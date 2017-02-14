@@ -1,7 +1,6 @@
-# @deja-js/angular2
-This is the home for the DSI-HUG team's Angular2 components for Angular 2 and material. 
-This library also includes the basic utility functions for DPI projects (servicelet call, ...)
-wiki page : http://wiki.hcuge.ch/display/DEVPAT/DEJAJS 
+# @deja-js/component
+This is the home for the Hôpital Univesitaire de Genève - DSI - Domaine Patient team's Angular2 components for Angular 2 and material. 
+
 
 ## Intro
 
