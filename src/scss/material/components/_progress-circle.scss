@@ -1,0 +1,23 @@
+/deep/ md-progress-spinner.primary {
+    path {
+        stroke: $primary;
+    }
+}
+
+/deep/ md-progress-spinner.danger {
+    path {
+        stroke: $red;
+    }
+}
+
+/deep/ md-progress-spinner.warn {
+    path {
+        stroke: $warning;
+    }
+}
+
+/deep/ md-progress-spinner.success {
+    path {
+        stroke: $success;
+    }
+}

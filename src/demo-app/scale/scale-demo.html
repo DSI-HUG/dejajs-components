@@ -1,0 +1,111 @@
+<md-card>
+    <md-toolbar color="secondary">Scale Demo</md-toolbar>
+
+    <md-card-content>
+        <div id="demo-scale-basic" [class.horizontal]="horizontal">
+            <div id="form">
+                <md-card>
+                    <div class="input">
+                        <div class="label"><span>Horizonal</span></div>
+                        <div class="control">
+                            <md-checkbox  [(ngModel)]="horizontal"
+                                          name="horizontal"
+                                          (change)="horizontal=$event.checked"></md-checkbox>
+                        </div>
+                    </div>
+                    <div class="input">
+                        <div class="label"><span>Label frequency</span></div>
+                        <div class="control">
+                            <md-slider min="0" max="15" step="3" value="15" #labelFrequency></md-slider>
+                            {{labelFrequency.value}}
+                        </div>
+                    </div>
+                    <div class="input">
+                        <div class="label"><span>Steps</span></div>
+                        <div class="control">
+                            <md-slider min="10" max="100" step="10" value="100" [(ngModel)]="steps" #scaleSteps></md-slider>
+                            {{scaleSteps.value}}
+                        </div>
+                    </div>
+                    <div class="input">
+                        <div class="label"><span>Max</span></div>
+                        <div class="control">
+                            <md-slider min="50" max="100" step="10" value="max" [(ngModel)]="max" #scaleMax></md-slider>
+                            {{scaleMax.value}}
+                        </div>
+                    </div>
+                    <div class="input">
+                        <div class="label"><span>Min</span></div>
+                        <div class="control">
+                            <md-slider min="0" max="40" step="10" value="min" [(ngModel)]="min" #scaleMin></md-slider>
+                            {{scaleMin.value}}
+                        </div>
+                    </div>
+                    <div class="input" [class.add-padding]="!customLabels">
+                        <div class="label"><span>Customize labels</span></div>
+                        <div class="control">
+                            <md-checkbox (change)="setCustomLabels($event.checked)"></md-checkbox>
+                        </div>
+                    </div>
+                    <div class="input" [class.disabled]="!customLabels">
+                        <div class="label"><span>Label decimals</span></div>
+                        <div class="control">
+                            <md-slider min="0" max="20" step="1" value="0" [(ngModel)]="labelDecimals" #labelDecimalsInput></md-slider>{{labelDecimalsInput.value}}
+                        </div>
+                    </div>
+                    <div class="input">
+                        <div class="label"><span>Enable zoom</span></div>
+                        <div class="control">
+                            <md-checkbox  [(ngModel)]="zoomEnabled"
+                                          name="zoomEnabled"
+                                          (change)="zoomEnabled=$event.checked"></md-checkbox>
+                        </div>
+                    </div>
+                    <div class="input" [class.disabled]="!zoomEnabled">
+                        <div class="label"><span>Zoom Factor</span></div>
+                        <div class="control">
+                            <md-slider min="10" max="90" step="10" value="10" #zoomFactorInput></md-slider>{{zoomFactorInput.value}}
+                        </div>
+                    </div>
+                    <div class="input" [class.disabled]="!zoomEnabled">
+                        <div class="label"><span>Zoom Step</span></div>
+                        <div class="control">
+                            <md-slider min="2" max="5" step="1" value="4" [(ngModel)]="zoomSteps" #zoomStepInput></md-slider>{{zoomStepInput.value}}
+                        </div>
+                    </div>
+                    <div class="input" [class.disabled]="horizontal">
+                        <div class="label"><span>Scale Height</span></div>
+                        <div class="control">
+                            <md-slider [disabled]="horizontal" min="200" max="1000" step="100" value="500" #containerHeightValue></md-slider>
+                            {{containerHeightValue.value}}
+                        </div>
+                    </div>
+                    <div class="input">
+                        <div class="label"><span>Selected value</span></div>
+                        <div class="control">
+                            {{selectedValue}}
+                        </div>
+                    </div>
+
+                </md-card>
+            </div>
+
+            <div id="component" [style.height]="containerHeightValue.value+'px'">
+                <deja-scale [min]="scaleMin.value"
+                            [max]="scaleMax.value"
+                            [steps]="scaleSteps.value"
+                            [horizontal]="horizontal"
+                            [labelXPos]="horizontal?'0rem':'1rem'"
+                            [labelYPos]="horizontal?'2rem':'0.5rem'"
+                            [zoomLabelXPos]="horizontal?'0rem':'1rem'"
+                            [zoomLabelYPos]="horizontal?'1.2rem':'0.5rem'"
+                            [labelFrequency]="labelFrequency.value"
+                            [labels]="customLabels?labels:undefined"
+                            [zoomEnabled]="zoomEnabled"
+                            [zoomFactor]="zoomEnabled?zoomFactorInput.value:undefined"
+                            [zoomSteps]="zoomStepInput.value"
+                            (selectedValue)="selectedValueListener($event)"></deja-scale>
+            </div>
+        </div>
+    </md-card-content>
+</md-card>

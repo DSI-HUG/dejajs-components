@@ -1,0 +1,25 @@
+<md-card class="{{type}}">
+    <md-card-title *ngIf="icon">
+        <md-icon *ngIf="icon">{{icon}}</md-icon><span *ngIf="!horizontal">{{title}}</span>
+    </md-card-title>
+    <md-card-content>
+        <h2 *ngIf="horizontal && title">{{title}}</h2>
+        <ng-content></ng-content>
+    </md-card-content>
+    <md-card-actions *ngIf="actions">
+        <span *ngFor="let action of actions">
+            <button md-raised-button *ngIf="action.icon && action.text" (click)="action.action()" class="with-icon" [attr.data-icon]="action.icon" [color]="action.type">
+                {{action.text}}
+            </button>
+            <button md-raised-button *ngIf="!action.icon && action.text" (click)="action.action()" [color]="action.type">
+                {{action.text}}
+            </button>
+            <button md-mini-fab *ngIf="action.icon && !action.text" [color]="action.type || 'blank'" [class.close]="!action.type" (click)="action.action()">
+                <md-icon>{{action.icon}}</md-icon>
+            </button>
+        </span>
+    </md-card-actions>
+    <md-card-actions *ngIf="!actions && actionsTemplate">
+		<template [ngTemplateOutlet]="actionsTemplate"></template>
+	</md-card-actions>
+</md-card>

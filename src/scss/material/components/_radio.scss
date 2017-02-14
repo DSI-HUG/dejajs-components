@@ -1,0 +1,34 @@
+md-radio-group {
+  .md-radio-checked {
+    .md-radio-inner-circle {
+      background-color:$secondary;
+    }
+    .md-radio-outer-circle {
+      border-color:$secondary;
+    }
+  }
+
+  .md-radio-ripple {
+    .md-ripple-foreground {
+      background-color:rgba($secondary, .2) !important;
+    }
+  }
+
+  &.ng-invalid {
+    label {
+      color:$red;
+      .md-radio-outer-circle{
+        border-color:$red;
+      }
+      .md-radio-inner-circle {
+        background-color:$red;
+      }
+    }
+
+    .md-radio-ripple {
+      .md-ripple-foreground {
+        background-color:rgba($red, .2);
+      }
+    }
+  }
+}

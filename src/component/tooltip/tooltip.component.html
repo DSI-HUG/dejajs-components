@@ -1,0 +1,9 @@
+<deja-dropdown 
+    #dropdown
+    *ngIf="model"
+    ownerAlignment="center top" 
+    [ownerElement]="params.ownerElement" 
+    dropdownAlignment="center top"
+>
+    <template *ngIf="tooltipTemplate" [ngTemplateOutlet]="tooltipTemplate" [ngOutletContext]="{ $implicit: model }"></template>
+</deja-dropdown>

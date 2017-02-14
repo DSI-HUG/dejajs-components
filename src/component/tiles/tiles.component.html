@@ -1,0 +1,11 @@
+<div class="tiles" [class.design]="designMode" [class.drag]="dragging" [style.width.px]="width" [style.height.px]="height" [style.cursor]="cursor">
+	<span *ngFor="let tile of tiles; let index = index;" id="tile-wrapper" [attr.tile-index]="index" [class.drag]="tile.dragging === true" [class.drop]="tile.dropping === true" [class.expanded]="tile.expanded === true" [style.left.px]="tile.l" [style.top.px]="tile.t" [style.width.px]="tile.r - tile.l" [style.height.px]="tile.b - tile.t" (dragstart)="onDragStart($event)">
+		<deja-tile-group *ngIf="tile.type==='group'" [model]="tile" [designMode]="designMode" [color]="tile.color" (onClose)="removeTile(tile);" (onEdit)="onTitleEditClicked($event, tile)">
+		</deja-tile-group>
+		<template *ngIf="tile.type!=='group'" [ngTemplateOutlet]="tileTemplate" [ngOutletContext]="{ $implicit: tile, index: index }"></template>
+	</span>
+	<span *ngIf="dragSelection" class="dragSelection" [style.left.px]="dragSelection.tilesRect.left" [style.top.px]="dragSelection.tilesRect.top" [style.width.px]="dragSelection.tilesRect.width" [style.height.px]="dragSelection.tilesRect.height">
+	</span>
+	<span *ngIf="layoutProvider && layoutProvider.targetPixelBounds" class="target" [style.left.px]="layoutProvider.targetPixelBounds.left" [style.top.px]="layoutProvider.targetPixelBounds.top" [style.width.px]="layoutProvider.targetPixelBounds.width" [style.height.px]="layoutProvider.targetPixelBounds.height">
+	</span>
+</div>

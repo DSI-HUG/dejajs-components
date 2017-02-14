@@ -1,0 +1,34 @@
+.demo-basic {
+	padding: 0;
+}
+
+.demo-full-width {
+	width: 100%;
+}
+
+.demo-icons {
+	font-size: 100%;
+	height: inherit;
+	vertical-align: top;
+	width: inherit;
+}
+
+.demo-card {
+	margin: 16px;
+	md-card-content {
+		display: flex;
+		flex-direction: column;
+		margin: 2rem;
+		.tile-content {
+			width: 100%;
+			height: 100%;
+			display: block;
+		}
+	}
+}
+
+#droparea {
+	height: 5rem;
+	background-color: rgb(245, 124, 0);
+	width: 50%;
+}

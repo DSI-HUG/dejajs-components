@@ -1,0 +1,60 @@
+@import "../../scss/variables/colors";
+.circular-picker-container {
+    /* min-height: 310px;
+    min-width: 310px;*/
+    position: relative;
+    .circular-picker {
+        border: 1px solid #dfdfdf;
+        background-color: #dfdfdf;
+        border-radius: 50%;
+        position: relative;
+        &:before {
+            /*background-color: $secondary;
+            border-radius: 50%;
+            content: '';
+            height: 0.3rem;
+            left: 50%;
+            margin-left: -0.15rem;
+            margin-top: -0.15rem;
+            position: absolute;
+            top: 50%;
+            width: 0.3rem;*/
+        }
+        .value {
+            border-radius: 50%;
+            cursor: pointer;
+            height: 43px;
+            line-height: 43px;
+            position: absolute;
+            text-align: center;
+            width: 43px;
+            &:hover {
+                background-color: $secondary;
+                color: #FFF;
+            }
+        }
+        .cursor-container {
+            .cursor {
+                background-color: $secondary;
+                border-radius: 50%;
+                color: #FFF;
+                cursor: pointer;
+                height: 43px;
+                line-height: 43px;
+                position: absolute;
+                text-align: center;
+                width: 43px;
+                z-index: 20;
+            }
+            .cursorHand {
+                background-color: $secondary;
+                border-radius: 2px;
+                height: 4px;
+                left: 50%;
+                position: absolute;
+                top: 50%;
+                transform-origin: left center;
+            }
+        }
+    }
+}

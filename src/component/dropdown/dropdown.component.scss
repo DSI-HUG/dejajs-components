@@ -1,0 +1,15 @@
+:host {
+	padding: 0 !important;
+	margin: 0 !important;
+	position: absolute;
+	overflow: auto;
+	z-index: 1000;
+	opacity: 0;
+	transition-duration: 0.5s;
+	transition-timing-function: ease;
+	transition-property: opacity;
+	&[halign],
+	&[valign] {
+		opacity: 1;
+	}
+}

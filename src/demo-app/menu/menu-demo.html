@@ -1,0 +1,69 @@
+<deja-menu #posYMenu buttonAlignment="left top">
+	<ul>
+		<li (click)="posYMenu.close()">
+			<md-icon>delete_sweep</md-icon> Supprimer</li>
+		<li (click)="posYMenu.close()">
+			<md-icon>content_copy</md-icon> Dupliquer</li>
+		<li (click)="posYMenu.close()">
+			<md-icon>edit</md-icon> Editer</li>
+	</ul>
+</deja-menu>
+
+<div id="demo-deja-menu">
+	<div class="menu-section">
+		<p>You clicked on: {{ selected }}</p>
+
+		<md-toolbar>
+			<button md-icon-button (click)="menu.show($event)">
+				<md-icon>more_vert</md-icon>
+			</button>
+		</md-toolbar>
+
+		<deja-menu #menu>
+			<button class="menu-item" *ngFor="let item of items" (click)="select(item.text); menu.close()">
+				{{ item.text }}
+			</button>
+		</deja-menu>
+	</div>
+	<div class="menu-section">
+		<p> Clicking these will navigate:</p>
+		<md-toolbar>
+			<button md-icon-button (click)="anchorMenu.show($event)">
+				<md-icon>more_vert</md-icon>
+			</button>
+		</md-toolbar>
+
+		<deja-menu #anchorMenu>
+			<a class="menu-item" *ngFor="let item of items" href="http://www.google.com">
+                {{ item.text }}
+            </a>
+		</deja-menu>
+	</div>
+	<div class="menu-section">
+		<p>
+			With buttons position before
+		</p>
+		<md-toolbar class="end-icon">
+			<button md-icon-button (click)="posXMenu.show($event)">
+				<md-icon>more_vert</md-icon>
+			</button>
+		</md-toolbar>
+
+		<deja-menu #posXMenu class="before" buttonAlignment="right top" menuAlignment="right top">
+			<button class="menu-item" *ngFor="let item of items" (click)="posXMenu.close()">
+				{{ item.text }}
+			</button>
+		</deja-menu>
+	</div>
+
+	<div class="menu-section">
+		<p>
+			With ul/li, position top
+		</p>
+		<md-toolbar>
+			<button md-icon-button (click)="posYMenu.show($event)">
+				<md-icon>more_vert</md-icon>
+			</button>
+		</md-toolbar>
+	</div>
+</div>

@@ -1,0 +1,183 @@
+ul {
+	&[depth-max] {
+		li {
+			&[depth] {
+				padding-left: 2.25rem;
+				background-color: initial;
+				color: initial;
+				&.selected {
+					background-color: rgba($secondary, 0.8);
+					color: #fff;
+				}
+			}
+			&[depth="0"] {
+				background-color: rgba($secondary, 0.85);
+				color: #FFF;
+				padding-left: 0;
+				&.selected {
+					background-color: rgba($secondary, 0.95);
+				}
+			}
+			&[depth="1"] {
+				background-color: rgba($secondary, 0.7);
+				color: #FFF;
+				padding-left: 0.45rem;
+				&.selected {
+					background-color: rgba($secondary, 0.85);
+				}
+			}
+			&[depth="2"] {
+				background-color: rgba($secondary, 0.55);
+				color: #FFF;
+				padding-left: 0.9rem;
+				&.selected {
+					background-color: rgba($secondary, 0.8);
+				}
+			}
+			&[depth="3"] {
+				background-color: rgba($secondary, 0.42);
+				color: #333;
+				padding-left: 1.35rem;
+				&.selected {
+					background-color: rgba($secondary, 0.75);
+				}
+			}
+			&[depth="4"] {
+				background-color: rgba($secondary, 0.3);
+				color: #333;
+				padding-left: 1.8rem;
+				&.selected {
+					background-color: rgba($secondary, 0.7);
+				}
+			}
+		}
+	}
+	&[depth-max="1"] {
+		li {
+			&[depth="0"] {
+				background-color: rgba($secondary, 0.6);
+				color: #FFF;
+				&.selected {
+					background-color: rgba($secondary, 0.95);
+				}
+			}
+			&[depth="1"] {
+				padding-left: 1rem;
+				background-color: initial;
+				color: initial;
+				&.selected {
+					background-color: rgba($secondary, 0.8);
+					color: #fff;
+				}
+			}
+		}
+	}
+	&[depth-max="2"] {
+		li {
+			&[depth="0"] {
+				background-color: rgba($secondary, 0.8);
+				color: #FFF;
+				&.selected {
+					background-color: rgba($secondary, 0.95);
+				}
+			}
+			&[depth="1"] {
+				background-color: rgba($secondary, 0.4);
+				color: #333;
+				padding-left: 0.7rem;
+				&.selected {
+					background-color: rgba($secondary, 0.85);
+				}
+			}
+			&[depth="2"] {
+				padding-left: 1.4rem;
+				background-color: initial;
+				color: initial;
+				&.selected {
+					background-color: rgba($secondary, 0.8);
+					color: #fff;
+				}
+			}
+		}
+	}
+	&[depth-max="3"] {
+		li {
+			&[depth="0"] {
+				background-color: rgba($secondary, 0.8);
+				color: #FFF;
+				&.selected {
+					background-color: rgba($secondary, 0.95);
+				}
+			}
+			&[depth="1"] {
+				background-color: rgba($secondary, 0.55);
+				color: #FFF;
+				padding-left: 0.6rem;
+				&.selected {
+					background-color: rgba($secondary, 0.85);
+				}
+			}
+			&[depth="2"] {
+				background-color: rgba($secondary, 0.3);
+				color: #333;
+				padding-left: 1.2rem;
+				&.selected {
+					background-color: rgba($secondary, 0.8);
+				}
+			}
+			&[depth="3"] {
+				padding-left: 1.8rem;
+				background-color: initial;
+				color: initial;
+				&.selected {
+					background-color: rgba($secondary, 0.8);
+					color: #fff;
+				}
+			}
+		}
+	}
+	&[depth-max="4"] {
+		li {
+			&[depth="0"] {
+				background-color: rgba($secondary, 0.85);
+				color: #FFF;
+				&.selected {
+					background-color: rgba($secondary, 0.95);
+				}
+			}
+			&[depth="1"] {
+				background-color: rgba($secondary, 0.7);
+				color: #FFF;
+				padding-left: 0.5rem;
+				&.selected {
+					background-color: rgba($secondary, 0.85);
+				}
+			}
+			&[depth="2"] {
+				background-color: rgba($secondary, 0.48);
+				color: #333;
+				padding-left: 1rem;
+				&.selected {
+					background-color: rgba($secondary, 0.8);
+				}
+			}
+			&[depth="3"] {
+				background-color: rgba($secondary, 0.3);
+				color: #333;
+				padding-left: 1.5rem;
+				&.selected {
+					background-color: rgba($secondary, 0.75);
+				}
+			}
+			&[depth="4"] {
+				padding-left: 2rem;
+				background-color: initial;
+				color: initial;
+				&.selected {
+					background-color: rgba($secondary, 0.8);
+					color: #fff;
+				}
+			}
+		}
+	}
+}

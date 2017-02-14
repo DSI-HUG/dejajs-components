@@ -1,0 +1,45 @@
+<md-input-container id="input" [attr.wait]="waiter || _waiter" [attr.multiselection]="_multiSelect && selectedItems.length > 0">
+    <input #inputelement type="text" md-input [readonly]="isReadOnly" (ngModelChange)="(!isReadOnly && queryChanged($event)) || null" [(ngModel)]="query" (keydown)="filter($event)" (keyup)="filter($event)" (focus)="focus($event)" (click)="click($event)" (blur)="blur($event)">
+	<div id="md-input-prefix" md-prefix *ngIf="_multiSelect && selectedItems.length > 0">
+		<ul>
+			<li *ngFor="let item of selectedItems; let index = index">
+				<span>
+					<span *ngIf="!selectedTemplate">{{ getTextValue(item) }}</span>
+					<span *ngIf="selectedTemplate">
+						<template [ngTemplateOutlet]="selectedTemplate" [ngOutletContext]="{ $implicit: item }"></template>
+					</span>
+					<i id="close-button" (click)="removeSelection($event, item)" class="material-icons">close</i>
+				</span>
+			</li>
+		</ul>
+	</div>
+	<md-placeholder>
+        <template [ngTemplateOutlet]="placeHolderTemplate"></template>
+        <span *ngIf="!placeHolderTemplate">{{ placeholder }}</span>
+	</md-placeholder>
+	<div *ngIf="selectionClearable && !_multiSelect && selectedItems.length > 0" md-suffix><i (click)="removeSelection($event)" id="clear-button" class="material-icons md-suffix">clear</i></div>
+	<md-hint *ngIf="hintTemplate">
+		<template [ngTemplateOutlet]="hintTemplate"></template>
+	</md-hint>
+	<span *ngIf="mdSuffix" md-suffix>
+		<template [ngTemplateOutlet]="mdSuffix"></template>
+	</span>
+</md-input-container>
+<deja-dropdown id="select-dropdown" #listcontainer *ngIf="dropdownVisible" (hide)="dropdownVisible=false" (scroll)="scroll($event)" [ownerAlignment]="dropdownAlignment" dropdownAlignment="left" [ownerElement]="elementRef" [containerElement]="containerElement" ownerBottomMargin="18" ownerTopMargin="10" ownerRightMargin="2" [style.max-height.px]="maxHeight">
+	<div *ngIf="vpBeforeHeight" [style.height.px]="vpBeforeHeight"></div>
+	<ul ulist [attr.depth-max]="_depthMax || null" [attr.keynav]="keyboardNavigation" [attr.vprowheight]="getViewPortRowHeight()" (mousedown)="mousedown($event)">
+		<li *ngFor="let item of _itemList; let index = index" #dropdownitem [class.hide]="item.collapsing || item.expanding" [class.parent]="item.depth < _depthMax" [class.collapsed]="item.collapsed" [class.selected]="item.selected" [class.current]="_multiSelect && item === currentItem" [class.unselectable]="item.selectable === false" [attr.depth]="_depthMax ? item.depth : null" [attr.id]="item.id || null" [attr.flat]="index" [style.height.px]="getItemHeight(item)" [class.odd]="(item.depth === _depthMax && item.odd) || null">
+			<span *ngIf="item.$items" id="expandbtn"></span>
+			<span class="item-content" *ngIf="(!item.$items || !parentItemTemplate) && (item.$items || !itemTemplate)">{{ getTextValue(item) }}</span>
+			<span class="item-content" *ngIf="item.$items && parentItemTemplate">
+				<template [ngTemplateOutlet]="parentItemTemplate" [ngOutletContext]="{ $implicit: item, query: query, flatindex: vpStartRow+index }"></template>
+			</span>
+			<span class="item-content" *ngIf="!item.$items && itemTemplate">
+				<template [ngTemplateOutlet]="itemTemplate" [ngOutletContext]="{ $implicit: item, query: query, flatindex: vpStartRow+index }"></template>
+			</span>
+		</li>
+	</ul>
+	<div *ngIf="vpAfterHeight" [style.height.px]="vpAfterHeight"></div>
+</deja-dropdown>
+<div *ngIf="_hintLabel != ''" class="md-hint">{{_hintLabel}}</div>
+<deja-backdrop id="select-backdrop" (click)="dropdownVisible=false" *ngIf="dropdownVisible"></deja-backdrop>

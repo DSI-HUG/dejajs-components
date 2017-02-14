@@ -1,0 +1,21 @@
+<md-card class="demo-card demo-basic" [class.debug]="debug">
+	<md-toolbar color="secondary">Tiles Demo</md-toolbar>
+	<md-card-content>
+		<md-checkbox [(ngModel)]="designMode">Design Mode</md-checkbox>
+	</md-card-content>
+	<md-card-content>
+		<span id="droparea" [deja-droppable]="getDropContext()">
+			Drop Area
+		</span>
+	</md-card-content>
+	<md-card-content>
+		<deja-tiles id="tiles" [(ngModel)]="tiles" (onTitleEditClick)="onTitleEditClick($event)" [designMode]="designMode" [maxwidth]="'100%'" [tileminwidth]="'5%'" [tileminheight]="'3%'" [tilemaxheight]="'50%'" [tilemaxwidth]="'50%'">
+			<template #tileTemplate let-tile>
+				<span [deja-draggable]="getDragContext(tile.templateModel)" class="tile-content unselectable" [style.background-color]="tile.templateModel.color">{{ tile.templateModel.country.naqme }} ({{ id }})
+					<span *ngIf="tile.selected">Selected</span>
+					<span *ngIf="tile.pressed">Pressed</span>
+				</span>
+			</template>
+		</deja-tiles>
+	</md-card-content>
+</md-card>

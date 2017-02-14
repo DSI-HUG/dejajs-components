@@ -1,0 +1,54 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    .base-colors,
+    .varied-colors {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        flex-wrap: wrap;
+        margin: 1rem 0;
+        &[disabled="true"] {
+            -webkit-filter: grayscale(100%);
+            /* Chrome, Safari, Opera */
+            filter: grayscale(100%);
+        }
+    }
+    .varied-colors {
+        &.active {
+            .color-var {
+                opacity: 1;
+                transform: scale(1, 1);
+                &.active {
+                    transform: scale(1.4, 1.4);
+                    transition-duration: 0.3s !important;
+                }
+            }
+        }
+    }
+    .color,
+    .color-var {
+        float: left;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+    .color {
+        transition: all .2s;
+        width: 1.6rem;
+        height: 1.6rem;
+        margin: 0.35rem;
+        &.active {
+            transform: scale(1.4, 1.4);
+        }
+    }
+    .color-var {
+        transition: all linear;
+        opacity: 0;
+        width: 2.5rem;
+        height: 2.5rem;
+        margin: 0.4rem;
+        transform: scale(0, 0);
+    }
+}

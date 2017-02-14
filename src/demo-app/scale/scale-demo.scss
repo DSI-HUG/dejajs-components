@@ -1,0 +1,59 @@
+@import "../../scss/variables/colors";
+
+#demo-scale-basic {
+
+	margin-top: 2rem;
+	display: flex;
+
+	#form {
+		margin-right: 2rem;
+		margin-bottom: 2rem;
+
+		.input {
+			display: flex;
+
+			&.add-padding {
+				padding-bottom: 19px;
+			}
+
+			&.disabled {
+				display: none;
+			}
+
+			.label {
+				width: 10rem;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+			}
+
+			.control {
+				.md-slider-track-fill {
+					background-color: #428BCA;
+				}
+				.md-slider-thumb {
+					background-color: #428BCA;
+				}
+			}
+
+		}
+	}
+
+	&:not(.horizontal) {
+		flex-direction: row;
+	}
+
+	&.horizontal {
+		flex-direction: column;
+	}
+
+
+
+	#component {
+		.labels {
+			text {
+				fill: #428BCA;
+			}
+		}
+	}
+}

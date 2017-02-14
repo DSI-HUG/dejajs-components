@@ -1,0 +1,71 @@
+@import "../../scss/variables/colors";
+
+deja-accordion-header {
+  &[secondary] {
+    .accordion-header {
+      background-color:$secondary;
+      border-bottom:2px solid rgba($darker, .4);
+      color:#FFF;
+      &:after {
+        background-color:#dfdfdf;
+      }
+      &:hover {
+        background-color:#FFF;
+        color:#000;
+      }
+    }
+  }
+}
+
+.accordion-group {
+  .accordion-header {
+    align-items: center;
+    border-bottom: 2px solid #dfdfdf;
+    cursor: pointer;
+    display: flex;
+    flex: 1 1 auto;
+    padding: 15px 10px;
+    position: relative;
+
+    &:hover {
+      background-color: $primary;
+    }
+
+    &:focus {
+      background-color: lightgreen;
+    }
+
+    &:after {
+      background-color: $secondary;
+      bottom: -2px;
+      content: '';
+      height: 2px;
+      left: 50%;
+      position: absolute;
+      transition: all 200ms linear;
+      width: 0;
+    }
+  }
+
+  .accordion-body {
+    display: block;
+    max-height: 0;
+    overflow: hidden;
+    position: relative;
+    transition: max-height 500ms ease;
+  }
+
+  &.open {
+    .accordion-header {
+      &:after {
+        left: 0;
+        width: 100%;
+      }
+    }
+
+    .accordion-body {
+      border-bottom: 2px solid #dfdfdf;
+      max-height: 1000px;
+    }
+  }
+}

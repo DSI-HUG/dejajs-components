@@ -1,0 +1,41 @@
+.tile-group {
+	height: calc(100% - 0.6rem);
+	width: calc(100% - 0.6rem);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	box-sizing: border-box;
+	padding: 0 0.5rem;
+	&[selected="true"] {
+		box-shadow: inset 0 0 0 3px rgba(0, 0, 0, 0.6);
+	}
+	#title {
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+		flex-grow: 1;
+		flex-basis: auto;
+		outline: none;
+		&[contenteditable="true"] {
+			cursor: text;
+		}
+	}
+	.material-icons {
+		font-size: 1rem;
+		z-index: 3;
+		cursor: pointer;
+		color: #777777;
+		flex-basis: 1rem;
+		flex-grow: 0;
+		flex-shrink: 0;
+	}
+	#edit-button,
+	#close-button {
+		margin: 0.3rem;
+		flex: 0 0 auto;
+	}
+	.material-icons:hover {
+		background-color: rgba(255, 255, 255, 0.2);
+		color: #222;
+	}
+}

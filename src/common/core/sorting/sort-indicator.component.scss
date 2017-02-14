@@ -1,0 +1,31 @@
+:host {
+	display: block;
+	position: relative;
+	width: 1rem;
+	[sortorder] {
+		&:before {
+			content: 'arrow_upward';
+			font-family: 'Material Icons';
+			position: absolute;
+			right: 0;
+			top: 50%;
+			font-size: 120%;
+			-ms-transform: translateY(-50%);
+			/* IE 9 */
+			-webkit-transform: translateY(-50%);
+			/* Chrome, Safari, Opera */
+			transform: translateY(-50%);
+			transition: all 200ms ease;
+			padding: 0.5rem;
+		}
+	}
+	[sortorder="1"] {
+		&:before {
+			-ms-transform: translateY(-50%) rotate(180deg);
+			/* IE 9 */
+			-webkit-transform: translateY(-50%) rotate(180deg);
+			/* Chrome, Safari, Opera */
+			transform: translateY(-50%) rotate(180deg);
+		}
+	}
+}

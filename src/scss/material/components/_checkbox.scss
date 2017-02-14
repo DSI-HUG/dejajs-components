@@ -1,0 +1,27 @@
+.md-checkbox-checked,
+.md-checkbox-indeterminate {
+  .md-checkbox-layout {
+    .md-checkbox-inner-container {
+      .md-checkbox-background {
+        background-color:$secondary;
+      }
+      .md-checkbox-ripple {
+        .md-ripple-foreground {
+          background-color:rgba($secondary, .2) !important;
+        }
+      }
+    }
+  }
+}
+
+.md-checkbox-focused {
+  .md-checkbox-layout {
+    .md-checkbox-inner-container {
+      .md-radio-ripple {
+        .md-ripple-foreground {
+          background-color:rgba($red, .2) !important;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "mode": "modules",
+  "out": "docs",
+  "logger":"none",
+  "theme": "default",
+  "ignoreCompilerErrors": "true",
+  "experimentalDecorators": "true",
+  "emitDecoratorMetadata": "true",
+  "target": "ES5",
+  "moduleResolution": "node",
+  "preserveConstEnums": "true",
+  "excludeNotExported":"true",
+  "excludeExternals":"true",
+  "externalPattern":"node_modules",
+  "excludePrivate":"true",
+  "stripInternal": "true",
+  "suppressExcessPropertyErrors": "true",
+  "suppressImplicitAnyIndexErrors": "true",
+  "module": "commonjs",
+  "disableOutputCheck" :"true"
+}

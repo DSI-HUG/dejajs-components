@@ -1,0 +1,17 @@
+// @import "../../../node_modules/@deja-js/resources/src/scss/fonts/material-icons/material-icons";
+#demo-deja-menu {
+	display: flex;
+	flex-flow: row;
+	.menu-section {
+		width: 300px;
+		margin: 0.5rem;
+	}
+	.end-icon {
+		align-items: flex-end;
+	}
+}
+
+#menudropdown #menucontent .menu-item {
+	white-space: nowrap;
+	padding: 0.5rem 2rem;
+}

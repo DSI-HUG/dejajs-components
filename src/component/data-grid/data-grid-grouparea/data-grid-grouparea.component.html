@@ -1,0 +1,11 @@
+<div #groupAreaElement id="deja-grid-grouparea" [deja-droppable]="getDropContext()">
+	<label id="placeholder" *ngIf="groups.length === 0">Déplacer une colonne ici pour grouper par cette dernière</label>
+	<ul *ngIf="groups.length > 0">
+		<li *ngFor="let column of groups; let index=index" [deja-draggable]="getDragContext(column)" [attr.index]="index" [attr.groupname]="column.name" class="group-wrapper">
+			<span>
+				<span>{{ column.label }}</span>
+				<i id="close-button" (click)="removeGroup($event, index)" class="material-icons">close</i>
+			</span>
+		</li>
+	</ul>
+</div>

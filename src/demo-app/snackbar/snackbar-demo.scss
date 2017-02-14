@@ -1,0 +1,31 @@
+/* These styles are used for demo purposes only, you don't need to use them at all. */
+
+:host {
+  #container {
+    display: block;
+    margin: auto;
+    max-width: 800px;
+    max-height: 800px;
+    min-height: 400px;
+    box-sizing: border-box;
+    border: solid rgba(0, 0, 0, 1) 1px;
+  }
+  .snackbarContent {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    border-radius: 1px;
+    box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.4);
+    span {
+      margin: 12px 0px 12px 12px;
+    }
+  }
+  #btnContainer {
+    width: 500px;
+    margin: auto;
+    margin-bottom: 12px;
+  }
+}

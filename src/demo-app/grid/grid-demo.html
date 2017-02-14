@@ -1,0 +1,80 @@
+<md-card id="grid-demo" class="demo-card demo-basic">
+	<md-toolbar color="secondary">Grille avec beaucoup d'enregistrements&nbsp;
+		<span *ngIf="bgrid && bgrid.itemListService && bgrid.itemListService.getItems()">({{ bgrid.itemListService.getItems().length }} enregistrements)</span>
+	</md-toolbar>
+	<!--<button (click)="onExpanAll()">Expand All</button>
+    <button (click)="onCollapseAll()">Collapse All</button>-->
+	<md-card-content class="listContainer">
+		<deja-menu #moreReactionMenu buttonAlignment="right top" menuAlignment="right top">
+			<ul>
+				<li *ngFor="let reaction of currentReactions">
+					{{ reaction.reactionmeddrapt }}
+				</li>
+			</ul>
+		</deja-menu>
+		<deja-menu #moreDrugMenu buttonAlignment="right top" menuAlignment="right top">
+			<ul>
+				<li *ngFor="let drug of currentDrugs">
+					{{ drug.medicinalproduct }}
+				</li>
+			</ul>
+		</deja-menu>
+		<!-- -->
+		<deja-grid #bgrid searchArea groupArea rowsSortable columnsSortable columnsSizable multiSelect sortable [(ngModel)]="drugsBigRecord" [columns]="columns" (selectedChange)="onSelectionChanged($event)" nodataholder="Pas de données" placeholder="Filtrer la liste par le nom" searchField="indexedText" (itemDragStart)="onItemDragStart($event)">
+			<template #cellTemplate let-row let-column="column">
+				<span id="cell-reaction" class="cell" *ngIf="column.name==='reaction' && row.reaction && row.reaction.length">
+					<span id="content">{{ row.reaction[0].reactionmeddrapt }}</span>
+					<button id="more" *ngIf="row.reaction.length > 1" md-icon-button (click)="currentReactions = row.reaction; moreReactionMenu.show($event)">
+						<md-icon>more_vert</md-icon>
+					</button>
+				</span>
+				<span id="cell-drug" class="cell" *ngIf="column.name==='drug' && row.drug && row.drug.length">
+					<span id="content">
+						<span class="drug" *ngFor="let drug of row.drug">{{ drug.medicinalproduct }}</span>
+					</span>
+					<button id="more" *ngIf="row.drug.length > 1" md-icon-button (click)="currentDrugs = row.drug; moreDrugMenu.show($event)">
+						<md-icon>more_vert</md-icon>
+					</button>
+				</span>
+			</template>
+			<template #searchSuffixTemplate>
+				<button id="more" md-icon-button (click)="onSuffixClicked()">
+					<md-icon>more_vert</md-icon>
+				</button>
+			</template>
+		</deja-grid>
+	</md-card-content>
+	<md-card-content class="ddContainer">
+		<div>
+			Selected Items
+			<ul>
+				<li *ngFor="let item of selectedItems">
+					<span>{{ item.groupName || item.suGroupName || item.name + ' - ' + item.type }}</span>
+				</li>
+			</ul>
+		</div>
+		<div>
+			Vous pouvez également dropper des items de la liste dans la zone rouge ci dessous (celle-ci affichera une représentation JSON de l'objet droppé) :
+		</div>
+		<div [deja-droppable]="{dragovercallback: onDivDragOver, dropcallback:onDivDropEvent}" style="border:1px solid red;min-height:150px;"></div>
+	</md-card-content>
+	<md-toolbar color="secondary">Grille avec taille des colonnes en pixels et en pourcents</md-toolbar>
+	<md-card-content class="listContainer">
+		<!-- -->
+		<deja-grid #cgrid searchArea groupArea sortable columnsSizable multiSelect [(ngModel)]="drugs" [columns]="percentColumns" (selectedChange)="onSelectionChanged2($event)" nodataholder="Pas de données" placeholder="Filtrer la liste par le nom" searchField="receivedate" (itemDragStart)="onItemDragStart($event)">
+			<template #rowTemplate let-row>
+				<deja-grid-row [row]="row" [columnLayout]="cgrid.columnLayout" [cellTemplateExternal]="cgrid.cellTemplate" [currentColumn]="cgrid.currentColumn">
+					<template #cellTemplate let-row let-column="column" let-current="isCurrentColumn">
+						<span *ngIf="column.name!=='transmissiondateformat'" class="cell" [class.current]="current">{{ row[column.name] }}</span>
+						<span *ngIf="column.name==='transmissiondateformat'" class="cell" [class.current]="current">{{ row[column.name] + 'apk'}}</span>
+					</template>
+				</deja-grid-row>
+			</template>
+		</deja-grid>
+	</md-card-content>
+	<md-toolbar color="secondary">Grille avec taille fixe des colonnes</md-toolbar>
+	<md-card-content class="listContainer">
+		<deja-grid #fgrid searchArea groupArea sortable columnsSizable multiSelect [(ngModel)]="groupedDrugs" [columns]="responsiveColumns" (selectedChange)="onSelectionChanged3($event)" nodataholder="Pas de données" placeholder="Filtrer la liste par le nom" searchField="receivedate" (itemDragStart)="onItemDragStart($event)">
+		</deja-grid>
+	</md-card-content>
+</md-card>

@@ -1,0 +1,17 @@
+md-slide-toggle {
+  &.md-primary {
+    &.md-checked {
+      &.md-slide-toggle-focused {
+        .md-ink-ripple {
+          background-color:rgba($secondary, .2) !important;
+        }
+      }
+      .md-slide-toggle-thumb {
+        background-color:$secondary !important;
+      }
+      .md-slide-toggle-bar {
+        background-color:rgba($secondary, .5) !important;
+      }
+    }
+  }
+}

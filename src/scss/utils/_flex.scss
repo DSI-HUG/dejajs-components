@@ -1,0 +1,118 @@
+.display-flex {
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+}
+
+.display-inline-flex {
+    display: -ms-inline-flexbox;
+    display: -webkit-inline-flex;
+    display: inline-flex;
+}
+
+@mixin flex($size) {
+    -webkit-flex: $size;
+    -ms-flex: $size;
+    flex: $size;
+}
+
+.flex { @include flex(1); }
+.flex-2 { @include flex(2); }
+.flex-3 { @include flex(3); }
+.flex-4 { @include flex(4); }
+.flex-5 { @include flex(5); }
+.flex-6 { @include flex(6); }
+.flex-7 { @include flex(7); }
+.flex-8 { @include flex(8); }
+.flex-9 { @include flex(9); }
+.flex-10 { @include flex(10); }
+.flex-11 { @include flex(11); }
+.flex-12 { @include flex(12); }
+
+@mixin flex-direction($direction) {
+    -webkit-flex-direction: $direction;
+    -ms-flex-direction: $direction;
+    flex-direction: $direction;
+}
+
+.flex-direction-row { @include flex-direction(row); }
+.flex-direction-column { @include flex-direction(column); }
+.flex-direction-row-reverse { @include flex-direction(row-reverse); }
+.flex-direction-column-reverse { @include flex-direction(column-reverse); }
+
+@mixin flex-wrap($wrap) {
+    -webkit-flex-wrap: $wrap;
+    -ms-flex-wrap: $wrap;
+    flex-wrap: $wrap;
+}
+
+.flex-wrap-nowrap { @include flex-wrap(nowrap); }
+.flex-wrap-wrap { @include flex-wrap(wrap); }
+.flex-wrap-wrap-reverse { @include flex-wrap(wrap-reverse); }
+
+@mixin justify-content($justify) {
+    -webkit-justify-content: $justify;
+    -ms-flex-pack: $justify;
+    justify-content: $justify;
+}
+
+.flex-justify-content-flex-start { @include justify-content(flex-start); }
+.flex-justify-content-flex-end { @include justify-content(flex-end); }
+.flex-justify-content-center { @include justify-content(center); }
+.flex-justify-content-space-between { @include justify-content(space-between); }
+.flex-justify-content-space-around { @include justify-content(space-around); }
+
+@mixin align-items($align) {
+    -webkit-align-items: $align;
+    -ms-flex-align: $align;
+    align-items: $align;
+}
+
+.flex-align-items-flex-start { @include align-items(flex-start); }
+.flex-align-items-flex-end { @include align-items(flex-end); }
+.flex-align-items-center { @include align-items(center); }
+.flex-align-items-baseline { @include align-items(baseline); }
+.flex-align-items-stretch { @include align-items(stretch); }
+
+@mixin align-content($align) {
+    -webkit-align-items: $align;
+    -ms-flex-align: $align;
+    align-items: $align;
+}
+
+.flex-align-content-flex-start { @include align-content(flex-start); }
+.flex-align-content-flex-end { @include align-content(flex-end); }
+.flex-align-content-center { @include align-content(center); }
+.flex-align-content-space-between { @include align-content(space-between); }
+.flex-align-content-space-around { @include align-content(space-around); }
+.flex-align-content-stretch { @include align-content(stretch); }
+
+@mixin order($order) {
+    -webkit-order: $order;
+    -ms-flex-order: $order;
+    order: $order;
+}
+
+.flex-order-1 { @include order(1); }
+.flex-order-2 { @include order(2); }
+.flex-order-3 { @include order(3); }
+.flex-order-4 { @include order(4); }
+.flex-order-5 { @include order(5); }
+.flex-order-6 { @include order(6); }
+.flex-order-7 { @include order(7); }
+.flex-order-8 { @include order(8); }
+.flex-order-9 { @include order(9); }
+.flex-order-10 { @include order(10); }
+
+@mixin align-self($align) {
+    -webkit-align-self: $align;
+    -ms-flex-item-align: $align;
+    align-self: $align;
+}
+
+.flex-align-self-auto { @include align-self(auto); }
+.flex-align-self-flex-start { @include align-self(flex-start); }
+.flex-align-self-flex-end { @include align-self(flex-end); }
+.flex-align-self-center { @include align-self(center); }
+.flex-align-self-baseline { @include align-self(baseline); }
+.flex-align-self-stretch { @include align-self(stretch); }

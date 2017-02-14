@@ -1,0 +1,27 @@
+<md-input-container id="deja-date-selector">
+    <input #inputelement id="deja-date-selector-input" md-input [disabled]="disabled" (focus)="toggleDateSelector($event)" [ngModel]="inputModel || null" placeholder="{{placeholder}}">
+	<div md-suffix>
+		<md-icon *ngIf="!inputModel">date_range</md-icon>
+		<md-icon *ngIf="inputModel && !disabled" (click)="reset()" id="clear-button">clear</md-icon>
+	</div>
+	<md-hint *ngIf="mdHint">
+		<template [ngTemplateOutlet]="mdHint"></template>
+	</md-hint>
+</md-input-container>
+<deja-dropdown *ngIf="useDropDown" id="deja-dropdown" [containerElement]="containerElement" [ownerElement]="elementRef.nativeElement" [ownerAlignment]="ownerAlignment" [dropdownAlignment]="dropdownAlignment" ownerBottomMargin=-4>
+	<deja-date-time-selector 
+		[time]="time" 
+		[disableDates]="disableDates" 
+		[ngModel]="date" 
+		(ngModelChange)="onDateChange($event)" 
+		class="inside-dropdown"
+		[dateMax]="dateMax"
+		[dateMin]="dateMin"
+	></deja-date-time-selector>
+	<div class="actions">
+		<button md-mini-fab (click)="close()">
+			<md-icon>close</md-icon>
+		</button>
+	</div>
+</deja-dropdown>
+<deja-backdrop (click)="close()" *ngIf="useDropDown"></deja-backdrop>

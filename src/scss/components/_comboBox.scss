@@ -1,0 +1,66 @@
+.form-group {
+	box-sizing: border-box;
+	font-family: 'Roboto', sans-serif;
+	margin-bottom: 20px;
+	margin-top: 20px;
+	position: relative;
+	select {
+		background: none;
+		border: none;
+		box-shadow: none;
+		color: #333;
+		font-size: 14px;
+		min-height: 20px;
+		padding: 5px 5px 2px;
+		width: 100%;
+		~.control-label {
+			color: #999;
+			font-size: 12px;
+			left: 0;
+			pointer-events: none;
+			position: absolute;
+			top: -14px;
+			z-index: 1;
+		}
+		&:focus {
+			outline: none;
+			~ {
+				.control-label {
+					color: $secondary;
+				}
+				.bar:before {
+					left: 0;
+					width: 100%;
+				}
+			}
+		}
+		&.ng-invalid {
+			color: $red;
+			~ {
+				.control-label {
+					color: $red;
+				}
+				.bar {
+					border-bottom-color: $red;
+				}
+			}
+		}
+	}
+	.bar {
+		border-bottom: 1px solid #999;
+		display: block;
+		position: relative;
+		&:before {
+			background: $secondary;
+			bottom: -1px;
+			content: '';
+			height: 2px;
+			left: 50%;
+			position: absolute;
+			-webkit-transition: left 200ms ease, width 200ms ease;
+			transition: left 200ms ease, width 200ms ease;
+			width: 0;
+			z-index: 2;
+		}
+	}
+}

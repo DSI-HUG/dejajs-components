@@ -1,0 +1,15 @@
+<md-card class="demo-card demo-basic">
+	<md-toolbar color="secondary">Content Editable Demo</md-toolbar>
+	<md-card-content>
+		<md-checkbox [(ngModel)]="designMode">Design Mode</md-checkbox>
+	</md-card-content>
+	<md-card-content id="contentEditableContainer">
+		<span [deja-editable]="designMode" multiline>
+			Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+			<br /> Mauris auctor sit amet odio et aliquet. Curabitur auctor eleifend mattis.
+			<br /> Nullam sit amet quam tellus. Ut mattis tellus sed erat ultricies ornare.
+			<br /> Nulla dictum nisi eu tortor lacinia porttitor. Donec eu arcu et enim cursus viverra.
+			<br /> Praesent pulvinar dui nisi, a tincidunt arcu finibus sed.
+		</span>
+	</md-card-content>
+</md-card>

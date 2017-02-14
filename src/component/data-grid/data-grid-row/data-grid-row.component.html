@@ -1,0 +1,5 @@
+<span *ngIf="columnLayout.vpBeforeWidth" [style.width.px]="columnLayout.vpBeforeWidth"></span>
+<span *ngFor="let column of columnLayout.columns; let index=index" [attr.colindex]="index" [attr.colname]="column.name" [class.dragged]="column.dragged" [class.current]="column === currentColumn" class="cell-wrapper" [style.width.px]="column.w">
+	<div *ngIf="!cellTemplate || !column.useCellTemplate" class="cell">{{ row[column.name] }}</div>
+	<template [ngTemplateOutlet]="cellTemplate" *ngIf="cellTemplate && column.useCellTemplate" [ngOutletContext]="{ $implicit: row, flatIndex: flatIndex, column: column, isCurrentColumn: column===currentColumn }"></template></span>
+<span *ngIf="columnLayout.vpAfterWidth" [style.width.px]="columnLayout.vpAfterWidth"></span>

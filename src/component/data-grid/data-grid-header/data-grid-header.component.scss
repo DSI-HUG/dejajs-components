@@ -1,0 +1,71 @@
+@import "../../../scss/variables/colors";
+:host {
+	display: block;
+	#deja-grid-header {
+		display: inline-flex;
+		flex-direction: row;
+		align-items: center;
+		height: 100%;
+		position: relative;
+		overflow: hidden;
+		.column-header-wrapper {
+			padding: 0 !important;
+			margin: 0 !important;
+			display: inline-flex;
+			align-items: center;
+			position: relative;
+			overflow: hidden;
+			.sort-waiter {
+				position: absolute;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				width: 100%;
+				background-color: rgba(255, 255, 255, 0.5);
+				height: 100%;
+				&:after,
+				&:before {
+					content: "loop";
+					color: transparent;
+					width: 100%;
+				}
+				.material-icons {
+					opacity: 0.65;
+					animation: spin 1s infinite .5s linear;
+				}
+			}
+			[separator] {
+				flex: 0 0 4px;
+				height: 65%;
+				border-right: solid 1px rgba($secondary, 0.8);
+				padding: 0.5rem 0;
+				margin-right: 0.3rem;
+			}
+			&.dragged {
+				background-color: rgba(0, 0, 0, 0.08);
+			}
+			&:hover {
+				background-color: rgba(0, 0, 0, 0.08);
+			}
+			.column-header {
+				flex: 1 1 auto;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow: hidden;
+				padding: 0.5rem 0.1rem;
+				display: block;
+			}
+			deja-sort-indicator {
+				opacity: 0.6;
+				flex: 0 0 auto;
+			}
+		}
+		&[sizable] {
+			.column-header-wrapper:not([sizeable="false"]) {
+				[separator] {
+					cursor: ew-resize;
+				}
+			}
+		}
+	}
+}

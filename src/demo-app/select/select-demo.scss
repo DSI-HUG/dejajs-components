@@ -1,0 +1,34 @@
+@import "../../scss/variables/colors";
+#deja-select-demo {
+	&.demo-card {
+		margin: 16px;
+		md-card-content {
+			padding: 16px;
+			display: flex;
+			flex-direction: column;
+			deja-select {
+				flex-basis: 50%;
+				flex-grow: 0;
+				flex-shrink: 0;
+				position: relative;
+				margin-top: 2rem;
+			}
+		}
+	}
+	&.demo-basic {
+		padding: 0;
+	}
+	&.demo-full-width {
+		width: 100%;
+	}
+	&.demo-icons {
+		font-size: 100%;
+		height: inherit;
+		vertical-align: top;
+		width: inherit;
+	}
+	#flight {
+		display: flex;
+		align-items: center;
+	}
+}

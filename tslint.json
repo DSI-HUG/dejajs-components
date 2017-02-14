@@ -1,0 +1,18 @@
+{
+    "extends": "tslint:recommended",
+    "rules": {
+        "quotemark": [
+            "single"
+        ],
+        "object-literal-shorthand": false,
+        "no-unused-expression": false,
+        "max-line-length": [
+            false
+        ],
+        "no-empty": false,
+        "radix": false,
+        "variable-name": false,
+        "no-bitwise": false,
+        "no-trailing-whitespace": false
+    }
+}

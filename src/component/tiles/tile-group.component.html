@@ -1,0 +1,5 @@
+<span [class.design]="designMode" class="tile-group unselectable" [attr.selected]="model.selected" [style.background-color]="backcolor" [style.color]="forecolor">
+	<span [deja-editable] id="title" [(ngModel)]="model.templateModel.title" [mandatory]="true"></span>
+	<i *ngIf="designMode" id="edit-button" (click)="edit()" class="material-icons">edit</i>
+	<i *ngIf="designMode" id="close-button" (click)="onClose.emit({})" class="material-icons">close</i>
+</span>

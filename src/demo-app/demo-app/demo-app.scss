@@ -1,0 +1,85 @@
+@import "../../scss/variables/colors";
+html,
+body {
+  height: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+demo-app {
+  height: 100%;
+  display: block;
+  scroll-behavior: smooth;
+  overflow: auto;
+}
+
+body {
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  // Helps fonts on OSX looks more consistent with other systems
+  // Isn't currently in button styles due to performance concerns
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  [md-icon-button] {
+    overflow: hidden;
+  }
+  md-sidenav-container.demo-root {
+    height: 100%;
+    overflow: visible;
+    md-sidenav {
+      min-width: 15%;
+      [md-button] {
+        width: 100%;
+        position: relative;
+        bottom: 0;
+        margin: 24px 0;
+      }
+    }
+    md-content {
+      height: auto;
+      overflow: visible;
+    }
+  }
+  .demo-content {
+    padding: 32px;
+  }
+  md-toolbar {
+    md-icon {
+      cursor: pointer;
+    }
+    .demo-toolbar {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+    }
+  }
+  h1 {
+    font-size: 20px;
+  }
+  deja-dropdown {
+    max-height: 500px;
+  }
+}
+
+.unselectable {
+  -webkit-touch-callout: none;
+  /* iOS Safari */
+  -webkit-user-select: none;
+  /* Chrome/Safari/Opera */
+  -khtml-user-select: none;
+  /* Konqueror */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* Internet Explorer/Edge */
+  user-select: none;
+  /* Non-prefixed version, currently not supported by any browser */
+}
+
+// avoid issue with display port calculation by the snackbar
+#scrollable-content {
+  overflow: auto;
+  height: 100%;
+}

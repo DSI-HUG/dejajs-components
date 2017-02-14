@@ -1,0 +1,17 @@
+md-toolbar {
+  background-color: $primary !important;
+  color: #FFF !important;
+  &.md-secondary {
+    background-color: $secondary !important;
+  }
+  &.sticky {
+    position:fixed;
+    z-index:20;
+    &.top {
+      top:0;
+    }
+    &.bottom {
+      bottom:0;
+    }
+  }
+}

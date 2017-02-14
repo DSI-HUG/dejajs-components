@@ -1,0 +1,221 @@
+@import "../../scss/variables/colors";
+deja-grid {
+	display: flex;
+	flex-direction: column;
+	align-content: stretch;
+	max-width: 100%;
+    overflow: hidden;
+	#deja-grid-grouparea {
+		flex: 0 0 auto;
+	}
+	#treelist {
+		flex: 1 1 auto;
+		#list {
+			ul {
+				>li {
+					&.current {
+						box-shadow: none;
+						.cell-wrapper.current {
+							box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.3);
+						}
+					}
+					display: inline-flex;
+					overflow: visible;
+					min-width: 100%;
+					.item-content {
+						padding: 0;
+					}
+				}
+				&[depth-max] {
+					li {
+						padding: 0;
+						&[depth] {
+							deja-grid-row,
+							deja-grid-parent-row {
+								>.cell-wrapper:nth-child(1) {
+									.cell {
+										padding-left: 2.25rem;
+									}
+								}
+							}
+						}
+						&[depth="0"] {
+							deja-grid-row,
+							deja-grid-parent-row {
+								>.cell-wrapper:nth-child(1) {
+									.cell {
+										padding-left: 0;
+									}
+								}
+							}
+						}
+						&[depth="1"] {
+							deja-grid-row,
+							deja-grid-parent-row {
+								>.cell-wrapper:nth-child(1) {
+									.cell {
+										padding-left: 0.45rem;
+									}
+								}
+							}
+						}
+						&[depth="2"] {
+							deja-grid-row,
+							deja-grid-parent-row {
+								>.cell-wrapper:nth-child(1) {
+									.cell {
+										padding-left: 0.9rem;
+									}
+								}
+							}
+						}
+						&[depth="3"] {
+							deja-grid-row,
+							deja-grid-parent-row {
+								>.cell-wrapper:nth-child(1) {
+									.cell {
+										padding-left: 1.35rem;
+									}
+								}
+							}
+						}
+						&[depth="4"] {
+							deja-grid-row,
+							deja-grid-parent-row {
+								>.cell-wrapper:nth-child(1) {
+									.cell {
+										padding-left: 1.8rem;
+									}
+								}
+							}
+						}
+					}
+				}
+				&[depth-max="1"] {
+					li {
+						&[depth="1"] {
+							deja-grid-row,
+							deja-grid-parent-row {
+								>.cell-wrapper:nth-child(1) {
+									.cell {
+										padding-left: 1rem;
+									}
+								}
+							}
+						}
+					}
+				}
+				&[depth-max="2"] {
+					li {
+						&[depth="1"] {
+							deja-grid-row,
+							deja-grid-parent-row {
+								>.cell-wrapper:nth-child(1) {
+									.cell {
+										padding-left: 0.7rem;
+									}
+								}
+							}
+						}
+						&[depth="2"] {
+							deja-grid-row,
+							deja-grid-parent-row {
+								>.cell-wrapper:nth-child(1) {
+									.cell {
+										padding-left: 1.4rem;
+									}
+								}
+							}
+						}
+					}
+				}
+				&[depth-max="3"] {
+					li {
+						&[depth="1"] {
+							deja-grid-row,
+							deja-grid-parent-row {
+								>.cell-wrapper:nth-child(1) {
+									.cell {
+										padding-left: 0.6rem;
+									}
+								}
+							}
+						}
+						&[depth="2"] {
+							deja-grid-row,
+							deja-grid-parent-row {
+								>.cell-wrapper:nth-child(1) {
+									.cell {
+										padding-left: 1.2rem;
+									}
+								}
+							}
+						}
+						&[depth="3"] {
+							deja-grid-row,
+							deja-grid-parent-row {
+								>.cell-wrapper:nth-child(1) {
+									.cell {
+										padding-left: 1.8rem;
+									}
+								}
+							}
+						}
+					}
+				}
+				&[depth-max="4"] {
+					li {
+						&[depth="1"] {
+							deja-grid-row,
+							deja-grid-parent-row {
+								>.cell-wrapper:nth-child(1) {
+									.cell {
+										padding-left: 0.5rem;
+									}
+								}
+							}
+						}
+						&[depth="2"] {
+							deja-grid-row,
+							deja-grid-parent-row {
+								>.cell-wrapper:nth-child(1) {
+									.cell {
+										padding-left: 1rem;
+									}
+								}
+							}
+						}
+						&[depth="3"] {
+							deja-grid-row,
+							deja-grid-parent-row {
+								>.cell-wrapper:nth-child(1) {
+									.cell {
+										padding-left: 1.5rem;
+									}
+								}
+							}
+						}
+						&[depth="4"] {
+							deja-grid-row,
+							deja-grid-parent-row {
+								>.cell-wrapper:nth-child(1) {
+									.cell {
+										padding-left: 2rem;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		&[nohscroll] {
+			#list {
+				overflow-x: hidden;
+			}
+		}
+	}
+	&[disableselection] {
+		user-select: none;
+	}
+}
