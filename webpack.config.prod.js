@@ -24,7 +24,7 @@ module.exports = webpackMerge.smart(commonConfig, {
         chunkFilename: "[id].[hash].chunk.js",
         filename: "[name].[hash].js",
         path: "./dist",
-        publicPath: "/",
+        publicPath: "/dejajs-components/",
     },
 
     plugins: [
