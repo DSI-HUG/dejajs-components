@@ -1,0 +1,23 @@
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "com.moowork.gradle:gradle-node-plugin:1.0.1"
+  }
+}
+
+apply plugin: "com.moowork.node"
+
+node{
+  nodeModulesDir = project.file("${project.projectDir}")
+}
+
+task dejajsNpmInstall (type:NpmTask){
+    args =["install"]
+}
+task dejajsNpmPublish (type:NpmTask,dependsOn:[dejajsNpmInstall]){
+    args =["login --scope=@deja-js","publish . --access=public", "logout"]
+}
