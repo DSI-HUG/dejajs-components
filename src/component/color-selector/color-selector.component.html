@@ -1,6 +1,0 @@
-<div class="base-colors" [attr.disabled]="_disabled | async">
-	<div id="basecolor" class="color" *ngFor="let clr of colors$ | async; let index=index" [attr.color]=clr.toHex() [attr.index]=index [style.background-color]=clr.toHex() [class.active]="index === selectedBaseIndex"></div>
-</div>
-<div class="varied-colors" [attr.disabled]="_disabled | async" [class.active]="_varActive | async">
-	<div id="subcolor" class="color-var" *ngFor="let clr of subColors$ | async; let index=index" [style.transition-duration]="(100*index)+'ms'" [attr.color]=clr.toHex() [style.background-color]=clr.toHex() [class.active]="index === selectedSubIndex"></div>
-</div>
