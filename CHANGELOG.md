@@ -1,9 +1,16 @@
 <a name="@next"></a>
 # [@next] (2017-02-xx)
 
-
-
 <a name="@next"></a>
+# [1.3.1] (2017-02-15)
+
+### Breaking changes from 1.3.0
+
+
+### Bug fixes #
+* **Typescript compiler options:**
+
+<a name="1.3.0"></a>
 # [1.3.0] (2017-02-10)
 
 ### Breaking changes from 1.2.2
