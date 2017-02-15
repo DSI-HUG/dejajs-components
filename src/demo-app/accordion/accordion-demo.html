@@ -1,72 +1,105 @@
-<md-card class="demo-card demo-basic">
-    <md-toolbar color="secondary">Accordion Demo</md-toolbar>
-    <md-card-content id="accordionContainer">
-        <h1>Default :</h1>
-        <deja-accordion>
-            <deja-accordion-group>
-                <deja-accordion-header>Un titre</deja-accordion-header>
-                <deja-accordion-body>
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br />
-                        Mauris auctor sit amet odio et aliquet. Curabitur auctor eleifend mattis. <br />
-                        Nullam sit amet quam tellus. Ut mattis tellus sed erat ultricies ornare. <br />
-                        Nulla dictum nisi eu tortor lacinia porttitor. Donec eu arcu et enim cursus viverra. <br />
-                        Praesent pulvinar dui nisi, a tincidunt arcu finibus sed.
-                    </p>
-                </deja-accordion-body>
-            </deja-accordion-group>
-            <deja-accordion-group>
-                <deja-accordion-header>Un second titre</deja-accordion-header>
-                <deja-accordion-body>
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br />
-                        Mauris auctor sit amet odio et aliquet. Curabitur auctor eleifend mattis. <br />
-                        Nullam sit amet quam tellus. Ut mattis tellus sed erat ultricies ornare. <br />
-                        Nulla dictum nisi eu tortor lacinia porttitor. Donec eu arcu et enim cursus viverra. <br />
-                        Praesent pulvinar dui nisi, a tincidunt arcu finibus sed.
-                    </p>
-                </deja-accordion-body>
-            </deja-accordion-group>
-            <deja-accordion-group>
-                <deja-accordion-header>Un troisieme titre</deja-accordion-header>
-                <deja-accordion-body>
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br />
-                        Mauris auctor sit amet odio et aliquet. Curabitur auctor eleifend mattis. <br />
-                        Nullam sit amet quam tellus. Ut mattis tellus sed erat ultricies ornare. <br />
-                        Nulla dictum nisi eu tortor lacinia porttitor. Donec eu arcu et enim cursus viverra. <br />
-                        Praesent pulvinar dui nisi, a tincidunt arcu finibus sed.
-                    </p>
-                </deja-accordion-body>
-            </deja-accordion-group>
-        </deja-accordion>
+<md-tab-group>
+    <md-tab label="API REFERENCE">
+        <md-card>
+            <md-card-title>Accordion</md-card-title>
+            <md-card-content>
+                Crée une liste d'éléments, permettant au contenu de chaque élément d'&ecirc;tre agrandi et réduit en cliquant sur son header.<br
+                /> Note V2 : La version 2 rend plus flexible et générique l'utilisation du composant. Celui-ci n'utilise
+                plus de propriétés et est donc totalement personnalisable.
 
-        <h1>Secondary :</h1>
-        <deja-accordion>
-            <deja-accordion-group>
-                <deja-accordion-header secondary>Un titre</deja-accordion-header>
-                <deja-accordion-body>
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br />
-                        Mauris auctor sit amet odio et aliquet. Curabitur auctor eleifend mattis. <br />
-                        Nullam sit amet quam tellus. Ut mattis tellus sed erat ultricies ornare. <br />
-                        Nulla dictum nisi eu tortor lacinia porttitor. Donec eu arcu et enim cursus viverra. <br />
-                        Praesent pulvinar dui nisi, a tincidunt arcu finibus sed.
-                    </p>
-                </deja-accordion-body>
-            </deja-accordion-group>
-            <deja-accordion-group>
-                <deja-accordion-header secondary><b>Un <u>second</u> titre</b></deja-accordion-header>
-                <deja-accordion-body>
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br />
-                        Mauris auctor sit amet odio et aliquet. Curabitur auctor eleifend mattis. <br />
-                        Nullam sit amet quam tellus. Ut mattis tellus sed erat ultricies ornare. <br />
-                        Nulla dictum nisi eu tortor lacinia porttitor. Donec eu arcu et enim cursus viverra. <br />
-                        Praesent pulvinar dui nisi, a tincidunt arcu finibus sed.
-                    </p>
-                </deja-accordion-body>
-            </deja-accordion-group>
-        </deja-accordion>
-    </md-card-content>
-</md-card>
+                <h2>Utilisation</h2>
+                <blockquote>Ne pas oublier d'importer le <b>DejaAccordionModule</b> dans les <b>imports</b> de votre module concerné
+                    !
+                </blockquote>
+
+                Ensuite utiliser le composant comme ceci dans votre template :
+
+                <div class="viewer">
+                    <deja-monaco-editor [(value)]="exampleValue" [language]="html" [readOnly]="true" [folding]="true"></deja-monaco-editor>
+                </div>
+
+                <h2>Note :</h2>
+                Vous pouvez ajouter la propriété `secondary` pour que le header soit en bleu foncé (<b>#428BCA</b>) :
+
+                <div class="viewer">
+                    <deja-monaco-editor [value]="'<deja-accordion-header secondary></deja-accordion-header>'" [language]="html" [readOnly]="true"
+                        [folding]="true"></deja-monaco-editor>
+                </div>
+            </md-card-content>
+        </md-card>
+    </md-tab>
+    <md-tab label="OVERVIEW">
+        <md-card class="demo-card demo-basic">
+            <md-card-content id="accordionContainer">
+                <h1>Default :</h1>
+                <deja-accordion>
+                    <deja-accordion-group>
+                        <deja-accordion-header>Un titre</deja-accordion-header>
+                        <deja-accordion-body>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br /> Mauris auctor sit amet odio
+                                et aliquet. Curabitur auctor eleifend mattis. <br /> Nullam sit amet quam tellus. Ut mattis
+                                tellus sed erat ultricies ornare. <br /> Nulla dictum nisi eu tortor lacinia porttitor. Donec
+                                eu arcu et enim cursus viverra. <br /> Praesent pulvinar dui nisi, a tincidunt arcu finibus
+                                sed.
+                            </p>
+                        </deja-accordion-body>
+                    </deja-accordion-group>
+                    <deja-accordion-group>
+                        <deja-accordion-header>Un second titre</deja-accordion-header>
+                        <deja-accordion-body>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br /> Mauris auctor sit amet odio
+                                et aliquet. Curabitur auctor eleifend mattis. <br /> Nullam sit amet quam tellus. Ut mattis
+                                tellus sed erat ultricies ornare. <br /> Nulla dictum nisi eu tortor lacinia porttitor. Donec
+                                eu arcu et enim cursus viverra. <br /> Praesent pulvinar dui nisi, a tincidunt arcu finibus
+                                sed.
+                            </p>
+                        </deja-accordion-body>
+                    </deja-accordion-group>
+                    <deja-accordion-group>
+                        <deja-accordion-header>Un troisieme titre</deja-accordion-header>
+                        <deja-accordion-body>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br /> Mauris auctor sit amet odio
+                                et aliquet. Curabitur auctor eleifend mattis. <br /> Nullam sit amet quam tellus. Ut mattis
+                                tellus sed erat ultricies ornare. <br /> Nulla dictum nisi eu tortor lacinia porttitor. Donec
+                                eu arcu et enim cursus viverra. <br /> Praesent pulvinar dui nisi, a tincidunt arcu finibus
+                                sed.
+                            </p>
+                        </deja-accordion-body>
+                    </deja-accordion-group>
+                </deja-accordion>
+
+                <h1>Secondary :</h1>
+                <deja-accordion>
+                    <deja-accordion-group>
+                        <deja-accordion-header secondary>Un titre</deja-accordion-header>
+                        <deja-accordion-body>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br /> Mauris auctor sit amet odio
+                                et aliquet. Curabitur auctor eleifend mattis. <br /> Nullam sit amet quam tellus. Ut mattis
+                                tellus sed erat ultricies ornare. <br /> Nulla dictum nisi eu tortor lacinia porttitor. Donec
+                                eu arcu et enim cursus viverra. <br /> Praesent pulvinar dui nisi, a tincidunt arcu finibus
+                                sed.
+                            </p>
+                        </deja-accordion-body>
+                    </deja-accordion-group>
+                    <deja-accordion-group>
+                        <deja-accordion-header secondary><b>Un <u>second</u> titre</b></deja-accordion-header>
+                        <deja-accordion-body>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br /> Mauris auctor sit amet odio
+                                et aliquet. Curabitur auctor eleifend mattis. <br /> Nullam sit amet quam tellus. Ut mattis
+                                tellus sed erat ultricies ornare. <br /> Nulla dictum nisi eu tortor lacinia porttitor. Donec
+                                eu arcu et enim cursus viverra. <br /> Praesent pulvinar dui nisi, a tincidunt arcu finibus
+                                sed.
+                            </p>
+                        </deja-accordion-body>
+                    </deja-accordion-group>
+                </deja-accordion>
+            </md-card-content>
+        </md-card>
+    </md-tab>
+    <md-tab label="EXAMPLES"></md-tab>
+</md-tab-group>

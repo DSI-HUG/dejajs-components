@@ -19,6 +19,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
 })
 export class DemoApp {
     public version: string;
+    protected navOpened = true;
 
     constructor() {
 

@@ -9,7 +9,9 @@
  *
  */
 
-import {Component} from '@angular/core';
+import { Component } from '@angular/core';
+
+import { IEditorLanguage } from "../../component/monaco-editor/options/editor-language.model";
 
 @Component({
   selector: 'deja-accordion-demo',
@@ -17,7 +19,16 @@ import {Component} from '@angular/core';
   templateUrl: './accordion-demo.html',
 })
 export class DejaAccordionDemo {
-  
+  protected exampleValue = `
+  <deja-accordion>
+      <deja-accordion-group>
+          <!-- loop here -->
+          <deja-accordion-header></deja-accordion-header>
+          <deja-accordion-body></deja-accordion-body>
+      </deja-accordion-group>
+  </deja-accordion>`;
+  protected html = IEditorLanguage.HTML;
+
   constructor() { }
 
 }

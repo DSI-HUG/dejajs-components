@@ -12,7 +12,7 @@
 import { ApplicationRef, NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { HttpModule } from "@angular/http";
-import { MdButtonModule, MdCardModule, MdCheckboxModule, MdIconModule, MdInputModule, MdListModule, MdProgressCircleModule, MdSidenavModule, MdSliderModule, MdToolbarModule } from "@angular/material";
+import { MdButtonModule, MdCardModule, MdCheckboxModule, MdIconModule, MdInputModule, MdListModule, MdProgressCircleModule, MdSidenavModule, MdSliderModule, MdTabsModule, MdToolbarModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 import { GroupingModule } from "../common/core/grouping/index";
@@ -127,6 +127,7 @@ import { DejaTreeListDemo } from "./tree-list/tree-list-demo";
         MdCheckboxModule.forRoot(),
         MdListModule.forRoot(),
         MdSliderModule.forRoot(),
+        MdTabsModule.forRoot(),
         DejaScaleModule.forRoot(),
         DejaSelectModule.forRoot(),
         DejaTreeListModule,
