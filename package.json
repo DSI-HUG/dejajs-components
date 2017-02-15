@@ -34,7 +34,8 @@
     "prepublish": "tsc && npm run build-css",
     "publish": "npm publish .",
     "build:prod": "del-cli dist &&  npm run build-css && webpack -p --config webpack.config.prod.js",
-    "serve": "lite-server && concurrently \"npm run countries\" \"npm run drug\""
+    "serve": "lite-server && concurrently \"npm run countries\" \"npm run drug\"",
+    "test" : "tsc"
   },
   "dependencies": {
     "@angular/common": "^2.4.0",
