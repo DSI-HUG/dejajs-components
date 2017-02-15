@@ -25,6 +25,10 @@
     "demo-app",
     "webpack"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DSI-HUG/dejajs-components.git"
+  },
   "scripts": {
     "drug": "json-server --port 5102 --ro -q ./src/demo-app/services/drug-event-0003-of-0003-2.json",
     "countries": "json-server --port 5101 --ro -q ./src/demo-app/services/countries.json",
