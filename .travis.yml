@@ -9,3 +9,10 @@ before_install:
 
 install:
 - npm install
+
+deploy :
+- npm login --scope=@deja-js
+- npm publish . --access=public
+- npm logout
+
+ 
