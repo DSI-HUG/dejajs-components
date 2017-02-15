@@ -12,8 +12,7 @@
 import { Component, ContentChild, ElementRef, EventEmitter, HostListener, Input, Output } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { Observable, Subscription } from 'rxjs/Rx';
-import { ISortInfos } from "../../../common/core/sorting/index";
-import { IDejaDragEvent, IDejaDropEvent } from "../../index";
+import { IDejaDragEvent, IDejaDropEvent, ISortInfos } from "../../../index";
 import { IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayout, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent } from "../index";
 
 @Component({

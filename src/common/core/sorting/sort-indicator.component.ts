@@ -10,7 +10,7 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { ISortInfos } from "./index";
+import { ISortInfos } from "../../../index";
 
 @Component({
     selector: 'deja-sort-indicator',
