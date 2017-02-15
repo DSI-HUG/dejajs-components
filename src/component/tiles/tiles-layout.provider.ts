@@ -46,7 +46,7 @@ export class DejaTilesLayoutProvider {
 
     private tiles = [] as IDejaTileList;
 
-    constructor(private element: HTMLElement, maxWidth: string, maxHeight: string, tileMinWidth: string, tileMaxWidth: string, tileMinHeight: string, tileMaxHeight: string, private sizeChanged: (width: number, height: number) => void) {
+    constructor(maxWidth: string, maxHeight: string, tileMinWidth: string, tileMaxWidth: string, tileMinHeight: string, tileMaxHeight: string, private sizeChanged: (width: number, height: number) => void) {
         let regexp = /(\d+)(.*)/i;
 
         let extractValueAndUnit = (prop: string, value: string) => {
@@ -264,7 +264,7 @@ export class DejaTilesLayoutProvider {
     }
 
     public startDrag(tiles: IDejaTile[], cursor: string, pageX: number, pageY: number) {
-        // Backup config        
+        // Backup config
         this.cursor = cursor;
 
         // Save layout
@@ -479,7 +479,7 @@ export class DejaTilesLayoutProvider {
         }
 
         if (Rect.equals(newTargetBounds, this.destination)) {
-            // Nothing change, wait for timers            
+            // Nothing change, wait for timers
             return;
         }
 
@@ -533,7 +533,7 @@ export class DejaTilesLayoutProvider {
         ));
 
         if (this.lastTargetBounds && Math.abs(newTargetBounds.left - this.lastTargetBounds.left) < 3 && Math.abs(newTargetBounds.top - this.lastTargetBounds.top) < 3) {
-            // Nothing change, wait for timers            
+            // Nothing change, wait for timers
             return;
         }
         this.lastTargetBounds = newTargetBounds;
@@ -579,7 +579,7 @@ export class DejaTilesLayoutProvider {
 
     }
 
-    // Ensure that the specified bounds are inside the tiles area. Return the corrected rectangle.    
+    // Ensure that the specified bounds are inside the tiles area. Return the corrected rectangle.
     private ensureContainer(percentBounds: Rect): Rect {
         if (percentBounds.left < 0) {
             percentBounds = percentBounds.offset(-percentBounds.left, 0);
@@ -602,7 +602,7 @@ export class DejaTilesLayoutProvider {
         return percentBounds;
     }
 
-    // Ensure that a tile can be dropped at the specified bounds. Return the corrected rectangle.       
+    // Ensure that a tile can be dropped at the specified bounds. Return the corrected rectangle.
     private ensureTarget(bounds: Rect, effectiveBounds?: Rect, directions?: Directions, originalBounds?: Rect): Rect {
         if (!effectiveBounds) {
             effectiveBounds = bounds;
@@ -722,7 +722,7 @@ export class DejaTilesLayoutProvider {
         });
     }
 
-    private calcHorizontalOverflow(bounds: Rect, direction: number, tiles: IDejaTile[], offset: number, blackList?: Object): number {
+    private calcHorizontalOverflow(direction: number, tiles: IDejaTile[], offset: number, blackList?: Object): number {
         let overflow = 0;
         blackList = blackList || {};
 
@@ -742,7 +742,7 @@ export class DejaTilesLayoutProvider {
 
                 let adjacentTiles = this.tiles.filter((tt) => !tt.dragging && t !== tt && tt.bounds.intersectWith(tryBounds));
                 if (adjacentTiles.length) {
-                    roffset += this.calcHorizontalOverflow(tryBounds, direction, adjacentTiles, offset, blackList);
+                    roffset += this.calcHorizontalOverflow(direction, adjacentTiles, offset, blackList);
                 }
 
                 if (roffset > overflow) {
@@ -754,14 +754,14 @@ export class DejaTilesLayoutProvider {
         return overflow;
     }
 
-    private moveHorizontal(bounds: Rect, direction: number, tiles: IDejaTile[], offset: number, targetBounds: { [id: number]: Rect }) {
+    private moveHorizontal(direction: number, tiles: IDejaTile[], offset: number, targetBounds: { [id: number]: Rect }) {
         tiles.forEach((t) => {
             if (!targetBounds[t.id]) {
                 // Offset tile
                 let newBounds = targetBounds[t.id] = t.bounds.offset(direction * offset, 0);
                 let adjacentTiles = this.tiles.filter((tt) => !tt.dragging && t !== tt && tt.bounds.intersectWith(newBounds));
                 if (adjacentTiles.length) {
-                    this.moveHorizontal(newBounds, direction, adjacentTiles, offset, targetBounds);
+                    this.moveHorizontal(direction, adjacentTiles, offset, targetBounds);
                 }
             }
         });
@@ -783,10 +783,10 @@ export class DejaTilesLayoutProvider {
 
         if (offset > 0) {
             // Calc overflow space if all specified tiles are moved
-            overflow = this.calcHorizontalOverflow(bounds, direction, tiles, offset);
+            overflow = this.calcHorizontalOverflow(direction, tiles, offset);
             offset -= overflow;
             if (offset > 0) {
-                this.moveHorizontal(bounds, direction, tiles, offset, targetBounds);
+                this.moveHorizontal(direction, tiles, offset, targetBounds);
 
                 // Copy bounds array to tiles
                 this.tiles.forEach((t) => {
@@ -800,7 +800,7 @@ export class DejaTilesLayoutProvider {
         return overflow;
     }
 
-    private calcVerticalOverflow(bounds: Rect, direction: number, tiles: IDejaTile[], offset: number, blackList?: Object): number {
+    private calcVerticalOverflow(direction: number, tiles: IDejaTile[], offset: number, blackList?: Object): number {
         let overflow = 0;
         blackList = blackList || {};
 
@@ -820,7 +820,7 @@ export class DejaTilesLayoutProvider {
 
                 let adjacentTiles = this.tiles.filter((tt) => !tt.dragging && t !== tt && tt.bounds.intersectWith(tryBounds));
                 if (adjacentTiles.length) {
-                    roffset += this.calcVerticalOverflow(tryBounds, direction, adjacentTiles, offset, blackList);
+                    roffset += this.calcVerticalOverflow(direction, adjacentTiles, offset, blackList);
                 }
 
                 if (roffset > overflow) {
@@ -832,14 +832,14 @@ export class DejaTilesLayoutProvider {
         return overflow;
     }
 
-    private moveVertical(bounds: Rect, direction: number, tiles: IDejaTile[], offset: number, targetBounds: { [id: number]: Rect }) {
+    private moveVertical(direction: number, tiles: IDejaTile[], offset: number, targetBounds: { [id: number]: Rect }) {
         tiles.forEach((t) => {
             if (!targetBounds[t.id]) {
                 // Offset tile
                 let newBounds = targetBounds[t.id] = t.bounds.offset(0, direction * offset);
                 let adjacentTiles = this.tiles.filter((tt) => !tt.dragging && t !== tt && tt.bounds.intersectWith(newBounds));
                 if (adjacentTiles.length) {
-                    this.moveVertical(newBounds, direction, adjacentTiles, offset, targetBounds);
+                    this.moveVertical(direction, adjacentTiles, offset, targetBounds);
                 }
             }
         });
@@ -861,10 +861,10 @@ export class DejaTilesLayoutProvider {
 
         if (offset > 0) {
             // Calc overflow space if all specified tiles are moved
-            overflow = this.calcVerticalOverflow(bounds, direction, tiles, offset);
+            overflow = this.calcVerticalOverflow(direction, tiles, offset);
             offset -= overflow;
             if (offset > 0) {
-                this.moveVertical(bounds, direction, tiles, offset, targetBounds);
+                this.moveVertical(direction, tiles, offset, targetBounds);
 
                 // Copy bounds array to tiles
                 this.tiles.forEach((t) => {

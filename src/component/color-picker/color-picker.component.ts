@@ -9,10 +9,10 @@
  *
  */
 
-import { Component, ElementRef, EventEmitter, forwardRef, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, forwardRef, Input, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import {coerceBooleanProperty} from '@angular/material/core/coercion/boolean-property';
-import { Color, ColorEvent } from '../../common/core/graphics/index';
+import { Color } from '../../common/core/graphics/index';
 import { MaterialColor } from '../../common/core/style';
 
 const noop = () => { };
@@ -34,7 +34,7 @@ const ColorPickerComponentAccessor = {
     templateUrl: './color-picker.component.html',
 })
 export class DejaColorPickerComponent implements ControlValueAccessor {
-    /** Retourne ou definit les couleurs selectionables affichées. */   
+    /** Retourne ou definit les couleurs selectionables affichées. */
     @Input() public colors: MaterialColor[];
 
     /** Retourne ou definit une référence sur le conteneur de la partie déroulante. Pare default le body sera seelctioné. */
@@ -53,9 +53,9 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
     protected onChangeCallback: (_: any) => void = noop;
 
     private _small = false;
-    private _disabled: boolean = false;    
+    private _disabled: boolean = false;
     private _value: Color;
-    
+
     get containerElement() {
         return this.dropdownContainerId && this.elementRef.nativeElement.ownerDocument.getElementById(this.dropdownContainerId);
     }
@@ -64,22 +64,22 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
     }
 
     /** Retourne ou définit la taille du bouton. */
-    @Input() 
-    public set small(value: boolean) { 
+    @Input()
+    public set small(value: boolean) {
         this._small = coerceBooleanProperty(value);
     }
-    
-    public get small() { 
+
+    public get small() {
         return this._small;
     }
 
     /** Retourne ou definit si le selecteur est desactivé. */
-    @Input() 
-    public set disabled(value: boolean) { 
+    @Input()
+    public set disabled(value: boolean) {
         this._disabled = coerceBooleanProperty(value);
     }
-    
-    public get disabled() { 
+
+    public get disabled() {
         return this._disabled;
     }
 
@@ -112,7 +112,7 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
         this.onTouchedCallback = fn;
     }
     // ************* End of ControlValueAccessor Implementation **************
-    
+
     protected onClick(event: Event) {
         if (this.disabled) {
             return;

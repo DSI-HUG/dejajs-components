@@ -10,7 +10,6 @@
  */
 
 import { ElementRef, Injectable } from '@angular/core';
-import { DejaTooltipComponent } from '.';
 
 @Injectable()
 export class DejaTooltipService {

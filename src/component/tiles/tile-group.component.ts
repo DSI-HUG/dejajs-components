@@ -11,7 +11,7 @@
 
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
-import { clearTimeout, setTimeout } from 'timers';
+import { setTimeout } from 'timers';
 import { Color } from '../../common/core/graphics/color';
 import { DejaEditableDirective } from '../content-editable';
 import { IDejaTile } from './';
@@ -46,15 +46,15 @@ export class DejaTileGroupComponent {
     constructor() {
     }
 
-    @Input() 
-    public set designMode(value: boolean) { 
+    @Input()
+    public set designMode(value: boolean) {
         this._designMode = coerceBooleanProperty(value);
     }
-    
-    public get designMode() { 
+
+    public get designMode() {
         return this._designMode;
     }
-    
+
     protected edit() {
         setTimeout(() => {
             this.title.edit();

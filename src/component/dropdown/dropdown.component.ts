@@ -9,7 +9,7 @@
  *
  */
 
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostBinding, HostListener, Input, Output } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostBinding, Input, Output } from '@angular/core';
 import { Observable, Subscription } from 'rxjs/Rx';
 import { setTimeout } from 'timers';
 import { Rect } from '../../common/core/graphics';

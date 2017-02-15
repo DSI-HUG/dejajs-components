@@ -9,7 +9,7 @@
  *
  */
 
-import {AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnDestroy, Output, SimpleChange, ViewChild, ViewEncapsulation} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnDestroy, Output, ViewChild, ViewEncapsulation} from '@angular/core';
 import {isUndefined} from "util";
 import {AutoCompleteSingleton} from "./options/autocomplete-singleton.model";
 import {IEditorLanguage} from "./options/editor-language.model";
@@ -17,7 +17,6 @@ import {IEditorOptions} from "./options/editor-options.model";
 import {IEditorScrollbarOptions} from "./options/editor-scrollbar-options";
 import {IEditorTheme} from "./options/editor-theme.component";
 
-declare const require: any;
 declare const monaco: any;
 
 @Component({
@@ -166,7 +165,7 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
         this.dispose();
     }
 
-    public ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
+    public ngOnChanges() {
         if (this._editor) {
             this._editor.updateOptions(this.getOptions());
         }
@@ -191,7 +190,7 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
      * @param event
      */
     @HostListener('window:resize', ['$event'])
-    private onResize(event) {
+    protected onResize() {
         // Manually set monaco size because MonacoEditor doesn't work with Flexbox css
         let myDiv: HTMLDivElement = this.editorContent.nativeElement;
         myDiv.setAttribute('style', `height: ${myDiv.parentElement.offsetHeight}px; width:100%;`);
@@ -225,7 +224,7 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
         }
 
         // Trigger on change event for simple editor
-        this.getOriginalModel().onDidChangeContent((e) => {
+        this.getOriginalModel().onDidChangeContent(() => {
             let newVal: string = this.getOriginalModel().getValue();
             if (this._value !== newVal) {
                 this.updateValue(newVal);
@@ -234,7 +233,7 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
 
         // Trigger on change event for diff editor
         if (this.getModifiedModel()) {
-            this.getModifiedModel().onDidChangeContent((e) => {
+            this.getModifiedModel().onDidChangeContent(() => {
                 let newVal: string = this.getModifiedModel().getValue();
                 if (this._valueToCompare !== newVal) {
                     this.updateValueToCompare(newVal);

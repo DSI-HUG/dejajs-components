@@ -13,7 +13,7 @@ import { Directive, ElementRef, forwardRef, HostBinding, HostListener, Input } f
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { Observable, Subscription } from 'rxjs/Rx';
-import { clearTimeout, setTimeout } from 'timers';
+import { setTimeout } from 'timers';
 import { KeyCodes } from "../../common/core/index";
 
 const noop = () => { };
@@ -49,7 +49,7 @@ export class DejaEditableDirective implements ControlValueAccessor {
     }
 
     /** Retourne une valeur indiquant si le contenu édité est obligatoire. Si la valeur est 'true' la sortie du mode édition ne sera pas possible tant qu'un contenu n'est pas ajouté. */
-    public get mandatory() { 
+    public get mandatory() {
         return this._mandatory;
     }
 
@@ -60,10 +60,10 @@ export class DejaEditableDirective implements ControlValueAccessor {
     }
 
     /** Retourne une valeur indiquant si le contenu édité est multiligne */
-    public get multiline() { 
+    public get multiline() {
         return this._multiline;
     }
-    
+
     /** Définit une valeur indiquant si l'édition est activée. */
     @Input('deja-editable')
     public set editMode(value: boolean) {
@@ -71,11 +71,11 @@ export class DejaEditableDirective implements ControlValueAccessor {
     }
 
     /** Retourne une valeur indiquant si l'édition est activée. */
-    public get editMode() { 
+    public get editMode() {
         return this._editMode;
     }
 
-    /** Définit une valeur indiquant si l'élément est en édition. */    
+    /** Définit une valeur indiquant si l'élément est en édition. */
     @Input()
     public set inEdition(value: boolean) {
         this._inEdition = coerceBooleanProperty(value);
@@ -124,7 +124,7 @@ export class DejaEditableDirective implements ControlValueAccessor {
         this.elementRef.nativeElement.focus();
     }
 
-    /** Place toute la zone d'édition en selectioné. */    
+    /** Place toute la zone d'édition en selectioné. */
     public selectAll() {
         let range = document.createRange();
         range.selectNodeContents(this.elementRef.nativeElement);
@@ -133,7 +133,7 @@ export class DejaEditableDirective implements ControlValueAccessor {
         sel.addRange(range);
     }
 
-    /** Active la zone d'édition. */    
+    /** Active la zone d'édition. */
     public edit(selectOnFocus?: boolean) {
         this.inEdition = true;
         if (selectOnFocus !== false) {
@@ -184,7 +184,7 @@ export class DejaEditableDirective implements ControlValueAccessor {
             delete this.globalClickObs;
         }
     }
-    
+
     private set keydown(value: boolean) {
         let elem = this.elementRef.nativeElement as HTMLElement;
         if (value && this.inEdition) {
@@ -231,7 +231,7 @@ export class DejaEditableDirective implements ControlValueAccessor {
     }
 
     private refreshView() {
-        if (!this.model) { 
+        if (!this.model) {
             return;
         }
         this.elementRef.nativeElement.innerText = this.model;

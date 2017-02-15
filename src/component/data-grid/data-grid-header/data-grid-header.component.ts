@@ -9,7 +9,7 @@
  *
  */
 
-import { Component, ContentChild, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
+import { Component, ContentChild, ElementRef, EventEmitter, HostListener, Input, Output } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { Observable, Subscription } from 'rxjs/Rx';
 import { ISortInfos } from "../../../common/core/sorting/index";
@@ -102,11 +102,11 @@ export class DejaGridHeaderComponent {
     /** Définit la structire de colonnes associée aux entêtes */
     public set columnLayout(layout: IDejaGridColumnLayout) {
         this._columnLayout = layout || {
-            columns: [],
-            scrollLeft: 0,
-            vpAfterWidth: 0,
-            vpBeforeWidth: 0,
-        };
+                columns: [],
+                scrollLeft: 0,
+                vpAfterWidth: 0,
+                vpBeforeWidth: 0,
+            };
     }
 
     /** Retourne la structire de colonnes associée aux entêtes */
@@ -156,7 +156,7 @@ export class DejaGridHeaderComponent {
                     event.dragInfo[this.columnGroupKey] = column;
                     column.dragged = true;
 
-                    // Backup column layout 
+                    // Backup column layout
                     this.backupColumnOrder = [];
                     this._columnLayout.columns.forEach((col) => this.backupColumnOrder.push(col));
                 } else {
@@ -168,7 +168,7 @@ export class DejaGridHeaderComponent {
 
     protected getDropContext() {
         return {
-            dragleavecallback: (event: IDejaDragEvent) => {
+            dragleavecallback: () => {
                 if (this.backupColumnOrder.length) {
                     // Restore original column layout
                     this._columnLayout.columns = [];

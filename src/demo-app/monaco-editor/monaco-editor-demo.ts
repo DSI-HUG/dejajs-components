@@ -12,7 +12,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {IEditorLanguage} from "../../component/monaco-editor/options/editor-language.model";
-import {IEditorOptions} from "../../component/monaco-editor/options/editor-options.model";
 import {IEditorTheme} from "../../component/monaco-editor/options/editor-theme.component";
 import {MonacoEditorDemoService} from "./monaco-editor-demo.service.";
 

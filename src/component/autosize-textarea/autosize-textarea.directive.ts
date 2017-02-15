@@ -9,8 +9,8 @@
  *
  */
 
-import { AfterViewInit, Directive, ElementRef, forwardRef, HostBinding, QueryList, ViewChild } from '@angular/core';
-import { AbstractControl, NG_VALIDATORS, Validator } from '@angular/forms';
+import { AfterViewInit, Directive, ElementRef, forwardRef, HostBinding } from '@angular/core';
+import { NG_VALIDATORS, Validator } from '@angular/forms';
 import { setTimeout } from 'timers';
 
 /**
@@ -25,7 +25,7 @@ import { setTimeout } from 'timers';
     selector: 'textarea[deja-autosize][ngModel]',
 })
 export class DejaAutosizeTextAreaDirective implements AfterViewInit, Validator {
-    @HostBinding('attr.rows') private rows = 1;
+    @HostBinding('attr.rows') protected rows = 1;
 
     constructor(private elementRef: ElementRef) {
     }
@@ -36,7 +36,7 @@ export class DejaAutosizeTextAreaDirective implements AfterViewInit, Validator {
         }, 0);
     }
 
-    public validate(c: AbstractControl): { [key: string]: any } {
+    public validate(): { [key: string]: any } {
         this.resize();
         return null;
     }

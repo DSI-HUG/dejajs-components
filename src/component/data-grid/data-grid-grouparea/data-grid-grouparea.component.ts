@@ -9,7 +9,7 @@
  *
  */
 
-import { Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IDejaDragEvent, IDejaDropEvent } from "../../index";
 import { IDejaGridColumn, IDejaGridGroupsEvent } from "../index";
 
@@ -39,7 +39,7 @@ export class DejaGridGroupAreaComponent {
         this._groups = columns || [];
     }
 
-    constructor(private elementRef: ElementRef) { }
+    constructor() { }
 
     protected getDragContext(group: IDejaGridColumn) {
         // console.log(`getDragContext ` + group.column.name + ' ' + Date.now();
@@ -97,7 +97,7 @@ export class DejaGridGroupAreaComponent {
 
                     event.preventDefault();
 
-                } else { 
+                } else {
                     return;
                 }
             },
@@ -110,7 +110,7 @@ export class DejaGridGroupAreaComponent {
                     } as IDejaGridGroupsEvent;
 
                     this.groupsChanged.emit(e);
-                    event.preventDefault();                    
+                    event.preventDefault();
                 };
 
                 if (event.dragInfo.hasOwnProperty(this.columnGroupKey)) {
@@ -141,7 +141,7 @@ export class DejaGridGroupAreaComponent {
         };
     }
 
-    protected removeGroup(event: Event, index: number) {        
+    protected removeGroup(event: Event, index: number) {
         let column = this.groups.splice(index, 1);
 
         let e = {
@@ -154,13 +154,13 @@ export class DejaGridGroupAreaComponent {
         event.stopPropagation();
         return false;
     }
-    
+
     protected getGroupColumnFromHTMLElement(element: HTMLElement): IDejaGridColumn {
         let groupElement = this.getGroupElementFromHTMLElement(element);
         let groupName = groupElement && groupElement.getAttribute('groupname');
         return groupName && this.groups.find((column) => column.name === groupName);
     }
-    
+
     private getGroupElementFromHTMLElement(element: HTMLElement): HTMLElement {
         let parentElement = element;
 

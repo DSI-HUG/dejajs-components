@@ -9,7 +9,7 @@
  *
  */
 
-import { Component, ContentChild, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, ContentChild, Input, OnInit } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 
 @Component({
@@ -25,16 +25,16 @@ export class DejaMessageBoxComponent implements OnInit {
     @ContentChild('actionsTemplate') protected actionsTemplate;
 
     private _horizontal: boolean;
-    
-    @Input() 
-    public set horizontal(value: boolean) { 
+
+    @Input()
+    public set horizontal(value: boolean) {
         this._horizontal = coerceBooleanProperty(value);
     }
-    
-    public get horizontal() { 
+
+    public get horizontal() {
         return this._horizontal;
     }
-    
+
     constructor() { }
 
     public ngOnInit() {
@@ -63,7 +63,7 @@ export class DejaMessageBoxComponent implements OnInit {
                 return 'warning';
             case 'danger':
                 return 'error_outline';
-            default: 
+            default:
                 return null;
         }
     }

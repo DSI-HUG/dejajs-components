@@ -13,7 +13,7 @@ import { Component,ContentChild, ElementRef, forwardRef, HostListener, Input, On
 import { NG_VALUE_ACCESSOR } from "@angular/forms";
 import {coerceBooleanProperty} from '@angular/material/core/coercion/boolean-property';
 import { Observable, Subscription } from 'rxjs/Rx';
-import { Circle, Position, Rect } from '../../common/core';
+import { Circle, Position } from '../../common/core';
 
 const noop = () => { };
 
@@ -48,17 +48,17 @@ export class DejaCircularPickerComponent implements OnInit {
     @ContentChild('labelTemplate') public labelTemplate;
     @ContentChild('cursorTemplate') public cursorTemplate;
 
-    @Input() 
-    public set disabled(value: boolean) { 
+    @Input()
+    public set disabled(value: boolean) {
         this._disabled = coerceBooleanProperty(value);
     }
-    
-    public get disabled() { 
+
+    public get disabled() {
         return this._disabled;
     }
-    
+
     private _disabled = false;
-    
+
     private _value: number;
     private TwoPI = Math.PI * 2;
 
@@ -82,7 +82,7 @@ export class DejaCircularPickerComponent implements OnInit {
     private circle: Circle;
 
     @ViewChild('picker') private picker: ElementRef;
-    
+
     constructor(private elementRef: ElementRef) { }
 
     public ngOnInit() {
@@ -185,12 +185,12 @@ export class DejaCircularPickerComponent implements OnInit {
     }
 
     private pointToAngle(x: number, y: number, config: IConfig): number {
-        return ( 
-            -Math.atan2(y, x)		    // Math.atan2() returns between -Ï€ and +Ï€, but in inverted trigonometrical order...
-            - config.range.beginOffset	// Correct the configured offset to compute in "natural" trigonometrical circle
-            - (config.stepAngle / 2)	// Remove half a step angle to match value from both sides
-            + this.TwoPI			    // We want the returned value to be between 0 and 2Ï€ => (x + 2Ï€) % 2Ï€
-        ) % this.TwoPI;
+        return (
+                -Math.atan2(y, x)		    // Math.atan2() returns between -Ï€ and +Ï€, but in inverted trigonometrical order...
+                - config.range.beginOffset	// Correct the configured offset to compute in "natural" trigonometrical circle
+                - (config.stepAngle / 2)	// Remove half a step angle to match value from both sides
+                + this.TwoPI			    // We want the returned value to be between 0 and 2Ï€ => (x + 2Ï€) % 2Ï€
+            ) % this.TwoPI;
     }
 
     private valueToAngle(value: number, config: IConfig): number {
@@ -320,15 +320,15 @@ export class DejaCircularPickerComponent implements OnInit {
 }
 
 interface IConfig {
-    range: ICircularRange; 
+    range: ICircularRange;
     steps: number;
     stepAngle: number;
 }
 
 export interface ICircularRange {
-    min: number; 
-    max: number; 
-    interval?: number; 
+    min: number;
+    max: number;
+    interval?: number;
     labelInterval?: number; // x*interval
     beginOffset?: number;
 }

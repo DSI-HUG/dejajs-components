@@ -22,7 +22,7 @@ export class ScaleService {
      * Zoom step by event. This results in putting a specific class to simulate the hover effect on a step. Useful when using with drag and drop.
      * @param $event
      */
-    public zoomStepByEvent($event) {
+    public zoomStepByEvent(event: Event) {
         let zoomableStep = this.getScaleStepByChild(event.target as HTMLElement);
         if (zoomableStep && zoomableStep !== this._lastHoveredStep) {
             zoomableStep.classList.add("hover");

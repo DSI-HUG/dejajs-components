@@ -10,7 +10,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
+import { Resolve } from '@angular/router';
 import { Observable } from 'rxjs/Rx';
 import {MonacoEditorDemoService} from "./monaco-editor-demo.service.";
 
@@ -20,7 +20,7 @@ export class MonacoEditorXmlFileResolver implements Resolve<any> {
 
     }
 
-    public resolve(route: ActivatedRouteSnapshot): Observable<any> {
+    public resolve(): Observable<any> {
         return this._fileService.getFile('xmlFile.xml');
     }
 }
@@ -31,7 +31,7 @@ export class MonacoEditorXmlToCompareFileResolver implements Resolve<any> {
 
     }
 
-    public resolve(route: ActivatedRouteSnapshot): Observable<any> {
+    public resolve(): Observable<any> {
         return this._fileService.getFile('xmlFileToCompare.xml');
     }
 }
@@ -42,7 +42,7 @@ export class MonacoEditorJsonFileResolver implements Resolve<any> {
 
     }
 
-    public resolve(route: ActivatedRouteSnapshot): Observable<any> {
+    public resolve(): Observable<any> {
         return this._fileService.getFile('jsonFile.json');
     }
 }
@@ -53,7 +53,7 @@ export class MonacoEditorJsonToCompareFileResolver implements Resolve<any> {
 
     }
 
-    public resolve(route: ActivatedRouteSnapshot): Observable<any> {
+    public resolve(): Observable<any> {
         return this._fileService.getFile('jsonFileToCompare.json');
     }
 }

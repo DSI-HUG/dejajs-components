@@ -108,7 +108,7 @@ export class GridDemo {
             label: 'transmissiondateformat',
             name: 'transmissiondateformat',
             sizeable: false,
-            useCellTemplate: true,            
+            useCellTemplate: true,
             width: '60px',
         },
         {
@@ -190,7 +190,7 @@ export class GridDemo {
             name: 'transmissiondateformat',
             responsive: 0,
             sizeable: false,
-            useCellTemplate: true,          
+            useCellTemplate: true,
             width: '60px',
         },
         {
@@ -284,7 +284,7 @@ export class GridDemo {
             width: '3%',
         },
     ] as IDejaGridColumn[];
-    
+
     private drugsBigRecord: Observable<IDrug[]>;
     private drugs: Observable<IDrug[]>;
     private groupedDrugs: Promise<IDrug[]>;
@@ -301,11 +301,11 @@ export class GridDemo {
         this.selectedItems = e.items;
     }
 
-    protected onSelectionChanged2(e: DejaGridRowsEvent) {
+    protected onSelectionChanged2() {
 
     }
 
-    protected onSelectionChanged3(e: DejaGridRowsEvent) {
+    protected onSelectionChanged3() {
 
     }
 
@@ -329,21 +329,11 @@ export class GridDemo {
         }
     }
 
-    protected showMoreReaction(event: Event) {
+    protected showMoreReaction() {
 
     }
 
-    protected onSuffixClicked() { 
+    protected onSuffixClicked() {
         alert('Suffix button was pressed');
     }
-    
-    private handleError(error: any) {
-        console.error('An error occurred', error);
-        return Promise.reject(error.message || error);
-    }
-}
-
-interface IFilteredListDrug extends IItemTree {
-    groupName?: string;
-    suGroupName?: string;
 }

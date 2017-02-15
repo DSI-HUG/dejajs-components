@@ -1,18 +1,6 @@
-/*
- * *
- *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
- *
- *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
- * /
- *
- */
-
 import { Directive, ElementRef, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { clearTimeout, setTimeout } from 'timers';
 import { DejaTooltipService } from '.';
-import { DejaTooltipComponent } from './tooltip.component';
 
 @Directive({
     selector: '[deja-tooltip]',
@@ -32,12 +20,12 @@ export class DejaTooltipDirective implements OnInit {
     public ngOnInit() { }
 
     @HostListener('mouseenter', ['$event'])
-    protected onMouseEnter(e: Event) {
+    protected onMouseEnter() {
         if (this.timeout) {
             clearTimeout(this.timeout);
             delete this.timeout;
         }
-        
+
         this.timeout = setTimeout(() => {
             this.tooltipService.params[this.name] = {
                 model: this.model,
@@ -50,7 +38,7 @@ export class DejaTooltipDirective implements OnInit {
     }
 
     @HostListener('mouseleave', ['$event'])
-    protected onMouseLeave(e: Event) {
+    protected onMouseLeave() {
         if (this.timeout) {
             clearTimeout(this.timeout);
             delete this.timeout;

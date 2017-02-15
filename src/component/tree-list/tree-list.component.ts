@@ -19,7 +19,7 @@ import { GroupingService } from '../../common/core/grouping';
 import { IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, ViewportMode } from '../../common/core/item-list';
 import { KeyCodes } from "../../common/core/keycodes.enum";
 import { SortingService } from '../../common/core/sorting';
-import { DragDropService, IDejaDragEvent } from '../dragdrop';
+import { IDejaDragEvent } from '../dragdrop';
 import { DejaTreeListItemEvent, DejaTreeListItemsEvent, DejaTreeListScrollEvent } from './index';
 
 const noop = () => { };
@@ -103,7 +103,6 @@ export class DejaTreeListComponent extends ItemListBase {
     private filterExpression = '';
     private clearFilterTimer: NodeJS.Timer;
     private completeTimer: NodeJS.Timer;
-    private scrollTimeout: NodeJS.Timer;
     private lastScrollTop = 0;
     private _searchArea = false;
     private _expandButton = false;
@@ -115,7 +114,7 @@ export class DejaTreeListComponent extends ItemListBase {
     private mouseMoveObs: Subscription;
     private mouseUpObs: Subscription;
 
-    constructor(public elementRef: ElementRef, private dragDropService: DragDropService) {
+    constructor(public elementRef: ElementRef) {
         super();
     }
 
@@ -194,7 +193,7 @@ export class DejaTreeListComponent extends ItemListBase {
         this.setViewPortRowHeight(value);
     }
 
-    /** 
+    /**
      * Les trois valeurs acceptés en paramètre se trouvent dans l'enum ViewportMode (NoViewport, ConstantRowheight, VariableRowHeight)
      * Attention, une désactivation du viewport dégrade considérablement les performances de la liste et ne doit pas être activée si la liste
      * est suceptible de contenir beaucoup d'éléments.
@@ -333,7 +332,7 @@ export class DejaTreeListComponent extends ItemListBase {
         this.writeValue(items);
     }
 
-    /** 
+    /**
      * Set a promise called before an item selection
      */
     @Input()
@@ -341,7 +340,7 @@ export class DejaTreeListComponent extends ItemListBase {
         super.setSelectingItem(fn);
     }
 
-    /** 
+    /**
      * Set a promise called before an item deselection
      */
     @Input()
@@ -625,7 +624,7 @@ export class DejaTreeListComponent extends ItemListBase {
 
         const resizeSub = Observable
             .fromEvent(window, 'resize')
-            .subscribe((event: Event) => {
+            .subscribe(() => {
                 if (this._viewportMode !== ViewportMode.NoViewport && this.maxHeight === 0) {
                     this.computedMaxHeight = 0;
                     this.calcViewPort();

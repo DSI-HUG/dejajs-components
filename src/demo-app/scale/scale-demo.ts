@@ -10,7 +10,6 @@
  */
 
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import { Observable } from 'rxjs/Rx';
 import {IScale, IZoomStep} from "../../component/scale/scale.component";
 
 @Component({

@@ -127,10 +127,10 @@ export class DejaColorSelectorComponent implements ControlValueAccessor {
                     timeout = 1000;
                     baseIndex = this.selectedBaseIndex;
                 }
-                return { timeout, targetColor, baseIndex, event };
+                return [timeout, targetColor, baseIndex, event];
             })
-            .debounce(({timeout}) => Observable.timer(timeout))
-            .do(({timeout, targetColor, baseIndex, event}) => {
+            .debounce(([timeout, _targetColor, _baseIndex, _event]) => Observable.timer(timeout))
+            .do(([_timeout, targetColor, baseIndex, event]) => {
                 if (baseIndex !== undefined) {
                     this.activeBaseIndex.next(baseIndex);
                 }

@@ -1,3 +1,14 @@
+/*
+ * *
+ *  @license
+ *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *
+ *  Use of this source code is governed by an Apache-2.0 license that can be
+ *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ * /
+ *
+ */
+
 import { ElementRef, QueryList } from "@angular/core";
 import { Observable } from "rxjs/Rx";
 import { clearTimeout, setTimeout } from 'timers';
@@ -142,14 +153,14 @@ export class ItemListBase {
         return this.getItemListService().setSelectedItems(value);
     }
 
-    /** 
+    /**
      * Set a promise called before an item selection
      */
     public setSelectingItem(fn: (item: any) => Promise<any>) {
         this.getItemListService().setSelectingItem(fn);
     }
 
-    /** 
+    /**
      * Set a promise called before an item deselection
      */
     public setUnselectingItem(fn: (item: any) => Promise<any>) {
@@ -166,7 +177,7 @@ export class ItemListBase {
 
     /**
      * Set le viewport mode
-     * 
+     *
      * @param {ViewportMode} mode Mode du viewport (sans viewport, avec un viewport tailles des rows fixes ou dynamiques)
      */
     public setViewportMode(mode: ViewportMode) {
@@ -217,7 +228,7 @@ export class ItemListBase {
      */
     public ungroup(groupInfo: IGroupInfo) {
         return new Promise<IGroupInfo[]>((resolved?: (groupInfos: IGroupInfo[]) => void, rejected?: (reason: any) => void) => {
-            return this.getItemListService().ungroup(groupInfo).then((ginfos) => {
+            return this.getItemListService().ungroup(groupInfo).then(() => {
                 this.calcViewPort().then(() => {
                     resolved(this.groupInfos);
                 }).catch(rejected);
@@ -562,7 +573,7 @@ export class ItemListBase {
             this._itemListService.valueField = value;
         }
     }
-    
+
     /** Définit le champ à utiliser comme champ de recherche.
      * Ce champ peut indiquer, un champ contenant une valeur, un texte indexé, ou une fonction.
      * @param {string} value Champ à utiliser comme champ de recherche.
@@ -609,7 +620,7 @@ export class ItemListBase {
 
     /** Charge le viewport */
     protected loadViewPort(res: IViewListResult) {
-        return new Promise<IViewListResult>((resolved?: (value: IViewListResult) => void, rejected?: (reason: any) => void) => {
+        return new Promise<IViewListResult>((resolved?: (value: IViewListResult) => void) => {
             this._itemList = res.visibleList;
             this.vpStartRow = res.startRow;
             this.vpEndRow = res.endRow;
@@ -627,7 +638,7 @@ export class ItemListBase {
     }
 
     /** Calcule le viewport pour le conteneur spécifié. */
-    protected calcViewPort(query?: string, maxHeight?: number, containerElement?: HTMLElement, ignoreSelection?: boolean) {
+    protected calcViewPort(query?: string, maxHeight?: number, containerElement?: HTMLElement) {
         return new Promise<IViewListResult>((resolved?: (value: IViewListResult) => void, rejected?: (reason: any) => void) => {
             let calcViewPortInternal = (qry?: string, heightMax?: number, containerElem?: HTMLElement, ignoreHeightMeasurement?: boolean) => {
                 this.waiter = !this.getItems();
@@ -750,7 +761,7 @@ export class ItemListBase {
                     let scrollPos = containerElement.scrollTop;
                     let scrollMax = 0;
                     let lastVisibleItem: IItemBase;
-                    let fn = isNaN(+item) ? (itm: IItemBase, index: number) => { return item === itm; } : (itm: IItemBase, index: number) => { return item === index; };
+                    let fn = isNaN(+item) ? (itm: IItemBase) => { return item === itm; } : (_itm: IItemBase, index: number) => { return item === index; };
                     lastVisibleItem = viewListResult.visibleList.find((itm: IItemBase, index: number) => {
                         let test = fn(itm, index);
                         if (!test) {

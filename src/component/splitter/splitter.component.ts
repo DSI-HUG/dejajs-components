@@ -21,7 +21,7 @@ const gutterSize = 'gutterSize';
 const disabled = 'disabled';
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,    
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     selector: 'deja-splitter',
     styleUrls: ['./splitter.scss'],
@@ -139,9 +139,9 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
 
         this.eventsDragFct.push(this.renderer.listenGlobal('document', 'mousemove', (e) => this.dragEvent(e, start, areaA, areaB)));
         this.eventsDragFct.push(this.renderer.listenGlobal('document', 'touchmove', (e) => this.dragEvent(e, start, areaA, areaB)));
-        this.eventsDragFct.push(this.renderer.listenGlobal('document', 'mouseup', (e) => this.stopDragging()));
-        this.eventsDragFct.push(this.renderer.listenGlobal('document', 'touchend', (e) => this.stopDragging()));
-        this.eventsDragFct.push(this.renderer.listenGlobal('document', 'touchcancel', (e) => this.stopDragging()));
+        this.eventsDragFct.push(this.renderer.listenGlobal('document', 'mouseup', () => this.stopDragging()));
+        this.eventsDragFct.push(this.renderer.listenGlobal('document', 'touchend', () => this.stopDragging()));
+        this.eventsDragFct.push(this.renderer.listenGlobal('document', 'touchcancel', () => this.stopDragging()));
 
         areaA.component.lockEvents();
         areaB.component.lockEvents();

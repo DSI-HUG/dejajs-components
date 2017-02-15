@@ -52,7 +52,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     /** ID de l'élement dans lequel la liste déroulante doit s'afficher (la liste déroulante ne peut dépasser de l'élement spécifié ici) */
     @Input() public dropdownContainerId: string;
     /** Ancre d'alignement de la liste déroulante. Valeurs possible: top, bottom, right, left. Une combinaison des ces valeurs peut également être utilisée, par exemple 'top left'. */
-    @Input() public dropdownAlignment = 'left right bottom';    
+    @Input() public dropdownAlignment = 'left right bottom';
     /** Permet de définir un template de ligne par binding */
     @Input() public itemTemplateExternal;
     /** Permet de définir un template de ligne parente par binding. */
@@ -173,11 +173,11 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         this.setViewPortRowHeight(value);
     }
 
-    /** 
+    /**
      * Les trois valeurs acceptés en paramètre se trouvent dans l'enum ViewportMode (NoViewport, ConstantRowheight, VariableRowHeight)
      * Attention, une désactivation du viewport dégrade considérablement les performances de la liste et ne doit pas être activée si la liste
      * est suceptible de contenir beaucoup d'éléments.
-     */ 
+     */
     @Input()
     public set viewportMode(mode: ViewportMode) {
         this.setViewportMode(mode);
@@ -230,22 +230,22 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         this.setMultiSelect(this._type === "multiselect");
     }
 
-    /** 
+    /**
      * Set a promise called before an item selection
      */
-    @Input() 
+    @Input()
     public set selectingItem(fn: (item: any) => Promise<any>) {
         super.setSelectingItem(fn);
     }
 
-    /** 
+    /**
      * Set a promise called before an item deselection
      */
-    @Input() 
+    @Input()
     public set unselectingItem(fn: (item: any) => Promise<any>) {
         super.setUnselectingItem(fn);
     }
-    
+
     /** Retourne si le select est en mode select, donc en lecture seule. */
     public get isReadOnly() {
         return this._type === "select";
@@ -272,7 +272,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     public set waiter(value: boolean) {
         this._waiter = value;
     }
-    
+
     /** Retourne si le waiter doit être affiché dans le select. */
     public get waiter() {
         return this._waiter;
@@ -295,7 +295,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     private get placeHolderTemplate() {
         return this.placeHolderTemplateExternal || this.placeHolderTemplateInternal;
     }
-    
+
     private get itemTemplate() {
         return this.itemTemplateExternal || this.itemTemplateInternal;
     }
@@ -351,7 +351,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         let selectedItems = this.getSelectedItems() || [];
         if (this._multiSelect || value !== selectedItems[0]) {
             this.writeValue(value);
-            // The event is synchrone, but not the selection. 
+            // The event is synchrone, but not the selection.
             // If there is any problems with that, just create a setSelectedItems methode and return a promise.
             // No way to change the value implementation, because this is part of the control value accessor
             this.onChangeCallback(value);
@@ -360,7 +360,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     // get accessor
     get value(): any {
-        // Special binding on selected item here. Value never can be null or undefined otherwise, 
+        // Special binding on selected item here. Value never can be null or undefined otherwise,
         // the ng2 binding don't work when no selected items.
         let selectedItems = super.getSelectedItems();
         return selectedItems.length ? (this._multiSelect ? selectedItems : selectedItems[0]) : undefined;
@@ -375,7 +375,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             if (item !== this.selectedItems[0]) {
                 this.unselectAll().then(() => {
                     if (item) {
-                        this.toggleSelect([item], true).then((selectedItems) => {
+                        this.toggleSelect([item], true).then(() => {
                             this.query = this.getTextValue(value);
                         });
                     } else {
@@ -521,7 +521,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                         return;
                     }
 
-                // Do not break or return here 
+                // Do not break or return here
 
                 case KeyCodes.Enter:
                     if (this.dropdownVisible) {
@@ -585,7 +585,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         }
     }
 
-    protected scroll(event: Event) {
+    protected scroll() {
         if (this._viewportMode === ViewportMode.NoViewport || this.ignoreNextScrollEvents) {
             this.ignoreNextScrollEvents = false;
             return;
@@ -622,7 +622,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         }
     }
 
-    protected mousedown(e: MouseEvent, item: IItemBase) {
+    protected mousedown(e: MouseEvent) {
         this.selectingItemIndex = this.getItemIndexFromHTMLElement(e.target as HTMLElement);
         this.mouseUp = true;
     }

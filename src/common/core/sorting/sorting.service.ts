@@ -17,7 +17,7 @@ export class SortingService {
      * @param {any} a Objet 1.
      * @param {any} b Objet 2.
      * @param {ISortInfos} sortInfos Modèle de tri à appliquer pour la comparaison.
-     * @return {number} 0 si les objet sont égaux, 1 si b est après a, -1 si a après b 
+     * @return {number} 0 si les objet sont égaux, 1 si b est après a, -1 si a après b
      */
     public compare(a: any, b: any, sortInfo: ISortInfos) {
         let orderfact = sortInfo.order === SortOrder.ascending ? 1 : -1;
@@ -58,19 +58,19 @@ export class SortingService {
         if (typea === 'function') {
             flda = flda();
             typea = typeof flda;
-        }        
+        }
 
         if (typeb === 'function') {
             fldb = fldb();
             typeb = typeof fldb;
-        }        
+        }
 
         if (typea === typeb) {
             if (typea === 'number') {
                 return orderfact * (fldb - flda);
             } else if (typea === 'date') {
                 return orderfact * (flda.getTime() - fldb.getTime());
-            }else if (typea === 'object') {
+            } else if (typea === 'object') {
                 typea = flda.constructor.name;
                 typeb = fldb.constructor.name;
 
@@ -78,7 +78,7 @@ export class SortingService {
                     switch (typea) {
                         case 'Date':
                             return orderfact * (flda.getTime() - fldb.getTime());
-                        default: 
+                        default:
                             break;
                     }
                 }
@@ -98,7 +98,7 @@ export class SortingService {
      * @return {Promise} Promesse résolue par la fonction.
      */
     public sort(list: any[], sortInfo: ISortInfos) {
-        return new Promise<any[]>((resolved?: (value: any[]) => void, rejected?: (reason: any) => void) => {
+        return new Promise<any[]>((resolved?: (value: any[]) => void) => {
             let compareFn = (a: any, b: any) => {
                 return this.compare(a, b, sortInfo);
             };
@@ -129,11 +129,11 @@ export class SortingService {
 
                     let subitems = sortedTree[index][childrenField];
                     if (subitems) {
-                        this.sortTree(subitems, sortInfo, childrenField).then((sortedChildren) => {
-                            sortChildren(index + 1);
-                        }).catch((error) => {
-                            rejected(error);
-                        });
+                        this.sortTree(subitems, sortInfo, childrenField)
+                            .then(() => {
+                                sortChildren(index + 1);
+                            })
+                            .catch(rejected);
                     } else {
                         sortChildren(index + 1);
                     }

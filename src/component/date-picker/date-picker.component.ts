@@ -73,7 +73,7 @@ export class DejaDatePickerComponent implements OnInit {
             this._useDropDown = value;
             if (value) {
                 this.keydown = Observable.fromEvent(this.inputElementRef.nativeElement, 'keydown');
-                this.keyDownSubscription = this.keydown.subscribe((event: KeyboardEvent) => {
+                this.keyDownSubscription = this.keydown.subscribe(() => {
                     this.dateSelectorComponent.keyboardNavigation = false;
                 });
             } else {
@@ -183,7 +183,7 @@ export class DejaDatePickerComponent implements OnInit {
         this.close();
     }
 
-    protected reset(event: MouseEvent) {
+    protected reset() {
         this.value = undefined;
         delete this.inputModel;
         this.onChangeCallback(this.value);

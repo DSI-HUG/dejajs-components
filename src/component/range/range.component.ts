@@ -54,7 +54,7 @@ export class DejaRangeComponent implements ControlValueAccessor {
         }
     }
 
-    // read / write mode 
+    // read / write mode
     @Input()
     public set readOnly(value: boolean) {
         this._readOnly = coerceBooleanProperty(value);
@@ -89,7 +89,7 @@ export class DejaRangeComponent implements ControlValueAccessor {
     public _onChangeCallback: (_: any) => void = () => { };
     public _onTouchCallback: () => void = () => { };
 
-    @HostListener('window:resize', ['$event']) public onResize(event: Event) { this.ranges = this.ranges.concat(); }
+    @HostListener('window:resize', ['$event']) public onResize() { this.ranges = this.ranges.concat(); }
 
     // add a new range, by splitting the selected one into 2 new ranges
     public add(): void {
@@ -146,7 +146,7 @@ export class DejaRangeComponent implements ControlValueAccessor {
     public remove(): void {
         if (!this.readOnly && this.ranges.length > 2) {
             const ranges = this.ranges
-                .filter((range: IRange, index: number) => this.selected !== index);
+                .filter((_range: IRange, index: number) => this.selected !== index);
             this.ranges = ranges
                 .map((range: IRange, index: number) => {
                     if (index !== ranges.length - 1) {
@@ -158,7 +158,7 @@ export class DejaRangeComponent implements ControlValueAccessor {
     }
 
     // set the new selected index and emit a IRangeEvent
-    private onSelect(e: Event, index: number): void {
+    protected onSelect(e: Event, index: number): void {
         if (this.selected !== index) {
             let event = e as IRangeEvent;
             event.range = this.ranges[index];
@@ -169,7 +169,7 @@ export class DejaRangeComponent implements ControlValueAccessor {
         }
     }
 
-    private onMouseDown($event: MouseEvent, index: number): void {
+    protected onMouseDown($event: MouseEvent, index: number): void {
 
         if (!this.readOnly) {
             const xStart = $event.x;
@@ -178,12 +178,11 @@ export class DejaRangeComponent implements ControlValueAccessor {
             const range = this.ranges[index];
             const rangeStart = range.max;
 
-            // get the block HTMLElement (contains range HTMLElement & separator HTMLElement)  
+            // get the block HTMLElement (contains range HTMLElement & separator HTMLElement)
             let parentElement = target.parentElement;
             while (!parentElement.classList.contains('block')) {
                 parentElement = parentElement.parentElement;
             }
-            const blockWidth = parentElement.getBoundingClientRect().width;
 
             const up$ = Observable
                 .fromEvent(document, 'mouseup');
@@ -213,7 +212,6 @@ export class DejaRangeComponent implements ControlValueAccessor {
                     const totalDifference = ranges[ranges.length - 1].max - ranges[0].min;
 
                     // calculate new width of the range, get host width
-                    const newWidth = blockWidth + xDifference;
                     const host = this.elementRef.nativeElement.firstChild as HTMLElement;
                     const hostWidth = host.getBoundingClientRect().width;
 

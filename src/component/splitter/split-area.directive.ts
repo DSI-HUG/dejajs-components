@@ -53,8 +53,8 @@ export class SplitAreaDirective implements OnInit, OnDestroy {
     }
 
     public lockEvents() {
-        this.eventsLockFct.push(this.renderer.listen(this.elementRef.nativeElement, 'selectstart', (e) => false));
-        this.eventsLockFct.push(this.renderer.listen(this.elementRef.nativeElement, 'dragstart', (e) => false));
+        this.eventsLockFct.push(this.renderer.listen(this.elementRef.nativeElement, 'selectstart', () => false));
+        this.eventsLockFct.push(this.renderer.listen(this.elementRef.nativeElement, 'dragstart', () => false));
     }
 
     public unlockEvents() {

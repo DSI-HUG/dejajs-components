@@ -31,9 +31,8 @@ export class SelectDemo extends OnInit {
     private dialogVisible = false;
 
     @ViewChild('dialog') private dialogWrapper: ElementRef;
-    @ViewChild('cancelbtn') private cancelbtn: ElementRef;
 
-    constructor(private countriesService: CountriesService, private countriesListService: CountriesListService) {
+    constructor(private countriesService: CountriesService, protected countriesListService: CountriesListService) {
         super();
         this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","displayName":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","displayName":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","displayName":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","displayName":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","displayName":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","displayName":"Dominica","depth":0,"odd":false,"selected":true}]');
     }
@@ -58,14 +57,14 @@ export class SelectDemo extends OnInit {
 
         this.countriesService.getCountries().subscribe((value: ICountry[]) => {
             /*let selection = {};
-            event && event.selection.map(s => selection[s.code] = s);
-            let result = [] as any[];
-            value.map(s => {
-              if (!selection[s.code]) {
-                s.toString = () => { return s.code + ' - ' + s.naqme; };
-                result.push(s);
-              }
-            });*/
+             event && event.selection.map(s => selection[s.code] = s);
+             let result = [] as any[];
+             value.map(s => {
+             if (!selection[s.code]) {
+             s.toString = () => { return s.code + ' - ' + s.naqme; };
+             result.push(s);
+             }
+             });*/
 
             this.countriesForMultiselect = value;
 
@@ -89,14 +88,14 @@ export class SelectDemo extends OnInit {
                 }
 
                 /*let subGroupName = 'Subgroup ' + country.naqme[1];
-                if (!map[groupName + subGroupName]) {
-                  map[groupName + subGroupName] = [] as IItemTree[];
-                  map[groupName].push({
-                    items: map[groupName + subGroupName],
-                    suGroupName: subGroupName,
-                    collapsible: true,
-                  });
-                }*/
+                 if (!map[groupName + subGroupName]) {
+                 map[groupName + subGroupName] = [] as IItemTree[];
+                 map[groupName].push({
+                 items: map[groupName + subGroupName],
+                 suGroupName: subGroupName,
+                 collapsible: true,
+                 });
+                 }*/
 
                 map[groupName].push(country);
             });
@@ -105,8 +104,8 @@ export class SelectDemo extends OnInit {
         }, (error) => this.handleError(error));
     }
 
-    private confirmUnselection() {
-        return (item) => {
+    protected confirmUnselection() {
+        return () => {
             this.dialogVisible = true;
             let self = this;
             return new Promise<any>((resolve?: () => void, reject?: (reason: any) => void) => {

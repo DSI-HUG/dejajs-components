@@ -19,7 +19,7 @@ import { IItemBase, IItemTree, ItemListBase, ItemListService, ViewportMode } fro
 import { KeyCodes } from "../../common/core/keycodes.enum";
 import { SortingService } from '../../common/core/sorting';
 import { IDejaDragEvent } from '../dragdrop';
-import { DejaTreeListComponent, DejaTreeListItemEvent, DejaTreeListItemsEvent, DejaTreeListScrollEvent } from "../tree-list";
+import { DejaTreeListComponent, DejaTreeListScrollEvent } from "../tree-list";
 import { DejaGridColumnsLayoutInfos, DejaGridRowEvent, DejaGridRowsEvent, IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayout, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent, IDejaGridGroupsEvent } from "./index";
 
 const noop = () => { };
@@ -659,7 +659,7 @@ export class DejaGridComponent {
             percentColumns.forEach((column) => availableWidthForPercent -= (column.minWidth || this.columnsMinWidth));
             let availableWidth = availableWidthForPercent;
 
-            // Attribution des colonnes en pourcent            
+            // Attribution des colonnes en pourcent
             percentColumns.forEach((column) => {
                 let width = this.columnsLayoutInfos.columnsWidth[column.name];
                 let minimumWidth = column.minWidth || this.columnsMinWidth;
@@ -725,7 +725,7 @@ export class DejaGridComponent {
                 return;
             }
 
-            this.resizeObs = Observable.fromEvent(window, 'resize').subscribe((event: Event) => {
+            this.resizeObs = Observable.fromEvent(window, 'resize').subscribe(() => {
                 this.calcColumnsLayout();
             });
         } else if (this.resizeObs) {

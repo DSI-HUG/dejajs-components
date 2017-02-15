@@ -30,11 +30,11 @@ export class TilesDemo extends OnInit {
     }
 
     protected get debug() {
-        // Check binding 
+        // Check binding
         console.log('bind ' + Date.now());
         return null;
     }
-    
+
     public ngOnInit() {
         this.countriesService.getCountries().subscribe((value: ICountry[]) => {
             this.countries = value;
@@ -46,7 +46,7 @@ export class TilesDemo extends OnInit {
 
     protected getDragContext(tile: IDejaTile) {
         return {
-            dragendcallback: (event: IDejaDragEvent) => {
+            dragendcallback: () => {
 
             },
             dragstartcallback: (event: IDejaDragEvent) => {
@@ -76,9 +76,9 @@ export class TilesDemo extends OnInit {
     protected onTitleEditClick(e: IDejaTileEvent) {
         if (e.tile.type === 'group') {
             /*this.groupNamePrompt.title = 'Editer un groupe';
-            this.groupNamePrompt.value = e.tile.templateModel.title;
-            this.groupNamePrompt.visible = true;
-            this.groupNamePrompt.tile = e.tile;*/
+             this.groupNamePrompt.value = e.tile.templateModel.title;
+             this.groupNamePrompt.visible = true;
+             this.groupNamePrompt.tile = e.tile;*/
         }
     }
 
@@ -98,7 +98,7 @@ export class TilesDemo extends OnInit {
         let tiles = [];
         let colors = this.materialColors.getPalet('700');
         let colorIndex = 0;
-        this.countries.map((country, index) => {
+        this.countries.map((country) => {
             tiles.push({
                 bounds: new Rect(x, y, 15, 15),
                 id: country.code,
@@ -123,7 +123,7 @@ export class TilesDemo extends OnInit {
     }
 }
 
-interface ITemplateModel { 
+interface ITemplateModel {
     color: string;
     country: ICountry;
 }

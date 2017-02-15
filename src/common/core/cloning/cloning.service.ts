@@ -47,7 +47,7 @@ export class CloningService {
      * Async Clone of an object and his prototype
      *
      * @param object  The object to clone.
-     * @return An observable completed with the cloned object 
+     * @return An observable completed with the cloned object
      */
     public cloneWithPrototype$(object: any) {
         return Observable.of(this.cloneSyncWithPrototype(object));
@@ -76,7 +76,7 @@ export class CloningService {
     public clone(object: any) {
         return new Promise<any[]>((resolved?: (result: any[]) => void, rejected?: (reason: any) => void) => {
             try {
-                this.cloneSync(object);
+                resolved(this.cloneSync(object));
             } catch (err) {
                 rejected(err);
             }

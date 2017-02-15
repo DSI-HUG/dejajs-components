@@ -9,9 +9,9 @@
  *
  */
 
-import { Component, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { IRange, IRangeEvent, IStepRangeEvent, Range } from '../../component/range/range.interface';
+import { IStepRangeEvent, Range } from '../../component/range/range.interface';
 import { ranges, rangesWithInterval, readOnlyRanges, steps, weights } from './ranges.mock';
 import { IWeight, Weight } from './weight.interface';
 
@@ -57,14 +57,14 @@ export class DejaRangeDemo {
 
     /**
      * compute next step for the weights (rounded to one)
-     * 
+     *
      * @protected
      * @param {IStepRangeEvent} event
      * @returns
-     * 
+     *
      * @memberOf DejaRangeDemo
      */
-    protected stepFn(event: IStepRangeEvent, step: number) {
+    protected stepFn(event: IStepRangeEvent) {
 
         const weight = event.ranges[event.index] as IWeight;
 
@@ -89,38 +89,14 @@ export class DejaRangeDemo {
         return newRangeMax;
     }
 
-    /**
-     * compute range min and max from weight value
-     * 
-     * @private
-     * 
-     * @memberOf DejaRangeDemo
-     */
-    private computeRangeFromWeight() {
-        let min = 0;
-
-        this.weights = this.weights
-            .map((weight: Weight) => {
-                const weightDifference = weight.maxWeight - weight.minWeight;
-                const rangeDifference = Math.log(4 * weightDifference);
-
-                weight.min = min;
-                weight.max = min + rangeDifference;
-
-                min += rangeDifference;
-
-                return weight;
-            });
-    }
-
-    private remove(index: number) {
+    protected remove(index: number) {
         if (weights.length >= 2) {
 
             const weight = this.weights
-                .find((w: Weight, i: number) => index === i);
+                .find((_w: Weight, i: number) => index === i);
 
             const weights = this.weights
-                .filter((w: Weight, i: number) => index !== i);
+                .filter((_w: Weight, i: number) => index !== i);
 
             if (index > 0) {
                 weights[index - 1].maxWeight = weight.maxWeight;
@@ -133,9 +109,9 @@ export class DejaRangeDemo {
         }
     }
 
-    private add(index: number) {
+    protected add(index: number) {
         const weight = this.weights
-            .find((w: Weight, i: number) => index === i);
+            .find((_w: Weight, i: number) => index === i);
 
         const weightDifference = weight.maxWeight - weight.minWeight;
         if (weightDifference >= 2) {
@@ -154,27 +130,51 @@ export class DejaRangeDemo {
 
     /**
      * increase the maximum of the biggest weight
-     * 
+     *
      * @private
-     * 
+     *
      * @memberOf DejaRangeDemo
      */
-    private increase(): void {
+    protected increase(): void {
         this.weights[this.weights.length - 1].maxWeight++;
         this.computeRangeFromWeight();
     }
 
     /**
      * decrease the minimum of the smallest weight
-     * 
+     *
      * @private
-     * 
+     *
      * @memberOf DejaRangeDemo
      */
-    private decrease(): void {
+    protected decrease(): void {
         if (this.weights[0].minWeight > 0) {
             this.weights[0].minWeight--;
             this.computeRangeFromWeight();
         }
+    }
+
+    /**
+     * compute range min and max from weight value
+     *
+     * @private
+     *
+     * @memberOf DejaRangeDemo
+     */
+    private computeRangeFromWeight() {
+        let min = 0;
+
+        this.weights = this.weights
+            .map((weight: Weight) => {
+                const weightDifference = weight.maxWeight - weight.minWeight;
+                const rangeDifference = Math.log(4 * weightDifference);
+
+                weight.min = min;
+                weight.max = min + rangeDifference;
+
+                min += rangeDifference;
+
+                return weight;
+            });
     }
 }

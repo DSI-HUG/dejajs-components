@@ -9,9 +9,8 @@
  *
  */
 
-import { enableProdMode } from '@angular/core';
+// import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { GlobalEventEmmitter } from '../../src/common/global-event/global-event-emmitter';
 import { DemoAppModule } from './demo-app-module';
 
 // enableProdMode();

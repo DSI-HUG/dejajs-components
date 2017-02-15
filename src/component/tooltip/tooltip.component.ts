@@ -10,7 +10,9 @@
  */
 
 import { Component, ContentChild, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
+
 import { clearTimeout, setTimeout } from 'timers';
+
 import { DejaTooltipService, ITooltipParams } from '.';
 import { DejaDropDownComponent, Position, Rect } from '../../';
 
@@ -29,10 +31,7 @@ export class DejaTooltipComponent implements OnInit {
     private hideTimeout: NodeJS.Timer;
     private model: any;
 
-    constructor(
-        private tooltipService: DejaTooltipService,
-        private elementRef: ElementRef,
-    ) { }
+    constructor(private tooltipService: DejaTooltipService) { }
 
     public ngOnInit() {
         if (!this.name) {
@@ -44,10 +43,10 @@ export class DejaTooltipComponent implements OnInit {
         if (promise.then) {
             promise.then((model) => {
                 this.model = model;
-            }).catch((err) => {
+            }).catch(() => {
                 this.hide.emit();
             });
-        } else { 
+        } else {
             this.model = this.params.model;
         }
     }

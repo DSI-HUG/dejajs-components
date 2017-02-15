@@ -71,7 +71,7 @@ export class DejaDateSelectorComponent implements AfterContentInit {
         minutes: {
             ranges: [
                 {min: 0, max: 59, labelInterval: 5},
-            ], 
+            ],
         },
     };
     // /Time
@@ -92,15 +92,15 @@ export class DejaDateSelectorComponent implements AfterContentInit {
     private onTouchedCallback: () => void = noop;
     private onChangeCallback: (_: any) => void = noop;
 
-    @Input() 
-    public set time(value: boolean) { 
+    @Input()
+    public set time(value: boolean) {
         this._time = coerceBooleanProperty(value);
     }
-    
-    public get time() { 
+
+    public get time() {
         return this._time;
     }
-    
+
     public get keyboardNavigation() {
         return this._keyboardNavigation;
     }
@@ -125,7 +125,7 @@ export class DejaDateSelectorComponent implements AfterContentInit {
         }
     }
 
-    constructor(private elementRef: ElementRef) { }
+    constructor() { }
 
     public ngAfterContentInit() {
         if (!this.displayedDate) {
@@ -215,7 +215,7 @@ export class DejaDateSelectorComponent implements AfterContentInit {
             if (this.selectedDate) {
                 let h = (value) ? value.getHours() : 0;
                 let m = (value) ? value.getMinutes() : 0;
-                if ( 
+                if (
                     (!this.time && this.selectedDate.toLocaleTimeString() !== value.toLocaleTimeString())
                     || (this.time && ((this.selectedDate.getHours() === 0 && this.selectedDate.getMinutes() === 0) && (h !== 0 && m !== 0) || (this.selectedDate.toLocaleDateString() !== value.toLocaleDateString())))
                 ) {
@@ -319,24 +319,24 @@ export class DejaDateSelectorComponent implements AfterContentInit {
     protected updateHours(hours: number) {
         let d: Date;
 
-        if (hours === 24) { 
+        if (hours === 24) {
             hours = 0;
         }
-        
+
         if (this.selectedDate) {
             d = new Date(this.selectedDate);
         } else {
             d = new Date();
             d.setHours(0, 0, 0, 0);
         }
-        
+
         d.setHours(hours);
         this.value = d;
     }
 
     protected updateMinutes(minutes: number) {
         let d: Date;
-        
+
         if (this.selectedDate) {
             d = new Date(this.selectedDate);
         } else {
@@ -346,6 +346,10 @@ export class DejaDateSelectorComponent implements AfterContentInit {
 
         d.setMinutes(minutes);
         this.value = d;
+    }
+
+    protected getHoursModel() {
+        return this.displayedDate.getHours() || 24;
     }
 
     private bind() {
@@ -363,13 +367,9 @@ export class DejaDateSelectorComponent implements AfterContentInit {
         }
     }
 
-    private getHoursModel() { 
-        return this.displayedDate.getHours() || 24;
-    }
-
     /**
      * Vérifie si la date passée en param est désactivée.
-     * 
+     *
      * @param {Date} date
      * @return {boolean} sera false si this.disableDates n'existe pas / n'est pas un tableau,
      *                   si la date envoyée en param est valide,
@@ -390,7 +390,7 @@ export class DejaDateSelectorComponent implements AfterContentInit {
                 return true;
             }
         }
-        
+
         if ((this.dateMax && date.getTime() > this.dateMax.getTime()) || (this.dateMin && date.getTime() < this.dateMin.getTime())) {
             return true;
         }
@@ -400,7 +400,7 @@ export class DejaDateSelectorComponent implements AfterContentInit {
     /**
      * Fonction récursive. Si le jour séléctionné + num est invalide, la fonction
      * se rappelle pour séléctionner le jour suivant (ou précédent)
-     * 
+     *
      * @param {Date} date
      * @param {number} num : nombre de jours à ajouter à date.
      */
@@ -419,7 +419,7 @@ export class DejaDateSelectorComponent implements AfterContentInit {
     /**
      * Fonction récursive. Si le mois séléctionné + num est invalide, la fonction
      * se rappelle pour séléctionner le jour suivant (ou précédent)
-     * 
+     *
      * @param {Date} date
      * @param {number} num : nombre de mois à ajouter à date.
      */
@@ -439,7 +439,7 @@ export class DejaDateSelectorComponent implements AfterContentInit {
     /**
      * Fonction récursive. Si l'année séléctionné + num est invalide, la fonction
      * se rappelle pour séléctionner le jour suivant (ou précédent)
-     * 
+     *
      * @param {Date} date
      * @param {number} num : nombre de jours à ajouter à date.
      */

@@ -1,3 +1,14 @@
+/*
+ * *
+ *  @license
+ *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *
+ *  Use of this source code is governed by an Apache-2.0 license that can be
+ *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ * /
+ *
+ */
+
 import { Observable } from 'rxjs/Rx';
 import { Subscriber } from 'rxjs/Subscriber';
 import { GroupingService, IGroupInfo } from "../grouping/index";
@@ -228,7 +239,7 @@ export class ItemListService {
             let listIndex = this._ddCurrentIndex;
             let item = this._ddList[listIndex] as IItemTree;
             if (!item) {
-                throw 'invalid drag infos stored in cache.';
+                rejected('invalid drag infos stored in cache.');
             }
 
             // La drag and drop liste est incomplète, en cas de filtrage, retrouver l'élément juste en dessus dans la liste complète
@@ -292,7 +303,7 @@ export class ItemListService {
 
     /** Usage interne. Calcul l'élément cible d'un drag and drop en fonction de l'index spécifié. */
     public calcDragTargetIndex(index: number, targetIndex: number): Promise<number> {
-        return new Promise<number>((resolved?: (dragDropIndex: number) => void, rejected?: (reason: any) => void) => {
+        return new Promise<number>((resolved?: (dragDropIndex: number) => void) => {
             let currentList = this._ddList || this._cache.visibleList;
 
             let startIndex = this._ddCurrentIndex !== undefined ? this._ddCurrentIndex : index;
@@ -452,7 +463,7 @@ export class ItemListService {
      * @return {Promise} Promesse résolue par la fonction.
      */
     public expandItem(item: IItemTree) {
-        return new Promise<void>((resolved?: () => void, rejected?: (reason: any) => void) => {
+        return new Promise<void>((resolved?: () => void) => {
             item.collapsed = false;
             // Invalidate view cache
             delete this._cache.visibleList;
@@ -465,7 +476,7 @@ export class ItemListService {
      * @return {Promise} Promesse résolue par la fonction.
      */
     public collapseItem(item: IItemTree) {
-        return new Promise<void>((resolved?: () => void, rejected?: (reason: any) => void) => {
+        return new Promise<void>((resolved?: () => void) => {
             item.collapsed = true;
             // Invalidate view cache
             delete this._cache.visibleList;
@@ -600,7 +611,7 @@ export class ItemListService {
         return Promise.all(promises);
     }
 
-    /** 
+    /**
      * Set a promise called before an item selection
      */
     public setSelectingItem(fn: (item: any) => Promise<any>) {
@@ -637,7 +648,7 @@ export class ItemListService {
         });
     }
 
-    /** 
+    /**
      * Set a promise called before an item deselection
      */
     public setUnselectingItem(fn: (item: any) => Promise<any>) {
@@ -681,7 +692,7 @@ export class ItemListService {
      * @return {Promise} Promesse résolue par la fonction.
      */
     public findNextMatch(compare?: (item: IItemBase, index: number) => boolean, startIndex?: number) {
-        return new Promise<IFindItemResult>((resolved?: (result: IFindItemResult) => void, rejected?: (reason: any) => void) => {
+        return new Promise<IFindItemResult>((resolved?: (result: IFindItemResult) => void) => {
             let list = this._cache.visibleList;
             if (list.length) {
                 if (startIndex < 0 || startIndex >= list.length) {
@@ -722,7 +733,7 @@ export class ItemListService {
             }
 
             let sortTree = () => {
-                this.getSortingService().sortTree(this._cache.groupedList, sortInfos, '$items').then((sortedResult) => {
+                this.getSortingService().sortTree(this._cache.groupedList, sortInfos, '$items').then(() => {
                     this.invalidateCache();
                     resolved(sortInfos);
                 }).catch((err) => {
@@ -748,7 +759,7 @@ export class ItemListService {
      * @return {Promise} Promesse résolue par la fonction.
      */
     public group(groupInfos: IGroupInfo[]) {
-        return new Promise<IGroupInfo[]>((resolved?: (value: IGroupInfo[]) => void, rejected?: (reason: any) => void) => {
+        return new Promise<IGroupInfo[]>((resolved?: (value: IGroupInfo[]) => void) => {
             this._groupInfos = groupInfos;
             this.invalidateCache();
             this.ensureChildrenProperties(this.items);
@@ -761,7 +772,7 @@ export class ItemListService {
      * @return {Promise} Promesse résolue par la fonction.
      */
     public ungroup(groupInfo: IGroupInfo) {
-        return new Promise<IGroupInfo>((resolved?: (value: IGroupInfo) => void, rejected?: (reason: any) => void) => {
+        return new Promise<IGroupInfo>((resolved?: (value: IGroupInfo) => void) => {
             let groupIndex = this._groupInfos ? this._groupInfos.findIndex((gi) => gi.groupByField === groupInfo.groupByField) : -1;
             if (groupIndex >= 0) {
                 this._groupInfos.splice(groupIndex, 1);
@@ -809,7 +820,7 @@ export class ItemListService {
             };
 
             if (!this._cache.flatList) {
-                this.ensureFlatListCache(true).then((flatList) => {
+                this.ensureFlatListCache(true).then(() => {
                     search(this._cache.flatList);
                 }).catch((err) => {
                     rejected(err);
@@ -951,8 +962,8 @@ export class ItemListService {
      * @param {IItemBase[]} selectedItems Liste des éléments selectionés.
      * @return {Promise} Promesse résolue par la fonction, qui retourne la liste à utiliser.
      */
-    protected getItemList(query?: RegExp | string, selectedItems?: IItemBase[]): Promise<IItemBase[]> {
-        return new Promise<IItemBase[]>((resolved?: (result: IItemBase[]) => void, rejected?: (reason: any) => void) => {
+    protected getItemList(_query?: RegExp | string, _selectedItems?: IItemBase[]): Promise<IItemBase[]> {
+        return new Promise<IItemBase[]>((resolved?: (result: IItemBase[]) => void) => {
             this.items = this.items || [];
             resolved(this.items);
         });
@@ -1010,7 +1021,7 @@ export class ItemListService {
      * @return {Promise} Promesse résolue par la fonction, qui retourne la liste visibles.
      */
     protected getVisibleList(items: IItemBase[], searchField?: string, regExp?: RegExp, expandTree?: boolean): Promise<IItemBase[]> {
-        return new Promise<IItemBase[]>((resolved?: (result: IItemBase[]) => void, rejected?: (reason: any) => void) => {
+        return new Promise<IItemBase[]>((resolved?: (result: IItemBase[]) => void) => {
             if (!items) {
                 resolved([]);
                 return;
@@ -1128,7 +1139,7 @@ export class ItemListService {
      * @return {Promise} Promesse résolue par la fonction, qui retourne la liste hierarchique mise à plat.
      */
     protected getFlatList(items: IItemBase[], isFiltered): Promise<IItemBase[]> {
-        return new Promise<IItemBase[]>((resolved?: (result: IItemBase[]) => void, rejected?: (reason: any) => void) => {
+        return new Promise<IItemBase[]>((resolved?: (result: IItemBase[]) => void) => {
             if (!items) {
                 resolved([]);
                 return;

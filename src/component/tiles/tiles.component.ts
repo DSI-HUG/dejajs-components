@@ -13,7 +13,7 @@ import { Component, ContentChild, ElementRef, EventEmitter, forwardRef, HostList
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { Observable, Subscription } from 'rxjs/Rx';
-import { clearTimeout, setTimeout } from 'timers';
+import { setTimeout } from 'timers';
 import { Position, Rect } from '../../common/core/graphics';
 import { DejaTileSelectionChangedEvent, IDejaTile, IDejaTileEvent, IDejaTileList } from './index';
 import { DejaTilesLayoutProvider } from './tiles-layout.provider';
@@ -105,7 +105,7 @@ export class DejaTilesComponent implements ControlValueAccessor {
 
     private get layoutProvider() {
         if (!this._layoutProvider) {
-            this._layoutProvider = new DejaTilesLayoutProvider(this.el.nativeElement, this.maxwidth, this.maxheight, this.tileminwidth, this.tilemaxwidth, this.tileminheight, this.tilemaxheight, (width, height) => {
+            this._layoutProvider = new DejaTilesLayoutProvider(this.maxwidth, this.maxheight, this.tileminwidth, this.tilemaxwidth, this.tileminheight, this.tilemaxheight, (width, height) => {
                 this.width = width;
                 this.height = height;
             });
@@ -211,8 +211,8 @@ export class DejaTilesComponent implements ControlValueAccessor {
         pageX -= containerBounds.left;
         pageY -= containerBounds.top;
 
-        let minSize = this.layoutProvider.getTileMinPixelSize();        
-        let tile = this.layoutProvider.HitTest(this.tiles, new Rect(pageX, pageY, minSize.width, minSize.height));
+        // let minSize = this.layoutProvider.getTileMinPixelSize();
+        // let tile = this.layoutProvider.HitTest(this.tiles, new Rect(pageX, pageY, minSize.width, minSize.height));
     }
 
     protected ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
@@ -225,7 +225,7 @@ export class DejaTilesComponent implements ControlValueAccessor {
     }
 
     protected ngAfterViewInit() {
-        Observable.fromEvent(window, 'resize').subscribe((event: Event) => {
+        Observable.fromEvent(window, 'resize').subscribe(() => {
             this.refresh();
         });
     }
@@ -236,7 +236,7 @@ export class DejaTilesComponent implements ControlValueAccessor {
         this.tileTitleEditClick.emit(event);
     }
 
-    protected onDragStart(event: Event) {
+    protected onDragStart() {
         // Disallow HTML drag and drop in design mode
         return !this.designMode;
     }
@@ -349,7 +349,7 @@ export class DejaTilesComponent implements ControlValueAccessor {
             }
 
             let element = this.el.nativeElement as HTMLElement;
-            this.globalMouseUpObs = Observable.fromEvent(element.ownerDocument, 'mouseup').subscribe((event: MouseEvent) => {
+            this.globalMouseUpObs = Observable.fromEvent(element.ownerDocument, 'mouseup').subscribe(() => {
                 if (this.dragSelection) {
                     this.dragSelection = undefined;
                     return false;

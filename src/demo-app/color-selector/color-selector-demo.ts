@@ -23,7 +23,7 @@ export class DejaColorSelectorDemo {
     protected invalidColor = Color.fromHex('#FFA012');
     private hoveredColor: string;
 
-    constructor(private materialColors: MaterialColors) { }
+    constructor(protected materialColors: MaterialColors) { }
 
     protected onColorPickerHover(event: ColorEvent) {
         this.hoveredColor = event.colorName;

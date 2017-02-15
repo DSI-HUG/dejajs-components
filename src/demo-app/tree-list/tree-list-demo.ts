@@ -22,19 +22,19 @@ import { CountriesService, ICountry } from "../services/countries.service";
     templateUrl: './tree-list-demo.html',
 })
 export class DejaTreeListDemo implements OnInit {
-    private variableMode = ViewportMode.VariableRowHeight;
-    private noViewportMode = ViewportMode.NoViewport;
+    protected variableMode = ViewportMode.VariableRowHeight;
+    protected noViewportMode = ViewportMode.NoViewport;
+    protected noViewportList: IItemTree[] = [{displayName: 'test'}, {displayName: 'test2'}, {displayName: 'test3'}];
     private groupedCountries: IItemTree[];
     private countries: Observable<ICountry[]>;
     private selectedItemsOut: IItemTree[];
     private selectedInfos = [];
     private loremList: IItemTree[] = [];
-    private noViewportList: IItemTree[] = [{displayName: 'test'}, {displayName: 'test2'}, {displayName: 'test3'}];
     @ViewChild('groupedtreelist') private groupedTreeList: DejaTreeListComponent;
     @ViewChild('treeList') private treeList: DejaTreeListComponent;
 
     constructor(
-        private countriesService: CountriesService, 
+        private countriesService: CountriesService,
         groupingService: GroupingService,
         private textMetricsService: DejaTextMetricsService,
     ) {
