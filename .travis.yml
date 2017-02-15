@@ -1,3 +1,4 @@
 language: groovy
 install: true
- 
+
+script: gradle dejajsNpmPublish
