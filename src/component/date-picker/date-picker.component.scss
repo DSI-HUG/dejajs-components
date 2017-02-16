@@ -38,16 +38,16 @@ deja-date-picker {
 	}
 	&.ng-invalid {
 		.mat-input-wrapper {
-			.md-input-underline {
-				.md-input-ripple {
+			.mat-input-underline {
+				.mat-input-ripple {
 					background-color: $red;
 					opacity: 1;
 					transform: scaleY(1);
 				}
 			}
-			.md-input-table {
-				.md-input-infix {
-					.md-input-placeholder {
+			.mat-input-table {
+				.mat-input-infix {
+					.mat-input-placeholder {
 						color: $red;
 					}
 				}
