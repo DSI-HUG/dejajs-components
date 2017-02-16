@@ -1,14 +1,14 @@
 md-tab-group {
 	&[multi-lines] {
-		.md-tab-header {
+		.mat-tab-header {
 			display: block;
-			.md-tab-label {
+			.mat-tab-label {
 				display: inline-block;
 			}
 		}
 	}
-	.md-tab-header {
-		.md-tab-label {
+	.mat-tab-header {
+		.mat-tab-label {
 			font-size: 12px;
 			height: auto;
 			line-height: normal;
@@ -29,7 +29,7 @@ md-tab-group {
 				transition: all 500ms ease;
 				width: 0;
 			}
-			&.md-tab-label-active { 
+			&.mat-tab-label-active { 
 				&:after {
 					left: 0;
 					width: 100%;

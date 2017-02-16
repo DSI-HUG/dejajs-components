@@ -1,15 +1,15 @@
 md-radio-group {
-  .md-radio-checked {
-    .md-radio-inner-circle {
+  .mat-radio-checked {
+    .mat-radio-inner-circle {
       background-color:$secondary;
     }
-    .md-radio-outer-circle {
+    .mat-radio-outer-circle {
       border-color:$secondary;
     }
   }
 
-  .md-radio-ripple {
-    .md-ripple-foreground {
+  .mat-radio-ripple {
+    .mat-ripple-foreground {
       background-color:rgba($secondary, .2) !important;
     }
   }
@@ -17,16 +17,16 @@ md-radio-group {
   &.ng-invalid {
     label {
       color:$red;
-      .md-radio-outer-circle{
+      .mat-radio-outer-circle{
         border-color:$red;
       }
-      .md-radio-inner-circle {
+      .mat-radio-inner-circle {
         background-color:$red;
       }
     }
 
-    .md-radio-ripple {
-      .md-ripple-foreground {
+    .mat-radio-ripple {
+      .mat-ripple-foreground {
         background-color:rgba($red, .2);
       }
     }

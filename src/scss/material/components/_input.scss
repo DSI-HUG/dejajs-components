@@ -1,19 +1,19 @@
 md-input-container {
-	.md-input-wrapper {
-		.md-input-underline {
-			.md-input-ripple {
+	.mat-input-wrapper {
+		.mat-input-underline {
+			.mat-input-ripple {
 				background-color: $secondary;
 			}
 		}
-		.md-input-table {
-			.md-input-placeholder {
-				&.md-focused {
+		.mat-input-table {
+			.mat-input-placeholder {
+				&.mat-focused {
 					color: $secondary;
 				}
 			}
 		}
 	}
-	~.md-input-message {
+	~.mat-input-message {
 		font-size: 0.8rem;
 		text-align: left;
 		&.ng-invalid {
@@ -21,15 +21,15 @@ md-input-container {
 		}
 	}
 	&.ng-invalid {
-		.md-input-wrapper {
-			.md-input-underline {
-				.md-input-ripple {
+		.mat-input-wrapper {
+			.mat-input-underline {
+				.mat-input-ripple {
 					background-color: $red;
 				}
 			}
-			.md-input-table {
-				.md-input-placeholder {
-					&.md-focused {
+			.mat-input-table {
+				.mat-input-placeholder {
+					&.mat-focused {
 						color: $red;
 					}
 				}
@@ -38,13 +38,13 @@ md-input-container {
 	}
 }
 
-// Workaround to md-hint bug
-.md-hint {
+// Workaround to mat-hint bug
+.mat-hint {
 	position: absolute;
 	font-size: 75%;
 	bottom: -1.8em;
 	left: 0;
-	&.md-right {
+	&.mat-right {
 		right: 0;
 	}
 	&.validation-error,
@@ -54,7 +54,7 @@ md-input-container {
 }
 
 deja-select {
-	.md-hint {
+	.mat-hint {
 		bottom: -0.5em;
 	}
 }
