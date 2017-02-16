@@ -10,7 +10,7 @@
  */
 
 import { CommonModule } from '@angular/common';
-import { ModuleWithProviders, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MdIconModule, MdInputModule} from '@angular/material';
 import { DejaBackdropModule } from "../backdrop";
@@ -27,17 +27,12 @@ import { DejaSelectComponent } from "./select.component";
     imports: [
         CommonModule,
         FormsModule,
-        MdInputModule.forRoot(),
+        MdInputModule,
         DejaDropDownModule,
         DejaBackdropModule,
         MdIconModule,
     ],
 })
 export class DejaSelectModule {
-    public static forRoot(): ModuleWithProviders {
-        return {
-            ngModule: DejaSelectModule,
-            providers: [],
-        };
-    }
+
 }

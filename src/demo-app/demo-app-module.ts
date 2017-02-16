@@ -12,7 +12,7 @@
 import { ApplicationRef, NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { HttpModule } from "@angular/http";
-import { MdButtonModule, MdCardModule, MdCheckboxModule, MdIconModule, MdInputModule, MdListModule, MdProgressCircleModule, MdSidenavModule, MdSliderModule, MdTabsModule, MdToolbarModule } from "@angular/material";
+import { MaterialModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 import { GroupingModule } from "../common/core/grouping/index";
@@ -37,7 +37,6 @@ import {
     DejaMessageBoxModule,
     DejaMonacoEditorModule,
     DejaRangeModule,
-    DejaScaleModule,
     DejaSelectModule,
     DejaSnackbarModule,
     DejaSplitterModule,
@@ -64,7 +63,6 @@ import { MonacoEditorDemoService } from "./monaco-editor/monaco-editor-demo.serv
 import { MonacoEditorJsonFileResolver, MonacoEditorJsonToCompareFileResolver, MonacoEditorXmlFileResolver, MonacoEditorXmlToCompareFileResolver } from "./monaco-editor/monaco-editor.resolver";
 import { ProgressCircleDemo } from "./progress-circle/progress-circle-demo";
 import { DejaRangeDemo } from './range/range-demo';
-import { ScaleDemo } from "./scale/scale-demo";
 import { SelectDemo } from "./select/select-demo";
 import { CountriesListService } from "./services/countries-list.service";
 import { CountriesService } from "./services/countries.service";
@@ -91,7 +89,6 @@ import { DejaTreeListDemo } from "./tree-list/tree-list-demo";
         Home,
         MenuDemo,
         MessageBoxDemo,
-        ScaleDemo,
         SelectDemo,
         TilesDemo,
         TextAreaDemo,
@@ -117,19 +114,8 @@ import { DejaTreeListDemo } from "./tree-list/tree-list-demo";
         FormsModule,
         HttpModule,
         RouterModule,
-        MdToolbarModule.forRoot(),
-        MdInputModule.forRoot(),
-        MdProgressCircleModule.forRoot(),
-        MdButtonModule.forRoot(),
-        MdIconModule.forRoot(),
-        MdSidenavModule.forRoot(),
-        MdCardModule.forRoot(),
-        MdCheckboxModule.forRoot(),
-        MdListModule.forRoot(),
-        MdSliderModule.forRoot(),
-        MdTabsModule.forRoot(),
-        DejaScaleModule.forRoot(),
-        DejaSelectModule.forRoot(),
+        MaterialModule,
+        DejaSelectModule,
         DejaTreeListModule,
         DejaTilesModule,
         DejaColorSelectorModule,
