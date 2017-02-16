@@ -49,9 +49,9 @@
     }
     /* these styles could be overriden */
     &:hover {
-      @include md-elevation(2);
+      @include mat-elevation(2);
     }
-    @include md-elevation(1);
+    @include mat-elevation(1);
     $accent: $secondary;
     $height: 32px;
     height: $height;
