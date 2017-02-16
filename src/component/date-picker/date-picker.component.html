@@ -1,5 +1,5 @@
 <md-input-container id="deja-date-selector">
-    <input #inputelement id="deja-date-selector-input" md-input [disabled]="disabled" (focus)="toggleDateSelector($event)" [ngModel]="inputModel || null" placeholder="{{placeholder}}">
+    <input #inputelement id="deja-date-selector-input" mdInput [disabled]="disabled" (focus)="toggleDateSelector($event)" [ngModel]="inputModel || null" placeholder="{{placeholder}}">
 	<div md-suffix>
 		<md-icon *ngIf="!inputModel">date_range</md-icon>
 		<md-icon *ngIf="inputModel && !disabled" (click)="reset()" id="clear-button">clear</md-icon>
