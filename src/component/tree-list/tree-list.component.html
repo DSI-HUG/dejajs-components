@@ -1,5 +1,5 @@
 <div id="header" *ngIf="expandButton || (searchArea || minlength > 0) || groupArea">
-	<button md-raised-button class="md-primary" *ngIf="expandButton" (click)="toggleAll()">
+	<button mat-raised-button class="mat-primary" *ngIf="expandButton" (click)="toggleAll()">
 		Tout {{(allCollapsed)?'étendre':'réduire'}}
 	</button>
 	<md-input-container id="input" *ngIf="searchArea || minlength > 0">

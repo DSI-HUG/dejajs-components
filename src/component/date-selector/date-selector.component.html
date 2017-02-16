@@ -12,9 +12,9 @@
         </div>
         <div class="sub-header">
             <div class="month">
-                <div class="previous"><button md-mini-fab (click)="changeMonth(-1)"><md-icon>navigate_before</md-icon></button></div>
+                <div class="previous"><button mat-mini-fab (click)="changeMonth(-1)"><md-icon>navigate_before</md-icon></button></div>
                 <span>{{displayedDate.toLocaleString(local, { month: 'long' })}} {{displayedDate.getFullYear()}}</span>
-                <div class="next"><button md-mini-fab (click)="changeMonth(1)"><md-icon>navigate_next</md-icon></button></div>
+                <div class="next"><button mat-mini-fab (click)="changeMonth(1)"><md-icon>navigate_next</md-icon></button></div>
             </div>
             <div class="days">
                 <span *ngFor="let day of days">{{day}}</span>
