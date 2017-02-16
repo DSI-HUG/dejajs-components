@@ -1,10 +1,15 @@
 language: node_js
 node_js:
 - '6'
-deploy: 
-api_key: 
-email: gmer@hcuge.ch
-provider: npm
+deploy:
+  provider: npm
+  email: gmer@hcuge.ch
+  api_key:
+    secure: PnDyksNEBI8ueuj8/3Ngk4rMIkBWHMcwVgRwEp2wSP/OWaTfnLVw6O+qVBFyXvYABTpdZ2C3FPYklCbtZgy1zK7xHreyRtMoQyt1VNPsbLaIkaquYfPpYEXryoo0TV7NVFuCWNWjii+3oawEq4uOz5wuf3kX5DPc/hcb5ISaTWeS7ylkE4IzmOIG/xRxSDqojK2XO/AlpuOKuXqd9UYOM++pQqlKo065zdMCSHS0+l+9aZ6ln+LusA/DKgCAy5TMdHYkkscN1igYhe7DnDmsb5n9ZgD4WsKCGToOhmWPDWpENe8nnmGPjc1rL4GQ4cul1aoOdg0voJbpTKgyULvAMCEczcF4Tc1kL5+Uoj78xgJpRVWetdqi4BVX14qDDy40HEw7ZVFJ6uJqHlOh3GRSctTRr/J4McazZFe+sTqvESXViM+aDGfM/mGnfpZ5iRS15q1mShg+7wv/1BvwwDEmNnfv/5H8+C+C2h1JRr8xz3E4IomuP+JOJT507BhD/Pnq/umn29kWbYtDg5QID62Aroi9UmPsdgo08HKTao8Ymflugpvn7Vi1xnv+KJ6p78qBqaUmYdzRaPCW+DjJ6rSdOc3mm9Tom1SODXTnuN5JZsyZuKxSmc0Fx0o0ryHTwCoU4UCOWhoPLtWnkcwutyjnUTGSlrg8p9u+O/OF/qUQ3uM=
+  on:
+    tags: true
+    repo: DSI-HUG/dejajs-components
+    branch: travis-test
 before_install:
 - export CHROME_BIN=chromium-browser
 - export DISPLAY=:99.0
@@ -13,6 +18,3 @@ install:
 - npm install
 script:
 - npm publish --access=public
-env:
-  global:
-    secure: eqv2Q1peGXC+h6ybMmlPa1BmEfMVIOMLeoEZbQ+qgNAQUeEhZcOHx6zqk5HH2+jwDwhfZSdW5bK/Z7vDor13rbatVCewoy82+oqcBWe71rXb9NUMimO+Me4h9d8iWRsirlzo2ct3KGdwxVdzAJ+ZxFL0WPXv7akNkIkxy1Xga0fowp4snixotzmd35KioNhvHmgOGvZRnhnrgaY7MzfJKoKBSCQpkARhz1rrZ2EU0V0gKrP87W5C/rYCCl6k17B30VyGWpB/M2QgBpRv2muqEMqzmJBRrV/JaoI734TTVBV2LyK6a+Et5BWSNR0gYy3I8SFE1RLu01OjHl3adqyAfB68PxAV0EiUXU+kJGlnj3ym5O/S874sgr9QnMv4+ZNpfR0l+AyikV4ZBT5bJe1sxxaPyuJXwZuiNQafTXE1XCtoFhoyEyT8smKFeXWNvhbUbvxY3AnTmpDkYazwsZbwUYTlq2DXVwk3mWg9gc2DUIOhyXRr18e6utf3cul/vyCWwX0fiQhfkWzANUNPjv0GBDKLUB7JndqRXB4lijniQEWrPdDwmCZ/HucSGGeQljQQSZbeFrSpeCmqDyPsXATfrUK1ckns9B8qfR13zPO6Gttw5kI2Jw1rkjxERkDeuGFtbkdNrjP3B24igJwAQmboe90lqvCkduIqMw2TzesSnKA=
