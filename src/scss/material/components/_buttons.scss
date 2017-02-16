@@ -1,50 +1,50 @@
-.mat-primary[mat-icon-button]:not([disabled]) {
+.mat-primary[md-icon-button]:not([disabled]) {
 	color: $secondary !important;
 }
 
-.mat-success[mat-icon-button]:not([disabled]) {
+.mat-success[md-icon-button]:not([disabled]) {
 	color: $success !important;
 }
 
-.mat-warn[mat-icon-button]:not([disabled]) {
+.mat-warn[md-icon-button]:not([disabled]) {
 	color: $warning !important;
 }
 
-.mat-danger[mat-icon-button]:not([disabled]) {
+.mat-danger[md-icon-button]:not([disabled]) {
 	color: $red !important;
 }
 
-.mat-primary[mat-raised-button],
-.mat-primary[mat-fab],
-.mat-primary[mat-mini-fab] {
+.mat-primary[md-raised-button],
+.mat-primary[md-fab],
+.mat-primary[md-mini-fab] {
 	background-color: $secondary !important;
 	color: #FFF !important;
 }
 
-.mat-success[mat-raised-button],
-.mat-success[mat-fab],
-.mat-success[mat-mini-fab] {
+.mat-success[md-raised-button],
+.mat-success[md-fab],
+.mat-success[md-mini-fab] {
 	background-color: $success !important;
 	color: #FFF !important;
 }
 
-.mat-warn[mat-raised-button],
-.mat-warn[mat-fab],
-.mat-warn[mat-mini-fab] {
+.mat-warn[md-raised-button],
+.mat-warn[md-fab],
+.mat-warn[md-mini-fab] {
 	background-color: $warning !important;
 	color: #FFF !important;
 }
 
-.mat-danger[mat-raised-button],
-.mat-danger[mat-fab],
-.mat-danger[mat-mini-fab] {
+.mat-danger[md-raised-button],
+.mat-danger[md-fab],
+.mat-danger[md-mini-fab] {
 	background-color: $red !important;
 	color: #FFF !important;
 }
 
-.mat-blank[mat-raised-button],
-.mat-blank[mat-fab],
-.mat-blank[mat-mini-fab] {
+.mat-blank[md-raised-button],
+.mat-blank[md-fab],
+.mat-blank[md-mini-fab] {
 	background-color: transparent !important;
 	box-shadow: none;
 	color: rgba(0, 0, 0, 0.6) !important;
@@ -73,8 +73,8 @@
 	}
 }
 
-[mat-menu-item].with-icon,
-[mat-raised-button].with-icon {
+[md-menu-item].with-icon,
+[md-raised-button].with-icon {
 	&:before {
 		content: attr(data-icon);
 		font-family: 'Material Icons';
@@ -84,7 +84,7 @@
 	}
 }
 
-[mat-menu-item].with-icon {
+[md-menu-item].with-icon {
 	padding-left: 3rem;
 	&:before {
 		width: 3rem;
@@ -93,20 +93,20 @@
 	}
 }
 
-[mat-raised-button].with-icon {
+[md-raised-button].with-icon {
 	padding-left: 2rem;
 	&:before {
 		width: 2rem;
 	}
 }
 
-.mat-accent[mat-raised-button],
-.mat-accent[mat-fab],
-.mat-accent[mat-mini-fab] {
+.mat-accent[md-raised-button],
+.mat-accent[md-fab],
+.mat-accent[md-mini-fab] {
 	background-color: $secondary !important;
 }
 
-.mat-accent[mat-raised-button] {
+.mat-accent[md-raised-button] {
 	padding-left: 30px;
 	&:before {
 		content: 'clear';
