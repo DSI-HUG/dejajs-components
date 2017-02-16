@@ -18,7 +18,7 @@ deja-date-picker {
 		background-color: transparent;
 	}
 	#deja-date-selector {
-		.md-input-wrapper {
+		.mat-input-wrapper {
 			padding-right: 24px;
 		}
 		.material-icons {
@@ -37,7 +37,7 @@ deja-date-picker {
 		}
 	}
 	&.ng-invalid {
-		.md-input-wrapper {
+		.mat-input-wrapper {
 			.md-input-underline {
 				.md-input-ripple {
 					background-color: $red;
