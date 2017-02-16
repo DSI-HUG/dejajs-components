@@ -10,7 +10,7 @@
  */
 
 import { CommonModule } from '@angular/common';
-import { ModuleWithProviders, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { DejaMonacoEditorComponent } from "./monaco-editor.component";
 
 @NgModule({
@@ -21,10 +21,5 @@ import { DejaMonacoEditorComponent } from "./monaco-editor.component";
     ],
 })
 export class DejaMonacoEditorModule {
-    public static forRoot(): ModuleWithProviders {
-        return {
-            ngModule: DejaMonacoEditorModule,
-            providers: [],
-        };
-    }
+
 }

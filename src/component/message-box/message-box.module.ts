@@ -25,9 +25,9 @@ import { DejaMessageBoxComponent } from './message-box.component';
     ],
     imports: [
         CommonModule,
-        MdCardModule.forRoot(),
-        MdIconModule.forRoot(),
-        MdButtonModule.forRoot(),
+        MdCardModule,
+        MdIconModule,
+        MdButtonModule,
     ],
 })
 export class DejaMessageBoxModule { }

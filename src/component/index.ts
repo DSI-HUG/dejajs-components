@@ -23,7 +23,6 @@ export * from "./dialog/index";
 export * from "./dragdrop/index";
 export * from "./dropdown/index";
 export * from "./menu/index";
-export * from "./scale/index";
 export * from "./select/index";
 export * from "./templates/index";
 export * from "./tiles/index";

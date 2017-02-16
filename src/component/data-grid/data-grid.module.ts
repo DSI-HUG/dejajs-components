@@ -10,7 +10,7 @@
  */
 
 import { CommonModule } from '@angular/common';
-import { ModuleWithProviders, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { FormsModule  } from '@angular/forms';
 import { DejaSortingModule } from "../../common/core/sorting/index";
 import { DejaDragDropModule } from '../dragdrop/dragdrop.module';
@@ -40,11 +40,6 @@ import { DejaGridComponent, DejaGridGroupAreaComponent, DejaGridHeaderComponent,
         DejaSortingModule,
     ],
 })
-export class DejaGridModule { 
-    public static forRoot(): ModuleWithProviders {
-        return {
-            ngModule: DejaGridModule,
-            providers: [],
-        };
-    }
+export class DejaGridModule {
+
 }
