@@ -25,7 +25,7 @@ import { DejaColorPickerComponent  } from './index';
         FormsModule,
         DejaColorSelectorModule,
         DejaDropDownModule,
-        MdButtonModule.forRoot(),
+        MdButtonModule,
     ],
 })
 export class DejaColorPickerModule { }
