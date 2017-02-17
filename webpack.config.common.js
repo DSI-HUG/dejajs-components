@@ -10,8 +10,6 @@ module.exports = {
             "./src/scss",
             "./src/polyfills.ts",
             "./src/demo-app/main.ts",
-            "./send-action.js",
-            "./send-action-test.js",
         ],
     },
     module: {

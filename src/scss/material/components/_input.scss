@@ -1,4 +1,8 @@
 md-input-container {
+	.mat-input-placeholder-wrapper {
+		overflow: visible !important;
+	}
+
 	.mat-input-wrapper {
 		.mat-input-underline {
 			.mat-input-ripple {

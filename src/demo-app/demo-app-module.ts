@@ -18,7 +18,6 @@ import { RouterModule } from "@angular/router";
 import { GroupingModule } from "../common/core/grouping/index";
 import { DejaSortingModule } from "../common/core/sorting/index";
 import { MaterialColors } from "../common/core/style/index";
-import { GlobalEventService } from "../common/global-event/global-event.service";
 import {
     DejaAccordionModule,
     DejaAutosizeTextAreaModule,
@@ -54,7 +53,6 @@ import { DejaDatePickerDemo } from "./date-picker/date-picker-demo";
 import { DemoApp } from "./demo-app/demo-app";
 import { Home } from "./demo-app/home-app";
 import { routing } from "./demo-app/routes";
-import { GlobalEventsDemo } from "./global-events/global-events-demo";
 import { GridDemo } from "./grid/grid-demo";
 import { MenuDemo } from "./menu/menu-demo";
 import { MessageBoxDemo } from "./message-box/message-box-demo";
@@ -84,7 +82,6 @@ import { DejaTreeListDemo } from "./tree-list/tree-list-demo";
         DejaDatePickerDemo,
         DejaColorSelectorDemo,
         DemoApp,
-        GlobalEventsDemo,
         GridDemo,
         Home,
         MenuDemo,
@@ -142,7 +139,6 @@ import { DejaTreeListDemo } from "./tree-list/tree-list-demo";
     providers: [
         CountriesService,
         CountriesListService,
-        GlobalEventService,
         MaterialColors,
         DrugsService,
         // Monaco Editor Resolver Route
