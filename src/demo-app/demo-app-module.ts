@@ -12,13 +12,12 @@
 import { ApplicationRef, NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { HttpModule } from "@angular/http";
-import { MdButtonModule, MdCardModule, MdCheckboxModule, MdIconModule, MdInputModule, MdListModule, MdProgressCircleModule, MdSidenavModule, MdSliderModule, MdTabsModule, MdToolbarModule } from "@angular/material";
+import { MaterialModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 import { GroupingModule } from "../common/core/grouping/index";
 import { DejaSortingModule } from "../common/core/sorting/index";
 import { MaterialColors } from "../common/core/style/index";
-import { GlobalEventService } from "../common/global-event/global-event.service";
 import {
     DejaAccordionModule,
     DejaAutosizeTextAreaModule,
@@ -37,7 +36,6 @@ import {
     DejaMessageBoxModule,
     DejaMonacoEditorModule,
     DejaRangeModule,
-    DejaScaleModule,
     DejaSelectModule,
     DejaSnackbarModule,
     DejaSplitterModule,
@@ -55,7 +53,6 @@ import { DejaDatePickerDemo } from "./date-picker/date-picker-demo";
 import { DemoApp } from "./demo-app/demo-app";
 import { Home } from "./demo-app/home-app";
 import { routing } from "./demo-app/routes";
-import { GlobalEventsDemo } from "./global-events/global-events-demo";
 import { GridDemo } from "./grid/grid-demo";
 import { MenuDemo } from "./menu/menu-demo";
 import { MessageBoxDemo } from "./message-box/message-box-demo";
@@ -64,7 +61,6 @@ import { MonacoEditorDemoService } from "./monaco-editor/monaco-editor-demo.serv
 import { MonacoEditorJsonFileResolver, MonacoEditorJsonToCompareFileResolver, MonacoEditorXmlFileResolver, MonacoEditorXmlToCompareFileResolver } from "./monaco-editor/monaco-editor.resolver";
 import { ProgressCircleDemo } from "./progress-circle/progress-circle-demo";
 import { DejaRangeDemo } from './range/range-demo';
-import { ScaleDemo } from "./scale/scale-demo";
 import { SelectDemo } from "./select/select-demo";
 import { CountriesListService } from "./services/countries-list.service";
 import { CountriesService } from "./services/countries.service";
@@ -86,12 +82,10 @@ import { DejaTreeListDemo } from "./tree-list/tree-list-demo";
         DejaDatePickerDemo,
         DejaColorSelectorDemo,
         DemoApp,
-        GlobalEventsDemo,
         GridDemo,
         Home,
         MenuDemo,
         MessageBoxDemo,
-        ScaleDemo,
         SelectDemo,
         TilesDemo,
         TextAreaDemo,
@@ -117,19 +111,8 @@ import { DejaTreeListDemo } from "./tree-list/tree-list-demo";
         FormsModule,
         HttpModule,
         RouterModule,
-        MdToolbarModule.forRoot(),
-        MdInputModule.forRoot(),
-        MdProgressCircleModule.forRoot(),
-        MdButtonModule.forRoot(),
-        MdIconModule.forRoot(),
-        MdSidenavModule.forRoot(),
-        MdCardModule.forRoot(),
-        MdCheckboxModule.forRoot(),
-        MdListModule.forRoot(),
-        MdSliderModule.forRoot(),
-        MdTabsModule.forRoot(),
-        DejaScaleModule.forRoot(),
-        DejaSelectModule.forRoot(),
+        MaterialModule,
+        DejaSelectModule,
         DejaTreeListModule,
         DejaTilesModule,
         DejaColorSelectorModule,
@@ -156,7 +139,6 @@ import { DejaTreeListDemo } from "./tree-list/tree-list-demo";
     providers: [
         CountriesService,
         CountriesListService,
-        GlobalEventService,
         MaterialColors,
         DrugsService,
         // Monaco Editor Resolver Route

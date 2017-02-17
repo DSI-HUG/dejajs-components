@@ -6,13 +6,13 @@ deja-select {
 	display: block;
 	&.ng-invalid {
 		#input {
-			.md-input-wrapper {
-				.md-input-underline {
-					.md-input-ripple {
+			.mat-input-wrapper {
+				.mat-input-underline {
+					.mat-input-ripple {
 						background-color: $red;
 					}
 				}
-				.md-input-placeholder.md-focused {
+				.mat-input-placeholder.mat-focused {
 					color: $red !important;
 				}
 			}
@@ -26,13 +26,13 @@ deja-select {
 		width: 100%;
 
 		// add a few pixels to avoid that the icon touch the line
-		.md-input-wrapper {
-			.md-input-underline {
+		.mat-input-wrapper {
+			.mat-input-underline {
 				margin-top: 8px;
 			}
 		}
 
-		.md-input-suffix {
+		.mat-input-suffix {
 			width: 2rem;
 			#clear-button {
 				opacity: 0.25;
@@ -44,8 +44,8 @@ deja-select {
 			}
 		}
 		&[wait="true"] {
-			.md-input-wrapper {
-				.md-input-underline {
+			.mat-input-wrapper {
+				.mat-input-underline {
 					border-top: 0;
 					overflow: hidden;
 					position: absolute;
@@ -74,7 +74,7 @@ deja-select {
 						animation: load-short 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
 						animation-delay: 1.15s;
 					}
-					.md-input-ripple {
+					.mat-input-ripple {
 						background-color: transparent;
 					}
 				}
@@ -82,15 +82,16 @@ deja-select {
 		}
 		&[multiselection="true"] {
 			margin-top: 0.6rem;
-			.md-input-wrapper {
+			.mat-input-wrapper {
 				margin-top: 0.5rem;
-				label.md-input-placeholder {
+				label.mat-input-placeholder {
 					display: block;
+					padding-top: 2rem;
 					-webkit-transform: translateY(-70%) scale(0.75);
 					transform: translateY(-70%) scale(0.75);
 					width: 133.33333%;
 				}
-				.md-input-table>* {
+				.mat-input-table>* {
 					display: table-row;
 					#md-input-prefix {
 						margin-bottom: 0.5rem;
@@ -128,7 +129,7 @@ deja-select {
 				}
 			}
 		}
-		[md-suffix] {
+		[mdSuffix] {
 			md-progress-spinner {
 				width: 1.5rem;
 				height: 1.5rem;

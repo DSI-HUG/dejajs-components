@@ -32,11 +32,8 @@ node_modules
 dist
 *.js
 *.js.map
-!send-action.js
-!send-action-test.js
 !webpack.*
 !bs-config.js
-!polyfills.js
 
 
 src/**/*.css

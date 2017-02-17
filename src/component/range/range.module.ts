@@ -19,7 +19,7 @@ import { DejaRangeComponent } from './range.component';
     exports: [DejaRangeComponent],
     imports: [
         CommonModule,
-        MaterialModule.forRoot(),
+        MaterialModule,
     ],
 })
 export class DejaRangeModule { }

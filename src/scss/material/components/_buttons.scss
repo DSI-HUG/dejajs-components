@@ -1,50 +1,50 @@
-.md-primary[md-icon-button]:not([disabled]) {
+.mat-primary[md-icon-button]:not([disabled]) {
 	color: $secondary !important;
 }
 
-.md-success[md-icon-button]:not([disabled]) {
+.mat-success[md-icon-button]:not([disabled]) {
 	color: $success !important;
 }
 
-.md-warn[md-icon-button]:not([disabled]) {
+.mat-warn[md-icon-button]:not([disabled]) {
 	color: $warning !important;
 }
 
-.md-danger[md-icon-button]:not([disabled]) {
+.mat-danger[md-icon-button]:not([disabled]) {
 	color: $red !important;
 }
 
-.md-primary[md-raised-button],
-.md-primary[md-fab],
-.md-primary[md-mini-fab] {
+.mat-primary[md-raised-button],
+.mat-primary[md-fab],
+.mat-primary[md-mini-fab] {
 	background-color: $secondary !important;
 	color: #FFF !important;
 }
 
-.md-success[md-raised-button],
-.md-success[md-fab],
-.md-success[md-mini-fab] {
+.mat-success[md-raised-button],
+.mat-success[md-fab],
+.mat-success[md-mini-fab] {
 	background-color: $success !important;
 	color: #FFF !important;
 }
 
-.md-warn[md-raised-button],
-.md-warn[md-fab],
-.md-warn[md-mini-fab] {
+.mat-warn[md-raised-button],
+.mat-warn[md-fab],
+.mat-warn[md-mini-fab] {
 	background-color: $warning !important;
 	color: #FFF !important;
 }
 
-.md-danger[md-raised-button],
-.md-danger[md-fab],
-.md-danger[md-mini-fab] {
+.mat-danger[md-raised-button],
+.mat-danger[md-fab],
+.mat-danger[md-mini-fab] {
 	background-color: $red !important;
 	color: #FFF !important;
 }
 
-.md-blank[md-raised-button],
-.md-blank[md-fab],
-.md-blank[md-mini-fab] {
+.mat-blank[md-raised-button],
+.mat-blank[md-fab],
+.mat-blank[md-mini-fab] {
 	background-color: transparent !important;
 	box-shadow: none;
 	color: rgba(0, 0, 0, 0.6) !important;
@@ -56,7 +56,7 @@
 		padding: 0;
 		right: 0;
 		width: 1rem;
-		.md-button-wrapper {
+		.mat-button-wrapper {
 			height: 1rem;
 			width: 1rem;
 			md-icon {
@@ -100,13 +100,13 @@
 	}
 }
 
-.md-accent[md-raised-button],
-.md-accent[md-fab],
-.md-accent[md-mini-fab] {
+.mat-accent[md-raised-button],
+.mat-accent[md-fab],
+.mat-accent[md-mini-fab] {
 	background-color: $secondary !important;
 }
 
-.md-accent[md-raised-button] {
+.mat-accent[md-raised-button] {
 	padding-left: 30px;
 	&:before {
 		content: 'clear';

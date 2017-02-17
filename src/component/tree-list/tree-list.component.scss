@@ -8,16 +8,16 @@ deja-tree-list {
     overflow: hidden;
 	&.ng-invalid {
 		#input {
-			.md-input-wrapper {
-				.md-input-underline {
-					.md-input-ripple {
+			.mat-input-wrapper {
+				.mat-input-underline {
+					.mat-input-ripple {
 						background-color: $red;
 						opacity: 1;
 						-webkit-transform: scaleY(1);
 						transform: scaleY(1);
 					}
 				}
-				.md-input-placeholder {
+				.mat-input-placeholder {
 					color: $red !important;
 				}
 			}

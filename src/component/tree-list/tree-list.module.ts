@@ -12,7 +12,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MdCheckboxModule, MdInputModule } from '@angular/material';
+import { MdButtonModule, MdCheckboxModule, MdInputModule } from '@angular/material';
 import { DejaDragDropModule, DragDropService } from '../dragdrop';
 import { DejaTreeListComponent } from "./";
 import { DejaTextMetricsModule } from "./text-metrics";
@@ -23,8 +23,9 @@ import { DejaTextMetricsModule } from "./text-metrics";
     imports: [
         CommonModule,
         FormsModule,
-        MdInputModule.forRoot(),
-        MdCheckboxModule.forRoot(),
+        MdInputModule,
+        MdCheckboxModule,
+        MdButtonModule,
         DejaDragDropModule,
         DejaTextMetricsModule,
     ],

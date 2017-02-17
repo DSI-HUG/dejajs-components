@@ -1,12 +1,12 @@
-.md-checkbox-checked,
-.md-checkbox-indeterminate {
-  .md-checkbox-layout {
-    .md-checkbox-inner-container {
-      .md-checkbox-background {
+.mat-checkbox-checked,
+.mat-checkbox-indeterminate {
+  .mat-checkbox-layout {
+    .mat-checkbox-inner-container {
+      .mat-checkbox-background {
         background-color:$secondary;
       }
-      .md-checkbox-ripple {
-        .md-ripple-foreground {
+      .mat-checkbox-ripple {
+        .mat-ripple-element {
           background-color:rgba($secondary, .2) !important;
         }
       }
@@ -14,14 +14,6 @@
   }
 }
 
-.md-checkbox-focused {
-  .md-checkbox-layout {
-    .md-checkbox-inner-container {
-      .md-radio-ripple {
-        .md-ripple-foreground {
-          background-color:rgba($red, .2) !important;
-        }
-      }
-    }
-  }
+.mat-checkbox:not(.mat-checkbox-disabled).mat-checkbox-anim-checked-unchecked .mat-checkbox-ripple .mat-ripple-element {
+  background-color: rgba($secondary,.26);
 }

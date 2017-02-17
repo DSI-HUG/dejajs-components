@@ -23,8 +23,8 @@ import { DejaDateSelectorComponent }   from './date-selector.component';
         DejaCircularPickerModule,
         CommonModule,
         FormsModule,
-        MdButtonModule.forRoot(),
-        MdIconModule.forRoot(),
+        MdButtonModule,
+        MdIconModule,
     ],
 })
 export class DejaDateSelectorModule { }

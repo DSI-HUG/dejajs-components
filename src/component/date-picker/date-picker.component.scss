@@ -18,7 +18,7 @@ deja-date-picker {
 		background-color: transparent;
 	}
 	#deja-date-selector {
-		.md-input-wrapper {
+		.mat-input-wrapper {
 			padding-right: 24px;
 		}
 		.material-icons {
@@ -37,17 +37,17 @@ deja-date-picker {
 		}
 	}
 	&.ng-invalid {
-		.md-input-wrapper {
-			.md-input-underline {
-				.md-input-ripple {
+		.mat-input-wrapper {
+			.mat-input-underline {
+				.mat-input-ripple {
 					background-color: $red;
 					opacity: 1;
 					transform: scaleY(1);
 				}
 			}
-			.md-input-table {
-				.md-input-infix {
-					.md-input-placeholder {
+			.mat-input-table {
+				.mat-input-infix {
+					.mat-input-placeholder {
 						color: $red;
 					}
 				}
