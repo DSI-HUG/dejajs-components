@@ -6,7 +6,7 @@
         background-color:$secondary;
       }
       .mat-checkbox-ripple {
-        .mat-ripple-foreground {
+        .mat-ripple-element {
           background-color:rgba($secondary, .2) !important;
         }
       }
@@ -14,14 +14,6 @@
   }
 }
 
-.mat-checkbox-focused {
-  .mat-checkbox-layout {
-    .mat-checkbox-inner-container {
-      .mat-radio-ripple {
-        .mat-ripple-foreground {
-          background-color:rgba($red, .2) !important;
-        }
-      }
-    }
-  }
+.mat-checkbox:not(.mat-checkbox-disabled).mat-checkbox-anim-checked-unchecked.mat-accent .mat-checkbox-ripple .mat-ripple-element {
+  background-color: rgba($secondary,.26);
 }
