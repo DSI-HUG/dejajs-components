@@ -27,8 +27,8 @@ export class CountriesService {
                     resolve.complete();
                     return;
                 }
-                // this.http.get('src/demo-app/services/countries.json', { responseType: ResponseContentType.Json })
-                this.http.get('http://localhost:5101/db', { responseType: ResponseContentType.Json })
+
+                this.http.get('src/demo-app/services/countries.json', { responseType: ResponseContentType.Json })
                     .map((response) => {
                         let datas = response.json();
                         let countries = datas.data as ICountry[];

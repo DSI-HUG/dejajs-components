@@ -30,7 +30,7 @@ module.exports = webpackMerge.smart(commonConfig, {
     plugins: [
         new HtmlWebpackPlugin({
             template: "src/index.ejs",
-            baseUrl: './dejajs-components',
+            baseUrl: 'https://dsi-hug.github.io/dejajs-components/',
             title: 'DEJA-JS Demo App',
         }),
         new webpack.NoErrorsPlugin(),
