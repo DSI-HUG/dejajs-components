@@ -1,20 +1,17 @@
 language: node_js
+cache:
+  directories:
+    - node_modules
+notifications:
+  email: false
 node_js:
-- '6'
-deploy:
-  provider: npm
-  email: gmer@hcuge.ch
-  api_key:
-    secure: PnDyksNEBI8ueuj8/3Ngk4rMIkBWHMcwVgRwEp2wSP/OWaTfnLVw6O+qVBFyXvYABTpdZ2C3FPYklCbtZgy1zK7xHreyRtMoQyt1VNPsbLaIkaquYfPpYEXryoo0TV7NVFuCWNWjii+3oawEq4uOz5wuf3kX5DPc/hcb5ISaTWeS7ylkE4IzmOIG/xRxSDqojK2XO/AlpuOKuXqd9UYOM++pQqlKo065zdMCSHS0+l+9aZ6ln+LusA/DKgCAy5TMdHYkkscN1igYhe7DnDmsb5n9ZgD4WsKCGToOhmWPDWpENe8nnmGPjc1rL4GQ4cul1aoOdg0voJbpTKgyULvAMCEczcF4Tc1kL5+Uoj78xgJpRVWetdqi4BVX14qDDy40HEw7ZVFJ6uJqHlOh3GRSctTRr/J4McazZFe+sTqvESXViM+aDGfM/mGnfpZ5iRS15q1mShg+7wv/1BvwwDEmNnfv/5H8+C+C2h1JRr8xz3E4IomuP+JOJT507BhD/Pnq/umn29kWbYtDg5QID62Aroi9UmPsdgo08HKTao8Ymflugpvn7Vi1xnv+KJ6p78qBqaUmYdzRaPCW+DjJ6rSdOc3mm9Tom1SODXTnuN5JZsyZuKxSmc0Fx0o0ryHTwCoU4UCOWhoPLtWnkcwutyjnUTGSlrg8p9u+O/OF/qUQ3uM=
-  on:
-    tags: true
-    repo: DSI-HUG/dejajs-components
-    branch: travis-test
-before_install:
-- export CHROME_BIN=chromium-browser
-- export DISPLAY=:99.0
-- sh -e /etc/init.d/xvfb start
-install:
-- npm install
-script:
-- npm publish --access=public
+  - '7'
+  - '6'
+  - '4'
+before_script:
+  - npm prune
+after_success:
+  - npm run semantic-release
+branches:
+  except:
+    - /^v\d+\.\d+\.\d+$/
