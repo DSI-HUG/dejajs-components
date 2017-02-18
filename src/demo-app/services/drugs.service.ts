@@ -45,8 +45,8 @@ export class DrugsService {
                     resolve.complete();
                     return;
                 }
-                // this.http.get('src/demo-app/services/countries.json', { responseType: ResponseContentType.Json })
-                this.http.get('http://localhost:5102/db', { responseType: ResponseContentType.Json })
+
+                this.http.get('src/demo-app/services/drugs.json', { responseType: ResponseContentType.Json })
                     .map((response: any) => {
                         let datas = response.json();
                         let drugs = datas.data as IDrug[];
