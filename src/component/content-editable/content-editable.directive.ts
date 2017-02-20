@@ -10,11 +10,10 @@
  */
 
 import { Directive, ElementRef, forwardRef, HostBinding, HostListener, Input } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { Observable, Subscription } from 'rxjs/Rx';
-import { setTimeout } from 'timers';
-import { KeyCodes } from "../../common/core/index";
+import { KeyCodes } from '../../common/core/index';
 
 const noop = () => { };
 
@@ -126,9 +125,9 @@ export class DejaEditableDirective implements ControlValueAccessor {
 
     /** Place toute la zone d'édition en selectioné. */
     public selectAll() {
-        let range = document.createRange();
+        const range = document.createRange();
         range.selectNodeContents(this.elementRef.nativeElement);
-        let sel = window.getSelection();
+        const sel = window.getSelection();
         sel.removeAllRanges();
         sel.addRange(range);
     }
@@ -137,10 +136,12 @@ export class DejaEditableDirective implements ControlValueAccessor {
     public edit(selectOnFocus?: boolean) {
         this.inEdition = true;
         if (selectOnFocus !== false) {
-            setTimeout(() => {
-                this.selectAll();
-                this.focus();
-            }, 10);
+            Observable.timer(10)
+                .first()
+                .subscribe(() => {
+                    this.selectAll();
+                    this.focus();
+                });
         }
     }
 
@@ -162,13 +163,13 @@ export class DejaEditableDirective implements ControlValueAccessor {
                 return;
             }
 
-            let element = this.elementRef.nativeElement as HTMLElement;
+            const element = this.elementRef.nativeElement as HTMLElement;
             this.globalClickObs = Observable.fromEvent(element.ownerDocument, 'click').subscribe((event: MouseEvent) => {
                 if (this.isChildElement(event.target as HTMLElement)) {
                     return;
                 }
 
-                let text = this.elementRef.nativeElement.innerText;
+                const text = this.elementRef.nativeElement.innerText;
                 this.onTouchedCallback();
                 if (text || !this.mandatory) {
                     this.value = text;
@@ -186,7 +187,7 @@ export class DejaEditableDirective implements ControlValueAccessor {
     }
 
     private set keydown(value: boolean) {
-        let elem = this.elementRef.nativeElement as HTMLElement;
+        const elem = this.elementRef.nativeElement as HTMLElement;
         if (value && this.inEdition) {
             if (this.keydownObs) {
                 return;
@@ -200,7 +201,7 @@ export class DejaEditableDirective implements ControlValueAccessor {
 
                 e.cancelBubble = true;
                 if (e.keyCode === KeyCodes.Enter && !this.multiline) {
-                    let text = this.elementRef.nativeElement.innerText;
+                    const text = this.elementRef.nativeElement.innerText;
                     if (text || !this.mandatory) {
                         this.value = text;
                     } else {
