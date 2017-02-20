@@ -9,7 +9,7 @@
  *
  */
 
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs/Rx';
 import { Rect } from '../../common/core/graphics';
 import { KeyCodes } from '../../common/core/keycodes.enum';
@@ -107,7 +107,7 @@ export class DejaDropDownComponent implements AfterViewInit {
         return this.elementRef.nativeElement;
     }
 
-    constructor(private elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef) {
+    constructor(private elementRef: ElementRef) {
         const element = elementRef.nativeElement as HTMLElement;
 
         Observable.from(this.dropDownPosition)
@@ -135,9 +135,7 @@ export class DejaDropDownComponent implements AfterViewInit {
     }
 
     public show() {
-        this.changeDetectorRef.detach();
         this.dropDownPosition.next({} as IDropDownPosition);
-        this.changeDetectorRef.detectChanges();
 
         Observable.timer(10)
             .first()
