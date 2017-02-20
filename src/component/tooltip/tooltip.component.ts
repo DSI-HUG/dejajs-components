@@ -39,7 +39,7 @@ export class DejaTooltipComponent implements OnInit {
         }
         this.params = this.tooltipService.params[this.name];
 
-        let promise = this.params.model as Promise<any>;
+        const promise = this.params.model as Promise<any>;
         if (promise.then) {
             promise.then((model) => {
                 this.model = model;
@@ -53,19 +53,19 @@ export class DejaTooltipComponent implements OnInit {
 
     @HostListener('document:mousemove', ['$event'])
     protected onMouseMove(e: MouseEvent) {
-        let deleteTimeout = () => {
+        const deleteTimeout = () => {
             if (this.hideTimeout) {
                 clearTimeout(this.hideTimeout);
                 delete this.hideTimeout;
             }
         };
-        let containerElement = this.dropdown.dropdownElement;
-        let containerBounds = new Rect(containerElement.getBoundingClientRect());
+        const containerElement = this.dropdown.dropdownElement;
+        const containerBounds = new Rect(containerElement.getBoundingClientRect());
 
-        let ownerElement = (this.params.ownerElement as ElementRef).nativeElement || this.params.ownerElement;
-        let ownerRect = new Rect(ownerElement.getBoundingClientRect());
+        const ownerElement = (this.params.ownerElement as ElementRef).nativeElement || this.params.ownerElement;
+        const ownerRect = new Rect(ownerElement.getBoundingClientRect());
 
-        let eventPosition = new Position(e.x, e.y);
+        const eventPosition = new Position(e.x, e.y);
         deleteTimeout();
         if (!containerBounds.containsPoint(eventPosition) && !ownerRect.containsPoint(eventPosition)) {
             this.hideTimeout = setTimeout(() => {

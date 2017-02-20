@@ -13,8 +13,8 @@
  * Created by rtr on 22.12.2016.
  */
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Output, Renderer, SimpleChanges, ViewEncapsulation } from '@angular/core';
-import {IAreaData} from "./area-data.model";
-import {Point} from "./point.model";
+import {IAreaData} from './area-data.model';
+import {Point} from './point.model';
 import {SplitAreaDirective} from './split-area.directive';
 
 const gutterSize = 'gutterSize';
@@ -28,11 +28,11 @@ const disabled = 'disabled';
     templateUrl: './splitter.html',
 })
 export class DejaSplitterComponent implements OnChanges, OnDestroy {
-    @Input() public direction: string = 'horizontal';
+    @Input() public direction = 'horizontal';
     @Input() public width: number;
     @Input() public height: number;
-    @Input() public gutterSize: number = 10;
-    @Input() public disabled: boolean = false;
+    @Input() public gutterSize = 10;
+    @Input() public disabled = false;
 
     @Output() public dragStart = new EventEmitter<number[]>(false);
     @Output() public dragProgress = new EventEmitter<number[]>(false);
@@ -54,12 +54,12 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
         return this.areas.length - 1;
     }
 
-    private minPercent: number = 0.3;
+    private minPercent = 0.3;
     private areas: IAreaData[] = [];
-    private isDragging: boolean = false;
-    private containerSize: number = 0;
-    private areaASize: number = 0;
-    private areaBSize: number = 0;
+    private isDragging = false;
+    private containerSize = 0;
+    private areaASize = 0;
+    private areaBSize = 0;
     private eventsDragFct: Function[] = [];
 
     constructor(private cdRef: ChangeDetectorRef,

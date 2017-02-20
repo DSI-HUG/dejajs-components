@@ -14,7 +14,7 @@ import { Rect } from '../../common/core/graphics';
 export interface IDejaTile {
   id?: string;
   type?: string;
-  color?: string; 
+  color?: string;
   bounds?: Rect;
   l?: number; // computed -- do not modify
   t?: number; // computed -- do not modify

@@ -10,8 +10,8 @@
  */
 
 import { Component, ElementRef, EventEmitter, forwardRef, Input, Output } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
-import {coerceBooleanProperty} from '@angular/material/core/coercion/boolean-property';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { Color } from '../../common/core/graphics/index';
 import { MaterialColor } from '../../common/core/style';
 
@@ -53,7 +53,7 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
     protected onChangeCallback: (_: any) => void = noop;
 
     private _small = false;
-    private _disabled: boolean = false;
+    private _disabled = false;
     private _value: Color;
 
     get containerElement() {
@@ -118,7 +118,7 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
             return;
         }
 
-        let target = event.currentTarget as HTMLElement;
+        const target = event.currentTarget as HTMLElement;
         if (target.id !== 'colorbtn') {
             return;
         }

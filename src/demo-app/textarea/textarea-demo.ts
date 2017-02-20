@@ -9,14 +9,14 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
     selector: 'textarea-demo',
     styleUrls: ['./textarea-demo.scss'],
     templateUrl: './textarea-demo.html',
 })
-export class TextAreaDemo implements OnInit {
+export class TextAreaDemo {
     protected multitext = `Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br />
                         Mauris auctor sit amet odio et aliquet. Curabitur auctor eleifend mattis. <br />
                         Nullam sit amet quam tellus. Ut mattis tellus sed erat ultricies ornare. <br />
@@ -26,8 +26,4 @@ export class TextAreaDemo implements OnInit {
     protected multitext2: string;
 
     constructor() { }
-
-    public ngOnInit() { 
-        
-    }
 }

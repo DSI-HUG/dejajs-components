@@ -8,6 +8,7 @@ import { DejaTooltipService } from '.';
 export class DejaTooltipDirective implements OnInit {
     @Input('tooltip-model') public model: any;
     @Input('deja-tooltip') public name: string;
+    // tslint:disable-next-line:no-output-rename
     @Output('tooltip-show') public show = new EventEmitter();
 
     private timeout: NodeJS.Timer;

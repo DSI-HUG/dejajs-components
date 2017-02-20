@@ -12,8 +12,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Rect } from '../../common/core/graphics/index';
 import { MaterialColors } from '../../common/core/style/index';
-import { IDejaDragEvent, IDejaTile, IDejaTileEvent, IDejaTileList } from '../../component';
-import { CountriesService, ICountry } from "../services/countries.service";
+import { IDejaDragEvent, IDejaTile, IDejaTileEvent } from '../../component';
+import { CountriesService, ICountry } from '../services/countries.service';
 
 @Component({
     selector: 'deja-tiles-demo',
@@ -23,7 +23,7 @@ import { CountriesService, ICountry } from "../services/countries.service";
 export class TilesDemo extends OnInit {
     protected designMode = false;
     private countries: ICountry[];
-    private tiles = [] as IDejaTileList;
+    private tiles = [] as IDejaTile[];
 
     constructor(private countriesService: CountriesService, private materialColors: MaterialColors) {
         super();
