@@ -9,9 +9,9 @@
  *
  */
 
-import { NgModule } from "@angular/core";
-import { SortingService } from "../sorting/index";
-import { GroupingService } from "./grouping.service";
+import { NgModule } from '@angular/core';
+import { SortingService } from '../sorting/index';
+import { GroupingService } from './index';
 
 @NgModule({
     providers: [SortingService, GroupingService],

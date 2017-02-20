@@ -9,7 +9,7 @@
  *
  */
 
-import { ControlValueAccessor } from "@angular/forms";
+import { ControlValueAccessor } from '@angular/forms';
 
 const noopv = (_v: any) => { };
 const noop = () => { };

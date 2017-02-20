@@ -9,9 +9,9 @@
  *
  */
 
-import { IItemTree } from "../item-list/index";
-import { SortingService } from "../sorting/index";
-import { IGroupInfo } from "./index";
+import { IItemTree } from '../item-list/index';
+import { SortingService } from '../sorting/index';
+import { IGroupInfo } from './index';
 
 /** Service de regroupement d'un tableau de modèles */
 export class GroupingService {
@@ -34,7 +34,7 @@ export class GroupingService {
             }
 
             if (groupInfos instanceof Array) {
-                let groupTree = (subtree: any[], index: number) => {
+                const groupTree = (subtree: any[], index: number) => {
                     if (index >= groupInfos.length) {
                         resolved(subtree);
                         return;
@@ -48,26 +48,26 @@ export class GroupingService {
                 groupTree(tree, 0);
 
             } else {
-                let groupInfo = groupInfos as IGroupInfo;
+                const groupInfo = groupInfos as IGroupInfo;
 
                 // Only group the last level listes
-                let groupTree = (parents: any[], curdepth: number) => {
+                const groupTree = (parents: any[], curdepth: number) => {
                     return new Promise<any[]>((resolvedChildren?: (result: any[]) => void, rejectedChildren?: (reason: any) => void) => {
                         try {
                             if (parents[0][childrenField]) {
-                                let groupParentChildren = (index) => {
+                                const groupParentChildren = (index) => {
                                     if (index >= parents.length) {
                                         resolvedChildren(parents);
                                         return;
                                     }
-                                    
+
                                     groupTree(parents[index][childrenField], curdepth + 1).then((result) => {
                                         parents[index][childrenField] = result;
                                         groupParentChildren(index + 1);
                                     }).catch(rejectedChildren);
                                 };
                                 groupParentChildren(0);
-                            } else {                                
+                            } else {
                                 this.groupChildren(parents, groupInfo, curdepth, childrenField).then(resolvedChildren).catch(rejectedChildren);
                             }
                         } catch (err) {
@@ -84,7 +84,7 @@ export class GroupingService {
     protected groupChildren(list: any[], groupInfo: IGroupInfo, _depth: number, childrenField: string) {
         return new Promise<any[]>((resolved?: (result: any[]) => void, rejected?: (reason: any) => void) => {
             try {
-                let groups = {} as { [groupby: string]: IItemTree };
+                const groups = {} as { [groupby: string]: IItemTree };
                 list.forEach((item) => {
                     let groupedBy = typeof groupInfo.groupByField === 'function' ? groupInfo.groupByField(item) : item[groupInfo.groupByField];
 
@@ -115,13 +115,13 @@ export class GroupingService {
                     parent[childrenField].push(item);
                 });
 
-                let groupedChildren = (<any> Object).values(groups) as any[];
+                const groupedChildren = (<any>Object).values(groups) as any[];
 
                 if (groupInfo.sortInfos) {
-                    let sortingService = new SortingService();
+                    const sortingService = new SortingService();
                     sortingService.sort(groupedChildren, groupInfo.sortInfos).then(resolved).catch(rejected);
                     groupedChildren.forEach((parent) => parent.sortField = groupInfo.sortInfos.name);
-                } else { 
+                } else {
                     groupedChildren.forEach((parent) => parent.sortField = 'toString');
                     resolved(groupedChildren);
                 }

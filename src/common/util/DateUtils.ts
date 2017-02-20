@@ -15,7 +15,9 @@ import { DatePipe } from '@angular/common';
  * Date conversion for DPI standards
  */
 export class DateUtils {
-    public static SYSTEM_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    public static SYSTEM_DATE_FORMAT = 'yyyy-MM-dd HH:mm:ss';
+
+    private static datePipe = new DatePipe('fr-CH');
 
     /**
      * Fromat a javascript date object to a 'yyyy-MM-dd HH:mm:ss' String Format
@@ -25,6 +27,4 @@ export class DateUtils {
     public static formatSystem(date: Date): string {
         return DateUtils.datePipe.transform(date, DateUtils.SYSTEM_DATE_FORMAT);
     }
-
-    private static datePipe = new DatePipe("fr-CH");
 }

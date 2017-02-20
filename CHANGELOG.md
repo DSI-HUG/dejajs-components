@@ -5,7 +5,7 @@
 # [1.3.1] (2017-02-15)
 
 ### Breaking changes from 1.3.0
-
+* **DateValidator:** Renamed to DateValidatorDirective
 
 ### Bug fixes #
 * **Typescript compiler options:**
