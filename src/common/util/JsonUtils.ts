@@ -11,7 +11,13 @@
 
 export class JsonUtils {
     /**
-     * deserializeJson is a method to deserialize a json into a typed object. The <T> say that we want to "capture" the object type so we can return it.
+     * Cache for getOneFrom() method
+     * @type {{}}
+     */
+    private static mapCaches: any = {};
+
+    /**
+     * deserializeJson is a method to deserialize a json into a typed object. The <T> say that we want to 'capture' the object type so we can return it.
      * More details : https://www.typescriptlang.org/docs/handbook/generics.html
      *
      * /!\ this is not a recursive function !
@@ -27,11 +33,11 @@ export class JsonUtils {
      * @param {Object} obj : Object to deserialize into
      * @param {Object | string} jsonObj : a JSON;
      *
-     * @return {<T>} obj : an object of "T" type
+     * @return {<T>} obj : an object of 'T' type
      */
     public static deserializeJson<T>(obj: T, jsonObj: any): T {
 
-        if (typeof jsonObj === "string") {
+        if (typeof jsonObj === 'string') {
             jsonObj = JSON.parse(jsonObj);
         }
 
@@ -54,14 +60,14 @@ export class JsonUtils {
      * @param clazz The class of the object created
      * @param sourceObj The JSON object
      * @param caseTransform
-     * @returns {T} : An object of "T" type
+     * @returns {T} : An object of 'T' type
      */
-    public static deserializeJson2<T>(clazz: {new (): T}, sourceObj: any, caseTransform: boolean = false): T {
-        let castedObj: T = new clazz();
+    public static deserializeJson2<T>(clazz: {new (): T}, sourceObj: any, caseTransform = false): T {
+        const castedObj: T = new clazz();
 
-        for (let sourcePropName in sourceObj) {
+        for (const sourcePropName in sourceObj) {
             if (sourceObj.hasOwnProperty(sourcePropName)) {
-                let targetPropName = caseTransform ? sourcePropName.toLowerCase() : sourcePropName;
+                const targetPropName = caseTransform ? sourcePropName.toLowerCase() : sourcePropName;
                 castedObj[targetPropName] = sourceObj[sourcePropName];
             }
         }
@@ -76,33 +82,28 @@ export class JsonUtils {
      * @param caseTransform
      * @returns {any[]}
      */
-    public static deserializeJsonList<T>(clazz: {new (): T}, sourceList: any[], caseTransform: boolean = false): T[] {
+    public static deserializeJsonList<T>(clazz: {new (): T}, sourceList: any[], caseTransform = false): T[] {
         return sourceList.map((sourceObj) => this.deserializeJson2<T>(clazz, sourceObj, caseTransform));
     }
 
     /**
-     * Convert a list of object into a "Map Object" where attributes name are IDs and values are the objects
-     * <br/>Note: the objects must have an "id" property
-     * @param objList : List of object with an attribute "id" or "ID" or "Id"
+     * Convert a list of object into a 'Map Object' where attributes name are IDs and values are the objects
+     * <br/>Note: the objects must have an 'id' property
+     * @param objList : List of object with an attribute 'id' or 'ID' or 'Id'
      * @returns {any}
      */
     public static toMap(objList: any[]): any {
-        let mapObj: any = {};
+        const mapObj: any = {};
         objList.forEach((obj: any) => {
             mapObj[obj.id || obj.ID || obj.Id] = obj;
         });
         return mapObj;
     }
 
-    /**
-     * Cache for getOneFrom() method
-     * @type {{}}
-     */
-    private static mapCaches: any = {};
 
     /**
      * Get an object from a array of object. It uses a cache in order to go faster if called in a loop.
-     * @param listPromise Promise that returns a array of objects. Object Must have an an attribute "id" or "ID" or "Id"
+     * @param listPromise Promise that returns a array of objects. Object Must have an an attribute 'id' or 'ID' or 'Id'
      * @param id: The ID we want to get
      * @param cacheName: The cache key to store it
      * @returns {Promise<any>} One Promise with the selected element

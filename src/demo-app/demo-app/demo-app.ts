@@ -9,9 +9,10 @@
  *
  */
 
-import { Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     selector: 'demo-app',
     styleUrls: ['./demo-app.scss', '../../scss/index.scss'],
@@ -21,9 +22,7 @@ export class DemoApp {
     public version: string;
     protected navOpened = true;
 
-    constructor() {
-
-    }
+    constructor() {}
 
     get debug() {
         // console.log('Binding ' + Date.now());
