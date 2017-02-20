@@ -9,8 +9,8 @@
  *
  */
 
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, Output } from '@angular/core';
-import { Observable, Subscription } from 'rxjs/Rx';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs/Rx';
 import { Rect } from '../../common/core/graphics';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 
@@ -50,12 +50,14 @@ export class DejaDropDownComponent implements AfterViewInit {
     /** Renvoie ou définit une valeur indiquant si le conteneur déroulant peut s'afficher par dessus son propriétaire */
     @Input() public avoidOnwerOverflow = true;
 
-    @HostBinding('attr.valign') private valign = null;
-    @HostBinding('attr.halign') private halign = null;
-    @HostBinding('style.left.px') private left = -1000;
-    @HostBinding('style.top.px') private top = -1000;
-    @HostBinding('style.width.px') private width = null as number;
-    @HostBinding('style.height.px') private height = null as number;
+    private dropDownPosition = new BehaviorSubject<IDropDownPosition>({
+        left: -1000,
+        top: -1000,
+        width: null,
+        height: null,
+        valign: null,
+        halign: null,
+    });
 
     private keyDownObs: Subscription;
 
@@ -106,6 +108,26 @@ export class DejaDropDownComponent implements AfterViewInit {
     }
 
     constructor(private elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef) {
+        const element = elementRef.nativeElement as HTMLElement;
+
+        Observable.from(this.dropDownPosition)
+            .subscribe((dropDownPosition) => {
+                const { left, top, width, height, valign, halign } = dropDownPosition;
+                element.style.left = left !== null ? `${left}px` : '';
+                element.style.top = top !== null ? `${top}px` : '';
+                element.style.width = width !== null ? `${width}px` : '';
+                element.style.height = height !== null ? `${height}px` : '';
+                if (valign) {
+                    element.setAttribute('valign', valign);
+                } else {
+                    element.removeAttribute('valign');
+                }
+                if (halign) {
+                    element.setAttribute('halign', halign);
+                } else {
+                    element.removeAttribute('halign');
+                }
+            });
     }
 
     public ngAfterViewInit() {
@@ -114,7 +136,7 @@ export class DejaDropDownComponent implements AfterViewInit {
 
     public show() {
         this.changeDetectorRef.detach();
-        this.height = null;
+        this.dropDownPosition.next({} as IDropDownPosition);
         this.changeDetectorRef.detectChanges();
 
         Observable.timer(10)
@@ -312,20 +334,22 @@ export class DejaDropDownComponent implements AfterViewInit {
                     }
                 }
 
+                const dropDownPosition = {} as IDropDownPosition;
+
                 if (dropdownBounds.top >= ownerBounds.bottom()) {
-                    this.valign = 'bottom';
+                    dropDownPosition.valign = 'bottom';
                 } else if (dropdownBounds.bottom() <= ownerBounds.top) {
-                    this.valign = 'top';
+                    dropDownPosition.valign = 'top';
                 } else {
-                    this.valign = 'center';
+                    dropDownPosition.valign = 'center';
                 }
 
                 if (dropdownBounds.left >= ownerBounds.right()) {
-                    this.halign = 'right';
+                    dropDownPosition.halign = 'right';
                 } else if (dropdownBounds.right() <= ownerBounds.left) {
-                    this.halign = 'left';
+                    dropDownPosition.halign = 'left';
                 } else {
-                    this.halign = 'center';
+                    dropDownPosition.halign = 'center';
                 }
 
                 // Convert to relative
@@ -333,14 +357,14 @@ export class DejaDropDownComponent implements AfterViewInit {
                 const parentRect = parentElement && parentElement.getBoundingClientRect();
                 const relativeBounds = (parentRect && dropdownBounds.offset(- parentRect.left, - parentRect.top)) || dropdownBounds;
 
-                this.left = relativeBounds.left;
-                this.top = relativeBounds.top;
-                this.width = relativeBounds.width;
-                this.height = relativeBounds.height;
+                dropDownPosition.left = relativeBounds.left;
+                dropDownPosition.top = relativeBounds.top;
+                dropDownPosition.width = relativeBounds.width;
+                dropDownPosition.height = relativeBounds.height;
 
                 this.keyDown = this.closeOnEscape;
 
-                this.changeDetectorRef.detectChanges();
+                this.dropDownPosition.next(dropDownPosition);
             });
     }
 
@@ -367,4 +391,13 @@ export class DejaDropDownComponent implements AfterViewInit {
             delete this.keyDownObs;
         }
     }
+}
+
+interface IDropDownPosition {
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+    valign: string;
+    halign: string;
 }
