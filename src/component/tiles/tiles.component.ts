@@ -48,7 +48,7 @@ export class DejaTilesComponent implements ControlValueAccessor, OnChanges, Afte
     @Output() public selectionChanged = new EventEmitter();
     @ContentChild('tileTemplate') public tileTemplate;
 
-    private tiles = [] as IDejaTile[];
+    private _tiles = [] as IDejaTile[];
     private dragInfos: IDejaTileDragDropInfos;
     private dragging = false;
     private onTouchedCallback: () => void = noop;
@@ -113,26 +113,35 @@ export class DejaTilesComponent implements ControlValueAccessor, OnChanges, Afte
         return this._layoutProvider;
     }
 
+    @Input()
+    public set tiles(tiles: IDejaTile[]) {
+        this.writeValue(tiles);
+    }
+
+    public get tiles() {
+        return this._tiles;
+    }
+
     // ************* ControlValueAccessor Implementation **************
     // get accessor
-    get value(): any {
-        return this.tiles;
+    public get value(): any {
+        return this._tiles;
     }
 
     // set accessor including call the onchange callback
-    set value(v: any) {
+    public set value(v: any) {
         this.writeValue(v);
         this.onChangeCallback(v);
     }
 
     // From ControlValueAccessor interface
     public writeValue(value: any) {
-        this.tiles = value;
-        if (this.tiles) {
+        this._tiles = value;
+        if (this._tiles) {
             this.ensureIds();
-            this.layoutProvider.refreshTiles(this.tiles, this.el.nativeElement.clientWidth);
+            this.layoutProvider.refreshTiles(this._tiles, this.el.nativeElement.clientWidth);
         } else {
-            this.tiles = [];
+            this._tiles = [];
         }
     }
 
@@ -148,9 +157,9 @@ export class DejaTilesComponent implements ControlValueAccessor, OnChanges, Afte
     // ************* End of ControlValueAccessor Implementation **************
 
     public removeTile(tile: IDejaTile) {
-        const index = this.tiles.indexOf(tile);
-        this.tiles.splice(index, 1);
-        this.onChangeCallback(this.tiles);
+        const index = this._tiles.indexOf(tile);
+        this._tiles.splice(index, 1);
+        this.onChangeCallback(this._tiles);
     }
 
     public ensureVisible(tile: IDejaTile) {
@@ -193,14 +202,14 @@ export class DejaTilesComponent implements ControlValueAccessor, OnChanges, Afte
     }
 
     public refresh() {
-        if (this.tiles) {
+        if (this._tiles) {
             this.ensureIds();
-            this.layoutProvider.refreshTiles(this.tiles, this.el.nativeElement.clientWidth);
+            this.layoutProvider.refreshTiles(this._tiles, this.el.nativeElement.clientWidth);
         }
     }
 
     public getFreePlace(pageX: number, pageY: number, width: number, height: number) {
-        if (!this.tiles || this.tiles.length === 0) {
+        if (!this._tiles || this._tiles.length === 0) {
             return new Rect(0, 0, width, height);
         }
 
@@ -218,8 +227,8 @@ export class DejaTilesComponent implements ControlValueAccessor, OnChanges, Afte
     public ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
         for (const propName in changes) {
             if (propName === 'designMode') {
-                if (this.tiles) {
-                    this.tiles.filter((t) => t.selected).forEach((t) => t.selected = false);
+                if (this._tiles) {
+                    this._tiles.filter((t) => t.selected).forEach((t) => t.selected = false);
                 }
                 this.selectedTiles = [];
             }
@@ -245,7 +254,7 @@ export class DejaTilesComponent implements ControlValueAccessor, OnChanges, Afte
 
     @HostListener('mousedown', ['$event'])
     protected onMouseDown(event: MouseEvent) {
-        if (event.buttons === 1 && this.tiles) {
+        if (event.buttons === 1 && this._tiles) {
             const target = event.target as HTMLElement;
             this.pressedTile = this.getTileFromHTMLElement(target);
             this.mouseUp = this.pressedTile !== undefined;
@@ -254,7 +263,7 @@ export class DejaTilesComponent implements ControlValueAccessor, OnChanges, Afte
                     if (event.ctrlKey) {
                         // Multi-selection is available in design mode, selection on the mouse up
                     } else {
-                        let selectedTiles = this.tiles.filter((t) => t.selected);
+                        let selectedTiles = this._tiles.filter((t) => t.selected);
                         if (!this.pressedTile.selected || this.cursor !== 'move') {
                             selectedTiles.forEach((t) => t.selected = false);
                             this.pressedTile.selected = true;
@@ -296,7 +305,7 @@ export class DejaTilesComponent implements ControlValueAccessor, OnChanges, Afte
                     };
 
                     // Unselect all tiles
-                    this.tiles.filter((t) => t.selected).forEach((t) => t.selected = false);
+                    this._tiles.filter((t) => t.selected).forEach((t) => t.selected = false);
                     this.selectedTiles = [];
 
                     event.preventDefault();
@@ -360,7 +369,7 @@ export class DejaTilesComponent implements ControlValueAccessor, OnChanges, Afte
                         this.layoutProvider.drop(this.dragInfos.tiles);
                     }
                     this.endDrag();
-                    this.onChangeCallback(this.tiles);
+                    this.onChangeCallback(this._tiles);
                     return false;
                 }
             });
@@ -426,7 +435,7 @@ export class DejaTilesComponent implements ControlValueAccessor, OnChanges, Afte
                     }
 
                     // Unselect all tiles
-                    this.tiles.filter((t) => t.selected).forEach((t) => t.selected = false);
+                    this._tiles.filter((t) => t.selected).forEach((t) => t.selected = false);
 
                     const containerElement = this.el.nativeElement as HTMLElement;
                     const containerBounds = containerElement.getBoundingClientRect();
@@ -439,7 +448,7 @@ export class DejaTilesComponent implements ControlValueAccessor, OnChanges, Afte
                     this.dragSelection.tilesRect = pageRect.offset(-this.dragSelection.tilesOffset.left, -this.dragSelection.tilesOffset.top);
 
                     const selectedTiles = [];
-                    this.layoutProvider.HitTest(this.tiles, this.dragSelection.tilesRect).forEach((t) => {
+                    this.layoutProvider.HitTest(this._tiles, this.dragSelection.tilesRect).forEach((t) => {
                         t.selected = true;
                         selectedTiles.push(t);
                     });
@@ -515,11 +524,11 @@ export class DejaTilesComponent implements ControlValueAccessor, OnChanges, Afte
         }
 
         const index = +tileElement.getAttribute('tile-index');
-        return this.tiles[index];
+        return this._tiles[index];
     }
 
     private ensureIds() {
-        this.tiles.forEach((t) => {
+        this._tiles.forEach((t) => {
             if (!t.id) {
                 t.id = this.getCurrentId();
             }
@@ -530,7 +539,7 @@ export class DejaTilesComponent implements ControlValueAccessor, OnChanges, Afte
         let id = 0;
         let sid = '#' + id;
         const ids = {};
-        this.tiles.map((t) => ids[t.id] = t.id);
+        this._tiles.map((t) => ids[t.id] = t.id);
         while (ids[sid]) {
             sid = '#' + (++id);
         }
