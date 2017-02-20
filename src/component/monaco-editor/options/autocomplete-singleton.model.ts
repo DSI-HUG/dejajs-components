@@ -9,8 +9,8 @@
  *
  */
 
-import {AutoCompleteItem} from "./auto-complete-item.model";
-import {IEditorLanguage} from "./editor-language.model";
+import {AutoCompleteItem} from './auto-complete-item.model';
+import {IEditorLanguage} from './editor-language.model';
 
 declare const monaco: any;
 
@@ -18,6 +18,9 @@ declare const monaco: any;
  * Manage the autoCompletion for all instances of the editors
  */
 export class AutoCompleteSingleton {
+    private static instance: AutoCompleteSingleton;
+    private _autoCompleteValues: { [key: string]: AutoCompleteItem[]; } = {};
+
     /**
      * We use a singleton, because this class can be call from all the Monaco Editor Components
      * @returns {AutoCompleteSingleton}
@@ -29,12 +32,9 @@ export class AutoCompleteSingleton {
         return AutoCompleteSingleton.instance;
     }
 
-    get autoCompleteValues(): {[p: string]: AutoCompleteItem[]} {
+    public get autoCompleteValues(): {[p: string]: AutoCompleteItem[]} {
         return this._autoCompleteValues;
     }
-
-    private static instance: AutoCompleteSingleton;
-    private _autoCompleteValues: { [key: string]: AutoCompleteItem[]; } = {};
 
     private constructor() {
 
@@ -83,9 +83,9 @@ export class AutoCompleteSingleton {
      * @returns {any[]}
      */
     private parseXmlAutoComplete(content: string): AutoCompleteItem[] {
-        let tempList: AutoCompleteItem [] = [];
-        let parser = new DOMParser();
-        let tags = parser.parseFromString(content, "text/xml").getElementsByTagName('*');
+        const tempList: AutoCompleteItem [] = [];
+        const parser = new DOMParser();
+        const tags = parser.parseFromString(content, 'text/xml').getElementsByTagName('*');
 
         for (let i = 0; i < tags.length; i++) {
             // Add TAG only if it not already existing in autoComplete list and in tempList
@@ -93,7 +93,7 @@ export class AutoCompleteSingleton {
                 && !tempList.find(obj => obj.label === tags[i].tagName)) {
 
                 // Create autoComplete object
-                let obj = new AutoCompleteItem()
+                const obj = new AutoCompleteItem()
                     .setLabel(tags[i].tagName)
                     .setKind(monaco.languages.CompletionItemKind.Function)
                     .setDocumentation('')
@@ -113,7 +113,7 @@ export class AutoCompleteSingleton {
 
     private parseJsonAutoComplete(content: string): AutoCompleteItem[] {
         const regex = /(?:\"|\')([^"]*)(?:\"|\')(?=:)(?:\:\s*)(?:\"|\')?(true|false|[0-9a-zA-Z\+\-\,\.\$]*)/g;
-        let tempList: AutoCompleteItem [] = [];
+        const tempList: AutoCompleteItem [] = [];
         let m;
 
         while ((m = regex.exec(content)) !== null) {
@@ -126,7 +126,7 @@ export class AutoCompleteSingleton {
             if (m[1] && !this._autoCompleteValues[IEditorLanguage.JSON].find(obj => obj.label === m[1])
                 && !tempList.find(obj => obj.label === m[1])) {
 
-                let obj = new AutoCompleteItem()
+                const obj = new AutoCompleteItem()
                     .setLabel(m[1])
                     .setKind(monaco.languages.CompletionItemKind.Value)
                     .setDocumentation('')
