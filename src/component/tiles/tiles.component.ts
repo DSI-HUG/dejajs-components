@@ -9,13 +9,13 @@
  *
  */
 
-import { Component, ContentChild, ElementRef, EventEmitter, forwardRef, HostListener, Input, Output, SimpleChange, ViewChild } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { AfterViewInit, Component, ContentChild, ElementRef, EventEmitter, forwardRef, HostListener, Input, OnChanges, Output, SimpleChange } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { Observable, Subscription } from 'rxjs/Rx';
 import { setTimeout } from 'timers';
 import { Position, Rect } from '../../common/core/graphics';
-import { DejaTileSelectionChangedEvent, IDejaTile, IDejaTileEvent, IDejaTileList } from './index';
+import { DejaTileSelectionChangedEvent, IDejaTile, IDejaTileEvent } from './index';
 import { DejaTilesLayoutProvider } from './tiles-layout.provider';
 
 const noop = () => { };
@@ -36,7 +36,7 @@ const DejaTilesComponentValueAccessor = {
     ],
     templateUrl: './tiles.component.html',
 })
-export class DejaTilesComponent implements ControlValueAccessor {
+export class DejaTilesComponent implements ControlValueAccessor, OnChanges, AfterViewInit {
 
     @Input() public maxwidth = '100%';
     @Input() public maxheight: string;
@@ -47,9 +47,8 @@ export class DejaTilesComponent implements ControlValueAccessor {
     @Output() public tileTitleEditClick = new EventEmitter();
     @Output() public selectionChanged = new EventEmitter();
     @ContentChild('tileTemplate') public tileTemplate;
-    @ViewChild('tilesContainer') private tilesContainer: ElementRef;
 
-    private _tiles = [] as IDejaTileList;
+    private tiles = [] as IDejaTile[];
     private dragInfos: IDejaTileDragDropInfos;
     private dragging = false;
     private onTouchedCallback: () => void = noop;
@@ -78,7 +77,7 @@ export class DejaTilesComponent implements ControlValueAccessor {
     }
 
     @Input()
-    public set designMode(value: boolean) {
+    set designMode(value: boolean) {
         this._designMode = coerceBooleanProperty(value);
         this.mouseMove = this._designMode;
         if (this._designMode) {
@@ -89,17 +88,7 @@ export class DejaTilesComponent implements ControlValueAccessor {
         }
     }
 
-    @Input()
-    public set tiles(value: IDejaTile[]) {
-        this._tiles = value;
-        this._selectedTiles = this._tiles ? this._tiles.filter((t) => t.selected) : [];
-    }
-
-    public get tiles() {
-        return this._tiles;
-    }
-
-    public get designMode() {
+    get designMode() {
         return this._designMode;
     }
 
@@ -108,8 +97,8 @@ export class DejaTilesComponent implements ControlValueAccessor {
     }
 
     public set selectedTiles(selectedTiles: IDejaTile[]) {
-        let event = {} as DejaTileSelectionChangedEvent;
-        event.tiles = selectedTiles;
+        const event = {} as DejaTileSelectionChangedEvent;
+        event.selectedTiles = selectedTiles;
         this.selectionChanged.emit(event);
         this._selectedTiles = selectedTiles;
     }
@@ -159,14 +148,14 @@ export class DejaTilesComponent implements ControlValueAccessor {
     // ************* End of ControlValueAccessor Implementation **************
 
     public removeTile(tile: IDejaTile) {
-        let index = this.tiles.indexOf(tile);
+        const index = this.tiles.indexOf(tile);
         this.tiles.splice(index, 1);
         this.onChangeCallback(this.tiles);
     }
 
     public ensureVisible(tile: IDejaTile) {
         let target = this.el.nativeElement as HTMLElement;
-        let scrollElement = target;
+        const scrollElement = (target.ownerDocument as any).scrollingElement;
 
         if (tile) {
             let left = tile.l;
@@ -210,121 +199,41 @@ export class DejaTilesComponent implements ControlValueAccessor {
         }
     }
 
-    public getFreePlace(pageX?: number, pageY?: number, width?: number, height?: number) {
+    public getFreePlace(pageX: number, pageY: number, width: number, height: number) {
         if (!this.tiles || this.tiles.length === 0) {
             return new Rect(0, 0, width, height);
         }
 
         // Check if we drag on a tile
-        let containerElement = this.tilesContainer.nativeElement as HTMLElement;
-        let containerBounds = containerElement.getBoundingClientRect();
-
-        const x = pageX ? (pageX - containerBounds.left) : 0;
-        const y = pageY ? (pageY - containerBounds.top) : 0;
-
-        return this.layoutProvider.getFreePlace(this.tiles, new Rect(this.layoutProvider.getPercentSize(x), this.layoutProvider.getPercentSize(y), width, height));
-    }
-
-    public startDrag(tiles: IDejaTile[], pageX: number, pageY: number, cursor?: string) {
-        let containerElement = this.tilesContainer.nativeElement as HTMLElement;
-        let containerBounds = containerElement.getBoundingClientRect();
-
-        let x = pageX - containerBounds.left;
-        let y = pageY - containerBounds.top;
-
-        this.dragInfos = {
-            cursor: cursor,
-            enabled: false,
-            startX: x,
-            startY: y,
-            tiles: tiles,
-        };
-        this.globalMouseUp = true;
-        this.selectedTiles = tiles;
-    }
-
-    public drag(pageX: number, pageY: number) {
-        const containerElement = this.tilesContainer.nativeElement as HTMLElement;
+        const containerElement = this.el.nativeElement as HTMLElement;
         const containerBounds = containerElement.getBoundingClientRect();
 
-        const x = pageX - containerBounds.left;
-        const y = pageY - containerBounds.top;
+        pageX -= containerBounds.left;
+        pageY -= containerBounds.top;
 
-        if (!this.dragInfos.enabled) {
-            if (Math.abs(this.dragInfos.startX - x) > 10 || Math.abs(this.dragInfos.startY - y) > 10) {
-                // Allow drag and drop of new tiles from outside the component
-                if (this.dragInfos.tiles.length === 1 && !this.tiles.find((t) => t === this.dragInfos.tiles[0])) {
-                    const tile = this.dragInfos.tiles[0];
-                    this.tiles.push(tile);
-                    const bounds = tile.bounds;
-                    this.dragInfos.startX = x - bounds.width / 2;
-                    this.dragInfos.startY = y - bounds.height / 2;
-                    tile.id = 'new';
-                    tile.bounds = new Rect(this.layoutProvider.getPercentSize(x) - bounds.width / 2, this.layoutProvider.getPercentSize(y) - bounds.height / 2, bounds.width, bounds.height);
-                    tile.dragging = true;
-                    this.clearSelection();
-                    tile.selected = true;
-                    this.selectedTiles = [tile];
-                }
-
-                // Start tile drag and drop
-                this.dragging = true;
-                this.dragInfos.enabled = true;
-                this.globalKeyUp = true;
-                this.layoutProvider.startDrag(this.dragInfos.tiles, this.dragInfos.cursor, x, y);
-            }
-        } else {
-            this.layoutProvider.drag(this.dragInfos.tiles, x, y);
-        }
+        // const minSize = this.layoutProvider.getTileMinPixelSize();
+        // const tile = this.layoutProvider.HitTest(this.tiles, new Rect(pageX, pageY, minSize.width, minSize.height));
     }
 
-    public drop() {
-        if (this.dragInfos.enabled) {
-            this.layoutProvider.drop(this.dragInfos.tiles);
-
-            if (this.dragInfos.tiles.length === 1) {
-                const tile = this.dragInfos.tiles[0];
-                if (tile.id === 'new') {
-                    tile.id = this.getCurrentId();
-                }
-            }
-        }
-        this.endDrag();
-        this.onChangeCallback(this.tiles);
-    }
-
-    public cancelDrag() {
-        if (this.dragInfos && this.dragInfos.enabled) {
-            if (this.dragInfos.tiles.length === 1) {
-                const tile = this.dragInfos.tiles[0];
-                if (tile.id === 'new') {
-                    const index = this.tiles.indexOf(tile);
-                    if (index >= 0) {
-                        this.tiles.splice(index, 1);
-                    }
-                }
-            }
-            this.layoutProvider.cancelDrag(this.dragInfos.tiles);
-        }
-        this.endDrag();
-    }
-
-    protected ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
-        for (let propName in changes) {
+    public ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
+        for (const propName in changes) {
             if (propName === 'designMode') {
-                this.clearSelection();
+                if (this.tiles) {
+                    this.tiles.filter((t) => t.selected).forEach((t) => t.selected = false);
+                }
+                this.selectedTiles = [];
             }
         }
     }
 
-    protected ngAfterViewInit() {
+    public ngAfterViewInit() {
         Observable.fromEvent(window, 'resize').subscribe(() => {
             this.refresh();
         });
     }
 
     protected onTitleEditClicked(e: Event, tile: IDejaTile) {
-        let event = e as IDejaTileEvent;
+        const event = e as IDejaTileEvent;
         event.tile = tile;
         this.tileTitleEditClick.emit(event);
     }
@@ -337,7 +246,7 @@ export class DejaTilesComponent implements ControlValueAccessor {
     @HostListener('mousedown', ['$event'])
     protected onMouseDown(event: MouseEvent) {
         if (event.buttons === 1 && this.tiles) {
-            let target = event.target as HTMLElement;
+            const target = event.target as HTMLElement;
             this.pressedTile = this.getTileFromHTMLElement(target);
             this.mouseUp = this.pressedTile !== undefined;
             if (this.designMode) {
@@ -347,22 +256,38 @@ export class DejaTilesComponent implements ControlValueAccessor {
                     } else {
                         let selectedTiles = this.tiles.filter((t) => t.selected);
                         if (!this.pressedTile.selected || this.cursor !== 'move') {
-                            this.clearSelection();
+                            selectedTiles.forEach((t) => t.selected = false);
                             this.pressedTile.selected = true;
                             selectedTiles = [this.pressedTile];
                         }
 
-                        this.startDrag(selectedTiles, event.pageX, event.pageY, this.cursor);
+                        const containerElement = this.el.nativeElement as HTMLElement;
+                        const containerBounds = containerElement.getBoundingClientRect();
+
+                        const pageX = event.pageX - containerBounds.left;
+                        const pageY = event.pageY - containerBounds.top;
+
+                        this.dragInfos = {
+                            cursor: this.cursor,
+                            enabled: false,
+                            offsetX: event.offsetX,
+                            offsetY: event.offsetY,
+                            startX: pageX,
+                            startY: pageY,
+                            tiles: selectedTiles,
+                        };
+                        this.globalMouseUp = true;
+                        this.selectedTiles = selectedTiles;
                         return true; // Continue in case of drag and drop
                     }
 
-                } else if (target === this.el.nativeElement || target === this.tilesContainer.nativeElement) {
+                } else if (target === this.el.nativeElement || target.parentNode === this.el.nativeElement) {
                     // Start drag selection
-                    let containerElement = this.tilesContainer.nativeElement as HTMLElement;
-                    let containerBounds = containerElement.getBoundingClientRect();
+                    const containerElement = this.el.nativeElement as HTMLElement;
+                    const containerBounds = containerElement.getBoundingClientRect();
 
-                    let pageX = event.pageX - containerBounds.left;
-                    let pageY = event.pageY - containerBounds.top;
+                    const pageX = event.pageX - containerBounds.left;
+                    const pageY = event.pageY - containerBounds.top;
 
                     this.dragSelection = {
                         pageOffset: new Position(pageX, pageY),
@@ -371,8 +296,8 @@ export class DejaTilesComponent implements ControlValueAccessor {
                     };
 
                     // Unselect all tiles
-                    this.clearPressedTile();
-                    this.clearSelection();
+                    this.tiles.filter((t) => t.selected).forEach((t) => t.selected = false);
+                    this.selectedTiles = [];
 
                     event.preventDefault();
                     return false;
@@ -391,17 +316,17 @@ export class DejaTilesComponent implements ControlValueAccessor {
                 return;
             }
 
-            let element = this.el.nativeElement as HTMLElement;
+            const element = this.el.nativeElement as HTMLElement;
             this.mouseUpObs = Observable.fromEvent(element.ownerDocument, 'mouseup').subscribe((event: MouseEvent) => {
                 if (this.pressedTile) {
                     this.pressedTile.pressed = false;
                     if (this.designMode) {
                         // Multi-selection is available in design mode
                         if (event.ctrlKey) {
-                            let selectedTiles = this.selectedTiles;
+                            const selectedTiles = this.selectedTiles;
                             if (this.pressedTile.selected) {
                                 this.pressedTile.selected = false;
-                                let index = this.selectedTiles.findIndex((t) => this.pressedTile === t);
+                                const index = this.selectedTiles.findIndex((t) => this.pressedTile === t);
                                 selectedTiles.splice(index, 1);
                             } else {
                                 this.pressedTile.selected = true;
@@ -425,13 +350,17 @@ export class DejaTilesComponent implements ControlValueAccessor {
                 return;
             }
 
-            let element = this.el.nativeElement as HTMLElement;
+            const element = this.el.nativeElement as HTMLElement;
             this.globalMouseUpObs = Observable.fromEvent(element.ownerDocument, 'mouseup').subscribe(() => {
                 if (this.dragSelection) {
                     this.dragSelection = undefined;
                     return false;
                 } else if (this.dragInfos) {
-                    this.drop();
+                    if (this.dragInfos.enabled) {
+                        this.layoutProvider.drop(this.dragInfos.tiles);
+                    }
+                    this.endDrag();
+                    this.onChangeCallback(this.tiles);
                     return false;
                 }
             });
@@ -448,7 +377,7 @@ export class DejaTilesComponent implements ControlValueAccessor {
                 return;
             }
 
-            let element = this.el.nativeElement as HTMLElement;
+            const element = this.el.nativeElement as HTMLElement;
             this.globalKeyUpObs = Observable.fromEvent(element.ownerDocument, 'keyup').subscribe((event: KeyboardEvent) => {
                 if (event.keyCode === 27) {
                     this.cancelDrag();
@@ -467,9 +396,9 @@ export class DejaTilesComponent implements ControlValueAccessor {
                 return;
             }
 
-            let element = this.tilesContainer.nativeElement as HTMLElement;
+            const element = this.el.nativeElement as HTMLElement;
             this.globalMouseMoveObs = Observable.fromEvent(element.ownerDocument, 'mousemove').subscribe((event: MouseEvent) => {
-                let currentTile = this.getTileFromHTMLElement(event.target as HTMLElement);
+                const currentTile = this.getTileFromHTMLElement(event.target as HTMLElement);
                 if (this.pressedTile && this.pressedTile.pressed && event.buttons === 1 && this.pressedTile === currentTile) {
                     return;
                 }
@@ -488,8 +417,8 @@ export class DejaTilesComponent implements ControlValueAccessor {
                 return;
             }
 
-            let containerElement = this.tilesContainer.nativeElement as HTMLElement;
-            this.mouseMoveObs = Observable.fromEvent(containerElement, 'mousemove').subscribe((event: MouseEvent) => {
+            const element = this.el.nativeElement as HTMLElement;
+            this.mouseMoveObs = Observable.fromEvent(element, 'mousemove').subscribe((event: MouseEvent) => {
                 if (this.dragSelection) {
                     if (event.buttons !== 1) {
                         this.dragSelection = undefined;
@@ -497,18 +426,19 @@ export class DejaTilesComponent implements ControlValueAccessor {
                     }
 
                     // Unselect all tiles
-                    this.clearSelection();
+                    this.tiles.filter((t) => t.selected).forEach((t) => t.selected = false);
 
-                    let containerBounds = containerElement.getBoundingClientRect();
+                    const containerElement = this.el.nativeElement as HTMLElement;
+                    const containerBounds = containerElement.getBoundingClientRect();
 
-                    let pageX = event.pageX - containerBounds.left;
-                    let pageY = event.pageY - containerBounds.top;
+                    const pageX = event.pageX - containerBounds.left;
+                    const pageY = event.pageY - containerBounds.top;
 
                     // And select all tiles between start position and current position
-                    let pageRect = Rect.fromPoints(this.dragSelection.pageOffset, new Position(pageX, pageY));
+                    const pageRect = Rect.fromPoints(this.dragSelection.pageOffset, new Position(pageX, pageY));
                     this.dragSelection.tilesRect = pageRect.offset(-this.dragSelection.tilesOffset.left, -this.dragSelection.tilesOffset.top);
 
-                    let selectedTiles = [];
+                    const selectedTiles = [];
                     this.layoutProvider.HitTest(this.tiles, this.dragSelection.tilesRect).forEach((t) => {
                         t.selected = true;
                         selectedTiles.push(t);
@@ -518,13 +448,29 @@ export class DejaTilesComponent implements ControlValueAccessor {
 
                 } else if (this.dragInfos) {
                     if (event.buttons === 1) {
-                        this.drag(event.pageX, event.pageY);
+                        const containerElement = this.el.nativeElement as HTMLElement;
+                        const containerBounds = containerElement.getBoundingClientRect();
+
+                        const pageX = event.pageX - containerBounds.left;
+                        const pageY = event.pageY - containerBounds.top;
+
+                        if (!this.dragInfos.enabled) {
+                            if (Math.abs(this.dragInfos.startX - pageX) > 10 || Math.abs(this.dragInfos.startY - pageY) > 10) {
+                                // Start tile drag and drop
+                                this.dragging = true;
+                                this.dragInfos.enabled = true;
+                                this.globalKeyUp = true;
+                                this.layoutProvider.startDrag(this.dragInfos.tiles, this.dragInfos.cursor, pageX, pageY);
+                            }
+                        } else {
+                            this.layoutProvider.drag(this.dragInfos.tiles, pageX, pageY);
+                        }
                     } else if (this.dragInfos.enabled) {
                         this.cancelDrag();
                     }
 
                 } else if (event.buttons !== 1) {
-                    let tileElement = this.getTileElementFromHTMLElement(event.target as HTMLElement);
+                    const tileElement = this.getTileElementFromHTMLElement(event.target as HTMLElement);
                     if (tileElement) {
                         this.cursor = this.getCursor(event, tileElement);
                     } else {
@@ -538,7 +484,7 @@ export class DejaTilesComponent implements ControlValueAccessor {
         }
     }
 
-    private clearPressedTile() {
+    private clearPressedTile = () => {
         if (this.pressedTile) {
             this.pressedTile.pressed = false;
             delete this.pressedTile;
@@ -547,18 +493,13 @@ export class DejaTilesComponent implements ControlValueAccessor {
         this.mouseUp = false;
     }
 
-    private clearSelection() {
-        this.tiles && this.tiles.filter((t) => t.selected).forEach((t) => t.selected = false);
-        this.selectedTiles = [];
-    }
-
     private getTileElementFromHTMLElement(element: HTMLElement) {
         let parentElement = element;
 
         while (parentElement && !parentElement.hasAttribute('tile-index')) {
             element = parentElement;
             parentElement = parentElement.parentElement;
-            if (parentElement === this.tilesContainer.nativeElement) {
+            if (parentElement === this.el.nativeElement) {
                 return undefined;
             }
         }
@@ -567,13 +508,13 @@ export class DejaTilesComponent implements ControlValueAccessor {
     }
 
     private getTileFromHTMLElement(element: HTMLElement): IDejaTile {
-        let tileElement = this.getTileElementFromHTMLElement(element);
+        const tileElement = this.getTileElementFromHTMLElement(element);
 
         if (!tileElement) {
             return undefined;
         }
 
-        let index = +tileElement.getAttribute('tile-index');
+        const index = +tileElement.getAttribute('tile-index');
         return this.tiles[index];
     }
 
@@ -588,7 +529,7 @@ export class DejaTilesComponent implements ControlValueAccessor {
     private getCurrentId(): string {
         let id = 0;
         let sid = '#' + id;
-        let ids = {};
+        const ids = {};
         this.tiles.map((t) => ids[t.id] = t.id);
         while (ids[sid]) {
             sid = '#' + (++id);
@@ -598,9 +539,9 @@ export class DejaTilesComponent implements ControlValueAccessor {
     }
 
     private getCursor(event: MouseEvent, tileElement: HTMLElement) {
-        let x = event.x;
-        let y = event.y;
-        let bounds = tileElement.getBoundingClientRect();
+        const x = event.x;
+        const y = event.y;
+        const bounds = tileElement.getBoundingClientRect();
 
         if (x < bounds.left + 10) {
             if (y < bounds.top + 10) {
@@ -629,6 +570,13 @@ export class DejaTilesComponent implements ControlValueAccessor {
         }
     }
 
+    private cancelDrag() {
+        if (this.dragInfos && this.dragInfos.enabled) {
+            this.layoutProvider.cancelDrag(this.dragInfos.tiles);
+        }
+        this.endDrag();
+    }
+
     private endDrag() {
         // console.log('EndDrag');
         if (this.dragInfos) {
@@ -649,6 +597,8 @@ interface IDejaTileDragDropInfos {
     enabled: boolean;
     startX: number;
     startY: number;
+    offsetX: number;
+    offsetY: number;
     tiles: IDejaTile[];
     cursor: string;
 }

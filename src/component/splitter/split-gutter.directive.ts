@@ -33,7 +33,7 @@ export class SplitGutterDirective {
         this.setStyle('flex-basis', v + 'px');
     }
 
-    private _disabled: boolean = false;
+    private _disabled = false;
     @Input() set disabled(v: boolean) {
         this._disabled = v;
         this.refreshStyle();

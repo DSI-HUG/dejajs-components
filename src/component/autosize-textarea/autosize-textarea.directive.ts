@@ -11,7 +11,7 @@
 
 import { AfterViewInit, Directive, ElementRef, forwardRef, HostBinding } from '@angular/core';
 import { NG_VALIDATORS, Validator } from '@angular/forms';
-import { setTimeout } from 'timers';
+import { Observable, Subject } from 'rxjs/Rx';
 
 /**
  * Directive pour rendre un textarea material redimensioné automatiquement au contenu.
@@ -27,13 +27,19 @@ import { setTimeout } from 'timers';
 export class DejaAutosizeTextAreaDirective implements AfterViewInit, Validator {
     @HostBinding('attr.rows') protected rows = 1;
 
+    private height = new Subject<string>();
+    private textAreaElement: HTMLTextAreaElement;
+
     constructor(private elementRef: ElementRef) {
+        this.textAreaElement = this.elementRef.nativeElement as HTMLTextAreaElement;
+        Observable.from(this.height)
+            .subscribe((height) => this.textAreaElement.style.height = height);
     }
 
     public ngAfterViewInit() {
-        setTimeout(() => {
-            this.resize();
-        }, 0);
+        Observable.timer(10)
+            .first()
+            .subscribe(() => this.resize());
     }
 
     public validate(): { [key: string]: any } {
@@ -42,8 +48,12 @@ export class DejaAutosizeTextAreaDirective implements AfterViewInit, Validator {
     }
 
     private resize() {
-        let textAreaElement = this.elementRef.nativeElement as HTMLTextAreaElement;
-        textAreaElement.style.height = 'auto';
-        textAreaElement.style.height = textAreaElement.scrollHeight + 'px';
+        Observable.from(this.height)
+            .first()
+            .subscribe(() => {
+                this.height.next(this.textAreaElement.scrollHeight + 'px');
+            });
+
+        this.height.next('auto');
     }
 }

@@ -9,9 +9,8 @@
  *
  */
 
-import {
-    AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, Renderer,
-} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, Renderer } from '@angular/core';
+import { Observable } from 'rxjs/Rx';
 
 @Component({
     selector: 'deja-snackbar',
@@ -256,15 +255,15 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
         this.launchEnterAnimation();
 
         // if a duration has been been specified, launch the 'leave' animation after snackbar's lifetime flow, then emit amination done
-        setTimeout(() => {
-            setTimeout(() => {
-                this.onAnimationDone.emit();
-            }, this.leaveAnimationDuration);
-
-            if (!!this.duration) {
-                this.launchLeaveAnimation();
-            }
-        }, this.duration + this.delay);
+        Observable.timer(this.duration + this.delay)
+            .first()
+            .do(() => {
+                if (!!this.duration) {
+                    this.launchLeaveAnimation();
+                }
+            })
+            .delay(this.leaveAnimationDuration)
+            .subscribe(() => this.onAnimationDone.emit());
     }
 
     /**

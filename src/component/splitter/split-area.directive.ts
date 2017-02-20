@@ -40,7 +40,7 @@ export class SplitAreaDirective implements OnInit, OnDestroy {
 
     private _order: number | null = null;
     private _size: number | null = null;
-    private _minSizePixel: number = 0;
+    private _minSizePixel = 0;
     private eventsLockFct: Function[] = [];
 
     constructor(private elementRef: ElementRef,

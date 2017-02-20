@@ -11,7 +11,7 @@
 
 import { clearTimeout, setTimeout } from 'timers';
 import { Directions, Position, Rect, Size } from '../../common/core/graphics';
-import { IDejaTile, IDejaTileList } from './index';
+import { IDejaTile } from './index';
 
 interface ILayoutInfo {
     id: string;
@@ -39,22 +39,20 @@ export class DejaTilesLayoutProvider {
     private width: number;
     private height: number;
     private tileMinHeight = 30;
-    private tileMinWidth = 30;
-    private maxWidth = 100;
     private dragPageOffset = {} as Position;
     private dragOriginalPosition = {} as Position;
     private dragRelativePosition: { [id: string]: Position };
     private expandedTile: IDejaTile;
 
-    private tiles = [] as IDejaTileList;
+    private tiles = [] as IDejaTile[];
 
     constructor(maxWidth: string, maxHeight: string, tileMinWidth: string, tileMaxWidth: string, tileMinHeight: string, tileMaxHeight: string, private sizeChanged: (width: number, height: number) => void) {
-        let regexp = /(\d+)(.*)/i;
+        const regexp = /(\d+)(.*)/i;
 
-        let extractValueAndUnit = (prop: string, value: string) => {
-            let matches = regexp.exec(value);
+        const extractValueAndUnit = (prop: string, value: string) => {
+            const matches = regexp.exec(value);
             if (matches && matches.length >= 1) {
-                this[prop] = parseInt(matches[1]);
+                this[prop] = parseInt(matches[1], 10);
                 if (matches.length >= 2) {
                     this[prop + 'Unit'] = matches[2];
                 } else {
@@ -83,36 +81,8 @@ export class DejaTilesLayoutProvider {
         }
     }
 
-    public getFreePlace(tiles: IDejaTile[], idealBounds: Rect) {
-        const percentHeight = this.getPercentSize(this.height);
-        let freePlaces = [] as Rect[];
-        for (let x = 0; x < this.maxWidth - idealBounds.width; x += this.tileMinWidth) {
-            for (let y = 0; y < percentHeight - idealBounds.height; y += this.tileMinHeight) {
-                const currentBounds = new Rect(x, y, idealBounds.width, idealBounds.height);
-                if (tiles.filter((t) => t.bounds.intersectWith(currentBounds)).length === 0) {
-                    freePlaces.push(currentBounds);
-                }
-            }
-        }
-
-        if (freePlaces.length > 0) {
-            // add at the nearest free place
-            freePlaces.sort((bounds1, bounds2) => {
-                const calcDistance = (bounds) => {
-                    return Math.min(Math.abs(bounds.left - idealBounds.left), Math.abs(bounds.right() - idealBounds.right())) + 2 * Math.min(Math.abs(bounds.top - idealBounds.top), Math.abs(bounds.bottom() - idealBounds.bottom()));
-                };
-                return calcDistance(bounds1) - calcDistance(bounds2);
-            });
-
-            return freePlaces[0];
-        }
-
-        // Add at the end
-        return new Rect(0, percentHeight, idealBounds.width, idealBounds.height);
-    }
-
     public HitTest(tiles: IDejaTile[], pixelBounds: Rect): IDejaTile[] {
-        let percentBounds = new Rect(this.getPercentSize(pixelBounds.left), this.getPercentSize(pixelBounds.top), this.getPercentSize(pixelBounds.width), this.getPercentSize(pixelBounds.height));
+        const percentBounds = new Rect(this.getPercentSize(pixelBounds.left), this.getPercentSize(pixelBounds.top), this.getPercentSize(pixelBounds.width), this.getPercentSize(pixelBounds.height));
         return tiles.filter((t) => t.bounds.intersectWith(percentBounds));
     }
 
@@ -129,7 +99,7 @@ export class DejaTilesLayoutProvider {
     }
 
     public getSizePercentLimit(prop: string): number {
-        let unit = this[prop + 'Unit'];
+        const unit = this[prop + 'Unit'];
         if (!unit || unit === 'px') {
             return this.getPercentSize(this[prop]);
         } else {
@@ -138,7 +108,7 @@ export class DejaTilesLayoutProvider {
     }
 
     public getSizePixelLimit(prop: string): number {
-        let unit = this[prop + 'Unit'];
+        const unit = this[prop + 'Unit'];
         if (!unit || unit === 'px') {
             return this[prop];
         } else {
@@ -195,8 +165,8 @@ export class DejaTilesLayoutProvider {
         }
         this.expandedTile = tile;
         tile.expanded = true;
-        let percentHeight = Math.ceil(pixelheight * 100 / this.hundredPercentWidth);
-        let height = this.getPixelSize(percentHeight);
+        const percentHeight = Math.ceil(pixelheight * 100 / this.hundredPercentWidth);
+        const height = this.getPixelSize(percentHeight);
         this.size(tile, new Position(0, tile.t + height), Directions.bottom);
     }
 
@@ -209,7 +179,7 @@ export class DejaTilesLayoutProvider {
         }
     }
 
-    public refreshTiles(tiles?: IDejaTileList, hundredPercentWidth?: number) {
+    public refreshTiles(tiles?: IDejaTile[], hundredPercentWidth?: number) {
         if (tiles) {
             this.tiles = tiles;
         }
@@ -220,7 +190,7 @@ export class DejaTilesLayoutProvider {
 
         let height = 0;
         let width = 0;
-        let placeAtTheEnd = [] as IDejaTile[];
+        const placeAtTheEnd = [] as IDejaTile[];
 
         this.tiles.forEach((tile) => {
             if (tile.bounds) {
@@ -238,10 +208,10 @@ export class DejaTilesLayoutProvider {
                         width = tile.r;
                     }
                 } else if (tile.bounds.top >= 0 && tile.bounds.left >= 0) {
-                    let l = this.getPixelSize(tile.bounds.left);
-                    let w = this.getPixelSize(tile.bounds.width);
-                    let t = this.getPixelSize(tile.bounds.top);
-                    let h = this.getPixelSize(tile.bounds.height);
+                    const l = this.getPixelSize(tile.bounds.left);
+                    const w = this.getPixelSize(tile.bounds.width);
+                    const t = this.getPixelSize(tile.bounds.top);
+                    const h = this.getPixelSize(tile.bounds.height);
                     if (t + h > height) {
                         height = t + h;
                     }
@@ -264,10 +234,10 @@ export class DejaTilesLayoutProvider {
         let left = 0;
         placeAtTheEnd.forEach((tile) => {
             tile.bounds = tile.bounds || new Rect(left, this.getPercentSize(top), 3 * this.getTileMinPercentWidth(), this.getTileMinPercentHeight());
-            let w = this.getPixelSize(tile.bounds.width);
-            let h = this.getPixelSize(tile.bounds.height);
-            let t = this.getPixelSize(tile.bounds.top);
-            let l = this.getPixelSize(tile.bounds.left);
+            const w = this.getPixelSize(tile.bounds.width);
+            const h = this.getPixelSize(tile.bounds.height);
+            const t = this.getPixelSize(tile.bounds.top);
+            const l = this.getPixelSize(tile.bounds.left);
 
             if (left + w > width) {
                 top += h;
@@ -298,7 +268,7 @@ export class DejaTilesLayoutProvider {
         this.cursor = cursor;
 
         // Save layout
-        let savedLayout = this.saveLayout();
+        const savedLayout = this.saveLayout();
 
         // Bring all tiles together
         let targetBounds: Rect;
@@ -355,13 +325,13 @@ export class DejaTilesLayoutProvider {
         this.restoreLayout(this.validLayout);
         if (this.cursor !== 'move') {
             // Only one tile can be resized at time
-            let tile = tiles[0];
+            const tile = tiles[0];
             tile.bounds = this.validLayout.validBounds;
             tile.dragging = false;
         } else {
             tiles.forEach((t) => {
-                let left = this.validLayout.validBounds.left + this.dragRelativePosition[t.id].left;
-                let top = this.validLayout.validBounds.top + this.dragRelativePosition[t.id].top;
+                const left = this.validLayout.validBounds.left + this.dragRelativePosition[t.id].left;
+                const top = this.validLayout.validBounds.top + this.dragRelativePosition[t.id].top;
                 t.bounds = new Rect(left, top, t.bounds.width, t.bounds.height);
                 t.dragging = false;
                 t.dropping = true;
@@ -387,18 +357,18 @@ export class DejaTilesLayoutProvider {
 
     public drag(tiles: IDejaTile[], pageX: number, pageY: number) {
         // Search related coords
-        let offset = new Position(pageX - this.dragPageOffset.left, pageY - this.dragPageOffset.top);
-        let offsetLeft = offset.left + this.getPixelSize(this.dragOriginalPosition.left);
-        let offsetTop = offset.top + this.getPixelSize(this.dragOriginalPosition.top);
+        const offset = new Position(pageX - this.dragPageOffset.left, pageY - this.dragPageOffset.top);
+        const offsetLeft = offset.left + this.getPixelSize(this.dragOriginalPosition.left);
+        const offsetTop = offset.top + this.getPixelSize(this.dragOriginalPosition.top);
 
-        let sizemin = this.getTileMinPixelSize();
-        let sizemax = this.getTileMaxPixelSize();
+        const sizemin = this.getTileMinPixelSize();
+        const sizemax = this.getTileMaxPixelSize();
 
         if (this.cursor !== 'move') {
             // Only one tile can be resized at time
-            let tile = tiles[0];
-            let offsetRight = offsetLeft + this.getPixelSize(tile.bounds.width);
-            let offsetBottom = offsetTop + this.getPixelSize(tile.bounds.height);
+            const tile = tiles[0];
+            const offsetRight = offsetLeft + this.getPixelSize(tile.bounds.width);
+            const offsetBottom = offsetTop + this.getPixelSize(tile.bounds.height);
             switch (this.cursor) {
                 case 'nw-resize':
                     tile.l = Math.max(Math.min(offsetLeft, tile.r - sizemin.width), tile.r - sizemax.width);
@@ -437,7 +407,7 @@ export class DejaTilesLayoutProvider {
                     this.size(tile, new Position(0, offsetBottom), Directions.bottom);
                     break;
                 default:
-                    throw 'Invalid direction';
+                    throw new Error('Invalid direction');
             }
         } else {
             tiles.forEach((t) => {
@@ -461,49 +431,53 @@ export class DejaTilesLayoutProvider {
 
     public size(tile: IDejaTile, pixelpos: Position, directions: Directions) {
         // Calc new tile bounds
-        let percentPos = new Position(this.getPercentSize(pixelpos.left), this.getPercentSize(pixelpos.top));
-        let dragBounds = tile.bounds.clone();
-        let newTargetBounds = tile.bounds.clone();
+        const percentPos = new Position(this.getPercentSize(pixelpos.left), this.getPercentSize(pixelpos.top));
+        const dragBounds = tile.bounds.clone();
+        const newTargetBounds = tile.bounds.clone();
         let minWidth: number;
         let minHeight: number;
         let maxWidth: number;
         let maxHeight: number;
 
+        // tslint:disable-next-line:no-bitwise
         if (directions & Directions.left) {
             minWidth = this.getTileMinPercentWidth();
             maxWidth = this.getTileMaxPercentWidth();
-            let dleft = percentPos.left;
-            let tleft = dragBounds.left < dleft ? minWidth * Math.ceil(dleft / minWidth) : minWidth * Math.floor(dleft / minWidth);
-            let twidth = Math.min(maxWidth, Math.max(minWidth, newTargetBounds.right() - tleft));
+            const dleft = percentPos.left;
+            const tleft = dragBounds.left < dleft ? minWidth * Math.ceil(dleft / minWidth) : minWidth * Math.floor(dleft / minWidth);
+            const twidth = Math.min(maxWidth, Math.max(minWidth, newTargetBounds.right() - tleft));
             dragBounds.width = dragBounds.right() - dleft;
             dragBounds.left = dleft;
             newTargetBounds.left = newTargetBounds.right() - twidth;
             newTargetBounds.width = twidth;
         }
+        // tslint:disable-next-line:no-bitwise
         if (directions & Directions.right) {
             minWidth = minWidth || this.getTileMinPercentWidth();
             maxWidth = maxWidth || this.getTileMaxPercentWidth();
-            let dright = percentPos.left;
-            let tright = dragBounds.right() < dright ? minWidth * Math.ceil(dright / minWidth) : minWidth * Math.floor(dright / minWidth);
+            const dright = percentPos.left;
+            const tright = dragBounds.right() < dright ? minWidth * Math.ceil(dright / minWidth) : minWidth * Math.floor(dright / minWidth);
             dragBounds.width = dright - dragBounds.left;
             newTargetBounds.width = Math.min(maxWidth, Math.max(minWidth, tright - newTargetBounds.left));
         }
+        // tslint:disable-next-line:no-bitwise
         if (directions & Directions.top) {
             minHeight = this.getTileMinPercentHeight();
             maxHeight = this.getTileMaxPercentHeight();
-            let dtop = percentPos.top;
-            let ttop = dragBounds.top < dtop ? minHeight * Math.ceil(dtop / minHeight) : minHeight * Math.floor(dtop / minHeight);
-            let theight = Math.min(maxHeight, Math.max(minHeight, newTargetBounds.bottom() - ttop));
+            const dtop = percentPos.top;
+            const ttop = dragBounds.top < dtop ? minHeight * Math.ceil(dtop / minHeight) : minHeight * Math.floor(dtop / minHeight);
+            const theight = Math.min(maxHeight, Math.max(minHeight, newTargetBounds.bottom() - ttop));
             dragBounds.height = dragBounds.bottom() - dtop;
             dragBounds.top = dtop;
             newTargetBounds.top = newTargetBounds.bottom() - theight;
             newTargetBounds.height = theight;
         }
+        // tslint:disable-next-line:no-bitwise
         if (directions & Directions.bottom) {
             minHeight = minHeight || this.getTileMinPercentHeight();
             maxHeight = maxHeight || this.getTileMaxPercentHeight();
-            let dbottom = percentPos.top;
-            let tbottom = dragBounds.bottom() < dbottom ? minHeight * Math.ceil(dbottom / minHeight) : minHeight * Math.floor(dbottom / minHeight);
+            const dbottom = percentPos.top;
+            const tbottom = dragBounds.bottom() < dbottom ? minHeight * Math.ceil(dbottom / minHeight) : minHeight * Math.floor(dbottom / minHeight);
             dragBounds.height = dbottom - dragBounds.top;
             newTargetBounds.height = Math.min(maxHeight, Math.max(minHeight, tbottom - newTargetBounds.top));
         }
@@ -515,7 +489,7 @@ export class DejaTilesLayoutProvider {
 
         // Restore a previous layout if exists for this position
         if (tile.expanded) {
-            let ensureBounds = this.ensureTarget(newTargetBounds, dragBounds, directions);
+            const ensureBounds = this.ensureTarget(newTargetBounds, dragBounds, directions);
             tile.bounds = ensureBounds;
             this.refreshTiles();
         } else {
@@ -525,7 +499,7 @@ export class DejaTilesLayoutProvider {
             this.destination = newTargetBounds.clone();
 
             // Check if location is free without pushing tiles
-            let result = this.tiles.find((t) => !t.dragging && t.bounds.intersectWith(newTargetBounds));
+            const result = this.tiles.find((t) => !t.dragging && t.bounds.intersectWith(newTargetBounds));
             if (!result) {
                 this.targetBounds = newTargetBounds;
 
@@ -537,7 +511,7 @@ export class DejaTilesLayoutProvider {
                 // Location must be freed
                 if (newTargetBounds) {
                     // Ensure new destination
-                    let ensureBounds = this.ensureTarget(newTargetBounds, dragBounds, directions);
+                    const ensureBounds = this.ensureTarget(newTargetBounds, dragBounds, directions);
                     if (ensureBounds) {
                         this.targetBounds = ensureBounds;
                         this.validLayout = this.saveLayout();
@@ -551,11 +525,11 @@ export class DejaTilesLayoutProvider {
     }
 
     private move() {
-        let minWidth = this.getTileMinPercentWidth();
-        let minHeight = this.getTileMinPercentHeight();
+        const minWidth = this.getTileMinPercentWidth();
+        const minHeight = this.getTileMinPercentHeight();
 
         // Search a new target
-        let newTargetBounds = this.ensureContainer(new Rect(
+        const newTargetBounds = this.ensureContainer(new Rect(
             minWidth * Math.round(this.moveDestination.left / minWidth),
             minHeight * Math.round(this.moveDestination.top / minHeight),
             this.moveDestination.width,
@@ -577,7 +551,7 @@ export class DejaTilesLayoutProvider {
         this.restoreLayout(this.originalLayout);
 
         // Check if location is free without pushing tiles
-        let result = this.tiles.find((t) => !t.dragging && t.bounds.intersectWith(newTargetBounds));
+        const result = this.tiles.find((t) => !t.dragging && t.bounds.intersectWith(newTargetBounds));
         if (!result) {
             this.targetBounds = newTargetBounds.clone();
             this.destination = newTargetBounds.clone();
@@ -595,7 +569,7 @@ export class DejaTilesLayoutProvider {
                 this.destination = newTargetBounds.clone();
                 if (newTargetBounds) {
                     // Ensure new destination
-                    let ensureBounds = this.ensureTarget(newTargetBounds, this.moveDestination, Directions.all);
+                    const ensureBounds = this.ensureTarget(newTargetBounds, this.moveDestination, Directions.all);
                     if (ensureBounds) {
                         this.targetBounds = ensureBounds;
                         this.validLayout = this.saveLayout();
@@ -619,12 +593,12 @@ export class DejaTilesLayoutProvider {
             percentBounds = percentBounds.offset(0, -percentBounds.top);
         }
 
-        let maxPercentWidth = this.getMaxPercentWidth();
+        const maxPercentWidth = this.getMaxPercentWidth();
         if (maxPercentWidth && percentBounds.right() > maxPercentWidth) {
             percentBounds = percentBounds.offset(maxPercentWidth - percentBounds.right(), 0);
         }
 
-        let maxPercentHeight = this.getMaxPercentHeight();
+        const maxPercentHeight = this.getMaxPercentHeight();
         if (maxPercentHeight && percentBounds.bottom() > maxPercentHeight) {
             percentBounds = percentBounds.offset(0, maxPercentHeight - percentBounds.bottom());
         }
@@ -647,40 +621,43 @@ export class DejaTilesLayoutProvider {
             directions = Directions.all;
         } else {
             // We always can escape to the bottom in case of
+            // tslint:disable-next-line:no-bitwise
             directions |= Directions.bottom;
         }
 
-        let tilesToPush = {} as { [direction: number]: IDejaTile[] };
+        const tilesToPush = {} as { [direction: number]: IDejaTile[] };
         tilesToPush[Directions.left] = [];
         tilesToPush[Directions.right] = [];
         tilesToPush[Directions.top] = [];
         tilesToPush[Directions.bottom] = [];
 
-        // tslint:disable-next-line:prefer-for-of
         for (let i = 0; i < this.tiles.length; i++) {
-            let t = this.tiles[i];
+            const t = this.tiles[i];
             if (!t.dragging && !t.expanded) {
                 if (t.bounds.intersectWith(bounds)) {
-                    let swapTargetRect = new Rect(this.dragOriginalPosition.left, this.dragOriginalPosition.top, bounds.width, bounds.height);
+                    const swapTargetRect = new Rect(this.dragOriginalPosition.left, this.dragOriginalPosition.top, bounds.width, bounds.height);
                     if (t.bounds.left === effectiveBounds.left && t.bounds.top === effectiveBounds.top && t.bounds.width === effectiveBounds.width && t.bounds.height === effectiveBounds.height && effectiveBounds.adjacent(swapTargetRect)) {
                         // swap
                         t.bounds = swapTargetRect;
                         return bounds;
                     } else {
-                        let hol = t.bounds.left - effectiveBounds.left; // Ce qui dépasse Ã  gauche
-                        let hor = effectiveBounds.right() - t.bounds.right(); // Ce qui dépasse Ã  droite
-                        let vot = t.bounds.top - effectiveBounds.top; // Ce qui dépasse en haut
-                        let vob = effectiveBounds.bottom() - t.bounds.bottom(); // Ce qui dépasse en bas
-                        let hoe = Math.max(0, Math.min(t.bounds.right(), effectiveBounds.right()) - Math.max(t.bounds.left, effectiveBounds.left)) / Math.min(t.bounds.width, effectiveBounds.width);
-                        let voe = Math.max(0, Math.min(t.bounds.bottom(), effectiveBounds.bottom()) - Math.max(t.bounds.top, effectiveBounds.top)) / Math.min(t.bounds.height, effectiveBounds.height);
+                        const hol = t.bounds.left - effectiveBounds.left; // Ce qui dépasse à gauche
+                        const hor = effectiveBounds.right() - t.bounds.right(); // Ce qui dépasse à droite
+                        const vot = t.bounds.top - effectiveBounds.top; // Ce qui dépasse en haut
+                        const vob = effectiveBounds.bottom() - t.bounds.bottom(); // Ce qui dépasse en bas
+                        const hoe = Math.max(0, Math.min(t.bounds.right(), effectiveBounds.right()) - Math.max(t.bounds.left, effectiveBounds.left)) / Math.min(t.bounds.width, effectiveBounds.width);
+                        const voe = Math.max(0, Math.min(t.bounds.bottom(), effectiveBounds.bottom()) - Math.max(t.bounds.top, effectiveBounds.top)) / Math.min(t.bounds.height, effectiveBounds.height);
 
                         // Calc prefered direction
                         let preferedDirection: Directions;
+                        // tslint:disable-next-line:no-bitwise
                         if (voe >= hoe && directions & Directions.horizontal) {
                             // horizontal
+                            // tslint:disable-next-line:no-bitwise
                             preferedDirection = hor >= hol && directions & Directions.left ? Directions.left : Directions.right;
                         } else {
                             // vertical
+                            // tslint:disable-next-line:no-bitwise
                             preferedDirection = vob >= vot && directions & Directions.top ? Directions.top : Directions.bottom;
                         }
                         tilesToPush[preferedDirection].push(t);
@@ -695,6 +672,7 @@ export class DejaTilesLayoutProvider {
             remain = this.pushHorizontal(bounds, -1, tilesToPush[Directions.left]);
             if (remain) {
                 bounds = this.ensureContainer(bounds.offset(remain, 0));
+                // tslint:disable-next-line:no-bitwise
                 return this.ensureTarget(bounds, effectiveBounds, directions & ~Directions.left, originalBounds);
             }
         }
@@ -707,6 +685,7 @@ export class DejaTilesLayoutProvider {
         if (remain > 0) {
             // No horizontal place, restore original position
             this.restoreLayout(this.originalLayout);
+            // tslint:disable-next-line:no-bitwise
             return this.ensureTarget(originalBounds, effectiveBounds, directions & Directions.vertical);
         } else {
             // Try top
@@ -730,11 +709,11 @@ export class DejaTilesLayoutProvider {
     }
 
     private saveLayout(): ILayoutInfos {
-        let layout = {} as ILayoutInfos;
+        const layout = {} as ILayoutInfos;
         layout.height = this.getTileMinPercentHeight();
         this.tiles.forEach((tile) => {
-            let y = this.getPixelSize(tile.bounds.top || 0);
-            let h = this.getPixelSize(tile.bounds.height || this.tileMinHeight);
+            const y = this.getPixelSize(tile.bounds.top || 0);
+            const h = this.getPixelSize(tile.bounds.height || this.tileMinHeight);
             if (y + h > layout.height) {
                 layout.height = y + h;
             }
@@ -747,12 +726,8 @@ export class DejaTilesLayoutProvider {
     }
 
     private restoreLayout(layout: ILayoutInfos) {
-        if (!layout) {
-            return;
-        }
-
         this.tiles.forEach((tile) => {
-            let config = layout[tile.id] as ILayoutInfo;
+            const config = layout[tile.id] as ILayoutInfo;
             tile.bounds = config.bounds.clone();
         });
     }
@@ -766,16 +741,16 @@ export class DejaTilesLayoutProvider {
                 blackList[t.id] = t.id;
 
                 // Offset tile
-                let tryBounds = t.bounds.offset(direction * offset, 0);
+                const tryBounds = t.bounds.offset(direction * offset, 0);
                 let roffset = 0;
-                let maxWidth = this.getMaxPercentWidth();
+                const maxWidth = this.getMaxPercentWidth();
                 if (tryBounds.left < 0) {
                     roffset = -tryBounds.left;
                 } else if (maxWidth && tryBounds.right() > maxWidth) {
                     roffset = tryBounds.right() - maxWidth;
                 }
 
-                let adjacentTiles = this.tiles.filter((tt) => !tt.dragging && t !== tt && tt.bounds.intersectWith(tryBounds));
+                const adjacentTiles = this.tiles.filter((tt) => !tt.dragging && t !== tt && tt.bounds.intersectWith(tryBounds));
                 if (adjacentTiles.length) {
                     roffset += this.calcHorizontalOverflow(direction, adjacentTiles, offset, blackList);
                 }
@@ -793,8 +768,8 @@ export class DejaTilesLayoutProvider {
         tiles.forEach((t) => {
             if (!targetBounds[t.id]) {
                 // Offset tile
-                let newBounds = targetBounds[t.id] = t.bounds.offset(direction * offset, 0);
-                let adjacentTiles = this.tiles.filter((tt) => !tt.dragging && t !== tt && tt.bounds.intersectWith(newBounds));
+                const newBounds = targetBounds[t.id] = t.bounds.offset(direction * offset, 0);
+                const adjacentTiles = this.tiles.filter((tt) => !tt.dragging && t !== tt && tt.bounds.intersectWith(newBounds));
                 if (adjacentTiles.length) {
                     this.moveHorizontal(direction, adjacentTiles, offset, targetBounds);
                 }
@@ -804,12 +779,12 @@ export class DejaTilesLayoutProvider {
 
     private pushHorizontal(bounds: Rect, direction: number, tiles?: IDejaTile[], offset?: number): number {
         let overflow = 0;
-        let targetBounds = {} as { [id: number]: Rect };
+        const targetBounds = {} as { [id: number]: Rect };
 
         if (!offset) {
             offset = 0;
             tiles.forEach((t) => {
-                let ho = direction > 0 ? Math.max(0, bounds.right() - t.bounds.left) : Math.max(0, t.bounds.right() - bounds.left);
+                const ho = direction > 0 ? Math.max(0, bounds.right() - t.bounds.left) : Math.max(0, t.bounds.right() - bounds.left);
                 if (ho > offset) {
                     offset = ho;
                 }
@@ -844,16 +819,16 @@ export class DejaTilesLayoutProvider {
                 blackList[t.id] = t.id;
 
                 // Offset tile
-                let tryBounds = t.bounds.offset(0, direction * offset);
+                const tryBounds = t.bounds.offset(0, direction * offset);
                 let roffset = 0;
-                let maxHeight = this.getMaxPercentHeight();
+                const maxHeight = this.getMaxPercentHeight();
                 if (tryBounds.top < 0) {
                     roffset = -tryBounds.top;
                 } else if (maxHeight && tryBounds.bottom() > maxHeight) {
                     roffset = tryBounds.bottom() - maxHeight;
                 }
 
-                let adjacentTiles = this.tiles.filter((tt) => !tt.dragging && t !== tt && tt.bounds.intersectWith(tryBounds));
+                const adjacentTiles = this.tiles.filter((tt) => !tt.dragging && t !== tt && tt.bounds.intersectWith(tryBounds));
                 if (adjacentTiles.length) {
                     roffset += this.calcVerticalOverflow(direction, adjacentTiles, offset, blackList);
                 }
@@ -871,8 +846,8 @@ export class DejaTilesLayoutProvider {
         tiles.forEach((t) => {
             if (!targetBounds[t.id]) {
                 // Offset tile
-                let newBounds = targetBounds[t.id] = t.bounds.offset(0, direction * offset);
-                let adjacentTiles = this.tiles.filter((tt) => !tt.dragging && t !== tt && tt.bounds.intersectWith(newBounds));
+                const newBounds = targetBounds[t.id] = t.bounds.offset(0, direction * offset);
+                const adjacentTiles = this.tiles.filter((tt) => !tt.dragging && t !== tt && tt.bounds.intersectWith(newBounds));
                 if (adjacentTiles.length) {
                     this.moveVertical(direction, adjacentTiles, offset, targetBounds);
                 }
@@ -882,12 +857,12 @@ export class DejaTilesLayoutProvider {
 
     private pushVertical(bounds: Rect, direction: number, tiles: IDejaTile[], offset?: number): number {
         let overflow = 0;
-        let targetBounds = {} as { [id: number]: Rect };
+        const targetBounds = {} as { [id: number]: Rect };
 
         if (!offset) {
             offset = 0;
             tiles.forEach((t) => {
-                let vo = direction > 0 ? Math.max(0, bounds.bottom() - t.bounds.top) : Math.max(0, t.bounds.bottom() - bounds.top);
+                const vo = direction > 0 ? Math.max(0, bounds.bottom() - t.bounds.top) : Math.max(0, t.bounds.bottom() - bounds.top);
                 if (vo > offset) {
                     offset = vo;
                 }

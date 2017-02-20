@@ -12,5 +12,5 @@
 import { IDejaTile } from './index';
 
 export class DejaTileSelectionChangedEvent extends Event {
-    public tiles: IDejaTile[];
+    public selectedTiles: IDejaTile[];
 }

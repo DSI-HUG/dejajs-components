@@ -29,7 +29,7 @@ export class DejaTileGroupComponent {
     @Output() public onEdit = new EventEmitter();
 
     @Input() public set color(color: string) {
-        let colorObj = Color.fromHex(color);
+        const colorObj = Color.fromHex(color);
         if (colorObj.isEmpty()) {
             return;
         }
