@@ -726,6 +726,10 @@ export class DejaTilesLayoutProvider {
     }
 
     private restoreLayout(layout: ILayoutInfos) {
+        if (!layout) {
+            return;
+        }
+
         this.tiles.forEach((tile) => {
             const config = layout[tile.id] as ILayoutInfo;
             tile.bounds = config.bounds.clone();

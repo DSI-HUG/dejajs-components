@@ -9,7 +9,7 @@
 		</span>
 	</md-card-content>
 	<md-card-content>
-		<deja-tiles id="tiles" [(ngModel)]="tiles" (onTitleEditClick)="onTitleEditClick($event)" [designMode]="designMode" [maxwidth]="'100%'" [tileminwidth]="'5%'" [tileminheight]="'3%'" [tilemaxheight]="'50%'" [tilemaxwidth]="'50%'">
+		<deja-tiles id="tiles" [tiles]="tiles" (onTitleEditClick)="onTitleEditClick($event)" [designMode]="designMode" [maxwidth]="'100%'" [tileminwidth]="'5%'" [tileminheight]="'3%'" [tilemaxheight]="'50%'" [tilemaxwidth]="'50%'">
 			<template #tileTemplate let-tile>
 				<span [deja-draggable]="getDragContext(tile.templateModel)" class="tile-content unselectable" [style.background-color]="tile.templateModel.color">{{ tile.templateModel.country.naqme }} ({{ id }})
 					<span *ngIf="tile.selected">Selected</span>
