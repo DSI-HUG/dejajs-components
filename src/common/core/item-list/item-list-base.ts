@@ -14,7 +14,10 @@ import { Observable } from "rxjs/Rx";
 import { clearTimeout, setTimeout } from 'timers';
 import { GroupingService, IGroupInfo } from "../grouping/index";
 import { ISortInfos, SortingService, SortOrder } from "../sorting/index";
-import { IItemBase, IItemTree, IParentListInfoResult, ItemListService, IViewListResult } from "./index";
+import { IItemBase } from './item-base';
+import { IParentListInfoResult, ItemListService, IViewListResult } from './item-list.service';
+import { IItemTree } from './item-tree';
+
 
 export enum ViewportMode {
     NoViewport,

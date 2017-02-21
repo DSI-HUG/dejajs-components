@@ -1,7 +1,7 @@
 var webpack = require("webpack");
 var webpackMerge = require("webpack-merge");
 var commonConfig = require("./webpack.config.common.js");
-var TypedocWebpackPlugin = require("typedoc-webpack-plugin");
+var HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = webpackMerge.smart(commonConfig, {
     entry: {
@@ -28,9 +28,14 @@ module.exports = webpackMerge.smart(commonConfig, {
     },
 
     plugins: [
+        new HtmlWebpackPlugin({
+            template: "src/index.ejs",
+            baseUrl: 'https://dsi-hug.github.io/dejajs-components/',
+            title: 'DEJA-JS Demo App',
+        }),
         new webpack.NoErrorsPlugin(),
         new webpack.optimize.CommonsChunkPlugin({
-        name: ["./src/demo-app/main.ts", "./src/polyfills.ts"],
-    }),
+            name: ["./src/demo-app/main.ts", "./src/polyfills.ts"],
+        }),
     ],
 });

@@ -12,7 +12,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule  } from '@angular/forms';
-import { DejaBackdropComponent  } from './index';
+import { DejaBackdropComponent  } from './backdrop.component';
 
 @NgModule({
     declarations: [DejaBackdropComponent],

@@ -13,8 +13,9 @@ import { Component, ContentChild, ElementRef, EventEmitter, HostListener, Input,
 
 import { clearTimeout, setTimeout } from 'timers';
 
-import { DejaTooltipService, ITooltipParams } from '.';
 import { DejaDropDownComponent, Position, Rect } from '../../';
+import { ITooltipParams } from './index';
+import { DejaTooltipService } from './tooltip.service';
 
 @Component({
     selector: 'deja-tooltip',
