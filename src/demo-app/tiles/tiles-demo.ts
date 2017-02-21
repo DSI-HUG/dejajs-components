@@ -14,6 +14,7 @@ import { Rect } from '../../common/core/graphics/index';
 import { MaterialColors } from '../../common/core/style/index';
 import { IDejaDragEvent, IDejaTile, IDejaTileEvent } from '../../component';
 import { CountriesService, ICountry } from '../services/countries.service';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
     selector: 'deja-tiles-demo',
@@ -22,8 +23,7 @@ import { CountriesService, ICountry } from '../services/countries.service';
 })
 export class TilesDemo extends OnInit {
     protected designMode = false;
-    private countries: ICountry[];
-    private tiles = [] as IDejaTile[];
+    private tiles: Observable<IDejaTile[]>;
 
     constructor(private countriesService: CountriesService, private materialColors: MaterialColors) {
         super();
@@ -36,12 +36,38 @@ export class TilesDemo extends OnInit {
     }
 
     public ngOnInit() {
-        this.countriesService.getCountries().subscribe((value: ICountry[]) => {
-            this.countries = value;
-            this.refershTiles();
-        }, (error) => {
-            this.handleError(error);
-        });
+        let x = 0;
+        let y = 0;
+        const colors = this.materialColors.getPalet('700');
+        let colorIndex = 0;
+        this.tiles = this.countriesService.getCountries()
+            .switchMap((countries) => countries)
+            .map((country) => {
+                const tile = {
+                    bounds: new Rect(x, y, 15, 15),
+                    id: country.code,
+                    templateModel: {
+                        color: colors[colorIndex].toHex(),
+                        country: country,
+                    } as ITemplateModel,
+                } as IDejaTile;
+
+                if (++colorIndex >= colors.length) {
+                    colorIndex = 0;
+                }
+
+                x += 15;
+                if (x + 15 > 100) {
+                    x = 0;
+                    y += 15;
+                }
+
+                return tile;
+            })
+            .reduce((acc, curr) => {
+                acc.push(curr);
+                return acc;
+            }, []);
     }
 
     protected getDragContext(tile: IDejaTile) {
@@ -65,7 +91,7 @@ export class TilesDemo extends OnInit {
             },
             dropcallback: (event: IDejaDragEvent) => {
                 if (event.dragInfo.hasOwnProperty('button')) {
-                    let model = event.dragInfo['button'] as ITemplateModel;
+                    const model = event.dragInfo['button'] as ITemplateModel;
                     (event.target as HTMLElement).innerText = `The dropped country is ${model.country.naqme} - the code is: ${model.country.code}`;
                     event.preventDefault();
                 }
@@ -80,46 +106,6 @@ export class TilesDemo extends OnInit {
              this.groupNamePrompt.visible = true;
              this.groupNamePrompt.tile = e.tile;*/
         }
-    }
-
-    private handleError(error: any) {
-        console.error('An error occurred', error);
-        return Promise.reject(error.message || error);
-    }
-
-    private refershTiles() {
-        // Wait for promises
-        if (!this.countries) {
-            return;
-        }
-
-        let x = 0;
-        let y = 0;
-        let tiles = [];
-        let colors = this.materialColors.getPalet('700');
-        let colorIndex = 0;
-        this.countries.map((country) => {
-            tiles.push({
-                bounds: new Rect(x, y, 15, 15),
-                id: country.code,
-                templateModel: {
-                    color: colors[colorIndex].toHex(),
-                    country: country,
-                } as ITemplateModel,
-            } as IDejaTile);
-
-            if (++colorIndex >= colors.length) {
-                colorIndex = 0;
-            }
-
-            x += 15;
-            if (x + 15 > 100) {
-                x = 0;
-                y += 15;
-            }
-        });
-
-        this.tiles = tiles;
     }
 }
 
