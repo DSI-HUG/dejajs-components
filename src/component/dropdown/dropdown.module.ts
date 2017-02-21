@@ -11,7 +11,7 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { DejaDropDownComponent } from './index';
+import { DejaDropDownComponent } from './dropdown.component';
 
 @NgModule({
     declarations: [DejaDropDownComponent],
@@ -19,3 +19,4 @@ import { DejaDropDownComponent } from './index';
     imports: [CommonModule],
 })
 export class DejaDropDownModule { }
+

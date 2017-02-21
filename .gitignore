@@ -56,3 +56,6 @@ typings/
 
 # docs
 docs/
+
+# The output file for cyclic dependencies
+stats.json

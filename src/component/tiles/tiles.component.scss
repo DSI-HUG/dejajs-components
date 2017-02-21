@@ -16,6 +16,9 @@
 		&.expanded {
 			transition-property: height;
 		}
+		&.cutted {
+			opacity: 0.5;
+		}
 	}
 	#tile-wrapper,
 	.target,

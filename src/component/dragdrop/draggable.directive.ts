@@ -11,7 +11,8 @@
 
 import { Directive, ElementRef, Input } from '@angular/core';
 import { UUID } from '../../common/core';
-import { DragDropService, IDejaDragInfos } from './';
+import { DragDropService } from './dragdrop.service';
+import { IDejaDragInfos } from './index';
 
 @Directive({
     host: {
@@ -52,7 +53,7 @@ export class DejaDraggableDirective {
             e.dragElement = this.elementRef.nativeElement;
             this.context.dragstartcallback(e);
 
-            if (e.defaultPrevented) { 
+            if (e.defaultPrevented) {
                 event.preventDefault();
             }
         }
@@ -71,7 +72,7 @@ export class DejaDraggableDirective {
             e.dragElement = this.dragDropService.dragInfos[this.elementKey];
             this.context.dragendcallback(e);
 
-            if (e.defaultPrevented) { 
+            if (e.defaultPrevented) {
                 event.stopPropagation();
             }
         }
