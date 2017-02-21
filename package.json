@@ -1,6 +1,6 @@
 {
   "name": "@deja-js/component",
-  "version": "1.4.2-beta.3",
+  "version": "1.4.2-beta.4",
   "description": "Angular2 Components Library",
   "homepage": "https://github.com/DSI-HUG/deja-js",
   "bugs": "https://github.com/DSI-HUG/deja-js/issues",
@@ -92,7 +92,7 @@
     "url-loader": "^0.5.7",
     "webpack": "2.2.0",
     "webpack-cyclic-dependency-checker": "0.0.1",
-    "webpack-dev-server": "2.2.0-rc.0",
+    "webpack-dev-server": "~2.3.0",
     "webpack-merge": "^2.4.0"
   }
 }

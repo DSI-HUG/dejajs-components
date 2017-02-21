@@ -54,7 +54,7 @@ export class DejaDatePickerDemo implements OnInit {
         Observable.combineLatest(dateFrom$, dateTo$)
             .debounceTime(debouceTime)
             .map(([date1, date2]) => date1 && date2 && date1.getTime() > date2.getTime() ? [date2, date1] : [date1, date2])
-            .subscribe(([_date1, _date2]) => {
+            .subscribe(([]) => {
                 // Value 1 et value2 dispo ici dans l'ordre
                 debouceTime = 500;
             });
