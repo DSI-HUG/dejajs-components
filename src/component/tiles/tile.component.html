@@ -1,0 +1,6 @@
+<deja-tile-group *ngIf="tile.type==='group'" [model]="tile" [designMode]="designMode" [color]="tile.color" (onClose)="removeTile(tile);" (onEdit)="onTitleEditClicked($event, tile)">
+</deja-tile-group>
+<template *ngIf="tile.type!=='group'" [ngTemplateOutlet]="template" [ngOutletContext]="{ $implicit: tile }"></template>
+
+
+

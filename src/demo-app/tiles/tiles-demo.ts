@@ -9,7 +9,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Rect } from '../../common/core/graphics/index';
 import { MaterialColors } from '../../common/core/style/index';
 import { IDejaDragEvent, IDejaTile, IDejaTileEvent } from '../../component';
@@ -20,13 +20,13 @@ import { Observable } from 'rxjs/Observable';
     selector: 'deja-tiles-demo',
     styleUrls: ['./tiles-demo.scss'],
     templateUrl: './tiles-demo.html',
+    encapsulation: ViewEncapsulation.None,
 })
-export class TilesDemo extends OnInit {
+export class TilesDemo implements OnInit {
     protected designMode = false;
     private tiles: Observable<IDejaTile[]>;
 
     constructor(private countriesService: CountriesService, private materialColors: MaterialColors) {
-        super();
     }
 
     protected get debug() {

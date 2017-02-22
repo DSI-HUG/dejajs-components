@@ -9,9 +9,10 @@
  *
  */
 
-import { clearTimeout, setTimeout } from 'timers';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
 import { Directions, Position, Rect, Size } from '../../common/core/graphics';
-import { IDejaTile } from './index';
+import { DejaTileComponent, IDejaTile } from './index';
 
 interface ILayoutInfo {
     id: string;
@@ -25,260 +26,494 @@ interface ILayoutInfos {
     validBounds: Rect;
 }
 
+@Injectable()
 export class DejaTilesLayoutProvider {
+    public tileComponent = new Subject<DejaTileComponent>();
+    public refreshTiles = new Subject();
+    public ensureVisible = new Subject<IDejaTile>();
+    public designMode = new BehaviorSubject<boolean>(false);
+    public tileComponents = {} as { [id: string]: DejaTileComponent };
+    public selectedTiles = new BehaviorSubject<IDejaTile[]>([]);
+    public dragging = new BehaviorSubject<boolean>(false);
+    public dragSelection = new Subject<IDragSelection>();
+    public dragSelectionRect = new Subject<Rect>();
+    public dragDropInfos = new Subject<IDragDropInfos>();
+    public dragTargetRect = new Subject<Rect>();
+
+    protected tileMinWidth = 10;
+    protected tileMinWidthUnit = '%';
+    protected tileMaxWidth = 100;
+    protected tileMaxWidthUnit = '%';
+    protected tileMinHeight = 10;
+    protected tileMinHeightUnit = '%';
+    protected tileMaxHeight = 100;
+    protected tileMaxHeightUnit = '%';
+    protected maxWidth = 100;
+    protected maxWidthUnit = '%';
+    protected maxHeight: number;
+    protected maxHeightUnit: string;
+
+    private currentId = 0;
+    private _cursor: string;
     private targetBounds = {} as Rect;
     private destination = {} as Rect;
     private lastTargetBounds: Rect;
-    private moveTimer: NodeJS.Timer;
-    private moveDestination: Rect;
+    private moveTimout: Subscription;
     private originalLayout: ILayoutInfos;
     private validLayout: ILayoutInfos;
     private beforeSizeLayout: ILayoutInfos;
-    private hundredPercentWidth: number;
-    private cursor: string;
-    private width: number;
-    private height: number;
-    private tileMinHeight = 30;
     private dragPageOffset = {} as Position;
     private dragOriginalPosition = {} as Position;
     private dragRelativePosition: { [id: string]: Position };
     private expandedTile: IDejaTile;
+    private _container: HTMLElement;
+    private _designMode = false;
+    private currentTile: DejaTileComponent;
+    private hundredPercentWith: number;
+    private _dragTarget: Rect;
 
-    private tiles = [] as IDejaTile[];
-
-    constructor(maxWidth: string, maxHeight: string, tileMinWidth: string, tileMaxWidth: string, tileMinHeight: string, tileMaxHeight: string, private sizeChanged: (width: number, height: number) => void) {
-        const regexp = /(\d+)(.*)/i;
-
-        const extractValueAndUnit = (prop: string, value: string) => {
-            const matches = regexp.exec(value);
-            if (matches && matches.length >= 1) {
-                this[prop] = parseInt(matches[1], 10);
-                if (matches.length >= 2) {
-                    this[prop + 'Unit'] = matches[2];
-                } else {
-                    this[prop + 'Unit'] = 'px';
+    constructor() {
+        Observable.from(this.tileComponent)
+            .subscribe((tileComponent) => {
+                const tile = tileComponent.tile;
+                if (!tile.id) {
+                    tile.id = '#' + this.currentId++;
                 }
-            }
-        };
-        extractValueAndUnit('maxWidth', maxWidth);
-        extractValueAndUnit('maxHeight', maxHeight);
-        extractValueAndUnit('tileMinWidth', tileMinWidth);
-        extractValueAndUnit('tileMaxWidth', tileMaxWidth);
-        extractValueAndUnit('tileMinHeight', tileMinHeight);
-        extractValueAndUnit('tileMaxHeight', tileMaxHeight);
-    }
+                this.tileComponents[tile.id] = tileComponent;
+                this.refreshTiles.next();
 
-    protected get targetPixelBounds() {
-        if (this.targetBounds) {
-            return {
-                height: this.getPixelSize(this.targetBounds.height || 0),
-                left: this.getPixelSize(this.targetBounds.left || 0),
-                top: this.getPixelSize(this.targetBounds.top || 0),
-                width: this.getPixelSize(this.targetBounds.width || 0),
-            };
-        } else {
-            return undefined;
-        }
-    }
+                tileComponent.dispose.first().subscribe((disposedTile) => this.tileComponents[disposedTile.tile.id] = null);
+            });
 
-    public HitTest(tiles: IDejaTile[], pixelBounds: Rect): IDejaTile[] {
-        const percentBounds = new Rect(this.getPercentSize(pixelBounds.left), this.getPercentSize(pixelBounds.top), this.getPercentSize(pixelBounds.width), this.getPercentSize(pixelBounds.height));
-        return tiles.filter((t) => t.bounds.intersectWith(percentBounds));
-    }
+        Observable.from(this.refreshTiles)
+            .debounceTime(30)
+            .do(() => this.container.style.width = `100%`)
+            .delay(10)
+            .subscribe(() => {
+                const placeAtTheEnd = [] as DejaTileComponent[];
 
-    public getPixelSize(value: number, unit?: string): number {
-        if (!unit || unit === '%') {
-            return Math.round(value * this.hundredPercentWidth / 100);
-        } else {
-            return value;
-        }
-    }
+                const containerBounds = this.container.getBoundingClientRect();
+                this.hundredPercentWith = containerBounds.width;
+                let height = 0;
+                let width = containerBounds.width;
 
-    public getPercentSize(value: number): number {
-        return Math.round(value * 100 / this.hundredPercentWidth);
-    }
+                Object.values(this.tileComponents)
+                    .forEach((tileComponent: DejaTileComponent) => {
+                        const bounds = tileComponent.getBounds();
+                        const tile = tileComponent.tile;
+                        if (tile.bounds) {
+                            if (tileComponent.isDragging) {
+                                if (containerBounds.height > height) {
+                                    height = containerBounds.height;
+                                }
+                                if (containerBounds.width > width) {
+                                    width = containerBounds.width;
+                                }
+                                if (bounds.top + bounds.height > height) {
+                                    height = bounds.top + bounds.height;
+                                }
+                                if (bounds.left + bounds.width > width) {
+                                    width = bounds.left + bounds.width;
+                                }
+                            } else if (tile.bounds.top >= 0 && tile.bounds.left >= 0) {
+                                const l = this.getPixelSize(tile.bounds.left);
+                                const w = this.getPixelSize(tile.bounds.width);
+                                const t = this.getPixelSize(tile.bounds.top);
+                                const h = this.getPixelSize(tile.bounds.height);
+                                if (t + h > height) {
+                                    height = t + h;
+                                }
+                                if (l + w > width) {
+                                    width = l + w;
+                                }
+                                tileComponent.bounds.next({
+                                    height: h,
+                                    left: l,
+                                    top: t,
+                                    width: w,
+                                });
+                            } else {
+                                placeAtTheEnd.push(tileComponent);
+                            }
+                        } else {
+                            placeAtTheEnd.push(tileComponent);
+                        }
+                    });
 
-    public getSizePercentLimit(prop: string): number {
-        const unit = this[prop + 'Unit'];
-        if (!unit || unit === 'px') {
-            return this.getPercentSize(this[prop]);
-        } else {
-            return this[prop];
-        }
-    }
-
-    public getSizePixelLimit(prop: string): number {
-        const unit = this[prop + 'Unit'];
-        if (!unit || unit === 'px') {
-            return this[prop];
-        } else {
-            return this.getPixelSize(this[prop]);
-        }
-    }
-
-    public getTileMinPercentWidth(): number {
-        return this.getSizePercentLimit('tileMinWidth');
-    }
-
-    public getTileMaxPercentWidth(): number {
-        return this.getSizePercentLimit('tileMaxWidth');
-    }
-
-    public getTileMinPercentHeight(): number {
-        return this.getSizePercentLimit('tileMinHeight');
-    }
-
-    public getTileMaxPercentHeight(): number {
-        return this.getSizePercentLimit('tileMaxHeight');
-    }
-
-    public getMaxPercentWidth(): number {
-        return this.getSizePercentLimit('maxWidth');
-    }
-
-    public getMaxPercentHeight(): number {
-        return this.getSizePercentLimit('maxHeight');
-    }
-
-    public getTileMinPixelSize(): Size {
-        return new Size(this.getSizePixelLimit('tileMinWidth'), this.getSizePixelLimit('tileMinHeight'));
-    }
-
-    public getTileMaxPixelSize(): Size {
-        return new Size(this.getSizePixelLimit('tileMaxWidth'), this.getSizePixelLimit('tileMaxHeight'));
-    }
-
-    public getMaxPixelWidth(): number {
-        return this.getSizePixelLimit('maxWidth');
-    }
-
-    public getMaxPixelHeight(): number {
-        return this.getSizePixelLimit('maxHeight');
-    }
-
-    public expandTile(tile: IDejaTile, pixelheight: number) {
-        // Save layout
-        if (this.beforeSizeLayout) {
-            this.restoreLayout(this.beforeSizeLayout);
-        } else {
-            this.beforeSizeLayout = this.saveLayout();
-        }
-        this.expandedTile = tile;
-        tile.expanded = true;
-        const percentHeight = Math.ceil(pixelheight * 100 / this.hundredPercentWidth);
-        const height = this.getPixelSize(percentHeight);
-        this.size(tile, new Position(0, tile.t + height), Directions.bottom);
-    }
-
-    public cancelExpand() {
-        if (this.beforeSizeLayout) {
-            this.expandedTile.expanded = false;
-            this.restoreLayout(this.beforeSizeLayout);
-            this.refreshTiles();
-            this.beforeSizeLayout = undefined;
-        }
-    }
-
-    public refreshTiles(tiles?: IDejaTile[], hundredPercentWidth?: number) {
-        if (tiles) {
-            this.tiles = tiles;
-        }
-
-        if (hundredPercentWidth) {
-            this.hundredPercentWidth = hundredPercentWidth;
-        }
-
-        let height = 0;
-        let width = 0;
-        const placeAtTheEnd = [] as IDejaTile[];
-
-        this.tiles.forEach((tile) => {
-            if (tile.bounds) {
-                if (tile.dragging) {
-                    if (this.height > height) {
-                        height = this.height;
-                    }
-                    if (this.width > width) {
-                        width = this.width;
-                    }
-                    if (tile.b > height) {
-                        height = tile.b;
-                    }
-                    if (tile.r > width) {
-                        width = tile.r;
-                    }
-                } else if (tile.bounds.top >= 0 && tile.bounds.left >= 0) {
-                    const l = this.getPixelSize(tile.bounds.left);
+                let top = height;
+                let left = 0;
+                placeAtTheEnd.forEach((tileComponent) => {
+                    const tile = tileComponent.tile;
+                    tile.bounds = tile.bounds || new Rect(left, this.getPercentSize(top), 3 * this.getTileMinPercentWidth(), this.getTileMinPercentHeight());
                     const w = this.getPixelSize(tile.bounds.width);
-                    const t = this.getPixelSize(tile.bounds.top);
                     const h = this.getPixelSize(tile.bounds.height);
+                    const t = this.getPixelSize(tile.bounds.top);
+                    const l = this.getPixelSize(tile.bounds.left);
+
+                    if (left + w > width) {
+                        top += h;
+                        tile.bounds.left = 0;
+                        tile.bounds.top = this.getPercentSize(t);
+                    }
+
                     if (t + h > height) {
                         height = t + h;
                     }
-                    if (l + w > width) {
-                        width = l + w;
-                    }
-                    tile.l = l;
-                    tile.t = t;
-                    tile.r = l + w;
-                    tile.b = t + h;
-                } else {
-                    placeAtTheEnd.push(tile);
+
+                    tileComponent.bounds.next({
+                        height: h,
+                        left: l,
+                        top: t,
+                        width: w,
+                    });
+                    left += l;
+                });
+
+                this.container.style.width = `${width}px`;
+                this.container.style.height = `${height}px`;
+            });
+
+        Observable.from(this.ensureVisible)
+            .map((tile) => this.tileComponents[tile.id])
+            .filter((tileComponent) => !!tileComponent)
+            .subscribe((tileComponent) => {
+                const bounds = tileComponent.element.getBoundingClientRect();
+                const containerBounds = this.container.getBoundingClientRect();
+
+                if (bounds.left - containerBounds.left < this.container.scrollLeft) {
+                    this.container.scrollLeft = bounds.left - containerBounds.left;
+                } else if (bounds.right - containerBounds.right > this.container.scrollLeft + this.hundredPercentWith) {
+                    this.container.scrollLeft = bounds.right - containerBounds.right;
                 }
-            } else {
-                placeAtTheEnd.push(tile);
-            }
-        });
+                if (bounds.top - containerBounds.top < this.container.scrollTop) {
+                    this.container.scrollTop = bounds.top - containerBounds.top;
+                } else if (bounds.bottom - containerBounds.bottom > this.container.scrollTop + this.hundredPercentWith) {
+                    this.container.scrollTop = bounds.bottom - containerBounds.bottom;
+                }
+            });
 
-        let top = height;
-        let left = 0;
-        placeAtTheEnd.forEach((tile) => {
-            tile.bounds = tile.bounds || new Rect(left, this.getPercentSize(top), 3 * this.getTileMinPercentWidth(), this.getTileMinPercentHeight());
-            const w = this.getPixelSize(tile.bounds.width);
-            const h = this.getPixelSize(tile.bounds.height);
-            const t = this.getPixelSize(tile.bounds.top);
-            const l = this.getPixelSize(tile.bounds.left);
+        Observable.from(this.designMode)
+            .subscribe((value) => this._designMode = value);
 
-            if (left + w > width) {
-                top += h;
-                tile.bounds.left = 0;
-                tile.bounds.top = this.getPercentSize(t);
-            }
+        Observable.from(this.selectedTiles)
+            .subscribe((tiles) => {
+                Object.values(this.tileComponents)
+                    .filter((tileComponent: DejaTileComponent) => tileComponent.isSelected)
+                    .forEach((tileComponent: DejaTileComponent) => tileComponent.selected.next(false));
 
-            if (t + h > height) {
-                height = t + h;
-            }
+                if (tiles && tiles.length) {
+                    tiles
+                        .map((tile) => this.tileComponents[tile.id])
+                        .forEach((tileComponent: DejaTileComponent) => tileComponent.selected.next(true));
+                }
+            });
 
-            tile.l = l;
-            tile.t = t;
-            tile.r = l + w;
-            tile.b = t + h;
-            left += l;
-        });
+        Observable.from(this.dragSelection)
+            .subscribe((dragSelection) => {
+                const mouseUp$ = Observable.fromEvent(this._container.ownerDocument, 'mouseup')
+                    .do(() => this.dragSelectionRect.next(null));
 
-        if (this.height !== height || this.width !== width) {
-            this.height = height;
-            this.width = width;
-            this.sizeChanged(this.width, this.height);
-        }
+                Observable.fromEvent(this._container, 'mousemove')
+                    .takeUntil(mouseUp$)
+                    .filter((event: MouseEvent) => event.buttons === 1)
+                    .subscribe((event: MouseEvent) => {
+                        const containerBounds = this._container.getBoundingClientRect();
+
+                        // Select all tiles between start position and current position
+                        dragSelection.selectedRect = Rect.fromPoints(dragSelection.startPosition, new Position(event.pageX - containerBounds.left, event.pageY - containerBounds.top));
+                        this.dragSelectionRect.next(dragSelection.selectedRect);
+
+                        const selectedTiles = this.HitTest(dragSelection.selectedRect);
+                        this.selectedTiles.next(selectedTiles);
+                    });
+            });
+
+        Observable.from(this.dragDropInfos)
+            .subscribe((dragDropInfos) => {
+                const mouseUp$ = Observable.fromEvent(this._container.ownerDocument, 'mouseup')
+                    .do(() => this.dragDropInfos.next(null));
+
+                Observable.fromEvent(this._container, 'mousemove')
+                    .takeUntil(mouseUp$)
+                    .filter((event: MouseEvent) => event.buttons === 1)
+                    .subscribe((event: MouseEvent) => {
+                        const containerBounds = this._container.getBoundingClientRect();
+                        const x = event.pageX - containerBounds.left;
+                        const y = event.pageY - containerBounds.top;
+
+                        if (!dragDropInfos.enabled) {
+                            if (Math.abs(dragDropInfos.startX - x) > 10 || Math.abs(dragDropInfos.startY - y) > 10) {
+                                // Allow drag and drop of new tiles from outside the component
+                                // TODO
+                                // if (this.dragInfos.tiles.length === 1 && !this.tiles.find((t) => t === this.dragInfos.tiles[0])) {
+                                //     const tile = this.dragInfos.tiles[0];
+                                //     this.tiles.push(tile);
+                                //     const bounds = tile.bounds;
+                                //     this.dragInfos.startX = x - bounds.width / 2;
+                                //     this.dragInfos.startY = y - bounds.height / 2;
+                                //     tile.id = 'new';
+                                //     tile.bounds = new Rect(this.layoutProvider.getPercentSize(x) - bounds.width / 2, this.layoutProvider.getPercentSize(y) - bounds.height / 2, bounds.width, bounds.height);
+                                //     // TODO tile.dragging.next(true);
+                                //     this.clearSelection();
+                                //     tile.selected = true;
+                                //     this.selectedTiles = [tile];
+                                // }
+
+                                // Start tile drag and drop
+                                this.dragging.next(true);
+                                dragDropInfos.enabled = true;
+                                // this.globalKeyUp = true;
+                                this.startDrag(dragDropInfos.tiles, x, y);
+                            }
+                        } else {
+                            this.drag(dragDropInfos.tiles, x, y);
+                        }
+                    });
+
+                //             } else if (this.dragInfos) {
+                //                 if (event.buttons === 1) {
+                //                     this.drag(event.pageX, event.pageY);
+                //                 } else if (this.dragInfos.enabled) {
+                //                     this.cancelDrag();
+                //                 }
+
+            });
     }
 
-    public startDrag(tiles: IDejaTile[], cursor: string, pageX: number, pageY: number) {
-        // Backup config
-        this.cursor = cursor;
+    public set container(container: HTMLElement) {
+        this._container = container;
 
+        Observable.from(this.dragging)
+            .subscribe((value) => {
+                if (value) {
+                    this._container.setAttribute('drag', '');
+                } else {
+                    this._container.removeAttribute('drag');
+                }
+            });
+
+        const enter$ = Observable.fromEvent(container, 'mouseenter');
+        const leave$ = Observable.fromEvent(container, 'mouseleave');
+        const mouseUp$ = Observable.fromEvent(container.ownerDocument, 'mouseup');
+
+        enter$
+            .subscribe(() => {
+                // Cursor provider
+                if (this._designMode) {
+                    Observable.fromEvent(container, 'mousemove')
+                        .debounceTime(10)
+                        .takeUntil(leave$)
+                        .filter((event: MouseEvent) => event.buttons === 0)
+                        .subscribe((event: MouseEvent) => {
+                            this._cursor = this.getCursorFromHTMLElement(event.pageX, event.pageY, event.target as HTMLElement);
+                            this.container.style.cursor = this._cursor;
+                        });
+                } else {
+                    this.container.style.cursor = '';
+                }
+
+                const mouseDown$ = Observable.fromEvent(container, 'mousedown')
+                    .filter((event: MouseEvent) => event.buttons === 1)
+                    .map((event: MouseEvent) => ({
+                        event: event,
+                        target: event.target as HTMLElement,
+                        clickedTile: this.getTileComponentFromHTMLElement(event.target as HTMLElement)
+                    }));
+
+                // Pressed and selected tile observers
+                mouseDown$
+                    .takeUntil(leave$)
+                    .subscribe(({event, target, clickedTile}) => {
+                        if (this.currentTile) {
+                            this.currentTile.pressed.next(false);
+                        }
+                        this.currentTile = clickedTile;
+                        if (this.currentTile) {
+                            this.currentTile.pressed.next(true);
+
+                            if (event.ctrlKey) {
+                                // Multi-selection is available in design mode, selection on the mouse up
+                            } else {
+                                if (!this.currentTile.isSelected || this._cursor !== 'move') {
+                                    this.selectedTiles.next([this.currentTile.tile]);
+                                }
+
+                                if (this._designMode) {
+                                    const containerBounds = this._container.getBoundingClientRect();
+                                    const x = event.pageX - containerBounds.left;
+                                    const y = event.pageY - containerBounds.top;
+
+                                    this.dragDropInfos.next({
+                                        enabled: false,
+                                        startX: x,
+                                        startY: y,
+                                        tiles: Object.values(this.tileComponents).filter((tileComponent) => tileComponent.isSelected),
+                                    } as IDragDropInfos);
+                                }
+                            }
+
+                            Observable.merge(mouseUp$, leave$)
+                                .first()
+                                .filter(() => !!this.currentTile)
+                                .subscribe((e: MouseEvent) => {
+                                    if (this.currentTile.isPressed) {
+                                        this.currentTile.pressed.next(false);
+                                        // Multi-selection
+                                        if (e.ctrlKey) {
+                                            const selectedTiles = Object.values(this.tileComponents).filter((tileComponent) => tileComponent.isSelected);
+                                            if (!this.currentTile.isSelected) {
+                                                selectedTiles.push(this.currentTile);
+                                            } else {
+                                                const index = selectedTiles.findIndex((tileComponent) => tileComponent === this.currentTile);
+                                                if (index >= 0) {
+                                                    selectedTiles.splice(index, 1);
+                                                }
+                                            }
+                                            this.selectedTiles.next(selectedTiles.map((tileComponent) => tileComponent.tile));
+                                        }
+                                    }
+
+                                    this.currentTile = undefined;
+                                });
+                        } else {
+                            if (target === this.container || target.parentElement === this.container) {
+                                if (event.buttons === 1) {
+                                    // Start drag selection
+                                    const containerBounds = this._container.getBoundingClientRect();
+                                    this.dragSelection.next({
+                                        startPosition: new Position(event.pageX - containerBounds.left, event.pageY - containerBounds.top),
+                                        selectedRect: new Rect(),
+                                    } as IDragSelection);
+                                }
+
+                                // Unselect all tiles
+                                if (this.currentTile) {
+                                    this.currentTile.pressed.next(false);
+                                }
+                                this.selectedTiles.next(null);
+                            }
+                        }
+                    });
+            });
+    }
+
+    public get container() {
+        return this._container;
+    }
+
+    public getTileElementFromHTMLElement(element: HTMLElement) {
+        let tileElement = element;
+
+        while (tileElement && tileElement.tagName !== 'DEJA-TILE') {
+            tileElement = tileElement.parentElement;
+            if (tileElement === this.container) {
+                return undefined;
+            }
+        }
+
+        return tileElement;
+    }
+
+    public getTileComponentFromHTMLElement(element: HTMLElement): DejaTileComponent {
+        const tileElement = this.getTileElementFromHTMLElement(element);
+        return tileElement && this.tileComponents[tileElement.id];
+    }
+
+    public set tileminwidth(value: string) {
+        this.extractValueAndUnit('tileMinWidth', value);
+    }
+
+    public set tilemaxwidth(value: string) {
+        this.extractValueAndUnit('tileMaxWidth', value);
+    }
+
+    public set tileminheight(value: string) {
+        this.extractValueAndUnit('tileMinHeight', value);
+    }
+
+    public set tilemaxheight(value: string) {
+        this.extractValueAndUnit('tileMaxHeight', value);
+    }
+
+    public set maxwidth(value: string) {
+        this.extractValueAndUnit('maxWidth', value);
+    }
+
+    public set maxheight(value: string) {
+        this.extractValueAndUnit('maxHeight', value);
+    }
+
+    public get isDesignMode() {
+        return this._designMode;
+    }
+
+    private get dragTarget() {
+        return this._dragTarget;
+    }
+
+    private set dragTarget(value: Rect) {
+        this._dragTarget = value;
+                                console.log(value);
+
+        this.dragTargetRect.next(value);
+    }
+
+    public getFreePlace(idealBounds: Rect) {
+        const containerBounds = this.container.getBoundingClientRect();
+        const percentHeight = this.getPercentSize(containerBounds.height);
+        const freePlaces = [] as Rect[];
+        const tiles = Object.values(this.tileComponents).map((tileComponent: DejaTileComponent) => tileComponent.tile);
+        for (let x = 0; x < this.maxWidth - idealBounds.width; x += this.tileMinWidth) {
+            for (let y = 0; y < percentHeight - idealBounds.height; y += this.tileMinHeight) {
+                const currentBounds = new Rect(x, y, idealBounds.width, idealBounds.height);
+
+                if (tiles.filter((t) => t.bounds.intersectWith(currentBounds)).length === 0) {
+                    freePlaces.push(currentBounds);
+                }
+            }
+        }
+
+        if (freePlaces.length > 0) {
+            // add at the nearest free place
+            freePlaces.sort((bounds1, bounds2) => {
+                const calcDistance = (bounds) => {
+                    return Math.min(Math.abs(bounds.left - idealBounds.left), Math.abs(bounds.right() - idealBounds.right())) + 2 * Math.min(Math.abs(bounds.top - idealBounds.top), Math.abs(bounds.bottom() - idealBounds.bottom()));
+                };
+                return calcDistance(bounds1) - calcDistance(bounds2);
+            });
+
+            return freePlaces[0];
+        }
+
+        // Add at the end
+        return new Rect(0, percentHeight, idealBounds.width, idealBounds.height);
+    }
+
+    public HitTest(pixelBounds: Rect): IDejaTile[] {
+        const percentBounds = new Rect(this.getPercentSize(pixelBounds.left), this.getPercentSize(pixelBounds.top), this.getPercentSize(pixelBounds.width), this.getPercentSize(pixelBounds.height));
+        return Object.values(this.tileComponents)
+            .map((tileComponent: DejaTileComponent) => tileComponent.tile)
+            .filter((t) => t.bounds.intersectWith(percentBounds));
+    }
+
+    public getPercentSize(value: number): number {
+        return Math.round(value * 100 / this.hundredPercentWith);
+    }
+
+    public startDrag(tiles: DejaTileComponent[], pageX: number, pageY: number) {
         // Save layout
         const savedLayout = this.saveLayout();
 
         // Bring all tiles together
         let targetBounds: Rect;
-        tiles.forEach((t) => {
-            targetBounds = targetBounds ? Rect.union(targetBounds, t.bounds) : t.bounds;
-            t.dragging = true;
+        tiles.forEach((tileComponent) => {
+            targetBounds = targetBounds ? Rect.union(targetBounds, tileComponent.tile.bounds) : tileComponent.tile.bounds;
+            tileComponent.dragging.next(true);
         });
 
         this.dragRelativePosition = {};
-        tiles.forEach((t) => {
+        tiles.forEach((tileComponent) => {
+            const t = tileComponent.tile;
             this.dragRelativePosition[t.id] = new Position(t.bounds.left - targetBounds.left, t.bounds.top - targetBounds.top);
         });
 
@@ -291,71 +526,107 @@ export class DejaTilesLayoutProvider {
         delete this.validLayout;
     }
 
-    public cancelDrag(tiles: IDejaTile[]) {
-        if (this.moveTimer) {
-            clearTimeout(this.moveTimer);
-            this.moveTimer = undefined;
+    public expandTile(tile: IDejaTile, pixelheight: number) {
+        // Save layout
+        if (this.beforeSizeLayout) {
+            this.restoreLayout(this.beforeSizeLayout);
+        } else {
+            this.beforeSizeLayout = this.saveLayout();
+        }
+        this.expandedTile = tile;
+        tile.expanded = true;
+        // TODO Simplifier
+        const percentHeight = Math.ceil(pixelheight * 100 / this.hundredPercentWith);
+        const height = this.getPixelSize(percentHeight);
+        const tileComponent = this.tileComponents[tile.id];
+        this.size(tile, new Position(0, tileComponent.getBounds().top + height), Directions.bottom);
+    }
+
+    public cancelExpand() {
+        if (this.beforeSizeLayout) {
+            this.expandedTile.expanded = false;
+            this.restoreLayout(this.beforeSizeLayout);
+            this.refreshTiles.next();
+            this.beforeSizeLayout = undefined;
+        }
+    }
+
+    public cancelDrag(tiles: DejaTileComponent[]) {
+        if (this.moveTimout) {
+            this.moveTimout.unsubscribe();
+            this.moveTimout = undefined;
         }
 
-        tiles.forEach((t) => {
-            t.dragging = false;
-            t.dropping = true;
-        });
-
-        setTimeout(() => {
-            tiles.forEach((t) => t.dropping = false);
-        }, 1000);
+        Observable.from(tiles)
+            .filter((tileComponent) => !!tileComponent)
+            .do((tileComponent) => {
+                tileComponent.dragging.next(false);
+                tileComponent.dropping.next(true);
+            })
+            .delay(1000)
+            .subscribe((tileComponent) => {
+                tileComponent.dropping.next(false);
+            });
 
         // Restore original layout
         this.restoreLayout(this.originalLayout);
         delete this.originalLayout;
         delete this.validLayout;
         delete this.targetBounds;
-        this.refreshTiles();
+        this.refreshTiles.next();
     }
 
-    public drop(tiles: IDejaTile[]) {
+    public drop(tiles: DejaTileComponent[]) {
         let changed: IDejaTile[];
 
-        if (this.moveTimer) {
-            clearTimeout(this.moveTimer);
-            this.moveTimer = undefined;
-        }
-
-        this.restoreLayout(this.validLayout);
-        if (this.cursor !== 'move') {
-            // Only one tile can be resized at time
-            const tile = tiles[0];
-            tile.bounds = this.validLayout.validBounds;
-            tile.dragging = false;
-        } else {
-            tiles.forEach((t) => {
-                const left = this.validLayout.validBounds.left + this.dragRelativePosition[t.id].left;
-                const top = this.validLayout.validBounds.top + this.dragRelativePosition[t.id].top;
-                t.bounds = new Rect(left, top, t.bounds.width, t.bounds.height);
-                t.dragging = false;
-                t.dropping = true;
-            });
-
-            setTimeout(() => {
-                tiles.forEach((t) => t.dropping = false);
-            }, 1000);
+        if (this.moveTimout) {
+            this.moveTimout.unsubscribe();
+            this.moveTimout = undefined;
         }
 
         if (this.validLayout) {
-            changed = this.tiles.filter((t) => !Rect.equals(t.bounds, this.originalLayout[t.id] && this.originalLayout[t.id].bounds));
+            this.restoreLayout(this.validLayout);
+        }
+
+        if (this._cursor !== 'move') {
+            // Only one tile can be resized at time
+            const tileComponent = tiles[0];
+            const tile = tileComponent.tile;
+            tile.bounds = this.validLayout.validBounds;
+            tileComponent.dragging.next(false);
+        } else {
+            Observable.from(tiles)
+                .filter((tileComponent) => !!tileComponent)
+                .do((tileComponent) => {
+                    const t = tileComponent.tile;
+                    const left = this.validLayout.validBounds.left + this.dragRelativePosition[t.id].left;
+                    const top = this.validLayout.validBounds.top + this.dragRelativePosition[t.id].top;
+                    t.bounds = new Rect(left, top, t.bounds.width, t.bounds.height);
+                    tileComponent.dragging.next(false);
+                    tileComponent.dropping.next(true);
+                })
+                .delay(1000)
+                .subscribe((tileComponent) => {
+                    tileComponent.dropping.next(false);
+                });
+        }
+
+        if (this.validLayout) {
+            changed = Object.values(this.tileComponents)
+                .map((tileComponent: DejaTileComponent) => tileComponent.tile)
+                .filter((t) => !Rect.equals(t.bounds, this.originalLayout[t.id] && this.originalLayout[t.id].bounds));
         }
 
         delete this.originalLayout;
         delete this.validLayout;
         delete this.targetBounds;
 
-        this.refreshTiles();
+        this.refreshTiles.next();
 
         return changed;
     }
 
-    public drag(tiles: IDejaTile[], pageX: number, pageY: number) {
+    public drag(tiles: DejaTileComponent[], pageX: number, pageY: number) {
         // Search related coords
         const offset = new Position(pageX - this.dragPageOffset.left, pageY - this.dragPageOffset.top);
         const offsetLeft = offset.left + this.getPixelSize(this.dragOriginalPosition.left);
@@ -364,61 +635,68 @@ export class DejaTilesLayoutProvider {
         const sizemin = this.getTileMinPixelSize();
         const sizemax = this.getTileMaxPixelSize();
 
-        if (this.cursor !== 'move') {
+        if (this._cursor !== 'move') {
             // Only one tile can be resized at time
-            const tile = tiles[0];
+            const tileComponent = tiles[0];
+            const tile = tileComponent.tile;
+            const bounds = tileComponent.getBounds();
             const offsetRight = offsetLeft + this.getPixelSize(tile.bounds.width);
             const offsetBottom = offsetTop + this.getPixelSize(tile.bounds.height);
-            switch (this.cursor) {
+            let right = bounds.top + bounds.width;
+            let bottom = bounds.top + bounds.height;
+            switch (this._cursor) {
                 case 'nw-resize':
-                    tile.l = Math.max(Math.min(offsetLeft, tile.r - sizemin.width), tile.r - sizemax.width);
-                    tile.t = Math.max(Math.min(offsetTop, tile.b - sizemin.height), tile.b - sizemax.height);
+                    bounds.left = Math.max(Math.min(offsetLeft, right - sizemin.width), right - sizemax.width);
+                    bounds.top = Math.max(Math.min(offsetTop, bottom - sizemin.height), bottom - sizemax.height);
                     this.size(tile, new Position(offsetLeft, offsetTop), Directions.left + Directions.top);
                     break;
                 case 'sw-resize':
-                    tile.l = Math.max(Math.min(offsetLeft, tile.r - sizemin.width), tile.r - sizemax.width);
-                    tile.b = Math.max(Math.min(offsetBottom, tile.t + sizemax.height), tile.t + sizemin.height);
+                    bounds.left = Math.max(Math.min(offsetLeft, right - sizemin.width), right - sizemax.width);
+                    bottom = Math.max(Math.min(offsetBottom, bounds.top + sizemax.height), bounds.top + sizemin.height);
                     this.size(tile, new Position(offsetLeft, offsetBottom), Directions.left + Directions.bottom);
                     break;
                 case 'w-resize':
-                    tile.l = Math.max(Math.min(offsetLeft, tile.r - sizemin.width), tile.r - sizemax.width);
+                    bounds.left = Math.max(Math.min(offsetLeft, right - sizemin.width), right - sizemax.width);
                     this.size(tile, new Position(offsetLeft, 0), Directions.left);
                     break;
                 case 'ne-resize':
-                    tile.r = Math.max(Math.min(offsetRight, tile.l + sizemax.width), tile.l + sizemin.width);
-                    tile.t = Math.max(Math.min(offsetTop, tile.b - sizemin.height), tile.b - sizemax.height);
+                    right = Math.max(Math.min(offsetRight, bounds.left + sizemax.width), bounds.left + sizemin.width);
+                    bounds.top = Math.max(Math.min(offsetTop, bottom - sizemin.height), bottom - sizemax.height);
                     this.size(tile, new Position(offsetRight, offsetTop), Directions.right + Directions.top);
                     break;
                 case 'se-resize':
-                    tile.r = Math.max(Math.min(offsetRight, tile.l + sizemax.width), tile.l + sizemin.width);
-                    tile.b = Math.max(Math.min(offsetBottom, tile.t + sizemax.height), tile.t + sizemin.height);
+                    right = Math.max(Math.min(offsetRight, bounds.left + sizemax.width), bounds.left + sizemin.width);
+                    bottom = Math.max(Math.min(offsetBottom, bounds.top + sizemax.height), bounds.top + sizemin.height);
                     this.size(tile, new Position(offsetRight, offsetBottom), Directions.right + Directions.bottom);
                     break;
                 case 'e-resize':
-                    tile.r = Math.max(Math.min(offsetRight, tile.l + sizemax.width), tile.l + sizemin.width);
+                    right = Math.max(Math.min(offsetRight, bounds.left + sizemax.width), bounds.left + sizemin.width);
                     this.size(tile, new Position(offsetRight, 0), Directions.right);
                     break;
                 case 'n-resize':
-                    tile.t = Math.max(Math.min(offsetTop, tile.b - sizemin.height), tile.b - sizemax.height);
+                    bounds.top = Math.max(Math.min(offsetTop, bottom - sizemin.height), bottom - sizemax.height);
                     this.size(tile, new Position(0, offsetTop), Directions.top);
                     break;
                 case 's-resize':
-                    tile.b = Math.max(Math.min(offsetBottom, tile.t + sizemax.height), tile.t + sizemin.height);
+                    bottom = Math.max(Math.min(offsetBottom, bounds.top + sizemax.height), bounds.top + sizemin.height);
                     this.size(tile, new Position(0, offsetBottom), Directions.bottom);
                     break;
                 default:
                     throw new Error('Invalid direction');
             }
         } else {
-            tiles.forEach((t) => {
-                t.l = offsetLeft + this.getPixelSize(this.dragRelativePosition[t.id].left);
-                t.t = offsetTop + this.getPixelSize(this.dragRelativePosition[t.id].top);
-                t.r = t.l + this.getPixelSize(t.bounds.width);
-                t.b = t.t + this.getPixelSize(t.bounds.height);
+            tiles.forEach((tileComponent) => {
+                const tile = tileComponent.tile;
+                tileComponent.bounds.next({
+                    height: this.getPixelSize(tile.bounds.height),
+                    left: offsetLeft + this.getPixelSize(this.dragRelativePosition[tile.id].left),
+                    top: offsetTop + this.getPixelSize(this.dragRelativePosition[tile.id].top),
+                    width: this.getPixelSize(tile.bounds.width),
+                });
             });
 
-            // Calc new drag and drop rectangle
-            this.moveDestination = new Rect(
+            // Assign new drag and drop rectangle
+            this.dragTarget = new Rect(
                 this.getPercentSize(offsetLeft),
                 this.getPercentSize(offsetTop),
                 this.targetBounds.width,
@@ -429,7 +707,7 @@ export class DejaTilesLayoutProvider {
         }
     }
 
-    public size(tile: IDejaTile, pixelpos: Position, directions: Directions) {
+    private size(tile: IDejaTile, pixelpos: Position, directions: Directions) {
         // Calc new tile bounds
         const percentPos = new Position(this.getPercentSize(pixelpos.left), this.getPercentSize(pixelpos.top));
         const dragBounds = tile.bounds.clone();
@@ -491,7 +769,7 @@ export class DejaTilesLayoutProvider {
         if (tile.expanded) {
             const ensureBounds = this.ensureTarget(newTargetBounds, dragBounds, directions);
             tile.bounds = ensureBounds;
-            this.refreshTiles();
+            this.refreshTiles.next();
         } else {
             // Restore the original layout before moving something
             this.restoreLayout(this.originalLayout);
@@ -499,14 +777,16 @@ export class DejaTilesLayoutProvider {
             this.destination = newTargetBounds.clone();
 
             // Check if location is free without pushing tiles
-            const result = this.tiles.find((t) => !t.dragging && t.bounds.intersectWith(newTargetBounds));
+            const result = Object.values(this.tileComponents)
+                .find((tileComponent: DejaTileComponent) => !tileComponent.isDragging && tileComponent.tile.bounds.intersectWith(newTargetBounds));
+
             if (!result) {
                 this.targetBounds = newTargetBounds;
 
                 // Save layout
                 this.validLayout = this.saveLayout();
                 this.validLayout.targetBounds = this.validLayout.validBounds = newTargetBounds;
-                this.refreshTiles();
+                this.refreshTiles.next();
             } else {
                 // Location must be freed
                 if (newTargetBounds) {
@@ -517,7 +797,7 @@ export class DejaTilesLayoutProvider {
                         this.validLayout = this.saveLayout();
                         this.validLayout.targetBounds = newTargetBounds;
                         this.validLayout.validBounds = ensureBounds;
-                        this.refreshTiles();
+                        this.refreshTiles.next();
                     }
                 }
             }
@@ -530,10 +810,10 @@ export class DejaTilesLayoutProvider {
 
         // Search a new target
         const newTargetBounds = this.ensureContainer(new Rect(
-            minWidth * Math.round(this.moveDestination.left / minWidth),
-            minHeight * Math.round(this.moveDestination.top / minHeight),
-            this.moveDestination.width,
-            this.moveDestination.height,
+            minWidth * Math.round(this.dragTarget.left / minWidth),
+            minHeight * Math.round(this.dragTarget.top / minHeight),
+            this.dragTarget.width,
+            this.dragTarget.height,
         ));
 
         if (this.lastTargetBounds && Math.abs(newTargetBounds.left - this.lastTargetBounds.left) < 3 && Math.abs(newTargetBounds.top - this.lastTargetBounds.top) < 3) {
@@ -542,16 +822,18 @@ export class DejaTilesLayoutProvider {
         }
         this.lastTargetBounds = newTargetBounds;
 
-        if (this.moveTimer) {
-            clearTimeout(this.moveTimer);
-            this.moveTimer = undefined;
+        if (this.moveTimout) {
+            this.moveTimout.unsubscribe();
+            this.moveTimout = undefined;
         }
 
         // Restore the original layout before moving something
         this.restoreLayout(this.originalLayout);
 
         // Check if location is free without pushing tiles
-        const result = this.tiles.find((t) => !t.dragging && t.bounds.intersectWith(newTargetBounds));
+        const result = Object.values(this.tileComponents)
+            .find((tileComponent: DejaTileComponent) => !tileComponent.isDragging && tileComponent.tile.bounds.intersectWith(newTargetBounds));
+
         if (!result) {
             this.targetBounds = newTargetBounds.clone();
             this.destination = newTargetBounds.clone();
@@ -559,28 +841,29 @@ export class DejaTilesLayoutProvider {
             // Save layout
             this.validLayout = this.saveLayout();
             this.validLayout.targetBounds = this.validLayout.validBounds = newTargetBounds;
-            this.refreshTiles();
+            this.refreshTiles.next();
         } else {
             // Location must be freed, timer
-            this.moveTimer = setTimeout(() => {
-                // console.log('moveTimer timer');
-                this.moveTimer = undefined;
+            this.moveTimout = Observable.timer(500)
+                .first()
+                .subscribe(() => {
+                    // console.log('moveTimer timer');
+                    this.moveTimout = undefined;
 
-                this.destination = newTargetBounds.clone();
-                if (newTargetBounds) {
-                    // Ensure new destination
-                    const ensureBounds = this.ensureTarget(newTargetBounds, this.moveDestination, Directions.all);
-                    if (ensureBounds) {
-                        this.targetBounds = ensureBounds;
-                        this.validLayout = this.saveLayout();
-                        this.validLayout.targetBounds = newTargetBounds;
-                        this.validLayout.validBounds = ensureBounds;
-                        this.refreshTiles();
+                    this.destination = newTargetBounds.clone();
+                    if (newTargetBounds) {
+                        // Ensure new destination
+                        const ensureBounds = this.ensureTarget(newTargetBounds, this.dragTarget, Directions.all);
+                        if (ensureBounds) {
+                            this.targetBounds = ensureBounds;
+                            this.validLayout = this.saveLayout();
+                            this.validLayout.targetBounds = newTargetBounds;
+                            this.validLayout.validBounds = ensureBounds;
+                            this.refreshTiles.next();
+                        }
                     }
-                }
-            }, 500);
+                });
         }
-
     }
 
     // Ensure that the specified bounds are inside the tiles area. Return the corrected rectangle.
@@ -631,36 +914,40 @@ export class DejaTilesLayoutProvider {
         tilesToPush[Directions.top] = [];
         tilesToPush[Directions.bottom] = [];
 
-        for (let i = 0; i < this.tiles.length; i++) {
-            const t = this.tiles[i];
-            if (!t.dragging && !t.expanded) {
-                if (t.bounds.intersectWith(bounds)) {
-                    const swapTargetRect = new Rect(this.dragOriginalPosition.left, this.dragOriginalPosition.top, bounds.width, bounds.height);
-                    if (t.bounds.left === effectiveBounds.left && t.bounds.top === effectiveBounds.top && t.bounds.width === effectiveBounds.width && t.bounds.height === effectiveBounds.height && effectiveBounds.adjacent(swapTargetRect)) {
-                        // swap
-                        t.bounds = swapTargetRect;
-                        return bounds;
-                    } else {
-                        const hol = t.bounds.left - effectiveBounds.left; // Ce qui dépasse à gauche
-                        const hor = effectiveBounds.right() - t.bounds.right(); // Ce qui dépasse à droite
-                        const vot = t.bounds.top - effectiveBounds.top; // Ce qui dépasse en haut
-                        const vob = effectiveBounds.bottom() - t.bounds.bottom(); // Ce qui dépasse en bas
-                        const hoe = Math.max(0, Math.min(t.bounds.right(), effectiveBounds.right()) - Math.max(t.bounds.left, effectiveBounds.left)) / Math.min(t.bounds.width, effectiveBounds.width);
-                        const voe = Math.max(0, Math.min(t.bounds.bottom(), effectiveBounds.bottom()) - Math.max(t.bounds.top, effectiveBounds.top)) / Math.min(t.bounds.height, effectiveBounds.height);
-
-                        // Calc prefered direction
-                        let preferedDirection: Directions;
-                        // tslint:disable-next-line:no-bitwise
-                        if (voe >= hoe && directions & Directions.horizontal) {
-                            // horizontal
-                            // tslint:disable-next-line:no-bitwise
-                            preferedDirection = hor >= hol && directions & Directions.left ? Directions.left : Directions.right;
+        // tslint:disable-next-line:prefer-for-of
+        for (const id in this.tileComponents) {
+            if (this.tileComponents[id]) {
+                const tileComponent = this.tileComponents[id];
+                const t = tileComponent.tile;
+                if (!tileComponent.isDragging && !t.expanded) {
+                    if (t.bounds.intersectWith(bounds)) {
+                        const swapTargetRect = new Rect(this.dragOriginalPosition.left, this.dragOriginalPosition.top, bounds.width, bounds.height);
+                        if (t.bounds.left === effectiveBounds.left && t.bounds.top === effectiveBounds.top && t.bounds.width === effectiveBounds.width && t.bounds.height === effectiveBounds.height && effectiveBounds.adjacent(swapTargetRect)) {
+                            // swap
+                            t.bounds = swapTargetRect;
+                            return bounds;
                         } else {
-                            // vertical
+                            const hol = t.bounds.left - effectiveBounds.left; // Ce qui dépasse Ã  gauche
+                            const hor = effectiveBounds.right() - t.bounds.right(); // Ce qui dépasse Ã  droite
+                            const vot = t.bounds.top - effectiveBounds.top; // Ce qui dépasse en haut
+                            const vob = effectiveBounds.bottom() - t.bounds.bottom(); // Ce qui dépasse en bas
+                            const hoe = Math.max(0, Math.min(t.bounds.right(), effectiveBounds.right()) - Math.max(t.bounds.left, effectiveBounds.left)) / Math.min(t.bounds.width, effectiveBounds.width);
+                            const voe = Math.max(0, Math.min(t.bounds.bottom(), effectiveBounds.bottom()) - Math.max(t.bounds.top, effectiveBounds.top)) / Math.min(t.bounds.height, effectiveBounds.height);
+
+                            // Calc prefered direction
+                            let preferedDirection: Directions;
                             // tslint:disable-next-line:no-bitwise
-                            preferedDirection = vob >= vot && directions & Directions.top ? Directions.top : Directions.bottom;
+                            if (voe >= hoe && directions & Directions.horizontal) {
+                                // horizontal
+                                // tslint:disable-next-line:no-bitwise
+                                preferedDirection = hor >= hol && directions & Directions.left ? Directions.left : Directions.right;
+                            } else {
+                                // vertical
+                                // tslint:disable-next-line:no-bitwise
+                                preferedDirection = vob >= vot && directions & Directions.top ? Directions.top : Directions.bottom;
+                            }
+                            tilesToPush[preferedDirection].push(t);
                         }
-                        tilesToPush[preferedDirection].push(t);
                     }
                 }
             }
@@ -711,29 +998,145 @@ export class DejaTilesLayoutProvider {
     private saveLayout(): ILayoutInfos {
         const layout = {} as ILayoutInfos;
         layout.height = this.getTileMinPercentHeight();
-        this.tiles.forEach((tile) => {
-            const y = this.getPixelSize(tile.bounds.top || 0);
-            const h = this.getPixelSize(tile.bounds.height || this.tileMinHeight);
-            if (y + h > layout.height) {
-                layout.height = y + h;
-            }
-            layout[tile.id] = {
-                bounds: tile.bounds.clone(),
-                id: tile.id,
-            } as ILayoutInfo;
-        });
+        Object.values(this.tileComponents)
+            .map((tileComponent: DejaTileComponent) => tileComponent.tile)
+            .forEach((tile) => {
+                const y = this.getPixelSize(tile.bounds.top || 0);
+                const h = this.getPixelSize(tile.bounds.height || this.tileMinHeight);
+                if (y + h > layout.height) {
+                    layout.height = y + h;
+                }
+                layout[tile.id] = {
+                    bounds: tile.bounds.clone(),
+                    id: tile.id,
+                } as ILayoutInfo;
+            });
+
         return layout;
     }
 
-    private restoreLayout(layout: ILayoutInfos) {
-        if (!layout) {
-            return;
+    private getPixelSize(value: number, unit?: string): number {
+        if (!unit || unit === '%') {
+            return Math.round(value * this.hundredPercentWith / 100);
+        } else {
+            return value;
+        }
+    }
+
+    private getSizePercentLimit(prop: string): number {
+        const unit = this[prop + 'Unit'];
+        if (!unit || unit === 'px') {
+            return this.getPercentSize(this[prop]);
+        } else {
+            return this[prop];
+        }
+    }
+
+    private getSizePixelLimit(prop: string): number {
+        const unit = this[prop + 'Unit'];
+        if (!unit || unit === 'px') {
+            return this[prop];
+        } else {
+            return this.getPixelSize(this[prop]);
+        }
+    }
+
+    private getTileMinPixelSize(): Size {
+        return new Size(this.getSizePixelLimit('tileMinWidth'), this.getSizePixelLimit('tileMinHeight'));
+    }
+
+    private getTileMaxPixelSize(): Size {
+        return new Size(this.getSizePixelLimit('tileMaxWidth'), this.getSizePixelLimit('tileMaxHeight'));
+    }
+
+    private getTileMinPercentWidth(): number {
+        return this.getSizePercentLimit('tileMinWidth');
+    }
+
+    private getTileMaxPercentWidth(): number {
+        return this.getSizePercentLimit('tileMaxWidth');
+    }
+
+    private getTileMinPercentHeight(): number {
+        return this.getSizePercentLimit('tileMinHeight');
+    }
+
+    private getTileMaxPercentHeight(): number {
+        return this.getSizePercentLimit('tileMaxHeight');
+    }
+
+    private getMaxPercentWidth(): number {
+        return this.getSizePercentLimit('maxWidth');
+    }
+
+    private getMaxPercentHeight(): number {
+        return this.getSizePercentLimit('maxHeight');
+    }
+
+    // private getMaxPixelWidth(): number {
+    //     return this.getSizePixelLimit('maxWidth');
+    // }
+
+    // private getMaxPixelHeight(): number {
+    //     return this.getSizePixelLimit('maxHeight');
+    // }
+
+    private getCursorFromHTMLElement(x: number, y: number, element: HTMLElement) {
+        const tileElement = this.getTileElementFromHTMLElement(element);
+        if (!tileElement) {
+            return null;
         }
 
-        this.tiles.forEach((tile) => {
-            const config = layout[tile.id] as ILayoutInfo;
-            tile.bounds = config.bounds.clone();
-        });
+        const bounds = tileElement.getBoundingClientRect();
+
+        if (x < bounds.left + 10) {
+            if (y < bounds.top + 10) {
+                return 'nw-resize';
+            } else if (y > bounds.bottom - 10) {
+                return 'sw-resize';
+            } else {
+                return 'w-resize';
+            }
+        } else if (x > bounds.right - 10) {
+            if (y < bounds.top + 10) {
+                return 'ne-resize';
+            } else if (y > bounds.bottom - 10) {
+                return 'se-resize';
+            } else {
+                return 'e-resize';
+            }
+        } else {
+            if (y < bounds.top + 10) {
+                return 'n-resize';
+            } else if (y > bounds.bottom - 10) {
+                return 's-resize';
+            } else {
+                return 'move';
+            }
+        }
+    }
+
+    private extractValueAndUnit(prop: string, value: string) {
+        const regexp = /(\d+)(.*)/i;
+        const matches = regexp.exec(value);
+
+        if (matches && matches.length >= 1) {
+            this[prop] = parseInt(matches[1], 10);
+            if (matches.length >= 2) {
+                this[prop + 'Unit'] = matches[2];
+            } else {
+                this[prop + 'Unit'] = 'px';
+            }
+        }
+    };
+
+    private restoreLayout(layout: ILayoutInfos) {
+        Object.values(this.tileComponents)
+            .map((tileComponent: DejaTileComponent) => tileComponent.tile)
+            .forEach((tile) => {
+                const config = layout[tile.id] as ILayoutInfo;
+                tile.bounds = config.bounds.clone();
+            });
     }
 
     private calcHorizontalOverflow(direction: number, tiles: IDejaTile[], offset: number, blackList?: Object): number {
@@ -754,7 +1157,8 @@ export class DejaTilesLayoutProvider {
                     roffset = tryBounds.right() - maxWidth;
                 }
 
-                const adjacentTiles = this.tiles.filter((tt) => !tt.dragging && t !== tt && tt.bounds.intersectWith(tryBounds));
+                const adjacentTiles = Object.values(this.tileComponents)
+                    .filter((tileComponent: DejaTileComponent) => !tileComponent.isDragging && t !== tileComponent.tile && tileComponent.tile.bounds.intersectWith(tryBounds));
                 if (adjacentTiles.length) {
                     roffset += this.calcHorizontalOverflow(direction, adjacentTiles, offset, blackList);
                 }
@@ -773,7 +1177,8 @@ export class DejaTilesLayoutProvider {
             if (!targetBounds[t.id]) {
                 // Offset tile
                 const newBounds = targetBounds[t.id] = t.bounds.offset(direction * offset, 0);
-                const adjacentTiles = this.tiles.filter((tt) => !tt.dragging && t !== tt && tt.bounds.intersectWith(newBounds));
+                const adjacentTiles = Object.values(this.tileComponents)
+                    .filter((tileComponent: DejaTileComponent) => !tileComponent.isDragging && t !== tileComponent.tile && tileComponent.tile.bounds.intersectWith(newBounds));
                 if (adjacentTiles.length) {
                     this.moveHorizontal(direction, adjacentTiles, offset, targetBounds);
                 }
@@ -803,11 +1208,13 @@ export class DejaTilesLayoutProvider {
                 this.moveHorizontal(direction, tiles, offset, targetBounds);
 
                 // Copy bounds array to tiles
-                this.tiles.forEach((t) => {
-                    if (targetBounds[t.id]) {
-                        t.bounds = targetBounds[t.id];
-                    }
-                });
+                Object.values(this.tileComponents)
+                    .map((tileComponent: DejaTileComponent) => tileComponent.tile)
+                    .forEach((t) => {
+                        if (targetBounds[t.id]) {
+                            t.bounds = targetBounds[t.id];
+                        }
+                    });
             }
         }
 
@@ -832,7 +1239,8 @@ export class DejaTilesLayoutProvider {
                     roffset = tryBounds.bottom() - maxHeight;
                 }
 
-                const adjacentTiles = this.tiles.filter((tt) => !tt.dragging && t !== tt && tt.bounds.intersectWith(tryBounds));
+                const adjacentTiles = Object.values(this.tileComponents)
+                    .filter((tileComponent: DejaTileComponent) => !tileComponent.isDragging && t !== tileComponent.tile && tileComponent.tile.bounds.intersectWith(tryBounds));
                 if (adjacentTiles.length) {
                     roffset += this.calcVerticalOverflow(direction, adjacentTiles, offset, blackList);
                 }
@@ -851,7 +1259,8 @@ export class DejaTilesLayoutProvider {
             if (!targetBounds[t.id]) {
                 // Offset tile
                 const newBounds = targetBounds[t.id] = t.bounds.offset(0, direction * offset);
-                const adjacentTiles = this.tiles.filter((tt) => !tt.dragging && t !== tt && tt.bounds.intersectWith(newBounds));
+                const adjacentTiles = Object.values(this.tileComponents)
+                    .filter((tileComponent: DejaTileComponent) => !tileComponent.isDragging && t !== tileComponent.tile && tileComponent.tile.bounds.intersectWith(newBounds));
                 if (adjacentTiles.length) {
                     this.moveVertical(direction, adjacentTiles, offset, targetBounds);
                 }
@@ -881,14 +1290,28 @@ export class DejaTilesLayoutProvider {
                 this.moveVertical(direction, tiles, offset, targetBounds);
 
                 // Copy bounds array to tiles
-                this.tiles.forEach((t) => {
-                    if (targetBounds[t.id]) {
-                        t.bounds = targetBounds[t.id];
-                    }
-                });
+                Object.values(this.tileComponents)
+                    .map((tileComponent: DejaTileComponent) => tileComponent.tile)
+                    .forEach((t) => {
+                        if (targetBounds[t.id]) {
+                            t.bounds = targetBounds[t.id];
+                        }
+                    });
             }
         }
 
         return overflow;
     }
+}
+
+interface IDragSelection {
+    startPosition: Position;
+    selectedRect: Rect;
+}
+
+interface IDragDropInfos {
+    enabled: boolean;
+    startX: number;
+    startY: number;
+    tiles: DejaTileComponent[];
 }

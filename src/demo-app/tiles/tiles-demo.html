@@ -10,10 +10,10 @@
 	</md-card-content>
 	<md-card-content>
 		<deja-tiles id="tiles" [tiles]="tiles | async" (onTitleEditClick)="onTitleEditClick($event)" [designMode]="designMode" [maxwidth]="'100%'" [tileminwidth]="'5%'" [tileminheight]="'3%'" [tilemaxheight]="'50%'" [tilemaxwidth]="'50%'">
-			<template #tileTemplate let-tile>
+			<template #tileTemplate let-tile let-pressed="pressed" let-selected="selected">
 				<span [deja-draggable]="getDragContext(tile.templateModel)" class="tile-content unselectable" [style.background-color]="tile.templateModel.color">{{ tile.templateModel.country.naqme }} ({{ id }})
-					<span *ngIf="tile.selected">Selected</span>
-					<span *ngIf="tile.pressed">Pressed</span>
+					<span id="selected">Selected</span>
+					<span id="pressed">Pressed</span>
 				</span>
 			</template>
 		</deja-tiles>
