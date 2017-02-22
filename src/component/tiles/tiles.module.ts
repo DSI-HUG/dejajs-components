@@ -14,11 +14,11 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DejaEditableModule } from '../content-editable';
 import { DejaDragDropModule } from '../dragdrop';
-import { DejaTileGroupComponent, DejaTilesComponent } from "./";
+import { DejaTileComponent, DejaTileGroupComponent, DejaTilesComponent, DejaTileSelectionComponent, DejaTileTargetComponent } from './index';
 
 @NgModule({
-    declarations: [DejaTilesComponent, DejaTileGroupComponent],
-    exports: [DejaTilesComponent, DejaTileGroupComponent],
+    declarations: [DejaTileComponent, DejaTilesComponent, DejaTileGroupComponent, DejaTileSelectionComponent, DejaTileTargetComponent],
+    exports: [DejaTileComponent, DejaTilesComponent, DejaTileGroupComponent],
     imports: [
         CommonModule,
         FormsModule,
