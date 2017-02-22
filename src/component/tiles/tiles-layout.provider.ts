@@ -55,7 +55,7 @@ export class DejaTilesLayoutProvider {
 
     private currentId = 0;
     private _cursor: string;
-    private targetBounds = {} as Rect;
+    private _targetBounds = {} as Rect;
     private destination = {} as Rect;
     private lastTargetBounds: Rect;
     private moveTimout: Subscription;
@@ -70,7 +70,7 @@ export class DejaTilesLayoutProvider {
     private _designMode = false;
     private currentTile: DejaTileComponent;
     private hundredPercentWith: number;
-    private _dragTarget: Rect;
+    private dragTarget: Rect;
 
     constructor() {
         Observable.from(this.tileComponent)
@@ -447,15 +447,22 @@ export class DejaTilesLayoutProvider {
         return this._designMode;
     }
 
-    private get dragTarget() {
-        return this._dragTarget;
+    private get targetBounds() {
+        return this._targetBounds;
     }
 
-    private set dragTarget(value: Rect) {
-        this._dragTarget = value;
-                                console.log(value);
-
-        this.dragTargetRect.next(value);
+    private set targetBounds(targetBounds: Rect) {
+        this._targetBounds = targetBounds;
+        if (targetBounds) {
+            this.dragTargetRect.next(new Rect({
+                height: this.getPixelSize(targetBounds.height || 0),
+                left: this.getPixelSize(targetBounds.left || 0),
+                top: this.getPixelSize(targetBounds.top || 0),
+                width: this.getPixelSize(targetBounds.width || 0),
+            }));
+        } else {
+            this.dragTargetRect.next(undefined);
+        }
     }
 
     public getFreePlace(idealBounds: Rect) {
