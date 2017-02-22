@@ -9,11 +9,11 @@
  *
  */
 
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
-import { GroupingService, IGroupInfo, IItemTree, ViewportMode } from '../../common/core';
-import { DejaTextMetricsService, DejaTreeListComponent, DejaTreeListItemsEvent, IDejaDragEvent } from '../../component';
-import { CountriesService, ICountry } from "../services/countries.service";
+import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Observable} from 'rxjs/Rx';
+import {GroupingService, IGroupInfo, IItemTree, ViewportMode} from '../../common/core';
+import {DejaTextMetricsService, DejaTreeListComponent, DejaTreeListItemsEvent, IDejaDragEvent} from '../../component';
+import {CountriesService, ICountry} from "../services/countries.service";
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -27,17 +27,16 @@ export class DejaTreeListDemo implements OnInit {
     protected noViewportList: IItemTree[] = [{displayName: 'test'}, {displayName: 'test2'}, {displayName: 'test3'}];
     private groupedCountries: IItemTree[];
     private countries: Observable<ICountry[]>;
+    private selectedCountries: ICountry[];
     private selectedItemsOut: IItemTree[];
     private selectedInfos = [];
     private loremList: IItemTree[] = [];
     @ViewChild('groupedtreelist') private groupedTreeList: DejaTreeListComponent;
     @ViewChild('treeList') private treeList: DejaTreeListComponent;
 
-    constructor(
-        private countriesService: CountriesService,
-        groupingService: GroupingService,
-        private textMetricsService: DejaTextMetricsService,
-    ) {
+    constructor(private countriesService: CountriesService,
+                groupingService: GroupingService,
+                private textMetricsService: DejaTextMetricsService,) {
         this.countries = this.countriesService.getCountries(null, 412);
         // this.countries = this.countriesService.getCountries(null, 1);
 
@@ -104,6 +103,10 @@ export class DejaTreeListDemo implements OnInit {
                     });
             }
         });
+    }
+
+    protected onSelectBusinessObject(e: ICountry[]) {
+        this.selectedCountries = e;
     }
 
     protected onItemDragStart(event: IDejaDragEvent) {

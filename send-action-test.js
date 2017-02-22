@@ -9,8 +9,8 @@
  *
  */
 
-import { IDejaTile } from './index';
-
-export class DejaTileSelectionChangedEvent extends Event {
-    public tiles: IDejaTile[];
-}
+(function() {
+    setInterval(function() {
+        sendAction((new Date()).getTime(), "This is a date");
+    }, 1000);
+})();

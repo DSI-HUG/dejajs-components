@@ -39,6 +39,8 @@ export class DejaTilesLayoutProvider {
     private width: number;
     private height: number;
     private tileMinHeight = 30;
+    private tileMinWidth = 30;
+    private maxWidth = 100;
     private dragPageOffset = {} as Position;
     private dragOriginalPosition = {} as Position;
     private dragRelativePosition: { [id: string]: Position };
@@ -79,6 +81,34 @@ export class DejaTilesLayoutProvider {
         } else {
             return undefined;
         }
+    }
+
+    public getFreePlace(tiles: IDejaTile[], idealBounds: Rect) {
+        const percentHeight = this.getPercentSize(this.height);
+        let freePlaces = [] as Rect[];
+        for (let x = 0; x < this.maxWidth - idealBounds.width; x += this.tileMinWidth) {
+            for (let y = 0; y < percentHeight - idealBounds.height; y += this.tileMinHeight) {
+                const currentBounds = new Rect(x, y, idealBounds.width, idealBounds.height);
+                if (tiles.filter((t) => t.bounds.intersectWith(currentBounds)).length === 0) {
+                    freePlaces.push(currentBounds);
+                }
+            }
+        }
+
+        if (freePlaces.length > 0) {
+            // add at the nearest free place
+            freePlaces.sort((bounds1, bounds2) => {
+                const calcDistance = (bounds) => {
+                    return Math.min(Math.abs(bounds.left - idealBounds.left), Math.abs(bounds.right() - idealBounds.right())) + 2 * Math.min(Math.abs(bounds.top - idealBounds.top), Math.abs(bounds.bottom() - idealBounds.bottom()));
+                };
+                return calcDistance(bounds1) - calcDistance(bounds2);
+            });
+
+            return freePlaces[0];
+        }
+
+        // Add at the end
+        return new Rect(0, percentHeight, idealBounds.width, idealBounds.height);
     }
 
     public HitTest(tiles: IDejaTile[], pixelBounds: Rect): IDejaTile[] {
@@ -626,6 +656,7 @@ export class DejaTilesLayoutProvider {
         tilesToPush[Directions.top] = [];
         tilesToPush[Directions.bottom] = [];
 
+        // tslint:disable-next-line:prefer-for-of
         for (let i = 0; i < this.tiles.length; i++) {
             let t = this.tiles[i];
             if (!t.dragging && !t.expanded) {
@@ -636,8 +667,8 @@ export class DejaTilesLayoutProvider {
                         t.bounds = swapTargetRect;
                         return bounds;
                     } else {
-                        let hol = t.bounds.left - effectiveBounds.left; // Ce qui dépasse à gauche
-                        let hor = effectiveBounds.right() - t.bounds.right(); // Ce qui dépasse à droite
+                        let hol = t.bounds.left - effectiveBounds.left; // Ce qui dépasse Ã  gauche
+                        let hor = effectiveBounds.right() - t.bounds.right(); // Ce qui dépasse Ã  droite
                         let vot = t.bounds.top - effectiveBounds.top; // Ce qui dépasse en haut
                         let vob = effectiveBounds.bottom() - t.bounds.bottom(); // Ce qui dépasse en bas
                         let hoe = Math.max(0, Math.min(t.bounds.right(), effectiveBounds.right()) - Math.max(t.bounds.left, effectiveBounds.left)) / Math.min(t.bounds.width, effectiveBounds.width);

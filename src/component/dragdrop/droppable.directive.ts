@@ -10,7 +10,10 @@
  */
 
 import { Directive, ElementRef, Input } from '@angular/core';
-import { DragDropService, IDejaDragEvent, IDejaDragInfos } from './';
+import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
+import { DragDropService} from './dragdrop.service';
+import { IDejaDragEvent} from './index';
+import { IDejaDragInfos } from './index';
 
 @Directive({
     host: {
@@ -24,17 +27,23 @@ import { DragDropService, IDejaDragEvent, IDejaDragInfos } from './';
 export class DejaDroppableDirective {
     @Input('deja-droppable') public context: IDejaDropContext;
 
+    @Input('continous-dragover')
+    public set allEvents(value: boolean) {
+        this._allEvents = coerceBooleanProperty(value);
+    }
+
     private objectKey = 'object';
     private droppedKey = 'dropped';
     private elementKey = 'element';
     private lastTarget: EventTarget;
     private lastAccept: boolean;
+    private _allEvents = false;
 
     constructor(private elementRef: ElementRef, private dragDropService: DragDropService) { }
 
     protected onDragOver(event: Event) {
-        if (this.lastTarget && this.lastTarget === event.target) {
-            if (this.lastAccept) { 
+        if (!this._allEvents && this.lastTarget && this.lastTarget === event.target) {
+            if (this.lastAccept) {
                 event.preventDefault();
             }
             return;
@@ -75,7 +84,6 @@ export class DejaDroppableDirective {
     }
 
     protected onDragLeave(event) {
-
         if (this.context && this.context.dragleavecallback) {
             let element = this.elementRef.nativeElement as HTMLElement;
             let bounds = element.getBoundingClientRect();
@@ -101,7 +109,7 @@ export interface IDejaDropEvent extends IDejaDragEvent {
     itsMe: boolean;
 }
 
-export interface IDejaDropContext { 
+export interface IDejaDropContext {
     dropcallback: (event: IDejaDropEvent) => void;
     dragovercallback: (event: IDejaDropEvent) => void;
     dragleavecallback: (event: IDejaDropEvent) => void;

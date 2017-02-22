@@ -33,6 +33,8 @@ dist
 *.js
 *.js.map
 !webpack.*
+!send-action.js
+!send-action-test.js
 !bs-config.js
 
 
@@ -56,3 +58,6 @@ typings/
 
 # docs
 docs/
+
+# The output file for cyclic dependencies
+stats.json

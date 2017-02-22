@@ -348,6 +348,16 @@ export class DejaTreeListComponent extends ItemListBase {
         super.setUnselectingItem(fn);
     }
 
+    /** Définit la liste des éléments (tout type d'objet métier) */
+    @Input()
+    public set models(items: any[] | Promise<any[]> | Observable<any[]>) {
+        this.isBusinessObject = true;
+        super.setModels(items).subscribe(() => {
+        }, (error: any) => {
+            this._hintLabel = error.toString();
+        });
+    }
+
     private get itemTemplate() {
         return this.itemTemplateExternal || this.itemTemplateInternal;
     }

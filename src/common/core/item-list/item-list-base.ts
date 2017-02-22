@@ -9,12 +9,15 @@
  *
  */
 
-import { ElementRef, QueryList } from "@angular/core";
-import { Observable } from "rxjs/Rx";
-import { clearTimeout, setTimeout } from 'timers';
-import { GroupingService, IGroupInfo } from "../grouping/index";
-import { ISortInfos, SortingService, SortOrder } from "../sorting/index";
-import { IItemBase, IItemTree, IParentListInfoResult, ItemListService, IViewListResult } from "./index";
+import {ElementRef, QueryList} from "@angular/core";
+import {Observable} from "rxjs/Rx";
+import {clearTimeout, setTimeout} from 'timers';
+import {GroupingService, IGroupInfo} from "../grouping/index";
+import {ISortInfos, SortingService, SortOrder} from "../sorting/index";
+import {IItemBase} from './item-base';
+import {IParentListInfoResult, ItemListService, IViewListResult} from './item-list.service';
+import {IItemTree} from './item-tree';
+
 
 export enum ViewportMode {
     NoViewport,
@@ -56,10 +59,13 @@ export class ItemListBase {
     protected _ddStartIndex: number;
     protected _ddTargetIndex: number;
 
+    protected isBusinessObject: boolean;
+
     private _itemListService: ItemListService;
     private allCollapsed = false;
     private toggleCollapseTimeout: NodeJS.Timer;
     private _viewPortRowHeight = ItemListBase.defaultViewPortRowHeight;
+
 
     /** Renvoie le modèle de tri appliqué à la liste.
      * @param {ISortInfos} sortInfos Modèle de tri appliqué.
@@ -140,10 +146,16 @@ export class ItemListBase {
     }
 
     /** Retourne la liste des éléments sélectionés.
-     * @return {IItemBase[]} Liste des éléments selectionés.
+     * @return {IItemBase[] or any[]} Liste des éléments selectionés.
      */
     public getSelectedItems() {
-        return this.getItemListService().getSelectedItems();
+        if (this.isBusinessObject) {
+            return this.getItemListService().getSelectedItems().map((itm) => {
+                return itm.model;
+            });
+        } else {
+            return this.getItemListService().getSelectedItems();
+        }
     }
 
     /** Définit la liste des éléments sélectionés.
@@ -498,11 +510,18 @@ export class ItemListBase {
         this._multiSelect = value;
     }
 
-    /** Définit le modèle utilisé par la liste. Ce model peut ètre hierarchique sans limitation de la profondeur ou une chargé en asynchrone par une promise ou un observable.
+    /** Définit le modèle utilisé par la liste. Il est uniquement de type IItemBase. Ce model peut ètre hierarchique sans limitation de la profondeur ou une chargé en asynchrone par une promise ou un observable.
      * @param {GroupingService}items Provider de la liste des éléments de la liste.
      */
     protected setItems(items: IItemBase[] | Promise<IItemBase[]> | Observable<IItemBase[]>) {
         return this.getItemListService().setItems(items);
+    }
+
+    /** Définit le modèle utilisé par la liste. Il peut être de tout type d'objet. Ce model peut ètre hierarchique sans limitation de la profondeur ou une chargé en asynchrone par une promise ou un observable.
+     * @param {GroupingService}items Provider de la liste des éléments de la liste.
+     */
+    protected setModels(items: any[] | Promise<any[]> | Observable<any[]>) {
+        return this.getItemListService().setModels(items);
     }
 
     // Ne pas utiliser, cette fonction retourne la liste des éléments pour l'implémentation de ngModel.
@@ -761,7 +780,11 @@ export class ItemListBase {
                     let scrollPos = containerElement.scrollTop;
                     let scrollMax = 0;
                     let lastVisibleItem: IItemBase;
-                    let fn = isNaN(+item) ? (itm: IItemBase) => { return item === itm; } : (_itm: IItemBase, index: number) => { return item === index; };
+                    let fn = isNaN(+item) ? (itm: IItemBase) => {
+                            return item === itm;
+                        } : (_itm: IItemBase, index: number) => {
+                            return item === index;
+                        };
                     lastVisibleItem = viewListResult.visibleList.find((itm: IItemBase, index: number) => {
                         let test = fn(itm, index);
                         if (!test) {
@@ -823,4 +846,5 @@ export interface IItemTreeInfo {
     children?: IItemBase[];
     startIndex: number;
     lastIndex?: number;
-};
+}
+;

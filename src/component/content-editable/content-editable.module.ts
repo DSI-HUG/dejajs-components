@@ -12,7 +12,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule  } from '@angular/forms';
-import { DejaEditableDirective  } from './index';
+import { DejaEditableDirective  } from './content-editable.directive';
 
 @NgModule({
     declarations: [DejaEditableDirective],

@@ -16,6 +16,7 @@ import { DejaCircularPickerDemo } from '../circular-picker/circular-picker-demo'
 import { DejaColorSelectorDemo } from '../color-selector/color-selector-demo';
 import { DejaContentEditableDemo } from '../content-editable/content-editable-demo';
 import { DejaDatePickerDemo } from '../date-picker/date-picker-demo';
+import { GlobalEventsDemo } from "../global-events/global-events-demo";
 import { GridDemo } from '../grid/grid-demo';
 import { MenuDemo } from '../menu/menu-demo';
 import { MessageBoxDemo } from "../message-box/message-box-demo";
@@ -40,6 +41,7 @@ const routes: Routes = [
     { component: DejaColorSelectorDemo, path: 'colorselector' },
     { component: DejaContentEditableDemo, path: 'contenteditableselector' },
     { component: DejaDatePickerDemo, path: 'date-picker' },
+    { component: GlobalEventsDemo, path: 'events' },
     { component: GridDemo, path: 'grid' },
     { component: MenuDemo, path: 'menu' },
     { component: MessageBoxDemo, path: 'message-box' },
