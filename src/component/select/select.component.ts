@@ -9,17 +9,35 @@
  *
  */
 
-import { Component, ContentChild, ElementRef, forwardRef, Input, QueryList, ViewChild, ViewChildren, ViewEncapsulation } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
-import { Observable, Subscription } from 'rxjs/Rx';
-import { clearTimeout, setTimeout } from 'timers';
-import { Position } from '../../common/core/graphics';
-import { IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, ViewportMode } from '../../common/core/item-list';
-import { KeyCodes } from '../../common/core/keycodes.enum';
-import { DejaDropDownComponent } from '../dropdown';
+import {
+    Component,
+    ContentChild,
+    ElementRef,
+    forwardRef,
+    Input,
+    QueryList,
+    ViewChild,
+    ViewChildren,
+    ViewEncapsulation,
+} from '@angular/core';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
+import {coerceBooleanProperty} from '@angular/material/core/coercion/boolean-property';
+import {Observable, Subscription} from 'rxjs/Rx';
+import {clearTimeout, setTimeout} from 'timers';
+import {Position} from '../../common/core/graphics';
+import {
+    IItemBase,
+    IItemTree,
+    ItemListBase,
+    ItemListService,
+    IViewListResult,
+    ViewportMode,
+} from '../../common/core/item-list';
+import {KeyCodes} from '../../common/core/keycodes.enum';
+import {DejaDropDownComponent} from '../dropdown';
 
-const noop = () => { };
+const noop = () => {
+};
 
 const SelectComponentValueAccessor = {
     multi: true,
@@ -278,10 +296,20 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return this._waiter;
     }
 
-    /** Définit la liste des éléments */
+    /** Définit la liste des éléments au format IItemBase */
     @Input()
     public set items(items: IItemBase[] | Promise<IItemBase[]> | Observable<IItemBase[]>) {
         super.setItems(items).subscribe(() => {
+        }, (error: any) => {
+            this._hintLabel = error.toString();
+        });
+    }
+
+    /** Définit la liste des éléments (tout type d'objet métier) */
+    @Input()
+    public set models(items: any[] | Promise<any[]> | Observable<any[]>) {
+        this.isBusinessObject = true;
+        super.setModels(items).subscribe(() => {
         }, (error: any) => {
             this._hintLabel = error.toString();
         });
@@ -351,10 +379,15 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         let selectedItems = this.getSelectedItems() || [];
         if (this._multiSelect || value !== selectedItems[0]) {
             this.writeValue(value);
+
             // The event is synchrone, but not the selection.
             // If there is any problems with that, just create a setSelectedItems methode and return a promise.
             // No way to change the value implementation, because this is part of the control value accessor
-            this.onChangeCallback(value);
+            if (this.isBusinessObject) {
+                this.onChangeCallback(value.model);
+            } else {
+                this.onChangeCallback(value);
+            }
         }
     }
 
@@ -395,6 +428,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     public registerOnTouched(fn: any) {
         this.onTouchedCallback = fn;
     }
+
     // ************* End of ControlValueAccessor Implementation **************
 
     /** Change l'état d'expansion de toute les lignes parentes */
