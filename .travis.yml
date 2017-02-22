@@ -13,4 +13,6 @@ branches:
 before_script:
   - npm prune
 after_success:
-  - npm run semantic-release
+  - npm run build:prod
+  - npm run deploy
+  - npm run publish
