@@ -383,11 +383,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             // The event is synchrone, but not the selection.
             // If there is any problems with that, just create a setSelectedItems methode and return a promise.
             // No way to change the value implementation, because this is part of the control value accessor
-            if (this.isBusinessObject) {
-                this.onChangeCallback(value.model);
-            } else {
-                this.onChangeCallback(value);
-            }
+            this.onChangeCallback(this.isBusinessObject ? value.model : value);
         }
     }
 

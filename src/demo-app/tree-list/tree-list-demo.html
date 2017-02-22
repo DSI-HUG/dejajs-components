@@ -1,4 +1,18 @@
-<md-card id="treelist-demo" class="demo-card demo-basic">
+<md-card class="treelist-demo demo-card demo-basic business-object">
+	<md-toolbar color="secondary">By passing business object</md-toolbar>
+	<md-card-content>
+		<div class="display-flex">
+			<deja-tree-list multiSelect class="flex" [maxHeight]="400" #treeList min-search-length="0" searchArea sortable multiSelect (selectedChange)="onSelectBusinessObject($event)" nodataholder="Pas de données" placeholder="Liste des pays" [models]="countries"></deja-tree-list>
+
+			<div class="flex json-view">
+				<h4>Selected country model :</h4>
+				<pre>{{selectedCountries | json}}</pre>
+			</div>
+		</div>
+	</md-card-content>
+</md-card>
+
+<md-card class="treelist-demo demo-card demo-basic">
 	<md-toolbar color="secondary">Treelist demo - Cas standards</md-toolbar>
 	<md-card-content class="listContainer">
 		<deja-tree-list #treeList min-search-length="0" searchArea sortable multiSelect [selectedItems]=selectedItems (selectedChange)="onSelectionChanged($event)" nodataholder="Pas de données" placeholder="Liste des pays" [(ngModel)]="countries" (itemDragStart)="onItemDragStart($event)">
