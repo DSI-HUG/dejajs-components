@@ -1,5 +1,15 @@
-<md-card id="deja-select-demo" class="demo-card demo-basic">
-	<md-toolbar color="secondary">Select Demo</md-toolbar>
+<md-card class="deja-select-demo demo-card demo-basic">
+	<md-toolbar color="secondary">By passing business object</md-toolbar>
+	<md-card-content>
+		<deja-select id="businessSelect" type="autocomplete" placeholder="Liste des pays" textField="naqme" [(ngModel)]="businessCountry" valueField="code" [models]="countries"></deja-select>
+
+		<h4>Selected country model :</h4>
+		<pre>{{businessCountry | json}}</pre>
+	</md-card-content>
+</md-card>
+
+<md-card class="deja-select-demo demo-card demo-basic">
+	<md-toolbar color="secondary">By passing IItemBase</md-toolbar>
 	<md-card-content id="selectContainer">
 		<div #dialog>
 			<deja-dialog *ngIf="dialogVisible" (closed)="dialogVisible = false">

@@ -41,6 +41,7 @@ export class DejaRangeComponent implements ControlValueAccessor {
     private minimumRangePercentage: number = 0.01;
 
     private _readOnly: boolean = true;
+    private _disabled: boolean = false;
     private _ranges: IRange[];
 
     // inner model
@@ -56,12 +57,22 @@ export class DejaRangeComponent implements ControlValueAccessor {
 
     // read / write mode
     @Input()
+    public set disabled(value: boolean) {
+        this._disabled = coerceBooleanProperty(value);
+    }
+
+    public get disabled() {
+        return this._disabled;
+    }
+
+    // read / write mode
+    @Input()
     public set readOnly(value: boolean) {
         this._readOnly = coerceBooleanProperty(value);
     }
 
     public get readOnly() {
-        return this._readOnly;
+        return this._readOnly || this.disabled;
     }
 
     constructor(private elementRef: ElementRef) { }
@@ -137,8 +148,12 @@ export class DejaRangeComponent implements ControlValueAccessor {
 
                     this.ranges = newRanges;
 
-                } else { this.errorFeedback.emit(new Error('Range is too small to be splitted')); }
-            } else { throw new Error('Invalid step type, you have to implement the add function yourself for the fn & array.'); }
+                } else {
+                    this.errorFeedback.emit(new Error('Range is too small to be splitted'));
+                }
+            } else {
+                throw new Error('Invalid step type, you have to implement the add function yourself for the fn & array.');
+            }
         }
     }
 
@@ -159,6 +174,10 @@ export class DejaRangeComponent implements ControlValueAccessor {
 
     // set the new selected index and emit a IRangeEvent
     protected onSelect(e: Event, index: number): void {
+        if (this.disabled) {
+            return;
+        }
+
         if (this.selected !== index) {
             let event = e as IRangeEvent;
             event.range = this.ranges[index];
@@ -170,7 +189,6 @@ export class DejaRangeComponent implements ControlValueAccessor {
     }
 
     protected onMouseDown($event: MouseEvent, index: number): void {
-
         if (!this.readOnly) {
             const xStart = $event.x;
             const target = $event.target as HTMLElement;
