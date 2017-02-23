@@ -22,7 +22,7 @@ import { setTimeout } from 'timers';
     providers: [
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => DejaAutosizeTextAreaDirective), multi: true },
     ],
-    selector: 'textarea[deja-autosize][ngModel]',
+    selector: 'textarea[deja-autosize]',
 })
 export class DejaAutosizeTextAreaDirective implements AfterViewInit, Validator {
     @HostBinding('attr.rows') protected rows = 1;

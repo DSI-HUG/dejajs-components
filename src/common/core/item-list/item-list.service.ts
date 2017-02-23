@@ -856,17 +856,19 @@ export class ItemListService {
             // Check regexp validity
             // regExp.test(this.getTextValue(item));
             let regExp: RegExp;
-            if (typeof query === 'string' && query) {
-                try {
-                    regExp = new RegExp(query, 'i');
-                } catch (exc) {
-                    rejected('Invalid search parameters');
-                    return;
-                }
-            } else {
-                regExp = query as RegExp;
-                if (!regExp.test) {
-                    regExp = undefined;
+            if (query) {
+                if (typeof query === 'string') {
+                    try {
+                        regExp = new RegExp(query, 'i');
+                    } catch (exc) {
+                        rejected('Invalid search parameters');
+                        return;
+                    }
+                } else {
+                    regExp = query as RegExp;
+                    if (!regExp.test) {
+                        regExp = undefined;
+                    }
                 }
             }
 
