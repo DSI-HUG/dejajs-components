@@ -35,7 +35,7 @@
     "start": "npm run build-css && npm run build",
     "prepublish": "tsc && npm run build-css",
     "publish": "npm publish --access public",
-    "build:prod": "del-cli dist &&  npm run build-css && webpack -p --config webpack.config.prod.js",
+    "build:prod": "del-cli dist && npm run build-css && webpack -p --config webpack.config.prod.js",
     "test": "tsc",
     "deploy": "npm run build:prod && gh-pages -d dist"
   },
@@ -84,7 +84,7 @@
     "node-sass": "^4.3.0",
     "raw-loader": "^0.5.1",
     "resolve-url-loader": "^1.6.0",
-    "sass-loader": "^4.1.1",
+    "sass-loader": "^5.0.0",
     "style-loader": "^0.13.1",
     "tslint": "^4.0.2",
     "typedoc": "^0.5.1",
