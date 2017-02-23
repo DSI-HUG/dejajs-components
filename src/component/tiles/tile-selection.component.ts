@@ -9,9 +9,8 @@
  *
  */
 
-import { Component, ElementRef } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
-import { DejaTilesLayoutProvider } from './tiles-layout.provider';
+import { Component, ElementRef, Input } from '@angular/core';
+import { Rect } from '../../common/core/graphics';
 
 @Component({
     selector: 'deja-tile-selection',
@@ -21,23 +20,24 @@ import { DejaTilesLayoutProvider } from './tiles-layout.provider';
     template: '',
 })
 export class DejaTileSelectionComponent {
-    constructor(el: ElementRef, layoutProvider: DejaTilesLayoutProvider) {
-        const element = el.nativeElement as HTMLElement;
+    private element: HTMLElement;
 
-        element.setAttribute('hidden', '');
+    constructor(el: ElementRef) {
+        this.element = el.nativeElement as HTMLElement;
+        this.element.setAttribute('hidden', '');
+    }
 
-        Observable.from(layoutProvider.dragSelectionRect)
-            .subscribe((rect) => {
-                if (rect) {
-                    const {left, top, width, height } = rect;
-                    element.style.left = `${left}px`;
-                    element.style.top = `${top}px`;
-                    element.style.width = `${width}px`;
-                    element.style.height = `${height}px`;
-                    element.removeAttribute('hidden');
-                } else {
-                    element.setAttribute('hidden', '');
-                }
-            });
+    @Input()
+    public set bounds(rect: Rect) {
+        if (rect) {
+            const {left, top, width, height } = rect;
+            this.element.style.left = `${left}px`;
+            this.element.style.top = `${top}px`;
+            this.element.style.width = `${width}px`;
+            this.element.style.height = `${height}px`;
+            this.element.removeAttribute('hidden');
+        } else {
+            this.element.setAttribute('hidden', '');
+        }
     }
 }

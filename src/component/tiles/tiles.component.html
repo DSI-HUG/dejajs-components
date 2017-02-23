@@ -1,6 +1,5 @@
 <div #tilesContainer class="tiles" [class.design]="designMode">
 	<deja-tile *ngFor="let tile of tiles; let index = index;" [id]="tile.id" [tile]="tile" [attr.tile-index]="index" [class.expanded]="tile.expanded === true" (dragstart)="onDragStart($event)" [template]="tileTemplate">
 	</deja-tile>
-	<deja-tile-selection></deja-tile-selection>
-    <deja-tile-target></deja-tile-target>
+	<deja-tile-selection [bounds]="layoutProvider.selectionRect | async"></deja-tile-selection>
 </div>
