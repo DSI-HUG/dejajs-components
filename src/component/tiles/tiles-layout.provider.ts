@@ -36,9 +36,8 @@ export class DejaTilesLayoutProvider {
     public selectedTiles = new BehaviorSubject<IDejaTile[]>([]);
     public dragging = new BehaviorSubject<boolean>(false);
     public dragSelection = new Subject<IDragSelection>();
-    public dragSelectionRect = new Subject<Rect>();
     public dragDropInfos = new Subject<IDragDropInfos>();
-    public dragTargetRect = new Subject<Rect>();
+    public selectionRect = new Subject<Rect>();
 
     protected tileMinWidth = 10;
     protected tileMinWidthUnit = '%';
@@ -211,7 +210,7 @@ export class DejaTilesLayoutProvider {
         Observable.from(this.dragSelection)
             .subscribe((dragSelection) => {
                 const mouseUp$ = Observable.fromEvent(this._container.ownerDocument, 'mouseup')
-                    .do(() => this.dragSelectionRect.next(null));
+                    .do(() => this.selectionRect.next(null));
 
                 Observable.fromEvent(this._container, 'mousemove')
                     .takeUntil(mouseUp$)
@@ -221,7 +220,7 @@ export class DejaTilesLayoutProvider {
 
                         // Select all tiles between start position and current position
                         dragSelection.selectedRect = Rect.fromPoints(dragSelection.startPosition, new Position(event.pageX - containerBounds.left, event.pageY - containerBounds.top));
-                        this.dragSelectionRect.next(dragSelection.selectedRect);
+                        this.selectionRect.next(dragSelection.selectedRect);
 
                         const selectedTiles = this.HitTest(dragSelection.selectedRect);
                         this.selectedTiles.next(selectedTiles);
@@ -230,6 +229,10 @@ export class DejaTilesLayoutProvider {
 
         Observable.from(this.dragDropInfos)
             .subscribe((dragDropInfos) => {
+                if (!dragDropInfos) {
+                    return;
+                }
+
                 const mouseUp$ = Observable.fromEvent(this._container.ownerDocument, 'mouseup')
                     .do(() => this.dragDropInfos.next(null));
 
@@ -262,7 +265,7 @@ export class DejaTilesLayoutProvider {
                                 // Start tile drag and drop
                                 this.dragging.next(true);
                                 dragDropInfos.enabled = true;
-                                // this.globalKeyUp = true;
+                                // TODO this.globalKeyUp = true;
                                 this.startDrag(dragDropInfos.tiles, x, y);
                             }
                         } else {
@@ -454,14 +457,14 @@ export class DejaTilesLayoutProvider {
     private set targetBounds(targetBounds: Rect) {
         this._targetBounds = targetBounds;
         if (targetBounds) {
-            this.dragTargetRect.next(new Rect({
+            this.selectionRect.next(new Rect({
                 height: this.getPixelSize(targetBounds.height || 0),
                 left: this.getPixelSize(targetBounds.left || 0),
                 top: this.getPixelSize(targetBounds.top || 0),
                 width: this.getPixelSize(targetBounds.width || 0),
             }));
         } else {
-            this.dragTargetRect.next(undefined);
+            this.selectionRect.next(undefined);
         }
     }
 
@@ -599,7 +602,7 @@ export class DejaTilesLayoutProvider {
             // Only one tile can be resized at time
             const tileComponent = tiles[0];
             const tile = tileComponent.tile;
-            tile.bounds = this.validLayout.validBounds;
+            tile.bounds = new Rect(this.validLayout.validBounds);
             tileComponent.dragging.next(false);
         } else {
             Observable.from(tiles)
@@ -1154,7 +1157,6 @@ export class DejaTilesLayoutProvider {
             if (!blackList[t.id]) {
                 blackList[t.id] = t.id;
 
-                // Offset tile
                 const tryBounds = t.bounds.offset(direction * offset, 0);
                 let roffset = 0;
                 const maxWidth = this.getMaxPercentWidth();
@@ -1165,7 +1167,8 @@ export class DejaTilesLayoutProvider {
                 }
 
                 const adjacentTiles = Object.values(this.tileComponents)
-                    .filter((tileComponent: DejaTileComponent) => !tileComponent.isDragging && t !== tileComponent.tile && tileComponent.tile.bounds.intersectWith(tryBounds));
+                    .filter((tileComponent: DejaTileComponent) => !tileComponent.isDragging && t !== tileComponent.tile && tileComponent.tile.bounds.intersectWith(tryBounds))
+                    .map((tileComponent: DejaTileComponent) => tileComponent.tile);
                 if (adjacentTiles.length) {
                     roffset += this.calcHorizontalOverflow(direction, adjacentTiles, offset, blackList);
                 }
@@ -1185,7 +1188,8 @@ export class DejaTilesLayoutProvider {
                 // Offset tile
                 const newBounds = targetBounds[t.id] = t.bounds.offset(direction * offset, 0);
                 const adjacentTiles = Object.values(this.tileComponents)
-                    .filter((tileComponent: DejaTileComponent) => !tileComponent.isDragging && t !== tileComponent.tile && tileComponent.tile.bounds.intersectWith(newBounds));
+                    .filter((tileComponent: DejaTileComponent) => !tileComponent.isDragging && t !== tileComponent.tile && tileComponent.tile.bounds.intersectWith(newBounds))
+                    .map((tileComponent: DejaTileComponent) => tileComponent.tile);
                 if (adjacentTiles.length) {
                     this.moveHorizontal(direction, adjacentTiles, offset, targetBounds);
                 }
@@ -1247,7 +1251,8 @@ export class DejaTilesLayoutProvider {
                 }
 
                 const adjacentTiles = Object.values(this.tileComponents)
-                    .filter((tileComponent: DejaTileComponent) => !tileComponent.isDragging && t !== tileComponent.tile && tileComponent.tile.bounds.intersectWith(tryBounds));
+                    .filter((tileComponent: DejaTileComponent) => !tileComponent.isDragging && t !== tileComponent.tile && tileComponent.tile.bounds.intersectWith(tryBounds))
+                    .map((tileComponent: DejaTileComponent) => tileComponent.tile);
                 if (adjacentTiles.length) {
                     roffset += this.calcVerticalOverflow(direction, adjacentTiles, offset, blackList);
                 }
@@ -1267,7 +1272,8 @@ export class DejaTilesLayoutProvider {
                 // Offset tile
                 const newBounds = targetBounds[t.id] = t.bounds.offset(0, direction * offset);
                 const adjacentTiles = Object.values(this.tileComponents)
-                    .filter((tileComponent: DejaTileComponent) => !tileComponent.isDragging && t !== tileComponent.tile && tileComponent.tile.bounds.intersectWith(newBounds));
+                    .filter((tileComponent: DejaTileComponent) => !tileComponent.isDragging && t !== tileComponent.tile && tileComponent.tile.bounds.intersectWith(newBounds))
+                    .map((tileComponent: DejaTileComponent) => tileComponent.tile);
                 if (adjacentTiles.length) {
                     this.moveVertical(direction, adjacentTiles, offset, targetBounds);
                 }

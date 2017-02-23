@@ -49,7 +49,7 @@ export class DejaTilesComponent implements ControlValueAccessor, AfterViewInit {
     private onChangeCallback: (_: any) => void = noop;
 
     constructor(el: ElementRef, private layoutProvider: DejaTilesLayoutProvider) {
-        this.layoutProvider.container =  el.nativeElement as HTMLElement;
+        this.layoutProvider.container = el.nativeElement as HTMLElement;
 
         this.layoutProvider.selectedTiles.subscribe((selectedTiles) => {
             const event = {} as DejaTileSelectionChangedEvent;
@@ -173,7 +173,7 @@ export class DejaTilesComponent implements ControlValueAccessor, AfterViewInit {
         // Disallow HTML drag and drop in design mode
         return !this.layoutProvider.isDesignMode;
     }
-    
+
     public getFreePlace(pageX?: number, pageY?: number, width?: number, height?: number) {
         if (!this.tiles || this.tiles.length === 0) {
             return new Rect(0, 0, width, height);
