@@ -42,9 +42,9 @@ export class Rect {
         const y = Math.max(0, Math.min(rect1.bottom, rect2.bottom) - Math.max(rect1.top, rect2.top));
         return {
             area: x * y,
-            direction: x > y ? RectOverlapDirection.horizontal : RectOverlapDirection.vertical,
-            height: y,
             width: x,
+            height: y,
+            direction: x > y ? RectOverlapDirection.horizontal : RectOverlapDirection.vertical,
         };
     }
 
@@ -82,7 +82,7 @@ export class Rect {
     public set bottom(value: number) {
         this.height = value - this.top;
     }
-    
+
     public get bottom() {
         return this.top + this.height;
     }
@@ -118,8 +118,8 @@ export class Rect {
             bounds.bottom > this.top;
     }
 
-    public union(bounds: Rect) {
-        return new Rect(Math.min(bounds.left, this.left), Math.min(bounds.top, this.top), Math.max(bounds.right(), this.right()), Math.max(bounds.bottom(), this.bottom()));
+    public isEmpty() {
+        return !this.width || !this.height;
     }
 
     public clone() {

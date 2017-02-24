@@ -12,7 +12,7 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.Default,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     selector: 'demo-app',
     styleUrls: ['./demo-app.scss', '../../scss/index.scss'],
