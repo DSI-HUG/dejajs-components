@@ -82,7 +82,7 @@ export class Rect {
     public set bottom(value: number) {
         this.height = value - this.top;
     }
-    
+
     public get bottom() {
         return this.top + this.height;
     }
@@ -116,6 +116,10 @@ export class Rect {
             bounds.right > this.left &&
             bounds.top < this.bottom &&
             bounds.bottom > this.top;
+    }
+
+    public isEmpty() {
+        return !this.width || !this.height;
     }
 
     public clone() {
