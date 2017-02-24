@@ -207,7 +207,7 @@ export class DejaRangeComponent implements ControlValueAccessor {
             const leave$ = Observable
                 .fromEvent(document.body, 'mouseleave');
             const kill$ = Observable.merge(up$, leave$)
-                .take(1)
+                .first()
                 .do(() => {
                     const host = this.elementRef.nativeElement.firstChild as HTMLElement;
                     host.ownerDocument.body.classList.remove('noselect');
@@ -220,7 +220,7 @@ export class DejaRangeComponent implements ControlValueAccessor {
             Observable
                 .fromEvent(document, 'mousemove')
                 .takeUntil(kill$)
-                .do((event: MouseEvent) => {
+                .subscribe((event: MouseEvent) => {
                     const x = event.x;
                     const xDifference = -(xStart - x);
 
@@ -253,8 +253,7 @@ export class DejaRangeComponent implements ControlValueAccessor {
                     ranges[index] = range;
                     ranges[index + 1] = nextRange;
                     this.writeValue(ranges);
-                })
-                .subscribe();
+                });
         }
     }
 
