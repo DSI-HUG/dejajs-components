@@ -211,6 +211,7 @@ export class DejaTilesLayoutProvider {
         Observable.from(this.dragSelection)
             .subscribe((dragSelection) => {
                 const mouseUp$ = Observable.fromEvent(this._container.ownerDocument, 'mouseup')
+                    .first()
                     .do(() => this.dragSelectionRect.next(null));
 
                 Observable.fromEvent(this._container, 'mousemove')
@@ -231,6 +232,7 @@ export class DejaTilesLayoutProvider {
         Observable.from(this.dragDropInfos)
             .subscribe((dragDropInfos) => {
                 const mouseUp$ = Observable.fromEvent(this._container.ownerDocument, 'mouseup')
+                    .first()
                     .do(() => this.dragDropInfos.next(null));
 
                 Observable.fromEvent(this._container, 'mousemove')

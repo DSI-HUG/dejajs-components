@@ -137,7 +137,7 @@ export class ItemListService {
                         }
                         this.ensureChildrenProperties(itms);
                         this.items = [...this.items || [], ...itms];
-                        console.log(`Loaded ${this.items.length} items`);
+                        // console.log(`Loaded ${this.items.length} items`);
                         subscriber.next();
                     }, (err) => {
                         subscriber.error(err);

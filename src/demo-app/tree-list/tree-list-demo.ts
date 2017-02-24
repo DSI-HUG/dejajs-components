@@ -24,7 +24,7 @@ import { CountriesService, ICountry } from "../services/countries.service";
 export class DejaTreeListDemo implements OnInit {
     protected variableMode = ViewportMode.VariableRowHeight;
     protected noViewportMode = ViewportMode.NoViewport;
-    protected noViewportList: IItemTree[] = [{displayName: 'test'}, {displayName: 'test2'}, {displayName: 'test3'}];
+    protected noViewportList: IItemTree[] = [{ displayName: 'test' }, { displayName: 'test2' }, { displayName: 'test3' }];
     private groupedCountries: IItemTree[];
     private countries: Observable<ICountry[]>;
     private selectedItemsOut: IItemTree[];
@@ -72,16 +72,18 @@ export class DejaTreeListDemo implements OnInit {
             this.loremList[i].displayName = i + ' - Une ligne de test avec une height de : ' + rand;
         }
 
-        groupingService.group(this.loremList, [{groupByField: 'height'}]).then((groupedResult) => {
+        groupingService.group(this.loremList, [{ groupByField: 'height' }]).then((groupedResult) => {
             this.loremList = groupedResult;
         });
     }
 
     public ngOnInit() {
-        this.textMetricsService.getTextHeight(300, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vulputate porttitor odio, non dictum massa vehicula nec. Proin finibus ex ac ipsum euismod, vitae lobortis augue pharetra. Ut tempor eu nunc sit amet rutrum. Aliquam a maximus est, id maximus quam. Proin justo quam, laoreet at placerat eu, vestibulum eget enim.').then((height: number) => {
-            // tslint:disable-next-line
-            console.info('La taille du lorem ipsum dans une div de 300px est de : ', height, 'px');
-        });
+        this.textMetricsService.getTextHeight(300, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vulputate porttitor odio, non dictum massa vehicula nec. Proin finibus ex ac ipsum euismod, vitae lobortis augue pharetra. Ut tempor eu nunc sit amet rutrum. Aliquam a maximus est, id maximus quam. Proin justo quam, laoreet at placerat eu, vestibulum eget enim.')
+            .first()
+            .subscribe((height: number) => {
+                // tslint:disable-next-line
+                console.info('La taille du lorem ipsum dans une div de 300px est de : ', height, 'px');
+            });
         this.textMetricsService.metricsElem = this.treeList.elementRef.nativeElement as HTMLElement;
     }
 
