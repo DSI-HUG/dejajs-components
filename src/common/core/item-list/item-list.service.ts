@@ -60,6 +60,9 @@ export class ItemListService {
     // champs à utiliser comme valeur de comparaison
     private _valueField: string;
 
+    // champs à utiliser pour l'affichage de la valeur
+    private _textField: string;
+
     private isBusinessObject: boolean;
 
     /** Définit le champs utilisé comme collection pour les enfants d'un parent.
@@ -94,6 +97,11 @@ export class ItemListService {
     /** Définit le champs à utiliser comme valeur de comparaison */
     public set valueField(valueField: string) {
         this._valueField = valueField;
+    }
+
+    /** Définit le champs à utiliser pour l'affichage de la valeur */
+    public set textField(textField: string) {
+        this._textField = textField;
     }
 
     private set items(items: IItemBase[]) {
@@ -1331,7 +1339,7 @@ export class ItemListService {
         if (this.isBusinessObject) {
             return items.map((item) => {
                 return {
-                    displayName: this.getTextValue(item),
+                    displayName: this.getTextValue(item, this._textField),
                     model: item,
                 };
             });
