@@ -34,12 +34,12 @@ export class Rect {
     }
 
     public static union(r1: Rect, r2: Rect) {
-        return Rect.fromLTRB(Math.min(r1.left, r2.left), Math.min(r1.top, r2.top), Math.max(r1.right(), r2.right()), Math.max(r1.bottom(), r2.bottom()));
+        return Rect.fromLTRB(Math.min(r1.left, r2.left), Math.min(r1.top, r2.top), Math.max(r1.right, r2.right), Math.max(r1.bottom, r2.bottom));
     }
 
     public static overlapInfos(rect1: Rect, rect2: Rect): IRectOverlapInfos {
-        const x = Math.max(0, Math.min(rect1.right(), rect2.right()) - Math.max(rect1.left, rect2.left));
-        const y = Math.max(0, Math.min(rect1.bottom(), rect2.bottom()) - Math.max(rect1.top, rect2.top));
+        const x = Math.max(0, Math.min(rect1.right, rect2.right) - Math.max(rect1.left, rect2.left));
+        const y = Math.max(0, Math.min(rect1.bottom, rect2.bottom) - Math.max(rect1.top, rect2.top));
         return {
             area: x * y,
             direction: x > y ? RectOverlapDirection.horizontal : RectOverlapDirection.vertical,
@@ -71,11 +71,19 @@ export class Rect {
         }
     }
 
-    public right() {
+    public set right(value: number) {
+        this.width = value - this.left;
+    }
+
+    public get right() {
         return this.left + this.width;
     }
 
-    public bottom() {
+    public set bottom(value: number) {
+        this.height = value - this.top;
+    }
+    
+    public get bottom() {
         return this.top + this.height;
     }
 
@@ -89,25 +97,25 @@ export class Rect {
     }
 
     public adjacent(bounds: Rect) {
-        return bounds.left <= this.right() &&
-            bounds.right() >= this.left &&
-            bounds.top <= this.bottom() &&
-            bounds.bottom() >= this.top;
+        return bounds.left <= this.right &&
+            bounds.right >= this.left &&
+            bounds.top <= this.bottom &&
+            bounds.bottom >= this.top;
     }
 
     public contains(bounds: Rect) {
-        return bounds.left >= this.left && bounds.right() <= this.right() && bounds.top >= this.top && bounds.bottom() <= this.bottom();
+        return bounds.left >= this.left && bounds.right <= this.right && bounds.top >= this.top && bounds.bottom <= this.bottom;
     }
 
     public containsPoint(point: Position) {
-        return point.left >= this.left && point.left <= this.right() && point.top >= this.top && point.top <= this.bottom();
+        return point.left >= this.left && point.left <= this.right && point.top >= this.top && point.top <= this.bottom;
     }
 
     public intersectWith(bounds: Rect) {
-        return bounds.left < this.right() &&
-            bounds.right() > this.left &&
-            bounds.top < this.bottom() &&
-            bounds.bottom() > this.top;
+        return bounds.left < this.right &&
+            bounds.right > this.left &&
+            bounds.top < this.bottom &&
+            bounds.bottom > this.top;
     }
 
     public union(bounds: Rect) {
