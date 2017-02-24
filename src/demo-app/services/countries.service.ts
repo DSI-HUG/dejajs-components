@@ -28,7 +28,7 @@ export class CountriesService {
                     return;
                 }
 
-                this.http.get('src/demo-app/services/countries.json', { responseType: ResponseContentType.Json })
+                this.http.get('https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/demo-app/services/countries.json', { responseType: ResponseContentType.Json })
                     .map((response) => {
                         let datas = response.json();
                         let countries = datas.data as ICountry[];
