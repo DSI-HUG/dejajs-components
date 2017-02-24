@@ -95,12 +95,6 @@ export class JsonUtils {
     }
 
     /**
-     * Cache for getOneFrom() method
-     * @type {{}}
-     */
-    private static mapCaches: any = {};
-
-    /**
      * Get an object from a array of object. It uses a cache in order to go faster if called in a loop.
      * @param listPromise Promise that returns a array of objects. Object Must have an an attribute "id" or "ID" or "Id"
      * @param id: The ID we want to get
@@ -125,4 +119,10 @@ export class JsonUtils {
             }
         });
     }
+
+    /**
+     * Cache for getOneFrom() method
+     * @type {{}}
+     */
+    private static mapCaches: any = {};
 }
