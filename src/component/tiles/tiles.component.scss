@@ -1,49 +1,55 @@
-.tiles {
-    list-style: none;
-    display: block;
-    position: relative;
-    padding: 0 !important;
-    margin: 0 !important;
-    transition-property: height;
-    transition-duration: 0.5s;
-    transition-timing-function: ease;
+:host {
+    .tiles {
+        list-style: none;
+        display: block;
+        position: relative;
+        padding: 0 !important;
+        margin: 0 !important;
+        transition-property: height;
+        transition-duration: 0.5s;
+        transition-timing-function: ease;
+    }
+    [deja-tile-position] {
+        position: absolute;
+        z-index: 11;
+        background-color: rgba(0, 0, 0, 0.25);
+    }
     &[drag] {
         background-color: rgba(0, 0, 0, 0.15);
+        [deja-tile-position] {
+            transition-property: left, top, width, height;
+            transition-duration: .35s;
+            transition-timing-function: ease;
+        }
     }
-}
-
-@media screen and (min-width: 1401px) {
-    .tiles {
-        font-size: 100%;
+    @media screen and (min-width: 1401px) {
+        .tiles {
+            font-size: 100%;
+        }
     }
-}
-
-@media screen and (max-width: 1400px) {
-    .tiles {
-        font-size: 90%;
+    @media screen and (max-width: 1400px) {
+        .tiles {
+            font-size: 90%;
+        }
     }
-}
-
-@media screen and (max-width: 1200px) {
-    .tiles {
-        font-size: 85%;
+    @media screen and (max-width: 1200px) {
+        .tiles {
+            font-size: 85%;
+        }
     }
-}
-
-@media screen and (max-width: 768px) {
-    .tiles {
-        font-size: 80%;
+    @media screen and (max-width: 768px) {
+        .tiles {
+            font-size: 80%;
+        }
     }
-}
-
-@media screen and (max-width: 640px) {
-    .tiles {
-        font-size: 70%;
+    @media screen and (max-width: 640px) {
+        .tiles {
+            font-size: 70%;
+        }
     }
-}
-
-@media screen and (max-width: 320px) {
-    .tiles {
-        font-size: 60%;
+    @media screen and (max-width: 320px) {
+        .tiles {
+            font-size: 60%;
+        }
     }
 }

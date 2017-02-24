@@ -14,10 +14,10 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DejaEditableModule } from '../content-editable';
 import { DejaDragDropModule } from '../dragdrop';
-import { DejaTileComponent, DejaTileGroupComponent, DejaTilesComponent, DejaTileSelectionComponent, DejaTileTargetComponent } from './index';
+import { DejaTileComponent, DejaTileGroupComponent, DejaTilesComponent, DejaTilePositionDirective } from './index';
 
 @NgModule({
-    declarations: [DejaTileComponent, DejaTilesComponent, DejaTileGroupComponent, DejaTileSelectionComponent, DejaTileTargetComponent],
+    declarations: [DejaTileComponent, DejaTilesComponent, DejaTileGroupComponent, DejaTilePositionDirective],
     exports: [DejaTileComponent, DejaTilesComponent, DejaTileGroupComponent],
     imports: [
         CommonModule,

@@ -11,7 +11,7 @@
 
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs/Rx';
-import { IDejaTile } from './tile';
+import { IDejaTile } from './tile.interface';
 import { DejaTilesLayoutProvider } from './tiles-layout.provider';
 
 @Component({
@@ -34,7 +34,6 @@ export class DejaTileComponent implements OnDestroy {
     public element: HTMLElement;
 
     private _tile: IDejaTile;
-    private _bounds: IBounds;
     private _isDragging = false;
     private _isPressed = false;
     private _isSelected = false;
@@ -52,7 +51,6 @@ export class DejaTileComponent implements OnDestroy {
 
         Observable.from(this.bounds)
             .subscribe((bounds) => {
-                this._bounds = bounds;
                 this.element.style.left = `${bounds.left}px`;
                 this.element.style.top = `${bounds.top}px`;
                 this.element.style.width = `${bounds.width}px`;
@@ -135,10 +133,6 @@ export class DejaTileComponent implements OnDestroy {
 
     public ngOnDestroy() {
         this.dispose.emit(this);
-    }
-
-    public getBounds() {
-        return this._bounds;
     }
 }
 

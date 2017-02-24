@@ -11,10 +11,9 @@
 
 export * from './tile-selection-change-event';
 export * from './tile-group.component';
-export * from './tile';
+export * from './tile.interface';
 export * from './tile.component';
-export * from './tile-selection.component';
-export * from './tile-target.component';
+export * from './tile-position.directive';
 export * from './tiles.component';
 export * from './tile.event';
 export * from './tiles.module';
