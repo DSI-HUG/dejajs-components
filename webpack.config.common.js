@@ -6,8 +6,6 @@ module.exports = {
     entry: {
         bundle: [
             "./node_modules/@angular/material/core/theming/prebuilt/deeppurple-amber.css",
-            "./node_modules/prismjs/themes/prism.css",
-            "./node_modules/prismjs/themes/prism-okaidia.css",
             "./src/scss",
             "./src/polyfills.ts",
             "./src/demo-app/main.ts",
@@ -35,7 +33,6 @@ module.exports = {
         }, {
             include: [
                 path.resolve("./node_modules/@angular/material/core/theming/prebuilt"),
-                path.resolve("./node_modules/prismjs/themes"),
                 path.resolve("./src/scss"),
             ],
             loaders: ["style-loader", "css-loader", "resolve-url-loader"],
