@@ -12,6 +12,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
 import { Directions, Position, Rect, Size } from '../../common/core/graphics';
+import { KeyCodes } from '../../common/core/';
 import { DejaTileComponent, IDejaTile } from './index';
 
 interface ILayoutInfo {
@@ -88,51 +89,33 @@ export class DejaTilesLayoutProvider {
             .debounceTime(30)
             .do(() => this.container.style.width = `100%`)
             .delay(10)
-            .subscribe(() => {
+            .subscribe((resetWidth) => {
                 const placeAtTheEnd = [] as DejaTileComponent[];
 
                 const containerBounds = this.container.getBoundingClientRect();
-                this.hundredPercentWith = containerBounds.width;
+                if (resetWidth || !this.hundredPercentWith) {
+                    this.hundredPercentWith = containerBounds.width;
+                }
                 let height = 0;
                 let width = containerBounds.width;
 
                 Object.values(this.tileComponents)
                     .forEach((tileComponent: DejaTileComponent) => {
-                        const bounds = tileComponent.getBounds();
                         const tile = tileComponent.tile;
                         if (tile.bounds) {
-                            if (tileComponent.isDragging) {
-                                if (containerBounds.height > height) {
-                                    height = containerBounds.height;
+                            const bounds = this.getPixelBounds(tile.bounds);
+                            if (bounds.bottom > height) {
+                                height = bounds.bottom;
+                            }
+                            if (bounds.right > width) {
+                                width = bounds.right;
+                            }
+                            if (!tileComponent.isDragging) {
+                                if (tile.bounds.top >= 0 && tile.bounds.left >= 0) {
+                                    tileComponent.bounds.next(bounds);
+                                } else {
+                                    placeAtTheEnd.push(tileComponent);
                                 }
-                                if (containerBounds.width > width) {
-                                    width = containerBounds.width;
-                                }
-                                if (bounds.top + bounds.height > height) {
-                                    height = bounds.top + bounds.height;
-                                }
-                                if (bounds.left + bounds.width > width) {
-                                    width = bounds.left + bounds.width;
-                                }
-                            } else if (tile.bounds.top >= 0 && tile.bounds.left >= 0) {
-                                const l = this.getPixelSize(tile.bounds.left);
-                                const w = this.getPixelSize(tile.bounds.width);
-                                const t = this.getPixelSize(tile.bounds.top);
-                                const h = this.getPixelSize(tile.bounds.height);
-                                if (t + h > height) {
-                                    height = t + h;
-                                }
-                                if (l + w > width) {
-                                    width = l + w;
-                                }
-                                tileComponent.bounds.next({
-                                    height: h,
-                                    left: l,
-                                    top: t,
-                                    width: w,
-                                });
-                            } else {
-                                placeAtTheEnd.push(tileComponent);
                             }
                         } else {
                             placeAtTheEnd.push(tileComponent);
@@ -167,6 +150,16 @@ export class DejaTilesLayoutProvider {
                     });
                     left += l;
                 });
+
+                if (this.dragTarget) {
+                    const dragBounds = this.getPixelBounds(this.dragTarget);
+                    if (height <= dragBounds.bottom) {
+                        height = dragBounds.bottom + dragBounds.height;
+                    }
+                    if (width <= dragBounds.right) {
+                        width = dragBounds.right + dragBounds.width;
+                    }
+                }
 
                 this.container.style.width = `${width}px`;
                 this.container.style.height = `${height}px`;
@@ -234,7 +227,14 @@ export class DejaTilesLayoutProvider {
                 }
 
                 const mouseUp$ = Observable.fromEvent(this._container.ownerDocument, 'mouseup')
-                    .do(() => this.dragDropInfos.next(null));
+                    .do(() => this.drop(dragDropInfos.tiles));
+
+                Observable.fromEvent(this._container.ownerDocument, 'keyup')
+                    .takeUntil(mouseUp$)
+                    .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.Escape)
+                    .subscribe(() => {
+                        this.cancelDrag(dragDropInfos.tiles);
+                    });
 
                 Observable.fromEvent(this._container, 'mousemove')
                     .takeUntil(mouseUp$)
@@ -265,7 +265,6 @@ export class DejaTilesLayoutProvider {
                                 // Start tile drag and drop
                                 this.dragging.next(true);
                                 dragDropInfos.enabled = true;
-                                // TODO this.globalKeyUp = true;
                                 this.startDrag(dragDropInfos.tiles, x, y);
                             }
                         } else {
@@ -279,7 +278,22 @@ export class DejaTilesLayoutProvider {
                 //                 } else if (this.dragInfos.enabled) {
                 //                     this.cancelDrag();
                 //                 }
-
+                // public cancelDrag() {
+                //     if (this.dragInfos && this.dragInfos.enabled) {
+                //         if (this.dragInfos.tiles.length === 1) {
+                //             const tileComponent = this.dragInfos.tiles[0];
+                //             // TODO
+                //             if (tileComponent.tile.id === 'new') {
+                //                 const index = this.tiles.indexOf(tileComponent.tile);
+                //                 if (index >= 0) {
+                //                     this.tiles.splice(index, 1);
+                //                 }
+                //             }
+                //         }
+                //         this.layoutProvider.cancelDrag(this.dragInfos.tiles);
+                //     }
+                //     this.endDrag();
+                // }
             });
     }
 
@@ -487,7 +501,7 @@ export class DejaTilesLayoutProvider {
             // add at the nearest free place
             freePlaces.sort((bounds1, bounds2) => {
                 const calcDistance = (bounds) => {
-                    return Math.min(Math.abs(bounds.left - idealBounds.left), Math.abs(bounds.right() - idealBounds.right())) + 2 * Math.min(Math.abs(bounds.top - idealBounds.top), Math.abs(bounds.bottom() - idealBounds.bottom()));
+                    return Math.min(Math.abs(bounds.left - idealBounds.left), Math.abs(bounds.right - idealBounds.right)) + 2 * Math.min(Math.abs(bounds.top - idealBounds.top), Math.abs(bounds.bottom - idealBounds.bottom));
                 };
                 return calcDistance(bounds1) - calcDistance(bounds2);
             });
@@ -533,7 +547,7 @@ export class DejaTilesLayoutProvider {
 
         this.targetBounds = savedLayout.targetBounds = savedLayout.validBounds = targetBounds;
         this.originalLayout = savedLayout;
-        delete this.validLayout;
+        this.validLayout = undefined;
     }
 
     public expandTile(tile: IDejaTile, pixelheight: number) {
@@ -545,11 +559,9 @@ export class DejaTilesLayoutProvider {
         }
         this.expandedTile = tile;
         tile.expanded = true;
-        // TODO Simplifier
         const percentHeight = Math.ceil(pixelheight * 100 / this.hundredPercentWith);
-        const height = this.getPixelSize(percentHeight);
-        const tileComponent = this.tileComponents[tile.id];
-        this.size(tile, new Position(0, tileComponent.getBounds().top + height), Directions.bottom);
+        const bottom = tile.bounds.top + percentHeight;
+        this.size(tile, new Position(0, this.getPixelSize(bottom)), Directions.bottom);
     }
 
     public cancelExpand() {
@@ -580,10 +592,8 @@ export class DejaTilesLayoutProvider {
 
         // Restore original layout
         this.restoreLayout(this.originalLayout);
-        delete this.originalLayout;
-        delete this.validLayout;
-        delete this.targetBounds;
-        this.refreshTiles.next();
+
+        this.endDrag();
     }
 
     public drop(tiles: DejaTileComponent[]) {
@@ -627,13 +637,22 @@ export class DejaTilesLayoutProvider {
                 .filter((t) => !Rect.equals(t.bounds, this.originalLayout[t.id] && this.originalLayout[t.id].bounds));
         }
 
-        delete this.originalLayout;
-        delete this.validLayout;
-        delete this.targetBounds;
-
-        this.refreshTiles.next();
+        //             if (tileComponent.tile.id === 'new') {
+        //                 // TODO tile.id = this.getCurrentId();
+        //             }        
+        this.endDrag();
 
         return changed;
+    }
+
+    public endDrag() {
+        this.originalLayout = undefined;
+        this.validLayout = undefined;
+        this.targetBounds = undefined;
+        this.dragging.next(false);
+        this.dragDropInfos.next(null);
+        this.dragTarget = undefined;
+        this.refreshTiles.next();
     }
 
     public drag(tiles: DejaTileComponent[], pageX: number, pageY: number) {
@@ -649,51 +668,51 @@ export class DejaTilesLayoutProvider {
             // Only one tile can be resized at time
             const tileComponent = tiles[0];
             const tile = tileComponent.tile;
-            const bounds = tileComponent.getBounds();
-            const offsetRight = offsetLeft + this.getPixelSize(tile.bounds.width);
-            const offsetBottom = offsetTop + this.getPixelSize(tile.bounds.height);
-            let right = bounds.top + bounds.width;
-            let bottom = bounds.top + bounds.height;
+            const bounds = this.getPixelBounds(tile.bounds);
+            const offsetRight = offsetLeft + bounds.width;
+            const offsetBottom = offsetTop + bounds.height;
             switch (this._cursor) {
                 case 'nw-resize':
-                    bounds.left = Math.max(Math.min(offsetLeft, right - sizemin.width), right - sizemax.width);
-                    bounds.top = Math.max(Math.min(offsetTop, bottom - sizemin.height), bottom - sizemax.height);
+                    bounds.left = Math.max(Math.min(offsetLeft, bounds.right - sizemin.width), bounds.right - sizemax.width);
+                    bounds.top = Math.max(Math.min(offsetTop, bounds.bottom - sizemin.height), bounds.bottom - sizemax.height);
                     this.size(tile, new Position(offsetLeft, offsetTop), Directions.left + Directions.top);
                     break;
                 case 'sw-resize':
-                    bounds.left = Math.max(Math.min(offsetLeft, right - sizemin.width), right - sizemax.width);
-                    bottom = Math.max(Math.min(offsetBottom, bounds.top + sizemax.height), bounds.top + sizemin.height);
+                    bounds.left = Math.max(Math.min(offsetLeft, bounds.right - sizemin.width), bounds.right - sizemax.width);
+                    bounds.bottom = Math.max(Math.min(offsetBottom, bounds.top + sizemax.height), bounds.top + sizemin.height);
                     this.size(tile, new Position(offsetLeft, offsetBottom), Directions.left + Directions.bottom);
                     break;
                 case 'w-resize':
-                    bounds.left = Math.max(Math.min(offsetLeft, right - sizemin.width), right - sizemax.width);
+                    bounds.left = Math.max(Math.min(offsetLeft, bounds.right - sizemin.width), bounds.right - sizemax.width);
                     this.size(tile, new Position(offsetLeft, 0), Directions.left);
                     break;
                 case 'ne-resize':
-                    right = Math.max(Math.min(offsetRight, bounds.left + sizemax.width), bounds.left + sizemin.width);
-                    bounds.top = Math.max(Math.min(offsetTop, bottom - sizemin.height), bottom - sizemax.height);
+                    bounds.right = Math.max(Math.min(offsetRight, bounds.left + sizemax.width), bounds.left + sizemin.width);
+                    bounds.top = Math.max(Math.min(offsetTop, bounds.bottom - sizemin.height), bounds.bottom - sizemax.height);
                     this.size(tile, new Position(offsetRight, offsetTop), Directions.right + Directions.top);
                     break;
                 case 'se-resize':
-                    right = Math.max(Math.min(offsetRight, bounds.left + sizemax.width), bounds.left + sizemin.width);
-                    bottom = Math.max(Math.min(offsetBottom, bounds.top + sizemax.height), bounds.top + sizemin.height);
+                    bounds.right = Math.max(Math.min(offsetRight, bounds.left + sizemax.width), bounds.left + sizemin.width);
+                    bounds.bottom = Math.max(Math.min(offsetBottom, bounds.top + sizemax.height), bounds.top + sizemin.height);
                     this.size(tile, new Position(offsetRight, offsetBottom), Directions.right + Directions.bottom);
                     break;
                 case 'e-resize':
-                    right = Math.max(Math.min(offsetRight, bounds.left + sizemax.width), bounds.left + sizemin.width);
+                    bounds.right = Math.max(Math.min(offsetRight, bounds.left + sizemax.width), bounds.left + sizemin.width);
                     this.size(tile, new Position(offsetRight, 0), Directions.right);
                     break;
                 case 'n-resize':
-                    bounds.top = Math.max(Math.min(offsetTop, bottom - sizemin.height), bottom - sizemax.height);
+                    bounds.top = Math.max(Math.min(offsetTop, bounds.bottom - sizemin.height), bounds.bottom - sizemax.height);
                     this.size(tile, new Position(0, offsetTop), Directions.top);
                     break;
                 case 's-resize':
-                    bottom = Math.max(Math.min(offsetBottom, bounds.top + sizemax.height), bounds.top + sizemin.height);
+                    bounds.bottom = Math.max(Math.min(offsetBottom, bounds.top + sizemax.height), bounds.top + sizemin.height);
                     this.size(tile, new Position(0, offsetBottom), Directions.bottom);
                     break;
                 default:
                     throw new Error('Invalid direction');
             }
+            tileComponent.bounds.next(bounds);
+
         } else {
             tiles.forEach((tileComponent) => {
                 const tile = tileComponent.tile;
@@ -733,10 +752,10 @@ export class DejaTilesLayoutProvider {
             maxWidth = this.getTileMaxPercentWidth();
             const dleft = percentPos.left;
             const tleft = dragBounds.left < dleft ? minWidth * Math.ceil(dleft / minWidth) : minWidth * Math.floor(dleft / minWidth);
-            const twidth = Math.min(maxWidth, Math.max(minWidth, newTargetBounds.right() - tleft));
-            dragBounds.width = dragBounds.right() - dleft;
+            const twidth = Math.min(maxWidth, Math.max(minWidth, newTargetBounds.right - tleft));
+            dragBounds.width = dragBounds.right - dleft;
             dragBounds.left = dleft;
-            newTargetBounds.left = newTargetBounds.right() - twidth;
+            newTargetBounds.left = newTargetBounds.right - twidth;
             newTargetBounds.width = twidth;
         }
         // tslint:disable-next-line:no-bitwise
@@ -744,7 +763,7 @@ export class DejaTilesLayoutProvider {
             minWidth = minWidth || this.getTileMinPercentWidth();
             maxWidth = maxWidth || this.getTileMaxPercentWidth();
             const dright = percentPos.left;
-            const tright = dragBounds.right() < dright ? minWidth * Math.ceil(dright / minWidth) : minWidth * Math.floor(dright / minWidth);
+            const tright = dragBounds.right < dright ? minWidth * Math.ceil(dright / minWidth) : minWidth * Math.floor(dright / minWidth);
             dragBounds.width = dright - dragBounds.left;
             newTargetBounds.width = Math.min(maxWidth, Math.max(minWidth, tright - newTargetBounds.left));
         }
@@ -754,10 +773,10 @@ export class DejaTilesLayoutProvider {
             maxHeight = this.getTileMaxPercentHeight();
             const dtop = percentPos.top;
             const ttop = dragBounds.top < dtop ? minHeight * Math.ceil(dtop / minHeight) : minHeight * Math.floor(dtop / minHeight);
-            const theight = Math.min(maxHeight, Math.max(minHeight, newTargetBounds.bottom() - ttop));
-            dragBounds.height = dragBounds.bottom() - dtop;
+            const theight = Math.min(maxHeight, Math.max(minHeight, newTargetBounds.bottom - ttop));
+            dragBounds.height = dragBounds.bottom - dtop;
             dragBounds.top = dtop;
-            newTargetBounds.top = newTargetBounds.bottom() - theight;
+            newTargetBounds.top = newTargetBounds.bottom - theight;
             newTargetBounds.height = theight;
         }
         // tslint:disable-next-line:no-bitwise
@@ -765,7 +784,7 @@ export class DejaTilesLayoutProvider {
             minHeight = minHeight || this.getTileMinPercentHeight();
             maxHeight = maxHeight || this.getTileMaxPercentHeight();
             const dbottom = percentPos.top;
-            const tbottom = dragBounds.bottom() < dbottom ? minHeight * Math.ceil(dbottom / minHeight) : minHeight * Math.floor(dbottom / minHeight);
+            const tbottom = dragBounds.bottom < dbottom ? minHeight * Math.ceil(dbottom / minHeight) : minHeight * Math.floor(dbottom / minHeight);
             dragBounds.height = dbottom - dragBounds.top;
             newTargetBounds.height = Math.min(maxHeight, Math.max(minHeight, tbottom - newTargetBounds.top));
         }
@@ -887,13 +906,13 @@ export class DejaTilesLayoutProvider {
         }
 
         const maxPercentWidth = this.getMaxPercentWidth();
-        if (maxPercentWidth && percentBounds.right() > maxPercentWidth) {
-            percentBounds = percentBounds.offset(maxPercentWidth - percentBounds.right(), 0);
+        if (maxPercentWidth && percentBounds.right > maxPercentWidth) {
+            percentBounds = percentBounds.offset(maxPercentWidth - percentBounds.right, 0);
         }
 
         const maxPercentHeight = this.getMaxPercentHeight();
-        if (maxPercentHeight && percentBounds.bottom() > maxPercentHeight) {
-            percentBounds = percentBounds.offset(0, maxPercentHeight - percentBounds.bottom());
+        if (maxPercentHeight && percentBounds.bottom > maxPercentHeight) {
+            percentBounds = percentBounds.offset(0, maxPercentHeight - percentBounds.bottom);
         }
 
         return percentBounds;
@@ -938,11 +957,11 @@ export class DejaTilesLayoutProvider {
                             return bounds;
                         } else {
                             const hol = t.bounds.left - effectiveBounds.left; // Ce qui dépasse Ã  gauche
-                            const hor = effectiveBounds.right() - t.bounds.right(); // Ce qui dépasse Ã  droite
+                            const hor = effectiveBounds.right - t.bounds.right; // Ce qui dépasse Ã  droite
                             const vot = t.bounds.top - effectiveBounds.top; // Ce qui dépasse en haut
-                            const vob = effectiveBounds.bottom() - t.bounds.bottom(); // Ce qui dépasse en bas
-                            const hoe = Math.max(0, Math.min(t.bounds.right(), effectiveBounds.right()) - Math.max(t.bounds.left, effectiveBounds.left)) / Math.min(t.bounds.width, effectiveBounds.width);
-                            const voe = Math.max(0, Math.min(t.bounds.bottom(), effectiveBounds.bottom()) - Math.max(t.bounds.top, effectiveBounds.top)) / Math.min(t.bounds.height, effectiveBounds.height);
+                            const vob = effectiveBounds.bottom - t.bounds.bottom; // Ce qui dépasse en bas
+                            const hoe = Math.max(0, Math.min(t.bounds.right, effectiveBounds.right) - Math.max(t.bounds.left, effectiveBounds.left)) / Math.min(t.bounds.width, effectiveBounds.width);
+                            const voe = Math.max(0, Math.min(t.bounds.bottom, effectiveBounds.bottom) - Math.max(t.bounds.top, effectiveBounds.top)) / Math.min(t.bounds.height, effectiveBounds.height);
 
                             // Calc prefered direction
                             let preferedDirection: Directions;
@@ -1023,6 +1042,15 @@ export class DejaTilesLayoutProvider {
             });
 
         return layout;
+    }
+
+    private getPixelBounds(rect: Rect) {
+        return Rect.fromLTRB(
+            Math.round(rect.left * this.hundredPercentWith / 100),
+            Math.round(rect.top * this.hundredPercentWith / 100),
+            Math.round(rect.right * this.hundredPercentWith / 100),
+            Math.round(rect.bottom * this.hundredPercentWith / 100)
+        );
     }
 
     private getPixelSize(value: number, unit?: string): number {
@@ -1162,8 +1190,8 @@ export class DejaTilesLayoutProvider {
                 const maxWidth = this.getMaxPercentWidth();
                 if (tryBounds.left < 0) {
                     roffset = -tryBounds.left;
-                } else if (maxWidth && tryBounds.right() > maxWidth) {
-                    roffset = tryBounds.right() - maxWidth;
+                } else if (maxWidth && tryBounds.right > maxWidth) {
+                    roffset = tryBounds.right - maxWidth;
                 }
 
                 const adjacentTiles = Object.values(this.tileComponents)
@@ -1204,7 +1232,7 @@ export class DejaTilesLayoutProvider {
         if (!offset) {
             offset = 0;
             tiles.forEach((t) => {
-                const ho = direction > 0 ? Math.max(0, bounds.right() - t.bounds.left) : Math.max(0, t.bounds.right() - bounds.left);
+                const ho = direction > 0 ? Math.max(0, bounds.right - t.bounds.left) : Math.max(0, t.bounds.right - bounds.left);
                 if (ho > offset) {
                     offset = ho;
                 }
@@ -1246,8 +1274,8 @@ export class DejaTilesLayoutProvider {
                 const maxHeight = this.getMaxPercentHeight();
                 if (tryBounds.top < 0) {
                     roffset = -tryBounds.top;
-                } else if (maxHeight && tryBounds.bottom() > maxHeight) {
-                    roffset = tryBounds.bottom() - maxHeight;
+                } else if (maxHeight && tryBounds.bottom > maxHeight) {
+                    roffset = tryBounds.bottom - maxHeight;
                 }
 
                 const adjacentTiles = Object.values(this.tileComponents)
@@ -1288,7 +1316,7 @@ export class DejaTilesLayoutProvider {
         if (!offset) {
             offset = 0;
             tiles.forEach((t) => {
-                const vo = direction > 0 ? Math.max(0, bounds.bottom() - t.bounds.top) : Math.max(0, t.bounds.bottom() - bounds.top);
+                const vo = direction > 0 ? Math.max(0, bounds.bottom - t.bounds.top) : Math.max(0, t.bounds.bottom - bounds.top);
                 if (vo > offset) {
                     offset = vo;
                 }

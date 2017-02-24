@@ -9,9 +9,14 @@
         transition-duration: 0.5s;
         transition-timing-function: ease;
     }
+    [deja-tile-position] {
+        position: absolute;
+        z-index: 11;
+        background-color: rgba(0, 0, 0, 0.25);
+    }
     &[drag] {
         background-color: rgba(0, 0, 0, 0.15);
-        deja-tile-selection {
+        [deja-tile-position] {
             transition-property: left, top, width, height;
             transition-duration: .35s;
             transition-timing-function: ease;

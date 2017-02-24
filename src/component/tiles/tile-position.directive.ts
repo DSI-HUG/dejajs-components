@@ -9,22 +9,18 @@
  *
  */
 
-import { Component, ElementRef, Input } from '@angular/core';
+import { Directive, ElementRef, Input } from '@angular/core';
 import { Rect } from '../../common/core/graphics';
 
-@Component({
-    selector: 'deja-tile-selection',
-    styleUrls: [
-        './tile-selection.component.scss',
-    ],
-    template: '',
+@Directive({
+    selector: '[deja-tile-position]',
 })
-export class DejaTileSelectionComponent {
+export class DejaTilePositionDirective {
     private element: HTMLElement;
 
     constructor(el: ElementRef) {
         this.element = el.nativeElement as HTMLElement;
-        this.element.setAttribute('hidden', '');
+        this.element.style.display = 'none';
     }
 
     @Input()
@@ -35,9 +31,9 @@ export class DejaTileSelectionComponent {
             this.element.style.top = `${top}px`;
             this.element.style.width = `${width}px`;
             this.element.style.height = `${height}px`;
-            this.element.removeAttribute('hidden');
+            this.element.style.display = 'block';
         } else {
-            this.element.setAttribute('hidden', '');
+            this.element.style.display = 'none';
         }
     }
 }
