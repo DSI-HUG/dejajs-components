@@ -34,7 +34,7 @@ export class Rect {
     }
 
     public static union(r1: Rect, r2: Rect) {
-        return Rect.fromLTRB(Math.min(r1.left, r2.left), Math.min(r1.top, r2.top), Math.max(r1.right, r2.right), Math.max(r1.bottom, r2.bottom));
+        return Rect.fromLTRB(Math.min(r1.left, r2.left), Math.min(r1.top, r2.top), Math.max(r1.left + r1.width, r2.left + r2.width), Math.max(r1.top + r1.height, r2.top + r2.height));
     }
 
     public static overlapInfos(rect1: Rect, rect2: Rect): IRectOverlapInfos {

@@ -15,6 +15,7 @@ import { FormsModule } from '@angular/forms';
 import { DejaEditableModule } from '../content-editable';
 import { DejaDragDropModule } from '../dragdrop';
 import { DejaTileComponent, DejaTileGroupComponent, DejaTilesComponent, DejaTilePositionDirective } from './index';
+import { CloningService } from '../../common/core/cloning';
 
 @NgModule({
     declarations: [DejaTileComponent, DejaTilesComponent, DejaTileGroupComponent, DejaTilePositionDirective],
@@ -25,5 +26,8 @@ import { DejaTileComponent, DejaTileGroupComponent, DejaTilesComponent, DejaTile
         DejaDragDropModule,
         DejaEditableModule,
     ],
+    providers: [
+        CloningService,
+    ]
 })
 export class DejaTilesModule { }

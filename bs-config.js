@@ -1,5 +1,5 @@
 module.exports = {
-    "port": 5100,
+    "port": 5101,
     server: {
         baseDir: './dist',
         middleware: {

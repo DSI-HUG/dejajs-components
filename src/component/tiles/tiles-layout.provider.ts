@@ -29,14 +29,17 @@ interface ILayoutInfos {
 
 @Injectable()
 export class DejaTilesLayoutProvider {
+    public static copyBag: IDejaTile[];
+
     public refreshTiles$ = new Subject();
     public ensureVisible$ = new Subject<IDejaTile>();
     public designMode$ = new BehaviorSubject<boolean>(false);
-    public selectedTiles$ = new Subject<IDejaTile[]>();
+    public selectionChanges$ = new Subject<IDejaTile[]>();
     public dragging$ = new BehaviorSubject<boolean>(false);
     public dragSelection$ = new Subject<IDragSelection>();
     public dragDropInfos$ = new Subject<IDragDropInfos>();
     public selectionRect$ = new Subject<Rect>();
+    public layoutChanges$ = new Subject<DejaTile[]>();
 
     protected tileMinWidth = 10;
     protected tileMinWidthUnit = '%';
@@ -166,7 +169,7 @@ export class DejaTilesLayoutProvider {
         Observable.from(this.designMode$)
             .subscribe((value) => this._designMode = value);
 
-        Observable.from(this.selectedTiles$)
+        Observable.from(this.selectionChanges$)
             .subscribe((tiles) => {
                 this.tiles.filter((tile: DejaTile) => tile.isSelected)
                     .forEach((tile: DejaTile) => tile.isSelected = false);
@@ -199,8 +202,8 @@ export class DejaTilesLayoutProvider {
                         dragSelection.selectedRect = Rect.fromPoints(dragSelection.startPosition, new Position(event.pageX - containerBounds.left, event.pageY - containerBounds.top));
                         this.selectionRect$.next(dragSelection.selectedRect);
 
-                        const selectedTiles = this.HitTest(dragSelection.selectedRect);
-                        this.selectedTiles$.next(selectedTiles);
+                        const selection = this.HitTest(dragSelection.selectedRect);
+                        this.selectionChanges$.next(selection);
                     });
             });
 
@@ -210,8 +213,15 @@ export class DejaTilesLayoutProvider {
                     return;
                 }
 
-                const mouseUp$ = Observable.fromEvent(this._container.ownerDocument, 'mouseup')
-                    .do(() => this.drop(dragDropInfos.tiles));
+                const mouseUp$ = Observable.fromEvent(this._container.ownerDocument, 'mouseup');
+
+                const drop$ = mouseUp$
+                    .map(() => this.drop(dragDropInfos.tiles))
+                    .do((changedTiles) => {
+                        if (changedTiles) {
+                            this.layoutChanges$.next(changedTiles);
+                        }
+                    });
 
                 Observable.fromEvent(this._container.ownerDocument, 'keyup')
                     .takeUntil(mouseUp$)
@@ -221,7 +231,7 @@ export class DejaTilesLayoutProvider {
                     });
 
                 Observable.fromEvent(this._container, 'mousemove')
-                    .takeUntil(mouseUp$)
+                    .takeUntil(drop$)
                     .filter((event: MouseEvent) => event.buttons === 1)
                     .subscribe((event: MouseEvent) => {
                         const containerBounds = this._container.getBoundingClientRect();
@@ -243,7 +253,7 @@ export class DejaTilesLayoutProvider {
                                 //     // TODO tile.dragging.next(true);
                                 //     this.clearSelection();
                                 //     tile.selected = true;
-                                //     this.selectedTiles = [tile];
+                                //     this.selection = [tile];
                                 // }
 
                                 // Start tile drag and drop
@@ -336,7 +346,7 @@ export class DejaTilesLayoutProvider {
                                 // Multi-selection is available in design mode, selection on the mouse up
                             } else {
                                 if (!this.currentTile.isSelected || this._cursor !== 'move') {
-                                    this.selectedTiles$.next([this.currentTile]);
+                                    this.selectionChanges$.next([this.currentTile]);
                                 }
 
                                 if (this._designMode) {
@@ -361,16 +371,16 @@ export class DejaTilesLayoutProvider {
                                         this.currentTile.isPressed = false;
                                         // Multi-selection
                                         if (e.ctrlKey) {
-                                            const selectedTiles = this.tiles.filter((tile) => tile.isSelected);
+                                            const selection = this.tiles.filter((tile) => tile.isSelected);
                                             if (!this.currentTile.isSelected) {
-                                                selectedTiles.push(this.currentTile);
+                                                selection.push(this.currentTile);
                                             } else {
-                                                const index = selectedTiles.findIndex((tileComponent) => tileComponent === this.currentTile);
+                                                const index = selection.findIndex((tileComponent) => tileComponent === this.currentTile);
                                                 if (index >= 0) {
-                                                    selectedTiles.splice(index, 1);
+                                                    selection.splice(index, 1);
                                                 }
                                             }
-                                            this.selectedTiles$.next(selectedTiles);
+                                            this.selectionChanges$.next(selection);
                                         }
                                     }
 
@@ -391,7 +401,7 @@ export class DejaTilesLayoutProvider {
                                 if (this.currentTile) {
                                     this.currentTile.isPressed = false;
                                 }
-                                this.selectedTiles$.next(null);
+                                this.selectionChanges$.next(null);
                             }
                         }
                     });
@@ -599,30 +609,28 @@ export class DejaTilesLayoutProvider {
 
         if (this.validLayout) {
             this.restoreLayout(this.validLayout);
-        }
 
-        if (this._cursor !== 'move') {
-            // Only one tile can be resized at time
-            const tile = tiles[0];
-            tile.percentBounds = new Rect(this.validLayout.validBounds);
-            tile.isDragging = false;
-        } else {
-            Observable.from(tiles)
-                .filter((tile) => !!tile)
-                .do((tile) => {
-                    const left = this.validLayout.validBounds.left + this.dragRelativePosition[tile.id].left;
-                    const top = this.validLayout.validBounds.top + this.dragRelativePosition[tile.id].top;
-                    tile.percentBounds = new Rect(left, top, tile.percentBounds.width, tile.percentBounds.height);
-                    tile.isDragging = false;
-                    tile.isDropping = true;
-                })
-                .delay(1000)
-                .subscribe((tile) => {
-                    tile.isDropping = false;
-                });
-        }
+            if (this._cursor !== 'move') {
+                // Only one tile can be resized at time
+                const tile = tiles[0];
+                tile.percentBounds = new Rect(this.validLayout.validBounds);
+                tile.isDragging = false;
+            } else {
+                Observable.from(tiles)
+                    .filter((tile) => !!tile)
+                    .do((tile) => {
+                        const left = this.validLayout.validBounds.left + this.dragRelativePosition[tile.id].left;
+                        const top = this.validLayout.validBounds.top + this.dragRelativePosition[tile.id].top;
+                        tile.percentBounds = new Rect(left, top, tile.percentBounds.width, tile.percentBounds.height);
+                        tile.isDragging = false;
+                        tile.isDropping = true;
+                    })
+                    .delay(1000)
+                    .subscribe((tile) => {
+                        tile.isDropping = false;
+                    });
+            }
 
-        if (this.validLayout) {
             changed = this.tiles.filter((t) => !Rect.equals(t.percentBounds, this.originalLayout[t.id] && this.originalLayout[t.id].bounds));
         }
 

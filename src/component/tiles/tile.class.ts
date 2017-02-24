@@ -9,19 +9,19 @@
  *
  */
 
-import { Subject } from 'rxjs/Rx';
+import { BehaviorSubject, Subject } from 'rxjs/Rx';
 import { IDejaTile } from './tile.interface';
 import { Rect } from '../../common/core/graphics';
 
 export class DejaTile implements IDejaTile {
     private static currentId = 0;
 
-    public cutted$ = new Subject<boolean>();
-    public dragging$ = new Subject<boolean>();
-    public dropping$ = new Subject<boolean>();
-    public pressed$ = new Subject<boolean>();
-    public selected$ = new Subject<boolean>();
-    public expanded$ = new Subject<boolean>();
+    public cutted$ = new BehaviorSubject<boolean>(false);
+    public dragging$ = new BehaviorSubject<boolean>(false);
+    public dropping$ = new BehaviorSubject<boolean>(false);
+    public pressed$ = new BehaviorSubject<boolean>(false);
+    public selected$ = new BehaviorSubject<boolean>(false);
+    public expanded$ = new BehaviorSubject<boolean>(false);
     public pixelBounds$ = new Subject<Rect>();
 
     private _id: string;
@@ -38,6 +38,7 @@ export class DejaTile implements IDejaTile {
     constructor(private tile: IDejaTile) {
         this.model = tile;
         this._id = tile.id;
+        this.isSelected = tile.selected;
         this._percentBounds = tile.bounds;
         if (!this._id) {
             this._id = '#' + DejaTile.currentId++;
