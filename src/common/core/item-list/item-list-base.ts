@@ -581,6 +581,7 @@ export class ItemListBase {
      */
     protected setTextField(value: string) {
         this._textField = value;
+        this.getItemListService().textField = value;
     }
 
     /** Définit le champ à utiliser comme valeur de comparaison.
