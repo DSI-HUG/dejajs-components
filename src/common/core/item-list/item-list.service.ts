@@ -9,11 +9,11 @@
  *
  */
 
-import {Observable} from 'rxjs/Rx';
-import {Subscriber} from 'rxjs/Subscriber';
-import {GroupingService, IGroupInfo} from "../grouping/index";
-import {ISortInfos, SortingService} from "../sorting/index";
-import {IItemBase, IItemTree} from "./index";
+import { Observable } from 'rxjs/Rx';
+import { Subscriber } from 'rxjs/Subscriber';
+import { GroupingService, IGroupInfo } from "../grouping/index";
+import { ISortInfos, SortingService } from "../sorting/index";
+import { IItemBase, IItemTree } from "./index";
 
 /** Service de gestion des listes (deja-treelist, deja-select et deja-grid).
  * Ce service permet la gestion du viewport et la gestion des caches des listes.
@@ -59,8 +59,6 @@ export class ItemListService {
 
     // champs à utiliser comme valeur de comparaison
     private _valueField: string;
-
-    private isBusinessObject: boolean;
 
     /** Définit le champs utilisé comme collection pour les enfants d'un parent.
      * @param {string} value Nom du champ à utiliser comme collection d'enfants
@@ -108,21 +106,20 @@ export class ItemListService {
     /** Définit le modèle utilisé par la liste. Ce model peut ètre hierarchique sans limitation de la profondeur ou une chargé en asynchrone par une promise ou un observable.
      * @param items Provider de la liste des éléments de la liste.
      */
-    public setItems(items: any[] | Promise<any[]> | Observable<any[]>) {
+    public setItems(items: IItemBase[] | Promise<IItemBase[]> | Observable<IItemBase[]>) {
         return new Observable<IItemBase[]>((subscriber: Subscriber<{}>) => {
             if (!items) {
                 this.items = undefined;
                 subscriber.next();
             } else if (items instanceof Array) {
-                this.items = this.convertToIItemBase(items);
+                this.items = items;
                 this.ensureChildrenProperties(this.items);
                 this.ensureSelectedItems(items);
                 subscriber.next();
             } else {
                 let promise = items as Promise<IItemBase[]>;
                 if (promise.then) {
-                    promise.then((its) => {
-                        let itms = this.convertToIItemBase(its);
+                    promise.then((itms) => {
                         if (!this.items || !this.items.length) {
                             this.ensureSelectedItems(itms);
                         }
@@ -134,13 +131,13 @@ export class ItemListService {
                     });
                 } else {
                     let observable = items as Observable<IItemBase[]>;
-                    observable.subscribe((its) => {
-                        let itms = this.convertToIItemBase(its);
+                    observable.subscribe((itms) => {
                         if (!this.items || !this.items.length) {
                             this.ensureSelectedItems(itms);
                         }
                         this.ensureChildrenProperties(itms);
                         this.items = [...this.items || [], ...itms];
+                        // console.log(`Loaded ${this.items.length} items`);
                         subscriber.next();
                     }, (err) => {
                         subscriber.error(err);
@@ -148,11 +145,6 @@ export class ItemListService {
                 }
             }
         });
-    }
-
-    public setModels(items: any[] | Promise<any[]> | Observable<any[]>) {
-        this.isBusinessObject = true;
-        return this.setItems(items);
     }
 
     /** Renvoie le modèle de grouping ajouté à la liste de base par le service. Ce modèle ne modifie pas la donée, mais est jsute ajouté à l'affichage
@@ -856,19 +848,17 @@ export class ItemListService {
             // Check regexp validity
             // regExp.test(this.getTextValue(item));
             let regExp: RegExp;
-            if (query) {
-                if (typeof query === 'string') {
-                    try {
-                        regExp = new RegExp(query, 'i');
-                    } catch (exc) {
-                        rejected('Invalid search parameters');
-                        return;
-                    }
-                } else {
-                    regExp = query as RegExp;
-                    if (!regExp.test) {
-                        regExp = undefined;
-                    }
+            if (typeof query === 'string' && query) {
+                try {
+                    regExp = new RegExp(query, 'i');
+                } catch (exc) {
+                    rejected('Invalid search parameters');
+                    return;
+                }
+            } else {
+                regExp = query as RegExp;
+                if (!regExp.test) {
+                    regExp = undefined;
                 }
             }
 
@@ -1325,19 +1315,6 @@ export class ItemListService {
                 this.ensureChildrenProperties(treeItem.$items);
             }
         });
-    }
-
-    private convertToIItemBase(items: any[]): IItemBase[] {
-        if (this.isBusinessObject) {
-            return items.map((item) => {
-                return {
-                    displayName: this.getTextValue(item),
-                    model: item,
-                };
-            });
-        }
-
-        return items;
     }
 }
 
