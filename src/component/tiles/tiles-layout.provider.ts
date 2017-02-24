@@ -671,24 +671,31 @@ export class DejaTilesLayoutProvider {
             const bounds = this.getPixelBounds(tile.bounds);
             const offsetRight = offsetLeft + bounds.width;
             const offsetBottom = offsetTop + bounds.height;
+            const right = bounds.right;
+            const bottom = bounds.bottom;
             switch (this._cursor) {
                 case 'nw-resize':
                     bounds.left = Math.max(Math.min(offsetLeft, bounds.right - sizemin.width), bounds.right - sizemax.width);
+                    bounds.right = right;
                     bounds.top = Math.max(Math.min(offsetTop, bounds.bottom - sizemin.height), bounds.bottom - sizemax.height);
+                    bounds.bottom = bottom;
                     this.size(tile, new Position(offsetLeft, offsetTop), Directions.left + Directions.top);
                     break;
                 case 'sw-resize':
                     bounds.left = Math.max(Math.min(offsetLeft, bounds.right - sizemin.width), bounds.right - sizemax.width);
+                    bounds.right = right;
                     bounds.bottom = Math.max(Math.min(offsetBottom, bounds.top + sizemax.height), bounds.top + sizemin.height);
                     this.size(tile, new Position(offsetLeft, offsetBottom), Directions.left + Directions.bottom);
                     break;
                 case 'w-resize':
                     bounds.left = Math.max(Math.min(offsetLeft, bounds.right - sizemin.width), bounds.right - sizemax.width);
+                    bounds.right = right;
                     this.size(tile, new Position(offsetLeft, 0), Directions.left);
                     break;
                 case 'ne-resize':
                     bounds.right = Math.max(Math.min(offsetRight, bounds.left + sizemax.width), bounds.left + sizemin.width);
                     bounds.top = Math.max(Math.min(offsetTop, bounds.bottom - sizemin.height), bounds.bottom - sizemax.height);
+                    bounds.bottom = bottom;
                     this.size(tile, new Position(offsetRight, offsetTop), Directions.right + Directions.top);
                     break;
                 case 'se-resize':
@@ -702,6 +709,7 @@ export class DejaTilesLayoutProvider {
                     break;
                 case 'n-resize':
                     bounds.top = Math.max(Math.min(offsetTop, bounds.bottom - sizemin.height), bounds.bottom - sizemax.height);
+                    bounds.bottom = bottom;
                     this.size(tile, new Position(0, offsetTop), Directions.top);
                     break;
                 case 's-resize':
