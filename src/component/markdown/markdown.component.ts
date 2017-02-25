@@ -9,7 +9,7 @@
  *
  */
 
-import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {AfterViewChecked, Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import { Http, ResponseContentType } from "@angular/http";
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser'
 
@@ -24,17 +24,13 @@ const Prism = require('prismjs');
     ],
     templateUrl: './markdown.component.html',
 })
-export class DejaMarkdownComponent implements OnInit{
+export class DejaMarkdownComponent implements OnInit, AfterViewChecked{
 
     @Input()
     set value(value: string) {
         if (value) {
             let tmp = this._converter.makeHtml(value);
             this._html = this.sanitized.bypassSecurityTrustHtml(tmp);
-
-            setTimeout(() => {
-                Prism.highlightAll();
-            }, 1);
         }
     }
 
@@ -45,6 +41,7 @@ export class DejaMarkdownComponent implements OnInit{
         });
     }
 
+    private _initialised = false;
     private _html: SafeHtml;
     private _converter: any;
 
@@ -54,5 +51,13 @@ export class DejaMarkdownComponent implements OnInit{
 
     public ngOnInit() {
 
+    }
+
+    public ngAfterViewChecked() {
+        if (!this._initialised) {
+            Prism.highlightAll(false, () => {
+                this._initialised = true;
+            });
+        }
     }
 }
