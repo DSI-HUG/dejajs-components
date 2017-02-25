@@ -1,0 +1,23 @@
+@import "../../scss/variables/colors";
+
+:host /deep/ {
+    table {
+        border-collapse: collapse;
+
+        tr {
+            &:nth-of-type(odd) {
+                background-color: #ececec;
+            }
+
+            &:first-child {
+                background: $secondary;
+                color: white;
+            }
+
+            th, td {
+                border: 1px solid #ddd;
+                padding: 1rem;
+            }
+        }
+    }
+}
