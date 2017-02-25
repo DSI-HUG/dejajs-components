@@ -1,6 +1,10 @@
 @import "../../scss/variables/colors";
 
-:host /deep/ {
+.markdown-content {
+
+    @import "~prismjs/themes/prism.css";
+    @import "~prismjs/themes/prism-okaidia.css";
+
     table {
         border-collapse: collapse;
 

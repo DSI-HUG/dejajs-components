@@ -9,13 +9,15 @@
  *
  */
 
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import { Http, ResponseContentType } from "@angular/http";
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser'
 
 const Showdown = require('showdown');
+const Prism = require('prismjs');
 
 @Component({
+    encapsulation: ViewEncapsulation.None,
     selector: 'deja-markdown',
     styleUrls: [
         './markdown.component.scss',
@@ -29,7 +31,10 @@ export class DejaMarkdownComponent implements OnInit{
         if (value) {
             let tmp = this._converter.makeHtml(value);
             this._html = this.sanitized.bypassSecurityTrustHtml(tmp);
-            // this._html = '<span>test</span>';
+
+            setTimeout(() => {
+                Prism.highlightAll();
+            }, 1);
         }
     }
 
