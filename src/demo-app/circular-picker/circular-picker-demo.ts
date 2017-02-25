@@ -16,6 +16,7 @@ import { ICircularRange } from "../../component";
     selector: 'deja-circular-picker-demo',
     styleUrls: ['./circular-picker-demo.scss'],
     templateUrl: './circular-picker-demo.html',
+    // template: '<md [value]="text"></md>',
 })
 export class DejaCircularPickerDemo implements OnInit {
     public sm = 3;
@@ -51,6 +52,8 @@ export class DejaCircularPickerDemo implements OnInit {
             min: 100,
         },
     ] as ICircularRange[];
+
+    protected text: string = '# Hello Markdown Binding!';
 
     private myModel = [
         { value: 0, label: "T0" },
