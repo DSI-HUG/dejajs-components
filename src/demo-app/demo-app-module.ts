@@ -15,6 +15,7 @@ import { HttpModule } from "@angular/http";
 import { MaterialModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
+import { MdModule } from 'ng2-md';
 import { GroupingModule } from "../common/core/grouping/index";
 import { DejaSortingModule } from "../common/core/sorting/index";
 import { MaterialColors } from "../common/core/style/index";
@@ -25,6 +26,7 @@ import {
     DejaBackdropModule,
     DejaBoldQueryModule,
     DejaCircularPickerModule,
+    DejaCodeViewerModule,
     DejaColorPickerModule,
     DejaColorSelectorModule,
     DejaDatePickerModule,
@@ -33,6 +35,7 @@ import {
     DejaDragDropModule,
     DejaEditableModule,
     DejaGridModule,
+    DejaMarkdownModule,
     DejaMenuModule,
     DejaMessageBoxModule,
     DejaMonacoEditorModule,
@@ -76,6 +79,8 @@ import { DejaTreeListDemo } from "./tree-list/tree-list-demo";
 /* deja-cli import demo */
 /* The comment above mustn't be removed ! */
 
+import { CodeblockModule } from 'ng-prism';
+
 @NgModule({
     declarations: [
         DejaAccordionDemo,
@@ -107,6 +112,8 @@ import { DejaTreeListDemo } from "./tree-list/tree-list-demo";
     imports: [
         DejaAccordionModule,
         BrowserModule,
+        DejaCodeViewerModule,
+        CodeblockModule,
         DejaCircularPickerModule,
         DejaDateSelectorModule,
         DejaDatePickerModule,
@@ -115,12 +122,14 @@ import { DejaTreeListDemo } from "./tree-list/tree-list-demo";
         HttpModule,
         RouterModule,
         MaterialModule,
+        MdModule,
         DejaSelectModule,
         DejaTreeListModule,
         DejaTilesModule,
         DejaColorSelectorModule,
         DejaColorPickerModule,
         DejaBoldQueryModule,
+        DejaMarkdownModule,
         DejaMenuModule,
         DejaMessageBoxModule,
         DejaEditableModule,

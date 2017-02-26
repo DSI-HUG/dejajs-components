@@ -1,6 +1,8 @@
 @import "../../scss/variables/colors";
 // @import "../../../node_modules/@deja-js/resources/src/scss/fonts/material-icons/material-icons";
 #grid-demo {
+	padding: 0 2rem;
+
 	&.demo-basic {
 		padding: 0;
 	}
@@ -14,7 +16,7 @@
 		width: inherit;
 	}
 	&.demo-card {
-		margin: 0 2rem;
+		//margin: 0 2rem;
 		md-card-content {
 			padding: 2rem;
 		}

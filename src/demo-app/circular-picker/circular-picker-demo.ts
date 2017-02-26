@@ -79,7 +79,9 @@ export class DejaCircularPickerDemo implements OnInit {
         { value: 111, label: "T-12", realValue: -12 },
     ] as ITemplateModel[];
 
-    constructor() { }
+    constructor() {
+
+    }
 
     public ngOnInit() {
 

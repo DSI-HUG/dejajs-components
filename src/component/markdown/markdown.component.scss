@@ -1,0 +1,27 @@
+@import "../../scss/variables/colors";
+
+.markdown-content {
+
+    @import "~prismjs/themes/prism.css";
+    @import "~prismjs/themes/prism-okaidia.css";
+
+    table {
+        border-collapse: collapse;
+
+        tr {
+            &:nth-of-type(odd) {
+                background-color: #ececec;
+            }
+
+            &:first-child {
+                background: $secondary;
+                color: white;
+            }
+
+            th, td {
+                border: 1px solid #ddd;
+                padding: 1rem;
+            }
+        }
+    }
+}
