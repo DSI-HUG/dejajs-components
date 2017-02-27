@@ -37,7 +37,7 @@ dist
 !send-action-test.js
 !bs-config.js
 
-
+src/polyfills.js
 src/**/*.css
 src/**/*.css.map
 

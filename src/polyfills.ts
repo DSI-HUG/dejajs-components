@@ -12,6 +12,8 @@
 import 'bluebird';
 import 'hammerjs';
 import 'moment';
+import 'prismjs';
+import 'showdown';
 import 'reflect-metadata';
 
 // This file includes polyfills needed by Angular and is loaded before the app.

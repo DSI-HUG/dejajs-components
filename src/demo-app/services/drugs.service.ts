@@ -46,7 +46,7 @@ export class DrugsService {
                     return;
                 }
 
-                this.http.get('src/demo-app/services/drugs.json', { responseType: ResponseContentType.Json })
+                this.http.get('https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/demo-app/services/drugs.json', { responseType: ResponseContentType.Json })
                     .map((response: any) => {
                         let datas = response.json();
                         let drugs = datas.data as IDrug[];

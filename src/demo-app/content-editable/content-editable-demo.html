@@ -1,9 +1,21 @@
-<md-card class="demo-card demo-basic">
-	<md-toolbar color="secondary">Content Editable Demo</md-toolbar>
-	<md-card-content>
-		<md-checkbox [(ngModel)]="designMode">Design Mode</md-checkbox>
-	</md-card-content>
-	<md-card-content id="contentEditableContainer">
+<md-tab-group>
+	<md-tab label="OVERVIEW">
+		<md-card class="demo-card demo-basic">
+			TODO
+		</md-card>
+	</md-tab>
+	<md-tab label="API REFERENCE">
+		<md-card class="demo-card demo-basic">
+			<deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/content-editable/readme.md'"></deja-markdown>
+		</md-card>
+	</md-tab>
+	<md-tab label="EXAMPLES">
+		<md-card class="demo-card demo-basic">
+			<md-toolbar color="secondary">Content Editable Demo</md-toolbar>
+			<md-card-content>
+				<md-checkbox [(ngModel)]="designMode">Design Mode</md-checkbox>
+			</md-card-content>
+			<md-card-content id="contentEditableContainer">
 		<span [deja-editable]="designMode" multiline>
 			Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 			<br /> Mauris auctor sit amet odio et aliquet. Curabitur auctor eleifend mattis.
@@ -11,5 +23,7 @@
 			<br /> Nulla dictum nisi eu tortor lacinia porttitor. Donec eu arcu et enim cursus viverra.
 			<br /> Praesent pulvinar dui nisi, a tincidunt arcu finibus sed.
 		</span>
-	</md-card-content>
-</md-card>
+			</md-card-content>
+		</md-card>
+	</md-tab>
+</md-tab-group>

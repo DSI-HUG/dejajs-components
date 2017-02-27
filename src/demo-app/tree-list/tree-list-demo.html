@@ -1,66 +1,84 @@
-<md-card class="treelist-demo demo-card demo-basic business-object">
-	<md-toolbar color="secondary">By passing business object</md-toolbar>
-	<md-card-content>
-		<div class="display-flex">
-			<deja-tree-list multiSelect class="flex" [maxHeight]="400" #treeList min-search-length="0" searchArea sortable multiSelect (selectedChange)="onSelectBusinessObject($event)" nodataholder="Pas de données" placeholder="Liste des pays" [models]="countries"></deja-tree-list>
+<md-tab-group>
+	<md-tab label="OVERVIEW">
+		<md-card class="demo-card demo-basic">
+			TODO
+		</md-card>
+	</md-tab>
+	<md-tab label="API REFERENCE">
+		<md-card class="demo-card demo-basic">
+			<deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/tree-list/readme.md'"></deja-markdown>
+		</md-card>
+	</md-tab>
+	<md-tab label="EXAMPLES">
 
-			<div class="flex json-view">
-				<h4>Selected country model :</h4>
-				<pre>{{selectedCountries | json}}</pre>
-			</div>
-		</div>
-	</md-card-content>
-</md-card>
 
-<md-card class="treelist-demo demo-card demo-basic">
-	<md-toolbar color="secondary">Treelist demo - Cas standards</md-toolbar>
-	<md-card-content class="listContainer">
-		<deja-tree-list #treeList min-search-length="0" searchArea sortable multiSelect [selectedItems]=selectedItems (selectedChange)="onSelectionChanged($event)" nodataholder="Pas de données" placeholder="Liste des pays" [(ngModel)]="countries" (itemDragStart)="onItemDragStart($event)">
-		</deja-tree-list>
-		<deja-tree-list min-search-length="0" expandButton searchArea sortable multiSelect [selectedItems]=selectedItems (selectedChange)="onSelectionChanged($event)" nodataholder="Pas de données" placeholder="Liste des pays, groupés par la première lettre" textField="naqme" [(ngModel)]="groupedCountries" (itemDragStart)="onItemDragStart($event)" #groupedtreelist childrenField="children">
-			<template #headerTemplate>
+		<md-card class="treelist-demo demo-card demo-basic business-object">
+			<md-toolbar color="secondary">By passing business object</md-toolbar>
+			<md-card-content>
+				<div class="display-flex">
+					<deja-tree-list multiSelect class="flex" [maxHeight]="400" #treeList min-search-length="0" searchArea sortable multiSelect (selectedChange)="onSelectBusinessObject($event)" nodataholder="Pas de données" placeholder="Liste des pays" [models]="countries"></deja-tree-list>
+
+					<div class="flex json-view">
+						<h4>Selected country model :</h4>
+						<pre>{{selectedCountries | json}}</pre>
+					</div>
+				</div>
+			</md-card-content>
+		</md-card>
+
+		<md-card class="treelist-demo demo-card demo-basic">
+			<md-toolbar color="secondary">Treelist demo - Cas standards</md-toolbar>
+			<md-card-content class="listContainer">
+				<deja-tree-list #treeList min-search-length="0" searchArea sortable multiSelect [selectedItems]=selectedItems (selectedChange)="onSelectionChanged($event)" nodataholder="Pas de données" placeholder="Liste des pays" [(ngModel)]="countries" (itemDragStart)="onItemDragStart($event)">
+				</deja-tree-list>
+				<deja-tree-list min-search-length="0" expandButton searchArea sortable multiSelect [selectedItems]=selectedItems (selectedChange)="onSelectionChanged($event)" nodataholder="Pas de données" placeholder="Liste des pays, groupés par la première lettre" textField="naqme" [(ngModel)]="groupedCountries" (itemDragStart)="onItemDragStart($event)" #groupedtreelist childrenField="children">
+					<template #headerTemplate>
 				<span id="headerTemplateContent" (click)="groupedtreelist.sort()">
 					<span id="title">
 						This is a header template, click to sort the list.
 					</span>
 					<deja-sort-indicator [sort-infos]="groupedtreelist.sortInfos"></deja-sort-indicator>
 				</span>
-			</template>
-			<template #itemTemplate let-item let-flatindex="flatindex">
-				<span>{{ item.naqme + ' - ' + item.code }}</span>
-			</template>
-			<template #searchSuffixTemplate>
-				<button id="more" md-icon-button (click)="onSuffixClicked()">
-					<md-icon>more_vert</md-icon>
-				</button>
-			</template>
-		</deja-tree-list>
-	</md-card-content>
-	<md-card-content class="dropzone">
-		<div>
-			Selected Items
-			<ul>
-				<li *ngFor="let selectedInfo of selectedInfos">
-					<span>{{ selectedInfo }}</span>
-				</li>
-			</ul>
-		</div>
-		<div>
-			Vous pouvez également dropper des items de la liste dans la zone rouge ci dessous (celle-ci affichera une représentation JSON de l'objet droppé) :
-		</div>
-		<div [deja-droppable]="{dragovercallback: onDivDragOver, dropcallback:onDivDropEvent}" style="border:1px solid red;min-height:150px;"></div>
-	</md-card-content>
-	<md-toolbar color="secondary">Treelist demo - Cas particuliers</md-toolbar>
-	<md-card-content class="listContainer">
-		<deja-tree-list [(ngModel)]="loremList"  [viewportMode]="variableMode" expandButton searchArea sortable placeholder="Tree list avec des tailles de rows différentes"></deja-tree-list>
-		<deja-tree-list [(ngModel)]="noViewportList"  [viewportMode]="noViewportMode" expandButton searchArea sortable placeholder="Tree list sans viewport">
-			<template #itemTemplate let-item let-flatindex="flatindex">
-				<div style="height:189px; width: 100%; display:flex; align-items:center; justify-content:center;">{{ item.displayName }} {{ flatindex }}</div>
-			</template>
-		</deja-tree-list>
-	</md-card-content>
-	<md-card-content class="empty">
-		Empty treelist
-		<deja-tree-list nodataholder="Pas de données"></deja-tree-list>
-	</md-card-content>
-</md-card>
+					</template>
+					<template #itemTemplate let-item let-flatindex="flatindex">
+						<span>{{ item.naqme + ' - ' + item.code }}</span>
+					</template>
+					<template #searchSuffixTemplate>
+						<button id="more" md-icon-button (click)="onSuffixClicked()">
+							<md-icon>more_vert</md-icon>
+						</button>
+					</template>
+				</deja-tree-list>
+			</md-card-content>
+			<md-card-content class="dropzone">
+				<div>
+					Selected Items
+					<ul>
+						<li *ngFor="let selectedInfo of selectedInfos">
+							<span>{{ selectedInfo }}</span>
+						</li>
+					</ul>
+				</div>
+				<div>
+					Vous pouvez également dropper des items de la liste dans la zone rouge ci dessous (celle-ci affichera une représentation JSON de l'objet droppé) :
+				</div>
+				<div [deja-droppable]="{dragovercallback: onDivDragOver, dropcallback:onDivDropEvent}" style="border:1px solid red;min-height:150px;"></div>
+			</md-card-content>
+			<md-toolbar color="secondary">Treelist demo - Cas particuliers</md-toolbar>
+			<md-card-content class="listContainer">
+				<deja-tree-list [(ngModel)]="loremList"  [viewportMode]="variableMode" expandButton searchArea sortable placeholder="Tree list avec des tailles de rows différentes"></deja-tree-list>
+				<deja-tree-list [(ngModel)]="noViewportList"  [viewportMode]="noViewportMode" expandButton searchArea sortable placeholder="Tree list sans viewport">
+					<template #itemTemplate let-item let-flatindex="flatindex">
+						<div style="height:189px; width: 100%; display:flex; align-items:center; justify-content:center;">{{ item.displayName }} {{ flatindex }}</div>
+					</template>
+				</deja-tree-list>
+			</md-card-content>
+			<md-card-content class="empty">
+				Empty treelist
+				<deja-tree-list nodataholder="Pas de données"></deja-tree-list>
+			</md-card-content>
+		</md-card>
+
+
+	</md-tab>
+</md-tab-group>

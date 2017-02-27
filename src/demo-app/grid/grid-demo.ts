@@ -292,7 +292,7 @@ export class GridDemo {
     @ViewChild(DejaGridComponent) private gridComponent: DejaGridComponent;
 
     constructor(private drugsService: DrugsService) {
-        this.drugsBigRecord = this.drugsService.getDrugs(null, 100);
+        this.drugsBigRecord = this.drugsService.getDrugs(null, 10);
         this.drugs = this.drugsService.getDrugs();
         this.groupedDrugs = this.drugsService.getGroupedDrugs();
     }

@@ -25,6 +25,7 @@ import {
     DejaBackdropModule,
     DejaBoldQueryModule,
     DejaCircularPickerModule,
+    DejaCodeViewerModule,
     DejaColorPickerModule,
     DejaColorSelectorModule,
     DejaDatePickerModule,
@@ -33,6 +34,7 @@ import {
     DejaDragDropModule,
     DejaEditableModule,
     DejaGridModule,
+    DejaMarkdownModule,
     DejaMenuModule,
     DejaMessageBoxModule,
     DejaMonacoEditorModule,
@@ -76,6 +78,8 @@ import { DejaTreeListDemo } from "./tree-list/tree-list-demo";
 /* deja-cli import demo */
 /* The comment above mustn't be removed ! */
 
+import { CodeblockModule } from 'ng-prism';
+
 @NgModule({
     declarations: [
         DejaAccordionDemo,
@@ -107,6 +111,8 @@ import { DejaTreeListDemo } from "./tree-list/tree-list-demo";
     imports: [
         DejaAccordionModule,
         BrowserModule,
+        DejaCodeViewerModule,
+        CodeblockModule,
         DejaCircularPickerModule,
         DejaDateSelectorModule,
         DejaDatePickerModule,
@@ -121,6 +127,7 @@ import { DejaTreeListDemo } from "./tree-list/tree-list-demo";
         DejaColorSelectorModule,
         DejaColorPickerModule,
         DejaBoldQueryModule,
+        DejaMarkdownModule,
         DejaMenuModule,
         DejaMessageBoxModule,
         DejaEditableModule,

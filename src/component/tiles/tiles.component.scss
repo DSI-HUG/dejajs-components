@@ -51,39 +51,3 @@
 		transition: none;
 	}
 }
-
-@media screen and (min-width: 1401px) {
-	.tiles {
-		font-size: 100%;
-	}
-}
-
-@media screen and (max-width: 1400px) {
-	.tiles {
-		font-size: 90%;
-	}
-}
-
-@media screen and (max-width: 1200px) {
-	.tiles {
-		font-size: 85%;
-	}
-}
-
-@media screen and (max-width: 768px) {
-	.tiles {
-		font-size: 80%;
-	}
-}
-
-@media screen and (max-width: 640px) {
-	.tiles {
-		font-size: 70%;
-	}
-}
-
-@media screen and (max-width: 320px) {
-	.tiles {
-		font-size: 60%;
-	}
-}
