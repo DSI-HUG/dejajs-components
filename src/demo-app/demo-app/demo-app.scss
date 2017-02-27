@@ -13,6 +13,10 @@ demo-app {
     display: block;
     scroll-behavior: smooth;
     overflow: auto;
+
+    > div {
+        width: 100%;
+    }
 }
 
 body {
@@ -44,7 +48,7 @@ body {
         }
     }
     .demo-content {
-        padding: 32px;
+        margin: 32px;
     }
     md-toolbar {
         md-icon {
