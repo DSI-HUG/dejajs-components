@@ -9,7 +9,7 @@
  *
  */
 
-import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { IItemTree } from '../../common/core';
 import { DejaGridComponent, DejaGridRowsEvent, IDejaDragEvent, IDejaGridColumn } from '../../component';
@@ -21,7 +21,7 @@ import { DrugsService, IDrug } from '../services/drugs.service';
     styleUrls: ['./grid-demo.scss'],
     templateUrl: './grid-demo.html',
 })
-export class GridDemo {
+export class GridDemo implements OnInit {
     protected columns = [
         {
             label: 'transmissiondateformat',
@@ -295,10 +295,15 @@ export class GridDemo {
     @ViewChild(DejaGridComponent) private gridComponent: DejaGridComponent;
 
     constructor(private drugsService: DrugsService) {
+
+    }
+
+    ngOnInit() {
         this.drugsBigRecord = this.drugsService.getDrugs(null, 10).do((drugs) => this.drugCounts += drugs.length);
         this.drugs = this.drugsService.getDrugs();
         this.groupedDrugs = this.drugsService.getGroupedDrugs();
     }
+
 
     protected onSelectionChanged(e: DejaGridRowsEvent) {
         this.selectedItems = e.items;
