@@ -15,7 +15,6 @@ import { HttpModule } from "@angular/http";
 import { MaterialModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
-import { MdModule } from 'ng2-md';
 import { GroupingModule } from "../common/core/grouping/index";
 import { DejaSortingModule } from "../common/core/sorting/index";
 import { MaterialColors } from "../common/core/style/index";
@@ -122,7 +121,6 @@ import { CodeblockModule } from 'ng-prism';
         HttpModule,
         RouterModule,
         MaterialModule,
-        MdModule,
         DejaSelectModule,
         DejaTreeListModule,
         DejaTilesModule,
