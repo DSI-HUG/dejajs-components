@@ -62,39 +62,39 @@
 		</deja-grid>
 	</md-card-content>
 
-	<!--<md-card-content class="ddContainer">-->
-		<!--<div>-->
-			<!--Selected Items-->
-			<!--<ul>-->
-				<!--<li *ngFor="let item of selectedItems">-->
-					<!--<span>{{ item.groupName || item.suGroupName || item.name + ' - ' + item.type }}</span>-->
-				<!--</li>-->
-			<!--</ul>-->
-		<!--</div>-->
-		<!--<div>-->
-			<!--Vous pouvez également dropper des items de la liste dans la zone rouge ci dessous (celle-ci affichera une représentation JSON de l'objet droppé) :-->
-		<!--</div>-->
-		<!--<div [deja-droppable]="{dragovercallback: onDivDragOver, dropcallback:onDivDropEvent}" style="border:1px solid red;min-height:150px;"></div>-->
-	<!--</md-card-content>-->
-	<!--<md-toolbar color="secondary">Grille avec taille des colonnes en pixels et en pourcents</md-toolbar>-->
-	<!--<md-card-content class="listContainer">-->
-		<!--&lt;!&ndash; &ndash;&gt;-->
-		<!--<deja-grid #cgrid searchArea groupArea sortable columnsSizable multiSelect [(ngModel)]="drugs" [columns]="percentColumns" (selectedChange)="onSelectionChanged2($event)" nodataholder="Pas de données"-->
-		           <!--placeholder="Filtrer la liste par le nom" searchField="receivedate" (itemDragStart)="onItemDragStart($event)">-->
-			<!--<template #rowTemplate let-row>-->
-				<!--<deja-grid-row [row]="row" [columnLayout]="cgrid.columnLayout" [cellTemplateExternal]="cgrid.cellTemplate" [currentColumn]="cgrid.currentColumn">-->
-					<!--<template #cellTemplate let-row let-column="column" let-current="isCurrentColumn">-->
-						<!--<span *ngIf="column.name!=='transmissiondateformat'" class="cell" [class.current]="current">{{ row[column.name] }}</span>-->
-						<!--<span *ngIf="column.name==='transmissiondateformat'" class="cell" [class.current]="current">{{ row[column.name] + 'apk'}}</span>-->
-					<!--</template>-->
-				<!--</deja-grid-row>-->
-			<!--</template>-->
-		<!--</deja-grid>-->
-	<!--</md-card-content>-->
-	<!--<md-toolbar color="secondary">Grille avec taille fixe des colonnes</md-toolbar>-->
-	<!--<md-card-content class="listContainer">-->
-		<!--<deja-grid #fgrid searchArea groupArea sortable columnsSizable multiSelect [(ngModel)]="groupedDrugs" [columns]="responsiveColumns" (selectedChange)="onSelectionChanged3($event)" nodataholder="Pas de données"-->
-		           <!--placeholder="Filtrer la liste par le nom" searchField="receivedate" (itemDragStart)="onItemDragStart($event)">-->
-		<!--</deja-grid>-->
-	<!--</md-card-content>-->
+	<md-card-content class="ddContainer">
+		<div>
+			Selected Items
+			<ul>
+				<li *ngFor="let item of selectedItems">
+					<span>{{ item.groupName || item.suGroupName || item.name + ' - ' + item.type }}</span>
+				</li>
+			</ul>
+		</div>
+		<div>
+			Vous pouvez également dropper des items de la liste dans la zone rouge ci dessous (celle-ci affichera une représentation JSON de l'objet droppé) :
+		</div>
+		<div [deja-droppable]="{dragovercallback: onDivDragOver, dropcallback:onDivDropEvent}" style="border:1px solid red;min-height:150px;"></div>
+	</md-card-content>
+	<md-toolbar color="secondary">Grille avec taille des colonnes en pixels et en pourcents</md-toolbar>
+	<md-card-content class="listContainer">
+		<!-- -->
+		<deja-grid #cgrid searchArea groupArea sortable columnsSizable multiSelect [(ngModel)]="drugs" [columns]="percentColumns" (selectedChange)="onSelectionChanged2($event)" nodataholder="Pas de données"
+		           placeholder="Filtrer la liste par le nom" searchField="receivedate" (itemDragStart)="onItemDragStart($event)">
+			<template #rowTemplate let-row>
+				<deja-grid-row [row]="row" [columnLayout]="cgrid.columnLayout" [cellTemplateExternal]="cgrid.cellTemplate" [currentColumn]="cgrid.currentColumn">
+					<template #cellTemplate let-row let-column="column" let-current="isCurrentColumn">
+						<span *ngIf="column.name!=='transmissiondateformat'" class="cell" [class.current]="current">{{ row[column.name] }}</span>
+						<span *ngIf="column.name==='transmissiondateformat'" class="cell" [class.current]="current">{{ row[column.name] + 'apk'}}</span>
+					</template>
+				</deja-grid-row>
+			</template>
+		</deja-grid>
+	</md-card-content>
+	<md-toolbar color="secondary">Grille avec taille fixe des colonnes</md-toolbar>
+	<md-card-content class="listContainer">
+		<deja-grid #fgrid searchArea groupArea sortable columnsSizable multiSelect [(ngModel)]="groupedDrugs" [columns]="responsiveColumns" (selectedChange)="onSelectionChanged3($event)" nodataholder="Pas de données"
+		           placeholder="Filtrer la liste par le nom" searchField="receivedate" (itemDragStart)="onItemDragStart($event)">
+		</deja-grid>
+	</md-card-content>
 </md-card>

@@ -9,14 +9,9 @@ body {
 }
 
 demo-app {
-    height: 100%;
-    display: block;
-    scroll-behavior: smooth;
-    overflow: auto;
-
-    > div {
-        width: 100%;
-    }
+    width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 body {
