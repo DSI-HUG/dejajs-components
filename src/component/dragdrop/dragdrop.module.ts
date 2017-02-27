@@ -13,10 +13,11 @@ import { NgModule } from '@angular/core';
 
 import { DejaDraggableDirective } from './draggable.directive';
 import { DejaDroppableDirective } from './droppable.directive';
+import { DejaMouseDraggableDirective } from './mouse-draggable.directive';
 
 @NgModule({
-    declarations: [DejaDraggableDirective, DejaDroppableDirective],
-    exports: [DejaDraggableDirective, DejaDroppableDirective],
+    declarations: [DejaDraggableDirective, DejaDroppableDirective, DejaMouseDraggableDirective],
+    exports: [DejaDraggableDirective, DejaDroppableDirective, DejaMouseDraggableDirective],
     imports: [],
 })
 export class DejaDragDropModule {}

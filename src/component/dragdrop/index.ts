@@ -11,4 +11,5 @@
 
 export * from './draggable.directive';
 export * from './droppable.directive';
+export * from './mouse-draggable.directive';
 export * from './dragdrop.module';

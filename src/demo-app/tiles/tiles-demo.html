@@ -29,7 +29,7 @@
     <md-card-content>
         <deja-tiles #tiles1 id="tiles1" [models]="tiles1$ | async" (contentAdded)="onContentAdded($event)" (contentRemoved)="onContentRemoved($event)" [maxwidth]="'100%'" [tileminwidth]="'5%'" [tileminheight]="'3%'" [tilemaxheight]="'50%'" [tilemaxwidth]="'50%'">
             <template #tileTemplate let-tile let-pressed="pressed" let-selected="selected">
-                <span [deja-draggable]="getDragContext(tile)" class="tile-content unselectable" [style.background-color]="tile.templateModel.color">{{ tile.templateModel.country.naqme }} ({{ id }})
+                <span class="tile-content unselectable" [style.background-color]="tile.templateModel.color">{{ tile.templateModel.country.naqme }} ({{ id }})
 					<span id="selected">Selected</span>
                 <span id="pressed">Pressed</span>
                 </span>
@@ -39,7 +39,7 @@
     <md-card-content>
         <deja-tiles #tiles2 id="tiles2" [models]="tiles2$ | async" (contentAdded)="onContentAdded($event)" (contentRemoved)="onContentRemoved($event)" canDelete canCopy canCut canPaste [designMode]="designMode" [maxwidth]="'100%'" [tileminwidth]="'5%'" [tileminheight]="'3%'" [tilemaxheight]="'50%'" [tilemaxwidth]="'50%'">
             <template #tileTemplate let-tile let-pressed="pressed" let-selected="selected">
-                <span [deja-draggable]="getDragContext(tile)" class="tile-content unselectable" [style.background-color]="tile.templateModel.color">{{ tile.templateModel.country.naqme }} ({{ id }})
+                <span class="tile-content unselectable" [style.background-color]="tile.templateModel.color">{{ tile.templateModel.country.naqme }} ({{ id }})
 					<span id="selected">Selected</span>
                 <span id="pressed">Pressed</span>
                 </span>
