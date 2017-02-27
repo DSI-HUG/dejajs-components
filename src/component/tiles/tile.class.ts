@@ -22,7 +22,12 @@ export class DejaTile implements IDejaTile {
     public pressed$ = new BehaviorSubject<boolean>(false);
     public selected$ = new BehaviorSubject<boolean>(false);
     public expanded$ = new BehaviorSubject<boolean>(false);
+    public hidden$ = new BehaviorSubject<boolean>(false);
+    public pending$ = new BehaviorSubject<boolean>(false);
+    public deleted$ = new Subject();
+    public close$ = new Subject();
     public pixelBounds$ = new Subject<Rect>();
+    public isTemporary = false;
 
     private _id: string;
     private _isCutted = false;
@@ -31,6 +36,8 @@ export class DejaTile implements IDejaTile {
     private _isPressed = false;
     private _isSelected = false;
     private _isExpanded = false;
+    private _isHidden = false;
+    private _isPending = false;
     private _pixelBounds: Rect;
     private _percentBounds: Rect;
     private model: IDejaTile;
@@ -38,7 +45,6 @@ export class DejaTile implements IDejaTile {
     constructor(private tile: IDejaTile) {
         this.model = tile;
         this._id = tile.id;
-        this.isSelected = tile.selected;
         this._percentBounds = tile.bounds;
         if (!this._id) {
             this._id = '#' + DejaTile.currentId++;
@@ -122,6 +128,28 @@ export class DejaTile implements IDejaTile {
         return this._isExpanded;
     }
 
+    public set isHidden(value: boolean) {
+        if (this._isHidden !== value) {
+            this._isHidden = value;
+            this.hidden$.next(value);
+        }
+    }
+
+    public get isHidden() {
+        return this._isHidden;
+    }
+
+    public set isPending(value: boolean) {
+        if (this._isPending !== value) {
+            this._isPending = value;
+            this.pending$.next(value);
+        }
+    }
+
+    public get isPending() {
+        return this._isPending;
+    }
+
     public get id() {
         return this._id;
     }
@@ -130,24 +158,12 @@ export class DejaTile implements IDejaTile {
         return this.tile.type;
     }
 
-    public get color() {
-        return this.tile.color;
-    }
-
     public set percentBounds(bounds: Rect) {
         this._percentBounds = bounds;
     }
 
     public get percentBounds() {
         return this._percentBounds;
-    }
-
-    public get expanded() {
-        return this.tile.expanded;
-    }
-
-    public get selected() {
-        return this.tile.selected;
     }
 
     public get templateModel() {
@@ -160,5 +176,26 @@ export class DejaTile implements IDejaTile {
         } else {
             return this.model === tile;
         }
+    }
+
+    public clone() {
+        return new DejaTile(this.toTileModel());
+    }
+
+    public delete() {
+        if (this.close$ && this.close$.observers) {
+            this.close$.observers.forEach((observer) => observer.complete());
+        }
+
+        this.deleted$.next();
+    }
+
+    public toTileModel() {
+        return {
+            id: this.id,
+            type: this.type,
+            bounds: this.percentBounds,
+            templateModel: this.templateModel,
+        } as IDejaTile;
     }
 }

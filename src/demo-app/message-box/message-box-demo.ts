@@ -59,14 +59,13 @@ export class MessageBoxDemo implements OnInit {
         this.messages = Observable
             .interval(2000)
             .map((x: number) => {
-                if(x % 2 === 0 ) {
-                    return new Message('Server push information', 'info'); 
+                if (x % 2 === 0) {
+                    return new Message('Server push information', 'info');
                 } else {
-                    return new Message('Server push error', 'danger'); 
+                    return new Message('Server push error', 'danger');
                 }
             })
             .scan((acc, curr) => [...acc, curr], [])
             .defaultIfEmpty([]);
     }
-
 }

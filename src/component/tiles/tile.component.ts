@@ -22,7 +22,8 @@ import { DejaTile } from './tile.class';
 })
 export class DejaTileComponent implements OnDestroy {
     @Input() public template;
-
+    @Input() public designMode;
+    
     public element: HTMLElement;
 
     private _tile: DejaTile;
@@ -30,7 +31,7 @@ export class DejaTileComponent implements OnDestroy {
 
     constructor(el: ElementRef) {
         this.element = el.nativeElement as HTMLElement;
-        this.element.setAttribute('hidden', '');
+        this.element.setAttribute('hidden', '0');
     }
 
     @Input()
@@ -41,6 +42,7 @@ export class DejaTileComponent implements OnDestroy {
             this.subscriptions.push(Observable.from(tile.pixelBounds$)
                 .first()
                 .delay(1)
+                .filter(() => !this._tile.isHidden)
                 .subscribe(() => {
                     this.element.removeAttribute('hidden');
                 }));
@@ -106,6 +108,33 @@ export class DejaTileComponent implements OnDestroy {
                         this.element.removeAttribute('expanded');
                     }
                 }));
+
+            this.subscriptions.push(Observable.from(tile.deleted$)
+                .subscribe(() => {
+                    this.element.remove();
+                }));
+
+            const tooogleHide$ = Observable.from(tile.hidden$)
+                .do((value) => {
+                    if (value) {
+                        this.element.setAttribute('hidden', '1');
+                    } else {
+                        this.element.setAttribute('hidden', '2');
+                    }
+                });
+
+            // Hide
+            this.subscriptions.push(tooogleHide$
+                .filter((value) => value)
+                .delay(1000)
+                .subscribe(() => this.element.setAttribute('hidden', '0')));
+
+            // Show
+            this.subscriptions.push(tooogleHide$
+                .filter((value) => !value)
+                .delay(1)
+                .subscribe(() => this.element.removeAttribute('hidden')));
+
         } else {
             this.subscriptions.forEach((subscription) => subscription.unsubscribe());
             this.subscriptions = [];

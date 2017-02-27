@@ -1,9 +1,10 @@
 :host {
     display: block;
     position: absolute;
-    transition-property: left, top;
+    transition-property: left, top, opacity;
     transition-duration: .5s;
     transition-timing-function: ease;
+    opacity: 1;
     &[expanded] {
         transition-property: height;
     }
@@ -19,7 +20,30 @@
         user-select: none;
         transition: none;
     }
-    &[hidden] {
+    &[hidden="0"] {
         visibility: hidden;
+    }
+    &[hidden="1"] {
+        opacity: 0;
+        transition: 1s ease-in-out opacity;
+    }
+    &[hidden="2"] {
+        visibility: visible;
+        opacity: 0;
+        transition: none;
+    }
+    deja-tile-group {
+        height: 100%;
+        width: 100%;
+    }
+    md-progress-spinner {
+        position: absolute;
+        z-index: 1;
+        right: 0.5rem;
+        bottom: 0.5rem;
+        width: 20%;
+        height: 20%;
+        max-width: 4rem;
+        max-height: 4rem;
     }
 }

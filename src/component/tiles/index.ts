@@ -16,5 +16,4 @@ export * from './tile.component';
 export * from './tile-position.directive';
 export * from './tiles.event';
 export * from './tiles.component';
-export * from './tile.event';
 export * from './tiles.module';

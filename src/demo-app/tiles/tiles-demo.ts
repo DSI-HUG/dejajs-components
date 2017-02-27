@@ -12,9 +12,9 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Rect } from '../../common/core/graphics/index';
 import { MaterialColors } from '../../common/core/style/index';
-import { IDejaDragEvent, IDejaTile, IDejaTileEvent } from '../../component';
+import { DejaTile, IDejaTilesAddEvent, IDejaDragEvent, IDejaTile, IDejaTilesRemoveEvent } from '../../component';
 import { CountriesService, ICountry } from '../services/countries.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable, Subject } from 'rxjs/Rx';
 
 @Component({
     selector: 'deja-tiles-demo',
@@ -22,11 +22,17 @@ import { Observable } from 'rxjs/Observable';
     templateUrl: './tiles-demo.html',
     encapsulation: ViewEncapsulation.None,
 })
-export class TilesDemo implements OnInit {
+export class TilesDemoComponent implements OnInit {
     protected designMode = false;
-    private tiles: Observable<IDejaTile[]>;
+    private messages$: Observable<IMessage[]>;
+    private message$ = new Subject<IMessage>();
+    private tiles1$: Observable<IDejaTile[]>;
+    private tiles2$: Observable<IDejaTile[]>;
 
     constructor(private countriesService: CountriesService, private materialColors: MaterialColors) {
+        this.messages$ = Observable.from(this.message$)
+            .scan((acc, curr) => [...acc, curr], [])
+            .defaultIfEmpty([]);
     }
 
     protected get debug() {
@@ -36,15 +42,21 @@ export class TilesDemo implements OnInit {
     }
 
     public ngOnInit() {
-        let x = 0;
-        let y = 0;
+        let x1 = 0;
+        let y1 = 0;
+        let x2 = 0;
+        let y2 = 0;
         const colors = this.materialColors.getPalet('700');
         let colorIndex = 0;
-        this.tiles = this.countriesService.getCountries()
-            .switchMap((countries) => countries)
+
+        const tiles$ = this.countriesService.getCountries()
+            .switchMap((countries) => countries);
+
+        this.tiles1$ = tiles$
+            .take(12)
             .map((country) => {
                 const tile = {
-                    bounds: new Rect(x, y, 15, 15),
+                    bounds: new Rect(x1, y1, 15, 15),
                     id: country.code,
                     templateModel: {
                         color: colors[colorIndex].toHex(),
@@ -56,10 +68,38 @@ export class TilesDemo implements OnInit {
                     colorIndex = 0;
                 }
 
-                x += 15;
-                if (x + 15 > 100) {
-                    x = 0;
-                    y += 15;
+                x1 += 15;
+                if (x1 + 15 > 100) {
+                    x1 = 0;
+                    y1 += 15;
+                }
+
+                return tile;
+            })
+            .reduce((acc, curr) => {
+                acc.push(curr);
+                return acc;
+            }, []);
+
+        this.tiles2$ = tiles$
+            .map((country) => {
+                const tile = {
+                    bounds: new Rect(x2, y2, 15, 15),
+                    id: country.code,
+                    templateModel: {
+                        color: colors[colorIndex].toHex(),
+                        country: country,
+                    } as ITemplateModel,
+                } as IDejaTile;
+
+                if (++colorIndex >= colors.length) {
+                    colorIndex = 0;
+                }
+
+                x2 += 15;
+                if (x2 + 15 > 100) {
+                    x2 = 0;
+                    y2 += 15;
                 }
 
                 return tile;
@@ -70,14 +110,14 @@ export class TilesDemo implements OnInit {
             }, []);
     }
 
-    protected getDragContext(tile: IDejaTile) {
+    protected getDragContext(tile: DejaTile) {
         return {
             dragendcallback: () => {
 
             },
             dragstartcallback: (event: IDejaDragEvent) => {
                 event.dragObject = tile;
-                event.dragInfo['button'] = tile;
+                event.dragInfo['IDejaTile'] = tile.toTileModel();
             },
         };
     }
@@ -85,13 +125,13 @@ export class TilesDemo implements OnInit {
     protected getDropContext() {
         return {
             dragovercallback: (event: IDejaDragEvent) => {
-                if (event.dragInfo.hasOwnProperty('button')) {
+                if (event.dragInfo.hasOwnProperty('IDejaTile')) {
                     event.preventDefault();
                 }
             },
             dropcallback: (event: IDejaDragEvent) => {
-                if (event.dragInfo.hasOwnProperty('button')) {
-                    const model = event.dragInfo['button'] as ITemplateModel;
+                if (event.dragInfo.hasOwnProperty('IDejaTile')) {
+                    const model = event.dragInfo['IDejaTile'].templateModel as ITemplateModel;
                     (event.target as HTMLElement).innerText = `The dropped country is ${model.country.naqme} - the code is: ${model.country.code}`;
                     event.preventDefault();
                 }
@@ -99,17 +139,48 @@ export class TilesDemo implements OnInit {
         };
     }
 
-    protected onTitleEditClick(e: IDejaTileEvent) {
-        if (e.tile.type === 'group') {
-            /*this.groupNamePrompt.title = 'Editer un groupe';
-             this.groupNamePrompt.value = e.tile.templateModel.title;
-             this.groupNamePrompt.visible = true;
-             this.groupNamePrompt.tile = e.tile;*/
-        }
+    protected onContentAdded(event: IDejaTilesAddEvent) {
+        this.message$.next({
+            title: 'Tiles added',
+            content: `${event.added.length} tiles added.`,
+            type: 'warn',
+            gate: true,
+            cancel: function (value: boolean) {
+                this.gate = false;
+                event.cancel$.next(value);
+            },
+        } as IMessage);
+
+        // Wait for message box validating the added tiles
+        event.preventDefault();
+    }
+
+    protected onContentRemoved(event: IDejaTilesRemoveEvent) {
+        this.message$.next({
+            title: 'Tiles deleted',
+            content: `${event.removed.length} tiles deleted.`,
+            type: 'warn',
+            gate: true,
+            cancel: function (value: boolean) {
+                this.gate = false;
+                event.cancel$.next(value);
+            },
+        } as IMessage);
+
+        // Wait for message box answer before destruction of the tiles
+        event.preventDefault();
     }
 }
 
 interface ITemplateModel {
     color: string;
     country: ICountry;
+}
+
+interface IMessage {
+    content: string;
+    title: string;
+    type: string;
+    gate: boolean;
+    cancel: () => {};
 }

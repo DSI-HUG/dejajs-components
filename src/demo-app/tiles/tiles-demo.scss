@@ -24,6 +24,12 @@ deja-tiles-demo {
             }
         }
     }
+    #actions {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
     #droparea {
         height: 5rem;
         background-color: rgb(245, 124, 0);
@@ -45,6 +51,36 @@ deja-tiles-demo {
             #pressed {
                 display: block;
             }
+        }
+    }
+    @media screen and (min-width: 1401px) {
+        deja-tiles {
+            font-size: 100%;
+        }
+    }
+    @media screen and (max-width: 1400px) {
+        deja-tiles {
+            font-size: 90%;
+        }
+    }
+    @media screen and (max-width: 1200px) {
+        deja-tiles {
+            font-size: 85%;
+        }
+    }
+    @media screen and (max-width: 768px) {
+        deja-tiles {
+            font-size: 80%;
+        }
+    }
+    @media screen and (max-width: 640px) {
+        deja-tiles {
+            font-size: 70%;
+        }
+    }
+    @media screen and (max-width: 320px) {
+        deja-tiles {
+            font-size: 60%;
         }
     }
 }

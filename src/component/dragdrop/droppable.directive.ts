@@ -11,9 +11,8 @@
 
 import { Directive, ElementRef, Input } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
-import { DragDropService} from './dragdrop.service';
-import { IDejaDragEvent} from './index';
-import { IDejaDragInfos } from './index';
+import { IDejaDragEvent } from './index';
+import { ClipboardService } from '../../common/core/clipboard/clipboard.service';
 
 @Directive({
     host: {
@@ -32,6 +31,7 @@ export class DejaDroppableDirective {
         this._allEvents = coerceBooleanProperty(value);
     }
 
+    private draginfokey = 'draginfos';
     private objectKey = 'object';
     private droppedKey = 'dropped';
     private elementKey = 'element';
@@ -39,7 +39,9 @@ export class DejaDroppableDirective {
     private lastAccept: boolean;
     private _allEvents = false;
 
-    constructor(private elementRef: ElementRef, private dragDropService: DragDropService) { }
+    constructor(private elementRef: ElementRef, private clipboardService: ClipboardService) {
+
+    }
 
     protected onDragOver(event: Event) {
         if (!this._allEvents && this.lastTarget && this.lastTarget === event.target) {
@@ -50,8 +52,8 @@ export class DejaDroppableDirective {
         }
 
         if (this.context && this.context.dragovercallback) {
-            let dragInfos = this.dragDropService.dragInfos as IDejaDragInfos;
-            let e = event as IDejaDropEvent;
+            const dragInfos = this.clipboardService.get(this.draginfokey) as { [key: string]: any };
+            const e = event as IDejaDropEvent;
             e.dragInfo = dragInfos;
             e.dragObject = dragInfos[this.objectKey];
             e.dragElement = this.elementRef.nativeElement;
@@ -68,8 +70,8 @@ export class DejaDroppableDirective {
 
     protected onDrop(event) {
         if (this.context && this.context.dropcallback) {
-            let dragInfos = this.dragDropService.dragInfos as IDejaDragInfos;
-            let e = event as IDejaDropEvent;
+            const dragInfos = this.clipboardService.get(this.draginfokey) as { [key: string]: any };
+            const e = event as IDejaDropEvent;
             e.dragInfo = dragInfos;
             e.dragObject = dragInfos[this.objectKey];
             e.dragElement = this.elementRef.nativeElement;
@@ -85,12 +87,12 @@ export class DejaDroppableDirective {
 
     protected onDragLeave(event) {
         if (this.context && this.context.dragleavecallback) {
-            let element = this.elementRef.nativeElement as HTMLElement;
-            let bounds = element.getBoundingClientRect();
-            let inside = event.x >= bounds.left && event.x <= bounds.right && event.y >= bounds.top && event.y <= bounds.bottom;
+            const element = this.elementRef.nativeElement as HTMLElement;
+            const bounds = element.getBoundingClientRect();
+            const inside = event.x >= bounds.left && event.x <= bounds.right && event.y >= bounds.top && event.y <= bounds.bottom;
             if (!inside) {
-                let dragInfos = this.dragDropService.dragInfos as IDejaDragInfos;
-                let e = event as IDejaDropEvent;
+                const dragInfos = this.clipboardService.get(this.draginfokey) as { [key: string]: any };
+                const e = event as IDejaDropEvent;
                 e.dragInfo = dragInfos;
                 e.dragObject = dragInfos[this.objectKey];
                 e.dragElement = this.elementRef.nativeElement;

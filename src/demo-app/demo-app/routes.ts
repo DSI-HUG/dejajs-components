@@ -16,7 +16,7 @@ import { DejaCircularPickerDemo } from '../circular-picker/circular-picker-demo'
 import { DejaColorSelectorDemo } from '../color-selector/color-selector-demo';
 import { DejaContentEditableDemo } from '../content-editable/content-editable-demo';
 import { DejaDatePickerDemo } from '../date-picker/date-picker-demo';
-import { GlobalEventsDemo } from "../global-events/global-events-demo";
+import { GlobalEventsDemo } from '../global-events/global-events-demo';
 import { GridDemo } from '../grid/grid-demo';
 import { MenuDemo } from '../menu/menu-demo';
 import { MessageBoxDemo } from '../message-box/message-box-demo';
@@ -28,7 +28,7 @@ import { SelectDemo } from '../select/select-demo';
 import { DejaSnackbarDemo } from '../snackbar/snackbar-demo';
 import { DejaSplitterDemo } from '../splitter/splitter-demo';
 import { TextAreaDemo } from '../textarea/textarea-demo';
-import { TilesDemo } from '../tiles/tiles-demo';
+import { TilesDemoComponent } from '../tiles/tiles-demo';
 import { DejaTreeListDemo } from '../tree-list/tree-list-demo';
 import { Home } from './home-app';
 /* deja-cli import demo */
@@ -47,7 +47,7 @@ const routes: Routes = [
     { component: MessageBoxDemo, path: 'message-box' },
     { component: SelectDemo, path: 'select' },
     { component: TextAreaDemo, path: 'textarea' },
-    { component: TilesDemo, path: 'tiles' },
+    { component: TilesDemoComponent, path: 'tiles' },
     { component: DejaTreeListDemo, path: 'tree-list' },
     { component: ProgressCircleDemo, path: 'progress-circle' },
     {

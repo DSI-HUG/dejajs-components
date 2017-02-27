@@ -1,6 +1,6 @@
 Usage:
 
-<deja-tiles [(ngModel)]="tiles" (onTitleEditClick)="onTitleEditClick($event)" [designMode]="designMode" maxwidth="100%" tileminwidth="5%" tileminheight="3%" tilemaxheight="50%"  tilemaxwidth="50%" (tilesLayoutChange)="tilesLayoutChange($event);">
+<deja-tiles [(ngModel)]="tiles" [designMode]="designMode" maxwidth="100%" tileminwidth="5%" tileminheight="3%" tilemaxheight="50%"  tilemaxwidth="50%" (tilesLayoutChange)="tilesLayoutChange($event);">
     <template #tileTemplate let-tile>
         // Here the component to instanciate inside each tiles
     </template>

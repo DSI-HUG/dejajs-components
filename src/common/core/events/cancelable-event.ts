@@ -9,8 +9,8 @@
  *
  */
 
-import { IDejaTile } from './';
+import { Subject } from 'rxjs/Rx';
 
-export interface IDejaTileEvent extends Event {
-  tile: IDejaTile;
+export class DejaCancelableEvent extends Event {
+    public cancel$ = new Subject<boolean>();
 }

@@ -14,9 +14,6 @@ import { Rect } from '../../common/core/graphics';
 export interface IDejaTile {
   id?: string;
   type?: string;
-  color?: string;
   bounds?: Rect;
-  expanded?: boolean;
-  selected?: boolean;
   templateModel?: any;
 }

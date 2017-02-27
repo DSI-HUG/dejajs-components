@@ -11,7 +11,6 @@
 
 import { NgModule } from '@angular/core';
 
-import { DragDropService } from './dragdrop.service';
 import { DejaDraggableDirective } from './draggable.directive';
 import { DejaDroppableDirective } from './droppable.directive';
 
@@ -19,6 +18,5 @@ import { DejaDroppableDirective } from './droppable.directive';
     declarations: [DejaDraggableDirective, DejaDroppableDirective],
     exports: [DejaDraggableDirective, DejaDroppableDirective],
     imports: [],
-    providers: [DragDropService],
 })
 export class DejaDragDropModule {}
