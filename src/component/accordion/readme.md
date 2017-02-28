@@ -24,6 +24,3 @@ Ensuite utiliser le composant comme ceci dans votre template :
 ```html
 <deja-accordion-header secondary></deja-accordion-header>
 ```
-
-### Exemple
-Un exemple d'utilisation est pr&eacute;sent dans l'application test de **deja-angular2**.

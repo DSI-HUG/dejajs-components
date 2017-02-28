@@ -123,6 +123,3 @@ Le composant splitter permet de découper horizontalement ou verticalement, un c
         <td>Pourcentage de la zone. Si null, chaque <split-area> aura la meme taille.</td>
     </tr>
 </table>
-
-### Demonstration
-La démonstration est disponible dans l'application de démo.

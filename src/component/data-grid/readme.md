@@ -347,6 +347,3 @@ Composant pour afficher des données dans un tableau, avec une fonction de reche
 <template #searchSuffixTemplate>
 </template>
 ```
-
-### Exemple
-Un exemple d'utilisation est présent dans l'application test de **deja-angular2**.
