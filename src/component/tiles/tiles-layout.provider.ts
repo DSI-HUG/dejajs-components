@@ -101,7 +101,7 @@ export class DejaTilesLayoutProvider {
     private currentTile: DejaTile;
     private hundredPercentWith: number;
     private dragTarget: Rect;
-    private draginfokey = 'draginfos';
+    // private draginfokey = 'draginfos';
 
     constructor(private clipboardService: ClipboardService) {
         Observable.from(this.refreshTiles$)
@@ -283,9 +283,10 @@ export class DejaTilesLayoutProvider {
                 const mousemove$ = Observable.fromEvent(this._container, 'mousemove')
                     .filter((event: MouseEvent) => event.buttons === 1);
 
-                const dragover$ = Observable.fromEvent(this._container, 'dragover');
+                // const dragover$ = Observable.fromEvent(this._container, 'dragover');
 
-                Observable.merge(mousemove$, dragover$)
+                // Observable.merge(mousemove$, dragover$)
+                mousemove$
                     .takeUntil(drop$)
                     .subscribe((event: MouseEvent) => {
                         const containerBounds = this._container.getBoundingClientRect();
@@ -530,30 +531,30 @@ export class DejaTilesLayoutProvider {
                 }
             });
 
-        // Drag and drop from outside provider
-        Observable.fromEvent(this._container, 'dragover')
-            .filter(() => this._designMode)
-            .subscribe((event: DragEvent) => {
-                const dragInfos = this.clipboardService.get(this.draginfokey) as { [key: string]: any };
-                if (dragInfos.hasOwnProperty('IDejaTile')) {
-                    const tile = dragInfos['IDejaTile'] as IDejaTile;
-                    const containerBounds = this._container.getBoundingClientRect();
-                    const x = event.pageX - containerBounds.left;
-                    const y = event.pageY - containerBounds.top;
+        // // Drag and drop from outside provider
+        // Observable.fromEvent(this._container, 'dragover')
+        //     .filter(() => this._designMode)
+        //     .subscribe((event: DragEvent) => {
+        //         const dragInfos = this.clipboardService.get(this.draginfokey) as { [key: string]: any };
+        //         if (dragInfos.hasOwnProperty('IDejaTile')) {
+        //             const tile = dragInfos['IDejaTile'] as IDejaTile;
+        //             const containerBounds = this._container.getBoundingClientRect();
+        //             const x = event.pageX - containerBounds.left;
+        //             const y = event.pageY - containerBounds.top;
 
-                    // Create a temporary tile for drag and drop
-                    tile.id = '#temp';
-                    const tempTile = new DejaTile(tile);
-                    tempTile.isTemporary = true;
+        //             // Create a temporary tile for drag and drop
+        //             tile.id = '#temp';
+        //             const tempTile = new DejaTile(tile);
+        //             tempTile.isTemporary = true;
 
-                    this.dragDropInfos$.next({
-                        enabled: false,
-                        startX: x,
-                        startY: y,
-                        tiles: [tempTile],
-                    } as IDragDropInfos);
-                }
-            });
+        //             this.dragDropInfos$.next({
+        //                 enabled: false,
+        //                 startX: x,
+        //                 startY: y,
+        //                 tiles: [tempTile],
+        //             } as IDragDropInfos);
+        //         }
+        //     });
 
         const leave$ = Observable.fromEvent(container, 'mouseleave');
         const mouseUp$ = Observable.fromEvent(container.ownerDocument, 'mouseup');

@@ -9,6 +9,7 @@
  *
  */
 
-export * from './draggable.directive';
-export * from './droppable.directive';
-export * from './dragdrop.module';
+export * from './mouse-dragdrop.service';
+export * from './mouse-draggable.directive';
+export * from './mouse-dragdrop-cursor.component';
+export * from './mouse-dragdrop.module';

@@ -251,8 +251,8 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
     }
 
     protected cancelDragEvent() {
-        // Disallow HTML drag and drop in design mode
-        return !this.layoutProvider.isDesignMode;
+        // Disallow HTML drag and drop
+        return false;
     }
 
     protected onModelChange(tiles: IDejaTile[]) {

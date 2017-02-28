@@ -1,0 +1,15 @@
+@import "../../scss/variables/colors";
+deja-mouse-dragdrop-cursor {
+    position: fixed;
+    z-index: 10000;
+    background-color: rgba(0, 0, 0, 0.75);
+    user-select: none;
+    #block {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        height: 3rem;
+        width: 3rem;
+        color: #fff;
+    }
+}

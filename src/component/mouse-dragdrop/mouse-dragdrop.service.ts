@@ -9,14 +9,21 @@
  *
  */
 
-import { Injectable } from '@angular/core';
-
 /**
- * Global property bag for copy paste
+ * Dragdrop service for mouse drag and drop
  */
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs/Rx';
+import { Position } from '../../common/core/graphics/position';
+
 @Injectable()
-export class ClipboardService {
+export class DejaMouseDragDropService {
     private clipboard = {} as { [key: string]: any };
+    public mousePosition$ = new BehaviorSubject<Position>(undefined);
+
+    constructor() {
+
+    }
 
     get(key: string) {
         return this.clipboard[key];

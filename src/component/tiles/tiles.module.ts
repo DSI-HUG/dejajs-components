@@ -14,7 +14,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MdProgressSpinnerModule } from '@angular/material';
 import { DejaEditableModule } from '../content-editable';
-import { DejaDragDropModule } from '../dragdrop';
+import { DejaMouseDragDropModule } from '../mouse-dragdrop';
 import { DejaTileComponent, DejaTileGroupComponent, DejaTilesComponent, DejaTilePositionDirective } from './index';
 import { CloningService } from '../../common/core/cloning';
 
@@ -25,7 +25,7 @@ import { CloningService } from '../../common/core/cloning';
         CommonModule,
         FormsModule,
         MdProgressSpinnerModule,
-        DejaDragDropModule,
+        DejaMouseDragDropModule,
         DejaEditableModule,
     ],
     providers: [

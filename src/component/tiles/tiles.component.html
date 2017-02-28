@@ -1,4 +1,4 @@
 <div #tilesContainer id="tiles" [class.design]="_designMode">
-    <deja-tile *ngFor="let tile of tiles$ | async; let index = index;" deja-mouse-draggable [id]="tile.id" [tile]="tile" [designMode]="_designMode" [attr.tile-index]="index" [template]="tileTemplate"></deja-tile>
+    <deja-tile *ngFor="let tile of tiles$ | async; let index = index;" deja-mouse-draggable (dragstart)="cancelDragEvent()" [id]="tile.id" [tile]="tile" [designMode]="_designMode" [attr.tile-index]="index" [template]="tileTemplate"></deja-tile>
     <div deja-tile-position [bounds]="layoutProvider.selectionRect$ | async"></div>
 </div>
