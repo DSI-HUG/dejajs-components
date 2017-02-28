@@ -12,7 +12,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Rect } from '../../common/core/graphics/index';
 import { MaterialColors } from '../../common/core/style/index';
-import { DejaTile, IDejaTilesAddEvent, IDejaDragEvent, IDejaTile, IDejaTilesRemoveEvent } from '../../component';
+import { IDejaMouseDraggableContext, IDejaTilesAddEvent, IDejaDragEvent, IDejaTile, IDejaTilesRemoveEvent } from '../../component';
 import { CountriesService, ICountry } from '../services/countries.service';
 import { Observable, Subject } from 'rxjs/Rx';
 
@@ -110,16 +110,21 @@ export class TilesDemoComponent implements OnInit {
             }, []);
     }
 
-    protected getDragContext(tile: DejaTile) {
-        return {
-            dragendcallback: () => {
+    protected getDragContext() {
 
-            },
-            dragstartcallback: (event: IDejaDragEvent) => {
-                event.dragObject = tile;
-                event.dragInfo['IDejaTile'] = tile.toTileModel();
-            },
-        };
+        return {
+            target: 'deja-tile',
+            className: 'deja-tile-cursor',
+        } as IDejaMouseDraggableContext;
+        // return {
+        //     dragendcallback: () => {
+
+        //     },
+        //     dragstartcallback: (event: IDejaDragEvent) => {
+        //         event.dragObject = tile;
+        //         event.dragInfo['IDejaTile'] = tile.toTileModel();
+        //     },
+        // };
     }
 
     protected getDropContext() {

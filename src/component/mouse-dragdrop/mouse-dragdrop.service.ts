@@ -13,13 +13,13 @@
  * Dragdrop service for mouse drag and drop
  */
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs/Rx';
+import { BehaviorSubject } from 'rxjs/Rx';
 import { Position } from '../../common/core/graphics/position';
 
 @Injectable()
 export class DejaMouseDragDropService {
     private clipboard = {} as { [key: string]: any };
-    public mousePosition$ = new BehaviorSubject<Position>(undefined);
+    public cursorInfos$ = new BehaviorSubject<ICursorInfos>(undefined);
 
     constructor() {
 
@@ -42,3 +42,10 @@ export class DejaMouseDragDropService {
     }
 }
 
+export interface ICursorInfos {
+    position: Position;
+    html?: string;
+    width?: number;
+    height?: number;
+    className?: string;
+}
