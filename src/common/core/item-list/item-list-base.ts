@@ -153,26 +153,16 @@ export class ItemListBase {
     }
 
     /** Retourne la liste des éléments sélectionés.
-     * @return {IItemBase[] or any[]} Liste des éléments selectionés.
+     * @return {IItemBase[] Liste des éléments selectionés.
      */
     public getSelectedItems() {
-        if (this._isBusinessObject) {
-            return this.getItemListService().getSelectedItems().map((itm) => {
-                return itm.model;
-            });
-        } else {
-            return this.getItemListService().getSelectedItems();
-        }
+        return this.getItemListService().getSelectedItems();
     }
 
     /** Définit la liste des éléments sélectionés.
      * @param {IItemBase[]} items Liste des éléments a selectioner.
      */
     public setSelectedItems(value: IItemBase[]) {
-        if (value && this._isBusinessObject) {
-            value = this.convertToIItemBase(value);
-        }
-
         return this.getItemListService().setSelectedItems(value);
     }
 
@@ -430,6 +420,25 @@ export class ItemListBase {
         return this.getItemListService().getParentListInfos(item);
     }
 
+    protected getSelectedModels() {
+        if (this._isBusinessObject) {
+            // TODO Recursive
+            return this.getItemListService().getSelectedItems().map((itm) => {
+                return itm.model;
+            });
+        } else {
+            return this.getItemListService().getSelectedItems();
+        }
+    }
+    
+    protected setSelectedModels(value: any[]) {
+        if (value && this._isBusinessObject) {
+            value = this.convertToIItemBase(value);
+        }
+
+        return this.getItemListService().setSelectedItems(value);
+    }
+    
     /** Trouve l'élément suivant répondant à la fonction de comparaison spécifiée.
      * @param {Function} compare Function de comparaison pour la recherche de l'élément.
      * @param {number} startIndex Index de départ sur la liste des éléments visibles.
@@ -851,7 +860,7 @@ export class ItemListBase {
         }
     }
 
-    private convertToIItemBase(modls: any[]): IItemBase[] {
+    protected convertToIItemBase(modls: any[], selected?: boolean): IItemBase[] {
             return modls.map((model) => {
                 let itemBase: IItemBase = {};
                 itemBase.model = model;
@@ -869,7 +878,9 @@ export class ItemListBase {
 
                 const childrenField = this.getItemListService().childrenField;
                 if (model[childrenField]) {
-                    itemBase[childrenField] = this.convertToIItemBase(model[childrenField]);
+                    itemBase[childrenField] = this.convertToIItemBase(model[childrenField], selected);
+                } else { 
+                    itemBase.selected = selected || false;
                 }
 
                 return itemBase;

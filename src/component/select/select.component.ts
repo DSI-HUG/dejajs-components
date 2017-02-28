@@ -20,11 +20,11 @@ import {
     ViewChildren,
     ViewEncapsulation,
 } from '@angular/core';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
-import {coerceBooleanProperty} from '@angular/material/core/coercion/boolean-property';
-import {Observable, Subscription} from 'rxjs/Rx';
-import {clearTimeout, setTimeout} from 'timers';
-import {Position} from '../../common/core/graphics';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
+import { Observable, Subscription } from 'rxjs/Rx';
+import { clearTimeout, setTimeout } from 'timers';
+import { Position } from '../../common/core/graphics';
 import {
     IItemBase,
     IItemTree,
@@ -33,8 +33,8 @@ import {
     IViewListResult,
     ViewportMode,
 } from '../../common/core/item-list';
-import {KeyCodes} from '../../common/core/keycodes.enum';
-import {DejaDropDownComponent} from '../dropdown';
+import { KeyCodes } from '../../common/core/keycodes.enum';
+import { DejaDropDownComponent } from '../dropdown';
 
 const noop = () => {
 };
@@ -276,7 +276,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     /** Retourne la liste des éléments selectionés en mode multiselect */
     public get selectedItems() {
-        return super.getSelectedItems();
+        return super.getSelectedModels();
     }
 
     /** Definit le service de liste utilisé par ce composant. Ce srevice permet de controller dynamiquement la liste, ou de faire du lazyloading. */
@@ -373,33 +373,33 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     // ************* ControlValueAccessor Implementation **************
-    // set accessor including call the onchange callback
-    set value(value: any) {
-        let selectedItems = this.getSelectedItems() || [];
-        if (this._multiSelect || value !== selectedItems[0]) {
-            this.writeValue(value);
+    // // set accessor including call the onchange callback
+    // set value(value: any) {
+    //     let selectedItems = this.getSelectedItems() || [];
+    //     if (this._multiSelect || value !== selectedItems[0]) {
+    //         this.writeValue(value);
 
-            // The event is synchrone, but not the selection.
-            // If there is any problems with that, just create a setSelectedItems methode and return a promise.
-            // No way to change the value implementation, because this is part of the control value accessor
-            this.onChangeCallback(super.isBusinessObject ? value.model : value);
-        }
-    }
+    //         // The event is synchrone, but not the selection.
+    //         // If there is any problems with that, just create a setSelectedItems methode and return a promise.
+    //         // No way to change the value implementation, because this is part of the control value accessor
+    //         this.onChangeCallback(super.isBusinessObject ? value.model : value);
+    //     }
+    // }
 
-    // get accessor
-    get value(): any {
-        // Special binding on selected item here. Value never can be null or undefined otherwise,
-        // the ng2 binding don't work when no selected items.
-        let selectedItems = super.getSelectedItems();
-        return selectedItems.length ? (this._multiSelect ? selectedItems : selectedItems[0]) : undefined;
-    }
+    // // get accessor
+    // get value(): any {
+    //     // Special binding on selected item here. Value never can be null or undefined otherwise,
+    //     // the ng2 binding don't work when no selected items.
+    //     let selectedItems = super.getSelectedItems();
+    //     return selectedItems.length ? (this._multiSelect ? selectedItems : selectedItems[0]) : undefined;
+    // }
 
     // From ControlValueAccessor interface
     public writeValue(value: any) {
         if (this._multiSelect) {
-            super.setSelectedItems(value);
+            super.setSelectedModels(value);
         } else {
-            let item = value as IItemBase;
+            let item = super.convertToIItemBase([value])[0];
             if (item !== this.selectedItems[0]) {
                 this.unselectAll().then(() => {
                     if (item) {
@@ -697,13 +697,16 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         if (!this._multiSelect) {
             this.query = '';
             this.dropDownQuery = '';
-            this.value = undefined;
+            this.setSelectedItems(undefined);
+            this.onModelChange();
             delete this.selectingItemIndex;
             this.inputElement.focus();
             this.hideDropDown();
         } else {
             this.toggleSelect([item], false).then((selectedItems) => {
-                this.value = [...selectedItems];
+                const selected = [...selectedItems];
+                this.setSelectedItems(selected);
+                this.onModelChange(selected);
             });
         }
 
@@ -728,6 +731,12 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     protected ensureItemVisible(item: IItemBase | number) {
         super.ensureItemVisible(this.query, this.listElement, this.dropdownItemElements, item);
+    }
+
+    private onModelChange(items?: IItemBase[] | IItemBase) {
+        // Convert recursive.
+        const output = items;
+        this.onChangeCallback(output);
     }
 
     private set mouseUp(value: boolean) {
@@ -773,19 +782,23 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         if (item) {
             if (this._multiSelect) {
                 this.toggleSelect([item], true).then((selectedItems) => {
-                    this.value = [...selectedItems];
+                    const selected = [...selectedItems];
+                    this.setSelectedItems(selected);
+                    this.onModelChange(selected);
                     this.query = '';
                     this.dropDownQuery = '';
                 });
             } else {
                 this.query = this.getTextValue(item);
                 this.dropDownQuery = '';
-                this.value = item;
+                this.setSelectedItems([item]);
+                this.onModelChange(item);
             }
         } else {
             this.query = '';
             this.dropDownQuery = '';
-            this.value = undefined;
+            this.setSelectedItems(undefined);
+            this.onModelChange();
         }
 
         this.inputElement.focus();
