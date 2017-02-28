@@ -2,8 +2,8 @@
   "name": "@deja-js/component",
   "version": "1.4.2-beta.9",
   "description": "Angular2 Components Library",
-  "homepage": "https://github.com/DSI-HUG/deja-js",
-  "bugs": "https://github.com/DSI-HUG/deja-js/issues",
+  "homepage": "https://github.com/DSI-HUG/dejajs-components",
+  "bugs": "https://github.com/DSI-HUG/dejajs-components/issues",
   "author": "Team DSI-HUG - Hôpital Univesitaire de Genève - DSI - Domaine Patient",
   "license": "Apache-2.0",
   "keywords": [
