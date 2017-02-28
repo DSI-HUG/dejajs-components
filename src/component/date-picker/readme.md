@@ -53,6 +53,3 @@ Composant pour séléctionner une date sur un calendrier et l'affficher dans un 
     <td>Le format de la date à afficher dans le champ texte. Par défaut ce aui est affiché est *_date_.toLocaleString()*</td>
 </tr>
 </table>
-
-### Exemple
-Un exemple d'utilisation est pr&eacute;sent dans l'application test de **deja-angular2**.

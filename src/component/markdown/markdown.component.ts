@@ -11,10 +11,11 @@
 
 import {AfterViewChecked, Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import { Http, ResponseContentType } from "@angular/http";
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser'
-
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+// tslint:disable
 const Showdown = require('showdown');
 const Prism = require('prismjs');
+// tslint:enable
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -24,7 +25,7 @@ const Prism = require('prismjs');
     ],
     templateUrl: './markdown.component.html',
 })
-export class DejaMarkdownComponent implements OnInit, AfterViewChecked{
+export class DejaMarkdownComponent implements OnInit, AfterViewChecked {
 
     @Input()
     set value(value: string) {
