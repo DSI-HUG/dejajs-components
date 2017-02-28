@@ -507,7 +507,7 @@ export class ItemListService {
         if (this.hideSelected) {
             delete this._cache.visibleList;
         }
-        debugger;
+
         this.ensureSelectedItems(this.items);
     }
 
