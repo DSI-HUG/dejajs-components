@@ -60,9 +60,6 @@ export class ItemListService {
     // champs à utiliser comme valeur de comparaison
     private _valueField: string;
 
-    // champs à utiliser pour l'affichage de la valeur
-    private _textField: string;
-
     private isBusinessObject: boolean;
 
     /** Définit le champs utilisé comme collection pour les enfants d'un parent.
@@ -99,11 +96,6 @@ export class ItemListService {
         this._valueField = valueField;
     }
 
-    /** Définit le champs à utiliser pour l'affichage de la valeur */
-    public set textField(textField: string) {
-        this._textField = textField;
-    }
-
     private set items(items: IItemBase[]) {
         this._items = items;
         this.invalidateCache();
@@ -122,20 +114,18 @@ export class ItemListService {
                 this.items = undefined;
                 subscriber.next();
             } else if (items instanceof Array) {
-                this.items = this.convertToIItemBase(items);
-                this.ensureChildrenProperties(this.items);
+                this.ensureChildrenProperties(items);
                 this.ensureSelectedItems(items);
                 subscriber.next();
             } else {
                 let promise = items as Promise<IItemBase[]>;
                 if (promise.then) {
                     promise.then((its) => {
-                        let itms = this.convertToIItemBase(its);
+                        this.ensureChildrenProperties(its);
                         if (!this.items || !this.items.length) {
-                            this.ensureSelectedItems(itms);
+                            this.ensureSelectedItems(its);
                         }
-                        this.items = itms;
-                        this.ensureChildrenProperties(this.items);
+                        this.items = its;
                         subscriber.next();
                     }).catch((err) => {
                         subscriber.error(err);
@@ -143,12 +133,11 @@ export class ItemListService {
                 } else {
                     let observable = items as Observable<IItemBase[]>;
                     observable.subscribe((its) => {
-                        let itms = this.convertToIItemBase(its);
+                        this.ensureChildrenProperties(its);
                         if (!this.items || !this.items.length) {
-                            this.ensureSelectedItems(itms);
+                            this.ensureSelectedItems(its);
                         }
-                        this.ensureChildrenProperties(itms);
-                        this.items = [...this.items || [], ...itms];
+                        this.items = [...this.items || [], ...its];
                         subscriber.next();
                     }, (err) => {
                         subscriber.error(err);
@@ -518,6 +507,7 @@ export class ItemListService {
         if (this.hideSelected) {
             delete this._cache.visibleList;
         }
+
         this.ensureSelectedItems(this.items);
     }
 
@@ -1237,6 +1227,10 @@ export class ItemListService {
             return item1.equals(item2);
         } else if (item2.equals) {
             return item2.equals(item1);
+        } else if (item1.model && item1.model.equals) {
+            return item1.model.equals(item2.model);
+        } else if (item2.model && item2.model.equals) {
+            return item2.model.equals(item1.model);
         } else {
             return item1 === item2;
         }
@@ -1333,19 +1327,6 @@ export class ItemListService {
                 this.ensureChildrenProperties(treeItem.$items);
             }
         });
-    }
-
-    private convertToIItemBase(items: any[]): IItemBase[] {
-        if (this.isBusinessObject) {
-            return items.map((item) => {
-                return {
-                    displayName: this.getTextValue(item, this._textField),
-                    model: item,
-                };
-            });
-        }
-
-        return items;
     }
 }
 

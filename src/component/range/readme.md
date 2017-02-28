@@ -247,5 +247,3 @@ export class DejaRangeDemo {
     </tr>
 </table>
 
-### Démonstration
-Une démonstration est consultable dans l'application de démonstration.

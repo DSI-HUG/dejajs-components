@@ -124,6 +124,3 @@ La liste des langages disponible est accessible au travers de l'interface IEdito
 ```typescript
     protected language: IEditorLanguage = IEditorLanguage.XML;
 ```
-
-### Demonstration
-A demonstration is available in the Demo App.

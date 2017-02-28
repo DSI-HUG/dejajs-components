@@ -82,8 +82,5 @@ Si le snackbar est une réponse à une action de l'utilisateur sur l'UI, veuille
     </tr>
 </table>
 
-### Démonstration
-Une démonstration est consultable dans l'application de démonstration.
-
 ### Bugs
 Regarder les commentaires de l'implémentation pour les détails.
