@@ -422,7 +422,6 @@ export class ItemListBase {
 
     protected getSelectedModels() {
         if (this._isBusinessObject) {
-            // TODO Recursive
             return this.getItemListService().getSelectedItems().map((itm) => {
                 return itm.model;
             });
@@ -430,15 +429,15 @@ export class ItemListBase {
             return this.getItemListService().getSelectedItems();
         }
     }
-    
+
     protected setSelectedModels(value: any[]) {
         if (value && this._isBusinessObject) {
-            value = this.convertToIItemBase(value);
+            value = this.convertToIItemBase(value, true);
         }
 
         return this.getItemListService().setSelectedItems(value);
     }
-    
+
     /** Trouve l'élément suivant répondant à la fonction de comparaison spécifiée.
      * @param {Function} compare Function de comparaison pour la recherche de l'élément.
      * @param {number} startIndex Index de départ sur la liste des éléments visibles.
@@ -861,31 +860,35 @@ export class ItemListBase {
     }
 
     protected convertToIItemBase(modls: any[], selected?: boolean): IItemBase[] {
-            return modls.map((model) => {
-                let itemBase: IItemBase = {};
-                itemBase.model = model;
+        if (!this.isBusinessObject) {
+            return modls as IItemBase[];
+        }
+        
+        return modls.map((model) => {
+            let itemBase: IItemBase = {};
+            itemBase.model = model;
 
-                const displayField = this._textField || 'displayName';
-                itemBase[displayField] = this.getTextValue(model);
+            const displayField = this._textField || 'displayName';
+            itemBase[displayField] = this.getTextValue(model);
 
-                if (this._searchField) {
-                    itemBase[this._searchField] = model[this._searchField];
-                }
+            if (this._searchField) {
+                itemBase[this._searchField] = model[this._searchField];
+            }
 
-                if (this._valueField) {
-                    itemBase[this._valueField] = model[this._valueField];
-                }
+            if (this._valueField) {
+                itemBase[this._valueField] = model[this._valueField];
+            }
 
-                const childrenField = this.getItemListService().childrenField;
-                if (model[childrenField]) {
-                    itemBase[childrenField] = this.convertToIItemBase(model[childrenField], selected);
-                } else { 
-                    itemBase.selected = selected || false;
-                }
+            const childrenField = this.getItemListService().childrenField;
+            if (model[childrenField]) {
+                itemBase[childrenField] = this.convertToIItemBase(model[childrenField], selected);
+            } else {
+                itemBase.selected = selected || false;
+            }
 
-                return itemBase;
-            });
-        };
+            return itemBase;
+        });
+    };
 
     private getItemHeight(item: IItemBase) {
         if (this._viewportMode === ViewportMode.NoViewport) {

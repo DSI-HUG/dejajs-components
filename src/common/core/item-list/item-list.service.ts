@@ -121,11 +121,11 @@ export class ItemListService {
                 let promise = items as Promise<IItemBase[]>;
                 if (promise.then) {
                     promise.then((its) => {
+                        this.ensureChildrenProperties(its);
                         if (!this.items || !this.items.length) {
                             this.ensureSelectedItems(its);
                         }
                         this.items = its;
-                        this.ensureChildrenProperties(this.items);
                         subscriber.next();
                     }).catch((err) => {
                         subscriber.error(err);
@@ -133,10 +133,10 @@ export class ItemListService {
                 } else {
                     let observable = items as Observable<IItemBase[]>;
                     observable.subscribe((its) => {
+                        this.ensureChildrenProperties(its);
                         if (!this.items || !this.items.length) {
                             this.ensureSelectedItems(its);
                         }
-                        this.ensureChildrenProperties(its);
                         this.items = [...this.items || [], ...its];
                         subscriber.next();
                     }, (err) => {
@@ -1250,10 +1250,6 @@ export class ItemListService {
                 }
                 if (item.$items) {
                     ensureSelectedChildren(item.$items);
-                }
-
-                if (item[this._childrenField]) {
-                    ensureSelectedChildren(item[this._childrenField]);
                 }
             });
         };

@@ -276,7 +276,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     /** Retourne la liste des éléments selectionés en mode multiselect */
     public get selectedItems() {
-        return super.getSelectedModels();
+        return super.getSelectedItems();
     }
 
     /** Definit le service de liste utilisé par ce composant. Ce srevice permet de controller dynamiquement la liste, ou de faire du lazyloading. */
@@ -396,6 +396,10 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     // From ControlValueAccessor interface
     public writeValue(value: any) {
+        if (!value) {
+            return;
+        }
+
         if (this._multiSelect) {
             super.setSelectedModels(value);
         } else {
@@ -734,8 +738,16 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     private onModelChange(items?: IItemBase[] | IItemBase) {
-        // Convert recursive.
-        const output = items;
+        let output = items;
+
+        if (super.isBusinessObject && items) {
+            if (items instanceof Array) {
+                output = items.map((item) => item.model);
+            } else {
+                output = items.model;
+            }
+        }
+        
         this.onChangeCallback(output);
     }
 
