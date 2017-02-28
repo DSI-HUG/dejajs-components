@@ -84,12 +84,17 @@ export class JsonUtils {
      * Convert a list of object into a "Map Object" where attributes name are IDs and values are the objects
      * <br/>Note: the objects must have an "id" property
      * @param objList : List of object with an attribute "id" or "ID" or "Id"
+     * @param idFieldName : Field name to use insetead of id.
      * @returns {any}
      */
-    public static toMap(objList: any[]): any {
+    public static toMap(objList: any[], idFieldName: string = null): any {
         let mapObj: any = {};
         objList.forEach((obj: any) => {
-            mapObj[obj.id || obj.ID || obj.Id] = obj;
+            if (idFieldName) {
+                mapObj[obj[idFieldName]] = obj;
+            } else {
+                mapObj[obj.id || obj.ID || obj.Id] = obj;
+            }
         });
         return mapObj;
     }
@@ -99,9 +104,10 @@ export class JsonUtils {
      * @param listPromise Promise that returns a array of objects. Object Must have an an attribute "id" or "ID" or "Id"
      * @param id: The ID we want to get
      * @param cacheName: The cache key to store it
+     * @param idFieldName : Field name to use insetead of id.
      * @returns {Promise<any>} One Promise with the selected element
      */
-    public static getOneFrom(listPromise: Promise<any>, id: string, cacheName: string): Promise<any> {
+    public static getOneFrom(listPromise: Promise<any>, id: string, cacheName: string, idFieldName: string = null): Promise<any> {
         let currentcache = JsonUtils.mapCaches[cacheName];
         return new Promise<any>((resolve) => {
             if (id) {
@@ -109,7 +115,7 @@ export class JsonUtils {
                     resolve(currentcache[id]);
                 } else {
                     listPromise.then((allObjs) => {
-                        currentcache = JsonUtils.toMap(allObjs);
+                        currentcache = JsonUtils.toMap(allObjs, idFieldName);
                         JsonUtils.mapCaches[cacheName] = currentcache;
                         resolve(currentcache[id]);
                     });
