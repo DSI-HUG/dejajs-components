@@ -16,6 +16,3 @@ Directive pour rendre un textarea material (md-textarea) redimensioné automatiq
 
 ### Propriétés
 - Aucune propriété n'est définie dans cette directive
-
-### Exemple
-- Un exemple d'utilisation est pr&eacute;sent dans l'application test de **deja-angular2**.

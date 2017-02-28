@@ -33,4 +33,4 @@ this.textMetricsService.getTextHeight(
 ```
 
 ## Exemple
-Un exemple d'utilisation est présent dans l'application test de **deja-angular2** au niveau de la treelist.
+L'exemple se trouve dans la demo de la tree-list
