@@ -59,7 +59,7 @@ export class ItemListBase {
     protected _ddStartIndex: number;
     protected _ddTargetIndex: number;
 
-    protected isBusinessObject: boolean;
+    private _isBusinessObject: boolean;
 
     private _itemListService: ItemListService;
     private allCollapsed = false;
@@ -145,11 +145,18 @@ export class ItemListBase {
         return this._currentItemIndex >= 0 ? this.getItemListService().getItemFromIndex(this._currentItemIndex) : null;
     }
 
+    /** Retourne true si l'on manipule des objet business, false si on manipule des IItemBase.
+     * @return {boolean}.
+     */
+    public isBusinessObject() {
+        return this._isBusinessObject;
+    }
+
     /** Retourne la liste des éléments sélectionés.
      * @return {IItemBase[] or any[]} Liste des éléments selectionés.
      */
     public getSelectedItems() {
-        if (this.isBusinessObject) {
+        if (this._isBusinessObject) {
             return this.getItemListService().getSelectedItems().map((itm) => {
                 return itm.model;
             });
@@ -162,6 +169,10 @@ export class ItemListBase {
      * @param {IItemBase[]} items Liste des éléments a selectioner.
      */
     public setSelectedItems(value: IItemBase[]) {
+        if (value && this._isBusinessObject) {
+            value = this.convertToIItemBase(value);
+        }
+
         return this.getItemListService().setSelectedItems(value);
     }
 
@@ -520,8 +531,18 @@ export class ItemListBase {
     /** Définit le modèle utilisé par la liste. Il peut être de tout type d'objet. Ce model peut ètre hierarchique sans limitation de la profondeur ou une chargé en asynchrone par une promise ou un observable.
      * @param {GroupingService}items Provider de la liste des éléments de la liste.
      */
-    protected setModels(items: any[] | Promise<any[]> | Observable<any[]>) {
-        return this.getItemListService().setModels(items);
+    protected setModels(models: any[] | Observable<any[]>) {
+        this._isBusinessObject = true;
+        let models$: Observable<any[]>;
+
+        if (models instanceof Array) {
+            models$ = Observable.of(models);
+        } else {
+            models$ = models as Observable<any[]>;
+        }
+
+        const items$ = models$ && models$.map((mods) => this.convertToIItemBase(mods));
+        return this.setItems(items$);
     }
 
     // Ne pas utiliser, cette fonction retourne la liste des éléments pour l'implémentation de ngModel.
@@ -581,7 +602,6 @@ export class ItemListBase {
      */
     protected setTextField(value: string) {
         this._textField = value;
-        this.getItemListService().textField = value;
     }
 
     /** Définit le champ à utiliser comme valeur de comparaison.
@@ -830,6 +850,31 @@ export class ItemListBase {
             }
         }
     }
+
+    private convertToIItemBase(modls: any[]): IItemBase[] {
+            return modls.map((model) => {
+                let itemBase: IItemBase = {};
+                itemBase.model = model;
+
+                const displayField = this._textField || 'displayName';
+                itemBase[displayField] = this.getTextValue(model);
+
+                if (this._searchField) {
+                    itemBase[this._searchField] = model[this._searchField];
+                }
+
+                if (this._valueField) {
+                    itemBase[this._valueField] = model[this._valueField];
+                }
+
+                const childrenField = this.getItemListService().childrenField;
+                if (model[childrenField]) {
+                    itemBase[childrenField] = this.convertToIItemBase(model[childrenField]);
+                }
+
+                return itemBase;
+            });
+        };
 
     private getItemHeight(item: IItemBase) {
         if (this._viewportMode === ViewportMode.NoViewport) {

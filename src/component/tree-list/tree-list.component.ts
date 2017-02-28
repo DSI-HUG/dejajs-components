@@ -350,8 +350,7 @@ export class DejaTreeListComponent extends ItemListBase {
 
     /** Définit la liste des éléments (tout type d'objet métier) */
     @Input()
-    public set models(items: any[] | Promise<any[]> | Observable<any[]>) {
-        this.isBusinessObject = true;
+    public set models(items: any[] | Observable<any[]>) {
         super.setModels(items).subscribe(() => {
         }, (error: any) => {
             this._hintLabel = error.toString();

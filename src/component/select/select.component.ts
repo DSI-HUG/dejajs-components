@@ -307,8 +307,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     /** Définit la liste des éléments (tout type d'objet métier) */
     @Input()
-    public set models(items: any[] | Promise<any[]> | Observable<any[]>) {
-        this.isBusinessObject = true;
+    public set models(items: any[] | Observable<any[]>) {
         super.setModels(items).subscribe(() => {
         }, (error: any) => {
             this._hintLabel = error.toString();
@@ -383,7 +382,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             // The event is synchrone, but not the selection.
             // If there is any problems with that, just create a setSelectedItems methode and return a promise.
             // No way to change the value implementation, because this is part of the control value accessor
-            this.onChangeCallback(this.isBusinessObject ? value.model : value);
+            this.onChangeCallback(super.isBusinessObject ? value.model : value);
         }
     }
 
