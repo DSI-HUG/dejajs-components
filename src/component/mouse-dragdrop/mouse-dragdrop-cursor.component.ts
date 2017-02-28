@@ -1,5 +1,3 @@
-import { Position } from './../../common/core/graphics/position';
-import { ICursorInfos } from './mouse-dragdrop.service';
 /*
  * *
  *  @license
@@ -14,8 +12,9 @@ import { ICursorInfos } from './mouse-dragdrop.service';
 import { Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { DejaMouseDragDropService } from './mouse-dragdrop.service';
 import { Observable, BehaviorSubject } from 'rxjs/Rx';
+import { Position } from './../../common/core/graphics/position';
+import { ICursorInfos } from './mouse-dragdrop.service';
 
-/** Menu avec placement optimisé (Voir DejaDropDownComponent) */
 @Component({
     encapsulation: ViewEncapsulation.None,
     selector: 'deja-mouse-dragdrop-cursor',
@@ -39,17 +38,15 @@ export class DejaMouseDragDropCursorComponent {
         position$
             .filter((pos) => !!pos)
             .subscribe((pos) => {
-                const width = element.offsetWidth;
-                const height = element.offsetHeight;
-                element.style.left = `${pos.left - width / 2}px`;
-                element.style.top = `${pos.top - height / 2}px`;
+                element.style.left = `${pos.left}px`;
+                element.style.top = `${pos.top}px`;
             });
 
         position$
             .filter((pos) => !pos)
             .subscribe(() => {
-                element.style.left = '';
-                element.style.top = '';
+                element.style.left = '-1000px';
+                element.style.top = '-1000px';
             });
 
         const infos$ = Observable.from(this.infos$);
@@ -61,52 +58,44 @@ export class DejaMouseDragDropCursorComponent {
                 if (this._infos) {
                     this.contentElement.style.opacity = '0';
                     this.iconElement.style.opacity = '0';
+                    this.position$.next(null);
                 }
             })
-            .delay(1000)
+            .delay(150)
             .do((infos) => this._infos = infos)
             .subscribe(() => element.style.display = 'none');
 
         const show$ = infos$
             .filter((infos) => !!infos)
-            .do((infos) => {
+            .do(() => {
                 element.style.display = '';
-                this.contentElement.innerHTML = infos.html;
-                this.contentElement.style.display = '';
                 this.contentElement.style.opacity = '0';
-                this.iconElement.style.display = '';
                 this.iconElement.style.opacity = '0';
-            })
-            .delay(500);
+            });
 
         // Show content
         show$
             .filter((infos) => !!infos.html)
             .do((infos) => {
+                this.contentElement.innerHTML = infos.html;
                 element.className = infos.className;
-                element.style.width = `${infos.width || 48}px`;
-                element.style.height = `${infos.height || 48}px`;
+                this.contentElement.style.width = `${infos.width || 48}px`;
+                this.contentElement.style.height = `${infos.height || 48}px`;
             })
-            .delay(500)
-            .subscribe((infos) => {
-                this._infos = infos;
-                this.contentElement.style.opacity = '1';
-            });
+            .delay(1)
+            .do(() => this.contentElement.style.opacity = '1')
+            .delay(150)
+            .subscribe((infos) => this._infos = infos);
 
         // Show block icon
         show$
             .filter((infos) => !infos.html)
-            .do(() => {
-                element.style.width = '48px';
-                element.style.height = '48px';
-            })
             .delay(1)
-            .do(() => {
-                this.iconElement.style.opacity = '1';
-            })
-            .delay(500)
+            .do(() => this.iconElement.style.opacity = '1')
+            .delay(150)
             .subscribe((infos) => {
                 this._infos = infos;
+                this.contentElement.innerHTML = '';
                 element.className = '';
             });
 
