@@ -55,7 +55,7 @@ export class JsonUtils {
      * <p> Exemple:
      *     <code>let newObj:MyClass = deserializeJson<MyClass>(MyClass>,jsonObj);</code>
      * </p>
-     * <p>note: It's possible than The object generate can old more properties than the one in the class</p>
+     * <p>note: It's possible than The object generate can hold more properties than the one in the class</p>
      * <p>note2: Require an empty constructor for the serialized class</p>
      * @param clazz The class of the object created
      * @param sourceObj The JSON object
@@ -88,7 +88,6 @@ export class JsonUtils {
 
     /**
      * Convert a list of object into a "Map Object" where attributes name are IDs and values are the objects
-     * <br/>Note: the objects must have an "id" property
      * @param objList : List of object with an attribute "id" or "ID" or "Id"
      * @param idFieldName : Field name to use insetead of id.
      * @returns {any}
@@ -107,7 +106,7 @@ export class JsonUtils {
 
     /**
      * Get an object from a array of object. It uses a cache in order to go faster if called in a loop.
-     * @param listPromise Promise that returns a array of objects. Object Must have an an attribute "id" or "ID" or "Id"
+     * @param listPromise Promise that returns a array of objects. Object can have an an attribute "id" or "ID" or "Id" or field named by the 'idFieldName' param.
      * @param id: The ID we want to get
      * @param cacheName: The cache key to store it
      * @param idFieldName : Field name to use insetead of id.
