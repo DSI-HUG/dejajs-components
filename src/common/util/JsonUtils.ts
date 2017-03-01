@@ -1,7 +1,7 @@
 /*
  * *
  *  @license
- *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
+ *  Copyright HÃ´pitaux Universitaires de GenÃ¨ve All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
@@ -17,24 +17,24 @@ export class JsonUtils {
     private static mapCaches: any = {};
 
     /**
-     * deserializeJson is a method to deserialize a json into a typed object. The <T> say that we want to 'capture' the object type so we can return it.
-     * More details : https://www.typescriptlang.org/docs/handbook/generics.html
-     *
-     * /!\ this is not a recursive function !
-     *      Object into object will stay as generic objects.
-     *      Re-use this function to deserialize them into typed objects.
-     *
-     * Usage : var obj = JsonUtils.deserializeJson(new TypedObj(), aJSON);
-     *          Where TypedObj is a valid TypeScript class.
-     *          After that, obj.constructor.name will be TypedObj
-     * {
-     * Example of use : http://plnkr.co/edit/11b0kzypP0N9I9B8AqPx?p=preview
-     *
-     * @param {Object} obj : Object to deserialize into
-     * @param {Object | string} jsonObj : a JSON;
-     *
-     * @return {<T>} obj : an object of 'T' type
-     */
+    * deserializeJson is a method to deserialize a json into a typed object. The <T> say that we want to "capture" the object type so we can return it.
+    * More details : https://www.typescriptlang.org/docs/handbook/generics.html
+    *
+    * /!\ this is not a recursive function !
+    *      Object into object will stay as generic objects.
+    *      Re-use this function to deserialize them into typed objects.
+    *
+    * Usage : var obj = JsonUtils.deserializeJson(new TypedObj(), aJSON);
+    *          Where TypedObj is a valid TypeScript class.
+    *          After that, obj.constructor.name will be TypedObj
+    * {
+    * Example of use : http://plnkr.co/edit/11b0kzypP0N9I9B8AqPx?p=preview
+    *
+    * @param {Object} obj : Object to deserialize into
+    * @param {Object | string} jsonObj : a JSON;
+    *
+    * @return {<T>} obj : an object of "T" type
+    */
     public static deserializeJson<T>(obj: T, jsonObj: any): T {
 
         if (typeof jsonObj === 'string') {
@@ -60,9 +60,9 @@ export class JsonUtils {
      * @param clazz The class of the object created
      * @param sourceObj The JSON object
      * @param caseTransform
-     * @returns {T} : An object of 'T' type
+     * @returns {T} : An object of "T" type
      */
-    public static deserializeJson2<T>(clazz: {new (): T}, sourceObj: any, caseTransform = false): T {
+    public static deserializeJson2<T>(clazz: { new (): T }, sourceObj: any, caseTransform = false): T {
         const castedObj: T = new clazz();
 
         for (const sourcePropName in sourceObj) {
@@ -82,32 +82,38 @@ export class JsonUtils {
      * @param caseTransform
      * @returns {any[]}
      */
-    public static deserializeJsonList<T>(clazz: {new (): T}, sourceList: any[], caseTransform = false): T[] {
+    public static deserializeJsonList<T>(clazz: { new (): T }, sourceList: any[], caseTransform = false): T[] {
         return sourceList.map((sourceObj) => this.deserializeJson2<T>(clazz, sourceObj, caseTransform));
     }
 
     /**
-     * Convert a list of object into a 'Map Object' where attributes name are IDs and values are the objects
-     * <br/>Note: the objects must have an 'id' property
-     * @param objList : List of object with an attribute 'id' or 'ID' or 'Id'
+     * Convert a list of object into a "Map Object" where attributes name are IDs and values are the objects
+     * <br/>Note: the objects must have an "id" property
+     * @param objList : List of object with an attribute "id" or "ID" or "Id"
+     * @param idFieldName : Field name to use insetead of id.
      * @returns {any}
      */
-    public static toMap(objList: any[]): any {
+    public static toMap(objList: any[], idFieldName: string = null): any {
         const mapObj: any = {};
         objList.forEach((obj: any) => {
+            if (idFieldName) {
+                mapObj[obj[idFieldName]] = obj;
+            } else {
                 mapObj[obj.id || obj.ID || obj.Id] = obj;
+            }
         });
         return mapObj;
     }
 
     /**
      * Get an object from a array of object. It uses a cache in order to go faster if called in a loop.
-     * @param listPromise Promise that returns a array of objects. Object Must have an an attribute 'id' or 'ID' or 'Id'
+     * @param listPromise Promise that returns a array of objects. Object Must have an an attribute "id" or "ID" or "Id"
      * @param id: The ID we want to get
      * @param cacheName: The cache key to store it
+     * @param idFieldName : Field name to use insetead of id.
      * @returns {Promise<any>} One Promise with the selected element
      */
-    public static getOneFrom(listPromise: Promise<any>, id: string, cacheName: string): Promise<any> {
+    public static getOneFrom(listPromise: Promise<any>, id: string, cacheName: string, idFieldName: string = null): Promise<any> {
         let currentcache = JsonUtils.mapCaches[cacheName];
         return new Promise<any>((resolve) => {
             if (id) {
@@ -115,7 +121,7 @@ export class JsonUtils {
                     resolve(currentcache[id]);
                 } else {
                     listPromise.then((allObjs) => {
-                        currentcache = JsonUtils.toMap(allObjs);
+                        currentcache = JsonUtils.toMap(allObjs, idFieldName);
                         JsonUtils.mapCaches[cacheName] = currentcache;
                         resolve(currentcache[id]);
                     });
@@ -126,4 +132,3 @@ export class JsonUtils {
         });
     }
 }
-
