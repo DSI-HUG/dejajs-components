@@ -9,15 +9,16 @@
  *
  */
 
-import { Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     selector: 'demo-app',
     styleUrls: ['./demo-app.scss', '../../scss/index.scss'],
     templateUrl: './demo-app.html',
 })
-export class DemoApp {
+export class DemoAppComponent {
     public version: string;
     protected navOpened = true;
 

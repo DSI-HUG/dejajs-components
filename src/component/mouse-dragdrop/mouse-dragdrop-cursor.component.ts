@@ -10,7 +10,7 @@
  */
 
 import { Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { DejaMouseDragDropService, IDragCursorInfos } from './mouse-dragdrop.service';
+import { DejaMouseDragDropService, IDragCursorInfos, IDropCursorInfos } from './mouse-dragdrop.service';
 import { Observable, BehaviorSubject } from 'rxjs/Rx';
 import { Position } from './../../common/core/graphics/position';
 
@@ -26,8 +26,10 @@ export class DejaMouseDragDropCursorComponent {
     @ViewChild('block') private icon: ElementRef;
     @ViewChild('content') private content: ElementRef;
     private position$ = new BehaviorSubject<Position>(undefined);
-    private dragCursor$ = new BehaviorSubject<IDragCursorInfos>(undefined);
+    private cursor$ = new BehaviorSubject<IDragCursorInfos>(undefined);
     private _dragCursor: IDragCursorInfos;
+    private _currentCursor: IDragCursorInfos;
+    private _dropCursor: IDropCursorInfos;
 
     constructor(elementRef: ElementRef, private dragDropService: DejaMouseDragDropService) {
         const element = elementRef.nativeElement as HTMLElement;
@@ -39,19 +41,18 @@ export class DejaMouseDragDropCursorComponent {
                 element.style.top = pos ? `${pos.top}px` : '-1000px';
             });
 
-
-        const dragCursor$ = Observable.from(this.dragCursor$);
+        const cursor$ = Observable.from(this.cursor$);
 
         // Hide
-        dragCursor$
+        cursor$
             .filter((dragCursor) => !dragCursor)
             .do(() => console.log('hide'))
             .do((dragCursor) => {
-                if (this._dragCursor) {
+                if (this._currentCursor) {
                     this.contentElement.style.opacity = '0';
                     this.iconElement.style.opacity = '0';
                 }
-                this._dragCursor = dragCursor;
+                this._currentCursor = dragCursor;
             })
             .delay(300)
             .subscribe(() => {
@@ -60,14 +61,14 @@ export class DejaMouseDragDropCursorComponent {
             });
 
         // Show
-        dragCursor$
+        cursor$
             .filter((dragCursor) => !!dragCursor)
             .do((dragCursor) => console.log('Show ' + !!dragCursor.html))
             .do((dragCursor) => {
                 element.style.display = '';
                 this.contentElement.style.opacity = '0';
                 this.iconElement.style.opacity = '0';
-                this._dragCursor = dragCursor;
+                this._currentCursor = dragCursor;
             })
             .do((dragCursor) => {
                 if (!!dragCursor.html) {
@@ -80,24 +81,28 @@ export class DejaMouseDragDropCursorComponent {
                 }
             })
             .delay(1)
-            .do((dragCursor) => {
+            .subscribe((dragCursor) => {
                 if (!!dragCursor.html) {
                     this.contentElement.style.opacity = '1';
-                }
-            })
-            .delay(300)
-            .subscribe((dragCursor) => {
-                if (!dragCursor.html) {
-                    this.contentElement.innerHTML = '';
-                    element.className = '';
                 }
             });
 
         Observable.from(this.dragDropService.dragCursor$)
             .subscribe((dragCursor) => {
-                if (!!dragCursor !== !!this._dragCursor || (dragCursor && !!dragCursor.html !== !!this._dragCursor.html)) {
+                if (!!dragCursor !== !!this._dragCursor) {
+                    this._dragCursor = dragCursor;
+                }
+
+                if (this._dropCursor && this._dragCursor) {
+                    dragCursor.className = this._dropCursor.className || this._dragCursor.className;
+                    dragCursor.html = this._dropCursor.html || this._dragCursor.html;
+                    dragCursor.width = this._dropCursor.width || this._dragCursor.width;
+                    dragCursor.height = this._dropCursor.height || this._dragCursor.height;
+                }
+
+                if (!!dragCursor !== !!this._currentCursor || (dragCursor && !!dragCursor.html !== !!this._currentCursor.html)) {
                     // Update Content
-                    this.dragCursor$.next(dragCursor);
+                    this.cursor$.next(dragCursor);
                 } else if (dragCursor) {
                     // Update only Position
                     this.position$.next(dragCursor.position);
@@ -106,7 +111,7 @@ export class DejaMouseDragDropCursorComponent {
 
         Observable.from(this.dragDropService.dropCursor$)
             .subscribe((dropCursor) => {
-                console.log(dropCursor);
+                this._dropCursor = dropCursor;
             });
     }
 

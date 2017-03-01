@@ -54,7 +54,7 @@ import { DejaCircularPickerDemo } from './circular-picker/circular-picker-demo';
 import { DejaColorSelectorDemo } from './color-selector/color-selector-demo';
 import { DejaContentEditableDemo } from './content-editable/content-editable-demo';
 import { DejaDatePickerDemo } from './date-picker/date-picker-demo';
-import { DemoApp } from './demo-app/demo-app';
+import { DemoAppComponent } from './demo-app/demo-app';
 import { Home } from './demo-app/home-app';
 import { routing } from './demo-app/routes';
 import { GlobalEventsDemo } from './global-events/global-events-demo';
@@ -89,7 +89,7 @@ import { CodeblockModule } from 'ng-prism';
         DejaCircularPickerDemo,
         DejaDatePickerDemo,
         DejaColorSelectorDemo,
-        DemoApp,
+        DemoAppComponent,
         GlobalEventsDemo,
         GridDemo,
         Home,
@@ -108,7 +108,7 @@ import { CodeblockModule } from 'ng-prism';
         /* The comment above mustn't be removed ! */
     ],
     entryComponents: [
-        DemoApp,
+        DemoAppComponent,
     ],
     imports: [
         DejaAccordionModule,
@@ -168,6 +168,6 @@ export class DemoAppModule {
     constructor(private appRef: ApplicationRef) { }
 
     protected ngDoBootstrap() {
-        this.appRef.bootstrap(DemoApp);
+        this.appRef.bootstrap(DemoAppComponent);
     }
 }

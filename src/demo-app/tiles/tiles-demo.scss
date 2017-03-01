@@ -94,9 +94,9 @@ deja-tiles-demo {
     }
 }
 
-.deja-tile-cursor {
-    .coutry-target-cursor {
-        background-color: sandybrown;
+.country-target-cursor {
+    .tile-content {
+        background-color: sandybrown !important;
         width: 100%;
         height: 100%;
         display: block;

@@ -48,17 +48,15 @@ export interface IDragDropContext {
     [key: string]: any;
 }
 
-export interface IDragCursorInfos {
-    position: Position;
+export interface IDropCursorInfos {
     html?: string;
     width?: number;
     height?: number;
     className?: string;
 }
 
-export interface IDropCursorInfos {
-    html?: string;
-    width?: number;
-    height?: number;
-    className?: string;
+export interface IDragCursorInfos extends IDropCursorInfos {
+    position: Position;
+    pageX: number;
+    pageY: number;
 }

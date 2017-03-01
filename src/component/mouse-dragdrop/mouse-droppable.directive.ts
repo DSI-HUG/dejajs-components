@@ -10,7 +10,7 @@
  */
 
 import { Directive, ElementRef, Input } from '@angular/core';
-import { DejaMouseDragDropService, IDragDropContext, IDropCursorInfos } from './mouse-dragdrop.service';
+import { DejaMouseDragDropService, IDragCursorInfos, IDragDropContext, IDropCursorInfos } from './mouse-dragdrop.service';
 import { Observable } from 'rxjs/Rx';
 import { Position, Rect } from '../../common/core/graphics/index';
 
@@ -19,6 +19,7 @@ import { Position, Rect } from '../../common/core/graphics/index';
 })
 export class DejaMouseDroppableDirective {
     private _context: IDejaMouseDroppableContext;
+    private _dragContext: IDragDropContext;
 
     @Input('deja-mouse-droppable')
     public set context(value: IDejaMouseDroppableContext) {
@@ -42,18 +43,23 @@ export class DejaMouseDroppableDirective {
             .subscribe(() => {
                 kill$
                     .first()
-                    .subscribe(() => dragDropService.dropCursor$.next(undefined));
+                    .subscribe(() => {
+                        if (this._dragContext) {
+                            this.context.drop(this._dragContext);
+                            this._dragContext = undefined;
+                        }
+                        dragDropService.dropCursor$.next(undefined);
+                    });
 
-                Observable.fromEvent(element.ownerDocument, 'mousemove')
+                Observable.from(dragDropService.dragCursor$)
                     .takeUntil(kill$)
-                    .subscribe((ev: MouseEvent) => {
-                        if (ev.buttons === 1) {
-                            const bounds = new Rect(element.getBoundingClientRect());
-                            const position = new Position(ev.pageX, ev.pageY);
-                            if (bounds.containsPoint(position)) {
+                    .subscribe((dragCursor) => {
+                        const bounds = new Rect(element.getBoundingClientRect());
+                        if (this.context && dragCursor) {
+                            if (bounds.containsPoint(new Position(dragCursor.pageX, dragCursor.pageY))) {
+                                this._dragContext = dragDropService.context;
                                 if (this.context.getContext) {
-                                    const dragContext = dragDropService.context;
-                                    const dropContext = this.context.getContext(dragContext, ev);
+                                    const dropContext = this.context.getContext(this._dragContext, dragCursor);
                                     const dropContextObs = dropContext as Observable<IDropCursorInfos>;
                                     if (dropContextObs.subscribe) {
                                         // Observable
@@ -66,8 +72,15 @@ export class DejaMouseDroppableDirective {
                                     } else {
                                         dragDropService.dropCursor$.next(dropContext as IDropCursorInfos);
                                     }
+                                } else {
+                                    dragDropService.dropCursor$.next(undefined);
                                 }
+                            } else {
+                                this._dragContext = undefined;
+                                dragDropService.dropCursor$.next(undefined);
                             }
+                        } else {
+                            dragDropService.dropCursor$.next(undefined);
                         }
                     });
             });
@@ -75,5 +88,6 @@ export class DejaMouseDroppableDirective {
 }
 
 export interface IDejaMouseDroppableContext {
-    getContext?: (dragContext: IDragDropContext, event: MouseEvent) => IDropCursorInfos | Observable<IDropCursorInfos>; // Return object or observable<object>
+    getContext?: (dragContext: IDragDropContext, dragCursor: IDragCursorInfos) => IDropCursorInfos | Observable<IDropCursorInfos>; // Return object or observable<object>
+    drop?: (dragContext: IDragDropContext) => void;
 }

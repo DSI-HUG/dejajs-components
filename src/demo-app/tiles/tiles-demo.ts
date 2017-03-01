@@ -37,7 +37,7 @@ export class TilesDemoComponent implements OnInit {
 
     protected get debug() {
         // Check binding
-        console.log('bind ' + Date.now());
+        // console.log('bind ' + Date.now());
         return null;
     }
 
@@ -122,16 +122,19 @@ export class TilesDemoComponent implements OnInit {
         } as IDejaMouseDraggableContext;
     }
 
-    protected getDropContext() {
+    protected getDropContext(dropArea: HTMLElement) {
         return {
             getContext: (_dragContext) => {
                 return {
-                    html: '<div></div>',
                     width: 200,
                     height: 60,
-                    className: 'coutry-target-cursor',
+                    className: 'country-target-cursor',
                 } as IDropCursorInfos;
-            }
+            },
+            drop: (dragContext) => {
+                const country = dragContext as ICountry;
+                dropArea.innerText = `The dropped country is ${country.naqme} - the code is: ${country.code}`;
+            },
         } as IDejaMouseDraggableContext;
     }
 
