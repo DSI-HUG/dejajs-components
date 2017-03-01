@@ -198,4 +198,16 @@ deja-select {
 			right: -8%;
 		}
 	}
+
+	// styling the icon and text in template placeholder. Avoid to repeat in sub-components
+	$deep: '/deep/';
+	#{$deep} {
+		md-placeholder {
+			display: flex;
+			align-items: center;
+			md-icon {
+				margin-right: 0.5rem;
+			}
+		}
+	}
 }
