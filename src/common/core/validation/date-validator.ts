@@ -14,11 +14,11 @@ import { FormControl, NG_VALIDATORS } from '@angular/forms';
 
 function validateDateFactory(dateMin, dateMax) {
    return (c: FormControl) => {
-        let bad = {
+        const bad = {
             invalideDate: true,
         };
 
-        let now = new Date();
+        const now = new Date();
 
         if (!c.value) {
             return bad;
@@ -33,11 +33,11 @@ function validateDateFactory(dateMin, dateMax) {
 
 @Directive({
     providers: [
-        { provide: NG_VALIDATORS, useExisting: forwardRef(() => DateValidator), multi: true },
+        { provide: NG_VALIDATORS, useExisting: forwardRef(() => DateValidatorDirective), multi: true },
     ],
     selector: '[date-validator][ngModel]',
 })
-export class DateValidator implements OnInit {
+export class DateValidatorDirective implements OnInit {
     @Input() public dateMin: Date;
     @Input() public dateMax: Date;
 

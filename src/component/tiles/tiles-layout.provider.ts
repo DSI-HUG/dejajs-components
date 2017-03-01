@@ -99,7 +99,7 @@ export class DejaTilesLayoutProvider {
             // add at the nearest free place
             freePlaces.sort((bounds1, bounds2) => {
                 const calcDistance = (bounds) => {
-                    return Math.min(Math.abs(bounds.left - idealBounds.left), Math.abs(bounds.right() - idealBounds.right())) + 2 * Math.min(Math.abs(bounds.top - idealBounds.top), Math.abs(bounds.bottom() - idealBounds.bottom()));
+                    return Math.min(Math.abs(bounds.left - idealBounds.left), Math.abs(bounds.right - idealBounds.right)) + 2 * Math.min(Math.abs(bounds.top - idealBounds.top), Math.abs(bounds.bottom - idealBounds.bottom));
                 };
                 return calcDistance(bounds1) - calcDistance(bounds2);
             });
@@ -474,17 +474,17 @@ export class DejaTilesLayoutProvider {
             maxWidth = this.getTileMaxPercentWidth();
             let dleft = percentPos.left;
             let tleft = dragBounds.left < dleft ? minWidth * Math.ceil(dleft / minWidth) : minWidth * Math.floor(dleft / minWidth);
-            let twidth = Math.min(maxWidth, Math.max(minWidth, newTargetBounds.right() - tleft));
-            dragBounds.width = dragBounds.right() - dleft;
+            let twidth = Math.min(maxWidth, Math.max(minWidth, newTargetBounds.right - tleft));
+            dragBounds.width = dragBounds.right - dleft;
             dragBounds.left = dleft;
-            newTargetBounds.left = newTargetBounds.right() - twidth;
+            newTargetBounds.left = newTargetBounds.right - twidth;
             newTargetBounds.width = twidth;
         }
         if (directions & Directions.right) {
             minWidth = minWidth || this.getTileMinPercentWidth();
             maxWidth = maxWidth || this.getTileMaxPercentWidth();
             let dright = percentPos.left;
-            let tright = dragBounds.right() < dright ? minWidth * Math.ceil(dright / minWidth) : minWidth * Math.floor(dright / minWidth);
+            let tright = dragBounds.right < dright ? minWidth * Math.ceil(dright / minWidth) : minWidth * Math.floor(dright / minWidth);
             dragBounds.width = dright - dragBounds.left;
             newTargetBounds.width = Math.min(maxWidth, Math.max(minWidth, tright - newTargetBounds.left));
         }
@@ -493,17 +493,17 @@ export class DejaTilesLayoutProvider {
             maxHeight = this.getTileMaxPercentHeight();
             let dtop = percentPos.top;
             let ttop = dragBounds.top < dtop ? minHeight * Math.ceil(dtop / minHeight) : minHeight * Math.floor(dtop / minHeight);
-            let theight = Math.min(maxHeight, Math.max(minHeight, newTargetBounds.bottom() - ttop));
-            dragBounds.height = dragBounds.bottom() - dtop;
+            let theight = Math.min(maxHeight, Math.max(minHeight, newTargetBounds.bottom - ttop));
+            dragBounds.height = dragBounds.bottom - dtop;
             dragBounds.top = dtop;
-            newTargetBounds.top = newTargetBounds.bottom() - theight;
+            newTargetBounds.top = newTargetBounds.bottom - theight;
             newTargetBounds.height = theight;
         }
         if (directions & Directions.bottom) {
             minHeight = minHeight || this.getTileMinPercentHeight();
             maxHeight = maxHeight || this.getTileMaxPercentHeight();
             let dbottom = percentPos.top;
-            let tbottom = dragBounds.bottom() < dbottom ? minHeight * Math.ceil(dbottom / minHeight) : minHeight * Math.floor(dbottom / minHeight);
+            let tbottom = dragBounds.bottom < dbottom ? minHeight * Math.ceil(dbottom / minHeight) : minHeight * Math.floor(dbottom / minHeight);
             dragBounds.height = dbottom - dragBounds.top;
             newTargetBounds.height = Math.min(maxHeight, Math.max(minHeight, tbottom - newTargetBounds.top));
         }
@@ -620,13 +620,13 @@ export class DejaTilesLayoutProvider {
         }
 
         let maxPercentWidth = this.getMaxPercentWidth();
-        if (maxPercentWidth && percentBounds.right() > maxPercentWidth) {
-            percentBounds = percentBounds.offset(maxPercentWidth - percentBounds.right(), 0);
+        if (maxPercentWidth && percentBounds.right > maxPercentWidth) {
+            percentBounds = percentBounds.offset(maxPercentWidth - percentBounds.right, 0);
         }
 
         let maxPercentHeight = this.getMaxPercentHeight();
-        if (maxPercentHeight && percentBounds.bottom() > maxPercentHeight) {
-            percentBounds = percentBounds.offset(0, maxPercentHeight - percentBounds.bottom());
+        if (maxPercentHeight && percentBounds.bottom > maxPercentHeight) {
+            percentBounds = percentBounds.offset(0, maxPercentHeight - percentBounds.bottom);
         }
 
         return percentBounds;
@@ -668,11 +668,11 @@ export class DejaTilesLayoutProvider {
                         return bounds;
                     } else {
                         let hol = t.bounds.left - effectiveBounds.left; // Ce qui dépasse Ã  gauche
-                        let hor = effectiveBounds.right() - t.bounds.right(); // Ce qui dépasse Ã  droite
+                        let hor = effectiveBounds.right - t.bounds.right; // Ce qui dépasse Ã  droite
                         let vot = t.bounds.top - effectiveBounds.top; // Ce qui dépasse en haut
-                        let vob = effectiveBounds.bottom() - t.bounds.bottom(); // Ce qui dépasse en bas
-                        let hoe = Math.max(0, Math.min(t.bounds.right(), effectiveBounds.right()) - Math.max(t.bounds.left, effectiveBounds.left)) / Math.min(t.bounds.width, effectiveBounds.width);
-                        let voe = Math.max(0, Math.min(t.bounds.bottom(), effectiveBounds.bottom()) - Math.max(t.bounds.top, effectiveBounds.top)) / Math.min(t.bounds.height, effectiveBounds.height);
+                        let vob = effectiveBounds.bottom - t.bounds.bottom; // Ce qui dépasse en bas
+                        let hoe = Math.max(0, Math.min(t.bounds.right, effectiveBounds.right) - Math.max(t.bounds.left, effectiveBounds.left)) / Math.min(t.bounds.width, effectiveBounds.width);
+                        let voe = Math.max(0, Math.min(t.bounds.bottom, effectiveBounds.bottom) - Math.max(t.bounds.top, effectiveBounds.top)) / Math.min(t.bounds.height, effectiveBounds.height);
 
                         // Calc prefered direction
                         let preferedDirection: Directions;
@@ -771,8 +771,8 @@ export class DejaTilesLayoutProvider {
                 let maxWidth = this.getMaxPercentWidth();
                 if (tryBounds.left < 0) {
                     roffset = -tryBounds.left;
-                } else if (maxWidth && tryBounds.right() > maxWidth) {
-                    roffset = tryBounds.right() - maxWidth;
+                } else if (maxWidth && tryBounds.right > maxWidth) {
+                    roffset = tryBounds.right - maxWidth;
                 }
 
                 let adjacentTiles = this.tiles.filter((tt) => !tt.dragging && t !== tt && tt.bounds.intersectWith(tryBounds));
@@ -809,7 +809,7 @@ export class DejaTilesLayoutProvider {
         if (!offset) {
             offset = 0;
             tiles.forEach((t) => {
-                let ho = direction > 0 ? Math.max(0, bounds.right() - t.bounds.left) : Math.max(0, t.bounds.right() - bounds.left);
+                let ho = direction > 0 ? Math.max(0, bounds.right - t.bounds.left) : Math.max(0, t.bounds.right - bounds.left);
                 if (ho > offset) {
                     offset = ho;
                 }
@@ -849,8 +849,8 @@ export class DejaTilesLayoutProvider {
                 let maxHeight = this.getMaxPercentHeight();
                 if (tryBounds.top < 0) {
                     roffset = -tryBounds.top;
-                } else if (maxHeight && tryBounds.bottom() > maxHeight) {
-                    roffset = tryBounds.bottom() - maxHeight;
+                } else if (maxHeight && tryBounds.bottom > maxHeight) {
+                    roffset = tryBounds.bottom - maxHeight;
                 }
 
                 let adjacentTiles = this.tiles.filter((tt) => !tt.dragging && t !== tt && tt.bounds.intersectWith(tryBounds));
@@ -887,7 +887,7 @@ export class DejaTilesLayoutProvider {
         if (!offset) {
             offset = 0;
             tiles.forEach((t) => {
-                let vo = direction > 0 ? Math.max(0, bounds.bottom() - t.bounds.top) : Math.max(0, t.bounds.bottom() - bounds.top);
+                let vo = direction > 0 ? Math.max(0, bounds.bottom - t.bounds.top) : Math.max(0, t.bounds.bottom - bounds.top);
                 if (vo > offset) {
                     offset = vo;
                 }

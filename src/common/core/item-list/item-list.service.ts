@@ -116,6 +116,7 @@ export class ItemListService {
             } else if (items instanceof Array) {
                 this.ensureChildrenProperties(items);
                 this.ensureSelectedItems(items);
+                this.items = items;
                 subscriber.next();
             } else {
                 let promise = items as Promise<IItemBase[]>;

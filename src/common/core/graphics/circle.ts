@@ -26,15 +26,15 @@ export class Circle {
      */
     public static fromOuterRect(left?: number | Object, top?: number, width?: number, height?: number) {
         if (typeof left === 'object') {
-            let bounds = left as any;
+            const bounds = left as any;
             left = bounds.left;
             top = bounds.top;
             width = bounds.width;
             height = bounds.height;
         }
-        let radius = Math.min(width, height) / 2;
+        const radius = Math.min(width, height) / 2;
 
-        let center = new Position(+left + (width / 2), top + (height / 2));
+        const center = new Position(+left + (width / 2), top + (height / 2));
         return new Circle(center, radius);
     }
 
@@ -55,8 +55,8 @@ export class Circle {
 
     /** Return a boolean indicate if the passed point is inside the circle */
     public containsPoint(point: Position): boolean {
-        let dx = Math.abs(point.left - this.center.left);
-        let dy = Math.abs(point.top - this.center.top);
+        const dx = Math.abs(point.left - this.center.left);
+        const dy = Math.abs(point.top - this.center.top);
 
         return dx * dx + dy * dy <= this.radius * this.radius;
     }

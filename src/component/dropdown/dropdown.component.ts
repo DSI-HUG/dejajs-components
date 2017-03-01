@@ -162,11 +162,11 @@ export class DejaDropDownComponent implements AfterViewInit {
                 if (this.ownerAlignents.left) {
                     width = ownerBounds.width;
                 } else if (this.dropdownAlignments.left) {
-                    left = ownerBounds.right();
+                    left = ownerBounds.right;
                 } else if (this.dropdownAlignments.right) {
-                    left = ownerBounds.right() - width;
+                    left = ownerBounds.right - width;
                 } else {
-                    left = ownerBounds.right() - width / 2;
+                    left = ownerBounds.right - width / 2;
                 }
             }
 
@@ -174,11 +174,11 @@ export class DejaDropDownComponent implements AfterViewInit {
                 if (this.ownerAlignents.top) {
                     height = ownerBounds.height;
                 } else if (this.dropdownAlignments.top) {
-                    top = ownerBounds.bottom();
+                    top = ownerBounds.bottom;
                 } else if (this.dropdownAlignments.bottom) {
-                    top = ownerBounds.bottom() - height;
+                    top = ownerBounds.bottom - height;
                 } else {
-                    top = ownerBounds.bottom() - height / 2;
+                    top = ownerBounds.bottom - height / 2;
                 }
             }
 
@@ -201,29 +201,29 @@ export class DejaDropDownComponent implements AfterViewInit {
                 dropdownBounds.top = minTop;
             }
 
-            if (dropdownBounds.right() > maxRight && this.dropdownAlignments.right) {
+            if (dropdownBounds.right > maxRight && this.dropdownAlignments.right) {
                 dropdownBounds.left = Math.max(maxRight - dropdownBounds.width, minLeft);
             }
 
-            if (dropdownBounds.bottom() > maxBottom && this.dropdownAlignments.bottom) {
+            if (dropdownBounds.bottom > maxBottom && this.dropdownAlignments.bottom) {
                 dropdownBounds.top = Math.max(maxBottom - dropdownBounds.height, minTop);
             }
 
             if (dropdownBounds.intersectWith(ownerBounds) && this.avoidOnwerOverflow) {
                 // Try a better aligment
-                if (dropdownBounds.left < ownerBounds.right() && dropdownBounds.right() > ownerBounds.left) {
-                    let overflowTop = dropdownBounds.bottom() - ownerBounds.top;
-                    let overflowBottom = ownerBounds.bottom() - dropdownBounds.top;
+                if (dropdownBounds.left < ownerBounds.right && dropdownBounds.right > ownerBounds.left) {
+                    let overflowTop = dropdownBounds.bottom - ownerBounds.top;
+                    let overflowBottom = ownerBounds.bottom - dropdownBounds.top;
                     if (overflowTop > 0 && overflowBottom > 0) {
                         let topHeight = Math.min(ownerBounds.top - minTop, dropdownBounds.height);
-                        let bottomHeight = Math.min(maxBottom - ownerBounds.bottom(), dropdownBounds.height);
+                        let bottomHeight = Math.min(maxBottom - ownerBounds.bottom, dropdownBounds.height);
                         if (overflowBottom > 0 && bottomHeight < topHeight) {
                             dropdownBounds.top = ownerBounds.top - topHeight;
                             if (dropdownBounds.height > topHeight) {
                                 dropdownBounds.height = topHeight;
                             }
                         } else {
-                            dropdownBounds.top = ownerBounds.bottom();
+                            dropdownBounds.top = ownerBounds.bottom;
                             if (dropdownBounds.height > bottomHeight) {
                                 dropdownBounds.height = bottomHeight;
                             }
@@ -231,19 +231,19 @@ export class DejaDropDownComponent implements AfterViewInit {
                     }
                 }
 
-                if (dropdownBounds.top < ownerBounds.bottom() && dropdownBounds.bottom() > ownerBounds.top) {
-                    let overflowLeft = dropdownBounds.right() - ownerBounds.left;
-                    let overflowRight = ownerBounds.right() - dropdownBounds.left;
+                if (dropdownBounds.top < ownerBounds.bottom && dropdownBounds.bottom > ownerBounds.top) {
+                    let overflowLeft = dropdownBounds.right - ownerBounds.left;
+                    let overflowRight = ownerBounds.right - dropdownBounds.left;
                     if (overflowLeft > 0 && overflowRight > 0) {
                         let leftWidth = Math.min(ownerBounds.left - minLeft, dropdownBounds.width);
-                        let rightWidth = Math.min(maxRight - ownerBounds.right(), dropdownBounds.width);
+                        let rightWidth = Math.min(maxRight - ownerBounds.right, dropdownBounds.width);
                         if (overflowRight > 0 && rightWidth < leftWidth) {
                             dropdownBounds.left = ownerBounds.left - leftWidth;
                             if (dropdownBounds.width > leftWidth) {
                                 dropdownBounds.width = leftWidth;
                             }
                         } else {
-                            dropdownBounds.left = ownerBounds.right();
+                            dropdownBounds.left = ownerBounds.right;
                             if (dropdownBounds.width > rightWidth) {
                                 dropdownBounds.width = rightWidth;
                             }
@@ -261,7 +261,7 @@ export class DejaDropDownComponent implements AfterViewInit {
                     if (this.ownerAlignents.left) {
                         dropdownBounds.width = Math.max(5, ownerBounds.left - minLeft);
                     } else if (this.ownerAlignents.right) {
-                        dropdownBounds.width = ownerBounds.right() - minLeft;
+                        dropdownBounds.width = ownerBounds.right - minLeft;
                     }
                 }
             }
@@ -273,12 +273,12 @@ export class DejaDropDownComponent implements AfterViewInit {
                     if (this.ownerAlignents.top) {
                         dropdownBounds.height = Math.max(5, ownerBounds.top - minTop);
                     } else if (this.ownerAlignents.bottom) {
-                        dropdownBounds.height = ownerBounds.bottom() - minTop;
+                        dropdownBounds.height = ownerBounds.bottom - minTop;
                     }
                 }
             }
 
-            if (dropdownBounds.right() > maxRight) {
+            if (dropdownBounds.right > maxRight) {
                 if (this.dropdownAlignments.left) {
                     // Left blocked
                     dropdownBounds.width = maxRight - dropdownBounds.left;
@@ -291,7 +291,7 @@ export class DejaDropDownComponent implements AfterViewInit {
                 }
             }
 
-            if (dropdownBounds.bottom() > maxBottom) {
+            if (dropdownBounds.bottom > maxBottom) {
                 if (this.dropdownAlignments.top) {
                     // Top blocked
                     dropdownBounds.height = maxBottom - dropdownBounds.top;
@@ -304,17 +304,17 @@ export class DejaDropDownComponent implements AfterViewInit {
                 }
             }
 
-            if (dropdownBounds.top >= ownerBounds.bottom()) {
+            if (dropdownBounds.top >= ownerBounds.bottom) {
                 this.valign = 'bottom';
-            } else if (dropdownBounds.bottom() <= ownerBounds.top) {
+            } else if (dropdownBounds.bottom <= ownerBounds.top) {
                 this.valign = 'top';
             } else {
                 this.valign = 'center';
             }
 
-            if (dropdownBounds.left >= ownerBounds.right()) {
+            if (dropdownBounds.left >= ownerBounds.right) {
                 this.halign = 'right';
-            } else if (dropdownBounds.right() <= ownerBounds.left) {
+            } else if (dropdownBounds.right <= ownerBounds.left) {
                 this.halign = 'left';
             } else {
                 this.halign = 'center';

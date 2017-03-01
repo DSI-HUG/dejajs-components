@@ -10,12 +10,12 @@
  */
 
 export class Position {
+    public left: number;
+    public top: number;
+
     public static equals(p1: Position, p2: Position) {
         return p1.left === p2.left && p1.top === p2.top;
     }
-
-    public left: number;
-    public top: number;
 
     constructor(left?: number, top?: number) {
         this.left = left || 0;
@@ -38,6 +38,6 @@ export class Position {
     }
 
     public around(x: number, y: number, xspan: number, yspan?: number): boolean {
-        return Math.abs(this.left - x) <= xspan && Math.abs(this.top - y) <= (yspan | xspan);
+        return Math.abs(this.left - x) <= xspan && Math.abs(this.top - y) <= (yspan || xspan);
     }
 }

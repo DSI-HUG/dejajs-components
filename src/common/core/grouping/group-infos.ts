@@ -9,7 +9,7 @@
  *
  */
 
-import { ISortInfos } from "../sorting/index";
+import { ISortInfos } from '../sorting/index';
 
 export interface IGroupInfo { 
     sortInfos?: ISortInfos;

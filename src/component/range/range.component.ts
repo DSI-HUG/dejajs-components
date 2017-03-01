@@ -29,7 +29,7 @@ export class DejaRangeComponent implements ControlValueAccessor {
     // step can be either a numeric value, an array of accepted intervals or a function returning the next accepted interval
     @Input() public step: number | number[] | ((event: IStepRangeEvent) => number) = 1;
     // index of the selected range
-    @Input() public selected: number = 0;
+    @Input() public selected = 0;
     // emit the selected range
     @Output() public select: EventEmitter<any> = new EventEmitter();
     // error emitter, used to notify the outside when forbidden actions are performed
@@ -38,10 +38,10 @@ export class DejaRangeComponent implements ControlValueAccessor {
     @ContentChild('rangeTemplate') protected rangeTemplate;
     @ContentChild('separatorTemplate') protected separatorTemplate;
     // minimum range percentage, used to avoid 2 separator being on the same visual space
-    private minimumRangePercentage: number = 0.01;
+    private minimumRangePercentage = 0.01;
 
-    private _readOnly: boolean = true;
-    private _disabled: boolean = false;
+    private _readOnly = true;
+    private _disabled = false;
     private _ranges: IRange[];
 
     // inner model
@@ -179,7 +179,7 @@ export class DejaRangeComponent implements ControlValueAccessor {
         }
 
         if (this.selected !== index) {
-            let event = e as IRangeEvent;
+            const event = e as IRangeEvent;
             event.range = this.ranges[index];
             event.index = index;
             event.ranges = this.ranges;
@@ -214,8 +214,6 @@ export class DejaRangeComponent implements ControlValueAccessor {
 
                     this._onChangeCallback(this._ranges);
                 });
-            kill$
-                .subscribe();
 
             Observable
                 .fromEvent(document, 'mousemove')
@@ -294,7 +292,7 @@ export class DejaRangeComponent implements ControlValueAccessor {
             return bestValue;
 
         } else if (typeof this.step === 'function') {
-            let event = {} as IStepRangeEvent;
+            const event = {} as IStepRangeEvent;
 
             event.range = this.ranges[index];
             event.index = index;
@@ -309,7 +307,7 @@ export class DejaRangeComponent implements ControlValueAccessor {
             this.step
                 .filter((value) => value <= viewMax && value >= viewMin)
                 .forEach((value) => {
-                    let diff = Math.abs(value - newMax);
+                    const diff = Math.abs(value - newMax);
                     if (bestDiff === undefined || bestDiff > diff) {
                         idealValue = value;
                         bestDiff = diff;

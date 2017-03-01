@@ -5,7 +5,8 @@
 # [1.3.1] (2017-02-15)
 
 ### Breaking changes from 1.3.0
-
+* **Rect:** Right and Bottom are now get set properties instead functions.
+* **DateValidatorDirective:** DateValidator is renamed DateValidatorDirective
 
 ### Bug fixes #
 * **Typescript compiler options:**

@@ -13,10 +13,10 @@ export class HtmlUtils {
 
     public static getEncodedURIComponent(jsonObjParameters: any): string {
         if (jsonObjParameters) {
-            let params: string[] = [];
-            for (let p in jsonObjParameters) {
+            const params: string[] = [];
+            for (const p in jsonObjParameters) {
                 if (jsonObjParameters.hasOwnProperty(p)) {
-                    params.push(encodeURIComponent(p) + "=" + encodeURIComponent(jsonObjParameters[p]));
+                    params.push(encodeURIComponent(p) + '=' + encodeURIComponent(jsonObjParameters[p]));
                 }
             }
             return params.join('&');

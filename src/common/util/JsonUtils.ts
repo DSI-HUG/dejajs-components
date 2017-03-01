@@ -1,7 +1,7 @@
 /*
  * *
  *  @license
- *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
+ *  Copyright HÃ´pitaux Universitaires de GenÃ¨ve All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
@@ -11,27 +11,33 @@
 
 export class JsonUtils {
     /**
-     * deserializeJson is a method to deserialize a json into a typed object. The <T> say that we want to "capture" the object type so we can return it.
-     * More details : https://www.typescriptlang.org/docs/handbook/generics.html
-     *
-     * /!\ this is not a recursive function !
-     *      Object into object will stay as generic objects.
-     *      Re-use this function to deserialize them into typed objects.
-     *
-     * Usage : var obj = JsonUtils.deserializeJson(new TypedObj(), aJSON);
-     *          Where TypedObj is a valid TypeScript class.
-     *          After that, obj.constructor.name will be TypedObj
-     * {
-     * Example of use : http://plnkr.co/edit/11b0kzypP0N9I9B8AqPx?p=preview
-     *
-     * @param {Object} obj : Object to deserialize into
-     * @param {Object | string} jsonObj : a JSON;
-     *
-     * @return {<T>} obj : an object of "T" type
+     * Cache for getOneFrom() method
+     * @type {{}}
      */
+    private static mapCaches: any = {};
+
+    /**
+    * deserializeJson is a method to deserialize a json into a typed object. The <T> say that we want to "capture" the object type so we can return it.
+    * More details : https://www.typescriptlang.org/docs/handbook/generics.html
+    *
+    * /!\ this is not a recursive function !
+    *      Object into object will stay as generic objects.
+    *      Re-use this function to deserialize them into typed objects.
+    *
+    * Usage : var obj = JsonUtils.deserializeJson(new TypedObj(), aJSON);
+    *          Where TypedObj is a valid TypeScript class.
+    *          After that, obj.constructor.name will be TypedObj
+    * {
+    * Example of use : http://plnkr.co/edit/11b0kzypP0N9I9B8AqPx?p=preview
+    *
+    * @param {Object} obj : Object to deserialize into
+    * @param {Object | string} jsonObj : a JSON;
+    *
+    * @return {<T>} obj : an object of "T" type
+    */
     public static deserializeJson<T>(obj: T, jsonObj: any): T {
 
-        if (typeof jsonObj === "string") {
+        if (typeof jsonObj === 'string') {
             jsonObj = JSON.parse(jsonObj);
         }
 
@@ -56,12 +62,12 @@ export class JsonUtils {
      * @param caseTransform
      * @returns {T} : An object of "T" type
      */
-    public static deserializeJson2<T>(clazz: {new (): T}, sourceObj: any, caseTransform: boolean = false): T {
-        let castedObj: T = new clazz();
+    public static deserializeJson2<T>(clazz: { new (): T }, sourceObj: any, caseTransform = false): T {
+        const castedObj: T = new clazz();
 
-        for (let sourcePropName in sourceObj) {
+        for (const sourcePropName in sourceObj) {
             if (sourceObj.hasOwnProperty(sourcePropName)) {
-                let targetPropName = caseTransform ? sourcePropName.toLowerCase() : sourcePropName;
+                const targetPropName = caseTransform ? sourcePropName.toLowerCase() : sourcePropName;
                 castedObj[targetPropName] = sourceObj[sourcePropName];
             }
         }
@@ -76,7 +82,7 @@ export class JsonUtils {
      * @param caseTransform
      * @returns {any[]}
      */
-    public static deserializeJsonList<T>(clazz: {new (): T}, sourceList: any[], caseTransform: boolean = false): T[] {
+    public static deserializeJsonList<T>(clazz: { new (): T }, sourceList: any[], caseTransform = false): T[] {
         return sourceList.map((sourceObj) => this.deserializeJson2<T>(clazz, sourceObj, caseTransform));
     }
 
@@ -88,7 +94,7 @@ export class JsonUtils {
      * @returns {any}
      */
     public static toMap(objList: any[], idFieldName: string = null): any {
-        let mapObj: any = {};
+        const mapObj: any = {};
         objList.forEach((obj: any) => {
             if (idFieldName) {
                 mapObj[obj[idFieldName]] = obj;
@@ -125,10 +131,4 @@ export class JsonUtils {
             }
         });
     }
-
-    /**
-     * Cache for getOneFrom() method
-     * @type {{}}
-     */
-    private static mapCaches: any = {};
 }
