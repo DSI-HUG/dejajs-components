@@ -10,7 +10,7 @@
  */
 
 import { Component, ContentChild, Input } from '@angular/core';
-import { IDejaGridColumn, IDejaGridParentRow } from "../index";
+import { IDejaGridColumn, IDejaGridParentRow } from '../index';
 
 /** Composant représentant une ligne parente d'une structure de ligne hierarchique */
 @Component({
@@ -23,7 +23,7 @@ export class DejaGridParentRowComponent {
     @Input() public row: IDejaGridParentRow;
 
     /** Définit la structure de colonnes a appliquer sur cette ligne */
-    @Input() public columns: IDejaGridColumn[];    
+    @Input() public columns: IDejaGridColumn[];
 
     /** Template de cellule si définit extérieurement à la grille */
     @Input() public cellTemplateExternal;
@@ -31,7 +31,7 @@ export class DejaGridParentRowComponent {
     /** Template de titre si définit extérieurement à la grille */
     @Input() public parentTitleTemplateExternal;
 
-    /** Index de la ligne sur la liste plate de ItemListService */    
+    /** Index de la ligne sur la liste plate de ItemListService */
     @Input() public flatIndex: number;
 
     /** Template de titre par defaut définit dans le HTML de la grille */
@@ -40,8 +40,8 @@ export class DejaGridParentRowComponent {
     /** Template de cellule par defaut  définit dans le HTML de la grille */
     @ContentChild('cellTemplate') protected cellTemplateInternal;
 
-    protected get columnLayout() { 
-        let colLayout = {} as IDejaGridParentRowColumnLayout;
+    protected get columnLayout() {
+        const colLayout = {} as IDejaGridParentRowColumnLayout;
         let left = 0;
         colLayout.columns = [];
         this.columns.forEach((column) => {
@@ -53,7 +53,7 @@ export class DejaGridParentRowComponent {
                     column: column,
                     left: left,
                 });
-            } 
+            }
             left += column.w;
         });
         colLayout.column0 = left;
@@ -69,7 +69,7 @@ export class DejaGridParentRowComponent {
     }
 }
 
-interface IDejaGridParentRowColumnLayout { 
+interface IDejaGridParentRowColumnLayout {
     column0: number;
     columns: Array<{
         column: IDejaGridColumn;

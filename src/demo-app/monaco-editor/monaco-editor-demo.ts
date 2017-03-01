@@ -10,10 +10,10 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
-import {IEditorLanguage} from "../../component/monaco-editor/options/editor-language.model";
-import {IEditorTheme} from "../../component/monaco-editor/options/editor-theme.component";
-import {MonacoEditorDemoService} from "./monaco-editor-demo.service.";
+import {ActivatedRoute} from '@angular/router';
+import {IEditorLanguage} from '../../component/monaco-editor/options/editor-language.model';
+import {IEditorTheme} from '../../component/monaco-editor/options/editor-theme.component';
+import {MonacoEditorDemoService} from './monaco-editor-demo.service.';
 
 const xmlFile = 'xmlFile';
 const xmlToCompareFile = 'xmlToCompareFile';
@@ -28,7 +28,7 @@ const jsonToCompareFile = 'jsonToCompareFile';
     ],
     templateUrl: './monaco-editor-demo.html',
 })
-export class DejaMonacoEditorDemo implements OnInit {
+export class DejaMonacoEditorDemoComponent implements OnInit {
     protected language: IEditorLanguage = IEditorLanguage.XML;
     protected languageJson: IEditorLanguage = IEditorLanguage.JSON;
 

@@ -10,19 +10,17 @@
  */
 
 import { CommonModule } from '@angular/common';
-import { Component, NgModule, ViewEncapsulation } from '@angular/core';
+import { Component, HostBinding, NgModule, ViewEncapsulation } from '@angular/core';
 
 @Component({
     encapsulation: ViewEncapsulation.None,
-    host: {
-        class: 'accordion',
-    },
     selector: 'deja-accordion',
     styleUrls: ['./accordion.component.scss'],
     template: '<ng-content></ng-content>',
 })
 export class DejaAccordionComponent {
     private groups: DejaAccordionGroupComponent[] = [];
+    @HostBinding('class.accordion') true;
 
     public addGroup(group: DejaAccordionGroupComponent): void {
         this.groups.push(group);
@@ -34,7 +32,7 @@ export class DejaAccordionComponent {
     template: '<div class="accordion-group" [class.open]="isOpen" (click)="toggleOpen($event)"><ng-content></ng-content></div>',
 })
 export class DejaAccordionGroupComponent {
-    private isOpen: boolean = false;
+    private isOpen = false;
 
     constructor(private accordion: DejaAccordionComponent) {
         this.accordion.addGroup(this);
@@ -59,11 +57,10 @@ export class DejaAccordionHeaderComponent { }
 @Component({
     selector: 'deja-accordion-body',
     template: '<ng-content></ng-content>',
-    host: {
-        'class': 'accordion-body',
-    },
 })
-export class DejaAccordionBodyComponent { }
+export class DejaAccordionBodyComponent {
+    @HostBinding('class.accordion-body') true;
+}
 
 const DEJA_ACCORDION_DIRECTIVES = [DejaAccordionComponent, DejaAccordionGroupComponent, DejaAccordionHeaderComponent, DejaAccordionBodyComponent];
 

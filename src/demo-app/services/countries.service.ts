@@ -28,7 +28,7 @@ export class CountriesService {
         return new Observable<ICountry[]>((resolve: Subscriber<ICountry[]>) => {
             /* resolve.error('Get Countries Error'); */
             number = number || 1;
-            let getNextBunch = () => {
+            const getNextBunch = () => {
                 if (--number < 0) {
                     resolve.complete();
                     return;

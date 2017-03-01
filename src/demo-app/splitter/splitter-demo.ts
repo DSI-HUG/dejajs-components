@@ -18,7 +18,7 @@ import {Component, OnInit} from '@angular/core';
     ],
     templateUrl: 'splitter-demo.html',
 })
-export class DejaSplitterDemo implements OnInit {
+export class DejaSplitterDemoComponent implements OnInit {
 
     constructor() {
     }

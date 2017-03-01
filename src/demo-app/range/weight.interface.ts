@@ -13,7 +13,7 @@ import { IRange } from '../../component/range/range.interface';
 
 /**
  * IWeight interface
- * 
+ *
  * @export
  * @interface IWeight
  * @extends {IRange}
@@ -26,7 +26,7 @@ export interface IWeight extends IRange {
 /**
  * IWeight class implementation
  * An example of non linear interpolation using logarithm
- * 
+ *
  * @export
  * @class Weight
  * @implements {IWeight}

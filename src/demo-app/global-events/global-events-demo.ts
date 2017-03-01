@@ -17,7 +17,7 @@ import { GlobalEventService } from '../../common/global-event/global-event.servi
   styleUrls: ['./global-events-demo.scss'],
   templateUrl: './global-events-demo.html',
 })
-export class GlobalEventsDemo implements OnInit {
+export class GlobalEventsDemoComponent implements OnInit {
   private model = {
     date: new Date(),
   };

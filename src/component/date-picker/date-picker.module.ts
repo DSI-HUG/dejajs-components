@@ -14,8 +14,8 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MdButtonModule, MdIconModule, MdInputModule } from '@angular/material';
 import { DejaBackdropModule } from '../backdrop';
-import { DejaCircularPickerModule }   from '../circular-picker/circular-picker.module';
-import { DejaDateSelectorModule }   from '../date-selector';
+import { DejaCircularPickerModule } from '../circular-picker/circular-picker.module';
+import { DejaDateSelectorModule } from '../date-selector';
 import { DejaDropDownModule } from '../dropdown';
 import { DejaDatePickerComponent } from './date-picker.component';
 

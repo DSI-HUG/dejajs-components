@@ -9,15 +9,15 @@
  *
  */
 
-import { Component, ContentChild, ElementRef, EventEmitter, forwardRef, Input, Output, QueryList, ViewChild, ViewChildren, ViewEncapsulation } from "@angular/core";
-import { NG_VALUE_ACCESSOR } from "@angular/forms";
+import { Component, ContentChild, ElementRef, EventEmitter, forwardRef, Input, Output, QueryList, ViewChild, ViewChildren, ViewEncapsulation } from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { Observable, Subscription } from 'rxjs/Rx';
 import { clearTimeout, setTimeout } from 'timers';
 import { Position, Rect } from '../../common/core/graphics';
 import { GroupingService } from '../../common/core/grouping';
 import { IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, ViewportMode } from '../../common/core/item-list';
-import { KeyCodes } from "../../common/core/keycodes.enum";
+import { KeyCodes } from '../../common/core/keycodes.enum';
 import { SortingService } from '../../common/core/sorting';
 import { IDejaDragEvent } from '../dragdrop';
 import { DejaTreeListItemEvent, DejaTreeListItemsEvent, DejaTreeListScrollEvent } from './index';
@@ -167,9 +167,9 @@ export class DejaTreeListComponent extends ItemListBase {
     /** Retourne le nombre de lignes à sauter en cas de pression sur les touches PageUp ou PageDown */
     public get pageSize() {
         if (this._pageSize === 0) {
-            let vpRowHeight = this.getViewPortRowHeight();
-            let containerElement = this.listcontainer.nativeElement as HTMLElement;
-            let containerHeight = this.maxHeight || containerElement.clientHeight;
+            const vpRowHeight = this.getViewPortRowHeight();
+            const containerElement = this.listcontainer.nativeElement as HTMLElement;
+            const containerHeight = this.maxHeight || containerElement.clientHeight;
             return Math.floor(containerHeight / vpRowHeight);
         }
 
@@ -286,7 +286,7 @@ export class DejaTreeListComponent extends ItemListBase {
     @Input()
     public set selectedItem(item: IItemBase) {
         if (this.multiSelect) {
-            throw 'selectedItem binding is for single selection only, use selectedItems for multi selection';
+            throw new Error('selectedItem binding is for single selection only, use selectedItems for multi selection');
         }
 
         this.selectedItems = item && [item];
@@ -295,7 +295,7 @@ export class DejaTreeListComponent extends ItemListBase {
     /** Retourne la liste des éléments selectionés en mode single select */
     public get selectedItem() {
         if (this.multiSelect) {
-            throw 'selectedItem is for single selection only, use selectedItems for multi selection';
+            throw new Error('selectedItem is for single selection only, use selectedItems for multi selection');
         }
 
         return this.selectedItems[0];
@@ -424,19 +424,19 @@ export class DejaTreeListComponent extends ItemListBase {
     }
 
     protected filter(event: KeyboardEvent) {
-        if ((this.query || "").length < this.minlength) {
+        if ((this.query || '').length < this.minlength) {
             this._itemList = [];
             return;
         }
 
         // Set current item from index for keyboard features only
-        let setCurrentIndex = (index: number) => {
+        const setCurrentIndex = (index: number) => {
             this._currentItemIndex = index;
             this.ensureItemVisible(this._currentItemIndex);
         };
 
         if (event.type === 'keydown') {
-            let currentIndex = this.rangeStartIndex >= 0 ? this.rangeStartIndex : this.rangeStartIndex = this._currentItemIndex;
+            const currentIndex = this.rangeStartIndex >= 0 ? this.rangeStartIndex : this.rangeStartIndex = this._currentItemIndex;
 
             switch (event.keyCode) {
                 case KeyCodes.Home:
@@ -466,7 +466,7 @@ export class DejaTreeListComponent extends ItemListBase {
                     return false;
 
                 case KeyCodes.PageUp:
-                    let upindex = Math.max(0, this._currentItemIndex - this.pageSize);
+                    const upindex = Math.max(0, this._currentItemIndex - this.pageSize);
                     if (event.shiftKey) {
                         this.selectRange(currentIndex, upindex);
                     } else if (!event.ctrlKey) {
@@ -480,7 +480,7 @@ export class DejaTreeListComponent extends ItemListBase {
                     return false;
 
                 case KeyCodes.PageDown:
-                    let dindex = Math.min(this.rowsCount - 1, this._currentItemIndex + this.pageSize);
+                    const dindex = Math.min(this.rowsCount - 1, this._currentItemIndex + this.pageSize);
                     if (event.shiftKey) {
                         this.selectRange(currentIndex, dindex);
                     } else if (!event.ctrlKey) {
@@ -494,7 +494,7 @@ export class DejaTreeListComponent extends ItemListBase {
                     return false;
 
                 case KeyCodes.UpArrow:
-                    let uaindex = Math.max(0, this._currentItemIndex - 1);
+                    const uaindex = Math.max(0, this._currentItemIndex - 1);
                     if (uaindex !== -1) {
                         if (event.shiftKey) {
                             this.selectRange(currentIndex, uaindex);
@@ -510,7 +510,7 @@ export class DejaTreeListComponent extends ItemListBase {
                     return false;
 
                 case KeyCodes.DownArrow:
-                    let daindex = Math.min(this.rowsCount - 1, this._currentItemIndex + 1);
+                    const daindex = Math.min(this.rowsCount - 1, this._currentItemIndex + 1);
                     if (daindex !== -1) {
                         if (event.shiftKey) {
                             this.selectRange(currentIndex, daindex);
@@ -526,7 +526,7 @@ export class DejaTreeListComponent extends ItemListBase {
                     return false;
 
                 case KeyCodes.Space:
-                    let sitem = this.currentItem as IItemTree;
+                    const sitem = this.currentItem as IItemTree;
                     if (sitem) {
                         if (this.isCollapsible(sitem)) {
                             this.toggleCollapse(currentIndex, !sitem.collapsed);
@@ -544,7 +544,7 @@ export class DejaTreeListComponent extends ItemListBase {
                     return false;
 
                 case KeyCodes.Enter:
-                    let eitem = this.currentItem as IItemTree;
+                    const eitem = this.currentItem as IItemTree;
                     if (eitem) {
                         if (this.isCollapsible(eitem) || eitem.selected) {
                             this.toggleCollapse(currentIndex, !eitem.collapsed);
@@ -579,10 +579,10 @@ export class DejaTreeListComponent extends ItemListBase {
 
                     // Search next
                     this.filterExpression += event.key;
-                    let rg = new RegExp('^' + this.filterExpression, 'i');
+                    const rg = new RegExp('^' + this.filterExpression, 'i');
                     this.findNextMatch((item) => {
                         if (item && this.isSelectable(item)) {
-                            let label = this.getTextValue(item);
+                            const label = this.getTextValue(item);
                             if (rg.test(label)) {
                                 return true;
                             }
@@ -631,7 +631,7 @@ export class DejaTreeListComponent extends ItemListBase {
             .fromEvent(this.listcontainer.nativeElement, 'scroll')
             .map((event: any) => [event, event.target.scrollTop, event.target.scrollLeft])
             .do(([event, scrollTop, scrollLeft]: [Event, number, number]) => {
-                let e = {
+                const e = {
                     originalEvent: event,
                     scrollLeft: scrollLeft,
                     scrollTop: scrollTop,
@@ -660,12 +660,12 @@ export class DejaTreeListComponent extends ItemListBase {
     }
 
     protected mousedown(e: MouseEvent) {
-        let itemIndex = this.getItemIndexFromHTMLElement(e.target as HTMLElement);
+        const itemIndex = this.getItemIndexFromHTMLElement(e.target as HTMLElement);
         if (itemIndex === undefined) {
             return;
         }
 
-        let item = this._itemList[itemIndex - this.vpStartRow];
+        const item = this._itemList[itemIndex - this.vpStartRow];
         this.clickedItem = item;
         if (!this.isCollapsible(item) && this.isSelectable(item) && (!e.ctrlKey || !this.multiSelect) && (e.button === 0 || !item.selected)) {
             if (e.shiftKey && this.multiSelect) {
@@ -700,7 +700,7 @@ export class DejaTreeListComponent extends ItemListBase {
                 this.calcViewPort(); // Comment this line to debug dragdrop
             },
             dragstartcallback: (event: IDejaDragEvent) => {
-                let targetIndex = this.getItemIndexFromHTMLElement(event.target as HTMLElement);
+                const targetIndex = this.getItemIndexFromHTMLElement(event.target as HTMLElement);
                 if (targetIndex === undefined) {
                     return;
                 }
@@ -725,7 +725,7 @@ export class DejaTreeListComponent extends ItemListBase {
                     return;
                 }
 
-                let targetIndex = this.getItemIndexFromHTMLElement(event.target as HTMLElement);
+                const targetIndex = this.getItemIndexFromHTMLElement(event.target as HTMLElement);
                 if (targetIndex === undefined) {
                     return;
                 }
@@ -753,9 +753,9 @@ export class DejaTreeListComponent extends ItemListBase {
     }
 
     protected dragLeave(event: DragEvent) {
-        let listRect = this.listcontainer.nativeElement.getBoundingClientRect();
+        const listRect = this.listcontainer.nativeElement.getBoundingClientRect();
 
-        let listBounds = Rect.fromLTRB(listRect.left,
+        const listBounds = Rect.fromLTRB(listRect.left,
             listRect.top,
             listRect.right,
             listRect.bottom);
@@ -767,7 +767,7 @@ export class DejaTreeListComponent extends ItemListBase {
     }
 
     protected onSelectionChange() {
-        let e = this.multiSelect ? { items: this.selectedItems } as DejaTreeListItemsEvent : { item: this.selectedItems[0] } as DejaTreeListItemEvent;
+        const e = this.multiSelect ? { items: this.selectedItems } as DejaTreeListItemsEvent : { item: this.selectedItems[0] } as DejaTreeListItemEvent;
         this.selectedChange.emit(e);
     }
 
@@ -844,16 +844,16 @@ export class DejaTreeListComponent extends ItemListBase {
                 return;
             }
 
-            let element = this.elementRef.nativeElement as HTMLElement;
+            const element = this.elementRef.nativeElement as HTMLElement;
             this.mouseUpObs = Observable.fromEvent(element, 'mouseup').subscribe((e: MouseEvent) => {
                 this.mouseUp = false;
 
-                let itemIndex = this.getItemIndexFromHTMLElement(e.target as HTMLElement);
+                const itemIndex = this.getItemIndexFromHTMLElement(e.target as HTMLElement);
                 if (itemIndex === undefined) {
                     return;
                 }
 
-                let item = this._itemList[itemIndex - this.vpStartRow];
+                const item = this._itemList[itemIndex - this.vpStartRow];
                 if (this.clickedItem && item !== this.clickedItem) {
                     return;
                 }
@@ -868,7 +868,7 @@ export class DejaTreeListComponent extends ItemListBase {
                 }
 
                 if (this.isCollapsible(item) || (e.target as HTMLElement).id === 'expandbtn') {
-                    let treeItem = item as IItemTree;
+                    const treeItem = item as IItemTree;
                     this.toggleCollapse(itemIndex, !treeItem.collapsed);
                     this._currentItemIndex = itemIndex;
 

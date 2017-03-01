@@ -11,7 +11,7 @@
 
 /**
  * IRange interface
- * 
+ *
  * @export
  * @interface IRange
  */
@@ -23,7 +23,7 @@ export interface IRange {
 
 /**
  * IRange Generic Event
- * 
+ *
  * @export
  * @interface IRangeEvent
  * @extends {Event}
@@ -36,7 +36,7 @@ export interface IRangeEvent extends Event {
 
 /**
  * IRange Step Event
- * 
+ *
  * @export
  * @interface IStepRangeEvent
  * @extends {IRangeEvent}
@@ -47,7 +47,7 @@ export interface IStepRangeEvent extends IRangeEvent {
 
 /**
  * IRange class implementation
- * 
+ *
  * @export
  * @class Range
  * @implements {IRange}

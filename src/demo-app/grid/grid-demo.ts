@@ -21,7 +21,7 @@ import { DrugsService, IDrug } from '../services/drugs.service';
     styleUrls: ['./grid-demo.scss'],
     templateUrl: './grid-demo.html',
 })
-export class GridDemo implements OnInit {
+export class GridDemoComponent implements OnInit {
     protected columns = [
         {
             label: 'transmissiondateformat',
@@ -285,8 +285,8 @@ export class GridDemo implements OnInit {
         },
     ] as IDejaGridColumn[];
 
-    protected tabIndex: number = 1;
-    protected drugCounts: number = 0;
+    protected tabIndex = 1;
+    protected drugCounts = 0;
 
     private drugsBigRecord: Observable<IDrug[]>;
     private drugs: Observable<IDrug[]>;
@@ -318,7 +318,7 @@ export class GridDemo implements OnInit {
     }
 
     protected onItemDragStart(event: IDejaDragEvent) {
-        let itm = event.dragObject as IItemTree;
+        const itm = event.dragObject as IItemTree;
         if (itm.depth === this.gridComponent.depthMax) {
             event.dragInfo['drug'] = event.dragObject;
         }

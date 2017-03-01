@@ -13,7 +13,7 @@ import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {GroupingService, IGroupInfo, IItemTree, ViewportMode} from '../../common/core';
 import {DejaTextMetricsService, DejaTreeListComponent, DejaTreeListItemsEvent, IDejaDragEvent} from '../../component';
-import {CountriesService, ICountry} from "../services/countries.service";
+import {CountriesService, ICountry} from '../services/countries.service';
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -21,7 +21,7 @@ import {CountriesService, ICountry} from "../services/countries.service";
     styleUrls: ['./tree-list-demo.scss'],
     templateUrl: './tree-list-demo.html',
 })
-export class DejaTreeListDemo implements OnInit {
+export class DejaTreeListDemoComponent implements OnInit {
     protected variableMode = ViewportMode.VariableRowHeight;
     protected noViewportMode = ViewportMode.NoViewport;
     protected noViewportList: IItemTree[] = [{ displayName: 'test' }, { displayName: 'test2' }, { displayName: 'test3' }];
@@ -36,12 +36,12 @@ export class DejaTreeListDemo implements OnInit {
 
     constructor(private countriesService: CountriesService,
                 groupingService: GroupingService,
-                private textMetricsService: DejaTextMetricsService,) {
+                private textMetricsService: DejaTextMetricsService ) {
         this.countries = this.countriesService.getCountries(null, 412);
         // this.countries = this.countriesService.getCountries(null, 1);
 
         this.countriesService.getCountries(null, 1).subscribe((values) => {
-            let extendedCountries = values.map((country) => {
+            const extendedCountries = values.map((country) => {
                 return {
                     code: country.code,
                     displayName: country.displayName,
@@ -51,7 +51,7 @@ export class DejaTreeListDemo implements OnInit {
                 } as IExtendedCountry;
             });
 
-            let groupInfos = [
+            const groupInfos = [
                 {
                     groupByField: 'groupName',
                 }, {
@@ -65,7 +65,7 @@ export class DejaTreeListDemo implements OnInit {
         });
 
         for (let i = 0; i < 50; i++) {
-            let rand = Math.floor(Math.random() * (70 - 33 + 1)) + 33; // random de 33 à 70
+            const rand = Math.floor(Math.random() * (70 - 33 + 1)) + 33; // random de 33 à 70
             this.loremList[i] = {} as IItemTree;
             this.loremList[i].height = rand;
             this.loremList[i].displayName = i + ' - Une ligne de test avec une height de : ' + rand;
@@ -91,8 +91,8 @@ export class DejaTreeListDemo implements OnInit {
         this.selectedItemsOut = e.items;
         this.selectedInfos = [];
         e.items.forEach((item) => {
-            let treeItem = item as IItemTree;
-            let country = item as IExtendedCountry;
+            const treeItem = item as IItemTree;
+            const country = item as IExtendedCountry;
             switch (treeItem.depth) {
                 case 0:
                     return 'Group ' + treeItem.toString();
@@ -100,7 +100,7 @@ export class DejaTreeListDemo implements OnInit {
                     return 'Subgroup ' + treeItem.toString();
                 default:
                     this.groupedTreeList.getParentListInfos(item).then((parentInfos) => {
-                        let parentDisplayName = parentInfos && parentInfos.parent ? parentInfos.parent.toString() : 'none';
+                        const parentDisplayName = parentInfos && parentInfos.parent ? parentInfos.parent.toString() : 'none';
                         this.selectedInfos.push('Country: ' + country.naqme + ' (' + country.code + ')' + (parentInfos ? '    parent: ' + parentDisplayName + ' (' + parentInfos.index + ')' : ''));
                     });
             }
@@ -112,7 +112,7 @@ export class DejaTreeListDemo implements OnInit {
     }
 
     protected onItemDragStart(event: IDejaDragEvent) {
-        let itm = event.dragObject as IItemTree;
+        const itm = event.dragObject as IItemTree;
         if (itm.depth === 2) {
             event.dragInfo['country'] = event.dragObject;
         }
@@ -126,7 +126,7 @@ export class DejaTreeListDemo implements OnInit {
 
     protected onDivDropEvent(event: IDejaDragEvent) {
         if (event.dragInfo.hasOwnProperty('country')) {
-            let country = event.dragInfo['country'] as ICountry;
+            const country = event.dragInfo['country'] as ICountry;
             (event.target as HTMLElement).innerText = `The dropped country is ${country.naqme} - the code is: ${country.code}`;
             event.preventDefault();
         }

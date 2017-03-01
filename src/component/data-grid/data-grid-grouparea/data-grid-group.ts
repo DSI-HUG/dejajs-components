@@ -9,9 +9,9 @@
  *
  */
 
-import { IDejaGridColumn } from "../index";
+import { IDejaGridColumn } from '../index';
 
-export interface IDejaGridGroupsEvent { 
+export interface IDejaGridGroupsEvent {
     originalEvent: Event;
     column: IDejaGridColumn;
     columns: IDejaGridColumn[];

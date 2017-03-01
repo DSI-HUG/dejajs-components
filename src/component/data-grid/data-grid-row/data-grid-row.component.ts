@@ -10,7 +10,7 @@
  */
 
 import { Component, ContentChild, Input } from '@angular/core';
-import { IDejaGridColumn, IDejaGridColumnLayout, IDejaGridRow } from "../index";
+import { IDejaGridColumn, IDejaGridColumnLayout, IDejaGridRow } from '../index';
 
 /** Composant représentant une ligne de la grille */
 @Component({
@@ -28,14 +28,14 @@ export class DejaGridRowComponent {
     /** Template de cellule si définit extérieurement à la grille */
     @Input() public cellTemplateExternal;
 
-    /** Index de la ligne sur la liste plate de ItemListService */    
+    /** Index de la ligne sur la liste plate de ItemListService */
     @Input() public flatIndex: number;
 
     /** Template de cellule par defaut  définit dans le HTML de la grille */
     @ContentChild('cellTemplate') protected cellTemplateInternal;
 
     @Input()
-    public set columnLayout(layout: IDejaGridColumnLayout) { 
+    public set columnLayout(layout: IDejaGridColumnLayout) {
         this._columnLayout = layout || {
             columns: [],
             scrollLeft: 0,
@@ -44,7 +44,7 @@ export class DejaGridRowComponent {
         };
     }
 
-    public get columnLayout() { 
+    public get columnLayout() {
         return this._columnLayout;
     }
 
