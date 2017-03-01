@@ -12,7 +12,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Rect } from '../../common/core/graphics/index';
 import { MaterialColors } from '../../common/core/style/index';
-import { IDejaMouseDraggableContext, IDejaTilesAddEvent, IDejaTile, IDejaTilesRemoveEvent } from '../../component';
+import { IDejaMouseDraggableContext, IDejaTilesAddEvent, IDejaTile, IDejaTilesRemoveEvent, IDropCursorInfos } from '../../component';
 import { CountriesService, ICountry } from '../services/countries.service';
 import { Observable, Subject } from 'rxjs/Rx';
 
@@ -124,22 +124,15 @@ export class TilesDemoComponent implements OnInit {
 
     protected getDropContext() {
         return {
-            className: 'coutry-target-cursor',
+            getContext: (dragContext) => {
+                return {
+                    html: '<div></div>',
+                    width: 200,
+                    height: 60,
+                    className: 'coutry-target-cursor',
+                } as IDropCursorInfos;
+            }
         } as IDejaMouseDraggableContext;
-        // return {
-        //     dragovercallback: (event: IDejaDragEvent) => {
-        //         if (event.dragInfo.hasOwnProperty('IDejaTile')) {
-        //             event.preventDefault();
-        //         }
-        //     },
-        //     dropcallback: (event: IDejaDragEvent) => {
-        //         if (event.dragInfo.hasOwnProperty('IDejaTile')) {
-        //             const model = event.dragInfo['IDejaTile'].templateModel as ITemplateModel;
-        //             (event.target as HTMLElement).innerText = `The dropped country is ${model.country.naqme} - the code is: ${model.country.code}`;
-        //             event.preventDefault();
-        //         }
-        //     },
-        // };
     }
 
     protected onContentAdded(event: IDejaTilesAddEvent) {
