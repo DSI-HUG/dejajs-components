@@ -60,6 +60,7 @@
     "@types/prismjs": "^1.4.18",
     "@types/showdown": "^1.4.31",
     "bluebird": "^3.4.6",
+    "codelyzer": "^3.0.0-beta.0",
     "core-js": "^2.4.1",
     "hammerjs": "^2.0.8",
     "material-design-lite": "^1.1.3",
