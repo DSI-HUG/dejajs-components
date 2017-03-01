@@ -124,7 +124,7 @@ export class TilesDemoComponent implements OnInit {
 
     protected getDropContext() {
         return {
-            getContext: (dragContext) => {
+            getContext: (_dragContext) => {
                 return {
                     html: '<div></div>',
                     width: 200,

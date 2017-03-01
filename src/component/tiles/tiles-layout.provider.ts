@@ -13,7 +13,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
 import { Directions, Position, Rect, Size } from '../../common/core/graphics';
 import { KeyCodes } from '../../common/core/';
-import { ClipboardService } from '../../common/core/clipboard/clipboard.service';
+import { DejaClipboardService } from '../../common/core/clipboard/clipboard.service';
 import { DejaTile, IDejaTile, IDejaTilesEvent, IDejaTilesRemoveEvent, IDejaTilesAddEvent } from './index';
 
 interface ILayoutInfo {
@@ -103,7 +103,7 @@ export class DejaTilesLayoutProvider {
     private dragTarget: Rect;
     // private draginfokey = 'draginfos';
 
-    constructor(private clipboardService: ClipboardService) {
+    constructor(private clipboardService: DejaClipboardService) {
         Observable.from(this.refreshTiles$)
             .debounceTime(30)
             .do(() => this.container.style.width = `100%`)

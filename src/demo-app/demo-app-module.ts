@@ -75,7 +75,7 @@ import { DejaSplitterDemo } from './splitter/splitter-demo';
 import { TextAreaDemo } from './textarea/textarea-demo';
 import { TilesDemoComponent } from './tiles/tiles-demo';
 import { DejaTreeListDemo } from './tree-list/tree-list-demo';
-import { ClipboardService } from '../common/core/clipboard/clipboard.service';
+import { DejaClipboardService } from '../common/core/clipboard/clipboard.service';
 
 /* deja-cli import demo */
 /* The comment above mustn't be removed ! */
@@ -150,7 +150,7 @@ import { CodeblockModule } from 'ng-prism';
         GroupingModule,
     ],
     providers: [
-        ClipboardService,
+        DejaClipboardService,
         CountriesService,
         CountriesListService,
         GlobalEventService,

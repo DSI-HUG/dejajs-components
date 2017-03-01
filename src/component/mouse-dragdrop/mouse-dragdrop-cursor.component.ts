@@ -53,7 +53,7 @@ export class DejaMouseDragDropCursorComponent {
                 }
                 this._dragCursor = dragCursor;
             })
-            .delay(150)
+            .delay(300)
             .subscribe(() => {
                 this.position$.next(null);
                 element.style.display = 'none';
@@ -85,7 +85,7 @@ export class DejaMouseDragDropCursorComponent {
                     this.contentElement.style.opacity = '1';
                 }
             })
-            .delay(150)
+            .delay(300)
             .subscribe((dragCursor) => {
                 if (!dragCursor.html) {
                     this.contentElement.innerHTML = '';

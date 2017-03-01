@@ -23,7 +23,7 @@ import { DejaTile } from './tile.class';
 export class DejaTileComponent implements OnDestroy {
     @Input() public template;
     @Input() public designMode;
-    
+
     public element: HTMLElement;
 
     private _tile: DejaTile;

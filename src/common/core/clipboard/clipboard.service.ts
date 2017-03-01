@@ -15,7 +15,7 @@ import { Injectable } from '@angular/core';
  * Global property bag for copy paste
  */
 @Injectable()
-export class ClipboardService {
+export class DejaClipboardService {
     private clipboard = {} as { [key: string]: any };
 
     get(key: string) {

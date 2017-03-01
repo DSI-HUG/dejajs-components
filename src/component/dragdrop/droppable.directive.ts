@@ -12,7 +12,7 @@
 import { Directive, ElementRef, Input, HostBinding } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { IDejaDragEvent } from './index';
-import { ClipboardService } from '../../common/core/clipboard/clipboard.service';
+import { DejaClipboardService } from '../../common/core/clipboard/clipboard.service';
 import { Observable } from 'rxjs/Rx';
 
 @Directive({
@@ -48,7 +48,7 @@ export class DejaDroppableDirective {
         return this._context;
     }
 
-    constructor(elementRef: ElementRef, private clipboardService: ClipboardService) {
+    constructor(elementRef: ElementRef, private clipboardService: DejaClipboardService) {
         const element = elementRef.nativeElement as HTMLElement;
 
         Observable.fromEvent(element, 'dragenter')
