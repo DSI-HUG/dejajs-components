@@ -11,7 +11,7 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { DejaMonacoEditorComponent } from "./monaco-editor.component";
+import { DejaMonacoEditorComponent } from './monaco-editor.component';
 
 @NgModule({
     declarations: [DejaMonacoEditorComponent],

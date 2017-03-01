@@ -9,14 +9,20 @@
  *
  */
 
-import { Injectable } from "@angular/core";
-import { Http, ResponseContentType } from "@angular/http";
-import { Observable } from "rxjs/Observable";
-import { Subscriber } from "rxjs/Subscriber";
+import { Injectable } from '@angular/core';
+import { Http, ResponseContentType } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
+import { Subscriber } from 'rxjs/Subscriber';
 
 @Injectable()
 export class CountriesService {
+    private countriesDic = {} as { [code: string]: ICountry };
+
     constructor(private http: Http) { }
+
+    public getCountyByCode(code: string): Observable<ICountry> {
+        return Observable.of(this.countriesDic[code]);
+    }
 
     public getCountries(query?: string, number?: number): Observable<ICountry[]> {
         return new Observable<ICountry[]>((resolve: Subscriber<ICountry[]>) => {
@@ -30,14 +36,17 @@ export class CountriesService {
 
                 this.http.get('https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/demo-app/services/countries.json', { responseType: ResponseContentType.Json })
                     .map((response) => {
-                        let datas = response.json();
-                        let countries = datas.data as ICountry[];
-                        countries.forEach((country) => { country.displayName = country.naqme; });
+                        const datas = response.json();
+                        const countries = datas.data as ICountry[];
+                        countries.forEach((country) => {
+                            country.displayName = country.naqme;
+                            this.countriesDic[country.code] = country;
+                        });
 
                         if (query) {
-                            let sr = new RegExp('^' + query, 'i');
-                            let sc = new RegExp('^(?!' + query + ').*(' + query + ')', 'i');
-                            let result = countries.filter((z) => sr.test(z.naqme));
+                            const sr = new RegExp('^' + query, 'i');
+                            const sc = new RegExp('^(?!' + query + ').*(' + query + ')', 'i');
+                            const result = countries.filter((z) => sr.test(z.naqme));
                             countries.forEach((z) => {
                                 if (sc.test(z.naqme)) {
                                     result.push(z);

@@ -10,7 +10,7 @@
  */
 
 import { Observable } from 'rxjs/Observable';
-import { Injectable } from "@angular/core";
+import {Injectable} from '@angular/core';
 
 /**
  * Service for cloning or copying an object
@@ -28,11 +28,11 @@ export class CloningService {
             return object;
         }
 
-        let target = new object.constructor();
+        const target = new object.constructor();
         Object.assign(target, object);
         Object.keys(target).forEach((key) => {
             if (target[key] instanceof Array) {
-                let a = target[key] as any[];
+                const a = target[key] as any[];
                 target[key] = a.map((element) => this.cloneSyncWithPrototype(element));
             } else if (target[key] instanceof Date) {
                 target[key] = new Date(target[key]);
@@ -111,11 +111,11 @@ export class CloningService {
             return objects[0];
         }
 
-        let target = objects[0];
+        const target = objects[0];
 
         // convert objects to array and cut off target object
-        let that = this; // Keep reference on class
-        let args = Array.prototype.slice.call(objects, 1);
+        const that = this;  // Keep reference on class
+        const args = Array.prototype.slice.call(objects, 1);
         let val;
         let src;
 
@@ -171,8 +171,8 @@ export class CloningService {
      * Recursive cloning array.
      */
     private deepCloneArray(arr) {
-        let clone = [];
-        let that = this;
+        const clone = [];
+        const that = this;
         arr.forEach((item, index) => {
             if (typeof item === 'object' && item !== null) {
                 if (Array.isArray(item)) {

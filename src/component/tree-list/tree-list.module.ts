@@ -15,8 +15,8 @@ import { FormsModule } from '@angular/forms';
 import { MdButtonModule, MdCheckboxModule, MdInputModule } from '@angular/material';
 import { DejaDragDropModule } from '../dragdrop/dragdrop.module';
 import { DragDropService } from '../dragdrop/dragdrop.service';
-import { DejaTextMetricsModule } from "./text-metrics/text-metrics.module";
-import { DejaTreeListComponent } from "./tree-list.component";
+import { DejaTextMetricsModule } from './text-metrics/text-metrics.module';
+import { DejaTreeListComponent } from './tree-list.component';
 
 @NgModule({
     declarations: [DejaTreeListComponent],

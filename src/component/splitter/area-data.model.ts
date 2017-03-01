@@ -12,7 +12,7 @@
 /**
  * Created by rtr on 22.12.2016.
  */
-import {SplitAreaDirective} from "./split-area.directive";
+import {SplitAreaDirective} from './split-area.directive';
 
 export interface IAreaData {
     component: SplitAreaDirective;

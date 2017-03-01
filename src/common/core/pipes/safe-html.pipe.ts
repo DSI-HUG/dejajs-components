@@ -9,7 +9,7 @@
  *
  */
 
-import { Pipe } from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
 /**
@@ -18,7 +18,7 @@ import { DomSanitizer } from '@angular/platform-browser';
  * @deprecated
  */
 @Pipe({ name: 'safeHTML' })
-export class SafeHTMLPipe {
+export class SafeHTMLPipe implements PipeTransform {
     constructor(private sanitizer: DomSanitizer) {
         this.sanitizer = sanitizer;
     }

@@ -10,7 +10,7 @@
  */
 
 import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, forwardRef, Input, Output } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { BehaviorSubject, Observable } from 'rxjs/Rx';
 import { Color, ColorEvent } from '../../common/core/graphics/index';
@@ -149,7 +149,7 @@ export class DejaColorSelectorComponent implements ControlValueAccessor {
             .switchMap((event: Event) => this._disabled.map((disabled) => disabled ? null : event).first())
             .filter((event) => !!event)
             .subscribe((event) => {
-                let target = event.target as HTMLElement;
+                const target = event.target as HTMLElement;
                 if (target.id === 'basecolor' || target.id === 'subcolor') {
                     // this.hoveredBaseIndex = undefined;
                     this.value = Color.fromHex(target.attributes[DejaColorSelectorComponent.colorAttribute].value);

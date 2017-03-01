@@ -10,6 +10,10 @@
  */
 
 export class Color {
+    private _r: number;
+    private _g: number;
+    private _b: number;
+
     public static equals(c1: Color, c2: Color) {
         return !c1 === !c2 && !c1.isEmpty() && c1.r === c2.r && c1.g === c2.g && c1.b === c2.b;
     }
@@ -36,9 +40,6 @@ export class Color {
         return new Color(r, g, b);
     }
 
-    private _r: number;
-    private _g: number;
-    private _b: number;
 
     constructor(r?: number, g?: number, b?: number) {
         this._r = r;
@@ -59,8 +60,8 @@ export class Color {
     }
 
     public get bestTextColor() {
-        let a = 1 - (0.299 * this.r + 0.587 * this.g + 0.114 * this.b) / 255;
-        let d = a < 0.5 ? 0 : 255;
+        const a = 1 - (0.299 * this.r + 0.587 * this.g + 0.114 * this.b) / 255;
+        const d = a < 0.5 ? 0 : 255;
         return new Color(d, d, d);
     }
 
@@ -73,8 +74,8 @@ export class Color {
     }
 
     public toHex() {
-        let toHex = (d) => {
-            return ("0" + (Number(d).toString(16))).slice(-2).toUpperCase();
+        const toHex = (d) => {
+            return ('0' + (Number(d).toString(16))).slice(-2).toUpperCase();
         };
 
         if (!this.isEmpty()) {

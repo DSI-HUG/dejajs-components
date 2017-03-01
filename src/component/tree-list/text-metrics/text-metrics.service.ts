@@ -10,22 +10,33 @@
  */
 
 import { Injectable } from '@angular/core';
-
-import { Subject } from 'rxjs/Rx';
+import { Observable, Subject } from 'rxjs/Rx';
 
 @Injectable()
 export class DejaTextMetricsService {
     private canvas;
-    private elem: HTMLElement;
-    private ElemObservable: Subject<HTMLElement> = new Subject();
+    private elemObservable: Subject<HTMLElement> = new Subject();
     private computedStyles: CSSStyleDeclaration;
-    private charSize: number[];
+    private charSize$: Observable<number[]>;
 
-    constructor() { }
+    constructor() {
+        this.charSize$ = Observable.from(this.elemObservable)
+            .delay(1)
+            .first()
+            .publishLast()
+            .refCount()
+            .map((element) => {
+                const charSize = [];
+                for (let i = 0; i < 255; i++) {
+                    const c = String.fromCharCode(i);
+                    charSize[i] = this.getTextWidth(c, element);
+                }
+                return charSize;
+            });
+    }
 
     public set metricsElem(elem: HTMLElement) {
-        this.elem = elem;
-        this.ElemObservable.next(elem);
+        this.elemObservable.next(elem);
     }
 
     /**
@@ -38,12 +49,12 @@ export class DejaTextMetricsService {
      */
     public getTextWidth(text: string, elem: HTMLElement): number {
         this.computedStyles = window.getComputedStyle(elem);
-        let font = this.computedStyles.fontSize + ' ' + this.computedStyles.fontFamily;
+        const font = this.computedStyles.fontSize + ' ' + this.computedStyles.fontFamily;
 
-        let canvas = this.canvas || (this.canvas = document.createElement('canvas'));
-        let context = canvas.getContext('2d');
+        const canvas = this.canvas || (this.canvas = document.createElement('canvas'));
+        const context = canvas.getContext('2d');
         context.font = font;
-        let metrics = context.measureText(text);
+        const metrics = context.measureText(text);
 
         return metrics.width * 1.1; // Correction for letter-spacing
     }
@@ -60,7 +71,7 @@ export class DejaTextMetricsService {
         let maxWidth = 0;
 
         texts.forEach((text: string) => {
-            let width = this.getTextWidth(text, elem);
+            const width = this.getTextWidth(text, elem);
             if (width > maxWidth) {
                 maxWidth = width;
             }
@@ -77,37 +88,16 @@ export class DejaTextMetricsService {
      *
      * @return {number} Hauteur théorique du conteneur.
      */
-    public getTextHeight(maxWidth: number, text: string): Promise<number> {
-        return new Promise<number>((resolve) => {
-            this.getNumberOfLines(maxWidth, text).then((numberOfLines: number) => {
-                let computedLineHeight = parseInt(this.computedStyles.lineHeight.replace('px', ''));
-                let lineHeight = (!isNaN(computedLineHeight)) ?
+    public getTextHeight(maxWidth: number, text: string): Observable<number> {
+        return this.getNumberOfLines(maxWidth, text)
+            .map((numberOfLines: number) => {
+                const computedLineHeight = parseInt(this.computedStyles.lineHeight.replace('px', ''), 10);
+                const lineHeight = (!isNaN(computedLineHeight)) ?
                     computedLineHeight :
-                    Math.floor(parseInt(this.computedStyles.fontSize.replace('px', '')) * 1.5);
+                    Math.floor(parseInt(this.computedStyles.fontSize.replace('px', ''), 10) * 1.5);
 
-                resolve(lineHeight * +numberOfLines);
+                return lineHeight * +numberOfLines;
             });
-        });
-    }
-
-    /**
-     * Calcule la taille théorique de chaque caractères ascii
-     */
-    private getAllCharSize(): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            if (this.charSize) {
-                resolve();
-            } else {
-                this.getMetricsElement().then((element: HTMLElement) => {
-                    this.charSize = [];
-                    for (let i = 0; i < 255; i++) {
-                        let c = String.fromCharCode(i);
-                        this.charSize[i] = this.getTextWidth(c, element);
-                    }
-                    resolve();
-                }).catch((err) => reject(err));
-            }
-        });
     }
 
     /**
@@ -118,20 +108,20 @@ export class DejaTextMetricsService {
      *
      * @return {number} Nombre de lignes théoriques du conteneur.
      */
-    private getNumberOfLines(maxWidth: number, text: string): Promise<number> {
-        return new Promise<number>((resolve, reject) => {
-            this.getAllCharSize().then(() => {
-                let arr = text.split(' ');
+    private getNumberOfLines(maxWidth: number, text: string): Observable<number> {
+        return this.charSize$
+            .map((charSize) => {
+                const arr = text.split(' ');
 
                 let tmpSize = 0;
                 let numberOfLines = 1;
                 arr.forEach((txt: string) => {
                     let w = 0;
                     for (let j = 0; j < txt.length; j++) {
-                        let charCode = txt.charCodeAt(j);
+                        const charCode = txt.charCodeAt(j);
                         // Si le caractère fait partie de la table ascii qu'on a calculé dans this.getAllCharsize() on incrémente la taille du mot de sa taille.
                         // Sinon, on ajoute la moyenne des tailles calculées (qui correspond théoriquement à la taille moyenne d'un caractère)
-                        w += (this.charSize[charCode]) ? this.charSize[charCode] : this.charSize.reduce( ( a, b ) => a + b, 0 ) / this.charSize.length;
+                        w += (charSize[charCode]) ? charSize[charCode] : charSize.reduce((a, b) => a + b, 0) / charSize.length;
                     }
                     if (tmpSize + w > maxWidth) {
                         tmpSize = w;
@@ -141,21 +131,7 @@ export class DejaTextMetricsService {
                     }
                 });
 
-                resolve(numberOfLines);
-            }).catch((err) => reject(err));
-        });
-    }
-
-    private getMetricsElement(): Promise<HTMLElement> {
-        return new Promise((resolve) => {
-            if (this.elem) {
-                resolve(this.elem);
-            } else {
-                this.ElemObservable.subscribe((elem: HTMLElement) => {
-                    resolve(elem);
-                    this.ElemObservable.unsubscribe();
-                });
-            }
-        });
+                return numberOfLines;
+            });
     }
 }

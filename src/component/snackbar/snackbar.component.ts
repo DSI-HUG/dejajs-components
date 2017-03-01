@@ -9,9 +9,8 @@
  *
  */
 
-import {
-  AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, Renderer,
-} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, Renderer } from '@angular/core';
+import { Observable } from 'rxjs/Rx';
 
 @Component({
   selector: 'deja-snackbar',
@@ -45,7 +44,7 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
    * @type {number}
    * @memberOf DejaSnackbarComponent
    */
-  @Input() public delay: number = 0;
+    @Input() public delay = 0;
 
   /**
    * specify lifetime of the snackbar on the screen
@@ -53,7 +52,7 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
    * @type {number}
    * @memberOf DejaSnackbarComponent
    */
-  @Input() public duration: number = 0;
+    @Input() public duration = 0;
 
   /**
    * set a container for the snackbar instead of default behavior (viewport)
@@ -96,7 +95,7 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
    * @type {number}
    * @memberOf DejaSnackbarComponent
    */
-  private marginTop: number = 6;
+    private marginTop = 6;
 
   /**
    * snackbar creation timestamp, used for calculation, forthe adapt animation
@@ -114,7 +113,7 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
    * @type {number}
    * @memberOf DejaSnackbarComponent
    */
-  private enterAnimationDuration: number = 350;
+    private enterAnimationDuration = 350;
 
   /**
    * leave animation duration
@@ -123,7 +122,7 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
    * @type {number}
    * @memberOf DejaSnackbarComponent
    */
-  private leaveAnimationDuration: number = 175;
+    private leaveAnimationDuration = 175;
 
   /**
    * adapt animation duration
@@ -132,7 +131,7 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
    * @type {number}
    * @memberOf DejaSnackbarComponent
    */
-  private adaptAnimationDuration: number = 225;
+    private adaptAnimationDuration = 225;
 
   /**
    * string representation of the alignment, used for statements and initial final position
@@ -166,9 +165,11 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
     };
 
     // set alignents
-    value && value
+        if (value) {
+            value
         .split(/\s+/g)
         .map((align: string) => this.alignents[align] = true);
+        }
 
     // filter incompatible alignments
     this.alignents.bottom = this.alignents.top && this.alignents.bottom ? false : this.alignents.bottom;
@@ -254,15 +255,15 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
     this.launchEnterAnimation();
 
     // if a duration has been been specified, launch the 'leave' animation after snackbar's lifetime flow, then emit amination done
-    setTimeout(() => {
-      setTimeout(() => {
-        this.onAnimationDone.emit();
-      }, this.leaveAnimationDuration);
-
+        Observable.timer(this.duration + this.delay)
+            .first()
+            .do(() => {
       if (!!this.duration) {
         this.launchLeaveAnimation();
       }
-    }, this.duration + this.delay);
+            })
+            .delay(this.leaveAnimationDuration)
+            .subscribe(() => this.onAnimationDone.emit());
   }
 
   /**

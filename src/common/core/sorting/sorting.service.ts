@@ -9,7 +9,7 @@
  *
  */
 
-import { ISortInfos, SortOrder } from "./index";
+import { ISortInfos, SortOrder } from './index';
 
 /** Classe de tri d'une liste plate ou hierarchique */
 export class SortingService {
@@ -20,7 +20,7 @@ export class SortingService {
      * @return {number} 0 si les objet sont égaux, 1 si b est après a, -1 si a après b
      */
     public compare(a: any, b: any, sortInfo: ISortInfos) {
-        let orderfact = sortInfo.order === SortOrder.ascending ? 1 : -1;
+        const orderfact = sortInfo.order === SortOrder.ascending ? 1 : -1;
 
         if (!a && !b) {
             return 0;
@@ -34,8 +34,8 @@ export class SortingService {
             return orderfact;
         }
 
-        let sortnamea = a.sortField || (typeof sortInfo.name === 'function' ? sortInfo.name(a) : sortInfo.name);
-        let sortnameb = b.sortField || (typeof sortInfo.name === 'function' ? sortInfo.name(b) : sortInfo.name);
+        const sortnamea = a.sortField || (typeof sortInfo.name === 'function' ? sortInfo.name(a) : sortInfo.name);
+        const sortnameb = b.sortField || (typeof sortInfo.name === 'function' ? sortInfo.name(b) : sortInfo.name);
 
         let flda = sortnamea ? a[sortnamea] : a;
         let fldb = sortnameb ? b[sortnameb] : b;
@@ -87,8 +87,8 @@ export class SortingService {
             }
         }
 
-        let stra = flda.toString() as string;
-        let strb = fldb.toString() as string;
+        const stra = flda.toString() as string;
+        const strb = fldb.toString() as string;
         return orderfact * stra.localeCompare(strb);
     }
 
@@ -99,7 +99,7 @@ export class SortingService {
      */
     public sort(list: any[], sortInfo: ISortInfos) {
         return new Promise<any[]>((resolved?: (value: any[]) => void) => {
-            let compareFn = (a: any, b: any) => {
+            const compareFn = (a: any, b: any) => {
                 return this.compare(a, b, sortInfo);
             };
 
@@ -122,12 +122,12 @@ export class SortingService {
         return new Promise<any[]>((resolved?: (value: any[]) => void, rejected?: (reason: any) => void) => {
             this.sort(tree, sortInfo).then((sortedTree) => {
                 // Sort children
-                let sortChildren = (index: number) => {
+                const sortChildren = (index: number) => {
                     if (index >= sortedTree.length) {
                         resolved(sortedTree);
                     }
 
-                    let subitems = sortedTree[index][childrenField];
+                    const subitems = sortedTree[index][childrenField];
                     if (subitems) {
                         this.sortTree(subitems, sortInfo, childrenField)
                             .then(() => {
