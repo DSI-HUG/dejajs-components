@@ -1,10 +1,10 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
@@ -25,6 +25,7 @@ import {
     DejaBackdropModule,
     DejaBoldQueryModule,
     DejaCircularPickerModule,
+    DejaCodeViewerModule,
     DejaColorPickerModule,
     DejaColorSelectorModule,
     DejaDatePickerModule,
@@ -34,6 +35,7 @@ import {
     DejaMouseDragDropModule,
     DejaEditableModule,
     DejaGridModule,
+    DejaMarkdownModule,
     DejaMenuModule,
     DejaMessageBoxModule,
     DejaMonacoEditorModule,
@@ -78,6 +80,8 @@ import { ClipboardService } from '../common/core/clipboard/clipboard.service';
 /* deja-cli import demo */
 /* The comment above mustn't be removed ! */
 
+import { CodeblockModule } from 'ng-prism';
+
 @NgModule({
     declarations: [
         DejaAccordionDemo,
@@ -109,6 +113,8 @@ import { ClipboardService } from '../common/core/clipboard/clipboard.service';
     imports: [
         DejaAccordionModule,
         BrowserModule,
+        DejaCodeViewerModule,
+        CodeblockModule,
         DejaCircularPickerModule,
         DejaDateSelectorModule,
         DejaDatePickerModule,
@@ -123,6 +129,7 @@ import { ClipboardService } from '../common/core/clipboard/clipboard.service';
         DejaColorSelectorModule,
         DejaColorPickerModule,
         DejaBoldQueryModule,
+        DejaMarkdownModule,
         DejaMenuModule,
         DejaMessageBoxModule,
         DejaEditableModule,

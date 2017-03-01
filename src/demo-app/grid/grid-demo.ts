@@ -1,15 +1,15 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
 
-import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { IItemTree } from '../../common/core';
 import { DejaGridComponent, DejaGridRowsEvent, IDejaDragEvent, IDejaGridColumn } from '../../component';
@@ -21,7 +21,7 @@ import { DrugsService, IDrug } from '../services/drugs.service';
     styleUrls: ['./grid-demo.scss'],
     templateUrl: './grid-demo.html',
 })
-export class GridDemo {
+export class GridDemo implements OnInit {
     protected columns = [
         {
             label: 'transmissiondateformat',
@@ -285,6 +285,9 @@ export class GridDemo {
         },
     ] as IDejaGridColumn[];
 
+    protected tabIndex: number = 1;
+    protected drugCounts: number = 0;
+
     private drugsBigRecord: Observable<IDrug[]>;
     private drugs: Observable<IDrug[]>;
     private groupedDrugs: Promise<IDrug[]>;
@@ -292,10 +295,15 @@ export class GridDemo {
     @ViewChild(DejaGridComponent) private gridComponent: DejaGridComponent;
 
     constructor(private drugsService: DrugsService) {
-        this.drugsBigRecord = this.drugsService.getDrugs(null, 100);
+
+    }
+
+    ngOnInit() {
+        this.drugsBigRecord = this.drugsService.getDrugs(null, 1).do((drugs) => this.drugCounts += drugs.length);
         this.drugs = this.drugsService.getDrugs();
         this.groupedDrugs = this.drugsService.getGroupedDrugs();
     }
+
 
     protected onSelectionChanged(e: DejaGridRowsEvent) {
         this.selectedItems = e.items;

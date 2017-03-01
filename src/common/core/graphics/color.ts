@@ -1,10 +1,10 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
@@ -47,11 +47,17 @@ export class Color {
         this._b = b;
     }
 
-    public get r() { return this._r; }
+    public get r() {
+        return this._r;
+    }
 
-    public get g() { return this._g; }
+    public get g() {
+        return this._g;
+    }
 
-    public get b() { return this._b; }
+    public get b() {
+        return this._b;
+    }
 
     public get bestTextColor() {
         const a = 1 - (0.299 * this.r + 0.587 * this.g + 0.114 * this.b) / 255;

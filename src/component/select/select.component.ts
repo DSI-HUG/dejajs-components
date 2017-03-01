@@ -1,10 +1,10 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
@@ -307,8 +307,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     /** Définit la liste des éléments (tout type d'objet métier) */
     @Input()
-    public set models(items: any[] | Promise<any[]> | Observable<any[]>) {
-        this.isBusinessObject = true;
+    public set models(items: any[] | Observable<any[]>) {
         super.setModels(items).subscribe(() => {
         }, (error: any) => {
             this._hintLabel = error.toString();
@@ -374,33 +373,37 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     // ************* ControlValueAccessor Implementation **************
-    // set accessor including call the onchange callback
-    set value(value: any) {
-        let selectedItems = this.getSelectedItems() || [];
-        if (this._multiSelect || value !== selectedItems[0]) {
-            this.writeValue(value);
+    // // set accessor including call the onchange callback
+    // set value(value: any) {
+    //     let selectedItems = this.getSelectedItems() || [];
+    //     if (this._multiSelect || value !== selectedItems[0]) {
+    //         this.writeValue(value);
 
-            // The event is synchrone, but not the selection.
-            // If there is any problems with that, just create a setSelectedItems methode and return a promise.
-            // No way to change the value implementation, because this is part of the control value accessor
-            this.onChangeCallback(this.isBusinessObject ? value.model : value);
-        }
-    }
+    //         // The event is synchrone, but not the selection.
+    //         // If there is any problems with that, just create a setSelectedItems methode and return a promise.
+    //         // No way to change the value implementation, because this is part of the control value accessor
+    //         this.onChangeCallback(super.isBusinessObject ? value.model : value);
+    //     }
+    // }
 
-    // get accessor
-    get value(): any {
-        // Special binding on selected item here. Value never can be null or undefined otherwise,
-        // the ng2 binding don't work when no selected items.
-        let selectedItems = super.getSelectedItems();
-        return selectedItems.length ? (this._multiSelect ? selectedItems : selectedItems[0]) : undefined;
-    }
+    // // get accessor
+    // get value(): any {
+    //     // Special binding on selected item here. Value never can be null or undefined otherwise,
+    //     // the ng2 binding don't work when no selected items.
+    //     let selectedItems = super.getSelectedItems();
+    //     return selectedItems.length ? (this._multiSelect ? selectedItems : selectedItems[0]) : undefined;
+    // }
 
     // From ControlValueAccessor interface
     public writeValue(value: any) {
+        if (!value) {
+            return;
+        }
+
         if (this._multiSelect) {
-            super.setSelectedItems(value);
+            super.setSelectedModels(value);
         } else {
-            let item = value as IItemBase;
+            let item = super.convertToIItemBase([value])[0];
             if (item !== this.selectedItems[0]) {
                 this.unselectAll().then(() => {
                     if (item) {
@@ -698,13 +701,16 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         if (!this._multiSelect) {
             this.query = '';
             this.dropDownQuery = '';
-            this.value = undefined;
+            this.setSelectedItems(undefined);
+            this.onModelChange();
             delete this.selectingItemIndex;
             this.inputElement.focus();
             this.hideDropDown();
         } else {
             this.toggleSelect([item], false).then((selectedItems) => {
-                this.value = [...selectedItems];
+                const selected = [...selectedItems];
+                this.setSelectedItems(selected);
+                this.onModelChange(selected);
             });
         }
 
@@ -729,6 +735,20 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     protected ensureItemVisible(item: IItemBase | number) {
         super.ensureItemVisible(this.query, this.listElement, this.dropdownItemElements, item);
+    }
+
+    private onModelChange(items?: IItemBase[] | IItemBase) {
+        let output = items;
+
+        if (super.isBusinessObject && items) {
+            if (items instanceof Array) {
+                output = items.map((item) => item.model);
+            } else {
+                output = items.model;
+            }
+        }
+        
+        this.onChangeCallback(output);
     }
 
     private set mouseUp(value: boolean) {
@@ -774,19 +794,23 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         if (item) {
             if (this._multiSelect) {
                 this.toggleSelect([item], true).then((selectedItems) => {
-                    this.value = [...selectedItems];
+                    const selected = [...selectedItems];
+                    this.setSelectedItems(selected);
+                    this.onModelChange(selected);
                     this.query = '';
                     this.dropDownQuery = '';
                 });
             } else {
                 this.query = this.getTextValue(item);
                 this.dropDownQuery = '';
-                this.value = item;
+                this.setSelectedItems([item]);
+                this.onModelChange(item);
             }
         } else {
             this.query = '';
             this.dropDownQuery = '';
-            this.value = undefined;
+            this.setSelectedItems(undefined);
+            this.onModelChange();
         }
 
         this.inputElement.focus();

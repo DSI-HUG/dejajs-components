@@ -70,5 +70,6 @@ module.exports = {
     ],
     resolve: {
         extensions: [".webpack.js", ".web.js", ".ts", ".tsx", ".js", ".css", ".html"],
+        modules: [ path.join(__dirname, "node_modules") ],
     },
 };

@@ -1,10 +1,10 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
@@ -49,7 +49,9 @@ export class CloningService {
      * @param object  The object to clone.
      * @return An observable completed with the cloned object
      */
-    public cloneWithPrototype$(object: any) { return Observable.of(this.cloneSyncWithPrototype(object)); }
+    public cloneWithPrototype$(object: any) {
+        return Observable.of(this.cloneSyncWithPrototype(object));
+    }
 
     /**
      * Clone an object without the prototype
@@ -87,7 +89,9 @@ export class CloningService {
      * @param object  The object to clone.
      * @return Observable resolving to the cloned object.
      */
-    public clone$(object: any) { return Observable.of(this.cloneSync(object)); }
+    public clone$(object: any) {
+        return Observable.of(this.cloneSync(object));
+    }
 
     /**
      * Extening object that entered in first argument.
@@ -185,7 +189,12 @@ export class CloningService {
         return clone;
     }
 
-    private isSpecificValue(val) { return (val instanceof Date || val instanceof RegExp) ? true : false; }
+    private isSpecificValue(val) {
+        return (
+            val instanceof Date
+            || val instanceof RegExp
+        ) ? true : false;
+    }
 
     private cloneSpecificValue(val): any {
         if (val instanceof Date) {

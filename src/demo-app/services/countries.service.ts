@@ -1,10 +1,10 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
@@ -28,13 +28,13 @@ export class CountriesService {
         return new Observable<ICountry[]>((resolve: Subscriber<ICountry[]>) => {
             /* resolve.error('Get Countries Error'); */
             number = number || 1;
-            const getNextBunch = () => {
+            let getNextBunch = () => {
                 if (--number < 0) {
                     resolve.complete();
                     return;
                 }
 
-                this.http.get('src/demo-app/services/countries.json', { responseType: ResponseContentType.Json })
+                this.http.get('https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/demo-app/services/countries.json', { responseType: ResponseContentType.Json })
                     .map((response) => {
                         const datas = response.json();
                         const countries = datas.data as ICountry[];

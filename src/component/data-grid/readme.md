@@ -4,7 +4,8 @@ Composant pour afficher des données dans un tableau, avec une fonction de reche
 ### Utilisation 
 > Ne pas oublier d'importer le `DataGridModule` dans les `imports` de votre module concerné !
 
-  - Implémentation (crée un tableau à partir des lignes *rows* et des colonnes *columns* passées en paramètres) : 
+### Utilisation 
+> créer un tableau à partir des lignes *rows* et des colonnes *columns* passées en paramètres : 
 
 ```html
 <deja-grid #grid searchArea sortable multiSelect 
@@ -135,6 +136,7 @@ Composant pour afficher des données dans un tableau, avec une fonction de reche
 <tr>
 	<td>valueField</td>
 	<td>string</td>
+	<td></td>
 	<td>Définit le champ à utiliser comme valeur de comparaison.</td>
 </tr>
 <tr>
@@ -347,6 +349,3 @@ Composant pour afficher des données dans un tableau, avec une fonction de reche
 <template #searchSuffixTemplate>
 </template>
 ```
-
-### Exemple
-Un exemple d'utilisation est présent dans l'application test de **deja-angular2**.

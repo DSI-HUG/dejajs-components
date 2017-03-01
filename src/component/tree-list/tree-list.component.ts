@@ -1,10 +1,10 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
@@ -274,14 +274,12 @@ export class DejaTreeListComponent extends ItemListBase {
     /** Définit la liste des éléments selectionés en mode multiselect */
     @Input()
     public set selectedItems(items: IItemBase[]) {
-        this.unselectAll().then(() => {
-            super.toggleSelect(items, true);
-        });
+        this.setSelectedModels(items);
     }
 
     /** Retourne la liste des éléments selectionés en mode multiselect */
     public get selectedItems(): IItemBase[] {
-        return this.getSelectedItems() || [];
+        return this.getSelectedModels() || [];
     }
 
     /** Définit la liste des éléments selectionés en mode single select */
@@ -350,8 +348,7 @@ export class DejaTreeListComponent extends ItemListBase {
 
     /** Définit la liste des éléments (tout type d'objet métier) */
     @Input()
-    public set models(items: any[] | Promise<any[]> | Observable<any[]>) {
-        this.isBusinessObject = true;
+    public set models(items: any[] | Observable<any[]>) {
         super.setModels(items).subscribe(() => {
         }, (error: any) => {
             this._hintLabel = error.toString();
@@ -383,17 +380,6 @@ export class DejaTreeListComponent extends ItemListBase {
     }
 
     // ************* ControlValueAccessor Implementation **************
-    /** Définit la liste des éléments, en invoquant ngModelChange */
-    public set value(items: any) {
-        this.writeValue(items);
-        this.onChangeCallback(items);
-    }
-
-    /** Retourne la liste des éléments */
-    public get value(): any {
-        return super.getItems();
-    }
-
     /** Définit la liste des éléments, sans invoquaer ngModelChange */
     public writeValue(items: any) {
         delete this.hintLabel;

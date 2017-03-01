@@ -1,10 +1,10 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
@@ -100,7 +100,6 @@ export class JsonUtils {
         return mapObj;
     }
 
-
     /**
      * Get an object from a array of object. It uses a cache in order to go faster if called in a loop.
      * @param listPromise Promise that returns a array of objects. Object Must have an an attribute 'id' or 'ID' or 'Id'
@@ -127,3 +126,4 @@ export class JsonUtils {
         });
     }
 }
+

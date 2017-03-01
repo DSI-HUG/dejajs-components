@@ -14,7 +14,3 @@ Directive + composant pour afficher une tooltip avec un contenu riche
 ```
 
 ***model affichera : un model***
-
-
-### Exemples
-Des exemples d'utilisation sont présents dans l'application test de **deja-angular2** (voir `user-selector`).

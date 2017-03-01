@@ -1,91 +1,104 @@
-<md-card>
+<md-tab-group [selectedIndex]="1">
+    <!--<md-tab label="OVERVIEW">-->
+        <!--<md-card class="demo-card demo-basic">-->
+            <!--TODO-->
+        <!--</md-card>-->
+    <!--</md-tab>-->
+    <md-tab label="API REFERENCE">
+        <md-card class="demo-card demo-basic">
+            <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/range/readme.md'"></deja-markdown>
+        </md-card>
+    </md-tab>
+    <md-tab label="EXAMPLES">
 
-    <md-card-title>
-        <md-toolbar color="secondary">
-            <span>Range</span>
-        </md-toolbar>
-    </md-card-title>
+        <md-card>
 
-    <md-card-subtitle>
-        <h3>Default template</h3>
-        <h4>Read-only</h4>
-    </md-card-subtitle>
-    <md-card-content>
-        <deja-range [(ngModel)]="readOnlyRanges">
-        </deja-range>
-    </md-card-content>
+            <md-card-title>
+                <md-toolbar color="secondary">
+                    <span>Range</span>
+                </md-toolbar>
+            </md-card-title>
 
-    <md-card-subtitle>
-        <h3>Default template</h3>
-        <h4>Movable separator, with an array of accepted intervals</h4>
-    </md-card-subtitle>
-    <md-card-content>
-        <deja-range [(ngModel)]="rangesWithInterval"
-            [readOnly]="false"
-            [selected]="1"
-            [step]="steps">
-        </deja-range>
-    </md-card-content>
-
-    <md-card-subtitle>
-        <h3>Default template</h3>
-        <h4>Movable separator, with a numeric step</h4>
-    </md-card-subtitle>
-    <md-card-content>
-
-        <section id="flex-container">
-            <section>
-                <deja-range [(ngModel)]="ranges"
-                    [readOnly]="false"
-                    [step]="2.5"
-                    #dejaRange
-                    (errorFeedback)="errorFeed.emit($event)">
+            <md-card-subtitle>
+                <h3>Default template</h3>
+                <h4>Read-only</h4>
+            </md-card-subtitle>
+            <md-card-content>
+                <deja-range [(ngModel)]="readOnlyRanges">
                 </deja-range>
-            </section>
-            <button md-raised-button>Simple</button>
-        </section>
-    </md-card-content>
-    <md-card-content id="custom-range-actions">
-        <section>
-            <button md-raised-button
-                (click)="dejaRange.add(dejaRange.selected)">
-                Split selected range
-            </button>
-            <button md-raised-button
-                (click)="dejaRange.remove(dejaRange.selected)">
-                Remove selected range
-            </button>
-        </section>
-    </md-card-content>
+            </md-card-content>
 
-    <md-card-subtitle>
-        <h3>Custom template</h3>
-        <h4>Movable separator, with a function based step, logarithmic interpolation bewtween the model (weight) and the inner
-            model
-        </h4>
-    </md-card-subtitle>
-    <md-card-content>
-        <deja-range id="custom-range"
-            [(ngModel)]="weights"
-            (ngModelChange)="computeRangeFromWeight()"
-            [readOnly]="false"
-            [selected]="0"
-            [step]="stepFn"
-            (errorFeedback)="errorFeed.emit($event)"
-            #dejaWeight>
+            <md-card-subtitle>
+                <h3>Default template</h3>
+                <h4>Movable separator, with an array of accepted intervals</h4>
+            </md-card-subtitle>
+            <md-card-content>
+                <deja-range [(ngModel)]="rangesWithInterval"
+                            [readOnly]="false"
+                            [selected]="1"
+                            [step]="steps">
+                </deja-range>
+            </md-card-content>
 
-            <template #rangeTemplate
-                let-range
-                let-index="index"
-                let-ranges="ranges">
+            <md-card-subtitle>
+                <h3>Default template</h3>
+                <h4>Movable separator, with a numeric step</h4>
+            </md-card-subtitle>
+            <md-card-content>
 
-                <span class="custom-range">{{range.minWeight | number: '1.0-2'}} - {{range.maxWeight | number: '1.0-2'}} kg</span>
-            </template>
+                <section id="flex-container">
+                    <section>
+                        <deja-range [(ngModel)]="ranges"
+                                    [readOnly]="false"
+                                    [step]="2.5"
+                                    #dejaRange
+                                    (errorFeedback)="errorFeed.emit($event)">
+                        </deja-range>
+                    </section>
+                    <button md-raised-button>Simple</button>
+                </section>
+            </md-card-content>
+            <md-card-content id="custom-range-actions">
+                <section>
+                    <button md-raised-button
+                            (click)="dejaRange.add(dejaRange.selected)">
+                        Split selected range
+                    </button>
+                    <button md-raised-button
+                            (click)="dejaRange.remove(dejaRange.selected)">
+                        Remove selected range
+                    </button>
+                </section>
+            </md-card-content>
 
-            <template #separatorTemplate
-                let-range
-                let-index="index"
-                let-ranges="ranges">
+            <md-card-subtitle>
+                <h3>Custom template</h3>
+                <h4>Movable separator, with a function based step, logarithmic interpolation bewtween the model (weight) and the inner
+                    model
+                </h4>
+            </md-card-subtitle>
+            <md-card-content>
+                <deja-range id="custom-range"
+                            [(ngModel)]="weights"
+                            (ngModelChange)="computeRangeFromWeight()"
+                            [readOnly]="false"
+                            [selected]="0"
+                            [step]="stepFn"
+                            (errorFeedback)="errorFeed.emit($event)"
+                            #dejaWeight>
+
+                    <template #rangeTemplate
+                              let-range
+                              let-index="index"
+                              let-ranges="ranges">
+
+                        <span class="custom-range">{{range.minWeight | number: '1.0-2'}} - {{range.maxWeight | number: '1.0-2'}} kg</span>
+                    </template>
+
+                    <template #separatorTemplate
+                              let-range
+                              let-index="index"
+                              let-ranges="ranges">
 
                 <span class="custom-separator">
                     <svg class="triangle">
@@ -100,48 +113,51 @@
                         <polygon points="0,5 5,0 10,5 "></polygon>
                     </svg>
                 </span>
-            </template>
-        </deja-range>
-    </md-card-content>
+                    </template>
+                </deja-range>
+            </md-card-content>
 
-    <md-card-content id="custom-range-actions">
-        <section>
-            <button md-raised-button
-                (click)="add(dejaWeight.selected)">
-                Split selected range
-            </button>
-            <button md-raised-button
-                (click)="remove(dejaWeight.selected)">
-                Remove selected range
-            </button>
-            <button id="decrease"
-                md-raised-button
-                (click)="decrease()"
-                [disabled]="weights[0]?.minWeight === 0">
-                Decrease minimum
-            </button>
-            <button id="increase"
-                md-raised-button
-                (click)="increase()">
-                Increase maximum
-            </button>
-        </section>
-    </md-card-content>
-</md-card>
+            <md-card-content id="custom-range-actions">
+                <section>
+                    <button md-raised-button
+                            (click)="add(dejaWeight.selected)">
+                        Split selected range
+                    </button>
+                    <button md-raised-button
+                            (click)="remove(dejaWeight.selected)">
+                        Remove selected range
+                    </button>
+                    <button id="decrease"
+                            md-raised-button
+                            (click)="decrease()"
+                            [disabled]="weights[0]?.minWeight === 0">
+                        Decrease minimum
+                    </button>
+                    <button id="increase"
+                            md-raised-button
+                            (click)="increase()">
+                        Increase maximum
+                    </button>
+                </section>
+            </md-card-content>
+        </md-card>
 
-<!-- error feedback implementation example with snackbar-->
-<template ngFor
-    let-error
-    [ngForOf]="errors | async">
+        <!-- error feedback implementation example with snackbar-->
+        <template ngFor
+                  let-error
+                  [ngForOf]="errors | async">
 
-    <deja-snackbar *ngIf="error?.gate"
-        alignment="bottom right"
-        [duration]="5000"
-        (onAnimationDone)="error.gate = false">
+            <deja-snackbar *ngIf="error?.gate"
+                           alignment="bottom right"
+                           [duration]="5000"
+                           (onAnimationDone)="error.gate = false">
 
-        <deja-message-box type="warn"
-            horizontal>
-            {{error.message}}
-        </deja-message-box>
-    </deja-snackbar>
-</template>
+                <deja-message-box type="warn"
+                                  horizontal>
+                    {{error.message}}
+                </deja-message-box>
+            </deja-snackbar>
+        </template>
+
+    </md-tab>
+</md-tab-group>

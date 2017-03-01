@@ -1,3 +1,17 @@
+<md-tab-group [selectedIndex]="1">
+	<!--<md-tab label="OVERVIEW">-->
+		<!--<md-card class="demo-card demo-basic">-->
+			<!--TODO-->
+		<!--</md-card>-->
+	<!--</md-tab>-->
+	<md-tab label="API REFERENCE">
+		<md-card class="demo-card demo-basic">
+			<deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/tiles/readme.txt'"></deja-markdown>
+		</md-card>
+	</md-tab>
+	<md-tab label="EXAMPLES">
+
+
 <template ngFor let-message [ngForOf]="messages$ | async">
     <deja-snackbar alignment="bottom right" *ngIf="message.gate" [duration]="8000" (onAnimationDone)="message.cancel(false)">
         <deja-message-box type="{{message.type}}" title="{{message.title}}">
@@ -47,3 +61,6 @@
         </deja-tiles>
     </md-card-content>
 </md-card>
+
+	</md-tab>
+</md-tab-group>
