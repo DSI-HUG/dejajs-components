@@ -13,37 +13,50 @@
  * Dragdrop service for mouse drag and drop
  */
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/Rx';
+import { BehaviorSubject, Subject } from 'rxjs/Rx';
 import { Position } from '../../common/core/graphics/position';
 
 @Injectable()
 export class DejaMouseDragDropService {
-    private clipboard = {} as { [key: string]: any };
-    public cursorInfos$ = new BehaviorSubject<ICursorInfos>(undefined);
+    private _context = {} as IDragDropContext;
+    private _isDragging = false;
+    public dragCursor$ = new BehaviorSubject<IDragCursorInfos>(undefined);
+    public dropCursor$ = new Subject<IDropCursorInfos>();
+    public dragging$ = new BehaviorSubject<boolean>(false);
 
     constructor() {
-
+        this.dragging$
+            .do((value) => this._isDragging = value)
+            .filter((value) => !value)
+            .subscribe(() => this._context = {});
     }
 
-    get(key: string) {
-        return this.clipboard[key];
+    public get isDragging() {
+        return this._isDragging;
     }
 
-    set(key: string, value: any) {
-        this.clipboard[key] = value;
+    public set context(value: IDragDropContext) {
+        this._context = value;
     }
 
-    isAvailable(key: string) {
-        return !!this.clipboard[key];
-    }
-
-    clear() {
-        this.clipboard = {};
+    public get context() {
+        return this._context;
     }
 }
 
-export interface ICursorInfos {
+export interface IDragDropContext {
+    [key: string]: any;
+}
+
+export interface IDragCursorInfos {
     position: Position;
+    html?: string;
+    width?: number;
+    height?: number;
+    className?: string;
+}
+
+export interface IDropCursorInfos {
     html?: string;
     width?: number;
     height?: number;

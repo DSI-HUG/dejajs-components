@@ -1,4 +1,3 @@
-import { ICursorInfos } from './mouse-dragdrop.service';
 /*
  * *
  *  @license
@@ -11,7 +10,7 @@ import { ICursorInfos } from './mouse-dragdrop.service';
  */
 
 import { Directive, ElementRef, Input } from '@angular/core';
-import { DejaMouseDragDropService } from './mouse-dragdrop.service';
+import { DejaMouseDragDropService, IDragCursorInfos } from './mouse-dragdrop.service';
 import { Observable, Subject } from 'rxjs/Rx';
 import { Position, Rect } from '../../common/core/graphics/index';
 
@@ -50,6 +49,39 @@ export class DejaMouseDraggableDirective {
                             return el.tagName === this.context.target.toUpperCase() || el.id === this.context.target.substr(1) || el.hasAttribute(this.context.target.substring(1, this.context.target.length - 1));
                         };
 
+                        const startDrag = () => {
+                            Observable.merge(mouseUp$, moveUp$)
+                                .first()
+                                .subscribe(() => {
+                                    dragDropService.dragCursor$.next(undefined);
+                                    dragDropService.dragging$.next(false);
+                                });
+
+                            Observable.fromEvent(element.ownerDocument, 'mousemove')
+                                .takeUntil(mouseUp$.first())
+                                .subscribe((ev: MouseEvent) => {
+                                    if (ev.buttons === 1) {
+                                        const bounds = new Rect(element.getBoundingClientRect());
+                                        const position = new Position(ev.pageX, ev.pageY);
+                                        const html = bounds.containsPoint(position) ? target.innerHTML : undefined;
+
+                                        // Post cursor infos to service
+                                        dragDropService.dragCursor$.next({
+                                            position: position,
+                                            html: html,
+                                            width: target.offsetWidth,
+                                            height: target.offsetHeight,
+                                            className: this.context.className,
+                                        } as IDragCursorInfos);
+
+                                    } else {
+                                        moveUp$.next();
+                                    }
+                                });
+
+                            dragDropService.dragging$.next(true);
+                        };
+
                         if (this.context) {
                             if (this.context.target) {
                                 target = event.target as HTMLElement;
@@ -61,38 +93,25 @@ export class DejaMouseDraggableDirective {
                             if (!target) {
                                 target = element;
                             }
+
+                            if (this.context.getContext) {
+                                const dragContext = this.context.getContext(target);
+                                if (dragContext.subscribe) {
+                                    // Observable
+                                    dragContext
+                                        .first()
+                                        .subscribe((ddctx) => {
+                                            dragDropService.context = ddctx;
+                                            startDrag();
+                                        });
+                                    return;
+                                } else {
+                                    dragDropService.context = dragContext;
+                                }
+                            }
                         }
 
-                        Observable.merge(mouseUp$, moveUp$)
-                            .first()
-                            .subscribe(() => dragDropService.cursorInfos$.next(undefined));
-
-                        Observable.fromEvent(element.ownerDocument, 'mousemove')
-                            .takeUntil(mouseUp$.first())
-                            .subscribe((ev: MouseEvent) => {
-                                if (ev.buttons === 1) {
-                                    const bounds = new Rect(element.getBoundingClientRect());
-                                    const position = new Position(ev.pageX, ev.pageY);
-                                    const html = bounds.containsPoint(position) ? target.innerHTML : undefined;
-
-                                    // Post cursor infos to service
-                                    dragDropService.cursorInfos$.next({
-                                        position: position,
-                                        visible: true,
-                                        html: html,
-                                        width: target.offsetWidth,
-                                        height: target.offsetHeight,
-                                        className: this.context.className,
-                                    } as ICursorInfos);
-                                } else {
-                                    moveUp$.next();
-                                }
-                            });
-
-                        // Post position to service
-                        dragDropService.cursorInfos$.next({
-                            position: new Position(event.pageX, event.pageY),
-                        });
+                        startDrag();
                     });
             });
     }
@@ -101,4 +120,5 @@ export class DejaMouseDraggableDirective {
 export interface IDejaMouseDraggableContext {
     target?: string; // Tagname or #id or [attribute]
     className?: string;
+    getContext?: (HTMLElement) => any; // Return object or observable<object>
 }

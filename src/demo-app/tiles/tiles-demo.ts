@@ -12,7 +12,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Rect } from '../../common/core/graphics/index';
 import { MaterialColors } from '../../common/core/style/index';
-import { IDejaMouseDraggableContext, IDejaTilesAddEvent, IDejaDragEvent, IDejaTile, IDejaTilesRemoveEvent } from '../../component';
+import { IDejaMouseDraggableContext, IDejaTilesAddEvent, IDejaTile, IDejaTilesRemoveEvent } from '../../component';
 import { CountriesService, ICountry } from '../services/countries.service';
 import { Observable, Subject } from 'rxjs/Rx';
 
@@ -55,13 +55,15 @@ export class TilesDemoComponent implements OnInit {
         this.tiles1$ = tiles$
             .take(12)
             .map((country) => {
+                const model = {
+                    color: colors[colorIndex].toHex(),
+                    country: country,
+                } as ITemplateModel;
+
                 const tile = {
                     bounds: new Rect(x1, y1, 15, 15),
                     id: country.code,
-                    templateModel: {
-                        color: colors[colorIndex].toHex(),
-                        country: country,
-                    } as ITemplateModel,
+                    templateModel: model,
                 } as IDejaTile;
 
                 if (++colorIndex >= colors.length) {
@@ -111,37 +113,33 @@ export class TilesDemoComponent implements OnInit {
     }
 
     protected getDragContext() {
-
         return {
             target: 'deja-tile',
             className: 'deja-tile-cursor',
+            getContext: (target) => {
+                return this.countriesService.getCountyByCode(target.id);
+            },
         } as IDejaMouseDraggableContext;
-        // return {
-        //     dragendcallback: () => {
-
-        //     },
-        //     dragstartcallback: (event: IDejaDragEvent) => {
-        //         event.dragObject = tile;
-        //         event.dragInfo['IDejaTile'] = tile.toTileModel();
-        //     },
-        // };
     }
 
     protected getDropContext() {
         return {
-            dragovercallback: (event: IDejaDragEvent) => {
-                if (event.dragInfo.hasOwnProperty('IDejaTile')) {
-                    event.preventDefault();
-                }
-            },
-            dropcallback: (event: IDejaDragEvent) => {
-                if (event.dragInfo.hasOwnProperty('IDejaTile')) {
-                    const model = event.dragInfo['IDejaTile'].templateModel as ITemplateModel;
-                    (event.target as HTMLElement).innerText = `The dropped country is ${model.country.naqme} - the code is: ${model.country.code}`;
-                    event.preventDefault();
-                }
-            },
-        };
+            className: 'coutry-target-cursor',
+        } as IDejaMouseDraggableContext;
+        // return {
+        //     dragovercallback: (event: IDejaDragEvent) => {
+        //         if (event.dragInfo.hasOwnProperty('IDejaTile')) {
+        //             event.preventDefault();
+        //         }
+        //     },
+        //     dropcallback: (event: IDejaDragEvent) => {
+        //         if (event.dragInfo.hasOwnProperty('IDejaTile')) {
+        //             const model = event.dragInfo['IDejaTile'].templateModel as ITemplateModel;
+        //             (event.target as HTMLElement).innerText = `The dropped country is ${model.country.naqme} - the code is: ${model.country.code}`;
+        //             event.preventDefault();
+        //         }
+        //     },
+        // };
     }
 
     protected onContentAdded(event: IDejaTilesAddEvent) {

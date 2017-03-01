@@ -10,10 +10,9 @@
  */
 
 import { Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { DejaMouseDragDropService } from './mouse-dragdrop.service';
+import { DejaMouseDragDropService, IDragCursorInfos } from './mouse-dragdrop.service';
 import { Observable, BehaviorSubject } from 'rxjs/Rx';
 import { Position } from './../../common/core/graphics/position';
-import { ICursorInfos } from './mouse-dragdrop.service';
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -27,88 +26,87 @@ export class DejaMouseDragDropCursorComponent {
     @ViewChild('block') private icon: ElementRef;
     @ViewChild('content') private content: ElementRef;
     private position$ = new BehaviorSubject<Position>(undefined);
-    private infos$ = new BehaviorSubject<ICursorInfos>(undefined);
-    private _infos: ICursorInfos;
+    private dragCursor$ = new BehaviorSubject<IDragCursorInfos>(undefined);
+    private _dragCursor: IDragCursorInfos;
 
     constructor(elementRef: ElementRef, private dragDropService: DejaMouseDragDropService) {
         const element = elementRef.nativeElement as HTMLElement;
 
-        const position$ = Observable.from(this.position$);
-
-        position$
-            .filter((pos) => !!pos)
+        Observable
+            .from(this.position$)
             .subscribe((pos) => {
-                element.style.left = `${pos.left}px`;
-                element.style.top = `${pos.top}px`;
+                element.style.left = pos ? `${pos.left}px` : '-1000px';
+                element.style.top = pos ? `${pos.top}px` : '-1000px';
             });
 
-        position$
-            .filter((pos) => !pos)
-            .subscribe(() => {
-                element.style.left = '-1000px';
-                element.style.top = '-1000px';
-            });
 
-        const infos$ = Observable.from(this.infos$);
+        const dragCursor$ = Observable.from(this.dragCursor$);
 
         // Hide
-        infos$
-            .filter((infos) => !infos)
-            .do(() => {
-                if (this._infos) {
+        dragCursor$
+            .filter((dragCursor) => !dragCursor)
+            .do(() => console.log('hide'))
+            .do((dragCursor) => {
+                if (this._dragCursor) {
                     this.contentElement.style.opacity = '0';
                     this.iconElement.style.opacity = '0';
-                    this.position$.next(null);
                 }
+                this._dragCursor = dragCursor;
             })
             .delay(150)
-            .do((infos) => this._infos = infos)
-            .subscribe(() => element.style.display = 'none');
+            .subscribe(() => {
+                this.position$.next(null);
+                element.style.display = 'none';
+            });
 
-        const show$ = infos$
-            .filter((infos) => !!infos)
-            .do(() => {
+        // Show
+        dragCursor$
+            .filter((dragCursor) => !!dragCursor)
+            .do((dragCursor) => console.log('Show ' + !!dragCursor.html))
+            .do((dragCursor) => {
                 element.style.display = '';
                 this.contentElement.style.opacity = '0';
                 this.iconElement.style.opacity = '0';
-            });
-
-        // Show content
-        show$
-            .filter((infos) => !!infos.html)
-            .do((infos) => {
-                this.contentElement.innerHTML = infos.html;
-                element.className = infos.className;
-                this.contentElement.style.width = `${infos.width || 48}px`;
-                this.contentElement.style.height = `${infos.height || 48}px`;
+                this._dragCursor = dragCursor;
+            })
+            .do((dragCursor) => {
+                if (!!dragCursor.html) {
+                    this.contentElement.innerHTML = dragCursor.html;
+                    element.className = dragCursor.className;
+                    this.contentElement.style.width = `${dragCursor.width || 48}px`;
+                    this.contentElement.style.height = `${dragCursor.height || 48}px`;
+                } else {
+                    this.iconElement.style.opacity = '1';
+                }
             })
             .delay(1)
-            .do(() => this.contentElement.style.opacity = '1')
+            .do((dragCursor) => {
+                if (!!dragCursor.html) {
+                    this.contentElement.style.opacity = '1';
+                }
+            })
             .delay(150)
-            .subscribe((infos) => this._infos = infos);
-
-        // Show block icon
-        show$
-            .filter((infos) => !infos.html)
-            .delay(1)
-            .do(() => this.iconElement.style.opacity = '1')
-            .delay(150)
-            .subscribe((infos) => {
-                this._infos = infos;
-                this.contentElement.innerHTML = '';
-                element.className = '';
+            .subscribe((dragCursor) => {
+                if (!dragCursor.html) {
+                    this.contentElement.innerHTML = '';
+                    element.className = '';
+                }
             });
 
-        Observable.from(this.dragDropService.cursorInfos$)
-            .subscribe((infos) => {
-                if (!!infos !== !!this._infos || !infos || !!infos.html !== !!this._infos.html) {
+        Observable.from(this.dragDropService.dragCursor$)
+            .subscribe((dragCursor) => {
+                if (!!dragCursor !== !!this._dragCursor || (dragCursor && !!dragCursor.html !== !!this._dragCursor.html)) {
                     // Update Content
-                    this.infos$.next(infos);
-                } else {
+                    this.dragCursor$.next(dragCursor);
+                } else if (dragCursor) {
                     // Update only Position
-                    this.position$.next(infos.position);
-                    this._infos = infos;
+                    this.position$.next(dragCursor.position);
                 }
+            });
+
+        Observable.from(this.dragDropService.dropCursor$)
+            .subscribe((dropCursor) => {
+                console.log(dropCursor);
             });
     }
 
@@ -120,5 +118,3 @@ export class DejaMouseDragDropCursorComponent {
         return this.content.nativeElement as HTMLElement;
     }
 }
-
-

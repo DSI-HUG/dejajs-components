@@ -16,7 +16,13 @@ import { Subscriber } from 'rxjs/Subscriber';
 
 @Injectable()
 export class CountriesService {
+    private countriesDic = {} as { [code: string]: ICountry };
+
     constructor(private http: Http) { }
+
+    public getCountyByCode(code: string): Observable<ICountry> {
+        return Observable.of(this.countriesDic[code]);
+    }
 
     public getCountries(query?: string, number?: number): Observable<ICountry[]> {
         return new Observable<ICountry[]>((resolve: Subscriber<ICountry[]>) => {
@@ -32,7 +38,10 @@ export class CountriesService {
                     .map((response) => {
                         const datas = response.json();
                         const countries = datas.data as ICountry[];
-                        countries.forEach((country) => { country.displayName = country.naqme; });
+                        countries.forEach((country) => {
+                            country.displayName = country.naqme;
+                            this.countriesDic[country.code] = country;
+                        });
 
                         if (query) {
                             const sr = new RegExp('^' + query, 'i');
