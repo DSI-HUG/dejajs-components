@@ -17,7 +17,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
     styleUrls: ['./demo-app.scss', '../../scss/index.scss'],
     templateUrl: './demo-app.html',
 })
-export class DemoApp {
+export class DemoAppComponent {
     public version: string;
     protected navOpened = true;
 

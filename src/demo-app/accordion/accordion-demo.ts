@@ -11,14 +11,14 @@
 
 import { Component } from '@angular/core';
 
-import { IEditorLanguage } from "../../component/monaco-editor/options/editor-language.model";
+import { IEditorLanguage } from '../../component/monaco-editor/options/editor-language.model';
 
 @Component({
   selector: 'deja-accordion-demo',
   styleUrls: ['./accordion-demo.scss'],
   templateUrl: './accordion-demo.html',
 })
-export class DejaAccordionDemo {
+export class DejaAccordionDemoComponent {
   protected exampleValue = `
   <deja-accordion>
       <deja-accordion-group>

@@ -17,7 +17,7 @@ import {Component, ViewEncapsulation} from '@angular/core';
   styleUrls: ['./menu-demo.scss'],
   templateUrl: './menu-demo.html',
 })
-export class MenuDemo {
+export class MenuDemoComponent {
   public selected = '';
   public items = [
     {text: 'Refresh'},

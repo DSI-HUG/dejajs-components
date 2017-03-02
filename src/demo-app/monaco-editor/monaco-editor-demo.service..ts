@@ -9,9 +9,9 @@
  *
  */
 
-import {Injectable} from "@angular/core";
-import { Http, ResponseContentType } from "@angular/http";
-import {Observable} from "rxjs/Observable";
+import {Injectable} from '@angular/core';
+import { Http, ResponseContentType } from '@angular/http';
+import {Observable} from 'rxjs/Observable';
 
 @Injectable()
 export class MonacoEditorDemoService {

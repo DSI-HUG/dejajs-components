@@ -12,8 +12,8 @@
 import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { IItemTree } from '../../common/core';
-import { CountriesListService } from "../services/countries-list.service";
-import { CountriesService, ICountry } from "../services/countries.service";
+import { CountriesListService } from '../services/countries-list.service';
+import { CountriesService, ICountry } from '../services/countries.service';
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -21,7 +21,7 @@ import { CountriesService, ICountry } from "../services/countries.service";
     styleUrls: ['./select-demo.scss'],
     templateUrl: './select-demo.html',
 })
-export class SelectDemo extends OnInit {
+export class SelectDemoComponent extends OnInit {
     protected country: ICountry;
     private countries: Observable<ICountry[]>;
     private countriesForTemplate: ICountry[];
@@ -47,7 +47,7 @@ export class SelectDemo extends OnInit {
         this.countries = this.countriesService.getCountries();
 
         this.countriesService.getCountries().subscribe((value: ICountry[]) => {
-            let result = [] as any[];
+            const result = [] as any[];
             value.map((s) => {
                 s.toString = () => { return s.code + ' - ' + s.naqme; };
                 result.push(s);
@@ -74,10 +74,10 @@ export class SelectDemo extends OnInit {
         }, (error) => this.handleError(error));
 
         this.countriesService.getCountries().subscribe((value: ICountry[]) => {
-            let result = [] as ISelectCountry[];
-            let map = {} as { [groupName: string]: ISelectCountry[] };
+            const result = [] as ISelectCountry[];
+            const map = {} as { [groupName: string]: ISelectCountry[] };
             value.map((country) => {
-                let groupName = 'Group ' + country.naqme[0];
+                const groupName = 'Group ' + country.naqme[0];
                 if (!map[groupName]) {
                     map[groupName] = [] as IItemTree[];
                     result.push({
@@ -107,7 +107,7 @@ export class SelectDemo extends OnInit {
     protected confirmUnselection() {
         return () => {
             this.dialogVisible = true;
-            let self = this;
+            const self = this;
             return new Promise<any>((resolve?: () => void, reject?: (reason: any) => void) => {
                 Observable
                     .fromEvent(this.dialogWrapper.nativeElement, 'click').first().subscribe((e: Event) => {

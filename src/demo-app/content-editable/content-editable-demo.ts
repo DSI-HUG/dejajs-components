@@ -16,7 +16,7 @@ import { Component } from '@angular/core';
     styleUrls: ['./content-editable-demo.scss'],
     templateUrl: './content-editable-demo.html',
 })
-export class DejaContentEditableDemo {
+export class DejaContentEditableDemoComponent {
     protected designMode = false;
 
     constructor() { }

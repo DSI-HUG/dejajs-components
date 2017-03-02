@@ -1,6 +1,6 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import { IItemBase, ItemListService } from '../../common/core/item-list';
-import { CountriesService } from "./countries.service";
+import { CountriesService } from './countries.service';
 
 @Injectable()
 export class CountriesListService extends ItemListService {

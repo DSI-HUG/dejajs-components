@@ -10,7 +10,7 @@
  */
 
 import { Component, ContentChild, Input } from '@angular/core';
-import { IDejaGridColumn, IDejaGridParentRow } from "../index";
+import { IDejaGridColumn, IDejaGridParentRow } from '../index';
 
 /** Composant représentant une ligne parente d'une structure de ligne hierarchique */
 @Component({
@@ -41,7 +41,7 @@ export class DejaGridParentRowComponent {
     @ContentChild('cellTemplate') protected cellTemplateInternal;
 
     protected get columnLayout() { 
-        let colLayout = {} as IDejaGridParentRowColumnLayout;
+        const colLayout = {} as IDejaGridParentRowColumnLayout;
         let left = 0;
         colLayout.columns = [];
         this.columns.forEach((column) => {

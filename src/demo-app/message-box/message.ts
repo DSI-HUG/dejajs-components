@@ -10,5 +10,5 @@
  */
 
 export class Message {
-    constructor(public content: string = `Some information`, public type: string = 'info', public gate: boolean = true) { }
+    constructor(public content = `Some information`, public type = 'info', public gate = true) { }
 }

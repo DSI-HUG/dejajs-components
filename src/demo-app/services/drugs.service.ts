@@ -9,10 +9,10 @@
  *
  */
 
-import { Injectable } from "@angular/core";
-import { Http, ResponseContentType } from "@angular/http";
-import { Observable } from "rxjs/Observable";
-import { Subscriber } from "rxjs/Subscriber";
+import { Injectable } from '@angular/core';
+import { Http, ResponseContentType } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
+import { Subscriber } from 'rxjs/Subscriber';
 import { setTimeout } from 'timers';
 import { GroupingService, IGroupInfo } from '../../common/core';
 
@@ -23,7 +23,7 @@ export class DrugsService {
     public getGroupedDrugs(query?: string): Promise<IDrug[]> {
         return new Promise<IDrug[]>((resolved?: (result: IDrug[]) => void, rejected?: (reason: any) => void) => {
             this.getDrugs(query).toPromise().then((drugs) => {
-                let groupInfos = [
+                const groupInfos = [
                     {
                         groupByField: 'fulfillexpeditecriteria',
                     },
@@ -40,7 +40,7 @@ export class DrugsService {
         return new Observable<IDrug[]>((resolve: Subscriber<IDrug[]>) => {
             /* resolve.error('Get Countries Error'); */
             number = number || 1;
-            let getNextBunch = () => {
+            const getNextBunch = () => {
                 if (--number < 0) {
                     resolve.complete();
                     return;
@@ -48,8 +48,8 @@ export class DrugsService {
 
                 this.http.get('https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/demo-app/services/drugs.json', { responseType: ResponseContentType.Json })
                     .map((response: any) => {
-                        let datas = response.json();
-                        let drugs = datas.data as IDrug[];
+                        const datas = response.json();
+                        const drugs = datas.data as IDrug[];
 
                         drugs.forEach((drug) => {
                             Object.keys(drug).forEach((key) => {
@@ -63,9 +63,9 @@ export class DrugsService {
                         });
 
                         if (query) {
-                            let sr = new RegExp('^' + query, 'i');
-                            let sc = new RegExp('^(?!' + query + ').*(' + query + ')', 'i');
-                            let result = drugs.filter((z) => sr.test(z.receivedate));
+                            const sr = new RegExp('^' + query, 'i');
+                            const sc = new RegExp('^(?!' + query + ').*(' + query + ')', 'i');
+                            const result = drugs.filter((z) => sr.test(z.receivedate));
                             drugs.forEach((z) => {
                                 if (sc.test(z.receivedate)) {
                                     result.push(z);

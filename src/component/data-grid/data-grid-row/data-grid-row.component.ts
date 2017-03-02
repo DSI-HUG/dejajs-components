@@ -10,7 +10,7 @@
  */
 
 import { Component, ContentChild, Input } from '@angular/core';
-import { IDejaGridColumn, IDejaGridColumnLayout, IDejaGridRow } from "../index";
+import { IDejaGridColumn, IDejaGridColumnLayout, IDejaGridRow } from '../index';
 
 /** Composant représentant une ligne de la grille */
 @Component({

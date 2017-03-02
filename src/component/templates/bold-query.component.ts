@@ -39,12 +39,12 @@ export class DejaBoldQueryComponent {
 
     private refresh() {
         if (this._value && this._query && this._query.length) {
-            let sc = new RegExp(this._query, 'i');
-            let value = this._value.toString() as string;
-            let splitted = value.split(sc);
+            const sc = new RegExp(this._query, 'i');
+            const value = this._value.toString() as string;
+            const splitted = value.split(sc);
             let position = 0;
-            let queryLength = this._query.length;
-            let contents = [] as string[];
+            const queryLength = this._query.length;
+            const contents = [] as string[];
             splitted.forEach((text) => {
                 if (text) {
                     contents.push(text);
@@ -52,7 +52,7 @@ export class DejaBoldQueryComponent {
                 }
                 if (position + queryLength <= value.length) {
                     contents.push('<b>');
-                    contents.push(value.slice(position, position + queryLength)),
+                    contents.push(value.slice(position, position + queryLength));
                     contents.push('</b>');
                     position += queryLength;
                 }

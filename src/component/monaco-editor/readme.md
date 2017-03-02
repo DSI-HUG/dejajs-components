@@ -27,7 +27,7 @@ l'input : monacoLibPath (Ex: 'mon_path/loader.js')
 ```
 
 ```typescript
-export class DejaMonacoEditorDemo implements OnInit {
+export class DejaMonacoEditorDemoComponent implements OnInit {
     protected code: string;
 
     protected language: IEditorLanguage = IEditorLanguage.XML;

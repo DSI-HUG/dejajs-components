@@ -9,11 +9,11 @@
  *
  */
 
-import {Observable} from 'rxjs/Rx';
-import {Subscriber} from 'rxjs/Subscriber';
-import {GroupingService, IGroupInfo} from "../grouping/index";
-import {ISortInfos, SortingService} from "../sorting/index";
-import {IItemBase, IItemTree} from "./index";
+import { Observable } from 'rxjs/Rx';
+import { Subscriber } from 'rxjs/Subscriber';
+import { GroupingService, IGroupInfo } from '../grouping/index';
+import { ISortInfos, SortingService } from '../sorting/index';
+import { IItemBase, IItemTree } from './index';
 
 /** Service de gestion des listes (deja-treelist, deja-select et deja-grid).
  * Ce service permet la gestion du viewport et la gestion des caches des listes.
@@ -119,7 +119,7 @@ export class ItemListService {
                 this.items = items;
                 subscriber.next();
             } else {
-                let promise = items as Promise<IItemBase[]>;
+                const promise = items as Promise<IItemBase[]>;
                 if (promise.then) {
                     promise.then((its) => {
                         this.ensureChildrenProperties(its);
@@ -132,7 +132,7 @@ export class ItemListService {
                         subscriber.error(err);
                     });
                 } else {
-                    let observable = items as Observable<IItemBase[]>;
+                    const observable = items as Observable<IItemBase[]>;
                     observable.subscribe((its) => {
                         this.ensureChildrenProperties(its);
                         if (!this.items || !this.items.length) {
@@ -242,21 +242,21 @@ export class ItemListService {
                 return;
             }
 
-            let listIndex = this._ddCurrentIndex;
-            let item = this._ddList[listIndex] as IItemTree;
+            const listIndex = this._ddCurrentIndex;
+            const item = this._ddList[listIndex] as IItemTree;
             if (!item) {
                 rejected('invalid drag infos stored in cache.');
             }
 
             // La drag and drop liste est incomplète, en cas de filtrage, retrouver l'élément juste en dessus dans la liste complète
-            let targetItem = this._ddList[listIndex - 1] as IItemTree;
+            const targetItem = this._ddList[listIndex - 1] as IItemTree;
             let targetParent: IItemTree;
 
             // Find target in the flat list to calculate the correct index
             let flatListIndex = this._cache.flatList.findIndex((itm) => itm === targetItem);
             let targetIndex = 0;
             while (flatListIndex >= 0) {
-                let parentItem = this._cache.flatList[flatListIndex] as IItemTree;
+                const parentItem = this._cache.flatList[flatListIndex] as IItemTree;
                 if (parentItem.depth === undefined) {
                     // Flat list
                     targetIndex = flatListIndex;
@@ -270,16 +270,16 @@ export class ItemListService {
                 --flatListIndex;
             }
 
-            let findItem = (itemToFind: IItemTree, treeList: IItemTree[]): IFindItemsResult => {
+            const findItem = (itemToFind: IItemTree, treeList: IItemTree[]): IFindItemsResult => {
                 for (let i = 0; i < treeList.length; i++) {
-                    let itm = treeList[i];
+                    const itm = treeList[i];
                     if (itm === itemToFind) {
                         return {
                             index: i,
                             list: treeList,
                         };
                     } else if (itm.$items !== undefined) {
-                        let result = findItem(itemToFind, itm.$items);
+                        const result = findItem(itemToFind, itm.$items);
                         if (result) {
                             return result;
                         }
@@ -287,13 +287,13 @@ export class ItemListService {
                 }
             };
 
-            let originResult = findItem(item, this.items);
+            const originResult = findItem(item, this.items);
 
             // Remove item from the origin
             originResult.list.splice(originResult.index, 1);
 
             // Add in the new location
-            let targetList = targetParent ? targetParent.$items : this.items;
+            const targetList = targetParent ? targetParent.$items : this.items;
 
             if (targetIndex > originResult.index && originResult.list === targetList) {
                 --targetIndex;
@@ -310,23 +310,23 @@ export class ItemListService {
     /** Usage interne. Calcul l'élément cible d'un drag and drop en fonction de l'index spécifié. */
     public calcDragTargetIndex(index: number, targetIndex: number): Promise<number> {
         return new Promise<number>((resolved?: (dragDropIndex: number) => void) => {
-            let currentList = this._ddList || this._cache.visibleList;
+            const currentList = this._ddList || this._cache.visibleList;
 
-            let startIndex = this._ddCurrentIndex !== undefined ? this._ddCurrentIndex : index;
+            const startIndex = this._ddCurrentIndex !== undefined ? this._ddCurrentIndex : index;
             if (startIndex >= currentList.length) {
                 resolved(currentList.length - 1);
                 return;
             }
 
-            let item = currentList[startIndex] as IItemTree;
-            let dragDropIndex = startIndex;
+            const item = currentList[startIndex] as IItemTree;
+            const dragDropIndex = startIndex;
 
             if (item.depth !== undefined && targetIndex !== startIndex) {
                 if (targetIndex < startIndex) {
                     // Remonte jusqu'au premier élément avec une profondeur plus grande
                     let beforeIndex = 0;
                     for (let b = startIndex - 1; b >= 0; b--) {
-                        let targetItem = currentList[b] as IItemTree;
+                        const targetItem = currentList[b] as IItemTree;
                         if (targetItem.depth <= item.depth) {
                             beforeIndex = b;
                             break;
@@ -335,7 +335,7 @@ export class ItemListService {
                     if (targetIndex <= beforeIndex) {
                         // Descend jusqu'au premier élément avec la même profondeur
                         for (let a = targetIndex; a <= beforeIndex; a++) {
-                            let targetItem = currentList[a] as IItemTree;
+                            const targetItem = currentList[a] as IItemTree;
                             if (targetItem.depth === item.depth) {
                                 resolved(a);
                                 return;
@@ -351,7 +351,7 @@ export class ItemListService {
                     // Descend jusqu'au premier élément avec une profondeur plus grande ou égale
                     let afterIndex = currentList.length - 1;
                     for (let a = startIndex + 1; a < currentList.length; a++) {
-                        let targetItem = currentList[a] as IItemTree;
+                        const targetItem = currentList[a] as IItemTree;
                         if (targetItem.depth <= item.depth) {
                             afterIndex = a;
                             break;
@@ -360,7 +360,7 @@ export class ItemListService {
                     if (targetIndex >= afterIndex) {
                         // Descend jusqu'au premier élément avec la même profondeur
                         for (let a = targetIndex + 1; a < currentList.length; a++) {
-                            let targetItem = currentList[a] as IItemTree;
+                            const targetItem = currentList[a] as IItemTree;
                             if (targetItem.depth === item.depth) {
                                 resolved(a);
                                 return;
@@ -370,7 +370,7 @@ export class ItemListService {
                             }
                         }
                         // Not found
-                        let targetItem = currentList[afterIndex] as IItemTree;
+                        const targetItem = currentList[afterIndex] as IItemTree;
                         if (targetItem.depth === item.depth) {
                             resolved(afterIndex);
                             return;
@@ -389,9 +389,9 @@ export class ItemListService {
      */
     public toggleAll(collapsed: boolean): Promise<void> {
         return new Promise<void>((resolved?: () => void, rejected?: (reason: any) => void) => {
-            let items = [] as IItemBase[];
+            const items = [] as IItemBase[];
             this._cache.flatList.forEach((item) => {
-                let itemTree = item as IItemTree;
+                const itemTree = item as IItemTree;
                 if (itemTree.$items && itemTree.collapsible !== false) {
                     items.push(itemTree);
                 }
@@ -415,13 +415,13 @@ export class ItemListService {
      */
     public toggleCollapse(index: number, collapse?: boolean): Promise<boolean> {
         return new Promise<boolean>((resolved?: (value: boolean) => void, rejected?: (reason: any) => void) => {
-            let item = this._cache.visibleList[index] as IItemTree;
+            const item = this._cache.visibleList[index] as IItemTree;
             if (!item || item.collapsible === false) {
                 resolved(false);
                 return;
             }
 
-            let collapsed = collapse !== undefined ? collapse : item.collapsed ? false : true;
+            const collapsed = collapse !== undefined ? collapse : item.collapsed ? false : true;
             if (collapsed) {
                 this.collapseItem(item).then(() => {
                     resolved(true);
@@ -439,7 +439,7 @@ export class ItemListService {
      * @return {Promise} Promesse résolue par la fonction.
      */
     public expandItems(items: IItemBase[]) {
-        let promises = [] as Array<Promise<void>>;
+        const promises = [] as Array<Promise<void>>;
         if (items) {
             items.forEach((item) => {
                 promises.push(this.expandItem(item));
@@ -454,7 +454,7 @@ export class ItemListService {
      * @return {Promise} Promesse résolue par la fonction.
      */
     public collapseItems(items: IItemBase[]) {
-        let promises = [] as Array<Promise<void>>;
+        const promises = [] as Array<Promise<void>>;
         if (items) {
             items.forEach((item) => {
                 promises.push(this.collapseItem(item));
@@ -501,9 +501,11 @@ export class ItemListService {
      * @param {IItemBase[]} items Liste des éléments a selectioner.
      */
     public setSelectedItems(items: IItemBase[]) {
-        this.selectedList && this.selectedList.forEach((item) => {
-            item.selected = false;
-        });
+        if (this.selectedList) {
+            this.selectedList.forEach((item) => {
+                item.selected = false;
+            });
+        }
         this.selectedList = items;
         if (this.hideSelected) {
             delete this._cache.visibleList;
@@ -521,7 +523,7 @@ export class ItemListService {
                 delete this._cache.visibleList;
             }
 
-            let selectedList = this.selectedList;
+            const selectedList = this.selectedList;
             this.selectedList = [];
 
             this.unSelectItems(selectedList).then(resolved).catch(rejected);
@@ -540,11 +542,11 @@ export class ItemListService {
             }
 
             this.unselectAll().then(() => {
-                let selecting = [] as IItemBase[];
+                const selecting = [] as IItemBase[];
 
                 if (this._cache.visibleList.length > 0) {
                     for (let i = Math.min(indexFrom, indexTo); i <= Math.max(indexFrom, indexTo); i++) {
-                        let itm = this._cache.visibleList[i];
+                        const itm = this._cache.visibleList[i];
                         if (itm.selectable !== false) {
                             selecting.push(itm);
                         }
@@ -569,7 +571,7 @@ export class ItemListService {
      */
     public toggleSelect(items: IItemBase[], selected: boolean) {
         return new Promise<IItemBase[]>((resolved?: (selected: IItemBase[]) => void, rejected?: (reason: any) => void) => {
-            let done = () => {
+            const done = () => {
                 if (this.hideSelected) {
                     delete this._cache.visibleList;
                 }
@@ -593,7 +595,7 @@ export class ItemListService {
      * @return {Promise} Promesse résolue par la fonction.
      */
     public selectItems(items: IItemBase[]) {
-        let promises = [] as Array<Promise<void>>;
+        const promises = [] as Array<Promise<void>>;
         if (items) {
             items.forEach((item) => {
                 promises.push(this.selectItem(item));
@@ -608,7 +610,7 @@ export class ItemListService {
      * @return {Promise} Promesse résolue par la fonction.
      */
     public unSelectItems(items: IItemBase[]) {
-        let promises = [] as Array<Promise<void>>;
+        const promises = [] as Array<Promise<void>>;
         if (items) {
             items.forEach((item) => {
                 promises.push(this.unSelectItem(item));
@@ -635,7 +637,7 @@ export class ItemListService {
                 resolved();
             }
 
-            let select = () => {
+            const select = () => {
                 if (!this.selectedList) {
                     this.selectedList = [];
                 }
@@ -672,10 +674,10 @@ export class ItemListService {
                 resolved();
             }
 
-            let unselect = () => {
+            const unselect = () => {
                 item.selected = false;
                 if (this.selectedList && this.selectedList.length) {
-                    let index = this.selectedList.findIndex((itm) => this.compareItems(itm, item));
+                    const index = this.selectedList.findIndex((itm) => this.compareItems(itm, item));
                     if (index >= 0) {
                         this.selectedList.splice(index, 1);
                     }
@@ -700,14 +702,14 @@ export class ItemListService {
      */
     public findNextMatch(compare?: (item: IItemBase, index: number) => boolean, startIndex?: number) {
         return new Promise<IFindItemResult>((resolved?: (result: IFindItemResult) => void) => {
-            let list = this._cache.visibleList;
+            const list = this._cache.visibleList;
             if (list.length) {
                 if (startIndex < 0 || startIndex >= list.length) {
                     startIndex = -1;
                 }
                 let idx = startIndex + 1;
                 while (idx !== startIndex) {
-                    let itm = list[idx];
+                    const itm = list[idx];
                     if (compare(itm, idx)) {
                         resolved({
                             index: idx,
@@ -739,7 +741,7 @@ export class ItemListService {
                 return;
             }
 
-            let sortTree = () => {
+            const sortTree = () => {
                 this.getSortingService().sortTree(this._cache.groupedList, sortInfos, '$items').then(() => {
                     this.invalidateCache();
                     resolved(sortInfos);
@@ -780,7 +782,7 @@ export class ItemListService {
      */
     public ungroup(groupInfo: IGroupInfo) {
         return new Promise<IGroupInfo>((resolved?: (value: IGroupInfo) => void) => {
-            let groupIndex = this._groupInfos ? this._groupInfos.findIndex((gi) => gi.groupByField === groupInfo.groupByField) : -1;
+            const groupIndex = this._groupInfos ? this._groupInfos.findIndex((gi) => gi.groupByField === groupInfo.groupByField) : -1;
             if (groupIndex >= 0) {
                 this._groupInfos.splice(groupIndex, 1);
             }
@@ -797,14 +799,14 @@ export class ItemListService {
      */
     public getParentListInfos(item: IItemTree): Promise<IParentListInfoResult> {
         return new Promise<IParentListInfoResult>((resolved?: (result: IParentListInfoResult) => void, rejected?: (reason: any) => void) => {
-            let search = (flatList: IItemBase[]) => {
+            const search = (flatList: IItemBase[]) => {
                 let flatIndex = flatList.findIndex((itm) => itm === item);
                 if (flatIndex < 0) {
                     rejected('Item not found.');
                 }
 
                 if (!item.depth) {
-                    let rootIndex = this.items.findIndex((itm) => itm === item);
+                    const rootIndex = this.items.findIndex((itm) => itm === item);
                     resolved({
                         index: rootIndex,
                     } as IParentListInfoResult);
@@ -812,7 +814,7 @@ export class ItemListService {
                     // Search parent and treeindex
                     let idx = 0;
                     while (--flatIndex >= 0) {
-                        let parentItem = flatList[flatIndex] as IItemTree;
+                        const parentItem = flatList[flatIndex] as IItemTree;
                         if (parentItem.depth < item.depth) {
                             resolved({
                                 index: idx,
@@ -846,10 +848,10 @@ export class ItemListService {
     /** Usage interne. Retourne la portion de la liste à afficher en fonction des paramètres spécifiés. */
     public getViewList(searchField: string, query?: RegExp | string, startRow?: number, maxCount?: number, ignoreCache?: boolean, ddStartIndex?: number, ddTargetIndex?: number): Promise<IViewListResult> {
         return new Promise<IViewListResult>((resolved?: (value: IViewListResult) => void, rejected?: (reason: any) => void) => {
-            let result = {} as IViewListResult;
+            const result = {} as IViewListResult;
 
             ignoreCache = ignoreCache || query !== this.lastQuery || !this.items || !this.items.length;
-            let expandTree = query !== this.lastQuery;
+            const expandTree = query !== this.lastQuery;
             this.lastQuery = query;
 
             // Check regexp validity
@@ -871,7 +873,7 @@ export class ItemListService {
                 }
             }
 
-            let loadViewList = () => {
+            const loadViewList = () => {
                 let viewList: IItemBase[];
                 if (ddStartIndex !== undefined && ddTargetIndex !== undefined && ddStartIndex !== ddTargetIndex) {
                     if (!this._ddList) {
@@ -879,12 +881,12 @@ export class ItemListService {
                         this._ddList = [...this._cache.visibleList];
 
                         // Calc child count to be dragged
-                        let draggedItem = this._ddList[ddStartIndex] as IItemTree;
-                        let parentDepth = draggedItem.depth;
+                        const draggedItem = this._ddList[ddStartIndex] as IItemTree;
+                        const parentDepth = draggedItem.depth;
                         let lastIndex = ddStartIndex;
                         if (parentDepth !== undefined) {
                             for (let i = ddStartIndex + 1; i < this._ddList.length; i++) {
-                                let currentItem = this._ddList[i] as IItemTree;
+                                const currentItem = this._ddList[i] as IItemTree;
                                 if (currentItem.depth <= parentDepth) {
                                     break;
                                 }
@@ -895,7 +897,7 @@ export class ItemListService {
                         this._ddCurrentIndex = ddStartIndex;
                     }
 
-                    let removed = this._ddList.splice(this._ddCurrentIndex, this._ddChildCount);
+                    const removed = this._ddList.splice(this._ddCurrentIndex, this._ddChildCount);
                     if (ddTargetIndex > this._ddCurrentIndex) {
                         ddTargetIndex -= this._ddChildCount;
                         ++ddTargetIndex;
@@ -918,7 +920,7 @@ export class ItemListService {
                 result.depthMax = this._cache.depthMax;
 
                 if (startRow !== undefined && maxCount !== undefined && maxCount > 0) {
-                    let rowsCount = Math.min(viewList.length - startRow, maxCount);
+                    const rowsCount = Math.min(viewList.length - startRow, maxCount);
 
                     if (rowsCount < 0) {
                         result.endRow = viewList.length - 1;
@@ -1043,61 +1045,63 @@ export class ItemListService {
 
             let visibleList = [] as IItemTree[];
 
-            let filter = () => {
-                let selectedList = [];
+            const filter = () => {
+                const selectedList = [];
                 let odd = false;
 
                 if (regExp) {
                     // Recalc visible list and select list from the filter
-                    let getFilteredList = (treeList: IItemBase[], depth: number, hidden: boolean) => {
+                    const getFilteredList = (treeList: IItemBase[], depth: number, hidden: boolean) => {
                         let filteredItems: IItemBase[];
-                        treeList && treeList.forEach((itm) => {
-                            let itmTree = (itm as IItemTree);
-                            if (itmTree.$items) {
-                                odd = false;
-                                let filteredChildren = getFilteredList(itmTree.$items, depth + 1, hidden || itm.visible === false);
-                                if (filteredChildren) {
-                                    if (itmTree.collapsed && expandTree) {
-                                        itmTree.collapsed = false;
+                        if (treeList) {
+                            treeList.forEach((itm) => {
+                                const itmTree = (itm as IItemTree);
+                                if (itmTree.$items) {
+                                    odd = false;
+                                    const filteredChildren = getFilteredList(itmTree.$items, depth + 1, hidden || itm.visible === false);
+                                    if (filteredChildren) {
+                                        if (itmTree.collapsed && expandTree) {
+                                            itmTree.collapsed = false;
+                                        }
+                                        if (!filteredItems) {
+                                            if (itmTree.collapsed) {
+                                                filteredItems = [itmTree];
+                                            } else {
+                                                filteredItems = [itmTree, ...filteredChildren];
+                                            }
+                                        } else {
+                                            if (itmTree.collapsed) {
+                                                filteredItems = [...filteredItems, itmTree];
+                                            } else {
+                                                filteredItems = [...filteredItems, itmTree, ...filteredChildren];
+                                            }
+                                        }
+                                        if (itmTree.selected) {
+                                            selectedList.push(itmTree);
+                                        }
                                     }
+
+                                    // compare fn can be something like re.test(this.getTextValue(itm)
+                                } else if (this.itemMatch(itm, searchField, regExp)) {
+                                    itmTree.depth = depth;
                                     if (!filteredItems) {
-                                        if (itmTree.collapsed) {
-                                            filteredItems = [itmTree];
-                                        } else {
-                                            filteredItems = [itmTree, ...filteredChildren];
-                                        }
-                                    } else {
-                                        if (itmTree.collapsed) {
-                                            filteredItems = [...filteredItems, itmTree];
-                                        } else {
-                                            filteredItems = [...filteredItems, itmTree, ...filteredChildren];
-                                        }
+                                        filteredItems = [];
+                                    }
+                                    if (!hidden && !(itm.visible === false)) {
+                                        // For style
+                                        itmTree.odd = odd;
+                                        odd = !odd;
+
+                                        filteredItems.push(itmTree);
                                     }
                                     if (itmTree.selected) {
                                         selectedList.push(itmTree);
                                     }
-                                }
-
-                                // compare fn can be something like re.test(this.getTextValue(itm)
-                            } else if (this.itemMatch(itm, searchField, regExp)) {
-                                itmTree.depth = depth;
-                                if (!filteredItems) {
-                                    filteredItems = [];
-                                }
-                                if (!hidden && !(itm.visible === false)) {
-                                    // For style
-                                    itmTree.odd = odd;
-                                    odd = !odd;
-
-                                    filteredItems.push(itmTree);
-                                }
-                                if (itmTree.selected) {
+                                } else if (itmTree.selected) {
                                     selectedList.push(itmTree);
                                 }
-                            } else if (itmTree.selected) {
-                                selectedList.push(itmTree);
-                            }
-                        });
+                            });
+                        }
 
                         return filteredItems;
                     };
@@ -1106,28 +1110,30 @@ export class ItemListService {
 
                 } else {
                     // Get visible items list without filter
-                    let getVisibleListInternal = (treeList: IItemTree[], depth: number, hidden: boolean) => {
-                        treeList && treeList.forEach((item) => {
-                            if (!hidden && !(item.visible === false) && !(item.selected && this.hideSelected)) {
-                                // For style
-                                item.odd = odd;
-                                odd = !odd;
+                    const getVisibleListInternal = (treeList: IItemTree[], depth: number, hidden: boolean) => {
+                        if (treeList) {
+                            treeList.forEach((item) => {
+                                if (!hidden && !(item.visible === false) && !(item.selected && this.hideSelected)) {
+                                    // For style
+                                    item.odd = odd;
+                                    odd = !odd;
 
-                                // Add to visible list only the visible items (uncollapsed)
-                                visibleList.push(item);
-                            }
+                                    // Add to visible list only the visible items (uncollapsed)
+                                    visibleList.push(item);
+                                }
 
-                            // Add to selected list only the visible items (uncollapsed) and selected
-                            if (item.selected) {
-                                selectedList.push(item);
-                            }
+                                // Add to selected list only the visible items (uncollapsed) and selected
+                                if (item.selected) {
+                                    selectedList.push(item);
+                                }
 
-                            // Recursive call
-                            if (item.$items) {
-                                odd = false;
-                                getVisibleListInternal(item.$items, depth + 1, hidden || item.collapsed || item.visible === false);
-                            }
-                        });
+                                // Recursive call
+                                if (item.$items) {
+                                    odd = false;
+                                    getVisibleListInternal(item.$items, depth + 1, hidden || item.collapsed || item.visible === false);
+                                }
+                            });
+                        }
                     };
 
                     getVisibleListInternal(items, 0, false);
@@ -1159,14 +1165,14 @@ export class ItemListService {
                 return;
             }
 
-            let flatList = [];
-            let visibleList = [];
-            let selectedList = [];
+            const flatList = [];
+            const visibleList = [];
+            const selectedList = [];
             let depthMax = 0;
             let isTree = false;
             let odd = false;
 
-            let getFlatListInternal = (itms: IItemTree[], depth: number, hidden: boolean) => {
+            const getFlatListInternal = (itms: IItemTree[], depth: number, hidden: boolean) => {
                 itms.forEach((item) => {
                     if (depth > depthMax) {
                         depthMax = depth;
@@ -1242,8 +1248,8 @@ export class ItemListService {
             return;
         }
 
-        let newSelectedList = [] as IItemBase[];
-        let ensureSelectedChildren = (children: IItemTree[]) => {
+        const newSelectedList = [] as IItemBase[];
+        const ensureSelectedChildren = (children: IItemTree[]) => {
             children.forEach((item) => {
                 item.selected = this.selectedList.find((selected) => this.compareItems(selected, item)) !== undefined;
                 if (item.selected) {
@@ -1321,13 +1327,15 @@ export class ItemListService {
     }
 
     private ensureChildrenProperties(items: IItemTree[]) {
-        items && items.forEach((item) => {
-            let treeItem = item as IItemTree;
-            if (treeItem[this.childrenField]) {
-                treeItem.$items = treeItem[this.childrenField];
-                this.ensureChildrenProperties(treeItem.$items);
-            }
-        });
+        if (items) {
+            items.forEach((item) => {
+                const treeItem = item as IItemTree;
+                if (treeItem[this.childrenField]) {
+                    treeItem.$items = treeItem[this.childrenField];
+                    this.ensureChildrenProperties(treeItem.$items);
+                }
+            });
+        }
     }
 }
 

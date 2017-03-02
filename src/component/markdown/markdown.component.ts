@@ -10,7 +10,7 @@
  */
 
 import {AfterViewChecked, Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
-import { Http, ResponseContentType } from "@angular/http";
+import { Http, ResponseContentType } from '@angular/http';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 // tslint:disable
 const Showdown = require('showdown');
@@ -30,7 +30,7 @@ export class DejaMarkdownComponent implements OnInit, AfterViewChecked {
     @Input()
     set value(value: string) {
         if (value) {
-            let tmp = this._converter.makeHtml(value);
+            const tmp = this._converter.makeHtml(value);
             this._html = this.sanitized.bypassSecurityTrustHtml(tmp);
         }
     }
