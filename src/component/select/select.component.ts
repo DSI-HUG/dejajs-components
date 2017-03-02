@@ -740,14 +740,14 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     private onModelChange(items?: IItemBase[] | IItemBase) {
         let output = items;
 
-        if (super.isBusinessObject && items) {
+        if (super.isBusinessObject() && items) {
             if (items instanceof Array) {
                 output = items.map((item) => item.model);
             } else {
                 output = items.model;
             }
         }
-        
+
         this.onChangeCallback(output);
     }
 
