@@ -1,4 +1,4 @@
-<div #tilesContainer id="tiles" [class.design]="_designMode">
+<div #tilesContainer id="tiles" [class.design]="_designMode" [deja-mouse-droppable]="getDropContext(dropArea)">
     <deja-tile *ngFor="let tile of tiles$ | async; let index = index;" (dragstart)="cancelDragEvent()" [id]="tile.id" [tile]="tile" [designMode]="_designMode" [attr.tile-index]="index" [template]="tileTemplate"></deja-tile>
     <div deja-tile-position [bounds]="layoutProvider.selectionRect$ | async"></div>
 </div>

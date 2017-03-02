@@ -45,7 +45,9 @@ export class DejaMouseDroppableDirective {
                     .first()
                     .subscribe(() => {
                         if (this._dragContext) {
-                            this.context.drop(this._dragContext);
+                            if (this.context && this.context.drop) {
+                                this.context.drop(this._dragContext);
+                            }
                             this._dragContext = undefined;
                         }
                         dragDropService.dropCursor$.next(undefined);
@@ -57,30 +59,36 @@ export class DejaMouseDroppableDirective {
                         const bounds = new Rect(element.getBoundingClientRect());
                         if (this.context && dragCursor) {
                             if (bounds.containsPoint(new Position(dragCursor.pageX, dragCursor.pageY))) {
-                                this._dragContext = dragDropService.context;
-                                if (this.context.getContext) {
-                                    const dropContext = this.context.getContext(this._dragContext, dragCursor);
-                                    const dropContextObs = dropContext as Observable<IDropCursorInfos>;
-                                    if (dropContextObs.subscribe) {
-                                        // Observable
-                                        dropContextObs
-                                            .first()
-                                            .subscribe((cursor) => {
-                                                dragDropService.dropCursor$.next(cursor);
-                                            });
-                                        return;
-                                    } else {
-                                        dragDropService.dropCursor$.next(dropContext as IDropCursorInfos);
+                                if (!this._dragContext) {
+                                    this._dragContext = dragDropService.context;
+                                    if (this.context.dragEnter) {
+                                        const dropContext = this.context.dragEnter(this._dragContext, dragCursor);
+                                        if (dropContext) {
+                                            const dropContextObs = dropContext as Observable<IDropCursorInfos>;
+                                            if (dropContextObs.subscribe) {
+                                                // Observable
+                                                dropContextObs
+                                                    .first()
+                                                    .subscribe((cursor) => {
+                                                        dragDropService.dropCursor$.next(cursor);
+                                                    });
+                                                return;
+                                            } else {
+                                                dragDropService.dropCursor$.next(dropContext as IDropCursorInfos);
+                                            }
+                                        }
+                                    } else if (this.context.dragOver) {
+                                        const overContext = this.context.dragOver(this._dragContext, dragCursor);
+                                        dragDropService.dropCursor$.next(overContext);
                                     }
-                                } else {
-                                    dragDropService.dropCursor$.next(undefined);
                                 }
-                            } else {
+                            } else if (this._dragContext) {
+                                if (this.context && this.context.dragLeave) {
+                                    this.context.dragLeave(this._dragContext);
+                                }
                                 this._dragContext = undefined;
                                 dragDropService.dropCursor$.next(undefined);
                             }
-                        } else {
-                            dragDropService.dropCursor$.next(undefined);
                         }
                     });
             });
@@ -88,6 +96,8 @@ export class DejaMouseDroppableDirective {
 }
 
 export interface IDejaMouseDroppableContext {
-    getContext?: (dragContext: IDragDropContext, dragCursor: IDragCursorInfos) => IDropCursorInfos | Observable<IDropCursorInfos>; // Return object or observable<object>
+    dragEnter?: (dragContext: IDragDropContext, dragCursor: IDragCursorInfos) => IDropCursorInfos | Observable<IDropCursorInfos>; // Return object or observable<object>
+    dragOver?: (dragContext: IDragDropContext, dragCursor: IDragCursorInfos) => IDropCursorInfos;
+    dragLeave?: (dragContext: IDragDropContext) => void;
     drop?: (dragContext: IDragDropContext) => void;
 }

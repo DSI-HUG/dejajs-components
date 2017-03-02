@@ -14,6 +14,7 @@ import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-p
 import { Observable, BehaviorSubject, Subscription } from 'rxjs/Rx';
 import { Rect } from '../../common/core/graphics';
 import { KeyCodes } from '../../common/core';
+import { IDropCursorInfos, IDejaMouseDraggableContext } from '../mouse-dragdrop/index';
 import { DejaTile, IDejaTilesEvent, IDejaTile, IDejaTilesRemoveEvent, IDejaTilesAddEvent } from './index';
 import { DejaTilesLayoutProvider } from './tiles-layout.provider';
 
@@ -253,6 +254,16 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
     protected cancelDragEvent() {
         // Disallow HTML drag and drop
         return false;
+    }
+
+    protected getDropContext(_dropArea: HTMLElement) {
+        return {
+            dragStart: (_dragContext) => {
+                return this._designMode && {
+                    html: ' ',
+                } as IDropCursorInfos;
+            },
+        } as IDejaMouseDraggableContext;
     }
 
     protected onModelChange(tiles: IDejaTile[]) {

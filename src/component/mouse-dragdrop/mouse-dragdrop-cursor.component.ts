@@ -46,7 +46,6 @@ export class DejaMouseDragDropCursorComponent {
         // Hide
         cursor$
             .filter((dragCursor) => !dragCursor)
-            .do(() => console.log('hide'))
             .do((dragCursor) => {
                 if (this._currentCursor) {
                     this.contentElement.style.opacity = '0';
@@ -63,7 +62,6 @@ export class DejaMouseDragDropCursorComponent {
         // Show
         cursor$
             .filter((dragCursor) => !!dragCursor)
-            .do((dragCursor) => console.log('Show ' + !!dragCursor.html))
             .do((dragCursor) => {
                 element.style.display = '';
                 this.contentElement.style.opacity = '0';

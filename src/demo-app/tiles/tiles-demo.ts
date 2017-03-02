@@ -12,7 +12,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Rect } from '../../common/core/graphics/index';
 import { MaterialColors } from '../../common/core/style/index';
-import { IDejaMouseDraggableContext, IDejaTilesAddEvent, IDejaTile, IDejaTilesRemoveEvent, IDropCursorInfos } from '../../component';
+import { IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDejaTilesAddEvent, IDejaTile, IDejaTilesRemoveEvent, IDropCursorInfos } from '../../component';
 import { CountriesService, ICountry } from '../services/countries.service';
 import { Observable, Subject } from 'rxjs/Rx';
 
@@ -116,7 +116,7 @@ export class TilesDemoComponent implements OnInit {
         return {
             target: 'deja-tile',
             className: 'deja-tile-cursor',
-            getContext: (target) => {
+            dragStart: (target) => {
                 return this.countriesService.getCountyByCode(target.id);
             },
         } as IDejaMouseDraggableContext;
@@ -124,7 +124,7 @@ export class TilesDemoComponent implements OnInit {
 
     protected getDropContext(dropArea: HTMLElement) {
         return {
-            getContext: (_dragContext) => {
+            dragEnter: (_dragContext) => {
                 return {
                     width: 200,
                     height: 60,
@@ -135,7 +135,7 @@ export class TilesDemoComponent implements OnInit {
                 const country = dragContext as ICountry;
                 dropArea.innerText = `The dropped country is ${country.naqme} - the code is: ${country.code}`;
             },
-        } as IDejaMouseDraggableContext;
+        } as IDejaMouseDroppableContext;
     }
 
     protected onContentAdded(event: IDejaTilesAddEvent) {

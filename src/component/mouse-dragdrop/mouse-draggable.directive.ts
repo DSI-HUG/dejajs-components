@@ -50,15 +50,18 @@ export class DejaMouseDraggableDirective {
                         };
 
                         const startDrag = () => {
-                            Observable.merge(mouseUp$, moveUp$)
+                            const kill$ = Observable.merge(mouseUp$, moveUp$)
+                                .first();
+
+                            kill$
                                 .first()
                                 .subscribe(() => {
-                                    dragDropService.dragCursor$.next(undefined);
-                                    dragDropService.dragging$.next(false);
-                                });
+                                dragDropService.dragCursor$.next(undefined);
+                                dragDropService.dragging$.next(false);
+                            });
 
                             Observable.fromEvent(element.ownerDocument, 'mousemove')
-                                .takeUntil(mouseUp$.first())
+                                .takeUntil(kill$)
                                 .subscribe((ev: MouseEvent) => {
                                     if (ev.buttons === 1) {
                                         const bounds = new Rect(element.getBoundingClientRect());
@@ -96,19 +99,21 @@ export class DejaMouseDraggableDirective {
                                 target = element;
                             }
 
-                            if (this.context.getContext) {
-                                const dragContext = this.context.getContext(target);
-                                if (dragContext.subscribe) {
-                                    // Observable
-                                    dragContext
-                                        .first()
-                                        .subscribe((ddctx) => {
-                                            dragDropService.context = ddctx;
-                                            startDrag();
-                                        });
-                                    return;
-                                } else {
-                                    dragDropService.context = dragContext;
+                            if (this.context.dragStart) {
+                                const dragContext = this.context.dragStart(target);
+                                if (dragContext) {
+                                    if (dragContext.subscribe) {
+                                        // Observable
+                                        dragContext
+                                            .first()
+                                            .subscribe((ddctx) => {
+                                                dragDropService.context = ddctx;
+                                                startDrag();
+                                            });
+                                        return;
+                                    } else {
+                                        dragDropService.context = dragContext;
+                                    }
                                 }
                             }
                         }
@@ -122,5 +127,5 @@ export class DejaMouseDraggableDirective {
 export interface IDejaMouseDraggableContext {
     target?: string; // Tagname or #id or [attribute]
     className?: string;
-    getContext?: (HTMLElement) => any; // Return object or observable<object>
+    dragStart?: (HTMLElement) => any; // Return object or observable<object>
 }
