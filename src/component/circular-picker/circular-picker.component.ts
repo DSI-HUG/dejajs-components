@@ -10,7 +10,7 @@
  */
 
 import { Component,ContentChild, ElementRef, forwardRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from "@angular/forms";
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import {coerceBooleanProperty} from '@angular/material/core/coercion/boolean-property';
 import { Observable, Subscription } from 'rxjs/Rx';
 import { Circle, Position } from '../../common/core';
@@ -41,9 +41,9 @@ interface ICircularValue {
 })
 export class DejaCircularPickerComponent implements OnInit {
     @Input() public clockwiseFactor: ClockwiseFactorEnum = ClockwiseFactorEnum.clockwise;
-    @Input() public fullDiameter: number = 310;
+    @Input() public fullDiameter = 310;
     @Input() public labelsDiameter = 43;
-    @Input() public outerLabels: boolean = false;
+    @Input() public outerLabels = false;
     @Input() public ranges: ICircularRange[];
     @ContentChild('labelTemplate') public labelTemplate;
     @ContentChild('cursorTemplate') public cursorTemplate;
@@ -62,7 +62,7 @@ export class DejaCircularPickerComponent implements OnInit {
     private _value: number;
     private TwoPI = Math.PI * 2;
 
-    private radius: number = 0;
+    private radius = 0;
     private configs: IConfig[] = [];
     private selectedConfig: IConfig;
 
@@ -86,7 +86,7 @@ export class DejaCircularPickerComponent implements OnInit {
     constructor(private elementRef: ElementRef) { }
 
     public ngOnInit() {
-        let diameter = this.fullDiameter /* max - width */ - this.labelsDiameter /* Material standard button size */;
+        const diameter = this.fullDiameter /* max - width */ - this.labelsDiameter /* Material standard button size */;
         this.radius = diameter / 2;
 
         this.ranges.forEach((range) => {
@@ -146,8 +146,8 @@ export class DejaCircularPickerComponent implements OnInit {
         }
 
         this.clickedTime = Date.now();
-        let cursorElement = this.getHTMLElement(event.target as HTMLElement, 'cursor');
-        let valueElement = this.getHTMLElement(event.target as HTMLElement, 'value');
+        const cursorElement = this.getHTMLElement(event.target as HTMLElement, 'cursor');
+        const valueElement = this.getHTMLElement(event.target as HTMLElement, 'value');
         if (cursorElement) {
             this.cursorElement = cursorElement;
         } else if (valueElement) {
@@ -160,8 +160,8 @@ export class DejaCircularPickerComponent implements OnInit {
         }
     }
 
-    protected pointToValue(x: number, y: number, config: IConfig): number {
-        let angleAtPoint: number = this.pointToAngle(x - this.radius, y - this.radius, config);
+    protected pointToValue(x: number, y: number, config: IConfig) {
+        const angleAtPoint: number = this.pointToAngle(x - this.radius, y - this.radius, config);
         let circleSegmentIndexAtPoint: number = config.steps - Math.ceil(angleAtPoint / config.stepAngle);
         // By having pointToAngle() to compute using a half step below the actual angle, 
         // we can use Math.ceil() to get the upper circleSegmentIndex. We're working in 
@@ -175,8 +175,8 @@ export class DejaCircularPickerComponent implements OnInit {
     }
 
     protected valueToPoint(value: number, radiusOffset: number, config: IConfig): Position {
-        let position = new Position();
-        let valueAngle: number = this.valueToAngle(value, config);
+        const position = new Position();
+        const valueAngle: number = this.valueToAngle(value, config);
 
         position.left = this.radius + (this.radius + radiusOffset) * Math.cos(valueAngle);
         position.top = this.radius - (this.radius + radiusOffset) * Math.sin(valueAngle); // y axis is reversed in display
@@ -187,14 +187,14 @@ export class DejaCircularPickerComponent implements OnInit {
     private pointToAngle(x: number, y: number, config: IConfig): number {
         return (
                 -Math.atan2(y, x)		    // Math.atan2() returns between -Ï€ and +Ï€, but in inverted trigonometrical order...
-                - config.range.beginOffset	// Correct the configured offset to compute in "natural" trigonometrical circle
+            - config.range.beginOffset	// Correct the configured offset to compute in 'natural' trigonometrical circle
                 - (config.stepAngle / 2)	// Remove half a step angle to match value from both sides
                 + this.TwoPI			    // We want the returned value to be between 0 and 2Ï€ => (x + 2Ï€) % 2Ï€
             ) % this.TwoPI;
     }
 
     private valueToAngle(value: number, config: IConfig): number {
-        let circleSegmentIndex: number = Math.floor((value - config.range.min) / config.range.interval);
+        const circleSegmentIndex: number = Math.floor((value - config.range.min) / config.range.interval);
         return (circleSegmentIndex * config.stepAngle * this.clockwiseFactor) + config.range.beginOffset;
     }
 
@@ -202,10 +202,10 @@ export class DejaCircularPickerComponent implements OnInit {
         this.circularValues = [];
         this.configs.forEach((config: IConfig, configNumber: number) => {
             for (let i = config.range.min; i <= config.range.max; i += (config.range.labelInterval * config.range.interval)) {
-                let val = { value: i } as ICircularValue;
-                let labelRadius = this.labelsDiameter / 2;
-                let configOffset = this.labelsDiameter * configNumber;
-                let labelPosition = this.valueToPoint(i, (this.outerLabels ? labelRadius + configOffset : -labelRadius - configOffset), config);
+                const val = { value: i } as ICircularValue;
+                const labelRadius = this.labelsDiameter / 2;
+                const configOffset = this.labelsDiameter * configNumber;
+                const labelPosition = this.valueToPoint(i, (this.outerLabels ? labelRadius + configOffset : -labelRadius - configOffset), config);
 
                 val.position = new Position((labelPosition.left - labelRadius), (labelPosition.top - labelRadius));
                 this.circularValues.push(val);
@@ -225,9 +225,9 @@ export class DejaCircularPickerComponent implements OnInit {
         if (!this.selectedConfig) {
             this.selectedConfig = this.configs[0];
         }
-        let selectedConfigIndex = this.configs.indexOf(this.selectedConfig);
+        const selectedConfigIndex = this.configs.indexOf(this.selectedConfig);
         let cursorCenter: Position;
-        let cursorRadius: number = this.labelsDiameter / 2;
+        const cursorRadius: number = this.labelsDiameter / 2;
 
         cursorCenter = this.valueToPoint(this.value, (this.outerLabels ? cursorRadius + (this.labelsDiameter * selectedConfigIndex) : -cursorRadius - (this.labelsDiameter * selectedConfigIndex)), this.selectedConfig);
         this.cursor = {
@@ -257,7 +257,7 @@ export class DejaCircularPickerComponent implements OnInit {
     }
 
     private set mouseMove(value: boolean) {
-        let elem = this.elementRef.nativeElement as HTMLElement;
+        const elem = this.elementRef.nativeElement as HTMLElement;
         if (value) {
             if (this.mouseMoveObs) {
                 return;
@@ -275,8 +275,8 @@ export class DejaCircularPickerComponent implements OnInit {
                     return;
                 }
 
-                let pickerElem = this.picker.nativeElement as HTMLElement;
-                let clientRect = pickerElem.getBoundingClientRect();
+                const pickerElem = this.picker.nativeElement as HTMLElement;
+                const clientRect = pickerElem.getBoundingClientRect();
 
                 this.circle = Circle.fromOuterRect(clientRect);
                 let contains = false;
@@ -293,7 +293,7 @@ export class DejaCircularPickerComponent implements OnInit {
                         }
                     }
                 } else {
-                    let x = this.labelsDiameter * (this.configs.length - 1);
+                    const x = this.labelsDiameter * (this.configs.length - 1);
                     this.circle = this.circle.inflate(-x);
                     for (let i = this.configs.length; i > 0 ; i--) {
                         contains = this.circle.containsPoint(new Position(event.pageX, event.pageY));
@@ -306,7 +306,7 @@ export class DejaCircularPickerComponent implements OnInit {
                     }
                 }
 
-                let newValue = this.pointToValue(event.pageX - clientRect.left, event.pageY - clientRect.top, this.selectedConfig);
+                const newValue = this.pointToValue(event.pageX - clientRect.left, event.pageY - clientRect.top, this.selectedConfig);
                 if (newValue !== this.value) {
                     this.value = newValue;
                 }

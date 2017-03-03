@@ -12,7 +12,7 @@
 import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
 import { Observable } from 'rxjs/Rx';
-import {MonacoEditorDemoService} from "./monaco-editor-demo.service.";
+import {MonacoEditorDemoService} from './monaco-editor-demo.service.';
 
 @Injectable()
 export class MonacoEditorXmlFileResolver implements Resolve<any> {

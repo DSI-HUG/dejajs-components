@@ -9,7 +9,7 @@
  *
  */
 
-import { IDejaGridColumn } from "../index";
+import { IDejaGridColumn } from '../index';
 
 export interface IDejaGridGroupsEvent { 
     originalEvent: Event;

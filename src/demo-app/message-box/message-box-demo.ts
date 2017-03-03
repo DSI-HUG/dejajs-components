@@ -18,7 +18,7 @@ import { Message } from './message';
     styleUrls: ['./message-box-demo.scss'],
     templateUrl: './message-box-demo.html',
 })
-export class MessageBoxDemo implements OnInit {
+export class MessageBoxDemoComponent implements OnInit {
 
     protected actions = [
         {

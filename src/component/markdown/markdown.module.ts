@@ -11,7 +11,7 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import {DejaMarkdownComponent} from "./markdown.component";
+import {DejaMarkdownComponent} from './markdown.component';
 
 @NgModule({
     declarations: [DejaMarkdownComponent],

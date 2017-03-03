@@ -19,7 +19,7 @@ import { Message } from './message.class';
   styleUrls: ['./snackbar-demo.scss'],
   templateUrl: './snackbar-demo.html',
 })
-export class DejaSnackbarDemo implements OnInit {
+export class DejaSnackbarDemoComponent implements OnInit {
   /*
    The example below demonstrate how you can dynamically add snackbars using *ngFor structural directive.
    Here the Observable simulate items being push from the server

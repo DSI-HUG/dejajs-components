@@ -22,6 +22,7 @@ export * from './date-selector/index';
 export * from './date-picker/index';
 export * from './dialog/index';
 export * from './dragdrop/index';
+export * from './mouse-dragdrop/index';
 export * from './dropdown/index';
 export * from './menu/index';
 export * from './select/index';

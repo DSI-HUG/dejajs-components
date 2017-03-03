@@ -12,7 +12,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule  } from '@angular/forms';
-import { DejaSortingModule } from "../../common/core/sorting/index";
+import { DejaSortingModule } from '../../common/core/sorting/index';
 import { DejaDragDropModule } from '../dragdrop/dragdrop.module';
 import { DejaTreeListModule } from '../tree-list/tree-list.module';
 import { DejaGridComponent, DejaGridGroupAreaComponent, DejaGridHeaderComponent, DejaGridParentRowComponent, DejaGridRowComponent } from './index';

@@ -34,7 +34,7 @@ export class GlobalEventEmmitter implements IGlobalEventEmmitter {
         }
 
         // specific event
-        let callbacks = this._callbacks['$' + event];
+        const callbacks = this._callbacks['$' + event];
         if (!callbacks) {
             return this;
         }

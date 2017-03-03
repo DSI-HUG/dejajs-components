@@ -7,6 +7,7 @@
 ### Breaking changes from 1.3.0
 * **Rect:** Right and Bottom are now get set properties instead functions.
 * **DateValidatorDirective:** DateValidator is renamed DateValidatorDirective
+* **DragDropService:** Replaced by ClipboardService. ClipboardService must be provided in your app module, one times only.
 
 ### Bug fixes #
 * **Typescript compiler options:**

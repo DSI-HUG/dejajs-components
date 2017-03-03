@@ -18,7 +18,7 @@ import {MaterialColors} from '../../common/core/style';
     styleUrls: ['./color-selector-demo.scss'],
     templateUrl: './color-selector-demo.html',
 })
-export class DejaColorSelectorDemo {
+export class DejaColorSelectorDemoComponent {
     protected selectedColor = Color.fromHex('#FFA000');
     protected invalidColor = Color.fromHex('#FFA012');
     private hoveredColor: string;

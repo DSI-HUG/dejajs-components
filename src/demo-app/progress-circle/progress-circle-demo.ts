@@ -18,7 +18,7 @@ import {Component} from '@angular/core';
     ],
     templateUrl: './progress-circle-demo.html',
 })
-export class ProgressCircleDemo {
+export class ProgressCircleDemoComponent {
 
     constructor() {
 

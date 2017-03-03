@@ -37,11 +37,11 @@ export class DejaGridColumnsLayoutInfos {
             }
 
             if (width.isInvalid()) {
-                throw 'Invalid column width unit can be for example: 11px or 23%';
+                throw new Error('Invalid column width unit can be for example: 11px or 23%');
             }
 
             if (width.unit && width.unit !== 'px' && width.unit !== '%') {
-                throw 'Column width unit can be only px or %';
+                throw new Error('Column width unit can be only px or %');
             }
 
             if (width.unit === '%') {

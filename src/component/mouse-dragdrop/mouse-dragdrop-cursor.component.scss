@@ -1,0 +1,38 @@
+deja-mouse-dragdrop-cursor {
+    position: fixed;
+    width: 0;
+    height: 0;
+    overflow: visible;
+    z-index: 10000;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    #block {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 3rem;
+        height: 3rem;
+        background-color: rgba(0, 0, 0, 0.75);
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        color: #fff;
+        transform: translate(-50%, -50%);
+        transition-property: opacity;
+        transition-timing-function: linear;
+        transition-duration: 300ms;
+        cursor: default;
+    }
+    #content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: translate(-50%, -50%);
+        transition-property: opacity;
+        transition-timing-function: linear;
+        transition-duration: 300ms;
+        cursor: default;
+    }
+}

@@ -13,14 +13,14 @@ import { Component, OnInit } from '@angular/core';
 import { Rect } from '../../common/core/graphics/index';
 import { MaterialColors } from '../../common/core/style/index';
 import { IDejaDragEvent, IDejaTile, IDejaTileEvent, IDejaTileList } from '../../component';
-import { CountriesService, ICountry } from "../services/countries.service";
+import { CountriesService, ICountry } from '../services/countries.service';
 
 @Component({
     selector: 'deja-tiles-demo',
     styleUrls: ['./tiles-demo.scss'],
     templateUrl: './tiles-demo.html',
 })
-export class TilesDemo extends OnInit {
+export class TilesDemoComponent extends OnInit {
     protected designMode = false;
     private countries: ICountry[];
     private tiles = [] as IDejaTileList;
@@ -65,7 +65,7 @@ export class TilesDemo extends OnInit {
             },
             dropcallback: (event: IDejaDragEvent) => {
                 if (event.dragInfo.hasOwnProperty('button')) {
-                    let model = event.dragInfo['button'] as ITemplateModel;
+                    const model = event.dragInfo['button'] as ITemplateModel;
                     (event.target as HTMLElement).innerText = `The dropped country is ${model.country.naqme} - the code is: ${model.country.code}`;
                     event.preventDefault();
                 }
@@ -95,8 +95,8 @@ export class TilesDemo extends OnInit {
 
         let x = 0;
         let y = 0;
-        let tiles = [];
-        let colors = this.materialColors.getPalet('700');
+        const tiles = [];
+        const colors = this.materialColors.getPalet('700');
         let colorIndex = 0;
         this.countries.map((country) => {
             tiles.push({

@@ -1,7 +1,7 @@
 /*
  * *
  *  @license
- *  Copyright HÃ´pitaux Universitaires de GenÃ¨ve All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
@@ -17,7 +17,7 @@ export class JsonUtils {
     private static mapCaches: any = {};
 
     /**
-    * deserializeJson is a method to deserialize a json into a typed object. The <T> say that we want to "capture" the object type so we can return it.
+     * deserializeJson is a method to deserialize a json into a typed object. The <T> say that we want to 'capture' the object type so we can return it.
     * More details : https://www.typescriptlang.org/docs/handbook/generics.html
     *
     * /!\ this is not a recursive function !
@@ -33,7 +33,7 @@ export class JsonUtils {
     * @param {Object} obj : Object to deserialize into
     * @param {Object | string} jsonObj : a JSON;
     *
-    * @return {<T>} obj : an object of "T" type
+     * @return {<T>} obj : an object of 'T' type
     */
     public static deserializeJson<T>(obj: T, jsonObj: any): T {
 
@@ -60,7 +60,7 @@ export class JsonUtils {
      * @param clazz The class of the object created
      * @param sourceObj The JSON object
      * @param caseTransform
-     * @returns {T} : An object of "T" type
+     * @returns {T} : An object of 'T' type
      */
     public static deserializeJson2<T>(clazz: { new (): T }, sourceObj: any, caseTransform = false): T {
         const castedObj: T = new clazz();
@@ -88,7 +88,6 @@ export class JsonUtils {
 
     /**
      * Convert a list of object into a "Map Object" where attributes name are IDs and values are the objects
-     * <br/>Note: the objects must have an "id" property
      * @param objList : List of object with an attribute "id" or "ID" or "Id"
      * @param idFieldName : Field name to use insetead of id.
      * @returns {any}
@@ -107,7 +106,7 @@ export class JsonUtils {
 
     /**
      * Get an object from a array of object. It uses a cache in order to go faster if called in a loop.
-     * @param listPromise Promise that returns a array of objects. Object Must have an an attribute "id" or "ID" or "Id"
+     * @param listPromise Promise that returns a array of objects. Object can have an an attribute "id" or "ID" or "Id" or field named by the 'idFieldName' param.
      * @param id: The ID we want to get
      * @param cacheName: The cache key to store it
      * @param idFieldName : Field name to use insetead of id.
@@ -132,3 +131,4 @@ export class JsonUtils {
         });
     }
 }
+

@@ -9,5 +9,5 @@
  *
  */
 
-export * from "./bold-query.component";
-export * from "./bold-query.module";
+export * from './bold-query.component';
+export * from './bold-query.module';

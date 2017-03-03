@@ -9,8 +9,8 @@
  *
  */
 
-import { DejaTreeListItemsEvent } from '../../tree-list';
+import { Subject } from 'rxjs/Rx';
 
-export class DejaGridRowsEvent extends DejaTreeListItemsEvent {
-
+export class DejaCancelableEvent extends Event {
+    public cancel$ = new Subject<boolean>();
 }
