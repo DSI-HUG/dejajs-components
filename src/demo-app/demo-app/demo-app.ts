@@ -9,9 +9,10 @@
  *
  */
 
-import { Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.Default,
     encapsulation: ViewEncapsulation.None,
     selector: 'demo-app',
     styleUrls: ['./demo-app.scss', '../../scss/index.scss'],
