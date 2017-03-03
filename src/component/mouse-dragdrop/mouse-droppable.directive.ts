@@ -77,8 +77,10 @@ export class DejaMouseDroppableDirective {
                                                 dragDropService.dropCursor$.next(dropContext as IDropCursorInfos);
                                             }
                                         }
+                                    }
                                     } else if (this.context.dragOver) {
                                         const overContext = this.context.dragOver(this._dragContext, dragCursor);
+                                    if (overContext) {
                                         dragDropService.dropCursor$.next(overContext);
                                     }
                                 }

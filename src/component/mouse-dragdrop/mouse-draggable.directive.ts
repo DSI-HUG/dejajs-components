@@ -9,7 +9,7 @@
  *
  */
 
-import { Directive, ElementRef, Input } from '@angular/core';
+import { Directive, ElementRef, HostListener, Input } from '@angular/core';
 import { DejaMouseDragDropService, IDragCursorInfos } from './mouse-dragdrop.service';
 import { Observable, Subject } from 'rxjs/Rx';
 import { Position, Rect } from '../../common/core/graphics/index';
@@ -51,11 +51,8 @@ export class DejaMouseDraggableDirective {
 
                         const startDrag = () => {
                             const kill$ = Observable.merge(mouseUp$, moveUp$)
-                                .first();
-
-                            kill$
                                 .first()
-                                .subscribe(() => {
+                                .do(() => {
                                 dragDropService.dragCursor$.next(undefined);
                                 dragDropService.dragging$.next(false);
                             });
@@ -108,7 +105,9 @@ export class DejaMouseDraggableDirective {
                                             .first()
                                             .subscribe((ddctx) => {
                                                 dragDropService.context = ddctx;
+                                                if (ddctx) {
                                                 startDrag();
+                                                }
                                             });
                                         return;
                                     } else {
@@ -121,6 +120,12 @@ export class DejaMouseDraggableDirective {
                         startDrag();
                     });
             });
+    }
+
+    @HostListener('mousedown', ['$event'])
+    protected onMouseDown(e: DragEvent) {
+        e.preventDefault();
+        return false;
     }
 }
 
