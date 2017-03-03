@@ -31,4 +31,12 @@
 		display: flex;
 		align-items: center;
 	}
+	#businessSelect {
+		.mat-input-placeholder {
+			margin-top: -0.4rem;
+			&.mat-empty:not(.mat-focused) {
+				margin-top: -0.1rem;
+			}
+		}
+	}
 }

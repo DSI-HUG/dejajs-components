@@ -125,4 +125,13 @@ export class Rect {
     public clone() {
         return new Rect(this.left, this.top, this.width, this.height);
     }
+
+    public toClientRect() { 
+        return {
+            left: this.left,
+            top: this.top,
+            bottom: this.bottom,
+            right: this.right,
+        } as ClientRect
+    }
 }
