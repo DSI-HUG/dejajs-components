@@ -42,6 +42,7 @@ export class SelectDemoComponent extends OnInit {
             code: 'CH',
             displayName: 'Switzerland',
             naqme: 'Switzerland',
+            color: 'rgb(211, 47, 47)',
         };
 
         this.countries = this.countriesService.getCountries();

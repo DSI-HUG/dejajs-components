@@ -9,8 +9,16 @@
  *
  */
 
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, Renderer } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Observable, Subject } from 'rxjs/Rx';
+
+interface IAnimation {
+    before: CSSStyleDeclaration;
+    after: CSSStyleDeclaration;
+    delay?: number;
+    duration: number;
+    easing: string;
+}
 
 @Component({
   selector: 'deja-snackbar',
@@ -18,7 +26,6 @@ import { Observable } from 'rxjs/Rx';
   template: `<ng-content></ng-content>`,
 
 })
-
 export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /**
@@ -151,6 +158,8 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   private alignents: { top: boolean, right: boolean, bottom: boolean, left: boolean };
 
+    private animate$ = new Subject<IAnimation>();
+
   /**
    * alignents setter
    *
@@ -184,14 +193,43 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
    *
    * @memberOf DejaSnackbarComponent
    */
-  constructor(
-      private elementRef: ElementRef,
-      private renderer: Renderer,
-  ) {
+    constructor(private elementRef: ElementRef) {
     if (!DejaSnackbarComponent.instances) {
       DejaSnackbarComponent.instances = [];
     }
     DejaSnackbarComponent.instances.push(this);
+
+        const applyParams = (styles: CSSStyleDeclaration) => {
+            Object.keys(styles)
+                .forEach((key) => {
+                    this.host.style[key] = styles[key];
+                });
+        };
+
+        const resetParams = (styles: CSSStyleDeclaration) => {
+            Object.keys(styles)
+                .forEach((key) => {
+                    this.host.style[key] = '';
+                });
+        };
+
+        Observable.from(this.animate$)
+            .do((animation) => applyParams(animation.before))
+            .delay(1)
+            .do((animation) => {
+                this.host.style.transitionDuration = `${animation.duration}ms`;
+                this.host.style.transitionTimingFunction = animation.easing;
+                this.host.style.transitionProperty = Object.keys(animation.before).join(',');
+            })
+            .debounce((animation) => Observable.timer(animation.delay || 1))
+            .do((animation) => applyParams(animation.after))
+            .debounce((animation) => Observable.timer(animation.duration))
+            .subscribe((animation) => {
+                resetParams(animation.after);
+                this.host.style.transitionDuration = '';
+                this.host.style.transitionTimingFunction = '';
+                this.host.style.transitionProperty = '';
+            });
   }
 
   /**
@@ -437,7 +475,7 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
    *
    * @memberOf DejaSnackbarComponent
    */
-  private launchAdaptAnimation(height: number): void {
+    private launchAdaptAnimation(height: number) {
 
     let direction = 1;
     if (this.alignents.top) {
@@ -450,21 +488,16 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
         .slice(-1)
         .pop());
 
-    this.renderer.invokeElementMethod(this.host, 'animate', [
-      [
-        {
+        this.animate$.next({
+            before: {
           transform: `${transform}`,
         },
-        {
+            after: {
           transform: `matrix(1,0,0,1,0,${sixth + ((height + this.marginTop) * direction)})`,
         },
-      ],
-      {
         duration: this.adaptAnimationDuration,
         easing: 'ease',
-        fill: 'both',
-      },
-    ]);
+        } as IAnimation);
   }
 
   /**
@@ -474,29 +507,25 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
    *
    * @memberOf DejaSnackbarComponent
    */
-  private launchEnterAnimation(): void {
+    private launchEnterAnimation() {
     let direction = -1;
     if (this.alignents.top) {
       direction = 1;
     }
-    this.renderer.invokeElementMethod(this.host, 'animate', [
-      [
-        {
-          opacity: 0,
+
+        this.animate$.next({
+            before: {
+                opacity: '0',
           transform: `translateY(${direction * 200}%)`,
         },
-        {
-          opacity: 1,
+            after: {
+                opacity: '1',
           transform: `translateY(0)`,
         },
-      ],
-      {
         delay: this.delay,
         duration: this.enterAnimationDuration,
         easing: 'ease',
-        fill: 'both',
-      },
-    ]);
+        } as IAnimation);
   }
 
   /**
@@ -506,21 +535,16 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
    *
    * @memberOf DejaSnackbarComponent
    */
-  private launchLeaveAnimation(): void {
-    this.renderer.invokeElementMethod(this.host, 'animate', [
-      [
-        {
-          opacity: 1,
+    private launchLeaveAnimation() {
+        this.animate$.next({
+            before: {
+                opacity: '1',
         },
-        {
-          opacity: 0,
+            after: {
+                opacity: '0',
         },
-      ],
-      {
         duration: this.leaveAnimationDuration,
         easing: 'ease',
-        fill: 'both',
-      },
-    ]);
+        } as IAnimation);
   }
 }

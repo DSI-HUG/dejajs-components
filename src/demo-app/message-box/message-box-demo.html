@@ -4,18 +4,18 @@
             <!--TODO-->
         <!--</md-card>-->
     <!--</md-tab>-->
-    <md-tab label="API REFERENCE">
-        <md-card class="demo-card demo-basic">
+    <md-tab label="API REFERENCE"></md-tab>
+    <md-tab label="EXAMPLES"> </md-tab>
+</md-tab-group>
+
+<md-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
             <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/message-box/readme.md'"></deja-markdown>
         </md-card>
-    </md-tab>
-    <md-tab label="EXAMPLES">
 
-
+<div *ngIf="tabIndex === 1">
         <deja-dialog *ngIf="dialogVisible" (closed)="dialogVisible = false">
             <deja-message-box type="primary" title="Un titre">
-                <b>Je suis un deja-dialog !</b><br />
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sit amet felis id nisl maximus interdum. Morbi mollis sapien sapien. Vivamus lacinia elementum eros
+            <b>Je suis un deja-dialog !</b><br /> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sit amet felis id nisl maximus interdum. Morbi mollis sapien sapien. Vivamus lacinia elementum eros
                 <template #actionsTemplate>
                     <button md-raised-button (click)="dialogVisible = false">
                         Annuler
@@ -75,6 +75,4 @@
                 </deja-message-box>
             </deja-snackbar>
         </template>
-
-    </md-tab>
-</md-tab-group>
+</div>

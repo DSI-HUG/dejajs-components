@@ -1,8 +1,16 @@
 <a name="@next"></a>
-# [@next] (2017-02-xx)
+# [@next] (2017-03-xx)
 
-<a name="@next"></a>
-# [1.3.1] (2017-02-15)
+### Breaking changes from 1.4.2-beta.10
+
+### Bug fixes #
+* **SnackBar:** Animation is now compatible with IE and FF
+* **SnackBarDemo:** SnackBar position inside ViewPort
+* **MenuDemo:** Menu position inside ViewPort
+* **MessageBoxDemo:** MessageBox position inside ViewPort
+
+<a name="1.4.2-beta.10"></a>
+# [1.4.2] (2017-03-03)
 
 ### Breaking changes from 1.3.0
 * **Rect:** Right and Bottom are now get set properties instead functions.

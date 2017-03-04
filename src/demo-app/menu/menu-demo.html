@@ -4,14 +4,15 @@
 			<!--TODO-->
 		<!--</md-card>-->
 	<!--</md-tab>-->
-	<md-tab label="API REFERENCE">
-		<md-card class="demo-card demo-basic">
+    <md-tab label="API REFERENCE"> </md-tab>
+    <md-tab label="EXAMPLES"></md-tab>
+</md-tab-group>
+
+<md-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
 			TODO
 		</md-card>
-	</md-tab>
-	<md-tab label="EXAMPLES">
 
-
+<div *ngIf="tabIndex === 1">
 		<deja-menu #posYMenu buttonAlignment="left top">
 			<ul>
 				<li (click)="posYMenu.close()">
@@ -81,6 +82,5 @@
 				</md-toolbar>
 			</div>
 		</div>
+</div>
 
-	</md-tab>
-</md-tab-group>

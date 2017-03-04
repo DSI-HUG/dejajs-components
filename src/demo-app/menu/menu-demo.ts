@@ -26,5 +26,7 @@ export class MenuDemoComponent {
     {text: 'Sign Out'},
   ];
 
+    protected tabIndex = 1;
+
   public select(text: string) { this.selected = text; }
 }
