@@ -206,13 +206,6 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
                 });
         };
 
-        const resetParams = (styles: CSSStyleDeclaration) => {
-            Object.keys(styles)
-                .forEach((key) => {
-                    this.host.style[key] = '';
-                });
-        };
-
         Observable.from(this.animate$)
             .do((animation) => applyParams(animation.before))
             .delay(1)
@@ -224,8 +217,7 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
             .debounce((animation) => Observable.timer(animation.delay || 1))
             .do((animation) => applyParams(animation.after))
             .debounce((animation) => Observable.timer(animation.duration))
-            .subscribe((animation) => {
-                resetParams(animation.after);
+            .subscribe(() => {
                 this.host.style.transitionDuration = '';
                 this.host.style.transitionTimingFunction = '';
                 this.host.style.transitionProperty = '';
