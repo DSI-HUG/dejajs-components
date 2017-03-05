@@ -15,7 +15,7 @@
 		<md-card class="deja-select-demo demo-card demo-basic">
 			<md-toolbar color="secondary">By passing business object</md-toolbar>
 			<md-card-content>
-				<deja-select id="businessSelect" type="autocomplete" textField="naqme" [(ngModel)]="businessCountry" valueField="code" [models]="countries">
+				<deja-select id="businessSelect" class="placeholder-icon" type="autocomplete" textField="naqme" [(ngModel)]="businessCountry" valueField="code" [models]="countries">
 					<template #placeHolderTemplate>
                         <md-icon role="img" class="material-icons mat-icon" aria-label="info_outline">info_outline</md-icon>
                         <span>Liste des pays</span>
@@ -46,7 +46,7 @@
 						</deja-message-box>
 					</deja-dialog>
 				</div>
-				<deja-select id="first" type="autocomplete" textField="naqme" [(ngModel)]="country" valueField="code" [items]="countries">
+				<deja-select id="first" type="autocomplete" class="placeholder-icon" textField="naqme" [(ngModel)]="country" valueField="code" [items]="countries">
 					<template #placeHolderTemplate>
 						<md-icon id="placeholder-icon">map</md-icon>
 						Liste des pays, standard select chargé directement, avec icon
