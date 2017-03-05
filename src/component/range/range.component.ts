@@ -100,7 +100,10 @@ export class DejaRangeComponent implements ControlValueAccessor {
     public _onChangeCallback: (_: any) => void = () => { };
     public _onTouchCallback: () => void = () => { };
 
-    @HostListener('window:resize', ['$event']) public onResize() { this.ranges = this.ranges.concat(); }
+    @HostListener('window:resize', ['$event'])
+    public onResize() {
+        this.ranges = this.ranges.concat();
+    }
 
     // add a new range, by splitting the selected one into 2 new ranges
     public add(): void {

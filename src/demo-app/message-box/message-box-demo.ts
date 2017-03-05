@@ -21,6 +21,10 @@ import { Message } from './message';
 export class MessageBoxDemoComponent implements OnInit {
     protected tabIndex = 1;
 
+    protected toolTipModel = {
+        text: 'Je suis un deja-tooltip'
+    };
+
     protected actions = [
         {
             action: () => {

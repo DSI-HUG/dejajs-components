@@ -21,15 +21,15 @@ import {MaterialColors} from '../../common/core/style';
 export class DejaColorSelectorDemoComponent {
     protected selectedColor = Color.fromHex('#FFA000');
     protected invalidColor = Color.fromHex('#FFA012');
-    private hoveredColor: string;
+    private hoveredColor: Color;
 
     constructor(protected materialColors: MaterialColors) { }
 
     protected onColorPickerHover(event: ColorEvent) {
-        this.hoveredColor = event.colorName;
+        this.hoveredColor = event.color;
     }
 
     protected onColorPickerChange(event: ColorEvent) {
-        this.hoveredColor = event.colorName;
+        this.hoveredColor = event.color;
     }
 }

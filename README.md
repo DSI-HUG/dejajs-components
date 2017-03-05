@@ -30,3 +30,30 @@ Take a look at the `src` folder. All components and demo application are placed 
 
 and navigate to `http://localhost:5100`.
 
+
+## Feature status and browsers compatibility:
+
+| Feature          | Working OnPush| Chrome 56 | Edge | IE11 | FF51 | Opera Neon | Readme and Demo | Note           |
+|------------------|-|-|-|-|-|-|-|-|
+| Accordion        |yes|yes|yes|yes|yes|yes|available|
+| Auto-Size TextArea|yes|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>|Scroll on IE11, Place holder on FF
+| Circular Picker  |<span style="color:red">no</span>|yes|yes|yes|yes|yes|available|
+| Color Selector   |yes|yes|yes|yes|yes|yes|available|
+| Color Picker     |yes|yes|yes|yes|yes|yes|available|
+| Content Editable |yes|yes|yes|yes|yes|yes|available|New line issue on IE11
+| Date Selector    |yes|yes|<span style="color:red">slow</span>|<span style="color:red">slow</span>|yes|yes|available|
+| Date Picker      |<span style="color:red">no</span>|yes|<span style="color:red">no</span>|<span style="color:red">no</span>|<span style="color:red">no</span>|yes|available
+| Dialog           |yes|yes|yes|yes|yes|yes|Message Box|
+| Events           |yes|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>|
+| Grid             |<span style="color:red">no</span>|yes|yes|<span style="color:red">no</span>|<span style="color:red">slow</span>|yes|available|
+| Dropdown Control |yes|yes|yes|yes|yes|yes|Color Picker|
+| Menu             |yes|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>|
+| Message Box      |yes|yes|yes|<span style="color:red">no</span>|yes|yes|available|Styling Issue on IE11
+| Monaco Editor    |yes|yes|yes|yes|yes|yes|available|
+| Range            |<span style="color:red">no</span>|yes|yes|yes|<span style="color:red">no</span>|yes|available|
+| Select           |<span style="color:red">no</span>|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>|Place Holder placement in FF, Edge and IE11
+| Snackbar         |yes|yes|yes|<span style="color:red">no</span>|yes|yes|available|Styling Issue on IE11
+| Splitter         |yes|yes|yes|yes|yes|yes|available|
+| Tiles            |@rxjs Branch|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>|
+| Tooltip          |yes|yes|yes|<span style="color:red">no</span>|yes|yes|Message Box|Styling Issue on IE11
+| Treelist         |<span style="color:red">no</span>|yes|yes|yes|yes|yes|available|

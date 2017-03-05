@@ -1,4 +1,4 @@
-<md-tab-group [selectedIndex]="1">
+<md-tab-group [selectedIndex]="tabIndex" (selectChange)="tabIndex = $event.index">
 	<!--<md-tab label="OVERVIEW">-->
 		<!--<md-card class="demo-card demo-basic">-->
 			<!--TODO-->

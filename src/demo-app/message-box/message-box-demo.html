@@ -1,4 +1,4 @@
-<md-tab-group [selectedIndex]="1">
+<md-tab-group [selectedIndex]="tabIndex" (selectChange)="tabIndex = $event.index">
     <!--<md-tab label="OVERVIEW">-->
         <!--<md-card class="demo-card demo-basic">-->
             <!--TODO-->
@@ -33,8 +33,16 @@
 
         <div style="margin:1rem;"></div>
 
+    <deja-tooltip name="test-tt" *ngIf="tooltipVisible" (hide)="tooltipVisible = false">
+        <template #tooltipTemplate let-model>
+            <div id="tooltip">
+                {{model.text}}
+            </div>
+        </template>
+    </deja-tooltip>
+
         <deja-message-box type="success" title="Un titre" [actions]="actions">
-            Un message "success"
+        <span deja-tooltip="test-tt" [tooltip-model]="toolTipModel" (tooltip-show)="tooltipVisible = true">Un message "success"</span>
         </deja-message-box>
 
         <div style="margin:1rem;"></div>
