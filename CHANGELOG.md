@@ -2,6 +2,7 @@
 # [@next] (2017-03-xx)
 
 ### Breaking changes from 1.4.2-beta.10
+* **ColorEvent:** ColorEvent inherits from CustomEvent. ColorName and Color can be set only on the constructor.
 
 ### Bug fixes #
 * **SnackBar:** Animation is now compatible with IE and FF

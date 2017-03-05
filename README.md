@@ -36,11 +36,11 @@ and navigate to `http://localhost:5100`.
 | Feature          | Working OnPush| Chrome 56 | Edge | IE11 | FF51 | Opera Neon | Readme and Demo | Note           |
 |------------------|-|-|-|-|-|-|-|-|
 | Accordion        |yes|yes|yes|yes|yes|yes|available|
-| Auto-Size TextArea|yes|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>|Place holder on FF
+| Auto-Size TextArea|yes|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>|
 | Circular Picker  |<span style="color:red">no</span>|yes|yes|yes|yes|yes|available|
 | Color Selector   |yes|yes|yes|yes|yes|yes|available|
 | Color Picker     |yes|yes|yes|yes|yes|yes|available|
-| Content Editable |yes|yes|yes|yes|yes|yes|available|New line issue on IE11
+| Content Editable |yes|yes|yes|yes|yes|yes|available|New line issue on IE11. IE11 add p indtead br 
 | Date Selector    |yes|yes|<span style="color:red">slow</span>|<span style="color:red">slow</span>|yes|yes|available|
 | Date Picker      |<span style="color:red">no</span>|yes|<span style="color:red">no</span>|<span style="color:red">no</span>|<span style="color:red">no</span>|yes|available
 | Dialog           |yes|yes|yes|yes|yes|yes|Message Box|
@@ -50,7 +50,7 @@ and navigate to `http://localhost:5100`.
 | Menu             |yes|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>|
 | Message Box      |yes|yes|yes|yes|yes|yes|available|
 | Monaco Editor    |yes|yes|yes|yes|yes|yes|available|
-| Range            |<span style="color:red">no</span>|yes|yes|yes|<span style="color:red">no</span>|yes|available|
+| Range            |yes|yes|yes|yes|yes|yes|available|
 | Select           |<span style="color:red">no</span>|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>|Place Holder placement in FF, Edge and IE11
 | Snackbar         |yes|yes|yes|yes|yes|yes|available|
 | Splitter         |yes|yes|yes|yes|yes|yes|available|
