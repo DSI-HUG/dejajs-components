@@ -9,15 +9,18 @@
  *
  */
 
-import { Component, ContentChild, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
-import { DejaDropDownComponent, Position, Rect } from '../../';
-import { ITooltipParams } from './index';
-import { DejaTooltipService } from './tooltip.service';
+import {Component, ContentChild, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Observable} from 'rxjs/Rx';
+import {DejaDropDownComponent, Position, Rect} from '../../';
+import {ITooltipParams} from './index';
+import {DejaTooltipService} from './tooltip.service';
 
 @Component({
     selector: 'deja-tooltip',
     templateUrl: 'tooltip.component.html',
+    styleUrls: [
+        './tooltip.component.scss',
+    ],
 })
 export class DejaTooltipComponent implements OnInit {
     @ViewChild('dropdown') public dropdown: DejaDropDownComponent;
@@ -31,8 +34,7 @@ export class DejaTooltipComponent implements OnInit {
     constructor(elementRef: ElementRef, private tooltipService: DejaTooltipService) {
         const element = elementRef.nativeElement as HTMLElement;
 
-        const hide$ = Observable.from(this.hide)
-            .do(() => this.model = undefined);
+        const hide$ = Observable.from(this.hide).do(() => this.model = undefined);
 
         Observable.fromEvent(element.ownerDocument, 'mousemove')
             .takeUntil(hide$)
@@ -49,13 +51,13 @@ export class DejaTooltipComponent implements OnInit {
                 const ownerRect = new Rect(ownerElement.getBoundingClientRect());
                 return !ownerRect.containsPoint(position);
             })
-            .delay(300)
+            .delay(111300)
             .subscribe(() => this.hide.emit());
     }
 
     public ngOnInit() {
         if (!this.name) {
-            throw (new Error('Name is required'));
+            throw(new Error('Name is required'));
         }
         this.params = this.tooltipService.params[this.name];
 
@@ -63,14 +65,12 @@ export class DejaTooltipComponent implements OnInit {
         if (model$.subscribe) {
             model$.subscribe((model) => this.model = model, () => this.hide.emit());
         } else {
-        const promise = this.params.model as Promise<any>;
-        if (promise.then) {
-                promise
-                    .then((model) => this.model = model)
-                    .catch(() => this.hide.emit());
-        } else {
-            this.model = this.params.model;
+            const promise = this.params.model as Promise<any>;
+            if (promise.then) {
+                promise.then((model) => this.model = model).catch(() => this.hide.emit());
+            } else {
+                this.model = this.params.model;
+            }
         }
-    }
     }
 }

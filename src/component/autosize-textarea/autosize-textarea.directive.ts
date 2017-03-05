@@ -9,7 +9,7 @@
  *
  */
 
-import { AfterViewInit, Directive, ElementRef, forwardRef, HostBinding } from '@angular/core';
+import { AfterViewChecked, Directive, ElementRef, forwardRef, HostBinding } from '@angular/core';
 import { NG_VALIDATORS, Validator } from '@angular/forms';
 import { Observable, Subject } from 'rxjs/Rx';
 
@@ -24,7 +24,7 @@ import { Observable, Subject } from 'rxjs/Rx';
     ],
     selector: 'textarea[deja-autosize]',
 })
-export class DejaAutosizeTextAreaDirective implements AfterViewInit, Validator {
+export class DejaAutosizeTextAreaDirective implements AfterViewChecked, Validator {
     @HostBinding('attr.rows') protected rows = 1;
 
     private height = new Subject<string>();
@@ -36,7 +36,7 @@ export class DejaAutosizeTextAreaDirective implements AfterViewInit, Validator {
             .subscribe((height) => this.textAreaElement.style.height = height);
     }
 
-    public ngAfterViewInit() {
+    public ngAfterViewChecked() {
         Observable.timer(10)
             .first()
             .subscribe(() => this.resize());

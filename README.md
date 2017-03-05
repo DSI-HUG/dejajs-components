@@ -36,7 +36,7 @@ and navigate to `http://localhost:5100`.
 | Feature          | Working OnPush| Chrome 56 | Edge | IE11 | FF51 | Opera Neon | Readme and Demo | Note           |
 |------------------|-|-|-|-|-|-|-|-|
 | Accordion        |yes|yes|yes|yes|yes|yes|available|
-| Auto-Size TextArea|yes|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>|Scroll on IE11, Place holder on FF
+| Auto-Size TextArea|yes|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>|Place holder on FF
 | Circular Picker  |<span style="color:red">no</span>|yes|yes|yes|yes|yes|available|
 | Color Selector   |yes|yes|yes|yes|yes|yes|available|
 | Color Picker     |yes|yes|yes|yes|yes|yes|available|
@@ -48,12 +48,12 @@ and navigate to `http://localhost:5100`.
 | Grid             |<span style="color:red">no</span>|yes|yes|<span style="color:red">no</span>|<span style="color:red">slow</span>|yes|available|
 | Dropdown Control |yes|yes|yes|yes|yes|yes|Color Picker|
 | Menu             |yes|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>|
-| Message Box      |yes|yes|yes|<span style="color:red">no</span>|yes|yes|available|Styling Issue on IE11
+| Message Box      |yes|yes|yes|yes|yes|yes|available|
 | Monaco Editor    |yes|yes|yes|yes|yes|yes|available|
 | Range            |<span style="color:red">no</span>|yes|yes|yes|<span style="color:red">no</span>|yes|available|
 | Select           |<span style="color:red">no</span>|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>|Place Holder placement in FF, Edge and IE11
-| Snackbar         |yes|yes|yes|<span style="color:red">no</span>|yes|yes|available|Styling Issue on IE11
+| Snackbar         |yes|yes|yes|yes|yes|yes|available|
 | Splitter         |yes|yes|yes|yes|yes|yes|available|
 | Tiles            |@rxjs Branch|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>|
-| Tooltip          |yes|yes|yes|<span style="color:red">no</span>|yes|yes|Message Box|Styling Issue on IE11
+| Tooltip          |yes|yes|yes|yes|yes|yes|Message Box|
 | Treelist         |<span style="color:red">no</span>|yes|yes|yes|yes|yes|available|

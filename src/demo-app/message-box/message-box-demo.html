@@ -1,37 +1,37 @@
 <md-tab-group [selectedIndex]="tabIndex" (selectChange)="tabIndex = $event.index">
     <!--<md-tab label="OVERVIEW">-->
-        <!--<md-card class="demo-card demo-basic">-->
-            <!--TODO-->
-        <!--</md-card>-->
+    <!--<md-card class="demo-card demo-basic">-->
+    <!--TODO-->
+    <!--</md-card>-->
     <!--</md-tab>-->
     <md-tab label="API REFERENCE"></md-tab>
     <md-tab label="EXAMPLES"> </md-tab>
 </md-tab-group>
 
 <md-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
-            <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/message-box/readme.md'"></deja-markdown>
-        </md-card>
+    <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/message-box/readme.md'"></deja-markdown>
+</md-card>
 
 <div *ngIf="tabIndex === 1">
-        <deja-dialog *ngIf="dialogVisible" (closed)="dialogVisible = false">
-            <deja-message-box type="primary" title="Un titre">
+    <deja-dialog *ngIf="dialogVisible" (closed)="dialogVisible = false">
+        <deja-message-box type="primary" title="Un titre">
             <b>Je suis un deja-dialog !</b><br /> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sit amet felis id nisl maximus interdum. Morbi mollis sapien sapien. Vivamus lacinia elementum eros
-                <template #actionsTemplate>
-                    <button md-raised-button (click)="dialogVisible = false">
+            <template #actionsTemplate>
+                <button md-raised-button (click)="dialogVisible = false">
                         Annuler
                     </button>
-                    <button md-raised-button color="primary" (click)="dialogVisible = false">
+                <button md-raised-button color="primary" (click)="dialogVisible = false">
                         Valider
                     </button>
-                </template>
-            </deja-message-box>
-        </deja-dialog>
-
-        <deja-message-box type="primary" title="Un titre">
-            Du texte dans la <b>message box</b>
+            </template>
         </deja-message-box>
+    </deja-dialog>
 
-        <div style="margin:1rem;"></div>
+    <deja-message-box type="primary" title="Un titre">
+        Du texte dans la <b>message box</b>
+    </deja-message-box>
+
+    <div style="margin:1rem;"></div>
 
     <deja-tooltip name="test-tt" *ngIf="tooltipVisible" (hide)="tooltipVisible = false">
         <template #tooltipTemplate let-model>
@@ -41,46 +41,46 @@
         </template>
     </deja-tooltip>
 
-        <deja-message-box type="success" title="Un titre" [actions]="actions">
+    <deja-message-box type="success" title="Un titre" [actions]="actions">
         <span deja-tooltip="test-tt" [tooltip-model]="toolTipModel" (tooltip-show)="tooltipVisible = true">Un message "success"</span>
-        </deja-message-box>
+    </deja-message-box>
 
-        <div style="margin:1rem;"></div>
+    <div style="margin:1rem;"></div>
 
-        <deja-message-box type="warn" horizontal title="Un titre" [actions]="closeAction">
-            Un message "warn" <b>horizontal</b>
-        </deja-message-box>
+    <deja-message-box type="warn" horizontal title="Un titre" [actions]="closeAction">
+        Un message "warn" <b>horizontal</b>
+    </deja-message-box>
 
-        <div style="margin:1rem;"></div>
+    <div style="margin:1rem;"></div>
 
-        <deja-message-box type="danger" horizontal title="Un titre">
-            Un message "danger" <b>horizontal</b> avec une action au format "template"
-            <template #actionsTemplate>
-                <button md-mini-fab [color]="'blank'" class="close">
+    <deja-message-box type="danger" horizontal title="Un titre">
+        Un message "danger" <b>horizontal</b> avec une action au format "template"
+        <template #actionsTemplate>
+            <button md-mini-fab [color]="'blank'" class="close">
                     <md-icon>clear</md-icon>
                 </button>
-            </template>
+        </template>
+    </deja-message-box>
+
+    <div style="margin:1rem;"></div>
+
+    <deja-message-box horizontal>
+        Un message horizontal sans type ni titre
+    </deja-message-box>
+
+    <!-- basic message box in a snackbar -->
+    <deja-snackbar alignment="bottom left">
+        <deja-message-box type="success" title="Un titre">
+            Un message "success" dans un snackbar
         </deja-message-box>
+    </deja-snackbar>
 
-        <div style="margin:1rem;"></div>
-
-        <deja-message-box horizontal>
-            Un message horizontal sans type ni titre
-        </deja-message-box>
-
-        <!-- basic message box in a snackbar -->
-        <deja-snackbar alignment="bottom left">
-            <deja-message-box type="success" title="Un titre">
-                Un message "success" dans un snackbar
+    <!-- server push error or information : put them in a snackbar -->
+    <template ngFor let-message [ngForOf]="messages | async">
+        <deja-snackbar *ngIf="message.gate" alignment="bottom right" [duration]="8000" (onAnimationDone)="message.gate = false">
+            <deja-message-box type="{{message.type}}" horizontal title="messagebox dans snackbar">
+                {{message.content}}
             </deja-message-box>
         </deja-snackbar>
-
-        <!-- server push error or information : put them in a snackbar -->
-        <template ngFor let-message [ngForOf]="messages | async">
-            <deja-snackbar *ngIf="message.gate" alignment="bottom right" [duration]="8000" (onAnimationDone)="message.gate = false">
-                <deja-message-box type="{{message.type}}" horizontal title="messagebox dans snackbar">
-                    {{message.content}}
-                </deja-message-box>
-            </deja-snackbar>
-        </template>
+    </template>
 </div>
