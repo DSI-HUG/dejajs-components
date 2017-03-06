@@ -387,7 +387,7 @@ export class DejaTreeListComponent extends ItemListBase {
             if (this.minlength > 0 && !this.query) {
                 // Waiting for query
                 this._itemList = [];
-            } else {
+            } else if (!!items || (this._itemList && this._itemList.length)) {
                 this.calcViewPort();
             }
         }, (error: any) => {
@@ -612,11 +612,12 @@ export class DejaTreeListComponent extends ItemListBase {
     protected ngAfterViewInit() {
         // FIXME Issue angular/issues/6005
         // see http://stackoverflow.com/questions/34364880/expression-has-changed-after-it-was-checked
-        if (this._itemList.length === 0) {
-            setTimeout(() => {
-                this.calcViewPort();
-            }, 0);
-        }
+        // Bug with waiter - 2017.03.06 uncomment this if you see some regression
+        // if (this._itemList.length === 0) {
+        //     setTimeout(() => {
+        //         this.calcViewPort();
+        //     }, 0);
+        // }
 
         const resizeSub = Observable
             .fromEvent(window, 'resize')
