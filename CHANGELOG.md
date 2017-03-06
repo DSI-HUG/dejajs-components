@@ -1,6 +1,15 @@
 <a name="@next"></a>
 # [@next] (2017-03-xx)
 
+### Breaking changes from 1.4.2-beta.13
+
+
+### Bug fixes #
+
+
+<a name="1.4.2-beta.13"></a>
+# [1.4.2-beta.13] (2017-03-06)
+
 ### Breaking changes from 1.4.2-beta.10
 * **ColorEvent:** ColorEvent inherits from CustomEvent. ColorName and Color can be set only on the constructor.
 
