@@ -18,9 +18,6 @@ import {DejaTooltipService} from './tooltip.service';
 @Component({
     selector: 'deja-tooltip',
     templateUrl: 'tooltip.component.html',
-    styleUrls: [
-        './tooltip.component.scss',
-    ],
 })
 export class DejaTooltipComponent implements OnInit {
     @ViewChild('dropdown') public dropdown: DejaDropDownComponent;
@@ -34,7 +31,8 @@ export class DejaTooltipComponent implements OnInit {
     constructor(elementRef: ElementRef, private tooltipService: DejaTooltipService) {
         const element = elementRef.nativeElement as HTMLElement;
 
-        const hide$ = Observable.from(this.hide).do(() => this.model = undefined);
+        const hide$ = Observable.from(this.hide)
+            .do(() => this.model = undefined);
 
         Observable.fromEvent(element.ownerDocument, 'mousemove')
             .takeUntil(hide$)
@@ -44,14 +42,14 @@ export class DejaTooltipComponent implements OnInit {
             .filter((position) => {
                 const containerElement = this.dropdown.dropdownElement;
                 const containerBounds = new Rect(containerElement.getBoundingClientRect());
-                return !containerBounds.containsPoint(position)
+                return !containerBounds.containsPoint(position);
             })
             .filter((position) => {
                 const ownerElement = (this.params.ownerElement as ElementRef).nativeElement || this.params.ownerElement;
                 const ownerRect = new Rect(ownerElement.getBoundingClientRect());
                 return !ownerRect.containsPoint(position);
             })
-            .delay(111300)
+            .delay(300)
             .subscribe(() => this.hide.emit());
     }
 
@@ -67,7 +65,9 @@ export class DejaTooltipComponent implements OnInit {
         } else {
             const promise = this.params.model as Promise<any>;
             if (promise.then) {
-                promise.then((model) => this.model = model).catch(() => this.hide.emit());
+                promise
+                    .then((model) => this.model = model)
+                    .catch(() => this.hide.emit());
             } else {
                 this.model = this.params.model;
             }
