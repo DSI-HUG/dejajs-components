@@ -85,7 +85,7 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
 
     // ************* ControlValueAccessor Implementation **************
     // set accessor including call the onchange callback
-    public set value(value: any) {
+    public set value(value: Color) {
         if (!Color.equals(value, this._value)) {
             this.writeValue(value);
             this.onChangeCallback(value);
@@ -93,12 +93,12 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
     }
 
     // get accessor
-    public get value(): any {
+    public get value(): Color {
         return this._value;
     }
 
     // From ControlValueAccessor interface
-    public writeValue(value: any) {
+    public writeValue(value: Color) {
         this._value = value;
     }
 

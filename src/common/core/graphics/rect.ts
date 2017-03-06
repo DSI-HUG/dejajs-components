@@ -87,6 +87,10 @@ export class Rect {
         return this.top + this.height;
     }
 
+    public get position() {
+        return new Position(this.left, this.top);
+    }
+
     public offset(x: number, y: number): Rect {
         return new Rect(
             this.left + x,
@@ -124,5 +128,14 @@ export class Rect {
 
     public clone() {
         return new Rect(this.left, this.top, this.width, this.height);
+    }
+
+    public toClientRect() { 
+        return {
+            left: this.left,
+            top: this.top,
+            bottom: this.bottom,
+            right: this.right,
+        } as ClientRect;
     }
 }

@@ -11,6 +11,7 @@
 
 import { Injectable } from '@angular/core';
 import { Http, ResponseContentType } from '@angular/http';
+import { MaterialColors } from '../../common/core/style/index';
 import { Observable } from 'rxjs/Observable';
 import { Subscriber } from 'rxjs/Subscriber';
 
@@ -18,9 +19,9 @@ import { Subscriber } from 'rxjs/Subscriber';
 export class CountriesService {
     private countriesDic = {} as { [code: string]: ICountry };
 
-    constructor(private http: Http) { }
+    constructor(private http: Http, private materialColors: MaterialColors) { }
 
-    public getCountyByCode(code: string): Observable<ICountry> {
+    public getCountryByCode(code: string): Observable<ICountry> {
         return Observable.of(this.countriesDic[code]);
     }
 
@@ -38,9 +39,16 @@ export class CountriesService {
                     .map((response) => {
                         const datas = response.json();
                         const countries = datas.data as ICountry[];
+                        let colorIndex = 0;
+                        const colors = this.materialColors.getPalet('700');
                         countries.forEach((country) => {
                             country.displayName = country.naqme;
+                            country.color = colors[colorIndex].toHex();
                             this.countriesDic[country.code] = country;
+
+                            if (++colorIndex >= colors.length) {
+                                colorIndex = 0;
+                            }
                         });
 
                         if (query) {
@@ -71,5 +79,6 @@ export interface ICountry {
     displayName: string;
     naqme: string;
     code: string;
+    color: string;
     equals?: (item: ICountry) => boolean;
 }

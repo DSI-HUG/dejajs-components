@@ -13,6 +13,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MdButtonModule, MdCheckboxModule, MdInputModule } from '@angular/material';
+import { DejaClipboardModule } from '../../common/core/clipboard/clipboard.module';
 import { DejaDragDropModule } from '../dragdrop/dragdrop.module';
 import { DejaTextMetricsModule } from './text-metrics/text-metrics.module';
 import { DejaTreeListComponent } from './tree-list.component';
@@ -28,6 +29,7 @@ import { DejaTreeListComponent } from './tree-list.component';
         MdCheckboxModule.forRoot(),
         DejaDragDropModule,
         DejaTextMetricsModule,
+        DejaClipboardModule.forRoot(),
     ],
 })
 export class DejaTreeListModule { }

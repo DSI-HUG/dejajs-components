@@ -9,7 +9,7 @@
  *
  */
 
-import { AfterViewInit, Directive, ElementRef, forwardRef, HostBinding } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, forwardRef } from '@angular/core';
 import { NG_VALIDATORS, Validator } from '@angular/forms';
 import { Observable, Subject } from 'rxjs/Rx';
 
@@ -25,35 +25,32 @@ import { Observable, Subject } from 'rxjs/Rx';
     selector: 'textarea[deja-autosize]',
 })
 export class DejaAutosizeTextAreaDirective implements AfterViewInit, Validator {
-    @HostBinding('attr.rows') protected rows = 1;
-
-    private height = new Subject<string>();
-    private textAreaElement: HTMLTextAreaElement;
+    private resize$ = new Subject<void>();
 
     constructor(private elementRef: ElementRef) {
-        this.textAreaElement = this.elementRef.nativeElement as HTMLTextAreaElement;
-        Observable.from(this.height)
-            .subscribe((height) => this.textAreaElement.style.height = height);
+        const textAreaElement = this.elementRef.nativeElement as HTMLTextAreaElement;
+
+        Observable.from(this.resize$)
+            .first()
+            .subscribe(() => {
+                textAreaElement.setAttribute('rows', '1');
+                textAreaElement.style.overflowY = 'hidden';
+            });
+
+        Observable.from(this.resize$)
+            .debounceTime(5)
+            .do(() => textAreaElement.style.height = '18px')
+            .subscribe(() => {
+                textAreaElement.style.height = textAreaElement.scrollHeight + 'px';
+            });
     }
 
     public ngAfterViewInit() {
-        Observable.timer(10)
-            .first()
-            .subscribe(() => this.resize());
+        this.resize$.next();
     }
 
     public validate(): { [key: string]: any } {
-        this.resize();
+        this.resize$.next();
         return null;
-    }
-
-    private resize() {
-        Observable.from(this.height)
-            .first()
-            .subscribe(() => {
-                this.height.next(this.textAreaElement.scrollHeight + 'px');
-            });
-
-        this.height.next('auto');
     }
 }

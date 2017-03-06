@@ -17,15 +17,19 @@
 .mat-primary[md-raised-button],
 .mat-primary[md-fab],
 .mat-primary[md-mini-fab] {
-	background-color: $secondary !important;
-	color: #FFF !important;
+	&:not([disabled]) {
+		background-color: $secondary !important;
+		color: #FFF !important;
+	}
 }
 
 .mat-success[md-raised-button],
 .mat-success[md-fab],
 .mat-success[md-mini-fab] {
-	background-color: $success !important;
-	color: #FFF !important;
+	&:not([disabled]) {
+		background-color: $success !important;
+		color: #FFF !important;
+	}
 }
 
 .mat-warn[md-raised-button],
@@ -38,16 +42,20 @@
 .mat-danger[md-raised-button],
 .mat-danger[md-fab],
 .mat-danger[md-mini-fab] {
-	background-color: $red !important;
-	color: #FFF !important;
+	&:not([disabled]) {
+		background-color: $red !important;
+		color: #FFF !important;
+	}
 }
 
 .mat-blank[md-raised-button],
 .mat-blank[md-fab],
 .mat-blank[md-mini-fab] {
-	background-color: transparent !important;
-	box-shadow: none;
-	color: rgba(0, 0, 0, 0.6) !important;
+	&:not([disabled]) {
+		background-color: transparent !important;
+		box-shadow: none;
+		color: rgba(0, 0, 0, 0.6) !important;
+	}
 	&.close {
 		align-items: stretch;
 		display: flex;
@@ -103,7 +111,9 @@
 .mat-accent[md-raised-button],
 .mat-accent[md-fab],
 .mat-accent[md-mini-fab] {
-	background-color: $secondary !important;
+	&:not([disabled]) {
+		background-color: $secondary !important;
+	}
 }
 
 .mat-accent[md-raised-button] {

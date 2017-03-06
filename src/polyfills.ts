@@ -36,6 +36,8 @@ import 'core-js/es6/symbol';
 import 'core-js/es7/reflect';
 import 'zone.js/dist/zone';
 
+import 'custom-event-polyfill/custom-event-polyfill';
+
 // If you need to support the browsers/features below, uncomment the import
 // and run `npm install import-name-here';
 // Learn more in https://angular.io/docs/ts/latest/guide/browser-support.html

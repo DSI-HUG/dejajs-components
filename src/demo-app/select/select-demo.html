@@ -1,8 +1,8 @@
 <md-tab-group [selectedIndex]="1">
 	<!--<md-tab label="OVERVIEW">-->
-		<!--<md-card class="demo-card demo-basic">-->
-			<!--TODO-->
-		<!--</md-card>-->
+	<!--<md-card class="demo-card demo-basic">-->
+	<!--TODO-->
+	<!--</md-card>-->
 	<!--</md-tab>-->
 	<md-tab label="API REFERENCE">
 		<md-card class="demo-card demo-basic">
@@ -15,7 +15,12 @@
 		<md-card class="deja-select-demo demo-card demo-basic">
 			<md-toolbar color="secondary">By passing business object</md-toolbar>
 			<md-card-content>
-				<deja-select id="businessSelect" type="autocomplete" placeholder="Liste des pays" textField="naqme" [(ngModel)]="businessCountry" valueField="code" [models]="countries"></deja-select>
+				<deja-select id="businessSelect" class="placeholder-icon" type="autocomplete" textField="naqme" [(ngModel)]="businessCountry" valueField="code" [models]="countries">
+					<template #placeHolderTemplate>
+                        <md-icon role="img" class="material-icons mat-icon" aria-label="info_outline">info_outline</md-icon>
+                        <span>Liste des pays</span>
+					</template>
+				</deja-select>
 
 				<h4>Selected country model :</h4>
 				<pre>{{businessCountry | json}}</pre>
@@ -41,7 +46,12 @@
 						</deja-message-box>
 					</deja-dialog>
 				</div>
-				<deja-select id="first" type="autocomplete" placeholder="Liste des pays, standard select chargé directement" textField="naqme" [(ngModel)]="country" valueField="code" [items]="countries"></deja-select>
+				<deja-select id="first" type="autocomplete" class="placeholder-icon" textField="naqme" [(ngModel)]="country" valueField="code" [items]="countries">
+					<template #placeHolderTemplate>
+						<md-icon id="placeholder-icon">map</md-icon>
+						Liste des pays, standard select chargé directement, avec icon
+					</template>
+				</deja-select>
 				<deja-select placeholder="Liste des pays, standard select chargé à la demande" [itemListService]="countriesListService" textField="naqme" valueField="code" [(ngModel)]="country"></deja-select>
 				<deja-select placeholder="Autocomplete filtré à la demande" type="autocomplete" [itemListService]="countriesListService" textField="naqme" valueField="code" [(ngModel)]="country"></deja-select>
 				<deja-select required selectionClearable placeholder="Liste des pays, avec templating" valueField="code" [(ngModel)]="countryForTemnplate" [items]="countriesForTemplate">
@@ -63,12 +73,12 @@
 				<deja-select class="row" [dropdownContainerId]="'selectContainer'" hideSelected type="multiselect" textField="naqme" valueField="code" placeholder="Multiselect" [(ngModel)]="multiselectModel" [items]="countriesForMultiselect" [unselectingItem]="confirmUnselection()"> </deja-select>
 				<deja-select class="row" [dropdownContainerId]="'selectContainer'" hideSelected type="multiselect" textField="naqme" valueField="code" placeholder="Multiselect avec template de selection" [(ngModel)]="multiselectModel" [items]="countriesForMultiselect">
 					<template #selectedTemplate let-item>
-				<span id="flight">
-					<i *ngIf="item.code !== 'CH' && item.code !== 'FR'" class="material-icons">flight_land</i>
-					<i *ngIf="item.code === 'FR'" class="material-icons">flight_landflight_takeoff</i>
-					<i *ngIf="item.code === 'CH'" class="material-icons">flight_takeoff</i>
-					<span>{{ item.naqme + ' - ' + item.code }}</span>
-				</span>
+						<span id="flight">
+							<i *ngIf="item.code !== 'CH' && item.code !== 'FR'" class="material-icons">flight_land</i>
+							<i *ngIf="item.code === 'FR'" class="material-icons">flight_landflight_takeoff</i>
+							<i *ngIf="item.code === 'CH'" class="material-icons">flight_takeoff</i>
+							<span>{{ item.naqme + ' - ' + item.code }}</span>
+						</span>
 					</template>
 				</deja-select>
 				<ul>
@@ -81,9 +91,9 @@
 						<deja-bold-query [query]="query" [value]="item.naqme"></deja-bold-query>
 					</template>
 					<template #hintTemplate>
-				<span class="validation-error">
-					Hint pour les errers de validations par exemple!
-				</span>
+						<span class="validation-error">
+							Hint pour les errers de validations par exemple!
+						</span>
 					</template>
 				</deja-select>
 			</md-card-content>

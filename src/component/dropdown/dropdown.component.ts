@@ -9,9 +9,8 @@
  *
  */
 
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostBinding, Input, Output } from '@angular/core';
-import { Observable, Subscription } from 'rxjs/Rx';
-import { setTimeout } from 'timers';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
+import { BehaviorSubject, Observable, Subject } from 'rxjs/Rx';
 import { Rect } from '../../common/core/graphics';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 
@@ -26,9 +25,6 @@ import { KeyCodes } from '../../common/core/keycodes.enum';
 export class DejaDropDownComponent implements AfterViewInit {
     /** Déclenché lorsque le conteneur déroulant disparait */
     @Output() public hide = new EventEmitter();
-
-    /** Renvoie ou définit une valeur indiquant si le conteneur déroulant se ferme sur pression de la touche Echap */
-    @Input() public closeOnEscape = true;
 
     /** Renvoie ou définit l'élement du DOM sur lequel le conteneur déroulant devra s'aligner */
     @Input() public ownerElement: ElementRef | HTMLElement;
@@ -51,14 +47,14 @@ export class DejaDropDownComponent implements AfterViewInit {
     /** Renvoie ou définit une valeur indiquant si le conteneur déroulant peut s'afficher par dessus son propriétaire */
     @Input() public avoidOnwerOverflow = true;
 
-    @HostBinding('attr.valign') private valign = null;
-    @HostBinding('attr.halign') private halign = null;
-    @HostBinding('style.left.px') private left = -1000;
-    @HostBinding('style.top.px') private top = -1000;
-    @HostBinding('style.width.px') private width = null as number;
-    @HostBinding('style.height.px') private height = null as number;
+    /** Renvoie ou définit une valeur indiquant si le conteneur déroulant se ferme sur pression de la touche Echap */
+    @Input()
+    public set closeOnEscape(value: true) {
+        this.closeOnEscape$.next(value);
+    }
 
-    private keyDownObs: Subscription;
+    private show$ = new Subject<boolean>();
+    private closeOnEscape$ = new BehaviorSubject<boolean>(true);
 
     private ownerAlignents = {
         bottom: false,
@@ -83,7 +79,9 @@ export class DejaDropDownComponent implements AfterViewInit {
             top: false,
         };
 
-        value && value.split(/\s+/).map((align) => this.ownerAlignents[align] = true);
+        if (value) {
+            value.split(/\s+/).map((align) => this.ownerAlignents[align] = true);
+        }
     }
 
     /** Ancre d'alignement du conteneur déroulant. Valeurs possible: top, bottom, right, left. Une combinaison des ces valeurs peut également être utilisée, par exemple 'top left'. */
@@ -95,7 +93,9 @@ export class DejaDropDownComponent implements AfterViewInit {
             top: false,
         };
 
-        value && value.split(/\s+/).map((align) => this.dropdownAlignments[align] = true);
+        if (value) {
+            value.split(/\s+/).map((align) => this.dropdownAlignments[align] = true);
+        }
     }
 
     public get dropdownElement(): HTMLElement {
@@ -103,35 +103,71 @@ export class DejaDropDownComponent implements AfterViewInit {
     }
 
     constructor(private elementRef: ElementRef) {
-    }
+        const element = elementRef.nativeElement as HTMLElement;
 
-    public ngAfterViewInit() {
-        this.show();
+        const setDropDownPosition = (dropDownPosition) => {
+            const { left, top, width, height, valign, halign } = dropDownPosition;
+            element.style.left = left !== null ? `${left}px` : '';
+            element.style.top = top !== null ? `${top}px` : '';
+            element.style.width = width !== null ? `${width}px` : '';
+            element.style.height = height !== null ? `${height}px` : '';
+            if (valign) {
+                element.setAttribute('valign', valign);
+            } else {
+                element.removeAttribute('valign');
+            }
+            if (halign) {
+                element.setAttribute('halign', halign);
+            } else {
+                element.removeAttribute('halign');
     }
+        };
 
-    public show() {
-        this.height = null;
-        setTimeout(() => {
+        const unRregisterEscape$ = Observable.from(this.closeOnEscape$)
+            .filter((value) => !value);
+
+        const registerEscape$ = Observable.from(this.closeOnEscape$)
+            .filter((value) => value);
+
+        const keyUp$ = Observable.fromEvent(element.ownerDocument, 'keydown') as Observable<KeyboardEvent>;
+
+        Observable.combineLatest(keyUp$, registerEscape$)
+            .takeUntil(unRregisterEscape$)
+            .filter(([event]) => event.keyCode === KeyCodes.Escape)
+            .subscribe(() => this.hide.emit());
+
+        Observable.from(this.show$)
+            .do(() => setDropDownPosition({
+                left: -1000,
+                top: -1000,
+                width: null,
+                height: null,
+                valign: null,
+                halign: null,
+            } as IDropDownPosition))
+            .debounceTime(100)
+            .subscribe((value) => {
+                if (value) {
             // Calc owner screen position
-            let ownerElement = (this.ownerElement as ElementRef).nativeElement || this.ownerElement;
-            let ownerRect = ownerElement.getBoundingClientRect();
-            let ownerBounds = Rect.fromLTRB(ownerRect.left + +this.ownerLeftMargin, ownerRect.top + +this.ownerTopMargin, ownerRect.right - +this.ownerRightMargin, ownerRect.bottom - +this.ownerBottomMargin);
+                    const ownerElement = (this.ownerElement as ElementRef).nativeElement || this.ownerElement;
+                    const ownerRect = ownerElement.getBoundingClientRect();
+                    const ownerBounds = Rect.fromLTRB(ownerRect.left + +this.ownerLeftMargin, ownerRect.top + +this.ownerTopMargin, ownerRect.right - +this.ownerRightMargin, ownerRect.bottom - +this.ownerBottomMargin);
 
             // Calc container screen position
-            let body = this.elementRef.nativeElement.ownerDocument.body;
-            let bodyRect = body.getBoundingClientRect();
-            let containerElement = this.containerElement && (this.containerElement as ElementRef).nativeElement || this.containerElement;
-            let containerRect = !containerElement ? bodyRect : containerElement.getBoundingClientRect();
+                    const body = this.elementRef.nativeElement.ownerDocument.body;
+                    const bodyRect = body.getBoundingClientRect();
+                    const containerElement = this.containerElement && (this.containerElement as ElementRef).nativeElement || this.containerElement;
+                    const containerRect = !containerElement ? bodyRect : containerElement.getBoundingClientRect();
 
             // Calc min max relative to screen
-            let minLeft = Math.max(bodyRect.left, containerRect.left);
-            let maxRight = Math.min(bodyRect.right, containerRect.right);
-            let minTop = Math.max(bodyRect.top, containerRect.top);
-            let maxBottom = Math.min(bodyRect.bottom, containerRect.bottom);
+                    const minLeft = Math.max(bodyRect.left, containerRect.left);
+                    const maxRight = Math.min(bodyRect.right, containerRect.right);
+                    const minTop = Math.max(bodyRect.top, containerRect.top);
+                    const maxBottom = Math.min(bodyRect.bottom, containerRect.bottom);
 
             // Calc dropdown screen position                
-            let dropdownContElement = this.elementRef.nativeElement as HTMLElement;
-            let dropdownRect = dropdownContElement.getBoundingClientRect();
+                    const dropdownContElement = this.elementRef.nativeElement as HTMLElement;
+                    const dropdownRect = dropdownContElement.getBoundingClientRect();
             let left: number;
             let top: number;
             let width = dropdownRect.width;
@@ -190,7 +226,7 @@ export class DejaDropDownComponent implements AfterViewInit {
                 left = ownerBounds.left + ownerBounds.width / 2 - width / 2;
             }
 
-            let dropdownBounds = new Rect(left, top, width, height);
+                    const dropdownBounds = new Rect(left, top, width, height);
 
             // Ensure container bounds
             if (minLeft > dropdownBounds.left) {
@@ -212,11 +248,11 @@ export class DejaDropDownComponent implements AfterViewInit {
             if (dropdownBounds.intersectWith(ownerBounds) && this.avoidOnwerOverflow) {
                 // Try a better aligment
                 if (dropdownBounds.left < ownerBounds.right && dropdownBounds.right > ownerBounds.left) {
-                    let overflowTop = dropdownBounds.bottom - ownerBounds.top;
-                    let overflowBottom = ownerBounds.bottom - dropdownBounds.top;
+                            const overflowTop = dropdownBounds.bottom - ownerBounds.top;
+                            const overflowBottom = ownerBounds.bottom - dropdownBounds.top;
                     if (overflowTop > 0 && overflowBottom > 0) {
-                        let topHeight = Math.min(ownerBounds.top - minTop, dropdownBounds.height);
-                        let bottomHeight = Math.min(maxBottom - ownerBounds.bottom, dropdownBounds.height);
+                                const topHeight = Math.min(ownerBounds.top - minTop, dropdownBounds.height);
+                                const bottomHeight = Math.min(maxBottom - ownerBounds.bottom, dropdownBounds.height);
                         if (overflowBottom > 0 && bottomHeight < topHeight) {
                             dropdownBounds.top = ownerBounds.top - topHeight;
                             if (dropdownBounds.height > topHeight) {
@@ -232,11 +268,11 @@ export class DejaDropDownComponent implements AfterViewInit {
                 }
 
                 if (dropdownBounds.top < ownerBounds.bottom && dropdownBounds.bottom > ownerBounds.top) {
-                    let overflowLeft = dropdownBounds.right - ownerBounds.left;
-                    let overflowRight = ownerBounds.right - dropdownBounds.left;
+                            const overflowLeft = dropdownBounds.right - ownerBounds.left;
+                            const overflowRight = ownerBounds.right - dropdownBounds.left;
                     if (overflowLeft > 0 && overflowRight > 0) {
-                        let leftWidth = Math.min(ownerBounds.left - minLeft, dropdownBounds.width);
-                        let rightWidth = Math.min(maxRight - ownerBounds.right, dropdownBounds.width);
+                                const leftWidth = Math.min(ownerBounds.left - minLeft, dropdownBounds.width);
+                                const rightWidth = Math.min(maxRight - ownerBounds.right, dropdownBounds.width);
                         if (overflowRight > 0 && rightWidth < leftWidth) {
                             dropdownBounds.left = ownerBounds.left - leftWidth;
                             if (dropdownBounds.width > leftWidth) {
@@ -304,57 +340,55 @@ export class DejaDropDownComponent implements AfterViewInit {
                 }
             }
 
+                    const dropDownPosition = {} as IDropDownPosition;
+
             if (dropdownBounds.top >= ownerBounds.bottom) {
-                this.valign = 'bottom';
+                        dropDownPosition.valign = 'bottom';
             } else if (dropdownBounds.bottom <= ownerBounds.top) {
-                this.valign = 'top';
+                        dropDownPosition.valign = 'top';
             } else {
-                this.valign = 'center';
+                        dropDownPosition.valign = 'center';
             }
 
             if (dropdownBounds.left >= ownerBounds.right) {
-                this.halign = 'right';
+                        dropDownPosition.halign = 'right';
             } else if (dropdownBounds.right <= ownerBounds.left) {
-                this.halign = 'left';
+                        dropDownPosition.halign = 'left';
             } else {
-                this.halign = 'center';
+                        dropDownPosition.halign = 'center';
             }
 
             // Convert to relative
-            let parentElement = dropdownContElement.offsetParent as HTMLElement;
-            let parentRect = parentElement && parentElement.getBoundingClientRect();
-            let relativeBounds = (parentRect && dropdownBounds.offset(- parentRect.left, - parentRect.top)) || dropdownBounds;
+                    const parentElement = dropdownContElement.offsetParent as HTMLElement;
+                    const parentRect = parentElement && parentElement.getBoundingClientRect();
+                    const relativeBounds = (parentRect && dropdownBounds.offset(- parentRect.left, - parentRect.top)) || dropdownBounds;
 
-            this.left = relativeBounds.left;
-            this.top = relativeBounds.top;
-            this.width = relativeBounds.width;
-            this.height = relativeBounds.height;
+                    dropDownPosition.left = relativeBounds.left;
+                    dropDownPosition.top = relativeBounds.top;
+                    dropDownPosition.width = relativeBounds.width;
+                    dropDownPosition.height = relativeBounds.height;
 
-            this.keyDown = this.closeOnEscape;
-        }, 0);
+                    setDropDownPosition(dropDownPosition);
+                } else {
+                    // Hide
     }
-
-    private set keyDown(value: boolean) {
-        if (value) {
-            if (this.keyDownObs) {
-                return;
+            });
             }
 
-            let element = this.elementRef.nativeElement as HTMLElement;
-            this.keyDownObs = Observable.fromEvent(element.ownerDocument, 'keydown').subscribe((event: KeyboardEvent) => {
-                switch (event.keyCode) {
-                    case KeyCodes.Escape:
-                        if (this.closeOnEscape) {
-                            this.hide.emit();
+    public ngAfterViewInit() {
+        this.show$.next(true);
                         }
-                        return false;
-                    default:
-                        return true;
-                }
-            });
-        } else if (this.keyDownObs) {
-            this.keyDownObs.unsubscribe();
-            delete this.keyDownObs;
+
+    public show() {
+        this.show$.next(true);
         }
     }
+
+interface IDropDownPosition {
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+    valign: string;
+    halign: string;
 }
