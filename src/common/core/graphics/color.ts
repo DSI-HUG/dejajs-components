@@ -19,8 +19,13 @@ export class Color {
         return !c1 === !c2 && !c1.isEmpty() && c1.r === c2.r && c1.g === c2.g && c1.b === c2.b && c1.a === c2.a;
     }
 
-    public static fromHex(color: string) {
-        if (!color || color.length < 3) {
+    /**
+     *
+     * @param colorValueHex exemple: #127bdc #FFF #
+     * @returns {Color}
+     */
+    public static fromHex(colorValueHex: string) {
+        if (!colorValueHex || colorValueHex.length < 3) {
             return new Color();
         }
 
@@ -28,23 +33,26 @@ export class Color {
         let g: number;
         let b: number;
         let a: number;
-        let startIndex = color[0] === '#' ? 1 : 0;
-        switch (color.length - 1) {
-            case 3:
-            r = parseInt(color[startIndex] + color[startIndex], 16);
-            g = parseInt(color[++startIndex] + color[startIndex], 16);
-            b = parseInt(color[++startIndex] + color[startIndex], 16);
+
+        if (colorValueHex[0] === '#') {
+            colorValueHex = colorValueHex.substring(1) ;
+        }
+        switch (colorValueHex.length) {
+            case 3: // short
+                r = parseInt(colorValueHex[0] + colorValueHex[0], 16);
+                g = parseInt(colorValueHex[2] + colorValueHex[2], 16);
+                b = parseInt(colorValueHex[4] + colorValueHex[4], 16);
                 break;
-            case 6:
-            r = parseInt(color[startIndex] + color[++startIndex], 16);
-            g = parseInt(color[++startIndex] + color[++startIndex], 16);
-            b = parseInt(color[++startIndex] + color[++startIndex], 16);
+            case 6: // Standard
+                r = parseInt(colorValueHex.substring(0,2), 16);
+                g = parseInt(colorValueHex.substring(2,4), 16);
+                b = parseInt(colorValueHex.substring(4,6), 16);
                 break;
-            case 8:
-                r = parseInt(color[startIndex] + color[startIndex], 16);
-                g = parseInt(color[++startIndex] + color[startIndex], 16);
-                b = parseInt(color[++startIndex] + color[startIndex], 16);
-                a = parseInt(color[++startIndex] + color[startIndex], 16);
+            case 8: // with alpha
+                r = parseInt(colorValueHex.substring(0,2), 16);
+                g = parseInt(colorValueHex.substring(2,4), 16);
+                b = parseInt(colorValueHex.substring(4,6), 16);
+                a = parseInt(colorValueHex.substring(6,8), 16);
                 break;
             default:
                 throw new Error('Invalid color.');
