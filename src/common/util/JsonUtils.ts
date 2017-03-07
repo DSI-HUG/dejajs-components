@@ -51,7 +51,8 @@ export class JsonUtils {
     }
 
     /**
-     * DeserializeJson is a method to deserialize a json into a typed object. The instance is created during the call. Not a recursive.
+     * DeserializeJson is a method to deserialize a json into a typed object. The instance is created during the call. Not recursive.
+     * <p> Th Boolean value will be casted automatically form string to <code>boolean</code></p>
      * <p> Exemple:
      *     <code>let newObj:MyClass = deserializeJson<MyClass>(MyClass>,jsonObj);</code>
      * </p>
@@ -68,7 +69,13 @@ export class JsonUtils {
         for (const sourcePropName in sourceObj) {
             if (sourceObj.hasOwnProperty(sourcePropName)) {
                 const targetPropName = caseTransform ? sourcePropName.toLowerCase() : sourcePropName;
-                castedObj[targetPropName] = sourceObj[sourcePropName];
+                // Boolean managment
+                let value = sourceObj[sourcePropName] ;
+                if (value && !(value instanceof Array) && value.length === 4 && (value.toLowerCase() === "true" ||  value.toLowerCase() === "false")) {
+                    castedObj[targetPropName] = JSON.parse(value.toLowerCase());
+                } else {
+                    castedObj[targetPropName] = value;
+                }
             }
         }
 
