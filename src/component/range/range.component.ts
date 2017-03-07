@@ -9,13 +9,14 @@
  *
  */
 
-import { Component, ContentChild, ElementRef, EventEmitter, forwardRef, HostListener, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, forwardRef, HostListener, Input, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { Observable } from 'rxjs/Rx';
 import { IRange, IRangeEvent, IStepRangeEvent, Range } from './range.interface';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [{
         multi: true,
         provide: NG_VALUE_ACCESSOR,
@@ -75,7 +76,7 @@ export class DejaRangeComponent implements ControlValueAccessor {
         return this._readOnly || this.disabled;
     }
 
-    constructor(private elementRef: ElementRef) { }
+    constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef) { }
 
     // ControlValueAccessor implementation
     public writeValue(ranges: IRange[]): void {
@@ -93,6 +94,8 @@ export class DejaRangeComponent implements ControlValueAccessor {
                 range.$width = +viewValue.toFixed(2);
                 return range;
             });
+
+            this.changeDetectorRef.markForCheck();
         }
     }
     public registerOnChange(fn: any): void { this._onChangeCallback = fn; }
@@ -100,7 +103,10 @@ export class DejaRangeComponent implements ControlValueAccessor {
     public _onChangeCallback: (_: any) => void = () => { };
     public _onTouchCallback: () => void = () => { };
 
-    @HostListener('window:resize', ['$event']) public onResize() { this.ranges = this.ranges.concat(); }
+    @HostListener('window:resize', ['$event'])
+    public onResize() {
+        this.ranges = this.ranges.concat();
+    }
 
     // add a new range, by splitting the selected one into 2 new ranges
     public add(): void {
@@ -190,7 +196,7 @@ export class DejaRangeComponent implements ControlValueAccessor {
 
     protected onMouseDown($event: MouseEvent, index: number): void {
         if (!this.readOnly) {
-            const xStart = $event.x;
+            const xStart = $event.pageX;
             const target = $event.target as HTMLElement;
             const ranges = this.ranges;
             const range = this.ranges[index];
@@ -219,7 +225,7 @@ export class DejaRangeComponent implements ControlValueAccessor {
                 .fromEvent(document, 'mousemove')
                 .takeUntil(kill$)
                 .subscribe((event: MouseEvent) => {
-                    const x = event.x;
+                    const x = event.pageX;
                     const xDifference = -(xStart - x);
 
                     const nextRange = this.ranges[index + 1];

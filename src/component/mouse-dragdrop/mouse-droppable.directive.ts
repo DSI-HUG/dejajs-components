@@ -58,7 +58,8 @@ export class DejaMouseDroppableDirective {
                     .subscribe((dragCursor) => {
                         const bounds = new Rect(element.getBoundingClientRect());
                         if (this.context && dragCursor) {
-                            if (bounds.containsPoint(new Position(dragCursor.pageX, dragCursor.pageY))) {
+                            const { pageX, pageY } = dragCursor.originalEvent;
+                            if (bounds.containsPoint(new Position(pageX, pageY))) {
                                 if (!this._dragContext) {
                                     this._dragContext = dragDropService.context;
                                     if (this.context.dragEnter) {

@@ -108,6 +108,7 @@ export class DejaTreeListComponent extends ItemListBase {
     private _expandButton = false;
     private _sortable = false;
     private _itemsDraggable = false;
+    private hasCustomService = false;
 
     private subscriptions: Subscription[] = [];
 
@@ -304,6 +305,7 @@ export class DejaTreeListComponent extends ItemListBase {
     /** Definit le service de liste utilisé par ce composant. Ce srevice permet de controller dynamiquement la liste, ou de faire du lazyloading. */
     @Input()
     public set itemListService(value: ItemListService) {
+        this.hasCustomService = true;
         this.setItemListService(value);
     }
 
@@ -387,7 +389,7 @@ export class DejaTreeListComponent extends ItemListBase {
             if (this.minlength > 0 && !this.query) {
                 // Waiting for query
                 this._itemList = [];
-            } else {
+            } else if (!!items || (this._itemList && this._itemList.length)) {
                 this.calcViewPort();
             }
         }, (error: any) => {
@@ -612,7 +614,7 @@ export class DejaTreeListComponent extends ItemListBase {
     protected ngAfterViewInit() {
         // FIXME Issue angular/issues/6005
         // see http://stackoverflow.com/questions/34364880/expression-has-changed-after-it-was-checked
-        if (this._itemList.length === 0) {
+        if (this._itemList.length === 0 && this.hasCustomService) {
             setTimeout(() => {
                 this.calcViewPort();
             }, 0);

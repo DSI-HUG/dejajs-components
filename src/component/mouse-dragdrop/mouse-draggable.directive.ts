@@ -72,8 +72,7 @@ export class DejaMouseDraggableDirective {
                                             width: target.offsetWidth,
                                             height: target.offsetHeight,
                                             className: this.context.className,
-                                            pageX: ev.pageX,
-                                            pageY: ev.pageY,
+                                            originalEvent: ev,
                                         } as IDragCursorInfos);
 
                                     } else {

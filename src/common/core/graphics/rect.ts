@@ -87,6 +87,10 @@ export class Rect {
         return this.top + this.height;
     }
 
+    public get position() {
+        return new Position(this.left, this.top);
+    }
+
     public offset(x: number, y: number): Rect {
         return new Rect(
             this.left + x,
@@ -132,6 +136,6 @@ export class Rect {
             top: this.top,
             bottom: this.bottom,
             right: this.right,
-        } as ClientRect
+        } as ClientRect;
     }
 }

@@ -23,7 +23,7 @@
 			</md-card-content>
 			<md-card-content>
 				<h1>Color Selector - Pick a color:</h1>
-				<div id="hoveredColor" [style.background-color]="hoveredColor || selectedColor.toHex()">
+				<div id="hoveredColor" [style.background-color]="(hoveredColor && hoveredColor.toHex()) || selectedColor.toHex()">
 					<deja-color-selector name="4" [colors]="materialColors.colors" [(ngModel)]="selectedColor" (colorhover)="onColorPickerHover($event)" (ngModelChange)="onColorPickerChange($event)"></deja-color-selector>
 				</div>
 			</md-card-content>

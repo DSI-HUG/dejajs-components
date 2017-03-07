@@ -57,6 +57,5 @@ export interface IDropCursorInfos {
 
 export interface IDragCursorInfos extends IDropCursorInfos {
     position: Position;
-    pageX: number;
-    pageY: number;
+    originalEvent: MouseEvent;
 }

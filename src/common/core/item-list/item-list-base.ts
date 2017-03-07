@@ -37,7 +37,7 @@ export class ItemListBase {
     protected _currentItemIndex = -1;
     protected _hintLabel: string;
     protected _nodataLabel: string;
-    protected waiter = false; // Display waiter
+    protected waiter = true; // Display waiter
     protected computedMaxHeight = 0;
     protected _hideSelected: boolean;
     protected _childrenField: string;
