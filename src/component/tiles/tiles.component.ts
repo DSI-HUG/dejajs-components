@@ -9,190 +9,232 @@
  *
  */
 
-import { Component, ContentChild, ElementRef, EventEmitter, forwardRef, HostListener, Input, Output, SimpleChange, ViewChild } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { AfterViewInit, Component, ContentChild, ElementRef, EventEmitter, HostListener, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
-import { Observable, Subscription } from 'rxjs/Rx';
-import { setTimeout } from 'timers';
-import { Position, Rect } from '../../common/core/graphics';
-import { DejaTileSelectionChangedEvent, IDejaTile, IDejaTileEvent, IDejaTileList } from './index';
+import { Observable, BehaviorSubject, Subscription } from 'rxjs/Rx';
+import { Rect } from '../../common/core/graphics';
+import { KeyCodes } from '../../common/core';
+import { IDropCursorInfos, IDejaMouseDroppableContext } from '../mouse-dragdrop/index';
+import { DejaTile, IDejaTilesEvent, IDejaTile, IDejaTilesRemoveEvent, IDejaTilesAddEvent, IDejaTilesRefreshParams } from './index';
 import { DejaTilesLayoutProvider } from './tiles-layout.provider';
 
-const noop = () => { };
-
-const DejaTilesComponentValueAccessor = {
-    multi: true,
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => DejaTilesComponent),
-};
-
 @Component({
-    providers: [
-        DejaTilesComponentValueAccessor,
-    ],
+    providers: [DejaTilesLayoutProvider],
     selector: 'deja-tiles',
     styleUrls: [
         './tiles.component.scss',
     ],
     templateUrl: './tiles.component.html',
 })
-export class DejaTilesComponent implements ControlValueAccessor {
+export class DejaTilesComponent implements AfterViewInit, OnDestroy {
+    /**
+     * Raised when the selected items has changed
+     */
+    @Output() public selectionChanged = new EventEmitter<IDejaTilesEvent>();
 
-    @Input() public maxwidth = '100%';
-    @Input() public maxheight: string;
-    @Input() public tileminwidth = '10%';
-    @Input() public tilemaxwidth = '100%';
-    @Input() public tileminheight = '10%';
-    @Input() public tilemaxheight = '100%';
-    @Output() public tileTitleEditClick = new EventEmitter();
-    @Output() public selectionChanged = new EventEmitter();
-    @ContentChild('tileTemplate') public tileTemplate;
+    /**
+     * Raised when the layout has changed with a drag and drop
+     */
+    @Output() public layoutChanged = new EventEmitter<IDejaTilesEvent>();
+
+    /**
+     * Raised when the data model has changed with a cut, delete or paste
+     */
+    @Output() public modelChanged = new EventEmitter<IDejaTilesEvent>();
+
+    /**
+     * Raised when some tiles was added to the data model with a paste
+     */
+    @Output() public contentAdded = new EventEmitter<IDejaTilesAddEvent>();
+
+    /**
+     * Raised when some tiles was removed from the data model with a delete
+     */
+    @Output() public contentRemoved = new EventEmitter<IDejaTilesRemoveEvent>();
+
+    /**
+     * Raised when some tiles are copied in the clipboard service. Can result from a copy or paste operation on the tiles.
+     */
+    @Output() public contentCopied = new EventEmitter<IDejaTilesEvent>();
+
+    @ContentChild('tileTemplate') protected tileTemplate;
+
+    private _models = [] as IDejaTile[];
+    private _designMode = false;
+    private delete$sub: Subscription;
+    private copy$sub: Subscription;
+    private cut$sub: Subscription;
+    private paste$sub: Subscription;
+    private keyup$: Observable<KeyboardEvent>;
+    private tiles$ = new BehaviorSubject<DejaTile[]>([]);
+
     @ViewChild('tilesContainer') private tilesContainer: ElementRef;
 
-    private _tiles = [] as IDejaTileList;
-    private dragInfos: IDejaTileDragDropInfos;
-    private dragging = false;
-    private onTouchedCallback: () => void = noop;
-    private onChangeCallback: (_: any) => void = noop;
-    private _selectedTiles: IDejaTile[];
-    private _layoutProvider: DejaTilesLayoutProvider;
-    private width: number;
-    private height: number;
-    private cursor: string;
-    private pressedTile: IDejaTile;
-    private _designMode = false;
+    constructor(el: ElementRef, private layoutProvider: DejaTilesLayoutProvider) {
+        const element = el.nativeElement as HTMLElement;
 
-    private mouseMoveObs: Subscription;
-    private mouseUpObs: Subscription;
-    private globalMouseMoveObs: Subscription;
-    private globalMouseUpObs: Subscription;
-    private globalKeyUpObs: Subscription;
+        this.layoutProvider.selectionChanges$.subscribe((tiles) => {
+            const event = {} as IDejaTilesEvent;
+            event.tiles = tiles;
+            this.selectionChanged.emit(event);
+        });
 
-    private dragSelection: {
-        pageOffset: Position,
-        tilesOffset: Position,
-        tilesRect: Rect,
-    };
+        this.layoutProvider.layoutChange$.subscribe((event) => {
+            this.layoutChanged.emit(event);
+        });
 
-    constructor(private el: ElementRef) {
+        this.layoutProvider.contentAdded$.subscribe((event) => {
+            this.contentAdded.emit(event);
+            this.tiles$.next(this.layoutProvider.tiles);
+        });
+
+        this.layoutProvider.contentRemoved$.subscribe((event) => this.contentRemoved.emit(event));
+
+        this.keyup$ = Observable.fromEvent(element.ownerDocument, 'keyup');
+    }
+
+    @Input()
+    public set tileminwidth(value: string) {
+        this.layoutProvider.tileminwidth = value;
+    }
+
+    @Input()
+    public set tilemaxwidth(value: string) {
+        this.layoutProvider.tilemaxwidth = value;
+    }
+
+    @Input()
+    public set tileminheight(value: string) {
+        this.layoutProvider.tileminheight = value;
+    }
+
+    @Input()
+    public set tilemaxheight(value: string) {
+        this.layoutProvider.tilemaxheight = value;
+    }
+
+    @Input()
+    public set maxwidth(value: string) {
+        this.layoutProvider.maxwidth = value;
     }
 
     @Input()
     public set designMode(value: boolean) {
-        this._designMode = coerceBooleanProperty(value);
-        this.mouseMove = this._designMode;
-        if (this._designMode) {
-            this.globalMouseMove = false;
-        } else {
-            // Ensure no resizing cursor in readonly mode
-            this.cursor = null;
+        this._designMode = value;
+        this.layoutProvider.designMode$.next(coerceBooleanProperty(value));
+    };
+
+    @Input()
+    public set models(models: IDejaTile[]) {
+        this._models = models || [];
+        this.tiles$.next(this.layoutProvider.tiles = (this._models.map((tile) => new DejaTile(tile))));
+    }
+
+    public get models() {
+        return this._models;
+    }
+
+    @Input()
+    public set canDelete(value: boolean) {
+        if (coerceBooleanProperty(value) && !this.delete$sub) {
+            this.delete$sub = this.keyup$
+                .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.Delete).filter(() => this._designMode)
+                .subscribe(() => this.layoutProvider.deleteSelection());
+
+        } else if (this.delete$sub) {
+            this.delete$sub.unsubscribe();
+            this.delete$sub = undefined;
         }
     }
 
     @Input()
-    public set tiles(value: IDejaTile[]) {
-        this._tiles = value;
-        this._selectedTiles = this._tiles ? this._tiles.filter((t) => t.selected) : [];
+    public set canCopy(value: boolean) {
+        if (coerceBooleanProperty(value) && !this.copy$sub) {
+            this.copy$sub = this.keyup$
+                .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.KeyC && event.ctrlKey)
+                .subscribe(() => {
+                    const tiles = this.layoutProvider.copySelection();
+                    if (tiles && tiles.length) {
+                        const event = new CustomEvent('DejaTilesCopied', { cancelable: true }) as IDejaTilesEvent;
+                        event.tiles = tiles.map((tile) => tile.toTileModel());
+                        this.contentCopied.emit(event);
+                    }
+                });
+
+        } else if (this.copy$sub) {
+            this.copy$sub.unsubscribe();
+            this.copy$sub = undefined;
+        }
     }
 
-    public get tiles() {
-        return this._tiles;
+    @Input()
+    public set canCut(value: boolean) {
+        if (coerceBooleanProperty(value) && !this.cut$sub) {
+            this.cut$sub = this.keyup$
+                .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.KeyX && event.ctrlKey).filter(() => this._designMode)
+                .subscribe(() => {
+                    const tiles = this.layoutProvider.cutSelection();
+                    if (tiles && tiles.length) {
+                        const event = new CustomEvent('DejaTilesCutted', { cancelable: true }) as IDejaTilesEvent;
+                        event.tiles = tiles.map((tile) => tile.toTileModel());
+                        this.contentCopied.emit(event);
+                    }
+                });
+
+        } else if (this.cut$sub) {
+            this.cut$sub.unsubscribe();
+            this.cut$sub = undefined;
+        }
     }
 
-    public get designMode() {
-        return this._designMode;
+    @Input()
+    public set canPaste(value: boolean) {
+        if (coerceBooleanProperty(value) && !this.paste$sub) {
+            this.paste$sub = this.keyup$
+                .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.KeyV && event.ctrlKey)
+                .filter(() => this._designMode).subscribe(() => this.layoutProvider.paste());
+
+        } else if (this.paste$sub) {
+            this.paste$sub.unsubscribe();
+            this.paste$sub = undefined;
+        }
     }
 
-    public get selectedTiles() {
-        return this._selectedTiles;
-    }
-
+    @Input()
     public set selectedTiles(selectedTiles: IDejaTile[]) {
-        let event = {} as DejaTileSelectionChangedEvent;
-        event.tiles = selectedTiles;
-        this.selectionChanged.emit(event);
-        this._selectedTiles = selectedTiles;
+        this.layoutProvider.selectionChanges$.next(selectedTiles);
     }
 
-    private get layoutProvider() {
-        if (!this._layoutProvider) {
-            this._layoutProvider = new DejaTilesLayoutProvider(this.maxwidth, this.maxheight, this.tileminwidth, this.tilemaxwidth, this.tileminheight, this.tilemaxheight, (width, height) => {
-                this.width = width;
-                this.height = height;
-            });
-        }
-        return this._layoutProvider;
+    public ngAfterViewInit() {
+        this.layoutProvider.container = this.tilesContainer.nativeElement;
+        Observable.fromEvent(window, 'resize').subscribe(() => { this.refresh(); });
     }
 
-    // ************* ControlValueAccessor Implementation **************
-    // get accessor
-    get value(): any {
-        return this.tiles;
+    public ngOnDestroy() {
+        this.canCopy = false;
+        this.canCut = false;
+        this.canDelete = false;
+        this.canPaste = false;
     }
 
-    // set accessor including call the onchange callback
-    set value(v: any) {
-        this.writeValue(v);
-        this.onChangeCallback(v);
+    public copySelection() {
+        return this.layoutProvider.copySelection();
     }
 
-    // From ControlValueAccessor interface
-    public writeValue(value: any) {
-        this.tiles = value;
-        if (this.tiles) {
-            this.ensureIds();
-            this.layoutProvider.refreshTiles(this.tiles, this.el.nativeElement.clientWidth);
-        } else {
-            this.tiles = [];
-        }
+    public cutSelection() {
+        return this.layoutProvider.cutSelection();
     }
 
-    // From ControlValueAccessor interface
-    public registerOnChange(fn: any) {
-        this.onChangeCallback = fn;
+    public deleteSelection() {
+        return this.layoutProvider.deleteSelection();
     }
 
-    // From ControlValueAccessor interface
-    public registerOnTouched(fn: any) {
-        this.onTouchedCallback = fn;
-    }
-    // ************* End of ControlValueAccessor Implementation **************
-
-    public removeTile(tile: IDejaTile) {
-        let index = this.tiles.indexOf(tile);
-        this.tiles.splice(index, 1);
-        this.onChangeCallback(this.tiles);
+    public paste() {
+        return this.layoutProvider.paste();
     }
 
     public ensureVisible(tile: IDejaTile) {
-        let target = this.el.nativeElement as HTMLElement;
-        let scrollElement = target;
-
-        if (tile) {
-            let left = tile.l;
-            let right = tile.r;
-            let top = tile.t;
-            let bottom = tile.b;
-
-            while (target && target.tagName !== 'BODY') {
-                left += target.offsetLeft;
-                right += target.offsetLeft;
-                top += target.offsetTop;
-                bottom += target.offsetTop;
-                target = target.offsetParent as HTMLElement;
-            }
-
-            if (left < scrollElement.scrollLeft) {
-                scrollElement.scrollLeft = left;
-            } else if (right > scrollElement.scrollLeft + scrollElement.clientWidth) {
-                scrollElement.scrollLeft = right;
-            }
-            if (top < scrollElement.scrollTop) {
-                scrollElement.scrollTop = top;
-            } else if (bottom > scrollElement.scrollTop + scrollElement.clientHeight) {
-                scrollElement.scrollTop = bottom;
-            }
-        }
+        this.layoutProvider.ensureVisible$.next(tile);
     }
 
     public expandTile(tile: IDejaTile, pixelheight: number) {
@@ -203,452 +245,85 @@ export class DejaTilesComponent implements ControlValueAccessor {
         this.layoutProvider.cancelExpand();
     }
 
-    public refresh() {
-        if (this.tiles) {
-            this.ensureIds();
-            this.layoutProvider.refreshTiles(this.tiles, this.el.nativeElement.clientWidth);
+    public refresh(params?: IDejaTilesRefreshParams) {
+        this.layoutProvider.refreshTiles$.next(params);
+    }
+
+    public addTiles(tiles: IDejaTile[]) {
+        this.layoutProvider.addTiles$.next(tiles.map((tile) => new DejaTile(tile)));
+    }
+
+    public removeTiles(tileIds: string[]) {
+        this.layoutProvider.removeTiles$.next(tileIds);
+    }
+
+    public addGroup(title?: string, bounds?: Rect) {
+        if (!this._designMode) {
+            return;
         }
+
+        const tile = {
+            type: 'group',
+            bounds: bounds || this.getFreePlace(0, 0, 15, 5),
+            templateModel: {
+                title: title || 'New Group',
+            },
+        } as IDejaTile;
+
+        this.layoutProvider.createTiles$.next([tile]);
+
+        return tile;
     }
 
     public getFreePlace(pageX?: number, pageY?: number, width?: number, height?: number) {
-        if (!this.tiles || this.tiles.length === 0) {
+        if (!this._models || this._models.length === 0) {
             return new Rect(0, 0, width, height);
         }
 
         // Check if we drag on a tile
-        let containerElement = this.tilesContainer.nativeElement as HTMLElement;
-        let containerBounds = containerElement.getBoundingClientRect();
+        const containerElement = this.tilesContainer.nativeElement as HTMLElement;
+        const containerBounds = containerElement.getBoundingClientRect();
 
         const x = pageX ? (pageX - containerBounds.left) : 0;
         const y = pageY ? (pageY - containerBounds.top) : 0;
 
-        return this.layoutProvider.getFreePlace(this.tiles, new Rect(this.layoutProvider.getPercentSize(x), this.layoutProvider.getPercentSize(y), width, height));
+        const percentBounds = new Rect(this.layoutProvider.getPercentSize(x), this.layoutProvider.getPercentSize(y), width, height);
+        return this.layoutProvider.getFreePlace(percentBounds);
     }
 
-    public startDrag(tiles: IDejaTile[], pageX: number, pageY: number, cursor?: string) {
-        let containerElement = this.tilesContainer.nativeElement as HTMLElement;
-        let containerBounds = containerElement.getBoundingClientRect();
-
-        let x = pageX - containerBounds.left;
-        let y = pageY - containerBounds.top;
-
-        this.dragInfos = {
-            cursor: cursor,
-            enabled: false,
-            startX: x,
-            startY: y,
-            tiles: tiles,
-        };
-        this.globalMouseUp = true;
-        this.selectedTiles = tiles;
+    protected getDropContext(_dropArea: HTMLElement) {
+        return {
+            dragEnter: (dragContext, dragCursor) => {
+                return this.layoutProvider.dragEnter(dragContext, dragCursor) && {
+                    html: ' ',
+                } as IDropCursorInfos;
+            },
+            dragOver: (_dragContext, dragCursor) => {
+                this.layoutProvider.dragover$.next(dragCursor);
+            },
+            dragLeave: (_dragContext, _dragCursor) => {
+                this.layoutProvider.dragleave$.next();
+            },
+        } as IDejaMouseDroppableContext;
     }
 
-    public drag(pageX: number, pageY: number) {
-        const containerElement = this.tilesContainer.nativeElement as HTMLElement;
-        const containerBounds = containerElement.getBoundingClientRect();
-
-        const x = pageX - containerBounds.left;
-        const y = pageY - containerBounds.top;
-
-        if (!this.dragInfos.enabled) {
-            if (Math.abs(this.dragInfos.startX - x) > 10 || Math.abs(this.dragInfos.startY - y) > 10) {
-                // Allow drag and drop of new tiles from outside the component
-                if (this.dragInfos.tiles.length === 1 && !this.tiles.find((t) => t === this.dragInfos.tiles[0])) {
-                    const tile = this.dragInfos.tiles[0];
-                    this.tiles.push(tile);
-                    const bounds = tile.bounds;
-                    this.dragInfos.startX = x - bounds.width / 2;
-                    this.dragInfos.startY = y - bounds.height / 2;
-                    tile.id = 'new';
-                    tile.bounds = new Rect(this.layoutProvider.getPercentSize(x) - bounds.width / 2, this.layoutProvider.getPercentSize(y) - bounds.height / 2, bounds.width, bounds.height);
-                    tile.dragging = true;
-                    this.clearSelection();
-                    tile.selected = true;
-                    this.selectedTiles = [tile];
-                }
-
-                // Start tile drag and drop
-                this.dragging = true;
-                this.dragInfos.enabled = true;
-                this.globalKeyUp = true;
-                this.layoutProvider.startDrag(this.dragInfos.tiles, this.dragInfos.cursor, x, y);
-            }
-        } else {
-            this.layoutProvider.drag(this.dragInfos.tiles, x, y);
-        }
+    protected onTileClosed(tile: DejaTile) {
+        this.layoutProvider.removeTiles$.next([tile.id]);
     }
 
-    public drop() {
-        if (this.dragInfos.enabled) {
-            this.layoutProvider.drop(this.dragInfos.tiles);
-
-            if (this.dragInfos.tiles.length === 1) {
-                const tile = this.dragInfos.tiles[0];
-                if (tile.id === 'new') {
-                    tile.id = this.getCurrentId();
-                }
-            }
-        }
-        this.endDrag();
-        this.onChangeCallback(this.tiles);
+    protected onTileModelChanged(tile: DejaTile) {
+        this.onModelChange([tile.toTileModel()]);
     }
 
-    public cancelDrag() {
-        if (this.dragInfos && this.dragInfos.enabled) {
-            if (this.dragInfos.tiles.length === 1) {
-                const tile = this.dragInfos.tiles[0];
-                if (tile.id === 'new') {
-                    const index = this.tiles.indexOf(tile);
-                    if (index >= 0) {
-                        this.tiles.splice(index, 1);
-                    }
-                }
-            }
-            this.layoutProvider.cancelDrag(this.dragInfos.tiles);
-        }
-        this.endDrag();
-    }
-
-    protected ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
-        for (let propName in changes) {
-            if (propName === 'designMode') {
-                this.clearSelection();
-            }
-        }
-    }
-
-    protected ngAfterViewInit() {
-        Observable.fromEvent(window, 'resize').subscribe(() => {
-            this.refresh();
-        });
-    }
-
-    protected onTitleEditClicked(e: Event, tile: IDejaTile) {
-        let event = e as IDejaTileEvent;
-        event.tile = tile;
-        this.tileTitleEditClick.emit(event);
-    }
-
-    protected onDragStart() {
-        // Disallow HTML drag and drop in design mode
-        return !this.designMode;
+    protected onModelChange(tiles: IDejaTile[]) {
+        const event = {} as IDejaTilesEvent;
+        event.tiles = tiles;
+        this.modelChanged.emit(event);
     }
 
     @HostListener('mousedown', ['$event'])
-    protected onMouseDown(event: MouseEvent) {
-        if (event.buttons === 1 && this.tiles) {
-            let target = event.target as HTMLElement;
-            this.pressedTile = this.getTileFromHTMLElement(target);
-            this.mouseUp = this.pressedTile !== undefined;
-            if (this.designMode) {
-                if (this.pressedTile) {
-                    if (event.ctrlKey) {
-                        // Multi-selection is available in design mode, selection on the mouse up
-                    } else {
-                        let selectedTiles = this.tiles.filter((t) => t.selected);
-                        if (!this.pressedTile.selected || this.cursor !== 'move') {
-                            this.clearSelection();
-                            this.pressedTile.selected = true;
-                            selectedTiles = [this.pressedTile];
-                        }
-
-                        this.startDrag(selectedTiles, event.pageX, event.pageY, this.cursor);
-                        return true; // Continue in case of drag and drop
-                    }
-
-                } else if (target === this.el.nativeElement || target === this.tilesContainer.nativeElement) {
-                    // Start drag selection
-                    let containerElement = this.tilesContainer.nativeElement as HTMLElement;
-                    let containerBounds = containerElement.getBoundingClientRect();
-
-                    let pageX = event.pageX - containerBounds.left;
-                    let pageY = event.pageY - containerBounds.top;
-
-                    this.dragSelection = {
-                        pageOffset: new Position(pageX, pageY),
-                        tilesOffset: new Position(pageX - event.offsetX, pageY - event.offsetY),
-                        tilesRect: new Rect(),
-                    };
-
-                    // Unselect all tiles
-                    this.clearPressedTile();
-                    this.clearSelection();
-
-                    event.preventDefault();
-                    return false;
-                }
-            } else if (this.pressedTile) {
-                this.pressedTile.pressed = true;
-                this.globalMouseMove = true;
-                return true; // Continue in case of drag and drop
-            }
-        }
+    protected onMouseDown(e: DragEvent) {
+        e.preventDefault();
+        return false;
     }
-
-    public set mouseUp(value: boolean) {
-        if (value) {
-            if (this.mouseUpObs) {
-                return;
-            }
-
-            let element = this.el.nativeElement as HTMLElement;
-            this.mouseUpObs = Observable.fromEvent(element.ownerDocument, 'mouseup').subscribe((event: MouseEvent) => {
-                if (this.pressedTile) {
-                    this.pressedTile.pressed = false;
-                    if (this.designMode) {
-                        // Multi-selection is available in design mode
-                        if (event.ctrlKey) {
-                            let selectedTiles = this.selectedTiles;
-                            if (this.pressedTile.selected) {
-                                this.pressedTile.selected = false;
-                                let index = this.selectedTiles.findIndex((t) => this.pressedTile === t);
-                                selectedTiles.splice(index, 1);
-                            } else {
-                                this.pressedTile.selected = true;
-                                selectedTiles.push(this.pressedTile);
-                            }
-                            this.selectedTiles = selectedTiles;
-                        }
-                    }
-                }
-            });
-
-        } else if (this.mouseUpObs) {
-            this.mouseUpObs.unsubscribe();
-            delete this.mouseUpObs;
-        }
-    }
-
-    public set globalMouseUp(value: boolean) {
-        if (value) {
-            if (this.globalMouseUpObs) {
-                return;
-            }
-
-            let element = this.el.nativeElement as HTMLElement;
-            this.globalMouseUpObs = Observable.fromEvent(element.ownerDocument, 'mouseup').subscribe(() => {
-                if (this.dragSelection) {
-                    this.dragSelection = undefined;
-                    return false;
-                } else if (this.dragInfos) {
-                    this.drop();
-                    return false;
-                }
-            });
-
-        } else if (this.globalMouseUpObs) {
-            this.globalMouseUpObs.unsubscribe();
-            delete this.globalMouseUpObs;
-        }
-    }
-
-    public set globalKeyUp(value: boolean) {
-        if (value) {
-            if (this.globalKeyUpObs) {
-                return;
-            }
-
-            let element = this.el.nativeElement as HTMLElement;
-            this.globalKeyUpObs = Observable.fromEvent(element.ownerDocument, 'keyup').subscribe((event: KeyboardEvent) => {
-                if (event.keyCode === 27) {
-                    this.cancelDrag();
-                }
-            });
-
-        } else if (this.globalKeyUpObs) {
-            this.globalKeyUpObs.unsubscribe();
-            delete this.globalKeyUpObs;
-        }
-    }
-
-    public set globalMouseMove(value: boolean) {
-        if (value) {
-            if (this.globalMouseMoveObs) {
-                return;
-            }
-
-            let element = this.tilesContainer.nativeElement as HTMLElement;
-            this.globalMouseMoveObs = Observable.fromEvent(element.ownerDocument, 'mousemove').subscribe((event: MouseEvent) => {
-                let currentTile = this.getTileFromHTMLElement(event.target as HTMLElement);
-                if (this.pressedTile && this.pressedTile.pressed && event.buttons === 1 && this.pressedTile === currentTile) {
-                    return;
-                }
-                this.clearPressedTile();
-            });
-
-        } else if (this.globalMouseMoveObs) {
-            this.globalMouseMoveObs.unsubscribe();
-            delete this.globalMouseMoveObs;
-        }
-    }
-
-    public set mouseMove(value: boolean) {
-        if (value) {
-            if (this.mouseMoveObs) {
-                return;
-            }
-
-            let containerElement = this.tilesContainer.nativeElement as HTMLElement;
-            this.mouseMoveObs = Observable.fromEvent(containerElement, 'mousemove').subscribe((event: MouseEvent) => {
-                if (this.dragSelection) {
-                    if (event.buttons !== 1) {
-                        this.dragSelection = undefined;
-                        return;
-                    }
-
-                    // Unselect all tiles
-                    this.clearSelection();
-
-                    let containerBounds = containerElement.getBoundingClientRect();
-
-                    let pageX = event.pageX - containerBounds.left;
-                    let pageY = event.pageY - containerBounds.top;
-
-                    // And select all tiles between start position and current position
-                    let pageRect = Rect.fromPoints(this.dragSelection.pageOffset, new Position(pageX, pageY));
-                    this.dragSelection.tilesRect = pageRect.offset(-this.dragSelection.tilesOffset.left, -this.dragSelection.tilesOffset.top);
-
-                    let selectedTiles = [];
-                    this.layoutProvider.HitTest(this.tiles, this.dragSelection.tilesRect).forEach((t) => {
-                        t.selected = true;
-                        selectedTiles.push(t);
-                    });
-
-                    this.selectedTiles = selectedTiles;
-
-                } else if (this.dragInfos) {
-                    if (event.buttons === 1) {
-                        this.drag(event.pageX, event.pageY);
-                    } else if (this.dragInfos.enabled) {
-                        this.cancelDrag();
-                    }
-
-                } else if (event.buttons !== 1) {
-                    let tileElement = this.getTileElementFromHTMLElement(event.target as HTMLElement);
-                    if (tileElement) {
-                        this.cursor = this.getCursor(event, tileElement);
-                    } else {
-                        this.cursor = null;
-                    }
-                }
-            });
-        } else if (this.mouseMoveObs) {
-            this.mouseMoveObs.unsubscribe();
-            delete this.mouseMoveObs;
-        }
-    }
-
-    private clearPressedTile() {
-        if (this.pressedTile) {
-            this.pressedTile.pressed = false;
-            delete this.pressedTile;
-        }
-        this.globalMouseMove = false;
-        this.mouseUp = false;
-    }
-
-    private clearSelection() {
-        this.tiles && this.tiles.filter((t) => t.selected).forEach((t) => t.selected = false);
-        this.selectedTiles = [];
-    }
-
-    private getTileElementFromHTMLElement(element: HTMLElement) {
-        let parentElement = element;
-
-        while (parentElement && !parentElement.hasAttribute('tile-index')) {
-            element = parentElement;
-            parentElement = parentElement.parentElement;
-            if (parentElement === this.tilesContainer.nativeElement) {
-                return undefined;
-            }
-        }
-
-        return parentElement;
-    }
-
-    private getTileFromHTMLElement(element: HTMLElement): IDejaTile {
-        let tileElement = this.getTileElementFromHTMLElement(element);
-
-        if (!tileElement) {
-            return undefined;
-        }
-
-        let index = +tileElement.getAttribute('tile-index');
-        return this.tiles[index];
-    }
-
-    private ensureIds() {
-        this.tiles.forEach((t) => {
-            if (!t.id) {
-                t.id = this.getCurrentId();
-            }
-        });
-    }
-
-    private getCurrentId(): string {
-        let id = 0;
-        let sid = '#' + id;
-        let ids = {};
-        this.tiles.map((t) => ids[t.id] = t.id);
-        while (ids[sid]) {
-            sid = '#' + (++id);
-        }
-
-        return sid;
-    }
-
-    private getCursor(event: MouseEvent, tileElement: HTMLElement) {
-        let x = event.x;
-        let y = event.y;
-        let bounds = tileElement.getBoundingClientRect();
-
-        if (x < bounds.left + 10) {
-            if (y < bounds.top + 10) {
-                return 'nw-resize';
-            } else if (y > bounds.bottom - 10) {
-                return 'sw-resize';
-            } else {
-                return 'w-resize';
-            }
-        } else if (x > bounds.right - 10) {
-            if (y < bounds.top + 10) {
-                return 'ne-resize';
-            } else if (y > bounds.bottom - 10) {
-                return 'se-resize';
-            } else {
-                return 'e-resize';
-            }
-        } else {
-            if (y < bounds.top + 10) {
-                return 'n-resize';
-            } else if (y > bounds.bottom - 10) {
-                return 's-resize';
-            } else {
-                return 'move';
-            }
-        }
-    }
-
-    private endDrag() {
-        // console.log('EndDrag');
-        if (this.dragInfos) {
-            if (this.dragInfos.enabled) {
-                this.dragInfos.enabled = false;
-                setTimeout(() => {
-                    this.dragging = this.dragInfos && this.dragInfos.enabled;
-                }, 500);
-            }
-            this.globalKeyUp = false;
-            this.globalMouseUp = false;
-            delete this.dragInfos;
-        }
-    }
-}
-
-interface IDejaTileDragDropInfos {
-    enabled: boolean;
-    startX: number;
-    startY: number;
-    tiles: IDejaTile[];
-    cursor: string;
 }
