@@ -1,7 +1,5 @@
 :host {
-	&[disabled],
-	&[disabled="true"],
-	&[ng-reflect-disabled="true"]{
+	&[disabled] {
 		-webkit-filter: grayscale(100%);
 		/* Chrome, Safari, Opera */
 		filter: grayscale(100%);

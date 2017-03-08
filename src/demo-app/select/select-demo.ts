@@ -23,6 +23,7 @@ import { CountriesService, ICountry } from '../services/countries.service';
 })
 export class SelectDemoComponent extends OnInit {
     protected country: ICountry;
+    protected tabIndex = 1;
     private countries: Observable<ICountry[]>;
     private countriesForTemplate: ICountry[];
     private countriesForMultiselect: ICountry[];

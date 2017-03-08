@@ -9,6 +9,7 @@
  *
  */
 
+export * from './events/index';
 export * from './graphics/index';
 export * from './sorting/index';
 export * from './graphics/index';

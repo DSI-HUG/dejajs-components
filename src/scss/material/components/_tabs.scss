@@ -1,10 +1,7 @@
 md-tab-group {
 	&[multi-lines] {
-		.mat-tab-header {
-			display: block;
-			.mat-tab-label {
-				display: inline-block;
-			}
+		.mat-tab-labels {
+            flex-wrap: wrap;
 		}
 	}
 	.mat-tab-header {

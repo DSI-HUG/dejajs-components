@@ -60,8 +60,6 @@ export class ItemListService {
     // champs à utiliser comme valeur de comparaison
     private _valueField: string;
 
-    private isBusinessObject: boolean;
-
     /** Définit le champs utilisé comme collection pour les enfants d'un parent.
      * @param {string} value Nom du champ à utiliser comme collection d'enfants
      */
@@ -149,7 +147,6 @@ export class ItemListService {
     }
 
     public setModels(items: any[] | Promise<any[]> | Observable<any[]>) {
-        this.isBusinessObject = true;
         return this.setItems(items);
     }
 
@@ -544,7 +541,7 @@ export class ItemListService {
             this.unselectAll().then(() => {
                 const selecting = [] as IItemBase[];
 
-                if (this._cache.visibleList.length > 0) {
+                if (this._cache.visibleList && this._cache.visibleList.length > 0) {
                     for (let i = Math.min(indexFrom, indexTo); i <= Math.max(indexFrom, indexTo); i++) {
                         const itm = this._cache.visibleList[i];
                         if (itm.selectable !== false) {

@@ -115,7 +115,7 @@ export class GroupingService {
                     parent[childrenField].push(item);
                 });
 
-                const groupedChildren = (<any>Object).values(groups) as any[];
+                const groupedChildren = Object.keys(groups).map((key) => groups[key]) as any[];
 
                 if (groupInfo.sortInfos) {
                     const sortingService = new SortingService();

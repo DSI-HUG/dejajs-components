@@ -138,4 +138,13 @@ export class Rect {
             right: this.right,
         } as ClientRect;
     }
+
+    public toRectStruct() {
+        return {
+            left: this.left,
+            top: this.top,
+            width: this.width,
+            height: this.height,
+        } as ClientRect;
+    }
 }

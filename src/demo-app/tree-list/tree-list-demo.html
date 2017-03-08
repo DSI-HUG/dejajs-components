@@ -16,7 +16,7 @@
 			<md-toolbar color="secondary">By passing business object</md-toolbar>
 			<md-card-content>
 				<div class="display-flex">
-					<deja-tree-list multiSelect class="flex" [maxHeight]="400" #treeList min-search-length="0" searchArea sortable multiSelect (selectedChange)="onSelectBusinessObject($event)" nodataholder="Pas de données" placeholder="Liste des pays" [models]="countries"></deja-tree-list>
+					<deja-tree-list class="flex" [maxHeight]="400" min-search-length="0" searchArea sortable multiSelect (selectedChange)="onSelectBusinessObject($event)" nodataholder="Pas de données" placeholder="Liste des pays" [models]="countries"></deja-tree-list>
 
 					<div class="flex json-view">
 						<h4>Selected country model :</h4>
@@ -29,8 +29,7 @@
 		<md-card class="treelist-demo demo-card demo-basic">
 			<md-toolbar color="secondary">Treelist demo - Cas standards</md-toolbar>
 			<md-card-content class="listContainer">
-				<deja-tree-list #treeList min-search-length="0" searchArea sortable multiSelect [selectedItems]=selectedItems (selectedChange)="onSelectionChanged($event)" nodataholder="Pas de données" placeholder="Liste des pays" [(ngModel)]="countries" (itemDragStart)="onItemDragStart($event)">
-				</deja-tree-list>
+				<deja-tree-list #treeList min-search-length="0" searchArea sortable multiSelect [selectedItems]=selectedItems (selectedChange)="onSelectionChanged($event)" nodataholder="Pas de données" placeholder="Liste des pays" [(ngModel)]="countries" (itemDragStart)="onItemDragStart($event)"></deja-tree-list>
 				<deja-tree-list min-search-length="0" expandButton searchArea sortable multiSelect [selectedItems]=selectedItems (selectedChange)="onSelectionChanged($event)" nodataholder="Pas de données" placeholder="Liste des pays, groupés par la première lettre" textField="naqme" [(ngModel)]="groupedCountries" (itemDragStart)="onItemDragStart($event)" #groupedtreelist childrenField="children">
 					<template #headerTemplate>
 				<span id="headerTemplateContent" (click)="groupedtreelist.sort()">
