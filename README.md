@@ -36,7 +36,7 @@ and navigate to `http://localhost:5100`.
 | Feature            | Working OnPush| Chrome 56 | Edge | IE11 | FF51 | Opera Neon | Readme and Demo | Note           |
 |--------------------|---------------|-----------|------|------|------|------------|-----------------|----------------|
 | Accordion          |            yes|        yes|   yes|   yes|   yes|         yes|        available|                |
-| Auto-Size TextArea |            yes|        yes|   yes|   yes|   yes|         yes|<span style="color:#F00">@todo</span>| |
+| Auto-Size TextArea |            yes|        yes|   yes|   yes|   yes|         yes|```diff -@todo```| |
 | Circular Picker  |<span style="color:red">no</span>|yes|yes|yes|yes|yes|available| |
 | Color Selector   |yes|yes|yes|yes|yes|yes|available| |
 | Color Picker     |yes|yes|yes|yes|yes|yes|available| |
