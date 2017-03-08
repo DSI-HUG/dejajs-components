@@ -20,8 +20,7 @@ export class Color {
     }
 
     /**
-     *
-     * @param colorValueHex exemple: #127bdc #FFF #
+     * @param colorValueHex exemple: #127bdc #FFF #127bdc56
      * @returns {Color}
      */
     public static fromHex(colorValueHex: string) {
