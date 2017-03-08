@@ -36,11 +36,11 @@ and navigate to `http://localhost:5100`.
 | Feature            | Working OnPush| Chrome 56 | Edge | IE11 | FF51 | Opera Neon | Readme and Demo | Note           |
 |--------------------|---------------|-----------|------|------|------|------------|-----------------|----------------|
 | Accordion          |            yes|        yes|   yes|   yes|   yes|         yes|        available|                |
-| Auto-Size TextArea |            yes|        yes|   yes|   yes|   yes|         yes|<span style="color:red">@todo</span>| |
+| Auto-Size TextArea |            yes|        yes|   yes|   yes|   yes|         yes|<span style="color:#F00">@todo</span>| |
 | Circular Picker  |<span style="color:red">no</span>|yes|yes|yes|yes|yes|available| |
 | Color Selector   |yes|yes|yes|yes|yes|yes|available| |
 | Color Picker     |yes|yes|yes|yes|yes|yes|available| |
-| Content Editable |yes|yes|yes|yes|yes|yes|available|New line issue on IE11. IE11 add p indtead br |
+| Content Editable |yes|yes|yes|yes|yes|yes|available|New line issue on IE11. IE11 add p instead br |
 | Date Selector    |yes|yes|<span style="color:red">slow</span>|<span style="color:red">slow</span>|yes|yes|available| |
 | Date Picker      |<span style="color:red">no</span>|yes|<span style="color:red">no</span>|<span style="color:red">no</span>|<span style="color:red">no</span>|yes|available| |
 | Dialog           |yes|yes|yes|yes|yes|yes|Message Box| |
