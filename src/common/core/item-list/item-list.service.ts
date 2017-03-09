@@ -1226,7 +1226,12 @@ export class ItemListService {
 
     private compareItems = (item1: IItemBase, item2: IItemBase) => {
         if (this._valueField) {
-            return item1[this._valueField] === item2[this._valueField];
+            // Si dans on est dans le cas d'un model on compare le value field du model, sinon le valueField de l'item
+            if (item1.model && item2.model) {
+                return item1.model[this._valueField] === item2.model[this._valueField];
+            } else {
+                return item1[this._valueField] === item2[this._valueField];
+            }
         } else if (item1.equals) {
             return item1.equals(item2);
         } else if (item2.equals) {
