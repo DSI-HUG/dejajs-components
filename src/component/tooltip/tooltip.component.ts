@@ -18,6 +18,9 @@ import {DejaTooltipService} from './tooltip.service';
 @Component({
     selector: 'deja-tooltip',
     templateUrl: 'tooltip.component.html',
+    styleUrls: [
+        './tooltip.component.scss',
+    ],
 })
 export class DejaTooltipComponent implements OnInit {
     @ViewChild('dropdown') public dropdown: DejaDropDownComponent;

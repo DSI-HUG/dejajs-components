@@ -12,18 +12,25 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DejaEditableModule } from '../content-editable';
-import { DejaDragDropModule } from '../dragdrop';
-import { DejaTileGroupComponent, DejaTilesComponent } from "./";
+import { MdProgressSpinnerModule } from '@angular/material';
+import { DejaEditableModule } from '../content-editable/index';
+import { DejaMouseDragDropModule, DejaMouseDragDropService } from '../mouse-dragdrop/index';
+import { DejaTileComponent, DejaTileGroupComponent, DejaTilesComponent, DejaTilePositionDirective } from './index';
+import { CloningService } from '../../common/core/cloning/index';
 
 @NgModule({
-    declarations: [DejaTilesComponent, DejaTileGroupComponent],
-    exports: [DejaTilesComponent, DejaTileGroupComponent],
+    declarations: [DejaTileComponent, DejaTilesComponent, DejaTileGroupComponent, DejaTilePositionDirective],
+    exports: [DejaTileComponent, DejaTilesComponent, DejaTileGroupComponent],
     imports: [
         CommonModule,
         FormsModule,
-        DejaDragDropModule,
+        MdProgressSpinnerModule,
+        DejaMouseDragDropModule,
         DejaEditableModule,
     ],
+    providers: [
+        CloningService,
+        DejaMouseDragDropService,
+    ]
 })
 export class DejaTilesModule { }

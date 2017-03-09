@@ -9,7 +9,7 @@
  *
  */
 
-import { Component, ElementRef, EventEmitter, forwardRef, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, forwardRef, HostBinding, Input, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {coerceBooleanProperty} from '@angular/material/core/coercion/boolean-property';
 import { Color } from '../../common/core/graphics/index';
@@ -53,7 +53,7 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
     protected onChangeCallback: (_: any) => void = noop;
 
     private _small = false;
-    private _disabled = false;
+    @HostBinding('attr.disabled') private _disabled = null;
     private _value: Color;
 
     get containerElement() {
@@ -76,7 +76,7 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
     /** Retourne ou definit si le selecteur est desactivé. */
     @Input()
     public set disabled(value: boolean) {
-        this._disabled = coerceBooleanProperty(value);
+        this._disabled = coerceBooleanProperty(value) || null;
     }
 
     public get disabled() {

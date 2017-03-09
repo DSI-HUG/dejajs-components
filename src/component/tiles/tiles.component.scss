@@ -1,53 +1,27 @@
-/*styles for deja-tiles component*/
-
-.tiles {
-	list-style: none;
-	display: block;
-	position: relative;
-	padding: 0 !important;
-	margin: 0 !important;
-	transition-property: height;
-	transition-duration: 0.5s;
-	transition-timing-function: ease;
-	#tile-wrapper {
-		transition-property: left, top;
-		transition-duration: .5s;
-		transition-timing-function: ease;
-		&.expanded {
-			transition-property: height;
-		}
-		&.cutted {
-			opacity: 0.5;
-		}
-	}
-	#tile-wrapper,
-	.target,
-	.dragSelection {
-		display: block;
-		position: absolute;
-	}
-	.dragSelection {
-		z-index: 11;
-		background-color: rgba(0, 0, 0, 0.25);
-	}
-	.target {
-		z-index: 11;
-		background-color: rgba(0, 0, 0, 0.15);
-		transition-property: left, top, width, height;
-		transition-duration: .35s;
-		transition-timing-function: ease;
-	}
-}
-
-.tiles.drag {
-	background-color: rgba(0, 0, 0, 0.15);
-	#tile-wrapper.drag,
-	#tile-wrapper.drop {
-		opacity: 0.9;
-		z-index: 100;
-	}
-	#tile-wrapper.drag {
-		user-select: none;
-		transition: none;
-	}
+:host {
+    #tiles {
+        list-style: none;
+        display: block;
+        width: 100%;
+        height: 100%;
+        position: relative;
+        padding: 0 !important;
+        margin: 0 !important;
+        transition-property: height;
+        transition-duration: 0.5s;
+        transition-timing-function: ease;
+    }
+    [deja-tile-position] {
+        position: absolute;
+        z-index: 11;
+        background-color: rgba(0, 0, 0, 0.25);
+    }
+    &[drag] {
+        background-color: rgba(0, 0, 0, 0.15);
+        [deja-tile-position] {
+            transition-property: left, top, width, height;
+            transition-duration: .35s;
+            transition-timing-function: ease;
+        }
+    }
 }

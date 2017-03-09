@@ -1,17 +1,17 @@
-<md-tab-group [selectedIndex]="1">
+<md-tab-group [selectedIndex]="tabIndex" (selectChange)="tabIndex = $event.index">
 	<!--<md-tab label="OVERVIEW">-->
 	<!--<md-card class="demo-card demo-basic">-->
 	<!--TODO-->
 	<!--</md-card>-->
 	<!--</md-tab>-->
-	<md-tab label="API REFERENCE">
-		<md-card class="demo-card demo-basic">
-			TODO
-		</md-card>
-	</md-tab>
-	<md-tab label="EXAMPLES">
+    <md-tab label="API REFERENCE"></md-tab>
+    <md-tab label="EXAMPLES"></md-tab>
+</md-tab-group>
 
-
+<md-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
+    TODO
+</md-card>
+<div *ngIf="tabIndex === 1">
 		<md-card class="deja-select-demo demo-card demo-basic">
 			<md-toolbar color="secondary">By passing business object</md-toolbar>
 			<md-card-content>
@@ -98,6 +98,4 @@
 				</deja-select>
 			</md-card-content>
 		</md-card>
-
-	</md-tab>
-</md-tab-group>
+</div>

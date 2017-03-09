@@ -549,8 +549,8 @@ export class ItemListBase {
             models$ = models as Observable<any[]>;
         }
 
-        const items$ = models$ && models$.map((mods) => this.convertToIItemBase(mods));
-        return this.setItems(items$);
+        const items$ = models$ && models$.map((model) => this.convertToIItemBase(model));
+        return this.setItems(items$.first());
     }
 
     // Ne pas utiliser, cette fonction retourne la liste des éléments pour l'implémentation de ngModel.
@@ -769,7 +769,7 @@ export class ItemListBase {
                     }).catch(rejected);
                 } else {
                     const loadViewList = () => {
-                        const scrollPos = containerHeight ? containerElem.scrollTop : 0;
+                        const scrollPos = (containerHeight && containerElem && containerElem.scrollTop) || 0;
                         const vpRowHeight = this.getViewPortRowHeight();
                         let maxCount = Math.ceil(containerHeight / vpRowHeight);
                         const startRow = Math.floor(scrollPos / vpRowHeight);
@@ -860,7 +860,7 @@ export class ItemListBase {
     }
 
     protected convertToIItemBase(modls: any[], selected?: boolean): IItemBase[] {
-        if (!this.isBusinessObject) {
+        if (!this._isBusinessObject) {
             return modls as IItemBase[];
         }
         
