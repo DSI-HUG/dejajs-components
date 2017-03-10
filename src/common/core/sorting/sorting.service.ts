@@ -97,16 +97,30 @@ export class SortingService {
      * @param {ISortInfos} sortInfos Modèle de tri à appliquer.
      * @return {Promise} Promesse résolue par la fonction.
      */
-    public sort(list: any[], sortInfo: ISortInfos) {
-        return new Promise<any[]>((resolved?: (value: any[]) => void) => {
-            const compareFn = (a: any, b: any) => {
-                return this.compare(a, b, sortInfo);
-            };
+    public sort(list: any[], sortInfo: ISortInfos | ISortInfos[]) {
+        const sort = (sortInfos: ISortInfos[]) => {
+            return new Promise<any[]>((resolved?: (value: any[]) => void) => {
+                const compareFn = (a: any, b: any) => {
+                    let i = -1;
+                    let result = 0;
+                    while (++i < sortInfos.length && result === 0) {
+                        result = this.compare(a, b, sortInfos[i]);
+                    }
+                    return result;
+                };
 
-            list.sort(compareFn);
-            resolved(list);
-        });
+                list.sort(compareFn);
+                resolved(list);
+            });
+        };
+
+        if (sortInfo instanceof Array) {
+            return sort(sortInfo as ISortInfos[]);
+        } else {
+            return sort([sortInfo as ISortInfos]);
+        }
     }
+
 
     /** Trie les éléments de la liste hierarchique spécifiée en fonction du modèle de tri spécifié
      * @param {any[]} tree Liste à trier.
@@ -114,7 +128,7 @@ export class SortingService {
      * @param {string} childrenField Champ à utiliser pour la recherche dans les enfants d'un parent.
      * @return {Promise} Promesse résolue par la fonction.
      */
-    public sortTree(tree: any[], sortInfo: ISortInfos, childrenField?: string) {
+    public sortTree(tree: any[], sortInfo: ISortInfos | ISortInfos[], childrenField?: string) {
         if (!childrenField) {
             childrenField = 'items';
         }
