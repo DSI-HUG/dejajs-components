@@ -16,9 +16,9 @@ export class DejaCodeViewerComponent implements AfterViewChecked {
     }
 
     public ngAfterViewChecked() {
-        console.log('ok');
+        // console.log('ok');
         if (!this.initialised) {
-            console.warn('not initialised');
+            // console.warn('not initialised');
             Prism.highlightAll(false, () => {
                 this.initialised = true;
             });

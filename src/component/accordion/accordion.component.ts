@@ -10,7 +10,7 @@
  */
 
 import { CommonModule } from '@angular/common';
-import { Component, HostBinding, NgModule, ViewEncapsulation } from '@angular/core';
+import { Component, HostBinding, HostListener, Input, NgModule, ViewEncapsulation } from '@angular/core';
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -29,30 +29,39 @@ export class DejaAccordionComponent {
 
 @Component({
     selector: 'deja-accordion-group',
-    template: '<div class="accordion-group" [class.open]="isOpen" (click)="toggleOpen($event)"><ng-content></ng-content></div>',
+    template: '<ng-content></ng-content>',
 })
 export class DejaAccordionGroupComponent {
-    private isOpen = false;
+    @HostBinding('class.open') @Input() public isOpen: boolean;
+    @HostBinding('class.accordion-group') true;
 
     constructor(private accordion: DejaAccordionComponent) {
         this.accordion.addGroup(this);
     }
 
+    @HostListener('click', ['$event'])
     public toggleOpen(event: MouseEvent): void {
         event.preventDefault();
-        this.isOpen = !this.isOpen;
+
+        let target = event.target as HTMLElement; 
+        const element = event.currentTarget as HTMLElement;
+        
+        while(target.parentElement && target !== element) {
+            if(target.tagName !== 'deja-accordion-header') {
+                this.isOpen = !this.isOpen;
+            } 
+            target = target.parentElement;
+        }
     }
 }
 
 @Component({
     selector: 'deja-accordion-header',
-    template: `
-        <div class="accordion-header">
-            <ng-content></ng-content>
-        </div>
-    `,
+    template: `<ng-content></ng-content>`,
 })
-export class DejaAccordionHeaderComponent { }
+export class DejaAccordionHeaderComponent { 
+    @HostBinding('class.accordion-header') true;
+}
 
 @Component({
     selector: 'deja-accordion-body',
