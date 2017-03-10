@@ -68,21 +68,16 @@ export class DejaMouseDragDropCursorComponent {
                 this.iconElement.style.opacity = '0';
                 this._currentCursor = dragCursor;
             })
+            .filter((dragCursor) => !!dragCursor.html)
             .do((dragCursor) => {
-                if (!!dragCursor.html) {
-                    this.contentElement.innerHTML = dragCursor.html;
-                    element.className = dragCursor.className;
-                    this.contentElement.style.width = `${dragCursor.width || 48}px`;
-                    this.contentElement.style.height = `${dragCursor.height || 48}px`;
-                } else {
-                    this.iconElement.style.opacity = '1';
-                }
+                this.contentElement.innerHTML = dragCursor.html;
+                element.className = dragCursor.className;
+                this.contentElement.style.width = `${dragCursor.width || 48}px`;
+                this.contentElement.style.height = `${dragCursor.height || 48}px`;
             })
             .delay(1)
-            .subscribe((dragCursor) => {
-                if (!!dragCursor.html) {
-                    this.contentElement.style.opacity = '1';
-                }
+            .subscribe(() => {
+                this.contentElement.style.opacity = '1';
             });
 
         Observable.from(this.dragDropService.dragCursor$)

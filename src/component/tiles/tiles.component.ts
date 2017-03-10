@@ -281,7 +281,7 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
         return {
             dragEnter: (dragContext, dragCursor) => {
                 return this.layoutProvider.dragEnter(dragContext, dragCursor) && {
-                    html: ' ',
+                    html: '',
                 } as IDropCursorInfos;
             },
             dragOver: (_dragContext, dragCursor) => {
