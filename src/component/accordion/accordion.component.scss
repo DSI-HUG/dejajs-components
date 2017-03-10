@@ -7,7 +7,7 @@
         background-color:$secondary;
         color:#FFF;
         &:hover {
-          background-color:rgba($secondary, 0.8);
+          background-color: darken($secondary, 5%);
         }
       }
     }
@@ -17,7 +17,7 @@
     deja-accordion-header {
       &[secondary] {
         &.accordion-header {
-          background-color:rgba($secondary, 0.8);
+          background-color: darken($secondary, 5%);
         }
       }
     }

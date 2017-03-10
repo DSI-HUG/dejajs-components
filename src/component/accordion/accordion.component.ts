@@ -10,7 +10,7 @@
  */
 
 import { CommonModule } from '@angular/common';
-import { Component, HostBinding, HostListener, NgModule, ViewEncapsulation } from '@angular/core';
+import { Component, HostBinding, HostListener, Input, NgModule, ViewEncapsulation } from '@angular/core';
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -32,7 +32,7 @@ export class DejaAccordionComponent {
     template: '<ng-content></ng-content>',
 })
 export class DejaAccordionGroupComponent {
-    @HostBinding('class.open') protected isOpen: boolean;
+    @HostBinding('class.open') @Input() public isOpen: boolean;
     @HostBinding('class.accordion-group') true;
 
     constructor(private accordion: DejaAccordionComponent) {
