@@ -42,7 +42,16 @@ export class DejaAccordionGroupComponent {
     @HostListener('click', ['$event'])
     public toggleOpen(event: MouseEvent): void {
         event.preventDefault();
-        this.isOpen = !this.isOpen;
+
+        let target = event.target as HTMLElement; 
+        const element = event.currentTarget as HTMLElement;
+        
+        while(target.parentElement && target !== element) {
+            if(target.tagName !== 'deja-accordion-header') {
+                this.isOpen = !this.isOpen;
+            } 
+            target = target.parentElement;
+        }
     }
 }
 
