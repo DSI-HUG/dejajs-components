@@ -12,5 +12,5 @@
 import { Subject } from 'rxjs/Rx';
 
 export class DejaCancelableEvent extends CustomEvent {
-    public cancel$ = new Subject<boolean>();
+    public cancel$ = new Subject<any>();
 }

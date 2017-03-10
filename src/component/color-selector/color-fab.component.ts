@@ -35,24 +35,19 @@ export class DejaColorFabComponent {
         this._colorFab = colorFab;
 
         if (colorFab) {
-            this.subscriptions.push(Observable.from(colorFab.active$)
-                .subscribe((value) => {
+            const toogleAttribute = (attribute: string, value: string | boolean) => {
                     if (value) {
-                        this.element.setAttribute('active', '');
+                    this.element.setAttribute(attribute, value.toString());
                     } else {
-                        this.element.removeAttribute('active');
+                    this.element.removeAttribute(attribute);
                     }
-                }));
+            };
+
+            this.subscriptions.push(Observable.from(colorFab.active$).subscribe((value) => toogleAttribute('active', value)));
 
             this.subscriptions.push(Observable.combineLatest(colorFab.color$, colorFab.disabled$)
                 .map(([color, disabled]) => color && disabled ? color.grayScale : color)
-                .subscribe((color) => {
-                    if (color) {
-                        this.element.style.backgroundColor = color.toHex();
-                    } else {
-                        this.element.style.backgroundColor = '';
-                    }
-                }));
+                .subscribe((color) => this.element.style.backgroundColor = color ? color.toHex() : ''));
 
         } else {
             this.subscriptions.forEach((subscription) => subscription.unsubscribe());

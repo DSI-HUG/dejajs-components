@@ -64,7 +64,9 @@ export class Color {
     }
 
     public static parse(color: string) {
-        if (color[0] === '#') {
+        if (!color || color.length === 0) {
+            return new Color();
+        } else if (color[0] === '#') {
             return Color.fromHex(color);
         } else {
             const rgb = /rgb\((\d{1,3}), (\d{1,3}), (\d{1,3})\)/.exec(color);

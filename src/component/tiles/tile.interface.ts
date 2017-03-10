@@ -15,6 +15,7 @@ export interface IDejaTileEffect {
     selected: boolean;
     cutted: boolean;
     pending: boolean;
+    fading: boolean;
 }
 
 export interface IDejaTile {

@@ -24,14 +24,12 @@ deja-select {
 	}
 	#input {
 		width: 100%;
-
 		// add a few pixels to avoid that the icon touch the line
 		.mat-input-wrapper {
 			.mat-input-underline {
 				margin-top: 8px;
 			}
 		}
-
 		.mat-input-suffix {
 			width: 2rem;
 			#clear-button {
@@ -142,7 +140,8 @@ deja-select {
 	#select-dropdown {
 		border: solid 1px rgba(0, 0, 0, 0.38);
 		text-align: left;
-		background-color: #fff;
+        background-color: $background;
+        color: $foreground;
 		color: initial;
 		overflow: auto;
 		&[valign="bottom"] {
@@ -198,7 +197,6 @@ deja-select {
 			right: -8%;
 		}
 	}
-
 	// styling the icon and text in template placeholder. Avoid to repeat in sub-components
 	$deep: '/deep/';
 	#{$deep} {

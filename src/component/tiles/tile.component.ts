@@ -50,14 +50,24 @@ export class DejaTileComponent implements OnDestroy {
                 }
             };
 
+            if (tile.fading) {
+                this.element.setAttribute('fading', '0');
+            }
+
             this.subscriptions.push(Observable.from(tile.pixelBounds$)
                 .first()
-                .delay(1)
-                .filter(() => !this._tile.isHidden)
-                .subscribe(() => this.element.removeAttribute('hidden')));
+                .filter(() => tile.fading)
+                .do(() => this.element.setAttribute('fading', '1'))
+                .delay(200)
+                .subscribe(() => {
+                    this.element.removeAttribute('fading');
+                }));
 
             this.subscriptions.push(Observable.from(tile.pixelBounds$)
                 .subscribe((bounds) => {
+                    if (!tile.isHidden) {
+                        this.element.removeAttribute('hidden');
+                    }
                     this.element.style.left = `${bounds.left}px`;
                     this.element.style.top = `${bounds.top}px`;
                     this.element.style.width = `${bounds.width}px`;
@@ -73,7 +83,10 @@ export class DejaTileComponent implements OnDestroy {
 
             this.subscriptions.push(Observable.from(tile.deleted$).subscribe(() => this.element.remove()));
 
-            const tooogleHide$ = Observable.from(tile.hidden$).do((value) => toogleAttribute('hidden', value ? '1' : '2'));
+            const tooogleHide$ = Observable.from(tile.hidden$)
+                .do((value) => {
+                    toogleAttribute('hidden', value ? '1' : '2');
+                });
 
             // Hide
             this.subscriptions.push(tooogleHide$

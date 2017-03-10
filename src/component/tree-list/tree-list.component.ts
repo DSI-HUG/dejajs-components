@@ -9,11 +9,10 @@
  *
  */
 
-import { Component, ContentChild, ElementRef, EventEmitter, forwardRef, Input, Output, QueryList, ViewChild, ViewChildren, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, forwardRef, Input, Output, QueryList, ViewChild, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
-import { Observable, Subscription } from 'rxjs/Rx';
-import { clearTimeout, setTimeout } from 'timers';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
 import { Position, Rect } from '../../common/core/graphics';
 import { GroupingService } from '../../common/core/grouping';
 import { IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, ViewportMode } from '../../common/core/item-list';
@@ -32,6 +31,7 @@ const TreeListComponentValueAccessor = {
 
 /** Composant de liste évoluée avec gestion de viewport et templating */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     providers: [TreeListComponentValueAccessor],
     selector: 'deja-tree-list',
@@ -101,8 +101,6 @@ export class DejaTreeListComponent extends ItemListBase {
     private keyboardNavigationPos: Position;
     private ignoreNextScrollEvents = false;
     private filterExpression = '';
-    private clearFilterTimer: NodeJS.Timer;
-    private completeTimer: NodeJS.Timer;
     private lastScrollTop = 0;
     private _searchArea = false;
     private _expandButton = false;
@@ -115,8 +113,22 @@ export class DejaTreeListComponent extends ItemListBase {
     private mouseMoveObs: Subscription;
     private mouseUpObs: Subscription;
 
-    constructor(public elementRef: ElementRef) {
+    private clearFilterExpression$ = new BehaviorSubject<void>(null);
+    private filterListComplete$ = new Subject();
+
+    constructor(private changeDetectorRef: ChangeDetectorRef, public elementRef: ElementRef) {
         super();
+
+        Observable.from(this.clearFilterExpression$)
+            .debounceTime(750)
+            .subscribe(() => this.filterExpression = '');
+
+        Observable.from(this.filterListComplete$)
+            .debounceTime(250)
+            .subscribe(() => {
+                this.setCurrentItem(undefined);
+                this.calcViewPort();
+            });
     }
 
     /** Affiche un barre de recherche au dessus de la liste. */
@@ -395,6 +407,7 @@ export class DejaTreeListComponent extends ItemListBase {
             } else if (!!items || (this._itemList && this._itemList.length)) {
                 this.calcViewPort();
             }
+            this.changeDetectorRef.markForCheck();
         }, (error: any) => {
             this.hintLabel = error.toString();
             this._itemList = [];
@@ -448,10 +461,8 @@ export class DejaTreeListComponent extends ItemListBase {
                     if (event.shiftKey) {
                         this.selectRange(currentIndex, 0);
                     } else if (!event.ctrlKey) {
-                        this.unselectAll().then(() => {
                             this.rangeStartIndex = 0;
                             this.selectRange(this.rangeStartIndex);
-                        });
                     }
                     setCurrentIndex(0);
                     this.keyboardNavigation = true;
@@ -461,10 +472,8 @@ export class DejaTreeListComponent extends ItemListBase {
                     if (event.shiftKey) {
                         this.selectRange(currentIndex, this.rowsCount - 1);
                     } else if (!event.ctrlKey) {
-                        this.unselectAll().then(() => {
                             this.rangeStartIndex = this.rowsCount - 1;
                             this.selectRange(this.rangeStartIndex);
-                        });
                     }
                     setCurrentIndex(this.rowsCount - 1);
                     this.keyboardNavigation = true;
@@ -475,10 +484,8 @@ export class DejaTreeListComponent extends ItemListBase {
                     if (event.shiftKey) {
                         this.selectRange(currentIndex, upindex);
                     } else if (!event.ctrlKey) {
-                        this.unselectAll().then(() => {
                             this.rangeStartIndex = upindex;
                             this.selectRange(this.rangeStartIndex);
-                        });
                     }
                     setCurrentIndex(upindex);
                     this.keyboardNavigation = true;
@@ -489,10 +496,8 @@ export class DejaTreeListComponent extends ItemListBase {
                     if (event.shiftKey) {
                         this.selectRange(currentIndex, dindex);
                     } else if (!event.ctrlKey) {
-                        this.unselectAll().then(() => {
                             this.rangeStartIndex = dindex;
                             this.selectRange(this.rangeStartIndex);
-                        });
                     }
                     setCurrentIndex(dindex);
                     this.keyboardNavigation = true;
@@ -504,10 +509,8 @@ export class DejaTreeListComponent extends ItemListBase {
                         if (event.shiftKey) {
                             this.selectRange(currentIndex, uaindex);
                         } else if (!event.ctrlKey) {
-                            this.unselectAll().then(() => {
                                 this.rangeStartIndex = uaindex;
                                 this.selectRange(this.rangeStartIndex);
-                            });
                         }
                         setCurrentIndex(uaindex);
                     }
@@ -520,10 +523,8 @@ export class DejaTreeListComponent extends ItemListBase {
                         if (event.shiftKey) {
                             this.selectRange(currentIndex, daindex);
                         } else if (!event.ctrlKey) {
-                            this.unselectAll().then(() => {
                                 this.rangeStartIndex = daindex;
                                 this.selectRange(this.rangeStartIndex);
-                            });
                         }
                         setCurrentIndex(daindex);
                     }
@@ -574,13 +575,7 @@ export class DejaTreeListComponent extends ItemListBase {
             if (!this.searchArea) {
                 if ((/[a-zA-Z0-9]/).test(event.key)) {
                     // Valid char
-                    if (this.clearFilterTimer) {
-                        clearTimeout(this.clearFilterTimer);
-                    }
-                    this.clearFilterTimer = setTimeout(() => {
-                        this.clearFilterTimer = undefined;
-                        this.filterExpression = '';
-                    }, 750);
+                    this.clearFilterExpression$.next(null);
 
                     // Search next
                     this.filterExpression += event.key;
@@ -602,14 +597,7 @@ export class DejaTreeListComponent extends ItemListBase {
             } else {
                 // Autocomplete, filter the list
                 this.keyboardNavigation = true;
-                if (this.completeTimer) {
-                    clearTimeout(this.completeTimer);
-                }
-                this.completeTimer = setTimeout(() => {
-                    this.completeTimer = undefined;
-                    this.setCurrentItem(undefined);
-                    this.calcViewPort();
-                }, 250);
+                this.filterListComplete$.next();
             }
         }
     }
@@ -618,9 +606,9 @@ export class DejaTreeListComponent extends ItemListBase {
         // FIXME Issue angular/issues/6005
         // see http://stackoverflow.com/questions/34364880/expression-has-changed-after-it-was-checked
         if (this._itemList.length === 0 && this.hasCustomService) {
-            setTimeout(() => {
-                this.calcViewPort();
-            }, 0);
+            Observable.timer(1)
+                .first()
+                .subscribe(() => this.calcViewPort());
         }
 
         const resizeSub = Observable
@@ -811,6 +799,7 @@ export class DejaTreeListComponent extends ItemListBase {
                     this.afterViewInit.emit();
                     this.afterViewInit = null;
                 }
+                this.changeDetectorRef.markForCheck();
                 resolved(res);
             }).catch((reason) => {
                 rejected(reason);

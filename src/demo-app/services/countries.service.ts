@@ -13,7 +13,6 @@ import { Injectable } from '@angular/core';
 import { Http, ResponseContentType } from '@angular/http';
 import { MaterialColors } from '../../common/core/style/index';
 import { Observable } from 'rxjs/Observable';
-import { Subscriber } from 'rxjs/Subscriber';
 
 @Injectable()
 export class CountriesService {
@@ -21,21 +20,17 @@ export class CountriesService {
 
     constructor(private http: Http, private materialColors: MaterialColors) { }
 
-    public getCountryByCode(code: string): Observable<ICountry> {
-        return Observable.of(this.countriesDic[code]);
+    public getCountryByIndex$(index: number) {
+        return this.getCountries$()
+            .map((countries) => countries[index % countries.length] );
     }
 
-    public getCountries(query?: string, number?: number): Observable<ICountry[]> {
-        return new Observable<ICountry[]>((resolve: Subscriber<ICountry[]>) => {
-            /* resolve.error('Get Countries Error'); */
-            number = number || 1;
-            const getNextBunch = () => {
-                if (--number < 0) {
-                    resolve.complete();
-                    return;
+    public getCountryByCode$(code: string) {
+        return Observable.of(this.countriesDic[code]);
                 }
 
-                this.http.get('https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/demo-app/services/countries.json', { responseType: ResponseContentType.Json })
+    public getCountries$(query?: string, number?: number): Observable<ICountry[]> {
+        return this.http.get('https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/demo-app/services/countries.json', { responseType: ResponseContentType.Json })
                     .map((response) => {
                         const datas = response.json();
                         const countries = datas.data as ICountry[];
@@ -65,13 +60,7 @@ export class CountriesService {
                             return countries;
                         }
                     })
-                    .subscribe((response: ICountry[]) => {
-                        resolve.next(response);
-                        setTimeout(() => { getNextBunch(); }, 1);
-                    });
-            };
-            getNextBunch();
-        });
+            .repeat(number || 1);
     }
 }
 

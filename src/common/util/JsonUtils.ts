@@ -70,8 +70,8 @@ export class JsonUtils {
             if (sourceObj.hasOwnProperty(sourcePropName)) {
                 const targetPropName = caseTransform ? sourcePropName.toLowerCase() : sourcePropName;
                 // Boolean managment
-                let value = sourceObj[sourcePropName] ;
-                if (value && !(value instanceof Array) && value.length === 4 && (value.toLowerCase() === "true" ||  value.toLowerCase() === "false")) {
+                const value = sourceObj[sourcePropName] ;
+                if (value && !(value instanceof Array) && value.length === 4 && (value.toLowerCase() === 'true' ||  value.toLowerCase() === 'false')) {
                     castedObj[targetPropName] = JSON.parse(value.toLowerCase());
                 } else {
                     castedObj[targetPropName] = value;

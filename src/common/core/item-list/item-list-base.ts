@@ -11,13 +11,11 @@
 
 import { ElementRef, QueryList } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import {clearTimeout, setTimeout} from 'timers';
 import { GroupingService, IGroupInfo } from '../grouping/index';
 import { ISortInfos, SortingService, SortOrder } from '../sorting/index';
 import {IItemBase} from './item-base';
 import {IParentListInfoResult, ItemListService, IViewListResult} from './item-list.service';
 import {IItemTree} from './item-tree';
-
 
 export enum ViewportMode {
     NoViewport,
@@ -63,9 +61,7 @@ export class ItemListBase {
 
     private _itemListService: ItemListService;
     private allCollapsed = false;
-    private toggleCollapseTimeout: NodeJS.Timer;
     private _viewPortRowHeight = ItemListBase.defaultViewPortRowHeight;
-
 
     /** Renvoie le modèle de tri appliqué à la liste.
      * @param {ISortInfos} sortInfos Modèle de tri appliqué.
@@ -274,81 +270,59 @@ export class ItemListBase {
      * @return {Promise} Promesse résolue par la fonction.
      */
     public toggleCollapse(index: number, collapsed: boolean): Promise<boolean> {
-        return new Promise<boolean>((resolved?: (value: boolean) => void, rejected?: (reason: any) => void) => {
-            if (this.toggleCollapseTimeout) {
-                clearTimeout(this.toggleCollapseTimeout);
-                this.toggleCollapseTimeout = undefined;
-            }
-
-            // return this.getItemListService().toggleCollapse(index, this._childrenField, collapsed);
-
             // Get item with relative index
             const item = this._itemList[index - this.vpStartRow];
             if (!item) {
                 // Not on the visible part, no transition
-                this.getItemListService().toggleCollapse(index, collapsed).then((result) => {
-                    resolved(result);
-                }).catch((reason) => {
-                    rejected(reason);
-                });
-                return;
-            }
-
+            return this.getItemListService().toggleCollapse(index, collapsed);
+        } else {
             const oldlist = [...this._itemList];
             const oldTreeInfo = this.getItemTreeInfo(oldlist, item);
 
             if (this._viewportMode === ViewportMode.NoViewport) {
                 if (collapsed) {
+                    return Observable.of(oldTreeInfo)
+                        .map((oldTree) => {
                     // Hide children for effect
-                    const children = (oldTreeInfo.children || []) as IItemTree[];
+                            const children = (oldTree.children || []) as IItemTree[];
                     children.forEach((child) => child.expanding = true);
-
-                    setTimeout(() => {
-                        children.forEach((child) => child.expanding = false);
-                        this.getItemListService().toggleCollapse(index, collapsed).then((result) => {
-                            if (!this.toggleCollapseTimeout) {
-                                delete this.toggleCollapseTimeout;
-                                this.calcViewPort().then(() => {
-                                    resolved(result);
-                                });
-                            }
-                        }).catch((reason) => {
-                            rejected(reason);
-                        });
-                    }, 300);
-
+                            return children;
+                        })
+                        .delay(300)
+                        .do((children) => children.forEach((child) => child.expanding = false))
+                        .switchMap(() => this.getItemListService().toggleCollapse(index, collapsed))
+                        .do((_result) => this.calcViewPort())
+                        .toPromise();
                 } else {
-                    this.getItemListService().toggleCollapse(index, collapsed).then((result) => {
-                        this.calcViewPort().then((vpresult) => {
+                    return Observable.fromPromise(this.getItemListService().toggleCollapse(index, collapsed))
+                        .switchMap(() => this.calcViewPort())
+                        .map((vpresult) => {
                             const newTreeInfo = this.getItemTreeInfo(vpresult.visibleList, item);
 
                             // Hide children for effect
                             const children = (newTreeInfo.children || []) as IItemTree[];
                             children.forEach((child) => child.collapsing = true);
-
-                            setTimeout(() => {
-                                // Show children now for effect
-                                children.forEach((child) => child.collapsing = false);
-                            }, 0);
-
-                            this.toggleCollapseTimeout = setTimeout(() => {
-                                delete this.toggleCollapseTimeout;
-                                this.calcViewPort().then(() => {
-                                    resolved(result);
-                                });
-                            }, 300);
-                        });
-                    }).catch((reason) => {
-                        rejected(reason);
-                    });
+                            return children;
+                        })
+                        .delay(1)
+                        .do((children) => children.forEach((child) => child.collapsing = false))
+                        .delay(300)
+                        .switchMap(() => this.calcViewPort())
+                        .map(() => true)
+                        .toPromise();
                 }
             } else {
-                this.getItemListService().toggleCollapse(index, collapsed).then((result) => {
-                    this.calcViewPort().then((vpresult) => {
+                const newTreeInfo$ = Observable.fromPromise(this.getItemListService().toggleCollapse(index, collapsed))
+                    .switchMap(() => this.calcViewPort())
+                    .map((vpresult) => {
                         const newlist = vpresult.visibleList;
                         const newTreeInfo = this.getItemTreeInfo(newlist, item);
+                        return { newlist, newTreeInfo };
+                    });
 
                         if (!collapsed) {
+                    return newTreeInfo$
+                        .map(({ newlist, newTreeInfo }) => {
                             // Add elements to the flat list, expand and calc new flatlist, keep children hidden for effect
                             const children = (newTreeInfo.children || []) as IItemTree[];
                             children.forEach((child) => child.expanding = true);
@@ -359,36 +333,29 @@ export class ItemListBase {
 
                             // Create a temporary list for visual effect
                             this._itemList = [...newlist.slice(0, newEndRow), ...oldlist.slice(oldTreeInfo.startIndex + 1, oldEndRow)];
-
-                            setTimeout(() => {
-                                // Show children now for effect
-                                children.forEach((child) => child.expanding = false);
-                            }, 0);
-
-                            // Recalc viewport after transition
-                            this.toggleCollapseTimeout = setTimeout(() => {
-                                delete this.toggleCollapseTimeout;
-                                this.calcViewPort().then(() => {
-                                    resolved(result);
-                                });
-                            }, 400);
+                            return children;
+                        })
+                        .delay(1)
+                        .do((children) => children.forEach((child) => child.expanding = false))
+                        .switchMap(() => this.calcViewPort())
+                        .map(() => true)
+                        .toPromise();
 
                         } else {
                             // Remove elements from the flat list, collapse and calc new flatlist
                             // Add same amount of elements to the visible list
+                    return newTreeInfo$
+                        .do(({ newlist, newTreeInfo }) => {
                             const oldEndRow = Math.min(oldlist.length - 1, oldTreeInfo.lastIndex + 1);
                             this.vpEndRow = Math.min(newlist.length - 1, this.vpEndRow - this.vpStartRow);
                             this._itemList = [...oldlist.slice(0, oldEndRow), ...newlist.slice(newTreeInfo.startIndex + 1)];
-                            this.calcViewPort().then(() => {
-                                resolved(result);
-                            });
+                        })
+                        .switchMap(() => this.calcViewPort())
+                        .map(() => true)
+                        .toPromise();
+                }
                         }
-                    });
-                }).catch((reason) => {
-                    rejected(reason);
-                });
             }
-        });
     }
 
     /** Déselectionne tous les éléments sélectionés.
@@ -718,10 +685,12 @@ export class ItemListBase {
                     // Use a blank div to do that
                     this.vpAfterHeight = heightMax;
                     // Wait next life cycle for the result
-                    setTimeout(() => {
+                    Observable.timer(1)
+                        .first()
+                        .subscribe(() => {
                         this.computedMaxHeight = containerElem.clientHeight;
                         calcViewPortInternal(qry, this.computedMaxHeight, containerElem, true);
-                    }, 0);
+                        });
                     return;
                 }
 

@@ -9,35 +9,16 @@
  *
  */
 
-import {
-    Component,
-    ContentChild,
-    ElementRef,
-    forwardRef,
-    Input,
-    QueryList,
-    ViewChild,
-    ViewChildren,
-    ViewEncapsulation,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, forwardRef, Input, QueryList, ViewChild, ViewChildren, ViewEncapsulation, } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
-import { Observable, Subscription } from 'rxjs/Rx';
-import { clearTimeout, setTimeout } from 'timers';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
 import { Position } from '../../common/core/graphics';
-import {
-    IItemBase,
-    IItemTree,
-    ItemListBase,
-    ItemListService,
-    IViewListResult,
-    ViewportMode,
-} from '../../common/core/item-list';
+import { IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, ViewportMode, } from '../../common/core/item-list';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { DejaDropDownComponent } from '../dropdown';
 
-const noop = () => {
-};
+const noop = () => { };
 
 const SelectComponentValueAccessor = {
     multi: true,
@@ -47,6 +28,7 @@ const SelectComponentValueAccessor = {
 
 /** Combo box avec une liste basée sur la treelist */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     providers: [SelectComponentValueAccessor],
     selector: 'deja-select',
@@ -92,7 +74,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @ContentChild('parentItemTemplate') protected parentItemTemplateInternal;
     @ContentChild('selectedTemplate') protected selectedTemplate;
     @ContentChild('suffixTemplate') protected mdSuffix;
-    @ViewChild('inputelement') private inputElementRef: ElementRef;
+    @ViewChild('inputElement') private inputElementRef: ElementRef;
     @ViewChildren('dropdownitem') private dropdownItemElements: QueryList<ElementRef>;
     @ViewChild('listcontainer') private listcontainer;
     @ViewChild(DejaDropDownComponent) private dropDownComponent: DejaDropDownComponent;
@@ -105,10 +87,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     private keepExistingViewPort = false;
     private dropDownQuery = '';
     private filterExpression = '';
-    private clearFilterTimer: NodeJS.Timer;
-    private completeTimer: NodeJS.Timer;
-    private showTimer: NodeJS.Timer;
-    private scrollTimeout: NodeJS.Timer;
     private dropdownVisible = false;
     private lastScrollPosition = 0;
     private _selectionClearable = false;
@@ -117,8 +95,67 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     private mouseMoveObs: Subscription;
     private mouseUpObs: Subscription;
 
-    constructor(private elementRef: ElementRef) {
+    private clearFilterExpression$ = new BehaviorSubject<void>(null);
+    private filterListComplete$ = new Subject();
+    private storeScrollPosition$ = new Subject();
+    private hideDropDown$ = new Subject<number>();
+    private showDropDown$ = new Subject();
+
+    constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef) {
         super();
+
+        Observable.from(this.clearFilterExpression$)
+            .debounceTime(750)
+            .subscribe(() => this.filterExpression = '');
+
+        Observable.from(this.filterListComplete$)
+            .debounceTime(this.delaySearchTrigger)
+            .subscribe(() => {
+                this._itemList = [];
+                this.showDropDown();
+            });
+
+        Observable.from(this.storeScrollPosition$)
+            .debounceTime(30)
+            .switchMap(() => this.calcViewPort())
+            .subscribe(() => {
+                this.keepExistingViewPort = false;
+                const listElement = this.listElement as HTMLElement;
+                this.lastScrollPosition = listElement.scrollTop;
+            });
+
+        Observable.from(this.hideDropDown$)
+            .filter(() => this.dropdownVisible)
+            .delayWhen((time) => Observable.timer(time || 0))
+            .subscribe(() => {
+                delete this.selectingItemIndex;
+                this.dropdownVisible = false;
+                this.changeDetectorRef.markForCheck();
+            });
+
+        this.showDropDown$
+            .debounceTime(50)
+            .filter(() => !!this.dropDownComponent) // Show canceled by the hide$ observable if !dropdownVisible
+            .do(() => {
+                // Restore scroll Position
+                const listElement = this.listElement;
+                if (listElement) {
+                    this.listElement.scrollTop = this.lastScrollPosition;
+                }
+            })
+            .switchMap(() => this.calcViewPort())
+            .delay(1)
+            .filter(() => !!this.dropDownComponent) // Show canceled by the hide$ observable if !dropdownVisible
+            .do(() => this.dropDownComponent.show())
+            .subscribe(() => {
+                // Ensure selection
+                const item = this.getSelectedItems()[0];
+                const index = item && this.getItemIndex(item);
+                if (index >= 0) {
+                    this._currentItemIndex = index;
+                    this.ensureItemVisible(index);
+                }
+            });
     }
 
     /** Indique ou détermine si le bouton pour effacer la selection doit être affiché */
@@ -343,7 +380,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     private get listElement() {
-        return this.listcontainer.elementRef.nativeElement as HTMLElement;
+        return this.listcontainer && this.listcontainer.elementRef.nativeElement as HTMLElement;
     }
 
     private get inputElement() {
@@ -353,7 +390,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     private set keyboardNavigation(value: boolean) {
         this._keyboardNavigation = value && this.dropdownVisible;
         if (this._keyboardNavigation) {
-            if (this.mouseMoveObs) {
+            if (this.mouseMoveObs || !this.listElement) {
                 return;
             }
 
@@ -374,28 +411,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     private get keyboardNavigation() {
         return this._keyboardNavigation;
     }
-
-    // ************* ControlValueAccessor Implementation **************
-    // // set accessor including call the onchange callback
-    // set value(value: any) {
-    //     let selectedItems = this.getSelectedItems() || [];
-    //     if (this._multiSelect || value !== selectedItems[0]) {
-    //         this.writeValue(value);
-
-    //         // The event is synchrone, but not the selection.
-    //         // If there is any problems with that, just create a setSelectedItems methode and return a promise.
-    //         // No way to change the value implementation, because this is part of the control value accessor
-    //         this.onChangeCallback(super.isBusinessObject ? value.model : value);
-    //     }
-    // }
-
-    // // get accessor
-    // get value(): any {
-    //     // Special binding on selected item here. Value never can be null or undefined otherwise,
-    //     // the ng2 binding don't work when no selected items.
-    //     let selectedItems = super.getSelectedItems();
-    //     return selectedItems.length ? (this._multiSelect ? selectedItems : selectedItems[0]) : undefined;
-    // }
 
     // From ControlValueAccessor interface
     public writeValue(value: any) {
@@ -419,6 +434,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 });
             }
         }
+
+        this.changeDetectorRef.markForCheck();
     }
 
     // From ControlValueAccessor interface
@@ -582,13 +599,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 // Select, search on the list
                 if ((/[a-zA-Z0-9]/).test(event.key)) {
                     // Valid char
-                    if (this.clearFilterTimer) {
-                        clearTimeout(this.clearFilterTimer);
-                    }
-                    this.clearFilterTimer = setTimeout(() => {
-                        this.clearFilterTimer = undefined;
-                        this.filterExpression = '';
-                    }, 750);
+                    this.clearFilterExpression$.next(null);
 
                     // Search next
                     this.filterExpression += event.key;
@@ -609,14 +620,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 }
             } else {
                 // Autocomplete, filter the list
-                if (this.completeTimer) {
-                    clearTimeout(this.completeTimer);
-                }
-                this.completeTimer = setTimeout(() => {
-                    this.completeTimer = undefined;
-                    this._itemList = [];
-                    this.showDropDown();
-                }, this.delaySearchTrigger);
+                this.filterListComplete$.next();
             }
         }
     }
@@ -629,20 +633,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
         this.keepExistingViewPort = true;
         this.calcViewPort();
-
-        if (this.scrollTimeout) {
-            clearTimeout(this.scrollTimeout);
-            delete this.scrollTimeout;
-        }
-
-        this.scrollTimeout = setTimeout(() => {
-            delete this.scrollTimeout;
-            this.calcViewPort().then(() => {
-                this.keepExistingViewPort = false;
-                const listElement = this.listElement as HTMLElement;
-                this.lastScrollPosition = listElement.scrollTop;
-            });
-        }, 30);
+        this.storeScrollPosition$.next();
     }
 
     protected click(event) {
@@ -682,22 +673,19 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         }
 
         this.onTouchedCallback();
-
-        setTimeout(() => {
-            if (this.showTimer) {
-                clearTimeout(this.showTimer);
-                this.showTimer = undefined;
-            }
-            this.hideDropDown();
-        }, 10);
+        this.hideDropDown$.next(10);
     }
 
-    protected queryChanged(value) {
+    protected queryChanged(event: Event) {
+        const target = event.target as HTMLInputElement;
+        this.query = target.value;
+        if (!this.isReadOnly) {
         // Autocomplete or multiselect only
-        this.dropDownQuery = value;
+            this.dropDownQuery = this.query;
         if (this.isAutocomplete) {
             this.unselectAll();
         }
+    }
     }
 
     protected removeSelection(event: Event, item: IItemBase) {
@@ -729,6 +717,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 if (!this.keepExistingViewPort) {
                     this._itemList = res.visibleList;
                 }
+                this.changeDetectorRef.markForCheck();
                 resolved(res);
             }).catch((reason) => {
                 rejected(reason);
@@ -831,61 +820,19 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     private hideDropDown() {
-        if (this.showTimer) {
-            clearTimeout(this.showTimer);
-            this.showTimer = undefined;
-        }
-        if (this.completeTimer) {
-            clearTimeout(this.completeTimer);
-            this.completeTimer = undefined;
-        }
-
-        delete this.selectingItemIndex;
-        this.dropdownVisible = false;
+        this.hideDropDown$.next();
     }
 
     private showDropDown() {
-        if (this.showTimer) {
-            clearTimeout(this.showTimer);
-        }
-
         // Ensure that dropdown container exists
         this.dropdownVisible = true;
-        this.showTimer = setTimeout(() => {
-            this.showTimer = undefined;
-
-            // Restore scroll Position            
-            this.listElement.scrollTop = this.lastScrollPosition;
-
-            this.calcViewPort().then(() => {
-                if (this.dropDownComponent) {
-                    this.dropDownComponent.show();
-
-                    // Ensure selection
-                    const item = this.getSelectedItems()[0];
-                    const index = item && this.getItemIndex(item);
-                    if (index >= 0) {
-                        this._currentItemIndex = index;
-                        this.ensureItemVisible(index);
-                    }
-                }
-            });
-        }, 50);
+        this.changeDetectorRef.markForCheck();
+        this.showDropDown$.next();
     }
 
     private reshowDropDown() {
         if (!this.dropdownVisible) {
             return this.showDropDown();
-        }
-
-        if (this.showTimer) {
-            clearTimeout(this.showTimer);
-            this.showTimer = undefined;
-        }
-
-        if (this.completeTimer) {
-            clearTimeout(this.completeTimer);
-            this.completeTimer = undefined;
         }
 
         delete this.selectingItemIndex;

@@ -1,7 +1,7 @@
 /*
  * *
  *  @license
- *  Copyright HÃ´pital Universitaire de GenÃ¨ve All Rights Reserved.
+ *  right HÃ´pital Universitaire de GenÃ¨ve All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
@@ -9,13 +9,13 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
-import { Directions, Position, Rect, Size } from '../../common/core/graphics';
 import { KeyCodes } from '../../common/core/';
 import { DejaClipboardService } from '../../common/core/clipboard/clipboard.service';
+import { Directions, Position, Rect, Size } from '../../common/core/graphics';
 import { IDragCursorInfos, IDragDropContext } from '../mouse-dragdrop/mouse-dragdrop.service';
-import { DejaTile, IDejaTile, IDejaTilesEvent, IDejaTilesRemoveEvent, IDejaTilesAddEvent } from './index';
+import { DejaTile, DejaTilesAddEvent, DejaTilesEvent, DejaTilesRemoveEvent, IDejaTile } from './index';
 
 interface ILayoutInfo {
     id: string;
@@ -43,31 +43,29 @@ interface IDragDropInfos {
 
 export interface IDejaTilesRefreshParams {
     resetWidth?: boolean;
-    refreshBounds?: boolean;
-    ensureVisible?: DejaTile;
+    ensureVisible?: string; // Tile id
     ensureBounds?: Rect;
 }
 
 @Injectable()
 export class DejaTilesLayoutProvider {
     public refreshTiles$ = new Subject<IDejaTilesRefreshParams>();
-    public removeTiles$ = new Subject<string[]>();
-    public deleteTiles$ = new Subject<DejaTile[]>();
-    public createTiles$ = new Subject<IDejaTile[]>();
-    public addTiles$ = new Subject<DejaTile[]>();
-    public ensureVisible$ = new Subject<IDejaTile>();
+    public ensureVisible$ = new Subject<string>();
     public ensureBounds$ = new Subject<Rect>();
-    public designMode$ = new BehaviorSubject<boolean>(false);
-    public selectionChanges$ = new Subject<IDejaTile[]>();
     public dragging$ = new BehaviorSubject<boolean>(false);
     public dragSelection$ = new Subject<IDragSelection>();
     public dragDropInfos$ = new Subject<IDragDropInfos>();
     public selectionRect$ = new Subject<Rect>();
-    public layoutChange$ = new Subject<IDejaTilesEvent>();
     public dragover$ = new Subject<IDragCursorInfos>();
     public dragleave$ = new Subject();
-    public contentAdded$ = new Subject<IDejaTilesAddEvent>();
-    public contentRemoved$ = new Subject<IDejaTilesRemoveEvent>();
+    public deleteTiles$ = new Subject<DejaTile[]>();
+    public designMode = false;
+
+    public layoutChanged = new EventEmitter<DejaTilesEvent>();
+    public modelChanged = new EventEmitter<DejaTilesEvent>();
+    public selectionChanged = new EventEmitter<DejaTilesEvent>();
+    public contentAdding = new EventEmitter<DejaTilesAddEvent>();
+    public contentRemoving = new EventEmitter<DejaTilesRemoveEvent>();
 
     protected tileMinWidth = 10;
     protected tileMinWidthUnit = '%';
@@ -95,7 +93,6 @@ export class DejaTilesLayoutProvider {
     private dragRelativePosition: { [id: string]: Position };
     private expandedTile: DejaTile;
     private _container: HTMLElement;
-    private _designMode = false;
     private currentTile: DejaTile;
     private hundredPercentWith: number;
     private dragTarget: Rect;
@@ -116,11 +113,7 @@ export class DejaTilesLayoutProvider {
                 let width = containerBounds.width;
                 const tiles = this.tiles || [];
 
-                if (params && params.refreshBounds) {
-                    tiles.forEach((tile: DejaTile) => {
-                        tile.refreshBounds();
-                    });
-                }
+                const selectedTileIds = [];
 
                 tiles.forEach((tile: DejaTile) => {
                     if (tile.percentBounds && !tile.percentBounds.isEmpty()) {
@@ -136,6 +129,9 @@ export class DejaTilesLayoutProvider {
                         }
                     } else {
                         placeAtTheEnd.push(tile);
+                    }
+                    if (tile.isSelected && !tile.isHidden) {
+                        selectedTileIds.push(tile.id);
                     }
                 });
 
@@ -169,6 +165,8 @@ export class DejaTilesLayoutProvider {
                     }
                 }
 
+                height += this.getPixelSize(this.tileMinHeight, this.tileMinHeightUnit);
+
                 this.container.style.width = `${width}px`;
                 this.container.style.height = `${height}px`;
 
@@ -180,17 +178,13 @@ export class DejaTilesLayoutProvider {
                         this.ensureBounds$.next(params.ensureBounds);
                     }
                 }
+
+                this.selectedTiles = selectedTileIds;
             });
 
         const ensureTile$ = Observable.from(this.ensureVisible$)
             .delay(1)
-            .map((tile) => {
-                if (tile.id) {
-                    return this.tilesDic[tile.id];
-                } else {
-                    return this.tiles.find((t) => t.equalsTo(tile));
-                }
-            })
+            .map((id) => this.tilesDic[id])
             .filter((tile) => !!tile)
             .map((tile) => tile.percentBounds);
 
@@ -227,25 +221,14 @@ export class DejaTilesLayoutProvider {
                 }
             });
 
-        Observable.from(this.designMode$)
-            .subscribe((value) => this._designMode = value);
-
-        Observable.from(this.selectionChanges$)
-            .subscribe((tiles) => {
-                this.tiles.filter((tile: DejaTile) => tile.isSelected).forEach((tile: DejaTile) => tile.isSelected = false);
-
-                if (tiles && tiles.length) {
-                    tiles
-                        .map((tile) => (tile.id ? this.tilesDic[tile.id] : this.tiles.find((t) => t.equalsTo(tile))) || tile)
-                        .forEach((tile: DejaTile) => tile.isSelected = true);
-                }
-            });
-
         Observable.from(this.dragSelection$)
             .subscribe((dragSelection) => {
-                const mouseUp$ = Observable.fromEvent(this._container.ownerDocument, 'mouseup').do(() => this.selectionRect$.next(null));
+                const mouseUp$ = Observable
+                    .fromEvent(this._container.ownerDocument, 'mouseup')
+                    .do(() => this.selectionRect$.next(null));
 
-                Observable.fromEvent(this._container, 'mousemove')
+                Observable
+                    .fromEvent(this._container, 'mousemove')
                     .takeUntil(mouseUp$)
                     .filter((event: MouseEvent) => event.buttons === 1)
                     .subscribe((event: MouseEvent) => {
@@ -256,7 +239,7 @@ export class DejaTilesLayoutProvider {
                         this.selectionRect$.next(dragSelection.selectedRect);
 
                         const selection = this.HitTest(dragSelection.selectedRect);
-                        this.selectionChanges$.next(selection);
+                        this.selectedTiles = selection.map((tile) => tile.id);
                     });
             });
 
@@ -264,7 +247,7 @@ export class DejaTilesLayoutProvider {
 
         Observable.from(this.dragDropInfos$)
             .subscribe((dragDropInfos) => {
-                if (!dragDropInfos) {
+                if (!dragDropInfos || !dragDropInfos.tiles || !dragDropInfos.tiles.length) {
                     return;
                 }
 
@@ -301,7 +284,7 @@ export class DejaTilesLayoutProvider {
                                     const tempTile = dragDropInfos.tiles[0];
 
                                     // Clear current selection
-                                    this.selectionChanges$.next([tempTile]);
+                                    this.selectedTiles = [tempTile.id];
 
                                     let bounds = tempTile.percentBounds;
                                     if (!bounds || bounds.isEmpty()) {
@@ -339,153 +322,8 @@ export class DejaTilesLayoutProvider {
                     });
             });
 
-        Observable.from(this.deleteTiles$)
-            .subscribe((tilesToDelete) => {
-                tilesToDelete.forEach((tile) => {
-                    delete this.tilesDic[tile.id];
-                    tile.delete();
-                });
-
-                let index = this._tiles.length;
-                while (--index >= 0) {
-                    const tile = this._tiles[index];
-                    if (!this.tilesDic[tile.id]) {
-                        this._tiles.splice(index, 1);
-                    }
-                }
-
-                this.refreshTiles$.next({ resetWidth: true });
-            });
-
-        Observable.from(this.addTiles$)
-            .subscribe((newTiles) => {
-                const event = new CustomEvent('DejaTilesAddEvent', { cancelable: true }) as IDejaTilesAddEvent;
-                event.tiles = this.tiles.map((tile) => tile.toTileModel());
-                event.added = newTiles.map((tile) => tile.toTileModel());
-                event.cancel$ = new Subject();
-
-                // Delete provider if cut operation
-                const deleteSourceProvider$ = this.clipboardService.get('tiles-provider') as Subject<DejaTile[]>;
-
-                // Hide originals if cut
-                let sourceTiles: DejaTile[];
-                if (deleteSourceProvider$) {
-                    sourceTiles = this.clipboardService.get('tiles') as DejaTile[];
-                    sourceTiles.forEach((tile) => {
-                        tile.isHidden = true;
-                    });
-                }
-
-                const deleteSourceTiles = () => {
-                    if (sourceTiles) {
-                        deleteSourceProvider$.next(sourceTiles);
-                        this.clipboardService.clear();
-                    }
-                };
-
-                newTiles.forEach((tile) => {
-                    tile.isPending = true;
-                });
-
-                const cancelSubscription = event.cancel$
-                    .first()
-                    .subscribe((value) => {
-                        if (value) {
-                            // Canceled, hide and remove added after effect
-                            Observable.from(newTiles)
-                                .do((tile) => tile.isHidden = true)
-                                .delay(1000)
-                                .reduce((acc, curr) => {
-                                    acc.push(curr);
-                                    return acc;
-                                }, [])
-                                .first()
-                                .subscribe((tiles) => this.deleteTiles$.next(tiles));
-
-                            // Reshow original tiles if cut operation
-                            if (sourceTiles) {
-                                sourceTiles.forEach((tile) => {
-                                    tile.isHidden = false;
-                                    tile.isCutted = true;
-                                });
-                            }
-                        } else {
-                            newTiles.forEach((tile) => {
-                                tile.isPending = false;
-                            });
-                            // Remove original tiles if cut operation
-                            deleteSourceTiles();
-                        }
-                    });
-
-                // Add immediately
-                Observable.timer(1000)
-                    .first()
-                    .filter(() => !event.defaultPrevented)
-                    .subscribe(() => {
-                        newTiles.forEach((tile) => {
-                            tile.isPending = false;
-                        });
-                        cancelSubscription.unsubscribe();
-                        // Remove original tiles if cut operation
-                        deleteSourceTiles();
-                    });
-
-                // Forward event
-                this.contentAdded$.next(event);
-
-                // Get total rectangle
-                let bounds: Rect;
-                newTiles.forEach((tile) => {
-                    bounds = bounds ? Rect.union(bounds, tile.percentBounds) : new Rect(tile.percentBounds);
-                });
-
-                this.refreshTiles$.next({ ensureBounds: bounds });
-            });
-
-        Observable.from(this.removeTiles$)
-            .subscribe((tileIdsToRemove) => {
-                const tilesToRemove = tileIdsToRemove.map((id) => this.tilesDic[id]);
-
-                // Delete selected tiles components
-                tilesToRemove.forEach((tile) => {
-                    tile.isHidden = true;
-                });
-
-                const event = new CustomEvent('DejaTilesRemoveEvent', { cancelable: true }) as IDejaTilesRemoveEvent;
-                event.tiles = this.tiles.map((tile) => tile.toTileModel());
-                event.removed = tilesToRemove.map((tile) => tile.toTileModel());
-                event.cancel$ = new Subject();
-
-                const cancelSubscription = event.cancel$
-                    .first()
-                    .subscribe((value) => {
-                        if (value) {
-                            tilesToRemove.forEach((tile) => tile.isHidden = false);
-                        } else {
-                            this.deleteTiles$.next(tilesToRemove);
-                        }
-                    });
-
-                // Remove immediately
-                Observable.timer(1000)
-                    .first()
-                    .filter(() => !event.defaultPrevented)
-                    .subscribe(() => {
-                        cancelSubscription.unsubscribe();
-                        this.deleteTiles$.next(tilesToRemove);
-                    });
-
-                // Forward event
-                this.contentRemoved$.next(event);
-            });
-
-        Observable.from(this.createTiles$)
-            .filter((tiles) => tiles && tiles.length > 0)
-            .map((tiles) => tiles.map((tile) => this.createTile(tile)))
-            .subscribe((newTiles) => {
-                this.addTiles$.next(newTiles);
-            });
+        // Delete stream for clipboard
+        Observable.from(this.deleteTiles$).subscribe((tilesToDelete) => this.deleteTiles(tilesToDelete));
     }
 
     public set container(container: HTMLElement) {
@@ -497,7 +335,7 @@ export class DejaTilesLayoutProvider {
         Observable.fromEvent(container, 'mouseenter')
             .subscribe(() => {
                 // Cursor provider
-                if (this._designMode) {
+                if (this.designMode) {
                     Observable.fromEvent(container, 'mousemove')
                         .debounceTime(10)
                         .takeUntil(leave$)
@@ -529,10 +367,10 @@ export class DejaTilesLayoutProvider {
                                 // Multi-selection is available in design mode, selection on the mouse up
                             } else {
                                 if (!this.currentTile.isSelected || this._cursor !== 'move') {
-                                    this.selectionChanges$.next([this.currentTile]);
+                                    this.selectedTiles = [this.currentTile.id];
                                 }
 
-                                if (this._designMode) {
+                                if (this.designMode) {
                                     const containerBounds = this._container.getBoundingClientRect();
                                     const x = event.pageX - containerBounds.left;
                                     const y = event.pageY - containerBounds.top;
@@ -554,16 +392,11 @@ export class DejaTilesLayoutProvider {
                                         this.currentTile.isPressed = false;
                                         // Multi-selection
                                         if (e.ctrlKey) {
-                                            const selection = this.tiles.filter((tile) => tile.isSelected);
-                                            if (!this.currentTile.isSelected) {
-                                                selection.push(this.currentTile);
-                                            } else {
-                                                const index = selection.findIndex((tileComponent) => tileComponent === this.currentTile);
-                                                if (index >= 0) {
-                                                    selection.splice(index, 1);
-                                                }
-                                            }
-                                            this.selectionChanges$.next(selection);
+                                            this.currentTile.isSelected = !this.currentTile.isSelected;
+
+                                            this.selectedTiles = this.tiles
+                                                .filter((tile) => tile.isSelected)
+                                                .map((tile) => tile.id);
                                         }
                                     }
 
@@ -581,7 +414,7 @@ export class DejaTilesLayoutProvider {
                                 if (this.currentTile) {
                                     this.currentTile.isPressed = false;
                                 }
-                                this.selectionChanges$.next(null);
+                                this.selectedTiles = [];
                             }
                         }
                     });
@@ -603,6 +436,61 @@ export class DejaTilesLayoutProvider {
         return this._tiles;
     }
 
+    public set selectedTiles(selectedIds: string[]) {
+        const selectedTiles = [];
+        const idsDic = {};
+        selectedIds.forEach((id) => idsDic[id] = true);
+
+        this.tiles.forEach((tile: DejaTile) => {
+            tile.isSelected = idsDic[tile.id];
+            if (tile.isSelected) {
+                selectedTiles.push(tile);
+            }
+        });
+
+        const event = new CustomEvent('DejaTilesAddEvent', { cancelable: false }) as DejaTilesEvent;
+        event.tiles = selectedTiles;
+        this.selectionChanged.emit(event);
+    }
+
+    public set tileminwidth(value: string) {
+        this.extractValueAndUnit('tileMinWidth', value);
+    }
+
+    public set tilemaxwidth(value: string) {
+        this.extractValueAndUnit('tileMaxWidth', value);
+    }
+
+    public set tileminheight(value: string) {
+        this.extractValueAndUnit('tileMinHeight', value);
+    }
+
+    public set tilemaxheight(value: string) {
+        this.extractValueAndUnit('tileMaxHeight', value);
+    }
+
+    public set maxwidth(value: string) {
+        this.extractValueAndUnit('maxWidth', value);
+    }
+
+    private get targetBounds() {
+        return this._targetBounds;
+    }
+
+    private set targetBounds(targetBounds: Rect) {
+        this._targetBounds = targetBounds;
+        if (targetBounds) {
+            this.selectionRect$.next(new Rect({
+                height: this.getPixelSize(targetBounds.height || 0),
+                left: this.getPixelSize(targetBounds.left || 0),
+                top: this.getPixelSize(targetBounds.top || 0),
+                width: this.getPixelSize(targetBounds.width || 0),
+            }));
+        } else {
+            this.selectionRect$.next(undefined);
+        }
+    }
+
     public copySelection() {
         const selectedTiles = this.tiles.filter((tile) => tile.isSelected);
         this.copyTiles(selectedTiles, false);
@@ -617,7 +505,7 @@ export class DejaTilesLayoutProvider {
 
     public deleteSelection() {
         const selectedTiles = this.tiles.filter((tile) => tile.isSelected);
-        this.removeTiles$.next(selectedTiles.map((tile) => tile.id));
+        this.removeTiles(selectedTiles.map((tile) => tile.id));
         return selectedTiles;
     }
 
@@ -649,7 +537,7 @@ export class DejaTilesLayoutProvider {
             return newTile;
         });
 
-        this.addTiles$.next(newTiles);
+        this.addTiles(newTiles);
 
         return newTiles;
     }
@@ -672,46 +560,77 @@ export class DejaTilesLayoutProvider {
         return tileElement && this.tilesDic[tileElement.id];
     }
 
-    public set tileminwidth(value: string) {
-        this.extractValueAndUnit('tileMinWidth', value);
-    }
-
-    public set tilemaxwidth(value: string) {
-        this.extractValueAndUnit('tileMaxWidth', value);
-    }
-
-    public set tileminheight(value: string) {
-        this.extractValueAndUnit('tileMinHeight', value);
-    }
-
-    public set tilemaxheight(value: string) {
-        this.extractValueAndUnit('tileMaxHeight', value);
-    }
-
-    public set maxwidth(value: string) {
-        this.extractValueAndUnit('maxWidth', value);
-    }
-
-    public get isDesignMode() {
-        return this._designMode;
-    }
-
-    private get targetBounds() {
-        return this._targetBounds;
-    }
-
-    private set targetBounds(targetBounds: Rect) {
-        this._targetBounds = targetBounds;
-        if (targetBounds) {
-            this.selectionRect$.next(new Rect({
-                height: this.getPixelSize(targetBounds.height || 0),
-                left: this.getPixelSize(targetBounds.left || 0),
-                top: this.getPixelSize(targetBounds.top || 0),
-                width: this.getPixelSize(targetBounds.width || 0),
-            }));
-        } else {
-            this.selectionRect$.next(undefined);
+    public deleteTiles(tilesToDelete: DejaTile[]) {
+        if (!tilesToDelete || tilesToDelete.length === 0) {
+            return;
         }
+
+        tilesToDelete.forEach((tile) => {
+            delete this.tilesDic[tile.id];
+            tile.delete();
+        });
+
+        let index = this._tiles.length;
+        while (--index >= 0) {
+            const tile = this._tiles[index];
+            if (!this.tilesDic[tile.id]) {
+                this._tiles.splice(index, 1);
+            }
+        }
+
+        this.refreshTiles$.next({ resetWidth: true });
+
+        const event = new CustomEvent('DejaTilesEvent', { cancelable: true }) as DejaTilesEvent;
+        event.tiles = tilesToDelete.map((tile) => tile.toTileModel());
+        this.modelChanged.emit(event);
+    }
+
+    public removeTiles(tileIdsToRemove: string[]) {
+        if (!tileIdsToRemove || tileIdsToRemove.length === 0) {
+            return;
+        }
+
+        const tilesToRemove = tileIdsToRemove.map((id) => this.tilesDic[id]);
+
+        // Delete selected tiles components
+        tilesToRemove.forEach((tile) => {
+            tile.isHidden = true;
+        });
+
+        const event = new CustomEvent('DejaTilesRemoveEvent', { cancelable: true }) as DejaTilesRemoveEvent;
+        event.tiles = this.tiles.map((tile) => tile.toTileModel());
+        event.removed = tilesToRemove.map((tile) => tile.toTileModel());
+        event.cancel$ = new Subject();
+
+        const cancelSubscription = event.cancel$
+            .first()
+            .subscribe((value) => {
+                if (value) {
+                    tilesToRemove.forEach((tile) => tile.isHidden = false);
+                } else {
+                    this.deleteTiles(tilesToRemove);
+                }
+            });
+
+        // Remove immediately
+        Observable.timer(1000)
+            .first()
+            .filter(() => !event.defaultPrevented)
+            .subscribe(() => {
+                cancelSubscription.unsubscribe();
+                this.deleteTiles(tilesToRemove);
+            });
+
+        // Forward event
+        this.contentRemoving.next(event);
+    }
+
+    public createTiles(tiles: IDejaTile[]) {
+        if (!tiles || tiles.length === 0) {
+            return;
+        }
+
+        this.addTiles(tiles.map((tile) => this.createTile(tile)));
     }
 
     public getFreePlace(idealBounds: Rect) {
@@ -742,16 +661,26 @@ export class DejaTilesLayoutProvider {
         return new Rect(0, percentHeight, idealBounds.width, idealBounds.height);
     }
 
+    public moveTile(id: string, bounds: Rect) {
+        const tile = this.tiles.find((t) => t.id === id);
+        if (tile) {
+            tile.percentBounds = bounds;
+            this.refreshTiles$.next();
+        }
+    }
+
     public HitTest(pixelBounds: Rect) {
         const percentBounds = new Rect(this.getPercentSize(pixelBounds.left), this.getPercentSize(pixelBounds.top), this.getPercentSize(pixelBounds.width), this.getPercentSize(pixelBounds.height));
         return this.tiles.filter((t) => t.percentBounds.intersectWith(percentBounds));
     }
 
-    public getPercentSize(value: number): number { return Math.round(value * 100 / this.hundredPercentWith); }
+    public getPercentSize(value: number): number {
+        return Math.round(value * 100 / this.hundredPercentWith);
+    }
 
     // Drag and drop from outside provider
     public dragEnter(dragContext: IDragDropContext, dragCursor: IDragCursorInfos) {
-        if (!this._designMode) {
+        if (!this.designMode) {
             return false;
         }
 
@@ -881,7 +810,7 @@ export class DejaTilesLayoutProvider {
                             this.tilesDic[tile.id] = tile;
                             delete this.tilesDic['#temp'];
 
-                            this.addTiles$.next([tile]);
+                            this.addTiles([tile]);
                         }
                     })
                     .delay(1000)
@@ -896,9 +825,9 @@ export class DejaTilesLayoutProvider {
         this.endDrag();
 
         if (changed) {
-            const event = new CustomEvent('DejaTilesEvent', { cancelable: true }) as IDejaTilesEvent;
+            const event = new CustomEvent('DejaTilesEvent', { cancelable: true }) as DejaTilesEvent;
             event.tiles = this.tiles.map((tile) => tile.toTileModel());
-            this.layoutChange$.next(event);
+            this.layoutChanged.emit(event);
         }
 
         return changed;
@@ -988,6 +917,98 @@ export class DejaTilesLayoutProvider {
 
             this.move();
         }
+    }
+
+    public addTiles(newTiles: DejaTile[]) {
+        if (!newTiles || newTiles.length === 0) {
+            return;
+        }
+
+        const event = new CustomEvent('DejaTilesAddEvent', { cancelable: true }) as DejaTilesAddEvent;
+        event.tiles = this.tiles.map((tile) => tile.toTileModel());
+        event.added = newTiles.map((tile) => tile.toTileModel());
+        event.cancel$ = new Subject();
+
+        // Delete provider if cut operation
+        const deleteSourceProvider$ = this.clipboardService.get('tiles-provider') as Subject<DejaTile[]>;
+
+        // Hide originals if cut
+        let sourceTiles: DejaTile[];
+        if (deleteSourceProvider$) {
+            sourceTiles = this.clipboardService.get('tiles') as DejaTile[];
+            sourceTiles.forEach((tile) => {
+                tile.isHidden = true;
+            });
+        }
+
+        const deleteSourceTiles = () => {
+            if (sourceTiles) {
+                deleteSourceProvider$.next(sourceTiles);
+                this.clipboardService.clear();
+            }
+        };
+
+        newTiles.forEach((tile) => {
+            tile.isPending = true;
+        });
+
+        const validateNewTiles = (tiles: DejaTile[]) => {
+            tiles.forEach((tile) => {
+                tile.isPending = false;
+            });
+            // Remove original tiles if cut operation
+            deleteSourceTiles();
+
+            const e = new CustomEvent('DejaTilesEvent', { cancelable: true }) as DejaTilesEvent;
+            e.tiles = tiles.map((tile) => tile.toTileModel());
+            this.modelChanged.emit(e);
+        };
+
+        const cancelSubscription = event.cancel$
+            .first()
+            .subscribe((value) => {
+                if (value) {
+                    // Canceled, hide and remove added after effect
+                    Observable.from(newTiles)
+                        .do((tile) => tile.isHidden = true)
+                        .delay(1000)
+                        .reduce((acc, curr) => {
+                            acc.push(curr);
+                            return acc;
+                        }, [])
+                        .first()
+                        .subscribe((tiles) => this.deleteTiles(tiles));
+
+                    // Reshow original tiles if cut operation
+                    if (sourceTiles) {
+                        sourceTiles.forEach((tile) => {
+                            tile.isHidden = false;
+                            tile.isCutted = true;
+                        });
+                    }
+                } else {
+                    validateNewTiles(newTiles);
+                }
+            });
+
+        // Add immediately
+        Observable.timer(1000)
+            .first()
+            .filter(() => !event.defaultPrevented)
+            .subscribe(() => {
+                cancelSubscription.unsubscribe();
+                validateNewTiles(newTiles);
+            });
+
+        // Get total rectangle
+        let bounds: Rect;
+        newTiles.forEach((tile) => {
+            bounds = bounds ? Rect.union(bounds, tile.percentBounds) : new Rect(tile.percentBounds);
+        });
+
+        this.refreshTiles$.next({ ensureBounds: bounds });
+
+        this.contentAdding.emit(event);
     }
 
     private size(tile: DejaTile, pixelpos: Position, directions: Directions) {
@@ -1332,14 +1353,6 @@ export class DejaTilesLayoutProvider {
 
     private getMaxPercentHeight(): number { return this.getSizePercentLimit('maxHeight'); }
 
-    // private getMaxPixelWidth(): number {
-    //     return this.getSizePixelLimit('maxWidth');
-    // }
-
-    // private getMaxPixelHeight(): number {
-    //     return this.getSizePixelLimit('maxHeight');
-    // }
-
     private getCursorFromHTMLElement(x: number, y: number, element: HTMLElement) {
         const tileElement = this.getTileElementFromHTMLElement(element);
         if (!tileElement) {
@@ -1463,7 +1476,7 @@ export class DejaTilesLayoutProvider {
             if (offset > 0) {
                 this.moveHorizontal(direction, tiles, offset, targetBounds);
 
-                // Copy bounds array to tiles
+                //  bounds array to tiles
                 this.tiles.forEach((t) => {
                     if (targetBounds[t.id]) {
                         t.percentBounds = targetBounds[t.id];
@@ -1543,7 +1556,7 @@ export class DejaTilesLayoutProvider {
             if (offset > 0) {
                 this.moveVertical(direction, tiles, offset, targetBounds);
 
-                // Copy bounds array to tiles
+                //  bounds array to tiles
                 this._tiles.forEach((t) => {
                     if (targetBounds[t.id]) {
                         t.percentBounds = targetBounds[t.id];
@@ -1571,6 +1584,8 @@ export class DejaTilesLayoutProvider {
         if (isCut) {
             tiles.forEach((tile) => tile.isCutted = true);
             this.clipboardService.set('tiles-provider', this.deleteTiles$);
+        } else {
+            this.clipboardService.set('tiles-provider', undefined);
         }
     }
 
