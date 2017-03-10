@@ -93,7 +93,7 @@
 	</md-card-content>
 	<md-toolbar color="secondary">Grille avec taille fixe des colonnes</md-toolbar>
 	<md-card-content class="listContainer">
-		<deja-grid #fgrid searchArea groupArea sortable columnsSizable multiSelect [(ngModel)]="groupedDrugs" [columns]="responsiveColumns" (selectedChange)="onSelectionChanged3($event)" nodataholder="Pas de données"
+		<deja-grid #fgrid searchArea groupArea sortable columnsSizable multiSelect [(ngModel)]="groupedDrugs$" [columns]="responsiveColumns" (selectedChange)="onSelectionChanged3($event)" nodataholder="Pas de données"
 		           placeholder="Filtrer la liste par le nom" searchField="receivedate" (itemDragStart)="onItemDragStart($event)">
 		</deja-grid>
 	</md-card-content>

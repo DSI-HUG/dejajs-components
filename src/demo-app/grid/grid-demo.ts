@@ -290,7 +290,7 @@ export class GridDemoComponent implements OnInit {
 
     private drugsBigRecord: Observable<IDrug[]>;
     private drugs: Observable<IDrug[]>;
-    private groupedDrugs: Promise<IDrug[]>;
+    private groupedDrugs$: Observable<IDrug[]>;
     private selectedItems: IItemTree[];
     @ViewChild(DejaGridComponent) private gridComponent: DejaGridComponent;
 
@@ -300,9 +300,9 @@ export class GridDemoComponent implements OnInit {
 
     ngOnInit() {
         this.drugCounts = 0;
-        this.drugsBigRecord = this.drugsService.getDrugs(null, 10).do((drugs) => this.drugCounts += drugs.length);
-        this.drugs = this.drugsService.getDrugs();
-        this.groupedDrugs = this.drugsService.getGroupedDrugs();
+        this.drugsBigRecord = this.drugsService.getDrugs$(null, 10).do((drugs) => this.drugCounts += drugs.length);
+        this.drugs = this.drugsService.getDrugs$();
+        this.groupedDrugs$ = this.drugsService.getGroupedDrugs$();
     }
 
 
