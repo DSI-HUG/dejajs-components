@@ -12,6 +12,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { DejaMonacoEditorComponent } from './monaco-editor.component';
+import { MonacoEditorService } from './monaco-editor.service';
 
 @NgModule({
     declarations: [DejaMonacoEditorComponent],
@@ -19,6 +20,7 @@ import { DejaMonacoEditorComponent } from './monaco-editor.component';
     imports: [
         CommonModule,
     ],
+    providers: [MonacoEditorService],
 })
 export class DejaMonacoEditorModule {
 

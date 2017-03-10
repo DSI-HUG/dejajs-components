@@ -1,10 +1,15 @@
 <a name="@next"></a>
 # [@next] (2017-03-xx)
 
-### Breaking changes from 1.4.2-beta.14
+### Breaking changes from 1.4.2-beta.15
 
 
 ### Bug fixes #
+
+<a name="1.4.2-beta.15"></a>
+# [1.4.2-beta.14] (2017-03-10)
+
+Minor bugs fix
 
 <a name="1.4.2-beta.14"></a>
 # [1.4.2-beta.14] (2017-03-09)
