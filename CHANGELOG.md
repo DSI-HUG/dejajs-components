@@ -1,13 +1,20 @@
 <a name="@next"></a>
 # [@next] (2017-03-xx)
 
-### Breaking changes from 1.4.2-beta.15
+### Breaking changes from 1.4.2-beta.16
 
 
 ### Bug fixes #
 
+<a name="1.4.2-beta.16"></a>
+# [1.4.2-beta.16] (2017-03-13)
+
+Update Typescript and webpack config
+
+### Bug fixes #
+
 <a name="1.4.2-beta.15"></a>
-# [1.4.2-beta.14] (2017-03-10)
+# [1.4.2-beta.15] (2017-03-10)
 
 Minor bugs fix
 
