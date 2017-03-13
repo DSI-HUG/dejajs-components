@@ -1,21 +1,21 @@
 {
     "compilerOptions": {
-        "sourceMap": true,
-        "declaration": false,
+        "declaration": true,
+        "target": "es5",
+        "module": "es2015",
         "moduleResolution": "node",
+        "noImplicitAny": false,
+        "removeComments": true,
+        "noLib": false,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
+        "sourceMap": true,
+        "noUnusedParameters": true,
+        "noUnusedLocals": true,
         "lib": [
             "es2016",
             "dom"
-        ],
-        "target": "es5",
-        "module": "es2015",
-        "removeComments": true,
-        "noLib": false,
-        "noImplicitAny": false,
-        "noUnusedParameters": true,
-        "noUnusedLocals": true
+        ]
     },
     "exclude": [
         "node_modules"
