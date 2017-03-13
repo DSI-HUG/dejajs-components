@@ -46,9 +46,9 @@ export class SelectDemoComponent extends OnInit {
             color: 'rgb(211, 47, 47)',
         };
 
-        this.countries = this.countriesService.getCountries();
+        this.countries = this.countriesService.getCountries$();
 
-        this.countriesService.getCountries().subscribe((value: ICountry[]) => {
+        this.countriesService.getCountries$().subscribe((value: ICountry[]) => {
             const result = [] as any[];
             value.map((s) => {
                 s.toString = () => { return s.code + ' - ' + s.naqme; };
@@ -57,25 +57,14 @@ export class SelectDemoComponent extends OnInit {
             this.countriesForTemplate = result;
         }, (error) => this.handleError(error));
 
-        this.countriesService.getCountries().subscribe((value: ICountry[]) => {
-            /*let selection = {};
-             event && event.selection.map(s => selection[s.code] = s);
-             let result = [] as any[];
-             value.map(s => {
-             if (!selection[s.code]) {
-             s.toString = () => { return s.code + ' - ' + s.naqme; };
-             result.push(s);
-             }
-             });*/
-
-            this.countriesForMultiselect = value;
-
-            setTimeout(() => {
+        this.countriesService.getCountries$()
+            .do((value) => this.countriesForMultiselect = value)
+            .delay(1)
+            .subscribe(() => {
                 this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","displayName":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","displayName":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","displayName":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","displayName":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","displayName":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","displayName":"Dominica","depth":0,"odd":false,"selected":true}]');
-            }, 10);
         }, (error) => this.handleError(error));
 
-        this.countriesService.getCountries().subscribe((value: ICountry[]) => {
+        this.countriesService.getCountries$().subscribe((value: ICountry[]) => {
             const result = [] as ISelectCountry[];
             const map = {} as { [groupName: string]: ISelectCountry[] };
             value.map((country) => {

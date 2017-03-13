@@ -60,7 +60,7 @@ export class DejaMouseDraggableDirective {
                             Observable.fromEvent(element.ownerDocument, 'mousemove')
                                 .takeUntil(kill$)
                                 .subscribe((ev: MouseEvent) => {
-                                    if (ev.buttons === 1) {
+                                    if (target && ev.buttons === 1) {
                                         const bounds = new Rect(element.getBoundingClientRect());
                                         const position = new Position(ev.pageX, ev.pageY);
                                         const html = bounds.containsPoint(position) ? target.innerHTML : undefined;
@@ -89,13 +89,11 @@ export class DejaMouseDraggableDirective {
                                 while (target && !match(target)) {
                                     target = target.parentElement;
                                 }
-                            }
-
-                            if (!target) {
+                            } else {
                                 target = element;
                             }
 
-                            if (this.context.dragStart) {
+                            if (target && this.context.dragStart) {
                                 const dragContext = this.context.dragStart(target);
                                 if (dragContext) {
                                     if (dragContext.subscribe) {
@@ -111,12 +109,11 @@ export class DejaMouseDraggableDirective {
                                         return;
                                     } else {
                                         dragDropService.context = dragContext;
+                                        startDrag();
                                     }
                                 }
                             }
                         }
-
-                        startDrag();
                     });
             });
     }

@@ -9,8 +9,8 @@
  *
  */
 
-import { Observable } from 'rxjs/Observable';
 import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
 
 /**
  * Service for cloning or copying an object

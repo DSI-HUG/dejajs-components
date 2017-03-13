@@ -9,11 +9,11 @@
  *
  */
 
-import { Directive, ElementRef, Input, HostBinding } from '@angular/core';
+import { Directive, ElementRef, HostBinding, Input } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
-import { IDejaDragEvent } from './index';
-import { DejaClipboardService } from '../../common/core/clipboard/clipboard.service';
 import { Observable } from 'rxjs/Rx';
+import { DejaClipboardService } from '../../common/core/clipboard/clipboard.service';
+import { IDejaDragEvent } from './index';
 
 @Directive({
     selector: '[deja-droppable]',

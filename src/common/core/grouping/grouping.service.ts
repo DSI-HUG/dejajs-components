@@ -60,14 +60,14 @@ export class GroupingService {
                                         resolvedChildren(parents);
                                         return;
                                     }
-                                    
+
                                     groupTree(parents[index][childrenField], curdepth + 1).then((result) => {
                                         parents[index][childrenField] = result;
                                         groupParentChildren(index + 1);
                                     }).catch(rejectedChildren);
                                 };
                                 groupParentChildren(0);
-                            } else {                                
+                            } else {
                                 this.groupChildren(parents, groupInfo, curdepth, childrenField).then(resolvedChildren).catch(rejectedChildren);
                             }
                         } catch (err) {
@@ -121,7 +121,7 @@ export class GroupingService {
                     const sortingService = new SortingService();
                     sortingService.sort(groupedChildren, groupInfo.sortInfos).then(resolved).catch(rejected);
                     groupedChildren.forEach((parent) => parent.sortField = groupInfo.sortInfos.name);
-                } else { 
+                } else {
                     groupedChildren.forEach((parent) => parent.sortField = 'toString');
                     resolved(groupedChildren);
                 }

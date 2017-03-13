@@ -12,7 +12,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule  } from '@angular/forms';
-import { DejaColorSelectorComponent, DejaColorFabComponent  } from './index';
+import { DejaColorFabComponent, DejaColorSelectorComponent  } from './index';
 
 @NgModule({
     declarations: [DejaColorSelectorComponent, DejaColorFabComponent],

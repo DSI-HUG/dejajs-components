@@ -1,5 +1,5 @@
 <md-input-container id="input" [attr.wait]="waiter || _waiter" [attr.multiselection]="_multiSelect && selectedItems.length > 0">
-    <input #inputelement type="text" mdInput [readonly]="isReadOnly" (ngModelChange)="(!isReadOnly && queryChanged($event)) || null" [(ngModel)]="query" (keydown)="filter($event)" (keyup)="filter($event)" (focus)="focus($event)" (click)="click($event)" (blur)="blur($event)">
+    <input #inputElement type="text" mdInput [readonly]="isReadOnly" (input)="queryChanged($event)" [value]="query" (keydown)="filter($event)" (keyup)="filter($event)" (focus)="focus($event)" (click)="click($event)" (blur)="blur($event)">
 	<div id="md-input-prefix" mdPrefix *ngIf="_multiSelect && selectedItems.length > 0">
 		<ul>
 			<li *ngFor="let item of selectedItems; let index = index">
@@ -25,7 +25,7 @@
 		<template [ngTemplateOutlet]="mdSuffix"></template>
 	</span>
 </md-input-container>
-<deja-dropdown id="select-dropdown" #listcontainer *ngIf="dropdownVisible" (hide)="dropdownVisible=false" (scroll)="scroll($event)" [ownerAlignment]="dropdownAlignment" dropdownAlignment="left" [ownerElement]="elementRef" [containerElement]="containerElement" ownerBottomMargin="18" ownerTopMargin="10" ownerRightMargin="2" [style.max-height.px]="maxHeight">
+<deja-dropdown id="select-dropdown" #listcontainer *ngIf="dropdownVisible" (hide)="dropdownVisible=false" (scroll)="scroll($event)" [ownerAlignment]="dropdownAlignment" dropdownAlignment="left" [ownerElement]="inputElement" [containerElement]="containerElement" ownerBottomMargin="-10" ownerTopMargin="-5" ownerRightMargin="-30" [style.max-height.px]="maxHeight">
 	<div *ngIf="vpBeforeHeight" [style.height.px]="vpBeforeHeight"></div>
 	<ul ulist [attr.depth-max]="_depthMax || null" [attr.keynav]="keyboardNavigation" [attr.vprowheight]="getViewPortRowHeight()" (mousedown)="mousedown($event)">
 		<li *ngFor="let item of _itemList; let index = index" #dropdownitem [class.hide]="item.collapsing || item.expanding" [class.parent]="item.depth < _depthMax" [class.collapsed]="item.collapsed" [class.selected]="item.selected" [class.current]="_multiSelect && item === currentItem" [class.unselectable]="item.selectable === false" [attr.depth]="_depthMax ? item.depth : null" [attr.id]="item.id || null" [attr.flat]="index" [style.height.px]="getItemHeight(item)" [class.odd]="(item.depth === _depthMax && item.odd) || null">

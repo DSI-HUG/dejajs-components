@@ -21,13 +21,16 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 export class DemoAppComponent {
     public version: string;
     protected navOpened = true;
+    protected iframeOpened = false;
 
-    constructor() {
-
-    }
-
-    get debug() {
+    protected get debug() {
         // console.log('Binding ' + Date.now());
         return null;
+    }
+
+    protected openIFrame(e: Event) {
+        this.iframeOpened = true;
+        e.preventDefault();
+        return false;
     }
 }

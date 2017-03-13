@@ -40,20 +40,20 @@ and navigate to `http://localhost:5100`.
 | Circular Picker  |<span style="color:red">no</span>|yes|yes|yes|yes|yes|available| |
 | Color Selector   |yes|yes|yes|yes|yes|yes|available| |
 | Color Picker     |yes|yes|yes|yes|yes|yes|available| |
-| Content Editable |yes|yes|yes|yes|yes|yes|available|New line issue on IE11. IE11 add p instead br |
+| Content Editable |yes|yes|yes|yes|yes|yes|available|New line issue on IE11. IE11 add p indtead br |
 | Date Selector    |yes|yes|<span style="color:red">slow</span>|<span style="color:red">slow</span>|yes|yes|available| |
 | Date Picker      |<span style="color:red">no</span>|yes|<span style="color:red">no</span>|<span style="color:red">no</span>|<span style="color:red">no</span>|yes|available| |
 | Dialog           |yes|yes|yes|yes|yes|yes|Message Box| |
 | Events           |yes|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>| |
-| Grid             |<span style="color:red">no</span>|yes|yes|<span style="color:red">no</span>|<span style="color:red">slow</span>|yes|available| |
+| Grid             |<span style="color:red">no</span>|yes|yes|<span style="color:red">slow</span>|yes|yes|available| |
 | Dropdown Control |yes|yes|yes|yes|yes|yes|Color Picker| |
 | Menu             |yes|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>| |
 | Message Box      |yes|yes|yes|yes|yes|yes|available| |
 | Monaco Editor    |yes|yes|yes|yes|yes|yes|available| |
 | Range            |yes|yes|yes|yes|yes|yes|available| |
-| Select           |<span style="color:red">no</span>|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>|Place Holder placement in FF, Edge and IE11 |
+| Select           |yes|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>|Place Holder placement in FF, Edge and IE11 |
 | Snackbar         |yes|yes|yes|yes|yes|yes|available| |
 | Splitter         |yes|yes|yes|yes|yes|yes|available| |
-| Tiles            |@rxjs Branch|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>| |
+| Tiles            |yes|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>| |
 | Tooltip          |yes|yes|yes|yes|yes|yes|Message Box| |
-| Treelist         |<span style="color:red">no</span>|yes|yes|yes|yes|yes|available| |
+| Treelist         |yes|yes|yes|yes|yes|yes|available| |

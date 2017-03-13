@@ -9,10 +9,10 @@
  *
  */
 
-import { Directive, ElementRef, Input, HostBinding } from '@angular/core';
+import { Directive, ElementRef, HostBinding, Input } from '@angular/core';
+import { Observable } from 'rxjs/Rx';
 import { UUID } from '../../common/core';
 import { DejaClipboardService } from '../../common/core/clipboard/clipboard.service';
-import { Observable } from 'rxjs/Rx';
 
 @Directive({
     selector: '[deja-draggable]',
@@ -73,7 +73,7 @@ export class DejaDraggableDirective {
                     .first()
                     .subscribe((evt: DragEvent) => {
                         const dragEndInfos = this.clipboardService.get(this.draginfokey) as { [key: string]: any };
-                        const obj = dragEndInfos[this.objectKey];
+                        const obj = dragEndInfos && dragEndInfos[this.objectKey];
                         if (obj) {
                             delete obj.dragged;
                         }

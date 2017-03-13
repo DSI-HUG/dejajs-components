@@ -16,6 +16,7 @@ import {IEditorLanguage} from './options/editor-language.model';
 import {IEditorOptions} from './options/editor-options.model';
 import {IEditorScrollbarOptions} from './options/editor-scrollbar-options';
 import {IEditorTheme} from './options/editor-theme.component';
+import { MonacoEditorService } from './monaco-editor.service';
 
 declare const monaco: any;
 
@@ -85,6 +86,7 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
     @Input() public fontWeight?: 'normal' | 'bold' | 'bolder' | 'lighter' | 'initial' | 'inherit' | '100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900';
     @Input() public fontSize?: number;
     @Input() public lineHeight?: number;
+    @Input() public formatOnPaste?: boolean;
 
     @Input() public language: IEditorLanguage;
 
@@ -127,35 +129,16 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
     private _value = '';
     private _valueToCompare = '';
 
-    constructor() {
+    constructor(public monacoEditorService: MonacoEditorService) {
     }
 
     /**
      * load Monaco lib
      */
     public ngAfterViewInit() {
-        // Remove the last character if is a '/'
-        if (this.monacoLibPath.substring(this.monacoLibPath.length - 1, this.monacoLibPath.length) === '/') {
-            this.monacoLibPath = this.monacoLibPath.substring(0, this.monacoLibPath.length - 1);
-        }
-
-        const onGotAmdLoader = () => {
-            // Load monaco
-            (<any> window).require([this.monacoLibPath + '/editor/editor.main'], () => {
-                this.initMonaco();
-            });
-        };
-
-        // Load AMD loader if necessary
-        if (!(<any> window).require) {
-            const loaderScript = document.createElement('script');
-            loaderScript.type = 'text/javascript';
-            loaderScript.src = this.monacoLibPath + '/loader.js';
-            loaderScript.addEventListener('load', onGotAmdLoader);
-            document.body.appendChild(loaderScript);
-        } else {
-            onGotAmdLoader();
-        }
+        this.monacoEditorService.initMonacoLib(this.monacoLibPath).then(() => {
+            this.initMonaco();
+        })
     }
 
     /**
@@ -330,6 +313,7 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
         options.fontWeight = this.fontWeight;
         options.fontSize = this.fontSize;
         options.lineHeight = this.lineHeight;
+        options.formatOnPaste = this.formatOnPaste;
         options.value = this._value;
         options.language = this.language;
 

@@ -9,11 +9,12 @@
  *
  */
 
-import { Component,ContentChild, ElementRef, forwardRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ContentChild, ElementRef, forwardRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import {coerceBooleanProperty} from '@angular/material/core/coercion/boolean-property';
+import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { Observable, Subscription } from 'rxjs/Rx';
-import { Circle, Position } from '../../common/core';
+import { Circle } from '../../common/core/graphics/circle';
+import { Position } from '../../common/core/graphics/position';
 
 const noop = () => { };
 
@@ -23,7 +24,7 @@ const DejaCircularPickerComponentValueAccessor = {
     useExisting: forwardRef(() => DejaCircularPickerComponent),
 };
 
-enum ClockwiseFactorEnum {
+export enum ClockwiseFactorEnum {
     clockwise = -1,
     counterClockwise = 1,
 }
@@ -86,7 +87,8 @@ export class DejaCircularPickerComponent implements OnInit {
     constructor(private elementRef: ElementRef) { }
 
     public ngOnInit() {
-        const diameter = this.fullDiameter /* max - width */ - this.labelsDiameter /* Material standard button size */;
+        /* max - width */
+        const diameter = this.fullDiameter - this.labelsDiameter; // Material standard button size
         this.radius = diameter / 2;
 
         this.ranges.forEach((range) => {
@@ -163,8 +165,8 @@ export class DejaCircularPickerComponent implements OnInit {
     protected pointToValue(x: number, y: number, config: IConfig) {
         const angleAtPoint: number = this.pointToAngle(x - this.radius, y - this.radius, config);
         let circleSegmentIndexAtPoint: number = config.steps - Math.ceil(angleAtPoint / config.stepAngle);
-        // By having pointToAngle() to compute using a half step below the actual angle, 
-        // we can use Math.ceil() to get the upper circleSegmentIndex. We're working in 
+        // By having pointToAngle() to compute using a half step below the actual angle,
+        // we can use Math.ceil() to get the upper circleSegmentIndex. We're working in
         // counter-clockwise direction, thus we finally get a -1 index when we're just
         // below the first circle segment. We can now simply wrap it to the 0 index,
         // resulting in the user-expected behavior.
@@ -186,11 +188,11 @@ export class DejaCircularPickerComponent implements OnInit {
 
     private pointToAngle(x: number, y: number, config: IConfig): number {
         return (
-                -Math.atan2(y, x)		    // Math.atan2() returns between -Ï€ and +Ï€, but in inverted trigonometrical order...
+            -Math.atan2(y, x)		    // Math.atan2() returns between -Ï€ and +Ï€, but in inverted trigonometrical order...
             - config.range.beginOffset	// Correct the configured offset to compute in 'natural' trigonometrical circle
-                - (config.stepAngle / 2)	// Remove half a step angle to match value from both sides
-                + this.TwoPI			    // We want the returned value to be between 0 and 2Ï€ => (x + 2Ï€) % 2Ï€
-            ) % this.TwoPI;
+            - (config.stepAngle / 2)	// Remove half a step angle to match value from both sides
+            + this.TwoPI			    // We want the returned value to be between 0 and 2Ï€ => (x + 2Ï€) % 2Ï€
+        ) % this.TwoPI;
     }
 
     private valueToAngle(value: number, config: IConfig): number {
@@ -295,7 +297,7 @@ export class DejaCircularPickerComponent implements OnInit {
                 } else {
                     const x = this.labelsDiameter * (this.configs.length - 1);
                     this.circle = this.circle.inflate(-x);
-                    for (let i = this.configs.length; i > 0 ; i--) {
+                    for (let i = this.configs.length; i > 0; i--) {
                         contains = this.circle.containsPoint(new Position(event.pageX, event.pageY));
                         if (contains) {
                             this.selectedConfig = this.configs[i - 1];
@@ -319,7 +321,7 @@ export class DejaCircularPickerComponent implements OnInit {
     }
 }
 
-interface IConfig {
+export interface IConfig {
     range: ICircularRange;
     steps: number;
     stepAngle: number;

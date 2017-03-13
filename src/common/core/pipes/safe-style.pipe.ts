@@ -24,6 +24,6 @@ export class SafeStylePipe implements PipeTransform {
     }
 
     public transform(style) {
-        return this.sanitizer.bypassSecurityTrustStyle(style);
+        return this.sanitizer.bypassSecurityTrustStyle(style) as any;
     }
 }

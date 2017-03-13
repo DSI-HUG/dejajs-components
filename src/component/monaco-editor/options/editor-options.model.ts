@@ -9,9 +9,9 @@
  *
  */
 
-import {IEditorLanguage} from './editor-language.model';
-import {IEditorScrollbarOptions} from './editor-scrollbar-options';
-import {IEditorTheme} from './editor-theme.component';
+import { IEditorLanguage } from './editor-language.model';
+import { IEditorScrollbarOptions } from './editor-scrollbar-options';
+import { IEditorTheme } from './editor-theme.component';
 /**
  * Configuration options for the editor.
  */
@@ -303,6 +303,11 @@ export class IEditorOptions {
      * The line height
      */
     public lineHeight?: number;
+    /**
+     * Enable format on paste.
+     * Defaults to false.
+     */
+    formatOnPaste?: boolean;
 
     /**
      * Content to show

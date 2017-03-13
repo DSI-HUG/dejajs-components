@@ -10,8 +10,8 @@
  */
 
 import { BehaviorSubject, Subject } from 'rxjs/Rx';
-import { IDejaTile } from './tile.interface';
 import { Rect } from '../../common/core/graphics';
+import { IDejaTile } from './tile.interface';
 
 export class DejaTile implements IDejaTile {
     private static currentId = 0;
@@ -22,11 +22,12 @@ export class DejaTile implements IDejaTile {
     public pressed$ = new BehaviorSubject<boolean>(false);
     public selected$ = new BehaviorSubject<boolean>(false);
     public expanded$ = new BehaviorSubject<boolean>(false);
-    public hidden$ = new BehaviorSubject<boolean>(false);
+    public hidden$ = new Subject<boolean>();
     public pending$ = new BehaviorSubject<boolean>(false);
     public deleted$ = new Subject();
     public pixelBounds$ = new Subject<Rect>();
     public isTemporary = false;
+    public fading = false;
 
     private _id: string;
     private _isCutted = false;
@@ -49,6 +50,7 @@ export class DejaTile implements IDejaTile {
             this.isCutted = tile.effects.cutted;
             this.isSelected = tile.effects.selected;
             this._isPending = tile.effects.pending;
+            this.fading = tile.effects.fading;
         }
         if (!this._id) {
             this._id = '#' + DejaTile.currentId++;

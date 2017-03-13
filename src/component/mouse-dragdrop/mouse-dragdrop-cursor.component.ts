@@ -68,12 +68,13 @@ export class DejaMouseDragDropCursorComponent {
                 this.iconElement.style.opacity = '0';
                 this._currentCursor = dragCursor;
             })
+            .filter((dragCursor) => !dragCursor.className || dragCursor.className !== 'hidden')
             .do((dragCursor) => {
                 if (!!dragCursor.html) {
-                    this.contentElement.innerHTML = dragCursor.html;
-                    element.className = dragCursor.className;
-                    this.contentElement.style.width = `${dragCursor.width || 48}px`;
-                    this.contentElement.style.height = `${dragCursor.height || 48}px`;
+                this.contentElement.innerHTML = dragCursor.html;
+                element.className = dragCursor.className;
+                this.contentElement.style.width = `${dragCursor.width || 48}px`;
+                this.contentElement.style.height = `${dragCursor.height || 48}px`;
                 } else {
                     this.iconElement.style.opacity = '1';
                 }
@@ -81,7 +82,7 @@ export class DejaMouseDragDropCursorComponent {
             .delay(1)
             .subscribe((dragCursor) => {
                 if (!!dragCursor.html) {
-                    this.contentElement.style.opacity = '1';
+                this.contentElement.style.opacity = '1';
                 }
             });
 

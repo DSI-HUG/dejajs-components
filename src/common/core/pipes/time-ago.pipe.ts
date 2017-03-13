@@ -9,21 +9,33 @@
  *
  */
 
-import { ChangeDetectorRef, NgZone, OnDestroy, Pipe, PipeTransform } from '@angular/core';
+import { ChangeDetectorRef, NgZone, Pipe, PipeTransform } from '@angular/core';
 import * as moment from 'moment';
+import { Observable, Subject } from 'rxjs/Rx';
 
 const momentConstructor: (value?: any) => moment.Moment = (<any> moment).default || moment;
 
 @Pipe({ name: 'momentTimeAgo', pure: false })
-export class TimeAgoPipe implements PipeTransform, OnDestroy {
-    private currentTimer: number;
-
+export class TimeAgoPipe implements PipeTransform {
     private lastTime: Number;
     private lastValue: Date | moment.Moment;
     private lastOmitSuffix: boolean;
     private lastText: string;
+    private createTimer$ = new Subject();
 
     constructor(private cdRef: ChangeDetectorRef, private ngZone: NgZone) {
+        Observable.from(this.createTimer$)
+            .debounce(() => {
+                const momentInstance = momentConstructor(this.lastValue);
+                const timeToUpdate = this.getSecondsUntilUpdate(momentInstance) * 1000;
+                return Observable.of(timeToUpdate);
+            })
+            .subscribe(() => {
+                this.ngZone.runOutsideAngular(() => {
+                    this.lastText = momentConstructor(this.lastValue).from(momentConstructor(), this.lastOmitSuffix);
+                    this.ngZone.run(() => this.cdRef.markForCheck());
+                });
+            });
     }
 
     public transform(value: Date | moment.Moment, omitSuffix?: boolean): string {
@@ -31,47 +43,14 @@ export class TimeAgoPipe implements PipeTransform, OnDestroy {
             this.lastTime = this.getTime(value);
             this.lastValue = value;
             this.lastOmitSuffix = omitSuffix;
-            this.removeTimer();
-            this.createTimer();
+            this.createTimer$.next();
             this.lastText = momentConstructor(value).from(momentConstructor(), omitSuffix);
 
         } else {
-            this.createTimer();
+            this.createTimer$.next();
         }
 
         return this.lastText;
-    }
-
-    public ngOnDestroy(): void {
-        this.removeTimer();
-    }
-
-
-    private createTimer() {
-        if (this.currentTimer) {
-            return;
-        }
-        const momentInstance = momentConstructor(this.lastValue);
-
-        const timeToUpdate = this.getSecondsUntilUpdate(momentInstance) * 1000;
-        this.currentTimer = this.ngZone.runOutsideAngular(() => {
-            if (typeof window !== 'undefined') {
-                return window.setTimeout(() => {
-                    this.lastText = momentConstructor(this.lastValue).from(momentConstructor(), this.lastOmitSuffix);
-
-                    this.currentTimer = null;
-                    this.ngZone.run(() => this.cdRef.markForCheck());
-                }, timeToUpdate);
-            }
-        });
-    }
-
-
-    private removeTimer() {
-        if (this.currentTimer) {
-            window.clearTimeout(this.currentTimer);
-            this.currentTimer = null;
-        }
     }
 
     private getSecondsUntilUpdate(momentInstance: moment.Moment) {

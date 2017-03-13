@@ -12,7 +12,7 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { GroupingService, IGroupInfo, IItemTree, ViewportMode } from '../../common/core';
-import { DejaTextMetricsService, DejaTreeListComponent, DejaTreeListItemsEvent, IDejaDragEvent } from '../../component';
+import { DejaTextMetricsService, DejaTreeListComponent, DejaTreeListItemsEvent, IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDejaDragEvent, IDropCursorInfos } from '../../component';
 import {CountriesService, ICountry} from '../services/countries.service';
 
 @Component({
@@ -37,10 +37,10 @@ export class DejaTreeListDemoComponent implements OnInit {
     constructor(private countriesService: CountriesService,
         groupingService: GroupingService,
                 private textMetricsService: DejaTextMetricsService ) {
-        this.countries = this.countriesService.getCountries(null, 412);
+        this.countries = this.countriesService.getCountries$(null, 412);
         // this.countries = this.countriesService.getCountries(null, 1);
 
-        this.countriesService.getCountries(null, 1).subscribe((values) => {
+        this.countriesService.getCountries$(null, 1).subscribe((values) => {
             const extendedCountries = values.map((country) => {
                 return {
                     code: country.code,
@@ -139,6 +139,33 @@ export class DejaTreeListDemoComponent implements OnInit {
             naqme: 'te',
         } as ICountry);
         this.groupedTreeList.refresh();
+    }
+
+    protected getDragContext() {
+        return {
+            target: '[ddid]',
+            className: 'item-base-cursor',
+            dragStart: (target: HTMLElement) => {
+                const id = target && target.getAttribute('ddid');
+                return id && this.countriesService.getCountryByCode$(id);
+            },
+        } as IDejaMouseDraggableContext;
+    }
+
+    protected getDropContext(dropArea: HTMLElement) {
+        return {
+            dragEnter: (_dragContext) => {
+                return {
+                    width: 200,
+                    height: 60,
+                    className: 'country-target-cursor',
+                } as IDropCursorInfos;
+            },
+            drop: (dragContext) => {
+                const country = dragContext as ICountry;
+                dropArea.innerText = `The dropped country is ${country.naqme} - the code is: ${country.code}`;
+            },
+        } as IDejaMouseDroppableContext;
     }
 }
 

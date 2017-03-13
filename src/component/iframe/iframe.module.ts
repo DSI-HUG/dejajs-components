@@ -11,17 +11,12 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { DejaMonacoEditorComponent } from './monaco-editor.component';
-import { MonacoEditorService } from './monaco-editor.service';
+import { DejaIFrameComponent } from './iframe.component';
 
 @NgModule({
-    declarations: [DejaMonacoEditorComponent],
-    exports: [DejaMonacoEditorComponent],
-    imports: [
-        CommonModule,
-    ],
-    providers: [MonacoEditorService],
+    declarations: [DejaIFrameComponent],
+    exports: [DejaIFrameComponent],
+    imports: [CommonModule],
 })
-export class DejaMonacoEditorModule {
+export class DejaIFrameModule { }
 
-}

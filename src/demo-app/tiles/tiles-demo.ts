@@ -10,10 +10,10 @@
  */
 
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { Rect } from '../../common/core/graphics/index';
-import { IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDejaTilesAddEvent, IDejaTile, IDejaTilesRemoveEvent, IDropCursorInfos } from '../../component';
-import { CountriesService, ICountry } from '../services/countries.service';
 import { Observable, Subject } from 'rxjs/Rx';
+import { Rect } from '../../common/core/graphics/index';
+import { DejaTilesAddEvent, DejaTilesRemoveEvent, IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDejaTile, IDropCursorInfos } from '../../component';
+import { CountriesService, ICountry } from '../services/countries.service';
 
 @Component({
     selector: 'deja-tiles-demo',
@@ -49,7 +49,7 @@ export class TilesDemoComponent implements OnInit {
         let x2 = 0;
         let y2 = 0;
 
-        const tiles$ = this.countriesService.getCountries()
+        const tiles$ = this.countriesService.getCountries$()
             .switchMap((countries) => countries);
 
         this.tiles1$ = tiles$
@@ -101,7 +101,7 @@ export class TilesDemoComponent implements OnInit {
             target: 'deja-tile',
             className: 'deja-tile-cursor',
             dragStart: (target) => {
-                return this.countriesService.getCountryByCode(target.id)
+                return this.countriesService.getCountryByCode$(target.id)
                     .map((country) => {
                         return {
                             country: country,
@@ -133,7 +133,7 @@ export class TilesDemoComponent implements OnInit {
         } as IDejaMouseDroppableContext;
     }
 
-    protected onContentAdded(event: IDejaTilesAddEvent) {
+    protected onContentAdding(event: DejaTilesAddEvent) {
         this.message$.next({
             title: 'Tiles added',
             content: `${event.added.length} tiles added.`,
@@ -149,7 +149,7 @@ export class TilesDemoComponent implements OnInit {
         event.preventDefault();
     }
 
-    protected onContentRemoved(event: IDejaTilesRemoveEvent) {
+    protected onContentRemoving(event: DejaTilesRemoveEvent) {
         this.message$.next({
             title: 'Tiles deleted',
             content: `${event.removed.length} tiles deleted.`,

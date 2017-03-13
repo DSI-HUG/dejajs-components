@@ -11,11 +11,11 @@
 
 import { AfterViewInit, Component, ContentChild, ElementRef, EventEmitter, HostListener, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
-import { Observable, BehaviorSubject, Subscription } from 'rxjs/Rx';
-import { Rect } from '../../common/core/graphics';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs/Rx';
 import { KeyCodes } from '../../common/core';
-import { IDropCursorInfos, IDejaMouseDroppableContext } from '../mouse-dragdrop/index';
-import { DejaTile, IDejaTilesEvent, IDejaTile, IDejaTilesRemoveEvent, IDejaTilesAddEvent, IDejaTilesRefreshParams } from './index';
+import { Rect } from '../../common/core/graphics';
+import { IDejaMouseDroppableContext, IDropCursorInfos } from '../mouse-dragdrop/index';
+import { DejaTile, DejaTilesAddEvent, DejaTilesEvent, DejaTilesRemoveEvent, IDejaTile, IDejaTilesRefreshParams } from './index';
 import { DejaTilesLayoutProvider } from './tiles-layout.provider';
 
 @Component({
@@ -30,42 +30,42 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
     /**
      * Raised when the selected items has changed
      */
-    @Output() public selectionChanged = new EventEmitter<IDejaTilesEvent>();
+    @Output() public selectionChanged = new EventEmitter<DejaTilesEvent>();
 
     /**
      * Raised when the layout has changed with a drag and drop
      */
-    @Output() public layoutChanged = new EventEmitter<IDejaTilesEvent>();
+    @Output() public layoutChanged = new EventEmitter<DejaTilesEvent>();
 
     /**
      * Raised when the data model has changed with a cut, delete or paste
      */
-    @Output() public modelChanged = new EventEmitter<IDejaTilesEvent>();
+    @Output() public modelChanged = new EventEmitter<DejaTilesEvent>();
 
     /**
      * Raised when some tiles was added to the data model with a paste
      */
-    @Output() public contentAdded = new EventEmitter<IDejaTilesAddEvent>();
+    @Output() public contentAdding = new EventEmitter<DejaTilesAddEvent>();
 
     /**
      * Raised when some tiles was removed from the data model with a delete
      */
-    @Output() public contentRemoved = new EventEmitter<IDejaTilesRemoveEvent>();
+    @Output() public contentRemoving = new EventEmitter<DejaTilesRemoveEvent>();
 
     /**
      * Raised when some tiles are copied in the clipboard service. Can result from a copy or paste operation on the tiles.
      */
-    @Output() public contentCopied = new EventEmitter<IDejaTilesEvent>();
+    @Output() public contentCopied = new EventEmitter<DejaTilesEvent>();
 
     @ContentChild('tileTemplate') protected tileTemplate;
 
     private _models = [] as IDejaTile[];
-    private _designMode = false;
     private delete$sub: Subscription;
     private copy$sub: Subscription;
     private cut$sub: Subscription;
     private paste$sub: Subscription;
     private keyup$: Observable<KeyboardEvent>;
+    private resize$sub: Subscription;
     private tiles$ = new BehaviorSubject<DejaTile[]>([]);
 
     @ViewChild('tilesContainer') private tilesContainer: ElementRef;
@@ -73,24 +73,18 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
     constructor(el: ElementRef, private layoutProvider: DejaTilesLayoutProvider) {
         const element = el.nativeElement as HTMLElement;
 
-        this.layoutProvider.selectionChanges$.subscribe((tiles) => {
-            const event = {} as IDejaTilesEvent;
-            event.tiles = tiles;
-            this.selectionChanged.emit(event);
-        });
+        this.selectionChanged = this.layoutProvider.selectionChanged;
+        this.layoutChanged = this.layoutProvider.layoutChanged;
+        this.contentAdding = this.layoutProvider.contentAdding;
+        this.contentRemoving = this.layoutProvider.contentRemoving;
 
-        this.layoutProvider.layoutChange$.subscribe((event) => {
-            this.layoutChanged.emit(event);
+        this.layoutProvider.modelChanged.subscribe((event) => {
+            this.modelChanged.emit(event);
         });
-
-        this.layoutProvider.contentAdded$.subscribe((event) => {
-            this.contentAdded.emit(event);
-            this.tiles$.next(this.layoutProvider.tiles);
-        });
-
-        this.layoutProvider.contentRemoved$.subscribe((event) => this.contentRemoved.emit(event));
 
         this.keyup$ = Observable.fromEvent(element.ownerDocument, 'keyup');
+
+        this.resize$sub = Observable.fromEvent(window, 'resize').subscribe(() => this.refresh());
     }
 
     @Input()
@@ -120,8 +114,7 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
 
     @Input()
     public set designMode(value: boolean) {
-        this._designMode = value;
-        this.layoutProvider.designMode$.next(coerceBooleanProperty(value));
+        this.layoutProvider.designMode = coerceBooleanProperty(value);
     };
 
     @Input()
@@ -130,15 +123,11 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
         this.tiles$.next(this.layoutProvider.tiles = (this._models.map((tile) => new DejaTile(tile))));
     }
 
-    public get models() {
-        return this._models;
-    }
-
     @Input()
     public set canDelete(value: boolean) {
         if (coerceBooleanProperty(value) && !this.delete$sub) {
             this.delete$sub = this.keyup$
-                .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.Delete).filter(() => this._designMode)
+                .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.Delete)
                 .subscribe(() => this.layoutProvider.deleteSelection());
 
         } else if (this.delete$sub) {
@@ -155,7 +144,7 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
                 .subscribe(() => {
                     const tiles = this.layoutProvider.copySelection();
                     if (tiles && tiles.length) {
-                        const event = new CustomEvent('DejaTilesCopied', { cancelable: true }) as IDejaTilesEvent;
+                        const event = new CustomEvent('DejaTilesCopied', { cancelable: true }) as DejaTilesEvent;
                         event.tiles = tiles.map((tile) => tile.toTileModel());
                         this.contentCopied.emit(event);
                     }
@@ -171,11 +160,11 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
     public set canCut(value: boolean) {
         if (coerceBooleanProperty(value) && !this.cut$sub) {
             this.cut$sub = this.keyup$
-                .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.KeyX && event.ctrlKey).filter(() => this._designMode)
+                .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.KeyX && event.ctrlKey)
                 .subscribe(() => {
                     const tiles = this.layoutProvider.cutSelection();
                     if (tiles && tiles.length) {
-                        const event = new CustomEvent('DejaTilesCutted', { cancelable: true }) as IDejaTilesEvent;
+                        const event = new CustomEvent('DejaTilesCutted', { cancelable: true }) as DejaTilesEvent;
                         event.tiles = tiles.map((tile) => tile.toTileModel());
                         this.contentCopied.emit(event);
                     }
@@ -192,7 +181,7 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
         if (coerceBooleanProperty(value) && !this.paste$sub) {
             this.paste$sub = this.keyup$
                 .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.KeyV && event.ctrlKey)
-                .filter(() => this._designMode).subscribe(() => this.layoutProvider.paste());
+                .subscribe(() => this.layoutProvider.paste());
 
         } else if (this.paste$sub) {
             this.paste$sub.unsubscribe();
@@ -201,13 +190,12 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
     }
 
     @Input()
-    public set selectedTiles(selectedTiles: IDejaTile[]) {
-        this.layoutProvider.selectionChanges$.next(selectedTiles);
+    public set selectedTiles(selectedIds: string[]) {
+        this.layoutProvider.selectedTiles = selectedIds;
     }
 
     public ngAfterViewInit() {
         this.layoutProvider.container = this.tilesContainer.nativeElement;
-        Observable.fromEvent(window, 'resize').subscribe(() => { this.refresh(); });
     }
 
     public ngOnDestroy() {
@@ -215,6 +203,7 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
         this.canCut = false;
         this.canDelete = false;
         this.canPaste = false;
+        this.resize$sub.unsubscribe();
     }
 
     public copySelection() {
@@ -233,8 +222,8 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
         return this.layoutProvider.paste();
     }
 
-    public ensureVisible(tile: IDejaTile) {
-        this.layoutProvider.ensureVisible$.next(tile);
+    public ensureVisible(id: string) {
+        this.layoutProvider.ensureVisible$.next(id);
     }
 
     public expandTile(tile: IDejaTile, pixelheight: number) {
@@ -250,18 +239,14 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
     }
 
     public addTiles(tiles: IDejaTile[]) {
-        this.layoutProvider.addTiles$.next(tiles.map((tile) => new DejaTile(tile)));
+        this.layoutProvider.addTiles(tiles.map((tile) => new DejaTile(tile)));
     }
 
     public removeTiles(tileIds: string[]) {
-        this.layoutProvider.removeTiles$.next(tileIds);
+        this.layoutProvider.removeTiles(tileIds);
     }
 
     public addGroup(title?: string, bounds?: Rect) {
-        if (!this._designMode) {
-            return;
-        }
-
         const tile = {
             type: 'group',
             bounds: bounds || this.getFreePlace(0, 0, 15, 5),
@@ -270,7 +255,7 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
             },
         } as IDejaTile;
 
-        this.layoutProvider.createTiles$.next([tile]);
+        this.layoutProvider.createTiles([tile]);
 
         return tile;
     }
@@ -291,11 +276,15 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
         return this.layoutProvider.getFreePlace(percentBounds);
     }
 
+    public moveTile(id: string, bounds: Rect) {
+        this.layoutProvider.moveTile(id, bounds);
+    }
+
     protected getDropContext(_dropArea: HTMLElement) {
         return {
             dragEnter: (dragContext, dragCursor) => {
                 return this.layoutProvider.dragEnter(dragContext, dragCursor) && {
-                    html: ' ',
+                    className: 'hidden', // Hide drag cusror
                 } as IDropCursorInfos;
             },
             dragOver: (_dragContext, dragCursor) => {
@@ -308,16 +297,12 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
     }
 
     protected onTileClosed(tile: DejaTile) {
-        this.layoutProvider.removeTiles$.next([tile.id]);
+        this.layoutProvider.removeTiles([tile.id]);
     }
 
     protected onTileModelChanged(tile: DejaTile) {
-        this.onModelChange([tile.toTileModel()]);
-    }
-
-    protected onModelChange(tiles: IDejaTile[]) {
-        const event = {} as IDejaTilesEvent;
-        event.tiles = tiles;
+        const event = {} as DejaTilesEvent;
+        event.tiles = [tile];
         this.modelChanged.emit(event);
     }
 

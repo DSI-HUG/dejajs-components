@@ -9,8 +9,5 @@
  *
  */
 
-import { IDejaTile } from './';
-
-export interface IDejaTileEvent extends Event {
-  tile: IDejaTile;
-}
+export * from './iframe.component';
+export * from './iframe.module';
