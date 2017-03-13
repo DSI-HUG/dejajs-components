@@ -23,7 +23,7 @@ export class SafeHTMLPipe implements PipeTransform {
         this.sanitizer = sanitizer;
     }
 
-    public transform(html) {
-        return this.sanitizer.bypassSecurityTrustHtml(html);
+    public transform(value: any) {
+        return this.sanitizer.bypassSecurityTrustHtml(value) as any;
     }
 }

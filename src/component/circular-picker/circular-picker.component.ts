@@ -23,7 +23,7 @@ const DejaCircularPickerComponentValueAccessor = {
     useExisting: forwardRef(() => DejaCircularPickerComponent),
 };
 
-enum ClockwiseFactorEnum {
+export enum ClockwiseFactorEnum {
     clockwise = -1,
     counterClockwise = 1,
 }
@@ -319,7 +319,7 @@ export class DejaCircularPickerComponent implements OnInit {
     }
 }
 
-interface IConfig {
+export interface IConfig {
     range: ICircularRange;
     steps: number;
     stepAngle: number;

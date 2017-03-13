@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs/Rx';
 /*
  * *
  *  @license
@@ -17,7 +18,7 @@ import { GroupingService, IGroupInfo } from '../../common/core';
 export class DrugsService {
     constructor(private http: Http, private groupingService: GroupingService) { }
 
-    public getGroupedDrugs$(query?: string) {
+    public getGroupedDrugs$(query?: string): Observable<IDrug[]> {
         return this.getDrugs$(query)
             .switchMap((drugs) => {
                 const groupInfos = [
@@ -29,43 +30,43 @@ export class DrugsService {
                     },
                 ] as IGroupInfo[];
 
-                return this.groupingService.group(drugs, groupInfos);
+                return this.groupingService.group(drugs, groupInfos) as Promise<IDrug[]>;
             });
-                }
+    }
 
     public getDrugs$(query?: string, number?: number) {
         return this.http.get('https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/demo-app/services/drugs.json', { responseType: ResponseContentType.Json })
-                    .map((response: any) => {
-                        const datas = response.json();
-                        const drugs = datas.data as IDrug[];
+            .map((response: any) => {
+                const datas = response.json();
+                const drugs = datas.data as IDrug[];
 
-                        drugs.forEach((drug) => {
-                            Object.keys(drug).forEach((key) => {
-                                if (drug[key] && typeof drug[key] === 'object') {
-                                    Object.keys(drug[key]).forEach((skey) => {
-                                        drug[skey] = drug[key][skey];
-                                    });
-                                    delete drug[key];
-                                }
+                drugs.forEach((drug) => {
+                    Object.keys(drug).forEach((key) => {
+                        if (drug[key] && typeof drug[key] === 'object') {
+                            Object.keys(drug[key]).forEach((skey) => {
+                                drug[skey] = drug[key][skey];
                             });
-                        });
-
-                        if (query) {
-                            const sr = new RegExp('^' + query, 'i');
-                            const sc = new RegExp('^(?!' + query + ').*(' + query + ')', 'i');
-                            const result = drugs.filter((z) => sr.test(z.receivedate));
-                            drugs.forEach((z) => {
-                                if (sc.test(z.receivedate)) {
-                                    result.push(z);
-                                }
-                            });
-                            return result;
-                        } else {
-                            drugs.forEach((drug) => drug.indexedText = drug.receivedate + ' ' + drug.companynumb + ' ' + drug.safetyreportid);
-
-                            return drugs;
+                            delete drug[key];
                         }
-                    })
+                    });
+                });
+
+                if (query) {
+                    const sr = new RegExp('^' + query, 'i');
+                    const sc = new RegExp('^(?!' + query + ').*(' + query + ')', 'i');
+                    const result = drugs.filter((z) => sr.test(z.receivedate));
+                    drugs.forEach((z) => {
+                        if (sc.test(z.receivedate)) {
+                            result.push(z);
+                        }
+                    });
+                    return result;
+                } else {
+                    drugs.forEach((drug) => drug.indexedText = drug.receivedate + ' ' + drug.companynumb + ' ' + drug.safetyreportid);
+
+                    return drugs;
+                }
+            })
             .repeat(number || 1);
     }
 }

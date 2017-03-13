@@ -29,12 +29,12 @@ interface ILayoutInfos {
     validBounds: Rect;
 }
 
-interface IDragSelection {
+export interface IDragSelection {
     startPosition: Position;
     selectedRect: Rect;
 }
 
-interface IDragDropInfos {
+export interface IDragDropInfos {
     enabled: boolean;
     startX: number;
     startY: number;

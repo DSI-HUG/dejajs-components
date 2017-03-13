@@ -13,9 +13,9 @@ import { ElementRef, QueryList } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { GroupingService, IGroupInfo } from '../grouping/index';
 import { ISortInfos, SortingService, SortOrder } from '../sorting/index';
-import {IItemBase} from './item-base';
-import {IParentListInfoResult, ItemListService, IViewListResult} from './item-list.service';
-import {IItemTree} from './item-tree';
+import { IItemBase } from './item-base';
+import { IFindItemResult, IParentListInfoResult, ItemListService, IViewListResult } from './item-list.service';
+import { IItemTree } from './item-tree';
 
 export enum ViewportMode {
     NoViewport,
@@ -270,10 +270,10 @@ export class ItemListBase {
      * @return {Promise} Promesse résolue par la fonction.
      */
     public toggleCollapse(index: number, collapsed: boolean): Promise<boolean> {
-            // Get item with relative index
-            const item = this._itemList[index - this.vpStartRow];
-            if (!item) {
-                // Not on the visible part, no transition
+        // Get item with relative index
+        const item = this._itemList[index - this.vpStartRow];
+        if (!item) {
+            // Not on the visible part, no transition
             return this.getItemListService().toggleCollapse(index, collapsed);
         } else {
             const oldlist = [...this._itemList];
@@ -283,9 +283,9 @@ export class ItemListBase {
                 if (collapsed) {
                     return Observable.of(oldTreeInfo)
                         .map((oldTree) => {
-                    // Hide children for effect
+                            // Hide children for effect
                             const children = (oldTree.children || []) as IItemTree[];
-                    children.forEach((child) => child.expanding = true);
+                            children.forEach((child) => child.expanding = true);
                             return children;
                         })
                         .delay(300)
@@ -320,7 +320,7 @@ export class ItemListBase {
                         return { newlist, newTreeInfo };
                     });
 
-                        if (!collapsed) {
+                if (!collapsed) {
                     return newTreeInfo$
                         .map(({ newlist, newTreeInfo }) => {
                             // Add elements to the flat list, expand and calc new flatlist, keep children hidden for effect
@@ -341,9 +341,9 @@ export class ItemListBase {
                         .map(() => true)
                         .toPromise();
 
-                        } else {
-                            // Remove elements from the flat list, collapse and calc new flatlist
-                            // Add same amount of elements to the visible list
+                } else {
+                    // Remove elements from the flat list, collapse and calc new flatlist
+                    // Add same amount of elements to the visible list
                     return newTreeInfo$
                         .do(({ newlist, newTreeInfo }) => {
                             const oldEndRow = Math.min(oldlist.length - 1, oldTreeInfo.lastIndex + 1);
@@ -354,8 +354,8 @@ export class ItemListBase {
                         .map(() => true)
                         .toPromise();
                 }
-                        }
             }
+        }
     }
 
     /** Déselectionne tous les éléments sélectionés.
@@ -411,7 +411,7 @@ export class ItemListBase {
      * @return {Promise} Promesse résolue par la fonction.
      */
     protected findNextMatch(compare?: (item: IItemBase, index: number) => boolean, startIndex?: number) {
-        return this.getItemListService().findNextMatch(compare, startIndex);
+        return this.getItemListService().findNextMatch(compare, startIndex) as Promise<IFindItemResult>;
     }
 
     /** Définit la hauteur d'une ligne pour le calcul du viewport. Le Viewport ne fonctionne qu'avec des hauteurs de lignes fixe.
@@ -688,8 +688,8 @@ export class ItemListBase {
                     Observable.timer(1)
                         .first()
                         .subscribe(() => {
-                        this.computedMaxHeight = containerElem.clientHeight;
-                        calcViewPortInternal(qry, this.computedMaxHeight, containerElem, true);
+                            this.computedMaxHeight = containerElem.clientHeight;
+                            calcViewPortInternal(qry, this.computedMaxHeight, containerElem, true);
                         });
                     return;
                 }
@@ -779,10 +779,10 @@ export class ItemListBase {
                     let scrollMax = 0;
                     let lastVisibleItem: IItemBase;
                     const fn = isNaN(+item) ? (itm: IItemBase) => {
-                            return item === itm;
-                        } : (_itm: IItemBase, index: number) => {
-                            return item === index;
-                        };
+                        return item === itm;
+                    } : (_itm: IItemBase, index: number) => {
+                        return item === index;
+                    };
                     lastVisibleItem = viewListResult.visibleList.find((itm: IItemBase, index: number) => {
                         const test = fn(itm, index);
                         if (!test) {
@@ -832,7 +832,7 @@ export class ItemListBase {
         if (!this._isBusinessObject) {
             return modls as IItemBase[];
         }
-        
+
         return modls.map((model) => {
             const itemBase: IItemBase = {};
             itemBase.model = model;
