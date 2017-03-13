@@ -581,7 +581,7 @@ export class DejaTilesLayoutProvider {
         this.refreshTiles$.next({ resetWidth: true });
 
         const event = new CustomEvent('DejaTilesEvent', { cancelable: true }) as DejaTilesEvent;
-        event.tiles = tilesToDelete.map((tile) => tile.toTileModel());
+        event.tiles = this._tiles.map((tile) => tile.toTileModel());
         this.modelChanged.emit(event);
     }
 
@@ -960,7 +960,7 @@ export class DejaTilesLayoutProvider {
             deleteSourceTiles();
 
             const e = new CustomEvent('DejaTilesEvent', { cancelable: true }) as DejaTilesEvent;
-            e.tiles = tiles.map((tile) => tile.toTileModel());
+            e.tiles = this._tiles.map((tile) => tile.toTileModel());
             this.modelChanged.emit(e);
         };
 

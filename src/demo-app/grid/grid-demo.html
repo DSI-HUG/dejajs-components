@@ -36,7 +36,7 @@
 			</ul>
 		</deja-menu>
 		<!-- -->
-		<deja-grid #bgrid searchArea groupArea rowsSortable columnsSortable columnsSizable multiSelect sortable [(ngModel)]="drugsBigRecord" [columns]="columns" (selectedChange)="onSelectionChanged($event)"
+		<deja-grid #bgrid searchArea groupArea rowsSortable columnsSortable columnsSizable multiSelect sortable [(ngModel)]="drugsBigRecord$" [columns]="columns" (selectedChange)="onSelectionChanged($event)"
 		           nodataholder="Pas de données" placeholder="Filtrer la liste par le nom" searchField="indexedText" (itemDragStart)="onItemDragStart($event)">
 			<template #cellTemplate let-row let-column="column">
 						<span id="cell-reaction" class="cell" *ngIf="column.name==='reaction' && row.reaction && row.reaction.length">
@@ -79,7 +79,7 @@
 	<md-toolbar color="secondary">Grille avec taille des colonnes en pixels et en pourcents</md-toolbar>
 	<md-card-content class="listContainer">
 		<!-- -->
-		<deja-grid #cgrid searchArea groupArea sortable columnsSizable multiSelect [(ngModel)]="drugs" [columns]="percentColumns" (selectedChange)="onSelectionChanged2($event)" nodataholder="Pas de données"
+		<deja-grid #cgrid searchArea groupArea sortable columnsSizable multiSelect [(ngModel)]="drugs$" [columns]="percentColumns" (selectedChange)="onSelectionChanged2($event)" nodataholder="Pas de données"
 		           placeholder="Filtrer la liste par le nom" searchField="receivedate" (itemDragStart)="onItemDragStart($event)">
 			<template #rowTemplate let-row>
 				<deja-grid-row [row]="row" [columnLayout]="cgrid.columnLayout" [cellTemplateExternal]="cgrid.cellTemplate" [currentColumn]="cgrid.currentColumn">

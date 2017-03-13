@@ -1,4 +1,3 @@
-import { Observable } from 'rxjs/Rx';
 /*
  * *
  *  @license
@@ -12,6 +11,7 @@ import { Observable } from 'rxjs/Rx';
 
 import { Injectable } from '@angular/core';
 import { Http, ResponseContentType } from '@angular/http';
+import { Observable } from 'rxjs/Rx';
 import { GroupingService, IGroupInfo } from '../../common/core';
 
 @Injectable()

@@ -65,6 +65,7 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
     private cut$sub: Subscription;
     private paste$sub: Subscription;
     private keyup$: Observable<KeyboardEvent>;
+    private resize$sub: Subscription;
     private tiles$ = new BehaviorSubject<DejaTile[]>([]);
 
     @ViewChild('tilesContainer') private tilesContainer: ElementRef;
@@ -82,6 +83,8 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
         });
 
         this.keyup$ = Observable.fromEvent(element.ownerDocument, 'keyup');
+
+        this.resize$sub = Observable.fromEvent(window, 'resize').subscribe(() => this.refresh());
     }
 
     @Input()
@@ -193,7 +196,6 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
 
     public ngAfterViewInit() {
         this.layoutProvider.container = this.tilesContainer.nativeElement;
-        Observable.fromEvent(window, 'resize').subscribe(() => { this.refresh(); });
     }
 
     public ngOnDestroy() {
@@ -201,6 +203,7 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
         this.canCut = false;
         this.canDelete = false;
         this.canPaste = false;
+        this.resize$sub.unsubscribe();
     }
 
     public copySelection() {
@@ -281,7 +284,7 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
         return {
             dragEnter: (dragContext, dragCursor) => {
                 return this.layoutProvider.dragEnter(dragContext, dragCursor) && {
-                    html: '',
+                    className: 'hidden', // Hide drag cusror
                 } as IDropCursorInfos;
             },
             dragOver: (_dragContext, dragCursor) => {
