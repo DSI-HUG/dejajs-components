@@ -3,7 +3,7 @@ cache:
   directories:
     - node_modules
 notifications:
-  email: false
+  email: true
 node_js:
   - '6'
 branches:
@@ -13,6 +13,5 @@ branches:
 before_script:
   - npm prune
 after_success:
-  - npm run build:prod
   - npm run deploy
   - npm run publish
