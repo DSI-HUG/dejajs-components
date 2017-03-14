@@ -1,17 +1,17 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
 
-import { AfterViewInit, Directive, ElementRef, forwardRef, HostBinding } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, forwardRef } from '@angular/core';
 import { NG_VALIDATORS, Validator } from '@angular/forms';
-import { setTimeout } from 'timers';
+import { Observable, Subject } from 'rxjs/Rx';
 
 /**
  * Directive pour rendre un textarea material redimensioné automatiquement au contenu.
@@ -22,28 +22,35 @@ import { setTimeout } from 'timers';
     providers: [
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => DejaAutosizeTextAreaDirective), multi: true },
     ],
-    selector: 'textarea[deja-autosize][ngModel]',
+    selector: 'textarea[deja-autosize]',
 })
 export class DejaAutosizeTextAreaDirective implements AfterViewInit, Validator {
-    @HostBinding('attr.rows') protected rows = 1;
+    private resize$ = new Subject<void>();
 
     constructor(private elementRef: ElementRef) {
+        const textAreaElement = this.elementRef.nativeElement as HTMLTextAreaElement;
+
+        Observable.from(this.resize$)
+            .first()
+            .subscribe(() => {
+                textAreaElement.setAttribute('rows', '1');
+                textAreaElement.style.overflowY = 'hidden';
+            });
+
+        Observable.from(this.resize$)
+            .debounceTime(5)
+            .do(() => textAreaElement.style.height = '18px')
+            .subscribe(() => {
+                textAreaElement.style.height = textAreaElement.scrollHeight + 'px';
+            });
     }
 
     public ngAfterViewInit() {
-        setTimeout(() => {
-            this.resize();
-        }, 0);
+        this.resize$.next();
     }
 
     public validate(): { [key: string]: any } {
-        this.resize();
+        this.resize$.next();
         return null;
-    }
-
-    private resize() {
-        let textAreaElement = this.elementRef.nativeElement as HTMLTextAreaElement;
-        textAreaElement.style.height = 'auto';
-        textAreaElement.style.height = textAreaElement.scrollHeight + 'px';
     }
 }

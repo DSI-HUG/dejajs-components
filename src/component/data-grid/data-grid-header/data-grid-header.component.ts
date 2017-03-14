@@ -1,10 +1,10 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
@@ -12,8 +12,8 @@
 import { Component, ContentChild, ElementRef, EventEmitter, HostListener, Input, Output } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { Observable, Subscription } from 'rxjs/Rx';
-import { IDejaDragEvent, IDejaDropEvent, ISortInfos } from "../../../index";
-import { IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayout, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent } from "../index";
+import { IDejaDragEvent, IDejaDropEvent, ISortInfos } from '../../../index';
+import { IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayout, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent } from '../index';
 
 @Component({
     selector: 'deja-grid-header',
@@ -179,15 +179,15 @@ export class DejaGridHeaderComponent {
                     return;
                 }
 
-                let targetElement = this.getColumnElementFromHTMLElement(event.target as HTMLElement);
-                let targetBounds = targetElement.getBoundingClientRect();
-                let targetIndex = targetElement && +targetElement.getAttribute('index');
+                const targetElement = this.getColumnElementFromHTMLElement(event.target as HTMLElement);
+                const targetBounds = targetElement.getBoundingClientRect();
+                const targetIndex = targetElement && +targetElement.getAttribute('index');
                 if (targetIndex === undefined) {
                     return;
                 }
 
-                let sourceColumn = event.dragInfo[this.columnGroupKey] as IDejaGridColumn;
-                let sourceIndex = this._columnLayout.columns.findIndex((og) => og === sourceColumn);
+                const sourceColumn = event.dragInfo[this.columnGroupKey] as IDejaGridColumn;
+                const sourceIndex = this._columnLayout.columns.findIndex((og) => og === sourceColumn);
 
                 // Dead zones                
                 if (sourceIndex === targetIndex) {
@@ -211,10 +211,10 @@ export class DejaGridHeaderComponent {
                 event.preventDefault();
             },
             dropcallback: (event: IDejaDropEvent) => {
-                let sourceColumn = event.dragInfo[this.columnGroupKey] as IDejaGridColumn;
+                const sourceColumn = event.dragInfo[this.columnGroupKey] as IDejaGridColumn;
                 let targetIndex = this._columnLayout.columns.findIndex((og) => og === sourceColumn);
 
-                let e = {
+                const e = {
                     column: sourceColumn,
                     originalEvent: event,
                     target: (++targetIndex < this._columnLayout.columns.length) ? this._columnLayout.columns[targetIndex] : null,
@@ -232,8 +232,8 @@ export class DejaGridHeaderComponent {
             return;
         }
 
-        let target = event.target as HTMLElement;
-        let column = this.getColumnFromHTMLElement(event.target as HTMLElement);
+        const target = event.target as HTMLElement;
+        const column = this.getColumnFromHTMLElement(event.target as HTMLElement);
 
         if (target.hasAttribute('separator')) {
             if (this.columnsSizable && column.sizeable !== false) {
@@ -257,13 +257,13 @@ export class DejaGridHeaderComponent {
                 return;
             }
 
-            let element = this.elementRef.nativeElement as HTMLElement;
+            const element = this.elementRef.nativeElement as HTMLElement;
             this.mouseUpObs = Observable.fromEvent(element, 'mouseup').subscribe((event: MouseEvent) => {
-                let time = Date.now();
+                const time = Date.now();
                 if (time - this.clickedTime < 1000) {
-                    let columnElement = this.getColumnElementFromHTMLElement(event.target as HTMLElement);
+                    const columnElement = this.getColumnElementFromHTMLElement(event.target as HTMLElement);
                     if ((columnElement && columnElement.getAttribute('colname')) === this.clickedColumn.name) {
-                        let e = {
+                        const e = {
                             column: this.clickedColumn,
                             originalEvent: event,
                         } as IDejaGridColumnEvent;
@@ -286,10 +286,10 @@ export class DejaGridHeaderComponent {
                 return;
             }
 
-            let element = this.elementRef.nativeElement as HTMLElement;
+            const element = this.elementRef.nativeElement as HTMLElement;
             this.mouseMoveObs = Observable.fromEvent(element.ownerDocument, 'mousemove').subscribe((event: MouseEvent) => {
                 if (event.buttons === 1) {
-                    let e = {
+                    const e = {
                         column: this.sizedColumn,
                         offsetWidth: event.pageX - this.sizedOrigin,
                         originalEvent: event,
@@ -301,7 +301,7 @@ export class DejaGridHeaderComponent {
                 }
             });
         } else if (this.mouseMoveObs) {
-            let e = {
+            const e = {
                 column: null,
             } as IDejaGridColumnSizeEvent;
             this.columnSizeChanged.emit(e);
@@ -327,8 +327,8 @@ export class DejaGridHeaderComponent {
     }
 
     private getColumnFromHTMLElement(element: HTMLElement): IDejaGridColumn {
-        let columnElement = this.getColumnElementFromHTMLElement(element);
-        let colName = columnElement && columnElement.getAttribute('colname');
+        const columnElement = this.getColumnElementFromHTMLElement(element);
+        const colName = columnElement && columnElement.getAttribute('colname');
         return colName && this._columnLayout.columns.find((column) => column.name === colName);
     }
 }

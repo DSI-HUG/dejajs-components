@@ -1,20 +1,19 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
 
-import { Directive, ElementRef, forwardRef, HostBinding, HostListener, Input } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { Directive, ElementRef, forwardRef, Input } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
-import { Observable, Subscription } from 'rxjs/Rx';
-import { setTimeout } from 'timers';
-import { KeyCodes } from "../../common/core/index";
+import { BehaviorSubject, Observable } from 'rxjs/Rx';
+import { KeyCodes } from '../../common/core/index';
 
 const noop = () => { };
 
@@ -29,17 +28,93 @@ const DejaEditableDirectiveValueAccessor = {
     selector: '[deja-editable]',
 })
 export class DejaEditableDirective implements ControlValueAccessor {
-    @HostBinding('attr.contenteditable') protected _inEdition = false;
-    @HostBinding('attr.content') protected model: string;
+    private model: string;
+    private _inEdition = false;
     private _editMode = false;
     private _mandatory = false;
     private _multiline = false;
     private onTouchedCallback: () => void = noop;
     private onChangeCallback: (_: any) => void = noop;
-    private globalClickObs: Subscription;
-    private keydownObs: Subscription;
+    private edit$ = new BehaviorSubject<[boolean, boolean]>([false, false]);
+    private element: HTMLElement;
 
-    constructor(private elementRef: ElementRef) {
+    constructor(elementRef: ElementRef) {
+        this.element = elementRef.nativeElement as HTMLElement;
+
+        Observable.fromEvent(this.element, 'mousedown')
+            .subscribe((e: MouseEvent) => {
+                if (this.inEdition) {
+                    e.cancelBubble = true;
+                    return false;
+                } else if (this.editMode) {
+                    this.edit$.next([true, true]);
+                    e.cancelBubble = true;
+                    return false;
+                }
+            });
+
+        const inEdition$ = Observable.from(this.edit$)
+            .map(([value, selectOnFocus]) => {
+                if (selectOnFocus !== false) {
+                    this.selectAll();
+                    Observable.timer(10)
+                        .first()
+                        .subscribe(() => {
+                            this.focus();
+                        });
+                }
+                return value;
+            })
+            .do((value) => {
+                this._inEdition = value;
+                if (value) {
+                    this.element.setAttribute('contenteditable', 'true');
+                } else {
+                    this.element.removeAttribute('contenteditable');
+                }
+            });
+
+        const kill$ = inEdition$
+            .filter((value) => !value);
+
+        inEdition$
+            .filter((value) => value)
+            .subscribe(() => {
+                Observable.fromEvent(this.element.ownerDocument, 'mousedown')
+                    .takeUntil(kill$)
+                    .filter((event: MouseEvent) => !this.isChildElement(event.target as HTMLElement))
+                    .subscribe(() => {
+                        const text = this.element.innerText;
+                        this.onTouchedCallback();
+                        if (text || !this.mandatory) {
+                            this.value = text;
+                        } else {
+                            this.refreshView();
+                        }
+
+                        this.inEdition = false;
+                    });
+
+                Observable.fromEvent(this.element, 'keydown')
+                    .takeUntil(kill$)
+                    .subscribe((e: KeyboardEvent) => {
+                        e.cancelBubble = true;
+                        if (e.keyCode === KeyCodes.Enter && !this.multiline) {
+                            const text = this.element.innerText;
+                            if (text || !this.mandatory) {
+                                this.value = text;
+                            } else {
+                                this.refreshView();
+                            }
+                            this.inEdition = false;
+                            return false;
+                        } else if (e.keyCode === KeyCodes.Escape) {
+                            this.refreshView();
+                            this.inEdition = false;
+                            return false;
+                        }
+                    });
+            });
     }
 
     /** Définit une valeur indiquant si le contenu édité est obligatoire. Si la valeur est 'true' la sortie du mode édition ne sera pas possible tant qu'un contenu n'est pas ajouté. */
@@ -78,9 +153,7 @@ export class DejaEditableDirective implements ControlValueAccessor {
     /** Définit une valeur indiquant si l'élément est en édition. */
     @Input()
     public set inEdition(value: boolean) {
-        this._inEdition = coerceBooleanProperty(value);
-        this.globalClick = this._inEdition;
-        this.keydown = this._inEdition;
+        this.edit$.next([coerceBooleanProperty(value), false]);
     }
 
     /** Retourne une valeur indiquant si l'élément est en édition. */
@@ -121,119 +194,37 @@ export class DejaEditableDirective implements ControlValueAccessor {
 
     /** Donne le focus à la zone d'édition. */
     public focus() {
-        this.elementRef.nativeElement.focus();
+        this.element.focus();
     }
 
     /** Place toute la zone d'édition en selectioné. */
     public selectAll() {
-        let range = document.createRange();
-        range.selectNodeContents(this.elementRef.nativeElement);
-        let sel = window.getSelection();
+        const range = document.createRange();
+        range.selectNodeContents(this.element);
+        const sel = window.getSelection();
         sel.removeAllRanges();
         sel.addRange(range);
     }
 
     /** Active la zone d'édition. */
     public edit(selectOnFocus?: boolean) {
-        this.inEdition = true;
-        if (selectOnFocus !== false) {
-            setTimeout(() => {
-                this.selectAll();
-                this.focus();
-            }, 10);
-        }
-    }
-
-    @HostListener('click', ['$event'])
-    protected onClick(e: Event) {
-        if (this.inEdition) {
-            e.cancelBubble = true;
-            return false;
-        } else if (this.editMode) {
-            this.edit();
-            e.cancelBubble = true;
-            return false;
-        }
-    }
-
-    private set globalClick(value: boolean) {
-        if (value) {
-            if (this.globalClickObs) {
-                return;
-            }
-
-            let element = this.elementRef.nativeElement as HTMLElement;
-            this.globalClickObs = Observable.fromEvent(element.ownerDocument, 'click').subscribe((event: MouseEvent) => {
-                if (this.isChildElement(event.target as HTMLElement)) {
-                    return;
-                }
-
-                let text = this.elementRef.nativeElement.innerText;
-                this.onTouchedCallback();
-                if (text || !this.mandatory) {
-                    this.value = text;
-                } else {
-                    this.refreshView();
-                }
-
-                this.inEdition = false;
-            });
-
-        } else if (this.globalClickObs) {
-            this.globalClickObs.unsubscribe();
-            delete this.globalClickObs;
-        }
-    }
-
-    private set keydown(value: boolean) {
-        let elem = this.elementRef.nativeElement as HTMLElement;
-        if (value && this.inEdition) {
-            if (this.keydownObs) {
-                return;
-            }
-
-            this.keydownObs = Observable.fromEvent(elem, 'keydown').subscribe((e: KeyboardEvent) => {
-                if (!this.inEdition) {
-                    this.keydown = false;
-                    return;
-                }
-
-                e.cancelBubble = true;
-                if (e.keyCode === KeyCodes.Enter && !this.multiline) {
-                    let text = this.elementRef.nativeElement.innerText;
-                    if (text || !this.mandatory) {
-                        this.value = text;
-                    } else {
-                        this.refreshView();
-                    }
-                    this.inEdition = false;
-                    return false;
-                } else if (e.keyCode === KeyCodes.Escape) {
-                    this.refreshView();
-                    this.inEdition = false;
-                    return false;
-                }
-            });
-        } else if (this.keydownObs) {
-            this.keydownObs.unsubscribe();
-            delete this.keydownObs;
-        }
+        this.edit$.next([true, selectOnFocus]);
     }
 
     private isChildElement(element: HTMLElement) {
         let parentElement = element;
 
-        while (parentElement && parentElement !== this.elementRef.nativeElement) {
+        while (parentElement && parentElement !== this.element) {
             parentElement = parentElement.parentElement;
         }
 
-        return parentElement === this.elementRef.nativeElement;
+        return parentElement === this.element;
     }
 
     private refreshView() {
         if (!this.model) {
             return;
         }
-        this.elementRef.nativeElement.innerText = this.model;
+        this.element.innerText = this.model;
     }
 }

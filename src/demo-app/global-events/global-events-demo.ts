@@ -1,35 +1,34 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
 
-import { Component, NgZone, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, NgZone } from '@angular/core';
 import { GlobalEventService } from '../../common/global-event/global-event.service';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'events-demo',
   styleUrls: ['./global-events-demo.scss'],
   templateUrl: './global-events-demo.html',
 })
-export class GlobalEventsDemo implements OnInit {
+export class GlobalEventsDemoComponent {
   private model = {
     date: new Date(),
   };
   private _subscription: any;
 
-  constructor(private globalEvent: GlobalEventService, private zone: NgZone) {
-  }
-
-  public ngOnInit() {
-    this._subscription = this.globalEvent.register('sendaction').subscribe((params: any[]) => {
-      this.zone.run(() => {
+    constructor(changeDetectorRef: ChangeDetectorRef, globalEvent: GlobalEventService, zone: NgZone) {
+        this._subscription = globalEvent.register('sendaction').subscribe((params: any[]) => {
+            zone.run(() => {
         this.model.date = new Date(params[0]);
+                changeDetectorRef.markForCheck();
       });
     });
   }

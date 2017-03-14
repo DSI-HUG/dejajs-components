@@ -1,11 +1,48 @@
 <a name="@next"></a>
-# [@next] (2017-02-xx)
+# [@next] (2017-03-xx)
 
-<a name="@next"></a>
-# [1.3.1] (2017-02-15)
+### Breaking changes from 1.4.2-beta.16
+
+
+### Bug fixes #
+
+<a name="1.4.2-beta.16"></a>
+# [1.4.2-beta.16] (2017-03-13)
+
+Update Typescript and webpack config
+
+### Bug fixes #
+
+<a name="1.4.2-beta.15"></a>
+# [1.4.2-beta.15] (2017-03-10)
+
+Minor bugs fix
+
+<a name="1.4.2-beta.14"></a>
+# [1.4.2-beta.14] (2017-03-09)
+
+Fix bugs
+
+
+<a name="1.4.2-beta.13"></a>
+# [1.4.2-beta.13] (2017-03-06)
+
+### Breaking changes from 1.4.2-beta.10
+* **ColorEvent:** ColorEvent inherits from CustomEvent. ColorName and Color can be set only on the constructor.
+
+### Bug fixes #
+* **SnackBar:** Animation is now compatible with IE and FF
+* **SnackBarDemo:** SnackBar position inside ViewPort
+* **MenuDemo:** Menu position inside ViewPort
+* **MessageBoxDemo:** MessageBox position inside ViewPort
+
+<a name="1.4.2-beta.10"></a>
+# [1.4.2] (2017-03-03)
 
 ### Breaking changes from 1.3.0
-
+* **Rect:** Right and Bottom are now get set properties instead functions.
+* **DateValidatorDirective:** DateValidator is renamed DateValidatorDirective
+* **DragDropService:** Replaced by ClipboardService. ClipboardService must be provided in your app module, one times only.
 
 ### Bug fixes #
 * **Typescript compiler options:**

@@ -1,16 +1,16 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
 
 import { AfterContentInit, Component, ElementRef, EventEmitter, forwardRef, Input, Output, ViewChild, ViewEncapsulation } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from "@angular/forms";
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import 'rxjs/Rx';
 import { Observable, Subscription } from 'rxjs/Rx';
@@ -87,7 +87,7 @@ export class DejaDateSelectorComponent implements AfterContentInit {
 
     private days = [];
     private emptyDays: any[];
-    private _time: boolean = false;
+    private _time = false;
 
     private onTouchedCallback: () => void = noop;
     private onChangeCallback: (_: any) => void = noop;
@@ -151,7 +151,7 @@ export class DejaDateSelectorComponent implements AfterContentInit {
             case KeyCodes.LeftArrow:
             case KeyCodes.RightArrow:
                 event.preventDefault();
-                let d = new Date(this.selectedDate);
+                const d = new Date(this.selectedDate);
                 switch (event.keyCode) {
                     case KeyCodes.PageUp:
                         // d.setMonth(d.getMonth() - 1);
@@ -213,8 +213,8 @@ export class DejaDateSelectorComponent implements AfterContentInit {
     public writeValue(value: Date) {
         if (value !== this.selectedDate) {
             if (this.selectedDate) {
-                let h = (value) ? value.getHours() : 0;
-                let m = (value) ? value.getMinutes() : 0;
+                const h = (value) ? value.getHours() : 0;
+                const m = (value) ? value.getMinutes() : 0;
                 if (
                     (!this.time && this.selectedDate.toLocaleTimeString() !== value.toLocaleTimeString())
                     || (this.time && ((this.selectedDate.getHours() === 0 && this.selectedDate.getMinutes() === 0) && (h !== 0 && m !== 0) || (this.selectedDate.toLocaleDateString() !== value.toLocaleDateString())))
@@ -247,14 +247,14 @@ export class DejaDateSelectorComponent implements AfterContentInit {
      * @return {IDateSelectorItem[]} Jours du mois au format IDateSelectorItem
      */
     public getAllDaysInMonth(month: number, year: number): IDateSelectorItem[] {
-        let days: IDateSelectorItem[] = [];
+        const days: IDateSelectorItem[] = [];
 
         let day = 1;
         let date = new Date(year, month, day);
 
         while (date.getDay() !== this.startDay) {
             date = new Date(year, month, --day);
-            let dateSelectorItem: IDateSelectorItem = {
+            const dateSelectorItem: IDateSelectorItem = {
                 background: true,
                 date: date,
             };
@@ -265,7 +265,7 @@ export class DejaDateSelectorComponent implements AfterContentInit {
         for (d = 1; d <= this.daysInMonth(month + 1, year); d++) {
             date = new Date(year, month, d);
 
-            let dateSelectorItem = {
+            const dateSelectorItem = {
                 currentDate: (this.currentDate.setHours(0, 0, 0, 0) === date.setHours(0, 0, 0, 0)) ? true : null,
                 date: date,
             };
@@ -277,7 +277,7 @@ export class DejaDateSelectorComponent implements AfterContentInit {
             if (date.getDay() === this.startDay) {
                 break;
             } else {
-                let dateSelectorItem = {
+                const dateSelectorItem = {
                     background: true,
                     date: date,
                 };
@@ -289,7 +289,7 @@ export class DejaDateSelectorComponent implements AfterContentInit {
         // Il nous faut 6 lignes de 7 jours pour correspondre à tous les mois. 6*7=42
         // Du coup on ajoute une ligne vide quand c'est nécessaire
         if (days.length < 42) {
-            let x = 42 - days.length;
+            const x = 42 - days.length;
             this.emptyDays = new Array(x);
         } else {
             this.emptyDays = null;
@@ -353,8 +353,8 @@ export class DejaDateSelectorComponent implements AfterContentInit {
     }
 
     private bind() {
-        let month = this.displayedDate.getMonth();
-        let year = this.displayedDate.getFullYear();
+        const month = this.displayedDate.getMonth();
+        const year = this.displayedDate.getFullYear();
 
         this.currentDays = this.getAllDaysInMonth(month, year);
 
@@ -378,7 +378,7 @@ export class DejaDateSelectorComponent implements AfterContentInit {
      */
     private isDisabledDate(date: Date): boolean {
         if (this.disableDates && this.disableDates instanceof Array) {
-            let find = this.disableDates.find((d: Date | number) => {
+            const find = this.disableDates.find((d: Date | number) => {
                 if (typeof d === 'number') {
                     return d === date.getDay();
                 } else {
@@ -405,7 +405,7 @@ export class DejaDateSelectorComponent implements AfterContentInit {
      * @param {number} num : nombre de jours à ajouter à date.
      */
     private setDateIfPossible(date: Date, num: number): void {
-        let d = new Date(date);
+        const d = new Date(date);
         d.setDate(d.getDate() + num);
         if (this.disableDates && this.isDisabledDate(d)) {
             this.setDateIfPossible(d, num);
@@ -424,7 +424,7 @@ export class DejaDateSelectorComponent implements AfterContentInit {
      * @param {number} num : nombre de mois à ajouter à date.
      */
     private setMonthIfPossible(date: Date, num: number): void {
-        let d = new Date(date);
+        const d = new Date(date);
         d.setMonth(d.getMonth() + num);
         if (this.disableDates && this.isDisabledDate(d)) {
             num = (num < 0) ? -1 : 1;
@@ -444,7 +444,7 @@ export class DejaDateSelectorComponent implements AfterContentInit {
      * @param {number} num : nombre de jours à ajouter à date.
      */
     private setYearIfPossible(date: Date, num: number): void {
-        let d = new Date(date);
+        const d = new Date(date);
         d.setFullYear(d.getFullYear() + num);
         if (this.disableDates && this.isDisabledDate(d)) {
             num = (num < 0) ? -1 : 1;

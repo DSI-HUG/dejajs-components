@@ -28,8 +28,8 @@ module.exports = {
             },
             test: /\.html$/,
         }, {
-            loader: "file-loader?name=assets/[name].[hash].[ext]",
-            test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
+            loader: "file-loader?name=assets/[name].[ext]",
+            test: /\.(png|jpe?g|gif|ico)$/,
         }, {
             include: [
                 path.resolve("./node_modules/@angular/material/core/theming/prebuilt"),
@@ -41,8 +41,20 @@ module.exports = {
             loaders: ["exports-loader?module.exports.toString()", "css-loader?sourceMap", "sass-loader?sourceMap"],
             test: /\.scss$/,
         }, {
-            loader: "url-loader?limit=100000",
-            test: /\.(woff|ttf|eot|svg)(\?v=[a-z0-9]\.[a-z0-9]\.[a-z0-9])?$/,
+            loader: "url-loader?name=assets/[name].[ext]&limit=10000&mimetype=application/font-woff",
+            test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
+        }, {
+            loader: "url-loader?name=assets/[name].[ext]&limit=10000&mimetype=application/font-woff",
+            test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
+        }, {
+            loader: "url-loader?name=assets/[name].[ext]&limit=10000&mimetype=application/octet-stream",
+            test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
+        }, {
+            loader: "file-loader?name=assets/[name].[ext]",
+            test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
+        }, {
+            loader: "url-loader?name=assets/[name].[ext]&limit=10000&mimetype=image/svg+xml",
+            test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
         }],
     },
     plugins: [
@@ -58,5 +70,6 @@ module.exports = {
     ],
     resolve: {
         extensions: [".webpack.js", ".web.js", ".ts", ".tsx", ".js", ".css", ".html"],
+        modules: [ path.join(__dirname, "node_modules") ],
     },
 };

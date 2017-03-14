@@ -1,15 +1,15 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
 
-import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { IItemTree } from '../../common/core';
 import { DejaGridComponent, DejaGridRowsEvent, IDejaDragEvent, IDejaGridColumn } from '../../component';
@@ -21,7 +21,7 @@ import { DrugsService, IDrug } from '../services/drugs.service';
     styleUrls: ['./grid-demo.scss'],
     templateUrl: './grid-demo.html',
 })
-export class GridDemo {
+export class GridDemoComponent implements OnInit {
     protected columns = [
         {
             label: 'transmissiondateformat',
@@ -285,17 +285,26 @@ export class GridDemo {
         },
     ] as IDejaGridColumn[];
 
-    private drugsBigRecord: Observable<IDrug[]>;
-    private drugs: Observable<IDrug[]>;
-    private groupedDrugs: Promise<IDrug[]>;
+    protected tabIndex = 1;
+    protected drugCounts = 0;
+
+    private drugsBigRecord$: Observable<IDrug[]>;
+    private drugs$: Observable<IDrug[]>;
+    private groupedDrugs$: Observable<IDrug[]>;
     private selectedItems: IItemTree[];
     @ViewChild(DejaGridComponent) private gridComponent: DejaGridComponent;
 
     constructor(private drugsService: DrugsService) {
-        this.drugsBigRecord = this.drugsService.getDrugs(null, 100);
-        this.drugs = this.drugsService.getDrugs();
-        this.groupedDrugs = this.drugsService.getGroupedDrugs();
+
     }
+
+    ngOnInit() {
+        this.drugCounts = 0;
+        this.drugsBigRecord$ = this.drugsService.getDrugs$(null, 10).do((drugs) => this.drugCounts += drugs.length);
+        this.drugs$ = this.drugsService.getDrugs$();
+        this.groupedDrugs$ = this.drugsService.getGroupedDrugs$();
+    }
+
 
     protected onSelectionChanged(e: DejaGridRowsEvent) {
         this.selectedItems = e.items;
@@ -310,7 +319,7 @@ export class GridDemo {
     }
 
     protected onItemDragStart(event: IDejaDragEvent) {
-        let itm = event.dragObject as IItemTree;
+        const itm = event.dragObject as IItemTree;
         if (itm.depth === this.gridComponent.depthMax) {
             event.dragInfo['drug'] = event.dragObject;
         }

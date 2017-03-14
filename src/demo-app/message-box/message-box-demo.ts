@@ -1,10 +1,10 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
@@ -18,7 +18,12 @@ import { Message } from './message';
     styleUrls: ['./message-box-demo.scss'],
     templateUrl: './message-box-demo.html',
 })
-export class MessageBoxDemo implements OnInit {
+export class MessageBoxDemoComponent implements OnInit {
+    protected tabIndex = 1;
+
+    protected toolTipModel = {
+        text: 'Je suis un deja-tooltip'
+    };
 
     protected actions = [
         {

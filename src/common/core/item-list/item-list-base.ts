@@ -1,23 +1,21 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
 
-import {ElementRef, QueryList} from "@angular/core";
-import {Observable} from "rxjs/Rx";
-import {clearTimeout, setTimeout} from 'timers';
-import {GroupingService, IGroupInfo} from "../grouping/index";
-import {ISortInfos, SortingService, SortOrder} from "../sorting/index";
-import {IItemBase} from './item-base';
-import {IParentListInfoResult, ItemListService, IViewListResult} from './item-list.service';
-import {IItemTree} from './item-tree';
-
+import { ElementRef, QueryList } from '@angular/core';
+import { Observable } from 'rxjs/Rx';
+import { GroupingService, IGroupInfo } from '../grouping/index';
+import { ISortInfos, SortingService, SortOrder } from '../sorting/index';
+import { IItemBase } from './item-base';
+import { IFindItemResult, IParentListInfoResult, ItemListService, IViewListResult } from './item-list.service';
+import { IItemTree } from './item-tree';
 
 export enum ViewportMode {
     NoViewport,
@@ -37,7 +35,7 @@ export class ItemListBase {
     protected _currentItemIndex = -1;
     protected _hintLabel: string;
     protected _nodataLabel: string;
-    protected waiter = false; // Display waiter
+    protected waiter = true; // Display waiter
     protected computedMaxHeight = 0;
     protected _hideSelected: boolean;
     protected _childrenField: string;
@@ -59,13 +57,11 @@ export class ItemListBase {
     protected _ddStartIndex: number;
     protected _ddTargetIndex: number;
 
-    protected isBusinessObject: boolean;
+    private _isBusinessObject: boolean;
 
     private _itemListService: ItemListService;
     private allCollapsed = false;
-    private toggleCollapseTimeout: NodeJS.Timer;
     private _viewPortRowHeight = ItemListBase.defaultViewPortRowHeight;
-
 
     /** Renvoie le modèle de tri appliqué à la liste.
      * @param {ISortInfos} sortInfos Modèle de tri appliqué.
@@ -120,7 +116,7 @@ export class ItemListBase {
     }
 
     public getItemFromHTMLElement(element: HTMLElement): IItemBase {
-        let itemIndex = this.getItemIndexFromHTMLElement(element);
+        const itemIndex = this.getItemIndexFromHTMLElement(element);
         if (itemIndex === undefined) {
             return undefined;
         }
@@ -145,17 +141,18 @@ export class ItemListBase {
         return this._currentItemIndex >= 0 ? this.getItemListService().getItemFromIndex(this._currentItemIndex) : null;
     }
 
+    /** Retourne true si l'on manipule des objet business, false si on manipule des IItemBase.
+     * @return {boolean}.
+     */
+    public isBusinessObject() {
+        return this._isBusinessObject;
+    }
+
     /** Retourne la liste des éléments sélectionés.
-     * @return {IItemBase[] or any[]} Liste des éléments selectionés.
+     * @return {IItemBase[] Liste des éléments selectionés.
      */
     public getSelectedItems() {
-        if (this.isBusinessObject) {
-            return this.getItemListService().getSelectedItems().map((itm) => {
-                return itm.model;
-            });
-        } else {
-            return this.getItemListService().getSelectedItems();
-        }
+        return this.getItemListService().getSelectedItems();
     }
 
     /** Définit la liste des éléments sélectionés.
@@ -199,7 +196,7 @@ export class ItemListBase {
     /** Trie la liste par le champs spécifié. */
     public sort(name?: string) {
         return new Promise<ISortInfos>((resolved?: (sortInfos: ISortInfos) => void, rejected?: (reason: any) => void) => {
-            let sortField = name || this._textField;
+            const sortField = name || this._textField;
 
             if (!this._sortInfos) {
                 this._sortInfos = {
@@ -256,7 +253,7 @@ export class ItemListBase {
             this.allCollapsed = !this.allCollapsed;
             if (this._viewportMode === ViewportMode.NoViewport) {
                 this._itemList.forEach((item, index) => {
-                    let treeItem = item as IItemTree;
+                    const treeItem = item as IItemTree;
                     if (treeItem.$items && treeItem.depth === 0 && treeItem.collapsible !== false) {
                         this.toggleCollapse(index + this.vpStartRow, this.allCollapsed).then(resolved).catch(rejected);
                     }
@@ -273,128 +270,99 @@ export class ItemListBase {
      * @return {Promise} Promesse résolue par la fonction.
      */
     public toggleCollapse(index: number, collapsed: boolean): Promise<boolean> {
-        return new Promise<boolean>((resolved?: (value: boolean) => void, rejected?: (reason: any) => void) => {
-            if (this.toggleCollapseTimeout) {
-                clearTimeout(this.toggleCollapseTimeout);
-                this.toggleCollapseTimeout = undefined;
-            }
-
-            // return this.getItemListService().toggleCollapse(index, this._childrenField, collapsed);
-
-            // Get item with relative index
-            let item = this._itemList[index - this.vpStartRow];
-            if (!item) {
-                // Not on the visible part, no transition
-                this.getItemListService().toggleCollapse(index, collapsed).then((result) => {
-                    resolved(result);
-                }).catch((reason) => {
-                    rejected(reason);
-                });
-                return;
-            }
-
-            let oldlist = [...this._itemList];
-            let oldTreeInfo = this.getItemTreeInfo(oldlist, item);
+        // Get item with relative index
+        const item = this._itemList[index - this.vpStartRow];
+        if (!item) {
+            // Not on the visible part, no transition
+            return this.getItemListService().toggleCollapse(index, collapsed);
+        } else {
+            const oldlist = [...this._itemList];
+            const oldTreeInfo = this.getItemTreeInfo(oldlist, item);
 
             if (this._viewportMode === ViewportMode.NoViewport) {
                 if (collapsed) {
-                    // Hide children for effect
-                    let children = (oldTreeInfo.children || []) as IItemTree[];
-                    children.forEach((child) => child.expanding = true);
-
-                    setTimeout(() => {
-                        children.forEach((child) => child.expanding = false);
-                        this.getItemListService().toggleCollapse(index, collapsed).then((result) => {
-                            if (!this.toggleCollapseTimeout) {
-                                delete this.toggleCollapseTimeout;
-                                this.calcViewPort().then(() => {
-                                    resolved(result);
-                                });
-                            }
-                        }).catch((reason) => {
-                            rejected(reason);
-                        });
-                    }, 300);
-
+                    return Observable.of(oldTreeInfo)
+                        .map((oldTree) => {
+                            // Hide children for effect
+                            const children = (oldTree.children || []) as IItemTree[];
+                            children.forEach((child) => child.expanding = true);
+                            return children;
+                        })
+                        .delay(300)
+                        .do((children) => children.forEach((child) => child.expanding = false))
+                        .switchMap(() => this.getItemListService().toggleCollapse(index, collapsed))
+                        .do((_result) => this.calcViewPort())
+                        .toPromise();
                 } else {
-                    this.getItemListService().toggleCollapse(index, collapsed).then((result) => {
-                        this.calcViewPort().then((vpresult) => {
-                            let newTreeInfo = this.getItemTreeInfo(vpresult.visibleList, item);
+                    return Observable.fromPromise(this.getItemListService().toggleCollapse(index, collapsed))
+                        .switchMap(() => this.calcViewPort())
+                        .map((vpresult) => {
+                            const newTreeInfo = this.getItemTreeInfo(vpresult.visibleList, item);
 
                             // Hide children for effect
-                            let children = (newTreeInfo.children || []) as IItemTree[];
+                            const children = (newTreeInfo.children || []) as IItemTree[];
                             children.forEach((child) => child.collapsing = true);
-
-                            setTimeout(() => {
-                                // Show children now for effect
-                                children.forEach((child) => child.collapsing = false);
-                            }, 0);
-
-                            this.toggleCollapseTimeout = setTimeout(() => {
-                                delete this.toggleCollapseTimeout;
-                                this.calcViewPort().then(() => {
-                                    resolved(result);
-                                });
-                            }, 300);
-                        });
-                    }).catch((reason) => {
-                        rejected(reason);
-                    });
+                            return children;
+                        })
+                        .delay(1)
+                        .do((children) => children.forEach((child) => child.collapsing = false))
+                        .delay(300)
+                        .switchMap(() => this.calcViewPort())
+                        .map(() => true)
+                        .toPromise();
                 }
             } else {
-                this.getItemListService().toggleCollapse(index, collapsed).then((result) => {
-                    this.calcViewPort().then((vpresult) => {
-                        let newlist = vpresult.visibleList;
-                        let newTreeInfo = this.getItemTreeInfo(newlist, item);
+                const newTreeInfo$ = Observable.fromPromise(this.getItemListService().toggleCollapse(index, collapsed))
+                    .switchMap(() => this.calcViewPort())
+                    .map((vpresult) => {
+                        const newlist = vpresult.visibleList;
+                        const newTreeInfo = this.getItemTreeInfo(newlist, item);
+                        return { newlist, newTreeInfo };
+                    });
 
-                        if (!collapsed) {
+                if (!collapsed) {
+                    return newTreeInfo$
+                        .map(({ newlist, newTreeInfo }) => {
                             // Add elements to the flat list, expand and calc new flatlist, keep children hidden for effect
-                            let children = (newTreeInfo.children || []) as IItemTree[];
+                            const children = (newTreeInfo.children || []) as IItemTree[];
                             children.forEach((child) => child.expanding = true);
 
                             // Calc added elements, start index still the same
-                            let oldEndRow = Math.min(oldlist.length - 1, this.vpEndRow - this.vpStartRow);
-                            let newEndRow = Math.min(newlist.length - 1, newTreeInfo.lastIndex + 1);
+                            const oldEndRow = Math.min(oldlist.length - 1, this.vpEndRow - this.vpStartRow);
+                            const newEndRow = Math.min(newlist.length - 1, newTreeInfo.lastIndex + 1);
 
                             // Create a temporary list for visual effect
                             this._itemList = [...newlist.slice(0, newEndRow), ...oldlist.slice(oldTreeInfo.startIndex + 1, oldEndRow)];
+                            return children;
+                        })
+                        .delay(1)
+                        .do((children) => children.forEach((child) => child.expanding = false))
+                        .switchMap(() => this.calcViewPort())
+                        .map(() => true)
+                        .toPromise();
 
-                            setTimeout(() => {
-                                // Show children now for effect
-                                children.forEach((child) => child.expanding = false);
-                            }, 0);
-
-                            // Recalc viewport after transition
-                            this.toggleCollapseTimeout = setTimeout(() => {
-                                delete this.toggleCollapseTimeout;
-                                this.calcViewPort().then(() => {
-                                    resolved(result);
-                                });
-                            }, 400);
-
-                        } else {
-                            // Remove elements from the flat list, collapse and calc new flatlist
-                            // Add same amount of elements to the visible list
-                            let oldEndRow = Math.min(oldlist.length - 1, oldTreeInfo.lastIndex + 1);
+                } else {
+                    // Remove elements from the flat list, collapse and calc new flatlist
+                    // Add same amount of elements to the visible list
+                    return newTreeInfo$
+                        .do(({ newlist, newTreeInfo }) => {
+                            const oldEndRow = Math.min(oldlist.length - 1, oldTreeInfo.lastIndex + 1);
                             this.vpEndRow = Math.min(newlist.length - 1, this.vpEndRow - this.vpStartRow);
                             this._itemList = [...oldlist.slice(0, oldEndRow), ...newlist.slice(newTreeInfo.startIndex + 1)];
-                            this.calcViewPort().then(() => {
-                                resolved(result);
-                            });
-                        }
-                    });
-                }).catch((reason) => {
-                    rejected(reason);
-                });
+                        })
+                        .switchMap(() => this.calcViewPort())
+                        .map(() => true)
+                        .toPromise();
+                }
             }
-        });
+        }
     }
 
     /** Déselectionne tous les éléments sélectionés.
      * @return {Promise} Promesse résolue par la fonction.
      */
     public unselectAll() {
-        let itemListService = this.getItemListService();
+        const itemListService = this.getItemListService();
         return itemListService.unselectAll();
     }
 
@@ -419,13 +387,31 @@ export class ItemListBase {
         return this.getItemListService().getParentListInfos(item);
     }
 
+    protected getSelectedModels() {
+        if (this._isBusinessObject) {
+            return this.getItemListService().getSelectedItems().map((itm) => {
+                return itm.model;
+            });
+        } else {
+            return this.getItemListService().getSelectedItems();
+        }
+    }
+
+    protected setSelectedModels(value: any[]) {
+        if (value && this._isBusinessObject) {
+            value = this.convertToIItemBase(value, true);
+        }
+
+        return this.getItemListService().setSelectedItems(value);
+    }
+
     /** Trouve l'élément suivant répondant à la fonction de comparaison spécifiée.
      * @param {Function} compare Function de comparaison pour la recherche de l'élément.
      * @param {number} startIndex Index de départ sur la liste des éléments visibles.
      * @return {Promise} Promesse résolue par la fonction.
      */
     protected findNextMatch(compare?: (item: IItemBase, index: number) => boolean, startIndex?: number) {
-        return this.getItemListService().findNextMatch(compare, startIndex);
+        return this.getItemListService().findNextMatch(compare, startIndex) as Promise<IFindItemResult>;
     }
 
     /** Définit la hauteur d'une ligne pour le calcul du viewport. Le Viewport ne fonctionne qu'avec des hauteurs de lignes fixe.
@@ -520,8 +506,18 @@ export class ItemListBase {
     /** Définit le modèle utilisé par la liste. Il peut être de tout type d'objet. Ce model peut ètre hierarchique sans limitation de la profondeur ou une chargé en asynchrone par une promise ou un observable.
      * @param {GroupingService}items Provider de la liste des éléments de la liste.
      */
-    protected setModels(items: any[] | Promise<any[]> | Observable<any[]>) {
-        return this.getItemListService().setModels(items);
+    protected setModels(models: any[] | Observable<any[]>) {
+        this._isBusinessObject = true;
+        let models$: Observable<any[]>;
+
+        if (models instanceof Array) {
+            models$ = Observable.of(models);
+        } else {
+            models$ = models as Observable<any[]>;
+        }
+
+        const items$ = models$ && models$.map((model) => this.convertToIItemBase(model));
+        return this.setItems(items$.first());
     }
 
     // Ne pas utiliser, cette fonction retourne la liste des éléments pour l'implémentation de ngModel.
@@ -546,7 +542,7 @@ export class ItemListBase {
      * @return {Promise} Promesse résolue par la fonction.
      */
     protected selectRange(indexFrom: number, indexTo?: number) {
-        let itemListService = this.getItemListService();
+        const itemListService = this.getItemListService();
         return itemListService.selectRange(indexFrom, indexTo);
     }
 
@@ -556,7 +552,7 @@ export class ItemListBase {
      * @return {Promise} Promesse résolue par la fonction.
      */
     protected toggleSelect(items: IItemBase[], selected: boolean) {
-        let itemListService = this.getItemListService();
+        const itemListService = this.getItemListService();
         return itemListService.toggleSelect(items, selected);
     }
 
@@ -608,19 +604,19 @@ export class ItemListBase {
 
     /** Internal usage */
     protected getItemTreeInfo(items: IItemBase[], item: IItemBase): IItemTreeInfo {
-        let parentIndex = items.findIndex((itm) => itm === item);
+        const parentIndex = items.findIndex((itm) => itm === item);
         if (parentIndex < 0) {
             return null;
         }
 
-        let treeItem = item as IItemTree;
-        let parentDepth = treeItem.depth;
+        const treeItem = item as IItemTree;
+        const parentDepth = treeItem.depth;
         let lastIndex = parentIndex;
-        let children = [] as IItemBase[];
+        const children = [] as IItemBase[];
 
         if (parentDepth !== undefined) {
             for (let i = parentIndex + 1; i < items.length; i++) {
-                let currentItem = items[i] as IItemTree;
+                const currentItem = items[i] as IItemTree;
                 if (currentItem.depth <= parentDepth) {
                     break;
                 }
@@ -645,7 +641,7 @@ export class ItemListBase {
             this.vpEndRow = res.endRow;
             this.rowsCount = res.rowsCount;
             if (this._viewportMode === ViewportMode.ConstantRowHeight) {
-                let vpRowHeight = this.getViewPortRowHeight();
+                const vpRowHeight = this.getViewPortRowHeight();
                 this.vpBeforeHeight = this.vpStartRow * vpRowHeight;
                 this.vpAfterHeight = (this.rowsCount - 1 - this.vpEndRow) * vpRowHeight;
             }
@@ -659,9 +655,9 @@ export class ItemListBase {
     /** Calcule le viewport pour le conteneur spécifié. */
     protected calcViewPort(query?: string, maxHeight?: number, containerElement?: HTMLElement) {
         return new Promise<IViewListResult>((resolved?: (value: IViewListResult) => void, rejected?: (reason: any) => void) => {
-            let calcViewPortInternal = (qry?: string, heightMax?: number, containerElem?: HTMLElement, ignoreHeightMeasurement?: boolean) => {
+            const calcViewPortInternal = (qry?: string, heightMax?: number, containerElem?: HTMLElement, ignoreHeightMeasurement?: boolean) => {
                 this.waiter = !this.getItems();
-                let loadViewPort = (viewList: Promise<IViewListResult>) => {
+                const loadViewPort = (viewList: Promise<IViewListResult>) => {
                     if (viewList) {
                         delete this._hintLabel;
                         viewList.then((response) => {
@@ -689,10 +685,12 @@ export class ItemListBase {
                     // Use a blank div to do that
                     this.vpAfterHeight = heightMax;
                     // Wait next life cycle for the result
-                    setTimeout(() => {
-                        this.computedMaxHeight = containerElem.clientHeight;
-                        calcViewPortInternal(qry, this.computedMaxHeight, containerElem, true);
-                    }, 0);
+                    Observable.timer(1)
+                        .first()
+                        .subscribe(() => {
+                            this.computedMaxHeight = containerElem.clientHeight;
+                            calcViewPortInternal(qry, this.computedMaxHeight, containerElem, true);
+                        });
                     return;
                 }
 
@@ -706,8 +704,8 @@ export class ItemListBase {
                     loadViewPort(this.getViewList(qry));
                 } else if (this._viewportMode === ViewportMode.VariableRowHeight) {
                     this.getViewList(qry).then((viewListResult: IViewListResult) => {
-                        let visibleList = [] as IItemBase[];
-                        let scrollPos = containerHeight ? containerElem.scrollTop : 0;
+                        const visibleList = [] as IItemBase[];
+                        const scrollPos = containerHeight ? containerElem.scrollTop : 0;
                         let startRow: number;
                         let endRow = 0;
                         this.vpBeforeHeight = 0;
@@ -715,7 +713,7 @@ export class ItemListBase {
                         this.vpAfterHeight = 0;
 
                         viewListResult.visibleList.forEach((item: IItemBase, index: number) => {
-                            let itemHeight = this.getItemHeight(item);
+                            const itemHeight = this.getItemHeight(item);
                             if (this.vpBeforeHeight + itemHeight < scrollPos && startRow === undefined) {
                                 this.vpBeforeHeight += itemHeight;
                             } else if (visibleListHeight + this.vpBeforeHeight < containerHeight + scrollPos) {
@@ -739,11 +737,11 @@ export class ItemListBase {
                         });
                     }).catch(rejected);
                 } else {
-                    let loadViewList = () => {
-                        let scrollPos = containerHeight ? containerElem.scrollTop : 0;
-                        let vpRowHeight = this.getViewPortRowHeight();
+                    const loadViewList = () => {
+                        const scrollPos = (containerHeight && containerElem && containerElem.scrollTop) || 0;
+                        const vpRowHeight = this.getViewPortRowHeight();
                         let maxCount = Math.ceil(containerHeight / vpRowHeight);
-                        let startRow = Math.floor(scrollPos / vpRowHeight);
+                        const startRow = Math.floor(scrollPos / vpRowHeight);
 
                         if (maxCount) {
                             maxCount++;
@@ -770,23 +768,23 @@ export class ItemListBase {
                 }
 
                 if (index >= 0) {
-                    let element = index >= 0 && listItemElements.toArray()[index];
+                    const element = index >= 0 && listItemElements.toArray()[index];
                     if (element) {
                         element.nativeElement.scrollIntoViewIfNeeded();
                     }
                 }
             } else if (this._viewportMode === ViewportMode.VariableRowHeight) {
                 this.getViewList(query).then((viewListResult: IViewListResult) => {
-                    let scrollPos = containerElement.scrollTop;
+                    const scrollPos = containerElement.scrollTop;
                     let scrollMax = 0;
                     let lastVisibleItem: IItemBase;
-                    let fn = isNaN(+item) ? (itm: IItemBase) => {
-                            return item === itm;
-                        } : (_itm: IItemBase, index: number) => {
-                            return item === index;
-                        };
+                    const fn = isNaN(+item) ? (itm: IItemBase) => {
+                        return item === itm;
+                    } : (_itm: IItemBase, index: number) => {
+                        return item === index;
+                    };
                     lastVisibleItem = viewListResult.visibleList.find((itm: IItemBase, index: number) => {
-                        let test = fn(itm, index);
+                        const test = fn(itm, index);
                         if (!test) {
                             scrollMax += this.getItemHeight(itm);
                         }
@@ -796,7 +794,7 @@ export class ItemListBase {
                     if (scrollPos > scrollMax) {
                         containerElement.scrollTop = scrollMax;
                     } else {
-                        let scrollMin = scrollMax - containerElement.clientHeight + this.getItemHeight(lastVisibleItem);
+                        const scrollMin = scrollMax - containerElement.clientHeight + this.getItemHeight(lastVisibleItem);
                         if (scrollPos < scrollMin) {
                             containerElement.scrollTop = scrollMin;
                         }
@@ -815,12 +813,12 @@ export class ItemListBase {
                 }
 
                 if (index >= 0) {
-                    let scrollPos = containerElement.scrollTop;
-                    let scrollMax = index * this.getViewPortRowHeight();
+                    const scrollPos = containerElement.scrollTop;
+                    const scrollMax = index * this.getViewPortRowHeight();
                     if (scrollPos > scrollMax) {
                         containerElement.scrollTop = scrollMax;
                     } else {
-                        let scrollMin = scrollMax - containerElement.clientHeight + this.getViewPortRowHeight();
+                        const scrollMin = scrollMax - containerElement.clientHeight + this.getViewPortRowHeight();
                         if (scrollPos < scrollMin) {
                             containerElement.scrollTop = scrollMin;
                         }
@@ -829,6 +827,37 @@ export class ItemListBase {
             }
         }
     }
+
+    protected convertToIItemBase(modls: any[], selected?: boolean): IItemBase[] {
+        if (!this._isBusinessObject) {
+            return modls as IItemBase[];
+        }
+
+        return modls.map((model) => {
+            const itemBase: IItemBase = {};
+            itemBase.model = model;
+
+            const displayField = this._textField || 'displayName';
+            itemBase[displayField] = this.getTextValue(model);
+
+            if (this._searchField) {
+                itemBase[this._searchField] = model[this._searchField];
+            }
+
+            if (this._valueField) {
+                itemBase[this._valueField] = model[this._valueField];
+            }
+
+            const childrenField = this.getItemListService().childrenField;
+            if (model[childrenField]) {
+                itemBase[childrenField] = this.convertToIItemBase(model[childrenField], selected);
+            } else {
+                itemBase.selected = selected || false;
+            }
+
+            return itemBase;
+        });
+    };
 
     private getItemHeight(item: IItemBase) {
         if (this._viewportMode === ViewportMode.NoViewport) {

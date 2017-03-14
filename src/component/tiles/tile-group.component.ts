@@ -1,18 +1,17 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
 
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, HostBinding, Input, Output, ViewChild } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
-import { setTimeout } from 'timers';
-import { Color } from '../../common/core/graphics/color';
+import { Observable, Subject } from 'rxjs/Rx';
 import { DejaEditableDirective } from '../content-editable';
 import { IDejaTile } from './';
 
@@ -25,25 +24,18 @@ import { IDejaTile } from './';
 })
 export class DejaTileGroupComponent {
     @Input() public model: IDejaTile;
-    @Output() public onClose = new EventEmitter();
-    @Output() public onEdit = new EventEmitter();
-
-    @Input() public set color(color: string) {
-        let colorObj = Color.fromHex(color);
-        if (colorObj.isEmpty()) {
-            return;
-        }
-        this.backcolor = colorObj.toHex();
-        this.forecolor = colorObj.bestTextColor.toHex();
-    }
+    @Output() public close = new EventEmitter<void>();
+    @Output() public titleChanged = new EventEmitter<string>();
+    private edit$ = new Subject<void>();
 
     @ViewChild(DejaEditableDirective) private title: DejaEditableDirective;
-
-    private backcolor = '#3B4250';
-    private forecolor = '#fff';
-    private _designMode = false;
+    @HostBinding('attr.design') private _designMode = false;
 
     constructor() {
+        Observable.from(this.edit$)
+            .filter(() => this._designMode)
+            .debounceTime(100)
+            .subscribe(() => this.title.edit(true));
     }
 
     @Input()
@@ -53,11 +45,5 @@ export class DejaTileGroupComponent {
 
     public get designMode() {
         return this._designMode;
-    }
-
-    protected edit() {
-        setTimeout(() => {
-            this.title.edit();
-        }, 100);
     }
 }

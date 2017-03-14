@@ -1,23 +1,22 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
 
-import { Component, ContentChild, ElementRef, EventEmitter, forwardRef, Input, Output, QueryList, ViewChild, ViewChildren, ViewEncapsulation } from "@angular/core";
-import { NG_VALUE_ACCESSOR } from "@angular/forms";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, forwardRef, Input, Output, QueryList, ViewChild, ViewChildren, ViewEncapsulation } from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
-import { Observable, Subscription } from 'rxjs/Rx';
-import { clearTimeout, setTimeout } from 'timers';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
 import { Position, Rect } from '../../common/core/graphics';
 import { GroupingService } from '../../common/core/grouping';
 import { IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, ViewportMode } from '../../common/core/item-list';
-import { KeyCodes } from "../../common/core/keycodes.enum";
+import { KeyCodes } from '../../common/core/keycodes.enum';
 import { SortingService } from '../../common/core/sorting';
 import { IDejaDragEvent } from '../dragdrop';
 import { DejaTreeListItemEvent, DejaTreeListItemsEvent, DejaTreeListScrollEvent } from './index';
@@ -32,6 +31,7 @@ const TreeListComponentValueAccessor = {
 
 /** Composant de liste évoluée avec gestion de viewport et templating */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     providers: [TreeListComponentValueAccessor],
     selector: 'deja-tree-list',
@@ -101,21 +101,34 @@ export class DejaTreeListComponent extends ItemListBase {
     private keyboardNavigationPos: Position;
     private ignoreNextScrollEvents = false;
     private filterExpression = '';
-    private clearFilterTimer: NodeJS.Timer;
-    private completeTimer: NodeJS.Timer;
     private lastScrollTop = 0;
     private _searchArea = false;
     private _expandButton = false;
     private _sortable = false;
     private _itemsDraggable = false;
+    private hasCustomService = false;
 
     private subscriptions: Subscription[] = [];
 
     private mouseMoveObs: Subscription;
     private mouseUpObs: Subscription;
 
-    constructor(public elementRef: ElementRef) {
+    private clearFilterExpression$ = new BehaviorSubject<void>(null);
+    private filterListComplete$ = new Subject();
+
+    constructor(private changeDetectorRef: ChangeDetectorRef, public elementRef: ElementRef) {
         super();
+
+        Observable.from(this.clearFilterExpression$)
+            .debounceTime(750)
+            .subscribe(() => this.filterExpression = '');
+
+        Observable.from(this.filterListComplete$)
+            .debounceTime(250)
+            .subscribe(() => {
+                this.setCurrentItem(undefined);
+                this.calcViewPort();
+            });
     }
 
     /** Affiche un barre de recherche au dessus de la liste. */
@@ -167,9 +180,9 @@ export class DejaTreeListComponent extends ItemListBase {
     /** Retourne le nombre de lignes à sauter en cas de pression sur les touches PageUp ou PageDown */
     public get pageSize() {
         if (this._pageSize === 0) {
-            let vpRowHeight = this.getViewPortRowHeight();
-            let containerElement = this.listcontainer.nativeElement as HTMLElement;
-            let containerHeight = this.maxHeight || containerElement.clientHeight;
+            const vpRowHeight = this.getViewPortRowHeight();
+            const containerElement = this.listcontainer.nativeElement as HTMLElement;
+            const containerHeight = this.maxHeight || containerElement.clientHeight;
             return Math.floor(containerHeight / vpRowHeight);
         }
 
@@ -274,21 +287,19 @@ export class DejaTreeListComponent extends ItemListBase {
     /** Définit la liste des éléments selectionés en mode multiselect */
     @Input()
     public set selectedItems(items: IItemBase[]) {
-        this.unselectAll().then(() => {
-            super.toggleSelect(items, true);
-        });
+        this.setSelectedModels(items);
     }
 
     /** Retourne la liste des éléments selectionés en mode multiselect */
     public get selectedItems(): IItemBase[] {
-        return this.getSelectedItems() || [];
+        return this.getSelectedModels() || [];
     }
 
     /** Définit la liste des éléments selectionés en mode single select */
     @Input()
     public set selectedItem(item: IItemBase) {
         if (this.multiSelect) {
-            throw 'selectedItem binding is for single selection only, use selectedItems for multi selection';
+            throw new Error('selectedItem binding is for single selection only, use selectedItems for multi selection');
         }
 
         this.selectedItems = item && [item];
@@ -297,7 +308,7 @@ export class DejaTreeListComponent extends ItemListBase {
     /** Retourne la liste des éléments selectionés en mode single select */
     public get selectedItem() {
         if (this.multiSelect) {
-            throw 'selectedItem is for single selection only, use selectedItems for multi selection';
+            throw new Error('selectedItem is for single selection only, use selectedItems for multi selection');
         }
 
         return this.selectedItems[0];
@@ -306,6 +317,7 @@ export class DejaTreeListComponent extends ItemListBase {
     /** Definit le service de liste utilisé par ce composant. Ce srevice permet de controller dynamiquement la liste, ou de faire du lazyloading. */
     @Input()
     public set itemListService(value: ItemListService) {
+        this.hasCustomService = true;
         this.setItemListService(value);
     }
 
@@ -350,9 +362,11 @@ export class DejaTreeListComponent extends ItemListBase {
 
     /** Définit la liste des éléments (tout type d'objet métier) */
     @Input()
-    public set models(items: any[] | Promise<any[]> | Observable<any[]>) {
-        this.isBusinessObject = true;
-        super.setModels(items).subscribe(() => {
+    public set models(items: any[] | Observable<any[]>) {
+        super.setModels(items)
+            .first()
+            .subscribe(() => {
+                this.calcViewPort();
         }, (error: any) => {
             this._hintLabel = error.toString();
         });
@@ -383,17 +397,6 @@ export class DejaTreeListComponent extends ItemListBase {
     }
 
     // ************* ControlValueAccessor Implementation **************
-    /** Définit la liste des éléments, en invoquant ngModelChange */
-    public set value(items: any) {
-        this.writeValue(items);
-        this.onChangeCallback(items);
-    }
-
-    /** Retourne la liste des éléments */
-    public get value(): any {
-        return super.getItems();
-    }
-
     /** Définit la liste des éléments, sans invoquaer ngModelChange */
     public writeValue(items: any) {
         delete this.hintLabel;
@@ -401,9 +404,10 @@ export class DejaTreeListComponent extends ItemListBase {
             if (this.minlength > 0 && !this.query) {
                 // Waiting for query
                 this._itemList = [];
-            } else {
+            } else if (!!items || (this._itemList && this._itemList.length)) {
                 this.calcViewPort();
             }
+            this.changeDetectorRef.markForCheck();
         }, (error: any) => {
             this.hintLabel = error.toString();
             this._itemList = [];
@@ -438,29 +442,27 @@ export class DejaTreeListComponent extends ItemListBase {
     }
 
     protected filter(event: KeyboardEvent) {
-        if ((this.query || "").length < this.minlength) {
+        if ((this.query || '').length < this.minlength) {
             this._itemList = [];
             return;
         }
 
         // Set current item from index for keyboard features only
-        let setCurrentIndex = (index: number) => {
+        const setCurrentIndex = (index: number) => {
             this._currentItemIndex = index;
             this.ensureItemVisible(this._currentItemIndex);
         };
 
         if (event.type === 'keydown') {
-            let currentIndex = this.rangeStartIndex >= 0 ? this.rangeStartIndex : this.rangeStartIndex = this._currentItemIndex;
+            const currentIndex = this.rangeStartIndex >= 0 ? this.rangeStartIndex : this.rangeStartIndex = this._currentItemIndex;
 
             switch (event.keyCode) {
                 case KeyCodes.Home:
                     if (event.shiftKey) {
                         this.selectRange(currentIndex, 0);
                     } else if (!event.ctrlKey) {
-                        this.unselectAll().then(() => {
                             this.rangeStartIndex = 0;
                             this.selectRange(this.rangeStartIndex);
-                        });
                     }
                     setCurrentIndex(0);
                     this.keyboardNavigation = true;
@@ -470,53 +472,45 @@ export class DejaTreeListComponent extends ItemListBase {
                     if (event.shiftKey) {
                         this.selectRange(currentIndex, this.rowsCount - 1);
                     } else if (!event.ctrlKey) {
-                        this.unselectAll().then(() => {
                             this.rangeStartIndex = this.rowsCount - 1;
                             this.selectRange(this.rangeStartIndex);
-                        });
                     }
                     setCurrentIndex(this.rowsCount - 1);
                     this.keyboardNavigation = true;
                     return false;
 
                 case KeyCodes.PageUp:
-                    let upindex = Math.max(0, this._currentItemIndex - this.pageSize);
+                    const upindex = Math.max(0, this._currentItemIndex - this.pageSize);
                     if (event.shiftKey) {
                         this.selectRange(currentIndex, upindex);
                     } else if (!event.ctrlKey) {
-                        this.unselectAll().then(() => {
                             this.rangeStartIndex = upindex;
                             this.selectRange(this.rangeStartIndex);
-                        });
                     }
                     setCurrentIndex(upindex);
                     this.keyboardNavigation = true;
                     return false;
 
                 case KeyCodes.PageDown:
-                    let dindex = Math.min(this.rowsCount - 1, this._currentItemIndex + this.pageSize);
+                    const dindex = Math.min(this.rowsCount - 1, this._currentItemIndex + this.pageSize);
                     if (event.shiftKey) {
                         this.selectRange(currentIndex, dindex);
                     } else if (!event.ctrlKey) {
-                        this.unselectAll().then(() => {
                             this.rangeStartIndex = dindex;
                             this.selectRange(this.rangeStartIndex);
-                        });
                     }
                     setCurrentIndex(dindex);
                     this.keyboardNavigation = true;
                     return false;
 
                 case KeyCodes.UpArrow:
-                    let uaindex = Math.max(0, this._currentItemIndex - 1);
+                    const uaindex = Math.max(0, this._currentItemIndex - 1);
                     if (uaindex !== -1) {
                         if (event.shiftKey) {
                             this.selectRange(currentIndex, uaindex);
                         } else if (!event.ctrlKey) {
-                            this.unselectAll().then(() => {
                                 this.rangeStartIndex = uaindex;
                                 this.selectRange(this.rangeStartIndex);
-                            });
                         }
                         setCurrentIndex(uaindex);
                     }
@@ -524,15 +518,13 @@ export class DejaTreeListComponent extends ItemListBase {
                     return false;
 
                 case KeyCodes.DownArrow:
-                    let daindex = Math.min(this.rowsCount - 1, this._currentItemIndex + 1);
+                    const daindex = Math.min(this.rowsCount - 1, this._currentItemIndex + 1);
                     if (daindex !== -1) {
                         if (event.shiftKey) {
                             this.selectRange(currentIndex, daindex);
                         } else if (!event.ctrlKey) {
-                            this.unselectAll().then(() => {
                                 this.rangeStartIndex = daindex;
                                 this.selectRange(this.rangeStartIndex);
-                            });
                         }
                         setCurrentIndex(daindex);
                     }
@@ -540,7 +532,7 @@ export class DejaTreeListComponent extends ItemListBase {
                     return false;
 
                 case KeyCodes.Space:
-                    let sitem = this.currentItem as IItemTree;
+                    const sitem = this.currentItem as IItemTree;
                     if (sitem) {
                         if (this.isCollapsible(sitem)) {
                             this.toggleCollapse(currentIndex, !sitem.collapsed);
@@ -558,7 +550,7 @@ export class DejaTreeListComponent extends ItemListBase {
                     return false;
 
                 case KeyCodes.Enter:
-                    let eitem = this.currentItem as IItemTree;
+                    const eitem = this.currentItem as IItemTree;
                     if (eitem) {
                         if (this.isCollapsible(eitem) || eitem.selected) {
                             this.toggleCollapse(currentIndex, !eitem.collapsed);
@@ -583,20 +575,14 @@ export class DejaTreeListComponent extends ItemListBase {
             if (!this.searchArea) {
                 if ((/[a-zA-Z0-9]/).test(event.key)) {
                     // Valid char
-                    if (this.clearFilterTimer) {
-                        clearTimeout(this.clearFilterTimer);
-                    }
-                    this.clearFilterTimer = setTimeout(() => {
-                        this.clearFilterTimer = undefined;
-                        this.filterExpression = '';
-                    }, 750);
+                    this.clearFilterExpression$.next(null);
 
                     // Search next
                     this.filterExpression += event.key;
-                    let rg = new RegExp('^' + this.filterExpression, 'i');
+                    const rg = new RegExp('^' + this.filterExpression, 'i');
                     this.findNextMatch((item) => {
                         if (item && this.isSelectable(item)) {
-                            let label = this.getTextValue(item);
+                            const label = this.getTextValue(item);
                             if (rg.test(label)) {
                                 return true;
                             }
@@ -611,14 +597,7 @@ export class DejaTreeListComponent extends ItemListBase {
             } else {
                 // Autocomplete, filter the list
                 this.keyboardNavigation = true;
-                if (this.completeTimer) {
-                    clearTimeout(this.completeTimer);
-                }
-                this.completeTimer = setTimeout(() => {
-                    this.completeTimer = undefined;
-                    this.setCurrentItem(undefined);
-                    this.calcViewPort();
-                }, 250);
+                this.filterListComplete$.next();
             }
         }
     }
@@ -626,10 +605,10 @@ export class DejaTreeListComponent extends ItemListBase {
     protected ngAfterViewInit() {
         // FIXME Issue angular/issues/6005
         // see http://stackoverflow.com/questions/34364880/expression-has-changed-after-it-was-checked
-        if (this._itemList.length === 0) {
-            setTimeout(() => {
-                this.calcViewPort();
-            }, 0);
+        if (this._itemList.length === 0 && this.hasCustomService) {
+            Observable.timer(1)
+                .first()
+                .subscribe(() => this.calcViewPort());
         }
 
         const resizeSub = Observable
@@ -645,7 +624,7 @@ export class DejaTreeListComponent extends ItemListBase {
             .fromEvent(this.listcontainer.nativeElement, 'scroll')
             .map((event: any) => [event, event.target.scrollTop, event.target.scrollLeft])
             .do(([event, scrollTop, scrollLeft]: [Event, number, number]) => {
-                let e = {
+                const e = {
                     originalEvent: event,
                     scrollLeft: scrollLeft,
                     scrollTop: scrollTop,
@@ -674,12 +653,12 @@ export class DejaTreeListComponent extends ItemListBase {
     }
 
     protected mousedown(e: MouseEvent) {
-        let itemIndex = this.getItemIndexFromHTMLElement(e.target as HTMLElement);
+        const itemIndex = this.getItemIndexFromHTMLElement(e.target as HTMLElement);
         if (itemIndex === undefined) {
             return;
         }
 
-        let item = this._itemList[itemIndex - this.vpStartRow];
+        const item = this._itemList[itemIndex - this.vpStartRow];
         this.clickedItem = item;
         if (!this.isCollapsible(item) && this.isSelectable(item) && (!e.ctrlKey || !this.multiSelect) && (e.button === 0 || !item.selected)) {
             if (e.shiftKey && this.multiSelect) {
@@ -714,7 +693,7 @@ export class DejaTreeListComponent extends ItemListBase {
                 this.calcViewPort(); // Comment this line to debug dragdrop
             },
             dragstartcallback: (event: IDejaDragEvent) => {
-                let targetIndex = this.getItemIndexFromHTMLElement(event.target as HTMLElement);
+                const targetIndex = this.getItemIndexFromHTMLElement(event.target as HTMLElement);
                 if (targetIndex === undefined) {
                     return;
                 }
@@ -739,7 +718,7 @@ export class DejaTreeListComponent extends ItemListBase {
                     return;
                 }
 
-                let targetIndex = this.getItemIndexFromHTMLElement(event.target as HTMLElement);
+                const targetIndex = this.getItemIndexFromHTMLElement(event.target as HTMLElement);
                 if (targetIndex === undefined) {
                     return;
                 }
@@ -767,9 +746,9 @@ export class DejaTreeListComponent extends ItemListBase {
     }
 
     protected dragLeave(event: DragEvent) {
-        let listRect = this.listcontainer.nativeElement.getBoundingClientRect();
+        const listRect = this.listcontainer.nativeElement.getBoundingClientRect();
 
-        let listBounds = Rect.fromLTRB(listRect.left,
+        const listBounds = Rect.fromLTRB(listRect.left,
             listRect.top,
             listRect.right,
             listRect.bottom);
@@ -781,7 +760,7 @@ export class DejaTreeListComponent extends ItemListBase {
     }
 
     protected onSelectionChange() {
-        let e = this.multiSelect ? { items: this.selectedItems } as DejaTreeListItemsEvent : { item: this.selectedItems[0] } as DejaTreeListItemEvent;
+        const e = this.multiSelect ? { items: this.selectedItems } as DejaTreeListItemsEvent : { item: this.selectedItems[0] } as DejaTreeListItemEvent;
         this.selectedChange.emit(e);
     }
 
@@ -820,6 +799,7 @@ export class DejaTreeListComponent extends ItemListBase {
                     this.afterViewInit.emit();
                     this.afterViewInit = null;
                 }
+                this.changeDetectorRef.markForCheck();
                 resolved(res);
             }).catch((reason) => {
                 rejected(reason);
@@ -858,16 +838,16 @@ export class DejaTreeListComponent extends ItemListBase {
                 return;
             }
 
-            let element = this.elementRef.nativeElement as HTMLElement;
+            const element = this.elementRef.nativeElement as HTMLElement;
             this.mouseUpObs = Observable.fromEvent(element, 'mouseup').subscribe((e: MouseEvent) => {
                 this.mouseUp = false;
 
-                let itemIndex = this.getItemIndexFromHTMLElement(e.target as HTMLElement);
+                const itemIndex = this.getItemIndexFromHTMLElement(e.target as HTMLElement);
                 if (itemIndex === undefined) {
                     return;
                 }
 
-                let item = this._itemList[itemIndex - this.vpStartRow];
+                const item = this._itemList[itemIndex - this.vpStartRow];
                 if (this.clickedItem && item !== this.clickedItem) {
                     return;
                 }
@@ -882,7 +862,7 @@ export class DejaTreeListComponent extends ItemListBase {
                 }
 
                 if (this.isCollapsible(item) || (e.target as HTMLElement).id === 'expandbtn') {
-                    let treeItem = item as IItemTree;
+                    const treeItem = item as IItemTree;
                     this.toggleCollapse(itemIndex, !treeItem.collapsed);
                     this._currentItemIndex = itemIndex;
 

@@ -65,7 +65,7 @@
             md-card-title {
                 align-items: center;
                 display: flex;
-                flex: 0;
+                flex: 0 0 auto;
                 justify-content: center;
                 margin: 0;
                 text-align: center;
@@ -75,7 +75,7 @@
             }
             md-card-content {
                 align-self: center;
-                flex: 1;
+                flex: 1 1 auto;
                 padding: 1rem;
             }
             md-card-actions {

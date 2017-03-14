@@ -81,6 +81,3 @@ Rend le contenu texte d'un élément HTML editable
     <td>Déclenché lorsqu'une couleur est survolée par la souris.</td>
 </tr>
 </table>
-
-### Exemple
-Un exemple d'utilisation est pr&eacute;sent dans l'application test de **deja-angular2**.

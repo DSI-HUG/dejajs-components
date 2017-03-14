@@ -1,10 +1,10 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
@@ -18,18 +18,18 @@ import {MaterialColors} from '../../common/core/style';
     styleUrls: ['./color-selector-demo.scss'],
     templateUrl: './color-selector-demo.html',
 })
-export class DejaColorSelectorDemo {
+export class DejaColorSelectorDemoComponent {
     protected selectedColor = Color.fromHex('#FFA000');
     protected invalidColor = Color.fromHex('#FFA012');
-    private hoveredColor: string;
+    private hoveredColor: Color;
 
     constructor(protected materialColors: MaterialColors) { }
 
     protected onColorPickerHover(event: ColorEvent) {
-        this.hoveredColor = event.colorName;
+        this.hoveredColor = event.color;
     }
 
     protected onColorPickerChange(event: ColorEvent) {
-        this.hoveredColor = event.colorName;
+        this.hoveredColor = event.color;
     }
 }

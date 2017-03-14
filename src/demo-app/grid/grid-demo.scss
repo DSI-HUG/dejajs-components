@@ -1,6 +1,23 @@
 @import "../../scss/variables/colors";
 // @import "../../../node_modules/@deja-js/resources/src/scss/fonts/material-icons/material-icons";
+
+:host {
+	display: flex;
+	overflow: hidden;
+	flex-direction: column;
+}
+
 #grid-demo {
+	padding: 0 2rem;
+	overflow: hidden;
+	display: flex;
+	flex: 1 1 auto;
+	flex-direction: column;
+
+	md-toolbar {
+		flex: 0 0 auto;
+	}
+
 	&.demo-basic {
 		padding: 0;
 	}
@@ -14,7 +31,7 @@
 		width: inherit;
 	}
 	&.demo-card {
-		margin: 0 2rem;
+		//margin: 0 2rem;
 		md-card-content {
 			padding: 2rem;
 		}
@@ -23,8 +40,9 @@
 			display: flex;
 			flex-direction: column;
 			overflow: hidden;
+
             deja-grid {
-				flex: 1 1 auto;
+				flex: 1;
 				li {
 					&.odd {
 						background-color: rgba($secondary, 0.1);

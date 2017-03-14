@@ -1,21 +1,22 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
 
 import {AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnDestroy, Output, ViewChild, ViewEncapsulation} from '@angular/core';
-import {isUndefined} from "util";
-import {AutoCompleteSingleton} from "./options/autocomplete-singleton.model";
-import {IEditorLanguage} from "./options/editor-language.model";
-import {IEditorOptions} from "./options/editor-options.model";
-import {IEditorScrollbarOptions} from "./options/editor-scrollbar-options";
-import {IEditorTheme} from "./options/editor-theme.component";
+import {isUndefined} from 'util';
+import {AutoCompleteSingleton} from './options/autocomplete-singleton.model';
+import {IEditorLanguage} from './options/editor-language.model';
+import {IEditorOptions} from './options/editor-options.model';
+import {IEditorScrollbarOptions} from './options/editor-scrollbar-options';
+import {IEditorTheme} from './options/editor-theme.component';
+import { MonacoEditorService } from './monaco-editor.service';
 
 declare const monaco: any;
 
@@ -25,7 +26,7 @@ declare const monaco: any;
     styleUrls: [
         './monaco-editor.scss',
     ],
-    template: `<div #editor class="monaco-editor"></div>`,
+    template: `<div #editor class='monaco-editor'></div>`,
 })
 export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnChanges {
     @Input() public experimentalScreenReader?: boolean;
@@ -85,12 +86,13 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
     @Input() public fontWeight?: 'normal' | 'bold' | 'bolder' | 'lighter' | 'initial' | 'inherit' | '100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900';
     @Input() public fontSize?: number;
     @Input() public lineHeight?: number;
+    @Input() public formatOnPaste?: boolean;
 
     @Input() public language: IEditorLanguage;
 
     @Input() public disableAutocomplete: boolean;
     @Input() public isDiffEditor: boolean;
-    @Input() public monacoLibPath: string = 'vs';
+    @Input() public monacoLibPath = 'vs';
 
     @Input() set valueToCompare(v: string) {
         if (v !== this._valueToCompare) {
@@ -124,38 +126,19 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
     @ViewChild('editor') private editorContent: ElementRef;
 
     private _editor: any;
-    private _value: string = '';
-    private _valueToCompare: string = '';
+    private _value = '';
+    private _valueToCompare = '';
 
-    constructor() {
+    constructor(public monacoEditorService: MonacoEditorService) {
     }
 
     /**
      * load Monaco lib
      */
     public ngAfterViewInit() {
-        // Remove the last character if is a '/'
-        if (this.monacoLibPath.substring(this.monacoLibPath.length - 1, this.monacoLibPath.length) === '/') {
-            this.monacoLibPath = this.monacoLibPath.substring(0, this.monacoLibPath.length - 1);
-        }
-
-        let onGotAmdLoader = () => {
-            // Load monaco
-            (<any> window).require([this.monacoLibPath + '/editor/editor.main'], () => {
-                this.initMonaco();
-            });
-        };
-
-        // Load AMD loader if necessary
-        if (!(<any> window).require) {
-            let loaderScript = document.createElement('script');
-            loaderScript.type = 'text/javascript';
-            loaderScript.src = this.monacoLibPath + '/loader.js';
-            loaderScript.addEventListener('load', onGotAmdLoader);
-            document.body.appendChild(loaderScript);
-        } else {
-            onGotAmdLoader();
-        }
+        this.monacoEditorService.initMonacoLib(this.monacoLibPath).then(() => {
+            this.initMonaco();
+        })
     }
 
     /**
@@ -175,7 +158,7 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
      * Destroy the monaco componenent
      */
     public dispose() {
-        let myDiv: HTMLDivElement = this.editorContent.nativeElement;
+        const myDiv: HTMLDivElement = this.editorContent.nativeElement;
         if (this._editor) {
             this._editor.dispose();
             while (myDiv.hasChildNodes()) {
@@ -192,7 +175,7 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
     @HostListener('window:resize', ['$event'])
     protected onResize() {
         // Manually set monaco size because MonacoEditor doesn't work with Flexbox css
-        let myDiv: HTMLDivElement = this.editorContent.nativeElement;
+        const myDiv: HTMLDivElement = this.editorContent.nativeElement;
         myDiv.setAttribute('style', `height: ${myDiv.parentElement.offsetHeight}px; width:100%;`);
     }
 
@@ -205,8 +188,8 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
     }
 
     private initEditor() {
-        let myDiv: HTMLDivElement = this.editorContent.nativeElement;
-        let options = this.getOptions();
+        const myDiv: HTMLDivElement = this.editorContent.nativeElement;
+        const options = this.getOptions();
         this.dispose();
 
         if (!this.isDiffEditor) {
@@ -225,7 +208,7 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
 
         // Trigger on change event for simple editor
         this.getOriginalModel().onDidChangeContent(() => {
-            let newVal: string = this.getOriginalModel().getValue();
+            const newVal: string = this.getOriginalModel().getValue();
             if (this._value !== newVal) {
                 this.updateValue(newVal);
             }
@@ -234,7 +217,7 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
         // Trigger on change event for diff editor
         if (this.getModifiedModel()) {
             this.getModifiedModel().onDidChangeContent(() => {
-                let newVal: string = this.getModifiedModel().getValue();
+                const newVal: string = this.getModifiedModel().getValue();
                 if (this._valueToCompare !== newVal) {
                     this.updateValueToCompare(newVal);
                 }
@@ -258,10 +241,10 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
      * @returns {IStandaloneDiffEditor}
      */
     private initDiffEditor(div: HTMLDivElement, options: any) {
-        let originalModel = monaco.editor.createModel(this._value, this.language);
-        let modifiedModel = monaco.editor.createModel(this._valueToCompare, this.language);
+        const originalModel = monaco.editor.createModel(this._value, this.language);
+        const modifiedModel = monaco.editor.createModel(this._valueToCompare, this.language);
 
-        let diffEditor = monaco.editor.createDiffEditor(div, options);
+        const diffEditor = monaco.editor.createDiffEditor(div, options);
         diffEditor.setModel({
             modified: modifiedModel,
             original: originalModel,
@@ -271,7 +254,7 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
     }
 
     private getOptions(): IEditorOptions {
-        let options: IEditorOptions = new IEditorOptions();
+        const options: IEditorOptions = new IEditorOptions();
         options.experimentalScreenReader = this.experimentalScreenReader;
         options.ariaLabel = this.ariaLabel;
         options.rulers = this.rulers;
@@ -330,6 +313,7 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
         options.fontWeight = this.fontWeight;
         options.fontSize = this.fontSize;
         options.lineHeight = this.lineHeight;
+        options.formatOnPaste = this.formatOnPaste;
         options.value = this._value;
         options.language = this.language;
 
@@ -361,14 +345,14 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
 
     private getOriginalModel() {
         if (this._editor) {
-            let model = this._editor.getModel();
+            const model = this._editor.getModel();
             return model.original ? model.original : model;
         }
     }
 
     private getModifiedModel() {
         if (this._editor) {
-            let model = this._editor.getModel();
+            const model = this._editor.getModel();
             return model.modified ? model.modified : null;
         }
     }

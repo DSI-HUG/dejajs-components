@@ -1,18 +1,20 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
 
-export * from './tile-selection-change-event';
 export * from './tile-group.component';
-export * from './tile-list';
-export * from './tile';
+export * from './tile.interface';
+export * from './tile.class';
+export * from './tile.component';
+export * from './tile-position.directive';
+export * from './tiles.event';
+export * from './tiles-layout.provider';
 export * from './tiles.component';
-export * from './tile.event';
 export * from './tiles.module';

@@ -102,6 +102,3 @@ Composant pour afficher un panneau flottant.
     <td>Ancre d'alignement du conteneur déroulant. Valeurs possible: top, bottom, right, left. Une combinaison des ces valeurs peut également être utilisée, par exemple 'top left'.</td>
 </tr>
 </table>
-
-### Exemples
-Des exemples d'utilisation sont présents dans l'application test de **deja-angular2** (voir `color-picker`, `select` ou `menu` par exemple).

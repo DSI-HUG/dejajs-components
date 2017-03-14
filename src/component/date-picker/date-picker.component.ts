@@ -1,16 +1,16 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
 
 import { Component, ContentChild, ElementRef, EventEmitter, forwardRef, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from "@angular/forms";
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import * as moment from 'moment';
 import { Observable, Subscription } from 'rxjs/Rx';
@@ -39,7 +39,7 @@ export class DejaDatePickerComponent implements OnInit {
     @Input() public dropdownAlignment = 'left right top bottom';
     @Input() public ownerAlignment = 'left bottom';
     @Input() public format: string;
-    @Input() public placeholder: string = 'Date';
+    @Input() public placeholder = 'Date';
     @Input() public disableDates: Array<DaysOfWeek | Date>; // | ((d: Date) => boolean);
     @ViewChild(DejaDateSelectorComponent) public dateSelectorComponent: DejaDateSelectorComponent;
     @Output() public dateChange = new EventEmitter();
@@ -50,8 +50,8 @@ export class DejaDatePickerComponent implements OnInit {
     private _useDropDown = false;
     private keydown: Observable<{}>;
     private keyDownSubscription: Subscription;
-    private _disabled: boolean = false;
-    private _time: boolean = false;
+    private _disabled = false;
+    private _time = false;
 
     private date = new Date();
 
@@ -153,7 +153,7 @@ export class DejaDatePickerComponent implements OnInit {
             return;
         }
 
-        let target = event.currentTarget as HTMLElement;
+        const target = event.currentTarget as HTMLElement;
         if (target.id !== 'deja-date-selector-input') {
             return;
         }

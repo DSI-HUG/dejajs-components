@@ -1,19 +1,19 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
 
-import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
-import {Observable} from 'rxjs/Rx';
-import {GroupingService, IGroupInfo, IItemTree, ViewportMode} from '../../common/core';
-import {DejaTextMetricsService, DejaTreeListComponent, DejaTreeListItemsEvent, IDejaDragEvent} from '../../component';
-import {CountriesService, ICountry} from "../services/countries.service";
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Observable } from 'rxjs/Rx';
+import { GroupingService, IGroupInfo, IItemTree, ViewportMode } from '../../common/core';
+import { DejaTextMetricsService, DejaTreeListComponent, DejaTreeListItemsEvent, IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDejaDragEvent, IDropCursorInfos } from '../../component';
+import {CountriesService, ICountry} from '../services/countries.service';
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -21,10 +21,10 @@ import {CountriesService, ICountry} from "../services/countries.service";
     styleUrls: ['./tree-list-demo.scss'],
     templateUrl: './tree-list-demo.html',
 })
-export class DejaTreeListDemo implements OnInit {
+export class DejaTreeListDemoComponent implements OnInit {
     protected variableMode = ViewportMode.VariableRowHeight;
     protected noViewportMode = ViewportMode.NoViewport;
-    protected noViewportList: IItemTree[] = [{displayName: 'test'}, {displayName: 'test2'}, {displayName: 'test3'}];
+    protected noViewportList: IItemTree[] = [{ displayName: 'test' }, { displayName: 'test2' }, { displayName: 'test3' }];
     private groupedCountries: IItemTree[];
     private countries: Observable<ICountry[]>;
     private selectedCountries: ICountry[];
@@ -35,13 +35,13 @@ export class DejaTreeListDemo implements OnInit {
     @ViewChild('treeList') private treeList: DejaTreeListComponent;
 
     constructor(private countriesService: CountriesService,
-                groupingService: GroupingService,
-                private textMetricsService: DejaTextMetricsService,) {
-        this.countries = this.countriesService.getCountries(null, 412);
+        groupingService: GroupingService,
+                private textMetricsService: DejaTextMetricsService ) {
+        this.countries = this.countriesService.getCountries$(null, 412);
         // this.countries = this.countriesService.getCountries(null, 1);
 
-        this.countriesService.getCountries(null, 1).subscribe((values) => {
-            let extendedCountries = values.map((country) => {
+        this.countriesService.getCountries$(null, 1).subscribe((values) => {
+            const extendedCountries = values.map((country) => {
                 return {
                     code: country.code,
                     displayName: country.displayName,
@@ -51,7 +51,7 @@ export class DejaTreeListDemo implements OnInit {
                 } as IExtendedCountry;
             });
 
-            let groupInfos = [
+            const groupInfos = [
                 {
                     groupByField: 'groupName',
                 }, {
@@ -65,22 +65,24 @@ export class DejaTreeListDemo implements OnInit {
         });
 
         for (let i = 0; i < 50; i++) {
-            let rand = Math.floor(Math.random() * (70 - 33 + 1)) + 33; // random de 33 à 70
+            const rand = Math.floor(Math.random() * (70 - 33 + 1)) + 33; // random de 33 à 70
             this.loremList[i] = {} as IItemTree;
             this.loremList[i].height = rand;
             this.loremList[i].displayName = i + ' - Une ligne de test avec une height de : ' + rand;
         }
 
-        groupingService.group(this.loremList, [{groupByField: 'height'}]).then((groupedResult) => {
+        groupingService.group(this.loremList, [{ groupByField: 'height' }]).then((groupedResult) => {
             this.loremList = groupedResult;
         });
     }
 
     public ngOnInit() {
-        this.textMetricsService.getTextHeight(300, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vulputate porttitor odio, non dictum massa vehicula nec. Proin finibus ex ac ipsum euismod, vitae lobortis augue pharetra. Ut tempor eu nunc sit amet rutrum. Aliquam a maximus est, id maximus quam. Proin justo quam, laoreet at placerat eu, vestibulum eget enim.').then((height: number) => {
-            // tslint:disable-next-line
-            console.info('La taille du lorem ipsum dans une div de 300px est de : ', height, 'px');
-        });
+        this.textMetricsService.getTextHeight(300, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vulputate porttitor odio, non dictum massa vehicula nec. Proin finibus ex ac ipsum euismod, vitae lobortis augue pharetra. Ut tempor eu nunc sit amet rutrum. Aliquam a maximus est, id maximus quam. Proin justo quam, laoreet at placerat eu, vestibulum eget enim.')
+            .first()
+            .subscribe((height: number) => {
+                // tslint:disable-next-line
+                console.info('La taille du lorem ipsum dans une div de 300px est de : ', height, 'px');
+            });
         this.textMetricsService.metricsElem = this.treeList.elementRef.nativeElement as HTMLElement;
     }
 
@@ -89,8 +91,8 @@ export class DejaTreeListDemo implements OnInit {
         this.selectedItemsOut = e.items;
         this.selectedInfos = [];
         e.items.forEach((item) => {
-            let treeItem = item as IItemTree;
-            let country = item as IExtendedCountry;
+            const treeItem = item as IItemTree;
+            const country = item as IExtendedCountry;
             switch (treeItem.depth) {
                 case 0:
                     return 'Group ' + treeItem.toString();
@@ -98,7 +100,7 @@ export class DejaTreeListDemo implements OnInit {
                     return 'Subgroup ' + treeItem.toString();
                 default:
                     this.groupedTreeList.getParentListInfos(item).then((parentInfos) => {
-                        let parentDisplayName = parentInfos && parentInfos.parent ? parentInfos.parent.toString() : 'none';
+                        const parentDisplayName = parentInfos && parentInfos.parent ? parentInfos.parent.toString() : 'none';
                         this.selectedInfos.push('Country: ' + country.naqme + ' (' + country.code + ')' + (parentInfos ? '    parent: ' + parentDisplayName + ' (' + parentInfos.index + ')' : ''));
                     });
             }
@@ -110,7 +112,7 @@ export class DejaTreeListDemo implements OnInit {
     }
 
     protected onItemDragStart(event: IDejaDragEvent) {
-        let itm = event.dragObject as IItemTree;
+        const itm = event.dragObject as IItemTree;
         if (itm.depth === 2) {
             event.dragInfo['country'] = event.dragObject;
         }
@@ -124,7 +126,7 @@ export class DejaTreeListDemo implements OnInit {
 
     protected onDivDropEvent(event: IDejaDragEvent) {
         if (event.dragInfo.hasOwnProperty('country')) {
-            let country = event.dragInfo['country'] as ICountry;
+            const country = event.dragInfo['country'] as ICountry;
             (event.target as HTMLElement).innerText = `The dropped country is ${country.naqme} - the code is: ${country.code}`;
             event.preventDefault();
         }
@@ -137,6 +139,33 @@ export class DejaTreeListDemo implements OnInit {
             naqme: 'te',
         } as ICountry);
         this.groupedTreeList.refresh();
+    }
+
+    protected getDragContext() {
+        return {
+            target: '[ddid]',
+            className: 'item-base-cursor',
+            dragStart: (target: HTMLElement) => {
+                const id = target && target.getAttribute('ddid');
+                return id && this.countriesService.getCountryByCode$(id);
+            },
+        } as IDejaMouseDraggableContext;
+    }
+
+    protected getDropContext(dropArea: HTMLElement) {
+        return {
+            dragEnter: (_dragContext) => {
+                return {
+                    width: 200,
+                    height: 60,
+                    className: 'country-target-cursor',
+                } as IDropCursorInfos;
+            },
+            drop: (dragContext) => {
+                const country = dragContext as ICountry;
+                dropArea.innerText = `The dropped country is ${country.naqme} - the code is: ${country.code}`;
+            },
+        } as IDejaMouseDroppableContext;
     }
 }
 

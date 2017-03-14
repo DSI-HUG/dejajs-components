@@ -1,10 +1,10 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
@@ -20,12 +20,12 @@ import { IWeight, Weight } from './weight.interface';
     styleUrls: ['./range-demo.scss'],
     templateUrl: './range-demo.html',
 })
-export class DejaRangeDemo {
+export class DejaRangeDemoComponent {
     public readOnlyRanges: Range[];
     public rangesWithInterval: Range[];
     public steps: number[];
     public ranges: Range[];
-    public numericStep: number = 1;
+    public numericStep = 1;
     public weights: Weight[];
 
     public errors: Observable<any>;
@@ -62,7 +62,7 @@ export class DejaRangeDemo {
      * @param {IStepRangeEvent} event
      * @returns
      *
-     * @memberOf DejaRangeDemo
+     * @memberOf DejaRangeDemoComponent
      */
     protected stepFn(event: IStepRangeEvent) {
 
@@ -133,7 +133,7 @@ export class DejaRangeDemo {
      *
      * @private
      *
-     * @memberOf DejaRangeDemo
+     * @memberOf DejaRangeDemoComponent
      */
     protected increase(): void {
         this.weights[this.weights.length - 1].maxWeight++;
@@ -145,7 +145,7 @@ export class DejaRangeDemo {
      *
      * @private
      *
-     * @memberOf DejaRangeDemo
+     * @memberOf DejaRangeDemoComponent
      */
     protected decrease(): void {
         if (this.weights[0].minWeight > 0) {
@@ -159,7 +159,7 @@ export class DejaRangeDemo {
      *
      * @private
      *
-     * @memberOf DejaRangeDemo
+     * @memberOf DejaRangeDemoComponent
      */
     private computeRangeFromWeight() {
         let min = 0;

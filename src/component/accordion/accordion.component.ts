@@ -1,28 +1,26 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
 
 import { CommonModule } from '@angular/common';
-import { Component, NgModule, ViewEncapsulation } from '@angular/core';
+import { Component, HostBinding, HostListener, Input, NgModule, ViewEncapsulation } from '@angular/core';
 
 @Component({
     encapsulation: ViewEncapsulation.None,
-    host: {
-        class: 'accordion',
-    },
     selector: 'deja-accordion',
     styleUrls: ['./accordion.component.scss'],
     template: '<ng-content></ng-content>',
 })
 export class DejaAccordionComponent {
     private groups: DejaAccordionGroupComponent[] = [];
+    @HostBinding('class.accordion') true;
 
     public addGroup(group: DejaAccordionGroupComponent): void {
         this.groups.push(group);
@@ -31,39 +29,47 @@ export class DejaAccordionComponent {
 
 @Component({
     selector: 'deja-accordion-group',
-    template: '<div class="accordion-group" [class.open]="isOpen" (click)="toggleOpen($event)"><ng-content></ng-content></div>',
+    template: '<ng-content></ng-content>',
 })
 export class DejaAccordionGroupComponent {
-    private isOpen: boolean = false;
+    @HostBinding('class.open') @Input() public isOpen: boolean;
+    @HostBinding('class.accordion-group') true;
 
     constructor(private accordion: DejaAccordionComponent) {
         this.accordion.addGroup(this);
     }
 
+    @HostListener('click', ['$event'])
     public toggleOpen(event: MouseEvent): void {
         event.preventDefault();
-        this.isOpen = !this.isOpen;
+
+        let target = event.target as HTMLElement; 
+        const element = event.currentTarget as HTMLElement;
+        
+        while(target.parentElement && target !== element) {
+            if(target.tagName !== 'deja-accordion-header') {
+                this.isOpen = !this.isOpen;
+            } 
+            target = target.parentElement;
+        }
     }
 }
 
 @Component({
     selector: 'deja-accordion-header',
-    template: `
-        <div class="accordion-header">
-            <ng-content></ng-content>
-        </div>
-    `,
+    template: `<ng-content></ng-content>`,
 })
-export class DejaAccordionHeaderComponent { }
+export class DejaAccordionHeaderComponent { 
+    @HostBinding('class.accordion-header') true;
+}
 
 @Component({
     selector: 'deja-accordion-body',
     template: '<ng-content></ng-content>',
-    host: {
-        'class': 'accordion-body',
-    },
 })
-export class DejaAccordionBodyComponent { }
+export class DejaAccordionBodyComponent {
+    @HostBinding('class.accordion-body') true;
+}
 
 const DEJA_ACCORDION_DIRECTIVES = [DejaAccordionComponent, DejaAccordionGroupComponent, DejaAccordionHeaderComponent, DejaAccordionBodyComponent];
 

@@ -1,15 +1,15 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
 
-import { Pipe } from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
 /**
@@ -18,12 +18,12 @@ import { DomSanitizer } from '@angular/platform-browser';
  * @deprecated
  */
 @Pipe({ name: 'safeStyle' })
-export class SafeStylePipe {
+export class SafeStylePipe implements PipeTransform {
     constructor(private sanitizer: DomSanitizer) {
         this.sanitizer = sanitizer;
     }
 
     public transform(style) {
-        return this.sanitizer.bypassSecurityTrustStyle(style);
+        return this.sanitizer.bypassSecurityTrustStyle(style) as any;
     }
 }

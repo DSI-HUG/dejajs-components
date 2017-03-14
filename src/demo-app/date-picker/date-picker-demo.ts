@@ -1,24 +1,24 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
 
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs/Rx';
-import { DejaDatePickerComponent } from "../../index";
+import { DejaDatePickerComponent } from '../../index';
 
 @Component({
     selector: 'dejadate-picker-demo',
     styleUrls: ['./date-picker-demo.scss'],
     templateUrl: './date-picker-demo.html',
 })
-export class DejaDatePickerDemo implements OnInit {
+export class DejaDatePickerDemoComponent implements OnInit {
     public theDate = new Date();
     public disabledDate = [0, 6, new Date(2016, 9, 12)];
 

@@ -1,17 +1,24 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
 
-import {
-  AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, Renderer,
-} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Observable, Subject } from 'rxjs/Rx';
+
+interface IAnimation {
+    before: CSSStyleDeclaration;
+    after: CSSStyleDeclaration;
+    delay?: number;
+    duration: number;
+    easing: string;
+}
 
 @Component({
   selector: 'deja-snackbar',
@@ -19,7 +26,6 @@ import {
   template: `<ng-content></ng-content>`,
 
 })
-
 export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /**
@@ -45,7 +51,7 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
    * @type {number}
    * @memberOf DejaSnackbarComponent
    */
-  @Input() public delay: number = 0;
+    @Input() public delay = 0;
 
   /**
    * specify lifetime of the snackbar on the screen
@@ -53,7 +59,7 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
    * @type {number}
    * @memberOf DejaSnackbarComponent
    */
-  @Input() public duration: number = 0;
+    @Input() public duration = 0;
 
   /**
    * set a container for the snackbar instead of default behavior (viewport)
@@ -96,7 +102,7 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
    * @type {number}
    * @memberOf DejaSnackbarComponent
    */
-  private marginTop: number = 6;
+    private marginTop = 6;
 
   /**
    * snackbar creation timestamp, used for calculation, forthe adapt animation
@@ -114,7 +120,7 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
    * @type {number}
    * @memberOf DejaSnackbarComponent
    */
-  private enterAnimationDuration: number = 350;
+    private enterAnimationDuration = 350;
 
   /**
    * leave animation duration
@@ -123,7 +129,7 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
    * @type {number}
    * @memberOf DejaSnackbarComponent
    */
-  private leaveAnimationDuration: number = 175;
+    private leaveAnimationDuration = 175;
 
   /**
    * adapt animation duration
@@ -132,7 +138,7 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
    * @type {number}
    * @memberOf DejaSnackbarComponent
    */
-  private adaptAnimationDuration: number = 225;
+    private adaptAnimationDuration = 225;
 
   /**
    * string representation of the alignment, used for statements and initial final position
@@ -152,6 +158,8 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   private alignents: { top: boolean, right: boolean, bottom: boolean, left: boolean };
 
+    private animate$ = new Subject<IAnimation>();
+
   /**
    * alignents setter
    *
@@ -166,9 +174,11 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
     };
 
     // set alignents
-    value && value
+        if (value) {
+            value
         .split(/\s+/g)
         .map((align: string) => this.alignents[align] = true);
+        }
 
     // filter incompatible alignments
     this.alignents.bottom = this.alignents.top && this.alignents.bottom ? false : this.alignents.bottom;
@@ -183,14 +193,35 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
    *
    * @memberOf DejaSnackbarComponent
    */
-  constructor(
-      private elementRef: ElementRef,
-      private renderer: Renderer,
-  ) {
+    constructor(private elementRef: ElementRef) {
     if (!DejaSnackbarComponent.instances) {
       DejaSnackbarComponent.instances = [];
     }
     DejaSnackbarComponent.instances.push(this);
+
+        const applyParams = (styles: CSSStyleDeclaration) => {
+            Object.keys(styles)
+                .forEach((key) => {
+                    this.host.style[key] = styles[key];
+                });
+        };
+
+        Observable.from(this.animate$)
+            .do((animation) => applyParams(animation.before))
+            .delay(1)
+            .do((animation) => {
+                this.host.style.transitionDuration = `${animation.duration}ms`;
+                this.host.style.transitionTimingFunction = animation.easing;
+                this.host.style.transitionProperty = Object.keys(animation.before).join(',');
+            })
+            .debounce((animation) => Observable.timer(animation.delay || 1))
+            .do((animation) => applyParams(animation.after))
+            .debounce((animation) => Observable.timer(animation.duration))
+            .subscribe(() => {
+                this.host.style.transitionDuration = '';
+                this.host.style.transitionTimingFunction = '';
+                this.host.style.transitionProperty = '';
+            });
   }
 
   /**
@@ -254,15 +285,15 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
     this.launchEnterAnimation();
 
     // if a duration has been been specified, launch the 'leave' animation after snackbar's lifetime flow, then emit amination done
-    setTimeout(() => {
-      setTimeout(() => {
-        this.onAnimationDone.emit();
-      }, this.leaveAnimationDuration);
-
+        Observable.timer(this.duration + this.delay)
+            .first()
+            .do(() => {
       if (!!this.duration) {
         this.launchLeaveAnimation();
       }
-    }, this.duration + this.delay);
+            })
+            .delay(this.leaveAnimationDuration)
+            .subscribe(() => this.onAnimationDone.emit());
   }
 
   /**
@@ -436,7 +467,7 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
    *
    * @memberOf DejaSnackbarComponent
    */
-  private launchAdaptAnimation(height: number): void {
+    private launchAdaptAnimation(height: number) {
 
     let direction = 1;
     if (this.alignents.top) {
@@ -449,21 +480,16 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
         .slice(-1)
         .pop());
 
-    this.renderer.invokeElementMethod(this.host, 'animate', [
-      [
-        {
+        this.animate$.next({
+            before: {
           transform: `${transform}`,
         },
-        {
+            after: {
           transform: `matrix(1,0,0,1,0,${sixth + ((height + this.marginTop) * direction)})`,
         },
-      ],
-      {
         duration: this.adaptAnimationDuration,
         easing: 'ease',
-        fill: 'both',
-      },
-    ]);
+        } as IAnimation);
   }
 
   /**
@@ -473,29 +499,25 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
    *
    * @memberOf DejaSnackbarComponent
    */
-  private launchEnterAnimation(): void {
+    private launchEnterAnimation() {
     let direction = -1;
     if (this.alignents.top) {
       direction = 1;
     }
-    this.renderer.invokeElementMethod(this.host, 'animate', [
-      [
-        {
-          opacity: 0,
+
+        this.animate$.next({
+            before: {
+                opacity: '0',
           transform: `translateY(${direction * 200}%)`,
         },
-        {
-          opacity: 1,
+            after: {
+                opacity: '1',
           transform: `translateY(0)`,
         },
-      ],
-      {
         delay: this.delay,
         duration: this.enterAnimationDuration,
         easing: 'ease',
-        fill: 'both',
-      },
-    ]);
+        } as IAnimation);
   }
 
   /**
@@ -505,21 +527,16 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
    *
    * @memberOf DejaSnackbarComponent
    */
-  private launchLeaveAnimation(): void {
-    this.renderer.invokeElementMethod(this.host, 'animate', [
-      [
-        {
-          opacity: 1,
+    private launchLeaveAnimation() {
+        this.animate$.next({
+            before: {
+                opacity: '1',
         },
-        {
-          opacity: 0,
+            after: {
+                opacity: '0',
         },
-      ],
-      {
         duration: this.leaveAnimationDuration,
         easing: 'ease',
-        fill: 'both',
-      },
-    ]);
+        } as IAnimation);
   }
 }

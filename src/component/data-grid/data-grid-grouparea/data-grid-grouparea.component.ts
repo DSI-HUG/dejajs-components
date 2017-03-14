@@ -1,17 +1,17 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { IDejaDragEvent, IDejaDropEvent } from "../../index";
-import { IDejaGridColumn, IDejaGridGroupsEvent } from "../index";
+import { IDejaDragEvent, IDejaDropEvent } from '../../index';
+import { IDejaGridColumn, IDejaGridGroupsEvent } from '../index';
 
 /** Zone de regroupement des colonnes dans laquelle les colonnes peuvent être drag and droppée */
 @Component({
@@ -59,22 +59,22 @@ export class DejaGridGroupAreaComponent {
         return {
             dragovercallback: (event: IDejaDropEvent) => {
                 if (event.dragInfo.hasOwnProperty(this.columnGroupKey)) {
-                    let sourceColumn = event.dragInfo[this.columnGroupKey] as IDejaGridColumn;
+                    const sourceColumn = event.dragInfo[this.columnGroupKey] as IDejaGridColumn;
                     if (!this.groups.find((column) => column === sourceColumn)) {
                         event.preventDefault();
                     }
 
                 } else if (event.dragInfo.hasOwnProperty(this.groupGroupKey)) {
-                    let targetElement = this.getGroupElementFromHTMLElement(event.target as HTMLElement);
-                    let targetIndex = targetElement && +targetElement.getAttribute('index');
+                    const targetElement = this.getGroupElementFromHTMLElement(event.target as HTMLElement);
+                    const targetIndex = targetElement && +targetElement.getAttribute('index');
                     if (targetIndex === undefined) {
                         return;
                     }
 
-                    let targetBounds = targetElement.getBoundingClientRect();
+                    const targetBounds = targetElement.getBoundingClientRect();
 
-                    let sourceColumn = event.dragInfo[this.groupGroupKey] as IDejaGridColumn;
-                    let sourceIndex = this.groups.findIndex((column) => column === sourceColumn);
+                    const sourceColumn = event.dragInfo[this.groupGroupKey] as IDejaGridColumn;
+                    const sourceIndex = this.groups.findIndex((column) => column === sourceColumn);
 
                     // Dead zones                
                     if (sourceIndex === targetIndex) {
@@ -102,8 +102,8 @@ export class DejaGridGroupAreaComponent {
                 }
             },
             dropcallback: (event: IDejaDropEvent) => {
-                let raiseEvent = (group: IDejaGridColumn) => {
-                    let e = {
+                const raiseEvent = (group: IDejaGridColumn) => {
+                    const e = {
                         column: group,
                         columns: this.groups,
                         originalEvent: event,
@@ -114,13 +114,13 @@ export class DejaGridGroupAreaComponent {
                 };
 
                 if (event.dragInfo.hasOwnProperty(this.columnGroupKey)) {
-                    let sourceColumn = event.dragInfo[this.columnGroupKey] as IDejaGridColumn;
+                    const sourceColumn = event.dragInfo[this.columnGroupKey] as IDejaGridColumn;
 
-                    let targetElement = this.getGroupElementFromHTMLElement(event.target as HTMLElement);
-                    let targetIndex = targetElement && +targetElement.getAttribute('index');
+                    const targetElement = this.getGroupElementFromHTMLElement(event.target as HTMLElement);
+                    const targetIndex = targetElement && +targetElement.getAttribute('index');
 
                     if (targetIndex !== undefined) {
-                        let targetBounds = targetElement.getBoundingClientRect();
+                        const targetBounds = targetElement.getBoundingClientRect();
                         if (event.x <= targetBounds.left + targetBounds.width / 2) {
                             this.groups.splice(targetIndex, 0, sourceColumn);
                         } else if (targetIndex < this.groups.length - 1) {
@@ -134,7 +134,7 @@ export class DejaGridGroupAreaComponent {
                     raiseEvent(sourceColumn);
 
                 } else if (event.dragInfo.hasOwnProperty(this.groupGroupKey)) {
-                    let sourceColumn = event.dragInfo[this.groupGroupKey] as IDejaGridColumn;
+                    const sourceColumn = event.dragInfo[this.groupGroupKey] as IDejaGridColumn;
                     raiseEvent(sourceColumn);
                 }
             },
@@ -142,9 +142,9 @@ export class DejaGridGroupAreaComponent {
     }
 
     protected removeGroup(event: Event, index: number) {
-        let column = this.groups.splice(index, 1);
+        const column = this.groups.splice(index, 1);
 
-        let e = {
+        const e = {
             column: column[0],
             columns: this.groups,
             originalEvent: event,
@@ -156,8 +156,8 @@ export class DejaGridGroupAreaComponent {
     }
 
     protected getGroupColumnFromHTMLElement(element: HTMLElement): IDejaGridColumn {
-        let groupElement = this.getGroupElementFromHTMLElement(element);
-        let groupName = groupElement && groupElement.getAttribute('groupname');
+        const groupElement = this.getGroupElementFromHTMLElement(element);
+        const groupName = groupElement && groupElement.getAttribute('groupname');
         return groupName && this.groups.find((column) => column.name === groupName);
     }
 

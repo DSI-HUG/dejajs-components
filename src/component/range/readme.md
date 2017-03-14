@@ -63,7 +63,7 @@ Il est votre responsabilité d'implémenter la charte graphique en surchargeant 
 </deja-range>
 ```
 ```js
-export class DejaRangeDemo {
+export class DejaRangeDemoComponent {
     public weights: Weight[];
 
     @ViewChild('dejaWeight') protected weightRef;
@@ -247,5 +247,3 @@ export class DejaRangeDemo {
     </tr>
 </table>
 
-### Démonstration
-Une démonstration est consultable dans l'application de démonstration.

@@ -34,7 +34,7 @@ export class GlobalEventEmmitter implements IGlobalEventEmmitter {
         }
 
         // specific event
-        let callbacks = this._callbacks['$' + event];
+        const callbacks = this._callbacks['$' + event];
         if (!callbacks) {
             return this;
         }
@@ -63,6 +63,7 @@ export class GlobalEventEmmitter implements IGlobalEventEmmitter {
 
         if (callbacks) {
             callbacks = callbacks.slice(0);
+            // tslint:disable-next-line:prefer-const
             for (let i = 0, len = callbacks.length; i < len; ++i) {
                 callbacks[i].apply(this, params);
             }

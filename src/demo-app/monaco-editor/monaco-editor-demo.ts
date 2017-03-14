@@ -1,19 +1,19 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
 
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
-import {IEditorLanguage} from "../../component/monaco-editor/options/editor-language.model";
-import {IEditorTheme} from "../../component/monaco-editor/options/editor-theme.component";
-import {MonacoEditorDemoService} from "./monaco-editor-demo.service.";
+import {ActivatedRoute} from '@angular/router';
+import {IEditorLanguage} from '../../component/monaco-editor/options/editor-language.model';
+import {IEditorTheme} from '../../component/monaco-editor/options/editor-theme.component';
+import {MonacoEditorDemoService} from './monaco-editor-demo.service.';
 
 const xmlFile = 'xmlFile';
 const xmlToCompareFile = 'xmlToCompareFile';
@@ -28,7 +28,7 @@ const jsonToCompareFile = 'jsonToCompareFile';
     ],
     templateUrl: './monaco-editor-demo.html',
 })
-export class DejaMonacoEditorDemo implements OnInit {
+export class DejaMonacoEditorDemoComponent implements OnInit {
     protected language: IEditorLanguage = IEditorLanguage.XML;
     protected languageJson: IEditorLanguage = IEditorLanguage.JSON;
 

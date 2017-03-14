@@ -1,15 +1,12 @@
 md-tab-group {
 	&[multi-lines] {
-		.mat-tab-header {
-			display: block;
-			.mat-tab-label {
-				display: inline-block;
-			}
+		.mat-tab-labels {
+            flex-wrap: wrap;
 		}
 	}
 	.mat-tab-header {
 		.mat-tab-label {
-			font-size: 12px;
+			font-size: 80%;
 			height: auto;
 			line-height: normal;
 			min-width: unset;

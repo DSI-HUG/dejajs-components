@@ -1,10 +1,10 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
@@ -12,7 +12,7 @@
 import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
 import { Observable } from 'rxjs/Rx';
-import {MonacoEditorDemoService} from "./monaco-editor-demo.service.";
+import {MonacoEditorDemoService} from './monaco-editor-demo.service.';
 
 @Injectable()
 export class MonacoEditorXmlFileResolver implements Resolve<any> {

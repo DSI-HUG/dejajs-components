@@ -1,17 +1,17 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
 
-import {IEditorLanguage} from "./editor-language.model";
-import {IEditorScrollbarOptions} from "./editor-scrollbar-options";
-import {IEditorTheme} from "./editor-theme.component";
+import { IEditorLanguage } from './editor-language.model';
+import { IEditorScrollbarOptions } from './editor-scrollbar-options';
+import { IEditorTheme } from './editor-theme.component';
 /**
  * Configuration options for the editor.
  */
@@ -303,6 +303,11 @@ export class IEditorOptions {
      * The line height
      */
     public lineHeight?: number;
+    /**
+     * Enable format on paste.
+     * Defaults to false.
+     */
+    formatOnPaste?: boolean;
 
     /**
      * Content to show

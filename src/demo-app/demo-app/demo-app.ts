@@ -1,32 +1,36 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
 
-import { Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.Default,
     encapsulation: ViewEncapsulation.None,
     selector: 'demo-app',
     styleUrls: ['./demo-app.scss', '../../scss/index.scss'],
     templateUrl: './demo-app.html',
 })
-export class DemoApp {
+export class DemoAppComponent {
     public version: string;
     protected navOpened = true;
+    protected iframeOpened = false;
 
-    constructor() {
-
-    }
-
-    get debug() {
+    protected get debug() {
         // console.log('Binding ' + Date.now());
         return null;
+    }
+
+    protected openIFrame(e: Event) {
+        this.iframeOpened = true;
+        e.preventDefault();
+        return false;
     }
 }

@@ -1,10 +1,10 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
@@ -37,11 +37,11 @@ export class DejaGridColumnsLayoutInfos {
             }
 
             if (width.isInvalid()) {
-                throw 'Invalid column width unit can be for example: 11px or 23%';
+                throw new Error('Invalid column width unit can be for example: 11px or 23%');
             }
 
             if (width.unit && width.unit !== 'px' && width.unit !== '%') {
-                throw 'Column width unit can be only px or %';
+                throw new Error('Column width unit can be only px or %');
             }
 
             if (width.unit === '%') {

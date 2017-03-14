@@ -1,21 +1,21 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
 
 export class Position {
+    public left: number;
+    public top: number;
+
     public static equals(p1: Position, p2: Position) {
         return p1.left === p2.left && p1.top === p2.top;
     }
-
-    public left: number;
-    public top: number;
 
     constructor(left?: number, top?: number) {
         this.left = left || 0;
@@ -38,6 +38,6 @@ export class Position {
     }
 
     public around(x: number, y: number, xspan: number, yspan?: number): boolean {
-        return Math.abs(this.left - x) <= xspan && Math.abs(this.top - y) <= (yspan | xspan);
+        return Math.abs(this.left - x) <= xspan && Math.abs(this.top - y) <= (yspan || xspan);
     }
 }

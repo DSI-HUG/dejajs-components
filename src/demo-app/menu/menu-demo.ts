@@ -1,10 +1,10 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
@@ -17,7 +17,7 @@ import {Component, ViewEncapsulation} from '@angular/core';
   styleUrls: ['./menu-demo.scss'],
   templateUrl: './menu-demo.html',
 })
-export class MenuDemo {
+export class MenuDemoComponent {
   public selected = '';
   public items = [
     {text: 'Refresh'},
@@ -25,6 +25,8 @@ export class MenuDemo {
     {text: 'Help', disabled: true},
     {text: 'Sign Out'},
   ];
+
+    protected tabIndex = 1;
 
   public select(text: string) { this.selected = text; }
 }

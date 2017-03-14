@@ -1,34 +1,16 @@
-<md-tab-group>
+<md-tab-group [selectedIndex]="1">
+    <!--<md-tab label="OVERVIEW">-->
+        <!--<md-card class="demo-card demo-basic">-->
+            <!--TODO-->
+        <!--</md-card>-->
+    <!--</md-tab>-->
     <md-tab label="API REFERENCE">
-        <md-card>
-            <md-card-title>Accordion</md-card-title>
-            <md-card-content>
-                Crée une liste d'éléments, permettant au contenu de chaque élément d'&ecirc;tre agrandi et réduit en cliquant sur son header.<br
-                /> Note V2 : La version 2 rend plus flexible et générique l'utilisation du composant. Celui-ci n'utilise
-                plus de propriétés et est donc totalement personnalisable.
-
-                <h2>Utilisation</h2>
-                <blockquote>Ne pas oublier d'importer le <b>DejaAccordionModule</b> dans les <b>imports</b> de votre module concerné
-                    !
-                </blockquote>
-
-                Ensuite utiliser le composant comme ceci dans votre template :
-
-                <div class="viewer">
-                    <deja-monaco-editor [(value)]="exampleValue" [language]="html" [readOnly]="true" [folding]="true"></deja-monaco-editor>
-                </div>
-
-                <h2>Note :</h2>
-                Vous pouvez ajouter la propriété `secondary` pour que le header soit en bleu foncé (<b>#428BCA</b>) :
-
-                <div class="viewer">
-                    <deja-monaco-editor [value]="'<deja-accordion-header secondary></deja-accordion-header>'" [language]="html" [readOnly]="true"
-                        [folding]="true"></deja-monaco-editor>
-                </div>
-            </md-card-content>
+        <md-card class="demo-card demo-basic">
+            <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/accordion/readme.md'"></deja-markdown>
         </md-card>
     </md-tab>
-    <md-tab label="OVERVIEW">
+    <md-tab label="EXAMPLES">
+
         <md-card class="demo-card demo-basic">
             <md-card-content id="accordionContainer">
                 <h1>Default :</h1>
@@ -100,6 +82,6 @@
                 </deja-accordion>
             </md-card-content>
         </md-card>
+
     </md-tab>
-    <md-tab label="EXAMPLES"></md-tab>
 </md-tab-group>

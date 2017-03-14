@@ -27,7 +27,7 @@ l'input : monacoLibPath (Ex: 'mon_path/loader.js')
 ```
 
 ```typescript
-export class DejaMonacoEditorDemo implements OnInit {
+export class DejaMonacoEditorDemoComponent implements OnInit {
     protected code: string;
 
     protected language: IEditorLanguage = IEditorLanguage.XML;
@@ -124,6 +124,3 @@ La liste des langages disponible est accessible au travers de l'interface IEdito
 ```typescript
     protected language: IEditorLanguage = IEditorLanguage.XML;
 ```
-
-### Demonstration
-A demonstration is available in the Demo App.

@@ -54,6 +54,3 @@ Ensuite utiliser le composant comme ceci dans votre template :
     <td>Type du messageBox. Cette propriété stylise le composant.</td>
 </tr>
 </table>
-
-### Exemple
-Un exemple d'utilisation est présent dans l'application test de **deja-angular2**.

@@ -1,15 +1,15 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
 
-import { ISortInfos, SortOrder } from "./index";
+import { ISortInfos, SortOrder } from './index';
 
 /** Classe de tri d'une liste plate ou hierarchique */
 export class SortingService {
@@ -20,7 +20,7 @@ export class SortingService {
      * @return {number} 0 si les objet sont égaux, 1 si b est après a, -1 si a après b
      */
     public compare(a: any, b: any, sortInfo: ISortInfos) {
-        let orderfact = sortInfo.order === SortOrder.ascending ? 1 : -1;
+        const orderfact = sortInfo.order === SortOrder.ascending ? 1 : -1;
 
         if (!a && !b) {
             return 0;
@@ -34,8 +34,8 @@ export class SortingService {
             return orderfact;
         }
 
-        let sortnamea = a.sortField || (typeof sortInfo.name === 'function' ? sortInfo.name(a) : sortInfo.name);
-        let sortnameb = b.sortField || (typeof sortInfo.name === 'function' ? sortInfo.name(b) : sortInfo.name);
+        const sortnamea = a.sortField || (typeof sortInfo.name === 'function' ? sortInfo.name(a) : sortInfo.name);
+        const sortnameb = b.sortField || (typeof sortInfo.name === 'function' ? sortInfo.name(b) : sortInfo.name);
 
         let flda = sortnamea ? a[sortnamea] : a;
         let fldb = sortnameb ? b[sortnameb] : b;
@@ -87,8 +87,8 @@ export class SortingService {
             }
         }
 
-        let stra = flda.toString() as string;
-        let strb = fldb.toString() as string;
+        const stra = flda.toString() as string;
+        const strb = fldb.toString() as string;
         return orderfact * stra.localeCompare(strb);
     }
 
@@ -97,16 +97,30 @@ export class SortingService {
      * @param {ISortInfos} sortInfos Modèle de tri à appliquer.
      * @return {Promise} Promesse résolue par la fonction.
      */
-    public sort(list: any[], sortInfo: ISortInfos) {
-        return new Promise<any[]>((resolved?: (value: any[]) => void) => {
-            let compareFn = (a: any, b: any) => {
-                return this.compare(a, b, sortInfo);
-            };
+    public sort(list: any[], sortInfo: ISortInfos | ISortInfos[]) {
+        const sort = (sortInfos: ISortInfos[]) => {
+            return new Promise<any[]>((resolved?: (value: any[]) => void) => {
+                const compareFn = (a: any, b: any) => {
+                    let i = -1;
+                    let result = 0;
+                    while (++i < sortInfos.length && result === 0) {
+                        result = this.compare(a, b, sortInfos[i]);
+                    }
+                    return result;
+                };
 
-            list.sort(compareFn);
-            resolved(list);
-        });
+                list.sort(compareFn);
+                resolved(list);
+            });
+        };
+
+        if (sortInfo instanceof Array) {
+            return sort(sortInfo as ISortInfos[]);
+        } else {
+            return sort([sortInfo as ISortInfos]);
+        }
     }
+
 
     /** Trie les éléments de la liste hierarchique spécifiée en fonction du modèle de tri spécifié
      * @param {any[]} tree Liste à trier.
@@ -114,7 +128,7 @@ export class SortingService {
      * @param {string} childrenField Champ à utiliser pour la recherche dans les enfants d'un parent.
      * @return {Promise} Promesse résolue par la fonction.
      */
-    public sortTree(tree: any[], sortInfo: ISortInfos, childrenField?: string) {
+    public sortTree(tree: any[], sortInfo: ISortInfos | ISortInfos[], childrenField?: string) {
         if (!childrenField) {
             childrenField = 'items';
         }
@@ -122,12 +136,12 @@ export class SortingService {
         return new Promise<any[]>((resolved?: (value: any[]) => void, rejected?: (reason: any) => void) => {
             this.sort(tree, sortInfo).then((sortedTree) => {
                 // Sort children
-                let sortChildren = (index: number) => {
+                const sortChildren = (index: number) => {
                     if (index >= sortedTree.length) {
                         resolved(sortedTree);
                     }
 
-                    let subitems = sortedTree[index][childrenField];
+                    const subitems = sortedTree[index][childrenField];
                     if (subitems) {
                         this.sortTree(subitems, sortInfo, childrenField)
                             .then(() => {

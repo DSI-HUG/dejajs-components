@@ -1,12 +1,31 @@
-<md-card class="demo-card demo-basic">
-	<md-card-content class="listContainer">
-		<md-input-container>
-			<textarea deja-autosize mdInput placeholder="This is an autosize text area" [(ngModel)]="multitext"></textarea>
-		</md-input-container>
-	</md-card-content>
-	<md-card-content class="listContainer">
-		<md-input-container>
-    		<textarea deja-autosize mdInput placeholder="This is an empty text area" [(ngModel)]="multitext2"></textarea>
-		</md-input-container>
-	</md-card-content>
-</md-card>
+<md-tab-group [selectedIndex]="1">
+	<!--<md-tab label="OVERVIEW">-->
+		<!--<md-card class="demo-card demo-basic">-->
+			<!--TODO-->
+		<!--</md-card>-->
+	<!--</md-tab>-->
+	<md-tab label="API REFERENCE">
+		<md-card class="demo-card demo-basic">
+			TODO
+		</md-card>
+	</md-tab>
+	<md-tab label="EXAMPLES">
+
+
+		<md-card class="demo-card demo-basic">
+			<md-toolbar color="secondary">Textarea Autosized</md-toolbar>
+			<md-card-content class="listContainer">
+				<md-input-container>
+					<textarea deja-autosize mdInput placeholder="This is an autosize text area" [(ngModel)]="multitext"></textarea>
+				</md-input-container>
+			</md-card-content>
+			<md-card-content class="listContainer">
+				<md-input-container>
+					<textarea deja-autosize mdInput placeholder="This is an empty text area" [(ngModel)]="multitext2"></textarea>
+				</md-input-container>
+			</md-card-content>
+		</md-card>
+
+
+	</md-tab>
+</md-tab-group>

@@ -1,26 +1,26 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
 
 import { Component, ContentChild, ElementRef, EventEmitter, forwardRef, HostBinding, HostListener, Input, Output, ViewChild, ViewEncapsulation } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from "@angular/forms";
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { Observable, Subscription } from 'rxjs/Rx';
 import { clearTimeout, setTimeout } from 'timers';
 import { GroupingService, IGroupInfo } from '../../common/core/grouping';
 import { IItemBase, IItemTree, ItemListBase, ItemListService, ViewportMode } from '../../common/core/item-list';
-import { KeyCodes } from "../../common/core/keycodes.enum";
+import { KeyCodes } from '../../common/core/keycodes.enum';
 import { SortingService } from '../../common/core/sorting';
 import { IDejaDragEvent } from '../dragdrop';
-import { DejaTreeListComponent, DejaTreeListScrollEvent } from "../tree-list";
-import { DejaGridColumnsLayoutInfos, DejaGridRowEvent, DejaGridRowsEvent, IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayout, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent, IDejaGridGroupsEvent } from "./index";
+import { DejaTreeListComponent, DejaTreeListScrollEvent } from '../tree-list';
+import { DejaGridColumnsLayoutInfos, DejaGridRowEvent, DejaGridRowsEvent, IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayout, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent, IDejaGridGroupsEvent } from './index';
 
 const noop = () => { };
 
@@ -267,13 +267,13 @@ export class DejaGridComponent {
             if (this._rows instanceof Array) {
                 this.calcColumnsLayout(this._rows);
             } else {
-                let promise = this._rows as Promise<IItemBase[]>;
+                const promise = this._rows as Promise<IItemBase[]>;
                 if (promise.then) {
                     promise.then((itms) => {
                         this.calcColumnsLayout(itms);
                     });
                 } else {
-                    let observable = this._rows as Observable<IItemBase[]>;
+                    const observable = this._rows as Observable<IItemBase[]>;
                     observable.subscribe((itms) => {
                         this.calcColumnsLayout(itms);
                     });
@@ -393,12 +393,16 @@ export class DejaGridComponent {
 
     /** Nettoye les caches et réaffiche le viewport. */
     public refresh() {
-        this.treeListComponent && this.treeListComponent.refresh();
+        if (this.treeListComponent) {
+            this.treeListComponent.refresh();
+        }
     }
 
     /** Efface le viewport */
     public clearViewPort() {
-        this.treeListComponent && this.treeListComponent.clearViewPort();
+        if (this.treeListComponent) {
+            this.treeListComponent.clearViewPort();
+        }
     }
 
     /** Calcul la position de la scrollbar horizontale pour que la colonne spéfiée soit dans la zone visible. */
@@ -407,8 +411,8 @@ export class DejaGridComponent {
             return;
         }
 
-        let listElement = this.treeListComponent.listcontainer.nativeElement as HTMLElement;
-        let scrollPos = listElement.scrollLeft;
+        const listElement = this.treeListComponent.listcontainer.nativeElement as HTMLElement;
+        const scrollPos = listElement.scrollLeft;
         let prevWidth = 0;
 
         this.columns.find((c) => {
@@ -450,11 +454,11 @@ export class DejaGridComponent {
     }
 
     protected onColumnLayoutChanged(e: IDejaGridColumnLayoutEvent) {
-        let sourceIndex = this.columns.findIndex((og) => og === e.column);
+        const sourceIndex = this.columns.findIndex((og) => og === e.column);
         this.columns.splice(sourceIndex, 1);
 
         if (e.target) {
-            let targetIndex = this.columns.findIndex((og) => og === e.target);
+            const targetIndex = this.columns.findIndex((og) => og === e.target);
             this.columns.splice(targetIndex, 0, e.column);
         } else {
             this.columns.push(e.column);
@@ -480,19 +484,19 @@ export class DejaGridComponent {
             return;
         }
 
-        let originalWidth = this.sizingLayoutInfos.columnsWidth[e.column.name];
-        let minimumWidth = e.column.minWidth || this.columnsMinWidth;
+        const originalWidth = this.sizingLayoutInfos.columnsWidth[e.column.name];
+        const minimumWidth = e.column.minWidth || this.columnsMinWidth;
         if (originalWidth.unit === '%') {
-            let listElement = this.treeListComponent.listcontainer.nativeElement as HTMLElement;
-            let containerWidth = listElement.clientWidth;
+            const listElement = this.treeListComponent.listcontainer.nativeElement as HTMLElement;
+            const containerWidth = listElement.clientWidth;
 
             // Calcul de la place restante pour les colonnes en pourcent
-            let availableWidth = containerWidth - this.sizingLayoutInfos.totalFixedWidth;
+            const availableWidth = containerWidth - this.sizingLayoutInfos.totalFixedWidth;
 
             // Calcul de l'offset en %
-            let percentOffsetWidth = e.offsetWidth * this.sizingLayoutInfos.totalPercentWidth / availableWidth;
+            const percentOffsetWidth = e.offsetWidth * this.sizingLayoutInfos.totalPercentWidth / availableWidth;
 
-            let percentMinWidth = minimumWidth * 100 / containerWidth;
+            const percentMinWidth = minimumWidth * 100 / containerWidth;
 
             e.column.width = Math.max(percentMinWidth, originalWidth.value + percentOffsetWidth * 2) + '%';
         } else {
@@ -500,7 +504,9 @@ export class DejaGridComponent {
         }
 
         this.calcColumnsLayout();
-        this.disableUserSelectionTimeOut && clearTimeout(this.disableUserSelectionTimeOut);
+        if (this.disableUserSelectionTimeOut) {
+            clearTimeout(this.disableUserSelectionTimeOut);
+        }
         this.disableUserSelection = true;
         this.disableUserSelectionTimeOut = setTimeout(() => {
             delete this.disableUserSelectionTimeOut;
@@ -511,7 +517,7 @@ export class DejaGridComponent {
     }
 
     protected onGroupRemoved(e: IDejaGridGroupsEvent) {
-        let groupInfo = {
+        const groupInfo = {
             groupByField: e.column.groupByField || e.column.name,
             groupTextField: e.column.groupTextField || e.column.name,
         } as IGroupInfo;
@@ -519,10 +525,10 @@ export class DejaGridComponent {
     }
 
     protected onGroupsChanged(e: IDejaGridGroupsEvent) {
-        let groupInfos = [] as IGroupInfo[];
-        let sortInfos = this.treeListComponent.sortInfos;
+        const groupInfos = [] as IGroupInfo[];
+        const sortInfos = this.treeListComponent.sortInfos;
         e.columns.forEach((column) => {
-            let groupInfo = {} as IGroupInfo;
+            const groupInfo = {} as IGroupInfo;
             if (sortInfos && sortInfos.name === column.name) {
                 groupInfo.sortInfos = sortInfos;
             }
@@ -536,12 +542,12 @@ export class DejaGridComponent {
 
     @HostListener('keydown', ['$event'])
     protected onKeyDown(event: KeyboardEvent) {
-        let findPrev = (index: number) => {
+        const findPrev = (index: number) => {
             if (index === -1) {
                 index = this.columns.length;
             }
             while (--index >= 0) {
-                let column = this.columns[index];
+                const column = this.columns[index];
                 if (column.w > 0) {
                     return column;
                 }
@@ -549,9 +555,9 @@ export class DejaGridComponent {
             return this.currentColumn;
         };
 
-        let findNext = (index: number) => {
+        const findNext = (index: number) => {
             while (++index < this.columns.length) {
-                let column = this.columns[index];
+                const column = this.columns[index];
                 if (column.w > 0) {
                     return column;
                 }
@@ -588,11 +594,11 @@ export class DejaGridComponent {
         if (!this._columns || !this._columns.length) {
             this.printColumnLayout = true;
             if (rows && rows.length) {
-                let searchFirstLastLevelRow = (items: IItemBase[]) => {
+                const searchFirstLastLevelRow = (items: IItemBase[]) => {
                     return items.find((row: IItemTree) => {
                         if (row.$items) {
                             // IItemTree
-                            let srow = searchFirstLastLevelRow(row.$items);
+                            const srow = searchFirstLastLevelRow(row.$items);
                             if (srow) {
                                 return srow;
                             }
@@ -602,7 +608,7 @@ export class DejaGridComponent {
                         }
                     });
                 };
-                let treeRow = searchFirstLastLevelRow(rows);
+                const treeRow = searchFirstLastLevelRow(rows);
 
                 if (treeRow) {
                     this._columns = Object.keys(treeRow).map((key) => {
@@ -627,8 +633,8 @@ export class DejaGridComponent {
 
         this._columnLayout.scrollLeft = -this.lastScrollLeft;
         let viewLeft = -this.lastScrollLeft;
-        let listElement = this.treeListComponent.listcontainer.nativeElement as HTMLElement;
-        let containerWidth = listElement.clientWidth;
+        const listElement = this.treeListComponent.listcontainer.nativeElement as HTMLElement;
+        const containerWidth = listElement.clientWidth;
 
         // Calc total fixed width
         this.columnsLayoutInfos = new DejaGridColumnsLayoutInfos(this._columns);
@@ -636,14 +642,14 @@ export class DejaGridComponent {
         // Reset width
         this._columns.forEach((column) => delete column.w);
 
-        let calcColumnsWidth = () => {
+        const calcColumnsWidth = () => {
             // Taille totale des colonnes visibles en pixel
             let totalFixedWidth = 0;
 
             // Attribution des colonnes en pixels
             this.columnsLayoutInfos.fixedColumns.filter((column) => column.w !== 0).forEach((column) => {
-                let width = this.columnsLayoutInfos.columnsWidth[column.name];
-                let minimumWidth = column.minWidth || this.columnsMinWidth;
+                const width = this.columnsLayoutInfos.columnsWidth[column.name];
+                const minimumWidth = column.minWidth || this.columnsMinWidth;
                 column.w = Math.max(minimumWidth, width.value);
                 totalFixedWidth += column.w;
             });
@@ -652,7 +658,7 @@ export class DejaGridComponent {
             this.columnsLayoutInfos.totalFixedWidth = totalFixedWidth;
 
             // Filtrer les colonnes visibles en pourcent
-            let percentColumns = this.columnsLayoutInfos.percentColumns.filter((column) => column.w !== 0);
+            const percentColumns = this.columnsLayoutInfos.percentColumns.filter((column) => column.w !== 0);
 
             // Calcul de la taille retsante pour l'attribution des pourcents une fois les tailles minimum enlevées
             let availableWidthForPercent = containerWidth - totalFixedWidth;
@@ -661,11 +667,11 @@ export class DejaGridComponent {
 
             // Attribution des colonnes en pourcent
             percentColumns.forEach((column) => {
-                let width = this.columnsLayoutInfos.columnsWidth[column.name];
-                let minimumWidth = column.minWidth || this.columnsMinWidth;
+                const width = this.columnsLayoutInfos.columnsWidth[column.name];
+                const minimumWidth = column.minWidth || this.columnsMinWidth;
                 let pixelWidth = minimumWidth;
                 if (availableWidthForPercent > 0) {
-                    let aditionalWidth = Math.floor(availableWidthForPercent * width.value / this.columnsLayoutInfos.totalPercentWidth);
+                    const aditionalWidth = Math.floor(availableWidthForPercent * width.value / this.columnsLayoutInfos.totalPercentWidth);
                     availableWidth -= aditionalWidth;
                     pixelWidth += aditionalWidth;
                 }
@@ -708,7 +714,9 @@ export class DejaGridComponent {
         });
 
         if (this.printColumnLayout) {
-            this.printColumnLayoutTimeout && clearTimeout(this.printColumnLayoutTimeout);
+            if (this.printColumnLayoutTimeout) {
+                clearTimeout(this.printColumnLayoutTimeout);
+            }
             this.printColumnLayoutTimeout = setTimeout(() => {
                 delete this.printColumnLayoutTimeout;
                 console.log('');
@@ -740,11 +748,11 @@ export class DejaGridComponent {
                 return;
             }
 
-            let element = this.elementRef.nativeElement as HTMLElement;
+            const element = this.elementRef.nativeElement as HTMLElement;
             this.mouseUpObs = Observable.fromEvent(element, 'mouseup').subscribe((event: MouseEvent) => {
-                let time = Date.now();
+                const time = Date.now();
                 if (time - this.clickedTime < 1000) {
-                    let columnElement = this.getColumnElementFromHTMLElement(event.target as HTMLElement);
+                    const columnElement = this.getColumnElementFromHTMLElement(event.target as HTMLElement);
                     if ((columnElement && columnElement.getAttribute('colname')) === this.clickedColumn.name) {
                         this.currentColumn = this.clickedColumn;
                     }
@@ -765,8 +773,8 @@ export class DejaGridComponent {
             return;
         }
 
-        let listElement = this.treeListComponent.listcontainer.nativeElement as HTMLElement;
-        let scrollPos = listElement.scrollLeft;
+        const listElement = this.treeListComponent.listcontainer.nativeElement as HTMLElement;
+        const scrollPos = listElement.scrollLeft;
         let prevWidth = 0;
 
         this.columns.find((c) => {
@@ -806,8 +814,8 @@ export class DejaGridComponent {
     }
 
     private getColumnFromHTMLElement(element: HTMLElement): IDejaGridColumn {
-        let columnElement = this.getColumnElementFromHTMLElement(element);
-        let colname = columnElement && columnElement.getAttribute('colname');
+        const columnElement = this.getColumnElementFromHTMLElement(element);
+        const colname = columnElement && columnElement.getAttribute('colname');
         return colname && this._columnLayout.columns.find((column) => column.name === colname);
     }
 }

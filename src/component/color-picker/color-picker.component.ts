@@ -1,16 +1,16 @@
 /*
  * *
  *  @license
- *  Copyright Hôpital Universitaire de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/deja-js/blob/master/LICENSE
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  * /
  *
  */
 
-import { Component, ElementRef, EventEmitter, forwardRef, Input, Output } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { Component, ElementRef, EventEmitter, forwardRef, HostBinding, Input, Output } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {coerceBooleanProperty} from '@angular/material/core/coercion/boolean-property';
 import { Color } from '../../common/core/graphics/index';
 import { MaterialColor } from '../../common/core/style';
@@ -53,7 +53,7 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
     protected onChangeCallback: (_: any) => void = noop;
 
     private _small = false;
-    private _disabled: boolean = false;
+    @HostBinding('attr.disabled') private _disabled = null;
     private _value: Color;
 
     get containerElement() {
@@ -76,7 +76,7 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
     /** Retourne ou definit si le selecteur est desactivé. */
     @Input()
     public set disabled(value: boolean) {
-        this._disabled = coerceBooleanProperty(value);
+        this._disabled = coerceBooleanProperty(value) || null;
     }
 
     public get disabled() {
@@ -85,7 +85,7 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
 
     // ************* ControlValueAccessor Implementation **************
     // set accessor including call the onchange callback
-    public set value(value: any) {
+    public set value(value: Color) {
         if (!Color.equals(value, this._value)) {
             this.writeValue(value);
             this.onChangeCallback(value);
@@ -93,12 +93,12 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
     }
 
     // get accessor
-    public get value(): any {
+    public get value(): Color {
         return this._value;
     }
 
     // From ControlValueAccessor interface
-    public writeValue(value: any) {
+    public writeValue(value: Color) {
         this._value = value;
     }
 
@@ -118,7 +118,7 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
             return;
         }
 
-        let target = event.currentTarget as HTMLElement;
+        const target = event.currentTarget as HTMLElement;
         if (target.id !== 'colorbtn') {
             return;
         }
