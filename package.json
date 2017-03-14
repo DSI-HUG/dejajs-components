@@ -50,7 +50,7 @@
     "@angular/platform-browser-dynamic": "^2.4.0",
     "@angular/router": "^3.4.0",
     "@angular/upgrade": "^2.4.0",
-    "@deja-js/resources": "^1.1.1",
+    "@deja-js/resources": "^1.1.4",
     "@types/chai": "^3.4.34",
     "@types/core-js": "^0.9.37",
     "@types/hammerjs": "^2.0.33",
