@@ -15,9 +15,4 @@ before_script:
 after_success:
 - git config --global user.email "remy.trompier@gmail.com"
 - git config --global user.name "rtrompier"
-- npm run deploy
-env:
-  global:
-  - ENCRYPTION_LABEL: d9215e5535f8
-  - COMMIT_AUTHOR_EMAIL: travis@hcuge.ch
-  - secure: olXvynNQ7nth+PP5dbToUKX0JW9gBqwyvxmBCiHHnP7eWtFcjtqyxXVngvo6o4S3lsp6kIfHSkwFqhU7pMhCphhtuW+GYhBAfS1YNnQ33RqWuObceRp6G/AikMSum15hAeoHW0uIdERYfJBibavQKW9ifTAfI3Hhj1fHrEIiMYbe8RLfl8JixTuF4YxZfGgT6S6Edi0ExJn57Y2ehxMGlAqwx4n1FpcQvggPWUYwfc+OrQbbZ6Q+hbN0T/LbfSnSsQYxPswx1xkJiTztRLQGjdZtAefH8k3RAt+ifEkvF+gsEBxiWJ8x+nhmW66HJZW5NG3yA83Tt5oibShzOqkViSlIFO+67+vU9dCcVLiWdVPfwuJXTMPMFkjTf3X/R52S/7+1oDI/bDSO/HFEmcorA5q2cWbqGh2ZBQlpsKBel1qdBjT4SEdmLd5tDcvw03G8Nb2qfRvTewDHCA3A6VZc6TCE1MseInwtAG0zQ0boBPRutOH4nbQtkO5fF40pVtJQXHTCNesBCqzXo7AelGSkbEMa5UoDPfIoeow4UNDy/LTmuN42p3r6hPEw/s4wVe4+sx5M+Kcb/Ribt2K925Hz4FUakUdqW8GME4El38eY39NfwdCmIkmOfynQoNnUuk+oEe1GotyOAfsw7Ed6eVjEJBQdvnmk+/s92U9R3cErnN4=
+- npm run deploy-after-install
