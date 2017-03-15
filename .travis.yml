@@ -12,8 +12,12 @@ branches:
   - travis-test
 before_script:
 - npm prune
-after_success:
-- npm run deploy
+script:
+- bash ./scripts/deploy.sh
+env:
+  global:
+  - ENCRYPTION_LABEL: "d9215e5535f8"
+  - COMMIT_AUTHOR_EMAIL: "travis@hcuge.ch"
 deploy:
   provider: npm
   email: gmer@hcuge.ch
