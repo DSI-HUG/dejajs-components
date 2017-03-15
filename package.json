@@ -37,7 +37,7 @@
     "publish": "npm publish --access public",
     "build:prod": "del-cli dist && npm run build-css && webpack -p --config webpack.config.prod.js",
     "test": "tsc",
-    "deploy": "npm run build:prod && gh-pages -d dist"
+    "deploy": "npm run build:prod && gh-pages-with-token -d dist"
   },
   "dependencies": {
     "@angular/common": "^2.4.0",
@@ -63,6 +63,7 @@
     "codelyzer": "^3.0.0-beta.0",
     "core-js": "^2.4.1",
     "custom-event-polyfill": "^0.3.0",
+    "gh-pages-with-token": "^1.0.0",
     "hammerjs": "^2.0.8",
     "material-design-lite": "^1.1.3",
     "moment": "^2.11.2",
