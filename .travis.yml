@@ -15,4 +15,4 @@ before_script:
 after_success:
 - git config --global user.email "remy.trompier@gmail.com"
 - git config --global user.name "rtrompier"
-- npm run deploy-after-install
+- npm run deploy

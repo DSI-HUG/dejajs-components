@@ -37,7 +37,6 @@
     "publish": "npm publish --access public",
     "build:prod": "del-cli dist && npm run build-css && webpack -p --config webpack.config.prod.js",
     "test": "tsc",
-    "deploy-after-install": "gh-pages-with-token -d dist",
     "deploy": "npm run build:prod && gh-pages-with-token -d dist"
   },
   "dependencies": {
