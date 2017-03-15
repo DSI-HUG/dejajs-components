@@ -14,7 +14,7 @@ import { Component } from '@angular/core';
 @Component({
     selector: 'home',
     template: `
-    <p>Welcome to the demo application. The components were developed as part of Angular 2 application developments within Hôpitaux Universitaires de Genève.</p>
+    <p>TEST : Welcome to the demo application. The components were developed as part of Angular 2 application developments within Hôpitaux Universitaires de Genève.</p>
     <p>Open the sidenav to select a demo. </p>
   `,
 })
