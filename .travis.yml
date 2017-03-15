@@ -16,6 +16,6 @@ after_success:
 - git config --global user.email "remy.trompier@gmail.com"
 - git config --global user.name "rtrompier"
 - npm run deploy
-env:
-  global:
-    secure: 2eTpFpVhNZJ8KBeFD6kaTOcj6qlyb7PfIfxGa+0Q2/ODs6MC+xtedmMgPJKfNpsBh/2fgnBTqlKjNZTlG5NOJWisI0UwtLiY1C75LGoJTVnNIzL6O58ChfbxbUBxkV28e62FSNAzeP1Mgt6PSBuxP9hgM0k6WdGdTDcDWx5ObgEVyhS9paXuEaJi03DcZhVZrco0etpKju/rQ2kfDZXM49GzxeCUoz1mF05nw3Zyj6tVlF/Z/H6gk8IgZtltPTVZEAOST8Z7yiVjJLId4qA91GsNygysh7Dwn7eKBgdxBSEVS815y+y5aP9C1GcP1HR49eMno4iOJSgwlg1lxAH+3XtXAaD6RTT8EPO/TUXvAhk/QeMCzHWJwfXP/WZclaQAjPS3SI3fIWCMbAFveQj6c0JIMnu4NFo96k4BgSRLXMpJ8Uu1JFJVu1mUeue50fVTW1XZWRnbnKsC4dwLIBcHlzOfyaFuS/BJxh0+9CcyKrrEgfe9DRlKxjorSYzG5HVb7iGeYokhMbo3pxcb/SpVTBqu6fYlBH4fdVO+Mf12+E59sUdlPzDKoawqcDlsrCfa9IJy+tlOb3FlQKk0dsVcxV5qvqlKyT6GHvROThM2fJ9Z7QsFlSTvUS8kPNLb5Cooh4WCGQQm95gcXHKW3PBUOIeQhN1uHmBscIrZ3QoinBw=
+before_install:
+- openssl aes-256-cbc -K $encrypted_d9215e5535f8_key -iv $encrypted_d9215e5535f8_iv
+  -in id_rsa.enc -out id_rsa -d
