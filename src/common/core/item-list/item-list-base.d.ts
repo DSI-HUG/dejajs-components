@@ -1,0 +1,104 @@
+import { ElementRef, QueryList } from '@angular/core';
+import { Observable } from 'rxjs/Rx';
+import { GroupingService, IGroupInfo } from '../grouping/index';
+import { ISortInfos, SortingService } from '../sorting/index';
+import { IItemBase } from './item-base';
+import { IFindItemResult, IParentListInfoResult, ItemListService, IViewListResult } from './item-list.service';
+import { IItemTree } from './item-tree';
+export declare enum ViewportMode {
+    NoViewport = 0,
+    ConstantRowHeight = 1,
+    VariableRowHeight = 2,
+}
+export declare class ItemListBase {
+    static defaultViewPortRowHeight: number;
+    protected _itemList: IItemBase[];
+    protected _multiSelect: boolean;
+    protected _searchField: string;
+    protected _textField: string;
+    protected _valueField: string;
+    protected _currentItemIndex: number;
+    protected _hintLabel: string;
+    protected _nodataLabel: string;
+    protected waiter: boolean;
+    protected computedMaxHeight: number;
+    protected _hideSelected: boolean;
+    protected _childrenField: string;
+    protected _viewportMode: ViewportMode;
+    protected vpBeforeHeight: number;
+    protected vpAfterHeight: number;
+    protected vpStartRow: number;
+    protected vpEndRow: number;
+    protected _pageSize: number;
+    protected _depthMax: number;
+    protected rowsCount: number;
+    protected _sortInfos: ISortInfos;
+    protected _ddStartIndex: number;
+    protected _ddTargetIndex: number;
+    private _isBusinessObject;
+    private _itemListService;
+    private allCollapsed;
+    private _viewPortRowHeight;
+    readonly sortInfos: ISortInfos;
+    readonly groupInfos: IGroupInfo[];
+    setHideSelected(value: boolean): void;
+    setChildrenField(value: string): void;
+    getItemIndexFromHTMLElement(element: HTMLElement): number;
+    getItemFromHTMLElement(element: HTMLElement): IItemBase;
+    getItemListService(): ItemListService;
+    getCurrentItem(): IItemBase;
+    isBusinessObject(): boolean;
+    getSelectedItems(): IItemBase[];
+    setSelectedItems(value: IItemBase[]): void;
+    setSelectingItem(fn: (item: any) => Promise<any>): void;
+    setUnselectingItem(fn: (item: any) => Promise<any>): void;
+    getTextValue(value: any): any;
+    setViewportMode(mode: ViewportMode): void;
+    sort(name?: string): Promise<ISortInfos>;
+    group(groups: IGroupInfo[]): Promise<IGroupInfo[]>;
+    ungroup(groupInfo: IGroupInfo): Promise<IGroupInfo[]>;
+    toggleAll(): Promise<void>;
+    toggleCollapse(index: number, collapsed: boolean): Promise<boolean>;
+    unselectAll(): Promise<void>;
+    refresh(): void;
+    clearViewPort(): void;
+    getParentListInfos(item: IItemTree): Promise<IParentListInfoResult>;
+    protected getSelectedModels(): any[];
+    protected setSelectedModels(value: any[]): void;
+    protected findNextMatch(compare?: (item: IItemBase, index: number) => boolean, startIndex?: number): Promise<IFindItemResult>;
+    protected setViewPortRowHeight(value: number): void;
+    protected getViewPortRowHeight(): number;
+    protected setItemListService(value: ItemListService): void;
+    protected setSortingService(value: SortingService): void;
+    protected setGroupingService(value: GroupingService): void;
+    protected setHintLabel(value: string): void;
+    protected setNodataLabel(value: string): void;
+    protected setCurrentItem(item: IItemBase): void;
+    protected getItemIndex(item: IItemBase): number;
+    protected setMultiSelect(value: boolean): void;
+    protected setItems(items: IItemBase[] | Promise<IItemBase[]> | Observable<IItemBase[]>): Observable<IItemBase[]>;
+    protected setModels(models: any[] | Observable<any[]>): Observable<IItemBase[]>;
+    protected getItems(): IItemBase[];
+    protected drop(): Promise<boolean>;
+    protected getViewList(query?: RegExp | string, startRow?: number, maxCount?: number, ignoreCache?: boolean): Promise<IViewListResult>;
+    protected selectRange(indexFrom: number, indexTo?: number): Promise<number>;
+    protected toggleSelect(items: IItemBase[], selected: boolean): Promise<IItemBase[]>;
+    protected isCollapsible(item: IItemTree): boolean;
+    protected isSelectable(item: IItemBase): boolean;
+    protected setTextField(value: string): void;
+    protected setValueField(value: string): void;
+    protected setSearchField(value: string): void;
+    protected calcDragTargetIndex(index: number, targetIndex: number): Promise<number>;
+    protected getItemTreeInfo(items: IItemBase[], item: IItemBase): IItemTreeInfo;
+    protected loadViewPort(res: IViewListResult): Promise<IViewListResult>;
+    protected calcViewPort(query?: string, maxHeight?: number, containerElement?: HTMLElement): Promise<IViewListResult>;
+    protected ensureItemVisible(query: string, containerElement: HTMLElement, listItemElements: QueryList<ElementRef>, item: IItemBase | number): void;
+    protected convertToIItemBase(modls: any[], selected?: boolean): IItemBase[];
+    private getItemHeight(item);
+}
+export interface IItemTreeInfo {
+    item?: IItemBase;
+    children?: IItemBase[];
+    startIndex: number;
+    lastIndex?: number;
+}

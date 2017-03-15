@@ -1,0 +1,90 @@
+import { Observable } from 'rxjs/Rx';
+import { GroupingService, IGroupInfo } from '../grouping/index';
+import { ISortInfos, SortingService } from '../sorting/index';
+import { IItemBase, IItemTree } from './index';
+export declare class ItemListService {
+    private _items;
+    private _cache;
+    private selectedList;
+    private _hideSelected;
+    private lastQuery;
+    private _sortingService;
+    private _groupInfos;
+    private _groupingService;
+    private _ddList;
+    private _ddCurrentIndex;
+    private _ddChildCount;
+    private _childrenField;
+    private selectingItem;
+    private unselectingItem;
+    private _valueField;
+    childrenField: string;
+    hideSelected: boolean;
+    valueField: string;
+    private items;
+    setItems(items: any[] | Promise<any[]> | Observable<any[]>): Observable<IItemBase[]>;
+    setModels(items: any[] | Promise<any[]> | Observable<any[]>): Observable<IItemBase[]>;
+    readonly groupInfos: IGroupInfo[];
+    getItems(): IItemBase[];
+    getItemFromIndex(index: number): IItemBase;
+    getItemIndex(item: IItemBase): number;
+    getSortingService(): SortingService;
+    setSortingService(value: SortingService): void;
+    getGroupingService(): GroupingService;
+    setGroupingService(value: GroupingService): void;
+    getTextValue(value: any, textField?: string): any;
+    drop(): Promise<boolean>;
+    calcDragTargetIndex(index: number, targetIndex: number): Promise<number>;
+    toggleAll(collapsed: boolean): Promise<void>;
+    toggleCollapse(index: number, collapse?: boolean): Promise<boolean>;
+    expandItems(items: IItemBase[]): Promise<void[]>;
+    collapseItems(items: IItemBase[]): Promise<void[]>;
+    expandItem(item: IItemTree): Promise<void>;
+    collapseItem(item: IItemTree): Promise<void>;
+    getSelectedItems(): IItemBase[];
+    setSelectedItems(items: IItemBase[]): void;
+    unselectAll(): Promise<void>;
+    selectRange(indexFrom: number, indexTo?: number): Promise<number>;
+    toggleSelect(items: IItemBase[], selected: boolean): Promise<IItemBase[]>;
+    selectItems(items: IItemBase[]): Promise<void[]>;
+    unSelectItems(items: IItemBase[]): Promise<void[]>;
+    setSelectingItem(fn: (item: any) => Promise<any>): void;
+    selectItem(item: IItemBase): Promise<void>;
+    setUnselectingItem(fn: (item: any) => Promise<any>): void;
+    unSelectItem(item: IItemBase): Promise<void>;
+    findNextMatch(compare?: (item: IItemBase, index: number) => boolean, startIndex?: number): Promise<IFindItemResult>;
+    sort(sortInfos: ISortInfos): Promise<ISortInfos>;
+    group(groupInfos: IGroupInfo[]): Promise<IGroupInfo[]>;
+    ungroup(groupInfo: IGroupInfo): Promise<IGroupInfo>;
+    getParentListInfos(item: IItemTree): Promise<IParentListInfoResult>;
+    invalidateCache(): void;
+    getViewList(searchField: string, query?: RegExp | string, startRow?: number, maxCount?: number, ignoreCache?: boolean, ddStartIndex?: number, ddTargetIndex?: number): Promise<IViewListResult>;
+    protected getItemList(_query?: RegExp | string, _selectedItems?: IItemBase[]): Promise<IItemBase[]>;
+    protected itemMatch(item: IItemBase, searchField: string, regExp: RegExp): boolean;
+    protected getGroupedList(items: IItemBase[]): Promise<IItemTree[]>;
+    protected getVisibleList(items: IItemBase[], searchField?: string, regExp?: RegExp, expandTree?: boolean): Promise<IItemBase[]>;
+    protected getFlatList(items: IItemBase[], isFiltered: any): Promise<IItemBase[]>;
+    protected invalidateViewCache(): void;
+    private compareItems;
+    private ensureSelectedItems(items);
+    private ensureVisibleListCache(searchField, regExp, expandTree);
+    private ensureFlatListCache(isFiltered);
+    private ensureGroupedListCache();
+    private ensureChildrenProperties(items);
+}
+export interface IViewListResult {
+    rowsCount?: number;
+    depthMax?: number;
+    visibleList?: IItemBase[];
+    startRow: number;
+    endRow: number;
+    outOfRange?: boolean;
+}
+export interface IFindItemResult {
+    item: IItemBase;
+    index: number;
+}
+export interface IParentListInfoResult {
+    parent?: IItemTree;
+    index: number;
+}
