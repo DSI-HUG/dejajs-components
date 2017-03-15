@@ -37,7 +37,7 @@
     "publish": "npm publish --access public",
     "build:prod": "del-cli dist && npm run build-css && webpack -p --config webpack.config.prod.js",
     "travis-build:prod": "npm run build-css && webpack -p --config webpack.config.prod.js",
-    "test": "tsc",
+    "test": "tsc"
   },
   "dependencies": {
     "@angular/common": "^2.4.0",
