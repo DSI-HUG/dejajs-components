@@ -15,7 +15,7 @@ import { BehaviorSubject, Observable, Subscription } from 'rxjs/Rx';
 import { KeyCodes } from '../../common/core';
 import { Rect } from '../../common/core/graphics';
 import { IDejaMouseDroppableContext, IDropCursorInfos } from '../mouse-dragdrop/index';
-import { DejaTile, DejaTilesAddEvent, DejaTilesEvent, DejaTilesRemoveEvent, IDejaTile, IDejaTilesRefreshParams } from './index';
+import { DejaTile, IDejaTile, IDejaTilesAddEvent, IDejaTilesEvent, IDejaTilesModelEvent, IDejaTilesRefreshParams, IDejaTilesRemoveEvent } from './index';
 import { DejaTilesLayoutProvider } from './tiles-layout.provider';
 
 @Component({
@@ -30,32 +30,32 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
     /**
      * Raised when the selected items has changed
      */
-    @Output() public selectionChanged = new EventEmitter<DejaTilesEvent>();
+    @Output() public selectionChanged = new EventEmitter<IDejaTilesEvent>();
 
     /**
      * Raised when the layout has changed with a drag and drop
      */
-    @Output() public layoutChanged = new EventEmitter<DejaTilesEvent>();
+    @Output() public layoutChanged = new EventEmitter<IDejaTilesEvent>();
 
     /**
-     * Raised when the data model has changed with a cut, delete or paste
+     * Raised before some tiles will be added to the data model with a paste
      */
-    @Output() public modelChanged = new EventEmitter<DejaTilesEvent>();
+    @Output() public contentAdding = new EventEmitter<IDejaTilesAddEvent>();
 
     /**
-     * Raised when some tiles was added to the data model with a paste
+     * Raised before some tiles will be removed from the data model with a delete
      */
-    @Output() public contentAdding = new EventEmitter<DejaTilesAddEvent>();
+    @Output() public contentRemoving = new EventEmitter<IDejaTilesRemoveEvent>();
 
     /**
-     * Raised when some tiles was removed from the data model with a delete
+     * Raised when some tiles model has changed
      */
-    @Output() public contentRemoving = new EventEmitter<DejaTilesRemoveEvent>();
+    @Output() public modelChanged = new EventEmitter<IDejaTilesModelEvent>();
 
     /**
      * Raised when some tiles are copied in the clipboard service. Can result from a copy or paste operation on the tiles.
      */
-    @Output() public contentCopied = new EventEmitter<DejaTilesEvent>();
+    @Output() public contentCopied = new EventEmitter<IDejaTilesEvent>();
 
     @ContentChild('tileTemplate') protected tileTemplate;
 
@@ -144,7 +144,7 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
                 .subscribe(() => {
                     const tiles = this.layoutProvider.copySelection();
                     if (tiles && tiles.length) {
-                        const event = new CustomEvent('DejaTilesCopied', { cancelable: true }) as DejaTilesEvent;
+                        const event = new CustomEvent('DejaTilesCopied', { cancelable: true }) as IDejaTilesEvent;
                         event.tiles = tiles.map((tile) => tile.toTileModel());
                         this.contentCopied.emit(event);
                     }
@@ -164,7 +164,7 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
                 .subscribe(() => {
                     const tiles = this.layoutProvider.cutSelection();
                     if (tiles && tiles.length) {
-                        const event = new CustomEvent('DejaTilesCutted', { cancelable: true }) as DejaTilesEvent;
+                        const event = new CustomEvent('DejaTilesCutted', { cancelable: true }) as IDejaTilesEvent;
                         event.tiles = tiles.map((tile) => tile.toTileModel());
                         this.contentCopied.emit(event);
                     }
@@ -301,7 +301,7 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
     }
 
     protected onTileModelChanged(tile: DejaTile) {
-        const event = {} as DejaTilesEvent;
+        const event = {} as IDejaTilesModelEvent;
         event.tiles = [tile];
         this.modelChanged.emit(event);
     }

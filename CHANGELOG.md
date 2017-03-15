@@ -2,7 +2,10 @@
 # [@next] (2017-03-xx)
 
 ### Breaking changes from 1.4.2-beta.16
-
+* **DejaTilesEvent:** DejaTilesEvent renamed to IDejaTilesEvent.
+* **DejaTilesCancelableEvent:** DejaTilesCancelableEvent renamed to IDejaTilesCancelableEvent.
+* **DejaTilesRemoveEvent:** DejaTilesRemoveEvent renamed to IDejaTilesRemoveEvent.
+* **DejaTilesAddEvent:** DejaTilesAddEvent renamed to IDejaTilesAddEvent.
 
 ### Bug fixes #
 

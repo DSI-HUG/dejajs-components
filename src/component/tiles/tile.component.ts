@@ -12,7 +12,7 @@ import { EventEmitter } from '@angular/core';
 
 import { Component, ElementRef, Input, OnDestroy, Output } from '@angular/core';
 import { Observable, Subscription } from 'rxjs/Rx';
-import { DejaTile } from './tile.class';
+import { DejaTile, IDejaTilesModelEvent } from './index';
 
 @Component({
     selector: 'deja-tile',
@@ -24,8 +24,8 @@ import { DejaTile } from './tile.class';
 export class DejaTileComponent implements OnDestroy {
     @Input() public template;
     @Input() public designMode;
-    @Output() public modelChanged = new EventEmitter();
-    @Output() public close = new EventEmitter();
+    @Output() public modelChanged = new EventEmitter<IDejaTilesModelEvent>();
+    @Output() public close = new EventEmitter<Event>();
 
     public element: HTMLElement;
 
