@@ -13,8 +13,6 @@ branches:
 before_script:
 - npm prune
 after_success:
-- git config --global user.email "remy.trompier@gmail.com"
-- git config --global user.name "rtrompier"
 - npm run deploy
 deploy:
   provider: npm
