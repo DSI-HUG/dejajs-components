@@ -9,7 +9,7 @@
  *
  */
 
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Output } from '@angular/core';
 
 @Component({
     selector: 'deja-dialog',
@@ -21,7 +21,24 @@ export class DejaDialogComponent {
 
     constructor() { }
 
-    public close() {
-        this.closed.emit();
+    @HostListener('click', ['$event'])
+    public close(event: MouseEvent) {
+        event.preventDefault();
+
+        let close = true;
+
+        let target = event.target as HTMLElement; 
+        const element = event.currentTarget as HTMLElement;
+        
+        while(target.parentElement && target !== element) {
+            if(target.className === 'dialog') {
+                close = false;
+            } 
+            target = target.parentElement;
+        }
+
+        if(close) {
+            this.closed.emit();
+        }
     }
 }
