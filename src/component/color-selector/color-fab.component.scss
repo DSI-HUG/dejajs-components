@@ -4,11 +4,12 @@
     transition: all linear .2s;
     width: 2.5rem;
     height: 2.5rem;
-    margin: 0.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
     &[small] {
         width: 1.6rem;
         height: 1.6rem;
-        margin: 0.35rem;
     }
     &[active] {
         transform: scale(1.4, 1.4);

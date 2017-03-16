@@ -11,7 +11,9 @@
 
 import {Component, ContentChild, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
-import {DejaDropDownComponent, Position, Rect} from '../../';
+import { Position } from '../../common/core/graphics/position';
+import { Rect } from '../../common/core/graphics/rect';
+import { DejaDropDownComponent } from '../dropdown/index';
 import {ITooltipParams} from './index';
 import {DejaTooltipService} from './tooltip.service';
 

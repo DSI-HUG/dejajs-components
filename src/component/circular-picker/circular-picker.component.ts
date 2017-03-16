@@ -13,7 +13,8 @@ import { Component, ContentChild, ElementRef, forwardRef, HostListener, Input, O
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { Observable, Subscription } from 'rxjs/Rx';
-import { Circle, Position } from '../../common/core/graphics/index';
+import { Circle } from '../../common/core/graphics/index';
+import { Position } from '../../common/core/graphics/position';
 
 const noop = () => { };
 

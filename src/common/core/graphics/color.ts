@@ -81,7 +81,6 @@ export class Color {
         }
     }
 
-
     constructor(r?: number, g?: number, b?: number, a?: number) {
         this._r = r;
         this._g = g;

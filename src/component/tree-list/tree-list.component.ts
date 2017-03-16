@@ -13,7 +13,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, El
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
-import { Position, Rect } from '../../common/core/graphics';
+import { Position } from '../../common/core/graphics/position';
+import { Rect } from '../../common/core/graphics/rect';
 import { GroupingService } from '../../common/core/grouping';
 import { IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, ViewportMode } from '../../common/core/item-list';
 import { KeyCodes } from '../../common/core/keycodes.enum';
