@@ -11,7 +11,7 @@
 
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs/Rx';
-import { Rect } from '../../common/core/graphics';
+import { Rect } from '../../common/core/graphics/rect';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 
 /** Place un conteneur déroulant */

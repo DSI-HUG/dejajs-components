@@ -10,9 +10,10 @@
  */
 
 import { Directive, ElementRef, Input } from '@angular/core';
-import { DejaMouseDragDropService, IDragCursorInfos, IDragDropContext, IDropCursorInfos } from './mouse-dragdrop.service';
 import { Observable } from 'rxjs/Rx';
-import { Position, Rect } from '../../common/core/graphics/index';
+import { Position } from '../../common/core/graphics/position';
+import { Rect } from '../../common/core/graphics/rect';
+import { DejaMouseDragDropService, IDragCursorInfos, IDragDropContext, IDropCursorInfos } from './mouse-dragdrop.service';
 
 @Directive({
     selector: '[deja-mouse-droppable]',

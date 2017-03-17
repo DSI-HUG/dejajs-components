@@ -12,18 +12,23 @@
 import { DejaCancelableEvent } from '../../common/core/events/cancelable-event';
 import { IDejaTile } from './index';
 
-export interface DejaTilesEvent extends CustomEvent {
+export interface IDejaTilesEvent extends CustomEvent {
     tiles: IDejaTile[];
 }
 
-export interface DejaTilesCancelableEvent extends DejaCancelableEvent {
+export interface IDejaTilesCancelableEvent extends DejaCancelableEvent {
     tiles: IDejaTile[];
 }
 
-export interface DejaTilesRemoveEvent extends DejaTilesCancelableEvent {
+export interface IDejaTilesRemoveEvent extends IDejaTilesCancelableEvent {
     removed: IDejaTile[];
 }
 
-export interface DejaTilesAddEvent extends DejaTilesCancelableEvent {
+export interface IDejaTilesAddEvent extends IDejaTilesCancelableEvent {
     added: IDejaTile[];
+}
+
+export interface IDejaTilesModelEvent extends IDejaTilesEvent {
+    removed?: IDejaTile[];
+    added?: IDejaTile[];
 }

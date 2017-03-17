@@ -12,7 +12,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Observable, Subject } from 'rxjs/Rx';
 import { Rect } from '../../common/core/graphics/index';
-import { DejaTilesAddEvent, DejaTilesRemoveEvent, IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDejaTile, IDropCursorInfos } from '../../component';
+import { IDejaTilesAddEvent, IDejaTilesRemoveEvent, IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDejaTile, IDropCursorInfos } from '../../component';
 import { CountriesService, ICountry } from '../services/countries.service';
 
 @Component({
@@ -133,7 +133,7 @@ export class TilesDemoComponent implements OnInit {
         } as IDejaMouseDroppableContext;
     }
 
-    protected onContentAdding(event: DejaTilesAddEvent) {
+    protected onContentAdding(event: IDejaTilesAddEvent) {
         this.message$.next({
             title: 'Tiles added',
             content: `${event.added.length} tiles added.`,
@@ -149,7 +149,7 @@ export class TilesDemoComponent implements OnInit {
         event.preventDefault();
     }
 
-    protected onContentRemoving(event: DejaTilesRemoveEvent) {
+    protected onContentRemoving(event: IDejaTilesRemoveEvent) {
         this.message$.next({
             title: 'Tiles deleted',
             content: `${event.removed.length} tiles deleted.`,

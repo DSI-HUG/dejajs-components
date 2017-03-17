@@ -1,10 +1,27 @@
 <a name="@next"></a>
 # [@next] (2017-03-xx)
 
-### Breaking changes from 1.4.2-beta.16
+### Breaking changes from 1.4.2-beta.17
 
+### Features
 
 ### Bug fixes #
+
+<a name="1.4.2-beta.17"></a>
+# [1.4.2-beta.17] (2017-03-17)
+
+### Breaking changes from 1.4.2-beta.16
+* **DejaTilesEvent:** DejaTilesEvent renamed to IDejaTilesEvent.
+* **DejaTilesCancelableEvent:** DejaTilesCancelableEvent renamed to IDejaTilesCancelableEvent.
+* **DejaTilesRemoveEvent:** DejaTilesRemoveEvent renamed to IDejaTilesRemoveEvent.
+* **DejaTilesAddEvent:** DejaTilesAddEvent renamed to IDejaTilesAddEvent.
+
+### Features
+* **DejaAccordionComponent:** New design
+
+### Bug fixes #
+* **DejaAccordionComponent:** Fix collapse on click in AccordionBody
+* **DejaDialogComponent:** Fix blur
 
 <a name="1.4.2-beta.16"></a>
 # [1.4.2-beta.16] (2017-03-13)

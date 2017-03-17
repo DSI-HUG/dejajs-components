@@ -9,7 +9,8 @@
  *
  */
 
-import { Position, Rect } from './index';
+import { Position } from './position';
+import { Rect } from './rect';
 
 /**
  * Utils class for operations in a Circle

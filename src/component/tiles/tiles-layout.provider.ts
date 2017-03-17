@@ -13,9 +13,12 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
 import { KeyCodes } from '../../common/core/';
 import { DejaClipboardService } from '../../common/core/clipboard/clipboard.service';
-import { Directions, Position, Rect, Size } from '../../common/core/graphics';
+import { Directions } from '../../common/core/graphics/directions';
+import { Position } from '../../common/core/graphics/position';
+import { Rect } from '../../common/core/graphics/rect';
+import { Size } from '../../common/core/graphics/size';
 import { IDragCursorInfos, IDragDropContext } from '../mouse-dragdrop/mouse-dragdrop.service';
-import { DejaTile, DejaTilesAddEvent, DejaTilesEvent, DejaTilesRemoveEvent, IDejaTile } from './index';
+import { DejaTile, IDejaTile, IDejaTilesAddEvent, IDejaTilesEvent, IDejaTilesModelEvent, IDejaTilesRemoveEvent } from './index';
 
 interface ILayoutInfo {
     id: string;
@@ -61,11 +64,11 @@ export class DejaTilesLayoutProvider {
     public deleteTiles$ = new Subject<DejaTile[]>();
     public designMode = false;
 
-    public layoutChanged = new EventEmitter<DejaTilesEvent>();
-    public modelChanged = new EventEmitter<DejaTilesEvent>();
-    public selectionChanged = new EventEmitter<DejaTilesEvent>();
-    public contentAdding = new EventEmitter<DejaTilesAddEvent>();
-    public contentRemoving = new EventEmitter<DejaTilesRemoveEvent>();
+    public layoutChanged = new EventEmitter<IDejaTilesEvent>();
+    public modelChanged = new EventEmitter<IDejaTilesModelEvent>();
+    public selectionChanged = new EventEmitter<IDejaTilesEvent>();
+    public contentAdding = new EventEmitter<IDejaTilesAddEvent>();
+    public contentRemoving = new EventEmitter<IDejaTilesRemoveEvent>();
 
     protected tileMinWidth = 10;
     protected tileMinWidthUnit = '%';
@@ -448,7 +451,7 @@ export class DejaTilesLayoutProvider {
             }
         });
 
-        const event = new CustomEvent('DejaTilesAddEvent', { cancelable: false }) as DejaTilesEvent;
+        const event = new CustomEvent('DejaTilesAddEvent', { cancelable: false }) as IDejaTilesEvent;
         event.tiles = selectedTiles;
         this.selectionChanged.emit(event);
     }
@@ -565,6 +568,10 @@ export class DejaTilesLayoutProvider {
             return;
         }
 
+        // For event after removed finished
+        const event = new CustomEvent('DejaTilesModelEvent', { cancelable: false }) as IDejaTilesModelEvent;
+        event.removed = tilesToDelete.map((tile) => tile.toTileModel());
+
         tilesToDelete.forEach((tile) => {
             delete this.tilesDic[tile.id];
             tile.delete();
@@ -580,7 +587,6 @@ export class DejaTilesLayoutProvider {
 
         this.refreshTiles$.next({ resetWidth: true });
 
-        const event = new CustomEvent('DejaTilesEvent', { cancelable: true }) as DejaTilesEvent;
         event.tiles = this._tiles.map((tile) => tile.toTileModel());
         this.modelChanged.emit(event);
     }
@@ -597,7 +603,7 @@ export class DejaTilesLayoutProvider {
             tile.isHidden = true;
         });
 
-        const event = new CustomEvent('DejaTilesRemoveEvent', { cancelable: true }) as DejaTilesRemoveEvent;
+        const event = new CustomEvent('DejaTilesRemoveEvent', { cancelable: true }) as IDejaTilesRemoveEvent;
         event.tiles = this.tiles.map((tile) => tile.toTileModel());
         event.removed = tilesToRemove.map((tile) => tile.toTileModel());
         event.cancel$ = new Subject();
@@ -825,7 +831,7 @@ export class DejaTilesLayoutProvider {
         this.endDrag();
 
         if (changed) {
-            const event = new CustomEvent('DejaTilesEvent', { cancelable: true }) as DejaTilesEvent;
+            const event = new CustomEvent('DejaTilesEvent', { cancelable: true }) as IDejaTilesEvent;
             event.tiles = this.tiles.map((tile) => tile.toTileModel());
             this.layoutChanged.emit(event);
         }
@@ -924,7 +930,7 @@ export class DejaTilesLayoutProvider {
             return;
         }
 
-        const event = new CustomEvent('DejaTilesAddEvent', { cancelable: true }) as DejaTilesAddEvent;
+        const event = new CustomEvent('DejaTilesAddEvent', { cancelable: true }) as IDejaTilesAddEvent;
         event.tiles = this.tiles.map((tile) => tile.toTileModel());
         event.added = newTiles.map((tile) => tile.toTileModel());
         event.cancel$ = new Subject();
@@ -959,8 +965,9 @@ export class DejaTilesLayoutProvider {
             // Remove original tiles if cut operation
             deleteSourceTiles();
 
-            const e = new CustomEvent('DejaTilesEvent', { cancelable: true }) as DejaTilesEvent;
+            const e = new CustomEvent('DejaTilesModelEvent', { cancelable: false }) as IDejaTilesModelEvent;
             e.tiles = this._tiles.map((tile) => tile.toTileModel());
+            e.added = tiles.map((tile) => tile.toTileModel());
             this.modelChanged.emit(e);
         };
 
