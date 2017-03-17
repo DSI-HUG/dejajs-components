@@ -1,6 +1,6 @@
 {
   "name": "@deja-js/component",
-  "version": "1.4.2-beta.16",
+  "version": "1.4.2-beta.17",
   "description": "Angular2 Components Library",
   "homepage": "https://github.com/DSI-HUG/dejajs-components",
   "bugs": "https://github.com/DSI-HUG/dejajs-components/issues",
@@ -33,11 +33,11 @@
     "build-css": "node-sass src/scss/index.scss -o ./src/scss",
     "build": "webpack-dev-server -d --devtool source-map --inline --progress --port 5100 --config webpack.config.dev.js",
     "start": "npm run build-css && npm run build",
-    "prepublish": "tsc && npm run build-css",
+    "prepublish": "npm run build-css",
     "publish": "npm publish --access public",
     "build:prod": "del-cli dist && npm run build-css && webpack -p --config webpack.config.prod.js",
-    "test": "tsc",
-    "deploy": "npm run build:prod && gh-pages -d dist"
+    "travis-build:prod": "npm run build-css && webpack -p --config webpack.config.prod.js",
+    "test": "tsc"
   },
   "dependencies": {
     "@angular/common": "^2.4.0",
@@ -50,7 +50,7 @@
     "@angular/platform-browser-dynamic": "^2.4.0",
     "@angular/router": "^3.4.0",
     "@angular/upgrade": "^2.4.0",
-    "@deja-js/resources": "^1.1.1",
+    "@deja-js/resources": "^1.1.4",
     "@types/chai": "^3.4.34",
     "@types/core-js": "^0.9.37",
     "@types/hammerjs": "^2.0.33",
@@ -85,7 +85,6 @@
     "del-cli": "^0.2.1",
     "exports-loader": "^0.6.3",
     "file-loader": "^0.9.0",
-    "gh-pages": "^0.12.0",
     "html-loader": "^0.4.4",
     "html-webpack-plugin": "^2.22.0",
     "node-sass": "^4.3.0",
