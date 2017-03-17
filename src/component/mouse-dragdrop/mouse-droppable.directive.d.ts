@@ -1,6 +1,6 @@
 import { ElementRef } from '@angular/core';
-import { DejaMouseDragDropService, IDragCursorInfos, IDragDropContext, IDropCursorInfos } from './mouse-dragdrop.service';
 import { Observable } from 'rxjs/Rx';
+import { DejaMouseDragDropService, IDragCursorInfos, IDragDropContext, IDropCursorInfos } from './mouse-dragdrop.service';
 export declare class DejaMouseDroppableDirective {
     private _context;
     private _dragContext;

@@ -1,5 +1,5 @@
 import { OnInit } from '@angular/core';
-import { DejaTilesAddEvent, DejaTilesRemoveEvent, IDejaMouseDraggableContext, IDejaMouseDroppableContext } from '../../component';
+import { IDejaTilesAddEvent, IDejaTilesRemoveEvent, IDejaMouseDraggableContext, IDejaMouseDroppableContext } from '../../component';
 import { CountriesService } from '../services/countries.service';
 export declare class TilesDemoComponent implements OnInit {
     private countriesService;
@@ -14,6 +14,6 @@ export declare class TilesDemoComponent implements OnInit {
     ngOnInit(): void;
     protected getDragContext(): IDejaMouseDraggableContext;
     protected getDropContext(dropArea: HTMLElement): IDejaMouseDroppableContext;
-    protected onContentAdding(event: DejaTilesAddEvent): void;
-    protected onContentRemoving(event: DejaTilesRemoveEvent): void;
+    protected onContentAdding(event: IDejaTilesAddEvent): void;
+    protected onContentRemoving(event: IDejaTilesRemoveEvent): void;
 }

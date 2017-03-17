@@ -1,5 +1,5 @@
 import { ElementRef, EventEmitter, OnInit } from '@angular/core';
-import { DejaDropDownComponent } from '../../';
+import { DejaDropDownComponent } from '../dropdown/index';
 import { ITooltipParams } from './index';
 import { DejaTooltipService } from './tooltip.service';
 export declare class DejaTooltipComponent implements OnInit {

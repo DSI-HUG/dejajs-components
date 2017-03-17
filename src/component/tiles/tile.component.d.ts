@@ -1,11 +1,11 @@
 import { EventEmitter } from '@angular/core';
 import { ElementRef, OnDestroy } from '@angular/core';
-import { DejaTile } from './tile.class';
+import { DejaTile, IDejaTilesModelEvent } from './index';
 export declare class DejaTileComponent implements OnDestroy {
     template: any;
     designMode: any;
-    modelChanged: EventEmitter<{}>;
-    close: EventEmitter<{}>;
+    modelChanged: EventEmitter<IDejaTilesModelEvent>;
+    close: EventEmitter<Event>;
     element: HTMLElement;
     private _tile;
     private subscriptions;

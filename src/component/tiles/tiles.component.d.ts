@@ -1,16 +1,16 @@
 import { AfterViewInit, ElementRef, EventEmitter, OnDestroy } from '@angular/core';
 import { Rect } from '../../common/core/graphics';
 import { IDejaMouseDroppableContext } from '../mouse-dragdrop/index';
-import { DejaTile, DejaTilesAddEvent, DejaTilesEvent, DejaTilesRemoveEvent, IDejaTile, IDejaTilesRefreshParams } from './index';
+import { DejaTile, IDejaTile, IDejaTilesAddEvent, IDejaTilesEvent, IDejaTilesModelEvent, IDejaTilesRefreshParams, IDejaTilesRemoveEvent } from './index';
 import { DejaTilesLayoutProvider } from './tiles-layout.provider';
 export declare class DejaTilesComponent implements AfterViewInit, OnDestroy {
     private layoutProvider;
-    selectionChanged: EventEmitter<DejaTilesEvent>;
-    layoutChanged: EventEmitter<DejaTilesEvent>;
-    modelChanged: EventEmitter<DejaTilesEvent>;
-    contentAdding: EventEmitter<DejaTilesAddEvent>;
-    contentRemoving: EventEmitter<DejaTilesRemoveEvent>;
-    contentCopied: EventEmitter<DejaTilesEvent>;
+    selectionChanged: EventEmitter<IDejaTilesEvent>;
+    layoutChanged: EventEmitter<IDejaTilesEvent>;
+    contentAdding: EventEmitter<IDejaTilesAddEvent>;
+    contentRemoving: EventEmitter<IDejaTilesRemoveEvent>;
+    modelChanged: EventEmitter<IDejaTilesModelEvent>;
+    contentCopied: EventEmitter<IDejaTilesEvent>;
     protected tileTemplate: any;
     private _models;
     private delete$sub;

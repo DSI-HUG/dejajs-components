@@ -1,9 +1,10 @@
 import { EventEmitter } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs/Rx';
 import { DejaClipboardService } from '../../common/core/clipboard/clipboard.service';
-import { Position, Rect } from '../../common/core/graphics';
+import { Position } from '../../common/core/graphics/position';
+import { Rect } from '../../common/core/graphics/rect';
 import { IDragCursorInfos, IDragDropContext } from '../mouse-dragdrop/mouse-dragdrop.service';
-import { DejaTile, DejaTilesAddEvent, DejaTilesEvent, DejaTilesRemoveEvent, IDejaTile } from './index';
+import { DejaTile, IDejaTile, IDejaTilesAddEvent, IDejaTilesEvent, IDejaTilesModelEvent, IDejaTilesRemoveEvent } from './index';
 export interface IDragSelection {
     startPosition: Position;
     selectedRect: Rect;
@@ -32,11 +33,11 @@ export declare class DejaTilesLayoutProvider {
     dragleave$: Subject<{}>;
     deleteTiles$: Subject<DejaTile[]>;
     designMode: boolean;
-    layoutChanged: EventEmitter<DejaTilesEvent>;
-    modelChanged: EventEmitter<DejaTilesEvent>;
-    selectionChanged: EventEmitter<DejaTilesEvent>;
-    contentAdding: EventEmitter<DejaTilesAddEvent>;
-    contentRemoving: EventEmitter<DejaTilesRemoveEvent>;
+    layoutChanged: EventEmitter<IDejaTilesEvent>;
+    modelChanged: EventEmitter<IDejaTilesModelEvent>;
+    selectionChanged: EventEmitter<IDejaTilesEvent>;
+    contentAdding: EventEmitter<IDejaTilesAddEvent>;
+    contentRemoving: EventEmitter<IDejaTilesRemoveEvent>;
     protected tileMinWidth: number;
     protected tileMinWidthUnit: string;
     protected tileMaxWidth: number;

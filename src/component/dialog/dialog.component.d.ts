@@ -2,5 +2,5 @@ import { EventEmitter } from '@angular/core';
 export declare class DejaDialogComponent {
     closed: EventEmitter<{}>;
     constructor();
-    close(): void;
+    close(event: MouseEvent): void;
 }

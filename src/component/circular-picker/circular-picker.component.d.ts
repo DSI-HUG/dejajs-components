@@ -1,5 +1,5 @@
 import { ElementRef, OnInit } from '@angular/core';
-import { Position } from '../../common/core/graphics/index';
+import { Position } from '../../common/core/graphics/position';
 export declare enum ClockwiseFactorEnum {
     clockwise = -1,
     counterClockwise = 1,

@@ -1,4 +1,5 @@
-import { Position, Rect } from './index';
+import { Position } from './position';
+import { Rect } from './rect';
 export declare class Circle {
     center: Position;
     radius: number;
