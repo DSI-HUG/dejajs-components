@@ -1,11 +1,16 @@
 <a name="@next"></a>
 # [@next] (2017-03-xx)
 
-### Breaking changes from 1.4.2-beta.17
+### Breaking changes from 1.4.2-beta.18
 
 ### Features
 
 ### Bug fixes #
+
+<a name="1.4.2-beta.18"></a>
+# [1.4.2-beta.18] (2017-03-17)
+
+Automatic publish in NPM from Travis.
 
 <a name="1.4.2-beta.17"></a>
 # [1.4.2-beta.17] (2017-03-17)
