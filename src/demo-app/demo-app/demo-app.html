@@ -39,4 +39,6 @@
     </div>
 </md-sidenav-container>
 <deja-mouse-dragdrop-cursor></deja-mouse-dragdrop-cursor>
-<deja-iframe *ngIf="iframeOpened" sourceUrl="http://localhost:5101/tiles"></deja-iframe>
+<deja-backdrop id="iframePopup" *ngIf="iframeOpened" (click)="iframeOpened=false">
+    <deja-iframe sourceUrl="http://www.youtube.com/embed/M7lc1UVf-VE?autoplay=1&origin=http://example.com"></deja-iframe>
+</deja-backdrop>

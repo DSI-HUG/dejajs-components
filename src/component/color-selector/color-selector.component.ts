@@ -117,6 +117,8 @@ export class DejaColorSelectorComponent implements ControlValueAccessor {
                 if (subColorIndex !== undefined) {
                     const subColor = this._subColorFabs && this._subColorFabs[subColorIndex] && this._subColorFabs[subColorIndex].color;
                     this.colorhover.emit(new ColorEvent(subColor));
+                } else {
+                    this.colorhover.emit(new ColorEvent(this.value));
                 }
             })
             .map((subColorIndex) => subColorIndex !== undefined ? subColorIndex : this._selectedSubIndex || 0);
