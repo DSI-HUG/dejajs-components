@@ -300,8 +300,13 @@ export class GridDemoComponent implements OnInit {
 
     ngOnInit() {
         this.drugCounts = 0;
-        this.drugsBigRecord$ = this.drugsService.getDrugs$(null, 10).do((drugs) => this.drugCounts += drugs.length);
+
+        this.drugsBigRecord$ = this.drugsService
+            .getDrugs$(null, 10)
+            .do((drugs) => this.drugCounts += drugs.length);
+
         this.drugs$ = this.drugsService.getDrugs$();
+
         this.groupedDrugs$ = this.drugsService.getGroupedDrugs$();
     }
 
