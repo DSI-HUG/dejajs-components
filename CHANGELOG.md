@@ -21,6 +21,7 @@
 
 ### Bug fixes #
 * **DejaAccordionComponent:** Fix collapse on click in AccordionBody
+* **DejaDialogComponent:** Fix blur
 
 <a name="1.4.2-beta.16"></a>
 # [1.4.2-beta.16] (2017-03-13)
