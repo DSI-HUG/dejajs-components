@@ -71,6 +71,7 @@ import { SelectDemoComponent } from './select/select-demo';
 import { CountriesListService } from './services/countries-list.service';
 import { CountriesService } from './services/countries.service';
 import { DrugsService } from './services/drugs.service';
+import { NewsService } from './services/news.service';
 import { DejaSnackbarDemoComponent } from './snackbar/snackbar-demo';
 import { DejaSplitterDemoComponent } from './splitter/splitter-demo';
 import { TextAreaDemoComponent } from './textarea/textarea-demo';
@@ -151,6 +152,7 @@ import { CodeblockModule } from 'ng-prism';
         GroupingModule,
     ],
     providers: [
+        NewsService,
         CountriesService,
         CountriesListService,
         GlobalEventService,

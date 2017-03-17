@@ -84,3 +84,13 @@ body {
     overflow: auto;
     height: 100%;
 }
+#iframePopup {
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+	deja-iframe {
+		width: 80%;
+		height: 80%;
+		display: block;
+	}
+}

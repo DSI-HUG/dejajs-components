@@ -20,6 +20,6 @@ import { Component } from '@angular/core';
     styleUrls: [
         './backdrop.component.scss',
     ],
-    template: '',
+    template: '<ng-content></ng-content>',
 })
 export class DejaBackdropComponent { }
