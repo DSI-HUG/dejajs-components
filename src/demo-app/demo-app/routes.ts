@@ -30,6 +30,7 @@ import { DejaSplitterDemoComponent } from '../splitter/splitter-demo';
 import { TextAreaDemoComponent } from '../textarea/textarea-demo';
 import { TilesDemoComponent } from '../tiles/tiles-demo';
 import { DejaTreeListDemoComponent } from '../tree-list/tree-list-demo';
+import { DejaViewPortDemoComponent } from '../viewport/viewport-demo';
 import { HomeComponent } from './home-app';
 /* deja-cli import demo */
 /* The comment above mustn't be removed ! */
@@ -61,6 +62,7 @@ const routes: Routes = [
     { component: DejaSnackbarDemoComponent, path: 'snackbar' },
     { component: DejaRangeDemoComponent, path: 'range' },
     { component: DejaSplitterDemoComponent, path: 'splitter' },
+    { component: DejaViewPortDemoComponent, path: 'viewport' },
     /* deja-cli route demo */
     /* The comment above mustn't be removed ! */
 ];

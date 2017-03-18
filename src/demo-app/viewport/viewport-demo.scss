@@ -1,0 +1,42 @@
+@import "../../scss/variables/colors";
+.viewer {
+    display: flex;
+    height: 200px;
+    margin: 1rem 0;
+}
+
+deja-viewport {
+    margin-top: 1rem;
+    height: calc(100vh - 260px);
+    .news {
+        border: 1px #aaa solid;
+        width: calc(100% - 1rem);
+        padding: 0.25rem;
+        margin: 0.25rem 0;
+        display: flex;
+        .logo {
+            flex: 0 0 auto;
+        }
+        .text {
+            border-left: 1px #aaa solid;
+            margin: 0.5rem 0 0.5rem 2rem;
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            .name {
+                font-size: 200%;
+                margin: 0 1rem 0.3rem 0.3rem;
+            }
+            .description {
+                font-size: 120%;
+                margin: 0.3rem 1rem 0.3rem 0.3rem;
+            }
+            .footer {
+                display: flex;
+                justify-content: space-between;
+                margin: 0.3rem 1rem 0 0.3rem;
+            }
+        }
+    }
+}

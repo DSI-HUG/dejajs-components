@@ -1,0 +1,36 @@
+<md-tab-group [selectedIndex]="1">
+    <!--<md-tab label="OVERVIEW">-->
+    <!--<md-card class="demo-card demo-basic">-->
+    <!--TODO-->
+    <!--</md-card>-->
+    <!--</md-tab>-->
+    <md-tab label="API REFERENCE">
+        <md-card class="demo-card demo-basic">
+            <!--deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/viewport/readme.md'"></deja-markdown-->
+        </md-card>
+    </md-tab>
+    <md-tab label="EXAMPLES">
+        <md-card class="demo-card demo-basic">
+            <md-card-content id="viewPortContainer">
+                <md-checkbox [(ngModel)]="isHorizontal">Horizontal</md-checkbox>
+                <deja-viewport [items]="news$ | async" itemSize="300" itemSizeMode="auto" [direction]="isHorizontal ? 'horizontal': 'vertical'">
+                    <template #itemTemplate let-item>
+                        <div *ngIf="item" class="news" [attr.id]="id">
+                            <img [attr.src]="item.urlsToLogos.medium" class="logo">
+                            <span class="text">
+                                <span class="name">{{ item.name }}</span>
+                                <span class="description">{{ item.description }}</span>
+                                <div class="footer">
+                                    <a class="url" [attr.href]="item.url">{{ item.url }}</a>
+                                    <span class="category">{{ item.category }}</span>
+                                    <span class="country">{{ item.country }}</span>
+                                    <span class="language">{{ item.language }}</span>
+                                </div>
+                            </span>
+                        </div>
+                    </template>
+                </deja-viewport>
+            </md-card-content>
+        </md-card>
+    </md-tab>
+</md-tab-group>

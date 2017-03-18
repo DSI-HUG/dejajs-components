@@ -1,0 +1,5 @@
+<span *ngIf="vpBeforeSize" [style.flex-basis.px]="vpBeforeSize"></span>
+<span #elitem *ngFor="let item of vpItems; let index = index" [attr.index]="vpStartIndex + index" [style.flex-basis]="item.size ? item.size + 'px' : 'auto'">
+    <template [ngTemplateOutlet]="itemTemplate" [ngOutletContext]="{ $implicit: item.model, index: vpStartIndex + index }"></template>
+</span>
+<span *ngIf="vpAfterSize" [style.flex-basis.px]="vpAfterSize"></span>
