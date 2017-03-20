@@ -13,7 +13,7 @@
         <md-card class="demo-card demo-basic">
             <md-card-content id="viewPortContainer">
                 <md-checkbox [(ngModel)]="isHorizontal">Horizontal</md-checkbox>
-                <deja-viewport [items]="news$ | async" itemSize="300" itemSizeMode="auto" [direction]="isHorizontal ? 'horizontal': 'vertical'">
+                <deja-viewport [items]="news$ | async" itemSize="200" itemSizeMode="auto" [direction]="isHorizontal ? 'horizontal': 'vertical'">
                     <template #itemTemplate let-item>
                         <div *ngIf="item" class="news" [attr.id]="id">
                             <img [attr.src]="item.urlsToLogos.medium" class="logo">

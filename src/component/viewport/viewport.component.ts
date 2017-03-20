@@ -33,6 +33,7 @@ export class DejaViewPortComponent implements OnDestroy, AfterViewInit {
     private _items: DejaViewPortItem[];
     private element: HTMLElement;
     private subscriptions: Subscription[] = [];
+    private lastScrollPos: -1;
     private isHorizontal = false;
     @HostBinding('attr.direction') private _direction = 'vertical' as 'vertical' | 'horizontal';
 
@@ -78,6 +79,14 @@ export class DejaViewPortComponent implements OnDestroy, AfterViewInit {
         return this.isHorizontal ? this.element.clientWidth : this.element.clientHeight;
     }
 
+    private set scrollPos(value: number) {
+        if (this.isHorizontal) {
+            this.element.scrollLeft = value;
+        } else {
+            this.element.scrollTop = value;
+        }
+    }
+
     private get scrollPos() {
         return this.isHorizontal ? this.element.scrollLeft : this.element.scrollTop;
     }
@@ -95,8 +104,10 @@ export class DejaViewPortComponent implements OnDestroy, AfterViewInit {
         this.subscriptions.push(Observable
             .fromEvent(this.element, 'scroll')
             .map((event: any) => this.isHorizontal ? event.target.scrollLeft : event.target.scrollTop)
-            .distinctUntilChanged()
-            .subscribe(() => {
+            // .do((scrollPos: number) => console.log(scrollPos))
+            // .debounce((scrollPos) => Observable.timer(Math.abs(this.lastScrollPos - scrollPos) > 2000 ? 1000 : 0))
+            .subscribe((scrollPos) => {
+                this.lastScrollPos = scrollPos;
                 this.calcViewPort();
             }));
 
@@ -152,8 +163,18 @@ export class DejaViewPortComponent implements OnDestroy, AfterViewInit {
             this.vpItems = [];
             let vpSize = 0;
             let overflow = false;
+            let averageSize = 0;
+            let averageCount = 0;
             this._items.forEach((item, index) => {
-                const itemSize = item.size || itemDefaultSize;
+                let itemSize = item.size;
+                if (itemSize) {
+                    averageSize += item.size;
+                    ++averageCount;
+                } else if (averageCount > 0) {
+                    itemSize = Math.round(averageSize / averageCount);
+                } else {
+                    itemSize = itemDefaultSize;
+                }
                 if (vpSize === 0 && this.vpBeforeSize + itemSize < scrollPos) {
                     this.vpBeforeSize += itemSize;
                 } else if (!overflow) {
@@ -170,6 +191,7 @@ export class DejaViewPortComponent implements OnDestroy, AfterViewInit {
                 }
             });
 
+            // Measure items height
             Observable.timer(1)
                 .first()
                 .subscribe(() => {
@@ -181,6 +203,7 @@ export class DejaViewPortComponent implements OnDestroy, AfterViewInit {
                         calculatedSize += size;
                     });
 
+                    // If height of the displayed items is not enough, calc viewport again
                     if (calculatedSize < scrollPos + containerSize) {
                         this.calcViewPort(maxSize);
                     }
