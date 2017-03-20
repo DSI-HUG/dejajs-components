@@ -13,7 +13,7 @@ import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, C
 import { Observable, Subscription } from 'rxjs/Rx';
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.Default,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'deja-viewport',
     styleUrls: ['./viewport.component.scss'],
     templateUrl: './viewport.component.html',
