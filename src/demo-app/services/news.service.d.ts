@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 export declare class NewsService {
     private http;
     constructor(http: Http);
-    getNews$(): Observable<INews[]>;
+    getNews$(repeatCount?: number): Observable<INews[]>;
 }
 export interface INewsResponse {
     status: string;
