@@ -11,7 +11,7 @@ node_js:
 branches:
   only:
   - master
-  - travis-test
+  - dev
 before_script:
 - npm prune
 script:
