@@ -37,7 +37,8 @@
     "publish": "npm publish --access public",
     "build:prod": "del-cli dist && npm run build-css && webpack -p --config webpack.config.prod.js",
     "travis-build:prod": "npm run build-css && webpack -p --config webpack.config.prod.js",
-    "test": "tsc"
+    "e2e": "webdriver-manager update && protractor specs/conf.js",
+    "test": "npm run e2e"
   },
   "dependencies": {
     "@angular/common": "^2.4.0",
@@ -88,6 +89,7 @@
     "html-loader": "^0.4.4",
     "html-webpack-plugin": "^2.22.0",
     "node-sass": "^4.3.0",
+    "protractor": "^5.1.1",
     "raw-loader": "^0.5.1",
     "resolve-url-loader": "^1.6.0",
     "sass-loader": "^5.0.0",
