@@ -8,7 +8,7 @@ describe('Accordion page', function () {
         element(by.css('md-nav-list > a[href="/accordion"]')).click();
     });
 
-    it('all accordion should be closed', function () {
+    it('all accordion should be opening on click', function () {
 
         element.all(by.css('deja-accordion-group')).each(function(item){
             var header = item.element(by.css('deja-accordion-header'));

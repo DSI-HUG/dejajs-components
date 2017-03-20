@@ -15,16 +15,16 @@ exports.config = {
         'browserName': 'chrome'
     },
 
-    // directConnect: true,
+    directConnect: true,
 
     baseUrl: 'http://localhost:5100/',
 
     framework: 'jasmine',
 
-    // jasmineNodeOpts: {
-    //     showColors: true,
-    //     defaultTimeoutInterval: 30000
-    // },
+    jasmineNodeOpts: {
+        showColors: true,
+        defaultTimeoutInterval: 30000
+    },
 
     beforeLaunch: function () {
         return new Promise(function(resolve){
@@ -41,9 +41,9 @@ exports.config = {
         });
     },
 
-    // onPrepare: function () {
-    //     browser.driver.manage().window().setSize(1280, 1024);
-    // },
+    onPrepare: function () {
+        browser.driver.manage().window().setSize(1280, 1024);
+    },
 
     useAllAngular2AppRoots: true
 };
