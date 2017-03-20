@@ -1,11 +1,17 @@
 <a name="@next"></a>
 # [@next] (2017-03-xx)
 
-### Breaking changes from 1.4.2-beta.18
+### Breaking changes from 1.4.2-beta.19
 
 ### Features
 
 ### Bug fixes #
+
+<a name="1.4.2-beta.19"></a>
+# [1.4.2-beta.19] (2017-03-20)
+
+### Features
+Add viewport component
 
 <a name="1.4.2-beta.18"></a>
 # [1.4.2-beta.18] (2017-03-17)

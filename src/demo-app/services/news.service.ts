@@ -17,7 +17,7 @@ import { Observable } from 'rxjs/Observable';
 export class NewsService {
     constructor(private http: Http) { }
 
-    public getNews$(): Observable<INews[]> {
+    public getNews$(repeatCount?: number): Observable<INews[]> {
         return this.http.get('https://newsapi.org/v1/sources?language=en')
             .map((response: any) => response.json() as INewsResponse)
             .map((resp: INewsResponse) => {
@@ -25,6 +25,15 @@ export class NewsService {
                     throw new Error('Fail to get news');
                 }
                 return resp.sources as INews[];
+            })
+            .map((news: INews[]) => {
+                let returnNews = news;
+                if (repeatCount) {
+                    while (--repeatCount > 0) {
+                        returnNews = returnNews.concat(news);
+                    }
+                }
+                return returnNews;
             })
             .publishLast()
             .refCount();

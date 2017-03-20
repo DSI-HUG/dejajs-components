@@ -58,7 +58,7 @@ export class Rect {
 
     constructor(left?: number | Object, top?: number, width?: number, height?: number) {
         if (typeof left === 'object') {
-            const bounds = left as any;
+            const bounds = left as any || {};
             this.left = bounds.left || 0;
             this.top = bounds.top || 0;
             this.width = bounds.width || 0;

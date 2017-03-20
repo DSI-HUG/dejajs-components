@@ -47,6 +47,7 @@ import {
     DejaTilesModule,
     DejaTooltipModule,
     DejaTreeListModule,
+    DejaViewPortModule,
     /* deja-cli import module */
     /* The comment above mustn't be removed ! */
 } from '../component';
@@ -77,6 +78,7 @@ import { DejaSplitterDemoComponent } from './splitter/splitter-demo';
 import { TextAreaDemoComponent } from './textarea/textarea-demo';
 import { TilesDemoComponent } from './tiles/tiles-demo';
 import { DejaTreeListDemoComponent } from './tree-list/tree-list-demo';
+import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
 
 /* deja-cli import demo */
 /* The comment above mustn't be removed ! */
@@ -104,6 +106,7 @@ import { CodeblockModule } from 'ng-prism';
         DejaSnackbarDemoComponent,
         DejaRangeDemoComponent,
         DejaSplitterDemoComponent,
+        DejaViewPortDemoComponent,
         ProgressCircleDemoComponent,
         /* deja-cli declarations demo */
         /* The comment above mustn't be removed ! */
@@ -146,6 +149,7 @@ import { CodeblockModule } from 'ng-prism';
         DejaRangeModule,
         DejaSplitterModule,
         DejaTooltipModule,
+        DejaViewPortModule,
         /* deja-cli imports module */
         /* The comment above mustn't be removed ! */
         routing,
