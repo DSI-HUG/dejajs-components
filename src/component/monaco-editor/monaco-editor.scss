@@ -1,8 +1,8 @@
 deja-monaco-editor{
     display: flex;
-    flex: 1;
+    flex: 1 1 auto;
 
     .monaco-editor {
-        flex: 1;
+        flex: 1 1 auto;
     }
 }
