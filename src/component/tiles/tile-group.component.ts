@@ -29,7 +29,7 @@ export class DejaTileGroupComponent {
     private edit$ = new Subject<void>();
 
     @ViewChild(DejaEditableDirective) private title: DejaEditableDirective;
-    @HostBinding('attr.design') private _designMode = false;
+    @HostBinding('attr.designMode') private _designMode = false;
 
     constructor() {
         Observable.from(this.edit$)

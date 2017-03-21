@@ -117,6 +117,10 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
         this.layoutProvider.designMode = coerceBooleanProperty(value);
     };
 
+    public get designMode() {
+        return this.layoutProvider.designMode;
+    };
+
     @Input()
     public set models(models: IDejaTile[]) {
         this._models = models || [];
