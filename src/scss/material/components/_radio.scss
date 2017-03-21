@@ -1,5 +1,5 @@
 md-radio-group {
-  .mat-radio-checked {
+  .mat-radio-checked:not(.mat-radio-disabled) {
     .mat-radio-inner-circle {
       background-color:$secondary;
     }
