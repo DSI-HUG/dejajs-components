@@ -1,11 +1,17 @@
 <a name="@next"></a>
 # [@next] (2017-03-xx)
 
-### Breaking changes from 1.4.2-beta.20
+### Breaking changes from 1.4.2-beta.21
 
 ### Features
 
 ### Bug fixes #
+
+<a name="1.4.2-beta.21"></a>
+# [1.4.2-beta.21] (2017-03-22)
+
+### Bug fixes #
+Fix JS lib import
 
 <a name="1.4.2-beta.20"></a>
 # [1.4.2-beta.20] (2017-03-22)
