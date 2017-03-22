@@ -1,11 +1,17 @@
 <a name="@next"></a>
 # [@next] (2017-03-xx)
 
-### Breaking changes from 1.4.2-beta.19
+### Breaking changes from 1.4.2-beta.20
 
 ### Features
 
 ### Bug fixes #
+
+<a name="1.4.2-beta.20"></a>
+# [1.4.2-beta.20] (2017-03-22)
+
+### Bug fixes #
+Some bugs fixs
 
 <a name="1.4.2-beta.19"></a>
 # [1.4.2-beta.19] (2017-03-20)
