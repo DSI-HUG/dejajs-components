@@ -12,10 +12,8 @@
 import {AfterViewChecked, Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import { Http, ResponseContentType } from '@angular/http';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-// tslint:disable
-const Showdown = require('showdown');
-const Prism = require('prismjs');
-// tslint:enable
+import * as Prism from 'prismjs';
+import * as Showdown from 'showdown';
 
 @Component({
     encapsulation: ViewEncapsulation.None,
