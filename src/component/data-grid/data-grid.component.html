@@ -7,6 +7,6 @@
 		<deja-grid-row *ngIf="!rowTemplate" [row]="item" [flatIndex]="flatindex" [columnLayout]="_columnLayout" [currentColumn]="_currentColumn" [cellTemplateExternal]="cellTemplate"></deja-grid-row>
 	</template>
 	<template #headerTemplate>
-		<deja-grid-header *ngIf="!columnsHeaderTemplate" #gridHeaderElement [sortInfos]="treelist.sortInfos" [columnLayout]="_columnLayout" [columnsDraggable]="columnsDraggable || groupArea" [columnsSortable]="columnsSortable" [columnsSizable]="columnsSizable" [columnHeaderTemplateExternal]="columnHeaderTemplate" (columnLayoutChanged)="onColumnLayoutChanged($event)" (columnSizeChanged)="onColumnSizeChanged($event)" (columnHeaderClicked)="onColumnHeaderClicked($event)"></deja-grid-header>
+		<deja-grid-header *ngIf="!columnsHeaderTemplate" [sortInfos]="treelist.sortInfos" [columnLayout]="_columnLayout" [columnsDraggable]="columnsDraggable || groupArea" [columnsSortable]="columnsSortable" [columnsSizable]="columnsSizable" [columnHeaderTemplateExternal]="columnHeaderTemplate" (columnLayoutChanged)="onColumnLayoutChanged($event)" (columnSizeChanged)="onColumnSizeChanged($event)" (columnHeaderClicked)="onColumnHeaderClicked($event)"></deja-grid-header>
 	</template>
 </deja-tree-list>
