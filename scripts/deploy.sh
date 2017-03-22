@@ -23,7 +23,7 @@ git checkout $TARGET_BRANCH || git checkout --orphan $TARGET_BRANCH
 cd ..
 
 # Clean dist existing contents
-rm -rf dist || exit 0
+rm -rf dist/**/* || exit 0
 
 # Run our compile script
 npm run travis-build:prod

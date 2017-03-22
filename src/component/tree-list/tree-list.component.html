@@ -32,16 +32,8 @@
 		</li>
 	</ul>
 	<div *ngIf="vpAfterHeight" [style.height.px]="vpAfterHeight"></div>
-	<div id="loader" *ngIf="waiter">
-		<span class="loader-container" *ngIf="!loaderTemplate">
-			<div class="spinner">
-				<div class="bounce1"></div>
-				<div class="bounce2"></div>
-				<div class="bounce3"></div>
-			</div>
-		</span>
-		<span class="loader-container" *ngIf="loaderTemplate">
+	<deja-list-loader id="loader" *ngIf="waiter && !loaderTemplate"></deja-list-loader>
+	<span class="loader-container" *ngIf="waiter && loaderTemplate">
 			<template [ngTemplateOutlet]="loaderTemplate"></template>
 		</span>
 	</div>
-</div>

@@ -29,6 +29,7 @@ export * from './menu/index';
 export * from './select/index';
 export * from './templates/index';
 export * from './tiles/index';
+export * from './loaders/index';
 export * from './tree-list/index';
 export * from './markdown/index';
 export * from './message-box/index';

@@ -1,25 +1,24 @@
 @import "../../scss/variables/colors";
-.circular-picker-container {
-    /* min-height: 310px;
-    min-width: 310px;*/
+:host {
+	-webkit-touch-callout: none;
+	/* iOS Safari */
+	-webkit-user-select: none;
+	/* Chrome/Safari/Opera */
+	-khtml-user-select: none;
+	/* Konqueror */
+	-moz-user-select: none;
+	/* Firefox */
+	-ms-user-select: none;
+	/* Internet Explorer/Edge */
+	user-select: none;
+	/* Non-prefixed version, currently
+       not supported by any browser */
     position: relative;
     .circular-picker {
         border: 1px solid #dfdfdf;
         background-color: #dfdfdf;
         border-radius: 50%;
         position: relative;
-        &:before {
-            /*background-color: $secondary;
-            border-radius: 50%;
-            content: '';
-            height: 0.3rem;
-            left: 50%;
-            margin-left: -0.15rem;
-            margin-top: -0.15rem;
-            position: absolute;
-            top: 50%;
-            width: 0.3rem;*/
-        }
         .value {
             border-radius: 50%;
             cursor: pointer;

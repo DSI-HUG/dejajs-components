@@ -15,6 +15,7 @@ import { FormsModule } from '@angular/forms';
 import { MdButtonModule, MdCheckboxModule, MdInputModule } from '@angular/material';
 import { DejaClipboardModule } from '../../common/core/clipboard/clipboard.module';
 import { DejaDragDropModule } from '../dragdrop/dragdrop.module';
+import { DejaListLoaderModule } from '../loaders/list-loader.module';
 import { DejaTextMetricsModule } from './text-metrics/text-metrics.module';
 import { DejaTreeListComponent } from './tree-list.component';
 
@@ -27,6 +28,7 @@ import { DejaTreeListComponent } from './tree-list.component';
         MdButtonModule,
         MdInputModule.forRoot(),
         MdCheckboxModule.forRoot(),
+        DejaListLoaderModule,
         DejaDragDropModule,
         DejaTextMetricsModule,
         DejaClipboardModule.forRoot(),
