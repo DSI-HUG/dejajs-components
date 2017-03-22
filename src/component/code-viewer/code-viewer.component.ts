@@ -10,7 +10,9 @@
  */
 
 import { AfterViewChecked, Component, Input, ViewEncapsulation } from '@angular/core';
-import * as Prism from 'prismjs';
+// tslint:disable
+const Prism = require('prismjs');
+// tslint:enable
 
 @Component({
     encapsulation: ViewEncapsulation.None,
