@@ -37,6 +37,7 @@ dist
 !send-action.js
 !send-action-test.js
 !bs-config.js
+!specs/**/*.js
 
 src/polyfills.js
 src/**/*.css
