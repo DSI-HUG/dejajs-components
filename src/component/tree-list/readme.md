@@ -155,9 +155,10 @@ Crée une liste récursive.
     <td>Nom du champ des objets à utiliser comme label. Si n'est pas setté, récupère la propriété `displayName` de l'objet qui peut etre un string ou une fonction.</td>
 </tr>
 <tr>
-	<td>valueField</td>
-	<td>string</td>
-	<td>Définit le champ à utiliser comme valeur de comparaison.</td>
+    <td>valueField</td>
+    <td>string</td>
+    <td></td>
+    <td>Définit le champ à utiliser comme valeur de comparaison.</td>
 </tr>
 <tr>
     <td>hintLabel</td>
