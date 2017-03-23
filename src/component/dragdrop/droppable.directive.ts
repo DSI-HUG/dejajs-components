@@ -63,15 +63,17 @@ export class DejaDroppableDirective {
                             const inside = leaveEvent.x >= bounds.left && leaveEvent.x <= bounds.right && leaveEvent.y >= bounds.top && leaveEvent.y <= bounds.bottom;
                             if (!inside) {
                                 const dragInfos = this.clipboardService.get(this.draginfokey) as { [key: string]: any };
-                                const e = leaveEvent as IDejaDropEvent;
-                                e.dragInfo = dragInfos;
-                                e.dragObject = dragInfos[this.objectKey];
-                                e.dragElement = element;
-                                e.itsMe = dragInfos[this.elementKey] === element;
+                                if (dragInfos) {
+                                    const e = leaveEvent as IDejaDropEvent;
+                                    e.dragInfo = dragInfos;
+                                    e.dragObject = dragInfos[this.objectKey];
+                                    e.dragElement = element;
+                                    e.itsMe = dragInfos[this.elementKey] === element;
 
-                                this.context.dragleavecallback(e);
-                                if (e.defaultPrevented) {
-                                    leaveEvent.preventDefault();
+                                    this.context.dragleavecallback(e);
+                                    if (e.defaultPrevented) {
+                                        leaveEvent.preventDefault();
+                                    }
                                 }
                             }
                         }
@@ -83,16 +85,18 @@ export class DejaDroppableDirective {
                     .subscribe((dropEvent: DragEvent) => {
                         if (this.context && this.context.dropcallback) {
                             const dragInfos = this.clipboardService.get(this.draginfokey) as { [key: string]: any };
-                            const e = dropEvent as IDejaDropEvent;
-                            e.dragInfo = dragInfos;
-                            e.dragObject = dragInfos[this.objectKey];
-                            e.dragElement = element;
-                            e.itsMe = dragInfos[this.elementKey] === element;
+                            if (dragInfos) {
+                                const e = dropEvent as IDejaDropEvent;
+                                e.dragInfo = dragInfos;
+                                e.dragObject = dragInfos[this.objectKey];
+                                e.dragElement = element;
+                                e.itsMe = dragInfos[this.elementKey] === element;
 
-                            this.context.dropcallback(e);
-                            if (e.defaultPrevented) {
-                                e.dragInfo[this.droppedKey] = true;
-                                dropEvent.preventDefault();
+                                this.context.dropcallback(e);
+                                if (e.defaultPrevented) {
+                                    e.dragInfo[this.droppedKey] = true;
+                                    dropEvent.preventDefault();
+                                }
                             }
                         }
                     });
@@ -113,17 +117,19 @@ export class DejaDroppableDirective {
 
                         if (this.context && this.context.dragovercallback) {
                             const dragInfos = this.clipboardService.get(this.draginfokey) as { [key: string]: any };
-                            const e = overEvent as IDejaDropEvent;
-                            e.dragInfo = dragInfos;
-                            e.dragObject = dragInfos[this.objectKey];
-                            e.dragElement = element;
-                            e.itsMe = dragInfos[this.elementKey] === element;
+                            if (dragInfos) {
+                                const e = overEvent as IDejaDropEvent;
+                                e.dragInfo = dragInfos;
+                                e.dragObject = dragInfos[this.objectKey];
+                                e.dragElement = element;
+                                e.itsMe = dragInfos[this.elementKey] === element;
 
-                            this.context.dragovercallback(e);
-                            this.lastTarget = overEvent.target;
-                            this.lastAccept = e.defaultPrevented;
-                            if (e.defaultPrevented) {
-                                overEvent.preventDefault();
+                                this.context.dragovercallback(e);
+                                this.lastTarget = overEvent.target;
+                                this.lastAccept = e.defaultPrevented;
+                                if (e.defaultPrevented) {
+                                    overEvent.preventDefault();
+                                }
                             }
                         }
                     });
