@@ -10,33 +10,31 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs/Rx';
+import { BehaviorSubject, Observable, Subject } from 'rxjs/Rx';
 
 @Injectable()
 export class DejaTextMetricsService {
     private canvas;
-    private elemObservable: Subject<HTMLElement> = new Subject();
+    private element$: Subject<HTMLElement> = new Subject();
     private computedStyles: CSSStyleDeclaration;
-    private charSize$: Observable<number[]>;
+    private charSize$ = new BehaviorSubject<number[]>(null);
 
     constructor() {
-        this.charSize$ = Observable.from(this.elemObservable)
+        Observable.from(this.element$)
             .delay(1)
             .first()
-            .publishLast()
-            .refCount()
-            .map((element) => {
+            .subscribe((element) => {
                 const charSize = [];
                 for (let i = 0; i < 255; i++) {
                     const c = String.fromCharCode(i);
                     charSize[i] = this.getTextWidth(c, element);
                 }
-                return charSize;
+                this.charSize$.next(charSize);
             });
     }
 
     public set metricsElem(elem: HTMLElement) {
-        this.elemObservable.next(elem);
+        this.element$.next(elem);
     }
 
     /**
@@ -110,6 +108,7 @@ export class DejaTextMetricsService {
      */
     private getNumberOfLines(maxWidth: number, text: string): Observable<number> {
         return this.charSize$
+            .filter((charSize) => charSize !== null)
             .map((charSize) => {
                 const arr = text.split(' ');
 
