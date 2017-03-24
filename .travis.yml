@@ -23,13 +23,15 @@ branches:
   only:
   - master
   - dev
+before_install:
+- rm -rf node_modules
 before_script:
 - "export DISPLAY=:99.0"
 - "sh -e /etc/init.d/xvfb start"
 - sleep 3
 - npm prune
-- npm test
 script:
+- npm test
 - bash ./scripts/deploy.sh
 env:
   global:
