@@ -27,7 +27,7 @@ exports.config = {
     },
 
     beforeLaunch: function () {
-        return new Promise(function(resolve){
+        return new Promise(function(resolve, reject){
             var compiler = webpack(require('../webpack.config.dev.js'));
             var server = new WebpackDevServer(compiler, {
                 stats: 'errors-only'
@@ -35,7 +35,12 @@ exports.config = {
 
             server.listen(5100, 'localhost');
 
-            compiler.plugin('done', function() {
+            compiler.plugin('done', function(stats) {
+                var jsonStats = stats.toJson();
+                if(jsonStats.errors.length > 0) {
+                    reject('Error during webpack build');
+                }
+
                 resolve();
             });
         });

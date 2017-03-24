@@ -1,11 +1,17 @@
 <a name="@next"></a>
 # [@next] (2017-03-xx)
 
-### Breaking changes from 1.4.2-beta.21
+### Breaking changes from 1.4.2-beta.23
 
 ### Features
 
 ### Bug fixes #
+
+<a name="1.4.2-beta.23"></a>
+# [1.4.2-beta.23] (2017-03-24)
+
+### Bug fixes #
+Monaco Ctrl+Z
 
 <a name="1.4.2-beta.22"></a>
 # [1.4.2-beta.22] (2017-03-23)
