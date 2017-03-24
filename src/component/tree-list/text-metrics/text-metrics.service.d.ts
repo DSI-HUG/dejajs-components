@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs/Rx';
 export declare class DejaTextMetricsService {
     private canvas;
-    private elemObservable;
+    private element$;
     private computedStyles;
     private charSize$;
     constructor();
