@@ -327,7 +327,7 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
      * @param value
      */
     private updateValue(value: string) {
-        this.value = value;
+        // this.value = value;
         this._value = value;
         this.valueChange.emit(value);
     }
@@ -338,7 +338,7 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
      * @param value
      */
     private updateValueToCompare(value: string) {
-        this.valueToCompare = value;
+        // this.valueToCompare = value;
         this._valueToCompare = value;
         this.valueToCompareChange.emit(value);
     }
