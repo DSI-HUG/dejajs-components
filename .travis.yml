@@ -28,8 +28,8 @@ before_script:
 - "sh -e /etc/init.d/xvfb start"
 - sleep 3
 - npm prune
-- npm test
 script:
+- npm test
 - bash ./scripts/deploy.sh
 env:
   global:
