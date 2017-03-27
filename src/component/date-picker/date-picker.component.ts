@@ -9,12 +9,11 @@
  *
  */
 
-import { Component, ContentChild, ElementRef, EventEmitter, forwardRef, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, forwardRef, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import * as moment from 'moment';
 import { Observable, Subscription } from 'rxjs/Rx';
-import 'rxjs/Rx';
 import { DaysOfWeek, DejaDateSelectorComponent } from '../date-selector';
 
 const noop = () => { };
@@ -26,7 +25,7 @@ const DejaDatePickerComponentValueAccessor = {
 };
 
 @Component({
-    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [DejaDatePickerComponentValueAccessor],
     selector: 'deja-date-picker',
     styleUrls: ['./date-picker.component.scss'],
@@ -46,9 +45,7 @@ export class DejaDatePickerComponent implements OnInit {
     @ContentChild('hintTemplate') protected mdHint;
     @ViewChild('inputelement') private inputElementRef: ElementRef;
 
-
-    private _useDropDown = false;
-    private keydown: Observable<{}>;
+    private _showDropDown = false;
     private keyDownSubscription: Subscription;
     private _disabled = false;
     private _time = false;
@@ -60,7 +57,7 @@ export class DejaDatePickerComponent implements OnInit {
     private onTouchedCallback: () => void = noop;
     private onChangeCallback: (_: any) => void = noop;
 
-    constructor(private elementRef: ElementRef) { }
+    constructor(private elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef) { }
 
     public ngOnInit() { }
 
@@ -68,13 +65,16 @@ export class DejaDatePickerComponent implements OnInit {
         return this.dropdownContainerId && this.elementRef.nativeElement.ownerDocument.getElementById(this.dropdownContainerId);
     }
 
-    private set useDropDown(value: boolean) {
-        if (value !== this._useDropDown) {
-            this._useDropDown = value;
+    private set showDropDown(value: boolean) {
+        if (value !== this._showDropDown) {
+            this._showDropDown = value;
             if (value) {
-                this.keydown = Observable.fromEvent(this.inputElementRef.nativeElement, 'keydown');
-                this.keyDownSubscription = this.keydown.subscribe(() => {
-                    this.dateSelectorComponent.keyboardNavigation = false;
+                const inputElement = this.inputElementRef.nativeElement as HTMLElement;
+                this.keyDownSubscription = Observable
+                    .fromEvent(inputElement, 'keydown')
+                    .subscribe((event: KeyboardEvent) => {
+                        this.dateSelectorComponent.keyDown(event);
+                        this.setFocus();
                 });
             } else {
                 if (this.keyDownSubscription) {
@@ -83,15 +83,18 @@ export class DejaDatePickerComponent implements OnInit {
                 }
             }
         }
+
+        this.changeDetectorRef.markForCheck();
     }
 
-    private get useDropDown() {
-        return this._useDropDown;
+    private get showDropDown() {
+        return this._showDropDown;
     }
 
     @Input()
     public set disabled(value: boolean) {
         this._disabled = coerceBooleanProperty(value);
+        this.changeDetectorRef.markForCheck();
     }
 
     public get disabled() {
@@ -101,6 +104,7 @@ export class DejaDatePickerComponent implements OnInit {
     @Input()
     public set time(value: boolean) {
         this._time = coerceBooleanProperty(value);
+        this.changeDetectorRef.markForCheck();
     }
 
     public get time() {
@@ -108,11 +112,11 @@ export class DejaDatePickerComponent implements OnInit {
     }
 
     public close() {
-        this.useDropDown = false;
+        this.showDropDown = false;
     }
 
     public open() {
-        this.useDropDown = true;
+        this.showDropDown = true;
     }
 
     // set accessor including call the onchange callback
@@ -134,6 +138,7 @@ export class DejaDatePickerComponent implements OnInit {
         if (value !== this.date) {
             this.date = value;
             this.inputModel = (this.format && this.date) ? moment(this.date).format(this.format) : (this.date) ? this.date.toLocaleString() : null;
+            this.changeDetectorRef.markForCheck();
         }
     }
 
@@ -148,29 +153,37 @@ export class DejaDatePickerComponent implements OnInit {
     }
     // ************* End of ControlValueAccessor Implementation **************
 
+    public setFocus() {
+        const inputElement = this.inputElementRef.nativeElement as HTMLElement;
+        inputElement.focus();
+    }
+
     protected toggleDateSelector(event: Event) {
         if (this.disabled) {
             return;
         }
 
         const target = event.currentTarget as HTMLElement;
-        if (target.id !== 'deja-date-selector-input') {
+        if (target.id !== 'date-selector-input') {
             return;
         }
 
-        this.useDropDown = !this.useDropDown;
+        this.showDropDown = !this.showDropDown;
         return false;
     }
 
-    protected onDateChange(event: Date) {
-        this.value = event;
+    protected onDateChange(newDate: Date) {
+        this.value = newDate;
+        // TODO
+        // if (this.value.getHours() === newDate.getHours() && this.value.getMinutes() === newDate.getMinutes() && this.value.getSeconds() === newDate.getSeconds()) {
+        //     this.setFocus();
+        // }
     }
 
     protected updateModel(date: string | Date) {
         if (typeof date === 'string') {
             let d = new Date(date);
             if (!moment(d).isValid()) {
-                // TODO : eventually throw error
                 d = new Date();
             }
             date = d;

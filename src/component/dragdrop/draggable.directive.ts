@@ -43,6 +43,7 @@ export class DejaDraggableDirective {
         Observable.fromEvent(element, 'dragstart')
             .filter(() => !!this.context)
             .subscribe((event: DragEvent) => {
+                // console.log('dragstart');
                 const dragInfos = {} as { [key: string]: any };
                 this.dragdropid = new UUID().toString();
                 dragInfos[this.uuidKey] = this.dragdropid;
@@ -72,6 +73,7 @@ export class DejaDraggableDirective {
                 Observable.fromEvent(element, 'dragend')
                     .first()
                     .subscribe((evt: DragEvent) => {
+                        // console.log('dragend');
                         const dragEndInfos = this.clipboardService.get(this.draginfokey) as { [key: string]: any };
                         const obj = dragEndInfos && dragEndInfos[this.objectKey];
                         if (obj) {

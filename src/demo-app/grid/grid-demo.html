@@ -79,8 +79,8 @@
 	<md-toolbar color="secondary">Grille avec taille des colonnes en pixels et en pourcents</md-toolbar>
 	<md-card-content class="listContainer">
 		<!-- -->
-		<deja-grid #cgrid searchArea groupArea sortable columnsSizable multiSelect [(ngModel)]="drugs$" [columns]="percentColumns" (selectedChange)="onSelectionChanged2($event)" nodataholder="Pas de données"
-		           placeholder="Filtrer la liste par le nom" searchField="receivedate" (itemDragStart)="onItemDragStart($event)">
+		<deja-grid #cgrid sortable columnsSizable multiSelect [(ngModel)]="drugs$" [columns]="percentColumns" (selectedChange)="onSelectionChanged2($event)" nodataholder="Pas de données"
+		           placeholder="Filtrer la liste par le nom" searchField="receivedate">
 			<template #rowTemplate let-row>
 				<deja-grid-row [row]="row" [columnLayout]="cgrid.columnLayout" [cellTemplateExternal]="cgrid.cellTemplate" [currentColumn]="cgrid.currentColumn">
 					<template #cellTemplate let-row let-column="column" let-current="isCurrentColumn">

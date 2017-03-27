@@ -53,7 +53,7 @@
 					</template>
 				</deja-select>
 				<deja-select placeholder="Liste des pays, standard select chargé à la demande" [itemListService]="countriesListService" textField="naqme" valueField="code" [(ngModel)]="country"></deja-select>
-				<deja-select placeholder="Autocomplete filtré à la demande" type="autocomplete" [itemListService]="countriesListService" textField="naqme" valueField="code" [(ngModel)]="country"></deja-select>
+            <deja-select placeholder="Autocomplete filtré à la demande" type="autocomplete" [itemListService]="countriesListService" textField="naqme" valueField="code" [(ngModel)]="country" min-search-length="2"></deja-select>
 				<deja-select required selectionClearable placeholder="Liste des pays, avec templating" valueField="code" [(ngModel)]="countryForTemnplate" [items]="countriesForTemplate">
 					<template #itemTemplate let-item>
 						<span>{{ item.naqme }}</span>

@@ -53,7 +53,7 @@ Crée une liste récursive.
     <td>Texte affiché si aucune data dans la liste</td>
 </tr>
 <tr>
-    <td>minlength</td>
+    <td>min-search-length</td>
     <td>number</td>
     <td>0</td>
     <td>Permet de définir la longeur minimum de caractères dans le champ de recherche avant que la recherche ou le filtrage soient effectués.</td>

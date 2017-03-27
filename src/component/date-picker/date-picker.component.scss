@@ -1,6 +1,8 @@
 @import "../../scss/variables/colors";
-deja-date-picker {
+:host {
+    $deep: '/deep/';
 	#deja-dropdown {
+        overflow: visible;
 		box-shadow: rgba(0, 0, 0, 0.247059) 0px 14px 45px, rgba(0, 0, 0, 0.219608) 0px 10px 18px;
 		.actions {
 			position: absolute;
@@ -17,7 +19,8 @@ deja-date-picker {
 	#deja-backdrop {
 		background-color: transparent;
 	}
-	#deja-date-selector {
+    #date-selector {
+        #{$deep} {
 		.mat-input-wrapper {
 			padding-right: 24px;
 		}
@@ -25,7 +28,7 @@ deja-date-picker {
 			position: absolute;
 			right: 0;
 			top: 50%;
-			margin-top: -12px;
+                transform: translateY(-68%);
 		}
 		#clear-button {
 			cursor: pointer;
@@ -36,7 +39,9 @@ deja-date-picker {
 			}
 		}
 	}
+    }
 	&.ng-invalid {
+        #{$deep} {
 		.mat-input-wrapper {
 			.mat-input-underline {
 				.mat-input-ripple {
@@ -57,4 +62,4 @@ deja-date-picker {
 			bottom: -0.8em;
 		}
 	}
-}
+}}

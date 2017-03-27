@@ -1,16 +1,16 @@
-<div class="deja-date-time-selector" [class.with-time]="time" tabindex="-1">
-    <div class="deja-date-selector">
-        <div class="header">
+<div id="date-time-selector" [attr.with-time]="time" tabindex="-1">
+    <div id="date-selector">
+        <div id="date-header">
             <div class="year">
                 <md-icon (click)="changeYear(-1)">navigate_before</md-icon>
                 <div>{{displayedDate.getFullYear()}}</div>
                 <md-icon (click)="changeYear(1)">navigate_next</md-icon>
             </div>
-            <div class="current-date">
+            <div current>
                 {{displayedDate.toLocaleDateString()}}
             </div>
         </div>
-        <div class="sub-header">
+        <div id="sub-header">
             <div class="month">
                 <div class="previous"><button md-mini-fab (click)="changeMonth(-1)"><md-icon>navigate_before</md-icon></button></div>
                 <span>{{displayedDate.toLocaleString(local, { month: 'long' })}} {{displayedDate.getFullYear()}}</span>
@@ -20,30 +20,20 @@
                 <span *ngFor="let day of days">{{day}}</span>
             </div>
         </div>
-        <div class="body" #bodyElem tabindex="-1" [attr.keyboardNavigation]="keyboardNavigation">
-            <div 
-                class="date" 
-                *ngFor="let dateSelectorItem of currentDays" 
-            >  
-                <div 
-                    class="day"
-                    [class.background]="dateSelectorItem.background"
-                    [class.disabled]="dateSelectorItem.disabled"
-                    [class.current-date]="dateSelectorItem.currentDate"
-                    [class.selected-date]="(selectedDate && dateSelectorItem.date.toLocaleDateString() === selectedDate.toLocaleDateString()) ? true : null"
-                    (click)="dateClicked(dateSelectorItem)"
-                >
-                    <span>{{dateSelectorItem.date.getDate()}}</span>
+        <div id="date-body" (keydown)="keyDown($event)" tabindex="0" [attr.keyboardNavigation]="keyboardNavigation">
+            <div class="date" *ngFor="let dateSelectorItem of currentDays; let index=index">
+                <div class="day" [attr.dateindex]="index" [class.background]="dateSelectorItem.background" [class.disabled]="dateSelectorItem.disabled" [attr.current]="dateSelectorItem.currentDate || null" [attr.selected]="dateSelectorItem.selected || null">
+                    {{dateSelectorItem.date.getDate()}}
                 </div>
             </div>
             <div class="date" *ngFor="let emptyDay of emptyDays"></div>
         </div>
     </div>
-    <div class="deja-time-selector" *ngIf="time">
-        <div class="header">
+    <div id="time-selector" *ngIf="time">
+        <div id="time-header">
             {{('0'+displayedDate.getHours()).slice(-2)}}:{{('0'+displayedDate.getMinutes()).slice(-2)}}
         </div>
-        <div class="body">
+        <div id="time-body">
             <deja-circular-picker [ngModel]="displayedDate.getMinutes()" (ngModelChange)="updateMinutes($event)" [ranges]="clocks.minutes.ranges" [outerLabels]="true" class="minutes"></deja-circular-picker>
             <deja-circular-picker [ngModel]="getHoursModel()" (ngModelChange)="updateHours($event)" [ranges]="clocks.hours.ranges" class="hours">
                 <template #cursorTemplate #labelTemplate let-value>
