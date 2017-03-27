@@ -9,14 +9,13 @@
  *
  */
 
-import {AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnDestroy, Output, ViewChild, ViewEncapsulation} from '@angular/core';
-import {isUndefined} from 'util';
-import {AutoCompleteSingleton} from './options/autocomplete-singleton.model';
-import {IEditorLanguage} from './options/editor-language.model';
-import {IEditorOptions} from './options/editor-options.model';
-import {IEditorScrollbarOptions} from './options/editor-scrollbar-options';
-import {IEditorTheme} from './options/editor-theme.component';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { isUndefined } from 'util';
 import { MonacoEditorService } from './monaco-editor.service';
+import { IEditorLanguage } from './options/editor-language.model';
+import { IEditorOptions } from './options/editor-options.model';
+import { IEditorScrollbarOptions } from './options/editor-scrollbar-options';
+import { IEditorTheme } from './options/editor-theme.component';
 
 declare const monaco: any;
 
@@ -90,7 +89,6 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
 
     @Input() public language: IEditorLanguage;
 
-    @Input() public disableAutocomplete: boolean;
     @Input() public isDiffEditor: boolean;
     @Input() public monacoLibPath = 'vs';
 
@@ -200,11 +198,6 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
 
         // Manually set monaco size because MonacoEditor doesn't work with Flexbox css
         myDiv.setAttribute('style', `height: ${myDiv.parentElement.offsetHeight}px; width:100%;`);
-
-        // Init Autocomplete if not disabled
-        if (!this.disableAutocomplete) {
-            AutoCompleteSingleton.getInstance().initAutoComplete(this.language);
-        }
 
         // Trigger on change event for simple editor
         this.getOriginalModel().onDidChangeContent(() => {
