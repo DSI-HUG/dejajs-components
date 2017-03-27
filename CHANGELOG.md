@@ -1,7 +1,16 @@
 <a name="@next"></a>
 # [@next] (2017-03-xx)
 
-### Breaking changes from 1.4.2-beta.19
+### Breaking changes from 1.4.2-beta.24
+
+### Features
+
+### Bug fixes #
+
+<a name="1.4.2-beta.24"></a>
+# [1.4.2-beta.24] (2017-03-27)
+
+### Breaking changes from 1.4.2-beta.23
 * **DejaCircularPickerComponent:**  circular-picker-container replaced by the host -> deja-circular-picker
 
 ### Features
