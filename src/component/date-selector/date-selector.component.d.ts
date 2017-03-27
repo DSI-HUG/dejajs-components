@@ -1,6 +1,4 @@
-import { AfterContentInit, ElementRef, EventEmitter } from '@angular/core';
-import 'rxjs/Rx';
-import { Observable } from 'rxjs/Rx';
+import { AfterContentInit, ChangeDetectorRef, ElementRef, EventEmitter } from '@angular/core';
 import { IDateSelectorItem } from './date-selector-item.model';
 export declare enum DaysOfWeek {
     Sunday = 0,
@@ -12,15 +10,13 @@ export declare enum DaysOfWeek {
     Saturday = 6,
 }
 export declare class DejaDateSelectorComponent implements AfterContentInit {
+    private changeDetectorRef;
     startDay: DaysOfWeek;
     disableDates: Array<(DaysOfWeek | Date)>;
     dateMax: Date;
     dateMin: Date;
     dateChange: EventEmitter<{}>;
-    dateSelectorBodyElem: ElementRef;
-    _keyboardNavigation: boolean;
     protected local: string;
-    protected keydown: Observable<any>;
     protected beginOffset: number;
     protected clocks: {
         hours: {
@@ -38,8 +34,8 @@ export declare class DejaDateSelectorComponent implements AfterContentInit {
             }[];
         };
     };
-    private keyboardNavigationPos;
-    private mouseMoveObs;
+    protected keyboardNavigation: boolean;
+    private keyboardNavigation$;
     private currentDays;
     private currentDate;
     private selectedDate;
@@ -50,19 +46,17 @@ export declare class DejaDateSelectorComponent implements AfterContentInit {
     private onTouchedCallback;
     private onChangeCallback;
     time: boolean;
-    keyboardNavigation: boolean;
-    constructor();
+    constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef);
     ngAfterContentInit(): void;
-    keyEventSubscriber(event: KeyboardEvent): boolean;
     value: Date;
     writeValue(value: Date): void;
     registerOnChange(fn: any): void;
     registerOnTouched(fn: any): void;
     getAllDaysInMonth(month: number, year: number): IDateSelectorItem[];
     daysInMonth(month: any, year: any): number;
+    keyDown(event: KeyboardEvent): boolean;
     protected changeMonth(x: number): void;
     protected changeYear(x: number): void;
-    protected dateClicked(dateSelectorItem: IDateSelectorItem): void;
     protected updateHours(hours: number): void;
     protected updateMinutes(minutes: number): void;
     protected getHoursModel(): number;

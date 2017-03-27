@@ -1,8 +1,8 @@
-import { ElementRef, EventEmitter, OnInit } from '@angular/core';
-import 'rxjs/Rx';
+import { ChangeDetectorRef, ElementRef, EventEmitter, OnInit } from '@angular/core';
 import { DaysOfWeek, DejaDateSelectorComponent } from '../date-selector';
 export declare class DejaDatePickerComponent implements OnInit {
     private elementRef;
+    private changeDetectorRef;
     dateMax: Date;
     dateMin: Date;
     dropdownContainerId: string;
@@ -15,8 +15,7 @@ export declare class DejaDatePickerComponent implements OnInit {
     dateChange: EventEmitter<{}>;
     protected mdHint: any;
     private inputElementRef;
-    private _useDropDown;
-    private keydown;
+    private _showDropDown;
     private keyDownSubscription;
     private _disabled;
     private _time;
@@ -24,10 +23,10 @@ export declare class DejaDatePickerComponent implements OnInit {
     private inputModel;
     private onTouchedCallback;
     private onChangeCallback;
-    constructor(elementRef: ElementRef);
+    constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef);
     ngOnInit(): void;
     private readonly containerElement;
-    private useDropDown;
+    private showDropDown;
     disabled: boolean;
     time: boolean;
     close(): void;
@@ -36,8 +35,9 @@ export declare class DejaDatePickerComponent implements OnInit {
     writeValue(value: Date): void;
     registerOnChange(fn: any): void;
     registerOnTouched(fn: any): void;
+    setFocus(): void;
     protected toggleDateSelector(event: Event): boolean;
-    protected onDateChange(event: Date): void;
+    protected onDateChange(newDate: Date): void;
     protected updateModel(date: string | Date): void;
     protected reset(): void;
 }
