@@ -11,7 +11,7 @@
 
 import { Directive, ElementRef, HostBinding, Input } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
-import { Observable } from 'rxjs/Rx';
+import { Observable, Subject } from 'rxjs/Rx';
 import { DejaClipboardService } from '../../common/core/clipboard/clipboard.service';
 import { IDejaDragEvent } from './index';
 
@@ -50,40 +50,25 @@ export class DejaDroppableDirective {
 
     constructor(elementRef: ElementRef, private clipboardService: DejaClipboardService) {
         const element = elementRef.nativeElement as HTMLElement;
+        const dragDrop$ = new Subject<string>();
+        const kill$ = new Subject();
+        const dragEnd$ = Observable.from(kill$).filter((value) => !value);
 
-        Observable.fromEvent(element, 'dragenter')
-            .filter(() => !!this.context)
-            .subscribe(() => {
-                const dragleave$ = Observable.fromEvent(element, 'dragleave');
-                dragleave$
-                    .first()
-                    .subscribe((leaveEvent: DragEvent) => {
-                        if (this.context && this.context.dragleavecallback) {
-                            const bounds = element.getBoundingClientRect();
-                            const inside = leaveEvent.x >= bounds.left && leaveEvent.x <= bounds.right && leaveEvent.y >= bounds.top && leaveEvent.y <= bounds.bottom;
-                            if (!inside) {
-                                const dragInfos = this.clipboardService.get(this.draginfokey) as { [key: string]: any };
-                                if (dragInfos) {
-                                    const e = leaveEvent as IDejaDropEvent;
-                                    e.dragInfo = dragInfos;
-                                    e.dragObject = dragInfos[this.objectKey];
-                                    e.dragElement = element;
-                                    e.itsMe = dragInfos[this.elementKey] === element;
-
-                                    this.context.dragleavecallback(e);
-                                    if (e.defaultPrevented) {
-                                        leaveEvent.preventDefault();
-                                    }
-                                }
+        Observable.from(dragDrop$)
+            .distinctUntilChanged()
+            .subscribe((value) => {
+                if (value === 'dragenter') {
+                    // console.log('DejaDragEnter');
+                    if (this.context.dragentercallback) {
+                        const event = new CustomEvent('DejaDragEnter', { cancelable: false });
+                        this.context.dragentercallback(event);
                             }
-                        }
-                    });
 
-                const drop$ = Observable.fromEvent(element, 'drop');
-                drop$
-                    .first()
+                    Observable.fromEvent(element, 'drop')
+                        .takeUntil(dragEnd$)
                     .subscribe((dropEvent: DragEvent) => {
-                        if (this.context && this.context.dropcallback) {
+                            console.log('DejaDrop');
+                            if (this.context.dropcallback) {
                             const dragInfos = this.clipboardService.get(this.draginfokey) as { [key: string]: any };
                             if (dragInfos) {
                                 const e = dropEvent as IDejaDropEvent;
@@ -99,15 +84,13 @@ export class DejaDroppableDirective {
                                 }
                             }
                         }
+                            dragDrop$.next('drop');
                     });
 
-                const kill$ = Observable
-                    .merge(dragleave$, drop$)
-                    .first();
-
                 Observable.fromEvent(element, 'dragover')
-                    .takeUntil(kill$)
+                        .takeUntil(dragEnd$)
                     .subscribe((overEvent: DragEvent) => {
+                            // console.log('DejaDragOver');
                         if (!this._allEvents && this.lastTarget && this.lastTarget === overEvent.target) {
                             if (this.lastAccept) {
                                 overEvent.preventDefault();
@@ -115,7 +98,7 @@ export class DejaDroppableDirective {
                             return;
                         }
 
-                        if (this.context && this.context.dragovercallback) {
+                            if (this.context.dragovercallback) {
                             const dragInfos = this.clipboardService.get(this.draginfokey) as { [key: string]: any };
                             if (dragInfos) {
                                 const e = overEvent as IDejaDropEvent;
@@ -133,6 +116,33 @@ export class DejaDroppableDirective {
                             }
                         }
                     });
+                } else if (value === 'dragleave') {
+                    // console.log('DejaDragLeave');
+                    if (this.context.dragleavecallback) {
+                        const event = new CustomEvent('DejaDragLeave', { cancelable: false });
+                        this.context.dragleavecallback(event);
+                    }
+                    kill$.next();
+                } else {
+                    kill$.next();
+                }
+            });
+
+        Observable.fromEvent(element, 'dragenter')
+            .filter(() => !!this.context)
+            .filter(() => !!this.clipboardService.get(this.draginfokey))
+            .subscribe(() => dragDrop$.next('dragenter'));
+
+        Observable.fromEvent(element, 'dragleave')
+            .filter(() => !!this.context)
+            .filter(() => !!this.clipboardService.get(this.draginfokey))
+            .subscribe((leaveEvent: DragEvent) => {
+                // console.log('dragleave ' + (leaveEvent.target as HTMLElement).tagName);
+                const bounds = element.getBoundingClientRect();
+                const inside = leaveEvent.x >= bounds.left && leaveEvent.x <= bounds.right && leaveEvent.y >= bounds.top && leaveEvent.y <= bounds.bottom;
+                if (!inside) {
+                    dragDrop$.next('dragleave');
+                }
             });
     }
 }
@@ -142,7 +152,8 @@ export interface IDejaDropEvent extends IDejaDragEvent {
 }
 
 export interface IDejaDropContext {
+    dragentercallback: (event: CustomEvent) => void;
     dropcallback: (event: IDejaDropEvent) => void;
     dragovercallback: (event: IDejaDropEvent) => void;
-    dragleavecallback: (event: IDejaDropEvent) => void;
+    dragleavecallback: (event: CustomEvent) => void;
 }

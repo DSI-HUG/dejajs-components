@@ -9,12 +9,10 @@
  *
  */
 
-import { AfterContentInit, Component, ElementRef, EventEmitter, forwardRef, Input, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, forwardRef, Input, Output } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
-import 'rxjs/Rx';
-import { Observable, Subscription } from 'rxjs/Rx';
-import { Position } from '../../common/core/graphics';
+import { Observable, Subject } from 'rxjs/Rx';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { IDateSelectorItem } from './date-selector-item.model';
 
@@ -37,7 +35,7 @@ const DejaDateSelectorComponentValueAccessor = {
 };
 
 @Component({
-    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [DejaDateSelectorComponentValueAccessor],
     selector: 'deja-date-time-selector',
     styleUrls: ['./date-selector.scss'],
@@ -51,13 +49,7 @@ export class DejaDateSelectorComponent implements AfterContentInit {
 
     @Output() public dateChange = new EventEmitter();
 
-    @ViewChild('bodyElem') public dateSelectorBodyElem: ElementRef;
-
-    public _keyboardNavigation = false;
-
     protected local = 'fr';
-
-    protected keydown: Observable<any>;
 
     // Time
     protected beginOffset = Math.PI / 3;
@@ -76,8 +68,8 @@ export class DejaDateSelectorComponent implements AfterContentInit {
     };
     // /Time
 
-    private keyboardNavigationPos: Position;
-    private mouseMoveObs: Subscription;
+    protected keyboardNavigation = false;
+    private keyboardNavigation$ = new Subject();
 
     private currentDays: IDateSelectorItem[];
     private currentDate: Date = new Date();
@@ -95,103 +87,42 @@ export class DejaDateSelectorComponent implements AfterContentInit {
     @Input()
     public set time(value: boolean) {
         this._time = coerceBooleanProperty(value);
+        this.changeDetectorRef.markForCheck();
     }
 
     public get time() {
         return this._time;
     }
 
-    public get keyboardNavigation() {
-        return this._keyboardNavigation;
-    }
+    constructor(elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef) {
+        const element = elementRef.nativeElement as HTMLElement;
 
-    public set keyboardNavigation(value: boolean) {
-        this._keyboardNavigation = value;
-        if (value) {
-            if (this.mouseMoveObs) {
-                return;
+        Observable.fromEvent(element, 'click').subscribe((event: Event) => {
+            const target = event.target as HTMLElement;
+            if (target.hasAttribute('dateindex')) {
+                const dateSelectorItem = this.currentDays[+target.getAttribute('dateindex')];
+                if (!dateSelectorItem.disabled) {
+                    this.value = dateSelectorItem.date;
             }
-            this.mouseMoveObs = Observable.fromEvent(this.dateSelectorBodyElem.nativeElement, 'mousemove').subscribe((event: MouseEvent) => {
-                if (!this.keyboardNavigationPos) {
-                    this.keyboardNavigationPos = new Position(event.x, event.y);
-                } else if (Math.abs(event.x - this.keyboardNavigationPos.left) > 5 || Math.abs(event.y - this.keyboardNavigationPos.top) > 5) {
-                    this.keyboardNavigation = false;
-                    delete this.keyboardNavigationPos;
                 }
             });
-        } else if (this.mouseMoveObs) {
-            this.mouseMoveObs.unsubscribe();
-            delete this.mouseMoveObs;
-        }
-    }
 
-    constructor() { }
+        Observable.from(this.keyboardNavigation$)
+            .subscribe(() => {
+                this.keyboardNavigation = true;
+                Observable.fromEvent(element, 'mouseenter')
+                    .first()
+                    .subscribe(() => {
+                        this.keyboardNavigation = false;
+                        this.changeDetectorRef.markForCheck();
+                    });
+            });
+    }
 
     public ngAfterContentInit() {
         if (!this.displayedDate) {
             this.displayedDate = this.currentDate;
             this.bind();
-        }
-
-        this.keydown = Observable.fromEvent(this.dateSelectorBodyElem.nativeElement, 'keydown');
-        this.dateSelectorBodyElem.nativeElement.focus();
-        this.keydown.subscribe((event: KeyboardEvent) => this.keyEventSubscriber(event));
-    }
-
-    public keyEventSubscriber(event: KeyboardEvent) {
-        if (!this.selectedDate) {
-            this.selectedDate = new Date(this.currentDate);
-        }
-        this.keyboardNavigation = true;
-        switch (event.keyCode) {
-            case KeyCodes.PageUp:
-            case KeyCodes.PageDown:
-            case KeyCodes.UpArrow:
-            case KeyCodes.DownArrow:
-            case KeyCodes.LeftArrow:
-            case KeyCodes.RightArrow:
-                event.preventDefault();
-                const d = new Date(this.selectedDate);
-                switch (event.keyCode) {
-                    case KeyCodes.PageUp:
-                        // d.setMonth(d.getMonth() - 1);
-                        this.setMonthIfPossible(d, -1);
-                        break;
-                    case KeyCodes.PageDown:
-                        // d.setMonth(d.getMonth() + 1);
-                        this.setMonthIfPossible(d, 1);
-                        break;
-                    case KeyCodes.UpArrow:
-                        // d.setDate(d.getDate() - 7);
-                        this.setDateIfPossible(d, -7);
-                        break;
-                    case KeyCodes.DownArrow:
-                        // d.setDate(d.getDate() + 7);
-                        this.setDateIfPossible(d, 7);
-                        break;
-                    case KeyCodes.LeftArrow:
-                        // d.setDate(d.getDate() - 1);
-                        this.setDateIfPossible(d, -1);
-                        break;
-                    case KeyCodes.RightArrow:
-                        // d.setDate(d.getDate() + 1);
-                        this.setDateIfPossible(d, 1);
-                        break;
-                    default:
-                        break;
-                }
-                // this.selectedDate = d;
-                // this.displayedDate = d;
-                // this.bind();
-                break;
-            case KeyCodes.Space:
-            case KeyCodes.Enter:
-                event.preventDefault();
-                this.onChangeCallback(this.selectedDate);
-                break;
-
-            default:
-                return true;
         }
     }
 
@@ -302,18 +233,70 @@ export class DejaDateSelectorComponent implements AfterContentInit {
         return new Date(year, month, 0).getDate();
     }
 
+    public keyDown(event: KeyboardEvent) {
+        if (!this.selectedDate) {
+            this.selectedDate = new Date(this.currentDate);
+        }
+
+        this.keyboardNavigation$.next();
+        switch (event.keyCode) {
+            case KeyCodes.PageUp:
+            case KeyCodes.PageDown:
+            case KeyCodes.UpArrow:
+            case KeyCodes.DownArrow:
+            case KeyCodes.LeftArrow:
+            case KeyCodes.RightArrow:
+                event.preventDefault();
+                const d = new Date(this.selectedDate);
+                switch (event.keyCode) {
+                    case KeyCodes.PageUp:
+                        // d.setMonth(d.getMonth() - 1);
+                        this.setMonthIfPossible(d, -1);
+                        break;
+                    case KeyCodes.PageDown:
+                        // d.setMonth(d.getMonth() + 1);
+                        this.setMonthIfPossible(d, 1);
+                        break;
+                    case KeyCodes.UpArrow:
+                        // d.setDate(d.getDate() - 7);
+                        this.setDateIfPossible(d, -7);
+                        break;
+                    case KeyCodes.DownArrow:
+                        // d.setDate(d.getDate() + 7);
+                        this.setDateIfPossible(d, 7);
+                        break;
+                    case KeyCodes.LeftArrow:
+                        // d.setDate(d.getDate() - 1);
+                        this.setDateIfPossible(d, -1);
+                        break;
+                    case KeyCodes.RightArrow:
+                        // d.setDate(d.getDate() + 1);
+                        this.setDateIfPossible(d, 1);
+                        break;
+                    default:
+                        break;
+                }
+                // this.selectedDate = d;
+                // this.displayedDate = d;
+                // this.bind();
+                break;
+            case KeyCodes.Space:
+            case KeyCodes.Enter:
+                event.preventDefault();
+                this.onChangeCallback(this.selectedDate);
+                break;
+
+            default:
+                return true;
+        }
+    }
+
     protected changeMonth(x: number) {
         this.setMonthIfPossible(this.displayedDate, x);
     }
 
     protected changeYear(x: number) {
         this.setYearIfPossible(this.displayedDate, x);
-    }
-
-    protected dateClicked(dateSelectorItem: IDateSelectorItem) {
-        if (!dateSelectorItem.disabled) {
-            this.value = dateSelectorItem.date;
-        }
     }
 
     protected updateHours(hours: number) {
@@ -358,13 +341,18 @@ export class DejaDateSelectorComponent implements AfterContentInit {
 
         this.currentDays = this.getAllDaysInMonth(month, year);
 
-        this.currentDays.forEach((day: IDateSelectorItem) => {
-            day.disabled = this.isDisabledDate(day.date);
-        });
+        this.currentDays.forEach((day: IDateSelectorItem) => day.disabled = this.isDisabledDate(day.date));
 
         for (let i = 0; i < 7; i++) {
             this.days[i] = this.currentDays[i].date.toLocaleString('fr', { weekday: 'narrow' });
         }
+
+        if (this.selectedDate && this.selectedDate.getFullYear() === year && this.selectedDate.getMonth() === month) {
+            const selectedDay = this.selectedDate.getDate();
+            this.currentDays.forEach((day: IDateSelectorItem) => day.selected = day.date.getDate() === selectedDay && day.date.getMonth() === month);
+        }
+
+        this.changeDetectorRef.markForCheck();
     }
 
     /**

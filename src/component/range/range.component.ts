@@ -210,8 +210,10 @@ export class DejaRangeComponent implements ControlValueAccessor {
 
             const up$ = Observable
                 .fromEvent(document, 'mouseup');
+
             const leave$ = Observable
                 .fromEvent(document.body, 'mouseleave');
+
             const kill$ = Observable.merge(up$, leave$)
                 .first()
                 .do(() => {

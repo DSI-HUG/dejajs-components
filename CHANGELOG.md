@@ -1,11 +1,16 @@
 <a name="@next"></a>
 # [@next] (2017-03-xx)
 
-### Breaking changes from 1.4.2-beta.23
+### Breaking changes from 1.4.2-beta.19
+* **DejaCircularPickerComponent:**  circular-picker-container replaced by the host -> deja-circular-picker
 
 ### Features
+* **DatePicker:** Date picker is now compatible with Firefx, Edge and Internet Explorer.
+* **DatePicker:** Date picker working OnPush mode.
+* **CircularPicker:** Circular picker working OnPush mode.
 
 ### Bug fixes #
+* **DragDropDirective:** DragDropDirective multiple drop fix.
 
 <a name="1.4.2-beta.23"></a>
 # [1.4.2-beta.23] (2017-03-24)
