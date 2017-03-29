@@ -43,13 +43,13 @@ export class DejaAccordionGroupComponent {
     public toggleOpen(event: MouseEvent): void {
         event.preventDefault();
 
-        let target = event.target as HTMLElement; 
+        let target = event.target as HTMLElement;
         const element = event.currentTarget as HTMLElement;
-        
-        while(target.parentElement && target !== element) {
-            if(target.tagName !== 'deja-accordion-header') {
+
+        while (target.parentElement && target !== element) {
+            if (target.localName === 'deja-accordion-header') {
                 this.isOpen = !this.isOpen;
-            } 
+            }
             target = target.parentElement;
         }
     }
@@ -59,7 +59,7 @@ export class DejaAccordionGroupComponent {
     selector: 'deja-accordion-header',
     template: `<ng-content></ng-content>`,
 })
-export class DejaAccordionHeaderComponent { 
+export class DejaAccordionHeaderComponent {
     @HostBinding('class.accordion-header') true;
 }
 
