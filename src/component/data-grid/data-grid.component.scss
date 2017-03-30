@@ -13,9 +13,9 @@ deja-grid {
 		#list {
 			ul {
 				>li {
-					&.current {
+					&[current="true"] {
 						box-shadow: none;
-						.cell-wrapper.current {
+						.cell-wrapper[current="true"] {
 							box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.3);
 						}
 					}

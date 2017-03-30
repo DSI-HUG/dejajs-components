@@ -1,5 +1,7 @@
-<span *ngIf="vpBeforeSize" [style.flex-basis.px]="vpBeforeSize"></span>
-<span #elitem *ngFor="let item of vpItems; let index = index" [attr.index]="vpStartIndex + index" [style.flex-basis]="item.size ? item.size + 'px' : 'auto'">
+<div #wrapper id="viewport-wrapper" [fxLayout]="isHorizontal ? 'row' : 'column'">
+	<span *ngIf="vpBeforeSize" fxFlex="0 0 {{vpBeforeSize}}px"></span>
+	<span #elitem *ngFor="let item of vpItems; let index = index" [attr.index]="vpStartIndex + index" fxFlex="0 0 {{item.size ? item.size + 'px' : 'auto'}}">
     <template [ngTemplateOutlet]="itemTemplate" [ngOutletContext]="{ $implicit: item.model, index: vpStartIndex + index }"></template>
 </span>
-<span *ngIf="vpAfterSize" [style.flex-basis.px]="vpAfterSize"></span>
+	<span *ngIf="vpAfterSize" fxFlex="0 0 {{vpAfterSize}}px"></span>
+</div>

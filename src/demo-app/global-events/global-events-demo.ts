@@ -29,6 +29,10 @@ export class GlobalEventsDemoComponent {
             zone.run(() => {
         this.model.date = new Date(params[0]);
                 changeDetectorRef.markForCheck();
+
+                if (window.parent && window.parent !== window && window.parent['sendAction']) {
+                    window.parent['sendAction']('From IFrame');
+                }
       });
     });
   }

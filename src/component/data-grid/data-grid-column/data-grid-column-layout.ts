@@ -9,6 +9,7 @@
  *
  */
 
+import { Subject } from 'rxjs/Rx';
 import { IDejaGridColumn } from '../index';
 
 export class IDejaGridColumnLayout {
@@ -16,4 +17,5 @@ export class IDejaGridColumnLayout {
     public vpBeforeWidth: number;
     public vpAfterWidth: number;
     public columns: IDejaGridColumn[];
+    public refresh$: Subject<void>;
 }

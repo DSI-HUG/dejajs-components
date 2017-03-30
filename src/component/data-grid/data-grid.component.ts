@@ -1,3 +1,4 @@
+import { DejaGridHeaderComponent } from './data-grid-header/data-grid-header.component';
 /*
  * *
  *  @license
@@ -9,11 +10,10 @@
  *
  */
 
-import { Component, ContentChild, ElementRef, EventEmitter, forwardRef, HostBinding, HostListener, Input, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, forwardRef, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
-import { Observable, Subscription } from 'rxjs/Rx';
-import { clearTimeout, setTimeout } from 'timers';
+import { Observable, Subject, Subscription } from 'rxjs/Rx';
 import { GroupingService, IGroupInfo } from '../../common/core/grouping';
 import { IItemBase, IItemTree, ItemListBase, ItemListService, ViewportMode } from '../../common/core/item-list';
 import { KeyCodes } from '../../common/core/keycodes.enum';
@@ -32,6 +32,7 @@ const DejaGridComponentValueAccessor = {
 
 /** The grid */
 @Component({
+    changeDetection: ChangeDetectionStrategy.Default,
     encapsulation: ViewEncapsulation.None,
     providers: [DejaGridComponentValueAccessor],
     selector: 'deja-grid',
@@ -40,13 +41,13 @@ const DejaGridComponentValueAccessor = {
     ],
     templateUrl: './data-grid.component.html',
 })
-export class DejaGridComponent {
-    /** Texte à afficher par default dans la zone de recherche */
+export class DejaGridComponent implements OnDestroy {
     @Input() public placeholder: string;
+    /** Texte à afficher par default dans la zone de recherche */
     /** Texte affiché si aucune donnée n'est présente dans le tableau */
     @Input() public nodataholder: string;
     /** Permet de définir la longueur minimale de caractères dans le champ de recherche avant que la recherche ou le filtrage soient effectués */
-    @Input('min-search-length') public minlength = 0;
+    @Input('min-search-length') public minSearchLength = 0;
     /** Correspond au ngModel du champ de filtrage ou recherche */
     @Input() public query = '';
     /** Hauteur maximum avant que le composant affiche une scrollbar
@@ -112,10 +113,6 @@ export class DejaGridComponent {
     protected onTouchedCallback: () => void = noop;
     protected onChangeCallback: (_: any) => void = noop;
 
-    // Disable text selection during drag and drop
-    protected disableUserSelectionTimeOut: NodeJS.Timer;
-    @HostBinding('attr.disableselection') protected disableUserSelection;
-
     @ContentChild('rowTemplate') private rowTemplateInternal;
     @ContentChild('parentRowTemplate') private parentRowTemplateInternal;
     @ContentChild('cellTemplate') private _cellTemplate;
@@ -125,17 +122,29 @@ export class DejaGridComponent {
     @ContentChild('searchPrefixTemplate') private searchPrefixTemplateInternal;
     @ContentChild('searchSuffixTemplate') private searchSuffixTemplateInternal;
 
-    private printColumnLayoutTimeout: NodeJS.Timer;
-    private printColumnLayout = false;
+    @ViewChild(DejaGridHeaderComponent) private header: DejaGridHeaderComponent;
+    @ViewChild(DejaTreeListComponent) private treeListComponent: DejaTreeListComponent;
+
+    private _rows: IItemBase[] | Promise<IItemBase[]> | Observable<IItemBase[]>;
+    private _columns: IDejaGridColumn[];
+    private _columnLayout = {
+        scrollLeft: 0,
+        vpBeforeWidth: 0,
+        vpAfterWidth: 0,
+        columns: [],
+        refresh$: new Subject<void>(),
+    } as IDejaGridColumnLayout;
+    private lastScrollLeft = 0;
+
+    private printColumnLayout$ = new Subject();
+    private disableUserSelection$ = new Subject();
+
     private noHorizontalScroll = false;
-    private _currentColumn: IDejaGridColumn;
     private _itemListService: ItemListService;
-    private clickedColumn: IDejaGridColumn;
-    private clickedTime: number;
     private sizingLayoutInfos: DejaGridColumnsLayoutInfos;
     private columnsLayoutInfos: DejaGridColumnsLayoutInfos;
-    private mouseUpObs: Subscription;
-    private resizeObs: Subscription;
+    private subscriptions = [] as Subscription[];
+    private hasPercentageColumns = false;
     private _sortable = false;
     private _searchArea = false;
     private _groupArea = false;
@@ -267,17 +276,13 @@ export class DejaGridComponent {
             if (this._rows instanceof Array) {
                 this.calcColumnsLayout(this._rows);
             } else {
-                const promise = this._rows as Promise<IItemBase[]>;
-                if (promise.then) {
-                    promise.then((itms) => {
-                        this.calcColumnsLayout(itms);
-                    });
-                } else {
-                    const observable = this._rows as Observable<IItemBase[]>;
-                    observable.subscribe((itms) => {
-                        this.calcColumnsLayout(itms);
-                    });
+                let observable = this._rows as Observable<IItemBase[]>;
+                if (!observable.subscribe) {
+                    const promise = this._rows as Promise<IItemBase[]>;
+                    observable = Observable.fromPromise(promise);
                 }
+
+                observable.subscribe((itms) => this.calcColumnsLayout(itms));
             }
         }
     }
@@ -290,15 +295,19 @@ export class DejaGridComponent {
     /** Définit la colonne en surbrillance. */
     @Input()
     public set currentColumn(column: IDejaGridColumn) {
-        this._currentColumn = column;
+        this.columns.forEach((c) => c.isCurrent = false);
         if (column) {
+            column.isCurrent = true;
             this.ensureColumnVisible(column);
+        }
+        if (this._columnLayout) {
+            this._columnLayout.refresh$.next();
         }
     }
 
     /** Retourne la colonne en surbrillance. */
     public get currentColumn() {
-        return this._currentColumn;
+        return this.columns.find((c) => c.isCurrent);
     }
 
     /** Definit le service de liste utilisé par ce composant. Ce srevice permet de controller dynamiquement la liste, ou de faire du lazyloading. */
@@ -353,14 +362,89 @@ export class DejaGridComponent {
         return this._columnLayout;
     }
 
-    private _rows: IItemBase[] | Promise<IItemBase[]> | Observable<IItemBase[]>;
-    private _columns: IDejaGridColumn[];
-    private _columnLayout = {} as IDejaGridColumnLayout;
-    private lastScrollLeft = 0;
-    @ViewChild(DejaTreeListComponent) private treeListComponent: DejaTreeListComponent;
+    constructor(_changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef) {
+        const element = this.elementRef.nativeElement as HTMLElement;
 
-    constructor(private elementRef: ElementRef) {
         this.clearColumnLayout();
+
+        this.subscriptions.push(Observable.from(this.printColumnLayout$)
+            .debounceTime(1000)
+            .subscribe(() => {
+                console.log('');
+                console.log('Column layout:');
+                console.log(JSON.stringify(this._columnLayout.columns, null, 4));
+                console.log('');
+            }));
+
+        this.subscriptions.push(Observable.from(this.disableUserSelection$)
+            .do(() => element.setAttribute('disableselection', ''))
+            .debounceTime(1000)
+            .subscribe(() => element.removeAttribute('disableselection')));
+
+        this.subscriptions.push(Observable.fromEvent(window, 'resize')
+            .filter(() => this.hasPercentageColumns)
+            .subscribe(() => {
+                this.calcColumnsLayout();
+            }));
+
+        this.subscriptions.push(Observable.fromEvent(element, 'keydown')
+            .subscribe((event: KeyboardEvent) => {
+                const findPrev = (index: number) => {
+                    if (index === -1) {
+                        index = this.columns.length;
+                    }
+                    while (--index >= 0) {
+                        const column = this.columns[index];
+                        if (column.w > 0) {
+                            return column;
+                        }
+                    }
+                    return this.currentColumn;
+                };
+
+                const findNext = (index: number) => {
+                    while (++index < this.columns.length) {
+                        const column = this.columns[index];
+                        if (column.w > 0) {
+                            return column;
+                        }
+                    }
+                    return this.currentColumn;
+                };
+
+                switch (event.keyCode) {
+                    case KeyCodes.LeftArrow:
+                        this.currentColumn = this.columns && findPrev(this.columns.findIndex((c) => c.isCurrent));
+                        return false;
+
+                    case KeyCodes.RightArrow:
+                        this.currentColumn = this.columns && findNext(this.columns.findIndex((c) => c.isCurrent));
+                        return false;
+
+                    default:
+                        return true;
+                }
+            }));
+
+        this.subscriptions.push(Observable.fromEvent(element, 'mousedown')
+            .filter((downEvent: MouseEvent) => downEvent.buttons === 1)
+            .subscribe((downEvent: MouseEvent) => {
+                const clickedColumn = this.getColumnFromHTMLElement(downEvent.target as HTMLElement);
+
+                Observable.fromEvent(element, 'mouseup')
+                    .first()
+                    .filter(() => !!clickedColumn)
+                    .subscribe((upEvent: MouseEvent) => {
+                        const columnElement = this.getColumnElementFromHTMLElement(upEvent.target as HTMLElement);
+                        if ((columnElement && columnElement.getAttribute('colname')) === clickedColumn.name) {
+                            this.currentColumn = clickedColumn;
+                        }
+                    });
+            }));
+    }
+
+    public ngOnDestroy() {
+        this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
     }
 
     // ************* ControlValueAccessor Implementation **************
@@ -436,21 +520,22 @@ export class DejaGridComponent {
         }
     }
     protected onColumnHeaderClicked(event: IDejaGridColumnEvent) {
-        if (!this.sortable || event.column.sortable === false) {
+        if (this.treeListComponent && !this.sortable || event.column.sortable === false) {
             return;
         }
 
         event.column.sorting = true;
-        setTimeout(() => {
-            if (this.treeListComponent && event.column.sortable !== false) {
-                this.treeListComponent.sort(event.column.name).then(() => {
-                    event.column.sorting = false;
-                }).catch((error) => {
-                    event.column.sorting = false;
-                    throw error.toString();
-                });
-            }
-        }, 0);
+        Observable.timer(1)
+            .switchMap(() => this.treeListComponent.sort$(event.column.name))
+            .first()
+            .subscribe(() => {
+
+            }, (error) => {
+                throw error.toString();
+            }, () => {
+                event.column.sorting = false;
+                this.header.refresh();
+            });
     }
 
     protected onColumnLayoutChanged(e: IDejaGridColumnLayoutEvent) {
@@ -504,14 +589,9 @@ export class DejaGridComponent {
         }
 
         this.calcColumnsLayout();
-        if (this.disableUserSelectionTimeOut) {
-            clearTimeout(this.disableUserSelectionTimeOut);
-        }
-        this.disableUserSelection = true;
-        this.disableUserSelectionTimeOut = setTimeout(() => {
-            delete this.disableUserSelectionTimeOut;
-            this.disableUserSelection = null;
-        }, 1000);
+
+        // Disable text selection during drag and drop
+        this.disableUserSelection$.next();
 
         this.ensureSizingVisible(e.column);
     }
@@ -521,7 +601,9 @@ export class DejaGridComponent {
             groupByField: e.column.groupByField || e.column.name,
             groupTextField: e.column.groupTextField || e.column.name,
         } as IGroupInfo;
-        this.treeListComponent.ungroup(groupInfo);
+        this.treeListComponent.ungroup$(groupInfo)
+            .first()
+            .subscribe(() => { });
     }
 
     protected onGroupsChanged(e: IDejaGridGroupsEvent) {
@@ -537,62 +619,14 @@ export class DejaGridComponent {
             groupInfos.push(groupInfo);
         });
 
-        this.treeListComponent.group(groupInfos);
-    }
-
-    @HostListener('keydown', ['$event'])
-    protected onKeyDown(event: KeyboardEvent) {
-        const findPrev = (index: number) => {
-            if (index === -1) {
-                index = this.columns.length;
-            }
-            while (--index >= 0) {
-                const column = this.columns[index];
-                if (column.w > 0) {
-                    return column;
-                }
-            }
-            return this.currentColumn;
-        };
-
-        const findNext = (index: number) => {
-            while (++index < this.columns.length) {
-                const column = this.columns[index];
-                if (column.w > 0) {
-                    return column;
-                }
-            }
-            return this.currentColumn;
-        };
-
-        switch (event.keyCode) {
-            case KeyCodes.LeftArrow:
-                this.currentColumn = this.columns && findPrev(this._currentColumn && this.columns.findIndex((c) => c === this._currentColumn));
-                return false;
-
-            case KeyCodes.RightArrow:
-                this.currentColumn = this.columns && findNext(this._currentColumn && this.columns.findIndex((c) => c === this._currentColumn));
-                return false;
-
-            default:
-                return true;
-        }
-    }
-
-    @HostListener('mousedown', ['$event'])
-    protected onMouseDown(event: MouseEvent) {
-        if (event.buttons !== 1) {
-            return;
-        }
-
-        this.clickedColumn = this.getColumnFromHTMLElement(event.target as HTMLElement);
-        this.clickedTime = this.clickedColumn && Date.now();
-        this.mouseUp = true;
+        this.treeListComponent.group$(groupInfos)
+            .first()
+            .subscribe(() => { });
     }
 
     protected calcColumnsLayout(rows?: IItemBase[]) {
         if (!this._columns || !this._columns.length) {
-            this.printColumnLayout = true;
+            this.printColumnLayout$.next(true);
             if (rows && rows.length) {
                 const searchFirstLastLevelRow = (items: IItemBase[]) => {
                     return items.find((row: IItemTree) => {
@@ -695,7 +729,7 @@ export class DejaGridComponent {
         this.noHorizontalScroll = rest >= 0;
 
         // Register to page resize only if percentage columns are defined
-        this.resize = this.columnsLayoutInfos && this.columnsLayoutInfos.percentColumns.length > 0;
+        this.hasPercentageColumns = this.columnsLayoutInfos && this.columnsLayoutInfos.percentColumns.length > 0;
 
         this._columnLayout.vpBeforeWidth = 0;
         this._columnLayout.vpAfterWidth = 0;
@@ -713,59 +747,11 @@ export class DejaGridComponent {
             }
         });
 
-        if (this.printColumnLayout) {
-            if (this.printColumnLayoutTimeout) {
-                clearTimeout(this.printColumnLayoutTimeout);
-            }
-            this.printColumnLayoutTimeout = setTimeout(() => {
-                delete this.printColumnLayoutTimeout;
-                console.log('');
-                console.log('Column layout:');
-                console.log(JSON.stringify(this._columnLayout.columns, null, 4));
-                console.log('');
-            }, 1000);
+        if (this.header) {
+            this.header.refresh();
         }
-    }
 
-    private set resize(value: boolean) {
-        if (value) {
-            if (this.resizeObs) {
-                return;
-            }
-
-            this.resizeObs = Observable.fromEvent(window, 'resize').subscribe(() => {
-                this.calcColumnsLayout();
-            });
-        } else if (this.resizeObs) {
-            this.resizeObs.unsubscribe();
-            delete this.resizeObs;
-        }
-    }
-
-    private set mouseUp(value: boolean) {
-        if (value) {
-            if (this.mouseUpObs) {
-                return;
-            }
-
-            const element = this.elementRef.nativeElement as HTMLElement;
-            this.mouseUpObs = Observable.fromEvent(element, 'mouseup').subscribe((event: MouseEvent) => {
-                const time = Date.now();
-                if (time - this.clickedTime < 1000) {
-                    const columnElement = this.getColumnElementFromHTMLElement(event.target as HTMLElement);
-                    if ((columnElement && columnElement.getAttribute('colname')) === this.clickedColumn.name) {
-                        this.currentColumn = this.clickedColumn;
-                    }
-                }
-
-                this.mouseUp = false;
-            });
-        } else if (this.mouseUpObs) {
-            delete this.clickedColumn;
-            delete this.clickedTime;
-            this.mouseUpObs.unsubscribe();
-            delete this.mouseUpObs;
-        }
+        this._columnLayout.refresh$.next();
     }
 
     private ensureSizingVisible(column: IDejaGridColumn) {

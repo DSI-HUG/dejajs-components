@@ -15,7 +15,7 @@
                 li {
                     &.odd {
                         background: rgba($secondary, 0.1);
-                        &.current {
+                        &[current="true"] {
                             background: rgba($secondary, 0.5);
                         }
                         &.selected {

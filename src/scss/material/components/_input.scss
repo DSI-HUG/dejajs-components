@@ -11,6 +11,10 @@ md-input-container {
 		}
 		.mat-input-table {
 			.mat-input-placeholder {
+				&.mat-float:not(.mat-empty),
+                &.mat-float.mat-focused {
+					transform: translateY(-65%) scale(.75) !important;
+				}
 				&.mat-focused {
 					color: $secondary;
 				}

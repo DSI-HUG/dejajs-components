@@ -320,7 +320,7 @@ Composant pour afficher des données dans un tableau, avec une fonction de reche
 
   - `cellTemplate`
 ```html
-<template #cellTemplate let-row let-flatIndex="flatIndex" let-column="column" let-isCurrentColumn="isCurrentColumn">
+<template #cellTemplate let-row let-flatIndex="flatIndex" let-column="column">
 </template>
 ```
 
