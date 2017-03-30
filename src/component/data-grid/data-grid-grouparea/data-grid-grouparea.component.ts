@@ -9,12 +9,13 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { IDejaDragEvent, IDejaDropEvent } from '../../index';
 import { IDejaGridColumn, IDejaGridGroupsEvent } from '../index';
 
 /** Zone de regroupement des colonnes dans laquelle les colonnes peuvent être drag and droppée */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'deja-grid-grouparea',
     styleUrls: ['./data-grid-grouparea.component.scss'],
     templateUrl: './data-grid-grouparea.component.html',
@@ -39,7 +40,7 @@ export class DejaGridGroupAreaComponent {
         this._groups = columns || [];
     }
 
-    constructor() { }
+    constructor(private changeDetectorRef: ChangeDetectorRef) { }
 
     protected getDragContext(group: IDejaGridColumn) {
         // console.log(`getDragContext ` + group.column.name + ' ' + Date.now();
@@ -95,6 +96,8 @@ export class DejaGridGroupAreaComponent {
                     this.groups.splice(sourceIndex, 1);
                     this.groups.splice(targetIndex, 0, sourceColumn);
 
+                    this.changeDetectorRef.markForCheck();
+
                     event.preventDefault();
 
                 } else {
@@ -131,12 +134,15 @@ export class DejaGridGroupAreaComponent {
                     } else {
                         this.groups.push(sourceColumn);
                     }
+
                     raiseEvent(sourceColumn);
 
                 } else if (event.dragInfo.hasOwnProperty(this.groupGroupKey)) {
                     const sourceColumn = event.dragInfo[this.groupGroupKey] as IDejaGridColumn;
                     raiseEvent(sourceColumn);
                 }
+
+                this.changeDetectorRef.markForCheck();
             },
         };
     }

@@ -1,6 +1,6 @@
 {
   "name": "@deja-js/component",
-  "version": "1.4.2-beta.24",
+  "version": "1.4.2-beta.25",
   "description": "Angular2 Components Library",
   "homepage": "https://github.com/DSI-HUG/dejajs-components",
   "bugs": "https://github.com/DSI-HUG/dejajs-components/issues",
@@ -44,6 +44,7 @@
     "@angular/common": "^2.4.0",
     "@angular/compiler": "^2.4.0",
     "@angular/core": "^2.4.0",
+    "@angular/flex-layout": "^2.0.0-rc.1",
     "@angular/forms": "^2.4.0",
     "@angular/http": "^2.4.0",
     "@angular/material": "^2.0.0-beta.2",

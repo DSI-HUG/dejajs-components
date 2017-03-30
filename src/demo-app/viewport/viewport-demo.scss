@@ -8,6 +8,7 @@
 deja-viewport {
     margin-top: 1rem;
     height: calc(100vh - 260px);
+    display: block;
     .news {
         border: 1px #aaa solid;
         width: calc(100% - 1rem);

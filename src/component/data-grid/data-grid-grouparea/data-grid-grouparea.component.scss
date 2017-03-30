@@ -4,19 +4,15 @@
         border: 1px solid rgba(0, 0, 0, 0.38);
         padding: 0.5rem;
         margin-bottom: 1rem;
+        display: flex;
+        flex-wrap: wrap;
         #placeholder {
             color: rgba(0, 0, 0, 0.38);
         }
-        ul {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            li {
+        .group-wrapper {
                 float: left;
                 background-color: $primary;
                 margin: 0.1rem;
-                >span {
                     display: flex;
                     align-items: center;
                     text-decoration: none;
@@ -36,5 +32,3 @@
                 }
             }
         }
-    }
-}

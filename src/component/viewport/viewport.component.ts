@@ -9,7 +9,7 @@
  *
  */
 
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, HostBinding, Input, OnDestroy, QueryList, ViewChildren } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, HostBinding, Input, OnDestroy, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { Observable, Subscription } from 'rxjs/Rx';
 
 @Component({
@@ -42,6 +42,7 @@ export class DejaViewPortComponent implements OnDestroy, AfterViewInit {
 
     @ContentChild('itemTemplate') private itemTemplateInternal;
     @ViewChildren('elitem') private itemElements: QueryList<ElementRef>;
+    @ViewChild('wrapper') private wrapperElement: ElementRef;
 
     /** Set the list of items to render inside the viewport control */
     @Input()
@@ -76,6 +77,9 @@ export class DejaViewPortComponent implements OnDestroy, AfterViewInit {
     }
 
     private get clientSize() {
+        if (!this.element) {
+            return 0;
+        }
         return this.isHorizontal ? this.element.clientWidth : this.element.clientHeight;
     }
 
@@ -91,23 +95,11 @@ export class DejaViewPortComponent implements OnDestroy, AfterViewInit {
         return this.isHorizontal ? this.element.scrollLeft : this.element.scrollTop;
     }
 
-    constructor(private changeDetectorRef: ChangeDetectorRef, elementRef: ElementRef) {
-        this.element = elementRef.nativeElement as HTMLElement;
-
+    constructor(private changeDetectorRef: ChangeDetectorRef) {
         this.subscriptions.push(Observable
             .fromEvent(window, 'resize')
             .debounceTime(10)
             .subscribe(() => {
-                this.calcViewPort();
-            }));
-
-        this.subscriptions.push(Observable
-            .fromEvent(this.element, 'scroll')
-            .map((event: any) => this.isHorizontal ? event.target.scrollLeft : event.target.scrollTop)
-            // .do((scrollPos: number) => console.log(scrollPos))
-            // .debounce((scrollPos) => Observable.timer(Math.abs(this.lastScrollPos - scrollPos) > 2000 ? 1000 : 0))
-            .subscribe((scrollPos) => {
-                this.lastScrollPos = scrollPos;
                 this.calcViewPort();
             }));
 
@@ -119,9 +111,20 @@ export class DejaViewPortComponent implements OnDestroy, AfterViewInit {
     }
 
     public ngAfterViewInit() {
-        if (this._items) {
+        this.element = this.wrapperElement.nativeElement as HTMLElement;
+
+        this.subscriptions.push(Observable
+            .fromEvent(this.element, 'scroll')
+            .map((event: any) => this.isHorizontal ? event.target.scrollLeft : event.target.scrollTop)
+            .subscribe((scrollPos) => {
+                this.lastScrollPos = scrollPos;
             this.calcViewPort();
-        }
+            }));
+
+        Observable.timer(1)
+            .first()
+            .filter(() => !!this._items)
+            .subscribe(() => this.calcViewPort());
     }
 
     private calcViewPort(maxSize?: number) {
@@ -159,6 +162,8 @@ export class DejaViewPortComponent implements OnDestroy, AfterViewInit {
             this.vpAfterSize = listSize - this.vpBeforeSize - vpSize;
             this.vpItems = this._items.slice(this.vpStartIndex, vpEndIndex);
             this.vpItems.forEach((item) => item.size = itemDefaultSize);
+
+            // console.log(`vpBeforeSize: ${this.vpBeforeSize} vpSize: ${vpSize} vpAfterSize: ${this.vpAfterSize}`);
         } else if (this.itemSizeMode === 'auto') {
             this.vpItems = [];
             let vpSize = 0;

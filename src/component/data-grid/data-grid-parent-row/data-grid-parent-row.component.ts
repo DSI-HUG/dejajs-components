@@ -9,11 +9,12 @@
  *
  */
 
-import { Component, ContentChild, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, Input } from '@angular/core';
 import { IDejaGridColumn, IDejaGridParentRow } from '../index';
 
 /** Composant représentant une ligne parente d'une structure de ligne hierarchique */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'deja-grid-parent-row',
     styleUrls: ['./data-grid-parent-row.component.scss'],
     templateUrl: './data-grid-parent-row.component.html',
@@ -21,9 +22,6 @@ import { IDejaGridColumn, IDejaGridParentRow } from '../index';
 export class DejaGridParentRowComponent {
     /** Définit la structure de la ligne associée à ce composant */
     @Input() public row: IDejaGridParentRow;
-
-    /** Définit la structure de colonnes a appliquer sur cette ligne */
-    @Input() public columns: IDejaGridColumn[];
 
     /** Template de cellule si définit extérieurement à la grille */
     @Input() public cellTemplateExternal;
@@ -40,25 +38,28 @@ export class DejaGridParentRowComponent {
     /** Template de cellule par defaut  définit dans le HTML de la grille */
     @ContentChild('cellTemplate') protected cellTemplateInternal;
 
-    protected get columnLayout() {
-        const colLayout = {} as IDejaGridParentRowColumnLayout;
+    private columnLayout = {} as IDejaGridParentRowColumnLayout;
+
+    /** Définit la structure de colonnes a appliquer sur cette ligne */
+    @Input()
+    public set columns(columns: IDejaGridColumn[]) {
         let left = 0;
-        colLayout.columns = [];
-        this.columns.forEach((column) => {
+        this.columnLayout.columns = [];
+        columns.forEach((column) => {
             if (this.row[column.name]) {
-                if (colLayout.column0 === 0) {
-                    colLayout.column0 = left;
+                if (this.columnLayout.column0 === 0) {
+                    this.columnLayout.column0 = left;
                 }
-                colLayout.columns.push({
+                this.columnLayout.columns.push({
                     column: column,
                     left: left,
                 });
             }
             left += column.w;
         });
-        colLayout.column0 = left;
-        return colLayout;
-    };
+        this.columnLayout.column0 = left;
+        this.changeDetectorRef.markForCheck();
+    }
 
     protected get cellTemplate() {
         return this.cellTemplateExternal || this.cellTemplateInternal;
@@ -67,12 +68,14 @@ export class DejaGridParentRowComponent {
     protected get parentTitleTemplate() {
         return this.parentTitleTemplateExternal || this.parentTitleTemplateInternal;
     }
+
+    constructor(private changeDetectorRef: ChangeDetectorRef) { }
 }
 
 export interface IDejaGridParentRowColumnLayout {
     column0: number;
-    columns: Array<{
+    columns: {
         column: IDejaGridColumn;
         left: number;
-    }>;
+    }[];
 }

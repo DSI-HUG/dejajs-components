@@ -83,12 +83,6 @@ export class DejaMonacoEditorDemoComponent implements OnInit {
     <td>Langage du code affiché (Voir la liste des langages supportés)</td>
 </tr>
 <tr>
-    <td>disableAutocomplete</td>
-    <td>Non</td>
-    <td>Boolean</td>
-    <td>Désactive le parsing du contenu afin d'afficher une autompletion mise à jour a chaque fois que l'utilisateur saise Ctrl + Espace</td>
-</tr>
-<tr>
     <td>autoFormatOnLoad</td>
     <td>Oui</td>
     <td>Boolean</td>

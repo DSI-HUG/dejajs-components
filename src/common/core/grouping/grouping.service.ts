@@ -9,6 +9,7 @@
  *
  */
 
+import { Observable } from 'rxjs/Rx';
 import { IItemTree } from '../item-list/index';
 import { SortingService } from '../sorting/index';
 import { IGroupInfo } from './index';
@@ -22,114 +23,103 @@ export class GroupingService {
      * @param {number} depth Niveau à partir duquel le modèle de regroupement doit être appliqué.
      * @return {Promise} Promesse résolue par la fonction.
      */
-    public group(tree: any[], groupInfos: IGroupInfo[] | IGroupInfo, childrenField?: string, depth?: number) {
-        return new Promise<any[]>((resolved?: (result: any[]) => void, rejected?: (reason: any) => void) => {
-            if (!tree || tree.length === 0 || !groupInfos) {
-                resolved(tree);
-                return;
+    public group$(tree: any[], groupInfos: IGroupInfo[] | IGroupInfo, childrenField = 'items'): Observable<any[]> {
+        if (!tree || tree.length === 0 || !groupInfos) {
+            return Observable.of(tree);
+        }
+
+        if (groupInfos instanceof Array) {
+            // Create a observable stream with a sequence for each groupinfos.
+            let result$ = Observable.of(tree);
+            groupInfos.forEach((groupInfo) => result$ = result$.switchMap((t) => this.group$(t, groupInfo, childrenField)));
+            return result$;
+        } else {
+            // Group the tree with the current groupInfo
+            const groupInfo = groupInfos as IGroupInfo;
+            if (!tree[0][childrenField]) {
+                // No children, group the tree
+                return this.groupChildren$(tree, groupInfo, 0, childrenField);
             }
 
-            if (!childrenField) {
-                childrenField = 'items';
-            }
+            // If the tree has chidren, group only the last level items
+            return Observable.from(tree)
+                .flatMap((item) => {
+                    let child = item;
+                    let children = item[childrenField];
+                    let curdepth = 0;
 
-            if (groupInfos instanceof Array) {
-                const groupTree = (subtree: any[], index: number) => {
-                    if (index >= groupInfos.length) {
-                        resolved(subtree);
-                        return;
+                    // For each items, search the last level
+                    while (childrenField[0] && children[0][childrenField]) {
+                        child = children[0];
+                        children = child[childrenField];
+                        ++curdepth;
                     }
 
-                    this.group(subtree, groupInfos[index], childrenField, (depth || 0) + 1).then((groupedTree) => {
-                        groupTree(groupedTree, index + 1);
-                    }).catch(rejected);
-                };
-
-                groupTree(tree, 0);
-
-            } else {
-                const groupInfo = groupInfos as IGroupInfo;
-
-                // Only group the last level listes
-                const groupTree = (parents: any[], curdepth: number) => {
-                    return new Promise<any[]>((resolvedChildren?: (result: any[]) => void, rejectedChildren?: (reason: any) => void) => {
-                        try {
-                            if (parents[0][childrenField]) {
-                                const groupParentChildren = (index) => {
-                                    if (index >= parents.length) {
-                                        resolvedChildren(parents);
-                                        return;
-                                    }
-
-                                    groupTree(parents[index][childrenField], curdepth + 1).then((result) => {
-                                        parents[index][childrenField] = result;
-                                        groupParentChildren(index + 1);
-                                    }).catch(rejectedChildren);
-                                };
-                                groupParentChildren(0);
-                            } else {
-                                this.groupChildren(parents, groupInfo, curdepth, childrenField).then(resolvedChildren).catch(rejectedChildren);
-                            }
-                        } catch (err) {
-                            rejectedChildren(err);
-                        }
-                    });
-                };
-
-                groupTree(tree, depth || 0).then(resolved).catch(rejected);
-            }
-        });
+                    // Group the last level item children, but return the root item
+                    return this.groupChildren$(children, groupInfo, curdepth, childrenField)
+                        .map((groupedChildren) => {
+                            child[childrenField] = groupedChildren;
+                            return item;
+                        });
+                })
+                .reduce((acc: any[], cur) => {
+                    // Return the array
+                    acc.push(cur);
+                    return acc;
+                }, []);
+        }
     }
 
-    protected groupChildren(list: any[], groupInfo: IGroupInfo, _depth: number, childrenField: string) {
-        return new Promise<any[]>((resolved?: (result: any[]) => void, rejected?: (reason: any) => void) => {
-            try {
-                const groups = {} as { [groupby: string]: IItemTree };
-                list.forEach((item) => {
-                    let groupedBy = typeof groupInfo.groupByField === 'function' ? groupInfo.groupByField(item) : item[groupInfo.groupByField];
+    /**
+     * @deprecated
+     */
+    public group(tree: any[], groupInfos: IGroupInfo[] | IGroupInfo, childrenField?: string) {
+        return this.group$(tree, groupInfos, childrenField).toPromise();
+    }
 
-                    if (typeof groupedBy === 'function') {
-                        groupedBy = groupedBy();
-                    }
+    protected groupChildren$(list: any[], groupInfo: IGroupInfo, _depth: number, childrenField: string): Observable<any[]> {
+        return Observable.of(list)
+            .switchMap((l) => l)
+            .reduce((groups: { [groupby: string]: IItemTree }, item) => {
+                let groupedBy = typeof groupInfo.groupByField === 'function' ? groupInfo.groupByField(item) : item[groupInfo.groupByField];
 
-                    if (!groupedBy) {
-                        groupedBy = this.getTextValue(item);
-                    }
-
-                    let parent = groups[groupedBy];
-
-                    if (!parent) {
-                        let groupLabel: string;
-                        if (groupInfo.groupTextField) {
-                            groupLabel = typeof groupInfo.groupTextField === 'function' ? groupInfo.groupTextField(item) : item[groupInfo.groupTextField];
-                        } else {
-                            groupLabel = groupedBy;
-                        }
-                        parent = groups[groupedBy] = {
-                            depth: _depth,
-                            toString: () => { return groupLabel; },
-                        } as IItemTree;
-                        parent[childrenField] = [];
-                    }
-
-                    parent[childrenField].push(item);
-                });
-
-                const groupedChildren = Object.keys(groups).map((key) => groups[key]) as any[];
-
-                if (groupInfo.sortInfos) {
-                    const sortingService = new SortingService();
-                    sortingService.sort(groupedChildren, groupInfo.sortInfos).then(resolved).catch(rejected);
-                    groupedChildren.forEach((parent) => parent.sortField = groupInfo.sortInfos.name);
-                } else {
-                    groupedChildren.forEach((parent) => parent.sortField = 'toString');
-                    resolved(groupedChildren);
+                if (typeof groupedBy === 'function') {
+                    groupedBy = groupedBy();
                 }
 
-            } catch (err) {
-                rejected(err);
-            }
-        });
+                if (!groupedBy) {
+                    groupedBy = this.getTextValue(item);
+                }
+
+                let parent = groups[groupedBy];
+
+                if (!parent) {
+                    let groupLabel: string;
+                    if (groupInfo.groupTextField) {
+                        groupLabel = typeof groupInfo.groupTextField === 'function' ? groupInfo.groupTextField(item) : item[groupInfo.groupTextField];
+                    } else {
+                        groupLabel = groupedBy;
+                    }
+                    parent = groups[groupedBy] = {
+                        depth: _depth,
+                        toString: () => { return groupLabel; },
+                    } as IItemTree;
+                    parent[childrenField] = [];
+                }
+
+                parent[childrenField].push(item);
+                return groups;
+            }, {})
+            .map((grps: { [groupby: string]: any }) => Object.keys(grps).map((key) => grps[key]))
+            .do((groupedChildren) => groupedChildren.forEach((parent) => parent.sortField = (groupInfo.sortInfos && groupInfo.sortInfos.name) || 'toString'))
+            .switchMap((groupedChildren) => {
+                if (groupInfo.sortInfos) {
+                    const sortingService = new SortingService();
+                    return sortingService.sort$(groupedChildren, groupInfo.sortInfos);
+                } else {
+                    return Observable.of(groupedChildren);
+                }
+            });
     }
 
     private getTextValue(value: any) {

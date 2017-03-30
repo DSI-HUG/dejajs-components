@@ -1,27 +1,31 @@
 :host {
-    display: flex;
     position: relative;
     &[direction="vertical"] {
+		#viewport-wrapper {
         overflow-x: visible;
         overflow-y: auto;
-        flex-direction: column;
         >span {
             width: 100%;
         }
     }
+	}
     &[direction="horizontal"] {
+		#viewport-wrapper {
         overflow-x: auto;
         overflow-y: visible;
-        flex-direction: row;
         >span {
             height: 100%;
         }
     }
+	}
+	#viewport-wrapper {
+		height: 100%;
+		width: 100%;
+		position: relative;
     >span {
-        flex-grow: 0;
-        flex-shrink: 0;
         padding: 0;
         margin: 0;
         overflow: hidden;
     }
+	}
 }

@@ -9,8 +9,8 @@
  *
  */
 
-import { ElementRef, QueryList } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { ChangeDetectorRef, ElementRef, QueryList } from '@angular/core';
+import { Observable, Subscriber, Subscription } from 'rxjs/Rx';
 import { GroupingService, IGroupInfo } from '../grouping/index';
 import { ISortInfos, SortingService, SortOrder } from '../sorting/index';
 import { IItemBase } from './item-base';
@@ -27,6 +27,8 @@ export enum ViewportMode {
 export class ItemListBase {
     public static defaultViewPortRowHeight = 33;
 
+    protected waiter = true;
+
     protected _itemList: IItemBase[] = []; // Viewport list
     protected _multiSelect = false;
     protected _searchField: string;
@@ -35,10 +37,10 @@ export class ItemListBase {
     protected _currentItemIndex = -1;
     protected _hintLabel: string;
     protected _nodataLabel: string;
-    protected waiter = true; // Display waiter
     protected computedMaxHeight = 0;
     protected _hideSelected: boolean;
     protected _childrenField: string;
+    protected _minSearchLength = 0;
 
     // Viewport
     protected _viewportMode = ViewportMode.ConstantRowHeight;
@@ -58,10 +60,15 @@ export class ItemListBase {
     protected _ddTargetIndex: number;
 
     private _isBusinessObject: boolean;
+    private waiter$sub: Subscription;
 
     private _itemListService: ItemListService;
     private allCollapsed = false;
     private _viewPortRowHeight = ItemListBase.defaultViewPortRowHeight;
+
+    constructor(protected changeDetectorRef: ChangeDetectorRef) {
+
+    }
 
     /** Renvoie le modèle de tri appliqué à la liste.
      * @param {ISortInfos} sortInfos Modèle de tri appliqué.
@@ -159,7 +166,7 @@ export class ItemListBase {
      * @param {IItemBase[]} items Liste des éléments a selectioner.
      */
     public setSelectedItems(value: IItemBase[]) {
-        return this.getItemListService().setSelectedItems(value);
+        return this.getItemListService().setSelectedItems(value, this._multiSelect);
     }
 
     /**
@@ -195,86 +202,72 @@ export class ItemListBase {
 
     /** Trie la liste par le champs spécifié. */
     public sort(name?: string) {
-        return new Promise<ISortInfos>((resolved?: (sortInfos: ISortInfos) => void, rejected?: (reason: any) => void) => {
-            const sortField = name || this._textField;
+        this.sort$(name).first().subscribe();
+    }
 
-            if (!this._sortInfos) {
-                this._sortInfos = {
-                    name: sortField,
-                    order: SortOrder.ascending,
-                };
-            } else if (sortField === this._sortInfos.name) {
-                this._sortInfos.order = this._sortInfos.order === SortOrder.ascending ? SortOrder.descending : SortOrder.ascending;
-            } else {
-                this._sortInfos.name = sortField;
-                this._sortInfos.order = SortOrder.ascending;
-            }
-            return this.getItemListService().sort(this._sortInfos).then((si) => {
-                this.calcViewPort().then(() => {
-                    resolved(si);
-                }).catch(rejected);
-            }).catch(rejected);
-        });
+    /** Trie la liste par le champs spécifié. */
+    public sort$(name?: string) {
+        const sortField = name || this._textField;
+
+        if (!this._sortInfos) {
+            this._sortInfos = {
+                name: sortField,
+                order: SortOrder.ascending,
+            };
+        } else if (sortField === this._sortInfos.name) {
+            this._sortInfos.order = this._sortInfos.order === SortOrder.ascending ? SortOrder.descending : SortOrder.ascending;
+        } else {
+            this._sortInfos.name = sortField;
+            this._sortInfos.order = SortOrder.ascending;
+        }
+        return this.getItemListService().sort$(this._sortInfos)
+            .first()
+            .switchMap((si) => this.calcViewPort$().map(() => si));
     }
 
     /** Groupe les éléments en fonction du modèle de groupe spécifié
      * @param {IGroupInfo} groupInfos Modèle de groupe à appliquer.
-     * @return {Promise} Promesse résolue par la fonction.
+     * @return {Observable} Observable résolu par la fonction.
      */
-    public group(groups: IGroupInfo[]) {
-        return new Promise<IGroupInfo[]>((resolved?: (groupInfos: IGroupInfo[]) => void, rejected?: (reason: any) => void) => {
-            return this.getItemListService().group(groups).then((ginfos) => {
-                this.calcViewPort().then(() => {
-                    resolved(ginfos);
-                }).catch(rejected);
-            }).catch(rejected);
-        });
+    public group$(groups: IGroupInfo[]) {
+        return this.getItemListService().group$(groups)
+            .switchMap(() => this.calcViewPort$());
     }
 
     /** Retire les groupe correspondants au modèle de groupe spécifié
      * @param {IGroupInfo} groupInfos Modèle de groupe à retirer.
-     * @return {Promise} Promesse résolue par la fonction.
+     * @return {Observable} Observable résolu par la fonction.
      */
-    public ungroup(groupInfo: IGroupInfo) {
-        return new Promise<IGroupInfo[]>((resolved?: (groupInfos: IGroupInfo[]) => void, rejected?: (reason: any) => void) => {
-            return this.getItemListService().ungroup(groupInfo).then(() => {
-                this.calcViewPort().then(() => {
-                    resolved(this.groupInfos);
-                }).catch(rejected);
-            }).catch(rejected);
-        });
+    public ungroup$(groupInfo: IGroupInfo) {
+        return this.getItemListService().ungroup$(groupInfo)
+            .switchMap(() => this.calcViewPort$());
     }
 
     /** Change l'état d'expansion de tous les éléments.
-     * @return {Promise} Promesse résolue par la fonction.
+     * @return {Observable} Observable résolu par la fonction.
      */
-    public toggleAll() {
-        return new Promise<void>((resolved?: () => void, rejected?: (reason: any) => void) => {
-            this.allCollapsed = !this.allCollapsed;
-            if (this._viewportMode === ViewportMode.NoViewport) {
-                this._itemList.forEach((item, index) => {
-                    const treeItem = item as IItemTree;
-                    if (treeItem.$items && treeItem.depth === 0 && treeItem.collapsible !== false) {
-                        this.toggleCollapse(index + this.vpStartRow, this.allCollapsed).then(resolved).catch(rejected);
-                    }
-                });
-            } else {
-                this.getItemListService().toggleAll(this.allCollapsed).then(resolved).catch(rejected);
-            }
-        });
+    public toggleAll$() {
+        this.allCollapsed = !this.allCollapsed;
+        if (this._viewportMode === ViewportMode.NoViewport) {
+            return Observable.from(this._itemList)
+                .filter((item: IItemTree) => item.$items && item.depth === 0 && item.collapsible !== false)
+                .switchMap((_item: IItemTree, index: number) => this.toggleCollapse$(index + this.vpStartRow, this.allCollapsed));
+        } else {
+            return this.getItemListService().toggleAll$(this.allCollapsed);
+        }
     }
 
     /** Change l'état d'expansion de l'élément spécifié par son index sur la liste des éléments visibles.
      * @param {number} index  Index sur la liste des éléments visibles de l'élément à changer.
      * @param {boolean} collapse  Etat de l'élément. True pour réduire l'élément.
-     * @return {Promise} Promesse résolue par la fonction.
+     * @return {Observable} Observable résolu par la fonction.
      */
-    public toggleCollapse(index: number, collapsed: boolean): Promise<boolean> {
+    public toggleCollapse$(index: number, collapsed: boolean): Observable<IItemTree[]> {
         // Get item with relative index
         const item = this._itemList[index - this.vpStartRow];
         if (!item) {
             // Not on the visible part, no transition
-            return this.getItemListService().toggleCollapse(index, collapsed);
+            return this.getItemListService().toggleCollapse$(index, collapsed);
         } else {
             const oldlist = [...this._itemList];
             const oldTreeInfo = this.getItemTreeInfo(oldlist, item);
@@ -290,12 +283,11 @@ export class ItemListBase {
                         })
                         .delay(300)
                         .do((children) => children.forEach((child) => child.expanding = false))
-                        .switchMap(() => this.getItemListService().toggleCollapse(index, collapsed))
-                        .do((_result) => this.calcViewPort())
-                        .toPromise();
+                        .switchMap(() => this.getItemListService().toggleCollapse$(index, collapsed))
+                        .switchMap((toogleResult) => this.calcViewPort$().map(() => toogleResult));
                 } else {
-                    return Observable.fromPromise(this.getItemListService().toggleCollapse(index, collapsed))
-                        .switchMap(() => this.calcViewPort())
+                    return this.getItemListService().toggleCollapse$(index, collapsed)
+                        .switchMap(() => this.calcViewPort$())
                         .map((vpresult) => {
                             const newTreeInfo = this.getItemTreeInfo(vpresult.visibleList, item);
 
@@ -307,17 +299,17 @@ export class ItemListBase {
                         .delay(1)
                         .do((children) => children.forEach((child) => child.collapsing = false))
                         .delay(300)
-                        .switchMap(() => this.calcViewPort())
-                        .map(() => true)
-                        .toPromise();
+                        .switchMap((toogleResult) => this.calcViewPort$().map(() => toogleResult));
                 }
             } else {
-                const newTreeInfo$ = Observable.fromPromise(this.getItemListService().toggleCollapse(index, collapsed))
-                    .switchMap(() => this.calcViewPort())
-                    .map((vpresult) => {
-                        const newlist = vpresult.visibleList;
-                        const newTreeInfo = this.getItemTreeInfo(newlist, item);
-                        return { newlist, newTreeInfo };
+                const newTreeInfo$ = this.getItemListService().toggleCollapse$(index, collapsed)
+                    .switchMap((toogleResult) => {
+                        return this.calcViewPort$()
+                            .map((vpresult) => {
+                                const newlist = vpresult.visibleList;
+                                const newTreeInfo = this.getItemTreeInfo(newlist, item);
+                                return { newlist, newTreeInfo, toogleResult };
+                            });
                     });
 
                 if (!collapsed) {
@@ -337,33 +329,30 @@ export class ItemListBase {
                         })
                         .delay(1)
                         .do((children) => children.forEach((child) => child.expanding = false))
-                        .switchMap(() => this.calcViewPort())
-                        .map(() => true)
-                        .toPromise();
+                        .switchMap((result) => this.calcViewPort$().map(() => result));
 
                 } else {
                     // Remove elements from the flat list, collapse and calc new flatlist
                     // Add same amount of elements to the visible list
                     return newTreeInfo$
-                        .do(({ newlist, newTreeInfo }) => {
+                        .map(({ newlist, newTreeInfo, toogleResult }) => {
                             const oldEndRow = Math.min(oldlist.length - 1, oldTreeInfo.lastIndex + 1);
                             this.vpEndRow = Math.min(newlist.length - 1, this.vpEndRow - this.vpStartRow);
                             this._itemList = [...oldlist.slice(0, oldEndRow), ...newlist.slice(newTreeInfo.startIndex + 1)];
+                            return toogleResult;
                         })
-                        .switchMap(() => this.calcViewPort())
-                        .map(() => true)
-                        .toPromise();
+                        .switchMap((toogleResult) => this.calcViewPort$().map(() => toogleResult));
                 }
             }
         }
     }
 
     /** Déselectionne tous les éléments sélectionés.
-     * @return {Promise} Promesse résolue par la fonction.
+     * @return {Observable} Observable résolu par la fonction.
      */
-    public unselectAll() {
+    public unselectAll$() {
         const itemListService = this.getItemListService();
-        return itemListService.unselectAll();
+        return itemListService.unselectAll$();
     }
 
     /** Nettoye les caches et réaffiche le viewport. */
@@ -381,10 +370,10 @@ export class ItemListBase {
 
     /** Retrouve les informations du parent de l'élément spécifié
      * @param {IItemTree} item Element enfant du parent à retrouver.
-     * @return {Promise<IParentListInfoResult>} Promesse résolue par la fonction, qui retourne les informations sur le parent de l'élément spécifié
+     * @return {Observable<IParentListInfoResult>} Observable résolu par la fonction, qui retourne les informations sur le parent de l'élément spécifié
      */
-    public getParentListInfos(item: IItemTree): Promise<IParentListInfoResult> {
-        return this.getItemListService().getParentListInfos(item);
+    public getParentListInfos$(item: IItemTree): Observable<IParentListInfoResult> {
+        return this.getItemListService().getParentListInfos$(item, this._multiSelect);
     }
 
     protected getSelectedModels() {
@@ -402,16 +391,16 @@ export class ItemListBase {
             value = this.convertToIItemBase(value, true);
         }
 
-        return this.getItemListService().setSelectedItems(value);
+        return this.setSelectedItems(value);
     }
 
     /** Trouve l'élément suivant répondant à la fonction de comparaison spécifiée.
      * @param {Function} compare Function de comparaison pour la recherche de l'élément.
      * @param {number} startIndex Index de départ sur la liste des éléments visibles.
-     * @return {Promise} Promesse résolue par la fonction.
+     * @return {Observable} Observable résolu par la fonction.
      */
-    protected findNextMatch(compare?: (item: IItemBase, index: number) => boolean, startIndex?: number) {
-        return this.getItemListService().findNextMatch(compare, startIndex) as Promise<IFindItemResult>;
+    protected findNextMatch$(compare?: (item: IItemBase, index: number) => boolean, startIndex?: number): Observable<IFindItemResult> {
+        return this.getItemListService().findNextMatch$(compare, startIndex);
     }
 
     /** Définit la hauteur d'une ligne pour le calcul du viewport. Le Viewport ne fonctionne qu'avec des hauteurs de lignes fixe.
@@ -432,11 +421,20 @@ export class ItemListBase {
      * @param {ItemListService} value Service de liste utilisé par ce composant.
      */
     protected setItemListService(value: ItemListService) {
+        if (this.waiter$sub) {
+            this.waiter$sub.unsubscribe();
+            this.waiter$sub = undefined;
+        }
         this._itemListService = value;
         if (this._itemListService) {
             this._itemListService.hideSelected = this._hideSelected;
             this._itemListService.childrenField = this._childrenField;
             this._itemListService.valueField = this._valueField;
+            this.waiter$sub = Observable.from(this._itemListService.waiter$)
+                .subscribe((status: boolean) => {
+                    this.waiter = status;
+                    this.changeDetectorRef.markForCheck();
+                });
         }
     }
 
@@ -499,14 +497,17 @@ export class ItemListBase {
     /** Définit le modèle utilisé par la liste. Il est uniquement de type IItemBase. Ce model peut ètre hierarchique sans limitation de la profondeur ou une chargé en asynchrone par une promise ou un observable.
      * @param {GroupingService}items Provider de la liste des éléments de la liste.
      */
-    protected setItems(items: IItemBase[] | Promise<IItemBase[]> | Observable<IItemBase[]>) {
-        return this.getItemListService().setItems(items);
+    protected setItems$(items: IItemBase[] | Promise<IItemBase[]> | Observable<IItemBase[]>) {
+        if (!(items instanceof Array)) {
+            this.clearViewPort();
+        }
+        return this.getItemListService().setItems$(items);
     }
 
     /** Définit le modèle utilisé par la liste. Il peut être de tout type d'objet. Ce model peut ètre hierarchique sans limitation de la profondeur ou une chargé en asynchrone par une promise ou un observable.
      * @param {GroupingService}items Provider de la liste des éléments de la liste.
      */
-    protected setModels(models: any[] | Observable<any[]>) {
+    protected setModels$(models: any[] | Observable<any[]>) {
         this._isBusinessObject = true;
         let models$: Observable<any[]>;
 
@@ -517,7 +518,7 @@ export class ItemListBase {
         }
 
         const items$ = models$ && models$.map((model) => this.convertToIItemBase(model));
-        return this.setItems(items$.first());
+        return this.setItems$(items$);
     }
 
     // Ne pas utiliser, cette fonction retourne la liste des éléments pour l'implémentation de ngModel.
@@ -526,34 +527,51 @@ export class ItemListBase {
     }
 
     /** Usage interne. Termine le drag and drop en cours. */
-    protected drop() {
+    protected drop$() {
         this._currentItemIndex = -1;
-        return this.getItemListService().drop();
+        return this.getItemListService().drop$();
     }
 
     /** Usage interne. Retourne la portion de la liste à afficher en fonction des paramètres spécifiés. */
-    protected getViewList(query?: RegExp | string, startRow?: number, maxCount?: number, ignoreCache?: boolean): Promise<IViewListResult> {
-        return this.getItemListService().getViewList(this._searchField || this._textField, query, startRow, maxCount, ignoreCache, this._ddStartIndex, this._ddTargetIndex);
+    protected getViewList$(query?: RegExp | string, startRow?: number, maxCount?: number, ignoreCache?: boolean): Observable<IViewListResult> {
+        if (typeof query === 'string' && (query + '').length < this._minSearchLength) {
+            const emptyListResult = {
+                rowsCount: 0,
+                depthMax: 0,
+                visibleList: [],
+                startRow: 0,
+                endRow: 0,
+                outOfRange: false,
+            } as IViewListResult;
+
+            if (!this.getItems()) {
+                return this.setItems$([]).map(() => emptyListResult);
+            } else {
+                return Observable.of(emptyListResult);
+            }
+        }
+
+        return this.getItemListService().getViewList$(this._searchField || this._textField, query, startRow, maxCount, ignoreCache, this._ddStartIndex, this._ddTargetIndex, this._multiSelect);
     }
 
     /** Sélectionne une plage d'éléments en fonction de l'index de début et l'index de fin sur la liste des éléments visibles.
      * @param {number} indexFrom index sur la liste des éléments visibles du premier élément à sélectioner.
      * @param {number} indexTo index sur la liste des éléments visibles du dernier élément à sélectioner.
-     * @return {Promise} Promesse résolue par la fonction.
+     * @return {Observable} Observable résolu par la fonction.
      */
-    protected selectRange(indexFrom: number, indexTo?: number) {
+    protected selectRange$(indexFrom: number, indexTo?: number) {
         const itemListService = this.getItemListService();
-        return itemListService.selectRange(indexFrom, indexTo);
+        return itemListService.selectRange$(indexFrom, indexTo);
     }
 
     /** Change l'état de selection de l'élément spécifié.
      * @param {IItemBase[]} items Liste des éléments à modifier.
      * @param {boolean} selected True si les éléments divent être sélectionés, False si ils doivent être déselectionés.
-     * @return {Promise} Promesse résolue par la fonction.
+     * @return {Observable} Observable résolu par la fonction.
      */
-    protected toggleSelect(items: IItemBase[], selected: boolean) {
+    protected toggleSelect$(items: IItemBase[], selected: boolean) {
         const itemListService = this.getItemListService();
-        return itemListService.toggleSelect(items, selected);
+        return itemListService.toggleSelect$(items, selected);
     }
 
     /** Définit si l'élément spécifié peut être réduit.
@@ -598,8 +616,8 @@ export class ItemListBase {
     }
 
     /** Internal usage. Calc the best target when an item is drag and dropped */
-    protected calcDragTargetIndex(index: number, targetIndex: number) {
-        return this.getItemListService().calcDragTargetIndex(index, targetIndex);
+    protected calcDragTargetIndex$(index: number, targetIndex: number) {
+        return this.getItemListService().calcDragTargetIndex$(index, targetIndex);
     }
 
     /** Internal usage */
@@ -654,26 +672,29 @@ export class ItemListBase {
 
     /** Calcule le viewport pour le conteneur spécifié. */
     protected calcViewPort(query?: string, maxHeight?: number, containerElement?: HTMLElement) {
-        return new Promise<IViewListResult>((resolved?: (value: IViewListResult) => void, rejected?: (reason: any) => void) => {
+        this.calcViewPort$(query, maxHeight, containerElement).first().subscribe();
+    }
+
+    protected calcViewPort$(query?: string, maxHeight?: number, containerElement?: HTMLElement) {
+        return new Observable<IViewListResult>((subscriber: Subscriber<IViewListResult>) => {
             const calcViewPortInternal = (qry?: string, heightMax?: number, containerElem?: HTMLElement, ignoreHeightMeasurement?: boolean) => {
-                this.waiter = !this.getItems();
-                const loadViewPort = (viewList: Promise<IViewListResult>) => {
+                const loadViewPort = (viewList: Observable<IViewListResult>) => {
                     if (viewList) {
                         delete this._hintLabel;
-                        viewList.then((response) => {
+                        viewList.subscribe((response) => {
                             this.loadViewPort(response).then((res: IViewListResult) => {
-                                this.waiter = !this.getItems();
-                                resolved(res);
+                                subscriber.next(res);
+                                this.changeDetectorRef.markForCheck();
                             });
-                        }).catch((error) => {
-                            this.waiter = false;
+                        }, (error) => {
                             this._hintLabel = error;
                             this.clearViewPort();
-                            rejected(error);
+                            throw error;
                         });
                     } else {
                         this.clearViewPort();
-                        resolved(null);
+                        subscriber.next(null);
+                        this.changeDetectorRef.markForCheck();
                     }
                 };
 
@@ -701,9 +722,9 @@ export class ItemListBase {
                 if (this._viewportMode === ViewportMode.NoViewport) {
                     this.vpBeforeHeight = 0;
                     this.vpAfterHeight = 0;
-                    loadViewPort(this.getViewList(qry));
+                    loadViewPort(this.getViewList$(qry));
                 } else if (this._viewportMode === ViewportMode.VariableRowHeight) {
-                    this.getViewList(qry).then((viewListResult: IViewListResult) => {
+                    this.getViewList$(qry).subscribe((viewListResult: IViewListResult) => {
                         const visibleList = [] as IItemBase[];
                         const scrollPos = containerHeight ? containerElem.scrollTop : 0;
                         let startRow: number;
@@ -732,10 +753,12 @@ export class ItemListBase {
                         viewListResult.endRow = endRow;
                         viewListResult.visibleList = visibleList;
                         this.loadViewPort(viewListResult).then((res: IViewListResult) => {
-                            this.waiter = !this.getItems();
-                            resolved(res);
+                            subscriber.next(res);
+                            this.changeDetectorRef.markForCheck();
                         });
-                    }).catch(rejected);
+                    }, (error) => {
+                        throw error;
+                    });
                 } else {
                     const loadViewList = () => {
                         const scrollPos = (containerHeight && containerElem && containerElem.scrollTop) || 0;
@@ -747,7 +770,7 @@ export class ItemListBase {
                             maxCount++;
                         }
 
-                        loadViewPort(this.getViewList(qry, startRow, maxCount));
+                        loadViewPort(this.getViewList$(qry, startRow, maxCount));
                     };
 
                     loadViewList();
@@ -774,7 +797,7 @@ export class ItemListBase {
                     }
                 }
             } else if (this._viewportMode === ViewportMode.VariableRowHeight) {
-                this.getViewList(query).then((viewListResult: IViewListResult) => {
+                this.getViewList$(query).subscribe((viewListResult: IViewListResult) => {
                     const scrollPos = containerElement.scrollTop;
                     let scrollMax = 0;
                     let lastVisibleItem: IItemBase;

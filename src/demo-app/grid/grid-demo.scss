@@ -1,6 +1,5 @@
 @import "../../scss/variables/colors";
 // @import "../../../node_modules/@deja-js/resources/src/scss/fonts/material-icons/material-icons";
-
 :host {
 	display: flex;
 	overflow: hidden;
@@ -46,7 +45,7 @@
 				li {
 					&.odd {
 						background-color: rgba($secondary, 0.1);
-						&.current {
+						&[current="true"] {
 							background-color: rgba($secondary, 0.5);
 						}
 						&.selected {
