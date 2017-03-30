@@ -45,6 +45,8 @@ export interface IDejaGridColumn {
     groupByField?: ((model: any) => string) | string;
     /** Indique le champ utilisé pour le titre des groupes ajoutés lors du regroupement */
     groupTextField?: ((model: any) => string) | string;
+    /** Indique si la colonne est la colonne courante */
+    isCurrent?: boolean;
 }
 
 export interface IDejaGridColumnEvent { 

@@ -99,7 +99,7 @@ export class DejaTreeListDemoComponent implements OnInit {
                 case 1:
                     return 'Subgroup ' + treeItem.toString();
                 default:
-                    this.groupedTreeList.getParentListInfos(item).then((parentInfos) => {
+                    this.groupedTreeList.getParentListInfos$(item).subscribe((parentInfos) => {
                         const parentDisplayName = parentInfos && parentInfos.parent ? parentInfos.parent.toString() : 'none';
                         this.selectedInfos.push('Country: ' + country.naqme + ' (' + country.code + ')' + (parentInfos ? '    parent: ' + parentDisplayName + ' (' + parentInfos.index + ')' : ''));
                     });

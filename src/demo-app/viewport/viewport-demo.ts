@@ -20,6 +20,8 @@ import { INews, NewsService } from '../services/news.service';
     templateUrl: './viewport-demo.html',
 })
 export class DejaViewPortDemoComponent {
+    protected tabIndex = 1;
+
     protected exampleValue = `
     <deja-viewport [items]="news$ | async" itemSize="120">
         <template #itemTemplate let-item>

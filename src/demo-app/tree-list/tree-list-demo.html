@@ -25,12 +25,12 @@
 		<md-card class="treelist-demo demo-card demo-basic">
 			<md-toolbar color="secondary">Treelist demo - Cas standards</md-toolbar>
 			<md-card-content class="listContainer">
-				<deja-tree-list #treeList min-search-length="0" searchArea sortable multiSelect [selectedItems]=selectedItems (selectedChange)="onSelectionChanged($event)" nodataholder="Pas de données" placeholder="Liste des pays" [(ngModel)]="countries" [deja-mouse-draggable]="getDragContext()">
+				<deja-tree-list #treeList min-search-length="0" searchArea sortable multiSelect nodataholder="Pas de données" placeholder="Liste des pays" [(ngModel)]="countries" [deja-mouse-draggable]="getDragContext()" [valueField]="code">
 					<template #itemTemplate let-item let-flatindex="flatindex">
 						<span [attr.ddid]="item.code">{{ item.naqme + ' - ' + item.code }}</span>
 					</template>                    
                 </deja-tree-list>
-				<deja-tree-list min-search-length="0" expandButton searchArea sortable multiSelect [selectedItems]=selectedItems (selectedChange)="onSelectionChanged($event)" nodataholder="Pas de données" placeholder="Liste des pays, groupés par la première lettre" textField="naqme" [(ngModel)]="groupedCountries" (itemDragStart)="onItemDragStart($event)" #groupedtreelist childrenField="children">
+				<deja-tree-list min-search-length="0" expandButton searchArea sortable multiSelect (selectedChange)="onSelectionChanged($event)" nodataholder="Pas de données" placeholder="Liste des pays, groupés par la première lettre" textField="naqme" [(ngModel)]="groupedCountries" (itemDragStart)="onItemDragStart($event)" #groupedtreelist childrenField="children">
 					<template #headerTemplate>
 				<span id="headerTemplateContent" (click)="groupedtreelist.sort()">
 					<span id="title">

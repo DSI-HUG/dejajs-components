@@ -18,7 +18,7 @@
 			({{ drugCounts }} enregistrements)
 		</span>
 	</md-toolbar>
-	<!--<button (click)="onExpanAll()">Expand All</button>
+	<!--<button (click)="onExpandAll()">Expand All</button>
 	<button (click)="onCollapseAll()">Collapse All</button>-->
 	<md-card-content class="listContainer">
 		<deja-menu #moreReactionMenu buttonAlignment="right top" menuAlignment="right top">
@@ -82,10 +82,10 @@
 		<deja-grid #cgrid sortable columnsSizable multiSelect [(ngModel)]="drugs$" [columns]="percentColumns" (selectedChange)="onSelectionChanged2($event)" nodataholder="Pas de données"
 		           placeholder="Filtrer la liste par le nom" searchField="receivedate">
 			<template #rowTemplate let-row>
-				<deja-grid-row [row]="row" [columnLayout]="cgrid.columnLayout" [cellTemplateExternal]="cgrid.cellTemplate" [currentColumn]="cgrid.currentColumn">
-					<template #cellTemplate let-row let-column="column" let-current="isCurrentColumn">
-						<span *ngIf="column.name!=='transmissiondateformat'" class="cell" [class.current]="current">{{ row[column.name] }}</span>
-						<span *ngIf="column.name==='transmissiondateformat'" class="cell" [class.current]="current">{{ row[column.name] + 'apk'}}</span>
+				<deja-grid-row [row]="row" [columnLayout]="cgrid.columnLayout" [cellTemplateExternal]="cgrid.cellTemplate">
+					<template #cellTemplate let-row let-column="column">
+						<span *ngIf="column.name!=='transmissiondateformat'" class="cell" [attr.current]="column.isCurrent || null">{{ row[column.name] }}</span>
+						<span *ngIf="column.name==='transmissiondateformat'" class="cell" [attr.current]="column.isCurrent || null">{{ row[column.name] + 'apk'}}</span>
 					</template>
 				</deja-grid-row>
 			</template>
