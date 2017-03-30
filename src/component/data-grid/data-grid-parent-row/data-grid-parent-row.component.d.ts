@@ -1,20 +1,23 @@
+import { ChangeDetectorRef } from '@angular/core';
 import { IDejaGridColumn, IDejaGridParentRow } from '../index';
 export declare class DejaGridParentRowComponent {
+    private changeDetectorRef;
     row: IDejaGridParentRow;
-    columns: IDejaGridColumn[];
     cellTemplateExternal: any;
     parentTitleTemplateExternal: any;
     flatIndex: number;
     protected parentTitleTemplateInternal: any;
     protected cellTemplateInternal: any;
-    protected readonly columnLayout: IDejaGridParentRowColumnLayout;
+    private columnLayout;
+    columns: IDejaGridColumn[];
     protected readonly cellTemplate: any;
     protected readonly parentTitleTemplate: any;
+    constructor(changeDetectorRef: ChangeDetectorRef);
 }
 export interface IDejaGridParentRowColumnLayout {
     column0: number;
-    columns: Array<{
+    columns: {
         column: IDejaGridColumn;
         left: number;
-    }>;
+    }[];
 }

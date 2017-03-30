@@ -1,34 +1,30 @@
-import { ElementRef, EventEmitter } from '@angular/core';
+import { ChangeDetectorRef, ElementRef, EventEmitter, OnDestroy } from '@angular/core';
 import { IDejaDragEvent, IDejaDropEvent, ISortInfos } from '../../../index';
 import { IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayout, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent } from '../index';
-export declare class DejaGridHeaderComponent {
-    private elementRef;
+export declare class DejaGridHeaderComponent implements OnDestroy {
+    private changeDetectorRef;
     columnHeaderTemplateExternal: any;
     sortInfos: ISortInfos;
     columnSizeChanged: EventEmitter<IDejaGridColumnSizeEvent>;
     columnLayoutChanged: EventEmitter<IDejaGridColumnLayoutEvent>;
     columnHeaderClicked: EventEmitter<IDejaGridColumnEvent>;
     protected columnHeaderTemplateInternal: any;
+    protected sizedColumn: IDejaGridColumn;
     private _columnsDraggable;
     private _columnsSortable;
     private _columnsSizable;
     private _columnLayout;
     private backupColumnOrder;
-    private _sizedColumn;
-    private sizedOrigin;
     private columnGroupKey;
-    private clickedColumn;
-    private clickedTime;
-    private mouseMoveObs;
-    private mouseUpObs;
+    private subscriptions;
     columnsDraggable: boolean;
     columnsSortable: boolean;
     columnsSizable: boolean;
     columnLayout: IDejaGridColumnLayout;
     protected readonly columnHeaderTemplate: any;
-    protected sizedColumn: IDejaGridColumn;
-    constructor(elementRef: ElementRef);
-    protected ngAfterViewInit(): void;
+    constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef);
+    ngOnDestroy(): void;
+    refresh(): void;
     protected getDragContext(column: IDejaGridColumn): {
         dragendcallback: (event: IDejaDragEvent) => void;
         dragstartcallback: (event: IDejaDragEvent) => void;
@@ -38,9 +34,6 @@ export declare class DejaGridHeaderComponent {
         dragovercallback: (event: IDejaDropEvent) => void;
         dropcallback: (event: IDejaDropEvent) => void;
     };
-    protected onMouseDown(event: MouseEvent): boolean;
-    private mouseUp;
-    private mouseMove;
     private getColumnElementFromHTMLElement(element);
     private getColumnFromHTMLElement(element);
 }

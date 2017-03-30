@@ -1,5 +1,4 @@
-/// <reference types="node" />
-import { ElementRef, EventEmitter } from '@angular/core';
+import { ChangeDetectorRef, ElementRef, EventEmitter, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { GroupingService } from '../../common/core/grouping';
 import { IItemBase, ItemListService, ViewportMode } from '../../common/core/item-list';
@@ -7,11 +6,11 @@ import { SortingService } from '../../common/core/sorting';
 import { IDejaDragEvent } from '../dragdrop';
 import { DejaTreeListScrollEvent } from '../tree-list';
 import { DejaGridRowEvent, DejaGridRowsEvent, IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent, IDejaGridGroupsEvent } from './index';
-export declare class DejaGridComponent {
+export declare class DejaGridComponent implements OnDestroy {
     private elementRef;
     placeholder: string;
     nodataholder: string;
-    minlength: number;
+    minSearchLength: number;
     query: string;
     maxHeight: number;
     pageSize: number;
@@ -40,8 +39,6 @@ export declare class DejaGridComponent {
     selectedChange: EventEmitter<DejaGridRowEvent | DejaGridRowsEvent>;
     protected onTouchedCallback: () => void;
     protected onChangeCallback: (_: any) => void;
-    protected disableUserSelectionTimeOut: NodeJS.Timer;
-    protected disableUserSelection: any;
     private rowTemplateInternal;
     private parentRowTemplateInternal;
     private _cellTemplate;
@@ -50,17 +47,20 @@ export declare class DejaGridComponent {
     private headerTemplateInternal;
     private searchPrefixTemplateInternal;
     private searchSuffixTemplateInternal;
-    private printColumnLayoutTimeout;
-    private printColumnLayout;
+    private header;
+    private treeListComponent;
+    private _rows;
+    private _columns;
+    private _columnLayout;
+    private lastScrollLeft;
+    private printColumnLayout$;
+    private disableUserSelection$;
     private noHorizontalScroll;
-    private _currentColumn;
     private _itemListService;
-    private clickedColumn;
-    private clickedTime;
     private sizingLayoutInfos;
     private columnsLayoutInfos;
-    private mouseUpObs;
-    private resizeObs;
+    private subscriptions;
+    private hasPercentageColumns;
     private _sortable;
     private _searchArea;
     private _groupArea;
@@ -95,12 +95,8 @@ export declare class DejaGridComponent {
     private readonly columnsHeaderTemplate;
     private readonly columnHeaderTemplate;
     private readonly columnLayout;
-    private _rows;
-    private _columns;
-    private _columnLayout;
-    private lastScrollLeft;
-    private treeListComponent;
-    constructor(elementRef: ElementRef);
+    constructor(_changeDetectorRef: ChangeDetectorRef, elementRef: ElementRef);
+    ngOnDestroy(): void;
     value: any;
     writeValue(value: any): void;
     registerOnChange(fn: any): void;
@@ -114,11 +110,7 @@ export declare class DejaGridComponent {
     protected onColumnSizeChanged(e: IDejaGridColumnSizeEvent): void;
     protected onGroupRemoved(e: IDejaGridGroupsEvent): void;
     protected onGroupsChanged(e: IDejaGridGroupsEvent): void;
-    protected onKeyDown(event: KeyboardEvent): boolean;
-    protected onMouseDown(event: MouseEvent): void;
     protected calcColumnsLayout(rows?: IItemBase[]): void;
-    private resize;
-    private mouseUp;
     private ensureSizingVisible(column);
     private clearColumnLayout();
     private getColumnElementFromHTMLElement(element);

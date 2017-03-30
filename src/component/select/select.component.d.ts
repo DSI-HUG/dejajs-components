@@ -1,12 +1,10 @@
-import { ChangeDetectorRef, ElementRef } from '@angular/core';
+import { ChangeDetectorRef, ElementRef, OnDestroy } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
-import { IItemBase, ItemListBase, ItemListService, IViewListResult, ViewportMode } from '../../common/core/item-list';
-export declare class DejaSelectComponent extends ItemListBase implements ControlValueAccessor {
-    private changeDetectorRef;
+import { IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, ViewportMode } from '../../common/core/item-list';
+export declare class DejaSelectComponent extends ItemListBase implements ControlValueAccessor, OnDestroy {
     private elementRef;
     placeholder: string;
-    minlength: number;
     query: string;
     maxHeight: number;
     dropdownContainerId: string;
@@ -18,6 +16,9 @@ export declare class DejaSelectComponent extends ItemListBase implements Control
     delaySearchTrigger: number;
     protected onTouchedCallback: () => void;
     protected onChangeCallback: (_: any) => void;
+    protected keyboardNavigation: boolean;
+    private subscriptions;
+    private mouseUp$sub;
     protected hintTemplateInternal: any;
     protected placeHolderTemplateInternal: any;
     protected itemTemplateInternal: any;
@@ -31,8 +32,6 @@ export declare class DejaSelectComponent extends ItemListBase implements Control
     private _type;
     private ignoreNextScrollEvents;
     private selectingItemIndex;
-    private _keyboardNavigation;
-    private keyboardNavigationPos;
     private keepExistingViewPort;
     private dropDownQuery;
     private filterExpression;
@@ -40,14 +39,14 @@ export declare class DejaSelectComponent extends ItemListBase implements Control
     private lastScrollPosition;
     private _selectionClearable;
     private _waiter;
-    private mouseMoveObs;
-    private mouseUpObs;
     private clearFilterExpression$;
     private filterListComplete$;
     private storeScrollPosition$;
     private hideDropDown$;
     private showDropDown$;
+    private keyboardNavigation$;
     constructor(changeDetectorRef: ChangeDetectorRef, elementRef: ElementRef);
+    minSearchlength: number;
     selectionClearable: boolean;
     hideSelected: any;
     currentItem: IItemBase;
@@ -77,12 +76,12 @@ export declare class DejaSelectComponent extends ItemListBase implements Control
     private readonly containerElement;
     private readonly listElement;
     private readonly inputElement;
-    private keyboardNavigation;
     writeValue(value: any): void;
     registerOnChange(fn: any): void;
     registerOnTouched(fn: any): void;
-    toggleAll(): Promise<void>;
-    toggleCollapse(index: number, collapsed: boolean): Promise<boolean>;
+    ngOnDestroy(): void;
+    toggleAll$(): Observable<IItemTree>;
+    toggleCollapse$(index: number, collapsed: boolean): Observable<IItemTree[]>;
     protected filter(event: KeyboardEvent): boolean;
     protected scroll(): void;
     protected click(event: any): void;
@@ -91,10 +90,9 @@ export declare class DejaSelectComponent extends ItemListBase implements Control
     protected blur(): void;
     protected queryChanged(event: Event): void;
     protected removeSelection(event: Event, item: IItemBase): boolean;
-    protected calcViewPort(): Promise<IViewListResult>;
+    protected calcViewPort$(): Observable<IViewListResult>;
     protected ensureItemVisible(item: IItemBase | number): void;
     private onModelChange(items?);
-    private mouseUp;
     private select(item, hideDropDown?);
     private toggleDropDown();
     private hideDropDown();

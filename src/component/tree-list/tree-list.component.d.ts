@@ -1,16 +1,14 @@
 import { ChangeDetectorRef, ElementRef, EventEmitter, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { GroupingService } from '../../common/core/grouping';
-import { IItemBase, ItemListBase, ItemListService, IViewListResult, ViewportMode } from '../../common/core/item-list';
+import { IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, ViewportMode } from '../../common/core/item-list';
 import { SortingService } from '../../common/core/sorting';
 import { IDejaDragEvent } from '../dragdrop';
 import { DejaTreeListItemEvent, DejaTreeListItemsEvent, DejaTreeListScrollEvent } from './index';
 export declare class DejaTreeListComponent extends ItemListBase implements OnDestroy {
-    private changeDetectorRef;
     elementRef: ElementRef;
     placeholder: string;
     nodataholder: string;
-    minlength: number;
     query: string;
     maxHeight: number;
     itemTemplateExternal: any;
@@ -27,6 +25,7 @@ export declare class DejaTreeListComponent extends ItemListBase implements OnDes
     listcontainer: ElementRef;
     protected onTouchedCallback: () => void;
     protected onChangeCallback: (_: any) => void;
+    protected keyboardNavigation: boolean;
     private listItemElements;
     private itemTemplateInternal;
     private parentItemTemplateInternal;
@@ -36,8 +35,6 @@ export declare class DejaTreeListComponent extends ItemListBase implements OnDes
     private searchSuffixTemplateInternal;
     private clickedItem;
     private rangeStartIndex;
-    private _keyboardNavigation;
-    private keyboardNavigationPos;
     private ignoreNextScrollEvents;
     private filterExpression;
     private lastScrollTop;
@@ -46,12 +43,13 @@ export declare class DejaTreeListComponent extends ItemListBase implements OnDes
     private _sortable;
     private _itemsDraggable;
     private hasCustomService;
+    private keyboardNavigation$;
     private subscriptions;
-    private mouseMoveObs;
-    private mouseUpObs;
+    private mouseUp$sub;
     private clearFilterExpression$;
     private filterListComplete$;
     constructor(changeDetectorRef: ChangeDetectorRef, elementRef: ElementRef);
+    minSearchlength: number;
     searchArea: boolean;
     expandButton: boolean;
     sortable: boolean;
@@ -85,7 +83,8 @@ export declare class DejaTreeListComponent extends ItemListBase implements OnDes
     writeValue(items: any): void;
     registerOnChange(fn: any): void;
     registerOnTouched(fn: any): void;
-    toggleAll(): Promise<void>;
+    toggleAll$(): Observable<IItemTree>;
+    toggleAll(): void;
     ensureItemVisible(item: IItemBase | number): void;
     protected filter(event: KeyboardEvent): boolean;
     protected ngAfterViewInit(): void;
@@ -104,9 +103,7 @@ export declare class DejaTreeListComponent extends ItemListBase implements OnDes
     };
     protected dragLeave(event: DragEvent): void;
     protected onSelectionChange(): void;
-    protected selectRange(indexFrom: number, indexTo?: number): Promise<number>;
-    protected toggleSelect(items: IItemBase[], state: boolean): Promise<IItemBase[]>;
-    protected calcViewPort(): Promise<IViewListResult>;
-    private keyboardNavigation;
-    private mouseUp;
+    protected selectRange$(indexFrom: number, indexTo?: number): Observable<number>;
+    protected toggleSelect$(items: IItemBase[], state: boolean): Observable<IItemBase[]>;
+    protected calcViewPort$(): Observable<IViewListResult>;
 }

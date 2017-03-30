@@ -1,8 +1,8 @@
 import { AfterViewInit, EventEmitter, OnChanges, OnDestroy } from '@angular/core';
+import { MonacoEditorService } from './monaco-editor.service';
 import { IEditorLanguage } from './options/editor-language.model';
 import { IEditorScrollbarOptions } from './options/editor-scrollbar-options';
 import { IEditorTheme } from './options/editor-theme.component';
-import { MonacoEditorService } from './monaco-editor.service';
 export declare class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnChanges {
     monacoEditorService: MonacoEditorService;
     experimentalScreenReader?: boolean;
@@ -64,7 +64,6 @@ export declare class DejaMonacoEditorComponent implements OnDestroy, AfterViewIn
     lineHeight?: number;
     formatOnPaste?: boolean;
     language: IEditorLanguage;
-    disableAutocomplete: boolean;
     isDiffEditor: boolean;
     monacoLibPath: string;
     valueToCompare: string;

@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, ElementRef, OnDestroy } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 export declare class DejaViewPortComponent implements OnDestroy, AfterViewInit {
     private changeDetectorRef;
     itemSizeMode: 'fixed' | 'auto';
@@ -16,12 +16,13 @@ export declare class DejaViewPortComponent implements OnDestroy, AfterViewInit {
     itemTemplateExternal: any;
     private itemTemplateInternal;
     private itemElements;
+    private wrapperElement;
     items: any[];
     direction: 'vertical' | 'horizontal';
     private readonly itemTemplate;
     private readonly clientSize;
     private scrollPos;
-    constructor(changeDetectorRef: ChangeDetectorRef, elementRef: ElementRef);
+    constructor(changeDetectorRef: ChangeDetectorRef);
     ngOnDestroy(): void;
     ngAfterViewInit(): void;
     private calcViewPort(maxSize?);

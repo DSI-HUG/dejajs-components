@@ -1,14 +1,15 @@
-import { EventEmitter } from '@angular/core';
+import { ChangeDetectorRef, EventEmitter } from '@angular/core';
 import { IDejaDragEvent, IDejaDropEvent } from '../../index';
 import { IDejaGridColumn, IDejaGridGroupsEvent } from '../index';
 export declare class DejaGridGroupAreaComponent {
+    private changeDetectorRef;
     groupsChanged: EventEmitter<IDejaGridGroupsEvent>;
     groupRemoved: EventEmitter<IDejaGridGroupsEvent>;
     private _groups;
     private columnGroupKey;
     private groupGroupKey;
     groups: IDejaGridColumn[];
-    constructor();
+    constructor(changeDetectorRef: ChangeDetectorRef);
     protected getDragContext(group: IDejaGridColumn): {
         dragendcallback: (event: IDejaDragEvent) => void;
         dragstartcallback: (event: IDejaDragEvent) => void;

@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs/Observable';
 import { INews, NewsService } from '../services/news.service';
 export declare class DejaViewPortDemoComponent {
+    protected tabIndex: number;
     protected exampleValue: string;
     protected html: string;
     protected news$: Observable<INews[]>;
