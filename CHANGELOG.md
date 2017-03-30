@@ -1,6 +1,17 @@
 <a name="@next"></a>
 # [@next] (2017-03-xx)
 
+### Breaking changes from 1.4.2-beta.25
+
+### Known issues #
+
+### Features
+
+### Bug fixes #
+
+<a name="1.4.2-beta.25"></a>
+# [1.4.2-beta.25] (2017-03-30)
+
 ### Breaking changes from 1.4.2-beta.24
 * **ItemListService:** Functions return observable instead promise, and suffixed by $. For example getItemList is remaned getItemLIst$ and return an observable.
 
