@@ -9,7 +9,7 @@
  *
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, forwardRef, Input, OnDestroy, QueryList, ViewChild, ViewChildren, ViewEncapsulation, } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, forwardRef, Input, OnDestroy, QueryList, ViewChild, ViewChildren, ViewEncapsulation, } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
@@ -36,7 +36,7 @@ const SelectComponentValueAccessor = {
     ],
     templateUrl: './select.component.html',
 })
-export class DejaSelectComponent extends ItemListBase implements ControlValueAccessor, OnDestroy {
+export class DejaSelectComponent extends ItemListBase implements ControlValueAccessor, OnDestroy, AfterViewInit {
     /** Texte à afficher par default dans la zone de recherche */
     @Input() public placeholder: string;
     /** Correspond au ngModel du champ de filtrage ou recherche */
@@ -76,7 +76,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @ContentChild('parentItemTemplate') protected parentItemTemplateInternal;
     @ContentChild('selectedTemplate') protected selectedTemplate;
     @ContentChild('suffixTemplate') protected mdSuffix;
-    @ViewChild('inputElement') private inputElementRef: ElementRef;
+    @ViewChild('inputElement') private input: ElementRef;
     @ViewChildren('dropdownitem') private dropdownItemElements: QueryList<ElementRef>;
     @ViewChild('listcontainer') private listcontainer;
     @ViewChild(DejaDropDownComponent) private dropDownComponent: DejaDropDownComponent;
@@ -97,6 +97,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     private storeScrollPosition$ = new Subject();
     private hideDropDown$ = new Subject<number>();
     private showDropDown$ = new Subject();
+    private filter$ = new Subject<Event>();
 
     private keyboardNavigation$ = new Subject();
 
@@ -134,6 +135,9 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
         this.subscriptions.push(this.showDropDown$
             .debounceTime(50)
+            .do(() => this.dropdownVisible = true) // Ensure that dropdown container exists
+            .do(() => this.changeDetectorRef.markForCheck())
+            .delay(1)
             .filter(() => !!this.dropDownComponent) // Show canceled by the hide$ observable if !dropdownVisible
             .do(() => {
                 // Restore scroll Position
@@ -151,7 +155,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 const item = this.getSelectedItems()[0];
                 const index = item && this.getItemIndex(item);
                 if (index >= 0) {
-                    this._currentItemIndex = index;
+                    this.currentItemIndex = index;
                     this.ensureItemVisible(index);
                 }
             }));
@@ -203,11 +207,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         if (item) {
             this.ensureItemVisible(item);
         }
-    }
-
-    /** Retourne la ligne courant ou ligne active */
-    public get currentItem() {
-        return this.getCurrentItem();
     }
 
     /** Définit le nombre de lignes à sauter en cas de pression sur les touches PageUp ou PageDown */
@@ -401,7 +400,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     private get inputElement() {
-        return this.inputElementRef && this.inputElementRef.nativeElement as HTMLInputElement;
+        return this.input && this.input.nativeElement as HTMLInputElement;
     }
 
     // From ControlValueAccessor interface
@@ -439,11 +438,214 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     public registerOnTouched(fn: any) {
         this.onTouchedCallback = fn;
     }
-
     // ************* End of ControlValueAccessor Implementation **************
 
     public ngOnDestroy() {
         this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
+    }
+
+    public ngAfterViewInit() {
+        this.subscriptions.push(Observable.fromEvent(this.inputElement, 'click')
+            .filter(() => !this.dropdownVisible)
+            .subscribe(() => {
+                if (!this.isReadOnly) {
+                    this.inputElement.select();
+                    this.filter$.next(event);
+                } else {
+                    this.showDropDown();
+                }
+            }));
+
+        this.subscriptions.push(Observable.fromEvent(this.inputElement, 'focus')
+            .filter(() => !this.dropdownVisible)
+            .subscribe(() => {
+                if (this.isReadOnly) {
+                    this.showDropDown();
+                } else {
+                    // Autocomplete
+                    this.filter$.next(event);
+                }
+            }));
+
+        this.subscriptions.push(Observable.fromEvent(this.inputElement, 'blur')
+            .filter(() => this.selectingItemIndex === undefined)
+            .subscribe(() => {
+                this.onTouchedCallback();
+                this.hideDropDown$.next(10);
+            }));
+
+        this.subscriptions.push(Observable.fromEvent(this.inputElement, 'keydown')
+            .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.Home ||
+                event.keyCode === KeyCodes.End ||
+                event.keyCode === KeyCodes.PageUp ||
+                event.keyCode === KeyCodes.PageDown ||
+                event.keyCode === KeyCodes.UpArrow ||
+                event.keyCode === KeyCodes.DownArrow ||
+                event.keyCode === KeyCodes.Space ||
+                event.keyCode === KeyCodes.Enter)
+            .switchMap((event) => this.ensureListCaches$().map(() => event))
+            .map((event: KeyboardEvent) => {
+                // Set and get current index for keyboard features only
+                const setCurrentIndex = (index: number, item?: IItemBase) => {
+                    this.currentItemIndex = index;
+                    if (this.dropdownVisible) {
+                        this.ensureItemVisible(this.currentItemIndex);
+                    }
+
+                    if (!this._multiSelect) {
+                        item = item || super.getCurrentItem();
+                        this.select(item, false);
+                    }
+                };
+
+                switch (event.keyCode) {
+                    case KeyCodes.Home:
+                        if (event.altKey || this._multiSelect && !this.dropdownVisible) {
+                            this.toggleDropDown();
+                        } else {
+                            setCurrentIndex(0);
+                        }
+                        return false;
+
+                    case KeyCodes.End:
+                        if (event.altKey || this._multiSelect && !this.dropdownVisible) {
+                            this.toggleDropDown();
+                        } else {
+                            setCurrentIndex(Math.max(0, this.rowsCount - 1));
+                        }
+                        return false;
+
+                    case KeyCodes.PageUp:
+                        if (event.altKey || this._multiSelect && !this.dropdownVisible) {
+                            this.toggleDropDown();
+                        } else {
+                            const index = Math.max(0, this.currentItemIndex - this.pageSize);
+                            setCurrentIndex(index);
+                        }
+                        return false;
+
+                    case KeyCodes.PageDown:
+                        if (event.altKey || this._multiSelect && !this.dropdownVisible) {
+                            this.toggleDropDown();
+                        } else {
+                            const index = Math.min(this.rowsCount - 1, this.currentItemIndex + this.pageSize);
+                            setCurrentIndex(index);
+                        }
+                        return false;
+
+                    case KeyCodes.UpArrow:
+                        if (event.altKey || this._multiSelect && !this.dropdownVisible) {
+                            this.toggleDropDown();
+                        } else {
+                            const index = Math.max(0, this.currentItemIndex - 1);
+                            setCurrentIndex(index);
+                        }
+                        return false;
+
+                    case KeyCodes.DownArrow:
+                        if (event.altKey || this._multiSelect && !this.dropdownVisible) {
+                            this.toggleDropDown();
+                        } else {
+                            const index = Math.min(this.rowsCount - 1, this.currentItemIndex + 1);
+                            setCurrentIndex(index);
+                        }
+                        return false;
+
+                    case KeyCodes.Space:
+                        if (this.dropdownVisible) {
+                            const item = this._itemList[this.currentItemIndex - this.vpStartRow] as IItemTree;
+                            if (this.isCollapsible(item)) {
+                                this.keyboardNavigation$.next();
+                                this.toggleCollapse$(this.currentItemIndex, !item.collapsed).first().subscribe(() => { });
+                                return false;
+                            }
+                        }
+
+                        if (!this.isReadOnly) {
+                            return;
+                        }
+
+                    // Do not break or return here
+                    // tslint:disable-next-line:no-switch-case-fall-through
+                    case KeyCodes.Enter:
+                        if (this.dropdownVisible) {
+                            const item = this._itemList[this.currentItemIndex - this.vpStartRow];
+                            this.select(item);
+                        }
+                        return false;
+
+                    default:
+                        return true;
+                }
+            })
+            .subscribe((continuePropagation) => {
+                if (!continuePropagation) {
+                    this.keyboardNavigation$.next();
+                    this.changeDetectorRef.markForCheck();
+                    event.preventDefault();
+                    return false;
+                }
+            }));
+
+        const keyUp$ = Observable.fromEvent(this.inputElement, 'keyup')
+            .filter((event: KeyboardEvent) => event.keyCode >= KeyCodes.Key0 ||
+                event.keyCode === KeyCodes.Backspace ||
+                event.keyCode === KeyCodes.Space ||
+                event.keyCode === KeyCodes.Delete);
+
+        this.subscriptions.push( Observable.merge(keyUp$, this.filter$)
+            .do(() => {
+                if ((this.query || '').length < this.minSearchlength) {
+                    this._itemList = [];
+                    return;
+                }
+            })
+            .subscribe((event: KeyboardEvent) => {
+                // Set and get current index for keyboard features only
+                const setCurrentIndex = (index: number, item?: IItemBase) => {
+                    this.currentItemIndex = index;
+                    if (this.dropdownVisible) {
+                        this.ensureItemVisible(this.currentItemIndex);
+                    }
+
+                    if (!this._multiSelect) {
+                        item = item || super.getCurrentItem();
+                        this.select(item, false);
+                    }
+                };
+
+                // console.log('select.component, keycode:' + event.keyCode);
+                this.keyboardNavigation$.next();
+                if (this.isReadOnly) {
+                    // Select, search on the list
+                    if ((/[a-zA-Z0-9]/).test(event.key)) {
+                        // Valid char
+                        this.clearFilterExpression$.next(null);
+
+                        // Search next
+                        this.filterExpression += event.key;
+                        const rg = new RegExp('^' + this.filterExpression, 'i');
+                        this.findNextMatch$((item) => {
+                            if (item && this.isSelectable(item)) {
+                                const label = this.getTextValue(item);
+                                if (rg.test(label)) {
+                                    return true;
+                                }
+                            }
+                            return false;
+                        }, this.currentItemIndex)
+                            .first()
+                            .subscribe((result) => {
+                                if (result.index >= 0) {
+                                    setCurrentIndex(result.index, result.item);
+                                }
+                            });
+                    }
+                } else {
+                    // Autocomplete, filter the list
+                    this.filterListComplete$.next();
+                }
+            }));
     }
 
     /** Change l'état d'expansion de toute les lignes parentes */
@@ -467,151 +669,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             });
     }
 
-    protected filter(event: KeyboardEvent) {
-        if (!this.isReadOnly && (this.query || '').length < this.minSearchlength) {
-            this.hideDropDown();
-            return;
-        }
-
-        // Set and get current index for keyboard features only
-        const setCurrentIndex = (index: number, item?: IItemBase) => {
-            this._currentItemIndex = index;
-            if (this.dropdownVisible) {
-                this.ensureItemVisible(this._currentItemIndex);
-            }
-
-            if (!this._multiSelect) {
-                item = item || this.getCurrentItem();
-                this.select(item, false);
-            }
-        };
-
-        if (event.type === 'keydown') {
-            switch (event.keyCode) {
-                case KeyCodes.Home:
-                    if (event.altKey || this._multiSelect && !this.dropdownVisible) {
-                        this.toggleDropDown();
-                    } else {
-                        setCurrentIndex(0);
-                    }
-                    this.keyboardNavigation$.next();
-                    return false;
-
-                case KeyCodes.End:
-                    if (event.altKey || this._multiSelect && !this.dropdownVisible) {
-                        this.toggleDropDown();
-                    } else {
-                        setCurrentIndex(Math.max(0, this.rowsCount - 1));
-                    }
-                    this.keyboardNavigation$.next();
-                    return false;
-
-                case KeyCodes.PageUp:
-                    if (event.altKey || this._multiSelect && !this.dropdownVisible) {
-                        this.toggleDropDown();
-                    } else {
-                        const index = Math.max(0, this._currentItemIndex - this.pageSize);
-                        setCurrentIndex(index);
-                    }
-                    return false;
-
-                case KeyCodes.PageDown:
-                    if (event.altKey || this._multiSelect && !this.dropdownVisible) {
-                        this.toggleDropDown();
-                    } else {
-                        const index = Math.min(this.rowsCount - 1, this._currentItemIndex + this.pageSize);
-                        setCurrentIndex(index);
-                    }
-                    this.keyboardNavigation$.next();
-                    return false;
-
-                case KeyCodes.UpArrow:
-                    if (event.altKey || this._multiSelect && !this.dropdownVisible) {
-                        this.toggleDropDown();
-                    } else {
-                        const index = Math.max(0, this._currentItemIndex - 1);
-                        setCurrentIndex(index);
-                    }
-                    this.keyboardNavigation$.next();
-                    return false;
-
-                case KeyCodes.DownArrow:
-                    if (event.altKey || this._multiSelect && !this.dropdownVisible) {
-                        this.toggleDropDown();
-                    } else {
-                        const index = Math.min(this.rowsCount - 1, this._currentItemIndex + 1);
-                        setCurrentIndex(index);
-                    }
-                    this.keyboardNavigation$.next();
-                    return false;
-
-                case KeyCodes.Space:
-                    if (this.dropdownVisible) {
-                        const item = this._itemList[this._currentItemIndex - this.vpStartRow] as IItemTree;
-                        if (this.isCollapsible(item)) {
-                            this.keyboardNavigation$.next();
-                            this.toggleCollapse$(this._currentItemIndex, !item.collapsed).first().subscribe(() => { });
-                            return false;
-                        }
-                    }
-
-                    if (!this.isReadOnly) {
-                        return;
-                    }
-
-                // Do not break or return here
-                // tslint:disable-next-line:no-switch-case-fall-through
-                case KeyCodes.Enter:
-                    if (this.dropdownVisible) {
-                        const item = this._itemList[this._currentItemIndex - this.vpStartRow];
-                        this.select(item);
-                    }
-                    this.keyboardNavigation$.next();
-                    return false;
-
-                default:
-                    return true;
-            }
-        } else {
-            if (event.keyCode < KeyCodes.Key0 && event.keyCode !== KeyCodes.Backspace && event.keyCode !== KeyCodes.Delete) {
-                // Forward
-                return true;
-            }
-
-            // console.log('select.component, keycode:' + event.keyCode);
-            this.keyboardNavigation$.next();
-            if (this.isReadOnly) {
-                // Select, search on the list
-                if ((/[a-zA-Z0-9]/).test(event.key)) {
-                    // Valid char
-                    this.clearFilterExpression$.next(null);
-
-                    // Search next
-                    this.filterExpression += event.key;
-                    const rg = new RegExp('^' + this.filterExpression, 'i');
-                    this.findNextMatch$((item) => {
-                        if (item && this.isSelectable(item)) {
-                            const label = this.getTextValue(item);
-                            if (rg.test(label)) {
-                                return true;
-                            }
-                        }
-                        return false;
-                    }, this._currentItemIndex)
-                        .first()
-                        .subscribe((result) => {
-                            if (result.index >= 0) {
-                                setCurrentIndex(result.index, result.item);
-                            }
-                        });
-                }
-            } else {
-                // Autocomplete, filter the list
-                this.filterListComplete$.next();
-            }
-        }
-    }
-
     protected scroll() {
         if (this._viewportMode === ViewportMode.NoViewport || this.ignoreNextScrollEvents) {
             this.ignoreNextScrollEvents = false;
@@ -621,19 +678,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         this.keepExistingViewPort = true;
         this.calcViewPort();
         this.storeScrollPosition$.next();
-    }
-
-    protected click(event) {
-        if (this.dropdownVisible) {
-            return;
-        }
-
-        if (!this.isReadOnly) {
-            this.inputElement.select();
-            this.filter(event);
-        } else {
-            this.showDropDown();
-        }
     }
 
     protected mousedown(e: MouseEvent) {
@@ -665,28 +709,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 this.select(item);
             }
         });
-    }
-
-    protected focus(event) {
-        if (this.dropdownVisible) {
-            return;
-        }
-
-        if (this.isReadOnly) {
-            this.showDropDown();
-        } else {
-            // Autocomplete
-            this.filter(event);
-        }
-    }
-
-    protected blur() {
-        if (this.selectingItemIndex !== undefined) {
-            return;
-        }
-
-        this.onTouchedCallback();
-        this.hideDropDown$.next(10);
     }
 
     protected queryChanged(event: Event) {
@@ -801,9 +823,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     private showDropDown() {
-        // Ensure that dropdown container exists
-        this.dropdownVisible = true;
-        this.changeDetectorRef.markForCheck();
         this.showDropDown$.next();
     }
 
@@ -826,7 +845,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 const item = this.getSelectedItems()[0];
                 const index = item && this.getItemIndex(item);
                 if (index >= 0) {
-                    this._currentItemIndex = index;
+                    this.currentItemIndex = index;
                     this.ensureItemVisible(index);
                 }
             });

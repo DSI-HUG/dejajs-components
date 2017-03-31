@@ -35,6 +35,7 @@ export class ItemListBase {
     protected _textField: string;
     protected _valueField: string;
     protected _currentItemIndex = -1;
+    protected _currentItem: IItemBase;
     protected _hintLabel: string;
     protected _nodataLabel: string;
     protected computedMaxHeight = 0;
@@ -82,6 +83,15 @@ export class ItemListBase {
      */
     public get groupInfos() {
         return this._itemListService.groupInfos;
+    }
+
+    protected set currentItemIndex(value: number) {
+        this._currentItemIndex = value;
+        this._currentItem = null;
+    }
+
+    protected get currentItemIndex() {
+        return this._currentItemIndex;
     }
 
     /** Définit une valeur indiquant si les éléments selectionés doivent être masqué. Ce flag est principalement utilisé dans le cas d'un multi-select
@@ -139,13 +149,6 @@ export class ItemListBase {
             this.setItemListService(new ItemListService());
         }
         return this._itemListService;
-    }
-
-    /** Retourne l'élément courant (actif).
-     * @return {IItemBase} Elément courant.
-     */
-    public getCurrentItem() {
-        return this._currentItemIndex >= 0 ? this.getItemListService().getItemFromIndex(this._currentItemIndex) : null;
     }
 
     /** Retourne true si l'on manipule des objet business, false si on manipule des IItemBase.
@@ -473,11 +476,22 @@ export class ItemListBase {
         this._nodataLabel = value;
     }
 
+    /** Retourne l'élément courant (actif).
+     * @return {IItemBase} Elément courant.
+     */
+    public getCurrentItem() {
+        if (!this._currentItem && this.currentItemIndex >= 0) {
+            this._currentItem = this.getItemListService().getItemFromIndex(this.currentItemIndex);
+        }
+        return this._currentItem;
+    }
+
     /** Définit l'élément courant (actif).
      * @param {IItemBase} item Elément courant.
      */
     protected setCurrentItem(item: IItemBase) {
-        this._currentItemIndex = item ? this.getItemListService().getItemIndex(item) : -1;
+        this.currentItemIndex = item ? this.getItemListService().getItemIndex(item) : -1;
+        this._currentItem = item;
     }
 
     /** Retourne l'index correspondant à l'élément spéficié dans la liste des éléments visibles
@@ -529,7 +543,7 @@ export class ItemListBase {
 
     /** Usage interne. Termine le drag and drop en cours. */
     protected drop$() {
-        this._currentItemIndex = -1;
+        this.currentItemIndex = -1;
         return this.getItemListService().drop$();
     }
 
@@ -637,11 +651,11 @@ export class ItemListBase {
 
         if (parentDepth !== undefined) {
             for (let i = parentIndex + 1; i < items.length; i++) {
-                const currentItem = items[i] as IItemTree;
-                if (currentItem.depth <= parentDepth) {
+                const curItem = items[i] as IItemTree;
+                if (curItem.depth <= parentDepth) {
                     break;
                 }
-                children.push(currentItem);
+                children.push(curItem);
                 lastIndex = i;
             }
         }

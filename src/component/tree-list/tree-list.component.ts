@@ -9,7 +9,7 @@
  *
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, forwardRef, Input, OnDestroy, Output, QueryList, ViewChild, ViewChildren, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, forwardRef, Input, OnDestroy, Output, QueryList, ViewChild, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
@@ -41,7 +41,7 @@ const TreeListComponentValueAccessor = {
     ],
     templateUrl: './tree-list.component.html',
 })
-export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
+export class DejaTreeListComponent extends ItemListBase implements OnDestroy, AfterViewInit {
     /** Texte à afficher par default dans la zone de recherche */
     @Input() public placeholder: string;
     /** Texte affiché si aucune donnée n'est présente dans le tableau */
@@ -283,7 +283,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
 
     /** Retourne la ligne courant ou ligne active */
     public get currentItem() {
-        return this.getCurrentItem();
+        return super.getCurrentItem();
     }
 
     /** Retourne le nombre de niveau pour une liste hierarchique */
@@ -465,7 +465,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
         this.changeDetectorRef.markForCheck();
     }
 
-    protected ngAfterViewInit() {
+    public ngAfterViewInit() {
         // FIXME Issue angular/issues/6005
         // see http://stackoverflow.com/questions/34364880/expression-has-changed-after-it-was-checked
         if (this._itemList.length === 0 && this.hasCustomService) {
@@ -518,19 +518,23 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
         }
 
         this.subscriptions.push(keyDown$
-            .subscribe((event: KeyboardEvent) => {
-        if ((this.query || '').length < this.minSearchlength) {
-            this._itemList = [];
-            return;
-        }
-
+            .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.Home ||
+                event.keyCode === KeyCodes.End ||
+                event.keyCode === KeyCodes.PageUp ||
+                event.keyCode === KeyCodes.PageDown ||
+                event.keyCode === KeyCodes.UpArrow ||
+                event.keyCode === KeyCodes.DownArrow ||
+                event.keyCode === KeyCodes.Space ||
+                event.keyCode === KeyCodes.Enter)
+            .switchMap((event) => this.ensureListCaches$().map(() => event))
+            .map((event: KeyboardEvent) => {
         // Set current item from index for keyboard features only
         const setCurrentIndex = (index: number) => {
-            this._currentItemIndex = index;
-            this.ensureItemVisible(this._currentItemIndex);
+                    this.currentItemIndex = index;
+                    this.ensureItemVisible(this.currentItemIndex);
         };
 
-            const currentIndex = this.rangeStartIndex >= 0 ? this.rangeStartIndex : this.rangeStartIndex = this._currentItemIndex;
+                const currentIndex = this.rangeStartIndex >= 0 ? this.rangeStartIndex : this.rangeStartIndex = this.currentItemIndex;
 
             switch (event.keyCode) {
                 case KeyCodes.Home:
@@ -541,8 +545,6 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
                         this.selectRange$(this.rangeStartIndex).first().subscribe(() => { });
                     }
                     setCurrentIndex(0);
-                    this.keyboardNavigation$.next();
-                        event.preventDefault();
                     return false;
 
                 case KeyCodes.End:
@@ -553,12 +555,10 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
                         this.selectRange$(this.rangeStartIndex).first().subscribe(() => { });
                     }
                     setCurrentIndex(this.rowsCount - 1);
-                    this.keyboardNavigation$.next();
-                        event.preventDefault();
                     return false;
 
                 case KeyCodes.PageUp:
-                    const upindex = Math.max(0, this._currentItemIndex - this.pageSize);
+                        const upindex = Math.max(0, this.currentItemIndex - this.pageSize);
                     if (event.shiftKey) {
                         this.selectRange$(currentIndex, upindex).first().subscribe(() => { });
                     } else if (!event.ctrlKey) {
@@ -566,12 +566,10 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
                         this.selectRange$(this.rangeStartIndex).first().subscribe(() => { });
                     }
                     setCurrentIndex(upindex);
-                    this.keyboardNavigation$.next();
-                        event.preventDefault();
                     return false;
 
                 case KeyCodes.PageDown:
-                    const dindex = Math.min(this.rowsCount - 1, this._currentItemIndex + this.pageSize);
+                        const dindex = Math.min(this.rowsCount - 1, this.currentItemIndex + this.pageSize);
                     if (event.shiftKey) {
                         this.selectRange$(currentIndex, dindex).first().subscribe(() => { });
                     } else if (!event.ctrlKey) {
@@ -579,12 +577,10 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
                         this.selectRange$(this.rangeStartIndex).first().subscribe(() => { });
                     }
                     setCurrentIndex(dindex);
-                    this.keyboardNavigation$.next();
-                        event.preventDefault();
                     return false;
 
                 case KeyCodes.UpArrow:
-                    const uaindex = Math.max(0, this._currentItemIndex - 1);
+                        const uaindex = Math.max(0, this.currentItemIndex - 1);
                     if (uaindex !== -1) {
                         if (event.shiftKey) {
                             this.selectRange$(currentIndex, uaindex).first().subscribe(() => { });
@@ -594,12 +590,10 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
                         }
                         setCurrentIndex(uaindex);
                     }
-                    this.keyboardNavigation$.next();
-                        event.preventDefault();
                     return false;
 
                 case KeyCodes.DownArrow:
-                    const daindex = Math.min(this.rowsCount - 1, this._currentItemIndex + 1);
+                        const daindex = Math.min(this.rowsCount - 1, this.currentItemIndex + 1);
                     if (daindex !== -1) {
                         if (event.shiftKey) {
                             this.selectRange$(currentIndex, daindex).first().subscribe(() => { });
@@ -609,8 +603,6 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
                         }
                         setCurrentIndex(daindex);
                     }
-                    this.keyboardNavigation$.next();
-                        event.preventDefault();
                     return false;
 
                 case KeyCodes.Space:
@@ -634,8 +626,6 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
                                 .subscribe(() => { });
                         }
                     }
-                    this.keyboardNavigation$.next();
-                        event.preventDefault();
                     return false;
 
                 case KeyCodes.Enter:
@@ -650,13 +640,19 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
                                 .subscribe(() => { });
                         }
                     }
-                    this.keyboardNavigation$.next();
-                        event.preventDefault();
                     return false;
 
                 default:
                     return true;
             }
+            })
+            .subscribe((continuePropagation) => {
+                if (!continuePropagation) {
+                    this.keyboardNavigation$.next();
+                    this.changeDetectorRef.markForCheck();
+                    event.preventDefault();
+                    return false;
+                }
             }));
 
 
@@ -667,24 +663,24 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
             keyUp$ = keyUp$.merge(inputKeyup$, inputDrop$);
         }
 
-        // Ensure list cache // TODO
-        this.subscriptions.push(keyDown$
-            .subscribe((event: KeyboardEvent) => {
+        // Ensure list cache
+        this.subscriptions.push(keyUp$
+            .do(() => {
                 if ((this.query || '').length < this.minSearchlength) {
                     this._itemList = [];
                     return;
                 }
-
+            })
+            .filter((event: KeyboardEvent) => event.keyCode >= KeyCodes.Key0 ||
+                event.keyCode === KeyCodes.Backspace ||
+                event.keyCode === KeyCodes.Space ||
+                event.keyCode === KeyCodes.Delete)
+            .subscribe((event: KeyboardEvent) => {
                 // Set current item from index for keyboard features only
                 const setCurrentIndex = (index: number) => {
-                    this._currentItemIndex = index;
-                    this.ensureItemVisible(this._currentItemIndex);
+                    this.currentItemIndex = index;
+                    this.ensureItemVisible(this.currentItemIndex);
                 };
-
-            if (event.keyCode < KeyCodes.Key0 && event.keyCode !== KeyCodes.Backspace && event.keyCode !== KeyCodes.Delete && event.keyCode !== KeyCodes.Space) {
-                // Forward
-                return true;
-            }
 
             if (!this.searchArea) {
                 if ((/[a-zA-Z0-9]/).test(event.key)) {
@@ -703,7 +699,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
                         }
                             event.preventDefault();
                         return false;
-                    }, this._currentItemIndex)
+                        }, this.currentItemIndex)
                         .first()
                         .subscribe((result) => {
                             if (result.index >= 0) {
@@ -714,8 +710,10 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
             } else {
                 // Autocomplete, filter the list
                 this.keyboardNavigation$.next();
+                    if (event.keyCode !== KeyCodes.Space) {
                 this.filterListComplete$.next();
             }
+                }
             }));
     }
 
@@ -739,7 +737,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
         if (!this.isCollapsible(item) && this.isSelectable(item) && (!e.ctrlKey || !this.multiSelect) && (e.button === 0 || !item.selected)) {
             if (e.shiftKey && this.multiSelect) {
                 // Select all from current to clicked
-                this.selectRange$(itemIndex, this._currentItemIndex)
+                this.selectRange$(itemIndex, this.currentItemIndex)
                     .first()
                     .subscribe(() => this.changeDetectorRef.markForCheck());
                 return false;
@@ -749,7 +747,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
                 }
 
                 this.unselectAll$().first().subscribe(() => {
-                    this._currentItemIndex = itemIndex;
+                    this.currentItemIndex = itemIndex;
                     this.toggleSelect$([item], true)
                         .first()
                         .subscribe(() => this.changeDetectorRef.markForCheck());
@@ -783,11 +781,11 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
                 if (this.isCollapsible(upItem) || (upevt.target as HTMLElement).id === 'expandbtn') {
                     const treeItem = upItem as IItemTree;
                     this.toggleCollapse$(upIndex, !treeItem.collapsed).first().subscribe(() => {
-                        this._currentItemIndex = upIndex;
+                        this.currentItemIndex = upIndex;
                     });
 
                 } else if (upevt.ctrlKey && this.multiSelect) {
-                    this._currentItemIndex = upIndex;
+                    this.currentItemIndex = upIndex;
                     this.toggleSelect$([upItem], !upItem.selected)
                         .first()
                         .subscribe(() => this.changeDetectorRef.markForCheck());

@@ -1,5 +1,5 @@
 <md-input-container id="input" [attr.wait]="waiter || _waiter" [attr.multiselection]="_multiSelect && selectedItems.length > 0">
-    <input #inputElement type="text" mdInput [readonly]="isReadOnly" (input)="queryChanged($event)" [value]="query" (keydown)="filter($event)" (keyup)="filter($event)" (focus)="focus($event)" (click)="click($event)" (blur)="blur($event)">
+    <input #inputElement type="text" mdInput [readonly]="isReadOnly" (input)="queryChanged($event)" [value]="query">
 	<div id="md-input-prefix" mdPrefix *ngIf="_multiSelect && selectedItems.length > 0">
 		<ul>
 			<li *ngFor="let item of selectedItems; let index = index">

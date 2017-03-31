@@ -812,8 +812,8 @@ export class ItemListService {
                     let lastIndex = ddStartIndex;
                     if (parentDepth !== undefined) {
                         for (let i = ddStartIndex + 1; i < this._ddList.length; i++) {
-                            const currentItem = this._ddList[i] as IItemTree;
-                            if (currentItem.depth <= parentDepth) {
+                            const curItem = this._ddList[i] as IItemTree;
+                            if (curItem.depth <= parentDepth) {
                                 break;
                             }
                             lastIndex = i;
