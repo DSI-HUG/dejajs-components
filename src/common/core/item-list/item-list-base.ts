@@ -400,7 +400,8 @@ export class ItemListBase {
      * @return {Observable} Observable résolu par la fonction.
      */
     protected findNextMatch$(compare?: (item: IItemBase, index: number) => boolean, startIndex?: number): Observable<IFindItemResult> {
-        return this.getItemListService().findNextMatch$(compare, startIndex);
+        return this.ensureListCaches$()
+            .switchMap(() => this.getItemListService().findNextMatch$(compare, startIndex));
     }
 
     /** Définit la hauteur d'une ligne pour le calcul du viewport. Le Viewport ne fonctionne qu'avec des hauteurs de lignes fixe.
@@ -561,7 +562,8 @@ export class ItemListBase {
      */
     protected selectRange$(indexFrom: number, indexTo?: number) {
         const itemListService = this.getItemListService();
-        return itemListService.selectRange$(indexFrom, indexTo);
+        return this.ensureListCaches$()
+            .switchMap(() => itemListService.selectRange$(indexFrom, indexTo));
     }
 
     /** Change l'état de selection de l'élément spécifié.
@@ -617,7 +619,8 @@ export class ItemListBase {
 
     /** Internal usage. Calc the best target when an item is drag and dropped */
     protected calcDragTargetIndex$(index: number, targetIndex: number) {
-        return this.getItemListService().calcDragTargetIndex$(index, targetIndex);
+        return this.ensureListCaches$()
+            .switchMap(() => this.getItemListService().calcDragTargetIndex$(index, targetIndex));
     }
 
     /** Internal usage */
@@ -779,6 +782,10 @@ export class ItemListBase {
 
             calcViewPortInternal(query, maxHeight, containerElement);
         });
+    }
+
+    protected ensureListCaches$(): Observable<IViewListResult> {
+        return this._itemListService.hasCache ? Observable.of(null) : this.calcViewPort$();
     }
 
     /** Calcul la position de la scrollbar pour que l'élément spéfié soit dans la zone visible. */

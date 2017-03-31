@@ -10,6 +10,7 @@
  */
 
 import { ApplicationRef, NgModule } from '@angular/core';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MaterialModule } from '@angular/material';
@@ -115,18 +116,19 @@ import { CodeblockModule } from 'ng-prism';
         DemoAppComponent,
     ],
     imports: [
-        DejaAccordionModule,
+        FormsModule,
+        HttpModule,
+        RouterModule,
+        FlexLayoutModule,
         BrowserModule,
+        MaterialModule,
+        DejaAccordionModule,
         DejaCodeViewerModule,
         CodeblockModule,
         DejaCircularPickerModule,
         DejaDateSelectorModule,
         DejaDatePickerModule,
         DejaDialogModule,
-        FormsModule,
-        HttpModule,
-        RouterModule,
-        MaterialModule,
         DejaSelectModule,
         DejaTreeListModule,
         DejaTilesModule,

@@ -285,6 +285,7 @@ export class DejaGridComponent implements OnDestroy {
                 observable.subscribe((itms) => this.calcColumnsLayout(itms));
             }
         }
+        this.changeDetectorRef.markForCheck();
     }
 
     /** Retourne le modèle affiché dans les lignes de la grille. */
@@ -362,7 +363,7 @@ export class DejaGridComponent implements OnDestroy {
         return this._columnLayout;
     }
 
-    constructor(_changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef) {
+    constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef) {
         const element = this.elementRef.nativeElement as HTMLElement;
 
         this.clearColumnLayout();
@@ -415,10 +416,12 @@ export class DejaGridComponent implements OnDestroy {
                 switch (event.keyCode) {
                     case KeyCodes.LeftArrow:
                         this.currentColumn = this.columns && findPrev(this.columns.findIndex((c) => c.isCurrent));
+                        event.preventDefault();
                         return false;
 
                     case KeyCodes.RightArrow:
                         this.currentColumn = this.columns && findNext(this.columns.findIndex((c) => c.isCurrent));
+                        event.preventDefault();
                         return false;
 
                     default:

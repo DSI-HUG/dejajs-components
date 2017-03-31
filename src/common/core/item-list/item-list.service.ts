@@ -106,6 +106,10 @@ export class ItemListService {
         this._valueField = valueField;
     }
 
+    public get hasCache() {
+        return this._cache && !!this._cache.visibleList;
+    }
+
     private set items(items: IItemBase[]) {
         this._items = items;
         this.invalidateCache();
@@ -316,6 +320,10 @@ export class ItemListService {
         return new Observable<number>((subscriber: Subscriber<number>) => {
             const currentList = this._ddList || this._cache.visibleList;
 
+            if (!currentList) {
+                throw new Error('Empty cache on calcDragTargetIndex');
+            }
+
             const startIndex = this._ddCurrentIndex !== undefined ? this._ddCurrentIndex : index;
             if (startIndex >= currentList.length) {
                 subscriber.next(currentList.length - 1);
@@ -404,7 +412,12 @@ export class ItemListService {
      * @return {Observable} Observable résolu par la fonction.
      */
     public toggleCollapse$(index: number, collapse?: boolean): Observable<IItemBase[]> {
-        const item = this._cache.visibleList[index] as IItemTree;
+        const visibleList = this._cache.visibleList;
+        if (!visibleList || !visibleList.length) {
+            throw new Error('Empty cache on toggleCollapse');
+        }
+
+        const item = visibleList[index] as IItemTree;
         if (!item || item.collapsible === false) {
             return Observable.of([]);
         }
@@ -515,9 +528,14 @@ export class ItemListService {
             indexTo = indexFrom;
         }
 
+        // Backup current visible list in case of unselectAll clear the cache
+        const visibleList = this._cache.visibleList;
+        if (!visibleList || !visibleList.length) {
+            throw new Error('Empty cache on selection');
+        }
+
         return this.unselectAll$()
-            .filter(() => this._cache.visibleList && this._cache.visibleList.length > 0)
-            .map(() => this._cache.visibleList.slice(Math.min(indexFrom, indexTo), Math.max(indexFrom, indexTo)))
+            .map(() => visibleList.slice(Math.min(indexFrom, indexTo), 1 + Math.max(indexFrom, indexTo)))
             .map((items) => items.filter((itm) => itm.selectable !== false))
             .do(() => {
                 if (this.hideSelected) {
@@ -628,7 +646,12 @@ export class ItemListService {
      */
     public findNextMatch$(compare?: (item: IItemBase, index: number) => boolean, startIndex?: number): Observable<IFindItemResult> {
         let result = { index: -1 } as IFindItemResult;
+
         const list = this._cache.visibleList;
+        if (!list || !list.length) {
+            throw new Error('Empty cache on findNextMatch');
+        }
+
         if (list.length) {
             if (startIndex < 0 || startIndex >= list.length) {
                 startIndex = -1;
@@ -833,7 +856,7 @@ export class ItemListService {
                     result.startRow = startRow;
                     result.endRow = result.startRow + rowsCount - 1;
                 }
-                result.visibleList = viewList.slice(result.startRow, result.endRow + 1);
+                result.visibleList = viewList.slice(result.startRow, 1 + result.endRow);
 
             } else {
                 result.visibleList = viewList;

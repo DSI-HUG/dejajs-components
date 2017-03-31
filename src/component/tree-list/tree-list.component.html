@@ -15,7 +15,7 @@
 <div id="list-header" *ngIf="headerTemplate">
 	<template [ngTemplateOutlet]="headerTemplate"></template>
 </div>
-<div #listcontainer id="list" [style.max-height.px]="maxHeight || null" tabindex="1" (keydown)="filter($event)" (keyup)="filter($event)" [class.hasheader]="headerTemplate" [class.dragover]="_ddStartIndex !== undefined ? _ddStartIndex : null" [attr.keynav]="keyboardNavigation" (dragleave)="sortable ? dragLeave($event): null" (mousedown)="mousedown($event)" [deja-droppable]="getDropContext()">
+<div #listcontainer id="list" [style.max-height.px]="maxHeight || null" tabindex="1" [class.hasheader]="headerTemplate" [class.dragover]="_ddStartIndex !== undefined ? _ddStartIndex : null" [attr.keynav]="keyboardNavigation" (dragleave)="sortable ? dragLeave($event): null" (mousedown)="mousedown($event)" [deja-droppable]="getDropContext()">
 	<div id="nodata-holder" *ngIf="(!_itemList || _itemList.length === 0) && !waiter">{{ nodataholder }}</div>
 	<div id="error-hint" *ngIf="_hintLabel">{{ _hintLabel }}</div>
 	<div *ngIf="vpBeforeHeight" [style.height.px]="vpBeforeHeight"></div>

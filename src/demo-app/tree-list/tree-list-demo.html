@@ -13,9 +13,9 @@
 		<md-card class="treelist-demo demo-card demo-basic business-object">
 			<md-toolbar color="secondary">By passing business object</md-toolbar>
 			<md-card-content>
-				<div class="display-flex">
-					<deja-tree-list class="flex" [maxHeight]="400" min-search-length="0" searchArea sortable multiSelect (selectedChange)="onSelectBusinessObject($event)" nodataholder="Pas de données" placeholder="Liste des pays" [models]="countries"></deja-tree-list>
-					<div class="flex json-view">
+				<div fxLayout="row">
+					<deja-tree-list fxFlex="0 0 50%" [maxHeight]="400" min-search-length="0" searchArea sortable multiSelect (selectedChange)="onSelectBusinessObject($event)" nodataholder="Pas de données" placeholder="Liste des pays" [models]="countries"></deja-tree-list>
+					<div fxFlex="0 0 50%" class="flex json-view">
 						<h4>Selected country model :</h4>
 						<pre>{{selectedCountries | json}}</pre>
 					</div>
@@ -25,7 +25,7 @@
 		<md-card class="treelist-demo demo-card demo-basic">
 			<md-toolbar color="secondary">Treelist demo - Cas standards</md-toolbar>
 			<md-card-content class="listContainer">
-				<deja-tree-list #treeList min-search-length="0" searchArea sortable multiSelect nodataholder="Pas de données" placeholder="Liste des pays" [(ngModel)]="countries" [deja-mouse-draggable]="getDragContext()" [valueField]="code">
+				<deja-tree-list #treeList min-search-length="0" searchArea multiSelect nodataholder="Pas de données" placeholder="Liste des pays" [(ngModel)]="countries" [deja-mouse-draggable]="getDragContext()" [valueField]="code">
 					<template #itemTemplate let-item let-flatindex="flatindex">
 						<span [attr.ddid]="item.code">{{ item.naqme + ' - ' + item.code }}</span>
 					</template>                    

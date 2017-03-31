@@ -9,7 +9,7 @@
  *
  */
 
-import { Directive, ElementRef, HostListener, Input } from '@angular/core';
+import { Directive, ElementRef, Input } from '@angular/core';
 import { Observable, Subject } from 'rxjs/Rx';
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
@@ -79,6 +79,9 @@ export class DejaMouseDraggableDirective {
                                     } else {
                                         moveUp$.next();
                                     }
+
+                                    ev.preventDefault();
+                                    return false;
                                 });
 
                             dragDropService.dragging$.next(true);
@@ -117,12 +120,6 @@ export class DejaMouseDraggableDirective {
                         }
                     });
             });
-    }
-
-    @HostListener('mousedown', ['$event'])
-    protected onMouseDown(e: DragEvent) {
-        e.preventDefault();
-        return false;
     }
 }
 

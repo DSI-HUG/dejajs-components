@@ -79,6 +79,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
 
     /** Internal use */
     @ViewChild('listcontainer') public listcontainer: ElementRef;
+    @ViewChild('inputelement') public input: ElementRef;
 
     // NgModel implementation
     protected onTouchedCallback: () => void = noop;
@@ -458,174 +459,10 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
         super.ensureItemVisible(this.query, this.listcontainer.nativeElement, this.listItemElements, item);
     }
 
-    protected filter(event: KeyboardEvent) {
-        if ((this.query || '').length < this.minSearchlength) {
-            this._itemList = [];
-            return;
-        }
-
-        // Set current item from index for keyboard features only
-        const setCurrentIndex = (index: number) => {
-            this._currentItemIndex = index;
-            this.ensureItemVisible(this._currentItemIndex);
-        };
-
-        if (event.type === 'keydown') {
-            const currentIndex = this.rangeStartIndex >= 0 ? this.rangeStartIndex : this.rangeStartIndex = this._currentItemIndex;
-
-            switch (event.keyCode) {
-                case KeyCodes.Home:
-                    if (event.shiftKey) {
-                        this.selectRange$(currentIndex, 0).first().subscribe(() => { });
-                    } else if (!event.ctrlKey) {
-                        this.rangeStartIndex = 0;
-                        this.selectRange$(this.rangeStartIndex).first().subscribe(() => { });
-                    }
-                    setCurrentIndex(0);
-                    this.keyboardNavigation$.next();
-                    return false;
-
-                case KeyCodes.End:
-                    if (event.shiftKey) {
-                        this.selectRange$(currentIndex, this.rowsCount - 1).first().subscribe(() => { });
-                    } else if (!event.ctrlKey) {
-                        this.rangeStartIndex = this.rowsCount - 1;
-                        this.selectRange$(this.rangeStartIndex).first().subscribe(() => { });
-                    }
-                    setCurrentIndex(this.rowsCount - 1);
-                    this.keyboardNavigation$.next();
-                    return false;
-
-                case KeyCodes.PageUp:
-                    const upindex = Math.max(0, this._currentItemIndex - this.pageSize);
-                    if (event.shiftKey) {
-                        this.selectRange$(currentIndex, upindex).first().subscribe(() => { });
-                    } else if (!event.ctrlKey) {
-                        this.rangeStartIndex = upindex;
-                        this.selectRange$(this.rangeStartIndex).first().subscribe(() => { });
-                    }
-                    setCurrentIndex(upindex);
-                    this.keyboardNavigation$.next();
-                    return false;
-
-                case KeyCodes.PageDown:
-                    const dindex = Math.min(this.rowsCount - 1, this._currentItemIndex + this.pageSize);
-                    if (event.shiftKey) {
-                        this.selectRange$(currentIndex, dindex).first().subscribe(() => { });
-                    } else if (!event.ctrlKey) {
-                        this.rangeStartIndex = dindex;
-                        this.selectRange$(this.rangeStartIndex).first().subscribe(() => { });
-                    }
-                    setCurrentIndex(dindex);
-                    this.keyboardNavigation$.next();
-                    return false;
-
-                case KeyCodes.UpArrow:
-                    const uaindex = Math.max(0, this._currentItemIndex - 1);
-                    if (uaindex !== -1) {
-                        if (event.shiftKey) {
-                            this.selectRange$(currentIndex, uaindex).first().subscribe(() => { });
-                        } else if (!event.ctrlKey) {
-                            this.rangeStartIndex = uaindex;
-                            this.selectRange$(this.rangeStartIndex).first().subscribe(() => { });
-                        }
-                        setCurrentIndex(uaindex);
-                    }
-                    this.keyboardNavigation$.next();
-                    return false;
-
-                case KeyCodes.DownArrow:
-                    const daindex = Math.min(this.rowsCount - 1, this._currentItemIndex + 1);
-                    if (daindex !== -1) {
-                        if (event.shiftKey) {
-                            this.selectRange$(currentIndex, daindex).first().subscribe(() => { });
-                        } else if (!event.ctrlKey) {
-                            this.rangeStartIndex = daindex;
-                            this.selectRange$(this.rangeStartIndex).first().subscribe(() => { });
-                        }
-                        setCurrentIndex(daindex);
-                    }
-                    this.keyboardNavigation$.next();
-                    return false;
-
-                case KeyCodes.Space:
-                    const target = event.target as HTMLElement;
-                    if (target.tagName === 'INPUT' && !event.ctrlKey && !event.shiftKey) {
-                        return true;
-                    }
-
-                    const sitem = this.currentItem as IItemTree;
-                    if (sitem) {
-                        if (this.isCollapsible(sitem)) {
-                            this.toggleCollapse$(currentIndex, !sitem.collapsed).first().subscribe(() => { });
-                        } else if (sitem.selected) {
-                            this.toggleSelect$([sitem], false).first().subscribe(() => { });
-                        } else if (this.multiSelect && event.ctrlKey) {
-                            this.toggleSelect$([sitem], !sitem.selected).first().subscribe(() => { });
-                        } else {
-                            this.unselectAll$()
-                                .switchMap(() => this.toggleSelect$([sitem], true))
-                                .first()
-                                .subscribe(() => { });
-                        }
-                    }
-                    this.keyboardNavigation$.next();
-                    return false;
-
-                case KeyCodes.Enter:
-                    const eitem = this.currentItem as IItemTree;
-                    if (eitem) {
-                        if (this.isCollapsible(eitem) || eitem.selected) {
-                            this.toggleCollapse$(currentIndex, !eitem.collapsed).first().subscribe(() => { });
-                        } else if (eitem.selectable) {
-                            this.unselectAll$()
-                                .switchMap(() => this.toggleSelect$([eitem], true))
-                                .first()
-                                .subscribe(() => { });
-                        }
-                    }
-                    this.keyboardNavigation$.next();
-                    return false;
-
-                default:
-                    return true;
-            }
-        } else {
-            if (event.keyCode < KeyCodes.Key0 && event.keyCode !== KeyCodes.Backspace && event.keyCode !== KeyCodes.Delete && event.keyCode !== KeyCodes.Space) {
-                // Forward
-                return true;
-            }
-
-            if (!this.searchArea) {
-                if ((/[a-zA-Z0-9]/).test(event.key)) {
-                    // Valid char
-                    this.clearFilterExpression$.next(null);
-
-                    // Search next
-                    this.filterExpression += event.key;
-                    const rg = new RegExp('^' + this.filterExpression, 'i');
-                    this.findNextMatch$((item) => {
-                        if (item && this.isSelectable(item)) {
-                            const label = this.getTextValue(item);
-                            if (rg.test(label)) {
-                                return true;
-                            }
-                        }
-                        return false;
-                    }, this._currentItemIndex)
-                        .first()
-                        .subscribe((result) => {
-                            if (result.index >= 0) {
-                                setCurrentIndex(result.index);
-                            }
-                        });
-                }
-            } else {
-                // Autocomplete, filter the list
-                this.keyboardNavigation$.next();
-                this.filterListComplete$.next();
-            }
-        }
+    /** Efface le contenu de la liste */
+    public clearViewPort() {
+        super.clearViewPort();
+        this.changeDetectorRef.markForCheck();
     }
 
     protected ngAfterViewInit() {
@@ -672,6 +509,214 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
                 this.calcViewPort();
             });
         this.subscriptions.push(scrollSub, resizeSub);
+
+
+        let keyDown$ = Observable.fromEvent(this.listcontainer.nativeElement, 'keydown');
+        if (this.input) {
+            const inputKeyDown$ = Observable.fromEvent(this.input.nativeElement, 'keydown');
+            keyDown$ = keyDown$.merge(inputKeyDown$);
+        }
+
+        this.subscriptions.push(keyDown$
+            .subscribe((event: KeyboardEvent) => {
+        if ((this.query || '').length < this.minSearchlength) {
+            this._itemList = [];
+            return;
+        }
+
+        // Set current item from index for keyboard features only
+        const setCurrentIndex = (index: number) => {
+            this._currentItemIndex = index;
+            this.ensureItemVisible(this._currentItemIndex);
+        };
+
+            const currentIndex = this.rangeStartIndex >= 0 ? this.rangeStartIndex : this.rangeStartIndex = this._currentItemIndex;
+
+            switch (event.keyCode) {
+                case KeyCodes.Home:
+                    if (event.shiftKey) {
+                        this.selectRange$(currentIndex, 0).first().subscribe(() => { });
+                    } else if (!event.ctrlKey) {
+                        this.rangeStartIndex = 0;
+                        this.selectRange$(this.rangeStartIndex).first().subscribe(() => { });
+                    }
+                    setCurrentIndex(0);
+                    this.keyboardNavigation$.next();
+                        event.preventDefault();
+                    return false;
+
+                case KeyCodes.End:
+                    if (event.shiftKey) {
+                        this.selectRange$(currentIndex, this.rowsCount - 1).first().subscribe(() => { });
+                    } else if (!event.ctrlKey) {
+                        this.rangeStartIndex = this.rowsCount - 1;
+                        this.selectRange$(this.rangeStartIndex).first().subscribe(() => { });
+                    }
+                    setCurrentIndex(this.rowsCount - 1);
+                    this.keyboardNavigation$.next();
+                        event.preventDefault();
+                    return false;
+
+                case KeyCodes.PageUp:
+                    const upindex = Math.max(0, this._currentItemIndex - this.pageSize);
+                    if (event.shiftKey) {
+                        this.selectRange$(currentIndex, upindex).first().subscribe(() => { });
+                    } else if (!event.ctrlKey) {
+                        this.rangeStartIndex = upindex;
+                        this.selectRange$(this.rangeStartIndex).first().subscribe(() => { });
+                    }
+                    setCurrentIndex(upindex);
+                    this.keyboardNavigation$.next();
+                        event.preventDefault();
+                    return false;
+
+                case KeyCodes.PageDown:
+                    const dindex = Math.min(this.rowsCount - 1, this._currentItemIndex + this.pageSize);
+                    if (event.shiftKey) {
+                        this.selectRange$(currentIndex, dindex).first().subscribe(() => { });
+                    } else if (!event.ctrlKey) {
+                        this.rangeStartIndex = dindex;
+                        this.selectRange$(this.rangeStartIndex).first().subscribe(() => { });
+                    }
+                    setCurrentIndex(dindex);
+                    this.keyboardNavigation$.next();
+                        event.preventDefault();
+                    return false;
+
+                case KeyCodes.UpArrow:
+                    const uaindex = Math.max(0, this._currentItemIndex - 1);
+                    if (uaindex !== -1) {
+                        if (event.shiftKey) {
+                            this.selectRange$(currentIndex, uaindex).first().subscribe(() => { });
+                        } else if (!event.ctrlKey) {
+                            this.rangeStartIndex = uaindex;
+                            this.selectRange$(this.rangeStartIndex).first().subscribe(() => { });
+                        }
+                        setCurrentIndex(uaindex);
+                    }
+                    this.keyboardNavigation$.next();
+                        event.preventDefault();
+                    return false;
+
+                case KeyCodes.DownArrow:
+                    const daindex = Math.min(this.rowsCount - 1, this._currentItemIndex + 1);
+                    if (daindex !== -1) {
+                        if (event.shiftKey) {
+                            this.selectRange$(currentIndex, daindex).first().subscribe(() => { });
+                        } else if (!event.ctrlKey) {
+                            this.rangeStartIndex = daindex;
+                            this.selectRange$(this.rangeStartIndex).first().subscribe(() => { });
+                        }
+                        setCurrentIndex(daindex);
+                    }
+                    this.keyboardNavigation$.next();
+                        event.preventDefault();
+                    return false;
+
+                case KeyCodes.Space:
+                    const target = event.target as HTMLElement;
+                    if (target.tagName === 'INPUT' && !event.ctrlKey && !event.shiftKey) {
+                        return true;
+                    }
+
+                    const sitem = this.currentItem as IItemTree;
+                    if (sitem) {
+                        if (this.isCollapsible(sitem)) {
+                            this.toggleCollapse$(currentIndex, !sitem.collapsed).first().subscribe(() => { });
+                        } else if (sitem.selected) {
+                            this.toggleSelect$([sitem], false).first().subscribe(() => { });
+                        } else if (this.multiSelect && event.ctrlKey) {
+                            this.toggleSelect$([sitem], !sitem.selected).first().subscribe(() => { });
+                        } else {
+                            this.unselectAll$()
+                                .switchMap(() => this.toggleSelect$([sitem], true))
+                                .first()
+                                .subscribe(() => { });
+                        }
+                    }
+                    this.keyboardNavigation$.next();
+                        event.preventDefault();
+                    return false;
+
+                case KeyCodes.Enter:
+                    const eitem = this.currentItem as IItemTree;
+                    if (eitem) {
+                        if (this.isCollapsible(eitem) || eitem.selected) {
+                            this.toggleCollapse$(currentIndex, !eitem.collapsed).first().subscribe(() => { });
+                        } else if (eitem.selectable) {
+                            this.unselectAll$()
+                                .switchMap(() => this.toggleSelect$([eitem], true))
+                                .first()
+                                .subscribe(() => { });
+                        }
+                    }
+                    this.keyboardNavigation$.next();
+                        event.preventDefault();
+                    return false;
+
+                default:
+                    return true;
+            }
+            }));
+
+
+        let keyUp$ = Observable.fromEvent(this.listcontainer.nativeElement, 'keyup');
+        if (this.input) {
+            const inputKeyup$ = Observable.fromEvent(this.input.nativeElement, 'keyup');
+            const inputDrop$ = Observable.fromEvent(this.input.nativeElement, 'drop');
+            keyUp$ = keyUp$.merge(inputKeyup$, inputDrop$);
+        }
+
+        // Ensure list cache // TODO
+        this.subscriptions.push(keyDown$
+            .subscribe((event: KeyboardEvent) => {
+                if ((this.query || '').length < this.minSearchlength) {
+                    this._itemList = [];
+                    return;
+                }
+
+                // Set current item from index for keyboard features only
+                const setCurrentIndex = (index: number) => {
+                    this._currentItemIndex = index;
+                    this.ensureItemVisible(this._currentItemIndex);
+                };
+
+            if (event.keyCode < KeyCodes.Key0 && event.keyCode !== KeyCodes.Backspace && event.keyCode !== KeyCodes.Delete && event.keyCode !== KeyCodes.Space) {
+                // Forward
+                return true;
+            }
+
+            if (!this.searchArea) {
+                if ((/[a-zA-Z0-9]/).test(event.key)) {
+                    // Valid char
+                    this.clearFilterExpression$.next(null);
+
+                    // Search next
+                    this.filterExpression += event.key;
+                    const rg = new RegExp('^' + this.filterExpression, 'i');
+                    this.findNextMatch$((item) => {
+                        if (item && this.isSelectable(item)) {
+                            const label = this.getTextValue(item);
+                            if (rg.test(label)) {
+                                return true;
+                            }
+                        }
+                            event.preventDefault();
+                        return false;
+                    }, this._currentItemIndex)
+                        .first()
+                        .subscribe((result) => {
+                            if (result.index >= 0) {
+                                setCurrentIndex(result.index);
+                            }
+                        });
+                }
+            } else {
+                // Autocomplete, filter the list
+                this.keyboardNavigation$.next();
+                this.filterListComplete$.next();
+            }
+            }));
     }
 
     public ngOnDestroy() {
@@ -847,7 +892,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
                 this.onSelectionChange();
             }
             return selectedCount;
-        });
+        }).do(() => this.changeDetectorRef.markForCheck());
     }
 
     protected toggleSelect$(items: IItemBase[], state: boolean): Observable<IItemBase[]> {
