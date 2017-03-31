@@ -6,8 +6,13 @@
 ### Known issues #
 
 ### Features
+* **DataGrid:** OnPush mode
 
 ### Bug fixes #
+* **DataGrid:** Keyboard navigation don't disable the horizontal scolling 
+* **TreeList:** Keyboard navigation don't select correctly the current row
+* **TreeList:** Keyborad navigation after an asynchronous scrolling crash because no cache is defined
+* **DataGrid:** Keyboard navigation don't select correctly the current row
 
 <a name="1.4.2-beta.25"></a>
 # [1.4.2-beta.25] (2017-03-30)

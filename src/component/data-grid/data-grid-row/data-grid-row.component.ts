@@ -15,7 +15,7 @@ import { IDejaGridColumnLayout, IDejaGridRow } from '../index';
 
 /** Composant représentant une ligne de la grille */
 @Component({
-    changeDetection: ChangeDetectionStrategy.Default,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'deja-grid-row',
     styleUrls: ['./data-grid-row.component.scss'],
     templateUrl: './data-grid-row.component.html',

@@ -85,15 +85,6 @@ export class ItemListBase {
         return this._itemListService.groupInfos;
     }
 
-    protected set currentItemIndex(value: number) {
-        this._currentItemIndex = value;
-        this._currentItem = null;
-    }
-
-    protected get currentItemIndex() {
-        return this._currentItemIndex;
-    }
-
     /** Définit une valeur indiquant si les éléments selectionés doivent être masqué. Ce flag est principalement utilisé dans le cas d'un multi-select
      * @param {boolean} value True si les éléments selectionés doivent être masqués
      */
@@ -476,12 +467,21 @@ export class ItemListBase {
         this._nodataLabel = value;
     }
 
+    protected setCurrentItemIndex(value: number) {
+        this._currentItemIndex = value;
+        this._currentItem = null;
+    }
+
+    protected getCurrentItemIndex() {
+        return this._currentItemIndex;
+    }
+    
     /** Retourne l'élément courant (actif).
      * @return {IItemBase} Elément courant.
      */
     public getCurrentItem() {
-        if (!this._currentItem && this.currentItemIndex >= 0) {
-            this._currentItem = this.getItemListService().getItemFromIndex(this.currentItemIndex);
+        if (!this._currentItem && this._currentItemIndex >= 0) {
+            this._currentItem = this.getItemListService().getItemFromIndex(this._currentItemIndex);
         }
         return this._currentItem;
     }
@@ -490,7 +490,7 @@ export class ItemListBase {
      * @param {IItemBase} item Elément courant.
      */
     protected setCurrentItem(item: IItemBase) {
-        this.currentItemIndex = item ? this.getItemListService().getItemIndex(item) : -1;
+        this._currentItemIndex = item ? this.getItemListService().getItemIndex(item) : -1;
         this._currentItem = item;
     }
 
@@ -543,7 +543,7 @@ export class ItemListBase {
 
     /** Usage interne. Termine le drag and drop en cours. */
     protected drop$() {
-        this.currentItemIndex = -1;
+        this.setCurrentItemIndex(-1);
         return this.getItemListService().drop$();
     }
 
