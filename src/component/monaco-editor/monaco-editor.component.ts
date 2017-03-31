@@ -110,8 +110,12 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
         if (v !== this._value) {
             this._value = v;
 
-            if (isUndefined(this._value) || !this._editor) {
+            if (!this._editor) {
                 return;
+            }
+
+            if (isUndefined(this._value)) {
+                this._value = '';
             }
 
             this.getOriginalModel().setValue(this._value);
