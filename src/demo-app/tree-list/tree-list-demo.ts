@@ -12,7 +12,7 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { GroupingService, IGroupInfo, IItemTree, ViewportMode } from '../../common/core';
-import { DejaTextMetricsService, DejaTreeListComponent, DejaTreeListItemsEvent, IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDejaDragEvent, IDropCursorInfos } from '../../component';
+import { DejaTextMetricsService, DejaTreeListComponent, DejaTreeListItemsEvent, IDejaDragEvent, IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDropCursorInfos } from '../../component';
 import {CountriesService, ICountry} from '../services/countries.service';
 
 @Component({
