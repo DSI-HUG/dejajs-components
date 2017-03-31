@@ -3,11 +3,11 @@
 @include mat-core();
 
 // Define color scheme
-$app-primary: mat-palette($md-hug-primary);
-$app-accent:  mat-palette($md-hug-primary, A200, A100, A400);
+$primary: mat-palette($md-hug-primary);
+$accent:  mat-palette($md-hug-primary, A200, A100, A400);
 
 // Create the theme object from colors
-$app-theme: mat-light-theme($app-primary, $app-accent);
+$theme: mat-light-theme($primary, $accent);
 
 // Include theme styles for core and each component used in the app.
-@include angular-material-theme($app-theme);
+@include angular-material-theme($theme);
