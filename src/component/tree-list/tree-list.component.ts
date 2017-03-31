@@ -390,6 +390,15 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
             });
     }
 
+    private set currentItemIndex(value: number) {
+        super.setCurrentItemIndex(value);
+        this.changeDetectorRef.markForCheck();
+    }
+
+    private get currentItemIndex() {
+        return this.getCurrentItemIndex();
+    }
+
     private get itemTemplate() {
         return this.itemTemplateExternal || this.itemTemplateInternal;
     }

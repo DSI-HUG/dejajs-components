@@ -32,7 +32,7 @@ const DejaGridComponentValueAccessor = {
 
 /** The grid */
 @Component({
-    changeDetection: ChangeDetectionStrategy.Default,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     providers: [DejaGridComponentValueAccessor],
     selector: 'deja-grid',

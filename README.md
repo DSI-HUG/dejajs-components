@@ -45,7 +45,7 @@ and navigate to `http://localhost:5100`.
 | Date Picker      |yes|yes|yes|yes|yes|yes|available| |
 | Dialog           |yes|yes|yes|yes|yes|yes|Message Box| |
 | Events           |yes|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>| |
-| Grid             |<span style="color:red">no</span>|yes|yes|<span style="color:red">slow</span>|yes|yes|available| |
+| Grid             |yes|yes|yes|<span style="color:red">slow</span>|yes|yes|available| |
 | Dropdown Control |yes|yes|yes|yes|yes|yes|Color Picker| |
 | Menu             |yes|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>| |
 | Message Box      |yes|yes|yes|yes|yes|yes|available| |

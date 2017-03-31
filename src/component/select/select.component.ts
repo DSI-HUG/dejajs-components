@@ -375,6 +375,15 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return this._depthMax;
     }
 
+    private set currentItemIndex(value: number) {
+        super.setCurrentItemIndex(value);
+        this.changeDetectorRef.markForCheck();
+    }
+
+    private get currentItemIndex() {
+        return this.getCurrentItemIndex();
+    }
+
     private get placeHolderTemplate() {
         return this.placeHolderTemplateExternal || this.placeHolderTemplateInternal;
     }
