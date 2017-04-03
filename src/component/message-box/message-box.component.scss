@@ -1,6 +1,7 @@
-@import "../../scss/variables/colors";
 :host {
     md-card {
+        border-style: solid;
+        border-width: 1px;
         margin: 0;
         padding: 0;
 
@@ -9,7 +10,6 @@
             box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.2);
             display: flex;
             margin: 0;
-            // margin: -24px -24px 1rem -24px;
             padding: 0.8rem;
             md-icon {
                 margin-right: 0.5rem;
@@ -32,34 +32,6 @@
             padding: 0.2rem;
             button {
                 margin-left: 0.2rem;
-            }
-        }
-        &.info, &.primary {
-            border: 1px solid $secondary;
-            md-card-title {
-                background-color: $secondary;
-                color: #FFF;
-            }
-        }
-        &.danger {
-            border: 1px solid $red;
-            md-card-title {
-                background-color: $red;
-                color: #FFF;
-            }
-        }
-        &.warn {
-            border: 1px solid $warning;
-            md-card-title {
-                background-color: $warning;
-                color: #FFF;
-            }
-        }
-        &.success {
-            border: 1px solid $success;
-            md-card-title {
-                background-color: $success;
-                color: #FFF;
             }
         }
     }

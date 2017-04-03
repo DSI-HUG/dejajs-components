@@ -1,0 +1,40 @@
+@import '../../../node_modules/@angular/material/core/theming/theming';
+
+@mixin message-box-theme($theme) {
+    $primary: map-get($theme, primary);
+    $warn: map-get($theme, warn);
+
+    $warning: #FF9800;
+    $success: #4CAF50;
+
+    md-card {
+        &.info, &.primary {
+            border-color: mat-color($primary);
+            md-card-title {
+                background-color: mat-color($primary);
+                color: #FFF;
+            }
+        }
+        &.danger {
+            border-color: mat-color($warn);
+            md-card-title {
+                background-color: mat-color($warn);
+                color: #FFF;
+            }
+        }
+        &.warn {
+            border-color: $warning;
+            md-card-title {
+                background-color: $warning;
+                color: #FFF;
+            }
+        }
+        &.success {
+            border-color: $success;
+            md-card-title {
+                background-color: $success;
+                color: #FFF;
+            }
+        }
+    }
+}
