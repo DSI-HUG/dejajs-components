@@ -13,7 +13,7 @@
 </md-card>
 
 <md-card id="grid-demo" class="demo-card demo-basic" *ngIf="tabIndex === 1">
-	<md-toolbar color="secondary">Grille avec beaucoup d'enregistrements&nbsp;
+	<md-toolbar color="primary">Grille avec beaucoup d'enregistrements&nbsp;
 		<span *ngIf="drugCounts">
 			({{ drugCounts }} enregistrements)
 		</span>
@@ -76,7 +76,7 @@
 		</div>
 		<div [deja-droppable]="{dragovercallback: onDivDragOver, dropcallback:onDivDropEvent}" style="border:1px solid red;min-height:150px;"></div>
 	</md-card-content>
-	<md-toolbar color="secondary">Grille avec taille des colonnes en pixels et en pourcents</md-toolbar>
+	<md-toolbar color="primary">Grille avec taille des colonnes en pixels et en pourcents</md-toolbar>
 	<md-card-content class="listContainer">
 		<!-- -->
 		<deja-grid #cgrid sortable columnsSizable multiSelect [(ngModel)]="drugs$" [columns]="percentColumns" (selectedChange)="onSelectionChanged2($event)" nodataholder="Pas de données"
@@ -91,7 +91,7 @@
 			</template>
 		</deja-grid>
 	</md-card-content>
-	<md-toolbar color="secondary">Grille avec taille fixe des colonnes</md-toolbar>
+	<md-toolbar color="primary">Grille avec taille fixe des colonnes</md-toolbar>
 	<md-card-content class="listContainer">
 		<deja-grid #fgrid searchArea groupArea sortable columnsSizable multiSelect [(ngModel)]="groupedDrugs$" [columns]="responsiveColumns" (selectedChange)="onSelectionChanged3($event)" nodataholder="Pas de données"
 		           placeholder="Filtrer la liste par le nom" searchField="receivedate" (itemDragStart)="onItemDragStart($event)">

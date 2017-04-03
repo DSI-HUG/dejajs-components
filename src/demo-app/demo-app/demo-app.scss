@@ -50,6 +50,20 @@ body {
     .demo-content {
         margin: 32px;
     }
+
+    md-card {
+        padding: 0 !important;
+        margin: 1rem 0;
+
+        md-card-content {
+            padding: 2rem;
+
+            &.no-padding {
+                padding: 0;
+            }
+        }
+    }
+
     md-toolbar {
         md-icon {
             cursor: pointer;
