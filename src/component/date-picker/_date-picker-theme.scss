@@ -1,0 +1,31 @@
+@import '../../../node_modules/@angular/material/core/theming/theming';
+
+@mixin date-picker-theme($theme) {
+    $warn: map-get($theme, warn);
+    $deep: '/deep/';
+	#deja-dropdown {
+		.actions {
+			button {
+				color: #FFF;
+			}
+		}
+	}
+	&.ng-invalid {
+        #{$deep} {
+            .mat-input-wrapper {
+                .mat-input-underline {
+                    .mat-input-ripple {
+                        background-color: mat-color($warn);
+                    }
+                }
+                .mat-input-table {
+                    .mat-input-infix {
+                        .mat-input-placeholder {
+                            color: mat-color($warn);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
