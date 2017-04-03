@@ -1,4 +1,8 @@
-@import "../../scss/variables/colors";
+@import '../../scss/index.scss';
+
+// Import global theme
+@import '../../scss/variables/themeHUG';
+@include deja-theme($theme);
 
 html,
 body {
