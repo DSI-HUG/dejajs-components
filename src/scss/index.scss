@@ -46,6 +46,7 @@
 @import 'src/component/date-selector/date-selector-theme';
 @import 'src/component/loaders/list-loader-theme';
 @import 'src/component/markdown/markdown-theme';
+@import 'src/component/menu/menu-theme';
 
 // Create a theme.
 @mixin deja-theme($custom-theme) {
@@ -55,4 +56,5 @@
     @include date-selector-theme($custom-theme);
     @include list-loader-theme($custom-theme);
     @include markdown-theme($custom-theme);
+    @include menu-theme($custom-theme);
 }
