@@ -1,0 +1,48 @@
+@import '../../../node_modules/@angular/material/core/theming/theming';
+
+@mixin range-theme($theme) {
+    $primary: map-get($theme, primary);
+    $accent: map-get($theme, accent);
+
+    #container {
+        .separator {
+            .default-separator {
+                .default-separator-item {
+                    background: mat-color($accent);
+                }
+            }
+        }
+        @-webkit-keyframes selected {
+            from {
+                border-bottom: 0px solid mat-color($primary);
+            }
+            to {
+                border-bottom: 2px solid mat-color($primary);
+            }
+        }
+        @keyframes selected {
+            from {
+                border-bottom: 0px solid mat-color($primary);
+            }
+            to {
+                border-bottom: 2px solid mat-color($primary);
+            }
+        }
+        @-webkit-keyframes not-selected {
+            from {
+                border-bottom: 2px solid mat-color($primary);
+            }
+            to {
+                border-bottom: 0px solid mat-color($primary);
+            }
+        }
+        @keyframes not-selected {
+            from {
+                border-bottom: 2px solid mat-color($primary);
+            }
+            to {
+                border-bottom: 0px solid mat-color($primary);
+            }
+        }
+    }
+}
