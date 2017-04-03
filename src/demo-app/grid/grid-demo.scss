@@ -1,67 +1,38 @@
 @import "../../scss/variables/colors";
-// @import "../../../node_modules/@deja-js/resources/src/scss/fonts/material-icons/material-icons";
+
 :host {
 	display: flex;
 	overflow: hidden;
 	flex-direction: column;
 }
 
-#grid-demo {
-	padding: 0 2rem;
-	overflow: hidden;
-	display: flex;
-	flex: 1 1 auto;
-	flex-direction: column;
+.demo-card {
+	.listContainer {
+		height: 700px;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
 
-	md-toolbar {
-		flex: 0 0 auto;
-	}
-
-	&.demo-basic {
-		padding: 0;
-	}
-	&.demo-full-width {
-		width: 100%;
-	}
-	&.demo-icons {
-		font-size: 100%;
-		height: inherit;
-		vertical-align: top;
-		width: inherit;
-	}
-	&.demo-card {
-		//margin: 0 2rem;
-		md-card-content {
-			padding: 2rem;
-		}
-		.listContainer {
-			height: 700px;
-			display: flex;
-			flex-direction: column;
-			overflow: hidden;
-
-            deja-grid {
-        flex: 1 1 auto;
-				li {
-					&.odd {
-						background-color: rgba($secondary, 0.1);
-						&[current="true"] {
-							background-color: rgba($secondary, 0.5);
-						}
-						&.selected {
-							background: rgba($secondary, 0.9);
-						}
+		deja-grid {
+			flex: 1 1 auto;
+			li {
+				&.odd {
+					background-color: rgba($secondary, 0.1);
+					&[current="true"] {
+						background-color: rgba($secondary, 0.5);
+					}
+					&.selected {
+						background: rgba($secondary, 0.9);
 					}
 				}
 			}
 		}
 	}
-	md-toolbar {
-		margin-top: 2rem;
-	}
+
 	button {
 		margin-top: 2rem;
 	}
+
 	[mdSuffix] {
 		display: flex;
 		justify-content: flex-end;
@@ -70,6 +41,7 @@
 			margin-bottom: 0;
 		}
 	}
+
 	#cell-drug,
 	#cell-reaction {
 		display: flex;
