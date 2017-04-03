@@ -1,0 +1,9 @@
+@import '../../../node_modules/@angular/material/core/theming/theming';
+
+@mixin list-loader-theme($theme) {
+    $primary: map-get($theme, primary);
+
+    .spinner>div {
+        background-color: mat-color($primary);
+    }
+}
