@@ -10,7 +10,7 @@
 		</md-card>
 	</md-tab>
 	<md-tab label="EXAMPLES">
-		<md-card>
+		<md-card class="demo-card">
 			<md-toolbar color="primary">Date Time Picker</md-toolbar>
 			<md-card-content>
 				<deja-date-picker format="dd.MM.YYYY" #dtfrom [disableDates]="disabledDate" time [ngModel]="dateRangeFrom" (ngModelChange)="dateFrom.next($event)"></deja-date-picker>
@@ -18,7 +18,7 @@
 				<p>Result : {{theDate}}</p>
 			</md-card-content>
 		</md-card>
-		<md-card>
+		<md-card class="demo-card">
 			<md-toolbar color="primary">Date Time Selector</md-toolbar>
 			<md-card-content>
 				<deja-date-time-selector [disableDates]="disabledDate" [(ngModel)]="theDate" time></deja-date-time-selector>
