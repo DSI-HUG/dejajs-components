@@ -56,10 +56,10 @@ export class DejaEditableDirective implements ControlValueAccessor {
         const inEdition$ = Observable.from(this.edit$)
             .map(([value, selectOnFocus]) => {
                 if (selectOnFocus !== false) {
-                    this.selectAll();
                     Observable.timer(10)
                         .first()
                         .subscribe(() => {
+                            this.selectAll();
                             this.focus();
                         });
                 }
