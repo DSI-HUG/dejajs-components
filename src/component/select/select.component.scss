@@ -4,10 +4,12 @@ deja-select {
 	min-height: 3.5rem;
 	white-space: initial;
 	display: block;
+
 	#select-placeholder {
 		display: flex;
 		align-items: center;
 	}
+
 	#input {
 		width: 100%; // add a few pixels to avoid that the icon touch the line
 		.mat-input-wrapper {
@@ -15,6 +17,7 @@ deja-select {
 				margin-top: 8px;
 			}
 		}
+
 		.mat-input-suffix {
 			width: 2rem;
 			#clear-button {
@@ -25,6 +28,11 @@ deja-select {
 				}
 			}
 		}
+		
+		.mat-hint {
+			bottom: -0.5em;
+		}
+
 		&[wait="true"] {
 			.mat-input-wrapper {
 				.mat-input-underline {
@@ -57,6 +65,7 @@ deja-select {
 				}
 			}
 		}
+
 		&[multiselection="true"] {
 			margin-top: 0.6rem;
 			.mat-input-wrapper {
@@ -101,6 +110,7 @@ deja-select {
 				}
 			}
 		}
+
 		[mdSuffix] {
 			md-progress-spinner {
 				width: 1.5rem;
@@ -108,6 +118,7 @@ deja-select {
 			}
 		}
 	}
+
 	deja-dropdown {
 		&#listcontainer {
 			text-align: left;
@@ -130,6 +141,7 @@ deja-select {
 			}
 		}
 	}
+
 	@keyframes load {
 		0% {
 			left: -35%;
@@ -158,6 +170,7 @@ deja-select {
 			right: -8%;
 		}
 	} // styling the icon and text in template placeholder. Avoid to repeat in sub-components
+	
 	$deep: '/deep/';
 	#{$deep} {
 		md-placeholder {
@@ -168,6 +181,7 @@ deja-select {
 			}
 		}
 	}
+
 	@import '../../common/core/item-list/item-list';
 	@import '../../common/core/item-list/tree-list';
 }
