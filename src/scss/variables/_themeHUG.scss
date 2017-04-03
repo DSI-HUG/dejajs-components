@@ -5,7 +5,7 @@
 // Define color scheme
 $primary: mat-palette($md-hug-primary);
 $accent:  mat-palette($md-hug-primary, A200, A100, A400);
-$warn: mat-palette($mat-teal);
+$warn: mat-palette($mat-red);
 
 // Create the theme object from colors
 $theme: mat-light-theme($primary, $accent, $warn);
