@@ -1,22 +1,20 @@
-ul {
+#listcontainer {
 	padding: 0;
 	margin: 0;
 	position: relative;
 	&[vprowheight="0"] {
-		li {
+		>div.listitem {
 			padding: 0.35rem 0.1rem;
 		}
 	}
-	li {
+	>div.listitem {
 		opacity: 1;
-		list-style: none;
-		padding: 0;
+		padding: 0 0 0 0.5rem;
 		margin: 0;
 		transition-timing-function: linear;
 		transition-duration: .3s;
 		transition-property: max-height, opacity;
 		overflow: hidden;
-		text-decoration: none;
 		display: flex;
 		align-items: center;
 		&.hide {
@@ -31,14 +29,6 @@ ul {
 		&.selected {
 			background-color: rgba($secondary, 0.8);
 			color: #fff;
-		}
-		.item-content {
-			flex: 1 1 auto;
-			padding-left: 0.5rem;
-			align-items: center;
-			display: flex;
-			height: 100%;
-            min-width: 0;
 		}
 		&.parent {
 			#expandbtn {

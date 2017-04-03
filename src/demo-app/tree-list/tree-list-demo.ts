@@ -13,7 +13,8 @@ import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { GroupingService, IGroupInfo, IItemTree, ViewportMode } from '../../common/core';
 import { DejaTextMetricsService, DejaTreeListComponent, DejaTreeListItemsEvent, IDejaDragEvent, IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDropCursorInfos } from '../../component';
-import {CountriesService, ICountry} from '../services/countries.service';
+import { CountriesService, ICountry } from '../services/countries.service';
+import { INews, NewsService } from '../services/news.service';
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -23,10 +24,11 @@ import {CountriesService, ICountry} from '../services/countries.service';
 })
 export class DejaTreeListDemoComponent implements OnInit {
     protected variableMode = ViewportMode.VariableRowHeight;
-    protected noViewportMode = ViewportMode.NoViewport;
+    protected autoMode = ViewportMode.AutoRowHeight;
     protected noViewportList: IItemTree[] = [{ displayName: 'test' }, { displayName: 'test2' }, { displayName: 'test3' }];
-    private groupedCountries: IItemTree[];
-    private countries: Observable<ICountry[]>;
+    protected news$: Observable<INews[]>;
+    protected groupedCountries: IItemTree[];
+    protected countries: Observable<ICountry[]>;
     private selectedCountries: ICountry[];
     private selectedItemsOut: IItemTree[];
     private selectedInfos = [];
@@ -36,9 +38,12 @@ export class DejaTreeListDemoComponent implements OnInit {
 
     constructor(private countriesService: CountriesService,
         groupingService: GroupingService,
-                private textMetricsService: DejaTextMetricsService ) {
+        private textMetricsService: DejaTextMetricsService,
+        newsService: NewsService) {
         this.countries = this.countriesService.getCountries$(null, 412);
         // this.countries = this.countriesService.getCountries(null, 1);
+
+        this.news$ = newsService.getNews$(50);
 
         this.countriesService.getCountries$(null, 1).subscribe((values) => {
             const extendedCountries = values.map((country) => {
@@ -102,9 +107,9 @@ export class DejaTreeListDemoComponent implements OnInit {
                     this.groupedTreeList.getParentListInfos$(item)
                         .first()
                         .subscribe((parentInfos) => {
-                        const parentDisplayName = parentInfos && parentInfos.parent ? parentInfos.parent.toString() : 'none';
-                        this.selectedInfos.push('Country: ' + country.naqme + ' (' + country.code + ')' + (parentInfos ? '    parent: ' + parentDisplayName + ' (' + parentInfos.index + ')' : ''));
-                    });
+                            const parentDisplayName = parentInfos && parentInfos.parent ? parentInfos.parent.toString() : 'none';
+                            this.selectedInfos.push('Country: ' + country.naqme + ' (' + country.code + ')' + (parentInfos ? '    parent: ' + parentDisplayName + ' (' + parentInfos.index + ')' : ''));
+                        });
             }
         });
     }

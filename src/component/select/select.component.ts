@@ -48,8 +48,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @Input() public maxHeight = 500;
     /** ID de l'élement dans lequel la liste déroulante doit s'afficher (la liste déroulante ne peut dépasser de l'élement spécifié ici) */
     @Input() public dropdownContainerId: string;
-    /** Ancre d'alignement de la liste déroulante. Valeurs possible: top, bottom, right, left. Une combinaison des ces valeurs peut également être utilisée, par exemple 'top left'. */
-    @Input() public dropdownAlignment = 'left right bottom';
     /** Permet de définir un template de ligne par binding */
     @Input() public itemTemplateExternal;
     /** Permet de définir un template de ligne parente par binding. */
@@ -77,7 +75,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @ContentChild('selectedTemplate') protected selectedTemplate;
     @ContentChild('suffixTemplate') protected mdSuffix;
     @ViewChild('inputElement') private input: ElementRef;
-    @ViewChildren('dropdownitem') private dropdownItemElements: QueryList<ElementRef>;
+    @ViewChildren('listitem') private listItemElements: QueryList<ElementRef>;
     @ViewChild('listcontainer') private listcontainer;
     @ViewChild(DejaDropDownComponent) private dropDownComponent: DejaDropDownComponent;
 
@@ -91,6 +89,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     private lastScrollPosition = 0;
     private _selectionClearable = false;
     private _waiter = false;
+    public _dropdownAlignment = 'left';
+    public _ownerAlignment = 'left right bottom';
 
     private clearFilterExpression$ = new BehaviorSubject<void>(null);
     private filterListComplete$ = new Subject();
@@ -167,6 +167,14 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 this.keyboardNavigation = false;
                 this.changeDetectorRef.markForCheck();
             }));
+    }
+
+    /** Ancre d'alignement de la liste déroulante. Valeurs possible: top, bottom, right, left. Une combinaison des ces valeurs peut également être utilisée, par exemple 'top left'. */
+    @Input()
+    public set dropdownAlignment(value: string) {
+        // TODO
+        this._dropdownAlignment = 'left';
+        this._ownerAlignment = value;
     }
 
     /** Définit la longueur minimale de caractères dans le champ de recherche avant que la recherche ou le filtrage soient effectués */
@@ -363,8 +371,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     public set models(items: any[] | Observable<any[]>) {
         super.setModels$(items)
             .first()
+            .switchMap(() => this.calcViewPort$())
             .subscribe(() => {
-                this.calcViewPort();
             }, (error: any) => {
                 this._hintLabel = error.toString();
             });
@@ -565,7 +573,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                             const item = this._itemList[this.currentItemIndex - this.vpStartRow] as IItemTree;
                             if (this.isCollapsible(item)) {
                                 this.keyboardNavigation$.next();
-                                this.toggleCollapse$(this.currentItemIndex, !item.collapsed).first().subscribe(() => { });
+                                this.toggleCollapse$(this.currentItemIndex, !item.collapsed).first().subscribe(noop);
                                 return false;
                             }
                         }
@@ -685,8 +693,9 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         }
 
         this.keepExistingViewPort = true;
-        this.calcViewPort();
-        this.storeScrollPosition$.next();
+        this.calcViewPort$()
+            .first()
+            .subscribe(() => this.storeScrollPosition$.next());
     }
 
     protected mousedown(e: MouseEvent) {
@@ -712,7 +721,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
             if (this.isCollapsible(item)) {
                 if (e.button === 0) {
-                    this.toggleCollapse$(itemIndex + this.vpStartRow, !item.collapsed).first().subscribe(() => { })
+                    this.toggleCollapse$(itemIndex + this.vpStartRow, !item.collapsed).first().subscribe(noop);
                 }
             } else if (!item.selected) {
                 this.select(item);
@@ -727,7 +736,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             // Autocomplete or multiselect only
             this.dropDownQuery = this.query;
             if (this.isAutocomplete) {
-                this.unselectAll$().first().subscribe(() => { });
+                this.unselectAll$().first().subscribe(noop);
             }
         }
     }
@@ -768,7 +777,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     protected ensureItemVisible(item: IItemBase | number) {
-        super.ensureItemVisible(this.query, this.listElement, this.dropdownItemElements, item);
+        super.ensureItemVisible(this.query, this.listElement, this.listItemElements, item);
     }
 
     private onModelChange(items?: IItemBase[] | IItemBase) {

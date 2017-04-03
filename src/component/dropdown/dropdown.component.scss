@@ -8,6 +8,7 @@
 	transition-duration: 0.5s;
 	transition-timing-function: ease;
 	transition-property: opacity;
+    display: block;
 	&[halign],
 	&[valign] {
 		opacity: 1;

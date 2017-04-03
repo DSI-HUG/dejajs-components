@@ -25,20 +25,18 @@
 		<template [ngTemplateOutlet]="mdSuffix"></template>
 	</span>
 </md-input-container>
-<deja-dropdown id="select-dropdown" #listcontainer *ngIf="dropdownVisible" (hide)="dropdownVisible=false" (scroll)="scroll($event)" [ownerAlignment]="dropdownAlignment" dropdownAlignment="left" [ownerElement]="inputElement" [containerElement]="containerElement" ownerBottomMargin="-10" ownerTopMargin="-5" ownerRightMargin="-30" [style.max-height.px]="maxHeight">
+<deja-dropdown id="listcontainer" #listcontainer *ngIf="dropdownVisible" [attr.depth-max]="_depthMax || null" [attr.keynav]="keyboardNavigation" [attr.vprowheight]="getViewPortRowHeight()" (mousedown)="mousedown($event)" (hide)="dropdownVisible=false" (scroll)="scroll($event)" [ownerAlignment]="_ownerAlignment" [dropdownAlignment]="_dropdownAlignment" [ownerElement]="inputElement" [containerElement]="containerElement" ownerBottomMargin="-10" ownerTopMargin="-5" ownerRightMargin="-30" [style.max-height.px]="maxHeight">
 	<div *ngIf="vpBeforeHeight" [style.height.px]="vpBeforeHeight"></div>
-	<ul ulist [attr.depth-max]="_depthMax || null" [attr.keynav]="keyboardNavigation" [attr.vprowheight]="getViewPortRowHeight()" (mousedown)="mousedown($event)">
-		<li *ngFor="let item of _itemList; let index = index" #dropdownitem [class.hide]="item.collapsing || item.expanding" [class.parent]="item.depth < _depthMax" [class.collapsed]="item.collapsed" [class.selected]="item.selected" [attr.current]="(_multiSelect && vpStartRow+index === currentItemIndex) || null" [class.unselectable]="item.selectable === false" [attr.depth]="_depthMax ? item.depth : null" [attr.id]="item.id || null" [attr.flat]="index" [style.height.px]="getItemHeight(item)" [class.odd]="(item.depth === _depthMax && item.odd) || null">
+	<div *ngFor="let item of _itemList; let index = index" #listitem class="listitem" [class.hide]="item.collapsing || item.expanding" [class.parent]="item.depth < _depthMax" [class.collapsed]="item.collapsed" [class.selected]="item.selected" [attr.current]="(_multiSelect && vpStartRow+index === currentItemIndex) || null" [class.unselectable]="item.selectable === false" [attr.depth]="_depthMax ? item.depth : null" [attr.id]="item.id || null" [attr.flat]="index" [style.height.px]="getItemHeight(item)" [class.odd]="(item.depth === _depthMax && item.odd) || null">
 			<span *ngIf="item.$items" id="expandbtn"></span>
-			<span class="item-content" *ngIf="(!item.$items || !parentItemTemplate) && (item.$items || !itemTemplate)">{{ getTextValue(item) }}</span>
-			<span class="item-content" *ngIf="item.$items && parentItemTemplate">
+        <ng-container *ngIf="(!item.$items || !parentItemTemplate) && (item.$items || !itemTemplate)">{{ getTextValue(item) }}</ng-container>
+        <ng-container *ngIf="item.$items && parentItemTemplate">
 				<template [ngTemplateOutlet]="parentItemTemplate" [ngOutletContext]="{ $implicit: item, query: query, flatindex: vpStartRow+index }"></template>
-			</span>
-			<span class="item-content" *ngIf="!item.$items && itemTemplate">
+        </ng-container>
+        <ng-container *ngIf="!item.$items && itemTemplate">
 				<template [ngTemplateOutlet]="itemTemplate" [ngOutletContext]="{ $implicit: item, query: query, flatindex: vpStartRow+index }"></template>
-			</span>
-		</li>
-	</ul>
+        </ng-container>
+	</div>
 	<div *ngIf="vpAfterHeight" [style.height.px]="vpAfterHeight"></div>
 </deja-dropdown>
 <div *ngIf="_hintLabel != ''" class="mat-hint">{{_hintLabel}}</div>

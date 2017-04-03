@@ -68,19 +68,10 @@ export class CloningService {
     }
 
     /**
-     * Sync cloning of an object
-     *
-     * @param object  The object to clone.
-     * @return Promise resolving to the cloned object.
+     * @deprecated
      */
     public clone(object: any) {
-        return new Promise<any[]>((resolved?: (result: any[]) => void, rejected?: (reason: any) => void) => {
-            try {
-                resolved(this.cloneSync(object));
-            } catch (err) {
-                rejected(err);
-            }
-        });
+        return this.clone$(object).toPromise();
     }
 
     /**
