@@ -1,5 +1,6 @@
 @import 'variables/colors';
 @import 'utils/flex';
+@import 'utils/form-validation';
 
 @import 'components/loader';
 @import 'material/material';
@@ -55,6 +56,7 @@
 
 // Create a theme.
 @mixin deja-theme($custom-theme) {
+    @include form-validation-theme($custom-theme);
     @include deja-material-theme($custom-theme);
 
     @include accordion-theme($custom-theme);
