@@ -55,6 +55,8 @@
 
 // Create a theme.
 @mixin deja-theme($custom-theme) {
+    @include deja-material-theme($custom-theme);
+
     @include accordion-theme($custom-theme);
     @include circular-picker-theme($custom-theme);
     @include data-grid-theme($custom-theme);
