@@ -47,6 +47,7 @@
 @import 'src/component/loaders/list-loader-theme';
 @import 'src/component/markdown/markdown-theme';
 @import 'src/component/menu/menu-theme';
+@import 'src/component/select/select-theme';
 @import 'src/component/tree-list/tree-list-theme';
 
 // Create a theme.
@@ -58,5 +59,6 @@
     @include list-loader-theme($custom-theme);
     @include markdown-theme($custom-theme);
     @include menu-theme($custom-theme);
+    @include select-theme($custom-theme);
     @include tree-list-theme($custom-theme);
 }
