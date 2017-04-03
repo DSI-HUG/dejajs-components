@@ -157,7 +157,7 @@ deja-select {
 				color: #fff;
 			}
 			&[keynav="false"] {
-				div:not(.unselectable):hover {
+				div.listitem:not(.unselectable):hover {
 					background-color: $secondary;
 					color: #fff;
 					cursor: pointer;

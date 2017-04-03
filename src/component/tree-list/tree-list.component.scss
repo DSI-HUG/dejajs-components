@@ -54,7 +54,7 @@ deja-tree-list {
             border-top: 0;
         }
         &[keynav="false"]:not(.dragover) {
-            div:not(.unselectable):hover {
+            div.listitem:not(.unselectable):hover {
                 background-color: $secondary;
                 color: #fff;
                 cursor: pointer;
