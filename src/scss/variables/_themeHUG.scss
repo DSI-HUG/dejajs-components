@@ -3,7 +3,7 @@
 @include mat-core();
 
 // Define color scheme
-$primary: mat-palette($md-hug-primary);
+$primary: mat-palette($mat-red);
 $accent:  mat-palette($md-hug-primary, A200, A100, A400);
 $warn: mat-palette($mat-red);
 

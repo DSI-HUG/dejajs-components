@@ -1,0 +1,25 @@
+@import '../../../node_modules/@angular/material/core/theming/theming';
+
+@mixin circular-picker-theme($theme) {
+    $primary: map-get($theme, primary);
+
+    .circular-picker {
+        border: 1px solid #dfdfdf;
+        background-color: #dfdfdf;
+        .value {
+            &:hover {
+                background-color: mat-color($primary);
+                color: #FFF;
+            }
+        }
+        .cursor-container {
+            .cursor {
+                background-color: mat-color($primary);
+                color: #FFF;
+            }
+            .cursorHand {
+                background-color: mat-color($primary);
+            }
+        }
+    }
+}

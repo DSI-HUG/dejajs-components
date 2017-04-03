@@ -1,6 +1,3 @@
-@import '~@angular/material/core/theming/theming';
-@import 'src/scss/variables/themeHUG';
-
 :host {
 	-webkit-touch-callout: none;
 	/* iOS Safari */
@@ -17,8 +14,6 @@
        not supported by any browser */
     position: relative;
     .circular-picker {
-        border: 1px solid #dfdfdf;
-        background-color: #dfdfdf;
         border-radius: 50%;
         position: relative;
         .value {
@@ -29,16 +24,10 @@
             position: absolute;
             text-align: center;
             width: 43px;
-            &:hover {
-                background-color: mat-color($primary);
-                color: #FFF;
-            }
         }
         .cursor-container {
             .cursor {
-                background-color: mat-color($primary);
                 border-radius: 50%;
-                color: #FFF;
                 cursor: pointer;
                 height: 43px;
                 line-height: 43px;
@@ -48,7 +37,6 @@
                 z-index: 20;
             }
             .cursorHand {
-                background-color: mat-color($primary);
                 border-radius: 2px;
                 height: 4px;
                 left: 50%;
