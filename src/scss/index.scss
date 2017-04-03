@@ -42,6 +42,7 @@
 // Import your custom input theme file so you can call the custom-input-theme function
 @import 'src/component/accordion/accordion-theme';
 @import 'src/component/circular-picker/circular-picker-theme';
+@import 'src/component/data-grid/data-grid-theme';
 @import 'src/component/date-picker/date-picker-theme';
 @import 'src/component/date-selector/date-selector-theme';
 @import 'src/component/loaders/list-loader-theme';
@@ -56,6 +57,7 @@
 @mixin deja-theme($custom-theme) {
     @include accordion-theme($custom-theme);
     @include circular-picker-theme($custom-theme);
+    @include data-grid-theme($custom-theme);
     @include date-picker-theme($custom-theme);
     @include date-selector-theme($custom-theme);
     @include list-loader-theme($custom-theme);

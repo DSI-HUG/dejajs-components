@@ -13,7 +13,7 @@
 		<deja-backdrop (click)="colorpicker.isOpen=false" *ngIf="colorpicker.isOpen"></deja-backdrop>
 		<deja-backdrop (click)="colorpicker2.isOpen=false" *ngIf="colorpicker2.isOpen"></deja-backdrop>
 		
-		<md-card>
+		<md-card class="demo-card">
 			<md-toolbar color="primary">Color Picker width backdrop - Pick a color:</md-toolbar>
 			<md-card-content id="colorpickers">
 				<deja-color-picker name="1" #colorpicker2 class="colorpicker" [colors]="materialColors.colors" [(ngModel)]="selectedColor" (colorhover)="onColorPickerHover($event)" (ngModelChange)="onColorPickerChange($event)"></deja-color-picker>
@@ -22,7 +22,7 @@
 			</md-card-content>
 		</md-card>
 		
-		<md-card>
+		<md-card class="demo-card">
 			<md-toolbar color="primary">Color Selector - Pick a color:</md-toolbar>
 			<md-card-content>
 				<div id="hoveredColor" [style.background-color]="(hoveredColor && hoveredColor.toHex()) || selectedColor.toHex()">
@@ -31,7 +31,7 @@
 			</md-card-content>
 		</md-card>
 
-		<md-card>
+		<md-card class="demo-card">
 			<md-toolbar color="primary">Color Selector - Disabled:</md-toolbar>
 			<md-card-content id="colorpickers">
 				<deja-color-selector name="5" disabled [colors]="materialColors.colors" [(ngModel)]="selectedColor" (colorhover)="onColorPickerHover($event)" (ngModelChange)="onColorPickerChange($event)"></deja-color-selector>
