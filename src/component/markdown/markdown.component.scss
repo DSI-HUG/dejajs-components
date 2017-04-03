@@ -1,6 +1,3 @@
-@import '~@angular/material/core/theming/theming';
-@import 'src/scss/variables/themeHUG';
-
 .markdown-content {
 
     @import "~prismjs/themes/prism.css";
@@ -10,17 +7,9 @@
         border-collapse: collapse;
 
         tr {
-            &:nth-of-type(odd) {
-                background-color: #ececec;
-            }
-
-            &:first-child {
-                background: mat-color($primary);
-                color: white;
-            }
-
             th, td {
-                border: 1px solid #ddd;
+                border-width: 1px;
+                border-style: solid;
                 padding: 1rem;
             }
         }
