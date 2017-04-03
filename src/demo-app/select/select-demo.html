@@ -13,7 +13,7 @@
 </md-card>
 <div *ngIf="tabIndex === 1">
 		<md-card class="deja-select-demo demo-card demo-basic">
-			<md-toolbar color="secondary">By passing business object</md-toolbar>
+			<md-toolbar color="primary">By passing business object</md-toolbar>
 			<md-card-content>
 				<deja-select id="businessSelect" class="placeholder-icon" type="autocomplete" textField="naqme" [(ngModel)]="businessCountry" valueField="code" [models]="countries">
 					<template #placeHolderTemplate>
@@ -28,7 +28,7 @@
 		</md-card>
 
 		<md-card class="deja-select-demo demo-card demo-basic">
-			<md-toolbar color="secondary">By passing IItemBase</md-toolbar>
+			<md-toolbar color="primary">By passing IItemBase</md-toolbar>
 			<md-card-content id="selectContainer">
 				<div #dialog>
 					<deja-dialog *ngIf="dialogVisible" (closed)="dialogVisible = false">

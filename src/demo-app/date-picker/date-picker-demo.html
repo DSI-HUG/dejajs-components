@@ -11,7 +11,7 @@
 	</md-tab>
 	<md-tab label="EXAMPLES">
 		<md-card class="demo-card demo-basic">
-			<md-toolbar color="secondary">Calendar demo</md-toolbar>
+			<md-toolbar color="primary">Calendar demo</md-toolbar>
 			<md-card-content class="listContainer">
 				<deja-date-picker format="dd.MM.YYYY" #dtfrom [disableDates]="disabledDate" time [ngModel]="dateRangeFrom" (ngModelChange)="dateFrom.next($event)"></deja-date-picker>
 				<deja-date-picker format="dd.MM.YYYY" #dtto [disableDates]="disabledDate" time [ngModel]="dateRangeTo" (ngModelChange)="dateTo.next($event)"></deja-date-picker>
