@@ -41,8 +41,10 @@
 
 // Import your custom input theme file so you can call the custom-input-theme function
 @import 'src/component/accordion/accordion-theme';
+@import 'src/component/circular-picker/circular-picker-theme';
 
 // Create a theme.
 @mixin deja-theme($custom-theme) {
     @include accordion-theme($custom-theme);
+    @include circular-picker-theme($custom-theme);
 }
