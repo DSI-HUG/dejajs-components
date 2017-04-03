@@ -15,6 +15,8 @@ import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-p
 import { Observable } from 'rxjs/Rx';
 import { IRange, IRangeEvent, IStepRangeEvent, Range } from './range.interface';
 
+const noop = () => { };
+
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [{
@@ -45,10 +47,16 @@ export class DejaRangeComponent implements ControlValueAccessor {
     private _disabled = false;
     private _ranges: IRange[];
 
+    public _onChangeCallback: (_: any) => void = noop;
+    public _onTouchCallback: () => void = noop;
+    public registerOnChange(fn: any): void { this._onChangeCallback = fn; }
+    public registerOnTouched(fn: any): void { this._onTouchCallback = fn; }
+
     // inner model
     public get ranges(): IRange[] {
         return this._ranges || [];
     }
+
     public set ranges(ranges: IRange[]) {
         if (!!ranges) {
             this.writeValue(ranges);
@@ -98,10 +106,6 @@ export class DejaRangeComponent implements ControlValueAccessor {
             this.changeDetectorRef.markForCheck();
         }
     }
-    public registerOnChange(fn: any): void { this._onChangeCallback = fn; }
-    public registerOnTouched(fn: any): void { this._onTouchCallback = fn; }
-    public _onChangeCallback: (_: any) => void = () => { };
-    public _onTouchCallback: () => void = () => { };
 
     @HostListener('window:resize', ['$event'])
     public onResize() {

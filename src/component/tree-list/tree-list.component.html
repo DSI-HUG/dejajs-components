@@ -1,39 +1,37 @@
 <div id="header" *ngIf="expandButton || (searchArea || minSearchlength > 0) || groupArea">
-	<button md-raised-button class="mat-primary" *ngIf="expandButton" (click)="toggleAll()">
+    <button md-raised-button class="mat-primary" *ngIf="expandButton" (click)="toggleAll()">
 		Tout {{(allCollapsed)?'étendre':'réduire'}}
 	</button>
-	<md-input-container id="input" *ngIf="searchArea || minSearchlength > 0">
-		<input #inputelement type="text" mdInput tabindex="0" [(ngModel)]="query" [placeholder]="placeholder">
-		<span *ngIf="searchPrefixTemplate" mdPrefix>
+    <md-input-container id="input" *ngIf="searchArea || minSearchlength > 0">
+        <input #inputelement type="text" mdInput tabindex="0" [(ngModel)]="query" [placeholder]="placeholder">
+        <span *ngIf="searchPrefixTemplate" mdPrefix>
 			<template [ngTemplateOutlet]="searchPrefixTemplate"></template>
 		</span>
-		<span *ngIf="searchSuffixTemplate" mdSuffix>
+        <span *ngIf="searchSuffixTemplate" mdSuffix>
 			<template [ngTemplateOutlet]="searchSuffixTemplate"></template>
 		</span>
-	</md-input-container>
+    </md-input-container>
 </div>
-<div id="list-header" *ngIf="headerTemplate">
-	<template [ngTemplateOutlet]="headerTemplate"></template>
+<div id="listheader" *ngIf="headerTemplate">
+    <template [ngTemplateOutlet]="headerTemplate"></template>
 </div>
-<div #listcontainer id="list" [style.max-height.px]="maxHeight || null" tabindex="1" [class.hasheader]="headerTemplate" [class.dragover]="_ddStartIndex !== undefined ? _ddStartIndex : null" [attr.keynav]="keyboardNavigation" (dragleave)="sortable ? dragLeave($event): null" (mousedown)="mousedown($event)" [deja-droppable]="getDropContext()">
-	<div id="nodata-holder" *ngIf="(!_itemList || _itemList.length === 0) && !waiter">{{ nodataholder }}</div>
-	<div id="error-hint" *ngIf="_hintLabel">{{ _hintLabel }}</div>
-	<div *ngIf="vpBeforeHeight" [style.height.px]="vpBeforeHeight"></div>
-	<ul ulist [attr.depth-max]="depthMax || null" [attr.vp-rowheight]="getViewPortRowHeight()" *ngIf="_itemList && _itemList.length > 0">
-		<li *ngFor="let item of _itemList; let index = index" #listitem [class.hide]="item.collapsing || item.expanding" [class.parent]="item.depth < depthMax" [class.collapsed]="item.collapsed" [class.selected]="item.selected" [attr.current]="vpStartRow+index === currentItemIndex" [class.unselectable]="item.selectable === false" [attr.depth]="depthMax ? item.depth : null" [attr.id]="item.id || null" [attr.flat]="vpStartRow + index" [deja-draggable]="getDragContext(vpStartRow + index)" [style.height.px]="getItemHeight(item)" [class.odd]="(item.depth === _depthMax && item.odd) || null">
-			<span *ngIf="item.$items" id="expandbtn"></span>
-			<span class="item-content" *ngIf="(!item.$items || !parentItemTemplate) && (item.$items || !itemTemplate)">{{ getTextValue(item) }}</span>
-			<span class="item-content" *ngIf="item.$items && parentItemTemplate">
-				<template [ngTemplateOutlet]="parentItemTemplate" [ngOutletContext]="{ $implicit: item, query: query, flatindex: vpStartRow+index }"></template>
-			</span>
-			<span class="item-content" *ngIf="!item.$items && itemTemplate">
-				<template [ngTemplateOutlet]="itemTemplate" [ngOutletContext]="{ $implicit: item, query: query, flatindex: vpStartRow+index }"></template>
-			</span>
-		</li>
-	</ul>
-	<div *ngIf="vpAfterHeight" [style.height.px]="vpAfterHeight"></div>
-	<deja-list-loader id="loader" *ngIf="waiter && !loaderTemplate"></deja-list-loader>
-	<span class="loader-container" *ngIf="waiter && loaderTemplate">
-			<template [ngTemplateOutlet]="loaderTemplate"></template>
-		</span>
-	</div>
+<div #listcontainer id="listcontainer" [attr.depth-max]="depthMax || null" [attr.vp-rowheight]="getViewPortRowHeight()" [style.max-height.px]="maxHeight || null" tabindex="1" [class.hasheader]="headerTemplate" [class.dragover]="_ddStartIndex !== undefined ? _ddStartIndex : null" [attr.keynav]="keyboardNavigation" (dragleave)="sortable ? dragLeave($event): null" (mousedown)="mousedown($event)" [deja-droppable]="getDropContext()">
+    <div id="nodata-holder" *ngIf="(!_itemList || _itemList.length === 0) && !waiter">{{ nodataholder }}</div>
+    <div id="error-hint" *ngIf="_hintLabel">{{ _hintLabel }}</div>
+    <div *ngIf="vpBeforeHeight" [style.height.px]="vpBeforeHeight"></div>
+    <div *ngFor="let item of _itemList; let index = index" #listitem class="listitem" [class.hide]="item.collapsing || item.expanding" [class.parent]="item.depth < depthMax" [class.collapsed]="item.collapsed" [class.selected]="item.selected" [attr.current]="vpStartRow+index === currentItemIndex" [class.unselectable]="item.selectable === false" [attr.depth]="depthMax ? item.depth : null" [attr.id]="item.id || null" [attr.flat]="vpStartRow + index" [deja-draggable]="getDragContext(vpStartRow + index)" [style.height.px]="getItemHeight(item)" [class.odd]="(item.depth === _depthMax && item.odd) || null">
+		<span *ngIf="item.$items" id="expandbtn"></span>
+        <ng-container *ngIf="(!item.$items || !parentItemTemplate) && (item.$items || !itemTemplate)">{{ getTextValue(item) }}</ng-container>
+        <ng-container class="item-content" *ngIf="item.$items && parentItemTemplate">
+		    <template [ngTemplateOutlet]="parentItemTemplate" [ngOutletContext]="{ $implicit: item, query: query, flatindex: vpStartRow+index }"></template>
+	    </ng-container>
+        <ng-container class="item-content" *ngIf="!item.$items && itemTemplate">
+			<template [ngTemplateOutlet]="itemTemplate" [ngOutletContext]="{ $implicit: item, query: query, flatindex: vpStartRow+index }"></template>
+		</ng-container>
+    </div>
+    <div *ngIf="vpAfterHeight" [style.height.px]="vpAfterHeight"></div>
+    <deja-list-loader id="loader" *ngIf="waiter && !loaderTemplate"></deja-list-loader>
+    <ng-container *ngIf="waiter && loaderTemplate">
+		<template [ngTemplateOutlet]="loaderTemplate"></template>
+	</ng-container>
+</div>

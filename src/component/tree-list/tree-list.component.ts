@@ -89,6 +89,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
     @ViewChildren('listitem') private listItemElements: QueryList<ElementRef>;
 
+    // Templates
     @ContentChild('itemTemplate') private itemTemplateInternal;
     @ContentChild('parentItemTemplate') private parentItemTemplateInternal;
     @ContentChild('loaderTemplate') private loaderTemplateInternal;
@@ -125,10 +126,9 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
         this.subscriptions.push(Observable.from(this.filterListComplete$)
             .debounceTime(250)
-            .subscribe(() => {
-                this.setCurrentItem(undefined);
-                this.calcViewPort();
-            }));
+            .do(() => this.setCurrentItem(undefined))
+            .switchMap(() => this.calcViewPort$())
+            .subscribe(noop));
 
         this.subscriptions.push(Observable.from(this.keyboardNavigation$)
             .do(() => this.keyboardNavigation = true)
@@ -225,7 +225,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     }
 
     /**
-     * Les trois valeurs acceptés en paramètre se trouvent dans l'enum ViewportMode (NoViewport, ConstantRowheight, VariableRowHeight)
+     * Les trois valeurs acceptés en paramètre se trouvent dans l'enum ViewportMode (NoViewport, ConstantRowheight, VariableRowHeight ou AutoRowHeight)
      * Attention, une désactivation du viewport dégrade considérablement les performances de la liste et ne doit pas être activée si la liste
      * est suceptible de contenir beaucoup d'éléments.
      */
@@ -383,8 +383,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     public set models(items: any[] | Observable<any[]>) {
         super.setModels$(items)
             .first()
+            .switchMap(() => this.calcViewPort$())
             .subscribe(() => {
-                this.calcViewPort();
             }, (error: any) => {
                 this._hintLabel = error.toString();
             });
@@ -427,18 +427,22 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Définit la liste des éléments, sans invoquaer ngModelChange */
     public writeValue(items: any) {
         delete this.hintLabel;
-        super.setItems$(items).subscribe(() => {
-            if (this.minSearchlength > 0 && !this.query) {
-                // Waiting for query
+        super.setItems$(items)
+            .switchMap((itms) => {
+                if (this.minSearchlength > 0 && !this.query) {
+                    // Waiting for query
+                    this._itemList = [];
+                    this.changeDetectorRef.markForCheck();
+                    return Observable.of(itms);
+                } else {
+                    return this.calcViewPort$().map(() => itms);
+                }
+            })
+            .subscribe(() => {
+            }, (error: any) => {
+                this.hintLabel = error.toString();
                 this._itemList = [];
-            } else if (!!items || (this._itemList && this._itemList.length)) {
-                this.calcViewPort();
-            }
-            this.changeDetectorRef.markForCheck();
-        }, (error: any) => {
-            this.hintLabel = error.toString();
-            this._itemList = [];
-        });
+            });
     }
 
     // From ControlValueAccessor interface
@@ -460,7 +464,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
     /** Change l'état d'expansion de toute les lignes parentes */
     public toggleAll() {
-        this.toggleAll$().first().subscribe();
+        this.toggleAll$().first().subscribe(noop);
     }
 
     /** Positionne a scrollbar pour assurer que l'élément spécifié soit visible */
@@ -480,22 +484,26 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
         if (this._itemList.length === 0 && this.hasCustomService) {
             Observable.timer(1)
                 .first()
-                .subscribe(() => this.calcViewPort());
+                .switchMap(() => this.calcViewPort$())
+                .subscribe(noop);
         }
 
-        const resizeSub = Observable
+        this.subscriptions.push(Observable
             .fromEvent(window, 'resize')
-            .subscribe(() => {
+            .switchMap((e: Event) => {
                 if (this._viewportMode !== ViewportMode.NoViewport && this.maxHeight === 0) {
                     this.computedMaxHeight = 0;
-                    this.calcViewPort();
+                    return this.calcViewPort$().map(() => e);
+                } else {
+                    return Observable.of(e);
                 }
-            });
+            })
+            .subscribe(noop));
 
-        const scrollSub = Observable
+        this.subscriptions.push(Observable
             .fromEvent(this.listcontainer.nativeElement, 'scroll')
             .map((event: any) => [event, event.target.scrollTop, event.target.scrollLeft])
-            .do(([event, scrollTop, scrollLeft]: [Event, number, number]) => {
+            .map(([event, scrollTop, scrollLeft]: [Event, number, number]) => {
                 const e = {
                     originalEvent: event,
                     scrollLeft: scrollLeft,
@@ -503,22 +511,21 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                 } as DejaTreeListScrollEvent;
 
                 this.scroll.emit(e);
+                return scrollTop;
             })
-            .filter(([scrollTop]: [number]) => this.lastScrollTop !== scrollTop)
-            .do(([scrollTop]: [number]) => {
+            .filter((scrollTop: number) => this.lastScrollTop !== scrollTop)
+            .switchMap((scrollTop: number) => {
                 if (this._viewportMode === ViewportMode.NoViewport && this.ignoreNextScrollEvents) {
                     this.ignoreNextScrollEvents = false;
+                    return Observable.of(scrollTop);
                 } else {
                     this.lastScrollTop = scrollTop;
-                    this.calcViewPort();
+                    return this.calcViewPort$().map(() => scrollTop);
                 }
             })
             .debounceTime(30)
-            .subscribe(() => {
-                this.calcViewPort();
-            });
-        this.subscriptions.push(scrollSub, resizeSub);
-
+            .switchMap(() => this.calcViewPort$())
+            .subscribe(noop));
 
         let keyDown$ = Observable.fromEvent(this.listcontainer.nativeElement, 'keydown');
         if (this.input) {
@@ -537,123 +544,123 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                 event.keyCode === KeyCodes.Enter)
             .switchMap((event) => this.ensureListCaches$().map(() => event))
             .map((event: KeyboardEvent) => {
-        // Set current item from index for keyboard features only
-        const setCurrentIndex = (index: number) => {
+                // Set current item from index for keyboard features only
+                const setCurrentIndex = (index: number) => {
                     this.currentItemIndex = index;
                     this.ensureItemVisible(this.currentItemIndex);
-        };
+                };
 
                 const currentIndex = this.rangeStartIndex >= 0 ? this.rangeStartIndex : this.rangeStartIndex = this.currentItemIndex;
 
-            switch (event.keyCode) {
-                case KeyCodes.Home:
-                    if (event.shiftKey) {
-                        this.selectRange$(currentIndex, 0).first().subscribe(() => { });
-                    } else if (!event.ctrlKey) {
-                        this.rangeStartIndex = 0;
-                        this.selectRange$(this.rangeStartIndex).first().subscribe(() => { });
-                    }
-                    setCurrentIndex(0);
-                    return false;
+                switch (event.keyCode) {
+                    case KeyCodes.Home:
+                        if (event.shiftKey) {
+                            this.selectRange$(currentIndex, 0).first().subscribe(noop);
+                        } else if (!event.ctrlKey) {
+                            this.rangeStartIndex = 0;
+                            this.selectRange$(this.rangeStartIndex).first().subscribe(noop);
+                        }
+                        setCurrentIndex(0);
+                        return false;
 
-                case KeyCodes.End:
-                    if (event.shiftKey) {
-                        this.selectRange$(currentIndex, this.rowsCount - 1).first().subscribe(() => { });
-                    } else if (!event.ctrlKey) {
-                        this.rangeStartIndex = this.rowsCount - 1;
-                        this.selectRange$(this.rangeStartIndex).first().subscribe(() => { });
-                    }
-                    setCurrentIndex(this.rowsCount - 1);
-                    return false;
+                    case KeyCodes.End:
+                        if (event.shiftKey) {
+                            this.selectRange$(currentIndex, this.rowsCount - 1).first().subscribe(noop);
+                        } else if (!event.ctrlKey) {
+                            this.rangeStartIndex = this.rowsCount - 1;
+                            this.selectRange$(this.rangeStartIndex).first().subscribe(noop);
+                        }
+                        setCurrentIndex(this.rowsCount - 1);
+                        return false;
 
-                case KeyCodes.PageUp:
+                    case KeyCodes.PageUp:
                         const upindex = Math.max(0, this.currentItemIndex - this.pageSize);
-                    if (event.shiftKey) {
-                        this.selectRange$(currentIndex, upindex).first().subscribe(() => { });
-                    } else if (!event.ctrlKey) {
-                        this.rangeStartIndex = upindex;
-                        this.selectRange$(this.rangeStartIndex).first().subscribe(() => { });
-                    }
-                    setCurrentIndex(upindex);
-                    return false;
+                        if (event.shiftKey) {
+                            this.selectRange$(currentIndex, upindex).first().subscribe(noop);
+                        } else if (!event.ctrlKey) {
+                            this.rangeStartIndex = upindex;
+                            this.selectRange$(this.rangeStartIndex).first().subscribe(noop);
+                        }
+                        setCurrentIndex(upindex);
+                        return false;
 
-                case KeyCodes.PageDown:
+                    case KeyCodes.PageDown:
                         const dindex = Math.min(this.rowsCount - 1, this.currentItemIndex + this.pageSize);
-                    if (event.shiftKey) {
-                        this.selectRange$(currentIndex, dindex).first().subscribe(() => { });
-                    } else if (!event.ctrlKey) {
-                        this.rangeStartIndex = dindex;
-                        this.selectRange$(this.rangeStartIndex).first().subscribe(() => { });
-                    }
-                    setCurrentIndex(dindex);
-                    return false;
+                        if (event.shiftKey) {
+                            this.selectRange$(currentIndex, dindex).first().subscribe(noop);
+                        } else if (!event.ctrlKey) {
+                            this.rangeStartIndex = dindex;
+                            this.selectRange$(this.rangeStartIndex).first().subscribe(noop);
+                        }
+                        setCurrentIndex(dindex);
+                        return false;
 
-                case KeyCodes.UpArrow:
+                    case KeyCodes.UpArrow:
                         const uaindex = Math.max(0, this.currentItemIndex - 1);
-                    if (uaindex !== -1) {
-                        if (event.shiftKey) {
-                            this.selectRange$(currentIndex, uaindex).first().subscribe(() => { });
-                        } else if (!event.ctrlKey) {
-                            this.rangeStartIndex = uaindex;
-                            this.selectRange$(this.rangeStartIndex).first().subscribe(() => { });
+                        if (uaindex !== -1) {
+                            if (event.shiftKey) {
+                                this.selectRange$(currentIndex, uaindex).first().subscribe(noop);
+                            } else if (!event.ctrlKey) {
+                                this.rangeStartIndex = uaindex;
+                                this.selectRange$(this.rangeStartIndex).first().subscribe(noop);
+                            }
+                            setCurrentIndex(uaindex);
                         }
-                        setCurrentIndex(uaindex);
-                    }
-                    return false;
+                        return false;
 
-                case KeyCodes.DownArrow:
+                    case KeyCodes.DownArrow:
                         const daindex = Math.min(this.rowsCount - 1, this.currentItemIndex + 1);
-                    if (daindex !== -1) {
-                        if (event.shiftKey) {
-                            this.selectRange$(currentIndex, daindex).first().subscribe(() => { });
-                        } else if (!event.ctrlKey) {
-                            this.rangeStartIndex = daindex;
-                            this.selectRange$(this.rangeStartIndex).first().subscribe(() => { });
+                        if (daindex !== -1) {
+                            if (event.shiftKey) {
+                                this.selectRange$(currentIndex, daindex).first().subscribe(noop);
+                            } else if (!event.ctrlKey) {
+                                this.rangeStartIndex = daindex;
+                                this.selectRange$(this.rangeStartIndex).first().subscribe(noop);
+                            }
+                            setCurrentIndex(daindex);
                         }
-                        setCurrentIndex(daindex);
-                    }
-                    return false;
+                        return false;
 
-                case KeyCodes.Space:
-                    const target = event.target as HTMLElement;
-                    if (target.tagName === 'INPUT' && !event.ctrlKey && !event.shiftKey) {
+                    case KeyCodes.Space:
+                        const target = event.target as HTMLElement;
+                        if (target.tagName === 'INPUT' && !event.ctrlKey && !event.shiftKey) {
+                            return true;
+                        }
+
+                        const sitem = this.currentItem as IItemTree;
+                        if (sitem) {
+                            if (this.isCollapsible(sitem)) {
+                                this.toggleCollapse$(currentIndex, !sitem.collapsed).first().subscribe(noop);
+                            } else if (sitem.selected) {
+                                this.toggleSelect$([sitem], false).first().subscribe(noop);
+                            } else if (this.multiSelect && event.ctrlKey) {
+                                this.toggleSelect$([sitem], !sitem.selected).first().subscribe(noop);
+                            } else {
+                                this.unselectAll$()
+                                    .switchMap(() => this.toggleSelect$([sitem], true))
+                                    .first()
+                                    .subscribe(noop);
+                            }
+                        }
+                        return false;
+
+                    case KeyCodes.Enter:
+                        const eitem = this.currentItem as IItemTree;
+                        if (eitem) {
+                            if (this.isCollapsible(eitem) || eitem.selected) {
+                                this.toggleCollapse$(currentIndex, !eitem.collapsed).first().subscribe(noop);
+                            } else if (eitem.selectable) {
+                                this.unselectAll$()
+                                    .switchMap(() => this.toggleSelect$([eitem], true))
+                                    .first()
+                                    .subscribe(noop);
+                            }
+                        }
+                        return false;
+
+                    default:
                         return true;
-                    }
-
-                    const sitem = this.currentItem as IItemTree;
-                    if (sitem) {
-                        if (this.isCollapsible(sitem)) {
-                            this.toggleCollapse$(currentIndex, !sitem.collapsed).first().subscribe(() => { });
-                        } else if (sitem.selected) {
-                            this.toggleSelect$([sitem], false).first().subscribe(() => { });
-                        } else if (this.multiSelect && event.ctrlKey) {
-                            this.toggleSelect$([sitem], !sitem.selected).first().subscribe(() => { });
-                        } else {
-                            this.unselectAll$()
-                                .switchMap(() => this.toggleSelect$([sitem], true))
-                                .first()
-                                .subscribe(() => { });
-                        }
-                    }
-                    return false;
-
-                case KeyCodes.Enter:
-                    const eitem = this.currentItem as IItemTree;
-                    if (eitem) {
-                        if (this.isCollapsible(eitem) || eitem.selected) {
-                            this.toggleCollapse$(currentIndex, !eitem.collapsed).first().subscribe(() => { });
-                        } else if (eitem.selectable) {
-                            this.unselectAll$()
-                                .switchMap(() => this.toggleSelect$([eitem], true))
-                                .first()
-                                .subscribe(() => { });
-                        }
-                    }
-                    return false;
-
-                default:
-                    return true;
-            }
+                }
             })
             .subscribe((continuePropagation) => {
                 if (!continuePropagation) {
@@ -691,37 +698,37 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                     this.ensureItemVisible(this.currentItemIndex);
                 };
 
-            if (!this.searchArea) {
-                if ((/[a-zA-Z0-9]/).test(event.key)) {
-                    // Valid char
-                    this.clearFilterExpression$.next(null);
+                if (!this.searchArea) {
+                    if ((/[a-zA-Z0-9]/).test(event.key)) {
+                        // Valid char
+                        this.clearFilterExpression$.next(null);
 
-                    // Search next
-                    this.filterExpression += event.key;
-                    const rg = new RegExp('^' + this.filterExpression, 'i');
-                    this.findNextMatch$((item) => {
-                        if (item && this.isSelectable(item)) {
-                            const label = this.getTextValue(item);
-                            if (rg.test(label)) {
-                                return true;
+                        // Search next
+                        this.filterExpression += event.key;
+                        const rg = new RegExp('^' + this.filterExpression, 'i');
+                        this.findNextMatch$((item) => {
+                            if (item && this.isSelectable(item)) {
+                                const label = this.getTextValue(item);
+                                if (rg.test(label)) {
+                                    return true;
+                                }
                             }
-                        }
                             event.preventDefault();
-                        return false;
+                            return false;
                         }, this.currentItemIndex)
-                        .first()
-                        .subscribe((result) => {
-                            if (result.index >= 0) {
-                                setCurrentIndex(result.index);
-                            }
-                        });
-                }
-            } else {
-                // Autocomplete, filter the list
-                this.keyboardNavigation$.next();
+                            .first()
+                            .subscribe((result) => {
+                                if (result.index >= 0) {
+                                    setCurrentIndex(result.index);
+                                }
+                            });
+                    }
+                } else {
+                    // Autocomplete, filter the list
+                    this.keyboardNavigation$.next();
                     if (event.keyCode !== KeyCodes.Space) {
-                this.filterListComplete$.next();
-            }
+                        this.filterListComplete$.next();
+                    }
                 }
             }));
     }
@@ -814,7 +821,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                 this.itemDragEnd.emit(event);
                 delete this._ddStartIndex;
                 delete this._ddTargetIndex;
-                this.calcViewPort(); // Comment this line to debug dragdrop
+                this.calcViewPort$().first().subscribe(noop); // Comment this line to debug dragdrop
             },
             dragstartcallback: (event: IDejaDragEvent) => {
                 const targetIndex = this.getItemIndexFromHTMLElement(event.target as HTMLElement);
@@ -857,7 +864,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                             return Observable.of(finalTarget);
                         }
                     })
-                    .subscribe(() => { });
+                    .subscribe(noop);
 
                 event.preventDefault();
                 return;
@@ -867,7 +874,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                 delete this._ddTargetIndex;
                 this.drop$()
                     .switchMap(() => this.calcViewPort$())
-                    .subscribe(() => { });
+                    .subscribe(noop);
                 event.preventDefault();
             },
         };
@@ -883,7 +890,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
         if (!listBounds.containsPoint(new Position(event.pageX, event.pageY))) {
             this._ddTargetIndex = this._ddStartIndex;
-            this.calcViewPort();
+            this.calcViewPort$().first().subscribe(noop);
         }
     }
 

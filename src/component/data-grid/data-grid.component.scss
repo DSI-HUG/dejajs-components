@@ -10,9 +10,9 @@ deja-grid {
 	}
 	#treelist {
 		flex: 1 1 auto;
-		#list {
-			ul {
-				>li {
+        #listcontainer {
+            >div.listitem {
+                padding: 0;
 					&[current="true"] {
 						box-shadow: none;
 						.cell-wrapper[current="true"] {
@@ -22,12 +22,9 @@ deja-grid {
 					display: inline-flex;
 					overflow: visible;
 					min-width: 100%;
-					.item-content {
-						padding: 0;
-					}
 				}
 				&[depth-max] {
-					li {
+                >div.listitem {
 						padding: 0;
 						&[depth] {
 							deja-grid-row,
@@ -92,7 +89,7 @@ deja-grid {
 					}
 				}
 				&[depth-max="1"] {
-					li {
+                >div.listitem {
 						&[depth="1"] {
 							deja-grid-row,
 							deja-grid-parent-row {
@@ -106,7 +103,7 @@ deja-grid {
 					}
 				}
 				&[depth-max="2"] {
-					li {
+                >div.listitem {
 						&[depth="1"] {
 							deja-grid-row,
 							deja-grid-parent-row {
@@ -130,7 +127,7 @@ deja-grid {
 					}
 				}
 				&[depth-max="3"] {
-					li {
+                >div.listitem {
 						&[depth="1"] {
 							deja-grid-row,
 							deja-grid-parent-row {
@@ -164,7 +161,7 @@ deja-grid {
 					}
 				}
 				&[depth-max="4"] {
-					li {
+                >div.listitem {
 						&[depth="1"] {
 							deja-grid-row,
 							deja-grid-parent-row {
@@ -208,9 +205,8 @@ deja-grid {
 					}
 				}
 			}
-		}
 		&[nohscroll] {
-			#list {
+            #listcontainer {
 				overflow-x: hidden;
 			}
 		}

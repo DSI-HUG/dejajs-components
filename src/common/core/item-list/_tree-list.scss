@@ -1,6 +1,6 @@
-ul {
+#listcontainer {
 	&[depth-max] {
-		li {
+        >div.listitem {
 			&[depth] {
 				padding-left: 2.25rem;
                 background-color: $background;
@@ -55,7 +55,7 @@ ul {
 		}
 	}
 	&[depth-max="1"] {
-		li {
+        >div.listitem {
 			&[depth="0"] {
 				background-color: rgba($secondary, 0.6);
 				color: #FFF;
@@ -77,7 +77,7 @@ ul {
 		}
 	}
 	&[depth-max="2"] {
-		li {
+        >div.listitem {
 			&[depth="0"] {
 				background-color: rgba($secondary, 0.8);
 				color: #FFF;
@@ -107,7 +107,7 @@ ul {
 		}
 	}
 	&[depth-max="3"] {
-		li {
+        >div.listitem {
 			&[depth="0"] {
 				background-color: rgba($secondary, 0.8);
 				color: #FFF;
@@ -145,7 +145,7 @@ ul {
 		}
 	}
 	&[depth-max="4"] {
-		li {
+        >div.listitem {
 			&[depth="0"] {
 				background-color: rgba($secondary, 0.85);
 				color: #FFF;
