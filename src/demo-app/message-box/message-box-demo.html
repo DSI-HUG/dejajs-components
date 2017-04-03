@@ -67,20 +67,4 @@
     <deja-message-box horizontal>
         Un message horizontal sans type ni titre
     </deja-message-box>
-
-    <!-- basic message box in a snackbar -->
-    <deja-snackbar alignment="bottom left">
-        <deja-message-box type="success" title="Un titre">
-            Un message "success" dans un snackbar
-        </deja-message-box>
-    </deja-snackbar>
-
-    <!-- server push error or information : put them in a snackbar -->
-    <template ngFor let-message [ngForOf]="messages | async">
-        <deja-snackbar *ngIf="message.gate" alignment="bottom right" [duration]="8000" (onAnimationDone)="message.gate = false">
-            <deja-message-box type="{{message.type}}" horizontal title="messagebox dans snackbar">
-                {{message.content}}
-            </deja-message-box>
-        </deja-snackbar>
-    </template>
 </div>

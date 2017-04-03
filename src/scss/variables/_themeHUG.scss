@@ -3,8 +3,8 @@
 @include mat-core();
 
 // Define color scheme
-$primary: mat-palette($mat-green);
-$accent:  mat-palette($mat-red, A200, A100, A400);
+$primary: mat-palette($md-hug-primary);
+$accent:  mat-palette($md-hug-primary, A200, A100, A400);
 $warn: mat-palette($mat-red);
 
 // Create the theme object from colors
