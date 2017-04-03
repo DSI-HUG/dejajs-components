@@ -1,6 +1,3 @@
-@import '~@angular/material/core/theming/theming';
-@import 'src/scss/variables/themeHUG';
-
 :host {
     $deep: '/deep/';
 	#deja-dropdown {
@@ -14,12 +11,8 @@
 				background: none;
 				border: none;
 				box-shadow: none;
-				color: #FFF;
 			}
 		}
-	}
-	#deja-backdrop {
-		background-color: transparent;
 	}
     #date-selector {
         #{$deep} {
@@ -47,7 +40,6 @@
 		.mat-input-wrapper {
 			.mat-input-underline {
 				.mat-input-ripple {
-					background-color: mat-color($warn);
 					opacity: 1;
 					transform: scaleY(1);
 				}
@@ -55,7 +47,6 @@
 			.mat-input-table {
 				.mat-input-infix {
 					.mat-input-placeholder {
-						color: mat-color($warn);
 					}
 				}
 			}
