@@ -4,7 +4,6 @@
 	#dpi {
 		@import 'components/buttons';
 		@import 'components/input';
-		@import 'components/radio';
 
 		@include tabs-theme($theme);
 	}
