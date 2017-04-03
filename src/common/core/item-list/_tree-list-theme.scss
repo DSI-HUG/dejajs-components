@@ -1,0 +1,185 @@
+@import '../../../node_modules/@angular/material/core/theming/theming';
+
+@mixin sub-tree-list-theme($theme) {
+	$secondary: map-get($theme, accent);
+	$foreground: #000;
+	$background: #fff;
+
+	#listcontainer {
+		&[depth-max] {
+			>div.listitem {
+				&[depth] {
+					background-color: $background;
+					background-color: initial;
+					color: $foreground;
+					color: initial;
+					&.selected {
+						background-color: rgba($secondary, 0.8);
+						color: #fff;
+					}
+				}
+				&[depth="0"] {
+					background-color: rgba($secondary, 0.85);
+					color: #FFF;
+					&.selected {
+						background-color: rgba($secondary, 0.95);
+					}
+				}
+				&[depth="1"] {
+					background-color: rgba($secondary, 0.7);
+					color: #FFF;
+					&.selected {
+						background-color: rgba($secondary, 0.85);
+					}
+				}
+				&[depth="2"] {
+					background-color: rgba($secondary, 0.55);
+					color: #FFF;
+					&.selected {
+						background-color: rgba($secondary, 0.8);
+					}
+				}
+				&[depth="3"] {
+					background-color: rgba($secondary, 0.42);
+					color: #333;
+					&.selected {
+						background-color: rgba($secondary, 0.75);
+					}
+				}
+				&[depth="4"] {
+					background-color: rgba($secondary, 0.3);
+					color: #333;
+					&.selected {
+						background-color: rgba($secondary, 0.7);
+					}
+				}
+			}
+		}
+		&[depth-max="1"] {
+			>div.listitem {
+				&[depth="0"] {
+					background-color: rgba($secondary, 0.6);
+					color: #FFF;
+					&.selected {
+						background-color: rgba($secondary, 0.95);
+					}
+				}
+				&[depth="1"] {
+					background-color: $background;
+					background-color: initial;
+					color: $foreground;
+					color: initial;
+					&.selected {
+						background-color: rgba($secondary, 0.8);
+						color: #fff;
+					}
+				}
+			}
+		}
+		&[depth-max="2"] {
+			>div.listitem {
+				&[depth="0"] {
+					background-color: rgba($secondary, 0.8);
+					color: #FFF;
+					&.selected {
+						background-color: rgba($secondary, 0.95);
+					}
+				}
+				&[depth="1"] {
+					background-color: rgba($secondary, 0.4);
+					color: #333;
+					&.selected {
+						background-color: rgba($secondary, 0.85);
+					}
+				}
+				&[depth="2"] {
+					background-color: $background;
+					background-color: initial;
+					color: $foreground;
+					color: initial;
+					&.selected {
+						background-color: rgba($secondary, 0.8);
+						color: #fff;
+					}
+				}
+			}
+		}
+		&[depth-max="3"] {
+			>div.listitem {
+				&[depth="0"] {
+					background-color: rgba($secondary, 0.8);
+					color: #FFF;
+					&.selected {
+						background-color: rgba($secondary, 0.95);
+					}
+				}
+				&[depth="1"] {
+					background-color: rgba($secondary, 0.55);
+					color: #FFF;
+					&.selected {
+						background-color: rgba($secondary, 0.85);
+					}
+				}
+				&[depth="2"] {
+					background-color: rgba($secondary, 0.3);
+					color: #333;
+					&.selected {
+						background-color: rgba($secondary, 0.8);
+					}
+				}
+				&[depth="3"] {
+					background-color: $background;
+					background-color: initial;
+					color: $foreground;
+					color: initial;
+					&.selected {
+						background-color: rgba($secondary, 0.8);
+						color: #fff;
+					}
+				}
+			}
+		}
+		&[depth-max="4"] {
+			>div.listitem {
+				&[depth="0"] {
+					background-color: rgba($secondary, 0.85);
+					color: #FFF;
+					&.selected {
+						background-color: rgba($secondary, 0.95);
+					}
+				}
+				&[depth="1"] {
+					background-color: rgba($secondary, 0.7);
+					color: #FFF;
+					&.selected {
+						background-color: rgba($secondary, 0.85);
+					}
+				}
+				&[depth="2"] {
+					background-color: rgba($secondary, 0.48);
+					color: #333;
+					&.selected {
+						background-color: rgba($secondary, 0.8);
+					}
+				}
+				&[depth="3"] {
+					background-color: rgba($secondary, 0.3);
+					color: #333;
+					&.selected {
+						background-color: rgba($secondary, 0.75);
+					}
+				}
+				&[depth="4"] {
+					background-color: $background;
+					background-color: initial;
+					color: $foreground;
+					color: initial;
+					&.selected {
+						background-color: rgba($secondary, 0.8);
+						color: #fff;
+					}
+				}
+			}
+		}
+	}
+}

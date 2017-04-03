@@ -11,7 +11,7 @@
     </md-tab>
     <md-tab label="EXAMPLES">
         <md-card class="treelist-demo demo-card demo-basic business-object">
-            <md-toolbar color="secondary">By passing business object</md-toolbar>
+            <md-toolbar color="primary">By passing business object</md-toolbar>
             <md-card-content>
                 <div fxLayout="row">
                     <deja-tree-list fxFlex="0 0 50%" [maxHeight]="400" min-search-length="0" searchArea sortable multiSelect (selectedChange)="onSelectBusinessObject($event)" nodataholder="Pas de données" placeholder="Liste des pays" [models]="countries"></deja-tree-list>
@@ -23,7 +23,7 @@
             </md-card-content>
         </md-card>
         <md-card class="treelist-demo demo-card demo-basic">
-            <md-toolbar color="secondary">Treelist demo - Cas standards</md-toolbar>
+            <md-toolbar color="primary">Treelist demo - Cas standards</md-toolbar>
             <md-card-content class="listContainer">
                 <deja-tree-list #treeList min-search-length="0" searchArea multiSelect nodataholder="Pas de données" placeholder="Liste des pays" [(ngModel)]="countries" [deja-mouse-draggable]="getDragContext()" [valueField]="code">
                     <template #itemTemplate let-item let-flatindex="flatindex">
@@ -63,7 +63,7 @@
                 </div>
                 <div #dropArea [deja-mouse-droppable]="getDropContext(dropArea)" [deja-droppable]="{dragovercallback: onDivDragOver, dropcallback:onDivDropEvent}" style="border:1px solid red;min-height:150px;"></div>
             </md-card-content>
-            <md-toolbar color="secondary">Treelist demo - Cas particuliers</md-toolbar>
+            <md-toolbar color="primary">Treelist demo - Cas particuliers</md-toolbar>
             <md-card-content class="listContainer">
                 <deja-tree-list [(ngModel)]="loremList" [viewportMode]="variableMode" expandButton searchArea sortable placeholder="Tree list avec des tailles de rows différentes"></deja-tree-list>
                 <deja-tree-list [models]="news$" [viewportMode]="autoMode" [viewPortRowHeight]="200" multiSelect searchArea sortable placeholder="Automatic row height TreeView ">
