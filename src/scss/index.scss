@@ -47,6 +47,7 @@
 @import 'src/component/loaders/list-loader-theme';
 @import 'src/component/markdown/markdown-theme';
 @import 'src/component/menu/menu-theme';
+@import 'src/component/tree-list/tree-list-theme';
 
 // Create a theme.
 @mixin deja-theme($custom-theme) {
@@ -57,4 +58,5 @@
     @include list-loader-theme($custom-theme);
     @include markdown-theme($custom-theme);
     @include menu-theme($custom-theme);
+    @include tree-list-theme($custom-theme);
 }
