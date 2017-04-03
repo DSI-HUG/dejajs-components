@@ -1,41 +1,44 @@
-md-tab-group {
-	&[multi-lines] {
-		.mat-tab-labels {
-            flex-wrap: wrap;
+@import '../../../node_modules/@angular/material/core/theming/theming';
+
+@mixin tabs-theme($theme) {
+	$primary: map-get($theme, primary);
+
+	md-tab-group {
+		&[multi-lines] {
+			.mat-tab-labels {
+				flex-wrap: wrap;
+			}
 		}
-	}
-	.mat-tab-header {
-		.mat-tab-label {
-			font-size: 80%;
-			height: auto;
-			line-height: normal;
-			min-width: unset;
-			padding: 12px 10px;
-			position: relative;
-			white-space: nowrap;
-			&:focus {
-				background-color: rgba($primary, .5) !important;
-			}
-			&:after {
-				background-color: $secondary;
-				bottom: 0;
-				content: '';
-				height: 2px;
-				left: 50%;
-				position: absolute;
-				transition: all 500ms ease;
-				width: 0;
-			}
-			&.mat-tab-label-active { 
+		.mat-tab-header {
+			.mat-tab-label {
+				font-size: 80%;
+				height: auto;
+				line-height: normal;
+				min-width: unset;
+				padding: 12px 10px;
+				position: relative;
+				white-space: nowrap;
 				&:after {
-					left: 0;
-					width: 100%;
+					background-color: mat-color($primary);
+					bottom: 0;
+					content: '';
+					height: 2px;
+					left: 50%;
+					position: absolute;
+					transition: all 500ms ease;
+					width: 0;
+				}
+				&.mat-tab-label-active { 
+					&:after {
+						left: 0;
+						width: 100%;
+					}
 				}
 			}
-		}
-		md-ink-bar {
-			background-color: $secondary !important;
-			display: none;
+			md-ink-bar {
+				background-color: mat-color($primary) !important;
+				display: none;
+			}
 		}
 	}
 }
