@@ -23,7 +23,7 @@
         }
         #listheader {
             border: solid 1px rgba(0, 0, 0, 0.38);
-            border-bottom: solid 1px rgba($secondary, 0.8);
+            border-bottom: solid 1px rgba(mat-color($secondary, 600), 0.8);
         }
         #listcontainer {
             background-color: white;
