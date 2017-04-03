@@ -5,7 +5,7 @@
 
     .accordion-group {
         deja-accordion-header {
-            &[secondary] {
+            &[primary] {
                 &.accordion-header {
                     background-color: mat-color($primary);
                     color:#FFF;
@@ -18,7 +18,7 @@
 
         &.open {
             deja-accordion-header {
-                &[secondary] {
+                &[primary] {
                     &.accordion-header {
                         background-color: mat-color($primary, 600);
                     }
