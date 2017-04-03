@@ -1,6 +1,6 @@
 @import "~@angular/material/core/style/_elevation.scss";
 @import "~@angular/material/core/style/_variables.scss";
-@import "../../scss/variables/_colors.scss";
+
 :host {
   /* the size of the separator has to be specified*/
   $separator-width: 7px;
@@ -52,7 +52,6 @@
       @include mat-elevation(2);
     }
     @include mat-elevation(1);
-    $accent: $secondary;
     $height: 32px;
     height: $height;
     .range {
@@ -83,7 +82,6 @@
         .default-separator-item {
           height: 100%;
           width: 1px;
-          background: $primary;
         }
       }
     }
@@ -106,38 +104,6 @@
       animation-fill-mode: both;
       -webkit-animation-timing-function: ease-in-out;
       animation-timing-function: ease-in-out;
-    }
-    @-webkit-keyframes selected {
-      from {
-        border-bottom: 0px solid $accent;
-      }
-      to {
-        border-bottom: 2px solid $accent;
-      }
-    }
-    @keyframes selected {
-      from {
-        border-bottom: 0px solid $accent;
-      }
-      to {
-        border-bottom: 2px solid $accent;
-      }
-    }
-    @-webkit-keyframes not-selected {
-      from {
-        border-bottom: 2px solid $accent;
-      }
-      to {
-        border-bottom: 0px solid $accent;
-      }
-    }
-    @keyframes not-selected {
-      from {
-        border-bottom: 2px solid $accent;
-      }
-      to {
-        border-bottom: 0px solid $accent;
-      }
     }
   }
 }
