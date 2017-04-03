@@ -172,8 +172,23 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     /** Ancre d'alignement de la liste déroulante. Valeurs possible: top, bottom, right, left. Une combinaison des ces valeurs peut également être utilisée, par exemple 'top left'. */
     @Input()
     public set dropdownAlignment(value: string) {
-        // TODO
-        this._dropdownAlignment = 'left';
+        const alignents = {
+            bottom: false,
+            left: false,
+            right: false,
+            top: false,
+        };
+
+        if (value) {
+            value.split(/\s+/).map((align) => alignents[align] = true);
+        }
+
+        if (!alignents.left && alignents.right) {
+            this._dropdownAlignment = 'right';
+        } else {
+            this._dropdownAlignment = 'left';
+        }
+
         this._ownerAlignment = value;
     }
 
@@ -610,7 +625,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 event.keyCode === KeyCodes.Space ||
                 event.keyCode === KeyCodes.Delete);
 
-        this.subscriptions.push( Observable.merge(keyUp$, this.filter$)
+        this.subscriptions.push(Observable.merge(keyUp$, this.filter$)
             .do(() => {
                 if ((this.query || '').length < this.minSearchlength) {
                     this._itemList = [];

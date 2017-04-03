@@ -120,7 +120,7 @@ export class DejaDropDownComponent implements AfterViewInit {
                 element.setAttribute('halign', halign);
             } else {
                 element.removeAttribute('halign');
-    }
+            }
         };
 
         const unRregisterEscape$ = Observable.from(this.closeOnEscape$)
@@ -148,217 +148,217 @@ export class DejaDropDownComponent implements AfterViewInit {
             .debounceTime(100)
             .subscribe((value) => {
                 if (value) {
-            // Calc owner screen position
+                    // Calc owner screen position
                     const ownerElement = (this.ownerElement as ElementRef).nativeElement || this.ownerElement;
                     const ownerRect = ownerElement.getBoundingClientRect();
                     const ownerBounds = Rect.fromLTRB(ownerRect.left + +this.ownerLeftMargin, ownerRect.top + +this.ownerTopMargin, ownerRect.right - +this.ownerRightMargin, ownerRect.bottom - +this.ownerBottomMargin);
 
-            // Calc container screen position
+                    // Calc container screen position
                     const body = this.elementRef.nativeElement.ownerDocument.body;
                     const bodyRect = body.getBoundingClientRect();
                     const containerElement = this.containerElement && (this.containerElement as ElementRef).nativeElement || this.containerElement;
                     const containerRect = !containerElement ? bodyRect : containerElement.getBoundingClientRect();
 
-            // Calc min max relative to screen
+                    // Calc min max relative to screen
                     const minLeft = Math.max(bodyRect.left, containerRect.left);
                     const maxRight = Math.min(bodyRect.right, containerRect.right);
                     const minTop = Math.max(bodyRect.top, containerRect.top);
                     const maxBottom = Math.min(bodyRect.bottom, containerRect.bottom);
 
-            // Calc dropdown screen position                
+                    // Calc dropdown screen position
                     const dropdownContElement = this.elementRef.nativeElement as HTMLElement;
                     const dropdownRect = dropdownContElement.getBoundingClientRect();
-            let left: number;
-            let top: number;
-            let width = dropdownRect.width;
-            let height = dropdownRect.height;
+                    let left: number;
+                    let top: number;
+                    let width = dropdownRect.width;
+                    let height = dropdownRect.height;
 
-            // Calc container absolute alignment
-            if (this.ownerAlignents.left) {
-                if (this.dropdownAlignments.left) {
-                    left = ownerBounds.left;
-                } else if (this.dropdownAlignments.right) {
-                    left = ownerBounds.left - width;
-                } else {
-                    left = ownerBounds.left - width / 2;
-                }
-            }
+                    // Calc container absolute alignment
+                    if (this.ownerAlignents.left) {
+                        if (this.dropdownAlignments.left) {
+                            left = ownerBounds.left;
+                        } else if (this.dropdownAlignments.right) {
+                            left = ownerBounds.left - width;
+                        } else {
+                            left = ownerBounds.left - width / 2;
+                        }
+                    }
 
-            if (this.ownerAlignents.top) {
-                if (this.dropdownAlignments.top) {
-                    top = ownerBounds.top;
-                } else if (this.dropdownAlignments.bottom) {
-                    top = ownerBounds.top - height;
-                } else {
-                    top = ownerBounds.top + ownerBounds.height / 2 - height / 2;
-                }
-            }
+                    if (this.ownerAlignents.top) {
+                        if (this.dropdownAlignments.top) {
+                            top = ownerBounds.top;
+                        } else if (this.dropdownAlignments.bottom) {
+                            top = ownerBounds.top - height;
+                        } else {
+                            top = ownerBounds.top + ownerBounds.height / 2 - height / 2;
+                        }
+                    }
 
-            if (this.ownerAlignents.right) {
-                if (this.ownerAlignents.left) {
-                    width = ownerBounds.width;
-                } else if (this.dropdownAlignments.left) {
-                    left = ownerBounds.right;
-                } else if (this.dropdownAlignments.right) {
-                    left = ownerBounds.right - width;
-                } else {
-                    left = ownerBounds.right - width / 2;
-                }
-            }
+                    if (this.ownerAlignents.right) {
+                        if (this.ownerAlignents.left) {
+                            width = ownerBounds.width;
+                        } else if (this.dropdownAlignments.left) {
+                            left = ownerBounds.right;
+                        } else if (this.dropdownAlignments.right) {
+                            left = ownerBounds.right - width;
+                        } else {
+                            left = ownerBounds.right - width / 2;
+                        }
+                    }
 
-            if (this.ownerAlignents.bottom) {
-                if (this.ownerAlignents.top) {
-                    height = ownerBounds.height;
-                } else if (this.dropdownAlignments.top) {
-                    top = ownerBounds.bottom;
-                } else if (this.dropdownAlignments.bottom) {
-                    top = ownerBounds.bottom - height;
-                } else {
-                    top = ownerBounds.bottom - height / 2;
-                }
-            }
+                    if (this.ownerAlignents.bottom) {
+                        if (this.ownerAlignents.top) {
+                            height = ownerBounds.height;
+                        } else if (this.dropdownAlignments.top) {
+                            top = ownerBounds.bottom;
+                        } else if (this.dropdownAlignments.bottom) {
+                            top = ownerBounds.bottom - height;
+                        } else {
+                            top = ownerBounds.bottom - height / 2;
+                        }
+                    }
 
-            if (top === undefined) {
-                top = ownerBounds.top + ownerBounds.height / 2 - height / 2;
-            }
+                    if (top === undefined) {
+                        top = ownerBounds.top + ownerBounds.height / 2 - height / 2;
+                    }
 
-            if (left === undefined) {
-                left = ownerBounds.left + ownerBounds.width / 2 - width / 2;
-            }
+                    if (left === undefined) {
+                        left = ownerBounds.left + ownerBounds.width / 2 - width / 2;
+                    }
 
                     const dropdownBounds = new Rect(left, top, width, height);
 
-            // Ensure container bounds
-            if (minLeft > dropdownBounds.left) {
-                dropdownBounds.left = minLeft;
-            }
+                    // Ensure container bounds
+                    if (minLeft > dropdownBounds.left) {
+                        dropdownBounds.left = minLeft;
+                    }
 
-            if (minTop > dropdownBounds.top) {
-                dropdownBounds.top = minTop;
-            }
+                    if (minTop > dropdownBounds.top) {
+                        dropdownBounds.top = minTop;
+                    }
 
-            if (dropdownBounds.right > maxRight && this.dropdownAlignments.right) {
-                dropdownBounds.left = Math.max(maxRight - dropdownBounds.width, minLeft);
-            }
+                    if (dropdownBounds.right > maxRight && this.dropdownAlignments.right) {
+                        dropdownBounds.left = Math.max(maxRight - dropdownBounds.width, minLeft);
+                    }
 
-            if (dropdownBounds.bottom > maxBottom && this.dropdownAlignments.bottom) {
-                dropdownBounds.top = Math.max(maxBottom - dropdownBounds.height, minTop);
-            }
+                    if (dropdownBounds.bottom > maxBottom && this.dropdownAlignments.bottom) {
+                        dropdownBounds.top = Math.max(maxBottom - dropdownBounds.height, minTop);
+                    }
 
-            if (dropdownBounds.intersectWith(ownerBounds) && this.avoidOnwerOverflow) {
-                // Try a better aligment
-                if (dropdownBounds.left < ownerBounds.right && dropdownBounds.right > ownerBounds.left) {
+                    if (dropdownBounds.intersectWith(ownerBounds) && this.avoidOnwerOverflow) {
+                        // Try a better aligment
+                        if (dropdownBounds.left < ownerBounds.right && dropdownBounds.right > ownerBounds.left) {
                             const overflowTop = dropdownBounds.bottom - ownerBounds.top;
                             const overflowBottom = ownerBounds.bottom - dropdownBounds.top;
-                    if (overflowTop > 0 && overflowBottom > 0) {
+                            if (overflowTop > 0 && overflowBottom > 0) {
                                 const topHeight = Math.min(ownerBounds.top - minTop, dropdownBounds.height);
                                 const bottomHeight = Math.min(maxBottom - ownerBounds.bottom, dropdownBounds.height);
-                        if (overflowBottom > 0 && bottomHeight < topHeight) {
-                            dropdownBounds.top = ownerBounds.top - topHeight;
-                            if (dropdownBounds.height > topHeight) {
-                                dropdownBounds.height = topHeight;
-                            }
-                        } else {
-                            dropdownBounds.top = ownerBounds.bottom;
-                            if (dropdownBounds.height > bottomHeight) {
-                                dropdownBounds.height = bottomHeight;
+                                if (overflowBottom > 0 && bottomHeight < topHeight) {
+                                    dropdownBounds.top = ownerBounds.top - topHeight;
+                                    if (dropdownBounds.height > topHeight) {
+                                        dropdownBounds.height = topHeight;
+                                    }
+                                } else {
+                                    dropdownBounds.top = ownerBounds.bottom;
+                                    if (dropdownBounds.height > bottomHeight) {
+                                        dropdownBounds.height = bottomHeight;
+                                    }
+                                }
                             }
                         }
-                    }
-                }
 
-                if (dropdownBounds.top < ownerBounds.bottom && dropdownBounds.bottom > ownerBounds.top) {
+                        if (dropdownBounds.top < ownerBounds.bottom && dropdownBounds.bottom > ownerBounds.top) {
                             const overflowLeft = dropdownBounds.right - ownerBounds.left;
                             const overflowRight = ownerBounds.right - dropdownBounds.left;
-                    if (overflowLeft > 0 && overflowRight > 0) {
+                            if (overflowLeft > 0 && overflowRight > 0) {
                                 const leftWidth = Math.min(ownerBounds.left - minLeft, dropdownBounds.width);
                                 const rightWidth = Math.min(maxRight - ownerBounds.right, dropdownBounds.width);
-                        if (overflowRight > 0 && rightWidth < leftWidth) {
-                            dropdownBounds.left = ownerBounds.left - leftWidth;
-                            if (dropdownBounds.width > leftWidth) {
-                                dropdownBounds.width = leftWidth;
-                            }
-                        } else {
-                            dropdownBounds.left = ownerBounds.right;
-                            if (dropdownBounds.width > rightWidth) {
-                                dropdownBounds.width = rightWidth;
+                                if (overflowRight > 0 && rightWidth < leftWidth) {
+                                    dropdownBounds.left = ownerBounds.left - leftWidth;
+                                    if (dropdownBounds.width > leftWidth) {
+                                        dropdownBounds.width = leftWidth;
+                                    }
+                                } else {
+                                    dropdownBounds.left = ownerBounds.right;
+                                    if (dropdownBounds.width > rightWidth) {
+                                        dropdownBounds.width = rightWidth;
+                                    }
+                                }
                             }
                         }
                     }
-                }
-            }
 
-            // Ensure container bounds
-            if (minLeft > dropdownBounds.left) {
-                // Recalc new position
-                dropdownBounds.left = minLeft;
-                if (this.dropdownAlignments.right) {
-                    // Right blocked
-                    if (this.ownerAlignents.left) {
-                        dropdownBounds.width = Math.max(5, ownerBounds.left - minLeft);
-                    } else if (this.ownerAlignents.right) {
-                        dropdownBounds.width = ownerBounds.right - minLeft;
+                    // Ensure container bounds
+                    if (minLeft > dropdownBounds.left) {
+                        // Recalc new position
+                        dropdownBounds.left = minLeft;
+                        if (this.dropdownAlignments.right) {
+                            // Right blocked
+                            if (this.ownerAlignents.left) {
+                                dropdownBounds.width = Math.max(5, ownerBounds.left - minLeft);
+                            } else if (this.ownerAlignents.right) {
+                                dropdownBounds.width = ownerBounds.right - minLeft;
+                            }
+                        }
                     }
-                }
-            }
 
-            if (minTop > dropdownBounds.top) {
-                dropdownBounds.top = minTop;
-                if (this.dropdownAlignments.bottom) {
-                    // Bottom blocked
-                    if (this.ownerAlignents.top) {
-                        dropdownBounds.height = Math.max(5, ownerBounds.top - minTop);
-                    } else if (this.ownerAlignents.bottom) {
-                        dropdownBounds.height = ownerBounds.bottom - minTop;
+                    if (minTop > dropdownBounds.top) {
+                        dropdownBounds.top = minTop;
+                        if (this.dropdownAlignments.bottom) {
+                            // Bottom blocked
+                            if (this.ownerAlignents.top) {
+                                dropdownBounds.height = Math.max(5, ownerBounds.top - minTop);
+                            } else if (this.ownerAlignents.bottom) {
+                                dropdownBounds.height = ownerBounds.bottom - minTop;
+                            }
+                        }
                     }
-                }
-            }
 
-            if (dropdownBounds.right > maxRight) {
-                if (this.dropdownAlignments.left) {
-                    // Left blocked
-                    dropdownBounds.width = maxRight - dropdownBounds.left;
-                } else if (maxRight - dropdownBounds.width < minLeft) {
-                    // Limited width
-                    dropdownBounds.left = minLeft;
-                    dropdownBounds.width = maxRight - minLeft;
-                } else {
-                    dropdownBounds.left = maxRight - dropdownBounds.width;
-                }
-            }
+                    if (dropdownBounds.right > maxRight) {
+                        if (this.dropdownAlignments.left) {
+                            // Left blocked
+                            dropdownBounds.width = maxRight - dropdownBounds.left;
+                        } else if (maxRight - dropdownBounds.width < minLeft) {
+                            // Limited width
+                            dropdownBounds.left = minLeft;
+                            dropdownBounds.width = maxRight - minLeft;
+                        } else {
+                            dropdownBounds.left = maxRight - dropdownBounds.width;
+                        }
+                    }
 
-            if (dropdownBounds.bottom > maxBottom) {
-                if (this.dropdownAlignments.top) {
-                    // Top blocked
-                    dropdownBounds.height = maxBottom - dropdownBounds.top;
-                } else if (maxBottom - dropdownBounds.height < minTop) {
-                    // Limited height
-                    dropdownBounds.top = minTop;
-                    dropdownBounds.height = maxBottom - minTop;
-                } else {
-                    dropdownBounds.top = maxBottom - dropdownBounds.height;
-                }
-            }
+                    if (dropdownBounds.bottom > maxBottom) {
+                        if (this.dropdownAlignments.top) {
+                            // Top blocked
+                            dropdownBounds.height = maxBottom - dropdownBounds.top;
+                        } else if (maxBottom - dropdownBounds.height < minTop) {
+                            // Limited height
+                            dropdownBounds.top = minTop;
+                            dropdownBounds.height = maxBottom - minTop;
+                        } else {
+                            dropdownBounds.top = maxBottom - dropdownBounds.height;
+                        }
+                    }
 
                     const dropDownPosition = {} as IDropDownPosition;
 
-            if (dropdownBounds.top >= ownerBounds.bottom) {
+                    if (dropdownBounds.top >= ownerBounds.bottom) {
                         dropDownPosition.valign = 'bottom';
-            } else if (dropdownBounds.bottom <= ownerBounds.top) {
+                    } else if (dropdownBounds.bottom <= ownerBounds.top) {
                         dropDownPosition.valign = 'top';
-            } else {
+                    } else {
                         dropDownPosition.valign = 'center';
-            }
+                    }
 
-            if (dropdownBounds.left >= ownerBounds.right) {
+                    if (dropdownBounds.left >= ownerBounds.right) {
                         dropDownPosition.halign = 'right';
-            } else if (dropdownBounds.right <= ownerBounds.left) {
+                    } else if (dropdownBounds.right <= ownerBounds.left) {
                         dropDownPosition.halign = 'left';
-            } else {
+                    } else {
                         dropDownPosition.halign = 'center';
-            }
+                    }
 
-            // Convert to relative
+                    // Convert to relative
                     const parentElement = dropdownContElement.offsetParent as HTMLElement;
                     const parentRect = parentElement && parentElement.getBoundingClientRect();
                     const relativeBounds = (parentRect && dropdownBounds.offset(- parentRect.left, - parentRect.top)) || dropdownBounds;
@@ -371,18 +371,18 @@ export class DejaDropDownComponent implements AfterViewInit {
                     setDropDownPosition(dropDownPosition);
                 } else {
                     // Hide
-    }
+                }
             });
-            }
+    }
 
     public ngAfterViewInit() {
         this.show$.next(true);
-                        }
+    }
 
     public show() {
         this.show$.next(true);
-        }
     }
+}
 
 interface IDropDownPosition {
     left: number;
