@@ -1,4 +1,6 @@
-@import "../../../scss/variables/colors";
+@import '~@angular/material/core/theming/theming';
+@import 'src/scss/variables/themeHUG';
+
 :host {
 	display: block;
 	#deja-grid-header {
@@ -35,7 +37,7 @@
 			}
 			[separator] {
 				flex: 0 0 4px;
-				border-right: solid 1px rgba($secondary, 0.8);
+				border-right: solid 1px mat-color($primary, 400);
 				padding: 0.5rem 0;
 				margin-right: 0.3rem;
 			}

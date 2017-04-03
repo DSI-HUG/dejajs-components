@@ -1,4 +1,6 @@
-@import "../../scss/variables/colors";
+@import '~@angular/material/core/theming/theming';
+@import 'src/scss/variables/themeHUG';
+
 :host {
 	-webkit-touch-callout: none;
 	/* iOS Safari */
@@ -28,13 +30,13 @@
             text-align: center;
             width: 43px;
             &:hover {
-                background-color: $secondary;
+                background-color: mat-color($primary);
                 color: #FFF;
             }
         }
         .cursor-container {
             .cursor {
-                background-color: $secondary;
+                background-color: mat-color($primary);
                 border-radius: 50%;
                 color: #FFF;
                 cursor: pointer;
@@ -46,7 +48,7 @@
                 z-index: 20;
             }
             .cursorHand {
-                background-color: $secondary;
+                background-color: mat-color($primary);
                 border-radius: 2px;
                 height: 4px;
                 left: 50%;
