@@ -1,4 +1,6 @@
-@import "../../scss/variables/colors";
+@import '~@angular/material/core/theming/theming';
+@import 'src/scss/variables/themeHUG';
+
 deja-menu {
 	position: absolute;
 	#menubackdrop {
@@ -22,13 +24,13 @@ deja-menu {
 					cursor: pointer;
 					align-items: center;
 					background-color: #FFF;
-					color: $secondary;
+					color: mat-color($primary);
 					display: flex;
 					justify-content: left;
 					list-style-type: none;
 					padding: 0.5rem 1rem 0.5rem 0.5rem;
 					&:hover {
-						background-color: $secondary;
+						background-color: mat-color($primary);
 						color: #FFF;
 					}
 					md-icon {
@@ -43,11 +45,11 @@ deja-menu {
 				border: none;
 				width: 100%;
 				background-color: #FFF;
-				color: $secondary;
+				color: mat-color($primary);
 				background-color: #FFF;
 				padding: 0.5rem 1rem 0.5rem 1rem;
 				&:hover {
-					background-color: $secondary;
+					background-color: mat-color($primary);
 					color: #FFF;
 				}
 			}

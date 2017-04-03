@@ -1,4 +1,6 @@
-@import "../../scss/variables/colors";
+@import '~@angular/material/core/theming/theming';
+@import 'src/scss/variables/themeHUG';
+
 :host {
     $deep: '/deep/';
 	#deja-dropdown {
@@ -45,7 +47,7 @@
 		.mat-input-wrapper {
 			.mat-input-underline {
 				.mat-input-ripple {
-					background-color: $red;
+					background-color: mat-color($warn);
 					opacity: 1;
 					transform: scaleY(1);
 				}
@@ -53,7 +55,7 @@
 			.mat-input-table {
 				.mat-input-infix {
 					.mat-input-placeholder {
-						color: $red;
+						color: mat-color($warn);
 					}
 				}
 			}

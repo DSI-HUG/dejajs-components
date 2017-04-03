@@ -1,4 +1,6 @@
-@import "../../scss/variables/colors";
+@import '~@angular/material/core/theming/theming';
+@import 'src/scss/variables/themeHUG';
+
 :host {
     .spinner {
         margin: 40px auto 0;
@@ -9,7 +11,7 @@
     .spinner>div {
         width: 10px;
         height: 10px;
-        background-color: $secondary;
+        background-color: mat-color($primary);
 
         border-radius: 100%;
         display: inline-block;
