@@ -1,96 +1,96 @@
 <md-tab-group [selectedIndex]="1">
-    <!--<md-tab label="OVERVIEW">-->
-    <!--<md-card class="demo-card demo-basic">-->
-    <!--TODO-->
-    <!--</md-card>-->
-    <!--</md-tab>-->
-    <md-tab label="API REFERENCE">
-        <md-card class="demo-card demo-basic">
-            <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/tree-list/readme.md'"></deja-markdown>
-        </md-card>
-    </md-tab>
-    <md-tab label="EXAMPLES">
-        <md-card class="treelist-demo demo-card demo-basic business-object">
-            <md-toolbar color="primary">By passing business object</md-toolbar>
-            <md-card-content>
-                <div fxLayout="row">
-                    <deja-tree-list fxFlex="0 0 50%" [maxHeight]="400" min-search-length="0" searchArea sortable multiSelect (selectedChange)="onSelectBusinessObject($event)" nodataholder="Pas de données" placeholder="Liste des pays" [models]="countries"></deja-tree-list>
-                    <div fxFlex="0 0 50%" class="flex json-view">
-                        <h4>Selected country model :</h4>
-                        <pre>{{selectedCountries | json}}</pre>
-                    </div>
-                </div>
-            </md-card-content>
-        </md-card>
-        <md-card class="treelist-demo demo-card demo-basic">
-            <md-toolbar color="primary">Treelist demo - Cas standards</md-toolbar>
-            <md-card-content class="listContainer">
-                <deja-tree-list #treeList min-search-length="0" searchArea multiSelect nodataholder="Pas de données" placeholder="Liste des pays" [(ngModel)]="countries" [deja-mouse-draggable]="getDragContext()" [valueField]="code">
-                    <template #itemTemplate let-item let-flatindex="flatindex">
-                        <span [attr.ddid]="item.code">{{ item.naqme + ' - ' + item.code }}</span>
-                    </template>
-                </deja-tree-list>
-                <deja-tree-list min-search-length="0" expandButton searchArea sortable multiSelect (selectedChange)="onSelectionChanged($event)" nodataholder="Pas de données" placeholder="Liste des pays, groupés par la première lettre" textField="naqme" [(ngModel)]="groupedCountries" (itemDragStart)="onItemDragStart($event)" #groupedtreelist childrenField="children">
-                    <template #headerTemplate>
-                        <span id="headerTemplateContent" (click)="groupedtreelist.sort()">
-					<span id="title">
-						This is a header template, click to sort the list.
-					</span>
-                        <deja-sort-indicator [sort-infos]="groupedtreelist.sortInfos"></deja-sort-indicator>
-                        </span>
-                    </template>
-                    <template #itemTemplate let-item let-flatindex="flatindex">
-                        <span>{{ item.naqme + ' - ' + item.code }}</span>
-                    </template>
-                    <template #searchSuffixTemplate>
-                        <button id="more" md-icon-button (click)="onSuffixClicked()">
+	<!--<md-tab label="OVERVIEW">-->
+	<!--<md-card class="demo-card demo-basic">-->
+	<!--TODO-->
+	<!--</md-card>-->
+	<!--</md-tab>-->
+	<md-tab label="API REFERENCE">
+		<md-card class="demo-card demo-basic">
+			<deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/tree-list/readme.md'"></deja-markdown>
+		</md-card>
+	</md-tab>
+	<md-tab label="EXAMPLES">
+		<md-card class="treelist-demo demo-card demo-basic business-object">
+			<md-toolbar color="primary">By passing business object</md-toolbar>
+			<md-card-content>
+				<div fxLayout="row">
+					<deja-tree-list fxFlex="0 0 50%" [maxHeight]="400" min-search-length="0" searchArea sortable multiSelect (selectedChange)="onSelectBusinessObject($event)" nodataholder="Pas de données" placeholder="Liste des pays" [models]="countries"></deja-tree-list>
+					<div fxFlex="0 0 50%" class="flex json-view">
+						<h4>Selected country model :</h4>
+						<pre>{{selectedCountries | json}}</pre>
+					</div>
+				</div>
+			</md-card-content>
+		</md-card>
+		<md-card class="treelist-demo demo-card demo-basic">
+			<md-toolbar color="primary">Treelist demo - Cas standards</md-toolbar>
+			<md-card-content class="listContainer">
+				<deja-tree-list #treeList min-search-length="0" searchArea multiSelect nodataholder="Pas de données" placeholder="Liste des pays" [(ngModel)]="countries" [deja-mouse-draggable]="getDragContext()" [valueField]="code">
+					<template #itemTemplate let-item let-flatindex="flatindex">
+						<span [attr.ddid]="item.code">{{ item.naqme + ' - ' + item.code }}</span>
+					</template>
+				</deja-tree-list>
+				<deja-tree-list min-search-length="0" expandButton searchArea sortable multiSelect (selectedChange)="onSelectionChanged($event)" nodataholder="Pas de données" placeholder="Liste des pays, groupés par la première lettre" textField="naqme" [(ngModel)]="groupedCountries" (itemDragStart)="onItemDragStart($event)" #groupedtreelist childrenField="children">
+					<template #headerTemplate>
+						<span id="headerTemplateContent" (click)="groupedtreelist.sort()">
+							<span id="title">
+								This is a header template, click to sort the list.
+							</span>
+							<deja-sort-indicator [sort-infos]="groupedtreelist.sortInfos"></deja-sort-indicator>
+						</span>
+					</template>
+					<template #itemTemplate let-item let-flatindex="flatindex">
+						<span>{{ item.naqme + ' - ' + item.code }}</span>
+					</template>
+					<template #searchSuffixTemplate>
+						<button id="more" md-icon-button (click)="onSuffixClicked()">
 							<md-icon>more_vert</md-icon>
 						</button>
-                    </template>
-                </deja-tree-list>
-            </md-card-content>
-            <md-card-content class="dropzone">
-                <div>
-                    Selected Items
-                    <ul>
-                        <li *ngFor="let selectedInfo of selectedInfos">
-                            <span>{{ selectedInfo }}</span>
-                        </li>
-                    </ul>
-                </div>
-                <div>
-                    Vous pouvez également dropper des items de la liste dans la zone rouge ci dessous (celle-ci affichera une représentation JSON de l'objet droppé) :
-                </div>
-                <div #dropArea [deja-mouse-droppable]="getDropContext(dropArea)" [deja-droppable]="{dragovercallback: onDivDragOver, dropcallback:onDivDropEvent}" style="border:1px solid red;min-height:150px;"></div>
-            </md-card-content>
-        </md-card>
+					</template>
+				</deja-tree-list>
+			</md-card-content>
+			<md-card-content class="dropzone">
+				<div>
+					Selected Items
+					<ul>
+						<li *ngFor="let selectedInfo of selectedInfos">
+							<span>{{ selectedInfo }}</span>
+						</li>
+					</ul>
+				</div>
+				<div>
+					Vous pouvez également dropper des items de la liste dans la zone rouge ci dessous (celle-ci affichera une représentation JSON de l'objet droppé) :
+				</div>
+				<div #dropArea [deja-mouse-droppable]="getDropContext(dropArea)" [deja-droppable]="{dragovercallback: onDivDragOver, dropcallback:onDivDropEvent}" style="border:1px solid red;min-height:150px;"></div>
+			</md-card-content>
+		</md-card>
 
-        <md-card class="treelist-demo demo-card">
-            <md-toolbar color="primary">Treelist demo - Cas particuliers</md-toolbar>
-            <md-card-content class="listContainer" fxLayout="row">
-                <deja-tree-list fxFlex [(ngModel)]="loremList" [viewportMode]="variableMode" expandButton searchArea sortable placeholder="Tree list avec des tailles de rows différentes"></deja-tree-list>
-                <deja-tree-list fxFlex [models]="news$" [viewportMode]="autoMode" [viewPortRowHeight]="200" multiSelect searchArea sortable placeholder="Automatic row height TreeView ">
-                    <template #itemTemplate let-item let-flatindex="flatindex">
-                        <div class="news" fxLayout="row">
-                            <img [attr.src]="item.model.urlsToLogos.small" class="logo" fxFlex="0 0 8rem" fxLayout="row" fxLayoutAlign="space-between" fxFlexAlign="center">
-                            <span class="text" fxFlex="1 1 auto">
-                            <span class="name">{{ item.model.name }}</span>
-                            <span class="description">{{ item.model.description }}</span>
-                            <div class="footer" fxFlex="column" fxLayoutAlign="space-between">
-                                <a class="url" [attr.href]="item.model.url">{{ item.model.url }}</a>
-                                <span class="category">{{ item.model.category }}</span>
-                                <span class="country">{{ item.model.country }}</span>
-                                <span class="language">{{ item.model.language }}</span>
-                            </div>
-                            </span>
-                        </div>
-                    </template>
-                </deja-tree-list>
-            </md-card-content>
-            <md-card-content class="empty">
-                Empty treelist
-                <deja-tree-list nodataholder="Pas de données"></deja-tree-list>
-            </md-card-content>
-        </md-card>
-    </md-tab>
+		<md-card class="treelist-demo demo-card">
+			<md-toolbar color="primary">Treelist demo - Cas particuliers</md-toolbar>
+			<md-card-content class="listContainer" fxLayout="row">
+				<deja-tree-list fxFlex [(ngModel)]="loremList" [viewportMode]="variableMode" expandButton searchArea sortable placeholder="Tree list avec des tailles de rows différentes"></deja-tree-list>
+				<deja-tree-list fxFlex [models]="news$" [viewportMode]="autoMode" [viewPortRowHeight]="200" multiSelect searchArea sortable placeholder="Automatic row height TreeView ">
+					<template #itemTemplate let-item let-flatindex="flatindex">
+						<div class="news" fxLayout="row">
+							<img [attr.src]="item.model.urlsToLogos.small" class="logo" fxFlex="0 0 8rem" fxLayout="row" fxLayoutAlign="space-between" fxFlexAlign="center">
+							<span class="text" fxFlex="1 1 auto">
+								<div class="name">{{ item.model.name }}</div>
+								<div class="description">{{ item.model.description }}</div>
+								<div class="footer" fxFlex="column" fxLayoutAlign="space-between">
+									<a class="url" [attr.href]="item.model.url">{{ item.model.url }}</a>
+									<span class="category">{{ item.model.category }}</span>
+									<span class="country">{{ item.model.country }}</span>
+									<span class="language">{{ item.model.language }}</span>
+								</div>
+							</span>
+						</div>
+					</template>
+				</deja-tree-list>
+			</md-card-content>
+			<md-card-content class="empty">
+				Empty treelist
+				<deja-tree-list nodataholder="Pas de données"></deja-tree-list>
+			</md-card-content>
+		</md-card>
+	</md-tab>
 </md-tab-group>
