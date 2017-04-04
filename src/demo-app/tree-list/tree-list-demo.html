@@ -63,10 +63,13 @@
                 </div>
                 <div #dropArea [deja-mouse-droppable]="getDropContext(dropArea)" [deja-droppable]="{dragovercallback: onDivDragOver, dropcallback:onDivDropEvent}" style="border:1px solid red;min-height:150px;"></div>
             </md-card-content>
+        </md-card>
+
+        <md-card class="demo-card">
             <md-toolbar color="primary">Treelist demo - Cas particuliers</md-toolbar>
             <md-card-content class="listContainer">
-                <deja-tree-list [(ngModel)]="loremList" [viewportMode]="variableMode" expandButton searchArea sortable placeholder="Tree list avec des tailles de rows différentes"></deja-tree-list>
-                <deja-tree-list [models]="news$" [viewportMode]="autoMode" [viewPortRowHeight]="200" multiSelect searchArea sortable placeholder="Automatic row height TreeView ">
+                <deja-tree-list [(ngModel)]="loremList" [maxHeight]="400" [viewportMode]="variableMode" expandButton searchArea sortable placeholder="Tree list avec des tailles de rows différentes"></deja-tree-list>
+                <deja-tree-list [models]="news$" [maxHeight]="400" [viewportMode]="autoMode" [viewPortRowHeight]="200" multiSelect searchArea sortable placeholder="Automatic row height TreeView ">
                     <template #itemTemplate let-item let-flatindex="flatindex">
                         <div class="news" fxLayout="row">
                             <img [attr.src]="item.model.urlsToLogos.small" class="logo" fxFlex="0 0 8rem" fxLayout="row" fxLayoutAlign="space-between" fxFlexAlign="center">
