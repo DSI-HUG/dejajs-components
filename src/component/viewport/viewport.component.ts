@@ -26,8 +26,8 @@ export class DejaViewPortComponent implements OnDestroy, AfterViewInit {
     @Input() public itemSizeMode: 'fixed' | 'auto' = 'fixed';
     /** Get or set the item size in fixed mode or the default item size before rendering in auto mode */
     @Input() public itemSize = '33';
-    protected vpBeforeSize: number;
-    protected vpAfterSize: number;
+    protected beforeSize: string;
+    protected afterSize: string;
     protected vpItems: DejaViewPortItem[];
     protected vpStartIndex: number;
     private _items: DejaViewPortItem[];
@@ -118,7 +118,7 @@ export class DejaViewPortComponent implements OnDestroy, AfterViewInit {
             .map((event: any) => this.isHorizontal ? event.target.scrollLeft : event.target.scrollTop)
             .subscribe((scrollPos) => {
                 this.lastScrollPos = scrollPos;
-            this.calcViewPort();
+                this.calcViewPort();
             }));
 
         Observable.timer(1)
@@ -140,7 +140,7 @@ export class DejaViewPortComponent implements OnDestroy, AfterViewInit {
             // Set the viewlist to the maximum size to measure the real max-size defined in the css
             maxSize = 200000;
             // Use a blank div to do that
-            this.vpAfterSize = maxSize;
+            this.afterSize = `${maxSize}px`;
             // Wait next life cycle for the result
             Observable.timer(1)
                 .first()
@@ -151,19 +151,19 @@ export class DejaViewPortComponent implements OnDestroy, AfterViewInit {
         }
 
         const scrollPos = this.scrollPos;
-        this.vpBeforeSize = 0;
-        this.vpAfterSize = 0;
+        let beforeSize = 0;
+        let afterSize = 0;
         if (this.itemSizeMode === 'fixed') {
             const listSize = itemDefaultSize * this._items.length;
             this.vpStartIndex = Math.floor(scrollPos / itemDefaultSize);
             const vpEndIndex = Math.ceil((scrollPos + containerSize) / itemDefaultSize);
-            this.vpBeforeSize = itemDefaultSize * this.vpStartIndex;
+            beforeSize = itemDefaultSize * this.vpStartIndex;
             const vpSize = itemDefaultSize * (vpEndIndex - this.vpStartIndex);
-            this.vpAfterSize = listSize - this.vpBeforeSize - vpSize;
+            afterSize = listSize - beforeSize - vpSize;
             this.vpItems = this._items.slice(this.vpStartIndex, vpEndIndex);
             this.vpItems.forEach((item) => item.size = itemDefaultSize);
 
-            // console.log(`vpBeforeSize: ${this.vpBeforeSize} vpSize: ${vpSize} vpAfterSize: ${this.vpAfterSize}`);
+            // console.log(`vpBeforeSize: ${this.vpBeforeSize} vpSize: ${vpSize} vpAfterSize: ${afterSize}`);
         } else if (this.itemSizeMode === 'auto') {
             this.vpItems = [];
             let vpSize = 0;
@@ -180,27 +180,30 @@ export class DejaViewPortComponent implements OnDestroy, AfterViewInit {
                 } else {
                     itemSize = itemDefaultSize;
                 }
-                if (vpSize === 0 && this.vpBeforeSize + itemSize < scrollPos) {
-                    this.vpBeforeSize += itemSize;
+                if (vpSize === 0 && beforeSize + itemSize < scrollPos) {
+                    beforeSize += itemSize;
                 } else if (!overflow) {
                     if (this.vpItems.length === 0) {
                         this.vpStartIndex = index;
                     }
                     vpSize += itemSize;
                     this.vpItems.push(item);
-                    if (this.vpBeforeSize + vpSize > scrollPos + containerSize) {
+                    if (beforeSize + vpSize > scrollPos + containerSize) {
                         overflow = true;
                     }
                 } else {
-                    this.vpAfterSize += itemSize;
+                    afterSize += itemSize;
                 }
             });
+
+            this.beforeSize = `${beforeSize}px`;
+            this.afterSize = `${afterSize}px`;
 
             // Measure items height
             Observable.timer(1)
                 .first()
                 .subscribe(() => {
-                    let calculatedSize = this.vpBeforeSize;
+                    let calculatedSize = beforeSize;
                     this.itemElements.forEach((itemElement, index) => {
                         const element = itemElement.nativeElement as HTMLElement;
                         const size = this.isHorizontal ? element.clientWidth : element.clientHeight;
@@ -221,8 +224,8 @@ export class DejaViewPortComponent implements OnDestroy, AfterViewInit {
     }
 
     private clearViewPort() {
-        this.vpBeforeSize = 0;
-        this.vpAfterSize = 0;
+        this.beforeSize = null;
+        this.afterSize = null;
         this.vpItems = [];
         this.changeDetectorRef.markForCheck();
     };

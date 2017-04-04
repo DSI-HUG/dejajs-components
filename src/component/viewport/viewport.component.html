@@ -1,7 +1,7 @@
 <div #wrapper id="viewport-wrapper" [fxLayout]="isHorizontal ? 'row' : 'column'">
-	<span *ngIf="vpBeforeSize" fxFlex="0 0 {{vpBeforeSize}}px"></span>
+	<span *ngIf="beforeSize" fxFlex="0 0 {{beforeSize}}"></span>
 	<span #elitem *ngFor="let item of vpItems; let index = index" [attr.index]="vpStartIndex + index" fxFlex="0 0 {{item.size ? item.size + 'px' : 'auto'}}">
-    <template [ngTemplateOutlet]="itemTemplate" [ngOutletContext]="{ $implicit: item.model, index: vpStartIndex + index }"></template>
-</span>
-	<span *ngIf="vpAfterSize" fxFlex="0 0 {{vpAfterSize}}px"></span>
+		<template [ngTemplateOutlet]="itemTemplate" [ngOutletContext]="{ $implicit: item.model, index: vpStartIndex + index, size: item.size || null }"></template>
+	</span>
+	<span *ngIf="afterSize" fxFlex="0 0 {{afterSize}}"></span>
 </div>

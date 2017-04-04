@@ -1,37 +1,37 @@
 <md-tab-group [selectedIndex]="tabIndex" (selectChange)="tabIndex = $event.index">
-    <!--<md-tab label="OVERVIEW">-->
-    <!--<md-card class="demo-card demo-basic">-->
-    <!--TODO-->
-    <!--</md-card>-->
-    <!--</md-tab>-->
+	<!--<md-tab label="OVERVIEW">-->
+	<!--<md-card class="demo-card demo-basic">-->
+	<!--TODO-->
+	<!--</md-card>-->
+	<!--</md-tab>-->
 	<md-tab label="API REFERENCE"> </md-tab>
 	<md-tab label="EXAMPLES"> </md-tab>
 </md-tab-group>
 
 <md-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
-    <!--deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/viewport/readme.md'"></deja-markdown-->
+	<!--deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/viewport/readme.md'"></deja-markdown-->
 </md-card>
 
 <md-card class="demo-card demo-basic" *ngIf="tabIndex === 1">
-    <md-toolbar color="primary">Viewport</md-toolbar>
-    <md-card-content id="viewPortContainer">
-        <md-checkbox [(ngModel)]="isHorizontal">Horizontal</md-checkbox>
-        <deja-viewport [items]="news$ | async" itemSize="200" itemSizeMode="auto" [direction]="isHorizontal ? 'horizontal': 'vertical'">
-            <template #itemTemplate let-item>
-                <div *ngIf="item" class="news" [attr.id]="id">
-                    <img [attr.src]="item.urlsToLogos.medium" class="logo">
-                    <span class="text">
-                        <span class="name">{{ item.name }}</span>
-                        <span class="description">{{ item.description }}</span>
-                        <div class="footer">
-                            <a class="url" [attr.href]="item.url">{{ item.url }}</a>
-                            <span class="category">{{ item.category }}</span>
-                            <span class="country">{{ item.country }}</span>
-                            <span class="language">{{ item.language }}</span>
-                        </div>
-                    </span>
-                </div>
-            </template>
-        </deja-viewport>
-    </md-card-content>
+	<md-toolbar color="primary">Viewport</md-toolbar>
+	<md-card-content id="viewPortContainer">
+		<md-checkbox [(ngModel)]="isHorizontal">Horizontal</md-checkbox>
+		<deja-viewport [items]="news$ | async" itemSize="200" itemSizeMode="auto" [direction]="isHorizontal ? 'horizontal': 'vertical'">
+			<template #itemTemplate let-item let-size="size">
+				<div *ngIf="item" class="news" fxLayout="row" [attr.id]="id">
+					<img [attr.src]="item.urlsToLogos.medium" class="logo" [style.max-height.px]="isHorizontal? null : (size? size - 10 : 20)" fxLayout="row" fxLayoutAlign="space-between" fxFlexAlign="center">
+					<span class="text">
+						<div class="name">{{ item.name }}</div>
+						<div class="description">{{ item.description }}</div>
+						<div class="footer" fxFlex="column" fxLayoutAlign="space-between">
+							<a class="url" [attr.href]="item.url">{{ item.url }}</a>
+							<span class="category">{{ item.category }}</span>
+							<span class="country">{{ item.country }}</span>
+							<span class="language">{{ item.language }}</span>
+						</div>
+					</span>
+				</div>
+			</template>
+		</deja-viewport>
+	</md-card-content>
 </md-card>
