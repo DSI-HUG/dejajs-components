@@ -883,7 +883,7 @@ export class ItemListService {
                     }
 
                     delete this._cache.visibleList;
-                    this.waiter$.next(false);
+                    this.waiter$.next(this.items === undefined);
                 })
                 .switchMap(() => this.ensureVisibleListCache$(searchField, regExp, expandTree, multiSelect))
                 .map(() => loadViewList());
@@ -900,7 +900,7 @@ export class ItemListService {
      * @return {Observable} Observable résolu par la fonction, qui retourne la liste à utiliser.
      */
     protected getItemList$(_query?: RegExp | string, _selectedItems?: IItemBase[]): Observable<IItemBase[]> {
-        return Observable.of(this.items = this.items || []);
+        return Observable.of(this.items);
     }
 
     /** Retourne une valeur indiquant si l'élément spécifié correspond aux critères de recherche spécifiés

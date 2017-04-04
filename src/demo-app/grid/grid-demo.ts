@@ -303,7 +303,8 @@ export class GridDemoComponent implements OnInit {
 
         this.drugsBigRecord$ = this.drugsService
             .getDrugs$(null, 10)
-            .do((drugs) => this.drugCounts += drugs.length);
+            .do((drugs) => this.drugCounts += drugs.length)
+            .delay(10000);
 
         this.drugs$ = this.drugsService.getDrugs$();
 
