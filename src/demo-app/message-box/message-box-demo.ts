@@ -9,16 +9,14 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
-import { Message } from './message';
+import { Component } from '@angular/core';
 
 @Component({
     selector: 'message-box-demo',
     styleUrls: ['./message-box-demo.scss'],
     templateUrl: './message-box-demo.html',
 })
-export class MessageBoxDemoComponent implements OnInit {
+export class MessageBoxDemoComponent {
     protected tabIndex = 1;
 
     protected toolTipModel = {
@@ -52,26 +50,6 @@ export class MessageBoxDemoComponent implements OnInit {
 
     private dialogVisible;
 
-    /*
-    The example below demonstrate how you can dynamically add snackbars using *ngFor structural directive.
-    Here the Observable simulate items being push from the server
-    */
-    private messages: Observable<any>;
-
     constructor() { }
-
-    public ngOnInit() {
-        this.messages = Observable
-            .interval(2000)
-            .map((x: number) => {
-                if(x % 2 === 0 ) {
-                    return new Message('Server push information', 'info'); 
-                } else {
-                    return new Message('Server push error', 'danger'); 
-                }
-            })
-            .scan((acc, curr) => [...acc, curr], [])
-            .defaultIfEmpty([]);
-    }
 
 }

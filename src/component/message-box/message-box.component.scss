@@ -1,11 +1,17 @@
-@import "../../scss/variables/colors";
+$deep: '/deep/';
+
 :host {
     md-card {
+        border-style: solid;
+        border-width: 1px;
+        margin: 0;
+        padding: 0;
+
         md-card-title {
             align-items: center;
             box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.2);
             display: flex;
-            margin: -24px -24px 1rem -24px;
+            margin: 0;
             padding: 0.8rem;
             md-icon {
                 margin-right: 0.5rem;
@@ -13,6 +19,7 @@
         }
         md-card-content {
             margin: 0;
+            padding: 1rem;
             h2 {
                 font-size: 1.5rem;
                 margin: 0;
@@ -23,36 +30,41 @@
             align-items: center;
             display: flex;
             justify-content: flex-end;
-            button {
+            margin: 0;
+            padding: 0.2rem;
+            #{$deep}button {
                 margin-left: 0.2rem;
-            }
-        }
-        &.info, &.primary {
-            border: 1px solid $secondary;
-            md-card-title {
-                background-color: $secondary;
-                color: #FFF;
-            }
-        }
-        &.danger {
-            border: 1px solid $red;
-            md-card-title {
-                background-color: $red;
-                color: #FFF;
-            }
-        }
-        &.warn {
-            border: 1px solid $warning;
-            md-card-title {
-                background-color: $warning;
-                color: #FFF;
-            }
-        }
-        &.success {
-            border: 1px solid $success;
-            md-card-title {
-                background-color: $success;
-                color: #FFF;
+
+                &.mat-blank[md-raised-button],
+                &.mat-blank[md-fab],
+                &.mat-blank[md-mini-fab] {
+                    &:not([disabled]) {
+                        box-shadow: none;
+                    }
+                    &.close {
+                        align-items: stretch;
+                        display: flex;
+                        height: 1rem;
+                        margin: 0;
+                        padding: 0;
+                        right: 0;
+                        width: 1rem;
+                        .mat-button-wrapper {
+                            height: 1rem;
+                            width: 1rem;
+                            md-icon {
+                                font-size: 1rem;
+                                height: 1rem;
+                                line-height: 1rem;
+                                padding: 0;
+                                position: absolute;
+                                right: 0;
+                                top: 0;
+                                width: 1rem;
+                            }
+                        }
+                    }
+                }
             }
         }
     }

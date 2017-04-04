@@ -1,0 +1,23 @@
+@import '../../../../node_modules/@angular/material/core/theming/theming';
+
+@mixin data-grid-grouparea-theme($theme) {
+    $accent: map-get($theme, accent);
+
+    #deja-grid-grouparea {
+        border: 1px solid rgba(0, 0, 0, 0.38);
+        
+        #placeholder {
+            color: rgba(0, 0, 0, 0.38);
+        }
+        
+        .group-wrapper {
+            background-color: mat-color($accent);
+            >&:hover {
+                background-color: rgba(255, 255, 255, 0.3);
+            }
+            #close-button {
+                color: #777777;
+            }
+        }
+    }
+}

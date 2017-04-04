@@ -10,8 +10,8 @@
 		</md-card>
 	</md-tab>
 	<md-tab label="EXAMPLES">
-		<md-card class="demo-card demo-basic">
-			<md-toolbar color="secondary">Complex Circular-picker width custom labels</md-toolbar>
+		<md-card class="demo-card">
+			<md-toolbar color="primary">Complex Circular-picker width custom labels</md-toolbar>
 			<md-card-content id="complex-wrapper" class="listContainer">
 				<deja-circular-picker [ranges]="ranges41" [outerLabels]="true" id="outside">
 				</deja-circular-picker>
@@ -21,7 +21,9 @@
 					</template>
 				</deja-circular-picker>
 			</md-card-content>
-			<md-toolbar color="secondary">Circular-picker demo simple - Range 1 to 20 (inside and outside labels)</md-toolbar>
+		</md-card>
+		<md-card class="demo-card">
+			<md-toolbar color="primary">Circular-picker demo simple - Range 1 to 20 (inside and outside labels)</md-toolbar>
 			<md-card-content class="listContainer">
 				<div>
 					<deja-circular-picker [ranges]="ranges1">
@@ -32,7 +34,9 @@
 					</deja-circular-picker>
 				</div>
 			</md-card-content>
-			<md-toolbar color="secondary">Circular-picker demo multiple range (inside labels)</md-toolbar>
+		</md-card>
+		<md-card class="demo-card">
+			<md-toolbar color="primary">Circular-picker demo multiple range (inside labels)</md-toolbar>
 			<md-card-content class="listContainer">
 				<deja-circular-picker [(ngModel)]="sms" [ranges]="ranges3">
 					<template #cursorTemplate #labelTemplate let-value>

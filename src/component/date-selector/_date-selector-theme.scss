@@ -1,0 +1,66 @@
+@import '../../../node_modules/@angular/material/core/theming/theming';
+
+@mixin date-selector-theme($theme) {
+    $primary: map-get($theme, primary);
+
+    #date-time-selector {
+        background-color: #FFF;
+        color: #000;
+        #time-header,
+        #date-header {
+            background-color: mat-color($primary);
+            color: #FFF;
+        }
+        #time-selector {
+            $deep: '/deep/';
+            #{$deep} {
+                deja-circular-picker {
+                    &.hours .circular-picker {
+                        background: transparent;
+                        &:before {
+                            background-color: mat-color($primary);
+                        }
+                    }
+                }
+            }
+        }
+        #date-selector {
+            #sub-header {
+                .month {
+                    button[md-mini-fab] {
+                        background: #FFF;
+                    }
+                }
+                .days {
+                    span {
+                        color: rgba(0, 0, 0, 0.7);
+                    }
+                }
+            }
+            #date-body {
+                .date {
+                    .day {
+                        &[current="true"] {
+                            color: mat-color($primary);
+                        }
+                        &.background {
+                            color: rgba(0, 0, 0, 0.5);
+                        }
+                        &.disabled {
+                            color: rgba(0, 0, 0, 0.3);
+                            &:hover {
+                                background: none;
+                                color: inherit;
+                            }
+                        }
+                        &:hover,
+                        &[selected] {
+                            background: mat-color($primary);
+                            color: #FFF;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

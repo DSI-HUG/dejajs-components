@@ -4,24 +4,12 @@ deja-select {
 	min-height: 3.5rem;
 	white-space: initial;
 	display: block;
-	&.ng-invalid {
-		#input {
-			.mat-input-wrapper {
-				.mat-input-underline {
-					.mat-input-ripple {
-						background-color: $red;
-					}
-				}
-				.mat-input-placeholder.mat-focused {
-					color: $red !important;
-				}
-			}
-		}
-	}
+
 	#select-placeholder {
 		display: flex;
 		align-items: center;
 	}
+
 	#input {
 		width: 100%; // add a few pixels to avoid that the icon touch the line
 		.mat-input-wrapper {
@@ -29,17 +17,22 @@ deja-select {
 				margin-top: 8px;
 			}
 		}
+
 		.mat-input-suffix {
 			width: 2rem;
 			#clear-button {
 				opacity: 0.25;
 				&:hover {
 					opacity: 1;
-					color: $secondary;
 					cursor: pointer;
 				}
 			}
 		}
+		
+		.mat-hint {
+			bottom: -0.5em;
+		}
+
 		&[wait="true"] {
 			.mat-input-wrapper {
 				.mat-input-underline {
@@ -53,7 +46,6 @@ deja-select {
 					&:before {
 						content: '';
 						position: absolute;
-						background-color: $secondary;
 						top: 0;
 						left: 0;
 						bottom: 0;
@@ -63,7 +55,6 @@ deja-select {
 					&:after {
 						content: '';
 						position: absolute;
-						background-color: $secondary;
 						top: 0;
 						left: 0;
 						bottom: 0;
@@ -71,12 +62,10 @@ deja-select {
 						animation: load-short 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
 						animation-delay: 1.15s;
 					}
-					.mat-input-ripple {
-						background-color: transparent;
-					}
 				}
 			}
 		}
+
 		&[multiselection="true"] {
 			margin-top: 0.6rem;
 			.mat-input-wrapper {
@@ -99,7 +88,6 @@ deja-select {
 							overflow: hidden;
 							li {
 								float: left;
-								background-color: $primary;
 								margin: 0.1rem;
 								border-radius: 1rem;
 								>span {
@@ -109,14 +97,10 @@ deja-select {
 									transition: 0.3s;
 									padding: 0.5rem;
 									cursor: default;
-									>&:hover {
-										background-color: rgba(255, 255, 255, 0.3);
-									}
 									#close-button {
 										font-size: 1rem;
 										z-index: 3;
 										cursor: pointer;
-										color: #777777;
 										vertical-align: middle;
 									}
 								}
@@ -126,22 +110,18 @@ deja-select {
 				}
 			}
 		}
+
 		[mdSuffix] {
 			md-progress-spinner {
 				width: 1.5rem;
 				height: 1.5rem;
-				svg path {
-					stroke: $secondary;
-				}
 			}
 		}
 	}
+
 	deja-dropdown {
 		&#listcontainer {
-			border: solid 1px rgba(0, 0, 0, 0.38);
 			text-align: left;
-			background-color: $background;
-			color: $foreground;
 			color: initial;
 			overflow: auto;
 			position: absolute;
@@ -153,21 +133,15 @@ deja-select {
 			}
 			[current="true"] {
 				box-shadow: none;
-				background-color: rgba($secondary, 0.8);
-				color: #fff;
 			}
 			&[keynav="false"] {
 				div.listitem:not(.unselectable):hover {
-					background-color: $secondary;
-					color: #fff;
 					cursor: pointer;
 				}
 			}
 		}
 	}
-	#select-backdrop {
-		background-color: transparent !important;
-	}
+
 	@keyframes load {
 		0% {
 			left: -35%;
@@ -196,6 +170,7 @@ deja-select {
 			right: -8%;
 		}
 	} // styling the icon and text in template placeholder. Avoid to repeat in sub-components
+	
 	$deep: '/deep/';
 	#{$deep} {
 		md-placeholder {
@@ -206,6 +181,7 @@ deja-select {
 			}
 		}
 	}
+
 	@import '../../common/core/item-list/item-list';
 	@import '../../common/core/item-list/tree-list';
 }

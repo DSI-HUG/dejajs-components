@@ -1,0 +1,103 @@
+@import '../../../node_modules/@angular/material/core/theming/theming';
+@import '../../common/core/item-list/item-list-theme';
+@import '../../common/core/item-list/tree-list-theme';
+
+@mixin select-theme($theme) {
+	$primary: map-get($theme, primary);
+	$accent: map-get($theme, accent);
+	$warn: map-get($theme, warn);
+	$background: #FFF;
+	$foreground: #000;
+
+	deja-select {
+		&.ng-invalid {
+			#input {
+				.mat-input-wrapper {
+					.mat-input-underline {
+						.mat-input-ripple {
+							background-color: mat-color($warn);
+						}
+					}
+					.mat-input-placeholder.mat-focused {
+						color: mat-color($warn) !important;
+					}
+				}
+			}
+		}
+		#input {
+			.mat-input-suffix {
+				#clear-button {
+					&:hover {
+						color: mat-color($primary);
+					}
+				}
+			}
+			&[wait="true"] {
+				.mat-input-wrapper {
+					.mat-input-underline {
+						&:before {
+							background-color: mat-color($primary);
+						}
+						&:after {
+							background-color: mat-color($primary);
+						}
+						.mat-input-ripple {
+							background-color: transparent;
+						}
+					}
+				}
+			}
+			&[multiselection="true"] {
+				.mat-input-wrapper {
+					.mat-input-table>* {
+						#md-input-prefix {
+							ul {
+								li {
+									background-color: mat-color($primary);
+									>span {
+										>&:hover {
+											background-color: rgba(255, 255, 255, 0.3);
+										}
+										#close-button {
+											color: #777777;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			[mdSuffix] {
+				md-progress-spinner {
+					svg path {
+						stroke: mat-color($primary);
+					}
+				}
+			}
+		}
+		deja-dropdown {
+			&#listcontainer {
+				border: solid 1px rgba(0, 0, 0, 0.38);
+				background-color: $background;
+				color: $foreground;
+				[current="true"] {
+					background-color: rgba(mat-color($primary), 0.8);
+					color: #fff;
+				}
+				&[keynav="false"] {
+					div:not(.unselectable):hover {
+						background-color: mat-color($primary);
+						color: #fff;
+					}
+				}
+			}
+		}
+		#select-backdrop {
+			background-color: transparent !important;
+		}
+		
+		@include sub-item-list-theme($theme);
+        @include sub-tree-list-theme($theme);
+	}
+}

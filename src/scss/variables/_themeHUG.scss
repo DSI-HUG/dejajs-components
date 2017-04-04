@@ -1,0 +1,14 @@
+@import '../../../node_modules/@angular/material/core/theming/all-theme';
+@import './palette';
+@include mat-core();
+
+// Define color scheme
+$primary: mat-palette($md-hug-primary);
+$accent:  mat-palette($md-hug-primary, A200, A100, A400);
+$warn: mat-palette($mat-red);
+
+// Create the theme object from colors
+$theme: mat-light-theme($primary, $accent, $warn);
+
+// Include theme styles for core and each component used in the app.
+@include angular-material-theme($theme);
