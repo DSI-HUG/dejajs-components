@@ -16,7 +16,7 @@
 	<md-toolbar color="primary">Viewport</md-toolbar>
 	<md-card-content id="viewPortContainer">
 		<md-checkbox [(ngModel)]="isHorizontal">Horizontal</md-checkbox>
-		<deja-viewport [items]="news$ | async" itemSize="200" itemSizeMode="auto" [direction]="isHorizontal ? 'horizontal': 'vertical'">
+		<deja-viewport #viewport [items]="news$ | async" itemSize="130" itemSizeMode="auto" [direction]="isHorizontal ? 'horizontal': 'vertical'" scrollingStyle="buttons">
 			<template #itemTemplate let-item let-size="size">
 				<div *ngIf="item" class="news" fxLayout="row" [attr.id]="id">
 					<img [attr.src]="item.urlsToLogos.medium" class="logo" [style.max-height.px]="isHorizontal? null : (size? size - 10 : 20)" fxLayout="row" fxLayoutAlign="space-between" fxFlexAlign="center">

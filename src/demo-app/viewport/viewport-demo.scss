@@ -7,11 +7,14 @@
 
 deja-viewport {
 	margin-top: 1rem;
-	height: calc(100vh - 260px);
-	display: block;
+	&[direction="vertical"] {
+		height: calc(100vh - 352px);
+	}
+	&[direction="horizontal"] {
+		height: 17rem;
+	}
 	.news {
 		border: 1px #aaa solid;
-		width: calc(100% - 1rem);
 		padding: 5px;
 		overflow: hidden;
 		.logo {
@@ -51,7 +54,6 @@ deja-viewport {
 	}
 	&[direction="horizontal"] {
 		.news {
-			height: 17rem;
 			.logo {
 				flex: 0 0 15rem;
 				max-height: 15rem;
@@ -59,9 +61,9 @@ deja-viewport {
 			}
 			.text {
 				flex: 1 1 auto;
-                .description { 
-                    max-width: 25rem;
-                }
+				.description {
+					max-width: 25rem;
+				}
 			}
 		}
 	}

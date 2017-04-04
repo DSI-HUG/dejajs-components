@@ -1,7 +1,9 @@
+<span #up id="up" *ngIf="hasButtons" fxFlex="0 0 auto"><i class="material-icons">keyboard_arrow_up</i></span>
 <div #wrapper id="viewport-wrapper" [fxLayout]="isHorizontal ? 'row' : 'column'">
 	<span *ngIf="beforeSize" fxFlex="0 0 {{beforeSize}}"></span>
-	<span #elitem *ngFor="let item of vpItems; let index = index" [attr.index]="vpStartIndex + index" fxFlex="0 0 {{item.size ? item.size + 'px' : 'auto'}}">
+	<span #elitem *ngFor="let item of vpItems; let index = index" [attr.index]="vpStartIndex + index" fxFlex="0 0 {{item.size ? item.size + 'px' : 'auto'}}" [style.margin-top.px]="isHorizontal || !startOffset || index > 0 ? null : -startOffset" [style.margin-left.px]="isHorizontal && startOffset && index === 0 ? -startOffset : null">
 		<template [ngTemplateOutlet]="itemTemplate" [ngOutletContext]="{ $implicit: item.model, index: vpStartIndex + index, size: item.size || null }"></template>
 	</span>
 	<span *ngIf="afterSize" fxFlex="0 0 {{afterSize}}"></span>
 </div>
+<span #down id="down" *ngIf="hasButtons" fxFlex="0 0 auto"><i class="material-icons">keyboard_arrow_down</i></span>
