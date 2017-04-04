@@ -1,26 +1,32 @@
-[md-menu-item].with-icon,
-[md-raised-button].with-icon {
-	&:before {
-		content: attr(data-icon);
-		font-family: 'Material Icons';
-		left: 0;
-		position: absolute;
-		text-align: center;
-	}
-}
+@import '../../../../node_modules/@angular/material/core/theming/theming';
 
-[md-menu-item].with-icon {
-	padding-left: 3rem;
-	&:before {
-		width: 3rem;
-		font-size: 130%;
-		opacity: 0.85;
-	}
-}
+@mixin buttons-theme($theme) {
 
-[md-raised-button].with-icon {
-	padding-left: 2rem;
-	&:before {
-		width: 2rem;
+	[md-menu-item].with-icon,
+	[md-raised-button].with-icon {
+		&:before {
+			content: attr(data-icon);
+			font-family: 'Material Icons';
+			left: 0;
+			position: absolute;
+			text-align: center;
+		}
 	}
+
+	[md-menu-item].with-icon {
+		padding-left: 3rem;
+		&:before {
+			width: 3rem;
+			font-size: 130%;
+			opacity: 0.85;
+		}
+	}
+
+	[md-raised-button].with-icon {
+		padding-left: 2rem;
+		&:before {
+			width: 2rem;
+		}
+	}
+
 }

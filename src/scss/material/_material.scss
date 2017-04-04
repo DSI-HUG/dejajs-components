@@ -1,10 +1,9 @@
 @import 'components/tabs';
+@import 'components/buttons';
 
 @mixin deja-material-theme($theme) {
 	#dpi {
-		@import 'components/buttons';
-		@import 'components/input';
-
 		@include tabs-theme($theme);
+		@include buttons-theme($theme);
 	}
 }

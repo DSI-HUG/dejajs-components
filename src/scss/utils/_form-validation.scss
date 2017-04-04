@@ -5,6 +5,7 @@
     
     form {
         
+        /** RADIO BUTTON **/
         md-radio-group.ng-invalid.ng-touched {
             label {
                 color: mat-color($warn);
@@ -21,6 +22,51 @@
             .mat-radio-ripple {
                 .mat-ripple-element {
                     background-color: rgba(mat-color($warn), .2);
+                }
+            }
+        }
+
+        /** INPUT **/
+        md-input-container {
+            &.ng-invalid {
+                &:not(.ng-touched) {
+                    .mat-input-wrapper {
+                        // Placeholder
+                        .mat-input-table {
+                            .mat-input-placeholder {
+                                color: initial;
+                            }
+                        }
+                        // Barre inférieur
+                        .mat-input-underline {
+                            .mat-input-ripple {
+                                background-color: initial;
+                            }
+                        }
+                    }
+                }
+
+                &.ng-touched {
+                    // Placeholder
+                    .mat-input-table {
+                        .mat-input-placeholder {
+                            color: mat-color($warn);
+                        }
+                    }
+                    
+                    // Barre inférieur
+                    // .mat-input-underline {
+                    //     .mat-input-ripple {
+                    //         opacity: 1;
+                    //         transform: scaleY(1);
+                    //         background-color: mat-color($warn);
+                    //     }
+                    // }
+
+                    // Hint
+                    .mat-hint.validation-error, .validation-error {
+                        color: mat-color($warn);
+                    }
                 }
             }
         }
