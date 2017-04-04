@@ -160,7 +160,8 @@ export class ItemListBase {
      * @param {IItemBase[]} items Liste des éléments a selectioner.
      */
     public setSelectedItems(value: IItemBase[]) {
-        return this.getItemListService().setSelectedItems(value, this._multiSelect);
+        this.getItemListService().setSelectedItems(value, this._multiSelect);
+        this.changeDetectorRef.markForCheck();
     }
 
     /**
