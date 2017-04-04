@@ -9,9 +9,9 @@
  *
  */
 
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { DejaViewPortComponent } from '../../component';
+// import { DejaViewPortComponent } from '../../component';
 import { IEditorLanguage } from '../../component/monaco-editor/options/editor-language.model';
 import { INews, NewsService } from '../services/news.service';
 
@@ -23,7 +23,7 @@ import { INews, NewsService } from '../services/news.service';
 export class DejaViewPortDemoComponent {
     protected tabIndex = 1;
 
-    @ViewChild('viewport') private viewport: DejaViewPortComponent;
+    // @ViewChild('viewport') private viewport: DejaViewPortComponent;
 
     protected exampleValue = `
     <deja-viewport [items]="news$ | async" itemSize="120">
@@ -47,7 +47,7 @@ export class DejaViewPortDemoComponent {
     protected news$: Observable<INews[]>;
 
     constructor(newsService: NewsService) {
-        this.news$ = newsService.getNews$(1);
-        Observable.timer(5000).first().subscribe(() => this.viewport.ensureVisible(23));
+        this.news$ = newsService.getNews$(50);
+        // Observable.timer(5000).first().subscribe(() => this.viewport.ensureVisible(23));
     }
 }
