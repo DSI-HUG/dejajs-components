@@ -2,13 +2,12 @@
 
 @mixin range-theme($theme) {
     $primary: map-get($theme, primary);
-    $accent: map-get($theme, accent);
 
     #container {
         .separator {
             .default-separator {
                 .default-separator-item {
-                    background: mat-color($accent);
+                    background: mat-color($primary, A400);
                 }
             }
         }
