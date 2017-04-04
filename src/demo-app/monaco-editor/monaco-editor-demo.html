@@ -11,11 +11,11 @@
     </md-tab>
     <md-tab label="EXAMPLES">
 
-        <md-card class="demo-card demo-basic" [class.debug]="debug">
+        <md-card class="demo-card demo-basic">
             <md-toolbar color="primary">
                 Modification d'un fichier XML
                 <span flex></span>
-                <label>Read only <input type="checkbox" [(ngModel)]="readOnly"></label>
+                <md-checkbox [(ngModel)]="readOnly">Read only</md-checkbox>
             </md-toolbar>
             <md-card-content>
                 <div class="viewer">
@@ -24,7 +24,7 @@
             </md-card-content>
         </md-card>
 
-        <md-card class="demo-card demo-basic" [class.debug]="debug">
+        <md-card class="demo-card demo-basic">
             <md-toolbar color="primary">Comparaison d'un fichier XML</md-toolbar>
             <md-card-content>
                 <div class="viewer">
@@ -33,7 +33,7 @@
             </md-card-content>
         </md-card>
 
-        <md-card class="demo-card demo-basic" [class.debug]="debug">
+        <md-card class="demo-card demo-basic">
             <md-toolbar color="primary">Modification d'un fichier JSON</md-toolbar>
             <md-card-content>
                 <div class="viewer">
@@ -42,7 +42,7 @@
             </md-card-content>
         </md-card>
 
-        <md-card class="demo-card demo-basic" [class.debug]="debug">
+        <md-card class="demo-card demo-basic">
             <md-toolbar color="primary">Comparaison d'un fichier JSON</md-toolbar>
             <md-card-content>
                 <div class="viewer">

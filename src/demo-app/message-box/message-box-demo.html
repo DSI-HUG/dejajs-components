@@ -12,7 +12,7 @@
     <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/message-box/readme.md'"></deja-markdown>
 </md-card>
 
-<div *ngIf="tabIndex === 1">
+<div *ngIf="tabIndex === 1" class="example">
     <deja-dialog *ngIf="dialogVisible" (closed)="dialogVisible = false">
         <deja-message-box type="primary" title="Un titre">
             <b>Je suis un deja-dialog !</b><br /> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sit amet felis id nisl maximus interdum. Morbi mollis sapien sapien. Vivamus lacinia elementum eros
