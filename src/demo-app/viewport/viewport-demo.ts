@@ -47,7 +47,7 @@ export class DejaViewPortDemoComponent {
     protected news$: Observable<INews[]>;
 
     constructor(newsService: NewsService) {
-        this.news$ = newsService.getNews$(50);
+        this.news$ = newsService.getNews$(1);
         // Observable.timer(5000).first().subscribe(() => this.viewport.ensureVisible(23));
     }
 }
