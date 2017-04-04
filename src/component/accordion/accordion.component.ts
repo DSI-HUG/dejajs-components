@@ -41,7 +41,6 @@ export class DejaAccordionGroupComponent {
 
     @HostListener('click', ['$event'])
     public toggleOpen(event: MouseEvent): void {
-        event.preventDefault();
 
         let target = event.target as HTMLElement;
         const element = event.currentTarget as HTMLElement;
