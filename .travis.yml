@@ -32,9 +32,6 @@ before_script:
 - npm prune
 script:
 - npm test
-- bash ./scripts/deploy.sh
-before_deploy:
-- npm i
 env:
   global:
   - ENCRYPTION_LABEL: d9215e5535f8
@@ -47,3 +44,5 @@ deploy:
   on:
     repo: DSI-HUG/dejajs-components
     branch: master
+after_script:
+- bash ./scripts/deploy.sh
