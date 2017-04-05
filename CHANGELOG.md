@@ -1,13 +1,19 @@
 <a name="@next"></a>
 # [@next] (2017-04-xx)
 
-### Breaking changes from 1.5.0
+### Breaking changes from 1.5.1
 
 ### Known issues
 
 ### Features
 
 ### Bug fixes
+
+<a name="1.5.1"></a>
+# [1.5.1] (2017-04-05)
+
+### Bug fixes
+Travis deployment
 
 <a name="1.5.0"></a>
 # [1.5.0] (2017-04-05)
