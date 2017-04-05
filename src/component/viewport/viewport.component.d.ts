@@ -39,6 +39,7 @@ export declare class DejaViewPortComponent implements OnDestroy, AfterViewInit {
     constructor(changeDetectorRef: ChangeDetectorRef);
     ngOnDestroy(): void;
     ngAfterViewInit(): void;
+    refresh(): void;
     ensureVisible(item: any): void;
     private calcViewPort(maxSize?);
     private clearViewPort();
