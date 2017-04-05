@@ -33,7 +33,7 @@
     "build-css": "node-sass src/scss/index.scss -o ./src/scss",
     "build": "webpack-dev-server -d --devtool source-map --inline --progress --port 5100 --config webpack.config.dev.js",
     "start": "npm run build-css && npm run build",
-    "prepublish": "npm install node-sass && npm run build-css",
+    "prepublish": "npm i && npm run build-css",
     "publish": "npm publish --access public",
     "build:prod": "del-cli dist && npm run build-css && webpack -p --config webpack.config.prod.js",
     "travis-build:prod": "npm run build-css && webpack -p --config webpack.config.prod.js",
