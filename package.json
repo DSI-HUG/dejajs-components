@@ -30,7 +30,7 @@
     "url": "https://github.com/DSI-HUG/dejajs-components.git"
   },
   "scripts": {
-    "build-css": "node-sass src/scss/index.scss -o ./src/scss",
+    "build-css": "node-sass src/scss/index.scss -o ./src/scss --importer=node_modules/node-sass-tilde-importer",
     "build": "webpack-dev-server -d --devtool source-map --inline --progress --port 5100 --config webpack.config.dev.js",
     "start": "npm run build-css && npm run build",
     "prepublish": "npm install node-sass && npm run build-css",
@@ -44,7 +44,7 @@
     "@angular/common": "^2.4.0",
     "@angular/compiler": "^2.4.0",
     "@angular/core": "^2.4.0",
-    "@angular/flex-layout": "^2.0.0-rc.1",
+    "@angular/flex-layout": "^2.0.0-beta.7",
     "@angular/forms": "^2.4.0",
     "@angular/http": "^2.4.0",
     "@angular/material": "^2.0.0-beta.2",
@@ -89,6 +89,7 @@
     "html-loader": "^0.4.4",
     "html-webpack-plugin": "^2.22.0",
     "node-sass": "^4.3.0",
+    "node-sass-tilde-importer": "0.0.4",
     "protractor": "^5.1.1",
     "raw-loader": "^0.5.1",
     "resolve-url-loader": "^1.6.0",
