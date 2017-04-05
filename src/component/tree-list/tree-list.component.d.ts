@@ -1,11 +1,11 @@
-import { ChangeDetectorRef, ElementRef, EventEmitter, OnDestroy } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, ElementRef, EventEmitter, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { GroupingService } from '../../common/core/grouping';
 import { IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, ViewportMode } from '../../common/core/item-list';
 import { SortingService } from '../../common/core/sorting';
 import { IDejaDragEvent } from '../dragdrop';
 import { DejaTreeListItemEvent, DejaTreeListItemsEvent, DejaTreeListScrollEvent } from './index';
-export declare class DejaTreeListComponent extends ItemListBase implements OnDestroy {
+export declare class DejaTreeListComponent extends ItemListBase implements OnDestroy, AfterViewInit {
     elementRef: ElementRef;
     placeholder: string;
     nodataholder: string;
@@ -23,6 +23,7 @@ export declare class DejaTreeListComponent extends ItemListBase implements OnDes
     selectedChange: EventEmitter<DejaTreeListItemsEvent | DejaTreeListItemEvent>;
     afterViewInit: EventEmitter<{}>;
     listcontainer: ElementRef;
+    input: ElementRef;
     protected onTouchedCallback: () => void;
     protected onChangeCallback: (_: any) => void;
     protected keyboardNavigation: boolean;
@@ -74,6 +75,7 @@ export declare class DejaTreeListComponent extends ItemListBase implements OnDes
     selectingItem: (item: any) => Promise<any>;
     unselectingItem: (item: any) => Promise<any>;
     models: any[] | Observable<any[]>;
+    private currentItemIndex;
     private readonly itemTemplate;
     private readonly parentItemTemplate;
     private readonly loaderTemplate;
@@ -86,8 +88,8 @@ export declare class DejaTreeListComponent extends ItemListBase implements OnDes
     toggleAll$(): Observable<IItemTree>;
     toggleAll(): void;
     ensureItemVisible(item: IItemBase | number): void;
-    protected filter(event: KeyboardEvent): boolean;
-    protected ngAfterViewInit(): void;
+    clearViewPort(): void;
+    ngAfterViewInit(): void;
     ngOnDestroy(): void;
     protected mousedown(e: MouseEvent): boolean;
     protected getDragContext(index: number): {

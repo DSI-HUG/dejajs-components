@@ -9,6 +9,7 @@ export declare enum ViewportMode {
     NoViewport = 0,
     ConstantRowHeight = 1,
     VariableRowHeight = 2,
+    AutoRowHeight = 3,
 }
 export declare class ItemListBase {
     protected changeDetectorRef: ChangeDetectorRef;
@@ -20,6 +21,7 @@ export declare class ItemListBase {
     protected _textField: string;
     protected _valueField: string;
     protected _currentItemIndex: number;
+    protected _currentItem: IItemBase;
     protected _hintLabel: string;
     protected _nodataLabel: string;
     protected computedMaxHeight: number;
@@ -50,7 +52,6 @@ export declare class ItemListBase {
     getItemIndexFromHTMLElement(element: HTMLElement): number;
     getItemFromHTMLElement(element: HTMLElement): IItemBase;
     getItemListService(): ItemListService;
-    getCurrentItem(): IItemBase;
     isBusinessObject(): boolean;
     getSelectedItems(): IItemBase[];
     setSelectedItems(value: IItemBase[]): void;
@@ -78,6 +79,9 @@ export declare class ItemListBase {
     protected setGroupingService(value: GroupingService): void;
     protected setHintLabel(value: string): void;
     protected setNodataLabel(value: string): void;
+    protected setCurrentItemIndex(value: number): void;
+    protected getCurrentItemIndex(): number;
+    getCurrentItem(): IItemBase;
     protected setCurrentItem(item: IItemBase): void;
     protected getItemIndex(item: IItemBase): number;
     protected setMultiSelect(value: boolean): void;
@@ -95,12 +99,11 @@ export declare class ItemListBase {
     protected setSearchField(value: string): void;
     protected calcDragTargetIndex$(index: number, targetIndex: number): Observable<number>;
     protected getItemTreeInfo(items: IItemBase[], item: IItemBase): IItemTreeInfo;
-    protected loadViewPort(res: IViewListResult): Promise<IViewListResult>;
-    protected calcViewPort(query?: string, maxHeight?: number, containerElement?: HTMLElement): void;
     protected calcViewPort$(query?: string, maxHeight?: number, containerElement?: HTMLElement): Observable<IViewListResult>;
+    protected ensureListCaches$(): Observable<IViewListResult>;
     protected ensureItemVisible(query: string, containerElement: HTMLElement, listItemElements: QueryList<ElementRef>, item: IItemBase | number): void;
     protected convertToIItemBase(modls: any[], selected?: boolean): IItemBase[];
-    private getItemHeight(item);
+    protected getItemHeight(item: IItemBase): number;
 }
 export interface IItemTreeInfo {
     item?: IItemBase;

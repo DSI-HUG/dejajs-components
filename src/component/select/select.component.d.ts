@@ -1,14 +1,13 @@
-import { ChangeDetectorRef, ElementRef, OnDestroy } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, ElementRef, OnDestroy } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
 import { IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, ViewportMode } from '../../common/core/item-list';
-export declare class DejaSelectComponent extends ItemListBase implements ControlValueAccessor, OnDestroy {
+export declare class DejaSelectComponent extends ItemListBase implements ControlValueAccessor, OnDestroy, AfterViewInit {
     private elementRef;
     placeholder: string;
     query: string;
     maxHeight: number;
     dropdownContainerId: string;
-    dropdownAlignment: string;
     itemTemplateExternal: any;
     parentItemTemplateExternal: any;
     placeHolderTemplateExternal: any;
@@ -25,8 +24,8 @@ export declare class DejaSelectComponent extends ItemListBase implements Control
     protected parentItemTemplateInternal: any;
     protected selectedTemplate: any;
     protected mdSuffix: any;
-    private inputElementRef;
-    private dropdownItemElements;
+    private input;
+    private listItemElements;
     private listcontainer;
     private dropDownComponent;
     private _type;
@@ -39,13 +38,17 @@ export declare class DejaSelectComponent extends ItemListBase implements Control
     private lastScrollPosition;
     private _selectionClearable;
     private _waiter;
+    _dropdownAlignment: string;
+    _ownerAlignment: string;
     private clearFilterExpression$;
     private filterListComplete$;
     private storeScrollPosition$;
     private hideDropDown$;
     private showDropDown$;
+    private filter$;
     private keyboardNavigation$;
     constructor(changeDetectorRef: ChangeDetectorRef, elementRef: ElementRef);
+    dropdownAlignment: string;
     minSearchlength: number;
     selectionClearable: boolean;
     hideSelected: any;
@@ -69,6 +72,7 @@ export declare class DejaSelectComponent extends ItemListBase implements Control
     items: IItemBase[] | Promise<IItemBase[]> | Observable<IItemBase[]>;
     models: any[] | Observable<any[]>;
     readonly depthMax: number;
+    private currentItemIndex;
     private readonly placeHolderTemplate;
     private readonly itemTemplate;
     private readonly hintTemplate;
@@ -80,14 +84,11 @@ export declare class DejaSelectComponent extends ItemListBase implements Control
     registerOnChange(fn: any): void;
     registerOnTouched(fn: any): void;
     ngOnDestroy(): void;
+    ngAfterViewInit(): void;
     toggleAll$(): Observable<IItemTree>;
     toggleCollapse$(index: number, collapsed: boolean): Observable<IItemTree[]>;
-    protected filter(event: KeyboardEvent): boolean;
     protected scroll(): void;
-    protected click(event: any): void;
     protected mousedown(e: MouseEvent): void;
-    protected focus(event: any): void;
-    protected blur(): void;
     protected queryChanged(event: Event): void;
     protected removeSelection(event: Event, item: IItemBase): boolean;
     protected calcViewPort$(): Observable<IViewListResult>;

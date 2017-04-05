@@ -1,5 +1,4 @@
-import { OnInit } from '@angular/core';
-export declare class MessageBoxDemoComponent implements OnInit {
+export declare class MessageBoxDemoComponent {
     protected tabIndex: number;
     protected toolTipModel: {
         text: string;
@@ -20,7 +19,5 @@ export declare class MessageBoxDemoComponent implements OnInit {
         icon: string;
     }[];
     private dialogVisible;
-    private messages;
     constructor();
-    ngOnInit(): void;
 }

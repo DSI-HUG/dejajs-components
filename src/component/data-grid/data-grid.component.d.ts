@@ -7,6 +7,7 @@ import { IDejaDragEvent } from '../dragdrop';
 import { DejaTreeListScrollEvent } from '../tree-list';
 import { DejaGridRowEvent, DejaGridRowsEvent, IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent, IDejaGridGroupsEvent } from './index';
 export declare class DejaGridComponent implements OnDestroy {
+    private changeDetectorRef;
     private elementRef;
     placeholder: string;
     nodataholder: string;
@@ -95,7 +96,7 @@ export declare class DejaGridComponent implements OnDestroy {
     private readonly columnsHeaderTemplate;
     private readonly columnHeaderTemplate;
     private readonly columnLayout;
-    constructor(_changeDetectorRef: ChangeDetectorRef, elementRef: ElementRef);
+    constructor(changeDetectorRef: ChangeDetectorRef, elementRef: ElementRef);
     ngOnDestroy(): void;
     value: any;
     writeValue(value: any): void;

@@ -23,6 +23,7 @@ export declare class ItemListService {
     childrenField: string;
     hideSelected: boolean;
     valueField: string;
+    readonly hasCache: boolean;
     private items;
     setItems$(items: any[] | Promise<any[]> | Observable<any[]>): Observable<IItemBase[]>;
     setModels$(items: any[] | Promise<any[]> | Observable<any[]>): Observable<IItemBase[]>;
