@@ -1,4 +1,5 @@
 @import "../../scss/variables/colors";
+
 .treelist-demo {
     &.demo-card {
         .listContainer {
@@ -11,17 +12,6 @@
                 margin: 2rem;
                 flex: 0 1 50%;
                 position: relative;
-                li {
-                    &.odd {
-                        background: rgba($secondary, 0.1);
-                        &[current="true"] {
-                            background: rgba($secondary, 0.5);
-                        }
-                        &.selected {
-                            background: rgba($secondary, 0.9);
-                        }
-                    }
-                }
             }
         }
     }
@@ -68,8 +58,7 @@
     #headerTemplateContent {
         padding: 0.4rem;
         display: block;
-        background-color: $secondary;
-        color: #fff;
+        background-color: #aaa;
         cursor: pointer;
         display: flex;
         #title {
@@ -121,7 +110,7 @@
 .item-base-cursor,
 .country-target-cursor {
     #content {
-        background-color: $secondary !important;
+        background-color: #222 !important;
         color: #fff;
         opacity: 0.8;
         display: flex;
