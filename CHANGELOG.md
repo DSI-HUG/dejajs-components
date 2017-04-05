@@ -1,5 +1,16 @@
 <a name="@next"></a>
-# [@next] (2017-03-xx)
+# [@next] (2017-04-xx)
+
+### Breaking changes from 1.5.0
+
+### Known issues
+
+### Features
+
+### Bug fixes
+
+<a name="1.5.0"></a>
+# [1.5.0] (2017-04-05)
 
 ### Breaking changes from 1.4.2-beta.25
 * **DejaSelect:** HTML Element with id=select-dropdown changed to id=listcontainer
