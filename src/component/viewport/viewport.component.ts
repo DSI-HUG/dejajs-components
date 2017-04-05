@@ -90,7 +90,6 @@ export class DejaViewPortComponent implements OnDestroy,
             this.isHorizontal = value === 'horizontal';
             if (this._items) {
                 this._items.forEach((item) => item.size = undefined);
-                this._items = [...this._items];
                 this.changeDetectorRef.markForCheck();
                 Observable.timer(1).first().subscribe(() => this.scrollPos = 0);
             }
@@ -156,20 +155,39 @@ export class DejaViewPortComponent implements OnDestroy,
             .delay(1)
             .subscribe((value) => {
                 if (value) {
-                    const mousedown$ = Observable.merge(Observable.fromEvent(this.downButton.nativeElement, 'mousedown'), Observable.fromEvent(this.upButton.nativeElement, 'mousedown'));
+                    const mousedown$ = Observable.merge(
+                        Observable.fromEvent(this.downButton.nativeElement, 'mousedown'),
+                        Observable.fromEvent(this.upButton.nativeElement, 'mousedown'));
 
-                    const mouseup$ = Observable.merge(Observable.fromEvent(this.downButton.nativeElement, 'mouseup'), Observable.fromEvent(this.upButton.nativeElement, 'mouseup'), Observable.fromEvent(this.downButton.nativeElement, 'mouseleave'), Observable.fromEvent(this.upButton.nativeElement, 'mouseleave'));
+                    const mouseup$ = Observable.merge(
+                        Observable.fromEvent(this.downButton.nativeElement, 'mouseup'),
+                        Observable.fromEvent(this.upButton.nativeElement, 'mouseup'),
+                        Observable.fromEvent(this.downButton.nativeElement, 'mouseleave'),
+                        Observable.fromEvent(this.upButton.nativeElement, 'mouseleave'));
 
                     this.mouseDown$Sub = mousedown$.subscribe((event: MouseEvent) => {
                         const target = event.currentTarget as HTMLElement;
                         const direction = target.id === 'up' ? -1 : +1;
 
-                        mouseup$.first().subscribe((upEvent: MouseEvent) => { this.scrollPos += upEvent.ctrlKey ? this.clientSize : direction * this.buttonsStep; });
+                        mouseup$.first()
+                            .subscribe((upEvent: MouseEvent) => {
+                                this.scrollPos += direction * (upEvent.ctrlKey ? this.clientSize : this.buttonsStep);
+                            });
 
-                        Observable.timer(1000).takeUntil(mouseup$).subscribe(() => { Observable.interval(50).takeUntil(mouseup$).subscribe(() => { this.scrollPos += event.ctrlKey ? this.clientSize : direction * this.buttonsStep * 2; }); });
+                        Observable.timer(1000)
+                            .takeUntil(mouseup$)
+                            .subscribe(() => {
+                                Observable.interval(50)
+                                    .takeUntil(mouseup$)
+                                    .subscribe(() => {
+                                        this.scrollPos += direction * (event.ctrlKey ? this.clientSize : this.buttonsStep * 2);
+                                    });
+                            });
                     });
 
-                    this.mouseWheel$Sub = Observable.fromEvent(this.wrapperElement.nativeElement, 'mousewheel').subscribe((event: MouseWheelEvent) => { this.scrollPos = this.scrollPos + event.deltaY; });
+                    this.mouseWheel$Sub = Observable
+                        .fromEvent(this.wrapperElement.nativeElement, 'mousewheel')
+                        .subscribe((event: MouseWheelEvent) => { this.scrollPos = this.scrollPos + event.deltaY; });
 
                 } else {
                     if (this.mouseDown$Sub) {
@@ -184,6 +202,10 @@ export class DejaViewPortComponent implements OnDestroy,
 
                 this.calcViewPort();
             }));
+    }
+
+    public refresh() {
+        this.changeDetectorRef.markForCheck();
     }
 
     public ensureVisible(item: any) {

@@ -20,7 +20,7 @@
 		<deja-viewport #viewport [items]="news$ | async" itemSize="130" itemSizeMode="auto" [direction]="isHorizontal ? 'horizontal': 'vertical'" [scrollingStyle]="hasButtons ? 'buttons' : 'scrollbar'">
 			<template #itemTemplate let-item let-size="size">
 				<div *ngIf="item" class="news" fxLayout="row" [attr.id]="id">
-					<img [attr.src]="item.urlsToLogos.medium" class="logo" [style.max-height.px]="isHorizontal? null : (size? size - 10 : 20)" fxLayout="row" fxLayoutAlign="space-between" fxFlexAlign="center">
+					<img [attr.src]="item.urlsToLogos.medium" onload="imageLoaded();" class="logo" [style.max-height.px]="isHorizontal? null : (size? size - 10 : 20)" fxLayout="row" fxLayoutAlign="space-between" fxFlexAlign="center">
 					<span class="text">
 						<div class="name">{{ item.name }}</div>
 						<div class="description">{{ item.description }}</div>

@@ -9,7 +9,7 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 // import { DejaViewPortComponent } from '../../component';
 import { IEditorLanguage } from '../../component/monaco-editor/options/editor-language.model';
@@ -46,8 +46,12 @@ export class DejaViewPortDemoComponent {
     protected html = IEditorLanguage.HTML;
     protected news$: Observable<INews[]>;
 
-    constructor(newsService: NewsService) {
+    constructor(newsService: NewsService, private changeDetectorRef: ChangeDetectorRef) {
         this.news$ = newsService.getNews$(1);
         // Observable.timer(5000).first().subscribe(() => this.viewport.ensureVisible(23));
+    }
+
+    protected imageLoaded() {
+        this.changeDetectorRef.markForCheck();
     }
 }

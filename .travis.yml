@@ -33,6 +33,8 @@ before_script:
 script:
 - npm test
 - bash ./scripts/deploy.sh
+before_deploy:
+- npm i
 env:
   global:
   - ENCRYPTION_LABEL: d9215e5535f8
