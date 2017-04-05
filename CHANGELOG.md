@@ -1,13 +1,44 @@
 <a name="@next"></a>
-# [@next] (2017-03-xx)
+# [@next] (2017-04-xx)
+
+### Breaking changes from 1.5.0
+
+### Known issues
+
+### Features
+
+### Bug fixes
+
+<a name="1.5.0"></a>
+# [1.5.0] (2017-04-05)
 
 ### Breaking changes from 1.4.2-beta.25
+* **DejaSelect:** HTML Element with id=select-dropdown changed to id=listcontainer
+* **DejaSelect:** HTML UL Removed
+* **DejaSelect:** HTML LI Changed to div
+* **DejaSelect:** HTML expandbtn Changed span to i
+* **DejaSelect:** HTML span with class item-content removed, use div.listitem instead
+* **DejaTreeList:** HTML Element with id=list changed to id=listcontainer
+* **DejaTreeList:** HTML Element with id=list-header changed to id=listheader
+* **DejaTreeList:** HTML UL Removed
+* **DejaTreeList:** HTML LI Changed to div
+* **DejaTreeList:** HTML expandbtn Changed span to i
+* **DejaTreeList:** HTML span with class item-content removed, use div.listitem instead
+* **DejaGrid:** HTML element with id parent-title-wrapper changed to id parent-title
 
 ### Known issues #
 
 ### Features
+* **DejaSelect:** Less DOM, performances improved
+* **DejaTreeList:** Less DOM, performances improved
+* **DejaTreeList:** Automatic row height calculation and scrollbar on scroll adjustment
+* **DejaGrid:** OnPush mode
 
 ### Bug fixes #
+* **DejaTreeList:** Keyboard navigation don't select correctly the current row
+* **DejaTreeList:** Keyborad navigation after an asynchronous scrolling crash because no cache is defined
+* **DejaGrid:** Keyboard navigation don't disable the horizontal scolling 
+* **DejaGrid:** Keyboard navigation don't select correctly the current row
 
 <a name="1.4.2-beta.25"></a>
 # [1.4.2-beta.25] (2017-03-30)

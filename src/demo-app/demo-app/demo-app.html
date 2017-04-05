@@ -1,4 +1,4 @@
-<md-toolbar color="secondary">
+<md-toolbar color="primary">
     <button md-icon-button (click)="navOpened = !navOpened">
             <md-icon class="md-24">{{navOpened ? 'clear' : 'menu'}}</md-icon>
         </button>
@@ -17,9 +17,9 @@
             <a md-list-item [routerLink]="['events']">Events</a>
             <a md-list-item [routerLink]="['grid']">Grid</a>
             <a md-list-item [routerLink]="['menu']">Menu</a>
-            <a md-list-item [routerLink]="['progress-circle']">Progress Circle</a>
             <a md-list-item [routerLink]="['message-box']">Message Box</a>
             <a md-list-item [routerLink]="['monaco-editor']">Monaco Editor</a>
+            <a md-list-item [routerLink]="['progress-circle']">Progress</a>
             <a md-list-item [routerLink]="['range']">Range</a>
             <a md-list-item [routerLink]="['select']">Select</a>
             <a md-list-item [routerLink]="['snackbar']">Snackbar</a>
@@ -41,8 +41,6 @@
 </md-sidenav-container>
 <deja-mouse-dragdrop-cursor></deja-mouse-dragdrop-cursor>
 <deja-backdrop id="iframePopup" *ngIf="iframeOpened" (click)="iframeOpened=false">
-    <!--<deja-iframe sourceUrl="http://www.youtube.com/embed/M7lc1UVf-VE?autoplay=1&origin=http://example.com">
-    </deja-iframe>-->
-    <deja-iframe sourceUrl="http://localhost:5101/events">
-    </deja-iframe>
+    <!--<deja-iframe sourceUrl="http://www.youtube.com/embed/M7lc1UVf-VE?autoplay=1&origin=http://example.com"></deja-iframe>-->
+    <deja-iframe sourceUrl="http://localhost:5100"></deja-iframe>
 </deja-backdrop>

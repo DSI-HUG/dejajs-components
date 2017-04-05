@@ -1,0 +1,45 @@
+@import '../../../node_modules/@angular/material/core/theming/theming';
+
+@mixin accordion-theme($theme) {
+    $primary: map-get($theme, primary);
+
+    .accordion-group {
+        deja-accordion-header {
+            &[primary] {
+                &.accordion-header {
+                    background-color: mat-color($primary);
+                    color:#FFF;
+                    &:hover {
+                        background-color: mat-color($primary, 600);
+                    }
+                }
+            }
+        }
+
+        &.open {
+            deja-accordion-header {
+                &[primary] {
+                    &.accordion-header {
+                        background-color: mat-color($primary, 600);
+                    }
+                }
+            }
+        }
+    }
+
+    .accordion-group {
+        background-color: #FFF;
+
+        .accordion-header {
+            &:hover {
+                background-color: rgba(0, 0, 0, .04);
+            }
+        }
+
+        &.open {
+            .accordion-header {
+                background-color: rgba(0, 0, 0, .04);
+            }
+        }
+    }
+}

@@ -1,0 +1,90 @@
+@import '../../../node_modules/@angular/material/core/theming/theming';
+
+@mixin message-box-theme($theme) {
+    $primary: map-get($theme, primary);
+    $warn: map-get($theme, warn);
+
+    $warning: #FF9800;
+    $success: #4CAF50;
+
+    md-card {
+        &.info, &.primary {
+            border-color: mat-color($primary);
+            md-card-title {
+                background-color: mat-color($primary);
+                color: #FFF;
+            }
+        }
+        &.danger {
+            border-color: mat-color($warn);
+            md-card-title {
+                background-color: mat-color($warn);
+                color: #FFF;
+            }
+        }
+        &.warn {
+            border-color: $warning;
+            md-card-title {
+                background-color: $warning;
+                color: #FFF;
+            }
+        }
+        &.success {
+            border-color: $success;
+            md-card-title {
+                background-color: $success;
+                color: #FFF;
+            }
+        }
+
+        md-card-actions {
+            button {
+                &.mat-success[md-icon-button]:not([disabled]) {
+                    color: $success !important;
+                }
+
+                &.mat-warn[md-icon-button]:not([disabled]) {
+                    color: $warning !important;
+                }
+
+                &.mat-danger[md-icon-button]:not([disabled]) {
+                    color: mat-color($warn) !important;
+                }
+
+                &.mat-success[md-raised-button],
+                &.mat-success[md-fab],
+                &.mat-success[md-mini-fab] {
+                    &:not([disabled]) {
+                        background-color: $success !important;
+                        color: #FFF !important;
+                    }
+                }
+
+                &.mat-warn[md-raised-button],
+                &.mat-warn[md-fab],
+                &.mat-warn[md-mini-fab] {
+                    background-color: $warning !important;
+                    color: #FFF !important;
+                }
+
+                &.mat-danger[md-raised-button],
+                &.mat-danger[md-fab],
+                &.mat-danger[md-mini-fab] {
+                    &:not([disabled]) {
+                        background-color: mat-color($warn) !important;
+                        color: #FFF !important;
+                    }
+                }
+
+                &.mat-blank[md-raised-button],
+                &.mat-blank[md-fab],
+                &.mat-blank[md-mini-fab] {
+                    &:not([disabled]) {
+                        background-color: transparent !important;
+                        color: rgba(0, 0, 0, 0.6) !important;
+                    }
+                }
+            }
+        }
+    }
+}

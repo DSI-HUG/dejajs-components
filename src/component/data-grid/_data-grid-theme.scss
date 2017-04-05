@@ -1,0 +1,23 @@
+@import '../../../node_modules/@angular/material/core/theming/theming';
+@import './data-grid-grouparea/data-grid-grouparea-theme';
+@import './data-grid-header/data-grid-header-theme';
+
+@mixin data-grid-theme($theme) {
+
+	deja-grid {
+		#treelist {
+			#listcontainer {
+				>div.listitem {
+					&[current="true"] {
+						.cell-wrapper[current="true"] {
+							box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.3);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	@include data-grid-grouparea-theme($theme);
+	@include data-grid-header-theme($theme);
+}

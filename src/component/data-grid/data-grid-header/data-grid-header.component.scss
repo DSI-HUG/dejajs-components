@@ -1,4 +1,3 @@
-@import "../../../scss/variables/colors";
 :host {
 	display: block;
 	#deja-grid-header {
@@ -20,12 +19,10 @@
 				align-items: center;
 				justify-content: center;
 				width: 100%;
-				background-color: rgba(255, 255, 255, 0.5);
 				height: 100%;
 				&:after,
 				&:before {
 					content: "loop";
-					color: transparent;
 					width: 100%;
 				}
 				.material-icons {
@@ -35,15 +32,8 @@
 			}
 			[separator] {
 				flex: 0 0 4px;
-				border-right: solid 1px rgba($secondary, 0.8);
 				padding: 0.5rem 0;
 				margin-right: 0.3rem;
-			}
-			&.dragged {
-				background-color: rgba(0, 0, 0, 0.08);
-			}
-			&:hover {
-				background-color: rgba(0, 0, 0, 0.08);
 			}
 			.column-header {
 				flex: 1 1 auto;

@@ -1,0 +1,28 @@
+@import '../../../../node_modules/@angular/material/core/theming/theming';
+
+@mixin data-grid-header-theme($theme) {
+	$primary: map-get($theme, primary);
+
+	#deja-grid-header {
+		.column-header-wrapper {
+			.sort-waiter {
+				background-color: rgba(255, 255, 255, 0.5);
+				&:after,
+				&:before {
+					content: "loop";
+					color: transparent;
+					width: 100%;
+				}
+			}
+			[separator] {
+				border-right: solid 1px mat-color($primary, A400);
+			}
+			&.dragged {
+				background-color: rgba(0, 0, 0, 0.08);
+			}
+			&:hover {
+				background-color: rgba(0, 0, 0, 0.08);
+			}
+		}
+	}
+}

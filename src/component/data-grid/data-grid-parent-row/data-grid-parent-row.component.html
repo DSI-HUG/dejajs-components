@@ -1,4 +1,4 @@
-<div *ngIf="columnLayout.column0" [style.width.px]="columnLayout.column0" id="parent-title-wrapper" class="cell-wrapper">
+<div *ngIf="columnLayout.column0" [style.width.px]="columnLayout.column0" id="parent-title" class="cell-wrapper">
 	<div *ngIf="!parentTitleTemplate" class="cell">{{ row.toString() }}</div>
 	<template [ngTemplateOutlet]="parentTitleTemplate" *ngIf="parentTitleTemplate"  [ngOutletContext]="{ $implicit: row }"></template>
 </div>

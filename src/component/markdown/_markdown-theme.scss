@@ -1,0 +1,24 @@
+@import '../../../node_modules/@angular/material/core/theming/theming';
+
+@mixin markdown-theme($theme) {
+    $primary: map-get($theme, primary);
+
+    .markdown-content {
+        table {
+            tr {
+                &:nth-of-type(odd) {
+                    background-color: #ececec;
+                }
+
+                &:first-child {
+                    background: mat-color($primary);
+                    color: white;
+                }
+
+                th, td {
+                    border-color: #ddd;
+                }
+            }
+        }
+    }
+}

@@ -5,8 +5,7 @@ var path = require("path");
 module.exports = {
     entry: {
         bundle: [
-            "./node_modules/@angular/material/core/theming/prebuilt/deeppurple-amber.css",
-            "./src/scss",
+            // "./src/scss",
             "./src/polyfills.ts",
             "./src/demo-app/main.ts",
             "./send-action.js",
@@ -32,8 +31,7 @@ module.exports = {
             test: /\.(png|jpe?g|gif|ico)$/,
         }, {
             include: [
-                path.resolve("./node_modules/@angular/material/core/theming/prebuilt"),
-                path.resolve("./src/scss"),
+                // path.resolve("./src/scss"),
             ],
             loaders: ["style-loader", "css-loader", "resolve-url-loader"],
             test: /\.css$/,

@@ -10,17 +10,20 @@
  */
 
 import { ChangeDetectorRef, ElementRef, QueryList } from '@angular/core';
-import { Observable, Subscriber, Subscription } from 'rxjs/Rx';
+import { Observable, Subscription } from 'rxjs/Rx';
 import { GroupingService, IGroupInfo } from '../grouping/index';
 import { ISortInfos, SortingService, SortOrder } from '../sorting/index';
 import { IItemBase } from './item-base';
 import { IFindItemResult, IParentListInfoResult, ItemListService, IViewListResult } from './item-list.service';
 import { IItemTree } from './item-tree';
 
+const noop = () => { };
+
 export enum ViewportMode {
     NoViewport,
     ConstantRowHeight,
     VariableRowHeight,
+    AutoRowHeight,
 }
 
 /** Classe de base pour tous les composants à listes (deja-treelist, deja-select, deja-grid) */
@@ -35,6 +38,7 @@ export class ItemListBase {
     protected _textField: string;
     protected _valueField: string;
     protected _currentItemIndex = -1;
+    protected _currentItem: IItemBase;
     protected _hintLabel: string;
     protected _nodataLabel: string;
     protected computedMaxHeight = 0;
@@ -108,14 +112,11 @@ export class ItemListBase {
      * @return {number} Index sur la liste plate corespondant à l'élément HTML
      */
     public getItemIndexFromHTMLElement(element: HTMLElement): number {
-        let parentElement = element && element.parentElement;
-
-        while (parentElement && !parentElement.hasAttribute('ulist')) {
-            element = parentElement;
-            parentElement = parentElement.parentElement;
+        while (element && element.parentElement && !element.hasAttribute('flat') && element.parentElement.id !== 'listcontainer') {
+            element = element.parentElement;
         }
 
-        if (!parentElement) {
+        if (!element || !element.hasAttribute('flat')) {
             return undefined;
         }
 
@@ -141,13 +142,6 @@ export class ItemListBase {
         return this._itemListService;
     }
 
-    /** Retourne l'élément courant (actif).
-     * @return {IItemBase} Elément courant.
-     */
-    public getCurrentItem() {
-        return this._currentItemIndex >= 0 ? this.getItemListService().getItemFromIndex(this._currentItemIndex) : null;
-    }
-
     /** Retourne true si l'on manipule des objet business, false si on manipule des IItemBase.
      * @return {boolean}.
      */
@@ -166,7 +160,8 @@ export class ItemListBase {
      * @param {IItemBase[]} items Liste des éléments a selectioner.
      */
     public setSelectedItems(value: IItemBase[]) {
-        return this.getItemListService().setSelectedItems(value, this._multiSelect);
+        this.getItemListService().setSelectedItems(value, this._multiSelect);
+        this.changeDetectorRef.markForCheck();
     }
 
     /**
@@ -202,7 +197,7 @@ export class ItemListBase {
 
     /** Trie la liste par le champs spécifié. */
     public sort(name?: string) {
-        this.sort$(name).first().subscribe();
+        this.sort$(name).first().subscribe(noop);
     }
 
     /** Trie la liste par le champs spécifié. */
@@ -358,7 +353,7 @@ export class ItemListBase {
     /** Nettoye les caches et réaffiche le viewport. */
     public refresh() {
         this.getItemListService().invalidateCache();
-        this.calcViewPort();
+        this.calcViewPort$().first().subscribe(noop);
     }
 
     /** Efface le viewport */
@@ -366,6 +361,7 @@ export class ItemListBase {
         this.vpBeforeHeight = 0;
         this.vpAfterHeight = 0;
         this._itemList = [];
+        this.changeDetectorRef.markForCheck();
     };
 
     /** Retrouve les informations du parent de l'élément spécifié
@@ -400,7 +396,8 @@ export class ItemListBase {
      * @return {Observable} Observable résolu par la fonction.
      */
     protected findNextMatch$(compare?: (item: IItemBase, index: number) => boolean, startIndex?: number): Observable<IFindItemResult> {
-        return this.getItemListService().findNextMatch$(compare, startIndex);
+        return this.ensureListCaches$()
+            .switchMap(() => this.getItemListService().findNextMatch$(compare, startIndex));
     }
 
     /** Définit la hauteur d'une ligne pour le calcul du viewport. Le Viewport ne fonctionne qu'avec des hauteurs de lignes fixe.
@@ -472,11 +469,31 @@ export class ItemListBase {
         this._nodataLabel = value;
     }
 
+    protected setCurrentItemIndex(value: number) {
+        this._currentItemIndex = value;
+        this._currentItem = null;
+    }
+
+    protected getCurrentItemIndex() {
+        return this._currentItemIndex;
+    }
+
+    /** Retourne l'élément courant (actif).
+     * @return {IItemBase} Elément courant.
+     */
+    public getCurrentItem() {
+        if (!this._currentItem && this._currentItemIndex >= 0) {
+            this._currentItem = this.getItemListService().getItemFromIndex(this._currentItemIndex);
+        }
+        return this._currentItem;
+    }
+
     /** Définit l'élément courant (actif).
      * @param {IItemBase} item Elément courant.
      */
     protected setCurrentItem(item: IItemBase) {
         this._currentItemIndex = item ? this.getItemListService().getItemIndex(item) : -1;
+        this._currentItem = item;
     }
 
     /** Retourne l'index correspondant à l'élément spéficié dans la liste des éléments visibles
@@ -528,7 +545,7 @@ export class ItemListBase {
 
     /** Usage interne. Termine le drag and drop en cours. */
     protected drop$() {
-        this._currentItemIndex = -1;
+        this.setCurrentItemIndex(-1);
         return this.getItemListService().drop$();
     }
 
@@ -561,7 +578,8 @@ export class ItemListBase {
      */
     protected selectRange$(indexFrom: number, indexTo?: number) {
         const itemListService = this.getItemListService();
-        return itemListService.selectRange$(indexFrom, indexTo);
+        return this.ensureListCaches$()
+            .switchMap(() => itemListService.selectRange$(indexFrom, indexTo));
     }
 
     /** Change l'état de selection de l'élément spécifié.
@@ -617,7 +635,8 @@ export class ItemListBase {
 
     /** Internal usage. Calc the best target when an item is drag and dropped */
     protected calcDragTargetIndex$(index: number, targetIndex: number) {
-        return this.getItemListService().calcDragTargetIndex$(index, targetIndex);
+        return this.ensureListCaches$()
+            .switchMap(() => this.getItemListService().calcDragTargetIndex$(index, targetIndex));
     }
 
     /** Internal usage */
@@ -634,11 +653,11 @@ export class ItemListBase {
 
         if (parentDepth !== undefined) {
             for (let i = parentIndex + 1; i < items.length; i++) {
-                const currentItem = items[i] as IItemTree;
-                if (currentItem.depth <= parentDepth) {
+                const curItem = items[i] as IItemTree;
+                if (curItem.depth <= parentDepth) {
                     break;
                 }
-                children.push(currentItem);
+                children.push(curItem);
                 lastIndex = i;
             }
         }
@@ -651,134 +670,210 @@ export class ItemListBase {
         } as IItemTreeInfo;
     }
 
-    /** Charge le viewport */
-    protected loadViewPort(res: IViewListResult) {
-        return new Promise<IViewListResult>((resolved?: (value: IViewListResult) => void) => {
-            this._itemList = res.visibleList;
-            this.vpStartRow = res.startRow;
-            this.vpEndRow = res.endRow;
-            this.rowsCount = res.rowsCount;
-            if (this._viewportMode === ViewportMode.ConstantRowHeight) {
+    /** Calcule le viewport pour le conteneur spécifié. */
+    protected calcViewPort$(query?: string, maxHeight?: number, containerElement?: HTMLElement): Observable<IViewListResult> {
+        let calcViewList$: (p: ICalcViewPortParams) => Observable<IViewListResult>;
+
+        const loadViewPort = (result: IViewListResult) => {
+            if (!result || !result.visibleList || result.visibleList.length === 0) {
+                this.clearViewPort();
+                return;
+            }
+
+            delete this._hintLabel;
+            this._itemList = result.visibleList;
+            this.vpStartRow = result.startRow;
+            this.vpEndRow = result.endRow;
+            this.rowsCount = result.rowsCount;
+            if (this._viewportMode === ViewportMode.NoViewport) {
+                this.vpBeforeHeight = 0;
+                this.vpAfterHeight = 0;
+            } else if (this._viewportMode === ViewportMode.ConstantRowHeight) {
                 const vpRowHeight = this.getViewPortRowHeight();
                 this.vpBeforeHeight = this.vpStartRow * vpRowHeight;
                 this.vpAfterHeight = (this.rowsCount - 1 - this.vpEndRow) * vpRowHeight;
             }
-            if (res.depthMax !== undefined) {
-                this._depthMax = res.depthMax;
+            if (result.depthMax !== undefined) {
+                this._depthMax = result.depthMax;
             }
-            resolved(res);
-        });
-    }
 
-    /** Calcule le viewport pour le conteneur spécifié. */
-    protected calcViewPort(query?: string, maxHeight?: number, containerElement?: HTMLElement) {
-        this.calcViewPort$(query, maxHeight, containerElement).first().subscribe();
-    }
+            this.changeDetectorRef.markForCheck();
+        };
 
-    protected calcViewPort$(query?: string, maxHeight?: number, containerElement?: HTMLElement) {
-        return new Observable<IViewListResult>((subscriber: Subscriber<IViewListResult>) => {
-            const calcViewPortInternal = (qry?: string, heightMax?: number, containerElem?: HTMLElement, ignoreHeightMeasurement?: boolean) => {
-                const loadViewPort = (viewList: Observable<IViewListResult>) => {
-                    if (viewList) {
-                        delete this._hintLabel;
-                        viewList.subscribe((response) => {
-                            this.loadViewPort(response).then((res: IViewListResult) => {
-                                subscriber.next(res);
-                                this.changeDetectorRef.markForCheck();
-                            });
-                        }, (error) => {
-                            this._hintLabel = error;
-                            this.clearViewPort();
-                            throw error;
-                        });
+        const calcContainerSize$ = (p: ICalcViewPortParams): Observable<IViewListResult> => {
+            // Set the viewlist to the maximum height to measure the real max-height defined in the css
+            const heightMax = 200000;
+            // Use a blank div to do that
+            this.vpAfterHeight = heightMax;
+            this.computedMaxHeight = p.containerElement.clientHeight;
+            this.changeDetectorRef.markForCheck();
+            // Wait next life cycle for the result
+            return Observable.timer(1)
+                .first()
+                .switchMap(() => calcViewList$({
+                    query: query,
+                    maxHeight: this.computedMaxHeight,
+                    containerElement: containerElement,
+                    measureContainerHeight: false,
+                }));
+        };
+
+        const calcVariableHeightViewList$ = (p: ICalcViewPortParams): Observable<IViewListResult> => {
+            return this.getViewList$(query)
+                .map((viewListResult: IViewListResult) => {
+                    const visibleList = [] as IItemBase[];
+                    const scrollPos = p.containerHeight ? p.containerElement.scrollTop : 0;
+                    let startRow: number;
+                    let endRow = 0;
+                    this.vpBeforeHeight = 0;
+                    let visibleListHeight = 0;
+                    this.vpAfterHeight = 0;
+
+                    viewListResult.visibleList.forEach((item: IItemBase, index: number) => {
+                        const itemHeight = this.getItemHeight(item);
+                        if (this.vpBeforeHeight + itemHeight < scrollPos && startRow === undefined) {
+                            this.vpBeforeHeight += itemHeight;
+                        } else if (visibleListHeight + this.vpBeforeHeight < p.containerHeight + scrollPos) {
+                            if (startRow === undefined) {
+                                startRow = index;
+                            }
+                            endRow = index;
+                            visibleListHeight += itemHeight;
+                            visibleList.push(item);
+                        } else {
+                            this.vpAfterHeight += itemHeight;
+                        }
+                    });
+
+                    viewListResult.startRow = startRow || 0;
+                    viewListResult.endRow = endRow;
+                    viewListResult.visibleList = visibleList;
+                    return viewListResult;
+                });
+        };
+
+        const calcConstantHeightViewList$ = (p: ICalcViewPortParams): Observable<IViewListResult> => {
+            const scrollPos = (p.containerHeight && p.containerElement && p.containerElement.scrollTop) || 0;
+            const vpRowHeight = this.getViewPortRowHeight();
+            let maxCount = Math.ceil(p.containerHeight / vpRowHeight);
+            const startRow = Math.floor(scrollPos / vpRowHeight);
+
+            if (maxCount) {
+                maxCount++;
+            }
+
+            return this.getViewList$(query, startRow, maxCount);
+        };
+
+        const calcAutoHeightViewList$ = (p: ICalcViewPortParams): Observable<IViewListResult> => {
+            return this.getViewList$(query)
+                .switchMap((viewListResult: IViewListResult) => {
+                    const visibleList = [] as IItemBase[];
+                    let vpHeight = 0;
+                    let startRow = 0;
+                    let endRow = 0;
+                    let overflow = false;
+                    let averageHeight = 0;
+                    let averageCount = 0;
+                    this.vpBeforeHeight = 0;
+                    this.vpAfterHeight = 0;
+                    let calculationRequired = false;
+                    const scrollPos = p.containerHeight ? p.containerElement.scrollTop : 0;
+                    viewListResult.visibleList.forEach((item, index) => {
+                        let itemHeight = item.height || 0;
+                        if (itemHeight > ItemListBase.defaultViewPortRowHeight) {
+                            averageHeight += itemHeight;
+                            ++averageCount;
+                        } else if (averageCount > 0) {
+                            itemHeight = Math.round(averageHeight / averageCount);
+                        } else {
+                            itemHeight = this.getViewPortRowHeight();
+                        }
+
+                        if (vpHeight === 0 && this.vpBeforeHeight + itemHeight < scrollPos) {
+                            this.vpBeforeHeight += itemHeight;
+                        } else if (!overflow) {
+                            if (visibleList.length === 0) {
+                                startRow = index;
+                            }
+                            if (!item.height) {
+                                calculationRequired = true;
+                            }
+                            endRow = index;
+                            vpHeight += itemHeight;
+                            visibleList.push(item);
+                            if (this.vpBeforeHeight + vpHeight > scrollPos + p.containerHeight) {
+                                overflow = true;
+                            }
+                        } else {
+                            this.vpAfterHeight += itemHeight;
+                        }
+                    });
+
+                    viewListResult.startRow = startRow;
+                    viewListResult.endRow = endRow;
+                    viewListResult.visibleList = visibleList;
+
+                    if (!calculationRequired) {
+                        return Observable.of(viewListResult);
                     } else {
-                        this.clearViewPort();
-                        subscriber.next(null);
-                        this.changeDetectorRef.markForCheck();
+                        // Measure items height
+                        loadViewPort(viewListResult);
+                        return Observable.timer(1)
+                            .switchMap(() => {
+                                const elements = p.containerElement.getElementsByClassName('listitem');
+                                for (let i = 0; i < elements.length; i++) {
+                                    const itemElement = elements[i];
+                                    const index = +itemElement.getAttribute('flat');
+                                    const item = visibleList[index - startRow];
+                                    if (item) {
+                                        item.height = itemElement.clientHeight;
+                                    }
+                                };
+                                return calcAutoHeightViewList$(p);
+                            });
                     }
-                };
+                });
+        };
 
-                let containerHeight = this.computedMaxHeight || heightMax || containerElem.clientHeight;
+        calcViewList$ = (params: ICalcViewPortParams) => {
+            params.containerHeight = this.computedMaxHeight || params.maxHeight || params.containerElement.clientHeight;
+            if (params.containerHeight < 2 * ItemListBase.defaultViewPortRowHeight && params.measureContainerHeight !== false) {
+                return calcContainerSize$(params);
 
-                if (containerHeight < 2 * ItemListBase.defaultViewPortRowHeight && !ignoreHeightMeasurement) {
-                    // Set the viewlist to the maximum height to measure the real max-height defined in the css
-                    heightMax = 200000;
-                    // Use a blank div to do that
-                    this.vpAfterHeight = heightMax;
-                    // Wait next life cycle for the result
-                    Observable.timer(1)
-                        .first()
-                        .subscribe(() => {
-                            this.computedMaxHeight = containerElem.clientHeight;
-                            calcViewPortInternal(qry, this.computedMaxHeight, containerElem, true);
-                        });
-                    return;
-                }
-
-                if (containerHeight <= ItemListBase.defaultViewPortRowHeight) {
-                    containerHeight = 500;
+            } else {
+                if (params.containerHeight <= ItemListBase.defaultViewPortRowHeight) {
+                    params.containerHeight = window.innerHeight;
                 }
 
                 if (this._viewportMode === ViewportMode.NoViewport) {
-                    this.vpBeforeHeight = 0;
-                    this.vpAfterHeight = 0;
-                    loadViewPort(this.getViewList$(qry));
+                    return this.getViewList$(query);
+
                 } else if (this._viewportMode === ViewportMode.VariableRowHeight) {
-                    this.getViewList$(qry).subscribe((viewListResult: IViewListResult) => {
-                        const visibleList = [] as IItemBase[];
-                        const scrollPos = containerHeight ? containerElem.scrollTop : 0;
-                        let startRow: number;
-                        let endRow = 0;
-                        this.vpBeforeHeight = 0;
-                        let visibleListHeight = 0;
-                        this.vpAfterHeight = 0;
+                    return calcVariableHeightViewList$(params);
 
-                        viewListResult.visibleList.forEach((item: IItemBase, index: number) => {
-                            const itemHeight = this.getItemHeight(item);
-                            if (this.vpBeforeHeight + itemHeight < scrollPos && startRow === undefined) {
-                                this.vpBeforeHeight += itemHeight;
-                            } else if (visibleListHeight + this.vpBeforeHeight < containerHeight + scrollPos) {
-                                if (startRow === undefined) {
-                                    startRow = index;
-                                }
-                                endRow = index;
-                                visibleListHeight += itemHeight;
-                                visibleList.push(item);
-                            } else {
-                                this.vpAfterHeight += itemHeight;
-                            }
-                        });
+                } else if (this._viewportMode === ViewportMode.AutoRowHeight) {
+                    return calcAutoHeightViewList$(params);
 
-                        viewListResult.startRow = startRow || 0;
-                        viewListResult.endRow = endRow;
-                        viewListResult.visibleList = visibleList;
-                        this.loadViewPort(viewListResult).then((res: IViewListResult) => {
-                            subscriber.next(res);
-                            this.changeDetectorRef.markForCheck();
-                        });
-                    }, (error) => {
-                        throw error;
-                    });
                 } else {
-                    const loadViewList = () => {
-                        const scrollPos = (containerHeight && containerElem && containerElem.scrollTop) || 0;
-                        const vpRowHeight = this.getViewPortRowHeight();
-                        let maxCount = Math.ceil(containerHeight / vpRowHeight);
-                        const startRow = Math.floor(scrollPos / vpRowHeight);
-
-                        if (maxCount) {
-                            maxCount++;
-                        }
-
-                        loadViewPort(this.getViewList$(qry, startRow, maxCount));
-                    };
-
-                    loadViewList();
+                    return calcConstantHeightViewList$(params);
                 }
-            };
+            }
+        };
 
-            calcViewPortInternal(query, maxHeight, containerElement);
+        const params = {
+            query: query,
+            maxHeight: maxHeight,
+            containerElement: containerElement,
+        } as ICalcViewPortParams;
+
+        return calcViewList$(params).do((result: IViewListResult) => {
+            loadViewPort(result);
         });
+    }
+
+    protected ensureListCaches$(): Observable<IViewListResult> {
+        return this._itemListService.hasCache ? Observable.of(null) : this.calcViewPort$();
     }
 
     /** Calcul la position de la scrollbar pour que l'élément spéfié soit dans la zone visible. */
@@ -796,7 +891,7 @@ export class ItemListBase {
                         element.nativeElement.scrollIntoViewIfNeeded();
                     }
                 }
-            } else if (this._viewportMode === ViewportMode.VariableRowHeight) {
+            } else if (this._viewportMode === ViewportMode.VariableRowHeight || this._viewportMode === ViewportMode.AutoRowHeight) {
                 this.getViewList$(query).subscribe((viewListResult: IViewListResult) => {
                     const scrollPos = containerElement.scrollTop;
                     let scrollMax = 0;
@@ -809,7 +904,7 @@ export class ItemListBase {
                     lastVisibleItem = viewListResult.visibleList.find((itm: IItemBase, index: number) => {
                         const test = fn(itm, index);
                         if (!test) {
-                            scrollMax += this.getItemHeight(itm);
+                            scrollMax += this.getItemHeight(itm) || this.getViewPortRowHeight();
                         }
                         return test;
                     });
@@ -817,7 +912,7 @@ export class ItemListBase {
                     if (scrollPos > scrollMax) {
                         containerElement.scrollTop = scrollMax;
                     } else {
-                        const scrollMin = scrollMax - containerElement.clientHeight + this.getItemHeight(lastVisibleItem);
+                        const scrollMin = scrollMax - containerElement.clientHeight + (this.getItemHeight(lastVisibleItem) || this.getViewPortRowHeight());
                         if (scrollPos < scrollMin) {
                             containerElement.scrollTop = scrollMin;
                         }
@@ -882,13 +977,15 @@ export class ItemListBase {
         });
     };
 
-    private getItemHeight(item: IItemBase) {
+    protected getItemHeight(item: IItemBase) {
         if (this._viewportMode === ViewportMode.NoViewport) {
             return null;
-        } else if (this._viewportMode === ViewportMode.VariableRowHeight) {
-            return (item.height && item.height > ItemListBase.defaultViewPortRowHeight) ? item.height : ItemListBase.defaultViewPortRowHeight;
-        } else {
+        } else if (this._viewportMode === ViewportMode.ConstantRowHeight) {
             return this.getViewPortRowHeight();
+        } else if (this._viewportMode === ViewportMode.AutoRowHeight) {
+            return item.height || null;
+        } else {
+            return (item.height && item.height > ItemListBase.defaultViewPortRowHeight) ? item.height : this.getViewPortRowHeight();
         }
     }
 }
@@ -899,4 +996,11 @@ export interface IItemTreeInfo {
     startIndex: number;
     lastIndex?: number;
 }
-;
+
+interface ICalcViewPortParams {
+    query?: string;
+    maxHeight?: number;
+    containerElement?: HTMLElement;
+    containerHeight?: number;
+    measureContainerHeight?: boolean;
+}

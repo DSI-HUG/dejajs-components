@@ -1,4 +1,5 @@
 [![npm version](https://badge.fury.io/js/%40deja-js%2Fcomponent.svg)](https://www.npmjs.com/package/@deja-js/component)
+[![travis build](https://travis-ci.org/DSI-HUG/dejajs-components.svg?branch=master)](https://travis-ci.org/DSI-HUG/dejajs-components)
 
 # @deja-js/component
 This is the home for the Hôpital Univesitaire de Genève - DSI - Domaine Patient team's Angular2 components for Angular 2 and material. 
@@ -45,7 +46,7 @@ and navigate to `http://localhost:5100`.
 | Date Picker      |yes|yes|yes|yes|yes|yes|available| |
 | Dialog           |yes|yes|yes|yes|yes|yes|Message Box| |
 | Events           |yes|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>| |
-| Grid             |<span style="color:red">no</span>|yes|yes|<span style="color:red">slow</span>|yes|yes|available| |
+| Grid             |yes|yes|yes|<span style="color:red">slow</span>|yes|yes|available| |
 | Dropdown Control |yes|yes|yes|yes|yes|yes|Color Picker| |
 | Menu             |yes|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>| |
 | Message Box      |yes|yes|yes|yes|yes|yes|available| |

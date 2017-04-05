@@ -1,129 +1,32 @@
-.mat-primary[md-icon-button]:not([disabled]) {
-	color: $secondary !important;
-}
+@import '../../../../node_modules/@angular/material/core/theming/theming';
 
-.mat-success[md-icon-button]:not([disabled]) {
-	color: $success !important;
-}
+@mixin buttons-theme($theme) {
 
-.mat-warn[md-icon-button]:not([disabled]) {
-	color: $warning !important;
-}
-
-.mat-danger[md-icon-button]:not([disabled]) {
-	color: $red !important;
-}
-
-.mat-primary[md-raised-button],
-.mat-primary[md-fab],
-.mat-primary[md-mini-fab] {
-	&:not([disabled]) {
-		background-color: $secondary !important;
-		color: #FFF !important;
-	}
-}
-
-.mat-success[md-raised-button],
-.mat-success[md-fab],
-.mat-success[md-mini-fab] {
-	&:not([disabled]) {
-		background-color: $success !important;
-		color: #FFF !important;
-	}
-}
-
-.mat-warn[md-raised-button],
-.mat-warn[md-fab],
-.mat-warn[md-mini-fab] {
-	background-color: $warning !important;
-	color: #FFF !important;
-}
-
-.mat-danger[md-raised-button],
-.mat-danger[md-fab],
-.mat-danger[md-mini-fab] {
-	&:not([disabled]) {
-		background-color: $red !important;
-		color: #FFF !important;
-	}
-}
-
-.mat-blank[md-raised-button],
-.mat-blank[md-fab],
-.mat-blank[md-mini-fab] {
-	&:not([disabled]) {
-		background-color: transparent !important;
-		box-shadow: none;
-		color: rgba(0, 0, 0, 0.6) !important;
-	}
-	&.close {
-		align-items: stretch;
-		display: flex;
-		height: 1rem;
-		margin: 0;
-		padding: 0;
-		right: 0;
-		width: 1rem;
-		.mat-button-wrapper {
-			height: 1rem;
-			width: 1rem;
-			md-icon {
-				font-size: 1rem;
-				height: 1rem;
-				line-height: 1rem;
-				padding: 0;
-				position: absolute;
-				right: 0;
-				top: 0;
-				width: 1rem;
-			}
+	[md-menu-item].with-icon,
+	[md-raised-button].with-icon {
+		&:before {
+			content: attr(data-icon);
+			font-family: 'Material Icons';
+			left: 0;
+			position: absolute;
+			text-align: center;
 		}
 	}
-}
 
-[md-menu-item].with-icon,
-[md-raised-button].with-icon {
-	&:before {
-		content: attr(data-icon);
-		font-family: 'Material Icons';
-		left: 0;
-		position: absolute;
-		text-align: center;
+	[md-menu-item].with-icon {
+		padding-left: 3rem;
+		&:before {
+			width: 3rem;
+			font-size: 130%;
+			opacity: 0.85;
+		}
 	}
-}
 
-[md-menu-item].with-icon {
-	padding-left: 3rem;
-	&:before {
-		width: 3rem;
-		font-size: 130%;
-		opacity: 0.85;
+	[md-raised-button].with-icon {
+		padding-left: 2rem;
+		&:before {
+			width: 2rem;
+		}
 	}
-}
 
-[md-raised-button].with-icon {
-	padding-left: 2rem;
-	&:before {
-		width: 2rem;
-	}
-}
-
-.mat-accent[md-raised-button],
-.mat-accent[md-fab],
-.mat-accent[md-mini-fab] {
-	&:not([disabled]) {
-		background-color: $secondary !important;
-	}
-}
-
-.mat-accent[md-raised-button] {
-	padding-left: 30px;
-	&:before {
-		content: 'clear';
-		font-family: 'Material Icons';
-		left: 0;
-		position: absolute;
-		text-align: center;
-		width: 30px;
-	}
 }

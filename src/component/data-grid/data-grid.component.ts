@@ -32,7 +32,7 @@ const DejaGridComponentValueAccessor = {
 
 /** The grid */
 @Component({
-    changeDetection: ChangeDetectionStrategy.Default,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     providers: [DejaGridComponentValueAccessor],
     selector: 'deja-grid',
@@ -61,7 +61,7 @@ export class DejaGridComponent implements OnDestroy {
     @Input() public hintLabel = '';
     /** Définit la hauteur d'une ligne pour le calcul du viewport en pixels */
     @Input() public viewPortRowHeight = ItemListBase.defaultViewPortRowHeight;
-    /** Les trois valeurs acceptés en paramètre se trouvent dans l'enum ViewportMode (NoViewport, ConstantRowheight, VariableRowHeight)
+    /** Les trois valeurs acceptés en paramètre se trouvent dans l'enum ViewportMode (NoViewport, ConstantRowheight, VariableRowHeight ou AutoRowHeight)
      * Attention, une désactivation du viewport dégrade considérablement les performances de la liste et ne doit pas être activée si la liste
      * est suceptible de contenir beaucoup d'éléments.
      */
@@ -285,6 +285,7 @@ export class DejaGridComponent implements OnDestroy {
                 observable.subscribe((itms) => this.calcColumnsLayout(itms));
             }
         }
+        this.changeDetectorRef.markForCheck();
     }
 
     /** Retourne le modèle affiché dans les lignes de la grille. */
@@ -362,7 +363,7 @@ export class DejaGridComponent implements OnDestroy {
         return this._columnLayout;
     }
 
-    constructor(_changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef) {
+    constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef) {
         const element = this.elementRef.nativeElement as HTMLElement;
 
         this.clearColumnLayout();
@@ -415,10 +416,12 @@ export class DejaGridComponent implements OnDestroy {
                 switch (event.keyCode) {
                     case KeyCodes.LeftArrow:
                         this.currentColumn = this.columns && findPrev(this.columns.findIndex((c) => c.isCurrent));
+                        event.preventDefault();
                         return false;
 
                     case KeyCodes.RightArrow:
                         this.currentColumn = this.columns && findNext(this.columns.findIndex((c) => c.isCurrent));
+                        event.preventDefault();
                         return false;
 
                     default:
@@ -603,7 +606,7 @@ export class DejaGridComponent implements OnDestroy {
         } as IGroupInfo;
         this.treeListComponent.ungroup$(groupInfo)
             .first()
-            .subscribe(() => { });
+            .subscribe(noop);
     }
 
     protected onGroupsChanged(e: IDejaGridGroupsEvent) {
@@ -621,7 +624,7 @@ export class DejaGridComponent implements OnDestroy {
 
         this.treeListComponent.group$(groupInfos)
             .first()
-            .subscribe(() => { });
+            .subscribe(noop);
     }
 
     protected calcColumnsLayout(rows?: IItemBase[]) {

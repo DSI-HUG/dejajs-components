@@ -9,7 +9,7 @@
  *
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, forwardRef, Input, OnDestroy, Output, QueryList, ViewChild, ViewChildren, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, forwardRef, Input, OnDestroy, Output, QueryList, ViewChild, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
@@ -41,7 +41,7 @@ const TreeListComponentValueAccessor = {
     ],
     templateUrl: './tree-list.component.html',
 })
-export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
+export class DejaTreeListComponent extends ItemListBase implements OnDestroy, AfterViewInit {
     /** Texte à afficher par default dans la zone de recherche */
     @Input() public placeholder: string;
     /** Texte affiché si aucune donnée n'est présente dans le tableau */
@@ -79,6 +79,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
 
     /** Internal use */
     @ViewChild('listcontainer') public listcontainer: ElementRef;
+    @ViewChild('inputelement') public input: ElementRef;
 
     // NgModel implementation
     protected onTouchedCallback: () => void = noop;
@@ -88,6 +89,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
 
     @ViewChildren('listitem') private listItemElements: QueryList<ElementRef>;
 
+    // Templates
     @ContentChild('itemTemplate') private itemTemplateInternal;
     @ContentChild('parentItemTemplate') private parentItemTemplateInternal;
     @ContentChild('loaderTemplate') private loaderTemplateInternal;
@@ -124,10 +126,9 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
 
         this.subscriptions.push(Observable.from(this.filterListComplete$)
             .debounceTime(250)
-            .subscribe(() => {
-                this.setCurrentItem(undefined);
-                this.calcViewPort();
-            }));
+            .do(() => this.setCurrentItem(undefined))
+            .switchMap(() => this.calcViewPort$())
+            .subscribe(noop));
 
         this.subscriptions.push(Observable.from(this.keyboardNavigation$)
             .do(() => this.keyboardNavigation = true)
@@ -224,7 +225,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
     }
 
     /**
-     * Les trois valeurs acceptés en paramètre se trouvent dans l'enum ViewportMode (NoViewport, ConstantRowheight, VariableRowHeight)
+     * Les trois valeurs acceptés en paramètre se trouvent dans l'enum ViewportMode (NoViewport, ConstantRowheight, VariableRowHeight ou AutoRowHeight)
      * Attention, une désactivation du viewport dégrade considérablement les performances de la liste et ne doit pas être activée si la liste
      * est suceptible de contenir beaucoup d'éléments.
      */
@@ -282,7 +283,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
 
     /** Retourne la ligne courant ou ligne active */
     public get currentItem() {
-        return this.getCurrentItem();
+        return super.getCurrentItem();
     }
 
     /** Retourne le nombre de niveau pour une liste hierarchique */
@@ -382,11 +383,20 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
     public set models(items: any[] | Observable<any[]>) {
         super.setModels$(items)
             .first()
+            .switchMap(() => this.calcViewPort$())
             .subscribe(() => {
-                this.calcViewPort();
             }, (error: any) => {
                 this._hintLabel = error.toString();
             });
+    }
+
+    private set currentItemIndex(value: number) {
+        super.setCurrentItemIndex(value);
+        this.changeDetectorRef.markForCheck();
+    }
+
+    private get currentItemIndex() {
+        return this.getCurrentItemIndex();
     }
 
     private get itemTemplate() {
@@ -417,18 +427,22 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
     /** Définit la liste des éléments, sans invoquaer ngModelChange */
     public writeValue(items: any) {
         delete this.hintLabel;
-        super.setItems$(items).subscribe(() => {
-            if (this.minSearchlength > 0 && !this.query) {
-                // Waiting for query
+        super.setItems$(items)
+            .switchMap((itms) => {
+                if (this.minSearchlength > 0 && !this.query) {
+                    // Waiting for query
+                    this._itemList = [];
+                    this.changeDetectorRef.markForCheck();
+                    return Observable.of(itms);
+                } else {
+                    return this.calcViewPort$().map(() => itms);
+                }
+            })
+            .subscribe(() => {
+            }, (error: any) => {
+                this.hintLabel = error.toString();
                 this._itemList = [];
-            } else if (!!items || (this._itemList && this._itemList.length)) {
-                this.calcViewPort();
-            }
-            this.changeDetectorRef.markForCheck();
-        }, (error: any) => {
-            this.hintLabel = error.toString();
-            this._itemList = [];
-        });
+            });
     }
 
     // From ControlValueAccessor interface
@@ -450,7 +464,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
 
     /** Change l'état d'expansion de toute les lignes parentes */
     public toggleAll() {
-        this.toggleAll$().first().subscribe();
+        this.toggleAll$().first().subscribe(noop);
     }
 
     /** Positionne a scrollbar pour assurer que l'élément spécifié soit visible */
@@ -458,198 +472,38 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
         super.ensureItemVisible(this.query, this.listcontainer.nativeElement, this.listItemElements, item);
     }
 
-    protected filter(event: KeyboardEvent) {
-        if ((this.query || '').length < this.minSearchlength) {
-            this._itemList = [];
-            return;
-        }
-
-        // Set current item from index for keyboard features only
-        const setCurrentIndex = (index: number) => {
-            this._currentItemIndex = index;
-            this.ensureItemVisible(this._currentItemIndex);
-        };
-
-        if (event.type === 'keydown') {
-            const currentIndex = this.rangeStartIndex >= 0 ? this.rangeStartIndex : this.rangeStartIndex = this._currentItemIndex;
-
-            switch (event.keyCode) {
-                case KeyCodes.Home:
-                    if (event.shiftKey) {
-                        this.selectRange$(currentIndex, 0).first().subscribe(() => { });
-                    } else if (!event.ctrlKey) {
-                        this.rangeStartIndex = 0;
-                        this.selectRange$(this.rangeStartIndex).first().subscribe(() => { });
-                    }
-                    setCurrentIndex(0);
-                    this.keyboardNavigation$.next();
-                    return false;
-
-                case KeyCodes.End:
-                    if (event.shiftKey) {
-                        this.selectRange$(currentIndex, this.rowsCount - 1).first().subscribe(() => { });
-                    } else if (!event.ctrlKey) {
-                        this.rangeStartIndex = this.rowsCount - 1;
-                        this.selectRange$(this.rangeStartIndex).first().subscribe(() => { });
-                    }
-                    setCurrentIndex(this.rowsCount - 1);
-                    this.keyboardNavigation$.next();
-                    return false;
-
-                case KeyCodes.PageUp:
-                    const upindex = Math.max(0, this._currentItemIndex - this.pageSize);
-                    if (event.shiftKey) {
-                        this.selectRange$(currentIndex, upindex).first().subscribe(() => { });
-                    } else if (!event.ctrlKey) {
-                        this.rangeStartIndex = upindex;
-                        this.selectRange$(this.rangeStartIndex).first().subscribe(() => { });
-                    }
-                    setCurrentIndex(upindex);
-                    this.keyboardNavigation$.next();
-                    return false;
-
-                case KeyCodes.PageDown:
-                    const dindex = Math.min(this.rowsCount - 1, this._currentItemIndex + this.pageSize);
-                    if (event.shiftKey) {
-                        this.selectRange$(currentIndex, dindex).first().subscribe(() => { });
-                    } else if (!event.ctrlKey) {
-                        this.rangeStartIndex = dindex;
-                        this.selectRange$(this.rangeStartIndex).first().subscribe(() => { });
-                    }
-                    setCurrentIndex(dindex);
-                    this.keyboardNavigation$.next();
-                    return false;
-
-                case KeyCodes.UpArrow:
-                    const uaindex = Math.max(0, this._currentItemIndex - 1);
-                    if (uaindex !== -1) {
-                        if (event.shiftKey) {
-                            this.selectRange$(currentIndex, uaindex).first().subscribe(() => { });
-                        } else if (!event.ctrlKey) {
-                            this.rangeStartIndex = uaindex;
-                            this.selectRange$(this.rangeStartIndex).first().subscribe(() => { });
-                        }
-                        setCurrentIndex(uaindex);
-                    }
-                    this.keyboardNavigation$.next();
-                    return false;
-
-                case KeyCodes.DownArrow:
-                    const daindex = Math.min(this.rowsCount - 1, this._currentItemIndex + 1);
-                    if (daindex !== -1) {
-                        if (event.shiftKey) {
-                            this.selectRange$(currentIndex, daindex).first().subscribe(() => { });
-                        } else if (!event.ctrlKey) {
-                            this.rangeStartIndex = daindex;
-                            this.selectRange$(this.rangeStartIndex).first().subscribe(() => { });
-                        }
-                        setCurrentIndex(daindex);
-                    }
-                    this.keyboardNavigation$.next();
-                    return false;
-
-                case KeyCodes.Space:
-                    const target = event.target as HTMLElement;
-                    if (target.tagName === 'INPUT' && !event.ctrlKey && !event.shiftKey) {
-                        return true;
-                    }
-
-                    const sitem = this.currentItem as IItemTree;
-                    if (sitem) {
-                        if (this.isCollapsible(sitem)) {
-                            this.toggleCollapse$(currentIndex, !sitem.collapsed).first().subscribe(() => { });
-                        } else if (sitem.selected) {
-                            this.toggleSelect$([sitem], false).first().subscribe(() => { });
-                        } else if (this.multiSelect && event.ctrlKey) {
-                            this.toggleSelect$([sitem], !sitem.selected).first().subscribe(() => { });
-                        } else {
-                            this.unselectAll$()
-                                .switchMap(() => this.toggleSelect$([sitem], true))
-                                .first()
-                                .subscribe(() => { });
-                        }
-                    }
-                    this.keyboardNavigation$.next();
-                    return false;
-
-                case KeyCodes.Enter:
-                    const eitem = this.currentItem as IItemTree;
-                    if (eitem) {
-                        if (this.isCollapsible(eitem) || eitem.selected) {
-                            this.toggleCollapse$(currentIndex, !eitem.collapsed).first().subscribe(() => { });
-                        } else if (eitem.selectable) {
-                            this.unselectAll$()
-                                .switchMap(() => this.toggleSelect$([eitem], true))
-                                .first()
-                                .subscribe(() => { });
-                        }
-                    }
-                    this.keyboardNavigation$.next();
-                    return false;
-
-                default:
-                    return true;
-            }
-        } else {
-            if (event.keyCode < KeyCodes.Key0 && event.keyCode !== KeyCodes.Backspace && event.keyCode !== KeyCodes.Delete && event.keyCode !== KeyCodes.Space) {
-                // Forward
-                return true;
-            }
-
-            if (!this.searchArea) {
-                if ((/[a-zA-Z0-9]/).test(event.key)) {
-                    // Valid char
-                    this.clearFilterExpression$.next(null);
-
-                    // Search next
-                    this.filterExpression += event.key;
-                    const rg = new RegExp('^' + this.filterExpression, 'i');
-                    this.findNextMatch$((item) => {
-                        if (item && this.isSelectable(item)) {
-                            const label = this.getTextValue(item);
-                            if (rg.test(label)) {
-                                return true;
-                            }
-                        }
-                        return false;
-                    }, this._currentItemIndex)
-                        .first()
-                        .subscribe((result) => {
-                            if (result.index >= 0) {
-                                setCurrentIndex(result.index);
-                            }
-                        });
-                }
-            } else {
-                // Autocomplete, filter the list
-                this.keyboardNavigation$.next();
-                this.filterListComplete$.next();
-            }
-        }
+    /** Efface le contenu de la liste */
+    public clearViewPort() {
+        super.clearViewPort();
+        this.changeDetectorRef.markForCheck();
     }
 
-    protected ngAfterViewInit() {
+    public ngAfterViewInit() {
         // FIXME Issue angular/issues/6005
         // see http://stackoverflow.com/questions/34364880/expression-has-changed-after-it-was-checked
         if (this._itemList.length === 0 && this.hasCustomService) {
             Observable.timer(1)
                 .first()
-                .subscribe(() => this.calcViewPort());
+                .switchMap(() => this.calcViewPort$())
+                .subscribe(noop);
         }
 
-        const resizeSub = Observable
+        this.subscriptions.push(Observable
             .fromEvent(window, 'resize')
-            .subscribe(() => {
+            .switchMap((e: Event) => {
                 if (this._viewportMode !== ViewportMode.NoViewport && this.maxHeight === 0) {
                     this.computedMaxHeight = 0;
-                    this.calcViewPort();
+                    return this.calcViewPort$().map(() => e);
+                } else {
+                    return Observable.of(e);
                 }
-            });
+            })
+            .subscribe(noop));
 
-        const scrollSub = Observable
+        this.subscriptions.push(Observable
             .fromEvent(this.listcontainer.nativeElement, 'scroll')
             .map((event: any) => [event, event.target.scrollTop, event.target.scrollLeft])
-            .do(([event, scrollTop, scrollLeft]: [Event, number, number]) => {
+            .map(([event, scrollTop, scrollLeft]: [Event, number, number]) => {
                 const e = {
                     originalEvent: event,
                     scrollLeft: scrollLeft,
@@ -657,21 +511,226 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
                 } as DejaTreeListScrollEvent;
 
                 this.scroll.emit(e);
+                return scrollTop;
             })
-            .filter(([scrollTop]: [number]) => this.lastScrollTop !== scrollTop)
-            .do(([scrollTop]: [number]) => {
+            .filter((scrollTop: number) => this.lastScrollTop !== scrollTop)
+            .switchMap((scrollTop: number) => {
                 if (this._viewportMode === ViewportMode.NoViewport && this.ignoreNextScrollEvents) {
                     this.ignoreNextScrollEvents = false;
+                    return Observable.of(scrollTop);
                 } else {
                     this.lastScrollTop = scrollTop;
-                    this.calcViewPort();
+                    return this.calcViewPort$().map(() => scrollTop);
                 }
             })
             .debounceTime(30)
-            .subscribe(() => {
-                this.calcViewPort();
-            });
-        this.subscriptions.push(scrollSub, resizeSub);
+            .switchMap(() => this.calcViewPort$())
+            .subscribe(noop));
+
+        let keyDown$ = Observable.fromEvent(this.listcontainer.nativeElement, 'keydown');
+        if (this.input) {
+            const inputKeyDown$ = Observable.fromEvent(this.input.nativeElement, 'keydown');
+            keyDown$ = keyDown$.merge(inputKeyDown$);
+        }
+
+        this.subscriptions.push(keyDown$
+            .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.Home ||
+                event.keyCode === KeyCodes.End ||
+                event.keyCode === KeyCodes.PageUp ||
+                event.keyCode === KeyCodes.PageDown ||
+                event.keyCode === KeyCodes.UpArrow ||
+                event.keyCode === KeyCodes.DownArrow ||
+                event.keyCode === KeyCodes.Space ||
+                event.keyCode === KeyCodes.Enter)
+            .switchMap((event) => this.ensureListCaches$().map(() => event))
+            .map((event: KeyboardEvent) => {
+                // Set current item from index for keyboard features only
+                const setCurrentIndex = (index: number) => {
+                    this.currentItemIndex = index;
+                    this.ensureItemVisible(this.currentItemIndex);
+                };
+
+                const currentIndex = this.rangeStartIndex >= 0 ? this.rangeStartIndex : this.rangeStartIndex = this.currentItemIndex;
+
+                switch (event.keyCode) {
+                    case KeyCodes.Home:
+                        if (event.shiftKey) {
+                            this.selectRange$(currentIndex, 0).first().subscribe(noop);
+                        } else if (!event.ctrlKey) {
+                            this.rangeStartIndex = 0;
+                            this.selectRange$(this.rangeStartIndex).first().subscribe(noop);
+                        }
+                        setCurrentIndex(0);
+                        return false;
+
+                    case KeyCodes.End:
+                        if (event.shiftKey) {
+                            this.selectRange$(currentIndex, this.rowsCount - 1).first().subscribe(noop);
+                        } else if (!event.ctrlKey) {
+                            this.rangeStartIndex = this.rowsCount - 1;
+                            this.selectRange$(this.rangeStartIndex).first().subscribe(noop);
+                        }
+                        setCurrentIndex(this.rowsCount - 1);
+                        return false;
+
+                    case KeyCodes.PageUp:
+                        const upindex = Math.max(0, this.currentItemIndex - this.pageSize);
+                        if (event.shiftKey) {
+                            this.selectRange$(currentIndex, upindex).first().subscribe(noop);
+                        } else if (!event.ctrlKey) {
+                            this.rangeStartIndex = upindex;
+                            this.selectRange$(this.rangeStartIndex).first().subscribe(noop);
+                        }
+                        setCurrentIndex(upindex);
+                        return false;
+
+                    case KeyCodes.PageDown:
+                        const dindex = Math.min(this.rowsCount - 1, this.currentItemIndex + this.pageSize);
+                        if (event.shiftKey) {
+                            this.selectRange$(currentIndex, dindex).first().subscribe(noop);
+                        } else if (!event.ctrlKey) {
+                            this.rangeStartIndex = dindex;
+                            this.selectRange$(this.rangeStartIndex).first().subscribe(noop);
+                        }
+                        setCurrentIndex(dindex);
+                        return false;
+
+                    case KeyCodes.UpArrow:
+                        const uaindex = Math.max(0, this.currentItemIndex - 1);
+                        if (uaindex !== -1) {
+                            if (event.shiftKey) {
+                                this.selectRange$(currentIndex, uaindex).first().subscribe(noop);
+                            } else if (!event.ctrlKey) {
+                                this.rangeStartIndex = uaindex;
+                                this.selectRange$(this.rangeStartIndex).first().subscribe(noop);
+                            }
+                            setCurrentIndex(uaindex);
+                        }
+                        return false;
+
+                    case KeyCodes.DownArrow:
+                        const daindex = Math.min(this.rowsCount - 1, this.currentItemIndex + 1);
+                        if (daindex !== -1) {
+                            if (event.shiftKey) {
+                                this.selectRange$(currentIndex, daindex).first().subscribe(noop);
+                            } else if (!event.ctrlKey) {
+                                this.rangeStartIndex = daindex;
+                                this.selectRange$(this.rangeStartIndex).first().subscribe(noop);
+                            }
+                            setCurrentIndex(daindex);
+                        }
+                        return false;
+
+                    case KeyCodes.Space:
+                        const target = event.target as HTMLElement;
+                        if (target.tagName === 'INPUT' && !event.ctrlKey && !event.shiftKey) {
+                            return true;
+                        }
+
+                        const sitem = this.currentItem as IItemTree;
+                        if (sitem) {
+                            if (this.isCollapsible(sitem)) {
+                                this.toggleCollapse$(currentIndex, !sitem.collapsed).first().subscribe(noop);
+                            } else if (sitem.selected) {
+                                this.toggleSelect$([sitem], false).first().subscribe(noop);
+                            } else if (this.multiSelect && event.ctrlKey) {
+                                this.toggleSelect$([sitem], !sitem.selected).first().subscribe(noop);
+                            } else {
+                                this.unselectAll$()
+                                    .switchMap(() => this.toggleSelect$([sitem], true))
+                                    .first()
+                                    .subscribe(noop);
+                            }
+                        }
+                        return false;
+
+                    case KeyCodes.Enter:
+                        const eitem = this.currentItem as IItemTree;
+                        if (eitem) {
+                            if (this.isCollapsible(eitem) || eitem.selected) {
+                                this.toggleCollapse$(currentIndex, !eitem.collapsed).first().subscribe(noop);
+                            } else if (eitem.selectable) {
+                                this.unselectAll$()
+                                    .switchMap(() => this.toggleSelect$([eitem], true))
+                                    .first()
+                                    .subscribe(noop);
+                            }
+                        }
+                        return false;
+
+                    default:
+                        return true;
+                }
+            })
+            .subscribe((continuePropagation) => {
+                if (!continuePropagation) {
+                    this.keyboardNavigation$.next();
+                    this.changeDetectorRef.markForCheck();
+                    event.preventDefault();
+                    return false;
+                }
+            }));
+
+
+        let keyUp$ = Observable.fromEvent(this.listcontainer.nativeElement, 'keyup');
+        if (this.input) {
+            const inputKeyup$ = Observable.fromEvent(this.input.nativeElement, 'keyup');
+            const inputDrop$ = Observable.fromEvent(this.input.nativeElement, 'drop');
+            keyUp$ = keyUp$.merge(inputKeyup$, inputDrop$);
+        }
+
+        // Ensure list cache
+        this.subscriptions.push(keyUp$
+            .do(() => {
+                if ((this.query || '').length < this.minSearchlength) {
+                    this._itemList = [];
+                    return;
+                }
+            })
+            .filter((event: KeyboardEvent) => event.keyCode >= KeyCodes.Key0 ||
+                event.keyCode === KeyCodes.Backspace ||
+                event.keyCode === KeyCodes.Space ||
+                event.keyCode === KeyCodes.Delete)
+            .subscribe((event: KeyboardEvent) => {
+                // Set current item from index for keyboard features only
+                const setCurrentIndex = (index: number) => {
+                    this.currentItemIndex = index;
+                    this.ensureItemVisible(this.currentItemIndex);
+                };
+
+                if (!this.searchArea) {
+                    if ((/[a-zA-Z0-9]/).test(event.key)) {
+                        // Valid char
+                        this.clearFilterExpression$.next(null);
+
+                        // Search next
+                        this.filterExpression += event.key;
+                        const rg = new RegExp('^' + this.filterExpression, 'i');
+                        this.findNextMatch$((item) => {
+                            if (item && this.isSelectable(item)) {
+                                const label = this.getTextValue(item);
+                                if (rg.test(label)) {
+                                    return true;
+                                }
+                            }
+                            event.preventDefault();
+                            return false;
+                        }, this.currentItemIndex)
+                            .first()
+                            .subscribe((result) => {
+                                if (result.index >= 0) {
+                                    setCurrentIndex(result.index);
+                                }
+                            });
+                    }
+                } else {
+                    // Autocomplete, filter the list
+                    this.keyboardNavigation$.next();
+                    if (event.keyCode !== KeyCodes.Space) {
+                        this.filterListComplete$.next();
+                    }
+                }
+            }));
     }
 
     public ngOnDestroy() {
@@ -694,7 +753,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
         if (!this.isCollapsible(item) && this.isSelectable(item) && (!e.ctrlKey || !this.multiSelect) && (e.button === 0 || !item.selected)) {
             if (e.shiftKey && this.multiSelect) {
                 // Select all from current to clicked
-                this.selectRange$(itemIndex, this._currentItemIndex)
+                this.selectRange$(itemIndex, this.currentItemIndex)
                     .first()
                     .subscribe(() => this.changeDetectorRef.markForCheck());
                 return false;
@@ -704,7 +763,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
                 }
 
                 this.unselectAll$().first().subscribe(() => {
-                    this._currentItemIndex = itemIndex;
+                    this.currentItemIndex = itemIndex;
                     this.toggleSelect$([item], true)
                         .first()
                         .subscribe(() => this.changeDetectorRef.markForCheck());
@@ -738,11 +797,11 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
                 if (this.isCollapsible(upItem) || (upevt.target as HTMLElement).id === 'expandbtn') {
                     const treeItem = upItem as IItemTree;
                     this.toggleCollapse$(upIndex, !treeItem.collapsed).first().subscribe(() => {
-                        this._currentItemIndex = upIndex;
+                        this.currentItemIndex = upIndex;
                     });
 
                 } else if (upevt.ctrlKey && this.multiSelect) {
-                    this._currentItemIndex = upIndex;
+                    this.currentItemIndex = upIndex;
                     this.toggleSelect$([upItem], !upItem.selected)
                         .first()
                         .subscribe(() => this.changeDetectorRef.markForCheck());
@@ -762,7 +821,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
                 this.itemDragEnd.emit(event);
                 delete this._ddStartIndex;
                 delete this._ddTargetIndex;
-                this.calcViewPort(); // Comment this line to debug dragdrop
+                this.calcViewPort$().first().subscribe(noop); // Comment this line to debug dragdrop
             },
             dragstartcallback: (event: IDejaDragEvent) => {
                 const targetIndex = this.getItemIndexFromHTMLElement(event.target as HTMLElement);
@@ -805,7 +864,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
                             return Observable.of(finalTarget);
                         }
                     })
-                    .subscribe(() => { });
+                    .subscribe(noop);
 
                 event.preventDefault();
                 return;
@@ -815,7 +874,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
                 delete this._ddTargetIndex;
                 this.drop$()
                     .switchMap(() => this.calcViewPort$())
-                    .subscribe(() => { });
+                    .subscribe(noop);
                 event.preventDefault();
             },
         };
@@ -831,7 +890,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
 
         if (!listBounds.containsPoint(new Position(event.pageX, event.pageY))) {
             this._ddTargetIndex = this._ddStartIndex;
-            this.calcViewPort();
+            this.calcViewPort$().first().subscribe(noop);
         }
     }
 
@@ -847,7 +906,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy {
                 this.onSelectionChange();
             }
             return selectedCount;
-        });
+        }).do(() => this.changeDetectorRef.markForCheck());
     }
 
     protected toggleSelect$(items: IItemBase[], state: boolean): Observable<IItemBase[]> {

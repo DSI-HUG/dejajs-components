@@ -1,4 +1,8 @@
-@import "../../scss/variables/colors";
+@import '../../scss/index.scss';
+
+// Import global theme
+@import '../../scss/variables/themeHUG';
+@include deja-theme($theme);
 
 html,
 body {
@@ -46,6 +50,20 @@ body {
     .demo-content {
         margin: 32px;
     }
+
+    md-card.demo-card {
+        padding: 0 !important;
+        margin: 1rem 0;
+
+        md-card-content {
+            padding: 2rem;
+
+            &.no-padding {
+                padding: 0;
+            }
+        }
+    }
+
     md-toolbar {
         md-icon {
             cursor: pointer;

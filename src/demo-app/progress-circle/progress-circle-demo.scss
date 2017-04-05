@@ -4,7 +4,7 @@ md-card-content {
     flex-direction: row;
     justify-content: center;
 
-    md-progress-spinner {
+    md-progress-spinner, md-progress-bar {
         margin: 20px;
     }
 }

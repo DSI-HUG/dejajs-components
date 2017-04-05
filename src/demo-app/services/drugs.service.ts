@@ -30,7 +30,7 @@ export class DrugsService {
                     },
                 ] as IGroupInfo[];
 
-                return this.groupingService.group(drugs, groupInfos) as Promise<IDrug[]>;
+                return this.groupingService.group$(drugs, groupInfos);
             });
     }
 
