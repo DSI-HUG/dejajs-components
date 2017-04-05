@@ -1,87 +1,84 @@
 :host {
-    position: relative;
-    display: flex;
-    overflow: hidden;
-    &[hasUpBtn="false"] {
-        #up {
-            visibility: hidden;
-            height: 0;
-            width: 0;
-            margin: 0 !important;
-        }
-    }
-    &[hasDownBtn="false"] {
-        #down {
-            visibility: hidden;
-            height: 0;
-            width: 0;
-            margin: 0 !important;
-        }
-    }
-    &[scrolling="true"] {
-        user-select: none;
-    }
-    &[scollstyle="scrollbar"] {
-        &[direction="vertical"] {
-            #viewport-wrapper {
-                width: 100%;
-                overflow-x: visible;
-                overflow-y: auto;
-                >span {
-                    width: 100%;
-                }
-            }
-        }
-        &[direction="horizontal"] {
-            #viewport-wrapper {
-                height: 100%;
-                overflow-x: auto;
-                overflow-y: visible;
-                >span {
-                    height: 100%;
-                }
-            }
-        }
-    }
-    &:not([scollstyle="scrollbar"]) {
-        &[direction="vertical"] {
-            flex-direction: column;
-        }
-        #viewport-wrapper {
-            overflow: hidden;
-        }
-    }
-    #viewport-wrapper {
-        position: relative;
-        flex: 1 1 auto;
-        >span {
-            padding: 0;
-            margin: 0;
-            overflow: hidden;
-        }
-    }
-    #up,
-    #down {
-        flex: 0 0 auto;
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        font-size: 120%;
-        cursor: pointer;
-    }
-    &[direction="vertical"] {
-        #up,
-        #down {
-            margin: 0.5rem 0;
-        }
-    }
-    &[direction="horizontal"] {
-        #up,
-        #down {
-            margin: 0 0.5rem;
-            >i {
-                transform: rotate(270Deg);
-            }
-        }
-    }
+	position: relative;
+	display: flex;
+	overflow: hidden;
+	&[hasUpBtn="false"] {
+		#up {
+			visibility: hidden;
+			height: 0;
+			width: 0;
+			margin: 0 !important;
+		}
+	}
+	&[hasDownBtn="false"] {
+		#down {
+			visibility: hidden;
+			height: 0;
+			width: 0;
+			margin: 0 !important;
+		}
+	}
+	&[scollstyle="scrollbar"] {
+		&[direction="vertical"] {
+			#viewport-wrapper {
+				width: 100%;
+				overflow-x: visible;
+				overflow-y: auto;
+				>span {
+					width: 100%;
+				}
+			}
+		}
+		&[direction="horizontal"] {
+			#viewport-wrapper {
+				height: 100%;
+				overflow-x: auto;
+				overflow-y: visible;
+				>span {
+					height: 100%;
+				}
+			}
+		}
+	}
+	&:not([scollstyle="scrollbar"]) {
+		&[direction="vertical"] {
+			flex-direction: column;
+		}
+		#viewport-wrapper {
+			overflow: hidden;
+		}
+	}
+	#viewport-wrapper {
+		position: relative;
+		flex: 1 1 auto;
+		>span {
+			padding: 0;
+			margin: 0;
+			overflow: hidden;
+		}
+	}
+	#up,
+	#down {
+		flex: 0 0 auto;
+		display: flex;
+		justify-content: space-around;
+		align-items: center;
+		font-size: 120%;
+		cursor: pointer;
+	}
+	&[direction="vertical"] {
+		#up,
+		#down {
+			padding: 0.15rem 0;
+		}
+	}
+	&[direction="horizontal"] {
+		#up,
+		#down {
+			padding: 0 0.15rem;
+			>i {
+				transform: rotate(270Deg);
+			}
+		}
+	}
 }

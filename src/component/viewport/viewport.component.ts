@@ -49,7 +49,6 @@ export class DejaViewPortComponent implements OnDestroy,
     @HostBinding('attr.hasDownBtn') private hasDownButton = false;
     @HostBinding('attr.direction') private _direction = 'vertical' as 'vertical' | 'horizontal';
     @HostBinding('attr.scollStyle') private _scrollingStyle = 'scrollbar' as 'scrollbar' | 'buttons';
-    @HostBinding('attr.scrolling') private scrolling = null;
 
     /** Permet de définir un template d'élément par binding */
     @Input() public itemTemplateExternal;
@@ -174,7 +173,7 @@ export class DejaViewPortComponent implements OnDestroy,
                                 this.scrollPos += direction * (upEvent.ctrlKey ? this.clientSize : this.buttonsStep);
                             });
 
-                        Observable.timer(1000)
+                        Observable.timer(750)
                             .takeUntil(mouseup$)
                             .subscribe(() => {
                                 Observable.interval(50)
@@ -186,7 +185,7 @@ export class DejaViewPortComponent implements OnDestroy,
                     });
 
                     this.mouseWheel$Sub = Observable
-                        .fromEvent(this.wrapperElement.nativeElement, 'mousewheel')
+                        .fromEvent(this.element, 'mousewheel')
                         .subscribe((event: MouseWheelEvent) => { this.scrollPos = this.scrollPos + event.deltaY; });
 
                 } else {
@@ -272,7 +271,6 @@ export class DejaViewPortComponent implements OnDestroy,
             return;
         }
 
-        this.scrolling = true;
         const itemDefaultSize = this.itemSize ? +this.itemSize : 33;
         const containerSize = maxSize || this.clientSize;
 
@@ -394,7 +392,6 @@ export class DejaViewPortComponent implements OnDestroy,
         }
 
         this.changeDetectorRef.markForCheck();
-        Observable.timer(10).first().subscribe(() => this.scrolling = false);
     }
 
     private clearViewPort() {
