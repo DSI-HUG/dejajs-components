@@ -368,6 +368,11 @@ export class ItemListBase {
         this.changeDetectorRef.markForCheck();
     };
 
+    /** Efface la hauteur calculée des lignes en mode automatique */
+    public clearRowsHeight() {
+        this.getItemListService().invalidateRowsHeightCache();
+    }
+
     /** Retrouve les informations du parent de l'élément spécifié
      * @param {IItemTree} item Element enfant du parent à retrouver.
      * @return {Observable<IParentListInfoResult>} Observable résolu par la fonction, qui retourne les informations sur le parent de l'élément spécifié

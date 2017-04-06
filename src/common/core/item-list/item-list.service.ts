@@ -774,6 +774,13 @@ export class ItemListService {
         this._cache = {};
     }
 
+    /** Efface la hauteur calculée des lignes en mode automatique */
+    public invalidateRowsHeightCache() {
+        if (this._items) {
+            this._items.forEach((item) => item.height = undefined);
+        }
+    }
+
     /** Usage interne. Retourne la portion de la liste à afficher en fonction des paramètres spécifiés. */
     public getViewList$(searchField: string, query?: RegExp | string, startRow?: number, maxCount?: number, ignoreCache?: boolean, ddStartIndex?: number, ddTargetIndex?: number, multiSelect?: boolean): Observable<IViewListResult> {
         const result = {} as IViewListResult;

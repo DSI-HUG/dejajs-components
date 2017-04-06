@@ -40,7 +40,7 @@ export interface IDejaGridColumn {
      */
     responsive?: boolean | number;
     /** Indique si la colonne est groupable */
-    groupable?: boolean;    
+    groupable?: boolean;
     /** Indique le champ utilisé pour le regroupement de la colonne */
     groupByField?: ((model: any) => string) | string;
     /** Indique le champ utilisé pour le titre des groupes ajoutés lors du regroupement */
@@ -49,17 +49,17 @@ export interface IDejaGridColumn {
     isCurrent?: boolean;
 }
 
-export interface IDejaGridColumnEvent { 
+export interface IDejaGridColumnEvent {
     column: IDejaGridColumn;
     originalEvent: MouseEvent;
 }
 
-export interface IDejaGridColumnSizeEvent { 
+export interface IDejaGridColumnSizeEvent {
     column: IDejaGridColumn;
     offsetWidth: number;
     originalEvent: MouseEvent;
 }
 
-export interface IDejaGridColumnLayoutEvent extends IDejaGridColumnEvent { 
+export interface IDejaGridColumnLayoutEvent extends IDejaGridColumnEvent {
     target: IDejaGridColumn;
 }

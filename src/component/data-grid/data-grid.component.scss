@@ -19,7 +19,7 @@ deja-grid {
 						}
 					}
 					display: inline-flex;
-					overflow: visible;
+					// overflow: visible; // Wrong flex calculation in auto row height
 					min-width: 100%;
 				}
 				&[depth-max] {

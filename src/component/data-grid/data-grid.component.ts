@@ -108,6 +108,10 @@ export class DejaGridComponent implements OnDestroy {
     @Output() public itemDragStart = new EventEmitter<IDejaDragEvent>();
     /** Exécuté lorsque l'utilisateur sélectionne ou désélectionne une ligne. */
     @Output() public selectedChange = new EventEmitter<DejaGridRowEvent | DejaGridRowsEvent>();
+    /** Cet évenement est levé lorsque la position des colonnes est modifiée */
+    @Output() public columnLayoutChanged = new EventEmitter<IDejaGridColumnLayoutEvent>();
+    /** Cet évenement est levé lorsque la taille d'une colonne est modifiée */
+    @Output() public columnSizeChanged = new EventEmitter<IDejaGridColumnSizeEvent>();
 
     // NgModel implementation
     protected onTouchedCallback: () => void = noop;
@@ -489,6 +493,13 @@ export class DejaGridComponent implements OnDestroy {
         this.changeDetectorRef.markForCheck();
     }
 
+    /** Efface la hauteur calculée des lignes en mode automatique */
+    public clearRowsHeight() {
+        if (this.treeListComponent) {
+            this.treeListComponent.clearRowsHeight();
+        }
+    }
+
     /** Efface le viewport */
     public clearViewPort() {
         if (this.treeListComponent) {
@@ -558,6 +569,8 @@ export class DejaGridComponent implements OnDestroy {
 
         this.calcColumnsLayout();
         this.ensureColumnVisible(e.column);
+
+        this.columnLayoutChanged.next(e);
     }
 
     protected onColumnSizeChanged(e: IDejaGridColumnSizeEvent) {
@@ -601,6 +614,8 @@ export class DejaGridComponent implements OnDestroy {
         this.disableUserSelection$.next();
 
         this.ensureSizingVisible(e.column);
+
+        this.columnSizeChanged.emit(e);
     }
 
     protected onGroupRemoved(e: IDejaGridGroupsEvent) {

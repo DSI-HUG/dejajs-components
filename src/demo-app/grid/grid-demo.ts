@@ -12,7 +12,7 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { IItemTree } from '../../common/core';
-import { DejaGridComponent, DejaGridRowsEvent, IDejaDragEvent, IDejaGridColumn } from '../../component';
+import { DejaGridComponent, DejaGridRowsEvent, IDejaDragEvent, IDejaGridColumn, IDejaGridColumnSizeEvent, IDejaGridRow } from '../../component';
 import { DrugsService, IDrug } from '../services/drugs.service';
 import { INews, NewsService } from '../services/news.service';
 
@@ -290,6 +290,7 @@ export class GridDemoComponent implements OnInit {
         {
             label: 'logo',
             name: 'logo',
+            minWidth: 64,
             sizeable: true,
             useCellTemplate: true,
             width: '150px',
@@ -304,6 +305,7 @@ export class GridDemoComponent implements OnInit {
         {
             label: 'description',
             name: 'description',
+            minWidth: 64,
             sizeable: true,
             width: '250px',
         },
@@ -338,6 +340,7 @@ export class GridDemoComponent implements OnInit {
     private groupedDrugs$: Observable<IDrug[]>;
     private selectedItems: IItemTree[];
     @ViewChild(DejaGridComponent) private gridComponent: DejaGridComponent;
+    @ViewChild('news') private gridNews: DejaGridComponent;
 
     constructor(private drugsService: DrugsService, newsService: NewsService) {
         this.news$ = newsService.getNews$(1);
@@ -385,6 +388,13 @@ export class GridDemoComponent implements OnInit {
         if (event.dragInfo.hasOwnProperty('drug')) {
             (event.target as HTMLElement).innerHTML = JSON.stringify(event.dragInfo['drug']);
             event.preventDefault();
+        }
+    }
+
+    protected onColumnSizeChanged(e: IDejaGridColumnSizeEvent) {
+        if (e.column.name === 'description' || e.column.name === 'logo') {
+            this.gridNews.clearRowsHeight();
+            this.gridNews.refresh();
         }
     }
 
