@@ -191,8 +191,12 @@ export class ItemListBase {
      *
      * @param {ViewportMode} mode Mode du viewport (sans viewport, avec un viewport tailles des rows fixes ou dynamiques)
      */
-    public setViewportMode(mode: ViewportMode) {
-        this._viewportMode = mode;
+    public setViewportMode(mode: ViewportMode | string) {
+        if (typeof mode === 'string') {
+            this._viewportMode = ViewportMode[mode];
+        } else {
+            this._viewportMode = mode;
+        }
     }
 
     /** Trie la liste par le champs spécifié. */

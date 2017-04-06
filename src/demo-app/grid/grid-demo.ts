@@ -14,6 +14,7 @@ import { Observable } from 'rxjs/Rx';
 import { IItemTree } from '../../common/core';
 import { DejaGridComponent, DejaGridRowsEvent, IDejaDragEvent, IDejaGridColumn } from '../../component';
 import { DrugsService, IDrug } from '../services/drugs.service';
+import { INews, NewsService } from '../services/news.service';
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -285,17 +286,61 @@ export class GridDemoComponent implements OnInit {
         },
     ] as IDejaGridColumn[];
 
+    protected newsColumns = [
+        {
+            label: 'logo',
+            name: 'logo',
+            sizeable: true,
+            useCellTemplate: true,
+            width: '150px',
+        },
+        {
+            label: 'name',
+            name: 'name',
+            sizeable: true,
+            useCellTemplate: false,
+            width: '180px',
+        },
+        {
+            label: 'description',
+            name: 'description',
+            sizeable: true,
+            width: '250px',
+        },
+        {
+            label: 'url',
+            name: 'url',
+            width: '200px',
+        },
+        {
+            label: 'category',
+            name: 'category',
+            width: '100px',
+        },
+        {
+            label: 'language',
+            name: 'language',
+            width: '64px',
+        },
+        {
+            label: 'country',
+            name: 'country',
+            width: '64px',
+        },
+    ] as IDejaGridColumn[];
+
     protected tabIndex = 1;
     protected drugCounts = 0;
 
     private drugsBigRecord$: Observable<IDrug[]>;
     private drugs$: Observable<IDrug[]>;
+    private news$: Observable<INews[]>;
     private groupedDrugs$: Observable<IDrug[]>;
     private selectedItems: IItemTree[];
     @ViewChild(DejaGridComponent) private gridComponent: DejaGridComponent;
 
-    constructor(private drugsService: DrugsService) {
-
+    constructor(private drugsService: DrugsService, newsService: NewsService) {
+        this.news$ = newsService.getNews$(1);
     }
 
     ngOnInit() {
