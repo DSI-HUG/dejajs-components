@@ -131,6 +131,7 @@ export class ItemListService {
                 this.ensureChildrenProperties(items);
                 this.ensureSelectedItems(items);
                 this.items = items;
+                this._waiter$.next(false);
                 subscriber.next();
             } else {
                 this.items = undefined;

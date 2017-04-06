@@ -483,6 +483,10 @@ export class DejaGridComponent implements OnDestroy {
         if (this.treeListComponent) {
             this.treeListComponent.refresh();
         }
+        if (this.columnLayout) {
+            this.columnLayout.refresh$.next();
+        }
+        this.changeDetectorRef.markForCheck();
     }
 
     /** Efface le viewport */
