@@ -11,6 +11,7 @@
 
 import { IItemTree } from '../../../common/core/item-list';
 
+// tslint:disable-next-line:no-empty-interface
 export interface IDejaGridRow extends IItemTree {
 
 }
