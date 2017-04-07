@@ -1,4 +1,6 @@
-export interface IItemBase {
+import { IViewPortItem } from './index';
+
+export interface IItemBase extends IViewPortItem {
     id?: any;
     selectable?: boolean;
     selected?: boolean;
@@ -8,6 +10,5 @@ export interface IItemBase {
     odd?: boolean; // For style only
     toString?: () => string;
     equals?: (item: IItemBase) => boolean;
-    height?: number;
     model?: any;
 }

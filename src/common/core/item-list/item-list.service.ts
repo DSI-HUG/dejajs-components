@@ -777,7 +777,7 @@ export class ItemListService {
     /** Efface la hauteur calculée des lignes en mode automatique */
     public invalidateRowsHeightCache() {
         if (this._items) {
-            this._items.forEach((item) => item.height = undefined);
+            this._items.forEach((item) => item.size = undefined);
         }
     }
 

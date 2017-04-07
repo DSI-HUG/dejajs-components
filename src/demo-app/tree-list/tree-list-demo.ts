@@ -72,8 +72,8 @@ export class DejaTreeListDemoComponent implements OnInit {
         for (let i = 0; i < 50; i++) {
             const rand = Math.floor(Math.random() * (70 - 33 + 1)) + 33; // random de 33 à 70
             this.loremList[i] = {} as IItemTree;
-            this.loremList[i].height = rand;
-            this.loremList[i].displayName = i + ' - Une ligne de test avec une height de : ' + rand;
+            this.loremList[i].size = rand;
+            this.loremList[i].displayName = i + ' - Une ligne de test avec une taille de : ' + rand;
         }
 
         groupingService.group(this.loremList, [{ groupByField: 'height' }]).then((groupedResult) => {

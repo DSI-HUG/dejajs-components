@@ -48,11 +48,6 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     @Input() public nodataholder: string;
     /** Correspond au ngModel du champ de filtrage ou recherche */
     @Input() public query = '';
-    /** Hauteur maximum avant que le composant affiche une scrollbar
-     * spécifier une grande valeur pour ne jamais afficher de scrollbar
-     * Spécifier 0 pour que le composant determine sa hauteur à partir du container
-     */
-    @Input() public maxHeight = 0;
     /** Permet de définir un template de ligne par binding */
     @Input() public itemTemplateExternal;
     /** Permet de définir un template de ligne parente par binding. */
@@ -78,7 +73,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     @Output() public afterViewInit = new EventEmitter();
 
     /** Internal use */
-    @ViewChild('listcontainer') public listcontainer: ElementRef;
+    @ViewChild('listcontainer') public listContainer: ElementRef;
     @ViewChild('inputelement') public input: ElementRef;
 
     // NgModel implementation
@@ -137,6 +132,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                 this.keyboardNavigation = false;
                 this.changeDetectorRef.markForCheck();
             }));
+
+        this.maxHeight = 0;
     }
 
     /** Définit la longueur minimale de caractères dans le champ de recherche avant que la recherche ou le filtrage soient effectués */
@@ -199,8 +196,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     public get pageSize() {
         if (this._pageSize === 0) {
             const vpRowHeight = this.getViewPortRowHeight();
-            const containerElement = this.listcontainer.nativeElement as HTMLElement;
-            const containerHeight = this.maxHeight || containerElement.clientHeight;
+            const listElement = this.listContainer.nativeElement as HTMLElement;
+            const containerHeight = this.maxHeight || listElement.clientHeight;
             return Math.floor(containerHeight / vpRowHeight);
         }
 
@@ -270,6 +267,23 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
      */
     public get searchField() {
         return this._searchField;
+    }
+
+    /** Définit la hauteur maximum avant que le composant affiche une scrollbar
+     * spécifier une grande valeur pour ne jamais afficher de scrollbar
+     * Spécifier 0 pour que le composant determine sa hauteur à partir du container
+     */
+    @Input()
+    public set maxHeight(value: number) {
+        super.setMaxHeight(value);
+    }
+
+    /** Retourne la hauteur maximum avant que le composant affiche une scrollbar
+     * spécifier une grande valeur pour ne jamais afficher de scrollbar
+     * Spécifier 0 pour que le composant determine sa hauteur à partir du container
+     */
+    public get maxHeight() {
+        return this.getMaxHeight();
     }
 
     /** Définit la ligne courant ou ligne active */
@@ -469,7 +483,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
     /** Positionne a scrollbar pour assurer que l'élément spécifié soit visible */
     public ensureItemVisible(item: IItemBase | number) {
-        super.ensureItemVisible(this.query, this.listcontainer.nativeElement, this.listItemElements, item);
+        super.ensureItemVisible(this.query, this.listContainer.nativeElement, this.listItemElements, item);
     }
 
     /** Efface le contenu de la liste */
@@ -500,8 +514,10 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
             })
             .subscribe(noop));
 
+        const listElement = this.listContainer.nativeElement as HTMLElement;
+
         this.subscriptions.push(Observable
-            .fromEvent(this.listcontainer.nativeElement, 'scroll')
+            .fromEvent(listElement, 'scroll')
             .map((event: any) => [event, event.target.scrollTop, event.target.scrollLeft])
             .map(([event, scrollTop, scrollLeft]: [Event, number, number]) => {
                 const e = {
@@ -527,7 +543,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
             .switchMap(() => this.calcViewPort$())
             .subscribe(noop));
 
-        let keyDown$ = Observable.fromEvent(this.listcontainer.nativeElement, 'keydown');
+        let keyDown$ = Observable.fromEvent(listElement, 'keydown');
         if (this.input) {
             const inputKeyDown$ = Observable.fromEvent(this.input.nativeElement, 'keydown');
             keyDown$ = keyDown$.merge(inputKeyDown$);
@@ -672,7 +688,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
             }));
 
 
-        let keyUp$ = Observable.fromEvent(this.listcontainer.nativeElement, 'keyup');
+        let keyUp$ = Observable.fromEvent(listElement, 'keyup');
         if (this.input) {
             const inputKeyup$ = Observable.fromEvent(this.input.nativeElement, 'keyup');
             const inputDrop$ = Observable.fromEvent(this.input.nativeElement, 'drop');
@@ -731,6 +747,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                     }
                 }
             }));
+
+        this.viewPort.element$.next(listElement);
     }
 
     public ngOnDestroy() {
@@ -881,7 +899,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     }
 
     protected dragLeave(event: DragEvent) {
-        const listRect = this.listcontainer.nativeElement.getBoundingClientRect();
+        const listElement = this.listContainer.nativeElement as HTMLElement;
+        const listRect = listElement.getBoundingClientRect();
 
         const listBounds = Rect.fromLTRB(listRect.left,
             listRect.top,
@@ -921,8 +940,9 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
         }
     }
 
-    protected calcViewPort$() {
-        return super.calcViewPort$(this.query, this.maxHeight, this.listcontainer.nativeElement)
+    protected calcViewPort$(): Observable<IViewPort> {
+        // TODO remove this.listContainer.nativeElement
+        return super.calcViewPort$(this.query, this.listContainer.nativeElement)
             .do(() => {
                 // Prevent that the adaptation of the scroll raise a new view port calculation
                 // this.ignoreNextScrollEvents = res.outOfRange;

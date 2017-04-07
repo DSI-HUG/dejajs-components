@@ -41,11 +41,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @Input() public placeholder: string;
     /** Correspond au ngModel du champ de filtrage ou recherche */
     @Input() public query = '';
-    /** Hauteur maximum avant que le composant affiche une scrollbar
-     * spécifier une grande valeur pour ne jamais afficher de scrollbar
-     * Spécifier 0 pour que le composant determine sa hauteur à partir du container
-     */
-    @Input() public maxHeight = 500;
     /** ID de l'élement dans lequel la liste déroulante doit s'afficher (la liste déroulante ne peut dépasser de l'élement spécifié ici) */
     @Input() public dropdownContainerId: string;
     /** Permet de définir un template de ligne par binding */
@@ -76,7 +71,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @ContentChild('suffixTemplate') protected mdSuffix;
     @ViewChild('inputElement') private input: ElementRef;
     @ViewChildren('listitem') private listItemElements: QueryList<ElementRef>;
-    @ViewChild('listcontainer') private listcontainer;
+    @ViewChild('listcontainer') private listContainer: ElementRef;
     @ViewChild(DejaDropDownComponent) private dropDownComponent: DejaDropDownComponent;
 
     private _type = 'select';
@@ -120,7 +115,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             .switchMap(() => this.calcViewPort$())
             .subscribe(() => {
                 this.keepExistingViewPort = false;
-                const listElement = this.listElement as HTMLElement;
+                const listElement = this.listContainer.nativeElement as HTMLElement;
                 this.lastScrollPosition = listElement.scrollTop;
             }));
 
@@ -141,9 +136,9 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             .filter(() => !!this.dropDownComponent) // Show canceled by the hide$ observable if !dropdownVisible
             .do(() => {
                 // Restore scroll Position
-                const listElement = this.listElement;
+                const listElement = this.listContainer.nativeElement as HTMLElement;
                 if (listElement) {
-                    this.listElement.scrollTop = this.lastScrollPosition;
+                    listElement.scrollTop = this.lastScrollPosition;
                 }
             })
             .switchMap(() => this.calcViewPort$())
@@ -167,6 +162,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 this.keyboardNavigation = false;
                 this.changeDetectorRef.markForCheck();
             }));
+
+        this.maxHeight = 500;
     }
 
     /** Ancre d'alignement de la liste déroulante. Valeurs possible: top, bottom, right, left. Une combinaison des ces valeurs peut également être utilisée, par exemple 'top left'. */
@@ -242,7 +239,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     public get pageSize() {
         if (this._pageSize === 0) {
             const vpRowHeight = this.getViewPortRowHeight();
-            const containerElement = this.listElement as HTMLElement;
+            const containerElement = this.listContainer.nativeElement as HTMLElement;
             const containerHeight = this.maxHeight || containerElement.clientHeight;
             return Math.floor(containerHeight / vpRowHeight);
         }
@@ -398,6 +395,23 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return this._depthMax;
     }
 
+    /** Définit la hauteur maximum avant que le composant affiche une scrollbar
+     * spécifier une grande valeur pour ne jamais afficher de scrollbar
+     * Spécifier 0 pour que le composant determine sa hauteur à partir du container
+     */
+    @Input()
+    public set maxHeight(value: number) {
+        super.setMaxHeight(value);
+    }
+
+    /** Retourne la hauteur maximum avant que le composant affiche une scrollbar
+     * spécifier une grande valeur pour ne jamais afficher de scrollbar
+     * Spécifier 0 pour que le composant determine sa hauteur à partir du container
+     */
+    public get maxHeight() {
+        return this.getMaxHeight();
+    }
+
     private set currentItemIndex(value: number) {
         super.setCurrentItemIndex(value);
         this.changeDetectorRef.markForCheck();
@@ -425,10 +439,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     private get containerElement() {
         return this.dropdownContainerId && this.elementRef.nativeElement.ownerDocument.getElementById(this.dropdownContainerId);
-    }
-
-    private get listElement() {
-        return this.listcontainer && this.listcontainer.elementRef.nativeElement as HTMLElement;
     }
 
     private get inputElement() {
@@ -678,6 +688,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                     this.filterListComplete$.next();
                 }
             }));
+
+        this.viewPort.element$.next(this.listContainer.nativeElement as HTMLElement);
     }
 
     /** Change l'état d'expansion de toute les lignes parentes */
@@ -780,7 +792,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     protected calcViewPort$() {
-        return super.calcViewPort$(this.dropDownQuery, this.maxHeight, this.listElement)
+        // TODO remove this.listContainer.nativeElement
+        return super.calcViewPort$(this.dropDownQuery, this.listContainer.nativeElement)
             .do((res: IViewPort) => {
                 // Prevent that the adaptation of the scroll raise a new view port calculation
                 // this.ignoreNextScrollEvents = res.outOfRange;
@@ -792,7 +805,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     protected ensureItemVisible(item: IItemBase | number) {
-        super.ensureItemVisible(this.query, this.listElement, this.listItemElements, item);
+        super.ensureItemVisible(this.query, this.listContainer.nativeElement, this.listItemElements, item);
     }
 
     private onModelChange(items?: IItemBase[] | IItemBase) {
@@ -867,7 +880,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         delete this.selectingItemIndex;
 
         // Restore scroll Position
-        this.listElement.scrollTop = this.lastScrollPosition;
+        const listElement = this.listContainer.nativeElement as HTMLElement;
+        listElement.scrollTop = this.lastScrollPosition;
 
         this.calcViewPort$()
             .first()

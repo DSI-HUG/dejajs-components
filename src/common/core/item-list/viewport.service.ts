@@ -28,6 +28,10 @@ export class ViewPortService {
 
     public mode$ = new ReplaySubject<ViewportMode | string>();
     public items$ = new ReplaySubject<IViewPortItem[]>();
+    public maxSize$ = new ReplaySubject<number>();
+    public element$ = new ReplaySubject<HTMLElement>();
+
+    public viewPortResult$ = new ReplaySubject<IViewPort>();
 
     private _mode: ViewportMode = ViewportMode.ConstantRowHeight;
 
@@ -38,6 +42,8 @@ export class ViewPortService {
         Observable.from(this.mode$)
             .map((mode) => typeof mode === 'string' ? ViewportMode[mode] : mode)
             .subscribe((mode: ViewportMode) => this._mode = mode);
+
+        this.viewPort$ = Observable.from(this.viewPortResult$);
     }
 }
 
@@ -51,5 +57,5 @@ export interface IViewPort {
 }
 
 export interface IViewPortItem {
-    size: number;
+    size?: number;
 }

@@ -513,7 +513,7 @@ export class DejaGridComponent implements OnDestroy {
             return;
         }
 
-        const listElement = this.treeListComponent.listcontainer.nativeElement as HTMLElement;
+        const listElement = this.treeListComponent.listContainer.nativeElement as HTMLElement;
         const scrollPos = listElement.scrollLeft;
         let prevWidth = 0;
 
@@ -592,7 +592,7 @@ export class DejaGridComponent implements OnDestroy {
         const originalWidth = this.sizingLayoutInfos.columnsWidth[e.column.name];
         const minimumWidth = e.column.minWidth || this.columnsMinWidth;
         if (originalWidth.unit === '%') {
-            const listElement = this.treeListComponent.listcontainer.nativeElement as HTMLElement;
+            const listElement = this.treeListComponent.listContainer.nativeElement as HTMLElement;
             const containerWidth = listElement.clientWidth;
 
             // Calcul de la place restante pour les colonnes en pourcent
@@ -683,13 +683,13 @@ export class DejaGridComponent implements OnDestroy {
         }
 
         this.clearColumnLayout();
-        if (this._columns.length === 0 || !this.treeListComponent || !this.treeListComponent.listcontainer) {
+        if (this._columns.length === 0 || !this.treeListComponent || !this.treeListComponent.listContainer) {
             return;
         }
 
         this._columnLayout.scrollLeft = -this.lastScrollLeft;
         let viewLeft = -this.lastScrollLeft;
-        const listElement = this.treeListComponent.listcontainer.nativeElement as HTMLElement;
+        const listElement = this.treeListComponent.listContainer.nativeElement as HTMLElement;
         const containerWidth = listElement.clientWidth;
 
         // Calc total fixed width
@@ -781,7 +781,7 @@ export class DejaGridComponent implements OnDestroy {
             return;
         }
 
-        const listElement = this.treeListComponent.listcontainer.nativeElement as HTMLElement;
+        const listElement = this.treeListComponent.listContainer.nativeElement as HTMLElement;
         const scrollPos = listElement.scrollLeft;
         let prevWidth = 0;
 
