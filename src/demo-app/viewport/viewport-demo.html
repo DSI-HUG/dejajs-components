@@ -15,9 +15,15 @@
 <md-card class="demo-card demo-basic" *ngIf="tabIndex === 1">
 	<md-toolbar color="primary">Viewport</md-toolbar>
 	<md-card-content id="viewPortContainer">
-		<md-checkbox [(ngModel)]="isHorizontal">Horizontal</md-checkbox>
-		<md-checkbox [(ngModel)]="hasButtons">Buttons Scrolling (Tips: press ctrl to increase the step)</md-checkbox>
-		<deja-viewport #viewport [items]="news$ | async" itemSize="130" itemSizeMode="auto" [direction]="isHorizontal ? 'horizontal': 'vertical'" [scrollingStyle]="hasButtons ? 'buttons' : 'scrollbar'">
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="2rem">
+            <md-checkbox [(ngModel)]="isHorizontal">Horizontal</md-checkbox>
+            <md-checkbox [(ngModel)]="hasButtons">Buttons Scrolling (Tips: press ctrl to increase the step)</md-checkbox>
+            <md-input-container>
+                <input mdInput type="number" [(ngModel)]="ensureIndex">
+            </md-input-container>
+            <button md-button (click)="viewport.ensureVisible(ensureIndex)">Ensure index</button>
+        </div>
+        <deja-viewport #viewport [items]="news$ | async" itemSize="130" itemSizeMode="auto" [direction]="isHorizontal ? 'horizontal': 'vertical'" [scrollingStyle]="hasButtons ? 'buttons' : 'scrollbar'">
 			<template #itemTemplate let-item let-size="size">
 				<div *ngIf="item" class="news" fxLayout="row" [attr.id]="id">
 					<img [attr.src]="item.urlsToLogos.medium" (load)="imageLoaded();" class="logo" [style.max-height.px]="isHorizontal? null : (size? size - 10 : 20)" fxLayout="row" fxLayoutAlign="space-between" fxFlexAlign="center">

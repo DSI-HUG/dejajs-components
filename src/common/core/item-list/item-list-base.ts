@@ -13,6 +13,7 @@ import { ChangeDetectorRef, ElementRef, QueryList } from '@angular/core';
 import { Observable, Subscription } from 'rxjs/Rx';
 import { GroupingService, IGroupInfo } from '../grouping/index';
 import { ISortInfos, SortingService, SortOrder } from '../sorting/index';
+import { ViewPortService } from './index';
 import { IItemBase } from './item-base';
 import { IFindItemResult, IParentListInfoResult, ItemListService, IViewListResult } from './item-list.service';
 import { IItemTree } from './item-tree';
@@ -70,8 +71,8 @@ export class ItemListBase {
     private allCollapsed = false;
     private _viewPortRowHeight = ItemListBase.defaultViewPortRowHeight;
 
-    constructor(protected changeDetectorRef: ChangeDetectorRef) {
-
+    constructor(protected changeDetectorRef: ChangeDetectorRef, private viewPort: ViewPortService) {
+        
     }
 
     /** Renvoie le modèle de tri appliqué à la liste.
