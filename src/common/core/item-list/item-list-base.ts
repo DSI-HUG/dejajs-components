@@ -62,7 +62,7 @@ export class ItemListBase {
     constructor(protected changeDetectorRef: ChangeDetectorRef, protected viewPort: ViewPortService) {
         this.viewPort$ = viewPort.viewPort$.do((viewPortResult: IViewPort) => {
             delete this._hintLabel;
-            this._itemList = viewPortResult.items;
+            this._itemList = viewPortResult.visibleItems;
             this.vpStartRow = viewPortResult.startIndex;
             this.vpEndRow = viewPortResult.endIndex;
             this.vpBeforeHeight = viewPortResult.beforeSize;

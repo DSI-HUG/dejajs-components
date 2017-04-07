@@ -40,19 +40,21 @@ export class ViewPortService {
     private emptyViewPort = {
         beforeSize: 0,
         afterSize: 0,
-        items: [],
+        visibleItems: [],
         startIndex: 0,
         endIndex: 0,
         startOffset: 0,
+        items: [],
     } as IViewPort;
 
     private measureViewPort = {
         beforeSize: 0,
         afterSize: 200000,
-        items: [],
+        visibleItems: [],
         startIndex: 0,
         endIndex: 0,
         startOffset: 0,
+        items: [],
     } as IViewPort;
 
     public viewPortResult$ = new BehaviorSubject<IViewPort>(this.emptyViewPort);
@@ -88,10 +90,11 @@ export class ViewPortService {
             return Observable.of({
                 beforeSize: startIndex * itemDefaultSize,
                 afterSize: (items.length - 1 - endIndex) * itemDefaultSize,
-                items: items.slice(startIndex, 1 + endIndex),
+                visibleItems: items.slice(startIndex, 1 + endIndex),
                 startIndex: startIndex,
                 endIndex: endIndex,
                 startOffset: 0,
+                items: items,
             } as IViewPort);
         };
 
@@ -123,10 +126,11 @@ export class ViewPortService {
             return Observable.of({
                 beforeSize: beforeSize,
                 afterSize: afterSize,
-                items: visibleList,
+                visibleItems: visibleList,
                 startIndex: startIndex || 0,
                 endIndex: endIndex,
                 startOffset: 0,
+                items: items,
             } as IViewPort);
         };
 
@@ -176,10 +180,11 @@ export class ViewPortService {
             const viewPort = {
                 beforeSize: beforeSize,
                 afterSize: afterSize,
-                items: visibleList,
+                visibleItems: visibleList,
                 startIndex: startIndex,
                 endIndex: endIndex,
                 startOffset: 0,
+                items: items,
             } as IViewPort;
 
 
@@ -214,10 +219,11 @@ export class ViewPortService {
                 return Observable.of({
                     beforeSize: 0,
                     afterSize: 0,
-                    items: items,
+                    visibleItems: items,
                     startIndex: 0,
                     endIndex: items.length,
                     startOffset: 0,
+                    items: items,
                 } as IViewPort);
 
             } else {
@@ -277,10 +283,11 @@ export class ViewPortService {
 export interface IViewPort {
     beforeSize: number;
     afterSize: number;
-    items: IViewPortItem[];
+    visibleItems: IViewPortItem[];
     startIndex: number;
     endIndex: number;
     startOffset: number;
+    items: IViewPortItem[];
 }
 
 export interface IViewPortItem {

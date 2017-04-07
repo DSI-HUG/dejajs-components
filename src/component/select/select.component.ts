@@ -797,7 +797,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 // Prevent that the adaptation of the scroll raise a new view port calculation
                 // this.ignoreNextScrollEvents = res.outOfRange;
                 if (!this.keepExistingViewPort) {
-                    this._itemList = res.items;
+                    this._itemList = res.visibleItems;
                 }
                 this.changeDetectorRef.markForCheck();
             });
