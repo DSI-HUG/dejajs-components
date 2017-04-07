@@ -398,10 +398,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
         super.setModels$(items)
             .first()
             .switchMap(() => this.calcViewPort$())
-            .subscribe(() => {
-            }, (error: any) => {
-                this._hintLabel = error.toString();
-            });
+            .subscribe(noop);
     }
 
     private set currentItemIndex(value: number) {
@@ -452,11 +449,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                     return this.calcViewPort$().map(() => itms);
                 }
             })
-            .subscribe(() => {
-            }, (error: any) => {
-                this.hintLabel = error.toString();
-                this._itemList = [];
-            });
+            .subscribe(noop);
     }
 
     // From ControlValueAccessor interface
@@ -489,7 +482,6 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Efface le contenu de la liste */
     public clearViewPort() {
         super.clearViewPort();
-        this.changeDetectorRef.markForCheck();
     }
 
     public ngAfterViewInit() {
@@ -504,15 +496,11 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
         this.subscriptions.push(Observable
             .fromEvent(window, 'resize')
-            .switchMap((e: Event) => {
+            .subscribe(() => {
                 if (this.viewPort.mode !== ViewportMode.NoViewport && this.maxHeight === 0) {
-                    this.computedMaxHeight = 0;
-                    return this.calcViewPort$().map(() => e);
-                } else {
-                    return Observable.of(e);
+                    this.viewPort.refresh();
                 }
-            })
-            .subscribe(noop));
+            }));
 
         const listElement = this.listContainer.nativeElement as HTMLElement;
 
@@ -941,8 +929,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     }
 
     protected calcViewPort$(): Observable<IViewPort> {
-        // TODO remove this.listContainer.nativeElement
-        return super.calcViewPort$(this.query, this.listContainer.nativeElement)
+        return super.calcViewPort$(this.query)
             .do(() => {
                 // Prevent that the adaptation of the scroll raise a new view port calculation
                 // this.ignoreNextScrollEvents = res.outOfRange;

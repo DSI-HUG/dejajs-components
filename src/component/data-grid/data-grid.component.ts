@@ -1,3 +1,4 @@
+import { ViewPortService } from './../../common/core/item-list/viewport.service';
 import { DejaGridHeaderComponent } from './data-grid-header/data-grid-header.component';
 /*
  * *
@@ -15,7 +16,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { Observable, Subject, Subscription } from 'rxjs/Rx';
 import { GroupingService, IGroupInfo } from '../../common/core/grouping';
-import { IItemBase, IItemTree, ItemListBase, ItemListService, ViewportMode } from '../../common/core/item-list';
+import { IItemBase, IItemTree, ItemListService, ViewportMode } from '../../common/core/item-list';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { SortingService } from '../../common/core/sorting';
 import { IDejaDragEvent } from '../dragdrop';
@@ -60,7 +61,7 @@ export class DejaGridComponent implements OnDestroy {
     /** Définit un texte de conseil en cas d'erreur de validation ou autre */
     @Input() public hintLabel = '';
     /** Définit la hauteur d'une ligne pour le calcul du viewport en pixels */
-    @Input() public viewPortRowHeight = ItemListBase.defaultViewPortRowHeight;
+    @Input() public viewPortRowHeight = ViewPortService.itemDefaultSize;
     /** Les trois valeurs acceptés en paramètre se trouvent dans l'enum ViewportMode (NoViewport, ConstantRowheight, VariableRowHeight ou AutoRowHeight)
      * Attention, une désactivation du viewport dégrade considérablement les performances de la liste et ne doit pas être activée si la liste
      * est suceptible de contenir beaucoup d'éléments.

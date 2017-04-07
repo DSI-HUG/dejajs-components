@@ -2,6 +2,7 @@
 # [@next] (2017-04-xx)
 
 ### Breaking changes from 1.5.1
+* **IItemBase:** height is renamed size to be compatible with viewport horizontal layout
 
 ### Known issues
 

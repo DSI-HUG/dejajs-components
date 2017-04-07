@@ -19,8 +19,6 @@ const noop = () => { };
 
 /** Classe de base pour tous les composants à listes (deja-treelist, deja-select, deja-grid) */
 export class ItemListBase {
-    public static defaultViewPortRowHeight = 33;
-
     protected waiter = true;
 
     protected _itemList: IItemBase[] = []; // Viewport list
@@ -33,7 +31,6 @@ export class ItemListBase {
     protected _currentItem: IItemBase;
     protected _hintLabel: string;
     protected _nodataLabel: string;
-    protected computedMaxHeight = 0;
     protected _hideSelected: boolean;
     protected _childrenField: string;
     protected _minSearchLength = 0;
@@ -59,23 +56,17 @@ export class ItemListBase {
 
     private _itemListService: ItemListService;
     private allCollapsed = false;
-    private _viewPortRowHeight = ItemListBase.defaultViewPortRowHeight;
+    private _viewPortRowHeight = ViewPortService.itemDefaultSize;
     private viewPort$: Observable<IViewPort>;
 
     constructor(protected changeDetectorRef: ChangeDetectorRef, protected viewPort: ViewPortService) {
         this.viewPort$ = viewPort.viewPort$.do((viewPortResult: IViewPort) => {
-            if (!viewPortResult || !viewPortResult.items || viewPortResult.items.length === 0) {
-                this.clearViewPort();
-                return;
-            }
-
             delete this._hintLabel;
             this._itemList = viewPortResult.items;
             this.vpStartRow = viewPortResult.startIndex;
             this.vpEndRow = viewPortResult.endIndex;
             this.vpBeforeHeight = viewPortResult.beforeSize;
             this.vpAfterHeight = viewPortResult.afterSize;
-
             this.changeDetectorRef.markForCheck();
         })
     }
@@ -364,10 +355,7 @@ export class ItemListBase {
 
     /** Efface le viewport */
     public clearViewPort() {
-        this.vpBeforeHeight = 0;
-        this.vpAfterHeight = 0;
-        this._itemList = [];
-        this.changeDetectorRef.markForCheck();
+        this.viewPort.clear();
     };
 
     /** Efface la hauteur calculée des lignes en mode automatique */
@@ -419,10 +407,13 @@ export class ItemListBase {
      */
     protected setViewPortRowHeight(value: number) {
         this._viewPortRowHeight = value;
+        if (value) {
+            this.viewPort.itemsSize$.next(value);
+        }
     }
 
     protected getViewPortRowHeight() {
-        return this._viewPortRowHeight || ItemListBase.defaultViewPortRowHeight;
+        return this._viewPortRowHeight || ViewPortService.itemDefaultSize;
     }
 
     /** Definit le service de liste utilisé par ce composant.
@@ -695,220 +686,17 @@ export class ItemListBase {
     }
 
     /** Calcule le viewport pour le conteneur spécifié. */
-    protected calcViewPort$(query?: string, containerElement?: HTMLElement): Observable<IViewPort> {
-        let calcViewPort$: (items: IItemBase[], maxSize: number, measureContHeight: boolean) => Observable<IViewPort>;
-
-        const calcContainerSize$ = (items: IItemBase[]): Observable<IViewPort> => {
-            // Set the viewlist to the maximum height to measure the real max-height defined in the css
-            const heightMax = 200000;
-            // Use a blank div to do that
-            this.vpAfterHeight = heightMax;
-            this.computedMaxHeight = containerElement.clientHeight;
-            this.changeDetectorRef.markForCheck();
-            // Wait next life cycle for the result
-            return Observable.timer(1)
-                .first()
-                .switchMap(() => calcViewPort$(items, this.computedMaxHeight, false));
-        };
-
-        const calcConstantHeightViewPort$ = (items: IItemBase[], contHeight: number): Observable<IViewPort> => {
-            const scrollPos = (contHeight && containerElement && containerElement.scrollTop) || 0;
-            const itemSize = this.getViewPortRowHeight();
-            let maxCount = Math.ceil(contHeight / itemSize);
-            const startRow = Math.floor(scrollPos / itemSize);
-
-            if (maxCount) {
-                maxCount++;
-            }
-
-            const rowsCount = Math.min(items.length - startRow, maxCount);
-            let startIndex: number;
-            let endIndex: number;
-
-            if (rowsCount < 0) {
-                endIndex = items.length - 1;
-                startIndex = endIndex - Math.min(items.length, maxCount) + 1;
-            } else {
-                startIndex = startRow;
-                endIndex = startIndex + rowsCount - 1;
-            }
-
-            return Observable.of({
-                beforeSize: startIndex * itemSize,
-                afterSize: (items.length - 1 - endIndex) * itemSize,
-                items: items.slice(startIndex, 1 + endIndex),
-                startIndex: startIndex,
-                endIndex: endIndex,
-                startOffset: 0,
-            } as IViewPort);
-        };
-
-        const calcVariableHeightViewPort$ = (items: IItemBase[], contHeight: number): Observable<IViewPort> => {
-            const visibleList = [] as IItemBase[];
-            const scrollPos = contHeight ? containerElement.scrollTop : 0;
-            let startIndex: number;
-            let endIndex = 0;
-            let beforeSize = 0;
-            let visibleListHeight = 0;
-            let afterSize = 0;
-
-            items.forEach((item: IItemBase, index: number) => {
-                const itemHeight = this.getItemHeight(item);
-                if (beforeSize + itemHeight < scrollPos && startIndex === undefined) {
-                    beforeSize += itemHeight;
-                } else if (visibleListHeight + beforeSize < contHeight + scrollPos) {
-                    if (startIndex === undefined) {
-                        startIndex = index;
-                    }
-                    endIndex = index;
-                    visibleListHeight += itemHeight;
-                    visibleList.push(item);
-                } else {
-                    afterSize += itemHeight;
-                }
-            });
-
-            return Observable.of({
-                beforeSize: beforeSize,
-                afterSize: afterSize,
-                items: visibleList,
-                startIndex: startIndex || 0,
-                endIndex: endIndex,
-                startOffset: 0,
-            } as IViewPort);
-        };
-
-        const calcAutoHeightViewPort$ = (items: IItemBase[], contHeight: number): Observable<IViewPort> => {
-            const visibleList = [] as IItemBase[];
-            let vpHeight = 0;
-            let startIndex = 0;
-            let endIndex = 0;
-            let overflow = false;
-            let averageHeight = 0;
-            let averageCount = 0;
-            let beforeSize = 0;
-            let afterSize = 0;
-            let calculationRequired = false;
-            const scrollPos = contHeight ? containerElement.scrollTop : 0;
-            items.forEach((item, index) => {
-                let itemHeight = item.size || 0;
-                if (itemHeight > ItemListBase.defaultViewPortRowHeight) {
-                    averageHeight += itemHeight;
-                    ++averageCount;
-                } else if (averageCount > 0) {
-                    itemHeight = Math.round(averageHeight / averageCount);
-                } else {
-                    itemHeight = this.getViewPortRowHeight();
-                }
-
-                if (vpHeight === 0 && beforeSize + itemHeight < scrollPos) {
-                    beforeSize += itemHeight;
-                } else if (!overflow) {
-                    if (visibleList.length === 0) {
-                        startIndex = index;
-                    }
-                    if (!item.size) {
-                        calculationRequired = true;
-                    }
-                    endIndex = index;
-                    vpHeight += itemHeight;
-                    visibleList.push(item);
-                    if (beforeSize + vpHeight > scrollPos + contHeight) {
-                        overflow = true;
-                    }
-                } else {
-                    afterSize += itemHeight;
-                }
-            });
-
-            const viewPort = {
-                beforeSize: beforeSize,
-                afterSize: afterSize,
-                items: visibleList,
-                startIndex: startIndex,
-                endIndex: endIndex,
-                startOffset: 0,
-            } as IViewPort;
-
-
-            if (!calculationRequired) {
-                return Observable.of(viewPort);
-            } else {
-                // Measure items height
-                this.viewPort.viewPortResult$.next(viewPort);
-                return Observable.timer(1)
-                    .switchMap(() => {
-                        const elements = containerElement.getElementsByClassName('listitem');
-                        for (let i = 0; i < elements.length; i++) {
-                            const itemElement = elements[i];
-                            const index = +itemElement.getAttribute('flat');
-                            const item = visibleList[index - startIndex];
-                            if (item) {
-                                item.size = itemElement.clientHeight;
-                            }
-                        };
-                        return calcAutoHeightViewPort$(items, contHeight);
-                    });
-            }
-        };
-
-        calcViewPort$ = (items: IItemBase[], maxheight: number, measureContHeight: boolean) => {
-            let containerHeight = this.computedMaxHeight || maxheight || containerElement.clientHeight;
-            if (containerHeight < 2 * ItemListBase.defaultViewPortRowHeight && measureContHeight !== false) {
-                return calcContainerSize$(items);
-
-            } else {
-                if (containerHeight <= ItemListBase.defaultViewPortRowHeight) {
-                    containerHeight = window.innerHeight;
-                }
-
-                if (this.viewPort.mode === ViewportMode.NoViewport) {
-                    return Observable.of({
-                        beforeSize: 0,
-                        afterSize: 0,
-                        items: items,
-                        startIndex: 0,
-                        endIndex: items.length,
-                        startOffset: 0,
-                    } as IViewPort);
-
-                } else {
-                    let viewPort$: Observable<IViewPort>;
-
-                    if (this.viewPort.mode === ViewportMode.VariableRowHeight) {
-                        viewPort$ = calcVariableHeightViewPort$(items, containerHeight);
-
-                    } else if (this.viewPort.mode === ViewportMode.AutoRowHeight) {
-                        viewPort$ = calcAutoHeightViewPort$(items, containerHeight);
-
-                    } else {
-                        viewPort$ = calcConstantHeightViewPort$(items, containerHeight);
-                    }
-
-                    return viewPort$.switchMap((viewPort: IViewPort) => {
-                        if (containerHeight < 2 * ItemListBase.defaultViewPortRowHeight) {
-                            return calcContainerSize$(items);
-                        } else {
-                            return Observable.of(viewPort);
-                        }
-                    });
-                }
-            };
-        };
-
+    protected calcViewPort$(query?: string): Observable<IViewPort> {
         this.getViewList$(query)
-            .filter((result: IViewListResult) => {
+            .do((result: IViewListResult) => {
                 if (result.depthMax !== undefined) {
                     this._depthMax = result.depthMax;
                 }
                 this.rowsCount = result.visibleList.length;
-                return this.rowsCount > 0;
+                this.viewPort.items$.next(result.visibleList);
             })
-            .switchMap((result: IViewListResult) => calcViewPort$(result.visibleList, this._maxHeight, true))
             .first()
-            .subscribe((viewPort: IViewPort) => {
-                this.viewPort.viewPortResult$.next(viewPort);
-            });
+            .subscribe(noop);
 
         return this.viewPort$;
     }
@@ -1026,7 +814,7 @@ export class ItemListBase {
         } else if (this.viewPort.mode === ViewportMode.AutoRowHeight) {
             return item.size || null;
         } else {
-            return (item.size && item.size > ItemListBase.defaultViewPortRowHeight) ? item.size : this.getViewPortRowHeight();
+            return (item.size && item.size > ViewPortService.itemDefaultSize) ? item.size : this.getViewPortRowHeight();
         }
     }
 }

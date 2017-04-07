@@ -792,8 +792,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     protected calcViewPort$() {
-        // TODO remove this.listContainer.nativeElement
-        return super.calcViewPort$(this.dropDownQuery, this.listContainer.nativeElement)
+        return super.calcViewPort$(this.dropDownQuery)
             .do((res: IViewPort) => {
                 // Prevent that the adaptation of the scroll raise a new view port calculation
                 // this.ignoreNextScrollEvents = res.outOfRange;
