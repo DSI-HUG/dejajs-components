@@ -100,7 +100,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     // protected _items: IItemBase[]; In the base class, correspond to the model
     private clickedItem: IItemBase;
     private rangeStartIndex = 0;
-    private ignoreNextScrollEvents = false;
+    private ignoreNextScrollEvents = false; // TODO unused
     private filterExpression = '';
     private lastScrollTop = 0;
     private _searchArea = false;
@@ -923,9 +923,9 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
     protected calcViewPort$() {
         return super.calcViewPort$(this.query, this.maxHeight, this.listcontainer.nativeElement)
-            .do((res: IViewPort) => {
+            .do(() => {
                 // Prevent that the adaptation of the scroll raise a new view port calculation
-                this.ignoreNextScrollEvents = res.outOfRange;
+                // this.ignoreNextScrollEvents = res.outOfRange;
                 if (this.rowsCount > 0 && this.afterViewInit) {
                     this.afterViewInit.emit();
                     this.afterViewInit = null;

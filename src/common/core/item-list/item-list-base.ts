@@ -548,12 +548,8 @@ export class ItemListBase {
     protected getViewList$(query?: RegExp | string, ignoreCache?: boolean): Observable<IViewListResult> {
         if (typeof query === 'string' && (query + '').length < this._minSearchLength) {
             const emptyListResult = {
-                rowsCount: 0,
                 depthMax: 0,
                 visibleList: [],
-                startRow: 0,
-                endRow: 0,
-                outOfRange: false,
             } as IViewListResult;
 
             if (!this.getItems()) {
@@ -712,16 +708,13 @@ export class ItemListBase {
             const rowsCount = Math.min(items.length - startRow, maxCount);
             let startIndex: number;
             let endIndex: number;
-            let outOfRange: boolean;
 
             if (rowsCount < 0) {
                 endIndex = items.length - 1;
                 startIndex = endIndex - Math.min(items.length, maxCount) + 1;
-                outOfRange = true;
             } else {
                 startIndex = startRow;
                 endIndex = startIndex + rowsCount - 1;
-                outOfRange = false;
             }
 
             return Observable.of({
@@ -861,7 +854,6 @@ export class ItemListBase {
                         startIndex: 0,
                         endIndex: items.length,
                         startOffset: 0,
-                        outOfRange: false,
                     } as IViewPort);
 
                 } else {

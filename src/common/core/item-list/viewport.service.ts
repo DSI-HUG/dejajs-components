@@ -48,7 +48,6 @@ export interface IViewPort {
     startIndex: number;
     endIndex: number;
     startOffset: number;
-    outOfRange: boolean;
 }
 
 export interface IViewPortItem {

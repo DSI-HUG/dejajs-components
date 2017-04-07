@@ -80,7 +80,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @ViewChild(DejaDropDownComponent) private dropDownComponent: DejaDropDownComponent;
 
     private _type = 'select';
-    private ignoreNextScrollEvents = false;
+    private ignoreNextScrollEvents = false;  // TODO unused
     private selectingItemIndex: number;
     private keepExistingViewPort = false;
     private dropDownQuery = '';
@@ -783,7 +783,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return super.calcViewPort$(this.dropDownQuery, this.maxHeight, this.listElement)
             .do((res: IViewPort) => {
                 // Prevent that the adaptation of the scroll raise a new view port calculation
-                this.ignoreNextScrollEvents = res.outOfRange;
+                // this.ignoreNextScrollEvents = res.outOfRange;
                 if (!this.keepExistingViewPort) {
                     this._itemList = res.items;
                 }
