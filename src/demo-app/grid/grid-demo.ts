@@ -12,7 +12,7 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { IItemTree } from '../../common/core';
-import { DejaGridComponent, DejaGridRowsEvent, IDejaDragEvent, IDejaGridColumn, IDejaGridColumnSizeEvent, IDejaGridRow } from '../../component';
+import { DejaGridComponent, DejaGridRowsEvent, IDejaDragEvent, IDejaGridColumn, IDejaGridColumnSizeEvent } from '../../component';
 import { DrugsService, IDrug } from '../services/drugs.service';
 import { INews, NewsService } from '../services/news.service';
 

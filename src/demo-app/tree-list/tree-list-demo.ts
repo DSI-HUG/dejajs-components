@@ -88,7 +88,7 @@ export class DejaTreeListDemoComponent implements OnInit {
                 // tslint:disable-next-line
                 console.info('La taille du lorem ipsum dans une div de 300px est de : ', height, 'px');
             });
-        this.textMetricsService.metricsElem = this.treeList.elementRef.nativeElement as HTMLElement;
+        this.textMetricsService.metricsElem = this.treeList && this.treeList.elementRef.nativeElement as HTMLElement;
     }
 
     protected onSelectionChanged(e: DejaTreeListItemsEvent) {

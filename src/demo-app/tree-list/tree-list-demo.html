@@ -10,7 +10,7 @@
 		</md-card>
 	</md-tab>
 	<md-tab label="EXAMPLES">
-		<md-card class="treelist-demo demo-card demo-basic business-object">
+		<!--<md-card class="treelist-demo demo-card demo-basic business-object">
 			<md-toolbar color="primary">By passing business object</md-toolbar>
 			<md-card-content>
 				<div fxLayout="row">
@@ -25,7 +25,7 @@
 		<md-card class="treelist-demo demo-card demo-basic">
 			<md-toolbar color="primary">Treelist demo - Cas standards</md-toolbar>
 			<md-card-content class="listContainer">
-				<deja-tree-list #treeList min-search-length="0" searchArea multiSelect nodataholder="Pas de données" placeholder="Liste des pays" [(ngModel)]="countries" [deja-mouse-draggable]="getDragContext()" [valueField]="code">
+				<deja-tree-list min-search-length="0" searchArea multiSelect nodataholder="Pas de données" placeholder="Liste des pays" [(ngModel)]="countries" [deja-mouse-draggable]="getDragContext()" [valueField]="code">
 					<template #itemTemplate let-item let-flatindex="flatindex">
 						<span [attr.ddid]="item.code">{{ item.naqme + ' - ' + item.code }}</span>
 					</template>
@@ -63,12 +63,12 @@
 				</div>
 				<div #dropArea [deja-mouse-droppable]="getDropContext(dropArea)" [deja-droppable]="{dragovercallback: onDivDragOver, dropcallback:onDivDropEvent}" style="border:1px solid red;min-height:150px;"></div>
 			</md-card-content>
-		</md-card>
+		</md-card>-->
 
 		<md-card class="treelist-demo demo-card">
 			<md-toolbar color="primary">Treelist demo - Cas particuliers</md-toolbar>
 			<md-card-content class="listContainer" fxLayout="row">
-				<deja-tree-list fxFlex [(ngModel)]="loremList" [viewportMode]="variableMode" expandButton searchArea sortable placeholder="Tree list avec des tailles de rows différentes"></deja-tree-list>
+				<deja-tree-list #treeList fxFlex [(ngModel)]="loremList" [viewportMode]="variableMode" expandButton searchArea sortable placeholder="Tree list avec des tailles de rows différentes"></deja-tree-list>
 				<deja-tree-list fxFlex [models]="news$" [viewportMode]="autoMode" [viewPortRowHeight]="200" multiSelect searchArea sortable placeholder="Automatic row height TreeView ">
 					<template #itemTemplate let-item let-flatindex="flatindex">
 						<div class="news" fxLayout="row">

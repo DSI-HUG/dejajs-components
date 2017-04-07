@@ -16,7 +16,7 @@ import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
 import { GroupingService } from '../../common/core/grouping';
-import { IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, ViewportMode } from '../../common/core/item-list';
+import { IItemBase, IItemTree, ItemListBase, ItemListService, IViewPort, ViewportMode, ViewPortService } from '../../common/core/item-list';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { SortingService } from '../../common/core/sorting';
 import { IDejaDragEvent } from '../dragdrop';
@@ -34,7 +34,7 @@ const TreeListComponentValueAccessor = {
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    providers: [TreeListComponentValueAccessor],
+    providers: [TreeListComponentValueAccessor, ViewPortService],
     selector: 'deja-tree-list',
     styleUrls: [
         './tree-list.component.scss',
@@ -117,8 +117,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     private clearFilterExpression$ = new BehaviorSubject<void>(null);
     private filterListComplete$ = new Subject();
 
-    constructor(changeDetectorRef: ChangeDetectorRef, public elementRef: ElementRef) {
-        super(changeDetectorRef);
+    constructor(changeDetectorRef: ChangeDetectorRef, viewPort: ViewPortService, public elementRef: ElementRef) {
+        super(changeDetectorRef, viewPort);
 
         this.subscriptions.push(Observable.from(this.clearFilterExpression$)
             .debounceTime(750)
@@ -491,7 +491,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
         this.subscriptions.push(Observable
             .fromEvent(window, 'resize')
             .switchMap((e: Event) => {
-                if (this._viewportMode !== ViewportMode.NoViewport && this.maxHeight === 0) {
+                if (this.viewPort.mode !== ViewportMode.NoViewport && this.maxHeight === 0) {
                     this.computedMaxHeight = 0;
                     return this.calcViewPort$().map(() => e);
                 } else {
@@ -515,7 +515,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
             })
             .filter((scrollTop: number) => this.lastScrollTop !== scrollTop)
             .switchMap((scrollTop: number) => {
-                if (this._viewportMode === ViewportMode.NoViewport && this.ignoreNextScrollEvents) {
+                if (this.viewPort.mode === ViewportMode.NoViewport && this.ignoreNextScrollEvents) {
                     this.ignoreNextScrollEvents = false;
                     return Observable.of(scrollTop);
                 } else {
@@ -923,10 +923,10 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
     protected calcViewPort$() {
         return super.calcViewPort$(this.query, this.maxHeight, this.listcontainer.nativeElement)
-            .do((res: IViewListResult) => {
+            .do((res: IViewPort) => {
                 // Prevent that the adaptation of the scroll raise a new view port calculation
                 this.ignoreNextScrollEvents = res.outOfRange;
-                if (res.rowsCount > 0 && this.afterViewInit) {
+                if (this.rowsCount > 0 && this.afterViewInit) {
                     this.afterViewInit.emit();
                     this.afterViewInit = null;
                 }

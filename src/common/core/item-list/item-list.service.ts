@@ -782,7 +782,7 @@ export class ItemListService {
     }
 
     /** Usage interne. Retourne la portion de la liste à afficher en fonction des paramètres spécifiés. */
-    public getViewList$(searchField: string, query?: RegExp | string, startRow?: number, maxCount?: number, ignoreCache?: boolean, ddStartIndex?: number, ddTargetIndex?: number, multiSelect?: boolean): Observable<IViewListResult> {
+    public getViewList$(searchField: string, query?: RegExp | string, ignoreCache?: boolean, ddStartIndex?: number, ddTargetIndex?: number, multiSelect?: boolean): Observable<IViewListResult> {
         const result = {} as IViewListResult;
 
         ignoreCache = ignoreCache || query !== this.lastQuery || !this.items || !this.items.length;
@@ -847,28 +847,8 @@ export class ItemListService {
                 viewList = this._cache.visibleList || [];
             }
 
-            result.startRow = 0;
-            result.endRow = 0;
-            result.outOfRange = false;
-            result.rowsCount = viewList.length;
             result.depthMax = this._cache.depthMax;
-
-            if (startRow !== undefined && maxCount !== undefined && maxCount > 0) {
-                const rowsCount = Math.min(viewList.length - startRow, maxCount);
-
-                if (rowsCount < 0) {
-                    result.endRow = viewList.length - 1;
-                    result.startRow = result.endRow - Math.min(viewList.length, maxCount) + 1;
-                    result.outOfRange = true;
-                } else {
-                    result.startRow = startRow;
-                    result.endRow = result.startRow + rowsCount - 1;
-                }
-                result.visibleList = viewList.slice(result.startRow, 1 + result.endRow);
-
-            } else {
-                result.visibleList = viewList;
-            }
+            result.visibleList = viewList;
 
             return result;
         };
@@ -1250,12 +1230,8 @@ export class ItemListService {
 
 /** Structure de retour de getViewList. */
 export interface IViewListResult {
-    rowsCount?: number;
     depthMax?: number;
     visibleList?: IItemBase[];
-    startRow: number;
-    endRow: number;
-    outOfRange?: boolean;
 }
 
 /** Structure de retour de findNextMatch. */

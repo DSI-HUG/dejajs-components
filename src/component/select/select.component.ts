@@ -13,7 +13,7 @@ import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, C
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
-import { IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, ViewportMode, } from '../../common/core/item-list';
+import { IItemBase, IItemTree, ItemListBase, ItemListService, IViewPort, ViewportMode, ViewPortService } from '../../common/core/item-list';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { DejaDropDownComponent } from '../dropdown';
 
@@ -29,7 +29,7 @@ const SelectComponentValueAccessor = {
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    providers: [SelectComponentValueAccessor],
+    providers: [SelectComponentValueAccessor, ViewPortService],
     selector: 'deja-select',
     styleUrls: [
         './select.component.scss',
@@ -101,8 +101,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     private keyboardNavigation$ = new Subject();
 
-    constructor(changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef) {
-        super(changeDetectorRef);
+    constructor(changeDetectorRef: ChangeDetectorRef, viewPort: ViewPortService, private elementRef: ElementRef) {
+        super(changeDetectorRef, viewPort);
 
         this.subscriptions.push(Observable.from(this.clearFilterExpression$)
             .debounceTime(750)
@@ -702,7 +702,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     protected scroll() {
-        if (this._viewportMode === ViewportMode.NoViewport || this.ignoreNextScrollEvents) {
+        if (this.viewPort.mode === ViewportMode.NoViewport || this.ignoreNextScrollEvents) {
             this.ignoreNextScrollEvents = false;
             return;
         }
@@ -781,11 +781,11 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     protected calcViewPort$() {
         return super.calcViewPort$(this.dropDownQuery, this.maxHeight, this.listElement)
-            .do((res: IViewListResult) => {
+            .do((res: IViewPort) => {
                 // Prevent that the adaptation of the scroll raise a new view port calculation
                 this.ignoreNextScrollEvents = res.outOfRange;
                 if (!this.keepExistingViewPort) {
-                    this._itemList = res.visibleList;
+                    this._itemList = res.items;
                 }
                 this.changeDetectorRef.markForCheck();
             });
