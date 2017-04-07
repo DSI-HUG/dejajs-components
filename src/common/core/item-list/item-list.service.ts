@@ -143,6 +143,7 @@ export class ItemListService {
                 }
 
                 observable
+                    .filter((its) => !!its)
                     .subscribe((its) => {
                         this.ensureChildrenProperties(its);
                         // TODO La déselection ne fonctionne pas pendant le chargement
