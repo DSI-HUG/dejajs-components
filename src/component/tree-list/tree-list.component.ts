@@ -95,9 +95,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     // protected _items: IItemBase[]; In the base class, correspond to the model
     private clickedItem: IItemBase;
     private rangeStartIndex = 0;
-    private ignoreNextScrollEvents = false; // TODO unused
     private filterExpression = '';
-    private lastScrollTop = 0;
     private _searchArea = false;
     private _expandButton = false;
     private _sortable = false;
@@ -122,7 +120,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
         this.subscriptions.push(Observable.from(this.filterListComplete$)
             .debounceTime(250)
             .do(() => this.setCurrentItem(undefined))
-            .switchMap(() => this.calcViewPort$())
+            .switchMap(() => this.calcViewList$())
             .subscribe(noop));
 
         this.subscriptions.push(Observable.from(this.keyboardNavigation$)
@@ -397,7 +395,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     public set models(items: any[] | Observable<any[]>) {
         super.setModels$(items)
             .first()
-            .switchMap(() => this.calcViewPort$())
+            .switchMap(() => this.calcViewList$())
             .subscribe(noop);
     }
 
@@ -446,7 +444,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                     this.changeDetectorRef.markForCheck();
                     return Observable.of(itms);
                 } else {
-                    return this.calcViewPort$().map(() => itms);
+                    return this.calcViewList$()
+                        .map(() => itms);
                 }
             })
             .subscribe(noop);
@@ -466,7 +465,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Change l'état d'expansion de toute les lignes parentes */
     public toggleAll$(): Observable<IItemTree> {
         return super.toggleAll$()
-            .switchMap(() => this.calcViewPort$());
+            .switchMap(() => this.calcViewList$().first());
     }
 
     /** Change l'état d'expansion de toute les lignes parentes */
@@ -490,7 +489,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
         if (this._itemList.length === 0 && this.hasCustomService) {
             Observable.timer(1)
                 .first()
-                .switchMap(() => this.calcViewPort$())
+                .switchMap(() => this.calcViewList$())
                 .subscribe(noop);
         }
 
@@ -517,18 +516,9 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                 this.scroll.emit(e);
                 return scrollTop;
             })
-            .filter((scrollTop: number) => this.lastScrollTop !== scrollTop)
-            .switchMap((scrollTop: number) => {
-                if (this.viewPort.mode === ViewportMode.NoViewport && this.ignoreNextScrollEvents) {
-                    this.ignoreNextScrollEvents = false;
-                    return Observable.of(scrollTop);
-                } else {
-                    this.lastScrollTop = scrollTop;
-                    return this.calcViewPort$().map(() => scrollTop);
-                }
-            })
+            .do((scrollPos) => this.viewPort.scrollPosition$.next(scrollPos))
             .debounceTime(30)
-            .switchMap(() => this.calcViewPort$())
+            .do((scrollPos) => this.viewPort.scrollPosition$.next(scrollPos))
             .subscribe(noop));
 
         let keyDown$ = Observable.fromEvent(listElement, 'keydown');
@@ -827,7 +817,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                 this.itemDragEnd.emit(event);
                 delete this._ddStartIndex;
                 delete this._ddTargetIndex;
-                this.calcViewPort$().first().subscribe(noop); // Comment this line to debug dragdrop
+                this.calcViewList$().first().subscribe(noop); // Comment this line to debug dragdrop
             },
             dragstartcallback: (event: IDejaDragEvent) => {
                 const targetIndex = this.getItemIndexFromHTMLElement(event.target as HTMLElement);
@@ -865,7 +855,9 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                     .switchMap((finalTarget) => {
                         if (finalTarget !== undefined && finalTarget !== this._ddTargetIndex) {
                             this._ddTargetIndex = finalTarget;
-                            return this.calcViewPort$().map(() => finalTarget);
+                            return this.calcViewList$()
+                                .first()
+                                .map(() => finalTarget);
                         } else {
                             return Observable.of(finalTarget);
                         }
@@ -879,7 +871,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                 delete this._ddStartIndex;
                 delete this._ddTargetIndex;
                 this.drop$()
-                    .switchMap(() => this.calcViewPort$())
+                    .switchMap(() => this.calcViewList$().first())
                     .subscribe(noop);
                 event.preventDefault();
             },
@@ -897,7 +889,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
         if (!listBounds.containsPoint(new Position(event.pageX, event.pageY))) {
             this._ddTargetIndex = this._ddStartIndex;
-            this.calcViewPort$().first().subscribe(noop);
+            this.calcViewList$().first().subscribe(noop);
         }
     }
 
@@ -928,8 +920,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
         }
     }
 
-    protected calcViewPort$(): Observable<IViewPort> {
-        return super.calcViewPort$(this.query)
+    protected calcViewList$(): Observable<IViewPort> {
+        return super.calcViewList$(this.query)
             .do(() => {
                 // Prevent that the adaptation of the scroll raise a new view port calculation
                 // this.ignoreNextScrollEvents = res.outOfRange;

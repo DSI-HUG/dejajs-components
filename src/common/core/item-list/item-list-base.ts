@@ -68,7 +68,7 @@ export class ItemListBase {
             this.vpBeforeHeight = viewPortResult.beforeSize;
             this.vpAfterHeight = viewPortResult.afterSize;
             this.changeDetectorRef.markForCheck();
-        })
+        });
     }
 
     /** Renvoie le modèle de tri appliqué à la liste.
@@ -214,7 +214,7 @@ export class ItemListBase {
         }
         return this.getItemListService().sort$(this._sortInfos)
             .first()
-            .switchMap((si) => this.calcViewPort$().map(() => si));
+            .switchMap((si) => this.calcViewList$().first().map(() => si));
     }
 
     /** Groupe les éléments en fonction du modèle de groupe spécifié
@@ -223,7 +223,7 @@ export class ItemListBase {
      */
     public group$(groups: IGroupInfo[]) {
         return this.getItemListService().group$(groups)
-            .switchMap(() => this.calcViewPort$());
+            .switchMap(() => this.calcViewList$().first());
     }
 
     /** Retire les groupe correspondants au modèle de groupe spécifié
@@ -232,7 +232,7 @@ export class ItemListBase {
      */
     public ungroup$(groupInfo: IGroupInfo) {
         return this.getItemListService().ungroup$(groupInfo)
-            .switchMap(() => this.calcViewPort$());
+            .switchMap(() => this.calcViewList$().first());
     }
 
     /** Change l'état d'expansion de tous les éléments.
@@ -276,10 +276,10 @@ export class ItemListBase {
                         .delay(300)
                         .do((children) => children.forEach((child) => child.expanding = false))
                         .switchMap(() => this.getItemListService().toggleCollapse$(index, collapsed))
-                        .switchMap((toogleResult) => this.calcViewPort$().map(() => toogleResult));
+                        .switchMap((toogleResult) => this.calcViewList$().first().map(() => toogleResult));
                 } else {
                     return this.getItemListService().toggleCollapse$(index, collapsed)
-                        .switchMap(() => this.calcViewPort$())
+                        .switchMap(() => this.calcViewList$().first())
                         .map((vpresult) => {
                             const newTreeInfo = this.getItemTreeInfo(vpresult.items, item);
 
@@ -291,12 +291,13 @@ export class ItemListBase {
                         .delay(1)
                         .do((children) => children.forEach((child) => child.collapsing = false))
                         .delay(300)
-                        .switchMap((toogleResult) => this.calcViewPort$().map(() => toogleResult));
+                        .switchMap((toogleResult) => this.calcViewList$().first().map(() => toogleResult));
                 }
             } else {
                 const newTreeInfo$ = this.getItemListService().toggleCollapse$(index, collapsed)
                     .switchMap((toogleResult) => {
-                        return this.calcViewPort$()
+                        return this.calcViewList$()
+                            .first()
                             .map((vpresult) => {
                                 const newlist = vpresult.items;
                                 const newTreeInfo = this.getItemTreeInfo(newlist, item);
@@ -321,7 +322,7 @@ export class ItemListBase {
                         })
                         .delay(1)
                         .do((children) => children.forEach((child) => child.expanding = false))
-                        .switchMap((result) => this.calcViewPort$().map(() => result));
+                        .switchMap((result) => this.calcViewList$().first().map(() => result));
 
                 } else {
                     // Remove elements from the flat list, collapse and calc new flatlist
@@ -333,7 +334,7 @@ export class ItemListBase {
                             this._itemList = [...oldlist.slice(0, oldEndRow), ...newlist.slice(newTreeInfo.startIndex + 1)];
                             return toogleResult;
                         })
-                        .switchMap((toogleResult) => this.calcViewPort$().map(() => toogleResult));
+                        .switchMap((toogleResult) => this.calcViewList$().first().map(() => toogleResult));
                 }
             }
         }
@@ -350,7 +351,9 @@ export class ItemListBase {
     /** Nettoye les caches et réaffiche le viewport. */
     public refresh() {
         this.getItemListService().invalidateCache();
-        this.calcViewPort$().first().subscribe(noop);
+        this.calcViewList$()
+            .first()
+            .subscribe(noop);
     }
 
     /** Efface le viewport */
@@ -686,7 +689,7 @@ export class ItemListBase {
     }
 
     /** Calcule le viewport pour le conteneur spécifié. */
-    protected calcViewPort$(query?: string): Observable<IViewPort> {
+    protected calcViewList$(query?: string): Observable<IViewPort> {
         this.getViewList$(query)
             .do((result: IViewListResult) => {
                 if (result.depthMax !== undefined) {
@@ -702,7 +705,7 @@ export class ItemListBase {
     }
 
     protected ensureListCaches$(): Observable<IViewListResult> {
-        return this._itemListService.hasCache ? Observable.of(null) : this.calcViewPort$();
+        return this._itemListService.hasCache ? Observable.of(null) : this.getViewList$();
     }
 
     /** Calcul la position de la scrollbar pour que l'élément spécifié soit dans la zone visible. */

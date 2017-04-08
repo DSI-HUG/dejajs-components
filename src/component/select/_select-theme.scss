@@ -85,7 +85,7 @@
 					color: #fff;
 				}
 				&[keynav="false"] {
-					div:not(.unselectable):hover {
+					div.listitem:not(.unselectable):hover {
 						background-color: mat-color($primary);
 						color: #fff;
 					}
