@@ -105,7 +105,7 @@
 	<md-card class="demo-card">
 		<md-toolbar color="primary">Grille avec taille automatique des lignes</md-toolbar>
 		<md-card-content class="listContainer">
-			<deja-grid id="news" #news groupArea sortable columnsSizable multiSelect [rows]="news$ | async" [columns]="newsColumns" viewportMode="AutoRowHeight" nodataholder="Pas de données" (columnSizeChanged)="onColumnSizeChanged($event)">
+			<deja-grid id="news" #news groupArea sortable columnsSizable multiSelect [rows]="news$ | async" [columns]="newsColumns" viewportMode="auto" nodataholder="Pas de données" (columnSizeChanged)="onColumnSizeChanged($event)">
 				<template #cellTemplate let-row let-column="column">
 					<img *ngIf="column.name==='logo'" [attr.src]="row.urlsToLogos.small" class="logo">
 				</template>

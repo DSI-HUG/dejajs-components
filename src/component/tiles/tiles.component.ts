@@ -84,7 +84,9 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
 
         this.keyup$ = Observable.fromEvent(element.ownerDocument, 'keyup');
 
-        this.resize$sub = Observable.fromEvent(window, 'resize').subscribe(() => this.refresh({ resetWidth: true }));
+        this.resize$sub = Observable.fromEvent(window, 'resize')
+            .debounceTime(5)
+            .subscribe(() => this.refresh({ resetWidth: true }));
     }
 
     @Input()

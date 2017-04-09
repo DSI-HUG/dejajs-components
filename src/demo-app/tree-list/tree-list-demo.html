@@ -68,8 +68,8 @@
 		<md-card class="treelist-demo demo-card">
 			<md-toolbar color="primary">Treelist demo - Cas particuliers</md-toolbar>
 			<md-card-content class="listContainer" fxLayout="row">
-				<deja-tree-list #treeList fxFlex [(ngModel)]="loremList" [viewportMode]="variableMode" expandButton searchArea sortable placeholder="Tree list avec des tailles de rows différentes"></deja-tree-list>
-				<deja-tree-list fxFlex [models]="news$" [viewportMode]="autoMode" [viewPortRowHeight]="200" multiSelect searchArea sortable placeholder="Automatic row height TreeView ">
+				<deja-tree-list #treeList fxFlex [(ngModel)]="loremList" viewportMode="variable" expandButton searchArea sortable placeholder="Tree list avec des tailles de rows différentes"></deja-tree-list>
+				<deja-tree-list fxFlex [models]="news$" viewportMode="auto" [viewPortRowHeight]="200" searchField="description" multiSelect searchArea sortable placeholder="Automatic row height TreeView ">
 					<template #itemTemplate let-item let-flatindex="flatindex">
 						<div class="news" fxLayout="row">
 							<img [attr.src]="item.model.urlsToLogos.small" class="logo" fxFlex="0 0 8rem" fxLayout="row" fxLayoutAlign="space-between" fxFlexAlign="center">

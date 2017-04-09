@@ -126,7 +126,7 @@ Crée une liste déroulante.
     <td>viewportMode</td>
     <td>ViewportMode</td>
     <td></td>
-    <td>Les trois valeurs acceptés en paramètre se trouvent dans l'enum ViewportMode (NoViewport, ConstantRowheight, VariableRowHeight ou AutoRowHeight). Attention, une désactivation du viewport dégrade considérablement les performances de la liste et ne doit pas être activée si la liste est suceptible de contenir beaucoup d'éléments.</td>
+    <td>Les trois valeurs acceptés en paramètre se trouvent dans l'enum ViewportMode (disabled, fixed, variable ou auto). Attention, une désactivation du viewport dégrade considérablement les performances de la liste et ne doit pas être activée si la liste est suceptible de contenir beaucoup d'éléments.</td>
 </tr>
 <tr>
     <td>childrenField</td>

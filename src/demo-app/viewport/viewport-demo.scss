@@ -7,10 +7,10 @@
 
 deja-viewport {
 	margin-top: 1rem;
-	&[direction="vertical"] {
-		height: calc(100vh - 352px);
+	&[horizontal="false"] {
+		height: calc(100vh - 380px);
 	}
-	&[direction="horizontal"] {
+	&[horizontal="true"] {
 		height: 17rem;
 	}
 	.news {
@@ -41,7 +41,7 @@ deja-viewport {
 			}
 		}
 	}
-	&[direction="vertical"] {
+	&[horizontal="false"] {
 		.news {
 			.logo {
 				flex: 0 0 50%;
@@ -52,7 +52,7 @@ deja-viewport {
 			}
 		}
 	}
-	&[direction="horizontal"] {
+	&[horizontal="true"] {
 		.news {
 			.logo {
 				flex: 0 0 15rem;

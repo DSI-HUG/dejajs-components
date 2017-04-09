@@ -277,7 +277,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     /**
-     * Les trois valeurs acceptés en paramètre se trouvent dans l'enum ViewportMode (NoViewport, ConstantRowheight, VariableRowHeight)
+     * Les trois valeurs acceptés en paramètre se trouvent dans l'enum ViewportMode (disabled, fixed, variable, auto)
      * Attention, une désactivation du viewport dégrade considérablement les performances de la liste et ne doit pas être activée si la liste
      * est suceptible de contenir beaucoup d'éléments.
      */
@@ -800,7 +800,11 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             .do((res: IViewPort) => {
                 // Prevent that the adaptation of the scroll raise a new view port calculation
                 if (!this.keepExistingViewPort) {
-                    this._itemList = res.visibleItems;
+                    if (this.viewPort.mode === ViewportMode.disabled) {
+                        this._itemList = res.items;
+                    } else {
+                        this._itemList = res.visibleItems;
+                    }
                 }
                 this.changeDetectorRef.markForCheck();
             });

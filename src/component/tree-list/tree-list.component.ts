@@ -131,6 +131,15 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                 this.changeDetectorRef.markForCheck();
             }));
 
+        this.subscriptions.push(Observable
+            .fromEvent(window, 'resize')
+            .debounceTime(5)
+            .subscribe(() => {
+                if (this.viewPort.mode !== ViewportMode.disabled && this.maxHeight === 0) {
+                    this.viewPort.refresh();
+                }
+            }));
+
         this.maxHeight = 0;
     }
 
@@ -220,7 +229,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     }
 
     /**
-     * Les trois valeurs acceptés en paramètre se trouvent dans l'enum ViewportMode (NoViewport, ConstantRowheight, VariableRowHeight ou AutoRowHeight)
+     * Les valeurs acceptées en paramètre se trouvent dans l'enum ViewportMode (disabled, constant, variable ou auto)
      * Attention, une désactivation du viewport dégrade considérablement les performances de la liste et ne doit pas être activée si la liste
      * est suceptible de contenir beaucoup d'éléments.
      */
@@ -493,14 +502,6 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                 .subscribe(noop);
         }
 
-        this.subscriptions.push(Observable
-            .fromEvent(window, 'resize')
-            .subscribe(() => {
-                if (this.viewPort.mode !== ViewportMode.NoViewport && this.maxHeight === 0) {
-                    this.viewPort.refresh();
-                }
-            }));
-
         const listElement = this.listContainer.nativeElement as HTMLElement;
 
         this.subscriptions.push(Observable
@@ -516,10 +517,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                 this.scroll.emit(e);
                 return scrollTop;
             })
-            .do((scrollPos) => this.viewPort.scrollPosition$.next(scrollPos))
-            .debounceTime(30)
-            .do((scrollPos) => this.viewPort.scrollPosition$.next(scrollPos))
-            .subscribe(noop));
+            .subscribe((scrollPos) => this.viewPort.scrollPosition$.next(scrollPos)));
 
         let keyDown$ = Observable.fromEvent(listElement, 'keydown');
         if (this.input) {

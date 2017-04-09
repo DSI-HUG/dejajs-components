@@ -62,11 +62,24 @@ export class ItemListBase {
     constructor(protected changeDetectorRef: ChangeDetectorRef, protected viewPort: ViewPortService) {
         this.viewPort$ = viewPort.viewPort$.do((viewPortResult: IViewPort) => {
             delete this._hintLabel;
-            this._itemList = viewPortResult.visibleItems;
-            this.vpStartRow = viewPortResult.startIndex;
-            this.vpEndRow = viewPortResult.endIndex;
-            this.vpBeforeHeight = viewPortResult.beforeSize;
-            this.vpAfterHeight = viewPortResult.afterSize;
+            if (viewPort.mode === ViewportMode.disabled) {
+                this._itemList = viewPortResult.items;
+                this.vpStartRow = 0;
+                this.vpEndRow = 0;
+                this.vpBeforeHeight = 0;
+                this.vpAfterHeight = 0;
+            } else {
+                this._itemList = viewPortResult.visibleItems;
+                this.vpStartRow = viewPortResult.startIndex;
+                this.vpEndRow = viewPortResult.endIndex;
+                this.vpBeforeHeight = viewPortResult.beforeSize;
+                this.vpAfterHeight = viewPortResult.afterSize;
+            }
+
+            if (viewPortResult.scrollPos !== undefined) {
+                // TODO this.scrollPosition = viewPortResult.scrollPos;
+            }
+
             this.changeDetectorRef.markForCheck();
         });
     }
@@ -240,7 +253,7 @@ export class ItemListBase {
      */
     public toggleAll$() {
         this.allCollapsed = !this.allCollapsed;
-        if (this.viewPort.mode === ViewportMode.NoViewport) {
+        if (this.viewPort.mode === ViewportMode.disabled) {
             return Observable.from(this._itemList)
                 .filter((item: IItemTree) => item.$items && item.depth === 0 && item.collapsible !== false)
                 .switchMap((_item: IItemTree, index: number) => this.toggleCollapse$(index + this.vpStartRow, this.allCollapsed));
@@ -264,7 +277,7 @@ export class ItemListBase {
             const oldlist = [...this._itemList];
             const oldTreeInfo = this.getItemTreeInfo(oldlist, item);
 
-            if (this.viewPort.mode === ViewportMode.NoViewport) {
+            if (this.viewPort.mode === ViewportMode.disabled) {
                 if (collapsed) {
                     return Observable.of(oldTreeInfo)
                         .map((oldTree) => {
@@ -711,7 +724,7 @@ export class ItemListBase {
     /** Calcul la position de la scrollbar pour que l'élément spécifié soit dans la zone visible. */
     protected ensureItemVisible(query: string, containerElement: HTMLElement, listItemElements: QueryList<ElementRef>, item: IItemBase | number) {
         if (item !== undefined) {
-            if (this.viewPort.mode === ViewportMode.NoViewport) {
+            if (this.viewPort.mode === ViewportMode.disabled) {
                 let index = item as number;
                 if (isNaN(index)) {
                     index = this._itemList.findIndex((itm) => item === itm);
@@ -723,7 +736,7 @@ export class ItemListBase {
                         element.nativeElement.scrollIntoViewIfNeeded();
                     }
                 }
-            } else if (this.viewPort.mode === ViewportMode.VariableRowHeight || this.viewPort.mode === ViewportMode.AutoRowHeight) {
+            } else if (this.viewPort.mode === ViewportMode.variable || this.viewPort.mode === ViewportMode.auto) {
                 this.getViewList$(query).subscribe((viewListResult: IViewListResult) => {
                     const scrollPos = containerElement.scrollTop;
                     let scrollMax = 0;
@@ -751,7 +764,7 @@ export class ItemListBase {
                     }
                 });
             } else {
-                // View port constant row height
+                // View port fixed row height
                 let index = item as number;
                 if (isNaN(index)) {
                     index = this._itemList.findIndex((itm) => item === itm) + this.vpStartRow;
@@ -810,11 +823,11 @@ export class ItemListBase {
     };
 
     protected getItemHeight(item: IItemBase) {
-        if (this.viewPort.mode === ViewportMode.NoViewport) {
+        if (this.viewPort.mode === ViewportMode.disabled) {
             return null;
-        } else if (this.viewPort.mode === ViewportMode.ConstantRowHeight) {
+        } else if (this.viewPort.mode === ViewportMode.fixed) {
             return this.getViewPortRowHeight();
-        } else if (this.viewPort.mode === ViewportMode.AutoRowHeight) {
+        } else if (this.viewPort.mode === ViewportMode.auto) {
             return item.size || null;
         } else {
             return (item.size && item.size > ViewPortService.itemDefaultSize) ? item.size : this.getViewPortRowHeight();

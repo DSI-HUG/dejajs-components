@@ -62,11 +62,11 @@ export class DejaGridComponent implements OnDestroy {
     @Input() public hintLabel = '';
     /** Définit la hauteur d'une ligne pour le calcul du viewport en pixels */
     @Input() public viewPortRowHeight = ViewPortService.itemDefaultSize;
-    /** Les trois valeurs acceptés en paramètre se trouvent dans l'enum ViewportMode (NoViewport, ConstantRowheight, VariableRowHeight ou AutoRowHeight)
+    /** Les trois valeurs acceptés en paramètre se trouvent dans l'enum ViewportMode (disabled, fixed, variable ou auto)
      * Attention, une désactivation du viewport dégrade considérablement les performances de la liste et ne doit pas être activée si la liste
      * est suceptible de contenir beaucoup d'éléments.
      */
-    @Input() public viewportMode = ViewportMode.ConstantRowHeight;
+    @Input() public viewportMode = ViewportMode.fixed;
     /** Champ utilisé pour la liste des enfants d'un parent */
     @Input() public childrenField: string;
     /** Définit le champ à utiliser comme valeur d'affichage. */
@@ -389,6 +389,7 @@ export class DejaGridComponent implements OnDestroy {
 
         this.subscriptions.push(Observable.fromEvent(window, 'resize')
             .filter(() => this.hasPercentageColumns)
+            .debounceTime(5)
             .subscribe(() => {
                 this.calcColumnsLayout();
             }));

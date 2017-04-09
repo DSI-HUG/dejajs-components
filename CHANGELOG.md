@@ -3,6 +3,10 @@
 
 ### Breaking changes from 1.5.1
 * **IItemBase:** height is renamed size to be compatible with viewport horizontal layout
+* **ViewportMode:** NoViewport renamed to disabled
+* **ViewportMode:** ConstantRowHeight renamed to fixed
+* **ViewportMode:** VariableRowHeight renamed to variable
+* **ViewportMode:** AutoRowHeight renamed to auto
 
 ### Known issues
 
