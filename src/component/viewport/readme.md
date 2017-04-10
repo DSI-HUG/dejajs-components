@@ -13,9 +13,9 @@ Ensuite utiliser le composant comme ceci dans votre template :
 
 ```html
 <deja-viewport [items]="news$ | async" itemSize="200" itemSizeMode="auto" direction="vertical">
-    <template #itemTemplate let-item>
+    <ng-template #itemTemplate let-item>
         <!-- Your content template here -->
-    </template>
+    </ng-template>
 </deja-viewport>
 ```
 

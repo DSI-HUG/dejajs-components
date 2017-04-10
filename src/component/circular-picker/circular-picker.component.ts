@@ -11,7 +11,6 @@
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, forwardRef, Input, OnInit, ViewChild } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { Observable, Subject } from 'rxjs/Rx';
 import { Circle } from '../../common/core/graphics/index';
 import { Position } from '../../common/core/graphics/position';
@@ -51,8 +50,8 @@ export class DejaCircularPickerComponent implements OnInit {
     @ContentChild('cursorTemplate') public cursorTemplate;
 
     @Input()
-    public set disabled(value: boolean) {
-        this._disabled = coerceBooleanProperty(value);
+    public set disabled(value: boolean | string) {
+        this._disabled = value != null && `${value}` !== 'false';
     }
 
     public get disabled() {

@@ -11,13 +11,13 @@
 		></div-->
 		<div class="cursor-container">
 			<div class="cursor" cursor *ngIf="cursor.value !== undefined" [style.top.px]="cursor.position.top" [style.left.px]="cursor.position.left">
-				<template *ngIf="cursorTemplate" [ngTemplateOutlet]="cursorTemplate" [ngOutletContext]="{ $implicit: cursor.value }"></template>
+				<ng-template *ngIf="cursorTemplate" [ngTemplateOutlet]="cursorTemplate" [ngTemplateOutletContext]="{ $implicit: cursor.value }"></ng-template>
 				<span *ngIf="!cursorTemplate">{{cursor.value}}</span>
 			</div>
 			<div class="cursorHand" [ngStyle]="{'transform':'translateY(-50%) rotate('+(-cursorHand.angle)+'rad)'}" [style.width.px]="cursorHand.width+2"></div>
 		</div>
 		<div class="value" [attr.value]="val.value" *ngFor="let val of circularValues; let index=index" [style.top.px]="val.position.top" [style.left.px]="val.position.left">
-			<template *ngIf="labelTemplate" [ngTemplateOutlet]="labelTemplate" [ngOutletContext]="{ $implicit: val.value, index: index }"></template>
+			<ng-template *ngIf="labelTemplate" [ngTemplateOutlet]="labelTemplate" [ngTemplateOutletContext]="{ $implicit: val.value, index: index }"></ng-template>
 			<span *ngIf="!labelTemplate">{{val.value}}</span>
 		</div>
 	</div>

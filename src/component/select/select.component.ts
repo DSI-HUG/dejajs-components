@@ -9,13 +9,12 @@
  *
  */
 
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, forwardRef, Input, OnDestroy, QueryList, ViewChild, ViewChildren, ViewEncapsulation, } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, forwardRef, Input, OnDestroy, ViewChild, ViewEncapsulation, } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
-import { IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, ViewportMode, } from '../../common/core/item-list';
+import { IItemBase, IItemTree, ItemListBase, ItemListService, IViewPort, ViewportMode, ViewPortService } from '../../common/core/item-list';
 import { KeyCodes } from '../../common/core/keycodes.enum';
-import { DejaDropDownComponent } from '../dropdown';
+import { DejaDropDownComponent, IDropDownResetParams } from '../dropdown';
 
 const noop = () => { };
 
@@ -29,23 +28,19 @@ const SelectComponentValueAccessor = {
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    providers: [SelectComponentValueAccessor],
+    providers: [SelectComponentValueAccessor, ViewPortService],
     selector: 'deja-select',
     styleUrls: [
         './select.component.scss',
     ],
     templateUrl: './select.component.html',
 })
-export class DejaSelectComponent extends ItemListBase implements ControlValueAccessor, OnDestroy, AfterViewInit {
+export class DejaSelectComponent extends ItemListBase implements ControlValueAccessor,
+    OnDestroy, AfterViewInit {
     /** Texte à afficher par default dans la zone de recherche */
     @Input() public placeholder: string;
     /** Correspond au ngModel du champ de filtrage ou recherche */
     @Input() public query = '';
-    /** Hauteur maximum avant que le composant affiche une scrollbar
-     * spécifier une grande valeur pour ne jamais afficher de scrollbar
-     * Spécifier 0 pour que le composant determine sa hauteur à partir du container
-     */
-    @Input() public maxHeight = 500;
     /** ID de l'élement dans lequel la liste déroulante doit s'afficher (la liste déroulante ne peut dépasser de l'élement spécifié ici) */
     @Input() public dropdownContainerId: string;
     /** Permet de définir un template de ligne par binding */
@@ -75,14 +70,12 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @ContentChild('selectedTemplate') protected selectedTemplate;
     @ContentChild('suffixTemplate') protected mdSuffix;
     @ViewChild('inputElement') private input: ElementRef;
-    @ViewChildren('listitem') private listItemElements: QueryList<ElementRef>;
-    @ViewChild('listcontainer') private listcontainer;
+    @ViewChild('listcontainer') private listContainer: any;
     @ViewChild(DejaDropDownComponent) private dropDownComponent: DejaDropDownComponent;
 
     private _type = 'select';
-    private ignoreNextScrollEvents = false;
     private selectingItemIndex: number;
-    private keepExistingViewPort = false;
+    private keepExistingViewPort = false; // TODO
     private dropDownQuery = '';
     private filterExpression = '';
     private dropdownVisible = false;
@@ -94,34 +87,31 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     private clearFilterExpression$ = new BehaviorSubject<void>(null);
     private filterListComplete$ = new Subject();
-    private storeScrollPosition$ = new Subject();
+    private storeScrollPosition$ = new Subject<number>();
     private hideDropDown$ = new Subject<number>();
     private showDropDown$ = new Subject();
     private filter$ = new Subject<Event>();
 
     private keyboardNavigation$ = new Subject();
 
-    constructor(changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef) {
-        super(changeDetectorRef);
+    constructor(changeDetectorRef: ChangeDetectorRef, viewPort: ViewPortService, private elementRef: ElementRef) {
+        super(changeDetectorRef, viewPort);
 
         this.subscriptions.push(Observable.from(this.clearFilterExpression$)
-            .debounceTime(750)
-            .subscribe(() => this.filterExpression = ''));
+            .debounceTime(750).subscribe(() => this.filterExpression = ''));
 
         this.subscriptions.push(Observable.from(this.filterListComplete$)
             .debounceTime(this.delaySearchTrigger)
             .subscribe(() => {
                 this._itemList = [];
-                this.showDropDown();
+                this.reshowDropDown();
             }));
 
         this.subscriptions.push(Observable.from(this.storeScrollPosition$)
-            .debounceTime(30)
-            .switchMap(() => this.calcViewPort$())
-            .subscribe(() => {
+            .subscribe((scrollPos) => {
+                this.viewPort.scrollPosition$.next(scrollPos);
+                this.lastScrollPosition = scrollPos;
                 this.keepExistingViewPort = false;
-                const listElement = this.listElement as HTMLElement;
-                this.lastScrollPosition = listElement.scrollTop;
             }));
 
         this.subscriptions.push(Observable.from(this.hideDropDown$)
@@ -135,20 +125,21 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
         this.subscriptions.push(this.showDropDown$
             .debounceTime(50)
-            .do(() => this.dropdownVisible = true) // Ensure that dropdown container exists
+            .do(() => this.dropdownVisible = true)  // Ensure that dropdown container exists
             .do(() => this.changeDetectorRef.markForCheck())
             .delay(1)
-            .filter(() => !!this.dropDownComponent) // Show canceled by the hide$ observable if !dropdownVisible
+            .filter(() => !!this.dropDownComponent)  // Show canceled by the hide$ observable if !dropdownVisible
             .do(() => {
                 // Restore scroll Position
                 const listElement = this.listElement;
                 if (listElement) {
-                    this.listElement.scrollTop = this.lastScrollPosition;
+                    listElement.scrollTop = this.lastScrollPosition;
+                    this.viewPort.element$.next(listElement);
                 }
             })
-            .switchMap(() => this.calcViewPort$())
+            .switchMap(() => this.calcViewList$().first())
             .delay(1)
-            .filter(() => !!this.dropDownComponent) // Show canceled by the hide$ observable if !dropdownVisible
+            .filter(() => !!this.dropDownComponent)  // Show canceled by the hide$ observable if !dropdownVisible
             .do(() => this.dropDownComponent.show())
             .subscribe(() => {
                 // Ensure selection
@@ -167,6 +158,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 this.keyboardNavigation = false;
                 this.changeDetectorRef.markForCheck();
             }));
+
+        this.maxHeight = 500;
     }
 
     /** Ancre d'alignement de la liste déroulante. Valeurs possible: top, bottom, right, left. Une combinaison des ces valeurs peut également être utilisée, par exemple 'top left'. */
@@ -204,8 +197,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     /** Indique ou détermine si le bouton pour effacer la selection doit être affiché */
     @Input()
-    public set selectionClearable(value: boolean) {
-        this._selectionClearable = coerceBooleanProperty(value);
+    public set selectionClearable(value: boolean | string) {
+        this._selectionClearable = value != null && `${value}` !== 'false';
     }
 
     public get selectionClearable() {
@@ -242,8 +235,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     public get pageSize() {
         if (this._pageSize === 0) {
             const vpRowHeight = this.getViewPortRowHeight();
-            const containerElement = this.listElement as HTMLElement;
-            const containerHeight = this.maxHeight || containerElement.clientHeight;
+            const containerElement = this.listElement;
+            const containerHeight = this.maxHeight || containerElement && containerElement.clientHeight;
             return Math.floor(containerHeight / vpRowHeight);
         }
 
@@ -268,7 +261,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     /**
-     * Les trois valeurs acceptés en paramètre se trouvent dans l'enum ViewportMode (NoViewport, ConstantRowheight, VariableRowHeight)
+     * Les trois valeurs acceptés en paramètre se trouvent dans l'enum ViewportMode (disabled, fixed, variable, auto)
      * Attention, une désactivation du viewport dégrade considérablement les performances de la liste et ne doit pas être activée si la liste
      * est suceptible de contenir beaucoup d'éléments.
      */
@@ -368,17 +361,15 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     /** Retourne si le waiter doit être affiché dans le select. */
-    public get waiter() {
-        return this._waiter;
-    }
+    public get waiter() { return this._waiter; }
 
     /** Définit la liste des éléments au format IItemBase */
     @Input()
     public set items(items: IItemBase[] | Promise<IItemBase[]> | Observable<IItemBase[]>) {
-        super.setItems$(items).subscribe(() => {
-        }, (error: any) => {
-            this._hintLabel = error.toString();
-        });
+        super.setItems$(items)
+            .first()
+            .switchMap(() => this.calcViewList$())
+            .subscribe(noop);
     }
 
     /** Définit la liste des éléments (tout type d'objet métier) */
@@ -386,16 +377,32 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     public set models(items: any[] | Observable<any[]>) {
         super.setModels$(items)
             .first()
-            .switchMap(() => this.calcViewPort$())
-            .subscribe(() => {
-            }, (error: any) => {
-                this._hintLabel = error.toString();
-            });
+            .switchMap(() => this.calcViewList$())
+            .subscribe(noop);
     }
 
     /** Retourne le nombre de niveau pour une liste hierarchique */
-    public get depthMax() {
-        return this._depthMax;
+    public get depthMax() { return this._depthMax; }
+
+    /** Définit la hauteur maximum avant que le composant affiche une scrollbar
+     * spécifier une grande valeur pour ne jamais afficher de scrollbar
+     * Spécifier 0 pour que le composant determine sa hauteur à partir du container
+     */
+    @Input()
+    public set maxHeight(value: number) {
+        super.setMaxHeight(value);
+    }
+
+    /** Retourne la hauteur maximum avant que le composant affiche une scrollbar
+     * spécifier une grande valeur pour ne jamais afficher de scrollbar
+     * Spécifier 0 pour que le composant determine sa hauteur à partir du container
+     */
+    public get maxHeight() {
+        return this.getMaxHeight();
+    }
+
+    protected get containerElement(): HTMLElement {
+        return this.dropdownContainerId && this.elementRef.nativeElement.ownerDocument.getElementById(this.dropdownContainerId);
     }
 
     private set currentItemIndex(value: number) {
@@ -423,16 +430,12 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return this.parentItemTemplateExternal || this.parentItemTemplateInternal;
     }
 
-    private get containerElement() {
-        return this.dropdownContainerId && this.elementRef.nativeElement.ownerDocument.getElementById(this.dropdownContainerId);
+    private get inputElement() {
+        return this.input && this.input.nativeElement as HTMLInputElement;
     }
 
     private get listElement() {
-        return this.listcontainer && this.listcontainer.elementRef.nativeElement as HTMLElement;
-    }
-
-    private get inputElement() {
-        return this.input && this.input.nativeElement as HTMLInputElement;
+        return this.listContainer && this.listContainer.elementRef.nativeElement as HTMLElement;
     }
 
     // From ControlValueAccessor interface
@@ -507,7 +510,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             }));
 
         this.subscriptions.push(Observable.fromEvent(this.inputElement, 'keydown')
-            .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.Home ||
+            .filter((event: KeyboardEvent) =>
+                event.keyCode === KeyCodes.Home ||
                 event.keyCode === KeyCodes.End ||
                 event.keyCode === KeyCodes.PageUp ||
                 event.keyCode === KeyCodes.PageDown ||
@@ -619,7 +623,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 }
             }));
 
-        const keyUp$ = Observable.fromEvent(this.inputElement, 'keyup')
+        const keyUp$ = Observable
+            .fromEvent(this.inputElement, 'keyup')
             .filter((event: KeyboardEvent) => event.keyCode >= KeyCodes.Key0 ||
                 event.keyCode === KeyCodes.Backspace ||
                 event.keyCode === KeyCodes.Space ||
@@ -665,7 +670,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                                 }
                             }
                             return false;
-                        }, this.currentItemIndex)
+                        },
+                            this.currentItemIndex)
                             .first()
                             .subscribe((result) => {
                                 if (result.index >= 0) {
@@ -683,7 +689,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     /** Change l'état d'expansion de toute les lignes parentes */
     public toggleAll$(): Observable<IItemTree> {
         return super.toggleAll$()
-            .switchMap(() => this.calcViewPort$());
+            .switchMap(() => this.calcViewList$().first());
     }
 
     /** Change l'état d'expansion de la ligne spécifiée
@@ -701,18 +707,11 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             });
     }
 
-    protected scroll() {
-        if (this._viewportMode === ViewportMode.NoViewport || this.ignoreNextScrollEvents) {
-            this.ignoreNextScrollEvents = false;
-            return;
-        }
-
+    protected scroll(event: Event) {
         this.keepExistingViewPort = true;
-        this.calcViewPort$()
-            .first()
-            .subscribe(() => this.storeScrollPosition$.next());
+        const element = event.target as HTMLElement;
+        this.storeScrollPosition$.next(element.scrollTop);
     }
-
     protected mousedown(e: MouseEvent) {
         if (this.mouseUp$sub) {
             this.mouseUp$sub.unsubscribe();
@@ -722,26 +721,27 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         this.selectingItemIndex = this.getItemIndexFromHTMLElement(e.target as HTMLElement);
 
         const element = this.elementRef.nativeElement as HTMLElement;
-        this.mouseUp$sub = Observable.fromEvent(element, 'mouseup').subscribe((e: MouseEvent) => {
-            const itemIndex = this.getItemIndexFromHTMLElement(e.target as HTMLElement);
-            if (itemIndex === undefined || this.selectingItemIndex === undefined || itemIndex !== this.selectingItemIndex) {
-                return;
-            }
-
-            const item = this._itemList[itemIndex] as IItemTree;
-            if (!item || e.button !== 0) {
-                // Right click menu
-                return;
-            }
-
-            if (this.isCollapsible(item)) {
-                if (e.button === 0) {
-                    this.toggleCollapse$(itemIndex + this.vpStartRow, !item.collapsed).first().subscribe(noop);
+        this.mouseUp$sub = Observable.fromEvent(element, 'mouseup')
+            .subscribe((upEvent: MouseEvent) => {
+                const itemIndex = this.getItemIndexFromHTMLElement(upEvent.target as HTMLElement);
+                if (itemIndex === undefined || this.selectingItemIndex === undefined || itemIndex !== this.selectingItemIndex) {
+                    return;
                 }
-            } else if (!item.selected) {
-                this.select(item);
-            }
-        });
+
+                const item = this._itemList[itemIndex] as IItemTree;
+                if (!item || upEvent.button !== 0) {
+                    // Right click menu
+                    return;
+                }
+
+                if (this.isCollapsible(item)) {
+                    if (upEvent.button === 0) {
+                        this.toggleCollapse$(itemIndex + this.vpStartRow, !item.collapsed).first().subscribe(noop);
+                    }
+                } else if (!item.selected) {
+                    this.select(item);
+                }
+            });
     }
 
     protected queryChanged(event: Event) {
@@ -779,20 +779,23 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return false;
     }
 
-    protected calcViewPort$() {
-        return super.calcViewPort$(this.dropDownQuery, this.maxHeight, this.listElement)
-            .do((res: IViewListResult) => {
+    protected calcViewList$() {
+        return super.calcViewList$(this.dropDownQuery)
+            .do((res: IViewPort) => {
                 // Prevent that the adaptation of the scroll raise a new view port calculation
-                this.ignoreNextScrollEvents = res.outOfRange;
                 if (!this.keepExistingViewPort) {
-                    this._itemList = res.visibleList;
+                    if (this.viewPort.mode === ViewportMode.disabled) {
+                        this._itemList = res.items;
+                    } else {
+                        this._itemList = res.visibleItems;
+                    }
                 }
                 this.changeDetectorRef.markForCheck();
             });
     }
 
     protected ensureItemVisible(item: IItemBase | number) {
-        super.ensureItemVisible(this.query, this.listElement, this.listItemElements, item);
+        super.ensureItemVisible(item);
     }
 
     private onModelChange(items?: IItemBase[] | IItemBase) {
@@ -869,10 +872,12 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         // Restore scroll Position
         this.listElement.scrollTop = this.lastScrollPosition;
 
-        this.calcViewPort$()
+        this.calcViewList$()
             .first()
             .subscribe(() => {
-                this.dropDownComponent.show();
+                this.dropDownComponent.show({
+                    height: true,
+                } as IDropDownResetParams);
 
                 // Ensure selection
                 const item = this.getSelectedItems()[0];

@@ -5,7 +5,7 @@ export interface IItemTree extends IItemBase {
     /** Indique si l'élément peut être réduit. */
     collapsible?: boolean;
     /** Indique si l'élément est réduit. */
-    collapsed?: boolean;    
+    collapsed?: boolean;
     /** Usage interne. */
     expanding?: boolean;
     /** Usage interne. */

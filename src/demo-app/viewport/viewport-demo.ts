@@ -27,7 +27,7 @@ export class DejaViewPortDemoComponent {
 
     protected exampleValue = `
     <deja-viewport [items]="news$ | async" itemSize="120">
-        <template #itemTemplate let-item>
+        <ng-template #itemTemplate let-item>
             <div *ngIf="item" class="news" [attr.id]="id">
                 <img [attr.src]="item.urlsToLogos.medium" class="logo">
                 <span class="text">
@@ -41,13 +41,13 @@ export class DejaViewPortDemoComponent {
                     </div>
                 </span>
             </div>
-        </template>
+        </ng-template>
     </deja-viewport>`;
     protected html = IEditorLanguage.HTML;
     protected news$: Observable<INews[]>;
 
     constructor(newsService: NewsService, private changeDetectorRef: ChangeDetectorRef) {
-        this.news$ = newsService.getNews$(50);
+        this.news$ = newsService.getNews$(1);
         // Observable.timer(5000).first().subscribe(() => this.viewport.ensureVisible(23));
     }
 

@@ -6,7 +6,7 @@
 				<span>
 					<span *ngIf="!selectedTemplate">{{ getTextValue(item) }}</span>
 					<span *ngIf="selectedTemplate">
-						<template [ngTemplateOutlet]="selectedTemplate" [ngOutletContext]="{ $implicit: item }"></template>
+						<ng-template [ngTemplateOutlet]="selectedTemplate" [ngTemplateOutletContext]="{ $implicit: item }"></ng-template>
 					</span>
 					<i id="close-button" (click)="removeSelection($event, item)" class="material-icons">close</i>
 				</span>
@@ -14,15 +14,15 @@
 		</ul>
 	</div>
 	<md-placeholder>
-		<template [ngTemplateOutlet]="placeHolderTemplate"></template>
+		<ng-template [ngTemplateOutlet]="placeHolderTemplate"></ng-template>
 		<span *ngIf="!placeHolderTemplate">{{ placeholder }}</span>
 	</md-placeholder>
 	<div *ngIf="selectionClearable && !_multiSelect && selectedItems.length > 0" mdSuffix><i (click)="removeSelection($event)" id="clear-button" class="material-icons mdSuffix">clear</i></div>
 	<md-hint *ngIf="hintTemplate">
-		<template [ngTemplateOutlet]="hintTemplate"></template>
+		<ng-template [ngTemplateOutlet]="hintTemplate"></ng-template>
 	</md-hint>
 	<span *ngIf="mdSuffix" mdSuffix>
-		<template [ngTemplateOutlet]="mdSuffix"></template>
+		<ng-template [ngTemplateOutlet]="mdSuffix"></ng-template>
 	</span>
 </md-input-container>
 <deja-dropdown id="listcontainer" #listcontainer *ngIf="dropdownVisible" [attr.depth-max]="_depthMax || null" [attr.keynav]="keyboardNavigation" [attr.vprowheight]="getViewPortRowHeight()" (mousedown)="mousedown($event)" (hide)="dropdownVisible=false" (scroll)="scroll($event)" [ownerAlignment]="_ownerAlignment" [dropdownAlignment]="_dropdownAlignment" [ownerElement]="inputElement" [containerElement]="containerElement" ownerBottomMargin="-10" ownerTopMargin="-5" ownerRightMargin="-34" [style.max-height.px]="maxHeight">
@@ -31,10 +31,10 @@
 		<span *ngIf="item.$items" id="expandbtn"></span>
 		<ng-container *ngIf="(!item.$items || !parentItemTemplate) && (item.$items || !itemTemplate)">{{ getTextValue(item) }}</ng-container>
 		<ng-container *ngIf="item.$items && parentItemTemplate">
-			<template [ngTemplateOutlet]="parentItemTemplate" [ngOutletContext]="{ $implicit: item, query: query, flatindex: vpStartRow+index }"></template>
+			<ng-template [ngTemplateOutlet]="parentItemTemplate" [ngTemplateOutletContext]="{ $implicit: item, query: query, flatindex: vpStartRow+index }"></ng-template>
 		</ng-container>
 		<ng-container *ngIf="!item.$items && itemTemplate">
-			<template [ngTemplateOutlet]="itemTemplate" [ngOutletContext]="{ $implicit: item, query: query, flatindex: vpStartRow+index }"></template>
+			<ng-template [ngTemplateOutlet]="itemTemplate" [ngTemplateOutletContext]="{ $implicit: item, query: query, flatindex: vpStartRow+index }"></ng-template>
 		</ng-container>
 	</div>
 	<div *ngIf="vpAfterHeight" [style.height.px]="vpAfterHeight"></div>

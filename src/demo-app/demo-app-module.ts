@@ -15,6 +15,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MaterialModule } from '@angular/material';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { GroupingModule } from '../common/core/grouping/index';
 import { DejaSortingModule } from '../common/core/sorting/index';
@@ -121,6 +122,7 @@ import { CodeblockModule } from 'ng-prism';
         RouterModule,
         FlexLayoutModule,
         BrowserModule,
+        BrowserAnimationsModule,
         MaterialModule,
         DejaAccordionModule,
         DejaCodeViewerModule,

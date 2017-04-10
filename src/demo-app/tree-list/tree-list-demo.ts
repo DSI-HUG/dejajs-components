@@ -11,7 +11,7 @@
 
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { GroupingService, IGroupInfo, IItemTree, ViewportMode } from '../../common/core';
+import { GroupingService, IGroupInfo, IItemTree } from '../../common/core';
 import { DejaTextMetricsService, DejaTreeListComponent, DejaTreeListItemsEvent, IDejaDragEvent, IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDropCursorInfos } from '../../component';
 import { CountriesService, ICountry } from '../services/countries.service';
 import { INews, NewsService } from '../services/news.service';
@@ -23,9 +23,6 @@ import { INews, NewsService } from '../services/news.service';
     templateUrl: './tree-list-demo.html',
 })
 export class DejaTreeListDemoComponent implements OnInit {
-    protected variableMode = ViewportMode.VariableRowHeight;
-    protected autoMode = ViewportMode.AutoRowHeight;
-    protected noViewportList: IItemTree[] = [{ displayName: 'test' }, { displayName: 'test2' }, { displayName: 'test3' }];
     protected news$: Observable<INews[]>;
     protected groupedCountries: IItemTree[];
     protected countries: Observable<ICountry[]>;
@@ -43,7 +40,7 @@ export class DejaTreeListDemoComponent implements OnInit {
         this.countries = this.countriesService.getCountries$(null, 412);
         // this.countries = this.countriesService.getCountries(null, 1);
 
-        this.news$ = newsService.getNews$(50);
+        this.news$ = newsService.getNews$(2);
 
         this.countriesService.getCountries$(null, 1).subscribe((values) => {
             const extendedCountries = values.map((country) => {
@@ -72,8 +69,8 @@ export class DejaTreeListDemoComponent implements OnInit {
         for (let i = 0; i < 50; i++) {
             const rand = Math.floor(Math.random() * (70 - 33 + 1)) + 33; // random de 33 à 70
             this.loremList[i] = {} as IItemTree;
-            this.loremList[i].height = rand;
-            this.loremList[i].displayName = i + ' - Une ligne de test avec une height de : ' + rand;
+            this.loremList[i].size = rand;
+            this.loremList[i].displayName = i + ' - Une ligne de test avec une taille de : ' + rand;
         }
 
         groupingService.group(this.loremList, [{ groupByField: 'height' }]).then((groupedResult) => {
@@ -88,7 +85,7 @@ export class DejaTreeListDemoComponent implements OnInit {
                 // tslint:disable-next-line
                 console.info('La taille du lorem ipsum dans une div de 300px est de : ', height, 'px');
             });
-        this.textMetricsService.metricsElem = this.treeList.elementRef.nativeElement as HTMLElement;
+        this.textMetricsService.metricsElem = this.treeList && this.treeList.elementRef.nativeElement as HTMLElement;
     }
 
     protected onSelectionChanged(e: DejaTreeListItemsEvent) {

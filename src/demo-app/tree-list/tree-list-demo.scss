@@ -1,9 +1,8 @@
 @import "../../scss/variables/colors";
-
 .treelist-demo {
     &.demo-card {
         .listContainer {
-            height: 700px;
+            height: 70vh;
             padding: 16px;
             display: flex;
             flex-direction: row;
@@ -42,9 +41,9 @@
     }
     md-toolbar {
         margin-bottom: 1rem;
-    }
-    button {
-        margin-top: 2rem;
+        .flexContainer {
+            width: 100%;
+        }
     }
     [mdSuffix] {
         display: flex;
@@ -89,8 +88,8 @@
         }
         .text {
             border-left: 1px #aaa solid;
-            padding-left: 0.3rem;     
-            margin-left: 0.3rem;       
+            padding-left: 0.3rem;
+            margin-left: 0.3rem;
             .name {
                 font-size: 200%;
                 margin: 0 1rem 0.3rem 0.3rem;

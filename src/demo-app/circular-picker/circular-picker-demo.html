@@ -16,9 +16,9 @@
 				<deja-circular-picker [ranges]="ranges41" [outerLabels]="true" id="outside">
 				</deja-circular-picker>
 				<deja-circular-picker [(ngModel)]="sm" [ranges]="ranges42" id="inside" (ngModelChange)="range42Changed($event)">
-					<template #cursorTemplate #labelTemplate let-value>
+					<ng-template #cursorTemplate #labelTemplate let-value>
 						{{ getLabelForValue(value) }}
-					</template>
+					</ng-template>
 				</deja-circular-picker>
 			</md-card-content>
 		</md-card>
@@ -39,9 +39,9 @@
 			<md-toolbar color="primary">Circular-picker demo multiple range (inside labels)</md-toolbar>
 			<md-card-content class="listContainer">
 				<deja-circular-picker [(ngModel)]="sms" [ranges]="ranges3">
-					<template #cursorTemplate #labelTemplate let-value>
+					<ng-template #cursorTemplate #labelTemplate let-value>
 						{{ value === 24 ? 0 : value }}
-					</template>
+					</ng-template>
 				</deja-circular-picker>
 			</md-card-content>
 		</md-card>

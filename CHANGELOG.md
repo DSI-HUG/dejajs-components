@@ -2,10 +2,16 @@
 # [@next] (2017-04-xx)
 
 ### Breaking changes from 1.5.1
+* **IItemBase:** height is renamed size to be compatible with viewport horizontal layout
+* **ViewportMode:** NoViewport renamed to disabled
+* **ViewportMode:** ConstantRowHeight renamed to fixed
+* **ViewportMode:** VariableRowHeight renamed to variable
+* **ViewportMode:** AutoRowHeight renamed to auto
 
 ### Known issues
 
 ### Features
+* **ViewportService:** A view port service manage the viewport calculations and ensureVisible for treelist, select, grid and viewport component.
 
 ### Bug fixes
 
@@ -213,19 +219,19 @@ Fix bugs
 ## Breaking Changes
 * `DejaGridCellTemplateDirective` à été remplacée par ngTemplateOutlet. A l'utilisation, la déclaration de la ligne devient implicite.
   ```html
-  <template #cellTemplate let-row let-column="column">
-  </template>
+  <ng-template #cellTemplate let-row let-column="column">
+  </ng-template>
   ```
 * `ItemTemplateDirective` à été remplacée par ngTemplateOutlet. A l'utilisation, la déclaration de l'élément devient implicite.
   ```html
-  <template #itemTemplate let-item>
-  </template>
+  <ng-template #itemTemplate let-item>
+  </ng-template>
   ```
 
 * `TileTemplateDirective` à été remplacée par ngTemplateOutlet. A l'utilisation, la déclaration de tile devient implicite.
   ```html
-  <template #tileTemplate let-tile>
-  </template>
+  <ng-template #tileTemplate let-tile>
+  </ng-template>
   ```
 
 * `TemplateDirective` à été supprimée, utiliser dorenavant ngTemplateOutlet. 

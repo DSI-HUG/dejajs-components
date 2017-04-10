@@ -1,4 +1,3 @@
-import { DejaGridHeaderComponent } from './data-grid-header/data-grid-header.component';
 /*
  * *
  *  @license
@@ -12,14 +11,15 @@ import { DejaGridHeaderComponent } from './data-grid-header/data-grid-header.com
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, forwardRef, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { Observable, Subject, Subscription } from 'rxjs/Rx';
 import { GroupingService, IGroupInfo } from '../../common/core/grouping';
-import { IItemBase, IItemTree, ItemListBase, ItemListService, ViewportMode } from '../../common/core/item-list';
+import { IItemBase, IItemTree, ItemListService, ViewportMode } from '../../common/core/item-list';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { SortingService } from '../../common/core/sorting';
 import { IDejaDragEvent } from '../dragdrop';
 import { DejaTreeListComponent, DejaTreeListScrollEvent } from '../tree-list';
+import { ViewPortService } from './../../common/core/item-list/viewport.service';
+import { DejaGridHeaderComponent } from './data-grid-header/data-grid-header.component';
 import { DejaGridColumnsLayoutInfos, DejaGridRowEvent, DejaGridRowsEvent, IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayout, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent, IDejaGridGroupsEvent } from './index';
 
 const noop = () => { };
@@ -60,12 +60,12 @@ export class DejaGridComponent implements OnDestroy {
     /** Définit un texte de conseil en cas d'erreur de validation ou autre */
     @Input() public hintLabel = '';
     /** Définit la hauteur d'une ligne pour le calcul du viewport en pixels */
-    @Input() public viewPortRowHeight = ItemListBase.defaultViewPortRowHeight;
-    /** Les trois valeurs acceptés en paramètre se trouvent dans l'enum ViewportMode (NoViewport, ConstantRowheight, VariableRowHeight ou AutoRowHeight)
+    @Input() public viewPortRowHeight = ViewPortService.itemDefaultSize;
+    /** Les trois valeurs acceptés en paramètre se trouvent dans l'enum ViewportMode (disabled, fixed, variable ou auto)
      * Attention, une désactivation du viewport dégrade considérablement les performances de la liste et ne doit pas être activée si la liste
      * est suceptible de contenir beaucoup d'éléments.
      */
-    @Input() public viewportMode = ViewportMode.ConstantRowHeight;
+    @Input() public viewportMode = ViewportMode.fixed;
     /** Champ utilisé pour la liste des enfants d'un parent */
     @Input() public childrenField: string;
     /** Définit le champ à utiliser comme valeur d'affichage. */
@@ -162,8 +162,8 @@ export class DejaGridComponent implements OnDestroy {
 
     /** Permet de trier le tableau au clic sur l'entête de la colonne */
     @Input()
-    public set sortable(value: boolean) {
-        this._sortable = coerceBooleanProperty(value);
+    public set sortable(value: boolean | string) {
+        this._sortable = value != null && `${value}` !== 'false';
     }
 
     public get sortable() {
@@ -172,8 +172,8 @@ export class DejaGridComponent implements OnDestroy {
 
     /** Affiche un barre de recherche au dessus du tableau. */
     @Input()
-    public set searchArea(value: boolean) {
-        this._searchArea = coerceBooleanProperty(value);
+    public set searchArea(value: boolean | string) {
+        this._searchArea = value != null && `${value}` !== 'false';
     }
 
     public get searchArea() {
@@ -182,8 +182,8 @@ export class DejaGridComponent implements OnDestroy {
 
     /** Affiche une zone de regroupement des colonnes par drag and drop. */
     @Input()
-    public set groupArea(value: boolean) {
-        this._groupArea = coerceBooleanProperty(value);
+    public set groupArea(value: boolean | string) {
+        this._groupArea = value != null && `${value}` !== 'false';
     }
 
     public get groupArea() {
@@ -192,8 +192,8 @@ export class DejaGridComponent implements OnDestroy {
 
     /** Affiche un bouton pour réduire ou étendre toutes les lignes parentes du tableau */
     @Input()
-    public set expandButton(value: boolean) {
-        this._expandButton = coerceBooleanProperty(value);
+    public set expandButton(value: boolean | string) {
+        this._expandButton = value != null && `${value}` !== 'false';
     }
 
     public get expandButton() {
@@ -202,8 +202,8 @@ export class DejaGridComponent implements OnDestroy {
 
     /** Rend les lignes du tableau draggable vers un autre composant (ne pas confondre avec la propriété `sortable`) */
     @Input()
-    public set rowsDraggable(value: boolean) {
-        this._rowsDraggable = coerceBooleanProperty(value);
+    public set rowsDraggable(value: boolean | string) {
+        this._rowsDraggable = value != null && `${value}` !== 'false';
     }
 
     public get rowsDraggable() {
@@ -212,8 +212,8 @@ export class DejaGridComponent implements OnDestroy {
 
     /** Rend les lignes du tableau triables par drag-and-drop */
     @Input()
-    public set rowsSortable(value: boolean) {
-        this._rowsSortable = coerceBooleanProperty(value);
+    public set rowsSortable(value: boolean | string) {
+        this._rowsSortable = value != null && `${value}` !== 'false';
     }
 
     public get rowsSortable() {
@@ -222,8 +222,8 @@ export class DejaGridComponent implements OnDestroy {
 
     /** Définit si toutes les colonnes peuvent être draggable vers un autre composant. */
     @Input()
-    public set columnsDraggable(value: boolean) {
-        this._columnsDraggable = coerceBooleanProperty(value);
+    public set columnsDraggable(value: boolean | string) {
+        this._columnsDraggable = value != null && `${value}` !== 'false';
     }
 
     public get columnsDraggable() {
@@ -232,8 +232,8 @@ export class DejaGridComponent implements OnDestroy {
 
     /** Définit si toutes les colonnes peuvent être déplacées parmis les autres colonnes. */
     @Input()
-    public set columnsSortable(value: boolean) {
-        this._columnsSortable = coerceBooleanProperty(value);
+    public set columnsSortable(value: boolean | string) {
+        this._columnsSortable = value != null && `${value}` !== 'false';
     }
 
     public get columnsSortable() {
@@ -242,8 +242,8 @@ export class DejaGridComponent implements OnDestroy {
 
     /** Permet de redimensionner manuellement les colonnes du tableau. */
     @Input()
-    public set columnsSizable(value: boolean) {
-        this._columnsSizable = coerceBooleanProperty(value);
+    public set columnsSizable(value: boolean | string) {
+        this._columnsSizable = value != null && `${value}` !== 'false';
     }
 
     public get columnsSizable() {
@@ -252,8 +252,8 @@ export class DejaGridComponent implements OnDestroy {
 
     /** Permet la sélection multiple des ligne de la grille (avec la touche shift ou ctrl) */
     @Input()
-    public set multiSelect(value: boolean) {
-        this._multiSelect = coerceBooleanProperty(value);
+    public set multiSelect(value: boolean | string) {
+        this._multiSelect = value != null && `${value}` !== 'false';
     }
 
     public get multiSelect() {
@@ -388,6 +388,7 @@ export class DejaGridComponent implements OnDestroy {
 
         this.subscriptions.push(Observable.fromEvent(window, 'resize')
             .filter(() => this.hasPercentageColumns)
+            .debounceTime(5)
             .subscribe(() => {
                 this.calcColumnsLayout();
             }));
@@ -513,7 +514,7 @@ export class DejaGridComponent implements OnDestroy {
             return;
         }
 
-        const listElement = this.treeListComponent.listcontainer.nativeElement as HTMLElement;
+        const listElement = this.treeListComponent.listContainer.nativeElement as HTMLElement;
         const scrollPos = listElement.scrollLeft;
         let prevWidth = 0;
 
@@ -592,7 +593,7 @@ export class DejaGridComponent implements OnDestroy {
         const originalWidth = this.sizingLayoutInfos.columnsWidth[e.column.name];
         const minimumWidth = e.column.minWidth || this.columnsMinWidth;
         if (originalWidth.unit === '%') {
-            const listElement = this.treeListComponent.listcontainer.nativeElement as HTMLElement;
+            const listElement = this.treeListComponent.listContainer.nativeElement as HTMLElement;
             const containerWidth = listElement.clientWidth;
 
             // Calcul de la place restante pour les colonnes en pourcent
@@ -683,13 +684,13 @@ export class DejaGridComponent implements OnDestroy {
         }
 
         this.clearColumnLayout();
-        if (this._columns.length === 0 || !this.treeListComponent || !this.treeListComponent.listcontainer) {
+        if (this._columns.length === 0 || !this.treeListComponent || !this.treeListComponent.listContainer) {
             return;
         }
 
         this._columnLayout.scrollLeft = -this.lastScrollLeft;
         let viewLeft = -this.lastScrollLeft;
-        const listElement = this.treeListComponent.listcontainer.nativeElement as HTMLElement;
+        const listElement = this.treeListComponent.listContainer.nativeElement as HTMLElement;
         const containerWidth = listElement.clientWidth;
 
         // Calc total fixed width
@@ -781,7 +782,7 @@ export class DejaGridComponent implements OnDestroy {
             return;
         }
 
-        const listElement = this.treeListComponent.listcontainer.nativeElement as HTMLElement;
+        const listElement = this.treeListComponent.listContainer.nativeElement as HTMLElement;
         const scrollPos = listElement.scrollLeft;
         let prevWidth = 0;
 
