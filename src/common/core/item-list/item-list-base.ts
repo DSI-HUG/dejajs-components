@@ -57,10 +57,9 @@ export abstract class ItemListBase {
     private _itemListService: ItemListService;
     private allCollapsed = false;
     private _viewPortRowHeight = ViewPortService.itemDefaultSize;
-    private viewPort$: Observable<IViewPort>;
 
     constructor(protected changeDetectorRef: ChangeDetectorRef, protected viewPort: ViewPortService) {
-        this.viewPort$ = viewPort.viewPort$.do((viewPortResult: IViewPort) => {
+        viewPort.viewPort$.subscribe((viewPortResult: IViewPort) => {
             delete this._hintLabel;
             if (viewPort.mode === ViewportMode.disabled) {
                 this._itemList = viewPortResult.items;
@@ -295,8 +294,8 @@ export abstract class ItemListBase {
                 } else {
                     return this.getItemListService().toggleCollapse$(index, collapsed)
                         .switchMap(() => this.calcViewList$().first())
-                        .map((vpresult) => {
-                            const newTreeInfo = this.getItemTreeInfo(vpresult.items, item);
+                        .map((result) => {
+                            const newTreeInfo = this.getItemTreeInfo(result.visibleList, item);
 
                             // Hide children for effect
                             const children = (newTreeInfo.children || []) as IItemTree[];
@@ -313,8 +312,8 @@ export abstract class ItemListBase {
                     .switchMap((toogleResult) => {
                         return this.calcViewList$()
                             .first()
-                            .map((vpresult) => {
-                                const newlist = vpresult.items;
+                            .map((result) => {
+                                const newlist = result.visibleList;
                                 const newTreeInfo = this.getItemTreeInfo(newlist, item);
                                 return { newlist, newTreeInfo, toogleResult };
                             });
@@ -704,8 +703,8 @@ export abstract class ItemListBase {
     }
 
     /** Calcule le viewport pour le conteneur spécifié. */
-    protected calcViewList$(query?: string): Observable<IViewPort> {
-        this.getViewList$(query)
+    protected calcViewList$(query?: string): Observable<IViewListResult> {
+        return this.getViewList$(query)
             .do((result: IViewListResult) => {
                 if (result.depthMax !== undefined) {
                     this._depthMax = result.depthMax;
@@ -713,10 +712,6 @@ export abstract class ItemListBase {
                 this.rowsCount = result.visibleList.length;
                 this.viewPort.items$.next(result.visibleList);
             })
-            .first()
-            .subscribe(noop);
-
-        return this.viewPort$;
     }
 
     protected ensureListCaches$(): Observable<IViewListResult> {

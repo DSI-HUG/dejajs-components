@@ -405,7 +405,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     }
 
     protected get listElement(): HTMLElement {
-        return this.listContainer.nativeElement;
+        return this.listContainer && this.listContainer.nativeElement;
     }
 
     private set currentItemIndex(value: number) {
@@ -918,8 +918,6 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     protected calcViewList$(): Observable<IViewPort> {
         return super.calcViewList$(this.query)
             .do(() => {
-                // Prevent that the adaptation of the scroll raise a new view port calculation
-                // this.ignoreNextScrollEvents = res.outOfRange;
                 if (this.rowsCount > 0 && this.afterViewInit) {
                     this.afterViewInit.emit();
                     this.afterViewInit = null;

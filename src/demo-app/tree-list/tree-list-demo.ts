@@ -13,6 +13,7 @@ import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { GroupingService, IGroupInfo, IItemTree } from '../../common/core';
 import { DejaTextMetricsService, DejaTreeListComponent, DejaTreeListItemsEvent, IDejaDragEvent, IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDropCursorInfos } from '../../component';
+import { CountriesListService } from '../services/countries-list.service';
 import { CountriesService, ICountry } from '../services/countries.service';
 import { INews, NewsService } from '../services/news.service';
 
@@ -34,6 +35,7 @@ export class DejaTreeListDemoComponent implements OnInit {
     @ViewChild('treeList') private treeList: DejaTreeListComponent;
 
     constructor(private countriesService: CountriesService,
+        protected countriesListService: CountriesListService,
         groupingService: GroupingService,
         private textMetricsService: DejaTextMetricsService,
         newsService: NewsService) {

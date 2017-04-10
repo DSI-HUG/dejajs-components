@@ -25,7 +25,7 @@
 		<md-card class="treelist-demo demo-card demo-basic">
 			<md-toolbar color="primary">Treelist demo - Cas standards</md-toolbar>
 			<md-card-content class="listContainer">
-				<deja-tree-list min-search-length="0" searchArea multiSelect nodataholder="Pas de données" placeholder="Liste des pays" [(ngModel)]="countries" [deja-mouse-draggable]="getDragContext()" [valueField]="code">
+				<deja-tree-list min-search-length="0" searchArea multiSelect nodataholder="Pas de données" placeholder="Liste des pays" [itemListService]="countriesListService" [deja-mouse-draggable]="getDragContext()" [valueField]="code">
 					<ng-template #itemTemplate let-item let-flatindex="flatindex">
 						<span [attr.ddid]="item.code">{{ item.naqme + ' - ' + item.code }}</span>
 					</ng-template>

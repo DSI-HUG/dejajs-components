@@ -132,12 +132,14 @@ export class ViewPortService {
                 newScrollPos = (endIndex + 1) * itemDefaultSize - containerSize;
             }
 
+            const visibleItems = items.slice(startIndex, 1 + endIndex);
+
             return Observable.of({
                 beforeSize: startIndex * itemDefaultSize,
                 afterSize: (items.length - 1 - endIndex) * itemDefaultSize,
                 listSize: containerSize,
-                viewPortSize: items.length * itemDefaultSize,
-                visibleItems: items.slice(startIndex, 1 + endIndex),
+                viewPortSize: visibleItems.length * itemDefaultSize,
+                visibleItems: visibleItems,
                 startIndex: startIndex,
                 endIndex: endIndex,
                 scrollPos: newScrollPos,
