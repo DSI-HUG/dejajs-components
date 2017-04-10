@@ -1,6 +1,17 @@
 <a name="@next"></a>
 # [@next] (2017-04-xx)
 
+### Breaking changes from 1.6.0
+
+### Known issues
+
+### Features
+
+### Bug fixes
+
+<a name="1.6.0"></a>
+# [1.6.0] (2017-04-10)
+
 ### Breaking changes from 1.5.1
 * **IItemBase:** height is renamed size to be compatible with viewport horizontal layout
 * **ViewportMode:** NoViewport renamed to disabled
