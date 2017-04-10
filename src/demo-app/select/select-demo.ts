@@ -11,7 +11,7 @@
 
 import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { IItemTree } from '../../common/core';
+import { IItemBase, IItemTree } from '../../common/core';
 import { CountriesListService } from '../services/countries-list.service';
 import { CountriesService, ICountry } from '../services/countries.service';
 
@@ -61,7 +61,7 @@ export class SelectDemoComponent implements OnInit {
             .delay(1)
             .subscribe(() => {
                 this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","displayName":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","displayName":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","displayName":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","displayName":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","displayName":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","displayName":"Dominica","depth":0,"odd":false,"selected":true}]');
-        }, (error) => this.handleError(error));
+            }, (error) => this.handleError(error));
 
         this.countriesService.getCountries$().subscribe((value: ICountry[]) => {
             const result = [] as ISelectCountry[];
@@ -95,26 +95,25 @@ export class SelectDemoComponent implements OnInit {
     }
 
     protected confirmUnselection() {
-        return () => {
+        return (item: IItemBase) => {
             this.dialogVisible = true;
             const self = this;
-            return new Promise<any>((resolve?: () => void, reject?: (reason: any) => void) => {
-                Observable
-                    .fromEvent(this.dialogWrapper.nativeElement, 'click').first().subscribe((e: Event) => {
+            return Observable
+                .fromEvent(this.dialogWrapper.nativeElement, 'click')
+                .first()
+                .do(() => self.dialogVisible = false)
+                .map((e: Event) => {
                     let parentElement = e.target as HTMLElement;
 
                     while (parentElement && parentElement !== this.dialogWrapper.nativeElement) {
                         if (parentElement.id === 'okbtn') {
-                            resolve();
-                        } else if (parentElement.id === 'cancelbtn') {
-                            reject('Canceled by the user.');
+                            return item;
                         }
                         parentElement = parentElement.parentElement;
                     }
 
-                    self.dialogVisible = false;
+                    return null;
                 });
-            });
         };
     }
 

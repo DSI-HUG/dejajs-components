@@ -58,8 +58,8 @@ export class ItemListService {
     private _childrenField = 'items';
 
     // Callback promises
-    private selectingItem: (item: any) => Promise<any>;
-    private unselectingItem: (item: any) => Promise<any>;
+    private selectingItem: (item: any) => Promise<any> | Observable<any>;
+    private unselectingItem: (item: any) => Promise<any> | Observable<any>;
 
     // champs à utiliser comme valeur de comparaison
     private _valueField: string;
@@ -595,7 +595,7 @@ export class ItemListService {
     /**
      * Set a promise called before an item selection
      */
-    public setSelectingItem(fn: (item: any) => Promise<any>) {
+    public setSelectingItem(fn: (item: any) => Promise<any> | Observable<any>) {
         this.selectingItem = fn;
     }
 
@@ -607,6 +607,7 @@ export class ItemListService {
         return Observable.of(item)
             .filter((itm) => !!itm)
             .switchMap((itm) => this.selectingItem ? this.selectingItem(itm) : Observable.of(itm))
+            .filter((itm) => !!itm)
             .do((itm) => {
                 if (!this.selectedList) {
                     this.selectedList = [];
@@ -620,7 +621,7 @@ export class ItemListService {
     /**
      * Set a promise called before an item deselection
      */
-    public setUnselectingItem(fn: (item: any) => Promise<any>) {
+    public setUnselectingItem(fn: (item: any) => Promise<any> | Observable<any>) {
         this.unselectingItem = fn;
     }
 
@@ -632,6 +633,7 @@ export class ItemListService {
         return Observable.of(item)
             .filter((itm) => !!itm)
             .switchMap((itm) => this.unselectingItem ? this.unselectingItem(itm) : Observable.of(itm))
+            .filter((itm) => !!itm)
             .do((itm) => {
                 itm.selected = false;
                 if (this.selectedList && this.selectedList.length) {

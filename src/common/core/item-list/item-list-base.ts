@@ -178,14 +178,14 @@ export abstract class ItemListBase {
     /**
      * Set a promise called before an item selection
      */
-    public setSelectingItem(fn: (item: any) => Promise<any>) {
+    public setSelectingItem(fn: (item: any) => Promise<any> | Observable<any>) {
         this.getItemListService().setSelectingItem(fn);
     }
 
     /**
      * Set a promise called before an item deselection
      */
-    public setUnselectingItem(fn: (item: any) => Promise<any>) {
+    public setUnselectingItem(fn: (item: any) => Promise<any> | Observable<any>) {
         this.getItemListService().setUnselectingItem(fn);
     }
 
