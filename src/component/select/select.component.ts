@@ -401,7 +401,11 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return this.getMaxHeight();
     }
 
-    protected get containerElement(): HTMLElement {
+    protected get listElement() {
+        return this.listContainer && this.listContainer.elementRef.nativeElement as HTMLElement;
+    }
+
+    private get containerElement(): HTMLElement {
         return this.dropdownContainerId && this.elementRef.nativeElement.ownerDocument.getElementById(this.dropdownContainerId);
     }
 
@@ -432,10 +436,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     private get inputElement() {
         return this.input && this.input.nativeElement as HTMLInputElement;
-    }
-
-    private get listElement() {
-        return this.listContainer && this.listContainer.elementRef.nativeElement as HTMLElement;
     }
 
     // From ControlValueAccessor interface

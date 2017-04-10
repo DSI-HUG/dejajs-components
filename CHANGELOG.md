@@ -1,13 +1,19 @@
 <a name="@next"></a>
 # [@next] (2017-04-xx)
 
-### Breaking changes from 1.6.0
+### Breaking changes from 1.6.1
 
 ### Known issues
 
 ### Features
 
 ### Bug fixes
+
+<a name="1.6.1"></a>
+# [1.6.1] (2017-04-10)
+
+### Bug fixes
+* **ViewportService:** Ensure Visible not working in fixed, variable and auto modes.
 
 <a name="1.6.0"></a>
 # [1.6.0] (2017-04-10)
@@ -20,6 +26,7 @@
 * **ViewportMode:** AutoRowHeight renamed to auto
 
 ### Known issues
+* **ViewportService:** Ensure Visible not working in fixed, variable and auto modes
 
 ### Features
 * **ViewportService:** A view port service manage the viewport calculations and ensureVisible for treelist, select, grid and viewport component.
