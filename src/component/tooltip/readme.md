@@ -4,9 +4,9 @@ Directive + composant pour afficher une tooltip avec un contenu riche
 ### Utilisation
 ```html
 <deja-tooltip name="test-tt" *ngIf="tooltipVisible" (hide)="tooltipVisible = false">
-    <template #tooltipTemplate let-model>
+    <ng-template #tooltipTemplate let-model>
         {{model}}
-    </template>
+    </ng-template>
 </deja-tooltip>
 ...
 

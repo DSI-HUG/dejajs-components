@@ -24,7 +24,7 @@
             <button md-button (click)="viewport.ensureVisible(ensureIndex)">Ensure index</button>
         </div>
         <deja-viewport #viewport [items]="news$ | async" itemSize="200" viewportMode="disabled" [direction]="isHorizontal ? 'horizontal': 'vertical'" [scrollingStyle]="hasButtons ? 'buttons' : 'scrollbar'">
-			<template #itemTemplate let-item let-size="size">
+			<ng-template #itemTemplate let-item let-size="size">
 				<div *ngIf="item" class="news" fxLayout="row" [attr.id]="id">
 					<img [attr.src]="item.urlsToLogos.medium" (load)="imageLoaded();" class="logo" [style.max-height.px]="isHorizontal? null : (size? size - 10 : 20)" fxLayout="row" fxLayoutAlign="space-between" fxFlexAlign="center">
 					<span class="text">
@@ -38,7 +38,7 @@
 						</div>
 					</span>
 				</div>
-			</template>
+			</ng-template>
 		</deja-viewport>
 	</md-card-content>
 </md-card>

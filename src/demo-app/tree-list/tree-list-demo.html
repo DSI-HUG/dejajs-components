@@ -26,27 +26,27 @@
 			<md-toolbar color="primary">Treelist demo - Cas standards</md-toolbar>
 			<md-card-content class="listContainer">
 				<deja-tree-list min-search-length="0" searchArea multiSelect nodataholder="Pas de données" placeholder="Liste des pays" [(ngModel)]="countries" [deja-mouse-draggable]="getDragContext()" [valueField]="code">
-					<template #itemTemplate let-item let-flatindex="flatindex">
+					<ng-template #itemTemplate let-item let-flatindex="flatindex">
 						<span [attr.ddid]="item.code">{{ item.naqme + ' - ' + item.code }}</span>
-					</template>
+					</ng-template>
 				</deja-tree-list>
 				<deja-tree-list min-search-length="0" expandButton searchArea sortable multiSelect (selectedChange)="onSelectionChanged($event)" nodataholder="Pas de données" placeholder="Liste des pays, groupés par la première lettre" textField="naqme" [(ngModel)]="groupedCountries" (itemDragStart)="onItemDragStart($event)" #groupedtreelist childrenField="children">
-					<template #headerTemplate>
+					<ng-template #headerTemplate>
 						<span id="headerTemplateContent" (click)="groupedtreelist.sort()">
 							<span id="title">
 								This is a header template, click to sort the list.
 							</span>
 							<deja-sort-indicator [sort-infos]="groupedtreelist.sortInfos"></deja-sort-indicator>
 						</span>
-					</template>
-					<template #itemTemplate let-item let-flatindex="flatindex">
+					</ng-template>
+					<ng-template #itemTemplate let-item let-flatindex="flatindex">
 						<span>{{ item.naqme + ' - ' + item.code }}</span>
-					</template>
-					<template #searchSuffixTemplate>
+					</ng-template>
+					<ng-template #searchSuffixTemplate>
 						<button id="more" md-icon-button (click)="onSuffixClicked()">
 							<md-icon>more_vert</md-icon>
 						</button>
-					</template>
+					</ng-template>
 				</deja-tree-list>
 			</md-card-content>
 			<md-card-content class="dropzone">
@@ -78,7 +78,7 @@
             <md-card-content class="listContainer" fxLayout="row">
                 <deja-tree-list #treeList fxFlex [(ngModel)]="loremList" viewportMode="variable" expandButton searchArea sortable placeholder="Tree list avec des tailles de rows différentes"></deja-tree-list>
                 <deja-tree-list #news fxFlex [models]="news$" viewportMode="disabled" [viewPortRowHeight]="200" searchField="description" multiSelect searchArea sortable placeholder="Automatic row height TreeView ">
-                    <template #itemTemplate let-item let-flatindex="flatindex">
+                    <ng-template #itemTemplate let-item let-flatindex="flatindex">
                         <div class="news" fxLayout="row">
                             <img [attr.src]="item.model.urlsToLogos.small" class="logo" fxFlex="0 0 8rem" fxLayout="row" fxLayoutAlign="space-between" fxFlexAlign="center">
                             <span class="text" fxFlex="1 1 auto">
@@ -92,7 +92,7 @@
                         </div>
                         </span>
                         </div>
-                    </template>
+                    </ng-template>
                 </deja-tree-list>
             </md-card-content>
             <md-card-content class="empty">

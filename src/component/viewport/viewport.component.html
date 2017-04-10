@@ -2,7 +2,7 @@
 <div #wrapper id="viewport-wrapper" [fxLayout]="isHorizontal ? 'row' : 'column'">
     <span *ngIf="beforeSize" fxFlex="0 0 {{beforeSize}}"></span>
     <span class="listitem" *ngFor="let item of vpItems; let index = index" [attr.flat]="vpStartIndex + index" fxFlex="0 0 {{item.size ? item.size + 'px' : 'auto'}}" [style.margin-top.px]="!isHorizontal && startOffset && index === 0 ? -startOffset : null" [style.margin-left.px]="isHorizontal && startOffset && index === 0 ? -startOffset : null" [style.height.px]="isHorizontal ? null : getItemSize(item)" [style.width.px]="isHorizontal ? getItemSize(item) : null">
-		<template [ngTemplateOutlet]="itemTemplate" [ngOutletContext]="{ $implicit: item.model, index: vpStartIndex + index, size: getItemSize(item) }"></template>
+		<ng-template [ngTemplateOutlet]="itemTemplate" [ngTemplateOutletContext]="{ $implicit: item.model, index: vpStartIndex + index, size: getItemSize(item) }"></ng-template>
 	</span>
     <span *ngIf="afterSize" fxFlex="0 0 {{afterSize}}"></span>
 </div>

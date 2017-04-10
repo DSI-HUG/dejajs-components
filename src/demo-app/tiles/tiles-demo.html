@@ -12,21 +12,21 @@
     <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/tiles/readme.txt'"></deja-markdown>
 </md-card>
 
-<template ngFor let-message [ngForOf]="messages$ | async">
+<ng-template ngFor let-message [ngForOf]="messages$ | async">
     <deja-snackbar alignment="bottom right" *ngIf="message.gate" [duration]="8000" (onAnimationDone)="message.cancel(false)">
         <deja-message-box type="{{message.type}}" title="{{message.title}}">
             {{message.content}}
-            <template #actionsTemplate>
+            <ng-template #actionsTemplate>
                 <button md-raised-button (click)="message.cancel(false)" color="primary">
                     Ok
                 </button>
                 <button md-raised-button (click)="message.cancel(true)">
                     Annuler
                 </button>
-            </template>
+            </ng-template>
         </deja-message-box>
     </deja-snackbar>
-</template>
+</ng-template>
 <md-card class="demo-card demo-basic" [class.debug]="debug" *ngIf="tabIndex === 1">
     <md-toolbar color="primary">Tiles Demo</md-toolbar>
     <md-card-content id="actions">
@@ -42,22 +42,22 @@
     </md-card-content>
     <md-card-content>
         <deja-tiles #tiles1 id="tiles1" [models]="tiles1$ | async" [deja-mouse-draggable]="getDragContext()" (contentAdding)="onContentAdding($event)" (contentRemoving)="onContentRemoving($event)" maxwidth="100%" tileminwidth="5%" tileminheight="5%" tilemaxheight="50%" tilemaxwidth="50%">
-            <template #tileTemplate let-tile let-pressed="pressed" let-selected="selected">
+            <ng-template #tileTemplate let-tile let-pressed="pressed" let-selected="selected">
                 <span class="tile-content unselectable" [style.background-color]="tile.templateModel.color">{{ tile.templateModel.naqme }} ({{ id }})
                     <span id="selected">Selected</span>
                 <span id="pressed">Pressed</span>
                 </span>
-            </template>
+            </ng-template>
         </deja-tiles>
     </md-card-content>
     <md-card-content>
         <deja-tiles #tiles2 id="tiles2" [models]="tiles2$ | async" (contentAdding)="onContentAdding($event)" (contentRemoving)="onContentRemoving($event)" canDelete canCopy canCut canPaste [designMode]="designMode" maxwidth="100%" tileminwidth="5%" tileminheight="5%" tilemaxheight="50%" tilemaxwidth="50%">
-            <template #tileTemplate let-tile let-pressed="pressed" let-selected="selected">
+            <ng-template #tileTemplate let-tile let-pressed="pressed" let-selected="selected">
                 <span class="tile-content unselectable" [style.background-color]="tile.templateModel.color">{{ tile.templateModel.naqme }} ({{ id }})
                     <span id="selected">Selected</span>
                 <span id="pressed">Pressed</span>
                 </span>
-            </template>
+            </ng-template>
         </deja-tiles>
     </md-card-content>
 </md-card>

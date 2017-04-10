@@ -144,11 +144,13 @@ export class ItemListService {
 
                 observable
                     .subscribe((its) => {
-                        this.ensureChildrenProperties(its);
-                        // TODO La déselection ne fonctionne pas pendant le chargement
-                        this.ensureSelectedItems(its, true);
-                        this.items = [...this.items || [], ...its];
-                        this._waiter$.next(false);
+                        if (its) {
+                            this.ensureChildrenProperties(its);
+                            // TODO La déselection ne fonctionne pas pendant le chargement
+                            this.ensureSelectedItems(its, true);
+                            this.items = [...this.items || [], ...its];
+                            this._waiter$.next(false);
+                        }
                         subscriber.next();
                     }, (error) => {
                         this._waiter$.next(false);
@@ -1219,6 +1221,10 @@ export class ItemListService {
     }
 
     private ensureChildrenProperties(items: IItemTree[]) {
+        if (!items) {
+            return;
+        }
+
         items.forEach((item) => {
             if (item[this.childrenField]) {
                 item.$items = item[this.childrenField];

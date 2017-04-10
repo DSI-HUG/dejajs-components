@@ -11,18 +11,18 @@ Exemple d'utilisation simple
 
 Si le serveur push des données, veuillez utilisé cette implémentation qui se charge de retirer automatiquement les snackbar du DOM après la durée définie.
 ```html
-<template ngFor let-message [ngForOf]="messages | async">
+<ng-template ngFor let-message [ngForOf]="messages | async">
   <deja-snackbar *ngIf="message.gate" alignment="left" [duration]="5000" (onAnimationDone)="message.gate = false">
   <!-- composant graphique ici -->
   </deja-snackbar>
-</template>
+</ng-template>
 ```
 
 Si le snackbar est une réponse à une action de l'utilisateur sur l'UI, veuillez utiliser cette implémentation.
 ```html
 <!-- le conteneur doit avoir  position: relative; s'il est spécifié en utilisant @Input outerContainerElement-->
 <section #containerEl id="container" [style.position]="'relative'">
-  <template ngFor let-message [ngForOf]="messages | async">
+  <ng-template ngFor let-message [ngForOf]="messages | async">
     <deja-snackbar *ngIf="message.gate" alignment="right" [outerContainerElement]="containerEl">
       <!-- si duration @Input & onAnimationDone @Output no sont pas spécifiés, un Event Emitter externe doit être utilisé pour disposé du snackbar -->
       <!-- par exemple -->
@@ -31,7 +31,7 @@ Si le snackbar est une réponse à une action de l'utilisateur sur l'UI, veuille
         <button (click)="message.gate = false"></button>
       </div>
     </deja-snackbar>
-  </template>
+  </ng-template>
 </section>
 ```
 

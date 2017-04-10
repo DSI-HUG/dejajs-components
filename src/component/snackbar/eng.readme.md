@@ -3,17 +3,17 @@
 ### Use
 
 ```html
-<template ngFor let-message [ngForOf]="messages | async">
+<ng-template ngFor let-message [ngForOf]="messages | async">
   <deja-snackbar *ngIf="message.gate" alignment="left" [duration]="5000" (onAnimationDone)="message.gate = false">
   <!-- graphic component here -->
   </deja-snackbar>
-</template>
+</ng-template>
 ```
 
 ```html
 <!-- container MUST have it's position set to relative if it's specified using outerContainerElement @Output -->
 <section #containerEl id="container" [style.position]="'relative'">
-  <template ngFor let-message [ngForOf]="messages | async">
+  <ng-template ngFor let-message [ngForOf]="messages | async">
     <deja-snackbar *ngIf="message.gate" alignment="right" [outerContainerElement]="containerEl">
       <!-- if duration @Input & onAnimationDone @Output aren't specified, MUST have an event emitter to dispose the snackbar -->
       <!-- i.e button & click eventer emitter-->
@@ -22,7 +22,7 @@
         <button (click)="message.gate = false"></button>
       </div>
     </deja-snackbar>
-  </template>
+  </ng-template>
 </section>
 ```
 

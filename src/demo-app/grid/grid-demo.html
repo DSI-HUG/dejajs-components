@@ -38,7 +38,7 @@
 			</deja-menu>
 			<!-- -->
 			<deja-grid #bgrid searchArea groupArea rowsSortable columnsSortable columnsSizable multiSelect sortable [(ngModel)]="drugsBigRecord$" [columns]="columns" (selectedChange)="onSelectionChanged($event)" nodataholder="Pas de données" placeholder="Filtrer la liste par le nom" searchField="indexedText" (itemDragStart)="onItemDragStart($event)">
-				<template #cellTemplate let-row let-column="column">
+				<ng-template #cellTemplate let-row let-column="column">
 					<span id="cell-reaction" class="cell" *ngIf="column.name==='reaction' && row.reaction && row.reaction.length">
 						<span id="content">{{ row.reaction[0].reactionmeddrapt }}</span>
 						<button id="more" *ngIf="row.reaction.length > 1" md-icon-button (click)="currentReactions = row.reaction; moreReactionMenu.show($event)">
@@ -53,12 +53,12 @@
 							<md-icon>more_vert</md-icon>
 						</button>
 					</span>
-				</template>
-				<template #searchSuffixTemplate>
+				</ng-template>
+				<ng-template #searchSuffixTemplate>
 					<button id="more" md-icon-button (click)="onSuffixClicked()">
 						<md-icon>more_vert</md-icon>
 					</button>
-				</template>
+				</ng-template>
 			</deja-grid>
 		</md-card-content>
 		<md-card-content class="ddContainer">
@@ -82,14 +82,14 @@
 		<md-card-content class="listContainer">
 			<!-- -->
 			<deja-grid #cgrid sortable columnsSizable multiSelect [(ngModel)]="drugs$" [columns]="percentColumns" (selectedChange)="onSelectionChanged2($event)" nodataholder="Pas de données" placeholder="Filtrer la liste par le nom" searchField="receivedate">
-				<template #rowTemplate let-row>
+				<ng-template #rowTemplate let-row>
 					<deja-grid-row [row]="row" [columnLayout]="cgrid.columnLayout" [cellTemplateExternal]="cgrid.cellTemplate">
-						<template #cellTemplate let-row let-column="column">
+						<ng-template #cellTemplate let-row let-column="column">
 							<span *ngIf="column.name!=='transmissiondateformat'" class="cell" [attr.current]="column.isCurrent || null">{{ row[column.name] }}</span>
 							<span *ngIf="column.name==='transmissiondateformat'" class="cell" [attr.current]="column.isCurrent || null">{{ row[column.name] + 'apk'}}</span>
-						</template>
+						</ng-template>
 					</deja-grid-row>
-				</template>
+				</ng-template>
 			</deja-grid>
 		</md-card-content>
 	</md-card>
@@ -106,9 +106,9 @@
 		<md-toolbar color="primary">Grille avec taille automatique des lignes</md-toolbar>
 		<md-card-content class="listContainer">
 			<deja-grid id="news" #news groupArea sortable columnsSizable multiSelect [rows]="news$ | async" [columns]="newsColumns" viewportMode="auto" nodataholder="Pas de données" (columnSizeChanged)="onColumnSizeChanged($event)">
-				<template #cellTemplate let-row let-column="column">
+				<ng-template #cellTemplate let-row let-column="column">
 					<img *ngIf="column.name==='logo'" [attr.src]="row.urlsToLogos.small" class="logo">
-				</template>
+				</ng-template>
 			</deja-grid>
 		</md-card-content>
 	</md-card>

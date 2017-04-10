@@ -5,15 +5,15 @@
     <md-input-container id="input" *ngIf="searchArea || minSearchlength > 0">
         <input #inputelement type="text" mdInput tabindex="0" [(ngModel)]="query" [placeholder]="placeholder">
         <span *ngIf="searchPrefixTemplate" mdPrefix>
-			<template [ngTemplateOutlet]="searchPrefixTemplate"></template>
+			<ng-template [ngTemplateOutlet]="searchPrefixTemplate"></ng-template>
 		</span>
         <span *ngIf="searchSuffixTemplate" mdSuffix>
-			<template [ngTemplateOutlet]="searchSuffixTemplate"></template>
+			<ng-template [ngTemplateOutlet]="searchSuffixTemplate"></ng-template>
 		</span>
     </md-input-container>
 </div>
 <div id="listheader" *ngIf="headerTemplate">
-    <template [ngTemplateOutlet]="headerTemplate"></template>
+    <ng-template [ngTemplateOutlet]="headerTemplate"></ng-template>
 </div>
 <div #listcontainer id="listcontainer" [attr.depth-max]="depthMax || null" [attr.vp-rowheight]="getViewPortRowHeight()" [style.max-height.px]="maxHeight || null" tabindex="1" [class.hasheader]="headerTemplate" [class.dragover]="_ddStartIndex !== undefined ? _ddStartIndex : null" [attr.keynav]="keyboardNavigation" (dragleave)="sortable ? dragLeave($event): null" (mousedown)="mousedown($event)" [deja-droppable]="getDropContext()">
     <div id="nodata-holder" *ngIf="(!_itemList || _itemList.length === 0) && !waiter">{{ nodataholder }}</div>
@@ -23,15 +23,15 @@
 		<span *ngIf="item.$items" id="expandbtn"></span>
         <ng-container *ngIf="(!item.$items || !parentItemTemplate) && (item.$items || !itemTemplate)">{{ getTextValue(item) }}</ng-container>
         <ng-container class="item-content" *ngIf="item.$items && parentItemTemplate">
-		    <template [ngTemplateOutlet]="parentItemTemplate" [ngOutletContext]="{ $implicit: item, query: query, flatindex: vpStartRow+index }"></template>
+		    <ng-template [ngTemplateOutlet]="parentItemTemplate" [ngTemplateOutletContext]="{ $implicit: item, query: query, flatindex: vpStartRow+index }"></ng-template>
 	    </ng-container>
         <ng-container class="item-content" *ngIf="!item.$items && itemTemplate">
-			<template [ngTemplateOutlet]="itemTemplate" [ngOutletContext]="{ $implicit: item, query: query, flatindex: vpStartRow+index }"></template>
+			<ng-template [ngTemplateOutlet]="itemTemplate" [ngTemplateOutletContext]="{ $implicit: item, query: query, flatindex: vpStartRow+index }"></ng-template>
 		</ng-container>
     </div>
     <div *ngIf="vpAfterHeight" [style.height.px]="vpAfterHeight"></div>
     <deja-list-loader id="loader" *ngIf="waiter && !loaderTemplate"></deja-list-loader>
     <ng-container *ngIf="waiter && loaderTemplate">
-		<template [ngTemplateOutlet]="loaderTemplate"></template>
+		<ng-template [ngTemplateOutlet]="loaderTemplate"></ng-template>
 	</ng-container>
 </div>
