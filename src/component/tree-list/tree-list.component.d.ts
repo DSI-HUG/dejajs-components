@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, ElementRef, EventEmitter, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { GroupingService } from '../../common/core/grouping';
-import { IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, ViewportMode } from '../../common/core/item-list';
+import { IItemBase, IItemTree, ItemListBase, ItemListService, IViewPort, ViewportMode, ViewPortService } from '../../common/core/item-list';
 import { SortingService } from '../../common/core/sorting';
 import { IDejaDragEvent } from '../dragdrop';
 import { DejaTreeListItemEvent, DejaTreeListItemsEvent, DejaTreeListScrollEvent } from './index';
@@ -10,7 +10,6 @@ export declare class DejaTreeListComponent extends ItemListBase implements OnDes
     placeholder: string;
     nodataholder: string;
     query: string;
-    maxHeight: number;
     itemTemplateExternal: any;
     parentItemTemplateExternal: any;
     loaderTemplateExternal: any;
@@ -22,12 +21,11 @@ export declare class DejaTreeListComponent extends ItemListBase implements OnDes
     scroll: EventEmitter<DejaTreeListScrollEvent>;
     selectedChange: EventEmitter<DejaTreeListItemsEvent | DejaTreeListItemEvent>;
     afterViewInit: EventEmitter<{}>;
-    listcontainer: ElementRef;
+    listContainer: ElementRef;
     input: ElementRef;
     protected onTouchedCallback: () => void;
     protected onChangeCallback: (_: any) => void;
     protected keyboardNavigation: boolean;
-    private listItemElements;
     private itemTemplateInternal;
     private parentItemTemplateInternal;
     private loaderTemplateInternal;
@@ -36,9 +34,7 @@ export declare class DejaTreeListComponent extends ItemListBase implements OnDes
     private searchSuffixTemplateInternal;
     private clickedItem;
     private rangeStartIndex;
-    private ignoreNextScrollEvents;
     private filterExpression;
-    private lastScrollTop;
     private _searchArea;
     private _expandButton;
     private _sortable;
@@ -49,12 +45,12 @@ export declare class DejaTreeListComponent extends ItemListBase implements OnDes
     private mouseUp$sub;
     private clearFilterExpression$;
     private filterListComplete$;
-    constructor(changeDetectorRef: ChangeDetectorRef, elementRef: ElementRef);
+    constructor(changeDetectorRef: ChangeDetectorRef, viewPort: ViewPortService, elementRef: ElementRef);
     minSearchlength: number;
-    searchArea: boolean;
-    expandButton: boolean;
-    sortable: boolean;
-    itemsDraggable: boolean;
+    searchArea: boolean | string;
+    expandButton: boolean | string;
+    sortable: boolean | string;
+    itemsDraggable: boolean | string;
     pageSize: number;
     hintLabel: string;
     viewPortRowHeight: number;
@@ -63,9 +59,10 @@ export declare class DejaTreeListComponent extends ItemListBase implements OnDes
     textField: string;
     valueField: string;
     searchField: string;
+    maxHeight: number;
     currentItem: IItemBase;
     readonly depthMax: number;
-    multiSelect: boolean;
+    multiSelect: boolean | string;
     selectedItems: IItemBase[];
     selectedItem: IItemBase;
     itemListService: ItemListService;
@@ -75,6 +72,7 @@ export declare class DejaTreeListComponent extends ItemListBase implements OnDes
     selectingItem: (item: any) => Promise<any>;
     unselectingItem: (item: any) => Promise<any>;
     models: any[] | Observable<any[]>;
+    protected readonly containerElement: HTMLElement;
     private currentItemIndex;
     private readonly itemTemplate;
     private readonly parentItemTemplate;
@@ -107,5 +105,5 @@ export declare class DejaTreeListComponent extends ItemListBase implements OnDes
     protected onSelectionChange(): void;
     protected selectRange$(indexFrom: number, indexTo?: number): Observable<number>;
     protected toggleSelect$(items: IItemBase[], state: boolean): Observable<IItemBase[]>;
-    protected calcViewPort$(): Observable<IViewListResult>;
+    protected calcViewList$(): Observable<IViewPort>;
 }

@@ -1,19 +1,23 @@
 import { OnInit } from '@angular/core';
-import { DejaGridRowsEvent, IDejaDragEvent, IDejaGridColumn } from '../../component';
+import { DejaGridRowsEvent, IDejaDragEvent, IDejaGridColumn, IDejaGridColumnSizeEvent } from '../../component';
 import { DrugsService } from '../services/drugs.service';
+import { NewsService } from '../services/news.service';
 export declare class GridDemoComponent implements OnInit {
     private drugsService;
     protected columns: IDejaGridColumn[];
     protected percentColumns: IDejaGridColumn[];
     protected responsiveColumns: IDejaGridColumn[];
+    protected newsColumns: IDejaGridColumn[];
     protected tabIndex: number;
     protected drugCounts: number;
     private drugsBigRecord$;
     private drugs$;
+    private news$;
     private groupedDrugs$;
     private selectedItems;
     private gridComponent;
-    constructor(drugsService: DrugsService);
+    private gridNews;
+    constructor(drugsService: DrugsService, newsService: NewsService);
     ngOnInit(): void;
     protected onSelectionChanged(e: DejaGridRowsEvent): void;
     protected onSelectionChanged2(): void;
@@ -21,6 +25,7 @@ export declare class GridDemoComponent implements OnInit {
     protected onItemDragStart(event: IDejaDragEvent): void;
     protected onDivDragOver(event: IDejaDragEvent): void;
     protected onDivDropEvent(event: IDejaDragEvent): void;
+    protected onColumnSizeChanged(e: IDejaGridColumnSizeEvent): void;
     protected showMoreReaction(): void;
     protected onSuffixClicked(): void;
 }

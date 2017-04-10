@@ -16,8 +16,8 @@ export declare class DejaColorPickerComponent implements ControlValueAccessor {
     private _value;
     readonly containerElement: any;
     constructor(elementRef: ElementRef);
-    small: boolean;
-    disabled: boolean;
+    small: boolean | string;
+    disabled: boolean | string;
     value: Color;
     writeValue(value: Color): void;
     registerOnChange(fn: any): void;

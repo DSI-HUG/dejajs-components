@@ -27,7 +27,7 @@ export declare class DejaTilesComponent implements AfterViewInit, OnDestroy {
     tileminheight: string;
     tilemaxheight: string;
     maxwidth: string;
-    designMode: boolean;
+    designMode: boolean | string;
     models: IDejaTile[];
     canDelete: boolean;
     canCopy: boolean;

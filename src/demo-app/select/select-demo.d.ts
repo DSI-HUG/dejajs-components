@@ -1,7 +1,7 @@
 import { OnInit } from '@angular/core';
 import { CountriesListService } from '../services/countries-list.service';
 import { CountriesService, ICountry } from '../services/countries.service';
-export declare class SelectDemoComponent extends OnInit {
+export declare class SelectDemoComponent implements OnInit {
     private countriesService;
     protected countriesListService: CountriesListService;
     protected country: ICountry;

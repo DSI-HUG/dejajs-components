@@ -27,8 +27,8 @@ export declare class DejaDatePickerComponent implements OnInit {
     ngOnInit(): void;
     private readonly containerElement;
     private showDropDown;
-    disabled: boolean;
-    time: boolean;
+    disabled: boolean | string;
+    time: boolean | string;
     close(): void;
     open(): void;
     value: Date;

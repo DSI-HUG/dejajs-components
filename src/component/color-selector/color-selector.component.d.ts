@@ -22,7 +22,7 @@ export declare class DejaColorSelectorComponent implements ControlValueAccessor 
     private hilightedSubIndex;
     private hilightedSubIndex$;
     constructor(elementRef: ElementRef);
-    disabled: boolean;
+    disabled: boolean | string;
     colors: Color[];
     selectedColor: Color;
     value: Color;

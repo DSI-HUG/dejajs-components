@@ -1,34 +1,25 @@
-import { ChangeDetectorRef, ElementRef, QueryList } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { GroupingService, IGroupInfo } from '../grouping/index';
 import { ISortInfos, SortingService } from '../sorting/index';
-import { IItemBase } from './item-base';
-import { IFindItemResult, IParentListInfoResult, ItemListService, IViewListResult } from './item-list.service';
-import { IItemTree } from './item-tree';
-export declare enum ViewportMode {
-    NoViewport = 0,
-    ConstantRowHeight = 1,
-    VariableRowHeight = 2,
-    AutoRowHeight = 3,
-}
-export declare class ItemListBase {
+import { IFindItemResult, IItemBase, IItemTree, IParentListInfoResult, ItemListService, IViewListResult, IViewPort, ViewportMode, ViewPortService } from './index';
+export declare abstract class ItemListBase {
     protected changeDetectorRef: ChangeDetectorRef;
-    static defaultViewPortRowHeight: number;
+    protected viewPort: ViewPortService;
     protected waiter: boolean;
     protected _itemList: IItemBase[];
     protected _multiSelect: boolean;
     protected _searchField: string;
+    protected _maxHeight: number;
     protected _textField: string;
     protected _valueField: string;
     protected _currentItemIndex: number;
     protected _currentItem: IItemBase;
     protected _hintLabel: string;
     protected _nodataLabel: string;
-    protected computedMaxHeight: number;
     protected _hideSelected: boolean;
     protected _childrenField: string;
     protected _minSearchLength: number;
-    protected _viewportMode: ViewportMode;
     protected vpBeforeHeight: number;
     protected vpAfterHeight: number;
     protected vpStartRow: number;
@@ -44,9 +35,11 @@ export declare class ItemListBase {
     private _itemListService;
     private allCollapsed;
     private _viewPortRowHeight;
-    constructor(changeDetectorRef: ChangeDetectorRef);
+    private viewPort$;
+    constructor(changeDetectorRef: ChangeDetectorRef, viewPort: ViewPortService);
     readonly sortInfos: ISortInfos;
     readonly groupInfos: IGroupInfo[];
+    protected readonly abstract containerElement: HTMLElement;
     setHideSelected(value: boolean): void;
     setChildrenField(value: string): void;
     getItemIndexFromHTMLElement(element: HTMLElement): number;
@@ -58,16 +51,17 @@ export declare class ItemListBase {
     setSelectingItem(fn: (item: any) => Promise<any>): void;
     setUnselectingItem(fn: (item: any) => Promise<any>): void;
     getTextValue(value: any): any;
-    setViewportMode(mode: ViewportMode): void;
+    setViewportMode(mode: ViewportMode | string): void;
     sort(name?: string): void;
     sort$(name?: string): any;
-    group$(groups: IGroupInfo[]): Observable<IViewListResult>;
-    ungroup$(groupInfo: IGroupInfo): Observable<IViewListResult>;
+    group$(groups: IGroupInfo[]): Observable<IViewPort>;
+    ungroup$(groupInfo: IGroupInfo): Observable<IViewPort>;
     toggleAll$(): Observable<IItemBase[]>;
     toggleCollapse$(index: number, collapsed: boolean): Observable<IItemTree[]>;
     unselectAll$(): Observable<IItemBase[]>;
     refresh(): void;
     clearViewPort(): void;
+    clearRowsHeight(): void;
     getParentListInfos$(item: IItemTree): Observable<IParentListInfoResult>;
     protected getSelectedModels(): any[];
     protected setSelectedModels(value: any[]): void;
@@ -89,7 +83,7 @@ export declare class ItemListBase {
     protected setModels$(models: any[] | Observable<any[]>): Observable<IItemBase[]>;
     protected getItems(): IItemBase[];
     protected drop$(): Observable<boolean>;
-    protected getViewList$(query?: RegExp | string, startRow?: number, maxCount?: number, ignoreCache?: boolean): Observable<IViewListResult>;
+    protected getViewList$(query?: RegExp | string, ignoreCache?: boolean): Observable<IViewListResult>;
     protected selectRange$(indexFrom: number, indexTo?: number): Observable<number>;
     protected toggleSelect$(items: IItemBase[], selected: boolean): Observable<IItemBase[]>;
     protected isCollapsible(item: IItemTree): boolean;
@@ -97,11 +91,13 @@ export declare class ItemListBase {
     protected setTextField(value: string): void;
     protected setValueField(value: string): void;
     protected setSearchField(value: string): void;
+    protected setMaxHeight(value: number | string): void;
+    protected getMaxHeight(): number;
     protected calcDragTargetIndex$(index: number, targetIndex: number): Observable<number>;
     protected getItemTreeInfo(items: IItemBase[], item: IItemBase): IItemTreeInfo;
-    protected calcViewPort$(query?: string, maxHeight?: number, containerElement?: HTMLElement): Observable<IViewListResult>;
+    protected calcViewList$(query?: string): Observable<IViewPort>;
     protected ensureListCaches$(): Observable<IViewListResult>;
-    protected ensureItemVisible(query: string, containerElement: HTMLElement, listItemElements: QueryList<ElementRef>, item: IItemBase | number): void;
+    protected ensureItemVisible(item: IItemBase | number): void;
     protected convertToIItemBase(modls: any[], selected?: boolean): IItemBase[];
     protected getItemHeight(item: IItemBase): number;
 }

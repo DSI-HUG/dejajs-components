@@ -45,7 +45,7 @@ export declare class DejaDateSelectorComponent implements AfterContentInit {
     private _time;
     private onTouchedCallback;
     private onChangeCallback;
-    time: boolean;
+    time: boolean | string;
     constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef);
     ngAfterContentInit(): void;
     value: Date;

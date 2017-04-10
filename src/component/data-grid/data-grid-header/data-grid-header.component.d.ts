@@ -17,9 +17,9 @@ export declare class DejaGridHeaderComponent implements OnDestroy {
     private backupColumnOrder;
     private columnGroupKey;
     private subscriptions;
-    columnsDraggable: boolean;
-    columnsSortable: boolean;
-    columnsSizable: boolean;
+    columnsDraggable: boolean | string;
+    columnsSortable: boolean | string;
+    columnsSizable: boolean | string;
     columnLayout: IDejaGridColumnLayout;
     protected readonly columnHeaderTemplate: any;
     constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef);

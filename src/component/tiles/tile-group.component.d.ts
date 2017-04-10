@@ -8,5 +8,5 @@ export declare class DejaTileGroupComponent {
     private title;
     private _designMode;
     constructor();
-    designMode: boolean;
+    designMode: boolean | string;
 }

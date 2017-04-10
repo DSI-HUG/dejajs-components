@@ -4,6 +4,7 @@ import { INews, NewsService } from '../services/news.service';
 export declare class DejaViewPortDemoComponent {
     private changeDetectorRef;
     protected tabIndex: number;
+    private viewport;
     protected exampleValue: string;
     protected html: string;
     protected news$: Observable<INews[]>;

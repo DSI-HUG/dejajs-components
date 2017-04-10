@@ -1,51 +1,50 @@
 import { AfterViewInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { IViewPortItem, ViewportDirection, ViewportMode, ViewPortService } from '../../common/core/item-list';
+export declare enum DejaViewPortScrollStyle {
+    scrollbar = 0,
+    buttons = 1,
+}
 export declare class DejaViewPortComponent implements OnDestroy, AfterViewInit {
     private changeDetectorRef;
-    itemSizeMode: 'fixed' | 'auto';
-    itemSize: string;
+    private viewPort;
     protected beforeSize: string;
     protected afterSize: string;
-    protected vpItems: DejaViewPortItem[];
+    protected vpItems: IDejaViewPortItem[];
     protected vpStartIndex: number;
+    protected vpEndIndex: number;
     protected startOffset: number;
+    protected hasUpButton: boolean;
+    protected hasDownButton: boolean;
+    protected isHorizontal: boolean;
+    protected hasButtons: boolean;
     private _items;
     private element;
     private subscriptions;
-    private lastScrollPos;
-    private isHorizontal;
-    private hasButtons;
     private hasButtons$;
-    private _scrollPos;
     private buttonsStep;
     private mouseDown$Sub;
     private mouseWheel$Sub;
-    private hasUpButton;
-    private hasDownButton;
-    private _direction;
-    private _scrollingStyle;
-    private scrolling;
+    private scrollPosition;
     itemTemplateExternal: any;
     private itemTemplateInternal;
-    private itemElements;
     private wrapperElement;
     private downButton;
     private upButton;
     items: any[];
-    scrollingStyle: 'scrollbar' | 'buttons';
-    direction: 'vertical' | 'horizontal';
+    scrollingStyle: DejaViewPortScrollStyle | string;
+    direction: ViewportDirection | string;
+    itemSize: number | string;
     private readonly itemTemplate;
     private readonly clientSize;
     private scrollPos;
-    constructor(changeDetectorRef: ChangeDetectorRef);
+    viewportMode: ViewportMode | string;
+    constructor(changeDetectorRef: ChangeDetectorRef, viewPort: ViewPortService);
     ngOnDestroy(): void;
     ngAfterViewInit(): void;
     refresh(): void;
     ensureVisible(item: any): void;
-    private calcViewPort(maxSize?);
-    private clearViewPort();
+    protected getItemSize(item: IViewPortItem): string | number;
 }
-export declare class DejaViewPortItem {
+export interface IDejaViewPortItem extends IViewPortItem {
     model: any;
-    size: number;
-    constructor(model: any, size?: number);
 }

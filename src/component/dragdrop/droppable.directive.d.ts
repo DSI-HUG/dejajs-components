@@ -3,7 +3,7 @@ import { DejaClipboardService } from '../../common/core/clipboard/clipboard.serv
 import { IDejaDragEvent } from './index';
 export declare class DejaDroppableDirective {
     private clipboardService;
-    allEvents: boolean;
+    allEvents: boolean | string;
     private droppable;
     private draginfokey;
     private objectKey;

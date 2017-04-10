@@ -11,10 +11,10 @@ export declare class DejaEditableDirective implements ControlValueAccessor {
     private edit$;
     private element;
     constructor(elementRef: ElementRef);
-    mandatory: boolean;
-    multiline: boolean;
-    editMode: boolean;
-    inEdition: boolean;
+    mandatory: boolean | string;
+    multiline: boolean | string;
+    editMode: boolean | string;
+    inEdition: boolean | string;
     value: any;
     writeValue(value: any): void;
     registerOnChange(fn: any): void;

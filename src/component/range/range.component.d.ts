@@ -19,8 +19,8 @@ export declare class DejaRangeComponent implements ControlValueAccessor {
     registerOnChange(fn: any): void;
     registerOnTouched(fn: any): void;
     ranges: IRange[];
-    disabled: boolean;
-    readOnly: boolean;
+    disabled: boolean | string;
+    readOnly: boolean | string;
     constructor(changeDetectorRef: ChangeDetectorRef, elementRef: ElementRef);
     writeValue(ranges: IRange[]): void;
     onResize(): void;

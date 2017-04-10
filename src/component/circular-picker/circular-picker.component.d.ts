@@ -13,7 +13,7 @@ export declare class DejaCircularPickerComponent implements OnInit {
     ranges: ICircularRange[];
     labelTemplate: any;
     cursorTemplate: any;
-    disabled: boolean;
+    disabled: boolean | string;
     private _disabled;
     private _value;
     private TwoPI;

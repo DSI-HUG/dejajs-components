@@ -1,15 +1,12 @@
 import { OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { GroupingService, IItemTree, ViewportMode } from '../../common/core';
+import { GroupingService, IItemTree } from '../../common/core';
 import { DejaTextMetricsService, DejaTreeListItemsEvent, IDejaDragEvent, IDejaMouseDraggableContext, IDejaMouseDroppableContext } from '../../component';
 import { CountriesService, ICountry } from '../services/countries.service';
 import { INews, NewsService } from '../services/news.service';
 export declare class DejaTreeListDemoComponent implements OnInit {
     private countriesService;
     private textMetricsService;
-    protected variableMode: ViewportMode;
-    protected autoMode: ViewportMode;
-    protected noViewportList: IItemTree[];
     protected news$: Observable<INews[]>;
     protected groupedCountries: IItemTree[];
     protected countries: Observable<ICountry[]>;

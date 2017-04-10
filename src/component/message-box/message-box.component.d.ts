@@ -11,7 +11,7 @@ export declare class DejaMessageBoxComponent implements OnInit {
     }>;
     protected actionsTemplate: any;
     private _horizontal;
-    horizontal: boolean;
+    horizontal: boolean | string;
     constructor();
     ngOnInit(): void;
     private getIconFromType(type);

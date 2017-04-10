@@ -61,7 +61,8 @@ export declare class ItemListService {
     ungroup$(groupInfo: IGroupInfo): Observable<IGroupInfo>;
     getParentListInfos$(item: IItemTree, multiSelect: boolean): Observable<IParentListInfoResult>;
     invalidateCache(): void;
-    getViewList$(searchField: string, query?: RegExp | string, startRow?: number, maxCount?: number, ignoreCache?: boolean, ddStartIndex?: number, ddTargetIndex?: number, multiSelect?: boolean): Observable<IViewListResult>;
+    invalidateRowsHeightCache(): void;
+    getViewList$(searchField: string, query?: RegExp | string, ignoreCache?: boolean, ddStartIndex?: number, ddTargetIndex?: number, multiSelect?: boolean): Observable<IViewListResult>;
     protected getItemList$(_query?: RegExp | string, _selectedItems?: IItemBase[]): Observable<IItemBase[]>;
     protected itemMatch(item: IItemBase, searchField: string, regExp: RegExp): boolean;
     protected getGroupedList$(items: IItemBase[]): Observable<IItemTree[]>;
@@ -76,12 +77,8 @@ export declare class ItemListService {
     private ensureChildrenProperties(items);
 }
 export interface IViewListResult {
-    rowsCount?: number;
     depthMax?: number;
     visibleList?: IItemBase[];
-    startRow: number;
-    endRow: number;
-    outOfRange?: boolean;
 }
 export interface IFindItemResult {
     item: IItemBase;
