@@ -9,7 +9,7 @@
  *
  */
 
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, forwardRef, Input, OnDestroy, Output, QueryList, ViewChild, ViewChildren, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, forwardRef, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
@@ -81,8 +81,6 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     protected onChangeCallback: (_: any) => void = noop;
 
     protected keyboardNavigation = false;
-
-    @ViewChildren('listitem') private listItemElements: QueryList<ElementRef>;
 
     // Templates
     @ContentChild('itemTemplate') private itemTemplateInternal;
@@ -203,8 +201,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     public get pageSize() {
         if (this._pageSize === 0) {
             const vpRowHeight = this.getViewPortRowHeight();
-            const listElement = this.listContainer.nativeElement as HTMLElement;
-            const containerHeight = this.maxHeight || listElement.clientHeight;
+            const containerHeight = this.maxHeight || this.containerElement.clientHeight;
             return Math.floor(containerHeight / vpRowHeight);
         }
 
@@ -408,6 +405,10 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
             .subscribe(noop);
     }
 
+    protected get containerElement(): HTMLElement {
+        return this.listContainer.nativeElement;
+    }
+
     private set currentItemIndex(value: number) {
         super.setCurrentItemIndex(value);
         this.changeDetectorRef.markForCheck();
@@ -484,7 +485,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
     /** Positionne a scrollbar pour assurer que l'élément spécifié soit visible */
     public ensureItemVisible(item: IItemBase | number) {
-        super.ensureItemVisible(this.query, this.listContainer.nativeElement, this.listItemElements, item);
+        super.ensureItemVisible(item);
     }
 
     /** Efface le contenu de la liste */
@@ -502,10 +503,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                 .subscribe(noop);
         }
 
-        const listElement = this.listContainer.nativeElement as HTMLElement;
-
         this.subscriptions.push(Observable
-            .fromEvent(listElement, 'scroll')
+            .fromEvent(this.containerElement, 'scroll')
             .map((event: any) => [event, event.target.scrollTop, event.target.scrollLeft])
             .map(([event, scrollTop, scrollLeft]: [Event, number, number]) => {
                 const e = {
@@ -519,7 +518,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
             })
             .subscribe((scrollPos) => this.viewPort.scrollPosition$.next(scrollPos)));
 
-        let keyDown$ = Observable.fromEvent(listElement, 'keydown');
+        let keyDown$ = Observable.fromEvent(this.containerElement, 'keydown');
         if (this.input) {
             const inputKeyDown$ = Observable.fromEvent(this.input.nativeElement, 'keydown');
             keyDown$ = keyDown$.merge(inputKeyDown$);
@@ -664,7 +663,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
             }));
 
 
-        let keyUp$ = Observable.fromEvent(listElement, 'keyup');
+        let keyUp$ = Observable.fromEvent(this.containerElement, 'keyup');
         if (this.input) {
             const inputKeyup$ = Observable.fromEvent(this.input.nativeElement, 'keyup');
             const inputDrop$ = Observable.fromEvent(this.input.nativeElement, 'drop');
@@ -724,7 +723,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                 }
             }));
 
-        this.viewPort.element$.next(listElement);
+        this.viewPort.element$.next(this.containerElement);
     }
 
     public ngOnDestroy() {
@@ -877,8 +876,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     }
 
     protected dragLeave(event: DragEvent) {
-        const listElement = this.listContainer.nativeElement as HTMLElement;
-        const listRect = listElement.getBoundingClientRect();
+        const listRect = this.containerElement.getBoundingClientRect();
 
         const listBounds = Rect.fromLTRB(listRect.left,
             listRect.top,

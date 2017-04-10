@@ -9,21 +9,7 @@
  *
  */
 
-import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ContentChild,
-    ElementRef,
-    forwardRef,
-    Input,
-    OnDestroy,
-    QueryList,
-    ViewChild,
-    ViewChildren,
-    ViewEncapsulation,
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, forwardRef, Input, OnDestroy, ViewChild, ViewEncapsulation, } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
@@ -85,7 +71,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @ContentChild('selectedTemplate') protected selectedTemplate;
     @ContentChild('suffixTemplate') protected mdSuffix;
     @ViewChild('inputElement') private input: ElementRef;
-    @ViewChildren('listitem') private listItemElements: QueryList<ElementRef>;
     @ViewChild('listcontainer') private listContainer: any;
     @ViewChild(DejaDropDownComponent) private dropDownComponent: DejaDropDownComponent;
 
@@ -417,6 +402,10 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return this.getMaxHeight();
     }
 
+    protected get containerElement(): HTMLElement {
+        return this.dropdownContainerId && this.elementRef.nativeElement.ownerDocument.getElementById(this.dropdownContainerId);
+    }
+
     private set currentItemIndex(value: number) {
         super.setCurrentItemIndex(value);
         this.changeDetectorRef.markForCheck();
@@ -440,10 +429,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     private get parentItemTemplate() {
         return this.parentItemTemplateExternal || this.parentItemTemplateInternal;
-    }
-
-    private get containerElement() {
-        return this.dropdownContainerId && this.elementRef.nativeElement.ownerDocument.getElementById(this.dropdownContainerId);
     }
 
     private get inputElement() {
@@ -811,7 +796,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     protected ensureItemVisible(item: IItemBase | number) {
-        super.ensureItemVisible(this.query, this.listElement, this.listItemElements, item);
+        super.ensureItemVisible(item);
     }
 
     private onModelChange(items?: IItemBase[] | IItemBase) {

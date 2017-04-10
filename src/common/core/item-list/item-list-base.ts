@@ -9,7 +9,7 @@
  *
  */
 
-import { ChangeDetectorRef, ElementRef, QueryList } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
 import { Observable, Subscription } from 'rxjs/Rx';
 import { GroupingService, IGroupInfo } from '../grouping/index';
 import { ISortInfos, SortingService, SortOrder } from '../sorting/index';
@@ -18,7 +18,7 @@ import { IFindItemResult, IItemBase, IItemTree, IParentListInfoResult, ItemListS
 const noop = () => { };
 
 /** Classe de base pour tous les composants à listes (deja-treelist, deja-select, deja-grid) */
-export class ItemListBase {
+export abstract class ItemListBase {
     protected waiter = true;
 
     protected _itemList: IItemBase[] = []; // Viewport list
@@ -77,7 +77,7 @@ export class ItemListBase {
             }
 
             if (viewPortResult.scrollPos !== undefined) {
-                // TODO this.scrollPosition = viewPortResult.scrollPos;
+                this.containerElement.scrollTop = viewPortResult.scrollPos;
             }
 
             this.changeDetectorRef.markForCheck();
@@ -97,6 +97,8 @@ export class ItemListBase {
     public get groupInfos() {
         return this._itemListService.groupInfos;
     }
+
+    protected abstract get containerElement(): HTMLElement;
 
     /** Définit une valeur indiquant si les éléments selectionés doivent être masqué. Ce flag est principalement utilisé dans le cas d'un multi-select
      * @param {boolean} value True si les éléments selectionés doivent être masqués
@@ -722,73 +724,8 @@ export class ItemListBase {
     }
 
     /** Calcul la position de la scrollbar pour que l'élément spécifié soit dans la zone visible. */
-    protected ensureItemVisible(query: string, containerElement: HTMLElement, listItemElements: QueryList<ElementRef>, item: IItemBase | number) {
-        if (item !== undefined) {
-            if (this.viewPort.mode === ViewportMode.disabled) {
-                let index = item as number;
-                if (isNaN(index)) {
-                    index = this._itemList.findIndex((itm) => item === itm);
-                }
-
-                if (index >= 0) {
-                    const element = index >= 0 && listItemElements.toArray()[index];
-                    if (element) {
-                        element.nativeElement.scrollIntoViewIfNeeded();
-                    }
-                }
-            } else if (this.viewPort.mode === ViewportMode.variable || this.viewPort.mode === ViewportMode.auto) {
-                this.getViewList$(query).subscribe((viewListResult: IViewListResult) => {
-                    const scrollPos = containerElement.scrollTop;
-                    let scrollMax = 0;
-                    let lastVisibleItem: IItemBase;
-                    const fn = isNaN(+item) ? (itm: IItemBase) => {
-                        return item === itm;
-                    } : (_itm: IItemBase, index: number) => {
-                        return item === index;
-                    };
-                    lastVisibleItem = viewListResult.visibleList.find((itm: IItemBase, index: number) => {
-                        const test = fn(itm, index);
-                        if (!test) {
-                            scrollMax += this.getItemHeight(itm) || this.getViewPortRowHeight();
-                        }
-                        return test;
-                    });
-
-                    if (scrollPos > scrollMax) {
-                        containerElement.scrollTop = scrollMax;
-                    } else {
-                        const scrollMin = scrollMax - containerElement.clientHeight + (this.getItemHeight(lastVisibleItem) || this.getViewPortRowHeight());
-                        if (scrollPos < scrollMin) {
-                            containerElement.scrollTop = scrollMin;
-                        }
-                    }
-                });
-            } else {
-                // View port fixed row height
-                let index = item as number;
-                if (isNaN(index)) {
-                    index = this._itemList.findIndex((itm) => item === itm) + this.vpStartRow;
-                }
-
-                if (index < 0) {
-                    // Outside visible part, ask service
-                    index = this.getItemIndex(item as IItemBase);
-                }
-
-                if (index >= 0) {
-                    const scrollPos = containerElement.scrollTop;
-                    const scrollMax = index * this.getViewPortRowHeight();
-                    if (scrollPos > scrollMax) {
-                        containerElement.scrollTop = scrollMax;
-                    } else {
-                        const scrollMin = scrollMax - containerElement.clientHeight + this.getViewPortRowHeight();
-                        if (scrollPos < scrollMin) {
-                            containerElement.scrollTop = scrollMin;
-                        }
-                    }
-                }
-            }
-        }
+    protected ensureItemVisible(item: IItemBase | number) {
+        this.viewPort.ensureItem$.next(item);
     }
 
     protected convertToIItemBase(modls: any[], selected?: boolean): IItemBase[] {
