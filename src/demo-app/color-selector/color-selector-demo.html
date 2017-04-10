@@ -1,41 +1,43 @@
-<md-tab-group [selectedIndex]="1">
-	<!--<md-tab label="OVERVIEW">-->
-		<!--<md-card class="demo-card demo-basic">-->
-			<!--TODO-->
-		<!--</md-card>-->
-	<!--</md-tab>-->
-	<md-tab label="API REFERENCE">
-		<md-card class="demo-card demo-basic">
-			<deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/color-selector/readme.md'"></deja-markdown>
-		</md-card>
-	</md-tab>
-	<md-tab label="EXAMPLES">
-		<deja-backdrop (click)="colorpicker.isOpen=false" *ngIf="colorpicker.isOpen"></deja-backdrop>
-		<deja-backdrop (click)="colorpicker2.isOpen=false" *ngIf="colorpicker2.isOpen"></deja-backdrop>
-		
-		<md-card class="demo-card">
-			<md-toolbar color="primary">Color Picker width backdrop - Pick a color:</md-toolbar>
-			<md-card-content id="colorpickers">
-				<deja-color-picker name="1" #colorpicker2 class="colorpicker" [colors]="materialColors.colors" [(ngModel)]="selectedColor" (colorhover)="onColorPickerHover($event)" (ngModelChange)="onColorPickerChange($event)"></deja-color-picker>
-				<deja-color-picker name="2" #colorpicker class="colorpicker" small [colors]="materialColors.colors" [(ngModel)]="invalidColor" (colorhover)="onColorPickerHover($event)" (ngModelChange)="onColorPickerChange($event)"></deja-color-picker>
-				<deja-color-picker name="3" disabled small class="colorpicker" [colors]="materialColors.colors" [(ngModel)]="selectedColor" (colorhover)="onColorPickerHover($event)" (ngModelChange)="onColorPickerChange($event)"></deja-color-picker>
-			</md-card-content>
-		</md-card>
-		
-		<md-card class="demo-card">
-			<md-toolbar color="primary">Color Selector - Pick a color:</md-toolbar>
-			<md-card-content>
-				<div id="hoveredColor" [style.background-color]="(hoveredColor && hoveredColor.toHex()) || selectedColor.toHex()">
-					<deja-color-selector name="4" [colors]="materialColors.colors" [(ngModel)]="selectedColor" (colorhover)="onColorPickerHover($event)" (ngModelChange)="onColorPickerChange($event)"></deja-color-selector>
-				</div>
-			</md-card-content>
-		</md-card>
-
-		<md-card class="demo-card">
-			<md-toolbar color="primary">Color Selector - Disabled:</md-toolbar>
-			<md-card-content id="colorpickers">
-				<deja-color-selector name="5" disabled [colors]="materialColors.colors" [(ngModel)]="selectedColor" (colorhover)="onColorPickerHover($event)" (ngModelChange)="onColorPickerChange($event)"></deja-color-selector>
-			</md-card-content>
-		</md-card>
-	</md-tab>
+<md-tab-group [selectedIndex]="tabIndex" (selectChange)="tabIndex = $event.index">
+    <!--<md-tab label="OVERVIEW">-->
+    <!--<md-card class="demo-card demo-basic">-->
+    <!--TODO-->
+    <!--</md-card>-->
+    <!--</md-tab>-->
+    <md-tab label="API REFERENCE"></md-tab>
+    <md-tab label="EXAMPLES"></md-tab>
 </md-tab-group>
+
+<md-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
+    <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/color-selector/readme.md'"></deja-markdown>
+</md-card>
+
+<div *ngIf="tabIndex === 1">
+    <deja-backdrop (click)="colorpicker.isOpen=false" *ngIf="colorpicker.isOpen"></deja-backdrop>
+    <deja-backdrop (click)="colorpicker2.isOpen=false" *ngIf="colorpicker2.isOpen"></deja-backdrop>
+
+    <md-card class="demo-card">
+        <md-toolbar color="primary">Color Picker width backdrop - Pick a color:</md-toolbar>
+        <md-card-content id="colorpickers">
+            <deja-color-picker name="1" #colorpicker2 class="colorpicker" [colors]="materialColors.colors" [(ngModel)]="selectedColor" (colorhover)="onColorPickerHover($event)" (ngModelChange)="onColorPickerChange($event)"></deja-color-picker>
+            <deja-color-picker name="2" #colorpicker class="colorpicker" small [colors]="materialColors.colors" [(ngModel)]="invalidColor" (colorhover)="onColorPickerHover($event)" (ngModelChange)="onColorPickerChange($event)"></deja-color-picker>
+            <deja-color-picker name="3" disabled small class="colorpicker" [colors]="materialColors.colors" [(ngModel)]="selectedColor" (colorhover)="onColorPickerHover($event)" (ngModelChange)="onColorPickerChange($event)"></deja-color-picker>
+        </md-card-content>
+    </md-card>
+
+    <md-card class="demo-card">
+        <md-toolbar color="primary">Color Selector - Pick a color:</md-toolbar>
+        <md-card-content>
+            <div id="hoveredColor" [style.background-color]="(hoveredColor && hoveredColor.toHex()) || selectedColor.toHex()">
+                <deja-color-selector name="4" [colors]="materialColors.colors" [(ngModel)]="selectedColor" (colorhover)="onColorPickerHover($event)" (ngModelChange)="onColorPickerChange($event)"></deja-color-selector>
+            </div>
+        </md-card-content>
+    </md-card>
+
+    <md-card class="demo-card">
+        <md-toolbar color="primary">Color Selector - Disabled:</md-toolbar>
+        <md-card-content id="colorpickers">
+            <deja-color-selector name="5" disabled [colors]="materialColors.colors" [(ngModel)]="selectedColor" (colorhover)="onColorPickerHover($event)" (ngModelChange)="onColorPickerChange($event)"></deja-color-selector>
+        </md-card-content>
+    </md-card>
+</div>

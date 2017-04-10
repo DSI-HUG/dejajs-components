@@ -9,7 +9,7 @@
  *
  */
 
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
     selector: 'deja-splitter-demo',
@@ -19,6 +19,7 @@ import {Component, OnInit} from '@angular/core';
     templateUrl: 'splitter-demo.html',
 })
 export class DejaSplitterDemoComponent implements OnInit {
+    protected tabIndex = 1;
 
     constructor() {
     }

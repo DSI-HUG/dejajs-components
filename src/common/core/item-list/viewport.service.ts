@@ -264,7 +264,7 @@ export class ViewPortService {
                 return Observable.of(viewPort);
             } else {
                 // Measure items size
-                this.ignoreScrollEvent = !!ensureParams;
+                this.ignoreScrollEvent = ensureParams.index !== undefined;
                 this.viewPortResult$.next(viewPort);
                 return Observable.timer(1)
                     .do(() => this.ignoreScrollEvent = false)

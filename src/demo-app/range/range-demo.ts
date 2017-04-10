@@ -21,6 +21,7 @@ import { IWeight, Weight } from './weight.interface';
     templateUrl: './range-demo.html',
 })
 export class DejaRangeDemoComponent {
+    protected tabIndex = 1;
     public readOnlyRanges: Range[];
     public rangesWithInterval: Range[];
     public steps: number[];

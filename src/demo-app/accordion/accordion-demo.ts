@@ -14,12 +14,14 @@ import { Component } from '@angular/core';
 import { IEditorLanguage } from '../../component/monaco-editor/options/editor-language.model';
 
 @Component({
-  selector: 'deja-accordion-demo',
-  styleUrls: ['./accordion-demo.scss'],
-  templateUrl: './accordion-demo.html',
+    selector: 'deja-accordion-demo',
+    styleUrls: ['./accordion-demo.scss'],
+    templateUrl: './accordion-demo.html',
 })
 export class DejaAccordionDemoComponent {
-  protected exampleValue = `
+    protected tabIndex = 1;
+
+    protected exampleValue = `
   <deja-accordion>
       <deja-accordion-group>
           <!-- loop here -->
@@ -27,8 +29,8 @@ export class DejaAccordionDemoComponent {
           <deja-accordion-body></deja-accordion-body>
       </deja-accordion-group>
   </deja-accordion>`;
-  protected html = IEditorLanguage.HTML;
+    protected html = IEditorLanguage.HTML;
 
-  constructor() { }
+    constructor() { }
 
 }

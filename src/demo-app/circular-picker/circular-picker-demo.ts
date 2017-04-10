@@ -18,14 +18,16 @@ import { ICircularRange } from '../../component';
     templateUrl: './circular-picker-demo.html',
 })
 export class DejaCircularPickerDemoComponent implements OnInit {
+    protected tabIndex = 1;
+
     public sm = 3;
     public sms = 10;
     protected ranges1 = [
-        {min: 1, max: 20, labelInterval: 2},
+        { min: 1, max: 20, labelInterval: 2 },
     ] as ICircularRange[];
 
     protected ranges2 = [
-        {min: 1, max: 20},
+        { min: 1, max: 20 },
     ] as ICircularRange[];
 
     protected ranges3 = [

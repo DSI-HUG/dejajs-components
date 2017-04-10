@@ -19,6 +19,8 @@ import { DejaDatePickerComponent } from '../../index';
     templateUrl: './date-picker-demo.html',
 })
 export class DejaDatePickerDemoComponent implements OnInit {
+    protected tabIndex = 1;
+
     public theDate = new Date();
     public disabledDate = [0, 6, new Date(2016, 9, 12)];
 

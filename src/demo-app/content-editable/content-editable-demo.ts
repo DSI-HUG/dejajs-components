@@ -17,6 +17,8 @@ import { Component } from '@angular/core';
     templateUrl: './content-editable-demo.html',
 })
 export class DejaContentEditableDemoComponent {
+    protected tabIndex = 1;
+
     protected designMode = false;
 
     constructor() { }

@@ -24,6 +24,7 @@ import { INews, NewsService } from '../services/news.service';
     templateUrl: './tree-list-demo.html',
 })
 export class DejaTreeListDemoComponent implements OnInit {
+    protected tabIndex = 1;
     protected news$: Observable<INews[]>;
     protected groupedCountries: IItemTree[];
     protected countries: Observable<ICountry[]>;
