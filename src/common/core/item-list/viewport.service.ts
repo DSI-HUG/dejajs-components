@@ -366,7 +366,7 @@ export class ViewPortService {
         // Ensure item visible by index or instance
         const ensureParams$ = Observable.from(this.ensureItem$)
             .map((ensureItem) => {
-                if (!ensureItem || !this.items || !this.items.length || !this.viewPort) {
+                if (ensureItem === undefined || ensureItem === null || !this.items || !this.items.length || !this.viewPort) {
                     return {};
                 }
 
