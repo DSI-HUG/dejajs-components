@@ -11,7 +11,6 @@
 
 import { Component, ElementRef, EventEmitter, forwardRef, Input, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { BehaviorSubject, Observable, Subject } from 'rxjs/Rx';
 import { Color, ColorEvent } from '../../common/core/graphics/index';
 import { MaterialColor } from '../../common/core/style';
@@ -163,14 +162,15 @@ export class DejaColorSelectorComponent implements ControlValueAccessor {
 
     /** Retourne ou definit si le selecteur est desactivé. */
     @Input()
-    public set disabled(value: boolean) {
-        this._disabled = coerceBooleanProperty(value) || null;
+    public set disabled(value: boolean | string) {
+        const disabled = (value != null && `${value}` !== 'false');
         if (this._colorFabs) {
-            this._colorFabs.forEach((colorFab) => colorFab.disabled = value);
+            this._colorFabs.forEach((colorFab) => colorFab.disabled = disabled);
         }
         if (this._subColorFabs) {
-            this._subColorFabs.forEach((colorFab) => colorFab.disabled = value);
+            this._subColorFabs.forEach((colorFab) => colorFab.disabled = disabled);
         }
+        this._disabled = disabled || null;
     }
 
     /**

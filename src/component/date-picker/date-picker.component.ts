@@ -11,7 +11,6 @@
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, forwardRef, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import * as moment from 'moment';
 import { Observable, Subscription } from 'rxjs/Rx';
 import { DaysOfWeek, DejaDateSelectorComponent } from '../date-selector';
@@ -92,8 +91,8 @@ export class DejaDatePickerComponent implements OnInit {
     }
 
     @Input()
-    public set disabled(value: boolean) {
-        this._disabled = coerceBooleanProperty(value);
+    public set disabled(value: boolean | string) {
+        this._disabled = value != null && `${value}` !== 'false';
         this.changeDetectorRef.markForCheck();
     }
 
@@ -102,8 +101,8 @@ export class DejaDatePickerComponent implements OnInit {
     }
 
     @Input()
-    public set time(value: boolean) {
-        this._time = coerceBooleanProperty(value);
+    public set time(value: boolean | string) {
+        this._time = value != null && `${value}` !== 'false';
         this.changeDetectorRef.markForCheck();
     }
 

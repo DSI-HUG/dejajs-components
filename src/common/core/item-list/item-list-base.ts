@@ -76,7 +76,7 @@ export abstract class ItemListBase {
                 this.vpAfterHeight = viewPortResult.afterSize;
             }
 
-            if (viewPortResult.scrollPos !== undefined) {
+            if (viewPortResult.scrollPos !== undefined && this.containerElement) {
                 this.containerElement.scrollTop = viewPortResult.scrollPos;
             }
 

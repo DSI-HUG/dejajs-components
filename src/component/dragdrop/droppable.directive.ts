@@ -10,7 +10,6 @@
  */
 
 import { Directive, ElementRef, HostBinding, Input } from '@angular/core';
-import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { Observable, Subject } from 'rxjs/Rx';
 import { DejaClipboardService } from '../../common/core/clipboard/clipboard.service';
 import { IDejaDragEvent } from './index';
@@ -24,8 +23,8 @@ export class DejaDroppableDirective {
      * @deprecated
      */
     @Input('continous-dragover')
-    public set allEvents(value: boolean) {
-        this._allEvents = coerceBooleanProperty(value);
+    public set allEvents(value: boolean | string) {
+        this._allEvents = value != null && `${value}` !== 'false';
     }
 
     @HostBinding('attr.draggable') private droppable = null;

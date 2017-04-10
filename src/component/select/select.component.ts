@@ -11,7 +11,6 @@
 
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, forwardRef, Input, OnDestroy, ViewChild, ViewEncapsulation, } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
 import { IItemBase, IItemTree, ItemListBase, ItemListService, IViewPort, ViewportMode, ViewPortService } from '../../common/core/item-list';
 import { KeyCodes } from '../../common/core/keycodes.enum';
@@ -198,8 +197,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     /** Indique ou détermine si le bouton pour effacer la selection doit être affiché */
     @Input()
-    public set selectionClearable(value: boolean) {
-        this._selectionClearable = coerceBooleanProperty(value);
+    public set selectionClearable(value: boolean | string) {
+        this._selectionClearable = value != null && `${value}` !== 'false';
     }
 
     public get selectionClearable() {

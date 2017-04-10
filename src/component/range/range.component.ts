@@ -11,7 +11,6 @@
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, forwardRef, HostListener, Input, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { Observable } from 'rxjs/Rx';
 import { IRange, IRangeEvent, IStepRangeEvent, Range } from './range.interface';
 
@@ -66,8 +65,8 @@ export class DejaRangeComponent implements ControlValueAccessor {
 
     // read / write mode
     @Input()
-    public set disabled(value: boolean) {
-        this._disabled = coerceBooleanProperty(value);
+    public set disabled(value: boolean | string) {
+        this._disabled = value != null && `${value}` !== 'false';
     }
 
     public get disabled() {
@@ -76,8 +75,8 @@ export class DejaRangeComponent implements ControlValueAccessor {
 
     // read / write mode
     @Input()
-    public set readOnly(value: boolean) {
-        this._readOnly = coerceBooleanProperty(value);
+    public set readOnly(value: boolean | string) {
+        this._readOnly = value != null && `${value}` !== 'false';
     }
 
     public get readOnly() {

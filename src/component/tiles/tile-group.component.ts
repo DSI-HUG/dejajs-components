@@ -10,7 +10,6 @@
  */
 
 import { Component, EventEmitter, HostBinding, Input, Output, ViewChild } from '@angular/core';
-import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { Observable, Subject } from 'rxjs/Rx';
 import { DejaEditableDirective } from '../content-editable';
 import { IDejaTile } from './';
@@ -39,8 +38,8 @@ export class DejaTileGroupComponent {
     }
 
     @Input()
-    public set designMode(value: boolean) {
-        this._designMode = coerceBooleanProperty(value);
+    public set designMode(value: boolean | string) {
+        this._designMode = value != null && `${value}` !== 'false';
     }
 
     public get designMode() {

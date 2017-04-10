@@ -21,7 +21,7 @@ import { CountriesService, ICountry } from '../services/countries.service';
     styleUrls: ['./select-demo.scss'],
     templateUrl: './select-demo.html',
 })
-export class SelectDemoComponent extends OnInit {
+export class SelectDemoComponent implements OnInit {
     protected country: ICountry;
     protected tabIndex = 1;
     private countries: Observable<ICountry[]>;
@@ -34,7 +34,6 @@ export class SelectDemoComponent extends OnInit {
     @ViewChild('dialog') private dialogWrapper: ElementRef;
 
     constructor(private countriesService: CountriesService, protected countriesListService: CountriesListService) {
-        super();
         this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","displayName":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","displayName":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","displayName":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","displayName":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","displayName":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","displayName":"Dominica","depth":0,"odd":false,"selected":true}]');
     }
 

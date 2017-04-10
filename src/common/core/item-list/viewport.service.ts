@@ -454,6 +454,7 @@ export class ViewPortService {
                 this.viewPortResult$.next(viewPort);
             }, ((error) => {
                 console.log(error);
+                // TODO Virer
                 debugger;
             }));
     }

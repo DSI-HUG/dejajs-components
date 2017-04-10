@@ -10,7 +10,6 @@
  */
 
 import { AfterViewInit, Component, ContentChild, ElementRef, EventEmitter, HostListener, Input, OnDestroy, Output, ViewChild } from '@angular/core';
-import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs/Rx';
 import { KeyCodes } from '../../common/core';
 import { Rect } from '../../common/core/graphics';
@@ -115,8 +114,8 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
     }
 
     @Input()
-    public set designMode(value: boolean) {
-        this.layoutProvider.designMode = coerceBooleanProperty(value);
+    public set designMode(value: boolean | string) {
+        this.layoutProvider.designMode = value != null && `${value}` !== 'false';
     };
 
     public get designMode() {
@@ -131,7 +130,7 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
 
     @Input()
     public set canDelete(value: boolean) {
-        if (coerceBooleanProperty(value) && !this.delete$sub) {
+        if (value != null && `${value}` !== 'false' && !this.delete$sub) {
             this.delete$sub = this.keyup$
                 .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.Delete)
                 .subscribe(() => this.layoutProvider.deleteSelection());
@@ -144,7 +143,7 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
 
     @Input()
     public set canCopy(value: boolean) {
-        if (coerceBooleanProperty(value) && !this.copy$sub) {
+        if (value != null && `${value}` !== 'false' && !this.copy$sub) {
             this.copy$sub = this.keyup$
                 .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.KeyC && event.ctrlKey)
                 .subscribe(() => {
@@ -164,7 +163,7 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
 
     @Input()
     public set canCut(value: boolean) {
-        if (coerceBooleanProperty(value) && !this.cut$sub) {
+        if (value != null && `${value}` !== 'false' && !this.cut$sub) {
             this.cut$sub = this.keyup$
                 .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.KeyX && event.ctrlKey)
                 .subscribe(() => {
@@ -184,7 +183,7 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
 
     @Input()
     public set canPaste(value: boolean) {
-        if (coerceBooleanProperty(value) && !this.paste$sub) {
+        if (value != null && `${value}` !== 'false' && !this.paste$sub) {
             this.paste$sub = this.keyup$
                 .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.KeyV && event.ctrlKey)
                 .subscribe(() => this.layoutProvider.paste());

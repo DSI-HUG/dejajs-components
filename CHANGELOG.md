@@ -11,6 +11,7 @@
 ### Known issues
 
 ### Features
+* **ViewportService:** A view port service manage the viewport calculations and ensureVisible for treelist, select, grid and viewport component.
 
 ### Bug fixes
 

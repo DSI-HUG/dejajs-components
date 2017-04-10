@@ -11,7 +11,6 @@
 
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, forwardRef, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
@@ -153,8 +152,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
     /** Affiche un barre de recherche au dessus de la liste. */
     @Input()
-    public set searchArea(value: boolean) {
-        this._searchArea = coerceBooleanProperty(value);
+    public set searchArea(value: boolean | string) {
+        this._searchArea = value != null && `${value}` !== 'false';
     }
 
     public get searchArea() {
@@ -163,8 +162,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
     /** Affiche un bouton pour réduire ou étendre toutes les lignes parentes du tableau */
     @Input()
-    public set expandButton(value: boolean) {
-        this._expandButton = coerceBooleanProperty(value);
+    public set expandButton(value: boolean | string) {
+        this._expandButton = value != null && `${value}` !== 'false';
     }
 
     public get expandButton() {
@@ -173,8 +172,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
     /** Permet de trier la liste au clic sur l'entête */
     @Input()
-    public set sortable(value: boolean) {
-        this._sortable = coerceBooleanProperty(value);
+    public set sortable(value: boolean | string) {
+        this._sortable = value != null && `${value}` !== 'false';
     }
 
     public get sortable() {
@@ -183,8 +182,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
     /** Rend les lignes de la liste draggable vers un autre composant (ne pas confondre avec la propriété `sortable`) */
     @Input()
-    public set itemsDraggable(value: boolean) {
-        this._itemsDraggable = coerceBooleanProperty(value);
+    public set itemsDraggable(value: boolean | string) {
+        this._itemsDraggable = value != null && `${value}` !== 'false';
     }
 
     public get itemsDraggable() {
@@ -311,8 +310,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
     /** Définit une valeur indiquant si plusieurs lignes peuvent être sélectionées. */
     @Input()
-    public set multiSelect(value: boolean) {
-        super.setMultiSelect(coerceBooleanProperty(value) !== false);
+    public set multiSelect(value: boolean | string) {
+        super.setMultiSelect(value != null && `${value}` !== 'false');
     }
 
     /** Retourne une valeur indiquant si plusieurs lignes peuvent être sélectionées. */
