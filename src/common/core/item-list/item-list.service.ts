@@ -131,6 +131,7 @@ export class ItemListService {
                 this.ensureChildrenProperties(items);
                 this.ensureSelectedItems(items);
                 this.items = items;
+                this._waiter$.next(false);
                 subscriber.next();
             } else {
                 this.items = undefined;
@@ -142,12 +143,15 @@ export class ItemListService {
                 }
 
                 observable
+                    .filter((its) => !!its)
                     .subscribe((its) => {
-                        this.ensureChildrenProperties(its);
-                        // TODO La déselection ne fonctionne pas pendant le chargement
-                        this.ensureSelectedItems(its, true);
-                        this.items = [...this.items || [], ...its];
-                        this._waiter$.next(false);
+                        if (its) {
+                            this.ensureChildrenProperties(its);
+                            // TODO La déselection ne fonctionne pas pendant le chargement
+                            this.ensureSelectedItems(its, true);
+                            this.items = [...this.items || [], ...its];
+                            this._waiter$.next(false);
+                        }
                         subscriber.next();
                     }, (error) => {
                         this._waiter$.next(false);
@@ -773,8 +777,15 @@ export class ItemListService {
         this._cache = {};
     }
 
+    /** Efface la hauteur calculée des lignes en mode automatique */
+    public invalidateRowsHeightCache() {
+        if (this._items) {
+            this._items.forEach((item) => item.size = undefined);
+        }
+    }
+
     /** Usage interne. Retourne la portion de la liste à afficher en fonction des paramètres spécifiés. */
-    public getViewList$(searchField: string, query?: RegExp | string, startRow?: number, maxCount?: number, ignoreCache?: boolean, ddStartIndex?: number, ddTargetIndex?: number, multiSelect?: boolean): Observable<IViewListResult> {
+    public getViewList$(searchField: string, query?: RegExp | string, ignoreCache?: boolean, ddStartIndex?: number, ddTargetIndex?: number, multiSelect?: boolean): Observable<IViewListResult> {
         const result = {} as IViewListResult;
 
         ignoreCache = ignoreCache || query !== this.lastQuery || !this.items || !this.items.length;
@@ -839,28 +850,8 @@ export class ItemListService {
                 viewList = this._cache.visibleList || [];
             }
 
-            result.startRow = 0;
-            result.endRow = 0;
-            result.outOfRange = false;
-            result.rowsCount = viewList.length;
             result.depthMax = this._cache.depthMax;
-
-            if (startRow !== undefined && maxCount !== undefined && maxCount > 0) {
-                const rowsCount = Math.min(viewList.length - startRow, maxCount);
-
-                if (rowsCount < 0) {
-                    result.endRow = viewList.length - 1;
-                    result.startRow = result.endRow - Math.min(viewList.length, maxCount) + 1;
-                    result.outOfRange = true;
-                } else {
-                    result.startRow = startRow;
-                    result.endRow = result.startRow + rowsCount - 1;
-                }
-                result.visibleList = viewList.slice(result.startRow, 1 + result.endRow);
-
-            } else {
-                result.visibleList = viewList;
-            }
+            result.visibleList = viewList;
 
             return result;
         };
@@ -1231,6 +1222,10 @@ export class ItemListService {
     }
 
     private ensureChildrenProperties(items: IItemTree[]) {
+        if (!items) {
+            return;
+        }
+
         items.forEach((item) => {
             if (item[this.childrenField]) {
                 item.$items = item[this.childrenField];
@@ -1242,12 +1237,8 @@ export class ItemListService {
 
 /** Structure de retour de getViewList. */
 export interface IViewListResult {
-    rowsCount?: number;
     depthMax?: number;
     visibleList?: IItemBase[];
-    startRow: number;
-    endRow: number;
-    outOfRange?: boolean;
 }
 
 /** Structure de retour de findNextMatch. */

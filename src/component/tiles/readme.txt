@@ -1,9 +1,9 @@
 Usage:
 
 <deja-tiles [(ngModel)]="tiles" [designMode]="designMode" maxwidth="100%" tileminwidth="5%" tileminheight="3%" tilemaxheight="50%"  tilemaxwidth="50%" (tilesLayoutChange)="tilesLayoutChange($event);">
-    <template #tileTemplate let-tile>
+    <ng-template #tileTemplate let-tile>
         // Here the component to instanciate inside each tiles
-    </template>
+    </ng-template>
 </deja-tiles>
 
 Exemple of service code to generate a tile model            

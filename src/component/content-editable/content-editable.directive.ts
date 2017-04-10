@@ -11,7 +11,6 @@
 
 import { Directive, ElementRef, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { BehaviorSubject, Observable } from 'rxjs/Rx';
 import { KeyCodes } from '../../common/core/index';
 
@@ -119,8 +118,8 @@ export class DejaEditableDirective implements ControlValueAccessor {
 
     /** Définit une valeur indiquant si le contenu édité est obligatoire. Si la valeur est 'true' la sortie du mode édition ne sera pas possible tant qu'un contenu n'est pas ajouté. */
     @Input()
-    public set mandatory(value: boolean) {
-        this._mandatory = coerceBooleanProperty(value);
+    public set mandatory(value: boolean | string) {
+        this._mandatory = value != null && `${value}` !== 'false';
     }
 
     /** Retourne une valeur indiquant si le contenu édité est obligatoire. Si la valeur est 'true' la sortie du mode édition ne sera pas possible tant qu'un contenu n'est pas ajouté. */
@@ -130,8 +129,8 @@ export class DejaEditableDirective implements ControlValueAccessor {
 
     /** Définit une valeur indiquant si le contenu édité est multiligne */
     @Input()
-    public set multiline(value: boolean) {
-        this._multiline = coerceBooleanProperty(value);
+    public set multiline(value: boolean | string) {
+        this._multiline = value != null && `${value}` !== 'false';
     }
 
     /** Retourne une valeur indiquant si le contenu édité est multiligne */
@@ -141,8 +140,8 @@ export class DejaEditableDirective implements ControlValueAccessor {
 
     /** Définit une valeur indiquant si l'édition est activée. */
     @Input('deja-editable')
-    public set editMode(value: boolean) {
-        this._editMode = coerceBooleanProperty(value);
+    public set editMode(value: boolean | string) {
+        this._editMode = value != null && `${value}` !== 'false';
     }
 
     /** Retourne une valeur indiquant si l'édition est activée. */
@@ -152,8 +151,8 @@ export class DejaEditableDirective implements ControlValueAccessor {
 
     /** Définit une valeur indiquant si l'élément est en édition. */
     @Input()
-    public set inEdition(value: boolean) {
-        this.edit$.next([coerceBooleanProperty(value), false]);
+    public set inEdition(value: boolean | string) {
+        this.edit$.next([value != null && `${value}` !== 'false', false]);
     }
 
     /** Retourne une valeur indiquant si l'élément est en édition. */

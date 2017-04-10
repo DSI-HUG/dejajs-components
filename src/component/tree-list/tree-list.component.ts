@@ -9,14 +9,13 @@
  *
  */
 
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, forwardRef, Input, OnDestroy, Output, QueryList, ViewChild, ViewChildren, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, forwardRef, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
 import { GroupingService } from '../../common/core/grouping';
-import { IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, ViewportMode } from '../../common/core/item-list';
+import { IItemBase, IItemTree, ItemListBase, ItemListService, IViewPort, ViewportMode, ViewPortService } from '../../common/core/item-list';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { SortingService } from '../../common/core/sorting';
 import { IDejaDragEvent } from '../dragdrop';
@@ -34,7 +33,7 @@ const TreeListComponentValueAccessor = {
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    providers: [TreeListComponentValueAccessor],
+    providers: [TreeListComponentValueAccessor, ViewPortService],
     selector: 'deja-tree-list',
     styleUrls: [
         './tree-list.component.scss',
@@ -48,11 +47,6 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     @Input() public nodataholder: string;
     /** Correspond au ngModel du champ de filtrage ou recherche */
     @Input() public query = '';
-    /** Hauteur maximum avant que le composant affiche une scrollbar
-     * spécifier une grande valeur pour ne jamais afficher de scrollbar
-     * Spécifier 0 pour que le composant determine sa hauteur à partir du container
-     */
-    @Input() public maxHeight = 0;
     /** Permet de définir un template de ligne par binding */
     @Input() public itemTemplateExternal;
     /** Permet de définir un template de ligne parente par binding. */
@@ -78,7 +72,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     @Output() public afterViewInit = new EventEmitter();
 
     /** Internal use */
-    @ViewChild('listcontainer') public listcontainer: ElementRef;
+    @ViewChild('listcontainer') public listContainer: ElementRef;
     @ViewChild('inputelement') public input: ElementRef;
 
     // NgModel implementation
@@ -86,8 +80,6 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     protected onChangeCallback: (_: any) => void = noop;
 
     protected keyboardNavigation = false;
-
-    @ViewChildren('listitem') private listItemElements: QueryList<ElementRef>;
 
     // Templates
     @ContentChild('itemTemplate') private itemTemplateInternal;
@@ -100,9 +92,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     // protected _items: IItemBase[]; In the base class, correspond to the model
     private clickedItem: IItemBase;
     private rangeStartIndex = 0;
-    private ignoreNextScrollEvents = false;
     private filterExpression = '';
-    private lastScrollTop = 0;
     private _searchArea = false;
     private _expandButton = false;
     private _sortable = false;
@@ -117,8 +107,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     private clearFilterExpression$ = new BehaviorSubject<void>(null);
     private filterListComplete$ = new Subject();
 
-    constructor(changeDetectorRef: ChangeDetectorRef, public elementRef: ElementRef) {
-        super(changeDetectorRef);
+    constructor(changeDetectorRef: ChangeDetectorRef, viewPort: ViewPortService, public elementRef: ElementRef) {
+        super(changeDetectorRef, viewPort);
 
         this.subscriptions.push(Observable.from(this.clearFilterExpression$)
             .debounceTime(750)
@@ -127,7 +117,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
         this.subscriptions.push(Observable.from(this.filterListComplete$)
             .debounceTime(250)
             .do(() => this.setCurrentItem(undefined))
-            .switchMap(() => this.calcViewPort$())
+            .switchMap(() => this.calcViewList$())
             .subscribe(noop));
 
         this.subscriptions.push(Observable.from(this.keyboardNavigation$)
@@ -137,6 +127,17 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                 this.keyboardNavigation = false;
                 this.changeDetectorRef.markForCheck();
             }));
+
+        this.subscriptions.push(Observable
+            .fromEvent(window, 'resize')
+            .debounceTime(5)
+            .subscribe(() => {
+                if (this.viewPort.mode !== ViewportMode.disabled && this.maxHeight === 0) {
+                    this.viewPort.refresh();
+                }
+            }));
+
+        this.maxHeight = 0;
     }
 
     /** Définit la longueur minimale de caractères dans le champ de recherche avant que la recherche ou le filtrage soient effectués */
@@ -151,8 +152,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
     /** Affiche un barre de recherche au dessus de la liste. */
     @Input()
-    public set searchArea(value: boolean) {
-        this._searchArea = coerceBooleanProperty(value);
+    public set searchArea(value: boolean | string) {
+        this._searchArea = value != null && `${value}` !== 'false';
     }
 
     public get searchArea() {
@@ -161,8 +162,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
     /** Affiche un bouton pour réduire ou étendre toutes les lignes parentes du tableau */
     @Input()
-    public set expandButton(value: boolean) {
-        this._expandButton = coerceBooleanProperty(value);
+    public set expandButton(value: boolean | string) {
+        this._expandButton = value != null && `${value}` !== 'false';
     }
 
     public get expandButton() {
@@ -171,8 +172,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
     /** Permet de trier la liste au clic sur l'entête */
     @Input()
-    public set sortable(value: boolean) {
-        this._sortable = coerceBooleanProperty(value);
+    public set sortable(value: boolean | string) {
+        this._sortable = value != null && `${value}` !== 'false';
     }
 
     public get sortable() {
@@ -181,8 +182,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
     /** Rend les lignes de la liste draggable vers un autre composant (ne pas confondre avec la propriété `sortable`) */
     @Input()
-    public set itemsDraggable(value: boolean) {
-        this._itemsDraggable = coerceBooleanProperty(value);
+    public set itemsDraggable(value: boolean | string) {
+        this._itemsDraggable = value != null && `${value}` !== 'false';
     }
 
     public get itemsDraggable() {
@@ -199,8 +200,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     public get pageSize() {
         if (this._pageSize === 0) {
             const vpRowHeight = this.getViewPortRowHeight();
-            const containerElement = this.listcontainer.nativeElement as HTMLElement;
-            const containerHeight = this.maxHeight || containerElement.clientHeight;
+            const containerHeight = this.maxHeight || this.containerElement.clientHeight;
             return Math.floor(containerHeight / vpRowHeight);
         }
 
@@ -225,7 +225,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     }
 
     /**
-     * Les trois valeurs acceptés en paramètre se trouvent dans l'enum ViewportMode (NoViewport, ConstantRowheight, VariableRowHeight ou AutoRowHeight)
+     * Les valeurs acceptées en paramètre se trouvent dans l'enum ViewportMode (disabled, constant, variable ou auto)
      * Attention, une désactivation du viewport dégrade considérablement les performances de la liste et ne doit pas être activée si la liste
      * est suceptible de contenir beaucoup d'éléments.
      */
@@ -272,6 +272,23 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
         return this._searchField;
     }
 
+    /** Définit la hauteur maximum avant que le composant affiche une scrollbar
+     * spécifier une grande valeur pour ne jamais afficher de scrollbar
+     * Spécifier 0 pour que le composant determine sa hauteur à partir du container
+     */
+    @Input()
+    public set maxHeight(value: number) {
+        super.setMaxHeight(value);
+    }
+
+    /** Retourne la hauteur maximum avant que le composant affiche une scrollbar
+     * spécifier une grande valeur pour ne jamais afficher de scrollbar
+     * Spécifier 0 pour que le composant determine sa hauteur à partir du container
+     */
+    public get maxHeight() {
+        return this.getMaxHeight();
+    }
+
     /** Définit la ligne courant ou ligne active */
     @Input()
     public set currentItem(item: IItemBase) {
@@ -293,8 +310,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
     /** Définit une valeur indiquant si plusieurs lignes peuvent être sélectionées. */
     @Input()
-    public set multiSelect(value: boolean) {
-        super.setMultiSelect(coerceBooleanProperty(value) !== false);
+    public set multiSelect(value: boolean | string) {
+        super.setMultiSelect(value != null && `${value}` !== 'false');
     }
 
     /** Retourne une valeur indiquant si plusieurs lignes peuvent être sélectionées. */
@@ -383,11 +400,12 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     public set models(items: any[] | Observable<any[]>) {
         super.setModels$(items)
             .first()
-            .switchMap(() => this.calcViewPort$())
-            .subscribe(() => {
-            }, (error: any) => {
-                this._hintLabel = error.toString();
-            });
+            .switchMap(() => this.calcViewList$())
+            .subscribe(noop);
+    }
+
+    protected get containerElement(): HTMLElement {
+        return this.listContainer.nativeElement;
     }
 
     private set currentItemIndex(value: number) {
@@ -435,14 +453,11 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                     this.changeDetectorRef.markForCheck();
                     return Observable.of(itms);
                 } else {
-                    return this.calcViewPort$().map(() => itms);
+                    return this.calcViewList$()
+                        .map(() => itms);
                 }
             })
-            .subscribe(() => {
-            }, (error: any) => {
-                this.hintLabel = error.toString();
-                this._itemList = [];
-            });
+            .subscribe(noop);
     }
 
     // From ControlValueAccessor interface
@@ -459,7 +474,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Change l'état d'expansion de toute les lignes parentes */
     public toggleAll$(): Observable<IItemTree> {
         return super.toggleAll$()
-            .switchMap(() => this.calcViewPort$());
+            .switchMap(() => this.calcViewList$().first());
     }
 
     /** Change l'état d'expansion de toute les lignes parentes */
@@ -469,13 +484,12 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
     /** Positionne a scrollbar pour assurer que l'élément spécifié soit visible */
     public ensureItemVisible(item: IItemBase | number) {
-        super.ensureItemVisible(this.query, this.listcontainer.nativeElement, this.listItemElements, item);
+        super.ensureItemVisible(item);
     }
 
     /** Efface le contenu de la liste */
     public clearViewPort() {
         super.clearViewPort();
-        this.changeDetectorRef.markForCheck();
     }
 
     public ngAfterViewInit() {
@@ -484,24 +498,12 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
         if (this._itemList.length === 0 && this.hasCustomService) {
             Observable.timer(1)
                 .first()
-                .switchMap(() => this.calcViewPort$())
+                .switchMap(() => this.calcViewList$())
                 .subscribe(noop);
         }
 
         this.subscriptions.push(Observable
-            .fromEvent(window, 'resize')
-            .switchMap((e: Event) => {
-                if (this._viewportMode !== ViewportMode.NoViewport && this.maxHeight === 0) {
-                    this.computedMaxHeight = 0;
-                    return this.calcViewPort$().map(() => e);
-                } else {
-                    return Observable.of(e);
-                }
-            })
-            .subscribe(noop));
-
-        this.subscriptions.push(Observable
-            .fromEvent(this.listcontainer.nativeElement, 'scroll')
+            .fromEvent(this.containerElement, 'scroll')
             .map((event: any) => [event, event.target.scrollTop, event.target.scrollLeft])
             .map(([event, scrollTop, scrollLeft]: [Event, number, number]) => {
                 const e = {
@@ -513,21 +515,9 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                 this.scroll.emit(e);
                 return scrollTop;
             })
-            .filter((scrollTop: number) => this.lastScrollTop !== scrollTop)
-            .switchMap((scrollTop: number) => {
-                if (this._viewportMode === ViewportMode.NoViewport && this.ignoreNextScrollEvents) {
-                    this.ignoreNextScrollEvents = false;
-                    return Observable.of(scrollTop);
-                } else {
-                    this.lastScrollTop = scrollTop;
-                    return this.calcViewPort$().map(() => scrollTop);
-                }
-            })
-            .debounceTime(30)
-            .switchMap(() => this.calcViewPort$())
-            .subscribe(noop));
+            .subscribe((scrollPos) => this.viewPort.scrollPosition$.next(scrollPos)));
 
-        let keyDown$ = Observable.fromEvent(this.listcontainer.nativeElement, 'keydown');
+        let keyDown$ = Observable.fromEvent(this.containerElement, 'keydown');
         if (this.input) {
             const inputKeyDown$ = Observable.fromEvent(this.input.nativeElement, 'keydown');
             keyDown$ = keyDown$.merge(inputKeyDown$);
@@ -672,7 +662,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
             }));
 
 
-        let keyUp$ = Observable.fromEvent(this.listcontainer.nativeElement, 'keyup');
+        let keyUp$ = Observable.fromEvent(this.containerElement, 'keyup');
         if (this.input) {
             const inputKeyup$ = Observable.fromEvent(this.input.nativeElement, 'keyup');
             const inputDrop$ = Observable.fromEvent(this.input.nativeElement, 'drop');
@@ -731,6 +721,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                     }
                 }
             }));
+
+        this.viewPort.element$.next(this.containerElement);
     }
 
     public ngOnDestroy() {
@@ -821,7 +813,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                 this.itemDragEnd.emit(event);
                 delete this._ddStartIndex;
                 delete this._ddTargetIndex;
-                this.calcViewPort$().first().subscribe(noop); // Comment this line to debug dragdrop
+                this.calcViewList$().first().subscribe(noop); // Comment this line to debug dragdrop
             },
             dragstartcallback: (event: IDejaDragEvent) => {
                 const targetIndex = this.getItemIndexFromHTMLElement(event.target as HTMLElement);
@@ -859,7 +851,9 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                     .switchMap((finalTarget) => {
                         if (finalTarget !== undefined && finalTarget !== this._ddTargetIndex) {
                             this._ddTargetIndex = finalTarget;
-                            return this.calcViewPort$().map(() => finalTarget);
+                            return this.calcViewList$()
+                                .first()
+                                .map(() => finalTarget);
                         } else {
                             return Observable.of(finalTarget);
                         }
@@ -873,7 +867,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                 delete this._ddStartIndex;
                 delete this._ddTargetIndex;
                 this.drop$()
-                    .switchMap(() => this.calcViewPort$())
+                    .switchMap(() => this.calcViewList$().first())
                     .subscribe(noop);
                 event.preventDefault();
             },
@@ -881,7 +875,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     }
 
     protected dragLeave(event: DragEvent) {
-        const listRect = this.listcontainer.nativeElement.getBoundingClientRect();
+        const listRect = this.containerElement.getBoundingClientRect();
 
         const listBounds = Rect.fromLTRB(listRect.left,
             listRect.top,
@@ -890,7 +884,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
         if (!listBounds.containsPoint(new Position(event.pageX, event.pageY))) {
             this._ddTargetIndex = this._ddStartIndex;
-            this.calcViewPort$().first().subscribe(noop);
+            this.calcViewList$().first().subscribe(noop);
         }
     }
 
@@ -921,12 +915,12 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
         }
     }
 
-    protected calcViewPort$() {
-        return super.calcViewPort$(this.query, this.maxHeight, this.listcontainer.nativeElement)
-            .do((res: IViewListResult) => {
+    protected calcViewList$(): Observable<IViewPort> {
+        return super.calcViewList$(this.query)
+            .do(() => {
                 // Prevent that the adaptation of the scroll raise a new view port calculation
-                this.ignoreNextScrollEvents = res.outOfRange;
-                if (res.rowsCount > 0 && this.afterViewInit) {
+                // this.ignoreNextScrollEvents = res.outOfRange;
+                if (this.rowsCount > 0 && this.afterViewInit) {
                     this.afterViewInit.emit();
                     this.afterViewInit = null;
                 }

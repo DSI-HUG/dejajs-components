@@ -20,6 +20,6 @@
         </span>
     </md-card-actions>
     <md-card-actions *ngIf="!actions && actionsTemplate">
-		<template [ngTemplateOutlet]="actionsTemplate"></template>
+		<ng-template [ngTemplateOutlet]="actionsTemplate"></ng-template>
 	</md-card-actions>
 </md-card>

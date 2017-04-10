@@ -10,7 +10,6 @@
  */
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
-import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { Observable, Subject, Subscription } from 'rxjs/Rx';
 import { IDejaDragEvent, IDejaDropEvent, ISortInfos } from '../../../index';
 import { IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayout, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent } from '../index';
@@ -53,8 +52,8 @@ export class DejaGridHeaderComponent implements OnDestroy {
      * Si une valeur spécifique à une colonne est spécifiée dans le modèle de la colonne, cette dernière sera prioritaire.
      */
     @Input()
-    public set columnsDraggable(value: boolean) {
-        this._columnsDraggable = coerceBooleanProperty(value);
+    public set columnsDraggable(value: boolean | string) {
+        this._columnsDraggable = value != null && `${value}` !== 'false';
     }
 
     /** Retourne si toutes les colonnes peuvent être draggable vers un autre composant.
@@ -68,8 +67,8 @@ export class DejaGridHeaderComponent implements OnDestroy {
      * Si une valeur spécifique à une colonne est spécifiée dans le modèle de la colonne, cette dernière sera prioritaire.
      */
     @Input()
-    public set columnsSortable(value: boolean) {
-        this._columnsSortable = coerceBooleanProperty(value);
+    public set columnsSortable(value: boolean | string) {
+        this._columnsSortable = value != null && `${value}` !== 'false';
     }
 
     /** Retourne si toutes les colonnes peuvent être déplacées parmis les autres colonnes.
@@ -83,8 +82,8 @@ export class DejaGridHeaderComponent implements OnDestroy {
      * Si une valeur spécifique à une colonne est spécifiée dans le modèle de la colonne, cette dernière sera prioritaire.
      */
     @Input()
-    public set columnsSizable(value: boolean) {
-        this._columnsSizable = coerceBooleanProperty(value);
+    public set columnsSizable(value: boolean | string) {
+        this._columnsSizable = value != null && `${value}` !== 'false';
     }
 
     /** Retourne si toutes les colonnes peuvent être redimensionées

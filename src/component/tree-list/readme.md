@@ -6,24 +6,24 @@ Crée une liste récursive.
 
 ```html
 <deja-tree-list min-search-length="0" expandButton searchArea sortable multiSelect [selectedItems]=selectedItems (selectedChange)="onSelectionChanged($event)" nodataholder="Pas de données" placeholder="Liste des pays, groupés par la première lettre" textField="naqme" [(ngModel)]="groupedCountries" (itemDragStart)="onItemDragStart($event)" #treelist childrenField="children">
-	<template #headerTemplate>
+	<ng-template #headerTemplate>
 		<span id="headerTemplateContent" (click)="treelist.sort()">
 			<span id="title">
 				This is a header template, click to sort the list.
 			</span>
 			<deja-sort-indicator [sort-infos]="treelist.sortInfos"></deja-sort-indicator>
 		</span>
-	</template>
+	</ng-template>
 	
-	<template #itemTemplate let-item let-flatindex="flatindex">
+	<ng-template #itemTemplate let-item let-flatindex="flatindex">
 		<span>{{ item.naqme + ' - ' + item.code }} </span>
-	</template>
+	</ng-template>
 	
-	<template #searchSuffixTemplate>
+	<ng-template #searchSuffixTemplate>
 		<button id="more" md-icon-button (click)="onSuffixClicked()">
 			<md-icon>more_vert</md-icon>
 		</button>
-	</template>
+	</ng-template>
 </deja-tree-list>
 ```
 
@@ -258,30 +258,30 @@ Crée une liste récursive.
 
   - `itemTemplate`
 ```html
-<template #itemTemplate let-item let-flatindex="flatindex">
+<ng-template #itemTemplate let-item let-flatindex="flatindex">
 	<span>{{ item.naqme + ' - ' + item.code }} </span>
-</template>
+</ng-template>
 ```
 
   - `parentItemTemplate`
 ```html
-<template #parentItemTemplate let-item let-flatindex="flatindex">
+<ng-template #parentItemTemplate let-item let-flatindex="flatindex">
     <span>{{ item.label }} </span>
     <span flex></span>
     <button md-icon-button (mouseup)="editSection($event, item)">
         <md-icon>edit</md-icon>
     </button>
-</template>
+</ng-template>
 ```
   
   - `headerTemplate`
 ```html
-<template #headerTemplate>
+<ng-template #headerTemplate>
 	<span id="headerTemplateContent" (click)="treelist.sort()">
 		<span id="title">This is a header template, click to sort the list.</span>
 		<deja-sort-indicator [sort-infos]="treelist.sortInfos"></deja-sort-indicator>
 	</span>
-</template>
+</ng-template>
 ```
   
   - `searchPrefixTemplate`
@@ -289,16 +289,16 @@ TODO
   
   - `searchSuffixTemplate`
 ```html
-<template #searchSuffixTemplate>
+<ng-template #searchSuffixTemplate>
 	<button id="more" md-icon-button (click)="onSuffixClicked()">
 		<md-icon>more_vert</md-icon>
 	</button>
-</template>
+</ng-template>
 ```
   
   - `loaderTemplate`
 ```html
-<template #loaderTemplate>
+<ng-template #loaderTemplate>
 	<span>Chargement en cours ...</span>
-</template>
+</ng-template>
 ```

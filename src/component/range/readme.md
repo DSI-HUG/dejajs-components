@@ -15,7 +15,7 @@ Il est votre responsabilité d'implémenter la charte graphique en surchargeant 
 <deja-range [(ngModel)]="ranges"
     [readOnly]="false"
     [step]="0.5">
-   <template #rangeTemplate
+   <ng-template #rangeTemplate
         let-range
         let-index="index"
         let-ranges="ranges">
@@ -23,8 +23,8 @@ Il est votre responsabilité d'implémenter la charte graphique en surchargeant 
         <!-- Résentation graphique de l'interval ici, libre à l'utilisateur -->        
         <span class="range">{{range.min}} - {{range.max}}</span>
 
-    </template>
-    <template #separatorTemplate
+    </ng-template>
+    <ng-template #separatorTemplate
         let-range
         let-index="index"
         let-ranges="ranges">
@@ -32,7 +32,7 @@ Il est votre responsabilité d'implémenter la charte graphique en surchargeant 
         <!-- Résentation graphique du séparateur ici, libre à l'utilisateur -->
         <span class="separator">|</span>
 
-    </template>
+    </ng-template>
 </deja-range>
 ```
 
@@ -42,7 +42,7 @@ Il est votre responsabilité d'implémenter la charte graphique en surchargeant 
     [readOnly]="false"
     [step]="stepFn"
     (errorFeedback)="errorFeed.emit($event)">
-   <template #rangeTemplate
+   <ng-template #rangeTemplate
         let-range
         let-index="index"
         let-ranges="ranges">
@@ -50,8 +50,8 @@ Il est votre responsabilité d'implémenter la charte graphique en surchargeant 
         <!-- Résentation graphique de l'interval ici, libre à l'utilisateur -->        
         <span class="range">{{range.min}} - {{range.max}}</span>
 
-    </template>
-    <template #separatorTemplate
+    </ng-template>
+    <ng-template #separatorTemplate
         let-range
         let-index="index"
         let-ranges="ranges">
@@ -59,7 +59,7 @@ Il est votre responsabilité d'implémenter la charte graphique en surchargeant 
         <!-- Résentation graphique du séparateur ici, libre à l'utilisateur -->
         <span class="separator">|</span>
 
-    </template>
+    </ng-template>
 </deja-range>
 ```
 ```js

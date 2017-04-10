@@ -11,7 +11,6 @@
 
 import { Component, ElementRef, EventEmitter, forwardRef, HostBinding, Input, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import {coerceBooleanProperty} from '@angular/material/core/coercion/boolean-property';
 import { Color } from '../../common/core/graphics/index';
 import { MaterialColor } from '../../common/core/style';
 
@@ -65,8 +64,8 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
 
     /** Retourne ou définit la taille du bouton. */
     @Input()
-    public set small(value: boolean) {
-        this._small = coerceBooleanProperty(value);
+    public set small(value: boolean | string) {
+        this._small = value != null && `${value}` !== 'false';
     }
 
     public get small() {
@@ -75,8 +74,8 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
 
     /** Retourne ou definit si le selecteur est desactivé. */
     @Input()
-    public set disabled(value: boolean) {
-        this._disabled = coerceBooleanProperty(value) || null;
+    public set disabled(value: boolean | string) {
+        this._disabled = value != null && `${value}` !== 'false';
     }
 
     public get disabled() {

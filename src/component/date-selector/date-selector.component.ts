@@ -11,7 +11,6 @@
 
 import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, forwardRef, Input, Output } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 import { Observable, Subject } from 'rxjs/Rx';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { IDateSelectorItem } from './date-selector-item.model';
@@ -85,8 +84,8 @@ export class DejaDateSelectorComponent implements AfterContentInit {
     private onChangeCallback: (_: any) => void = noop;
 
     @Input()
-    public set time(value: boolean) {
-        this._time = coerceBooleanProperty(value);
+    public set time(value: boolean | string) {
+        this._time = value != null && `${value}` !== 'false';
         this.changeDetectorRef.markForCheck();
     }
 

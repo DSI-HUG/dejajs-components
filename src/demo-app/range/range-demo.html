@@ -59,11 +59,11 @@
                             (errorFeedback)="errorFeed.emit($event)"
                             #dejaWeight>
 
-                    <template #rangeTemplate let-range let-index="index" let-ranges="ranges">
+                    <ng-template #rangeTemplate let-range let-index="index" let-ranges="ranges">
                         <span class="custom-range">{{range.minWeight | number: '1.0-2'}} - {{range.maxWeight | number: '1.0-2'}} kg</span>
-                    </template>
+                    </ng-template>
 
-                    <template #separatorTemplate let-range let-index="index" let-ranges="ranges">
+                    <ng-template #separatorTemplate let-range let-index="index" let-ranges="ranges">
                         <span class="custom-separator">
                             <svg class="triangle">
                                 <polygon points="0,0 10,0 5,5"></polygon>
@@ -77,7 +77,7 @@
                                 <polygon points="0,5 5,0 10,5 "></polygon>
                             </svg>
                         </span>
-                    </template>
+                    </ng-template>
                 </deja-range>
             </md-card-content>
 
@@ -90,11 +90,11 @@
         </md-card>
 
         <!-- error feedback implementation example with snackbar-->
-        <template ngFor let-error [ngForOf]="errors | async">
+        <ng-template ngFor let-error [ngForOf]="errors | async">
             <deja-snackbar *ngIf="error?.gate"alignment="bottom right" [duration]="5000" (onAnimationDone)="error.gate = false">
                 <deja-message-box type="warn" horizontal>{{error.message}}</deja-message-box>
             </deja-snackbar>
-        </template>
+        </ng-template>
 
     </md-tab>
 </md-tab-group>

@@ -9,9 +9,9 @@
  *
  */
 
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-// import { DejaViewPortComponent } from '../../component';
+import { DejaViewPortComponent } from '../../component';
 import { IEditorLanguage } from '../../component/monaco-editor/options/editor-language.model';
 import { INews, NewsService } from '../services/news.service';
 
@@ -23,11 +23,11 @@ import { INews, NewsService } from '../services/news.service';
 export class DejaViewPortDemoComponent {
     protected tabIndex = 1;
 
-    // @ViewChild('viewport') private viewport: DejaViewPortComponent;
+    @ViewChild('viewport') private viewport: DejaViewPortComponent;
 
     protected exampleValue = `
     <deja-viewport [items]="news$ | async" itemSize="120">
-        <template #itemTemplate let-item>
+        <ng-template #itemTemplate let-item>
             <div *ngIf="item" class="news" [attr.id]="id">
                 <img [attr.src]="item.urlsToLogos.medium" class="logo">
                 <span class="text">
@@ -41,7 +41,7 @@ export class DejaViewPortDemoComponent {
                     </div>
                 </span>
             </div>
-        </template>
+        </ng-template>
     </deja-viewport>`;
     protected html = IEditorLanguage.HTML;
     protected news$: Observable<INews[]>;
@@ -53,5 +53,6 @@ export class DejaViewPortDemoComponent {
 
     protected imageLoaded() {
         this.changeDetectorRef.markForCheck();
+        this.viewport.refresh();
     }
 }

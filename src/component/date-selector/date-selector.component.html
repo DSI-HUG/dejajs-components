@@ -36,9 +36,9 @@
         <div id="time-body">
             <deja-circular-picker [ngModel]="displayedDate.getMinutes()" (ngModelChange)="updateMinutes($event)" [ranges]="clocks.minutes.ranges" [outerLabels]="true" class="minutes"></deja-circular-picker>
             <deja-circular-picker [ngModel]="getHoursModel()" (ngModelChange)="updateHours($event)" [ranges]="clocks.hours.ranges" class="hours">
-                <template #cursorTemplate #labelTemplate let-value>
+                <ng-template #cursorTemplate #labelTemplate let-value>
                     {{ value === 24 ? 0 : value }}
-                </template>
+                </ng-template>
             </deja-circular-picker>
         </div>
     </div>

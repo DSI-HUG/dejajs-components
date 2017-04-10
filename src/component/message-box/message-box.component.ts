@@ -10,7 +10,6 @@
  */
 
 import { Component, ContentChild, Input, OnInit } from '@angular/core';
-import { coerceBooleanProperty } from '@angular/material/core/coercion/boolean-property';
 
 @Component({
     selector: 'deja-message-box',
@@ -27,8 +26,8 @@ export class DejaMessageBoxComponent implements OnInit {
     private _horizontal: boolean;
 
     @Input()
-    public set horizontal(value: boolean) {
-        this._horizontal = coerceBooleanProperty(value);
+    public set horizontal(value: boolean | string) {
+        this._horizontal = value != null && `${value}` !== 'false';
     }
 
     public get horizontal() {

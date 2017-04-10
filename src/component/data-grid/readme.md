@@ -113,13 +113,13 @@ Composant pour afficher des données dans un tableau, avec une fonction de reche
 	<td>viewPortRowHeight</td>
 	<td>number</td>
 	<td>33</td>
-	<td>Définit la hauteur d'une ligne pour le calcul du viewport en mode ConstantRowHeight</td>
+	<td>Définit la hauteur d'une ligne pour le calcul du viewport en mode constant</td>
 </tr>
 <tr>
 	<td>viewportMode</td>
 	<td>ViewportMode (enum)</td>
-	<td>ViewportMode.ConstantRowHeight</td>
-	<td>Définit le mode de calcul du viewport. Le Viewport ne fonctionne qu'avec des hauteurs de lignes fixe / ou définies sur chaque items. Pour désactiver le viewport, mettre le mode NoViewport. Attention, une désactivation du viewport dégrade considérablement les performances de la liste et ne doit pas être activée si la liste est suceptible de contenir beaucoup d'éléments.</td>
+	<td>ViewportMode.fixed</td>
+	<td>Définit le mode de calcul du viewport. Le Viewport ne fonctionne qu'avec des hauteurs de lignes fixe / ou définies sur chaque items. Pour désactiver le viewport, mettre le mode disabled. Attention, une désactivation du viewport dégrade considérablement les performances de la liste et ne doit pas être activée si la liste est suceptible de contenir beaucoup d'éléments.</td>
 </tr>
 <tr>
 	<td>childrenField</td>
@@ -308,44 +308,44 @@ Composant pour afficher des données dans un tableau, avec une fonction de reche
 
   - `rowTemplate`
 ```html
-<template #rowTemplate let-item let-query="query" let-flatindex="flatindex">
-</template>
+<ng-template #rowTemplate let-item let-query="query" let-flatindex="flatindex">
+</ng-template>
 ```
 
   - `parentRowTemplate`
 ```html
-<template #parentRowTemplate let-item let-query="query" let-flatindex="flatindex">
-</template>
+<ng-template #parentRowTemplate let-item let-query="query" let-flatindex="flatindex">
+</ng-template>
 ```
 
   - `cellTemplate`
 ```html
-<template #cellTemplate let-row let-flatIndex="flatIndex" let-column="column">
-</template>
+<ng-template #cellTemplate let-row let-flatIndex="flatIndex" let-column="column">
+</ng-template>
 ```
 
   - `columnHeaderTemplate`
 ```html
-<template #columnHeaderTemplate let-column>
-</template>
+<ng-template #columnHeaderTemplate let-column>
+</ng-template>
 ```
 
   - `columnsHeaderTemplate`
 ```html
-<template #columnsHeaderTemplate>
-</template>
+<ng-template #columnsHeaderTemplate>
+</ng-template>
 ```
 
 - `searchPrefixTemplate`
 `
 ```html
-<template #searchPrefixTemplate>
-</template>
+<ng-template #searchPrefixTemplate>
+</ng-template>
 ```
 
 - `searchSuffixTemplate`
 `
 ```html
-<template #searchSuffixTemplate>
-</template>
+<ng-template #searchSuffixTemplate>
+</ng-template>
 ```

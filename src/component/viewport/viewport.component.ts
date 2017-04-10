@@ -9,53 +9,49 @@
  *
  */
 
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, HostBinding, Input, OnDestroy, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, HostBinding, Input, OnDestroy, ViewChild } from '@angular/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs/Rx';
+import { IViewPort, IViewPortItem, ViewportDirection, ViewportMode, ViewPortService } from '../../common/core/item-list';
+
+export enum DejaViewPortScrollStyle {
+    scrollbar,
+    buttons,
+}
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [ViewPortService],
     selector: 'deja-viewport',
     styleUrls: ['./viewport.component.scss'],
     templateUrl: './viewport.component.html',
 })
 export class DejaViewPortComponent implements OnDestroy,
     AfterViewInit {
-    /** Define the item size startegy
-     * fixed: the item size is fixed and defined by the input itemSize
-     * auto: The item size is defined by the input itemSize, but recalculated to the real size after rendering the viewport.
-     */
-    @Input() public itemSizeMode: 'fixed' | 'auto' = 'fixed';
-
-    /** Get or set the item size in fixed mode or the default item size before rendering in auto mode */
-    @Input() public itemSize = '33';
 
     protected beforeSize: string;
     protected afterSize: string;
-    protected vpItems: DejaViewPortItem[];
+    protected vpItems: IDejaViewPortItem[];
     protected vpStartIndex: number;
+    protected vpEndIndex: number;
     protected startOffset: number;  // Buttons mode only
-    private _items: DejaViewPortItem[];
+    @HostBinding('attr.hasUpBtn') protected hasUpButton = false;
+    @HostBinding('attr.hasDownBtn') protected hasDownButton = false;
+    @HostBinding('attr.horizontal') protected isHorizontal = false;
+    @HostBinding('attr.buttons') protected hasButtons = false;
+
+    private _items: IDejaViewPortItem[];
     private element: HTMLElement;
     private subscriptions: Subscription[] = [];
-    private lastScrollPos: -1;
-    private isHorizontal = false;
-    private hasButtons = false;
     private hasButtons$ = new BehaviorSubject<boolean>(false);
-    private _scrollPos = 0;  // Buttons mode only
     private buttonsStep = 20;
     private mouseDown$Sub: Subscription;
     private mouseWheel$Sub: Subscription;
-    @HostBinding('attr.hasUpBtn') private hasUpButton = false;
-    @HostBinding('attr.hasDownBtn') private hasDownButton = false;
-    @HostBinding('attr.direction') private _direction = 'vertical' as 'vertical' | 'horizontal';
-    @HostBinding('attr.scollStyle') private _scrollingStyle = 'scrollbar' as 'scrollbar' | 'buttons';
-    @HostBinding('attr.scrolling') private scrolling = null;
+    private scrollPosition = 0;
 
     /** Permet de définir un template d'élément par binding */
     @Input() public itemTemplateExternal;
 
     @ContentChild('itemTemplate') private itemTemplateInternal;
-    @ViewChildren('elitem') private itemElements: QueryList<ElementRef>;
     @ViewChild('wrapper') private wrapperElement: ElementRef;
     @ViewChild('down') private downButton: ElementRef;
     @ViewChild('up') private upButton: ElementRef;
@@ -63,8 +59,13 @@ export class DejaViewPortComponent implements OnDestroy,
     /** Set the list of items to render inside the viewport control */
     @Input()
     public set items(items: any[]) {
-        this._items = items ? items.map((item) => new DejaViewPortItem(item)) : [];
-        this.calcViewPort();
+        this._items = items ? items.map((item) => ({
+            model: item,
+        } as IDejaViewPortItem)) : [];
+        if (this.viewPort.mode === ViewportMode.disabled) {
+            this.vpItems = this._items;
+        }
+        this.viewPort.items$.next(this._items);
     }
 
     /** Set the scrolling style
@@ -72,32 +73,34 @@ export class DejaViewPortComponent implements OnDestroy,
       * buttons: A button before is placed at the top or at the left of the list, and a button after is placed at the right or the bottom of the list.
       */
     @Input()
-    public set scrollingStyle(value: 'scrollbar' | 'buttons') {
-        this._scrollingStyle = value;
-        this.hasButtons$.next(this._scrollingStyle === 'buttons');
+    public set scrollingStyle(value: DejaViewPortScrollStyle | string) {
+        const scrollingStyle = typeof value === 'string' ? DejaViewPortScrollStyle[value] : value;
+        this.hasButtons$.next(scrollingStyle === DejaViewPortScrollStyle.buttons);
     }
-
-    public get scrollingStyle() { return this._scrollingStyle; }
 
     /** Set the direction of the items rendering
      * vertical: The item are displayed vertically
      * horizontal: The item are displayed horizontally
      */
     @Input()
-    public set direction(value: 'vertical' | 'horizontal') {
-        if (this._direction !== value) {
-            this._direction = value;
-            this.isHorizontal = value === 'horizontal';
-            if (this._items) {
-                this._items.forEach((item) => item.size = undefined);
-                this.changeDetectorRef.markForCheck();
-                Observable.timer(1).first().subscribe(() => this.scrollPos = 0);
-            }
+    public set direction(value: ViewportDirection | string) {
+        const direction = typeof value === 'string' ? ViewportDirection[value] : value;
+        this.viewPort.direction$.next(direction);
+        this.isHorizontal = direction === ViewportDirection.horizontal;
+        this.changeDetectorRef.markForCheck();
+    }
+
+    /** Set the item size in fixed mode or the default item size before rendering in auto mode */
+    @Input()
+    public set itemSize(value: number | string) {
+        if (value) {
+            this.viewPort.itemsSize$.next(+value);
         }
     }
 
-    /** Get the direction of the items rendering */
-    public get direction() { return this._direction; }
+    public get itemSize() {
+        return this.viewPort.itemsSize;
+    }
 
     private get itemTemplate() { return this.itemTemplateExternal || this.itemTemplateInternal; }
 
@@ -109,45 +112,79 @@ export class DejaViewPortComponent implements OnDestroy,
     }
 
     private set scrollPos(value: number) {
-        if (this.hasButtons) {
-            this._scrollPos = value;
-        } else if (this.isHorizontal) {
-            this.element.scrollLeft = value;
-        } else {
-            this.element.scrollTop = value;
-        }
-        this.calcViewPort();
+        this.scrollPosition = value;
+        this.viewPort.scrollPosition$.next(value);
     }
 
-    private get scrollPos() { return this.hasButtons ? this._scrollPos : (this.isHorizontal ? this.element.scrollLeft : this.element.scrollTop); }
-
-    constructor(private changeDetectorRef: ChangeDetectorRef) {
-        this.subscriptions.push(Observable.fromEvent(window, 'resize').debounceTime(10).subscribe(() => { this.calcViewPort(); }));
-
-        this.clearViewPort();
+    private get scrollPos() {
+        return this.scrollPosition;
     }
 
-    public ngOnDestroy() {
-        this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
-        if (this.mouseDown$Sub) {
-            this.mouseDown$Sub.unsubscribe();
-        }
-        if (this.mouseWheel$Sub) {
-            this.mouseWheel$Sub.unsubscribe();
-        }
+    /**
+     * Définit la méthode de calcul de la taille des éléments. Les valuers acceptées sont
+     * disabled: Tous les éléments sont rendus. (< 100 éléments)
+     * fixed: Seul les éléments visibles sont rendus. La taille des éléments est constante et définie par itemsSize. (performances ++)
+     * variable: Seul les éléments visibles sont rendus. La taille des éléments est variable et définie par item.size. (performances +-)
+     * auto: Seul les éléments visibles sont rendus. La taille des éléments est calculée automatiquement (performances --)
+     */
+    @Input()
+    public set viewportMode(mode: ViewportMode | string) {
+        this.viewPort.mode$.next(mode);
     }
 
-    public ngAfterViewInit() {
-        this.element = this.wrapperElement.nativeElement as HTMLElement;
+    public get viewportMode() {
+        return this.viewPort.mode;
+    }
 
-        this.subscriptions.push(Observable.fromEvent(this.element, 'scroll')
-            .map((event: any) => this.isHorizontal ? event.target.scrollLeft : event.target.scrollTop)
-            .subscribe((scrollPos) => {
-                this.lastScrollPos = scrollPos;
-                this.calcViewPort();
+    constructor(private changeDetectorRef: ChangeDetectorRef, private viewPort: ViewPortService) {
+        this.subscriptions.push(Observable
+            .fromEvent(window, 'resize')
+            .debounceTime(5)
+            .subscribe(() => {
+                if (viewPort.mode !== ViewportMode.disabled) {
+                    viewPort.refresh();
+                }
             }));
 
-        Observable.timer(1).first().filter(() => !!this._items).subscribe(() => this.calcViewPort());
+        this.subscriptions.push(viewPort.viewPort$
+            .subscribe((viewPortResult: IViewPort) => {
+                if (viewPort.mode !== ViewportMode.disabled) {
+                    this.vpItems = viewPortResult.visibleItems as IDejaViewPortItem[];
+                    this.vpStartIndex = viewPortResult.startIndex;
+                    this.vpEndIndex = viewPortResult.endIndex;
+                } else {
+                    this.vpStartIndex = 0;
+                    this.vpEndIndex = 0;
+                }
+
+                if (viewPortResult.scrollPos !== undefined) {
+                    this.scrollPosition = viewPortResult.scrollPos;
+                }
+
+                if (this.hasButtons) {
+                    this.startOffset = this.scrollPos - viewPortResult.beforeSize;
+                    this.beforeSize = null;
+                    this.afterSize = null;
+                    this.hasUpButton = this.scrollPos > 0;
+                    this.hasDownButton = this.scrollPos + viewPortResult.listSize < viewPortResult.beforeSize + viewPortResult.viewPortSize + viewPortResult.afterSize;
+
+                } else {
+                    this.startOffset = 0;
+                    this.beforeSize = viewPortResult.beforeSize ? `${viewPortResult.beforeSize}px` : null;
+                    this.afterSize = viewPortResult.afterSize ? `${viewPortResult.afterSize}px` : null;
+                    this.hasUpButton = false;
+                    this.hasDownButton = false;
+
+                    if (viewPortResult.scrollPos !== undefined && this.element) {
+                        if (this.isHorizontal) {
+                            this.element.scrollLeft = this.scrollPosition;
+                        } else {
+                            this.element.scrollTop = this.scrollPosition;
+                        }
+                    }
+                }
+                this.changeDetectorRef.markForCheck();
+            }));
 
         this.subscriptions.push(Observable.from(this.hasButtons$)
             .distinctUntilChanged()
@@ -174,7 +211,7 @@ export class DejaViewPortComponent implements OnDestroy,
                                 this.scrollPos += direction * (upEvent.ctrlKey ? this.clientSize : this.buttonsStep);
                             });
 
-                        Observable.timer(1000)
+                        Observable.timer(750)
                             .takeUntil(mouseup$)
                             .subscribe(() => {
                                 Observable.interval(50)
@@ -186,8 +223,10 @@ export class DejaViewPortComponent implements OnDestroy,
                     });
 
                     this.mouseWheel$Sub = Observable
-                        .fromEvent(this.wrapperElement.nativeElement, 'mousewheel')
-                        .subscribe((event: MouseWheelEvent) => { this.scrollPos = this.scrollPos + event.deltaY; });
+                        .fromEvent(this.element, 'mousewheel')
+                        .subscribe((event: MouseWheelEvent) => {
+                            this.scrollPos = this.scrollPos + event.deltaY;
+                        });
 
                 } else {
                     if (this.mouseDown$Sub) {
@@ -200,8 +239,29 @@ export class DejaViewPortComponent implements OnDestroy,
                     }
                 }
 
-                this.calcViewPort();
+                this.viewPort.refresh();
             }));
+    }
+
+    public ngOnDestroy() {
+        this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
+        if (this.mouseDown$Sub) {
+            this.mouseDown$Sub.unsubscribe();
+        }
+        if (this.mouseWheel$Sub) {
+            this.mouseWheel$Sub.unsubscribe();
+        }
+    }
+
+    public ngAfterViewInit() {
+        this.element = this.wrapperElement.nativeElement as HTMLElement;
+
+        this.subscriptions.push(Observable.fromEvent(this.element, 'scroll')
+            .map((event: Event) => event.target as HTMLElement)
+            .map((target) => Math.round(this.isHorizontal ? target.scrollLeft : target.scrollTop))
+            .subscribe((scrollPos) => this.viewPort.scrollPosition$.next(scrollPos)));
+
+        this.viewPort.element$.next(this.wrapperElement.nativeElement);
     }
 
     public refresh() {
@@ -209,202 +269,22 @@ export class DejaViewPortComponent implements OnDestroy,
     }
 
     public ensureVisible(item: any) {
-        if (item === undefined) {
-            return;
-        }
-
-        const scrollPos = this.scrollPos;
-        const itemDefaultSize = this.itemSize ? +this.itemSize : 33;
-        const containerSize = this.clientSize;
-        let index = item as number;
-        if (isNaN(index)) {
-            index = this._items.findIndex((itm) => item === itm);
-        } else {
-            item = this._items[index];
-        }
-
-        if (this.itemSizeMode === 'fixed') {
-            // View port constant row height
-            if (index >= 0) {
-                const scrollMax = index * itemDefaultSize;
-                if (scrollPos > scrollMax) {
-                    this.scrollPos = scrollMax;
-                } else {
-                    const scrollMin = scrollMax + containerSize - itemDefaultSize;
-                    if (scrollPos < scrollMin) {
-                        this.scrollPos = scrollMin;
-                    }
-                }
-            }
-        } else {
-            let averageSize = 0;
-            let averageCount = 0;
-            let scrollMin = 0;
-            let scrollMax = 0;
-            this._items.find((itm) => {
-                let itemSize = itm.size;
-                if (itemSize) {
-                    averageSize += itm.size;
-                    ++averageCount;
-                } else if (averageCount > 0) {
-                    itemSize = Math.round(averageSize / averageCount);
-                } else {
-                    itemSize = itemDefaultSize;
-                }
-                if (itm === item) {
-                    return true;
-                }
-                scrollMax += itemSize;
-                scrollMin = scrollMax - containerSize + itemSize;
-            });
-
-            if (scrollPos < scrollMin) {
-                this.scrollPos = scrollMin;
-            } else if (scrollPos > scrollMax) {
-                this.scrollPos = scrollMax;
-            }
-        }
+        this.viewPort.ensureItem$.next(item);
     }
 
-    private calcViewPort(maxSize?: number) {
-        if (!this._items || this._items.length === 0) {
-            this.clearViewPort();
-            return;
-        }
-
-        this.scrolling = true;
-        const itemDefaultSize = this.itemSize ? +this.itemSize : 33;
-        const containerSize = maxSize || this.clientSize;
-
-        if (containerSize < 50 && !maxSize) {
-            // Set the viewlist to the maximum size to measure the real max-size defined in the css
-            maxSize = 200000;
-            // Use a blank div to do that
-            this.afterSize = `${maxSize}px`;
-            // Wait next life cycle for the result
-            Observable.timer(1).first().subscribe(() => { this.calcViewPort(this.clientSize || 500); });
-            return;
-        }
-
-        let scrollPos = this.scrollPos;
-        if (scrollPos < 0) {
-            this._scrollPos = 0;
-            scrollPos = 0;
-        }
-
-        let beforeSize = 0;
-        let afterSize = 0;
-        this.startOffset = null;
-        this.hasDownButton = this.hasButtons;
-        if (this.itemSizeMode === 'fixed') {
-            const listSize = itemDefaultSize * this._items.length;
-            if (scrollPos > listSize - containerSize) {
-                this._scrollPos = listSize - containerSize;
-                scrollPos = this._scrollPos;
-            }
-
-            this.vpStartIndex = Math.floor(scrollPos / itemDefaultSize);
-            const vpEndIndex = Math.ceil((scrollPos + containerSize) / itemDefaultSize);
-            const vpSize = itemDefaultSize * (vpEndIndex - this.vpStartIndex);
-            beforeSize = itemDefaultSize * this.vpStartIndex;
-            afterSize = listSize - beforeSize - vpSize;
-            if (this.hasButtons) {
-                this.startOffset = scrollPos - beforeSize;
-            }
-            this.vpItems = this._items.slice(this.vpStartIndex, vpEndIndex);
-            this.vpItems.forEach((item) => item.size = itemDefaultSize);
-
-            // console.log(`vpBeforeSize: ${this.vpBeforeSize} vpSize: ${vpSize} vpAfterSize: ${afterSize}`);
-        } else if (this.itemSizeMode === 'auto') {
-            this.vpItems = [];
-            let vpSize = 0;
-            let overflow = false;
-            let averageSize = 0;
-            let averageCount = 0;
-            this._items.forEach((item, index) => {
-                let itemSize = item.size;
-                if (itemSize) {
-                    averageSize += item.size;
-                    ++averageCount;
-                } else if (averageCount > 0) {
-                    itemSize = Math.round(averageSize / averageCount);
-                } else {
-                    itemSize = itemDefaultSize;
-                }
-                if (vpSize === 0 && beforeSize + itemSize < scrollPos) {
-                    beforeSize += itemSize;
-                } else if (!overflow) {
-                    if (this.vpItems.length === 0) {
-                        this.vpStartIndex = index;
-                        if (this.hasButtons) {
-                            this.startOffset = scrollPos - beforeSize;
-                        }
-                    }
-                    vpSize += itemSize;
-                    this.vpItems.push(item);
-                    if (beforeSize + vpSize > scrollPos + containerSize) {
-                        overflow = true;
-                    }
-                } else {
-                    afterSize += itemSize;
-                }
-            });
-
-            if (afterSize === 0 && scrollPos > beforeSize + vpSize - containerSize) {
-                // Maximum of scroll reached, can be happens if we scroll with the buttons
-                this._scrollPos = beforeSize + vpSize - containerSize;
-                this.calcViewPort(maxSize);
-                this.hasDownButton = false;
-                return;
-            } else {
-                // Measure items height
-                Observable.timer(1).first().subscribe(() => {
-                    let calculatedSize = beforeSize;
-                    this.itemElements.forEach((itemElement, index) => {
-                        const element = itemElement.nativeElement as HTMLElement;
-                        const size = this.isHorizontal ? element.clientWidth : element.clientHeight;
-                        this.vpItems[index].size = size;
-                        calculatedSize += size;
-                    });
-
-                    // If height of the displayed items is not enough, calc viewport again
-                    if (calculatedSize < scrollPos + containerSize) {
-                        if (afterSize === 0) {
-                            // Maximum of scroll reached, can be happens if we scroll with the buttons
-                            this._scrollPos = calculatedSize - containerSize;
-                            this.hasDownButton = false;
-                        }
-                        this.calcViewPort(maxSize);
-                    }
-                });
-            }
+    protected getItemSize(item: IViewPortItem) {
+        if (this.viewPort.mode === ViewportMode.disabled) {
+            return null;
+        } else if (this.viewPort.mode === ViewportMode.fixed) {
+            return this.itemSize;
+        } else if (this.viewPort.mode === ViewportMode.auto) {
+            return item.size || null;
         } else {
-            throw new Error('DejaViewPortComponent itemSizeMode, bad parameter');
+            return (item.size && item.size > ViewPortService.itemDefaultSize) ? item.size : this.itemSize;
         }
-
-        if (this.hasButtons) {
-            this.beforeSize = null;
-            this.afterSize = null;
-            this.hasUpButton = this.scrollPos > 0;
-        } else {
-            this.beforeSize = beforeSize ? `${beforeSize}px` : null;
-            this.afterSize = afterSize ? `${afterSize}px` : null;
-            this.hasUpButton = false;
-            this.hasDownButton = false;
-        }
-
-        this.changeDetectorRef.markForCheck();
-        Observable.timer(10).first().subscribe(() => this.scrolling = false);
     }
-
-    private clearViewPort() {
-        this.beforeSize = null;
-        this.afterSize = null;
-        this.vpItems = [];
-        this.changeDetectorRef.markForCheck();
-    };
 }
 
-export class DejaViewPortItem {
-    constructor(public model: any, public size?: number) { }
+export interface IDejaViewPortItem extends IViewPortItem {
+    model: any;
 }

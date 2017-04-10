@@ -6,10 +6,10 @@ Crée une liste déroulante.
 
 ```html
 <deja-select required selectionClearable placeholder="Liste des pays, avec templating" valueField="code" [(ngModel)]="countryForTemnplate" [items]="countriesForTemplate">
-    <template #itemTemplate let-item>
+    <ng-template #itemTemplate let-item>
         <span>{{ item.naqme }}</span>
         <span>{{ item.code }}</span>
-    </template>
+    </ng-template>
 </deja-select>
 ```
 
@@ -126,7 +126,7 @@ Crée une liste déroulante.
     <td>viewportMode</td>
     <td>ViewportMode</td>
     <td></td>
-    <td>Les trois valeurs acceptés en paramètre se trouvent dans l'enum ViewportMode (NoViewport, ConstantRowheight, VariableRowHeight ou AutoRowHeight). Attention, une désactivation du viewport dégrade considérablement les performances de la liste et ne doit pas être activée si la liste est suceptible de contenir beaucoup d'éléments.</td>
+    <td>Les trois valeurs acceptés en paramètre se trouvent dans l'enum ViewportMode (disabled, fixed, variable ou auto). Attention, une désactivation du viewport dégrade considérablement les performances de la liste et ne doit pas être activée si la liste est suceptible de contenir beaucoup d'éléments.</td>
 </tr>
 <tr>
     <td>childrenField</td>
@@ -200,49 +200,49 @@ Crée une liste déroulante.
 
   - `itemTemplate`
 ```html
-<template #itemTemplate let-item let-flatindex="flatindex">
+<ng-template #itemTemplate let-item let-flatindex="flatindex">
 	<span>{{ item.naqme + ' - ' + item.code }} </span>
-</template>
+</ng-template>
 ```
 
   - `parentItemTemplate`
 ```html
-<template #parentItemTemplate let-item let-flatindex="flatindex">
+<ng-template #parentItemTemplate let-item let-flatindex="flatindex">
     <span>{{ item.label }} </span>
     <span flex></span>
     <button md-icon-button (mouseup)="editSection($event, item)">
         <md-icon>edit</md-icon>
     </button>
-</template>
+</ng-template>
 ```
   
   - `hintTemplate`
 ```html
-<template #hintTemplate>
+<ng-template #hintTemplate>
     <span class="validation-error">
         Hint pour les errers de validations par exemple!
     </span>
-</template>
+</ng-template>
 ```
   
   - `placeHolderTemplate`
 ```html
-<template #placeHolderTemplate>
+<ng-template #placeHolderTemplate>
     <md-icon role="img" class="material-icons mat-icon" aria-label="info_outline">info_outline</md-icon>
     <span>Liste des pays</span>
-</template>
+</ng-template>
 ```
   
   - `selectedTemplate`
 ```html
-<template #selectedTemplate let-item>
+<ng-template #selectedTemplate let-item>
     <span id="flight">
         <i *ngIf="item.code !== 'CH' && item.code !== 'FR'" class="material-icons">flight_land</i>
         <i *ngIf="item.code === 'FR'" class="material-icons">flight_landflight_takeoff</i>
         <i *ngIf="item.code === 'CH'" class="material-icons">flight_takeoff</i>
         <span>{{ item.naqme + ' - ' + item.code }}</span>
     </span>
-</template>
+</ng-template>
 ```
   
   - `suffixTemplate`
