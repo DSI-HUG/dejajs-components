@@ -200,7 +200,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     public get pageSize() {
         if (this._pageSize === 0) {
             const vpRowHeight = this.getViewPortRowHeight();
-            const containerHeight = this.maxHeight || this.containerElement.clientHeight;
+            const containerHeight = this.maxHeight || this.listElement.clientHeight;
             return Math.floor(containerHeight / vpRowHeight);
         }
 
@@ -404,7 +404,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
             .subscribe(noop);
     }
 
-    protected get containerElement(): HTMLElement {
+    protected get listElement(): HTMLElement {
         return this.listContainer.nativeElement;
     }
 
@@ -503,7 +503,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
         }
 
         this.subscriptions.push(Observable
-            .fromEvent(this.containerElement, 'scroll')
+            .fromEvent(this.listElement, 'scroll')
             .map((event: any) => [event, event.target.scrollTop, event.target.scrollLeft])
             .map(([event, scrollTop, scrollLeft]: [Event, number, number]) => {
                 const e = {
@@ -517,7 +517,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
             })
             .subscribe((scrollPos) => this.viewPort.scrollPosition$.next(scrollPos)));
 
-        let keyDown$ = Observable.fromEvent(this.containerElement, 'keydown');
+        let keyDown$ = Observable.fromEvent(this.listElement, 'keydown');
         if (this.input) {
             const inputKeyDown$ = Observable.fromEvent(this.input.nativeElement, 'keydown');
             keyDown$ = keyDown$.merge(inputKeyDown$);
@@ -662,7 +662,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
             }));
 
 
-        let keyUp$ = Observable.fromEvent(this.containerElement, 'keyup');
+        let keyUp$ = Observable.fromEvent(this.listElement, 'keyup');
         if (this.input) {
             const inputKeyup$ = Observable.fromEvent(this.input.nativeElement, 'keyup');
             const inputDrop$ = Observable.fromEvent(this.input.nativeElement, 'drop');
@@ -722,7 +722,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                 }
             }));
 
-        this.viewPort.element$.next(this.containerElement);
+        this.viewPort.element$.next(this.listElement);
     }
 
     public ngOnDestroy() {
@@ -875,7 +875,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     }
 
     protected dragLeave(event: DragEvent) {
-        const listRect = this.containerElement.getBoundingClientRect();
+        const listRect = this.listElement.getBoundingClientRect();
 
         const listBounds = Rect.fromLTRB(listRect.left,
             listRect.top,

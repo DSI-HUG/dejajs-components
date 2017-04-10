@@ -76,8 +76,8 @@ export abstract class ItemListBase {
                 this.vpAfterHeight = viewPortResult.afterSize;
             }
 
-            if (viewPortResult.scrollPos !== undefined && this.containerElement) {
-                this.containerElement.scrollTop = viewPortResult.scrollPos;
+            if (viewPortResult.scrollPos !== undefined && this.listElement) {
+                this.listElement.scrollTop = viewPortResult.scrollPos;
             }
 
             this.changeDetectorRef.markForCheck();
@@ -98,7 +98,7 @@ export abstract class ItemListBase {
         return this._itemListService.groupInfos;
     }
 
-    protected abstract get containerElement(): HTMLElement;
+    protected abstract get listElement(): HTMLElement;
 
     /** Définit une valeur indiquant si les éléments selectionés doivent être masqué. Ce flag est principalement utilisé dans le cas d'un multi-select
      * @param {boolean} value True si les éléments selectionés doivent être masqués

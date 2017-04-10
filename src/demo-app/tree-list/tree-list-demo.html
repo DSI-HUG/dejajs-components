@@ -1,16 +1,16 @@
 <md-tab-group [selectedIndex]="1">
-    <!--<md-tab label="OVERVIEW">-->
-    <!--<md-card class="demo-card demo-basic">-->
-    <!--TODO-->
-    <!--</md-card>-->
-    <!--</md-tab>-->
-    <md-tab label="API REFERENCE">
-        <md-card class="demo-card demo-basic">
-            <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/tree-list/readme.md'"></deja-markdown>
-        </md-card>
-    </md-tab>
-    <md-tab label="EXAMPLES">
-        <md-card class="treelist-demo demo-card demo-basic business-object">
+	<!--<md-tab label="OVERVIEW">-->
+	<!--<md-card class="demo-card demo-basic">-->
+	<!--TODO-->
+	<!--</md-card>-->
+	<!--</md-tab>-->
+	<md-tab label="API REFERENCE">
+		<md-card class="demo-card demo-basic">
+			<deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/tree-list/readme.md'"></deja-markdown>
+		</md-card>
+	</md-tab>
+	<md-tab label="EXAMPLES">
+		<md-card class="treelist-demo demo-card demo-basic business-object">
 			<md-toolbar color="primary">By passing business object</md-toolbar>
 			<md-card-content>
 				<div fxLayout="row">
@@ -65,40 +65,40 @@
 			</md-card-content>
 		</md-card>
 
-        <md-card class="treelist-demo demo-card">
-            <md-toolbar color="primary">
-                <div class="flexContainer" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="2rem">
-                    <span fxFlex="1 1 auto">Treelist demo - Cas particuliers</span>
-                    <md-input-container fxFlex="0 0 5rem">
-                        <input mdInput type="number" [(ngModel)]="ensureIndex">
-                    </md-input-container>
-                    <button fxFlex="0 0 auto" md-button (click)="news.ensureItemVisible(ensureIndex)">Ensure index</button>
-                </div>
-            </md-toolbar>
-            <md-card-content class="listContainer" fxLayout="row">
-                <deja-tree-list #treeList fxFlex [(ngModel)]="loremList" viewportMode="variable" expandButton searchArea sortable placeholder="Tree list avec des tailles de rows différentes"></deja-tree-list>
-                <deja-tree-list #news fxFlex [models]="news$" viewportMode="disabled" [viewPortRowHeight]="200" searchField="description" multiSelect searchArea sortable placeholder="Automatic row height TreeView ">
-                    <ng-template #itemTemplate let-item let-flatindex="flatindex">
-                        <div class="news" fxLayout="row">
-                            <img [attr.src]="item.model.urlsToLogos.small" class="logo" fxFlex="0 0 8rem" fxLayout="row" fxLayoutAlign="space-between" fxFlexAlign="center">
-                            <span class="text" fxFlex="1 1 auto">
+		<md-card class="treelist-demo demo-card">
+			<md-toolbar color="primary">
+				<div class="flexContainer" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="2rem">
+					<span fxFlex="1 1 auto">Treelist demo - Cas particuliers</span>
+					<md-input-container fxFlex="0 0 5rem">
+						<input mdInput type="number" [(ngModel)]="ensureIndex">
+					</md-input-container>
+					<button fxFlex="0 0 auto" md-button (click)="news.ensureItemVisible(ensureIndex)">Ensure index</button>
+				</div>
+			</md-toolbar>
+			<md-card-content class="listContainer" fxLayout="row">
+				<deja-tree-list #treeList fxFlex [(ngModel)]="loremList" viewportMode="variable" expandButton searchArea sortable placeholder="Tree list avec des tailles de rows différentes"></deja-tree-list>
+				<deja-tree-list #news fxFlex [models]="news$" viewportMode="auto" [viewPortRowHeight]="100" searchField="description" multiSelect searchArea sortable placeholder="Automatic row height TreeView ">
+					<ng-template #itemTemplate let-item let-flatindex="flatindex">
+						<div class="news" fxLayout="row">
+							<img [attr.src]="item.model.urlsToLogos.small" class="logo" fxFlex="0 0 8rem" fxLayout="row" fxLayoutAlign="space-between" fxFlexAlign="center">
+							<span class="text" fxFlex="1 1 auto">
 								<div class="name">{{ item.model.name }}</div>
 								<div class="description">{{ item.model.description }}</div>
 								<div class="footer" fxFlex="column" fxLayoutAlign="space-between">
 									<a class="url" [attr.href]="item.model.url">{{ item.model.url }}</a>
 									<span class="category">{{ item.model.category }}</span>
-                            <span class="country">{{ item.model.country }}</span>
-                            <span class="language">{{ item.model.language }}</span>
-                        </div>
-                        </span>
-                        </div>
-                    </ng-template>
-                </deja-tree-list>
-            </md-card-content>
-            <md-card-content class="empty">
-                Empty treelist
-                <deja-tree-list nodataholder="Pas de données"></deja-tree-list>
-            </md-card-content>
-        </md-card>
-    </md-tab>
+									<span class="country">{{ item.model.country }}</span>
+									<span class="language">{{ item.model.language }}</span>
+								</div>
+							</span>
+						</div>
+					</ng-template>
+				</deja-tree-list>
+			</md-card-content>
+			<md-card-content class="empty">
+				Empty treelist
+				<deja-tree-list nodataholder="Pas de données"></deja-tree-list>
+			</md-card-content>
+		</md-card>
+	</md-tab>
 </md-tab-group>
