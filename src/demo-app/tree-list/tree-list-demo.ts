@@ -82,13 +82,16 @@ export class DejaTreeListDemoComponent implements OnInit {
     }
 
     public ngOnInit() {
-        this.textMetricsService.getTextHeight(300, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vulputate porttitor odio, non dictum massa vehicula nec. Proin finibus ex ac ipsum euismod, vitae lobortis augue pharetra. Ut tempor eu nunc sit amet rutrum. Aliquam a maximus est, id maximus quam. Proin justo quam, laoreet at placerat eu, vestibulum eget enim.')
+        Observable.timer(1000)
+            .map(() => this.treeList && this.treeList.elementRef.nativeElement as HTMLElement)
+            .filter((element) => !!element)
+            .do((element) => this.textMetricsService.metricsElem = element)
+            .switchMap(() => this.textMetricsService.getTextHeight(300, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vulputate porttitor odio, non dictum massa vehicula nec. Proin finibus ex ac ipsum euismod, vitae lobortis augue pharetra. Ut tempor eu nunc sit amet rutrum. Aliquam a maximus est, id maximus quam. Proin justo quam, laoreet at placerat eu, vestibulum eget enim.'))
             .first()
             .subscribe((height: number) => {
                 // tslint:disable-next-line
                 console.info('La taille du lorem ipsum dans une div de 300px est de : ', height, 'px');
             });
-        this.textMetricsService.metricsElem = this.treeList && this.treeList.elementRef.nativeElement as HTMLElement;
     }
 
     protected onSelectionChanged(e: DejaTreeListItemsEvent) {

@@ -59,28 +59,31 @@ export abstract class ItemListBase {
     private _viewPortRowHeight = ViewPortService.itemDefaultSize;
 
     constructor(protected changeDetectorRef: ChangeDetectorRef, protected viewPort: ViewPortService) {
-        viewPort.viewPort$.subscribe((viewPortResult: IViewPort) => {
-            delete this._hintLabel;
-            if (viewPort.mode === ViewportMode.disabled) {
-                this._itemList = viewPortResult.items;
-                this.vpStartRow = 0;
-                this.vpEndRow = 0;
-                this.vpBeforeHeight = 0;
-                this.vpAfterHeight = 0;
-            } else {
-                this._itemList = viewPortResult.visibleItems;
-                this.vpStartRow = viewPortResult.startIndex;
-                this.vpEndRow = viewPortResult.endIndex;
-                this.vpBeforeHeight = viewPortResult.beforeSize;
-                this.vpAfterHeight = viewPortResult.afterSize;
-            }
-
-            if (viewPortResult.scrollPos !== undefined && this.listElement) {
-                this.listElement.scrollTop = viewPortResult.scrollPos;
-            }
-
-            this.changeDetectorRef.markForCheck();
-        });
+        viewPort.viewPort$
+            .do((viewPortResult: IViewPort) => {
+                delete this._hintLabel;
+                if (viewPort.mode === ViewportMode.disabled) {
+                    this._itemList = viewPortResult.items;
+                    this.vpStartRow = 0;
+                    this.vpEndRow = 0;
+                    this.vpBeforeHeight = 0;
+                    this.vpAfterHeight = 0;
+                } else {
+                    this._itemList = viewPortResult.visibleItems;
+                    this.vpStartRow = viewPortResult.startIndex;
+                    this.vpEndRow = viewPortResult.endIndex;
+                    this.vpBeforeHeight = viewPortResult.beforeSize;
+                    this.vpAfterHeight = viewPortResult.afterSize;
+                }
+                this.changeDetectorRef.markForCheck();
+            })
+            .delay(1)
+            .subscribe((viewPortResult: IViewPort) => {
+                if (viewPortResult.scrollPos !== undefined && this.listElement) {
+                    this.listElement.scrollTop = viewPortResult.scrollPos;
+                    this.changeDetectorRef.markForCheck();
+                }
+            });
     }
 
     /** Renvoie le modèle de tri appliqué à la liste.
