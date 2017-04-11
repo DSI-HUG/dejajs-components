@@ -2,11 +2,14 @@ import { OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { GroupingService, IItemTree } from '../../common/core';
 import { DejaTextMetricsService, DejaTreeListItemsEvent, IDejaDragEvent, IDejaMouseDraggableContext, IDejaMouseDroppableContext } from '../../component';
+import { CountriesListService } from '../services/countries-list.service';
 import { CountriesService, ICountry } from '../services/countries.service';
 import { INews, NewsService } from '../services/news.service';
 export declare class DejaTreeListDemoComponent implements OnInit {
     private countriesService;
+    protected countriesListService: CountriesListService;
     private textMetricsService;
+    protected tabIndex: number;
     protected news$: Observable<INews[]>;
     protected groupedCountries: IItemTree[];
     protected countries: Observable<ICountry[]>;
@@ -16,7 +19,7 @@ export declare class DejaTreeListDemoComponent implements OnInit {
     private loremList;
     private groupedTreeList;
     private treeList;
-    constructor(countriesService: CountriesService, groupingService: GroupingService, textMetricsService: DejaTextMetricsService, newsService: NewsService);
+    constructor(countriesService: CountriesService, countriesListService: CountriesListService, groupingService: GroupingService, textMetricsService: DejaTextMetricsService, newsService: NewsService);
     ngOnInit(): void;
     protected onSelectionChanged(e: DejaTreeListItemsEvent): void;
     protected onSelectBusinessObject(e: ICountry[]): void;

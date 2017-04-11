@@ -4,6 +4,7 @@ import { IEditorLanguage } from '../../component/monaco-editor/options/editor-la
 import { IEditorTheme } from '../../component/monaco-editor/options/editor-theme.component';
 export declare class DejaMonacoEditorDemoComponent implements OnInit {
     private route;
+    protected tabIndex: number;
     protected language: IEditorLanguage;
     protected languageJson: IEditorLanguage;
     protected xmlContent: string;

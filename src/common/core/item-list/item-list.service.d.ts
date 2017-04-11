@@ -51,9 +51,9 @@ export declare class ItemListService {
     toggleSelect$(items: IItemBase[], selected: boolean): Observable<IItemBase[]>;
     selectItems$(items: IItemBase[]): Observable<IItemBase[]>;
     unSelectItems$(items: IItemBase[]): Observable<IItemBase[]>;
-    setSelectingItem(fn: (item: any) => Promise<any>): void;
+    setSelectingItem(fn: (item: any) => Promise<any> | Observable<any>): void;
     selectItem$(item: IItemBase): Observable<any>;
-    setUnselectingItem(fn: (item: any) => Promise<any>): void;
+    setUnselectingItem(fn: (item: any) => Promise<any> | Observable<any>): void;
     unSelectItem$(item: IItemBase): Observable<any>;
     findNextMatch$(compare?: (item: IItemBase, index: number) => boolean, startIndex?: number): Observable<IFindItemResult>;
     sort$(sortInfos: ISortInfos): any;

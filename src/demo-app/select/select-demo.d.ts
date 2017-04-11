@@ -1,4 +1,6 @@
 import { OnInit } from '@angular/core';
+import { Observable } from 'rxjs/Rx';
+import { IItemBase } from '../../common/core';
 import { CountriesListService } from '../services/countries-list.service';
 import { CountriesService, ICountry } from '../services/countries.service';
 export declare class SelectDemoComponent implements OnInit {
@@ -15,6 +17,6 @@ export declare class SelectDemoComponent implements OnInit {
     private dialogWrapper;
     constructor(countriesService: CountriesService, countriesListService: CountriesListService);
     ngOnInit(): void;
-    protected confirmUnselection(): () => Promise<any>;
+    protected confirmUnselection(): (item: IItemBase) => Observable<IItemBase>;
     private handleError(error);
 }

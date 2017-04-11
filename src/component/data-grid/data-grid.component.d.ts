@@ -5,7 +5,7 @@ import { IItemBase, ItemListService, ViewportMode } from '../../common/core/item
 import { SortingService } from '../../common/core/sorting';
 import { IDejaDragEvent } from '../dragdrop';
 import { DejaTreeListScrollEvent } from '../tree-list';
-import { DejaGridRowEvent, DejaGridRowsEvent, IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent, IDejaGridGroupsEvent } from './index';
+import { DejaGridRowEvent, DejaGridRowsEvent, IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent, IDejaGridGroupsEvent, IDejaGridRow } from './index';
 export declare class DejaGridComponent implements OnDestroy {
     private changeDetectorRef;
     private elementRef;
@@ -33,8 +33,8 @@ export declare class DejaGridComponent implements OnDestroy {
     columnHeaderTemplateExternal: any;
     searchPrefixTemplateExternal: any;
     searchSuffixTemplateExternal: any;
-    selectingRow: (item: any) => Promise<any>;
-    unselectingRow: (item: any) => Promise<any>;
+    selectingRow: (row: IDejaGridRow) => Promise<IDejaGridRow> | Observable<IDejaGridRow>;
+    unselectingRow: (row: IDejaGridRow) => Promise<IDejaGridRow> | Observable<IDejaGridRow>;
     itemDragEnd: EventEmitter<IDejaDragEvent>;
     itemDragStart: EventEmitter<IDejaDragEvent>;
     selectedChange: EventEmitter<DejaGridRowEvent | DejaGridRowsEvent>;

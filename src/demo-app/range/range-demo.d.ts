@@ -3,6 +3,7 @@ import { Observable } from 'rxjs/Rx';
 import { IStepRangeEvent, Range } from '../../component/range/range.interface';
 import { Weight } from './weight.interface';
 export declare class DejaRangeDemoComponent {
+    protected tabIndex: number;
     readOnlyRanges: Range[];
     rangesWithInterval: Range[];
     steps: number[];

@@ -69,10 +69,10 @@ export declare class DejaTreeListComponent extends ItemListBase implements OnDes
     sortingService: SortingService;
     groupingService: GroupingService;
     items: IItemBase[] | Promise<IItemBase[]> | Observable<IItemBase[]>;
-    selectingItem: (item: any) => Promise<any>;
-    unselectingItem: (item: any) => Promise<any>;
+    selectingItem: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>;
+    unselectingItem: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>;
     models: any[] | Observable<any[]>;
-    protected readonly containerElement: HTMLElement;
+    protected readonly listElement: HTMLElement;
     private currentItemIndex;
     private readonly itemTemplate;
     private readonly parentItemTemplate;

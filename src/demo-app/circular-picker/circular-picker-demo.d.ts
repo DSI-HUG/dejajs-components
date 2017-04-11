@@ -1,6 +1,7 @@
 import { OnInit } from '@angular/core';
 import { ICircularRange } from '../../component';
 export declare class DejaCircularPickerDemoComponent implements OnInit {
+    protected tabIndex: number;
     sm: number;
     sms: number;
     protected ranges1: ICircularRange[];

@@ -28,7 +28,6 @@ export declare class DejaSelectComponent extends ItemListBase implements Control
     private dropDownComponent;
     private _type;
     private selectingItemIndex;
-    private keepExistingViewPort;
     private dropDownQuery;
     private filterExpression;
     private dropdownVisible;
@@ -59,8 +58,8 @@ export declare class DejaSelectComponent extends ItemListBase implements Control
     valueField: string;
     searchField: string;
     type: any;
-    selectingItem: (item: any) => Promise<any>;
-    unselectingItem: (item: any) => Promise<any>;
+    selectingItem: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>;
+    unselectingItem: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>;
     readonly isReadOnly: boolean;
     readonly isAutocomplete: boolean;
     readonly selectedItems: IItemBase[];
@@ -70,14 +69,14 @@ export declare class DejaSelectComponent extends ItemListBase implements Control
     models: any[] | Observable<any[]>;
     readonly depthMax: number;
     maxHeight: number;
-    protected readonly containerElement: HTMLElement;
+    protected readonly listElement: HTMLElement;
+    private readonly containerElement;
     private currentItemIndex;
     private readonly placeHolderTemplate;
     private readonly itemTemplate;
     private readonly hintTemplate;
     private readonly parentItemTemplate;
     private readonly inputElement;
-    private readonly listElement;
     writeValue(value: any): void;
     registerOnChange(fn: any): void;
     registerOnTouched(fn: any): void;

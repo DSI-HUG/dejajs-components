@@ -1,5 +1,6 @@
 import { OnInit } from '@angular/core';
 export declare class DejaDatePickerDemoComponent implements OnInit {
+    protected tabIndex: number;
     theDate: Date;
     disabledDate: (number | Date)[];
     dateRangeFrom: Date;

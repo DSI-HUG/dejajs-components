@@ -32,6 +32,7 @@ export declare class ViewPortService {
     private _scrollPosition;
     private items;
     private viewPort;
+    private ignoreScrollEvent;
     readonly mode: ViewportMode;
     readonly itemsSize: number;
     readonly direction: ViewportDirection;
