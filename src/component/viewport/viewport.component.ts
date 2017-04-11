@@ -112,8 +112,9 @@ export class DejaViewPortComponent implements OnDestroy,
     }
 
     private set scrollPos(value: number) {
-        this.scrollPosition = value;
-        this.viewPort.scrollPosition$.next(value);
+        const scrollPos = Math.max(value, 0);
+        this.scrollPosition = scrollPos;
+        this.viewPort.scrollPosition$.next(scrollPos);
     }
 
     private get scrollPos() {
@@ -147,7 +148,7 @@ export class DejaViewPortComponent implements OnDestroy,
             }));
 
         this.subscriptions.push(viewPort.viewPort$
-            .subscribe((viewPortResult: IViewPort) => {
+            .do((viewPortResult: IViewPort) => {
                 if (viewPort.mode !== ViewportMode.disabled) {
                     this.vpItems = viewPortResult.visibleItems as IDejaViewPortItem[];
                     this.vpStartIndex = viewPortResult.startIndex;
@@ -155,10 +156,6 @@ export class DejaViewPortComponent implements OnDestroy,
                 } else {
                     this.vpStartIndex = 0;
                     this.vpEndIndex = 0;
-                }
-
-                if (viewPortResult.scrollPos !== undefined) {
-                    this.scrollPosition = viewPortResult.scrollPos;
                 }
 
                 if (this.hasButtons) {
@@ -174,23 +171,28 @@ export class DejaViewPortComponent implements OnDestroy,
                     this.afterSize = viewPortResult.afterSize ? `${viewPortResult.afterSize}px` : null;
                     this.hasUpButton = false;
                     this.hasDownButton = false;
-
-                    if (viewPortResult.scrollPos !== undefined && this.element) {
-                        if (this.isHorizontal) {
-                            this.element.scrollLeft = this.scrollPosition;
-                        } else {
-                            this.element.scrollTop = this.scrollPosition;
-                        }
-                    }
                 }
                 this.changeDetectorRef.markForCheck();
+            })
+            .delay(1)
+            .subscribe((viewPortResult: IViewPort) => {
+                if (viewPortResult.scrollPos !== undefined) {
+                    if (this.hasButtons) {
+                        this.scrollPos = viewPortResult.scrollPos;
+                    } else if (this.isHorizontal) {
+                        this.element.scrollLeft = viewPortResult.scrollPos;
+                    } else {
+                        this.element.scrollTop = viewPortResult.scrollPos;
+                    }
+                    this.changeDetectorRef.markForCheck();
+                }
             }));
 
         this.subscriptions.push(Observable.from(this.hasButtons$)
             .distinctUntilChanged()
             .do((value) => this.hasButtons = value)
             .delay(1)
-            .subscribe((value) => {
+            .do((value) => {
                 if (value) {
                     const mousedown$ = Observable.merge(
                         Observable.fromEvent(this.downButton.nativeElement, 'mousedown'),
@@ -239,8 +241,10 @@ export class DejaViewPortComponent implements OnDestroy,
                     }
                 }
 
-                this.viewPort.refresh();
-            }));
+                this.scrollPos = 0;
+            })
+            .delay(1)
+            .subscribe(() => this.viewPort.refresh()));
     }
 
     public ngOnDestroy() {

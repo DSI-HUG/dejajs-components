@@ -73,35 +73,9 @@
         display: flex;
         align-items: center;
     }
-    .news {
-        border: 1px #aaa solid;
-        width: calc(100% - 1rem);
-        padding: 0.25rem;
-        margin: 0.25rem 0;
-        overflow: hidden;
-        .logo {
-            max-width: 7rem;
-            max-height: 7rem;
-            width: auto;
-            height: auto;
-            object-fit: contain;
-        }
-        .text {
-            border-left: 1px #aaa solid;
-            padding-left: 0.3rem;
-            margin-left: 0.3rem;
-            .name {
-                font-size: 200%;
-                margin: 0 1rem 0.3rem 0.3rem;
-            }
-            .description {
-                font-size: 120%;
-                margin: 0.3rem 1rem 0.3rem 0.3rem;
-            }
-            .footer {
-                margin: 0.3rem 1rem 0 0.3rem;
-                overflow: hidden;
-            }
+    #news {
+        .listitem.odd {
+            background-color: rgba( 0, 0, 0, 0.05);
         }
     }
 }

@@ -25,19 +25,7 @@
         </div>
         <deja-viewport #viewport [items]="news$ | async" itemSize="200" viewportMode="auto" [direction]="isHorizontal ? 'horizontal': 'vertical'" [scrollingStyle]="hasButtons ? 'buttons' : 'scrollbar'">
 			<ng-template #itemTemplate let-item let-size="size">
-				<div *ngIf="item" class="news" fxLayout="row" [attr.id]="id">
-					<img [attr.src]="item.urlsToLogos.medium" (load)="imageLoaded();" class="logo" [style.max-height.px]="isHorizontal? null : (size? size - 10 : 20)" fxLayout="row" fxLayoutAlign="space-between" fxFlexAlign="center">
-					<span class="text">
-						<div class="name">{{ item.name }}</div>
-						<div class="description">{{ item.description }}</div>
-						<div class="footer" fxFlex="column" fxLayoutAlign="space-between">
-							<a class="url" [attr.href]="item.url">{{ item.url }}</a>
-							<span class="category">{{ item.category }}</span>
-							<span class="country">{{ item.country }}</span>
-							<span class="language">{{ item.language }}</span>
-						</div>
-					</span>
-				</div>
+                <news-card [item]="item"></news-card>
 			</ng-template>
 		</deja-viewport>
 	</md-card-content>

@@ -56,6 +56,7 @@ import {
 import { DejaAccordionDemoComponent } from './accordion/accordion-demo';
 import { DejaCircularPickerDemoComponent } from './circular-picker/circular-picker-demo';
 import { DejaColorSelectorDemoComponent } from './color-selector/color-selector-demo';
+import { NewsCardComponent } from './common/news-card.component';
 import { DejaContentEditableDemoComponent } from './content-editable/content-editable-demo';
 import { DejaDatePickerDemoComponent } from './date-picker/date-picker-demo';
 import { DemoAppComponent } from './demo-app/demo-app';
@@ -110,6 +111,7 @@ import { CodeblockModule } from 'ng-prism';
         DejaSplitterDemoComponent,
         DejaViewPortDemoComponent,
         ProgressCircleDemoComponent,
+        NewsCardComponent,
         /* deja-cli declarations demo */
         /* The comment above mustn't be removed ! */
     ],

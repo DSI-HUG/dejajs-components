@@ -1,0 +1,32 @@
+:host {
+    .news {
+        padding: 5px;
+        overflow: hidden;
+        .logo {
+            display: block;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+        .text {
+            border-left: 1px #aaa solid;
+            padding-left: 0.3rem;
+            margin-left: 0.3rem;
+            flex: 0 0 50%;
+            .name {
+                font-size: 200%;
+                margin: 0 1rem 0.3rem 0.3rem;
+            }
+            .description {
+                font-size: 120%;
+                margin: 0.3rem 1rem 0.3rem 0.3rem;
+            }
+            .footer {
+                margin: 0.3rem 1rem 0 0.3rem;
+                overflow: hidden;
+            }
+        }
+    }
+}

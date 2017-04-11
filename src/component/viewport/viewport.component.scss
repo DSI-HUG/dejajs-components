@@ -1,84 +1,79 @@
 :host {
-	position: relative;
-	display: flex;
+    position: relative;
+    display: flex;
     flex-direction: row !important;
-	overflow: hidden;
-	&[hasUpBtn="false"] {
-		#up {
-			visibility: hidden;
-			height: 0;
-			width: 0;
-			margin: 0 !important;
-		}
-	}
-	&[hasDownBtn="false"] {
-		#down {
-			visibility: hidden;
-			height: 0;
-			width: 0;
-			margin: 0 !important;
-		}
-	}
-	&[buttons="false"] {
-		&[horizontal="false"] {
-			#viewport-wrapper {
-				width: 100%;
-				overflow-y: auto;
-				>span {
-					width: 100%;
-				}
-			}
-		}
-		&[horizontal="true"] {
-			#viewport-wrapper {
-				height: 100%;
-				overflow-x: auto;
-				>span {
-					height: 100%;
-				}
-			}
-		}
-	}
-	&[buttons="true"] {
-		&[horizontal="false"] {
-			flex-direction: column !important;
-		}
-		#viewport-wrapper {
-			overflow: hidden;
-		}
-	}
-	#viewport-wrapper {
-		position: relative;
-		flex: 1 1 auto;
+    overflow: hidden;
+    &[hasUpBtn="false"] {
+        #up {
+            visibility: hidden;
+        }
+    }
+    &[hasDownBtn="false"] {
+        #down {
+            visibility: hidden;
+        }
+    }
+    &[buttons="false"] {
+        &[horizontal="false"] {
+            #viewport-wrapper {
+                width: 100%;
+                overflow-y: auto;
+                >span {
+                    width: 100%;
+                }
+            }
+        }
+        &[horizontal="true"] {
+            #viewport-wrapper {
+                height: 100%;
+                overflow-x: auto;
+                >span {
+                    height: 100%;
+                }
+            }
+        }
+    }
+    &[buttons="true"] {
+        &[horizontal="false"] {
+            flex-direction: column !important;
+        }
+        #viewport-wrapper {
+            justify-content: flex-start;
+            overflow: hidden;
+        }
+    }
+    #viewport-wrapper {
+        position: relative;
+        flex: 1 1 auto;
         overflow: visible;
-		>span {
-			padding: 0;
-			margin: 0;
-			overflow: hidden;
-		}
-	}
-	#up,
-	#down {
-		flex: 0 0 auto;
-		display: flex;
-		justify-content: space-around;
-		align-items: center;
-		font-size: 120%;
-		cursor: pointer;
-	}
-	&[horizontal="false"] {
-		#up,
-		#down {
-			padding: 0.15rem 0;
-		}
-	}
-	&[horizontal="true"] {
-		#up,
-		#down {
-			padding: 0 0.15rem;
-			>i {
-				transform: rotate(270Deg);
-			}
-		}
-	}
+        >span {
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+    }
+    #up,
+    #down {
+        flex: 0 0 auto;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        font-size: 120%;
+        cursor: pointer;
+    }
+    &[horizontal="false"] {
+        #up,
+        #down {
+            padding: 0.15rem 0;
+        }
+    }
+    &[horizontal="true"] {
+        #up,
+        #down {
+            padding: 0 0.15rem;
+            >i {
+                transform: rotate(270Deg);
+            }
+        }
+    }
 }

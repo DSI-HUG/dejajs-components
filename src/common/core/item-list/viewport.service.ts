@@ -448,9 +448,9 @@ export class ViewPortService {
             .do((value) => this._itemsSize = value);
 
         // Reset items size when direction change in auto mode
-        Observable.zip(direction$, Observable.combineLatest(this.items$, mode$))
-            .filter(([_direction, [items, mode]]) => items && items.length && mode === ViewportMode.auto)
-            .switchMap(([_direction, [items]]) => items)
+        Observable.combineLatest(direction$, this.items$, mode$)
+            .filter(([_direction, items, mode]) => items && items.length && mode === ViewportMode.auto)
+            .switchMap(([_direction, items]) => items)
             .subscribe((item) => {
                 item.size = undefined;
             });
