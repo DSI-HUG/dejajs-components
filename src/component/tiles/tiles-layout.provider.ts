@@ -496,19 +496,25 @@ export class DejaTilesLayoutProvider {
 
     public copySelection() {
         const selectedTiles = this.tiles.filter((tile) => tile.isSelected);
-        this.copyTiles(selectedTiles, false);
+        if (selectedTiles.length) {
+            this.copyTiles(selectedTiles, false);
+        }
         return selectedTiles;
     }
 
     public cutSelection() {
         const selectedTiles = this.tiles.filter((tile) => tile.isSelected);
-        this.copyTiles(selectedTiles, true);
+        if (selectedTiles.length) {
+            this.copyTiles(selectedTiles, true);
+        }
         return selectedTiles;
     }
 
     public deleteSelection() {
         const selectedTiles = this.tiles.filter((tile) => tile.isSelected);
-        this.removeTiles(selectedTiles.map((tile) => tile.id));
+        if (selectedTiles.length) {
+            this.removeTiles(selectedTiles.map((tile) => tile.id));
+        }
         return selectedTiles;
     }
 
@@ -663,8 +669,15 @@ export class DejaTilesLayoutProvider {
             return freePlaces[0];
         }
 
+        let maxHeight = 0;
+        this.tiles.forEach((t) => {
+            if (t.percentBounds.bottom > maxHeight) {
+                maxHeight = t.percentBounds.bottom;
+            }
+        });
+
         // Add at the end
-        return new Rect(0, percentHeight, idealBounds.width, idealBounds.height);
+        return new Rect(0, maxHeight, idealBounds.width, idealBounds.height);
     }
 
     public moveTile(id: string, bounds: Rect) {

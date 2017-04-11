@@ -78,7 +78,6 @@ export class ViewPortService {
     private _itemsSize = ViewPortService.itemDefaultSize;
     private _direction = ViewportDirection.vertical;
     private _scrollPosition = 0;
-    private items: IViewPortItem[];
     private viewPort: IViewPort;
     private ignoreScrollEvent = false;
 
@@ -127,8 +126,8 @@ export class ViewPortService {
                 }
             } else {
                 // Ensure visible from the end
-                endIndex = ensureParams.index;
-                startIndex = endIndex - Math.min(items.length, maxCount) + 1;
+                startIndex = Math.max(0, ensureParams.index - Math.min(items.length, maxCount) + 1);
+                endIndex = Math.max(ensureParams.index, maxCount);
                 newScrollPos = (endIndex + 1) * itemDefaultSize - containerSize;
             }
 
@@ -200,7 +199,7 @@ export class ViewPortService {
                     if (endIndex !== undefined) {
                         if (startIndex === undefined) {
                             viewPortSize += itemSize;
-                            visibleList.push(item);
+                            visibleList.unshift(item);
 
                             if (viewPortSize > containerSize) {
                                 startIndex = index;
@@ -227,7 +226,7 @@ export class ViewPortService {
                 scrollPos: newScrollPos,
                 items: items,
             } as IViewPort;
-        }
+        };
 
         const calcVariableSizeViewPort$ = (items: IViewPortItem[], containerSize: number, scrollPos: number, itemDefaultSize: number, ensureParams: IEnsureParams): Observable<IViewPort> => {
             const getItemSize = (item: IViewPortItem) => {
@@ -397,32 +396,27 @@ export class ViewPortService {
         };
 
         // Ensure item visible by index or instance
-        const ensureParams$ = Observable.from(this.ensureItem$)
-            .map((ensureItem) => {
-                if (ensureItem === undefined || ensureItem === null || !this.items || !this.items.length || !this.viewPort) {
-                    return {};
-                }
+        const ensureParams$ = Observable.combineLatest(this.ensureItem$, this.items$)
+            .map(([ensureItem, items]) => {
+                const ensureParams = {} as IEnsureParams;
+                if (ensureItem !== undefined && ensureItem !== null && items && items.length) {
+                    let ensureIndex = ensureItem as number;
+                    if (isNaN(ensureIndex)) {
+                        ensureIndex = items.findIndex((itm) => ensureItem === itm);
+                    }
 
-                let ensureIndex = ensureItem as number;
-                if (isNaN(ensureIndex)) {
-                    ensureIndex = this.items.findIndex((itm) => ensureItem === itm);
-                }
-
-                if (ensureIndex >= 0) {
-                    if (ensureIndex <= this.viewPort.startIndex) {
-                        return {
-                            index: ensureIndex,
-                            atEnd: false,
-                        } as IEnsureParams;
-                    } else if (ensureIndex >= this.viewPort.endIndex) {
-                        return {
-                            index: ensureIndex,
-                            atEnd: true,
-                        } as IEnsureParams;
+                    if (ensureIndex >= 0) {
+                        if (this.viewPort && ensureIndex <= this.viewPort.startIndex) {
+                            ensureParams.index = ensureIndex;
+                            ensureParams.atEnd = false;
+                        } else if (!this.viewPort || ensureIndex >= this.viewPort.endIndex) {
+                            ensureParams.index = ensureIndex;
+                            ensureParams.atEnd = true;
+                        }
                     }
                 }
 
-                return {};
+                return ensureParams;
             });
 
         const maxSize$ = Observable.from(this.maxSize$).distinctUntilChanged();
@@ -464,7 +458,6 @@ export class ViewPortService {
         // Calc view port observable
         Observable.combineLatest(this.items$, maxSize$, scrollPos$, this.element$, itemsSize$, ensureParams$, direction$.delay(1), mode$, refresh$)
             .switchMap(([items, maxSize, scrollPos, element, itemDefaultSize, ensureParams]: [IViewPortItem[], number, number, HTMLElement, number, IEnsureParams]) => {
-                this.items = items;
                 const listSize = this.lastCalculatedSize || maxSize || clientSize(element);
                 if (listSize < 2 * ViewPortService.itemDefaultSize) {
                     // Set the viewlist to the maximum height to measure the real max-height defined in the css
