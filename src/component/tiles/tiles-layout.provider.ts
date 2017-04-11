@@ -669,8 +669,15 @@ export class DejaTilesLayoutProvider {
             return freePlaces[0];
         }
 
+        let maxHeight = 0;
+        this.tiles.forEach((t) => {
+            if (t.percentBounds.bottom > maxHeight) {
+                maxHeight = t.percentBounds.bottom;
+            }
+        });
+
         // Add at the end
-        return new Rect(0, percentHeight, idealBounds.width, idealBounds.height);
+        return new Rect(0, maxHeight, idealBounds.width, idealBounds.height);
     }
 
     public moveTile(id: string, bounds: Rect) {

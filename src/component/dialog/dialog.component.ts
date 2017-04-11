@@ -1,3 +1,4 @@
+import { ElementRef } from '@angular/core';
 /*
  * *
  *  @license
@@ -9,7 +10,9 @@
  *
  */
 
-import { Component, EventEmitter, HostListener, Output } from '@angular/core';
+import { Component, ContentChild, EventEmitter, HostListener, Output } from '@angular/core';
+import { Observable } from 'rxjs/Rx';
+import { KeyCodes } from '../../common/core/keycodes.enum';
 
 @Component({
     selector: 'deja-dialog',
@@ -19,7 +22,23 @@ import { Component, EventEmitter, HostListener, Output } from '@angular/core';
 export class DejaDialogComponent {
     @Output() public closed = new EventEmitter();
 
-    constructor() { }
+    @ContentChild('okaction') private okButton;
+    @ContentChild('cancelaction') private cancelButton;
+
+    constructor(elementRef: ElementRef) {
+        const element = elementRef.nativeElement as HTMLElement;
+
+        Observable.fromEvent(element.ownerDocument, 'keyup')
+            .filter((event: KeyboardEvent) => !!(event.keyCode === KeyCodes.Enter && this.okButton && this.okButton._elementRef) || !!(event.keyCode === KeyCodes.Escape && this.cancelButton && this.cancelButton._elementRef))
+            .subscribe((event: KeyboardEvent) => {
+                if (event.keyCode === KeyCodes.Enter) {
+                    this.okButton._elementRef.nativeElement.click();
+                }
+                if (event.keyCode === KeyCodes.Escape) {
+                    this.cancelButton._elementRef.nativeElement.click();
+                }
+            });
+    }
 
     @HostListener('click', ['$event'])
     public close(event: MouseEvent) {
@@ -27,17 +46,17 @@ export class DejaDialogComponent {
 
         let close = true;
 
-        let target = event.target as HTMLElement; 
+        let target = event.target as HTMLElement;
         const element = event.currentTarget as HTMLElement;
-        
-        while(target.parentElement && target !== element) {
-            if(target.className === 'dialog') {
+
+        while (target.parentElement && target !== element) {
+            if (target.className === 'dialog') {
                 close = false;
-            } 
+            }
             target = target.parentElement;
         }
 
-        if(close) {
+        if (close) {
             this.closed.emit();
         }
     }

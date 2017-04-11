@@ -12,7 +12,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { DejaBackdropModule } from '../backdrop';
-import { DejaDialogComponent }   from './dialog.component';
+import { DejaDialogComponent } from './dialog.component';
 
 @NgModule({
     declarations: [
