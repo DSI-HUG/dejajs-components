@@ -54,7 +54,7 @@
 								li {
 									background-color: mat-color($primary, A400);
 									>span {
-										>&:hover {
+										&:hover {
 											background-color: rgba(255, 255, 255, 0.3);
 										}
 										#close-button {
@@ -80,10 +80,6 @@
 				border: solid 1px rgba(0, 0, 0, 0.38);
 				background-color: $background;
 				color: $foreground;
-				[current="true"] {
-					background-color: rgba(mat-color($primary), 0.8);
-					color: #fff;
-				}
 				&[keynav="false"] {
 					div.listitem:not(.unselectable):hover {
 						background-color: mat-color($primary);
