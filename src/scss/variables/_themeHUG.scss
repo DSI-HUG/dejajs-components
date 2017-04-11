@@ -17,6 +17,5 @@ $theme: mat-light-theme($primary, $accent, $warn);
 /* ------ FAKE THEME ----- */
 /* WE NEED TO CREATE A FAKE THEME AND OVERRIDE THE COMPONENT MIXIN TO FIX THE MATERIAL COMPONENT COLOR ISSUE */
 /* https://github.com/angular/material2/issues/947 */ 
-// @import '~@angular2-material/radio/radio-theme';
-// $fake-theme: mat-light-theme($primary, $primary, $warn);
-// @include md-radio-theme($fake-theme);
+$fake-theme: mat-light-theme($primary, $primary, $warn);
+@include mat-radio-theme($fake-theme);
