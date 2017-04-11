@@ -383,7 +383,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
      * Set a promise called before an item selection
      */
     @Input()
-    public set selectingItem(fn: (item: any) => Promise<any>) {
+    public set selectingItem(fn: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>) {
         super.setSelectingItem(fn);
     }
 
@@ -391,7 +391,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
      * Set a promise called before an item deselection
      */
     @Input()
-    public set unselectingItem(fn: (item: any) => Promise<any>) {
+    public set unselectingItem(fn: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>) {
         super.setUnselectingItem(fn);
     }
 

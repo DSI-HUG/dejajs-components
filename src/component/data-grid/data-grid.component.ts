@@ -20,7 +20,7 @@ import { IDejaDragEvent } from '../dragdrop';
 import { DejaTreeListComponent, DejaTreeListScrollEvent } from '../tree-list';
 import { ViewPortService } from './../../common/core/item-list/viewport.service';
 import { DejaGridHeaderComponent } from './data-grid-header/data-grid-header.component';
-import { DejaGridColumnsLayoutInfos, DejaGridRowEvent, DejaGridRowsEvent, IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayout, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent, IDejaGridGroupsEvent } from './index';
+import { DejaGridColumnsLayoutInfos, DejaGridRowEvent, DejaGridRowsEvent, IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayout, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent, IDejaGridGroupsEvent, IDejaGridRow } from './index';
 
 const noop = () => { };
 
@@ -98,10 +98,10 @@ export class DejaGridComponent implements OnDestroy {
     @Input() public searchPrefixTemplateExternal;
     /** Permet de définir un template comme suffixe de la zone de recherche par binding. */
     @Input() public searchSuffixTemplateExternal;
-    /** Set a promise called before an item selection */
-    @Input() public selectingRow: (item: any) => Promise<any>;
-    /** Set a promise called before an item deselection */
-    @Input() public unselectingRow: (item: any) => Promise<any>;
+    /** Set a promise called before a row selection */
+    @Input() public selectingRow: (row: IDejaGridRow) => Promise<IDejaGridRow> | Observable<IDejaGridRow>;
+    /** Set a promise called before a row deselection */
+    @Input() public unselectingRow: (row: IDejaGridRow) => Promise<IDejaGridRow> | Observable<IDejaGridRow>;
     /** Exécuté lorsque le déplacement d'une ligne est terminée. */
     @Output() public itemDragEnd = new EventEmitter<IDejaDragEvent>();
     /** Exécuté lorsque le déplacement d'une ligne commence. */

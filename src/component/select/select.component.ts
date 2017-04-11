@@ -319,7 +319,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
      * Set a promise called before an item selection
      */
     @Input()
-    public set selectingItem(fn: (item: any) => Promise<any>) {
+    public set selectingItem(fn: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>) {
         super.setSelectingItem(fn);
     }
 
@@ -327,7 +327,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
      * Set a promise called before an item deselection
      */
     @Input()
-    public set unselectingItem(fn: (item: any) => Promise<any>) {
+    public set unselectingItem(fn: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>) {
         super.setUnselectingItem(fn);
     }
 
@@ -775,7 +775,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return false;
     }
 
-    protected calcViewList$() : Observable<IViewPort> {
+    protected calcViewList$(): Observable<IViewPort> {
         return super.calcViewList$(this.dropDownQuery)
             .do(() => {
                 this.changeDetectorRef.markForCheck();
