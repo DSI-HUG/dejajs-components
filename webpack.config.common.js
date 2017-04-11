@@ -57,9 +57,9 @@ module.exports = {
     },
     plugins: [
         new webpack.ContextReplacementPlugin(
-            // The (\\|\/) piece accounts for path separators in *nix and Windows
-            /angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/,
-            "./src"),
+            /angular(\\|\/)core(\\|\/)@angular/,
+            "./src", 
+            {}),
         new CopyWebpackPlugin([{
             from: "node_modules/monaco-editor/min/vs",
             to: "vs",
