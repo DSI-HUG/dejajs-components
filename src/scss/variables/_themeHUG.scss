@@ -12,3 +12,10 @@ $theme: mat-light-theme($primary, $accent, $warn);
 
 // Include theme styles for core and each component used in the app.
 @include angular-material-theme($theme);
+
+
+/* ------ FAKE THEME ----- */
+/* WE NEED TO CREATE A FAKE THEME AND OVERRIDE THE COMPONENT MIXIN TO FIX THE MATERIAL COMPONENT COLOR ISSUE */
+/* https://github.com/angular/material2/issues/947 */ 
+$fake-theme: mat-light-theme($primary, $primary, $warn);
+@include mat-radio-theme($fake-theme);

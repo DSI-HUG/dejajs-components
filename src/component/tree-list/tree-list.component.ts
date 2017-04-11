@@ -383,7 +383,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
      * Set a promise called before an item selection
      */
     @Input()
-    public set selectingItem(fn: (item: any) => Promise<any>) {
+    public set selectingItem(fn: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>) {
         super.setSelectingItem(fn);
     }
 
@@ -391,7 +391,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
      * Set a promise called before an item deselection
      */
     @Input()
-    public set unselectingItem(fn: (item: any) => Promise<any>) {
+    public set unselectingItem(fn: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>) {
         super.setUnselectingItem(fn);
     }
 
@@ -405,7 +405,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     }
 
     protected get listElement(): HTMLElement {
-        return this.listContainer.nativeElement;
+        return this.listContainer && this.listContainer.nativeElement;
     }
 
     private set currentItemIndex(value: number) {
@@ -918,8 +918,6 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     protected calcViewList$(): Observable<IViewPort> {
         return super.calcViewList$(this.query)
             .do(() => {
-                // Prevent that the adaptation of the scroll raise a new view port calculation
-                // this.ignoreNextScrollEvents = res.outOfRange;
                 if (this.rowsCount > 0 && this.afterViewInit) {
                     this.afterViewInit.emit();
                     this.afterViewInit = null;

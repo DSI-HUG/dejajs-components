@@ -9,7 +9,7 @@
  *
  */
 
-import {Component} from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
     selector: 'deja-progress-circle-demo',
@@ -19,7 +19,7 @@ import {Component} from '@angular/core';
     templateUrl: './progress-circle-demo.html',
 })
 export class ProgressCircleDemoComponent {
-
+    protected tabIndex = 1;
     constructor() {
 
     }

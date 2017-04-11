@@ -9,9 +9,9 @@
  *
  */
 
-import {Component} from '@angular/core';
+import { Component } from '@angular/core';
 import { Color, ColorEvent } from '../../common/core/graphics';
-import {MaterialColors} from '../../common/core/style';
+import { MaterialColors } from '../../common/core/style';
 
 @Component({
     selector: 'deja-color-selector-demo',
@@ -19,6 +19,8 @@ import {MaterialColors} from '../../common/core/style';
     templateUrl: './color-selector-demo.html',
 })
 export class DejaColorSelectorDemoComponent {
+    protected tabIndex = 1;
+
     protected selectedColor = Color.fromHex('#FFA000');
     protected invalidColor = Color.fromHex('#FFA012');
     private hoveredColor: Color;

@@ -75,7 +75,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     private _type = 'select';
     private selectingItemIndex: number;
-    private keepExistingViewPort = false; // TODO
     private dropDownQuery = '';
     private filterExpression = '';
     private dropdownVisible = false;
@@ -110,8 +109,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         this.subscriptions.push(Observable.from(this.storeScrollPosition$)
             .subscribe((scrollPos) => {
                 this.viewPort.scrollPosition$.next(scrollPos);
-                this.lastScrollPosition = scrollPos;
-                this.keepExistingViewPort = false;
+                this.lastScrollPosition = scrollPos; // TODO ItemListBase scrollPos defined
             }));
 
         this.subscriptions.push(Observable.from(this.hideDropDown$)
@@ -321,7 +319,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
      * Set a promise called before an item selection
      */
     @Input()
-    public set selectingItem(fn: (item: any) => Promise<any>) {
+    public set selectingItem(fn: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>) {
         super.setSelectingItem(fn);
     }
 
@@ -329,7 +327,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
      * Set a promise called before an item deselection
      */
     @Input()
-    public set unselectingItem(fn: (item: any) => Promise<any>) {
+    public set unselectingItem(fn: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>) {
         super.setUnselectingItem(fn);
     }
 
@@ -698,7 +696,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
      * @return {Observable} Observable résolu par la fonction.
      */
     public toggleCollapse$(index: number, collapsed: boolean): Observable<IItemTree[]> {
-        this.keepExistingViewPort = false;
         return super.toggleCollapse$(index, collapsed)
             .do(() => {
                 if (this.dropdownVisible) {
@@ -708,7 +705,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     protected scroll(event: Event) {
-        this.keepExistingViewPort = true;
         const element = event.target as HTMLElement;
         this.storeScrollPosition$.next(element.scrollTop);
     }
@@ -779,17 +775,9 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return false;
     }
 
-    protected calcViewList$() {
+    protected calcViewList$(): Observable<IViewPort> {
         return super.calcViewList$(this.dropDownQuery)
-            .do((res: IViewPort) => {
-                // Prevent that the adaptation of the scroll raise a new view port calculation
-                if (!this.keepExistingViewPort) {
-                    if (this.viewPort.mode === ViewportMode.disabled) {
-                        this._itemList = res.items;
-                    } else {
-                        this._itemList = res.visibleItems;
-                    }
-                }
+            .do(() => {
                 this.changeDetectorRef.markForCheck();
             });
     }

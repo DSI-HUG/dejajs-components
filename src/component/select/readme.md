@@ -160,13 +160,13 @@ Crée une liste déroulante.
 </tr>
 <tr>
     <td>selectingItem</td>
-    <td>Fonction retournant une promise</td>
+    <td>Fonction retournant une promise ou un observable</td>
     <td></td>
     <td>Set a promise called before an item selection</td>
 </tr>
 <tr>
     <td>unselectingItem</td>
-    <td>Fonction retournant une promise</td>
+    <td>Fonction retournant une promise ou un observable</td>
     <td></td>
     <td>Set a promise called before an item deselection</td>
 </tr>

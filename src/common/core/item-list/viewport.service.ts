@@ -132,12 +132,14 @@ export class ViewPortService {
                 newScrollPos = (endIndex + 1) * itemDefaultSize - containerSize;
             }
 
+            const visibleItems = items.slice(startIndex, 1 + endIndex);
+
             return Observable.of({
                 beforeSize: startIndex * itemDefaultSize,
                 afterSize: (items.length - 1 - endIndex) * itemDefaultSize,
                 listSize: containerSize,
-                viewPortSize: items.length * itemDefaultSize,
-                visibleItems: items.slice(startIndex, 1 + endIndex),
+                viewPortSize: visibleItems.length * itemDefaultSize,
+                visibleItems: visibleItems,
                 startIndex: startIndex,
                 endIndex: endIndex,
                 scrollPos: newScrollPos,
@@ -262,21 +264,22 @@ export class ViewPortService {
                 return Observable.of(viewPort);
             } else {
                 // Measure items size
-                this.ignoreScrollEvent = true;
+                this.ignoreScrollEvent = ensureParams.index !== undefined;
                 this.viewPortResult$.next(viewPort);
-                return Observable.timer(1).switchMap(() => {
-                    const elements = element.getElementsByClassName('listitem');
-                    for (let i = 0; i < elements.length; i++) {
-                        const itemElement = elements[i] as HTMLElement;
-                        const index = +itemElement.getAttribute('flat');
-                        const item = viewPort.visibleItems[index - viewPort.startIndex];
-                        if (item) {
-                            item.size = clientSize(itemElement);
-                        }
-                    };
-                    return calcAutoSizeViewPort$(items, containerSize, viewPort.scrollPos || scrollPos, element, itemDefaultSize, ensureParams, true)
-                        .do(() => this.ignoreScrollEvent = false);
-                });
+                return Observable.timer(1)
+                    .do(() => this.ignoreScrollEvent = false)
+                    .do(() => {
+                        const elements = element.getElementsByClassName('listitem');
+                        for (let i = 0; i < elements.length; i++) {
+                            const itemElement = elements[i] as HTMLElement;
+                            const index = +itemElement.getAttribute('flat');
+                            const item = viewPort.visibleItems[index - viewPort.startIndex];
+                            if (item) {
+                                item.size = clientSize(itemElement);
+                            }
+                        };
+                    })
+                    .switchMap(() => calcAutoSizeViewPort$(items, containerSize, viewPort.scrollPos || scrollPos, element, itemDefaultSize, ensureParams, true));
             }
         };
 
