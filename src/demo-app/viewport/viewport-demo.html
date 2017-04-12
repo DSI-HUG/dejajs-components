@@ -23,7 +23,7 @@
             </md-input-container>
             <button md-button (click)="viewport.ensureVisible(ensureIndex)">Ensure index</button>
         </div>
-        <deja-viewport #viewport [items]="news$ | async" itemSize="130" viewportMode="auto" [direction]="isHorizontal ? 'horizontal': 'vertical'" [scrollingStyle]="hasButtons ? 'buttons' : 'scrollbar'">
+        <deja-viewport #viewport [items]="news$ | async" viewportMode="auto" [direction]="isHorizontal ? 'horizontal': 'vertical'" [scrollingStyle]="hasButtons ? 'buttons' : 'scrollbar'">
 			<ng-template #itemTemplate let-item let-size="size">
                 <news-card [item]="item" (imageLoaded)="imageLoaded()"></news-card>
 			</ng-template>
