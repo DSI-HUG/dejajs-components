@@ -148,7 +148,7 @@ export class DejaViewPortComponent implements OnDestroy,
             }));
 
         this.subscriptions.push(viewPort.viewPort$
-            .do((viewPortResult: IViewPort) => {
+            .subscribe((viewPortResult: IViewPort) => {
                 if (viewPort.mode !== ViewportMode.disabled) {
                     this.vpItems = viewPortResult.visibleItems as IDejaViewPortItem[];
                     this.vpStartIndex = viewPortResult.startIndex;
@@ -172,20 +172,24 @@ export class DejaViewPortComponent implements OnDestroy,
                     this.hasUpButton = false;
                     this.hasDownButton = false;
                 }
-                this.changeDetectorRef.markForCheck();
-            })
-            .delay(1)
-            .subscribe((viewPortResult: IViewPort) => {
+
                 if (viewPortResult.scrollPos !== undefined) {
-                    if (this.hasButtons) {
-                        this.scrollPos = viewPortResult.scrollPos;
-                    } else if (this.isHorizontal) {
-                        this.element.scrollLeft = viewPortResult.scrollPos;
+                    if (!this.hasButtons) {
+                        if (this.element) {
+                            if (this.isHorizontal) {
+                                this.element.scrollLeft = viewPortResult.scrollPos;
+                            } else {
+                                this.element.scrollTop = viewPortResult.scrollPos;
+                            }
+                            this.scrollPosition = viewPortResult.scrollPos;
+                        }
                     } else {
-                        this.element.scrollTop = viewPortResult.scrollPos;
+                        this.scrollPos = viewPortResult.scrollPos;
+                        this.startOffset = this.scrollPos - viewPortResult.beforeSize;
                     }
-                    this.changeDetectorRef.markForCheck();
                 }
+
+                this.changeDetectorRef.markForCheck();
             }));
 
         this.subscriptions.push(Observable.from(this.hasButtons$)

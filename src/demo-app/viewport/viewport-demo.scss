@@ -11,6 +11,9 @@ deja-viewport {
         height: calc(100vh - 380px);
         #{$deep} {
             .listitem {
+                &:first-child {
+                    border-top: 1px #aaa solid;
+                }
                 border-left: 1px #aaa solid;
                 border-bottom: 1px #aaa solid;
                 border-right: 1px #aaa solid;
@@ -21,6 +24,9 @@ deja-viewport {
         height: 17rem;
         #{$deep} {
             .listitem {
+                &:first-child {
+                    border-left: 1px #aaa solid;
+                }
                 border-top: 1px #aaa solid;
                 border-bottom: 1px #aaa solid;
                 border-right: 1px #aaa solid;

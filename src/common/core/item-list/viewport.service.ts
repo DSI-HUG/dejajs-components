@@ -79,7 +79,7 @@ export class ViewPortService {
     private _direction = ViewportDirection.vertical;
     private _scrollPosition = 0;
     private viewPort: IViewPort;
-    private ignoreScrollEvent = false;
+    private ignoreScrollCount = 0;
 
     public get mode() {
         return this._mode;
@@ -259,14 +259,16 @@ export class ViewPortService {
 
             const calculationRequired = !isCalculation && viewPort.visibleItems.find((item) => !item.size);
 
+            if (ensureParams.index !== undefined) {
+                this.ignoreScrollCount++;
+            }
+
             if (!calculationRequired) {
                 return Observable.of(viewPort);
             } else {
                 // Measure items size
-                this.ignoreScrollEvent = ensureParams.index !== undefined;
                 this.viewPortResult$.next(viewPort);
                 return Observable.timer(1)
-                    .do(() => this.ignoreScrollEvent = false)
                     .do(() => {
                         const elements = element.getElementsByClassName('listitem');
                         for (let i = 0; i < elements.length; i++) {
@@ -417,35 +419,55 @@ export class ViewPortService {
                 }
 
                 return ensureParams;
-            });
+            })
+            .do(() => console.log('ensureParams'));
 
-        const maxSize$ = Observable.from(this.maxSize$).distinctUntilChanged();
+        const maxSize$ = Observable.from(this.maxSize$)
+            .distinctUntilChanged()
+            .do((value) => console.log(`maxSize ${value}`));
+
         const refresh$ = Observable.from(this.refresh$)
-            .do(() => this.lastCalculatedSize = undefined);
+            .do(() => {
+                this.ignoreScrollCount = 0;
+                this.lastCalculatedSize = undefined;
+            })
+            .do(() => console.log('refresh'));
 
         const scrollPos$ = Observable.from(this.scrollPosition$)
-            .filter(() => !this.ignoreScrollEvent)
             .map((scrollPos) => this._scrollPosition = scrollPos || 0)
             .map((scrollPos) => Math.max(scrollPos, 0))
-            .distinctUntilChanged();
+            .filter(() => {
+                if (this.ignoreScrollCount > 0) {
+                    this.ignoreScrollCount--;
+                    return false;
+                } else {
+                    return true;
+                }
+            })
+            .distinctUntilChanged()
+            .do((value) => console.log(`scrollPos ${value}`));
 
         const mode$ = Observable.from(this.mode$)
             .map((mode) => {
                 this._mode = typeof mode === 'string' ? ViewportMode[mode] : mode;
                 return this._mode;
             })
-            .distinctUntilChanged();
+            .distinctUntilChanged()
+            .do((value) => console.log(`mode ${value}`));
 
         const direction$ = Observable.from(this.direction$)
             .map((direction) => {
                 this._direction = typeof direction === 'string' ? ViewportDirection[direction] : direction;
                 return this._direction;
             })
-            .distinctUntilChanged();
+            .distinctUntilChanged()
+            .do((value) => console.log(`direction ${value}`));
+
 
         const itemsSize$ = Observable.from(this.itemsSize$)
             .distinctUntilChanged()
-            .do((value) => this._itemsSize = value);
+            .do((value) => this._itemsSize = value)
+            .do((value) => console.log(`itemsSize ${value}`));
 
         // Reset items size when direction change in auto mode
         Observable.combineLatest(direction$, this.items$, mode$)
