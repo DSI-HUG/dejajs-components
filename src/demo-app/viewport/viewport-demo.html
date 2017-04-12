@@ -1,32 +1,36 @@
 <md-tab-group [selectedIndex]="tabIndex" (selectChange)="tabIndex = $event.index">
-	<!--<md-tab label="OVERVIEW">-->
-	<!--<md-card class="demo-card demo-basic">-->
-	<!--TODO-->
-	<!--</md-card>-->
-	<!--</md-tab>-->
-	<md-tab label="API REFERENCE"> </md-tab>
-	<md-tab label="EXAMPLES"> </md-tab>
+    <!--<md-tab label="OVERVIEW">-->
+    <!--<md-card class="demo-card demo-basic">-->
+    <!--TODO-->
+    <!--</md-card>-->
+    <!--</md-tab>-->
+    <md-tab label="API REFERENCE"> </md-tab>
+    <md-tab label="EXAMPLES"> </md-tab>
 </md-tab-group>
 
 <md-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
-	<!--deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/viewport/readme.md'"></deja-markdown-->
+    <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/viewport/readme.md'"></deja-markdown>
 </md-card>
 
 <md-card class="demo-card demo-basic" *ngIf="tabIndex === 1">
-	<md-toolbar color="primary">Viewport</md-toolbar>
-	<md-card-content id="viewPortContainer">
-        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="2rem">
+    <md-toolbar color="primary">Viewport</md-toolbar>
+    <md-card-content id="viewPortContainer">
+        Sample with a big list of more than 3000 templates. Rendering can be horizontal or vertical. Only the visible templates are created on the dom. In this example, the size of the template is automatically calculated on the rendering, and the scroll bar is adapted during the scolling. This is the worst case for perfomances.
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="3rem">
             <md-checkbox [(ngModel)]="isHorizontal">Horizontal</md-checkbox>
             <md-checkbox [(ngModel)]="hasButtons">Buttons Scrolling (Tips: press ctrl to increase the step)</md-checkbox>
-            <md-input-container>
-                <input mdInput type="number" [(ngModel)]="ensureIndex">
-            </md-input-container>
-            <button md-button (click)="viewport.ensureVisible(ensureIndex)">Ensure index</button>
+            <span fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1rem">
+                <span>Ensure index:</span>
+                <md-input-container fxFlex="0 0 3rem">
+                    <input mdInput type="number" [(ngModel)]="ensureIndex">
+                </md-input-container>
+                <button md-button (click)="viewport.ensureVisible(ensureIndex)">Go</button>
+            </span>
         </div>
         <deja-viewport #viewport [items]="news$ | async" viewportMode="auto" [direction]="isHorizontal ? 'horizontal': 'vertical'" [scrollingStyle]="hasButtons ? 'buttons' : 'scrollbar'">
-			<ng-template #itemTemplate let-item let-size="size">
+            <ng-template #itemTemplate let-item let-size="size">
                 <news-card [item]="item" (imageLoaded)="imageLoaded()"></news-card>
-			</ng-template>
-		</deja-viewport>
-	</md-card-content>
+            </ng-template>
+        </deja-viewport>
+    </md-card-content>
 </md-card>
