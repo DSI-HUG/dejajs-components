@@ -10,7 +10,7 @@
  */
 
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, HostBinding, Input, OnDestroy, ViewChild } from '@angular/core';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs/Rx';
+import { Observable, Subject, Subscription } from 'rxjs/Rx';
 import { IViewPort, IViewPortItem, ViewportDirection, ViewportMode, ViewPortService } from '../../common/core/item-list';
 
 export enum DejaViewPortScrollStyle {
@@ -42,7 +42,7 @@ export class DejaViewPortComponent implements OnDestroy,
     private _items: IDejaViewPortItem[];
     private element: HTMLElement;
     private subscriptions: Subscription[] = [];
-    private hasButtons$ = new BehaviorSubject<boolean>(false);
+    private hasButtons$ = new Subject<boolean>();
     private buttonsStep = 20;
     private mouseDown$Sub: Subscription;
     private mouseWheel$Sub: Subscription;
@@ -112,8 +112,9 @@ export class DejaViewPortComponent implements OnDestroy,
     }
 
     private set scrollPos(value: number) {
-        this.scrollPosition = value;
-        this.viewPort.scrollPosition$.next(value);
+        const scrollPos = Math.max(value, 0);
+        this.scrollPosition = scrollPos;
+        this.viewPort.scrollPosition$.next(scrollPos);
     }
 
     private get scrollPos() {
@@ -157,10 +158,6 @@ export class DejaViewPortComponent implements OnDestroy,
                     this.vpEndIndex = 0;
                 }
 
-                if (viewPortResult.scrollPos !== undefined) {
-                    this.scrollPosition = viewPortResult.scrollPos;
-                }
-
                 if (this.hasButtons) {
                     this.startOffset = this.scrollPos - viewPortResult.beforeSize;
                     this.beforeSize = null;
@@ -174,23 +171,32 @@ export class DejaViewPortComponent implements OnDestroy,
                     this.afterSize = viewPortResult.afterSize ? `${viewPortResult.afterSize}px` : null;
                     this.hasUpButton = false;
                     this.hasDownButton = false;
+                }
 
-                    if (viewPortResult.scrollPos !== undefined && this.element) {
-                        if (this.isHorizontal) {
-                            this.element.scrollLeft = this.scrollPosition;
-                        } else {
-                            this.element.scrollTop = this.scrollPosition;
+                if (viewPortResult.scrollPos !== undefined) {
+                    if (!this.hasButtons) {
+                        if (this.element) {
+                            if (this.isHorizontal) {
+                                this.element.scrollLeft = viewPortResult.scrollPos;
+                            } else {
+                                this.element.scrollTop = viewPortResult.scrollPos;
+                            }
+                            this.scrollPosition = viewPortResult.scrollPos;
                         }
+                    } else {
+                        this.scrollPos = viewPortResult.scrollPos;
+                        this.startOffset = this.scrollPos - viewPortResult.beforeSize;
                     }
                 }
+
                 this.changeDetectorRef.markForCheck();
             }));
 
         this.subscriptions.push(Observable.from(this.hasButtons$)
-            .distinctUntilChanged()
+            .filter((value) => this.hasButtons !== value)
             .do((value) => this.hasButtons = value)
             .delay(1)
-            .subscribe((value) => {
+            .do((value) => {
                 if (value) {
                     const mousedown$ = Observable.merge(
                         Observable.fromEvent(this.downButton.nativeElement, 'mousedown'),
@@ -239,8 +245,10 @@ export class DejaViewPortComponent implements OnDestroy,
                     }
                 }
 
-                this.viewPort.refresh();
-            }));
+                this.scrollPos = 0;
+            })
+            .delay(1)
+            .subscribe(() => this.viewPort.refresh()));
     }
 
     public ngOnDestroy() {

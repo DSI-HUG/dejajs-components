@@ -132,6 +132,7 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
     public set canDelete(value: boolean) {
         if (value != null && `${value}` !== 'false' && !this.delete$sub) {
             this.delete$sub = this.keyup$
+                .filter(() => this.layoutProvider.designMode)
                 .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.Delete)
                 .subscribe(() => this.layoutProvider.deleteSelection());
 
@@ -165,6 +166,7 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
     public set canCut(value: boolean) {
         if (value != null && `${value}` !== 'false' && !this.cut$sub) {
             this.cut$sub = this.keyup$
+                .filter(() => this.layoutProvider.designMode)
                 .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.KeyX && event.ctrlKey)
                 .subscribe(() => {
                     const tiles = this.layoutProvider.cutSelection();
@@ -185,6 +187,7 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
     public set canPaste(value: boolean) {
         if (value != null && `${value}` !== 'false' && !this.paste$sub) {
             this.paste$sub = this.keyup$
+                .filter(() => this.layoutProvider.designMode)
                 .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.KeyV && event.ctrlKey)
                 .subscribe(() => this.layoutProvider.paste());
 

@@ -1,13 +1,19 @@
 <a name="@next"></a>
 # [@next] (2017-04-xx)
 
-### Breaking changes from 1.6.2
+### Breaking changes from 1.6.3
 
 ### Known issues
 
 ### Features
 
 ### Bug fixes
+
+<a name="1.6.3"></a>
+# [1.6.3] (2017-04-12)
+
+### Bug fixes
+Fix dependencies versions
 
 <a name="1.6.2"></a>
 # [1.6.2] (2017-04-11)

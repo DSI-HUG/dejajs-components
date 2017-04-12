@@ -1,70 +1,49 @@
-@import "../../scss/variables/colors";
 .viewer {
-	display: flex;
-	height: 200px;
-	margin: 1rem 0;
+    display: flex;
+    height: 200px;
+    margin: 1rem 0;
 }
 
+$deep: '/deep/';
 deja-viewport {
-	margin-top: 1rem;
-	&[horizontal="false"] {
-		height: calc(100vh - 380px);
-	}
-	&[horizontal="true"] {
-		height: 17rem;
-	}
-	.news {
-		border: 1px #aaa solid;
-		padding: 5px;
-		overflow: hidden;
-		.logo {
-			display: block;
-			width: auto;
-			height: auto;
-			object-fit: contain;
-		}
-		.text {
-			border-left: 1px #aaa solid;
-			padding-left: 0.3rem;
-			margin-left: 0.3rem;
-			.name {
-				font-size: 200%;
-				margin: 0 1rem 0.3rem 0.3rem;
-			}
-			.description {
-				font-size: 120%;
-				margin: 0.3rem 1rem 0.3rem 0.3rem;
-			}
-			.footer {
-				margin: 0.3rem 1rem 0 0.3rem;
-				overflow: hidden;
-			}
-		}
-	}
-	&[horizontal="false"] {
-		.news {
-			.logo {
-				flex: 0 0 50%;
-				max-width: 50%;
-			}
-			.text {
-				flex: 0 0 50%;
-			}
-		}
-	}
-	&[horizontal="true"] {
-		.news {
-			.logo {
-				flex: 0 0 15rem;
-				max-height: 15rem;
-				max-width: 15rem;
-			}
-			.text {
-				flex: 1 1 auto;
-				.description {
-					max-width: 25rem;
-				}
-			}
-		}
-	}
+    margin-top: 1rem;
+    &[horizontal="false"] {
+        height: calc(100vh - 380px);
+        #{$deep} {
+            .listitem {
+                &:first-child {
+                    border-top: 1px #aaa solid;
+                }
+                border-left: 1px #aaa solid;
+                border-bottom: 1px #aaa solid;
+                border-right: 1px #aaa solid;
+            }
+        }
+    }
+    &[horizontal="true"] {
+        height: 17rem;
+        #{$deep} {
+            .listitem {
+                &:first-child {
+                    border-left: 1px #aaa solid;
+                }
+                border-top: 1px #aaa solid;
+                border-bottom: 1px #aaa solid;
+                border-right: 1px #aaa solid;
+            }
+            .news {
+                .logo {
+                    flex: 0 0 15rem !important;
+                    max-height: 15rem !important;
+                    max-width: 15rem !important;
+                }
+                .text {
+                    flex: 1 1 auto !important;
+                    .description {
+                        max-width: 25rem !important;
+                    }
+                }
+            }
+        }
+    }
 }

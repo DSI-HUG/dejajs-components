@@ -140,7 +140,7 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
     public ngAfterViewInit() {
         this.monacoEditorService.initMonacoLib(this.monacoLibPath).then(() => {
             this.initMonaco();
-        })
+        });
     }
 
     /**

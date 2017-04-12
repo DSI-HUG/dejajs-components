@@ -60,7 +60,7 @@ export abstract class ItemListBase {
 
     constructor(protected changeDetectorRef: ChangeDetectorRef, protected viewPort: ViewPortService) {
         viewPort.viewPort$
-            .do((viewPortResult: IViewPort) => {
+            .subscribe((viewPortResult: IViewPort) => {
                 delete this._hintLabel;
                 if (viewPort.mode === ViewportMode.disabled) {
                     this._itemList = viewPortResult.items;
@@ -75,14 +75,22 @@ export abstract class ItemListBase {
                     this.vpBeforeHeight = viewPortResult.beforeSize;
                     this.vpAfterHeight = viewPortResult.afterSize;
                 }
-                this.changeDetectorRef.markForCheck();
-            })
-            .delay(1)
-            .subscribe((viewPortResult: IViewPort) => {
-                if (viewPortResult.scrollPos !== undefined && this.listElement) {
-                    this.listElement.scrollTop = viewPortResult.scrollPos;
-                    this.changeDetectorRef.markForCheck();
+
+                if (viewPortResult.scrollPos !== undefined) {
+                    if (this.listElement) {
+                        const listItems = this.listElement.getElementsByClassName('listitem');
+                        const rebind = listItems.length !== viewPortResult.visibleItems.length;
+                        if (!rebind) {
+                            this.listElement.scrollTop = viewPortResult.scrollPos;
+                        } else {
+                            Observable.timer(1)
+                                .first()
+                                .subscribe(() => this.listElement.scrollTop = viewPortResult.scrollPos);
+                        }
+                    }
                 }
+
+                this.changeDetectorRef.markForCheck();
             });
     }
 
@@ -714,7 +722,7 @@ export abstract class ItemListBase {
                 }
                 this.rowsCount = result.visibleList.length;
                 this.viewPort.items$.next(result.visibleList);
-            })
+            });
     }
 
     protected ensureListCaches$(): Observable<IViewListResult> {

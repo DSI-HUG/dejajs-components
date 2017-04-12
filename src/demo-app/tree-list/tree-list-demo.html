@@ -80,21 +80,9 @@
         </md-toolbar>
         <md-card-content class="listContainer" fxLayout="row">
             <deja-tree-list #treeList fxFlex [(ngModel)]="loremList" viewportMode="variable" expandButton searchArea sortable placeholder="Tree list avec des tailles de rows différentes"></deja-tree-list>
-            <deja-tree-list #news fxFlex [models]="news$" viewportMode="auto" [viewPortRowHeight]="100" searchField="description" multiSelect searchArea sortable placeholder="Automatic row height TreeView ">
+            <deja-tree-list #news fxFlex id="news" [models]="news$" viewportMode="auto" [viewPortRowHeight]="100" searchField="description" multiSelect searchArea sortable placeholder="Automatic row height TreeView ">
                 <ng-template #itemTemplate let-item let-flatindex="flatindex">
-                    <div class="news" fxLayout="row">
-                        <img [attr.src]="item.model.urlsToLogos.small" class="logo" fxFlex="0 0 8rem" fxLayout="row" fxLayoutAlign="space-between" fxFlexAlign="center">
-                        <span class="text" fxFlex="1 1 auto">
-                            <div class="name">{{ item.model.name }}</div>
-                            <div class="description">{{ item.model.description }}</div>
-                            <div class="footer" fxFlex="column" fxLayoutAlign="space-between">
-                                <a class="url" [attr.href]="item.model.url">{{ item.model.url }}</a>
-                                <span class="category">{{ item.model.category }}</span>
-                        <span class="country">{{ item.model.country }}</span>
-                        <span class="language">{{ item.model.language }}</span>
-                    </div>
-                    </span>
-                    </div>
+                    <news-card [item]="item.model"></news-card>
                 </ng-template>
             </deja-tree-list>
         </md-card-content>

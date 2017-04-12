@@ -25,6 +25,7 @@ branches:
   - dev
 before_install:
 - rm -rf node_modules
+- bash ./scripts/test-latest-versions.sh
 before_script:
 - "export DISPLAY=:99.0"
 - "sh -e /etc/init.d/xvfb start"
@@ -36,6 +37,8 @@ env:
   global:
   - ENCRYPTION_LABEL: d9215e5535f8
   - COMMIT_AUTHOR_EMAIL: travis@hcuge.ch
+before_deploy:
+- bash ./scripts/fix-versions.sh
 deploy:
   provider: npm
   email: gmer@hcuge.ch

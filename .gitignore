@@ -54,6 +54,9 @@ dejajs-angular2.css
 # vscode project file
 .vscode/
 
+# Yarn files
+yarn.lock
+
 # Typings
 typings/
 !src/common/global-event/typings

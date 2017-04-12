@@ -43,7 +43,7 @@ export class DejaTreeListDemoComponent implements OnInit {
         this.countries = this.countriesService.getCountries$(null, 412);
         // this.countries = this.countriesService.getCountries(null, 1);
 
-        this.news$ = newsService.getNews$(50);
+        this.news$ = newsService.getNews$(3000);
 
         this.countriesService.getCountries$(null, 1).subscribe((values) => {
             const extendedCountries = values.map((country) => {

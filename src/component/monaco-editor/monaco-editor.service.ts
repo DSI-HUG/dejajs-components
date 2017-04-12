@@ -36,7 +36,6 @@ export class MonacoEditorService {
 
             // Load AMD loader if necessary
             if (!(<any>window).require && !(<any>window).monaco) {
-                console.log('load monaco lib');
                 const loaderScript = document.createElement('script');
                 loaderScript.type = 'text/javascript';
                 loaderScript.src = monacoLibPath + '/loader.js';
