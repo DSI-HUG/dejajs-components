@@ -6,4 +6,4 @@ if [ "$TRAVIS_EVENT_TYPE" != "cron" ]; then
     exit 0
 fi
 
-npm update
+npm update --save
