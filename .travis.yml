@@ -25,6 +25,7 @@ branches:
   - dev
 before_install:
 - rm -rf node_modules
+- bash ./scripts/test-latest-versions.sh
 before_script:
 - "export DISPLAY=:99.0"
 - "sh -e /etc/init.d/xvfb start"
