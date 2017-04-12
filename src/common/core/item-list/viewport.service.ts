@@ -37,7 +37,7 @@ export class ViewPortService {
     public viewPort$: Observable<IViewPort>;
 
     public mode$ = new BehaviorSubject<ViewportMode | string>(ViewportMode.fixed);
-    public items$ = new ReplaySubject<IViewPortItem[]>();
+    public items$ = new BehaviorSubject<IViewPortItem[]>([]);
     public maxSize$ = new BehaviorSubject<number>(0);
     public ensureItem$ = new BehaviorSubject<IViewPortItem | number>(null);
     public scrollPosition$ = new BehaviorSubject<number>(0);
@@ -259,10 +259,6 @@ export class ViewPortService {
 
             const calculationRequired = !isCalculation && viewPort.visibleItems.find((item) => !item.size);
 
-            if (ensureParams.index !== undefined) {
-                this.ignoreScrollCount++;
-            }
-
             if (!calculationRequired) {
                 return Observable.of(viewPort);
             } else {
@@ -363,6 +359,10 @@ export class ViewPortService {
 
             return Observable.of(this.mode)
                 .switchMap((mode) => {
+                    if (ensureParams.index !== undefined) {
+                        this.ignoreScrollCount++;
+                    }
+
                     switch (mode) {
                         case ViewportMode.disabled:
                             return calcDisabledViewPort$(items, listSize, scrollPos, element, ensureParams);
@@ -373,7 +373,7 @@ export class ViewPortService {
                         case ViewportMode.fixed:
                             return calcFixedSizeViewPort$(items, listSize, scrollPos, itemDefaultSize, ensureParams);
                         default:
-                            throw new Error('ViewPortService, invalide mode.');
+                            throw new Error('ViewPortService, invalide mode. The value can be disabled, variable, auto and fixed.');
                     }
                 })
                 .switchMap((viewPort: IViewPort) => {
@@ -397,8 +397,18 @@ export class ViewPortService {
                 .do(() => ensureParams.index = undefined);
         };
 
+        const items$ = Observable.from(this.items$)
+            .filter((items) => {
+                if (items && items.length) {
+                    return true;
+                } else {
+                    this.viewPortResult$.next(this.emptyViewPort);
+                    return false;
+                }
+            });
+
         // Ensure item visible by index or instance
-        const ensureParams$ = Observable.combineLatest(this.ensureItem$, this.items$)
+        const ensureParams$ = Observable.combineLatest(this.ensureItem$, items$)
             .map(([ensureItem, items]) => {
                 const ensureParams = {} as IEnsureParams;
                 if (ensureItem !== undefined && ensureItem !== null && items && items.length) {
@@ -470,7 +480,7 @@ export class ViewPortService {
             .do((value) => console.log(`itemsSize ${value}`));
 
         // Reset items size when direction change in auto mode
-        Observable.combineLatest(direction$, this.items$, mode$)
+        Observable.combineLatest(direction$, items$, mode$)
             .filter(([_direction, items, mode]) => items && items.length && mode === ViewportMode.auto)
             .switchMap(([_direction, items]) => items)
             .subscribe((item) => {
@@ -478,7 +488,8 @@ export class ViewPortService {
             });
 
         // Calc view port observable
-        Observable.combineLatest(this.items$, maxSize$, scrollPos$, this.element$, itemsSize$, ensureParams$, direction$.delay(1), mode$, refresh$)
+        Observable.combineLatest(items$, maxSize$, scrollPos$, this.element$, itemsSize$, ensureParams$, direction$.delay(1), mode$, refresh$)
+            .do(() => console.log(`calcViewPort`))
             .switchMap(([items, maxSize, scrollPos, element, itemDefaultSize, ensureParams]: [IViewPortItem[], number, number, HTMLElement, number, IEnsureParams]) => {
                 const listSize = this.lastCalculatedSize || maxSize || clientSize(element);
                 if (listSize < 2 * ViewPortService.itemDefaultSize) {

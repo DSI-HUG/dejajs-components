@@ -10,7 +10,7 @@
  */
 
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, HostBinding, Input, OnDestroy, ViewChild } from '@angular/core';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs/Rx';
+import { Observable, Subject, Subscription } from 'rxjs/Rx';
 import { IViewPort, IViewPortItem, ViewportDirection, ViewportMode, ViewPortService } from '../../common/core/item-list';
 
 export enum DejaViewPortScrollStyle {
@@ -42,7 +42,7 @@ export class DejaViewPortComponent implements OnDestroy,
     private _items: IDejaViewPortItem[];
     private element: HTMLElement;
     private subscriptions: Subscription[] = [];
-    private hasButtons$ = new BehaviorSubject<boolean>(false);
+    private hasButtons$ = new Subject<boolean>();
     private buttonsStep = 20;
     private mouseDown$Sub: Subscription;
     private mouseWheel$Sub: Subscription;
@@ -193,7 +193,7 @@ export class DejaViewPortComponent implements OnDestroy,
             }));
 
         this.subscriptions.push(Observable.from(this.hasButtons$)
-            .distinctUntilChanged()
+            .filter((value) => this.hasButtons !== value)
             .do((value) => this.hasButtons = value)
             .delay(1)
             .do((value) => {

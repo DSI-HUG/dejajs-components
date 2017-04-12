@@ -943,6 +943,13 @@ export class DejaTilesLayoutProvider {
             return;
         }
 
+        newTiles.forEach((newTile) => {
+            if (!this.tiles.find((t) => t.id === newTile.id)) {
+                newTile.percentBounds = this.getFreePlace(newTile.percentBounds);
+                this._tiles.push(newTile);
+            }
+        });
+
         const event = new CustomEvent('DejaTilesAddEvent', { cancelable: true }) as IDejaTilesAddEvent;
         event.tiles = this.tiles.map((tile) => tile.toTileModel());
         event.added = newTiles.map((tile) => tile.toTileModel());

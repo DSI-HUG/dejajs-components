@@ -9,7 +9,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { INews } from '../services/news.service';
 
 @Component({
@@ -18,7 +18,8 @@ import { INews } from '../services/news.service';
     templateUrl: 'news-card.component.html',
 })
 export class NewsCardComponent {
-    @Input() item: INews;
+    @Input() protected item: INews;
+    @Output() protected imageLoaded = new EventEmitter();
 
     public constructor() {
 

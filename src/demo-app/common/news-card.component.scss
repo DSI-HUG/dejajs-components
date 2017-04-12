@@ -7,15 +7,16 @@
             width: auto;
             height: auto;
             object-fit: contain;
-            flex: 0 0 50%;
-            max-width: 50%;
+            flex: 0 0 25%;
+            max-width: 22%;
+            max-height: 100%;            
         }
         .text {
             border-left: 1px #aaa solid;
             padding-left: 0.3rem;
             margin-left: 0.3rem;
-            flex: 0 0 50%;
-            .name {
+            flex: 0 0 75%;
+            .title {
                 font-size: 200%;
                 margin: 0 1rem 0.3rem 0.3rem;
             }

@@ -1,78 +1,85 @@
 :host {
-    position: relative;
-    display: flex;
-    flex-direction: row !important;
-    overflow: hidden;
-    &[hasUpBtn="false"] {
-        #up {
-            visibility: hidden;
-        }
-    }
-    &[hasDownBtn="false"] {
-        #down {
-            visibility: hidden;
-        }
-    }
-    &[buttons="false"] {
-        &[horizontal="false"] {
-            #viewport-wrapper {
-                width: 100%;
-                overflow-y: auto;
-                >span {
-                    width: 100%;
-                }
-            }
-        }
-        &[horizontal="true"] {
-            #viewport-wrapper {
-                height: 100%;
-                overflow-x: auto;
-                >span {
-                    height: 100%;
-                }
-            }
-        }
-    }
-    &[buttons="true"] {
-        &[horizontal="false"] {
-            flex-direction: column !important;
-        }
-    }
-    #viewport-wrapper {
-        justify-content: flex-start;
-        align-items: stretch;
-        position: relative;
-        flex: 1 1 auto;
-        overflow: visible;
-        >span {
-            padding: 0;
-            margin: 0;
-            overflow: hidden;
-        }
-    }
-    #up,
-    #down {
-        flex: 0 0 auto;
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        font-size: 120%;
-        cursor: pointer;        
-        z-index: 1;
-    }
-    &[horizontal="false"] {
-        #up,
-        #down {
-            padding: 0.15rem 0;
-        }
-    }
-    &[horizontal="true"] {
-        #up,
-        #down {
-            padding: 0 0.15rem;
-            >i {
-                transform: rotate(270Deg);
-            }
-        }
-    }
+	position: relative;
+	display: flex;
+	flex-direction: row !important;
+	overflow: hidden;
+	&[hasUpBtn="false"] {
+		#up {
+			visibility: hidden;
+		}
+	}
+	&[hasDownBtn="false"] {
+		#down {
+			visibility: hidden;
+		}
+	}
+	&[buttons="false"] {
+		&[horizontal="false"] {
+			#viewport-wrapper {
+				width: 100%;
+				overflow-y: auto;
+				>span {
+					width: 100%;
+				}
+			}
+		}
+		&[horizontal="true"] {
+			#viewport-wrapper {
+				height: 100%;
+				overflow-x: auto;
+				>span {
+					height: 100%;
+				}
+			}
+		}
+	}
+	&[buttons="true"] {
+		&[horizontal="false"] {
+			flex-direction: column !important;
+			#viewport-wrapper {
+				overflow: visible;
+			}
+		}
+		&[horizontal="true"] {
+			#viewport-wrapper {
+				overflow: hidden;
+			}
+		}
+	}
+	#viewport-wrapper {
+		justify-content: flex-start;
+		align-items: stretch;
+		position: relative;
+		flex: 1 1 auto;
+		>span {
+			padding: 0;
+			margin: 0;
+			overflow: hidden;
+		}
+	}
+	#up,
+	#down {
+		flex: 0 0 auto;
+		display: flex;
+		justify-content: space-around;
+		align-items: center;
+		font-size: 120%;
+		cursor: pointer;
+		z-index: 1;
+	}
+	&[horizontal="false"] {
+		#up,
+		#down {
+			padding: 0.15rem 0;
+		}
+	}
+	&[horizontal="true"] {
+		#up,
+		#down {
+			padding: 0 0.15rem;
+			>i {
+				transform: rotate(270Deg);
+			}
+		}
+	}
 }
