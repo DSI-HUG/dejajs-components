@@ -1,6 +1,5 @@
 @import 'variables/colors';
 @import 'utils/flex';
-@import 'utils/form-validation';
 
 @import 'components/loader';
 @import 'material/material';
@@ -54,6 +53,8 @@
 @import '../component/select/select-theme';
 @import '../component/tree-list/tree-list-theme';
 @import '../component/viewport/viewport-theme';
+
+@import 'utils/form-validation';
 
 // Create a theme.
 @mixin deja-theme($custom-theme) {
