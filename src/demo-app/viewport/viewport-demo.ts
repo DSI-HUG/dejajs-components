@@ -1,3 +1,4 @@
+import { IViewPortItem } from './../../common/core/item-list/viewport.service';
 /*
  * *
  *  @license
@@ -51,7 +52,8 @@ export class DejaViewPortDemoComponent {
         // Observable.timer(5000).first().subscribe(() => this.viewport.ensureVisible(23));
     }
 
-    protected imageLoaded() {
+    protected imageLoaded(item: IViewPortItem) {
+        item.size = undefined;
         this.changeDetectorRef.markForCheck();
         this.viewport.refresh();
     }

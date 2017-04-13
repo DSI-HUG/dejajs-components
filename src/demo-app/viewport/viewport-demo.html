@@ -29,7 +29,7 @@
         </div>
         <deja-viewport #viewport [items]="news$ | async" viewportMode="auto" [direction]="isHorizontal ? 'horizontal': 'vertical'" [scrollingStyle]="hasButtons ? 'buttons' : 'scrollbar'">
             <ng-template #itemTemplate let-item let-size="size">
-                <news-card [item]="item" (imageLoaded)="imageLoaded()"></news-card>
+                <news-card [item]="item" (imageLoaded)="imageLoaded(item)"></news-card>
             </ng-template>
         </deja-viewport>
     </md-card-content>

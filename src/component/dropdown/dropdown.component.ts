@@ -26,6 +26,9 @@ export class DejaDropDownComponent implements AfterViewInit {
     /** Déclenché lorsque le conteneur déroulant disparait */
     @Output() public hide = new EventEmitter();
 
+    /** Déclenché lorsque le conteneur apparait */
+    @Output() public showed = new EventEmitter();
+
     /** Renvoie ou définit l'élement du DOM sur lequel le conteneur déroulant devra s'aligner */
     @Input() public ownerElement: ElementRef | HTMLElement;
 
@@ -162,8 +165,8 @@ export class DejaDropDownComponent implements AfterViewInit {
                 setDropDownPosition({
                     left: resetParams.left ? -1000 : undefined,
                     top: resetParams.top ? -1000 : undefined,
-                    width: resetParams.width ? null : undefined,
-                    height: resetParams.height ? null : undefined,
+                    width: resetParams.width ? resetParams.width || null : undefined,
+                    height: resetParams.height ? resetParams.height || null : undefined,
                     valign: resetParams.valign ? null : undefined,
                     halign: resetParams.halign ? null : undefined,
                 } as IDropDownPosition);
@@ -172,7 +175,7 @@ export class DejaDropDownComponent implements AfterViewInit {
                 return reshow;
             })
             .debounce((reshow) => Observable.timer(reshow ? 0 : 100))
-            .subscribe(() => {
+            .do(() => {
                 // Calc owner screen position
                 const ownerElement = (this.ownerElement as ElementRef).nativeElement || this.ownerElement;
                 const ownerRect = ownerElement.getBoundingClientRect();
@@ -394,7 +397,9 @@ export class DejaDropDownComponent implements AfterViewInit {
                 dropDownPosition.height = relativeBounds.height;
 
                 setDropDownPosition(dropDownPosition);
-            });
+            })
+            .delay(1)
+            .subscribe(() => this.showed.emit(new Event('showed')));
     }
 
     public ngAfterViewInit() {
@@ -409,8 +414,8 @@ export class DejaDropDownComponent implements AfterViewInit {
 export interface IDropDownResetParams {
     left?: boolean;
     top?: boolean;
-    width?: boolean;
-    height?: boolean;
+    width?: boolean | number;
+    height?: boolean | number;
     valign?: boolean;
     halign?: boolean;
 }

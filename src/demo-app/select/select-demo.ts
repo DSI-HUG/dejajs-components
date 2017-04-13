@@ -1,3 +1,4 @@
+import { IViewPortItem } from './../../common/core/item-list/viewport.service';
 /*
  * *
  *  @license
@@ -122,7 +123,8 @@ export class SelectDemoComponent implements OnInit {
         };
     }
 
-    protected imageLoaded() {
+    protected imageLoaded(item: IViewPortItem) {
+        item.size = undefined;
         this.changeDetectorRef.markForCheck();
         this.newsSelect.refreshViewPort();
     }

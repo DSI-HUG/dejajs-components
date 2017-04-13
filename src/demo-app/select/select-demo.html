@@ -21,7 +21,7 @@
         <md-card-content fxLayout="row" fxLayoutWrap>
             <span fxFlex="0 0 100%">Just passing an array of objects</span>
             <span fxFlex="0 0 45%" fxLajout="column">
-                <deja-select placeholder="Select mode" [(ngModel)]="businessCountry" textField="naqme"  valueField="code" [models]="countries"></deja-select>
+                <deja-select placeholder="Select mode" [(ngModel)]="businessCountry" textField="naqme" valueField="code" [models]="countries"></deja-select>
                 <deja-select placeholder="Autocomplete" type="autocomplete" [(ngModel)]="businessCountry" textField="naqme"  valueField="code" [models]="countries"></deja-select>
             </span>
             <span fxFlex="0 0 45%" fxFlexOffset="10%">
@@ -35,7 +35,7 @@
         <md-card-content fxLayout="row" fxLayoutWrap>
             <span fxFlex="0 0 100%">deja-select has some keyboard navigation feature</span>
             <span fxFlex="0 0 45%" fxLajout="column">
-                <deja-select placeholder="Select a country" [(ngModel)]="businessCountry" textField="naqme"  valueField="code" [models]="countries"></deja-select>
+                <deja-select placeholder="Select a country" [(ngModel)]="businessCountry" textField="naqme" valueField="code" [models]="countries"></deja-select>
             </span>
             <ul fxFlex="0 0 45%" fxFlexOffset="10%">
                 <li>UpArrow: Select the previous item</li>
@@ -57,7 +57,7 @@
         <md-card-content fxLayout="row" fxLayoutWrap>
             <span fxFlex="0 0 100%">Add the selectionClearable attribute to enable the clear button</span>
             <span fxFlex="0 0 45%" fxLajout="column">
-                <deja-select placeholder="Clearable content" selectionClearable [(ngModel)]="businessCountry" textField="naqme"  valueField="code" [models]="countries"></deja-select>
+                <deja-select placeholder="Clearable content" selectionClearable [(ngModel)]="businessCountry" textField="naqme" valueField="code" [models]="countries"></deja-select>
             </span>
         </md-card-content>
     </md-card>
@@ -69,7 +69,7 @@
         <md-card-content>
             <deja-select #news type="select" viewportMode="auto" textField="title" searchField="description" [models]="news$">
                 <ng-template #itemTemplate let-item let-flatindex="flatindex">
-                    <news-card [item]="item.model" (imageLoaded)="imageLoaded()"></news-card>
+                    <news-card [item]="item.model" (imageLoaded)="imageLoaded(item)"></news-card>
                 </ng-template>
             </deja-select>
             <deja-select id="first" type="autocomplete" class="placeholder-icon" textField="naqme" [(ngModel)]="country" valueField="code" [items]="countries">

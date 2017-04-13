@@ -190,7 +190,7 @@ export class ItemListService {
      * @return {number} Index correspondant à l'élément recherché.
      */
     public getItemIndex(item: IItemBase) {
-        return this._cache.visibleList ? this._cache.visibleList.findIndex((itm) => item === itm) : -1;
+        return this._cache.visibleList ? this._cache.visibleList.findIndex((itm) => this.compareItems(item, itm)) : -1;
     }
 
     /** Renvoie le service utilisé pour le tri de la liste

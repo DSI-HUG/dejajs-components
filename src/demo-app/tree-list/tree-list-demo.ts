@@ -1,3 +1,4 @@
+import { IDejaViewPortItem } from './../../component/viewport/viewport.component';
 /*
  * *
  *  @license
@@ -179,7 +180,8 @@ export class DejaTreeListDemoComponent implements OnInit {
         } as IDejaMouseDroppableContext;
     }
 
-    protected imageLoaded() {
+    protected imageLoaded(item: IDejaViewPortItem) {
+        item.size = undefined;
         this.changeDetectorRef.markForCheck();
         this.treeList.refreshViewPort();
     }

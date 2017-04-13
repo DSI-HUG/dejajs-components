@@ -12,7 +12,7 @@
 // TODO Key events for ViewportComponent
 
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs/Rx';
+import { BehaviorSubject, Observable } from 'rxjs/Rx';
 import { IViewPort, IViewPortItem } from './viewport.service';
 
 export enum ViewportMode {
@@ -41,11 +41,12 @@ export class ViewPortService {
     public maxSize$ = new BehaviorSubject<number>(0);
     public ensureItem$ = new BehaviorSubject<IViewPortItem | number>(null);
     public scrollPosition$ = new BehaviorSubject<number>(0);
-    public element$ = new ReplaySubject<HTMLElement>();
+    public element$ = new BehaviorSubject<HTMLElement>(null);
     public itemsSize$ = new BehaviorSubject<number>(0);
     public direction$ = new BehaviorSubject<ViewportDirection | string>(ViewportDirection.vertical);
 
     private refresh$ = new BehaviorSubject<boolean>(true);
+    private deleteSizeCache$ = new BehaviorSubject<boolean>(true);
     private lastCalculatedSize: number;
 
     private emptyViewPort = {
@@ -118,15 +119,15 @@ export class ViewPortService {
             let newScrollPos: number;
             if (!ensureParams || ensureParams.index === undefined || !ensureParams.atEnd) {
                 if (rowsCount < 0) {
-                    endIndex = items.length - 1;
+                    endIndex = items.length;
                     startIndex = endIndex - Math.min(items.length, maxCount) + 1;
                 } else if (ensureParams.index !== undefined) {
                     startIndex = ensureParams.index;
-                    endIndex = startIndex + rowsCount - 1;
+                    endIndex = startIndex + rowsCount;
                     newScrollPos = startIndex * itemDefaultSize;
                 } else {
                     startIndex = startRow;
-                    endIndex = startIndex + rowsCount - 1;
+                    endIndex = startIndex + rowsCount;
                 }
             } else {
                 // Ensure visible from the end
@@ -135,7 +136,7 @@ export class ViewPortService {
                 newScrollPos = (endIndex + 1) * itemDefaultSize - containerSize;
             }
 
-            const visibleItems = items.slice(startIndex, 1 + endIndex);
+            const visibleItems = items.slice(startIndex, endIndex + 1);
 
             return Observable.of({
                 beforeSize: startIndex * itemDefaultSize,
@@ -240,10 +241,10 @@ export class ViewPortService {
         const calcAutoSizeViewPort$ = (items: IViewPortItem[], containerSize: number, scrollPos: number, element: HTMLElement, itemDefaultSize: number, ensureParams: IEnsureParams, isCalculation?: boolean): Observable<IViewPort> => {
             if (!itemDefaultSize) {
                 const item = items.find((vpitem: IViewPortItem) => vpitem.size && vpitem.size > 0);
-                itemDefaultSize = (item && item.size) || ViewPortService.itemDefaultSize;
+                itemDefaultSize = (item && item.size);
             }
 
-            const viewPort = getVariableAndAutoSizeViewPort(items, containerSize, scrollPos, ensureParams, itemDefaultSize);
+            const viewPort = getVariableAndAutoSizeViewPort(items, containerSize, scrollPos, ensureParams, itemDefaultSize || ViewPortService.itemDefaultSize);
 
             const calculationRequired = !isCalculation && viewPort.visibleItems.find((item) => !item.size);
 
@@ -253,18 +254,22 @@ export class ViewPortService {
                 // Measure items size
                 this.viewPortResult$.next(viewPort);
                 return Observable.timer(1)
-                    .do(() => {
+                    .map(() => {
                         const elements = element.getElementsByClassName('listitem');
+                        let averageSize = 0;
                         for (let i = 0; i < elements.length; i++) {
                             const itemElement = elements[i] as HTMLElement;
                             const index = +itemElement.getAttribute('flat');
                             const item = viewPort.visibleItems[index - viewPort.startIndex];
                             if (item) {
                                 item.size = clientSize(itemElement);
+                                averageSize += item.size;
                             }
                         };
+                        averageSize = averageSize / elements.length;
+                        return averageSize;
                     })
-                    .switchMap(() => calcAutoSizeViewPort$(items, containerSize, viewPort.scrollPos || scrollPos, element, itemDefaultSize, ensureParams, true));
+                    .switchMap((averageSize) => calcAutoSizeViewPort$(items, containerSize, viewPort.scrollPos || scrollPos, element, averageSize, ensureParams, true));
             }
         };
 
@@ -339,7 +344,8 @@ export class ViewPortService {
             } as IViewPort);
         };
 
-        const calcViewPort$ = (items: IViewPortItem[], maxSize: number, scrollPos, element: HTMLElement, itemDefaultSize: number, ensureParams: IEnsureParams) => {
+        const calcViewPort$ = (items: IViewPortItem[], maxSize: number, scrollPos: number, element: HTMLElement, itemDefaultSize: number, ensureParams: IEnsureParams) => {
+            console.log(`calcViewPort`);
             let listSize = maxSize || clientSize(element);
             if (listSize <= ViewPortService.itemDefaultSize) {
                 listSize = innerSize();
@@ -349,6 +355,8 @@ export class ViewPortService {
                 .switchMap((mode) => {
                     if (ensureParams.index !== undefined) {
                         this.ignoreScrollCount++;
+                    } else {
+                        this.ignoreScrollCount = 0;
                     }
 
                     switch (mode) {
@@ -393,7 +401,8 @@ export class ViewPortService {
                     this.viewPortResult$.next(this.emptyViewPort);
                     return false;
                 }
-            });
+            })
+            .do(() => console.log('items'));
 
         // Ensure item visible by index or instance
         const ensureParams$ = Observable.combineLatest(this.ensureItem$, items$)
@@ -417,19 +426,19 @@ export class ViewPortService {
                 }
 
                 return ensureParams;
-            });
-        // .do(() => console.log('ensureParams'));
+            })
+            .do(() => console.log('ensureParams'));
 
         const maxSize$ = Observable.from(this.maxSize$)
-            .distinctUntilChanged();
-        // .do((value) => console.log(`maxSize ${value}`));
+            .distinctUntilChanged()
+            .do((value) => console.log(`maxSize ${value}`));
 
         const refresh$ = Observable.from(this.refresh$)
             .do(() => {
                 this.ignoreScrollCount = 0;
                 this.lastCalculatedSize = undefined;
-            });
-        // .do(() => console.log('refresh'));
+            })
+            .do(() => console.log('refresh'));
 
         const scrollPos$ = Observable.from(this.scrollPosition$)
             .map((scrollPos) => this._scrollPosition = scrollPos || 0)
@@ -442,32 +451,42 @@ export class ViewPortService {
                     return true;
                 }
             })
-            .distinctUntilChanged();
-        // .do((value) => console.log(`scrollPos ${value}`));
+            .distinctUntilChanged()
+            .do((value) => console.log(`scrollPos ${value}`));
 
         const mode$ = Observable.from(this.mode$)
             .map((mode) => {
                 this._mode = typeof mode === 'string' ? ViewportMode[mode] : mode;
                 return this._mode;
             })
-            .distinctUntilChanged();
-        // .do((value) => console.log(`mode ${value}`));
+            .distinctUntilChanged()
+            .do((value) => console.log(`mode ${value}`));
 
         const direction$ = Observable.from(this.direction$)
             .map((direction) => {
                 this._direction = typeof direction === 'string' ? ViewportDirection[direction] : direction;
                 return this._direction;
             })
-            .distinctUntilChanged();
-        // .do((value) => console.log(`direction ${value}`));
+            .distinctUntilChanged()
+            .do((value) => console.log(`direction ${value}`));
 
         const itemsSize$ = Observable.from(this.itemsSize$)
             .distinctUntilChanged()
-            .do((value) => this._itemsSize = value);
-        // .do((value) => console.log(`itemsSize ${value}`));
+            .do((value) => this._itemsSize = value)
+            .do((value) => console.log(`itemsSize ${value}`));
+
+        const element$ = Observable.from(this.element$)
+            .do((element) => {
+                if (!element) {
+                    this.viewPort = undefined;
+                    this.ignoreScrollCount = 0;
+                    this.lastCalculatedSize = undefined;
+                }
+            })
+            .do(() => console.log(`element`));
 
         // Reset items size when direction change in auto mode
-        Observable.combineLatest(direction$, items$, mode$)
+        Observable.combineLatest(direction$, items$, mode$, this.deleteSizeCache$)
             .filter(([_direction, items, mode]) => items && items.length && mode === ViewportMode.auto)
             .switchMap(([_direction, items]) => items)
             .subscribe((item) => {
@@ -475,10 +494,14 @@ export class ViewPortService {
             });
 
         // Calc view port observable
-        Observable.combineLatest(items$, maxSize$, scrollPos$, this.element$, itemsSize$, ensureParams$, direction$.delay(1), mode$, refresh$)
-            // .do(() => console.log(`calcViewPort`))
-            .switchMap(([items, maxSize, scrollPos, element, itemDefaultSize, ensureParams]: [IViewPortItem[], number, number, HTMLElement, number, IEnsureParams]) => {
+        Observable.combineLatest(items$, maxSize$, itemsSize$, ensureParams$, direction$, mode$, refresh$)
+            .debounceTime(1)
+            .combineLatest(element$, scrollPos$)
+            .filter(([[_items, _maxSize, _itemDefaultSize, _ensureParams, _direction, _mode, _refresh], element, _scrollPos]: [[IViewPortItem[], number, number, IEnsureParams, ViewportDirection, ViewportMode, boolean], HTMLElement, number]) => !!element)
+            .do(() => console.log(`combineLatest`))
+            .switchMap(([[items, maxSize, itemDefaultSize, ensureParams, _direction, _mode, _refresh], element, _scrollPos]: [[IViewPortItem[], number, number, IEnsureParams, ViewportDirection, ViewportMode, boolean], HTMLElement, number]) => {
                 const listSize = this.lastCalculatedSize || maxSize || clientSize(element);
+                const scrollPos = this._scrollPosition;
                 if (listSize < 2 * ViewPortService.itemDefaultSize) {
                     // Set the viewlist to the maximum height to measure the real max-height defined in the css
                     // Use a blank div to do that
@@ -486,12 +509,12 @@ export class ViewPortService {
                     // Wait next life cycle for the result
                     return Observable.timer(1)
                         .do(() => this.lastCalculatedSize = clientSize(element))
-                        .map(() => ({ items, maxSize, scrollPos, element, itemDefaultSize, ensureParams }));
+                        .map(() => ({ element, scrollPos, items, maxSize, itemDefaultSize, ensureParams }));
                 } else {
-                    return Observable.of({ items, maxSize, scrollPos, element, itemDefaultSize, ensureParams });
+                    return Observable.of({ element, scrollPos, items, maxSize, itemDefaultSize, ensureParams });
                 }
             })
-            .switchMap(({ items, maxSize, scrollPos, element, itemDefaultSize, ensureParams }) => calcViewPort$(items, maxSize, scrollPos, element, itemDefaultSize, ensureParams))
+            .switchMap(({ element, scrollPos, items, maxSize, itemDefaultSize, ensureParams }) => calcViewPort$(items, maxSize, scrollPos, element, itemDefaultSize, ensureParams))
             .subscribe((viewPort: IViewPort) => {
                 this.viewPortResult$.next(viewPort);
             }, ((error) => {
@@ -500,6 +523,10 @@ export class ViewPortService {
 
         // Cache last calculated viewport
         Observable.from(this.viewPortResult$).subscribe((viewPort: IViewPort) => this.viewPort = viewPort);
+    }
+
+    public deleteSizeCache() {
+        this.deleteSizeCache$.next(true);
     }
 
     public clear() {
