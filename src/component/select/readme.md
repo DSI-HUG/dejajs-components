@@ -244,8 +244,3 @@ Crée une liste déroulante.
     </span>
 </ng-template>
 ```
-  
-  - `suffixTemplate`
-```html
-TODO DEMO
-```

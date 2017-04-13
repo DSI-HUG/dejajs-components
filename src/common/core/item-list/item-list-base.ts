@@ -381,6 +381,11 @@ export abstract class ItemListBase {
             .subscribe(noop);
     }
 
+    /** Recalcule le viewport. */
+    public refreshViewPort() {
+        this.viewPort.refresh();
+    }
+
     /** Efface le viewport */
     public clearViewPort() {
         this.viewPort.clear();

@@ -9,7 +9,7 @@
  *
  */
 
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { GroupingService, IGroupInfo, IItemTree } from '../../common/core';
 import { DejaTextMetricsService, DejaTreeListComponent, DejaTreeListItemsEvent, IDejaDragEvent, IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDropCursorInfos } from '../../component';
@@ -39,7 +39,8 @@ export class DejaTreeListDemoComponent implements OnInit {
         protected countriesListService: CountriesListService,
         groupingService: GroupingService,
         private textMetricsService: DejaTextMetricsService,
-        newsService: NewsService) {
+        newsService: NewsService,
+        private changeDetectorRef: ChangeDetectorRef) {
         this.countries = this.countriesService.getCountries$(null, 412);
         // this.countries = this.countriesService.getCountries(null, 1);
 
@@ -176,6 +177,11 @@ export class DejaTreeListDemoComponent implements OnInit {
                 dropArea.innerText = `The dropped country is ${country.naqme} - the code is: ${country.code}`;
             },
         } as IDejaMouseDroppableContext;
+    }
+
+    protected imageLoaded() {
+        this.changeDetectorRef.markForCheck();
+        this.treeList.refreshViewPort();
     }
 }
 

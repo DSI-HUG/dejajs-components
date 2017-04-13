@@ -5,56 +5,79 @@
     <!--</md-card>-->
     <!--</md-tab>-->
     <md-tab label="API REFERENCE"></md-tab>
-    <md-tab label="EXAMPLES"></md-tab>
+    <md-tab label="SIMPLE EXAMPLES"></md-tab>
+    <md-tab label="TEMPLATING"></md-tab>
+    <md-tab label="MULTISELECT"></md-tab>
+    <md-tab label="PERFORMANCES"></md-tab>
 </md-tab-group>
 
 <md-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
-    TODO
+    <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/select/readme.md'"></deja-markdown>
 </md-card>
 
 <div *ngIf="tabIndex === 1">
     <md-card class="deja-select-demo demo-card demo-basic">
-        <md-toolbar color="primary">By passing business object</md-toolbar>
-        <md-card-content>
-            <deja-select id="businessSelect" class="placeholder-icon" type="autocomplete" textField="naqme" [(ngModel)]="businessCountry" valueField="code" [models]="countries">
-                <ng-template #placeHolderTemplate>
-                    <md-icon role="img" class="material-icons mat-icon" aria-label="info_outline">info_outline</md-icon>
-                    <span>Liste des pays</span>
-                </ng-template>
-            </deja-select>
-
-            <h4>Selected country model :</h4>
-            <pre>{{businessCountry | json}}</pre>
+        <md-toolbar color="primary">Simple Usage</md-toolbar>
+        <md-card-content fxLayout="row" fxLayoutWrap>
+            <span fxFlex="0 0 100%">Just passing an array of objects</span>
+            <span fxFlex="0 0 45%" fxLajout="column">
+                <deja-select placeholder="Select mode" [(ngModel)]="businessCountry" textField="naqme"  valueField="code" [models]="countries"></deja-select>
+                <deja-select placeholder="Autocomplete" type="autocomplete" [(ngModel)]="businessCountry" textField="naqme"  valueField="code" [models]="countries"></deja-select>
+            </span>
+            <span fxFlex="0 0 45%" fxFlexOffset="10%">
+                <h4>Selected country model :</h4>
+                <pre>{{businessCountry | json}}</pre>
+            </span>
         </md-card-content>
     </md-card>
-
     <md-card class="deja-select-demo demo-card demo-basic">
-        <md-toolbar color="primary">By passing IItemBase</md-toolbar>
-        <md-card-content id="selectContainer">
-            <div #dialog>
-                <deja-dialog *ngIf="dialogVisible" (closed)="dialogVisible = false">
-                    <deja-message-box type="primary" title="Un titre">
-                        <b>Je suis un deja-dialog !</b>
-                        <br /> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sit amet felis id nisl maximus interdum. Morbi mollis sapien sapien. Vivamus lacinia elementum eros
-                        <ng-template #actionsTemplate>
-                            <button id="cancelbtn" md-raised-button>
-									Annuler
-								</button>
-                            <button id="okbtn" md-raised-button color="primary">
-									Valider
-								</button>
-                        </ng-template>
-                    </deja-message-box>
-                </deja-dialog>
-            </div>
+        <md-toolbar color="primary">Keyboard Navigation</md-toolbar>
+        <md-card-content fxLayout="row" fxLayoutWrap>
+            <span fxFlex="0 0 100%">deja-select has some keyboard navigation feature</span>
+            <span fxFlex="0 0 45%" fxLajout="column">
+                <deja-select placeholder="Select a country" [(ngModel)]="businessCountry" textField="naqme"  valueField="code" [models]="countries"></deja-select>
+            </span>
+            <ul fxFlex="0 0 45%" fxFlexOffset="10%">
+                <li>UpArrow: Select the previous item</li>
+                <li>DownArrow: Select the next item</li>
+                <li>Alt+UpArrow: Toogle the dropdown</li>
+                <li>Alt+DownArrow: Toogle the dropdown</li>
+                <li>PageUp: Select the next page item</li>
+                <li>PageDown: Select the previous page item</li>
+                <li>Home: Select the first item</li>
+                <li>End: Select the last item</li>
+                <li>Space: Collapse or expand a group header</li>
+                <li>Enter: Select the current item and close the dropdown</li>
+                <li>A-Z 0-9: Select the next item started with the pressed key</li>
+            </ul>
+        </md-card-content>
+    </md-card>
+    <md-card class="deja-select-demo demo-card demo-basic">
+        <md-toolbar color="primary">Clearable content</md-toolbar>
+        <md-card-content fxLayout="row" fxLayoutWrap>
+            <span fxFlex="0 0 100%">Add the selectionClearable attribute to enable the clear button</span>
+            <span fxFlex="0 0 45%" fxLajout="column">
+                <deja-select placeholder="Clearable content" selectionClearable [(ngModel)]="businessCountry" textField="naqme"  valueField="code" [models]="countries"></deja-select>
+            </span>
+        </md-card-content>
+    </md-card>
+</div>
+
+<div *ngIf="tabIndex === 2">
+    <md-card class="deja-select-demo demo-card demo-basic">
+        <md-toolbar color="primary">Item Templating Example</md-toolbar>
+        <md-card-content>
+            <deja-select #news type="select" viewportMode="auto" textField="title" searchField="description" [models]="news$">
+                <ng-template #itemTemplate let-item let-flatindex="flatindex">
+                    <news-card [item]="item.model" (imageLoaded)="imageLoaded()"></news-card>
+                </ng-template>
+            </deja-select>
             <deja-select id="first" type="autocomplete" class="placeholder-icon" textField="naqme" [(ngModel)]="country" valueField="code" [items]="countries">
                 <ng-template #placeHolderTemplate>
                     <md-icon id="placeholder-icon">map</md-icon>
                     Liste des pays, standard select chargé directement, avec icon
                 </ng-template>
             </deja-select>
-            <deja-select placeholder="Liste des pays, standard select chargé à la demande" [itemListService]="countriesListService" textField="naqme" valueField="code" [(ngModel)]="country"></deja-select>
-            <deja-select placeholder="Autocomplete filtré à la demande" type="autocomplete" [itemListService]="countriesListService" textField="naqme" valueField="code" [(ngModel)]="country" min-search-length="2"></deja-select>
             <deja-select required selectionClearable placeholder="Liste des pays, avec templating" valueField="code" [(ngModel)]="countryForTemnplate" [items]="countriesForTemplate">
                 <ng-template #itemTemplate let-item>
                     <span>{{ item.naqme }}</span>
@@ -71,8 +94,42 @@
                 </ng-template>
             </deja-select>
             <deja-select class="row" type="autocomplete" min-search-length="2" placeholder="Autocomplete 2 characters minimum" textField="naqme" valueField="code" [(ngModel)]="country" [items]="countries"></deja-select>
-            <deja-select class="row" [dropdownContainerId]="'selectContainer'" hideSelected type="multiselect" textField="naqme" valueField="code" placeholder="Multiselect" [(ngModel)]="multiselectModel" [items]="countriesForMultiselect" [unselectingItem]="confirmUnselection()"> </deja-select>
-            <deja-select class="row" [dropdownContainerId]="'selectContainer'" hideSelected type="multiselect" textField="naqme" valueField="code" placeholder="Multiselect avec template de selection" [(ngModel)]="multiselectModel" [items]="countriesForMultiselect">
+            <deja-select class="row" type="autocomplete" placeholder="Autocomplete avec la recherche en gras" textField="naqme" valueField="code" [(ngModel)]="country" [items]="countries">
+                <ng-template #itemTemplate let-query="query" let-item>
+                    <deja-bold-query [query]="query" [value]="item.naqme"></deja-bold-query>
+                </ng-template>
+                <ng-template #hintTemplate>
+                    <span class="validation-error">
+							Hint pour les errers de validations par exemple!
+						</span>
+                </ng-template>
+            </deja-select>
+        </md-card-content>
+    </md-card>
+</div>
+
+<div *ngIf="tabIndex === 3">
+    <md-card class="deja-select-demo demo-card demo-basic">
+        <md-toolbar color="primary">By passing IItemBase</md-toolbar>
+        <md-card-content>
+            <div #dialog>
+                <deja-dialog *ngIf="dialogVisible" (closed)="dialogVisible = false">
+                    <deja-message-box type="primary" title="Un titre">
+                        <b>Je suis un deja-dialog !</b>
+                        <br /> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sit amet felis id nisl maximus interdum. Morbi mollis sapien sapien. Vivamus lacinia elementum eros
+                        <ng-template #actionsTemplate>
+                            <button id="cancelbtn" md-raised-button>
+									Annuler
+								</button>
+                            <button id="okbtn" md-raised-button color="primary">
+									Valider
+								</button>
+                        </ng-template>
+                    </deja-message-box>
+                </deja-dialog>
+            </div>
+            <deja-select class="row" hideSelected type="multiselect" textField="naqme" valueField="code" placeholder="Multiselect" [(ngModel)]="multiselectModel" [items]="countriesForMultiselect" [unselectingItem]="confirmUnselection()"> </deja-select>
+            <deja-select class="row" hideSelected type="multiselect" textField="naqme" valueField="code" placeholder="Multiselect avec template de selection" [(ngModel)]="multiselectModel" [items]="countriesForMultiselect">
                 <ng-template #selectedTemplate let-item>
                     <span id="flight">
 							<i *ngIf="item.code !== 'CH' && item.code !== 'FR'" class="material-icons">flight_land</i>
@@ -87,16 +144,16 @@
                     <span>{{ item.naqme }}</span>
                 </li>
             </ul>
-            <deja-select class="row" type="autocomplete" placeholder="Autocomplete avec la recherche en gras" textField="naqme" valueField="code" [(ngModel)]="country" [items]="countries">
-                <ng-template #itemTemplate let-query="query" let-item>
-                    <deja-bold-query [query]="query" [value]="item.naqme"></deja-bold-query>
-                </ng-template>
-                <ng-template #hintTemplate>
-                    <span class="validation-error">
-							Hint pour les errers de validations par exemple!
-						</span>
-                </ng-template>
-            </deja-select>
+        </md-card-content>
+    </md-card>
+</div>
+
+<div *ngIf="tabIndex === 4">
+    <md-card class="deja-select-demo demo-card demo-basic">
+        <md-toolbar color="primary">By passing IItemBase</md-toolbar>
+        <md-card-content>
+            <deja-select placeholder="Liste des pays, standard select chargé à la demande" [itemListService]="countriesListService" textField="naqme" valueField="code" [(ngModel)]="country"></deja-select>
+            <deja-select placeholder="Autocomplete filtré à la demande" type="autocomplete" [itemListService]="countriesListService" textField="naqme" valueField="code" [(ngModel)]="country" min-search-length="2"></deja-select>
         </md-card-content>
     </md-card>
 </div>

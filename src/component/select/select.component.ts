@@ -439,6 +439,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     // From ControlValueAccessor interface
     public writeValue(value: any) {
         if (!value) {
+            this.removeSelection();
             return;
         }
 
@@ -455,6 +456,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                             return Observable.of('');
                         }
                     })
+                    .first()
                     .subscribe((query) => this.query = query);
             }
         }
@@ -668,8 +670,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                                 }
                             }
                             return false;
-                        },
-                            this.currentItemIndex)
+                        }, this.currentItemIndex)
                             .first()
                             .subscribe((result) => {
                                 if (result.index >= 0) {
@@ -752,16 +753,16 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         }
     }
 
-    protected removeSelection(event: Event, item: IItemBase) {
+    protected removeSelection(event?: Event, item?: IItemBase) {
         if (!this._multiSelect) {
             this.query = '';
             this.dropDownQuery = '';
             this.setSelectedItems(undefined);
             this.onModelChange();
             delete this.selectingItemIndex;
-            this.inputElement.focus();
-            this.hideDropDown();
-        } else {
+            // this.inputElement.focus();
+            // this.hideDropDown();
+        } else if (item) {
             this.toggleSelect$([item], false)
                 .first()
                 .subscribe((selectedItems) => {
@@ -769,10 +770,17 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                     this.setSelectedItems(selected);
                     this.onModelChange(selected);
                 });
+        } else {
+            this.unselectAll$()
+                .first()
+                .subscribe(noop);
+             this.onModelChange();
         }
 
-        event.stopPropagation();
-        return false;
+        if (event) {
+            event.stopPropagation();
+            return false;
+        }
     }
 
     protected calcViewList$(): Observable<IViewPort> {
