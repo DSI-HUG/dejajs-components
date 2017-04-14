@@ -26,7 +26,7 @@ import { INews, NewsService } from '../services/news.service';
 export class DejaTreeListDemoComponent implements OnInit {
     protected tabIndex = 1;
     protected news$: Observable<INews[]>;
-    protected groupedCountries: IItemTree[];
+    protected groupedCountries$: Observable<IItemTree[]>;
     protected countries: Observable<ICountry[]>;
     private selectedCountries: ICountry[];
     private selectedItemsOut: IItemTree[];
@@ -64,9 +64,7 @@ export class DejaTreeListDemoComponent implements OnInit {
                 },
             ] as IGroupInfo[];
 
-            groupingService.group(extendedCountries, groupInfos, 'children').then((groupedResult) => {
-                this.groupedCountries = groupedResult;
-            });
+            this.groupedCountries$ = groupingService.group$(extendedCountries, groupInfos, 'children');
         });
 
         for (let i = 0; i < 50; i++) {
@@ -143,12 +141,7 @@ export class DejaTreeListDemoComponent implements OnInit {
     }
 
     protected onSuffixClicked() {
-        this.groupedCountries[0].$items[0].$items.push({
-            code: 'te',
-            displayName: 'test',
-            naqme: 'te',
-        } as ICountry);
-        this.groupedTreeList.refresh();
+        alert('Suffix clicked');
     }
 
     protected getDragContext() {

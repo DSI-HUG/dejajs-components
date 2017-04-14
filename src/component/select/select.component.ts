@@ -125,6 +125,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
         this.subscriptions.push(this.showDropDown$
             .debounceTime(50)
+            .filter(() => (this.query || '').length >= this.minSearchlength)
             .do(() => this.dropdownVisible = true)  // Ensure that dropdown container exists
             .delay(1)
             .filter(() => !!this.dropDownComponent)  // Show canceled by the hide$ observable if !dropdownVisible
@@ -660,6 +661,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             .do(() => {
                 if ((this.query || '').length < this.minSearchlength) {
                     this._itemList = [];
+                    this.hideDropDown();
                     return;
                 }
             })

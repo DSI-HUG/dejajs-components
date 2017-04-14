@@ -3,7 +3,7 @@
     <span class="text" fxLayout="column">
         <span class="title">{{ item.title }}</span>
         <span class="description">{{ item.description }}</span>
-        <span class="footer" fxFlex="column" fxLayoutAlign="space-between">
+        <span class="footer" fxFlex="column" fxLayoutAlign="space-between" fxLayoutWrap>
             <a class="url" [attr.href]="item.url">{{ item.url }}</a>
             <span class="author">{{ item.author }}</span>
             <span class="publishedAt">{{ item.publishedAt }}</span>

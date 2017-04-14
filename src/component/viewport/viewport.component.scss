@@ -1,7 +1,7 @@
 :host {
     position: relative;
     display: flex;
-    flex-direction: row !important;
+    flex-direction: row;
     overflow: hidden;
     &[hasUpBtn="false"] {
         #up {
@@ -18,32 +18,18 @@
             #viewport-wrapper {
                 width: 100%;
                 overflow-y: auto;
-                >span {
-                    width: 100%;
-                }
             }
         }
         &[horizontal="true"] {
             #viewport-wrapper {
                 height: 100%;
                 overflow-x: auto;
-                >span {
-                    height: 100%;
-                }
             }
         }
     }
     &[buttons="true"] {
         &[horizontal="false"] {
-            flex-direction: column !important;
-            #viewport-wrapper {
-                overflow: visible;
-            }
-        }
-        &[horizontal="true"] {
-            #viewport-wrapper {
-                overflow: hidden;
-            }
+            flex-direction: column;
         }
     }
     #viewport-wrapper {
@@ -51,10 +37,14 @@
         align-items: stretch;
         position: relative;
         flex: 1 1 auto;
-        >span {
+        overflow: hidden;
+        display: flex;
+        >div {
             padding: 0;
             margin: 0;
             overflow: hidden;
+            flex-grow: 1;
+            flex-shrink: 0;
         }
     }
     #up,
@@ -68,6 +58,12 @@
         z-index: 1;
     }
     &[horizontal="false"] {
+        #viewport-wrapper {
+            flex-direction: column;
+            >div {
+                width: 100%;
+            }
+        }
         #up,
         #down {
             padding: 0.15rem 0;
@@ -75,8 +71,9 @@
     }
     &[horizontal="true"] {
         #viewport-wrapper {
-            >span {
-                max-width: 100% !important;
+            flex-direction: row;
+            >div {
+                height: 100%;
             }
         }
         #up,

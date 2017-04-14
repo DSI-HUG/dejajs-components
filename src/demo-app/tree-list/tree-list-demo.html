@@ -33,7 +33,7 @@
                     <span [attr.ddid]="item.code">{{ item.naqme + ' - ' + item.code }}</span>
                 </ng-template>
             </deja-tree-list>
-            <deja-tree-list min-search-length="0" expandButton searchArea sortable multiSelect (selectedChange)="onSelectionChanged($event)" nodataholder="Pas de données" placeholder="Liste des pays, groupés par la première lettre" textField="naqme" [(ngModel)]="groupedCountries" (itemDragStart)="onItemDragStart($event)" #groupedtreelist childrenField="children">
+            <deja-tree-list min-search-length="0" expandButton searchArea sortable multiSelect (selectedChange)="onSelectionChanged($event)" nodataholder="Pas de données" placeholder="Liste des pays, groupés par la première lettre" textField="naqme" [items]="groupedCountries$" (itemDragStart)="onItemDragStart($event)" #groupedtreelist childrenField="children">
                 <ng-template #headerTemplate>
                     <span id="headerTemplateContent" (click)="groupedtreelist.sort()">
                         <span id="title">
@@ -79,8 +79,10 @@
             </div>
         </md-toolbar>
         <md-card-content class="listContainer" fxLayout="row">
-            <deja-tree-list #treeList fxFlex [(ngModel)]="loremList" viewportMode="variable" expandButton searchArea sortable placeholder="Tree list avec des tailles de rows différentes"></deja-tree-list>
-            <deja-tree-list #news fxFlex id="news" [models]="news$" viewportMode="auto" [viewPortRowHeight]="100" searchField="description" multiSelect searchArea sortable placeholder="Automatic row height TreeView ">
+            <deja-tree-list #treeList fxFlex [items]="loremList" viewportMode="variable" expandButton searchArea sortable placeholder="Tree list avec des tailles de rows différentes"></deja-tree-list>
+        </md-card-content>
+        <md-card-content>
+            <deja-tree-list #news id="news" [models]="news$" viewportMode="auto" [viewPortRowHeight]="100" searchField="description" multiSelect searchArea sortable placeholder="Automatic row height TreeView ">
                 <ng-template #itemTemplate let-item let-flatindex="flatindex">
                     <news-card [item]="item.model" (imageLoaded)="imageLoaded(item)"></news-card>
                 </ng-template>
@@ -88,7 +90,7 @@
         </md-card-content>
         <md-card-content class="empty">
             Empty treelist
-            <deja-tree-list nodataholder="Pas de données"></deja-tree-list>
+            <deja-tree-list nodataholder="Pas de données" [models]="[]"></deja-tree-list>
         </md-card-content>
     </md-card>
 </div>

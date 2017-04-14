@@ -165,8 +165,8 @@ export class DejaDropDownComponent implements AfterViewInit {
                 setDropDownPosition({
                     left: resetParams.left ? -1000 : undefined,
                     top: resetParams.top ? -1000 : undefined,
-                    width: resetParams.width ? resetParams.width || null : undefined,
-                    height: resetParams.height ? resetParams.height || null : undefined,
+                    width: resetParams.width ? (resetParams.width !== true ? resetParams.width || null : null) : undefined,
+                    height: resetParams.height ? (resetParams.height !== true ? resetParams.height || null : null) : undefined,
                     valign: resetParams.valign ? null : undefined,
                     halign: resetParams.halign ? null : undefined,
                 } as IDropDownPosition);

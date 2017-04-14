@@ -40,5 +40,8 @@
 	}
     news-card {
         width: 100%;
+        .text {
+            overflow-x: hidden;
+        }
     }
 }

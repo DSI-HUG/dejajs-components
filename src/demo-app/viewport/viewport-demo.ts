@@ -48,7 +48,7 @@ export class DejaViewPortDemoComponent {
     protected news$: Observable<INews[]>;
 
     constructor(newsService: NewsService) {
-        this.news$ = newsService.getNews$(3000);
+        this.news$ = newsService.getNews$(50);
     }
 
     protected imageLoaded(item: IViewPortItem) {

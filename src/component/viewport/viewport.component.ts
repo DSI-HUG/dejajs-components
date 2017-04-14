@@ -30,8 +30,8 @@ export enum DejaViewPortScrollStyle {
 export class DejaViewPortComponent implements OnDestroy,
     AfterViewInit {
 
-    protected beforeSize: string;
-    protected afterSize: string;
+    protected beforeSize: number;
+    protected afterSize: number;
     protected vpItems: IDejaViewPortItem[];
     protected vpStartIndex: number;
     protected vpEndIndex: number;
@@ -140,14 +140,14 @@ export class DejaViewPortComponent implements OnDestroy,
     }
 
     constructor(private changeDetectorRef: ChangeDetectorRef, private viewPort: ViewPortService) {
-        this.subscriptions.push(Observable
-            .fromEvent(window, 'resize')
+        this.subscriptions.push(Observable.fromEvent(window, 'resize')
             .debounceTime(5)
             .subscribe(() => {
-                if (viewPort.mode !== ViewportMode.disabled) {
-                    viewPort.refresh();
-                }
+                this.viewPort.deleteSizeCache();
+                this.viewPort.refresh();
+                this.changeDetectorRef.markForCheck();
             }));
+
 
         this.subscriptions.push(viewPort.viewPort$
             .subscribe((viewPortResult: IViewPort) => {
@@ -169,8 +169,8 @@ export class DejaViewPortComponent implements OnDestroy,
 
                 } else {
                     this.startOffset = 0;
-                    this.beforeSize = viewPortResult.beforeSize ? `${viewPortResult.beforeSize}px` : null;
-                    this.afterSize = viewPortResult.afterSize ? `${viewPortResult.afterSize}px` : null;
+                    this.beforeSize = viewPortResult.beforeSize || null;
+                    this.afterSize = viewPortResult.afterSize || null;
                     this.hasUpButton = false;
                     this.hasDownButton = false;
                 }
@@ -279,8 +279,10 @@ export class DejaViewPortComponent implements OnDestroy,
     }
 
     /** Recalcule le viewport. */
-    public refreshViewPort(item?: IViewPortItem) {
+    public refreshViewPort(item: IViewPortItem) {
+        item.size = undefined;
         this.viewPort.refresh(item);
+        this.changeDetectorRef.markForCheck();
     }
 
     public ensureVisible(item: any) {

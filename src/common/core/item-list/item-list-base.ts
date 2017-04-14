@@ -390,8 +390,10 @@ export abstract class ItemListBase {
     }
 
     /** Recalcule le viewport. */
-    public refreshViewPort(item?: IItemBase) {
-        this.viewPort.refresh(item || null);
+    public refreshViewPort(item: IItemBase) {
+        item.size = undefined;
+        this.viewPort.refresh(item);
+        this.changeDetectorRef.markForCheck();
     }
 
     /** Efface le viewport */

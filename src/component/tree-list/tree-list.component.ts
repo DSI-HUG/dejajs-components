@@ -128,13 +128,12 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                 this.changeDetectorRef.markForCheck();
             }));
 
-        this.subscriptions.push(Observable
-            .fromEvent(window, 'resize')
+        this.subscriptions.push(Observable.fromEvent(window, 'resize')
             .debounceTime(5)
             .subscribe(() => {
-                if (this.viewPort.mode !== ViewportMode.disabled && this.maxHeight === 0) {
-                    this.viewPort.refresh();
-                }
+                this.viewPort.deleteSizeCache();
+                this.viewPort.refresh();
+                this.changeDetectorRef.markForCheck();
             }));
 
         this.maxHeight = 0;

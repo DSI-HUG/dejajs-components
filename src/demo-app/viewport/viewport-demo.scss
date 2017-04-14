@@ -11,12 +11,10 @@ deja-viewport {
         height: calc(100vh - 380px);
         #{$deep} {
             .listitem {
+                box-shadow: inset 1px 0 0 #aaa, inset -1px 0 0 #aaa, inset 0 -1px 0 #aaa;
                 &:first-child {
-                    border-top: 1px #aaa solid;
+                    box-shadow: inset 1px 0 0 #aaa, inset -1px 0 0 #aaa, inset 0 -1px 0 #aaa, inset 0 1px 0 #aaa;
                 }
-                border-left: 1px #aaa solid;
-                border-bottom: 1px #aaa solid;
-                border-right: 1px #aaa solid;
             }
         }
     }
@@ -24,12 +22,10 @@ deja-viewport {
         height: 25rem;
         #{$deep} {
             .listitem {
+                box-shadow: inset -1px 0 0 #aaa, inset 0 -1px 0 #aaa, inset 0 1px 0 #aaa;
                 &:first-child {
-                    border-left: 1px #aaa solid;
+                    box-shadow: inset 1px 0 0 #aaa, inset -1px 0 0 #aaa, inset 0 -1px 0 #aaa, inset 0 1px 0 #aaa;
                 }
-                border-top: 1px #aaa solid;
-                border-bottom: 1px #aaa solid;
-                border-right: 1px #aaa solid;
                 .news {
                     max-width: 45rem;
                     display: block;

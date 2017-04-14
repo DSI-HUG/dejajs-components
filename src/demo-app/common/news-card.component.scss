@@ -1,4 +1,5 @@
 :host {
+    display: block;
     .news {
         padding: 5px;
         overflow: hidden;
@@ -19,10 +20,12 @@
             .title {
                 font-size: 200%;
                 margin: 0 1rem 0.3rem 0.3rem;
+                white-space: normal;
             }
             .description {
                 font-size: 120%;
                 margin: 0.3rem 1rem 0.3rem 0.3rem;
+                white-space: normal;
             }
             .footer {
                 margin: 0.3rem 1rem 0 0.3rem;
