@@ -6,10 +6,23 @@
     <!--</md-tab>-->
     <md-tab label="API REFERENCE"></md-tab>
     <md-tab label="SIMPLE EXAMPLES"></md-tab>
-    <md-tab label="TEMPLATING"></md-tab>
     <md-tab label="MULTISELECT"></md-tab>
+    <md-tab label="TEMPLATING"></md-tab>
     <md-tab label="PERFORMANCES"></md-tab>
 </md-tab-group>
+
+<div #dialog>
+    <deja-dialog *ngIf="dialogVisible" (closed)="dialogVisible = false">
+        <deja-message-box type="primary" title="Un titre">
+            <b>Je suis un deja-dialog !</b>
+            <br /> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sit amet felis id nisl maximus interdum. Morbi mollis sapien sapien. Vivamus lacinia elementum eros
+            <ng-template #actionsTemplate>
+                <button id="cancelbtn" md-raised-button>Annuler</button>
+                <button id="okbtn" md-raised-button color="primary">Valider</button>
+            </ng-template>
+        </deja-message-box>
+    </deja-dialog>
+</div>
 
 <md-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
     <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/select/readme.md'"></deja-markdown>
@@ -65,11 +78,42 @@
 
 <div *ngIf="tabIndex === 2">
     <md-card class="deja-select-demo demo-card demo-basic">
+        <md-toolbar color="primary">Multiselect</md-toolbar>
+        <md-card-content fxLayout="row" fxLayoutWrap>
+            <span fxFlex="0 0 100%">Multiselect example</span>
+            <span fxFlex="0 0 45%" fxLajout="column">
+                <deja-select class="row" hideSelected type="multiselect" textField="naqme" valueField="code" placeholder="Selection hidden" [(ngModel)]="multiselectModel" [items]="countriesForMultiselect"> </deja-select>
+                <deja-select dropdownContainerId="scrollable-content" class="row" type="multiselect" textField="naqme" valueField="code" placeholder="Selection visible" [(ngModel)]="multiselectModel" [items]="countriesForMultiselect"> </deja-select>
+            </span>
+            <span fxFlex="0 0 45%" fxFlexOffset="10%">
+                <h4>Selected country model :</h4>
+                <ul>
+                    <li *ngFor="let item of multiselectModel">
+                        <span>{{ item.naqme }}</span>
+                    </li>
+                </ul>
+            </span>
+        </md-card-content>
+    </md-card>
+</div>
+
+<div *ngIf="tabIndex === 3">
+    <md-card class="deja-select-demo demo-card demo-basic">
         <md-toolbar color="primary">Item Templating Example</md-toolbar>
         <md-card-content>
             <deja-select #news type="select" viewportMode="auto" textField="title" searchField="description" [models]="news$">
                 <ng-template #itemTemplate let-item let-flatindex="flatindex">
                     <news-card [item]="item.model" (imageLoaded)="imageLoaded(item)"></news-card>
+                </ng-template>
+            </deja-select>
+            <deja-select class="row" hideSelected type="multiselect" textField="naqme" valueField="code" placeholder="Multiselect avec template de selection" [(ngModel)]="multiselectModel" [items]="countriesForMultiselect">
+                <ng-template #selectedTemplate let-item>
+                    <span id="flight">
+							<i *ngIf="item.code !== 'CH' && item.code !== 'FR'" class="material-icons">flight_land</i>
+							<i *ngIf="item.code === 'FR'" class="material-icons">flight_landflight_takeoff</i>
+							<i *ngIf="item.code === 'CH'" class="material-icons">flight_takeoff</i>
+							<span>{{ item.naqme + ' - ' + item.code }}</span>
+                    </span>
                 </ng-template>
             </deja-select>
             <deja-select id="first" type="autocomplete" class="placeholder-icon" textField="naqme" [(ngModel)]="country" valueField="code" [items]="countries">
@@ -104,46 +148,6 @@
 						</span>
                 </ng-template>
             </deja-select>
-        </md-card-content>
-    </md-card>
-</div>
-
-<div *ngIf="tabIndex === 3">
-    <md-card class="deja-select-demo demo-card demo-basic">
-        <md-toolbar color="primary">By passing IItemBase</md-toolbar>
-        <md-card-content>
-            <div #dialog>
-                <deja-dialog *ngIf="dialogVisible" (closed)="dialogVisible = false">
-                    <deja-message-box type="primary" title="Un titre">
-                        <b>Je suis un deja-dialog !</b>
-                        <br /> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sit amet felis id nisl maximus interdum. Morbi mollis sapien sapien. Vivamus lacinia elementum eros
-                        <ng-template #actionsTemplate>
-                            <button id="cancelbtn" md-raised-button>
-									Annuler
-								</button>
-                            <button id="okbtn" md-raised-button color="primary">
-									Valider
-								</button>
-                        </ng-template>
-                    </deja-message-box>
-                </deja-dialog>
-            </div>
-            <deja-select class="row" hideSelected type="multiselect" textField="naqme" valueField="code" placeholder="Multiselect" [(ngModel)]="multiselectModel" [items]="countriesForMultiselect" [unselectingItem]="confirmUnselection()"> </deja-select>
-            <deja-select class="row" hideSelected type="multiselect" textField="naqme" valueField="code" placeholder="Multiselect avec template de selection" [(ngModel)]="multiselectModel" [items]="countriesForMultiselect">
-                <ng-template #selectedTemplate let-item>
-                    <span id="flight">
-							<i *ngIf="item.code !== 'CH' && item.code !== 'FR'" class="material-icons">flight_land</i>
-							<i *ngIf="item.code === 'FR'" class="material-icons">flight_landflight_takeoff</i>
-							<i *ngIf="item.code === 'CH'" class="material-icons">flight_takeoff</i>
-							<span>{{ item.naqme + ' - ' + item.code }}</span>
-                    </span>
-                </ng-template>
-            </deja-select>
-            <ul>
-                <li *ngFor="let item of multiselectModel">
-                    <span>{{ item.naqme }}</span>
-                </li>
-            </ul>
         </md-card-content>
     </md-card>
 </div>

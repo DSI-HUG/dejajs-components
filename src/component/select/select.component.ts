@@ -95,7 +95,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     private keyboardNavigation$ = new Subject();
 
-    constructor(changeDetectorRef: ChangeDetectorRef, viewPort: ViewPortService, private elementRef: ElementRef) {
+    constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, private elementRef: ElementRef) {
         super(changeDetectorRef, viewPort);
 
         this.subscriptions.push(Observable.from(this.clearFilterExpression$)
@@ -129,11 +129,12 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             .delay(1)
             .filter(() => !!this.dropDownComponent)  // Show canceled by the hide$ observable if !dropdownVisible
             .do(() => {
-                const item = this.getSelectedItems()[0];
-                const index = item && this.getItemIndex(item);
+                const selectedItems = this.getSelectedItems();
+                const first = selectedItems && selectedItems[0];
+                const index = first && this.getItemIndex(first);
                 if (index >= 0) {
                     // Ensure selection
-                    this.setSelectedItems([item]);
+                    this.setSelectedItems(selectedItems);
                     this.currentItemIndex = index;
                     this.ensureItemVisible(index);
                 } else {
@@ -161,39 +162,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             }));
 
         this._viewPortChanged = this.viewPortChanged;
-
-
-        // this.subscriptions.push(this.showDropDown$
-        //     .debounceTime(50)
-        //     .do(() => this.dropdownVisible = true)  // Ensure that dropdown container exists
-        //     .delay(1)
-        //     .filter(() => !!this.dropDownComponent)  // Show canceled by the hide$ observable if !dropdownVisible
-        //     .switchMap(() => this.calcViewList$().first())
-        //     .delay(1)
-        //     .filter(() => !!this.dropDownComponent)
-        //     .do(() => this.dropDownComponent.show())
-        //     .switchMap(() => this.dropDownComponent.showed)
-        //     .do(() => this.viewPort.element$.next(this.listElement))
-        //     .delay(1)
-        //     .filter(() => !!this.dropDownComponent)
-        //     .do(() => this.dropDownComponent.show({
-        //         height: true,
-        //     } as IDropDownResetParams))
-        //     .delay(1)
-        //     .filter(() => !!this.dropDownComponent)
-        //     .subscribe(() => {
-        //         // Ensure selection
-        //         const item = this.getSelectedItems()[0];
-        //         const index = item && this.getItemIndex(item);
-        //         if (index >= 0) {
-        //             this.currentItemIndex = index;
-        //             this.ensureItemVisible(index);
-        //         } else {
-        //             // Restore scroll Position
-        //             const listElement = this.listElement;
-        //             listElement.scrollTop = this.lastScrollPosition;
-        //         }
-        //     }));
 
         this.subscriptions.push(Observable.from(this.keyboardNavigation$)
             .do(() => this.keyboardNavigation = true)

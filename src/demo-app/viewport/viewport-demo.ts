@@ -1,4 +1,3 @@
-import { IViewPortItem } from './../../common/core/item-list/viewport.service';
 /*
  * *
  *  @license
@@ -10,11 +9,12 @@ import { IViewPortItem } from './../../common/core/item-list/viewport.service';
  *
  */
 
-import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { DejaViewPortComponent } from '../../component';
 import { IEditorLanguage } from '../../component/monaco-editor/options/editor-language.model';
 import { INews, NewsService } from '../services/news.service';
+import { IViewPortItem } from './../../common/core/item-list/viewport.service';
 
 @Component({
     selector: 'deja-viewport-demo',
@@ -47,14 +47,19 @@ export class DejaViewPortDemoComponent {
     protected html = IEditorLanguage.HTML;
     protected news$: Observable<INews[]>;
 
-    constructor(newsService: NewsService, private changeDetectorRef: ChangeDetectorRef) {
+    constructor(newsService: NewsService) {
         this.news$ = newsService.getNews$(3000);
-        // Observable.timer(5000).first().subscribe(() => this.viewport.ensureVisible(23));
     }
 
     protected imageLoaded(item: IViewPortItem) {
-        item.size = undefined;
-        this.changeDetectorRef.markForCheck();
-        this.viewport.refresh();
+        const itemExt = item as IExtendedViewPortItem;
+        if (!itemExt.loaded) {
+            itemExt.loaded = true;
+            this.viewport.refreshViewPort(itemExt);
+        }
     }
+}
+
+interface IExtendedViewPortItem extends IViewPortItem {
+    loaded: boolean;
 }

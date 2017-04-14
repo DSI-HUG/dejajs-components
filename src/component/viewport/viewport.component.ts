@@ -9,6 +9,8 @@
  *
  */
 
+// TODO Key events
+
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, HostBinding, Input, OnDestroy, ViewChild } from '@angular/core';
 import { Observable, Subject, Subscription } from 'rxjs/Rx';
 import { IViewPort, IViewPortItem, ViewportDirection, ViewportMode, ViewPortService } from '../../common/core/item-list';
@@ -276,8 +278,18 @@ export class DejaViewPortComponent implements OnDestroy,
         this.changeDetectorRef.markForCheck();
     }
 
+    /** Recalcule le viewport. */
+    public refreshViewPort(item?: IViewPortItem) {
+        this.viewPort.refresh(item);
+    }
+
     public ensureVisible(item: any) {
         this.viewPort.ensureItem$.next(item);
+    }
+
+    protected getFlexSize(item: IViewPortItem) {
+        const itemSize = this.getItemSize(item);
+        return itemSize ? `${itemSize}px` : 'auto';
     }
 
     protected getItemSize(item: IViewPortItem) {

@@ -1,4 +1,3 @@
-import { IDejaViewPortItem } from './../../component/viewport/viewport.component';
 /*
  * *
  *  @license
@@ -10,9 +9,9 @@ import { IDejaViewPortItem } from './../../component/viewport/viewport.component
  *
  */
 
-import { ChangeDetectorRef, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { GroupingService, IGroupInfo, IItemTree } from '../../common/core';
+import { GroupingService, IGroupInfo, IItemTree, IViewPortItem } from '../../common/core';
 import { DejaTextMetricsService, DejaTreeListComponent, DejaTreeListItemsEvent, IDejaDragEvent, IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDropCursorInfos } from '../../component';
 import { CountriesListService } from '../services/countries-list.service';
 import { CountriesService, ICountry } from '../services/countries.service';
@@ -40,8 +39,7 @@ export class DejaTreeListDemoComponent implements OnInit {
         protected countriesListService: CountriesListService,
         groupingService: GroupingService,
         private textMetricsService: DejaTextMetricsService,
-        newsService: NewsService,
-        private changeDetectorRef: ChangeDetectorRef) {
+        newsService: NewsService) {
         this.countries = this.countriesService.getCountries$(null, 412);
         // this.countries = this.countriesService.getCountries(null, 1);
 
@@ -180,14 +178,20 @@ export class DejaTreeListDemoComponent implements OnInit {
         } as IDejaMouseDroppableContext;
     }
 
-    protected imageLoaded(item: IDejaViewPortItem) {
-        item.size = undefined;
-        this.changeDetectorRef.markForCheck();
-        this.treeList.refreshViewPort();
+    protected imageLoaded(item: IViewPortItem) {
+        const itemExt = item as IExtendedViewPortItem;
+        if (!itemExt.loaded) {
+            itemExt.loaded = true;
+            this.treeList.refreshViewPort(itemExt);
+        }
     }
 }
 
 interface IExtendedCountry extends ICountry {
     groupName: string;
     subGroupName: string;
+}
+
+interface IExtendedViewPortItem extends IViewPortItem {
+    loaded: boolean;
 }

@@ -1,4 +1,3 @@
-import { IViewPortItem } from './../../common/core/item-list/viewport.service';
 /*
  * *
  *  @license
@@ -10,13 +9,14 @@ import { IViewPortItem } from './../../common/core/item-list/viewport.service';
  *
  */
 
-import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { IItemBase, IItemTree } from '../../common/core';
 import { DejaSelectComponent } from '../../component';
 import { CountriesListService } from '../services/countries-list.service';
 import { CountriesService, ICountry } from '../services/countries.service';
 import { INews, NewsService } from '../services/news.service';
+import { IViewPortItem } from './../../common/core/item-list/viewport.service';
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -38,7 +38,7 @@ export class SelectDemoComponent implements OnInit {
     @ViewChild('dialog') private dialogWrapper: ElementRef;
     @ViewChild('news') private newsSelect: DejaSelectComponent;
 
-    constructor(private countriesService: CountriesService, protected countriesListService: CountriesListService, newsService: NewsService, private changeDetectorRef: ChangeDetectorRef) {
+    constructor(private countriesService: CountriesService, protected countriesListService: CountriesListService, newsService: NewsService) {
         this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","displayName":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","displayName":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","displayName":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","displayName":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","displayName":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","displayName":"Dominica","depth":0,"odd":false,"selected":true}]');
         this.news$ = newsService.getNews$(300);
     }
@@ -124,9 +124,11 @@ export class SelectDemoComponent implements OnInit {
     }
 
     protected imageLoaded(item: IViewPortItem) {
-        item.size = undefined;
-        this.changeDetectorRef.markForCheck();
-        this.newsSelect.refreshViewPort();
+        const itemExt = item as IExtendedViewPortItem;
+        if (!itemExt.loaded) {
+            itemExt.loaded = true;
+            this.newsSelect.refreshViewPort(itemExt);
+        }
     }
 }
 
@@ -134,4 +136,8 @@ interface ISelectCountry extends IItemTree {
     groupName?: string;
     suGroupName?: string;
     items?: IItemTree[];
+}
+
+interface IExtendedViewPortItem extends IViewPortItem {
+    loaded: boolean;
 }

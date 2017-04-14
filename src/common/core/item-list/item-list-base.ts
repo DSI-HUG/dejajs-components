@@ -190,7 +190,7 @@ export abstract class ItemListBase {
      * @param {IItemBase[]} items Liste des éléments a selectioner.
      */
     public setSelectedItems(value: IItemBase[]) {
-        this.getItemListService().setSelectedItems(value, this._multiSelect);
+        this.getItemListService().setSelectedItems(value);
         this.changeDetectorRef.markForCheck();
     }
 
@@ -390,8 +390,8 @@ export abstract class ItemListBase {
     }
 
     /** Recalcule le viewport. */
-    public refreshViewPort() {
-        this.viewPort.refresh();
+    public refreshViewPort(item?: IItemBase) {
+        this.viewPort.refresh(item || null);
     }
 
     /** Efface le viewport */
