@@ -10,7 +10,7 @@
  */
 
 import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable, Subscription } from 'rxjs/Rx';
 import { IItemBase, IItemTree } from '../../common/core';
 import { DejaSelectComponent } from '../../component';
 import { CountriesListService } from '../services/countries-list.service';
@@ -27,15 +27,21 @@ import { IViewPortItem } from './../../common/core/item-list/viewport.service';
 export class SelectDemoComponent implements OnInit {
     protected country: ICountry;
     protected tabIndex = 1;
+    protected news$: Observable<INews[]>;
+    protected bigNews$: Observable<INews[]>;
+    protected bigCountries$: Observable<ICountry[]>;
+    protected viewPortInfos: {
+        name: string;
+        value: string;
+    }[];
+    protected viewPortInfos$: Subscription;
+
     private countries: Observable<ICountry[]>;
     private countriesForTemplate: ICountry[];
     private countriesForMultiselect: ICountry[];
     private groupedCountries: IItemTree[];
     private multiselectModel: IItemTree[];
     private dialogVisible = false;
-    protected news$: Observable<INews[]>;
-    protected bigNews$: Observable<INews[]>;
-    protected bigCountries$: Observable<ICountry[]>;
 
     @ViewChild('dialog') private dialogWrapper: ElementRef;
     @ViewChild('news') private newsSelect: DejaSelectComponent;
@@ -127,6 +133,27 @@ export class SelectDemoComponent implements OnInit {
                     return null;
                 });
         };
+    }
+
+    @ViewChild('bigCountries')
+    protected set bigCountriesSelect(select: DejaSelectComponent) {
+        if (this.viewPortInfos$) {
+            this.viewPortInfos$.unsubscribe();
+            this.viewPortInfos = [];
+            delete this.viewPortInfos$;
+        }
+
+        this.viewPortInfos$ = select && select.viewPort.viewPort$.subscribe((viewPort) => {
+            this.viewPortInfos = [
+                { name: 'beforeSize', value: String(viewPort.beforeSize), },
+                { name: 'startIndex', value: String(viewPort.startIndex), },
+                { name: 'viewPortSize', value: String(viewPort.viewPortSize), },
+                { name: 'visibleCount', value: String(viewPort.visibleItems && viewPort.visibleItems.length), },
+                { name: 'endIndex', value: String(viewPort.endIndex), },
+                { name: 'afterSize', value: String(viewPort.afterSize), },
+                { name: 'itemsCount', value: String(viewPort.items && viewPort.items.length), }
+            ];
+        });
     }
 
     protected imageLoaded(item: IViewPortItem) {

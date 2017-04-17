@@ -90,8 +90,8 @@
                 <ul>
                     <li *ngFor="let item of multiselectModel">
                         <span>{{ item.naqme }}</span>
-                    </li>
-                </ul>
+            </li>
+            </ul>
             </span>
         </md-card-content>
         <md-toolbar color="primary">Grouping</md-toolbar>
@@ -108,8 +108,6 @@
             <span fxFlex="0 0 100%">Autocomplete 2 characters minimum</span>
             <span fxFlex="0 0 45%">
                 <deja-select type="autocomplete" [itemListService]="countriesListService" textField="naqme" valueField="code" min-search-length="2"></deja-select>
-            </span>
-            <span fxFlex="0 0 45%" fxFlexOffset="10%">
             </span>
         </md-card-content>
     </md-card>
@@ -151,8 +149,8 @@
                     <ng-template #parentItemTemplate let-item>
                         <md-icon id="placeholder-icon">public</md-icon>&nbsp;
                         <span>{{ item.groupName }}</span>
-                    </ng-template>
-                </deja-select>
+            </ng-template>
+            </deja-select>
             </span>
             <h1>Hint and Suffix Templates</h1>
             <span fxLayout="row">
@@ -161,13 +159,13 @@
                         <span class="validation-error">
                             Hint template. Can be used for the validations errors for exemple!
                         </span>
-                    </ng-template>
-                </deja-select>
-                <deja-select fxFlex="0 0 45%" fxFlexOffset="10%" placeholder="Suffix template selelct" textField="naqme" valueField="code" [items]="countries">
-                    <ng-template #suffixTemplate>
-                        <md-icon id="placeholder-icon">public</md-icon>
-                    </ng-template>
-                </deja-select>
+            </ng-template>
+            </deja-select>
+            <deja-select fxFlex="0 0 45%" fxFlexOffset="10%" placeholder="Suffix template selelct" textField="naqme" valueField="code" [items]="countries">
+                <ng-template #suffixTemplate>
+                    <md-icon id="placeholder-icon">public</md-icon>
+                </ng-template>
+            </deja-select>
             </span>
         </md-card-content>
     </md-card>
@@ -179,15 +177,23 @@
         <md-card-content>
             <h1>10K items with Item Template </h1>
             <div>An exemple with 10000 auto sized templatized items</div>
-            <deja-select #news type="autocomplete" dropdownContainerId="scrollable-content"  placeholder="10000 items select" type="select" viewportMode="auto" textField="title" searchField="description" [models]="bigNews$">
+            <deja-select #news type="autocomplete" dropdownContainerId="scrollable-content" placeholder="10000 items select" type="select" viewportMode="auto" textField="title" searchField="description" [models]="bigNews$">
                 <ng-template #itemTemplate let-item let-flatindex="flatindex">
                     <news-card [item]="item.model" (imageLoaded)="imageLoaded(item)"></news-card>
                 </ng-template>
             </deja-select>
-            
+
             <h1>Fixed size rows 100K items</h1>
             <div>An exemple with 100000 fixed size items</div>
-            <deja-select type="autocomplete" dropdownContainerId="scrollable-content"  placeholder="100000 items select" [items]="bigCountries$" textField="naqme" valueField="code"></deja-select>
+            <span fxLayout="row">
+                <deja-select #bigCountries fxFlex="0 0 45%" type="autocomplete" dropdownContainerId="scrollable-content"  placeholder="100000 items select" [items]="bigCountries$" textField="naqme" valueField="code"></deja-select>
+                <span fxFlex="0 0 45%" fxFlexOffset="10%">
+                    <h4 id="vptitle">Viewport Infos:</h4>
+                    <div *ngFor="let info of viewPortInfos">
+                        <span class="vpinfoname">{{info.name}}</span><span>{{info.value}}</span>
+                    </div>
+                </span>
+            </span>
         </md-card-content>
     </md-card>
 </div>
