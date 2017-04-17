@@ -37,6 +37,8 @@ export class NewsService {
                 }
                 return resp.articles as INews[];
             })
+            .publishLast()
+            .refCount()
             .map((news: INews[]) => {
                 let returnNews = news;
                 if (recordCount) {
@@ -46,9 +48,7 @@ export class NewsService {
                     }
                 }
                 return returnNews;
-            })
-            .publishLast()
-            .refCount();
+            });
     }
 }
 

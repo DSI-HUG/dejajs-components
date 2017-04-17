@@ -40,7 +40,7 @@ export class DejaTreeListDemoComponent implements OnInit {
         groupingService: GroupingService,
         private textMetricsService: DejaTextMetricsService,
         newsService: NewsService) {
-        this.countries = this.countriesService.getCountries$(null, 412);
+        this.countries = this.countriesService.getCountries$(null, 10000);
         // this.countries = this.countriesService.getCountries(null, 1);
 
         this.news$ = newsService.getNews$(3000);

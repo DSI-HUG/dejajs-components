@@ -98,7 +98,16 @@
         <md-card-content fxLayout="row" fxLayoutWrap>
             <span fxFlex="0 0 100%">Grouping example</span>
             <span fxFlex="0 0 45%">
-                <deja-select type="autocomplete" min-search-length="2" placeholder="Autocomplete 2 characters minimum" textField="naqme" valueField="code" [items]="groupedCountries"></deja-select>
+                <deja-select textField="naqme" valueField="code" [items]="groupedCountries"></deja-select>
+            </span>
+            <span fxFlex="0 0 45%" fxFlexOffset="10%">
+            </span>
+        </md-card-content>
+        <md-toolbar color="primary">Autocomplete</md-toolbar>
+        <md-card-content fxLayout="row" fxLayoutWrap>
+            <span fxFlex="0 0 100%">Autocomplete 2 characters minimum</span>
+            <span fxFlex="0 0 45%">
+                <deja-select type="autocomplete" [itemListService]="countriesListService" textField="naqme" valueField="code" min-search-length="2"></deja-select>
             </span>
             <span fxFlex="0 0 45%" fxFlexOffset="10%">
             </span>
@@ -166,10 +175,19 @@
 
 <div *ngIf="tabIndex === 4">
     <md-card class="deja-select-demo demo-card demo-basic">
-        <md-toolbar color="primary">By passing IItemBase</md-toolbar>
+        <md-toolbar color="primary">Performance Examples</md-toolbar>
         <md-card-content>
-            <deja-select placeholder="Liste des pays, standard select chargé à la demande" [itemListService]="countriesListService" textField="naqme" valueField="code" [(ngModel)]="country"></deja-select>
-            <deja-select placeholder="Autocomplete filtré à la demande" type="autocomplete" [itemListService]="countriesListService" textField="naqme" valueField="code" [(ngModel)]="country" min-search-length="2"></deja-select>
+            <h1>10K items with Item Template </h1>
+            <div>An exemple with 10000 auto sized templatized items</div>
+            <deja-select #news type="autocomplete" dropdownContainerId="scrollable-content"  placeholder="10000 items select" type="select" viewportMode="auto" textField="title" searchField="description" [models]="bigNews$">
+                <ng-template #itemTemplate let-item let-flatindex="flatindex">
+                    <news-card [item]="item.model" (imageLoaded)="imageLoaded(item)"></news-card>
+                </ng-template>
+            </deja-select>
+            
+            <h1>Fixed size rows 100K items</h1>
+            <div>An exemple with 100000 fixed size items</div>
+            <deja-select type="autocomplete" dropdownContainerId="scrollable-content"  placeholder="100000 items select" [items]="bigCountries$" textField="naqme" valueField="code"></deja-select>
         </md-card-content>
     </md-card>
 </div>

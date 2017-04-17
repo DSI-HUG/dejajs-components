@@ -11,8 +11,8 @@
 
 import { Injectable } from '@angular/core';
 import { Http, ResponseContentType } from '@angular/http';
-import { MaterialColors } from '../../common/core/style/index';
 import { Observable } from 'rxjs/Observable';
+import { MaterialColors } from '../../common/core/style/index';
 
 @Injectable()
 export class CountriesService {
@@ -22,45 +22,48 @@ export class CountriesService {
 
     public getCountryByIndex$(index: number) {
         return this.getCountries$()
-            .map((countries) => countries[index % countries.length] );
+            .map((countries) => countries[index % countries.length]);
     }
 
     public getCountryByCode$(code: string) {
         return Observable.of(this.countriesDic[code]);
-                }
+    }
 
     public getCountries$(query?: string, number?: number): Observable<ICountry[]> {
+        const repeatCount = number ? Math.ceil(number / 243) : 1;
         return this.http.get('https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/demo-app/services/countries.json', { responseType: ResponseContentType.Json })
-                    .map((response) => {
-                        const datas = response.json();
-                        const countries = datas.data as ICountry[];
-                        let colorIndex = 0;
-                        const colors = this.materialColors.getPalet('700');
-                        countries.forEach((country) => {
-                            country.displayName = country.naqme;
-                            country.color = colors[colorIndex].toHex();
-                            this.countriesDic[country.code] = country;
+            .map((response) => {
+                const datas = response.json();
+                const countries = datas.data as ICountry[];
+                let colorIndex = 0;
+                const colors = this.materialColors.getPalet('700');
+                countries.forEach((country) => {
+                    country.displayName = country.naqme;
+                    country.color = colors[colorIndex].toHex();
+                    this.countriesDic[country.code] = country;
 
-                            if (++colorIndex >= colors.length) {
-                                colorIndex = 0;
-                            }
-                        });
+                    if (++colorIndex >= colors.length) {
+                        colorIndex = 0;
+                    }
+                });
 
-                        if (query) {
-                            const sr = new RegExp('^' + query, 'i');
-                            const sc = new RegExp('^(?!' + query + ').*(' + query + ')', 'i');
-                            const result = countries.filter((z) => sr.test(z.naqme));
-                            countries.forEach((z) => {
-                                if (sc.test(z.naqme)) {
-                                    result.push(z);
-                                }
-                            });
-                            return result;
-                        } else {
-                            return countries;
+                if (query) {
+                    const sr = new RegExp('^' + query, 'i');
+                    const sc = new RegExp('^(?!' + query + ').*(' + query + ')', 'i');
+                    const result = countries.filter((z) => sr.test(z.naqme));
+                    countries.forEach((z) => {
+                        if (sc.test(z.naqme)) {
+                            result.push(z);
                         }
-                    })
-            .repeat(number || 1);
+                    });
+                    return result;
+                } else {
+                    return countries;
+                }
+            })
+            .publishLast()
+            .refCount()
+            .repeat(repeatCount);
     }
 }
 
