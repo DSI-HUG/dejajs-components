@@ -520,6 +520,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         this.subscriptions.push(Observable.fromEvent(this.inputElement, 'focus')
             .filter(() => !this.dropdownVisible)
             .subscribe(() => {
+                 debugger;
                 if (this.isReadOnly) {
                     this.showDropDown();
                 } else {
@@ -659,6 +660,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
         this.subscriptions.push(Observable.merge(keyUp$, this.filter$)
             .do(() => {
+                debugger;
                 if ((this.query || '').length < this.minSearchlength) {
                     this._itemList = [];
                     this.hideDropDown();
