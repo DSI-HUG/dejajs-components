@@ -520,7 +520,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         this.subscriptions.push(Observable.fromEvent(this.inputElement, 'focus')
             .filter(() => !this.dropdownVisible)
             .subscribe(() => {
-                 debugger;
+                 // debugger;
                 if (this.isReadOnly) {
                     this.showDropDown();
                 } else {
