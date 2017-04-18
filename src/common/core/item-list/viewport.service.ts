@@ -262,12 +262,30 @@ export class ViewPortService {
                 });
         };
 
-        const calcDisabledViewPort$ = (items: IViewPortItem[], containerSize: number, scrollPos: number, element: HTMLElement, ensureParams: IEnsureParams): Observable<IViewPort> => {
+        const calcDisabledViewPort$ = (items: IViewPortItem[], containerSize: number, scrollPos: number, element: HTMLElement, ensureParams: IEnsureParams, bindIfAny: boolean): Observable<IViewPort> => {
             let viewPortSize = 0;
             let startIndex: number;
             let endIndex: number;
             let newScrollPos: number;
             const elements = element.getElementsByClassName('listitem');
+
+            let viewPort = {
+                beforeSize: 0,
+                afterSize: 0,
+                listSize: containerSize,
+                viewPortSize: 0,
+                visibleItems: [],
+                startIndex: 0,
+                endIndex: 0,
+                scrollPos: 0,
+                items: items,
+            } as IViewPort;
+
+            if (elements.length === 0 && bindIfAny !== false) {
+                this.viewPortResult$.next(viewPort);
+                return Observable.timer(1).switchMap(() => calcDisabledViewPort$(items, containerSize, scrollPos, element, ensureParams, false));
+            }
+
             if (!ensureParams || ensureParams.index === undefined || !ensureParams.atEnd) {
                 for (let i = 0; i < elements.length; i++) {
                     const itemElement = elements[i] as HTMLElement;
@@ -320,7 +338,7 @@ export class ViewPortService {
             startIndex = startIndex || 0;
             endIndex = endIndex || 0;
 
-            return Observable.of({
+            viewPort = {
                 beforeSize: 0,
                 afterSize: 0,
                 listSize: containerSize,
@@ -330,7 +348,9 @@ export class ViewPortService {
                 endIndex: endIndex,
                 scrollPos: newScrollPos,
                 items: items,
-            } as IViewPort);
+            } as IViewPort;
+
+            return Observable.of(viewPort);
         };
 
         const calcViewPort$ = (items: IViewPortItem[], maxSize: number, scrollPos: number, element: HTMLElement, itemDefaultSize: number, ensureParams: IEnsureParams) => {
@@ -350,7 +370,7 @@ export class ViewPortService {
 
                     switch (mode) {
                         case ViewportMode.disabled:
-                            return calcDisabledViewPort$(items, listSize, scrollPos, element, ensureParams);
+                            return calcDisabledViewPort$(items, listSize, scrollPos, element, ensureParams, true);
                         case ViewportMode.variable:
                             return calcVariableSizeViewPort$(items, listSize, scrollPos, itemDefaultSize, ensureParams);
                         case ViewportMode.auto:
@@ -486,12 +506,12 @@ export class ViewPortService {
             });
 
         // Calc view port observable
-        Observable.combineLatest(items$, maxSize$, itemsSize$, ensureParams$, direction$, mode$, refresh$)
+        Observable.combineLatest(items$, maxSize$, itemsSize$, ensureParams$, direction$, mode$, refresh$, element$)
             .debounceTime(1)
-            .combineLatest(element$, scrollPos$)
-            .filter(([[_items, _maxSize, _itemDefaultSize, _ensureParams, _direction, _mode, _refresh], element, _scrollPos]: [[IViewPortItem[], number, number, IEnsureParams, ViewportDirection, ViewportMode, IViewPortItem], HTMLElement, number]) => !!element)
+            .combineLatest(scrollPos$)
+            .filter(([[_items, _maxSize, _itemDefaultSize, _ensureParams, _direction, _mode, _refresh, element], _scrollPos]: [[IViewPortItem[], number, number, IEnsureParams, ViewportDirection, ViewportMode, IViewPortItem, HTMLElement], number]) => !!element)
             .do(() => consoleLog(`combineLatest`))
-            .switchMap(([[items, maxSize, itemDefaultSize, ensureParams, _direction, _mode, _refresh], element, _scrollPos]: [[IViewPortItem[], number, number, IEnsureParams, ViewportDirection, ViewportMode, IViewPortItem], HTMLElement, number]) => {
+            .switchMap(([[items, maxSize, itemDefaultSize, ensureParams, _direction, _mode, _refresh, element], _scrollPos]: [[IViewPortItem[], number, number, IEnsureParams, ViewportDirection, ViewportMode, IViewPortItem, HTMLElement], number]) => {
                 const listSize = this.lastCalculatedSize || maxSize || clientSize(element);
                 const scrollPos = this._scrollPosition;
                 if (listSize < 2 * ViewPortService.itemDefaultSize) {
