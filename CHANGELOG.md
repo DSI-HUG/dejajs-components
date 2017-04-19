@@ -1,14 +1,22 @@
 <a name="@next"></a>
 # [@next] (2017-04-xx)
 
-### Breaking changes from 1.6.3
+### Breaking changes from 1.6.4
 
 ### Known issues
+
+### Features
+
+### Bug fixes
+
+<a name="1.6.4"></a>
+# [1.6.4] (2017-04-19)
 
 ### Features
 * **SelectComponent:** Add disabled property
 
 ### Bug fixes
+Some bug fixes
 
 <a name="1.6.3"></a>
 # [1.6.3] (2017-04-12)
