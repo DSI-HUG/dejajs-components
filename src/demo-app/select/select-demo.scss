@@ -38,4 +38,14 @@
 			}
 		}
 	}
+    news-card {
+        width: 100%;
+        .text {
+            overflow-x: hidden;
+        }
+    }
+    .vpinfoname {
+        display: inline-block;
+        width: 7rem;    
+    }
 }

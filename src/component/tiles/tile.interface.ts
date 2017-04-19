@@ -22,6 +22,7 @@ export interface IDejaTile {
     id?: string;
     type?: string;
     bounds?: Rect;
+    color?: string;
     templateModel?: any;
     effects?: IDejaTileEffect;
 }

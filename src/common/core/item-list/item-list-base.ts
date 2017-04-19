@@ -9,7 +9,7 @@
  *
  */
 
-import { ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, EventEmitter } from '@angular/core';
 import { Observable, Subscription } from 'rxjs/Rx';
 import { GroupingService, IGroupInfo } from '../grouping/index';
 import { ISortInfos, SortingService, SortOrder } from '../sorting/index';
@@ -46,6 +46,8 @@ export abstract class ItemListBase {
 
     // Sorting
     protected _sortInfos: ISortInfos;
+
+    protected _viewPortChanged: EventEmitter<IViewPort>;
 
     // Drag drop
     protected _ddStartIndex: number;
@@ -85,12 +87,18 @@ export abstract class ItemListBase {
                         } else {
                             Observable.timer(1)
                                 .first()
-                                .subscribe(() => this.listElement.scrollTop = viewPortResult.scrollPos);
+                                .subscribe(() => {
+                                    this.listElement.scrollTop = viewPortResult.scrollPos;
+                                });
                         }
                     }
                 }
 
                 this.changeDetectorRef.markForCheck();
+
+                if (this._viewPortChanged) {
+                    this._viewPortChanged.emit(viewPortResult);
+                }
             });
     }
 
@@ -182,7 +190,7 @@ export abstract class ItemListBase {
      * @param {IItemBase[]} items Liste des éléments a selectioner.
      */
     public setSelectedItems(value: IItemBase[]) {
-        this.getItemListService().setSelectedItems(value, this._multiSelect);
+        this.getItemListService().setSelectedItems(value);
         this.changeDetectorRef.markForCheck();
     }
 
@@ -379,6 +387,13 @@ export abstract class ItemListBase {
         this.calcViewList$()
             .first()
             .subscribe(noop);
+    }
+
+    /** Recalcule le viewport. */
+    public refreshViewPort(item: IItemBase) {
+        item.size = undefined;
+        this.viewPort.refresh(item);
+        this.changeDetectorRef.markForCheck();
     }
 
     /** Efface le viewport */

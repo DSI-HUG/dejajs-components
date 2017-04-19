@@ -107,7 +107,7 @@
 		<md-card-content class="listContainer">
 			<deja-grid id="news" #news groupArea sortable columnsSizable multiSelect [rows]="news$ | async" [columns]="newsColumns" viewportMode="auto" nodataholder="Pas de données" (columnSizeChanged)="onColumnSizeChanged($event)">
 				<ng-template #cellTemplate let-row let-column="column">
-					<img *ngIf="column.name==='logo'" [attr.src]="row.urlsToLogos.small" class="logo">
+					<img *ngIf="column.name==='logo'" [attr.src]="" class="logo">
 				</ng-template>
 			</deja-grid>
 		</md-card-content>

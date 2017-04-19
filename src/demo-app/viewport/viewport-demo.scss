@@ -11,36 +11,32 @@ deja-viewport {
         height: calc(100vh - 380px);
         #{$deep} {
             .listitem {
+                box-shadow: inset 1px 0 0 #aaa, inset -1px 0 0 #aaa, inset 0 -1px 0 #aaa;
                 &:first-child {
-                    border-top: 1px #aaa solid;
+                    box-shadow: inset 1px 0 0 #aaa, inset -1px 0 0 #aaa, inset 0 -1px 0 #aaa, inset 0 1px 0 #aaa;
                 }
-                border-left: 1px #aaa solid;
-                border-bottom: 1px #aaa solid;
-                border-right: 1px #aaa solid;
             }
         }
     }
     &[horizontal="true"] {
-        height: 17rem;
+        height: 25rem;
         #{$deep} {
             .listitem {
+                box-shadow: inset -1px 0 0 #aaa, inset 0 -1px 0 #aaa, inset 0 1px 0 #aaa;
                 &:first-child {
-                    border-left: 1px #aaa solid;
+                    box-shadow: inset 1px 0 0 #aaa, inset -1px 0 0 #aaa, inset 0 -1px 0 #aaa, inset 0 1px 0 #aaa;
                 }
-                border-top: 1px #aaa solid;
-                border-bottom: 1px #aaa solid;
-                border-right: 1px #aaa solid;
-            }
-            .news {
-                .logo {
-                    flex: 0 0 15rem !important;
-                    max-height: 15rem !important;
-                    max-width: 15rem !important;
-                }
-                .text {
-                    flex: 1 1 auto !important;
-                    .description {
-                        max-width: 25rem !important;
+                .news {
+                    max-width: 45rem;
+                    display: block;
+                    .logo {
+                        max-width: 20rem !important;
+                    }
+                    .text {
+                        flex: 0 1 25rem !important;
+                        .footer {
+                            flex-direction: column !important;
+                        }
                     }
                 }
             }

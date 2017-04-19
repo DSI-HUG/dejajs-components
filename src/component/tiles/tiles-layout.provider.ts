@@ -168,7 +168,7 @@ export class DejaTilesLayoutProvider {
                     }
                 }
 
-                height += this.getPixelSize(this.tileMinHeight, this.tileMinHeightUnit);
+                height += this.getPixelSize(2 * this.tileMinHeight, this.tileMinHeightUnit);
 
                 this.container.style.width = `${width}px`;
                 this.container.style.height = `${height}px`;

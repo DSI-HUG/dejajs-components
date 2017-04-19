@@ -1,5 +1,5 @@
 <md-input-container id="input" [attr.wait]="waiter || _waiter" [attr.multiselection]="_multiSelect && selectedItems.length > 0">
-	<input #inputElement type="text" mdInput [readonly]="isReadOnly" (input)="queryChanged($event)" [value]="query">
+	<input #inputElement type="text" mdInput [readonly]="isReadOnly" (input)="queryChanged($event)" [value]="query" [disabled]="disabled">
 	<div id="md-input-prefix" mdPrefix *ngIf="_multiSelect && selectedItems.length > 0">
 		<ul>
 			<li *ngFor="let item of selectedItems; let index = index">
@@ -27,7 +27,7 @@
 </md-input-container>
 <deja-dropdown id="listcontainer" #listcontainer *ngIf="dropdownVisible" [attr.depth-max]="_depthMax || null" [attr.keynav]="keyboardNavigation" [attr.vprowheight]="getViewPortRowHeight()" (mousedown)="mousedown($event)" (hide)="dropdownVisible=false" (scroll)="scroll($event)" [ownerAlignment]="_ownerAlignment" [dropdownAlignment]="_dropdownAlignment" [ownerElement]="inputElement" [containerElement]="containerElement" ownerBottomMargin="-10" ownerTopMargin="-5" ownerRightMargin="0" [style.max-height.px]="maxHeight">
 	<div *ngIf="vpBeforeHeight" [style.height.px]="vpBeforeHeight"></div>
-	<div *ngFor="let item of _itemList; let index = index" #listitem class="listitem" [class.hide]="item.collapsing || item.expanding" [class.parent]="item.depth < _depthMax" [class.collapsed]="item.collapsed" [class.selected]="item.selected" [attr.current]="(_multiSelect && vpStartRow+index === currentItemIndex) || null" [class.unselectable]="item.selectable === false" [attr.depth]="_depthMax ? item.depth : null" [attr.id]="item.id || null" [attr.flat]="index" [style.height.px]="getItemHeight(item)" [class.odd]="(item.depth === _depthMax && item.odd) || null">
+	<div *ngFor="let item of _itemList; let index = index" #listitem class="listitem" [class.hide]="item.collapsing || item.expanding" [class.parent]="item.depth < _depthMax" [class.collapsed]="item.collapsed" [class.selected]="item.selected" [attr.current]="(_multiSelect && vpStartRow+index === currentItemIndex) || null" [class.unselectable]="item.selectable === false" [attr.depth]="_depthMax ? item.depth : null" [attr.id]="item.id || null" [attr.flat]="vpStartRow + index" [style.height.px]="getItemHeight(item)" [class.odd]="(item.depth === _depthMax && item.odd) || null">
 		<span *ngIf="item.$items" id="expandbtn"></span>
 		<ng-container *ngIf="(!item.$items || !parentItemTemplate) && (item.$items || !itemTemplate)">{{ getTextValue(item) }}</ng-container>
 		<ng-container *ngIf="item.$items && parentItemTemplate">

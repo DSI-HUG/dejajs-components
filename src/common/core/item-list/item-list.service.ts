@@ -148,7 +148,7 @@ export class ItemListService {
                         if (its) {
                             this.ensureChildrenProperties(its);
                             // TODO La déselection ne fonctionne pas pendant le chargement
-                            this.ensureSelectedItems(its, true);
+                            this.ensureSelectedItems(its);
                             this.items = [...this.items || [], ...its];
                             this._waiter$.next(false);
                         }
@@ -190,7 +190,7 @@ export class ItemListService {
      * @return {number} Index correspondant à l'élément recherché.
      */
     public getItemIndex(item: IItemBase) {
-        return this._cache.visibleList ? this._cache.visibleList.findIndex((itm) => item === itm) : -1;
+        return this._cache.visibleList ? this._cache.visibleList.findIndex((itm) => this.compareItems(item, itm)) : -1;
     }
 
     /** Renvoie le service utilisé pour le tri de la liste
@@ -494,7 +494,7 @@ export class ItemListService {
     /** Définit la liste des éléments sélectionés.
      * @param {IItemBase[]} items Liste des éléments a selectioner.
      */
-    public setSelectedItems(items: IItemBase[], multiSelect?: boolean) {
+    public setSelectedItems(items: IItemBase[]) {
         if (this.selectedList) {
             this.selectedList.forEach((item) => {
                 item.selected = false;
@@ -505,7 +505,7 @@ export class ItemListService {
             delete this._cache.visibleList;
         }
 
-        this.ensureSelectedItems(this.items, multiSelect);
+        this.ensureSelectedItems(this.items);
     }
 
     /** Déselectionne tous les éléments sélectionés.
@@ -864,7 +864,7 @@ export class ItemListService {
             return this.getItemList$(query, this.selectedList)
                 .do((items) => {
                     if (!this.items || !this.items.length) {
-                        this.ensureSelectedItems(items, multiSelect);
+                        this.ensureSelectedItems(items);
                     }
 
                     if (items !== this.items) {
@@ -1135,29 +1135,25 @@ export class ItemListService {
         }
     }
 
-    private ensureSelectedItems(items: IItemBase[], multiSelect?: boolean) {
+    private ensureSelectedItems(items: IItemBase[]) {
         if (!items || !this.selectedList || this.selectedList.length === 0) {
             return;
         }
 
-        if (multiSelect) {
-            this.selectedList.forEach((item) => item.selected = true);
-        } else {
-            const newSelectedList = [] as IItemBase[];
-            const ensureSelectedChildren = (children: IItemTree[]) => {
-                children.forEach((item) => {
-                    item.selected = this.selectedList.find((selected) => this.compareItems(selected, item)) !== undefined;
-                    if (item.selected) {
-                        newSelectedList.push(item);
-                    }
-                    if (item.$items) {
-                        ensureSelectedChildren(item.$items);
-                    }
-                });
-            };
-            ensureSelectedChildren(items);
-            this.selectedList = newSelectedList;
-        }
+        const newSelectedList = [] as IItemBase[];
+        const ensureSelectedChildren = (children: IItemTree[]) => {
+            children.forEach((item) => {
+                item.selected = this.selectedList.find((selected) => this.compareItems(selected, item)) !== undefined;
+                if (item.selected) {
+                    newSelectedList.push(item);
+                }
+                if (item.$items) {
+                    ensureSelectedChildren(item.$items);
+                }
+            });
+        };
+        ensureSelectedChildren(items);
+        this.selectedList = newSelectedList;
     }
 
     private ensureVisibleListCache$(searchField: string, regExp: RegExp, expandTree: boolean, multiSelect: boolean) {

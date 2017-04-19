@@ -9,11 +9,12 @@
  *
  */
 
-import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { DejaViewPortComponent } from '../../component';
 import { IEditorLanguage } from '../../component/monaco-editor/options/editor-language.model';
 import { INews, NewsService } from '../services/news.service';
+import { IViewPortItem } from './../../common/core/item-list/viewport.service';
 
 @Component({
     selector: 'deja-viewport-demo',
@@ -46,13 +47,19 @@ export class DejaViewPortDemoComponent {
     protected html = IEditorLanguage.HTML;
     protected news$: Observable<INews[]>;
 
-    constructor(newsService: NewsService, private changeDetectorRef: ChangeDetectorRef) {
-        this.news$ = newsService.getNews$(3000);
-        // Observable.timer(5000).first().subscribe(() => this.viewport.ensureVisible(23));
+    constructor(newsService: NewsService) {
+        this.news$ = newsService.getNews$(50);
     }
 
-    protected imageLoaded() {
-        this.changeDetectorRef.markForCheck();
-        this.viewport.refresh();
+    protected imageLoaded(item: IViewPortItem) {
+        const itemExt = item as IExtendedViewPortItem;
+        if (!itemExt.loaded) {
+            itemExt.loaded = true;
+            this.viewport.refreshViewPort(itemExt);
+        }
     }
+}
+
+interface IExtendedViewPortItem extends IViewPortItem {
+    loaded: boolean;
 }

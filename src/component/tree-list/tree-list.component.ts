@@ -68,8 +68,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     @Output() public scroll = new EventEmitter<DejaTreeListScrollEvent>();
     /** Exécuté lorsque l'utilisateur sélectionne ou désélectionne une ligne. */
     @Output() public selectedChange = new EventEmitter<DejaTreeListItemsEvent | DejaTreeListItemEvent>();
-    /** Exécuté lorsque le calcul di viewPort est executé à l'initialisation. */
-    @Output() public afterViewInit = new EventEmitter();
+    /** Exécuté lorsque le calcul du viewPort est executé. */
+    @Output() public viewPortChanged = new EventEmitter<IViewPort>();
 
     /** Internal use */
     @ViewChild('listcontainer') public listContainer: ElementRef;
@@ -107,7 +107,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     private clearFilterExpression$ = new BehaviorSubject<void>(null);
     private filterListComplete$ = new Subject();
 
-    constructor(changeDetectorRef: ChangeDetectorRef, viewPort: ViewPortService, public elementRef: ElementRef) {
+    constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, public elementRef: ElementRef) {
         super(changeDetectorRef, viewPort);
 
         this.subscriptions.push(Observable.from(this.clearFilterExpression$)
@@ -128,16 +128,16 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                 this.changeDetectorRef.markForCheck();
             }));
 
-        this.subscriptions.push(Observable
-            .fromEvent(window, 'resize')
+        this.subscriptions.push(Observable.fromEvent(window, 'resize')
             .debounceTime(5)
             .subscribe(() => {
-                if (this.viewPort.mode !== ViewportMode.disabled && this.maxHeight === 0) {
-                    this.viewPort.refresh();
-                }
+                this.viewPort.deleteSizeCache();
+                this.viewPort.refresh();
+                this.changeDetectorRef.markForCheck();
             }));
 
         this.maxHeight = 0;
+        this._viewPortChanged = this.viewPortChanged;
     }
 
     /** Définit la longueur minimale de caractères dans le champ de recherche avant que la recherche ou le filtrage soient effectués */
@@ -538,6 +538,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                 const setCurrentIndex = (index: number) => {
                     this.currentItemIndex = index;
                     this.ensureItemVisible(this.currentItemIndex);
+                    this.viewPort.refresh();
                 };
 
                 const currentIndex = this.rangeStartIndex >= 0 ? this.rangeStartIndex : this.rangeStartIndex = this.currentItemIndex;
@@ -917,12 +918,6 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
     protected calcViewList$(): Observable<IViewPort> {
         return super.calcViewList$(this.query)
-            .do(() => {
-                if (this.rowsCount > 0 && this.afterViewInit) {
-                    this.afterViewInit.emit();
-                    this.afterViewInit = null;
-                }
-                this.changeDetectorRef.markForCheck();
-            });
+            .do(() => this.changeDetectorRef.markForCheck());
     }
 }

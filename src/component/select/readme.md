@@ -51,6 +51,12 @@ Crée une liste déroulante.
     <td>Hauteur maximum avant que le composant affiche une scrollbar (Spécifier une grande valeur pour ne jamais afficher de scroolbar)</td>
 </tr>
 <tr>
+    <td>disabled</td>
+    <td>boolean</td>
+    <td>null</td>
+    <td>Désactive le select</td>
+</tr>
+<tr>
     <td>dropdownContainerId</td>
     <td>string</td>
     <td></td>
@@ -243,9 +249,4 @@ Crée une liste déroulante.
         <span>{{ item.naqme + ' - ' + item.code }}</span>
     </span>
 </ng-template>
-```
-  
-  - `suffixTemplate`
-```html
-TODO DEMO
 ```
