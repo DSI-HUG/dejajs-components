@@ -25,6 +25,7 @@ import { IViewPortItem } from './../../common/core/item-list/viewport.service';
     templateUrl: './select-demo.html',
 })
 export class SelectDemoComponent implements OnInit {
+    protected disabled: boolean;
     protected country: ICountry;
     protected tabIndex = 1;
     protected news$: Observable<INews[]>;

@@ -9,7 +9,7 @@
  *
  */
 
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, forwardRef, Input, OnDestroy, Output, ViewChild, ViewEncapsulation, } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, forwardRef, HostBinding, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
 import { IItemBase, IItemTree, ItemListBase, ItemListService, IViewPort, ViewportMode, ViewPortService } from '../../common/core/item-list';
@@ -75,6 +75,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @ViewChild('listcontainer') private listContainer: any;
     @ViewChild(DejaDropDownComponent) private dropDownComponent: DejaDropDownComponent;
 
+    @HostBinding('attr.disabled') private _disabled: boolean;
+    private disabled$ = new BehaviorSubject<boolean>(false);
     private _type = 'select';
     private selectingItemIndex: number;
     private dropDownQuery = '';
@@ -97,6 +99,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, private elementRef: ElementRef) {
         super(changeDetectorRef, viewPort);
+
+        this.subscriptions.push(Observable.from(this.disabled$).subscribe((value) => this._disabled = value || null));
 
         this.subscriptions.push(Observable.from(this.clearFilterExpression$)
             .debounceTime(750).subscribe(() => this.filterExpression = ''));
@@ -206,6 +210,16 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     public get minSearchlength() {
         return this._minSearchLength;
+    }
+
+    /** Permet de désactiver le select */
+    @Input()
+    public set disabled(value: boolean | string) {
+        this.disabled$.next(value != null && `${value}` !== 'false');
+    }
+
+    public get disabled() {
+        return this._disabled;
     }
 
     /** Indique ou détermine si le bouton pour effacer la selection doit être affiché */
@@ -508,6 +522,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     public ngAfterViewInit() {
         this.subscriptions.push(Observable.fromEvent(this.inputElement, 'click')
             .filter(() => !this.dropdownVisible)
+            .combineLatest(this.disabled$)
+            .filter(([_e, disabled]) => !disabled)
             .subscribe(() => {
                 if (!this.isReadOnly) {
                     this.inputElement.select();
@@ -519,6 +535,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
         this.subscriptions.push(Observable.fromEvent(this.inputElement, 'focus')
             .filter(() => !this.dropdownVisible)
+            .combineLatest(this.disabled$)
+            .filter(([_e, disabled]) => !disabled)
             .delay(10)
             .filter(() => this.inputElement === document.activeElement)
             .subscribe(() => {

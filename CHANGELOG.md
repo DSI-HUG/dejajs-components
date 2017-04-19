@@ -6,6 +6,7 @@
 ### Known issues
 
 ### Features
+* **SelectComponent:** Add disabled property
 
 ### Bug fixes
 

@@ -74,6 +74,15 @@
             </span>
         </md-card-content>
     </md-card>
+    <md-card class="deja-select-demo demo-card demo-basic">
+        <md-toolbar color="primary">Disableable select</md-toolbar>
+        <md-card-content fxLayout="row" fxLayoutWrap>
+            <span fxFlex="0 0 100%"><md-checkbox [(ngModel)]="disabled" color="primary">Check me to disable select below</md-checkbox></span>
+            <span fxFlex="0 0 45%" fxLajout="column">
+                <deja-select placeholder="Disableable select" [disabled]="disabled" selectionClearable [(ngModel)]="businessCountry" textField="naqme" valueField="code" [models]="countries"></deja-select>
+            </span>
+        </md-card-content>
+    </md-card>
 </div>
 
 <div *ngIf="tabIndex === 2">
