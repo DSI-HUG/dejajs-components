@@ -148,12 +148,7 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
             this.copy$sub = this.keyup$
                 .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.KeyC && event.ctrlKey)
                 .subscribe(() => {
-                    const tiles = this.layoutProvider.copySelection();
-                    if (tiles && tiles.length) {
-                        const event = new CustomEvent('DejaTilesCopied', { cancelable: true }) as IDejaTilesEvent;
-                        event.tiles = tiles.map((tile) => tile.toTileModel());
-                        this.contentCopied.emit(event);
-                    }
+                    this.copySelection();
                 });
 
         } else if (this.copy$sub) {
@@ -169,12 +164,7 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
                 .filter(() => this.layoutProvider.designMode)
                 .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.KeyX && event.ctrlKey)
                 .subscribe(() => {
-                    const tiles = this.layoutProvider.cutSelection();
-                    if (tiles && tiles.length) {
-                        const event = new CustomEvent('DejaTilesCutted', { cancelable: true }) as IDejaTilesEvent;
-                        event.tiles = tiles.map((tile) => tile.toTileModel());
-                        this.contentCopied.emit(event);
-                    }
+                    this.cutSelection();
                 });
 
         } else if (this.cut$sub) {
@@ -215,11 +205,21 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
     }
 
     public copySelection() {
-        return this.layoutProvider.copySelection();
+        const tiles = this.layoutProvider.copySelection();
+        if (tiles && tiles.length) {
+            const event = new CustomEvent('DejaTilesCopied', { cancelable: true }) as IDejaTilesEvent;
+            event.tiles = tiles.map((tile) => tile.toTileModel());
+            this.contentCopied.emit(event);
+        }
     }
 
     public cutSelection() {
-        return this.layoutProvider.cutSelection();
+        const tiles = this.layoutProvider.cutSelection();
+        if (tiles && tiles.length) {
+            const event = new CustomEvent('DejaTilesCutted', { cancelable: true }) as IDejaTilesEvent;
+            event.tiles = tiles.map((tile) => tile.toTileModel());
+            this.contentCopied.emit(event);
+        }
     }
 
     public deleteSelection() {

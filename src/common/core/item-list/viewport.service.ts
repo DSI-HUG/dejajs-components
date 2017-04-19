@@ -104,7 +104,8 @@ export class ViewPortService {
         };
 
         const clientSize = (element: HTMLElement) => {
-            return this._direction === ViewportDirection.horizontal ? element.clientWidth : element.clientHeight;
+            const clientRect = element.getBoundingClientRect();
+            return Math.ceil(this._direction === ViewportDirection.horizontal ? clientRect.width : clientRect.height);
         };
 
         const calcFixedSizeViewPort$ = (items: IViewPortItem[], containerSize: number, scrollPos: number, itemDefaultSize: number, ensureParams: IEnsureParams): Observable<IViewPort> => {
@@ -390,6 +391,12 @@ export class ViewPortService {
                     } else if (items.length && endScrollPos > 0 && (viewPort.scrollPos || scrollPos) > endScrollPos) {
                         // Scroll position is over the last item
                         // Ensure last item visible and recalc viewport
+                        return calcViewPort$(items, maxSize, 0, element, itemDefaultSize, {
+                            index: items.length - 1,
+                            atEnd: true,
+                        } as IEnsureParams);
+                    } else if (this.mode === ViewportMode.auto && viewPort.listSize < listSize) {
+                        // Rendered viewport is to small, render again to complete
                         return calcViewPort$(items, maxSize, 0, element, itemDefaultSize, {
                             index: items.length - 1,
                             atEnd: true,
