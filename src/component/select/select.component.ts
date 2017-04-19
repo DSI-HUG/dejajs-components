@@ -521,9 +521,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     public ngAfterViewInit() {
         this.subscriptions.push(Observable.fromEvent(this.inputElement, 'click')
-            .filter(() => !this.dropdownVisible)
-            .combineLatest(this.disabled$)
-            .filter(([_e, disabled]) => !disabled)
+            .filter(() => !this.dropdownVisible && !this.disabled)
             .subscribe(() => {
                 if (!this.isReadOnly) {
                     this.inputElement.select();
@@ -534,9 +532,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             }));
 
         this.subscriptions.push(Observable.fromEvent(this.inputElement, 'focus')
-            .filter(() => !this.dropdownVisible)
-            .combineLatest(this.disabled$)
-            .filter(([_e, disabled]) => !disabled)
+            .filter(() => !this.dropdownVisible && !this.disabled)
             .delay(10)
             .filter(() => this.inputElement === document.activeElement)
             .subscribe(() => {
