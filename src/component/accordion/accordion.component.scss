@@ -37,9 +37,11 @@ deja-accordion {
 		&.open {
 			border-radius: 2px;
 			margin: 1rem 0;
+			overflow: initial;
 
 			.accordion-body {
 				max-height: 1000px;
+				overflow: initial;
 			}
 		}
 	}
