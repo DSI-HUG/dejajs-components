@@ -100,6 +100,8 @@ export class DejaTilesLayoutProvider {
     private hundredPercentWith: number;
     private dragTarget: Rect;
 
+    private selectedIds = [] as string[];
+
     constructor(private clipboardService: DejaClipboardService) {
         Observable.from(this.refreshTiles$)
             .debounceTime(30)
@@ -441,19 +443,25 @@ export class DejaTilesLayoutProvider {
 
     public set selectedTiles(selectedIds: string[]) {
         const selectedTiles = [];
-        const idsDic = {};
         let raiseEvent = false;
+
+        const idsDic = {};
         selectedIds.forEach((id) => idsDic[id] = true);
 
+        const previousIdsDic = {};
+        this.selectedIds.forEach((id) => previousIdsDic[id] = true);
+
         this.tiles.forEach((tile: DejaTile) => {
-            if (tile.isSelected !== idsDic[tile.id]) {
+            if (idsDic[tile.id] !== previousIdsDic[tile.id]) {
                 raiseEvent = true;
-                tile.isSelected = idsDic[tile.id];
             }
+            tile.isSelected = idsDic[tile.id];
             if (tile.isSelected) {
                 selectedTiles.push(tile);
             }
         });
+
+        this.selectedIds = selectedIds;
 
         if (raiseEvent) {
             const event = new CustomEvent('DejaTilesAddEvent', { cancelable: false }) as IDejaTilesEvent;
