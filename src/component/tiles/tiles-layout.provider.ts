@@ -442,18 +442,24 @@ export class DejaTilesLayoutProvider {
     public set selectedTiles(selectedIds: string[]) {
         const selectedTiles = [];
         const idsDic = {};
+        let raiseEvent = false;
         selectedIds.forEach((id) => idsDic[id] = true);
 
         this.tiles.forEach((tile: DejaTile) => {
-            tile.isSelected = idsDic[tile.id];
+            if (tile.isSelected !== idsDic[tile.id]) {
+                raiseEvent = true;
+                tile.isSelected = idsDic[tile.id];
+            }
             if (tile.isSelected) {
                 selectedTiles.push(tile);
             }
         });
 
-        const event = new CustomEvent('DejaTilesAddEvent', { cancelable: false }) as IDejaTilesEvent;
-        event.tiles = selectedTiles;
-        this.selectionChanged.emit(event);
+        if (raiseEvent) {
+            const event = new CustomEvent('DejaTilesAddEvent', { cancelable: false }) as IDejaTilesEvent;
+            event.tiles = selectedTiles;
+            this.selectionChanged.emit(event);
+        }
     }
 
     public set tileminwidth(value: string) {
