@@ -33,18 +33,10 @@
         }
     }
     #viewport-wrapper {
-        justify-content: flex-start;
-        align-items: stretch;
         position: relative;
-        flex-grow: 1;
-        overflow: hidden;
-        display: flex;
         >div {
             padding: 0;
             margin: 0;
-            overflow: hidden;
-            flex-grow: 0;
-            flex-shrink: 0;
         }
     }
     #up,
@@ -59,7 +51,6 @@
     }
     &[horizontal="false"] {
         #viewport-wrapper {
-            flex-direction: column;
             >div {
                 width: 100%;
             }
@@ -71,7 +62,6 @@
     }
     &[horizontal="true"] {
         #viewport-wrapper {
-            flex-direction: row;
             >div {
                 height: 100%;
             }
