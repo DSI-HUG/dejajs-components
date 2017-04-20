@@ -302,7 +302,7 @@ export class DejaViewPortComponent implements OnDestroy {
         this.viewPort.ensureItem$.next(item);
     }
 
-    protected getFlexSize(item: IViewPortItem) {
+    protected getCssSize(item: IViewPortItem) {
         const itemSize = this.getItemSize(item);
         return itemSize ? `${itemSize}px` : 'auto';
     }
