@@ -5,7 +5,9 @@ describe('Accordion page', function () {
 
     beforeAll(function() {
         browser.get('/');
-        element(by.css('md-nav-list > a[href="/accordion"]')).click();
+        element(by.css('md-toolbar-row > a[href="/components"]')).click().then(function () {
+            element(by.css('md-nav-list > a[ng-reflect-router-link="accordion"]')).click();
+        });
     });
 
     it('all accordion should be opening on click', function () {

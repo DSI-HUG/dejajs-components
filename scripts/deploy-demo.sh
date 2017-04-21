@@ -29,9 +29,6 @@ rm -rf dist/**/* || exit 0
 # Run our compile script
 npm run travis-build:prod
 
-# copy 404.html file
-cp 404.html dist/
-
 # Now let's go have some fun with the cloned repo
 cd dist
 git config user.name "Travis CI"
