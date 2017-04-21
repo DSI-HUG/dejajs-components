@@ -2,6 +2,7 @@ var webpack = require("webpack");
 var webpackMerge = require("webpack-merge");
 var commonConfig = require("./webpack.config.common.js");
 var HtmlWebpackPlugin = require("html-webpack-plugin");
+var path = require("path");
 
 module.exports = webpackMerge.smart(commonConfig, {
     entry: {
@@ -23,7 +24,7 @@ module.exports = webpackMerge.smart(commonConfig, {
     output: {
         chunkFilename: "[id].[hash].chunk.js",
         filename: "[name].[hash].js",
-        path: "./dist",
+        path: path.join(__dirname, "dist"),
         publicPath: "/dejajs-components/",
     },
 
