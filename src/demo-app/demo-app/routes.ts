@@ -18,6 +18,9 @@ import { DejaContentEditableDemoComponent } from '../content-editable/content-ed
 import { DejaDatePickerDemoComponent } from '../date-picker/date-picker-demo';
 import { GlobalEventsDemoComponent } from '../global-events/global-events-demo';
 import { GridDemoComponent } from '../grid/grid-demo';
+import { HomeComponentsComponent } from '../home-components/home-components.component';
+import { HomeGuidesComponent } from '../home-guides/home-guides.component';
+import { HomeComponent } from '../home/home.component';
 import { MenuDemoComponent } from '../menu/menu-demo';
 import { MessageBoxDemoComponent } from '../message-box/message-box-demo';
 import { DejaMonacoEditorDemoComponent } from '../monaco-editor/monaco-editor-demo';
@@ -31,40 +34,41 @@ import { TextAreaDemoComponent } from '../textarea/textarea-demo';
 import { TilesDemoComponent } from '../tiles/tiles-demo';
 import { DejaTreeListDemoComponent } from '../tree-list/tree-list-demo';
 import { DejaViewPortDemoComponent } from '../viewport/viewport-demo';
-import { HomeComponent } from './home-app';
 /* deja-cli import demo */
 /* The comment above mustn't be removed ! */
 
 const routes: Routes = [
     { component: HomeComponent, path: '' },
-    { component: DejaAccordionDemoComponent, path: 'accordion' },
-    { component: DejaCircularPickerDemoComponent, path: 'circular-picker' },
-    { component: DejaColorSelectorDemoComponent, path: 'colorselector' },
-    { component: DejaContentEditableDemoComponent, path: 'contenteditableselector' },
-    { component: DejaDatePickerDemoComponent, path: 'date-picker' },
-    { component: GlobalEventsDemoComponent, path: 'events' },
-    { component: GridDemoComponent, path: 'grid' },
-    { component: MenuDemoComponent, path: 'menu' },
-    { component: MessageBoxDemoComponent, path: 'message-box' },
-    { component: SelectDemoComponent, path: 'select' },
-    { component: TextAreaDemoComponent, path: 'textarea' },
-    { component: TilesDemoComponent, path: 'tiles' },
-    { component: DejaTreeListDemoComponent, path: 'tree-list' },
-    { component: ProgressCircleDemoComponent, path: 'progress-circle' },
-    {
-        component: DejaMonacoEditorDemoComponent, path: 'monaco-editor', resolve: {
-            jsonFile: MonacoEditorJsonFileResolver,
-            jsonToCompareFile: MonacoEditorJsonToCompareFileResolver,
-            xmlFile: MonacoEditorXmlFileResolver,
-            xmlToCompareFile: MonacoEditorXmlToCompareFileResolver,
-        }
-    },
-    { component: DejaSnackbarDemoComponent, path: 'snackbar' },
-    { component: DejaRangeDemoComponent, path: 'range' },
-    { component: DejaSplitterDemoComponent, path: 'splitter' },
-    { component: DejaViewPortDemoComponent, path: 'viewport' },
-    /* deja-cli route demo */
-    /* The comment above mustn't be removed ! */
+    { component: HomeComponentsComponent, path: 'components', children: [
+        { component: DejaAccordionDemoComponent, path: 'accordion' },
+        { component: DejaCircularPickerDemoComponent, path: 'circular-picker' },
+        { component: DejaColorSelectorDemoComponent, path: 'colorselector' },
+        { component: DejaContentEditableDemoComponent, path: 'contenteditableselector' },
+        { component: DejaDatePickerDemoComponent, path: 'date-picker' },
+        { component: GlobalEventsDemoComponent, path: 'events' },
+        { component: GridDemoComponent, path: 'grid' },
+        { component: MenuDemoComponent, path: 'menu' },
+        { component: MessageBoxDemoComponent, path: 'message-box' },
+        { component: SelectDemoComponent, path: 'select' },
+        { component: TextAreaDemoComponent, path: 'textarea' },
+        { component: TilesDemoComponent, path: 'tiles' },
+        { component: DejaTreeListDemoComponent, path: 'tree-list' },
+        { component: ProgressCircleDemoComponent, path: 'progress-circle' },
+        {
+            component: DejaMonacoEditorDemoComponent, path: 'monaco-editor', resolve: {
+                jsonFile: MonacoEditorJsonFileResolver,
+                jsonToCompareFile: MonacoEditorJsonToCompareFileResolver,
+                xmlFile: MonacoEditorXmlFileResolver,
+                xmlToCompareFile: MonacoEditorXmlToCompareFileResolver,
+            }
+        },
+        { component: DejaSnackbarDemoComponent, path: 'snackbar' },
+        { component: DejaRangeDemoComponent, path: 'range' },
+        { component: DejaSplitterDemoComponent, path: 'splitter' },
+        { component: DejaViewPortDemoComponent, path: 'viewport' },
+        { path: '**', pathMatch: 'prefix', redirectTo: 'accordion'},
+    ]},
+    { component: HomeGuidesComponent, path: 'guides' },
 ];
 
 export const routing: ModuleWithProviders = RouterModule.forRoot(routes);

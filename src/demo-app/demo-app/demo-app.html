@@ -1,46 +1,9 @@
 <md-toolbar color="primary">
-    <button md-icon-button (click)="navOpened = !navOpened">
-            <md-icon class="md-24">{{navOpened ? 'clear' : 'menu'}}</md-icon>
-        </button>
-    <div class="demo-toolbar">
-        <h1>DEJA-JS Demo App</h1>
-    </div>
+    <a md-button routerLink="/"><md-icon>important_devices</md-icon> DEJA JS</a>
+    <a md-button routerLink="/components">COMPONENTS</a>
+    <a md-button routerLink="/guides">GUIDES</a>
+    <span fxFlex></span>
+    <a md-button href="https://github.com/DSI-HUG/dejajs-components" target="_blank">GITHUB</a>
 </md-toolbar>
-<md-sidenav-container class="demo-root flex display-flex" [class.debug]="debug">
-    <md-sidenav #start mode="side" [opened]="navOpened">
-        <md-nav-list>
-            <a md-list-item [routerLink]="['accordion']">Accordion</a>
-            <a md-list-item [routerLink]="['circular-picker']">Circular Picker</a>
-            <a md-list-item [routerLink]="['colorselector']">Color Selector</a>
-            <a md-list-item [routerLink]="['contenteditableselector']">Content Editable</a>
-            <a md-list-item [routerLink]="['date-picker']">Date Picker</a>
-            <a md-list-item [routerLink]="['events']">Events</a>
-            <a md-list-item [routerLink]="['grid']">Grid</a>
-            <a md-list-item [routerLink]="['menu']">Menu</a>
-            <a md-list-item [routerLink]="['message-box']">Message Box</a>
-            <a md-list-item [routerLink]="['monaco-editor']">Monaco Editor</a>
-            <a md-list-item [routerLink]="['progress-circle']">Progress</a>
-            <a md-list-item [routerLink]="['range']">Range</a>
-            <a md-list-item [routerLink]="['select']">Select</a>
-            <a md-list-item [routerLink]="['snackbar']">Snackbar</a>
-            <a md-list-item [routerLink]="['splitter']">Splitter</a>
-            <a md-list-item [routerLink]="['textarea']">Text Area</a>
-            <a md-list-item [routerLink]="['tiles']">Tiles</a>
-            <a md-list-item [routerLink]="['tree-list']">Tree List</a>
-            <a md-list-item [routerLink]="['viewport']">Viewport</a>
-            <a md-list-item (click)="openIFrame($event)">Iframe</a>
-            <!-- deja-cli route demo -->
-            <!-- The comment above mustn't be removed ! -->
-        </md-nav-list>
-    </md-sidenav>
-    <div id="scrollable-content">
-        <div dir="ltr" class="demo-content flex">
-            <router-outlet></router-outlet>
-        </div>
-    </div>
-</md-sidenav-container>
-<deja-mouse-dragdrop-cursor></deja-mouse-dragdrop-cursor>
-<deja-backdrop id="iframePopup" *ngIf="iframeOpened" (click)="iframeOpened=false">
-    <deja-iframe sourceUrl="http://www.youtube.com/embed/M7lc1UVf-VE?autoplay=1&origin=http://example.com"></deja-iframe>
-    <!--<deja-iframe sourceUrl="http://localhost:5100"></deja-iframe>-->
-</deja-backdrop>
+
+<router-outlet></router-outlet>

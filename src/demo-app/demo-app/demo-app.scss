@@ -1,7 +1,10 @@
 @import '../../scss/index.scss';
+@import '~@angular/material/theming';
+@import 'theme.scss';
 
-// Import global theme
-@import '../../scss/variables/themeHUG';
+
+// Include theme styles for core and each component used in the app.
+@include angular-material-theme($theme);
 @include deja-theme($theme);
 
 html,
@@ -17,7 +20,7 @@ demo-app {
     height: 100%;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    // overflow: hidden;
 }
 
 body {
