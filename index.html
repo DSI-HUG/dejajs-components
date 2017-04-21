@@ -6,7 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
 
-	<title>DEJA-JS Demo App</title>
+    <title>
+        DEJA-JS Demo App
+    </title>
+    <meta name="description" content="This is the home for the Hôpital Univesitaire de Genève - DSI - Domaine Patient team's Angular2 components for Angular 2 and material.">
     <base href="https://dsi-hug.github.io/dejajs-components/">
 </head>
 
@@ -16,14 +19,43 @@
     </demo-app>
 
     <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-      ga('create', 'UA-92183749-1', 'auto');
-      ga('send', 'pageview');
+        if (sessionStorage && history) {
+            // simulate html5 mode server behavior on github pages - see 404.html
+            var redirect = sessionStorage.redirect;
+            delete sessionStorage.redirect;
+            if (redirect && redirect != location.href) {
+                history.replaceState(null, null, redirect);
+            }
+        }
     </script>
-<script type="text/javascript" src="/dejajs-components/./src/polyfills.ts.a2837824ccf600612609.js"></script><script type="text/javascript" src="/dejajs-components/./src/demo-app/main.ts.a2837824ccf600612609.js"></script><script type="text/javascript" src="/dejajs-components/bundle.a2837824ccf600612609.js"></script><script type="text/javascript" src="/dejajs-components/app.a2837824ccf600612609.js"></script></body>
+
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-92183749-1', 'auto');
+        ga('send', 'pageview');
+
+        (function (history) {
+            var pushState = history.pushState;
+            history.pushState = function (state) {
+                if (typeof history.onpushstate == "function") {
+                    history.onpushstate({ state: state });
+                }
+                return pushState.apply(history, arguments);
+            }
+        })(window.history);
+        window.onpopstate = history.onpushstate = function (event) {
+            ga('send', {
+                hitType: 'pageview',
+                page: location.pathname
+            });
+        };
+    </script>
+<script type="text/javascript" src="/dejajs-components/./src/polyfills.ts.c32e49be64b5517c2f45.js"></script><script type="text/javascript" src="/dejajs-components/./src/demo-app/main.ts.c32e49be64b5517c2f45.js"></script><script type="text/javascript" src="/dejajs-components/bundle.c32e49be64b5517c2f45.js"></script><script type="text/javascript" src="/dejajs-components/app.c32e49be64b5517c2f45.js"></script></body>
 
 </html>
