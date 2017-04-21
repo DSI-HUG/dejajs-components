@@ -5,7 +5,7 @@
     flex: 1 1 100%;
 
     header {
-        background: mat-color($primary);
+        background: url(header-background.svg) repeat-x 50% mat-color($primary);
         padding: 160px 0 120px;
         text-align: center;
         color: white;
