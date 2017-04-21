@@ -1,0 +1,35 @@
+<md-sidenav-container class="demo-root flex display-flex" [class.debug]="debug">
+    <md-sidenav #start mode="side" [opened]="true">
+        <md-nav-list>
+            <a md-list-item [routerLink]="['accordion']" routerLinkActive="active">Accordion</a>
+            <a md-list-item [routerLink]="['circular-picker']" routerLinkActive="active">Circular Picker</a>
+            <a md-list-item [routerLink]="['colorselector']" routerLinkActive="active">Color Selector</a>
+            <a md-list-item [routerLink]="['contenteditableselector']" routerLinkActive="active">Content Editable</a>
+            <a md-list-item [routerLink]="['date-picker']" routerLinkActive="active">Date Picker</a>
+            <a md-list-item [routerLink]="['events']" routerLinkActive="active">Events</a>
+            <a md-list-item [routerLink]="['grid']" routerLinkActive="active">Grid</a>
+            <a md-list-item [routerLink]="['menu']" routerLinkActive="active">Menu</a>
+            <a md-list-item [routerLink]="['message-box']" routerLinkActive="active">Message Box</a>
+            <a md-list-item [routerLink]="['monaco-editor']" routerLinkActive="active">Monaco Editor</a>
+            <a md-list-item [routerLink]="['progress-circle']" routerLinkActive="active">Progress</a>
+            <a md-list-item [routerLink]="['range']" routerLinkActive="active">Range</a>
+            <a md-list-item [routerLink]="['select']" routerLinkActive="active">Select</a>
+            <a md-list-item [routerLink]="['snackbar']" routerLinkActive="active">Snackbar</a>
+            <a md-list-item [routerLink]="['splitter']" routerLinkActive="active">Splitter</a>
+            <a md-list-item [routerLink]="['textarea']" routerLinkActive="active">Text Area</a>
+            <a md-list-item [routerLink]="['tiles']" routerLinkActive="active">Tiles</a>
+            <a md-list-item [routerLink]="['tree-list']" routerLinkActive="active">Tree List</a>
+            <a md-list-item [routerLink]="['viewport']" routerLinkActive="active">Viewport</a>
+            <a md-list-item (click)="openIFrame($event)">Iframe</a>
+        </md-nav-list>
+    </md-sidenav>
+    <div id="scrollable-content">
+        <div dir="ltr" class="demo-content flex">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</md-sidenav-container>
+<deja-mouse-dragdrop-cursor></deja-mouse-dragdrop-cursor>
+<deja-backdrop id="iframePopup" *ngIf="iframeOpened" (click)="iframeOpened=false">
+    <deja-iframe sourceUrl="http://www.youtube.com/embed/M7lc1UVf-VE?autoplay=1&origin=http://example.com"></deja-iframe>
+</deja-backdrop>

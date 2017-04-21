@@ -1,0 +1,42 @@
+@import '../demo-app/theme.scss';
+@import '~@angular/material/theming';
+
+:host {
+    flex: 1 1 100%;
+
+    header {
+        background: url(header-background.svg) repeat-x 50% mat-color($primary);
+        padding: 160px 0 120px;
+        text-align: center;
+        color: white;
+        line-height: 40px;
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 200;
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            font-weight: 200;
+        }
+    }
+
+    .content {
+        section {
+            max-width: 920px;
+            margin: 60px 0;
+
+            padding: 500px 0;
+        }
+    }
+
+    footer {
+        background: mat-color($primary);
+        padding: 20px;
+        text-align: center;
+        color: white;
+    }
+
+    
+}

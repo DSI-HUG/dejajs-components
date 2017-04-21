@@ -19,7 +19,7 @@ exports.config = {
 
     baseUrl: 'http://localhost:5100/',
 
-    framework: 'jasmine',
+    framework: 'jasmine2',
 
     jasmineNodeOpts: {
         showColors: true,
@@ -41,6 +41,7 @@ exports.config = {
                     reject('Error during webpack build');
                 }
 
+                console.log('Server started, start e2e tests');
                 resolve();
             });
         });

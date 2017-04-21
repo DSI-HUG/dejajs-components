@@ -35,7 +35,7 @@
     "start": "npm run build-css && npm run build",
     "prepublish": "npm run build-css",
     "publish": "npm publish --access public",
-    "build:prod": "del-cli dist && npm run build-css && webpack -p --config webpack.config.prod.js",
+    "build:prod": "del-cli dist && npm run build-css && webpack -p --config webpack.config.prod.js && copy 404.html dist",
     "travis-build:prod": "npm run build-css && webpack -p --config webpack.config.prod.js",
     "e2e": "webdriver-manager update && protractor specs/protractor.conf.js",
     "test": "npm run e2e"
@@ -81,6 +81,7 @@
     "angular2-template-loader": "^0.5.0",
     "awesome-typescript-loader": "^3.1.2",
     "concurrently": "^3.4.0",
+    "copy": "^0.3.0",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.26.4",
     "del-cli": "^0.2.1",

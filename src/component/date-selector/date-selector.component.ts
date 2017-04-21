@@ -78,14 +78,14 @@ export class DejaDateSelectorComponent implements AfterContentInit {
 
     private days = [];
     private emptyDays: any[];
-    private _time = false;
+    private _time: boolean;
 
     private onTouchedCallback: () => void = noop;
     private onChangeCallback: (_: any) => void = noop;
 
     @Input()
     public set time(value: boolean | string) {
-        this._time = value != null && `${value}` !== 'false';
+        this._time = (value != null && `${value}` !== 'false') ? true : null;
         this.changeDetectorRef.markForCheck();
     }
 

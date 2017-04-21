@@ -15,7 +15,7 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     selector: 'demo-app',
-    styleUrls: ['./demo-app.scss', '../../scss/index.scss'],
+    styleUrls: ['./demo-app.scss'],
     templateUrl: './demo-app.html',
 })
 export class DemoAppComponent {

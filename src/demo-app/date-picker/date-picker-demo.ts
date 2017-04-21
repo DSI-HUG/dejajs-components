@@ -62,7 +62,5 @@ export class DejaDatePickerDemoComponent implements OnInit {
             });
     }
 
-    public ngOnInit() {
-
-    }
+    public ngOnInit() { }
 }
