@@ -48,6 +48,7 @@ export class DejaMarkdownComponent implements OnInit, AfterViewChecked {
 
     constructor(protected _http: Http, private sanitized: DomSanitizer) {
         this._converter = new Showdown.Converter();
+        this._converter.setOption('tables', true);
     }
 
     public ngOnInit() {
