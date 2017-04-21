@@ -24,7 +24,7 @@ const DejaDatePickerComponentValueAccessor = {
 };
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.Default,
     providers: [DejaDatePickerComponentValueAccessor],
     selector: 'deja-date-picker',
     styleUrls: ['./date-picker.component.scss'],
@@ -46,8 +46,8 @@ export class DejaDatePickerComponent implements OnInit {
 
     private _showDropDown = false;
     private keyDownSubscription: Subscription;
-    private _disabled = false;
-    private _time = false;
+    private _disabled: boolean;
+    private _time: boolean;
 
     private date = new Date();
 
@@ -92,7 +92,7 @@ export class DejaDatePickerComponent implements OnInit {
 
     @Input()
     public set disabled(value: boolean | string) {
-        this._disabled = value != null && `${value}` !== 'false';
+        this._disabled = (value != null && `${value}` !== 'false') ? true : null;
         this.changeDetectorRef.markForCheck();
     }
 
@@ -102,7 +102,7 @@ export class DejaDatePickerComponent implements OnInit {
 
     @Input()
     public set time(value: boolean | string) {
-        this._time = value != null && `${value}` !== 'false';
+        this._time = (value != null && `${value}` !== 'false') ? true : null;
         this.changeDetectorRef.markForCheck();
     }
 

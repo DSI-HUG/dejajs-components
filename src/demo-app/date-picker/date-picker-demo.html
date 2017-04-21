@@ -14,17 +14,26 @@
 
 <div *ngIf="tabIndex === 1">
     <md-card class="demo-card">
-        <md-toolbar color="primary">Date Time Picker</md-toolbar>
+        <md-toolbar color="primary">Date Time Selector</md-toolbar>
         <md-card-content>
-            <deja-date-picker format="dd.MM.YYYY" #dtfrom [disableDates]="disabledDate" time [ngModel]="dateRangeFrom" (ngModelChange)="dateFrom.next($event)"></deja-date-picker>
-            <deja-date-picker format="dd.MM.YYYY" #dtto [disableDates]="disabledDate" time [ngModel]="dateRangeTo" (ngModelChange)="dateTo.next($event)"></deja-date-picker>
-            <p>Result : {{theDate}}</p>
+            <div fxLayout>
+                <deja-date-time-selector [disableDates]="disabledDate" [(ngModel)]="theDate" fxFlex="1 1 auto"></deja-date-time-selector>
+                <deja-date-time-selector [disableDates]="disabledDate" [(ngModel)]="theDate" time fxFlex="1 1 auto"></deja-date-time-selector>
+            </div>
+            <p>Selected date : {{theDate}}</p>
         </md-card-content>
     </md-card>
     <md-card class="demo-card">
-        <md-toolbar color="primary">Date Time Selector</md-toolbar>
+        <md-toolbar color="primary">Date Time Picker</md-toolbar>
         <md-card-content>
-            <deja-date-time-selector [disableDates]="disabledDate" [(ngModel)]="theDate" time></deja-date-time-selector>
+            <deja-date-picker format="DD.MM.YYYY HH:mm" [disableDates]="disabledDate" [(ngModel)]="theDate" time></deja-date-picker>
+        </md-card-content>
+    </md-card>
+    <md-card class="demo-card">
+        <md-toolbar color="primary">Date Range Picker</md-toolbar>
+        <md-card-content>
+            <deja-date-picker format="DD.MM.YYYY" #dtfrom [disableDates]="disabledDate" [ngModel]="dateRangeFrom" (ngModelChange)="dateFrom.next($event)"></deja-date-picker>
+            <deja-date-picker format="DD.MM.YYYY" #dtto [disableDates]="disabledDate" [ngModel]="dateRangeTo" (ngModelChange)="dateTo.next($event)"></deja-date-picker>
         </md-card-content>
     </md-card>
 </div>
