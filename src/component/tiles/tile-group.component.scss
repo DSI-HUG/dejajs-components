@@ -4,8 +4,6 @@
 	align-items: center;
 	box-sizing: border-box;
 	padding: 0 0.5rem;
-    background-color: #3B4250;
-    color: #fff;
 	&[selected="true"] {
 		box-shadow: inset 0 0 0 3px rgba(0, 0, 0, 0.6);
 	}

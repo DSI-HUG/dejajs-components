@@ -41,11 +41,13 @@ export class DejaTile implements IDejaTile {
     private _pixelBounds: Rect;
     private _percentBounds: Rect;
     private _model: IDejaTile;
+    private _color: string;
 
     constructor(private tile: IDejaTile) {
         this._model = tile;
         this._id = tile.id;
         this._percentBounds = tile.bounds;
+        this._color = tile.color;
         if (tile.effects) {
             this.isCutted = tile.effects.cutted;
             this.isSelected = tile.effects.selected;
@@ -209,6 +211,7 @@ export class DejaTile implements IDejaTile {
             id: this.id,
             type: this.type,
             bounds: this.percentBounds,
+            color: this._color,
             templateModel: this.templateModel,
             effects: {
                 pending: this.isPending || undefined,
