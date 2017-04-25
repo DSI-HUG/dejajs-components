@@ -17,5 +17,11 @@ import { Component } from '@angular/core';
     templateUrl: 'home-components.component.html',
 })
 export class HomeComponentsComponent {
+    protected iframeOpened = false;
 
+    protected openIFrame(e: Event) {
+        this.iframeOpened = true;
+        e.preventDefault();
+        return false;
+    }
 }

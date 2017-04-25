@@ -1,12 +1,11 @@
 @import '../../scss/index.scss';
 @import '~@angular/material/theming';
 @import '../../scss/variables/themeHUG';
-// @import 'theme.scss';
+@import '../home/home-theme';
 
-
-// Include theme styles for core and each component used in the app.
-// @include angular-material-theme($theme);
 @include deja-theme($theme);
+
+@include home-demo-theme($theme);
 
 html,
 body {

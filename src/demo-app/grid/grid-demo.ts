@@ -9,7 +9,7 @@
  *
  */
 
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { IItemTree } from '../../common/core';
 import { DejaGridComponent, DejaGridRowsEvent, IDejaDragEvent, IDejaGridColumn, IDejaGridColumnSizeEvent } from '../../component';
@@ -17,7 +17,7 @@ import { DrugsService, IDrug } from '../services/drugs.service';
 import { INews, NewsService } from '../services/news.service';
 
 @Component({
-    encapsulation: ViewEncapsulation.None,
+    // encapsulation: ViewEncapsulation.None,
     selector: 'grid-demo',
     styleUrls: ['./grid-demo.scss'],
     templateUrl: './grid-demo.html',

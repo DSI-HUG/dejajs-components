@@ -1,77 +1,74 @@
 @import "../../scss/variables/colors";
+$deep: '/deep/';
 
 :host {
 	display: flex;
 	overflow: hidden;
 	flex-direction: column;
-}
-
-.demo-card {
-	.listContainer {
-		height: 700px;
-		display: flex;
-		flex-direction: column;
-		overflow: hidden;
-
-		deja-grid {
-			flex: 1 1 auto;
-			li {
-				&.odd {
-					background-color: rgba($secondary, 0.1);
-					&[current="true"] {
-						background-color: rgba($secondary, 0.5);
-					}
-					&.selected {
-						background: rgba($secondary, 0.9);
-					}
-				}
-			}
-		}
-	}
-
-	button {
-		margin-top: 2rem;
-	}
-
-	[mdSuffix] {
-		display: flex;
-		justify-content: flex-end;
-		[md-icon-button] {
-			margin-top: -1.5rem;
-			margin-bottom: 0;
-		}
-	}
-
-	#cell-drug,
-	#cell-reaction {
-		display: flex;
-		align-items: center;
-		width: 100%;
-		#content {
-			flex: 1 1 auto;
-			text-overflow: ellipsis;
-			white-space: nowrap;
+	
+	.demo-card {
+		.listContainer {
+			height: 700px;
+			display: flex;
+			flex-direction: column;
 			overflow: hidden;
-		}
-		#more {
-			margin: 0 0.5rem;
-		}
-	}
 
-	#news {
-		.cell-wrapper {
-			&[colname="logo"] {
-				.logo {
-					max-width: 100%;
-					max-height: 100%;
-					width: auto;
-					height: auto;
-					object-fit: contain;
+			#{$deep} deja-grid {
+				flex: 1 1 auto;
+				.listitem {
+					&.odd {
+						deja-grid-row {
+							background-color: rgba(#000, 0.07);
+						}
+					}
 				}
 			}
-			&[colname="description"] {
-				.cell {
-					white-space: normal;
+		}
+
+		button {
+			margin-top: 2rem;
+		}
+
+		[mdSuffix] {
+			display: flex;
+			justify-content: flex-end;
+			[md-icon-button] {
+				margin-top: -1.5rem;
+				margin-bottom: 0;
+			}
+		}
+
+		#cell-drug,
+		#cell-reaction {
+			display: flex;
+			align-items: center;
+			width: 100%;
+			#content {
+				flex: 1 1 auto;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow: hidden;
+			}
+			#more {
+				margin: 0 0.5rem;
+			}
+		}
+
+		#news {
+			.cell-wrapper {
+				&[colname="logo"] {
+					.logo {
+						max-width: 100%;
+						max-height: 100%;
+						width: auto;
+						height: auto;
+						object-fit: contain;
+					}
+				}
+				&[colname="description"] {
+					.cell {
+						white-space: normal;
+					}
 				}
 			}
 		}

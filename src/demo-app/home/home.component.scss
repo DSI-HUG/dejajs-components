@@ -1,11 +1,8 @@
-@import '../demo-app/theme.scss';
-@import '~@angular/material/theming';
-
 :host {
     flex: 1 1 100%;
 
     header {
-        background: url(header-background.svg) repeat-x 50% mat-color($primary);
+        background: url(header-background.svg) repeat-x 50%;
         padding: 160px 0 120px;
         text-align: center;
         color: white;
@@ -32,7 +29,6 @@
     }
 
     footer {
-        background: mat-color($primary);
         padding: 20px;
         text-align: center;
         color: white;

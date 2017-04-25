@@ -9,10 +9,9 @@
  *
  */
 
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
-  encapsulation: ViewEncapsulation.None,
   selector: 'deja-menu-demo',
   styleUrls: ['./menu-demo.scss'],
   templateUrl: './menu-demo.html',
