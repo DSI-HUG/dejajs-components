@@ -194,6 +194,7 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
 
     public ngAfterViewInit() {
         this.layoutProvider.container = this.tilesContainer.nativeElement;
+        this.refresh({ resetWidth: true });
     }
 
     public ngOnDestroy() {

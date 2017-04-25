@@ -78,8 +78,8 @@
 		deja-dropdown {
 			&#listcontainer {
 				border: solid 1px rgba(0, 0, 0, 0.38);
-				background-color: $background;
-				color: $foreground;
+				background-color: $background !important;
+				color: $foreground !important;
 				&[keynav="false"] {
 					div.listitem:not(.unselectable):hover {
 						background-color: mat-color($primary);
