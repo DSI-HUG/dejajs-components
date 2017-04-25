@@ -1,13 +1,26 @@
 <a name="@next"></a>
 # [@next] (2017-04-xx)
 
-### Breaking changes from 1.6.4
+### Breaking changes from 1.7.0
 
 ### Known issues
 
 ### Features
 
 ### Bug fixes
+
+<a name="1.7.0"></a>
+# [1.7.0] (2017-04-25)
+
+### Breaking changes from 1.6.4
+Update all dependencies to the latestet version
+
+### Features
+New demo app design
+Material theming for all components
+
+### Bug fixes
+Datepicker width without timeout directive
 
 <a name="1.6.4"></a>
 # [1.6.4] (2017-04-19)
