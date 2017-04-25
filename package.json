@@ -111,10 +111,11 @@
   "license-check-config": {
     "src": [
       "**/*.ts",
-      "!./node_modules/**/*"
+      "!./node_modules/**/*",
+      "!**/*.d.ts"
     ],
-    "path": "assets/header.txt",
-    "blocking": false,
+    "path": "header-license.txt",
+    "blocking": true,
     "logInfo": false,
     "logError": true
   }
