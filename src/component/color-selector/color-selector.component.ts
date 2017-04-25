@@ -95,7 +95,7 @@ export class DejaColorSelectorComponent implements ControlValueAccessor {
             .do((colorIndex) => {
                 if (this._colorFabs) {
                     this._colorFabs.forEach((colorFab, index) => colorFab.active$.next(index === colorIndex));
-                                }
+                }
             })
             .debounceTime(100)
             .do(() => element.setAttribute('sub-tr', ''))
@@ -105,8 +105,8 @@ export class DejaColorSelectorComponent implements ControlValueAccessor {
                 this._subColorFabs = subColorFabs;
                 Observable.timer(100).first().subscribe(() => {
                     element.removeAttribute('sub-tr');
-                            });
-                        });
+                });
+            });
 
         const hilightedSubIndex$ = Observable.from(this.hilightedSubIndex$)
             .distinctUntilChanged()
@@ -130,7 +130,7 @@ export class DejaColorSelectorComponent implements ControlValueAccessor {
             .subscribe((subColorIndex) => {
                 if (this._subColorFabs) {
                     this._subColorFabs.forEach((colorFab, index) => colorFab.active$.next(index === subColorIndex));
-                        }
+                }
             });
 
         Observable.fromEvent(element, 'mousemove')
@@ -176,7 +176,7 @@ export class DejaColorSelectorComponent implements ControlValueAccessor {
     /**
      * Definit les couleurs selectionables affichées.
      *
-     * @param colors    Structure hierarchique des couleurs selectionablea suivant le modele MaterialColor.
+     * @param colors Structure hierarchique des couleurs selectionablea suivant le modele MaterialColor.
      */
     @Input()
     public set colors(colors: Color[]) {
@@ -185,29 +185,29 @@ export class DejaColorSelectorComponent implements ControlValueAccessor {
     }
 
     public set selectedColor(color: Color) {
-                if (this._colorFabs) {
-                    const find = this._colorFabs.find((colorFab, index) => {
-                        const baseColor = colorFab.color as MaterialColor;
-                        const subIndex = baseColor.subColors && baseColor.subColors.findIndex((subColor) => Color.equals(subColor, color));
-                        if (subIndex !== undefined && subIndex >= 0) {
-                            this._selectedSubIndex = subIndex;
-                            this.selectedBaseIndex$.next(index);
-                            // Break
-                            return true;
-                        } else if (Color.equals(baseColor, color)) {
-                            this._selectedSubIndex = 0;
-                            this.selectedBaseIndex$.next(index);
-                            // Break
-                            return true;
+        if (this._colorFabs) {
+            const find = this._colorFabs.find((colorFab, index) => {
+                const baseColor = colorFab.color as MaterialColor;
+                const subIndex = baseColor.subColors && baseColor.subColors.findIndex((subColor) => Color.equals(subColor, color));
+                if (subIndex !== undefined && subIndex >= 0) {
+                    this.selectedBaseIndex$.next(index);
+                    Observable.timer(1).first().subscribe(() => this.selectedSubIndex$.next(subIndex));
+                    // Break
+                    return true;
+                } else if (Color.equals(baseColor, color)) {
+                    this.selectedBaseIndex$.next(index);
+                    Observable.timer(1).first().subscribe(() => this.selectedSubIndex$.next(0));
+                    // Break
+                    return true;
                 }
-                        // Continue
-                        return false;
-                    });
-                    if (!find) {
-                        this._selectedSubIndex = 0;
-                        this.selectedBaseIndex$.next(0);
-                    }
-                }
+                // Continue
+                return false;
+            });
+            if (!find) {
+                this.selectedBaseIndex$.next(0);
+                Observable.timer(1).first().subscribe(() => this.selectedSubIndex$.next(0));
+            }
+        }
     }
 
     // ************* ControlValueAccessor Implementation **************

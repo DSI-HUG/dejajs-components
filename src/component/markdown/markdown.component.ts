@@ -9,7 +9,7 @@
  *
  */
 
-import {AfterViewChecked, Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, AfterViewChecked, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { Http, ResponseContentType } from '@angular/http';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 // tslint:disable
@@ -18,6 +18,7 @@ const Prism = require('prismjs');
 // tslint:enable
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     selector: 'deja-markdown',
     styleUrls: [
@@ -32,13 +33,15 @@ export class DejaMarkdownComponent implements OnInit, AfterViewChecked {
         if (value) {
             const tmp = this._converter.makeHtml(value);
             this._html = this.sanitized.bypassSecurityTrustHtml(tmp);
+            this.changeDetectorRef.markForCheck();
         }
     }
 
     @Input()
     set url(url: string) {
-        this._http.get(url, {responseType: ResponseContentType.Text}).subscribe((response) => {
+        this._http.get(url, { responseType: ResponseContentType.Text }).subscribe((response) => {
             this.value = response.text();
+            this.changeDetectorRef.markForCheck();
         });
     }
 
@@ -46,8 +49,9 @@ export class DejaMarkdownComponent implements OnInit, AfterViewChecked {
     private _html: SafeHtml;
     private _converter: any;
 
-    constructor(protected _http: Http, private sanitized: DomSanitizer) {
+    constructor(private changeDetectorRef: ChangeDetectorRef, protected _http: Http, private sanitized: DomSanitizer) {
         this._converter = new Showdown.Converter();
+        this._converter.setOption('tables', true);
     }
 
     public ngOnInit() {

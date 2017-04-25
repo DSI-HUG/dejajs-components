@@ -75,8 +75,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @ViewChild('listcontainer') private listContainer: any;
     @ViewChild(DejaDropDownComponent) private dropDownComponent: DejaDropDownComponent;
 
-    @HostBinding('attr.disabled') private _disabled: boolean;
-    private disabled$ = new BehaviorSubject<boolean>(false);
+    @HostBinding('attr.disabled') private _disabled = false;
     private _type = 'select';
     private selectingItemIndex: number;
     private dropDownQuery = '';
@@ -99,8 +98,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, private elementRef: ElementRef) {
         super(changeDetectorRef, viewPort);
-
-        this.subscriptions.push(Observable.from(this.disabled$).subscribe((value) => this._disabled = value || null));
 
         this.subscriptions.push(Observable.from(this.clearFilterExpression$)
             .debounceTime(750).subscribe(() => this.filterExpression = ''));
@@ -215,7 +212,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     /** Permet de désactiver le select */
     @Input()
     public set disabled(value: boolean | string) {
-        this.disabled$.next(value != null && `${value}` !== 'false');
+        const disabled = value != null && `${value}` !== 'false';
+        this._disabled = disabled || null;
     }
 
     public get disabled() {
@@ -521,26 +519,21 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     public ngAfterViewInit() {
         this.subscriptions.push(Observable.fromEvent(this.inputElement, 'click')
-            .filter(() => !this.dropdownVisible)
-            .combineLatest(this.disabled$)
-            .filter(([_e, disabled]) => !disabled)
-            .subscribe(() => {
-                if (!this.isReadOnly) {
+            .filter(() => !this.dropdownVisible && !this.disabled)
+            .subscribe((event: Event) => {
+                if (this.isReadOnly) {
+                    this.showDropDown();
+                } else {
                     this.inputElement.select();
                     this.filter$.next(event);
-                } else {
-                    this.showDropDown();
                 }
             }));
 
         this.subscriptions.push(Observable.fromEvent(this.inputElement, 'focus')
-            .filter(() => !this.dropdownVisible)
-            .combineLatest(this.disabled$)
-            .filter(([_e, disabled]) => !disabled)
+            .filter(() => !this.dropdownVisible && !this.disabled)
             .delay(10)
             .filter(() => this.inputElement === document.activeElement)
-            .subscribe(() => {
-                // debugger;
+            .subscribe((event: Event) => {
                 if (this.isReadOnly) {
                     this.showDropDown();
                 } else {

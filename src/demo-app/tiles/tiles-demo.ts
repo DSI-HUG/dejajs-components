@@ -12,7 +12,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Observable, Subject } from 'rxjs/Rx';
 import { Rect } from '../../common/core/graphics/index';
-import { IDejaTilesAddEvent, IDejaTilesRemoveEvent, IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDejaTile, IDropCursorInfos } from '../../component';
+import { IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDejaTile, IDejaTilesAddEvent, IDejaTilesRemoveEvent, IDropCursorInfos } from '../../component';
 import { CountriesService, ICountry } from '../services/countries.service';
 
 @Component({

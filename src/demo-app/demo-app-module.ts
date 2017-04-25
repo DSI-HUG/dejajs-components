@@ -60,10 +60,12 @@ import { NewsCardComponent } from './common/news-card.component';
 import { DejaContentEditableDemoComponent } from './content-editable/content-editable-demo';
 import { DejaDatePickerDemoComponent } from './date-picker/date-picker-demo';
 import { DemoAppComponent } from './demo-app/demo-app';
-import { HomeComponent } from './demo-app/home-app';
 import { routing } from './demo-app/routes';
 import { GlobalEventsDemoComponent } from './global-events/global-events-demo';
 import { GridDemoComponent } from './grid/grid-demo';
+import { HomeComponentsComponent } from './home-components/home-components.component';
+import { HomeGuidesComponent } from './home-guides/home-guides.component';
+import { HomeComponent } from './home/home.component';
 import { MenuDemoComponent } from './menu/menu-demo';
 import { MessageBoxDemoComponent } from './message-box/message-box-demo';
 import { DejaMonacoEditorDemoComponent } from './monaco-editor/monaco-editor-demo';
@@ -90,6 +92,9 @@ import { CodeblockModule } from 'ng-prism';
 
 @NgModule({
     declarations: [
+        HomeComponent,
+        HomeComponentsComponent,
+        HomeGuidesComponent,
         DejaAccordionDemoComponent,
         DejaContentEditableDemoComponent,
         DejaCircularPickerDemoComponent,
@@ -98,7 +103,6 @@ import { CodeblockModule } from 'ng-prism';
         DemoAppComponent,
         GlobalEventsDemoComponent,
         GridDemoComponent,
-        HomeComponent,
         MenuDemoComponent,
         MessageBoxDemoComponent,
         SelectDemoComponent,

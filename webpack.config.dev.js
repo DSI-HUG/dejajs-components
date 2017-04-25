@@ -17,7 +17,7 @@ module.exports = webpackMerge(commonConfig, {
     plugins: [
         new HtmlWebpackPlugin({
             template: "src/index.ejs",
-            baseUrl: './',
+            baseUrl: '/',
             title: 'DEJA-JS Demo App',
         })
     ]

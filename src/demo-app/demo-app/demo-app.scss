@@ -1,8 +1,11 @@
 @import '../../scss/index.scss';
-
-// Import global theme
+@import '~@angular/material/theming';
 @import '../../scss/variables/themeHUG';
+@import '../home/home-theme';
+
 @include deja-theme($theme);
+
+@include home-demo-theme($theme);
 
 html,
 body {
@@ -17,7 +20,7 @@ demo-app {
     height: 100%;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    // overflow: hidden;
 }
 
 body {

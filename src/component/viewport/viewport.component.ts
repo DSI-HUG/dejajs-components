@@ -11,7 +11,7 @@
 
 // TODO Key events
 
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, HostBinding, Input, OnDestroy, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, HostBinding, Input, OnDestroy, ViewChild } from '@angular/core';
 import { Observable, Subject, Subscription } from 'rxjs/Rx';
 import { IViewPort, IViewPortItem, ViewportDirection, ViewportMode, ViewPortService } from '../../common/core/item-list';
 
@@ -27,8 +27,7 @@ export enum DejaViewPortScrollStyle {
     styleUrls: ['./viewport.component.scss'],
     templateUrl: './viewport.component.html',
 })
-export class DejaViewPortComponent implements OnDestroy,
-    AfterViewInit {
+export class DejaViewPortComponent implements OnDestroy {
 
     protected beforeSize: number;
     protected afterSize: number;
@@ -49,12 +48,12 @@ export class DejaViewPortComponent implements OnDestroy,
     private mouseDown$Sub: Subscription;
     private mouseWheel$Sub: Subscription;
     private scrollPosition = 0;
+    private scroll$Sub: Subscription;
 
     /** Permet de définir un template d'élément par binding */
     @Input() public itemTemplateExternal;
 
     @ContentChild('itemTemplate') private itemTemplateInternal;
-    @ViewChild('wrapper') private wrapperElement: ElementRef;
     @ViewChild('down') private downButton: ElementRef;
     @ViewChild('up') private upButton: ElementRef;
 
@@ -104,6 +103,18 @@ export class DejaViewPortComponent implements OnDestroy,
         return this.viewPort.itemsSize;
     }
 
+    @ViewChild('wrapper')
+    private set wrapperElement(element: ElementRef) {
+        this.element = element.nativeElement as HTMLElement;
+        this.viewPort.element$.next(this.element);
+        this.subscriptions.push(this.scroll$Sub = Observable.fromEvent(this.element, 'scroll')
+            .map((event: Event) => event.target as HTMLElement)
+            .map((target) => Math.round(this.isHorizontal ? target.scrollLeft : target.scrollTop))
+            .subscribe((scrollPos) => {
+                this.viewPort.scrollPosition$.next(scrollPos);
+            }));
+    }
+
     private get itemTemplate() { return this.itemTemplateExternal || this.itemTemplateInternal; }
 
     private get clientSize() {
@@ -148,7 +159,6 @@ export class DejaViewPortComponent implements OnDestroy,
                 this.changeDetectorRef.markForCheck();
             }));
 
-
         this.subscriptions.push(viewPort.viewPort$
             .subscribe((viewPortResult: IViewPort) => {
                 if (viewPort.mode !== ViewportMode.disabled) {
@@ -175,23 +185,37 @@ export class DejaViewPortComponent implements OnDestroy,
                     this.hasDownButton = false;
                 }
 
-                if (viewPortResult.scrollPos !== undefined) {
+                const scroll = (vp: IViewPort) => {
                     if (!this.hasButtons) {
                         if (this.element) {
                             if (this.isHorizontal) {
-                                this.element.scrollLeft = viewPortResult.scrollPos;
+                                this.element.scrollLeft = vp.scrollPos;
                             } else {
-                                this.element.scrollTop = viewPortResult.scrollPos;
+                                this.element.scrollTop = vp.scrollPos;
                             }
-                            this.scrollPosition = viewPortResult.scrollPos;
+                            this.scrollPosition = vp.scrollPos;
                         }
                     } else {
-                        this.scrollPos = viewPortResult.scrollPos;
-                        this.startOffset = this.scrollPos - viewPortResult.beforeSize;
+                        this.scrollPos = vp.scrollPos;
+                        this.startOffset = this.scrollPos - vp.beforeSize;
                     }
-                }
+                    this.changeDetectorRef.markForCheck();
+                };
 
-                this.changeDetectorRef.markForCheck();
+                if (viewPortResult.scrollPos !== undefined) {
+                    const listItems = this.element ? this.element.getElementsByClassName('listitem') : [];
+                    const rebind = listItems.length !== viewPortResult.visibleItems.length;
+                    if (!rebind) {
+                        scroll(viewPortResult);
+                    } else {
+                        this.changeDetectorRef.markForCheck();
+                        Observable.timer(1)
+                            .first()
+                            .subscribe(() => scroll(viewPortResult));
+                    }
+                } else {
+                    this.changeDetectorRef.markForCheck();
+                }
             }));
 
         this.subscriptions.push(Observable.from(this.hasButtons$)
@@ -263,17 +287,6 @@ export class DejaViewPortComponent implements OnDestroy,
         }
     }
 
-    public ngAfterViewInit() {
-        this.element = this.wrapperElement.nativeElement as HTMLElement;
-
-        this.subscriptions.push(Observable.fromEvent(this.element, 'scroll')
-            .map((event: Event) => event.target as HTMLElement)
-            .map((target) => Math.round(this.isHorizontal ? target.scrollLeft : target.scrollTop))
-            .subscribe((scrollPos) => this.viewPort.scrollPosition$.next(scrollPos)));
-
-        this.viewPort.element$.next(this.wrapperElement.nativeElement);
-    }
-
     public refresh() {
         this.changeDetectorRef.markForCheck();
     }
@@ -289,7 +302,7 @@ export class DejaViewPortComponent implements OnDestroy,
         this.viewPort.ensureItem$.next(item);
     }
 
-    protected getFlexSize(item: IViewPortItem) {
+    protected getCssSize(item: IViewPortItem) {
         const itemSize = this.getItemSize(item);
         return itemSize ? `${itemSize}px` : 'auto';
     }

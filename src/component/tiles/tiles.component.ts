@@ -14,7 +14,7 @@ import { BehaviorSubject, Observable, Subscription } from 'rxjs/Rx';
 import { KeyCodes } from '../../common/core';
 import { Rect } from '../../common/core/graphics';
 import { IDejaMouseDroppableContext, IDropCursorInfos } from '../mouse-dragdrop/index';
-import { DejaTile, IDejaTile, IDejaTilesAddEvent, IDejaTilesEvent, IDejaTilesModelEvent, IDejaTilesRefreshParams, IDejaTilesRemoveEvent } from './index';
+import { DejaTile, DejaTileGroupComponent, IDejaTile, IDejaTilesAddEvent, IDejaTilesEvent, IDejaTilesModelEvent, IDejaTilesRefreshParams, IDejaTilesRemoveEvent } from './index';
 import { DejaTilesLayoutProvider } from './tiles-layout.provider';
 
 @Component({
@@ -258,6 +258,7 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
         const tile = {
             type: 'group',
             bounds: bounds || this.getFreePlace(0, 0, 15, 5),
+            color: DejaTileGroupComponent.defaultColor,
             templateModel: {
                 title: title || 'New Group',
             },

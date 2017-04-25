@@ -48,5 +48,6 @@ deploy:
   on:
     repo: DSI-HUG/dejajs-components
     branch: master
-after_script:
-- bash ./scripts/deploy.sh
+after_deploy:
+- bash ./scripts/tag.sh
+- bash ./scripts/deploy-demo.sh
