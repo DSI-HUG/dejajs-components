@@ -114,7 +114,7 @@ export class DejaTilesLayoutProvider {
                 if ((params && params.resetWidth) || !this.hundredPercentWith) {
                     this.hundredPercentWith = containerBounds.width;
                 }
-                let height = 0;
+                let height = containerBounds.height;
                 let width = containerBounds.width;
                 const tiles = this.tiles || [];
 
@@ -170,7 +170,10 @@ export class DejaTilesLayoutProvider {
                     }
                 }
 
-                height += this.getPixelSize(2 * this.tileMinHeight, this.tileMinHeightUnit);
+                const minHeight = this.getPixelSize(2 * this.tileMinHeight, this.tileMinHeightUnit);
+                if (height < minHeight) {
+                    height = minHeight;
+                }
 
                 this.container.style.width = `${width}px`;
                 this.container.style.height = `${height}px`;
@@ -256,27 +259,34 @@ export class DejaTilesLayoutProvider {
                     return;
                 }
 
-                const mouseUp$ = Observable.fromEvent(this._container.ownerDocument, 'mouseup')
-                    .first()
-                    .do(() => this.drop(dragDropInfos.tiles));
+                const mousemove$ = Observable.fromEvent(this._container, 'mousemove');
+                const mouseUp$ = Observable.fromEvent(this._container.ownerDocument, 'mouseup');
+                const keyUp$ = Observable.fromEvent(this._container.ownerDocument, 'keyup');
+                const escape$ = keyUp$.filter((event: KeyboardEvent) => event.keyCode === KeyCodes.Escape);
+                const cancel$ = Observable.merge(leave$, mousemove$.filter((event: MouseEvent) => event.buttons !== 1), escape$);
 
-                const endDrag$ = leave$.do(() => {
-                    this.removeTemporaryTile();
-                    this.cancelDrag(dragDropInfos.tiles);
-                });
+                const kill$ = Observable.merge(mouseUp$, cancel$);
 
-                Observable.fromEvent(this._container.ownerDocument, 'keyup')
-                    .takeUntil(Observable.merge(mouseUp$, leave$))
-                    .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.Escape).subscribe(() => { this.cancelDrag(dragDropInfos.tiles); });
+                let mouseUp$sub: Subscription;
 
-                const mousemove$ = Observable.fromEvent(this._container, 'mousemove')
-                    .filter((event: MouseEvent) => event.buttons === 1);
+                const cancel$sub = cancel$
+                    .take(1)
+                    .do(() => mouseUp$sub.unsubscribe())
+                    .subscribe(() => {
+                        this.removeTemporaryTile();
+                        this.cancelDrag(dragDropInfos.tiles);
+                    });
+
+                mouseUp$sub = mouseUp$
+                    .take(1)
+                    .do(() => cancel$sub.unsubscribe())
+                    .subscribe(() => this.drop(dragDropInfos.tiles));
 
                 const dragover$ = Observable.from(this.dragover$)
                     .map((cursor) => cursor.originalEvent);
 
                 Observable.merge(mousemove$, dragover$)
-                    .takeUntil(Observable.merge(mouseUp$, endDrag$))
+                    .takeUntil(kill$)
                     .subscribe((event: MouseEvent) => {
                         const containerBounds = this._container.getBoundingClientRect();
                         const x = event.pageX - containerBounds.left;
@@ -808,7 +818,9 @@ export class DejaTilesLayoutProvider {
             .subscribe((tile) => { tile.isDropping = false; });
 
         // Restore original layout
-        this.restoreLayout(this.originalLayout);
+        if (this.originalLayout) {
+            this.restoreLayout(this.originalLayout);
+        }
 
         this.endDrag();
     }
@@ -851,11 +863,11 @@ export class DejaTilesLayoutProvider {
             }
 
             changed = this.tiles.filter((t) => !Rect.equals(t.percentBounds, this.originalLayout[t.id] && this.originalLayout[t.id].bounds));
+            this.endDrag();
         } else {
             this.removeTemporaryTile();
+            this.cancelDrag(tiles);
         }
-
-        this.endDrag();
 
         if (changed) {
             const event = new CustomEvent('DejaTilesEvent', { cancelable: true }) as IDejaTilesEvent;

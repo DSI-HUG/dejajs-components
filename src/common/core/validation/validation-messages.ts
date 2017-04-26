@@ -1,12 +1,9 @@
 /*
- * *
  *  @license
- *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
- * /
- *
  */
 
 // Attention, spécifier ici que les messages génériques. Créez votre propre objet pour les messages spécifiques à votre page

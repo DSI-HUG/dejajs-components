@@ -3,14 +3,14 @@
     justify-content: center;
     margin-top: 15px;
     padding: 2rem 0;
-	>div {
+	> div {
         flex: 1 1 auto;
 		deja-circular-picker {
-        align-items: center;
-        display: flex;
-        justify-content: center;
-    }
-}
+			align-items: center;
+			display: flex;
+			justify-content: center;
+		}
+	}
 	&#complex-wrapper {
 		position: relative;
         height: 333px;
@@ -21,9 +21,10 @@
 			top: 50%;
 			transform: translate(-50%, -50%);
 		}
-		#inside {
+		$deep: '/deep/';
+		#{$deep}#inside .circular-picker {
 			background: transparent;
 			border: none;
 		}
-}
+	}
 }

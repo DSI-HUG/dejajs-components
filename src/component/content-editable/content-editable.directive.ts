@@ -1,12 +1,9 @@
 /*
- * *
  *  @license
- *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
- * /
- *
  */
 
 import { Directive, ElementRef, forwardRef, Input } from '@angular/core';
@@ -98,6 +95,7 @@ export class DejaEditableDirective implements ControlValueAccessor {
                     .takeUntil(kill$)
                     .subscribe((e: KeyboardEvent) => {
                         e.cancelBubble = true;
+                        e.stopPropagation();
                         if (e.keyCode === KeyCodes.Enter && !this.multiline) {
                             const text = this.element.innerText;
                             if (text || !this.mandatory) {
@@ -112,6 +110,7 @@ export class DejaEditableDirective implements ControlValueAccessor {
                             this.inEdition = false;
                             return false;
                         }
+                        return false;
                     });
             });
     }

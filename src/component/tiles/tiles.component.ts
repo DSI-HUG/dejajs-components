@@ -1,12 +1,9 @@
 /*
- * *
  *  @license
- *  Copyright Hôpitaux Universitaires de Genève All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
- * /
- *
  */
 
 import { AfterViewInit, Component, ContentChild, ElementRef, EventEmitter, HostListener, Input, OnDestroy, Output, ViewChild } from '@angular/core';
@@ -194,6 +191,7 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
 
     public ngAfterViewInit() {
         this.layoutProvider.container = this.tilesContainer.nativeElement;
+        this.refresh({ resetWidth: true });
     }
 
     public ngOnDestroy() {

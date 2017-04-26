@@ -9,6 +9,12 @@
 
 ### Bug fixes
 
+<a name="1.7.1"></a>
+# [1.7.1] (2017-04-26)
+
+### Bug fixes
+* **SelectComponent:** Height measurment fix.
+
 <a name="1.7.0"></a>
 # [1.7.0] (2017-04-25)
 
