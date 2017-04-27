@@ -1,8 +1,10 @@
 <md-input-container id="date-selector">
-    <input #inputelement id="date-selector-input" mdInput [disabled]="disabled" (focus)="toggleDateSelector($event)" [ngModel]="inputModel || null" placeholder="{{placeholder}}">
+    <input #inputelement id="date-selector-input" mdInput [disabled]="disabled" [ngModel]="inputModel" (ngModelChange)="updateModel($event)" placeholder="{{placeholder}}" [textMask]="{mask: mask, showMask: true}">
 	<div mdSuffix>
-		<md-icon *ngIf="!inputModel">date_range</md-icon>
-		<md-icon *ngIf="inputModel && !disabled" (click)="reset()" id="clear-button">clear</md-icon>
+		<div id="action-icon-container">
+			<md-icon *ngIf="inputModel && !disabled" (click)="reset()" id="clear-button">clear</md-icon>
+			<md-icon *ngIf="!disabled" (click)="toggleDateSelector($event)" id="calendar-button">date_range</md-icon>
+		</div>
 	</div>
 	<md-hint *ngIf="mdHint">
 		<ng-template [ngTemplateOutlet]="mdHint"></ng-template>

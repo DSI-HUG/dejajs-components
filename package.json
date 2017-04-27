@@ -62,6 +62,7 @@
     "@types/node": "^7.0.13",
     "@types/prismjs": "^1.6.2",
     "@types/showdown": "^1.4.32",
+    "angular2-text-mask": "^8.0.0",
     "bluebird": "^3.5.0",
     "codelyzer": "^3.0.0",
     "core-js": "^2.4.1",
