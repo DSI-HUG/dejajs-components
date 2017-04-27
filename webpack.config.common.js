@@ -5,7 +5,6 @@ var path = require("path");
 module.exports = {
     entry: {
         bundle: [
-            // "./src/scss",
             "./src/polyfills.ts",
             "./src/demo-app/main.ts",
             "./send-action.js",
@@ -29,12 +28,6 @@ module.exports = {
         }, {
             loader: "file-loader?name=assets/[name].[ext]",
             test: /\.(png|jpe?g|gif|ico)$/,
-        }, {
-            include: [
-                // path.resolve("./src/scss"),
-            ],
-            loaders: ["style-loader", "css-loader", "resolve-url-loader"],
-            test: /\.css$/,
         }, {
             loaders: ["exports-loader?module.exports.toString()", "css-loader?sourceMap", "sass-loader?sourceMap"],
             test: /\.scss$/,

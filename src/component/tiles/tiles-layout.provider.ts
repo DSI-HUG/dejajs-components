@@ -105,7 +105,10 @@ export class DejaTilesLayoutProvider {
     constructor(private clipboardService: DejaClipboardService) {
         Observable.from(this.refreshTiles$)
             .debounceTime(30)
-            .do(() => this.container.style.width = `100%`)
+            .do(() => {
+                this.container.style.width = ''
+                this.container.style.height = ''
+            })
             .delay(10)
             .subscribe((params) => {
                 const placeAtTheEnd = [] as DejaTile[];
@@ -114,8 +117,8 @@ export class DejaTilesLayoutProvider {
                 if ((params && params.resetWidth) || !this.hundredPercentWith) {
                     this.hundredPercentWith = containerBounds.width;
                 }
-                let height = containerBounds.height;
-                let width = containerBounds.width;
+                let height = containerBounds.height - 20;
+                let width = containerBounds.width - 20;
                 const tiles = this.tiles || [];
 
                 const selectedTileIds = [];

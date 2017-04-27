@@ -31,8 +31,6 @@ import { TextAreaDemoComponent } from '../textarea/textarea-demo';
 import { TilesDemoComponent } from '../tiles/tiles-demo';
 import { DejaTreeListDemoComponent } from '../tree-list/tree-list-demo';
 import { DejaViewPortDemoComponent } from '../viewport/viewport-demo';
-/* deja-cli import demo */
-/* The comment above mustn't be removed ! */
 
 const routes: Routes = [
     { component: HomeComponent, path: '' },

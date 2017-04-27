@@ -1,5 +1,7 @@
 @import '~@angular/material/theming';
 @mixin viewport-theme($theme) {
+    $primary: map-get($theme, primary);
+
     deja-viewport {
         #up,
         #down {

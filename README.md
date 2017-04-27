@@ -2,7 +2,7 @@
 [![travis build](https://travis-ci.org/DSI-HUG/dejajs-components.svg?branch=master)](https://travis-ci.org/DSI-HUG/dejajs-components)
 
 # @deja-js/component
-This is the home for the Hôpital Univesitaire de Genève - DSI - Domaine Patient team's Angular2 components for Angular 2 and material. 
+This is the home for the Hôpitaux Universitaires de Genève - DSI - Domaine Patient team's Angular2 components for Angular 2 and material. 
 
 Online demo : [https://dsi-hug.github.io/dejajs-components](https://dsi-hug.github.io/dejajs-components)
 
