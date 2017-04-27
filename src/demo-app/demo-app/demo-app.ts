@@ -6,7 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, ViewEncapsulation } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs/Rx';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,10 +20,34 @@ export class DemoAppComponent {
     public version: string;
     protected navOpened = true;
 
+    protected colors = [
+        {label: 'HUG', value: 'hug'},
+        {label: 'Pink', value: 'pink'},
+        {label: 'Teal', value: 'teal'},
+        {label: 'Amber', value: 'amber'},
+    ];
+
+    private _theme = this.colors[0];
+    protected theme$ = new BehaviorSubject<any>(this._theme);
+
+    constructor (elementRef: ElementRef) {
+        const elem = elementRef.nativeElement as HTMLElement;
+
+        Observable.from(this.theme$).subscribe((theme) => elem.setAttribute('theme', theme.value) );
+    }
+
+    public get theme() {
+        return this._theme;
+    }
+
+    public set theme(theme: any) {
+        this._theme = theme;
+        this.theme$.next(theme);
+    }
+
     protected get debug() {
         // console.log('Binding ' + Date.now());
         return null;
     }
-
-    
 }
+

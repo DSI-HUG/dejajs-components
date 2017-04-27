@@ -1,9 +1,10 @@
-<md-toolbar color="primary">
+<md-toolbar color="primary" id="toolbar-demo">
     <img src="hug-logo-bw.svg" alt="HUG Logo" height="30">
     <a md-button routerLink="/">DEJA JS</a>
     <a md-button routerLink="/components">COMPONENTS</a>
     <a md-button routerLink="/guides">GUIDES</a>
     <span fxFlex></span>
+    <deja-select [models]="colors" textField="label" [ngModel]="theme" (ngModelChange)="theme = $event" placeholder="Sélectionnez un theme"></deja-select>
     <a md-button href="https://github.com/DSI-HUG/dejajs-components" target="_blank">GITHUB</a>
 </md-toolbar>
 

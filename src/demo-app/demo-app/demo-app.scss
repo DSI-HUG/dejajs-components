@@ -1,16 +1,33 @@
-@import '../../scss/index.scss';
 @import '~@angular/material/theming';
-@import '../../scss/variables/themeHUG';
+@import '../../scss/index.scss';
 @import '../home/home-theme';
 
-@include deja-theme($theme);
+@mixin create-theme($color1, $color2) {
+    @include mat-core();
 
-@include home-demo-theme($theme);
+    // Define color scheme
+    $primary: mat-palette($color1);
+    $accent: mat-palette($color2);
+    $warn: mat-palette($mat-red);
+
+    // Create the theme object from colors
+    $pink-theme: mat-light-theme($primary, $accent, $warn);
+
+    // Include theme styles for core and each component used in the app.
+    @include angular-material-theme($pink-theme);
+
+    /* ------ FAKE THEME ----- */
+    /* WE NEED TO CREATE A FAKE THEME AND OVERRIDE THE COMPONENT MIXIN TO FIX THE MATERIAL COMPONENT COLOR ISSUE */
+    /* https://github.com/angular/material2/issues/947 */ 
+    $fake-theme: mat-light-theme($primary, $primary, $warn);
+    @include mat-radio-theme($fake-theme);
+    @include deja-theme($pink-theme);
+    @include home-demo-theme($pink-theme);
+}
 
 html,
 body {
     height: 100%;
-    font-family: Arial, Helvetica, sans-serif;
     margin: 0;
     padding: 0;
 }
@@ -21,6 +38,16 @@ demo-app {
     display: flex;
     flex-direction: column;
     // overflow: hidden;
+
+    &[theme="hug"] {
+        @import '../../scss/variables/themeHUG';
+        @include deja-theme($theme);
+        @include home-demo-theme($theme);
+    }
+
+    &[theme="pink"] { @include create-theme($mat-pink, $mat-indigo); }
+    &[theme="teal"] { @include create-theme($mat-teal, $mat-green); }
+    &[theme="amber"] { @include create-theme($mat-amber, $mat-orange); }
 }
 
 body {
@@ -76,6 +103,9 @@ body {
             justify-content: space-between;
             width: 100%;
         }
+        &#toolbar-demo {
+            font-size: 1rem;
+        }
     }
     h1 {
         font-size: 20px;
@@ -83,21 +113,6 @@ body {
     deja-dropdown {
         max-height: 500px;
     }
-}
-
-.unselectable {
-    -webkit-touch-callout: none;
-    /* iOS Safari */
-    -webkit-user-select: none;
-    /* Chrome/Safari/Opera */
-    -khtml-user-select: none;
-    /* Konqueror */
-    -moz-user-select: none;
-    /* Firefox */
-    -ms-user-select: none;
-    /* Internet Explorer/Edge */
-    user-select: none;
-    /* Non-prefixed version, currently not supported by any browser */
 }
 
 // avoid issue with display port calculation by the snackbar

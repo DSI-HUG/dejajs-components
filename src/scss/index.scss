@@ -33,44 +33,4 @@
     }
 }
 
-/**
-* Mixin for themes
-*/
-
-
-// Import your custom input theme file so you can call the custom-input-theme function
-@import '../component/accordion/accordion-theme';
-@import '../component/circular-picker/circular-picker-theme';
-@import '../component/data-grid/data-grid-theme';
-@import '../component/date-picker/date-picker-theme';
-@import '../component/date-selector/date-selector-theme';
-@import '../component/loaders/list-loader-theme';
-@import '../component/markdown/markdown-theme';
-@import '../component/menu/menu-theme';
-@import '../component/message-box/message-box-theme';
-@import '../component/range/range-theme';
-@import '../component/select/select-theme';
-@import '../component/tree-list/tree-list-theme';
-@import '../component/viewport/viewport-theme';
-
-@import 'utils/form-validation';
-
-// Create a theme.
-@mixin deja-theme($custom-theme) {
-    @include form-validation-theme($custom-theme);
-    @include deja-material-theme($custom-theme);
-
-    @include accordion-theme($custom-theme);
-    @include circular-picker-theme($custom-theme);
-    @include data-grid-theme($custom-theme);
-    @include date-picker-theme($custom-theme);
-    @include date-selector-theme($custom-theme);
-    @include list-loader-theme($custom-theme);
-    @include markdown-theme($custom-theme);
-    @include menu-theme($custom-theme);
-    @include message-box-theme($custom-theme);
-    @include range-theme($custom-theme);
-    @include select-theme($custom-theme);
-    @include tree-list-theme($custom-theme);
-    @include viewport-theme($custom-theme);
-}
+@import 'mixins/deja-theme';

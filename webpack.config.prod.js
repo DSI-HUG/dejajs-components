@@ -34,7 +34,7 @@ module.exports = webpackMerge.smart(commonConfig, {
             baseUrl: 'https://dsi-hug.github.io/dejajs-components/',
             title: 'DEJA-JS Demo App',
         }),
-        new webpack.NoErrorsPlugin(),
+        new webpack.NoEmitOnErrorsPlugin(),
         new webpack.optimize.CommonsChunkPlugin({
             name: ["./src/demo-app/main.ts", "./src/polyfills.ts"],
         }),
