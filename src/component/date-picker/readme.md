@@ -16,12 +16,15 @@ Composant pour séléctionner une date sur un calendrier et l'affficher dans un 
 ### Propriétés
 
 <table>
+<thead>
 <tr>
     <th>Nom</th>
     <th>Type</th>
     <th>Defaut</th>
     <th>Description</th>
 </tr>
+</thead>
+<tbody>
 <tr>
     <td>disabled</td>
     <td>boolean</td>
@@ -52,4 +55,5 @@ Composant pour séléctionner une date sur un calendrier et l'affficher dans un 
     <td>null</td>
     <td>Le format de la date à afficher dans le champ texte. Par défaut ce aui est affiché est *_date_.toLocaleString()*</td>
 </tr>
+</tbody>
 </table>

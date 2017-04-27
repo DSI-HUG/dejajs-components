@@ -20,12 +20,15 @@ Crée une liste déroulante.
     - `@input`
 
 <table>
+<thead>
 <tr>
     <th>Nom</th>
     <th>Type</th>
     <th>Defaut</th>
     <th>Description</th>
 </tr>
+</thead>
+<tbody>
 <tr>
     <td>placeholder</td>
     <td>string</td>
@@ -200,6 +203,7 @@ Crée une liste déroulante.
     <td></td>
     <td>Définit la liste des éléments (tout type d'objet métier)</td>
 </tr>
+</tbody>
 </table>
 
 ### Templating

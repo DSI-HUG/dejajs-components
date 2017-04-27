@@ -58,12 +58,15 @@ export class DejaMonacoEditorDemoComponent implements OnInit {
 ### Propriétés
 
 <table>
+<thead>
 <tr>
     <th>Nom</th>
     <th>Obligatoire</th>
     <th>Type</th>
     <th>Description</th>
 </tr>
+</thead>
+<tbody>
 <tr>
     <td>value</td>
     <td>Oui</td>
@@ -106,6 +109,7 @@ export class DejaMonacoEditorDemoComponent implements OnInit {
     <td>String</td>
     <td>Chemin vers le loader.js situé dans la librairie Monaco Editor. Permet de modifier le path de la lib en fonction de votre configuration Webpack.</td>
 </tr>
+</tbody>
 </table>
 
 Il est également possible de passer au composant l'ensemble des options disponible au composant Monaco ([voir ici](https://microsoft.github.io/monaco-editor/api/interfaces/monaco.editor.ieditoroptions.html#readonly))

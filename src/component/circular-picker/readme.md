@@ -15,12 +15,15 @@ Ensuite utiliser le composant comme ceci dans votre template :
 ### Propriétés
 
 <table>
-<tr>
-    <th>Nom</th>
-    <th>Type</th>
-    <th>Defaut</th>
-    <th>Description</th>
-</tr>
+<thead>
+    <tr>
+        <th>Nom</th>
+        <th>Type</th>
+        <th>Defaut</th>
+        <th>Description</th>
+    </tr>
+</thead>
+<tbody>
 <tr>
     <td>clockwiseFactor</td>
     <td>ClockwiseFactorEnum *</td>
@@ -57,6 +60,7 @@ Ensuite utiliser le composant comme ceci dans votre template :
     <td>null</td>
     <td>Ranges a afficher sur le picker. Voir la demoApp pour plus de détails</td>
 </tr>
+</tbody>
 </table>
 
 ### Notes : 

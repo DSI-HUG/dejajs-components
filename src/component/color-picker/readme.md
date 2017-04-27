@@ -16,12 +16,15 @@ Composant de selection d'une couleur sous forme d'un bouton.
 ### Propriétés
 
 <table>
+<thead>
 <tr>
     <th>Nom</th>
     <th>Type</th>
     <th>Defaut</th>
     <th>Description</th>
 </tr>
+</thead>
+<tbody>
 <tr>
     <td>disabled</td>
     <td>boolean</td>
@@ -58,17 +61,22 @@ Composant de selection d'une couleur sous forme d'un bouton.
     <td>false</td>
     <td>Retourne ou definit si la partie déroulante est visible.</td>
 </tr>
+</tbody>
 </table>
 
 ### Evénements
 
 <table>
+<thead>
 <tr>
     <th>Nom</th>
     <th>Description</th>
 </tr>
+</thead>
+<tbody>
 <tr>
     <td>colorhover</td>
     <td>Déclenché lorsqu'une couleur est survolée par la souris.</td>
 </tr>
+</tbody>
 </table>

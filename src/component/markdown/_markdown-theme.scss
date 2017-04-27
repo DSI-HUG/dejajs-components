@@ -5,14 +5,14 @@
 
     .markdown-content {
         table {
+            thead tr th{
+                background: mat-color($primary);
+                color: white;
+            }
+            
             tr {
                 &:nth-of-type(odd) {
                     background-color: #ececec;
-                }
-
-                &:first-child {
-                    background: mat-color($primary);
-                    color: white;
                 }
 
                 th, td {

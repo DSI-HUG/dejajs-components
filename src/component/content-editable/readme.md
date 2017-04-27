@@ -14,12 +14,15 @@ Rend le contenu texte d'un élément HTML editable
 ### Propriétés
 
 <table>
+<thead>
 <tr>
     <th>Nom</th>
     <th>Type</th>
     <th>Defaut</th>
     <th>Description</th>
 </tr>
+</thead>
+<tbody>
 <tr>
     <td>multiline</td>
     <td>boolean</td>
@@ -44,16 +47,19 @@ Rend le contenu texte d'un élément HTML editable
     <td>false</td>
     <td>Retourne ou définit une valeur indiquant si l'élément est en édition.</td>
 </tr>
+</tbody>
 </table>
-<br>
 
 ### Méthodes
 
 <table>
+<thead>
 <tr>
     <th>Nom</th>
     <th>Description</th>
 </tr>
+</thead>
+<tbody>
 <tr>
     <td>focus</td>
     <td>Donne le focus à la zone d'édition.</td>
@@ -66,18 +72,23 @@ Rend le contenu texte d'un élément HTML editable
     <td>edit</td>
     <td>Active la zone d'édition.</td>
 </tr>
+</tbody>
 </table>
 <br>
 
 ### Evénements
 
 <table>
+<thead>
 <tr>
     <th>Nom</th>
     <th>Description</th>
 </tr>
+</thead>
+<tbody>
 <tr>
     <td>colorhover</td>
     <td>Déclenché lorsqu'une couleur est survolée par la souris.</td>
 </tr>
+</tbody>
 </table>
