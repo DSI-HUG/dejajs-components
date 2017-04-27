@@ -36,7 +36,6 @@
     "prepublish": "npm run build-css",
     "publish": "npm publish --access public",
     "build:prod": "del-cli dist && npm run build-css && webpack -p --config webpack.config.prod.js && copy 404.html dist",
-    "travis-build:prod": "npm run build-css && webpack -p --config webpack.config.prod.js",
     "e2e": "webdriver-manager update && protractor specs/protractor.conf.js",
     "test": "npm run e2e",
     "licensecheck": "license-check"
