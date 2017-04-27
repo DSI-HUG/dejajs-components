@@ -18,3 +18,4 @@ export * from './style/index';
 export * from './keycodes.enum';
 export * from './UUID';
 export * from './validation/index';
+export * from './pipes/index';
