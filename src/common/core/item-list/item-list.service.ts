@@ -54,13 +54,51 @@ export class ItemListService {
 
     private _childrenField = 'items';
 
-    // Callback promises
-    private selectingItem: (item: any) => Promise<any> | Observable<any>;
-    private unselectingItem: (item: any) => Promise<any> | Observable<any>;
+    // Cnacelable pre events
+    private loadingItems$: (query: string | RegExp, selectedItems: IItemBase[]) => Observable<IItemBase[]>;
+    private selectingItem$: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>;
+    private unselectingItem$: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>;
+    private expandingItem$: (item: IItemTree) => Promise<IItemTree> | Observable<IItemTree>;
+    private collapsingItem$: (item: IItemTree) => Promise<IItemTree> | Observable<IItemTree>;
 
     // champs à utiliser comme valeur de comparaison
     private _valueField: string;
 
+    /**
+     * Set a observable called before the list will be displayed
+     */
+    public setLoadingItems(fn: (query: string, selectedItems: IItemBase[]) => Observable<IItemBase>) {
+        this.loadingItems$ = fn;
+    }
+
+    /**
+     * Set a promise or an observable called before an item selection
+     */
+    public setSelectingItem(fn: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>) {
+        this.selectingItem$ = fn;
+    }
+
+    /**
+     * Set a promise or an observable called before an item deselection
+     */
+    public setUnselectingItem(fn: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>) {
+        this.unselectingItem$ = fn;
+    }
+    
+    /**
+     * Set a promise or an observable called before an item expand
+     */
+    public setExpandingItem(fn: (item: IItemTree) => Promise<IItemTree> | Observable<IItemTree>) {
+        this.expandingItem$ = fn;
+    }
+
+    /**
+     * Set a promise or an observable called before an item collapse
+     */
+    public setCollapsingItem(fn: (item: IItemTree) => Promise<IItemTree> | Observable<IItemTree>) {
+        this.collapsingItem$ = fn;
+    }
+    
     /**
      * Permet de controler l'affichage du waiter
      * @returns {BehaviorSubject<boolean>}
@@ -460,6 +498,8 @@ export class ItemListService {
     public expandItem$(item: IItemTree) {
         return Observable.of(item)
             .filter((itm) => !!itm)
+            .switchMap((itm) => this.expandingItem$ ? this.expandingItem$(itm) : Observable.of(itm))
+            .filter((itm) => !!itm)
             .do((itm) => {
                 itm.collapsed = false;
                 // Invalidate view cache
@@ -473,6 +513,8 @@ export class ItemListService {
      */
     public collapseItem$(item: IItemTree) {
         return Observable.of(item)
+            .filter((itm) => !!itm)
+            .switchMap((itm) => this.collapsingItem$ ? this.collapsingItem$(itm) : Observable.of(itm))
             .filter((itm) => !!itm)
             .do((itm) => {
                 itm.collapsed = true;
@@ -589,13 +631,6 @@ export class ItemListService {
             }, []);
     }
 
-    /**
-     * Set a promise called before an item selection
-     */
-    public setSelectingItem(fn: (item: any) => Promise<any> | Observable<any>) {
-        this.selectingItem = fn;
-    }
-
     /** Sélectionne l'élément spécifié
      * @param {IItemBase} item Elément à sélectioner.
      * @return {Observable} Observable résolu par la fonction.
@@ -603,7 +638,7 @@ export class ItemListService {
     public selectItem$(item: IItemBase) {
         return Observable.of(item)
             .filter((itm) => !!itm)
-            .switchMap((itm) => this.selectingItem ? this.selectingItem(itm) : Observable.of(itm))
+            .switchMap((itm) => this.selectingItem$ ? this.selectingItem$(itm) : Observable.of(itm))
             .filter((itm) => !!itm)
             .do((itm) => {
                 if (!this.selectedList) {
@@ -615,13 +650,6 @@ export class ItemListService {
             });
     }
 
-    /**
-     * Set a promise called before an item deselection
-     */
-    public setUnselectingItem(fn: (item: any) => Promise<any> | Observable<any>) {
-        this.unselectingItem = fn;
-    }
-
     /** Déselectionne l'élément spécifié
      * @param {IItemBase} item Elément à déselectioner.
      * @return {Observable} Observable résolu par la fonction.
@@ -629,7 +657,7 @@ export class ItemListService {
     public unSelectItem$(item: IItemBase) {
         return Observable.of(item)
             .filter((itm) => !!itm)
-            .switchMap((itm) => this.unselectingItem ? this.unselectingItem(itm) : Observable.of(itm))
+            .switchMap((itm) => this.unselectingItem$ ? this.unselectingItem$(itm) : Observable.of(itm))
             .filter((itm) => !!itm)
             .do((itm) => {
                 itm.selected = false;
@@ -774,6 +802,7 @@ export class ItemListService {
     /** Supprime tous les caches internes. Ils seront recréés à la première demande de la portion de la liste à afficher. */
     public invalidateCache() {
         this._cache = {};
+        this.ensureChildrenProperties(this.items);
     }
 
     /** Efface la hauteur calculée des lignes en mode automatique */
@@ -889,8 +918,8 @@ export class ItemListService {
      * @param {IItemBase[]} selectedItems Liste des éléments selectionés.
      * @return {Observable} Observable résolu par la fonction, qui retourne la liste à utiliser.
      */
-    protected getItemList$(_query?: RegExp | string, _selectedItems?: IItemBase[]): Observable<IItemBase[]> {
-        return Observable.of(this.items);
+    protected getItemList$(query?: RegExp | string, selectedItems?: IItemBase[]): Observable<IItemBase[]> {
+        return this.loadingItems$ ? this.loadingItems$(query, selectedItems) : Observable.of(this.items);
     }
 
     /** Retourne une valeur indiquant si l'élément spécifié correspond aux critères de recherche spécifiés

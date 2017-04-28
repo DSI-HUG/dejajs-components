@@ -33,6 +33,7 @@ deja-select {
 		}
 
 		&[wait="true"] {
+            z-index: 910;
 			.mat-input-wrapper {
 				.mat-input-underline {
 					border-top: 0;
