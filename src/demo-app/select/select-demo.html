@@ -51,17 +51,17 @@
 				<span fxFlex="0 0 45%" fxLayout="column">
 					<deja-select fxFlex="0 0 auto" placeholder="Select a country" [(ngModel)]="businessCountry" textField="naqme" valueField="code" [models]="countries"></deja-select>
 				</span>
-				<ul fxFlex="0 0 45%" fxFlexOffset="10%">
-					<li>UpArrow: Select the previous item</li>
-					<li>DownArrow: Select the next item</li>
-					<li>Alt+UpArrow: Toogle the dropdown</li>
-					<li>Alt+DownArrow: Toogle the dropdown</li>
-					<li>PageUp: Select the next page item</li>
-					<li>PageDown: Select the previous page item</li>
-					<li>Home: Select the first item</li>
-					<li>End: Select the last item</li>
-					<li>Space: Collapse or expand a group header</li>
-					<li>Enter: Select the current item and close the dropdown</li>
+				<ul fxFlex="0 0 45%" fxFlexOffset="10%" id="shortcut-list">
+					<li>Press <span class="keyboard-key">↑</span> to select the previous item</li>
+					<li>Press <span class="keyboard-key">↓</span> to select the next item</li>
+					<li>Press <span class="keyboard-key">Alt</span> + <span class="keyboard-key">↑</span> to toogle the dropdown</li>
+					<li>Press <span class="keyboard-key">Alt</span> + <span class="keyboard-key">↓</span> to toogle the dropdown</li>
+					<li>Press <span class="keyboard-key">PageUp</span> to select the next page item</li>
+					<li>Press <span class="keyboard-key">PageDown</span> to select the previous page item</li>
+					<li>Press <span class="keyboard-key">Home</span> to select the first item</li>
+					<li>Press <span class="keyboard-key">End</span> to select the last item</li>
+					<li>Press <span class="keyboard-key">Space</span> to collapse or expand a group header</li>
+					<li>Press <span class="keyboard-key">Enter</span> to select the current item and close the dropdown</li>
 					<li>A-Z 0-9: Select the next item started with the pressed key</li>
 				</ul>
 			</div>

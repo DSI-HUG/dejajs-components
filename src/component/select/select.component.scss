@@ -10,12 +10,7 @@ deja-select {
 	}
 
 	#input {
-		width: 100%; // add a few pixels to avoid that the icon touch the line
-		.mat-input-wrapper {
-			.mat-input-underline {
-				margin-top: 8px;
-			}
-		}
+		width: 100%;
 
 		.mat-input-suffix {
 			width: 2rem;
