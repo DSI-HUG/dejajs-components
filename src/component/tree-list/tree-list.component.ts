@@ -12,11 +12,11 @@ import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
 import { GroupingService } from '../../common/core/grouping';
-import { IItemBase, IItemTree, ItemListBase, ItemListService, IViewPort, ViewportMode, ViewPortService } from '../../common/core/item-list';
+import { DejaItemEvent, DejaItemsEvent, IItemBase, IItemTree, ItemListBase, ItemListService, IViewPort, ViewportMode, ViewPortService } from '../../common/core/item-list';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { SortingService } from '../../common/core/sorting';
 import { IDejaDragEvent } from '../dragdrop';
-import { DejaTreeListItemEvent, DejaTreeListItemsEvent, DejaTreeListScrollEvent } from './index';
+import { DejaTreeListScrollEvent } from './index';
 
 const noop = () => { };
 
@@ -64,7 +64,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Exécuté lorsque la scrollbar change de position. */
     @Output() public scroll = new EventEmitter<DejaTreeListScrollEvent>();
     /** Exécuté lorsque l'utilisateur sélectionne ou désélectionne une ligne. */
-    @Output() public selectedChange = new EventEmitter<DejaTreeListItemsEvent | DejaTreeListItemEvent>();
+    @Output() public selectedChange = new EventEmitter<DejaItemsEvent | DejaItemEvent>();
     /** Exécuté lorsque le calcul du viewPort est executé. */
     @Output() public viewPortChanged = new EventEmitter<IViewPort>();
 
@@ -910,7 +910,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     }
 
     protected onSelectionChange() {
-        const e = this.multiSelect ? { items: this.selectedItems } as DejaTreeListItemsEvent : { item: this.selectedItems[0] } as DejaTreeListItemEvent;
+        const e = this.multiSelect ? { items: this.selectedItems } as DejaItemsEvent : { item: this.selectedItems[0] } as DejaItemEvent;
         this.selectedChange.emit(e);
     }
 

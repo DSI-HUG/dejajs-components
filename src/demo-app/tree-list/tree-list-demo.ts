@@ -8,8 +8,8 @@
 
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { GroupingService, IGroupInfo, IItemTree, IViewPortItem } from '../../common/core';
-import { DejaTextMetricsService, DejaTreeListComponent, DejaTreeListItemsEvent, IDejaDragEvent, IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDropCursorInfos } from '../../component';
+import { DejaItemsEvent, GroupingService, IGroupInfo, IItemTree, IViewPortItem } from '../../common/core';
+import { DejaTextMetricsService, DejaTreeListComponent, IDejaDragEvent, IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDropCursorInfos } from '../../component';
 import { CountriesListService } from '../services/countries-list.service';
 import { CountriesService, ICountry } from '../services/countries.service';
 import { INews, NewsService } from '../services/news.service';
@@ -89,7 +89,7 @@ export class DejaTreeListDemoComponent implements OnInit {
             });
     }
 
-    protected onSelectionChanged(e: DejaTreeListItemsEvent) {
+    protected onSelectionChanged(e: DejaItemsEvent) {
         // Ne jamais binder la sortie et l'entree des selections sur la meme variable
         this.selectedItemsOut = e.items;
         this.selectedInfos = [];

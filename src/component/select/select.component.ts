@@ -9,7 +9,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, forwardRef, HostBinding, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
-import { IItemBase, IItemTree, ItemListBase, ItemListService, IViewPort, ViewportMode, ViewPortService } from '../../common/core/item-list';
+import { DejaItemEvent, DejaItemsEvent, IItemBase, IItemTree, ItemListBase, ItemListService, IViewPort, ViewportMode, ViewPortService } from '../../common/core/item-list';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { DejaDropDownComponent, IDropDownResetParams } from '../dropdown';
 
@@ -52,6 +52,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @Input('delay-search-trigger') public delaySearchTrigger = 250;
     /** Exécuté lorsque le calcul du viewPort est executé. */
     @Output() public viewPortChanged = new EventEmitter<IViewPort>();
+    /** Exécuté lorsque l'utilisateur sélectionne ou désélectionne une ligne. */
+    @Output() public selectedChange = new EventEmitter<DejaItemsEvent | DejaItemEvent>();
 
     // NgModel implementation
     protected onTouchedCallback: () => void = noop;
@@ -171,6 +173,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             }));
 
         this.maxHeight = 500;
+
     }
 
     /** Ancre d'alignement de la liste déroulante. Valeurs possible: top, bottom, right, left. Une combinaison des ces valeurs peut également être utilisée, par exemple 'top left'. */
@@ -362,7 +365,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     public set unselectingItem(fn: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>) {
         super.setUnselectingItem(fn);
     }
-    
+
     /**
      * Set a promise or an observable called before an item expand
      */
@@ -524,6 +527,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     // From ControlValueAccessor interface
+    // Replace the default onChange emitter
     public registerOnChange(fn: any) {
         this.onChangeCallback = fn;
     }
@@ -858,6 +862,18 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     private onModelChange(items?: IItemBase[] | IItemBase) {
+
+        if (items) {
+            let outputEmitter = null;
+
+            if (Array.isArray(items)) {
+                outputEmitter = { items: this.selectedItems } as DejaItemsEvent;
+            } else {
+                outputEmitter = { item: this.selectedItems[0] } as DejaItemEvent;
+            }
+            this.selectedChange.emit(outputEmitter);
+        }
+
         let output = items;
 
         if (super.isBusinessObject() && items) {
