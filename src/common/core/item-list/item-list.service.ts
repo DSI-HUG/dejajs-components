@@ -84,7 +84,7 @@ export class ItemListService {
     public setUnselectingItem(fn: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>) {
         this.unselectingItem$ = fn;
     }
-    
+
     /**
      * Set a promise or an observable called before an item expand
      */
@@ -98,7 +98,7 @@ export class ItemListService {
     public setCollapsingItem(fn: (item: IItemTree) => Promise<IItemTree> | Observable<IItemTree>) {
         this.collapsingItem$ = fn;
     }
-    
+
     /**
      * Permet de controler l'affichage du waiter
      * @returns {BehaviorSubject<boolean>}
@@ -158,42 +158,36 @@ export class ItemListService {
      * @param items Provider de la liste des éléments de la liste.
      */
     public setItems$(items: any[] | Promise<any[]> | Observable<any[]>) {
-        return new Observable<IItemBase[]>((subscriber: Subscriber<IItemBase[]>) => {
-            if (!items) {
-                this.items = undefined;
-                subscriber.next();
-            } else if (items instanceof Array) {
-                this.ensureChildrenProperties(items);
-                this.ensureSelectedItems(items);
-                this.items = items;
-                this._waiter$.next(false);
-                subscriber.next();
-            } else {
-                this.items = undefined;
-                this._waiter$.next(true);
-                let observable = items as Observable<IItemBase[]>;
-                if (!observable.subscribe) {
-                    const promise = items as Promise<IItemBase[]>;
-                    observable = Observable.fromPromise(promise);
-                }
-
-                observable
-                    .filter((its) => !!its)
-                    .subscribe((its) => {
-                        if (its) {
-                            this.ensureChildrenProperties(its);
-                            // TODO La déselection ne fonctionne pas pendant le chargement
-                            this.ensureSelectedItems(its);
-                            this.items = [...this.items || [], ...its];
-                            this._waiter$.next(false);
-                        }
-                        subscriber.next();
-                    }, (error) => {
-                        this._waiter$.next(false);
-                        subscriber.error(error);
-                    });
+        if (!items) {
+            this.items = undefined;
+            return Observable.of(null);
+        } else if (items instanceof Array) {
+            this.ensureChildrenProperties(items);
+            this.ensureSelectedItems(items);
+            this.items = items;
+            this._waiter$.next(false);
+            return Observable.of(items);
+        } else {
+            this.items = undefined;
+            this._waiter$.next(true);
+            let observable = items as Observable<IItemBase[]>;
+            if (!observable.subscribe) {
+                const promise = items as Promise<IItemBase[]>;
+                observable = Observable.fromPromise(promise);
             }
-        });
+
+            return observable
+                .filter((its) => !!its)
+                .do((its) => {
+                    if (its) {
+                        this.ensureChildrenProperties(its);
+                        // TODO La déselection ne fonctionne pas pendant le chargement
+                        this.ensureSelectedItems(its);
+                        this.items = [...this.items || [], ...its];
+                        this._waiter$.next(false);
+                    }
+                });
+        }
     }
 
     public setModels$(items: any[] | Promise<any[]> | Observable<any[]>) {
