@@ -192,19 +192,40 @@ export abstract class ItemListBase {
     }
 
     /**
-     * Set a promise called before an item selection
+     * Set a promise or an observable called before an item selection
+     */
+    public setLoadingItems(fn: (query: string | RegExp, selectedItems: IItemBase[]) => Observable<IItemBase>) {
+        this.getItemListService().setLoadingItems(fn);
+    }
+
+    /**
+     * Set a promise or an observable called before an item deselection
      */
     public setSelectingItem(fn: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>) {
         this.getItemListService().setSelectingItem(fn);
     }
 
     /**
-     * Set a promise called before an item deselection
+     * Set a promise or an observable called before an item deselection
      */
     public setUnselectingItem(fn: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>) {
         this.getItemListService().setUnselectingItem(fn);
     }
+    
+    /**
+     * Set a promise or an observable called before an item selection
+     */
+    public setExpandingItem(fn: (item: IItemTree) => Promise<IItemTree> | Observable<IItemTree>) {
+        this.getItemListService().setExpandingItem(fn);
+    }
 
+    /**
+     * Set a promise or an observable called before an item deselection
+     */
+    public setCollapsingItem(fn: (item: IItemTree) => Promise<IItemTree> | Observable<IItemTree>) {
+        this.getItemListService().setCollapsingItem(fn);
+    }
+    
     /** Evalue le texte à afficher pour l'élément spécifié.
      * @param {any} value  Model à évaluer.
      * @return {string} Texte à afficher pour le modèle spécifié.
@@ -677,7 +698,8 @@ export abstract class ItemListBase {
      * Spécifier 0 pour que le composant determine sa hauteur à partir du container
      */
     protected setMaxHeight(value: number | string) {
-        this.viewPort.maxSize$.next(this._maxHeight ? +value : null);
+        this._maxHeight = value ? +value : null;
+        this.viewPort.maxSize$.next(this._maxHeight);        
     }
 
     /** Retourne la hauteur maximum avant que le composant affiche une scrollbar

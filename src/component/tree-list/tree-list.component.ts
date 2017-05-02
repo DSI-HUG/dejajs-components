@@ -377,7 +377,15 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     }
 
     /**
-     * Set a promise called before an item selection
+     * Set a observable called before the list will be displayed
+     */
+    @Input()
+    public set loadingItems(fn: (query: string | RegExp, selectedItems: IItemBase[]) => Observable<IItemBase>) {
+        super.setLoadingItems(fn);
+    }
+
+    /**
+     * Set a promise or an observable called before an item selection
      */
     @Input()
     public set selectingItem(fn: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>) {
@@ -385,11 +393,27 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     }
 
     /**
-     * Set a promise called before an item deselection
+     * Set a promise or an observable called before an item deselection
      */
     @Input()
     public set unselectingItem(fn: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>) {
         super.setUnselectingItem(fn);
+    }
+    
+    /**
+     * Set a promise or an observable called before an item expand
+     */
+    @Input()
+    public set expandingItem(fn: (item: IItemTree) => Promise<IItemTree> | Observable<IItemTree>) {
+        super.setExpandingItem(fn);
+    }
+
+    /**
+     * Set a promise or an observable called before an item collapse
+     */
+    @Input()
+    public set collapsingItem(fn: (item: IItemTree) => Promise<IItemTree> | Observable<IItemTree>) {
+        super.setCollapsingItem(fn);
     }
 
     /** Définit la liste des éléments (tout type d'objet métier) */

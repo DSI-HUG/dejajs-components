@@ -6,8 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Observable, Subscription } from 'rxjs/Rx';
+import { ChangeDetectorRef, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Observable, Subscription, Subject } from 'rxjs/Rx';
 import { IItemBase, IItemTree } from '../../common/core';
 import { DejaSelectComponent } from '../../component';
 import { CountriesListService } from '../services/countries-list.service';
@@ -33,18 +33,31 @@ export class SelectDemoComponent implements OnInit {
         value: string;
     }[];
     protected viewPortInfos$: Subscription;
+    protected dialogResponse$: Subject<string> = new Subject<string>();
 
     private countries: Observable<ICountry[]>;
     private countriesForTemplate: ICountry[];
     private countriesForMultiselect: ICountry[];
-    private groupedCountries: IItemTree[];
+    private groupedCountries: ICountryGroup[];
+    private onDemandGroupedCountries: ICountryGroup[];
     private multiselectModel: IItemTree[];
-    private dialogVisible = false;
+    private _dialogVisible = false;
+    private onDemandPlaceHolder = 'Open to load';
 
-    @ViewChild('dialog') private dialogWrapper: ElementRef;
     @ViewChild('news') private newsSelect: DejaSelectComponent;
+    @ViewChild('ondemand') private onDemandSelect: DejaSelectComponent;
+    @ViewChild('onexpand') private onExpandSelect: DejaSelectComponent;
 
-    constructor(private countriesService: CountriesService, protected countriesListService: CountriesListService, newsService: NewsService) {
+    protected set dialogVisible(value: boolean) {
+        this._dialogVisible = value;
+        this.changeDetectorRef.markForCheck();
+    }
+
+    protected get dialogVisible() {
+        return this._dialogVisible;
+    }
+
+    constructor(private changeDetectorRef: ChangeDetectorRef, private countriesService: CountriesService, protected countriesListService: CountriesListService, newsService: NewsService) {
         this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","displayName":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","displayName":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","displayName":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","displayName":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","displayName":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","displayName":"Dominica","depth":0,"odd":false,"selected":true}]');
         this.news$ = newsService.getNews$(50);
         this.bigNews$ = newsService.getNews$(10000);
@@ -78,57 +91,111 @@ export class SelectDemoComponent implements OnInit {
             });
 
         this.countriesService.getCountries$().subscribe((value: ICountry[]) => {
-            const result = [] as ISelectCountry[];
+            const result = [] as ICountryGroup[];
+            const onDemandResult = [] as ICountryGroup[];
             const map = {} as { [groupName: string]: ISelectCountry[] };
             value.map((country) => {
                 const groupName = 'Group ' + country.naqme[0];
                 if (!map[groupName]) {
-                    map[groupName] = [] as IItemTree[];
+                    map[groupName] = [] as ICountryGroup[];
                     result.push({
                         collapsible: true,
                         groupName: groupName,
                         items: map[groupName],
                         displayName: groupName,
                         selectable: false,
-                    });
-                }
+                    } as ICountryGroup);
 
-                /*let subGroupName = 'Subgroup ' + country.naqme[1];
-                 if (!map[groupName + subGroupName]) {
-                 map[groupName + subGroupName] = [] as IItemTree[];
-                 map[groupName].push({
-                 items: map[groupName + subGroupName],
-                 suGroupName: subGroupName,
-                 collapsible: true,
-                 });
-                 }*/
+                    onDemandResult.push({
+                        collapsible: true,
+                        collapsed: true,
+                        groupName: groupName,
+                        items: [{
+                            displayName: 'loading...',
+                            selectable: false,
+                        }],
+                        displayName: groupName,
+                        selectable: false,
+                        loaded: false,
+                    } as ICountryGroup);
+                }
 
                 map[groupName].push(country);
             });
 
             this.groupedCountries = result;
+            this.onDemandGroupedCountries = onDemandResult;
         });
     }
 
-    protected confirmUnselection() {
+    protected loadingItems() {
+        const self = this;
+        return (_query: string | RegExp, _selectedItems: IItemBase[]) => {
+            self.onDemandSelect.waiter = true;
+            self.onDemandPlaceHolder = 'loading...';
+            return self.countriesService.getCountries$()
+                .delay(3000)
+                .do(() => {
+                    self.onDemandSelect.waiter = false;
+                    self.onDemandPlaceHolder = 'Selected a country';
+                });
+        }
+    }
+
+    protected collapsingItems() {
+        const self = this;
         return (item: IItemBase) => {
-            this.dialogVisible = true;
-            const self = this;
-            return Observable
-                .fromEvent(this.dialogWrapper.nativeElement, 'click')
-                .first()
-                .do(() => self.dialogVisible = false)
-                .map((e: Event) => {
-                    let parentElement = e.target as HTMLElement;
+            const country = item as ICountryGroup;
+            return country.loaded ? Observable.of(item) : self.confirmDialog()(item);
+        }
+    }
 
-                    while (parentElement && parentElement !== this.dialogWrapper.nativeElement) {
-                        if (parentElement.id === 'okbtn') {
-                            return item;
+    protected expandingItems() {
+        const self = this;
+        return (item: IItemBase) => {
+            const group = item as ICountryGroup;
+            if (group.loaded) {
+                return Observable.of(item);
+            } else {
+                return self.confirmDialog()(item)
+                    .switchMap((itm) => {
+                        if (!itm) {
+                            return Observable.of(null);
                         }
-                        parentElement = parentElement.parentElement;
-                    }
 
-                    return null;
+                        Observable.of(group)
+                            .delay(2000)
+                            .first()
+                            .subscribe((grp) => {
+                                // Simulate asynchronous load
+                                const original = this.groupedCountries.find((c) => c.displayName === grp.displayName);
+                                grp.items = original.items;
+                                grp.loaded = true;
+                                this.onExpandSelect.refresh();
+                            })
+
+                        return Observable.of(itm);
+                    });
+            }
+        }
+    }
+
+    protected confirmDialogWithPromise() {
+        const self = this;
+        return (item: IItemBase) => {
+            return self.confirmDialog()(item).toPromise();
+        }
+    }
+
+    protected confirmDialog() {
+        const self = this;
+        return (item: IItemBase) => {
+            self.dialogVisible = true;
+            return Observable.from(this.dialogResponse$)
+                .first()
+                .map((response) => {
+                    self.dialogVisible = false;
+                    return response === 'ok' ? item : null;
                 });
         };
     }
@@ -164,9 +231,13 @@ export class SelectDemoComponent implements OnInit {
 }
 
 interface ISelectCountry extends IItemTree {
-    groupName?: string;
-    suGroupName?: string;
     items?: IItemTree[];
+}
+
+interface ICountryGroup extends ISelectCountry {
+    groupName?: string;
+    items: IItemBase[]
+    loaded?: boolean,
 }
 
 interface IExtendedViewPortItem extends IViewPortItem {
