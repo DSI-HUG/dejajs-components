@@ -601,6 +601,7 @@ export class ItemListService {
      * @return {Observable} Observable résolu par la fonction.
      */
     public selectItem$(item: IItemBase) {
+        console.log('selectItem', item);
         return Observable.of(item)
             .filter((itm) => !!itm)
             .switchMap((itm) => this.selectingItem ? this.selectingItem(itm) : Observable.of(itm))

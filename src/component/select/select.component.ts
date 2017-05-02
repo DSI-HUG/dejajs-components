@@ -52,6 +52,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @Input('delay-search-trigger') public delaySearchTrigger = 250;
     /** Exécuté lorsque le calcul du viewPort est executé. */
     @Output() public viewPortChanged = new EventEmitter<IViewPort>();
+    @Output() public onChange = new EventEmitter<any>();
 
     // NgModel implementation
     protected onTouchedCallback: () => void = noop;
@@ -171,6 +172,10 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             }));
 
         this.maxHeight = 500;
+
+        this.registerOnChange((model: any) => {
+            this.onChange.emit(model);
+        });
     }
 
     /** Ancre d'alignement de la liste déroulante. Valeurs possible: top, bottom, right, left. Une combinaison des ces valeurs peut également être utilisée, par exemple 'top left'. */
@@ -500,6 +505,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     // From ControlValueAccessor interface
+    // Replace the default onChange emitter
     public registerOnChange(fn: any) {
         this.onChangeCallback = fn;
     }
@@ -835,6 +841,9 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     private onModelChange(items?: IItemBase[] | IItemBase) {
         let output = items;
+
+        const e = this.multiSelect ? { items: this.selectedItems } as DejaTreeListItemsEvent : { item: this.selectedItems[0] } as DejaTreeListItemEvent;
+        this.selectedChange.emit(e);
 
         if (super.isBusinessObject() && items) {
             if (items instanceof Array) {
