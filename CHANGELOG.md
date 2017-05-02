@@ -2,6 +2,7 @@
 # [@next] (2017-04-xx)
 
 ### Breaking changes from 1.7.2
+Update dependencies version
 
 ### Known issues
 
