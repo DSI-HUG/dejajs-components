@@ -52,11 +52,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @Input('delay-search-trigger') public delaySearchTrigger = 250;
     /** Exécuté lorsque le calcul du viewPort est executé. */
     @Output() public viewPortChanged = new EventEmitter<IViewPort>();
-
-    // ccsm 20170502 - emit item(s) on select
     /** Exécuté lorsque l'utilisateur sélectionne ou désélectionne une ligne. */
     @Output() public selectedChange = new EventEmitter<DejaItemsEvent | DejaItemEvent>();
-    // ccsm 20170502 - end
 
     // NgModel implementation
     protected onTouchedCallback: () => void = noop;
@@ -866,7 +863,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     private onModelChange(items?: IItemBase[] | IItemBase) {
 
-        // ccsm 20170502 - emit item(s) on select
         if (items) {
             let outputEmitter = null;
 
@@ -877,7 +873,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             }
             this.selectedChange.emit(outputEmitter);
         }
-        // ccsm 20170502 - end
 
         let output = items;
 
