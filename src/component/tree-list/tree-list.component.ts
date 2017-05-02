@@ -399,7 +399,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     public set unselectingItem(fn: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>) {
         super.setUnselectingItem(fn);
     }
-    
+
     /**
      * Set a promise or an observable called before an item expand
      */
@@ -420,7 +420,6 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     @Input()
     public set models(items: any[] | Observable<any[]>) {
         super.setModels$(items)
-            .first()
             .switchMap(() => this.calcViewList$())
             .subscribe(noop);
     }
