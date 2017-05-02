@@ -420,7 +420,6 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     @Input()
     public set models(items: any[] | Observable<any[]>) {
         super.setModels$(items)
-            .first()
             .switchMap(() => this.calcViewList$())
             .subscribe(noop);
     }
