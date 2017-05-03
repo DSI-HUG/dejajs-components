@@ -23,6 +23,13 @@ export class DejaDatePickerDemoComponent implements OnInit {
 
     public dateRangeFrom: Date;
     public dateRangeTo: Date;
+
+    public datetimeRangeFrom: Date;
+    public datetimeRangeTo: Date;
+
+    public dateMin: Date;
+    public dateMax: Date;
+
     @ViewChild('dtfrom') private dateFromCtrl: DejaDatePickerComponent;
     @ViewChild('dtto') private dateToCtrl: DejaDatePickerComponent;
 
@@ -31,7 +38,7 @@ export class DejaDatePickerDemoComponent implements OnInit {
 
     constructor() {
         let debouceTime = 0;
-
+        
         const dateFrom$ = Observable.from(this.dateFrom)
             .distinctUntilChanged((date1, date2) => {
                 return (date1 && date1.getTime()) === (date2 && date2.getTime());
@@ -59,5 +66,11 @@ export class DejaDatePickerDemoComponent implements OnInit {
             });
     }
 
-    public ngOnInit() { }
+    public ngOnInit() { 
+        let now: Date = new Date();
+        this.dateMin = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
+        this.dateMax = new Date();
+        console.log(this.dateMin)
+        console.log(this.dateMax)
+    }
 }
