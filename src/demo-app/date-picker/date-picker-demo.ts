@@ -22,9 +22,7 @@ export class DejaDatePickerDemoComponent implements OnInit {
 
     public dateRangeFrom: Date;
     public dateRangeTo: Date;
-    @ViewChild('dtfrom') private dateFromCtrl: DejaDatePickerComponent;
-    @ViewChild('dtto') private dateToCtrl: DejaDatePickerComponent;
-
+    
     private dateFrom = new BehaviorSubject(undefined);
     private dateTo = new BehaviorSubject(undefined);
 
@@ -34,14 +32,6 @@ export class DejaDatePickerDemoComponent implements OnInit {
         const dateFrom$ = Observable.from(this.dateFrom)
             .distinctUntilChanged((date1, date2) => {
                 return (date1 && date1.getTime()) === (date2 && date2.getTime());
-            });
-
-        dateFrom$.debounceTime(debouceTime)
-            .skip(1)
-            .filter((date) => !!date)
-            .subscribe(() => {
-                this.dateFromCtrl.close();
-                this.dateToCtrl.open();
             });
 
         const dateTo$ = Observable.from(this.dateTo)
