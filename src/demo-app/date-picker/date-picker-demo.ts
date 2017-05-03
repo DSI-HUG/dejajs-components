@@ -6,13 +6,11 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs/Rx';
-import { DejaDatePickerComponent } from '../../index';
 
 @Component({
     selector: 'dejadate-picker-demo',
-    styleUrls: ['./date-picker-demo.scss'],
     templateUrl: './date-picker-demo.html',
 })
 export class DejaDatePickerDemoComponent implements OnInit {
@@ -23,15 +21,8 @@ export class DejaDatePickerDemoComponent implements OnInit {
 
     public dateRangeFrom: Date;
     public dateRangeTo: Date;
-
-    public datetimeRangeFrom: Date;
-    public datetimeRangeTo: Date;
-
     public dateMin: Date;
     public dateMax: Date;
-
-    @ViewChild('dtfrom') private dateFromCtrl: DejaDatePickerComponent;
-    @ViewChild('dtto') private dateToCtrl: DejaDatePickerComponent;
 
     private dateFrom = new BehaviorSubject(undefined);
     private dateTo = new BehaviorSubject(undefined);
@@ -42,14 +33,6 @@ export class DejaDatePickerDemoComponent implements OnInit {
         const dateFrom$ = Observable.from(this.dateFrom)
             .distinctUntilChanged((date1, date2) => {
                 return (date1 && date1.getTime()) === (date2 && date2.getTime());
-            });
-
-        dateFrom$.debounceTime(debouceTime)
-            .skip(1)
-            .filter((date) => !!date)
-            .subscribe(() => {
-                this.dateFromCtrl.close();
-                this.dateToCtrl.open();
             });
 
         const dateTo$ = Observable.from(this.dateTo)

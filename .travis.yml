@@ -40,7 +40,6 @@ env:
   - COMMIT_AUTHOR_EMAIL: travis@hcuge.ch
 before_deploy:
 - bash ./scripts/fix-versions.sh
-- npm shrinkwrap
 deploy:
   provider: npm
   email: gmer@hcuge.ch
