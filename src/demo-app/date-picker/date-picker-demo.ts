@@ -6,9 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs/Rx';
-import { DejaDatePickerComponent } from '../../index';
 
 @Component({
     selector: 'dejadate-picker-demo',
@@ -22,7 +21,7 @@ export class DejaDatePickerDemoComponent implements OnInit {
 
     public dateRangeFrom: Date;
     public dateRangeTo: Date;
-    
+
     private dateFrom = new BehaviorSubject(undefined);
     private dateTo = new BehaviorSubject(undefined);
 
