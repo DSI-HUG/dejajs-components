@@ -29,6 +29,7 @@
                 .month {
                     button[md-mini-fab] {
                         background: #FFF;
+                        color: mat-color($primary);
                     }
                 }
                 .days {
