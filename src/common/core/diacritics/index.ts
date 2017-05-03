@@ -6,8 +6,4 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { IItemBase } from '../../common/core/item-list';
-
-export class DejaTreeListItemEvent {
-    public item: IItemBase;
-}
+export * from './diacritics';

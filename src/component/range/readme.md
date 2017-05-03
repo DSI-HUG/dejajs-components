@@ -170,6 +170,7 @@ export class DejaRangeDemoComponent {
 ## API
 ### Propriétés
 <table>
+<thead>
     <tr>
         <th>Nom</th>
         <th>Obligatoire</th>
@@ -177,6 +178,8 @@ export class DejaRangeDemoComponent {
         <th>Genre</th>
         <th>Description</th>
     </tr>
+</thead>
+<tbody>
     <tr>
         <td>ngModel</td>
         <td>oui</td>
@@ -205,16 +208,20 @@ export class DejaRangeDemoComponent {
         <td>@Input()</td>
         <td>index de l'interval séléctionné</td>
     </tr>
+<tbody>
 </table>
 
 ### Méthodes
 <table>
+<thead>
     <tr>
         <th>Nom</th>
         <th>Paramètres</th>
         <th>Type de sortie</th>
         <th>Description</th>
     </tr>
+</thead>
+<tbody>
     <tr>
         <td>add</td>
         <td></td>
@@ -227,10 +234,12 @@ export class DejaRangeDemoComponent {
         <td>void</td>
         <td>supprime l'interval actuellement séléctionné, fonctionne uniquement avec une valeur numérique pour le step, pour la fn / array, vous devez implémenter vous même la fonction</td>
     </tr>
+</tbody>
 </table>
 
 ### Evénements (@Output())
 <table>
+<thead>
     <tr>
         <th>Nom</th>
         <th>Paramètres</th>
@@ -238,6 +247,8 @@ export class DejaRangeDemoComponent {
         <th>Type de sortie</th>
         <th>Description</th>
     </tr>
+</thead>
+<tbody>
     <tr>
         <td>errorFeedback</td>
         <td>$event</td>
@@ -245,5 +256,6 @@ export class DejaRangeDemoComponent {
         <td>Error</td>
         <td>Si une erreur est produit, retourne l'erreur dans l'objet $event</td>
     </tr>
+</tbody>
 </table>
 

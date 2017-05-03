@@ -12,11 +12,11 @@ import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
 import { GroupingService } from '../../common/core/grouping';
-import { IItemBase, IItemTree, ItemListBase, ItemListService, IViewPort, ViewportMode, ViewPortService } from '../../common/core/item-list';
+import { DejaItemEvent, DejaItemsEvent, IItemBase, IItemTree, ItemListBase, ItemListService, IViewPort, ViewportMode, ViewPortService } from '../../common/core/item-list';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { SortingService } from '../../common/core/sorting';
 import { IDejaDragEvent } from '../dragdrop';
-import { DejaTreeListItemEvent, DejaTreeListItemsEvent, DejaTreeListScrollEvent } from './index';
+import { DejaTreeListScrollEvent } from './index';
 
 const noop = () => { };
 
@@ -64,7 +64,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Exécuté lorsque la scrollbar change de position. */
     @Output() public scroll = new EventEmitter<DejaTreeListScrollEvent>();
     /** Exécuté lorsque l'utilisateur sélectionne ou désélectionne une ligne. */
-    @Output() public selectedChange = new EventEmitter<DejaTreeListItemsEvent | DejaTreeListItemEvent>();
+    @Output() public selectedChange = new EventEmitter<DejaItemsEvent | DejaItemEvent>();
     /** Exécuté lorsque le calcul du viewPort est executé. */
     @Output() public viewPortChanged = new EventEmitter<IViewPort>();
 
@@ -377,7 +377,15 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     }
 
     /**
-     * Set a promise called before an item selection
+     * Set a observable called before the list will be displayed
+     */
+    @Input()
+    public set loadingItems(fn: (query: string | RegExp, selectedItems: IItemBase[]) => Observable<IItemBase>) {
+        super.setLoadingItems(fn);
+    }
+
+    /**
+     * Set a promise or an observable called before an item selection
      */
     @Input()
     public set selectingItem(fn: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>) {
@@ -385,18 +393,33 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     }
 
     /**
-     * Set a promise called before an item deselection
+     * Set a promise or an observable called before an item deselection
      */
     @Input()
     public set unselectingItem(fn: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>) {
         super.setUnselectingItem(fn);
     }
 
+    /**
+     * Set a promise or an observable called before an item expand
+     */
+    @Input()
+    public set expandingItem(fn: (item: IItemTree) => Promise<IItemTree> | Observable<IItemTree>) {
+        super.setExpandingItem(fn);
+    }
+
+    /**
+     * Set a promise or an observable called before an item collapse
+     */
+    @Input()
+    public set collapsingItem(fn: (item: IItemTree) => Promise<IItemTree> | Observable<IItemTree>) {
+        super.setCollapsingItem(fn);
+    }
+
     /** Définit la liste des éléments (tout type d'objet métier) */
     @Input()
     public set models(items: any[] | Observable<any[]>) {
         super.setModels$(items)
-            .first()
             .switchMap(() => this.calcViewList$())
             .subscribe(noop);
     }
@@ -887,7 +910,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     }
 
     protected onSelectionChange() {
-        const e = this.multiSelect ? { items: this.selectedItems } as DejaTreeListItemsEvent : { item: this.selectedItems[0] } as DejaTreeListItemEvent;
+        const e = this.multiSelect ? { items: this.selectedItems } as DejaItemsEvent : { item: this.selectedItems[0] } as DejaItemEvent;
         this.selectedChange.emit(e);
     }
 

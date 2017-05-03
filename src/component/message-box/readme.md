@@ -17,12 +17,15 @@ Ensuite utiliser le composant comme ceci dans votre template :
 ### Propriétés
 
 <table>
+<thead>
 <tr>
     <th>Nom</th>
     <th>Type</th>
     <th>Defaut</th>
     <th>Description</th>
 </tr>
+</thead>
+<tbody>
 <tr>
     <td>actions</td>
     <td>{text?: string, type?: 'info' | 'success' | 'warn' | 'danger', icon?: string, action: () => any}[]</td>
@@ -53,4 +56,5 @@ Ensuite utiliser le composant comme ceci dans votre template :
     <td>null</td>
     <td>Type du messageBox. Cette propriété stylise le composant.</td>
 </tr>
+</tbody>
 </table>

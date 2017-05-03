@@ -27,7 +27,7 @@ cd ..
 rm -rf dist/**/* || exit 0
 
 # Run our compile script
-npm run travis-build:prod
+npm run build:prod
 
 # Now let's go have some fun with the cloned repo
 cd dist

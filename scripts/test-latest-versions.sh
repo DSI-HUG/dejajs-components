@@ -7,4 +7,10 @@ if [ "$TRAVIS_EVENT_TYPE" != "cron" ]; then
 fi
 
 npm i -g npm-check-updates
+
+# Remove all ^ or ~ in the package.json file before update to be sure to keep the latest version
+sed -i 's/"^/"/g' package.json
+sed -i 's/"~/"/g' package.json
+
+# Update package in the latest version
 npm-check-updates -u

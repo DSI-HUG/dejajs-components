@@ -16,44 +16,39 @@
 	}
     #date-selector {
         #{$deep} {
-		.mat-input-wrapper {
-			padding-right: 24px;
-		}
-		.material-icons {
-			position: absolute;
-			right: 0;
-			top: 50%;
-                transform: translateY(-68%);
-		}
-		#clear-button {
-			cursor: pointer;
-			opacity: 0.4;
-			transition: opacity 200ms ease;
-			&:hover {
-				opacity: 0.8;
+			.mat-input-wrapper {
+				padding-right: 24px;
+			}
+			#action-icon-container {
+				position: absolute;
+				right: 0;
+				top: 50%;
+				transform: translateY(-68%);
+			}
+			#calendar-button,
+			#clear-button {
+				cursor: pointer;
+				opacity: 0.4;
+				transition: opacity 200ms ease;
+				&:hover {
+					opacity: 0.8;
+				}
 			}
 		}
-	}
     }
 	&.ng-invalid {
         #{$deep} {
-		.mat-input-wrapper {
-			.mat-input-underline {
-				.mat-input-ripple {
-					opacity: 1;
-					transform: scaleY(1);
-				}
-			}
-			.mat-input-table {
-				.mat-input-infix {
-					.mat-input-placeholder {
+			.mat-input-wrapper {
+				.mat-input-underline {
+					.mat-input-ripple {
+						opacity: 1;
+						transform: scaleY(1);
 					}
 				}
 			}
+			md-hint {
+				bottom: -0.8em;
+			}
 		}
-		md-hint {
-			bottom: -0.8em;
-		}
-	}
     }
 }

@@ -7,6 +7,7 @@
  */
 
 export * from './events/index';
+export * from './diacritics/index';
 export * from './graphics/index';
 export * from './sorting/index';
 export * from './graphics/index';

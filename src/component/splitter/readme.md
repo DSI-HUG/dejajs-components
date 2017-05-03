@@ -63,12 +63,15 @@ Le composant splitter permet de découper horizontalement ou verticalement, un c
 
 #### Composant **deja-splitter**
 <table>
+    <thead>
     <tr>
         <th>@Input()</th>
         <th>Type</th>
         <th>Default</th>
         <th>Description</th>
     </tr>
+    </thead>
+    <tbody>
     <tr>
         <td>direction</td>
         <td>string</td>
@@ -87,39 +90,48 @@ Le composant splitter permet de découper horizontalement ou verticalement, un c
         <td>null</td>
         <td>Specifi la valeur de la hauteur en pixel. Si null, prendra toute la place disponible</td>
     </tr>
+    </tbody>
 </table>
 
 <table>
-    <tr>
-        <th>@Output()</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <td>dragStart</td>
-        <td>Exécuté au démarrage du drag</td>
-    </tr>
-    <tr>
-        <td>drag</td>
-        <td>Exécuté lors du drag</td>
-    </tr>
-    <tr>
-        <td>dragEnd</td>
-        <td>Exécuté quand drag est stoppé</td>
-    </tr>
+    <thead>
+        <tr>
+            <th>@Output()</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>dragStart</td>
+            <td>Exécuté au démarrage du drag</td>
+        </tr>
+        <tr>
+            <td>drag</td>
+            <td>Exécuté lors du drag</td>
+        </tr>
+        <tr>
+            <td>dragEnd</td>
+            <td>Exécuté quand drag est stoppé</td>
+        </tr>
+    </tbody>
 </table>
 
 #### Composant **split-area**
 <table>
-    <tr>
-        <th>@Input()</th>
-        <th>Type</th>
-        <th>Default</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <td>size</td>
-        <td>number</td>
-        <td>null</td>
-        <td>Pourcentage de la zone. Si null, chaque <split-area> aura la meme taille.</td>
-    </tr>
+    <thead>
+        <tr>
+            <th>@Input()</th>
+            <th>Type</th>
+            <th>Default</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>size</td>
+            <td>number</td>
+            <td>null</td>
+            <td>Pourcentage de la zone. Si null, chaque <split-area> aura la meme taille.</td>
+        </tr>
+    </tbody>
 </table>

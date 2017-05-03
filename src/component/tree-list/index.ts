@@ -6,8 +6,6 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-export * from './tree-list-item-event';
-export * from './tree-list-items-event';
 export * from './tree-list-scroll-event';
 export * from './tree-list.component';
 export * from './text-metrics/index';

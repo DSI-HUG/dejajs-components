@@ -82,11 +82,6 @@ import { TilesDemoComponent } from './tiles/tiles-demo';
 import { DejaTreeListDemoComponent } from './tree-list/tree-list-demo';
 import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
 
-/* deja-cli import demo */
-/* The comment above mustn't be removed ! */
-
-import { CodeblockModule } from 'ng-prism';
-
 @NgModule({
     declarations: [
         HomeComponent,
@@ -113,8 +108,6 @@ import { CodeblockModule } from 'ng-prism';
         DejaViewPortDemoComponent,
         ProgressCircleDemoComponent,
         NewsCardComponent,
-        /* deja-cli declarations demo */
-        /* The comment above mustn't be removed ! */
     ],
     entryComponents: [
         DemoAppComponent,
@@ -129,7 +122,6 @@ import { CodeblockModule } from 'ng-prism';
         MaterialModule,
         DejaAccordionModule,
         DejaCodeViewerModule,
-        CodeblockModule,
         DejaCircularPickerModule,
         DejaDateSelectorModule,
         DejaDatePickerModule,
@@ -157,8 +149,6 @@ import { CodeblockModule } from 'ng-prism';
         DejaSplitterModule,
         DejaTooltipModule,
         DejaViewPortModule,
-        /* deja-cli imports module */
-        /* The comment above mustn't be removed ! */
         routing,
         GroupingModule,
     ],

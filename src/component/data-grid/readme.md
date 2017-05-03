@@ -25,12 +25,15 @@ Composant pour afficher des données dans un tableau, avec une fonction de reche
     - `@input`
 
 <table>
+<thead>
 <tr>
     <th>Nom</th>
     <th>Type</th>
     <th>Defaut</th>
     <th>Description</th>
 </tr>
+</thead>
+<tbody>
 <tr>
 	<td>columns</td>
 	<td>IDejaGridColumn[]</td>
@@ -259,16 +262,20 @@ Composant pour afficher des données dans un tableau, avec une fonction de reche
 	<td>false</td>
 	<td>Permet la sélection multiple des ligne de la grille (avec la touche shift ou ctrl)</td>
 </tr>
+<tbody>
 </table>
 
   - `@Output`
 
 <table>
+<thead>
 <tr>
     <th>Nom</th>
     <th>Type</th>
     <th>Description</th>
 </tr>
+</thead>
+<tbody>
 <tr>
 	<td>itemDragEnd</td>
 	<td>EventEmitter</td>
@@ -284,15 +291,19 @@ Composant pour afficher des données dans un tableau, avec une fonction de reche
 	<td>EventEmitter</td>
 	<td>Exécuté lorsque l'utilisateur sélectionne ou désélectionne une ligne.</td>
 </tr>
+</tbody>
 </table>
 
 
 ### Méthodes
 <table>
+<thead>
 <tr>
     <th>Nom</th>
     <th>Description</th>
 </tr>
+</thead>
+<tbody>
 <tr>
 	<td>Refresh</td>
 	<td>Nettoye les caches et réaffiche le viewport.</td>
@@ -301,6 +312,7 @@ Composant pour afficher des données dans un tableau, avec une fonction de reche
 	<td>ensureColumnVisible</td>
 	<td>Calcul la position de la scrollbar horizontale pour que la colonne spéfiée soit dans la zone visible.</td>
 </tr>
+</tbody>
 </table>
 
 

@@ -20,12 +20,9 @@
     }
 
     .content {
-        section {
-            max-width: 920px;
-            margin: 60px 0;
-
-            padding: 500px 0;
-        }
+        max-width: 1200px;
+        min-height: 500px;
+        margin: 0 auto;
     }
 
     footer {

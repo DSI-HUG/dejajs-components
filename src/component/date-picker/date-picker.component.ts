@@ -10,7 +10,9 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, El
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import * as moment from 'moment';
 import { Observable, Subscription } from 'rxjs/Rx';
+import { KeyCodes } from '../../common/core/keycodes.enum';
 import { DaysOfWeek, DejaDateSelectorComponent } from '../date-selector';
+import { formatToMask } from './';
 
 const noop = () => { };
 
@@ -33,12 +35,14 @@ export class DejaDatePickerComponent implements OnInit {
     @Input() public dropdownContainerId: string;
     @Input() public dropdownAlignment = 'left right top bottom';
     @Input() public ownerAlignment = 'left bottom';
-    @Input() public format: string;
+    @Input() public format = 'YYYY-MM-DD HH:mm';
     @Input() public placeholder = 'Date';
     @Input() public disableDates: Array<DaysOfWeek | Date>; // | ((d: Date) => boolean);
     @ViewChild(DejaDateSelectorComponent) public dateSelectorComponent: DejaDateSelectorComponent;
     @Output() public dateChange = new EventEmitter();
     @ContentChild('hintTemplate') protected mdHint;
+    protected mask: any[];
+
     @ViewChild('inputelement') private inputElementRef: ElementRef;
 
     private _showDropDown = false;
@@ -55,7 +59,57 @@ export class DejaDatePickerComponent implements OnInit {
 
     constructor(private elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef) { }
 
-    public ngOnInit() { }
+    public ngOnInit() {
+        const formattingTokens = /(\[[^\[]*\])|(\\)?([Hh]mm(ss)?|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Qo?|YYYYYY|YYYYY|YYYY|YY|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|kk?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g;
+
+        if (this.format) {
+            let mask = [];
+            const array = this.format.match(formattingTokens);
+            array.forEach((val: string) => {
+                if (formatToMask[val]) {
+                    mask = [...mask, ...formatToMask[val]];
+                } else {
+                    mask.push(val);
+                }
+            });
+
+            this.mask = mask;
+        }
+
+        // Shortcut for now()
+        Observable
+            .fromEvent(this.inputElementRef.nativeElement, 'keydown')
+            .filter((event: KeyboardEvent) => !this._showDropDown &&
+            (
+                event.keyCode === KeyCodes.KeyD ||
+                event.keyCode === KeyCodes.UpArrow ||
+                event.keyCode === KeyCodes.DownArrow
+            ))
+            .subscribe((event: KeyboardEvent) => {
+                event.preventDefault();
+                switch (event.keyCode) {
+                    case (KeyCodes.KeyD):
+                        this.value = new Date();
+                        break;
+                    case (KeyCodes.UpArrow):
+                        if (this.date) {
+                            const d = new Date(this.date);
+                            d.setDate(this.date.getDate() + 1);
+                            this.value = d;
+                        }
+                        break;
+                    case (KeyCodes.DownArrow):
+                        if (this.date) {
+                            const d = new Date(this.date);
+                            d.setDate(this.date.getDate() - 1);
+                            this.value = d;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            });
+    }
 
     private get containerElement() {
         return this.dropdownContainerId && this.elementRef.nativeElement.ownerDocument.getElementById(this.dropdownContainerId);
@@ -70,7 +124,7 @@ export class DejaDatePickerComponent implements OnInit {
                     .fromEvent(inputElement, 'keydown')
                     .subscribe((event: KeyboardEvent) => {
                         this.dateSelectorComponent.keyDown(event);
-                        this.setFocus();
+                        // this.setFocus();
                 });
             } else {
                 if (this.keyDownSubscription) {
@@ -160,7 +214,7 @@ export class DejaDatePickerComponent implements OnInit {
         }
 
         const target = event.currentTarget as HTMLElement;
-        if (target.id !== 'date-selector-input') {
+        if (target.id !== 'calendar-button') {
             return;
         }
 
@@ -177,19 +231,17 @@ export class DejaDatePickerComponent implements OnInit {
     }
 
     protected updateModel(date: string | Date) {
-        if (typeof date === 'string') {
-            let d = new Date(date);
+        if (typeof date === 'string' && date.replace(/_/g, '').length === this.format.length) {
+            let d = moment(date, this.format).toDate();
             if (!moment(d).isValid()) {
                 d = new Date();
             }
             date = d;
         }
 
-        if (this.date.toLocaleTimeString() !== date.toLocaleTimeString()) {
-            date.setHours(this.date.getHours(), this.date.getMinutes(), this.date.getSeconds());
+        if (typeof date !== 'string') {
+            this.value = date;
         }
-        this.value = date;
-        this.close();
     }
 
     protected reset() {

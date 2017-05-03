@@ -10,9 +10,10 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MdButtonModule, MdIconModule, MdInputModule } from '@angular/material';
+import { TextMaskModule } from 'angular2-text-mask';
 import { DejaBackdropModule } from '../backdrop';
-import { DejaCircularPickerModule }   from '../circular-picker/circular-picker.module';
-import { DejaDateSelectorModule }   from '../date-selector';
+import { DejaCircularPickerModule } from '../circular-picker/circular-picker.module';
+import { DejaDateSelectorModule } from '../date-selector';
 import { DejaDropDownModule } from '../dropdown';
 import { DejaDatePickerComponent } from './date-picker.component';
 
@@ -29,6 +30,7 @@ import { DejaDatePickerComponent } from './date-picker.component';
         DejaCircularPickerModule,
         DejaDateSelectorModule,
         DejaDropDownModule,
+        TextMaskModule,
     ],
 })
 export class DejaDatePickerModule { }

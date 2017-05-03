@@ -6,8 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { DejaItemsEvent } from '../../../common/core/item-list';
+import { IItemBase } from './item-base';
 
-export class DejaGridRowsEvent extends DejaItemsEvent {
-
+export class DejaItemsEvent {
+    public items: IItemBase[];
 }

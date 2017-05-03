@@ -20,27 +20,34 @@ Composant pour afficher un panneau flottant.
 #### @Output
 
 <table>
+<thead>
 <tr>
     <th>Nom</th>
     <th>Type</th>
     <th>Description</th>
 </tr>
+</thead>
+<tbody>
 <tr>
     <td>hide</td>
     <td>EventEmitter</td>
     <td>Déclenché lorsque le dropdown disparait</td>
 </tr>
+</tbody>
 </table>
 
 #### @Input
 
 <table>
+<thead>
 <tr>
     <th>Nom</th>
     <th>Type</th>
     <th>Défaut</th>
     <th>Description</th>
 </tr>
+</thead>
+<tbody>
 <tr>
     <td>closeOnEscape</td>
     <td>boolean</td>
@@ -101,4 +108,5 @@ Composant pour afficher un panneau flottant.
     <td>null</td>
     <td>Ancre d'alignement du conteneur déroulant. Valeurs possible: top, bottom, right, left. Une combinaison des ces valeurs peut également être utilisée, par exemple 'top left'.</td>
 </tr>
+</tbody>
 </table>
