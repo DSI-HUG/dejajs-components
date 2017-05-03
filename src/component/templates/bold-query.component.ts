@@ -7,6 +7,7 @@
  */
 
 import { Component, Input } from '@angular/core';
+import { Diacritics } from '../../common/core/diacritics/index';
 
 @Component({
     selector: 'deja-bold-query',
@@ -22,6 +23,7 @@ export class DejaBoldQueryComponent {
 
     @Input()
     set query(value) {
+        value = Diacritics.remove(value);
         if (this._query !== value) {
             this._query = value;
             this.refresh();
@@ -38,13 +40,14 @@ export class DejaBoldQueryComponent {
         if (this._value && this._query && this._query.length) {
             const sc = new RegExp(this._query, 'i');
             const value = this._value.toString() as string;
-            const splitted = value.split(sc);
+            const search = Diacritics.remove(value);
+            const splitted = search.split(sc);
             let position = 0;
             const queryLength = this._query.length;
             const contents = [] as string[];
             splitted.forEach((text) => {
                 if (text) {
-                    contents.push(text);
+                    contents.push(value.slice(position, position + text.length));
                     position += text.length;
                 }
                 if (position + queryLength <= value.length) {

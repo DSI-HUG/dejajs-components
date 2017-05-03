@@ -9,6 +9,7 @@
 import { BehaviorSubject, Observable } from 'rxjs/Rx';
 import { Subscriber } from 'rxjs/Subscriber';
 import { GroupingService, IGroupInfo } from '../grouping/index';
+import { Diacritics } from '../diacritics/index';
 import { ISortInfos, SortingService } from '../sorting/index';
 import { IItemBase, IItemTree } from './index';
 
@@ -820,6 +821,7 @@ export class ItemListService {
         if (query) {
             if (typeof query === 'string') {
                 try {
+                    query = Diacritics.remove(query);
                     regExp = new RegExp(query, 'i');
                 } catch (exc) {
                     throw new Error('Invalid search parameters');
@@ -931,6 +933,7 @@ export class ItemListService {
         } else {
             value = this.getTextValue(item);
         }
+        value = Diacritics.remove(value);
         return value && regExp.test(value);
     }
 
@@ -998,7 +1001,7 @@ export class ItemListService {
                             if (!filteredItems) {
                                 filteredItems = [];
                             }
-                            if (!hidden && !(itm.visible === false)) {
+                            if (!hidden && !(itm.visible === false) && !(itm.selected && this.hideSelected)) {
                                 // For style
                                 itmTree.odd = odd;
                                 odd = !odd;
@@ -1160,11 +1163,15 @@ export class ItemListService {
             return;
         }
 
+        // Ensure selected flag
+        this.selectedList.forEach((item) => item.selected = true);
+
         const newSelectedList = [] as IItemBase[];
         const ensureSelectedChildren = (children: IItemTree[]) => {
             children.forEach((item) => {
-                item.selected = this.selectedList.find((selected) => this.compareItems(selected, item)) !== undefined;
-                if (item.selected) {
+                const selectedItem = this.selectedList.find((selected) => this.compareItems(selected, item));
+                if (selectedItem) {
+                    selectedItem.selected = false;
                     newSelectedList.push(item);
                 }
                 if (item.$items) {
@@ -1172,8 +1179,16 @@ export class ItemListService {
                 }
             });
         };
+
         ensureSelectedChildren(items);
+
+        // Add not found selected items
+        this.selectedList.filter((item) => item.selected).forEach((item) => newSelectedList.push(item));
+
         this.selectedList = newSelectedList;
+
+        // Ensure selected flag for the new items
+        this.selectedList.forEach((item) => item.selected = true);
     }
 
     private ensureVisibleListCache$(searchField: string, regExp: RegExp, expandTree: boolean, multiSelect: boolean) {

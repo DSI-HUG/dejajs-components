@@ -664,7 +664,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                         }
 
                         if (!this.isReadOnly) {
-                            return;
+                            return true;
                         }
 
                     // Do not break or return here
