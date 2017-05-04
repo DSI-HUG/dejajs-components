@@ -16,7 +16,9 @@ import { BehaviorSubject, Observable } from 'rxjs/Rx';
 export class DejaDatePickerDemoComponent implements OnInit {
     protected tabIndex = 1;
 
-    public theDate = new Date();
+    public theDate: Date = new Date();
+    public theDateSelected: Date = new Date();
+
     public disabledDate = [0, 6, new Date(2016, 9, 12)];
 
     public dateRangeFrom: Date;
@@ -52,7 +54,8 @@ export class DejaDatePickerDemoComponent implements OnInit {
     public ngOnInit() { 
         let now: Date = new Date();
         this.dateMin = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
-        this.dateMax = new Date();
+        this.dateMax = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        this.theDateSelected = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
         console.log(this.dateMin)
         console.log(this.dateMax)
     }

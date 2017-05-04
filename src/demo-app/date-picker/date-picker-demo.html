@@ -18,21 +18,31 @@
         <md-card-content>
             <div fxLayout>
                 <div fxFlex="1 1 auto">
-                    <p>Only weeks are disabled</p>
+                    <h3>Only weeks are disabled :</h3>
                     <deja-date-time-selector [disableDates]="disabledDate" [(ngModel)]="theDate1"></deja-date-time-selector>
                     <p>Selected date : {{theDate1 | date:'yyyy-MM-dd'}}</p>
                 </div>
                 <div fxFlex="1 1 auto">
-                    <p>With min and max dates</p>
-                    <deja-date-time-selector [(ngModel)]="theDate2" [dateMin]="dateMin"></deja-date-time-selector>
-                    <p>Selected date : {{theDate2 | date:'yyyy-MM-dd'}}</p>
-                </div>
-                <div fxFlex="1 1 auto">
-                    <p>With min and max dates and weeks are disabled</p>
-                    <deja-date-time-selector [disableDates]="disabledDate" [(ngModel)]="theDate3" [dateMin]="dateMin"></deja-date-time-selector>
-                    <p>Selected date : {{theDate3 | date:'yyyy-MM-dd'}}</p>
+                    <h3>With initial date :</h3>
+                    <deja-date-time-selector [(ngModel)]="theDateSelected"></deja-date-time-selector>
+                    <p>Selected date : {{theDateSelected | date:'yyyy-MM-dd'}}</p>
                 </div>
             </div>
+            <div fxLayout>
+                <div fxFlex="1 1 auto">
+                    <h3>With min / max dates :</h3>
+                    <deja-date-time-selector [(ngModel)]="theDate2" [dateMin]="dateMin" [dateMax]="dateMax"></deja-date-time-selector>
+                    <p>Selected date : {{theDate2 | date:'yyyy-MM-dd'}}</p>
+                    <p>min => max date : {{dateMin | date:'yyyy-MM-dd'}} => {{dateMax | date:'yyyy-MM-dd'}}</p>
+                </div>
+                <div fxFlex="1 1 auto">
+                    <h3>With min / max dates and weeks are disabled :</h3>
+                    <deja-date-time-selector [disableDates]="disabledDate" [(ngModel)]="theDate3" [dateMin]="dateMin" [dateMax]="dateMax"></deja-date-time-selector>
+                    <p>Selected date : {{theDate3 | date:'yyyy-MM-dd'}}</p>
+                    <p>min => max date : {{dateMin | date:'yyyy-MM-dd'}} => {{dateMax | date:'yyyy-MM-dd'}}</p>
+                </div>
+            </div>
+
         </md-card-content>
     </md-card>
     <md-card class="demo-card">
@@ -41,18 +51,25 @@
             <div fxLayout>
                 <div fxFlex="1 1 auto" fxLayout="column" fxLayoutAlign="center center">
                     <deja-date-time-selector [disableDates]="disabledDate" [(ngModel)]="theDateTime" time></deja-date-time-selector>
-                    <p>Selected date : {{theDateTime}}</p>
+                    <p>Selected date : {{theDateTime | date:'yyyy-MM-dd hh:mm:ss'}}</p>
                 </div>
             </div>
         </md-card-content>
     </md-card>
 
     <md-card class="demo-card">
-        <md-toolbar color="primary">Date Picker</md-toolbar>
-        <md-card-content>
+        <md-toolbar color="primary">Date Picker & DateTime Picker</md-toolbar>
+        <md-card-content> 
             <div fxLayout>
                 <div fxFlex="1 1 auto">
-                    <deja-date-picker [disableDates]="disabledDate"></deja-date-picker>
+                    <h3>Date Picker :</h3>
+                    <deja-date-picker [disableDates]="disabledDate" [(ngModel)]="theDatePicker"></deja-date-picker>
+                    <p>Selected date : {{theDatePicker | date:'yyyy-MM-dd'}}</p>
+                </div>
+                <div fxFlex="1 1 auto">
+                    <h3>DateTime Picker :</h3>
+                    <deja-date-picker [disableDates]="disabledDate" [(ngModel)]="theDatetimePicker" time></deja-date-picker>
+                    <p>Selected date : {{theDatetimePicker | date:'yyyy-MM-dd hh:mm:ss'}}</p>
                 </div>
                 <div fxFlex="1 1 auto" fxLayout fxLayoutAlign="center center" id="shortcut-list">
                     <ul>
@@ -79,53 +96,23 @@
         </md-card-content>
     </md-card>
 
-
     <md-card class="demo-card">
-        <md-toolbar color="primary">Date Time Picker</md-toolbar>
+        <md-toolbar color="primary">Date Range Picker & DateTime Range Picker</md-toolbar>
         <md-card-content>
             <div fxLayout>
                 <div fxFlex="1 1 auto">
-                    <deja-date-picker [disableDates]="disabledDate" time></deja-date-picker>
+                    <h3>Date Range Picker :</h3>
+                    <deja-date-picker format="DD.MM.YYYY" #dtfrom [disableDates]="disabledDate" [ngModel]="dateRangeFrom" (ngModelChange)="dateFrom.next($event)"></deja-date-picker>
+                    <deja-date-picker format="DD.MM.YYYY" #dtto [disableDates]="disabledDate" [ngModel]="dateRangeTo" (ngModelChange)="dateTo.next($event)"></deja-date-picker>
+                    <p>Selected date : from {{dateRangeFrom | date:'yyyy-MM-dd'}} to {{dateRangeTo | date:'yyyy-MM-dd'}}</p>
                 </div>
-                <div fxFlex="1 1 auto" fxLayout fxLayoutAlign="center center" id="shortcut-list">
-                    <ul>
-                        <li> Inside input :
-                            <ul>
-                                <li>Press <span class="keyboard-key">D</span> to select the current date.</li>
-                                <li>Press <span class="keyboard-key">↑</span> to increase the selected date of 1 day.</li>
-                                <li>Press <span class="keyboard-key">↓</span> to decrease the selected date of 1 day.</li>
-                            </ul>
-                        </li>
-                    </ul>
-                    <ul>
-                        <li> Inside date selector :
-                            <ul>
-                                <li>Press <span class="keyboard-key">↑</span> to decrease the selected date of 7 day.</li>
-                                <li>Press <span class="keyboard-key">↓</span> to increase the selected date of 7 day.</li>
-                                <li>Press <span class="keyboard-key">←</span> to decrease the selected date of 1 day.</li>
-                                <li>Press <span class="keyboard-key">→</span> to increase the selected date of 1 day.</li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
+                <div fxFlex="1 1 auto">
+                    <h3>DateTime Range Picker :</h3>
+                    <deja-date-picker format="DD.MM.YYYY HH:mm" #dtfrom [disableDates]="disabledDate" [(ngModel)]="datetimeRangeFrom" time></deja-date-picker>
+                    <deja-date-picker format="DD.MM.YYYY HH:mm" #dtto [disableDates]="disabledDate" [(ngModel)]="datetimeRangeTo" time></deja-date-picker>
+                    <p>Selected date : from {{datetimeRangeFrom | date:'yyyy-MM-dd hh:mm:ss'}} to {{datetimeRangeTo | date:'yyyy-MM-dd hh:mm:ss'}}</p>
+                 </div>   
             </div>
-        </md-card-content>
-    </md-card>
-    <md-card class="demo-card">
-        <md-toolbar color="primary">Date Range Picker</md-toolbar>
-        <md-card-content>
-            <deja-date-picker format="DD.MM.YYYY" #dtfrom [disableDates]="disabledDate" [ngModel]="dateRangeFrom" (ngModelChange)="dateFrom.next($event)"></deja-date-picker>
-            <deja-date-picker format="DD.MM.YYYY" #dtto [disableDates]="disabledDate" [ngModel]="dateRangeTo" (ngModelChange)="dateTo.next($event)"></deja-date-picker>
-        </md-card-content>
-    </md-card>
-
-
-    <md-card class="demo-card">
-        <md-toolbar color="primary">DateTime Range Picker</md-toolbar>
-        <md-card-content>
-            <deja-date-picker format="DD.MM.YYYY HH:mm" #dtfrom [disableDates]="disabledDate" [(ngModel)]="datetimeRangeFrom" time></deja-date-picker>
-            <deja-date-picker format="DD.MM.YYYY HH:mm" #dtto [disableDates]="disabledDate" [(ngModel)]="datetimeRangeTo" time></deja-date-picker>
-            <p>Selected date : from {{datetimeRangeFrom}} to {{datetimeRangeTo}}</p>
         </md-card-content>
     </md-card>
 
