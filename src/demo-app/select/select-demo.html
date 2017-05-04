@@ -75,12 +75,12 @@
 		</md-card-content>
 	</md-card>
 	<md-card class="deja-select-demo demo-card demo-basic">
-		<md-toolbar color="primary">Disableable select</md-toolbar>
+		<md-toolbar color="primary">Disabled select</md-toolbar>
 		<md-card-content>
 			<div>
 				<md-checkbox [(ngModel)]="disabled" color="primary">Check me to disable select below</md-checkbox>
 			</div>
-			<deja-select class="demo-half-width" placeholder="Disableable select" [disabled]="disabled" selectionClearable [(ngModel)]="businessCountry" textField="naqme" valueField="code" [models]="countries"></deja-select>
+			<deja-select class="demo-half-width" placeholder="Disabled select" [disabled]="disabled" selectionClearable [(ngModel)]="businessCountry" textField="naqme" valueField="code" [models]="countries"></deja-select>
 		</md-card-content>
 	</md-card>
 </div>
