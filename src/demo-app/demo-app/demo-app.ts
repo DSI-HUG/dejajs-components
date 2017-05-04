@@ -27,7 +27,7 @@ export class DemoAppComponent {
         {label: 'Amber', value: 'amber'},
     ];
 
-    private _theme = this.colors[0];
+    private _theme = this.colors.find((color) => color.value === localStorage.getItem('dejajs-demo-color')) || this.colors[0];
     protected theme$ = new BehaviorSubject<any>(this._theme);
 
     constructor (elementRef: ElementRef) {
@@ -42,6 +42,7 @@ export class DemoAppComponent {
 
     public set theme(theme: any) {
         this._theme = theme;
+        localStorage.setItem('dejajs-demo-color', theme.value);
         this.theme$.next(theme);
     }
 
