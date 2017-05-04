@@ -23,11 +23,12 @@
                     <p>Selected date : {{theDate1 | date:'yyyy-MM-dd'}}</p>
                 </div>
                 <div fxFlex="1 1 auto">
-                    <h3>With initial date :</h3>
+                    <h3>With initial date setted :</h3>
                     <deja-date-time-selector [(ngModel)]="theDateSelected"></deja-date-time-selector>
                     <p>Selected date : {{theDateSelected | date:'yyyy-MM-dd'}}</p>
                 </div>
             </div>
+            <hr>
             <div fxLayout>
                 <div fxFlex="1 1 auto">
                     <h3>With min / max dates :</h3>
@@ -71,6 +72,10 @@
                     <deja-date-picker [disableDates]="disabledDate" [(ngModel)]="theDatetimePicker" time></deja-date-picker>
                     <p>Selected date : {{theDatetimePicker | date:'yyyy-MM-dd hh:mm:ss'}}</p>
                 </div>
+            </div>
+            <hr>
+            <div fxLayout>
+                <h3>Shortcut navigation :</h3>
                 <div fxFlex="1 1 auto" fxLayout fxLayoutAlign="center center" id="shortcut-list">
                     <ul>
                         <li> Inside input :
@@ -93,6 +98,8 @@
                     </ul>
                 </div>
             </div>
+
+
         </md-card-content>
     </md-card>
 
