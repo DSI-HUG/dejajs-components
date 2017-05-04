@@ -178,14 +178,18 @@ export class ItemListService {
             }
 
             return observable
-                .filter((its) => !!its)
-                .do((its) => {
+                .map((its) => {
                     if (its) {
                         this.ensureChildrenProperties(its);
                         // TODO La déselection ne fonctionne pas pendant le chargement
                         this.ensureSelectedItems(its);
                         this.items = [...this.items || [], ...its];
                         this._waiter$.next(false);
+                        return its;
+                    } else {
+                        this.items = [];
+                        this._waiter$.next(false);
+                        return [];
                     }
                 });
         }

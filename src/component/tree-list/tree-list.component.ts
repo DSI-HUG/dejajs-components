@@ -485,8 +485,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                     this.changeDetectorRef.markForCheck();
                     return Observable.of(itms);
                 } else {
-                    return this.calcViewList$()
-                        .map(() => itms);
+                    return this.calcViewList$().map(() => itms);
                 }
             })
             .subscribe(noop);
