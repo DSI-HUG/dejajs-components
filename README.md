@@ -36,7 +36,7 @@ and navigate to `http://localhost:5100`.
 ## Feature status and browsers compatibility:
 
 | Feature            | Working OnPush | Required / Disabled | Chrome 56 | Edge | IE11 | FF51 | Opera Neon | Readme and Demo | Note           |
-|--------------------|----------------|---------------------|-----------|------|------|------------|-----------------|----------------|
+|--------------------|----------------|---------------------|-----------|------|------|------|------------|-----------------|----------------|
 | Accordion          |             yes|                  N/A|        yes|   yes|   yes|   yes|         yes|        available|                |
 | Auto-Size TextArea |             yes|          @todo/@todo|        yes|   yes|   yes|   yes|         yes|<span style="color:red">@todo</span>| |
 | Circular Picker    |             yes|                  N/A|yes|yes|yes|yes|yes|available| |
