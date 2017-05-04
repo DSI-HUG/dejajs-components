@@ -42,7 +42,7 @@ and navigate to `http://localhost:5100`.
 | Circular Picker    |             yes|                  N/A|yes|yes|yes|yes|yes|available| |
 | Color Selector     |             yes|                  N/A|yes|yes|yes|yes|yes|available| |
 | Color Picker       |             yes|          @todo/@todo|yes|yes|yes|yes|yes|available| |
-| Content Editable   |             yes|                 N/A|yes|yes|yes|yes|yes|available|New line issue on IE11. IE11 add p indtead br |
+| Content Editable   |             yes|                 N/A|yes|yes|yes|yes|yes|available|New line issue on IE11. IE11 add p instead br |
 | Date Selector      |             yes|                 N/A|yes|yes|yes|yes|yes|available| |
 | Date Picker        |             yes|          @todo/@todo|yes|yes|yes|yes|yes|available| |
 | Dialog             |             yes|                 N/A|yes|yes|yes|yes|yes|Message Box| |
