@@ -498,7 +498,7 @@ export class DejaGridComponent implements OnDestroy {
     }
 
     /** Recalcule le viewport. */
-    public refreshViewPort(item: IItemBase) {
+    public refreshViewPort(item?: IItemBase) {
         this.treeListComponent.refreshViewPort(item);
     }
 

@@ -327,8 +327,10 @@ export abstract class ItemListBase {
     }
 
     /** Recalcule le viewport. */
-    public refreshViewPort(item: IItemBase) {
-        item.size = undefined;
+    public refreshViewPort(item?: IItemBase) {
+        if (item) {
+            item.size = undefined;
+        }
         this.viewPort.refresh(item);
         this.changeDetectorRef.markForCheck();
     }
