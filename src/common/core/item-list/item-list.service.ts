@@ -8,8 +8,8 @@
 
 import { BehaviorSubject, Observable } from 'rxjs/Rx';
 import { Subscriber } from 'rxjs/Subscriber';
-import { GroupingService, IGroupInfo } from '../grouping/index';
 import { Diacritics } from '../diacritics/index';
+import { GroupingService, IGroupInfo } from '../grouping/index';
 import { ISortInfos, SortingService } from '../sorting/index';
 import { IItemBase, IItemTree } from './index';
 
