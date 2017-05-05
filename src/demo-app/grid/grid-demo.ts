@@ -8,10 +8,11 @@
 
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { IItemTree } from '../../common/core';
+import { IItemTree, IViewPortItem } from '../../common/core';
 import { DejaGridComponent, DejaGridRowsEvent, IDejaDragEvent, IDejaGridColumn, IDejaGridColumnSizeEvent } from '../../component';
 import { DrugsService, IDrug } from '../services/drugs.service';
 import { INews, NewsService } from '../services/news.service';
+import { IExtendedViewPortItem } from '../tree-list/tree-list-demo'
 
 @Component({
     // encapsulation: ViewEncapsulation.None,
@@ -285,16 +286,16 @@ export class GridDemoComponent implements OnInit {
 
     protected newsColumns = [
         {
-            label: 'logo',
-            name: 'logo',
+            label: 'Logo',
+            name: 'urlToImage',
             minWidth: 64,
             sizeable: true,
             useCellTemplate: true,
             width: '150px',
         },
         {
-            label: 'name',
-            name: 'name',
+            label: 'title',
+            name: 'title',
             sizeable: true,
             useCellTemplate: false,
             width: '180px',
@@ -389,9 +390,9 @@ export class GridDemoComponent implements OnInit {
     }
 
     protected onColumnSizeChanged(e: IDejaGridColumnSizeEvent) {
-        if (e.column.name === 'description' || e.column.name === 'logo') {
+        if (e.column.name === 'description' || e.column.name === 'urlToImage') {
             this.gridNews.clearRowsHeight();
-            this.gridNews.refresh();
+            this.gridNews.refreshViewPort();
         }
     }
 
@@ -401,5 +402,13 @@ export class GridDemoComponent implements OnInit {
 
     protected onSuffixClicked() {
         alert('Suffix button was pressed');
+    }
+
+    protected imageLoaded(item: IViewPortItem) {
+        const itemExt = item as IExtendedViewPortItem;
+        if (!itemExt.loaded) {
+            itemExt.loaded = true;
+            this.gridNews.refreshViewPort(itemExt);
+        }
     }
 }

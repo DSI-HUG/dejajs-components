@@ -54,9 +54,9 @@ $deep: '/deep/';
 			}
 		}
 
-		#news {
+		#{$deep}#news {
 			.cell-wrapper {
-				&[colname="logo"] {
+				&[colname="urlToImage"] {
 					.logo {
 						max-width: 100%;
 						max-height: 100%;
