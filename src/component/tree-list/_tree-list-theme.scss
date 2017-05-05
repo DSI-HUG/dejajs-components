@@ -3,43 +3,54 @@
 @import '../../common/core/item-list/tree-list-theme';
 
 @mixin tree-list-theme($theme) {
-    $primary: map-get($theme, primary);
-    $warn: map-get($theme, warn);
+	$primary: map-get($theme, primary);
+	$warn: map-get($theme, warn);
 
-    deja-tree-list {
-        &.ng-invalid {
-            #input {
-                .mat-input-wrapper {
-                    .mat-input-underline {
-                        .mat-input-ripple {
-                            background-color: mat-color($warn);
-                        }
-                    }
-                    .mat-input-placeholder {
-                        color: mat-color($warn) !important;
-                    }
-                }
-            }
-        }
-        #listheader {
-            border: solid 1px rgba(0, 0, 0, 0.38);
-            border-bottom: solid 1px rgba(mat-color($primary), 0.8);
-        }
-        #listcontainer {
-            background-color: white;
-            border: solid 1px rgba(0, 0, 0, 0.38);
-            &[keynav="false"]:not(.dragover) {
-                div.listitem:not(.unselectable):hover {
-                    background-color: mat-color($primary);
-                    color: #fff;
-                }
-            }
-            #error-hint {
-                color: mat-color($warn);
-            }
-        }
+	deja-tree-list {
+		&[disabled="true"] {
+			#listcontainer {
+				background-color: rgba(0, 0, 0, 0.05);
+				color: rgba(0, 0, 0, 0.8);
+				#error-hint {
+					color: rgba(0, 0, 0, 0.5);
+				}
+			}
+		}
+		&.ng-invalid {
+			#input {
+				.mat-input-wrapper {
+					.mat-input-underline {
+						.mat-input-ripple {
+							background-color: mat-color($warn);
+						}
+					}
+					.mat-input-placeholder {
+						color: mat-color($warn) !important;
+					}
+				}
+			}
+		}
+		#listheader {
+			border: solid 1px rgba(0, 0, 0, 0.38);
+			border-bottom: solid 1px rgba(mat-color($primary), 0.8);
+		}
+		&:not([disabled="true"]) {
+			#listcontainer {
+				background-color: white;
+				border: solid 1px rgba(0, 0, 0, 0.38);
+				&[keynav="false"]:not(.dragover) {
+					div.listitem:not(.unselectable):hover {
+						background-color: mat-color($primary);
+						color: #fff;
+					}
+				}
+				#error-hint {
+					color: mat-color($warn);
+				}
+			}
+		}
 
-        @include sub-item-list-theme($theme);
-        @include sub-tree-list-theme($theme);
-    }
+		@include sub-item-list-theme($theme);
+		@include sub-tree-list-theme($theme);
+	}
 }

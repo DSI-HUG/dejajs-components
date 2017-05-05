@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, forwardRef, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, forwardRef, HostBinding, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
 import { Position } from '../../common/core/graphics/position';
@@ -95,6 +95,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     private _sortable = false;
     private _itemsDraggable = false;
     private hasCustomService = false;
+    @HostBinding('attr.disabled') private _disabled = null;
 
     private keyboardNavigation$ = new Subject();
 
@@ -424,6 +425,17 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
             .subscribe(noop);
     }
 
+    /** Permet de désactiver le select */
+    @Input()
+    public set disabled(value: boolean | string) {
+        const disabled = value != null && `${value}` !== 'false';
+        this._disabled = disabled || null;
+    }
+
+    public get disabled() {
+        return this._disabled;
+    }
+
     protected get listElement(): HTMLElement {
         return this.listContainer && this.listContainer.nativeElement;
     }
@@ -544,6 +556,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
         }
 
         this.subscriptions.push(keyDown$
+            .filter(() => !this.disabled)
             .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.Home ||
                 event.keyCode === KeyCodes.End ||
                 event.keyCode === KeyCodes.PageUp ||
@@ -692,6 +705,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
         // Ensure list cache
         this.subscriptions.push(keyUp$
+            .filter(() => !this.disabled)
             .do(() => {
                 if ((this.query || '').length < this.minSearchlength) {
                     this._itemList = [];
@@ -751,6 +765,10 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     }
 
     protected mousedown(e: MouseEvent) {
+        if (this.disabled) {
+            return;
+        }
+
         if (this.mouseUp$sub) {
             this.mouseUp$sub.unsubscribe();
             this.mouseUp$sub = undefined;
@@ -787,6 +805,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
         const element = this.elementRef.nativeElement as HTMLElement;
         this.mouseUp$sub = Observable.fromEvent(element, 'mouseup')
             .first()
+            .filter(() => !this.disabled)
             .subscribe((upevt: MouseEvent) => {
                 const upIndex = this.getItemIndexFromHTMLElement(upevt.target as HTMLElement);
                 if (upIndex === undefined) {

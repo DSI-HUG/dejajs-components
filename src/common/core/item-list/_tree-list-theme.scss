@@ -5,178 +5,180 @@
 	$foreground: #000;
 	$background: #fff;
 
-	#listcontainer {
-		&[depth-max] {
-			>div.listitem {
-				&[depth] {
-					background-color: $background;
-					background-color: initial;
-					color: $foreground;
-					color: initial;
-					&.selected {
-						background-color: rgba(mat-color($primary), 0.8);
-						color: #fff;
+	&:not([disabled="true"]) {
+		#listcontainer {
+			&[depth-max] {
+				>div.listitem {
+					&[depth] {
+						background-color: $background;
+						background-color: initial;
+						color: $foreground;
+						color: initial;
+						&.selected {
+							background-color: rgba(mat-color($primary), 0.8);
+							color: #fff;
+						}
 					}
-				}
-				&[depth="0"] {
-					background-color: rgba(mat-color($primary), 0.85);
-					color: #FFF;
-					&.selected {
-						background-color: rgba(mat-color($primary), 0.95);
-					}
-				}
-				&[depth="1"] {
-					background-color: rgba(mat-color($primary), 0.7);
-					color: #FFF;
-					&.selected {
+					&[depth="0"] {
 						background-color: rgba(mat-color($primary), 0.85);
+						color: #FFF;
+						&.selected {
+							background-color: rgba(mat-color($primary), 0.95);
+						}
 					}
-				}
-				&[depth="2"] {
-					background-color: rgba(mat-color($primary), 0.55);
-					color: #FFF;
-					&.selected {
-						background-color: rgba(mat-color($primary), 0.8);
-					}
-				}
-				&[depth="3"] {
-					background-color: rgba(mat-color($primary), 0.42);
-					color: #333;
-					&.selected {
-						background-color: rgba(mat-color($primary), 0.75);
-					}
-				}
-				&[depth="4"] {
-					background-color: rgba(mat-color($primary), 0.3);
-					color: #333;
-					&.selected {
+					&[depth="1"] {
 						background-color: rgba(mat-color($primary), 0.7);
+						color: #FFF;
+						&.selected {
+							background-color: rgba(mat-color($primary), 0.85);
+						}
+					}
+					&[depth="2"] {
+						background-color: rgba(mat-color($primary), 0.55);
+						color: #FFF;
+						&.selected {
+							background-color: rgba(mat-color($primary), 0.8);
+						}
+					}
+					&[depth="3"] {
+						background-color: rgba(mat-color($primary), 0.42);
+						color: #333;
+						&.selected {
+							background-color: rgba(mat-color($primary), 0.75);
+						}
+					}
+					&[depth="4"] {
+						background-color: rgba(mat-color($primary), 0.3);
+						color: #333;
+						&.selected {
+							background-color: rgba(mat-color($primary), 0.7);
+						}
 					}
 				}
 			}
-		}
-		&[depth-max="1"] {
-			>div.listitem {
-				&[depth="0"] {
-					background-color: rgba(mat-color($primary), 0.6);
-					color: #FFF;
-					&.selected {
-						background-color: rgba(mat-color($primary), 0.95);
+			&[depth-max="1"] {
+				>div.listitem {
+					&[depth="0"] {
+						background-color: rgba(mat-color($primary), 0.6);
+						color: #FFF;
+						&.selected {
+							background-color: rgba(mat-color($primary), 0.95);
+						}
+					}
+					&[depth="1"] {
+						background-color: $background;
+						background-color: initial;
+						color: $foreground;
+						color: initial;
+						&.selected {
+							background-color: rgba(mat-color($primary), 0.8);
+							color: #fff;
+						}
 					}
 				}
-				&[depth="1"] {
-					background-color: $background;
-					background-color: initial;
-					color: $foreground;
-					color: initial;
-					&.selected {
+			}
+			&[depth-max="2"] {
+				>div.listitem {
+					&[depth="0"] {
 						background-color: rgba(mat-color($primary), 0.8);
-						color: #fff;
+						color: #FFF;
+						&.selected {
+							background-color: rgba(mat-color($primary), 0.95);
+						}
+					}
+					&[depth="1"] {
+						background-color: rgba(mat-color($primary), 0.4);
+						color: #333;
+						&.selected {
+							background-color: rgba(mat-color($primary), 0.85);
+						}
+					}
+					&[depth="2"] {
+						background-color: $background;
+						background-color: initial;
+						color: $foreground;
+						color: initial;
+						&.selected {
+							background-color: rgba(mat-color($primary), 0.8);
+							color: #fff;
+						}
 					}
 				}
 			}
-		}
-		&[depth-max="2"] {
-			>div.listitem {
-				&[depth="0"] {
-					background-color: rgba(mat-color($primary), 0.8);
-					color: #FFF;
-					&.selected {
-						background-color: rgba(mat-color($primary), 0.95);
+			&[depth-max="3"] {
+				>div.listitem {
+					&[depth="0"] {
+						background-color: rgba(mat-color($primary), 0.8);
+						color: #FFF;
+						&.selected {
+							background-color: rgba(mat-color($primary), 0.95);
+						}
+					}
+					&[depth="1"] {
+						background-color: rgba(mat-color($primary), 0.55);
+						color: #FFF;
+						&.selected {
+							background-color: rgba(mat-color($primary), 0.85);
+						}
+					}
+					&[depth="2"] {
+						background-color: rgba(mat-color($primary), 0.3);
+						color: #333;
+						&.selected {
+							background-color: rgba(mat-color($primary), 0.8);
+						}
+					}
+					&[depth="3"] {
+						background-color: $background;
+						background-color: initial;
+						color: $foreground;
+						color: initial;
+						&.selected {
+							background-color: rgba(mat-color($primary), 0.8);
+							color: #fff;
+						}
 					}
 				}
-				&[depth="1"] {
-					background-color: rgba(mat-color($primary), 0.4);
-					color: #333;
-					&.selected {
+			}
+			&[depth-max="4"] {
+				>div.listitem {
+					&[depth="0"] {
 						background-color: rgba(mat-color($primary), 0.85);
+						color: #FFF;
+						&.selected {
+							background-color: rgba(mat-color($primary), 0.95);
+						}
 					}
-				}
-				&[depth="2"] {
-					background-color: $background;
-					background-color: initial;
-					color: $foreground;
-					color: initial;
-					&.selected {
-						background-color: rgba(mat-color($primary), 0.8);
-						color: #fff;
+					&[depth="1"] {
+						background-color: rgba(mat-color($primary), 0.7);
+						color: #FFF;
+						&.selected {
+							background-color: rgba(mat-color($primary), 0.85);
+						}
 					}
-				}
-			}
-		}
-		&[depth-max="3"] {
-			>div.listitem {
-				&[depth="0"] {
-					background-color: rgba(mat-color($primary), 0.8);
-					color: #FFF;
-					&.selected {
-						background-color: rgba(mat-color($primary), 0.95);
+					&[depth="2"] {
+						background-color: rgba(mat-color($primary), 0.48);
+						color: #333;
+						&.selected {
+							background-color: rgba(mat-color($primary), 0.8);
+						}
 					}
-				}
-				&[depth="1"] {
-					background-color: rgba(mat-color($primary), 0.55);
-					color: #FFF;
-					&.selected {
-						background-color: rgba(mat-color($primary), 0.85);
+					&[depth="3"] {
+						background-color: rgba(mat-color($primary), 0.3);
+						color: #333;
+						&.selected {
+							background-color: rgba(mat-color($primary), 0.75);
+						}
 					}
-				}
-				&[depth="2"] {
-					background-color: rgba(mat-color($primary), 0.3);
-					color: #333;
-					&.selected {
-						background-color: rgba(mat-color($primary), 0.8);
-					}
-				}
-				&[depth="3"] {
-					background-color: $background;
-					background-color: initial;
-					color: $foreground;
-					color: initial;
-					&.selected {
-						background-color: rgba(mat-color($primary), 0.8);
-						color: #fff;
-					}
-				}
-			}
-		}
-		&[depth-max="4"] {
-			>div.listitem {
-				&[depth="0"] {
-					background-color: rgba(mat-color($primary), 0.85);
-					color: #FFF;
-					&.selected {
-						background-color: rgba(mat-color($primary), 0.95);
-					}
-				}
-				&[depth="1"] {
-					background-color: rgba(mat-color($primary), 0.7);
-					color: #FFF;
-					&.selected {
-						background-color: rgba(mat-color($primary), 0.85);
-					}
-				}
-				&[depth="2"] {
-					background-color: rgba(mat-color($primary), 0.48);
-					color: #333;
-					&.selected {
-						background-color: rgba(mat-color($primary), 0.8);
-					}
-				}
-				&[depth="3"] {
-					background-color: rgba(mat-color($primary), 0.3);
-					color: #333;
-					&.selected {
-						background-color: rgba(mat-color($primary), 0.75);
-					}
-				}
-				&[depth="4"] {
-					background-color: $background;
-					background-color: initial;
-					color: $foreground;
-					color: initial;
-					&.selected {
-						background-color: rgba(mat-color($primary), 0.8);
-						color: #fff;
+					&[depth="4"] {
+						background-color: $background;
+						background-color: initial;
+						color: $foreground;
+						color: initial;
+						&.selected {
+							background-color: rgba(mat-color($primary), 0.8);
+							color: #fff;
+						}
 					}
 				}
 			}

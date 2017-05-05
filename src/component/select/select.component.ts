@@ -74,7 +74,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @ViewChild('listcontainer') private listContainer: any;
     @ViewChild(DejaDropDownComponent) private dropDownComponent: DejaDropDownComponent;
 
-    @HostBinding('attr.disabled') private _disabled = false;
+    @HostBinding('attr.disabled') private _disabled = null;
     private _type = 'select';
     private selectingItemIndex: number;
     private dropDownQuery = '';
