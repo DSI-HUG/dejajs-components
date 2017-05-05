@@ -497,6 +497,11 @@ export class DejaGridComponent implements OnDestroy {
         this.changeDetectorRef.markForCheck();
     }
 
+    /** Recalcule le viewport. */
+    public refreshViewPort(item: IItemBase) {
+        this.treeListComponent.refreshViewPort(item);
+    }
+
     /** Efface la hauteur calculée des lignes en mode automatique */
     public clearRowsHeight() {
         if (this.treeListComponent) {
