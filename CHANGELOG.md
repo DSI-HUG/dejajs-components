@@ -9,6 +9,12 @@
 
 ### Bug fixes
 
+<a name="1.8.1"></a>
+# [1.8.1] (2017-05-08)
+
+### Bug fixes
+Minor bugs fix
+
 <a name="1.8.0"></a>
 # [1.8.0] (2017-05-03)
 
