@@ -1,8 +1,8 @@
-<div id="header" *ngIf="expandButton || (searchArea || minSearchlength > 0) || groupArea">
+<div id="header" *ngIf="expandButton || searchArea || groupArea">
     <button md-raised-button class="mat-primary" *ngIf="expandButton" (click)="toggleAll()">
-		Tout {{(allCollapsed)?'étendre':'réduire'}}
+		{{(allCollapsed)?'Expand':'Collapse'}} All
 	</button>
-    <md-input-container id="input" *ngIf="searchArea || minSearchlength > 0">
+    <md-input-container id="input" *ngIf="searchArea">
         <input #inputelement type="text" mdInput tabindex="0" [(ngModel)]="query" [placeholder]="placeholder" [disabled]="disabled">
         <span *ngIf="searchPrefixTemplate" mdPrefix>
 			<ng-template [ngTemplateOutlet]="searchPrefixTemplate"></ng-template>

@@ -95,6 +95,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     private _sortable = false;
     private _itemsDraggable = false;
     private hasCustomService = false;
+    private hasLoadingEvent = false;
     @HostBinding('attr.disabled') private _disabled = null;
 
     private keyboardNavigation$ = new Subject();
@@ -109,7 +110,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
         super(changeDetectorRef, viewPort);
 
         this.subscriptions.push(Observable.from(this.clearFilterExpression$)
-            .debounceTime(750)
+            .debounceTime(400)
             .subscribe(() => this.filterExpression = ''));
 
         this.subscriptions.push(Observable.from(this.filterListComplete$)
@@ -155,7 +156,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     }
 
     public get searchArea() {
-        return this._searchArea;
+        return this._searchArea || this.minSearchlength > 0;
     }
 
     /** Affiche un bouton pour réduire ou étendre toutes les lignes parentes du tableau */
@@ -382,6 +383,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
      */
     @Input()
     public set loadingItems(fn: (query: string | RegExp, selectedItems: IItemBase[]) => Observable<IItemBase>) {
+        this.hasLoadingEvent = !!fn;
         super.setLoadingItems(fn);
     }
 
@@ -527,7 +529,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     public ngAfterViewInit() {
         // FIXME Issue angular/issues/6005
         // see http://stackoverflow.com/questions/34364880/expression-has-changed-after-it-was-checked
-        if (this._itemList.length === 0 && this.hasCustomService) {
+        if (this._itemList.length === 0 && (this.hasCustomService || this.hasLoadingEvent)) {
             Observable.timer(1)
                 .first()
                 .switchMap(() => this.calcViewList$())

@@ -152,6 +152,10 @@ export class ViewPortService {
         };
 
         const calcVariableSizeViewPort$ = (items: IViewPortItem[], containerSize: number, scrollPos: number, itemDefaultSize: number, ensureParams: IEnsureParams): Observable<IViewPort> => {
+            if (!itemDefaultSize) {
+                itemDefaultSize = ViewPortService.itemDefaultSize;
+            }
+
             const visibleList = [] as IViewPortItem[];
             let startIndex: number;
             let endIndex;
