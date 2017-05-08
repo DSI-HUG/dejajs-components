@@ -177,7 +177,7 @@ export abstract class ItemListBase {
     }
 
     /** Retourne la liste des éléments sélectionés.
-     * @return {IItemBase[] Liste des éléments selectionés.
+     * @return {IItemBase[]} Liste des éléments selectionés.
      */
     public getSelectedItems() {
         return this.getItemListService().getSelectedItems();

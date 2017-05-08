@@ -1,101 +1,98 @@
-@import "../../scss/variables/colors";
-.treelist-demo {
-    &.demo-card {
-        .listContainer {
-            height: 70vh;
-            padding: 16px;
-            display: flex;
-            flex-direction: row;
-            overflow: hidden;
-            deja-tree-list {
-                margin: 2rem;
-                flex: 0 1 50%;
-                position: relative;
-            }
-        }
-    }
-    &.demo-basic {
-        padding: 0;
-    }
-    &.demo-full-width {
-        width: 100%;
-    }
-    &.demo-icons {
-        font-size: 100%;
-        height: inherit;
-        vertical-align: top;
-        width: inherit;
-    }
-    &.business-object {
-        md-card-content {
-            padding: 30px;
-            .json-view {
-                margin-left: 40px;
-            }
-        }
-    }
-    .itemindex {
-        float: right;
-        margin-right: 1rem;
-        text-align: right;
-    }
-    md-toolbar {
-        margin-bottom: 1rem;
-        .flexContainer {
-            width: 100%;
-        }
-    }
-    [mdSuffix] {
-        display: flex;
-        justify-content: flex-end;
-        [md-icon-button] {
-            position: absolute;
-            bottom: -7px;
-            right: 0;
-        }
-    }
-    #headerTemplateContent {
-        padding: 0.4rem;
-        display: block;
-        background-color: #aaa;
-        cursor: pointer;
-        display: flex;
-        #title {
-            flex: 1 0 auto;
-        }
-        step-indicator {
-            flex: 0 0 auto;
-        }
-    }
-    [ddid] {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-    }
-    #news {
-        max-height: 700px;
-        .listitem.odd {
-            >news-card {
-                background-color: rgba( 0, 0, 0, 0.05);
-            }
-        }
-    }
+.deja-treelist-demo {
+	&.demo-card {
+		margin: 16px;
+		md-card-content {
+			padding: 16px;
+			display: flex;
+			flex-direction: column;
+			deja-tree-list {
+				flex-basis: 400px;
+				flex-grow: 0;
+				flex-shrink: 0;
+				position: relative;
+				margin: 1rem 0;
+				&.news {
+					flex-basis: 600px;
+				}
+			}
+		}
+	}
+	&.demo-basic {
+		padding: 0;
+	}
+	&.demo-full-width {
+		width: 100%;
+	}
+	.demo-half-width {
+		width: 45%;
+	}
+	&.demo-icons {
+		font-size: 100%;
+		height: inherit;
+		vertical-align: top;
+		width: inherit;
+	}
+	#flight {
+		display: flex;
+		align-items: center;
+	}
+	news-card {
+		width: 100%;
+		.text {
+			overflow-x: hidden;
+		}
+	}
+	.vpinfoname {
+		display: inline-block;
+		width: 7rem;
+	}
+	#bigCountries {
+		height: 400px;
+	}
+	#headerTemplateContent {
+		padding: 0.4rem;
+		display: block;
+		background-color: #aaa;
+		cursor: pointer;
+		display: flex;
+		#title {
+			flex: 1 0 auto;
+		}
+		step-indicator {
+			flex: 0 0 auto;
+		}
+	}
+	[mdprefix] {
+		cursor: default;
+		padding: 4px;
+	}
+	[mdSuffix] {
+		padding: 4px;
+		display: flex;
+		justify-content: flex-end;
+		cursor: pointer;
+	}
+	[ddid] {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+	}
 }
 
 .item-base-cursor,
 .country-target-cursor {
-    #content {
-        background-color: #222 !important;
-        color: #fff;
-        opacity: 0.8;
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-        &::before {
-            display: block;
-            width: 0.5rem;
-            content: " ";
-        }
-    }
+	#content {
+		background-color: #222 !important;
+		color: #fff;
+		opacity: 0.8;
+		display: flex;
+		align-items: center;
+		cursor: pointer;
+		&::before {
+			display: block;
+			width: 0.5rem;
+			content: " ";
+		}
+	}
 }

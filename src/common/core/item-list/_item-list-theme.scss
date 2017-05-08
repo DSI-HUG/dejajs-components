@@ -21,7 +21,7 @@
 					background-color: rgba(0, 0, 0, 0.03);
 				}
 				&.selected {
-					background-color: rgba(mat-color($primary), 0.25);
+					background-color: rgba(mat-color($primary), 0.75);
 					color: #fff;
 				}
 			}
