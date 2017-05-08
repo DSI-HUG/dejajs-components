@@ -34,6 +34,7 @@ before_script:
 - npm run licensecheck
 script:
 - npm test
+- bash ./scripts/deploy-demo.sh
 env:
   global:
   - ENCRYPTION_LABEL: d9215e5535f8
