@@ -211,7 +211,7 @@ export abstract class ItemListBase {
     public setUnselectingItem(fn: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>) {
         this.getItemListService().setUnselectingItem(fn);
     }
-    
+
     /**
      * Set a promise or an observable called before an item selection
      */
@@ -225,7 +225,7 @@ export abstract class ItemListBase {
     public setCollapsingItem(fn: (item: IItemTree) => Promise<IItemTree> | Observable<IItemTree>) {
         this.getItemListService().setCollapsingItem(fn);
     }
-    
+
     /** Evalue le texte à afficher pour l'élément spécifié.
      * @param {any} value  Model à évaluer.
      * @return {string} Texte à afficher pour le modèle spécifié.
@@ -306,89 +306,8 @@ export abstract class ItemListBase {
      * @return {Observable} Observable résolu par la fonction.
      */
     public toggleCollapse$(index: number, collapsed: boolean): Observable<IItemTree[]> {
-        // Get item with relative index
-        const item = this._itemList[index - this.vpStartRow];
-        if (!item) {
-            // Not on the visible part, no transition
-            return this.getItemListService().toggleCollapse$(index, collapsed);
-        } else {
-            const oldlist = [...this._itemList];
-            const oldTreeInfo = this.getItemTreeInfo(oldlist, item);
-
-            if (this.viewPort.mode === ViewportMode.disabled) {
-                if (collapsed) {
-                    return Observable.of(oldTreeInfo)
-                        .map((oldTree) => {
-                            // Hide children for effect
-                            const children = (oldTree.children || []) as IItemTree[];
-                            children.forEach((child) => child.expanding = true);
-                            return children;
-                        })
-                        .delay(300)
-                        .do((children) => children.forEach((child) => child.expanding = false))
-                        .switchMap(() => this.getItemListService().toggleCollapse$(index, collapsed))
-                        .switchMap((toogleResult) => this.calcViewList$().first().map(() => toogleResult));
-                } else {
-                    return this.getItemListService().toggleCollapse$(index, collapsed)
-                        .switchMap(() => this.calcViewList$().first())
-                        .map((result) => {
-                            const newTreeInfo = this.getItemTreeInfo(result.visibleList, item);
-
-                            // Hide children for effect
-                            const children = (newTreeInfo.children || []) as IItemTree[];
-                            children.forEach((child) => child.collapsing = true);
-                            return children;
-                        })
-                        .delay(1)
-                        .do((children) => children.forEach((child) => child.collapsing = false))
-                        .delay(300)
-                        .switchMap((toogleResult) => this.calcViewList$().first().map(() => toogleResult));
-                }
-            } else {
-                const newTreeInfo$ = this.getItemListService().toggleCollapse$(index, collapsed)
-                    .switchMap((toogleResult) => {
-                        return this.calcViewList$()
-                            .first()
-                            .map((result) => {
-                                const newlist = result.visibleList;
-                                const newTreeInfo = this.getItemTreeInfo(newlist, item);
-                                return { newlist, newTreeInfo, toogleResult };
-                            });
-                    });
-
-                if (!collapsed) {
-                    return newTreeInfo$
-                        .map(({ newlist, newTreeInfo }) => {
-                            // Add elements to the flat list, expand and calc new flatlist, keep children hidden for effect
-                            const children = (newTreeInfo.children || []) as IItemTree[];
-                            children.forEach((child) => child.expanding = true);
-
-                            // Calc added elements, start index still the same
-                            const oldEndRow = Math.min(oldlist.length - 1, this.vpEndRow - this.vpStartRow);
-                            const newEndRow = Math.min(newlist.length - 1, newTreeInfo.lastIndex + 1);
-
-                            // Create a temporary list for visual effect
-                            this._itemList = [...newlist.slice(0, newEndRow), ...oldlist.slice(oldTreeInfo.startIndex + 1, oldEndRow)];
-                            return children;
-                        })
-                        .delay(1)
-                        .do((children) => children.forEach((child) => child.expanding = false))
-                        .switchMap((result) => this.calcViewList$().first().map(() => result));
-
-                } else {
-                    // Remove elements from the flat list, collapse and calc new flatlist
-                    // Add same amount of elements to the visible list
-                    return newTreeInfo$
-                        .map(({ newlist, newTreeInfo, toogleResult }) => {
-                            const oldEndRow = Math.min(oldlist.length - 1, oldTreeInfo.lastIndex + 1);
-                            this.vpEndRow = Math.min(newlist.length - 1, this.vpEndRow - this.vpStartRow);
-                            this._itemList = [...oldlist.slice(0, oldEndRow), ...newlist.slice(newTreeInfo.startIndex + 1)];
-                            return toogleResult;
-                        })
-                        .switchMap((toogleResult) => this.calcViewList$().first().map(() => toogleResult));
-                }
-            }
-        }
+        return this.getItemListService().toggleCollapse$(index, collapsed)
+            .switchMap((toogleResult) => this.calcViewList$().first().map(() => toogleResult));
     }
 
     /** Déselectionne tous les éléments sélectionés.
@@ -408,8 +327,10 @@ export abstract class ItemListBase {
     }
 
     /** Recalcule le viewport. */
-    public refreshViewPort(item: IItemBase) {
-        item.size = undefined;
+    public refreshViewPort(item?: IItemBase) {
+        if (item) {
+            item.size = undefined;
+        }
         this.viewPort.refresh(item);
         this.changeDetectorRef.markForCheck();
     }
@@ -699,7 +620,7 @@ export abstract class ItemListBase {
      */
     protected setMaxHeight(value: number | string) {
         this._maxHeight = value ? +value : null;
-        this.viewPort.maxSize$.next(this._maxHeight);        
+        this.viewPort.maxSize$.next(this._maxHeight);
     }
 
     /** Retourne la hauteur maximum avant que le composant affiche une scrollbar

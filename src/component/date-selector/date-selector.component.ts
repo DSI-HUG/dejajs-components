@@ -391,7 +391,10 @@ export class DejaDateSelectorComponent implements AfterContentInit {
     private setDateIfPossible(date: Date, num: number): void {
         const d = new Date(date);
         d.setDate(d.getDate() + num);
-        if (this.disableDates && this.isDisabledDate(d)) {
+        if ((this.dateMin && d.getTime() < this.dateMin.getTime()) || (this.dateMax && d.getTime() > this.dateMax.getTime())) {
+            this.displayedDate = d;
+            this.bind();
+        } else if (this.disableDates && this.isDisabledDate(d)) {
             this.setDateIfPossible(d, num);
         } else {
             this.selectedDate = d;

@@ -8,8 +8,8 @@
 
 import { BehaviorSubject, Observable } from 'rxjs/Rx';
 import { Subscriber } from 'rxjs/Subscriber';
-import { GroupingService, IGroupInfo } from '../grouping/index';
 import { Diacritics } from '../diacritics/index';
+import { GroupingService, IGroupInfo } from '../grouping/index';
 import { ISortInfos, SortingService } from '../sorting/index';
 import { IItemBase, IItemTree } from './index';
 
@@ -178,14 +178,18 @@ export class ItemListService {
             }
 
             return observable
-                .filter((its) => !!its)
-                .do((its) => {
+                .map((its) => {
                     if (its) {
                         this.ensureChildrenProperties(its);
                         // TODO La déselection ne fonctionne pas pendant le chargement
                         this.ensureSelectedItems(its);
                         this.items = [...this.items || [], ...its];
                         this._waiter$.next(false);
+                        return its;
+                    } else {
+                        this.items = [];
+                        this._waiter$.next(false);
+                        return [];
                     }
                 });
         }

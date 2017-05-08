@@ -35,28 +35,28 @@ and navigate to `http://localhost:5100`.
 
 ## Feature status and browsers compatibility:
 
-| Feature            | Working OnPush| Chrome 56 | Edge | IE11 | FF51 | Opera Neon | Readme and Demo | Note           |
-|--------------------|---------------|-----------|------|------|------|------------|-----------------|----------------|
-| Accordion          |            yes|        yes|   yes|   yes|   yes|         yes|        available|                |
-| Auto-Size TextArea |            yes|        yes|   yes|   yes|   yes|         yes|<span style="color:red">@todo</span>| |
-| Circular Picker  |yes|yes|yes|yes|yes|yes|available| |
-| Color Selector   |yes|yes|yes|yes|yes|yes|available| |
-| Color Picker     |yes|yes|yes|yes|yes|yes|available| |
-| Content Editable |yes|yes|yes|yes|yes|yes|available|New line issue on IE11. IE11 add p indtead br |
-| Date Selector    |yes|yes|yes|yes|yes|yes|available| |
-| Date Picker      |yes|yes|yes|yes|yes|yes|available| |
-| Dialog           |yes|yes|yes|yes|yes|yes|Message Box| |
-| Events           |yes|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>| |
-| Grid             |yes|yes|yes|yes|yes|yes|available| |
-| Dropdown Control |yes|yes|yes|yes|yes|yes|Color Picker| |
-| Menu             |yes|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>| |
-| Message Box      |yes|yes|yes|yes|yes|yes|available| |
-| Monaco Editor    |yes|yes|yes|yes|yes|yes|available| |
-| Range            |yes|yes|yes|yes|yes|yes|available| |
-| Select           |yes|yes|yes|yes|yes|yes|available|Place Holder placement in FF, Edge and IE11 |
-| Snackbar         |yes|yes|yes|yes|yes|yes|available| |
-| Splitter         |yes|yes|yes|yes|yes|yes|available| |
-| Tiles            |yes|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>| |
-| Tooltip          |yes|yes|yes|yes|yes|yes|Message Box| |
-| Treelist         |yes|yes|yes|yes|yes|yes|available| |
-| Viewport         |yes|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>| |
+| Feature            | Working OnPush | Required / Disabled | Chrome 56 | Edge | IE11 | FF51 | Opera Neon | Readme and Demo | Note           |
+|--------------------|----------------|---------------------|-----------|------|------|------|------------|-----------------|----------------|
+| Accordion          |             yes|                  N/A|        yes|   yes|   yes|   yes|         yes|        available|                |
+| Auto-Size TextArea |             yes|          @todo/@todo|        yes|   yes|   yes|   yes|         yes|<span style="color:red">@todo</span>| |
+| Circular Picker    |             yes|                  N/A|yes|yes|yes|yes|yes|available| |
+| Color Selector     |             yes|                  N/A|yes|yes|yes|yes|yes|available| |
+| Color Picker       |             yes|          @todo/@todo|yes|yes|yes|yes|yes|available| |
+| Content Editable   |             yes|                  N/A|yes|yes|yes|yes|yes|available|New line issue on IE11. IE11 add p instead br |
+| Date Selector      |             yes|                  N/A|yes|yes|yes|yes|yes|available| |
+| Date Picker        |             yes|          @todo/@todo|yes|yes|yes|yes|yes|available| |
+| Dialog             |             yes|                  N/A|yes|yes|yes|yes|yes|Message Box| |
+| Events             |             yes|                  N/A|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>| |
+| Grid               |             yes|                  N/A|yes|yes|yes|yes|yes|available| |
+| Dropdown Control   |             yes|          @todo/@todo|yes|yes|yes|yes|yes|Color Picker| |
+| Menu               |             yes|                  N/A|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>| |
+| Message Box        |             yes|                  N/A|yes|yes|yes|yes|yes|available| |
+| Monaco Editor      |             yes|                  N/A|yes|yes|yes|yes|yes|available| |
+| Range              |             yes|                  N/A|yes|yes|yes|yes|yes|available| |
+| Select             |             yes|          @todo/@todo|yes|yes|yes|yes|yes|available|Place Holder placement in FF, Edge and IE11 |
+| Snackbar           |             yes|                  N/A|yes|yes|yes|yes|yes|available| |
+| Splitter           |             yes|                  N/A|yes|yes|yes|yes|yes|available| |
+| Tiles              |             yes|                  N/A|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>| |
+| Tooltip            |             yes|                  N/A|yes|yes|yes|yes|yes|Message Box| |
+| Treelist           |             yes|          @todo/@todo|yes|yes|yes|yes|yes|available| |
+| Viewport           |             yes|                  N/A|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>| |

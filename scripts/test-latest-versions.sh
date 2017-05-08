@@ -7,6 +7,7 @@ if [ "$TRAVIS_EVENT_TYPE" != "cron" ]; then
 fi
 
 npm i -g npm-check-updates
+rm -f yarn.lock
 
 # Remove all ^ or ~ in the package.json file before update to be sure to keep the latest version
 sed -i 's/"^/"/g' package.json

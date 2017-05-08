@@ -62,7 +62,7 @@
 					<li>Press <span class="keyboard-key">End</span> to select the last item</li>
 					<li>Press <span class="keyboard-key">Space</span> to collapse or expand a group header</li>
 					<li>Press <span class="keyboard-key">Enter</span> to select the current item and close the dropdown</li>
-					<li>A-Z 0-9: Select the next item started with the pressed key</li>
+					<li>Press <span class="keyboard-key">A</span>..<span class="keyboard-key">Z</span>  <span class="keyboard-key">0</span>..<span class="keyboard-key">9</span> to select the next item started with the pressed key</li>
 				</ul>
 			</div>
 		</md-card-content>
@@ -75,12 +75,12 @@
 		</md-card-content>
 	</md-card>
 	<md-card class="deja-select-demo demo-card demo-basic">
-		<md-toolbar color="primary">Disableable select</md-toolbar>
+		<md-toolbar color="primary">Disabled select</md-toolbar>
 		<md-card-content>
 			<div>
 				<md-checkbox [(ngModel)]="disabled" color="primary">Check me to disable select below</md-checkbox>
 			</div>
-			<deja-select class="demo-half-width" placeholder="Disableable select" [disabled]="disabled" selectionClearable [(ngModel)]="businessCountry" textField="naqme" valueField="code" [models]="countries"></deja-select>
+			<deja-select class="demo-half-width" placeholder="Disabled select" [disabled]="disabled" selectionClearable [(ngModel)]="businessCountry" textField="naqme" valueField="code" [models]="countries"></deja-select>
 		</md-card-content>
 	</md-card>
 </div>

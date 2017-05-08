@@ -26,6 +26,18 @@ Composant pour séléctionner une date sur un calendrier et l'affficher dans un 
 </thead>
 <tbody>
 <tr>
+    <td>dateMax</td>
+    <td>Date</td>
+    <td>null</td>
+    <td>Date maximum sélectionnable dans le calendrier</td>
+</tr>
+<tr>
+    <td>dateMin</td>
+    <td>Date</td>
+    <td>null</td>
+    <td>Date minimum sélectionnable dans le calendrier</td>
+</tr>
+<tr>
     <td>disabled</td>
     <td>boolean</td>
     <td>false</td>
@@ -40,7 +52,7 @@ Composant pour séléctionner une date sur un calendrier et l'affficher dans un 
 <tr>
     <td>dropdownAlignment</td>
     <td>string</td>
-    <td>left bottom</td>
+    <td>left right top bottom</td>
     <td>Voir la documentation du *DejaDropdownComponent* pour plus d'informations</td>
 </tr>
 <tr>
@@ -53,7 +65,19 @@ Composant pour séléctionner une date sur un calendrier et l'affficher dans un 
     <td>format</td>
     <td>string</td>
     <td>null</td>
-    <td>Le format de la date à afficher dans le champ texte. Par défaut ce aui est affiché est *_date_.toLocaleString()*</td>
+    <td>Le format de la date à afficher dans le champ texte. Par défaut ce aui est affiché est YYYY-MM-DD + HH:mm si c'est aussi un timepicker</td>
+</tr>
+<tr>
+    <td>ownerAlignment</td>
+    <td>string</td>
+    <td>left bottom</td>
+    <td>Voir la documentation du *DejaDropdownComponent* pour plus d'informations</td>
+</tr>
+<tr>
+    <td>placeholder</td>
+    <td>string</td>
+    <td>Date</td>
+    <td>Le placeholder du champ texte du datepicker</td>
 </tr>
 </tbody>
 </table>

@@ -3,7 +3,7 @@
 		Tout {{(allCollapsed)?'étendre':'réduire'}}
 	</button>
     <md-input-container id="input" *ngIf="searchArea || minSearchlength > 0">
-        <input #inputelement type="text" mdInput tabindex="0" [(ngModel)]="query" [placeholder]="placeholder">
+        <input #inputelement type="text" mdInput tabindex="0" [(ngModel)]="query" [placeholder]="placeholder" [disabled]="disabled">
         <span *ngIf="searchPrefixTemplate" mdPrefix>
 			<ng-template [ngTemplateOutlet]="searchPrefixTemplate"></ng-template>
 		</span>

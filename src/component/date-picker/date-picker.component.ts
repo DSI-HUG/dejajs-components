@@ -35,7 +35,7 @@ export class DejaDatePickerComponent implements OnInit {
     @Input() public dropdownContainerId: string;
     @Input() public dropdownAlignment = 'left right top bottom';
     @Input() public ownerAlignment = 'left bottom';
-    @Input() public format = 'YYYY-MM-DD HH:mm';
+    @Input() public format: string;
     @Input() public placeholder = 'Date';
     @Input() public disableDates: Array<DaysOfWeek | Date>; // | ((d: Date) => boolean);
     @ViewChild(DejaDateSelectorComponent) public dateSelectorComponent: DejaDateSelectorComponent;
@@ -62,19 +62,21 @@ export class DejaDatePickerComponent implements OnInit {
     public ngOnInit() {
         const formattingTokens = /(\[[^\[]*\])|(\\)?([Hh]mm(ss)?|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Qo?|YYYYYY|YYYYY|YYYY|YY|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|kk?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g;
 
-        if (this.format) {
-            let mask = [];
-            const array = this.format.match(formattingTokens);
-            array.forEach((val: string) => {
-                if (formatToMask[val]) {
-                    mask = [...mask, ...formatToMask[val]];
-                } else {
-                    mask.push(val);
-                }
-            });
-
-            this.mask = mask;
+        if (!this.format) {
+            this.format = 'YYYY-MM-DD' + ((this.time) ? ' HH:mm' : '');
         }
+
+        let mask = [];
+        const array = this.format.match(formattingTokens);
+        array.forEach((val: string) => {
+            if (formatToMask[val]) {
+                mask = [...mask, ...formatToMask[val]];
+            } else {
+                mask.push(val);
+            }
+        });
+
+        this.mask = mask;
 
         // Shortcut for now()
         Observable

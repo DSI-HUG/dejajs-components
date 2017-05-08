@@ -182,6 +182,6 @@ interface IExtendedCountry extends ICountry {
     subGroupName: string;
 }
 
-interface IExtendedViewPortItem extends IViewPortItem {
+export interface IExtendedViewPortItem extends IViewPortItem {
     loaded: boolean;
 }
