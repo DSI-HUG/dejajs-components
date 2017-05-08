@@ -1,6 +1,6 @@
 {
   "name": "@deja-js/component",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "description": "Angular2 Components Library",
   "homepage": "https://github.com/DSI-HUG/dejajs-components",
   "bugs": "https://github.com/DSI-HUG/dejajs-components/issues",
@@ -34,7 +34,6 @@
     "build": "webpack-dev-server -d --devtool source-map --inline --hot --progress --port 5100 --config webpack.config.dev.js",
     "start": "npm run build-css && npm run build",
     "prepublish": "npm run build-css",
-    "publish": "npm publish --access public",
     "build:prod": "del-cli dist && npm run build-css && webpack -p --config webpack.config.prod.js && copy 404.html dist",
     "e2e": "webdriver-manager update && protractor specs/protractor.conf.js",
     "test": "npm run e2e",
