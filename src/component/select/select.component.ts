@@ -394,6 +394,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     /** Définit la liste des éléments selectionés en mode multiselect */
+    @Input()
     public set selectedItems(value: IItemBase[]) {
         this.writeValue(value)
     }
@@ -404,6 +405,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     /** Définit l'éléments selectioné en mode single select */
+    @Input()
     public set selectedItem(value: IItemBase) {
         this.writeValue(value)
     }
