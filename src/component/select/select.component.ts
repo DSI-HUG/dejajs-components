@@ -40,6 +40,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @Input() public query = '';
     /** ID de l'élement dans lequel la liste déroulante doit s'afficher (la liste déroulante ne peut dépasser de l'élement spécifié ici) */
     @Input() public dropdownContainerId: string;
+    @Input() public dropdownContainerElement: ElementRef | HTMLElement;
     /** Permet de définir un template de ligne par binding */
     @Input() public itemTemplateExternal;
     /** Permet de définir un template de ligne parente par binding. */
@@ -455,7 +456,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     private get containerElement(): HTMLElement {
-        return this.dropdownContainerId && this.elementRef.nativeElement.ownerDocument.getElementById(this.dropdownContainerId);
+        return this.dropdownContainerElement || this.dropdownContainerId && this.elementRef.nativeElement.ownerDocument.getElementById(this.dropdownContainerId);
     }
 
     private set currentItemIndex(value: number) {

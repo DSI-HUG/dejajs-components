@@ -6,13 +6,11 @@
 			display: flex;
 			flex-direction: column;
 			deja-tree-list {
-				flex-basis: 400px;
-				flex-grow: 0;
-				flex-shrink: 0;
+                max-height: 400px;
 				position: relative;
 				margin: 1rem 0;
 				&.news {
-					flex-basis: 600px;
+					flex: 0 0 600px;
 				}
 			}
 		}
