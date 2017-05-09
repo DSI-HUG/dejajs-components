@@ -393,8 +393,23 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return this._type === 'autocomplete';
     }
 
+    /** Définit la liste des éléments selectionés en mode multiselect */
+    public set selectedItems(value: IItemBase[]) {
+        this.writeValue(value)
+    }
+
     /** Retourne la liste des éléments selectionés en mode multiselect */
     public get selectedItems() {
+        return super.getSelectedItems();
+    }
+
+    /** Définit l'éléments selectioné en mode single select */
+    public set selectedItem(value: IItemBase) {
+        this.writeValue(value)
+    }
+
+    /** Retourne l'éléments selectioné en mode single select */
+    public get selectedItem() {
         return super.getSelectedItems();
     }
 

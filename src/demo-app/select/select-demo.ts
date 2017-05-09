@@ -7,7 +7,7 @@
  */
 
 import { ChangeDetectorRef, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Observable, Subscription, Subject } from 'rxjs/Rx';
+import { Observable, Subject, Subscription } from 'rxjs/Rx';
 import { IItemBase, IItemTree } from '../../common/core';
 import { DejaSelectComponent } from '../../component';
 import { CountriesListService } from '../services/countries-list.service';
