@@ -94,7 +94,7 @@
 			<div>
 				<md-checkbox [(ngModel)]="disabled" color="primary">Check me to disable tree-list below</md-checkbox>
 			</div>
-			<deja-tree-list searchArea class="demo-half-width" maxHeight="auto" [disabled]="disabled" selectionClearable [selectedItems]="businessCountries" (selectedChange)="businessCountryChange($event.item)" textField="naqme" valueField="code" [models]="countries"></deja-tree-list>
+			<deja-tree-list searchArea class="demo-half-width" nodataholder="No record to display" maxHeight="auto" [disabled]="disabled" selectionClearable [selectedItems]="businessCountries" (selectedChange)="businessCountryChange($event.item)" textField="naqme" valueField="code" [models]="countries"></deja-tree-list>
 		</md-card-content>
 	</md-card>
 </div>
@@ -151,7 +151,7 @@
 		<md-toolbar color="primary">Autocomplete</md-toolbar>
 		<md-card-content>
 			<div>Autocomplete 2 characters minimum</div>
-			<deja-tree-list class="demo-half-width" [itemListService]="countriesListService" textField="naqme" valueField="code" min-search-length="2"></deja-tree-list>
+			<deja-tree-list class="demo-half-width" nodataholder="No record to display" [itemListService]="countriesListService" textField="naqme" valueField="code" min-search-length="2"></deja-tree-list>
 		</md-card-content>
 		<md-toolbar color="primary">Variable Row Size</md-toolbar>
 		<md-card-content>
@@ -223,13 +223,13 @@
 		<md-card-content>
 			<h1>On Demand Loading </h1>
 			<div>The items are loaded from the loading event</div>
-			<deja-tree-list #ondemand class="demo-half-width" textField="naqme" valueField="code" [loadingItems]="loadingItems()"></deja-tree-list>
+			<deja-tree-list #ondemand class="demo-half-width fixed-height" textField="naqme" valueField="code" [loadingItems]="loadingItems()"></deja-tree-list>
 			<h1>Confirm Selection</h1>
 			<div>A dialog will confirm the selection of an item</div>
-			<deja-tree-list class="demo-half-width" multiSelect textField="naqme" valueField="code" [selectingItem]="confirmDialog()" [items]="countries"> </deja-tree-list>
+			<deja-tree-list class="demo-half-width fixed-height" multiSelect textField="naqme" valueField="code" [selectingItem]="confirmDialog()" [items]="countries"> </deja-tree-list>
 			<h1>Confirm Expand and Collapse </h1>
 			<div>A dialog will confirm the expand and collapse or an item if the children are not loaded. The children will be loaded asynchronously after the item expansion.</div>
-			<deja-tree-list #onexpand class="demo-half-width" textField="naqme" valueField="code" [items]="onDemandGroupedCountries" [expandingItem]="expandingItems()" [collapsingItem]="collapsingItems()"></deja-tree-list>
+			<deja-tree-list #onexpand class="demo-half-width fixed-height" textField="naqme" valueField="code" [items]="onDemandGroupedCountries" [expandingItem]="expandingItems()" [collapsingItem]="collapsingItems()"></deja-tree-list>
 		</md-card-content>
 	</md-card>
 </div>

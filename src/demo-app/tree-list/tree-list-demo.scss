@@ -5,12 +5,15 @@
 			padding: 16px;
 			display: flex;
 			flex-direction: column;
-			deja-tree-list {
+			deja-tree-list {                
                 max-height: 400px;
 				position: relative;
 				margin: 1rem 0;
+                &.fixed-height {
+                    height: 400px;                        
+                }
 				&.news {
-					flex: 0 0 600px;
+                    max-height: 600px;
 				}
 			}
 		}
