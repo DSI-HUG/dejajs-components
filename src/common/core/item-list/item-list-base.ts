@@ -619,8 +619,8 @@ export abstract class ItemListBase {
      * Spécifier 0 pour que le composant determine sa hauteur à partir du container
      */
     protected setMaxHeight(value: number | string) {
-        this._maxHeight = value ? +value : null;
-        this.viewPort.maxSize$.next(this._maxHeight);
+        this._maxHeight = value === 'auto' ? null : +value;
+        this.viewPort.maxSize$.next(value);
     }
 
     /** Retourne la hauteur maximum avant que le composant affiche une scrollbar

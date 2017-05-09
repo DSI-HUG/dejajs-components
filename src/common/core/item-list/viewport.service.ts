@@ -33,7 +33,7 @@ export class ViewPortService {
 
     public mode$ = new BehaviorSubject<ViewportMode | string>(ViewportMode.fixed);
     public items$ = new BehaviorSubject<IViewPortItem[]>([]);
-    public maxSize$ = new BehaviorSubject<number>(0);
+    public maxSize$ = new BehaviorSubject<number | string>(0);
     public ensureItem$ = new BehaviorSubject<IViewPortItem | number>(null);
     public scrollPosition$ = new BehaviorSubject<number>(0);
     public element$ = new BehaviorSubject<HTMLElement>(null);
@@ -513,24 +513,25 @@ export class ViewPortService {
         Observable.combineLatest(items$, maxSize$, itemsSize$, ensureParams$, direction$, mode$, refresh$, element$)
             .debounceTime(1)
             .combineLatest(scrollPos$)
-            .filter(([[_items, _maxSize, _itemDefaultSize, _ensureParams, _direction, _mode, _refresh, element], _scrollPos]: [[IViewPortItem[], number, number, IEnsureParams, ViewportDirection, ViewportMode, IViewPortItem, HTMLElement], number]) => !!element)
+            .filter(([[_items, _maxSize, _itemDefaultSize, _ensureParams, _direction, _mode, _refresh, element], _scrollPos]: [[IViewPortItem[], number|string, number, IEnsureParams, ViewportDirection, ViewportMode, IViewPortItem, HTMLElement], number]) => !!element)
             .do(() => consoleLog(`combineLatest`))
-            .switchMap(([[items, maxSize, itemDefaultSize, ensureParams, _direction, _mode, _refresh, element], _scrollPos]: [[IViewPortItem[], number, number, IEnsureParams, ViewportDirection, ViewportMode, IViewPortItem, HTMLElement], number]) => {
+            .switchMap(([[items, maxSize, itemDefaultSize, ensureParams, _direction, _mode, _refresh, element], _scrollPos]: [[IViewPortItem[], number|string, number, IEnsureParams, ViewportDirection, ViewportMode, IViewPortItem, HTMLElement], number]) => {
                 const listSize = this.lastCalculatedSize || maxSize || clientSize(element);
                 const scrollPos = this._scrollPosition;
-                if (items && items.length && listSize < 2 * ViewPortService.itemDefaultSize) {
+                const maxSizeValue = maxSize === 'auto' ? 0 : +maxSize;
+                if (items && items.length && (maxSize === 'auto' || listSize < 2 * ViewPortService.itemDefaultSize)) {
                     // Set the viewlist to the maximum height to measure the real max-height defined in the css
                     // Use a blank div to do that
                     this.viewPortResult$.next(this.measureViewPort);
                     // Wait next life cycle for the result
                     return Observable.timer(1)
                         .do(() => this.lastCalculatedSize = clientSize(element))
-                        .map(() => ({ element, scrollPos, items, maxSize, itemDefaultSize, ensureParams }));
+                        .map(() => ({ element, scrollPos, items, maxSizeValue, itemDefaultSize, ensureParams }));
                 } else {
-                    return Observable.of({ element, scrollPos, items, maxSize, itemDefaultSize, ensureParams });
+                    return Observable.of({ element, scrollPos, items, maxSizeValue, itemDefaultSize, ensureParams });
                 }
             })
-            .switchMap(({ element, scrollPos, items, maxSize, itemDefaultSize, ensureParams }) => calcViewPort$(items, maxSize, scrollPos, element, itemDefaultSize, ensureParams))
+            .switchMap(({ element, scrollPos, items, maxSizeValue, itemDefaultSize, ensureParams }) => calcViewPort$(items, maxSizeValue, scrollPos, element, itemDefaultSize, ensureParams))
             .subscribe((viewPort: IViewPort) => {
                 this.viewPortResult$.next(viewPort);
             }, ((error) => {

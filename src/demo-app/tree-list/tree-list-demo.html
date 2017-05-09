@@ -94,7 +94,7 @@
 			<div>
 				<md-checkbox [(ngModel)]="disabled" color="primary">Check me to disable tree-list below</md-checkbox>
 			</div>
-			<deja-tree-list searchArea class="demo-half-width" [maxHeight]="400" [disabled]="disabled" selectionClearable [selectedItems]="businessCountries" (selectedChange)="businessCountryChange($event.item)" textField="naqme" valueField="code" [models]="countries"></deja-tree-list>
+			<deja-tree-list searchArea class="demo-half-width" maxHeight="auto" [disabled]="disabled" selectionClearable [selectedItems]="businessCountries" (selectedChange)="businessCountryChange($event.item)" textField="naqme" valueField="code" [models]="countries"></deja-tree-list>
 		</md-card-content>
 	</md-card>
 </div>
