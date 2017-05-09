@@ -568,6 +568,7 @@ export class DejaTilesLayoutProvider {
                 type: tile.type,
                 bounds: new Rect(targetBounds.left + tile.percentBounds.left - bounds.left, targetBounds.top + tile.percentBounds.top - bounds.top, tile.percentBounds.width, tile.percentBounds.height, ),
                 templateModel: tile.templateModel,
+                color: tile.color,
             } as IDejaTile);
             newTile.isSelected = true;
             return newTile;

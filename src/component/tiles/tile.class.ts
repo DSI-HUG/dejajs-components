@@ -60,6 +60,10 @@ export class DejaTile implements IDejaTile {
         return this._model;
     }
 
+    public get color() {
+        return this._color;
+    }
+
     public set pixelBounds(value: Rect) {
         if (!Rect.equals(this._pixelBounds, value)) {
             this._pixelBounds = value;
