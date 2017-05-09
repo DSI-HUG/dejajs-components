@@ -353,6 +353,10 @@ export class ViewPortService {
 
         const calcViewPort$ = (items: IViewPortItem[], maxSize: number, scrollPos: number, element: HTMLElement, itemDefaultSize: number, ensureParams: IEnsureParams) => {
             consoleLog(`calcViewPort`);
+            if (!items || !items.length) {
+                return Observable.of(this.emptyViewPort);
+            }
+
             let listSize = maxSize || clientSize(element);
             if (listSize <= ViewPortService.itemDefaultSize) {
                 listSize = innerSize();
@@ -407,14 +411,6 @@ export class ViewPortService {
         };
 
         const items$ = Observable.from(this.items$)
-            .filter((items) => {
-                if (items && items.length) {
-                    return true;
-                } else {
-                    this.viewPortResult$.next(this.emptyViewPort);
-                    return false;
-                }
-            })
             .do(() => consoleLog('items'));
 
         // Ensure item visible by index or instance
@@ -518,7 +514,7 @@ export class ViewPortService {
             .switchMap(([[items, maxSize, itemDefaultSize, ensureParams, _direction, _mode, _refresh, element], _scrollPos]: [[IViewPortItem[], number, number, IEnsureParams, ViewportDirection, ViewportMode, IViewPortItem, HTMLElement], number]) => {
                 const listSize = this.lastCalculatedSize || maxSize || clientSize(element);
                 const scrollPos = this._scrollPosition;
-                if (listSize < 2 * ViewPortService.itemDefaultSize) {
+                if (items && items.length && listSize < 2 * ViewPortService.itemDefaultSize) {
                     // Set the viewlist to the maximum height to measure the real max-height defined in the css
                     // Use a blank div to do that
                     this.viewPortResult$.next(this.measureViewPort);
