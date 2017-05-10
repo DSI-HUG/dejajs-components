@@ -1,5 +1,5 @@
 <md-input-container id="input" [attr.wait]="waiter || _waiter" [attr.multiselection]="_multiSelect && selectedItems.length > 0">
-	<input #inputElement type="text" mdInput [readonly]="isReadOnly" (input)="queryChanged($event)" [value]="query" [disabled]="disabled">
+	<input #inputElement deja-child-validator type="text" mdInput [readonly]="isReadOnly" (ngModelChange)="queryChanged($event)" [ngModel]="query" [disabled]="disabled">
 	<div id="md-input-prefix" mdPrefix *ngIf="_multiSelect && selectedItems.length > 0">
 		<ul>
 			<li *ngFor="let item of selectedItems; let index = index">

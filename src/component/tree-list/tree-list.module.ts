@@ -11,13 +11,16 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MdButtonModule, MdCheckboxModule, MdInputModule } from '@angular/material';
 import { DejaClipboardModule } from '../../common/core/clipboard/clipboard.module';
+import { DejaChildValidatorModule } from '../../common/core/validation';
 import { DejaDragDropModule } from '../dragdrop/dragdrop.module';
 import { DejaListLoaderModule } from '../loaders/list-loader.module';
 import { DejaTextMetricsModule } from './text-metrics/text-metrics.module';
 import { DejaTreeListComponent } from './tree-list.component';
 
 @NgModule({
-    declarations: [DejaTreeListComponent],
+    declarations: [
+        DejaTreeListComponent,
+    ],
     exports: [DejaTreeListComponent],
     imports: [
         CommonModule,
@@ -25,6 +28,7 @@ import { DejaTreeListComponent } from './tree-list.component';
         MdButtonModule,
         MdInputModule.forRoot(),
         MdCheckboxModule.forRoot(),
+        DejaChildValidatorModule,
         DejaListLoaderModule,
         DejaDragDropModule,
         DejaTextMetricsModule,

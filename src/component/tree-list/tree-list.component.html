@@ -2,7 +2,7 @@
     <button md-raised-button class="mat-primary" *ngIf="expandButton" (click)="toggleAll()">
 		{{(allCollapsed)?'Expand':'Collapse'}} All
 	</button>
-    <md-input-container id="input" *ngIf="searchArea">
+    <md-input-container deja-child-validator id="input" *ngIf="searchArea">
         <input #inputelement type="text" mdInput tabindex="0" [(ngModel)]="query" [placeholder]="placeholder" [disabled]="disabled">
         <span *ngIf="searchPrefixTemplate" mdPrefix>
 			<ng-template [ngTemplateOutlet]="searchPrefixTemplate"></ng-template>

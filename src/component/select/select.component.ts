@@ -1,3 +1,4 @@
+import { AfterContentInit } from '@angular/core';
 /*
  *  @license
  *  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
@@ -6,34 +7,28 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, forwardRef, HostBinding, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ControlValueAccessor, NgControl, NgForm } from '@angular/forms';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
 import { DejaItemEvent, DejaItemsEvent, IItemBase, IItemTree, ItemListBase, ItemListService, IViewPort, ViewportMode, ViewPortService } from '../../common/core/item-list';
 import { KeyCodes } from '../../common/core/keycodes.enum';
+import { DejaChildValidatorDirective } from '../../common/core/validation';
 import { DejaDropDownComponent, IDropDownResetParams } from '../dropdown';
 
 const noop = () => { };
-
-const SelectComponentValueAccessor = {
-    multi: true,
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => DejaSelectComponent),
-};
 
 /** Combo box avec une liste basée sur la treelist */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    providers: [SelectComponentValueAccessor, ViewPortService],
+    providers: [ViewPortService],
     selector: 'deja-select',
     styleUrls: [
         './select.component.scss',
     ],
     templateUrl: './select.component.html',
 })
-export class DejaSelectComponent extends ItemListBase implements ControlValueAccessor,
-    OnDestroy, AfterViewInit {
+export class DejaSelectComponent extends ItemListBase implements ControlValueAccessor, OnDestroy, AfterViewInit, AfterContentInit {
     /** Texte à afficher par default dans la zone de recherche */
     @Input() public placeholder: string;
     /** Correspond au ngModel du champ de filtrage ou recherche */
@@ -59,6 +54,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     // NgModel implementation
     protected onTouchedCallback: () => void = noop;
     protected onChangeCallback: (_: any) => void = noop;
+    protected onValidatorChangeCallback: () => void = noop;
 
     protected keyboardNavigation = false;
 
@@ -71,6 +67,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @ContentChild('parentItemTemplate') protected parentItemTemplateInternal;
     @ContentChild('selectedTemplate') protected selectedTemplate;
     @ContentChild('suffixTemplate') protected mdSuffix;
+
     @ViewChild('inputElement') private input: ElementRef;
     @ViewChild('listcontainer') private listContainer: any;
     @ViewChild(DejaDropDownComponent) private dropDownComponent: DejaDropDownComponent;
@@ -87,6 +84,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     public _dropdownAlignment = 'left';
     public _ownerAlignment = 'left right bottom';
 
+    @ViewChild(DejaChildValidatorDirective) private inputValidatorDirective: DejaChildValidatorDirective;
+
     private clearFilterExpression$ = new BehaviorSubject<void>(null);
     private filterListComplete$ = new Subject();
     private storeScrollPosition$ = new Subject<number>();
@@ -96,8 +95,18 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     private keyboardNavigation$ = new Subject();
 
-    constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, private elementRef: ElementRef) {
+    constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, private elementRef: ElementRef, @Self() @Optional() public _control: NgControl, @Optional() private _parentForm: NgForm) {
         super(changeDetectorRef, viewPort);
+
+        if (this._control) {
+            this._control.valueAccessor = this;
+        }
+
+        if (this._parentForm) {
+            this._parentForm.ngSubmit.subscribe(() => {
+                this.changeDetectorRef.markForCheck();
+            })
+        }
 
         this.subscriptions.push(Observable.from(this.clearFilterExpression$)
             .debounceTime(750).subscribe(() => this.filterExpression = ''));
@@ -218,7 +227,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     public get disabled() {
-        return this._disabled;
+        return this._control ? this._control.disabled : this._disabled;
     }
 
     /** Indique ou détermine si le bouton pour effacer la selection doit être affiché */
@@ -514,7 +523,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return this._dropdownVisible;
     }
 
-    // From ControlValueAccessor interface
+    // ************* ControlValueAccessor Implementation **************
     public writeValue(value: any) {
         if (!value) {
             if (this.selectedItems && this.selectedItems.length) {
@@ -544,20 +553,27 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         this.changeDetectorRef.markForCheck();
     }
 
-    // From ControlValueAccessor interface
-    // Replace the default onChange emitter
     public registerOnChange(fn: any) {
         this.onChangeCallback = fn;
     }
 
-    // From ControlValueAccessor interface
     public registerOnTouched(fn: any) {
         this.onTouchedCallback = fn;
+    }
+
+    public setDisabledState?(isDisabled: boolean) {
+        this.disabled = isDisabled;
     }
     // ************* End of ControlValueAccessor Implementation **************
 
     public ngOnDestroy() {
         this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
+    }
+
+    public ngAfterContentInit() {
+        if (this.inputValidatorDirective) {
+            this.inputValidatorDirective.parentControl = this._control;
+        }
     }
 
     public ngAfterViewInit() {
@@ -826,9 +842,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             });
     }
 
-    protected queryChanged(event: Event) {
-        const target = event.target as HTMLInputElement;
-        this.query = target.value;
+    protected queryChanged(value: string) {
+        this.query = value;
         if (!this.isReadOnly) {
             // Autocomplete or multiselect only
             this.dropDownQuery = this.query;
