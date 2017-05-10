@@ -1,14 +1,3 @@
-<a name="@next"></a>
-# [@next] (2017-05-xx)
-
-### Breaking changes from 1.8.0
-
-### Known issues
-
-### Features
-
-### Bug fixes
-
 <a name="1.8.1"></a>
 # [1.8.1] (2017-05-08)
 
