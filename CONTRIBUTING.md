@@ -42,14 +42,14 @@ features by not reporting duplicate issues.  Providing the following information
 chances of your issue being dealt with quickly:
 
 * **Overview of the Issue** - if an error is being thrown a non-minified stack trace helps
-* **Angular and Material Versions** - which versions of Angular and Material are affected
-    (e.g. 2.0.0-alpha.53)
+* **Angular and DEJA JS Versions** - which versions of Angular and DEJA JS are affected
+    (e.g. 1.0.1)
 * **Motivation for or Use Case** - explain what are you trying to do and why the current behavior
     is a bug for you
 * **Browsers and Operating System** - is this a problem with all browsers?
 * **Reproduce the Error** - provide a live example (using [CodePen][codepen], [JsBin][jsbin],
     [Plunker][plunker], etc.) or a unambiguous set of steps
-* **Screenshots** - Due to the visual nature of Angular Material, screenshots can help the team
+* **Screenshots** - Due to the visual nature of DEJA JS, screenshots can help the team
     triage issues far more quickly than a text descrption.
 * **Related Issues** - has a similar issue been reported before?
 * **Suggest a Fix** - if you can't fix the bug yourself, perhaps you can point to what might be
