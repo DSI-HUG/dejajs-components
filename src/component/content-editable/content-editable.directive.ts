@@ -6,21 +6,14 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Directive, ElementRef, forwardRef, Input } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Directive, ElementRef, HostBinding, Input, Optional, Self } from '@angular/core';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { BehaviorSubject, Observable } from 'rxjs/Rx';
 import { KeyCodes } from '../../common/core/index';
 
 const noop = () => { };
 
-const DejaEditableDirectiveValueAccessor = {
-    multi: true,
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => DejaEditableDirective),
-};
-
 @Directive({
-    providers: [DejaEditableDirectiveValueAccessor],
     selector: '[deja-editable]',
 })
 export class DejaEditableDirective implements ControlValueAccessor {
@@ -34,7 +27,13 @@ export class DejaEditableDirective implements ControlValueAccessor {
     private edit$ = new BehaviorSubject<[boolean, boolean]>([false, false]);
     private element: HTMLElement;
 
-    constructor(elementRef: ElementRef) {
+    @HostBinding('attr.disabled') private _disabled = null;
+
+    constructor(elementRef: ElementRef, @Self() @Optional() public _control: NgControl) {
+        if (this._control) {
+            this._control.valueAccessor = this;
+        }
+
         this.element = elementRef.nativeElement as HTMLElement;
 
         Observable.fromEvent(this.element, 'mousedown')
@@ -137,6 +136,20 @@ export class DejaEditableDirective implements ControlValueAccessor {
         return this._multiline;
     }
 
+    /** Permet de désactiver le controle */
+    @Input()
+    public set disabled(value: boolean | string) {
+        const disabled = value != null && `${value}` !== 'false';
+        this._disabled = disabled || null;
+        if (this.disabled) { 
+            this.edit$.next([false, false]);
+        }
+    }
+
+    public get disabled() {
+        return this._control ? this._control.disabled : this._disabled;
+    }
+
     /** Définit une valeur indiquant si l'édition est activée. */
     @Input('deja-editable')
     public set editMode(value: boolean | string) {
@@ -151,6 +164,9 @@ export class DejaEditableDirective implements ControlValueAccessor {
     /** Définit une valeur indiquant si l'élément est en édition. */
     @Input()
     public set inEdition(value: boolean | string) {
+        if (this.disabled) {
+            return;
+        }
         this.edit$.next([value != null && `${value}` !== 'false', false]);
     }
 
@@ -206,7 +222,7 @@ export class DejaEditableDirective implements ControlValueAccessor {
 
     /** Active la zone d'édition. */
     public edit(selectOnFocus?: boolean) {
-        this.edit$.next([true, selectOnFocus]);
+        this.edit$.next([!this.disabled, selectOnFocus]);
     }
 
     private isChildElement(element: HTMLElement) {
