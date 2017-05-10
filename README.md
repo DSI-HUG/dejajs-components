@@ -1,5 +1,6 @@
 [![npm version](https://badge.fury.io/js/%40deja-js%2Fcomponent.svg)](https://www.npmjs.com/package/@deja-js/component)
 [![travis build](https://travis-ci.org/DSI-HUG/dejajs-components.svg?branch=master)](https://travis-ci.org/DSI-HUG/dejajs-components)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 # @deja-js/component
 This is the home for the Hôpitaux Universitaires de Genève - DSI - Domaine Patient team's Angular2 components for Angular 2 and material. 
