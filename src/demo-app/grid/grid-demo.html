@@ -37,7 +37,7 @@
 				</ul>
 			</deja-menu>
 			<!-- -->
-			<deja-grid #bgrid searchArea groupArea rowsSortable columnsSortable columnsSizable multiSelect sortable [(ngModel)]="drugsBigRecord$" [columns]="columns" (selectedChange)="onSelectionChanged($event)" nodataholder="Pas de données" placeholder="Filtrer la liste par le nom" searchField="indexedText" (itemDragStart)="onItemDragStart($event)">
+			<deja-grid #bgrid searchArea groupArea rowsSortable columnsSortable columnsSizable multiSelect sortable [rows]="drugsBigRecord$" [columns]="columns" (selectedChange)="onSelectionChanged($event)" nodataholder="Pas de données" placeholder="Filtrer la liste par le nom" searchField="indexedText" (itemDragStart)="onItemDragStart($event)">
 				<ng-template #cellTemplate let-row let-column="column">
 					<span id="cell-reaction" class="cell" *ngIf="column.name==='reaction' && row.reaction && row.reaction.length">
 						<span id="content">{{ row.reaction[0].reactionmeddrapt }}</span>
@@ -81,7 +81,7 @@
 		<md-toolbar color="primary">Grille avec taille des colonnes en pixels et en pourcents</md-toolbar>
 		<md-card-content class="listContainer">
 			<!-- -->
-			<deja-grid #cgrid sortable columnsSizable multiSelect [(ngModel)]="drugs$" [columns]="percentColumns" (selectedChange)="onSelectionChanged2($event)" nodataholder="Pas de données" placeholder="Filtrer la liste par le nom" searchField="receivedate">
+			<deja-grid #cgrid sortable columnsSizable multiSelect [rows]="drugs$" [columns]="percentColumns" (selectedChange)="onSelectionChanged2($event)" nodataholder="Pas de données" placeholder="Filtrer la liste par le nom" searchField="receivedate">
 				<ng-template #rowTemplate let-row>
 					<deja-grid-row [row]="row" [columnLayout]="cgrid.columnLayout" [cellTemplateExternal]="cgrid.cellTemplate">
 						<ng-template #cellTemplate let-row let-column="column">
@@ -97,7 +97,7 @@
 	<md-card class="demo-card">
 		<md-toolbar color="primary">Grille avec taille fixe des colonnes</md-toolbar>
 		<md-card-content class="listContainer">
-			<deja-grid #fgrid searchArea groupArea sortable columnsSizable multiSelect [(ngModel)]="groupedDrugs$" [columns]="responsiveColumns" (selectedChange)="onSelectionChanged3($event)" nodataholder="Pas de données" placeholder="Filtrer la liste par le nom" searchField="receivedate" (itemDragStart)="onItemDragStart($event)">
+			<deja-grid #fgrid searchArea groupArea sortable columnsSizable multiSelect [rows]="groupedDrugs$" [columns]="responsiveColumns" (selectedChange)="onSelectionChanged3($event)" nodataholder="Pas de données" placeholder="Filtrer la liste par le nom" searchField="receivedate" (itemDragStart)="onItemDragStart($event)">
 			</deja-grid>
 		</md-card-content>
 	</md-card>

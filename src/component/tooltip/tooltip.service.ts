@@ -18,5 +18,7 @@ export class DejaTooltipService {
 export interface ITooltipParams {
     /** Renvoie ou définit l'élement du DOM sur lequel le conteneur déroulant devra s'aligner */
     ownerElement: ElementRef | HTMLElement;
+    ownerAlignment: string;
+    dropdownAlignment: string;
     model: any;
 }

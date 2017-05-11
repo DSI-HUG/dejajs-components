@@ -6,8 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, forwardRef, HostBinding, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ControlValueAccessor, NgControl, NgForm } from '@angular/forms';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
@@ -15,29 +15,24 @@ import { GroupingService } from '../../common/core/grouping';
 import { DejaItemEvent, DejaItemsEvent, IItemBase, IItemTree, ItemListBase, ItemListService, IViewPort, ViewportMode, ViewPortService } from '../../common/core/item-list';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { SortingService } from '../../common/core/sorting';
+import { DejaChildValidatorDirective } from '../../common/core/validation';
 import { IDejaDragEvent } from '../dragdrop';
 import { DejaTreeListScrollEvent } from './index';
 
 const noop = () => { };
 
-const TreeListComponentValueAccessor = {
-    multi: true,
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => DejaTreeListComponent),
-};
-
 /** Composant de liste évoluée avec gestion de viewport et templating */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    providers: [TreeListComponentValueAccessor, ViewPortService],
+    providers: [ViewPortService],
     selector: 'deja-tree-list',
     styleUrls: [
         './tree-list.component.scss',
     ],
     templateUrl: './tree-list.component.html',
 })
-export class DejaTreeListComponent extends ItemListBase implements OnDestroy, AfterViewInit {
+export class DejaTreeListComponent extends ItemListBase implements OnDestroy, AfterViewInit, AfterContentInit, ControlValueAccessor {
     /** Texte à afficher par default dans la zone de recherche */
     @Input() public placeholder: string;
     /** Texte affiché si aucune donnée n'est présente dans le tableau */
@@ -91,10 +86,10 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     private rangeStartIndex = 0;
     private filterExpression = '';
     private _searchArea = false;
-    private _expandButton = false;
     private _sortable = false;
     private _itemsDraggable = false;
     private hasCustomService = false;
+    private hasLoadingEvent = false;
     @HostBinding('attr.disabled') private _disabled = null;
 
     private keyboardNavigation$ = new Subject();
@@ -105,11 +100,23 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     private clearFilterExpression$ = new BehaviorSubject<void>(null);
     private filterListComplete$ = new Subject();
 
-    constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, public elementRef: ElementRef) {
+    @ViewChild(DejaChildValidatorDirective) private inputValidatorDirective: DejaChildValidatorDirective;
+
+    constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, public elementRef: ElementRef, @Self() @Optional() public _control: NgControl, @Optional() private _parentForm: NgForm) {
         super(changeDetectorRef, viewPort);
 
+        if (this._control) {
+            this._control.valueAccessor = this;
+        }
+
+        if (this._parentForm) {
+            this._parentForm.ngSubmit.subscribe(() => {
+                this.changeDetectorRef.markForCheck();
+            })
+        }
+
         this.subscriptions.push(Observable.from(this.clearFilterExpression$)
-            .debounceTime(750)
+            .debounceTime(400)
             .subscribe(() => this.filterExpression = ''));
 
         this.subscriptions.push(Observable.from(this.filterListComplete$)
@@ -155,17 +162,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     }
 
     public get searchArea() {
-        return this._searchArea;
-    }
-
-    /** Affiche un bouton pour réduire ou étendre toutes les lignes parentes du tableau */
-    @Input()
-    public set expandButton(value: boolean | string) {
-        this._expandButton = value != null && `${value}` !== 'false';
-    }
-
-    public get expandButton() {
-        return this._expandButton;
+        return this._searchArea || this.minSearchlength > 0;
     }
 
     /** Permet de trier la liste au clic sur l'entête */
@@ -382,6 +379,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
      */
     @Input()
     public set loadingItems(fn: (query: string | RegExp, selectedItems: IItemBase[]) => Observable<IItemBase>) {
+        this.hasLoadingEvent = !!fn;
         super.setLoadingItems(fn);
     }
 
@@ -523,10 +521,16 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
         super.clearViewPort();
     }
 
+    public ngAfterContentInit() {
+        if (this.inputValidatorDirective) {
+            this.inputValidatorDirective.parentControl = this._control;
+        }
+    }
+
     public ngAfterViewInit() {
         // FIXME Issue angular/issues/6005
         // see http://stackoverflow.com/questions/34364880/expression-has-changed-after-it-was-checked
-        if (this._itemList.length === 0 && this.hasCustomService) {
+        if (this._itemList.length === 0 && (this.hasCustomService || this.hasLoadingEvent)) {
             Observable.timer(1)
                 .first()
                 .switchMap(() => this.calcViewList$())

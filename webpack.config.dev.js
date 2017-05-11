@@ -7,7 +7,7 @@ module.exports = webpackMerge(commonConfig, {
         historyApiFallback: true,
         stats: "minimal",
     },
-    devtool: "cheap-module-eval-source-map",
+    devtool: "cheap-eval-source-map",
     output: {
         chunkFilename: "[id].chunk.js",
         filename: "[name].js",

@@ -8,10 +8,17 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { DejaTextMetricsService } from './text-metrics.service';
+import { FormsModule } from '@angular/forms';
+import { DejaChildValidatorDirective } from './index';
 
 @NgModule({
-    imports: [CommonModule],
-    providers: [DejaTextMetricsService],
+    declarations: [
+        DejaChildValidatorDirective,
+    ],
+    exports: [DejaChildValidatorDirective],
+    imports: [
+        CommonModule,
+        FormsModule,
+    ],
 })
-export class DejaTextMetricsModule { }
+export class DejaChildValidatorModule { }

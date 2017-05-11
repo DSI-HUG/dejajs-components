@@ -36,7 +36,7 @@
 					<deja-select fxFlex="0 0 auto" placeholder="Select mode" [(ngModel)]="businessCountry" textField="naqme" valueField="code" [models]="countries"></deja-select>
 					<deja-select fxFlex="0 0 auto" placeholder="Autocomplete" type="autocomplete" [(ngModel)]="businessCountry" textField="naqme" valueField="code" [models]="countries"></deja-select>
 				</span>
-				<span fxFlex="0 0 45%" fxFlexOffset="10%">
+				<span fxFlex="0 0 45%" fxFlexOffset="5%">
 					<h4>Selected country model :</h4>
 					<pre>{{businessCountry | json}}</pre>
 				</span>
@@ -51,7 +51,7 @@
 				<span fxFlex="0 0 45%" fxLayout="column">
 					<deja-select fxFlex="0 0 auto" placeholder="Select a country" [(ngModel)]="businessCountry" textField="naqme" valueField="code" [models]="countries"></deja-select>
 				</span>
-				<ul fxFlex="0 0 45%" fxFlexOffset="10%" id="shortcut-list">
+				<ul fxFlex="0 0 50%" fxFlexOffset="5%" id="shortcut-list">
 					<li>Press <span class="keyboard-key">↑</span> to select the previous item</li>
 					<li>Press <span class="keyboard-key">↓</span> to select the next item</li>
 					<li>Press <span class="keyboard-key">Alt</span> + <span class="keyboard-key">↑</span> to toogle the dropdown</li>
@@ -95,7 +95,7 @@
 					<deja-select fxFlex="0 0 auto" hideSelected type="multiselect" textField="naqme" valueField="code" placeholder="Selection hidden" [(ngModel)]="multiselectModel" [items]="countriesForMultiselect"> </deja-select>
 					<deja-select fxFlex="0 0 auto" dropdownContainerId="scrollable-content" type="multiselect" textField="naqme" valueField="code" placeholder="Selection visible" [(ngModel)]="multiselectModel" [items]="countriesForMultiselect"> </deja-select>
 				</span>
-				<span fxFlex="0 0 45%" fxFlexOffset="10%">
+				<span fxFlex="0 0 45%" fxFlexOffset="5%">
 					<h4>Selected country model :</h4>
 					<ul>
 						<li *ngFor="let item of multiselectModel">
@@ -150,7 +150,7 @@
 						Place Holder Template
 					</ng-template>
 				</deja-select>
-				<deja-select fxFlex="0 0 45%" fxFlexOffset="10%" type="autocomplete" placeholder="Group Template" textField="naqme" [items]="groupedCountries">
+				<deja-select fxFlex="0 0 45%" fxFlexOffset="5%" type="autocomplete" placeholder="Group Template" textField="naqme" [items]="groupedCountries">
 					<ng-template #parentItemTemplate let-item>
 						<md-icon id="placeholder-icon">public</md-icon>&nbsp;
 						<span>{{ item.groupName }}</span>
@@ -166,7 +166,7 @@
 						</span>
 					</ng-template>
 				</deja-select>
-				<deja-select fxFlex="0 0 45%" fxFlexOffset="10%" placeholder="Suffix template selelct" textField="naqme" valueField="code" [items]="countries">
+				<deja-select fxFlex="0 0 45%" fxFlexOffset="5%" placeholder="Suffix template selelct" textField="naqme" valueField="code" [items]="countries">
 					<ng-template #suffixTemplate>
 						<md-icon id="placeholder-icon">public</md-icon>
 					</ng-template>
@@ -199,7 +199,7 @@
 		<md-card-content>
 			<h1>10K items with Item Template </h1>
 			<div>An exemple with 10000 auto sized templatized items</div>
-			<deja-select #news type="autocomplete" dropdownContainerId="scrollable-content" placeholder="10000 items select" type="select" viewportMode="auto" textField="title" searchField="description" [models]="bigNews$">
+			<deja-select #news dropdownContainerId="scrollable-content" placeholder="10000 items select" type="select" viewportMode="auto" textField="title" searchField="description" [models]="bigNews$">
 				<ng-template #itemTemplate let-item let-flatindex="flatindex">
 					<news-card [item]="item.model" (imageLoaded)="imageLoaded(item)"></news-card>
 				</ng-template>
@@ -209,7 +209,7 @@
 			<div>An exemple with 100000 fixed size items</div>
 			<span fxLayout="row">
 				<deja-select #bigCountries fxFlex="0 0 45%" type="autocomplete" dropdownContainerId="scrollable-content" placeholder="100000 items select" [items]="bigCountries$" textField="naqme" valueField="code"></deja-select>
-				<span fxFlex="0 0 45%" fxFlexOffset="10%">
+				<span fxFlex="0 0 45%" fxFlexOffset="5%">
 					<h4 id="vptitle">Viewport Infos:</h4>
 					<div *ngFor="let info of viewPortInfos">
 						<span class="vpinfoname">{{info.name}}</span>

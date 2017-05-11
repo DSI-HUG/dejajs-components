@@ -6,23 +6,14 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, ElementRef, EventEmitter, forwardRef, HostBinding, Input, Output } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Component, ElementRef, EventEmitter, HostBinding, Input, Optional, Output, Self } from '@angular/core';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Color } from '../../common/core/graphics/index';
 import { MaterialColor } from '../../common/core/style';
 
 const noop = () => { };
 
-const ColorPickerComponentAccessor = {
-    multi: true,
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => DejaColorPickerComponent),
-};
-
 @Component({
-    providers: [
-        ColorPickerComponentAccessor,
-    ],
     selector: 'deja-color-picker',
     styleUrls: [
         './color-picker.component.scss',
@@ -56,7 +47,10 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
         return this.dropdownContainerId && this.elementRef.nativeElement.ownerDocument.getElementById(this.dropdownContainerId);
     }
 
-    constructor(private elementRef: ElementRef) {
+    constructor(private elementRef: ElementRef, @Self() @Optional() public _control: NgControl) {
+        if (this._control) {
+            this._control.valueAccessor = this;
+        }
     }
 
     /** Retourne ou définit la taille du bouton. */

@@ -9,13 +9,17 @@
 import { Injectable } from '@angular/core';
 import { Http, ResponseContentType } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+import { Color } from '../../common/core/graphics/color';
 import { MaterialColors } from '../../common/core/style/index';
 
 @Injectable()
 export class CountriesService {
     private countriesDic = {} as { [code: string]: ICountry };
+    private materialColors: Color[];
 
-    constructor(private http: Http, private materialColors: MaterialColors) { }
+    constructor(private http: Http, materialColors: MaterialColors) {
+        this.materialColors = materialColors.getPalet('700');
+    }
 
     public getCountryByIndex$(index: number) {
         return this.getCountries$()
@@ -27,23 +31,26 @@ export class CountriesService {
     }
 
     public getCountries$(query?: string, number?: number): Observable<ICountry[]> {
-        const repeatCount = number ? Math.ceil(number / 243) : 1;
+        let recordCount = number || 0;
         return this.http.get('https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/demo-app/services/countries.json', { responseType: ResponseContentType.Json })
-            .map((response) => {
-                const datas = response.json();
-                const countries = datas.data as ICountry[];
+            .map((response) => response.json())
+            .map((datas) => datas.data as ICountry[])
+            .map((countries) => {
                 let colorIndex = 0;
-                const colors = this.materialColors.getPalet('700');
                 countries.forEach((country) => {
                     country.displayName = country.naqme;
-                    country.color = colors[colorIndex].toHex();
+                    country.color = this.materialColors[colorIndex].toHex();
                     this.countriesDic[country.code] = country;
 
-                    if (++colorIndex >= colors.length) {
+                    if (++colorIndex >= this.materialColors.length) {
                         colorIndex = 0;
                     }
                 });
-
+                return countries;
+            })
+            .publishLast()
+            .refCount()
+            .map((countries) => {
                 if (query) {
                     const sr = new RegExp('^' + query, 'i');
                     const sc = new RegExp('^(?!' + query + ').*(' + query + ')', 'i');
@@ -58,9 +65,16 @@ export class CountriesService {
                     return countries;
                 }
             })
-            .publishLast()
-            .refCount()
-            .repeat(repeatCount);
+            .map((countries) => {
+                let returnCountries = countries;
+                if (recordCount) {
+                    while (recordCount > 0) {
+                        returnCountries = returnCountries.concat(countries);
+                        recordCount -= countries.length;
+                    }
+                }
+                return returnCountries;
+            });
     }
 }
 

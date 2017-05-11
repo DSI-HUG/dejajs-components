@@ -1,6 +1,6 @@
 {
   "name": "@deja-js/component",
-  "version": "1.8.1",
+  "version": "1.8.2",
   "description": "Angular2 Components Library",
   "homepage": "https://github.com/DSI-HUG/dejajs-components",
   "bugs": "https://github.com/DSI-HUG/dejajs-components/issues",
@@ -31,13 +31,14 @@
   },
   "scripts": {
     "build-css": "node-sass src/scss/index.scss -o ./src/scss --importer=node_modules/node-sass-tilde-importer",
-    "build": "webpack-dev-server -d --devtool source-map --inline --hot --progress --port 5100 --config webpack.config.dev.js",
+    "build": "webpack-dev-server --inline --hot --progress --port 5100 --config webpack.config.dev.js",
     "start": "npm run build-css && npm run build",
     "prepublish": "npm run build-css",
     "build:prod": "del-cli dist && npm run build-css && webpack -p --config webpack.config.prod.js && copy 404.html dist",
     "e2e": "webdriver-manager update && protractor specs/protractor.conf.js",
     "test": "npm run e2e",
-    "licensecheck": "license-check"
+    "licensecheck": "license-check",
+    "changelog": "changelog"
   },
   "dependencies": {
     "@angular/animations": "^4.1.0",
@@ -83,9 +84,11 @@
     "copy": "^0.3.0",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.28.1",
+    "cz-conventional-changelog": "^2.0.0",
     "del-cli": "^0.2.1",
     "exports-loader": "^0.6.4",
     "file-loader": "^0.11.1",
+    "generate-changelog": "^1.1.0",
     "html-loader": "^0.4.5",
     "html-webpack-plugin": "^2.28.0",
     "license-check": "^1.1.5",
@@ -116,5 +119,10 @@
     "blocking": true,
     "logInfo": false,
     "logError": true
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
