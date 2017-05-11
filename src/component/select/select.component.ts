@@ -8,7 +8,7 @@ import { AfterContentInit } from '@angular/core';
  */
 
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ControlValueAccessor, NgControl, NgForm } from '@angular/forms';
+import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
 import { DejaItemEvent, DejaItemsEvent, IItemBase, IItemTree, ItemListBase, ItemListService, IViewPort, ViewportMode, ViewPortService } from '../../common/core/item-list';
 import { KeyCodes } from '../../common/core/keycodes.enum';
@@ -102,7 +102,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     private _selectedItemsPosition = DejaSelectSelectionPosition.above;
 
-    constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, private elementRef: ElementRef, @Self() @Optional() public _control: NgControl, @Optional() private _parentForm: NgForm) {
+    constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, private elementRef: ElementRef, @Self() @Optional() public _control: NgControl, @Optional() private _parentForm: NgForm, @Optional() private _parentFormGroup: FormGroupDirective) {
         super(changeDetectorRef, viewPort);
 
         if (this._control) {
@@ -111,6 +111,12 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
         if (this._parentForm) {
             this._parentForm.ngSubmit.subscribe(() => {
+                this.changeDetectorRef.markForCheck();
+            })
+        }
+
+        if (this._parentFormGroup) {
+            this._parentFormGroup.ngSubmit.subscribe(() => {
                 this.changeDetectorRef.markForCheck();
             })
         }
@@ -541,6 +547,16 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     // ************* ControlValueAccessor Implementation **************
+    public get value() {
+        return this._multiSelect ? this.selectedItems : this.selectedItem;
+    }
+
+    public set value(val) {
+        this.writeValue(val);
+        this.onChangeCallback(val);
+        this.onTouchedCallback();
+    }
+
     public writeValue(value: any) {
         if (!value) {
             if (this.selectedItems && this.selectedItems.length) {
@@ -912,16 +928,14 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     private onModelChange(items?: IItemBase[] | IItemBase) {
+        let outputEmitter = null;
 
         if (items) {
-            let outputEmitter = null;
-
             if (Array.isArray(items)) {
                 outputEmitter = { items: this.selectedItems } as DejaItemsEvent;
             } else {
                 outputEmitter = { item: this.selectedItems[0] } as DejaItemEvent;
             }
-            this.selectedChange.emit(outputEmitter);
         }
 
         let output = items;
@@ -935,6 +949,10 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         }
 
         this.onChangeCallback(output);
+
+        if (outputEmitter) {
+            this.selectedChange.emit(outputEmitter);
+        }
     }
 
     private select(item: IItemBase, hideDropDown?: boolean) {

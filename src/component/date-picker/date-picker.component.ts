@@ -7,7 +7,7 @@
  */
 
 import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnInit, Optional, Output, Self, ViewChild } from '@angular/core';
-import { ControlValueAccessor, NgControl, NgForm } from '@angular/forms';
+import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import * as moment from 'moment';
 import { Observable, Subscription } from 'rxjs/Rx';
 import { KeyCodes } from '../../common/core/keycodes.enum';
@@ -53,13 +53,19 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     private onTouchedCallback: () => void = noop;
     private onChangeCallback: (_: any) => void = noop;
 
-    constructor(private elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, @Self() @Optional() public _control: NgControl, @Optional() private _parentForm: NgForm) {
+    constructor(private elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, @Self() @Optional() public _control: NgControl, @Optional() private _parentForm: NgForm, @Optional() private _parentFormGroup: FormGroupDirective) {
         if (this._control) {
             this._control.valueAccessor = this;
         }
 
         if (this._parentForm) {
             this._parentForm.ngSubmit.subscribe(() => {
+                this.changeDetectorRef.markForCheck();
+            })
+        }
+
+        if (this._parentFormGroup) {
+            this._parentFormGroup.ngSubmit.subscribe(() => {
                 this.changeDetectorRef.markForCheck();
             })
         }

@@ -7,7 +7,7 @@
  */
 
 import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ControlValueAccessor, NgControl, NgForm } from '@angular/forms';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
@@ -102,17 +102,11 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
     @ViewChild(DejaChildValidatorDirective) private inputValidatorDirective: DejaChildValidatorDirective;
 
-    constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, public elementRef: ElementRef, @Self() @Optional() public _control: NgControl, @Optional() private _parentForm: NgForm) {
+    constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, public elementRef: ElementRef, @Self() @Optional() public _control: NgControl) {
         super(changeDetectorRef, viewPort);
 
         if (this._control) {
             this._control.valueAccessor = this;
-        }
-
-        if (this._parentForm) {
-            this._parentForm.ngSubmit.subscribe(() => {
-                this.changeDetectorRef.markForCheck();
-            })
         }
 
         this.subscriptions.push(Observable.from(this.clearFilterExpression$)
