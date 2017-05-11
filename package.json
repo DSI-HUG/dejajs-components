@@ -31,7 +31,7 @@
   },
   "scripts": {
     "build-css": "node-sass src/scss/index.scss -o ./src/scss --importer=node_modules/node-sass-tilde-importer",
-    "build": "webpack-dev-server -d --devtool source-map --inline --hot --progress --port 5100 --config webpack.config.dev.js",
+    "build": "webpack-dev-server --inline --hot --progress --port 5100 --config webpack.config.dev.js",
     "start": "npm run build-css && npm run build",
     "prepublish": "npm run build-css",
     "build:prod": "del-cli dist && npm run build-css && webpack -p --config webpack.config.prod.js && copy 404.html dist",
