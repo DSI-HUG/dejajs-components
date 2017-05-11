@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { MdIconModule, MdInputModule} from '@angular/material';
 import { DejaChildValidatorModule } from '../../common/core/validation';
 import { DejaBackdropModule } from '../backdrop';
+import { DejaChipsModule } from '../chips';
 import { DejaDropDownModule } from '../dropdown';
 import { DejaSelectComponent } from './select.component';
 
@@ -28,6 +29,7 @@ import { DejaSelectComponent } from './select.component';
         MdIconModule,
         MdInputModule.forRoot(),
         DejaChildValidatorModule,
+        DejaChipsModule,
         DejaDropDownModule,
         DejaBackdropModule,
     ],

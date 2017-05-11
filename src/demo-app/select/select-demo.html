@@ -93,7 +93,7 @@
 			<div fxLayout="row">
 				<span fxFlex="0 0 45%" fxLayout="column">
 					<deja-select fxFlex="0 0 auto" hideSelected type="multiselect" textField="naqme" valueField="code" placeholder="Selection hidden" [(ngModel)]="multiselectModel" [items]="countriesForMultiselect"> </deja-select>
-					<deja-select fxFlex="0 0 auto" dropdownContainerId="scrollable-content" type="multiselect" textField="naqme" valueField="code" placeholder="Selection visible" [(ngModel)]="multiselectModel" [items]="countriesForMultiselect"> </deja-select>
+					<deja-select fxFlex="0 0 auto" dropdownContainerId="scrollable-content" type="multiselect" textField="naqme" valueField="code" selectedItemsPosition="below" placeholder="Selection visible and below" [(ngModel)]="multiselectModel" [items]="countriesForMultiselect"> </deja-select>
 				</span>
 				<span fxFlex="0 0 45%" fxFlexOffset="5%">
 					<h4>Selected country model :</h4>
