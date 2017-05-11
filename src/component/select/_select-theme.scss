@@ -46,27 +46,6 @@
 					}
 				}
 			}
-			&[multiselection="true"] {
-				.mat-input-wrapper {
-					.mat-input-table>* {
-						#md-input-prefix {
-							ul {
-								li {
-									background-color: mat-color($primary, A400);
-									>span {
-										&:hover {
-											background-color: rgba(255, 255, 255, 0.3);
-										}
-										#close-button {
-											color: #777777;
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
 			[mdSuffix] {
 				md-progress-spinner {
 					svg path {

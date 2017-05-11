@@ -17,6 +17,11 @@ import { DejaDropDownComponent, IDropDownResetParams } from '../dropdown';
 
 const noop = () => { };
 
+export enum DejaSelectSelectionPosition {
+    above = 0, // value in HTML
+    below = 1, // value in HTML
+}
+
 /** Combo box avec une liste basée sur la treelist */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -81,8 +86,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     private lastScrollPosition = 0;
     private _selectionClearable = false;
     private _waiter = false;
-    public _dropdownAlignment = 'left';
-    public _ownerAlignment = 'left right bottom';
+    private _dropdownAlignment = 'left';
+    private _ownerAlignment = 'left right bottom';
 
     @ViewChild(DejaChildValidatorDirective) private inputValidatorDirective: DejaChildValidatorDirective;
 
@@ -94,6 +99,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     private filter$ = new Subject<Event>();
 
     private keyboardNavigation$ = new Subject();
+
+    private _selectedItemsPosition = DejaSelectSelectionPosition.above;
 
     constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, private elementRef: ElementRef, @Self() @Optional() public _control: NgControl, @Optional() private _parentForm: NgForm) {
         super(changeDetectorRef, viewPort);
@@ -238,6 +245,16 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     public get selectionClearable() {
         return this._selectionClearable;
+    }
+
+    /** Définit la position des éléments selectionées en multiselect */
+    @Input()
+    public set selectedItemsPosition(value: string | DejaSelectSelectionPosition) {
+        this._selectedItemsPosition = typeof value === 'string' ? DejaSelectSelectionPosition[value] : value;
+    }
+
+    public get selectedItemsPosition() {
+        return this._selectedItemsPosition;
     }
 
     @Input()
@@ -853,7 +870,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         }
     }
 
-    protected removeSelection(event?: Event, item?: IItemBase) {
+    protected removeSelection(item?: IItemBase) {
         if (!this._multiSelect) {
             this.query = '';
             this.dropDownQuery = '';

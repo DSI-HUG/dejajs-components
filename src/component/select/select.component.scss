@@ -61,7 +61,7 @@ deja-select {
 			}
 		}
 
-		&[multiselection="true"] {
+		&[multiselection="true"][selection="above"] {
 			margin-top: 0.6rem;
 			.mat-input-wrapper {
 				margin-top: 0.5rem;
@@ -76,31 +76,6 @@ deja-select {
 					display: table-row;
 					#md-input-prefix {
 						margin-bottom: 0.5rem;
-						ul {
-							list-style-type: none;
-							margin: 0;
-							padding: 0;
-							overflow: hidden;
-							li {
-								float: left;
-								margin: 0.1rem;
-								border-radius: 1rem;
-								>span {
-									display: flex;
-									align-items: center;
-									text-decoration: none;
-									transition: 0.3s;
-									padding: 0.5rem;
-									cursor: default;
-									#close-button {
-										font-size: 1rem;
-										z-index: 3;
-										cursor: pointer;
-										vertical-align: middle;
-									}
-								}
-							}
-						}
 					}
 				}
 			}
