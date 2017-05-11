@@ -7,7 +7,7 @@
  */
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, Input, OnInit, Optional, Self, ViewChild } from '@angular/core';
-import { NgControl } from '@angular/forms';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Observable, Subject } from 'rxjs/Rx';
 import { Circle } from '../../common/core/graphics/index';
 import { Position } from '../../common/core/graphics/position';
@@ -30,7 +30,7 @@ interface ICircularValue {
     styleUrls: ['./circular-picker.component.scss'],
     templateUrl: './circular-picker.component.html',
 })
-export class DejaCircularPickerComponent implements OnInit {
+export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor {
     @Input() public clockwiseFactor: ClockwiseFactorEnum = ClockwiseFactorEnum.clockwise;
     @Input() public fullDiameter = 310;
     @Input() public labelsDiameter = 43;
