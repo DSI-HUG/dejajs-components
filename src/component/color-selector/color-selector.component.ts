@@ -6,8 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
-import { ControlValueAccessor } from '@angular/forms';
+import { Component, ElementRef, EventEmitter, Input, Optional, Output, Self } from '@angular/core';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { BehaviorSubject, Observable, Subject } from 'rxjs/Rx';
 import { Color, ColorEvent } from '../../common/core/graphics/index';
 import { MaterialColor } from '../../common/core/style';
@@ -56,6 +56,10 @@ export class DejaColorSelectorComponent implements ControlValueAccessor {
 
     constructor(elementRef: ElementRef, @Self() @Optional() public _control: NgControl) {
         const element = elementRef.nativeElement as HTMLElement;
+
+        if (this._control) {
+            this._control.valueAccessor = this;
+        }
 
         this.colorFabs$ = Observable.from(this._colors$)
             .map((colors) => colors.map((color, index) => new DejaColorFab(color, this._disabled, index === this._selectedBaseIndex)))
@@ -159,6 +163,10 @@ export class DejaColorSelectorComponent implements ControlValueAccessor {
             this._subColorFabs.forEach((colorFab) => colorFab.disabled = disabled);
         }
         this._disabled = disabled || null;
+    }
+
+    public get disabled() {
+        return this._disabled;
     }
 
     /**
