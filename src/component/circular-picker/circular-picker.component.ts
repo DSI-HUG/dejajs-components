@@ -6,19 +6,13 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, forwardRef, Input, OnInit, ViewChild } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, Input, OnInit, Optional, Self, ViewChild } from '@angular/core';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Observable, Subject } from 'rxjs/Rx';
 import { Circle } from '../../common/core/graphics/index';
 import { Position } from '../../common/core/graphics/position';
 
 const noop = () => { };
-
-const DejaCircularPickerComponentValueAccessor = {
-    multi: true,
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => DejaCircularPickerComponent),
-};
 
 export enum ClockwiseFactorEnum {
     clockwise = -1,
@@ -32,12 +26,11 @@ interface ICircularValue {
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [DejaCircularPickerComponentValueAccessor],
     selector: 'deja-circular-picker',
     styleUrls: ['./circular-picker.component.scss'],
     templateUrl: './circular-picker.component.html',
 })
-export class DejaCircularPickerComponent implements OnInit {
+export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor {
     @Input() public clockwiseFactor: ClockwiseFactorEnum = ClockwiseFactorEnum.clockwise;
     @Input() public fullDiameter = 310;
     @Input() public labelsDiameter = 43;
@@ -77,8 +70,12 @@ export class DejaCircularPickerComponent implements OnInit {
 
     @ViewChild('picker') private picker: ElementRef;
 
-    constructor(elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef) {
+    constructor(elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, @Self() @Optional() public _control: NgControl) {
         const element = elementRef.nativeElement as HTMLElement;
+
+        if (this._control) {
+            this._control.valueAccessor = this;
+        }
 
         Observable.fromEvent(element, 'mousedown')
             .filter((event: MouseEvent) => event.buttons === 1)
@@ -269,7 +266,10 @@ export class DejaCircularPickerComponent implements OnInit {
     }
 
     private updateCursor() {
-        if (typeof this.value === 'undefined') {
+        if (!this.circularValues || !this.circularValues.length) {
+            return;
+        }
+        if (this.value === undefined || this.value === null) {
             this.value = this.circularValues[0].value;
         }
         this.selectedConfig = this.configs.find((conf: IConfig) => {

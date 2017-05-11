@@ -6,8 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, forwardRef, HostBinding, Input, OnDestroy, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
-import { NG_VALUE_ACCESSOR, NgControl, NgForm } from '@angular/forms';
+import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ControlValueAccessor, NgControl, NgForm } from '@angular/forms';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
@@ -21,24 +21,18 @@ import { DejaTreeListScrollEvent } from './index';
 
 const noop = () => { };
 
-const TreeListComponentValueAccessor = {
-    multi: true,
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => DejaTreeListComponent),
-};
-
 /** Composant de liste évoluée avec gestion de viewport et templating */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    providers: [TreeListComponentValueAccessor, ViewPortService],
+    providers: [ViewPortService],
     selector: 'deja-tree-list',
     styleUrls: [
         './tree-list.component.scss',
     ],
     templateUrl: './tree-list.component.html',
 })
-export class DejaTreeListComponent extends ItemListBase implements OnDestroy, AfterViewInit, AfterContentInit {
+export class DejaTreeListComponent extends ItemListBase implements OnDestroy, AfterViewInit, AfterContentInit, ControlValueAccessor {
     /** Texte à afficher par default dans la zone de recherche */
     @Input() public placeholder: string;
     /** Texte affiché si aucune donnée n'est présente dans le tableau */
@@ -92,7 +86,6 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     private rangeStartIndex = 0;
     private filterExpression = '';
     private _searchArea = false;
-    private _expandButton = false;
     private _sortable = false;
     private _itemsDraggable = false;
     private hasCustomService = false;
@@ -170,16 +163,6 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
     public get searchArea() {
         return this._searchArea || this.minSearchlength > 0;
-    }
-
-    /** Affiche un bouton pour réduire ou étendre toutes les lignes parentes du tableau */
-    @Input()
-    public set expandButton(value: boolean | string) {
-        this._expandButton = value != null && `${value}` !== 'false';
-    }
-
-    public get expandButton() {
-        return this._expandButton;
     }
 
     /** Permet de trier la liste au clic sur l'entête */

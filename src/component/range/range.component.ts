@@ -6,8 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, forwardRef, HostListener, Input, Output } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostListener, Input, Optional, Output, Self } from '@angular/core';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
 import { IRange, IRangeEvent, IStepRangeEvent, Range } from './range.interface';
 
@@ -15,11 +15,6 @@ const noop = () => { };
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [{
-        multi: true,
-        provide: NG_VALUE_ACCESSOR,
-        useExisting: forwardRef(() => DejaRangeComponent),
-    }],
     selector: 'deja-range',
     styleUrls: ['./range.component.scss'],
     templateUrl: './range.component.html',
@@ -80,7 +75,11 @@ export class DejaRangeComponent implements ControlValueAccessor {
         return this._readOnly || this.disabled;
     }
 
-    constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef) { }
+    constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef, @Self() @Optional() public _control: NgControl) {
+        if (this._control) {
+            this._control.valueAccessor = this;
+        }
+    }
 
     // ControlValueAccessor implementation
     public writeValue(ranges: IRange[]): void {

@@ -42,8 +42,8 @@ and navigate to `http://localhost:5100`.
 | Accordion          |             yes|                  N/A|        yes|   yes|   yes|   yes|         yes|        available|                |
 | Auto-Size TextArea |             yes|                  N/A|        yes|   yes|   yes|   yes|         yes|<span style="color:red">@todo</span>| |
 | Circular Picker    |             yes|                @todo|yes|yes|yes|yes|yes|available| |
-| Color Selector     |             yes|                @todo|yes|yes|yes|yes|yes|available| |
-| Color Picker       |             yes|                @todo|yes|yes|yes|yes|yes|available| |
+| Color Selector     |             yes|                  yes|yes|yes|yes|yes|yes|available| |
+| Color Picker       |             yes|                  yes|yes|yes|yes|yes|yes|available| |
 | Content Editable   |             yes|                  yes|yes|yes|yes|yes|yes|available|New line issue on IE11. IE11 add p instead br |
 | Date Selector      |             yes|                @todo|yes|yes|yes|yes|yes|available| |
 | Date Picker        |             yes|                @todo|yes|yes|yes|yes|yes|available| |

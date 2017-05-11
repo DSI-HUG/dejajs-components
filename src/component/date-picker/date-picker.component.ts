@@ -6,30 +6,24 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, forwardRef, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnInit, Optional, Output, Self, ViewChild } from '@angular/core';
+import { ControlValueAccessor, NgControl, NgForm } from '@angular/forms';
 import * as moment from 'moment';
 import { Observable, Subscription } from 'rxjs/Rx';
 import { KeyCodes } from '../../common/core/keycodes.enum';
+import { DejaChildValidatorDirective } from '../../common/core/validation';
 import { DaysOfWeek, DejaDateSelectorComponent } from '../date-selector';
 import { formatToMask } from './';
 
 const noop = () => { };
 
-const DejaDatePickerComponentValueAccessor = {
-    multi: true,
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => DejaDatePickerComponent),
-};
-
 @Component({
     changeDetection: ChangeDetectionStrategy.Default,
-    providers: [DejaDatePickerComponentValueAccessor],
     selector: 'deja-date-picker',
     styleUrls: ['./date-picker.component.scss'],
     templateUrl: './date-picker.component.html',
 })
-export class DejaDatePickerComponent implements OnInit {
+export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, AfterContentInit {
     @Input() public dateMax: Date;
     @Input() public dateMin: Date;
     @Input() public dropdownContainerId: string;
@@ -45,6 +39,8 @@ export class DejaDatePickerComponent implements OnInit {
 
     @ViewChild('inputelement') private inputElementRef: ElementRef;
 
+    @ViewChild(DejaChildValidatorDirective) private inputValidatorDirective: DejaChildValidatorDirective;
+
     private _showDropDown = false;
     private keyDownSubscription: Subscription;
     private _disabled: boolean;
@@ -57,7 +53,17 @@ export class DejaDatePickerComponent implements OnInit {
     private onTouchedCallback: () => void = noop;
     private onChangeCallback: (_: any) => void = noop;
 
-    constructor(private elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef) { }
+    constructor(private elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, @Self() @Optional() public _control: NgControl, @Optional() private _parentForm: NgForm) {
+        if (this._control) {
+            this._control.valueAccessor = this;
+        }
+
+        if (this._parentForm) {
+            this._parentForm.ngSubmit.subscribe(() => {
+                this.changeDetectorRef.markForCheck();
+            })
+        }
+    }
 
     public ngOnInit() {
         const formattingTokens = /(\[[^\[]*\])|(\\)?([Hh]mm(ss)?|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Qo?|YYYYYY|YYYYY|YYYY|YY|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|kk?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g;
@@ -82,11 +88,11 @@ export class DejaDatePickerComponent implements OnInit {
         Observable
             .fromEvent(this.inputElementRef.nativeElement, 'keydown')
             .filter((event: KeyboardEvent) => !this._showDropDown &&
-            (
-                event.keyCode === KeyCodes.KeyD ||
-                event.keyCode === KeyCodes.UpArrow ||
-                event.keyCode === KeyCodes.DownArrow
-            ))
+                (
+                    event.keyCode === KeyCodes.KeyD ||
+                    event.keyCode === KeyCodes.UpArrow ||
+                    event.keyCode === KeyCodes.DownArrow
+                ))
             .subscribe((event: KeyboardEvent) => {
                 event.preventDefault();
                 switch (event.keyCode) {
@@ -127,7 +133,7 @@ export class DejaDatePickerComponent implements OnInit {
                     .subscribe((event: KeyboardEvent) => {
                         this.dateSelectorComponent.keyDown(event);
                         // this.setFocus();
-                });
+                    });
             } else {
                 if (this.keyDownSubscription) {
                     this.keyDownSubscription.unsubscribe();
@@ -204,6 +210,12 @@ export class DejaDatePickerComponent implements OnInit {
         this.onTouchedCallback = fn;
     }
     // ************* End of ControlValueAccessor Implementation **************
+
+    public ngAfterContentInit() {
+        if (this.inputValidatorDirective) {
+            this.inputValidatorDirective.parentControl = this._control;
+        }
+    }
 
     public setFocus() {
         const inputElement = this.inputElementRef.nativeElement as HTMLElement;

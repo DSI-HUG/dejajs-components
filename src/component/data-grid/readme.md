@@ -221,12 +221,6 @@ Composant pour afficher des données dans un tableau, avec une fonction de reche
 	<td>Affiche une zone de regroupement des colonnes par drag and drop.</td>
 </tr>
 <tr>
-	<td>expandButton</td>
-	<td>boolean</td>
-	<td>false</td>
-	<td>Affiche un bouton pour réduire ou étendre toutes les lignes parentes du tableau</td>
-</tr>
-<tr>
 	<td>rowsDraggable</td>
 	<td>boolean</td>
 	<td>false</td>

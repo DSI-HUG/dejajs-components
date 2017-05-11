@@ -6,8 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, forwardRef, Input, Output } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Optional, Output, Self } from '@angular/core';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Observable, Subject } from 'rxjs/Rx';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { IDateSelectorItem } from './date-selector-item.model';
@@ -24,20 +24,13 @@ export enum DaysOfWeek {
 
 const noop = () => { };
 
-const DejaDateSelectorComponentValueAccessor = {
-    multi: true,
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => DejaDateSelectorComponent),
-};
-
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [DejaDateSelectorComponentValueAccessor],
     selector: 'deja-date-time-selector',
     styleUrls: ['./date-selector.scss'],
     templateUrl: './date-selector.component.html',
 })
-export class DejaDateSelectorComponent implements AfterContentInit {
+export class DejaDateSelectorComponent implements AfterContentInit, ControlValueAccessor {
     @Input() public startDay: DaysOfWeek = DaysOfWeek.Monday;
     @Input() public disableDates: Array<(DaysOfWeek | Date)>; // | ((d: Date) => boolean);
     @Input() public dateMax: Date;
@@ -52,13 +45,13 @@ export class DejaDateSelectorComponent implements AfterContentInit {
     protected clocks = {
         hours: {
             ranges: [
-                {min: 1, max: 12, beginOffset: Math.PI / 3},
-                {min: 13, max: 24, beginOffset: Math.PI / 3},
+                { min: 1, max: 12, beginOffset: Math.PI / 3 },
+                { min: 13, max: 24, beginOffset: Math.PI / 3 },
             ],
         },
         minutes: {
             ranges: [
-                {min: 0, max: 59, labelInterval: 5},
+                { min: 0, max: 59, labelInterval: 5 },
             ],
         },
     };
@@ -90,8 +83,12 @@ export class DejaDateSelectorComponent implements AfterContentInit {
         return this._time;
     }
 
-    constructor(elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef) {
+    constructor(elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, @Self() @Optional() public _control: NgControl) {
         const element = elementRef.nativeElement as HTMLElement;
+
+        if (this._control) {
+            this._control.valueAccessor = this;
+        }
 
         Observable.fromEvent(element, 'click').subscribe((event: Event) => {
             const target = event.target as HTMLElement;
@@ -99,9 +96,9 @@ export class DejaDateSelectorComponent implements AfterContentInit {
                 const dateSelectorItem = this.currentDays[+target.getAttribute('dateindex')];
                 if (!dateSelectorItem.disabled) {
                     this.value = dateSelectorItem.date;
-            }
                 }
-            });
+            }
+        });
 
         Observable.from(this.keyboardNavigation$)
             .subscribe(() => {
