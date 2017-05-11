@@ -1,3 +1,35 @@
+#### 1.8.2 (2017-5-11)
+
+##### Documentation Changes
+
+* **Contribution:** Create a creatibution readme ([485f0ccb](https://github.com/DSI-HUG/dejajs-components/commit/485f0ccbaa15ddb051943bb5d098c8c1251e8a6e))
+* **Readme:**
+  * Add commitizen badge in readme ([54598c50](https://github.com/DSI-HUG/dejajs-components/commit/54598c501529330499eccd9d887ce2ea9317762b))
+  * Add licence badge ([19bf614d](https://github.com/DSI-HUG/dejajs-components/commit/19bf614d6bcc4f90784b0ae79edc6b5a662ddc07))
+
+##### New Features
+
+* **DejaDatePicker:** Reactive form compatibility ([e92d5d7f](https://github.com/DSI-HUG/dejajs-components/commit/e92d5d7f152328efead93f2fd19b8d1520acf335))
+* **DejaDateSelector:** Reactive form compatibility ([9fcf751b](https://github.com/DSI-HUG/dejajs-components/commit/9fcf751bff5bda5ee77942ce9191b57fc8b0431d))
+* **DejaCircularPicker:** Reactive form compatibility ([6574f5e5](https://github.com/DSI-HUG/dejajs-components/commit/6574f5e5126f4040b6b84ddb99a7e61f80a1e600))
+* **DejaColorPicker:** Reactive from compatibility ([3a5b01a9](https://github.com/DSI-HUG/dejajs-components/commit/3a5b01a9e88fb92870c481720f8df8b2587ac47e))
+* **DejaColorSelector:** Reactive form compatibility ([76256172](https://github.com/DSI-HUG/dejajs-components/commit/76256172b416e5ac3e1545c4edd83353eb2d3db3))
+* **DejaEditableDirective:** ReactiveForm compatibility ([67a10411](https://github.com/DSI-HUG/dejajs-components/commit/67a10411e97dc857b520407a34217083d6b3b066))
+* **DejaGrid:** NgModel removed Compatibility ([6ba84c47](https://github.com/DSI-HUG/dejajs-components/commit/6ba84c4719d4e42d80b0bc3f24fb96741d5a0bbd))
+* **DejaSelect:** Implement reactive form compatibility and ngModel propagation to child input ([d6d2455c](https://github.com/DSI-HUG/dejajs-components/commit/d6d2455c1ac7aa9cd2c8968945c3d8d81099ff44))
+
+##### Bug Fixes
+
+* **DejaTreeList:** Expand button removed ([50036980](https://github.com/DSI-HUG/dejajs-components/commit/50036980533a0cef470863499770d5b6742bd31b))
+
+##### Other Changes
+
+* **Changelog:** Change the changelog generator ([c8e60610](https://github.com/DSI-HUG/dejajs-components/commit/c8e6061003b7debb23a9c2b6a2a1bff5560f92b1))
+* **Webpack:** Webpack optimization ([b1921080](https://github.com/DSI-HUG/dejajs-components/commit/b192108057f2329da5963d896ab7ce7c2afeb1c4))
+* **Travis:**
+  * Add configuration to generate changelog ([8b4e0703](https://github.com/DSI-HUG/dejajs-components/commit/8b4e07035f2d6ab2697b6f1a0ade1ebc355f059d))
+  * Add Commitizen config ([1084ba5a](https://github.com/DSI-HUG/dejajs-components/commit/1084ba5a8c2d530e4e45d81c1ca42d42ca9e45d5))
+
 <a name="1.8.1"></a>
 # [1.8.1] (2017-05-08)
 
