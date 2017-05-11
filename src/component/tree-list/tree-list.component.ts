@@ -7,7 +7,7 @@
  */
 
 import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, forwardRef, HostBinding, Input, OnDestroy, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
-import { NG_VALUE_ACCESSOR, NgControl, NgForm } from '@angular/forms';
+import { NgControl, NgForm } from '@angular/forms';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
@@ -21,17 +21,11 @@ import { DejaTreeListScrollEvent } from './index';
 
 const noop = () => { };
 
-const TreeListComponentValueAccessor = {
-    multi: true,
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => DejaTreeListComponent),
-};
-
 /** Composant de liste évoluée avec gestion de viewport et templating */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    providers: [TreeListComponentValueAccessor, ViewPortService],
+    providers: [ViewPortService],
     selector: 'deja-tree-list',
     styleUrls: [
         './tree-list.component.scss',
@@ -170,7 +164,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     public get searchArea() {
         return this._searchArea || this.minSearchlength > 0;
     }
-    
+
     /** Permet de trier la liste au clic sur l'entête */
     @Input()
     public set sortable(value: boolean | string) {
