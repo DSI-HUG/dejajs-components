@@ -38,7 +38,7 @@ export class DejaEditableDirective implements ControlValueAccessor {
 
         Observable.fromEvent(this.element, 'mousedown')
             .subscribe((e: MouseEvent) => {
-                if (this.inEdition) {
+                if (this.inEdition || this.disabled) {
                     e.cancelBubble = true;
                     return false;
                 } else if (this.editMode) {
@@ -141,7 +141,7 @@ export class DejaEditableDirective implements ControlValueAccessor {
     public set disabled(value: boolean | string) {
         const disabled = value != null && `${value}` !== 'false';
         this._disabled = disabled || null;
-        if (this.disabled) { 
+        if (this.disabled) {
             this.edit$.next([false, false]);
         }
     }

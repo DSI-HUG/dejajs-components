@@ -143,7 +143,6 @@ export class DejaGridComponent implements OnDestroy {
     private _sortable = false;
     private _searchArea = false;
     private _groupArea = false;
-    private _expandButton = false;
     private _rowsDraggable = false;
     private _rowsSortable = false;
     private _columnsDraggable = false;
@@ -179,16 +178,6 @@ export class DejaGridComponent implements OnDestroy {
 
     public get groupArea() {
         return this._groupArea;
-    }
-
-    /** Affiche un bouton pour réduire ou étendre toutes les lignes parentes du tableau */
-    @Input()
-    public set expandButton(value: boolean | string) {
-        this._expandButton = value != null && `${value}` !== 'false';
-    }
-
-    public get expandButton() {
-        return this._expandButton;
     }
 
     /** Rend les lignes du tableau draggable vers un autre composant (ne pas confondre avec la propriété `sortable`) */

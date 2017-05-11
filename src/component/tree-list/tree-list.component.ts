@@ -92,7 +92,6 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     private rangeStartIndex = 0;
     private filterExpression = '';
     private _searchArea = false;
-    private _expandButton = false;
     private _sortable = false;
     private _itemsDraggable = false;
     private hasCustomService = false;
@@ -171,17 +170,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     public get searchArea() {
         return this._searchArea || this.minSearchlength > 0;
     }
-
-    /** Affiche un bouton pour réduire ou étendre toutes les lignes parentes du tableau */
-    @Input()
-    public set expandButton(value: boolean | string) {
-        this._expandButton = value != null && `${value}` !== 'false';
-    }
-
-    public get expandButton() {
-        return this._expandButton;
-    }
-
+    
     /** Permet de trier la liste au clic sur l'entête */
     @Input()
     public set sortable(value: boolean | string) {

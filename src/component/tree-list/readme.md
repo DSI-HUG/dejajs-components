@@ -5,7 +5,7 @@ Crée une liste récursive.
 > Ne pas oublier d'importer le `DejaTreeListModule` dans les `imports` de votre module concerné !
 
 ```html
-<deja-tree-list min-search-length="0" expandButton searchArea sortable multiSelect [selectedItems]=selectedItems (selectedChange)="onSelectionChanged($event)" nodataholder="Pas de données" placeholder="Liste des pays, groupés par la première lettre" textField="naqme" [(ngModel)]="groupedCountries" (itemDragStart)="onItemDragStart($event)" #treelist childrenField="children">
+<deja-tree-list min-search-length="0" searchArea sortable multiSelect [selectedItems]=selectedItems (selectedChange)="onSelectionChanged($event)" nodataholder="Pas de données" placeholder="Liste des pays, groupés par la première lettre" textField="naqme" [(ngModel)]="groupedCountries" (itemDragStart)="onItemDragStart($event)" #treelist childrenField="children">
 	<ng-template #headerTemplate>
 		<span id="headerTemplateContent" (click)="treelist.sort()">
 			<span id="title">
@@ -78,12 +78,6 @@ Crée une liste récursive.
             <td></td>
             <td></td>
             <td>Si true, ajoute une barre de recherche au dessus de la liste</td>
-        </tr>
-        <tr>
-            <td>expandButton</td>
-            <td>boolean</td>
-            <td>false</td>
-            <td>Si true, ajoute un bouton pour réduire / étendre la liste complète d'un seul coup.</td>
         </tr>
         <tr>
             <td>sortable</td>
