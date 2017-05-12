@@ -78,7 +78,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @ViewChild(DejaDropDownComponent) private dropDownComponent: DejaDropDownComponent;
 
     @HostBinding('attr.disabled') private _disabled = null;
-    private _mode = 'select';
+    private _type = 'select';
     private selectingItemIndex: number;
     private dropDownQuery = '';
     private filterExpression = '';
@@ -398,8 +398,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         if (type !== 'autocomplete' && type !== 'multiselect' && type !== 'select') {
             throw new Error('Invalid type property for DejaSelectComponent. Type can be select, autocomplete or multiselect.');
         }
-        this._mode = type;
-        this.setMultiSelect(this._mode === 'multiselect');
+        this._type = type;
+        this.setMultiSelect(this._type === 'multiselect');
     }
 
     /**
@@ -444,12 +444,12 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     /** Retourne si le select est en mode select, donc en lecture seule. */
     public get isModeSelect() {
-        return this._mode === 'select';
+        return this._type === 'select';
     }
 
     /** Retourne si le select est en mode autocomplete */
     public get isModeAutocomplete() {
-        return this._mode === 'autocomplete';
+        return this._type === 'autocomplete';
     }
 
     /** Définit la liste des éléments selectionés en mode multiselect */

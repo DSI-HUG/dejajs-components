@@ -1,5 +1,5 @@
 <md-input-container id="input" [attr.wait]="waiter || _waiter" [attr.multiselection]="_multiSelect && selectedItems.length > 0" [attr.selection]="selectedItemsPosition===0 ? 'above' : null">
-	<input #inputElement deja-child-validator type="text" mdInput [readonly]="isModeSelect" (ngModelChange)="queryChanged($event)" [ngModel]="query" [disabled]="disabled || readonly">
+	<input #inputElement deja-child-validator type="text" mdInput [readonly]="isModeSelect || readonly" (ngModelChange)="queryChanged($event)" [ngModel]="query" [disabled]="disabled">
 	<div id="md-input-prefix" mdPrefix *ngIf="_multiSelect && selectedItems.length > 0 && selectedItemsPosition===0">
         <deja-chips [items]="selectedItems" [readonly]="readonly" [disabled]="disabled" (close)="removeSelection($event)" [itemTemplateExternal]="selectedTemplate" [textField]="_textField"></deja-chips>
 	</div>

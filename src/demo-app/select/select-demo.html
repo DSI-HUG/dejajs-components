@@ -112,11 +112,11 @@
 						<section fxFlex="1 0 auto" fxLayout="row">
 							<section fxLayout="column">
 								<span>Read only : </span>
-								<span>Disable : </span>
+								<span class="disable-check">Disable : </span>
 							</section>
 							<section fxLayout="column" fxFlexOffset="5%">
 								<md-checkbox [(ngModel)]="readonlyMultiSelect" [color]="'primary'"></md-checkbox>
-								<md-checkbox [(ngModel)]="disableMultiSelect" [color]="'primary'"></md-checkbox>
+								<md-checkbox class="disable-check" [(ngModel)]="disableMultiSelect" [color]="'primary'"></md-checkbox>
 							</section>
 						</section>
 					</span>
