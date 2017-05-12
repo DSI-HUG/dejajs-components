@@ -1,4 +1,4 @@
-<span *ngFor="let item of items; let index = index" [class.disabled]="disabled">
+<span *ngFor="let item of items; let index = index">
 	<span *ngIf="!itemTemplate">{{ getTextValue(item) }}</span>
 	<span *ngIf="itemTemplate">
 		<ng-template [ngTemplateOutlet]="itemTemplate" [ngTemplateOutletContext]="{ $implicit: item }"></ng-template>

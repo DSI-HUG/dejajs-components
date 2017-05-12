@@ -49,7 +49,7 @@ export class DejaChipsComponent implements ControlValueAccessor {
     /** Retourne ou definit si le selecteur est desactivé. */
     @Input()
     public set disabled(value: boolean | string) {
-        this._disabled = value != null && `${value}` !== 'false';
+        this._disabled = (value != null && `${value}` !== 'false') || null;
     }
 
     public get disabled() {
