@@ -1,21 +1,30 @@
 <md-tab-group [selectedIndex]="tabIndex" (selectChange)="tabIndex = $event.index">
-    <!--<md-tab label="OVERVIEW">-->
-    <!--<md-card class="demo-card demo-basic">-->
-    <!--TODO-->
-    <!--</md-card>-->
-    <!--</md-tab>-->
-    <md-tab label="API REFERENCE"> </md-tab>
-    <md-tab label="EXAMPLES"> </md-tab>
+	<!--<md-tab label="OVERVIEW">-->
+	<!--<md-card class="demo-card demo-basic">-->
+	<!--TODO-->
+	<!--</md-card>-->
+	<!--</md-tab>-->
+	<md-tab label="API REFERENCE"> </md-tab>
+	<md-tab label="EXAMPLES"> </md-tab>
 </md-tab-group>
 
 <md-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
 </md-card>
 
 <md-card class="demo-card demo-basic" *ngIf="tabIndex === 1">
-    <md-toolbar color="primary">Reactive From</md-toolbar>
-    <md-card-content id="reactiveFormContainer">
+	<md-toolbar color="primary">Reactive From</md-toolbar>
+	<md-card-content id="reactiveFormContainer" fxLayout="row">
+		<form novalidate [formGroup]="form" fxFlex="0 0 45%" fxLayout="column">
+			<md-input-container fxFlex="0 0 auto">
+				<input mdInput pending-onfocus formControlName="name" placeholder="Name">
+			</md-input-container>
+			<deja-select fxFlex="0 0 auto" placeholder="Country" selectionClearable formControlName="country" textField="naqme" valueField="code" [models]="countries"></deja-select>
+			<deja-select fxFlex="0 0 auto" type="multiselect" placeholder="Visited Countries" formControlName="visitedCountries" textField="naqme" valueField="code" [models]="countries"></deja-select>
+		</form>
+		<span fxFlex="0 0 45%" fxFlexOffset="5%">
+			<h4>Model :</h4>
+			<pre>{{formMap | json}}</pre>
+		</span>
 
-
-
-    </md-card-content>
+	</md-card-content>
 </md-card>

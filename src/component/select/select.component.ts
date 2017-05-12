@@ -977,7 +977,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             }
         }
 
-        let output = items;
+        let output = items || null;
 
         if (super.isBusinessObject() && items) {
             if (items instanceof Array) {
