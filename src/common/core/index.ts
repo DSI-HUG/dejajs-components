@@ -15,6 +15,7 @@ export * from './grouping/index';
 export * from './clipboard/index';
 export * from './cloning/index';
 export * from './item-list/index';
+export * from './form/index';
 export * from './style/index';
 export * from './keycodes.enum';
 export * from './UUID';

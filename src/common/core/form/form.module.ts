@@ -6,7 +6,11 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-export interface IGroupParent {
-    groupedBy?: string; // Group field
-    toString?: () => string; // Label
-}
+import { NgModule } from '@angular/core';
+import { ValidationOnBlurDirective } from './index';
+
+@NgModule({
+    declarations: [ValidationOnBlurDirective],
+    exports: [ValidationOnBlurDirective],
+})
+export class DejaFormModule { }

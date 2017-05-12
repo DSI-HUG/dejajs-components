@@ -107,4 +107,10 @@ export class DejaChipsComponent implements ControlValueAccessor {
             }
         }
     }
+
+    protected onClose(item: any, index: number) {
+        this.items.splice(index, 1);
+        this.onChangeCallback(this.items);
+        this.close.emit(item);
+    }
 }

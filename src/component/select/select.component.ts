@@ -9,6 +9,7 @@ import { AfterContentInit } from '@angular/core';
 
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
+import { MdInputContainer } from '@angular/material';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
 import { DejaItemEvent, DejaItemsEvent, IItemBase, IItemTree, ItemListBase, ItemListService, IViewPort, ViewportMode, ViewPortService } from '../../common/core/item-list';
 import { KeyCodes } from '../../common/core/keycodes.enum';
@@ -36,8 +37,6 @@ export enum DejaSelectSelectionPosition {
 export class DejaSelectComponent extends ItemListBase implements ControlValueAccessor, OnDestroy, AfterViewInit, AfterContentInit {
     /** Texte à afficher par default dans la zone de recherche */
     @Input() public placeholder: string;
-    /** Correspond au ngModel du champ de filtrage ou recherche */
-    @Input() public query = '';
     /** ID de l'élement dans lequel la liste déroulante doit s'afficher (la liste déroulante ne peut dépasser de l'élement spécifié ici) */
     @Input() public dropdownContainerId: string;
     @Input() public dropdownContainerElement: ElementRef | HTMLElement;
@@ -74,6 +73,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @ContentChild('suffixTemplate') protected mdSuffix;
 
     @ViewChild('inputElement') private input: ElementRef;
+    @ViewChild(MdInputContainer) private inputContainer: MdInputContainer;
     @ViewChild('listcontainer') private listContainer: any;
     @ViewChild(DejaDropDownComponent) private dropDownComponent: DejaDropDownComponent;
 
@@ -88,6 +88,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     private _waiter = false;
     private _dropdownAlignment = 'left';
     private _ownerAlignment = 'left right bottom';
+    private _query = '';
 
     @ViewChild(DejaChildValidatorDirective) private inputValidatorDirective: DejaChildValidatorDirective;
 
@@ -97,6 +98,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     private hideDropDown$ = new Subject<number>();
     private showDropDown$ = new Subject();
     private filter$ = new Subject<Event>();
+    private query$ = new BehaviorSubject<string>('');
 
     private keyboardNavigation$ = new Subject();
 
@@ -195,8 +197,31 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 this.changeDetectorRef.markForCheck();
             }));
 
+        // **** Force place holder to escape input angular material issue ****
+        this.subscriptions.push(Observable.from(this.query$)
+            .do((query) => this._query = query)
+            .filter(() => !!this.inputContainer)
+            .do(() => {
+                this.inputContainer.floatPlaceholder = 'always';
+            })
+            .delay(1)
+            .subscribe(() => {
+                this.inputContainer.floatPlaceholder = 'auto';
+                this.changeDetectorRef.markForCheck();
+            }));
+
         this.maxHeight = 500;
 
+    }
+
+    /** Correspond au ngModel du champ de filtrage ou recherche */
+    @Input()
+    public set query(value: string) {
+        this.query$.next(value);
+    }
+
+    public get query() {
+        return this._query;
     }
 
     /** Ancre d'alignement de la liste déroulante. Valeurs possible: top, bottom, right, left. Une combinaison des ces valeurs peut également être utilisée, par exemple 'top left'. */
