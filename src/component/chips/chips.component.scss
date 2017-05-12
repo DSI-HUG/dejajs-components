@@ -18,5 +18,12 @@
             cursor: pointer;
             vertical-align: middle;
         }
+
+      &.disabled {
+        background-color: #c9c9c9;
+        > span {
+          font-style: italic;
+        }
+      }
 	}
 }
