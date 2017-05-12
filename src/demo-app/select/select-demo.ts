@@ -34,6 +34,9 @@ export class SelectDemoComponent implements OnInit {
     }[];
     protected viewPortInfos$: Subscription;
     protected dialogResponse$: Subject<string> = new Subject<string>();
+    protected readonlyMultiSelect = false;
+    protected disableMultiSelect = false;
+
 
     private countries: Observable<ICountry[]>;
     private countriesForTemplate: ICountry[];

@@ -28,6 +28,9 @@ export class DejaChipsComponent implements ControlValueAccessor {
     /** Template d'élément si définit extérieurement au composant */
     @Input() public itemTemplateExternal;
 
+    /** Lecture seule */
+    @Input() public readonly = false;
+
     @Output() public close = new EventEmitter<any>();
 
     protected onTouchedCallback: () => void = noop;
@@ -46,7 +49,7 @@ export class DejaChipsComponent implements ControlValueAccessor {
     /** Retourne ou definit si le selecteur est desactivé. */
     @Input()
     public set disabled(value: boolean | string) {
-        this._disabled = value != null && `${value}` !== 'false';
+        this._disabled = (value != null && `${value}` !== 'false') || null;
     }
 
     public get disabled() {
