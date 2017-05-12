@@ -78,7 +78,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @ViewChild(DejaDropDownComponent) private dropDownComponent: DejaDropDownComponent;
 
     @HostBinding('attr.disabled') private _disabled = null;
-    private _type = 'select';
+    private _mode = 'select';
     private selectingItemIndex: number;
     private dropDownQuery = '';
     private filterExpression = '';
@@ -88,6 +88,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     private _waiter = false;
     private _dropdownAlignment = 'left';
     private _ownerAlignment = 'left right bottom';
+    private _readonly = false;
 
     @ViewChild(DejaChildValidatorDirective) private inputValidatorDirective: DejaChildValidatorDirective;
 
@@ -148,7 +149,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
         this.subscriptions.push(this.showDropDown$
             .debounceTime(50)
-            .filter(() => (this.query || '').length >= this.minSearchlength)
+            .filter(() => (this.query || '').length >= this.minSearchlength && !this._readonly)
             .do(() => this.dropdownVisible = true)  // Ensure that dropdown container exists
             .delay(1)
             .filter(() => !!this.dropDownComponent)  // Show canceled by the hide$ observable if !dropdownVisible
@@ -237,6 +238,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     public set disabled(value: boolean | string) {
         const disabled = value != null && `${value}` !== 'false';
         this._disabled = disabled || null;
+        this.changeDetectorRef.markForCheck();
     }
 
     public get disabled() {
@@ -371,8 +373,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         if (type !== 'autocomplete' && type !== 'multiselect' && type !== 'select') {
             throw new Error('Invalid type property for DejaSelectComponent. Type can be select, autocomplete or multiselect.');
         }
-        this._type = type;
-        this.setMultiSelect(this._type === 'multiselect');
+        this._mode = type;
+        this.setMultiSelect(this._mode === 'multiselect');
     }
 
     /**
@@ -416,13 +418,13 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     /** Retourne si le select est en mode select, donc en lecture seule. */
-    public get isReadOnly() {
-        return this._type === 'select';
+    public get isModeSelect() {
+        return this._mode === 'select';
     }
 
     /** Retourne si le select est en mode autocomplete */
-    public get isAutocomplete() {
-        return this._type === 'autocomplete';
+    public get isModeAutocomplete() {
+        return this._mode === 'autocomplete';
     }
 
     /** Définit la liste des éléments selectionés en mode multiselect */
@@ -499,6 +501,17 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     public get maxHeight() {
         return this.getMaxHeight();
     }
+
+    @Input()
+    public set readonly(value: boolean) {
+        this._readonly = value;
+        this.changeDetectorRef.markForCheck();
+    }
+
+    public get readonly() {
+        return this._readonly;
+    }
+
 
     protected get listElement() {
         return this.listContainer && this.listContainer.elementRef.nativeElement as HTMLElement;
@@ -613,7 +626,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         this.subscriptions.push(Observable.fromEvent(this.inputElement, 'click')
             .filter(() => !this.dropdownVisible && !this.disabled)
             .subscribe((event: Event) => {
-                if (this.isReadOnly) {
+                if (this.isModeSelect) {
                     this.showDropDown();
                 } else {
                     this.inputElement.select();
@@ -626,7 +639,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             .delay(10)
             .filter(() => this.inputElement === document.activeElement)
             .subscribe((event: Event) => {
-                if (this.isReadOnly) {
+                if (this.isModeSelect) {
                     this.showDropDown();
                 } else {
                     // Autocomplete
@@ -730,7 +743,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                             }
                         }
 
-                        if (!this.isReadOnly) {
+                        if (!this.isModeSelect) {
                             return true;
                         }
 
@@ -787,7 +800,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
                 // console.log('select.component, keycode:' + event.keyCode);
                 this.keyboardNavigation$.next();
-                if (this.isReadOnly) {
+                if (this.isModeSelect) {
                     // Select, search on the list
                     if ((/[a-zA-Z0-9]/).test(event.key)) {
                         // Valid char
@@ -877,10 +890,10 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     protected queryChanged(value: string) {
         this.query = value;
-        if (!this.isReadOnly) {
+        if (!this.isModeSelect) {
             // Autocomplete or multiselect only
             this.dropDownQuery = this.query;
-            if (this.isAutocomplete) {
+            if (this.isModeAutocomplete) {
                 this.unselectAll$().first().subscribe(noop);
             }
         }

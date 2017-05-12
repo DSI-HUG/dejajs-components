@@ -28,6 +28,9 @@ export class DejaChipsComponent implements ControlValueAccessor {
     /** Template d'élément si définit extérieurement au composant */
     @Input() public itemTemplateExternal;
 
+    /** Lecture seule */
+    @Input() public readonly = false;
+
     @Output() public close = new EventEmitter<any>();
 
     protected onTouchedCallback: () => void = noop;
