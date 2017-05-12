@@ -604,6 +604,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         }
 
         if (this._multiSelect) {
+            this.query = '';
             super.setSelectedModels(value);
         } else {
             const item = super.convertToIItemBase([value])[0];

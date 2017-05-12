@@ -81,6 +81,7 @@ import { TextAreaDemoComponent } from './textarea/textarea-demo';
 import { TilesDemoComponent } from './tiles/tiles-demo';
 import { DejaTreeListDemoComponent } from './tree-list/tree-list-demo';
 import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
+import { ReactiveFormDemoComponent } from './reactive-form/reactive-form-demo';
 
 @NgModule({
     declarations: [
@@ -108,6 +109,7 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         DejaViewPortDemoComponent,
         ProgressCircleDemoComponent,
         NewsCardComponent,
+        ReactiveFormDemoComponent,
     ],
     entryComponents: [
         DemoAppComponent,

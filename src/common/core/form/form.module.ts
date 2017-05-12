@@ -7,10 +7,10 @@
  */
 
 import { NgModule } from '@angular/core';
-import { ValidateOnBlurDirective } from './index';
+import { PendingOnFocusDirective, ValidateOnBlurDirective } from './index';
 
 @NgModule({
-    declarations: [ValidateOnBlurDirective],
-    exports: [ValidateOnBlurDirective],
+    declarations: [PendingOnFocusDirective, ValidateOnBlurDirective],
+    exports: [PendingOnFocusDirective, ValidateOnBlurDirective],
 })
 export class DejaFormModule { }
