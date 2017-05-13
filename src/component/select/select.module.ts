@@ -27,7 +27,7 @@ import { DejaSelectComponent } from './select.component';
         CommonModule,
         FormsModule,
         MdIconModule,
-        MdInputModule.forRoot(),
+        MdInputModule,
         DejaChildValidatorModule,
         DejaChipsModule,
         DejaDropDownModule,
