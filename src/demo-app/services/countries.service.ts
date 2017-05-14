@@ -79,9 +79,9 @@ export class CountriesService {
 }
 
 export interface ICountry {
-    displayName: string;
+    displayName?: string;
     naqme: string;
     code: string;
-    color: string;
+    color?: string;
     equals?: (item: ICountry) => boolean;
 }

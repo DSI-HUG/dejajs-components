@@ -37,7 +37,6 @@ export class SelectDemoComponent implements OnInit {
     protected readonlyMultiSelect = false;
     protected disableMultiSelect = false;
 
-
     private countries: Observable<ICountry[]>;
     private countriesForTemplate: ICountry[];
     private countriesForMultiselect: ICountry[];

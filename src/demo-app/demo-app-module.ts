@@ -8,7 +8,7 @@
 
 import { ApplicationRef, NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MaterialModule } from '@angular/material';
 import { BrowserModule } from '@angular/platform-browser';
@@ -23,6 +23,7 @@ import {
     DejaAutosizeTextAreaModule,
     DejaBackdropModule,
     DejaBoldQueryModule,
+    DejaChipsModule,
     DejaCircularPickerModule,
     DejaCodeViewerModule,
     DejaColorPickerModule,
@@ -50,6 +51,7 @@ import {
     /* deja-cli import module */
     /* The comment above mustn't be removed ! */
 } from '../component';
+import { DejaFormModule } from './../common/core/form/form.module';
 import { DejaAccordionDemoComponent } from './accordion/accordion-demo';
 import { DejaCircularPickerDemoComponent } from './circular-picker/circular-picker-demo';
 import { DejaColorSelectorDemoComponent } from './color-selector/color-selector-demo';
@@ -70,6 +72,7 @@ import { MonacoEditorDemoService } from './monaco-editor/monaco-editor-demo.serv
 import { MonacoEditorJsonFileResolver, MonacoEditorJsonToCompareFileResolver, MonacoEditorXmlFileResolver, MonacoEditorXmlToCompareFileResolver } from './monaco-editor/monaco-editor.resolver';
 import { ProgressCircleDemoComponent } from './progress-circle/progress-circle-demo';
 import { DejaRangeDemoComponent } from './range/range-demo';
+import { ReactiveFormDemoComponent } from './reactive-form/reactive-form-demo';
 import { SelectDemoComponent } from './select/select-demo';
 import { CountriesListService } from './services/countries-list.service';
 import { CountriesService } from './services/countries.service';
@@ -81,7 +84,6 @@ import { TextAreaDemoComponent } from './textarea/textarea-demo';
 import { TilesDemoComponent } from './tiles/tiles-demo';
 import { DejaTreeListDemoComponent } from './tree-list/tree-list-demo';
 import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
-import { ReactiveFormDemoComponent } from './reactive-form/reactive-form-demo';
 
 @NgModule({
     declarations: [
@@ -116,6 +118,7 @@ import { ReactiveFormDemoComponent } from './reactive-form/reactive-form-demo';
     ],
     imports: [
         FormsModule,
+        ReactiveFormsModule,
         HttpModule,
         RouterModule,
         FlexLayoutModule,
@@ -151,8 +154,10 @@ import { ReactiveFormDemoComponent } from './reactive-form/reactive-form-demo';
         DejaSplitterModule,
         DejaTooltipModule,
         DejaViewPortModule,
+        DejaChipsModule,
         routing,
         GroupingModule,
+        DejaFormModule,
     ],
     providers: [
         NewsService,
