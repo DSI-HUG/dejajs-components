@@ -9,7 +9,7 @@ import { AfterContentInit } from '@angular/core';
 
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
-import { MdInputContainer } from '@angular/material';
+import { MdInputContainer, MdInputDirective } from '@angular/material';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
 import { DejaItemEvent, DejaItemsEvent, IItemBase, IItemTree, ItemListBase, ItemListService, IViewPort, ViewportMode, ViewPortService } from '../../common/core/item-list';
 import { KeyCodes } from '../../common/core/keycodes.enum';
@@ -72,8 +72,9 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @ContentChild('selectedTemplate') protected selectedTemplate;
     @ContentChild('suffixTemplate') protected mdSuffix;
 
-    @ViewChild('inputElement') private input: ElementRef;
+    @ViewChild('inputElement') private _inputElement: ElementRef;
     @ViewChild(MdInputContainer) private inputContainer: MdInputContainer;
+    @ViewChild(MdInputDirective) protected input: MdInputDirective;
     @ViewChild('listcontainer') private listContainer: any;
     @ViewChild(DejaDropDownComponent) private dropDownComponent: DejaDropDownComponent;
 
@@ -198,16 +199,12 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 this.changeDetectorRef.markForCheck();
             }));
 
-        // **** Force place holder to escape input angular material issue ****
         this.subscriptions.push(Observable.from(this.query$)
             .do((query) => this._query = query)
             .filter(() => !!this.inputContainer)
-            .do(() => {
-                this.inputContainer.floatPlaceholder = 'always';
-            })
             .delay(1)
             .subscribe(() => {
-                this.inputContainer.floatPlaceholder = 'auto';
+                // **** Force place holder to refresh to escape input angular material issue ****
                 this.changeDetectorRef.markForCheck();
             }));
 
@@ -572,7 +569,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     private get inputElement() {
-        return this.input && this.input.nativeElement as HTMLInputElement;
+        return this._inputElement && this._inputElement.nativeElement as HTMLInputElement;
     }
 
     private set dropdownVisible(value: boolean) {
@@ -643,8 +640,12 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     public ngAfterContentInit() {
-        if (this.inputValidatorDirective) {
-            this.inputValidatorDirective.parentControl = this._control;
+        if (this._control) {
+            if (this.inputValidatorDirective) {
+                this.inputValidatorDirective.parentControl = this._control;
+            }
+            this._control.valueChanges
+                .subscribe(() => this.input._ngControl.control.updateValueAndValidity());
         }
     }
 

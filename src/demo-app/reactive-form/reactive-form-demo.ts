@@ -9,6 +9,7 @@
 import { AfterContentInit, ChangeDetectorRef, Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
+import { MaterialColors } from '../../common/core/style';
 import { IEditorLanguage } from '../../component/monaco-editor/options/editor-language.model';
 import { Color } from './../../common/core/graphics/color';
 import { IRange } from './../../component/range/range.interface';
@@ -47,7 +48,7 @@ export class ReactiveFormDemoComponent implements AfterContentInit {
         return this._readonly;
     }
 
-    constructor(private changeDetectorRef: ChangeDetectorRef, fb: FormBuilder, countriesService: CountriesService) {
+    constructor(private changeDetectorRef: ChangeDetectorRef, fb: FormBuilder, countriesService: CountriesService, protected materialColors: MaterialColors) {
         this.countries = countriesService.getCountries$();
 
         this.form = fb.group({
@@ -57,6 +58,7 @@ export class ReactiveFormDemoComponent implements AfterContentInit {
             birthDate: [{ value: null, disabled: this.readonly }, Validators.required],
             size: [{ value: 0, disabled: this.readonly }, Validators.pattern(new RegExp('[0-9]{1,3}'))],
             color: [{ value: null, disabled: this.readonly }],
+            color2: [{ value: null, disabled: this.readonly }],
             skills: [{ value: null, disabled: this.readonly }],
             remark: [{ value: null, disabled: this.readonly }, Validators.compose([Validators.required, Validators.maxLength(500)])],
             ranges: [{ value: [], disabled: this.readonly }],
@@ -80,6 +82,7 @@ export class ReactiveFormDemoComponent implements AfterContentInit {
         const user = {
             birthDate: new Date(1968, 5, 24),
             color: new Color(2, 119, 189),
+            color2: new Color(183, 28, 28),
             size: 174,
             ranges: [
                 {
@@ -104,8 +107,8 @@ export class ReactiveFormDemoComponent implements AfterContentInit {
                 code: 'CH',
             } as ICountry],
             name: 'Serge',
-            skills: ['angular2', 'ngrx', 'typescript', 'html5', 'css3'],
-            remark: 'vapkse',
+            skills: ['angular2', 'ngrx', 'typescript', 'html5', 'css3', 'Moutainbike'],
+            remark: 'Râleur mais moins que William',
         } as IUser;
 
         Observable.of(user)
@@ -118,6 +121,7 @@ export class ReactiveFormDemoComponent implements AfterContentInit {
                     birthDate: user.birthDate || null,
                     size: user.size || 0,
                     color: user.color || null,
+                    color2: user.color2 || null,
                     skills: user.skills || [],
                     remark: user.remark || null,
                     ranges: user.ranges || [],
@@ -132,7 +136,8 @@ interface IUser {
     visitedCountries: ICountry[];       // DejaSelect => MultiSelect
     birthDate: Date;                    // DejaDatePicker && DejaDateSelector
     size: number,                       // DejaCircularPicker
-    color: Color,                       // DejaColorPicker && DejaColor Selector
+    color: Color,                       // DejaColor Selector
+    color2: Color,                      // DejaColorPicker
     skills: string[];                   // DejaChips
     remark: string;                     // DejaContentEditable
     ranges: IRange[];                   // DejaRange
