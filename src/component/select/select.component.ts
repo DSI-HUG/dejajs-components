@@ -645,7 +645,12 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 this.inputValidatorDirective.parentControl = this._control;
             }
             this._control.valueChanges
-                .subscribe(() => this.input._ngControl.control.updateValueAndValidity());
+                .subscribe(() => {
+                    if (this._control.touched) {
+                        this.input._ngControl.control.markAsTouched();
+                    }
+                    this.input._ngControl.control.updateValueAndValidity();
+                });
         }
     }
 
@@ -926,6 +931,12 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         }
     }
 
+    protected onCloseClicked(item?: IItemBase) {
+        if (this._control) {
+            this._control.control.markAsTouched();
+        }
+        this.removeSelection(item);
+    }
     protected removeSelection(item?: IItemBase) {
         if (!this._multiSelect) {
             this.query = '';
@@ -933,8 +944,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             this.setSelectedItems(undefined);
             this.onModelChange();
             delete this.selectingItemIndex;
-            // this.inputElement.focus();
-            // this.hideDropDown();
         } else if (item) {
             this.toggleSelect$([item], false)
                 .first()
@@ -946,8 +955,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         } else {
             this.unselectAll$()
                 .first()
-                .subscribe(noop);
-            this.onModelChange();
+                .subscribe(() => this.onModelChange());
         }
 
         if (event) {
