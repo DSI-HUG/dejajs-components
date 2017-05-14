@@ -9,6 +9,7 @@
 import { AfterContentInit, ChangeDetectorRef, Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
+import { KeyCodes } from '../../common/core/index';
 import { MaterialColors } from '../../common/core/style';
 import { IEditorLanguage } from '../../component/monaco-editor/options/editor-language.model';
 import { Color } from './../../common/core/graphics/color';
@@ -127,6 +128,25 @@ export class ReactiveFormDemoComponent implements AfterContentInit {
                     ranges: user.ranges || [],
                 });
             });
+    }
+
+    protected onSkillKeyDown(e: KeyboardEvent) {
+        if (e.keyCode === KeyCodes.Enter) {
+            const target = e.target as HTMLInputElement;
+            this.onAddSkill(target);
+        }
+    }
+
+    protected onAddSkill(input: HTMLInputElement) {
+        let skill = input.value;
+        if (skill) {
+            skill = skill.trim();
+            if (skill) {
+                const skills = this.form.value.skills as string[];
+                skills.push(skill);
+                input.value = '';
+            }
+        }
     }
 }
 
