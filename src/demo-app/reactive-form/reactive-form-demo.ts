@@ -108,8 +108,12 @@ export class ReactiveFormDemoComponent implements AfterContentInit {
                 code: 'CH',
             } as ICountry],
             name: 'Serge',
-            skills: ['angular2', 'ngrx', 'typescript', 'html5', 'css3', 'Moutainbike'],
-            remark: 'Râleur mais moins que William',
+            skills: ['angular2', 'ngrx', 'typescript', 'html5', 'css3'],
+            remark: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+Mauris auctor sit amet odio et aliquet. Curabitur auctor eleifend mattis.
+Nullam sit amet quam tellus. Ut mattis tellus sed erat ultricies ornare.
+Nulla dictum nisi eu tortor lacinia porttitor. Donec eu arcu et enim cursus viverra.
+Praesent pulvinar dui nisi, a tincidunt arcu finibus sed.`,
         } as IUser;
 
         Observable.of(user)
