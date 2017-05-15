@@ -4,11 +4,12 @@
     <!--TODO-->
     <!--</md-card>-->
     <!--</md-tab>-->
-    <md-tab label="API REFERENCE"> </md-tab>
+    <md-tab label="INTRODUCTION"> </md-tab>
     <md-tab label="EXAMPLES"> </md-tab>
 </md-tab-group>
 
 <md-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
+    <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/demo-app/reactive-form/readme.md'"></deja-markdown>
 </md-card>
 
 <md-card class="demo-card demo-basic" *ngIf="tabIndex === 1">
@@ -40,7 +41,7 @@
             <deja-chips fxFlex="0 0 auto" formControlName="skills"></deja-chips>
             <md-input-container fxFlex="0 0 auto" id="addskill">
                 <input mdInput #skill (keydown)="onSkillKeyDown($event)" placeholder="Add Skill">
-            	<div mdSuffix><i (click)="onAddSkill(skill)" class="material-icons mdSuffix">add</i></div>
+                <div mdSuffix><i (click)="onAddSkill(skill)" class="material-icons mdSuffix">add</i></div>
             </md-input-container>
             <h3 fxFlex="0 0 auto">Deja Editable</h3>
             <div class="placeholder" fxFlex="0 0 auto">Remark</div>
