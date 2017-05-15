@@ -109,7 +109,7 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
         }
 
         const target = event.currentTarget as HTMLElement;
-        if (target.id !== 'colorbtn') {
+        if (target.id !== 'colorbtn' || target.ownerDocument.activeElement.id !== 'colorbtn') {
             return;
         }
 
