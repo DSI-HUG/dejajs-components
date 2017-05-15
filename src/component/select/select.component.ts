@@ -1,4 +1,3 @@
-import { AfterContentInit } from '@angular/core';
 /*
  *  @license
  *  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
@@ -34,7 +33,7 @@ export enum DejaSelectSelectionPosition {
     ],
     templateUrl: './select.component.html',
 })
-export class DejaSelectComponent extends ItemListBase implements ControlValueAccessor, OnDestroy, AfterViewInit, AfterContentInit {
+export class DejaSelectComponent extends ItemListBase implements ControlValueAccessor, OnDestroy, AfterViewInit {
     /** Texte à afficher par default dans la zone de recherche */
     @Input() public placeholder: string;
     /** ID de l'élement dans lequel la liste déroulante doit s'afficher (la liste déroulante ne peut dépasser de l'élement spécifié ici) */
@@ -92,8 +91,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     private _query = '';
     private _readonly = false;
 
-    @ViewChild(DejaChildValidatorDirective) private inputValidatorDirective: DejaChildValidatorDirective;
-
     private clearFilterExpression$ = new BehaviorSubject<void>(null);
     private filterListComplete$ = new Subject();
     private storeScrollPosition$ = new Subject<number>();
@@ -111,6 +108,14 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
         if (this._control) {
             this._control.valueAccessor = this;
+            this._control.valueChanges
+                .filter(() => !!this.input)
+                .subscribe(() => {
+                    if (this._control.touched) {
+                        this.input._ngControl.control.markAsTouched();
+                    }
+                    this.input._ngControl.control.updateValueAndValidity();
+                });
         }
 
         if (this._parentForm) {
@@ -534,6 +539,12 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return this._readonly;
     }
 
+    @ViewChild(DejaChildValidatorDirective)
+    protected set inputValidatorDirective(value: DejaChildValidatorDirective) {
+        if (value) {
+            value.parentControl = this._control;
+        }
+    }
 
     protected get listElement() {
         return this.listContainer && this.listContainer.elementRef.nativeElement as HTMLElement;
@@ -637,21 +648,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     public ngOnDestroy() {
         this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
-    }
-
-    public ngAfterContentInit() {
-        if (this._control) {
-            if (this.inputValidatorDirective) {
-                this.inputValidatorDirective.parentControl = this._control;
-            }
-            this._control.valueChanges
-                .subscribe(() => {
-                    if (this._control.touched) {
-                        this.input._ngControl.control.markAsTouched();
-                    }
-                    this.input._ngControl.control.updateValueAndValidity();
-                });
-        }
     }
 
     public ngAfterViewInit() {

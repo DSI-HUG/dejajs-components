@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
 import { Position } from '../../common/core/graphics/position';
@@ -32,7 +32,7 @@ const noop = () => { };
     ],
     templateUrl: './tree-list.component.html',
 })
-export class DejaTreeListComponent extends ItemListBase implements OnDestroy, AfterViewInit, AfterContentInit, ControlValueAccessor {
+export class DejaTreeListComponent extends ItemListBase implements OnDestroy, AfterViewInit, ControlValueAccessor {
     /** Texte à afficher par default dans la zone de recherche */
     @Input() public placeholder: string;
     /** Texte affiché si aucune donnée n'est présente dans le tableau */
@@ -99,8 +99,6 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
     private clearFilterExpression$ = new BehaviorSubject<void>(null);
     private filterListComplete$ = new Subject();
-
-    @ViewChild(DejaChildValidatorDirective) private inputValidatorDirective: DejaChildValidatorDirective;
 
     constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, public elementRef: ElementRef, @Self() @Optional() public _control: NgControl) {
         super(changeDetectorRef, viewPort);
@@ -428,6 +426,13 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
         return this._disabled;
     }
 
+    @ViewChild(DejaChildValidatorDirective)
+    protected set inputValidatorDirective(value: DejaChildValidatorDirective) {
+        if (value) {
+            value.parentControl = this._control;
+        }
+    }
+
     protected get listElement(): HTMLElement {
         return this.listContainer && this.listContainer.nativeElement;
     }
@@ -513,12 +518,6 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Efface le contenu de la liste */
     public clearViewPort() {
         super.clearViewPort();
-    }
-
-    public ngAfterContentInit() {
-        if (this.inputValidatorDirective) {
-            this.inputValidatorDirective.parentControl = this._control;
-        }
     }
 
     public ngAfterViewInit() {
