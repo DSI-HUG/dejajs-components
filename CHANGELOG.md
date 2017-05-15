@@ -12,7 +12,7 @@
 * **DejaDatePicker:** Reactive form compatibility ([e92d5d7f](https://github.com/DSI-HUG/dejajs-components/commit/e92d5d7f152328efead93f2fd19b8d1520acf335))
 * **DejaDateSelector:** Reactive form compatibility ([9fcf751b](https://github.com/DSI-HUG/dejajs-components/commit/9fcf751bff5bda5ee77942ce9191b57fc8b0431d))
 * **DejaCircularPicker:** Reactive form compatibility ([6574f5e5](https://github.com/DSI-HUG/dejajs-components/commit/6574f5e5126f4040b6b84ddb99a7e61f80a1e600))
-* **DejaColorPicker:** Reactive from compatibility ([3a5b01a9](https://github.com/DSI-HUG/dejajs-components/commit/3a5b01a9e88fb92870c481720f8df8b2587ac47e))
+* **DejaColorPicker:** Reactive form compatibility ([3a5b01a9](https://github.com/DSI-HUG/dejajs-components/commit/3a5b01a9e88fb92870c481720f8df8b2587ac47e))
 * **DejaColorSelector:** Reactive form compatibility ([76256172](https://github.com/DSI-HUG/dejajs-components/commit/76256172b416e5ac3e1545c4edd83353eb2d3db3))
 * **DejaEditableDirective:** ReactiveForm compatibility ([67a10411](https://github.com/DSI-HUG/dejajs-components/commit/67a10411e97dc857b520407a34217083d6b3b066))
 * **DejaGrid:** NgModel removed Compatibility ([6ba84c47](https://github.com/DSI-HUG/dejajs-components/commit/6ba84c4719d4e42d80b0bc3f24fb96741d5a0bbd))
