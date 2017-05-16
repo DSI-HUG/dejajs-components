@@ -31,6 +31,11 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
     /**
      * Raised when the layout has changed with a drag and drop
      */
+    @Output() public layoutUpdated = new EventEmitter();
+
+    /**
+     * Raised when the layout has changed with a drag and drop
+     */
     @Output() public layoutChanged = new EventEmitter<IDejaTilesEvent>();
 
     /**
@@ -70,6 +75,7 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
         const element = el.nativeElement as HTMLElement;
 
         this.selectionChanged = this.layoutProvider.selectionChanged;
+        this.layoutUpdated = this.layoutProvider.layoutUpdated;
         this.layoutChanged = this.layoutProvider.layoutChanged;
         this.contentAdding = this.layoutProvider.contentAdding;
         this.contentRemoving = this.layoutProvider.contentRemoving;

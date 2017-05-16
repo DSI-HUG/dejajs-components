@@ -64,6 +64,7 @@ export class DejaTilesLayoutProvider {
     public deleteTiles$ = new Subject<DejaTile[]>();
     public designMode = false;
 
+    public layoutUpdated = new EventEmitter();
     public layoutChanged = new EventEmitter<IDejaTilesEvent>();
     public modelChanged = new EventEmitter<IDejaTilesModelEvent>();
     public selectionChanged = new EventEmitter<IDejaTilesEvent>();
@@ -191,6 +192,7 @@ export class DejaTilesLayoutProvider {
                 }
 
                 this.selectedTiles = selectedTileIds;
+                this.layoutUpdated.emit();
             });
 
         const ensureTile$ = Observable.from(this.ensureVisible$)
@@ -326,7 +328,7 @@ export class DejaTilesLayoutProvider {
                                     dragDropInfos.enabled = true;
                                     this.startDrag(dragDropInfos.tiles, this.getPixelSize(idealBounds.left + idealBounds.width / 2), this.getPixelSize(idealBounds.top + idealBounds.height / 2));
 
-                                } else {
+                                } else if (this._cursor) {
                                     // Start tile drag and drop
                                     this.dragging$.next(true);
                                     dragDropInfos.enabled = true;
@@ -722,7 +724,7 @@ export class DejaTilesLayoutProvider {
     }
 
     public getPercentSize(value: number): number {
-        return Math.round(value * 100 / this.hundredPercentWith);
+        return value * 100 / this.hundredPercentWith;
     }
 
     // Drag and drop from outside provider
@@ -863,7 +865,10 @@ export class DejaTilesLayoutProvider {
                         }
                     })
                     .delay(1000)
-                    .subscribe((tile) => { tile.isDropping = false; });
+                    .subscribe((tile) => {
+                        tile.isDropping = false;
+                        this.layoutUpdated.emit();
+                    });
             }
 
             changed = this.tiles.filter((t) => !Rect.equals(t.percentBounds, this.originalLayout[t.id] && this.originalLayout[t.id].bounds));
@@ -966,6 +971,8 @@ export class DejaTilesLayoutProvider {
 
             this.move();
         }
+
+        this.layoutUpdated.emit();
     }
 
     public addTiles(newTiles: DejaTile[]) {
@@ -1171,10 +1178,11 @@ export class DejaTilesLayoutProvider {
         // Search a new target
         const newTargetBounds = this.ensureContainer(new Rect(minWidth * Math.round(this.dragTarget.left / minWidth), minHeight * Math.round(this.dragTarget.top / minHeight), this.dragTarget.width, this.dragTarget.height, ));
 
-        if (this.lastTargetBounds && Math.abs(newTargetBounds.left - this.lastTargetBounds.left) < 3 && Math.abs(newTargetBounds.top - this.lastTargetBounds.top) < 3) {
-            // Nothing change, wait for timers
-            return;
-        }
+        // if (this.lastTargetBounds && Math.abs(newTargetBounds.left - this.lastTargetBounds.left) < 3 && Math.abs(newTargetBounds.top - this.lastTargetBounds.top) < 3) {
+        //     // Nothing change, wait for timers
+        //     return;
+        // }
+
         this.lastTargetBounds = newTargetBounds;
 
         if (this.moveTimout) {
