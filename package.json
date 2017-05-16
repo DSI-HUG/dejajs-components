@@ -38,7 +38,9 @@
     "e2e": "webdriver-manager update && protractor specs/protractor.conf.js",
     "test": "npm run e2e",
     "licensecheck": "license-check",
-    "changelog": "changelog"
+    "release:major": "changelog -M && git add CHANGELOG.md && git commit -m 'updated CHANGELOG.md' && npm version major && git push origin",
+    "release:minor": "changelog -m && git add CHANGELOG.md && git commit -m 'updated CHANGELOG.md' && npm version minor && git push origin",
+    "release:patch": "changelog -p && git add CHANGELOG.md && git commit -m 'updated CHANGELOG.md' && npm version patch && git push origin"
   },
   "dependencies": {
     "@angular/animations": "4.1.2",
