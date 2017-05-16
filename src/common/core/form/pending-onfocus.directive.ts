@@ -6,25 +6,28 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Directive, HostListener } from '@angular/core';
+import { AfterContentInit, Directive, HostListener } from '@angular/core';
 import { NgControl } from '@angular/forms';
 
 @Directive({
     selector: '[pending-onfocus]',
 })
-export class PendingOnFocusDirective {
+export class PendingOnFocusDirective implements AfterContentInit {
     private hasFocus = false;
 
     constructor(public formControl: NgControl) {
 
     }
 
-    @HostListener('focus')
-    protected onFocus() {
-        this.hasFocus = true;
+    public ngAfterContentInit() {
         this.formControl.control.valueChanges
             .filter(() => this.hasFocus)
             .subscribe(() => this.formControl.control.markAsPending());
+    }
+
+    @HostListener('focus')
+    protected onFocus() {
+        this.hasFocus = true;
     }
 
     @HostListener('blur')
