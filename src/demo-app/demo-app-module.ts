@@ -14,6 +14,7 @@ import { MaterialModule } from '@angular/material';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
+import { StoreModule } from '@ngrx/store';
 import { GroupingModule } from '../common/core/grouping/index';
 import { DejaSortingModule } from '../common/core/sorting/index';
 import { MaterialColors } from '../common/core/style/index';
@@ -72,7 +73,9 @@ import { MonacoEditorDemoService } from './monaco-editor/monaco-editor-demo.serv
 import { MonacoEditorJsonFileResolver, MonacoEditorJsonToCompareFileResolver, MonacoEditorXmlFileResolver, MonacoEditorXmlToCompareFileResolver } from './monaco-editor/monaco-editor.resolver';
 import { ProgressCircleDemoComponent } from './progress-circle/progress-circle-demo';
 import { DejaRangeDemoComponent } from './range/range-demo';
+import { userReducer } from './reactive-form/model/user.reducer';
 import { ReactiveFormDemoComponent } from './reactive-form/reactive-form-demo';
+import { UserService } from './reactive-form/service/user.service';
 import { SelectDemoComponent } from './select/select-demo';
 import { CountriesListService } from './services/countries-list.service';
 import { CountriesService } from './services/countries.service';
@@ -84,6 +87,7 @@ import { TextAreaDemoComponent } from './textarea/textarea-demo';
 import { TilesDemoComponent } from './tiles/tiles-demo';
 import { DejaTreeListDemoComponent } from './tree-list/tree-list-demo';
 import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
+
 
 @NgModule({
     declarations: [
@@ -158,6 +162,9 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         routing,
         GroupingModule,
         DejaFormModule,
+        StoreModule.provideStore({
+            user: userReducer,
+        })
     ],
     providers: [
         NewsService,
@@ -172,6 +179,7 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         MonacoEditorJsonFileResolver,
         MonacoEditorJsonToCompareFileResolver,
         MonacoEditorDemoService,
+        UserService,
     ],
 })
 export class DemoAppModule {
