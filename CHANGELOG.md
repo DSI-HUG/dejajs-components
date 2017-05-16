@@ -1,3 +1,7 @@
+#### 1.9.1 (2017-5-16)
+
+Update all dependencies in latest version
+
 #### 1.9.0 (2017-5-16)
 
 ##### Documentation Changes
