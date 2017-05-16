@@ -15,6 +15,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { StoreModule } from '@ngrx/store';
+import { DejaClipboardModule } from '../common/core/clipboard/clipboard.module';
+import { DejaClipboardService } from '../common/core/clipboard/clipboard.service';
 import { GroupingModule } from '../common/core/grouping/index';
 import { DejaSortingModule } from '../common/core/sorting/index';
 import { MaterialColors } from '../common/core/style/index';
@@ -87,7 +89,6 @@ import { TextAreaDemoComponent } from './textarea/textarea-demo';
 import { TilesDemoComponent } from './tiles/tiles-demo';
 import { DejaTreeListDemoComponent } from './tree-list/tree-list-demo';
 import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
-
 
 @NgModule({
     declarations: [
@@ -162,6 +163,7 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         routing,
         GroupingModule,
         DejaFormModule,
+        DejaClipboardModule.forRoot(),
         StoreModule.provideStore({
             user: userReducer,
         })
@@ -180,6 +182,7 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         MonacoEditorJsonToCompareFileResolver,
         MonacoEditorDemoService,
         UserService,
+        DejaClipboardService,
     ],
 })
 export class DemoAppModule {

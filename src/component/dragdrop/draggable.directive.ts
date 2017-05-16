@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Directive, ElementRef, HostBinding, Input } from '@angular/core';
+import { Directive, ElementRef, HostBinding, Input, Optional } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { UUID } from '../../common/core';
 import { DejaClipboardService } from '../../common/core/clipboard/clipboard.service';
@@ -34,8 +34,12 @@ export class DejaDraggableDirective {
         return this._context;
     }
 
-    constructor(elementRef: ElementRef, private clipboardService: DejaClipboardService) {
+    constructor(elementRef: ElementRef, @Optional() private clipboardService: DejaClipboardService) {
         const element = elementRef.nativeElement as HTMLElement;
+
+        if (!clipboardService) {
+            throw new Error('To use the DejaDraggableDirective, please import and provide the DejaClipboardService in your application.');
+        }
 
         Observable.fromEvent(element, 'dragstart')
             .filter(() => !!this.context)
