@@ -1,5 +1,5 @@
 import { Color } from './../../../common/core/graphics/color';
-import { IRange } from './../../../component/range/range.interface.d';
+import { IRange } from './../../../component/range/range.interface';
 import { ICountry } from './../../services/countries.service';
 
 export interface IUser {
