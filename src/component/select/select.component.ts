@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { MdInputContainer, MdInputDirective } from '@angular/material';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
@@ -33,7 +33,7 @@ export enum DejaSelectSelectionPosition {
     ],
     templateUrl: './select.component.html',
 })
-export class DejaSelectComponent extends ItemListBase implements ControlValueAccessor, OnDestroy, AfterViewInit {
+export class DejaSelectComponent extends ItemListBase implements ControlValueAccessor, OnDestroy, AfterViewInit, AfterContentInit {
     /** Texte à afficher par default dans la zone de recherche */
     @Input() public placeholder: string;
     /** ID de l'élement dans lequel la liste déroulante doit s'afficher (la liste déroulante ne peut dépasser de l'élement spécifié ici) */
@@ -108,14 +108,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
         if (this._control) {
             this._control.valueAccessor = this;
-            this._control.valueChanges
-                .filter(() => !!this.input)
-                .subscribe(() => {
-                    if (this._control.touched) {
-                        this.input._ngControl.control.markAsTouched();
-                    }
-                    this.input._ngControl.control.updateValueAndValidity();
-                });
         }
 
         if (this._parentForm) {
@@ -648,6 +640,19 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     public ngOnDestroy() {
         this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
+    }
+
+    public ngAfterContentInit() {
+        if (this._control) {
+            this._control.valueChanges
+                .filter(() => !!this.input)
+                .subscribe(() => {
+                    if (this._control.touched) {
+                        this.input._ngControl.control.markAsTouched();
+                    }
+                    this.input._ngControl.control.updateValueAndValidity();
+                });
+        }
     }
 
     public ngAfterViewInit() {

@@ -1,3 +1,4 @@
+
 /*
  *  @license
  *  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
@@ -6,23 +7,27 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { AfterContentInit, ChangeDetectorRef, Component, Input } from '@angular/core';
+import { AfterContentInit, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
 import { KeyCodes } from '../../common/core/index';
 import { MaterialColors } from '../../common/core/style';
 import { IEditorLanguage } from '../../component/monaco-editor/options/editor-language.model';
-import { Color } from './../../common/core/graphics/color';
-import { IRange } from './../../component/range/range.interface';
 import { CountriesService } from './../services/countries.service';
 import { ICountry } from './../services/countries.service';
+
+// ngrx
+import { Store } from '@ngrx/store';
+import { IappState } from './model/app-state.interface';
+import { IUser } from './model/user.interface';
+import { UserService } from './service/user.service';
 
 @Component({
     selector: 'reactive-form-demo',
     styleUrls: ['./reactive-form-demo.scss'],
     templateUrl: './reactive-form-demo.html',
 })
-export class ReactiveFormDemoComponent implements AfterContentInit {
+export class ReactiveFormDemoComponent implements AfterContentInit, OnInit {
     protected tabIndex = 1;
     protected form: FormGroup;
 
@@ -31,6 +36,8 @@ export class ReactiveFormDemoComponent implements AfterContentInit {
 
     protected html = IEditorLanguage.HTML;
     protected formMap = {} as { [key: string]: any };
+
+    protected user$: Observable<IUser>;
 
     private _readonly = false;
     private countries: Observable<ICountry[]>;
@@ -49,7 +56,14 @@ export class ReactiveFormDemoComponent implements AfterContentInit {
         return this._readonly;
     }
 
-    constructor(private changeDetectorRef: ChangeDetectorRef, fb: FormBuilder, countriesService: CountriesService, protected materialColors: MaterialColors) {
+    constructor(
+        private changeDetectorRef: ChangeDetectorRef,
+        fb: FormBuilder,
+        countriesService: CountriesService,
+        protected materialColors: MaterialColors,
+        private _store: Store<IappState>,
+        private _userService: UserService,
+    ) {
         this.countries = countriesService.getCountries$();
 
         this.form = fb.group({
@@ -65,6 +79,12 @@ export class ReactiveFormDemoComponent implements AfterContentInit {
             ranges: [{ value: [], disabled: this.readonly }],
         });
 
+        this.user$ = this._store.select('user');
+        this._userService.mockApiGetUser();
+
+    }
+
+    public ngOnInit() {
         this.form.valueChanges
             .filter(() => this.form.status !== 'PENDING')
             .debounceTime(500)
@@ -80,45 +100,12 @@ export class ReactiveFormDemoComponent implements AfterContentInit {
     }
 
     public ngAfterContentInit() {
-        const user = {
-            birthDate: new Date(1968, 5, 24),
-            color: new Color(2, 119, 189),
-            color2: new Color(183, 28, 28),
-            size: 174,
-            ranges: [
-                {
-                    min: 0,
-                    max: 10,
-                },
-                {
-                    min: 10,
-                    max: 30,
-                },
-                {
-                    min: 30,
-                    max: 80,
-                }
-            ],
-            country: {
-                naqme: 'Switzerland',
-                code: 'CH',
-            } as ICountry,
-            visitedCountries: [{
-                naqme: 'Switzerland',
-                code: 'CH',
-            } as ICountry],
-            name: 'Serge',
-            skills: ['angular2', 'ngrx', 'typescript', 'html5', 'css3'],
-            remark: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-Mauris auctor sit amet odio et aliquet. Curabitur auctor eleifend mattis.
-Nullam sit amet quam tellus. Ut mattis tellus sed erat ultricies ornare.
-Nulla dictum nisi eu tortor lacinia porttitor. Donec eu arcu et enim cursus viverra.
-Praesent pulvinar dui nisi, a tincidunt arcu finibus sed.`,
-        } as IUser;
 
-        Observable.of(user)
+        this.user$
+            // .do((user: IUser) => console.log('user$', user))
             .delay(1)
-            .subscribe(() => {
+            .filter((user: IUser) => !!user)
+            .subscribe((user: IUser) => {
                 this.form.setValue({
                     name: user.name || '',
                     country: user.country || null,
@@ -154,15 +141,4 @@ Praesent pulvinar dui nisi, a tincidunt arcu finibus sed.`,
     }
 }
 
-interface IUser {
-    name: string;                       // MdInput
-    country: ICountry;                  // DejaSelect
-    visitedCountries: ICountry[];       // DejaSelect => MultiSelect
-    birthDate: Date;                    // DejaDatePicker && DejaDateSelector
-    size: number,                       // DejaCircularPicker
-    color: Color,                       // DejaColor Selector
-    color2: Color,                      // DejaColorPicker
-    skills: string[];                   // DejaChips
-    remark: string;                     // DejaContentEditable
-    ranges: IRange[];                   // DejaRange
-}
+
