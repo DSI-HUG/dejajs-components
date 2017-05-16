@@ -90,19 +90,37 @@
 		<md-toolbar color="primary">Multiselect</md-toolbar>
 		<md-card-content>
 			<div>Multiselect example</div>
-			<div fxLayout="row">
-				<span fxFlex="0 0 45%" fxLayout="column">
-					<deja-select fxFlex="0 0 auto" hideSelected type="multiselect" textField="naqme" valueField="code" placeholder="Selection hidden" [(ngModel)]="multiselectModel" [items]="countriesForMultiselect"> </deja-select>
-					<deja-select fxFlex="0 0 auto" dropdownContainerId="scrollable-content" type="multiselect" textField="naqme" valueField="code" placeholder="Selection visible" [(ngModel)]="multiselectModel" [items]="countriesForMultiselect"> </deja-select>
-				</span>
-				<span fxFlex="0 0 45%" fxFlexOffset="5%">
-					<h4>Selected country model :</h4>
-					<ul>
-						<li *ngFor="let item of multiselectModel">
-							<span>{{ item.naqme }}</span>
-						</li>
-					</ul>
-				</span>
+			<div fxLayout="column">
+				<div fxLayout="row">
+					<span fxFlex="0 0 45%" fxLayout="column">
+						<deja-select fxFlex="0 0 auto" hideSelected type="multiselect" textField="naqme" valueField="code" placeholder="Selection hidden" [(ngModel)]="multiselectModel" [items]="countriesForMultiselect"> </deja-select>
+					</span>
+					<span fxFlex="0 0 45%" fxFlexOffset="5%">
+						<h4>Selected country model :</h4>
+						<ul>
+							<li *ngFor="let item of multiselectModel">
+								<span>{{ item.naqme }}</span>
+							</li>
+						</ul>
+					</span>
+				</div>
+				<div fxLayout="row">
+					<span fxFlex="0 0 45%" fxLayout="column">
+						<deja-select fxFlex="0 0 auto" [readonly]="readonlyMultiSelect" [disabled]="disableMultiSelect" dropdownContainerId="scrollable-content" type="multiselect" textField="naqme" valueField="code" selectedItemsPosition="below" placeholder="Selection visible and below" [(ngModel)]="multiselectModel" [items]="countriesForMultiselect"> </deja-select>
+					</span>
+					<span fxFlex="0 0 45%" fxFlexOffset="5%">
+						<section fxFlex="1 0 auto" fxLayout="row">
+							<section fxLayout="column">
+								<span>Read only : </span>
+								<span class="disable-check">Disable : </span>
+							</section>
+							<section fxLayout="column" fxFlexOffset="5%">
+								<md-checkbox [(ngModel)]="readonlyMultiSelect" [color]="'primary'"></md-checkbox>
+								<md-checkbox class="disable-check" [(ngModel)]="disableMultiSelect" [color]="'primary'"></md-checkbox>
+							</section>
+						</section>
+					</span>
+				</div>
 			</div>
 		</md-card-content>
 		<md-toolbar color="primary">Grouping</md-toolbar>

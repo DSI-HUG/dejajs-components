@@ -1,3 +1,50 @@
+#### 1.9.0 (2017-5-16)
+
+##### Documentation Changes
+
+* **Contribution:** Create a creatibution readme ([485f0ccb](https://github.com/DSI-HUG/dejajs-components/commit/485f0ccbaa15ddb051943bb5d098c8c1251e8a6e))
+* **Readme:**
+  * Add commitizen badge in readme ([54598c50](https://github.com/DSI-HUG/dejajs-components/commit/54598c501529330499eccd9d887ce2ea9317762b))
+  * Add licence badge ([19bf614d](https://github.com/DSI-HUG/dejajs-components/commit/19bf614d6bcc4f90784b0ae79edc6b5a662ddc07))
+
+##### New Features
+
+* **PendingOnFocusDirective:** Directive to mark as pending the input has focus for reactive form ([2aa214cc](https://github.com/DSI-HUG/dejajs-components/commit/2aa214cc8774d72a9d3271e5b683a72deabbdb56))
+* **DejaSelect:**
+  * Added readonly property ([a95b2983](https://github.com/DSI-HUG/dejajs-components/commit/a95b2983c388bed033cf6668c95b65636c58aced))
+  * Implement reactive form compatibility and ngModel propagation to child input ([d6d2455c](https://github.com/DSI-HUG/dejajs-components/commit/d6d2455c1ac7aa9cd2c8968945c3d8d81099ff44))
+* **DejaChip:** Added readonly and disabled properties ([a9117570](https://github.com/DSI-HUG/dejajs-components/commit/a9117570ce6c491c85d230f6394db56391398247))
+* **ValidateOnBlurDirective:**
+  * Directive to validate input on blur instead on type for reactive form ([4e7b6657](https://github.com/DSI-HUG/dejajs-components/commit/4e7b6657526777c98250069705df4ff376540344))
+  * Directive to validate input on blur instead on type for reactive form fix(DejaSelect): Place holder position when late binding ([2e907c25](https://github.com/DSI-HUG/dejajs-components/commit/2e907c2597ff86ed1fb01c4256b23a6022543581))
+* **DejaChips:** DejaChips added for DejaSelect selected items in multiselect mode. ([fd1fe27d](https://github.com/DSI-HUG/dejajs-components/commit/fd1fe27db5ff7683feec47a15081127236df9947))
+* **DejaDatePicker:** Reactive form compatibility ([e92d5d7f](https://github.com/DSI-HUG/dejajs-components/commit/e92d5d7f152328efead93f2fd19b8d1520acf335))
+* **DejaDateSelector:** Reactive form compatibility ([9fcf751b](https://github.com/DSI-HUG/dejajs-components/commit/9fcf751bff5bda5ee77942ce9191b57fc8b0431d))
+* **DejaCircularPicker:** Reactive form compatibility ([6574f5e5](https://github.com/DSI-HUG/dejajs-components/commit/6574f5e5126f4040b6b84ddb99a7e61f80a1e600))
+* **DejaColorPicker:** Reactive from compatibility ([3a5b01a9](https://github.com/DSI-HUG/dejajs-components/commit/3a5b01a9e88fb92870c481720f8df8b2587ac47e))
+* **DejaColorSelector:** Reactive form compatibility ([76256172](https://github.com/DSI-HUG/dejajs-components/commit/76256172b416e5ac3e1545c4edd83353eb2d3db3))
+* **DejaEditableDirective:** ReactiveForm compatibility ([67a10411](https://github.com/DSI-HUG/dejajs-components/commit/67a10411e97dc857b520407a34217083d6b3b066))
+* **DejaGrid:** NgModel removed Compatibility ([6ba84c47](https://github.com/DSI-HUG/dejajs-components/commit/6ba84c4719d4e42d80b0bc3f24fb96741d5a0bbd))
+
+##### Bug Fixes
+
+* **DejaChips:** Chips height aligned to material ([a4b6597b](https://github.com/DSI-HUG/dejajs-components/commit/a4b6597bc088a593cf564d092365e6826ced9cf9))
+* **DejaColorPicker:** Added a filter on focus when enter is pressed ([70120b24](https://github.com/DSI-HUG/dejajs-components/commit/70120b247b943ad4a06eff2d8ff484a5c9878ae8))
+* **DejaTreeList:**
+  * Material Beta5 Compatibility Issue ([f2a858a7](https://github.com/DSI-HUG/dejajs-components/commit/f2a858a791c842121ce49473df17cba11196392d))
+  * Material Beta5 Compatibility Issue ([9daada13](https://github.com/DSI-HUG/dejajs-components/commit/9daada132c6552f5f7bca0dd745ac5e87f4c27c5))
+  * Expand button removed ([50036980](https://github.com/DSI-HUG/dejajs-components/commit/50036980533a0cef470863499770d5b6742bd31b))
+
+##### Other Changes
+
+* **Webpack:**
+  * Webpack optimization ([8669e8c4](https://github.com/DSI-HUG/dejajs-components/commit/8669e8c4ac46ea992ee478822431e5018e3cddfb))
+  * Webpack optimization ([b1921080](https://github.com/DSI-HUG/dejajs-components/commit/b192108057f2329da5963d896ab7ce7c2afeb1c4))
+* **Changelog:** Change the changelog generator ([c8e60610](https://github.com/DSI-HUG/dejajs-components/commit/c8e6061003b7debb23a9c2b6a2a1bff5560f92b1))
+* **Travis:**
+  * Add configuration to generate changelog ([8b4e0703](https://github.com/DSI-HUG/dejajs-components/commit/8b4e07035f2d6ab2697b6f1a0ade1ebc355f059d))
+  * Add Commitizen config ([1084ba5a](https://github.com/DSI-HUG/dejajs-components/commit/1084ba5a8c2d530e4e45d81c1ca42d42ca9e45d5))
+
 #### 1.8.2 (2017-5-11)
 
 ##### Documentation Changes
@@ -12,7 +59,7 @@
 * **DejaDatePicker:** Reactive form compatibility ([e92d5d7f](https://github.com/DSI-HUG/dejajs-components/commit/e92d5d7f152328efead93f2fd19b8d1520acf335))
 * **DejaDateSelector:** Reactive form compatibility ([9fcf751b](https://github.com/DSI-HUG/dejajs-components/commit/9fcf751bff5bda5ee77942ce9191b57fc8b0431d))
 * **DejaCircularPicker:** Reactive form compatibility ([6574f5e5](https://github.com/DSI-HUG/dejajs-components/commit/6574f5e5126f4040b6b84ddb99a7e61f80a1e600))
-* **DejaColorPicker:** Reactive from compatibility ([3a5b01a9](https://github.com/DSI-HUG/dejajs-components/commit/3a5b01a9e88fb92870c481720f8df8b2587ac47e))
+* **DejaColorPicker:** Reactive form compatibility ([3a5b01a9](https://github.com/DSI-HUG/dejajs-components/commit/3a5b01a9e88fb92870c481720f8df8b2587ac47e))
 * **DejaColorSelector:** Reactive form compatibility ([76256172](https://github.com/DSI-HUG/dejajs-components/commit/76256172b416e5ac3e1545c4edd83353eb2d3db3))
 * **DejaEditableDirective:** ReactiveForm compatibility ([67a10411](https://github.com/DSI-HUG/dejajs-components/commit/67a10411e97dc857b520407a34217083d6b3b066))
 * **DejaGrid:** NgModel removed Compatibility ([6ba84c47](https://github.com/DSI-HUG/dejajs-components/commit/6ba84c4719d4e42d80b0bc3f24fb96741d5a0bbd))

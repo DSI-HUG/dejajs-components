@@ -4,6 +4,7 @@
 
 // Import your custom input theme file so you can call the custom-input-theme function
 @import '../../component/accordion/accordion-theme';
+@import '../../component/chips/chips-theme';
 @import '../../component/circular-picker/circular-picker-theme';
 @import '../../component/data-grid/data-grid-theme';
 @import '../../component/date-picker/date-picker-theme';
@@ -25,6 +26,7 @@
     @include deja-material-theme($custom-theme);
 
     @include accordion-theme($custom-theme);
+    @include chips-theme($custom-theme);
     @include circular-picker-theme($custom-theme);
     @include data-grid-theme($custom-theme);
     @include date-picker-theme($custom-theme);

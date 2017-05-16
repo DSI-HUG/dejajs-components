@@ -1,0 +1,30 @@
+:host {
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	&[disabled] {
+		>span {
+			background-color: #c9c9c9;
+			>span {
+				font-style: italic;
+			}
+		}
+	}
+	>span {
+		float: left;
+		margin: 0.1rem;
+		border-radius: 0.88rem;
+		display: flex;
+		align-items: center;
+		text-decoration: none;
+		transition: 0.3s;
+		padding: 0.38rem;
+		cursor: default;
+		#close-button {
+			font-size: 1rem;
+			z-index: 3;
+			cursor: pointer;
+			vertical-align: middle;
+		}
+	}
+}

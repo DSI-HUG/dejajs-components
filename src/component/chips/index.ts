@@ -6,7 +6,5 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-export interface IGroupParent {
-    groupedBy?: string; // Group field
-    toString?: () => string; // Label
-}
+export * from './chips.component';
+export * from './chips.module';
