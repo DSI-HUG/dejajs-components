@@ -7,6 +7,8 @@ module.exports = {
         bundle: [
             "./src/polyfills.ts",
             "./src/demo-app/main.ts",
+        ],
+        sendAction: [
             "./send-action.js",
             "./send-action-test.js",
         ],
