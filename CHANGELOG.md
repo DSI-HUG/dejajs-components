@@ -77,8 +77,7 @@
   * Add configuration to generate changelog ([8b4e0703](https://github.com/DSI-HUG/dejajs-components/commit/8b4e07035f2d6ab2697b6f1a0ade1ebc355f059d))
   * Add Commitizen config ([1084ba5a](https://github.com/DSI-HUG/dejajs-components/commit/1084ba5a8c2d530e4e45d81c1ca42d42ca9e45d5))
 
-<a name="1.8.1"></a>
-# [1.8.1] (2017-05-08)
+#### 1.8.1 (2017-5-08)
 
 ### Bug fixes
 Minor bugs fix
