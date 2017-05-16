@@ -777,7 +777,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
         const item = this._itemList[itemIndex - this.vpStartRow];
         this.clickedItem = item;
-        if (!this.isCollapsible(item) && this.isSelectable(item) && (!e.ctrlKey || !this.multiSelect) && (e.button === 0 || !item.selected)) {
+        const isExpanButton = (e.target as HTMLElement).id === 'expandbtn';
+        if ((!isExpanButton || !this.isCollapsible(item)) && this.isSelectable(item) && (!e.ctrlKey || !this.multiSelect) && (e.button === 0 || !item.selected)) {
             if (e.shiftKey && this.multiSelect) {
                 // Select all from current to clicked
                 this.selectRange$(itemIndex, this.currentItemIndex)
@@ -822,7 +823,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                     return;
                 }
 
-                if (this.isCollapsible(upItem) || (upevt.target as HTMLElement).id === 'expandbtn') {
+                const isExpanButton = (upevt.target as HTMLElement).id === 'expandbtn';
+                if (this.isCollapsible(upItem) && (isExpanButton || !this.isSelectable(upItem))) {
                     const treeItem = upItem as IItemTree;
                     this.toggleCollapse$(upIndex, !treeItem.collapsed).first().subscribe(() => {
                         this.currentItemIndex = upIndex;
