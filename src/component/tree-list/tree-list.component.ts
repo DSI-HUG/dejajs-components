@@ -823,8 +823,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                     return;
                 }
 
-                const isExpanButton = (upevt.target as HTMLElement).id === 'expandbtn';
-                if (this.isCollapsible(upItem) && (isExpanButton || !this.isSelectable(upItem))) {
+                const isExpandButton = (upevt.target as HTMLElement).id === 'expandbtn';
+                if (this.isCollapsible(upItem) && (isExpandButton || !this.isSelectable(upItem))) {
                     const treeItem = upItem as IItemTree;
                     this.toggleCollapse$(upIndex, !treeItem.collapsed).first().subscribe(() => {
                         this.currentItemIndex = upIndex;
