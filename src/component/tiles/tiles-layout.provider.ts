@@ -102,7 +102,7 @@ export class DejaTilesLayoutProvider {
 
     private selectedIds = [] as string[];
 
-    constructor( @Optional() private clipboardService: DejaClipboardService) {
+    constructor(@Optional() private clipboardService: DejaClipboardService) {
         Observable.from(this.refreshTiles$)
             .debounceTime(30)
             .do(() => {

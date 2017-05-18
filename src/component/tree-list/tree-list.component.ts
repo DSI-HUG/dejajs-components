@@ -9,6 +9,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
+import { DejaClipboardService } from '../../common/core/clipboard/clipboard.service';
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
 import { GroupingService } from '../../common/core/grouping';
@@ -100,7 +101,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     private clearFilterExpression$ = new BehaviorSubject<void>(null);
     private filterListComplete$ = new Subject();
 
-    constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, public elementRef: ElementRef, @Self() @Optional() public _control: NgControl) {
+    constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, public elementRef: ElementRef, @Self() @Optional() public _control: NgControl, @Optional() private clipboardService: DejaClipboardService) {
         super(changeDetectorRef, viewPort);
 
         if (this._control) {
@@ -842,7 +843,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     }
 
     protected getDragContext(index: number) {
-        if (!this.sortable && !this.itemsDraggable) {
+        if (!this.clipboardService || (!this.sortable && !this.itemsDraggable)) {
             return null;
         }
 
@@ -869,7 +870,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     }
 
     protected getDropContext() {
-        if (!this.sortable) {
+        if (!this.clipboardService || !this.sortable) {
             return null;
         }
 

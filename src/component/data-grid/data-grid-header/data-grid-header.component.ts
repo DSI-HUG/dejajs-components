@@ -6,8 +6,9 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output } from '@angular/core';
 import { Observable, Subject, Subscription } from 'rxjs/Rx';
+import { DejaClipboardService } from '../../../common/core/clipboard/clipboard.service';
 import { IDejaDragEvent, IDejaDropEvent, ISortInfos } from '../../../index';
 import { IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayout, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent } from '../index';
 
@@ -112,7 +113,7 @@ export class DejaGridHeaderComponent implements OnDestroy {
         return this.columnHeaderTemplateExternal || this.columnHeaderTemplateInternal;
     }
 
-    constructor(elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef) {
+    constructor(elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, @Optional() private clipboardService: DejaClipboardService) {
         const element = elementRef.nativeElement as HTMLElement;
 
         this.subscriptions.push(Observable.fromEvent(element, 'mousedown')
@@ -189,7 +190,7 @@ export class DejaGridHeaderComponent implements OnDestroy {
     }
 
     protected getDragContext(column: IDejaGridColumn) {
-        if ((!this.columnsDraggable && !this.columnsSortable) || column.draggable === false) {
+        if (!this.clipboardService || (!this.columnsDraggable && !this.columnsSortable) || column.draggable === false) {
             return null;
         }
 
@@ -219,6 +220,10 @@ export class DejaGridHeaderComponent implements OnDestroy {
     }
 
     protected getDropContext() {
+        if (!this.clipboardService) {
+            return null;
+        }
+
         return {
             dragleavecallback: () => {
                 if (this.backupColumnOrder.length) {

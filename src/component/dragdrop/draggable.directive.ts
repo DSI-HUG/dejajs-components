@@ -15,7 +15,6 @@ import { DejaClipboardService } from '../../common/core/clipboard/clipboard.serv
     selector: '[deja-draggable]',
 })
 export class DejaDraggableDirective {
-
     @HostBinding('attr.dragdropid') private dragdropid;
     @HostBinding('attr.draggable') private draggable = null;
     private draginfokey = 'draginfos';
@@ -37,13 +36,13 @@ export class DejaDraggableDirective {
     constructor(elementRef: ElementRef, @Optional() private clipboardService: DejaClipboardService) {
         const element = elementRef.nativeElement as HTMLElement;
 
-        if (!clipboardService) {
-            throw new Error('To use the DejaDraggableDirective, please import and provide the DejaClipboardService in your application.');
-        }
-
         Observable.fromEvent(element, 'dragstart')
             .filter(() => !!this.context)
             .subscribe((event: DragEvent) => {
+                if (!clipboardService) {
+                    throw new Error('To use the DejaDraggableDirective, please import and provide the DejaClipboardService in your application.');
+                }
+
                 // console.log('dragstart');
                 const dragInfos = {} as { [key: string]: any };
                 this.dragdropid = new UUID().toString();

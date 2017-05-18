@@ -6,8 +6,9 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Observable, Subject, Subscription } from 'rxjs/Rx';
+import { DejaClipboardService } from '../../common/core/clipboard/clipboard.service';
 import { GroupingService, IGroupInfo } from '../../common/core/grouping';
 import { IItemBase, IItemTree, ItemListService, ViewportMode } from '../../common/core/item-list';
 import { KeyCodes } from '../../common/core/keycodes.enum';
@@ -174,6 +175,9 @@ export class DejaGridComponent implements OnDestroy {
     @Input()
     public set groupArea(value: boolean | string) {
         this._groupArea = value != null && `${value}` !== 'false';
+        if (this._columnsSortable && !this.clipboardService) {
+            throw new Error('To use the DejaGrid.groupArea feature, please import and provide the DejaClipboardService in your application.');
+        }
     }
 
     public get groupArea() {
@@ -214,6 +218,9 @@ export class DejaGridComponent implements OnDestroy {
     @Input()
     public set columnsSortable(value: boolean | string) {
         this._columnsSortable = value != null && `${value}` !== 'false';
+        if (this._columnsSortable && !this.clipboardService) {
+            throw new Error('To use the DejaGrid.columnsSortable feature, please import and provide the DejaClipboardService in your application.');
+        }
     }
 
     public get columnsSortable() {
@@ -347,7 +354,7 @@ export class DejaGridComponent implements OnDestroy {
         return this._columnLayout;
     }
 
-    constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef) {
+    constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef, @Optional() private clipboardService: DejaClipboardService) {
         const element = this.elementRef.nativeElement as HTMLElement;
 
         this.clearColumnLayout();
