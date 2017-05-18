@@ -98,6 +98,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     private showDropDown$ = new Subject();
     private filter$ = new Subject<Event>();
     private query$ = new BehaviorSubject<string>('');
+    private writeValue$ = new Subject<any>();
+    private contentInitialized$ = new Subject();
 
     private keyboardNavigation$ = new Subject();
 
@@ -204,6 +206,38 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 // **** Force place holder to refresh to escape input angular material issue ****
                 this.changeDetectorRef.markForCheck();
             }));
+
+        this.subscriptions.push(Observable.combineLatest(this.writeValue$, this.contentInitialized$)
+            .subscribe(([value]) => {
+                if (!value) {
+                    if (this.selectedItems && this.selectedItems.length) {
+                        this.removeSelection();
+                    }
+                    return;
+                }
+
+                if (this._multiSelect) {
+                    this.query = '';
+                    super.setSelectedModels(value);
+                } else {
+                    const item = super.convertToIItemBase([value])[0];
+                    if (item !== this.selectedItems[0]) {
+                        this.unselectAll$()
+                            .switchMap(() => {
+                                if (item) {
+                                    return this.toggleSelect$([item], true).map(() => this.getTextValue(value));
+                                } else {
+                                    return Observable.of('');
+                                }
+                            })
+                            .first()
+                            .subscribe((query) => this.query = query);
+                    }
+                }
+
+                this.changeDetectorRef.markForCheck();
+            })
+        );
 
         this.maxHeight = 500;
 
@@ -590,39 +624,14 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     public set value(val) {
+        debugger;
         this.writeValue(val);
         this.onChangeCallback(val);
         this.onTouchedCallback();
     }
 
     public writeValue(value: any) {
-        if (!value) {
-            if (this.selectedItems && this.selectedItems.length) {
-                this.removeSelection();
-            }
-            return;
-        }
-
-        if (this._multiSelect) {
-            this.query = '';
-            super.setSelectedModels(value);
-        } else {
-            const item = super.convertToIItemBase([value])[0];
-            if (item !== this.selectedItems[0]) {
-                this.unselectAll$()
-                    .switchMap(() => {
-                        if (item) {
-                            return this.toggleSelect$([item], true).map(() => this.getTextValue(value));
-                        } else {
-                            return Observable.of('');
-                        }
-                    })
-                    .first()
-                    .subscribe((query) => this.query = query);
-            }
-        }
-
-        this.changeDetectorRef.markForCheck();
+        this.writeValue$.next(value);
     }
 
     public registerOnChange(fn: any) {
@@ -643,6 +652,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     public ngAfterContentInit() {
+        this.contentInitialized$.next();
+
         if (this._control) {
             this._control.valueChanges
                 .filter(() => !!this.input)
