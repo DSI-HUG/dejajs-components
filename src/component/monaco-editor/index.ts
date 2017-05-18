@@ -6,5 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+export * from './options/editor-language.model';
+export * from './options/editor-theme.component';
 export * from './monaco-editor.component';
 export * from './monaco-editor.module';
