@@ -6,13 +6,12 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, AfterViewChecked, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { AfterViewChecked, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { Http, ResponseContentType } from '@angular/http';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-// tslint:disable
-const Showdown = require('showdown');
-const Prism = require('prismjs');
-// tslint:enable
+
+import * as Prism from 'prismjs';
+import * as Showdown from 'showdown';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
