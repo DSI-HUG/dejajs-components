@@ -6,7 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Optional, Output } from '@angular/core';
+import { DejaClipboardService } from '../../../common/core/clipboard/clipboard.service';
 import { IDejaDragEvent, IDejaDropEvent } from '../../index';
 import { IDejaGridColumn, IDejaGridGroupsEvent } from '../index';
 
@@ -37,9 +38,13 @@ export class DejaGridGroupAreaComponent {
         this._groups = columns || [];
     }
 
-    constructor(private changeDetectorRef: ChangeDetectorRef) { }
+    constructor(private changeDetectorRef: ChangeDetectorRef, @Optional() private clipboardService: DejaClipboardService) { }
 
     protected getDragContext(group: IDejaGridColumn) {
+        if (!this.clipboardService) {
+            return null;
+        }
+
         // console.log(`getDragContext ` + group.column.name + ' ' + Date.now();
         return {
             dragendcallback: (event: IDejaDragEvent) => {
@@ -54,6 +59,10 @@ export class DejaGridGroupAreaComponent {
     }
 
     protected getDropContext() {
+        if (!this.clipboardService) {
+            return null;
+        }
+
         return {
             dragovercallback: (event: IDejaDropEvent) => {
                 if (event.dragInfo.hasOwnProperty(this.columnGroupKey)) {
@@ -74,7 +83,7 @@ export class DejaGridGroupAreaComponent {
                     const sourceColumn = event.dragInfo[this.groupGroupKey] as IDejaGridColumn;
                     const sourceIndex = this.groups.findIndex((column) => column === sourceColumn);
 
-                    // Dead zones                
+                    // Dead zones
                     if (sourceIndex === targetIndex) {
                         event.preventDefault();
                         return;

@@ -16,9 +16,10 @@
     <md-toolbar color="primary">Content Editable Demo</md-toolbar>
     <md-card-content>
         <md-checkbox color="primary" [(ngModel)]="designMode">Design Mode</md-checkbox>
+        <md-checkbox color="primary" [(ngModel)]="disabled">Disabled</md-checkbox>
     </md-card-content>
     <md-card-content id="contentEditableContainer">
-        <span [deja-editable]="designMode" multiline>
+        <span [deja-editable]="designMode" [disabled]="disabled" multiline>
 			Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 			<br /> Mauris auctor sit amet odio et aliquet. Curabitur auctor eleifend mattis.
 			<br /> Nullam sit amet quam tellus. Ut mattis tellus sed erat ultricies ornare.

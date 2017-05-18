@@ -24,6 +24,7 @@ import { DejaMonacoEditorDemoComponent } from '../monaco-editor/monaco-editor-de
 import { MonacoEditorJsonFileResolver, MonacoEditorJsonToCompareFileResolver, MonacoEditorXmlFileResolver, MonacoEditorXmlToCompareFileResolver } from '../monaco-editor/monaco-editor.resolver';
 import { ProgressCircleDemoComponent } from '../progress-circle/progress-circle-demo';
 import { DejaRangeDemoComponent } from '../range/range-demo';
+import { ReactiveFormDemoComponent } from '../reactive-form/reactive-form-demo';
 import { SelectDemoComponent } from '../select/select-demo';
 import { DejaSnackbarDemoComponent } from '../snackbar/snackbar-demo';
 import { DejaSplitterDemoComponent } from '../splitter/splitter-demo';
@@ -44,6 +45,7 @@ const routes: Routes = [
         { component: GridDemoComponent, path: 'grid' },
         { component: MenuDemoComponent, path: 'menu' },
         { component: MessageBoxDemoComponent, path: 'message-box' },
+        { component: ReactiveFormDemoComponent, path: 'reactive-form' },
         { component: SelectDemoComponent, path: 'select' },
         { component: TextAreaDemoComponent, path: 'textarea' },
         { component: TilesDemoComponent, path: 'tiles' },

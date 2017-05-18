@@ -6,9 +6,9 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, forwardRef, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Observable, Subject, Subscription } from 'rxjs/Rx';
+import { DejaClipboardService } from '../../common/core/clipboard/clipboard.service';
 import { GroupingService, IGroupInfo } from '../../common/core/grouping';
 import { IItemBase, IItemTree, ItemListService, ViewportMode } from '../../common/core/item-list';
 import { KeyCodes } from '../../common/core/keycodes.enum';
@@ -21,18 +21,11 @@ import { DejaGridColumnsLayoutInfos, DejaGridRowEvent, DejaGridRowsEvent, IDejaG
 
 const noop = () => { };
 
-const DejaGridComponentValueAccessor = {
-    multi: true,
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => DejaGridComponent),
-};
-
 /** The grid */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    providers: [DejaGridComponentValueAccessor],
-    selector: 'deja-grid',
+     selector: 'deja-grid',
     styleUrls: [
         './data-grid.component.scss',
     ],
@@ -116,10 +109,6 @@ export class DejaGridComponent implements OnDestroy {
     /** Cet évenement est levé lorsque la taille d'une colonne est modifiée */
     @Output() public columnSizeChanged = new EventEmitter<IDejaGridColumnSizeEvent>();
 
-    // NgModel implementation
-    protected onTouchedCallback: () => void = noop;
-    protected onChangeCallback: (_: any) => void = noop;
-
     @ContentChild('rowTemplate') private rowTemplateInternal;
     @ContentChild('parentRowTemplate') private parentRowTemplateInternal;
     @ContentChild('cellTemplate') private _cellTemplate;
@@ -155,7 +144,6 @@ export class DejaGridComponent implements OnDestroy {
     private _sortable = false;
     private _searchArea = false;
     private _groupArea = false;
-    private _expandButton = false;
     private _rowsDraggable = false;
     private _rowsSortable = false;
     private _columnsDraggable = false;
@@ -187,20 +175,13 @@ export class DejaGridComponent implements OnDestroy {
     @Input()
     public set groupArea(value: boolean | string) {
         this._groupArea = value != null && `${value}` !== 'false';
+        if (this._columnsSortable && !this.clipboardService) {
+            throw new Error('To use the DejaGrid.groupArea feature, please import and provide the DejaClipboardService in your application.');
+        }
     }
 
     public get groupArea() {
         return this._groupArea;
-    }
-
-    /** Affiche un bouton pour réduire ou étendre toutes les lignes parentes du tableau */
-    @Input()
-    public set expandButton(value: boolean | string) {
-        this._expandButton = value != null && `${value}` !== 'false';
-    }
-
-    public get expandButton() {
-        return this._expandButton;
     }
 
     /** Rend les lignes du tableau draggable vers un autre composant (ne pas confondre avec la propriété `sortable`) */
@@ -237,6 +218,9 @@ export class DejaGridComponent implements OnDestroy {
     @Input()
     public set columnsSortable(value: boolean | string) {
         this._columnsSortable = value != null && `${value}` !== 'false';
+        if (this._columnsSortable && !this.clipboardService) {
+            throw new Error('To use the DejaGrid.columnsSortable feature, please import and provide the DejaClipboardService in your application.');
+        }
     }
 
     public get columnsSortable() {
@@ -370,7 +354,7 @@ export class DejaGridComponent implements OnDestroy {
         return this._columnLayout;
     }
 
-    constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef) {
+    constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef, @Optional() private clipboardService: DejaClipboardService) {
         const element = this.elementRef.nativeElement as HTMLElement;
 
         this.clearColumnLayout();
@@ -458,7 +442,6 @@ export class DejaGridComponent implements OnDestroy {
         this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
     }
 
-    // ************* ControlValueAccessor Implementation **************
     // get accessor
     get value(): any {
         return this.rows;
@@ -466,25 +449,8 @@ export class DejaGridComponent implements OnDestroy {
 
     // set accessor including call the onchange callback
     set value(value: any) {
-        this.writeValue(value);
-        this.onChangeCallback(value);
-    }
-
-    // From ControlValueAccessor interface
-    public writeValue(value: any) {
         this.rows = value;
     }
-
-    // From ControlValueAccessor interface
-    public registerOnChange(fn: any) {
-        this.onChangeCallback = fn;
-    }
-
-    // From ControlValueAccessor interface
-    public registerOnTouched(fn: any) {
-        this.onTouchedCallback = fn;
-    }
-    // ************* End of ControlValueAccessor Implementation **************}
 
     /** Nettoye les caches et réaffiche le viewport. */
     public refresh() {

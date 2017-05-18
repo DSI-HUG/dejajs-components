@@ -22,10 +22,11 @@ import {DejaTooltipService} from './tooltip.service';
     ],
 })
 export class DejaTooltipComponent implements OnInit {
-    @ViewChild('dropdown') public dropdown: DejaDropDownComponent;
-    @ContentChild('tooltipTemplate') public tooltipTemplate;
+    @Input() public containerElement: ElementRef | HTMLElement;
     @Input() public name: string;
     @Output() public hide = new EventEmitter();
+    @ViewChild('dropdown') public dropdown: DejaDropDownComponent;
+    @ContentChild('tooltipTemplate') public tooltipTemplate;
 
     public params: ITooltipParams;
     private model: any;

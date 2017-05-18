@@ -16,6 +16,9 @@ import { DejaTooltipService } from '.';
 export class DejaTooltipDirective {
     @Input('tooltip-model') public model: any;
     @Input('deja-tooltip') public name: string;
+    @Input('tooltip-owner-alignment') public ownerAlignment: 'center top';
+    @Input('tooltip-alignment') public dropdownAlignment: 'center bottom';
+
     // tslint:disable-next-line:no-output-rename
     @Output('tooltip-show') public show = new EventEmitter();
 
@@ -28,11 +31,13 @@ export class DejaTooltipDirective {
             .flatMap((e) => Observable.of(e).delay(200).takeUntil(leave$))
             .subscribe(() => {
                 tooltipService.params[this.name] = {
-                model: this.model,
+                    model: this.model,
                     ownerElement: elementRef,
-            };
+                    ownerAlignment: this.ownerAlignment,
+                    dropdownAlignment: this.dropdownAlignment,
+                };
 
-            this.show.emit();
+                this.show.emit();
             });
     }
 }

@@ -1,8 +1,9 @@
-.listContainer {
+.demo-card {
 	display: flex;
 	justify-content: left;
 	margin-top: 15px;
+	flex-direction: column;
 	md-input-container {
-		width: 100%;
+		width: 60%;
 	}
 }

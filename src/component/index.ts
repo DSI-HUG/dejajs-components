@@ -9,6 +9,7 @@
 export * from './accordion/index';
 export * from './autosize-textarea/index';
 export * from './backdrop/index';
+export * from './chips/index';
 export * from './circular-picker/index';
 export * from './code-viewer/index';
 export * from './color-picker/index';

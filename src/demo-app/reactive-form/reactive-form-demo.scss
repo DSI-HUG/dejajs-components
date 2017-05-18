@@ -1,0 +1,21 @@
+:host {
+    .placeholder {
+        color: rgba(0, 0, 0, 0.38);
+        font-size: 87%;
+        margin-bottom: 0.2rem;
+    }
+    h3 {
+        background-color: rgba(0, 0, 0, 0.07);
+        padding: 0.5rem;
+    }
+    #addskill {
+        margin-top: 0.5rem;
+        .mdSuffix {
+            opacity: 0.4;
+            cursor: pointer;
+            &:hover {
+                opacity: 1;
+            }
+        }
+    }
+}
