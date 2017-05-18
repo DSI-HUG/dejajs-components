@@ -7,7 +7,11 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs/Rx';
+import 'rxjs/add/observable/combineLatest';
+import 'rxjs/add/observable/from';
+import 'rxjs/add/operator/distinctUntilChanged';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
     selector: 'dejadate-picker-demo',

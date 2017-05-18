@@ -7,7 +7,7 @@
  */
 
 import { Component, EventEmitter, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { MaterialColors } from '../../index';
 import { Message } from './message.class';
 

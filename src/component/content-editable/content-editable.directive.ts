@@ -8,7 +8,8 @@
 
 import { Directive, ElementRef, HostBinding, Input, Optional, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { BehaviorSubject, Observable } from 'rxjs/Rx';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
 import { KeyCodes } from '../../common/core/index';
 
 const noop = () => { };

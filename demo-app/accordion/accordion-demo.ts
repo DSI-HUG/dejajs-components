@@ -16,6 +16,7 @@ import { Component } from '@angular/core';
 export class DejaAccordionDemoComponent {
     protected tabIndex = 1;
 
-    constructor() { }
+    constructor() {
+    }
 
 }

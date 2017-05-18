@@ -7,7 +7,7 @@
  */
 
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { DejaGridComponent, DejaGridRowsEvent, IDejaDragEvent, IDejaGridColumn, IDejaGridColumnSizeEvent, IItemTree, IViewPortItem } from '../../index';
 import { DrugsService, IDrug } from '../services/drugs.service';
 import { INews, NewsService } from '../services/news.service';

@@ -7,7 +7,8 @@
  */
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, Input } from '@angular/core';
-import { Observable, Subscription } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import { IDejaGridColumnLayout, IDejaGridRow } from '../index';
 
 /** Composant représentant une ligne de la grille */

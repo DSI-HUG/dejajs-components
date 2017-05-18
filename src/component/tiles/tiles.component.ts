@@ -7,7 +7,9 @@
  */
 
 import { AfterViewInit, Component, ContentChild, ElementRef, EventEmitter, HostListener, Input, OnDestroy, Output, ViewChild } from '@angular/core';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs/Rx';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import { KeyCodes } from '../../common/core';
 import { Rect } from '../../common/core/graphics';
 import { IDejaMouseDroppableContext, IDropCursorInfos } from '../mouse-dragdrop/index';

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { IItemBase, ItemListService } from '../../index';
 import { CountriesService } from './countries.service';
 

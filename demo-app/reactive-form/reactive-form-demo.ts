@@ -9,7 +9,7 @@
 
 import { AfterContentInit, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { IEditorLanguage, KeyCodes, MaterialColors } from '../../index';
 import { CountriesService } from '../services/countries.service';
 import { ICountry } from '../services/countries.service';

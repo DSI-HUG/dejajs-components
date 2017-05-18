@@ -7,7 +7,8 @@
  */
 
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { Observable, Subject } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 import { IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDejaTile, IDejaTilesAddEvent, IDejaTilesRemoveEvent, IDropCursorInfos } from '../../index';
 import { Rect } from '../../src/common/core/graphics/index';
 import { CountriesService, ICountry } from '../services/countries.service';

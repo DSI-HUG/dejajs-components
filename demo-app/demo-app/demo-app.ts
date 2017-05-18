@@ -7,7 +7,8 @@
  */
 
 import { ChangeDetectionStrategy, Component, ElementRef, ViewEncapsulation } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs/Rx';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

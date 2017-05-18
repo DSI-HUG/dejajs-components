@@ -7,7 +7,8 @@
  */
 
 import { Directive, ElementRef, Input } from '@angular/core';
-import { Observable, Subject } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
 import { DejaMouseDragDropService, IDragCursorInfos } from './mouse-dragdrop.service';

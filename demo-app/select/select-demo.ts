@@ -7,7 +7,10 @@
  */
 
 import { ChangeDetectorRef, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Observable, Subject, Subscription } from 'rxjs/Rx';
+import 'rxjs/add/operator/toPromise';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
 import { DejaSelectComponent, IItemBase, IItemTree, IViewPortItem } from '../../index';
 import { CountriesListService } from '../services/countries-list.service';
 import { CountriesService, ICountry } from '../services/countries.service';

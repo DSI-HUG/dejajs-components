@@ -8,6 +8,7 @@
 
 import { Injectable } from '@angular/core';
 import { Http, ResponseContentType } from '@angular/http';
+import 'rxjs/add/operator/publishLast';
 import { Observable } from 'rxjs/Observable';
 import { Color, MaterialColors } from '../../index';
 

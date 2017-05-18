@@ -6,7 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Observable } from 'rxjs/Rx';
+import 'rxjs/add/operator/mergeMap';
+import { Observable } from 'rxjs/Observable';
 import { ISortInfos, SortOrder } from './index';
 
 /** Classe de tri d'une liste plate ou hierarchique */

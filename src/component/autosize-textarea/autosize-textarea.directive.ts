@@ -8,7 +8,8 @@
 
 import { AfterViewInit, Directive, ElementRef, forwardRef } from '@angular/core';
 import { NG_VALIDATORS, Validator } from '@angular/forms';
-import { Observable, Subject } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 
 /**
  * Directive pour rendre un textarea material redimensioné automatiquement au contenu.

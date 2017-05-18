@@ -7,7 +7,8 @@
  */
 
 import { Component, EventEmitter, HostBinding, Input, Output, ViewChild } from '@angular/core';
-import { Observable, Subject } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 import { Color } from '../../common/core/graphics/color';
 import { DejaEditableDirective } from '../content-editable';
 import { IDejaTile } from './';

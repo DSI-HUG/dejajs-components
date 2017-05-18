@@ -8,7 +8,9 @@
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, Input, OnInit, Optional, Self, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { Observable, Subject } from 'rxjs/Rx';
+import 'rxjs/add/operator/sampleTime';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 import { Circle } from '../../common/core/graphics/index';
 import { Position } from '../../common/core/graphics/position';
 

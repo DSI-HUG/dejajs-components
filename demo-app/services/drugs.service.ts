@@ -8,7 +8,8 @@
 
 import { Injectable } from '@angular/core';
 import { Http, ResponseContentType } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
+import 'rxjs/add/operator/repeat';
+import { Observable } from 'rxjs/Observable';
 import { GroupingService, IGroupInfo } from '../../index';
 
 @Injectable()

@@ -6,13 +6,13 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import {Component, ContentChild, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {Observable} from 'rxjs/Rx';
+import { Component, ContentChild, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
 import { DejaDropDownComponent } from '../dropdown/index';
-import {ITooltipParams} from './index';
-import {DejaTooltipService} from './tooltip.service';
+import { ITooltipParams } from './index';
+import { DejaTooltipService } from './tooltip.service';
 
 @Component({
     selector: 'deja-tooltip',
@@ -58,7 +58,7 @@ export class DejaTooltipComponent implements OnInit {
 
     public ngOnInit() {
         if (!this.name) {
-            throw(new Error('Name is required'));
+            throw (new Error('Name is required'));
         }
         this.params = this.tooltipService.params[this.name];
 
