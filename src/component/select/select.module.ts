@@ -11,9 +11,9 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MdIconModule, MdInputModule} from '@angular/material';
 import { DejaChildValidatorModule } from '../../common/core/validation/index';
-import { DejaBackdropModule } from '../backdrop';
-import { DejaChipsModule } from '../chips';
-import { DejaDropDownModule } from '../dropdown';
+import { DejaBackdropModule } from '../backdrop/index';
+import { DejaChipsModule } from '../chips/index';
+import { DejaDropDownModule } from '../dropdown/index';
 import { DejaSelectComponent } from './select.component';
 
 @NgModule({
