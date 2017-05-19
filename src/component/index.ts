@@ -37,5 +37,3 @@ export * from './range/index';
 export * from './splitter/index';
 export * from './tooltip/index';
 export * from './viewport/index';
-/* deja-cli export index */
-/* The comment above mustn't be removed ! */

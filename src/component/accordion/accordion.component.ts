@@ -6,8 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { CommonModule } from '@angular/common';
-import { Component, HostBinding, HostListener, Input, NgModule, ViewEncapsulation } from '@angular/core';
+import { Component, HostBinding, HostListener, Input, ViewEncapsulation } from '@angular/core';
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -66,12 +65,3 @@ export class DejaAccordionHeaderComponent {
 export class DejaAccordionBodyComponent {
     @HostBinding('class.accordion-body') true;
 }
-
-const DEJA_ACCORDION_DIRECTIVES = [DejaAccordionComponent, DejaAccordionGroupComponent, DejaAccordionHeaderComponent, DejaAccordionBodyComponent];
-
-@NgModule({
-    imports: [CommonModule],
-    exports: DEJA_ACCORDION_DIRECTIVES,
-    declarations: DEJA_ACCORDION_DIRECTIVES,
-})
-export class DejaAccordionModule { }
