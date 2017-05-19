@@ -16,7 +16,7 @@ import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 import { DejaItemEvent, DejaItemsEvent, IItemBase, IItemTree, ItemListBase, ItemListService, IViewPort, ViewportMode, ViewPortService } from '../../common/core/item-list/index';
 import { KeyCodes } from '../../common/core/keycodes.enum';
-import { DejaChildValidatorDirective } from '../../common/core/validation';
+import { DejaChildValidatorDirective } from '../../common/core/validation/index';
 import { DejaDropDownComponent, IDropDownResetParams } from '../dropdown';
 
 const noop = () => { };

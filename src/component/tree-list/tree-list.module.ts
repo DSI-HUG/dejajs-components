@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MdButtonModule, MdCheckboxModule, MdInputModule } from '@angular/material';
-import { DejaChildValidatorModule } from '../../common/core/validation';
+import { DejaChildValidatorModule } from '../../common/core/validation/index';
 import { DejaDragDropModule } from '../dragdrop/dragdrop.module';
 import { DejaListLoaderModule } from '../loaders/list-loader.module';
 import { DejaTextMetricsModule } from './text-metrics/text-metrics.module';

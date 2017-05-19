@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MdIconModule, MdInputModule} from '@angular/material';
-import { DejaChildValidatorModule } from '../../common/core/validation';
+import { DejaChildValidatorModule } from '../../common/core/validation/index';
 import { DejaBackdropModule } from '../backdrop';
 import { DejaChipsModule } from '../chips';
 import { DejaDropDownModule } from '../dropdown';

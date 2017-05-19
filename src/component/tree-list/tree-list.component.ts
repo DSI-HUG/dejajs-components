@@ -20,7 +20,7 @@ import { GroupingService } from '../../common/core/grouping';
 import { DejaItemEvent, DejaItemsEvent, IItemBase, IItemTree, ItemListBase, ItemListService, IViewPort, ViewportMode, ViewPortService } from '../../common/core/item-list/index';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { SortingService } from '../../common/core/sorting';
-import { DejaChildValidatorDirective } from '../../common/core/validation';
+import { DejaChildValidatorDirective } from '../../common/core/validation/index';
 import { IDejaDragEvent } from '../dragdrop';
 import { DejaTreeListScrollEvent } from './tree-list-scroll-event';
 

@@ -16,7 +16,7 @@ import { IItemBase, IItemTree, ItemListService, ViewportMode } from '../../commo
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { SortingService } from '../../common/core/sorting';
 import { IDejaDragEvent } from '../dragdrop';
-import { DejaTreeListComponent, DejaTreeListScrollEvent } from '../tree-list';
+import { DejaTreeListComponent, DejaTreeListScrollEvent } from '../tree-list/index';
 import { ViewPortService } from './../../common/core/item-list/viewport.service';
 import { DejaGridHeaderComponent } from './data-grid-header/data-grid-header.component';
 import { DejaGridColumnsLayoutInfos, DejaGridRowEvent, DejaGridRowsEvent, IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayout, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent, IDejaGridGroupsEvent, IDejaGridRow } from './index';
