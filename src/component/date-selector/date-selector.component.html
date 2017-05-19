@@ -7,7 +7,7 @@
                 <md-icon (click)="changeYear(1)">navigate_next</md-icon>
             </div>
             <div current>
-                {{displayedDate.toLocaleDateString()}}
+                {{displayedDate && displayedDate.toLocaleDateString()}}
             </div>
         </div>
         <div id="sub-header">

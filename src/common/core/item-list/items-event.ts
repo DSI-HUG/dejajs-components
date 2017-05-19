@@ -10,4 +10,5 @@ import { IItemBase } from './item-base';
 
 export class DejaItemsEvent {
     public items: IItemBase[];
+    public models: any[];
 }

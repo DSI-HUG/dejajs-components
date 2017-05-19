@@ -224,19 +224,17 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                     this.query = '';
                     super.setSelectedModels(value);
                 } else {
-                    const item = super.convertToIItemBase([value])[0];
-                    if (item !== this.selectedItems[0]) {
-                        this.unselectAll$()
-                            .switchMap(() => {
-                                if (item) {
-                                    return this.toggleSelect$([item], true).map(() => this.getTextValue(value));
-                                } else {
-                                    return Observable.of('');
-                                }
-                            })
-                            .first()
-                            .subscribe((query) => this.query = query);
-                    }
+                    const item = super.mapToIItemBase([value])[0];
+                    this.unselectAll$()
+                        .switchMap(() => {
+                            if (item) {
+                                return this.toggleSelect$([item], true).map(() => this.getTextValue(value));
+                            } else {
+                                return Observable.of('');
+                            }
+                        })
+                        .first()
+                        .subscribe((query) => this.query = query);
                 }
 
                 this.changeDetectorRef.markForCheck();
@@ -487,7 +485,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     /** Définit la liste des éléments selectionés en mode multiselect */
     @Input()
     public set selectedItems(value: IItemBase[]) {
-        this.writeValue(value)
+        this.setSelectedItems(value)
     }
 
     /** Retourne la liste des éléments selectionés en mode multiselect */
@@ -498,12 +496,36 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     /** Définit l'éléments selectioné en mode single select */
     @Input()
     public set selectedItem(value: IItemBase) {
-        this.writeValue(value)
+        this.setSelectedItems([value])
     }
 
     /** Retourne l'éléments selectioné en mode single select */
     public get selectedItem() {
-        return super.getSelectedItems();
+        const selectedItem = super.getSelectedItems();
+        return selectedItem && selectedItem[0];
+    }
+
+    /** Définit le model selectioné en mode single select */
+    @Input()
+    public set selectedModel(value: IItemBase) {
+        this.writeValue(value)
+    }
+
+    /** Retourne le model selectioné en mode single select */
+    public get selectedModel() {
+        const selectedModel = super.getSelectedModels();
+        return selectedModel && selectedModel[0];
+    }
+
+    /** Définit la liste des models selectionés en mode multiselect */
+    @Input()
+    public set selectedModels(value: IItemBase[]) {
+        this.writeValue(value)
+    }
+
+    /** Retourne la liste des models selectionés en mode multiselect */
+    public get selectedModels() {
+        return super.getSelectedModels();
     }
 
     /** Definit le service de liste utilisé par ce composant. Ce srevice permet de controller dynamiquement la liste, ou de faire du lazyloading. */
@@ -628,7 +650,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     public set value(val) {
-        debugger;
         this.writeValue(val);
         this.onChangeCallback(val);
         this.onTouchedCallback();
@@ -994,21 +1015,22 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     private onModelChange(items?: IItemBase[] | IItemBase) {
         let outputEmitter = null;
 
+        let output = null;
+
         if (items) {
             if (Array.isArray(items)) {
-                outputEmitter = { items: this.selectedItems } as DejaItemsEvent;
+                const models = items.map((itm) => itm.model !== undefined ? itm.model : itm)
+                outputEmitter = {
+                    items: items,
+                    models: models,
+                } as DejaItemsEvent;
+                output = models;
             } else {
-                outputEmitter = { item: this.selectedItems[0] } as DejaItemEvent;
-            }
-        }
-
-        let output = items || null;
-
-        if (super.isBusinessObject() && items) {
-            if (items instanceof Array) {
-                output = items.map((item) => item.model);
-            } else {
-                output = items.model;
+                outputEmitter = {
+                    item: items,
+                    model: items.model,
+                } as DejaItemEvent;
+                output = items.model !== undefined ? items.model : items;
             }
         }
 
