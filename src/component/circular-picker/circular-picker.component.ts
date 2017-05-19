@@ -12,7 +12,7 @@ import 'rxjs/add/operator/sampleTime';
 import 'rxjs/add/operator/takeUntil';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
-import { Circle } from '../../common/core/graphics/index';
+import { Circle } from '../../common/core/graphics/circle';
 import { Position } from '../../common/core/graphics/position';
 
 const noop = () => { };

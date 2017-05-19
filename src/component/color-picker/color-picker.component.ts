@@ -8,7 +8,7 @@
 
 import { Component, ElementRef, EventEmitter, HostBinding, Input, Optional, Output, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { Color } from '../../common/core/graphics/index';
+import { Color } from '../../common/core/graphics/color';
 import { MaterialColor } from '../../common/core/style';
 
 const noop = () => { };

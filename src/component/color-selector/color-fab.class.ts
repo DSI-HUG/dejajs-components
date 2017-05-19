@@ -8,7 +8,7 @@
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
-import { Color } from '../../common/core/graphics/index';
+import { Color } from '../../common/core/graphics/color';
 
 export class DejaColorFab {
     public color$: Subject<Color>;

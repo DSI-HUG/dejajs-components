@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { UnitValue } from '../../../common/core/graphics';
+import { UnitValue } from '../../../common/core/graphics/unit-value';
 import { IDejaGridColumn } from '../index';
 
 export class DejaGridColumnsLayoutInfos {
