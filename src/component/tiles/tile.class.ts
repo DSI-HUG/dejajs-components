@@ -8,7 +8,7 @@
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
-import { Rect } from '../../common/core/graphics';
+import { Rect } from '../../common/core/graphics/rect';
 import { IDejaTile } from './tile.interface';
 
 export class DejaTile implements IDejaTile {
@@ -61,6 +61,10 @@ export class DejaTile implements IDejaTile {
         return this._model;
     }
 
+    public set color(value: string) {
+        this._color  = value;
+    }
+    
     public get color() {
         return this._color;
     }

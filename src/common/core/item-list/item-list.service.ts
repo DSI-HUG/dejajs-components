@@ -275,7 +275,9 @@ export class ItemListService {
         if (!value) {
             return '';
         } else {
-            if (textField && value[textField]) {
+            if (textField && value.model && value.model[textField]) {
+                return value.model[textField];
+            } else if (textField && value[textField]) {
                 return value[textField];
             } else if (value.displayName) {
                 return typeof value.displayName === 'string' ? value.displayName : value.displayName();
