@@ -1,4 +1,4 @@
-import { IViewPortItem } from './index';
+import { IViewPortItem } from './viewport.service';
 
 export interface IItemBase extends IViewPortItem {
     id?: any;
