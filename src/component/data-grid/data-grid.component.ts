@@ -12,7 +12,7 @@ import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 import { DejaClipboardService } from '../../common/core/clipboard/clipboard.service';
 import { GroupingService, IGroupInfo } from '../../common/core/grouping';
-import { IItemBase, IItemTree, ItemListService, ViewportMode } from '../../common/core/item-list';
+import { IItemBase, IItemTree, ItemListService, ViewportMode } from '../../common/core/item-list/index';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { SortingService } from '../../common/core/sorting';
 import { IDejaDragEvent } from '../dragdrop';
