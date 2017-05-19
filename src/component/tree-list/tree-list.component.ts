@@ -22,7 +22,7 @@ import { KeyCodes } from '../../common/core/keycodes.enum';
 import { SortingService } from '../../common/core/sorting';
 import { DejaChildValidatorDirective } from '../../common/core/validation';
 import { IDejaDragEvent } from '../dragdrop';
-import { DejaTreeListScrollEvent } from './index';
+import { DejaTreeListScrollEvent } from './tree-list-scroll-event';
 
 const noop = () => { };
 

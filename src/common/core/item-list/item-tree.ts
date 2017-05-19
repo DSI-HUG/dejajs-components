@@ -1,4 +1,4 @@
-import { IItemBase } from './index';
+import { IItemBase } from './item-base';
 
 /** Interface représentant un model de liste hierarchique. */
 export interface IItemTree extends IItemBase {
