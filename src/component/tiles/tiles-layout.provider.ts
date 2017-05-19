@@ -15,12 +15,12 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
-import { KeyCodes } from '../../common/core/';
 import { DejaClipboardService } from '../../common/core/clipboard/clipboard.service';
 import { Directions } from '../../common/core/graphics/directions';
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
 import { Size } from '../../common/core/graphics/size';
+import { KeyCodes } from '../../common/core/keycodes.enum';
 import { IDragCursorInfos, IDragDropContext } from '../mouse-dragdrop/mouse-dragdrop.service';
 import { DejaTile, IDejaTile, IDejaTilesAddEvent, IDejaTilesEvent, IDejaTilesModelEvent, IDejaTilesRemoveEvent } from './index';
 

@@ -10,8 +10,8 @@ import { Component, EventEmitter, HostBinding, Input, Output, ViewChild } from '
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Color } from '../../common/core/graphics/color';
-import { DejaEditableDirective } from '../content-editable';
-import { IDejaTile } from './';
+import { DejaEditableDirective } from '../content-editable/content-editable.directive';
+import { IDejaTile } from './tile.interface';
 
 @Component({
     selector: 'deja-tile-group',

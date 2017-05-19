@@ -11,7 +11,8 @@ import { Component, ElementRef, Input, OnDestroy, Output } from '@angular/core';
 import 'rxjs/add/operator/delay';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { DejaTile, IDejaTilesModelEvent } from './index';
+import { DejaTile } from './tile.class';
+import { IDejaTilesModelEvent } from './tiles.event';
 
 @Component({
     selector: 'deja-tile',
