@@ -11,7 +11,8 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
-import { Color, ColorEvent } from '../../common/core/graphics/index';
+import { Color } from '../../common/core/graphics/color';
+import { ColorEvent } from '../../common/core/graphics/color-event';
 import { MaterialColor } from '../../common/core/style';
 import { DejaColorFab } from './index';
 

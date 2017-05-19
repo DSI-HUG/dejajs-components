@@ -7,7 +7,9 @@
  */
 
 import { Component } from '@angular/core';
-import { Color, ColorEvent, MaterialColors } from '../../index';
+import { Color } from '../../src/common/core/graphics/color';
+import { ColorEvent } from '../../src/common/core/graphics/color-event';
+import { MaterialColors } from '../../src/common/core/style/material-colors';
 
 @Component({
     selector: 'deja-color-selector-demo',
