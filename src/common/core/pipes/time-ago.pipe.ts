@@ -8,7 +8,8 @@
 
 import { ChangeDetectorRef, NgZone, Pipe, PipeTransform } from '@angular/core';
 import * as moment from 'moment';
-import { Observable, Subject } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 
 const momentConstructor: (value?: any) => moment.Moment = (<any> moment).default || moment;
 

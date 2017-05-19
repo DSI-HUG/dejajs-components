@@ -1,0 +1,21 @@
+deja-color-selector {
+    background-color: #222;
+}
+
+deja-color-selector[disabled] {
+    margin: 1rem 2rem 3rem 2rem;
+}
+
+#hoveredColor {
+    width: 100%;
+    margin: 1rem 0 3rem 0;
+    padding: 5rem 0;
+    transition: background-color ease 0.5s;
+}
+
+#colorpickers {
+    flex-direction: row;
+    .colorpicker {
+        margin-right: 1rem;
+    }
+}

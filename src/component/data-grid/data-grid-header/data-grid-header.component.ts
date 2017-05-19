@@ -7,7 +7,10 @@
  */
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output } from '@angular/core';
-import { Observable, Subject, Subscription } from 'rxjs/Rx';
+import 'rxjs/add/operator/timeout';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
 import { DejaClipboardService } from '../../../common/core/clipboard/clipboard.service';
 import { IDejaDragEvent, IDejaDropEvent, ISortInfos } from '../../../index';
 import { IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayout, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent } from '../index';

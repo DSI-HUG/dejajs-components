@@ -6,7 +6,11 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { BehaviorSubject, Observable } from 'rxjs/Rx';
+import 'rxjs/add/observable/concat';
+import 'rxjs/add/observable/fromPromise';
+import 'rxjs/add/operator/reduce';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
 import { Subscriber } from 'rxjs/Subscriber';
 import { Diacritics } from '../diacritics/index';
 import { GroupingService, IGroupInfo } from '../grouping/index';

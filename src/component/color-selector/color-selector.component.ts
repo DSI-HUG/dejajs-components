@@ -8,7 +8,9 @@
 
 import { Component, ElementRef, EventEmitter, Input, Optional, Output, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { BehaviorSubject, Observable, Subject } from 'rxjs/Rx';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 import { Color, ColorEvent } from '../../common/core/graphics/index';
 import { MaterialColor } from '../../common/core/style';
 import { DejaColorFab } from './index';

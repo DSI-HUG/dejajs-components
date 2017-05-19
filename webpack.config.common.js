@@ -6,7 +6,7 @@ module.exports = {
     entry: {
         bundle: [
             "./src/polyfills.ts",
-            "./src/demo-app/main.ts",
+            "./demo-app/main.ts",
         ],
         sendAction: [
             "./send-action.js",

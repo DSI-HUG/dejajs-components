@@ -7,7 +7,9 @@
  */
 
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs/Rx';
+import 'rxjs/add/operator/combineLatest';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
 import { IViewPort, IViewPortItem } from './viewport.service';
 
 export enum ViewportMode {

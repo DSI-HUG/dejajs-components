@@ -7,7 +7,8 @@
  */
 
 import { Directive, ElementRef, HostBinding, Input, Optional } from '@angular/core';
-import { Observable, Subject } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 import { DejaClipboardService } from '../../common/core/clipboard/clipboard.service';
 import { IDejaDragEvent } from './index';
 

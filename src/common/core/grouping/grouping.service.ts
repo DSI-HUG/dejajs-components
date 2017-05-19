@@ -6,7 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Observable } from 'rxjs/Rx';
+import 'rxjs/add/operator/mergeMap';
+import { Observable } from 'rxjs/Observable';
 import { IItemTree } from '../item-list/index';
 import { SortingService } from '../sorting/index';
 import { IGroupInfo } from './index';

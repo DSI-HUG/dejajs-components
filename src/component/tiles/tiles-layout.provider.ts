@@ -10,7 +10,11 @@
  */
 
 import { EventEmitter, Injectable, Optional } from '@angular/core';
-import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
+import 'rxjs/add/operator/take';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
 import { KeyCodes } from '../../common/core/';
 import { DejaClipboardService } from '../../common/core/clipboard/clipboard.service';
 import { Directions } from '../../common/core/graphics/directions';

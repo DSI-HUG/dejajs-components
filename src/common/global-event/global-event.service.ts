@@ -6,9 +6,9 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Rx';
-import {GlobalEventEmmitter} from './global-event-emmitter';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { GlobalEventEmmitter } from './global-event-emmitter';
 
 @Injectable()
 export class GlobalEventService {
