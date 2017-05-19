@@ -313,32 +313,48 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
     /** Définit la liste des éléments selectionés en mode multiselect */
     @Input()
-    public set selectedItems(items: IItemBase[]) {
-        this.setSelectedModels(items);
+    public set selectedItems(value: IItemBase[]) {
+        this.setSelectedItems(value)
     }
 
     /** Retourne la liste des éléments selectionés en mode multiselect */
-    public get selectedItems(): IItemBase[] {
-        return this.getSelectedModels() || [];
+    public get selectedItems() {
+        return super.getSelectedItems();
     }
 
-    /** Définit la liste des éléments selectionés en mode single select */
+    /** Définit l'éléments selectioné en mode single select */
     @Input()
-    public set selectedItem(item: IItemBase) {
-        if (this.multiSelect) {
-            throw new Error('selectedItem binding is for single selection only, use selectedItems for multi selection');
-        }
-
-        this.selectedItems = item && [item];
+    public set selectedItem(value: IItemBase) {
+        this.setSelectedItems([value])
     }
 
-    /** Retourne la liste des éléments selectionés en mode single select */
+    /** Retourne l'éléments selectioné en mode single select */
     public get selectedItem() {
-        if (this.multiSelect) {
-            throw new Error('selectedItem is for single selection only, use selectedItems for multi selection');
-        }
+        const selectedItem = super.getSelectedItems();
+        return selectedItem && selectedItem[0];
+    }
 
-        return this.selectedItems[0];
+    /** Définit le model selectioné en mode single select */
+    @Input()
+    public set selectedModel(value: IItemBase) {
+        this.setSelectedModels([value])
+    }
+
+    /** Retourne le model selectioné en mode single select */
+    public get selectedModel() {
+        const selectedModel = super.getSelectedModels();
+        return selectedModel && selectedModel[0];
+    }
+
+    /** Définit la liste des models selectionés en mode multiselect */
+    @Input()
+    public set selectedModels(value: IItemBase[]) {
+        this.setSelectedModels(value)
+    }
+
+    /** Retourne la liste des models selectionés en mode multiselect */
+    public get selectedModels() {
+        return super.getSelectedModels();
     }
 
     /** Definit le service de liste utilisé par ce composant. Ce srevice permet de controller dynamiquement la liste, ou de faire du lazyloading. */
@@ -477,6 +493,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
     // ************* ControlValueAccessor Implementation **************
     /** Définit la liste des éléments, sans invoquaer ngModelChange */
+    /** @deprecated */
     public writeValue(items: any) {
         delete this.hintLabel;
         super.setItems$(items)
@@ -494,11 +511,13 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     }
 
     // From ControlValueAccessor interface
+    /** @deprecated */
     public registerOnChange(fn: any) {
         this.onChangeCallback = fn;
     }
 
     // From ControlValueAccessor interface
+    /** @deprecated */
     public registerOnTouched(fn: any) {
         this.onTouchedCallback = fn;
     }
@@ -932,7 +951,13 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     }
 
     protected onSelectionChange() {
-        const e = this.multiSelect ? { items: this.selectedItems } as DejaItemsEvent : { item: this.selectedItems[0] } as DejaItemEvent;
+        const e = this.multiSelect ? {
+            items: this.selectedItems,
+            models: this.selectedModels,
+        } as DejaItemsEvent : {
+            item: this.selectedItems[0],
+            model: this.selectedItems[0] && this.selectedItems[0].model,
+        } as DejaItemEvent;
         this.selectedChange.emit(e);
     }
 
@@ -947,7 +972,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     }
 
     protected toggleSelect$(items: IItemBase[], state: boolean): Observable<IItemBase[]> {
-        if (!this._multiSelect && items[0].selected === state) {
+        if (!this._multiSelect && !items[0].selected === !state) {
             return Observable.of(items);
         } else {
             return super.toggleSelect$(items, state)

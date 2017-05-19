@@ -52,7 +52,6 @@ export abstract class ItemListBase {
     protected _ddStartIndex: number;
     protected _ddTargetIndex: number;
 
-    private _isBusinessObject: boolean;
     private waiter$sub: Subscription;
 
     private _itemListService: ItemListService;
@@ -141,7 +140,7 @@ export abstract class ItemListBase {
      * @return {number} Index sur la liste plate corespondant à l'élément HTML
      */
     public getItemIndexFromHTMLElement(element: HTMLElement): number {
-        while (element && element.parentElement && !element.hasAttribute('flat') && element.parentElement.id !== 'listcontainer') {
+        while (element && element.parentElement && element.hasAttribute && !element.hasAttribute('flat') && element.parentElement.id !== 'listcontainer') {
             element = element.parentElement;
         }
 
@@ -169,13 +168,6 @@ export abstract class ItemListBase {
             this.setItemListService(new ItemListService());
         }
         return this._itemListService;
-    }
-
-    /** Retourne true si l'on manipule des objet business, false si on manipule des IItemBase.
-     * @return {boolean}.
-     */
-    public isBusinessObject() {
-        return this._isBusinessObject;
     }
 
     /** Retourne la liste des éléments sélectionés.
@@ -356,21 +348,11 @@ export abstract class ItemListBase {
     }
 
     protected getSelectedModels() {
-        if (this._isBusinessObject) {
-            return this.getItemListService().getSelectedItems().map((itm) => {
-                return itm.model;
-            });
-        } else {
-            return this.getItemListService().getSelectedItems();
-        }
+        return this.getItemListService().getSelectedItems().map((itm) => itm.model !== undefined ? itm.model : itm);
     }
 
-    protected setSelectedModels(value: any[]) {
-        if (value && this._isBusinessObject) {
-            value = this.convertToIItemBase(value, true);
-        }
-
-        return this.setSelectedItems(value);
+    protected setSelectedModels(values: any[]) {
+        return this.setSelectedItems(values && this.mapToIItemBase(values, true));
     }
 
     /** Trouve l'élément suivant répondant à la fonction de comparaison spécifiée.
@@ -511,7 +493,6 @@ export abstract class ItemListBase {
      * @param {GroupingService}items Provider de la liste des éléments de la liste.
      */
     protected setModels$(models: any[] | Observable<any[]>) {
-        this._isBusinessObject = true;
         let models$: Observable<any[]>;
 
         if (models instanceof Array) {
@@ -520,7 +501,7 @@ export abstract class ItemListBase {
             models$ = models as Observable<any[]>;
         }
 
-        const items$ = models$ && models$.map((model) => this.convertToIItemBase(model));
+        const items$ = models$ && models$.map((model) => this.mapToIItemBase(model));
         return this.setItems$(items$);
     }
 
@@ -691,11 +672,7 @@ export abstract class ItemListBase {
         this.viewPort.ensureItem$.next(item);
     }
 
-    protected convertToIItemBase(modls: any[], selected?: boolean): IItemBase[] {
-        if (!this._isBusinessObject) {
-            return modls as IItemBase[];
-        }
-
+    protected mapToIItemBase(modls: any[], selected?: boolean): IItemBase[] {
         return modls.map((model) => {
             const itemBase: IItemBase = {};
             itemBase.model = model;
@@ -713,9 +690,9 @@ export abstract class ItemListBase {
 
             const childrenField = this.getItemListService().childrenField;
             if (model[childrenField]) {
-                itemBase[childrenField] = this.convertToIItemBase(model[childrenField], selected);
+                itemBase[childrenField] = this.mapToIItemBase(model[childrenField], selected);
             } else {
-                itemBase.selected = selected || false;
+                itemBase.selected = selected || undefined;
             }
 
             return itemBase;

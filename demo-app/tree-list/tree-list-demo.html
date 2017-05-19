@@ -33,7 +33,7 @@
 			<div>Just passing an array of objects</div>
 			<div fxLayout="row">
 				<span fxFlex="0 0 45%" fxLayout="column">
-					<deja-tree-list fxFlex="0 0 400px" [selectedItems]="businessCountries" (selectedChange)="businessCountryChange($event.item)" textField="naqme" valueField="code" [models]="countries"></deja-tree-list>
+					<deja-tree-list fxFlex="0 0 400px" [selectedModels]="businessCountries" (selectedChange)="businessCountryChange($event.item?.model)" textField="naqme" valueField="code" [models]="countries"></deja-tree-list>
 				</span>
 				<span fxFlex="0 0 45%" fxFlexOffset="5%">
 					<h4>Selected country model :</h4>
@@ -48,7 +48,7 @@
 			<div>deja-tree-list has some keyboard navigation feature</div>
 			<div fxLayout="row">
 				<span fxFlex="0 0 45%" fxLayout="column">
-					<deja-tree-list fxFlex="0 0 400px" [selectedItems]="businessCountries" (selectedChange)="businessCountryChange($event.item)" textField="naqme" valueField="code" [models]="countries"></deja-tree-list>
+					<deja-tree-list fxFlex="0 0 400px" [selectedModels]="businessCountries" (selectedChange)="businessCountryChange($event.item?.model)" textField="naqme" valueField="code" [models]="countries"></deja-tree-list>
 				</span>
 				<ul fxFlex="0 0 50%" fxFlexOffset="5%" id="shortcut-list">
 					<li>Press
@@ -94,7 +94,7 @@
 			<div>
 				<md-checkbox [(ngModel)]="disabled" color="primary">Check me to disable tree-list below</md-checkbox>
 			</div>
-			<deja-tree-list searchArea class="demo-half-width" nodataholder="No record to display" maxHeight="auto" [disabled]="disabled" selectionClearable [selectedItems]="businessCountries" (selectedChange)="businessCountryChange($event.item)" textField="naqme" valueField="code" [models]="countries"></deja-tree-list>
+			<deja-tree-list searchArea class="demo-half-width" nodataholder="No record to display" maxHeight="auto" [disabled]="disabled" selectionClearable [selectedModels]="businessCountries" (selectedChange)="businessCountryChange($event.item?.model)" textField="naqme" valueField="code" [models]="countries"></deja-tree-list>
 		</md-card-content>
 	</md-card>
 </div>
