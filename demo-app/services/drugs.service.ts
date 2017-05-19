@@ -33,7 +33,7 @@ export class DrugsService {
     }
 
     public getDrugs$(query?: string, number?: number) {
-        return this.http.get('https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/demo-app/services/drugs.json', { responseType: ResponseContentType.Json })
+        return this.http.get('https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/demo-app/services/drugs.json', { responseType: ResponseContentType.Json })
             .map((response: any) => {
                 const datas = response.json();
                 const drugs = datas.data as IDrug[];
