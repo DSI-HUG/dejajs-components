@@ -39,7 +39,7 @@ module.exports = webpackMerge(commonConfig, {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: "src/index.ejs",
+            template: "demo-app/index.ejs",
             baseUrl: '/',
             title: 'DEJA-JS Demo App',
         }),
