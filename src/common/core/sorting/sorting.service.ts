@@ -89,6 +89,14 @@ export class SortingService {
             }
         }
 
+        if (!flda) {
+            flda = '';
+        }
+
+        if (!fldb) {
+            fldb = '';
+        }
+
         const stra = flda.toString() as string;
         const strb = fldb.toString() as string;
         return orderfact * stra.localeCompare(strb);

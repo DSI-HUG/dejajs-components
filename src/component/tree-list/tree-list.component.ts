@@ -897,34 +897,37 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
             return null;
         }
 
-        return {
-            dragovercallback: (event: IDejaDragEvent) => {
-                if (this._ddStartIndex === undefined) {
-                    return;
-                }
-
-                const targetIndex = this.getItemIndexFromHTMLElement(event.target as HTMLElement);
-                if (targetIndex === undefined) {
-                    return;
-                }
-
-                // Faire calculer le target final en fonction de la hierarchie par le service
-                this.calcDragTargetIndex$(this._ddStartIndex, targetIndex)
-                    .switchMap((finalTarget) => {
-                        if (finalTarget !== undefined && finalTarget !== this._ddTargetIndex) {
-                            this._ddTargetIndex = finalTarget;
-                            return this.calcViewList$()
-                                .first()
-                                .map(() => finalTarget);
-                        } else {
-                            return Observable.of(finalTarget);
-                        }
-                    })
-                    .subscribe(noop);
-
-                event.preventDefault();
+        const dragcallback = (event: IDejaDragEvent) => {
+            if (this._ddStartIndex === undefined) {
                 return;
-            },
+            }
+
+            const targetIndex = this.getItemIndexFromHTMLElement(event.target as HTMLElement);
+            if (targetIndex === undefined) {
+                return;
+            }
+
+            // Faire calculer le target final en fonction de la hierarchie par le service
+            this.calcDragTargetIndex$(this._ddStartIndex, targetIndex)
+                .switchMap((finalTarget) => {
+                    if (finalTarget !== undefined && finalTarget !== this._ddTargetIndex) {
+                        this._ddTargetIndex = finalTarget;
+                        return this.calcViewList$()
+                            .first()
+                            .map(() => finalTarget);
+                    } else {
+                        return Observable.of(finalTarget);
+                    }
+                })
+                .subscribe(noop);
+
+            event.preventDefault();
+            return;
+        };
+
+        return {
+            dragentercallback: dragcallback,
+            dragovercallback: dragcallback,
             dropcallback: (event: IDejaDragEvent) => {
                 delete this._ddStartIndex;
                 delete this._ddTargetIndex;

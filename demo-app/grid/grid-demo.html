@@ -55,13 +55,11 @@
 					</span>
 				</ng-template>
 				<ng-template #searchSuffixTemplate>
-					<button id="more" md-icon-button (click)="onSuffixClicked()">
-						<md-icon>more_vert</md-icon>
-					</button>
+					<md-icon suffix (click)="onSuffixClicked()">more_vert</md-icon>
 				</ng-template>
 			</deja-grid>
 		</md-card-content>
-		<md-card-content class="ddContainer">
+		<!--<md-card-content class="ddContainer">
 			<div>
 				Selected Items
 				<ul>
@@ -73,14 +71,13 @@
 			<div>
 				Vous pouvez également dropper des items de la liste dans la zone rouge ci dessous (celle-ci affichera une représentation JSON de l'objet droppé) :
 			</div>
-			<div [deja-droppable]="{dragovercallback: onDivDragOver, dropcallback:onDivDropEvent}" style="border:1px solid red;min-height:150px;"></div>
-		</md-card-content>
+			<div [deja-droppable]="{dragovercallback: onDivDragOver, dragentercallback:onDivDragOver, dropcallback:onDivDropEvent}" style="border:1px solid red;min-height:150px;"></div>
+		</md-card-content>-->
 	</md-card>
 
-	<md-card class="demo-card">
+	<!--<md-card class="demo-card">
 		<md-toolbar color="primary">Grille avec taille des colonnes en pixels et en pourcents</md-toolbar>
 		<md-card-content class="listContainer">
-			<!-- -->
 			<deja-grid #cgrid sortable columnsSizable multiSelect [rows]="drugs$" [columns]="percentColumns" (selectedChange)="onSelectionChanged2($event)" nodataholder="Pas de données" placeholder="Filtrer la liste par le nom" searchField="receivedate">
 				<ng-template #rowTemplate let-row>
 					<deja-grid-row [row]="row" [columnLayout]="cgrid.columnLayout" [cellTemplateExternal]="cgrid.cellTemplate">
@@ -111,5 +108,5 @@
 				</ng-template>
 			</deja-grid>
 		</md-card-content>
-	</md-card>
+	</md-card>-->
 </div>

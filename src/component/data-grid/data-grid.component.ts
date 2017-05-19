@@ -27,7 +27,7 @@ const noop = () => { };
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-     selector: 'deja-grid',
+    selector: 'deja-grid',
     styleUrls: [
         './data-grid.component.scss',
     ],
@@ -519,17 +519,20 @@ export class DejaGridComponent implements OnDestroy {
             return;
         }
 
+        const hideSpinner = () => {
+            event.column.sorting = false;
+            this.header.refresh();
+        }
+
         event.column.sorting = true;
         Observable.timer(1)
             .switchMap(() => this.treeListComponent.sort$(event.column.name))
             .first()
             .subscribe(() => {
-
+                hideSpinner();
             }, (error) => {
+                hideSpinner();
                 throw error.toString();
-            }, () => {
-                event.column.sorting = false;
-                this.header.refresh();
             });
     }
 

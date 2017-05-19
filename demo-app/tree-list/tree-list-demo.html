@@ -144,7 +144,7 @@
 				</span>
 				<span fxFlex="0 0 45%" fxFlexOffset="5%">
 					<div>You can drag and drop items the the area bellow (That will display a JSON representation of the dropped model) :</div>
-					<div #dropArea [deja-mouse-droppable]="getDropContext(dropArea)" [deja-droppable]="{dragovercallback: onDivDragOver, dropcallback:onDivDropEvent}" style="border:1px solid red;min-height:150px;"></div>
+					<div #dropArea [deja-mouse-droppable]="getDropContext(dropArea)" [deja-droppable]="{dragovercallback: onDivDragOver, dragentercallback:onDivDragOver, dropcallback:onDivDropEvent}" style="border:1px solid red;min-height:150px;"></div>
 				</span>
 			</div>
 		</md-card-content>
