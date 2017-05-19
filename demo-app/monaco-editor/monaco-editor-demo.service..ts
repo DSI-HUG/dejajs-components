@@ -19,7 +19,7 @@ export class MonacoEditorDemoService {
 
     public getFile(filename: string): Observable<any> {
         return Observable.create((observer) => {
-            this._http.get(`https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/demo-app/monaco-editor/data/${filename}`, { responseType: ResponseContentType.Text })
+            this._http.get(`https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/demo-app/monaco-editor/data/${filename}`, { responseType: ResponseContentType.Text })
                 .subscribe((response) => {
                     observer.next(response.text());
                     observer.complete();

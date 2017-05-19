@@ -6,7 +6,7 @@ var path = require("path");
 
 module.exports = webpackMerge.smart(commonConfig, {
     entry: {
-        "app": "./src/demo-app/main.ts",
+        "app": "./demo-app/main.ts",
     },
 
     module: {
@@ -30,13 +30,13 @@ module.exports = webpackMerge.smart(commonConfig, {
 
     plugins: [
         new HtmlWebpackPlugin({
-            template: "src/index.ejs",
+            template: "demo-app/index.ejs",
             baseUrl: 'https://dsi-hug.github.io/dejajs-components/',
             title: 'DEJA-JS Demo App',
         }),
         new webpack.NoEmitOnErrorsPlugin(),
         new webpack.optimize.CommonsChunkPlugin({
-            name: ["./src/demo-app/main.ts", "./src/polyfills.ts"],
+            name: ["./demo-app/main.ts", "./src/polyfills.ts"],
         }),
     ],
 });

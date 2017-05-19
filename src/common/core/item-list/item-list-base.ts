@@ -7,6 +7,7 @@
  */
 
 import { ChangeDetectorRef, EventEmitter } from '@angular/core';
+import 'rxjs/add/operator/first';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { GroupingService, IGroupInfo } from '../grouping/index';

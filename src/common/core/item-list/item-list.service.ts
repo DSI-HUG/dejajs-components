@@ -8,6 +8,7 @@
 
 import 'rxjs/add/observable/concat';
 import 'rxjs/add/observable/fromPromise';
+import 'rxjs/add/observable/if';
 import 'rxjs/add/operator/reduce';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
