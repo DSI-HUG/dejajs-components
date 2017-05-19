@@ -8,7 +8,7 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { DejaBackdropModule } from '../backdrop';
+import { DejaBackdropModule } from '../backdrop/backdrop.module';
 import { DejaDialogComponent } from './dialog.component';
 
 @NgModule({

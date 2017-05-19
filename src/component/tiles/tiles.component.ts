@@ -10,8 +10,8 @@ import { AfterViewInit, Component, ContentChild, ElementRef, EventEmitter, HostL
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { KeyCodes } from '../../common/core';
-import { Rect } from '../../common/core/graphics';
+import { Rect } from '../../common/core/graphics/rect';
+import { KeyCodes } from '../../common/core/keycodes.enum';
 import { IDejaMouseDroppableContext, IDropCursorInfos } from '../mouse-dragdrop/index';
 import { DejaTile, DejaTileGroupComponent, IDejaTile, IDejaTilesAddEvent, IDejaTilesEvent, IDejaTilesModelEvent, IDejaTilesRefreshParams, IDejaTilesRemoveEvent } from './index';
 import { DejaTilesLayoutProvider } from './tiles-layout.provider';
