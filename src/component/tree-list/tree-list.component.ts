@@ -56,7 +56,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     @Input() public searchPrefixTemplateExternal;
     /** Permet de définir un template comme suffixe de la zone de recherche par binding. */
     @Input() public searchSuffixTemplateExternal;
-
+    /** Largeur des éléments par defaut si différent de 100% */
+    @Input() public itemsWidth = null;
     /** Exécuté lorsque le déplacement d'une ligne est terminée. */
     @Output() public itemDragEnd = new EventEmitter<IDejaDragEvent>();
     /** Exécuté lorsque le déplacement d'une ligne commence. */
@@ -801,7 +802,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
         const item = this._itemList[itemIndex - this.vpStartRow];
         this.clickedItem = item;
-        const isExpanButton = (e.target as HTMLElement).id === 'expandbtn';
+        const target = e.target as HTMLElement;
+        const isExpanButton = target && (target.id === 'expandbtn' || (target.parentElement && target.parentElement.id === 'expandbtn'));
         if ((!isExpanButton || !this.isCollapsible(item)) && this.isSelectable(item) && (!e.ctrlKey || !this.multiSelect) && (e.button === 0 || !item.selected)) {
             if (e.shiftKey && this.multiSelect) {
                 // Select all from current to clicked
@@ -847,7 +849,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                     return;
                 }
 
-                const isExpandButton = (upevt.target as HTMLElement).id === 'expandbtn';
+                const tgt = upevt.target as HTMLElement;
+                const isExpandButton = tgt && (tgt.id === 'expandbtn' || (tgt.parentElement && tgt.parentElement.id === 'expandbtn'));
                 if (this.isCollapsible(upItem) && (isExpandButton || !this.isSelectable(upItem))) {
                     const treeItem = upItem as IItemTree;
                     this.toggleCollapse$(upIndex, !treeItem.collapsed).first().subscribe(() => {
