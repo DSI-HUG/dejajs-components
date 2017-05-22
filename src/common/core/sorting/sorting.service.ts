@@ -11,7 +11,8 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/switchMap';
 import { Observable } from 'rxjs/Observable';
-import { ISortInfos, SortOrder } from './index';
+import { ISortInfos } from './sort-infos.model';
+import { SortOrder } from './sort-infos.model';
 
 /** Classe de tri d'une liste plate ou hierarchique */
 export class SortingService {

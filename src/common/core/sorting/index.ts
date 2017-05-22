@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-export * from './sort-infos';
+export * from './sort-infos.model';
 export * from './sorting.service';
 export * from './sort-indicator.component';
 export * from './sorting.module';

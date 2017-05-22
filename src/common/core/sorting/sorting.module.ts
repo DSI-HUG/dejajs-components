@@ -7,7 +7,8 @@
  */
 
 import { NgModule } from '@angular/core';
-import { DejaSortIndicatorComponent, SortingService} from './index';
+import { DejaSortIndicatorComponent } from './sort-indicator.component';
+import { SortingService } from './sorting.service';
 
 @NgModule({
     declarations: [DejaSortIndicatorComponent],

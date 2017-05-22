@@ -17,10 +17,18 @@ import { DejaClipboardService } from '../../common/core/clipboard/clipboard.serv
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
 import { GroupingService } from '../../common/core/grouping';
-import { DejaItemEvent, DejaItemsEvent, IItemBase, IItemTree, ItemListBase, ItemListService, IViewPort, ViewportMode, ViewPortService } from '../../common/core/item-list/index';
+import { IItemBase } from '../../common/core/item-list/item-base';
+import { DejaItemEvent } from '../../common/core/item-list/item-event';
+import { ItemListBase } from '../../common/core/item-list/item-list-base';
+import { ItemListService } from '../../common/core/item-list/item-list.service';
+import { IItemTree } from '../../common/core/item-list/item-tree';
+import { DejaItemsEvent } from '../../common/core/item-list/items-event';
+import { IViewPort } from '../../common/core/item-list/viewport.service';
+import { ViewportMode } from '../../common/core/item-list/viewport.service';
+import { ViewPortService } from '../../common/core/item-list/viewport.service';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { SortingService } from '../../common/core/sorting';
-import { DejaChildValidatorDirective } from '../../common/core/validation/index';
+import { DejaChildValidatorDirective } from '../../common/core/validation/child-validator.directive';
 import { IDejaDragEvent } from '../dragdrop';
 import { DejaTreeListScrollEvent } from './tree-list-scroll-event';
 
