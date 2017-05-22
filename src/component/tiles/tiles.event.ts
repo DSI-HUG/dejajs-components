@@ -7,7 +7,7 @@
  */
 
 import { DejaCancelableEvent } from '../../common/core/events/cancelable-event';
-import { IDejaTile } from './index';
+import { IDejaTile } from './tile.interface';
 
 export interface IDejaTilesEvent extends CustomEvent {
     tiles: IDejaTile[];

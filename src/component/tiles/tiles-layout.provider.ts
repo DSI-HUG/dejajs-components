@@ -22,7 +22,9 @@ import { Rect } from '../../common/core/graphics/rect';
 import { Size } from '../../common/core/graphics/size';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { IDragCursorInfos, IDragDropContext } from '../mouse-dragdrop/mouse-dragdrop.service';
-import { DejaTile, IDejaTile, IDejaTilesAddEvent, IDejaTilesEvent, IDejaTilesModelEvent, IDejaTilesRemoveEvent } from './index';
+import { DejaTile } from './tile.class';
+import { IDejaTile } from './tile.interface';
+import { IDejaTilesAddEvent, IDejaTilesEvent, IDejaTilesModelEvent, IDejaTilesRemoveEvent } from './tiles.event';
 
 interface ILayoutInfo {
     id: string;

@@ -10,7 +10,7 @@ import { Directive, ElementRef, HostBinding, Input, Optional } from '@angular/co
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { DejaClipboardService } from '../../common/core/clipboard/clipboard.service';
-import { IDejaDragEvent } from './index';
+import { IDejaDragEvent } from './draggable.directive';
 
 @Directive({
     selector: '[deja-droppable]',

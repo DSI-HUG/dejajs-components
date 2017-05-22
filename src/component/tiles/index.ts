@@ -11,9 +11,13 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MdProgressSpinnerModule } from '@angular/material';
 import { CloningService } from '../../common/core/cloning/cloning.service';
-import { DejaEditableModule } from '../content-editable/index';
-import { DejaMouseDragDropModule, DejaMouseDragDropService } from '../mouse-dragdrop/index';
-import { DejaTileComponent, DejaTileGroupComponent, DejaTilePositionDirective, DejaTilesComponent } from './index';
+import { DejaEditableModule } from '../content-editable/content-editable.module';
+import { DejaMouseDragDropModule } from './../mouse-dragdrop/index';
+import { DejaMouseDragDropService } from './../mouse-dragdrop/mouse-dragdrop.service';
+import { DejaTileGroupComponent } from './tile-group.component';
+import { DejaTilePositionDirective } from './tile-position.directive';
+import { DejaTileComponent } from './tile.component';
+import { DejaTilesComponent } from './tiles.component';
 
 @NgModule({
     declarations: [DejaTileComponent, DejaTilesComponent, DejaTileGroupComponent, DejaTilePositionDirective],

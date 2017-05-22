@@ -12,9 +12,13 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { Rect } from '../../common/core/graphics/rect';
 import { KeyCodes } from '../../common/core/keycodes.enum';
-import { IDejaMouseDroppableContext, IDropCursorInfos } from '../mouse-dragdrop/index';
-import { DejaTile, DejaTileGroupComponent, IDejaTile, IDejaTilesAddEvent, IDejaTilesEvent, IDejaTilesModelEvent, IDejaTilesRefreshParams, IDejaTilesRemoveEvent } from './index';
-import { DejaTilesLayoutProvider } from './tiles-layout.provider';
+import { IDropCursorInfos } from '../mouse-dragdrop/mouse-dragdrop.service';
+import { IDejaMouseDroppableContext } from '../mouse-dragdrop/mouse-droppable.directive';
+import { DejaTileGroupComponent } from './tile-group.component';
+import { DejaTile } from './tile.class';
+import { IDejaTile } from './tile.interface';
+import { DejaTilesLayoutProvider, IDejaTilesRefreshParams } from './tiles-layout.provider';
+import { IDejaTilesAddEvent, IDejaTilesEvent, IDejaTilesModelEvent, IDejaTilesRemoveEvent } from './tiles.event';
 
 @Component({
     providers: [DejaTilesLayoutProvider],
