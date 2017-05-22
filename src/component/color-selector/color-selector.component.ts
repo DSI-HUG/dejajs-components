@@ -14,7 +14,7 @@ import { Subject } from 'rxjs/Subject';
 import { Color } from '../../common/core/graphics/color';
 import { ColorEvent } from '../../common/core/graphics/color-event';
 import { MaterialColor } from '../../common/core/style';
-import { DejaColorFab } from './index';
+import { DejaColorFab } from './color-fab.class';
 
 const noop = () => { };
 

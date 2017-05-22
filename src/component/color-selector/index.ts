@@ -9,7 +9,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule  } from '@angular/forms';
-import { DejaColorFabComponent, DejaColorSelectorComponent  } from './index';
+import { DejaColorFabComponent } from './color-fab.component';
+import { DejaColorSelectorComponent } from './color-selector.component';
 
 @NgModule({
     declarations: [DejaColorSelectorComponent, DejaColorFabComponent],

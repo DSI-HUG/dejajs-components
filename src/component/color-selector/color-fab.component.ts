@@ -9,7 +9,7 @@
 import { Component, ElementRef, Input } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { DejaColorFab } from './index';
+import { DejaColorFab } from './color-fab.class';
 
 @Component({
     selector: 'deja-color-fab',

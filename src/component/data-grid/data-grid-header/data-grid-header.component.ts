@@ -12,8 +12,11 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 import { DejaClipboardService } from '../../../common/core/clipboard/clipboard.service';
-import { IDejaDragEvent, IDejaDropEvent, ISortInfos } from '../../../index';
-import { IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayout, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent } from '../index';
+import { ISortInfos } from '../../../common/core/sorting/sort-infos.model';
+import { IDejaDragEvent } from '../../dragdrop/draggable.directive';
+import { IDejaDropEvent } from '../../dragdrop/droppable.directive';
+import { IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent } from '../data-grid-column/data-grid-column';
+import { IDejaGridColumnLayout } from '../data-grid-column/data-grid-column-layout';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

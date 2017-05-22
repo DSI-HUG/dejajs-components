@@ -7,7 +7,7 @@
  */
 
 import { Subject } from 'rxjs/Subject';
-import { IDejaGridColumn } from '../index';
+import { IDejaGridColumn } from './data-grid-column';
 
 export class IDejaGridColumnLayout {
     public scrollLeft: number;

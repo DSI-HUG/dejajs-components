@@ -18,8 +18,14 @@ import { SortingService } from '../../common/core/sorting';
 import { IDejaDragEvent } from '../dragdrop';
 import { DejaTreeListComponent, DejaTreeListScrollEvent } from '../tree-list/index';
 import { ViewPortService } from './../../common/core/item-list/viewport.service';
+import { IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent } from './data-grid-column/data-grid-column';
+import { IDejaGridColumnLayout } from './data-grid-column/data-grid-column-layout';
+import { DejaGridColumnsLayoutInfos } from './data-grid-column/data-grid-column-layout-infos';
+import { IDejaGridGroupsEvent } from './data-grid-grouparea/data-grid-group';
 import { DejaGridHeaderComponent } from './data-grid-header/data-grid-header.component';
-import { DejaGridColumnsLayoutInfos, DejaGridRowEvent, DejaGridRowsEvent, IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayout, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent, IDejaGridGroupsEvent, IDejaGridRow } from './index';
+import { IDejaGridRow } from './data-grid-row/data-grid-row';
+import { DejaGridRowEvent } from './data-grid-row/data-grid-row-event';
+import { DejaGridRowsEvent } from './data-grid-row/data-grid-rows-event';
 
 const noop = () => { };
 

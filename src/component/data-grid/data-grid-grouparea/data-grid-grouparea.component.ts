@@ -8,8 +8,10 @@
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Optional, Output } from '@angular/core';
 import { DejaClipboardService } from '../../../common/core/clipboard/clipboard.service';
-import { IDejaDragEvent, IDejaDropEvent } from '../../index';
-import { IDejaGridColumn, IDejaGridGroupsEvent } from '../index';
+import { IDejaDragEvent } from '../../dragdrop/draggable.directive';
+import { IDejaDropEvent } from '../../dragdrop/droppable.directive';
+import { IDejaGridColumn } from '../data-grid-column/data-grid-column';
+import { IDejaGridGroupsEvent } from './data-grid-group';
 
 /** Zone de regroupement des colonnes dans laquelle les colonnes peuvent être drag and droppée */
 @Component({

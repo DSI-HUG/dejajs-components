@@ -7,7 +7,7 @@
  */
 
 import { UnitValue } from '../../../common/core/graphics/unit-value';
-import { IDejaGridColumn } from '../index';
+import { IDejaGridColumn } from './data-grid-column';
 
 export class DejaGridColumnsLayoutInfos {
     public percentColumns: IDejaGridColumn[];
