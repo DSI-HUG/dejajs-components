@@ -6,5 +6,21 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { DejaBoldQueryComponent } from './index';
+
+@NgModule({
+    declarations: [
+        DejaBoldQueryComponent,
+    ],
+    exports: [DejaBoldQueryComponent],
+    imports: [
+        CommonModule,
+        FormsModule,
+    ],
+})
+export class DejaBoldQueryModule { }
+
 export * from './bold-query.component';
-export * from './bold-query.module';

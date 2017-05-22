@@ -6,4 +6,27 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-export * from './splitter.module';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { SplitAreaDirective } from './split-area.directive';
+import { SplitGutterDirective } from './split-gutter.directive';
+import { DejaSplitterComponent } from './splitter.component';
+
+@NgModule({
+    declarations: [
+        DejaSplitterComponent,
+        SplitAreaDirective,
+        SplitGutterDirective,
+    ],
+    exports: [
+        DejaSplitterComponent,
+        SplitAreaDirective,
+        SplitGutterDirective,
+    ],
+    imports: [
+        CommonModule,
+    ],
+})
+export class DejaSplitterModule {
+
+}

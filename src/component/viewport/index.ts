@@ -6,5 +6,25 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { DejaViewPortComponent } from './viewport.component';
+
+@NgModule({
+    declarations: [
+        DejaViewPortComponent,
+    ],
+    exports: [
+        DejaViewPortComponent,
+    ],
+    imports: [
+        CommonModule,
+        FlexLayoutModule,
+    ],
+})
+export class DejaViewPortModule { }
+
+
 export * from './viewport.component';
-export * from './viewport.module';
+
