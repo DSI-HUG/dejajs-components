@@ -9,7 +9,7 @@
 import { Directive, ElementRef, EventEmitter, Input, Output } from '@angular/core';
 import 'rxjs/add/operator/mergeMap';
 import { Observable } from 'rxjs/Observable';
-import { DejaTooltipService } from '.';
+import { DejaTooltipService } from './tooltip.service';
 
 @Directive({
     selector: '[deja-tooltip]',

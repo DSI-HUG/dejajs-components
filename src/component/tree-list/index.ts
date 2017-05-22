@@ -11,8 +11,8 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MdButtonModule, MdCheckboxModule, MdInputModule } from '@angular/material';
 import { DejaChildValidatorModule } from '../../common/core/validation/index';
-import { DejaDragDropModule } from '../dragdrop/dragdrop.module';
-import { DejaListLoaderModule } from '../loaders/list-loader.module';
+import { DejaDragDropModule } from '../dragdrop/index';
+import { DejaListLoaderModule } from '../loaders/index';
 import { DejaTextMetricsModule } from './text-metrics/index';
 import { DejaTreeListComponent } from './tree-list.component';
 
