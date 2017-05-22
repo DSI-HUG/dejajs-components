@@ -7,6 +7,7 @@
  */
 
 import { Component, ContentChild, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import 'rxjs/add/observable/fromEvent';
 import { Observable } from 'rxjs/Observable';
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
