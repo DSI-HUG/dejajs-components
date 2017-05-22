@@ -10,7 +10,7 @@ import { Directive, ElementRef, HostBinding, Input, Optional, Self } from '@angu
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { KeyCodes } from '../../common/core/index';
+import { KeyCodes } from '../../common/core/keycodes.enum';
 
 const noop = () => { };
 

@@ -8,8 +8,8 @@
 
 import 'rxjs/add/operator/mergeMap';
 import { Observable } from 'rxjs/Observable';
-import { IItemTree } from '../item-list/index';
-import { SortingService } from '../sorting/index';
+import { IItemTree } from '../item-list/item-tree';
+import { SortingService } from '../sorting/sorting.service';
 import { IGroupInfo } from './group-infos';
 
 /** Service de regroupement d'un tableau de modèles */

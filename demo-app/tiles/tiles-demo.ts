@@ -9,7 +9,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
-import { Rect } from '../../src/common/core/graphics/index';
+import { Rect } from '../../src/common/core/graphics/rect';
 import { IDropCursorInfos } from '../../src/component/mouse-dragdrop/mouse-dragdrop.service';
 import { IDejaMouseDraggableContext } from '../../src/component/mouse-dragdrop/mouse-draggable.directive';
 import { IDejaMouseDroppableContext } from '../../src/component/mouse-dragdrop/mouse-droppable.directive';

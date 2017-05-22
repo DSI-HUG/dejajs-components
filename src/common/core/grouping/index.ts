@@ -7,7 +7,7 @@
  */
 
 import { NgModule } from '@angular/core';
-import { SortingService } from '../sorting/index';
+import { SortingService } from '../sorting/sorting.service';
 import { GroupingService } from './grouping.service';
 
 @NgModule({

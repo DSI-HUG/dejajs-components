@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { IItemTree } from '../../../common/core/item-list/index';
+import { IItemTree } from '../../../common/core/item-list/item-tree';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IDejaGridRow extends IItemTree {
