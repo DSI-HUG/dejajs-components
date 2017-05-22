@@ -14,10 +14,16 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
-import { DejaItemEvent, DejaItemsEvent, IItemBase, IItemTree, ItemListBase, ItemListService, IViewPort, ViewportMode, ViewPortService } from '../../common/core/item-list/index';
 import { KeyCodes } from '../../common/core/keycodes.enum';
-import { DejaChildValidatorDirective } from '../../common/core/validation/index';
-import { DejaDropDownComponent, IDropDownResetParams } from '../dropdown/index';
+import { DejaChildValidatorDirective } from '../../common/core/validation/child-validator.directive';
+import { DejaDropDownComponent, IDropDownResetParams } from '../dropdown/dropdown.component';
+import { IItemBase } from './../../common/core/item-list/item-base';
+import { DejaItemEvent } from './../../common/core/item-list/item-event';
+import { ItemListBase } from './../../common/core/item-list/item-list-base';
+import { ItemListService } from './../../common/core/item-list/item-list.service';
+import { IItemTree } from './../../common/core/item-list/item-tree';
+import { DejaItemsEvent } from './../../common/core/item-list/items-event';
+import { IViewPort, ViewportMode, ViewPortService } from './../../common/core/item-list/viewport.service';
 
 const noop = () => { };
 

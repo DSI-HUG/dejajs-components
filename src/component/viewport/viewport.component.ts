@@ -14,7 +14,7 @@ import 'rxjs/add/observable/timer';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
-import { IViewPort, IViewPortItem, ViewportDirection, ViewportMode, ViewPortService } from '../../common/core/item-list/index';
+import { IViewPort, IViewPortItem, ViewportDirection, ViewportMode, ViewPortService } from '../../common/core/item-list/viewport.service';
 
 export enum DejaViewPortScrollStyle {
     scrollbar,

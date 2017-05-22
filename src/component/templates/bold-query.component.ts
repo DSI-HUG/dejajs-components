@@ -7,7 +7,7 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { Diacritics } from '../../common/core/diacritics/index';
+import { Diacritics } from '../../common/core/diacritics/diacritics';
 
 @Component({
     selector: 'deja-bold-query',
