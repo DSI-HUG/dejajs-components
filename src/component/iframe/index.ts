@@ -6,5 +6,15 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { DejaIFrameComponent } from './iframe.component';
+
+@NgModule({
+    declarations: [DejaIFrameComponent],
+    exports: [DejaIFrameComponent],
+    imports: [CommonModule],
+})
+export class DejaIFrameModule { }
+
 export * from './iframe.component';
-export * from './iframe.module';

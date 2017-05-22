@@ -10,9 +10,8 @@ import { Component, ContentChild, ElementRef, EventEmitter, Input, OnInit, Outpu
 import { Observable } from 'rxjs/Observable';
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
-import { DejaDropDownComponent } from '../dropdown/index';
-import { ITooltipParams } from './index';
-import { DejaTooltipService } from './tooltip.service';
+import { DejaDropDownComponent } from '../dropdown/dropdown.component';
+import { DejaTooltipService, ITooltipParams } from './tooltip.service';
 
 @Component({
     selector: 'deja-tooltip',

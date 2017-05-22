@@ -6,6 +6,6 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-export * from './core';
-export * from './global-event';
-export * from './util';
+export * from './util/index';
+export * from './global-event/index';
+export * from './core/index';
