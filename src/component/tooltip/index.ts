@@ -8,7 +8,7 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { DejaDropDownModule } from '../';
+import { DejaDropDownModule } from '../dropdown/index';
 import { DejaTooltipComponent } from './tooltip.component';
 import { DejaTooltipDirective } from './tooltip.directive';
 import { DejaTooltipService } from './tooltip.service';
