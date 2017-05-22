@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MdInputModule } from '@angular/material';
-import { DejaAutosizeTextAreaDirective } from './index';
+import { DejaAutosizeTextAreaDirective } from './autosize-textarea.directive';
 
 @NgModule({
     declarations: [DejaAutosizeTextAreaDirective],
