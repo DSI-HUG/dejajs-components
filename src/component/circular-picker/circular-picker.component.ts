@@ -8,6 +8,8 @@
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, Input, OnInit, Optional, Self, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/sampleTime';
 import 'rxjs/add/operator/takeUntil';
 import { Observable } from 'rxjs/Observable';
