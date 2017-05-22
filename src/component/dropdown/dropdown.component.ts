@@ -7,6 +7,7 @@
  */
 
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
+import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/debounce';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/takeUntil';

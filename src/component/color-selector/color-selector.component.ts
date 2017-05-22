@@ -8,6 +8,8 @@
 
 import { Component, ElementRef, EventEmitter, Input, Optional, Output, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/observable/merge';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';

@@ -8,6 +8,7 @@ import { ElementRef } from '@angular/core';
  */
 
 import { Component, ContentChild, EventEmitter, HostListener, Output } from '@angular/core';
+import 'rxjs/add/observable/fromEvent';
 import { Observable } from 'rxjs/Observable';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 

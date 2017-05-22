@@ -7,6 +7,9 @@
  */
 
 import { Directive, ElementRef, Input } from '@angular/core';
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/observable/merge';
+import 'rxjs/add/operator/takeUntil';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Position } from '../../common/core/graphics/position';

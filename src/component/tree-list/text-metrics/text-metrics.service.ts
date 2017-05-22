@@ -7,6 +7,7 @@
  */
 
 import { Injectable } from '@angular/core';
+import 'rxjs/add/operator/delay';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
