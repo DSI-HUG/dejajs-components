@@ -10,7 +10,7 @@ import 'rxjs/add/operator/mergeMap';
 import { Observable } from 'rxjs/Observable';
 import { IItemTree } from '../item-list/index';
 import { SortingService } from '../sorting/index';
-import { IGroupInfo } from './index';
+import { IGroupInfo } from './group-infos';
 
 /** Service de regroupement d'un tableau de modèles */
 export class GroupingService {

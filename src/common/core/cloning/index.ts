@@ -7,7 +7,7 @@
  */
 
 import { NgModule } from '@angular/core';
-import { CloningService } from './index';
+import { CloningService } from './cloning.service';
 
 @NgModule({
     providers: [CloningService],

@@ -7,7 +7,7 @@
  */
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, NgZone } from '@angular/core';
-import { GlobalEventService } from '../../index';
+import { GlobalEventService } from '../../src/common/global-event/global-event.service';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

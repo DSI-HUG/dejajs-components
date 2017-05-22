@@ -7,7 +7,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { ICircularRange } from '../../index';
+import { ICircularRange } from '../../src/component/circular-picker/circular-picker.component';
 
 @Component({
     selector: 'deja-circular-picker-demo',

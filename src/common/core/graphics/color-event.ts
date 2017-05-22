@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Color } from './index';
+import { Color } from './color';
 
 export class ColorEvent extends CustomEvent {
     public color: Color;

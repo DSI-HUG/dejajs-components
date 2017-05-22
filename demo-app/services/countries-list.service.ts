@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { IItemBase, ItemListService } from '../../index';
+import { IItemBase } from '../../src/common/core/item-list/item-base';
+import { ItemListService } from '../../src/common/core/item-list/item-list.service';
 import { CountriesService } from './countries.service';
 
 @Injectable()

@@ -16,7 +16,8 @@ import { Subscriber } from 'rxjs/Subscriber';
 import { Diacritics } from '../diacritics/index';
 import { GroupingService, IGroupInfo } from '../grouping/index';
 import { ISortInfos, SortingService } from '../sorting/index';
-import { IItemBase, IItemTree } from './index';
+import { IItemBase } from './item-base';
+import { IItemTree } from './item-tree';
 
 /** Service de gestion des listes (deja-treelist, deja-select et deja-grid).
  * Ce service permet la gestion du viewport et la gestion des caches des listes.

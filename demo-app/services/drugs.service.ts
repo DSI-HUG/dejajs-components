@@ -10,7 +10,8 @@ import { Injectable } from '@angular/core';
 import { Http, ResponseContentType } from '@angular/http';
 import 'rxjs/add/operator/repeat';
 import { Observable } from 'rxjs/Observable';
-import { GroupingService, IGroupInfo } from '../../index';
+import { IGroupInfo } from '../../src/common/core/grouping/group-infos';
+import { GroupingService } from '../../src/common/core/grouping/grouping.service';
 
 @Injectable()
 export class DrugsService {

@@ -8,7 +8,12 @@
 
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { DejaGridComponent, DejaGridRowsEvent, IDejaDragEvent, IDejaGridColumn, IDejaGridColumnSizeEvent, IItemTree, IViewPortItem } from '../../index';
+import { IItemTree } from '../../src/common/core/item-list/item-tree';
+import { IViewPortItem } from '../../src/common/core/item-list/viewport.service';
+import { IDejaGridColumn, IDejaGridColumnSizeEvent } from '../../src/component/data-grid/data-grid-column/data-grid-column';
+import { DejaGridRowsEvent } from '../../src/component/data-grid/data-grid-row/data-grid-rows-event';
+import { DejaGridComponent } from '../../src/component/data-grid/data-grid.component';
+import { IDejaDragEvent } from '../../src/component/dragdrop/draggable.directive';
 import { DrugsService, IDrug } from '../services/drugs.service';
 import { INews, NewsService } from '../services/news.service';
 import { IExtendedViewPortItem } from '../tree-list/tree-list-demo'

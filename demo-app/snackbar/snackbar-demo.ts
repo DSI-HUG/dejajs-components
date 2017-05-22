@@ -8,7 +8,7 @@
 
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { MaterialColors } from '../../index';
+import { MaterialColors } from '../../src/common/core/style/material-colors';
 import { Message } from './message.class';
 
 @Component({

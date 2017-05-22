@@ -8,7 +8,9 @@
 
 import { Component, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { DejaViewPortComponent, IEditorLanguage, IViewPortItem } from '../../index';
+import { IViewPortItem } from '../../src/common/core/item-list/viewport.service';
+import { IEditorLanguage } from '../../src/component/monaco-editor/options/editor-language.model';
+import { DejaViewPortComponent } from '../../src/component/viewport/viewport.component';
 import { INews, NewsService } from '../services/news.service';
 
 @Component({

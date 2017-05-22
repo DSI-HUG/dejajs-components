@@ -10,7 +10,15 @@ import { ChangeDetectorRef, Component, OnInit, ViewChild, ViewEncapsulation } fr
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
-import { DejaTreeListComponent, GroupingService, IDejaDragEvent, IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDropCursorInfos, IItemBase, IItemTree, IViewPortItem } from '../../index';
+import { GroupingService } from '../../src/common/core/grouping/grouping.service';
+import { IItemBase } from '../../src/common/core/item-list/item-base';
+import { IItemTree } from '../../src/common/core/item-list/item-tree';
+import { IViewPortItem } from '../../src/common/core/item-list/viewport.service';
+import { IDejaDragEvent } from '../../src/component/dragdrop/draggable.directive';
+import { IDropCursorInfos } from '../../src/component/mouse-dragdrop/mouse-dragdrop.service';
+import { IDejaMouseDraggableContext } from '../../src/component/mouse-dragdrop/mouse-draggable.directive';
+import { IDejaMouseDroppableContext } from '../../src/component/mouse-dragdrop/mouse-droppable.directive';
+import { DejaTreeListComponent } from '../../src/component/tree-list/tree-list.component';
 import { CountriesListService } from '../services/countries-list.service';
 import { CountriesService, ICountry } from '../services/countries.service';
 import { INews, NewsService } from '../services/news.service';

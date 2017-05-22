@@ -8,7 +8,8 @@
 
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { IEditorLanguage, IEditorTheme } from '../../index';
+import { IEditorLanguage } from '../../src/component/monaco-editor/options/editor-language.model';
+import { IEditorTheme } from '../../src/component/monaco-editor/options/editor-theme.component';
 import { MonacoEditorDemoService } from './monaco-editor-demo.service.';
 
 const xmlFile = 'xmlFile';

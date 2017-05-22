@@ -10,7 +10,8 @@ import { Injectable } from '@angular/core';
 import { Http, ResponseContentType } from '@angular/http';
 import 'rxjs/add/operator/publishLast';
 import { Observable } from 'rxjs/Observable';
-import { Color, MaterialColors } from '../../index';
+import { Color } from '../../src/common/core/graphics/color';
+import { MaterialColors } from '../../src/common/core/style/material-colors';
 
 @Injectable()
 export class CountriesService {
