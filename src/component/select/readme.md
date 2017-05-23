@@ -248,7 +248,8 @@ Crée une liste déroulante.
 </tbody>
 </table>
 
-### Events
+  - `@Output`
+
 <table>
 <thead>
 <tr>
@@ -271,7 +272,8 @@ Crée une liste déroulante.
 </tbody>
 </table>
 
-### Pré-Events
+  - `@Pré-Events`
+
 <table>
 <thead>
 <tr>
