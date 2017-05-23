@@ -6,7 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { AfterViewInit, Component, ContentChild, ElementRef, EventEmitter, HostListener, Input, OnDestroy, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ContentChild, ElementRef, EventEmitter, HostListener, Input, OnDestroy, Optional, Output, Self, ViewChild } from '@angular/core';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -16,6 +17,8 @@ import { IDejaMouseDroppableContext, IDropCursorInfos } from '../mouse-dragdrop/
 import { DejaTile, DejaTileGroupComponent, IDejaTile, IDejaTilesAddEvent, IDejaTilesEvent, IDejaTilesModelEvent, IDejaTilesRefreshParams, IDejaTilesRemoveEvent } from './index';
 import { DejaTilesLayoutProvider } from './tiles-layout.provider';
 
+const noop = () => { };
+
 @Component({
     providers: [DejaTilesLayoutProvider],
     selector: 'deja-tiles',
@@ -24,7 +27,7 @@ import { DejaTilesLayoutProvider } from './tiles-layout.provider';
     ],
     templateUrl: './tiles.component.html',
 })
-export class DejaTilesComponent implements AfterViewInit, OnDestroy {
+export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, OnDestroy {
     /**
      * Raised when the selected items has changed
      */
@@ -57,6 +60,10 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
 
     @ContentChild('tileTemplate') protected tileTemplate;
 
+    // NgModel implementation
+    protected onTouchedCallback: () => void = noop;
+    protected onChangeCallback: (_: any) => void = noop;
+
     private _models = [] as IDejaTile[];
     private delete$sub: Subscription;
     private copy$sub: Subscription;
@@ -68,16 +75,25 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
 
     @ViewChild('tilesContainer') private tilesContainer: ElementRef;
 
-    constructor(el: ElementRef, private layoutProvider: DejaTilesLayoutProvider) {
+    constructor(el: ElementRef, private layoutProvider: DejaTilesLayoutProvider, @Self() @Optional() public _control: NgControl) {
+        if (this._control) {
+            this._control.valueAccessor = this;
+        }
+
         const element = el.nativeElement as HTMLElement;
 
         this.selectionChanged = this.layoutProvider.selectionChanged;
-        this.layoutChanged = this.layoutProvider.layoutChanged;
         this.contentAdding = this.layoutProvider.contentAdding;
         this.contentRemoving = this.layoutProvider.contentRemoving;
 
         this.layoutProvider.modelChanged.subscribe((event) => {
             this.modelChanged.emit(event);
+            this.onChangeCallback(event.tiles);
+        });
+
+        this.layoutProvider.layoutChanged.subscribe((event) => {
+            this.layoutChanged.emit(event);
+            this.onChangeCallback(event.tiles);
         });
 
         this.keyup$ = Observable.fromEvent(element.ownerDocument, 'keyup');
@@ -123,8 +139,7 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
 
     @Input()
     public set models(models: IDejaTile[]) {
-        this._models = models || [];
-        this.tiles$.next(this.layoutProvider.tiles = (this._models.map((tile) => new DejaTile(tile))));
+        this.writeValue(models)
     }
 
     @Input()
@@ -190,6 +205,21 @@ export class DejaTilesComponent implements AfterViewInit, OnDestroy {
     public set selectedTiles(selectedIds: string[]) {
         this.layoutProvider.selectedTiles = selectedIds;
     }
+
+    // ************* ControlValueAccessor Implementation **************
+    public writeValue(models: any) {
+        this._models = models || [];
+        this.tiles$.next(this.layoutProvider.tiles = (this._models.map((tile) => new DejaTile(tile))));
+    }
+
+    public registerOnChange(fn: any) {
+        this.onChangeCallback = fn;
+    }
+
+    public registerOnTouched(fn: any) {
+        this.onTouchedCallback = fn;
+    }
+    // ************* End of ControlValueAccessor Implementation **************
 
     public ngAfterViewInit() {
         this.layoutProvider.container = this.tilesContainer.nativeElement;
