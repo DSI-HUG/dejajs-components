@@ -7,8 +7,8 @@ Crée une liste déroulante.
 ```html
 <deja-select required selectionClearable placeholder="Liste des pays, avec templating" valueField="code" [(ngModel)]="countryForTemnplate" [models]="countriesForTemplate">
     <ng-template #itemTemplate let-item>
-        <span>{{ item.naqme }}</span>
-        <span>{{ item.code }}</span>
+        <span>{{ item.model.naqme }}</span>
+        <span>{{ item.model.code }}</span>
     </ng-template>
 </deja-select>
 ```
@@ -45,7 +45,7 @@ Crée une liste déroulante.
     <td>query</td>
     <td></td>
     <td></td>
-    <td>Correspond au ngModel du chanp de filtrage ou recherche.</td>
+    <td>Correspond au model du chanp de filtrage ou recherche.</td>
 </tr>
 <tr>
     <td>maxHeight</td>
@@ -64,6 +64,12 @@ Crée une liste déroulante.
     <td>string</td>
     <td></td>
     <td>ID de l'élement dans lequel la liste déroulante doit s'afficher (la liste déroulante ne peut dépasser de l'élement spécifié ici)</td>
+</tr>
+<tr>
+    <td>dropdownContainerElement</td>
+    <td>ElementRef | HTMLElement</td>
+    <td></td>
+    <td>Element dans lequel la liste déroulante doit s'afficher (la liste déroulante ne peut dépasser de l'élement spécifié ici)</td>
 </tr>
 <tr>
     <td>dropdownAlignment </td>
@@ -96,16 +102,28 @@ Crée une liste déroulante.
     <td>Permet de définir un template pour l'élément de conseil ou d'affichage d'erreur.</td>
 </tr>
 <tr>
+    <td>delay-search-trigger</td>
+    <td>number</td>
+    <td>250</td>
+    <td>Temps d'attente en ms avant que la recherche dans la liste soit lancée lorsque l'utilisateur tape dans le select </td>
+</tr>
+<tr>
     <td>selectionClearable</td>
     <td>boolean</td>
     <td>false</td>
     <td>Indique ou détermine si le bouton pour effacer la selection doit être affiché</td>
 </tr>
 <tr>
+    <td>selectedItemsPosition</td>
+    <td>DejaSelectSelectionPosition</td>
+    <td>above</td>
+    <td>Retourne ou définit la position des éléments selectionées en multiselect</td>
+</tr>
+<tr>
     <td>hideSelected</td>
     <td>boolean</td>
     <td>false</td>
-    <td>Définit une valeur indiquant si les éléments selectionés doivent être masqué de la liste déroulante.</td>
+    <td>Retourne ou définit une valeur indiquant si les éléments selectionés doivent être masqué de la liste déroulante.</td>
 </tr>
 <tr>
     <td>currentItem</td>
@@ -117,19 +135,19 @@ Crée une liste déroulante.
     <td>pageSize</td>
     <td>number</td>
     <td></td>
-    <td>Définit le nombre de lignes à sauter en cas de pression sur les touches PageUp ou PageDown</td>
+    <td>Retourne ou définit le nombre de lignes à sauter en cas de pression sur les touches PageUp ou PageDown</td>
 </tr>
 <tr>
     <td>hintLabel</td>
     <td>string</td>
     <td></td>
-    <td>Définit un texte de conseil en cas d'erreur de validation ou autre</td>
+    <td>Retourne ou définit un texte de conseil en cas d'erreur de validation ou autre</td>
 </tr>
 <tr>
     <td>viewPortRowHeight</td>
     <td>number</td>
     <td></td>
-    <td>Définit la hauteur d'une ligne pour le calcul du viewport en pixels (la valeur par défaut sera utilisée si aucune valeur n'est setté).</td>
+    <td>Définit la hauteur d'une ligne pour le calcul du viewport en pixels (la valeur par défaut sera utilisée si aucune valeur n'est définie).</td>
 </tr>
 <tr>
     <td>viewportMode</td>
@@ -141,25 +159,25 @@ Crée une liste déroulante.
     <td>childrenField</td>
     <td>string</td>
     <td></td>
-    <td>Retourne le champ utilisé pour la liste des enfants d'un parent</td>
+    <td>Retourne ou définit le champ utilisé pour la liste des enfants d'un parent</td>
 </tr>
 <tr>
     <td>textField</td>
     <td>string</td>
     <td></td>
-    <td>Définit le champ à utiliser comme valeur d'affichage.</td>
+    <td>Retourne ou définit le champ à utiliser comme valeur d'affichage.</td>
 </tr>
 <tr>
     <td>valueField</td>
     <td>string</td>
     <td></td>
-    <td>Définit le champ à utiliser comme valeur de comparaison.</td>
+    <td>Retourne ou définit le champ à utiliser comme valeur de comparaison.</td>
 </tr>
 <tr>
     <td>searchField</td>
     <td>string</td>
     <td></td>
-    <td>Définit le champ à utiliser comme champ de recherche. Ce champ peut indiquer, un champ contenant une valeur, un texte indexé, ou une fonction.</td>
+    <td>Retourne ou définit le champ à utiliser comme champ de recherche. Ce champ peut indiquer, un champ contenant une valeur, un texte indexé, ou une fonction.</td>
 </tr>
 <tr>
     <td>type</td>
@@ -168,28 +186,40 @@ Crée une liste déroulante.
     <td>Définit le type du select. Valeur possible : autocomplete, multiselect, select</td>
 </tr>
 <tr>
-    <td>selectingItem</td>
-    <td>Fonction retournant une promise ou un observable</td>
-    <td></td>
-    <td>Set a promise called before an item selection</td>
-</tr>
-<tr>
-    <td>unselectingItem</td>
-    <td>Fonction retournant une promise ou un observable</td>
-    <td></td>
-    <td>Set a promise called before an item deselection</td>
-</tr>
-<tr>
     <td>itemListService</td>
     <td>ItemListService</td>
     <td></td>
     <td>Definit le service de liste utilisé par ce composant. Ce srevice permet de controller dynamiquement la liste, ou de faire du lazyloading.</td>
 </tr>
 <tr>
+    <td>selectedItem</td>
+    <td>IItemBase</td>
+    <td></td>
+    <td>Retourne ou définit l'élément selectioné en mode single select</td>
+</tr>
+<tr>
+    <td>selectedItems</td>
+    <td>IItemBase[]</td>
+    <td></td>
+    <td>Retourne ou définit la liste des éléments selectionés en mode multiselect</td>
+</tr>
+<tr>
+    <td>selectedModel</td>
+    <td>any</td>
+    <td></td>
+    <td>Retourne ou définit le model selectioné en mode single select</td>
+</tr>
+<tr>
+    <td>selectedModels</td>
+    <td>any[]</td>
+    <td></td>
+    <td>Retourne ou définit la liste des models selectionés en mode multiselect</td>
+</tr>
+<tr>
     <td>waiter</td>
     <td>boolean</td>
     <td></td>
-    <td>Definit si le waiter doit être affiché dans le select.</td>
+    <td>Retourne ou définit si le waiter doit être affiché dans le select.</td>
 </tr>
 <tr>
     <td>items</td>
@@ -202,6 +232,79 @@ Crée une liste déroulante.
     <td>any[] | Observable<any[]></td>
     <td></td>
     <td>Définit la liste des éléments (tout type d'objet métier)</td>
+</tr>
+<tr>
+    <td>maxHeight</td>
+    <td>number></td>
+    <td>500</td>
+    <td>Retourne ou définit la hauteur maximum avant que le composant affiche une scrollbar. Spécifier une grande valeur pour ne jamais afficher de scrollbar. Spécifier 0 pour que le composant determine sa hauteur à partir du container</td>
+</tr>
+<tr>
+    <td>readonly</td>
+    <td>boolean></td>
+    <td>false</td>
+    <td>Retourne ou définit une valeur indiquant si le composant est en lecture seule</td>
+</tr>
+</tbody>
+</table>
+
+### Events
+<table>
+<thead>
+<tr>
+    <th>Nom</th>
+    <th>Type</th>
+    <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+    <td>viewPortChanged</td>
+    <td>EventEmitter<IViewPort><any[]></td>
+    <td>Exécuté lorsque le calcul du viewPort est terminé.</td>
+</tr>
+<tr>
+    <td>selectedChange</td>
+    <td>EventEmitter<DejaItemsEvent | DejaItemEvent><any[]></td>
+    <td>Exécuté lorsque l'utilisateur sélectionne ou désélectionne une ligne.</td>
+</tr>
+</tbody>
+</table>
+
+### Pré-Events
+<table>
+<thead>
+<tr>
+    <th>Nom</th>
+    <th>Type</th>
+    <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+    <td>loadingItems</td>
+    <td>(query: string | RegExp, selectedItems: IItemBase[]) => Observable<IItemBase></td>
+    <td>Définit un Observable appelé avant que la liste ne soit affichée</td>
+</tr>
+<tr>
+    <td>selectingItem</td>
+    <td>(item: IItemBase) => Promise<IItemBase> | Observable<IItemBase></td>
+    <td>Définit une promesse ou un observable appelé avant qu'un élément ne soit selectioné</td>
+</tr>
+<tr>
+    <td>unselectingItem</td>
+    <td>(item: IItemBase) => Promise<IItemBase> | Observable<IItemBase></td>
+    <td>Définit une promesse ou un observable appelé avant qu'un élément ne soit déselectioné</td>
+</tr>
+<tr>
+    <td>expandingItem</td>
+    <td>(item: IItemTree) => Promise<IItemTree> | Observable<IItemTree></td>
+    <td>Définit une promesse ou un observable appelé avant qu'un élément ne soit étendu</td>
+</tr>
+<tr>
+    <td>collapsingItem</td>
+    <td>(item: IItemTree) => Promise<IItemTree> | Observable<IItemTree></td>
+    <td>Définit une promesse ou un observable appelé avant qu'un élément ne soit réduit</td>
 </tr>
 </tbody>
 </table>
