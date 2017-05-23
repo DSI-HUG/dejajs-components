@@ -339,9 +339,9 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
         this.layoutProvider.removeTiles([tile.id]);
     }
 
-    protected onTileModelChanged(tile: DejaTile) {
-        const event = {} as IDejaTilesModelEvent;
-        event.tiles = [tile];
+    protected onTileModelChanged() {
+        const event = new CustomEvent('DejaTilesModelEvent', { cancelable: false }) as IDejaTilesModelEvent;
+        event.tiles = this.layoutProvider.tiles.map((t) => t.toTileModel());
         this.modelChanged.emit(event);
     }
 

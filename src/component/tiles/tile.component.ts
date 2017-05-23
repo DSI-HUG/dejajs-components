@@ -1,4 +1,3 @@
-import { EventEmitter } from '@angular/core';
 /*
  *  @license
  *  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
@@ -8,11 +7,11 @@ import { EventEmitter } from '@angular/core';
  */
 
 import { Component, ElementRef, Input, OnDestroy, Output } from '@angular/core';
+import { EventEmitter } from '@angular/core';
 import 'rxjs/add/operator/delay';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { DejaTile } from './tile.class';
-import { IDejaTilesModelEvent } from './tiles.event';
 
 @Component({
     selector: 'deja-tile',
@@ -24,7 +23,7 @@ import { IDejaTilesModelEvent } from './tiles.event';
 export class DejaTileComponent implements OnDestroy {
     @Input() public template;
     @Input() public designMode;
-    @Output() public modelChanged = new EventEmitter<IDejaTilesModelEvent>();
+    @Output() public modelChanged = new EventEmitter();
     @Output() public close = new EventEmitter<Event>();
 
     public element: HTMLElement;
@@ -112,5 +111,9 @@ export class DejaTileComponent implements OnDestroy {
 
     public ngOnDestroy() {
         this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+    }
+
+    protected onTitleChanged() {
+        this.modelChanged.emit();
     }
 }
