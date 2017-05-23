@@ -10,13 +10,16 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DejaChildValidatorDirective } from './child-validator.directive';
+import { DateValidatorDirective } from './date-validator';
 
 @NgModule({
     declarations: [
         DejaChildValidatorDirective,
+        DateValidatorDirective,
     ],
     exports: [
         DejaChildValidatorDirective,
+        DateValidatorDirective,
     ],
     imports: [
         CommonModule,
