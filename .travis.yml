@@ -54,3 +54,4 @@ deploy:
 after_deploy:
 - bash ./scripts/tag.sh
 - bash ./scripts/deploy-demo.sh
+- bash ./scripts/deploy-doc.sh

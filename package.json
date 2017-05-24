@@ -73,6 +73,7 @@
     "cz-conventional-changelog": "2.0.0",
     "del": "2.2.2",
     "del-cli": "1.0.0",
+    "gh-pages": "^1.0.0",
     "gulp": "3.9.1",
     "gulp-json-editor": "^2.2.1",
     "gulp-rename": "1.2.2",
