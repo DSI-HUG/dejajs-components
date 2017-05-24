@@ -25,7 +25,7 @@ export class DejaDroppableDirective {
         this._allEvents = value != null && `${value}` !== 'false';
     }
 
-    @HostBinding('attr.draggable') private droppable = null;
+    @HostBinding('attr.droppable') private droppable = null;
     private draginfokey = 'draginfos';
     private objectKey = 'object';
     private droppedKey = 'dropped';
