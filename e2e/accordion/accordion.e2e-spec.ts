@@ -24,7 +24,9 @@ describe('Accordion component', () => {
 
             expect(page.headerIsOpen(body)).toBe(false);
             page.openHeader(header);
-            expect(page.headerIsOpenAfterAnimation(body)).toBe(true);
+            page.headerIsOpenAfterAnimation(body).then((resp) => {
+                expect(resp).toBe(true);
+            });
         });
 
     });
