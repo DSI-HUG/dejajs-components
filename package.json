@@ -28,7 +28,7 @@
     "docs:watch": "yarn run docs:build -- -s -w",
     "e2e": "ng e2e",
     "licensecheck": "license-check",
-    "lint": "ng lint",
+    "lint": "ng lint --type-check",
     "ng": "ng",
     "release:major": "changelog -M && git add CHANGELOG.md && git commit -m 'updated CHANGELOG.md' && npm version major && git push origin",
     "release:minor": "changelog -m && git add CHANGELOG.md && git commit -m 'updated CHANGELOG.md' && npm version minor && git push origin",

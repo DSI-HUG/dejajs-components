@@ -56,7 +56,7 @@ export class DejaDatePickerDemoComponent implements OnInit {
     }
 
     public ngOnInit() {
-        let now: Date = new Date();
+        const now: Date = new Date();
         this.dateMin = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
         this.dateMax = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         this.theDateSelected = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);

@@ -76,15 +76,15 @@ export class DejaDroppableDirective {
                                 if (this.context.dropcallback) {
                                     const dragInfos = this.clipboardService.get(this.draginfokey) as { [key: string]: any };
                                     if (dragInfos) {
-                                        const e = dropEvent as IDejaDropEvent;
-                                        e.dragInfo = dragInfos;
-                                        e.dragObject = dragInfos[this.objectKey];
-                                        e.dragElement = element;
-                                        e.itsMe = dragInfos[this.elementKey] === element;
+                                        const evt = dropEvent as IDejaDropEvent;
+                                        evt.dragInfo = dragInfos;
+                                        evt.dragObject = dragInfos[this.objectKey];
+                                        evt.dragElement = element;
+                                        evt.itsMe = dragInfos[this.elementKey] === element;
 
-                                        this.context.dropcallback(e);
-                                        if (e.defaultPrevented) {
-                                            e.dragInfo[this.droppedKey] = true;
+                                        this.context.dropcallback(evt);
+                                        if (evt.defaultPrevented) {
+                                            evt.dragInfo[this.droppedKey] = true;
                                             dropEvent.preventDefault();
                                             dragEvent.dataTransfer.dropEffect = 'copy';
                                         } else {
@@ -112,16 +112,16 @@ export class DejaDroppableDirective {
                                 if (this.context.dragovercallback) {
                                     const dragInfos = this.clipboardService.get(this.draginfokey) as { [key: string]: any };
                                     if (dragInfos) {
-                                        const e = overEvent as IDejaDropEvent;
-                                        e.dragInfo = dragInfos;
-                                        e.dragObject = dragInfos[this.objectKey];
-                                        e.dragElement = element;
-                                        e.itsMe = dragInfos[this.elementKey] === element;
+                                        const evt = overEvent as IDejaDropEvent;
+                                        evt.dragInfo = dragInfos;
+                                        evt.dragObject = dragInfos[this.objectKey];
+                                        evt.dragElement = element;
+                                        evt.itsMe = dragInfos[this.elementKey] === element;
 
-                                        this.context.dragovercallback(e);
+                                        this.context.dragovercallback(evt);
                                         this.lastTarget = overEvent.target;
-                                        this.lastAccept = e.defaultPrevented;
-                                        if (e.defaultPrevented) {
+                                        this.lastAccept = evt.defaultPrevented;
+                                        if (evt.defaultPrevented) {
                                             overEvent.preventDefault();
                                             dragEvent.dataTransfer.dropEffect = 'copy';
                                         } else {
