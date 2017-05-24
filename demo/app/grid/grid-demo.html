@@ -73,6 +73,41 @@
 	</md-card>
 </div>
 
+<div *ngIf="tabIndex === 2">
+	<md-card class="deja-treelist-demo demo-card demo-basic">
+		<md-toolbar color="primary">Advanced Examples</md-toolbar>
+        Under construction
+	</md-card>
+</div>
+
+<div *ngIf="tabIndex === 3">
+	<md-card class="deja-treelist-demo demo-card demo-basic">
+		<md-toolbar color="primary">Templating Examples</md-toolbar>
+		<md-card-content>
+			<h1>Cells Template</h1>
+			<deja-grid id="news" #news sortable columnsSizable multiSelect [rows]="news$ | async" [columns]="newsColumns" viewportMode="auto" nodataholder="Pas de données" (columnSizeChanged)="onColumnSizeChanged($event)">
+				<ng-template #cellTemplate let-row let-column="column">
+					<img *ngIf="column.name==='urlToImage'" [attr.src]="row[column.name]" class="logo" (load)="imageLoaded(row)">
+				</ng-template>
+			</deja-grid>
+		</md-card-content>
+	</md-card>
+</div>
+
+<div *ngIf="tabIndex === 4">
+	<md-card class="deja-treelist-demo demo-card demo-basic">
+		<md-toolbar color="primary">Pre-events and on-demand</md-toolbar>
+        Under construction
+	</md-card>
+</div>
+
+<div *ngIf="tabIndex === 5">
+	<md-card class="deja-treelist-demo demo-card demo-basic">
+		<md-toolbar color="primary">Performances</md-toolbar>
+        Under construction
+	</md-card>
+</div>
+
 <!--<div *ngIf="tabIndex === 22">
 	<md-card class="demo-card">
 		<md-toolbar color="primary">Grille avec beaucoup d'enregistrements&nbsp;
@@ -160,11 +195,7 @@
 	<md-card class="demo-card">
 		<md-toolbar color="primary">Grille avec taille automatique des lignes</md-toolbar>
 		<md-card-content class="listContainer">
-			<deja-grid id="news" #news groupArea sortable columnsSizable multiSelect [rows]="news$ | async" [columns]="newsColumns" viewportMode="auto" nodataholder="Pas de données" (columnSizeChanged)="onColumnSizeChanged($event)">
-				<ng-template #cellTemplate let-row let-column="column">
-					<img *ngIf="column.name==='urlToImage'" [attr.src]="row[column.name]" class="logo" (load)="imageLoaded(row)">
-				</ng-template>
-			</deja-grid>
+
 		</md-card-content>
 	</md-card>
 </div>-->

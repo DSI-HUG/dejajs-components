@@ -1,6 +1,6 @@
-<span #headerElement id="deja-grid-header" [style.left.px]="columnLayout.scrollLeft" [class.onsizer]="(sizedColumn && true) || null" [deja-droppable]="getDropContext()" [attr.sizable]="columnsSizable || null">
-	<span *ngIf="columnLayout.vpBeforeWidth" [style.width.px]="columnLayout.vpBeforeWidth"></span>
-	<span *ngFor="let column of columnLayout.columns; let index=index" [deja-draggable]="getDragContext(column)" [attr.index]="index" [attr.colname]="column.name" [attr.sizeable]="column.sizeable === false ? false : null" [class.dragged]="column.dragged" class="column-header-wrapper" [style.width.px]="column.w">
+<div #headerElement id="deja-grid-header" [style.left.px]="columnLayout.scrollLeft" [class.onsizer]="(sizedColumn && true) || null" [deja-droppable]="getDropContext()" [attr.sizable]="columnsSizable || null">
+	<div *ngIf="columnLayout.vpBeforeWidth" [style.flex-basis.px]="columnLayout.vpBeforeWidth"></div>
+	<div *ngFor="let column of columnLayout.columns; let index=index" [deja-draggable]="getDragContext(column)" [attr.index]="index" [attr.colname]="column.name" [attr.sizeable]="column.sizeable === false ? false : null" [class.dragged]="column.dragged" class="column-header-wrapper" [style.flex-basis.px]="column.w">
 		<div *ngIf="!(columnHeaderTemplate && column.useHeaderTemplate!==false)" class="column-header">{{ column.label }}</div>
 		<ng-template [ngTemplateOutlet]="columnHeaderTemplate" *ngIf="columnHeaderTemplate && column.useHeaderTemplate!==false" [ngTemplateOutletContext]="{ $implicit: column }"></ng-template>
 		<deja-sort-indicator *ngIf="sortInfos && sortInfos.name === column.name" [sort-infos]="sortInfos"></deja-sort-indicator>
@@ -8,6 +8,6 @@
 		<div class="sort-waiter" *ngIf="column.sorting">
 			<i class="material-icons">cached</i>
 		</div>
-	</span>
-	<span *ngIf="columnLayout.vpAfterWidth" [style.width.px]="columnLayout.vpAfterWidth"></span>
-</span>
+	</div>
+	<div *ngIf="columnLayout.vpAfterWidth" [style.flex-basis.px]="columnLayout.vpAfterWidth"></div>
+</div>

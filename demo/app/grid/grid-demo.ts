@@ -20,7 +20,6 @@ import { IPerson, PeopleService } from '../services/people.service';
 import { IExtendedViewPortItem } from '../tree-list/tree-list-demo';
 
 @Component({
-    // encapsulation: ViewEncapsulation.None,
     selector: 'grid-demo',
     styleUrls: ['./grid-demo.scss'],
     templateUrl: './grid-demo.html',
@@ -29,6 +28,8 @@ export class GridDemoComponent {
     protected tabIndex = 1;
     private people$: Observable<IPerson[]>;
     private news$: Observable<INews[]>;
+
+    @ViewChild('news') private gridNews: DejaGridComponent;
 
     protected peopleColumns = [
         {
@@ -68,9 +69,69 @@ export class GridDemoComponent {
         },
     ] as IDejaGridColumn[];
 
+    protected newsColumns = [
+        {
+            label: 'Logo',
+            name: 'urlToImage',
+            minWidth: 64,
+            sizeable: true,
+            useCellTemplate: true,
+            width: '150px',
+        },
+        {
+            label: 'title',
+            name: 'title',
+            sizeable: true,
+            useCellTemplate: false,
+            width: '180px',
+        },
+        {
+            label: 'description',
+            name: 'description',
+            minWidth: 64,
+            sizeable: true,
+            width: '450px',
+        },
+        {
+            label: 'url',
+            name: 'url',
+            width: '200px',
+        },
+        {
+            label: 'category',
+            name: 'category',
+            width: '100px',
+        },
+        {
+            label: 'language',
+            name: 'language',
+            width: '64px',
+        },
+        {
+            label: 'country',
+            name: 'country',
+            width: '64px',
+        },
+    ] as IDejaGridColumn[];
+
     constructor(private peopleService: PeopleService, newsService: NewsService) {
         this.news$ = newsService.getNews$(1);
         this.people$ = peopleService.getPeople$();
+    }
+
+    protected onColumnSizeChanged(e: IDejaGridColumnSizeEvent) {
+        if (e.column.name === 'description' || e.column.name === 'urlToImage') {
+            this.gridNews.clearRowsHeight();
+            this.gridNews.refreshViewPort();
+        }
+    }
+
+    protected imageLoaded(item: IViewPortItem) {
+        const itemExt = item as IExtendedViewPortItem;
+        if (!itemExt.loaded) {
+            itemExt.loaded = true;
+            this.gridNews.refreshViewPort(itemExt);
+        }
     }
 }
 
@@ -257,51 +318,6 @@ export class GridDemoComponent {
 //         },
 //     ] as IDejaGridColumn[];
 
-//     protected newsColumns = [
-//         {
-//             label: 'Logo',
-//             name: 'urlToImage',
-//             minWidth: 64,
-//             sizeable: true,
-//             useCellTemplate: true,
-//             width: '150px',
-//         },
-//         {
-//             label: 'title',
-//             name: 'title',
-//             sizeable: true,
-//             useCellTemplate: false,
-//             width: '180px',
-//         },
-//         {
-//             label: 'description',
-//             name: 'description',
-//             minWidth: 64,
-//             sizeable: true,
-//             width: '250px',
-//         },
-//         {
-//             label: 'url',
-//             name: 'url',
-//             width: '200px',
-//         },
-//         {
-//             label: 'category',
-//             name: 'category',
-//             width: '100px',
-//         },
-//         {
-//             label: 'language',
-//             name: 'language',
-//             width: '64px',
-//         },
-//         {
-//             label: 'country',
-//             name: 'country',
-//             width: '64px',
-//         },
-//     ] as IDejaGridColumn[];
-
 //     protected tabIndex = 1;
 //     protected drugCounts = 0;
 
@@ -311,7 +327,7 @@ export class GridDemoComponent {
 //     private groupedDrugs$: Observable<IDrug[]>;
 //     private selectedItems: IItemTree[];
 //     @ViewChild(DejaGridComponent) private gridComponent: DejaGridComponent;
-//     @ViewChild('news') private gridNews: DejaGridComponent;
+
 
 //     constructor(private drugsService: DrugsService, newsService: NewsService) {
 //         this.news$ = newsService.getNews$(1);
@@ -363,13 +379,6 @@ export class GridDemoComponent {
 //         }
 //     }
 
-//     protected onColumnSizeChanged(e: IDejaGridColumnSizeEvent) {
-//         if (e.column.name === 'description' || e.column.name === 'urlToImage') {
-//             this.gridNews.clearRowsHeight();
-//             this.gridNews.refreshViewPort();
-//         }
-//     }
-
 //     protected showMoreReaction() {
 
 //     }
@@ -378,11 +387,5 @@ export class GridDemoComponent {
 //         alert('Suffix button was pressed');
 //     }
 
-//     protected imageLoaded(item: IViewPortItem) {
-//         const itemExt = item as IExtendedViewPortItem;
-//         if (!itemExt.loaded) {
-//             itemExt.loaded = true;
-//             this.gridNews.refreshViewPort(itemExt);
-//         }
-//     }
+
 // }

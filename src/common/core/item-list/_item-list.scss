@@ -26,13 +26,11 @@
 			#expandbtn {
 				flex: 0 0 2rem;
 				position: relative;
-				&:before {
-					content: 'keyboard_arrow_down';
-					font-family: 'Material Icons';
+				>.material-icons {
 					position: absolute;
 					right: 0;
 					top: 50%;
-					font-size: 120%;
+					font-size: 100%;
 					-ms-transform: translateY(-50%);
 					/* IE 9 */
 					-webkit-transform: translateY(-50%);
@@ -44,7 +42,7 @@
 			}
 			&.collapsed {
 				#expandbtn {
-					&:before {
+					>.material-icons {
 						-ms-transform: translateY(-50%) rotate(-90deg);
 						/* IE 9 */
 						-webkit-transform: translateY(-50%) rotate(-90deg);

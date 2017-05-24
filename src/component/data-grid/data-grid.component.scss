@@ -28,9 +28,10 @@ deja-grid {
 						box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.3);
 					}
 				}
-				display: inline-flex;
-				// overflow: visible; // Wrong flex calculation in auto row height
-				min-width: 100%;
+                deja-grid-row,
+                deja-grid-parent-row {
+                    width: 100%;
+                }
 			}
 			&[depth-max] {
 				>div.listitem {

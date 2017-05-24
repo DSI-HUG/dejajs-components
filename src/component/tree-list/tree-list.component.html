@@ -16,8 +16,8 @@
     <div id="nodata-holder" *ngIf="(!_itemList || _itemList.length === 0) && !waiter">{{ nodataholder }}</div>
     <div id="error-hint" *ngIf="_hintLabel">{{ _hintLabel }}</div>
     <div *ngIf="vpBeforeHeight" [style.height.px]="vpBeforeHeight"></div>
-    <div *ngFor="let item of _itemList; let index = index" #listitem class="listitem" [class.hide]="item.collapsing || item.expanding" [class.parent]="item.depth < depthMax" [class.collapsed]="item.collapsed" [class.selected]="item.selected" [attr.current]="(vpStartRow+index === currentItemIndex) || null" [class.unselectable]="item.selectable === false" [attr.depth]="depthMax ? item.depth : null" [attr.id]="item.id || null" [attr.flat]="vpStartRow + index" [deja-draggable]="getDragContext(vpStartRow + index)" [style.height.px]="getItemHeight(item)" [class.odd]="(item.depth === _depthMax && item.odd) || null">
-		<span *ngIf="item.$items" id="expandbtn"></span>
+    <div *ngFor="let item of _itemList; let index = index" #listitem class="listitem" [class.hide]="item.collapsing || item.expanding" [class.parent]="item.depth < depthMax" [class.collapsed]="item.collapsed" [class.selected]="item.selected" [attr.current]="(vpStartRow+index === currentItemIndex) || null" [class.unselectable]="item.selectable === false" [attr.depth]="depthMax ? item.depth : null" [attr.id]="item.id || null" [attr.flat]="vpStartRow + index" [deja-draggable]="getDragContext(vpStartRow + index)" [style.width.px]="itemsWidth" [style.height.px]="getItemHeight(item)" [class.odd]="(item.depth === _depthMax && item.odd) || null">
+		<span *ngIf="item.$items" id="expandbtn"><i class="material-icons">keyboard_arrow_down</i></span>
         <ng-container *ngIf="(!item.$items || !parentItemTemplate) && (item.$items || !itemTemplate)">{{ getTextValue(item) }}</ng-container>
         <ng-container class="item-content" *ngIf="item.$items && parentItemTemplate">
 		    <ng-template [ngTemplateOutlet]="parentItemTemplate" [ngTemplateOutletContext]="{ $implicit: item, query: query, flatindex: vpStartRow+index }"></ng-template>

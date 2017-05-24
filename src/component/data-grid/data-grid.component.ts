@@ -121,6 +121,8 @@ export class DejaGridComponent implements OnDestroy {
     /** Cet évenement est levé lorsque la taille d'une colonne est modifiée */
     @Output() public columnSizeChanged = new EventEmitter<IDejaGridColumnSizeEvent>();
 
+    protected rowsWidth = null;
+
     @ContentChild('rowTemplate') private rowTemplateInternal;
     @ContentChild('parentRowTemplate') private parentRowTemplateInternal;
     @ContentChild('cellTemplate') private _cellTemplate;
@@ -745,7 +747,9 @@ export class DejaGridComponent implements OnDestroy {
 
         this._columnLayout.vpBeforeWidth = 0;
         this._columnLayout.vpAfterWidth = 0;
+        let totalWidth = 0;
         this._columns.filter((column) => column.w > 0).forEach((column) => {
+            totalWidth += column.w;
             if (viewLeft > containerWidth) {
                 this._columnLayout.vpAfterWidth += column.w;
                 viewLeft += column.w;
@@ -758,6 +762,8 @@ export class DejaGridComponent implements OnDestroy {
                 }
             }
         });
+
+        this.rowsWidth = totalWidth > containerWidth ? totalWidth : containerWidth;
 
         if (this.header) {
             this.header.refresh();
