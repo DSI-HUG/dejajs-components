@@ -40,8 +40,7 @@ env:
   - ENCRYPTION_LABEL: d9215e5535f8
   - COMMIT_AUTHOR_EMAIL: travis@hcuge.ch
 before_deploy:
-  - pwd
-  - ls
+  - yarn run build:lib
   - cd dist
 deploy:
   provider: npm
