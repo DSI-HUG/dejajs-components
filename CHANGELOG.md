@@ -1,3 +1,112 @@
+## 2.0.0 (2017-5-24)
+
+##### Documentation Changes
+
+* **Contribution:** Create a creatibution readme ([485f0ccb](https://github.com/DSI-HUG/dejajs-components/commit/485f0ccbaa15ddb051943bb5d098c8c1251e8a6e))
+* **Readme:**
+  * Add commitizen badge in readme ([54598c50](https://github.com/DSI-HUG/dejajs-components/commit/54598c501529330499eccd9d887ce2ea9317762b))
+  * Add licence badge ([19bf614d](https://github.com/DSI-HUG/dejajs-components/commit/19bf614d6bcc4f90784b0ae79edc6b5a662ddc07))
+
+##### New Features
+
+* **PendingOnFocusDirective:** Directive to mark as pending the input has focus for reactive form ([2aa214cc](https://github.com/DSI-HUG/dejajs-components/commit/2aa214cc8774d72a9d3271e5b683a72deabbdb56))
+* **DejaSelect:**
+  * Added readonly property ([a95b2983](https://github.com/DSI-HUG/dejajs-components/commit/a95b2983c388bed033cf6668c95b65636c58aced))
+  * Implement reactive form compatibility and ngModel propagation to child input ([d6d2455c](https://github.com/DSI-HUG/dejajs-components/commit/d6d2455c1ac7aa9cd2c8968945c3d8d81099ff44))
+* **DejaChip:** Added readonly and disabled properties ([a9117570](https://github.com/DSI-HUG/dejajs-components/commit/a9117570ce6c491c85d230f6394db56391398247))
+* **ValidateOnBlurDirective:**
+  * Directive to validate input on blur instead on type for reactive form ([4e7b6657](https://github.com/DSI-HUG/dejajs-components/commit/4e7b6657526777c98250069705df4ff376540344))
+  * Directive to validate input on blur instead on type for reactive form fix(DejaSelect): Place holder position when late binding ([2e907c25](https://github.com/DSI-HUG/dejajs-components/commit/2e907c2597ff86ed1fb01c4256b23a6022543581))
+* **DejaChips:** DejaChips added for DejaSelect selected items in multiselect mode. ([fd1fe27d](https://github.com/DSI-HUG/dejajs-components/commit/fd1fe27db5ff7683feec47a15081127236df9947))
+* **DejaDatePicker:** Reactive form compatibility ([e92d5d7f](https://github.com/DSI-HUG/dejajs-components/commit/e92d5d7f152328efead93f2fd19b8d1520acf335))
+* **DejaDateSelector:** Reactive form compatibility ([9fcf751b](https://github.com/DSI-HUG/dejajs-components/commit/9fcf751bff5bda5ee77942ce9191b57fc8b0431d))
+* **DejaCircularPicker:** Reactive form compatibility ([6574f5e5](https://github.com/DSI-HUG/dejajs-components/commit/6574f5e5126f4040b6b84ddb99a7e61f80a1e600))
+* **DejaColorPicker:** Reactive from compatibility ([3a5b01a9](https://github.com/DSI-HUG/dejajs-components/commit/3a5b01a9e88fb92870c481720f8df8b2587ac47e))
+* **DejaColorSelector:** Reactive form compatibility ([76256172](https://github.com/DSI-HUG/dejajs-components/commit/76256172b416e5ac3e1545c4edd83353eb2d3db3))
+* **DejaEditableDirective:** ReactiveForm compatibility ([67a10411](https://github.com/DSI-HUG/dejajs-components/commit/67a10411e97dc857b520407a34217083d6b3b066))
+* **DejaGrid:** NgModel removed Compatibility ([6ba84c47](https://github.com/DSI-HUG/dejajs-components/commit/6ba84c4719d4e42d80b0bc3f24fb96741d5a0bbd))
+
+##### Bug Fixes
+
+* **E2E:** E2E TS Compliant with typescript 2.2.2 ([8aa7f7ad](https://github.com/DSI-HUG/dejajs-components/commit/8aa7f7ad6a41aaa9980c436d9fa94f9e8e8b999d))
+* **CLI:** Downgrad to typescript 2.2.2 to fix an incompatibility of cli compiler ([d72b26e1](https://github.com/DSI-HUG/dejajs-components/commit/d72b26e12168190e97224e35e4ca459518cc7326))
+* **Lint:**
+  * Fix tslint warning ([cd79cf07](https://github.com/DSI-HUG/dejajs-components/commit/cd79cf07e957aa5d821596532a4af325e1f42c40))
+  * Remove public rule ([bcc16aea](https://github.com/DSI-HUG/dejajs-components/commit/bcc16aea7246afb4e6a68ef318f05710947d60d7))
+* **Global:**
+  * Better imports ([d3238801](https://github.com/DSI-HUG/dejajs-components/commit/d3238801d8fce144de664557142cbff0110ebc8d))
+  * Compiler CLI compliance ([43346ee9](https://github.com/DSI-HUG/dejajs-components/commit/43346ee9337c4876a5aced605b91a53aefbcc5e9))
+  * Better imports ([ecd0689c](https://github.com/DSI-HUG/dejajs-components/commit/ecd0689ce15a20d57f7e35c291f10cee11eb3c2b))
+  * Better import ([784901c3](https://github.com/DSI-HUG/dejajs-components/commit/784901c3197a2dce02a1f0000390fb5de79cf96a))
+  * Better imports for compiler-cli compliance ([9db28940](https://github.com/DSI-HUG/dejajs-components/commit/9db289403f639e93e8d6c2973f25eb64d72d44ba))
+  * Better imports for compiler-cli compliance ([a7415451](https://github.com/DSI-HUG/dejajs-components/commit/a7415451fa4363e7d0fe29deb66bd0c857864df5))
+  * Better imports for compiler-cli compliance ([5cfdeb13](https://github.com/DSI-HUG/dejajs-components/commit/5cfdeb1330db306312b6fa50c2547c5e4f873c60))
+  * Better imports for compiler-cli compliance ([f49030d2](https://github.com/DSI-HUG/dejajs-components/commit/f49030d23f56e5b0dfc76e5fae0b22ec05d09772))
+  * Better imports for compiler-cli compliance ([0172c7a3](https://github.com/DSI-HUG/dejajs-components/commit/0172c7a3f24745801852140cf773e2a56f1160c7))
+  * Better imports for compiler-cli compliance ([70050e54](https://github.com/DSI-HUG/dejajs-components/commit/70050e54d4a534013995facf568b64b34b4b1826))
+  * Better imports for compiler-cli compliance ([0a5ab130](https://github.com/DSI-HUG/dejajs-components/commit/0a5ab1304f5b524b3ddba6e693ec35ed62bb68d9))
+  * Better imports for compiler-cli compliance ([8b10385e](https://github.com/DSI-HUG/dejajs-components/commit/8b10385e3c1819643979b463aae2b6eabd49ece9))
+  * Better imports for compiler-cli compliance ([0edcd9a2](https://github.com/DSI-HUG/dejajs-components/commit/0edcd9a299c5e7a2be989cd53994e5390ffc2f2d))
+  * Better imports for compiler-cli compliance ([a0ac3316](https://github.com/DSI-HUG/dejajs-components/commit/a0ac3316fbc7943357379d47d3665839baf0182f))
+  * Add RXJS Operators ([d123fc43](https://github.com/DSI-HUG/dejajs-components/commit/d123fc436aa7cd7de70e065502ad37471aff1fc0))
+  * Improve ClipboardService providing error and message ([c89e736d](https://github.com/DSI-HUG/dejajs-components/commit/c89e736d208c1bd553dfe7b677534b20a36ee411))
+* **CircularPicker:** Better import ([116cc22d](https://github.com/DSI-HUG/dejajs-components/commit/116cc22d5987ce4e172ec808972defaef85ad264))
+* **ContentEditable:** Update module import ([b3ef56d9](https://github.com/DSI-HUG/dejajs-components/commit/b3ef56d9b80eb6079bea41939a398729a6814b44))
+* **DejaMouseDragDropCursor:** Add RXJS delay operator ([3bce1595](https://github.com/DSI-HUG/dejajs-components/commit/3bce1595cbbce6b0eecfa95e3f6fc972fc10dc3c))
+* **DejaCircularPicker:** Add RXJS takeUntil operator ([bcf13250](https://github.com/DSI-HUG/dejajs-components/commit/bcf1325041147428200d4b102702f3122beaf293))
+* **DropdownComponent:** Add RXJS delay operator ([528061d9](https://github.com/DSI-HUG/dejajs-components/commit/528061d9d819305b99fe75cc7311cbfa6cd5116f))
+* **DemoApp:** Imports... ([9e23d465](https://github.com/DSI-HUG/dejajs-components/commit/9e23d4651f8a1c8cfcc8165bb0f2dd2d1c87e9d5))
+* **ItemListService:** Add if opperator ([45e8c529](https://github.com/DSI-HUG/dejajs-components/commit/45e8c52993b9623442fae6212b33cfe6b1ab3d75))
+* **DejaCodeViewer:**
+  * replace require ([2018d8a1](https://github.com/DSI-HUG/dejajs-components/commit/2018d8a121644b4aefac0aed392b2a635a64ad6e))
+  * replace require ([807335d8](https://github.com/DSI-HUG/dejajs-components/commit/807335d86d5b94f910ebf4636bf342970c7f6dfa))
+* **DejaSelect:**
+  * Synchronization between model and textField property when control is in a reactive form ([333f9b40](https://github.com/DSI-HUG/dejajs-components/commit/333f9b40b5910aff78274d6d9c94cdeb3b49b88c))
+  * Synchronization between model and textField property when control is in a reactive form ([2ceb7cf7](https://github.com/DSI-HUG/dejajs-components/commit/2ceb7cf740bfe3678f3f3b5b980b0a279409bcb1))
+* **PendingOnFocusDirective:** Observable leak ([26dde51d](https://github.com/DSI-HUG/dejajs-components/commit/26dde51dd697d8ec6c26b3de49df6d76c0b58f70))
+* **DejaClipboardService:** DejaClipboardService is now optional. DejaClipboardService must be provided on your app.module to get the full drag drop and copy/paste features of the components. ([fcd2c7bf](https://github.com/DSI-HUG/dejajs-components/commit/fcd2c7bf3c6b30ad3e12581b3e78bf45fd530c2f))
+* **DejaTreeList:**
+  * Selection on parent ([32a28ee7](https://github.com/DSI-HUG/dejajs-components/commit/32a28ee7028b6c48a32dca1440ac69708d4c4947))
+  * Material Beta5 Compatibility Issue ([f2a858a7](https://github.com/DSI-HUG/dejajs-components/commit/f2a858a791c842121ce49473df17cba11196392d))
+  * Material Beta5 Compatibility Issue ([9daada13](https://github.com/DSI-HUG/dejajs-components/commit/9daada132c6552f5f7bca0dd745ac5e87f4c27c5))
+  * Expand button removed ([50036980](https://github.com/DSI-HUG/dejajs-components/commit/50036980533a0cef470863499770d5b6742bd31b))
+* **DejaChips:** Chips height aligned to material ([a4b6597b](https://github.com/DSI-HUG/dejajs-components/commit/a4b6597bc088a593cf564d092365e6826ced9cf9))
+* **DejaColorPicker:** Added a filter on focus when enter is pressed ([70120b24](https://github.com/DSI-HUG/dejajs-components/commit/70120b247b943ad4a06eff2d8ff484a5c9878ae8))
+
+##### Other Changes
+
+* **tsLint:** tsLint as warnings ([931bb956](https://github.com/DSI-HUG/dejajs-components/commit/931bb95681f5b9119fd99b2f60bd88601a663cf5))
+* **Deploy:** Automatic version incrementation ([e72aa683](https://github.com/DSI-HUG/dejajs-components/commit/e72aa683d01e4008b7c644cf42a4b9a511d76e46))
+* **Dependencies:** Update all dependencies in latest version ([1afae63a](https://github.com/DSI-HUG/dejajs-components/commit/1afae63a10a5247c1702553cc90decb66dd69732))
+* **Webpack:**
+  * Webpack optimization ([8669e8c4](https://github.com/DSI-HUG/dejajs-components/commit/8669e8c4ac46ea992ee478822431e5018e3cddfb))
+  * Webpack optimization ([b1921080](https://github.com/DSI-HUG/dejajs-components/commit/b192108057f2329da5963d896ab7ce7c2afeb1c4))
+* **Changelog:** Change the changelog generator ([c8e60610](https://github.com/DSI-HUG/dejajs-components/commit/c8e6061003b7debb23a9c2b6a2a1bff5560f92b1))
+* **Travis:**
+  * Add configuration to generate changelog ([8b4e0703](https://github.com/DSI-HUG/dejajs-components/commit/8b4e07035f2d6ab2697b6f1a0ade1ebc355f059d))
+  * Add Commitizen config ([1084ba5a](https://github.com/DSI-HUG/dejajs-components/commit/1084ba5a8c2d530e4e45d81c1ca42d42ca9e45d5))
+
+##### Refactors
+
+* **Global:**
+  * Move to a bundle architecture (rollup & angular cli for demo app) ([88ec6e4f](https://github.com/DSI-HUG/dejajs-components/commit/88ec6e4fb16a0aaff3015a8d7bd8c4a6fe69cdb6))
+  * Better imports ([96158281](https://github.com/DSI-HUG/dejajs-components/commit/96158281985687ecf75aee7505a1d6dc98665e66))
+  * Better imports ([5a2e4fbe](https://github.com/DSI-HUG/dejajs-components/commit/5a2e4fbef750c3cc729e7b6b21cba3f97f87a3b8))
+  * Better imports ([059629b5](https://github.com/DSI-HUG/dejajs-components/commit/059629b56a8fbb6889c5b15f9f7b960a6970d86b))
+  * Better imports ([2bd4dfb4](https://github.com/DSI-HUG/dejajs-components/commit/2bd4dfb488c867722d6b58c28a2d8470a5cf76d1))
+  * Better imports ([67fa043c](https://github.com/DSI-HUG/dejajs-components/commit/67fa043cba46e7e61ec5e33c89f03228103c88a2))
+  * Better imports ([dfdde95e](https://github.com/DSI-HUG/dejajs-components/commit/dfdde95ee99dccff52834f3a2de004a719ba4c34))
+  * better import ([fd93f940](https://github.com/DSI-HUG/dejajs-components/commit/fd93f9404532a3eb259b419620b867bb978d2bfd))
+  * Fix index ([cef0dc6b](https://github.com/DSI-HUG/dejajs-components/commit/cef0dc6b1cff84a42b71e5edd142348f7667f1ad))
+  * Import modules inside index ([fa9500c4](https://github.com/DSI-HUG/dejajs-components/commit/fa9500c476ae9692c0680c2c63a377779e5c44d6))
+  * Import modules inside index ([77077303](https://github.com/DSI-HUG/dejajs-components/commit/7707730375979fbdaa815f2be8a46369fcd153c9))
+  * Better imports ([ad05bbfa](https://github.com/DSI-HUG/dejajs-components/commit/ad05bbfae825e85675e2fa56b16038779ab2341b))
+  * Better import for Rxjs ([6fc67033](https://github.com/DSI-HUG/dejajs-components/commit/6fc6703397cf98115833b8f224a684bda26f88ed))
+* **DejaAccordion:** Moving ngModule into separate file ([f0ea1029](https://github.com/DSI-HUG/dejajs-components/commit/f0ea1029a4110883be508e4efea9d0339451f552))
+* **DemoApp:**
+  * Move index.ejs ([a1f7a468](https://github.com/DSI-HUG/dejajs-components/commit/a1f7a46886a05d1bb67c481af76d902950ceb9be))
+  * Remove demo-app from src folder ([ad856d5a](https://github.com/DSI-HUG/dejajs-components/commit/ad856d5a5bad3bd913cb92fa17edfb97e700963e))
+
 #### 1.9.1 (2017-5-16)
 
 Update all dependencies in latest version
