@@ -64,7 +64,7 @@ export class DejaTile implements IDejaTile {
     public set color(value: string) {
         this._color  = value;
     }
-    
+
     public get color() {
         return this._color;
     }

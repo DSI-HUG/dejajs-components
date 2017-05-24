@@ -323,7 +323,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Définit la liste des éléments selectionés en mode multiselect */
     @Input()
     public set selectedItems(value: IItemBase[]) {
-        this.setSelectedItems(value)
+        this.setSelectedItems(value);
     }
 
     /** Retourne la liste des éléments selectionés en mode multiselect */
@@ -334,7 +334,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Définit l'éléments selectioné en mode single select */
     @Input()
     public set selectedItem(value: IItemBase) {
-        this.setSelectedItems([value])
+        this.setSelectedItems([value]);
     }
 
     /** Retourne l'éléments selectioné en mode single select */
@@ -346,7 +346,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Définit le model selectioné en mode single select */
     @Input()
     public set selectedModel(value: IItemBase) {
-        this.setSelectedModels([value])
+        this.setSelectedModels([value]);
     }
 
     /** Retourne le model selectioné en mode single select */
@@ -358,7 +358,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Définit la liste des models selectionés en mode multiselect */
     @Input()
     public set selectedModels(value: IItemBase[]) {
-        this.setSelectedModels(value)
+        this.setSelectedModels(value);
     }
 
     /** Retourne la liste des models selectionés en mode multiselect */

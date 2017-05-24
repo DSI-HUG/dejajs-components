@@ -127,7 +127,7 @@ export class Rect {
         return new Rect(this.left, this.top, this.width, this.height);
     }
 
-    public toClientRect() { 
+    public toClientRect() {
         return {
             left: this.left,
             top: this.top,

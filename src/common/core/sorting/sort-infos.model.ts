@@ -17,3 +17,6 @@ export interface ISortInfos {
     /* Type de la donée de tri ('number', 'string', 'date') */
     type?: string;
 }
+
+
+

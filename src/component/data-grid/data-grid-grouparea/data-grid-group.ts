@@ -8,7 +8,7 @@
 
 import { IDejaGridColumn } from '../data-grid-column/data-grid-column';
 
-export interface IDejaGridGroupsEvent { 
+export interface IDejaGridGroupsEvent {
     originalEvent: Event;
     column: IDejaGridColumn;
     columns: IDejaGridColumn[];
