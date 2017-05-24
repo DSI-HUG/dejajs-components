@@ -188,6 +188,7 @@ gulp.task('copy:manifest', function () {
   return gulp.src([`${srcFolder}/package.json`])
   .pipe(jeditor(function(json) {
       var package = JSON.parse(fs.readFileSync(path.join(rootFolder, 'package.json')));
+      json.version = package.version;
       json.dependencies = package.dependencies;
       return json;
     }))
