@@ -125,13 +125,13 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         if (this._parentForm) {
             this._parentForm.ngSubmit.subscribe(() => {
                 this.changeDetectorRef.markForCheck();
-            })
+            });
         }
 
         if (this._parentFormGroup) {
             this._parentFormGroup.ngSubmit.subscribe(() => {
                 this.changeDetectorRef.markForCheck();
-            })
+            });
         }
 
         this.subscriptions.push(Observable.from(this.clearFilterExpression$)
@@ -491,7 +491,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     /** Définit la liste des éléments selectionés en mode multiselect */
     @Input()
     public set selectedItems(value: IItemBase[]) {
-        this.setSelectedItems(value)
+        this.setSelectedItems(value);
     }
 
     /** Retourne la liste des éléments selectionés en mode multiselect */
@@ -502,7 +502,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     /** Définit l'éléments selectioné en mode single select */
     @Input()
     public set selectedItem(value: IItemBase) {
-        this.setSelectedItems([value])
+        this.setSelectedItems([value]);
     }
 
     /** Retourne l'éléments selectioné en mode single select */
@@ -514,7 +514,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     /** Définit le model selectioné en mode single select */
     @Input()
     public set selectedModel(value: IItemBase) {
-        this.writeValue(value)
+        this.writeValue(value);
     }
 
     /** Retourne le model selectioné en mode single select */
@@ -526,7 +526,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     /** Définit la liste des models selectionés en mode multiselect */
     @Input()
     public set selectedModels(value: IItemBase[]) {
-        this.writeValue(value)
+        this.writeValue(value);
     }
 
     /** Retourne la liste des models selectionés en mode multiselect */
@@ -1025,7 +1025,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
         if (items) {
             if (Array.isArray(items)) {
-                const models = items.map((itm) => itm.model !== undefined ? itm.model : itm)
+                const models = items.map((itm) => itm.model !== undefined ? itm.model : itm);
                 outputEmitter = {
                     items: items,
                     models: models,

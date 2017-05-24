@@ -1,0 +1,21 @@
+{
+  "name": "@deja-js/component",
+  "version": "2.0.0",
+  "description": "Angular2 Components Library",
+  "homepage": "https://github.com/DSI-HUG/dejajs-components",
+  "bugs": "https://github.com/DSI-HUG/dejajs-components/issues",
+  "author": "Team DSI-HUG - Hôpital Univesitaire de Genève - DSI - Domaine Patient",
+  "license": "Apache-2.0",
+  "keywords": [
+    "angular",
+    "material",
+    "component",
+    "angular-cli"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DSI-HUG/dejajs-components.git"
+  },
+  "module": "dejajs-component.js",
+  "typings": "dejajs-component.d.ts"
+}

@@ -6,9 +6,6 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-/**
- * Created by rtr on 22.12.2016.
- */
 import {SplitAreaDirective} from './split-area.directive';
 
 export interface IAreaData {

@@ -1,0 +1,100 @@
+:host {
+  /* for demo purpose only*/
+  #custom-range-actions {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: distribute;
+    justify-content: space-around;
+  }
+  h3 {
+    margin-top: 24px;
+  }
+  #flex-container {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    /* !!! important or it won't work !*/
+    -webkit-box-pack: end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+    section {
+      display: block;
+      -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+      flex-grow: 1;
+      -ms-flex-negative: 0;
+      flex-shrink: 0;
+      box-sizing: border-box;
+      margin: 1rem 1rem 1rem 1rem;
+    }
+    button {
+      -webkit-box-flex: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      -ms-flex-negative: 1;
+      flex-shrink: 1;
+      -ms-flex-preferred-size: 36px;
+      flex-basis: 36px;
+      box-sizing: border-box;
+      margin: 1rem 1rem 1rem 1rem;
+    }
+  }
+  /* copy the styles below if you want to use custom demo as is*/
+  #custom-range {
+    @import "../../../src/scss/variables/_colors.scss";
+    $deep: '/deep/';
+    /* change the height of the component using this variable only*/
+    $height: 24px;
+    #{$deep} {
+      -ms-flex-preferred-size: max-content;
+      flex-basis: max-content;
+      -ms-flex-item-align: center;
+      -ms-grid-row-align: center;
+      align-self: center;
+      height: $height;
+    }
+    .custom-range {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-item-align: center;
+      align-self: center;
+      font-size: 10pt;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    /* don't mess with the custom-seprator styling if you want to use the svg separator as is*/
+    .custom-separator {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      width: 10px;
+      -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+      $triangle-height: 5px;
+      svg.triangle {
+        polygon {
+          fill: $secondary;
+        }
+        margin-top: 0px - $triangle-height;
+        width: $triangle-height * 2;
+        height: $triangle-height;
+      }
+      svg.line {
+        height: $height + 2 * $triangle-height;
+        margin-top: 0px - $triangle-height;
+        rect {
+          fill: $secondary;
+          height: $height + 2 * $triangle-height;
+          width: 1px;
+        }
+      }
+    }
+  }
+}

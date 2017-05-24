@@ -37,13 +37,13 @@ export class DejaMenuComponent {
         return this.dropdownContainerId && this.elementRef.nativeElement.ownerDocument.getElementById(this.dropdownContainerId);
     }
 
-    /** Affiche le menu. */    
+    /** Affiche le menu. */
     public show(event: Event) {
         this.ownerElement = (event && event.target) || this.elementRef.nativeElement;
         this.isVisible = true;
     }
 
-    /** Ferme le menu. */    
+    /** Ferme le menu. */
     public close() {
         this.isVisible = false;
     }
