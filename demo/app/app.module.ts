@@ -27,8 +27,8 @@ import { userReducer } from './reactive-form/model/user.reducer';
 import { UserService } from './reactive-form/service/user.service';
 import { CountriesListService } from './services/countries-list.service';
 import { CountriesService } from './services/countries.service';
-import { DrugsService } from './services/drugs.service';
 import { NewsService } from './services/news.service';
+import { PeopleService } from './services/people.service';
 
 import {
     DejaAccordionModule,
@@ -174,7 +174,7 @@ import { MonacoEditorJsonFileResolver, MonacoEditorJsonToCompareFileResolver, Mo
     providers: [
         CountriesService,
         CountriesListService,
-        DrugsService,
+        PeopleService,
         GlobalEventService,
         MaterialColors,
         NewsService,

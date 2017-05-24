@@ -25,8 +25,7 @@ export class PeopleService {
     public getPeople$(query?: string, number?: number): Observable<IPerson[]> {
         let recordCount = number || 0;
         return this.http.get('assets/datas/people.json', { responseType: ResponseContentType.Json })
-            .map((response) => response.json())
-            .map((datas) => datas.data as IPerson[])
+            .map((response) => response.json() as IPerson[])
             .map((people) => {
                 let colorIndex = 0;
                 people.forEach((person) => {
