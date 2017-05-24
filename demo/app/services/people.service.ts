@@ -24,7 +24,7 @@ export class PeopleService {
 
     public getPeople$(query?: string, number?: number): Observable<IPerson[]> {
         let recordCount = number || 0;
-        return this.http.get('https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/demo/app/services/people.json', { responseType: ResponseContentType.Json })
+        return this.http.get('assets/datas/people.json', { responseType: ResponseContentType.Json })
             .map((response) => response.json())
             .map((datas) => datas.data as IPerson[])
             .map((people) => {

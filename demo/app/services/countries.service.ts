@@ -33,7 +33,7 @@ export class CountriesService {
 
     public getCountries$(query?: string, number?: number): Observable<ICountry[]> {
         let recordCount = number || 0;
-        return this.http.get('https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/demo-app/services/countries.json', { responseType: ResponseContentType.Json })
+        return this.http.get('assets/datas/countries.json', { responseType: ResponseContentType.Json })
             .map((response) => response.json())
             .map((datas) => datas.data as ICountry[])
             .map((countries) => {
