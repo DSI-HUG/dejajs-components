@@ -198,9 +198,11 @@ gulp.task('copy:manifest', function () {
 /**
  * Copy sendAction to /dist
  */
-gulp.task('copy:sendAction', function () {
-  return gulp.src([path.join(rootFolder, 'send-action.js')])
-    .pipe(gulp.dest(distFolder));
+gulp.task('copy:assets', function () {
+  return gulp.src([
+    path.join(rootFolder, 'send-action.js'),
+    path.join(rootFolder, 'polyfills.ts'),
+  ]).pipe(gulp.dest(distFolder));
 });
 
 /**
@@ -238,7 +240,7 @@ gulp.task('compile', function () {
     'copy:build',
     'copy:manifest',
     'copy:readme',
-    'copy:sendAction',
+    'copy:assets',
     'clean:build',
     'clean:tmp',
     function (err) {
