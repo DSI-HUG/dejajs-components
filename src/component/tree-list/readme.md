@@ -59,11 +59,11 @@ Crée une liste récursive.
             <td>min-search-length</td>
             <td>number</td>
             <td>0</td>
-            <td>Permet de définir la longeur minimum de caractères dans le champ de recherche avant que la recherche ou le filtrage soient effectués.</td>
+            <td>Retourne ou définit la longeur minimum de caractères dans le champ de recherche avant que la recherche ou le filtrage soient effectués.</td>
         </tr>
         <tr>
             <td>query</td>
-            <td></td>
+            <td>string | RegExp</td>
             <td></td>
             <td>Correspond au ngModel du chanp de filtrage ou recherche.</td>
         </tr>
@@ -71,11 +71,11 @@ Crée une liste récursive.
             <td>maxHeight</td>
             <td>number</td>
             <td></td>
-            <td>Hauteur maximum avant que le composant affiche une scrollbar (Spécifier une grande valeur pour ne jamais afficher de scroolbar)</td>
+            <td>Retourne ou définit la hauteur maximum avant que le composant affiche une scrollbar (Spécifier une grande valeur pour ne jamais afficher de scroolbar)</td>
         </tr>
         <tr>
             <td>searchArea</td>
-            <td></td>
+            <td>boolean</td>
             <td></td>
             <td>Si true, ajoute une barre de recherche au dessus de la liste</td>
         </tr>
@@ -83,13 +83,13 @@ Crée une liste récursive.
             <td>sortable</td>
             <td>boolean</td>
             <td>false</td>
-            <td>Rent la liste triable. Voir l'exemple dans la demo-app ou avec @sdil et @maxf pour l'utilisation</td>
+            <td>Retourne ou définit une valeur indiquant si les lignes de la liste peuvent être déplacées manuelement par l'utilisateur</td>
         </tr>
         <tr>
             <td>itemsDraggable</td>
             <td>boolean</td>
             <td>false</td>
-            <td>Rend les lignes de la liste draggable vers un autre composant (ne pas confondre avec la propriété `sortable`)</td>
+            <td>Retourne ou définit une valeur indiquant si les lignes peuvent être déplacées vers un autre composant</td>
         </tr>
         <tr>
             <td>itemTemplateExternal</td>
@@ -123,15 +123,15 @@ Crée une liste récursive.
         </tr>
         <tr>
             <td>pageSize</td>
-            <td></td>
+            <td>number</td>
             <td>0</td>
-            <td>Definit le nombre de lignes à sauter en cas de pression sur les touches PageUp ou PageDown</td>
+            <td>Retourne ou définit le nombre de lignes à sauter en cas de pression sur les touches PageUp ou PageDown</td>
         </tr>
         <tr>
             <td>childrenField</td>
             <td>string</td>
             <td>items</td>
-            <td>Champ utilisé pour la liste des enfants d'un parent</td>
+            <td>Retourne ou définit le champ utilisé pour la liste des enfants d'un parent</td>
         </tr>
         <tr>
             <td>items</td>
@@ -140,8 +140,14 @@ Crée une liste récursive.
             <td>Tableau d'items. Si n'est pas défini, on utilisera un service pour fournir les données.</td>
         </tr>
         <tr>
+            <td>models</td>
+            <td>any[] | Observable<any[]></td>
+            <td></td>
+            <td>Définit la liste des éléments (tout type d'objet métier)</td>
+        </tr>
+        <tr>
             <td>multiSelect</td>
-            <td>true</td>
+            <td>boolean</td>
             <td>false</td>
             <td>Permet la multi-selection des items de la ligne (avec la touche shift ou ctrl)</td>
         </tr>
@@ -149,19 +155,19 @@ Crée une liste récursive.
             <td>textField</td>
             <td>string</td>
             <td>displayName</td>
-            <td>Nom du champ des objets à utiliser comme label. Si n'est pas setté, récupère la propriété `displayName` de l'objet qui peut etre un string ou une fonction.</td>
+            <td>Retourne ou définit le champ des objets à utiliser comme label. Si cette valeur n'est pas définie, la propriété `displayName` de l'objet sera utilisée, et qui peut etre un string ou une fonction.</td>
         </tr>
         <tr>
             <td>valueField</td>
             <td>string</td>
             <td></td>
-            <td>Définit le champ à utiliser comme valeur de comparaison.</td>
+            <td>Retourne ou définit le champ à utiliser comme valeur de comparaison.</td>
         </tr>
         <tr>
             <td>hintLabel</td>
             <td>string</td>
-            <td>TODO</td>
-            <td>TODO</td>
+            <td></td>
+            <td>Retourne ou définit un texte de conseil en cas d'erreur de validation ou autre</td>
         </tr>
         <tr>
             <td>viewPortRowHeight</td>
@@ -172,50 +178,60 @@ Crée une liste récursive.
         <tr>
             <td>searchField</td>
             <td>string</td>
-            <td>TODO</td>
-            <td>TODO</td>
+            <td></td>
+            <td>Retourne ou définit le champ à utiliser comme champ de recherche. Ce champ peut indiquer, un champ contenant une valeur, un texte indexé, ou une fonction.</td>
         </tr>
         <tr>
             <td>multiSelect</td>
-            <td>Boolean</td>
+            <td>boolean</td>
             <td>false</td>
-            <td>Autorise la sélection multiple</td>
-        </tr>
-        <tr>
-            <td>selectedItems</td>
-            <td>IItemBase[]</td>
-            <td></td>
-            <td>List d'items sélectionnés (multiSelect doit être à true)</td>
+            <td>Retourne ou définit une valeur indiquant si plusieurs lignes peuvent être sélectionées.</td>
         </tr>
         <tr>
             <td>selectedItem</td>
             <td>IItemBase</td>
             <td></td>
-            <td>Item sélectionné (multiSelect doit être à false)</td>
+            <td>Retourne ou définit l'élément selectioné en mode single select</td>
+        </tr>
+        <tr>
+            <td>selectedItems</td>
+            <td>IItemBase[]</td>
+            <td></td>
+            <td>Retourne ou définit la liste des éléments selectionés en mode multiselect</td>
+        </tr>
+        <tr>
+            <td>selectedModel</td>
+            <td>any</td>
+            <td></td>
+            <td>Retourne ou définit le model selectioné en mode single select</td>
+        </tr>
+        <tr>
+            <td>selectedModels</td>
+            <td>any[]</td>
+            <td></td>
+            <td>Retourne ou définit la liste des models selectionés en mode multiselect</td>
         </tr>
         <tr>
             <td>itemListService</td>
             <td>ItemListService</td>
-            <td>Utilisation du service interne</td>
-            <td>TODO</td>
+            <td></td>
+            <td>Retourne le service de liste utilisé par ce composant. Ce srevice permet de controller dynamiquement la liste, ou de faire du lazyloading.</td>
         </tr>
         <tr>
             <td>sortingService</td>
             <td>SortingService</td>
-            <td>Utilisation du service interne</td>
-            <td>TODO</td>
+            <td></td>
+            <td>Definit le service utilisé pour le tri de la liste</td>
         </tr>
         <tr>
             <td>groupingService</td>
             <td>GroupingService</td>
-            <td>Utilisation du service interne</td>
-            <td>TODO</td>
+            <td></td>
+            <td>Definit le service utilisé pour le regroupement de la liste</td>
         </tr>
     </tbody>
 </table>
 
-
-</table>
 
   - `@Output`
 
@@ -224,7 +240,6 @@ Crée une liste récursive.
         <tr>
             <th>Nom</th>
             <th>Type</th>
-            <th>Defaut</th>
             <th>Description</th>
         </tr>
     </thead>
@@ -232,28 +247,68 @@ Crée une liste récursive.
         <tr>
             <td>itemDragEnd</td>
             <td>EventEmitter</td>
-            <td></td>
             <td>Exécuté lorsque le déplacement d'un item terminé</td>
         </tr>
         <tr>
             <td>itemDragStart</td>
             <td>EventEmitter</td>
-            <td></td>
             <td>Exécuté lorsque le déplacement d'un item commence</td>
         </tr>
         <tr>
             <td>scroll</td>
             <td>EventEmitter</td>
-            <td></td>
             <td>Exécuté lorsque l'utilisateur scroll la liste d'item</td>
         </tr>
         <tr>
             <td>selectedChange</td>
             <td>EventEmitter</td>
-            <td></td>
             <td>Exécuté lorsque l'utilisateur sélectionne ou désélectionne un item</td>
         </tr>
+        <tr>
+            <td>viewPortChanged</td>
+            <td>EventEmitter<IViewPort><any[]></td>
+            <td>Exécuté lorsque le calcul du viewPort est terminé.</td>
+        </tr>
     </tbody>
+</table>
+
+  - `@Pré-Events`
+
+<table>
+<thead>
+<tr>
+    <th>Nom</th>
+    <th>Type</th>
+    <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+    <td>loadingItems</td>
+    <td>(query: string | RegExp, selectedItems: IItemBase[]) => Observable<IItemBase></td>
+    <td>Définit un Observable appelé avant que la liste ne soit affichée</td>
+</tr>
+<tr>
+    <td>selectingItem</td>
+    <td>(item: IItemBase) => Promise<IItemBase> | Observable<IItemBase></td>
+    <td>Définit une promesse ou un observable appelé avant qu'un élément ne soit selectioné</td>
+</tr>
+<tr>
+    <td>unselectingItem</td>
+    <td>(item: IItemBase) => Promise<IItemBase> | Observable<IItemBase></td>
+    <td>Définit une promesse ou un observable appelé avant qu'un élément ne soit déselectioné</td>
+</tr>
+<tr>
+    <td>expandingItem</td>
+    <td>(item: IItemTree) => Promise<IItemTree> | Observable<IItemTree></td>
+    <td>Définit une promesse ou un observable appelé avant qu'un élément ne soit étendu</td>
+</tr>
+<tr>
+    <td>collapsingItem</td>
+    <td>(item: IItemTree) => Promise<IItemTree> | Observable<IItemTree></td>
+    <td>Définit une promesse ou un observable appelé avant qu'un élément ne soit réduit</td>
+</tr>
+</tbody>
 </table>
 
 ### Templating

@@ -65,7 +65,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     @Input() public searchPrefixTemplateExternal;
     /** Permet de définir un template comme suffixe de la zone de recherche par binding. */
     @Input() public searchSuffixTemplateExternal;
-
+    /** Largeur des éléments par defaut si différent de 100% */
+    @Input() public itemsWidth = null;
     /** Exécuté lorsque le déplacement d'une ligne est terminée. */
     @Output() public itemDragEnd = new EventEmitter<IDejaDragEvent>();
     /** Exécuté lorsque le déplacement d'une ligne commence. */
@@ -171,7 +172,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
         return this._searchArea || this.minSearchlength > 0;
     }
 
-    /** Permet de trier la liste au clic sur l'entête */
+    /** Retourne ou définit une valeur indiquant si les lignes de la liste peuvent être déplacées manuelement par l'utilisateur */
     @Input()
     public set sortable(value: boolean | string) {
         this._sortable = value != null && `${value}` !== 'false';
@@ -181,7 +182,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
         return this._sortable;
     }
 
-    /** Rend les lignes de la liste draggable vers un autre composant (ne pas confondre avec la propriété `sortable`) */
+    /** Retourne ou définit une valeur indiquant si les lignes peuvent être déplacées vers un autre composant */
     @Input()
     public set itemsDraggable(value: boolean | string) {
         this._itemsDraggable = value != null && `${value}` !== 'false';
@@ -345,7 +346,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
     /** Définit le model selectioné en mode single select */
     @Input()
-    public set selectedModel(value: IItemBase) {
+    public set selectedModel(value: any) {
         this.setSelectedModels([value]);
     }
 
@@ -357,7 +358,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
     /** Définit la liste des models selectionés en mode multiselect */
     @Input()
-    public set selectedModels(value: IItemBase[]) {
+    public set selectedModels(value: any[]) {
         this.setSelectedModels(value);
     }
 

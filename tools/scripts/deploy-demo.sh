@@ -9,14 +9,11 @@ if [ "$TRAVIS_PULL_REQUEST" != "false" -o "$TRAVIS_BRANCH" != "$SOURCE_BRANCH" ]
     exit 0
 fi
 
-#Install Plugin GH-PAGES
-yarn global add gh-pages
-
 # Clean dist existing contents
 rm -rf dist-prod
 
 # Run our compile script
-npm run build:prod
+yarn run build:prod
 
 # Deploy dist directory into th GH-PAGES branch
-gh-pages -d dist-demo --repo https://rtrompier:${GITHUB_TOKEN}@github.com/DSI-HUG/dejajs-components.git
+node_modules/.bin/gh-pages -d dist-demo --repo https://rtrompier:${GITHUB_TOKEN}@github.com/DSI-HUG/dejajs-components.git

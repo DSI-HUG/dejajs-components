@@ -30,10 +30,10 @@ That property will not be modified.
 
 | List entry            | Selection entry (I/O) | selectedChange event        |
 |-----------------------|-----------------|-----------------------------------|
-| models (Single Select)| selectedModel   | (event as DejaItemsEvent).model   |
-| models (Multi Select) | selectedModels  | (event as DejaItemsEvents).models |
-| items (Single Select) | selectedItem    | (event as DejaItemsEvent).item    |
-| items (Multi Select)  | selectedItems   | (event as DejaItemsEvents).items  |
+| models (Single Select)| selectedModel   | (event as DejaItemEvent).model   |
+| models (Multi Select) | selectedModels  | (event as DejaItemsEvent).models |
+| items (Single Select) | selectedItem    | (event as DejaItemEvent).item    |
+| items (Multi Select)  | selectedItems   | (event as DejaItemsEvent).items  |
 
 ### ngModel and ReactiveForms
 

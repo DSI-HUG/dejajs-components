@@ -164,6 +164,15 @@ gulp.task('copy:build', function () {
 
 
 /**
+ * Copy all theming sccs files into the lib
+ */
+gulp.task('copy:theming', function () {
+  return gulp.src([`${srcFolder}/**/*-theme.scss`])
+    .pipe(gulp.dest(`${distFolder}`));
+});
+
+
+/**
  * Copy the scss directory into the dist folder
  */
 gulp.task('copy:scss', function () {
@@ -224,6 +233,7 @@ gulp.task('compile', function () {
     'rollup:fesm',
     'rollup:umd',
     'copy:scss',
+    'copy:theming',
     'copy:build',
     'copy:manifest',
     'copy:readme',

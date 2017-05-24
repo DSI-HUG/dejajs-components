@@ -1,17 +1,20 @@
 :host {
 	display: block;
 	#deja-grid-header {
-		display: inline-flex;
+        display: flex;
 		flex-direction: row;
 		align-items: center;
-		overflow: hidden;
-        position: relative;
-		.column-header-wrapper {
+        overflow: visible;
+        position: relative; // For scroll offset
+        >div {
 			padding: 0 !important;
 			margin: 0 !important;
-			display: inline-flex;
+            flex-grow: 0;
+            flex-shrink: 0;
+            height: 100%;
+            &.column-header-wrapper {
+                display: flex;
 			align-items: center;
-			position: relative;
 			overflow: hidden;
 			.sort-waiter {
 				position: absolute;
@@ -34,6 +37,7 @@
 				flex: 0 0 4px;
 				padding: 0.5rem 0;
 				margin-right: 0.3rem;
+                    cursor: ew-resize;
 			}
 			.column-header {
 				flex: 1 1 auto;
@@ -56,4 +60,4 @@
 			}
 		}
 	}
-}
+}}

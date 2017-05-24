@@ -7,11 +7,11 @@ $deep: '/deep/';
 
 	.demo-card {
 		.listContainer {
-			height: 700px;
+			max-height: 700px;
 			display: flex;
 			flex-direction: column;
 			overflow: hidden;
-
+            
 			#{$deep} deja-grid {
 				flex: 1 1 auto;
 				.listitem {
@@ -23,27 +23,25 @@ $deep: '/deep/';
 				}
 			}
 		}
-		md-icon[suffix] {
-			padding: 4px;
-			display: flex;
-			justify-content: flex-end;
-			cursor: pointer;
-		}
-		#cell-drug,
-		#cell-reaction {
-			display: flex;
-			align-items: center;
-			width: 100%;
-			#content {
-				flex: 1 1 auto;
-				text-overflow: ellipsis;
-				white-space: nowrap;
-				overflow: hidden;
-			}
-			#more {
-				margin: 0 0.5rem;
-			}
-		}
+		// md-icon[suffix] {
+		// 	padding: 4px;
+		// 	cursor: pointer;
+		// }
+		// #cell-drug,
+		// #cell-reaction {
+		// 	display: flex;
+		// 	align-items: center;
+		// 	width: 100%;
+		// 	#content {
+		// 		flex: 1 1 auto;
+		// 		text-overflow: ellipsis;
+		// 		white-space: nowrap;
+		// 		overflow: hidden;
+		// 	}
+		// 	#more {
+		// 		margin: 0 0.5rem;
+		// 	}
+		// }
 
 		#{$deep}#news {
 			.cell-wrapper {

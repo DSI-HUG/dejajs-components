@@ -5,7 +5,11 @@
 	<!--</md-card>-->
 	<!--</md-tab>-->
 	<md-tab label="API REFERENCE"></md-tab>
-	<md-tab label="EXAMPLES"></md-tab>
+	<md-tab label="SIMPLE EXAMPLES"></md-tab>
+	<md-tab label="ADVANCED EXAMPLES"></md-tab>
+	<md-tab label="TEMPLATING"></md-tab>
+	<md-tab label="PRE-EVENTS AND ON_DEMAND"></md-tab>
+	<md-tab label="PERFORMANCES"></md-tab>
 </md-tab-group>
 
 <md-card class="demo-card" *ngIf="tabIndex === 0">
@@ -13,14 +17,104 @@
 </md-card>
 
 <div *ngIf="tabIndex === 1">
+	<md-card class="demo-card demo-basic">
+		<md-toolbar color="primary">Simple Usage</md-toolbar>
+		<md-card-content class="listContainer">
+			<deja-grid searchArea columnsSortable columnsSizable multiSelect sortable [rows]="people$" [columns]="peopleColumns" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid"></deja-grid>
+		</md-card-content>
+	</md-card>
+	<md-card class="demo-card demo-basic">
+		<md-toolbar color="primary">Keyboard Navigation</md-toolbar>
+		<md-card-content>
+			<div>deja-grid has some keyboard navigation feature</div>
+			<div fxLayout="row">
+				<span fxFlex="0 0 45%" fxLayout="column">
+					<deja-grid fxFlex="0 0 400px" columnsSortable columnsSizable multiSelect sortable [rows]="people$" [columns]="peopleColumns" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid"></deja-grid>
+				</span>
+				<ul fxFlex="0 0 50%" fxFlexOffset="5%" id="shortcut-list">
+					<li>Press
+						<span class="keyboard-key">↑</span> to select the previous row</li>
+					<li>Press
+						<span class="keyboard-key">↓</span> to select the next row</li>
+					<li>Press
+						<span class="keyboard-key">←</span> to select the previous cell</li>
+					<li>Press
+						<span class="keyboard-key">→</span> to select the next cell</li>
+					<li>Press
+						<span class="keyboard-key">Ctrl</span>
+						<span class="keyboard-key">↑</span> to change the current row to the previous</li>
+					<li>Press
+						<span class="keyboard-key">Ctrl</span>
+						<span class="keyboard-key">↓</span> to change the current row to the next</li>
+					<li>Press
+						<span class="keyboard-key">Shift</span>
+						<span class="keyboard-key">↑</span> to change the current row to the previous</li>
+					<li>Press
+						<span class="keyboard-key">Shift</span>
+						<span class="keyboard-key">↓</span> to change the current row to the next</li>
+					<li>Press
+						<span class="keyboard-key">PageUp</span> to select the next page row</li>
+					<li>Press
+						<span class="keyboard-key">PageDown</span> to select the previous page row</li>
+					<li>Press
+						<span class="keyboard-key">Home</span> to select the first row</li>
+					<li>Press
+						<span class="keyboard-key">End</span> to select the last row</li>
+					<li>Press
+						<span class="keyboard-key">Space</span> to collapse/expand a group header or to select/unselect the current row</li>
+					<li>Press
+						<span class="keyboard-key">A</span>..
+						<span class="keyboard-key">Z</span>
+						<span class="keyboard-key">0</span>..
+						<span class="keyboard-key">9</span> to select the next row started with the pressed key</li>
+				</ul>
+			</div>
+		</md-card-content>
+	</md-card>
+</div>
+
+<div *ngIf="tabIndex === 2">
+	<md-card class="deja-treelist-demo demo-card demo-basic">
+		<md-toolbar color="primary">Advanced Examples</md-toolbar>
+        Under construction
+	</md-card>
+</div>
+
+<div *ngIf="tabIndex === 3">
+	<md-card class="deja-treelist-demo demo-card demo-basic">
+		<md-toolbar color="primary">Templating Examples</md-toolbar>
+		<md-card-content>
+			<h1>Cells Template</h1>
+			<deja-grid id="news" #news sortable columnsSizable multiSelect [rows]="news$ | async" [columns]="newsColumns" viewportMode="auto" nodataholder="Pas de données" (columnSizeChanged)="onColumnSizeChanged($event)">
+				<ng-template #cellTemplate let-row let-column="column">
+					<img *ngIf="column.name==='urlToImage'" [attr.src]="row[column.name]" class="logo" (load)="imageLoaded(row)">
+				</ng-template>
+			</deja-grid>
+		</md-card-content>
+	</md-card>
+</div>
+
+<div *ngIf="tabIndex === 4">
+	<md-card class="deja-treelist-demo demo-card demo-basic">
+		<md-toolbar color="primary">Pre-events and on-demand</md-toolbar>
+        Under construction
+	</md-card>
+</div>
+
+<div *ngIf="tabIndex === 5">
+	<md-card class="deja-treelist-demo demo-card demo-basic">
+		<md-toolbar color="primary">Performances</md-toolbar>
+        Under construction
+	</md-card>
+</div>
+
+<!--<div *ngIf="tabIndex === 22">
 	<md-card class="demo-card">
 		<md-toolbar color="primary">Grille avec beaucoup d'enregistrements&nbsp;
 			<span *ngIf="drugCounts">
 				({{ drugCounts }} enregistrements)
 			</span>
 		</md-toolbar>
-		<!--<button (click)="onExpandAll()">Expand All</button>
-		<button (click)="onCollapseAll()">Collapse All</button>-->
 		<md-card-content class="listContainer">
 			<deja-menu #moreReactionMenu buttonAlignment="right top" menuAlignment="right top">
 				<ul>
@@ -36,7 +130,6 @@
 					</li>
 				</ul>
 			</deja-menu>
-			<!-- -->
 			<deja-grid #bgrid searchArea groupArea rowsSortable columnsSortable columnsSizable multiSelect sortable [rows]="drugsBigRecord$" [columns]="columns" (selectedChange)="onSelectionChanged($event)" nodataholder="Pas de données" placeholder="Filtrer la liste par le nom" searchField="indexedText" (itemDragStart)="onItemDragStart($event)">
 				<ng-template #cellTemplate let-row let-column="column">
 					<span id="cell-reaction" class="cell" *ngIf="column.name==='reaction' && row.reaction && row.reaction.length">
@@ -102,11 +195,7 @@
 	<md-card class="demo-card">
 		<md-toolbar color="primary">Grille avec taille automatique des lignes</md-toolbar>
 		<md-card-content class="listContainer">
-			<deja-grid id="news" #news groupArea sortable columnsSizable multiSelect [rows]="news$ | async" [columns]="newsColumns" viewportMode="auto" nodataholder="Pas de données" (columnSizeChanged)="onColumnSizeChanged($event)">
-				<ng-template #cellTemplate let-row let-column="column">
-					<img *ngIf="column.name==='urlToImage'" [attr.src]="row[column.name]" class="logo" (load)="imageLoaded(row)">
-				</ng-template>
-			</deja-grid>
+
 		</md-card-content>
 	</md-card>
-</div>
+</div>-->

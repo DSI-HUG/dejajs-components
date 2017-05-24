@@ -110,8 +110,7 @@ export class ViewPortService {
         };
 
         const clientSize = (element: HTMLElement) => {
-            const clientRect = element.getBoundingClientRect();
-            return Math.ceil(this._direction === ViewportDirection.horizontal ? clientRect.width : clientRect.height);
+            return Math.ceil(this._direction === ViewportDirection.horizontal ? element.clientWidth : element.clientHeight);
         };
 
         const calcFixedSizeViewPort$ = (items: IViewPortItem[], containerSize: number, scrollPos: number, itemDefaultSize: number, ensureParams: IEnsureParams): Observable<IViewPort> => {

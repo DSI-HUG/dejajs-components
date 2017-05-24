@@ -1,0 +1,976 @@
+{
+    "data": [
+        {
+            "naqme": "Afghanistan",
+            "code": "AF"
+        },
+        {
+            "naqme": "ÅlandIslands",
+            "code": "AX"
+        },
+        {
+            "naqme": "Albania",
+            "code": "AL"
+        },
+        {
+            "naqme": "Algeria",
+            "code": "DZ"
+        },
+        {
+            "naqme": "AmericanSamoa",
+            "code": "AS"
+        },
+        {
+            "naqme": "AndorrA",
+            "code": "AD"
+        },
+        {
+            "naqme": "Angola",
+            "code": "AO"
+        },
+        {
+            "naqme": "Anguilla",
+            "code": "AI"
+        },
+        {
+            "naqme": "Antarctica",
+            "code": "AQ"
+        },
+        {
+            "naqme": "AntiguaandBarbuda",
+            "code": "AG"
+        },
+        {
+            "naqme": "Argentina",
+            "code": "AR"
+        },
+        {
+            "naqme": "Armenia",
+            "code": "AM"
+        },
+        {
+            "naqme": "Aruba",
+            "code": "AW"
+        },
+        {
+            "naqme": "Australia",
+            "code": "AU"
+        },
+        {
+            "naqme": "Austria",
+            "code": "AT"
+        },
+        {
+            "naqme": "Azerbaijan",
+            "code": "AZ"
+        },
+        {
+            "naqme": "Bahamas",
+            "code": "BS"
+        },
+        {
+            "naqme": "Bahrain",
+            "code": "BH"
+        },
+        {
+            "naqme": "Bangladesh",
+            "code": "BD"
+        },
+        {
+            "naqme": "Barbados",
+            "code": "BB"
+        },
+        {
+            "naqme": "Belarus",
+            "code": "BY"
+        },
+        {
+            "naqme": "Belgium",
+            "code": "BE"
+        },
+        {
+            "naqme": "Belize",
+            "code": "BZ"
+        },
+        {
+            "naqme": "Benin",
+            "code": "BJ"
+        },
+        {
+            "naqme": "Bermuda",
+            "code": "BM"
+        },
+        {
+            "naqme": "Bhutan",
+            "code": "BT"
+        },
+        {
+            "naqme": "Bolivia",
+            "code": "BO"
+        },
+        {
+            "naqme": "BosniaandHerzegovina",
+            "code": "BA"
+        },
+        {
+            "naqme": "Botswana",
+            "code": "BW"
+        },
+        {
+            "naqme": "BouvetIsland",
+            "code": "BV"
+        },
+        {
+            "naqme": "Brazil",
+            "code": "BR"
+        },
+        {
+            "naqme": "BritishIndianOceanTerritory",
+            "code": "IO"
+        },
+        {
+            "naqme": "BruneiDarussalam",
+            "code": "BN"
+        },
+        {
+            "naqme": "Bulgaria",
+            "code": "BG"
+        },
+        {
+            "naqme": "BurkinaFaso",
+            "code": "BF"
+        },
+        {
+            "naqme": "Burundi",
+            "code": "BI"
+        },
+        {
+            "naqme": "Cambodia",
+            "code": "KH"
+        },
+        {
+            "naqme": "Cameroon",
+            "code": "CM"
+        },
+        {
+            "naqme": "Canada",
+            "code": "CA"
+        },
+        {
+            "naqme": "CapeVerde",
+            "code": "CV"
+        },
+        {
+            "naqme": "CaymanIslands",
+            "code": "KY"
+        },
+        {
+            "naqme": "CentralAfricanRepublic",
+            "code": "CF"
+        },
+        {
+            "naqme": "Chad",
+            "code": "TD"
+        },
+        {
+            "naqme": "Chile",
+            "code": "CL"
+        },
+        {
+            "naqme": "China",
+            "code": "CN"
+        },
+        {
+            "naqme": "ChristmasIsland",
+            "code": "CX"
+        },
+        {
+            "naqme": "Cocos(Keeling)Islands",
+            "code": "CC"
+        },
+        {
+            "naqme": "Colombia",
+            "code": "CO"
+        },
+        {
+            "naqme": "Comoros",
+            "code": "KM"
+        },
+        {
+            "naqme": "Congo",
+            "code": "CG"
+        },
+        {
+            "naqme": "Congo, The Democratic Republic of the",
+            "code": "CD"
+        },
+        {
+            "naqme": "CookIslands",
+            "code": "CK"
+        },
+        {
+            "naqme": "CostaRica",
+            "code": "CR"
+        },
+        {
+            "naqme": "CoteD\"Ivoire",
+            "code": "CI"
+        },
+        {
+            "naqme": "Croatia",
+            "code": "HR"
+        },
+        {
+            "naqme": "Cuba",
+            "code": "CU"
+        },
+        {
+            "naqme": "Cyprus",
+            "code": "CY"
+        },
+        {
+            "naqme": "CzechRepublic",
+            "code": "CZ"
+        },
+        {
+            "naqme": "Denmark",
+            "code": "DK"
+        },
+        {
+            "naqme": "Djibouti",
+            "code": "DJ"
+        },
+        {
+            "naqme": "Dominica",
+            "code": "DM"
+        },
+        {
+            "naqme": "DominicanRepublic",
+            "code": "DO"
+        },
+        {
+            "naqme": "Ecuador",
+            "code": "EC"
+        },
+        {
+            "naqme": "Egypt",
+            "code": "EG"
+        },
+        {
+            "naqme": "ElSalvador",
+            "code": "SV"
+        },
+        {
+            "naqme": "EquatorialGuinea",
+            "code": "GQ"
+        },
+        {
+            "naqme": "Eritrea",
+            "code": "ER"
+        },
+        {
+            "naqme": "Estonia",
+            "code": "EE"
+        },
+        {
+            "naqme": "Ethiopia",
+            "code": "ET"
+        },
+        {
+            "naqme": "FalklandIslands(Malvinas)",
+            "code": "FK"
+        },
+        {
+            "naqme": "FaroeIslands",
+            "code": "FO"
+        },
+        {
+            "naqme": "Fiji",
+            "code": "FJ"
+        },
+        {
+            "naqme": "Finland",
+            "code": "FI"
+        },
+        {
+            "naqme": "France",
+            "code": "FR"
+        },
+        {
+            "naqme": "FrenchGuiana",
+            "code": "GF"
+        },
+        {
+            "naqme": "FrenchPolynesia",
+            "code": "PF"
+        },
+        {
+            "naqme": "FrenchSouthernTerritories",
+            "code": "TF"
+        },
+        {
+            "naqme": "Gabon",
+            "code": "GA"
+        },
+        {
+            "naqme": "Gambia",
+            "code": "GM"
+        },
+        {
+            "naqme": "Georgia",
+            "code": "GE"
+        },
+        {
+            "naqme": "Germany",
+            "code": "DE"
+        },
+        {
+            "naqme": "Ghana",
+            "code": "GH"
+        },
+        {
+            "naqme": "Gibraltar",
+            "code": "GI"
+        },
+        {
+            "naqme": "Greece",
+            "code": "GR"
+        },
+        {
+            "naqme": "Greenland",
+            "code": "GL"
+        },
+        {
+            "naqme": "Grenada",
+            "code": "GD"
+        },
+        {
+            "naqme": "Guadeloupe",
+            "code": "GP"
+        },
+        {
+            "naqme": "Guam",
+            "code": "GU"
+        },
+        {
+            "naqme": "Guatemala",
+            "code": "GT"
+        },
+        {
+            "naqme": "Guernsey",
+            "code": "GG"
+        },
+        {
+            "naqme": "Guinea",
+            "code": "GN"
+        },
+        {
+            "naqme": "Guinea-Bissau",
+            "code": "GW"
+        },
+        {
+            "naqme": "Guyana",
+            "code": "GY"
+        },
+        {
+            "naqme": "Haiti",
+            "code": "HT"
+        },
+        {
+            "naqme": "HeardIslandandMcdonaldIslands",
+            "code": "HM"
+        },
+        {
+            "naqme": "HolySee(VaticanCityState)",
+            "code": "VA"
+        },
+        {
+            "naqme": "Honduras",
+            "code": "HN"
+        },
+        {
+            "naqme": "HongKong",
+            "code": "HK"
+        },
+        {
+            "naqme": "Hungary",
+            "code": "HU"
+        },
+        {
+            "naqme": "Iceland",
+            "code": "IS"
+        },
+        {
+            "naqme": "India",
+            "code": "IN"
+        },
+        {
+            "naqme": "Indonesia",
+            "code": "ID"
+        },
+        {
+            "naqme": "Iran, Islamic Republic Of",
+            "code": "IR"
+        },
+        {
+            "naqme": "Iraq",
+            "code": "IQ"
+        },
+        {
+            "naqme": "Ireland",
+            "code": "IE"
+        },
+        {
+            "naqme": "IsleofMan",
+            "code": "IM"
+        },
+        {
+            "naqme": "Israel",
+            "code": "IL"
+        },
+        {
+            "naqme": "Italy",
+            "code": "IT"
+        },
+        {
+            "naqme": "Jamaica",
+            "code": "JM"
+        },
+        {
+            "naqme": "Japan",
+            "code": "JP"
+        },
+        {
+            "naqme": "Jersey",
+            "code": "JE"
+        },
+        {
+            "naqme": "Jordan",
+            "code": "JO"
+        },
+        {
+            "naqme": "Kazakhstan",
+            "code": "KZ"
+        },
+        {
+            "naqme": "Kenya",
+            "code": "KE"
+        },
+        {
+            "naqme": "Kiribati",
+            "code": "KI"
+        },
+        {
+            "naqme": "Korea, Democratic People SRepublic of",
+            "code": "KP"
+        },
+        {
+            "naqme": "Korea, Republic of ",
+            "code": "KR"
+        },
+        {
+            "naqme": "Kuwait",
+            "code": "KW"
+        },
+        {
+            "naqme": "Kyrgyzstan",
+            "code": "KG"
+        },
+        {
+            "naqme": "LaoPeople\"SDemocraticRepublic",
+            "code": "LA"
+        },
+        {
+            "naqme": "Latvia",
+            "code": "LV"
+        },
+        {
+            "naqme": "Lebanon",
+            "code": "LB"
+        },
+        {
+            "naqme": "Lesotho",
+            "code": "LS"
+        },
+        {
+            "naqme": "Liberia",
+            "code": "LR"
+        },
+        {
+            "naqme": "LibyanArabJamahiriya",
+            "code": "LY"
+        },
+        {
+            "naqme": "Liechtenstein",
+            "code": "LI"
+        },
+        {
+            "naqme": "Lithuania",
+            "code": "LT"
+        },
+        {
+            "naqme": "Luxembourg",
+            "code": "LU"
+        },
+        {
+            "naqme": "Macao",
+            "code": "MO"
+        },
+        {
+            "naqme": "Macedonia, The Former Yugoslav Republic of",
+            "code": "MK"
+        },
+        {
+            "naqme": "Madagascar",
+            "code": "MG"
+        },
+        {
+            "naqme": "Malawi",
+            "code": "MW"
+        },
+        {
+            "naqme": "Malaysia",
+            "code": "MY"
+        },
+        {
+            "naqme": "Maldives",
+            "code": "MV"
+        },
+        {
+            "naqme": "Mali",
+            "code": "ML"
+        },
+        {
+            "naqme": "Malta",
+            "code": "MT"
+        },
+        {
+            "naqme": "MarshallIslands",
+            "code": "MH"
+        },
+        {
+            "naqme": "Martinique",
+            "code": "MQ"
+        },
+        {
+            "naqme": "Mauritania",
+            "code": "MR"
+        },
+        {
+            "naqme": "Mauritius",
+            "code": "MU"
+        },
+        {
+            "naqme": "Mayotte",
+            "code": "YT"
+        },
+        {
+            "naqme": "Mexico",
+            "code": "MX"
+        },
+        {
+            "naqme": "Micronesia, Federated States of",
+            "code": "FM"
+        },
+        {
+            "naqme": "Moldova, Republic of",
+            "code": "MD"
+        },
+        {
+            "naqme": "Monaco",
+            "code": "MC"
+        },
+        {
+            "naqme": "Mongolia",
+            "code": "MN"
+        },
+        {
+            "naqme": "Montserrat",
+            "code": "MS"
+        },
+        {
+            "naqme": "Morocco",
+            "code": "MA"
+        },
+        {
+            "naqme": "Mozambique",
+            "code": "MZ"
+        },
+        {
+            "naqme": "Myanmar",
+            "code": "MM"
+        },
+        {
+            "naqme": "Namibia",
+            "code": "NA"
+        },
+        {
+            "naqme": "Nauru",
+            "code": "NR"
+        },
+        {
+            "naqme": "Nepal",
+            "code": "NP"
+        },
+        {
+            "naqme": "Netherlands",
+            "code": "NL"
+        },
+        {
+            "naqme": "NetherlandsAntilles",
+            "code": "AN"
+        },
+        {
+            "naqme": "NewCaledonia",
+            "code": "NC"
+        },
+        {
+            "naqme": "NewZealand",
+            "code": "NZ"
+        },
+        {
+            "naqme": "Nicaragua",
+            "code": "NI"
+        },
+        {
+            "naqme": "Niger",
+            "code": "NE"
+        },
+        {
+            "naqme": "Nigeria",
+            "code": "NG"
+        },
+        {
+            "naqme": "Niue",
+            "code": "NU"
+        },
+        {
+            "naqme": "NorfolkIsland",
+            "code": "NF"
+        },
+        {
+            "naqme": "NorthernMarianaIslands",
+            "code": "MP"
+        },
+        {
+            "naqme": "Norway",
+            "code": "NO"
+        },
+        {
+            "naqme": "Oman",
+            "code": "OM"
+        },
+        {
+            "naqme": "Pakistan",
+            "code": "PK"
+        },
+        {
+            "naqme": "Palau",
+            "code": "PW"
+        },
+        {
+            "naqme": "Palestinian Territory, Occupied",
+            "code": "PS"
+        },
+        {
+            "naqme": "Panama",
+            "code": "PA"
+        },
+        {
+            "naqme": "PapuaNewGuinea",
+            "code": "PG"
+        },
+        {
+            "naqme": "Paraguay",
+            "code": "PY"
+        },
+        {
+            "naqme": "Peru",
+            "code": "PE"
+        },
+        {
+            "naqme": "Philippines",
+            "code": "PH"
+        },
+        {
+            "naqme": "Pitcairn",
+            "code": "PN"
+        },
+        {
+            "naqme": "Poland",
+            "code": "PL"
+        },
+        {
+            "naqme": "Portugal",
+            "code": "PT"
+        },
+        {
+            "naqme": "PuertoRico",
+            "code": "PR"
+        },
+        {
+            "naqme": "Qatar",
+            "code": "QA"
+        },
+        {
+            "naqme": "Reunion",
+            "code": "RE"
+        },
+        {
+            "naqme": "Romania",
+            "code": "RO"
+        },
+        {
+            "naqme": "RussianFederation",
+            "code": "RU"
+        },
+        {
+            "naqme": "RWANDA",
+            "code": "RW"
+        },
+        {
+            "naqme": "SaintHelena",
+            "code": "SH"
+        },
+        {
+            "naqme": "SaintKittsandNevis",
+            "code": "KN"
+        },
+        {
+            "naqme": "SaintLucia",
+            "code": "LC"
+        },
+        {
+            "naqme": "SaintPierreandMiquelon",
+            "code": "PM"
+        },
+        {
+            "naqme": "SaintVincentandtheGrenadines",
+            "code": "VC"
+        },
+        {
+            "naqme": "Samoa",
+            "code": "WS"
+        },
+        {
+            "naqme": "SanMarino",
+            "code": "SM"
+        },
+        {
+            "naqme": "SaoTomeandPrincipe",
+            "code": "ST"
+        },
+        {
+            "naqme": "SaudiArabia",
+            "code": "SA"
+        },
+        {
+            "naqme": "Senegal",
+            "code": "SN"
+        },
+        {
+            "naqme": "SerbiaandMontenegro",
+            "code": "CS"
+        },
+        {
+            "naqme": "Seychelles",
+            "code": "SC"
+        },
+        {
+            "naqme": "SierraLeone",
+            "code": "SL"
+        },
+        {
+            "naqme": "Singapore",
+            "code": "SG"
+        },
+        {
+            "naqme": "Slovakia",
+            "code": "SK"
+        },
+        {
+            "naqme": "Slovenia",
+            "code": "SI"
+        },
+        {
+            "naqme": "SolomonIslands",
+            "code": "SB"
+        },
+        {
+            "naqme": "Somalia",
+            "code": "SO"
+        },
+        {
+            "naqme": "SouthAfrica",
+            "code": "ZA"
+        },
+        {
+            "naqme": "SouthGeorgiaandtheSouthSandwichIslands",
+            "code": "GS"
+        },
+        {
+            "naqme": "Spain",
+            "code": "ES"
+        },
+        {
+            "naqme": "SriLanka",
+            "code": "LK"
+        },
+        {
+            "naqme": "Sudan",
+            "code": "SD"
+        },
+        {
+            "naqme": "Suri",
+            "code": "SR"
+        },
+        {
+            "naqme": "SvalbardandJanMayen",
+            "code": "SJ"
+        },
+        {
+            "naqme": "Swaziland",
+            "code": "SZ"
+        },
+        {
+            "naqme": "Sweden",
+            "code": "SE"
+        },
+        {
+            "naqme": "Switzerland",
+            "code": "CH"
+        },
+        {
+            "naqme": "SyrianArabRepublic",
+            "code": "SY"
+        },
+        {
+            "naqme": "Taiwan, Province of China",
+            "code": "TW"
+        },
+        {
+            "naqme": "Tajikistan",
+            "code": "TJ"
+        },
+        {
+            "naqme": "Tanzania, United Republic of",
+            "code": "TZ"
+        },
+        {
+            "naqme": "Thailand",
+            "code": "TH"
+        },
+        {
+            "naqme": "Timor-Leste",
+            "code": "TL"
+        },
+        {
+            "naqme": "Togo",
+            "code": "TG"
+        },
+        {
+            "naqme": "Tokelau",
+            "code": "TK"
+        },
+        {
+            "naqme": "Tonga",
+            "code": "TO"
+        },
+        {
+            "naqme": "TrinidadandTobago",
+            "code": "TT"
+        },
+        {
+            "naqme": "Tunisia",
+            "code": "TN"
+        },
+        {
+            "naqme": "Turkey",
+            "code": "TR"
+        },
+        {
+            "naqme": "Turkmenistan",
+            "code": "TM"
+        },
+        {
+            "naqme": "TurksandCaicosIslands",
+            "code": "TC"
+        },
+        {
+            "naqme": "Tuvalu",
+            "code": "TV"
+        },
+        {
+            "naqme": "Uganda",
+            "code": "UG"
+        },
+        {
+            "naqme": "Ukraine",
+            "code": "UA"
+        },
+        {
+            "naqme": "UnitedArabEmirates",
+            "code": "AE"
+        },
+        {
+            "naqme": "UnitedKingdom",
+            "code": "GB"
+        },
+        {
+            "naqme": "UnitedStates",
+            "code": "US"
+        },
+        {
+            "naqme": "UnitedStatesMinorOutlyingIslands",
+            "code": "UM"
+        },
+        {
+            "naqme": "Uruguay",
+            "code": "UY"
+        },
+        {
+            "naqme": "Uzbekistan",
+            "code": "UZ"
+        },
+        {
+            "naqme": "Vanuatu",
+            "code": "VU"
+        },
+        {
+            "naqme": "Venezuela",
+            "code": "VE"
+        },
+        {
+            "naqme": "VietNam",
+            "code": "VN"
+        },
+        {
+            "naqme": "VirginIslands, British",
+            "code": "VG"
+        },
+        {
+            "naqme": "VirginIslands, U.S.",
+            "code": "VI"
+        },
+        {
+            "naqme": "WallisandFutuna",
+            "code": "WF"
+        },
+        {
+            "naqme": "WesternSahara",
+            "code": "EH"
+        },
+        {
+            "naqme": "Yemen",
+            "code": "YE"
+        },
+        {
+            "naqme": "Zambia",
+            "code": "ZM"
+        },
+        {
+            "naqme": "Zimbabwe",
+            "code": "ZW"
+        }
+    ]
+}

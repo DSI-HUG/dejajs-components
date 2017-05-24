@@ -1,3 +1,19 @@
+#### 2.0.1 (2017-5-24)
+
+##### Bug Fixes
+
+* **Theming:** Import theming files during the build ([e2631b3c](https://github.com/DSI-HUG/dejajs-components/commit/e2631b3c5570067846f478260a92a509d05f000c))
+* **DemoApp:**
+  * Fix redirect on Github Pages ([1bdbd357](https://github.com/DSI-HUG/dejajs-components/commit/1bdbd3572ea770fefcaae6081356308c215e5068))
+  * Logo path ([2c020594](https://github.com/DSI-HUG/dejajs-components/commit/2c020594cb72f0c559d3249ec8f27745d9558871))
+  * Move demo-app datas to assets/datas ([1bf04c05](https://github.com/DSI-HUG/dejajs-components/commit/1bf04c058914da5cbd3e85a8aec403ec8ab10007))
+
+##### Other Changes
+
+* **Travis:**
+  * Automatic deployment for documentation ([68ec2113](https://github.com/DSI-HUG/dejajs-components/commit/68ec21139f7a193475218605f1511fdc7024bd08))
+  * Fix script location ([a800346b](https://github.com/DSI-HUG/dejajs-components/commit/a800346b0dd3f54527549b410aabe13ec67c46dd))
+
 ## 2.0.0 (2017-5-24)
 
 ##### Documentation Changes

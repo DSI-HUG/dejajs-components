@@ -48,6 +48,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @Input() public placeholder: string;
     /** ID de l'élement dans lequel la liste déroulante doit s'afficher (la liste déroulante ne peut dépasser de l'élement spécifié ici) */
     @Input() public dropdownContainerId: string;
+    /** Element dans lequel la liste déroulante doit s'afficher (la liste déroulante ne peut dépasser de l'élement spécifié ici) */
     @Input() public dropdownContainerElement: ElementRef | HTMLElement;
     /** Permet de définir un template de ligne par binding */
     @Input() public itemTemplateExternal;
@@ -57,9 +58,9 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @Input() public placeHolderTemplateExternal;
     /** Permet de définir un template pour l'élément de conseil ou d'affichage d'erreur. */
     @Input() public hintTemplateExternal;
-    /** Temps d'attente avant que la recherche dans la liste soit lancée */
+    /** Temps d'attente en ms avant que la recherche dans la liste soit lancée lorsque l'utilisateur tape dans le select */
     @Input('delay-search-trigger') public delaySearchTrigger = 250;
-    /** Exécuté lorsque le calcul du viewPort est executé. */
+    /** Exécuté lorsque le calcul du viewPort est terminé. */
     @Output() public viewPortChanged = new EventEmitter<IViewPort>();
     /** Exécuté lorsque l'utilisateur sélectionne ou désélectionne une ligne. */
     @Output() public selectedChange = new EventEmitter<DejaItemsEvent | DejaItemEvent>();
@@ -251,7 +252,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     }
 
-    /** Correspond au ngModel du champ de filtrage ou recherche */
+    /** Correspond au model du champ de filtrage ou recherche */
     @Input()
     public set query(value: string) {
         this.query$.next(value);
@@ -375,7 +376,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return this._hintLabel;
     }
 
-    /** Définit la hauteur d'une ligne pour le calcul du viewport en pixels (la valeur par défaut sera utilisée si aucune valeur n'est setté). */
+    /** Définit la hauteur d'une ligne pour le calcul du viewport en pixels (la valeur par défaut sera utilisée si aucune valeur n'est définie). */
     @Input()
     public set viewPortRowHeight(value: number) {
         this.setViewPortRowHeight(value);
@@ -439,7 +440,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     /**
-     * Set a observable called before the list will be displayed
+     * Set an observable called before the list will be displayed
      */
     @Input()
     public set loadingItems(fn: (query: string | RegExp, selectedItems: IItemBase[]) => Observable<IItemBase>) {
@@ -505,7 +506,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         this.setSelectedItems([value]);
     }
 
-    /** Retourne l'éléments selectioné en mode single select */
+    /** Retourne l'élément selectioné en mode single select */
     public get selectedItem() {
         const selectedItem = super.getSelectedItems();
         return selectedItem && selectedItem[0];
@@ -513,7 +514,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     /** Définit le model selectioné en mode single select */
     @Input()
-    public set selectedModel(value: IItemBase) {
+    public set selectedModel(value: any) {
         this.writeValue(value);
     }
 
@@ -525,7 +526,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     /** Définit la liste des models selectionés en mode multiselect */
     @Input()
-    public set selectedModels(value: IItemBase[]) {
+    public set selectedModels(value: any[]) {
         this.writeValue(value);
     }
 
@@ -588,11 +589,13 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     @Input()
+    /** Retourne une valeur indiquant si le composant est en lecture seule */
     public set readonly(value: boolean) {
         this._readonly = value;
         this.changeDetectorRef.markForCheck();
     }
 
+    /** Définit une valeur indiquant si le composant est en lecture seule */
     public get readonly() {
         return this._readonly;
     }

@@ -3,6 +3,8 @@
     .news {
         padding: 5px;
         overflow: hidden;
+        display: flex;
+        flex-direction: row;
         .logo {
             display: block;
             width: auto;
@@ -13,6 +15,8 @@
             max-height: 100%;
         }
         .text {
+            display: flex;
+            flex-direction: column;
             border-left: 1px #aaa solid;
             padding-left: 0.3rem;
             margin-left: 0.3rem;
@@ -28,8 +32,12 @@
                 white-space: normal;
             }
             .footer {
+                display: flex;
+                flex-direction: row;
                 margin: 0.3rem 1rem 0 0.3rem;
                 overflow: hidden;
+                justify-content: space-between;
+                flex-wrap: wrap;
             }
         }
     }
