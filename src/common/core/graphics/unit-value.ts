@@ -19,7 +19,7 @@ export class UnitValue {
             const match = value.match(/([0-9\.]+)(.*)/);
             this.value = match.length >= 2 && parseInt(match[1], 10);
             this.unit = match.length >= 3 &&  match[2];
-        } else { 
+        } else {
             this.value = value;
             this.unit = unit;
         }
@@ -29,11 +29,11 @@ export class UnitValue {
         return new UnitValue(this.value, this.unit);
     }
 
-    public toString() { 
+    public toString() {
         return String(this.value) + this.unit;
     }
 
-    public isInvalid() { 
+    public isInvalid() {
         return this.value && isNaN(this.value);
     }
 }

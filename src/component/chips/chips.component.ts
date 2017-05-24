@@ -101,7 +101,9 @@ export class DejaChipsComponent implements ControlValueAccessor {
         if (!value) {
             return '';
         } else {
-            if (this.textField && value[this.textField]) {
+            if (this.textField && value.model && value.model[this.textField]) {
+                return value.model[this.textField];
+            } else if (this.textField && value.model[this.textField]) {
                 return value[this.textField];
             } else if (value.displayName) {
                 return typeof value.displayName === 'string' ? value.displayName : value.displayName();

@@ -6,17 +6,30 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Observable, Subject, Subscription } from 'rxjs/Rx';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
+import { DejaClipboardService } from '../../common/core/clipboard/clipboard.service';
 import { GroupingService, IGroupInfo } from '../../common/core/grouping';
-import { IItemBase, IItemTree, ItemListService, ViewportMode } from '../../common/core/item-list';
+import { IItemBase } from '../../common/core/item-list/item-base';
+import { ItemListService } from '../../common/core/item-list/item-list.service';
+import { IItemTree } from '../../common/core/item-list/item-tree';
+import { ViewportMode } from '../../common/core/item-list/viewport.service';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { SortingService } from '../../common/core/sorting';
 import { IDejaDragEvent } from '../dragdrop';
-import { DejaTreeListComponent, DejaTreeListScrollEvent } from '../tree-list';
+import { DejaTreeListScrollEvent } from '../tree-list/tree-list-scroll-event';
+import { DejaTreeListComponent } from '../tree-list/tree-list.component';
 import { ViewPortService } from './../../common/core/item-list/viewport.service';
+import { IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent } from './data-grid-column/data-grid-column';
+import { IDejaGridColumnLayout } from './data-grid-column/data-grid-column-layout';
+import { DejaGridColumnsLayoutInfos } from './data-grid-column/data-grid-column-layout-infos';
+import { IDejaGridGroupsEvent } from './data-grid-grouparea/data-grid-group';
 import { DejaGridHeaderComponent } from './data-grid-header/data-grid-header.component';
-import { DejaGridColumnsLayoutInfos, DejaGridRowEvent, DejaGridRowsEvent, IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayout, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent, IDejaGridGroupsEvent, IDejaGridRow } from './index';
+import { IDejaGridRow } from './data-grid-row/data-grid-row';
+import { DejaGridRowEvent } from './data-grid-row/data-grid-row-event';
+import { DejaGridRowsEvent } from './data-grid-row/data-grid-rows-event';
 
 const noop = () => { };
 
@@ -24,7 +37,7 @@ const noop = () => { };
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-     selector: 'deja-grid',
+    selector: 'deja-grid',
     styleUrls: [
         './data-grid.component.scss',
     ],
@@ -174,6 +187,9 @@ export class DejaGridComponent implements OnDestroy {
     @Input()
     public set groupArea(value: boolean | string) {
         this._groupArea = value != null && `${value}` !== 'false';
+        if (this._columnsSortable && !this.clipboardService) {
+            throw new Error('To use the DejaGrid.groupArea feature, please import and provide the DejaClipboardService in your application.');
+        }
     }
 
     public get groupArea() {
@@ -214,6 +230,9 @@ export class DejaGridComponent implements OnDestroy {
     @Input()
     public set columnsSortable(value: boolean | string) {
         this._columnsSortable = value != null && `${value}` !== 'false';
+        if (this._columnsSortable && !this.clipboardService) {
+            throw new Error('To use the DejaGrid.columnsSortable feature, please import and provide the DejaClipboardService in your application.');
+        }
     }
 
     public get columnsSortable() {
@@ -347,7 +366,7 @@ export class DejaGridComponent implements OnDestroy {
         return this._columnLayout;
     }
 
-    constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef) {
+    constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef, @Optional() private clipboardService: DejaClipboardService) {
         const element = this.elementRef.nativeElement as HTMLElement;
 
         this.clearColumnLayout();
@@ -510,17 +529,20 @@ export class DejaGridComponent implements OnDestroy {
             return;
         }
 
+        const hideSpinner = () => {
+            event.column.sorting = false;
+            this.header.refresh();
+        }
+
         event.column.sorting = true;
         Observable.timer(1)
             .switchMap(() => this.treeListComponent.sort$(event.column.name))
             .first()
             .subscribe(() => {
-
+                hideSpinner();
             }, (error) => {
+                hideSpinner();
                 throw error.toString();
-            }, () => {
-                event.column.sorting = false;
-                this.header.refresh();
             });
     }
 

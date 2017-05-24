@@ -1,0 +1,112 @@
+<md-tab-group [selectedIndex]="tabIndex" (selectChange)="tabIndex = $event.index">
+	<!--<md-tab label="OVERVIEW">-->
+	<!--<md-card class="demo-card demo-basic">-->
+	<!--TODO-->
+	<!--</md-card>-->
+	<!--</md-tab>-->
+	<md-tab label="API REFERENCE"></md-tab>
+	<md-tab label="EXAMPLES"></md-tab>
+</md-tab-group>
+
+<md-card class="demo-card" *ngIf="tabIndex === 0">
+	<deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/data-grid/readme.md'"></deja-markdown>
+</md-card>
+
+<div *ngIf="tabIndex === 1">
+	<md-card class="demo-card">
+		<md-toolbar color="primary">Grille avec beaucoup d'enregistrements&nbsp;
+			<span *ngIf="drugCounts">
+				({{ drugCounts }} enregistrements)
+			</span>
+		</md-toolbar>
+		<!--<button (click)="onExpandAll()">Expand All</button>
+		<button (click)="onCollapseAll()">Collapse All</button>-->
+		<md-card-content class="listContainer">
+			<deja-menu #moreReactionMenu buttonAlignment="right top" menuAlignment="right top">
+				<ul>
+					<li *ngFor="let reaction of currentReactions">
+						{{ reaction.reactionmeddrapt }}
+					</li>
+				</ul>
+			</deja-menu>
+			<deja-menu #moreDrugMenu buttonAlignment="right top" menuAlignment="right top">
+				<ul>
+					<li *ngFor="let drug of currentDrugs">
+						{{ drug.medicinalproduct }}
+					</li>
+				</ul>
+			</deja-menu>
+			<!-- -->
+			<deja-grid #bgrid searchArea groupArea rowsSortable columnsSortable columnsSizable multiSelect sortable [rows]="drugsBigRecord$" [columns]="columns" (selectedChange)="onSelectionChanged($event)" nodataholder="Pas de données" placeholder="Filtrer la liste par le nom" searchField="indexedText" (itemDragStart)="onItemDragStart($event)">
+				<ng-template #cellTemplate let-row let-column="column">
+					<span id="cell-reaction" class="cell" *ngIf="column.name==='reaction' && row.reaction && row.reaction.length">
+						<span id="content">{{ row.reaction[0].reactionmeddrapt }}</span>
+						<button id="more" *ngIf="row.reaction.length > 1" md-icon-button (click)="currentReactions = row.reaction; moreReactionMenu.show($event)">
+							<md-icon>more_vert</md-icon>
+						</button>
+					</span>
+					<span id="cell-drug" class="cell" *ngIf="column.name==='drug' && row.drug && row.drug.length">
+						<span id="content">
+							<span class="drug" *ngFor="let drug of row.drug">{{ drug.medicinalproduct }}</span>
+						</span>
+						<button id="more" *ngIf="row.drug.length > 1" md-icon-button (click)="currentDrugs = row.drug; moreDrugMenu.show($event)">
+							<md-icon>more_vert</md-icon>
+						</button>
+					</span>
+				</ng-template>
+				<ng-template #searchSuffixTemplate>
+					<md-icon suffix (click)="onSuffixClicked()">more_vert</md-icon>
+				</ng-template>
+			</deja-grid>
+		</md-card-content>
+		<md-card-content class="ddContainer">
+			<div>
+				Selected Items
+				<ul>
+					<li *ngFor="let item of selectedItems">
+						<span>{{ item.groupName || item.suGroupName || item.name + ' - ' + item.type }}</span>
+					</li>
+				</ul>
+			</div>
+			<div>
+				Vous pouvez également dropper des items de la liste dans la zone rouge ci dessous (celle-ci affichera une représentation JSON de l'objet droppé) :
+			</div>
+			<div [deja-droppable]="{dragovercallback: onDivDragOver, dragentercallback:onDivDragOver, dropcallback:onDivDropEvent}" style="border:1px solid red;min-height:150px;"></div>
+		</md-card-content>
+	</md-card>
+
+	<md-card class="demo-card">
+		<md-toolbar color="primary">Grille avec taille des colonnes en pixels et en pourcents</md-toolbar>
+		<md-card-content class="listContainer">
+			<deja-grid #cgrid sortable columnsSizable multiSelect [rows]="drugs$" [columns]="percentColumns" (selectedChange)="onSelectionChanged2($event)" nodataholder="Pas de données" placeholder="Filtrer la liste par le nom" searchField="receivedate">
+				<ng-template #rowTemplate let-row>
+					<deja-grid-row [row]="row" [columnLayout]="cgrid.columnLayout" [cellTemplateExternal]="cgrid.cellTemplate">
+						<ng-template #cellTemplate let-row let-column="column">
+							<span *ngIf="column.name!=='transmissiondateformat'" class="cell" [attr.current]="column.isCurrent || null">{{ row[column.name] }}</span>
+							<span *ngIf="column.name==='transmissiondateformat'" class="cell" [attr.current]="column.isCurrent || null">{{ row[column.name] + 'apk'}}</span>
+						</ng-template>
+					</deja-grid-row>
+				</ng-template>
+			</deja-grid>
+		</md-card-content>
+	</md-card>
+
+	<md-card class="demo-card">
+		<md-toolbar color="primary">Grille avec taille fixe des colonnes</md-toolbar>
+		<md-card-content class="listContainer">
+			<deja-grid #fgrid searchArea groupArea sortable columnsSizable multiSelect [rows]="groupedDrugs$" [columns]="responsiveColumns" (selectedChange)="onSelectionChanged3($event)" nodataholder="Pas de données" placeholder="Filtrer la liste par le nom" searchField="receivedate" (itemDragStart)="onItemDragStart($event)">
+			</deja-grid>
+		</md-card-content>
+	</md-card>
+
+	<md-card class="demo-card">
+		<md-toolbar color="primary">Grille avec taille automatique des lignes</md-toolbar>
+		<md-card-content class="listContainer">
+			<deja-grid id="news" #news groupArea sortable columnsSizable multiSelect [rows]="news$ | async" [columns]="newsColumns" viewportMode="auto" nodataholder="Pas de données" (columnSizeChanged)="onColumnSizeChanged($event)">
+				<ng-template #cellTemplate let-row let-column="column">
+					<img *ngIf="column.name==='urlToImage'" [attr.src]="row[column.name]" class="logo" (load)="imageLoaded(row)">
+				</ng-template>
+			</deja-grid>
+		</md-card-content>
+	</md-card>
+</div>

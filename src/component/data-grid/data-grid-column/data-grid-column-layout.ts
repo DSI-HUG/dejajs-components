@@ -6,8 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Subject } from 'rxjs/Rx';
-import { IDejaGridColumn } from '../index';
+import { Subject } from 'rxjs/Subject';
+import { IDejaGridColumn } from './data-grid-column';
 
 export class IDejaGridColumnLayout {
     public scrollLeft: number;

@@ -6,6 +6,20 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { MaterialModule } from '@angular/material';
+import { DejaRangeComponent } from './range.component';
+
+@NgModule({
+    declarations: [DejaRangeComponent],
+    exports: [DejaRangeComponent],
+    imports: [
+        CommonModule,
+        MaterialModule,
+    ],
+})
+export class DejaRangeModule { }
+
 export * from './range.interface';
 export * from './range.component';
-export * from './range.module';

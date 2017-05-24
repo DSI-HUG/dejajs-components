@@ -7,7 +7,13 @@
  */
 
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs/Rx';
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/operator/debounce';
+import 'rxjs/add/operator/delay';
+import 'rxjs/add/operator/takeUntil';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 import { Rect } from '../../common/core/graphics/rect';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 

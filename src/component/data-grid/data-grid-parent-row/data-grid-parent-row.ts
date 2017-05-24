@@ -7,7 +7,7 @@
  */
 
 import { IGroupParent } from '../../../common/core/grouping';
-import { IItemTree } from '../../../common/core/item-list';
+import { IItemTree } from '../../../common/core/item-list/item-tree';
 
 export class IDejaGridParentRow implements IItemTree, IGroupParent {
 

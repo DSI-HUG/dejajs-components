@@ -7,7 +7,9 @@
  */
 
 import { Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs/Rx';
+import 'rxjs/add/operator/delay';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
 import { Position } from './../../common/core/graphics/position';
 import { DejaMouseDragDropService, IDragCursorInfos, IDropCursorInfos } from './mouse-dragdrop.service';
 

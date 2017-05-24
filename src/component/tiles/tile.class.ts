@@ -6,8 +6,9 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { BehaviorSubject, Subject } from 'rxjs/Rx';
-import { Rect } from '../../common/core/graphics';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subject } from 'rxjs/Subject';
+import { Rect } from '../../common/core/graphics/rect';
 import { IDejaTile } from './tile.interface';
 
 export class DejaTile implements IDejaTile {
@@ -58,6 +59,10 @@ export class DejaTile implements IDejaTile {
 
     public get model() {
         return this._model;
+    }
+
+    public set color(value: string) {
+        this._color  = value;
     }
 
     public get color() {

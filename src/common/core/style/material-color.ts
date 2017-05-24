@@ -7,7 +7,7 @@
  */
 
 import { Color } from '../graphics/color';
-import { MaterialColors } from '../index';
+import { MaterialColors } from './material-colors';
 
 export class MaterialColor extends Color {
     public name: string;

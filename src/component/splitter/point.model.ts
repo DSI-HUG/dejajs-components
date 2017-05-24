@@ -6,9 +6,6 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-/**
- * Created by rtr on 22.12.2016.
- */
 export interface Point {
     x: number;
     y: number;

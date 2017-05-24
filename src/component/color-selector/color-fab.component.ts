@@ -6,9 +6,10 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, ElementRef, Input } from '@angular/core';
-import { Observable, Subscription } from 'rxjs/Rx';
-import { DejaColorFab } from './index';
+import { Component, ElementRef, Input, OnDestroy } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import { DejaColorFab } from './color-fab.class';
 
 @Component({
     selector: 'deja-color-fab',
@@ -17,7 +18,7 @@ import { DejaColorFab } from './index';
     ],
     template: '<ng-content></ng-content>',
 })
-export class DejaColorFabComponent {
+export class DejaColorFabComponent implements OnDestroy {
     public element: HTMLElement;
 
     private _colorFab: DejaColorFab;

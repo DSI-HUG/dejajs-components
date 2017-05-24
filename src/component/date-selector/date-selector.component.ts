@@ -8,7 +8,8 @@
 
 import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Optional, Output, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { Observable, Subject } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { IDateSelectorItem } from './date-selector-item.model';
 
@@ -139,10 +140,10 @@ export class DejaDateSelectorComponent implements AfterContentInit, ControlValue
             if (this.selectedDate) {
                 const h = (value) ? value.getHours() : 0;
                 const m = (value) ? value.getMinutes() : 0;
-                if (
+                if ( value && (
                     (!this.time && this.selectedDate.toLocaleTimeString() !== value.toLocaleTimeString())
                     || (this.time && ((this.selectedDate.getHours() === 0 && this.selectedDate.getMinutes() === 0) && (h !== 0 && m !== 0) || (this.selectedDate.toLocaleDateString() !== value.toLocaleDateString())))
-                ) {
+                )) {
                     value.setHours(this.selectedDate.getHours(), this.selectedDate.getMinutes(), this.selectedDate.getSeconds());
                 }
             }

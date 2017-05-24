@@ -6,8 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { UnitValue } from '../../../common/core/graphics';
-import { IDejaGridColumn } from '../index';
+import { UnitValue } from '../../../common/core/graphics/unit-value';
+import { IDejaGridColumn } from './data-grid-column';
 
 export class DejaGridColumnsLayoutInfos {
     public percentColumns: IDejaGridColumn[];

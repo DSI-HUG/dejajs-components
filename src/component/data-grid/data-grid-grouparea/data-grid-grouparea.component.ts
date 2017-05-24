@@ -6,9 +6,12 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
-import { IDejaDragEvent, IDejaDropEvent } from '../../index';
-import { IDejaGridColumn, IDejaGridGroupsEvent } from '../index';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Optional, Output } from '@angular/core';
+import { DejaClipboardService } from '../../../common/core/clipboard/clipboard.service';
+import { IDejaDragEvent } from '../../dragdrop/draggable.directive';
+import { IDejaDropEvent } from '../../dragdrop/droppable.directive';
+import { IDejaGridColumn } from '../data-grid-column/data-grid-column';
+import { IDejaGridGroupsEvent } from './data-grid-group';
 
 /** Zone de regroupement des colonnes dans laquelle les colonnes peuvent être drag and droppée */
 @Component({
@@ -37,9 +40,13 @@ export class DejaGridGroupAreaComponent {
         this._groups = columns || [];
     }
 
-    constructor(private changeDetectorRef: ChangeDetectorRef) { }
+    constructor(private changeDetectorRef: ChangeDetectorRef, @Optional() private clipboardService: DejaClipboardService) { }
 
     protected getDragContext(group: IDejaGridColumn) {
+        if (!this.clipboardService) {
+            return null;
+        }
+
         // console.log(`getDragContext ` + group.column.name + ' ' + Date.now();
         return {
             dragendcallback: (event: IDejaDragEvent) => {
@@ -54,53 +61,60 @@ export class DejaGridGroupAreaComponent {
     }
 
     protected getDropContext() {
-        return {
-            dragovercallback: (event: IDejaDropEvent) => {
-                if (event.dragInfo.hasOwnProperty(this.columnGroupKey)) {
-                    const sourceColumn = event.dragInfo[this.columnGroupKey] as IDejaGridColumn;
-                    if (!this.groups.find((column) => column === sourceColumn)) {
-                        event.preventDefault();
-                    }
+        if (!this.clipboardService) {
+            return null;
+        }
 
-                } else if (event.dragInfo.hasOwnProperty(this.groupGroupKey)) {
-                    const targetElement = this.getGroupElementFromHTMLElement(event.target as HTMLElement);
-                    const targetIndex = targetElement && +targetElement.getAttribute('index');
-                    if (targetIndex === undefined) {
-                        return;
-                    }
-
-                    const targetBounds = targetElement.getBoundingClientRect();
-
-                    const sourceColumn = event.dragInfo[this.groupGroupKey] as IDejaGridColumn;
-                    const sourceIndex = this.groups.findIndex((column) => column === sourceColumn);
-
-                    // Dead zones                
-                    if (sourceIndex === targetIndex) {
-                        event.preventDefault();
-                        return;
-                    } else if (targetIndex === sourceIndex + 1) {
-                        if (event.x <= targetBounds.left + targetBounds.width / 2) {
-                            event.preventDefault();
-                            return;
-                        }
-                    } else if (targetIndex === sourceIndex - 1) {
-                        if (event.x >= targetBounds.left + targetBounds.width / 2) {
-                            event.preventDefault();
-                            return;
-                        }
-                    }
-
-                    this.groups.splice(sourceIndex, 1);
-                    this.groups.splice(targetIndex, 0, sourceColumn);
-
-                    this.changeDetectorRef.markForCheck();
-
+        const dragcallback = (event: IDejaDropEvent) => {
+            if (event.dragInfo.hasOwnProperty(this.columnGroupKey)) {
+                const sourceColumn = event.dragInfo[this.columnGroupKey] as IDejaGridColumn;
+                if (!this.groups.find((column) => column === sourceColumn)) {
                     event.preventDefault();
+                }
 
-                } else {
+            } else if (event.dragInfo.hasOwnProperty(this.groupGroupKey)) {
+                const targetElement = this.getGroupElementFromHTMLElement(event.target as HTMLElement);
+                const targetIndex = targetElement && +targetElement.getAttribute('index');
+                if (targetIndex === undefined) {
                     return;
                 }
-            },
+
+                const targetBounds = targetElement.getBoundingClientRect();
+
+                const sourceColumn = event.dragInfo[this.groupGroupKey] as IDejaGridColumn;
+                const sourceIndex = this.groups.findIndex((column) => column === sourceColumn);
+
+                // Dead zones
+                if (sourceIndex === targetIndex) {
+                    event.preventDefault();
+                    return;
+                } else if (targetIndex === sourceIndex + 1) {
+                    if (event.x <= targetBounds.left + targetBounds.width / 2) {
+                        event.preventDefault();
+                        return;
+                    }
+                } else if (targetIndex === sourceIndex - 1) {
+                    if (event.x >= targetBounds.left + targetBounds.width / 2) {
+                        event.preventDefault();
+                        return;
+                    }
+                }
+
+                this.groups.splice(sourceIndex, 1);
+                this.groups.splice(targetIndex, 0, sourceColumn);
+
+                this.changeDetectorRef.markForCheck();
+
+                event.preventDefault();
+
+            } else {
+                return;
+            }
+        };
+
+        return {
+            dragentercallback: dragcallback,
+            dragovercallback: dragcallback,
             dropcallback: (event: IDejaDropEvent) => {
                 const raiseEvent = (group: IDejaGridColumn) => {
                     const e = {

@@ -8,8 +8,11 @@ import { EventEmitter } from '@angular/core';
  */
 
 import { Component, ElementRef, Input, OnDestroy, Output } from '@angular/core';
-import { Observable, Subscription } from 'rxjs/Rx';
-import { DejaTile, IDejaTilesModelEvent } from './index';
+import 'rxjs/add/operator/delay';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import { DejaTile } from './tile.class';
+import { IDejaTilesModelEvent } from './tiles.event';
 
 @Component({
     selector: 'deja-tile',

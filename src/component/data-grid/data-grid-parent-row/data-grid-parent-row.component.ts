@@ -7,7 +7,8 @@
  */
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, Input } from '@angular/core';
-import { IDejaGridColumn, IDejaGridParentRow } from '../index';
+import { IDejaGridColumn } from '../data-grid-column/data-grid-column';
+import { IDejaGridParentRow } from './data-grid-parent-row';
 
 /** Composant représentant une ligne parente d'une structure de ligne hierarchique */
 @Component({

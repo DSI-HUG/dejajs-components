@@ -8,8 +8,13 @@
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, Input, OnInit, Optional, Self, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { Observable, Subject } from 'rxjs/Rx';
-import { Circle } from '../../common/core/graphics/index';
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/observable/merge';
+import 'rxjs/add/operator/sampleTime';
+import 'rxjs/add/operator/takeUntil';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import { Circle } from '../../common/core/graphics/circle';
 import { Position } from '../../common/core/graphics/position';
 
 const noop = () => { };

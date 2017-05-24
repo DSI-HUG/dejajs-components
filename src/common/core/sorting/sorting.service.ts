@@ -6,8 +6,13 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Observable } from 'rxjs/Rx';
-import { ISortInfos, SortOrder } from './index';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator/switchMap';
+import { Observable } from 'rxjs/Observable';
+import { ISortInfos } from './sort-infos.model';
+import { SortOrder } from './sort-order.model';
 
 /** Classe de tri d'une liste plate ou hierarchique */
 export class SortingService {
@@ -83,6 +88,14 @@ export class SortingService {
             } else {
                 // for other types, write your code here
             }
+        }
+
+        if (!flda) {
+            flda = '';
+        }
+
+        if (!fldb) {
+            fldb = '';
         }
 
         const stra = flda.toString() as string;

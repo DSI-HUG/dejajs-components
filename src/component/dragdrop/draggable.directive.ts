@@ -6,16 +6,17 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Directive, ElementRef, HostBinding, Input } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
-import { UUID } from '../../common/core';
+import { Directive, ElementRef, HostBinding, Input, Optional } from '@angular/core';
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/operator/takeUntil';
+import { Observable } from 'rxjs/Observable';
 import { DejaClipboardService } from '../../common/core/clipboard/clipboard.service';
+import { UUID } from '../../common/core/UUID';
 
 @Directive({
     selector: '[deja-draggable]',
 })
 export class DejaDraggableDirective {
-
     @HostBinding('attr.dragdropid') private dragdropid;
     @HostBinding('attr.draggable') private draggable = null;
     private draginfokey = 'draginfos';
@@ -34,12 +35,16 @@ export class DejaDraggableDirective {
         return this._context;
     }
 
-    constructor(elementRef: ElementRef, private clipboardService: DejaClipboardService) {
+    constructor(elementRef: ElementRef, @Optional() private clipboardService: DejaClipboardService) {
         const element = elementRef.nativeElement as HTMLElement;
 
         Observable.fromEvent(element, 'dragstart')
             .filter(() => !!this.context)
             .subscribe((event: DragEvent) => {
+                if (!clipboardService) {
+                    throw new Error('To use the DejaDraggableDirective, please import and provide the DejaClipboardService in your application.');
+                }
+
                 // console.log('dragstart');
                 const dragInfos = {} as { [key: string]: any };
                 this.dragdropid = new UUID().toString();
@@ -51,8 +56,10 @@ export class DejaDraggableDirective {
 
                 this.clipboardService.set(this.draginfokey, dragInfos);
 
+                let data = 'notavailable';
                 if (object) {
                     object.dragged = true;
+                    data = JSON.stringify(data);
                 }
 
                 if (this.context && this.context.dragstartcallback) {
@@ -61,7 +68,7 @@ export class DejaDraggableDirective {
                     e.dragObject = this.context.object;
                     e.dragElement = element;
                     this.context.dragstartcallback(e);
-
+                    event.dataTransfer.setData('text/plain', data);
                     if (e.defaultPrevented) {
                         event.preventDefault();
                     }

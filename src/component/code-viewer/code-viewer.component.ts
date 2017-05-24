@@ -7,9 +7,8 @@
  */
 
 import { AfterViewChecked, Component, Input, ViewEncapsulation } from '@angular/core';
-// tslint:disable
-const Prism = require('prismjs');
-// tslint:enable
+
+import * as Prism from 'prismjs';
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -22,7 +21,7 @@ export class DejaCodeViewerComponent implements AfterViewChecked {
 
     private initialised = false;
 
-    constructor() { 
+    constructor() {
         // console.log('ok');
     }
 

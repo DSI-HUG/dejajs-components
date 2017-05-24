@@ -1,0 +1,58 @@
+<md-tab-group [selectedIndex]="tabIndex" (selectChange)="tabIndex = $event.index">
+    <!--<md-tab label="OVERVIEW">-->
+    <!--<md-card class="demo-card demo-basic">-->
+    <!--TODO-->
+    <!--</md-card>-->
+    <!--</md-tab>-->
+    <md-tab label="INTRODUCTION"> </md-tab>
+    <md-tab label="EXAMPLES"> </md-tab>
+</md-tab-group>
+
+<md-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
+    <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/demo-app/reactive-form/readme.md'"></deja-markdown>
+</md-card>
+
+<md-card class="demo-card demo-basic" *ngIf="tabIndex === 1">
+    <md-toolbar color="primary">Reactive Form</md-toolbar>
+    <md-card-content id="reactiveFormContainer" fxLayout="row">
+        <form novalidate [formGroup]="form" fxFlex="0 0 55%" fxLayout="column">
+            <h3 fxFlex="0 0 auto">Material Input</h3>
+            <md-input-container fxFlex="0 0 auto">
+                <input mdInput pending-onfocus formControlName="name" placeholder="Name">
+            </md-input-container>
+            <h3 fxFlex="0 0 auto">Deja Select</h3>
+            <deja-select fxFlex="0 0 auto" placeholder="Country" selectionClearable formControlName="country" textField="naqme" valueField="code" [models]="countries"></deja-select>
+            <h3 fxFlex="0 0 auto">Deja Select (Multiselect)</h3>
+            <deja-select fxFlex="0 0 auto" type="multiselect" placeholder="Visited Countries" formControlName="visitedCountries" textField="naqme" valueField="code" [models]="countries"></deja-select>
+            <h3 fxFlex="0 0 auto">Deja Date Picker</h3>
+            <div class="placeholder" fxFlex="0 0 auto">Birth Date</div>
+            <deja-date-picker formControlName="birthDate"></deja-date-picker>
+            <h3 fxFlex="0 0 auto">Deja Circular Picker</h3>
+            <div class="placeholder" fxFlex="0 0 auto">Size (cm)</div>
+            <deja-circular-picker formControlName="size" [ranges]="[{ min: 110, max: 219, labelInterval: 5 }]"></deja-circular-picker>
+            <h3 fxFlex="0 0 auto">Deja Color Selector</h3>
+            <div class="placeholder" fxFlex="0 0 auto">Preffered Color</div>
+            <deja-color-selector fxFlex="0 0 auto" [colors]="materialColors.colors" formControlName="color"></deja-color-selector>
+            <h3 fxFlex="0 0 auto">Deja Color Picker</h3>
+            <div class="placeholder" fxFlex="0 0 auto">House Color</div>
+            <deja-color-picker fxFlex="0 0 auto" [colors]="materialColors.colors" formControlName="color2"></deja-color-picker>
+            <h3 fxFlex="0 0 auto">Deja Chips</h3>
+            <div class="placeholder" fxFlex="0 0 auto">Skills</div>
+            <deja-chips fxFlex="0 0 auto" formControlName="skills"></deja-chips>
+            <md-input-container fxFlex="0 0 auto" id="addskill">
+                <input mdInput #skill (keydown)="onSkillKeyDown($event)" placeholder="Add Skill">
+                <div mdSuffix><i (click)="onAddSkill(skill)" class="material-icons mdSuffix">add</i></div>
+            </md-input-container>
+            <h3 fxFlex="0 0 auto">Deja Editable</h3>
+            <div class="placeholder" fxFlex="0 0 auto">Remark</div>
+            <span [deja-editable]="true" formControlName="remark" multiline></span>
+            <h3 fxFlex="0 0 auto">Deja Range</h3>
+            <deja-range [readOnly]="false" [step]="1" formControlName="ranges"></deja-range>
+        </form>
+        <span fxFlex="0 0 40%" fxFlexOffset="5%">
+			<h4>Model :</h4>
+			<pre>{{formMap | json}}</pre>
+		</span>
+
+    </md-card-content>
+</md-card>

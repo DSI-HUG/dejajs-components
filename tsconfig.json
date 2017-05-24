@@ -1,23 +1,21 @@
 {
+    "compileOnSave": false,
     "compilerOptions": {
-        "declaration": true,
-        "target": "es5",
-        "module": "es2015",
+        "allowSyntheticDefaultImports": true,
+        "outDir": "./dist/out-tsc",
+        "baseUrl": "demo",
+        "sourceMap": true,
+        "declaration": false,
         "moduleResolution": "node",
-        "noImplicitAny": false,
-        "removeComments": true,
-        "noLib": false,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "sourceMap": true,
-        "noUnusedParameters": true,
-        "noUnusedLocals": true,
+        "target": "es5",
+        "typeRoots": [
+            "node_modules/@types"
+        ],
         "lib": [
             "es2016",
             "dom"
         ]
-    },
-    "exclude": [
-        "node_modules"
-    ]
+    }
 }

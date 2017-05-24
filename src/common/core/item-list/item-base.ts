@@ -1,4 +1,4 @@
-import { IViewPortItem } from './index';
+import { IViewPortItem } from './viewport.service';
 
 export interface IItemBase extends IViewPortItem {
     id?: any;
@@ -10,5 +10,6 @@ export interface IItemBase extends IViewPortItem {
     odd?: boolean; // For style only
     toString?: () => string;
     equals?: (item: IItemBase) => boolean;
+    /** Immutable model */
     model?: any;
 }

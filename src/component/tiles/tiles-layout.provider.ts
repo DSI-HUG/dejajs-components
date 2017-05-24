@@ -9,16 +9,22 @@
  *
  */
 
-import { EventEmitter, Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
-import { KeyCodes } from '../../common/core/';
+import { EventEmitter, Injectable, Optional } from '@angular/core';
+import 'rxjs/add/operator/take';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
 import { DejaClipboardService } from '../../common/core/clipboard/clipboard.service';
 import { Directions } from '../../common/core/graphics/directions';
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
 import { Size } from '../../common/core/graphics/size';
+import { KeyCodes } from '../../common/core/keycodes.enum';
 import { IDragCursorInfos, IDragDropContext } from '../mouse-dragdrop/mouse-dragdrop.service';
-import { DejaTile, IDejaTile, IDejaTilesAddEvent, IDejaTilesEvent, IDejaTilesModelEvent, IDejaTilesRemoveEvent } from './index';
+import { DejaTile } from './tile.class';
+import { IDejaTile } from './tile.interface';
+import { IDejaTilesAddEvent, IDejaTilesEvent, IDejaTilesModelEvent, IDejaTilesRemoveEvent } from './tiles.event';
 
 interface ILayoutInfo {
     id: string;
@@ -102,7 +108,7 @@ export class DejaTilesLayoutProvider {
 
     private selectedIds = [] as string[];
 
-    constructor(private clipboardService: DejaClipboardService) {
+    constructor(@Optional() private clipboardService: DejaClipboardService) {
         Observable.from(this.refreshTiles$)
             .debounceTime(30)
             .do(() => {
@@ -546,7 +552,7 @@ export class DejaTilesLayoutProvider {
     }
 
     public paste() {
-        if (!this.clipboardService.isAvailable('tiles')) {
+        if (!this.clipboardService || !this.clipboardService.isAvailable('tiles')) {
             return [];
         }
 
@@ -986,7 +992,7 @@ export class DejaTilesLayoutProvider {
         event.cancel$ = new Subject();
 
         // Delete provider if cut operation
-        const deleteSourceProvider$ = this.clipboardService.get('tiles-provider') as Subject<DejaTile[]>;
+        const deleteSourceProvider$ = this.clipboardService && this.clipboardService.get('tiles-provider') as Subject<DejaTile[]>;
 
         // Hide originals if cut
         let sourceTiles: DejaTile[];
@@ -1633,6 +1639,13 @@ export class DejaTilesLayoutProvider {
     }
 
     private copyTiles(tiles: DejaTile[], isCut?: boolean) {
+        if (!this.clipboardService) {
+            if (!tiles) {
+                return;
+            }
+            throw new Error('DejaClipboardService must be imported by your application to use the copyTiles methode of DejaTilesComponent.');
+        }
+
         const tt = this.clipboardService.get('tiles') as DejaTile[];
         if (tt) {
             tt.forEach((tile) => tile.isCutted = false);

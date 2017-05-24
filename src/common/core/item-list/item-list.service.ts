@@ -6,12 +6,20 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { BehaviorSubject, Observable } from 'rxjs/Rx';
+import 'rxjs/add/observable/concat';
+import 'rxjs/add/observable/fromPromise';
+import 'rxjs/add/observable/if';
+import 'rxjs/add/operator/reduce';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
 import { Subscriber } from 'rxjs/Subscriber';
-import { Diacritics } from '../diacritics/index';
-import { GroupingService, IGroupInfo } from '../grouping/index';
-import { ISortInfos, SortingService } from '../sorting/index';
-import { IItemBase, IItemTree } from './index';
+import { Diacritics } from '../diacritics/diacritics';
+import { IGroupInfo } from '../grouping/group-infos';
+import { GroupingService } from '../grouping/grouping.service';
+import { ISortInfos } from '../sorting/sort-infos.model';
+import { SortingService } from '../sorting/sorting.service';
+import { IItemBase } from './item-base';
+import { IItemTree } from './item-tree';
 
 /** Service de gestion des listes (deja-treelist, deja-select et deja-grid).
  * Ce service permet la gestion du viewport et la gestion des caches des listes.
@@ -270,7 +278,9 @@ export class ItemListService {
         if (!value) {
             return '';
         } else {
-            if (textField && value[textField]) {
+            if (textField && value.model && value.model[textField]) {
+                return value.model[textField];
+            } else if (textField && value[textField]) {
                 return value[textField];
             } else if (value.displayName) {
                 return typeof value.displayName === 'string' ? value.displayName : value.displayName();
@@ -1142,13 +1152,16 @@ export class ItemListService {
     }
 
     private compareItems = (item1: IItemBase, item2: IItemBase) => {
-        if (this._valueField) {
-            // Si dans on est dans le cas d'un model on compare le value field du model, sinon le valueField de l'item
+        if (item1.model && !item2.model) {
+            return false;
+        } else if (!item1.model && item2.model) {
+            return false;
+        } else if (this._valueField) {
             if (item1.model && item2.model) {
-                return item1.model[this._valueField] === item2.model[this._valueField];
-            } else {
-                return item1[this._valueField] === item2[this._valueField];
+                item1 = item1.model;
+                item2 = item2.model;
             }
+            return item1[this._valueField] === item2[this._valueField];
         } else if (item1.equals) {
             return item1.equals(item2);
         } else if (item2.equals) {
@@ -1158,6 +1171,10 @@ export class ItemListService {
         } else if (item2.model && item2.model.equals) {
             return item2.model.equals(item1.model);
         } else {
+            if (item1.model && item2.model) {
+                item1 = item1.model;
+                item2 = item2.model;
+            }
             return item1 === item2;
         }
     }

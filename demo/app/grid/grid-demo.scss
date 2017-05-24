@@ -1,0 +1,67 @@
+$deep: '/deep/';
+
+:host {
+	display: flex;
+	overflow: hidden;
+	flex-direction: column;
+
+	.demo-card {
+		.listContainer {
+			height: 700px;
+			display: flex;
+			flex-direction: column;
+			overflow: hidden;
+
+			#{$deep} deja-grid {
+				flex: 1 1 auto;
+				.listitem {
+					&.odd {
+						deja-grid-row {
+							background-color: rgba(#000, 0.07);
+						}
+					}
+				}
+			}
+		}
+		md-icon[suffix] {
+			padding: 4px;
+			display: flex;
+			justify-content: flex-end;
+			cursor: pointer;
+		}
+		#cell-drug,
+		#cell-reaction {
+			display: flex;
+			align-items: center;
+			width: 100%;
+			#content {
+				flex: 1 1 auto;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow: hidden;
+			}
+			#more {
+				margin: 0 0.5rem;
+			}
+		}
+
+		#{$deep}#news {
+			.cell-wrapper {
+				&[colname="urlToImage"] {
+					.logo {
+						max-width: 100%;
+						max-height: 100%;
+						width: auto;
+						height: auto;
+						object-fit: contain;
+					}
+				}
+				&[colname="description"] {
+					.cell {
+						white-space: normal;
+					}
+				}
+			}
+		}
+	}
+}

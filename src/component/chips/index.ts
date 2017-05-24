@@ -6,5 +6,20 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+
+import { DejaChipsComponent } from './chips.component';
+
+@NgModule({
+    declarations: [DejaChipsComponent],
+    exports: [DejaChipsComponent],
+    imports: [
+        CommonModule,
+        FormsModule,
+    ],
+})
+export class DejaChipsModule { }
+
 export * from './chips.component';
-export * from './chips.module';

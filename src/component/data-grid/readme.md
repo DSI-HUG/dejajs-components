@@ -1,7 +1,7 @@
 # Data Grid
 Composant pour afficher des données dans un tableau, avec une fonction de recherche.  
 
-### Utilisation 
+### Dépendances 
 > Ne pas oublier d'importer le `DataGridModule` dans les `imports` de votre module concerné !
 
 ### Utilisation 
@@ -41,10 +41,10 @@ Composant pour afficher des données dans un tableau, avec une fonction de reche
 	<td>Définit la structure des colonnes de la grille.</td>
 </tr>
 <tr>
-	<td>rows</td>
+	<td>rows (ngModel)</td>
 	<td>IItemBase[], Promise<iitembase[] ou Observable</iitembase[]</td>
 	<td>null</td>
-	<td>Définit le modèle affiché dans les lignes de la grille. (c'est le contenu du tableau)</td>
+	<td>Définit le modèle affiché dans les lignes de la grille (c'est le contenu du tableau). Si le contenu renvoie une information indéfinie (valeur <code>null</code>), une information visuelle est affichée signifiant que les données sont en cours de chargement. Si la liste est définie mais ne contient pas de données, le message passé dans l'attribut "nodataholder" est affiché.</td>
 </tr>
 <tr>
 	<td>currentColumn</td>

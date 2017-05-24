@@ -8,10 +8,15 @@
 
 import { Component, ElementRef, EventEmitter, Input, Optional, Output, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { BehaviorSubject, Observable, Subject } from 'rxjs/Rx';
-import { Color, ColorEvent } from '../../common/core/graphics/index';
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/observable/merge';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import { Color } from '../../common/core/graphics/color';
+import { ColorEvent } from '../../common/core/graphics/color-event';
 import { MaterialColor } from '../../common/core/style';
-import { DejaColorFab } from './index';
+import { DejaColorFab } from './color-fab.class';
 
 const noop = () => { };
 

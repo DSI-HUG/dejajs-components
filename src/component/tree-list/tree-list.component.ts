@@ -8,16 +8,30 @@
 
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs/Rx';
+import 'rxjs/add/operator/delay';
+import 'rxjs/add/operator/merge';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
+import { DejaClipboardService } from '../../common/core/clipboard/clipboard.service';
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
 import { GroupingService } from '../../common/core/grouping';
-import { DejaItemEvent, DejaItemsEvent, IItemBase, IItemTree, ItemListBase, ItemListService, IViewPort, ViewportMode, ViewPortService } from '../../common/core/item-list';
+import { IItemBase } from '../../common/core/item-list/item-base';
+import { DejaItemEvent } from '../../common/core/item-list/item-event';
+import { ItemListBase } from '../../common/core/item-list/item-list-base';
+import { ItemListService } from '../../common/core/item-list/item-list.service';
+import { IItemTree } from '../../common/core/item-list/item-tree';
+import { DejaItemsEvent } from '../../common/core/item-list/items-event';
+import { IViewPort } from '../../common/core/item-list/viewport.service';
+import { ViewportMode } from '../../common/core/item-list/viewport.service';
+import { ViewPortService } from '../../common/core/item-list/viewport.service';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { SortingService } from '../../common/core/sorting';
-import { DejaChildValidatorDirective } from '../../common/core/validation';
+import { DejaChildValidatorDirective } from '../../common/core/validation/child-validator.directive';
 import { IDejaDragEvent } from '../dragdrop';
-import { DejaTreeListScrollEvent } from './index';
+import { DejaTreeListScrollEvent } from './tree-list-scroll-event';
 
 const noop = () => { };
 
@@ -100,7 +114,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     private clearFilterExpression$ = new BehaviorSubject<void>(null);
     private filterListComplete$ = new Subject();
 
-    constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, public elementRef: ElementRef, @Self() @Optional() public _control: NgControl) {
+    constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, public elementRef: ElementRef, @Self() @Optional() public _control: NgControl, @Optional() private clipboardService: DejaClipboardService) {
         super(changeDetectorRef, viewPort);
 
         if (this._control) {
@@ -308,32 +322,48 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
     /** Définit la liste des éléments selectionés en mode multiselect */
     @Input()
-    public set selectedItems(items: IItemBase[]) {
-        this.setSelectedModels(items);
+    public set selectedItems(value: IItemBase[]) {
+        this.setSelectedItems(value);
     }
 
     /** Retourne la liste des éléments selectionés en mode multiselect */
-    public get selectedItems(): IItemBase[] {
-        return this.getSelectedModels() || [];
+    public get selectedItems() {
+        return super.getSelectedItems();
     }
 
-    /** Définit la liste des éléments selectionés en mode single select */
+    /** Définit l'éléments selectioné en mode single select */
     @Input()
-    public set selectedItem(item: IItemBase) {
-        if (this.multiSelect) {
-            throw new Error('selectedItem binding is for single selection only, use selectedItems for multi selection');
-        }
-
-        this.selectedItems = item && [item];
+    public set selectedItem(value: IItemBase) {
+        this.setSelectedItems([value]);
     }
 
-    /** Retourne la liste des éléments selectionés en mode single select */
+    /** Retourne l'éléments selectioné en mode single select */
     public get selectedItem() {
-        if (this.multiSelect) {
-            throw new Error('selectedItem is for single selection only, use selectedItems for multi selection');
-        }
+        const selectedItem = super.getSelectedItems();
+        return selectedItem && selectedItem[0];
+    }
 
-        return this.selectedItems[0];
+    /** Définit le model selectioné en mode single select */
+    @Input()
+    public set selectedModel(value: IItemBase) {
+        this.setSelectedModels([value]);
+    }
+
+    /** Retourne le model selectioné en mode single select */
+    public get selectedModel() {
+        const selectedModel = super.getSelectedModels();
+        return selectedModel && selectedModel[0];
+    }
+
+    /** Définit la liste des models selectionés en mode multiselect */
+    @Input()
+    public set selectedModels(value: IItemBase[]) {
+        this.setSelectedModels(value);
+    }
+
+    /** Retourne la liste des models selectionés en mode multiselect */
+    public get selectedModels() {
+        return super.getSelectedModels();
     }
 
     /** Definit le service de liste utilisé par ce composant. Ce srevice permet de controller dynamiquement la liste, ou de faire du lazyloading. */
@@ -472,6 +502,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
     // ************* ControlValueAccessor Implementation **************
     /** Définit la liste des éléments, sans invoquaer ngModelChange */
+    /** @deprecated */
     public writeValue(items: any) {
         delete this.hintLabel;
         super.setItems$(items)
@@ -489,11 +520,13 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     }
 
     // From ControlValueAccessor interface
+    /** @deprecated */
     public registerOnChange(fn: any) {
         this.onChangeCallback = fn;
     }
 
     // From ControlValueAccessor interface
+    /** @deprecated */
     public registerOnTouched(fn: any) {
         this.onTouchedCallback = fn;
     }
@@ -777,7 +810,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
         const item = this._itemList[itemIndex - this.vpStartRow];
         this.clickedItem = item;
-        if (!this.isCollapsible(item) && this.isSelectable(item) && (!e.ctrlKey || !this.multiSelect) && (e.button === 0 || !item.selected)) {
+        const isExpanButton = (e.target as HTMLElement).id === 'expandbtn';
+        if ((!isExpanButton || !this.isCollapsible(item)) && this.isSelectable(item) && (!e.ctrlKey || !this.multiSelect) && (e.button === 0 || !item.selected)) {
             if (e.shiftKey && this.multiSelect) {
                 // Select all from current to clicked
                 this.selectRange$(itemIndex, this.currentItemIndex)
@@ -822,7 +856,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                     return;
                 }
 
-                if (this.isCollapsible(upItem) || (upevt.target as HTMLElement).id === 'expandbtn') {
+                const isExpandButton = (upevt.target as HTMLElement).id === 'expandbtn';
+                if (this.isCollapsible(upItem) && (isExpandButton || !this.isSelectable(upItem))) {
                     const treeItem = upItem as IItemTree;
                     this.toggleCollapse$(upIndex, !treeItem.collapsed).first().subscribe(() => {
                         this.currentItemIndex = upIndex;
@@ -840,7 +875,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     }
 
     protected getDragContext(index: number) {
-        if (!this.sortable && !this.itemsDraggable) {
+        if (!this.clipboardService || (!this.sortable && !this.itemsDraggable)) {
             return null;
         }
 
@@ -867,38 +902,41 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     }
 
     protected getDropContext() {
-        if (!this.sortable) {
+        if (!this.clipboardService || !this.sortable) {
             return null;
         }
 
-        return {
-            dragovercallback: (event: IDejaDragEvent) => {
-                if (this._ddStartIndex === undefined) {
-                    return;
-                }
-
-                const targetIndex = this.getItemIndexFromHTMLElement(event.target as HTMLElement);
-                if (targetIndex === undefined) {
-                    return;
-                }
-
-                // Faire calculer le target final en fonction de la hierarchie par le service
-                this.calcDragTargetIndex$(this._ddStartIndex, targetIndex)
-                    .switchMap((finalTarget) => {
-                        if (finalTarget !== undefined && finalTarget !== this._ddTargetIndex) {
-                            this._ddTargetIndex = finalTarget;
-                            return this.calcViewList$()
-                                .first()
-                                .map(() => finalTarget);
-                        } else {
-                            return Observable.of(finalTarget);
-                        }
-                    })
-                    .subscribe(noop);
-
-                event.preventDefault();
+        const dragcallback = (event: IDejaDragEvent) => {
+            if (this._ddStartIndex === undefined) {
                 return;
-            },
+            }
+
+            const targetIndex = this.getItemIndexFromHTMLElement(event.target as HTMLElement);
+            if (targetIndex === undefined) {
+                return;
+            }
+
+            // Faire calculer le target final en fonction de la hierarchie par le service
+            this.calcDragTargetIndex$(this._ddStartIndex, targetIndex)
+                .switchMap((finalTarget) => {
+                    if (finalTarget !== undefined && finalTarget !== this._ddTargetIndex) {
+                        this._ddTargetIndex = finalTarget;
+                        return this.calcViewList$()
+                            .first()
+                            .map(() => finalTarget);
+                    } else {
+                        return Observable.of(finalTarget);
+                    }
+                })
+                .subscribe(noop);
+
+            event.preventDefault();
+            return;
+        };
+
+        return {
+            dragentercallback: dragcallback,
+            dragovercallback: dragcallback,
             dropcallback: (event: IDejaDragEvent) => {
                 delete this._ddStartIndex;
                 delete this._ddTargetIndex;
@@ -925,7 +963,13 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     }
 
     protected onSelectionChange() {
-        const e = this.multiSelect ? { items: this.selectedItems } as DejaItemsEvent : { item: this.selectedItems[0] } as DejaItemEvent;
+        const e = this.multiSelect ? {
+            items: this.selectedItems,
+            models: this.selectedModels,
+        } as DejaItemsEvent : {
+            item: this.selectedItems[0],
+            model: this.selectedItems[0] && this.selectedItems[0].model,
+        } as DejaItemEvent;
         this.selectedChange.emit(e);
     }
 
@@ -940,7 +984,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     }
 
     protected toggleSelect$(items: IItemBase[], state: boolean): Observable<IItemBase[]> {
-        if (!this._multiSelect && items[0].selected === state) {
+        if (!this._multiSelect && !items[0].selected === !state) {
             return Observable.of(items);
         } else {
             return super.toggleSelect$(items, state)

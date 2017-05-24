@@ -1,0 +1,269 @@
+<md-tab-group [selectedIndex]="tabIndex" (selectChange)="tabIndex = $event.index">
+	<!--<md-tab label="OVERVIEW">-->
+	<!--<md-card class="demo-card demo-basic">-->
+	<!--TODO-->
+	<!--</md-card>-->
+	<!--</md-tab>-->
+	<md-tab label="API REFERENCE"></md-tab>
+	<md-tab label="SIMPLE EXAMPLES"></md-tab>
+	<md-tab label="ADVANCED EXAMPLES"></md-tab>
+	<md-tab label="TEMPLATING"></md-tab>
+	<md-tab label="PRE-EVENTS AND ON_DEMAND"></md-tab>
+	<md-tab label="PERFORMANCES"></md-tab>
+</md-tab-group>
+
+<deja-dialog *ngIf="dialogVisible">
+	<deja-message-box type="primary" title="Un titre">
+		Please confirm your operation!
+		<ng-template #actionsTemplate>
+			<button id="cancelbtn" md-raised-button (click)="dialogResponse$.next('cancel')">Annuler</button>
+			<button id="okbtn" md-raised-button color="primary" (click)="dialogResponse$.next('ok')">Valider</button>
+		</ng-template>
+	</deja-message-box>
+</deja-dialog>
+
+<md-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
+	<deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/tree-list/readme.md'"></deja-markdown>
+</md-card>
+
+<div *ngIf="tabIndex === 1">
+	<md-card class="deja-treelist-demo demo-card demo-basic">
+		<md-toolbar color="primary">Simple Usage</md-toolbar>
+		<md-card-content>
+			<div>Just passing an array of objects</div>
+			<div fxLayout="row">
+				<span fxFlex="0 0 45%" fxLayout="column">
+					<deja-tree-list fxFlex="0 0 400px" [selectedModels]="businessCountries" (selectedChange)="businessCountryChange($event.item?.model)" textField="naqme" valueField="code" [models]="countries"></deja-tree-list>
+				</span>
+				<span fxFlex="0 0 45%" fxFlexOffset="5%">
+					<h4>Selected country model :</h4>
+					<pre>{{businessCountries | json}}</pre>
+				</span>
+			</div>
+		</md-card-content>
+	</md-card>
+	<md-card class="deja-treelist-demo demo-card demo-basic">
+		<md-toolbar color="primary">Keyboard Navigation</md-toolbar>
+		<md-card-content>
+			<div>deja-tree-list has some keyboard navigation feature</div>
+			<div fxLayout="row">
+				<span fxFlex="0 0 45%" fxLayout="column">
+					<deja-tree-list fxFlex="0 0 400px" [selectedModels]="businessCountries" (selectedChange)="businessCountryChange($event.item?.model)" textField="naqme" valueField="code" [models]="countries"></deja-tree-list>
+				</span>
+				<ul fxFlex="0 0 50%" fxFlexOffset="5%" id="shortcut-list">
+					<li>Press
+						<span class="keyboard-key">↑</span> to select the previous item</li>
+					<li>Press
+						<span class="keyboard-key">↓</span> to select the next item</li>
+					<li>Press
+						<span class="keyboard-key">Ctrl</span>
+						<span class="keyboard-key">↑</span> to change the current item to the previous</li>
+					<li>Press
+						<span class="keyboard-key">Ctrl</span>
+						<span class="keyboard-key">↓</span> to change the current item to the next</li>
+					<li>Press
+						<span class="keyboard-key">Shift</span>
+						<span class="keyboard-key">↑</span> to change the current item to the previous</li>
+					<li>Press
+						<span class="keyboard-key">Shift</span>
+						<span class="keyboard-key">↓</span> to change the current item to the next</li>
+					<li>Press
+						<span class="keyboard-key">PageUp</span> to select the next page item</li>
+					<li>Press
+						<span class="keyboard-key">PageDown</span> to select the previous page item</li>
+					<li>Press
+						<span class="keyboard-key">Home</span> to select the first item</li>
+					<li>Press
+						<span class="keyboard-key">End</span> to select the last item</li>
+					<li>Press
+						<span class="keyboard-key">Space</span> to collapse/expand a group header or to select/unselect the current item</li>
+					<li>Press
+						<span class="keyboard-key">Enter</span> to select the current item and close the dropdown</li>
+					<li>Press
+						<span class="keyboard-key">A</span>..
+						<span class="keyboard-key">Z</span>
+						<span class="keyboard-key">0</span>..
+						<span class="keyboard-key">9</span> to select the next item started with the pressed key</li>
+				</ul>
+			</div>
+		</md-card-content>
+	</md-card>
+	<md-card class="deja-treelist-demo demo-card demo-basic">
+		<md-toolbar color="primary">Disabled tree-list</md-toolbar>
+		<md-card-content>
+			<div>
+				<md-checkbox [(ngModel)]="disabled" color="primary">Check me to disable tree-list below</md-checkbox>
+			</div>
+			<deja-tree-list searchArea class="demo-half-width" nodataholder="No record to display" maxHeight="auto" [disabled]="disabled" selectionClearable [selectedModels]="businessCountries" (selectedChange)="businessCountryChange($event.item?.model)" textField="naqme" valueField="code" [models]="countries"></deja-tree-list>
+		</md-card-content>
+	</md-card>
+</div>
+
+<div *ngIf="tabIndex === 2">
+	<md-card class="deja-treelist-demo demo-card demo-basic">
+		<md-toolbar color="primary">Multi selection</md-toolbar>
+		<md-card-content>
+			<div>Multi selection example</div>
+			<div fxLayout="row">
+				<span fxFlex="0 0 45%" fxLayout="column">
+					<deja-tree-list sortable multiSelect textField="naqme" valueField="code" [selectedItems]="multiselectModel" (itemDragStart)="onItemDragStart($event)" (selectedChange)="multiselectModelChange($event.items)" [items]="countriesForMultiselect">
+					</deja-tree-list>
+				</span>
+				<span fxFlex="0 0 45%" fxFlexOffset="5%">
+					<h4>Multi selection shortcuts :</h4>
+					<ul id="shortcut-list">
+						<li>Press
+							<span class="keyboard-key">Ctrl</span>
+							<span class="keyboard-key">Space</span> to add/remove the current item to the selection</li>
+						<li>Press
+							<span class="keyboard-key">Shift</span>
+							<span class="keyboard-key">↑</span> to select a range orf items</li>
+						<li>Press
+							<span class="keyboard-key">Shift</span>
+							<span class="keyboard-key">↓</span> to select a range orf items</li>
+					</ul>
+					<h4>Selected country model :</h4>
+					<ul>
+						<li *ngFor="let item of multiselectModel">
+							<span>{{ item.naqme }}</span>
+						</li>
+					</ul>
+				</span>
+			</div>
+		</md-card-content>
+		<md-toolbar color="primary">Grouping and Drag Drop</md-toolbar>
+		<md-card-content>
+			<div>Grouping example</div>
+			<div fxLayout="row">
+				<span fxFlex="0 0 45%" fxLayout="column">
+					<deja-tree-list textField="naqme" valueField="code" [items]="groupedCountries" [deja-mouse-draggable]="getDragContext()">
+						<ng-template #itemTemplate let-item let-flatindex="flatindex">
+							<span [attr.ddid]="item.code">{{ item.naqme }}</span>
+						</ng-template>
+					</deja-tree-list>
+				</span>
+				<span fxFlex="0 0 45%" fxFlexOffset="5%">
+					<div>You can drag and drop items the the area bellow (That will display a JSON representation of the dropped model) :</div>
+					<div #dropArea [deja-mouse-droppable]="getDropContext(dropArea)" [deja-droppable]="{dragovercallback: onDivDragOver, dragentercallback:onDivDragOver, dropcallback:onDivDropEvent}" style="border:1px solid red;min-height:150px;"></div>
+				</span>
+			</div>
+		</md-card-content>
+		<md-toolbar color="primary">Autocomplete</md-toolbar>
+		<md-card-content>
+			<div>Autocomplete 2 characters minimum</div>
+			<deja-tree-list class="demo-half-width" nodataholder="No record to display" [itemListService]="countriesListService" textField="naqme" valueField="code" min-search-length="2"></deja-tree-list>
+		</md-card-content>
+		<md-toolbar color="primary">Variable Row Size</md-toolbar>
+		<md-card-content>
+			<div>Variable Row height example</div>
+			<div fxLayout="row">
+				<span fxFlex="0 0 45%" fxLayout="column">
+					<deja-tree-list [items]="loremList" multiSelect viewportMode="variable" searchArea sortable></deja-tree-list>
+				</span>
+			</div>
+		</md-card-content>
+	</md-card>
+</div>
+
+<div *ngIf="tabIndex === 3">
+	<md-card class="deja-treelist-demo demo-card demo-basic">
+		<md-toolbar color="primary">Templating Examples</md-toolbar>
+		<md-card-content>
+			<h1>Item Template</h1>
+			<div>An exemple with auto sized item template</div>
+			<deja-tree-list #news class="news" viewportMode="auto" textField="title" searchField="description" [models]="news$">
+				<ng-template #itemTemplate let-item let-flatindex="flatindex">
+					<news-card [item]="item.model" (imageLoaded)="imageLoaded(item)"></news-card>
+				</ng-template>
+			</deja-tree-list>
+			<h1>Header Template and Group Template</h1>
+			<div>Treelist with an header template</div>
+			<div fxLayout="row">
+				<span fxFlex="0 0 45%" fxLayout="column">
+					<deja-tree-list #headertreelist textField="naqme" valueField="code" [models]="countries">
+						<ng-template #headerTemplate>
+							<span id="headerTemplateContent" (click)="headertreelist.sort()">
+								<span id="title">
+									This is a header template, click to sort the list.
+								</span>
+								<deja-sort-indicator [sort-infos]="headertreelist.sortInfos"></deja-sort-indicator>
+							</span>
+						</ng-template>
+					</deja-tree-list>
+				</span>
+				<span fxFlex="0 0 45%" fxFlexOffset="5%" fxLayout="column">
+					<deja-tree-list textField="naqme" [items]="groupedCountries">
+						<ng-template #parentItemTemplate let-item>
+							<md-icon id="placeholder-icon">public</md-icon>&nbsp;
+							<span>{{ item.groupName }}</span>
+						</ng-template>
+					</deja-tree-list>
+				</span>
+			</div>
+			<h1>Search Prefix and Suffix Templates</h1>
+			<div fxLayout="row">
+				<span fxFlex="0 0 45%" fxLayout="column">
+					<deja-tree-list searchArea class="placeholder-icon" textField="naqme" valueField="code" [items]="countries">
+						<ng-template #searchPrefixTemplate>
+							<md-icon (click)="onFilterTemplateClicked('Prefix')">public</md-icon>
+						</ng-template>
+						<ng-template #searchSuffixTemplate>
+							<md-icon (click)="onFilterTemplateClicked('Suffix')">more_vert</md-icon>
+						</ng-template>
+					</deja-tree-list>
+				</span>
+			</div>
+		</md-card-content>
+	</md-card>
+</div>
+
+<div *ngIf="tabIndex === 4">
+	<md-card class="deja-treelist-demo demo-card demo-basic">
+		<md-toolbar color="primary">Pre-Events and on Demand</md-toolbar>
+		<md-card-content>
+			<h1>On Demand Loading </h1>
+			<div>The items are loaded from the loading event</div>
+			<deja-tree-list #ondemand class="demo-half-width fixed-height" textField="naqme" valueField="code" [loadingItems]="loadingItems()"></deja-tree-list>
+			<h1>Confirm Selection</h1>
+			<div>A dialog will confirm the selection of an item</div>
+			<deja-tree-list class="demo-half-width fixed-height" multiSelect textField="naqme" valueField="code" [selectingItem]="confirmDialog()" [items]="countries"> </deja-tree-list>
+			<h1>Confirm Expand and Collapse </h1>
+			<div>A dialog will confirm the expand and collapse or an item if the children are not loaded. The children will be loaded asynchronously after the item expansion.</div>
+			<deja-tree-list #onexpand class="demo-half-width fixed-height" textField="naqme" valueField="code" [items]="onDemandGroupedCountries" [expandingItem]="expandingItems()" [collapsingItem]="collapsingItems()"></deja-tree-list>
+		</md-card-content>
+	</md-card>
+</div>
+
+<div *ngIf="tabIndex === 5">
+	<md-card class="deja-treelist-demo demo-card demo-basic">
+		<md-toolbar color="primary">Performance Examples</md-toolbar>
+		<md-card-content>
+			<h1>10K items with Item Template </h1>
+			<div class="flexContainer" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1rem">
+				<span fxFlex="1 1 auto">An exemple with 10000 auto sized templatized items</span>
+				<md-input-container fxFlex="0 0 5rem">
+					<input mdInput type="number" [(ngModel)]="ensureIndex">
+				</md-input-container>
+				<button fxFlex="0 0 auto" md-button (click)="news.ensureItemVisible(ensureIndex)">Ensure index</button>
+			</div>
+			<deja-tree-list #news class="news" dropdownContainerId="scrollable-content" viewportMode="auto" textField="title" searchField="description" [models]="bigNews$">
+				<ng-template #itemTemplate let-item let-flatindex="flatindex">
+					<news-card [item]="item.model" (imageLoaded)="imageLoaded(item)"></news-card>
+				</ng-template>
+			</deja-tree-list>
+
+			<h1>Fixed size rows 100K items</h1>
+			<div>An exemple with 100000 fixed size items</div>
+			<span fxLayout="row">
+				<deja-tree-list #bigCountries id="bigCountries" fxFlex="0 0 45%" dropdownContainerId="scrollable-content" [items]="bigCountries$" textField="naqme" valueField="code"></deja-tree-list>
+				<span fxFlex="0 0 45%" fxFlexOffset="5%" fxFlexOffset="5%">
+					<h4 id="vptitle">Viewport Infos:</h4>
+					<div *ngFor="let info of viewPortInfos">
+						<span class="vpinfoname">{{info.name}}</span>
+						<span>{{info.value}}</span>
+					</div>
+				</span>
+			</span>
+		</md-card-content>
+	</md-card>
+</div>
