@@ -39,6 +39,8 @@ env:
   global:
   - ENCRYPTION_LABEL: d9215e5535f8
   - COMMIT_AUTHOR_EMAIL: travis@hcuge.ch
+before_deploy:
+  - cd dist
 deploy:
   provider: npm
   email: gmer@hcuge.ch
@@ -49,5 +51,6 @@ deploy:
     repo: DSI-HUG/dejajs-components
     branch: master
 after_deploy:
+- cd ..
 - bash ./scripts/tag.sh
 - bash ./scripts/deploy-demo.sh
