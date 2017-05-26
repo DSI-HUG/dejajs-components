@@ -8,13 +8,15 @@
 
 import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnInit, Optional, Output, Self, ViewChild } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
-import moment from 'moment';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { DejaChildValidatorDirective } from '../../common/core/validation/child-validator.directive';
 import { DaysOfWeek, DejaDateSelectorComponent } from '../date-selector/date-selector.component';
 import { formatToMask } from './format-to-mask';
+
+import * as moment_ from 'moment';
+const moment: (value?: any, format?: string) => moment_.Moment = (<any>moment_).default || moment_;
 
 const noop = () => { };
 
