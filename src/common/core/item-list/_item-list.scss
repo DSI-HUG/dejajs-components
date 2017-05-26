@@ -14,7 +14,6 @@
 		transition-timing-function: linear;
 		transition-duration: .3s;
 		transition-property: max-height, opacity;
-		overflow: hidden;
 		display: flex;
 		align-items: center;
 		&.hide {
@@ -26,6 +25,7 @@
 			#expandbtn {
 				flex: 0 0 2rem;
 				position: relative;
+                cursor: pointer;
 				>.material-icons {
 					position: absolute;
 					right: 0;

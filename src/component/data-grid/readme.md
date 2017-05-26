@@ -8,13 +8,10 @@ Composant pour afficher des données dans un tableau, avec une fonction de reche
 > créer un tableau à partir des lignes *rows* et des colonnes *columns* passées en paramètres : 
 
 ```html
-<deja-grid #grid searchArea sortable multiSelect 
-	[maxHeight]="600" 
-	[viewPortRowHeight]="33" 
-	[ngModel]="rows" 
+<deja-grid searchArea sortable multiSelect 
+	[rows]="rows" 
 	[columns]="columns"
-	nodataholder="Pas de données" 
-	placeholder="Filtrer la liste par le nom" 
+	nodataholder="No Datas" 
 	searchField="name"
 >
 ```

@@ -263,7 +263,9 @@ export class DejaGridHeaderComponent implements OnDestroy {
 
             this._columnLayout.columns.splice(sourceIndex, 1);
             this._columnLayout.columns.splice(targetIndex, 0, sourceColumn);
+
             event.preventDefault();
+
             this.changeDetectorRef.markForCheck();
         };
 

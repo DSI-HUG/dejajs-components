@@ -7,7 +7,8 @@
  */
 
 import { Pipe, PipeTransform} from '@angular/core';
-import moment from 'moment';
+import * as moment_ from 'moment';
+const moment: (value?: any, format?: string) => moment_.Moment = (<any>moment_).default || moment_;
 
 @Pipe({ name: 'stringToDateFormat' })
 export class StringToDateFormatPipe implements PipeTransform {

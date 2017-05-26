@@ -18,6 +18,9 @@ import { INews } from '../common/news.model';
 import { NewsService } from '../services/news.service';
 import { IPerson, PeopleService } from '../services/people.service';
 import { IExtendedViewPortItem } from '../tree-list/tree-list-demo';
+import { CloningService } from './../../../src/common/core/cloning/cloning.service';
+import { IGroupInfo } from './../../../src/common/core/grouping/group-infos';
+import { GroupingService } from './../../../src/common/core/grouping/grouping.service';
 
 @Component({
     selector: 'grid-demo',
@@ -26,8 +29,10 @@ import { IExtendedViewPortItem } from '../tree-list/tree-list-demo';
 })
 export class GridDemoComponent {
     protected tabIndex = 1;
-    private people$: Observable<IPerson[]>;
-    private news$: Observable<INews[]>;
+    protected people$: Observable<IPerson[]>;
+    protected peopleForMultiselect$: Observable<IPerson[]>;
+    protected groupedPeople$: Observable<IPerson[]>;
+    protected news$: Observable<INews[]>;
 
     @ViewChild('news') private gridNews: DejaGridComponent;
 
@@ -68,6 +73,8 @@ export class GridDemoComponent {
             width: '1000px',
         },
     ] as IDejaGridColumn[];
+
+    protected peopleColumnsEx: IDejaGridColumn[];
 
     protected newsColumns = [
         {
@@ -114,9 +121,24 @@ export class GridDemoComponent {
         },
     ] as IDejaGridColumn[];
 
-    constructor(private peopleService: PeopleService, newsService: NewsService) {
+    constructor(private peopleService: PeopleService, newsService: NewsService, cloningService: CloningService, groupingService: GroupingService) {
         this.news$ = newsService.getNews$(1);
         this.people$ = peopleService.getPeople$();
+        this.peopleForMultiselect$ = peopleService.getPeople$().switchMap((people) => cloningService.clone$(people));
+        this.groupedPeople$ = peopleService.getPeople$()
+            .switchMap((people) => groupingService.group$(people, {
+                groupByField: 'gender',
+            } as IGroupInfo));
+
+        this.peopleColumnsEx = [
+            ...[{
+                label: 'Color',
+                name: 'color',
+                width: '64px',
+                useCellTemplate: true,
+            } as IDejaGridColumn],
+            ...this.peopleColumns,
+        ]
     }
 
     protected onColumnSizeChanged(e: IDejaGridColumnSizeEvent) {

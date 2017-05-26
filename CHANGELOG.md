@@ -1,3 +1,18 @@
+#### 2.0.2 (2017-5-26)
+
+##### Bug Fixes
+
+* **Moment:** Update moment imports ([bd86f22c](https://github.com/DSI-HUG/dejajs-components/commit/bd86f22c585650f567b0a601b68dae340dd54349))
+* **Sorting:** Export SortOrder ([067c315f](https://github.com/DSI-HUG/dejajs-components/commit/067c315f7eb62e3bb66f664c81250ba999b2fe60))
+* **Build:** Add polyfills into the build ([677766a2](https://github.com/DSI-HUG/dejajs-components/commit/677766a294b0a69a70dafab200ab5442dc93d153))
+* **Global:** Update version during the build ([453472c0](https://github.com/DSI-HUG/dejajs-components/commit/453472c004ebdd2a4012bd1b69914e8e9b3865a5))
+
+##### Other Changes
+
+* **Bundle:** Improve bundle size ([8cec8932](https://github.com/DSI-HUG/dejajs-components/commit/8cec8932347e4c8ff5411d7f76040b52cac10e91))
+* **Doc:** Specify root folder for documentation ([23b38c09](https://github.com/DSI-HUG/dejajs-components/commit/23b38c09c508fadc129733649482d81884610d27))
+* **Travis:** Fix script path ([779e6f70](https://github.com/DSI-HUG/dejajs-components/commit/779e6f7048f22df05f3751cc7b9f3e0a3a59a9f2))
+
 #### 2.0.1 (2017-5-24)
 
 ##### Bug Fixes

@@ -7,17 +7,17 @@
  */
 
 import { ChangeDetectorRef, NgZone, Pipe, PipeTransform } from '@angular/core';
-import moment from 'moment';
 import 'rxjs/add/operator/debounce';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
-const momentConstructor: (value?: any) => moment.Moment = (<any> moment).default || moment;
+import * as moment_ from 'moment';
+const moment: (value?: any, format?: string) => moment_.Moment = (<any>moment_).default || moment_;
 
 @Pipe({ name: 'momentTimeAgo', pure: false })
 export class TimeAgoPipe implements PipeTransform {
     private lastTime: Number;
-    private lastValue: Date | moment.Moment;
+    private lastValue: Date | moment_.Moment;
     private lastOmitSuffix: boolean;
     private lastText: string;
     private createTimer$ = new Subject();
@@ -25,25 +25,25 @@ export class TimeAgoPipe implements PipeTransform {
     constructor(private cdRef: ChangeDetectorRef, private ngZone: NgZone) {
         Observable.from(this.createTimer$)
             .debounce(() => {
-                const momentInstance = momentConstructor(this.lastValue);
+                const momentInstance = moment(this.lastValue);
                 const timeToUpdate = this.getSecondsUntilUpdate(momentInstance) * 1000;
                 return Observable.of(timeToUpdate);
             })
             .subscribe(() => {
                 this.ngZone.runOutsideAngular(() => {
-                    this.lastText = momentConstructor(this.lastValue).from(momentConstructor(), this.lastOmitSuffix);
+                    this.lastText = moment(this.lastValue).from(moment(), this.lastOmitSuffix);
                     this.ngZone.run(() => this.cdRef.markForCheck());
                 });
             });
     }
 
-    public transform(value: Date | moment.Moment, omitSuffix?: boolean): string {
+    public transform(value: Date | moment_.Moment, omitSuffix?: boolean): string {
         if (this.hasChanged(value, omitSuffix)) {
             this.lastTime = this.getTime(value);
             this.lastValue = value;
             this.lastOmitSuffix = omitSuffix;
             this.createTimer$.next();
-            this.lastText = momentConstructor(value).from(momentConstructor(), omitSuffix);
+            this.lastText = moment(value).from(moment(), omitSuffix);
 
         } else {
             this.createTimer$.next();
@@ -52,8 +52,8 @@ export class TimeAgoPipe implements PipeTransform {
         return this.lastText;
     }
 
-    private getSecondsUntilUpdate(momentInstance: moment.Moment) {
-        const howOld = Math.abs(momentConstructor().diff(momentInstance, 'minute'));
+    private getSecondsUntilUpdate(momentInstance: moment_.Moment) {
+        const howOld = Math.abs(moment().diff(momentInstance, 'minute'));
         if (howOld < 1) {
             return 1;
         } else if (howOld < 60) {
@@ -65,17 +65,17 @@ export class TimeAgoPipe implements PipeTransform {
         }
     }
 
-    private hasChanged(value: Date | moment.Moment, omitSuffix?: boolean) {
+    private hasChanged(value: Date | moment_.Moment, omitSuffix?: boolean) {
         return this.getTime(value) !== this.lastTime || omitSuffix !== this.lastOmitSuffix;
     }
 
-    private getTime(value: Date | moment.Moment) {
-        if (moment.isDate(value)) {
+    private getTime(value: Date | moment_.Moment) {
+        if (moment_.isDate(value)) {
             return value.getTime();
-        } else if (moment.isMoment(value)) {
+        } else if (moment_.isMoment(value)) {
             return value.valueOf();
         } else {
-            return momentConstructor(value).valueOf();
+            return moment(value).valueOf();
         }
     }
 }
