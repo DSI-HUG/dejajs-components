@@ -18,5 +18,6 @@ import { SortingService } from './sorting.service';
 export class DejaSortingModule { }
 
 export * from './sort-infos.model';
+export * from './sort-order.model';
 export * from './sorting.service';
 export * from './sort-indicator.component';
