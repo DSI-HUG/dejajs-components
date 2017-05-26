@@ -11,19 +11,28 @@ $deep: '/deep/';
 			display: flex;
 			flex-direction: column;
 			overflow: hidden;
-            
-			#{$deep} deja-grid {
-				flex: 1 1 auto;
-				.listitem {
-					&.odd {
-						deja-grid-row {
-							background-color: rgba(#000, 0.07);
+
+			#{$deep} {
+				deja-grid {
+					flex: 1 1 auto;
+					margin: 1rem 0;
+					.listitem {
+						.color {
+							border-radius: 50%;
+							width: 1.5rem;
+							height: 1.5rem;
+							margin: 0.35rem;
+						}
+						&.odd {
+							deja-grid-row {
+								background-color: rgba(#000, 0.07);
+							}
 						}
 					}
 				}
 			}
-		}
-		// md-icon[suffix] {
+		} 
+        // md-icon[suffix] {
 		// 	padding: 4px;
 		// 	cursor: pointer;
 		// }
@@ -42,7 +51,6 @@ $deep: '/deep/';
 		// 		margin: 0 0.5rem;
 		// 	}
 		// }
-
 		#{$deep}#news {
 			.cell-wrapper {
 				&[colname="urlToImage"] {

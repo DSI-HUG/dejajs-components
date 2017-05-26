@@ -809,10 +809,14 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
             return;
         }
 
+        const isExpandButton = (target: HTMLElement) => {
+            return target.id === 'expandbtn' || target.parentElement.id === 'expandbtn';
+        };
+
         const item = this._itemList[itemIndex - this.vpStartRow];
         this.clickedItem = item;
-        const isExpanButton = (e.target as HTMLElement).id === 'expandbtn';
-        if ((!isExpanButton || !this.isCollapsible(item)) && this.isSelectable(item) && (!e.ctrlKey || !this.multiSelect) && (e.button === 0 || !item.selected)) {
+
+        if ((!isExpandButton(e.target as HTMLElement) || !this.isCollapsible(item)) && this.isSelectable(item) && (!e.ctrlKey || !this.multiSelect) && (e.button === 0 || !item.selected)) {
             if (e.shiftKey && this.multiSelect) {
                 // Select all from current to clicked
                 this.selectRange$(itemIndex, this.currentItemIndex)
@@ -857,8 +861,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                     return;
                 }
 
-                const isExpandButton = (upevt.target as HTMLElement).id === 'expandbtn';
-                if (this.isCollapsible(upItem) && (isExpandButton || !this.isSelectable(upItem))) {
+                if (this.isCollapsible(upItem) && (isExpandButton(upevt.target as HTMLElement) || !this.isSelectable(upItem))) {
                     const treeItem = upItem as IItemTree;
                     this.toggleCollapse$(upIndex, !treeItem.collapsed).first().subscribe(() => {
                         this.currentItemIndex = upIndex;
