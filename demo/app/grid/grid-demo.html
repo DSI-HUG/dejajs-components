@@ -97,7 +97,7 @@
 		<md-toolbar color="primary">Grouping Server Side or Client Side</md-toolbar>
 		<md-card-content fxLayout="column" class="listContainer">
 			<div>To allow the user grouping just add the groupArea directive</div>
-			<deja-grid fxFlex="0 0 600px" groupArea columnsSortable multiSelect columnsSizable sortable [rows]="groupedPeople$" [columns]="peopleColumnsEx" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid">
+			<deja-grid fxFlex="0 0 600px" groupArea columnsSortable multiSelect columnsSizable sortable [rows]="groupedByGenderPeople$" [columns]="peopleColumnsEx" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid">
 				<ng-template #cellTemplate let-row let-column="column">
 					<span *ngIf="column.name==='color'" class="color" [style.background-color]="row[column.name]"></span>
 				</ng-template>
@@ -134,11 +134,11 @@
 			<div>A dialog will confirm the expand and collapse or an row if the children are not loaded. The children will be loaded asynchronously after the row expansion.</div>
 			<deja-grid #onexpand maxHeight="auto" textField="name" valueField="guid" childrenField="rows" [rows]="onDemandGroupedPeople" [expandingRow]="expandingRows()" [collapsingRow]="collapsingRows()" [columns]="peopleColumns">
 				<ng-template #rowTemplate let-item let-query="query" let-flatindex="flatindex">
-            		<deja-grid-row *ngIf="!item.displayName" [row]="item.model" [flatIndex]="flatindex" [columnLayout]="onexpand.columnLayout" [style.width.px]="rowsWidth"></deja-grid-row>
-            		<span class="loading" *ngIf="item.displayName" [style.width.px]="rowsWidth">{{item.displayName}}</span>
+					<deja-grid-row *ngIf="!item.displayName" [row]="item.model" [flatIndex]="flatindex" [columnLayout]="onexpand.columnLayout" [style.width.px]="rowsWidth"></deja-grid-row>
+					<span class="loading" *ngIf="item.displayName" [style.width.px]="rowsWidth">{{item.displayName}}</span>
 				</ng-template>
 				<ng-template #parentRowTemplate let-item let-query="query" let-flatindex="flatindex">
-					<span class="color" [style.background-color]="item.color"></span> {{item.color}}         
+					<span class="color" [style.background-color]="item.color"></span> {{item.color}}
 				</ng-template>
 			</deja-grid>
 		</md-card-content>
@@ -147,8 +147,35 @@
 
 <div *ngIf="tabIndex === 5">
 	<md-card class="deja-treelist-demo demo-card demo-basic">
-		<md-toolbar color="primary">Performances</md-toolbar>
-		Under construction
+		<md-toolbar color="primary">Performance Examples</md-toolbar>
+		<md-card-content class="listContainer">
+			<h1>10K rows with Item Template </h1>
+			<div>An exemple with 100000 fixed size rows</div>
+			<span fxLayout="columns">
+				<deja-grid id="news" #news sortable columnsSizable multiSelect [rows]="bigNews$" [columns]="newsColumns" viewportMode="auto" nodataholder="Pas de données" (columnSizeChanged)="onColumnSizeChanged($event)">
+					<ng-template #cellTemplate let-row let-column="column">
+						<img *ngIf="column.name==='urlToImage'" [attr.src]="row[column.name]" class="logo" (load)="imageLoaded(row)">
+					</ng-template>
+				</deja-grid>
+			</span>
+
+			<h1>Fixed size rows 100K items</h1>
+			<div>An exemple with 100000 fixed size rows</div>
+			<span fxLayout="row">
+				<deja-grid #bigPeople fxFlex="0 0 65%" columnsSortable multiSelect columnsSizable sortable [rows]="bigPeople$" [columns]="peopleColumnsEx" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid">
+					<ng-template #cellTemplate let-row let-column="column">
+						<span *ngIf="column.name==='color'" class="color" [style.background-color]="row[column.name]"></span>
+					</ng-template>
+				</deja-grid>
+				<span fxFlex="0 0 30%" fxFlexOffset="5%" fxFlexOffset="5%">
+					<h4 id="vptitle">Viewport Infos:</h4>
+					<div *ngFor="let info of viewPortInfos">
+						<span class="vpinfoname">{{info.name}}</span>
+						<span>{{info.value}}</span>
+					</div>
+				</span>
+			</span>
+		</md-card-content>
 	</md-card>
 </div>
 

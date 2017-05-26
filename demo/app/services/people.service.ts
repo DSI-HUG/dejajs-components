@@ -12,6 +12,7 @@ import 'rxjs/add/operator/publishLast';
 import { Observable } from 'rxjs/Observable';
 import { Color } from '../../../src/common/core/graphics/color';
 import { MaterialColors } from '../../../src/common/core/style/material-colors';
+import { UUID } from '../../../src/common/core/UUID';
 
 @Injectable()
 export class PeopleService {
@@ -59,7 +60,10 @@ export class PeopleService {
                 let returnPeople = people;
                 if (recordCount) {
                     while (recordCount > 0) {
-                        returnPeople = returnPeople.concat(people);
+                        returnPeople = returnPeople.concat(people.map((person) => {
+                            person.guid = (new UUID()).toString();
+                            return person;
+                        }));
                         recordCount -= people.length;
                     }
                 }

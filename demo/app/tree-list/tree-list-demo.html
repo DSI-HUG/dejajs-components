@@ -244,7 +244,7 @@
 				</md-input-container>
 				<button fxFlex="0 0 auto" md-button (click)="news.ensureItemVisible(ensureIndex)">Ensure index</button>
 			</div>
-			<deja-tree-list #news class="news" dropdownContainerId="scrollable-content" viewportMode="auto" textField="title" searchField="description" [models]="bigNews$">
+			<deja-tree-list #news class="news" viewportMode="auto" textField="title" searchField="description" [models]="bigNews$">
 				<ng-template #itemTemplate let-item let-flatindex="flatindex">
 					<news-card [item]="item.model" (imageLoaded)="imageLoaded(item)"></news-card>
 				</ng-template>
@@ -253,7 +253,7 @@
 			<h1>Fixed size rows 100K items</h1>
 			<div>An exemple with 100000 fixed size items</div>
 			<span fxLayout="row">
-				<deja-tree-list #bigCountries id="bigCountries" fxFlex="0 0 45%" dropdownContainerId="scrollable-content" [items]="bigCountries$" textField="naqme" valueField="code"></deja-tree-list>
+				<deja-tree-list #bigCountries id="bigCountries" fxFlex="0 0 45%" [items]="bigCountries$" textField="naqme" valueField="code"></deja-tree-list>
 				<span fxFlex="0 0 45%" fxFlexOffset="5%" fxFlexOffset="5%">
 					<h4 id="vptitle">Viewport Infos:</h4>
 					<div *ngFor="let info of viewPortInfos">

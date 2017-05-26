@@ -332,6 +332,11 @@ export class DejaGridComponent implements OnDestroy {
         return this.treeListComponent.depthMax;
     }
 
+    /** Retourne le service de viewport utilisé pour la grille */
+    public get viewPort() {
+        return this.treeListComponent.viewPort;
+    }
+
     private get searchPrefixTemplate() {
         return this.searchPrefixTemplateExternal || this.searchPrefixTemplateInternal;
     }

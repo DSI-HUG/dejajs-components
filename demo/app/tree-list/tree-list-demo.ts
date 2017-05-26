@@ -191,13 +191,6 @@ export class DejaTreeListDemoComponent implements OnInit {
         };
     }
 
-    protected confirmDialogWithPromise() {
-        const self = this;
-        return (item: IItemBase) => {
-            return self.confirmDialog()(item).toPromise();
-        };
-    }
-
     protected confirmDialog() {
         const self = this;
         return (item: IItemBase) => {

@@ -9,6 +9,7 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
 import { IItemTree } from '../../../src/common/core/item-list/item-tree';
 import { IViewPortItem } from '../../../src/common/core/item-list/viewport.service';
 import { IDejaGridColumn, IDejaGridColumnSizeEvent } from '../../../src/component/data-grid/data-grid-column/data-grid-column';
@@ -41,6 +42,14 @@ export class GridDemoComponent {
     protected onDemandGroupedPeople: IPeopleGroup[];
     protected news$: Observable<INews[]>;
     protected dialogResponse$: Subject<string> = new Subject<string>();
+    protected bigNews$: Observable<INews[]>;
+    protected bigPeople$: Observable<IPerson[]>;
+
+    protected viewPortInfos: {
+        name: string;
+        value: string;
+    }[];
+    protected viewPortInfos$: Subscription;
 
     private _dialogVisible = false;
 
@@ -141,9 +150,35 @@ export class GridDemoComponent {
         return this._dialogVisible;
     }
 
+    @ViewChild('bigPeople')
+    protected set bigCountriesList(grid: DejaGridComponent) {
+        if (this.viewPortInfos$) {
+            this.viewPortInfos$.unsubscribe();
+            this.viewPortInfos = [];
+            delete this.viewPortInfos$;
+        }
+
+        this.viewPortInfos$ = grid && grid.viewPort.viewPort$
+            .debounceTime(1)
+            .subscribe((viewPort) => {
+                this.viewPortInfos = [
+                    { name: 'beforeSize', value: String(viewPort.beforeSize), },
+                    { name: 'startIndex', value: String(viewPort.startIndex), },
+                    { name: 'viewPortSize', value: String(viewPort.viewPortSize), },
+                    { name: 'visibleCount', value: String(viewPort.visibleItems && viewPort.visibleItems.length), },
+                    { name: 'endIndex', value: String(viewPort.endIndex), },
+                    { name: 'afterSize', value: String(viewPort.afterSize), },
+                    { name: 'itemsCount', value: String(viewPort.items && viewPort.items.length), }
+                ];
+            });
+    }
+
     constructor(private changeDetectorRef: ChangeDetectorRef, private peopleService: PeopleService, newsService: NewsService, cloningService: CloningService, groupingService: GroupingService) {
-        this.news$ = newsService.getNews$(1);
+        this.news$ = newsService.getNews$(50);
+        this.bigNews$ = newsService.getNews$(10000);
         this.people$ = peopleService.getPeople$();
+        this.bigPeople$ = peopleService.getPeople$(undefined, 100000);
+
         this.peopleForMultiselect$ = peopleService.getPeople$().switchMap((people) => cloningService.clone$(people));
         this.groupedByGenderPeople$ = peopleService.getPeople$()
             .switchMap((people) => groupingService.group$(people, {
@@ -256,13 +291,6 @@ export class GridDemoComponent {
                     });
             }
         };
-    }
-
-    protected confirmDialogWithPromise() {
-        // const self = this;
-        // return (row: IDejaGridRow) => {
-        //     return self.confirmDialog()(item).toPromise();
-        // };
     }
 
     protected confirmDialog() {
