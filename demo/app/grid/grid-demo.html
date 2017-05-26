@@ -20,7 +20,7 @@
 	<md-card class="demo-card demo-basic">
 		<md-toolbar color="primary">Simple Usage</md-toolbar>
 		<md-card-content fxLayout="column">
-			<deja-grid fxFlex="0 0 600px" searchArea columnsSortable columnsSizable sortable [rows]="people$" [columns]="peopleColumns" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid"></deja-grid>
+			<deja-grid searchArea columnsSortable columnsSizable sortable maxHeight="auto" [rows]="people$" [columns]="peopleColumns" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid"></deja-grid>
 		</md-card-content>
 	</md-card>
 	<md-card class="demo-card demo-basic">
@@ -113,8 +113,17 @@
 <div *ngIf="tabIndex === 4">
 	<md-card class="deja-treelist-demo demo-card demo-basic">
 		<md-toolbar color="primary">Pre-events and on-demand</md-toolbar>
-		Under construction
-	</md-card>
+		<md-card-content class="listContainer">
+			<h1>On Demand Loading </h1>
+			<div>The rows are loaded from the loading event</div>
+			<deja-grid #ondemand maxHeight="auto" textField="name" valueField="guid" [loadingRows]="loadingRows()" [columns]="peopleColumns" ></deja-grid>
+			<h1>Confirm Selection</h1>
+			<div>A dialog will confirm the selection of an row</div>
+			<deja-grid multiSelect maxHeight="auto" textField="name" valueField="guid" [selectingRow]="confirmDialog()" [rows]="people$" [columns]="peopleColumns" > </deja-grid>
+			<h1>Confirm Expand and Collapse </h1>
+			<div>A dialog will confirm the expand and collapse or an row if the children are not loaded. The children will be loaded asynchronously after the row expansion.</div>
+			<deja-grid #onexpand maxHeight="auto" textField="name" valueField="guid" [rows]="groupedPeople$" [expandingRow]="expandingRows()" [collapsingRow]="collapsingRows()" [columns]="peopleColumns" ></deja-grid>
+		</md-card-content>	</md-card>
 </div>
 
 <div *ngIf="tabIndex === 5">

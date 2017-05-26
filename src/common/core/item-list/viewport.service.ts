@@ -526,16 +526,17 @@ export class ViewPortService {
             .switchMap(([[items, maxSize, itemDefaultSize, ensureParams, _direction, _mode, _refresh, element], _scrollPos]: [[IViewPortItem[], number|string, number, IEnsureParams, ViewportDirection, ViewportMode, IViewPortItem, HTMLElement], number]) => {
                 const listSize = this.lastCalculatedSize || maxSize || clientSize(element);
                 const scrollPos = this._scrollPosition;
-                const maxSizeValue = maxSize === 'auto' ? 0 : +maxSize;
-                if (items && items.length && (maxSize === 'auto' || listSize < 2 * ViewPortService.itemDefaultSize)) {
+                let maxSizeValue = maxSize === 'auto' ? 0 : +maxSize;
+                if (items && items.length && (listSize === 'auto' || listSize < 2 * ViewPortService.itemDefaultSize)) {
                     // Set the viewlist to the maximum height to measure the real max-height defined in the css
                     // Use a blank div to do that
                     this.viewPortResult$.next(this.measureViewPort);
                     // Wait next life cycle for the result
                     return Observable.timer(1)
-                        .do(() => this.lastCalculatedSize = clientSize(element))
+                        .map(() => maxSizeValue = this.lastCalculatedSize = clientSize(element))
                         .map(() => ({ element, scrollPos, items, maxSizeValue, itemDefaultSize, ensureParams }));
                 } else {
+                    maxSizeValue = maxSizeValue || this.lastCalculatedSize;
                     return Observable.of({ element, scrollPos, items, maxSizeValue, itemDefaultSize, ensureParams });
                 }
             })

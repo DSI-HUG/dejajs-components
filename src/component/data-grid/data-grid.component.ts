@@ -101,7 +101,7 @@ export class DejaGridComponent implements OnDestroy {
     /** Permet de définir un template comme suffixe de la zone de recherche par binding. */
     @Input() public searchSuffixTemplateExternal;
     /** Set a observable called before the rows will be displayed */
-    @Input() public loadingRow: (query: string | RegExp, selectedRows: IDejaGridRow[]) => Observable<IDejaGridRow[]>;
+    @Input() public loadingRows: (query: string | RegExp, selectedRows: IDejaGridRow[]) => Observable<IDejaGridRow[]>;
     /** Set a promise called before a row selection */
     @Input() public selectingRow: (row: IDejaGridRow) => Promise<IDejaGridRow> | Observable<IDejaGridRow>;
     /** Set a promise called before a row deselection */

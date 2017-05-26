@@ -11,6 +11,7 @@ import { Observable } from 'rxjs/Observable';
 import { IItemTree } from '../../../src/common/core/item-list/item-tree';
 import { IViewPortItem } from '../../../src/common/core/item-list/viewport.service';
 import { IDejaGridColumn, IDejaGridColumnSizeEvent } from '../../../src/component/data-grid/data-grid-column/data-grid-column';
+import { IDejaGridRow } from '../../../src/component/data-grid/data-grid-row/data-grid-row';
 import { DejaGridRowsEvent } from '../../../src/component/data-grid/data-grid-row/data-grid-rows-event';
 import { DejaGridComponent } from '../../../src/component/data-grid/data-grid.component';
 import { IDejaDragEvent } from '../../../src/component/dragdrop/draggable.directive';
@@ -154,6 +155,69 @@ export class GridDemoComponent {
             itemExt.loaded = true;
             this.gridNews.refreshViewPort(itemExt);
         }
+    }
+
+    protected loadingRows() {
+        const self = this;
+        return (_query: string | RegExp, _selectedItems: IDejaGridRow[]) => self.peopleService.getPeople$().delay(3000);
+    }
+
+    protected collapsingRows() {
+        // const self = this;
+        // return (item: IItemBase) => {
+        //     const country = item as ICountryGroup;
+        //     return country.loaded ? Observable.of(item) : self.confirmDialog()(item);
+        // };
+    }
+
+    protected expandingRows() {
+        // const self = this;
+        // return (item: IItemBase) => {
+        //     const group = item as ICountryGroup;
+        //     if (group.loaded) {
+        //         return Observable.of(item);
+        //     } else {
+        //         return self.confirmDialog()(item)
+        //             .switchMap((itm) => {
+        //                 if (!itm) {
+        //                     return Observable.of(null);
+        //                 }
+
+        //                 Observable.of(group)
+        //                     .delay(2000)
+        //                     .first()
+        //                     .subscribe((grp) => {
+        //                         // Simulate asynchronous load
+        //                         const original = this.groupedCountries.find((c) => c.displayName === grp.displayName);
+        //                         grp.items = original.items;
+        //                         grp.loaded = true;
+        //                         this.onExpandList.refresh();
+        //                     });
+
+        //                 return Observable.of(itm);
+        //             });
+        //     }
+        // };
+    }
+
+    protected confirmDialogWithPromise() {
+        // const self = this;
+        // return (item: IItemBase) => {
+        //     return self.confirmDialog()(item).toPromise();
+        // };
+    }
+
+    protected confirmDialog() {
+        // const self = this;
+        // return (item: IItemBase) => {
+        //     self.dialogVisible = true;
+        //     return Observable.from(this.dialogResponse$)
+        //         .first()
+        //         .map((response) => {
+        //             self.dialogVisible = false;
+        //             return response === 'ok' ? item : null;
+        //         });
+        // };
     }
 }
 
