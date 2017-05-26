@@ -16,8 +16,8 @@
 	<deja-message-box type="primary" title="Un titre">
 		Please confirm your operation!
 		<ng-template #actionsTemplate>
-			<button id="cancelbtn" md-raised-button (click)="dialogResponse$.next('cancel')">Annuler</button>
-			<button id="okbtn" md-raised-button color="primary" (click)="dialogResponse$.next('ok')">Valider</button>
+			<button id="cancelbtn" md-raised-button (click)="dialogResponse$.next('cancel')">Cancel</button>
+			<button id="okbtn" md-raised-button color="primary" (click)="dialogResponse$.next('ok')">Ok</button>
 		</ng-template>
 	</deja-message-box>
 </deja-dialog>

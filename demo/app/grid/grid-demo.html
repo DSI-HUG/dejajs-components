@@ -12,6 +12,16 @@
 	<md-tab label="PERFORMANCES"></md-tab>
 </md-tab-group>
 
+<deja-dialog *ngIf="dialogVisible">
+	<deja-message-box type="primary" title="Un titre">
+		Please confirm your operation!
+		<ng-template #actionsTemplate>
+			<button id="cancelbtn" md-raised-button (click)="dialogResponse$.next('cancel')">Cancel</button>
+			<button id="okbtn" md-raised-button color="primary" (click)="dialogResponse$.next('ok')">Ok</button>
+		</ng-template>
+	</deja-message-box>
+</deja-dialog>
+
 <md-card class="demo-card" *ngIf="tabIndex === 0">
 	<deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/data-grid/readme.md'"></deja-markdown>
 </md-card>
@@ -116,14 +126,23 @@
 		<md-card-content class="listContainer">
 			<h1>On Demand Loading </h1>
 			<div>The rows are loaded from the loading event</div>
-			<deja-grid #ondemand maxHeight="auto" textField="name" valueField="guid" [loadingRows]="loadingRows()" [columns]="peopleColumns" ></deja-grid>
+			<deja-grid #ondemand maxHeight="auto" textField="name" valueField="guid" [loadingRows]="loadingRows()" [columns]="peopleColumns"></deja-grid>
 			<h1>Confirm Selection</h1>
 			<div>A dialog will confirm the selection of an row</div>
-			<deja-grid multiSelect maxHeight="auto" textField="name" valueField="guid" [selectingRow]="confirmDialog()" [rows]="people$" [columns]="peopleColumns" > </deja-grid>
+			<deja-grid multiSelect maxHeight="auto" textField="name" valueField="guid" [selectingRow]="confirmDialog()" [rows]="people$" [columns]="peopleColumns"> </deja-grid>
 			<h1>Confirm Expand and Collapse </h1>
 			<div>A dialog will confirm the expand and collapse or an row if the children are not loaded. The children will be loaded asynchronously after the row expansion.</div>
-			<deja-grid #onexpand maxHeight="auto" textField="name" valueField="guid" [rows]="groupedPeople$" [expandingRow]="expandingRows()" [collapsingRow]="collapsingRows()" [columns]="peopleColumns" ></deja-grid>
-		</md-card-content>	</md-card>
+			<deja-grid #onexpand maxHeight="auto" textField="name" valueField="guid" childrenField="rows" [rows]="onDemandGroupedPeople" [expandingRow]="expandingRows()" [collapsingRow]="collapsingRows()" [columns]="peopleColumns">
+				<ng-template #rowTemplate let-item let-query="query" let-flatindex="flatindex">
+            		<deja-grid-row *ngIf="!item.displayName" [row]="item.model" [flatIndex]="flatindex" [columnLayout]="onexpand.columnLayout" [style.width.px]="rowsWidth"></deja-grid-row>
+            		<span class="loading" *ngIf="item.displayName" [style.width.px]="rowsWidth">{{item.displayName}}</span>
+				</ng-template>
+				<ng-template #parentRowTemplate let-item let-query="query" let-flatindex="flatindex">
+					<span class="color" [style.background-color]="item.color"></span> {{item.color}}         
+				</ng-template>
+			</deja-grid>
+		</md-card-content>
+	</md-card>
 </div>
 
 <div *ngIf="tabIndex === 5">

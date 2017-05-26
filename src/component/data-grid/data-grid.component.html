@@ -4,9 +4,9 @@
 		<deja-grid-parent-row *ngIf="!parentRowTemplate" [row]="item" [flatIndex]="flatindex" [columns]="columns" [parentTitleTemplateExternal]="parentTitleTemplate" [cellTemplateExternal]="cellTemplate" [style.width.px]="rowsWidth"></deja-grid-parent-row>
 	</ng-template>
 	<ng-template #itemTemplate let-item let-flatindex="flatindex " let-query="query">
-		<deja-grid-row *ngIf="!rowTemplate" [row]="item" [flatIndex]="flatindex" [columnLayout]="_columnLayout" [cellTemplateExternal]="cellTemplate" [style.width.px]="rowsWidth"></deja-grid-row>
+		<deja-grid-row *ngIf="!rowTemplate" [row]="item" [flatIndex]="flatindex" [columnLayout]="columnLayout" [cellTemplateExternal]="cellTemplate" [style.width.px]="rowsWidth"></deja-grid-row>
 	</ng-template>
 	<ng-template #headerTemplate>
-		<deja-grid-header *ngIf="!columnsHeaderTemplate" #gridHeaderElement [sortInfos]="treelist.sortInfos" [columnLayout]="_columnLayout" [columnsDraggable]="columnsDraggable || groupArea" [columnsSortable]="columnsSortable" [columnsSizable]="columnsSizable" [columnHeaderTemplateExternal]="columnHeaderTemplate" (columnLayoutChanged)="onColumnLayoutChanged($event)" (columnSizeChanged)="onColumnSizeChanged($event)" (columnHeaderClicked)="onColumnHeaderClicked($event)"></deja-grid-header>
+		<deja-grid-header *ngIf="!columnsHeaderTemplate" #gridHeaderElement [sortInfos]="treelist.sortInfos" [columnLayout]="columnLayout" [columnsDraggable]="columnsDraggable || groupArea" [columnsSortable]="columnsSortable" [columnsSizable]="columnsSizable" [columnHeaderTemplateExternal]="columnHeaderTemplate" (columnLayoutChanged)="onColumnLayoutChanged($event)" (columnSizeChanged)="onColumnSizeChanged($event)" (columnHeaderClicked)="onColumnHeaderClicked($event)"></deja-grid-header>
 	</ng-template>
 </deja-tree-list>

@@ -6,8 +6,9 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 import { IItemTree } from '../../../src/common/core/item-list/item-tree';
 import { IViewPortItem } from '../../../src/common/core/item-list/viewport.service';
 import { IDejaGridColumn, IDejaGridColumnSizeEvent } from '../../../src/component/data-grid/data-grid-column/data-grid-column';
@@ -32,10 +33,19 @@ export class GridDemoComponent {
     protected tabIndex = 1;
     protected people$: Observable<IPerson[]>;
     protected peopleForMultiselect$: Observable<IPerson[]>;
-    protected groupedPeople$: Observable<IPerson[]>;
+    protected groupedByGenderPeople$: Observable<IPerson[]>;
+    protected groupedByColorPeople: {
+        items: IPerson[],
+        toString: () => string,
+    }[];
+    protected onDemandGroupedPeople: IPeopleGroup[];
     protected news$: Observable<INews[]>;
+    protected dialogResponse$: Subject<string> = new Subject<string>();
+
+    private _dialogVisible = false;
 
     @ViewChild('news') private gridNews: DejaGridComponent;
+    @ViewChild('onexpand') private onExpandGrid: DejaGridComponent;
 
     protected peopleColumns = [
         {
@@ -122,14 +132,32 @@ export class GridDemoComponent {
         },
     ] as IDejaGridColumn[];
 
-    constructor(private peopleService: PeopleService, newsService: NewsService, cloningService: CloningService, groupingService: GroupingService) {
+    protected set dialogVisible(value: boolean) {
+        this._dialogVisible = value;
+        this.changeDetectorRef.markForCheck();
+    }
+
+    protected get dialogVisible() {
+        return this._dialogVisible;
+    }
+
+    constructor(private changeDetectorRef: ChangeDetectorRef, private peopleService: PeopleService, newsService: NewsService, cloningService: CloningService, groupingService: GroupingService) {
         this.news$ = newsService.getNews$(1);
         this.people$ = peopleService.getPeople$();
         this.peopleForMultiselect$ = peopleService.getPeople$().switchMap((people) => cloningService.clone$(people));
-        this.groupedPeople$ = peopleService.getPeople$()
+        this.groupedByGenderPeople$ = peopleService.getPeople$()
             .switchMap((people) => groupingService.group$(people, {
                 groupByField: 'gender',
             } as IGroupInfo));
+
+        peopleService.getPeople$()
+            .switchMap((people) => groupingService.group$(people, {
+                groupByField: 'color',
+            } as IGroupInfo))
+            .first()
+            .subscribe((items) => {
+                this.groupedByColorPeople = items;
+            });
 
         this.peopleColumnsEx = [
             ...[{
@@ -140,6 +168,36 @@ export class GridDemoComponent {
             } as IDejaGridColumn],
             ...this.peopleColumns,
         ]
+
+        this.peopleService.getPeople$().subscribe((value: IPerson[]) => {
+            const onDemandResult = [] as IPeopleGroup[];
+            const map = {} as { [groupName: string]: IDejaGridRow[] };
+            value.map((person) => {
+                const groupName = 'Group ' + person.color;
+                if (!map[groupName]) {
+                    map[groupName] = [] as IPerson[];
+                    onDemandResult.push({
+                        color: person.color,
+                        collapsible: true,
+                        collapsed: true,
+                        groupName: groupName,
+                        rows: [{
+                            displayName: 'loading...',
+                            selectable: false,
+                        } as IDejaGridRow],
+                        displayName: groupName,
+                        selectable: false,
+                        loaded: false,
+                    } as IPeopleGroup);
+                }
+
+                map[groupName].push({
+                    model: person,
+                } as IDejaGridRow);
+            });
+
+            this.onDemandGroupedPeople = onDemandResult;
+        });
     }
 
     protected onColumnSizeChanged(e: IDejaGridColumnSizeEvent) {
@@ -163,62 +221,69 @@ export class GridDemoComponent {
     }
 
     protected collapsingRows() {
-        // const self = this;
-        // return (item: IItemBase) => {
-        //     const country = item as ICountryGroup;
-        //     return country.loaded ? Observable.of(item) : self.confirmDialog()(item);
-        // };
+        const self = this;
+        return (row: IDejaGridRow) => {
+            const group = row as IPeopleGroup;
+            return group.loaded ? Observable.of(row) : self.confirmDialog()(row);
+        };
     }
 
     protected expandingRows() {
-        // const self = this;
-        // return (item: IItemBase) => {
-        //     const group = item as ICountryGroup;
-        //     if (group.loaded) {
-        //         return Observable.of(item);
-        //     } else {
-        //         return self.confirmDialog()(item)
-        //             .switchMap((itm) => {
-        //                 if (!itm) {
-        //                     return Observable.of(null);
-        //                 }
+        const self = this;
+        return (row: IDejaGridRow) => {
+            const group = row as IPeopleGroup;
+            if (group.loaded) {
+                return Observable.of(row);
+            } else {
+                return self.confirmDialog()(row)
+                    .switchMap((itm) => {
+                        if (!itm) {
+                            return Observable.of(null);
+                        }
 
-        //                 Observable.of(group)
-        //                     .delay(2000)
-        //                     .first()
-        //                     .subscribe((grp) => {
-        //                         // Simulate asynchronous load
-        //                         const original = this.groupedCountries.find((c) => c.displayName === grp.displayName);
-        //                         grp.items = original.items;
-        //                         grp.loaded = true;
-        //                         this.onExpandList.refresh();
-        //                     });
+                        Observable.of(group)
+                            .delay(2000)
+                            .first()
+                            .subscribe((grp) => {
+                                // Simulate asynchronous load
+                                const original = this.groupedByColorPeople.find((c) => c.toString() === grp.color);
+                                grp.rows = original.items.map((person) => ({ model: person }));
+                                grp.loaded = true;
+                                this.onExpandGrid.refresh();
+                            });
 
-        //                 return Observable.of(itm);
-        //             });
-        //     }
-        // };
+                        return Observable.of(itm);
+                    });
+            }
+        };
     }
 
     protected confirmDialogWithPromise() {
         // const self = this;
-        // return (item: IItemBase) => {
+        // return (row: IDejaGridRow) => {
         //     return self.confirmDialog()(item).toPromise();
         // };
     }
 
     protected confirmDialog() {
-        // const self = this;
-        // return (item: IItemBase) => {
-        //     self.dialogVisible = true;
-        //     return Observable.from(this.dialogResponse$)
-        //         .first()
-        //         .map((response) => {
-        //             self.dialogVisible = false;
-        //             return response === 'ok' ? item : null;
-        //         });
-        // };
+        const self = this;
+        return (row: IDejaGridRow) => {
+            self.dialogVisible = true;
+            return Observable.from(this.dialogResponse$)
+                .first()
+                .map((response) => {
+                    self.dialogVisible = false;
+                    return response === 'ok' ? row : null;
+                });
+        };
     }
+}
+
+interface IPeopleGroup extends IItemTree {
+    groupName: string;
+    color: string;
+    rows: IDejaGridRow[];
+    loaded?: boolean;
 }
 
 // export class GridDemoComponent implements OnInit {

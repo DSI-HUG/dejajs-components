@@ -15,13 +15,13 @@
 <div *ngIf="tabIndex === 1" class="example">
     <deja-dialog *ngIf="dialogVisible" (closed)="dialogVisible = false">
         <deja-message-box type="primary" title="Un titre">
-            <b>Je suis un deja-dialog !</b><br /> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sit amet felis id nisl maximus interdum. Morbi mollis sapien sapien. Vivamus lacinia elementum eros
+            <b>I am a deja-dialog !</b><br /> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sit amet felis id nisl maximus interdum. Morbi mollis sapien sapien. Vivamus lacinia elementum eros
             <ng-template #actionsTemplate>
                 <button md-raised-button (click)="dialogVisible = false">
-                        Annuler
+                        Cancel
                     </button>
                 <button md-raised-button color="primary" (click)="dialogVisible = false">
-                        Valider
+                        Ok
                     </button>
             </ng-template>
         </deja-message-box>
