@@ -92,6 +92,7 @@
     "node-watch": "0.5.4",
     "protractor": "5.1.2",
     "rollup": "0.41.6",
+    "rollup-plugin-uglify": "2.0.1",
     "run-sequence": "1.2.2",
     "symlink-dir": "^1.0.2",
     "ts-node": "3.0.4",
