@@ -13,13 +13,14 @@ import { Observable } from 'rxjs/Observable';
 import { Color } from '../../../src/common/core/graphics/color';
 import { MaterialColors } from '../../../src/common/core/style/material-colors';
 import { UUID } from '../../../src/common/core/UUID';
+import { CloningService } from './../../../src/common/core/cloning/cloning.service';
 
 @Injectable()
 export class PeopleService {
     private peopleDic = {} as { [code: string]: IPerson };
     private materialColors: Color[];
 
-    constructor(private http: Http, materialColors: MaterialColors) {
+    constructor(private http: Http, materialColors: MaterialColors, private cloningService: CloningService) {
         this.materialColors = materialColors.getPalet('700');
     }
 
@@ -60,7 +61,7 @@ export class PeopleService {
                 let returnPeople = people;
                 if (recordCount) {
                     while (recordCount > 0) {
-                        returnPeople = returnPeople.concat(people.map((person) => {
+                        returnPeople = returnPeople.concat(this.cloningService.cloneSync(people).map((person) => {
                             person.guid = (new UUID()).toString();
                             return person;
                         }));

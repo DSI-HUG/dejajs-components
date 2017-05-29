@@ -538,13 +538,16 @@ export class DejaGridComponent implements OnDestroy {
 
         const hideSpinner = () => {
             event.column.sorting = false;
+            this.changeDetectorRef.markForCheck();
             this.header.refresh();
         }
 
         event.column.sorting = true;
+        this.changeDetectorRef.markForCheck();
+
         Observable.timer(1)
-            .switchMap(() => this.treeListComponent.sort$(event.column.name))
             .first()
+            .switchMap(() => this.treeListComponent.sort$(event.column.name))
             .subscribe(() => {
                 hideSpinner();
             }, (error) => {
