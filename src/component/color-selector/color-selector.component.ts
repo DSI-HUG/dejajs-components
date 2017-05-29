@@ -6,13 +6,14 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, ElementRef, EventEmitter, Input, Optional, Output, Self } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/observable/merge';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
 import { Color } from '../../common/core/graphics/color';
 import { ColorEvent } from '../../common/core/graphics/color-event';
 import { MaterialColor } from '../../common/core/style';
@@ -28,7 +29,7 @@ const noop = () => { };
     ],
     templateUrl: './color-selector.component.html',
 })
-export class DejaColorSelectorComponent implements ControlValueAccessor {
+export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestroy {
     private static indexAttribute = 'index';
 
     /** Evénement déclenché lorsqu'une couleur est survolée par la souris. */
@@ -58,6 +59,8 @@ export class DejaColorSelectorComponent implements ControlValueAccessor {
 
     private hilightedSubIndex: number;
     private hilightedSubIndex$ = new Subject<number>();
+
+    private subscriptions = [] as Subscription[];
 
     constructor(elementRef: ElementRef, @Self() @Optional() public _control: NgControl) {
         const element = elementRef.nativeElement as HTMLElement;
@@ -123,14 +126,14 @@ export class DejaColorSelectorComponent implements ControlValueAccessor {
             .distinctUntilChanged()
             .do((subColorIndex) => this._selectedSubIndex = subColorIndex);
 
-        Observable.merge(hilightedSubIndex$, selectedSubIndex$)
+        this.subscriptions.push(Observable.merge(hilightedSubIndex$, selectedSubIndex$)
             .subscribe((subColorIndex) => {
                 if (this._subColorFabs) {
                     this._subColorFabs.forEach((colorFab, index) => colorFab.active$.next(index === subColorIndex));
                 }
-            });
+            }));
 
-        Observable.fromEvent(element, 'mousemove')
+        this.subscriptions.push(Observable.fromEvent(element, 'mousemove')
             .filter((_event) => !this._disabled)
             .subscribe((event: Event) => {
                 const { id, attributes } = event.target as HTMLElement;
@@ -145,16 +148,16 @@ export class DejaColorSelectorComponent implements ControlValueAccessor {
                     this.hilightedBaseIndex$.next();
                     this.hilightedSubIndex$.next();
                 }
-            });
+            }));
 
-        Observable.fromEvent(element, 'click')
+        this.subscriptions.push(Observable.fromEvent(element, 'click')
             .filter((_event) => !this._disabled)
             .subscribe((event: Event) => {
                 const target = event.target as HTMLElement;
                 if (target.id === 'basecolor' || target.id === 'subcolor') {
                     this.value = Color.parse(target.style.backgroundColor);
                 }
-            });
+            }));
     }
 
     /** Retourne ou definit si le selecteur est desactivé. */
@@ -240,4 +243,8 @@ export class DejaColorSelectorComponent implements ControlValueAccessor {
         this.onTouchedCallback = fn;
     }
     // ************* End of ControlValueAccessor Implementation **************
+
+    public ngOnDestroy() {
+        this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
+    }
 }

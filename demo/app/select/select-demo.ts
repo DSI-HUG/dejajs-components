@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectorRef, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
 import 'rxjs/add/operator/toPromise';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -26,7 +26,7 @@ import { NewsService } from '../services/news.service';
     styleUrls: ['./select-demo.scss'],
     templateUrl: './select-demo.html',
 })
-export class SelectDemoComponent implements OnInit {
+export class SelectDemoComponent implements OnDestroy {
     protected disabled: boolean;
     protected country: ICountry;
     protected tabIndex = 1;
@@ -50,6 +50,7 @@ export class SelectDemoComponent implements OnInit {
     private multiselectModel: IItemTree[];
     private _dialogVisible = false;
     private onDemandPlaceHolder = 'Open to load';
+    private subscriptions = [] as Subscription[];
 
     @ViewChild('news') private newsSelect: DejaSelectComponent;
     @ViewChild('ondemand') private onDemandSelect: DejaSelectComponent;
@@ -69,9 +70,7 @@ export class SelectDemoComponent implements OnInit {
         this.news$ = newsService.getNews$(50);
         this.bigNews$ = newsService.getNews$(10000);
         this.bigCountries$ = countriesService.getCountries$(null, 100000);
-    }
 
-    public ngOnInit() {
         this.country = {
             code: 'CH',
             displayName: 'Switzerland',
@@ -81,58 +80,64 @@ export class SelectDemoComponent implements OnInit {
 
         this.countries = this.countriesService.getCountries$();
 
-        this.countriesService.getCountries$().subscribe((value: ICountry[]) => {
-            const result = [] as any[];
-            value.map((s) => {
-                s.toString = () => { return s.code + ' - ' + s.naqme; };
-                result.push(s);
-            });
-            this.countriesForTemplate = result;
-        });
+        this.subscriptions.push(this.countries
+            .subscribe((value: ICountry[]) => {
+                const result = [] as any[];
+                value.map((s) => {
+                    s.toString = () => { return s.code + ' - ' + s.naqme; };
+                    result.push(s);
+                });
+                this.countriesForTemplate = result;
+            }));
 
-        this.countriesService.getCountries$()
+        this.subscriptions.push(this.countries
             .do((value) => this.countriesForMultiselect = value)
             .delay(1)
             .subscribe(() => {
                 this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","displayName":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","displayName":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","displayName":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","displayName":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","displayName":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","displayName":"Dominica","depth":0,"odd":false,"selected":true}]');
-            });
+            }));
 
-        this.countriesService.getCountries$().subscribe((value: ICountry[]) => {
-            const result = [] as ICountryGroup[];
-            const onDemandResult = [] as ICountryGroup[];
-            const map = {} as { [groupName: string]: ISelectCountry[] };
-            value.map((country) => {
-                const groupName = 'Group ' + country.naqme[0];
-                if (!map[groupName]) {
-                    map[groupName] = [] as ICountryGroup[];
-                    result.push({
-                        collapsible: true,
-                        groupName: groupName,
-                        items: map[groupName],
-                        displayName: groupName,
-                        selectable: false,
-                    } as ICountryGroup);
-
-                    onDemandResult.push({
-                        collapsible: true,
-                        collapsed: true,
-                        groupName: groupName,
-                        items: [{
-                            displayName: 'loading...',
+        this.subscriptions.push(this.countries
+            .subscribe((value: ICountry[]) => {
+                const result = [] as ICountryGroup[];
+                const onDemandResult = [] as ICountryGroup[];
+                const map = {} as { [groupName: string]: ISelectCountry[] };
+                value.map((country) => {
+                    const groupName = 'Group ' + country.naqme[0];
+                    if (!map[groupName]) {
+                        map[groupName] = [] as ICountryGroup[];
+                        result.push({
+                            collapsible: true,
+                            groupName: groupName,
+                            items: map[groupName],
+                            displayName: groupName,
                             selectable: false,
-                        }],
-                        displayName: groupName,
-                        selectable: false,
-                        loaded: false,
-                    } as ICountryGroup);
-                }
+                        } as ICountryGroup);
 
-                map[groupName].push(country);
-            });
+                        onDemandResult.push({
+                            collapsible: true,
+                            collapsed: true,
+                            groupName: groupName,
+                            items: [{
+                                displayName: 'loading...',
+                                selectable: false,
+                            }],
+                            displayName: groupName,
+                            selectable: false,
+                            loaded: false,
+                        } as ICountryGroup);
+                    }
 
-            this.groupedCountries = result;
-            this.onDemandGroupedCountries = onDemandResult;
-        });
+                    map[groupName].push({ model: country });
+                });
+
+                this.groupedCountries = result;
+                this.onDemandGroupedCountries = onDemandResult;
+            }));
+    }
+
+    public ngOnDestroy() {
+        this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
     }
 
     protected loadingItems() {

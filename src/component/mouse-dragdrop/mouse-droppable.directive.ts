@@ -6,8 +6,9 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Directive, ElementRef, Input } from '@angular/core';
+import { Directive, ElementRef, Input, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
 import { DejaMouseDragDropService, IDragCursorInfos, IDragDropContext, IDropCursorInfos } from './mouse-dragdrop.service';
@@ -15,9 +16,10 @@ import { DejaMouseDragDropService, IDragCursorInfos, IDragDropContext, IDropCurs
 @Directive({
     selector: '[deja-mouse-droppable]',
 })
-export class DejaMouseDroppableDirective {
+export class DejaMouseDroppableDirective implements OnDestroy {
     private _context: IDejaMouseDroppableContext;
     private _dragContext: IDragDropContext;
+    private dragging$sub: Subscription
 
     @Input('deja-mouse-droppable')
     public set context(value: IDejaMouseDroppableContext) {
@@ -36,7 +38,7 @@ export class DejaMouseDroppableDirective {
         const kill$ = dragging$
             .filter((value) => !value);
 
-        dragging$
+        this.dragging$sub = dragging$
             .filter((value) => value)
             .subscribe(() => {
                 kill$
@@ -93,6 +95,10 @@ export class DejaMouseDroppableDirective {
                         }
                     });
             });
+    }
+
+    public ngOnDestroy() {
+        this.dragging$sub.unsubscribe();
     }
 }
 

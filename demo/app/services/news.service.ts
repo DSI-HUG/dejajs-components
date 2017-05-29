@@ -11,10 +11,11 @@ import { Http } from '@angular/http';
 import 'rxjs/add/operator/publishLast';
 import { Observable } from 'rxjs/Observable';
 import { INews, INewsArticles, INewsSource, INewsSources } from '../common/news.model';
+import { CloningService } from './../../../src/common/core/cloning/cloning.service';
 
 @Injectable()
 export class NewsService {
-    constructor(private http: Http) { }
+    constructor(private http: Http, private cloningService: CloningService) { }
 
     public getNews$(recordCount?: number): Observable<INews[]> {
         return this.http.get('https://newsapi.org/v1/sources?language=en')
@@ -42,7 +43,7 @@ export class NewsService {
                 let returnNews = news;
                 if (recordCount) {
                     while (recordCount > 0) {
-                        returnNews = returnNews.concat(news);
+                        returnNews = returnNews.concat(this.cloningService.cloneSync(news));
                         recordCount -= news.length;
                     }
                 }

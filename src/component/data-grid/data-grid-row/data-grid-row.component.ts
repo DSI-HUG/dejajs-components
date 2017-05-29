@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, Input, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { IDejaGridColumnLayout } from '../data-grid-column/data-grid-column-layout';
@@ -19,7 +19,7 @@ import { IDejaGridRow } from './data-grid-row';
     styleUrls: ['./data-grid-row.component.scss'],
     templateUrl: './data-grid-row.component.html',
 })
-export class DejaGridRowComponent {
+export class DejaGridRowComponent implements OnDestroy {
     /** Définit la structure de la ligne associée à ce composant */
     @Input() public row: IDejaGridRow;
 
@@ -65,5 +65,11 @@ export class DejaGridRowComponent {
     }
 
     constructor(private changeDetectorRef: ChangeDetectorRef) { }
+
+    public ngOnDestroy() {
+        if (this.refresh$sub) {
+            this.refresh$sub.unsubscribe();
+        }
+    }
 }
 

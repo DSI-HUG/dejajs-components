@@ -101,7 +101,7 @@ export class DejaGridComponent implements OnDestroy {
     /** Permet de définir un template comme suffixe de la zone de recherche par binding. */
     @Input() public searchSuffixTemplateExternal;
     /** Set a observable called before the rows will be displayed */
-    @Input() public loadingRow: (query: string | RegExp, selectedRows: IDejaGridRow[]) => Observable<IDejaGridRow[]>;
+    @Input() public loadingRows: (query: string | RegExp, selectedRows: IDejaGridRow[]) => Observable<IDejaGridRow[]>;
     /** Set a promise called before a row selection */
     @Input() public selectingRow: (row: IDejaGridRow) => Promise<IDejaGridRow> | Observable<IDejaGridRow>;
     /** Set a promise called before a row deselection */
@@ -332,6 +332,11 @@ export class DejaGridComponent implements OnDestroy {
         return this.treeListComponent.depthMax;
     }
 
+    /** Retourne le service de viewport utilisé pour la grille */
+    public get viewPort() {
+        return this.treeListComponent.viewPort;
+    }
+
     private get searchPrefixTemplate() {
         return this.searchPrefixTemplateExternal || this.searchPrefixTemplateInternal;
     }
@@ -533,13 +538,16 @@ export class DejaGridComponent implements OnDestroy {
 
         const hideSpinner = () => {
             event.column.sorting = false;
+            this.changeDetectorRef.markForCheck();
             this.header.refresh();
         }
 
         event.column.sorting = true;
+        this.changeDetectorRef.markForCheck();
+
         Observable.timer(1)
-            .switchMap(() => this.treeListComponent.sort$(event.column.name))
             .first()
+            .switchMap(() => this.treeListComponent.sort$(event.column.name))
             .subscribe(() => {
                 hideSpinner();
             }, (error) => {

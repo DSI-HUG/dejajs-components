@@ -6,16 +6,17 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Directive, ElementRef, HostBinding, Input, Optional } from '@angular/core';
+import { Directive, ElementRef, HostBinding, Input, OnDestroy, Optional } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
 import { DejaClipboardService } from '../../common/core/clipboard/clipboard.service';
 import { IDejaDragEvent } from './draggable.directive';
 
 @Directive({
     selector: '[deja-droppable]',
 })
-export class DejaDroppableDirective {
+export class DejaDroppableDirective implements OnDestroy {
 
     /**
      * @deprecated
@@ -34,6 +35,7 @@ export class DejaDroppableDirective {
     private lastAccept: boolean;
     private _allEvents = false;
     private _context: IDejaDropContext;
+    private subscriptions = [] as Subscription[];
 
     @Input('deja-droppable')
     public set context(value: IDejaDropContext) {
@@ -51,7 +53,7 @@ export class DejaDroppableDirective {
         const kill$ = new Subject();
         const dragEnd$ = Observable.from(kill$).filter((value) => !value);
 
-        Observable.from(dragDrop$)
+        this.subscriptions.push(Observable.from(dragDrop$)
             .subscribe((dragEvent) => {
                 if (dragEvent.type === 'dragenter') {
                     console.log('DejaDragEnter');
@@ -144,9 +146,9 @@ export class DejaDroppableDirective {
                 } else {
                     kill$.next();
                 }
-            });
+            }));
 
-        Observable.fromEvent(element, 'dragenter')
+        this.subscriptions.push(Observable.fromEvent(element, 'dragenter')
             .filter(() => !!this.context)
             .filter(() => !!this.clipboardService.get(this.draginfokey))
             .subscribe((event: DragEvent) => {
@@ -154,9 +156,9 @@ export class DejaDroppableDirective {
                     throw new Error('To use the DejaDroppableDirective, please import and provide the DejaClipboardService in your application.');
                 }
                 dragDrop$.next(event);
-            });
+            }));
 
-        Observable.fromEvent(element, 'dragleave')
+        this.subscriptions.push(Observable.fromEvent(element, 'dragleave')
             .filter(() => !!this.context)
             .filter(() => !!this.clipboardService.get(this.draginfokey))
             .subscribe((leaveEvent: DragEvent) => {
@@ -166,7 +168,11 @@ export class DejaDroppableDirective {
                 if (!inside) {
                     dragDrop$.next(leaveEvent);
                 }
-            });
+            }));
+    }
+
+    public ngOnDestroy() {
+        this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
     }
 }
 

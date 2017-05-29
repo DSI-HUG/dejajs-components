@@ -28,7 +28,7 @@ export class DejaRangeDemoComponent {
     public numericStep = 1;
     public weights: Weight[];
 
-    public errors: Observable<any>;
+    public errors: Observable<any[]>;
     @Output() protected errorFeed: EventEmitter<any> = new EventEmitter();
 
     @ViewChild('dejaRange') protected rangeRef;

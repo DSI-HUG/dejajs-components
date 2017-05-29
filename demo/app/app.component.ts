@@ -6,10 +6,11 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectionStrategy, Component, ElementRef, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, ViewEncapsulation } from '@angular/core';
 import 'rxjs/add/observable/from';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,23 +19,24 @@ import { Observable } from 'rxjs/Observable';
     styleUrls: ['./app.component.scss'],
     templateUrl: './app.component.html',
 })
-export class AppComponent {
+export class AppComponent implements OnDestroy {
     public version: string;
     protected navOpened = true;
 
     protected colors = [
-        {label: 'HUG', value: 'hug'},
-        {label: 'Pink', value: 'pink'},
-        {label: 'Teal', value: 'teal'},
-        {label: 'Amber', value: 'amber'},
+        { label: 'HUG', value: 'hug' },
+        { label: 'Pink', value: 'pink' },
+        { label: 'Teal', value: 'teal' },
+        { label: 'Amber', value: 'amber' },
     ];
 
     private _theme = this.colors.find((color) => color.value === localStorage.getItem('dejajs-demo-color')) || this.colors[0];
     protected theme$ = new BehaviorSubject<any>(this._theme);
+    private theme$sub: Subscription;
 
-    constructor (elementRef: ElementRef) {
+    constructor(elementRef: ElementRef) {
         const elem = elementRef.nativeElement as HTMLElement;
-        Observable.from(this.theme$).subscribe((theme) => elem.setAttribute('theme', theme.value) );
+        this.theme$sub = Observable.from(this.theme$).subscribe((theme) => elem.setAttribute('theme', theme.value));
     }
 
     public get theme() {
@@ -45,6 +47,10 @@ export class AppComponent {
         this._theme = theme;
         localStorage.setItem('dejajs-demo-color', theme.value);
         this.theme$.next(theme);
+    }
+
+    public ngOnDestroy() {
+        this.theme$sub.unsubscribe();
     }
 
     protected get debug() {

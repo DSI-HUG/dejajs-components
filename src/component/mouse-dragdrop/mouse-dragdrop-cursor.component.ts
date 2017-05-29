@@ -6,10 +6,11 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
 import 'rxjs/add/operator/delay';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import { Position } from './../../common/core/graphics/position';
 import { DejaMouseDragDropService, IDragCursorInfos, IDropCursorInfos } from './mouse-dragdrop.service';
 
@@ -21,7 +22,7 @@ import { DejaMouseDragDropService, IDragCursorInfos, IDropCursorInfos } from './
     ],
     templateUrl: './mouse-dragdrop-cursor.component.html',
 })
-export class DejaMouseDragDropCursorComponent {
+export class DejaMouseDragDropCursorComponent implements OnDestroy {
     @ViewChild('block') private icon: ElementRef;
     @ViewChild('content') private content: ElementRef;
     private position$ = new BehaviorSubject<Position>(undefined);
@@ -29,21 +30,22 @@ export class DejaMouseDragDropCursorComponent {
     private _dragCursor: IDragCursorInfos;
     private _currentCursor: IDragCursorInfos;
     private _dropCursor: IDropCursorInfos;
+    private subscriptions: Subscription[] = [];
 
     constructor(elementRef: ElementRef, private dragDropService: DejaMouseDragDropService) {
         const element = elementRef.nativeElement as HTMLElement;
 
-        Observable
+        this.subscriptions.push(Observable
             .from(this.position$)
             .subscribe((pos) => {
                 element.style.left = pos ? `${pos.left}px` : '-1000px';
                 element.style.top = pos ? `${pos.top}px` : '-1000px';
-            });
+            }));
 
         const cursor$ = Observable.from(this.cursor$);
 
         // Hide
-        cursor$
+        this.subscriptions.push(cursor$
             .filter((dragCursor) => !dragCursor)
             .do((dragCursor) => {
                 if (this._currentCursor) {
@@ -56,10 +58,10 @@ export class DejaMouseDragDropCursorComponent {
             .subscribe(() => {
                 this.position$.next(null);
                 element.style.display = 'none';
-            });
+            }));
 
         // Show
-        cursor$
+        this.subscriptions.push(cursor$
             .filter((dragCursor) => !!dragCursor)
             .do((dragCursor) => {
                 element.style.display = '';
@@ -83,9 +85,9 @@ export class DejaMouseDragDropCursorComponent {
                 if (!!dragCursor.html) {
                 this.contentElement.style.opacity = '1';
                 }
-            });
+            }));
 
-        Observable.from(this.dragDropService.dragCursor$)
+        this.subscriptions.push(Observable.from(this.dragDropService.dragCursor$)
             .subscribe((dragCursor) => {
                 if (!!dragCursor !== !!this._dragCursor) {
                     this._dragCursor = dragCursor;
@@ -105,12 +107,12 @@ export class DejaMouseDragDropCursorComponent {
                     // Update only Position
                     this.position$.next(dragCursor.position);
                 }
-            });
+            }));
 
-        Observable.from(this.dragDropService.dropCursor$)
+        this.subscriptions.push(Observable.from(this.dragDropService.dropCursor$)
             .subscribe((dropCursor) => {
                 this._dropCursor = dropCursor;
-            });
+            }));
     }
 
     private get iconElement() {
@@ -119,5 +121,9 @@ export class DejaMouseDragDropCursorComponent {
 
     private get contentElement() {
         return this.content.nativeElement as HTMLElement;
+    }
+
+    public ngOnDestroy() {
+        this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
     }
 }

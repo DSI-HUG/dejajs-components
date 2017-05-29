@@ -6,24 +6,26 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectorRef, NgZone, Pipe, PipeTransform } from '@angular/core';
+import { ChangeDetectorRef, NgZone, OnDestroy, Pipe, PipeTransform } from '@angular/core';
 import 'rxjs/add/operator/debounce';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
 
 import * as moment_ from 'moment';
 const moment: (value?: any, format?: string) => moment_.Moment = (<any>moment_).default || moment_;
 
 @Pipe({ name: 'momentTimeAgo', pure: false })
-export class TimeAgoPipe implements PipeTransform {
+export class TimeAgoPipe implements PipeTransform, OnDestroy {
     private lastTime: Number;
     private lastValue: Date | moment_.Moment;
     private lastOmitSuffix: boolean;
     private lastText: string;
     private createTimer$ = new Subject();
+    private createTimer$sub: Subscription;
 
     constructor(private cdRef: ChangeDetectorRef, private ngZone: NgZone) {
-        Observable.from(this.createTimer$)
+        this.createTimer$sub = Observable.from(this.createTimer$)
             .debounce(() => {
                 const momentInstance = moment(this.lastValue);
                 const timeToUpdate = this.getSecondsUntilUpdate(momentInstance) * 1000;
@@ -35,6 +37,10 @@ export class TimeAgoPipe implements PipeTransform {
                     this.ngZone.run(() => this.cdRef.markForCheck());
                 });
             });
+    }
+
+    public ngOnDestroy() {
+        this.createTimer$sub.unsubscribe();
     }
 
     public transform(value: Date | moment_.Moment, omitSuffix?: boolean): string {

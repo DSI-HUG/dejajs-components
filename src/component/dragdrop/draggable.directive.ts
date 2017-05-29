@@ -6,17 +6,18 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Directive, ElementRef, HostBinding, Input, Optional } from '@angular/core';
+import { Directive, ElementRef, HostBinding, Input, OnDestroy, Optional } from '@angular/core';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/takeUntil';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import { DejaClipboardService } from '../../common/core/clipboard/clipboard.service';
 import { UUID } from '../../common/core/UUID';
 
 @Directive({
     selector: '[deja-draggable]',
 })
-export class DejaDraggableDirective {
+export class DejaDraggableDirective implements OnDestroy {
     @HostBinding('attr.dragdropid') private dragdropid;
     @HostBinding('attr.draggable') private draggable = null;
     private draginfokey = 'draginfos';
@@ -24,6 +25,7 @@ export class DejaDraggableDirective {
     private elementKey = 'element';
     private uuidKey = 'uuid';
     private _context: IDejaDragContext;
+    private dragstart$sub: Subscription;
 
     @Input('deja-draggable')
     public set context(value: IDejaDragContext) {
@@ -38,7 +40,7 @@ export class DejaDraggableDirective {
     constructor(elementRef: ElementRef, @Optional() private clipboardService: DejaClipboardService) {
         const element = elementRef.nativeElement as HTMLElement;
 
-        Observable.fromEvent(element, 'dragstart')
+        this.dragstart$sub = Observable.fromEvent(element, 'dragstart')
             .filter(() => !!this.context)
             .subscribe((event: DragEvent) => {
                 if (!clipboardService) {
@@ -100,6 +102,10 @@ export class DejaDraggableDirective {
                         this.dragdropid = undefined;
                     });
             });
+    }
+
+    public ngOnDestroy() {
+        this.dragstart$sub.unsubscribe();
     }
 }
 

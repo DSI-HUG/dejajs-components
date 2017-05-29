@@ -17,13 +17,8 @@ export class MonacoEditorDemoService {
 
     }
 
-    public getFile(filename: string): Observable<any> {
-        return Observable.create((observer) => {
-            this._http.get(`assets/datas/monaco/${filename}`, { responseType: ResponseContentType.Text })
-                .subscribe((response) => {
-                    observer.next(response.text());
-                    observer.complete();
-                });
-        });
+    public getFile$(filename: string): Observable<string> {
+        return this._http.get(`assets/datas/monaco/${filename}`, { responseType: ResponseContentType.Text })
+            .map((response) => response.text());
     }
 }

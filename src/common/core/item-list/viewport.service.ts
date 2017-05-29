@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/timer';
@@ -17,6 +17,7 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/filter';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import { IViewPort, IViewPortItem } from './viewport.service';
 
 export enum ViewportMode {
@@ -35,7 +36,7 @@ export enum ViewportDirection {
  * Ce service permet la gestion du viewport verticalement ou horizontalement.
  */
 @Injectable()
-export class ViewPortService {
+export class ViewPortService implements OnDestroy {
     public static itemDefaultSize = 33;
 
     public viewPort$: Observable<IViewPort>;
@@ -48,6 +49,7 @@ export class ViewPortService {
     public element$ = new BehaviorSubject<HTMLElement>(null);
     public itemsSize$ = new BehaviorSubject<number>(0);
     public direction$ = new BehaviorSubject<ViewportDirection | string>(ViewportDirection.vertical);
+    private subscriptions = [] as Subscription[];
 
     private refresh$ = new BehaviorSubject<IViewPortItem>(null);
     private deleteSizeCache$ = new BehaviorSubject<boolean>(true);
@@ -510,32 +512,33 @@ export class ViewPortService {
             .do(() => consoleLog(`element`));
 
         // Reset items size when direction change in auto mode
-        Observable.combineLatest(direction$, items$, mode$, this.deleteSizeCache$)
+        this.subscriptions.push(Observable.combineLatest(direction$, items$, mode$, this.deleteSizeCache$)
             .filter(([_direction, items, mode]) => items && items.length && mode === ViewportMode.auto)
             .switchMap(([_direction, items]) => items)
             .subscribe((item) => {
                 item.size = undefined;
-            });
+            }));
 
         // Calc view port observable
-        Observable.combineLatest(items$, maxSize$, itemsSize$, ensureParams$, direction$, mode$, refresh$, element$)
+        this.subscriptions.push(Observable.combineLatest(items$, maxSize$, itemsSize$, ensureParams$, direction$, mode$, refresh$, element$)
             .debounceTime(1)
             .combineLatest(scrollPos$)
-            .filter(([[_items, _maxSize, _itemDefaultSize, _ensureParams, _direction, _mode, _refresh, element], _scrollPos]: [[IViewPortItem[], number|string, number, IEnsureParams, ViewportDirection, ViewportMode, IViewPortItem, HTMLElement], number]) => !!element)
+            .filter(([[_items, _maxSize, _itemDefaultSize, _ensureParams, _direction, _mode, _refresh, element], _scrollPos]: [[IViewPortItem[], number | string, number, IEnsureParams, ViewportDirection, ViewportMode, IViewPortItem, HTMLElement], number]) => !!element)
             .do(() => consoleLog(`combineLatest`))
-            .switchMap(([[items, maxSize, itemDefaultSize, ensureParams, _direction, _mode, _refresh, element], _scrollPos]: [[IViewPortItem[], number|string, number, IEnsureParams, ViewportDirection, ViewportMode, IViewPortItem, HTMLElement], number]) => {
+            .switchMap(([[items, maxSize, itemDefaultSize, ensureParams, _direction, _mode, _refresh, element], _scrollPos]: [[IViewPortItem[], number | string, number, IEnsureParams, ViewportDirection, ViewportMode, IViewPortItem, HTMLElement], number]) => {
                 const listSize = this.lastCalculatedSize || maxSize || clientSize(element);
                 const scrollPos = this._scrollPosition;
-                const maxSizeValue = maxSize === 'auto' ? 0 : +maxSize;
-                if (items && items.length && (maxSize === 'auto' || listSize < 2 * ViewPortService.itemDefaultSize)) {
+                let maxSizeValue = maxSize === 'auto' ? 0 : +maxSize;
+                if (items && items.length && (listSize === 'auto' || listSize < 2 * ViewPortService.itemDefaultSize)) {
                     // Set the viewlist to the maximum height to measure the real max-height defined in the css
                     // Use a blank div to do that
                     this.viewPortResult$.next(this.measureViewPort);
                     // Wait next life cycle for the result
                     return Observable.timer(1)
-                        .do(() => this.lastCalculatedSize = clientSize(element))
+                        .map(() => maxSizeValue = this.lastCalculatedSize = clientSize(element))
                         .map(() => ({ element, scrollPos, items, maxSizeValue, itemDefaultSize, ensureParams }));
                 } else {
+                    maxSizeValue = maxSizeValue || this.lastCalculatedSize;
                     return Observable.of({ element, scrollPos, items, maxSizeValue, itemDefaultSize, ensureParams });
                 }
             })
@@ -544,10 +547,14 @@ export class ViewPortService {
                 this.viewPortResult$.next(viewPort);
             }, ((error) => {
                 console.log(error);
-            }));
+            })));
 
         // Cache last calculated viewport
-        Observable.from(this.viewPortResult$).subscribe((viewPort: IViewPort) => this.viewPort = viewPort);
+        this.subscriptions.push(Observable.from(this.viewPortResult$).subscribe((viewPort: IViewPort) => this.viewPort = viewPort));
+    }
+
+    public ngOnDestroy() {
+        this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
     }
 
     public deleteSizeCache() {

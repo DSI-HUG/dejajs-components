@@ -17,8 +17,8 @@ export class MonacoEditorXmlFileResolver implements Resolve<any> {
 
     }
 
-    public resolve(): Observable<any> {
-        return this._fileService.getFile('xmlFile.xml');
+    public resolve(): Observable<string> {
+        return this._fileService.getFile$('xmlFile.xml');
     }
 }
 
@@ -28,8 +28,8 @@ export class MonacoEditorXmlToCompareFileResolver implements Resolve<any> {
 
     }
 
-    public resolve(): Observable<any> {
-        return this._fileService.getFile('xmlFileToCompare.xml');
+    public resolve(): Observable<string> {
+        return this._fileService.getFile$('xmlFileToCompare.xml');
     }
 }
 
@@ -39,8 +39,8 @@ export class MonacoEditorJsonFileResolver implements Resolve<any> {
 
     }
 
-    public resolve(): Observable<any> {
-        return this._fileService.getFile('jsonFile.json');
+    public resolve(): Observable<string> {
+        return this._fileService.getFile$('jsonFile.json');
     }
 }
 
@@ -50,7 +50,7 @@ export class MonacoEditorJsonToCompareFileResolver implements Resolve<any> {
 
     }
 
-    public resolve(): Observable<any> {
-        return this._fileService.getFile('jsonFileToCompare.json');
+    public resolve(): Observable<string> {
+        return this._fileService.getFile$('jsonFileToCompare.json');
     }
 }

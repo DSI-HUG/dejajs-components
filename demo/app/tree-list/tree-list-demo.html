@@ -13,11 +13,11 @@
 </md-tab-group>
 
 <deja-dialog *ngIf="dialogVisible">
-	<deja-message-box type="primary" title="Un titre">
+	<deja-message-box type="primary" title="Confirm">
 		Please confirm your operation!
 		<ng-template #actionsTemplate>
-			<button id="cancelbtn" md-raised-button (click)="dialogResponse$.next('cancel')">Annuler</button>
-			<button id="okbtn" md-raised-button color="primary" (click)="dialogResponse$.next('ok')">Valider</button>
+			<button id="cancelbtn" md-raised-button (click)="dialogResponse$.next('cancel')">Cancel</button>
+			<button id="okbtn" md-raised-button color="primary" (click)="dialogResponse$.next('ok')">Ok</button>
 		</ng-template>
 	</deja-message-box>
 </deja-dialog>
@@ -136,7 +136,7 @@
 				<span fxFlex="0 0 45%" fxLayout="column">
 					<deja-tree-list textField="naqme" valueField="code" [items]="groupedCountries" [deja-mouse-draggable]="getDragContext()">
 						<ng-template #itemTemplate let-item let-flatindex="flatindex">
-							<span [attr.ddid]="item.code">{{ item.naqme }}</span>
+							<span [attr.ddid]="item.model.code">{{ item.model.naqme }}</span>
 						</ng-template>
 					</deja-tree-list>
 				</span>
@@ -244,7 +244,7 @@
 				</md-input-container>
 				<button fxFlex="0 0 auto" md-button (click)="news.ensureItemVisible(ensureIndex)">Ensure index</button>
 			</div>
-			<deja-tree-list #news class="news" dropdownContainerId="scrollable-content" viewportMode="auto" textField="title" searchField="description" [models]="bigNews$">
+			<deja-tree-list #news class="news" viewportMode="auto" textField="title" searchField="description" [models]="bigNews$">
 				<ng-template #itemTemplate let-item let-flatindex="flatindex">
 					<news-card [item]="item.model" (imageLoaded)="imageLoaded(item)"></news-card>
 				</ng-template>
@@ -253,7 +253,7 @@
 			<h1>Fixed size rows 100K items</h1>
 			<div>An exemple with 100000 fixed size items</div>
 			<span fxLayout="row">
-				<deja-tree-list #bigCountries id="bigCountries" fxFlex="0 0 45%" dropdownContainerId="scrollable-content" [items]="bigCountries$" textField="naqme" valueField="code"></deja-tree-list>
+				<deja-tree-list #bigCountries id="bigCountries" fxFlex="0 0 45%" [items]="bigCountries$" textField="naqme" valueField="code"></deja-tree-list>
 				<span fxFlex="0 0 45%" fxFlexOffset="5%" fxFlexOffset="5%">
 					<h4 id="vptitle">Viewport Infos:</h4>
 					<div *ngFor="let info of viewPortInfos">

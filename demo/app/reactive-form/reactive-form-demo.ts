@@ -7,9 +7,10 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { AfterContentInit, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { AfterContentInit, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import { CountriesService } from '../services/countries.service';
 import { ICountry } from '../services/countries.service';
 
@@ -27,7 +28,7 @@ import { UserService } from './service/user.service';
     styleUrls: ['./reactive-form-demo.scss'],
     templateUrl: './reactive-form-demo.html',
 })
-export class ReactiveFormDemoComponent implements AfterContentInit, OnInit {
+export class ReactiveFormDemoComponent implements AfterContentInit, OnInit, OnDestroy {
     protected tabIndex = 1;
     protected form: FormGroup;
 
@@ -41,6 +42,9 @@ export class ReactiveFormDemoComponent implements AfterContentInit, OnInit {
 
     private _readonly = false;
     private countries: Observable<ICountry[]>;
+
+    private valueChanges$sub: Subscription;
+    private user$sub: Subscription;
 
     @Input()
     public set readonly(value: boolean) {
@@ -84,8 +88,17 @@ export class ReactiveFormDemoComponent implements AfterContentInit, OnInit {
 
     }
 
+    public ngOnDestroy() {
+        if (this.valueChanges$sub) {
+            this.valueChanges$sub.unsubscribe();
+        }
+        if (this.user$sub) {
+            this.user$sub.unsubscribe();
+        }
+    }
+
     public ngOnInit() {
-        this.form.valueChanges
+        this.valueChanges$sub = this.form.valueChanges
             .filter(() => this.form.status !== 'PENDING')
             .debounceTime(500)
             .distinctUntilChanged((previousForm: { [key: string]: any }, currentForm: { [key: string]: any }) => {
@@ -101,7 +114,7 @@ export class ReactiveFormDemoComponent implements AfterContentInit, OnInit {
 
     public ngAfterContentInit() {
 
-        this.user$
+        this.user$sub = this.user$
             // .do((user: IUser) => console.log('user$', user))
             .delay(1)
             .filter((user: IUser) => !!user)

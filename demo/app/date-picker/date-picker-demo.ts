@@ -6,18 +6,19 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'dejadate-picker-demo',
     templateUrl: './date-picker-demo.html',
 })
-export class DejaDatePickerDemoComponent implements OnInit {
+export class DejaDatePickerDemoComponent implements OnInit, OnDestroy {
     protected tabIndex = 1;
 
     public theDate: Date = new Date();
@@ -33,6 +34,8 @@ export class DejaDatePickerDemoComponent implements OnInit {
     private dateFrom = new BehaviorSubject(undefined);
     private dateTo = new BehaviorSubject(undefined);
 
+    private date$sub: Subscription;
+
     constructor() {
         let debouceTime = 0;
 
@@ -46,13 +49,17 @@ export class DejaDatePickerDemoComponent implements OnInit {
                 return (date1 && date1.getTime()) === (date2 && date2.getTime());
             });
 
-        Observable.combineLatest(dateFrom$, dateTo$)
+        this.date$sub = Observable.combineLatest(dateFrom$, dateTo$)
             .debounceTime(debouceTime)
             .map(([date1, date2]) => date1 && date2 && date1.getTime() > date2.getTime() ? [date2, date1] : [date1, date2])
             .subscribe(([]) => {
                 // Value 1 et value2 dispo ici dans l'ordre
                 debouceTime = 500;
             });
+    }
+
+    public ngOnDestroy() {
+        this.date$sub.unsubscribe();
     }
 
     public ngOnInit() {

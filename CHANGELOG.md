@@ -1,3 +1,17 @@
+#### 2.0.3 (2017-5-29)
+
+##### Bug Fixes
+
+* **Packages:** Add reflect-metadata to package.json ([19992ea6](https://github.com/DSI-HUG/dejajs-components/commit/19992ea67e49b43ddf62c123930d2bbc24c0c8f4))
+
+##### Other Changes
+
+* **DejaGrid:** Sort spinner position ([4bf7cac0](https://github.com/DSI-HUG/dejajs-components/commit/4bf7cac0f439ead0f907a6c28874397d73fe6e4c))
+
+##### Refactors
+
+* **Global:** Observable cleanup ([611d7a93](https://github.com/DSI-HUG/dejajs-components/commit/611d7a93df1e1f482ba819ac6f7bc191edb3e2bd))
+
 #### 2.0.2 (2017-5-26)
 
 ##### Bug Fixes
