@@ -13,7 +13,7 @@
 </md-tab-group>
 
 <deja-dialog *ngIf="dialogVisible">
-	<deja-message-box type="primary" title="Un titre">
+	<deja-message-box type="primary" title="Confirm">
 		Please confirm your operation!
 		<ng-template #actionsTemplate>
 			<button id="cancelbtn" md-raised-button (click)="dialogResponse$.next('cancel')">Cancel</button>

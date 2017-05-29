@@ -14,7 +14,7 @@
 
 <div *ngIf="tabIndex === 1" class="example">
     <deja-dialog *ngIf="dialogVisible" (closed)="dialogVisible = false">
-        <deja-message-box type="primary" title="Un titre">
+        <deja-message-box type="primary" title="Title">
             <b>I am a deja-dialog !</b><br /> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sit amet felis id nisl maximus interdum. Morbi mollis sapien sapien. Vivamus lacinia elementum eros
             <ng-template #actionsTemplate>
                 <button md-raised-button (click)="dialogVisible = false">
@@ -27,7 +27,7 @@
         </deja-message-box>
     </deja-dialog>
 
-    <deja-message-box type="primary" title="Un titre">
+    <deja-message-box type="primary" title="Title">
         Du texte dans la <b>message box</b>
     </deja-message-box>
 
@@ -41,19 +41,19 @@
         </ng-template>
     </deja-tooltip>
 
-    <deja-message-box type="success" title="Un titre" [actions]="actions">
+    <deja-message-box type="success" title="Title" [actions]="actions">
         <span deja-tooltip="test-tt" [tooltip-model]="toolTipModel" (tooltip-show)="tooltipVisible = true">Un message "success"</span>
     </deja-message-box>
 
     <div style="margin:1rem;"></div>
 
-    <deja-message-box type="warn" horizontal title="Un titre" [actions]="closeAction">
+    <deja-message-box type="warn" horizontal title="Title" [actions]="closeAction">
         Un message "warn" <b>horizontal</b>
     </deja-message-box>
 
     <div style="margin:1rem;"></div>
 
-    <deja-message-box type="danger" horizontal title="Un titre">
+    <deja-message-box type="danger" horizontal title="Title">
         Un message "danger" <b>horizontal</b> avec une action au format template
         <ng-template #actionsTemplate>
             <button md-mini-fab [color]="'blank'" class="close">
