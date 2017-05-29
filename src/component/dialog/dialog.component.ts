@@ -1,4 +1,3 @@
-import { ElementRef } from '@angular/core';
 /*
  *  @license
  *  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
@@ -7,9 +6,10 @@ import { ElementRef } from '@angular/core';
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, ContentChild, EventEmitter, HostListener, Output } from '@angular/core';
+import { Component, ContentChild, ElementRef, EventEmitter, HostListener, OnDestroy, Output } from '@angular/core';
 import 'rxjs/add/observable/fromEvent';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 
 @Component({
@@ -17,16 +17,18 @@ import { KeyCodes } from '../../common/core/keycodes.enum';
     styleUrls: ['./dialog.component.scss'],
     templateUrl: './dialog.component.html',
 })
-export class DejaDialogComponent {
+export class DejaDialogComponent implements OnDestroy {
     @Output() public closed = new EventEmitter();
 
     @ContentChild('okaction') private okButton;
     @ContentChild('cancelaction') private cancelButton;
 
+    private keyup$sub: Subscription;
+
     constructor(elementRef: ElementRef) {
         const element = elementRef.nativeElement as HTMLElement;
 
-        Observable.fromEvent(element.ownerDocument, 'keyup')
+        this.keyup$sub = Observable.fromEvent(element.ownerDocument, 'keyup')
             .filter((event: KeyboardEvent) => !!(event.keyCode === KeyCodes.Enter && this.okButton && this.okButton._elementRef) || !!(event.keyCode === KeyCodes.Escape && this.cancelButton && this.cancelButton._elementRef))
             .subscribe((event: KeyboardEvent) => {
                 if (event.keyCode === KeyCodes.Enter) {
@@ -36,6 +38,10 @@ export class DejaDialogComponent {
                     this.cancelButton._elementRef.nativeElement.click();
                 }
             });
+    }
+
+    public ngOnDestroy() {
+        this.keyup$sub.unsubscribe();
     }
 
     @HostListener('click', ['$event'])

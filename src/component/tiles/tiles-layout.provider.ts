@@ -9,7 +9,7 @@
  *
  */
 
-import { EventEmitter, Injectable, Optional } from '@angular/core';
+import { EventEmitter, Injectable, OnDestroy, Optional } from '@angular/core';
 import 'rxjs/add/operator/take';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
@@ -57,7 +57,7 @@ export interface IDejaTilesRefreshParams {
 }
 
 @Injectable()
-export class DejaTilesLayoutProvider {
+export class DejaTilesLayoutProvider implements OnDestroy {
     public refreshTiles$ = new Subject<IDejaTilesRefreshParams>();
     public ensureVisible$ = new Subject<string>();
     public ensureBounds$ = new Subject<Rect>();
@@ -105,11 +105,12 @@ export class DejaTilesLayoutProvider {
     private currentTile: DejaTile;
     private hundredPercentWith: number;
     private dragTarget: Rect;
+    private subscriptions: Subscription[] = [];
 
     private selectedIds = [] as string[];
 
-    constructor(@Optional() private clipboardService: DejaClipboardService) {
-        Observable.from(this.refreshTiles$)
+    constructor( @Optional() private clipboardService: DejaClipboardService) {
+        this.subscriptions.push(Observable.from(this.refreshTiles$)
             .debounceTime(30)
             .do(() => {
                 this.container.style.width = ''
@@ -197,7 +198,7 @@ export class DejaTilesLayoutProvider {
                 }
 
                 this.selectedTiles = selectedTileIds;
-            });
+            }));
 
         const ensureTile$ = Observable.from(this.ensureVisible$)
             .delay(1)
@@ -205,7 +206,7 @@ export class DejaTilesLayoutProvider {
             .filter((tile) => !!tile)
             .map((tile) => tile.percentBounds);
 
-        Observable.merge(this.ensureBounds$, ensureTile$)
+        this.subscriptions.push(Observable.merge(this.ensureBounds$, ensureTile$)
             .subscribe((percentBounds) => {
                 const { left, right, top, bottom } = this.getPixelBounds(percentBounds);
 
@@ -236,9 +237,9 @@ export class DejaTilesLayoutProvider {
                 } else if (bottom + containerBounds.top > scrollBounds.bottom) {
                     scrollContainer.scrollTop += bottom + containerBounds.top - scrollBounds.bottom;
                 }
-            });
+            }));
 
-        Observable.from(this.dragSelection$)
+        this.subscriptions.push(Observable.from(this.dragSelection$)
             .subscribe((dragSelection) => {
                 const mouseUp$ = Observable
                     .fromEvent(this._container.ownerDocument, 'mouseup')
@@ -258,11 +259,11 @@ export class DejaTilesLayoutProvider {
                         const selection = this.HitTest(dragSelection.selectedRect);
                         this.selectedTiles = selection.map((tile) => tile.id);
                     });
-            });
+            }));
 
         const leave$ = Observable.from(this.dragleave$);
 
-        Observable.from(this.dragDropInfos$)
+        this.subscriptions.push(Observable.from(this.dragDropInfos$)
             .subscribe((dragDropInfos) => {
                 if (!dragDropInfos || !dragDropInfos.tiles || !dragDropInfos.tiles.length) {
                     return;
@@ -344,10 +345,11 @@ export class DejaTilesLayoutProvider {
                             this.drag(dragDropInfos.tiles, x, y);
                         }
                     });
-            });
+            }));
 
         // Delete stream for clipboard
-        Observable.from(this.deleteTiles$).subscribe((tilesToDelete) => this.deleteTiles(tilesToDelete));
+        this.subscriptions.push(Observable.from(this.deleteTiles$)
+            .subscribe((tilesToDelete) => this.deleteTiles(tilesToDelete)));
     }
 
     public set container(container: HTMLElement) {
@@ -525,6 +527,10 @@ export class DejaTilesLayoutProvider {
         } else {
             this.selectionRect$.next(undefined);
         }
+    }
+
+    public ngOnDestroy() {
+        this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
     }
 
     public copySelection() {

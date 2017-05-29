@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectorRef, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
@@ -30,7 +30,7 @@ import { NewsService } from '../services/news.service';
     styleUrls: ['./tree-list-demo.scss'],
     templateUrl: './tree-list-demo.html',
 })
-export class DejaTreeListDemoComponent implements OnInit {
+export class DejaTreeListDemoComponent implements OnDestroy {
     protected disabled: boolean;
     protected country: ICountry;
     protected tabIndex = 1;
@@ -53,6 +53,7 @@ export class DejaTreeListDemoComponent implements OnInit {
     private onDemandGroupedCountries: ICountryGroup[];
     private multiselectModel: IItemTree[];
     private _dialogVisible = false;
+    private subscriptions = [] as Subscription[];
 
     @ViewChild('news') private newsList: DejaTreeListComponent;
     @ViewChild('onexpand') private onExpandList: DejaTreeListComponent;
@@ -82,9 +83,7 @@ export class DejaTreeListDemoComponent implements OnInit {
         groupingService.group(this.loremList, [{ groupByField: 'height' }]).then((groupedResult) => {
             this.loremList = groupedResult;
         });
-    }
 
-    public ngOnInit() {
         this.country = {
             code: 'CH',
             displayName: 'Switzerland',
@@ -94,23 +93,23 @@ export class DejaTreeListDemoComponent implements OnInit {
 
         this.countries = this.countriesService.getCountries$();
 
-        this.countriesService.getCountries$().subscribe((value: ICountry[]) => {
+        this.subscriptions.push(this.countries.subscribe((value: ICountry[]) => {
             const result = [] as any[];
             value.map((s) => {
                 s.toString = () => { return s.code + ' - ' + s.naqme; };
                 result.push(s);
             });
             this.countriesForTemplate = result;
-        });
+        }));
 
-        this.countriesService.getCountries$()
+        this.subscriptions.push(this.countries
             .do((value) => this.countriesForMultiselect = value)
             .delay(1)
             .subscribe(() => {
                 this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","displayName":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","displayName":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","displayName":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","displayName":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","displayName":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","displayName":"Dominica","depth":0,"odd":false,"selected":true}]');
-            });
+            }));
 
-        this.countriesService.getCountries$().subscribe((value: ICountry[]) => {
+        this.subscriptions.push(this.countries.subscribe((value: ICountry[]) => {
             const result = [] as ICountryGroup[];
             const onDemandResult = [] as ICountryGroup[];
             const map = {} as { [groupName: string]: ISelectCountry[] };
@@ -140,12 +139,16 @@ export class DejaTreeListDemoComponent implements OnInit {
                     } as ICountryGroup);
                 }
 
-                map[groupName].push(country);
+                map[groupName].push({ model: country });
             });
 
             this.groupedCountries = result;
             this.onDemandGroupedCountries = onDemandResult;
-        });
+        }));
+    }
+
+    public ngOnDestroy() {
+        this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
     }
 
     protected loadingItems() {

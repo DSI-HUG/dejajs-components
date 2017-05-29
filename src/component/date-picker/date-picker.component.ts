@@ -6,9 +6,12 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnInit, Optional, Output, Self, ViewChild } from '@angular/core';
+import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Optional, Output, Self, ViewChild } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { DejaChildValidatorDirective } from '../../common/core/validation/child-validator.directive';
@@ -26,7 +29,7 @@ const noop = () => { };
     styleUrls: ['./date-picker.component.scss'],
     templateUrl: './date-picker.component.html',
 })
-export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, AfterContentInit {
+export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, AfterContentInit, OnDestroy {
     @Input() public dateMax: Date;
     @Input() public dateMin: Date;
     @Input() public dropdownContainerId: string;
@@ -40,14 +43,14 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     @ContentChild('hintTemplate') protected mdHint;
     protected mask: any[];
 
-    @ViewChild('inputelement') private inputElementRef: ElementRef;
-
     @ViewChild(DejaChildValidatorDirective) private inputValidatorDirective: DejaChildValidatorDirective;
 
-    private _showDropDown = false;
-    private keyDownSubscription: Subscription;
+    private subscriptions = [] as Subscription[];
     private _disabled: boolean;
     private _time: boolean;
+    private inputElement$ = new ReplaySubject<HTMLElement>(1);
+    private focus$ = new Subject();
+    private _showDropDown = false;
 
     private date = new Date();
 
@@ -55,6 +58,13 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
 
     private onTouchedCallback: () => void = noop;
     private onChangeCallback: (_: any) => void = noop;
+
+    @ViewChild('inputelement')
+    private set inputElementRef(element: ElementRef) {
+        if (element) {
+            this.inputElement$.next(element.nativeElement);
+        }
+    }
 
     constructor(private elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, @Self() @Optional() public _control: NgControl, @Optional() private _parentForm: NgForm, @Optional() private _parentFormGroup: FormGroupDirective) {
         if (this._control) {
@@ -72,6 +82,62 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
                 this.changeDetectorRef.markForCheck();
             })
         }
+
+        const keydown$ = Observable.from(this.inputElement$)
+            .switchMap((element) => Observable.fromEvent(element, 'keydown'))
+
+        this.subscriptions.push(keydown$
+            .filter((event: KeyboardEvent) => !this.showDropDown && (event.keyCode === KeyCodes.KeyD || event.keyCode === KeyCodes.UpArrow || event.keyCode === KeyCodes.DownArrow))
+            .subscribe((event: KeyboardEvent) => {
+                event.preventDefault();
+                switch (event.keyCode) {
+                    case (KeyCodes.KeyD):
+                        this.value = new Date();
+                        break;
+
+                    case (KeyCodes.UpArrow):
+                        if (event.altKey) {
+                            this.showDropDown = true;
+                        } else if (this.date) {
+                            const d = new Date(this.date);
+                            d.setDate(this.date.getDate() + 1);
+                            this.value = d;
+                        }
+                        break;
+                    case (KeyCodes.DownArrow):
+                        if (event.altKey) {
+                            this.showDropDown = true;
+                        } else if (this.date) {
+                            const d = new Date(this.date);
+                            d.setDate(this.date.getDate() - 1);
+                            this.value = d;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }));
+
+        this.subscriptions.push(keydown$
+            .filter(() => this.showDropDown)
+            .subscribe((event: KeyboardEvent) => {
+                switch (event.keyCode) {
+                    case (KeyCodes.Escape):
+                        this.showDropDown = false;
+                        break;
+
+                    default:
+                        this.dateSelectorComponent.keyDown(event);
+
+                }
+            }));
+
+        this.subscriptions.push(Observable.combineLatest(this.inputElement$, this.focus$)
+            .subscribe(([element]) => element.focus()));
+    }
+
+    public ngOnDestroy() {
+        this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
     }
 
     public ngOnInit() {
@@ -92,40 +158,6 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
         });
 
         this.mask = mask;
-
-        // Shortcut for now()
-        Observable
-            .fromEvent(this.inputElementRef.nativeElement, 'keydown')
-            .filter((event: KeyboardEvent) => !this._showDropDown &&
-                (
-                    event.keyCode === KeyCodes.KeyD ||
-                    event.keyCode === KeyCodes.UpArrow ||
-                    event.keyCode === KeyCodes.DownArrow
-                ))
-            .subscribe((event: KeyboardEvent) => {
-                event.preventDefault();
-                switch (event.keyCode) {
-                    case (KeyCodes.KeyD):
-                        this.value = new Date();
-                        break;
-                    case (KeyCodes.UpArrow):
-                        if (this.date) {
-                            const d = new Date(this.date);
-                            d.setDate(this.date.getDate() + 1);
-                            this.value = d;
-                        }
-                        break;
-                    case (KeyCodes.DownArrow):
-                        if (this.date) {
-                            const d = new Date(this.date);
-                            d.setDate(this.date.getDate() - 1);
-                            this.value = d;
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            });
     }
 
     private get containerElement() {
@@ -133,24 +165,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     }
 
     private set showDropDown(value: boolean) {
-        if (value !== this._showDropDown) {
-            this._showDropDown = value;
-            if (value) {
-                const inputElement = this.inputElementRef.nativeElement as HTMLElement;
-                this.keyDownSubscription = Observable
-                    .fromEvent(inputElement, 'keydown')
-                    .subscribe((event: KeyboardEvent) => {
-                        this.dateSelectorComponent.keyDown(event);
-                        // this.setFocus();
-                    });
-            } else {
-                if (this.keyDownSubscription) {
-                    this.keyDownSubscription.unsubscribe();
-                    delete this.keyDownSubscription;
-                }
-            }
-        }
-
+        this._showDropDown = value;
         this.changeDetectorRef.markForCheck();
     }
 
@@ -227,8 +242,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     }
 
     public setFocus() {
-        const inputElement = this.inputElementRef.nativeElement as HTMLElement;
-        inputElement.focus();
+        this.focus$.next();
     }
 
     protected toggleDateSelector(event: Event) {

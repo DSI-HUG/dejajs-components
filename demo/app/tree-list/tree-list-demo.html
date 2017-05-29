@@ -136,7 +136,7 @@
 				<span fxFlex="0 0 45%" fxLayout="column">
 					<deja-tree-list textField="naqme" valueField="code" [items]="groupedCountries" [deja-mouse-draggable]="getDragContext()">
 						<ng-template #itemTemplate let-item let-flatindex="flatindex">
-							<span [attr.ddid]="item.code">{{ item.naqme }}</span>
+							<span [attr.ddid]="item.model.code">{{ item.model.naqme }}</span>
 						</ng-template>
 					</deja-tree-list>
 				</span>

@@ -6,12 +6,13 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Directive, ElementRef, HostBinding, Input, Optional, Self } from '@angular/core';
+import { Directive, ElementRef, HostBinding, Input, OnDestroy, Optional, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/takeUntil';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 
 const noop = () => { };
@@ -19,7 +20,7 @@ const noop = () => { };
 @Directive({
     selector: '[deja-editable]',
 })
-export class DejaEditableDirective implements ControlValueAccessor {
+export class DejaEditableDirective implements ControlValueAccessor, OnDestroy {
     private model: string;
     private _inEdition = false;
     private _editMode = false;
@@ -29,6 +30,7 @@ export class DejaEditableDirective implements ControlValueAccessor {
     private onChangeCallback: (_: any) => void = noop;
     private edit$ = new BehaviorSubject<[boolean, boolean]>([false, false]);
     private element: HTMLElement;
+    private subscriptions = [] as Subscription[];
 
     @HostBinding('attr.disabled') private _disabled = null;
 
@@ -39,7 +41,7 @@ export class DejaEditableDirective implements ControlValueAccessor {
 
         this.element = elementRef.nativeElement as HTMLElement;
 
-        Observable.fromEvent(this.element, 'mousedown')
+        this.subscriptions.push(Observable.fromEvent(this.element, 'mousedown')
             .subscribe((e: MouseEvent) => {
                 if (this.inEdition || this.disabled) {
                     e.cancelBubble = true;
@@ -49,7 +51,7 @@ export class DejaEditableDirective implements ControlValueAccessor {
                     e.cancelBubble = true;
                     return false;
                 }
-            });
+            }));
 
         const inEdition$ = Observable.from(this.edit$)
             .map(([value, selectOnFocus]) => {
@@ -75,7 +77,7 @@ export class DejaEditableDirective implements ControlValueAccessor {
         const kill$ = inEdition$
             .filter((value) => !value);
 
-        inEdition$
+        this.subscriptions.push(inEdition$
             .filter((value) => value)
             .subscribe(() => {
                 Observable.fromEvent(this.element.ownerDocument, 'mousedown')
@@ -114,7 +116,7 @@ export class DejaEditableDirective implements ControlValueAccessor {
                         }
                         return false;
                     });
-            });
+            }));
     }
 
     /** Définit une valeur indiquant si le contenu édité est obligatoire. Si la valeur est 'true' la sortie du mode édition ne sera pas possible tant qu'un contenu n'est pas ajouté. */
@@ -208,6 +210,10 @@ export class DejaEditableDirective implements ControlValueAccessor {
         this.onTouchedCallback = fn;
     }
     // ************* End of ControlValueAccessor Implementation **************
+
+    public ngOnDestroy() {
+        this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
+    }
 
     /** Donne le focus à la zone d'édition. */
     public focus() {

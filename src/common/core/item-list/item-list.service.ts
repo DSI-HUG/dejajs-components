@@ -278,9 +278,9 @@ export class ItemListService {
         if (!value) {
             return '';
         } else {
-            if (textField && value.model && value.model[textField]) {
+            if (textField && value.model && value.model[textField] !== undefined) {
                 return value.model[textField];
-            } else if (textField && value[textField]) {
+            } else if (textField && value[textField] !== undefined) {
                 return value[textField];
             } else if (value.displayName) {
                 return typeof value.displayName === 'string' ? value.displayName : value.displayName();

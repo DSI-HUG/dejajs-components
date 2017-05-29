@@ -6,10 +6,11 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Optional, Output, Self } from '@angular/core';
+import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { IDateSelectorItem } from './date-selector-item.model';
 
@@ -31,7 +32,7 @@ const noop = () => { };
     styleUrls: ['./date-selector.scss'],
     templateUrl: './date-selector.component.html',
 })
-export class DejaDateSelectorComponent implements AfterContentInit, ControlValueAccessor {
+export class DejaDateSelectorComponent implements AfterContentInit, ControlValueAccessor, OnDestroy {
     @Input() public startDay: DaysOfWeek = DaysOfWeek.Monday;
     @Input() public disableDates: Array<(DaysOfWeek | Date)>; // | ((d: Date) => boolean);
     @Input() public dateMax: Date;
@@ -60,6 +61,8 @@ export class DejaDateSelectorComponent implements AfterContentInit, ControlValue
 
     protected keyboardNavigation = false;
     private keyboardNavigation$ = new Subject();
+
+    private subscriptions: Subscription[] = [];
 
     private currentDays: IDateSelectorItem[];
     private currentDate: Date = new Date();
@@ -91,7 +94,7 @@ export class DejaDateSelectorComponent implements AfterContentInit, ControlValue
             this._control.valueAccessor = this;
         }
 
-        Observable.fromEvent(element, 'click').subscribe((event: Event) => {
+        this.subscriptions.push(Observable.fromEvent(element, 'click').subscribe((event: Event) => {
             const target = event.target as HTMLElement;
             if (target.hasAttribute('dateindex')) {
                 const dateSelectorItem = this.currentDays[+target.getAttribute('dateindex')];
@@ -99,9 +102,9 @@ export class DejaDateSelectorComponent implements AfterContentInit, ControlValue
                     this.value = dateSelectorItem.date;
                 }
             }
-        });
+        }));
 
-        Observable.from(this.keyboardNavigation$)
+        this.subscriptions.push(Observable.from(this.keyboardNavigation$)
             .subscribe(() => {
                 this.keyboardNavigation = true;
                 Observable.fromEvent(element, 'mouseenter')
@@ -110,7 +113,7 @@ export class DejaDateSelectorComponent implements AfterContentInit, ControlValue
                         this.keyboardNavigation = false;
                         this.changeDetectorRef.markForCheck();
                     });
-            });
+            }));
     }
 
     public ngAfterContentInit() {
@@ -118,6 +121,10 @@ export class DejaDateSelectorComponent implements AfterContentInit, ControlValue
             this.displayedDate = this.currentDate;
             this.bind();
         }
+    }
+
+    public ngOnDestroy() {
+        this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
     }
 
     // ************* ControlValueAccessor Implementation **************
@@ -140,7 +147,7 @@ export class DejaDateSelectorComponent implements AfterContentInit, ControlValue
             if (this.selectedDate) {
                 const h = (value) ? value.getHours() : 0;
                 const m = (value) ? value.getMinutes() : 0;
-                if ( value && (
+                if (value && (
                     (!this.time && this.selectedDate.toLocaleTimeString() !== value.toLocaleTimeString())
                     || (this.time && ((this.selectedDate.getHours() === 0 && this.selectedDate.getMinutes() === 0) && (h !== 0 && m !== 0) || (this.selectedDate.toLocaleDateString() !== value.toLocaleDateString())))
                 )) {

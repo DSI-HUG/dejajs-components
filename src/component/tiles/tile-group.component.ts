@@ -6,9 +6,10 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, EventEmitter, HostBinding, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, HostBinding, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
 import { Color } from '../../common/core/graphics/color';
 import { DejaEditableDirective } from '../content-editable/content-editable.directive';
 import { IDejaTile } from './tile.interface';
@@ -20,7 +21,7 @@ import { IDejaTile } from './tile.interface';
     ],
     templateUrl: './tile-group.component.html',
 })
-export class DejaTileGroupComponent {
+export class DejaTileGroupComponent implements OnDestroy {
     public static defaultColor = 'rgb(38, 50, 56)';
     @Input() public model: IDejaTile;
     @Output() public close = new EventEmitter<void>();
@@ -30,11 +31,12 @@ export class DejaTileGroupComponent {
     @HostBinding('style.color') protected foregroundColor = null;
 
     private edit$ = new Subject<void>();
+    private edit$sub: Subscription;
     @ViewChild(DejaEditableDirective) private title: DejaEditableDirective;
     @HostBinding('attr.designMode') private _designMode = false;
 
     constructor() {
-        Observable.from(this.edit$)
+        this.edit$sub = Observable.from(this.edit$)
             .filter(() => this._designMode)
             .debounceTime(100)
             .subscribe(() => this.title.edit(true));
@@ -53,5 +55,9 @@ export class DejaTileGroupComponent {
 
     public get designMode() {
         return this._designMode;
+    }
+
+    public ngOnDestroy() {
+        this.edit$sub.unsubscribe();
     }
 }

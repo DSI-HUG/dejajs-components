@@ -6,10 +6,11 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { AfterViewInit, Directive, ElementRef, forwardRef } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, forwardRef, OnDestroy } from '@angular/core';
 import { NG_VALIDATORS, Validator } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
 
 /**
  * Directive pour rendre un textarea material redimensioné automatiquement au contenu.
@@ -22,8 +23,9 @@ import { Subject } from 'rxjs/Subject';
     ],
     selector: 'textarea[deja-autosize]',
 })
-export class DejaAutosizeTextAreaDirective implements AfterViewInit, Validator {
+export class DejaAutosizeTextAreaDirective implements AfterViewInit, Validator, OnDestroy {
     private resize$ = new Subject<void>();
+    private resize$sub: Subscription;
 
     constructor(private elementRef: ElementRef) {
         const textAreaElement = this.elementRef.nativeElement as HTMLTextAreaElement;
@@ -35,12 +37,16 @@ export class DejaAutosizeTextAreaDirective implements AfterViewInit, Validator {
                 textAreaElement.style.overflowY = 'hidden';
             });
 
-        Observable.from(this.resize$)
+        this.resize$sub = Observable.from(this.resize$)
             .debounceTime(5)
             .do(() => textAreaElement.style.height = '18px')
             .subscribe(() => {
                 textAreaElement.style.height = textAreaElement.scrollHeight + 'px';
             });
+    }
+
+    public ngOnDestroy() {
+        this.resize$sub.unsubscribe();
     }
 
     public ngAfterViewInit() {

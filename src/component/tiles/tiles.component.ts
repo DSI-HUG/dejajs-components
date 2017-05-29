@@ -75,6 +75,8 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     private paste$sub: Subscription;
     private keyup$: Observable<KeyboardEvent>;
     private resize$sub: Subscription;
+    private modelChanged$sub: Subscription;
+    private layoutChanged$sub: Subscription;
     private tiles$ = new BehaviorSubject<DejaTile[]>([]);
 
     @ViewChild('tilesContainer') private tilesContainer: ElementRef;
@@ -90,12 +92,12 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
         this.contentAdding = this.layoutProvider.contentAdding;
         this.contentRemoving = this.layoutProvider.contentRemoving;
 
-        this.layoutProvider.modelChanged.subscribe((event) => {
+        this.modelChanged$sub = this.layoutProvider.modelChanged.subscribe((event) => {
             this.modelChanged.emit(event);
             this.onChangeCallback(event.tiles);
         });
 
-        this.layoutProvider.layoutChanged.subscribe((event) => {
+        this.layoutChanged$sub = this.layoutProvider.layoutChanged.subscribe((event) => {
             this.layoutChanged.emit(event);
             this.onChangeCallback(event.tiles);
         });
@@ -236,6 +238,8 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
         this.canDelete = false;
         this.canPaste = false;
         this.resize$sub.unsubscribe();
+        this.modelChanged$sub.unsubscribe();
+        this.layoutChanged$sub.unsubscribe();
     }
 
     public copySelection() {
