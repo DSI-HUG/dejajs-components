@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/debounce';
 import 'rxjs/add/operator/delay';
@@ -14,6 +14,7 @@ import 'rxjs/add/operator/takeUntil';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
 import { Rect } from '../../common/core/graphics/rect';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 
@@ -25,7 +26,7 @@ import { KeyCodes } from '../../common/core/keycodes.enum';
     ],
     template: `<ng-content></ng-content>`,
 })
-export class DejaDropDownComponent implements AfterViewInit {
+export class DejaDropDownComponent implements AfterViewInit, OnDestroy {
     /** Déclenché lorsque le conteneur déroulant disparait */
     @Output() public hide = new EventEmitter();
 
@@ -60,6 +61,7 @@ export class DejaDropDownComponent implements AfterViewInit {
     }
 
     private show$ = new Subject<IDropDownResetParams>();
+    private show$sub: Subscription;
     private closeOnEscape$ = new BehaviorSubject<boolean>(true);
 
     private ownerAlignents = {
@@ -163,7 +165,7 @@ export class DejaDropDownComponent implements AfterViewInit {
             .filter(([event]) => event.keyCode === KeyCodes.Escape)
             .subscribe(() => this.hide.emit());
 
-        Observable.from(this.show$)
+        this.show$sub = Observable.from(this.show$)
             .map((resetParams: IDropDownResetParams) => {
                 setDropDownPosition({
                     left: resetParams.left ? -1000 : undefined,
@@ -407,6 +409,11 @@ export class DejaDropDownComponent implements AfterViewInit {
 
     public ngAfterViewInit() {
         this.show$.next(this.resetAllParams);
+    }
+
+    public ngOnDestroy() {
+        this.closeOnEscape$.next(false);
+        this.show$sub.unsubscribe();
     }
 
     public show(resetParams?: IDropDownResetParams) {

@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectorRef, EventEmitter } from '@angular/core';
+import { ChangeDetectorRef, EventEmitter, OnDestroy } from '@angular/core';
 import 'rxjs/add/operator/first';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -23,7 +23,7 @@ import { IViewPort, ViewportMode, ViewPortService } from './viewport.service';
 const noop = () => { };
 
 /** Classe de base pour tous les composants à listes (deja-treelist, deja-select, deja-grid) */
-export abstract class ItemListBase {
+export abstract class ItemListBase implements OnDestroy {
     protected waiter = true;
 
     protected _itemList: IItemBase[] = []; // Viewport list
@@ -59,13 +59,14 @@ export abstract class ItemListBase {
     protected _ddTargetIndex: number;
 
     private waiter$sub: Subscription;
+    private viewPort$sub: Subscription;
 
     private _itemListService: ItemListService;
     private allCollapsed = false;
     private _viewPortRowHeight = ViewPortService.itemDefaultSize;
 
     constructor(protected changeDetectorRef: ChangeDetectorRef, protected viewPort: ViewPortService) {
-        viewPort.viewPort$
+        this.viewPort$sub = viewPort.viewPort$
             .subscribe((viewPortResult: IViewPort) => {
                 delete this._hintLabel;
                 if (viewPort.mode === ViewportMode.disabled) {
@@ -121,6 +122,13 @@ export abstract class ItemListBase {
     }
 
     protected abstract get listElement(): HTMLElement;
+
+    public ngOnDestroy() {
+        this.viewPort$sub.unsubscribe();
+        if (this.waiter$sub) {
+            this.waiter$sub.unsubscribe();
+        }
+    }
 
     /** Définit une valeur indiquant si les éléments selectionés doivent être masqué. Ce flag est principalement utilisé dans le cas d'un multi-select
      * @param {boolean} value True si les éléments selectionés doivent être masqués

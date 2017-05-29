@@ -6,12 +6,13 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Directive, ElementRef, Input } from '@angular/core';
+import { Directive, ElementRef, Input, OnDestroy } from '@angular/core';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/takeUntil';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
 import { DejaMouseDragDropService, IDragCursorInfos } from './mouse-dragdrop.service';
@@ -19,8 +20,9 @@ import { DejaMouseDragDropService, IDragCursorInfos } from './mouse-dragdrop.ser
 @Directive({
     selector: '[deja-mouse-draggable]',
 })
-export class DejaMouseDraggableDirective {
+export class DejaMouseDraggableDirective implements OnDestroy {
     private _context: IDejaMouseDraggableContext;
+    private mouseenter$sub: Subscription;
 
     @Input('deja-mouse-draggable')
     public set context(value: IDejaMouseDraggableContext) {
@@ -38,7 +40,7 @@ export class DejaMouseDraggableDirective {
 
         const mouseUp$ = Observable.fromEvent(element.ownerDocument, 'mouseup');
 
-        Observable.fromEvent(element, 'mouseenter')
+        this.mouseenter$sub = Observable.fromEvent(element, 'mouseenter')
             .subscribe(() => {
                 Observable.fromEvent(element, 'mousedown')
                     .takeUntil(leave$)
@@ -121,6 +123,10 @@ export class DejaMouseDraggableDirective {
                         }
                     });
             });
+    }
+
+    public ngOnDestroy() {
+        this.mouseenter$sub.unsubscribe();
     }
 }
 

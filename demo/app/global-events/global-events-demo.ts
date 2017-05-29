@@ -7,6 +7,7 @@
  */
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, NgZone, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 import { GlobalEventService } from '../../../src/common/global-event/global-event.service';
 
 @Component({
@@ -21,10 +22,10 @@ export class GlobalEventsDemoComponent implements OnDestroy {
     private model = {
         date: new Date(),
     };
-    private _subscription: any;
+    private sendaction$sub: Subscription;
 
     constructor(changeDetectorRef: ChangeDetectorRef, globalEvent: GlobalEventService, zone: NgZone) {
-        this._subscription = globalEvent.register('sendaction').subscribe((params: any[]) => {
+        this.sendaction$sub = globalEvent.register('sendaction').subscribe((params: any[]) => {
             zone.run(() => {
                 this.model.date = new Date(params[0]);
                 changeDetectorRef.markForCheck();
@@ -37,6 +38,6 @@ export class GlobalEventsDemoComponent implements OnDestroy {
     }
 
     public ngOnDestroy() {
-        this._subscription.unsubscribe();
+        this.sendaction$sub.unsubscribe();
     }
 }

@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, Input, OnInit, Optional, Self, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, Input, OnDestroy, OnInit, Optional, Self, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/observable/merge';
@@ -14,6 +14,7 @@ import 'rxjs/add/operator/sampleTime';
 import 'rxjs/add/operator/takeUntil';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
 import { Circle } from '../../common/core/graphics/circle';
 import { Position } from '../../common/core/graphics/position';
 
@@ -35,7 +36,7 @@ interface ICircularValue {
     styleUrls: ['./circular-picker.component.scss'],
     templateUrl: './circular-picker.component.html',
 })
-export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor {
+export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor, OnDestroy {
     @Input() public clockwiseFactor: ClockwiseFactorEnum = ClockwiseFactorEnum.clockwise;
     @Input() public fullDiameter = 310;
     @Input() public labelsDiameter = 43;
@@ -73,6 +74,8 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
     private onTouchedCallback: () => void = noop;
     private onChangeCallback: (_: any) => void = noop;
 
+    private mousedown$sub: Subscription;
+
     @ViewChild('picker') private picker: ElementRef;
 
     constructor(elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, @Self() @Optional() public _control: NgControl) {
@@ -82,7 +85,7 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
             this._control.valueAccessor = this;
         }
 
-        Observable.fromEvent(element, 'mousedown')
+        this.mousedown$sub = Observable.fromEvent(element, 'mousedown')
             .filter((event: MouseEvent) => event.buttons === 1)
             .debounceTime(100)
             .subscribe((mouseEvent: MouseEvent) => {
@@ -160,6 +163,10 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
                 }
             });
 
+    }
+
+    public ngOnDestroy() {
+        this.mousedown$sub.unsubscribe();
     }
 
     public ngOnInit() {

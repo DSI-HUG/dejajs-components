@@ -23,12 +23,12 @@ export class DejaSnackbarDemoComponent implements OnInit {
    The example below demonstrate how you can dynamically add snackbars using *ngFor structural directive.
    Here the Observable simulate items being push from the server
    */
-  private messages: Observable<any>;
+  private messages: Observable<any[]>;
 
-  private dangers: Observable<any>;
-  private warnings: Observable<any>;
-  private successes: Observable<any>;
-  private infos: Observable<any>;
+  private dangers: Observable<any[]>;
+  private warnings: Observable<any[]>;
+  private successes: Observable<any[]>;
+  private infos: Observable<any[]>;
 
   private push = new EventEmitter();
 
