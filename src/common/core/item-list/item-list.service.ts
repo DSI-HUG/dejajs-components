@@ -1263,7 +1263,7 @@ export class ItemListService {
         } else if (!this.groupInfos || this.groupInfos.length === 0) {
             return Observable.of(this.items)
                 .do((items) => this._cache.groupedList = items);
-        } else {
+        } else if (this.items) {
             return this.getGroupedList$(this.items)
                 .do((groupedList) => {
                     if (this._cache.groupedList && this._cache.groupedList.length && this._cache.groupedList !== groupedList) {
@@ -1272,6 +1272,8 @@ export class ItemListService {
                     }
                     this._cache.groupedList = groupedList;
                 });
+        } else {
+            return Observable.of([]);
         }
     }
 

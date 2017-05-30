@@ -8,6 +8,7 @@
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 import { DejaClipboardService } from '../../common/core/clipboard/clipboard.service';
@@ -165,6 +166,10 @@ export class DejaGridComponent implements OnDestroy {
     private _columnsSizable = false;
     private _multiSelect = false;
 
+    private columnGroups$ = new Subject<IDejaGridColumn[] | string>();
+    private columns$ = new ReplaySubject<IDejaGridColumn[]>(1);
+    private _columnGroups = [] as IDejaGridColumn[];
+
     /** Permet de trier le tableau au clic sur l'entête de la colonne */
     @Input()
     public set sortable(value: boolean | string) {
@@ -264,8 +269,7 @@ export class DejaGridComponent implements OnDestroy {
     @Input()
     /** Définit la structure des colonnes de la grille. */
     public set columns(columns: IDejaGridColumn[]) {
-        this._columns = columns;
-        this.calcColumnsLayout();
+        this.columns$.next(columns);
     }
 
     /** Retourne la structure des colonnes de la grille. */
@@ -337,6 +341,12 @@ export class DejaGridComponent implements OnDestroy {
         return this.treeListComponent.viewPort;
     }
 
+    /** Définit les options de regroupement utilisateur de la grille. */
+    @Input()
+    public set columnGroups(value: IDejaGridColumn[] | string) {
+        this.columnGroups$.next(value);
+    }
+
     private get searchPrefixTemplate() {
         return this.searchPrefixTemplateExternal || this.searchPrefixTemplateInternal;
     }
@@ -377,6 +387,38 @@ export class DejaGridComponent implements OnDestroy {
         const element = this.elementRef.nativeElement as HTMLElement;
 
         this.clearColumnLayout();
+
+        this.subscriptions.push(Observable.combineLatest(this.columns$, this.columnGroups$)
+            .map(([columns, columnGroups]) => {
+                if (typeof columnGroups === 'string') {
+                    const groups = columnGroups.split(',').map((v) => v.trim());
+                    return this._columnGroups = groups.map((group) => columns.find((column) => column.name === group));
+                } else {
+                    return this._columnGroups = columnGroups;
+                }
+            })
+            .map((columnGroups) => {
+                const groupInfos = [] as IGroupInfo[];
+                const sortInfos = this.treeListComponent.sortInfos;
+                columnGroups.forEach((column) => {
+                    const groupInfo = {} as IGroupInfo;
+                    if (sortInfos && sortInfos.name === column.name) {
+                        groupInfo.sortInfos = sortInfos;
+                    }
+                    groupInfo.groupByField = column.groupByField || column.name;
+                    groupInfo.groupTextField = column.groupTextField || column.name;
+                    groupInfos.push(groupInfo);
+                });
+                return groupInfos;
+            })
+            .switchMap((groupInfos) => this.treeListComponent.group$(groupInfos))
+            .subscribe(() => this.changeDetectorRef.markForCheck()));
+
+        this.subscriptions.push(Observable.from(this.columns$)
+            .subscribe((columns) => {
+                this._columns = columns;
+                this.calcColumnsLayout();
+            }));
 
         this.subscriptions.push(Observable.from(this.printColumnLayout$)
             .debounceTime(1000)
@@ -618,32 +660,21 @@ export class DejaGridComponent implements OnDestroy {
         this.columnSizeChanged.emit(e);
     }
 
-    protected onGroupRemoved(e: IDejaGridGroupsEvent) {
+    protected onGroupRemoved(index: number) {
+        const column = this._columnGroups.splice(index, 1)[0];
+
         const groupInfo = {
-            groupByField: e.column.groupByField || e.column.name,
-            groupTextField: e.column.groupTextField || e.column.name,
+            groupByField: column.groupByField || column.name,
+            groupTextField: column.groupTextField || column.name,
         } as IGroupInfo;
+
         this.treeListComponent.ungroup$(groupInfo)
             .first()
             .subscribe(noop);
     }
 
     protected onGroupsChanged(e: IDejaGridGroupsEvent) {
-        const groupInfos = [] as IGroupInfo[];
-        const sortInfos = this.treeListComponent.sortInfos;
-        e.columns.forEach((column) => {
-            const groupInfo = {} as IGroupInfo;
-            if (sortInfos && sortInfos.name === column.name) {
-                groupInfo.sortInfos = sortInfos;
-            }
-            groupInfo.groupByField = column.groupByField || column.name;
-            groupInfo.groupTextField = column.groupTextField || column.name;
-            groupInfos.push(groupInfo);
-        });
-
-        this.treeListComponent.group$(groupInfos)
-            .first()
-            .subscribe(noop);
+        this.columnGroups$.next(e.columns)
     }
 
     protected calcColumnsLayout(rows?: IItemBase[]) {

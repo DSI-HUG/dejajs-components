@@ -45,6 +45,7 @@ export class GridDemoComponent {
     protected dialogResponse$: Subject<string> = new Subject<string>();
     protected bigNews$: Observable<INews[]>;
     protected bigPeople$: Observable<IPerson[]>;
+    protected columnGroups = [] as IDejaGridColumn[];
 
     protected viewPortInfos: {
         name: string;
