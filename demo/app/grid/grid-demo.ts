@@ -83,6 +83,11 @@ export class GridDemoComponent {
             width: '130px',
         },
         {
+            label: 'eyeColor',
+            name: 'eyeColor',
+            width: '85px',
+        },
+        {
             label: 'Address',
             name: 'address',
             width: '360px',
@@ -304,6 +309,10 @@ export class GridDemoComponent {
                     return response === 'ok' ? row : null;
                 });
         };
+    }
+
+    protected onFilterTemplateClicked(where: string) {
+        alert(`${where} clicked`);
     }
 }
 

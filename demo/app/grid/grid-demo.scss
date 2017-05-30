@@ -21,6 +21,16 @@ $deep: '/deep/';
 						margin: 0.35rem;
 					}
 				}
+				[mdprefix] {
+					cursor: default;
+					padding: 0 4px;
+				}
+				[mdSuffix] {
+					padding: 0 4px;
+					display: flex;
+					justify-content: flex-end;
+					cursor: pointer;
+				}
 			}
 		}
 		.listContainer {
@@ -35,7 +45,9 @@ $deep: '/deep/';
 					.listitem {
 						&.odd {
 							deja-grid-row {
-								background-color: rgba(#000, 0.07);
+								.cell-wrapper {
+									background-color: rgba(#000, 0.07);
+								}
 							}
 						}
 					}

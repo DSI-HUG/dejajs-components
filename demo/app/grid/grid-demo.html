@@ -116,6 +116,30 @@
 					<img *ngIf="column.name==='urlToImage'" [attr.src]="row[column.name]" class="logo" (load)="imageLoaded(row)">
 				</ng-template>
 			</deja-grid>
+			<div fxLayout="row">
+				<span fxFlex="0 0 45%" fxLayout="column">
+					<h1>Search Prefix and Suffix Templates</h1>
+					<deja-grid searchArea columnsSortable columnsSizable sortable maxHeight="auto" [rows]="people$" [columns]="peopleColumns" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid">
+						<ng-template #searchPrefixTemplate>
+							<md-icon (click)="onFilterTemplateClicked('Prefix')">public</md-icon>
+						</ng-template>
+						<ng-template #searchSuffixTemplate>
+							<md-icon (click)="onFilterTemplateClicked('Suffix')">more_vert</md-icon>
+						</ng-template>
+					</deja-grid>
+				</span>
+				<span fxFlex="0 0 45%" fxFlexOffset="5%" fxLayout="column">
+					<h1>Search Prefix and Suffix Templates</h1>
+					<deja-grid searchArea columnsSortable columnsSizable sortable maxHeight="auto" [rows]="people$" [columns]="peopleColumns" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid">
+						<ng-template #searchPrefixTemplate>
+							<md-icon (click)="onFilterTemplateClicked('Prefix')">public</md-icon>
+						</ng-template>
+						<ng-template #searchSuffixTemplate>
+							<md-icon (click)="onFilterTemplateClicked('Suffix')">more_vert</md-icon>
+						</ng-template>
+					</deja-grid>
+				</span>
+			</div>
 		</md-card-content>
 	</md-card>
 </div>
