@@ -35,6 +35,7 @@ export class GridDemoComponent {
     protected people$: Observable<IPerson[]>;
     protected peopleForMultiselect$: Observable<IPerson[]>;
     protected groupedByGenderPeople$: Observable<IPerson[]>;
+    protected groupedByEyesColorPeople$: Observable<IPerson[]>;
     protected groupedByColorPeople: {
         items: IPerson[],
         toString: () => string,
@@ -83,7 +84,7 @@ export class GridDemoComponent {
             width: '130px',
         },
         {
-            label: 'eyeColor',
+            label: 'Eyes Color',
             name: 'eyeColor',
             width: '85px',
         },
@@ -188,6 +189,11 @@ export class GridDemoComponent {
         this.groupedByGenderPeople$ = peopleService.getPeople$()
             .switchMap((people) => groupingService.group$(people, {
                 groupByField: 'gender',
+            } as IGroupInfo));
+
+        this.groupedByEyesColorPeople$ = peopleService.getPeople$()
+            .switchMap((people) => groupingService.group$(people, {
+                groupByField: 'eyeColor',
             } as IGroupInfo));
 
         peopleService.getPeople$()

@@ -118,8 +118,8 @@
 			</deja-grid>
 			<div fxLayout="row">
 				<span fxFlex="0 0 45%" fxLayout="column">
-					<h1>Search Prefix and Suffix Templates</h1>
-					<deja-grid searchArea columnsSortable columnsSizable sortable maxHeight="auto" [rows]="people$" [columns]="peopleColumns" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid">
+					<h1>Parent Row Templating</h1>
+					<deja-grid searchArea columnsSortable columnsSizable sortable maxHeight="auto" [rows]="groupedByEyesColorPeople$" [columns]="peopleColumns" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid">
 						<ng-template #searchPrefixTemplate>
 							<md-icon (click)="onFilterTemplateClicked('Prefix')">public</md-icon>
 						</ng-template>
