@@ -18,7 +18,7 @@ import { SortingService } from '../sorting/sorting.service';
 import { IItemBase } from './item-base';
 import { IFindItemResult, IParentListInfoResult, ItemListService, IViewListResult } from './item-list.service';
 import { IItemTree } from './item-tree';
-import { IViewPort, ViewportMode, ViewPortService } from './viewport.service';
+import { IViewPort, IViewPortRefreshParams, ViewportMode, ViewPortService } from './viewport.service';
 
 const noop = () => { };
 
@@ -335,11 +335,15 @@ export abstract class ItemListBase implements OnDestroy {
     }
 
     /** Recalcule le viewport. */
-    public refreshViewPort(item?: IItemBase) {
+    public refreshViewPort(item?: IItemBase, clearMeasuredHeight?: boolean) {
+        const refreshParams = {} as IViewPortRefreshParams;
         if (item) {
-            item.size = undefined;
+            refreshParams.items = [item];
         }
-        this.viewPort.refresh(item);
+        if (clearMeasuredHeight) {
+            refreshParams.clearMeasuredSize = clearMeasuredHeight;
+        }
+        this.viewPort.refresh(refreshParams);
         this.changeDetectorRef.markForCheck();
     }
 

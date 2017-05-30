@@ -111,7 +111,7 @@
 		<md-toolbar color="primary">Templating Examples</md-toolbar>
 		<md-card-content class="listContainer">
 			<h1>Cells Template</h1>
-			<deja-grid id="news" #news sortable columnsSizable multiSelect [rows]="news$ | async" [columns]="newsColumns" viewportMode="auto" nodataholder="Pas de données" (columnSizeChanged)="onColumnSizeChanged($event)">
+			<deja-grid id="news" #news sortable columnsSizable multiSelect maxHeight="auto" [rows]="news$ | async" [columns]="newsColumns" viewportMode="auto" nodataholder="Pas de données" (columnSizeChanged)="onColumnSizeChanged($event)">
 				<ng-template #cellTemplate let-row let-column="column">
 					<img *ngIf="column.name==='urlToImage'" [attr.src]="row[column.name]" class="logo" (load)="imageLoaded(row)">
 				</ng-template>
@@ -162,7 +162,7 @@
 			<h1>Fixed size rows 100K items</h1>
 			<div>An exemple with 100000 fixed size rows</div>
 			<span fxLayout="row">
-				<deja-grid #bigPeople fxFlex="0 0 65%" columnsSortable multiSelect columnsSizable sortable [rows]="bigPeople$" [columns]="peopleColumnsEx" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid">
+				<deja-grid #bigPeople fxFlex="0 0 65%" columnsSortable multiSelect columnsSizable sortable maxHeight="auto" [rows]="bigPeople$" [columns]="peopleColumnsEx" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid">
 					<ng-template #cellTemplate let-row let-column="column">
 						<span *ngIf="column.name==='color'" class="color" [style.background-color]="row[column.name]"></span>
 					</ng-template>
