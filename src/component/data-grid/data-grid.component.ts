@@ -341,7 +341,7 @@ export class DejaGridComponent implements OnDestroy {
         return this.treeListComponent.viewPort;
     }
 
-    /** Définit les options de regroupement utilisateur de la grille. */
+    /** Définit les options de regroupement utilisateur de la grille. Plusieurs champs peuvent etre spécifiés dans le HTML en utilisant la , comme séparateur (Ex: columnGroups="color, name") */
     @Input()
     public set columnGroups(value: IDejaGridColumn[] | string) {
         this.columnGroups$.next(value);

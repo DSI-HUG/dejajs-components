@@ -39,32 +39,28 @@ export class GroupingService {
                 return this.groupChildren$(tree, groupInfo, 0, childrenField);
             }
 
+            const groupTree$ = (t: any[], curDepth: number) => {
+                return Observable.from(t)
+                    .flatMap((treeItem) => {
+                        const children = treeItem[childrenField];
+                        if (children[0] && children[0][childrenField]) {
+                            return groupTree$(children, curDepth + 1).map(() => treeItem);
+                        } else {
+                            return this.groupChildren$(children, groupInfo, curDepth, childrenField).map((groupedChildren) => {
+                                treeItem[childrenField] = groupedChildren;
+                                return treeItem;
+                            });;
+                        }
+                    })
+                    .reduce((acc: any[], cur) => {
+                        // Return the array
+                        acc.push(cur);
+                        return acc;
+                    }, []);
+            };
+
             // If the tree has chidren, group only the last level items
-            return Observable.from(tree)
-                .flatMap((item) => {
-                    let child = item;
-                    let children = item[childrenField];
-                    let curdepth = 0;
-
-                    // For each items, search the last level
-                    while (childrenField[0] && children[0][childrenField]) {
-                        child = children[0];
-                        children = child[childrenField];
-                        ++curdepth;
-                    }
-
-                    // Group the last level item children, but return the root item
-                    return this.groupChildren$(children, groupInfo, curdepth, childrenField)
-                        .map((groupedChildren) => {
-                            child[childrenField] = groupedChildren;
-                            return item;
-                        });
-                })
-                .reduce((acc: any[], cur) => {
-                    // Return the array
-                    acc.push(cur);
-                    return acc;
-                }, []);
+            return groupTree$(tree, 1);
         }
     }
 
@@ -101,6 +97,7 @@ export class GroupingService {
                     parent = groups[groupedBy] = {
                         depth: _depth,
                         toString: () => { return groupLabel; },
+                        $text: groupLabel,
                     } as IItemTree;
                     parent[childrenField] = [];
                 }
