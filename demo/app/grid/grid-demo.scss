@@ -45,9 +45,7 @@ $deep: '/deep/';
 					.listitem {
 						&.odd {
 							deja-grid-row {
-								.cell-wrapper {
-									background-color: rgba(#000, 0.07);
-								}
+								background-color: rgba(#000, 0.07);
 							}
 						}
 					}
