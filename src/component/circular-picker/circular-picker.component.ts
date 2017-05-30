@@ -281,11 +281,11 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
         if (!this.circularValues || !this.circularValues.length) {
             return;
         }
-        if (this.value === undefined || this.value === null) {
-            this.value = this.circularValues[0].value;
+        if (this._value === undefined || this._value === null) {
+            this._value = this.circularValues[0].value;
         }
         this.selectedConfig = this.configs.find((conf: IConfig) => {
-            if (this.value >= conf.range.min && this.value <= conf.range.max) {
+            if (this._value >= conf.range.min && this._value <= conf.range.max) {
                 return true;
             }
         });
@@ -296,14 +296,14 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
         let cursorCenter: Position;
         const cursorRadius: number = this.labelsDiameter / 2;
 
-        cursorCenter = this.valueToPoint(this.value, (this.outerLabels ? cursorRadius + (this.labelsDiameter * selectedConfigIndex) : -cursorRadius - (this.labelsDiameter * selectedConfigIndex)), this.selectedConfig);
+        cursorCenter = this.valueToPoint(this._value, (this.outerLabels ? cursorRadius + (this.labelsDiameter * selectedConfigIndex) : -cursorRadius - (this.labelsDiameter * selectedConfigIndex)), this.selectedConfig);
         this.cursor = {
             position: new Position((cursorCenter.left - cursorRadius), (cursorCenter.top - cursorRadius)),
-            value: this.value,
+            value: this._value,
         };
 
         this.cursorHand = {
-            angle: this.valueToAngle(this.value, this.selectedConfig),
+            angle: this.valueToAngle(this._value, this.selectedConfig),
             width: (this.outerLabels) ? this.radius + (this.labelsDiameter * selectedConfigIndex) : this.radius - this.labelsDiameter - (this.labelsDiameter * selectedConfigIndex),
         };
 
