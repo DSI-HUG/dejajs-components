@@ -120,11 +120,9 @@
 				<span fxFlex="0 0 45%" fxLayout="column">
 					<h1>Parent Row Templating</h1>
 					<deja-grid searchArea columnsSortable columnsSizable sortable maxHeight="auto" [rows]="groupedByEyesColorPeople$" [columns]="peopleColumns" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid">
-						<ng-template #searchPrefixTemplate>
-							<md-icon (click)="onFilterTemplateClicked('Prefix')">public</md-icon>
-						</ng-template>
-						<ng-template #searchSuffixTemplate>
-							<md-icon (click)="onFilterTemplateClicked('Suffix')">more_vert</md-icon>
+						<ng-template #parentRowTemplate let-row>
+							<md-icon id="placeholder-icon">visibility</md-icon>&nbsp;
+							<span>{{ getParentRowDecr(row) }}</span>
 						</ng-template>
 					</deja-grid>
 				</span>

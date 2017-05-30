@@ -321,6 +321,10 @@ export class GridDemoComponent {
     protected onFilterTemplateClicked(where: string) {
         alert(`${where} clicked`);
     }
+
+    protected getParentRowDecr(row: IDejaGridRow) {
+        return row.toString();
+    }
 }
 
 interface IPeopleGroup extends IItemTree {
