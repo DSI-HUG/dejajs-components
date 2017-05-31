@@ -598,13 +598,15 @@ export class DejaGridComponent implements OnDestroy {
             });
     }
 
-    protected onColumnLayoutChanged(e: IDejaGridColumnLayoutEvent) {
-        const sourceIndex = this.columns.findIndex((og) => og === e.column);
-        this.columns.splice(sourceIndex, 1);
+    protected onColumnDragEnd() {
+        this.columnLayout.refresh$.next();
+    }
 
-        if (e.target) {
-            const targetIndex = this.columns.findIndex((og) => og === e.target);
-            this.columns.splice(targetIndex, 0, e.column);
+    protected onColumnLayoutChanged(e: IDejaGridColumnLayoutEvent) {
+        this.columns.splice(e.index, 1);
+
+        if (!!e.target) {
+            this.columns.splice(e.targetIndex, 0, e.column);
         } else {
             this.columns.push(e.column);
         }
@@ -612,7 +614,9 @@ export class DejaGridComponent implements OnDestroy {
         this.calcColumnsLayout();
         this.ensureColumnVisible(e.column);
 
-        this.columnLayoutChanged.next(e);
+        this.columnLayoutChanged.emit(e);
+
+        this.changeDetectorRef.markForCheck();
     }
 
     protected onColumnSizeChanged(e: IDejaGridColumnSizeEvent) {
