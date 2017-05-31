@@ -52,10 +52,16 @@ export class DejaDroppableDirective implements OnDestroy {
         const dragDrop$ = new Subject<DragEvent>();
         const kill$ = new Subject();
         const dragEnd$ = Observable.from(kill$).filter((value) => !value);
+        let inDrag = false;
 
         this.subscriptions.push(Observable.from(dragDrop$)
             .subscribe((dragEvent) => {
                 if (dragEvent.type === 'dragenter') {
+                    if (inDrag) {
+                        return;
+                    }
+                    inDrag = true;
+
                     console.log('DejaDragEnter');
                     if (this.context.dragentercallback) {
                         const e = dragEvent as IDejaDropEvent;
@@ -94,7 +100,8 @@ export class DejaDroppableDirective implements OnDestroy {
                                         }
                                     }
                                 }
-                                dragDrop$.next(dropEvent);
+                                kill$.next();
+                                return;
                             });
 
                         Observable.fromEvent(element, 'dragover')
@@ -133,7 +140,8 @@ export class DejaDroppableDirective implements OnDestroy {
                                 }
                             });
                     }
-                } else if (dragEvent.type === 'dragleave') {
+                } else {
+                    inDrag = false;
                     console.log('DejaDragLeave');
                     if (this.context.dragleavecallback) {
                         const e = new CustomEvent('DejaDragLeave', { cancelable: false });
@@ -142,8 +150,6 @@ export class DejaDroppableDirective implements OnDestroy {
                             dragEvent.preventDefault();
                         }
                     }
-                    kill$.next();
-                } else {
                     kill$.next();
                 }
             }));
@@ -162,7 +168,7 @@ export class DejaDroppableDirective implements OnDestroy {
             .filter(() => !!this.context)
             .filter(() => !!this.clipboardService.get(this.draginfokey))
             .subscribe((leaveEvent: DragEvent) => {
-                console.log('dragleave ' + (leaveEvent.target as HTMLElement).tagName);
+                // console.log('dragleave ' + (leaveEvent.target as HTMLElement).tagName);
                 const bounds = element.getBoundingClientRect();
                 const inside = leaveEvent.x >= bounds.left && leaveEvent.x <= bounds.right && leaveEvent.y >= bounds.top && leaveEvent.y <= bounds.bottom;
                 if (!inside) {

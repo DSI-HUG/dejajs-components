@@ -100,7 +100,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     private _dropdownAlignment = 'left';
     private _ownerAlignment = 'left right bottom';
     private _query = '';
-    private _readonly = false;
+    @HostBinding('attr.readonly') private _readonly = null;
 
     private clearFilterExpression$ = new BehaviorSubject<void>(null);
     private filterListComplete$ = new Subject();
@@ -591,7 +591,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @Input()
     /** Retourne une valeur indiquant si le composant est en lecture seule */
     public set readonly(value: boolean) {
-        this._readonly = value;
+        this._readonly = value || null;
         this.changeDetectorRef.markForCheck();
     }
 
