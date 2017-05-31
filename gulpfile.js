@@ -9,6 +9,7 @@ var gulp = require('gulp'),
     runSequence = require('run-sequence'),
     inlineResources = require('./tools/gulp/inline-resources'),
     fs = require('fs'),
+    license = require('gulp-license-check'),
     jeditor = require("gulp-json-editor");
 
 const rootFolder = path.join(__dirname);
@@ -16,6 +17,19 @@ const srcFolder = path.join(rootFolder, 'src');
 const tmpFolder = path.join(rootFolder, '.tmp');
 const buildFolder = path.join(rootFolder, 'build');
 const distFolder = path.join(rootFolder, 'dist');
+
+/**
+ * Check if all TS files start by the HUG Licence
+ */
+gulp.task('license', function () {
+    return gulp.src(['**/*.ts', '!**/*.d.ts', '!node_modules/**'])
+        .pipe(license({
+            path: `${rootFolder}/header-license.txt`,
+            blocking: true,
+            logInfo: false,
+            logError: true
+        }));
+});
 
 /**
  * 1. Delete /dist folder
