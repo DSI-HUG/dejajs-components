@@ -31,6 +31,7 @@ before_script:
 - "sh -e /etc/init.d/xvfb start"
 - sleep 3
 - npm prune
+- npm install -g license-check
 - yarn run licensecheck
 - yarn run lint
 script:
