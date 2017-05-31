@@ -66,10 +66,6 @@ import {
 // } from '../../dist';
 } from '../../src/index';
 
-import { HomeComponentsComponent } from './home-components/home-components.component';
-import { HomeGuidesComponent } from './home-guides/home-guides.component';
-import { HomeComponent } from './home/home.component';
-
 import { DejaAccordionDemoComponent } from './accordion/accordion-demo.component';
 import { DejaCircularPickerDemoComponent } from './circular-picker/circular-picker-demo';
 import { DejaColorSelectorDemoComponent } from './color-selector/color-selector-demo';
@@ -77,9 +73,13 @@ import { DejaContentEditableDemoComponent } from './content-editable/content-edi
 import { DejaDatePickerDemoComponent } from './date-picker/date-picker-demo';
 import { GlobalEventsDemoComponent } from './global-events/global-events-demo';
 import { GridDemoComponent } from './grid/grid-demo';
+import { HomeComponentsComponent } from './home-components/home-components.component';
+import { HomeGuidesComponent } from './home-guides/home-guides.component';
+import { HomeComponent } from './home/home.component';
 import { MenuDemoComponent } from './menu/menu-demo';
 import { MessageBoxDemoComponent } from './message-box/message-box-demo';
 import { DejaMonacoEditorDemoComponent } from './monaco-editor/monaco-editor-demo';
+import { MonacoEditorDemoService } from './monaco-editor/monaco-editor-demo.service.';
 import { ProgressCircleDemoComponent } from './progress-circle/progress-circle-demo';
 import { DejaRangeDemoComponent } from './range/range-demo';
 import { ReactiveFormDemoComponent } from './reactive-form/reactive-form-demo';
@@ -90,9 +90,6 @@ import { TextAreaDemoComponent } from './textarea/textarea-demo';
 import { TilesDemoComponent } from './tiles/tiles-demo';
 import { DejaTreeListDemoComponent } from './tree-list/tree-list-demo';
 import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
-
-import { MonacoEditorDemoService } from './monaco-editor/monaco-editor-demo.service.';
-import { MonacoEditorJsonFileResolver, MonacoEditorJsonToCompareFileResolver, MonacoEditorXmlFileResolver, MonacoEditorXmlToCompareFileResolver } from './monaco-editor/monaco-editor.resolver';
 
 @NgModule({
     declarations: [
@@ -178,11 +175,6 @@ import { MonacoEditorJsonFileResolver, MonacoEditorJsonToCompareFileResolver, Mo
         GlobalEventService,
         MaterialColors,
         NewsService,
-        // Monaco Editor Resolver Route
-        MonacoEditorXmlFileResolver,
-        MonacoEditorXmlToCompareFileResolver,
-        MonacoEditorJsonFileResolver,
-        MonacoEditorJsonToCompareFileResolver,
         MonacoEditorDemoService,
         UserService,
     ],

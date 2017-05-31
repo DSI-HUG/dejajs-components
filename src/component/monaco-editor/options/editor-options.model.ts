@@ -6,13 +6,12 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { IEditorLanguage } from './editor-language.model';
-import { IEditorScrollbarOptions } from './editor-scrollbar-options';
-import { IEditorTheme } from './editor-theme.component';
+import { EditorScrollbarOptions } from './editor-scrollbar-options.model';
+
 /**
  * Configuration options for the editor.
  */
-export class IEditorOptions {
+export class EditorOptions {
     /**
      * Enable experimental screen reader support.
      * Defaults to `true`.
@@ -44,7 +43,7 @@ export class IEditorOptions {
      * Otherwise, line numbers will not be rendered.
      * Defaults to true.
      */
-    public lineNumbers?: boolean;
+    public lineNumbers?: 'on' | 'off' | 'relative' | ((lineNumber: number) => string);
     /**
      * Should the corresponding line be selected when clicking on the line number?
      * Defaults to true.
@@ -57,15 +56,16 @@ export class IEditorOptions {
     public lineNumbersMinChars?: number;
     /**
      * Enable the rendering of the glyph margin.
-     * Defaults to false.
+     * Defaults to true in vscode and to false in monaco-editor.
      */
     public glyphMargin?: boolean;
     /**
      * The width reserved for line decorations (in px).
      * Line decorations are placed between line numbers and the editor content.
+     * You can pass in a string in the format floating point followed by "ch". e.g. 1.3ch.
      * Defaults to 10.
      */
-    public lineDecorationsWidth?: number;
+    public lineDecorationsWidth?: number | string;
     /**
      * When revealing the cursor, a virtual padding (px) is added to the cursor, turning it into a rectangle.
      * This virtual padding ensures that the cursor gets revealed before hitting the edge of the viewport.
@@ -78,12 +78,11 @@ export class IEditorOptions {
      */
     public roundedSelection?: boolean;
     /**
-     * Theme to be used for rendering. Consists of two parts, the UI theme and the syntax theme,
-     * separated by a space.
-     * The current available UI themes are: 'vs' (default), 'vs-dark', 'hc-black'
-     * The syntax themes are contributed. The default is 'default-theme'
+     * Theme to be used for rendering.
+     * The current out-of-the-box available themes are: 'vs' (default), 'vs-dark', 'hc-black'.
+     * You can create custom themes via `monaco.editor.defineTheme`.
      */
-    public theme?: IEditorTheme;
+    public theme?: string;
     /**
      * Should the editor be read only.
      * Defaults to false.
@@ -92,7 +91,12 @@ export class IEditorOptions {
     /**
      * Control the behavior and rendering of the scrollbars.
      */
-    public scrollbar?: IEditorScrollbarOptions;
+    public scrollbar?: EditorScrollbarOptions;
+    /**
+     * Display overflow widgets as `fixed`.
+     * Defaults to `false`.
+     */
+    public fixedOverflowWidgets?: boolean;
     /**
      * The number of vertical lanes the overview ruler should render.
      * Defaults to 2.
@@ -123,6 +127,11 @@ export class IEditorOptions {
      * Defaults to false.
      */
     public disableTranslate3d?: boolean;
+    /**
+     * Disable the optimizations for monospace fonts.
+     * Defaults to false.
+     */
+    public disableMonospaceOptimizations?: boolean;
     /**
      * Should the cursor be hidden in the overview ruler.
      * Defaults to false.
@@ -155,7 +164,7 @@ export class IEditorOptions {
     public wordWrap?: boolean;
     /**
      * Control indentation of wrapped lines. Can be: 'none', 'same' or 'indent'.
-     * Defaults to 'none'.
+     * Defaults to 'same' in vscode and to 'none' in monaco-editor.
      */
     public wrappingIndent?: string;
     /**
@@ -224,6 +233,11 @@ export class IEditorOptions {
      */
     public formatOnType?: boolean;
     /**
+     * Enable format on paste.
+     * Defaults to false.
+     */
+    public formatOnPaste?: boolean;
+    /**
      * Enable the suggestion box to pop-up on trigger characters.
      * Defaults to true.
      */
@@ -234,9 +248,18 @@ export class IEditorOptions {
      */
     public acceptSuggestionOnEnter?: boolean;
     /**
+     * Accept suggestions on provider defined characters.
+     * Defaults to true.
+     */
+    public acceptSuggestionOnCommitCharacter?: boolean;
+    /**
      * Enable snippet suggestions. Default to 'true'.
      */
     public snippetSuggestions?: 'top' | 'bottom' | 'inline' | 'none';
+    /**
+     * Copying without a selection copies the current line.
+     */
+    public emptySelectionClipboard?: boolean;
     /**
      * Enable tab completion. Defaults to 'false'
      */
@@ -245,6 +268,16 @@ export class IEditorOptions {
      * Enable word based suggestions. Defaults to 'true'
      */
     public wordBasedSuggestions?: boolean;
+    /**
+     * The font size for the suggest widget.
+     * Defaults to the editor font size.
+     */
+    public suggestFontSize?: number;
+    /**
+     * The line height for the suggest widget.
+     * Defaults to the editor line height.
+     */
+    public suggestLineHeight?: number;
     /**
      * Enable selection highlight.
      * Defaults to true.
@@ -257,7 +290,7 @@ export class IEditorOptions {
     public codeLens?: boolean;
     /**
      * Enable code folding
-     * Defaults to true.
+     * Defaults to true in vscode and to false in monaco-editor.
      */
     public folding?: boolean;
     /**
@@ -277,9 +310,9 @@ export class IEditorOptions {
     public renderIndentGuides?: boolean;
     /**
      * Enable rendering of current line highlight.
-     * Defaults to true.
+     * Defaults to all.
      */
-    public renderLineHighlight?: boolean;
+    public renderLineHighlight?: 'none' | 'gutter' | 'line' | 'all';
     /**
      * Inserting and deleting whitespace follows tab stops.
      */
@@ -301,17 +334,11 @@ export class IEditorOptions {
      */
     public lineHeight?: number;
     /**
-     * Enable format on paste.
-     * Defaults to false.
-     */
-    formatOnPaste?: boolean;
-
-    /**
      * Content to show
      */
     public value: string;
     /**
      * Language of content to show
      */
-    public language: IEditorLanguage;
+    public language: 'bat' | 'c' | 'cpp' | 'csharp' | 'css' | 'dockerfile' | 'fsharp' | 'go' | 'handlebars' | 'html' | 'ini' | 'jade' | 'javascript' | 'json' | 'less' | 'lua' | 'markdown' | 'objective-c' | 'php' | 'csharp' | 'plaintext' | 'postiats' | 'powershell' | 'python' | 'r' | 'razor' | 'ruby' | 'scss' | 'sql' | 'swift' | 'typescript' | 'vb' | 'xml' | 'yaml';
 }

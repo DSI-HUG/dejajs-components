@@ -1,8 +1,16 @@
-.viewer {
-    height: 500px;
-    display: flex;
-}
+:host {
+    .viewer {
+        height: 500px;
+        display: flex;
+        flex: 1 1 100%;
 
-span[flex] {
-        flex: 1 1 auto;
+        deja-monaco-editor {
+            display: flex;
+            flex: 1 1 100%;
+        }
+    }
+
+    span[flex] {
+            flex: 1 1 auto;
+    }
 }

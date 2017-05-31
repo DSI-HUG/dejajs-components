@@ -8,36 +8,42 @@
 
 import { Injectable } from '@angular/core';
 
+/**
+ * Monaco Editor Service
+ *
+ * Service used by Monaco Editor Component to load only once instance of the Monaco Editor Library
+ */
 @Injectable()
 export class MonacoEditorService {
 
     private _loading: boolean;
     private _loader: Promise<any>;
 
-    constructor() {
+    /**
+     * Constructor
+     */
+    constructor() { }
 
-    }
-
-    public initMonacoLib(monacoLibPath: string): Promise<any> {
+    /**
+     * Load the Monaco Editor Library
+     *
+     * @return Resolved promise when the library is loaded
+     */
+    public initMonacoLib(): Promise<any> {
         if (!this._loading) {
-            this.init(monacoLibPath);
+            this.init();
         }
 
         return this._loader;
     }
 
-    private init(monacoLibPath: string) {
+    private init() {
         this._loader = new Promise((resolve) => {
             this._loading = true;
 
-            // Remove the last character if is a '/'
-            if (monacoLibPath.substring(monacoLibPath.length - 1, monacoLibPath.length) === '/') {
-                monacoLibPath = monacoLibPath.substring(0, monacoLibPath.length - 1);
-            }
-
             const onGotAmdLoader = () => {
                 // Load monaco
-                (<any>window).require([monacoLibPath + '/editor/editor.main'], () => {
+                (<any>window).require(['vs/editor/editor.main'], () => {
                     resolve();
                 });
             };
@@ -46,7 +52,7 @@ export class MonacoEditorService {
             if (!(<any>window).require && !(<any>window).monaco) {
                 const loaderScript = document.createElement('script');
                 loaderScript.type = 'text/javascript';
-                loaderScript.src = monacoLibPath + '/loader.js';
+                loaderScript.src = 'vs/loader.js';
                 loaderScript.addEventListener('load', onGotAmdLoader);
                 document.body.appendChild(loaderScript);
             } else {

@@ -23,7 +23,7 @@
     "build:lib:watch": "gulp",
     "copy:assets": "del-cli demo/vs && symlink-dir ./node_modules/monaco-editor/min/vs demo/vs",
     "docs": "yarn run docs:build",
-    "docs:build": "compodoc ./src -p tsconfig.json -n @deja-js/component -d docs --hideGenerator --theme vagrant",
+    "docs:build": "compodoc ./src -p tsconfig.json -n @deja-js/component -d docs --hideGenerator --theme vagrant --disablePrivateOrInternalSupport --disableGraph",
     "docs:serve": "yarn run docs:build -- -s",
     "docs:watch": "yarn run docs:build -- -s -w",
     "e2e": "ng e2e",
