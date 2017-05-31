@@ -201,12 +201,12 @@ gulp.task('copy:manifest', function () {
 });
 
 /**
- * Copy sendAction to /dist
+ * Copy Assets to /dist
  */
 gulp.task('copy:assets', function () {
     return gulp.src([
-        path.join(rootFolder, 'send-action.js'),
-        path.join(rootFolder, 'polyfills.ts'),
+        path.join(srcFolder, 'send-action.js'),
+        path.join(srcFolder, 'polyfills.ts'),
     ]).pipe(gulp.dest(distFolder));
 });
 
