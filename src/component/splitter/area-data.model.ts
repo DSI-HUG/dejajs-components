@@ -8,6 +8,9 @@
 
 import {SplitAreaDirective} from './split-area.directive';
 
+/**
+ * Represent an area for the SplitterComponent
+ */
 export interface IAreaData {
     component: SplitAreaDirective;
     sizeUser: number | null;

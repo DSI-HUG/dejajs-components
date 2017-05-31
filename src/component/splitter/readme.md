@@ -1,12 +1,12 @@
 # Splitter
-Le composant splitter permet de découper horizontalement ou verticalement, un container en N partie redimensionnable.
+The splitter component allows to split horizontally or vertically, a container in N resizable part.
 
-### Informations inportantes
-> Ne pas oublier d'importer le `DejaSplitterModule` dans les `imports` de votre module concerné !
+### Important Informations
+> Do not forget to import `DejaSplitterModule` in the `imports` section of your module !
 
-### Utilisation 
+### How to use 
 
-####Splitter horizontal
+Horizontal Splitter
 ```html
 <deja-splitter [direction]="'horizontal'">
     <split-area [size]="50">
@@ -18,7 +18,7 @@ Le composant splitter permet de découper horizontalement ou verticalement, un c
 </deja-splitter>
 ```
 
-####Splitter vertical
+Vertical Splitter
 ```html
 <deja-splitter [direction]="'vertical'">
     <split-area [size]="25">
@@ -30,7 +30,7 @@ Le composant splitter permet de découper horizontalement ou verticalement, un c
 </deja-splitter>
 ```
 
-####Splitter multiple
+Multiple Splitter
 ```html
 <deja-splitter [direction]="'horizontal'">
     <split-area [size]="40">
@@ -61,77 +61,22 @@ Le composant splitter permet de découper horizontalement ou verticalement, un c
 
 ### Propriétés
 
-#### Composant **deja-splitter**
-<table>
-    <thead>
-    <tr>
-        <th>@Input()</th>
-        <th>Type</th>
-        <th>Default</th>
-        <th>Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td>direction</td>
-        <td>string</td>
-        <td>'horizontal'</td>
-        <td>Spécifi la direction du splitter ('horizontal' ou 'vertical')</td>
-    </tr>
-    <tr>
-        <td>width</td>
-        <td>number</td>
-        <td>null</td>
-        <td>Specifi la valeur de la largeur en pixel. Si null, prendra toute la place disponible</td>
-    </tr>
-    <tr>
-        <td>height</td>
-        <td>number</td>
-        <td>null</td>
-        <td>Specifi la valeur de la hauteur en pixel. Si null, prendra toute la place disponible</td>
-    </tr>
-    </tbody>
-</table>
+Component **deja-splitter**
 
-<table>
-    <thead>
-        <tr>
-            <th>@Output()</th>
-            <th>Description</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>dragStart</td>
-            <td>Exécuté au démarrage du drag</td>
-        </tr>
-        <tr>
-            <td>drag</td>
-            <td>Exécuté lors du drag</td>
-        </tr>
-        <tr>
-            <td>dragEnd</td>
-            <td>Exécuté quand drag est stoppé</td>
-        </tr>
-    </tbody>
-</table>
+| @Input()            | Type   | Default      | Description                                              |
+| ------------------- | ----   | ------------ | -------------------------------------------------------- |
+| direction           | string | 'horizontal' | Direction of the split. Can be `horizontal` or `vertical`|
+| width               | number | 100          | Width in percent of the component                        |
+| height              | number | 100          | Width in percent of the component                        |
 
-#### Composant **split-area**
-<table>
-    <thead>
-        <tr>
-            <th>@Input()</th>
-            <th>Type</th>
-            <th>Default</th>
-            <th>Description</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>size</td>
-            <td>number</td>
-            <td>null</td>
-            <td>Pourcentage de la zone. Si null, chaque <split-area> aura la meme taille.</td>
-        </tr>
-    </tbody>
-</table>
+| @Output()           | Description                                                                      |
+| ------------------- | -------------------------------------------------------------------------------- |
+| dragStart           | Event triggered when the user start to drag the cursor                           |
+| drag                | Event triggered during the cursor's drag                                         |
+| dragEnd             | Event triggered when the user stop to drag the cursor                            |
+
+Component **split-area**
+
+| @Input()         | Type   | Default | Description                                                              |
+| ---------------- | ------ | ------- | ------------------------------------------------------------------------ |
+| size             | number | null    | Size in percent of the area. If null, every area will have the same size |
