@@ -24,6 +24,9 @@ import { IExtendedViewPortItem } from '../tree-list/tree-list-demo';
 import { CloningService } from './../../../src/common/core/cloning/cloning.service';
 import { IGroupInfo } from './../../../src/common/core/grouping/group-infos';
 import { GroupingService } from './../../../src/common/core/grouping/grouping.service';
+import { IConfig } from './../../../src/component/circular-picker/circular-picker.component.d';
+import { IDropCursorInfos } from './../../../src/component/mouse-dragdrop/mouse-dragdrop.service';
+import { IDejaMouseDroppableContext } from './../../../src/component/mouse-dragdrop/mouse-droppable.directive.d';
 
 @Component({
     selector: 'grid-demo',
@@ -324,6 +327,22 @@ export class GridDemoComponent {
 
     protected getParentRowDecr(row: IDejaGridRow) {
         return row.toString();
+    }
+
+    protected getDropContext(dropArea: HTMLElement) {
+        return {
+            dragEnter: (_dragContext) => {
+                return {
+                    width: 200,
+                    height: 60,
+                    className: 'country-target-cursor',
+                } as IDropCursorInfos;
+            },
+            drop: (dragContext) => {
+                const person = dragContext as IPerson;
+                dropArea.innerText = `The dropped person is: ${person.name} - the id is: ${person.guid}`;
+            },
+        } as IDejaMouseDroppableContext;
     }
 }
 

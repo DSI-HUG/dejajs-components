@@ -7,6 +7,7 @@
  */
 
 import { Component, ElementRef, Input, ViewEncapsulation } from '@angular/core';
+import { Position } from '../../common/core/graphics/position';
 
 /** Menu avec placement optimisé (Voir DejaDropDownComponent) */
 @Component({
@@ -29,6 +30,8 @@ export class DejaMenuComponent {
     /** Renvoie ou définit l'élement du DOM sur lequel le menu devra s'aligner */
     @Input() public ownerElement: HTMLElement;
 
+    protected dropDownPosition: Position;
+
     constructor(private elementRef: ElementRef) {
         this.ownerElement = this.elementRef.nativeElement;
     }
@@ -38,7 +41,10 @@ export class DejaMenuComponent {
     }
 
     /** Affiche le menu. */
-    public show(event: Event) {
+    public show(event: MouseEvent) {
+        if (!this.buttonAlignment) {
+            this.dropDownPosition = new Position(event.pageX, event.pageY);
+        }
         this.ownerElement = (event && event.target) || this.elementRef.nativeElement;
         this.isVisible = true;
     }
