@@ -7,6 +7,7 @@
 	<md-tab label="API REFERENCE"></md-tab>
 	<md-tab label="SIMPLE EXAMPLES"></md-tab>
 	<md-tab label="ADVANCED EXAMPLES"></md-tab>
+	<md-tab label="COLUMNS MODES"></md-tab>
 	<md-tab label="TEMPLATING"></md-tab>
 	<md-tab label="PRE-EVENTS AND ON_DEMAND"></md-tab>
 	<md-tab label="PERFORMANCES"></md-tab>
@@ -93,7 +94,7 @@
 </div>
 
 <div *ngIf="tabIndex === 2">
-	<md-card class="deja-treelist-demo demo-card demo-basic">
+	<md-card class="deja-grid-demo demo-card demo-basic">
 		<md-toolbar color="primary">Grouping Client Side</md-toolbar>
 		<md-card-content fxLayout="column" class="listContainer">
 			<div>To allow the user grouping just add the groupArea directive</div>
@@ -116,21 +117,70 @@
 				</span>
 				<span fxFlex="0 0 45%" fxFlexOffset="5%" id="dropArea">
 					<div>You can drag and drop items the the area bellow (That will display a JSON representation of the dropped model) :</div>
-					<div #dropArea [deja-droppable]="getDropContext(dropArea)" style="border:1px solid red;min-height:150px;"><pre>{{draggedPerson | json}}</pre></div>
+					<div #dropArea [deja-droppable]="getDropContext(dropArea)" style="border:1px solid red;min-height:150px;">
+						<pre>{{draggedPerson | json}}</pre>
+					</div>
 				</span>
 			</div>
+		</md-card-content>
+		<md-toolbar color="primary">Variable Rows Height</md-toolbar>
+		<md-card-content fxLayout="column" class="listContainer">
+			<deja-grid id="variable" #variable maxHeight="auto" columnsSortable multiSelect columnsSizable sortable [rows]="variableHeightPeopleRows$" [columns]="variableHeightPeopleColumns" viewportMode="auto" nodataholder="No datas" searchField="name" valueField="guid" (columnSizeChanged)="onColumnSizeChanged($event, variable)"></deja-grid>
 		</md-card-content>
 	</md-card>
 </div>
 
 <div *ngIf="tabIndex === 3">
-	<md-card class="deja-treelist-demo demo-card demo-basic">
+	<md-card class="deja-grid-demo demo-card demo-basic">
+		<md-toolbar color="primary">Sizeable Columns</md-toolbar>
+		<md-card-content class="listContainer">
+			<div>The horizontal scrollbar will be adjusted to match the total with of the columns</div>
+			<deja-splitter direction="horizontal">
+				<split-area [size]="60">
+					<deja-grid columnsSizable [rows]="people$" [columns]="peopleColumns" nodataholder="No datas" valueField="guid"> </deja-grid>
+				</split-area>
+				<split-area [size]="40">
+				</split-area>
+			</deja-splitter>
+		</md-card-content>
+		<md-toolbar color="primary">Percent Columns</md-toolbar>
+		<md-card-content fxLayout="column" class="listContainer">
+			<div>Under construction</div>
+			<deja-splitter direction="horizontal">
+				<split-area [size]="60">
+					<deja-grid columnsSizable [rows]="people$" [columns]="percentPeopleColumns" nodataholder="No datas" valueField="guid"> </deja-grid>
+				</split-area>
+				<split-area [size]="40">
+				</split-area>
+			</deja-splitter>
+		</md-card-content>
+		<md-toolbar color="primary">Responsives Columns</md-toolbar>
+		<md-card-content fxLayout="column" class="listContainer">
+			<div>Under construction</div>
+			<deja-splitter direction="horizontal">
+				<split-area [size]="60">
+					<deja-grid columnsSizable [rows]="people$" [columns]="responsivePeopleColumns" nodataholder="No datas" valueField="guid"> </deja-grid>
+				</split-area>
+				<split-area [size]="40">
+				</split-area>
+			</deja-splitter>
+		</md-card-content>
+		<md-toolbar color="primary">Columns not Specified</md-toolbar>
+		<md-card-content fxLayout="column" class="listContainer">
+			<div>Under construction</div>
+      		<deja-grid columnsSizable [rows]="people$" nodataholder="No datas" valueField="guid"> </deja-grid>
+		</md-card-content>
+	</md-card>
+</div>
+
+<div *ngIf="tabIndex === 4">
+	<md-card class="deja-grid-demo demo-card demo-basic">
 		<md-toolbar color="primary">Templating Examples</md-toolbar>
 		<md-card-content class="listContainer">
 			<h1>Cells Template</h1>
-			<deja-grid id="news" #news sortable columnsSizable multiSelect maxHeight="auto" [rows]="news$ | async" [columns]="newsColumns" viewportMode="auto" nodataholder="Pas de données" (columnSizeChanged)="onColumnSizeChanged($event)">
+			<deja-grid id="news" #news sortable columnsSizable multiSelect maxHeight="auto" [rows]="news$ | async" [columns]="newsColumns" viewportMode="auto" nodataholder="Pas de données" (columnSizeChanged)="onColumnSizeChanged($event, news)">
 				<ng-template #cellTemplate let-row let-column="column">
-					<img *ngIf="column.name==='urlToImage'" [attr.src]="row[column.name]" class="logo" (load)="imageLoaded(row)">
+					<img *ngIf="column.name==='urlToImage'" [attr.src]="row[column.name]" class="logo" (load)="imageLoaded(row, news)">
 				</ng-template>
 			</deja-grid>
 			<div fxLayout="row">
@@ -159,8 +209,8 @@
 	</md-card>
 </div>
 
-<div *ngIf="tabIndex === 4">
-	<md-card class="deja-treelist-demo demo-card demo-basic">
+<div *ngIf="tabIndex === 5">
+	<md-card class="deja-grid-demo demo-card demo-basic">
 		<md-toolbar color="primary">Pre-events and on-demand</md-toolbar>
 		<md-card-content class="listContainer">
 			<h1>On Demand Loading </h1>
@@ -184,16 +234,16 @@
 	</md-card>
 </div>
 
-<div *ngIf="tabIndex === 5">
-	<md-card class="deja-treelist-demo demo-card demo-basic">
+<div *ngIf="tabIndex === 6">
+	<md-card class="deja-grid-demo demo-card demo-basic">
 		<md-toolbar color="primary">Performance Examples</md-toolbar>
 		<md-card-content class="listContainer">
 			<h1>10K rows with Item Template </h1>
 			<div>An exemple with 100000 fixed size rows</div>
 			<span fxLayout="columns">
-				<deja-grid id="news" #news sortable columnsSizable multiSelect [rows]="bigNews$" [columns]="newsColumns" viewportMode="auto" nodataholder="Pas de données" (columnSizeChanged)="onColumnSizeChanged($event)">
+				<deja-grid id="news" #bigNews sortable columnsSizable multiSelect [rows]="bigNews$" [columns]="newsColumns" viewportMode="auto" nodataholder="Pas de données" (columnSizeChanged)="onColumnSizeChanged($event, bigNews)">
 					<ng-template #cellTemplate let-row let-column="column">
-						<img *ngIf="column.name==='urlToImage'" [attr.src]="row[column.name]" class="logo" (load)="imageLoaded(row)">
+						<img *ngIf="column.name==='urlToImage'" [attr.src]="row[column.name]" class="logo" (load)="imageLoaded(row, bigNews)">
 					</ng-template>
 				</deja-grid>
 			</span>

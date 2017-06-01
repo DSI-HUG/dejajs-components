@@ -38,6 +38,7 @@ export class GridDemoComponent {
     protected people$: Observable<IPerson[]>;
     protected peopleForMultiselect$: Observable<IPerson[]>;
     protected groupedByGenderPeople$: Observable<IPerson[]>;
+    protected variableHeightPeopleRows$: Observable<IPerson[]>;
     protected groupedByEyesColorPeople$: Observable<IPerson[]>;
     protected groupedByColorPeople: {
         items: IPerson[],
@@ -59,7 +60,6 @@ export class GridDemoComponent {
 
     private _dialogVisible = false;
 
-    @ViewChild('news') private gridNews: DejaGridComponent;
     @ViewChild('onexpand') private onExpandGrid: DejaGridComponent;
 
     protected peopleColumns = [
@@ -106,6 +106,7 @@ export class GridDemoComponent {
     ] as IDejaGridColumn[];
 
     protected peopleColumnsEx: IDejaGridColumn[];
+    protected variableHeightPeopleColumns: IDejaGridColumn[];
 
     protected newsColumns = [
         {
@@ -149,6 +150,108 @@ export class GridDemoComponent {
             label: 'country',
             name: 'country',
             width: '64px',
+        },
+    ] as IDejaGridColumn[];
+
+    protected percentPeopleColumns = [
+        {
+            label: 'Name',
+            name: 'name',
+            width: '130px',
+            sizeable: false,
+        },
+        {
+            label: 'Gender',
+            name: 'gender',
+            width: '70px',
+            sizeable: true,
+        },
+        {
+            label: 'Company',
+            name: 'company',
+            width: '4.5%',
+        },
+        {
+            label: 'Email',
+            name: 'email',
+            width: '6%',
+        },
+        {
+            label: 'Phone',
+            name: 'phone',
+            width: '7%',
+        },
+        {
+            label: 'Eyes Color',
+            name: 'eyeColor',
+            width: '4.5%',
+        },
+        {
+            label: 'Address',
+            name: 'address',
+            width: '19%',
+        },
+        {
+            label: 'About',
+            name: 'about',
+            width: '54%',
+        },
+    ] as IDejaGridColumn[];
+
+    protected responsivePeopleColumns = [
+        {
+            label: 'Name',
+            name: 'name',
+            width: '130px',
+            sizeable: false,
+            responsive: 0,
+        },
+        {
+            label: 'Gender',
+            name: 'gender',
+            width: '70px',
+            sizeable: true,
+            responsive: 1,
+        },
+        {
+            label: 'Company',
+            name: 'company',
+            width: '4.5%',
+            minWidth: 64,
+            responsive: 3,
+        },
+        {
+            label: 'Email',
+            name: 'email',
+            width: '6%',
+            minWidth: 64,
+        },
+        {
+            label: 'Phone',
+            name: 'phone',
+            width: '7%',
+            minWidth: 64,
+        },
+        {
+            label: 'Eyes Color',
+            name: 'eyeColor',
+            width: '4.5%',
+            minWidth: 64,
+            responsive: 3,
+        },
+        {
+            label: 'Address',
+            name: 'address',
+            width: '19%',
+            minWidth: 64,
+            responsive: 2,
+        },
+        {
+            label: 'About',
+            name: 'about',
+            width: '54%',
+            minWidth: 64,
+            responsive: 4,
         },
     ] as IDejaGridColumn[];
 
@@ -220,6 +323,18 @@ export class GridDemoComponent {
             ...this.peopleColumns,
         ]
 
+        this.variableHeightPeopleColumns = [...this.peopleColumns]
+
+        const addressCol = this.variableHeightPeopleColumns.find((column) => column.name === 'address');
+        addressCol.sizeable = true;
+        addressCol.width = '250px';
+
+        const aboutCol = this.variableHeightPeopleColumns.find((column) => column.name === 'about')
+        aboutCol.sizeable = true;
+        aboutCol.width = '400px';
+
+        this.variableHeightPeopleRows$ = peopleService.getPeople$().switchMap((people) => cloningService.clone$(people));
+
         this.peopleService.getPeople$().subscribe((value: IPerson[]) => {
             const onDemandResult = [] as IPeopleGroup[];
             const map = {} as { [groupName: string]: IDejaGridRow[] };
@@ -251,18 +366,24 @@ export class GridDemoComponent {
         });
     }
 
-    protected onColumnSizeChanged(e: IDejaGridColumnSizeEvent) {
-        if (e.column.name === 'description' || e.column.name === 'urlToImage') {
-            this.gridNews.clearRowsHeight();
-            this.gridNews.refreshViewPort();
+    protected onColumnSizeChanged(e: IDejaGridColumnSizeEvent, grid: DejaGridComponent) {
+        switch (e.column.name) {
+            case 'description':
+            case 'urlToImage':
+            case 'address':
+            case 'about':
+                grid.clearRowsHeight();
+                grid.refreshViewPort();
+                break;
+            default:
         }
     }
 
-    protected imageLoaded(item: IViewPortItem) {
+    protected imageLoaded(item: IViewPortItem, grid: DejaGridComponent) {
         const itemExt = item as IExtendedViewPortItem;
         if (!itemExt.loaded) {
             itemExt.loaded = true;
-            this.gridNews.refreshViewPort(itemExt);
+            grid.refreshViewPort(itemExt);
         }
     }
 
@@ -362,187 +483,7 @@ interface IPeopleGroup extends IItemTree {
 }
 
 // export class GridDemoComponent implements OnInit {
-//     protected percentColumns = [
-//         {
-//             label: 'transmissiondateformat',
-//             name: 'transmissiondateformat',
-//             sizeable: false,
-//             useCellTemplate: true,
-//             width: '60px',
-//         },
-//         {
-//             label: 'receiptdateformat',
-//             name: 'receiptdateformat',
-//             sizeable: true,
-//             width: '60px',
-//         },
-//         {
-//             label: 'receiver',
-//             name: 'receiver',
-//             width: '3%',
-//         },
-//         {
-//             label: 'serious',
-//             name: 'serious',
-//             width: '3%',
-//         },
-//         {
-//             label: 'receivedateformat',
-//             name: 'receivedateformat',
-//             width: '3%',
-//         },
-//         {
-//             label: 'fulfillexpeditecriteria',
-//             name: 'fulfillexpeditecriteria',
-//             width: '3%',
-//         },
-//         {
-//             label: 'safetyreportid',
-//             name: 'safetyreportid',
-//             width: '5%',
-//         },
-//         {
-//             label: 'companynumb',
-//             name: 'companynumb',
-//             width: '4%',
-//         },
-//         {
-//             label: 'reaction',
-//             name: 'reaction',
-//             width: '4%',
-//         },
-//         {
-//             label: 'patientonsetage',
-//             name: 'patientonsetage',
-//             width: '3%',
-//         },
-//         {
-//             label: 'patientsex',
-//             name: 'patientsex',
-//             width: '3%',
-//         },
-//         {
-//             label: 'patientonsetageunit',
-//             name: 'patientonsetageunit',
-//             width: '2%',
-//         },
-//         {
-//             label: 'drug',
-//             name: 'drug',
-//             width: '2%',
-//         },
-//         {
-//             label: 'senderorganization',
-//             name: 'senderorganization',
-//             width: '2%',
-//         },
-//         {
-//             label: 'qualification',
-//             name: 'qualification',
-//             width: '3%',
-//         },
-//     ] as IDejaGridColumn[];
 
-//     protected responsiveColumns = [
-//         {
-//             label: 'transmissiondateformat',
-//             name: 'transmissiondateformat',
-//             responsive: 0,
-//             sizeable: false,
-//             useCellTemplate: true,
-//             width: '60px',
-//         },
-//         {
-//             label: 'receiptdateformat',
-//             name: 'receiptdateformat',
-//             sizeable: true,
-//             width: '60px',
-//         },
-//         {
-//             label: 'receiver',
-//             minWidth: 64,
-//             name: 'receiver',
-//             width: '3%',
-//         },
-//         {
-//             label: 'serious',
-//             minWidth: 64,
-//             name: 'serious',
-//             width: '3%',
-//         },
-//         {
-//             label: 'receivedateformat',
-//             minWidth: 64,
-//             name: 'receivedateformat',
-//             width: '3%',
-//         },
-//         {
-//             label: 'fulfillexpeditecriteria',
-//             minWidth: 64,
-//             name: 'fulfillexpeditecriteria',
-//             responsive: 7,
-//             width: '3%',
-//         },
-//         {
-//             label: 'safetyreportid',
-//             minWidth: 64,
-//             name: 'safetyreportid',
-//             responsive: 1,
-//             width: '5%',
-//         },
-//         {
-//             label: 'companynumb',
-//             minWidth: 64,
-//             name: 'companynumb',
-//             width: '4%',
-//         },
-//         {
-//             label: 'reaction',
-//             name: 'reaction',
-//             responsive: 2,
-//             width: '4%',
-//         },
-//         {
-//             label: 'patientonsetage',
-//             minWidth: 64,
-//             name: 'patientonsetage',
-//             width: '3%',
-//         },
-//         {
-//             label: 'patientsex',
-//             minWidth: 64,
-//             name: 'patientsex',
-//             responsive: 3,
-//             width: '3%',
-//         },
-//         {
-//             label: 'patientonsetageunit',
-//             minWidth: 64,
-//             name: 'patientonsetageunit',
-//             responsive: 3,
-//             width: '2%',
-//         },
-//         {
-//             label: 'drug',
-//             minWidth: 64,
-//             name: 'drug',
-//             responsive: 4,
-//             width: '2%',
-//         },
-//         {
-//             label: 'senderorganization',
-//             minWidth: 64,
-//             name: 'senderorganization',
-//             width: '2%',
-//         },
-//         {
-//             label: 'qualification',
-//             minWidth: 64,
-//             name: 'qualification',
-//             responsive: 5,
-//             width: '3%',
-//         },
-//     ] as IDejaGridColumn[];
 
 //     protected tabIndex = 1;
 //     protected drugCounts = 0;

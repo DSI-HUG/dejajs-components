@@ -52,7 +52,8 @@ $deep: '/deep/';
 				}
 			}
 		}
-		#{$deep}#news {
+		#{$deep}#news,
+		#{$deep}#variable {
 			.cell-wrapper {
 				&[colname="urlToImage"] {
 					.logo {
@@ -63,7 +64,9 @@ $deep: '/deep/';
 						object-fit: contain;
 					}
 				}
-				&[colname="description"] {
+				&[colname="description"],
+				&[colname="address"],
+				&[colname="about"] {
 					.cell {
 						white-space: normal;
 					}
@@ -72,6 +75,20 @@ $deep: '/deep/';
 		}
 		#dropArea {
 			overflow: hidden;
+		}
+		deja-splitter {
+			#{$deep} {
+				split-area {
+					deja-grid {
+						padding: 0 1rem;
+						height: 400px;
+					}
+				}
+				split-gutter {
+					content: ' ';
+					height: 400px;
+				}
+			}
 		}
 	}
 }
