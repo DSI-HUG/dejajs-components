@@ -24,9 +24,9 @@ import { IExtendedViewPortItem } from '../tree-list/tree-list-demo';
 import { CloningService } from './../../../src/common/core/cloning/cloning.service';
 import { IGroupInfo } from './../../../src/common/core/grouping/group-infos';
 import { GroupingService } from './../../../src/common/core/grouping/grouping.service';
-import { IConfig } from './../../../src/component/circular-picker/circular-picker.component.d';
+import { IConfig } from './../../../src/component/circular-picker/circular-picker.component';
 import { IDropCursorInfos } from './../../../src/component/mouse-dragdrop/mouse-dragdrop.service';
-import { IDejaMouseDroppableContext } from './../../../src/component/mouse-dragdrop/mouse-droppable.directive.d';
+import { IDejaMouseDroppableContext } from './../../../src/component/mouse-dragdrop/mouse-droppable.directive';
 
 @Component({
     selector: 'grid-demo',
