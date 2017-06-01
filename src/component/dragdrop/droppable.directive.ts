@@ -48,11 +48,14 @@ export class DejaDroppableDirective implements OnDestroy {
     }
 
     constructor(elementRef: ElementRef, @Optional() private clipboardService: DejaClipboardService) {
+        let inDrag = false;
         const element = elementRef.nativeElement as HTMLElement;
         const dragDrop$ = new Subject<DragEvent>();
         const kill$ = new Subject();
-        const dragEnd$ = Observable.from(kill$).filter((value) => !value);
-        let inDrag = false;
+
+        const dragEnd$ = Observable.from(kill$)
+            .do(() => inDrag = false)
+            .filter((value) => !value);
 
         this.subscriptions.push(Observable.from(dragDrop$)
             .subscribe((dragEvent) => {
@@ -141,7 +144,6 @@ export class DejaDroppableDirective implements OnDestroy {
                             });
                     }
                 } else {
-                    inDrag = false;
                     console.log('DejaDragLeave');
                     if (this.context.dragleavecallback) {
                         const e = new CustomEvent('DejaDragLeave', { cancelable: false });
