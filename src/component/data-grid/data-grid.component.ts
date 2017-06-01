@@ -121,8 +121,8 @@ export class DejaGridComponent implements OnDestroy {
     @Output() public columnLayoutChanged = new EventEmitter<IDejaGridColumnLayoutEvent>();
     /** Cet évenement est levé lorsque la taille d'une colonne est modifiée */
     @Output() public columnSizeChanged = new EventEmitter<IDejaGridColumnSizeEvent>();
-
-    protected rowsWidth = null;
+    /** retourne la largeur calculée des lignes */
+    public rowsWidth = null;
 
     @ContentChild('rowTemplate') private rowTemplateInternal;
     @ContentChild('parentRowTemplate') private parentRowTemplateInternal;

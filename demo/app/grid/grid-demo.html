@@ -108,15 +108,15 @@
 			<div>Grouping example</div>
 			<div fxLayout="row">
 				<span fxFlex="0 0 45%" fxLayout="column">
-					<deja-grid fxFlex="0 0 600px" columnsSortable multiSelect columnsSizable sortable [rows]="groupedByGenderPeople$" [columns]="peopleColumns" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid">
-						<ng-template #cellTemplate let-row let-column="column">
-							<span *ngIf="column.name==='color'" class="color" [style.background-color]="row[column.name]"></span>
+					<deja-grid #gg fxFlex="0 0 600px" columnsSortable multiSelect columnsSizable sortable [rows]="groupedByGenderPeople$" [columns]="peopleColumns" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid">
+						<ng-template #rowTemplate let-row>
+							<deja-grid-row [row]="row" [columnLayout]="gg.columnLayout" [style.width.px]="gg.rowsWidth" [deja-draggable]="getDragContext(row)"></deja-grid-row>
 						</ng-template>
 					</deja-grid>
 				</span>
-				<span fxFlex="0 0 45%" fxFlexOffset="5%">
+				<span fxFlex="0 0 45%" fxFlexOffset="5%" id="dropArea">
 					<div>You can drag and drop items the the area bellow (That will display a JSON representation of the dropped model) :</div>
-					<div #dropArea [deja-mouse-droppable]="getDropContext(dropArea)" [deja-droppable]="{dragovercallback: onDivDragOver, dragentercallback:onDivDragOver, dropcallback:onDivDropEvent}" style="border:1px solid red;min-height:150px;"></div>
+					<div #dropArea [deja-droppable]="getDropContext(dropArea)" style="border:1px solid red;min-height:150px;"><pre>{{draggedPerson | json}}</pre></div>
 				</span>
 			</div>
 		</md-card-content>

@@ -67,8 +67,9 @@ export class DejaDroppableDirective implements OnDestroy {
 
                     console.log('DejaDragEnter');
                     if (this.context.dragentercallback) {
+                        const dragInfos = this.clipboardService.get(this.draginfokey) as { [key: string]: any };
                         const e = dragEvent as IDejaDropEvent;
-                        e.dragInfo = dragEvent;
+                        e.dragInfo = dragInfos;
                         e.dragObject = dragEvent[this.objectKey];
                         e.dragElement = element;
                         e.itsMe = dragEvent[this.elementKey] === element;
@@ -85,7 +86,6 @@ export class DejaDroppableDirective implements OnDestroy {
                             .subscribe((dropEvent: DragEvent) => {
                                 console.log('DejaDrop');
                                 if (this.context.dropcallback) {
-                                    const dragInfos = this.clipboardService.get(this.draginfokey) as { [key: string]: any };
                                     if (dragInfos) {
                                         const evt = dropEvent as IDejaDropEvent;
                                         evt.dragInfo = dragInfos;
@@ -122,7 +122,6 @@ export class DejaDroppableDirective implements OnDestroy {
                                 }
 
                                 if (this.context.dragovercallback) {
-                                    const dragInfos = this.clipboardService.get(this.draginfokey) as { [key: string]: any };
                                     if (dragInfos) {
                                         const evt = overEvent as IDejaDropEvent;
                                         evt.dragInfo = dragInfos;
@@ -190,7 +189,7 @@ export interface IDejaDropEvent extends IDejaDragEvent {
 
 export interface IDejaDropContext {
     dragentercallback: (event: IDejaDropEvent) => void;
-    dropcallback: (event: IDejaDropEvent) => void;
-    dragovercallback: (event: IDejaDropEvent) => void;
-    dragleavecallback: (event: CustomEvent) => void;
+    dropcallback?: (event: IDejaDropEvent) => void;
+    dragovercallback?: (event: IDejaDropEvent) => void;
+    dragleavecallback?: (event: CustomEvent) => void;
 }

@@ -25,8 +25,8 @@ import { CloningService } from './../../../src/common/core/cloning/cloning.servi
 import { IGroupInfo } from './../../../src/common/core/grouping/group-infos';
 import { GroupingService } from './../../../src/common/core/grouping/grouping.service';
 import { IConfig } from './../../../src/component/circular-picker/circular-picker.component';
-import { IDropCursorInfos } from './../../../src/component/mouse-dragdrop/mouse-dragdrop.service';
-import { IDejaMouseDroppableContext } from './../../../src/component/mouse-dragdrop/mouse-droppable.directive';
+import { IDejaDragContext } from './../../../src/component/dragdrop/draggable.directive.d';
+import { IDejaDropContext, IDejaDropEvent } from './../../../src/component/dragdrop/droppable.directive';
 
 @Component({
     selector: 'grid-demo',
@@ -49,6 +49,7 @@ export class GridDemoComponent {
     protected bigNews$: Observable<INews[]>;
     protected bigPeople$: Observable<IPerson[]>;
     protected columnGroups = [] as IDejaGridColumn[];
+    protected draggedPerson;
 
     protected viewPortInfos: {
         name: string;
@@ -329,20 +330,27 @@ export class GridDemoComponent {
         return row.toString();
     }
 
-    protected getDropContext(dropArea: HTMLElement) {
+    protected getDragContext(row: IDejaGridRow) {
         return {
-            dragEnter: (_dragContext) => {
-                return {
-                    width: 200,
-                    height: 60,
-                    className: 'country-target-cursor',
-                } as IDropCursorInfos;
+            object: row,
+        } as IDejaDragContext;
+    }
+
+    protected getDropContext(dropArea: HTMLElement) {
+        const drag = (event: IDejaDropEvent) => {
+            if (event.dragInfo && event.dragInfo.element && event.dragInfo.element.tagName === 'DEJA-GRID-ROW') {
+                event.preventDefault();
+            }
+        }
+
+        return {
+            dragentercallback: drag,
+            dragovercallback: drag,
+            dropcallback: (event: IDejaDropEvent) => {
+                this.draggedPerson = event.dragInfo.object as IPerson;
+                this.changeDetectorRef.markForCheck();
             },
-            drop: (dragContext) => {
-                const person = dragContext as IPerson;
-                dropArea.innerText = `The dropped person is: ${person.name} - the id is: ${person.guid}`;
-            },
-        } as IDejaMouseDroppableContext;
+        } as IDejaDropContext;
     }
 }
 

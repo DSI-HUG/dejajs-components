@@ -86,7 +86,7 @@ export class DejaDraggableDirective implements OnDestroy {
                             delete obj.dragged;
                         }
 
-                        if (this.context && this.context.dragendcallback) {
+                        if (this.context && this.context.dragendcallback && dragEndInfos) {
                             const e = evt as IDejaDragEvent;
                             e.dragInfo = dragEndInfos;
                             e.dragObject = obj;
@@ -116,7 +116,7 @@ export interface IDejaDragEvent extends DragEvent {
 }
 
 export interface IDejaDragContext {
-    object: any;
-    dragstartcallback: (event: IDejaDragEvent) => void;
-    dragendcallback: (event: IDejaDragEvent) => void;
+    object?: any;
+    dragstartcallback?: (event: IDejaDragEvent) => void;
+    dragendcallback?: (event: IDejaDragEvent) => void;
 }
