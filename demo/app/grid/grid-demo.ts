@@ -25,7 +25,7 @@ import { CloningService } from './../../../src/common/core/cloning/cloning.servi
 import { IGroupInfo } from './../../../src/common/core/grouping/group-infos';
 import { GroupingService } from './../../../src/common/core/grouping/grouping.service';
 import { IConfig } from './../../../src/component/circular-picker/circular-picker.component';
-import { IDejaDragContext } from './../../../src/component/dragdrop/draggable.directive.d';
+import { IDejaDragContext } from './../../../src/component/dragdrop/draggable.directive';
 import { IDejaDropContext, IDejaDropEvent } from './../../../src/component/dragdrop/droppable.directive';
 
 @Component({
