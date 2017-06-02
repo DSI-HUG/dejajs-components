@@ -426,7 +426,7 @@ export class DejaGridComponent implements OnDestroy {
             .subscribe(() => {
                 console.log('');
                 console.log('Column layout:');
-                console.log(JSON.stringify(this._columnLayout.columns, null, 4));
+                console.log(JSON.stringify(this._columns, null, 4));
                 console.log('');
             }));
 
