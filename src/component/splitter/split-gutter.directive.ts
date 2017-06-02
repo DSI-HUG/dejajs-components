@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import {Directive, ElementRef, Input, Renderer} from '@angular/core';
+import { Directive, ElementRef, Input, Renderer } from '@angular/core';
 
 /**
  * Separator for the spltter component
@@ -54,14 +54,19 @@ export class SplitGutterDirective {
      * Constructor
      */
     constructor(private elementRef: ElementRef,
-                private renderer: Renderer) {
+        private renderer: Renderer) {
     }
 
     private refreshStyle() {
         const state = this._disabled === true ? 'disabled' : this._direction;
 
         this.setStyle('cursor', this.getCursor(state));
-        this.setStyle('background-image', `url("${ this.getImage(state) }")`);
+        this.setStyle('background-image', `url("${this.getImage(state)}")`);
+
+        // Add a content in css, to allow the gutter to take the full wize
+        if(state === 'horizontal') {
+            this.setStyle('content', ` `);
+        }
     }
 
     private setStyle(key: string, value: any) {
