@@ -204,7 +204,7 @@ export class GridDemoComponent {
             name: 'name',
             width: '130px',
             sizeable: false,
-            responsive: 0,
+            minWidth: 64,
         },
         {
             label: 'Gender',
