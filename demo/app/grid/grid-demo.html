@@ -145,7 +145,7 @@
 		</md-card-content>
 		<md-toolbar color="primary">Percent Columns</md-toolbar>
 		<md-card-content fxLayout="column" class="listContainer">
-			<div>Les colonnes en pourcent vont se redimensioner pour occuper la place restante. Lorsque leur taille minimum sera atteinte, une scrollbar horizontale va s'ajouter.</div>
+			<div>The columns having a width defined as a percentage will resize to fill the remaining space.  If their size reaches their minimum width a horizontal scrollbar will appear.</div>
 			<deja-splitter direction="horizontal" (dragProgress)="grdclm2.calcColumnsLayout()">
 				<split-area [size]="60">
 					<deja-grid #grdclm2 columnsSizable [rows]="people$" [columns]="percentPeopleColumns" nodataholder="No datas" valueField="guid"> </deja-grid>
@@ -156,7 +156,7 @@
 		</md-card-content>
 		<md-toolbar color="primary">Responsives Columns</md-toolbar>
 		<md-card-content fxLayout="column" class="listContainer">
-			<div>Les colonnes en pourcent vont se redimensioner pour occuper la place restante. Lorsque leur taille minimum sera atteinte, les colonnes dont la propriété responsive est définie vont se masquer en commencant par celles qui on la valeur responsive la plus basse.</div>
+			<div>The columns having a width defined as a percentage will resize to fill the remaining space.  If their size reaches their minimum width, then the columns having a responsive property will be hidden, starting with the lowest responsive value.</div>
 			<deja-splitter direction="horizontal" (dragProgress)="grdclm3.calcColumnsLayout()">
 				<split-area [size]="60">
 					<deja-grid #grdclm3 columnsSizable [rows]="people$" [columns]="responsivePeopleColumns" nodataholder="No datas" valueField="guid"> </deja-grid>
@@ -167,7 +167,7 @@
 		</md-card-content>
 		<md-toolbar color="primary">Columns not Specified</md-toolbar>
 		<md-card-content fxLayout="column" class="listContainer">
-			<div>Les colonnes ne sont pas spécifiées. La grille va créer des colonnes à partir du model de ligne passé. A partir de ce moment, le modèle de colonnes dynamique sera affiché dans la console du navigateur permettant ainsi d'être récupéré pour être ajouté dans le code.</div>
+			<div>The columns are not specified.  The grid will create columns based on the line model given.  At that moment, the dynamic column model will be displayed in the browser console so that it can be copied and included in the code.</div>
       		<deja-grid columnsSizable maxHeight="auto" [rows]="people$" nodataholder="No datas" valueField="guid"> </deja-grid>
 		</md-card-content>
 	</md-card>
