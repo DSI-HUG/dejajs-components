@@ -64,7 +64,7 @@ export class SplitGutterDirective {
         this.setStyle('background-image', `url("${this.getImage(state)}")`);
 
         // Add a content in css, to allow the gutter to take the full wize
-        if(state === 'horizontal') {
+        if (state === 'horizontal') {
             this.setStyle('content', ` `);
         }
     }
