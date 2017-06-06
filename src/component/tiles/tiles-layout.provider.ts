@@ -110,8 +110,8 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         this.subscriptions.push(Observable.from(this.refreshTiles$)
             .debounceTime(30)
             .do(() => {
-                this.container.style.width = ''
-                this.container.style.height = ''
+                this.container.style.width = '';
+                this.container.style.height = '';
             })
             .delay(10)
             .subscribe((params) => {
@@ -1466,7 +1466,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                 this[prop + 'Unit'] = 'px';
             }
         }
-    };
+    }
 
     private restoreLayout(layout: ILayoutInfos) {
         this.tiles.forEach((tile) => {

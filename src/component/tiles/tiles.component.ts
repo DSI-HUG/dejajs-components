@@ -137,15 +137,15 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     @Input()
     public set designMode(value: boolean | string) {
         this.layoutProvider.designMode = value != null && `${value}` !== 'false';
-    };
+    }
 
     public get designMode() {
         return this.layoutProvider.designMode;
-    };
+    }
 
     @Input()
     public set models(models: IDejaTile[]) {
-        this.writeValue(models)
+        this.writeValue(models);
     }
 
     @Input()

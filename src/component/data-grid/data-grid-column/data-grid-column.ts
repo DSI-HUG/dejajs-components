@@ -60,5 +60,5 @@ export interface IDejaGridColumnSizeEvent {
 
 export interface IDejaGridColumnLayoutEvent extends IDejaGridColumnEvent {
     target?: IDejaGridColumn;
-    targetIndex?: number,
+    targetIndex?: number;
 }

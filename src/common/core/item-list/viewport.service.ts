@@ -267,7 +267,7 @@ export class ViewPortService implements OnDestroy {
                                     if (item) {
                                         item.size = clientSize(itemElement);
                                     }
-                                };
+                                }
                             })
                             .switchMap(() => calcVariableSizeViewPort$(items, containerSize, viewPort.scrollPos || scrollPos, itemDefaultSize || ViewPortService.itemDefaultSize, ensureParams));
                     }

@@ -583,7 +583,7 @@ export class DejaGridComponent implements OnDestroy {
             event.column.sorting = false;
             this.changeDetectorRef.markForCheck();
             this.header.refresh();
-        }
+        };
 
         event.column.sorting = true;
         this.changeDetectorRef.markForCheck();
@@ -679,7 +679,7 @@ export class DejaGridComponent implements OnDestroy {
     }
 
     protected onGroupsChanged(e: IDejaGridGroupsEvent) {
-        this.columnGroups$.next(e.columns)
+        this.columnGroups$.next(e.columns);
     }
 
     protected calcColumnsLayout(rows?: IItemBase[]) {

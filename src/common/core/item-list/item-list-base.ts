@@ -350,7 +350,7 @@ export abstract class ItemListBase implements OnDestroy {
     /** Efface le viewport */
     public clearViewPort() {
         this.viewPort.clear();
-    };
+    }
 
     /** Efface la hauteur calculée des lignes en mode automatique */
     public clearRowsHeight() {
@@ -715,7 +715,7 @@ export abstract class ItemListBase implements OnDestroy {
 
             return itemBase;
         });
-    };
+    }
 
     protected getItemHeight(item: IItemBase) {
         if (this.viewPort.mode === ViewportMode.disabled) {

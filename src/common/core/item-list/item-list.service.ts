@@ -806,7 +806,7 @@ export class ItemListService {
 
         return this.ensureFlatListCache$(true, multiSelect)
             .switchMap((flatList) => search$(flatList));
-    };
+    }
 
     /** Supprime tous les caches internes. Ils seront recréés à la première demande de la portion de la liste à afficher. */
     public invalidateCache() {

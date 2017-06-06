@@ -321,15 +321,15 @@ export class GridDemoComponent {
                 useCellTemplate: true,
             } as IDejaGridColumn],
             ...this.peopleColumns,
-        ]
+        ];
 
-        this.variableHeightPeopleColumns = [...this.peopleColumns]
+        this.variableHeightPeopleColumns = [...this.peopleColumns];
 
         const addressCol = this.variableHeightPeopleColumns.find((column) => column.name === 'address');
         addressCol.sizeable = true;
         addressCol.width = '250px';
 
-        const aboutCol = this.variableHeightPeopleColumns.find((column) => column.name === 'about')
+        const aboutCol = this.variableHeightPeopleColumns.find((column) => column.name === 'about');
         aboutCol.sizeable = true;
         aboutCol.width = '400px';
 
@@ -462,7 +462,7 @@ export class GridDemoComponent {
             if (event.dragInfo && event.dragInfo.element && event.dragInfo.element.tagName === 'DEJA-GRID-ROW') {
                 event.preventDefault();
             }
-        }
+        };
 
         return {
             dragentercallback: drag,
@@ -481,78 +481,3 @@ interface IPeopleGroup extends IItemTree {
     rows: IDejaGridRow[];
     loaded?: boolean;
 }
-
-// export class GridDemoComponent implements OnInit {
-
-
-//     protected tabIndex = 1;
-//     protected drugCounts = 0;
-
-//     private drugsBigRecord$: Observable<IDrug[]>;
-//     private drugs$: Observable<IDrug[]>;
-//     private news$: Observable<INews[]>;
-//     private groupedDrugs$: Observable<IDrug[]>;
-//     private selectedItems: IItemTree[];
-//     @ViewChild(DejaGridComponent) private gridComponent: DejaGridComponent;
-
-
-//     constructor(private drugsService: DrugsService, newsService: NewsService) {
-//         this.news$ = newsService.getNews$(1);
-//     }
-
-//     ngOnInit() {
-//         this.drugCounts = 0;
-
-//         this.drugsBigRecord$ = this.drugsService
-//             .getDrugs$(null, 1)
-//             // .getDrugs$(null, 10)
-//             .do((drugs) => this.drugCounts += drugs.length);
-
-//         this.drugs$ = this.drugsService.getDrugs$();
-
-//         this.groupedDrugs$ = this.drugsService.getGroupedDrugs$();
-//     }
-
-
-//     protected onSelectionChanged(e: DejaGridRowsEvent) {
-//         this.selectedItems = e.items;
-//     }
-
-//     protected onSelectionChanged2() {
-
-//     }
-
-//     protected onSelectionChanged3() {
-
-//     }
-
-//     protected onItemDragStart(event: IDejaDragEvent) {
-//         const itm = event.dragObject as IItemTree;
-//         if (itm.depth === this.gridComponent.depthMax) {
-//             event.dragInfo['drug'] = event.dragObject;
-//         }
-//     }
-
-//     protected onDivDragOver(event: IDejaDragEvent) {
-//         if (event.dragInfo.hasOwnProperty('drug')) {
-//             event.preventDefault();
-//         }
-//     }
-
-//     protected onDivDropEvent(event: IDejaDragEvent) {
-//         if (event.dragInfo.hasOwnProperty('drug')) {
-//             (event.target as HTMLElement).innerHTML = JSON.stringify(event.dragInfo['drug']);
-//             event.preventDefault();
-//         }
-//     }
-
-//     protected showMoreReaction() {
-
-//     }
-
-//     protected onSuffixClicked() {
-//         alert('Suffix button was pressed');
-//     }
-
-
-// }

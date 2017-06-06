@@ -73,17 +73,17 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
         if (this._parentForm) {
             this._parentForm.ngSubmit.subscribe(() => {
                 this.changeDetectorRef.markForCheck();
-            })
+            });
         }
 
         if (this._parentFormGroup) {
             this._parentFormGroup.ngSubmit.subscribe(() => {
                 this.changeDetectorRef.markForCheck();
-            })
+            });
         }
 
         const keydown$ = Observable.from(this.inputElement$)
-            .switchMap((element) => Observable.fromEvent(element, 'keydown'))
+            .switchMap((element) => Observable.fromEvent(element, 'keydown'));
 
         this.subscriptions.push(keydown$
             .filter((event: KeyboardEvent) => !this.showDropDown && (event.keyCode === KeyCodes.KeyD || event.keyCode === KeyCodes.UpArrow || event.keyCode === KeyCodes.DownArrow))

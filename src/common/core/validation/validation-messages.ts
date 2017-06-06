@@ -17,4 +17,4 @@ export class ValidationMessages {
     public getMessage(key: string) {
         return this.messages[key];
     }
-};
+}
