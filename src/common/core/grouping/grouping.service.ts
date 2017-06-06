@@ -49,7 +49,7 @@ export class GroupingService {
                             return this.groupChildren$(children, groupInfo, curDepth, childrenField).map((groupedChildren) => {
                                 treeItem[childrenField] = groupedChildren;
                                 return treeItem;
-                            });;
+                            });
                         }
                     })
                     .reduce((acc: any[], cur) => {
