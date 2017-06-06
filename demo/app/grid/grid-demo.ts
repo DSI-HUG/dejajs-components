@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
@@ -14,9 +14,7 @@ import { IItemTree } from '../../../src/common/core/item-list/item-tree';
 import { IViewPortItem } from '../../../src/common/core/item-list/viewport.service';
 import { IDejaGridColumn, IDejaGridColumnSizeEvent } from '../../../src/component/data-grid/data-grid-column/data-grid-column';
 import { IDejaGridRow } from '../../../src/component/data-grid/data-grid-row/data-grid-row';
-import { DejaGridRowsEvent } from '../../../src/component/data-grid/data-grid-row/data-grid-rows-event';
 import { DejaGridComponent } from '../../../src/component/data-grid/data-grid.component';
-import { IDejaDragEvent } from '../../../src/component/dragdrop/draggable.directive';
 import { INews } from '../common/news.model';
 import { NewsService } from '../services/news.service';
 import { IPerson, PeopleService } from '../services/people.service';
@@ -24,7 +22,6 @@ import { IExtendedViewPortItem } from '../tree-list/tree-list-demo';
 import { CloningService } from './../../../src/common/core/cloning/cloning.service';
 import { IGroupInfo } from './../../../src/common/core/grouping/group-infos';
 import { GroupingService } from './../../../src/common/core/grouping/grouping.service';
-import { IConfig } from './../../../src/component/circular-picker/circular-picker.component';
 import { IDejaDragContext } from './../../../src/component/dragdrop/draggable.directive';
 import { IDejaDropContext, IDejaDropEvent } from './../../../src/component/dragdrop/droppable.directive';
 
@@ -457,7 +454,7 @@ export class GridDemoComponent {
         } as IDejaDragContext;
     }
 
-    protected getDropContext(dropArea: HTMLElement) {
+    protected getDropContext() {
         const drag = (event: IDejaDropEvent) => {
             if (event.dragInfo && event.dragInfo.element && event.dragInfo.element.tagName === 'DEJA-GRID-ROW') {
                 event.preventDefault();
