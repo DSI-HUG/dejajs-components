@@ -7,6 +7,8 @@
         "stripInternal": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
+        "noUnusedParameters": true,
+        "noUnusedLocals": true,
         "moduleResolution": "node",
         "outDir": "../build",
         "rootDir": ".",
