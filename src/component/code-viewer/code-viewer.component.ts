@@ -26,10 +26,6 @@ export class DejaCodeViewerComponent implements AfterViewChecked {
 
     private initialised = false;
 
-    constructor() {
-        // console.log('ok');
-    }
-
     /**
      * Re-init prismjs afterViewChecked.
      * It's a quick fix to bind this component in any cases.

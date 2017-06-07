@@ -96,6 +96,10 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
 
     @ViewChild('picker') private picker: ElementRef;
 
+    /**
+     * Constructor.
+     * Create MouseDown & mouseMove Observables needed inside this control.
+     */
     constructor(elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, @Self() @Optional() public _control: NgControl) {
         const element = elementRef.nativeElement as HTMLElement;
 
