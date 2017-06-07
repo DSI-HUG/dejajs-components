@@ -9,10 +9,16 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 /**
+ * Map on object so we can itterate on it
  * @deprecated
  */
 @Pipe({ name: 'keys' })
 export class KeysPipe implements PipeTransform {
+    /**
+     * Transform object in array.
+     *
+     * @param {any} value Object to itterate
+     */
     public transform(value): any {
         return Object.keys(value).map((key) => value[key]);
     }

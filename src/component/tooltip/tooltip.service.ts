@@ -8,13 +8,18 @@
 
 import { ElementRef, Injectable } from '@angular/core';
 
+/**
+ * Service to pass some params through tooltip module
+ */
 @Injectable()
 export class DejaTooltipService {
+    /** Tooltip params */
     public params = {} as { [name: string]: ITooltipParams };
-
-    constructor() { }
 }
 
+/**
+ * Format of tooltip params
+ */
 export interface ITooltipParams {
     /** Renvoie ou définit l'élement du DOM sur lequel le conteneur déroulant devra s'aligner */
     ownerElement: ElementRef | HTMLElement;

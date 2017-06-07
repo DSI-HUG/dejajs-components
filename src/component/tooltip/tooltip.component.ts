@@ -14,6 +14,9 @@ import { Rect } from '../../common/core/graphics/rect';
 import { DejaDropDownComponent } from '../dropdown/dropdown.component';
 import { DejaTooltipService, ITooltipParams } from './tooltip.service';
 
+/**
+ * Customizable tooltip component for Angular2
+ */
 @Component({
     selector: 'deja-tooltip',
     templateUrl: 'tooltip.component.html',
@@ -22,15 +25,25 @@ import { DejaTooltipService, ITooltipParams } from './tooltip.service';
     ],
 })
 export class DejaTooltipComponent implements OnInit {
+    /** Element where tooltip can't overflow. Default is body. */
     @Input() public containerElement: ElementRef | HTMLElement;
+    /** Tooltip name. Mandatory, and need to be unic */
     @Input() public name: string;
+    /** Event Emmited when hide action is called */
     @Output() public hide = new EventEmitter();
+    /** Reference to dropdown component inside this */
     @ViewChild('dropdown') public dropdown: DejaDropDownComponent;
+    /** Template for tooltip content */
     @ContentChild('tooltipTemplate') public tooltipTemplate;
 
+    /** Parameters of the tooltip */
     public params: ITooltipParams;
     private model: any;
 
+    /**
+     * Constructor
+     * Subscribe to mouseover to know when tooltip must disappear.
+     */
     constructor(elementRef: ElementRef, private tooltipService: DejaTooltipService) {
         const element = elementRef.nativeElement as HTMLElement;
 
@@ -56,6 +69,10 @@ export class DejaTooltipComponent implements OnInit {
             .subscribe(() => this.hide.emit());
     }
 
+    /**
+     * Init tooltip configuration
+     * Check if ng-template model passed through param is an observable or a promise and resolve it before set.
+     */
     public ngOnInit() {
         if (!this.name) {
             throw (new Error('Name is required'));
