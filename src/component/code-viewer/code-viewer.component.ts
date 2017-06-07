@@ -10,6 +10,10 @@ import { AfterViewChecked, Component, Input, ViewEncapsulation } from '@angular/
 
 import * as Prism from 'prismjs';
 
+/**
+ * Experimental
+ * Code viewer component for angular2 using PrismJs
+ */
 @Component({
     encapsulation: ViewEncapsulation.None,
     selector: 'deja-code-viewer',
@@ -17,6 +21,7 @@ import * as Prism from 'prismjs';
     templateUrl: './code-viewer.component.html',
 })
 export class DejaCodeViewerComponent implements AfterViewChecked {
+    /** Language inside viewer @see http://prismjs.com/#languages-list - PrismJs documentation to know possibles values */
     @Input() public language: string;
 
     private initialised = false;
@@ -25,6 +30,10 @@ export class DejaCodeViewerComponent implements AfterViewChecked {
         // console.log('ok');
     }
 
+    /**
+     * Re-init prismjs afterViewChecked.
+     * It's a quick fix to bind this component in any cases.
+     */
     public ngAfterViewChecked() {
         // console.log('ok');
         if (!this.initialised) {
