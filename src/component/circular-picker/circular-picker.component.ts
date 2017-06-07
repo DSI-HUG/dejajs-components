@@ -30,6 +30,9 @@ interface ICircularValue {
     value: number;
 }
 
+/**
+ * Circular-picker component for Angular
+ */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'deja-circular-picker',
@@ -37,19 +40,34 @@ interface ICircularValue {
     templateUrl: './circular-picker.component.html',
 })
 export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor, OnDestroy {
+    /** ClockwiseFactor allows user to choose rotation direction of picker */
     @Input() public clockwiseFactor: ClockwiseFactorEnum = ClockwiseFactorEnum.clockwise;
+    /** Diameter of circular picker in pixels. Default 310px */
     @Input() public fullDiameter = 310;
+    /** Diameter of labels on circular picker */
     @Input() public labelsDiameter = 43;
+    /**
+     * Allows user to choose labels position. If outerLabels is true, labels will come outside the circular picker
+     *
+     * With outerLabels = true, and ranges.length > 1, labels will go outwards.
+     * With outerLabels = false, and ranges.length > 1, labels will go inwards.
+     */
     @Input() public outerLabels = false;
+    /** Ranges of circular picker */
     @Input() public ranges: ICircularRange[];
+
+    /** Template for labels inside picker. Use it to customize labels */
     @ContentChild('labelTemplate') public labelTemplate;
+    /** template for cursor inside picker. Use it to customize labels */
     @ContentChild('cursorTemplate') public cursorTemplate;
 
+    /** disabled property setter. Can be string or empty so you can use it like : <circular-picker disabled></circular-picker> */
     @Input()
     public set disabled(value: boolean | string) {
         this._disabled = value != null && `${value}` !== 'false';
     }
 
+    /** To get disabled attribute. */
     public get disabled() {
         return this._disabled;
     }
@@ -165,10 +183,14 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
 
     }
 
+    /** Unsubscribe to Observables when component is destroyed */
     public ngOnDestroy() {
         this.mousedown$sub.unsubscribe();
     }
 
+    /**
+     * Init circular-picker configuration
+     */
     public ngOnInit() {
         /* max - width */
         const diameter = this.fullDiameter - this.labelsDiameter; // Material standard button size
@@ -192,7 +214,7 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
     }
 
     // ************* ControlValueAccessor Implementation **************
-    // set accessor including call the onchange callback
+    /** set accessor including call the onchange callback */
     set value(v: number) {
         if (v !== this._value) {
             this.writeValue(v);
@@ -200,12 +222,12 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
         }
     }
 
-    // get accessor
+    /** get accessor */
     get value(): number {
         return this._value;
     }
 
-    // From ControlValueAccessor interface
+    /** From ControlValueAccessor interface */
     public writeValue(value: number) {
         if (value !== this._value) {
             this._value = value;
@@ -213,17 +235,26 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
         }
     }
 
-    // From ControlValueAccessor interface
+    /** From ControlValueAccessor interface */
     public registerOnChange(fn: any) {
         this.onChangeCallback = fn;
     }
 
-    // From ControlValueAccessor interface
+    /** From ControlValueAccessor interface */
     public registerOnTouched(fn: any) {
         this.onTouchedCallback = fn;
     }
     // ************* End of ControlValueAccessor Implementation **************
 
+    /**
+     * Take a point in parameter and return corresponding value
+     *
+     * @param {number} x xPos of point
+     * @param {number} y yPos of point
+     * @param {IConfig} config config where the point is located
+     *
+     * @return {number} value
+     */
     protected pointToValue(x: number, y: number, config: IConfig) {
         const angleAtPoint: number = this.pointToAngle(x - this.radius, y - this.radius, config);
         let circleSegmentIndexAtPoint: number = config.steps - Math.ceil(angleAtPoint / config.stepAngle);
@@ -238,6 +269,14 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
         return config.range.min + circleSegmentIndexAtPoint * config.range.interval;
     }
 
+    /**
+     * Take velue and returns its position
+     * @param value value to check
+     * @param radiusOffset Radius to ckeck (if outerLabels are on, the radius offset = fullDiameter + labelsDiameter)
+     * @param config the config where to check
+     *
+     * @returns {Position} the position of value
+     */
     protected valueToPoint(value: number, radiusOffset: number, config: IConfig): Position {
         const position = new Position();
         const valueAngle: number = this.valueToAngle(value, config);
