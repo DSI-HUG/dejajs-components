@@ -21,7 +21,6 @@ import { MonacoEditorService } from './monaco-editor.service';
 })
 export class DejaMonacoEditorModule {}
 
-
-export * from './options/editor-language.model';
-export * from './options/editor-theme.component';
+export * from './options/editor-options.model';
+export * from './options/editor-scrollbar-options.model';
 export * from './monaco-editor.component';

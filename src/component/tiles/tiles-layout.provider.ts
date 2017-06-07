@@ -1,12 +1,9 @@
 /*
- * *
  *  @license
- *  right HÃ´pital Universitaire de GenÃ¨ve All Rights Reserved.
+ *  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
  *
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
- * /
- *
  */
 
 import { EventEmitter, Injectable, OnDestroy, Optional } from '@angular/core';
@@ -113,8 +110,8 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         this.subscriptions.push(Observable.from(this.refreshTiles$)
             .debounceTime(30)
             .do(() => {
-                this.container.style.width = ''
-                this.container.style.height = ''
+                this.container.style.width = '';
+                this.container.style.height = '';
             })
             .delay(10)
             .subscribe((params) => {
@@ -1469,7 +1466,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                 this[prop + 'Unit'] = 'px';
             }
         }
-    };
+    }
 
     private restoreLayout(layout: ILayoutInfos) {
         this.tiles.forEach((tile) => {

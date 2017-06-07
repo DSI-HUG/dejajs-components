@@ -22,7 +22,6 @@ import { HomeComponent } from './home/home.component';
 import { MenuDemoComponent } from './menu/menu-demo';
 import { MessageBoxDemoComponent } from './message-box/message-box-demo';
 import { DejaMonacoEditorDemoComponent } from './monaco-editor/monaco-editor-demo';
-import { MonacoEditorJsonFileResolver, MonacoEditorJsonToCompareFileResolver, MonacoEditorXmlFileResolver, MonacoEditorXmlToCompareFileResolver } from './monaco-editor/monaco-editor.resolver';
 import { ProgressCircleDemoComponent } from './progress-circle/progress-circle-demo';
 import { DejaRangeDemoComponent } from './range/range-demo';
 import { ReactiveFormDemoComponent } from './reactive-form/reactive-form-demo';
@@ -46,14 +45,7 @@ const routes: Routes = [
         { component: GridDemoComponent, path: 'grid' },
         { component: MenuDemoComponent, path: 'menu' },
         { component: MessageBoxDemoComponent, path: 'message-box' },
-        {
-            component: DejaMonacoEditorDemoComponent, path: 'monaco-editor', resolve: {
-                jsonFile: MonacoEditorJsonFileResolver,
-                jsonToCompareFile: MonacoEditorJsonToCompareFileResolver,
-                xmlFile: MonacoEditorXmlFileResolver,
-                xmlToCompareFile: MonacoEditorXmlToCompareFileResolver,
-            }
-        },
+        { component: DejaMonacoEditorDemoComponent, path: 'monaco-editor' },
         { component: ProgressCircleDemoComponent, path: 'progress-circle' },
         { component: DejaRangeDemoComponent, path: 'range' },
         { component: ReactiveFormDemoComponent, path: 'reactive-form' },

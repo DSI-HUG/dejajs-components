@@ -6,9 +6,6 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-/**
- * Created by rtr on 22.12.2016.
- */
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Output, Renderer, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import {IAreaData} from './area-data.model';
 import {Point} from './point.model';
@@ -17,32 +14,72 @@ import {SplitAreaDirective} from './split-area.directive';
 const gutterSize = 'gutterSize';
 const disabled = 'disabled';
 
+/**
+ * Splitter Component for Angular
+ *
+ * The splitter component allows to split horizontally or vertically, a container in N resizable part.
+ */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     selector: 'deja-splitter',
-    styleUrls: ['./splitter.scss'],
-    templateUrl: './splitter.html',
+    styleUrls: ['./splitter.component.scss'],
+    templateUrl: './splitter.component.html',
 })
 export class DejaSplitterComponent implements OnChanges, OnDestroy {
+    /**
+     * Direction of the split
+     * Can be `horizontal` or `vertical`
+     */
     @Input() public direction = 'horizontal';
+    /**
+     * Width in percent of the component
+     * By default `100%`
+     */
     @Input() public width: number;
+    /**
+     * Height in percent of the component
+     * By default `100%`
+     */
     @Input() public height: number;
+    /**
+     * Separator width
+     */
     @Input() public gutterSize = 10;
+    /**
+     * Disable the component
+     */
     @Input() public disabled = false;
-
+    /**
+     * Event triggered when the user start to drag the cursor
+     */
     @Output() public dragStart = new EventEmitter<number[]>(false);
+    /**
+     * Event triggered during the cursor's drag
+     */
     @Output() public dragProgress = new EventEmitter<number[]>(false);
+    /**
+     * Event triggered when the user stop to drag the cursor
+     */
     @Output() public dragEnd = new EventEmitter<number[]>(false);
 
+    /**
+     * Host Binding
+     */
     @HostBinding('style.flex-direction') get styleFlexDirection() {
         return this.direction === 'horizontal' ? 'row' : 'column';
     }
 
+    /**
+     * Host Binding
+     */
     @HostBinding('style.width') get styleWidth() {
         return (this.width && !isNaN(this.width) && this.width > 0) ? this.width + 'px' : '100%';
     }
 
+    /**
+     * Host Binding
+     */
     @HostBinding('style.height') get styleHeight() {
         return (this.height && !isNaN(this.height) && this.height > 0) ? this.height + 'px' : '100%';
     }
@@ -59,21 +96,37 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
     private areaBSize = 0;
     private eventsDragFct: Function[] = [];
 
+    /**
+     * Constructor
+     */
     constructor(private cdRef: ChangeDetectorRef,
                 private elementRef: ElementRef,
                 private renderer: Renderer) {
     }
 
+    /**
+     * Lifecycle hook that is called when any data-bound property of a directive changes.
+     */
     public ngOnChanges(changes: SimpleChanges) {
         if (changes[gutterSize] || changes[disabled]) {
             this.refresh();
         }
     }
 
+    /**
+     * Lifecycle hook that is called when a directive, pipe or service is destroyed.
+     */
     public ngOnDestroy() {
         this.stopDragging();
     }
 
+    /**
+     * Add a new area into the component
+     * @param component Area to add
+     * @param orderUser Position of the new area into the component
+     * @param sizeUser Size of the new area
+     * @param minPixel Min size of the new area
+     */
     public addArea(component: SplitAreaDirective, orderUser: number | null, sizeUser: number | null, minPixel: number) {
         this.areas.push({
             component,
@@ -87,6 +140,13 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
         this.refresh();
     }
 
+    /**
+     * Update an existing area into the component
+     * @param component Area to update
+     * @param orderUser Position of the area into the component
+     * @param sizeUser Size of the area
+     * @param minPixel  Min size of the area
+     */
     public updateArea(component: SplitAreaDirective, orderUser: number | null, sizeUser: number | null, minPixel: number) {
         const item = this.areas.find((a) => a.component === component);
 
@@ -99,6 +159,10 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
         }
     }
 
+    /**
+     * Delete an existing area into the component
+     * @param area Area to delete
+     */
     public removeArea(area: SplitAreaDirective) {
         const item = this.areas.find((a) => a.component === area);
 
@@ -111,6 +175,11 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
         }
     }
 
+    /**
+     * Function called when the user start to drag the cursor
+     * @param startEvent drag event
+     * @param gutterOrder separator number
+     */
     public startDragging(startEvent: MouseEvent, gutterOrder: number) {
         startEvent.preventDefault();
 

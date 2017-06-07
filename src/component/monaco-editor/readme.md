@@ -1,11 +1,7 @@
-# Monaco Editor
-Monaco Editor est l'éditeur de code utilisé dans [VS Code](https://github.com/Microsoft/vscode).
-Une page décrivant bien les fonctionnalitées de l'éditeur est présente [ici](https://code.visualstudio.com/docs/editor/editingevolved).
+### Important Informations
+> Do not forget to import `DejaMonacoEditorModule` in the `imports` section of your module !
 
-### Informations inportantes 
-> Ne pas oublier d'importer le `DejaMonacoEditorModule`dans les `imports` de votre module concerné !
-
-> Ne pas oublier de modifier votre configuration webpack :
+> Do not forget to edit your webpack configuration :
 
 ```javascript
 var CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -18,20 +14,14 @@ plugins: [
     ]
 ```
 
-Si le dossier de sortie doit etre modifié (vs enb l'occurence), il est possible de modifier la path dans le composant via 
-l'input : monacoLibPath (Ex: 'mon_path/loader.js')
-
-### Utilisation 
+### How to use
 ```html
-<deja-monaco-editor [(value)]="code" [(valueToCompare)]="codeToCompare" [language]="language"></deja-monaco-editor>
+<deja-monaco-editor [(value)]="code" [(valueToCompare)]="codeToCompare" language="xml"></deja-monaco-editor>
 ```
 
 ```typescript
 export class DejaMonacoEditorDemoComponent implements OnInit {
     protected code: string;
-
-    protected language: IEditorLanguage = IEditorLanguage.XML;
-    protected languageJson: IEditorLanguage = IEditorLanguage.JSON;
 
     constructor() {
     }
@@ -55,64 +45,12 @@ export class DejaMonacoEditorDemoComponent implements OnInit {
 }
 ```
 
-### Propriétés
-
-<table>
-<thead>
-<tr>
-    <th>Nom</th>
-    <th>Obligatoire</th>
-    <th>Type</th>
-    <th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-    <td>value</td>
-    <td>Oui</td>
-    <td>string</td>
-    <td>Contenu a afficher dans l'éditeur</td>
-</tr>
-<tr>
-    <td>valueToCompare</td>
-    <td>Non</td>    
-    <td>string</td>
-    <td>Contenu a comparer avec "value" dans l'éditeur</td>
-</tr>
-<tr>
-    <td>language</td>
-    <td>Oui</td>    
-    <td>IEditorLanguage</td>
-    <td>Langage du code affiché (Voir la liste des langages supportés)</td>
-</tr>
-<tr>
-    <td>valueChange</td>
-    <td>Non</td>
-    <td>Event</td>
-    <td>Exécuté lors d'une modification de la valeur de "value"</td>
-</tr>
-<tr>
-    <td>valueToCompareChange</td>
-    <td>No</td>
-    <td>Event</td>
-    <td>Exécuté lors d'une modification de la valeur de "valueToCompare"</td>
-</tr>
-<tr>
-    <td>monacoLibPath</td>
-    <td>'vs/loader.js')</td>
-    <td>String</td>
-    <td>Chemin vers le loader.js situé dans la librairie Monaco Editor. Permet de modifier le path de la lib en fonction de votre configuration Webpack.</td>
-</tr>
-</tbody>
-</table>
-
-Il est également possible de passer au composant l'ensemble des options disponible au composant Monaco ([voir ici](https://microsoft.github.io/monaco-editor/api/interfaces/monaco.editor.ieditoroptions.html#readonly))
+You can pass in param every options coming from monaco editor ([see here](https://microsoft.github.io/monaco-editor/api/interfaces/monaco.editor.ieditoroptions.html#readonly))
 ```html
-<deja-monaco-editor [(value)]="code" [language]="language" [readOnly]="true" [automaticLayout]="true"></deja-monaco-editor>
+<deja-monaco-editor [(value)]="code" language="json" [readOnly]="true" [automaticLayout]="true"></deja-monaco-editor>
 ```
 
-### Langages supportés
-La liste des langages disponible est accessible au travers de l'interface IEditorLanguage.
+### Supported language
 ```typescript
-    protected language: IEditorLanguage = IEditorLanguage.XML;
+    @Input() public language: 'bat' | 'c' | 'cpp' | 'csharp' | 'css' | 'dockerfile' | 'fsharp' | 'go' | 'handlebars' | 'html' | 'ini' | 'jade' | 'javascript' | 'json' | 'less' | 'lua' | 'markdown' | 'objective-c' | 'php' | 'csharp' | 'plaintext' | 'postiats' | 'powershell' | 'python' | 'r' | 'razor' | 'ruby' | 'scss' | 'sql' | 'swift' | 'typescript' | 'vb' | 'xml' | 'yaml';
 ```

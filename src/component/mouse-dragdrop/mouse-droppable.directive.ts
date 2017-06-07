@@ -19,7 +19,7 @@ import { DejaMouseDragDropService, IDragCursorInfos, IDragDropContext, IDropCurs
 export class DejaMouseDroppableDirective implements OnDestroy {
     private _context: IDejaMouseDroppableContext;
     private _dragContext: IDragDropContext;
-    private dragging$sub: Subscription
+    private dragging$sub: Subscription;
 
     @Input('deja-mouse-droppable')
     public set context(value: IDejaMouseDroppableContext) {

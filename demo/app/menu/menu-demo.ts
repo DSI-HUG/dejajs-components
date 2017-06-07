@@ -6,23 +6,31 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import {Component} from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 
 @Component({
-  selector: 'deja-menu-demo',
-  styleUrls: ['./menu-demo.scss'],
-  templateUrl: './menu-demo.html',
+    selector: 'deja-menu-demo',
+    styleUrls: ['./menu-demo.scss'],
+    templateUrl: './menu-demo.html',
 })
 export class MenuDemoComponent {
-  public selected = '';
-  public items = [
-    {text: 'Refresh'},
-    {text: 'Settings'},
-    {text: 'Help', disabled: true},
-    {text: 'Sign Out'},
-  ];
+    public selected = '';
+    public items = [
+        { text: 'Refresh' },
+        { text: 'Settings' },
+        { text: 'Help', disabled: true },
+        { text: 'Sign Out' },
+    ];
 
     protected tabIndex = 1;
 
-  public select(text: string) { this.selected = text; }
+    @ViewChild('contextMenu') private contextMenu;
+
+    public select(text: string) { this.selected = text; }
+
+    protected onContextMenu(event: MouseEvent) {
+        this.contextMenu.show(event);
+        event.preventDefault();
+        return false;
+    }
 }

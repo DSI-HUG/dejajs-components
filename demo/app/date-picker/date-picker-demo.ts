@@ -67,7 +67,7 @@ export class DejaDatePickerDemoComponent implements OnInit, OnDestroy {
         this.dateMin = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
         this.dateMax = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         this.theDateSelected = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
-        console.log(this.dateMin)
-        console.log(this.dateMax)
+        console.log(this.dateMin);
+        console.log(this.dateMax);
     }
 }

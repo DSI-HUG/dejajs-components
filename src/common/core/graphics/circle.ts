@@ -9,9 +9,6 @@
 import { Position } from './position';
 import { Rect } from './rect';
 
-/**
- * Utils class for operations in a Circle
- */
 export class Circle {
     /**
      * Return a circle from his outer rectangle.

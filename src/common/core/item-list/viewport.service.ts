@@ -51,7 +51,7 @@ export class ViewPortService implements OnDestroy {
     public direction$ = new BehaviorSubject<ViewportDirection | string>(ViewportDirection.vertical);
     private subscriptions = [] as Subscription[];
 
-    private refresh$ = new BehaviorSubject<IViewPortItem>(null);
+    private refresh$ = new BehaviorSubject<IViewPortRefreshParams>(null);
     private deleteSizeCache$ = new BehaviorSubject<boolean>(true);
     private lastCalculatedSize: number;
 
@@ -75,7 +75,7 @@ export class ViewPortService implements OnDestroy {
         visibleItems: [],
         startIndex: 0,
         endIndex: 0,
-        scrollPos: 0,
+        scrollPos: undefined, // Do not change the scroll pos in case of refresh is called when the list is scrolling (I.E. dynamic content loading)
         items: [],
     } as IViewPort;
 
@@ -267,7 +267,7 @@ export class ViewPortService implements OnDestroy {
                                     if (item) {
                                         item.size = clientSize(itemElement);
                                     }
-                                };
+                                }
                             })
                             .switchMap(() => calcVariableSizeViewPort$(items, containerSize, viewPort.scrollPos || scrollPos, itemDefaultSize || ViewPortService.itemDefaultSize, ensureParams));
                     }
@@ -457,11 +457,15 @@ export class ViewPortService implements OnDestroy {
             .do((value) => consoleLog(`maxSize ${value}`));
 
         const refresh$ = Observable.from(this.refresh$)
-            .do((item: IViewPortItem) => {
+            .do((params: IViewPortRefreshParams) => {
                 this.ignoreScrollCount = 0;
-                this.lastCalculatedSize = undefined;
-                if (item) {
-                    item.size = undefined;
+                if (params) {
+                    if (params.clearMeasuredSize) {
+                        this.lastCalculatedSize = undefined;
+                    }
+                    if (params.items) {
+                        params.items.forEach((item) => item.size = undefined);
+                    }
                 }
             })
             .do(() => consoleLog('refresh'));
@@ -565,8 +569,8 @@ export class ViewPortService implements OnDestroy {
         this.viewPortResult$.next(this.emptyViewPort);
     }
 
-    public refresh(item?: IViewPortItem) {
-        this.refresh$.next(item || null);
+    public refresh(params?: IViewPortRefreshParams) {
+        this.refresh$.next(params || null);
     }
 }
 
@@ -588,3 +592,8 @@ export interface IViewPort {
 }
 
 export interface IViewPortItem { size?: number; }
+
+export interface IViewPortRefreshParams {
+    items: IViewPortItem[];
+    clearMeasuredSize: boolean;
+}

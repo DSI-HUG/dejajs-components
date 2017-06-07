@@ -1,4 +1,4 @@
-<div #headerElement id="deja-grid-header" [style.left.px]="columnLayout.scrollLeft" [class.onsizer]="(sizedColumn && true) || null" [deja-droppable]="getDropContext()" [attr.sizable]="columnsSizable || null">
+<div #headerElement id="deja-grid-header" [style.left.px]="columnLayout.scrollLeft" [class.onsizer]="(sizedColumn && true) || null" [deja-droppable]="getDropContext()" continous-dragover [attr.sizable]="columnsSizable || null">
 	<div *ngIf="columnLayout.vpBeforeWidth" [style.flex-basis.px]="columnLayout.vpBeforeWidth"></div>
 	<div *ngFor="let column of columnLayout.columns; let index=index" [deja-draggable]="getDragContext(column)" [attr.index]="index" [attr.colname]="column.name" [attr.sizeable]="column.sizeable === false ? false : null" [class.dragged]="column.dragged" class="column-header-wrapper" [style.flex-basis.px]="column.w">
 		<div *ngIf="!(columnHeaderTemplate && column.useHeaderTemplate!==false)" class="column-header">{{ column.label }}</div>

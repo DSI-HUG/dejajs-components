@@ -1,5 +1,4 @@
 {
-  "defaultSeverity": "warning",
   "rulesDirectory": [
     "node_modules/codelyzer"
   ],
@@ -75,7 +74,8 @@
     ],
     "radix": true,
     "semicolon": [
-      "always"
+        true,
+        "always"
     ],
     "triple-equals": [
       true,
