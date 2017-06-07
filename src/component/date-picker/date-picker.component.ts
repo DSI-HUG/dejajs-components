@@ -22,6 +22,9 @@ const moment: (value?: any, format?: string) => moment_.Moment = (<any>moment_).
 
 const noop = () => { };
 
+/**
+ * Date-picker component for Angular2
+ */
 @Component({
     changeDetection: ChangeDetectionStrategy.Default,
     selector: 'deja-date-picker',
@@ -29,17 +32,27 @@ const noop = () => { };
     templateUrl: './date-picker.component.html',
 })
 export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, AfterContentInit, OnDestroy {
+    /** Maximum date avaliable inside date-picker */
     @Input() public dateMax: Date;
+    /** Minimum date avaliable inside date-picker */
     @Input() public dateMin: Date;
+    /** Dropdown container id. @see DejaDropDowncomponent documentation for details */
     @Input() public dropdownContainerId: string;
+    /** Dropdown alignment. @see DejaDropDowncomponent documentation for details */
     @Input() public dropdownAlignment = 'left right top bottom';
+    /** Owner alignment. @see DejaDropDowncomponent documentation for details */
     @Input() public ownerAlignment = 'left bottom';
+    /** Date format. If unset, format will be 'YYYY-MM-DD' + ' HH:mm' it's a date-time selector */
     @Input() public format: string;
+    /** Placeholder for input */
     @Input() public placeholder = 'Date';
+    /** Disabled dates. It's an array of DaysOfWeek (number between 0 and 6) or a date. */
     @Input() public disableDates: Array<DaysOfWeek | Date>; // | ((d: Date) => boolean);
+    /** Reference to DejaDateSelectorComponent inside thic control */
     @ViewChild(DejaDateSelectorComponent) public dateSelectorComponent: DejaDateSelectorComponent;
-    @Output() public dateChange = new EventEmitter();
+    /** Template for MdHint inside md-input-container */
     @ContentChild('hintTemplate') protected mdHint;
+    /** Mask for input */
     protected mask: any[];
 
     @ViewChild(DejaChildValidatorDirective) private inputValidatorDirective: DejaChildValidatorDirective;
@@ -65,6 +78,10 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
         }
     }
 
+    /**
+     * Constructor
+     * subscribe on fifferent events needed inside this component
+     */
     constructor(private elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, @Self() @Optional() public _control: NgControl, @Optional() private _parentForm: NgForm, @Optional() private _parentFormGroup: FormGroupDirective) {
         if (this._control) {
             this._control.valueAccessor = this;
@@ -135,10 +152,12 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
             .subscribe(([element]) => element.focus()));
     }
 
+    /** unsubscribe to all Observable when component is destroyed */
     public ngOnDestroy() {
         this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
     }
 
+    /** Init mask */
     public ngOnInit() {
         const formattingTokens = /(\[[^\[]*\])|(\\)?([Hh]mm(ss)?|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Qo?|YYYYYY|YYYYY|YYYY|YY|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|kk?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g;
 
@@ -172,35 +191,44 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
         return this._showDropDown;
     }
 
+    /** disabled property setter. Can be string or empty so you can use it like : <deja-date-picker disabled></deja-date-picker> */
     @Input()
     public set disabled(value: boolean | string) {
         this._disabled = (value != null && `${value}` !== 'false') ? true : null;
         this.changeDetectorRef.markForCheck();
     }
 
+    /** disabled property getter. */
     public get disabled() {
         return this._disabled;
     }
 
+    /**
+     * Time property setter. Can be string or empty so you can use it like : <deja-date-picker time></deja-date-picker>
+     * Used to add time selector next to calendar
+     */
     @Input()
     public set time(value: boolean | string) {
         this._time = (value != null && `${value}` !== 'false') ? true : null;
         this.changeDetectorRef.markForCheck();
     }
 
+    /** Time property getter */
     public get time() {
         return this._time;
     }
 
+    /** Method to close date-picker dialog */
     public close() {
         this.showDropDown = false;
     }
 
+    /** Method to open date-picker dialog */
     public open() {
         this.showDropDown = true;
     }
 
-    // set accessor including call the onchange callback
+    /** set accessor including call the onchange callback */
     public set value(v: Date) {
         if (v !== this.date) {
             this.writeValue(v);
@@ -209,12 +237,12 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     }
 
     // ************* ControlValueAccessor Implementation **************
-    // get accessor
+    /** get accessor */
     public get value(): Date {
         return this.date;
     }
 
-    // From ControlValueAccessor interface
+    /** From ControlValueAccessor interface */
     public writeValue(value: Date) {
         if (value !== this.date) {
             this.date = value;
@@ -223,27 +251,35 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
         }
     }
 
-    // From ControlValueAccessor interface
+    /** From ControlValueAccessor interface */
     public registerOnChange(fn: any) {
         this.onChangeCallback = fn;
     }
 
-    // From ControlValueAccessor interface
+    /** From ControlValueAccessor interface */
     public registerOnTouched(fn: any) {
         this.onTouchedCallback = fn;
     }
     // ************* End of ControlValueAccessor Implementation **************
 
+    /** For reactive form. */
     public ngAfterContentInit() {
         if (this.inputValidatorDirective) {
             this.inputValidatorDirective.parentControl = this._control;
         }
     }
 
+    /** Give focus to this component */
     public setFocus() {
         this.focus$.next();
     }
 
+    /**
+     * Called when user click on the input of this component.
+     * If click is located on md-icon 'calendar' who is in the mdPrefix of md-input-container, the picker show off.
+     *
+     * @param {Event} event
+     */
     protected toggleDateSelector(event: Event) {
         if (this.disabled) {
             return;
@@ -258,6 +294,11 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
         return false;
     }
 
+    /**
+     * ngModelChange of date-selector.
+     *
+     * @param {Date} newDate Date to set.
+     */
     protected onDateChange(newDate: Date) {
         this.value = newDate;
         // TODO
@@ -266,6 +307,11 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
         // }
     }
 
+    /**
+     * Called when input change. If it's a string it's because user set the date manually. So we need to convert it into date with MomentJs.
+     *
+     * @param {string | Date} date new value of this model
+     */
     protected updateModel(date: string | Date) {
         if (typeof date === 'string' && date.replace(/_/g, '').length === this.format.length) {
             let d = moment(date, this.format).toDate();
@@ -280,6 +326,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
         }
     }
 
+    /** Reset date-picker values. */
     protected reset() {
         this.value = undefined;
         delete this.inputModel;
