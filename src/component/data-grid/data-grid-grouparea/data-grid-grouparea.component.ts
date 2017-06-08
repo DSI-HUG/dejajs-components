@@ -24,7 +24,7 @@ export class DejaGridGroupAreaComponent {
     /** Cet évenement est levé lorsque le model de groupe est modifié */
     @Output() public groupsChanged = new EventEmitter<IDejaGridGroupsEvent>();
     /** Cet évenement est levé lorsqu'un group est supprimé du model */
-    @Output() public groupRemoved = new EventEmitter<IDejaGridGroupsEvent>();
+    @Output() public groupRemoved = new EventEmitter<number>();
     private _groups = [] as IDejaGridColumn[];
     private columnGroupKey = 'deja-grid-column';
     private groupGroupKey = 'deja-grid-group';
@@ -159,15 +159,7 @@ export class DejaGridGroupAreaComponent {
     }
 
     protected removeGroup(event: Event, index: number) {
-        const column = this.groups.splice(index, 1);
-
-        const e = {
-            column: column[0],
-            columns: this.groups,
-            originalEvent: event,
-        } as IDejaGridGroupsEvent;
-
-        this.groupRemoved.emit(e);
+        this.groupRemoved.emit(index);
         event.stopPropagation();
         return false;
     }

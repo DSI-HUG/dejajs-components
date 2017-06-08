@@ -12,6 +12,9 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
+/**
+ * Service to measure the theorical size of a text inside a container
+ */
 @Injectable()
 export class DejaTextMetricsService {
     private canvas;
@@ -19,6 +22,10 @@ export class DejaTextMetricsService {
     private computedStyles: CSSStyleDeclaration;
     private charSize$ = new BehaviorSubject<number[]>(null);
 
+    /**
+     * Constructor
+     * Add observable to wait for element to be set. And then take its properties to measure all ASCII char size.
+     */
     constructor() {
         Observable.from(this.element$)
             .delay(1)
@@ -33,6 +40,7 @@ export class DejaTextMetricsService {
             });
     }
 
+    /** Setter for base element */
     public set metricsElem(elem: HTMLElement) {
         this.element$.next(elem);
     }

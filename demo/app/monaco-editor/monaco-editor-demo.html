@@ -21,7 +21,7 @@
         </md-toolbar>
         <md-card-content>
             <div class="viewer">
-                <deja-monaco-editor [(value)]="xmlContent" [language]="language" [readOnly]="readOnly" [folding]="true" [theme]="theme" (valueChange)="onValueChange()"></deja-monaco-editor>
+                <deja-monaco-editor [(value)]="xmlContent" language="xml" [readOnly]="readOnly" [folding]="true" theme="vs" (valueChange)="onValueChange()"></deja-monaco-editor>
             </div>
         </md-card-content>
     </md-card>
@@ -30,7 +30,7 @@
         <md-toolbar color="primary">Comparaison d'un fichier XML</md-toolbar>
         <md-card-content>
             <div class="viewer">
-                <deja-monaco-editor [(value)]="xmlContent" [(valueToCompare)]="xmlContentToCompare" [isDiffEditor]="true" [folding]="true" [language]="language" (valueToCompareChange)="onValueToCompareChange()"></deja-monaco-editor>
+                <deja-monaco-editor [(value)]="xmlContent" [(valueToCompare)]="xmlContentToCompare" [isDiffEditor]="true" [folding]="true" language="xml" (valueToCompareChange)="onValueToCompareChange()"></deja-monaco-editor>
             </div>
         </md-card-content>
     </md-card>
@@ -39,7 +39,7 @@
         <md-toolbar color="primary">Modification d'un fichier JSON</md-toolbar>
         <md-card-content>
             <div class="viewer">
-                <deja-monaco-editor [(value)]="jsonContent" [folding]="true" [language]="languageJson"></deja-monaco-editor>
+                <deja-monaco-editor [(value)]="jsonContent" [folding]="true" language="json"></deja-monaco-editor>
             </div>
         </md-card-content>
     </md-card>
@@ -48,7 +48,7 @@
         <md-toolbar color="primary">Comparaison d'un fichier JSON</md-toolbar>
         <md-card-content>
             <div class="viewer">
-                <deja-monaco-editor [(value)]="jsonContent" [valueToCompare]="jsonContentToCompare" [isDiffEditor]="true" [folding]="true" [language]="languageJson"></deja-monaco-editor>
+                <deja-monaco-editor [(value)]="jsonContent" [valueToCompare]="jsonContentToCompare" [isDiffEditor]="true" [folding]="true" language="json"></deja-monaco-editor>
             </div>
         </md-card-content>
     </md-card>

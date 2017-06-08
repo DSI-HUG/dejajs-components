@@ -8,6 +8,7 @@
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 import { DejaClipboardService } from '../../common/core/clipboard/clipboard.service';
@@ -120,8 +121,8 @@ export class DejaGridComponent implements OnDestroy {
     @Output() public columnLayoutChanged = new EventEmitter<IDejaGridColumnLayoutEvent>();
     /** Cet évenement est levé lorsque la taille d'une colonne est modifiée */
     @Output() public columnSizeChanged = new EventEmitter<IDejaGridColumnSizeEvent>();
-
-    protected rowsWidth = null;
+    /** retourne la largeur calculée des lignes */
+    public rowsWidth = null;
 
     @ContentChild('rowTemplate') private rowTemplateInternal;
     @ContentChild('parentRowTemplate') private parentRowTemplateInternal;
@@ -164,6 +165,11 @@ export class DejaGridComponent implements OnDestroy {
     private _columnsSortable = false;
     private _columnsSizable = false;
     private _multiSelect = false;
+    private noColumnsSpecified = false;
+
+    private columnGroups$ = new Subject<IDejaGridColumn[] | string>();
+    private columns$ = new ReplaySubject<IDejaGridColumn[]>(1);
+    private _columnGroups = [] as IDejaGridColumn[];
 
     /** Permet de trier le tableau au clic sur l'entête de la colonne */
     @Input()
@@ -264,8 +270,7 @@ export class DejaGridComponent implements OnDestroy {
     @Input()
     /** Définit la structure des colonnes de la grille. */
     public set columns(columns: IDejaGridColumn[]) {
-        this._columns = columns;
-        this.calcColumnsLayout();
+        this.columns$.next(columns);
     }
 
     /** Retourne la structure des colonnes de la grille. */
@@ -337,6 +342,12 @@ export class DejaGridComponent implements OnDestroy {
         return this.treeListComponent.viewPort;
     }
 
+    /** Définit les options de regroupement utilisateur de la grille. Plusieurs champs peuvent etre spécifiés dans le HTML en utilisant la , comme séparateur (Ex: columnGroups="color, name") */
+    @Input()
+    public set columnGroups(value: IDejaGridColumn[] | string) {
+        this.columnGroups$.next(value);
+    }
+
     private get searchPrefixTemplate() {
         return this.searchPrefixTemplateExternal || this.searchPrefixTemplateInternal;
     }
@@ -378,12 +389,44 @@ export class DejaGridComponent implements OnDestroy {
 
         this.clearColumnLayout();
 
+        this.subscriptions.push(Observable.combineLatest(this.columns$, this.columnGroups$)
+            .map(([columns, columnGroups]) => {
+                if (typeof columnGroups === 'string') {
+                    const groups = columnGroups.split(',').map((v) => v.trim());
+                    return this._columnGroups = groups.map((group) => columns.find((column) => column.name === group));
+                } else {
+                    return this._columnGroups = columnGroups;
+                }
+            })
+            .map((columnGroups) => {
+                const groupInfos = [] as IGroupInfo[];
+                const sortInfos = this.treeListComponent.sortInfos;
+                columnGroups.forEach((column) => {
+                    const groupInfo = {} as IGroupInfo;
+                    if (sortInfos && sortInfos.name === column.name) {
+                        groupInfo.sortInfos = sortInfos;
+                    }
+                    groupInfo.groupByField = column.groupByField || column.name;
+                    groupInfo.groupTextField = column.groupTextField || column.name;
+                    groupInfos.push(groupInfo);
+                });
+                return groupInfos;
+            })
+            .switchMap((groupInfos) => this.treeListComponent.group$(groupInfos))
+            .subscribe(() => this.changeDetectorRef.markForCheck()));
+
+        this.subscriptions.push(Observable.from(this.columns$)
+            .subscribe((columns) => {
+                this._columns = columns;
+                this.calcColumnsLayout();
+            }));
+
         this.subscriptions.push(Observable.from(this.printColumnLayout$)
             .debounceTime(1000)
             .subscribe(() => {
                 console.log('');
                 console.log('Column layout:');
-                console.log(JSON.stringify(this._columnLayout.columns, null, 4));
+                console.log(JSON.stringify(this._columns, null, 4));
                 console.log('');
             }));
 
@@ -540,7 +583,7 @@ export class DejaGridComponent implements OnDestroy {
             event.column.sorting = false;
             this.changeDetectorRef.markForCheck();
             this.header.refresh();
-        }
+        };
 
         event.column.sorting = true;
         this.changeDetectorRef.markForCheck();
@@ -556,13 +599,15 @@ export class DejaGridComponent implements OnDestroy {
             });
     }
 
-    protected onColumnLayoutChanged(e: IDejaGridColumnLayoutEvent) {
-        const sourceIndex = this.columns.findIndex((og) => og === e.column);
-        this.columns.splice(sourceIndex, 1);
+    protected onColumnDragEnd() {
+        this.columnLayout.refresh$.next();
+    }
 
-        if (e.target) {
-            const targetIndex = this.columns.findIndex((og) => og === e.target);
-            this.columns.splice(targetIndex, 0, e.column);
+    protected onColumnLayoutChanged(e: IDejaGridColumnLayoutEvent) {
+        this.columns.splice(e.index, 1);
+
+        if (!!e.target) {
+            this.columns.splice(e.targetIndex, 0, e.column);
         } else {
             this.columns.push(e.column);
         }
@@ -570,7 +615,9 @@ export class DejaGridComponent implements OnDestroy {
         this.calcColumnsLayout();
         this.ensureColumnVisible(e.column);
 
-        this.columnLayoutChanged.next(e);
+        this.columnLayoutChanged.emit(e);
+
+        this.changeDetectorRef.markForCheck();
     }
 
     protected onColumnSizeChanged(e: IDejaGridColumnSizeEvent) {
@@ -618,37 +665,25 @@ export class DejaGridComponent implements OnDestroy {
         this.columnSizeChanged.emit(e);
     }
 
-    protected onGroupRemoved(e: IDejaGridGroupsEvent) {
+    protected onGroupRemoved(index: number) {
+        const column = this._columnGroups.splice(index, 1)[0];
+
         const groupInfo = {
-            groupByField: e.column.groupByField || e.column.name,
-            groupTextField: e.column.groupTextField || e.column.name,
+            groupByField: column.groupByField || column.name,
+            groupTextField: column.groupTextField || column.name,
         } as IGroupInfo;
+
         this.treeListComponent.ungroup$(groupInfo)
             .first()
             .subscribe(noop);
     }
 
     protected onGroupsChanged(e: IDejaGridGroupsEvent) {
-        const groupInfos = [] as IGroupInfo[];
-        const sortInfos = this.treeListComponent.sortInfos;
-        e.columns.forEach((column) => {
-            const groupInfo = {} as IGroupInfo;
-            if (sortInfos && sortInfos.name === column.name) {
-                groupInfo.sortInfos = sortInfos;
-            }
-            groupInfo.groupByField = column.groupByField || column.name;
-            groupInfo.groupTextField = column.groupTextField || column.name;
-            groupInfos.push(groupInfo);
-        });
-
-        this.treeListComponent.group$(groupInfos)
-            .first()
-            .subscribe(noop);
+        this.columnGroups$.next(e.columns);
     }
 
     protected calcColumnsLayout(rows?: IItemBase[]) {
         if (!this._columns || !this._columns.length) {
-            this.printColumnLayout$.next(true);
             if (rows && rows.length) {
                 const searchFirstLastLevelRow = (items: IItemBase[]) => {
                     return items.find((row: IItemTree) => {
@@ -664,9 +699,10 @@ export class DejaGridComponent implements OnDestroy {
                         }
                     });
                 };
-                const treeRow = searchFirstLastLevelRow(rows);
 
+                const treeRow = searchFirstLastLevelRow(rows);
                 if (treeRow) {
+                    this.noColumnsSpecified = true;
                     this._columns = Object.keys(treeRow).map((key) => {
                         return {
                             label: key,
@@ -680,6 +716,10 @@ export class DejaGridComponent implements OnDestroy {
             if (!this._columns || !this._columns.length) {
                 return;
             }
+        }
+
+        if (this.noColumnsSpecified) {
+            this.printColumnLayout$.next();
         }
 
         this.clearColumnLayout();

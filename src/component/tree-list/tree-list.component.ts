@@ -370,8 +370,10 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Definit le service de liste utilisé par ce composant. Ce srevice permet de controller dynamiquement la liste, ou de faire du lazyloading. */
     @Input()
     public set itemListService(value: ItemListService) {
-        this.hasCustomService = true;
-        this.setItemListService(value);
+        if (value !== undefined) {
+            this.hasCustomService = true;
+            this.setItemListService(value);
+        }
     }
 
     /** Retourne le service de liste utilisé par ce composant. Ce srevice permet de controller dynamiquement la liste, ou de faire du lazyloading. */

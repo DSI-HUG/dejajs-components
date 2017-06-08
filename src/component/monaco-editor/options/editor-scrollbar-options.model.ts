@@ -9,7 +9,7 @@
 /**
  * Configuration options for editor scrollbars
  */
-export interface IEditorScrollbarOptions {
+export class EditorScrollbarOptions {
     /**
      * The size of arrows (if displayed).
      * Defaults to 11.

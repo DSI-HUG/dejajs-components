@@ -9,7 +9,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { IViewPortItem } from '../../../src/common/core/item-list/viewport.service';
-import { IEditorLanguage } from '../../../src/component/monaco-editor/options/editor-language.model';
 import { DejaViewPortComponent } from '../../../src/component/viewport/viewport.component';
 import { INews } from '../common/news.model';
 import { NewsService } from '../services/news.service';
@@ -42,7 +41,6 @@ export class DejaViewPortDemoComponent {
             </div>
         </ng-template>
     </deja-viewport>`;
-    protected html = IEditorLanguage.HTML;
     protected news$: Observable<INews[]>;
 
     constructor(newsService: NewsService) {

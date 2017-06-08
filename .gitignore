@@ -54,6 +54,7 @@ Thumbs.db
 src/*.js
 src/*.js.map
 src/**/*.d.ts
+!src/send-action.js
 
 # Ignore in demo
 demo/vs

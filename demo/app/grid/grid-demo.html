@@ -7,6 +7,7 @@
 	<md-tab label="API REFERENCE"></md-tab>
 	<md-tab label="SIMPLE EXAMPLES"></md-tab>
 	<md-tab label="ADVANCED EXAMPLES"></md-tab>
+	<md-tab label="COLUMNS MODES"></md-tab>
 	<md-tab label="TEMPLATING"></md-tab>
 	<md-tab label="PRE-EVENTS AND ON_DEMAND"></md-tab>
 	<md-tab label="PERFORMANCES"></md-tab>
@@ -93,35 +94,123 @@
 </div>
 
 <div *ngIf="tabIndex === 2">
-	<md-card class="deja-treelist-demo demo-card demo-basic">
-		<md-toolbar color="primary">Grouping Server Side or Client Side</md-toolbar>
+	<md-card class="deja-grid-demo demo-card demo-basic">
+		<md-toolbar color="primary">Grouping Client Side</md-toolbar>
 		<md-card-content fxLayout="column" class="listContainer">
 			<div>To allow the user grouping just add the groupArea directive</div>
-			<deja-grid fxFlex="0 0 600px" groupArea columnsSortable multiSelect columnsSizable sortable [rows]="groupedByGenderPeople$" [columns]="peopleColumnsEx" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid">
+			<deja-grid fxFlex="0 0 600px" groupArea columnsSortable multiSelect columnsSizable sortable columnGroups="eyeColor" [rows]="people$" [columns]="peopleColumnsEx" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid">
 				<ng-template #cellTemplate let-row let-column="column">
 					<span *ngIf="column.name==='color'" class="color" [style.background-color]="row[column.name]"></span>
 				</ng-template>
 			</deja-grid>
 		</md-card-content>
+		<md-toolbar color="primary">Grouping Server Side and Drag Drop</md-toolbar>
+		<md-card-content>
+			<div>Grouping example</div>
+			<div fxLayout="row">
+				<span fxFlex="0 0 45%" fxLayout="column">
+					<deja-grid #gg fxFlex="0 0 600px" columnsSortable multiSelect columnsSizable sortable [rows]="groupedByGenderPeople$" [columns]="peopleColumns" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid">
+						<ng-template #rowTemplate let-row>
+							<deja-grid-row [row]="row" [columnLayout]="gg.columnLayout" [style.width.px]="gg.rowsWidth" [deja-draggable]="getDragContext(row)"></deja-grid-row>
+						</ng-template>
+					</deja-grid>
+				</span>
+				<span fxFlex="0 0 45%" fxFlexOffset="5%" id="dropArea">
+					<div>You can drag and drop items the the area bellow (That will display a JSON representation of the dropped model) :</div>
+					<div #dropArea [deja-droppable]="getDropContext(dropArea)" style="border:1px solid red;min-height:150px;">
+						<pre>{{draggedPerson | json}}</pre>
+					</div>
+				</span>
+			</div>
+		</md-card-content>
+		<md-toolbar color="primary">Variable Rows Height</md-toolbar>
+		<md-card-content fxLayout="column" class="listContainer">
+			<deja-grid id="variable" #variable maxHeight="auto" columnsSortable multiSelect columnsSizable sortable [rows]="variableHeightPeopleRows$" [columns]="variableHeightPeopleColumns" viewportMode="auto" nodataholder="No datas" searchField="name" valueField="guid" (columnSizeChanged)="onColumnSizeChanged($event, variable)"></deja-grid>
+		</md-card-content>
 	</md-card>
 </div>
 
 <div *ngIf="tabIndex === 3">
-	<md-card class="deja-treelist-demo demo-card demo-basic">
-		<md-toolbar color="primary">Templating Examples</md-toolbar>
+	<md-card class="deja-grid-demo demo-card demo-basic">
+		<md-toolbar color="primary">Sizeable Columns</md-toolbar>
 		<md-card-content class="listContainer">
-			<h1>Cells Template</h1>
-			<deja-grid id="news" #news sortable columnsSizable multiSelect [rows]="news$ | async" [columns]="newsColumns" viewportMode="auto" nodataholder="Pas de données" (columnSizeChanged)="onColumnSizeChanged($event)">
-				<ng-template #cellTemplate let-row let-column="column">
-					<img *ngIf="column.name==='urlToImage'" [attr.src]="row[column.name]" class="logo" (load)="imageLoaded(row)">
-				</ng-template>
-			</deja-grid>
+			<div>The horizontal scrollbar will be adjusted to match the total with of the columns</div>
+			<deja-splitter direction="horizontal">
+				<split-area [size]="60">
+					<deja-grid columnsSizable [rows]="people$" [columns]="peopleColumns" nodataholder="No datas" valueField="guid"> </deja-grid>
+				</split-area>
+				<split-area [size]="40">
+				</split-area>
+			</deja-splitter>
+		</md-card-content>
+		<md-toolbar color="primary">Percent Columns</md-toolbar>
+		<md-card-content fxLayout="column" class="listContainer">
+			<div>The columns having a width defined as a percentage will resize to fill the remaining space.  If their size reaches their minimum width a horizontal scrollbar will appear.</div>
+			<deja-splitter direction="horizontal" (dragProgress)="grdclm2.calcColumnsLayout()">
+				<split-area [size]="60">
+					<deja-grid #grdclm2 columnsSizable [rows]="people$" [columns]="percentPeopleColumns" nodataholder="No datas" valueField="guid"> </deja-grid>
+				</split-area>
+				<split-area [size]="40">
+				</split-area>
+			</deja-splitter>
+		</md-card-content>
+		<md-toolbar color="primary">Responsives Columns</md-toolbar>
+		<md-card-content fxLayout="column" class="listContainer">
+			<div>The columns having a width defined as a percentage will resize to fill the remaining space.  If their size reaches their minimum width, then the columns having a responsive property will be hidden, starting with the lowest responsive value.</div>
+			<deja-splitter direction="horizontal" (dragProgress)="grdclm3.calcColumnsLayout()">
+				<split-area [size]="60">
+					<deja-grid #grdclm3 columnsSizable [rows]="people$" [columns]="responsivePeopleColumns" nodataholder="No datas" valueField="guid"> </deja-grid>
+				</split-area>
+				<split-area [size]="40">
+				</split-area>
+			</deja-splitter>
+		</md-card-content>
+		<md-toolbar color="primary">Columns not Specified</md-toolbar>
+		<md-card-content fxLayout="column" class="listContainer">
+			<div>The columns are not specified.  The grid will create columns based on the line model given.  At that moment, the dynamic column model will be displayed in the browser console so that it can be copied and included in the code.</div>
+      		<deja-grid columnsSizable maxHeight="auto" [rows]="people$" nodataholder="No datas" valueField="guid"> </deja-grid>
 		</md-card-content>
 	</md-card>
 </div>
 
 <div *ngIf="tabIndex === 4">
-	<md-card class="deja-treelist-demo demo-card demo-basic">
+	<md-card class="deja-grid-demo demo-card demo-basic">
+		<md-toolbar color="primary">Templating Examples</md-toolbar>
+		<md-card-content class="listContainer">
+			<h1>Cells Template</h1>
+			<deja-grid id="news" #news sortable columnsSizable multiSelect maxHeight="auto" [rows]="news$ | async" [columns]="newsColumns" viewportMode="auto" nodataholder="Pas de données" (columnSizeChanged)="onColumnSizeChanged($event, news)">
+				<ng-template #cellTemplate let-row let-column="column">
+					<img *ngIf="column.name==='urlToImage'" [attr.src]="row[column.name]" class="logo" (load)="imageLoaded(row, news)">
+				</ng-template>
+			</deja-grid>
+			<div fxLayout="row">
+				<span fxFlex="0 0 45%" fxLayout="column">
+					<h1>Parent Row Templating</h1>
+					<deja-grid searchArea columnsSortable columnsSizable sortable maxHeight="auto" [rows]="groupedByEyesColorPeople$" [columns]="peopleColumns" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid">
+						<ng-template #parentRowTemplate let-row>
+							<md-icon id="placeholder-icon">visibility</md-icon>&nbsp;
+							<span>{{ getParentRowDecr(row) }}</span>
+						</ng-template>
+					</deja-grid>
+				</span>
+				<span fxFlex="0 0 45%" fxFlexOffset="5%" fxLayout="column">
+					<h1>Search Prefix and Suffix Templates</h1>
+					<deja-grid searchArea columnsSortable columnsSizable sortable maxHeight="auto" [rows]="people$" [columns]="peopleColumns" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid">
+						<ng-template #searchPrefixTemplate>
+							<md-icon (click)="onFilterTemplateClicked('Prefix')">public</md-icon>
+						</ng-template>
+						<ng-template #searchSuffixTemplate>
+							<md-icon (click)="onFilterTemplateClicked('Suffix')">more_vert</md-icon>
+						</ng-template>
+					</deja-grid>
+				</span>
+			</div>
+		</md-card-content>
+	</md-card>
+</div>
+
+<div *ngIf="tabIndex === 5">
+	<md-card class="deja-grid-demo demo-card demo-basic">
 		<md-toolbar color="primary">Pre-events and on-demand</md-toolbar>
 		<md-card-content class="listContainer">
 			<h1>On Demand Loading </h1>
@@ -145,16 +234,16 @@
 	</md-card>
 </div>
 
-<div *ngIf="tabIndex === 5">
-	<md-card class="deja-treelist-demo demo-card demo-basic">
+<div *ngIf="tabIndex === 6">
+	<md-card class="deja-grid-demo demo-card demo-basic">
 		<md-toolbar color="primary">Performance Examples</md-toolbar>
 		<md-card-content class="listContainer">
 			<h1>10K rows with Item Template </h1>
 			<div>An exemple with 100000 fixed size rows</div>
 			<span fxLayout="columns">
-				<deja-grid id="news" #news sortable columnsSizable multiSelect [rows]="bigNews$" [columns]="newsColumns" viewportMode="auto" nodataholder="Pas de données" (columnSizeChanged)="onColumnSizeChanged($event)">
+				<deja-grid id="news" #bigNews sortable columnsSizable multiSelect [rows]="bigNews$" [columns]="newsColumns" viewportMode="auto" nodataholder="Pas de données" (columnSizeChanged)="onColumnSizeChanged($event, bigNews)">
 					<ng-template #cellTemplate let-row let-column="column">
-						<img *ngIf="column.name==='urlToImage'" [attr.src]="row[column.name]" class="logo" (load)="imageLoaded(row)">
+						<img *ngIf="column.name==='urlToImage'" [attr.src]="row[column.name]" class="logo" (load)="imageLoaded(row, bigNews)">
 					</ng-template>
 				</deja-grid>
 			</span>
@@ -162,7 +251,7 @@
 			<h1>Fixed size rows 100K items</h1>
 			<div>An exemple with 100000 fixed size rows</div>
 			<span fxLayout="row">
-				<deja-grid #bigPeople fxFlex="0 0 65%" columnsSortable multiSelect columnsSizable sortable [rows]="bigPeople$" [columns]="peopleColumnsEx" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid">
+				<deja-grid #bigPeople fxFlex="0 0 65%" columnsSortable multiSelect columnsSizable sortable maxHeight="auto" [rows]="bigPeople$" [columns]="peopleColumnsEx" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid">
 					<ng-template #cellTemplate let-row let-column="column">
 						<span *ngIf="column.name==='color'" class="color" [style.background-color]="row[column.name]"></span>
 					</ng-template>

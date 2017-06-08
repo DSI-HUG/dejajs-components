@@ -6,6 +6,9 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+/**
+ * Define a point by his absciss and ordinate value
+ */
 export interface Point {
     x: number;
     y: number;

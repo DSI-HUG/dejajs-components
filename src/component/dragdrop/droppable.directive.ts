@@ -48,18 +48,28 @@ export class DejaDroppableDirective implements OnDestroy {
     }
 
     constructor(elementRef: ElementRef, @Optional() private clipboardService: DejaClipboardService) {
+        let inDrag = false;
         const element = elementRef.nativeElement as HTMLElement;
         const dragDrop$ = new Subject<DragEvent>();
         const kill$ = new Subject();
-        const dragEnd$ = Observable.from(kill$).filter((value) => !value);
+
+        const dragEnd$ = Observable.from(kill$)
+            .do(() => inDrag = false)
+            .filter((value) => !value);
 
         this.subscriptions.push(Observable.from(dragDrop$)
             .subscribe((dragEvent) => {
                 if (dragEvent.type === 'dragenter') {
+                    if (inDrag) {
+                        return;
+                    }
+                    inDrag = true;
+
                     console.log('DejaDragEnter');
                     if (this.context.dragentercallback) {
+                        const dragInfos = this.clipboardService.get(this.draginfokey) as { [key: string]: any };
                         const e = dragEvent as IDejaDropEvent;
-                        e.dragInfo = dragEvent;
+                        e.dragInfo = dragInfos;
                         e.dragObject = dragEvent[this.objectKey];
                         e.dragElement = element;
                         e.itsMe = dragEvent[this.elementKey] === element;
@@ -76,7 +86,6 @@ export class DejaDroppableDirective implements OnDestroy {
                             .subscribe((dropEvent: DragEvent) => {
                                 console.log('DejaDrop');
                                 if (this.context.dropcallback) {
-                                    const dragInfos = this.clipboardService.get(this.draginfokey) as { [key: string]: any };
                                     if (dragInfos) {
                                         const evt = dropEvent as IDejaDropEvent;
                                         evt.dragInfo = dragInfos;
@@ -94,7 +103,8 @@ export class DejaDroppableDirective implements OnDestroy {
                                         }
                                     }
                                 }
-                                dragDrop$.next(dropEvent);
+                                kill$.next();
+                                return;
                             });
 
                         Observable.fromEvent(element, 'dragover')
@@ -112,7 +122,6 @@ export class DejaDroppableDirective implements OnDestroy {
                                 }
 
                                 if (this.context.dragovercallback) {
-                                    const dragInfos = this.clipboardService.get(this.draginfokey) as { [key: string]: any };
                                     if (dragInfos) {
                                         const evt = overEvent as IDejaDropEvent;
                                         evt.dragInfo = dragInfos;
@@ -133,7 +142,7 @@ export class DejaDroppableDirective implements OnDestroy {
                                 }
                             });
                     }
-                } else if (dragEvent.type === 'dragleave') {
+                } else {
                     console.log('DejaDragLeave');
                     if (this.context.dragleavecallback) {
                         const e = new CustomEvent('DejaDragLeave', { cancelable: false });
@@ -142,8 +151,6 @@ export class DejaDroppableDirective implements OnDestroy {
                             dragEvent.preventDefault();
                         }
                     }
-                    kill$.next();
-                } else {
                     kill$.next();
                 }
             }));
@@ -162,7 +169,7 @@ export class DejaDroppableDirective implements OnDestroy {
             .filter(() => !!this.context)
             .filter(() => !!this.clipboardService.get(this.draginfokey))
             .subscribe((leaveEvent: DragEvent) => {
-                console.log('dragleave ' + (leaveEvent.target as HTMLElement).tagName);
+                // console.log('dragleave ' + (leaveEvent.target as HTMLElement).tagName);
                 const bounds = element.getBoundingClientRect();
                 const inside = leaveEvent.x >= bounds.left && leaveEvent.x <= bounds.right && leaveEvent.y >= bounds.top && leaveEvent.y <= bounds.bottom;
                 if (!inside) {
@@ -182,7 +189,7 @@ export interface IDejaDropEvent extends IDejaDragEvent {
 
 export interface IDejaDropContext {
     dragentercallback: (event: IDejaDropEvent) => void;
-    dropcallback: (event: IDejaDropEvent) => void;
-    dragovercallback: (event: IDejaDropEvent) => void;
-    dragleavecallback: (event: CustomEvent) => void;
+    dropcallback?: (event: IDejaDropEvent) => void;
+    dragovercallback?: (event: IDejaDropEvent) => void;
+    dragleavecallback?: (event: CustomEvent) => void;
 }

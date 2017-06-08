@@ -172,6 +172,7 @@ Must be one of the following:
 * **ci**: Configuration files
 * **chore**: Other changes that don't modify `src` or `test` files
 * **revert**: Revert another commit
+* **quiet**: Not documented in readme.md
 
 ### Scope
 The scope could be anything specifying place of the commit change. For example

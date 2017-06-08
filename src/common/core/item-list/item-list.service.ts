@@ -47,7 +47,8 @@ export class ItemListService {
     private _hideSelected: boolean;
 
     // Cache for last query. Flat list will be regenerated only if the query change
-    private lastQuery: string | RegExp;
+    private lastQuery: RegExp;
+    private internalQuery: RegExp;
 
     // Sorting
     private _sortingService: SortingService;
@@ -806,7 +807,7 @@ export class ItemListService {
 
         return this.ensureFlatListCache$(true, multiSelect)
             .switchMap((flatList) => search$(flatList));
-    };
+    }
 
     /** Supprime tous les caches internes. Ils seront recréés à la première demande de la portion de la liste à afficher. */
     public invalidateCache() {
@@ -824,10 +825,6 @@ export class ItemListService {
     /** Usage interne. Retourne la portion de la liste à afficher en fonction des paramètres spécifiés. */
     public getViewList$(searchField: string, query?: RegExp | string, ignoreCache?: boolean, ddStartIndex?: number, ddTargetIndex?: number, multiSelect?: boolean): Observable<IViewListResult> {
         const result = {} as IViewListResult;
-
-        ignoreCache = ignoreCache || query !== this.lastQuery || !this.items || !this.items.length;
-        const expandTree = query !== this.lastQuery;
-        this.lastQuery = query;
 
         // Check regexp validity
         // regExp.test(this.getTextValue(item));
@@ -847,6 +844,10 @@ export class ItemListService {
                 }
             }
         }
+
+        const expandTree = (regExp && regExp.toString()) !== (this.lastQuery && this.lastQuery.toString());
+        ignoreCache = ignoreCache || expandTree || !this.items || !this.items.length;
+        this.lastQuery = regExp;
 
         const loadViewList = () => {
             let viewList: IItemBase[];
@@ -897,6 +898,11 @@ export class ItemListService {
         if (ignoreCache) {
             // console.log('getItemList ' + Date.now());
             this.waiter$.next(true);
+
+            if (!this.items || !this.items.length) {
+                this.internalQuery = regExp;
+            }
+
             return this.getItemList$(query, this.selectedList)
                 .do((items) => {
                     if (!this.items || !this.items.length) {
@@ -907,17 +913,17 @@ export class ItemListService {
                         // New item list, invalidate view cache
                         this.items = items;
                         // Be cause a new array was returned by getItemList, the list is considered as already filtered (Lazy loading)
-                        regExp = undefined;
+                        this.internalQuery = undefined;
                         this.ensureChildrenProperties(items);
                     }
 
                     delete this._cache.visibleList;
                     this.waiter$.next(this.items === undefined);
                 })
-                .switchMap(() => this.ensureVisibleListCache$(searchField, regExp, expandTree, multiSelect))
+                .switchMap(() => this.ensureVisibleListCache$(searchField, this.internalQuery, expandTree, multiSelect))
                 .map(() => loadViewList());
         } else {
-            return this.ensureVisibleListCache$(searchField, regExp, expandTree, multiSelect)
+            return this.ensureVisibleListCache$(searchField, this.internalQuery, expandTree, multiSelect)
                 .map(() => loadViewList());
         }
     }
@@ -1263,7 +1269,7 @@ export class ItemListService {
         } else if (!this.groupInfos || this.groupInfos.length === 0) {
             return Observable.of(this.items)
                 .do((items) => this._cache.groupedList = items);
-        } else {
+        } else if (this.items) {
             return this.getGroupedList$(this.items)
                 .do((groupedList) => {
                     if (this._cache.groupedList && this._cache.groupedList.length && this._cache.groupedList !== groupedList) {
@@ -1272,6 +1278,8 @@ export class ItemListService {
                     }
                     this._cache.groupedList = groupedList;
                 });
+        } else {
+            return Observable.of([]);
         }
     }
 

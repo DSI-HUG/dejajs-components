@@ -1,5 +1,5 @@
 :host {
-    position: fixed;
+    // position: fixed; Fail on IE11
     width: 100%;
     height: 100%;
     background-color: #222;

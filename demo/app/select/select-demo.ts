@@ -102,6 +102,16 @@ export class SelectDemoComponent implements OnDestroy {
                 const result = [] as ICountryGroup[];
                 const onDemandResult = [] as ICountryGroup[];
                 const map = {} as { [groupName: string]: ISelectCountry[] };
+
+                result.push({
+                    collapsible: true,
+                    collapsed: true,
+                    groupName: 'EmptyGroup',
+                    items: [],
+                    displayName: 'Empty Group',
+                    selectable: false,
+                } as ICountryGroup);
+
                 value.map((country) => {
                     const groupName = 'Group ' + country.naqme[0];
                     if (!map[groupName]) {

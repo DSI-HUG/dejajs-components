@@ -12,12 +12,16 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 
+/**
+ * Simple dialog for Angular2
+ */
 @Component({
     selector: 'deja-dialog',
     styleUrls: ['./dialog.component.scss'],
     templateUrl: './dialog.component.html',
 })
 export class DejaDialogComponent implements OnDestroy {
+    /** Event emitted when dialog close action is called */
     @Output() public closed = new EventEmitter();
 
     @ContentChild('okaction') private okButton;
@@ -25,6 +29,9 @@ export class DejaDialogComponent implements OnDestroy {
 
     private keyup$sub: Subscription;
 
+    /**
+     * Constructor
+     */
     constructor(elementRef: ElementRef) {
         const element = elementRef.nativeElement as HTMLElement;
 
@@ -40,10 +47,17 @@ export class DejaDialogComponent implements OnDestroy {
             });
     }
 
+    /** Unsubscribe to all observables when component is destroyed */
     public ngOnDestroy() {
         this.keyup$sub.unsubscribe();
     }
 
+    /**
+     * Listen on click on dialogComponent.
+     * If click is not inside the dialog, close action is called.
+     *
+     * @param {MouseEvent} event
+     */
     @HostListener('click', ['$event'])
     public close(event: MouseEvent) {
         event.preventDefault();

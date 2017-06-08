@@ -1,4 +1,3 @@
-
 /*
  *  @license
  *  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
@@ -18,7 +17,6 @@ import { ICountry } from '../services/countries.service';
 import { Store } from '@ngrx/store';
 import { KeyCodes } from '../../../src/common/core/keycodes.enum';
 import { MaterialColors } from '../../../src/common/core/style/material-colors';
-import { IEditorLanguage } from '../../../src/component/monaco-editor/options/editor-language.model';
 import { IappState } from './model/app-state.interface';
 import { IUser } from './model/user.interface';
 import { UserService } from './service/user.service';
@@ -32,10 +30,6 @@ export class ReactiveFormDemoComponent implements AfterContentInit, OnInit, OnDe
     protected tabIndex = 1;
     protected form: FormGroup;
 
-    protected exampleValue = `
-    `;
-
-    protected html = IEditorLanguage.HTML;
     protected formMap = {} as { [key: string]: any };
 
     protected user$: Observable<IUser>;

@@ -48,6 +48,7 @@ export interface IDejaGridColumn {
 
 export interface IDejaGridColumnEvent {
     column: IDejaGridColumn;
+    index: number;
     originalEvent: MouseEvent;
 }
 
@@ -58,5 +59,6 @@ export interface IDejaGridColumnSizeEvent {
 }
 
 export interface IDejaGridColumnLayoutEvent extends IDejaGridColumnEvent {
-    target: IDejaGridColumn;
+    target?: IDejaGridColumn;
+    targetIndex?: number;
 }

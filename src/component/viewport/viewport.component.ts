@@ -18,7 +18,7 @@ import 'rxjs/add/operator/takeUntil';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
-import { IViewPort, IViewPortItem, ViewportDirection, ViewportMode, ViewPortService } from '../../common/core/item-list/viewport.service';
+import { IViewPort, IViewPortItem, IViewPortRefreshParams, ViewportDirection, ViewportMode, ViewPortService } from '../../common/core/item-list/viewport.service';
 
 export enum DejaViewPortScrollStyle {
     scrollbar,
@@ -297,9 +297,15 @@ export class DejaViewPortComponent implements OnDestroy {
     }
 
     /** Recalcule le viewport. */
-    public refreshViewPort(item: IViewPortItem) {
-        item.size = undefined;
-        this.viewPort.refresh(item);
+    public refreshViewPort(item?: IViewPortItem, clearMeasuredHeight?: boolean) {
+        const refreshParams = {} as IViewPortRefreshParams;
+        if (item) {
+            refreshParams.items = [item];
+        }
+        if (clearMeasuredHeight) {
+            refreshParams.clearMeasuredSize = clearMeasuredHeight;
+        }
+        this.viewPort.refresh(refreshParams);
         this.changeDetectorRef.markForCheck();
     }
 

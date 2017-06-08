@@ -15,6 +15,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
+import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 
@@ -53,6 +54,9 @@ export class DejaDropDownComponent implements AfterViewInit, OnDestroy {
 
     /** Renvoie ou définit une valeur indiquant si le conteneur déroulant peut s'afficher par dessus son propriétaire */
     @Input() public avoidOnwerOverflow = true;
+
+    /** Permet de définir la position du dropdown manuellement */
+    @Input() public position: Position;
 
     /** Renvoie ou définit une valeur indiquant si le conteneur déroulant se ferme sur pression de la touche Echap */
     @Input()
@@ -206,48 +210,54 @@ export class DejaDropDownComponent implements AfterViewInit, OnDestroy {
                 let width = dropdownRect.width;
                 let height = dropdownRect.height;
 
-                // Calc container absolute alignment
-                if (this.ownerAlignents.left) {
-                    if (this.dropdownAlignments.left) {
-                        left = ownerBounds.left;
-                    } else if (this.dropdownAlignments.right) {
-                        left = ownerBounds.left - width;
-                    } else {
-                        left = ownerBounds.left - width / 2;
-                    }
-                }
-
-                if (this.ownerAlignents.top) {
-                    if (this.dropdownAlignments.top) {
-                        top = ownerBounds.top;
-                    } else if (this.dropdownAlignments.bottom) {
-                        top = ownerBounds.top - height;
-                    } else {
-                        top = ownerBounds.top + ownerBounds.height / 2 - height / 2;
-                    }
-                }
-
-                if (this.ownerAlignents.right) {
+                // If position specified, align to the position
+                if (this.position) {
+                    left = this.position.left;
+                    top = this.position.top;
+                } else {
+                    // Otherwise, calc container absolute alignment
                     if (this.ownerAlignents.left) {
-                        width = ownerBounds.width;
-                    } else if (this.dropdownAlignments.left) {
-                        left = ownerBounds.right;
-                    } else if (this.dropdownAlignments.right) {
-                        left = ownerBounds.right - width;
-                    } else {
-                        left = ownerBounds.right - width / 2;
+                        if (this.dropdownAlignments.left) {
+                            left = ownerBounds.left;
+                        } else if (this.dropdownAlignments.right) {
+                            left = ownerBounds.left - width;
+                        } else {
+                            left = ownerBounds.left - width / 2;
+                        }
                     }
-                }
 
-                if (this.ownerAlignents.bottom) {
                     if (this.ownerAlignents.top) {
-                        height = ownerBounds.height;
-                    } else if (this.dropdownAlignments.top) {
-                        top = ownerBounds.bottom;
-                    } else if (this.dropdownAlignments.bottom) {
-                        top = ownerBounds.bottom - height;
-                    } else {
-                        top = ownerBounds.bottom - height / 2;
+                        if (this.dropdownAlignments.top) {
+                            top = ownerBounds.top;
+                        } else if (this.dropdownAlignments.bottom) {
+                            top = ownerBounds.top - height;
+                        } else {
+                            top = ownerBounds.top + ownerBounds.height / 2 - height / 2;
+                        }
+                    }
+
+                    if (this.ownerAlignents.right) {
+                        if (this.ownerAlignents.left) {
+                            width = ownerBounds.width;
+                        } else if (this.dropdownAlignments.left) {
+                            left = ownerBounds.right;
+                        } else if (this.dropdownAlignments.right) {
+                            left = ownerBounds.right - width;
+                        } else {
+                            left = ownerBounds.right - width / 2;
+                        }
+                    }
+
+                    if (this.ownerAlignents.bottom) {
+                        if (this.ownerAlignents.top) {
+                            height = ownerBounds.height;
+                        } else if (this.dropdownAlignments.top) {
+                            top = ownerBounds.bottom;
+                        } else if (this.dropdownAlignments.bottom) {
+                            top = ownerBounds.bottom - height;
+                        } else {
+                            top = ownerBounds.bottom - height / 2;
+                        }
                     }
                 }
 
@@ -270,11 +280,11 @@ export class DejaDropDownComponent implements AfterViewInit, OnDestroy {
                     dropdownBounds.top = minTop;
                 }
 
-                if (dropdownBounds.right > maxRight && this.dropdownAlignments.right) {
+                if (dropdownBounds.right > maxRight && (this.dropdownAlignments.right || !!this.position)) {
                     dropdownBounds.left = Math.max(maxRight - dropdownBounds.width, minLeft);
                 }
 
-                if (dropdownBounds.bottom > maxBottom && this.dropdownAlignments.bottom) {
+                if (dropdownBounds.bottom > maxBottom && (this.dropdownAlignments.bottom || !!this.position)) {
                     dropdownBounds.top = Math.max(maxBottom - dropdownBounds.height, minTop);
                 }
 
