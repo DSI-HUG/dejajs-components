@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output, Self } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Optional, Output, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -32,7 +32,7 @@ const noop = () => { };
     styleUrls: ['./date-selector.scss'],
     templateUrl: './date-selector.component.html',
 })
-export class DejaDateSelectorComponent implements AfterContentInit, ControlValueAccessor, OnDestroy {
+export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, OnDestroy {
     @Input() public startDay: DaysOfWeek = DaysOfWeek.Monday;
     @Input() public disableDates: Array<(DaysOfWeek | Date)>; // | ((d: Date) => boolean);
     @Input() public dateMax: Date;
@@ -116,7 +116,7 @@ export class DejaDateSelectorComponent implements AfterContentInit, ControlValue
             }));
     }
 
-    public ngAfterContentInit() {
+    public ngOnInit() {
         if (!this.displayedDate) {
             this.displayedDate = this.currentDate;
             this.bind();
