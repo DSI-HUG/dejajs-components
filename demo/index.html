@@ -9,10 +9,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="This is the home for the Hôpital Univesitaire de Genève - DSI - Domaine Patient team's Angular2 components for Angular 2 and material.">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <style>
+        .page-loader { position: absolute; top: 50%; left: 50%; margin-top: -2.5rem; margin-left: -2.5rem; }
+        .page-loader:after, .page-loader:before { content: ''; width: 5rem; height: 5rem; border-radius: 50%; background-color: rgba(0, 0, 0, 0.25); opacity: 0.6; position: absolute; top: 0; left: 0; -webkit-animation: sk-bounce 2.0s infinite ease-in-out; animation: sk-bounce 2.0s infinite ease-in-out; }
+        .page-loader:before { -webkit-animation-delay: -1.0s; animation-delay: -1.0s; }
+        @-webkit-keyframes sk-bounce {
+            0%, 100% { -webkit-transform: scale(0.0) }
+            50% { -webkit-transform: scale(1.0) }
+        }
+        @keyframes sk-bounce {
+            0%, 100% { 
+                transform: scale(0.0);
+                -webkit-transform: scale(0.0);
+            } 50% { 
+                transform: scale(1.0);
+                -webkit-transform: scale(1.0);
+            }
+        }
+    </style>
 </head>
 
 <body id="dpi">
-    <app-root>Loading...</app-root>
+    <app-root>
+        <div class="page-loader"></div>
+    </app-root>
 
     <script>
         if (sessionStorage && history) {
