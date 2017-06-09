@@ -19,9 +19,12 @@
 @import '../../component/viewport/viewport-theme';
 
 @import '../utils/form-validation';
+@import '../components/loader';
 
 // Create a theme.
 @mixin deja-theme($custom-theme) {
+    @include loader-theme($custom-theme);
+
     @include form-validation-theme($custom-theme);
     @include deja-material-theme($custom-theme);
 

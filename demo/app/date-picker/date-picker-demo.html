@@ -54,6 +54,10 @@
                     <deja-date-time-selector [disableDates]="disabledDate" [(ngModel)]="theDateTime" time></deja-date-time-selector>
                     <p>Selected date : {{theDateTime | date:'yyyy-MM-dd hh:mm:ss'}}</p>
                 </div>
+                <div fxFlex="1 1 auto" fxLayout="column" fxLayoutAlign="center center">
+                    <deja-date-time-selector [disabled]="disableDateTime" time></deja-date-time-selector>
+                    <p><md-checkbox [(ngModel)]="disableDateTime">Disable date-time-picker</md-checkbox></p>
+                </div>
             </div>
         </md-card-content>
     </md-card>
