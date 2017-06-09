@@ -108,6 +108,7 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
         }
 
         this.mousedown$sub = Observable.fromEvent(element, 'mousedown')
+            .filter(() => !this.disabled)
             .filter((event: MouseEvent) => event.buttons === 1)
             .debounceTime(100)
             .subscribe((mouseEvent: MouseEvent) => {

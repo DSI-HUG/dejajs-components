@@ -6,6 +6,24 @@
     .circular-picker {
         border: 1px solid #dfdfdf;
         background-color: #dfdfdf;
+
+        &.disabled {
+             .value {
+                &:hover {
+                    background-color: transparent;
+                    color: initial;
+                    cursor: not-allowed;
+                }
+            }
+            .cursor-container {
+                .cursor {
+                    background-color: #AAA;
+                }
+                .cursorHand {
+                    background-color: #AAA;
+                }
+            }
+        }
         .value {
             &:hover {
                 background-color: mat-color($primary);
