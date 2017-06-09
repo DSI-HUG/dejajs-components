@@ -334,7 +334,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
     /** Définit l'éléments selectioné en mode single select */
     @Input()
-    public set selectedItem(value: IItemBase) {
+    public set selectedItem(value: IItemBase | string) {
         if (typeof value === 'string') {
             this.selectedItem = value && this.getItems().find((item) => item[this._valueField] === value);
         } else {
