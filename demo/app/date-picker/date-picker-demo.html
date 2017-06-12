@@ -52,7 +52,7 @@
             <div fxLayout>
                 <div fxFlex="1 1 auto" fxLayout="column" fxLayoutAlign="center center">
                     <deja-date-time-selector [disableDates]="disabledDate" [(ngModel)]="theDateTime" time></deja-date-time-selector>
-                    <p>Selected date : {{theDateTime | date:'yyyy-MM-dd hh:mm:ss'}}</p>
+                    <p>Selected date : {{theDateTime | date:'yyyy-MM-dd HH:mm:ss'}}</p>
                 </div>
                 <div fxFlex="1 1 auto" fxLayout="column" fxLayoutAlign="center center">
                     <deja-date-time-selector [disabled]="disableDateTime" time></deja-date-time-selector>
@@ -74,7 +74,7 @@
                 <div fxFlex="1 1 auto">
                     <h3>DateTime Picker :</h3>
                     <deja-date-picker [disableDates]="disabledDate" [(ngModel)]="theDatetimePicker" time></deja-date-picker>
-                    <p>Selected date : {{theDatetimePicker | date:'yyyy-MM-dd hh:mm:ss'}}</p>
+                    <p>Selected date : {{theDatetimePicker | date:'yyyy-MM-dd HH:mm:ss'}}</p>
                 </div>
             </div>
             <hr>
@@ -121,7 +121,7 @@
                     <h3>DateTime Range Picker :</h3>
                     <deja-date-picker format="DD.MM.YYYY HH:mm" #dtfrom [disableDates]="disabledDate" [(ngModel)]="datetimeRangeFrom" time></deja-date-picker>
                     <deja-date-picker format="DD.MM.YYYY HH:mm" #dtto [disableDates]="disabledDate" [(ngModel)]="datetimeRangeTo" time></deja-date-picker>
-                    <p>Selected date : from {{datetimeRangeFrom | date:'yyyy-MM-dd hh:mm:ss'}} to {{datetimeRangeTo | date:'yyyy-MM-dd hh:mm:ss'}}</p>
+                    <p>Selected date : from {{datetimeRangeFrom | date:'yyyy-MM-dd HH:mm:ss'}} to {{datetimeRangeTo | date:'yyyy-MM-dd HH:mm:ss'}}</p>
                  </div>   
             </div>
         </md-card-content>
