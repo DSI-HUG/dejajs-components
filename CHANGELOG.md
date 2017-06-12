@@ -1,3 +1,23 @@
+#### 2.1.1 (2017-6-12)
+
+##### New Features
+
+* **DejaTreeList:** Selection by valueFiled as string is now possible ([f904991d](https://github.com/DSI-HUG/dejajs-components/commit/f904991d82e9a8984ecaeca6d064694f8de90717))
+* **DateSelector:** #96 Add disabled property ([e4db8a18](https://github.com/DSI-HUG/dejajs-components/commit/e4db8a18185c4ee54b462403902885ce6dbade23))
+
+##### Bug Fixes
+
+* **CircularPicker:** #128 Make disabled property work ([2b1da727](https://github.com/DSI-HUG/dejajs-components/commit/2b1da727583bd9e41bcfabcbd03697c06eeb679f))
+* **DatePicker:** #110 I think it's ok, I hope it will not have any side effect ([2ad1a2e7](https://github.com/DSI-HUG/dejajs-components/commit/2ad1a2e7eb0e54b682b6748723be37610b49a9d4))
+
+##### Other Changes
+
+* **dependencies:** use real registry ([a197b364](https://github.com/DSI-HUG/dejajs-components/commit/a197b364c734943c9263ce6c59eb64d3bc449a39))
+
+##### Refactors
+
+* **Loader:** #123 done ([949c487f](https://github.com/DSI-HUG/dejajs-components/commit/949c487f852938b3ff1527b6e4e765cc2ff6206c))
+
 ### 2.2.0 (2017-6-8)
 
 ### 2.1.0 (2017-6-8)
