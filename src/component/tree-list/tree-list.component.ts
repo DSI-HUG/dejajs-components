@@ -334,8 +334,13 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
     /** Définit l'éléments selectioné en mode single select */
     @Input()
-    public set selectedItem(value: IItemBase) {
-        this.setSelectedItems([value]);
+    public set selectedItem(value: IItemBase | string) {
+        if (typeof value === 'string') {
+            const items = this.getItems();
+            this.selectedItem = items && value && items.find((item) => item[this._valueField] === value);
+        } else {
+            this.setSelectedItems(value && [value]);
+        }
     }
 
     /** Retourne l'éléments selectioné en mode single select */
@@ -347,7 +352,12 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Définit le model selectioné en mode single select */
     @Input()
     public set selectedModel(value: any) {
-        this.setSelectedModels([value]);
+        if (typeof value === 'string') {
+            const items = this.getItems();
+            this.selectedItem = items && value && items.find((item) => item[this._valueField] === value);
+        } else {
+            this.setSelectedModels(value && [value]);
+        }
     }
 
     /** Retourne le model selectioné en mode single select */

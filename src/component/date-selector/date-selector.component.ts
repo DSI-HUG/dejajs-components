@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output, Self } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Optional, Output, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -32,7 +32,7 @@ const noop = () => { };
     styleUrls: ['./date-selector.scss'],
     templateUrl: './date-selector.component.html',
 })
-export class DejaDateSelectorComponent implements AfterContentInit, ControlValueAccessor, OnDestroy {
+export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, OnDestroy {
     @Input() public startDay: DaysOfWeek = DaysOfWeek.Monday;
     @Input() public disableDates: Array<(DaysOfWeek | Date)>; // | ((d: Date) => boolean);
     @Input() public dateMax: Date;
@@ -68,23 +68,42 @@ export class DejaDateSelectorComponent implements AfterContentInit, ControlValue
     private currentDate: Date = new Date();
 
     private selectedDate: Date;
-    private displayedDate: Date;
+    private displayedDate = new Date();
 
     private days = [];
     private emptyDays: any[];
     private _time: boolean;
+    private _disabled: boolean;
 
     private onTouchedCallback: () => void = noop;
     private onChangeCallback: (_: any) => void = noop;
 
+    /**
+     * Time property setter. Can be string or empty so you can use it like : <deja-date-selector time></deja-date-selector>
+     * Used to add time selector next to calendar
+     */
     @Input()
     public set time(value: boolean | string) {
         this._time = (value != null && `${value}` !== 'false') ? true : null;
         this.changeDetectorRef.markForCheck();
     }
 
+    /** Time property getter. */
     public get time() {
         return this._time;
+    }
+
+    /** Disabled property setter. Can be string or empty so you can use it like : <deja-date-selector disabled></deja-date-selector> */
+    @Input()
+    public set disabled(value: boolean | string) {
+        this._disabled = (value != null && `${value}` !== 'false') ? true : null;
+        // this.changeDetectorRef.markForCheck();
+        this.bind();
+    }
+
+    /** Disabled property getter. */
+    public get disabled() {
+        return this._disabled;
     }
 
     constructor(elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, @Self() @Optional() public _control: NgControl) {
@@ -116,7 +135,7 @@ export class DejaDateSelectorComponent implements AfterContentInit, ControlValue
             }));
     }
 
-    public ngAfterContentInit() {
+    public ngOnInit() {
         if (!this.displayedDate) {
             this.displayedDate = this.currentDate;
             this.bind();
@@ -235,6 +254,10 @@ export class DejaDateSelectorComponent implements AfterContentInit, ControlValue
     }
 
     public keyDown(event: KeyboardEvent) {
+        if (this.disabled) {
+            return;
+        }
+
         if (!this.selectedDate) {
             this.selectedDate = new Date(this.currentDate);
         }
@@ -332,10 +355,6 @@ export class DejaDateSelectorComponent implements AfterContentInit, ControlValue
         this.value = d;
     }
 
-    protected getHoursModel() {
-        return this.displayedDate.getHours() || 24;
-    }
-
     private bind() {
         const month = this.displayedDate.getMonth();
         const year = this.displayedDate.getFullYear();
@@ -366,6 +385,9 @@ export class DejaDateSelectorComponent implements AfterContentInit, ControlValue
      *                   ou si la date est inférieure a dateMin
      */
     private isDisabledDate(date: Date): boolean {
+        if (this._disabled) {
+            return true;
+        }
         if (this.disableDates && this.disableDates instanceof Array) {
             const find = this.disableDates.find((d: Date | number) => {
                 if (typeof d === 'number') {

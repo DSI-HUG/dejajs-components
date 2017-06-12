@@ -10,6 +10,11 @@
         #date-header {
             background-color: mat-color($primary);
             color: #FFF;
+            button[md-mini-fab] {
+                background: mat-color($primary);
+                box-shadow: none;
+                color: #FFF;
+            }
         }
         #time-selector {
             $deep: '/deep/';
@@ -19,6 +24,9 @@
                         background: transparent;
                         &:before {
                             background-color: mat-color($primary);
+                        }
+                        &.disabled:before {
+                            background: #AAA;
                         }
                     }
                 }
