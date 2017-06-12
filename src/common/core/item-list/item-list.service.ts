@@ -1167,8 +1167,14 @@ export class ItemListService {
                 item1 = item1.model;
                 item2 = item2.model;
             }
-            return item1[this._valueField] === item2[this._valueField];
-        } else if (item1.equals) {
+            const value1 = item1[this._valueField];
+            const value2 = item2[this._valueField];
+            if (value1 !== undefined || value2 !== undefined) {
+                return item1[this._valueField] === item2[this._valueField];
+            }
+        }
+
+        if (item1.equals) {
             return item1.equals(item2);
         } else if (item2.equals) {
             return item2.equals(item1);
