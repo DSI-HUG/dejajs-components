@@ -336,7 +336,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     @Input()
     public set selectedItem(value: IItemBase | string) {
         if (typeof value === 'string') {
-            this.selectedItem = value && this.getItems().find((item) => item[this._valueField] === value);
+            const items = this.getItems();
+            this.selectedItem = items && value && items.find((item) => item[this._valueField] === value);
         } else {
             this.setSelectedItems(value && [value]);
         }
@@ -352,7 +353,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     @Input()
     public set selectedModel(value: any) {
         if (typeof value === 'string') {
-            this.selectedItem = value && this.getItems().find((item) => item[this._valueField] === value);
+            const items = this.getItems();
+            this.selectedItem = items && value && items.find((item) => item[this._valueField] === value);
         } else {
             this.setSelectedModels(value && [value]);
         }
