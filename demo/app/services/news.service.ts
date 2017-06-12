@@ -26,6 +26,7 @@ export class NewsService {
                 }
                 return resp.sources as INewsSource[];
             })
+            .map((sources: INewsSource[]) => sources.filter((source) => source.category === 'technology' || source.category === 'gaming'))
             .switchMap((sources: INewsSource[]) => {
                 const source = sources[Math.round(Math.random() * (sources.length - 1))];
                 return this.http.get(`https://newsapi.org/v1/articles?source=${source.id}&apiKey=228bc9410a2a4f608d2ad2e5626896f3`);
