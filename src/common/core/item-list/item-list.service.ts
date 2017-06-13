@@ -845,8 +845,8 @@ export class ItemListService {
             }
         }
 
-        const expandTree = (regExp && regExp.toString()) !== (this.lastQuery && this.lastQuery.toString());
-        ignoreCache = ignoreCache || expandTree || !this.items || !this.items.length;
+        const queryChanged = (regExp && regExp.toString()) !== (this.lastQuery && this.lastQuery.toString());
+        ignoreCache = ignoreCache || queryChanged || !this.items || !this.items.length;
         this.lastQuery = regExp;
 
         const loadViewList = () => {
@@ -899,7 +899,7 @@ export class ItemListService {
             // console.log('getItemList ' + Date.now());
             this.waiter$.next(true);
 
-            if (!this.items || !this.items.length) {
+            if (queryChanged || !this.items || !this.items.length) {
                 this.internalQuery = regExp;
             }
 
@@ -920,10 +920,10 @@ export class ItemListService {
                     delete this._cache.visibleList;
                     this.waiter$.next(this.items === undefined);
                 })
-                .switchMap(() => this.ensureVisibleListCache$(searchField, this.internalQuery, expandTree, multiSelect))
+                .switchMap(() => this.ensureVisibleListCache$(searchField, this.internalQuery, queryChanged, multiSelect))
                 .map(() => loadViewList());
         } else {
-            return this.ensureVisibleListCache$(searchField, this.internalQuery, expandTree, multiSelect)
+            return this.ensureVisibleListCache$(searchField, this.internalQuery, queryChanged, multiSelect)
                 .map(() => loadViewList());
         }
     }
