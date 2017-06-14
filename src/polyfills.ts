@@ -8,7 +8,7 @@
 
 import 'hammerjs';
 import 'moment';
-import 'prismjs';
+import 'prismjs/prism';
 import 'reflect-metadata';
 import 'showdown';
 
