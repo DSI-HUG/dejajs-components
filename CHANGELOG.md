@@ -1,3 +1,9 @@
+#### 2.2.1 (2017-6-14)
+
+##### Bug Fixes
+
+* **Prism:** Bundle issue with Prism import ([014a1ee9](https://github.com/DSI-HUG/dejajs-components/commit/014a1ee9c4bef37e456ea2f0d798e6d87155a63e))
+
 ### 2.2.0 (2017-6-14)
 
 ##### Documentation Changes
