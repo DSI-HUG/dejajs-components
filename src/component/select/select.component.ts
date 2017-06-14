@@ -956,7 +956,11 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                     return;
                 }
 
-                if (this.isCollapsible(item)) {
+                const isExpandButton = (target: HTMLElement) => {
+                    return target.id === 'expandbtn' || target.parentElement.id === 'expandbtn';
+                };
+
+                if (this.isCollapsible(item) && (isExpandButton(e.target as HTMLElement) || !this.isSelectable(item))) {
                     if (upEvent.button === 0) {
                         this.toggleCollapse$(itemIndex, !item.collapsed).first().subscribe(noop);
                     }
@@ -1060,7 +1064,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 this.toggleSelect$([item], true)
                     .first()
                     .subscribe((selectedItems) => {
-                        const selected = [...selectedItems];
+                        const selected = selectedItems ? [...selectedItems] : [];
                         this.setSelectedItems(selected);
                         this.onModelChange(selected);
                         this.query = '';

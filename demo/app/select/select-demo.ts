@@ -121,7 +121,7 @@ export class SelectDemoComponent implements OnDestroy {
                             groupName: groupName,
                             items: map[groupName],
                             displayName: groupName,
-                            selectable: false,
+                            selectable: true,
                         } as ICountryGroup);
 
                         onDemandResult.push({
