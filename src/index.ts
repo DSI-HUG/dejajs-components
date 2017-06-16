@@ -8,3 +8,7 @@
 
 export * from './common/index';
 export * from './component/index';
+
+if (!document.doctype) {
+    console.warn('[DejaJS] Current document does not have a doctype. This may cause some components not to behave as expected.');
+}
