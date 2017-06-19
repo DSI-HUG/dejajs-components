@@ -546,14 +546,14 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     // ************* End of ControlValueAccessor Implementation **************
 
     /** Change l'état d'expansion de toute les lignes parentes */
-    public toggleAll$(): Observable<IItemTree> {
-        return super.toggleAll$()
+    public toggleAll$(collapsed?: boolean): Observable<IItemTree> {
+        return super.toggleAll$(collapsed)
             .switchMap(() => this.calcViewList$().first());
     }
 
     /** Change l'état d'expansion de toute les lignes parentes */
-    public toggleAll() {
-        this.toggleAll$().first().subscribe(noop);
+    public toggleAll(collapsed?: boolean) {
+        this.toggleAll$(collapsed).first().subscribe(noop);
     }
 
     /** Positionne a scrollbar pour assurer que l'élément spécifié soit visible */

@@ -297,8 +297,8 @@ export abstract class ItemListBase implements OnDestroy {
     /** Change l'état d'expansion de tous les éléments.
      * @return {Observable} Observable résolu par la fonction.
      */
-    public toggleAll$() {
-        this.allCollapsed = !this.allCollapsed;
+    public toggleAll$(collapsed?: boolean) {
+        this.allCollapsed = (collapsed !== undefined) ? collapsed : !this.allCollapsed;
         if (this.viewPort.mode === ViewportMode.disabled) {
             return Observable.from(this._itemList)
                 .filter((item: IItemTree) => item.$items && item.depth === 0 && item.collapsible !== false)

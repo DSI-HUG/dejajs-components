@@ -911,8 +911,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     /** Change l'état d'expansion de toute les lignes parentes */
-    public toggleAll$(): Observable<IItemTree> {
-        return super.toggleAll$()
+    public toggleAll$(collapsed?: boolean): Observable<IItemTree> {
+        return super.toggleAll$(collapsed)
             .switchMap(() => this.calcViewList$().first());
     }
 
