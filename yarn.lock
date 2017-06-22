@@ -8,9 +8,9 @@
   dependencies:
     tslib "^1.7.1"
 
-"@angular/cli@1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@angular/cli/-/cli-1.1.1.tgz#ee5cf7637ad859c08e8a5e7a7f2161d0e74ce7a5"
+"@angular/cli@1.1.2":
+  version "1.1.2"
+  resolved "http://129.195.13.159:8081/nexus/repository/npm-all/@angular/cli/-/cli-1.1.2.tgz#03855777cdab1ba8dc3f6cdc55eac8fcb0fcf831"
   dependencies:
     "@ngtools/json-schema" "1.1.0"
     "@ngtools/webpack" "1.4.1"
@@ -6766,16 +6766,9 @@ write-file-atomic@^2.0.0:
     imurmurhash "^0.1.4"
     slide "^1.1.5"
 
-ws@1.1.2:
+ws@1.1.2, ws@^1.0.1:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/ws/-/ws-1.1.2.tgz#8a244fa052401e08c9886cf44a85189e1fd4067f"
-  dependencies:
-    options ">=0.0.5"
-    ultron "1.0.x"
-
-ws@^1.0.1:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-1.1.4.tgz#57f40d036832e5f5055662a397c4de76ed66bf61"
   dependencies:
     options ">=0.0.5"
     ultron "1.0.x"

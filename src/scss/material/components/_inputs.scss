@@ -11,19 +11,11 @@
         }
 
 	    .mat-input-wrapper {
-            .mat-input-underline {
-                .mat-input-ripple {
-                    background-color: mat-color($primary);
-                }
-            }
             .mat-input-table {
                 .mat-input-placeholder {
                     &.mat-float:not(.mat-empty),
                     &.mat-float.mat-focused {
                         transform: translateY(-65%) scale(.75) !important;
-                    }
-                    &.mat-focused {
-                        color: mat-color($primary);
                     }
                 }
             }
