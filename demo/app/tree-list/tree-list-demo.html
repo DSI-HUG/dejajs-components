@@ -50,7 +50,7 @@
 				<span fxFlex="0 0 45%" fxLayout="column">
 					<deja-tree-list fxFlex="0 0 400px" [selectedModels]="businessCountries" (selectedChange)="businessCountryChange($event.item?.model)" textField="naqme" valueField="code" [models]="countries"></deja-tree-list>
 				</span>
-				<ul fxFlex="0 0 50%" fxFlexOffset="5%" id="shortcut-list">
+				<ul fxFlex="0 0 50%" fxFlexOffset="5%" class="shortcut-list">
 					<li>Press
 						<span class="keyboard-key">↑</span> to select the previous item</li>
 					<li>Press
@@ -109,7 +109,7 @@
 				</span>
 				<span fxFlex="0 0 45%" fxFlexOffset="5%" fxLayout="column">
 					<h4>Multi selection shortcuts :</h4>
-					<ul id="shortcut-list">
+					<ul class="shortcut-list">
 						<li>Press
 							<span class="keyboard-key">Ctrl</span>
 							<span class="keyboard-key">Space</span> to add/remove the current item to the selection</li>

@@ -14,6 +14,8 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
+import { StepUnit } from './../../../src/component/date-picker/date-picker.component';
+
 @Component({
     selector: 'dejadate-picker-demo',
     templateUrl: './date-picker-demo.html',
@@ -23,6 +25,7 @@ export class DejaDatePickerDemoComponent implements OnInit, OnDestroy {
 
     public theDate: Date = new Date();
     public theDateSelected: Date = new Date();
+    public kboDate: Date = new Date();
 
     public disabledDate = [0, 6, new Date(2016, 9, 12)];
 
@@ -30,6 +33,9 @@ export class DejaDatePickerDemoComponent implements OnInit, OnDestroy {
     public dateRangeTo: Date;
     public dateMin: Date;
     public dateMax: Date;
+    public datetimeKeyboard: Date;
+
+    protected stepUnit = StepUnit.Minute;
 
     private dateFrom = new BehaviorSubject(undefined);
     private dateTo = new BehaviorSubject(undefined);

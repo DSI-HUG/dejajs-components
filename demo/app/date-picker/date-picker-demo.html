@@ -80,7 +80,7 @@
             <hr>
             <div fxLayout>
                 <h3>Shortcut navigation :</h3>
-                <div fxFlex="1 1 auto" fxLayout fxLayoutAlign="center center" id="shortcut-list">
+                <div fxFlex="1 1 auto" fxLayout fxLayoutAlign="center center" class="shortcut-list">
                     <ul>
                         <li> Inside input :
                             <ul>
@@ -123,6 +123,50 @@
                     <deja-date-picker format="DD.MM.YYYY HH:mm" #dtto [disableDates]="disabledDate" [(ngModel)]="datetimeRangeTo" time></deja-date-picker>
                     <p>Selected date : from {{datetimeRangeFrom | date:'yyyy-MM-dd HH:mm:ss'}} to {{datetimeRangeTo | date:'yyyy-MM-dd HH:mm:ss'}}</p>
                  </div>   
+            </div>
+        </md-card-content>
+    </md-card>
+
+    <md-card class="demo-card">
+        <md-toolbar color="primary">Keyboard Operations</md-toolbar>
+        <md-card-content>
+            <div fxLayout>
+                <div fxFlex="1 1 auto">
+                    <h3>DateTime Picker with 30 minutes as unit :</h3>
+
+                    <deja-date-picker 
+                        format="DD.MM.YYYY HH:mm" 
+                        [(ngModel)]="kboDate" 
+                        [stepUnit]="stepUnit"
+                        [stepValue]="30"
+                        [stepRoundToMinutes]="30"
+                        time></deja-date-picker>
+
+                    <p>Selected date : {{kboDate | date:'yyyy-MM-dd HH:mm:ss'}}</p>
+                 </div>   
+            </div>
+            <div fxLayout>
+                <h3>Shortcut navigation :</h3>
+                <div fxFlex="1 1 auto" fxLayout fxLayoutAlign="center center" class="shortcut-list">
+                    <ul>
+                        <li> Inside input :
+                            <ul>
+                                <li>Press <span class="keyboard-key">D</span> to select the current date.</li>
+                                <li>Press <span class="keyboard-key">↑</span> to increase the selected date of n unit.</li>
+                                <li>Press <span class="keyboard-key">↓</span> to decrease the selected date of n unit.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul>
+                        <li> Parameters :
+                            <ul>
+                                <li><div class="">[stepUnit]</div> The type of unit as in StepUnit enum.<br/> (default to days)</li>
+                                <li><div class="">[stepValue]</div> The amount of unit applied by the operation.<br/> (default: 1)</li>
+                                <li><div class="">[stepRoundToMinutes]</div> Whenever the minutes have to be rounded.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </md-card-content>
     </md-card>
