@@ -13,8 +13,8 @@ import { DejaAccordionBodyComponent, DejaAccordionComponent, DejaAccordionGroupC
 const DEJA_ACCORDION_COMPONENTS = [DejaAccordionBodyComponent, DejaAccordionComponent, DejaAccordionGroupComponent, DejaAccordionHeaderComponent];
 
 @NgModule({
-    declarations: [DEJA_ACCORDION_COMPONENTS],
-    exports: [DEJA_ACCORDION_COMPONENTS],
+    declarations: DEJA_ACCORDION_COMPONENTS,
+    exports: DEJA_ACCORDION_COMPONENTS,
     imports: [CommonModule],
 })
 export class DejaAccordionModule { }

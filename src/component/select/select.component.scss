@@ -13,12 +13,19 @@ deja-select {
 		width: 100%;
 
 		.mat-input-suffix {
-			width: 2rem;
-			#clear-button {
-				opacity: 0.25;
-				&:hover {
-					opacity: 1;
-					cursor: pointer;
+			[mdSuffix] {
+				display: table-cell;
+			}
+			.actions-suffix {
+				text-align: right;
+				#clear-button, .select-arrow-down {
+					font-size: 1rem;
+					opacity: 0.25;
+					vertical-align: bottom;
+					&:hover {
+						opacity: 1;
+						cursor: pointer;
+					}
 				}
 			}
 		}
