@@ -125,7 +125,14 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
             .switchMap((element) => Observable.fromEvent(element, 'keydown'));
 
         this.subscriptions.push(keydown$
-            .filter((event: KeyboardEvent) => !this.showDropDown && (event.keyCode === KeyCodes.KeyD || event.keyCode === KeyCodes.UpArrow || event.keyCode === KeyCodes.DownArrow))
+            .filter((event: KeyboardEvent) => !this.showDropDown
+                && (
+                    event.keyCode === KeyCodes.KeyD
+                    || event.keyCode === KeyCodes.UpArrow
+                    || event.keyCode === KeyCodes.DownArrow
+                    || (this.time && event.keyCode === KeyCodes.Tab && !event.shiftKey && this.stepUnit === StepUnit.Day)
+                    || (this.time && event.keyCode === KeyCodes.Tab && event.shiftKey && this.stepUnit === StepUnit.Hour)
+                ))
             .subscribe((event: KeyboardEvent) => {
                 event.preventDefault();
 
@@ -146,6 +153,15 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
                             this.showDropDown = true;
                         } else if (this.date) {
                             this.value = this.calcDuration(this.date, -1);
+                        }
+                        break;
+                    case (KeyCodes.Tab):
+                        if (this.time) {
+                            if (event.shiftKey && this.stepUnit === StepUnit.Hour) {
+                                this.stepUnit = StepUnit.Day;
+                            } else if (!event.shiftKey && this.stepUnit === StepUnit.Day) {
+                                this.stepUnit = StepUnit.Hour;
+                            }
                         }
                         break;
                     default:
