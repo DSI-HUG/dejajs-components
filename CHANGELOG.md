@@ -1,3 +1,90 @@
+#### 2.2.2 (2017-6-26)
+
+##### Documentation Changes
+
+* **TextMetrics:** comment ([97fd7ea0](https://github.com/DSI-HUG/dejajs-components/commit/97fd7ea057fb133b643335fc8240c7ead4795c72))
+* **TooltipComponent:** comment ([b64eff25](https://github.com/DSI-HUG/dejajs-components/commit/b64eff251193030034bed82aafe6faa626f39fc1))
+* **Pipe:** comment ([1e46f823](https://github.com/DSI-HUG/dejajs-components/commit/1e46f8239de003ea57d39e5c798e2cfe78631589))
+* **DatePickerComponent:** comment ([94877ced](https://github.com/DSI-HUG/dejajs-components/commit/94877cedb78310cee6c6d09880d3c543e83d0ddb))
+* **DialogComponent:** comment ([01f0ab5f](https://github.com/DSI-HUG/dejajs-components/commit/01f0ab5fd34e5d88b62214ed189b281b0e4b8426))
+* **CodeViewer:** comment ([7d3aef1a](https://github.com/DSI-HUG/dejajs-components/commit/7d3aef1a9e8ded72ff160a5728a4ab314b58ae12))
+* **CircularPicker:** comment ([de19260e](https://github.com/DSI-HUG/dejajs-components/commit/de19260e396e96d1fce926497fa696975d713a9a))
+* **AccordionComponent:** comment ([8cf16670](https://github.com/DSI-HUG/dejajs-components/commit/8cf166705804335784ad669ff38942fa01affca9))
+* **README:** Migrate to Yarn ([d8217895](https://github.com/DSI-HUG/dejajs-components/commit/d821789548387e771960c2bede03b19196b4c72a))
+* **Splitter:** Add comments for documentation ([3853b1fd](https://github.com/DSI-HUG/dejajs-components/commit/3853b1fd993a7722086d9ef5ae3ff48d2a8c8e21))
+* **Contributing:** Add quiet type in contrib doc ([7852633a](https://github.com/DSI-HUG/dejajs-components/commit/7852633a7812c1eeba2159f5be671c2ceaa43db9))
+
+##### New Features
+
+* **List:** toggleAll$ can have a collapsed parameter ([07190ba6](https://github.com/DSI-HUG/dejajs-components/commit/07190ba6309087fe3054dd09ffef5126e7098a48))
+* **Global:**
+  * Add warning if doctype is not set ([a993c543](https://github.com/DSI-HUG/dejajs-components/commit/a993c543b850d980e874ff0d60f978781df50dc4))
+  * Move Polyfills and SendAction to src folder to avoid missing files when linked ([02ea544a](https://github.com/DSI-HUG/dejajs-components/commit/02ea544a33e2465db132ad79f7f0cbfae8532564))
+* **DejaTreeList:** Selection by valueFiled as string is now possible ([f904991d](https://github.com/DSI-HUG/dejajs-components/commit/f904991d82e9a8984ecaeca6d064694f8de90717))
+* **DateSelector:** #96 Add disabled property ([e4db8a18](https://github.com/DSI-HUG/dejajs-components/commit/e4db8a18185c4ee54b462403902885ce6dbade23))
+* **DejaMenu:** Context menu if buttonAlignment is not specified ([901ee4b1](https://github.com/DSI-HUG/dejajs-components/commit/901ee4b12c2d2dcf230c36c683fd31ce22954a19))
+* **DEMO:** Add documentation link ([c1f145dc](https://github.com/DSI-HUG/dejajs-components/commit/c1f145dc9b66d3816dff1cf6a10e0bd37f57fd36))
+* **DejaGrid:** User grouping can be specified on the HTML ([5b56692c](https://github.com/DSI-HUG/dejajs-components/commit/5b56692c154a02a5eb90bc8c65487b233e6eb3cb))
+
+##### Bug Fixes
+
+* **Dependencies:** Rollback cli version ([4dfd9cb6](https://github.com/DSI-HUG/dejajs-components/commit/4dfd9cb6afd256d8eb44a0dc4eb16bd77bace1b8))
+* **Theme:** Remove customized color for input bar (not working also in invalid mode) ([ab2b56f3](https://github.com/DSI-HUG/dejajs-components/commit/ab2b56f3796bb47372018e5259c90fb53f079bbd))
+* **Prism:** Bundle issue with Prism import ([014a1ee9](https://github.com/DSI-HUG/dejajs-components/commit/014a1ee9c4bef37e456ea2f0d798e6d87155a63e))
+* **ItemListService:**
+  * Broken DejaTreeList and DejaGrid search area. ([e79be1b5](https://github.com/DSI-HUG/dejajs-components/commit/e79be1b5de75fbcfc3646eaec687a6b7a76ed4d0))
+  * Cache re-filtered on lazy loading ([3b0545bb](https://github.com/DSI-HUG/dejajs-components/commit/3b0545bbf3e4f73ea9636959106f8538a23499a4))
+* **DejaSelect:** Parent items are not selectable with the mouse, even if the flag selectable is set to true ([6435809b](https://github.com/DSI-HUG/dejajs-components/commit/6435809b6dd8a25c0b8da14d000f47afc9089683))
+* **Demo:**
+  * displayed datetime are now in 24h format. ([615b90ec](https://github.com/DSI-HUG/dejajs-components/commit/615b90ecb91579fac25e6127806c687b41bb3652))
+  * Fix imports in gris demo ([9eb2cc2c](https://github.com/DSI-HUG/dejajs-components/commit/9eb2cc2c0c38630a8eef7bff8dc49670a640727c))
+* **CircularPicker:**
+  * #128 Make disabled property work ([2b1da727](https://github.com/DSI-HUG/dejajs-components/commit/2b1da727583bd9e41bcfabcbd03697c06eeb679f))
+  * Use _value inside updateCursor instead of value ([be4fda24](https://github.com/DSI-HUG/dejajs-components/commit/be4fda24ed5d6eb83929c149811f15b50a01a02c))
+* **DatePicker:** #110 I think it's ok, I hope it will not have any side effect ([2ad1a2e7](https://github.com/DSI-HUG/dejajs-components/commit/2ad1a2e7eb0e54b682b6748723be37610b49a9d4))
+* **DejaTreeList:**
+  * Parent row padding when no-children fix(DejaSelect): Parent row padding when no-children fix(DejaGrid): Parent row padding when no-children ([a7dc91f7](https://github.com/DSI-HUG/dejajs-components/commit/a7dc91f7f4edef9727d251d9081021eda3d0e5ad))
+  * Treelist border #124 fix(DejaGrid): Grid border ([39ee8dcd](https://github.com/DSI-HUG/dejajs-components/commit/39ee8dcd5389e8a953701d6d0998b41341ba7d15))
+* **DejaSplitter:** Fix height of the gutter in horizontal mode ([92e1a4d3](https://github.com/DSI-HUG/dejajs-components/commit/92e1a4d339441cd425cb686b2bd6617fcf0f99a9))
+* **DejaGrid:**
+  * Laggy columns drag and drop ([3b163eae](https://github.com/DSI-HUG/dejajs-components/commit/3b163eaec8d8b47d14ab15d24a23f0a75fdd5d17))
+  * Incorrect elected and hover row backcolor when the horizontal scroll was not at 0 ([e96fa7ac](https://github.com/DSI-HUG/dejajs-components/commit/e96fa7ac3a8696acd08df467f30bf9aa5078fce4))
+  * Incorrect elected and hover row backcolor when the horizontal scroll was not at 0 ([528a0aaf](https://github.com/DSI-HUG/dejajs-components/commit/528a0aaffc9c346a49abebf9723c2ee2b18bd5cb))
+  * Scroll return to 0 when refreshViewPort() was called ([74bbdb83](https://github.com/DSI-HUG/dejajs-components/commit/74bbdb83f7fc9dd2c08857d3733798c70d1e8d6f))
+  * Scroll return to 0 when refreshViewPort() was called ([612da559](https://github.com/DSI-HUG/dejajs-components/commit/612da55920f892ca43c09296a8be1e40c73e2398))
+* **DejaDroppable:** Event leak ([8d60c789](https://github.com/DSI-HUG/dejajs-components/commit/8d60c78943db7d07ef9b9425f931daf7ea909cc8))
+* **Graphics:** Double import make /graphics/ classes undefined when imported by the index fix(DejaIFrame): Center screen on IE11 ([d57bf525](https://github.com/DSI-HUG/dejajs-components/commit/d57bf5255e708e4d818511fa1438b311e9be5b41))
+* **GroupingService:** Grouping fail after the third level ([d5696ea3](https://github.com/DSI-HUG/dejajs-components/commit/d5696ea313970664c36df2d89a1297d2de61a384))
+* **Docs:** Add required dependencie for linux doc build ([38ad6eba](https://github.com/DSI-HUG/dejajs-components/commit/38ad6ebaca84b994776d8c26672fcfa9d030e9e9))
+
+##### Other Changes
+
+* **Dependencies:**
+  * Update dependencies in latest version ([c06b7424](https://github.com/DSI-HUG/dejajs-components/commit/c06b7424c897be79f338838de446720f5be3dd30))
+  * Update dependencies version ([8f103704](https://github.com/DSI-HUG/dejajs-components/commit/8f103704a1e4435ce3be55d092a559acc5eedf03))
+  * Update dependencies version ([d540f225](https://github.com/DSI-HUG/dejajs-components/commit/d540f2254d94594731bec105518001630c2b950b))
+* **dependencies:** use real registry ([a197b364](https://github.com/DSI-HUG/dejajs-components/commit/a197b364c734943c9263ce6c59eb64d3bc449a39))
+* **dependancies:**
+  * remove changelog, add generate-changelog ([cb2e1d9b](https://github.com/DSI-HUG/dejajs-components/commit/cb2e1d9b9a806ad3ae0ca5b54754a76c1528d53c))
+  * add changelog ([55b7745f](https://github.com/DSI-HUG/dejajs-components/commit/55b7745fcd126da15fa064eb984863803c1d9b89))
+* **undefined:** Laggy columns drag and drop ([7c9b3450](https://github.com/DSI-HUG/dejajs-components/commit/7c9b3450cecd9dcf5b0f27474b9ecf54947517f5))
+* **Polyfills:** Fix polyfills location ([09b24614](https://github.com/DSI-HUG/dejajs-components/commit/09b246141958f0955d24e054ae2bbfbbd9d9aeb0))
+* **Global:** Licence in all TS files ([c3f76e71](https://github.com/DSI-HUG/dejajs-components/commit/c3f76e71bfac7f138f6b1d1b1f00a2e2b71c181b))
+* **Travis:**
+  * Fix node version to avoid dependencies error ([90f177d6](https://github.com/DSI-HUG/dejajs-components/commit/90f177d6b2d5a085be0b0627721bc7276b999444))
+  * Add licence check in global dependencies ([37a65080](https://github.com/DSI-HUG/dejajs-components/commit/37a650806143f18b91fef25f7e1c8a11c289d3e3))
+* **Deploy:** Copy assets during the build prod ([8ebab52e](https://github.com/DSI-HUG/dejajs-components/commit/8ebab52ea9603d5cc091cc423b3911bd8be244a6))
+
+##### Refactors
+
+* **DejaSelect:** Minimize clear-button & add arrow ([28362e85](https://github.com/DSI-HUG/dejajs-components/commit/28362e854922625df3937fd9b69c7edb7e9943c2))
+* **Loader:** #123 done ([949c487f](https://github.com/DSI-HUG/dejajs-components/commit/949c487f852938b3ff1527b6e4e765cc2ff6206c))
+* **MonacoEditor:** Clean code & comment ([c8c2188e](https://github.com/DSI-HUG/dejajs-components/commit/c8c2188e2a8c3c4daa0377a156e5be83dad8af1a))
+
+##### Code Style Changes
+
+* **LINT:** Fix lint warning ([c2de666e](https://github.com/DSI-HUG/dejajs-components/commit/c2de666ec6ed98b849cb480f2e8a96eb099f0ef4))
+
 #### 2.2.1 (2017-6-14)
 
 ##### Bug Fixes
