@@ -418,6 +418,7 @@ export class GridDemoComponent {
                                 const original = this.groupedByColorPeople.find((c) => c.toString() === grp.color);
                                 grp.rows = original.items.map((person) => ({ model: person }));
                                 grp.loaded = true;
+                                grp.className = 'loaded';
                                 this.onExpandGrid.refresh();
                             });
 
