@@ -176,7 +176,7 @@ export class ViewPortService implements OnDestroy {
 
             if (!ensureParams || ensureParams.index === undefined || !ensureParams.atEnd) {
                 items.forEach((item: IViewPortItem, index: number) => {
-                    const itemSize = (item.size && item.size > ViewPortService.itemDefaultSize) ? item.size : itemDefaultSize;
+                    const itemSize = item.size || itemDefaultSize;
 
                     if (ensureParams && ensureParams.index === index) {
                         startIndex = index;
