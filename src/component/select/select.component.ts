@@ -71,6 +71,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     protected onValidatorChangeCallback: () => void = noop;
 
     protected keyboardNavigation = false;
+    protected _waiter = false;
 
     private subscriptions: Subscription[] = [];
     private mouseUp$sub: Subscription;
@@ -96,7 +97,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     private _dropdownVisible = false;
     private lastScrollPosition = 0;
     private _selectionClearable = false;
-    private _waiter = false;
     private _dropdownAlignment = 'left';
     private _ownerAlignment = 'left right bottom';
     private _query = '';
