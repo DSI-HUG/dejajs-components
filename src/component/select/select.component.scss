@@ -18,7 +18,8 @@ deja-select {
 			}
 			.actions-suffix {
 				text-align: right;
-				#clear-button, .select-arrow-down {
+				#clear-button,
+				.select-arrow-down {
 					font-size: 1rem;
 					opacity: 0.25;
 					vertical-align: bottom;
@@ -29,15 +30,15 @@ deja-select {
 				}
 			}
 		}
-		
+
 		.mat-hint {
 			bottom: -0.5em;
 		}
 
 		&[wait="true"] {
-            z-index: 910;
 			.mat-input-wrapper {
 				.mat-input-underline {
+					z-index: 910;
 					border-top: 0;
 					overflow: hidden;
 					position: absolute;
@@ -146,7 +147,6 @@ deja-select {
 			right: -8%;
 		}
 	} // styling the icon and text in template placeholder. Avoid to repeat in sub-components
-	
 	$deep: '/deep/';
 	#{$deep} {
 		md-placeholder {
