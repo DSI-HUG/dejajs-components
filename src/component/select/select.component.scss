@@ -85,6 +85,11 @@ deja-select {
 					#md-input-prefix {
 						margin-bottom: 0.5rem;
 					}
+					&.mat-input-infix:after {
+						content: '';
+						display: table-cell;
+						width: 1rem;
+					}
 					.actions-suffix {
 						bottom: 1.2rem;
 						position: absolute;
