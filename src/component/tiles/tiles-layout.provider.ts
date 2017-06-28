@@ -1403,21 +1403,37 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         }
     }
 
-    private getTileMinPixelSize(): Size { return new Size(this.getSizePixelLimit('tileMinWidth'), this.getSizePixelLimit('tileMinHeight')); }
+    private getTileMinPixelSize(): Size {
+        return new Size(this.getSizePixelLimit('tileMinWidth'), this.getSizePixelLimit('tileMinHeight'));
+    }
 
-    private getTileMaxPixelSize(): Size { return new Size(this.getSizePixelLimit('tileMaxWidth'), this.getSizePixelLimit('tileMaxHeight')); }
+    private getTileMaxPixelSize(): Size {
+        return new Size(this.getSizePixelLimit('tileMaxWidth'), this.getSizePixelLimit('tileMaxHeight'));
+    }
 
-    private getTileMinPercentWidth(): number { return this.getSizePercentLimit('tileMinWidth'); }
+    private getTileMinPercentWidth(): number {
+        return this.getSizePercentLimit('tileMinWidth');
+    }
 
-    private getTileMaxPercentWidth(): number { return this.getSizePercentLimit('tileMaxWidth'); }
+    private getTileMaxPercentWidth(): number {
+        return this.getSizePercentLimit('tileMaxWidth');
+    }
 
-    private getTileMinPercentHeight(): number { return this.getSizePercentLimit('tileMinHeight'); }
+    private getTileMinPercentHeight(): number {
+        return this.getSizePercentLimit('tileMinHeight');
+    }
 
-    private getTileMaxPercentHeight(): number { return this.getSizePercentLimit('tileMaxHeight'); }
+    private getTileMaxPercentHeight(): number {
+        return this.getSizePercentLimit('tileMaxHeight');
+    }
 
-    private getMaxPercentWidth(): number { return this.getSizePercentLimit('maxWidth'); }
+    private getMaxPercentWidth(): number {
+        return this.getSizePercentLimit('maxWidth');
+    }
 
-    private getMaxPercentHeight(): number { return this.getSizePercentLimit('maxHeight'); }
+    private getMaxPercentHeight(): number {
+        return this.getSizePercentLimit('maxHeight');
+    }
 
     private getCursorFromHTMLElement(x: number, y: number, element: HTMLElement) {
         const tileElement = this.getTileElementFromHTMLElement(element);

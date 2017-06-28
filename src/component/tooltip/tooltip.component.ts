@@ -80,7 +80,9 @@ export class DejaTooltipComponent implements OnInit {
         this.params = this.tooltipService.params[this.name];
 
         const model$ = this.params.model as Observable<any>;
-        if (model$.subscribe) {
+        if (!model$) {
+            this.model = undefined;
+        } else if (model$.subscribe) {
             model$.subscribe((model) => this.model = model, () => this.hide.emit());
         } else {
             const promise = this.params.model as Promise<any>;
