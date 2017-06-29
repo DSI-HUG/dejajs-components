@@ -15,7 +15,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { DejaChildValidatorDirective } from '../../common/core/validation/child-validator.directive';
 import { DaysOfWeek, DejaDateSelectorComponent } from '../date-selector/date-selector.component';
-import { formatToMask } from './format-to-mask';
+import { formatToMask, formatToUnitOfTime } from './format-to-mask';
 
 import * as moment_ from 'moment';
 const moment: (value?: any, format?: string) => moment_.Moment = (<any>moment_).default || moment_;
@@ -32,6 +32,8 @@ const noop = () => { };
     templateUrl: './date-picker.component.html',
 })
 export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, AfterContentInit, OnDestroy {
+    private static formattingTokens = /(\[[^\[]*\])|(\\)?([Hh]mm(ss)?|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Qo?|YYYYYY|YYYYY|YYYY|YY|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|kk?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g;
+
     /** Maximum date avaliable inside date-picker */
     @Input() public dateMax: Date;
     /** Minimum date avaliable inside date-picker */
@@ -130,9 +132,19 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
                         if (event.altKey) {
                             this.showDropDown = true;
                         } else if (this.date) {
+                            // If cursor is on number, we can update it
                             if (!isNaN(+this.inputModel[this.cursorPosition - 1])) {
-                                const replacement = +this.inputModel[this.cursorPosition - 1] + 1;
-                                this.updateModel(this.inputModel.substr(0, this.cursorPosition - 1) + replacement + this.inputModel.substr(this.cursorPosition));
+                                // We get an array of all sections of the date format
+                                const format = this.format.match(DejaDatePickerComponent.formattingTokens);
+                                // We check the letter of the format at cursor position
+                                const f = this.format[this.cursorPosition - 1];
+                                // With this letter we determinate the format by checking on format array
+                                let unitOfTime = format.find((str) => str.indexOf(f) !== -1);
+                                // If this format has a corresponding value inside formatToUnitOfTime object we can increment its value with moment.add() method
+                                unitOfTime = (unitOfTime && formatToUnitOfTime[unitOfTime]) ? formatToUnitOfTime[unitOfTime] : undefined;
+                                if (unitOfTime) {
+                                    this.updateModel(moment(this.value).add(1, unitOfTime as moment_.unitOfTime.DurationConstructor).toDate());
+                                }
                             }
                         }
                         break;
@@ -140,9 +152,16 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
                         if (event.altKey) {
                             this.showDropDown = true;
                         } else if (this.date) {
+                            // Same as arrowUp
                             if (!isNaN(+this.inputModel[this.cursorPosition - 1])) {
-                                const replacement = +this.inputModel[this.cursorPosition - 1] - 1;
-                                this.updateModel(this.inputModel.substr(0, this.cursorPosition - 1) + replacement + this.inputModel.substr(this.cursorPosition));
+                                const format = this.format.match(DejaDatePickerComponent.formattingTokens);
+                                const f = this.format[this.cursorPosition - 1];
+
+                                let unitOfTime = format.find((str) => str.indexOf(f) !== -1);
+                                unitOfTime = (unitOfTime && formatToUnitOfTime[unitOfTime]) ? formatToUnitOfTime[unitOfTime] : undefined;
+                                if (unitOfTime) {
+                                    this.updateModel(moment(this.value).subtract(1, unitOfTime as moment_.unitOfTime.DurationConstructor).toDate());
+                                }
                             }
                         }
                         break;
@@ -176,14 +195,12 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
 
     /** Init mask */
     public ngOnInit() {
-        const formattingTokens = /(\[[^\[]*\])|(\\)?([Hh]mm(ss)?|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Qo?|YYYYYY|YYYYY|YYYY|YY|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|kk?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g;
-
         if (!this.format) {
             this.format = 'YYYY-MM-DD' + ((this.time) ? ' HH:mm' : '');
         }
 
         let mask = [];
-        const array = this.format.match(formattingTokens);
+        const array = this.format.match(DejaDatePickerComponent.formattingTokens);
         array.forEach((val: string) => {
             if (formatToMask[val]) {
                 mask = [...mask, ...formatToMask[val]];
