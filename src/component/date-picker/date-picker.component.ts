@@ -67,6 +67,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     private date = new Date();
 
     private inputModel;
+    private cursorPosition: number;
 
     private onTouchedCallback: () => void = noop;
     private onChangeCallback: (_: any) => void = noop;
@@ -102,6 +103,20 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
         const keydown$ = Observable.from(this.inputElement$)
             .switchMap((element) => Observable.fromEvent(element, 'keydown'));
 
+        const cursorChanged$ = Observable.from(this.inputElement$)
+            .switchMap((element: HTMLInputElement) => {
+                return Observable.merge(Observable.fromEvent(element, 'mouseup'), Observable.fromEvent(element, 'focus'), Observable.fromEvent(element, 'keyup'))
+                    .map(() => {
+                        return element.selectionStart;
+                    });
+            });
+
+        this.subscriptions.push(cursorChanged$
+            .subscribe((position: number) => {
+                this.cursorPosition = position;
+            })
+        );
+
         this.subscriptions.push(keydown$
             .filter((event: KeyboardEvent) => !this.showDropDown && (event.keyCode === KeyCodes.KeyD || event.keyCode === KeyCodes.UpArrow || event.keyCode === KeyCodes.DownArrow))
             .subscribe((event: KeyboardEvent) => {
@@ -115,18 +130,20 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
                         if (event.altKey) {
                             this.showDropDown = true;
                         } else if (this.date) {
-                            const d = new Date(this.date);
-                            d.setDate(this.date.getDate() + 1);
-                            this.value = d;
+                            if (!isNaN(+this.inputModel[this.cursorPosition - 1])) {
+                                const replacement = +this.inputModel[this.cursorPosition - 1] + 1;
+                                this.updateModel(this.inputModel.substr(0, this.cursorPosition - 1) + replacement + this.inputModel.substr(this.cursorPosition));
+                            }
                         }
                         break;
                     case (KeyCodes.DownArrow):
                         if (event.altKey) {
                             this.showDropDown = true;
                         } else if (this.date) {
-                            const d = new Date(this.date);
-                            d.setDate(this.date.getDate() - 1);
-                            this.value = d;
+                            if (!isNaN(+this.inputModel[this.cursorPosition - 1])) {
+                                const replacement = +this.inputModel[this.cursorPosition - 1] - 1;
+                                this.updateModel(this.inputModel.substr(0, this.cursorPosition - 1) + replacement + this.inputModel.substr(this.cursorPosition));
+                            }
                         }
                         break;
                     default:
@@ -247,6 +264,11 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
         if (value !== this.date) {
             this.date = value;
             this.inputModel = (this.format && this.date) ? moment(this.date).format(this.format) : (this.date) ? this.date.toLocaleString() : null;
+
+            // si la position du curseur était stockée, on la restaure apres avoir changé la valeur
+            if (this.cursorPosition) {
+                this.inputElement$.delay(1).first().subscribe((elem: HTMLInputElement) => elem.setSelectionRange(this.cursorPosition, this.cursorPosition));
+            }
             this.changeDetectorRef.markForCheck();
         }
     }
