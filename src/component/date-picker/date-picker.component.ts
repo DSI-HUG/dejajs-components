@@ -22,6 +22,19 @@ const moment: (value?: any, format?: string) => moment_.Moment = (<any>moment_).
 
 const noop = () => { };
 
+/** Type of unit for keyboard operations. */
+export enum StepUnit {
+    Year = 0,
+    Quarter,
+    Month,
+    Week,
+    Day,
+    Hour,
+    Minute,
+    Second,
+    Millisecond
+}
+
 /**
  * Date-picker component for Angular2
  */
@@ -54,6 +67,14 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     @ContentChild('hintTemplate') protected mdHint;
     /** Mask for input */
     protected mask: any[];
+    /** Type of unit for keyboard operations. */
+    @Input() public stepUnit: StepUnit = StepUnit.Day;
+    /** Amount of unit to be added or subtracted to the date value on keyboard operations. */
+    @Input() public stepValue = 1;
+    /** Amount of unit to be added or subtracted to the date value on keyboard operations. */
+    @Input() public stepRoundToMinutes: number = null;
+
+    private aUnit: string[] = ['years', 'quarters', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds'];
 
     @ViewChild(DejaChildValidatorDirective) private inputValidatorDirective: DejaChildValidatorDirective;
 
@@ -83,6 +104,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
      * subscribe on fifferent events needed inside this component
      */
     constructor(private elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, @Self() @Optional() public _control: NgControl, @Optional() private _parentForm: NgForm, @Optional() private _parentFormGroup: FormGroupDirective) {
+
         if (this._control) {
             this._control.valueAccessor = this;
         }
@@ -103,9 +125,17 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
             .switchMap((element) => Observable.fromEvent(element, 'keydown'));
 
         this.subscriptions.push(keydown$
-            .filter((event: KeyboardEvent) => !this.showDropDown && (event.keyCode === KeyCodes.KeyD || event.keyCode === KeyCodes.UpArrow || event.keyCode === KeyCodes.DownArrow))
+            .filter((event: KeyboardEvent) => !this.showDropDown
+                && (
+                    event.keyCode === KeyCodes.KeyD
+                    || event.keyCode === KeyCodes.UpArrow
+                    || event.keyCode === KeyCodes.DownArrow
+                    || (this.time && event.keyCode === KeyCodes.Tab && !event.shiftKey && this.stepUnit === StepUnit.Day)
+                    || (this.time && event.keyCode === KeyCodes.Tab && event.shiftKey && this.stepUnit === StepUnit.Hour)
+                ))
             .subscribe((event: KeyboardEvent) => {
                 event.preventDefault();
+
                 switch (event.keyCode) {
                     case (KeyCodes.KeyD):
                         this.value = new Date();
@@ -115,18 +145,23 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
                         if (event.altKey) {
                             this.showDropDown = true;
                         } else if (this.date) {
-                            const d = new Date(this.date);
-                            d.setDate(this.date.getDate() + 1);
-                            this.value = d;
+                            this.value = this.calcDuration(this.date, 1);
                         }
                         break;
                     case (KeyCodes.DownArrow):
                         if (event.altKey) {
                             this.showDropDown = true;
                         } else if (this.date) {
-                            const d = new Date(this.date);
-                            d.setDate(this.date.getDate() - 1);
-                            this.value = d;
+                            this.value = this.calcDuration(this.date, -1);
+                        }
+                        break;
+                    case (KeyCodes.Tab):
+                        if (this.time) {
+                            if (event.shiftKey && this.stepUnit === StepUnit.Hour) {
+                                this.stepUnit = StepUnit.Day;
+                            } else if (!event.shiftKey && this.stepUnit === StepUnit.Day) {
+                                this.stepUnit = StepUnit.Hour;
+                            }
                         }
                         break;
                     default:
@@ -314,7 +349,9 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
      */
     protected updateModel(date: string | Date) {
         if (typeof date === 'string' && date.replace(/_/g, '').length === this.format.length) {
-            let d = moment(date, this.format).toDate();
+
+            const dm = moment(date, this.format);
+            let d = dm.toDate();
             if (!moment(d).isValid()) {
                 d = new Date();
             }
@@ -322,9 +359,11 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
         }
 
         if (typeof date !== 'string') {
+            console.log('updateModel2');
             this.value = date;
         }
     }
+
 
     /** Reset date-picker values. */
     protected reset() {
@@ -333,4 +372,35 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
         this.onChangeCallback(this.value);
         this.close();
     }
+
+
+    /**
+     * Keyboard operations.
+     *
+     * @param {Date} date
+     * @param {number} num : nombre de unité à ajouter à date.
+     */
+    private calcDuration(date: Date, num: number): Date {
+        const d = moment(date);
+        const val = num * this.stepValue;
+        const duration = moment_.duration({ [this.aUnit[this.stepUnit]]: Math.abs(val) });
+
+        if (num < 0) {
+            d.subtract(duration);
+        } else {
+            d.add(duration);
+        }
+
+        if (this.stepRoundToMinutes) {
+            this.calcRoundedMinutes(d);
+        }
+
+        return d.toDate();
+    }
+
+    private calcRoundedMinutes(d: moment_.Moment) {
+        d.startOf('minute');
+        d.minute(this.stepRoundToMinutes * Math.round(d.minute() / this.stepRoundToMinutes));
+    }
+
 }

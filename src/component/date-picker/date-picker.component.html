@@ -1,5 +1,13 @@
 <md-input-container id="date-selector">
-    <input #inputelement id="date-selector-input" mdInput [disabled]="disabled" [ngModel]="inputModel" (ngModelChange)="updateModel($event)" placeholder="{{placeholder}}" [textMask]="{mask: mask, showMask: true}">
+    <input 
+		#inputelement 
+		id="date-selector-input" 
+		mdInput 
+		[disabled]="disabled" 
+		[ngModel]="inputModel" 
+		(ngModelChange)="updateModel($event)" 
+		placeholder="{{placeholder}}" 
+		[textMask]="{mask: mask, showMask: true}">
 	<div mdSuffix>
 		<div id="action-icon-container">
 			<md-icon *ngIf="inputModel && !disabled" (click)="reset()" id="clear-button">clear</md-icon>
@@ -10,7 +18,14 @@
 		<ng-template [ngTemplateOutlet]="mdHint"></ng-template>
 	</md-hint>
 </md-input-container>
-<deja-dropdown *ngIf="showDropDown" id="deja-dropdown" [containerElement]="containerElement" [ownerElement]="elementRef.nativeElement" [ownerAlignment]="ownerAlignment" [dropdownAlignment]="dropdownAlignment" ownerBottomMargin=-4>
+<deja-dropdown 
+	*ngIf="showDropDown" 
+	id="deja-dropdown" 
+	[containerElement]="containerElement" 
+	[ownerElement]="elementRef.nativeElement" 
+	[ownerAlignment]="ownerAlignment" 
+	[dropdownAlignment]="dropdownAlignment" 
+	ownerBottomMargin=-4>
 	<deja-date-time-selector 
 		[time]="time" 
 		[disableDates]="disableDates" 
