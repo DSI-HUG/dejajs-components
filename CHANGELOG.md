@@ -1,3 +1,37 @@
+### 2.3.0 (2017-06-30)
+
+##### Build System / Dependencies
+
+* **Dependencies:** Update dependencies in latest version ([ffca0f8a](https://github.com/DSI-HUG/dejajs-components/commit/ffca0f8a59c5a9d32a844114304be0733b40a2e4))
+
+##### New Features
+
+* **DatePicker:** Keyboard updates are now according to format ([8d8bff71](https://github.com/DSI-HUG/dejajs-components/commit/8d8bff712b06e8e81c4b6057c4aee1d8dd9e52a8))
+* **ItemService:** show waiter from external parent component ([6587e1f6](https://github.com/DSI-HUG/dejajs-components/commit/6587e1f60e52d77e09f538881fc553cb55c8312f))
+* **ItemList:** push css class name ([d5cde9b3](https://github.com/DSI-HUG/dejajs-components/commit/d5cde9b31a7329a8b6f0184e6944587eb6030044))
+* **List:** toggleAll$ can have a collapsed parameter ([07190ba6](https://github.com/DSI-HUG/dejajs-components/commit/07190ba6309087fe3054dd09ffef5126e7098a48))
+* **Global:** Add warning if doctype is not set ([a993c543](https://github.com/DSI-HUG/dejajs-components/commit/a993c543b850d980e874ff0d60f978781df50dc4))
+
+##### Bug Fixes
+
+* **ViewPortService:**
+  * Last item scrolling fix(ViewPortService): EnsureParams at end if viewport is not complete ([21da57da](https://github.com/DSI-HUG/dejajs-components/commit/21da57dadeefc8a3c688fe85bc2dcf9f828a151b))
+  * auto height calculation fix ([3b06a853](https://github.com/DSI-HUG/dejajs-components/commit/3b06a8538fd1973c6ebd1bee89259cad054539fa))
+* **Select:**
+  * Arrow overflowing ([dadfe221](https://github.com/DSI-HUG/dejajs-components/commit/dadfe221739464179aa55022f9332e140c1364db))
+  * Arrow was not properly displayed in [multiselection][above] mode ([085a5939](https://github.com/DSI-HUG/dejajs-components/commit/085a5939e0c7c67d9056ca37c67bccde5ab185ad))
+  * Waiter z-index fix ([b3089bcf](https://github.com/DSI-HUG/dejajs-components/commit/b3089bcf11fc5002ecab99325d1f9f196b6ea703))
+* **Diacritics:**
+  * Fix locale dependencies ([3cee17f7](https://github.com/DSI-HUG/dejajs-components/commit/3cee17f793e9c3e38b36f6de2ec8f1e5c4f3372d))
+  * Fix locale dependencies ([9fcd1608](https://github.com/DSI-HUG/dejajs-components/commit/9fcd16085c65ec44aad64f62cdb124d269ca62f4))
+* **Dependencies:** Rollback cli version ([4dfd9cb6](https://github.com/DSI-HUG/dejajs-components/commit/4dfd9cb6afd256d8eb44a0dc4eb16bd77bace1b8))
+* **Theme:** Remove customized color for input bar (not working also in invalid mode) ([ab2b56f3](https://github.com/DSI-HUG/dejajs-components/commit/ab2b56f3796bb47372018e5259c90fb53f079bbd))
+
+##### Refactors
+
+* **DatePicker:** Cursor based keyboard update ([afdcdd10](https://github.com/DSI-HUG/dejajs-components/commit/afdcdd10f92543c00d9d959fbae65092a19fe2d0))
+* **DejaSelect:** Minimize clear-button & add arrow ([28362e85](https://github.com/DSI-HUG/dejajs-components/commit/28362e854922625df3937fd9b69c7edb7e9943c2))
+
 #### 2.2.2 (2017-6-26)
 
 ##### Documentation Changes
