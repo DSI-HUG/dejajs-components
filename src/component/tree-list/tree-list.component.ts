@@ -458,7 +458,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
             .subscribe(noop);
     }
 
-    /** Permet de désactiver le select */
+    /** Permet de désactiver la liste */
     @Input()
     public set disabled(value: boolean | string) {
         const disabled = value != null && `${value}` !== 'false';
@@ -468,6 +468,15 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     public get disabled() {
         return this._disabled;
     }
+
+    /** Definit si le waiter doit être affiché dans la liste. */
+    @Input()
+    public set waiter(value: boolean) {
+        this._waiter = value;
+    }
+
+    /** Retourne si le waiter doit être affiché dans la liste. */
+    public get waiter() { return this._waiter; }
 
     @ViewChild(DejaChildValidatorDirective)
     protected set inputValidatorDirective(value: DejaChildValidatorDirective) {
@@ -1014,5 +1023,31 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     protected calcViewList$(): Observable<IViewPort> {
         return super.calcViewList$(this.query)
             .do(() => this.changeDetectorRef.markForCheck());
+    }
+
+    protected getItemClass(item: IItemTree) {
+        const classNames = ['listitem'] as string[];
+        if (item.className) {
+            classNames.push(item.className);
+        }
+        if (item.collapsing || item.expanding) {
+            classNames.push('hide');
+        }
+        if (item.depth < this.depthMax) {
+            classNames.push('parent');
+        }
+        if (item.collapsed) {
+            classNames.push('collapsed');
+        }
+        if (item.selected) {
+            classNames.push('selected');
+        }
+        if (item.selectable === false) {
+            classNames.push('unselectable');
+        }
+        if (item.depth === this._depthMax && item.odd) {
+            classNames.push('odd');
+        }
+        return classNames.join(' ');
     }
 }

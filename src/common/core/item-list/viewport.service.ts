@@ -176,7 +176,7 @@ export class ViewPortService implements OnDestroy {
 
             if (!ensureParams || ensureParams.index === undefined || !ensureParams.atEnd) {
                 items.forEach((item: IViewPortItem, index: number) => {
-                    const itemSize = (item.size && item.size > ViewPortService.itemDefaultSize) ? item.size : itemDefaultSize;
+                    const itemSize = item.size || itemDefaultSize;
 
                     if (ensureParams && ensureParams.index === index) {
                         startIndex = index;
@@ -231,6 +231,20 @@ export class ViewPortService implements OnDestroy {
                     } else {
                         afterSize += itemSize;
                     }
+                }
+            }
+
+            if (ensureParams && viewPortSize < containerSize && visibleList.length < items.length) {
+                if (ensureParams.atEnd) {
+                    return calcVariableSizeViewPort$(items, containerSize, scrollPos, itemDefaultSize, {
+                        index: 0,
+                        atEnd: false,
+                    } as IEnsureParams);
+                } else {
+                    return calcVariableSizeViewPort$(items, containerSize, scrollPos, itemDefaultSize, {
+                        index: items.length - 1,
+                        atEnd: true,
+                    } as IEnsureParams);
                 }
             }
 
@@ -406,10 +420,7 @@ export class ViewPortService implements OnDestroy {
                     } else if (items.length && endScrollPos > 0 && (viewPort.scrollPos || scrollPos) > endScrollPos) {
                         // Scroll position is over the last item
                         // Ensure last item visible and recalc viewport
-                        return calcViewPort$(items, maxSize, 0, element, itemDefaultSize, {
-                            index: items.length - 1,
-                            atEnd: true,
-                        } as IEnsureParams);
+                        return calcViewPort$(items, maxSize, endScrollPos, element, itemDefaultSize, {} as IEnsureParams);
                     } else if (this.mode === ViewportMode.auto && viewPort.listSize < listSize) {
                         // Rendered viewport is to small, render again to complete
                         return calcViewPort$(items, maxSize, 0, element, itemDefaultSize, {
@@ -476,6 +487,7 @@ export class ViewPortService implements OnDestroy {
             .filter(() => {
                 if (this.ignoreScrollCount > 0) {
                     this.ignoreScrollCount--;
+                    console.log('ignoreScrollCount ' + this.ignoreScrollCount);
                     return false;
                 } else {
                     return true;

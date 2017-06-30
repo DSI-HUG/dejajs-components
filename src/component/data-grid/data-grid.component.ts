@@ -73,6 +73,8 @@ export class DejaGridComponent implements OnDestroy {
     @Input() public childrenField: string;
     /** Définit le champ à utiliser comme valeur d'affichage. */
     @Input() public textField: string;
+    /** Définit si le waiter doit être affiché dans la grille. */
+    @Input() public waiter: boolean;
     /** Définit le champ à utiliser comme valeur de comparaison. */
     @Input() public valueField: string;
     /** Définit le champ à utiliser comme champ de recherche.

@@ -24,7 +24,7 @@ const noop = () => { };
 
 /** Classe de base pour tous les composants à listes (deja-treelist, deja-select, deja-grid) */
 export abstract class ItemListBase implements OnDestroy {
-    protected waiter = true;
+    protected _waiter = true;
 
     protected _itemList: IItemBase[] = []; // Viewport list
     protected _multiSelect = false;
@@ -415,7 +415,7 @@ export abstract class ItemListBase implements OnDestroy {
             this._itemListService.valueField = this._valueField;
             this.waiter$sub = Observable.from(this._itemListService.waiter$)
                 .subscribe((status: boolean) => {
-                    this.waiter = status;
+                    this._waiter = status;
                     this.changeDetectorRef.markForCheck();
                 });
         }
