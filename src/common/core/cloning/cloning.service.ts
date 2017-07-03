@@ -6,9 +6,10 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
+import { ObjectMapper } from 'json-object-mapper';
 import 'rxjs/add/operator/toPromise';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs/Observable';
 
 /**
  * Service for cloning or copying an object
@@ -16,10 +17,7 @@ import {Observable} from 'rxjs/Observable';
 @Injectable()
 export class CloningService {
     /**
-     * Clone an object and his prototype
-     *
-     * @param object  The object to clone.
-     * @return A new instance of the passed object and cloned
+     * @deprecated 03.07.2017 Use cloneSync with the parameter type specified instead
      */
     public cloneSyncWithPrototype(object: any) {
         if (!object || typeof object !== 'object') {
@@ -42,31 +40,27 @@ export class CloningService {
     }
 
     /**
-     * Async Clone of an object and his prototype
-     *
-     * @param object  The object to clone.
-     * @return An observable completed with the cloned object
+     * @deprecated Use clone$ with the parameter type specified instead
      */
     public cloneWithPrototype$(object: any) {
         return Observable.of(this.cloneSyncWithPrototype(object));
     }
 
     /**
-     * Clone an object without the prototype
+     * Clone an object or a class
      *
      * @param object  The object to clone.
+     * @param type The type of object to clone
      * @return A new instance of the passed object and cloned.
      */
-    public cloneSync(object: any): any {
-        try {
-            return JSON.parse(JSON.stringify(object));
-        } catch (err) {
-            return null;
-        }
+    public cloneSync<T>(object: any, type?: { new (): T }, ): T {
+        const json = type ? ObjectMapper.serialize(object) : JSON.stringify(object);
+        const jsonObject = JSON.parse(json as string);
+        return (type && ObjectMapper.deserialize(type, jsonObject)) || jsonObject;
     }
 
     /**
-     * @deprecated
+     * @deprecated 01.03.2017
      */
     public clone(object: any) {
         return this.clone$(object).toPromise();
@@ -76,20 +70,15 @@ export class CloningService {
      * Sync cloning of an object
      *
      * @param object  The object to clone.
+     * @param type The type of object to clone
      * @return Observable resolving to the cloned object.
      */
-    public clone$(object: any) {
-        return Observable.of(this.cloneSync(object));
+    public clone$<T>(object: any, type?: { new (): T }, ): Observable<T> {
+        return Observable.of(this.cloneSync(object, type));
     }
 
     /**
-     * Extening object that entered in first argument.
-     *
-     * Returns extended object or false if have no target object or incorrect type.
-     *
-     * If you wish to clone source object (without modify it), just use empty new
-     * object as first argument, like this:
-     *   deepCopy({}, yourObj_1, [yourObj_N]);
+     * @deprecated 03.07.2017 Use cloneSync with the parameter type specified instead
      */
     public deepCopy(...objects: any[]) {
         if (objects.length < 1 || typeof objects[0] !== 'object') {
@@ -156,9 +145,6 @@ export class CloningService {
         return target;
     }
 
-    /**
-     * Recursive cloning array.
-     */
     private deepCloneArray(arr) {
         const clone = [];
         const that = this;
