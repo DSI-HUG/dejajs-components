@@ -44,7 +44,7 @@ export class NewsService {
                 let returnNews = news;
                 if (recordCount) {
                     while (recordCount > 0) {
-                        returnNews = returnNews.concat(this.cloningService.cloneSync(news));
+                        returnNews = returnNews.concat(this.cloningService.cloneSync(news) as INews);
                         recordCount -= news.length;
                     }
                 }
