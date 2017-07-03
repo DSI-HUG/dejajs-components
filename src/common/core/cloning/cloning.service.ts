@@ -7,7 +7,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { ObjectMapper } from 'json-object-mapper';
+import { deserialize, serialize} from 'json-typescript-mapper';
 import 'rxjs/add/operator/toPromise';
 import { Observable } from 'rxjs/Observable';
 
@@ -54,9 +54,7 @@ export class CloningService {
      * @return A new instance of the passed object and cloned.
      */
     public cloneSync<T>(object: any, type?: { new (): T }, ): T {
-        const json = type ? ObjectMapper.serialize(object) : JSON.stringify(object);
-        const jsonObject = JSON.parse(json as string);
-        return (type && ObjectMapper.deserialize(type, jsonObject)) || jsonObject;
+        return (type && deserialize(type, serialize(object))) || JSON.parse(JSON.stringify(object));
     }
 
     /**
