@@ -55,7 +55,7 @@
     "core-js": "2.4.1",
     "custom-event-polyfill": "0.3.0",
     "hammerjs": "2.0.8",
-    "json-object-mapper": "^1.4.0",
+    "json-object-mapper": "1.4.0",
     "moment": "2.18.1",
     "monaco-editor": "0.8.3",
     "prismjs": "1.6.0",
