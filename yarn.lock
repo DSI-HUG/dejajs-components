@@ -3465,12 +3465,6 @@ json-stringify-safe@~5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz#1296a2d58fd45f19a0f6ce01d65701e2c735b6eb"
 
-json-typescript-mapper@^1.1.3:
-  version "1.1.3"
-  resolved "http://129.195.13.159:8081/nexus/repository/npm-all/json-typescript-mapper/-/json-typescript-mapper-1.1.3.tgz#f6b1fca2d038611d65b54d7f149f628c5cf0a7da"
-  dependencies:
-    reflect-metadata "^0.1.3"
-
 json3@3.3.2, json3@^3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/json3/-/json3-3.3.2.tgz#3c0434743df93e2f5c42aee7b19bcb483575f4e1"
@@ -5281,7 +5275,7 @@ reduce-function-call@^1.0.1:
   dependencies:
     balanced-match "^0.4.2"
 
-reflect-metadata@0.1.10, reflect-metadata@^0.1.2, reflect-metadata@^0.1.3:
+reflect-metadata@0.1.10, reflect-metadata@^0.1.2:
   version "0.1.10"
   resolved "https://registry.yarnpkg.com/reflect-metadata/-/reflect-metadata-0.1.10.tgz#b4f83704416acad89988c9b15635d47e03b9344a"
 

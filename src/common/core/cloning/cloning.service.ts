@@ -7,7 +7,6 @@
  */
 
 import { Injectable } from '@angular/core';
-import { deserialize, serialize} from 'json-typescript-mapper';
 import 'rxjs/add/operator/toPromise';
 import { Observable } from 'rxjs/Observable';
 
@@ -53,8 +52,48 @@ export class CloningService {
      * @param type The type of object to clone
      * @return A new instance of the passed object and cloned.
      */
-    public cloneSync<T>(object: any, type?: { new (): T }, ): T {
-        return (type && deserialize(type, serialize(object))) || JSON.parse(JSON.stringify(object));
+    public cloneSync<T>(obj: any, Type?: { new (): T }, ): T {
+        if (!Type) {
+            return JSON.parse(JSON.stringify(obj));
+        } else {
+            const cloneInternal = (source: any, target?: any) => {
+                if (!target) {
+                    target = new source.constructor();
+                }
+
+                Object.keys(target).forEach((key) => {
+                    const val = source[key];
+
+                    if (typeof val !== 'object' || val === null) {
+                        target[key] = val;
+
+                    } else if (Array.isArray(val)) {
+                        // just clone arrays (and recursive clone objects inside)
+                        const clone = [];
+                        val.forEach((item, index) => {
+                            clone[index] = cloneInternal(item);
+                        });
+                        target[key] = clone;
+
+                    } else if (val instanceof Date) {
+                        target[key] = new Date(val.getTime());
+
+                    } else if (val instanceof RegExp) {
+                        target[key] = new RegExp(val);
+
+                    } else {
+                        target[key] = cloneInternal(val);
+
+                    }
+                });
+
+                return target;
+            };
+
+            const target = new Type();
+            cloneInternal(obj, target);
+            return target;
+        }
     }
 
     /**

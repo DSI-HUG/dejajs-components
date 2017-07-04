@@ -55,7 +55,6 @@
     "core-js": "2.4.1",
     "custom-event-polyfill": "0.3.0",
     "hammerjs": "2.0.8",
-    "json-typescript-mapper": "1.1.3",
     "moment": "2.18.1",
     "monaco-editor": "0.8.3",
     "prismjs": "1.6.0",
