@@ -6,10 +6,11 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ICircularRange } from './../../../src/component/circular-picker/circular-picker.component';
 
 @Component({
+    encapsulation: ViewEncapsulation.None,
     selector: 'deja-circular-picker-demo',
     styleUrls: ['./circular-picker-demo.scss'],
     templateUrl: './circular-picker-demo.html',

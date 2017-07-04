@@ -8,6 +8,7 @@
 
 import { Injectable } from '@angular/core';
 import { Http, ResponseContentType } from '@angular/http';
+import { ObjectMapper } from 'json-object-mapper';
 import 'rxjs/add/operator/publishLast';
 import { Observable } from 'rxjs/Observable';
 import { Color } from '../../../src/common/core/graphics/color';
@@ -15,7 +16,7 @@ import { MaterialColors } from '../../../src/common/core/style/material-colors';
 
 @Injectable()
 export class CountriesService {
-    private countriesDic = {} as { [code: string]: ICountry };
+    private countriesDic = {} as { [code: string]: Country };
     private materialColors: Color[];
 
     constructor(private http: Http, materialColors: MaterialColors) {
@@ -31,11 +32,16 @@ export class CountriesService {
         return Observable.of(this.countriesDic[code]);
     }
 
-    public getCountries$(query?: string, number?: number): Observable<ICountry[]> {
+    public getCountries$(query?: string, number?: number): Observable<Country[]> {
         let recordCount = number || 0;
         return this.http.get('assets/datas/countries.json', { responseType: ResponseContentType.Json })
             .map((response) => response.json())
-            .map((datas) => datas.data as ICountry[])
+            .switchMap((datas) => datas.data as any[])
+            .map((json) => ObjectMapper.deserialize(Country, json))
+            .reduce((acc, country) => {
+                acc.push(country);
+                return acc;
+            }, [])
             .map((countries) => {
                 let colorIndex = 0;
                 countries.forEach((country) => {
@@ -79,10 +85,10 @@ export class CountriesService {
     }
 }
 
-export interface ICountry {
-    displayName?: string;
-    naqme: string;
-    code: string;
-    color?: string;
-    equals?: (item: ICountry) => boolean;
+export class Country {
+    public displayName: string = void 0;
+    public naqme: string = void 0;
+    public code: string = void 0;
+    public color: string = void 0;
+    public equals: (item: Country) => boolean;
 }

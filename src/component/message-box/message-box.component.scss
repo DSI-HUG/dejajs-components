@@ -1,13 +1,11 @@
-$deep: '/deep/';
-
-:host {
-    md-card {
+deja-message-box {
+    .mat-card#msgbox {
         border-style: solid;
         border-width: 1px;
         margin: 0;
         padding: 0;
 
-        md-card-title {
+        .mat-card-title {
             align-items: center;
             box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.2);
             display: flex;
@@ -17,7 +15,7 @@ $deep: '/deep/';
                 margin-right: 0.5rem;
             }
         }
-        md-card-content {
+        .mat-card-content {
             margin: 0;
             padding: 1rem;
             h2 {
@@ -26,13 +24,14 @@ $deep: '/deep/';
                 line-height: 32px;
             }
         }
-        md-card-actions {
+        .mat-card-actions {
             align-items: center;
             display: flex;
             justify-content: flex-end;
             margin: 0;
             padding: 0.2rem;
-            #{$deep}button {
+            
+            button {
                 margin-left: 0.2rem;
 
                 &.mat-blank[md-raised-button],
@@ -69,12 +68,12 @@ $deep: '/deep/';
         }
     }
     &[horizontal] {
-        md-card {
+        .mat-card#msgbox {
             align-items: stretch;
             display: flex;
             flex-direction: row;
             padding: 0;
-            md-card-title {
+            .mat-card-title {
                 align-items: center;
                 display: flex;
                 flex: 0 0 auto;
@@ -85,12 +84,12 @@ $deep: '/deep/';
                     margin: 0;
                 }
             }
-            md-card-content {
+            .mat-card-content {
                 align-self: center;
                 flex: 1 1 auto;
                 padding: 1rem;
             }
-            md-card-actions {
+            .mat-card-actions {
                 margin: 0;
                 padding: 0;
                 position: absolute;
