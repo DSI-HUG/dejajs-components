@@ -15,9 +15,9 @@ import { IItemBase } from '../../../src/common/core/item-list/item-base';
 import { IItemTree } from '../../../src/common/core/item-list/item-tree';
 import { IViewPortItem } from '../../../src/common/core/item-list/viewport.service';
 import { DejaSelectComponent } from '../../../src/component/select/select.component';
-import { INews } from '../common/news.model';
+import { News } from '../common/news.model';
 import { CountriesListService } from '../services/countries-list.service';
-import { CountriesService, ICountry } from '../services/countries.service';
+import { CountriesService, Country } from '../services/countries.service';
 import { NewsService } from '../services/news.service';
 
 @Component({
@@ -28,11 +28,11 @@ import { NewsService } from '../services/news.service';
 })
 export class SelectDemoComponent implements OnDestroy {
     protected disabled: boolean;
-    protected country: ICountry;
+    protected country: Country;
     protected tabIndex = 1;
-    protected news$: Observable<INews[]>;
-    protected bigNews$: Observable<INews[]>;
-    protected bigCountries$: Observable<ICountry[]>;
+    protected news$: Observable<News[]>;
+    protected bigNews$: Observable<News[]>;
+    protected bigCountries$: Observable<Country[]>;
     protected viewPortInfos: {
         name: string;
         value: string;
@@ -42,9 +42,9 @@ export class SelectDemoComponent implements OnDestroy {
     protected readonlyMultiSelect = false;
     protected disableMultiSelect = false;
 
-    private countries: Observable<ICountry[]>;
-    private countriesForTemplate: ICountry[];
-    private countriesForMultiselect: ICountry[];
+    private countries: Observable<Country[]>;
+    private countriesForTemplate: Country[];
+    private countriesForMultiselect: Country[];
     private groupedCountries: ICountryGroup[];
     private onDemandGroupedCountries: ICountryGroup[];
     private multiselectModel: IItemTree[];
@@ -71,17 +71,16 @@ export class SelectDemoComponent implements OnDestroy {
         this.bigNews$ = newsService.getNews$(10000);
         this.bigCountries$ = countriesService.getCountries$(null, 100000);
 
-        this.country = {
-            code: 'CH',
-            displayName: 'Switzerland',
-            naqme: 'Switzerland',
-            color: 'rgb(211, 47, 47)',
-        };
+        this.country = new Country();
+        this.country.code = 'CH';
+        this.country.displayName = 'Switzerland';
+        this.country.naqme = 'Switzerland';
+        this.country.color = 'rgb(211, 47, 47)';
 
         this.countries = this.countriesService.getCountries$();
 
         this.subscriptions.push(this.countries
-            .subscribe((value: ICountry[]) => {
+            .subscribe((value: Country[]) => {
                 const result = [] as any[];
                 value.map((s) => {
                     s.toString = () => { return s.code + ' - ' + s.naqme; };
@@ -98,7 +97,7 @@ export class SelectDemoComponent implements OnDestroy {
             }));
 
         this.subscriptions.push(this.countries
-            .subscribe((value: ICountry[]) => {
+            .subscribe((value: Country[]) => {
                 const result = [] as ICountryGroup[];
                 const onDemandResult = [] as ICountryGroup[];
                 const map = {} as { [groupName: string]: ISelectCountry[] };

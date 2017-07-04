@@ -6,9 +6,10 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, ContentChild, Input, OnInit } from '@angular/core';
+import { Component, ContentChild, Input, OnInit, ViewEncapsulation } from '@angular/core';
 
 @Component({
+    encapsulation: ViewEncapsulation.None,
     selector: 'deja-message-box',
     styleUrls: ['./message-box.component.scss'],
     templateUrl: './message-box.component.html',

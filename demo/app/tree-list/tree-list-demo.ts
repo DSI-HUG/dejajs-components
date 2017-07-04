@@ -19,9 +19,9 @@ import { IDropCursorInfos } from '../../../src/component/mouse-dragdrop/mouse-dr
 import { IDejaMouseDraggableContext } from '../../../src/component/mouse-dragdrop/mouse-draggable.directive';
 import { IDejaMouseDroppableContext } from '../../../src/component/mouse-dragdrop/mouse-droppable.directive';
 import { DejaTreeListComponent } from '../../../src/component/tree-list/tree-list.component';
-import { INews } from '../common/news.model';
+import { News } from '../common/news.model';
 import { CountriesListService } from '../services/countries-list.service';
-import { CountriesService, ICountry } from '../services/countries.service';
+import { CountriesService, Country } from '../services/countries.service';
 import { NewsService } from '../services/news.service';
 
 @Component({
@@ -32,23 +32,23 @@ import { NewsService } from '../services/news.service';
 })
 export class DejaTreeListDemoComponent implements OnDestroy {
     protected disabled: boolean;
-    protected country: ICountry;
+    protected country: Country;
     protected tabIndex = 1;
-    protected news$: Observable<INews[]>;
-    protected bigNews$: Observable<INews[]>;
-    protected bigCountries$: Observable<ICountry[]>;
+    protected news$: Observable<News[]>;
+    protected bigNews$: Observable<News[]>;
+    protected bigCountries$: Observable<Country[]>;
     protected viewPortInfos: {
         name: string;
         value: string;
     }[];
     protected viewPortInfos$: Subscription;
     protected dialogResponse$: Subject<string> = new Subject<string>();
-    protected businessCountries: ICountry[];
+    protected businessCountries: Country[];
     protected loremList: IItemTree[] = [];
 
-    private countries: Observable<ICountry[]>;
-    private countriesForTemplate: ICountry[];
-    private countriesForMultiselect: ICountry[];
+    private countries: Observable<Country[]>;
+    private countriesForTemplate: Country[];
+    private countriesForMultiselect: Country[];
     private groupedCountries: ICountryGroup[];
     private onDemandGroupedCountries: ICountryGroup[];
     private multiselectModel: IItemTree[];
@@ -84,16 +84,15 @@ export class DejaTreeListDemoComponent implements OnDestroy {
             this.loremList = groupedResult;
         });
 
-        this.country = {
-            code: 'CH',
-            displayName: 'Switzerland',
-            naqme: 'Switzerland',
-            color: 'rgb(211, 47, 47)',
-        };
+        this.country = new Country();
+        this.country.code = 'CH';
+        this.country.displayName = 'Switzerland';
+        this.country.naqme = 'Switzerland';
+        this.country.color = 'rgb(211, 47, 47)';
 
         this.countries = this.countriesService.getCountries$();
 
-        this.subscriptions.push(this.countries.subscribe((value: ICountry[]) => {
+        this.subscriptions.push(this.countries.subscribe((value: Country[]) => {
             const result = [] as any[];
             value.map((s) => {
                 s.toString = () => { return s.code + ' - ' + s.naqme; };
@@ -109,7 +108,7 @@ export class DejaTreeListDemoComponent implements OnDestroy {
                 this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","displayName":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","displayName":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","displayName":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","displayName":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","displayName":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","displayName":"Dominica","depth":0,"odd":false,"selected":true}]');
             }));
 
-        this.subscriptions.push(this.countries.subscribe((value: ICountry[]) => {
+        this.subscriptions.push(this.countries.subscribe((value: Country[]) => {
             const result = [] as ICountryGroup[];
             const onDemandResult = [] as ICountryGroup[];
             const map = {} as { [groupName: string]: ISelectCountry[] };
@@ -246,11 +245,11 @@ export class DejaTreeListDemoComponent implements OnDestroy {
         }
     }
 
-    protected businessCountryChange(country: ICountry) {
+    protected businessCountryChange(country: Country) {
         this.businessCountries = country ? [country] : null;
     }
 
-    protected multiselectModelChange(countries: ICountry[]) {
+    protected multiselectModelChange(countries: Country[]) {
         this.multiselectModel = countries ? countries : null;
     }
 
@@ -270,7 +269,7 @@ export class DejaTreeListDemoComponent implements OnDestroy {
 
     protected onDivDropEvent(event: IDejaDragEvent) {
         if (event.dragInfo.hasOwnProperty('country')) {
-            const country = event.dragInfo['country'] as ICountry;
+            const country = event.dragInfo['country'] as Country;
             (event.target as HTMLElement).innerText = `The dropped country is ${country.naqme} - the code is: ${country.code}`;
             event.preventDefault();
         }
@@ -297,7 +296,7 @@ export class DejaTreeListDemoComponent implements OnDestroy {
                 } as IDropCursorInfos;
             },
             drop: (dragContext) => {
-                const country = dragContext as ICountry;
+                const country = dragContext as Country;
                 dropArea.innerText = `The dropped country is ${country.naqme} - the code is: ${country.code}`;
             },
         } as IDejaMouseDroppableContext;

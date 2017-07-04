@@ -8,6 +8,7 @@
 
 import { Injectable } from '@angular/core';
 import { Http, ResponseContentType } from '@angular/http';
+import { JsonProperty, ObjectMapper } from 'json-object-mapper';
 import 'rxjs/add/operator/publishLast';
 import { Observable } from 'rxjs/Observable';
 import { Color } from '../../../src/common/core/graphics/color';
@@ -15,19 +16,58 @@ import { MaterialColors } from '../../../src/common/core/style/material-colors';
 import { UUID } from '../../../src/common/core/UUID';
 import { CloningService } from './../../../src/common/core/cloning/cloning.service';
 
+export class Friend {
+    public id: number = void 0;
+    public name: string = void 0;
+}
+
+export class Person {
+    public _id: string = void 0;
+    public index: number = void 0;
+    public guid: string = void 0;
+    public isActive: boolean = void 0;
+    public balance: number = void 0;
+    public picture: string = void 0;
+    public age: number = void 0;
+    public eyeColor: string = void 0;
+    public name: string = void 0;
+    public gender: string = void 0;
+    public company: string = void 0;
+    public email: string = void 0;
+    public phone: string = void 0;
+    public address: string = void 0;
+    public about: string = void 0;
+    @JsonProperty({ type: Date })
+    public registered: Date = void 0;
+    public latitude: number = void 0;
+    public longitude: number = void 0;
+    @JsonProperty({ type: String })
+    public tags: string[] = void 0;
+    public color: string = void 0;
+    @JsonProperty({ type: Friend })
+    public friends: Friend[] = void 0;
+    public greeting: string = void 0;
+    public favoriteFruit: string = void 0;
+}
+
 @Injectable()
 export class PeopleService {
-    private peopleDic = {} as { [code: string]: IPerson };
+    private peopleDic = {} as { [code: string]: Person };
     private materialColors: Color[];
 
     constructor(private http: Http, materialColors: MaterialColors, private cloningService: CloningService) {
         this.materialColors = materialColors.getPalet('700');
     }
 
-    public getPeople$(query?: string, number?: number): Observable<IPerson[]> {
+    public getPeople$(query?: string, number?: number): Observable<Person[]> {
         let recordCount = number || 0;
         return this.http.get('assets/datas/people.json', { responseType: ResponseContentType.Json })
-            .map((response) => response.json() as IPerson[])
+            .switchMap((response) => response.json())
+            .map((json) => ObjectMapper.deserialize(Person, json))
+            .reduce((acc, person) => {
+                acc.push(person);
+                return acc;
+            }, [])
             .map((people) => {
                 let colorIndex = 0;
                 people.forEach((person) => {
@@ -61,7 +101,7 @@ export class PeopleService {
                 let returnPeople = people;
                 if (recordCount) {
                     while (recordCount > 0) {
-                        const clonedPeople = this.cloningService.cloneSync(people) as IPerson[];
+                        const clonedPeople = people.map((person) => this.cloningService.cloneSync(person, Person));
                         returnPeople = returnPeople.concat(clonedPeople.map((person) => {
                             person.guid = (new UUID()).toString();
                             return person;
@@ -73,35 +113,3 @@ export class PeopleService {
             });
     }
 }
-
-export interface IPerson {
-    _id: string;
-    index: number;
-    guid: string;
-    isActive: boolean;
-    balance: number;
-    picture: string;
-    age: number;
-    eyeColor: string;
-    name: string;
-    gender: string;
-    company: string;
-    email: string;
-    phone: string;
-    address: string;
-    about: string;
-    registered: Date;
-    latitude: number;
-    longitude: number;
-    tags: string[];
-    color: string;
-    friends: [
-        {
-            id: number,
-            name: string
-        }
-    ];
-    greeting: string;
-    favoriteFruit: string;
-}
-

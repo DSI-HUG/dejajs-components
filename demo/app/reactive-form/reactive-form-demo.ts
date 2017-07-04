@@ -11,7 +11,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { CountriesService } from '../services/countries.service';
-import { ICountry } from '../services/countries.service';
+import { Country } from '../services/countries.service';
 
 // ngrx
 import { Store } from '@ngrx/store';
@@ -35,7 +35,7 @@ export class ReactiveFormDemoComponent implements AfterContentInit, OnInit, OnDe
     protected user$: Observable<IUser>;
 
     private _readonly = false;
-    private countries: Observable<ICountry[]>;
+    private countries: Observable<Country[]>;
 
     private valueChanges$sub: Subscription;
     private user$sub: Subscription;

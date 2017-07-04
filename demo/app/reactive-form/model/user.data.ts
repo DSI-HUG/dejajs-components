@@ -7,7 +7,7 @@
  */
 
 import { Color } from '../../../../src/common/core/graphics/color';
-import { ICountry } from '../../services/countries.service';
+import { Country } from '../../services/countries.service';
 import { IUser } from './user.interface';
 
 export const user = {
@@ -32,11 +32,11 @@ export const user = {
     country: {
         naqme: 'Switzerland',
         code: 'CH',
-    } as ICountry,
+    } as Country,
     visitedCountries: [{
         naqme: 'Switzerland',
         code: 'CH',
-    } as ICountry],
+    } as Country],
     name: 'Serge',
     skills: ['angular2', 'ngrx', 'typescript', 'html5', 'css3'],
     remark: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.

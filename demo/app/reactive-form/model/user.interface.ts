@@ -8,12 +8,12 @@
 
 import { Color } from '../../../../src/common/core/graphics/color';
 import { IRange } from '../../../../src/component/range/range.interface';
-import { ICountry } from '../../services/countries.service';
+import { Country } from '../../services/countries.service';
 
 export interface IUser {
     name: string;                       // MdInput
-    country: ICountry;                  // DejaSelect
-    visitedCountries: ICountry[];       // DejaSelect => MultiSelect
+    country: Country;                  // DejaSelect
+    visitedCountries: Country[];       // DejaSelect => MultiSelect
     birthDate: Date;                    // DejaDatePicker && DejaDateSelector
     size: number;                       // DejaCircularPicker
     color: Color;                       // DejaColor Selector

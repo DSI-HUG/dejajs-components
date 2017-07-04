@@ -15,7 +15,7 @@ import { IDejaMouseDraggableContext } from '../../../src/component/mouse-dragdro
 import { IDejaMouseDroppableContext } from '../../../src/component/mouse-dragdrop/mouse-droppable.directive';
 import { IDejaTile } from '../../../src/component/tiles/tile.interface';
 import { IDejaTilesAddEvent, IDejaTilesRemoveEvent } from '../../../src/component/tiles/tiles.event';
-import { CountriesService, ICountry } from '../services/countries.service';
+import { CountriesService, Country } from '../services/countries.service';
 
 @Component({
     selector: 'deja-tiles-demo',
@@ -129,7 +129,7 @@ export class TilesDemoComponent implements OnInit {
                 } as IDropCursorInfos;
             },
             drop: (dragContext) => {
-                const country = dragContext['country'] as ICountry;
+                const country = dragContext['country'] as Country;
                 dropArea.innerText = `The dropped country is ${country.naqme} - the code is: ${country.code}`;
             },
         } as IDejaMouseDroppableContext;

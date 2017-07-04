@@ -7,7 +7,7 @@
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { INews } from './news.model';
+import { News } from './news.model';
 
 @Component({
     selector: 'news-card',
@@ -15,7 +15,7 @@ import { INews } from './news.model';
     templateUrl: 'news-card.component.html',
 })
 export class NewsCardComponent {
-    @Input() protected item: INews;
+    @Input() protected item: News;
     @Output() protected imageLoaded = new EventEmitter();
 
     public constructor() {
