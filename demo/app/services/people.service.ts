@@ -16,6 +16,40 @@ import { MaterialColors } from '../../../src/common/core/style/material-colors';
 import { UUID } from '../../../src/common/core/UUID';
 import { CloningService } from './../../../src/common/core/cloning/cloning.service';
 
+export class Friend {
+    public id: number = void 0;
+    public name: string = void 0;
+}
+
+export class Person {
+    public _id: string = void 0;
+    public index: number = void 0;
+    public guid: string = void 0;
+    public isActive: boolean = void 0;
+    public balance: number = void 0;
+    public picture: string = void 0;
+    public age: number = void 0;
+    public eyeColor: string = void 0;
+    public name: string = void 0;
+    public gender: string = void 0;
+    public company: string = void 0;
+    public email: string = void 0;
+    public phone: string = void 0;
+    public address: string = void 0;
+    public about: string = void 0;
+    @JsonProperty({ type: Date })
+    public registered: Date = void 0;
+    public latitude: number = void 0;
+    public longitude: number = void 0;
+    @JsonProperty({ type: String })
+    public tags: string[] = void 0;
+    public color: string = void 0;
+    @JsonProperty({ type: Friend })
+    public friends: Friend[] = void 0;
+    public greeting: string = void 0;
+    public favoriteFruit: string = void 0;
+}
+
 @Injectable()
 export class PeopleService {
     private peopleDic = {} as { [code: string]: Person };
@@ -79,38 +113,3 @@ export class PeopleService {
             });
     }
 }
-
-export class Friend {
-    public id: number = void 0;
-    public name: string = void 0;
-}
-
-export class Person {
-    public _id: string = void 0;
-    public index: number = void 0;
-    public guid: string = void 0;
-    public isActive: boolean = void 0;
-    public balance: number = void 0;
-    public picture: string = void 0;
-    public age: number = void 0;
-    public eyeColor: string = void 0;
-    public name: string = void 0;
-    public gender: string = void 0;
-    public company: string = void 0;
-    public email: string = void 0;
-    public phone: string = void 0;
-    public address: string = void 0;
-    public about: string = void 0;
-    @JsonProperty({ type: Date })
-    public registered: Date = void 0;
-    public latitude: number = void 0;
-    public longitude: number = void 0;
-    @JsonProperty({ type: String })
-    public tags: string[] = void 0;
-    public color: string = void 0;
-    @JsonProperty({ type: Friend })
-    public friends: Friend[] = void 0;
-    public greeting: string = void 0;
-    public favoriteFruit: string = void 0;
-}
-

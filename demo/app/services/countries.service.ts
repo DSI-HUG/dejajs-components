@@ -14,6 +14,14 @@ import { Observable } from 'rxjs/Observable';
 import { Color } from '../../../src/common/core/graphics/color';
 import { MaterialColors } from '../../../src/common/core/style/material-colors';
 
+export class Country {
+    public displayName: string = void 0;
+    public naqme: string = void 0;
+    public code: string = void 0;
+    public color: string = void 0;
+    public equals: (item: Country) => boolean;
+}
+
 @Injectable()
 export class CountriesService {
     private countriesDic = {} as { [code: string]: Country };
@@ -83,12 +91,4 @@ export class CountriesService {
                 return returnCountries;
             });
     }
-}
-
-export class Country {
-    public displayName: string = void 0;
-    public naqme: string = void 0;
-    public code: string = void 0;
-    public color: string = void 0;
-    public equals: (item: Country) => boolean;
 }
