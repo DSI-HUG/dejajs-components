@@ -61,7 +61,8 @@ export class PeopleService {
                 let returnPeople = people;
                 if (recordCount) {
                     while (recordCount > 0) {
-                        returnPeople = returnPeople.concat(this.cloningService.cloneSync(people).map((person) => {
+                        const clonedPeople = this.cloningService.cloneSync(people) as IPerson[];
+                        returnPeople = returnPeople.concat(clonedPeople.map((person) => {
                             person.guid = (new UUID()).toString();
                             return person;
                         }));
