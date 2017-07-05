@@ -45,13 +45,13 @@ and navigate to `http://localhost:5100`.
 | Feature            | Working OnPush | Required / Disabled | Chrome 56 | Edge | IE11 | FF51 | Opera Neon | Readme and Demo | Note           |
 |--------------------|----------------|---------------------|-----------|------|------|------|------------|-----------------|----------------|
 | Accordion          |             yes|                  N/A|        yes|   yes|   yes|   yes|         yes|        available|                |
-| Auto-Size TextArea |             yes|                  N/A|        yes|   yes|   yes|   yes|         yes|<span style="color:red">@todo</span>| |
-| Circular Picker    |             yes|                @todo|yes|yes|yes|yes|yes|available| |
+| Auto-Size TextArea |             yes|                  N/A|        yes|   yes|   yes|   yes|         yes|        available|                |
+| Circular Picker    |             yes|                  yes|yes|yes|yes|yes|yes|available| |
 | Color Selector     |             yes|                  yes|yes|yes|yes|yes|yes|available| |
 | Color Picker       |             yes|                  yes|yes|yes|yes|yes|yes|available| |
 | Content Editable   |             yes|                  yes|yes|yes|yes|yes|yes|available|New line issue on IE11. IE11 add p instead br |
-| Date Selector      |             yes|                @todo|yes|yes|yes|yes|yes|available| |
-| Date Picker        |             yes|                @todo|yes|yes|yes|yes|yes|available| |
+| Date Selector      |             yes|                  yes|yes|yes|yes|yes|yes|available| |
+| Date Picker        |             yes|                  yes|yes|yes|yes|yes|yes|available| |
 | Dialog             |             yes|                  N/A|yes|yes|yes|yes|yes|Message Box| |
 | Events             |             yes|                  N/A|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>| |
 | Grid               |             yes|                  N/A|yes|yes|yes|yes|yes|available| |

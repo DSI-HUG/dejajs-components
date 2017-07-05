@@ -7,37 +7,37 @@
     $warning: #FF9800;
     $success: #4CAF50;
 
-    md-card {
+    #msgbox {
         &.info, &.primary {
             border-color: mat-color($primary);
-            md-card-title {
+            .mat-card-title {
                 background-color: mat-color($primary);
                 color: #FFF;
             }
         }
         &.danger {
             border-color: mat-color($warn);
-            md-card-title {
+            .mat-card-title {
                 background-color: mat-color($warn);
                 color: #FFF;
             }
         }
         &.warn {
             border-color: $warning;
-            md-card-title {
+            .mat-card-title {
                 background-color: $warning;
                 color: #FFF;
             }
         }
         &.success {
             border-color: $success;
-            md-card-title {
+            .mat-card-title {
                 background-color: $success;
                 color: #FFF;
             }
         }
 
-        md-card-actions {
+        .mat-card-actions {
             button {
                 &.mat-success[md-icon-button]:not([disabled]) {
                     color: $success !important;
