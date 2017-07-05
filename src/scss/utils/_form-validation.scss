@@ -32,7 +32,7 @@
                 &:not(.ng-touched) {
                     .mat-input-wrapper {
                         // Placeholder
-                        // .mat-input-flex {
+                        // .mat-input-table {
                         //     .mat-input-placeholder {
                         //         color: initial;
                         //     }
@@ -48,7 +48,7 @@
 
                 &.ng-touched {
                     // Placeholder
-                    .mat-input-flex {
+                    .mat-input-table {
                         .mat-input-placeholder {
                             color: mat-color($warn);
                         }

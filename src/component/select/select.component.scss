@@ -69,6 +69,36 @@ deja-select {
 			}
 		}
 
+		&[multiselection="true"][selection="above"] {
+			margin-top: 0.6rem;
+			.mat-input-wrapper {
+				margin-top: 0.5rem;
+				label.mat-input-placeholder {
+					display: block;
+					padding-top: 2rem;
+					-webkit-transform: translateY(-70%) scale(0.75);
+					transform: translateY(-70%) scale(0.75);
+					width: 133.33333%;
+				}
+				.mat-input-table>* {
+					display: table-row;
+					#md-input-prefix {
+						margin-bottom: 0.5rem;
+					}
+					&.mat-input-infix:after {
+						content: '';
+						display: table-cell;
+						width: 1rem;
+					}
+					.actions-suffix {
+						bottom: 1.2rem;
+						position: absolute;
+						right: 0;
+					}
+				}
+			}
+		}
+
 		[mdSuffix] {
 			md-progress-spinner {
 				width: 1.5rem;
