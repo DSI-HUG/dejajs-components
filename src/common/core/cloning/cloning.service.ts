@@ -6,9 +6,9 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/toPromise';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs/Observable';
 
 /**
  * Service for cloning or copying an object
@@ -16,11 +16,76 @@ import {Observable} from 'rxjs/Observable';
 @Injectable()
 export class CloningService {
     /**
-     * Clone an object and his prototype
+     * Sync cloning of an object
      *
      * @param object  The object to clone.
-     * @return A new instance of the passed object and cloned
+     * @param type The type of object to clone
+     * @return Observable resolving to the cloned object.
      */
+    public clone$<T>(object: any, type?: { new (): T } | object): Observable<T> {
+        return Observable.of(this.cloneSync(object, type));
+    }
+
+    /**
+     * Clone an object or a class
+     *
+     * @param object  The object to clone.
+     * @param target The type or an instance of the target
+     * @return The cloned object.
+     */
+    public cloneSync<T>(obj: object, target?: { new (): T } | object): T {
+        if (!target) {
+            return JSON.parse(JSON.stringify(obj));
+        } else {
+            const cloneInternal = (src: any, tgt?: any) => {
+                if (!src || typeof src !== 'object') {
+                    return src;
+                }
+
+                if (!tgt) {
+                    tgt = new src.constructor();
+                }
+
+                Object.keys(src).forEach((key) => {
+                    const val = src[key];
+
+                    if (typeof val !== 'object' || val === null) {
+                        tgt[key] = val;
+
+                    } else if (Array.isArray(val)) {
+                        // just clone arrays (and recursive clone objects inside)
+                        const clone = [];
+                        val.forEach((item, index) => {
+                            clone[index] = cloneInternal(item);
+                        });
+                        tgt[key] = clone;
+
+                    } else if (val instanceof Date) {
+                        tgt[key] = new Date(val.getTime());
+
+                    } else if (val instanceof RegExp) {
+                        tgt[key] = new RegExp(val);
+
+                    } else {
+                        tgt[key] = cloneInternal(val);
+
+                    }
+                });
+
+                return tgt;
+            };
+
+            if (obj && Array.isArray(obj)) {
+                throw new Error('Only objects can be cloned. Please map the array and clone each elements.');
+            }
+
+            return cloneInternal(obj, typeof target === 'object' ? target : new target());
+        }
+    }
+
+    /**
+     * @deprecated 03.07.2017 Use cloneSync with the parameter type specified instead
+    */
     public cloneSyncWithPrototype(object: any) {
         if (!object || typeof object !== 'object') {
             return object;
@@ -42,54 +107,21 @@ export class CloningService {
     }
 
     /**
-     * Async Clone of an object and his prototype
-     *
-     * @param object  The object to clone.
-     * @return An observable completed with the cloned object
+     * @deprecated 03.07.2017 Use clone$ with the parameter type specified instead
      */
     public cloneWithPrototype$(object: any) {
         return Observable.of(this.cloneSyncWithPrototype(object));
     }
 
     /**
-     * Clone an object without the prototype
-     *
-     * @param object  The object to clone.
-     * @return A new instance of the passed object and cloned.
-     */
-    public cloneSync(object: any): any {
-        try {
-            return JSON.parse(JSON.stringify(object));
-        } catch (err) {
-            return null;
-        }
-    }
-
-    /**
-     * @deprecated
+     * @deprecated 01.03.2017
      */
     public clone(object: any) {
         return this.clone$(object).toPromise();
     }
 
     /**
-     * Sync cloning of an object
-     *
-     * @param object  The object to clone.
-     * @return Observable resolving to the cloned object.
-     */
-    public clone$(object: any) {
-        return Observable.of(this.cloneSync(object));
-    }
-
-    /**
-     * Extening object that entered in first argument.
-     *
-     * Returns extended object or false if have no target object or incorrect type.
-     *
-     * If you wish to clone source object (without modify it), just use empty new
-     * object as first argument, like this:
-     *   deepCopy({}, yourObj_1, [yourObj_N]);
+     * @deprecated 03.07.2017 Use cloneSync with the parameter type specified instead
      */
     public deepCopy(...objects: any[]) {
         if (objects.length < 1 || typeof objects[0] !== 'object') {
@@ -157,8 +189,8 @@ export class CloningService {
     }
 
     /**
-     * Recursive cloning array.
-     */
+     * @deprecated 03.07.2017
+    */
     private deepCloneArray(arr) {
         const clone = [];
         const that = this;
@@ -178,6 +210,9 @@ export class CloningService {
         return clone;
     }
 
+    /**
+     * @deprecated 03.07.2017
+    */
     private isSpecificValue(val) {
         return (
             val instanceof Date
@@ -185,6 +220,9 @@ export class CloningService {
         ) ? true : false;
     }
 
+    /**
+     * @deprecated 03.07.2017
+    */
     private cloneSpecificValue(val): any {
         if (val instanceof Date) {
             return new Date(val.getTime());

@@ -113,8 +113,8 @@
             <div fxLayout>
                 <div fxFlex="1 1 auto">
                     <h3>Date Range Picker :</h3>
-                    <deja-date-picker format="DD.MM.YYYY" #dtfrom [disableDates]="disabledDate" [ngModel]="dateRangeFrom" (ngModelChange)="dateFrom.next($event)"></deja-date-picker>
-                    <deja-date-picker format="DD.MM.YYYY" #dtto [disableDates]="disabledDate" [ngModel]="dateRangeTo" (ngModelChange)="dateTo.next($event)"></deja-date-picker>
+                    <deja-date-picker format="DD.MM.YYYY" #dtfrom [disableDates]="disabledDate" [(ngModel)]="dateRangeFrom"></deja-date-picker>
+                    <deja-date-picker format="DD.MM.YYYY" #dtto [disableDates]="disabledDate" [(ngModel)]="dateRangeTo"></deja-date-picker>
                     <p>Selected date : from {{dateRangeFrom | date:'yyyy-MM-dd'}} to {{dateRangeTo | date:'yyyy-MM-dd'}}</p>
                 </div>
                 <div fxFlex="1 1 auto">

@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
@@ -15,9 +15,9 @@ import { IViewPortItem } from '../../../src/common/core/item-list/viewport.servi
 import { IDejaGridColumn, IDejaGridColumnSizeEvent } from '../../../src/component/data-grid/data-grid-column/data-grid-column';
 import { IDejaGridRow } from '../../../src/component/data-grid/data-grid-row/data-grid-row';
 import { DejaGridComponent } from '../../../src/component/data-grid/data-grid.component';
-import { INews } from '../common/news.model';
+import { News } from '../common/news.model';
 import { NewsService } from '../services/news.service';
-import { IPerson, PeopleService } from '../services/people.service';
+import { PeopleService, Person } from '../services/people.service';
 import { IExtendedViewPortItem } from '../tree-list/tree-list-demo';
 import { CloningService } from './../../../src/common/core/cloning/cloning.service';
 import { IGroupInfo } from './../../../src/common/core/grouping/group-infos';
@@ -26,26 +26,27 @@ import { IDejaDragContext } from './../../../src/component/dragdrop/draggable.di
 import { IDejaDropContext, IDejaDropEvent } from './../../../src/component/dragdrop/droppable.directive';
 
 @Component({
+    encapsulation: ViewEncapsulation.None,
     selector: 'grid-demo',
     styleUrls: ['./grid-demo.scss'],
     templateUrl: './grid-demo.html',
 })
 export class GridDemoComponent {
     protected tabIndex = 1;
-    protected people$: Observable<IPerson[]>;
-    protected peopleForMultiselect$: Observable<IPerson[]>;
-    protected groupedByGenderPeople$: Observable<IPerson[]>;
-    protected variableHeightPeopleRows$: Observable<IPerson[]>;
-    protected groupedByEyesColorPeople$: Observable<IPerson[]>;
+    protected people$: Observable<Person[]>;
+    protected peopleForMultiselect$: Observable<Person[]>;
+    protected groupedByGenderPeople$: Observable<Person[]>;
+    protected variableHeightPeopleRows$: Observable<Person[]>;
+    protected groupedByEyesColorPeople$: Observable<Person[]>;
     protected groupedByColorPeople: {
-        items: IPerson[],
+        items: Person[],
         toString: () => string,
     }[];
     protected onDemandGroupedPeople: IPeopleGroup[];
-    protected news$: Observable<INews[]>;
+    protected news$: Observable<News[]>;
     protected dialogResponse$: Subject<string> = new Subject<string>();
-    protected bigNews$: Observable<INews[]>;
-    protected bigPeople$: Observable<IPerson[]>;
+    protected bigNews$: Observable<News[]>;
+    protected bigPeople$: Observable<Person[]>;
     protected columnGroups = [] as IDejaGridColumn[];
     protected draggedPerson;
 
@@ -332,13 +333,13 @@ export class GridDemoComponent {
 
         this.variableHeightPeopleRows$ = peopleService.getPeople$().switchMap((people) => cloningService.clone$(people));
 
-        this.peopleService.getPeople$().subscribe((value: IPerson[]) => {
+        this.peopleService.getPeople$().subscribe((value: Person[]) => {
             const onDemandResult = [] as IPeopleGroup[];
             const map = {} as { [groupName: string]: IDejaGridRow[] };
             value.map((person) => {
                 const groupName = 'Group ' + person.color;
                 if (!map[groupName]) {
-                    map[groupName] = [] as IPerson[];
+                    map[groupName] = [] as Person[];
                     onDemandResult.push({
                         color: person.color,
                         collapsible: true,
@@ -466,7 +467,7 @@ export class GridDemoComponent {
             dragentercallback: drag,
             dragovercallback: drag,
             dropcallback: (event: IDejaDropEvent) => {
-                this.draggedPerson = event.dragInfo.object as IPerson;
+                this.draggedPerson = event.dragInfo.object as Person;
                 this.changeDetectorRef.markForCheck();
             },
         } as IDejaDropContext;

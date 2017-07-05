@@ -6,31 +6,36 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-export interface INews {
-    author: string;
-    title: string;
-    description: string;
-    url: string;
-    urlToImage: string;
-    publishedAt: string;
+import { JsonProperty } from 'json-object-mapper';
+
+export class News {
+    author: string = void 0;
+    title: string = void 0;
+    description: string = void 0;
+    url: string = void 0;
+    urlToImage: string = void 0;
+    publishedAt: string = void 0;
 }
 
-export interface INewsSources {
-    status: string;
-    sources: INewsSource[];
+export class NewsSource {
+    id: string = void 0;
+    name: string = void 0;
+    category: string = void 0;
+    language: string = void 0;
+    country: string = void 0;
+    @JsonProperty({ type: String })
+    sortBysAvailable: string[] = void 0;
 }
 
-export interface INewsSource {
-    id: string;
-    name: string;
-    category: string;
-    language: string;
-    country: string;
-    sortBysAvailable: string[];
+export class NewsSources {
+    status: string = void 0;
+    @JsonProperty({ type: NewsSource })
+    sources: NewsSource[] = void 0;
 }
 
-export interface INewsArticles {
-    status: string;
-    sources: string;
-    articles: INews[];
+export class NewsArticles {
+    status: string = void 0;
+    sources: string = void 0;
+    @JsonProperty({ type: News })
+    articles: News[] = void 0;
 }

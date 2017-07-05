@@ -6,14 +6,15 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { IViewPortItem } from '../../../src/common/core/item-list/viewport.service';
 import { DejaViewPortComponent } from '../../../src/component/viewport/viewport.component';
-import { INews } from '../common/news.model';
+import { News } from '../common/news.model';
 import { NewsService } from '../services/news.service';
 
 @Component({
+    encapsulation: ViewEncapsulation.None,
     selector: 'deja-viewport-demo',
     styleUrls: ['./viewport-demo.scss'],
     templateUrl: './viewport-demo.html',
@@ -41,7 +42,7 @@ export class DejaViewPortDemoComponent {
             </div>
         </ng-template>
     </deja-viewport>`;
-    protected news$: Observable<INews[]>;
+    protected news$: Observable<News[]>;
 
     constructor(newsService: NewsService) {
         this.news$ = newsService.getNews$(50);
