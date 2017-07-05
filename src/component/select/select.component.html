@@ -1,8 +1,6 @@
+<deja-chips [items]="selectedItems" [readonly]="readonly" [disabled]="disabled" (close)="onCloseClicked($event)" [itemTemplateExternal]="selectedTemplate" *ngIf="_multiSelect && selectedItems.length > 0 && selectedItemsPosition===0" [textField]="_textField"></deja-chips>
 <md-input-container id="input" [attr.wait]="waiter || _waiter" [attr.multiselection]="_multiSelect && selectedItems.length > 0" [attr.selection]="selectedItemsPosition===0 ? 'above' : null">
 	<input #inputElement deja-child-validator type="text" mdInput [readonly]="isModeSelect || readonly" (ngModelChange)="queryChanged($event)" [ngModel]="query" [disabled]="disabled">
-	<div id="md-input-prefix" mdPrefix *ngIf="_multiSelect && selectedItems.length > 0 && selectedItemsPosition===0">
-        <deja-chips [items]="selectedItems" [readonly]="readonly" [disabled]="disabled" (close)="onCloseClicked($event)" [itemTemplateExternal]="selectedTemplate" [textField]="_textField"></deja-chips>
-	</div>
 	<md-placeholder>
 		<ng-template [ngTemplateOutlet]="placeHolderTemplate"></ng-template>
 		<span *ngIf="!placeHolderTemplate">{{ placeholder }}</span>
