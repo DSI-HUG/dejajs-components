@@ -76,7 +76,7 @@ export class CloningService {
             };
 
             if (obj && Array.isArray(obj)) {
-                throw new Error('Only objects can be cloned. Please map the array and clone each elements.');
+                return obj.map((o) => this.cloneSync(o, target)) as any;
             }
 
             return cloneInternal(obj, typeof target === 'object' ? target : new target());
