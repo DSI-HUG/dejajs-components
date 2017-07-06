@@ -7,9 +7,9 @@
  */
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Output, Renderer, SimpleChanges, ViewEncapsulation } from '@angular/core';
-import {IAreaData} from './area-data.model';
-import {Point} from './point.model';
-import {SplitAreaDirective} from './split-area.directive';
+import { IAreaData } from './area-data.model';
+import { Point } from './point.model';
+import { SplitAreaDirective } from './split-area.directive';
 
 const gutterSize = 'gutterSize';
 const disabled = 'disabled';
@@ -100,8 +100,8 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
      * Constructor
      */
     constructor(private cdRef: ChangeDetectorRef,
-                private elementRef: ElementRef,
-                private renderer: Renderer) {
+        private elementRef: ElementRef,
+        private renderer: Renderer) {
     }
 
     /**
@@ -232,11 +232,28 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
 
         // SIZES: Set css 'flex-basis' property depending on user input or equal sizes
         const totalSize = this.areas.map((a) => a.sizeUser).reduce((acc, s) => acc + s, 0);
-        const nbCorrectSize = this.areas.filter((a) => a.sizeUser && !isNaN(a.sizeUser) && a.sizeUser >= this.minPercent).length;
+        const toBeDefined = this.areas.filter((a) => !a.sizeUser || isNaN(a.sizeUser));
 
-        if (totalSize < 99.99 || totalSize > 100.01 || nbCorrectSize !== this.areas.length) {
-            const size = Number((100 / this.areas.length).toFixed(3));
-            this.areas.forEach((a) => a.size = size);
+        if ((totalSize < 99.99 || totalSize > 100.01) && this.areas.length > 1) {
+            if (toBeDefined.length === 0) {
+                // Map to 100%
+                this.areas.forEach((a) => {
+                    const adjustedSize = a.size * 100 / totalSize;
+                    a.size = adjustedSize;
+                });
+            } else if (totalSize < 99.99) {
+                // Share the remaining size to the undefined areas
+                let remain = (100 - totalSize);
+                let toBeDefinedLength = toBeDefined.length;
+                toBeDefined.forEach((a) => {
+                    const size = remain / toBeDefinedLength--;
+                    a.size = size;
+                    remain -= size;
+                });
+            } else {
+                const size = Number((100 / this.areas.length).toFixed(3));
+                this.areas.forEach((a) => a.size = size);
+            }
         } else {
             this.areas.forEach((a) => a.size = Number(a.sizeUser));
         }
@@ -247,7 +264,7 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
 
     private refreshStyleSizes() {
         const f = this.gutterSize * this.nbGutters / this.areas.length;
-        this.areas.forEach((a) => a.component.setStyle('flex-basis', `calc( ${ a.size }% - ${ f }px )`));
+        this.areas.forEach((a) => a.component.setStyle('flex-basis', `calc( ${a.size}% - ${f}px )`));
     }
 
     private dragEvent(event: MouseEvent, start: Point, areaA: IAreaData, areaB: IAreaData) {
