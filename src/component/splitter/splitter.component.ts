@@ -216,11 +216,11 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
         this.notify('start');
     }
 
-    private refresh() {
+    public refresh() {
         this.stopDragging();
 
         // ORDERS: Set css 'order' property depending on user input or added order
-        const nbCorrectOrder = this.areas.filter((a) => a.orderUser && !isNaN(a.orderUser)).length;
+        const nbCorrectOrder = this.areas.filter((a) => a.orderUser !== null && !isNaN(a.orderUser)).length;
         if (nbCorrectOrder === this.areas.length) {
             this.areas.sort((a, b) => +a.orderUser - +b.orderUser);
         }
@@ -238,7 +238,7 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
             if (toBeDefined.length === 0) {
                 // Map to 100%
                 this.areas.forEach((a) => {
-                    const adjustedSize = a.size * 100 / totalSize;
+                    const adjustedSize =  Number(a.sizeUser) * 100 / totalSize;
                     a.size = adjustedSize;
                 });
             } else if (totalSize < 99.99) {
@@ -250,10 +250,15 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
                     a.size = size;
                     remain -= size;
                 });
+                this.areas
+                    .filter((a) => a.sizeUser && !isNaN(a.sizeUser))
+                    .forEach((a) => a.size = Number(a.sizeUser));
             } else {
                 const size = Number((100 / this.areas.length).toFixed(3));
                 this.areas.forEach((a) => a.size = size);
             }
+        } else if (totalSize === 0 && this.areas.length === 1) {
+            this.areas[0].size = 100;
         } else {
             this.areas.forEach((a) => a.size = Number(a.sizeUser));
         }

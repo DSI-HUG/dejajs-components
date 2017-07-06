@@ -1,3 +1,4 @@
+import { EventEmitter } from '@angular/core';
 /*
  *  @license
  *  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
@@ -6,7 +7,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, ElementRef, Input, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, Input, Output, ViewEncapsulation } from '@angular/core';
 import { Position } from '../../common/core/graphics/position';
 
 /** Menu avec placement optimisé (Voir DejaDropDownComponent) */
@@ -30,6 +31,8 @@ export class DejaMenuComponent {
     /** Renvoie ou définit l'élement du DOM sur lequel le menu devra s'aligner */
     @Input() public ownerElement: HTMLElement;
 
+    @Output() visibleChange = new EventEmitter<boolean>();
+
     protected dropDownPosition: Position;
 
     constructor(private elementRef: ElementRef) {
@@ -47,10 +50,12 @@ export class DejaMenuComponent {
         }
         this.ownerElement = (event && event.target) || this.elementRef.nativeElement;
         this.isVisible = true;
+        this.visibleChange.emit(this.isVisible);
     }
 
     /** Ferme le menu. */
     public close() {
         this.isVisible = false;
+        this.visibleChange.emit(this.isVisible);
     }
 }

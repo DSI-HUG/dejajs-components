@@ -1,4 +1,4 @@
-<deja-backdrop *ngIf="isVisible" id="menubackdrop" (mousedown)="isVisible=false"></deja-backdrop>
+<deja-backdrop *ngIf="isVisible" id="menubackdrop" (mousedown)="close()"></deja-backdrop>
 <deja-dropdown *ngIf="isVisible" id="menudropdown" [position]="dropDownPosition" [avoidOnwerOverflow]="!dropDownPosition" [dropdownAlignment]="menuAlignment" [ownerAlignment]="buttonAlignment" [containerElement]="containerElement" [ownerElement]="ownerElement">
 	<div id="menucontent">
 		<ng-content></ng-content>
