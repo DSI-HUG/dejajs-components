@@ -1,8 +1,8 @@
 :host {
     flex: 1 1 100%;
     display: flex;
-
-    md-nav-list a.active {
-        background: rgba(0, 0, 0, 0.11);
+    #menu-button {
+        margin-top: 0.5rem;
+        margin-left: 0.5rem;
     }
 }
