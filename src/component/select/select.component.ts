@@ -7,6 +7,7 @@
  */
 
 import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ObservableMedia } from '@angular/flex-layout';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { MdInputContainer, MdInputDirective } from '@angular/material';
 import 'rxjs/add/operator/delayWhen';
@@ -87,7 +88,20 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @ViewChild(MdInputContainer) private inputContainer: MdInputContainer;
     @ViewChild(MdInputDirective) protected input: MdInputDirective;
     @ViewChild('listcontainer') private listContainer: any;
-    @ViewChild(DejaDropDownComponent) private dropDownComponent: DejaDropDownComponent;
+
+    private _dropDownComponent: DejaDropDownComponent;
+    private dropDownComponent$ = new Subject<DejaDropDownComponent>();
+    private dropDownFullScreen = false;
+
+    @ViewChild(DejaDropDownComponent)
+    private set dropDownComponent(value: DejaDropDownComponent) {
+        this._dropDownComponent = value;
+        this.dropDownComponent$.next();
+    }
+
+    private get dropDownComponent() {
+        return this._dropDownComponent;
+    }
 
     @HostBinding('attr.disabled') private _disabled = null;
     private _type = 'select';
@@ -116,12 +130,23 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     private _selectedItemsPosition = DejaSelectSelectionPosition.above;
 
-    constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, private elementRef: ElementRef, @Self() @Optional() public _control: NgControl, @Optional() private _parentForm: NgForm, @Optional() private _parentFormGroup: FormGroupDirective) {
+    constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, private elementRef: ElementRef, @Self() @Optional() public _control: NgControl, @Optional() private _parentForm: NgForm, @Optional() private _parentFormGroup: FormGroupDirective, media: ObservableMedia) {
         super(changeDetectorRef, viewPort);
 
         if (this._control) {
             this._control.valueAccessor = this;
         }
+
+        this.subscriptions.push(Observable.merge(this.dropDownComponent$, media.asObservable())
+            .filter(() => !!this.dropDownComponent)
+            .do(() => {
+                this.dropDownFullScreen = media.isActive('xs') || media.isActive('sm')
+                changeDetectorRef.markForCheck();
+            })
+            .delay(1)
+            .subscribe(() => {
+                this.dropDownComponent.position = this.dropDownFullScreen ? 'fixed' : undefined;
+            }));
 
         if (this._parentForm) {
             this._parentForm.ngSubmit.subscribe(() => {
@@ -248,7 +273,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             })
         );
 
-        this.maxHeight = 500;
+        // this.maxHeight = 500;
 
     }
 
@@ -317,7 +342,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return this._selectionClearable;
     }
 
-    /** Définit la position des éléments selectionées en multiselect */
+    /** Définit la  des éléments selectionées en multiselect */
     @Input()
     public set selectedItemsPosition(value: string | DejaSelectSelectionPosition) {
         this._selectedItemsPosition = typeof value === 'string' ? DejaSelectSelectionPosition[value] : value;
@@ -609,6 +634,14 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     protected get listElement() {
         return this.listContainer && this.listContainer.elementRef.nativeElement as HTMLElement;
+    }
+
+    protected getOwnerAlignment() {
+        return this.dropDownFullScreen ? 'left right top' : this._ownerAlignment;
+    }
+
+    protected getDropdownAlignment() {
+        return this.dropDownFullScreen ? null : this._dropdownAlignment;
     }
 
     private get containerElement(): HTMLElement {

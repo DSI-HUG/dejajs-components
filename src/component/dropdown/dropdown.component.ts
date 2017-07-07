@@ -7,7 +7,6 @@
  */
 
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
-import { ObservableMedia } from '@angular/flex-layout';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/debounce';
 import 'rxjs/add/operator/delay';
@@ -57,7 +56,7 @@ export class DejaDropDownComponent implements AfterViewInit, OnDestroy {
     @Input() public avoidOnwerOverflow = true;
 
     /** Permet de définir la position du dropdown manuellement */
-    @Input() public position: Position;
+    @Input() public position: Position | string;
 
     /** Renvoie ou définit une valeur indiquant si le conteneur déroulant se ferme sur pression de la touche Echap */
     @Input()
@@ -124,44 +123,47 @@ export class DejaDropDownComponent implements AfterViewInit, OnDestroy {
         return this.elementRef.nativeElement;
     }
 
-    constructor(private elementRef: ElementRef, media: ObservableMedia) {
+    constructor(private elementRef: ElementRef) {
         const element = elementRef.nativeElement as HTMLElement;
 
         const setDropDownPosition = (dropDownPosition: IDropDownPosition) => {
-            const { relative, left, top, width, height, valign, halign } = dropDownPosition;
-            if (relative) {
-                if (left !== undefined) {
-                    element.style.left = left !== null ? `${left}px` : '';
+            const { position, left, top, right, bottom, width, height, valign, halign } = dropDownPosition;
+
+            if (left !== undefined) {
+                element.style.left = left !== null ? `${left}px` : '';
+            }
+            if (top !== undefined) {
+                element.style.top = top !== null ? `${top}px` : '';
+            }
+            if (right !== undefined) {
+                element.style.right = right !== null ? `${right}px` : '';
+            }
+            if (bottom !== undefined) {
+                element.style.bottom = bottom !== null ? `${bottom}px` : '';
+            }
+            if (width !== undefined) {
+                element.style.width = width !== null ? `${width}px` : '';
+            }
+            if (height !== undefined) {
+                element.style.height = height !== null ? `${height}px` : '';
+            }
+            if (valign !== undefined) {
+                if (valign) {
+                    element.setAttribute('valign', valign);
+                } else {
+                    element.removeAttribute('valign');
                 }
-                if (top !== undefined) {
-                    element.style.top = top !== null ? `${top}px` : '';
+            }
+            if (halign !== undefined) {
+                if (halign) {
+                    element.setAttribute('halign', halign);
+                } else {
+                    element.removeAttribute('halign');
                 }
-                if (width !== undefined) {
-                    element.style.width = width !== null ? `${width}px` : '';
-                }
-                if (height !== undefined) {
-                    element.style.height = height !== null ? `${height}px` : '';
-                }
-                if (valign !== undefined) {
-                    if (valign) {
-                        element.setAttribute('valign', valign);
-                    } else {
-                        element.removeAttribute('valign');
-                    }
-                }
-                if (halign !== undefined) {
-                    if (halign) {
-                        element.setAttribute('halign', halign);
-                    } else {
-                        element.removeAttribute('halign');
-                    }
-                }
-            } else {
-                element.style.left = '0';
-                element.style.top = '0';
-                element.style.width = '100%';
-                element.style.height = '100%';
-                element.style.position = 'fixed';
+            }
+
+            if (position) {
+                element.style.position = position;
                 element.setAttribute('valign', '');
             }
         };
@@ -204,31 +206,37 @@ export class DejaDropDownComponent implements AfterViewInit, OnDestroy {
                 const dropdownContElement = this.elementRef.nativeElement as HTMLElement;
                 const dropDownPosition = {} as IDropDownPosition;
 
-                if (media.isActive('xs') || media.isActive('sm')) {
-                    dropDownPosition.relative = false;
+                // Calc owner screen position
+                const ownerElement = (this.ownerElement as ElementRef).nativeElement || this.ownerElement;
+                const ownerRect = ownerElement.getBoundingClientRect();
+                const ownerBounds = Rect.fromLTRB(ownerRect.left + +this.ownerLeftMargin, ownerRect.top + +this.ownerTopMargin, ownerRect.right - +this.ownerRightMargin, ownerRect.bottom - +this.ownerBottomMargin);
+
+                // Calc min max relative to screen
+                const minLeft = Math.max(bodyRect.left, containerRect.left);
+                const maxRight = Math.min(bodyRect.right, containerRect.right);
+                const minTop = Math.max(bodyRect.top, containerRect.top);
+                const maxBottom = Math.min(bodyRect.bottom, containerRect.bottom);
+
+                // Calc dropdown screen position
+                const dropdownRect = dropdownContElement.getBoundingClientRect();
+                let left: number;
+                let top: number;
+                let width = dropdownRect.width;
+                let height = dropdownRect.height;
+
+                // If position specified, align to the position
+                if (this.position && typeof this.position === 'string') {
+                    dropDownPosition.position = this.position;
+                    dropDownPosition.left = this.ownerAlignents.left ? 0 : null;
+                    dropDownPosition.top = this.ownerAlignents.top ? 0 : null;
+                    dropDownPosition.right = this.ownerAlignents.right ? 0 : null;
+                    dropDownPosition.bottom = this.ownerAlignents.bottom ? 0 : null;
+
                 } else {
-                    // Calc owner screen position
-                    const ownerElement = (this.ownerElement as ElementRef).nativeElement || this.ownerElement;
-                    const ownerRect = ownerElement.getBoundingClientRect();
-                    const ownerBounds = Rect.fromLTRB(ownerRect.left + +this.ownerLeftMargin, ownerRect.top + +this.ownerTopMargin, ownerRect.right - +this.ownerRightMargin, ownerRect.bottom - +this.ownerBottomMargin);
-
-                    // Calc min max relative to screen
-                    const minLeft = Math.max(bodyRect.left, containerRect.left);
-                    const maxRight = Math.min(bodyRect.right, containerRect.right);
-                    const minTop = Math.max(bodyRect.top, containerRect.top);
-                    const maxBottom = Math.min(bodyRect.bottom, containerRect.bottom);
-
-                    // Calc dropdown screen position
-                    const dropdownRect = dropdownContElement.getBoundingClientRect();
-                    let left: number;
-                    let top: number;
-                    let width = dropdownRect.width;
-                    let height = dropdownRect.height;
-
-                    // If position specified, align to the position
                     if (this.position) {
-                        left = this.position.left;
-                        top = this.position.top;
+                        const position = this.position as Position;
+                        left = position.left;
+                        top = position.top;
                     } else {
                         // Otherwise, calc container absolute alignment
                         if (this.ownerAlignents.left) {
@@ -423,7 +431,6 @@ export class DejaDropDownComponent implements AfterViewInit, OnDestroy {
                     dropDownPosition.top = relativeBounds.top;
                     dropDownPosition.width = relativeBounds.width;
                     dropDownPosition.height = relativeBounds.height;
-                    dropDownPosition.relative = true;
                 }
 
                 setDropDownPosition(dropDownPosition);
@@ -458,9 +465,11 @@ export interface IDropDownResetParams {
 interface IDropDownPosition {
     left: number;
     top: number;
+    right: number;
+    bottom: number;
     width: number;
     height: number;
     valign: string;
     halign: string;
-    relative: boolean;
+    position: string;
 }
