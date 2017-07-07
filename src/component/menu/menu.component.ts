@@ -1,4 +1,3 @@
-import { EventEmitter } from '@angular/core';
 /*
  *  @license
  *  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
@@ -7,6 +6,7 @@ import { EventEmitter } from '@angular/core';
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { EventEmitter } from '@angular/core';
 import { Component, ElementRef, Input, Output, ViewEncapsulation } from '@angular/core';
 import { Position } from '../../common/core/graphics/position';
 
