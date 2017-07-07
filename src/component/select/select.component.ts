@@ -73,6 +73,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     protected keyboardNavigation = false;
     protected _waiter = false;
+    protected isMobile = false;
 
     private subscriptions: Subscription[] = [];
     private mouseUp$sub: Subscription;
@@ -89,19 +90,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @ViewChild(MdInputDirective) protected input: MdInputDirective;
     @ViewChild('listcontainer') private listContainer: any;
 
-    private _dropDownComponent: DejaDropDownComponent;
-    private dropDownComponent$ = new Subject<DejaDropDownComponent>();
-    private dropDownFullScreen = false;
-
-    @ViewChild(DejaDropDownComponent)
-    private set dropDownComponent(value: DejaDropDownComponent) {
-        this._dropDownComponent = value;
-        this.dropDownComponent$.next();
-    }
-
-    private get dropDownComponent() {
-        return this._dropDownComponent;
-    }
+    @ViewChild(DejaDropDownComponent) private dropDownComponent: DejaDropDownComponent;
 
     @HostBinding('attr.disabled') private _disabled = null;
     private _type = 'select';
@@ -137,15 +126,10 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             this._control.valueAccessor = this;
         }
 
-        this.subscriptions.push(Observable.merge(this.dropDownComponent$, media.asObservable())
-            .filter(() => !!this.dropDownComponent)
-            .do(() => {
-                this.dropDownFullScreen = media.isActive('xs') || media.isActive('sm')
-                changeDetectorRef.markForCheck();
-            })
-            .delay(1)
+        this.subscriptions.push(Observable.merge(this.contentInitialized$, media.asObservable())
             .subscribe(() => {
-                this.dropDownComponent.position = this.dropDownFullScreen ? 'fixed' : undefined;
+                this.isMobile = media.isActive('xs') || media.isActive('sm');
+                this.changeDetectorRef.markForCheck();
             }));
 
         if (this._parentForm) {
@@ -637,11 +621,11 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     protected getOwnerAlignment() {
-        return this.dropDownFullScreen ? 'left right top' : this._ownerAlignment;
+        return this._ownerAlignment;
     }
 
     protected getDropdownAlignment() {
-        return this.dropDownFullScreen ? null : this._dropdownAlignment;
+        return this._dropdownAlignment;
     }
 
     private get containerElement(): HTMLElement {

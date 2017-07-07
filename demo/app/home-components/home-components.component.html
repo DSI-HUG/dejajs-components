@@ -1,6 +1,6 @@
 <div id="button-wrapper" *ngIf="!navIsVisible">
 	<deja-menu #navmnu>
-		<navigation-component></navigation-component>
+		<navigation-component (click)="navmnu.close()"></navigation-component>
 	</deja-menu>
 	<button md-icon-button id="menu-button" (click)="navmnu.show($event)">
 		<md-icon>more_vert</md-icon>

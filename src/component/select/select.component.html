@@ -17,7 +17,7 @@
 	</span>
 </md-input-container>
 <deja-chips [items]="selectedItems" [readonly]="readonly" [disabled]="disabled" (close)="onCloseClicked($event)" [itemTemplateExternal]="selectedTemplate" *ngIf="_multiSelect && selectedItems.length > 0 && selectedItemsPosition===1" [textField]="_textField"></deja-chips>
-<deja-dropdown id="listcontainer" #listcontainer *ngIf="dropdownVisible" [attr.depth-max]="_depthMax || null" [attr.keynav]="keyboardNavigation" [attr.vprowheight]="getViewPortRowHeight()" (mousedown)="mousedown($event)" (hide)="dropdownVisible=false" (scroll)="scroll($event)" [ownerAlignment]="getOwnerAlignment()" [dropdownAlignment]="getDropdownAlignment()" [ownerElement]="inputElement" [containerElement]="containerElement" ownerBottomMargin="-6" ownerTopMargin="-5" ownerRightMargin="-14" [style.max-height.px]="dropDownFullScreen ? null : maxHeight">
+<deja-dropdown id="listcontainer" #listcontainer *ngIf="dropdownVisible" [mobile]="isMobile" [attr.depth-max]="_depthMax || null" [attr.keynav]="keyboardNavigation" [attr.vprowheight]="getViewPortRowHeight()" (mousedown)="mousedown($event)" (hide)="dropdownVisible=false" (scroll)="scroll($event)" [ownerAlignment]="getOwnerAlignment()" [dropdownAlignment]="getDropdownAlignment()" [ownerElement]="inputElement" [containerElement]="containerElement" ownerBottomMargin="-6" ownerTopMargin="-5" ownerRightMargin="-14" [style.max-height.px]="dropDownFullScreen ? null : maxHeight">
 	<div *ngIf="vpBeforeHeight" [style.height.px]="vpBeforeHeight"></div>
 	<div *ngFor="let item of _itemList; let index = index" #listitem class="listitem" [class.hide]="item.collapsing || item.expanding" [class.parent]="item.depth < _depthMax" [class.collapsed]="item.collapsed" [class.selected]="item.selected" [attr.current]="(_multiSelect && vpStartRow+index === currentItemIndex) || null" [class.unselectable]="item.selectable === false" [attr.depth]="_depthMax ? item.depth : null" [attr.id]="item.id || null" [attr.flat]="vpStartRow + index" [style.height.px]="getItemHeight(item)" [class.odd]="(item.depth === _depthMax && item.odd) || null">
 		<span id="expandbtn"><i *ngIf="item.$items && item.$items.length" class="material-icons">keyboard_arrow_down</i></span>
@@ -32,4 +32,4 @@
 	<div *ngIf="vpAfterHeight" [style.height.px]="vpAfterHeight"></div>
 </deja-dropdown>
 <div *ngIf="_hintLabel != ''" class="mat-hint">{{_hintLabel}}</div>
-<deja-backdrop id="select-backdrop" (click)="dropdownVisible=false" *ngIf="dropdownVisible"></deja-backdrop>
+<deja-backdrop id="select-backdrop" [attr.mobile]="isMobile" (click)="dropdownVisible=false" *ngIf="dropdownVisible"></deja-backdrop>
