@@ -38,7 +38,7 @@ export class DejaTooltipComponent implements OnInit {
 
     /** Parameters of the tooltip */
     public params: ITooltipParams;
-    private model: any;
+    public model: any;
 
     /**
      * Constructor

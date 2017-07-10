@@ -48,7 +48,7 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
     private _selectedSubIndex: number;
     private _disabled = false;
 
-    private colorFabs$: Observable<DejaColorFab[]>;
+    public colorFabs$: Observable<DejaColorFab[]>;
     private selectedBaseIndex$ = new BehaviorSubject<number>(0);
 
     public subColorFabs$: Observable<DejaColorFab[]>;
