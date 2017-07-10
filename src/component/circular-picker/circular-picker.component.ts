@@ -77,14 +77,14 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
     private _value: number;
     private TwoPI = Math.PI * 2;
 
-    private radius = 0;
+    public radius = 0;
     private configs: IConfig[] = [];
     private selectedConfig: IConfig;
 
-    private circularValues: ICircularValue[] = [];
+    public circularValues: ICircularValue[] = [];
 
     private cursor: ICircularValue;
-    private cursorHand: { width: number, angle: number };
+    public cursorHand: { width: number, angle: number };
     private cursorElement: HTMLElement;
 
     private clickedTime: number;

@@ -27,7 +27,7 @@ export class DejaTileComponent implements OnDestroy {
 
     public element: HTMLElement;
 
-    private _tile: DejaTile;
+    public _tile: DejaTile;
     private subscriptions = [] as Subscription[];
 
     constructor(el: ElementRef) {

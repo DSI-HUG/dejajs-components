@@ -77,11 +77,11 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     private resize$sub: Subscription;
     private modelChanged$sub: Subscription;
     private layoutChanged$sub: Subscription;
-    private tiles$ = new BehaviorSubject<DejaTile[]>([]);
+    public tiles$ = new BehaviorSubject<DejaTile[]>([]);
 
     @ViewChild('tilesContainer') private tilesContainer: ElementRef;
 
-    constructor(el: ElementRef, private layoutProvider: DejaTilesLayoutProvider, @Self() @Optional() public _control: NgControl) {
+    constructor(el: ElementRef, public layoutProvider: DejaTilesLayoutProvider, @Self() @Optional() public _control: NgControl) {
         if (this._control) {
             this._control.valueAccessor = this;
         }

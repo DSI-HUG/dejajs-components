@@ -46,7 +46,7 @@ export class DejaGridHeaderComponent implements OnDestroy {
     /** Template d'entête de colonne par defaut définit dans le HTML de la grille */
     @ContentChild('columnHeaderTemplate') protected columnHeaderTemplateInternal;
 
-    protected sizedColumn: IDejaGridColumn;
+    public sizedColumn: IDejaGridColumn;
     private _columnsDraggable = false;
     private _columnsSortable = false;
     private _columnsSizable = false;
@@ -231,7 +231,7 @@ export class DejaGridHeaderComponent implements OnDestroy {
         };
     }
 
-    protected getDropContext() {
+    public getDropContext() {
         if (!this.clipboardService) {
             return null;
         }

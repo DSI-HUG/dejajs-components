@@ -53,7 +53,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     /** Reference to DejaDateSelectorComponent inside thic control */
     @ViewChild(DejaDateSelectorComponent) public dateSelectorComponent: DejaDateSelectorComponent;
     /** Template for MdHint inside md-input-container */
-    @ContentChild('hintTemplate') protected mdHint;
+    @ContentChild('hintTemplate') public mdHint;
     /** Mask for input */
     protected mask: any[];
 
@@ -68,7 +68,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
 
     private date = new Date();
 
-    private inputModel;
+    public inputModel;
     private cursorPosition: number;
 
     private onTouchedCallback: () => void = noop;
@@ -216,12 +216,12 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
         return this.dropdownContainerId && this.elementRef.nativeElement.ownerDocument.getElementById(this.dropdownContainerId);
     }
 
-    private set showDropDown(value: boolean) {
+    public set showDropDown(value: boolean) {
         this._showDropDown = value;
         this.changeDetectorRef.markForCheck();
     }
 
-    private get showDropDown() {
+    public get showDropDown() {
         return this._showDropDown;
     }
 
@@ -351,7 +351,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
      *
      * @param {string | Date} date new value of this model
      */
-    protected updateModel(date: string | Date) {
+    public updateModel(date: string | Date) {
         if (typeof date === 'string' && date.replace(/_/g, '').length === this.format.length) {
             let d = moment(date, this.format).toDate();
             if (!moment(d).isValid()) {

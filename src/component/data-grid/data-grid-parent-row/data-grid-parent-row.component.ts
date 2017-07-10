@@ -36,7 +36,7 @@ export class DejaGridParentRowComponent {
     /** Template de cellule par defaut  définit dans le HTML de la grille */
     @ContentChild('cellTemplate') protected cellTemplateInternal;
 
-    private columnLayout = {} as IDejaGridParentRowColumnLayout;
+    public columnLayout = {} as IDejaGridParentRowColumnLayout;
 
     /** Définit la structure de colonnes a appliquer sur cette ligne */
     @Input()

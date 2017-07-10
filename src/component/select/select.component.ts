@@ -81,7 +81,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @ContentChild('itemTemplate') protected itemTemplateInternal;
     @ContentChild('parentItemTemplate') protected parentItemTemplateInternal;
     @ContentChild('selectedTemplate') protected selectedTemplate;
-    @ContentChild('suffixTemplate') protected mdSuffix;
+    @ContentChild('suffixTemplate') public mdSuffix;
 
     @ViewChild('inputElement') private _inputElement: ElementRef;
     @ViewChild(MdInputContainer) private inputContainer: MdInputContainer;
@@ -624,7 +624,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return this.getCurrentItemIndex();
     }
 
-    private get placeHolderTemplate() {
+    public get placeHolderTemplate() {
         return this.placeHolderTemplateExternal || this.placeHolderTemplateInternal;
     }
 
@@ -632,7 +632,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return this.itemTemplateExternal || this.itemTemplateInternal;
     }
 
-    private get hintTemplate() {
+    public get hintTemplate() {
         return this.hintTemplateExternal || this.hintTemplateInternal;
     }
 
@@ -644,12 +644,12 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return this._inputElement && this._inputElement.nativeElement as HTMLInputElement;
     }
 
-    private set dropdownVisible(value: boolean) {
+    public set dropdownVisible(value: boolean) {
         this._dropdownVisible = value;
         this.changeDetectorRef.markForCheck();
     }
 
-    private get dropdownVisible() {
+    public get dropdownVisible() {
         return this._dropdownVisible;
     }
 
@@ -970,7 +970,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             });
     }
 
-    protected queryChanged(value: string) {
+    public queryChanged(value: string) {
         this.query = value;
         if (!this.isModeSelect) {
             // Autocomplete or multiselect only

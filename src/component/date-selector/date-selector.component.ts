@@ -40,7 +40,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
 
     @Output() public dateChange = new EventEmitter();
 
-    protected local = 'fr';
+    public local = 'fr';
 
     // Time
     protected beginOffset = Math.PI / 3;
@@ -59,19 +59,19 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
     };
     // /Time
 
-    protected keyboardNavigation = false;
+    public keyboardNavigation = false;
     private keyboardNavigation$ = new Subject();
 
     private subscriptions: Subscription[] = [];
 
-    private currentDays: IDateSelectorItem[];
+    public currentDays: IDateSelectorItem[];
     private currentDate: Date = new Date();
 
     private selectedDate: Date;
-    private displayedDate = new Date();
+    public displayedDate = new Date();
 
-    private days = [];
-    private emptyDays: any[];
+    public days = [];
+    public emptyDays: any[];
     private _time: boolean;
     private _disabled: boolean;
 
@@ -315,11 +315,11 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
         }
     }
 
-    protected changeMonth(x: number) {
+    public changeMonth(x: number) {
         this.setMonthIfPossible(this.displayedDate, x);
     }
 
-    protected changeYear(x: number) {
+    public changeYear(x: number) {
         this.setYearIfPossible(this.displayedDate, x);
     }
 
