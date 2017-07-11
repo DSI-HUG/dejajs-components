@@ -1,4 +1,3 @@
-
 /*
  *  @license
  *  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
@@ -223,7 +222,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
         this.subscriptions.push(Observable.combineLatest(this.writeValue$, this.contentInitialized$)
             .subscribe(([value]) => {
-                console.log(value + ' ' + this.textField + ' ' + this.valueField);
                 if (!value) {
                     if (this.selectedItems && this.selectedItems.length) {
                         this.removeSelection();
