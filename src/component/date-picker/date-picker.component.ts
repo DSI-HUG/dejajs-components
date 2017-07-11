@@ -55,7 +55,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     /** Template for MdHint inside md-input-container */
     @ContentChild('hintTemplate') public mdHint;
     /** Mask for input */
-    public mask: any[];
+    protected mask: any[];
 
     @ViewChild(DejaChildValidatorDirective) private inputValidatorDirective: DejaChildValidatorDirective;
 

@@ -152,7 +152,7 @@ export class DejaGridComponent implements OnDestroy {
     private printColumnLayout$ = new Subject();
     private disableUserSelection$ = new Subject();
 
-    public noHorizontalScroll = false;
+    private noHorizontalScroll = false;
     public _itemListService: ItemListService;
     private sizingLayoutInfos: DejaGridColumnsLayoutInfos;
     private columnsLayoutInfos: DejaGridColumnsLayoutInfos;

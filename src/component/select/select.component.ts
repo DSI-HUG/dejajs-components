@@ -71,7 +71,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     protected onValidatorChangeCallback: () => void = noop;
 
     protected keyboardNavigation = false;
-    public _waiter = false;
+    protected _waiter = false;
 
     private subscriptions: Subscription[] = [];
     private mouseUp$sub: Subscription;

@@ -42,7 +42,7 @@ export class DejaMarkdownComponent implements OnInit, AfterViewChecked {
     }
 
     private _initialised = false;
-    public _html: SafeHtml;
+    private _html: SafeHtml;
     private _converter: any;
 
     constructor(private changeDetectorRef: ChangeDetectorRef, protected _http: Http, private sanitized: DomSanitizer) {
