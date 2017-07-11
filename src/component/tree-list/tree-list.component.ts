@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/merge';
@@ -24,13 +24,14 @@ import { ItemListBase } from '../../common/core/item-list/item-list-base';
 import { ItemListService } from '../../common/core/item-list/item-list.service';
 import { IItemTree } from '../../common/core/item-list/item-tree';
 import { DejaItemsEvent } from '../../common/core/item-list/items-event';
-import { IViewPort } from '../../common/core/item-list/viewport.service';
 import { ViewportMode } from '../../common/core/item-list/viewport.service';
+import { IViewPort } from '../../common/core/item-list/viewport.service';
 import { ViewPortService } from '../../common/core/item-list/viewport.service';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { SortingService } from '../../common/core/sorting';
 import { DejaChildValidatorDirective } from '../../common/core/validation/child-validator.directive';
 import { IDejaDragEvent } from '../dragdrop';
+import { DejaItemComponent } from './../../common/core/item-list/item.component';
 import { DejaTreeListScrollEvent } from './tree-list-scroll-event';
 
 const noop = () => { };
@@ -46,7 +47,7 @@ const noop = () => { };
     ],
     templateUrl: './tree-list.component.html',
 })
-export class DejaTreeListComponent extends ItemListBase implements OnDestroy, AfterViewInit, ControlValueAccessor {
+export class DejaTreeListComponent extends ItemListBase implements OnDestroy, AfterViewInit, AfterContentInit, ControlValueAccessor {
     /** Texte à afficher par default dans la zone de recherche */
     @Input() public placeholder: string;
     /** Texte affiché si aucune donnée n'est présente dans le tableau */
@@ -95,6 +96,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     @ContentChild('headerTemplate') private headerTemplateInternal;
     @ContentChild('searchPrefixTemplate') private searchPrefixTemplateInternal;
     @ContentChild('searchSuffixTemplate') private searchSuffixTemplateInternal;
+    @ContentChildren(DejaItemComponent) protected options: DejaItemComponent[];
 
     // protected _items: IItemBase[]; In the base class, correspond to the model
     private clickedItem: IItemBase;
@@ -114,6 +116,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
     private clearFilterExpression$ = new BehaviorSubject<void>(null);
     private filterListComplete$ = new Subject();
+    private writeValue$ = new Subject<any>();
+    private contentInitialized$ = new Subject();
 
     constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, public elementRef: ElementRef, @Self() @Optional() public _control: NgControl, @Optional() private clipboardService: DejaClipboardService) {
         super(changeDetectorRef, viewPort);
@@ -147,6 +151,29 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                 this.viewPort.refresh();
                 this.changeDetectorRef.markForCheck();
             }));
+
+        this.subscriptions.push(Observable.combineLatest(this.writeValue$, this.contentInitialized$)
+            .subscribe(([value]) => {
+                if (typeof value === 'string') {
+                    if (this._multiSelect) {
+                        this.query = '';
+                        value = value.split(',').map((v) => ({ value: v.trim() }));
+                    } else {
+                        value = [{
+                            value: value.trim(),
+                        }];
+                    }
+                    super.setSelectedModels(value);
+                    super.getItemListService().ensureSelection();
+                } else if (!value || value instanceof Array) {
+                    super.setSelectedModels(value);
+                } else {
+                    super.setSelectedModels([value]);
+                }
+
+                this.changeDetectorRef.markForCheck();
+            })
+        );
 
         this.maxHeight = 0;
         this._viewPortChanged = this.viewPortChanged;
@@ -352,12 +379,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Définit le model selectioné en mode single select */
     @Input()
     public set selectedModel(value: any) {
-        if (typeof value === 'string') {
-            const items = this.getItems();
-            this.selectedItem = items && value && items.find((item) => item[this._valueField] === value);
-        } else {
-            this.setSelectedModels(value && [value]);
-        }
+        this.writeValue$.next(value);
     }
 
     /** Retourne le model selectioné en mode single select */
@@ -369,7 +391,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Définit la liste des models selectionés en mode multiselect */
     @Input()
     public set selectedModels(value: any[]) {
-        this.setSelectedModels(value);
+        this.writeValue$.next(value);
     }
 
     /** Retourne la liste des models selectionés en mode multiselect */
@@ -573,6 +595,25 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Efface le contenu de la liste */
     public clearViewPort() {
         super.clearViewPort();
+    }
+
+    public ngAfterContentInit() {
+        if (!this.items && this.options && this.options.length) {
+            this.valueField = 'value';
+            this.textField = 'text';
+            const models = this.options.map((option) => ({
+                text: option.text,
+                value: option.value,
+            }));
+            this.models = models;
+            if (models.length > 100) {
+                // tslint:disable-next-line:no-debugger
+                debugger;
+                console.error('Select options with more than 100 items can have performance options. Please bind directly the items in code behind with items or models input.');
+            }
+        }
+
+        this.contentInitialized$.next(true);
     }
 
     public ngAfterViewInit() {

@@ -928,6 +928,10 @@ export class ItemListService {
         }
     }
 
+    public ensureSelection() {
+        return this.ensureSelectedItems(this.items);
+    }
+
     /** Retourne la liste à utilise pour la création des caches. Surcharger cetee méthode pour fournir une liste de façon lazy.
      * En cas de surcharge, retourner une nouvelle instance de la liste originale pour que le service regénère ses caches.
      * @param {string} query Texte ou regular expression par laquelle la liste doit être filtrée.
@@ -1157,40 +1161,6 @@ export class ItemListService {
         this._cache.rowsCount = 0;
     }
 
-    private compareItems = (item1: IItemBase, item2: IItemBase) => {
-        if (item1.model && !item2.model) {
-            return false;
-        } else if (!item1.model && item2.model) {
-            return false;
-        } else if (this._valueField) {
-            if (item1.model && item2.model) {
-                item1 = item1.model;
-                item2 = item2.model;
-            }
-            const value1 = item1[this._valueField];
-            const value2 = item2[this._valueField];
-            if (value1 !== undefined || value2 !== undefined) {
-                return item1[this._valueField] === item2[this._valueField];
-            }
-        }
-
-        if (item1.equals) {
-            return item1.equals(item2);
-        } else if (item2.equals) {
-            return item2.equals(item1);
-        } else if (item1.model && item1.model.equals) {
-            return item1.model.equals(item2.model);
-        } else if (item2.model && item2.model.equals) {
-            return item2.model.equals(item1.model);
-        } else {
-            if (item1.model && item2.model) {
-                item1 = item1.model;
-                item2 = item2.model;
-            }
-            return item1 === item2;
-        }
-    }
-
     private ensureSelectedItems(items: IItemBase[]) {
         if (!items || !this.selectedList || this.selectedList.length === 0) {
             return;
@@ -1222,6 +1192,44 @@ export class ItemListService {
 
         // Ensure selected flag for the new items
         this.selectedList.forEach((item) => item.selected = true);
+
+        return this.selectedList;
+    }
+
+    private compareItems = (item1: IItemBase, item2: IItemBase) => {
+        if (!item1 || !item2) {
+            return false;
+        } else if (item1.model && !item2.model) {
+            return false;
+        } else if (!item1.model && item2.model) {
+            return false;
+        } else if (this._valueField) {
+            if (item1.model && item2.model) {
+                item1 = item1.model;
+                item2 = item2.model;
+            }
+            const value1 = item1[this._valueField];
+            const value2 = item2[this._valueField];
+            if (value1 !== undefined || value2 !== undefined) {
+                return item1[this._valueField] === item2[this._valueField];
+            }
+        }
+
+        if (item1.equals) {
+            return item1.equals(item2);
+        } else if (item2.equals) {
+            return item2.equals(item1);
+        } else if (item1.model && item1.model.equals) {
+            return item1.model.equals(item2.model);
+        } else if (item2.model && item2.model.equals) {
+            return item2.model.equals(item1.model);
+        } else {
+            if (item1.model && item2.model) {
+                item1 = item1.model;
+                item2 = item2.model;
+            }
+            return item1 === item2;
+        }
     }
 
     private ensureVisibleListCache$(searchField: string, regExp: RegExp, expandTree: boolean, multiSelect: boolean) {

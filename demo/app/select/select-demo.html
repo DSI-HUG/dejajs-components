@@ -52,19 +52,71 @@
 					<deja-select fxFlex="0 0 auto" placeholder="Select a country" [(ngModel)]="businessCountry" textField="naqme" valueField="code" [models]="countries"></deja-select>
 				</span>
 				<ul fxFlex="0 0 50%" fxFlexOffset="5%" id="shortcut-list">
-					<li>Press <span class="keyboard-key">↑</span> to select the previous item</li>
-					<li>Press <span class="keyboard-key">↓</span> to select the next item</li>
-					<li>Press <span class="keyboard-key">Alt</span> + <span class="keyboard-key">↑</span> to toogle the dropdown</li>
-					<li>Press <span class="keyboard-key">Alt</span> + <span class="keyboard-key">↓</span> to toogle the dropdown</li>
-					<li>Press <span class="keyboard-key">PageUp</span> to select the next page item</li>
-					<li>Press <span class="keyboard-key">PageDown</span> to select the previous page item</li>
-					<li>Press <span class="keyboard-key">Home</span> to select the first item</li>
-					<li>Press <span class="keyboard-key">End</span> to select the last item</li>
-					<li>Press <span class="keyboard-key">Space</span> to collapse or expand a group header</li>
-					<li>Press <span class="keyboard-key">Enter</span> to select the current item and close the dropdown</li>
-					<li>Press <span class="keyboard-key">A</span>..<span class="keyboard-key">Z</span>  <span class="keyboard-key">0</span>..<span class="keyboard-key">9</span> to select the next item started with the pressed key</li>
+					<li>Press
+						<span class="keyboard-key">↑</span> to select the previous item</li>
+					<li>Press
+						<span class="keyboard-key">↓</span> to select the next item</li>
+					<li>Press
+						<span class="keyboard-key">Alt</span> +
+						<span class="keyboard-key">↑</span> to toogle the dropdown</li>
+					<li>Press
+						<span class="keyboard-key">Alt</span> +
+						<span class="keyboard-key">↓</span> to toogle the dropdown</li>
+					<li>Press
+						<span class="keyboard-key">PageUp</span> to select the next page item</li>
+					<li>Press
+						<span class="keyboard-key">PageDown</span> to select the previous page item</li>
+					<li>Press
+						<span class="keyboard-key">Home</span> to select the first item</li>
+					<li>Press
+						<span class="keyboard-key">End</span> to select the last item</li>
+					<li>Press
+						<span class="keyboard-key">Space</span> to collapse or expand a group header</li>
+					<li>Press
+						<span class="keyboard-key">Enter</span> to select the current item and close the dropdown</li>
+					<li>Press
+						<span class="keyboard-key">A</span>..
+						<span class="keyboard-key">Z</span>
+						<span class="keyboard-key">0</span>..
+						<span class="keyboard-key">9</span> to select the next item started with the pressed key</li>
 				</ul>
 			</div>
+		</md-card-content>
+	</md-card>
+	<md-card class="deja-select-demo demo-card demo-basic">
+		<md-toolbar color="primary">Select with options</md-toolbar>
+		<md-card-content>
+			<div>These selects has a list coming from html options</div>
+			<span fxLayout="row" fxLayoutAlign="start end">
+				<deja-select fxFlex="0 0 45%" class="demo-half-width" placeholder="Options content" selectedModel="mango">
+					<deja-item value="apricots" text="Apricots"></deja-item>
+					<deja-item value="banana" text="Banana"></deja-item>
+					<deja-item value="cantaloupe" text="Cantaloupe"></deja-item>
+					<deja-item value="cherries" text="Cherries"></deja-item>
+					<deja-item value="coconut" text="Coconut"></deja-item>
+					<deja-item value="cranberries" text="Cranberries"></deja-item>
+					<deja-item value="durian" text="Durian"></deja-item>
+					<deja-item value="grapes" text="Grapes"></deja-item>
+					<deja-item value="lemon" text="Lemon"></deja-item>
+					<deja-item value="mango" text="Mango"></deja-item>
+					<deja-item value="pineapple" text="Pineapple"></deja-item>
+					<deja-item value="watermelon" text="Watermelon"></deja-item>
+				</deja-select>
+				<deja-select fxFlex="0 0 45%" fxFlexOffset="5%" class="demo-half-width" placeholder="Options content" type="multiselect" selectedModels="mango, apricots, coconut">
+					<deja-item value="apricots" text="Apricots"></deja-item>
+					<deja-item value="banana" text="Banana"></deja-item>
+					<deja-item value="cantaloupe" text="Cantaloupe"></deja-item>
+					<deja-item value="cherries" text="Cherries"></deja-item>
+					<deja-item value="coconut" text="Coconut"></deja-item>
+					<deja-item value="cranberries" text="Cranberries"></deja-item>
+					<deja-item value="durian" text="Durian"></deja-item>
+					<deja-item value="grapes" text="Grapes"></deja-item>
+					<deja-item value="lemon" text="Lemon"></deja-item>
+					<deja-item value="mango" text="Mango"></deja-item>
+					<deja-item value="pineapple" text="Pineapple"></deja-item>
+					<deja-item value="watermelon" text="Watermelon"></deja-item>
+				</deja-select>
+			</span>
 		</md-card-content>
 	</md-card>
 	<md-card class="deja-select-demo demo-card demo-basic">
@@ -126,7 +178,7 @@
 		<md-toolbar color="primary">Grouping</md-toolbar>
 		<md-card-content>
 			<div>Grouping example</div>
-    		<deja-select class="demo-half-width" textField="naqme" valueField="code" [items]="groupedCountries"></deja-select>
+			<deja-select class="demo-half-width" textField="naqme" valueField="code" [items]="groupedCountries"></deja-select>
 		</md-card-content>
 		<md-toolbar color="primary">Autocomplete</md-toolbar>
 		<md-card-content>

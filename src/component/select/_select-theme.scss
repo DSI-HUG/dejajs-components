@@ -68,10 +68,12 @@
 			}
 		}
 		#select-backdrop {
-			background-color: transparent !important;
+			&:not([mobile]) {
+				background-color: transparent !important;
+			}
 		}
-		
+
 		@include sub-item-list-theme($theme);
-        @include sub-tree-list-theme($theme);
+		@include sub-tree-list-theme($theme);
 	}
 }
