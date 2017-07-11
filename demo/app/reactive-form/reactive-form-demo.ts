@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { AfterContentInit, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterContentInit, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -22,6 +22,7 @@ import { IUser } from './model/user.interface';
 import { UserService } from './service/user.service';
 
 @Component({
+    encapsulation: ViewEncapsulation.None,
     selector: 'reactive-form-demo',
     styleUrls: ['./reactive-form-demo.scss'],
     templateUrl: './reactive-form-demo.html',
