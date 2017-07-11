@@ -1,3 +1,4 @@
+
 /*
  *  @license
  *  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
@@ -6,7 +7,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { MdInputContainer, MdInputDirective } from '@angular/material';
 import 'rxjs/add/operator/delayWhen';
@@ -22,6 +23,7 @@ import { DejaItemEvent } from './../../common/core/item-list/item-event';
 import { ItemListBase } from './../../common/core/item-list/item-list-base';
 import { ItemListService } from './../../common/core/item-list/item-list.service';
 import { IItemTree } from './../../common/core/item-list/item-tree';
+import { DejaItemComponent } from './../../common/core/item-list/item.component';
 import { DejaItemsEvent } from './../../common/core/item-list/items-event';
 import { IViewPort, ViewportMode, ViewPortService } from './../../common/core/item-list/viewport.service';
 
@@ -82,6 +84,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @ContentChild('parentItemTemplate') protected parentItemTemplateInternal;
     @ContentChild('selectedTemplate') protected selectedTemplate;
     @ContentChild('suffixTemplate') protected mdSuffix;
+    @ContentChildren(DejaItemComponent) protected options: DejaItemComponent[];
 
     @ViewChild('inputElement') private _inputElement: ElementRef;
     @ViewChild(MdInputContainer) private inputContainer: MdInputContainer;
@@ -220,6 +223,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
         this.subscriptions.push(Observable.combineLatest(this.writeValue$, this.contentInitialized$)
             .subscribe(([value]) => {
+                console.log(value + ' ' + this.textField + ' ' + this.valueField);
                 if (!value) {
                     if (this.selectedItems && this.selectedItems.length) {
                         this.removeSelection();
@@ -227,19 +231,27 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                     return;
                 }
 
+                if (typeof value === 'string') {
+                    if (this._multiSelect) {
+                        this.query = '';
+                        value = value.split(',').map((v) => ({ value: v.trim() }));
+                    } else {
+                        value = {
+                            value: value.trim(),
+                        };
+                    }
+                }
+
                 if (this._multiSelect) {
                     this.query = '';
                     super.setSelectedModels(value);
+
                 } else {
                     const item = super.mapToIItemBase([value])[0];
                     this.unselectAll$()
-                        .switchMap(() => {
-                            if (item) {
-                                return this.toggleSelect$([item], true).map(() => this.getTextValue(value));
-                            } else {
-                                return Observable.of('');
-                            }
-                        })
+                        .switchMap(() => item ? this.toggleSelect$([item], true) : [])
+                        .map(() => super.getItemListService().ensureSelection())
+                        .map((selectedItems) => selectedItems.length ? this.getTextValue(selectedItems[0]) : '')
                         .first()
                         .subscribe((query) => this.query = query);
                 }
@@ -409,10 +421,20 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         super.setTextField(value);
     }
 
+    /** Retourne le champ à utiliser comme valeur d'affichage. */
+    public get textField() {
+        return super.getTextField();
+    }
+
     /** Définit le champ à utiliser comme valeur de comparaison. */
     @Input()
     public set valueField(value: string) {
         super.setValueField(value);
+    }
+
+    /** Retourne le champ à utiliser comme valeur de comparaison. */
+    public get valueField() {
+        return super.getValueField();
     }
 
     /** Définit le champ à utiliser comme champ de recherche.
@@ -686,7 +708,22 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     public ngAfterContentInit() {
-        this.contentInitialized$.next();
+        if (!this.items && this.options && this.options.length) {
+            this.valueField = 'value';
+            this.textField = 'text';
+            const models = this.options.map((option) => ({
+                text: option.text,
+                value: option.value,
+            }));
+            this.models = models;
+            if (models.length > 100) {
+                // tslint:disable-next-line:no-debugger
+                debugger;
+                console.error('Select options with more than 100 items can have performance options. Please bind directly the items in code behind with items or models input.');
+            }
+        }
+
+        this.contentInitialized$.next(true);
 
         if (this._control) {
             this._control.valueChanges

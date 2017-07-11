@@ -597,6 +597,11 @@ export abstract class ItemListBase implements OnDestroy {
         this._textField = value;
     }
 
+    /** Retourne le champ utilisé comme valeur d'affichage.*/
+    protected getTextField() {
+        return this._textField;
+    }
+
     /** Définit le champ à utiliser comme valeur de comparaison.
      * @param {string} value Champ à utiliser comme valeur de comparaison.
      */
@@ -605,6 +610,11 @@ export abstract class ItemListBase implements OnDestroy {
         if (this._itemListService) {
             this._itemListService.valueField = value;
         }
+    }
+
+    /** Retourne le champ utilisé comme valeur de comparaison.*/
+    protected getValueField() {
+        return this._valueField;
     }
 
     /** Définit le champ à utiliser comme champ de recherche.
@@ -693,6 +703,7 @@ export abstract class ItemListBase implements OnDestroy {
     protected mapToIItemBase(modls: any[], selected?: boolean): IItemBase[] {
         return modls.map((model) => {
             const itemBase: IItemBase = {};
+
             itemBase.model = model;
 
             const displayField = this._textField || 'displayName';
