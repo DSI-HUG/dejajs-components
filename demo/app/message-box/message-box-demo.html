@@ -13,14 +13,14 @@
 </md-card>
 
 <div *ngIf="tabIndex === 1" class="example">
-    <deja-dialog *ngIf="dialogVisible" (closed)="dialogVisible = false">
+    <deja-dialog *ngIf="dialogTitle" (closed)="dialogTitle = null">
         <deja-message-box type="primary" title="Title">
-            <b>I am a deja-dialog !</b><br /> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sit amet felis id nisl maximus interdum. Morbi mollis sapien sapien. Vivamus lacinia elementum eros
+            <span [innerHtml]="dialogTitle"></span>
             <ng-template #actionsTemplate>
-                <button md-raised-button (click)="dialogVisible = false">
+                <button md-raised-button (click)="dialogTitle = null">
                         Cancel
                     </button>
-                <button md-raised-button color="primary" (click)="dialogVisible = false">
+                <button md-raised-button color="primary" (click)="dialogTitle = null">
                         Ok
                     </button>
             </ng-template>

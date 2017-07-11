@@ -1197,7 +1197,9 @@ export class ItemListService {
     }
 
     private compareItems = (item1: IItemBase, item2: IItemBase) => {
-        if (item1.model && !item2.model) {
+        if (!item1 || !item2) {
+            return false;
+        } else if (item1.model && !item2.model) {
             return false;
         } else if (!item1.model && item2.model) {
             return false;
