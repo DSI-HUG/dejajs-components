@@ -2,7 +2,18 @@
     flex: 1 1 100%;
     display: flex;
 
-    md-nav-list a.active {
-        background: rgba(0, 0, 0, 0.11);
+    deja-splitter {
+        split-area:first-child {
+            display: flex;
+        }
+    }
+
+    md-nav-list {
+        flex: 1 1 auto;
+        overflow: auto;
+        padding-top: 0;
+        a.active {
+            background: rgba(0, 0, 0, 0.11);
+        }
     }
 }
