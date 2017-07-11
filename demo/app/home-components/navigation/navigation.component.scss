@@ -1,0 +1,7 @@
+:host {
+    overflow-y: auto;
+    display: block;
+    a.active {
+        background: rgba(0, 0, 0, 0.11);
+    }
+}

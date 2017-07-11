@@ -109,7 +109,6 @@ export class ReactiveFormDemoComponent implements AfterContentInit, OnInit, OnDe
     public ngAfterContentInit() {
 
         this.user$sub = this.user$
-            // .do((user: IUser) => console.log('user$', user))
             .delay(1)
             .filter((user: IUser) => !!user)
             .subscribe((user: IUser) => {

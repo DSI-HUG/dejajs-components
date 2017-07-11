@@ -1,19 +1,19 @@
 :host {
     flex: 1 1 100%;
     display: flex;
-
-    deja-splitter {
-        split-area:first-child {
-            display: flex;
-        }
+    overflow: hidden;
+    #menu-button {
+        margin-top: 0.5rem;
+        margin-left: 0.5rem;
     }
-
-    md-nav-list {
-        flex: 1 1 auto;
-        overflow: auto;
-        padding-top: 0;
-        a.active {
-            background: rgba(0, 0, 0, 0.11);
-        }
+    #button-wrapper {
+        flex: 0 0 auto;        
+    }
+    deja-splitter {
+        flex: 1 1 auto;      
+        overflow: hidden;
+    }
+    navigation-component {
+        height: 100%;
     }
 }
