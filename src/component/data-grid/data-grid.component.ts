@@ -126,19 +126,19 @@ export class DejaGridComponent implements OnDestroy {
     /** retourne la largeur calculée des lignes */
     public rowsWidth = null;
 
-    @ContentChild('rowTemplate') public rowTemplateInternal;
-    @ContentChild('parentRowTemplate') public parentRowTemplateInternal;
+    @ContentChild('rowTemplate') private rowTemplateInternal;
+    @ContentChild('parentRowTemplate') private parentRowTemplateInternal;
     @ContentChild('cellTemplate') private _cellTemplate;
     @ContentChild('parentTitleTemplate') private _parentTitleTemplate;
     @ContentChild('columnHeaderTemplate') private _columnHeaderTemplate;
     @ContentChild('headerTemplate') private headerTemplateInternal;
-    @ContentChild('searchPrefixTemplate') public searchPrefixTemplateInternal;
-    @ContentChild('searchSuffixTemplate') public searchSuffixTemplateInternal;
+    @ContentChild('searchPrefixTemplate') private searchPrefixTemplateInternal;
+    @ContentChild('searchSuffixTemplate') private searchSuffixTemplateInternal;
 
     @ViewChild(DejaGridHeaderComponent) private header: DejaGridHeaderComponent;
     @ViewChild(DejaTreeListComponent) private treeListComponent: DejaTreeListComponent;
 
-    public _rows: IItemBase[] | Promise<IItemBase[]> | Observable<IItemBase[]>;
+    private _rows: IItemBase[] | Promise<IItemBase[]> | Observable<IItemBase[]>;
     private _columns: IDejaGridColumn[];
     private _columnLayout = {
         scrollLeft: 0,
@@ -152,8 +152,8 @@ export class DejaGridComponent implements OnDestroy {
     private printColumnLayout$ = new Subject();
     private disableUserSelection$ = new Subject();
 
-    public noHorizontalScroll = false;
-    public _itemListService: ItemListService;
+    private noHorizontalScroll = false;
+    private _itemListService: ItemListService;
     private sizingLayoutInfos: DejaGridColumnsLayoutInfos;
     private columnsLayoutInfos: DejaGridColumnsLayoutInfos;
     private subscriptions = [] as Subscription[];
@@ -350,19 +350,19 @@ export class DejaGridComponent implements OnDestroy {
         this.columnGroups$.next(value);
     }
 
-    public get searchPrefixTemplate() {
+    private get searchPrefixTemplate() {
         return this.searchPrefixTemplateExternal || this.searchPrefixTemplateInternal;
     }
 
-    public get searchSuffixTemplate() {
+    private get searchSuffixTemplate() {
         return this.searchSuffixTemplateExternal || this.searchSuffixTemplateInternal;
     }
 
-    public get rowTemplate() {
+    private get rowTemplate() {
         return this.rowTemplateExternal || this.rowTemplateInternal;
     }
 
-    public get parentRowTemplate() {
+    private get parentRowTemplate() {
         return this.parentRowTemplateExternal || this.parentRowTemplateInternal;
     }
 
@@ -374,7 +374,7 @@ export class DejaGridComponent implements OnDestroy {
         return this._parentTitleTemplate;
     }
 
-    public get columnsHeaderTemplate() {
+    private get columnsHeaderTemplate() {
         return this.headerTemplateExternal || this.headerTemplateInternal;
     }
 
@@ -571,7 +571,7 @@ export class DejaGridComponent implements OnDestroy {
         }
     }
 
-    public scroll(event: DejaTreeListScrollEvent) {
+    protected scroll(event: DejaTreeListScrollEvent) {
         if (this.lastScrollLeft !== event.scrollLeft) {
             this.lastScrollLeft = event.scrollLeft;
             this.calcColumnsLayout();

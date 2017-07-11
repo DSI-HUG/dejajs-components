@@ -25,7 +25,7 @@ export enum ClockwiseFactorEnum {
     counterClockwise = 1,
 }
 
-export interface ICircularValue {
+interface ICircularValue {
     position: Position;
     value: number;
 }
@@ -77,14 +77,14 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
     private _value: number;
     private TwoPI = Math.PI * 2;
 
-    public radius = 0;
+    private radius = 0;
     private configs: IConfig[] = [];
     private selectedConfig: IConfig;
 
-    public circularValues: ICircularValue[] = [];
+    private circularValues: ICircularValue[] = [];
 
-    public cursor: ICircularValue;
-    public cursorHand: { width: number, angle: number };
+    private cursor: ICircularValue;
+    private cursorHand: { width: number, angle: number };
     private cursorElement: HTMLElement;
 
     private clickedTime: number;

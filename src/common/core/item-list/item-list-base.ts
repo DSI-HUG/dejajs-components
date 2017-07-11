@@ -26,23 +26,23 @@ const noop = () => { };
 export abstract class ItemListBase implements OnDestroy {
     protected _waiter = true;
 
-    public _itemList: IItemBase[] = []; // Viewport list
-    public _multiSelect = false;
+    protected _itemList: IItemBase[] = []; // Viewport list
+    protected _multiSelect = false;
     protected _searchField: string;
     protected _maxHeight: number;
     protected _textField: string;
     protected _valueField: string;
     protected _currentItemIndex = -1;
     protected _currentItem: IItemBase;
-    public _hintLabel: string;
+    protected _hintLabel: string;
     protected _nodataLabel: string;
     protected _hideSelected: boolean;
     protected _childrenField: string;
     protected _minSearchLength = 0;
 
     // Viewport
-    public vpBeforeHeight = 0;
-    public vpAfterHeight = 0;
+    protected vpBeforeHeight = 0;
+    protected vpAfterHeight = 0;
     protected vpStartRow = 0;
     protected vpEndRow = 0;
     protected _pageSize = 0;
@@ -55,7 +55,7 @@ export abstract class ItemListBase implements OnDestroy {
     protected _viewPortChanged: EventEmitter<IViewPort>;
 
     // Drag drop
-    public _ddStartIndex: number;
+    protected _ddStartIndex: number;
     protected _ddTargetIndex: number;
 
     private waiter$sub: Subscription;
@@ -396,7 +396,7 @@ export abstract class ItemListBase implements OnDestroy {
         }
     }
 
-    public getViewPortRowHeight() {
+    protected getViewPortRowHeight() {
         return this._viewPortRowHeight || ViewPortService.itemDefaultSize;
     }
 

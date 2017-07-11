@@ -42,8 +42,8 @@ export class DejaViewPortComponent implements OnDestroy {
     protected startOffset: number;  // Buttons mode only
     @HostBinding('attr.hasUpBtn') protected hasUpButton = false;
     @HostBinding('attr.hasDownBtn') protected hasDownButton = false;
-    @HostBinding('attr.horizontal') public isHorizontal = false;
-    @HostBinding('attr.buttons') public hasButtons = false;
+    @HostBinding('attr.horizontal') protected isHorizontal = false;
+    @HostBinding('attr.buttons') protected hasButtons = false;
 
     private _items: IDejaViewPortItem[];
     private element: HTMLElement;

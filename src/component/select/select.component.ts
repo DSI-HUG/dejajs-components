@@ -73,7 +73,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     protected onValidatorChangeCallback: () => void = noop;
 
     protected keyboardNavigation = false;
-    public _waiter = false;
     protected _waiter = false;
     protected isMobile = false;
 
@@ -661,7 +660,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return this.getCurrentItemIndex();
     }
 
-    public get placeHolderTemplate() {
+    private get placeHolderTemplate() {
         return this.placeHolderTemplateExternal || this.placeHolderTemplateInternal;
     }
 
@@ -669,7 +668,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return this.itemTemplateExternal || this.itemTemplateInternal;
     }
 
-    public get hintTemplate() {
+    private get hintTemplate() {
         return this.hintTemplateExternal || this.hintTemplateInternal;
     }
 
@@ -681,12 +680,12 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return this._inputElement && this._inputElement.nativeElement as HTMLInputElement;
     }
 
-    public set dropdownVisible(value: boolean) {
+    private set dropdownVisible(value: boolean) {
         this._dropdownVisible = value;
         this.changeDetectorRef.markForCheck();
     }
 
-    public get dropdownVisible() {
+    private get dropdownVisible() {
         return this._dropdownVisible;
     }
 
@@ -1022,7 +1021,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             });
     }
 
-    public queryChanged(value: string) {
+    protected queryChanged(value: string) {
         this.query = value;
         if (!this.isModeSelect) {
             // Autocomplete or multiselect only

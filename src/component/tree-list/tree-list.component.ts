@@ -87,12 +87,12 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     protected onTouchedCallback: () => void = noop;
     protected onChangeCallback: (_: any) => void = noop;
 
-    public keyboardNavigation = false;
+    protected keyboardNavigation = false;
 
     // Templates
     @ContentChild('itemTemplate') private itemTemplateInternal;
     @ContentChild('parentItemTemplate') private parentItemTemplateInternal;
-    @ContentChild('loaderTemplate') public loaderTemplateInternal;
+    @ContentChild('loaderTemplate') private loaderTemplateInternal;
     @ContentChild('headerTemplate') private headerTemplateInternal;
     @ContentChild('searchPrefixTemplate') private searchPrefixTemplateInternal;
     @ContentChild('searchSuffixTemplate') private searchSuffixTemplateInternal;
@@ -528,11 +528,11 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
         return this.parentItemTemplateExternal || this.parentItemTemplateInternal;
     }
 
-    public get loaderTemplate() {
+    private get loaderTemplate() {
         return this.loaderTemplateExternal || this.loaderTemplateInternal;
     }
 
-    public get headerTemplate() {
+    private get headerTemplate() {
         return this.headerTemplateExternal || this.headerTemplateInternal;
     }
 
@@ -856,7 +856,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
         this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
     }
 
-    public mousedown(e: MouseEvent) {
+    protected mousedown(e: MouseEvent) {
         if (this.disabled) {
             return;
         }
@@ -967,7 +967,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
         };
     }
 
-    public getDropContext() {
+    protected getDropContext() {
         if (!this.clipboardService || !this.sortable) {
             return null;
         }
@@ -1014,7 +1014,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
         };
     }
 
-    public dragLeave(event: DragEvent) {
+    protected dragLeave(event: DragEvent) {
         const listRect = this.listElement.getBoundingClientRect();
 
         const listBounds = Rect.fromLTRB(listRect.left,

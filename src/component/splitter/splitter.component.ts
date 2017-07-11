@@ -89,7 +89,7 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
     }
 
     private minPercent = 0.3;
-    public areas: IAreaData[] = [];
+    private areas: IAreaData[] = [];
     private isDragging = false;
     private containerSize = 0;
     private areaASize = 0;
