@@ -181,7 +181,7 @@ export class ItemListService {
             this.items = undefined;
             this._waiter$.next(true);
             let observable = items as Observable<IItemBase[]>;
-            if (!observable.subscribe) {
+            if (observable.subscribe === undefined) {
                 const promise = items as Promise<IItemBase[]>;
                 observable = Observable.fromPromise(promise);
             }
@@ -296,7 +296,7 @@ export class ItemListService {
         return new Observable<boolean>((subscriber: Subscriber<boolean>) => {
             if (!this._ddList || !this.items) {
                 subscriber.next(false);
-                return;
+                return undefined;
             }
 
             const listIndex = this._ddCurrentIndex;
@@ -376,7 +376,7 @@ export class ItemListService {
             const startIndex = this._ddCurrentIndex !== undefined ? this._ddCurrentIndex : index;
             if (startIndex >= currentList.length) {
                 subscriber.next(currentList.length - 1);
-                return;
+                return undefined;
             }
 
             const item = currentList[startIndex] as IItemTree;
@@ -399,10 +399,10 @@ export class ItemListService {
                             const targetItem = currentList[a] as IItemTree;
                             if (targetItem.depth === item.depth) {
                                 subscriber.next(a);
-                                return;
+                                return undefined;
                             } else if (targetItem.depth === item.depth - 1) {
                                 subscriber.next(a + 1);
-                                return;
+                                return undefined;
                             }
                         }
                     }
@@ -421,20 +421,20 @@ export class ItemListService {
                     if (targetIndex >= afterIndex) {
                         // Descend jusqu'au premier élément avec la même profondeur
                         for (let a = targetIndex + 1; a < currentList.length; a++) {
-                            const targetItem = currentList[a] as IItemTree;
-                            if (targetItem.depth === item.depth) {
+                            const itm = currentList[a] as IItemTree;
+                            if (itm.depth === item.depth) {
                                 subscriber.next(a);
-                                return;
-                            } else if (targetItem.depth === item.depth - 1) {
+                                return undefined;
+                            } else if (itm.depth === item.depth - 1) {
                                 subscriber.next(a - 1);
-                                return;
+                                return undefined;
                             }
                         }
                         // Not found
                         const targetItem = currentList[afterIndex] as IItemTree;
                         if (targetItem.depth === item.depth) {
                             subscriber.next(afterIndex);
-                            return;
+                            return undefined;
                         }
                     }
                 }
@@ -806,7 +806,7 @@ export class ItemListService {
         };
 
         return this.ensureFlatListCache$(true, multiSelect)
-            .switchMap((flatList) => search$(flatList));
+            .switchMap(search$);
     }
 
     /** Supprime tous les caches internes. Ils seront recréés à la première demande de la portion de la liste à afficher. */
@@ -839,7 +839,7 @@ export class ItemListService {
                 }
             } else {
                 regExp = query as RegExp;
-                if (!regExp.test) {
+                if (regExp.test === undefined) {
                     regExp = undefined;
                 }
             }
@@ -921,10 +921,10 @@ export class ItemListService {
                     this.waiter$.next(this.items === undefined);
                 })
                 .switchMap(() => this.ensureVisibleListCache$(searchField, this.internalQuery, queryChanged, multiSelect))
-                .map(() => loadViewList());
+                .map(loadViewList);
         } else {
             return this.ensureVisibleListCache$(searchField, this.internalQuery, queryChanged, multiSelect)
-                .map(() => loadViewList());
+                .map(loadViewList);
         }
     }
 
@@ -949,16 +949,8 @@ export class ItemListService {
      * @return {boolean} True si l'élément correspond aux critères de recherche.
      */
     protected itemMatch(item: IItemBase, searchField: string, regExp: RegExp) {
-        let value;
-        if (typeof item[searchField] === 'function') {
-            value = item[searchField]();
-        } else if (item[searchField]) {
-            value = item[searchField];
-        } else {
-            value = this.getTextValue(item);
-        }
-        value = Diacritics.remove(value);
-        return value && regExp.test(value);
+        const value = typeof item[searchField] === 'function' ? item[searchField]() : (item[searchField] ? item[searchField] : this.getTextValue(item));
+        return value && regExp.test(Diacritics.remove(value));
     }
 
     /** Retourne une liste groupée si un modèle de groupe interne est spécifié.
@@ -1001,19 +993,7 @@ export class ItemListService {
                                 if (itmTree.collapsed && expandTree) {
                                     itmTree.collapsed = false;
                                 }
-                                if (!filteredItems) {
-                                    if (itmTree.collapsed) {
-                                        filteredItems = [itmTree];
-                                    } else {
-                                        filteredItems = [itmTree, ...filteredChildren];
-                                    }
-                                } else {
-                                    if (itmTree.collapsed) {
-                                        filteredItems = [...filteredItems, itmTree];
-                                    } else {
-                                        filteredItems = [...filteredItems, itmTree, ...filteredChildren];
-                                    }
-                                }
+                                filteredItems = !filteredItems ? (itmTree.collapsed ? [itmTree] : [itmTree, ...filteredChildren]) : (itmTree.collapsed ? [...filteredItems, itmTree] : [...filteredItems, itmTree, ...filteredChildren]);
                                 if (itmTree.selected) {
                                     selectedList.push(itmTree);
                                 }

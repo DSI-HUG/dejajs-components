@@ -196,7 +196,8 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     /** Init mask */
     public ngOnInit() {
         if (!this.format) {
-            this.format = 'YYYY-MM-DD' + ((this.time) ? ' HH:mm' : '');
+            const time = this.time ? ' HH:mm' : '';
+            this.format = `YYYY-MM-DD${time}`;
         }
 
         let mask = [];
@@ -321,12 +322,12 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
      */
     protected toggleDateSelector(event: Event) {
         if (this.disabled) {
-            return;
+            return undefined;
         }
 
         const target = event.currentTarget as HTMLElement;
         if (target.id !== 'calendar-button') {
-            return;
+            return undefined;
         }
 
         this.showDropDown = !this.showDropDown;

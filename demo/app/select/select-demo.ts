@@ -83,7 +83,7 @@ export class SelectDemoComponent implements OnDestroy {
             .subscribe((value: Country[]) => {
                 const result = [] as any[];
                 value.map((s) => {
-                    s.toString = () => { return s.code + ' - ' + s.naqme; };
+                    s.toString = () => `${s.code}-${s.naqme}`;
                     result.push(s);
                 });
                 this.countriesForTemplate = result;
@@ -112,7 +112,7 @@ export class SelectDemoComponent implements OnDestroy {
                 } as ICountryGroup);
 
                 value.map((country) => {
-                    const groupName = 'Group ' + country.naqme[0];
+                    const groupName = `Group${country.naqme[0]}`;
                     if (!map[groupName]) {
                         map[groupName] = [] as ICountryGroup[];
                         result.push({

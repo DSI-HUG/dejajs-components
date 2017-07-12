@@ -122,7 +122,8 @@ export class Color {
 
     public toHex() {
         const toHex = (d) => {
-            return ('0' + (Number(d).toString(16))).slice(-2).toUpperCase();
+            const s = Number(d).toString(16);
+            return `0${s}`.slice(-2).toUpperCase();
         };
 
         if (this.isEmpty()) {

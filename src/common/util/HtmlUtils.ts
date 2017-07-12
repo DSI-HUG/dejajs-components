@@ -13,7 +13,7 @@ export class HtmlUtils {
             const params: string[] = [];
             for (const p in jsonObjParameters) {
                 if (jsonObjParameters.hasOwnProperty(p)) {
-                    params.push(encodeURIComponent(p) + '=' + encodeURIComponent(jsonObjParameters[p]));
+                    params.push(`${encodeURIComponent(p)}=${encodeURIComponent(jsonObjParameters[p])}`);
                 }
             }
             return params.join('&');

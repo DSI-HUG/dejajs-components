@@ -937,7 +937,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
                         // Search next
                         this.filterExpression += event.key;
-                        const rg = new RegExp('^' + this.filterExpression, 'i');
+                        const rg = new RegExp(`^${this.filterExpression}`, 'i');
                         this.findNextMatch$((item) => {
                             if (item && this.isSelectable(item)) {
                                 const label = this.getTextValue(item);

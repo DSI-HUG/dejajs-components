@@ -39,8 +39,8 @@ export class GridDemoComponent {
     protected variableHeightPeopleRows$: Observable<Person[]>;
     protected groupedByEyesColorPeople$: Observable<Person[]>;
     protected groupedByColorPeople: {
-        items: Person[],
-        toString: () => string,
+        items: Person[];
+        toString(): string;
     }[];
     protected onDemandGroupedPeople: IPeopleGroup[];
     protected news$: Observable<News[]>;
@@ -337,7 +337,7 @@ export class GridDemoComponent {
             const onDemandResult = [] as IPeopleGroup[];
             const map = {} as { [groupName: string]: IDejaGridRow[] };
             value.map((person) => {
-                const groupName = 'Group ' + person.color;
+                const groupName = `Group${person.color}`;
                 if (!map[groupName]) {
                     map[groupName] = [] as Person[];
                     onDemandResult.push({

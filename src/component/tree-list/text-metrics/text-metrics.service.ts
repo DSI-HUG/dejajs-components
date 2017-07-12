@@ -55,7 +55,7 @@ export class DejaTextMetricsService {
      */
     public getTextWidth(text: string, elem: HTMLElement): number {
         this.computedStyles = window.getComputedStyle(elem);
-        const font = this.computedStyles.fontSize + ' ' + this.computedStyles.fontFamily;
+        const font = `${this.computedStyles.fontSize} ${this.computedStyles.fontFamily}`;
 
         const canvas = this.canvas || (this.canvas = document.createElement('canvas'));
         const context = canvas.getContext('2d');

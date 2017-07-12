@@ -21,3 +21,6 @@
 	<a md-list-item [routerLink]="['viewport']" routerLinkActive="active">Viewport</a>
 	<a md-list-item (click)="openIFrame($event)">Iframe</a>
 </md-nav-list>
+<deja-backdrop id="iframePopup" *ngIf="iframeOpened" (click)="iframeOpened=false">
+	<deja-iframe sourceUrl="https://www.youtube.com/embed/M7lc1UVf-VE?autoplay=1&origin=http://example.com"></deja-iframe>
+</deja-backdrop>

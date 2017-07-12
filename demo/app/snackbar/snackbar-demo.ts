@@ -40,6 +40,7 @@ export class DejaSnackbarDemoComponent implements OnInit {
   private default: string;
 
   public ngOnInit() {
+    // tslint:disable-next-line:no-string-literal
     this.colors = new MaterialColors()['palet'];
     this.danger = this.colors['md-red']['500'];
     this.warning = this.colors['md-orange']['500'];

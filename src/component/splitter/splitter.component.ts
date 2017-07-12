@@ -74,14 +74,14 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
      * Host Binding
      */
     @HostBinding('style.width') get styleWidth() {
-        return (this.width && !isNaN(this.width) && this.width > 0) ? this.width + 'px' : '100%';
+        return (this.width && !isNaN(this.width) && this.width > 0) ? `${this.width}px` : '100%';
     }
 
     /**
      * Host Binding
      */
     @HostBinding('style.height') get styleHeight() {
-        return (this.height && !isNaN(this.height) && this.height > 0) ? this.height + 'px' : '100%';
+        return (this.height && !isNaN(this.height) && this.height > 0) ? `${this.height}px` : '100%';
     }
 
     private get nbGutters(): number {
@@ -238,7 +238,7 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
             if (toBeDefined.length === 0) {
                 // Map to 100%
                 this.areas.forEach((a) => {
-                    const adjustedSize =  Number(a.sizeUser) * 100 / totalSize;
+                    const adjustedSize = Number(a.sizeUser) * 100 / totalSize;
                     a.size = adjustedSize;
                 });
             } else if (totalSize < 99.99) {

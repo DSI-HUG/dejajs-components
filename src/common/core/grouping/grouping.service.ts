@@ -88,15 +88,10 @@ export class GroupingService {
                 let parent = groups[groupedBy];
 
                 if (!parent) {
-                    let groupLabel: string;
-                    if (groupInfo.groupTextField) {
-                        groupLabel = typeof groupInfo.groupTextField === 'function' ? groupInfo.groupTextField(item) : item[groupInfo.groupTextField];
-                    } else {
-                        groupLabel = groupedBy;
-                    }
+                    const groupLabel = groupInfo.groupTextField ? (typeof groupInfo.groupTextField === 'function' ? groupInfo.groupTextField(item) : item[groupInfo.groupTextField]) : groupedBy;
                     parent = groups[groupedBy] = {
                         depth: _depth,
-                        toString: () => { return groupLabel; },
+                        toString: () => groupLabel,
                         $text: groupLabel,
                     } as IItemTree;
                     parent[childrenField] = [];

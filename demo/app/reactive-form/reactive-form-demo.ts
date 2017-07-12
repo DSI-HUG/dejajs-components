@@ -147,5 +147,3 @@ export class ReactiveFormDemoComponent implements AfterContentInit, OnInit, OnDe
         }
     }
 }
-
-

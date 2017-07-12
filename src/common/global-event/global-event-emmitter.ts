@@ -42,14 +42,14 @@ export class GlobalEventEmmitter implements IGlobalEventEmmitter {
         }
 
         // specific event
-        const callbacks = this._callbacks['$' + event];
+        const callbacks = this._callbacks[`$${event}`];
         if (!callbacks) {
             return this;
         }
 
         // remove all handlers
         if (!fn) {
-            delete this._callbacks['$' + event];
+            delete this._callbacks[`$${event}`];
             return this;
         }
 
@@ -67,12 +67,12 @@ export class GlobalEventEmmitter implements IGlobalEventEmmitter {
 
     public emit = (event: string, ...params) => {
         this._callbacks = this._callbacks || {};
-        let callbacks = this._callbacks['$' + event];
+        let callbacks = this._callbacks[`$${event}`];
 
         if (callbacks) {
             callbacks = callbacks.slice(0);
-            // tslint:disable-next-line:prefer-const
-            for (let i = 0, len = callbacks.length; i < len; ++i) {
+            // tslint:disable-next-line:prefer-for-of
+            for (let i = 0; i < callbacks.length; ++i) {
                 callbacks[i].apply(this, params);
             }
         }
@@ -82,7 +82,7 @@ export class GlobalEventEmmitter implements IGlobalEventEmmitter {
 
     public listeners = (event) => {
         this._callbacks = this._callbacks || {};
-        return this._callbacks['$' + event] || [];
+        return this._callbacks[`$${event}`] || [];
     }
 
     public hasListeners = (event) => {
@@ -95,7 +95,7 @@ export class GlobalEventEmmitter implements IGlobalEventEmmitter {
 
     public addEventListener = (event: string, fn: (params: any[]) => void) => {
         this._callbacks = this._callbacks || {};
-        (this._callbacks['$' + event] = this._callbacks['$' + event] || []).push(fn);
+        (this._callbacks[`$${event}`] = this._callbacks[`$${event}`] || []).push(fn);
         return this;
     }
 }

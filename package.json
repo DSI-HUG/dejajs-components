@@ -101,7 +101,7 @@
     "run-sequence": "1.2.2",
     "symlink-dir": "1.0.3",
     "ts-node": "3.1.0",
-    "tslint": "5.4.3",
+    "tslint": "5.5.0",
     "typescript": "2.3.4"
   },
   "config": {

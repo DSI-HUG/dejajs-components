@@ -274,6 +274,7 @@ export class ViewPortService implements OnDestroy {
                         return Observable.timer(1)
                             .do(() => {
                                 const elements = element.getElementsByClassName('listitem');
+                                // tslint:disable-next-line:prefer-for-of
                                 for (let i = 0; i < elements.length; i++) {
                                     const itemElement = elements[i] as HTMLElement;
                                     const index = +itemElement.getAttribute('flat');
@@ -487,7 +488,7 @@ export class ViewPortService implements OnDestroy {
             .filter(() => {
                 if (this.ignoreScrollCount > 0) {
                     this.ignoreScrollCount--;
-                    console.log('ignoreScrollCount ' + this.ignoreScrollCount);
+                    console.log(`ignoreScrollCount ${this.ignoreScrollCount}`);
                     return false;
                 } else {
                     return true;
