@@ -327,7 +327,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
         this.layoutProvider.moveTile(id, bounds);
     }
 
-    protected getDropContext(_dropArea: HTMLElement) {
+    public getDropContext() {
         return {
             dragEnter: (dragContext, dragCursor) => {
                 return this.layoutProvider.dragEnter(dragContext, dragCursor) && {
