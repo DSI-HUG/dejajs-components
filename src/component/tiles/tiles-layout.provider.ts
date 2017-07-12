@@ -699,7 +699,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         if (freePlaces.length > 0) {
             // add at the nearest free place
             freePlaces.sort((bounds1, bounds2) => {
-                const calcDistance = (bounds) => { return Math.min(Math.abs(bounds.left - idealBounds.left), Math.abs(bounds.right - idealBounds.right)) + 2 * Math.min(Math.abs(bounds.top - idealBounds.top), Math.abs(bounds.bottom - idealBounds.bottom)); };
+                const calcDistance = (bounds) => Math.min(Math.abs(bounds.left - idealBounds.left), Math.abs(bounds.right - idealBounds.right)) + 2 * Math.min(Math.abs(bounds.top - idealBounds.top), Math.abs(bounds.bottom - idealBounds.bottom));
                 return calcDistance(bounds1) - calcDistance(bounds2);
             });
 
@@ -740,7 +740,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             return false;
         }
 
-        const tile = dragContext['IDejaTile'] as IDejaTile;
+        const tile = dragContext.IDejaTile as IDejaTile;
         if (!tile) {
             return false;
         }
@@ -1289,8 +1289,8 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                             tile.percentBounds = swapTargetRect;
                             return bounds;
                         } else {
-                            const hol = tile.percentBounds.left - effectiveBounds.left;      // Ce qui depasse a  gauche
-                            const hor = effectiveBounds.right - tile.percentBounds.right;    // Ce qui depasse a  droite
+                            const hol = tile.percentBounds.left - effectiveBounds.left;      // Ce qui depasse a gauche
+                            const hor = effectiveBounds.right - tile.percentBounds.right;    // Ce qui depasse a droite
                             const vot = tile.percentBounds.top - effectiveBounds.top;        // Ce qui depasse en haut
                             const vob = effectiveBounds.bottom - tile.percentBounds.bottom;  // Ce qui depasse en bas
                             const hoe = Math.max(0, Math.min(tile.percentBounds.right, effectiveBounds.right) - Math.max(tile.percentBounds.left, effectiveBounds.left)) / Math.min(tile.percentBounds.width, effectiveBounds.width);
@@ -1386,7 +1386,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
     }
 
     private getSizePercentLimit(prop: string): number {
-        const unit = this[prop + 'Unit'];
+        const unit = this[`${prop}Unit`];
         if (!unit || unit === 'px') {
             return this.getPercentSize(this[prop]);
         } else {
@@ -1395,7 +1395,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
     }
 
     private getSizePixelLimit(prop: string): number {
-        const unit = this[prop + 'Unit'];
+        const unit = this[`${prop}Unit`];
         if (!unit || unit === 'px') {
             return this[prop];
         } else {
@@ -1477,9 +1477,9 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         if (matches && matches.length >= 1) {
             this[prop] = parseInt(matches[1], 10);
             if (matches.length >= 2) {
-                this[prop + 'Unit'] = matches[2];
+                this[`${prop}Unit`] = matches[2];
             } else {
-                this[prop + 'Unit'] = 'px';
+                this[`${prop}Unit`] = 'px';
             }
         }
     }

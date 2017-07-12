@@ -91,19 +91,19 @@ export class DejaRangeDemoComponent {
     }
 
     protected remove(index: number) {
-        if (weights.length >= 2) {
+        if (this.weights.length >= 2) {
 
             const weight = this.weights
                 .find((_w: Weight, i: number) => index === i);
 
-            const weights = this.weights
+            const wgts = this.weights
                 .filter((_w: Weight, i: number) => index !== i);
 
             if (index > 0) {
-                weights[index - 1].maxWeight = weight.maxWeight;
+                wgts[index - 1].maxWeight = weight.maxWeight;
             }
 
-            this.weights = weights;
+            this.weights = wgts;
 
             this.weightRef.selected = 0;
             this.computeRangeFromWeight();

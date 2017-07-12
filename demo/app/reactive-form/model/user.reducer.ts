@@ -14,6 +14,7 @@ import {
     USER_ON_GET,
 } from './action-name';
 
+// tslint:disable-next-line:only-arrow-functions
 export function userReducer(state: IUser, action: Action): IUser {
     switch (action.type) {
 

@@ -129,7 +129,7 @@ export class TilesDemoComponent implements OnInit {
                 } as IDropCursorInfos;
             },
             drop: (dragContext) => {
-                const country = dragContext['country'] as Country;
+                const country = dragContext.country as Country;
                 dropArea.innerText = `The dropped country is ${country.naqme} - the code is: ${country.code}`;
             },
         } as IDejaMouseDroppableContext;
@@ -173,5 +173,5 @@ interface IMessage {
     title: string;
     type: string;
     gate: boolean;
-    cancel: () => {};
+    cancel(): {};
 }

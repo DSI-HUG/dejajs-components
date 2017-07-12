@@ -12,8 +12,10 @@ export class UUID {
 
     constructor() {
         let d = new Date().getTime();
-        if (window.performance && typeof window.performance.now === 'function') {
-            d += performance.now();
+        if (window.performance !== undefined) {
+            if (typeof window.performance.now === 'function') {
+                d += performance.now();
+            }
         }
         this.uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
             // tslint:disable-next-line:no-bitwise

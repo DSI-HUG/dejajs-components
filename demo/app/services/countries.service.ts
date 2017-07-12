@@ -67,8 +67,8 @@ export class CountriesService {
             .refCount()
             .map((countries) => {
                 if (query) {
-                    const sr = new RegExp('^' + query, 'i');
-                    const sc = new RegExp('^(?!' + query + ').*(' + query + ')', 'i');
+                    const sr = new RegExp(`^${query}`, 'i');
+                    const sc = new RegExp(`^(?!${query}).*(${query})`, 'i');
                     const result = countries.filter((z) => sr.test(z.naqme));
                     countries.forEach((z) => {
                         if (sc.test(z.naqme)) {

@@ -77,7 +77,7 @@ export class DejaTreeListDemoComponent implements OnDestroy {
             const rand = Math.floor(Math.random() * (70 - 33 + 1)) + 33; // random de 33 à 70
             this.loremList[i] = {} as IItemTree;
             this.loremList[i].size = rand;
-            this.loremList[i].displayName = i + ' - Une ligne de test avec une taille de : ' + rand;
+            this.loremList[i].displayName = `${i} - Une ligne de test avec une taille de : ${rand}`;
         }
 
         groupingService.group(this.loremList, [{ groupByField: 'height' }]).then((groupedResult) => {
@@ -95,7 +95,7 @@ export class DejaTreeListDemoComponent implements OnDestroy {
         this.subscriptions.push(this.countries.subscribe((value: Country[]) => {
             const result = [] as any[];
             value.map((s) => {
-                s.toString = () => { return s.code + ' - ' + s.naqme; };
+                s.toString = () => `${s.code} - ${s.naqme}`;
                 result.push(s);
             });
             this.countriesForTemplate = result;
@@ -123,7 +123,7 @@ export class DejaTreeListDemoComponent implements OnDestroy {
             } as ICountryGroup);
 
             value.map((country) => {
-                const groupName = 'Group ' + country.naqme[0];
+                const groupName = `Group ${country.naqme[0]}`;
                 if (!map[groupName]) {
                     map[groupName] = [] as ICountryGroup[];
                     result.push({
@@ -258,7 +258,7 @@ export class DejaTreeListDemoComponent implements OnDestroy {
     }
 
     protected onItemDragStart(event: IDejaDragEvent) {
-        event.dragInfo['country'] = event.dragObject;
+        event.dragInfo.country = event.dragObject;
     }
 
     protected onDivDragOver(event: IDejaDragEvent) {
@@ -269,7 +269,7 @@ export class DejaTreeListDemoComponent implements OnDestroy {
 
     protected onDivDropEvent(event: IDejaDragEvent) {
         if (event.dragInfo.hasOwnProperty('country')) {
-            const country = event.dragInfo['country'] as Country;
+            const country = event.dragInfo.country as Country;
             (event.target as HTMLElement).innerText = `The dropped country is ${country.naqme} - the code is: ${country.code}`;
             event.preventDefault();
         }

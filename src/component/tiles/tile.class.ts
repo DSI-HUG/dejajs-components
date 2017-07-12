@@ -53,7 +53,7 @@ export class DejaTile implements IDejaTile {
             this.fading = tile.effects.fading;
         }
         if (!this._id) {
-            this._id = '#' + DejaTile.currentId++;
+            this._id = `#${DejaTile.currentId++}`;
         }
     }
 
@@ -189,7 +189,7 @@ export class DejaTile implements IDejaTile {
     }
 
     public makeId() {
-        this._id = '#' + DejaTile.currentId++;
+        this._id = `#${DejaTile.currentId++}`;
     }
 
     public refreshBounds() {

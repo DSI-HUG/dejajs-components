@@ -117,6 +117,6 @@ export interface IDejaDragEvent extends DragEvent {
 
 export interface IDejaDragContext {
     object?: any;
-    dragstartcallback?: (event: IDejaDragEvent) => void;
-    dragendcallback?: (event: IDejaDragEvent) => void;
+    dragstartcallback?(event: IDejaDragEvent): void;
+    dragendcallback?(event: IDejaDragEvent): void;
 }

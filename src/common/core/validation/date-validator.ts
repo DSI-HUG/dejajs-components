@@ -9,8 +9,8 @@
 import { Directive, forwardRef, Input, OnInit } from '@angular/core';
 import { FormControl, NG_VALIDATORS } from '@angular/forms';
 
-function validateDateFactory(dateMin, dateMax) {
-   return (c: FormControl) => {
+const validateDateFactory = (dateMin, dateMax) => {
+    return (c: FormControl) => {
         const bad = {
             invalideDate: true,
         };
@@ -26,7 +26,7 @@ function validateDateFactory(dateMin, dateMax) {
         }
         return null;
     };
-}
+};
 
 @Directive({
     providers: [

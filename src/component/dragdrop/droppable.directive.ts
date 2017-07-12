@@ -188,8 +188,8 @@ export interface IDejaDropEvent extends IDejaDragEvent {
 }
 
 export interface IDejaDropContext {
-    dragentercallback: (event: IDejaDropEvent) => void;
-    dropcallback?: (event: IDejaDropEvent) => void;
-    dragovercallback?: (event: IDejaDropEvent) => void;
-    dragleavecallback?: (event: CustomEvent) => void;
+    dragentercallback(event: IDejaDropEvent): void;
+    dropcallback?(event: IDejaDropEvent): void;
+    dragovercallback?(event: IDejaDropEvent): void;
+    dragleavecallback?(event: CustomEvent): void;
 }
