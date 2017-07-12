@@ -1163,7 +1163,7 @@ export class ItemListService {
 
     private ensureSelectedItems(items: IItemBase[]) {
         if (!items || !this.selectedList || this.selectedList.length === 0) {
-            return;
+            return [];
         }
 
         // Ensure selected flag
