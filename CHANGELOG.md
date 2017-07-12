@@ -1,3 +1,20 @@
+#### 2.3.3 (2017-07-12)
+
+##### New Features
+
+* **CloningService:** Clone with prototype using ObjectMapper ([53c39054](https://github.com/DSI-HUG/dejajs-components/commit/53c39054871a7eaebdc03d2b2172a7ae1f2a722c))
+
+##### Bug Fixes
+
+* **Demo:** add scrollbar to menu ([4bb32496](https://github.com/DSI-HUG/dejajs-components/commit/4bb32496b0ef7ba9cc9d3ab7af6f6ad4805f8c64))
+* **Grid:** Add debounce to calcColumnLayout ([00fa4c93](https://github.com/DSI-HUG/dejajs-components/commit/00fa4c93732cc068ccdfb35555f2b9cbb658ee9f))
+* **DemoApp:** Fix datepicker demo ([4d9716b7](https://github.com/DSI-HUG/dejajs-components/commit/4d9716b7f3772b31900c798b83444f061f5bc795))
+
+##### Other Changes
+
+* **Global:** Fix yarn.lock urls ([dbb9ea39](https://github.com/DSI-HUG/dejajs-components/commit/dbb9ea39e8c4f7b9f5fa9fb44c64b251d685ad60))
+* **Changelog:** Add breaking changes support ([727ea323](https://github.com/DSI-HUG/dejajs-components/commit/727ea323ab1fb58884f644dcac988a637aa3ad45))
+
 #### 2.3.2 (2017-07-06)
 
 ##### Build System / Dependencies

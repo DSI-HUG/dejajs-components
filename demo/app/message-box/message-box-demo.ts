@@ -23,7 +23,7 @@ export class MessageBoxDemoComponent {
     protected actions = [
         {
             action: () => {
-                this.dialogVisible = true;
+                this.dialogTitle = '<b>I am a deja-dialog !</b><br/> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sit amet felis id nisl maximus interdum. Morbi mollis sapien sapien. Vivamus lacinia elementum eros';
             },
             text: 'Cliquez moi pour ouvrir une deja-dialog',
             type: 'primary',
@@ -45,7 +45,7 @@ export class MessageBoxDemoComponent {
         },
     ];
 
-    private dialogVisible;
+    private dialogTitle;
 
     constructor() { }
 

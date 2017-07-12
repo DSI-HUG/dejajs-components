@@ -14,14 +14,17 @@ import { DejaChildValidatorModule } from '../../common/core/validation/index';
 import { DejaBackdropModule } from '../backdrop/index';
 import { DejaChipsModule } from '../chips/index';
 import { DejaDropDownModule } from '../dropdown/index';
+import { DejaItemComponent } from './../../common/core/item-list/item.component';
 import { DejaSelectComponent } from './select.component';
 
 @NgModule({
     declarations: [
         DejaSelectComponent,
+        DejaItemComponent,
     ],
     exports: [
         DejaSelectComponent,
+        DejaItemComponent,
     ],
     imports: [
         CommonModule,

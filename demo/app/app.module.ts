@@ -63,7 +63,7 @@ import {
     DejaTooltipModule,
     DejaTreeListModule,
     DejaViewPortModule,
-// } from '../../dist';
+    // } from '../../dist';
 } from '../../src/index';
 
 import { DejaAccordionDemoComponent } from './accordion/accordion-demo.component';
@@ -74,6 +74,7 @@ import { DejaDatePickerDemoComponent } from './date-picker/date-picker-demo';
 import { GlobalEventsDemoComponent } from './global-events/global-events-demo';
 import { GridDemoComponent } from './grid/grid-demo';
 import { HomeComponentsComponent } from './home-components/home-components.component';
+import { NavigationComponent } from './home-components/navigation/navigation.component';
 import { HomeGuidesComponent } from './home-guides/home-guides.component';
 import { HomeComponent } from './home/home.component';
 import { MenuDemoComponent } from './menu/menu-demo';
@@ -95,6 +96,7 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
     declarations: [
         AppComponent,
         HomeComponent,
+        NavigationComponent,
         HomeComponentsComponent,
         HomeGuidesComponent,
         DejaAccordionDemoComponent,

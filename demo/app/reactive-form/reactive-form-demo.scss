@@ -1,4 +1,4 @@
-:host {
+reactive-form-demo {
     .placeholder {
         color: rgba(0, 0, 0, 0.38);
         font-size: 87%;
@@ -16,6 +16,12 @@
             &:hover {
                 opacity: 1;
             }
+        }
+    }
+    #toolbar {
+        .mat-toolbar-row {
+            display: flex;
+            justify-content: space-between;
         }
     }
 }

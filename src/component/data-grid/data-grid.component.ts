@@ -418,6 +418,7 @@ export class DejaGridComponent implements OnDestroy {
             .subscribe(() => this.changeDetectorRef.markForCheck()));
 
         this.subscriptions.push(Observable.from(this.columns$)
+            .debounceTime(1)
             .subscribe((columns) => {
                 this._columns = columns;
                 this.calcColumnsLayout();

@@ -6,7 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ObservableMedia } from '@angular/flex-layout';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { MdInputContainer, MdInputDirective } from '@angular/material';
 import 'rxjs/add/operator/delayWhen';
@@ -22,6 +23,7 @@ import { DejaItemEvent } from './../../common/core/item-list/item-event';
 import { ItemListBase } from './../../common/core/item-list/item-list-base';
 import { ItemListService } from './../../common/core/item-list/item-list.service';
 import { IItemTree } from './../../common/core/item-list/item-tree';
+import { DejaItemComponent } from './../../common/core/item-list/item.component';
 import { DejaItemsEvent } from './../../common/core/item-list/items-event';
 import { IViewPort, ViewportMode, ViewPortService } from './../../common/core/item-list/viewport.service';
 
@@ -72,6 +74,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     protected keyboardNavigation = false;
     protected _waiter = false;
+    protected isMobile = false;
 
     private subscriptions: Subscription[] = [];
     private mouseUp$sub: Subscription;
@@ -82,11 +85,13 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @ContentChild('parentItemTemplate') protected parentItemTemplateInternal;
     @ContentChild('selectedTemplate') protected selectedTemplate;
     @ContentChild('suffixTemplate') protected mdSuffix;
+    @ContentChildren(DejaItemComponent) protected options: DejaItemComponent[];
 
     @ViewChild('inputElement') private _inputElement: ElementRef;
     @ViewChild(MdInputContainer) private inputContainer: MdInputContainer;
     @ViewChild(MdInputDirective) protected input: MdInputDirective;
     @ViewChild('listcontainer') private listContainer: any;
+
     @ViewChild(DejaDropDownComponent) private dropDownComponent: DejaDropDownComponent;
 
     @HostBinding('attr.disabled') private _disabled = null;
@@ -116,12 +121,18 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     private _selectedItemsPosition = DejaSelectSelectionPosition.above;
 
-    constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, private elementRef: ElementRef, @Self() @Optional() public _control: NgControl, @Optional() private _parentForm: NgForm, @Optional() private _parentFormGroup: FormGroupDirective) {
+    constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, private elementRef: ElementRef, @Self() @Optional() public _control: NgControl, @Optional() private _parentForm: NgForm, @Optional() private _parentFormGroup: FormGroupDirective, media: ObservableMedia) {
         super(changeDetectorRef, viewPort);
 
         if (this._control) {
             this._control.valueAccessor = this;
         }
+
+        this.subscriptions.push(Observable.merge(this.contentInitialized$, media.asObservable())
+            .subscribe(() => {
+                this.isMobile = media.isActive('xs') || media.isActive('sm');
+                this.changeDetectorRef.markForCheck();
+            }));
 
         if (this._parentForm) {
             this._parentForm.ngSubmit.subscribe(() => {
@@ -227,19 +238,27 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                     return;
                 }
 
+                if (typeof value === 'string') {
+                    if (this._multiSelect) {
+                        this.query = '';
+                        value = value.split(',').map((v) => ({ value: v.trim() }));
+                    } else {
+                        value = {
+                            value: value.trim(),
+                        };
+                    }
+                }
+
                 if (this._multiSelect) {
                     this.query = '';
                     super.setSelectedModels(value);
+
                 } else {
                     const item = super.mapToIItemBase([value])[0];
                     this.unselectAll$()
-                        .switchMap(() => {
-                            if (item) {
-                                return this.toggleSelect$([item], true).map(() => this.getTextValue(value));
-                            } else {
-                                return Observable.of('');
-                            }
-                        })
+                        .switchMap(() => item ? this.toggleSelect$([item], true) : [])
+                        .map(() => super.getItemListService().ensureSelection())
+                        .map((selectedItems) => selectedItems.length ? this.getTextValue(selectedItems[0]) : '')
                         .first()
                         .subscribe((query) => this.query = query);
                 }
@@ -248,7 +267,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             })
         );
 
-        this.maxHeight = 500;
+        // this.maxHeight = 500;
 
     }
 
@@ -317,7 +336,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return this._selectionClearable;
     }
 
-    /** Définit la position des éléments selectionées en multiselect */
     @Input()
     public set selectedItemsPosition(value: string | DejaSelectSelectionPosition) {
         this._selectedItemsPosition = typeof value === 'string' ? DejaSelectSelectionPosition[value] : value;
@@ -409,10 +427,20 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         super.setTextField(value);
     }
 
+    /** Retourne le champ à utiliser comme valeur d'affichage. */
+    public get textField() {
+        return super.getTextField();
+    }
+
     /** Définit le champ à utiliser comme valeur de comparaison. */
     @Input()
     public set valueField(value: string) {
         super.setValueField(value);
+    }
+
+    /** Retourne le champ à utiliser comme valeur de comparaison. */
+    public get valueField() {
+        return super.getValueField();
     }
 
     /** Définit le champ à utiliser comme champ de recherche.
@@ -611,6 +639,14 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return this.listContainer && this.listContainer.elementRef.nativeElement as HTMLElement;
     }
 
+    protected getOwnerAlignment() {
+        return this._ownerAlignment;
+    }
+
+    protected getDropdownAlignment() {
+        return this._dropdownAlignment;
+    }
+
     private get containerElement(): HTMLElement {
         return this.dropdownContainerElement || this.dropdownContainerId && this.elementRef.nativeElement.ownerDocument.getElementById(this.dropdownContainerId);
     }
@@ -686,7 +722,22 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     public ngAfterContentInit() {
-        this.contentInitialized$.next();
+        if (!this.items && this.options && this.options.length) {
+            this.valueField = 'value';
+            this.textField = 'text';
+            const models = this.options.map((option) => ({
+                text: option.text,
+                value: option.value,
+            }));
+            this.models = models;
+            if (models.length > 100) {
+                // tslint:disable-next-line:no-debugger
+                debugger;
+                console.error('Select options with more than 100 items can have performance options. Please bind directly the items in code behind with items or models input.');
+            }
+        }
+
+        this.contentInitialized$.next(true);
 
         if (this._control) {
             this._control.valueChanges
