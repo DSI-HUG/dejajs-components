@@ -494,7 +494,9 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Definit si le waiter doit être affiché dans la liste. */
     @Input()
     public set waiter(value: boolean) {
-        this._waiter = value;
+        if (value !== undefined) {
+            this._waiter = value;
+        }
     }
 
     /** Retourne si le waiter doit être affiché dans la liste. */
