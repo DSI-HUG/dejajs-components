@@ -52,7 +52,7 @@ export class DejaViewPortComponent implements OnDestroy {
     public get isHorizontal() {
         return this._isHorizontal;
     }
-    
+
     private _items: IDejaViewPortItem[];
     private element: HTMLElement;
     private subscriptions: Subscription[] = [];

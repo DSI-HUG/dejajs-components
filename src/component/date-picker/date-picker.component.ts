@@ -88,7 +88,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     public get inputModel() {
         return this._inputModel;
     }
-    
+
     /**
      * Constructor
      * subscribe on fifferent events needed inside this component

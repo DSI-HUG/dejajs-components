@@ -82,7 +82,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     public get tiles$() {
         return this._tiles$;
     }
-    
+
     @ViewChild('tilesContainer') private tilesContainer: ElementRef;
 
     constructor(el: ElementRef, private layoutProvider: DejaTilesLayoutProvider, @Self() @Optional() public _control: NgControl) {

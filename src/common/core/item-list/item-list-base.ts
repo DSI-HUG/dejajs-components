@@ -26,7 +26,7 @@ const noop = () => { };
 export abstract class ItemListBase implements OnDestroy {
     protected _waiter = true;
 
-    protected _itemList: IItemBase[] = []; // Viewport list 
+    protected _itemList: IItemBase[] = []; // Viewport list
     protected _multiSelect = false;
     protected _searchField: string;
     protected _maxHeight: number;
@@ -64,35 +64,6 @@ export abstract class ItemListBase implements OnDestroy {
     private _itemListService: ItemListService;
     private allCollapsed = false;
     private _viewPortRowHeight = ViewPortService.itemDefaultSize;
-
-
-    public get isMultiSelect(){
-        return this._multiSelect;
-    }
-
-    public get itemList(){
-        return this._itemList;
-    }
-
-    public get ddStartIndex(){
-        return this._ddStartIndex;
-    }
-    
-    public get vpBeforeHeight() {
-       return this._vpBeforeHeight; 
-    }
-
-    public get vpAfterHeight() {
-        return this._vpAfterHeight;
-    }
-
-    public get vpStartRow() {
-        return this._vpStartRow;
-    }
-
-    public get vpEndRow(){
-        return this._vpEndRow;
-    }
 
     constructor(protected changeDetectorRef: ChangeDetectorRef, protected viewPort: ViewPortService) {
         this.viewPort$sub = viewPort.viewPort$
@@ -134,6 +105,34 @@ export abstract class ItemListBase implements OnDestroy {
                     this._viewPortChanged.emit(viewPortResult);
                 }
             });
+    }
+
+    public get isMultiSelect(){
+        return this._multiSelect;
+    }
+
+    public get itemList(){
+        return this._itemList;
+    }
+
+    public get ddStartIndex(){
+        return this._ddStartIndex;
+    }
+
+    public get vpBeforeHeight() {
+       return this._vpBeforeHeight;
+    }
+
+    public get vpAfterHeight() {
+        return this._vpAfterHeight;
+    }
+
+    public get vpStartRow() {
+        return this._vpStartRow;
+    }
+
+    public get vpEndRow(){
+        return this._vpEndRow;
     }
 
     /** Renvoie le modèle de tri appliqué à la liste.
