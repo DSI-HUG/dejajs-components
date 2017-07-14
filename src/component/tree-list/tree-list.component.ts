@@ -89,10 +89,6 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
     protected _keyboardNavigation = false;
 
-    public keyboardNavigation() {
-        return this._keyboardNavigation;
-    }
-
     // Templates
     @ContentChild('itemTemplate') private itemTemplateInternal;
     @ContentChild('parentItemTemplate') private parentItemTemplateInternal;
@@ -181,6 +177,10 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
         this.maxHeight = 0;
         this._viewPortChanged = this.viewPortChanged;
+    }
+
+    public keyboardNavigation() {
+        return this._keyboardNavigation;
     }
 
     /** Définit la longueur minimale de caractères dans le champ de recherche avant que la recherche ou le filtrage soient effectués */
