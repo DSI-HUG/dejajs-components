@@ -25,7 +25,7 @@ export enum ClockwiseFactorEnum {
     counterClockwise = 1,
 }
 
-interface ICircularValue {
+export interface ICircularValue {
     position: Position;
     value: number;
 }
