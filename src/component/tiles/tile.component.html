@@ -1,5 +1,5 @@
 <deja-tile-group class="unselectable" *ngIf="tile.type==='group'" [model]="tile" [designMode]="designMode" (titleChanged)="onTitleChanged($event)" [color]="tile.color" (close)="close.emit($event)"></deja-tile-group>
 <ng-template *ngIf="tile.type!=='group'" [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: tile, designMode: designMode }"></ng-template>
-<md-progress-spinner *ngIf="this._tile && this._tile.pending$ | async" mode="indeterminate" class="accent"></md-progress-spinner>
+<md-progress-spinner *ngIf="this.tile && this.tile.pending$ | async" mode="indeterminate" class="accent"></md-progress-spinner>
 
 

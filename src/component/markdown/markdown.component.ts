@@ -45,6 +45,10 @@ export class DejaMarkdownComponent implements OnInit, AfterViewChecked {
     private _html: SafeHtml;
     private _converter: any;
 
+    public get html() {
+        return this._html;
+    }
+
     constructor(private changeDetectorRef: ChangeDetectorRef, protected _http: Http, private sanitized: DomSanitizer) {
         this._converter = new Showdown.Converter();
         this._converter.setOption('tables', true);

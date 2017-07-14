@@ -26,7 +26,7 @@ const noop = () => { };
 export abstract class ItemListBase implements OnDestroy {
     protected _waiter = true;
 
-    protected _itemList: IItemBase[] = []; // Viewport list
+    protected _itemList: IItemBase[] = []; // Viewport list 
     protected _multiSelect = false;
     protected _searchField: string;
     protected _maxHeight: number;
@@ -41,10 +41,10 @@ export abstract class ItemListBase implements OnDestroy {
     protected _minSearchLength = 0;
 
     // Viewport
-    protected vpBeforeHeight = 0;
-    protected vpAfterHeight = 0;
-    protected vpStartRow = 0;
-    protected vpEndRow = 0;
+    protected _vpBeforeHeight = 0;
+    protected _vpAfterHeight = 0;
+    protected _vpStartRow = 0;
+    protected _vpEndRow = 0;
     protected _pageSize = 0;
     protected _depthMax = 0;
     protected rowsCount = 0;
@@ -65,22 +65,51 @@ export abstract class ItemListBase implements OnDestroy {
     private allCollapsed = false;
     private _viewPortRowHeight = ViewPortService.itemDefaultSize;
 
+
+    public get isMultiSelect(){
+        return this._multiSelect;
+    }
+
+    public get itemList(){
+        return this._itemList;
+    }
+
+    public get ddStartIndex(){
+        return this._ddStartIndex;
+    }
+    
+    public get vpBeforeHeight() {
+       return this._vpBeforeHeight; 
+    }
+
+    public get vpAfterHeight() {
+        return this._vpAfterHeight;
+    }
+
+    public get vpStartRow() {
+        return this._vpStartRow;
+    }
+
+    public get vpEndRow(){
+        return this._vpEndRow;
+    }
+
     constructor(protected changeDetectorRef: ChangeDetectorRef, protected viewPort: ViewPortService) {
         this.viewPort$sub = viewPort.viewPort$
             .subscribe((viewPortResult: IViewPort) => {
                 delete this._hintLabel;
                 if (viewPort.mode === ViewportMode.disabled) {
                     this._itemList = viewPortResult.items;
-                    this.vpStartRow = 0;
-                    this.vpEndRow = 0;
-                    this.vpBeforeHeight = 0;
-                    this.vpAfterHeight = 0;
+                    this._vpStartRow = 0;
+                    this._vpEndRow = 0;
+                    this._vpBeforeHeight = 0;
+                    this._vpAfterHeight = 0;
                 } else {
                     this._itemList = viewPortResult.visibleItems;
-                    this.vpStartRow = viewPortResult.startIndex;
-                    this.vpEndRow = viewPortResult.endIndex;
-                    this.vpBeforeHeight = viewPortResult.beforeSize;
-                    this.vpAfterHeight = viewPortResult.afterSize;
+                    this._vpStartRow = viewPortResult.startIndex;
+                    this._vpEndRow = viewPortResult.endIndex;
+                    this._vpBeforeHeight = viewPortResult.beforeSize;
+                    this._vpAfterHeight = viewPortResult.afterSize;
                 }
 
                 if (viewPortResult.scrollPos !== undefined) {
@@ -396,7 +425,7 @@ export abstract class ItemListBase implements OnDestroy {
         }
     }
 
-    protected getViewPortRowHeight() {
+    public getViewPortRowHeight() {
         return this._viewPortRowHeight || ViewPortService.itemDefaultSize;
     }
 

@@ -60,7 +60,7 @@ export class DejaGridGroupAreaComponent {
         };
     }
 
-    protected getDropContext() {
+    public getDropContext() {
         if (!this.clipboardService) {
             return null;
         }

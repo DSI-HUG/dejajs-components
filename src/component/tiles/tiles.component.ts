@@ -77,8 +77,12 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     private resize$sub: Subscription;
     private modelChanged$sub: Subscription;
     private layoutChanged$sub: Subscription;
-    private tiles$ = new BehaviorSubject<DejaTile[]>([]);
+    private _tiles$ = new BehaviorSubject<DejaTile[]>([]);
 
+    public get tiles$() {
+        return this._tiles$;
+    }
+    
     @ViewChild('tilesContainer') private tilesContainer: ElementRef;
 
     constructor(el: ElementRef, private layoutProvider: DejaTilesLayoutProvider, @Self() @Optional() public _control: NgControl) {
@@ -107,6 +111,11 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
         this.resize$sub = Observable.fromEvent(window, 'resize')
             .debounceTime(5)
             .subscribe(() => this.refresh({ resetWidth: true }));
+    }
+
+    // provide a public acccess
+    public get selectionRect$() {
+        return this.layoutProvider.selectionRect$;
     }
 
     @Input()
@@ -215,7 +224,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     // ************* ControlValueAccessor Implementation **************
     public writeValue(models: any) {
         this._models = models || [];
-        this.tiles$.next(this.layoutProvider.tiles = (this._models.map((tile) => new DejaTile(tile))));
+        this._tiles$.next(this.layoutProvider.tiles = (this._models.map((tile) => new DejaTile(tile))));
     }
 
     public registerOnChange(fn: any) {
@@ -327,7 +336,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
         this.layoutProvider.moveTile(id, bounds);
     }
 
-    protected getDropContext() {
+    public getDropContext() {
         return {
             dragEnter: (dragContext, dragCursor) => {
                 return this.layoutProvider.dragEnter(dragContext, dragCursor) && {

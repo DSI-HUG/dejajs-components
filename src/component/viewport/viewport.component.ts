@@ -42,9 +42,17 @@ export class DejaViewPortComponent implements OnDestroy {
     protected startOffset: number;  // Buttons mode only
     @HostBinding('attr.hasUpBtn') protected hasUpButton = false;
     @HostBinding('attr.hasDownBtn') protected hasDownButton = false;
-    @HostBinding('attr.horizontal') protected isHorizontal = false;
-    @HostBinding('attr.buttons') protected hasButtons = false;
+    @HostBinding('attr.horizontal') protected _isHorizontal = false;
+    @HostBinding('attr.buttons') protected _hasButtons = false;
 
+    public get hasButtons() {
+        return this._hasButtons;
+    }
+
+    public get isHorizontal() {
+        return this._isHorizontal;
+    }
+    
     private _items: IDejaViewPortItem[];
     private element: HTMLElement;
     private subscriptions: Subscription[] = [];
@@ -92,7 +100,7 @@ export class DejaViewPortComponent implements OnDestroy {
     public set direction(value: ViewportDirection | string) {
         const direction = typeof value === 'string' ? ViewportDirection[value] : value;
         this.viewPort.direction$.next(direction);
-        this.isHorizontal = direction === ViewportDirection.horizontal;
+        this._isHorizontal = direction === ViewportDirection.horizontal;
         this.changeDetectorRef.markForCheck();
     }
 
@@ -114,7 +122,7 @@ export class DejaViewPortComponent implements OnDestroy {
         this.viewPort.element$.next(this.element);
         this.subscriptions.push(this.scroll$Sub = Observable.fromEvent(this.element, 'scroll')
             .map((event: Event) => event.target as HTMLElement)
-            .map((target) => Math.round(this.isHorizontal ? target.scrollLeft : target.scrollTop))
+            .map((target) => Math.round(this._isHorizontal ? target.scrollLeft : target.scrollTop))
             .subscribe((scrollPos) => {
                 this.viewPort.scrollPosition$.next(scrollPos);
             }));
@@ -126,7 +134,7 @@ export class DejaViewPortComponent implements OnDestroy {
         if (!this.element) {
             return 0;
         }
-        return this.isHorizontal ? this.element.clientWidth : this.element.clientHeight;
+        return this._isHorizontal ? this.element.clientWidth : this.element.clientHeight;
     }
 
     private set scrollPos(value: number) {
@@ -193,7 +201,7 @@ export class DejaViewPortComponent implements OnDestroy {
                 const scroll = (vp: IViewPort) => {
                     if (!this.hasButtons) {
                         if (this.element) {
-                            if (this.isHorizontal) {
+                            if (this._isHorizontal) {
                                 this.element.scrollLeft = vp.scrollPos;
                             } else {
                                 this.element.scrollTop = vp.scrollPos;
@@ -224,8 +232,8 @@ export class DejaViewPortComponent implements OnDestroy {
             }));
 
         this.subscriptions.push(Observable.from(this.hasButtons$)
-            .filter((value) => this.hasButtons !== value)
-            .do((value) => this.hasButtons = value)
+            .filter((value) => this._hasButtons !== value)
+            .do((value) => this._hasButtons = value)
             .delay(1)
             .do((value) => {
                 if (value) {

@@ -87,7 +87,11 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     protected onTouchedCallback: () => void = noop;
     protected onChangeCallback: (_: any) => void = noop;
 
-    protected keyboardNavigation = false;
+    protected _keyboardNavigation = false;
+
+    public keyboardNavigation() {
+        return this._keyboardNavigation;
+    }
 
     // Templates
     @ContentChild('itemTemplate') private itemTemplateInternal;
@@ -137,10 +141,10 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
             .subscribe(noop));
 
         this.subscriptions.push(Observable.from(this.keyboardNavigation$)
-            .do(() => this.keyboardNavigation = true)
+            .do(() => this._keyboardNavigation = true)
             .debounceTime(1000)
             .subscribe(() => {
-                this.keyboardNavigation = false;
+                this._keyboardNavigation = false;
                 this.changeDetectorRef.markForCheck();
             }));
 
@@ -530,11 +534,11 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
         return this.parentItemTemplateExternal || this.parentItemTemplateInternal;
     }
 
-    private get loaderTemplate() {
+    public get loaderTemplate() {
         return this.loaderTemplateExternal || this.loaderTemplateInternal;
     }
 
-    private get headerTemplate() {
+    public get headerTemplate() {
         return this.headerTemplateExternal || this.headerTemplateInternal;
     }
 
@@ -857,7 +861,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
         this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
     }
 
-    protected mousedown(e: MouseEvent) {
+    public mousedown(e: MouseEvent) {
         if (this.disabled) {
             return undefined;
         }
@@ -968,7 +972,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
         };
     }
 
-    protected getDropContext() {
+    public getDropContext() {
         if (!this.clipboardService || !this.sortable) {
             return null;
         }
@@ -1015,7 +1019,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
         };
     }
 
-    protected dragLeave(event: DragEvent) {
+    public dragLeave(event: DragEvent) {
         const listRect = this.listElement.getBoundingClientRect();
 
         const listBounds = Rect.fromLTRB(listRect.left,
