@@ -60,7 +60,7 @@
     "monaco-editor": "0.8.3",
     "prismjs": "1.6.0",
     "reflect-metadata": "0.1.10",
-    "rxjs": "5.4.1",
+    "rxjs": "~5.4.0",
     "showdown": "1.7.1",
     "zone.js": "0.8.12"
   },
