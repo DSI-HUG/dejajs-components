@@ -84,8 +84,8 @@ export class PeopleService {
             .refCount()
             .map((people) => {
                 if (query) {
-                    const sr = new RegExp('^' + query, 'i');
-                    const sc = new RegExp('^(?!' + query + ').*(' + query + ')', 'i');
+                    const sr = new RegExp(`^${query}`, 'i');
+                    const sc = new RegExp(`^(?!${query}).*(${query})`, 'i');
                     const result = people.filter((z) => sr.test(z.name));
                     people.forEach((z) => {
                         if (sc.test(z.name)) {

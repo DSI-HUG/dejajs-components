@@ -255,7 +255,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
 
     public keyDown(event: KeyboardEvent) {
         if (this.disabled) {
-            return;
+            return undefined;
         }
 
         if (!this.selectedDate) {

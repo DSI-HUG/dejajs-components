@@ -536,7 +536,7 @@ export abstract class ItemListBase implements OnDestroy {
 
     /** Usage interne. Retourne la portion de la liste à afficher en fonction des paramètres spécifiés. */
     protected getViewList$(query?: RegExp | string, ignoreCache?: boolean): Observable<IViewListResult> {
-        if (typeof query === 'string' && (query + '').length < this._minSearchLength) {
+        if (typeof query === 'string' && (query || '').length < this._minSearchLength) {
             const emptyListResult = {
                 depthMax: 0,
                 visibleList: [],

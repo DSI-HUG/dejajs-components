@@ -494,7 +494,9 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Definit si le waiter doit être affiché dans la liste. */
     @Input()
     public set waiter(value: boolean) {
-        this._waiter = value;
+        if (value !== undefined) {
+            this._waiter = value;
+        }
     }
 
     /** Retourne si le waiter doit être affiché dans la liste. */
@@ -787,7 +789,6 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                 }
             }));
 
-
         let keyUp$ = Observable.fromEvent(this.listElement, 'keyup');
         if (this.input) {
             const inputKeyup$ = Observable.fromEvent(this.input.nativeElement, 'keyup');
@@ -822,7 +823,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
                         // Search next
                         this.filterExpression += event.key;
-                        const rg = new RegExp('^' + this.filterExpression, 'i');
+                        const rg = new RegExp(`^${this.filterExpression}`, 'i');
                         this.findNextMatch$((item) => {
                             if (item && this.isSelectable(item)) {
                                 const label = this.getTextValue(item);
@@ -858,7 +859,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
     protected mousedown(e: MouseEvent) {
         if (this.disabled) {
-            return;
+            return undefined;
         }
 
         if (this.mouseUp$sub) {
@@ -868,7 +869,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
         const itemIndex = this.getItemIndexFromHTMLElement(e.target as HTMLElement);
         if (itemIndex === undefined) {
-            return;
+            return undefined;
         }
 
         const isExpandButton = (target: HTMLElement) => {
@@ -887,7 +888,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                 return false;
             } else if (!e.ctrlKey || !this.multiSelect) {
                 if (!this.multiSelect && item.selected) {
-                    return;
+                    return undefined;
                 }
 
                 this.unselectAll$().first().subscribe(() => {

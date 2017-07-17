@@ -18,7 +18,7 @@ export class DejaMessageBoxComponent implements OnInit {
     @Input() public type: 'info' | 'primary' | 'success' | 'warn' | 'danger';
     @Input() public title: string;
     @Input() public icon: string;
-    @Input() public actions: Array<{text?: string, type?: 'info' | 'primary' | 'success' | 'warn' | 'danger', icon?: string, action: () => any}>;
+    @Input() public actions: Array<{text?: string; type?: 'info' | 'primary' | 'success' | 'warn' | 'danger'; icon?: string; action(): any}>;
     @ContentChild('actionsTemplate') protected actionsTemplate;
 
     private _horizontal: boolean;

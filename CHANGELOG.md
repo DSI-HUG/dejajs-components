@@ -1,3 +1,15 @@
+#### 2.3.4 (2017-07-17)
+
+##### Bug Fixes
+
+* **DatePicker:** Fix reactive form implementation ([7b2a9185](https://github.com/DSI-HUG/dejajs-components/commit/7b2a9185a1cb6fdfeaf7fb158fb31943d5a5b216))
+* **Demo:** add scrollbar to menu ([4bb32496](https://github.com/DSI-HUG/dejajs-components/commit/4bb32496b0ef7ba9cc9d3ab7af6f6ad4805f8c64))
+* **Grid:** Add debounce to calcColumnLayout ([00fa4c93](https://github.com/DSI-HUG/dejajs-components/commit/00fa4c93732cc068ccdfb35555f2b9cbb658ee9f))
+
+##### Other Changes
+
+* **Conf:** Add lint on start ([fafd50a7](https://github.com/DSI-HUG/dejajs-components/commit/fafd50a7b85a2cebb045d5b95f9539053a503d39))
+
 #### 2.3.3 (2017-07-12)
 
 ##### New Features

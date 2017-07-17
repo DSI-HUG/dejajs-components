@@ -156,7 +156,7 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
      * @type {{ top: boolean, right: boolean, bottom: boolean, left: boolean }}
      * @memberOf DejaSnackbarComponent
      */
-    private alignents: { top: boolean, right: boolean, bottom: boolean, left: boolean };
+    private alignents: { top: boolean; right: boolean; bottom: boolean; left: boolean };
 
     private animate$ = new Subject<IAnimation>();
     private animate$sub: Subscription;
@@ -332,7 +332,6 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
     protected animationDone(event: Event): void {
         this.onAnimationDone.emit(event);
     }
-
 
     protected increaseElevation() {
         const zIndex = window.getComputedStyle(this.host).zIndex;

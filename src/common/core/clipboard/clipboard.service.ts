@@ -31,4 +31,3 @@ export class DejaClipboardService {
         this.clipboard = {};
     }
 }
-

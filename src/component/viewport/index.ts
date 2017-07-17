@@ -25,6 +25,4 @@ import { DejaViewPortComponent } from './viewport.component';
 })
 export class DejaViewPortModule { }
 
-
 export * from './viewport.component';
-

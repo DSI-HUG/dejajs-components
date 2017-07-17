@@ -30,7 +30,9 @@ export class GlobalEventsDemoComponent implements OnDestroy {
                 this.model.date = new Date(params[0]);
                 changeDetectorRef.markForCheck();
 
+                // tslint:disable-next-line:no-string-literal
                 if (window.parent && window.parent !== window && window.parent['sendAction']) {
+                    // tslint:disable-next-line:no-string-literal
                     window.parent['sendAction']('From IFrame');
                 }
             });

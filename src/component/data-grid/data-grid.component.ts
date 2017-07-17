@@ -653,9 +653,9 @@ export class DejaGridComponent implements OnDestroy {
 
             const percentMinWidth = minimumWidth * 100 / containerWidth;
 
-            e.column.width = Math.max(percentMinWidth, originalWidth.value + percentOffsetWidth * 2) + '%';
+            e.column.width = `${Math.max(percentMinWidth, originalWidth.value + percentOffsetWidth * 2)}%`;
         } else {
-            e.column.width = Math.max(minimumWidth, originalWidth.value + e.offsetWidth) + 'px';
+            e.column.width = `${Math.max(minimumWidth, originalWidth.value + e.offsetWidth)}px`;
         }
 
         this.calcColumnsLayout();

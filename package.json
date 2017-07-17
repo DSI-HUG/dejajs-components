@@ -1,6 +1,6 @@
 {
   "name": "@deja-js/component",
-  "version": "2.3.3",
+  "version": "2.3.4",
   "description": "Angular2 Components Library",
   "homepage": "https://github.com/DSI-HUG/dejajs-components",
   "bugs": "https://github.com/DSI-HUG/dejajs-components/issues",
@@ -33,7 +33,7 @@
     "release:major": "changelog -M && git add CHANGELOG.md && git commit -m \"updated CHANGELOG.md\" && npm version major && git push origin",
     "release:minor": "changelog -m && git add CHANGELOG.md && git commit -m \"updated CHANGELOG.md\" && npm version minor && git push origin",
     "release:patch": "changelog -p && git add CHANGELOG.md && git commit -m \"updated CHANGELOG.md\" && npm version patch && git push origin",
-    "start": "yarn run copy:assets && ng serve --port 5100",
+    "start": "yarn run copy:assets && yarn run lint && ng serve --port 5100",
     "test": "ng test"
   },
   "dependencies": {
@@ -101,7 +101,7 @@
     "run-sequence": "1.2.2",
     "symlink-dir": "1.0.3",
     "ts-node": "3.1.0",
-    "tslint": "5.4.3",
+    "tslint": "5.5.0",
     "typescript": "2.3.4"
   },
   "config": {

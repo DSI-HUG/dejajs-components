@@ -11,7 +11,7 @@ import { browser, by, element, ExpectedConditions } from 'protractor';
 export class AccordionPage {
     navigateTo() {
         browser.get('/');
-        return element(by.css('md-toolbar-row > a[href="/components"]')).click().then(function () {
+        return element(by.css('md-toolbar-row > a[href="/components"]')).click().then(() => {
             return element(by.css('md-nav-list > a[ng-reflect-router-link="accordion"]')).click();
         });
     }
