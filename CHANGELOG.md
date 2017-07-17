@@ -1,3 +1,9 @@
+#### 2.3.5 (2017-07-17)
+
+##### Bug Fixes
+
+* **Global:** Update rxjs ([bbb55617](https://github.com/DSI-HUG/dejajs-components/commit/bbb556176605ce9a2218dbae01a80b9435dfb796))
+
 #### 2.3.4 (2017-07-17)
 
 ##### Bug Fixes
