@@ -75,12 +75,11 @@ export class DejaGridGroupAreaComponent {
 
             } else if (event.dragInfo.hasOwnProperty(this.groupGroupKey)) {
                 const targetElement = this.getGroupElementFromHTMLElement(event.target as HTMLElement);
-                const targetIndex = targetElement && +targetElement.getAttribute('index');
-                if (targetIndex === undefined) {
+                const attrIndex = (targetElement && targetElement.getAttribute('index')) || null;
+                const targetIndex = attrIndex !== null ? +attrIndex : null;
+                if (targetIndex === null) {
                     return;
                 }
-
-                const targetBounds = targetElement.getBoundingClientRect();
 
                 const sourceColumn = event.dragInfo[this.groupGroupKey] as IDejaGridColumn;
                 const sourceIndex = this.groups.findIndex((column) => column === sourceColumn);
@@ -89,16 +88,6 @@ export class DejaGridGroupAreaComponent {
                 if (sourceIndex === targetIndex) {
                     event.preventDefault();
                     return;
-                } else if (targetIndex === sourceIndex + 1) {
-                    if (event.x <= targetBounds.left + targetBounds.width / 2) {
-                        event.preventDefault();
-                        return;
-                    }
-                } else if (targetIndex === sourceIndex - 1) {
-                    if (event.x >= targetBounds.left + targetBounds.width / 2) {
-                        event.preventDefault();
-                        return;
-                    }
                 }
 
                 this.groups.splice(sourceIndex, 1);
@@ -132,9 +121,10 @@ export class DejaGridGroupAreaComponent {
                     const sourceColumn = event.dragInfo[this.columnGroupKey] as IDejaGridColumn;
 
                     const targetElement = this.getGroupElementFromHTMLElement(event.target as HTMLElement);
-                    const targetIndex = targetElement && +targetElement.getAttribute('index');
+                    const attrIndex = (targetElement && targetElement.getAttribute('index')) || null;
+                    const targetIndex = attrIndex !== null ? +attrIndex : null;
 
-                    if (targetIndex !== undefined) {
+                    if (targetIndex !== null) {
                         const targetBounds = targetElement.getBoundingClientRect();
                         if (event.x <= targetBounds.left + targetBounds.width / 2) {
                             this.groups.splice(targetIndex, 0, sourceColumn);

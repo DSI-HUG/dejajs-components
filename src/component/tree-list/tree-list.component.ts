@@ -21,7 +21,7 @@ import { GroupingService } from '../../common/core/grouping';
 import { IItemBase } from '../../common/core/item-list/item-base';
 import { DejaItemEvent } from '../../common/core/item-list/item-event';
 import { ItemListBase } from '../../common/core/item-list/item-list-base';
-import { ItemListService } from '../../common/core/item-list/item-list.service';
+import { ItemListService, IViewListResult } from '../../common/core/item-list/item-list.service';
 import { IItemTree } from '../../common/core/item-list/item-tree';
 import { DejaItemsEvent } from '../../common/core/item-list/items-event';
 import { ViewportMode } from '../../common/core/item-list/viewport.service';
@@ -435,7 +435,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
      * Set a observable called before the list will be displayed
      */
     @Input()
-    public set loadingItems(fn: (query: string | RegExp, selectedItems: IItemBase[]) => Observable<IItemBase>) {
+    public set loadingItems(fn: (query: string | RegExp, selectedItems: IItemBase[]) => Observable<IItemBase[]>) {
         this.hasLoadingEvent = !!fn;
         super.setLoadingItems(fn);
     }
@@ -579,9 +579,9 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     // ************* End of ControlValueAccessor Implementation **************
 
     /** Change l'état d'expansion de toute les lignes parentes */
-    public toggleAll$(collapsed?: boolean): Observable<IItemTree> {
+    public toggleAll$(collapsed?: boolean): Observable<IItemTree[]> {
         return super.toggleAll$(collapsed)
-            .switchMap(() => this.calcViewList$().first());
+            .switchMap((items) => this.calcViewList$().first().map(() => items));
     }
 
     /** Change l'état d'expansion de toute les lignes parentes */
@@ -1062,7 +1062,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
         }
     }
 
-    protected calcViewList$(): Observable<IViewPort> {
+    protected calcViewList$(): Observable<IViewListResult> {
         return super.calcViewList$(this.query)
             .do(() => this.changeDetectorRef.markForCheck());
     }

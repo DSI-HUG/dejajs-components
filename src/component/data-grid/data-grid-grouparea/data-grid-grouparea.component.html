@@ -1,8 +1,6 @@
 <div #groupAreaElement id="deja-grid-grouparea" [deja-droppable]="getDropContext()">
-    <label id="placeholder" *ngIf="groups.length === 0">Drag one column here to group by this column</label>
-    <deja-chips [items]="groups" textField="label" (close)="removeGroup($event)"></deja-chips>
-	<!-- <span *ngFor="let column of groups; let index=index" [deja-draggable]="getDragContext(column)" [attr.index]="index" [attr.groupname]="column.name" class="group-wrapper">
-		<span>{{ column.label }}</span>
-		<i id="close-button" (click)="removeGroup($event, index)" class="material-icons">close</i>
-	</span> -->
+	<label id="placeholder" *ngIf="groups.length === 0">Drag one column here to group by this column</label>
+	<deja-chips [items]="groups" (close)="removeGroup($event)">
+		<ng-template #itemTemplate let-item let-index="index"><span class="label" [attr.groupname]="item.name" [attr.index]="index" [deja-draggable]="getDragContext(item)">{{ item.label }}</span></ng-template>
+	</deja-chips>
 </div>
