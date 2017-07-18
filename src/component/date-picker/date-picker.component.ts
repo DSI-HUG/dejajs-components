@@ -57,6 +57,8 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     @ViewChild(DejaDateSelectorComponent) public dateSelectorComponent: DejaDateSelectorComponent;
     /** Template for MdHint inside md-input-container */
     @ContentChild('hintTemplate') protected mdHint;
+    /** Template for MdError inside md-input-container */
+    @ContentChild('errorTemplate') protected mdError;
     /** Mask for input */
     protected mask: any[];
 
@@ -64,6 +66,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
 
     private subscriptions = [] as Subscription[];
     private _disabled: boolean;
+    private _required: boolean;
     private _time: boolean;
     private _format: string;
     private inputElement$ = new ReplaySubject<HTMLElement>(1);
@@ -256,6 +259,18 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     /** disabled property getter. */
     public get disabled() {
         return this._disabled;
+    }
+
+    /** required property setter. Can be string or empty so you can use it like : <deja-date-picker required></deja-date-picker> */
+    @Input()
+    public set required(value: boolean | string) {
+        this._required = (value != null && `${value}` !== 'false') ? true : null;
+        this.changeDetectorRef.markForCheck();
+    }
+
+    /** required property getter. */
+    public get required() {
+        return this._required;
     }
 
     /**
