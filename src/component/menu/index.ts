@@ -8,6 +8,7 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule  } from '@angular/forms';
 import { DejaBackdropModule } from './../backdrop/index';
 import { DejaDropDownModule } from './../dropdown/index';
@@ -18,6 +19,7 @@ import { DejaMenuComponent } from './menu.component';
     exports: [DejaMenuComponent],
     imports: [
         CommonModule,
+        FlexLayoutModule,
         FormsModule,
         DejaDropDownModule,
         DejaBackdropModule,
