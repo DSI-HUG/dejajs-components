@@ -537,12 +537,13 @@ export class ViewPortService implements OnDestroy {
             }));
 
         // Calc view port observable
-        this.subscriptions.push(Observable.combineLatest(items$, maxSize$, itemsSize$, ensureParams$, direction$, mode$, refresh$, element$)
+        this.subscriptions.push(Observable.combineLatest(items$, maxSize$, itemsSize$, ensureParams$)
+            .combineLatest(direction$, mode$, refresh$, element$)
             .debounceTime(1)
             .combineLatest(scrollPos$)
-            .filter(([[_items, _maxSize, _itemDefaultSize, _ensureParams, _direction, _mode, _refresh, element], _scrollPos]: [[IViewPortItem[], number | string, number, IEnsureParams, ViewportDirection, ViewportMode, IViewPortItem, HTMLElement], number]) => !!element)
+            .filter(([[[_items, _maxSize, _itemDefaultSize, _ensureParams], _direction, _mode, _refresh, element], _scrollPos]) => !!element)
             .do(() => consoleLog(`combineLatest`))
-            .switchMap(([[items, maxSize, itemDefaultSize, ensureParams, _direction, _mode, _refresh, element], _scrollPos]: [[IViewPortItem[], number | string, number, IEnsureParams, ViewportDirection, ViewportMode, IViewPortItem, HTMLElement], number]) => {
+            .switchMap(([[[items, maxSize, itemDefaultSize, ensureParams], _direction, _mode, _refresh, element], _scrollPos]) => {
                 const listSize = this.lastCalculatedSize || maxSize || clientSize(element);
                 const scrollPos = this._scrollPosition;
                 let maxSizeValue = maxSize === 'auto' ? 0 : +maxSize;
