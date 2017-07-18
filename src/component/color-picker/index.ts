@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule  } from '@angular/forms';
 import { MdButtonModule } from '@angular/material';
+import { DejaBackdropModule } from '../backdrop/index';
 import { DejaColorSelectorModule  } from '../color-selector/index';
 import { DejaDropDownModule } from '../dropdown/index';
 import { DejaColorPickerComponent  } from './color-picker.component';
@@ -22,6 +23,7 @@ import { DejaColorPickerComponent  } from './color-picker.component';
         FormsModule,
         DejaColorSelectorModule,
         DejaDropDownModule,
+        DejaBackdropModule,
         MdButtonModule,
     ],
 })

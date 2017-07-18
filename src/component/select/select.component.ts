@@ -88,12 +88,13 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @ContentChild('selectedTemplate') protected selectedTemplate;
     @ContentChild('suffixTemplate') protected mdSuffix;
     @ContentChildren(DejaItemComponent) protected options: DejaItemComponent[];
+    /** Template for MdError inside md-input-container */
+    @ContentChild('errorTemplate') protected mdError;
 
     @ViewChild('inputElement') private _inputElement: ElementRef;
     @ViewChild(MdInputContainer) private inputContainer: MdInputContainer;
     @ViewChild(MdInputDirective) protected input: MdInputDirective;
     @ViewChild('listcontainer') private listContainer: any;
-
     @ViewChild(DejaDropDownComponent) private dropDownComponent: DejaDropDownComponent;
 
     @HostBinding('attr.disabled') private _disabled = null;
