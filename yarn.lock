@@ -193,9 +193,9 @@
     commander "^2.9.0"
     github-url-from-git "^1.4.0"
 
-"@deja-js/resources@1.1.4":
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/@deja-js/resources/-/resources-1.1.4.tgz#663e9055b3abb8ed39dfe3329b17aaeec15e3c60"
+"@deja-js/resources@1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@deja-js/resources/-/resources-1.2.0.tgz#ea6611e4af0c7986349dba39293929409e9cd09f"
 
 "@ngrx/core@1.2.0":
   version "1.2.0"
@@ -6832,16 +6832,9 @@ write-file-atomic@^2.0.0:
     imurmurhash "^0.1.4"
     slide "^1.1.5"
 
-ws@1.1.2:
+ws@1.1.2, ws@^1.0.1:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/ws/-/ws-1.1.2.tgz#8a244fa052401e08c9886cf44a85189e1fd4067f"
-  dependencies:
-    options ">=0.0.5"
-    ultron "1.0.x"
-
-ws@^1.0.1:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-1.1.4.tgz#57f40d036832e5f5055662a397c4de76ed66bf61"
   dependencies:
     options ">=0.0.5"
     ultron "1.0.x"
