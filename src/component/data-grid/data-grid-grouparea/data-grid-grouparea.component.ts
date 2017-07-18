@@ -8,6 +8,7 @@
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Optional, Output } from '@angular/core';
 import { DejaClipboardService } from '../../../common/core/clipboard/clipboard.service';
+import { DejaChipsCloseEvent } from '../../chips/chips.component';
 import { IDejaDragEvent } from '../../dragdrop/draggable.directive';
 import { IDejaDropEvent } from '../../dragdrop/droppable.directive';
 import { IDejaGridColumn } from '../data-grid-column/data-grid-column';
@@ -24,7 +25,7 @@ export class DejaGridGroupAreaComponent {
     /** Cet évenement est levé lorsque le model de groupe est modifié */
     @Output() public groupsChanged = new EventEmitter<IDejaGridGroupsEvent>();
     /** Cet évenement est levé lorsqu'un group est supprimé du model */
-    @Output() public groupRemoved = new EventEmitter<number>();
+    @Output() public groupRemoved = new EventEmitter<DejaChipsCloseEvent>();
     private _groups = [] as IDejaGridColumn[];
     private columnGroupKey = 'deja-grid-column';
     private groupGroupKey = 'deja-grid-group';
@@ -158,8 +159,8 @@ export class DejaGridGroupAreaComponent {
         };
     }
 
-    protected removeGroup(event: Event, index: number) {
-        this.groupRemoved.emit(index);
+    protected removeGroup(event: DejaChipsCloseEvent) {
+        this.groupRemoved.emit(event);
         event.stopPropagation();
         return false;
     }

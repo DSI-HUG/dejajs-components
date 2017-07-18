@@ -19,6 +19,7 @@ import { IItemTree } from '../../common/core/item-list/item-tree';
 import { ViewportMode } from '../../common/core/item-list/viewport.service';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { SortingService } from '../../common/core/sorting';
+import { DejaChipsCloseEvent } from '../chips/chips.component';
 import { IDejaDragEvent } from '../dragdrop';
 import { DejaTreeListScrollEvent } from '../tree-list/tree-list-scroll-event';
 import { DejaTreeListComponent } from '../tree-list/tree-list.component';
@@ -668,8 +669,8 @@ export class DejaGridComponent implements OnDestroy {
         this.columnSizeChanged.emit(e);
     }
 
-    protected onGroupRemoved(index: number) {
-        const column = this._columnGroups.splice(index, 1)[0];
+    protected onGroupRemoved(event: DejaChipsCloseEvent) {
+        const column = event.item;
 
         const groupInfo = {
             groupByField: column.groupByField || column.name,

@@ -13,6 +13,6 @@ export class ColorEvent extends CustomEvent {
 
     constructor(color: Color, eventInitDict?: CustomEventInit) {
         super('ColorEvent', eventInitDict);
-            this.color = color;
-        }
+        this.color = color;
     }
+}

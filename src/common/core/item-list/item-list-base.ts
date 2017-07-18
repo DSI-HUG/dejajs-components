@@ -202,7 +202,7 @@ export abstract class ItemListBase implements OnDestroy {
     /**
      * Set a promise or an observable called before an item selection
      */
-    public setLoadingItems(fn: (query: string | RegExp, selectedItems: IItemBase[]) => Observable<IItemBase>) {
+    public setLoadingItems(fn: (query: string | RegExp, selectedItems: IItemBase[]) => Observable<IItemBase[]>) {
         this.getItemListService().setLoadingItems(fn);
     }
 
@@ -297,12 +297,16 @@ export abstract class ItemListBase implements OnDestroy {
     /** Change l'état d'expansion de tous les éléments.
      * @return {Observable} Observable résolu par la fonction.
      */
-    public toggleAll$(collapsed?: boolean) {
+    public toggleAll$(collapsed?: boolean): Observable<IItemTree[]> {
         this.allCollapsed = (collapsed !== undefined) ? collapsed : !this.allCollapsed;
         if (this.viewPort.mode === ViewportMode.disabled) {
             return Observable.from(this._itemList)
                 .filter((item: IItemTree) => item.$items && item.depth === 0 && item.collapsible !== false)
-                .switchMap((_item: IItemTree, index: number) => this.toggleCollapse$(index + this.vpStartRow, this.allCollapsed));
+                .switchMap((_item: IItemTree, index: number) => this.toggleCollapse$(index + this.vpStartRow, this.allCollapsed))
+                .reduce((acc, item) => {
+                    acc.push(item);
+                    return acc;
+                }, [] as IItemTree[]);
         } else {
             return this.getItemListService().toggleAll$(this.allCollapsed);
         }
@@ -313,7 +317,7 @@ export abstract class ItemListBase implements OnDestroy {
      * @param {boolean} collapse  Etat de l'élément. True pour réduire l'élément.
      * @return {Observable} Observable résolu par la fonction.
      */
-    public toggleCollapse$(index: number, collapsed: boolean): Observable<IItemTree[]> {
+    public toggleCollapse$(index: number, collapsed: boolean): Observable<IItemTree> {
         return this.getItemListService().toggleCollapse$(index, collapsed)
             .switchMap((toogleResult) => this.calcViewList$().first().map(() => toogleResult));
     }
