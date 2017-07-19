@@ -62,8 +62,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @Input() public placeHolderTemplateExternal;
     /** Permet de définir un template pour l'élément de conseil ou d'affichage d'erreur. */
     @Input() public hintTemplateExternal;
-    /** Temps d'attente en ms avant que la recherche dans la liste soit lancée lorsque l'utilisateur tape dans le select */
-    @Input('delay-search-trigger') public delaySearchTrigger = 250;
     /** Exécuté lorsque le calcul du viewPort est terminé. */
     @Output() public viewPortChanged = new EventEmitter<IViewPort>();
     /** Exécuté lorsque l'utilisateur sélectionne ou désélectionne une ligne. */
@@ -122,6 +120,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     private keyboardNavigation$ = new Subject();
 
+    private delaySearchTrigger$ = new BehaviorSubject<number>(250);
+
     private _selectedItemsPosition = DejaSelectSelectionPosition.above;
 
     constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, private elementRef: ElementRef, @Self() @Optional() public _control: NgControl, @Optional() private _parentForm: NgForm, @Optional() private _parentFormGroup: FormGroupDirective, media: ObservableMedia) {
@@ -152,8 +152,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         this.subscriptions.push(Observable.from(this.clearFilterExpression$)
             .debounceTime(750).subscribe(() => this.filterExpression = ''));
 
-        this.subscriptions.push(Observable.from(this.filterListComplete$)
-            .debounceTime(this.delaySearchTrigger)
+        this.subscriptions.push(Observable.combineLatest(this.delaySearchTrigger$, this.filterListComplete$)
+            .debounce(([delaySearchTrigger]) => Observable.timer(delaySearchTrigger))
             .subscribe(() => {
                 this._itemList = [];
                 this.reshowDropDown();
@@ -272,6 +272,12 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     public get query() {
         return this._query;
+    }
+
+    /** Temps d'attente en ms avant que la recherche dans la liste soit lancée lorsque l'utilisateur tape dans le select */
+    @Input('delay-search-trigger')
+    public set delaySearchTrigger(value: number) {
+        this.delaySearchTrigger$.next(value);
     }
 
     /** Ancre d'alignement de la liste déroulante. Valeurs possible: top, bottom, right, left. Une combinaison des ces valeurs peut également être utilisée, par exemple 'top left'. */
