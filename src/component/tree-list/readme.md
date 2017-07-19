@@ -20,7 +20,7 @@ Crée une liste récursive.
 	</ng-template>
 	
 	<ng-template #searchSuffixTemplate>
-		<button id="more" md-icon-button (click)="onSuffixClicked()">
+		<button type="button" id="more" md-icon-button (click)="onSuffixClicked()">
 			<md-icon>more_vert</md-icon>
 		</button>
 	</ng-template>
@@ -325,7 +325,7 @@ Crée une liste récursive.
 <ng-template #parentItemTemplate let-item let-flatindex="flatindex">
     <span>{{ item.label }} </span>
     <span flex></span>
-    <button md-icon-button (mouseup)="editSection($event, item)">
+    <button type="button" md-icon-button (mouseup)="editSection($event, item)">
         <md-icon>edit</md-icon>
     </button>
 </ng-template>
@@ -347,7 +347,7 @@ TODO
   - `searchSuffixTemplate`
 ```html
 <ng-template #searchSuffixTemplate>
-	<button id="more" md-icon-button (click)="onSuffixClicked()">
+	<button type="button" id="more" md-icon-button (click)="onSuffixClicked()">
 		<md-icon>more_vert</md-icon>
 	</button>
 </ng-template>

@@ -171,4 +171,8 @@ export class ReactiveFormDemoComponent implements AfterContentInit, OnInit, OnDe
 
         return undefined;
     }
+
+    protected onSubmit() {
+        console.log('Form submitted.');
+    }
 }

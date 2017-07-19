@@ -325,7 +325,7 @@ Crée une liste déroulante.
 <ng-template #parentItemTemplate let-item let-flatindex="flatindex">
     <span>{{ item.label }} </span>
     <span flex></span>
-    <button md-icon-button (mouseup)="editSection($event, item)">
+    <button type="button" md-icon-button (mouseup)="editSection($event, item)">
         <md-icon>edit</md-icon>
     </button>
 </ng-template>
