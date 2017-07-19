@@ -3,6 +3,8 @@
 ##### BREAKING CHANGES
 
 * **Fonts:** Remove fonts from the libraries ([1b4e8968](https://github.com/DSI-HUG/dejajs-components/commit/1b4e896816cb169ab7b42c03fb6a0c50b924be48))
+* **DejaChips:** CloseEvent is now a custom event containing item and index instead index only. The index is now available in event.index
+
 
 ##### Documentation Changes
 
