@@ -53,7 +53,7 @@
 			<div class="placeholder" fxFlex="0 0 auto">House Color</div>
 			<deja-color-picker fxFlex="0 0 auto" [colors]="materialColors.colors" formControlName="color2"></deja-color-picker>
 			<h3 fxFlex="0 0 auto">Deja Chips</h3>
-			<div class="placeholder" fxFlex="0 0 auto">Skills</div>
+			<div [class.error]="!!getError('skillsErrors')" class="placeholder" fxFlex="0 0 auto">Skills</div>
 			<deja-chips fxFlex="0 0 auto" formControlName="skills"></deja-chips>
 			<md-input-container fxFlex="0 0 auto" id="addskill">
 				<input formControlName="skillsErrors" #skill mdInput (keydown)="onSkillKeyDown($event)" placeholder="Add Skill">
@@ -61,9 +61,9 @@
 				<md-error *ngIf="!!getError('skillsErrors')">{{ getError('skillsErrors') }}</md-error>
 			</md-input-container>
 			<h3 fxFlex="0 0 auto">Deja Editable</h3>
-			<div class="placeholder" fxFlex="0 0 auto">Remark</div>
+			<div [class.error]="!!getError('remark')" class="placeholder" fxFlex="0 0 auto">Remark</div>
 			<span [deja-editable]="true" formControlName="remark" multiline></span>
-			<span class="mat-error" *ngIf="!!getError('remark')">{{ getError('remark') }}</span>
+			<span class="error errorfld" *ngIf="!!getError('remark')">{{ getError('remark') }}</span>
 			<h3 fxFlex="0 0 auto">Deja Range</h3>
 			<deja-range [readOnly]="false" [step]="1" formControlName="ranges"></deja-range>
 		</form>

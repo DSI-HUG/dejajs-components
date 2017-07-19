@@ -196,19 +196,10 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 }
             })
             .switchMap(() => this.calcViewList$().first())
-            .filter(() => !!this.dropDownComponent)  // Show canceled by the hide$ observable if !dropdownVisible
             .delay(1)
             .filter(() => !!this.dropDownComponent)  // Show canceled by the hide$ observable if !dropdownVisible
-            .switchMap(() => {
-                if (this.viewPort.mode === ViewportMode.auto) {
-                    // reset the height to the  maxsize in auto mode to avoid measurment
-                    this.dropDownComponent.show({ height: this.maxHeight });
-                    return this.dropDownComponent.showed;
-                } else {
-                    this.dropDownComponent.show();
-                    return Observable.timer(1);
-                }
-            })
+            .do(() => this.dropDownComponent.show())
+            .delay(1)
             .subscribe(() => {
                 this.viewPort.element$.next(this.listElement);
             }));
@@ -270,8 +261,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             })
         );
 
-        // this.maxHeight = 500;
-
+        this.maxHeight = 0;
     }
 
     /** Correspond au model du champ de filtrage ou recherche */

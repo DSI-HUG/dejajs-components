@@ -102,7 +102,7 @@
 					<deja-item value="pineapple" text="Pineapple"></deja-item>
 					<deja-item value="watermelon" text="Watermelon"></deja-item>
 				</deja-select>
-				<deja-select fxFlex="0 0 45%" fxFlexOffset="5%" class="demo-half-width" placeholder="Options content" type="multiselect" selectedModels="mango, apricots, coconut">
+				<deja-select fxFlex="0 0 45%" viewportMode="variable" fxFlexOffset="5%" class="demo-half-width" placeholder="Options content" type="multiselect" selectedModels="mango, apricots, coconut">
 					<deja-item value="apricots" text="Apricots"></deja-item>
 					<deja-item value="banana" text="Banana"></deja-item>
 					<deja-item value="cantaloupe" text="Cantaloupe"></deja-item>
@@ -194,14 +194,14 @@
 		<md-card-content>
 			<h1>Item Template</h1>
 			<div>An exemple with auto sized item template</div>
-			<deja-select #news type="select" viewportMode="auto" textField="title" searchField="description" [models]="news$">
+			<deja-select #news type="select" viewportMode="auto" textField="title" searchField="description" [models]="news$" dropdownContainerId="scrollable-content">
 				<ng-template #itemTemplate let-item let-flatindex="flatindex">
 					<news-card [item]="item.model" (imageLoaded)="imageLoaded(item)"></news-card>
 				</ng-template>
 			</deja-select>
 			<h1>Selected Template</h1>
 			<div>Multi select with template for selected items</div>
-			<deja-select hideSelected type="multiselect" textField="naqme" valueField="code" placeholder="Select one or more countries" [(ngModel)]="multiselectModel" [items]="countriesForMultiselect">
+			<deja-select hideSelected type="multiselect" textField="naqme" valueField="code" placeholder="Select one or more countries" [(ngModel)]="multiselectModel" [items]="countriesForMultiselect" dropdownContainerId="scrollable-content">
 				<ng-template #selectedTemplate let-item>
 					<span id="flight">
 						<i *ngIf="item.code !== 'CH' && item.code !== 'FR'" class="material-icons">flight_land</i>
@@ -214,13 +214,13 @@
 			<h1>Place Holder and Group Template</h1>
 			<div>Select with a place holder template containing an icon</div>
 			<span fxLayout="row">
-				<deja-select fxFlex="0 0 45%" type="autocomplete" class="placeholder-icon" textField="naqme" valueField="code" [items]="countries">
+				<deja-select fxFlex="0 0 45%" type="autocomplete" class="placeholder-icon" textField="naqme" valueField="code" [items]="countries" dropdownContainerId="scrollable-content">
 					<ng-template #placeHolderTemplate>
 						<md-icon id="placeholder-icon">public</md-icon>
 						Place Holder Template
 					</ng-template>
 				</deja-select>
-				<deja-select fxFlex="0 0 45%" fxFlexOffset="5%" type="autocomplete" placeholder="Group Template" textField="naqme" [items]="groupedCountries">
+				<deja-select fxFlex="0 0 45%" fxFlexOffset="5%" type="autocomplete" placeholder="Group Template" textField="naqme" [items]="groupedCountries" dropdownContainerId="scrollable-content">
 					<ng-template #parentItemTemplate let-item>
 						<md-icon id="placeholder-icon">public</md-icon>&nbsp;
 						<span>{{ item.groupName }}</span>
@@ -229,14 +229,14 @@
 			</span>
 			<h1>Hint and Suffix Templates</h1>
 			<span fxLayout="row">
-				<deja-select fxFlex="0 0 45%" placeholder="Hint template select" textField="naqme" valueField="code" [items]="countries">
+				<deja-select fxFlex="0 0 45%" placeholder="Hint template select" textField="naqme" valueField="code" [items]="countries" dropdownContainerId="scrollable-content">
 					<ng-template #hintTemplate>
 						<span class="validation-error">
 							Hint template. Can be used for the validations errors for exemple!
 						</span>
 					</ng-template>
 				</deja-select>
-				<deja-select fxFlex="0 0 45%" fxFlexOffset="5%" placeholder="Suffix template selelct" textField="naqme" valueField="code" [items]="countries">
+				<deja-select fxFlex="0 0 45%" fxFlexOffset="5%" placeholder="Suffix template selelct" textField="naqme" valueField="code" [items]="countries" dropdownContainerId="scrollable-content">
 					<ng-template #suffixTemplate>
 						<md-icon id="placeholder-icon">public</md-icon>
 					</ng-template>
@@ -252,13 +252,13 @@
 		<md-card-content>
 			<h1>On Demand Loading </h1>
 			<div>The items are loaded after the drop down is opened</div>
-			<deja-select #ondemand class="demo-half-width" textField="naqme" valueField="code" [loadingItems]="loadingItems()" [placeholder]="onDemandPlaceHolder"></deja-select>
+			<deja-select #ondemand class="demo-half-width" textField="naqme" valueField="code" [loadingItems]="loadingItems()" [placeholder]="onDemandPlaceHolder" dropdownContainerId="scrollable-content"></deja-select>
 			<h1>Confirm Selection and Unselection </h1>
 			<div>A dialog will confirm the selection or the unselection of an item</div>
-			<deja-select hideSelected class="demo-half-width" type="multiselect" textField="naqme" valueField="code" placeholder="Selection hidden" [(ngModel)]="multiselectModel" [items]="countriesForMultiselect" [selectingItem]="confirmDialog()" [unselectingItem]="confirmDialogWithPromise()"> </deja-select>
+			<deja-select hideSelected class="demo-half-width" type="multiselect" textField="naqme" valueField="code" placeholder="Selection hidden" [(ngModel)]="multiselectModel" [items]="countriesForMultiselect" [selectingItem]="confirmDialog()" [unselectingItem]="confirmDialogWithPromise()" dropdownContainerId="scrollable-content"> </deja-select>
 			<h1>Confirm Expand and Collapse </h1>
 			<div>A dialog will confirm the expand and collapse or an item if the children are not loaded. The children will be loaded asynchronously after the item expansion.</div>
-			<deja-select #onexpand class="demo-half-width" textField="naqme" valueField="code" [items]="onDemandGroupedCountries" [expandingItem]="expandingItems()" [collapsingItem]="collapsingItems()"></deja-select>
+			<deja-select #onexpand class="demo-half-width" textField="naqme" valueField="code" [items]="onDemandGroupedCountries" [expandingItem]="expandingItems()" [collapsingItem]="collapsingItems()" dropdownContainerId="scrollable-content"></deja-select>
 		</md-card-content>
 	</md-card>
 </div>
