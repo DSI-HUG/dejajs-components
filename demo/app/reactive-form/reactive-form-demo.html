@@ -56,12 +56,14 @@
 			<div class="placeholder" fxFlex="0 0 auto">Skills</div>
 			<deja-chips fxFlex="0 0 auto" formControlName="skills"></deja-chips>
 			<md-input-container fxFlex="0 0 auto" id="addskill">
-				<input mdInput #skill (keydown)="onSkillKeyDown($event)" placeholder="Add Skill">
+				<input formControlName="skillsErrors" #skill mdInput (keydown)="onSkillKeyDown($event)" placeholder="Add Skill">
 				<div mdSuffix><i (click)="onAddSkill(skill)" class="material-icons mdSuffix">add</i></div>
+				<md-error *ngIf="!!getError('skillsErrors')">{{ getError('skillsErrors') }}</md-error>
 			</md-input-container>
 			<h3 fxFlex="0 0 auto">Deja Editable</h3>
 			<div class="placeholder" fxFlex="0 0 auto">Remark</div>
 			<span [deja-editable]="true" formControlName="remark" multiline></span>
+			<span class="mat-error" *ngIf="!!getError('remark')">{{ getError('remark') }}</span>
 			<h3 fxFlex="0 0 auto">Deja Range</h3>
 			<deja-range [readOnly]="false" [step]="1" formControlName="ranges"></deja-range>
 		</form>
