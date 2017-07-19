@@ -8,6 +8,7 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
 import { MdIconModule, MdInputModule} from '@angular/material';
 import { DejaChildValidatorModule } from '../../common/core/validation/index';
@@ -28,6 +29,7 @@ import { DejaSelectComponent } from './select.component';
     ],
     imports: [
         CommonModule,
+        FlexLayoutModule,
         FormsModule,
         MdIconModule,
         MdInputModule,

@@ -3,3 +3,4 @@
 <deja-dropdown id="deja-dropdown" *ngIf="isOpen" [ownerAlignment]="dropdownAlignment" [ownerElement]="elementRef.nativeElement" dropdownAlignment="left bottom" [containerElement]="containerElement">
 	<deja-color-selector [colors]="colors" [ngModel]="value" (colorhover)="colorhover.emit($event)" (ngModelChange)="onColorChange($event)"></deja-color-selector>
 </deja-dropdown>
+<deja-backdrop (click)="isOpen=false" *ngIf="isOpen"></deja-backdrop>

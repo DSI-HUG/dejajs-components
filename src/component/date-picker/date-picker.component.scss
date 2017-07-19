@@ -28,6 +28,7 @@
 			#calendar-button,
 			#clear-button {
 				cursor: pointer;
+				font-size: 100%;
 				opacity: 0.4;
 				transition: opacity 200ms ease;
 				&:hover {

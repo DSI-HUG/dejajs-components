@@ -79,5 +79,11 @@ Composant pour séléctionner une date sur un calendrier et l'affficher dans un 
     <td>Date</td>
     <td>Le placeholder du champ texte du datepicker</td>
 </tr>
+<tr>
+    <td>required</td>
+    <td>boolean</td>
+    <td>false</td>
+    <td>Rend le champ obligatoire</td>
+</tr>
 </tbody>
 </table>

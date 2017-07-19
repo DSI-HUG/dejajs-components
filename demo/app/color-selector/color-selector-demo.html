@@ -13,14 +13,11 @@
 </md-card>
 
 <div *ngIf="tabIndex === 1">
-    <deja-backdrop (click)="colorpicker.isOpen=false" *ngIf="colorpicker.isOpen"></deja-backdrop>
-    <deja-backdrop (click)="colorpicker2.isOpen=false" *ngIf="colorpicker2.isOpen"></deja-backdrop>
-
     <md-card class="demo-card">
         <md-toolbar color="primary">Color Picker width backdrop - Pick a color:</md-toolbar>
         <md-card-content id="colorpickers">
-            <deja-color-picker name="1" #colorpicker2 class="colorpicker" [colors]="materialColors.colors" [(ngModel)]="selectedColor" (colorhover)="onColorPickerHover($event)" (ngModelChange)="onColorPickerChange($event)"></deja-color-picker>
-            <deja-color-picker name="2" #colorpicker class="colorpicker" small [colors]="materialColors.colors" [(ngModel)]="invalidColor" (colorhover)="onColorPickerHover($event)" (ngModelChange)="onColorPickerChange($event)"></deja-color-picker>
+            <deja-color-picker name="1" class="colorpicker" [colors]="materialColors.colors" [(ngModel)]="selectedColor" (colorhover)="onColorPickerHover($event)" (ngModelChange)="onColorPickerChange($event)"></deja-color-picker>
+            <deja-color-picker name="2" class="colorpicker" small [colors]="materialColors.colors" [(ngModel)]="invalidColor" (colorhover)="onColorPickerHover($event)" (ngModelChange)="onColorPickerChange($event)"></deja-color-picker>
             <deja-color-picker name="3" disabled small class="colorpicker" [colors]="materialColors.colors" [(ngModel)]="selectedColor" (colorhover)="onColorPickerHover($event)" (ngModelChange)="onColorPickerChange($event)"></deja-color-picker>
         </md-card-content>
     </md-card>

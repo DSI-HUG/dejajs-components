@@ -77,7 +77,7 @@ export class ItemListService {
     /**
      * Set a observable called before the list will be displayed
      */
-    public setLoadingItems(fn: (query: string, selectedItems: IItemBase[]) => Observable<IItemBase>) {
+    public setLoadingItems(fn: (query: string | RegExp, selectedItems: IItemBase[]) => Observable<IItemBase[]>) {
         this.loadingItems$ = fn;
     }
 
@@ -448,7 +448,7 @@ export class ItemListService {
      * @param {boolean} collapsed  True si les éléments doivent être réduits.
      * @return {Observable} Observable résolu par la fonction.
      */
-    public toggleAll$(collapsed: boolean): Observable<IItemBase[]> {
+    public toggleAll$(collapsed: boolean): Observable<IItemTree[]> {
         return Observable.of(this._cache.flatList)
             .map((items: IItemTree[]) => items.filter((item) => item.$items && item.collapsible !== false))
             .do(() => delete this._cache.visibleList) // Invalidate view cache
@@ -460,7 +460,7 @@ export class ItemListService {
      * @param {boolean} collapse  Etat de l'élément. True pour réduire l'élément.
      * @return {Observable} Observable résolu par la fonction.
      */
-    public toggleCollapse$(index: number, collapse?: boolean): Observable<IItemBase[]> {
+    public toggleCollapse$(index: number, collapse?: boolean): Observable<IItemTree> {
         const visibleList = this._cache.visibleList;
         if (!visibleList || !visibleList.length) {
             throw new Error('Empty cache on toggleCollapse');

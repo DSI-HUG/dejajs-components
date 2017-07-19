@@ -146,4 +146,16 @@ export class ReactiveFormDemoComponent implements AfterContentInit, OnInit, OnDe
             }
         }
     }
+
+    protected getError(fieldName: string) {
+        const field = this.form.get(fieldName);
+        if (field && field.errors) {
+            const errors = Object.keys(field.errors);
+            if (errors.length) {
+                return errors[0];
+            }
+        }
+
+        return undefined;
+    }
 }

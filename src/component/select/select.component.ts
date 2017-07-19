@@ -15,8 +15,10 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
+import { IViewListResult } from '../../common/core/item-list/item-list.service';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { DejaChildValidatorDirective } from '../../common/core/validation/child-validator.directive';
+import { DejaChipsCloseEvent } from '../chips/chips.component';
 import { DejaDropDownComponent, IDropDownResetParams } from '../dropdown/dropdown.component';
 import { IItemBase } from './../../common/core/item-list/item-base';
 import { DejaItemEvent } from './../../common/core/item-list/item-event';
@@ -86,12 +88,13 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @ContentChild('selectedTemplate') protected selectedTemplate;
     @ContentChild('suffixTemplate') protected mdSuffix;
     @ContentChildren(DejaItemComponent) protected options: DejaItemComponent[];
+    /** Template for MdError inside md-input-container */
+    @ContentChild('errorTemplate') protected mdError;
 
     @ViewChild('inputElement') private _inputElement: ElementRef;
     @ViewChild(MdInputContainer) private inputContainer: MdInputContainer;
     @ViewChild(MdInputDirective) protected input: MdInputDirective;
     @ViewChild('listcontainer') private listContainer: any;
-
     @ViewChild(DejaDropDownComponent) private dropDownComponent: DejaDropDownComponent;
 
     @HostBinding('attr.disabled') private _disabled = null;
@@ -171,7 +174,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 this.viewPort.element$.next(null);
             }));
 
-        this.subscriptions.push(this.showDropDown$
+        this.subscriptions.push(Observable.from(this.showDropDown$)
             .debounceTime(50)
             .filter(() => (this.query || '').length >= this.minSearchlength && !this._readonly)
             .do(() => this.dropdownVisible = true)  // Ensure that dropdown container exists
@@ -471,7 +474,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
      * Set an observable called before the list will be displayed
      */
     @Input()
-    public set loadingItems(fn: (query: string | RegExp, selectedItems: IItemBase[]) => Observable<IItemBase>) {
+    public set loadingItems(fn: (query: string | RegExp, selectedItems: IItemBase[]) => Observable<IItemBase[]>) {
         super.setLoadingItems(fn);
     }
 
@@ -962,9 +965,9 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     /** Change l'état d'expansion de toute les lignes parentes */
-    public toggleAll$(collapsed?: boolean): Observable<IItemTree> {
+    public toggleAll$(collapsed?: boolean): Observable<IItemTree[]> {
         return super.toggleAll$(collapsed)
-            .switchMap(() => this.calcViewList$().first());
+            .switchMap((items) => this.calcViewList$().first().map(() => items));
     }
 
     /** Change l'état d'expansion de la ligne spécifiée
@@ -972,7 +975,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
      * @param {boolean} collapse  Etat de l'élément. True pour réduire l'élément.
      * @return {Observable} Observable résolu par la fonction.
      */
-    public toggleCollapse$(index: number, collapsed: boolean): Observable<IItemTree[]> {
+    public toggleCollapse$(index: number, collapsed: boolean): Observable<IItemTree> {
         return super.toggleCollapse$(index, collapsed)
             .do(() => {
                 if (this.dropdownVisible) {
@@ -1032,11 +1035,11 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         }
     }
 
-    protected onCloseClicked(item?: IItemBase) {
+    protected onCloseClicked(event?: DejaChipsCloseEvent) {
         if (this._control) {
             this._control.control.markAsTouched();
         }
-        this.removeSelection(item);
+        this.removeSelection(event && event.item);
     }
     protected removeSelection(item?: IItemBase) {
         if (!this._multiSelect) {
@@ -1065,11 +1068,9 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         }
     }
 
-    protected calcViewList$(): Observable<IViewPort> {
+    protected calcViewList$(): Observable<IViewListResult> {
         return super.calcViewList$(this.dropDownQuery)
-            .do(() => {
-                this.changeDetectorRef.markForCheck();
-            });
+            .do(() => this.changeDetectorRef.markForCheck());
     }
 
     protected ensureItemVisible(item: IItemBase | number) {
