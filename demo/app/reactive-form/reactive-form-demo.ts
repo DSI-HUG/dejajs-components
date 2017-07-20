@@ -7,7 +7,7 @@
  */
 
 import { AfterContentInit, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { CountriesService } from '../services/countries.service';
@@ -20,6 +20,15 @@ import { MaterialColors } from '../../../src/common/core/style/material-colors';
 import { IappState } from './model/app-state.interface';
 import { IUser } from './model/user.interface';
 import { UserService } from './service/user.service';
+
+const formValidator = (control: AbstractControl): { [key: string]: string } => {
+    const skillsCtrl = control.get('skills');
+    const skillsErrorsCtrl = control.get('skillsErrors');
+    skillsErrorsCtrl.setErrors(skillsCtrl.errors);
+    skillsErrorsCtrl.markAsDirty();
+    skillsErrorsCtrl.markAsTouched();
+    return null;
+};
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -73,12 +82,14 @@ export class ReactiveFormDemoComponent implements AfterContentInit, OnInit, OnDe
             size: [{ value: 0, disabled: this.readonly }, Validators.pattern(new RegExp('[0-9]{1,3}'))],
             color: [{ value: null, disabled: this.readonly }],
             color2: [{ value: null, disabled: this.readonly }],
-            skills: [{ value: null, disabled: this.readonly }],
+            skills: [{ value: null, disabled: this.readonly }, Validators.required],
+            skillsErrors: [null],
             remark: [{ value: null, disabled: this.readonly }, Validators.compose([Validators.required, Validators.maxLength(500)])],
             ranges: [{ value: [], disabled: this.readonly }],
-        });
+        },
+            { validator: formValidator });
 
-        this.user$ = this._store.select('user');
+        this.user$ = this._store.select(state => state.userDemo.user);
         this._userService.mockApiGetUser();
 
     }
@@ -122,6 +133,7 @@ export class ReactiveFormDemoComponent implements AfterContentInit, OnInit, OnDe
                     color: user.color || null,
                     color2: user.color2 || null,
                     skills: user.skills || [],
+                    skillsErrors: null,
                     remark: user.remark || null,
                     ranges: user.ranges || [],
                 });
@@ -143,6 +155,7 @@ export class ReactiveFormDemoComponent implements AfterContentInit, OnInit, OnDe
                 const skills = this.form.value.skills as string[];
                 skills.push(skill);
                 input.value = '';
+                this.form.controls.skills.updateValueAndValidity();
             }
         }
     }
@@ -157,5 +170,9 @@ export class ReactiveFormDemoComponent implements AfterContentInit, OnInit, OnDe
         }
 
         return undefined;
+    }
+
+    protected onSubmit() {
+        console.log('Form submitted.');
     }
 }

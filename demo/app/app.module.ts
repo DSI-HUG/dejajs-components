@@ -166,9 +166,10 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         DejaTreeListModule,
         DejaViewPortModule,
         GroupingModule,
-        StoreModule.provideStore({
+        StoreModule.forRoot({}),
+        StoreModule.forFeature('userDemo', {
             user: userReducer,
-        })
+        }),
     ],
     providers: [
         CountriesService,

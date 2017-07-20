@@ -24,4 +24,13 @@ reactive-form-demo {
             justify-content: space-between;
         }
     }
+    .error {
+        color: #f44336;
+    }
+    .errorfld {
+        font-size: 75%;
+    }
+    [formcontrolname="remark"] {
+        min-height: 1rem;
+    }
 }

@@ -291,6 +291,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     /** Method to close date-picker dialog */
     public close() {
         this.showDropDown = false;
+        return false;
     }
 
     /** Method to open date-picker dialog */

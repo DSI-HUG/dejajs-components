@@ -634,7 +634,7 @@ export abstract class ItemListBase implements OnDestroy {
      * Spécifier 0 pour que le composant determine sa hauteur à partir du container
      */
     protected setMaxHeight(value: number | string) {
-        this._maxHeight = value === 'auto' ? null : +value;
+        this._maxHeight = value === 'auto' ? null : +value || null;
         this.viewPort.maxSize$.next(value);
     }
 
