@@ -1,3 +1,35 @@
+### 2.5.0 (2017-07-20)
+
+##### BREAKING CHANGES
+
+* **Dependencies:** Update all dependencies (Angular 4.3 & Ngrx 4) ([62d612a0](https://github.com/DSI-HUG/dejajs-components/commit/62d612a0778ede150ae47a40a59b55a1598cd856))
+* **Fonts:** Remove fonts from the libraries ([1b4e8968](https://github.com/DSI-HUG/dejajs-components/commit/1b4e896816cb169ab7b42c03fb6a0c50b924be48))
+
+##### Documentation Changes
+
+* **DatePicker:** Update doc ([090b47ff](https://github.com/DSI-HUG/dejajs-components/commit/090b47ffef9a151d2a269c197ecf0b890504ec5d))
+
+##### New Features
+
+* **DatePicker:** Add required attribute and mdError templating ([2482cc06](https://github.com/DSI-HUG/dejajs-components/commit/2482cc06cbc1e7e8d56b4e726a79e7c271d9264e))
+
+##### Bug Fixes
+
+* **DatePicker:**
+  * button type ([d3ebb3df](https://github.com/DSI-HUG/dejajs-components/commit/d3ebb3dfca3347685aa276db293ada8313fb501e))
+  * add DejaChildValidatorDirective to datepicker input to make it work with reactive forms ([3afe12b1](https://github.com/DSI-HUG/dejajs-components/commit/3afe12b1d410ffd69116fad4cdd94f7971c6e9ed))
+  * update icon font-size to 100% ([cfaa4e64](https://github.com/DSI-HUG/dejajs-components/commit/cfaa4e647c5ff990739c693d5a97bae45e66611b))
+  * Fix reactive form implementation ([7b2a9185](https://github.com/DSI-HUG/dejajs-components/commit/7b2a9185a1cb6fdfeaf7fb158fb31943d5a5b216))
+* **flexLayout:** Add flexLayout import where it's needed ([d2c69acc](https://github.com/DSI-HUG/dejajs-components/commit/d2c69acc96bec08aee1ced3d1d1b97ef1f850be9))
+* **Global:** Update rxjs ([bbb55617](https://github.com/DSI-HUG/dejajs-components/commit/bbb556176605ce9a2218dbae01a80b9435dfb796))
+
+##### Other Changes
+
+* **Config:** Add npmrc file to force registry ([bfb5130d](https://github.com/DSI-HUG/dejajs-components/commit/bfb5130d33f5e617c1871811200e23bfe1741d7c))
+* **Global:** Update yarn.lock ([42b64e23](https://github.com/DSI-HUG/dejajs-components/commit/42b64e239554fc821dc92ae3afe1999bd63bc744))
+* **Fonts:** Update dejajs resources ([b4965147](https://github.com/DSI-HUG/dejajs-components/commit/b4965147da47b72467752f2a02916442bd2cd491))
+* **Conf:** Add lint on start ([fafd50a7](https://github.com/DSI-HUG/dejajs-components/commit/fafd50a7b85a2cebb045d5b95f9539053a503d39))
+
 ### 2.4.0 (2017-07-19)
 
 ##### BREAKING CHANGES
