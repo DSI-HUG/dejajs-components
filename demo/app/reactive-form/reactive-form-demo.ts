@@ -89,7 +89,7 @@ export class ReactiveFormDemoComponent implements AfterContentInit, OnInit, OnDe
         },
             { validator: formValidator });
 
-        this.user$ = this._store.select('user');
+        this.user$ = this._store.select(state => state.userDemo.user);
         this._userService.mockApiGetUser();
 
     }

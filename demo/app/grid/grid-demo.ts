@@ -339,7 +339,7 @@ export class GridDemoComponent {
             value.map((person) => {
                 const groupName = `Group${person.color}`;
                 if (!map[groupName]) {
-                    map[groupName] = [] as Person[];
+                    map[groupName] = [];
                     onDemandResult.push({
                         color: person.color,
                         collapsible: true,
