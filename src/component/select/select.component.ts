@@ -124,6 +124,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     private _selectedItemsPosition = DejaSelectSelectionPosition.above;
 
+    private modelIsValue = false;
+
     constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, private elementRef: ElementRef, @Self() @Optional() public _control: NgControl, @Optional() private _parentForm: NgForm, @Optional() private _parentFormGroup: FormGroupDirective, media: ObservableMedia) {
         super(changeDetectorRef, viewPort);
 
@@ -232,15 +234,32 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                     return;
                 }
 
-                if (typeof value === 'string') {
-                    if (this._multiSelect) {
-                        this.query = '';
-                        value = value.split(',').map((v) => ({ value: v.trim() }));
-                    } else {
-                        value = {
-                            value: value.trim(),
-                        };
-                    }
+                const modelType = typeof value;
+                switch (modelType) {
+                    case 'string':
+                    case 'number':
+                        this.modelIsValue = true;
+                        if (this._multiSelect) {
+                            this.query = '';
+                            value = value.split(',')
+                                .map((v) => v.trim())
+                                .map((v) => ({
+                                    value: v,
+                                    displayName: v,
+                                }));
+                        } else {
+                            const v = value.trim();
+                            value = {
+                                value: v,
+                                displayName: v,
+                            };
+                        }
+                        break;
+
+                    default:
+                        this.modelIsValue = false;
+                        break;
+
                 }
 
                 if (this._multiSelect) {
@@ -1085,13 +1104,28 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                     items: items,
                     models: models,
                 } as DejaItemsEvent;
-                output = models;
+
+                if (this.modelIsValue) {
+                    const valueField = this._valueField || 'value';
+                    if (models.find((m) => !!m[valueField])) {
+                        output = models.map((m) => m[valueField] || m);
+                    }
+                } else {
+                    output = output;
+                }
             } else {
+                const model = items.model;
                 outputEmitter = {
                     item: items,
-                    model: items.model,
+                    model: model,
                 } as DejaItemEvent;
-                output = items.model !== undefined ? items.model : items;
+
+                if (this.modelIsValue) {
+                    const valueField = this._valueField || 'value';
+                    output = model[valueField] || model;
+                } else {
+                    output = items.model !== undefined ? items.model : items;
+                }
             }
         }
 

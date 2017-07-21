@@ -27,6 +27,9 @@ import { NewsService } from '../services/news.service';
     templateUrl: './select-demo.html',
 })
 export class SelectDemoComponent implements OnDestroy {
+    public fruct = '';
+    public fructs = [] as string[];
+
     protected disabled: boolean;
     protected country: Country;
     protected tabIndex = 1;
@@ -78,6 +81,21 @@ export class SelectDemoComponent implements OnDestroy {
         this.country.color = 'rgb(211, 47, 47)';
 
         this.countries = this.countriesService.getCountries$();
+
+        this.fructs = [
+            'Apricots',
+            'Banana',
+            'Cantaloupe',
+            'Cherries',
+            'Coconut',
+            'Cranberries',
+            'Durian',
+            'Grapes',
+            'Lemon',
+            'Mango',
+            'Pineapple',
+            'Watermelon',
+        ];
 
         this.subscriptions.push(this.countries
             .subscribe((value: Country[]) => {
