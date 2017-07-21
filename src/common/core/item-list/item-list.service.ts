@@ -1179,36 +1179,34 @@ export class ItemListService {
     private compareItems = (item1: IItemBase, item2: IItemBase) => {
         if (!item1 || !item2) {
             return false;
-        } else if (item1.model && !item2.model) {
+        } else if (item1 && !item2) {
             return false;
-        } else if (!item1.model && item2.model) {
+        } else if (!item1 && item2) {
             return false;
-        } else if (this._valueField) {
-            if (item1.model && item2.model) {
-                item1 = item1.model;
-                item2 = item2.model;
-            }
-            const value1 = item1[this._valueField];
-            const value2 = item2[this._valueField];
-            if (value1 !== undefined || value2 !== undefined) {
-                return item1[this._valueField] === item2[this._valueField];
-            }
-        }
-
-        if (item1.equals) {
-            return item1.equals(item2);
-        } else if (item2.equals) {
-            return item2.equals(item1);
-        } else if (item1.model && item1.model.equals) {
-            return item1.model.equals(item2.model);
-        } else if (item2.model && item2.model.equals) {
-            return item2.model.equals(item1.model);
         } else {
-            if (item1.model && item2.model) {
-                item1 = item1.model;
-                item2 = item2.model;
+            if (item1.equals) {
+                return item1.equals(item2);
+            } else if (item2.equals) {
+                return item2.equals(item1);
+            } else if (item1.model && item1.model.equals) {
+                return item1.model.equals(item2.model);
+            } else if (item2.model && item2.model.equals) {
+                return item2.model.equals(item1.model);
+            } else {
+                const getValue = (item: any) => {
+                    if (item.model) {
+                        item = item.model;
+                    }
+                    const valueField = this._valueField || 'value';
+                    if (item[valueField] !== undefined) {
+                        return item[valueField];
+                    } else {
+                        return item;
+                    }
+                };
+
+                return getValue(item1) === getValue(item2);
             }
-            return item1 === item2;
         }
     }
 

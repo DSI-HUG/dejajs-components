@@ -119,6 +119,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     private writeValue$ = new Subject<any>();
     private contentInitialized$ = new Subject();
 
+    private modelIsValue = false;
+
     constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, public elementRef: ElementRef, @Self() @Optional() public _control: NgControl, @Optional() private clipboardService: DejaClipboardService) {
         super(changeDetectorRef, viewPort);
 
@@ -154,26 +156,44 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
         this.subscriptions.push(Observable.combineLatest(this.writeValue$, this.contentInitialized$)
             .subscribe(([value]) => {
-                if (typeof value === 'string') {
-                    if (this._multiSelect) {
-                        this.query = '';
-                        value = value.split(',').map((v) => ({ value: v.trim() }));
-                    } else {
-                        value = [{
-                            value: value.trim(),
-                        }];
-                    }
-                    super.setSelectedModels(value);
-                    super.getItemListService().ensureSelection();
-                } else if (!value || value instanceof Array) {
-                    super.setSelectedModels(value);
-                } else {
-                    super.setSelectedModels([value]);
+                const modelType = typeof value;
+                if (!value) {
+                    this.modelIsValue = value === '';
+                    super.setSelectedModels(null);
+                    this.changeDetectorRef.markForCheck();
+                    return;
                 }
 
+                switch (modelType) {
+                    case 'string':
+                    case 'number':
+                        this.modelIsValue = true;
+                        if (this._multiSelect) {
+                            this.query = '';
+                            value = value.split(',')
+                                .map((v) => v.trim())
+                                .map((v) => ({
+                                    value: v,
+                                    displayName: v,
+                                }));
+                        } else {
+                            const v = value.trim();
+                            value = {
+                                value: v,
+                                displayName: v,
+                            };
+                        }
+                        break;
+
+                    default:
+                        this.modelIsValue = false;
+                        break;
+                }
+
+                super.setSelectedModels(this._multiSelect ? value : [value]);
+                super.getItemListService().ensureSelection();
                 this.changeDetectorRef.markForCheck();
-            })
-        );
+            }));
 
         this.maxHeight = 0;
         this._viewPortChanged = this.viewPortChanged;
@@ -379,7 +399,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Définit le model selectioné en mode single select */
     @Input()
     public set selectedModel(value: any) {
-        this.writeValue$.next(value);
+        this.writeValue(value);
     }
 
     /** Retourne le model selectioné en mode single select */
@@ -391,7 +411,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Définit la liste des models selectionés en mode multiselect */
     @Input()
     public set selectedModels(value: any[]) {
-        this.writeValue$.next(value);
+        this.writeValue(value);
     }
 
     /** Retourne la liste des models selectionés en mode multiselect */
@@ -428,7 +448,19 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Définit la liste des éléments */
     @Input()
     public set items(items: IItemBase[] | Promise<IItemBase[]> | Observable<IItemBase[]>) {
-        this.writeValue(items);
+        delete this.hintLabel;
+        super.setItems$(items)
+            .switchMap((itms) => {
+                if (this.minSearchlength > 0 && !this.query) {
+                    // Waiting for query
+                    this._itemList = [];
+                    this.changeDetectorRef.markForCheck();
+                    return Observable.of(itms);
+                } else {
+                    return this.calcViewList$().map(() => itms);
+                }
+            })
+            .subscribe(noop);
     }
 
     /**
@@ -476,6 +508,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     @Input()
     public set models(items: any[] | Observable<any[]>) {
         super.setModels$(items)
+            .first()
             .switchMap(() => this.calcViewList$())
             .subscribe(noop);
     }
@@ -547,34 +580,30 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     }
 
     // ************* ControlValueAccessor Implementation **************
-    /** Définit la liste des éléments, sans invoquaer ngModelChange */
-    /** @deprecated */
-    public writeValue(items: any) {
-        delete this.hintLabel;
-        super.setItems$(items)
-            .switchMap((itms) => {
-                if (this.minSearchlength > 0 && !this.query) {
-                    // Waiting for query
-                    this._itemList = [];
-                    this.changeDetectorRef.markForCheck();
-                    return Observable.of(itms);
-                } else {
-                    return this.calcViewList$().map(() => itms);
-                }
-            })
-            .subscribe(noop);
+    public get value() {
+        return this._multiSelect ? this.selectedItems : this.selectedItem;
     }
 
-    // From ControlValueAccessor interface
-    /** @deprecated */
+    public set value(val) {
+        this.writeValue(val);
+        this.onChangeCallback(val);
+        this.onTouchedCallback();
+    }
+
+    public writeValue(value: any) {
+        this.writeValue$.next(value);
+    }
+
     public registerOnChange(fn: any) {
         this.onChangeCallback = fn;
     }
 
-    // From ControlValueAccessor interface
-    /** @deprecated */
     public registerOnTouched(fn: any) {
         this.onTouchedCallback = fn;
+    }
+
+    public setDisabledState?(isDisabled: boolean) {
+        this.disabled = isDisabled;
     }
     // ************* End of ControlValueAccessor Implementation **************
 
@@ -1030,14 +1059,44 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     }
 
     protected onSelectionChange() {
-        const e = this.multiSelect ? {
-            items: this.selectedItems,
-            models: this.selectedModels,
-        } as DejaItemsEvent : {
-            item: this.selectedItems[0],
-            model: this.selectedItems[0] && this.selectedItems[0].model,
-        } as DejaItemEvent;
-        this.selectedChange.emit(e);
+        let outputEmitter = null;
+
+        let output = null;
+
+        if (this.multiSelect) {
+            const models = this.selectedModels;
+
+            outputEmitter = {
+                items: this.selectedItems,
+                models: models,
+            } as DejaItemsEvent;
+
+            if (this.modelIsValue) {
+                const valueField = this._valueField || 'value';
+                if (models.find((m) => !!m[valueField])) {
+                    output = models.map((m) => m[valueField] || m);
+                }
+            } else {
+                output = output;
+            }
+        } else {
+            const model = this.selectedItems[0] && this.selectedItems[0].model;
+
+            outputEmitter = {
+                item: this.selectedItems[0],
+                model: model,
+            } as DejaItemEvent;
+
+            if (this.modelIsValue) {
+                const valueField = this._valueField || 'value';
+                output = model[valueField] || model;
+            } else {
+                output = model;
+            }
+        }
+
+        this.onChangeCallback(output);
+        this.selectedChange.emit(outputEmitter);
     }
 
     protected selectRange$(indexFrom: number, indexTo?: number): Observable<number> {

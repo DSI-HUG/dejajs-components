@@ -228,6 +228,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         this.subscriptions.push(Observable.combineLatest(this.writeValue$, this.contentInitialized$)
             .subscribe(([value]) => {
                 if (!value) {
+                    this.modelIsValue = value === '';
                     if (this.selectedItems && this.selectedItems.length) {
                         this.removeSelection();
                     }
@@ -265,6 +266,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 if (this._multiSelect) {
                     this.query = '';
                     super.setSelectedModels(value);
+                    super.getItemListService().ensureSelection();
+                    this.changeDetectorRef.markForCheck();
 
                 } else {
                     const item = super.mapToIItemBase([value])[0];
@@ -273,10 +276,11 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                         .map(() => super.getItemListService().ensureSelection())
                         .map((selectedItems) => selectedItems.length ? this.getTextValue(selectedItems[0]) : '')
                         .first()
-                        .subscribe((query) => this.query = query);
+                        .subscribe((query) => {
+                            this.query = query;
+                            this.changeDetectorRef.markForCheck();
+                        });
                 }
-
-                this.changeDetectorRef.markForCheck();
             })
         );
 
@@ -1111,7 +1115,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                         output = models.map((m) => m[valueField] || m);
                     }
                 } else {
-                    output = output;
+                    output = models;
                 }
             } else {
                 const model = items.model;
