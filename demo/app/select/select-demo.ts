@@ -7,7 +7,7 @@
  */
 
 import { ChangeDetectorRef, Component, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import 'rxjs/add/operator/toPromise';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -20,6 +20,7 @@ import { News } from '../common/news.model';
 import { CountriesListService } from '../services/countries-list.service';
 import { CountriesService, Country } from '../services/countries.service';
 import { NewsService } from '../services/news.service';
+import {cheeseValidator } from './validators';
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -295,10 +296,3 @@ interface ICountryGroup extends ISelectCountry {
 interface IExtendedViewPortItem extends IViewPortItem {
     loaded: boolean;
 }
-
-const cheeseValidator = (control: AbstractControl): string[] => {
-    const val = control.value;
-    if (val === 'gruyère') {
-        return [`${val} is not a fruit`];
-    }
-};
