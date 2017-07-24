@@ -42,13 +42,13 @@
                     <span>{{ getError('birthDate') }}</span>
                 </ng-template>
             </deja-date-picker>
-            <h3 fxFlex="0 0 auto">Deja TreeList</h3>
+            <h3 fxFlex="0 0 auto">Deja Select</h3>
             <deja-select fxFlex="0 0 auto" placeholder="Prefered Juice" selectionClearable formControlName="preferedJuice" [models]="fructs">
                 <ng-template #errorTemplate *ngIf="!!getError('preferedJuice')">
                     <span>{{ getError('preferedJuice') }}</span>
                 </ng-template>                
             </deja-select>
-            <h3 fxFlex="0 0 auto">Deja Select (String list and model)</h3>
+            <h3 fxFlex="0 0 auto">Deja TreeList (String list and model)</h3>
             <deja-tree-list fxFlex="0 0 auto" formControlName="preferedFruct" [models]="fructs"></deja-tree-list>
             <h3 fxFlex="0 0 auto">Deja Circular Picker</h3>
             <div class="placeholder" fxFlex="0 0 auto">Size (cm)</div>

@@ -10,6 +10,7 @@
     <md-tab label="TEMPLATING"></md-tab>
     <md-tab label="PRE-EVENTS AND ON_DEMAND"></md-tab>
     <md-tab label="PERFORMANCES"></md-tab>
+    <md-tab label="REACTIVE FORM"></md-tab>
 </md-tab-group>
 
 <deja-dialog *ngIf="dialogVisible">
@@ -132,7 +133,8 @@
         <md-toolbar color="primary">Clearable content</md-toolbar>
         <md-card-content>
             <div>Add the selectionClearable attribute to enable the clear button</div>
-            <deja-select class="demo-half-width" placeholder="Clearable content" selectionClearable [(ngModel)]="businessCountry" textField="naqme" valueField="code" [models]="countries"></deja-select>
+            <deja-select class="demo-half-width" placeholder="Clearable content" selectionClearable [(ngModel)]="businessCountry" textField="naqme"
+                valueField="code" [models]="countries"></deja-select>
         </md-card-content>
     </md-card>
     <md-card class="deja-select-demo demo-card demo-basic">
@@ -141,7 +143,8 @@
             <div>
                 <md-checkbox [(ngModel)]="disabled" color="primary">Check me to disable select below</md-checkbox>
             </div>
-            <deja-select class="demo-half-width" placeholder="Disabled select" [disabled]="disabled" selectionClearable [(ngModel)]="businessCountry" textField="naqme" valueField="code" [models]="countries"></deja-select>
+            <deja-select class="demo-half-width" placeholder="Disabled select" [disabled]="disabled" selectionClearable [(ngModel)]="businessCountry"
+                textField="naqme" valueField="code" [models]="countries"></deja-select>
         </md-card-content>
     </md-card>
 </div>
@@ -192,7 +195,8 @@
         <md-toolbar color="primary">Autocomplete</md-toolbar>
         <md-card-content>
             <div>Autocomplete 2 characters minimum</div>
-            <deja-select class="demo-half-width" type="autocomplete" [itemListService]="countriesListService" textField="naqme" valueField="code" min-search-length="2"></deja-select>
+            <deja-select class="demo-half-width" type="autocomplete" [itemListService]="countriesListService" textField="naqme" valueField="code"
+                min-search-length="2"></deja-select>
         </md-card-content>
     </md-card>
 </div>
@@ -210,7 +214,8 @@
             </deja-select>
             <h1>Selected Template</h1>
             <div>Multi select with template for selected items</div>
-            <deja-select hideSelected type="multiselect" textField="naqme" valueField="code" placeholder="Select one or more countries" [(ngModel)]="multiselectModel" [items]="countriesForMultiselect" dropdownContainerId="scrollable-content">
+            <deja-select hideSelected type="multiselect" textField="naqme" valueField="code" placeholder="Select one or more countries"
+                [(ngModel)]="multiselectModel" [items]="countriesForMultiselect" dropdownContainerId="scrollable-content">
                 <ng-template #selectedTemplate let-item>
                     <span id="flight">
 						<i *ngIf="item.code !== 'CH' && item.code !== 'FR'" class="material-icons">flight_land</i>
@@ -245,7 +250,8 @@
 						</span>
             </ng-template>
             </deja-select>
-            <deja-select fxFlex="0 0 45%" fxFlexOffset="5%" placeholder="Suffix template selelct" textField="naqme" valueField="code" [items]="countries" dropdownContainerId="scrollable-content">
+            <deja-select fxFlex="0 0 45%" fxFlexOffset="5%" placeholder="Suffix template selelct" textField="naqme" valueField="code"
+                [items]="countries" dropdownContainerId="scrollable-content">
                 <ng-template #suffixTemplate>
                     <md-icon id="placeholder-icon">public</md-icon>
                 </ng-template>
@@ -261,13 +267,18 @@
         <md-card-content>
             <h1>On Demand Loading </h1>
             <div>The items are loaded after the drop down is opened</div>
-            <deja-select #ondemand class="demo-half-width" textField="naqme" valueField="code" [loadingItems]="loadingItems()" [placeholder]="onDemandPlaceHolder" dropdownContainerId="scrollable-content"></deja-select>
+            <deja-select #ondemand class="demo-half-width" textField="naqme" valueField="code" [loadingItems]="loadingItems()" [placeholder]="onDemandPlaceHolder"
+                dropdownContainerId="scrollable-content"></deja-select>
             <h1>Confirm Selection and Unselection </h1>
             <div>A dialog will confirm the selection or the unselection of an item</div>
-            <deja-select hideSelected class="demo-half-width" type="multiselect" textField="naqme" valueField="code" placeholder="Selection hidden" [(ngModel)]="multiselectModel" [items]="countriesForMultiselect" [selectingItem]="confirmDialog()" [unselectingItem]="confirmDialogWithPromise()" dropdownContainerId="scrollable-content"> </deja-select>
+            <deja-select hideSelected class="demo-half-width" type="multiselect" textField="naqme" valueField="code" placeholder="Selection hidden"
+                [(ngModel)]="multiselectModel" [items]="countriesForMultiselect" [selectingItem]="confirmDialog()" [unselectingItem]="confirmDialogWithPromise()"
+                dropdownContainerId="scrollable-content"> </deja-select>
             <h1>Confirm Expand and Collapse </h1>
-            <div>A dialog will confirm the expand and collapse or an item if the children are not loaded. The children will be loaded asynchronously after the item expansion.</div>
-            <deja-select #onexpand class="demo-half-width" textField="naqme" valueField="code" [items]="onDemandGroupedCountries" [expandingItem]="expandingItems()" [collapsingItem]="collapsingItems()" dropdownContainerId="scrollable-content"></deja-select>
+            <div>A dialog will confirm the expand and collapse or an item if the children are not loaded. The children will be
+                loaded asynchronously after the item expansion.</div>
+            <deja-select #onexpand class="demo-half-width" textField="naqme" valueField="code" [items]="onDemandGroupedCountries" [expandingItem]="expandingItems()"
+                [collapsingItem]="collapsingItems()" dropdownContainerId="scrollable-content"></deja-select>
         </md-card-content>
     </md-card>
 </div>
@@ -278,7 +289,8 @@
         <md-card-content>
             <h1>10K items with Item Template </h1>
             <div>An exemple with 10000 auto sized templatized items</div>
-            <deja-select #news dropdownContainerId="scrollable-content" placeholder="10000 items select" type="select" viewportMode="auto" textField="title" searchField="description" [models]="bigNews$">
+            <deja-select #news dropdownContainerId="scrollable-content" placeholder="10000 items select" type="select" viewportMode="auto"
+                textField="title" searchField="description" [models]="bigNews$">
                 <ng-template #itemTemplate let-item let-flatindex="flatindex">
                     <news-card [item]="item.model" (imageLoaded)="imageLoaded(item)"></news-card>
                 </ng-template>
@@ -287,15 +299,69 @@
             <h1>Fixed size rows 100K items</h1>
             <div>An exemple with 100000 fixed size items</div>
             <span fxLayout="row">
-				<deja-select #bigCountries fxFlex="0 0 45%" type="autocomplete" dropdownContainerId="scrollable-content" placeholder="100000 items select" [items]="bigCountries$" textField="naqme" valueField="code"></deja-select>
-				<span fxFlex="0 0 45%" fxFlexOffset="5%">
-					<h4 id="vptitle">Viewport Infos:</h4>
-					<div *ngFor="let info of viewPortInfos">
-						<span class="vpinfoname">{{info.name}}</span>
+        <deja-select #bigCountries fxFlex="0 0 45%" type="autocomplete" dropdownContainerId="scrollable-content" placeholder="100000 items select" [items]="bigCountries$" textField="naqme" valueField="code"></deja-select>
+        <span fxFlex="0 0 45%" fxFlexOffset="5%">
+          <h4 id="vptitle">Viewport Infos:</h4>
+          <div *ngFor="let info of viewPortInfos">
+            <span class="vpinfoname">{{info.name}}</span>
             <span>{{info.value}}</span>
 </div>
 </span>
 </span>
 </md-card-content>
 </md-card>
+</div>
+
+<div *ngIf="tabIndex === 6">
+    <md-card class="deja-select-demo demo-card demo-basic">
+        <md-toolbar color="primary">Minimal case</md-toolbar>
+        <md-card-content>
+
+            <form novalidate [formGroup]="fruitForm">
+                <div class="demo-half-width react-form-elem">
+                    <h3>Select: </h3>
+                    <deja-select placeholder="Fruit" selectionClearable formControlName="fruitName">
+                        <deja-item value="apple" text="apple"></deja-item>
+                        <deja-item value="banana" text="banana"></deja-item>
+                        <deja-item value="gruyère" text="gruyère"></deja-item>
+                    </deja-select>
+                    <md-error align="end">{{fruitForm.get('fruitName').errors ? fruitForm.get('fruitName').errors[0] : ''}}</md-error>
+                </div>
+            </form>
+
+            <div class="react-form-elem">
+                <h3>Your selection: </h3>
+                <span>{{fruitForm.get('fruitName').value}}</span>
+            </div>
+
+            <div class="react-form-elem">
+                <h3>Code: </h3>
+                <deja-markdown [url]="'assets/snippets/select-reactive-form.md'"></deja-markdown>
+            </div>
+
+        </md-card-content>
+    </md-card>
+    <md-card class="deja-select-demo demo-card demo-basic">
+        <md-toolbar color="primary">With models as an array of strings</md-toolbar>
+        <md-card-content>
+
+            <form novalidate [formGroup]="fruitFormModels">
+                <div class="demo-half-width react-form-elem">
+                    <h3>Select: </h3>
+                    <deja-select placeholder="Fruit" selectionClearable [models]="fruits$" formControlName="fruitName"></deja-select>
+                </div>
+            </form>
+
+            <div class="react-form-elem">
+                <h3>Your selection: </h3>
+                <span>{{fruitFormModels.get('fruitName').value}}</span>
+            </div>
+
+            <div class="react-form-elem">
+                <h3>Code: </h3>
+                <deja-markdown [url]="'assets/snippets/select-reactive-form-models.md'"></deja-markdown>
+            </div>
+
+        </md-card-content>
+    </md-card>
 </div>

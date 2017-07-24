@@ -7,6 +7,7 @@
  */
 
 import { ChangeDetectorRef, Component, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import 'rxjs/add/operator/toPromise';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -44,6 +45,9 @@ export class SelectDemoComponent implements OnDestroy {
     protected dialogResponse$: Subject<string> = new Subject<string>();
     protected readonlyMultiSelect = false;
     protected disableMultiSelect = false;
+    protected fruitForm: FormGroup;
+    protected fruitFormModels: FormGroup;
+    protected fruits$: Observable<string[]>;
 
     private countries: Observable<Country[]>;
     private countriesForTemplate: Country[];
@@ -68,7 +72,7 @@ export class SelectDemoComponent implements OnDestroy {
         return this._dialogVisible;
     }
 
-    constructor(private changeDetectorRef: ChangeDetectorRef, private countriesService: CountriesService, protected countriesListService: CountriesListService, newsService: NewsService) {
+    constructor(private changeDetectorRef: ChangeDetectorRef, private countriesService: CountriesService, protected countriesListService: CountriesListService, newsService: NewsService, private _fb: FormBuilder) {
         this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","displayName":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","displayName":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","displayName":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","displayName":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","displayName":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","displayName":"Dominica","depth":0,"odd":false,"selected":true}]');
         this.news$ = newsService.getNews$(50);
         this.bigNews$ = newsService.getNews$(10000);
@@ -96,6 +100,7 @@ export class SelectDemoComponent implements OnDestroy {
             'Pineapple',
             'Watermelon',
         ];
+        this.fruits$ = Observable.of(this.fructs);
 
         this.subscriptions.push(this.countries
             .subscribe((value: Country[]) => {
@@ -161,6 +166,13 @@ export class SelectDemoComponent implements OnDestroy {
                 this.groupedCountries = result;
                 this.onDemandGroupedCountries = onDemandResult;
             }));
+
+        this.fruitForm = this._fb.group({
+            fruitName: ['', [cheeseValidator]],
+        });
+        this.fruitFormModels = this._fb.group({
+            fruitName: [''],
+        });
     }
 
     public ngOnDestroy() {
@@ -267,6 +279,7 @@ export class SelectDemoComponent implements OnDestroy {
             this.newsSelect.refreshViewPort(itemExt);
         }
     }
+
 }
 
 interface ISelectCountry extends IItemTree {
@@ -282,3 +295,10 @@ interface ICountryGroup extends ISelectCountry {
 interface IExtendedViewPortItem extends IViewPortItem {
     loaded: boolean;
 }
+
+const cheeseValidator = (control: AbstractControl): string[] => {
+    const val = control.value;
+    if (val === 'gruyère') {
+        return [`${val} is not a fruit`];
+    }
+};
