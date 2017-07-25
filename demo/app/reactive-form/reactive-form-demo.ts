@@ -44,6 +44,21 @@ export class ReactiveFormDemoComponent implements AfterContentInit, OnInit, OnDe
 
     protected user$: Observable<IUser>;
 
+    protected fructs = [
+        'Apricots',
+        'Banana',
+        'Cantaloupe',
+        'Cherries',
+        'Coconut',
+        'Cranberries',
+        'Durian',
+        'Grapes',
+        'Lemon',
+        'Mango',
+        'Pineapple',
+        'Watermelon',
+    ];
+
     private _readonly = false;
     private countries: Observable<Country[]>;
 
@@ -79,6 +94,8 @@ export class ReactiveFormDemoComponent implements AfterContentInit, OnInit, OnDe
             country: [{ value: null, disabled: this.readonly }, Validators.required],
             visitedCountries: [{ value: [], disabled: this.readonly }, Validators.required],
             birthDate: [{ value: null, disabled: this.readonly }, Validators.required],
+            preferedJuice: [{ value: null, disabled: this.readonly }, Validators.required],
+            preferedFruct: [{ value: null, disabled: this.readonly }, Validators.required],
             size: [{ value: 0, disabled: this.readonly }, Validators.pattern(new RegExp('[0-9]{1,3}'))],
             color: [{ value: null, disabled: this.readonly }],
             color2: [{ value: null, disabled: this.readonly }],
@@ -129,6 +146,8 @@ export class ReactiveFormDemoComponent implements AfterContentInit, OnInit, OnDe
                     country: user.country || null,
                     visitedCountries: user.visitedCountries || [],
                     birthDate: user.birthDate || null,
+                    preferedJuice: user.preferedJuice || '',
+                    preferedFruct: user.preferedFruct || '',
                     size: user.size || 0,
                     color: user.color || null,
                     color2: user.color2 || null,
