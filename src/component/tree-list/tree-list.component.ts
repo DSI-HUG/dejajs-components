@@ -915,7 +915,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                     .first()
                     .subscribe(() => this.changeDetectorRef.markForCheck());
                 return false;
-            } else if (!e.ctrlKey || !this.multiSelect) {
+            } else if (!e.ctrlKey) {
                 if (!this.multiSelect && item.selected) {
                     return undefined;
                 }
@@ -959,11 +959,22 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                         this.currentItemIndex = upIndex;
                     });
 
-                } else if (upevt.ctrlKey && this.multiSelect) {
-                    this.currentItemIndex = upIndex;
-                    this.toggleSelect$([upItem], !upItem.selected)
-                        .first()
-                        .subscribe(() => this.changeDetectorRef.markForCheck());
+                } else if (upevt.ctrlKey) {
+                    if (this.multiSelect) {
+                        this.toggleSelect$([upItem], !upItem.selected)
+                            .first()
+                            .subscribe(() => {
+                                this.currentItemIndex = upIndex;
+                                this.changeDetectorRef.markForCheck();
+                            });
+                    } else {
+                        const o = this.selectedItem && this.selectedItem !== upItem ? this.toggleSelect$([this.selectedItem], false).switchMap(() => this.toggleSelect$([upItem], true)) : this.toggleSelect$([upItem], !upItem.selected);
+                        o.first()
+                            .subscribe(() => {
+                                this.currentItemIndex = upIndex;
+                                this.changeDetectorRef.markForCheck();
+                            });
+                    }
                 }
 
                 this.rangeStartIndex = -1;
