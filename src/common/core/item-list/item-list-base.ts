@@ -711,14 +711,26 @@ export abstract class ItemListBase implements OnDestroy {
             itemBase.model = model;
 
             const displayField = this._textField || 'displayName';
-            itemBase[displayField] = this.getTextValue(model);
+            if (typeof model === 'string') {
+                itemBase[displayField] = model;
 
-            if (this._searchField) {
-                itemBase[this._searchField] = model[this._searchField];
-            }
+                if (this._searchField) {
+                    itemBase[this._searchField] = model;
+                }
 
-            if (this._valueField) {
-                itemBase[this._valueField] = model[this._valueField];
+                if (this._valueField) {
+                    itemBase[this._valueField] = model;
+                }
+            } else {
+                itemBase[displayField] = this.getTextValue(model);
+
+                if (this._searchField) {
+                    itemBase[this._searchField] = model[this._searchField];
+                }
+
+                if (this._valueField) {
+                    itemBase[this._valueField] = model[this._valueField];
+                }
             }
 
             const childrenField = this.getItemListService().childrenField;
