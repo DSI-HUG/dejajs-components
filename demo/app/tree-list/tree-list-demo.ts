@@ -31,6 +31,9 @@ import { NewsService } from '../services/news.service';
     templateUrl: './tree-list-demo.html',
 })
 export class DejaTreeListDemoComponent implements OnDestroy {
+    public fruct = '';
+    public fructs = [] as string[];
+
     protected disabled: boolean;
     protected country: Country;
     protected tabIndex = 1;
@@ -43,7 +46,6 @@ export class DejaTreeListDemoComponent implements OnDestroy {
     }[];
     protected viewPortInfos$: Subscription;
     protected dialogResponse$: Subject<string> = new Subject<string>();
-    protected businessCountries: Country[];
     protected loremList: IItemTree[] = [];
 
     private countries: Observable<Country[]>;
@@ -91,6 +93,21 @@ export class DejaTreeListDemoComponent implements OnDestroy {
         this.country.color = 'rgb(211, 47, 47)';
 
         this.countries = this.countriesService.getCountries$();
+
+        this.fructs = [
+            'Apricots',
+            'Banana',
+            'Cantaloupe',
+            'Cherries',
+            'Coconut',
+            'Cranberries',
+            'Durian',
+            'Grapes',
+            'Lemon',
+            'Mango',
+            'Pineapple',
+            'Watermelon',
+        ];
 
         this.subscriptions.push(this.countries.subscribe((value: Country[]) => {
             const result = [] as any[];
@@ -243,10 +260,6 @@ export class DejaTreeListDemoComponent implements OnDestroy {
             itemExt.loaded = true;
             this.newsList.refreshViewPort(itemExt);
         }
-    }
-
-    protected businessCountryChange(country: Country) {
-        this.businessCountries = country ? [country] : null;
     }
 
     protected multiselectModelChange(countries: Country[]) {

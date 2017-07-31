@@ -29,8 +29,14 @@
         ],
         "member-ordering": [
             true,
-            "static-before-instance",
-            "variables-before-functions"
+            {
+                "order": [
+                    "public-static-field",
+                    "protected-static-field",
+                    "public-static-method",
+                    "protected-static-method"
+                ]
+            }
         ],
         "no-arg": true,
         "no-bitwise": true,
