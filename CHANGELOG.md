@@ -1,3 +1,15 @@
+### 2.6.0 (2017-07-31)
+
+##### BREAKING CHANGES
+
+* **DejaTreelist:** Treelist NgModel to the selected items same as the DejaSelect ([5874d2d8](https://github.com/DSI-HUG/dejajs-components/commit/5874d2d8f467d63df2ecee40387caac5766f3ff0))
+* **DejaSelect:** NgModel type same as set ([87627bfb](https://github.com/DSI-HUG/dejajs-components/commit/87627bfb75834fa57b6e376f168015f114e1bba8))
+
+##### Bug Fixes
+
+* **SelectDemoComponent validator:** license header ([b7247f1c](https://github.com/DSI-HUG/dejajs-components/commit/b7247f1ccf4b08484946ae9e5d6548106d57d072))
+* **SelectDemoComponent:** validator declaration ([16d6249d](https://github.com/DSI-HUG/dejajs-components/commit/16d6249d5b71076c3da93fb2f0b2dea046af71c3))
+
 ### 2.5.0 (2017-07-20)
 
 ##### BREAKING CHANGES
