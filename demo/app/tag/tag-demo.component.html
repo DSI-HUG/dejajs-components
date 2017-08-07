@@ -1,0 +1,19 @@
+<md-tab-group [selectedIndex]="tabIndex" (selectChange)="tabIndex = $event.index">
+    <md-tab label="API REFERENCE"></md-tab>
+    <md-tab label="EXAMPLES"></md-tab>
+</md-tab-group>
+
+<md-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
+    TODO
+</md-card>
+<md-card class="demo-card demo-basic" *ngIf="tabIndex === 1">
+    <md-toolbar color="primary">Tag Component</md-toolbar>
+    <md-card-content>
+        <deja-tag [(ngModel)]="values" placeholder="Add tags"></deja-tag>
+
+        <div>
+            Model : 
+            <pre>{{values | json}}</pre>
+        </div>
+    </md-card-content>
+</md-card>

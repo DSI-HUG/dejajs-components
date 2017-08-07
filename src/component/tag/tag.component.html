@@ -1,0 +1,5 @@
+<deja-chips fxFlex="0 0 auto" [items]="items" [disabled]="disabled"></deja-chips>
+<md-input-container fxFlex="0 0 auto">
+    <input mdInput [(ngModel)]="text" mdInput (keydown)="onKeyDown($event)" [placeholder]="placeholder" [disabled]="disabled">
+    <div mdSuffix><i (click)="onAddItem(text)" class="material-icons mdSuffix">add</i></div>
+</md-input-container>
