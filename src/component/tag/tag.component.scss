@@ -1,8 +1,13 @@
 :host {
-    display: flex;
-    flex-direction: column;
-
-    md-input-container i:hover {
-        cursor: pointer;
+    deja-chips {
+        display: block;
     }
+
+    md-input-container {
+        display: block;
+
+        i:hover {
+            cursor: pointer;
+        }
+    } 
 }
