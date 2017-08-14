@@ -28,6 +28,7 @@ import { ReactiveFormDemoComponent } from './reactive-form/reactive-form-demo';
 import { SelectDemoComponent } from './select/select-demo';
 import { DejaSnackbarDemoComponent } from './snackbar/snackbar-demo';
 import { DejaSplitterDemoComponent } from './splitter/splitter-demo';
+import { TagDemoComponent } from './tag/tag-demo.component';
 import { TextAreaDemoComponent } from './textarea/textarea-demo';
 import { TilesDemoComponent } from './tiles/tiles-demo';
 import { DejaTreeListDemoComponent } from './tree-list/tree-list-demo';
@@ -52,6 +53,7 @@ const routes: Routes = [
         { component: SelectDemoComponent, path: 'select' },
         { component: DejaSnackbarDemoComponent, path: 'snackbar' },
         { component: DejaSplitterDemoComponent, path: 'splitter' },
+        { component: TagDemoComponent, path: 'tag' },
         { component: TextAreaDemoComponent, path: 'textarea' },
         { component: TilesDemoComponent, path: 'tiles' },
         { component: DejaTreeListDemoComponent, path: 'tree-list' },

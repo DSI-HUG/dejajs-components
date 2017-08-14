@@ -89,6 +89,8 @@ export class CloningService {
     public cloneSyncWithPrototype(object: any) {
         if (!object || typeof object !== 'object') {
             return object;
+        } else if (object instanceof Date) {
+            return new Date(object);
         }
 
         const target = new object.constructor();

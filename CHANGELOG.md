@@ -1,3 +1,19 @@
+#### 2.6.1 (2017-08-14)
+
+##### New Features
+
+* **DejaTag:** Add DejaTag component. ([b8228ce1](https://github.com/DSI-HUG/dejajs-components/commit/b8228ce1d668f751e13812396ad3fe7a5ad1ec08))
+
+##### Bug Fixes
+
+* **Global:** rxjs:5.4.3 ([f899fd59](https://github.com/DSI-HUG/dejajs-components/commit/f899fd5985e0fbae74ba0bdf0595a84b93d8d9a1))
+* **DejaTag:** Remove flex layout into the component ([80dc0519](https://github.com/DSI-HUG/dejajs-components/commit/80dc051925bb476c7c42868f8fbfdd64365652e3))
+* **Cloning:** Clone date in array of date ([4dfd752a](https://github.com/DSI-HUG/dejajs-components/commit/4dfd752a21632bc8375f02d83fc1841ce4d6397c))
+
+##### Other Changes
+
+* **License:** Add license ([70d5dcdc](https://github.com/DSI-HUG/dejajs-components/commit/70d5dcdc2cce9435fe8d4afa07d99cda17aaa10c))
+
 ### 2.6.0 (2017-07-31)
 
 ##### BREAKING CHANGES
@@ -10,7 +26,7 @@
 * **SelectDemoComponent validator:** license header ([b7247f1c](https://github.com/DSI-HUG/dejajs-components/commit/b7247f1ccf4b08484946ae9e5d6548106d57d072))
 * **SelectDemoComponent:** validator declaration ([16d6249d](https://github.com/DSI-HUG/dejajs-components/commit/16d6249d5b71076c3da93fb2f0b2dea046af71c3))
 
-### 2.5.0 (2017-07-20)
+#### 2.5.0 (2017-07-20)
 
 ##### BREAKING CHANGES
 
@@ -42,7 +58,7 @@
 * **Fonts:** Update dejajs resources ([b4965147](https://github.com/DSI-HUG/dejajs-components/commit/b4965147da47b72467752f2a02916442bd2cd491))
 * **Conf:** Add lint on start ([fafd50a7](https://github.com/DSI-HUG/dejajs-components/commit/fafd50a7b85a2cebb045d5b95f9539053a503d39))
 
-### 2.4.0 (2017-07-19)
+#### 2.4.0 (2017-07-19)
 
 ##### BREAKING CHANGES
 
