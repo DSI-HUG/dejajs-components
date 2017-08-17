@@ -30,6 +30,38 @@
 * **License:** Add license ([70d5dcdc](https://github.com/DSI-HUG/dejajs-components/commit/70d5dcdc2cce9435fe8d4afa07d99cda17aaa10c))
 * **Config:** Add npmrc file to force registry ([bfb5130d](https://github.com/DSI-HUG/dejajs-components/commit/bfb5130d33f5e617c1871811200e23bfe1741d7c))
 
+### 2.7.0 (2017-08-17)
+
+##### BREAKING CHANGES
+
+* **DejaTreelist:** Treelist NgModel to the selected items same as the DejaSelect ([5874d2d8](https://github.com/DSI-HUG/dejajs-components/commit/5874d2d8f467d63df2ecee40387caac5766f3ff0))
+* **DejaSelect:** NgModel type same as set ([87627bfb](https://github.com/DSI-HUG/dejajs-components/commit/87627bfb75834fa57b6e376f168015f114e1bba8))
+* **Dependencies:** Update all dependencies (Angular 4.3 & Ngrx 4) ([62d612a0](https://github.com/DSI-HUG/dejajs-components/commit/62d612a0778ede150ae47a40a59b55a1598cd856))
+
+##### Build System / Dependencies
+
+* **Dependencies:** Update all dependencies in latest version ([e2f16623](https://github.com/DSI-HUG/dejajs-components/commit/e2f166234a83eb835f27603ffdf095cdc8765262))
+
+##### New Features
+
+* **DejaTag:** Add DejaTag component. ([b8228ce1](https://github.com/DSI-HUG/dejajs-components/commit/b8228ce1d668f751e13812396ad3fe7a5ad1ec08))
+
+##### Bug Fixes
+
+* **CircularPicker:** Update for to for...of to remove tslint error ([ad23fc17](https://github.com/DSI-HUG/dejajs-components/commit/ad23fc17e9e8a37a497b56ddf66cb4f70d3a5d25))
+* **Global:** rxjs:5.4.3 ([f899fd59](https://github.com/DSI-HUG/dejajs-components/commit/f899fd5985e0fbae74ba0bdf0595a84b93d8d9a1))
+* **DejaTag:** Remove flex layout into the component ([80dc0519](https://github.com/DSI-HUG/dejajs-components/commit/80dc051925bb476c7c42868f8fbfdd64365652e3))
+* **Cloning:** Clone date in array of date ([4dfd752a](https://github.com/DSI-HUG/dejajs-components/commit/4dfd752a21632bc8375f02d83fc1841ce4d6397c))
+* **SelectDemoComponent validator:** license header ([b7247f1c](https://github.com/DSI-HUG/dejajs-components/commit/b7247f1ccf4b08484946ae9e5d6548106d57d072))
+* **SelectDemoComponent:** validator declaration ([16d6249d](https://github.com/DSI-HUG/dejajs-components/commit/16d6249d5b71076c3da93fb2f0b2dea046af71c3))
+* **DatePicker:** button type ([d3ebb3df](https://github.com/DSI-HUG/dejajs-components/commit/d3ebb3dfca3347685aa276db293ada8313fb501e))
+
+##### Other Changes
+
+* **Changelog:** fix duplicate commit info ([0e8ea9c4](https://github.com/DSI-HUG/dejajs-components/commit/0e8ea9c484c02c00976ec345f89b5bc438ee007c))
+* **License:** Add license ([70d5dcdc](https://github.com/DSI-HUG/dejajs-components/commit/70d5dcdc2cce9435fe8d4afa07d99cda17aaa10c))
+* **Config:** Add npmrc file to force registry ([bfb5130d](https://github.com/DSI-HUG/dejajs-components/commit/bfb5130d33f5e617c1871811200e23bfe1741d7c))
+
 #### 2.6.1 (2017-08-14)
 
 ##### New Features
