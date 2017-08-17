@@ -1,3 +1,13 @@
+### 2.7.0 (2017-08-17)
+
+##### Build System / Dependencies
+
+* **Dependencies:** Update all dependencies in latest version ([e2f16623](https://github.com/DSI-HUG/dejajs-components/commit/e2f166234a83eb835f27603ffdf095cdc8765262))
+
+##### Bug Fixes
+
+* **CircularPicker:** Update for to for...of to remove tslint error ([ad23fc17](https://github.com/DSI-HUG/dejajs-components/commit/ad23fc17e9e8a37a497b56ddf66cb4f70d3a5d25))
+
 #### 2.6.1 (2017-08-14)
 
 ##### New Features
