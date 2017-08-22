@@ -244,23 +244,27 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                             this.query = '';
                             value = value.split(',')
                                 .map((v) => v.trim())
-                                .map((v) => ({
-                                    value: v,
-                                    displayName: v,
-                                }));
+                                .map((v) => {
+                                    const model = {};
+                                    const textField = this._textField || 'displayName';
+                                    const valueField = this._valueField || 'value';
+                                    model[textField] = v;
+                                    model[valueField] = v;
+                                    return model;
+                                });
                         } else {
                             const v = value.trim();
-                            value = {
-                                value: v,
-                                displayName: v,
-                            };
+                            value = {};
+                            const textField = this._textField || 'displayName';
+                            const valueField = this._valueField || 'value';
+                            value[textField] = v;
+                            value[valueField] = v;
                         }
                         break;
 
                     default:
                         this.modelIsValue = false;
                         break;
-
                 }
 
                 if (this._multiSelect) {

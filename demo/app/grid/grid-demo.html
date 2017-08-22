@@ -98,7 +98,7 @@
 		<md-toolbar color="primary">Grouping Client Side</md-toolbar>
 		<md-card-content fxLayout="column" class="listContainer">
 			<div>To allow the user grouping just add the groupArea directive</div>
-			<deja-grid fxFlex="0 0 600px" groupArea columnsSortable multiSelect columnsSizable sortable columnGroups="eyeColor" [rows]="people$" [columns]="peopleColumnsEx" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid">
+			<deja-grid fxFlex="0 0 600px" selectedModel="e3380ac9-679e-403d-b907-d4fcaa7b7f8d" groupArea columnsSortable multiSelect columnsSizable sortable columnGroups="eyeColor" [rows]="people$" [columns]="peopleColumnsEx" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid">
 				<ng-template #cellTemplate let-row let-column="column">
 					<span *ngIf="column.name==='color'" class="color" [style.background-color]="row[column.name]"></span>
 				</ng-template>

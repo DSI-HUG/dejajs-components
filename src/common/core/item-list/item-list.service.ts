@@ -280,9 +280,11 @@ export class ItemListService {
             return '';
         } else {
             if (textField && value.model && value.model[textField] !== undefined) {
-                return value.model[textField];
+                const displayName = value.model[textField];
+                return typeof displayName === 'string' ? displayName : displayName();
             } else if (textField && value[textField] !== undefined) {
-                return value[textField];
+                const displayName = value[textField];
+                return typeof displayName === 'string' ? displayName : displayName();
             } else if (value.displayName) {
                 return typeof value.displayName === 'string' ? value.displayName : value.displayName();
             } else if (typeof value.toString === 'function') {
@@ -1142,12 +1144,16 @@ export class ItemListService {
     }
 
     private ensureSelectedItems(items: IItemBase[]) {
-        if (!items || !this.selectedList || this.selectedList.length === 0) {
+        if (!this.selectedList || this.selectedList.length === 0) {
             return [];
         }
 
         // Ensure selected flag
         this.selectedList.forEach((item) => item.selected = true);
+
+        if (!items) {
+            return this.selectedList;
+        }
 
         const newSelectedList = [] as IItemBase[];
         const ensureSelectedChildren = (children: IItemTree[]) => {

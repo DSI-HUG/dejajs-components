@@ -172,16 +172,21 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                             this.query = '';
                             value = value.split(',')
                                 .map((v) => v.trim())
-                                .map((v) => ({
-                                    value: v,
-                                    displayName: v,
-                                }));
+                                .map((v) => {
+                                    const model = {};
+                                    const textField = this._textField || 'displayName';
+                                    const valueField = this._valueField || 'value';
+                                    model[textField] = v;
+                                    model[valueField] = v;
+                                    return model;
+                                });
                         } else {
                             const v = value.trim();
-                            value = {
-                                value: v,
-                                displayName: v,
-                            };
+                            value = {};
+                            const textField = this._textField || 'displayName';
+                            const valueField = this._valueField || 'value';
+                            value[textField] = v;
+                            value[valueField] = v;
                         }
                         break;
 
@@ -379,7 +384,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
         return super.getSelectedItems();
     }
 
-    /** Définit l'éléments selectioné en mode single select */
+    /** Définit l'élément selectioné en mode single select */
     @Input()
     public set selectedItem(value: IItemBase | string) {
         if (typeof value === 'string') {
@@ -399,7 +404,9 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Définit le model selectioné en mode single select */
     @Input()
     public set selectedModel(value: any) {
-        this.writeValue(value);
+        if (value !== undefined) {
+            this.writeValue(value);
+        }
     }
 
     /** Retourne le model selectioné en mode single select */
@@ -411,7 +418,9 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Définit la liste des models selectionés en mode multiselect */
     @Input()
     public set selectedModels(value: any[]) {
-        this.writeValue(value);
+        if (value !== undefined) {
+            this.writeValue(value);
+        }
     }
 
     /** Retourne la liste des models selectionés en mode multiselect */

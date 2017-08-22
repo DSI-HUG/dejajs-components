@@ -84,8 +84,14 @@ export class DejaGridComponent implements OnDestroy {
     @Input() public searchField: string;
     /** Ligne courant ou ligne active */
     @Input() public currentRow: IItemBase;
-    /** Liste des éléments sélectionnés */
+    /** Liste des éléments sélectionnés en mode multiselect */
     @Input() public selectedItems: IItemBase[];
+    /** Elément selectioné en mode single select */
+    @Input() public selectedItem: IItemBase | string;
+    /** Liste des models selectionés en mode multiselect */
+    @Input() public selectedModels: any[];
+    /** Model selectioné en mode single select */
+    @Input() public selectedModel: any;
     /** Definit le service de tri utilisé par ce composant. */
     @Input() public sortingService: SortingService;
     /** Definit le service de regroupement utilisé par ce composant. */
