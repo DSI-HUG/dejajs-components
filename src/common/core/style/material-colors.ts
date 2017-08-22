@@ -283,4 +283,14 @@ export class MaterialColors {
         }
         return this.palettes[subColor];
     }
+
+    public getColorFromText(text: string) {
+        let sum = 0;
+        for (let i = 0; i < text.length; i++) {
+            sum += text.charCodeAt(i);
+        }
+        const colors = this.colors;
+        const subColors = (colors[sum % colors.length]).subColors;
+        return subColors[sum % subColors.length];
+    }
 }
