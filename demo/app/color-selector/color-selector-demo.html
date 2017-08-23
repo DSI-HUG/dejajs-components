@@ -14,7 +14,7 @@
 
 <div *ngIf="tabIndex === 1">
     <md-card class="demo-card">
-        <md-toolbar color="primary">Color Picker width backdrop - Pick a color:</md-toolbar>
+        <md-toolbar color="primary">Color Picker width backdrop - Pick a color:    (selected color: {{ selectedColor.toHex() }});</md-toolbar>
         <md-card-content id="colorpickers">
             <deja-color-picker name="1" class="colorpicker" [colors]="materialColors.colors" [(ngModel)]="selectedColor" (colorhover)="onColorPickerHover($event)" (ngModelChange)="onColorPickerChange($event)"></deja-color-picker>
             <deja-color-picker name="2" class="colorpicker" small [colors]="materialColors.colors" [(ngModel)]="invalidColor" (colorhover)="onColorPickerHover($event)" (ngModelChange)="onColorPickerChange($event)"></deja-color-picker>

@@ -31,8 +31,10 @@ import { NewsService } from '../services/news.service';
     templateUrl: './tree-list-demo.html',
 })
 export class DejaTreeListDemoComponent implements OnDestroy {
-    public fruct = '';
+    public fruct = 'apricots';
     public fructs = [] as string[];
+    public fructItems = [] as IItemBase[];
+    public fructItemsWithPreSelection = [] as IItemBase[];
 
     protected disabled: boolean;
     protected country: Country;
@@ -108,6 +110,17 @@ export class DejaTreeListDemoComponent implements OnDestroy {
             'Pineapple',
             'Watermelon',
         ];
+
+        this.fructItems = this.fructs.map((fruct) => ({
+            displayName: fruct,
+            value: fruct.toLowerCase(),
+        } as IItemBase));
+
+        this.fructItemsWithPreSelection = this.fructs.map((fruct, index) => ({
+            displayName: fruct,
+            value: fruct.toLowerCase(),
+            selected: index === 1,
+        } as IItemBase));
 
         this.subscriptions.push(this.countries.subscribe((value: Country[]) => {
             const result = [] as any[];

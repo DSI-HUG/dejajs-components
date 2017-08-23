@@ -226,45 +226,22 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             }));
 
         this.subscriptions.push(Observable.combineLatest(this.writeValue$, this.contentInitialized$)
-            .subscribe(([value]) => {
+            .map(([value]) => value)
+            .do((value) => {
+                const modelType = typeof value;
+                this.modelIsValue = value === '' || modelType === 'string' || modelType === 'number';
+                if (this.modelIsValue) {
+                    this.query = '';
+                }
+                return value;
+            })
+            .map((value) => this.getVirtualSelectedEntities(value))
+            .subscribe((value) => {
                 if (!value) {
-                    this.modelIsValue = value === '';
                     if (this.selectedItems && this.selectedItems.length) {
                         this.removeSelection();
                     }
                     return;
-                }
-
-                const modelType = typeof value;
-                switch (modelType) {
-                    case 'string':
-                    case 'number':
-                        this.modelIsValue = true;
-                        if (this._multiSelect) {
-                            this.query = '';
-                            value = value.split(',')
-                                .map((v) => v.trim())
-                                .map((v) => {
-                                    const model = {};
-                                    const textField = this._textField || 'displayName';
-                                    const valueField = this._valueField || 'value';
-                                    model[textField] = v;
-                                    model[valueField] = v;
-                                    return model;
-                                });
-                        } else {
-                            const v = value.trim();
-                            value = {};
-                            const textField = this._textField || 'displayName';
-                            const valueField = this._valueField || 'value';
-                            value[textField] = v;
-                            value[valueField] = v;
-                        }
-                        break;
-
-                    default:
-                        this.modelIsValue = false;
-                        break;
                 }
 
                 if (this._multiSelect) {
@@ -1114,7 +1091,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 } as DejaItemsEvent;
 
                 if (this.modelIsValue) {
-                    const valueField = this._valueField || 'value';
+                    const valueField = this.getValueField();
                     if (models.find((m) => !!m[valueField])) {
                         output = models.map((m) => m[valueField] || m);
                     }
@@ -1129,7 +1106,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 } as DejaItemEvent;
 
                 if (this.modelIsValue) {
-                    const valueField = this._valueField || 'value';
+                    const valueField = this.getValueField();
                     output = model[valueField] || model;
                 } else {
                     output = items.model !== undefined ? items.model : items;

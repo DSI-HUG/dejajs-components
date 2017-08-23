@@ -9,6 +9,7 @@
 	<md-tab label="ADVANCED EXAMPLES"></md-tab>
 	<md-tab label="COLUMNS MODES"></md-tab>
 	<md-tab label="TEMPLATING"></md-tab>
+	<md-tab label="PRE-SELECTIONS"></md-tab>
 	<md-tab label="PRE-EVENTS AND ON_DEMAND"></md-tab>
 	<md-tab label="PERFORMANCES"></md-tab>
 </md-tab-group>
@@ -98,7 +99,7 @@
 		<md-toolbar color="primary">Grouping Client Side</md-toolbar>
 		<md-card-content fxLayout="column" class="listContainer">
 			<div>To allow the user grouping just add the groupArea directive</div>
-			<deja-grid fxFlex="0 0 600px" selectedModel="e3380ac9-679e-403d-b907-d4fcaa7b7f8d" groupArea columnsSortable multiSelect columnsSizable sortable columnGroups="eyeColor" [rows]="people$" [columns]="peopleColumnsEx" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid">
+			<deja-grid fxFlex="0 0 600px" groupArea columnsSortable multiSelect columnsSizable sortable columnGroups="eyeColor" [rows]="people$" [columns]="peopleColumnsEx" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid">
 				<ng-template #cellTemplate let-row let-column="column">
 					<span *ngIf="column.name==='color'" class="color" [style.background-color]="row[column.name]"></span>
 				</ng-template>
@@ -145,7 +146,7 @@
 		</md-card-content>
 		<md-toolbar color="primary">Percent Columns</md-toolbar>
 		<md-card-content fxLayout="column" class="listContainer">
-			<div>The columns having a width defined as a percentage will resize to fill the remaining space.  If their size reaches their minimum width a horizontal scrollbar will appear.</div>
+			<div>The columns having a width defined as a percentage will resize to fill the remaining space. If their size reaches their minimum width a horizontal scrollbar will appear.</div>
 			<deja-splitter direction="horizontal" (dragProgress)="grdclm2.calcColumnsLayout()">
 				<split-area [size]="60">
 					<deja-grid #grdclm2 columnsSizable [rows]="people$" [columns]="percentPeopleColumns" nodataholder="No datas" valueField="guid"> </deja-grid>
@@ -156,7 +157,7 @@
 		</md-card-content>
 		<md-toolbar color="primary">Responsives Columns</md-toolbar>
 		<md-card-content fxLayout="column" class="listContainer">
-			<div>The columns having a width defined as a percentage will resize to fill the remaining space.  If their size reaches their minimum width, then the columns having a responsive property will be hidden, starting with the lowest responsive value.</div>
+			<div>The columns having a width defined as a percentage will resize to fill the remaining space. If their size reaches their minimum width, then the columns having a responsive property will be hidden, starting with the lowest responsive value.</div>
 			<deja-splitter direction="horizontal" (dragProgress)="grdclm3.calcColumnsLayout()">
 				<split-area [size]="60">
 					<deja-grid #grdclm3 columnsSizable [rows]="people$" [columns]="responsivePeopleColumns" nodataholder="No datas" valueField="guid"> </deja-grid>
@@ -167,8 +168,8 @@
 		</md-card-content>
 		<md-toolbar color="primary">Columns not Specified</md-toolbar>
 		<md-card-content fxLayout="column" class="listContainer">
-			<div>The columns are not specified.  The grid will create columns based on the line model given.  At that moment, the dynamic column model will be displayed in the browser console so that it can be copied and included in the code.</div>
-      		<deja-grid columnsSizable maxHeight="auto" [rows]="people$" nodataholder="No datas" valueField="guid"> </deja-grid>
+			<div>The columns are not specified. The grid will create columns based on the line model given. At that moment, the dynamic column model will be displayed in the browser console so that it can be copied and included in the code.</div>
+			<deja-grid columnsSizable maxHeight="auto" [rows]="people$" nodataholder="No datas" valueField="guid"> </deja-grid>
 		</md-card-content>
 	</md-card>
 </div>
@@ -211,6 +212,41 @@
 
 <div *ngIf="tabIndex === 5">
 	<md-card class="deja-grid-demo demo-card demo-basic">
+		<md-toolbar color="primary">Pre-Selections from html inputs</md-toolbar>
+		<md-card-content class="listContainer">
+			<span fxLayout="row">
+				<div fxFlex="0 0 45%">Preselection with the inputs</div>
+				<div fxFlex="0 0 45%" fxFlexOffset="5%">Preselections with the input selectedModels</div>
+			</span>
+			<span fxLayout="row">
+				<deja-grid fxFlex="0 0 45%" selectedItem="mango" maxHeight="auto" [rows]="fructs" [columns]="fructsColumns" valueField="value">
+					<ng-template #cellTemplate let-row let-column="column">
+						<span *ngIf="column.name==='color'" class="color" [style.background-color]="row[column.name]"></span>
+					</ng-template>
+				</deja-grid>
+				<deja-grid fxFlex="0 0 45%" fxFlexOffset="5%" multiSelect="true" selectedItems="mango, peach, cranberries" maxHeight="auto" [rows]="fructsForMultiSelection" [columns]="fructsColumns" valueField="value">
+					<ng-template #cellTemplate let-row let-column="column">
+						<span *ngIf="column.name==='color'" class="color" [style.background-color]="row[column.name]"></span>
+					</ng-template>
+				</deja-grid>
+			</span>
+		</md-card-content>
+		<md-toolbar color="primary">Pre-Selections from javascript</md-toolbar>
+		<md-card-content class="listContainer">
+			<div>The collection fructItemsWithPreSelection has a pre-selected item</div>
+			<span fxLayout="row">
+				<deja-grid fxFlex="0 0 45%" maxHeight="auto" [rows]="fructsWithPreSelection" [columns]="fructsColumns">
+					<ng-template #cellTemplate let-row let-column="column">
+						<span *ngIf="column.name==='color'" class="color" [style.background-color]="row[column.name]"></span>
+					</ng-template>
+				</deja-grid>
+			</span>
+		</md-card-content>
+	</md-card>
+</div>
+
+<div *ngIf="tabIndex === 6">
+	<md-card class="deja-grid-demo demo-card demo-basic">
 		<md-toolbar color="primary">Pre-events and on-demand</md-toolbar>
 		<md-card-content class="listContainer">
 			<h1>On Demand Loading </h1>
@@ -234,7 +270,7 @@
 	</md-card>
 </div>
 
-<div *ngIf="tabIndex === 6">
+<div *ngIf="tabIndex === 7">
 	<md-card class="deja-grid-demo demo-card demo-basic">
 		<md-toolbar color="primary">Performance Examples</md-toolbar>
 		<md-card-content class="listContainer">
