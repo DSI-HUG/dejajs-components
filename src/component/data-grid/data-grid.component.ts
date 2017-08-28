@@ -16,7 +16,7 @@ import { GroupingService, IGroupInfo } from '../../common/core/grouping';
 import { IItemBase } from '../../common/core/item-list/item-base';
 import { ItemListService } from '../../common/core/item-list/item-list.service';
 import { IItemTree } from '../../common/core/item-list/item-tree';
-import { ViewportMode } from '../../common/core/item-list/viewport.service';
+import { IViewPort, ViewportMode } from '../../common/core/item-list/viewport.service';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { SortingService } from '../../common/core/sorting';
 import { DejaChipsCloseEvent } from '../chips/chips.component';
@@ -130,6 +130,8 @@ export class DejaGridComponent implements OnDestroy {
     @Output() public columnLayoutChanged = new EventEmitter<IDejaGridColumnLayoutEvent>();
     /** Cet évenement est levé lorsque la taille d'une colonne est modifiée */
     @Output() public columnSizeChanged = new EventEmitter<IDejaGridColumnSizeEvent>();
+    /** Exécuté lorsque le calcul du viewPort est executé. */
+    @Output() public viewPortChanged = new EventEmitter<IViewPort>();
     /** retourne la largeur calculée des lignes */
     public rowsWidth = null;
 
@@ -301,7 +303,10 @@ export class DejaGridComponent implements OnDestroy {
                     observable = Observable.fromPromise(promise);
                 }
 
-                observable.subscribe((itms) => this.calcColumnsLayout(itms));
+                this.viewPortChanged
+                    .filter((vp) => vp && vp.items && vp.items.length > 0)
+                    .first()
+                    .subscribe((vp) => this.calcColumnsLayout(vp.items));
             }
         }
         this.changeDetectorRef.markForCheck();
