@@ -698,6 +698,8 @@ export class DejaGridComponent implements OnDestroy {
     }
 
     protected calcColumnsLayout(rows?: IItemBase[]) {
+        this.noColumnsSpecified = false;
+
         if (!this._columns || !this._columns.length) {
             if (rows && rows.length) {
                 const searchFirstLastLevelRow = (items: IItemBase[]) => {
@@ -727,10 +729,6 @@ export class DejaGridComponent implements OnDestroy {
                     });
                 }
             }
-
-            if (!this._columns || !this._columns.length) {
-                return;
-            }
         }
 
         if (this.noColumnsSpecified) {
@@ -738,7 +736,16 @@ export class DejaGridComponent implements OnDestroy {
         }
 
         this.clearColumnLayout();
-        if (this._columns.length === 0 || !this.treeListComponent || !this.treeListComponent.listContainer) {
+
+        if (!this._columns || !this._columns.length) {
+            if (this.header) {
+                this.header.refresh();
+            }
+            this._columnLayout.refresh$.next();
+            return;
+        }
+
+        if (!this.treeListComponent || !this.treeListComponent.listContainer) {
             return;
         }
 

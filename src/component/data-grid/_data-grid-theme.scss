@@ -6,6 +6,9 @@
 
 	deja-grid {
 		#treelist {
+			#listheader {
+				border-bottom: 0;
+			}
 			#listcontainer {
 				>div.listitem {
 					&[current="true"] {

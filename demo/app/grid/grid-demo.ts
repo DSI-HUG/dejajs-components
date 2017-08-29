@@ -50,6 +50,7 @@ export class GridDemoComponent {
     protected bigNews$: Observable<News[]>;
     protected bigPeople$: Observable<Person[]>;
     protected columnGroups = [] as IDejaGridColumn[];
+    protected peopleRows = [] as Person[];
     protected draggedPerson;
 
     protected viewPortInfos: {
@@ -632,13 +633,12 @@ export class GridDemoComponent {
             } as IGroupInfo));
 
         peopleService.getPeople$()
+            .do((items) => this.peopleRows = items)
             .switchMap((people) => groupingService.group$(people, {
                 groupByField: 'color',
             } as IGroupInfo))
             .first()
-            .subscribe((items) => {
-                this.groupedByColorPeople = items;
-            });
+            .subscribe((items) => this.groupedByColorPeople = items);
 
         this.peopleColumnsEx = [
             ...[{
@@ -810,6 +810,11 @@ export class GridDemoComponent {
                 this.changeDetectorRef.markForCheck();
             },
         } as IDejaDropContext;
+    }
+
+    protected clearButtonClicked() {
+        this.peopleColumns = [];
+        this.peopleRows = [];
     }
 }
 
