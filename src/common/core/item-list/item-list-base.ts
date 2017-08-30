@@ -30,8 +30,6 @@ export abstract class ItemListBase implements OnDestroy {
     protected _multiSelect = false;
     protected _searchField: string;
     protected _maxHeight: number;
-    protected _textField: string;
-    protected _valueField: string;
     protected _currentItemIndex = -1;
     protected _currentItem: IItemBase;
     protected _hintLabel: string;
@@ -57,6 +55,9 @@ export abstract class ItemListBase implements OnDestroy {
     // Drag drop
     protected _ddStartIndex: number;
     protected _ddTargetIndex: number;
+
+    private _textField: string;
+    private _valueField: string;
 
     private waiter$sub: Subscription;
     private viewPort$sub: Subscription;
@@ -416,7 +417,7 @@ export abstract class ItemListBase implements OnDestroy {
         if (this._itemListService) {
             this._itemListService.hideSelected = this._hideSelected;
             this._itemListService.childrenField = this._childrenField;
-            this._itemListService.valueField = this._valueField;
+            this._itemListService.valueField = this.getValueField();
             this.waiter$sub = Observable.from(this._itemListService.waiter$)
                 .subscribe((status: boolean) => {
                     this._waiter = status;
@@ -603,7 +604,7 @@ export abstract class ItemListBase implements OnDestroy {
 
     /** Retourne le champ utilisé comme valeur d'affichage.*/
     protected getTextField() {
-        return this._textField;
+        return this._textField || 'displayName';
     }
 
     /** Définit le champ à utiliser comme valeur de comparaison.
@@ -618,7 +619,7 @@ export abstract class ItemListBase implements OnDestroy {
 
     /** Retourne le champ utilisé comme valeur de comparaison.*/
     protected getValueField() {
-        return this._valueField;
+        return this._valueField || 'value';
     }
 
     /** Définit le champ à utiliser comme champ de recherche.
@@ -710,26 +711,23 @@ export abstract class ItemListBase implements OnDestroy {
 
             itemBase.model = model;
 
-            const displayField = this._textField || 'displayName';
+            const displayField = this.getTextField();
+            const valueField = this.getValueField();
+
             if (typeof model === 'string') {
                 itemBase[displayField] = model;
+                itemBase[valueField] = model;
 
                 if (this._searchField) {
                     itemBase[this._searchField] = model;
                 }
 
-                if (this._valueField) {
-                    itemBase[this._valueField] = model;
-                }
             } else {
                 itemBase[displayField] = this.getTextValue(model);
+                itemBase[valueField] = model[this._valueField];
 
                 if (this._searchField) {
                     itemBase[this._searchField] = model[this._searchField];
-                }
-
-                if (this._valueField) {
-                    itemBase[this._valueField] = model[this._valueField];
                 }
             }
 
@@ -754,6 +752,35 @@ export abstract class ItemListBase implements OnDestroy {
         } else {
             return (item.size && item.size > ViewPortService.itemDefaultSize) ? item.size : this.getViewPortRowHeight();
         }
+    }
+
+    protected getVirtualSelectedEntities(value) {
+        if (value) {
+            const modelType = typeof value;
+            if (modelType === 'string' || modelType === 'number') {
+                if (this._multiSelect) {
+                    value = value.split(',')
+                        .map((v) => v.trim())
+                        .map((v) => {
+                            const model = {};
+                            const textField = this.getTextField();
+                            const valueField = this.getValueField();
+                            model[textField] = v;
+                            model[valueField] = v;
+                            return model;
+                        });
+                } else {
+                    const v = value.trim();
+                    value = {};
+                    const textField = this.getTextField();
+                    const valueField = this.getValueField();
+                    value[textField] = v;
+                    value[valueField] = v;
+                }
+            }
+        }
+
+        return value;
     }
 }
 

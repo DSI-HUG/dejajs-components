@@ -280,9 +280,11 @@ export class ItemListService {
             return '';
         } else {
             if (textField && value.model && value.model[textField] !== undefined) {
-                return value.model[textField];
+                const displayName = value.model[textField];
+                return typeof displayName === 'string' ? displayName : displayName();
             } else if (textField && value[textField] !== undefined) {
-                return value[textField];
+                const displayName = value[textField];
+                return typeof displayName === 'string' ? displayName : displayName();
             } else if (value.displayName) {
                 return typeof value.displayName === 'string' ? value.displayName : value.displayName();
             } else if (typeof value.toString === 'function') {
@@ -1142,12 +1144,16 @@ export class ItemListService {
     }
 
     private ensureSelectedItems(items: IItemBase[]) {
-        if (!items || !this.selectedList || this.selectedList.length === 0) {
+        if (!this.selectedList || this.selectedList.length === 0) {
             return [];
         }
 
         // Ensure selected flag
         this.selectedList.forEach((item) => item.selected = true);
+
+        if (!items) {
+            return this.selectedList;
+        }
 
         const newSelectedList = [] as IItemBase[];
         const ensureSelectedChildren = (children: IItemTree[]) => {
@@ -1194,17 +1200,16 @@ export class ItemListService {
                 return item2.model.equals(item1.model);
             } else {
                 const getValue = (item: any) => {
-                    if (item.model) {
-                        item = item.model;
-                    }
                     const valueField = this._valueField || 'value';
+                    if (item.model && item.model[valueField] !== undefined) {
+                        return item.model[valueField];
+                    }
                     if (item[valueField] !== undefined) {
                         return item[valueField];
                     } else {
-                        return item;
+                        return item.model || item;
                     }
                 };
-
                 return getValue(item1) === getValue(item2);
             }
         }

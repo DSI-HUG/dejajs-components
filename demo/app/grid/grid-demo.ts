@@ -32,6 +32,8 @@ import { IDejaDropContext, IDejaDropEvent } from './../../../src/component/dragd
     templateUrl: './grid-demo.html',
 })
 export class GridDemoComponent {
+    protected fructsForMultiSelection: IDejaGridRow[];
+    protected fructsWithPreSelection: IDejaGridRow[];
     protected tabIndex = 1;
     protected people$: Observable<Person[]>;
     protected peopleForMultiselect$: Observable<Person[]>;
@@ -48,6 +50,7 @@ export class GridDemoComponent {
     protected bigNews$: Observable<News[]>;
     protected bigPeople$: Observable<Person[]>;
     protected columnGroups = [] as IDejaGridColumn[];
+    protected peopleRows = [] as Person[];
     protected draggedPerson;
 
     protected viewPortInfos: {
@@ -59,6 +62,333 @@ export class GridDemoComponent {
     private _dialogVisible = false;
 
     @ViewChild('onexpand') private onExpandGrid: DejaGridComponent;
+
+    protected fructs = [
+        {
+            name: 'Peach',
+            value: 'peach',
+            color: '#FF6F00',
+            Potassium: '285 mg',
+            Phosphorus: '30 mg',
+            Magnesium: '14 mg',
+            Calcium: '9 mg',
+            Iron: '0.38 mg',
+            Selenium: '0.1 mcg',
+            Manganese: '0.091 mg',
+            Copper: '0.102 mg',
+            Zinc: '0.26 mg',
+            VitaminA: '489 IU',
+            VitaminB1: '0.036 mg',
+            VitaminB2: '0.047 mg',
+            Niacin: '1.209 mg',
+            Folate: '6 mcg',
+            PantothenicAcid: '0.229 mg',
+            VitaminB6: '0.037 mg',
+            VitaminC: '9.9 mg',
+            VitaminE: '1.09 mg',
+            VitaminK: '3.9 mcg',
+        },
+        {
+            name: 'Banana',
+            value: 'banana',
+            color: '#FFEB3B',
+            Potassium: '422 mg',
+            Phosphorus: '26 mg',
+            Magnesium: '32 mg',
+            Calcium: '6 mg',
+            Sodium: '1 mg',
+            Iron: '0.31 mg',
+            Selenium: '1.2 mcg',
+            Manganese: '0.319 mg',
+            Copper: '0.092 mg',
+            Zinc: '0.18 mg',
+            VitaminA: '76 IU',
+            VitaminB1: '0.037 mg',
+            VitaminB2: '0.086 mg',
+            Niacin: '0.785 mg',
+            Folate: '24 mcg',
+            PantothenicAcid: '0.394 mg',
+            VitaminB6: '0.433 mg',
+            VitaminC: '10.3 mg',
+            VitaminE: '0.12 mg',
+            VitaminK: '0.6 mcg',
+        },
+        {
+            name: 'Cantaloupe',
+            value: 'cantaloupe',
+            color: '#AED581',
+            Potassium: '184 mg',
+            Phosphorus: '10 mg',
+            Magnesium: '8 mg',
+            Calcium: '6 mg',
+            Sodium: '11 mg',
+            Iron: '0.14 mg',
+            Selenium: '0.3 mcg',
+            Manganese: '0.028 mg',
+            Copper: '0.028 mg',
+            Zinc: '0.12 mg',
+            VitaminA: '2334 IU',
+            VitaminB1: '0.028 mg',
+            VitaminB2: '0.013 mg',
+            Niacin: '0.506 mg',
+            Folate: '14 mcg',
+            PantothenicAcid: '0.072 mg',
+            VitaminB6: '0.05 mg',
+            VitaminC: '25.3 mg',
+            VitaminE: '0.03 mg',
+            VitaminK: '1.7 mcg    ',
+        },
+        {
+            name: 'Cherries',
+            value: 'cherries',
+            color: '#880E4F',
+            Potassium: '306 mg',
+            Phosphorus: '29 mg',
+            Magnesium: '15 mg',
+            Calcium: '18 mg',
+            Iron: '0.5 mg',
+            Zinc: '0.1 mg',
+            Manganese: '0.097 mg',
+            Copper: '0.083 mg    ',
+            VitaminA: '88 IU',
+            VitaminB1: '0.037 mg',
+            VitaminB2: '0.046 mg',
+            Niacin: '0.213 mg',
+            Folate: '6 mcg',
+            PantothenicAcid: '0.275 mg',
+            VitaminB6: '0.068 mg',
+            VitaminC: '9.7 mg',
+            VitaminE: '0.1 mg',
+            VitaminK: '2.9 mcg',
+        },
+        {
+            name: 'Chinese Pears',
+            value: 'chinesepears',
+            color: '#F5F5F5',
+            Potassium: '333 mg',
+            Phosphorus: '30 mg',
+            Magnesium: '22 mg',
+            Calcium: '11 mg',
+            Selenium: '0.3 mcg',
+            Manganese: '0.165 mg',
+            Copper: '0.138 mg',
+            Zinc: '0.06 mg',
+            VitaminA: '0 mg',
+            VitaminB1: '0.025 mg',
+            VitaminB2: '0.028 mg',
+            Niacin: '0.602 mg',
+            Folate: '22 mcg',
+            PantothenicAcid: '0.193 mg',
+            VitaminB6: '0.06 mg',
+            VitaminC: '10.4 mg',
+            VitaminE: '0.33 mg',
+            VitaminK: '12.4 mcg',
+        },
+        {
+            name: 'Cranberries',
+            value: 'cranberries',
+            color: '#C2185B',
+            Potassium: '85 mg',
+            Phosphorus: '13 mg',
+            Magnesium: '6 mg',
+            Calcium: '8 mg',
+            Sodium: '2 mg',
+            Iron: '0.25 mg',
+            Selenium: '0.1 mcg',
+            Manganese: '0.36 mg',
+            Copper: '0.061 mg',
+            Zinc: '0.1 mg',
+            VitaminA: '60 IU',
+            VitaminB1: '0.012 mg',
+            VitaminB2: '0.02 mg',
+            Niacin: '0.101 mg',
+            Folate: '1 mcg',
+            PantothenicAcid: '0.295 mg',
+            VitaminB6: '0.057 mg',
+            VitaminC: '13.3 mg',
+            VitaminE: '1.2 mg',
+            VitaminK: '5.1 mcg',
+        },
+        {
+            name: 'Guava',
+            value: 'guava',
+            color: '#FFCA28',
+            Potassium: '688 mg',
+            Phosphorus: '66 mg',
+            Magnesium: '36 mg',
+            Calcium: '30 mg',
+            Sodium: '3 mg',
+            Iron: '0.43 mg',
+            Selenium: '1 mcg',
+            Manganese: '0.247 mg',
+            Copper: '0.38 mg',
+            Zinc: '0.38 mg',
+            VitaminA: '1030 IU',
+            VitaminB1: '0.111 mg',
+            VitaminB2: '0.066 mg',
+            Niacin: '1.789 mg',
+            Folate: '81 mcg',
+            PantothenicAcid: '0.744 mg',
+            VitaminB6: '0.181 mg',
+            VitaminC: '376.7 mg',
+            VitaminE: '1.2 mg',
+            VitaminK: '4.3 mcg',
+        },
+        {
+            name: 'Grapes',
+            value: 'grapes',
+            color: '#303F9F',
+            Potassium: '288 mg',
+            Phosphorus: '30 mg',
+            Magnesium: '11 mg',
+            Calcium: '15 mg',
+            Sodium: '3 mg',
+            Iron: '0.54 mg',
+            Selenium: '0.2 mcg',
+            Manganese: '0.107 mg',
+            Copper: '0.192 mg',
+            Zinc: '0.11 mg',
+            VitaminA: '100 IU',
+            VitaminB1: '0.104 mg',
+            VitaminB2: '0.106 mg',
+            Niacin: '0.284 mg',
+            Folate: '3 mcg',
+            PantothenicAcid: '0.076 mg',
+            VitaminB6: '0.13 mg',
+            VitaminC: '16.3 mg',
+            VitaminE: '0.29 mg',
+            VitaminK: '22 mcg',
+        },
+        {
+            name: 'Lemon',
+            value: 'lemon',
+            color: '#FFF176',
+            Potassium: '116 mg',
+            Phosphorus: '13 mg',
+            Magnesium: '7 mg',
+            Calcium: '22 mg',
+            Sodium: '2 mg',
+            Iron: '0.5 mg',
+            Selenium: '0.3 mcg',
+            Manganese: '0.025 mg',
+            Copper: '0.031 mg',
+            Zinc: '0.05 mg',
+            VitaminA: '18 IU',
+            VitaminB1: '0.034 mg',
+            VitaminB2: '0.017 mg',
+            Niacin: '0.084 mg',
+            Folate: '9 mcg',
+            PantothenicAcid: '0.16 mg',
+            VitaminB6: '0.067 mg',
+            VitaminC: '44.5 mg',
+            VitaminE: '0.13 mg',
+        },
+        {
+            name: 'Mango',
+            value: 'mango',
+            color: '#FBC02D',
+            Potassium: '323 mg',
+            Phosphorus: '23 mg',
+            Magnesium: '19 mg',
+            Calcium: '21 mg',
+            Sodium: '4 mg',
+            Iron: '0.27 mg',
+            Selenium: '1.2 mcg',
+            Manganese: '0.056 mg',
+            Copper: '0.228 mg',
+            Zinc: '0.08 mg',
+            VitaminA: '1584 IU',
+            VitaminB1: '0.12 mg',
+            VitaminB2: '0.118 mg',
+            Niacin: '1.209 mg',
+            Folate: '29 mcg',
+            PantothenicAcid: '0.331 mg',
+            VitaminB6: '0.227 mg',
+            VitaminC: '57.3 mg',
+            VitaminE: '2.32 mg',
+            VitaminK: '8.7 mcg',
+        },
+        {
+            name: 'Pineapple',
+            value: 'pineapple',
+            color: '#FDD835',
+            Potassium: '180 mg',
+            Phosphorus: '13 mg',
+            Magnesium: '20 mg',
+            Calcium: '21 mg',
+            Sodium: '2 mg',
+            Iron: '0.48 mg',
+            Selenium: '0.2 mcg',
+            Manganese: '1.53 mg',
+            Copper: '0.181 mg',
+            Zinc: '0.2 mg',
+            VitaminA: '96 IU',
+            VitaminB1: '0.13 mg',
+            VitaminB2: '0.053 mg',
+            Niacin: '0.825 mg',
+            Folate: '30 mcg',
+            PantothenicAcid: '0.351 mg',
+            VitaminB6: '0.185 mg',
+            VitaminC: '78.9 mg',
+            VitaminE: '0.03 mg',
+            VitaminK: '1.2 mcg',
+        },
+        {
+            name: 'Watermelon',
+            value: 'watermelon',
+            color: '#E91E63',
+            Potassium: '320 mg',
+            Phosphorus: '31 mg',
+            Magnesium: '29 mg',
+            Calcium: '20 mg',
+            Sodium: '3 mg',
+            Iron: '0.69 mg',
+            Selenium: '1.1 mcg',
+            Manganese: '0.109 mg',
+            Copper: '0.12 mg',
+            Zinc: '0.29 mg',
+            VitaminA: '1627 IU',
+            VitaminB1: '0.094 mg',
+            VitaminB2: '0.06 mg',
+            Niacin: '0.509 mg',
+            Folate: '9 mcg',
+            PantothenicAcid: '0.632 mg',
+            VitaminB6: '0.129 mg',
+            VitaminC: '23.2 mg',
+            VitaminE: '0.14 mg',
+            VitaminK: '0.3 mcg',
+        },
+    ] as any[];
+
+    protected fructsColumns = [
+        {
+            label: 'Color',
+            name: 'color',
+            width: '64px',
+            useCellTemplate: true,
+        },
+        {
+            label: 'Name',
+            name: 'name',
+            width: '130px',
+        },
+        {
+            label: 'Vitamin A',
+            name: 'VitaminA',
+        },
+        {
+            label: 'Vitamin B1',
+            name: 'VitaminB1',
+        },
+        {
+            label: 'Vitamin B2',
+            name: 'VitaminB1',
+        },
+        {
+            label: 'Vitamin C',
+            name: 'VitaminC',
+        },
+    ] as IDejaGridColumn[];
 
     protected peopleColumns = [
         {
@@ -303,13 +633,12 @@ export class GridDemoComponent {
             } as IGroupInfo));
 
         peopleService.getPeople$()
+            .do((items) => this.peopleRows = items)
             .switchMap((people) => groupingService.group$(people, {
                 groupByField: 'color',
             } as IGroupInfo))
             .first()
-            .subscribe((items) => {
-                this.groupedByColorPeople = items;
-            });
+            .subscribe((items) => this.groupedByColorPeople = items);
 
         this.peopleColumnsEx = [
             ...[{
@@ -362,6 +691,16 @@ export class GridDemoComponent {
 
             this.onDemandGroupedPeople = onDemandResult;
         });
+
+        this.fructsForMultiSelection = this.fructs
+            .map((fruct) => cloningService.cloneSync(fruct));
+
+        this.fructsWithPreSelection = this.fructs
+            .map((fruct) => {
+                const f = cloningService.cloneSync(fruct) as any;
+                f.selected = fruct.value === 'banana';
+                return f;
+            });
     }
 
     protected onColumnSizeChanged(e: IDejaGridColumnSizeEvent, grid: DejaGridComponent) {
@@ -471,6 +810,11 @@ export class GridDemoComponent {
                 this.changeDetectorRef.markForCheck();
             },
         } as IDejaDropContext;
+    }
+
+    protected clearButtonClicked() {
+        this.peopleColumns = [];
+        this.peopleRows = [];
     }
 }
 

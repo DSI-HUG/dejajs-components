@@ -117,6 +117,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     private clearFilterExpression$ = new BehaviorSubject<void>(null);
     private filterListComplete$ = new Subject();
     private writeValue$ = new Subject<any>();
+    private selectItems$ = new Subject<any>();
     private contentInitialized$ = new Subject();
 
     private modelIsValue = false;
@@ -154,43 +155,25 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                 this.changeDetectorRef.markForCheck();
             }));
 
-        this.subscriptions.push(Observable.combineLatest(this.writeValue$, this.contentInitialized$)
-            .subscribe(([value]) => {
+        const selectItems$ = Observable.combineLatest(this.selectItems$, this.contentInitialized$)
+            .map(([value]) => value)
+            .map((value) => this.getVirtualSelectedEntities(value))
+            .do((value) => super.setSelectedItems(!value || this._multiSelect ? value : [value]));
+
+        const selectModels$ = Observable.combineLatest(this.writeValue$, this.contentInitialized$)
+            .map(([value]) => {
                 const modelType = typeof value;
-                if (!value) {
-                    this.modelIsValue = value === '';
-                    super.setSelectedModels(null);
-                    this.changeDetectorRef.markForCheck();
-                    return;
+                this.modelIsValue = value === '' || modelType === 'string' || modelType === 'number';
+                if (this.modelIsValue) {
+                    this.query = '';
                 }
+                return value;
+            })
+            .map((value) => this.getVirtualSelectedEntities(value))
+            .do((value) => super.setSelectedModels(!value || this._multiSelect ? value : [value]));
 
-                switch (modelType) {
-                    case 'string':
-                    case 'number':
-                        this.modelIsValue = true;
-                        if (this._multiSelect) {
-                            this.query = '';
-                            value = value.split(',')
-                                .map((v) => v.trim())
-                                .map((v) => ({
-                                    value: v,
-                                    displayName: v,
-                                }));
-                        } else {
-                            const v = value.trim();
-                            value = {
-                                value: v,
-                                displayName: v,
-                            };
-                        }
-                        break;
-
-                    default:
-                        this.modelIsValue = false;
-                        break;
-                }
-
-                super.setSelectedModels(this._multiSelect ? value : [value]);
+        this.subscriptions.push(Observable.merge(selectModels$, selectItems$)
+            .subscribe(() => {
                 super.getItemListService().ensureSelection();
                 this.changeDetectorRef.markForCheck();
             }));
@@ -371,7 +354,9 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Définit la liste des éléments selectionés en mode multiselect */
     @Input()
     public set selectedItems(value: IItemBase[]) {
-        this.setSelectedItems(value);
+        if (value !== undefined) {
+            this.selectItems$.next(value);
+        }
     }
 
     /** Retourne la liste des éléments selectionés en mode multiselect */
@@ -379,14 +364,11 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
         return super.getSelectedItems();
     }
 
-    /** Définit l'éléments selectioné en mode single select */
+    /** Définit l'élément selectioné en mode single select */
     @Input()
     public set selectedItem(value: IItemBase | string) {
-        if (typeof value === 'string') {
-            const items = this.getItems();
-            this.selectedItem = items && value && items.find((item) => item[this._valueField] === value);
-        } else {
-            this.setSelectedItems(value && [value]);
+        if (value !== undefined) {
+            this.selectItems$.next(value);
         }
     }
 
@@ -399,7 +381,9 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Définit le model selectioné en mode single select */
     @Input()
     public set selectedModel(value: any) {
-        this.writeValue(value);
+        if (value !== undefined) {
+            this.writeValue(value);
+        }
     }
 
     /** Retourne le model selectioné en mode single select */
@@ -411,7 +395,9 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Définit la liste des models selectionés en mode multiselect */
     @Input()
     public set selectedModels(value: any[]) {
-        this.writeValue(value);
+        if (value !== undefined) {
+            this.writeValue(value);
+        }
     }
 
     /** Retourne la liste des models selectionés en mode multiselect */
@@ -1083,7 +1069,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
             } as DejaItemsEvent;
 
             if (this.modelIsValue) {
-                const valueField = this._valueField || 'value';
+                const valueField = this.getValueField();
                 if (models.find((m) => !!m[valueField])) {
                     output = models.map((m) => m[valueField] || m);
                 }
@@ -1099,7 +1085,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
             } as DejaItemEvent;
 
             if (this.modelIsValue) {
-                const valueField = this._valueField || 'value';
+                const valueField = this.getValueField();
                 output = model[valueField] || model;
             } else {
                 output = model;

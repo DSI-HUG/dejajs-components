@@ -16,7 +16,7 @@ import { GroupingService, IGroupInfo } from '../../common/core/grouping';
 import { IItemBase } from '../../common/core/item-list/item-base';
 import { ItemListService } from '../../common/core/item-list/item-list.service';
 import { IItemTree } from '../../common/core/item-list/item-tree';
-import { ViewportMode } from '../../common/core/item-list/viewport.service';
+import { IViewPort, ViewportMode } from '../../common/core/item-list/viewport.service';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { SortingService } from '../../common/core/sorting';
 import { DejaChipsCloseEvent } from '../chips/chips.component';
@@ -84,8 +84,14 @@ export class DejaGridComponent implements OnDestroy {
     @Input() public searchField: string;
     /** Ligne courant ou ligne active */
     @Input() public currentRow: IItemBase;
-    /** Liste des éléments sélectionnés */
+    /** Liste des éléments sélectionnés en mode multiselect */
     @Input() public selectedItems: IItemBase[];
+    /** Elément selectioné en mode single select */
+    @Input() public selectedItem: IItemBase | string;
+    /** Liste des models selectionés en mode multiselect */
+    @Input() public selectedModels: any[];
+    /** Model selectioné en mode single select */
+    @Input() public selectedModel: any;
     /** Definit le service de tri utilisé par ce composant. */
     @Input() public sortingService: SortingService;
     /** Definit le service de regroupement utilisé par ce composant. */
@@ -124,6 +130,8 @@ export class DejaGridComponent implements OnDestroy {
     @Output() public columnLayoutChanged = new EventEmitter<IDejaGridColumnLayoutEvent>();
     /** Cet évenement est levé lorsque la taille d'une colonne est modifiée */
     @Output() public columnSizeChanged = new EventEmitter<IDejaGridColumnSizeEvent>();
+    /** Exécuté lorsque le calcul du viewPort est executé. */
+    @Output() public viewPortChanged = new EventEmitter<IViewPort>();
     /** retourne la largeur calculée des lignes */
     public rowsWidth = null;
 
@@ -295,7 +303,10 @@ export class DejaGridComponent implements OnDestroy {
                     observable = Observable.fromPromise(promise);
                 }
 
-                observable.subscribe((itms) => this.calcColumnsLayout(itms));
+                this.viewPortChanged
+                    .filter((vp) => vp && vp.items && vp.items.length > 0)
+                    .first()
+                    .subscribe((vp) => this.calcColumnsLayout(vp.items));
             }
         }
         this.changeDetectorRef.markForCheck();
@@ -687,6 +698,8 @@ export class DejaGridComponent implements OnDestroy {
     }
 
     protected calcColumnsLayout(rows?: IItemBase[]) {
+        this.noColumnsSpecified = false;
+
         if (!this._columns || !this._columns.length) {
             if (rows && rows.length) {
                 const searchFirstLastLevelRow = (items: IItemBase[]) => {
@@ -716,10 +729,6 @@ export class DejaGridComponent implements OnDestroy {
                     });
                 }
             }
-
-            if (!this._columns || !this._columns.length) {
-                return;
-            }
         }
 
         if (this.noColumnsSpecified) {
@@ -727,7 +736,16 @@ export class DejaGridComponent implements OnDestroy {
         }
 
         this.clearColumnLayout();
-        if (this._columns.length === 0 || !this.treeListComponent || !this.treeListComponent.listContainer) {
+
+        if (!this._columns || !this._columns.length) {
+            if (this.header) {
+                this.header.refresh();
+            }
+            this._columnLayout.refresh$.next();
+            return;
+        }
+
+        if (!this.treeListComponent || !this.treeListComponent.listContainer) {
             return;
         }
 
