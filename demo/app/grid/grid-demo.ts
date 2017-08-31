@@ -811,11 +811,6 @@ export class GridDemoComponent {
             },
         } as IDejaDropContext;
     }
-
-    protected clearButtonClicked() {
-        this.peopleColumns = [];
-        this.peopleRows = [];
-    }
 }
 
 interface IPeopleGroup extends IItemTree {
