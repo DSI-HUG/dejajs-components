@@ -32,9 +32,9 @@ import { IDejaDropContext, IDejaDropEvent } from './../../../src/component/dragd
     templateUrl: './grid-demo.html',
 })
 export class GridDemoComponent {
+    public tabIndex = 1;
     protected fructsForMultiSelection: IDejaGridRow[];
     protected fructsWithPreSelection: IDejaGridRow[];
-    public tabIndex = 1;
     protected people$: Observable<Person[]>;
     protected peopleForMultiselect$: Observable<Person[]>;
     protected groupedByGenderPeople$: Observable<Person[]>;
