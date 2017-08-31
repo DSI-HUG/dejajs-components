@@ -18,7 +18,7 @@
   },
   "scripts": {
     "build": "ng build",
-    "build:prod": "del-cli .tmp && yarn run copy:assets && ng build --prod --aot=true --env=prod --base-href https://dsi-hug.github.io/dejajs-components/",
+    "build:prod": "del-cli .tmp && yarn run copy:assets && ng build --prod --aot=false --env=prod --base-href https://dsi-hug.github.io/dejajs-components/",
     "build:lib": "gulp build",
     "build:lib:watch": "gulp",
     "copy:assets": "del-cli demo/vs && symlink-dir ./node_modules/monaco-editor/min/vs demo/vs",

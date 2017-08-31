@@ -89,16 +89,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     private subscriptions: Subscription[] = [];
     private mouseUp$sub: Subscription;
 
-    @ContentChild('hintTemplate') protected hintTemplateInternal;
-    @ContentChild('placeHolderTemplate') protected placeHolderTemplateInternal;
-    @ContentChild('itemTemplate') protected itemTemplateInternal;
-    @ContentChild('parentItemTemplate') protected parentItemTemplateInternal;
-    @ContentChild('selectedTemplate') protected selectedTemplate;
-    @ContentChild('suffixTemplate') protected mdSuffix;
-    @ContentChildren(DejaItemComponent) protected options: DejaItemComponent[];
-    /** Template for MdError inside md-input-container */
-    @ContentChild('errorTemplate') protected mdError;
-
     @ViewChild('inputElement') private _inputElement: ElementRef;
     @ViewChild(MdInputContainer) private inputContainer: MdInputContainer;
     @ViewChild(MdInputDirective) protected input: MdInputDirective;
