@@ -38,7 +38,11 @@ export class DejaTooltipComponent implements OnInit {
 
     /** Parameters of the tooltip */
     public params: ITooltipParams;
-    private model: any;
+    private _model: any;
+
+    public get model() {
+        return this._model;
+    }
 
     /**
      * Constructor
@@ -48,12 +52,12 @@ export class DejaTooltipComponent implements OnInit {
         const element = elementRef.nativeElement as HTMLElement;
 
         const hide$ = Observable.from(this.hide)
-            .do(() => this.model = undefined);
+            .do(() => this._model = undefined);
 
         Observable.fromEvent(element.ownerDocument, 'mousemove')
             .takeUntil(hide$)
             .debounceTime(20)
-            .filter(() => this.model)
+            .filter(() => this._model)
             .map((event: MouseEvent) => new Position(event.pageX, event.pageY))
             .filter((position) => {
                 const containerElement = this.dropdown.dropdownElement;
@@ -81,17 +85,17 @@ export class DejaTooltipComponent implements OnInit {
 
         const model$ = this.params.model as Observable<any>;
         if (!model$) {
-            this.model = undefined;
+            this._model = undefined;
         } else if (model$.subscribe) {
-            model$.subscribe((model) => this.model = model, () => this.hide.emit());
+            model$.subscribe((model) => this._model = model, () => this.hide.emit());
         } else {
             const promise = this.params.model as Promise<any>;
             if (promise.then) {
                 promise
-                    .then((model) => this.model = model)
+                    .then((model) => this._model = model)
                     .catch(() => this.hide.emit());
             } else {
-                this.model = this.params.model;
+                this._model = this.params.model;
             }
         }
     }

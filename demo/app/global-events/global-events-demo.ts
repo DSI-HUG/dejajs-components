@@ -17,7 +17,7 @@ import { GlobalEventService } from '../../../src/common/global-event/global-even
     templateUrl: './global-events-demo.html',
 })
 export class GlobalEventsDemoComponent implements OnDestroy {
-    protected tabIndex = 1;
+    public tabIndex = 1;
 
     private model = {
         date: new Date(),

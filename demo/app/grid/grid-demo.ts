@@ -32,9 +32,9 @@ import { IDejaDropContext, IDejaDropEvent } from './../../../src/component/dragd
     templateUrl: './grid-demo.html',
 })
 export class GridDemoComponent {
+    public tabIndex = 1;
     protected fructsForMultiSelection: IDejaGridRow[];
     protected fructsWithPreSelection: IDejaGridRow[];
-    protected tabIndex = 1;
     protected people$: Observable<Person[]>;
     protected peopleForMultiselect$: Observable<Person[]>;
     protected groupedByGenderPeople$: Observable<Person[]>;
@@ -583,12 +583,12 @@ export class GridDemoComponent {
         },
     ] as IDejaGridColumn[];
 
-    protected set dialogVisible(value: boolean) {
+    public set dialogVisible(value: boolean) {
         this._dialogVisible = value;
         this.changeDetectorRef.markForCheck();
     }
 
-    protected get dialogVisible() {
+    public get dialogVisible() {
         return this._dialogVisible;
     }
 

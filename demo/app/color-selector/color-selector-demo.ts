@@ -17,7 +17,7 @@ import { MaterialColors } from '../../../src/common/core/style/material-colors';
     templateUrl: './color-selector-demo.html',
 })
 export class DejaColorSelectorDemoComponent {
-    protected tabIndex = 1;
+    public tabIndex = 1;
 
     protected selectedColor = Color.fromHex('#FFA000');
     protected invalidColor = Color.fromHex('#FFA012');

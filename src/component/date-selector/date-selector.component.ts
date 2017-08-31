@@ -40,7 +40,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
 
     @Output() public dateChange = new EventEmitter();
 
-    protected local = 'fr';
+    protected _local = 'fr';
 
     // Time
     protected beginOffset = Math.PI / 3;
@@ -59,19 +59,35 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
     };
     // /Time
 
-    protected keyboardNavigation = false;
-    private keyboardNavigation$ = new Subject();
+    protected _keyboardNavigation = false;
+    private _keyboardNavigation$ = new Subject();
+
+    public get keyboardNavigation(){
+        return this._keyboardNavigation;
+    }
+
+    public get keyboardNavigation$() {
+        return this._keyboardNavigation$;
+    }
+
+    public get displayedDate() {
+        return this._displayedDate;
+    }
+
+    public get local() {
+        return this._local;
+    }
 
     private subscriptions: Subscription[] = [];
 
-    private currentDays: IDateSelectorItem[];
-    private currentDate: Date = new Date();
+    private _currentDays: IDateSelectorItem[];
+    private _currentDate: Date = new Date();
 
     private selectedDate: Date;
-    private displayedDate = new Date();
+    private _displayedDate = new Date();
 
-    private days = [];
-    private emptyDays: any[];
+    private _days = [];
+    private _emptyDays: any[];
     private _time: boolean;
     private _disabled: boolean;
 
@@ -91,6 +107,22 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
     /** Time property getter. */
     public get time() {
         return this._time;
+    }
+
+    public get days() {
+        return this._days;
+    }
+
+    public get emptyDays() {
+        return this._emptyDays;
+    }
+
+    public get currentDate() {
+        return this._currentDate;
+    }
+
+    public get currentDays() {
+        return this._currentDays;
     }
 
     /** Disabled property setter. Can be string or empty so you can use it like : <deja-date-selector disabled></deja-date-selector> */
@@ -116,28 +148,28 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
         this.subscriptions.push(Observable.fromEvent(element, 'click').subscribe((event: Event) => {
             const target = event.target as HTMLElement;
             if (target.hasAttribute('dateindex')) {
-                const dateSelectorItem = this.currentDays[+target.getAttribute('dateindex')];
+                const dateSelectorItem = this._currentDays[+target.getAttribute('dateindex')];
                 if (!dateSelectorItem.disabled) {
                     this.value = dateSelectorItem.date;
                 }
             }
         }));
 
-        this.subscriptions.push(Observable.from(this.keyboardNavigation$)
+        this.subscriptions.push(Observable.from(this._keyboardNavigation$)
             .subscribe(() => {
-                this.keyboardNavigation = true;
+                this._keyboardNavigation = true;
                 Observable.fromEvent(element, 'mouseenter')
                     .first()
                     .subscribe(() => {
-                        this.keyboardNavigation = false;
+                        this._keyboardNavigation = false;
                         this.changeDetectorRef.markForCheck();
                     });
             }));
     }
 
     public ngOnInit() {
-        if (!this.displayedDate) {
-            this.displayedDate = this.currentDate;
+        if (!this._displayedDate) {
+            this._displayedDate = this._currentDate;
             this.bind();
         }
     }
@@ -175,7 +207,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
             }
 
             this.selectedDate = value;
-            this.displayedDate = value || this.currentDate;
+            this._displayedDate = value || this._currentDate;
 
             this.bind();
         }
@@ -217,7 +249,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
             date = new Date(year, month, d);
 
             const dateSelectorItem = {
-                currentDate: (this.currentDate.setHours(0, 0, 0, 0) === date.setHours(0, 0, 0, 0)) ? true : null,
+                currentDate: (this._currentDate.setHours(0, 0, 0, 0) === date.setHours(0, 0, 0, 0)) ? true : null,
                 date: date,
             };
             days.push(dateSelectorItem);
@@ -241,9 +273,9 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
         // Du coup on ajoute une ligne vide quand c'est nécessaire
         if (days.length < 42) {
             const x = 42 - days.length;
-            this.emptyDays = new Array(x);
+            this._emptyDays = new Array(x);
         } else {
-            this.emptyDays = null;
+            this._emptyDays = null;
         }
 
         return days;
@@ -259,10 +291,10 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
         }
 
         if (!this.selectedDate) {
-            this.selectedDate = new Date(this.currentDate);
+            this.selectedDate = new Date(this._currentDate);
         }
 
-        this.keyboardNavigation$.next();
+        this._keyboardNavigation$.next();
         switch (event.keyCode) {
             case KeyCodes.PageUp:
             case KeyCodes.PageDown:
@@ -301,7 +333,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
                         break;
                 }
                 // this.selectedDate = d;
-                // this.displayedDate = d;
+                // this._displayedDate = d;
                 // this.bind();
                 break;
             case KeyCodes.Space:
@@ -315,13 +347,13 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
         }
     }
 
-    protected changeMonth(x: number) {
-        this.setMonthIfPossible(this.displayedDate, x);
+    public changeMonth(x: number) {
+        this.setMonthIfPossible(this._displayedDate, x);
         return false;
     }
 
-    protected changeYear(x: number) {
-        this.setYearIfPossible(this.displayedDate, x);
+    public changeYear(x: number) {
+        this.setYearIfPossible(this._displayedDate, x);
         return false;
     }
 
@@ -358,20 +390,20 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
     }
 
     private bind() {
-        const month = this.displayedDate.getMonth();
-        const year = this.displayedDate.getFullYear();
+        const month = this._displayedDate.getMonth();
+        const year = this._displayedDate.getFullYear();
 
-        this.currentDays = this.getAllDaysInMonth(month, year);
+        this._currentDays = this.getAllDaysInMonth(month, year);
 
-        this.currentDays.forEach((day: IDateSelectorItem) => day.disabled = this.isDisabledDate(day.date));
+        this._currentDays.forEach((day: IDateSelectorItem) => day.disabled = this.isDisabledDate(day.date));
 
         for (let i = 0; i < 7; i++) {
-            this.days[i] = this.currentDays[i].date.toLocaleString('fr', { weekday: 'narrow' });
+            this._days[i] = this._currentDays[i].date.toLocaleString('fr', { weekday: 'narrow' });
         }
 
         if (this.selectedDate && this.selectedDate.getFullYear() === year && this.selectedDate.getMonth() === month) {
             const selectedDay = this.selectedDate.getDate();
-            this.currentDays.forEach((day: IDateSelectorItem) => day.selected = day.date.getDate() === selectedDay && day.date.getMonth() === month);
+            this._currentDays.forEach((day: IDateSelectorItem) => day.selected = day.date.getDate() === selectedDay && day.date.getMonth() === month);
         }
 
         this.changeDetectorRef.markForCheck();
@@ -421,13 +453,13 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
         const d = new Date(date);
         d.setDate(d.getDate() + num);
         if ((this.dateMin && d.getTime() < this.dateMin.getTime()) || (this.dateMax && d.getTime() > this.dateMax.getTime())) {
-            this.displayedDate = d;
+            this._displayedDate = d;
             this.bind();
         } else if (this.disableDates && this.isDisabledDate(d)) {
             this.setDateIfPossible(d, num);
         } else {
             this.selectedDate = d;
-            this.displayedDate = d;
+            this._displayedDate = d;
             this.bind();
         }
     }
@@ -447,7 +479,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
             this.setDateIfPossible(d, num);
         } else {
             this.selectedDate = d;
-            this.displayedDate = d;
+            this._displayedDate = d;
             this.bind();
         }
     }
@@ -467,7 +499,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
             this.setDateIfPossible(d, num);
         } else {
             this.selectedDate = d;
-            this.displayedDate = d;
+            this._displayedDate = d;
             this.bind();
         }
     }

@@ -19,7 +19,7 @@ import { DejaSplitterComponent } from './../../../src/component/splitter/splitte
     templateUrl: 'home-components.component.html',
 })
 export class HomeComponentsComponent implements OnDestroy, OnInit {
-    protected navIsVisible = true;
+    public navIsVisible = true;
 
     @ViewChild(DejaSplitterComponent)
     private splitter: DejaSplitterComponent;

@@ -17,7 +17,7 @@ import { Message } from './message.class';
   templateUrl: './snackbar-demo.html',
 })
 export class DejaSnackbarDemoComponent implements OnInit {
-    protected tabIndex = 1;
+    public tabIndex = 1;
 
   /*
    The example below demonstrate how you can dynamically add snackbars using *ngFor structural directive.

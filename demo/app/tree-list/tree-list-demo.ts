@@ -38,7 +38,7 @@ export class DejaTreeListDemoComponent implements OnDestroy {
 
     protected disabled: boolean;
     protected country: Country;
-    protected tabIndex = 1;
+    public tabIndex = 1;
     protected news$: Observable<News[]>;
     protected bigNews$: Observable<News[]>;
     protected bigCountries$: Observable<Country[]>;
@@ -62,12 +62,12 @@ export class DejaTreeListDemoComponent implements OnDestroy {
     @ViewChild('news') private newsList: DejaTreeListComponent;
     @ViewChild('onexpand') private onExpandList: DejaTreeListComponent;
 
-    protected set dialogVisible(value: boolean) {
+    public set dialogVisible(value: boolean) {
         this._dialogVisible = value;
         this.changeDetectorRef.markForCheck();
     }
 
-    protected get dialogVisible() {
+    public get dialogVisible() {
         return this._dialogVisible;
     }
 

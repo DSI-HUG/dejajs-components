@@ -14,7 +14,7 @@ import { Component } from '@angular/core';
     templateUrl: './textarea-demo.html',
 })
 export class TextAreaDemoComponent {
-    protected tabIndex = 1;
+    public tabIndex = 1;
     protected multitext = `Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br />
                         Mauris auctor sit amet odio et aliquet. Curabitur auctor eleifend mattis. <br />
                         Nullam sit amet quam tellus. Ut mattis tellus sed erat ultricies ornare. <br />

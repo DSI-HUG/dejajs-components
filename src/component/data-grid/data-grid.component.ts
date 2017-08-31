@@ -161,7 +161,7 @@ export class DejaGridComponent implements OnDestroy {
     private printColumnLayout$ = new Subject();
     private disableUserSelection$ = new Subject();
 
-    private noHorizontalScroll = false;
+    private _noHorizontalScroll = false;
     private _itemListService: ItemListService;
     private sizingLayoutInfos: DejaGridColumnsLayoutInfos;
     private columnsLayoutInfos: DejaGridColumnsLayoutInfos;
@@ -190,6 +190,10 @@ export class DejaGridComponent implements OnDestroy {
 
     public get sortable() {
         return this._sortable;
+    }
+
+    public get noHorizontalScroll() {
+        return this._noHorizontalScroll;
     }
 
     /** Affiche un barre de recherche au dessus du tableau. */
@@ -362,19 +366,19 @@ export class DejaGridComponent implements OnDestroy {
         this.columnGroups$.next(value);
     }
 
-    private get searchPrefixTemplate() {
+    public get searchPrefixTemplate() {
         return this.searchPrefixTemplateExternal || this.searchPrefixTemplateInternal;
     }
 
-    private get searchSuffixTemplate() {
+    public get searchSuffixTemplate() {
         return this.searchSuffixTemplateExternal || this.searchSuffixTemplateInternal;
     }
 
-    private get rowTemplate() {
+    public get rowTemplate() {
         return this.rowTemplateExternal || this.rowTemplateInternal;
     }
 
-    private get parentRowTemplate() {
+    public get parentRowTemplate() {
         return this.parentRowTemplateExternal || this.parentRowTemplateInternal;
     }
 
@@ -386,7 +390,7 @@ export class DejaGridComponent implements OnDestroy {
         return this._parentTitleTemplate;
     }
 
-    private get columnsHeaderTemplate() {
+    public get columnsHeaderTemplate() {
         return this.headerTemplateExternal || this.headerTemplateInternal;
     }
 
@@ -561,7 +565,7 @@ export class DejaGridComponent implements OnDestroy {
 
     /** Calcul la position de la scrollbar horizontale pour que la colonne spéfiée soit dans la zone visible. */
     public ensureColumnVisible(column: IDejaGridColumn) {
-        if (column === undefined || !this.columns || this.columns.length === 0 || this.noHorizontalScroll) {
+        if (column === undefined || !this.columns || this.columns.length === 0 || this._noHorizontalScroll) {
             return;
         }
 
@@ -583,12 +587,13 @@ export class DejaGridComponent implements OnDestroy {
         }
     }
 
-    protected scroll(event: DejaTreeListScrollEvent) {
+    public scroll(event: DejaTreeListScrollEvent) {
         if (this.lastScrollLeft !== event.scrollLeft) {
             this.lastScrollLeft = event.scrollLeft;
             this.calcColumnsLayout();
         }
     }
+
     protected onColumnHeaderClicked(event: IDejaGridColumnEvent) {
         if (this.treeListComponent && !this.sortable || event.column.sortable === false) {
             return;
@@ -810,7 +815,7 @@ export class DejaGridComponent implements OnDestroy {
             rest = calcColumnsWidth();
         }
 
-        this.noHorizontalScroll = rest >= 0;
+        this._noHorizontalScroll = rest >= 0;
 
         // Register to page resize only if percentage columns are defined
         this.hasPercentageColumns = this.columnsLayoutInfos && this.columnsLayoutInfos.percentColumns.length > 0;
@@ -843,7 +848,7 @@ export class DejaGridComponent implements OnDestroy {
     }
 
     private ensureSizingVisible(column: IDejaGridColumn) {
-        if (column === undefined || !this.columns || this.columns.length === 0 || this.noHorizontalScroll) {
+        if (column === undefined || !this.columns || this.columns.length === 0 || this._noHorizontalScroll) {
             return;
         }
 

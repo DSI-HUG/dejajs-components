@@ -10,6 +10,7 @@ import { AfterViewInit, Component, ContentChild, ElementRef, EventEmitter, Input
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 import { Rect } from '../../common/core/graphics/rect';
 import { KeyCodes } from '../../common/core/keycodes.enum';
@@ -82,8 +83,12 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     private resize$sub: Subscription;
     private modelChanged$sub: Subscription;
     private layoutChanged$sub: Subscription;
-    private tiles$ = new BehaviorSubject<DejaTile[]>([]);
+    private _tiles$ = new BehaviorSubject<DejaTile[]>([]);
     private hasFocus = false;
+
+    public get tiles$(): BehaviorSubject<DejaTile[]> {
+        return this._tiles$;
+    }
 
     @ViewChild('tilesContainer') private tilesContainer: ElementRef;
 
@@ -113,6 +118,11 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
         this.resize$sub = Observable.fromEvent(window, 'resize')
             .debounceTime(5)
             .subscribe(() => this.refresh({ resetWidth: true }));
+    }
+
+    // provide a public acccess
+    public get selectionRect$(): Subject<Rect> {
+        return this.layoutProvider.selectionRect$;
     }
 
     @Input()
@@ -221,7 +231,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     // ************* ControlValueAccessor Implementation **************
     public writeValue(models: any) {
         this._models = models || [];
-        this.tiles$.next(this.layoutProvider.tiles = (this._models.map((tile) => new DejaTile(tile))));
+        this._tiles$.next(this.layoutProvider.tiles = (this._models.map((tile) => new DejaTile(tile))));
     }
 
     public registerOnChange(fn: any) {
@@ -333,7 +343,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
         this.layoutProvider.moveTile(id, bounds);
     }
 
-    protected getDropContext() {
+    public getDropContext() {
         return {
             dragEnter: (dragContext, dragCursor) => {
                 return this.layoutProvider.dragEnter(dragContext, dragCursor) && {

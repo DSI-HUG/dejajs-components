@@ -36,26 +36,34 @@ export class DejaGridParentRowComponent {
     /** Template de cellule par defaut  définit dans le HTML de la grille */
     @ContentChild('cellTemplate') protected cellTemplateInternal;
 
-    private columnLayout = {} as IDejaGridParentRowColumnLayout;
+    private _columnLayout = {} as IDejaGridParentRowColumnLayout;
+
+    public columnLayoutOfColumn0() {
+        return this._columnLayout.column0;
+    }
+
+    public columnLayoutOfColumns() {
+        return this._columnLayout.columns;
+    }
 
     /** Définit la structure de colonnes a appliquer sur cette ligne */
     @Input()
     public set columns(columns: IDejaGridColumn[]) {
         let left = 0;
-        this.columnLayout.columns = [];
+        this._columnLayout.columns = [];
         columns.forEach((column) => {
             if (this.row[column.name]) {
-                if (this.columnLayout.column0 === 0) {
-                    this.columnLayout.column0 = left;
+                if (this._columnLayout.column0 === 0) {
+                    this._columnLayout.column0 = left;
                 }
-                this.columnLayout.columns.push({
+                this._columnLayout.columns.push({
                     column: column,
                     left: left,
                 });
             }
             left += column.w;
         });
-        this.columnLayout.column0 = left;
+        this._columnLayout.column0 = left;
         this.changeDetectorRef.markForCheck();
     }
 

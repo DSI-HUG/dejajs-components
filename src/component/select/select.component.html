@@ -1,12 +1,12 @@
-<deja-chips [items]="selectedItems" [readonly]="readonly" [disabled]="disabled" (close)="onCloseClicked($event)" [itemTemplateExternal]="selectedTemplate" *ngIf="_multiSelect && selectedItems.length > 0 && selectedItemsPosition===0" [textField]="_textField"></deja-chips>
-<md-input-container id="input" [attr.wait]="waiter || _waiter" [attr.multiselection]="_multiSelect && selectedItems.length > 0" [attr.selection]="selectedItemsPosition===0 ? 'above' : null">
+<deja-chips [items]="selectedItems" [readonly]="readonly" [disabled]="disabled" (close)="onCloseClicked($event)" [itemTemplateExternal]="selectedTemplate" *ngIf="isMultiSelect && selectedItems.length > 0 && selectedItemsPosition===0" [textField]="_textField"></deja-chips>
+<md-input-container id="input" [attr.wait]="waiter" [attr.multiselection]="isMultiSelect && selectedItems.length > 0" [attr.selection]="selectedItemsPosition===0 ? 'above' : null">
 	<input #inputElement deja-child-validator type="text" mdInput [readonly]="isModeSelect || readonly" (ngModelChange)="queryChanged($event)" [ngModel]="query" [disabled]="disabled" autocomplete="false">
 	<md-placeholder>
 		<ng-template [ngTemplateOutlet]="placeHolderTemplate"></ng-template>
 		<span *ngIf="!placeHolderTemplate">{{ placeholder }}</span>
 	</md-placeholder>
 	<div *ngIf="!disabled" mdSuffix class="actions-suffix">
-		<i (click)="onCloseClicked()" id="clear-button" class="material-icons mdSuffix" *ngIf="selectionClearable && !_multiSelect && selectedItems.length > 0">clear</i>
+		<i (click)="onCloseClicked()" id="clear-button" class="material-icons mdSuffix" *ngIf="selectionClearable && !isMultiSelect && selectedItems.length > 0">clear</i>
 		<i class="material-icons mdSuffix select-arrow-down">keyboard_arrow_down</i>
 	</div>
 	<md-hint *ngIf="hintTemplate">
@@ -19,10 +19,10 @@
 		<ng-template [ngTemplateOutlet]="mdSuffix"></ng-template>
 	</span>
 </md-input-container>
-<deja-chips [items]="selectedItems" [readonly]="readonly" [disabled]="disabled" (close)="onCloseClicked($event)" [itemTemplateExternal]="selectedTemplate" *ngIf="_multiSelect && selectedItems.length > 0 && selectedItemsPosition===1" [textField]="_textField"></deja-chips>
+<deja-chips [items]="selectedItems" [readonly]="readonly" [disabled]="disabled" (close)="onCloseClicked($event)" [itemTemplateExternal]="selectedTemplate" *ngIf="isMultiSelect && selectedItems.length > 0 && selectedItemsPosition===1" [textField]="_textField"></deja-chips>
 <deja-dropdown id="listcontainer" #listcontainer *ngIf="dropdownVisible" [mobile]="isMobile||null" [attr.depth-max]="_depthMax || null" [attr.keynav]="keyboardNavigation" [attr.vprowheight]="getViewPortRowHeight()" (mousedown)="mousedown($event)" (hide)="dropdownVisible=false" (scroll)="scroll($event)" [ownerAlignment]="getOwnerAlignment()" [dropdownAlignment]="getDropdownAlignment()" [ownerElement]="inputElement" [containerElement]="containerElement" ownerBottomMargin="-6" ownerTopMargin="-5" ownerRightMargin="-14" [style.max-height.px]="dropDownFullScreen ? null : maxHeight">
 	<div *ngIf="vpBeforeHeight" [style.height.px]="vpBeforeHeight"></div>
-	<div *ngFor="let item of _itemList; let index = index" #listitem class="listitem" [class.hide]="item.collapsing || item.expanding" [class.parent]="item.depth < _depthMax" [class.collapsed]="item.collapsed" [class.selected]="item.selected" [attr.current]="(_multiSelect && vpStartRow+index === currentItemIndex) || null" [class.unselectable]="item.selectable === false" [attr.depth]="_depthMax ? item.depth : null" [attr.id]="item.id || null" [attr.flat]="vpStartRow + index" [style.height.px]="getItemHeight(item)" [class.odd]="(item.depth === _depthMax && item.odd) || null">
+	<div *ngFor="let item of itemList; let index = index" #listitem class="listitem" [class.hide]="item.collapsing || item.expanding" [class.parent]="item.depth < _depthMax" [class.collapsed]="item.collapsed" [class.selected]="item.selected" [attr.current]="(isMmultiSelect && vpStartRow+index === currentItemIndex) || null" [class.unselectable]="item.selectable === false" [attr.depth]="_depthMax ? item.depth : null" [attr.id]="item.id || null" [attr.flat]="vpStartRow + index" [style.height.px]="getItemHeight(item)" [class.odd]="(item.depth === _depthMax && item.odd) || null">
 		<span id="expandbtn"><i *ngIf="item.$items && item.$items.length" class="material-icons">keyboard_arrow_down</i></span>
 		<ng-container *ngIf="(!item.$items || !parentItemTemplate) && (item.$items || !itemTemplate)">{{ getTextValue(item) }}</ng-container>
 		<ng-container *ngIf="item.$items && parentItemTemplate">
@@ -34,5 +34,5 @@
 	</div>
 	<div *ngIf="vpAfterHeight" [style.height.px]="vpAfterHeight"></div>
 </deja-dropdown>
-<div *ngIf="_hintLabel != ''" class="mat-hint">{{_hintLabel}}</div>
+<div *ngIf="hintLabel != ''" class="mat-hint">{{hintLabel}}</div>
 <deja-backdrop id="select-backdrop" [attr.mobile]="isMobile||null" (click)="dropdownVisible=false" *ngIf="dropdownVisible"></deja-backdrop>
