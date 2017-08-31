@@ -1,3 +1,47 @@
+#### 2.8.1 (2017-08-31)
+
+##### BREAKING CHANGES
+
+* **MaterialColor:** Removed circular dependency warnings ([57c9715e](https://github.com/DSI-HUG/dejajs-components/commit/57c9715e7771198319e6953d1c02dfd3827f313b))
+
+##### Build System / Dependencies
+
+* **Dependencies:** Update all dependencies in latest version ([e2f16623](https://github.com/DSI-HUG/dejajs-components/commit/e2f166234a83eb835f27603ffdf095cdc8765262))
+
+##### Continuous Integration
+
+* **Travis:** Upgrade to node 8 ([1875c980](https://github.com/DSI-HUG/dejajs-components/commit/1875c980b11d079820feae86e5728572ff14c17e))
+
+##### New Features
+
+* **DejaGridDemo:** Added pre-selection demo feat(DejaTreeListDemo): Added pre-selection demo ([74a62d6e](https://github.com/DSI-HUG/dejajs-components/commit/74a62d6e391743977bae5d028954532f8bcf3f3c))
+* **DejaGrid:** Map selectedModel, selectedModels and selectedItem to the internal tree list ([6ecac951](https://github.com/DSI-HUG/dejajs-components/commit/6ecac951c6d7eac752dcd7ae524d3b8e046a72d8))
+* **DejaTag:** Add DejaTag component. ([b8228ce1](https://github.com/DSI-HUG/dejajs-components/commit/b8228ce1d668f751e13812396ad3fe7a5ad1ec08))
+
+##### Bug Fixes
+
+* **Dependencies:** CDK Build error version ([21436239](https://github.com/DSI-HUG/dejajs-components/commit/21436239a4686c298b4a8060a389a36592c5a0ac))
+* **ItemListService:** Improvement of the comparison to pre-select one or more elements of a list ([7ede9515](https://github.com/DSI-HUG/dejajs-components/commit/7ede9515f88532ee136bdebead1befaa2b631d9b))
+* **Select:**
+  * Remove position relative on select ([e900d1ba](https://github.com/DSI-HUG/dejajs-components/commit/e900d1ba70d17c6402f09a13e8a97791d6162b77))
+  * Remove autocomplete on select search input ([cc4ec9ff](https://github.com/DSI-HUG/dejajs-components/commit/cc4ec9ff8659b9b09356e4ba3d47abb151b8ee25))
+* **DejaGrid:**
+  * Assign an empty array to the columns collection, clear columns and remove header component ([05c0b083](https://github.com/DSI-HUG/dejajs-components/commit/05c0b083278ee9a921475b1adad6594509a837f5))
+  * Row observable was subscribed two times ([36f51182](https://github.com/DSI-HUG/dejajs-components/commit/36f51182ee849fbdabcbc8021c522930321f6bbb))
+* **CircularPicker:** Update for to for...of to remove tslint error ([ad23fc17](https://github.com/DSI-HUG/dejajs-components/commit/ad23fc17e9e8a37a497b56ddf66cb4f70d3a5d25))
+* **Global:** rxjs:5.4.3 ([f899fd59](https://github.com/DSI-HUG/dejajs-components/commit/f899fd5985e0fbae74ba0bdf0595a84b93d8d9a1))
+* **DejaTag:** Remove flex layout into the component ([80dc0519](https://github.com/DSI-HUG/dejajs-components/commit/80dc051925bb476c7c42868f8fbfdd64365652e3))
+* **Cloning:** Clone date in array of date ([4dfd752a](https://github.com/DSI-HUG/dejajs-components/commit/4dfd752a21632bc8375f02d83fc1841ce4d6397c))
+
+##### Other Changes
+
+* **Travis:** Remove npm prune ([6afc69c5](https://github.com/DSI-HUG/dejajs-components/commit/6afc69c5da505f2e61becc377f269c02bbcb2813))
+* **DemoApp:** Add list loader demo ([66eaaeaa](https://github.com/DSI-HUG/dejajs-components/commit/66eaaeaa5bab1111229a6fa92541ace69c2c87f4))
+* **Changelog:**
+  * Fix changelog...... ([707ff2ac](https://github.com/DSI-HUG/dejajs-components/commit/707ff2ac149fab1f69a972eecff976fe5f36e858))
+  * fix duplicate commit info ([0e8ea9c4](https://github.com/DSI-HUG/dejajs-components/commit/0e8ea9c484c02c00976ec345f89b5bc438ee007c))
+* **License:** Add license ([70d5dcdc](https://github.com/DSI-HUG/dejajs-components/commit/70d5dcdc2cce9435fe8d4afa07d99cda17aaa10c))
+
 ### 2.8.0 (2017-08-30)
 
 ##### BREAKING CHANGES
