@@ -4,8 +4,6 @@
 
 * **Dependencies:** Fix CDK Version ([08e1f5e6](https://github.com/DSI-HUG/dejajs-components/commit/08e1f5e68c289dc566d6c1a1cdd696cb94145d05))
 
-#### 2.7.1 (2017-08-31)
-
 ### 2.7.0 (2017-08-17)
 
 ##### Build System / Dependencies
