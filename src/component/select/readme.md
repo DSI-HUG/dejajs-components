@@ -207,13 +207,19 @@ Crée une liste déroulante.
     <td>selectedModel</td>
     <td>any</td>
     <td></td>
-    <td>Retourne ou définit le model selectioné en mode single select</td>
+    <td>Retourne ou définit le model selectioné en mode single select. **Le type de la valeur passé comme input détermine le type rendu en output: si en première instance on passe null, deja-select retourne un objet générique.**  </td>
 </tr>
 <tr>
     <td>selectedModels</td>
     <td>any[]</td>
     <td></td>
-    <td>Retourne ou définit la liste des models selectionés en mode multiselect</td>
+    <td>Retourne ou définit la liste des models selectionés en mode multiselect. **Le type de la valeur passé comme input détermine le type rendu en output: si en première instance on passe null, deja-select retourne un objet générique.**  </td>
+</tr>
+<tr>
+    <td>formControlName</td>
+    <td>string<any[]></td>
+    <td></td>
+    <td>N'est pas une propriété de deja-select mais une directive d'@angular/form. Permets de binder une FormControl au select. **Le type de la valeur passé comme input détermine le type rendu en output: si en première instance on passe null, deja-select retourne un objet générique.**</td>
 </tr>
 <tr>
     <td>waiter</td>
@@ -231,17 +237,17 @@ Crée une liste déroulante.
     <td>models</td>
     <td>any[] | Observable<any[]></td>
     <td></td>
-    <td>Définit la liste des éléments (tout type d'objet métier)</td>
+    <td>Définit la liste des éléments (tout type d'objet métier).</td>
 </tr>
 <tr>
     <td>maxHeight</td>
-    <td>number></td>
+    <td>number</td>
     <td>500</td>
     <td>Retourne ou définit la hauteur maximum avant que le composant affiche une scrollbar. Spécifier une grande valeur pour ne jamais afficher de scrollbar. Spécifier 0 pour que le composant determine sa hauteur à partir du container</td>
 </tr>
 <tr>
     <td>readonly</td>
-    <td>boolean></td>
+    <td>boolean</td>
     <td>false</td>
     <td>Retourne ou définit une valeur indiquant si le composant est en lecture seule</td>
 </tr>
@@ -325,7 +331,7 @@ Crée une liste déroulante.
 <ng-template #parentItemTemplate let-item let-flatindex="flatindex">
     <span>{{ item.label }} </span>
     <span flex></span>
-    <button md-icon-button (mouseup)="editSection($event, item)">
+    <button type="button" md-icon-button (mouseup)="editSection($event, item)">
         <md-icon>edit</md-icon>
     </button>
 </ng-template>

@@ -77,7 +77,7 @@ export class ItemListService {
     /**
      * Set a observable called before the list will be displayed
      */
-    public setLoadingItems(fn: (query: string, selectedItems: IItemBase[]) => Observable<IItemBase>) {
+    public setLoadingItems(fn: (query: string | RegExp, selectedItems: IItemBase[]) => Observable<IItemBase[]>) {
         this.loadingItems$ = fn;
     }
 
@@ -280,9 +280,11 @@ export class ItemListService {
             return '';
         } else {
             if (textField && value.model && value.model[textField] !== undefined) {
-                return value.model[textField];
+                const displayName = value.model[textField];
+                return typeof displayName === 'string' ? displayName : displayName();
             } else if (textField && value[textField] !== undefined) {
-                return value[textField];
+                const displayName = value[textField];
+                return typeof displayName === 'string' ? displayName : displayName();
             } else if (value.displayName) {
                 return typeof value.displayName === 'string' ? value.displayName : value.displayName();
             } else if (typeof value.toString === 'function') {
@@ -448,7 +450,7 @@ export class ItemListService {
      * @param {boolean} collapsed  True si les éléments doivent être réduits.
      * @return {Observable} Observable résolu par la fonction.
      */
-    public toggleAll$(collapsed: boolean): Observable<IItemBase[]> {
+    public toggleAll$(collapsed: boolean): Observable<IItemTree[]> {
         return Observable.of(this._cache.flatList)
             .map((items: IItemTree[]) => items.filter((item) => item.$items && item.collapsible !== false))
             .do(() => delete this._cache.visibleList) // Invalidate view cache
@@ -460,7 +462,7 @@ export class ItemListService {
      * @param {boolean} collapse  Etat de l'élément. True pour réduire l'élément.
      * @return {Observable} Observable résolu par la fonction.
      */
-    public toggleCollapse$(index: number, collapse?: boolean): Observable<IItemBase[]> {
+    public toggleCollapse$(index: number, collapse?: boolean): Observable<IItemTree> {
         const visibleList = this._cache.visibleList;
         if (!visibleList || !visibleList.length) {
             throw new Error('Empty cache on toggleCollapse');
@@ -1142,12 +1144,16 @@ export class ItemListService {
     }
 
     private ensureSelectedItems(items: IItemBase[]) {
-        if (!items || !this.selectedList || this.selectedList.length === 0) {
+        if (!this.selectedList || this.selectedList.length === 0) {
             return [];
         }
 
         // Ensure selected flag
         this.selectedList.forEach((item) => item.selected = true);
+
+        if (!items) {
+            return this.selectedList;
+        }
 
         const newSelectedList = [] as IItemBase[];
         const ensureSelectedChildren = (children: IItemTree[]) => {
@@ -1179,36 +1185,33 @@ export class ItemListService {
     private compareItems = (item1: IItemBase, item2: IItemBase) => {
         if (!item1 || !item2) {
             return false;
-        } else if (item1.model && !item2.model) {
+        } else if (item1 && !item2) {
             return false;
-        } else if (!item1.model && item2.model) {
+        } else if (!item1 && item2) {
             return false;
-        } else if (this._valueField) {
-            if (item1.model && item2.model) {
-                item1 = item1.model;
-                item2 = item2.model;
-            }
-            const value1 = item1[this._valueField];
-            const value2 = item2[this._valueField];
-            if (value1 !== undefined || value2 !== undefined) {
-                return item1[this._valueField] === item2[this._valueField];
-            }
-        }
-
-        if (item1.equals) {
-            return item1.equals(item2);
-        } else if (item2.equals) {
-            return item2.equals(item1);
-        } else if (item1.model && item1.model.equals) {
-            return item1.model.equals(item2.model);
-        } else if (item2.model && item2.model.equals) {
-            return item2.model.equals(item1.model);
         } else {
-            if (item1.model && item2.model) {
-                item1 = item1.model;
-                item2 = item2.model;
+            if (item1.equals) {
+                return item1.equals(item2);
+            } else if (item2.equals) {
+                return item2.equals(item1);
+            } else if (item1.model && item1.model.equals) {
+                return item1.model.equals(item2.model);
+            } else if (item2.model && item2.model.equals) {
+                return item2.model.equals(item1.model);
+            } else {
+                const getValue = (item: any) => {
+                    const valueField = this._valueField || 'value';
+                    if (item.model && item.model[valueField] !== undefined) {
+                        return item.model[valueField];
+                    }
+                    if (item[valueField] !== undefined) {
+                        return item[valueField];
+                    } else {
+                        return item.model || item;
+                    }
+                };
+                return getValue(item1) === getValue(item2);
             }
-            return item1 === item2;
         }
     }
 

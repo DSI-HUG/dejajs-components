@@ -8,13 +8,13 @@
     </md-card-content>
     <md-card-actions *ngIf="actions">
         <span *ngFor="let action of actions">
-            <button md-raised-button *ngIf="action.icon && action.text" (click)="action.action()" class="with-icon" [attr.data-icon]="action.icon" [color]="action.type">
+            <button md-raised-button type="button" *ngIf="action.icon && action.text" (click)="action.action()" class="with-icon" [attr.data-icon]="action.icon" [color]="action.type">
                 {{action.text}}
             </button>
-            <button md-raised-button *ngIf="!action.icon && action.text" (click)="action.action()" [color]="action.type">
+            <button md-raised-button type="button" *ngIf="!action.icon && action.text" (click)="action.action()" [color]="action.type">
                 {{action.text}}
             </button>
-            <button md-mini-fab *ngIf="action.icon && !action.text" [color]="action.type || 'blank'" [class.close]="!action.type" (click)="action.action()">
+            <button md-mini-fab type="button" *ngIf="action.icon && !action.text" [color]="action.type || 'blank'" [class.close]="!action.type" (click)="action.action()">
                 <md-icon>{{action.icon}}</md-icon>
             </button>
         </span>

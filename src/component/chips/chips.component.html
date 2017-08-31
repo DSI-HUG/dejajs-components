@@ -1,7 +1,7 @@
 <span *ngFor="let item of items; let index = index">
 	<span *ngIf="!itemTemplate">{{ getTextValue(item) }}</span>
 	<span *ngIf="itemTemplate">
-		<ng-template [ngTemplateOutlet]="itemTemplate" [ngTemplateOutletContext]="{ $implicit: item }"></ng-template>
+		<ng-template [ngTemplateOutlet]="itemTemplate" [ngTemplateOutletContext]="{ $implicit: item, index: index }"></ng-template>
 	</span>
 	<i id="close-button" *ngIf="!readonly && !disabled" (click)="onClose(item, index)" class="material-icons">close</i>
 </span>

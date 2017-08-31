@@ -15,8 +15,11 @@ import { News } from './news.model';
     templateUrl: 'news-card.component.html',
 })
 export class NewsCardComponent {
-    @Input() protected item: News;
-    @Output() protected imageLoaded = new EventEmitter();
+    @Input()
+    public item: News;
+
+    @Output()
+    public imageLoaded = new EventEmitter();
 
     public constructor() {
 

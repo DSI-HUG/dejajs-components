@@ -6,4 +6,10 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-export const USER_ON_GET = '[User] mocking get user server api';
+import { AbstractControl } from '@angular/forms';
+export const cheeseValidator = (control: AbstractControl): string[] => {
+    const val = control.value;
+    if (val === 'gruyère') {
+        return [`${val} is not a fruit`];
+    }
+};

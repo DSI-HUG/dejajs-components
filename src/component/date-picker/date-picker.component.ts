@@ -45,7 +45,10 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     /** Owner alignment. @see DejaDropDowncomponent documentation for details */
     @Input() public ownerAlignment = 'left bottom';
     /** Date format. If unset, format will be 'YYYY-MM-DD' + ' HH:mm' it's a date-time selector */
-    @Input() public format: string;
+    @Input() public set format(format: string) {
+        this._format = format;
+        this.formatChanged$.next(format);
+    }
     /** Placeholder for input */
     @Input() public placeholder = 'Date';
     /** Disabled dates. It's an array of DaysOfWeek (number between 0 and 6) or a date. */
@@ -54,6 +57,8 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     @ViewChild(DejaDateSelectorComponent) public dateSelectorComponent: DejaDateSelectorComponent;
     /** Template for MdHint inside md-input-container */
     @ContentChild('hintTemplate') public mdHint;
+    /** Template for MdError inside md-input-container */
+    @ContentChild('errorTemplate') public mdError;
     /** Mask for input */
     protected _mask: any[];
 
@@ -65,7 +70,9 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
 
     private subscriptions = [] as Subscription[];
     private _disabled: boolean;
+    private _required: boolean;
     private _time: boolean;
+    private _format: string;
     private inputElement$ = new ReplaySubject<HTMLElement>(1);
     private focus$ = new Subject();
     private _showDropDown = false;
@@ -74,6 +81,8 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
 
     private _inputModel;
     private cursorPosition: number;
+    private formatChanged$ = new Subject<string>();
+    private dateChanged$ = new Subject<Date>();
 
     private onTouchedCallback: () => void = noop;
     private onChangeCallback: (_: any) => void = noop;
@@ -143,9 +152,9 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
                             // If cursor is on number, we can update it
                             if (!isNaN(+this._inputModel[this.cursorPosition - 1])) {
                                 // We get an array of all sections of the date format
-                                const format = this.format.match(DejaDatePickerComponent.formattingTokens);
+                                const format = this._format.match(DejaDatePickerComponent.formattingTokens);
                                 // We check the letter of the format at cursor position
-                                const f = this.format[this.cursorPosition - 1];
+                                const f = this._format[this.cursorPosition - 1];
                                 // With this letter we determinate the format by checking on format array
                                 let unitOfTime = format.find((str) => str.indexOf(f) !== -1);
                                 // If this format has a corresponding value inside formatToUnitOfTime object we can increment its value with moment.add() method
@@ -162,8 +171,8 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
                         } else if (this.date) {
                             // Same as arrowUp
                             if (!isNaN(+this._inputModel[this.cursorPosition - 1])) {
-                                const format = this.format.match(DejaDatePickerComponent.formattingTokens);
-                                const f = this.format[this.cursorPosition - 1];
+                                const format = this._format.match(DejaDatePickerComponent.formattingTokens);
+                                const f = this._format[this.cursorPosition - 1];
 
                                 let unitOfTime = format.find((str) => str.indexOf(f) !== -1);
                                 unitOfTime = (unitOfTime && formatToUnitOfTime[unitOfTime]) ? formatToUnitOfTime[unitOfTime] : undefined;
@@ -177,6 +186,32 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
                         break;
                 }
             }));
+
+        const valueUpdated$ = Observable.combineLatest(this.formatChanged$, this.dateChanged$)
+            .do(([format]) => {
+                let mask = [];
+                const array = format.match(DejaDatePickerComponent.formattingTokens);
+                array.forEach((val: string) => {
+                    if (formatToMask[val]) {
+                        mask = [...mask, ...formatToMask[val]];
+                    } else {
+                        mask.push(val);
+                    }
+                });
+
+                this._mask = mask;
+            });
+
+        this.subscriptions.push(valueUpdated$.subscribe(([format, value]) => {
+            this.date = value;
+            this._inputModel = (this.date) ? moment(this.date).format(format) : null;
+
+            // si la position du curseur était stockée, on la restaure apres avoir changé la valeur
+            if (this.cursorPosition) {
+                this.inputElement$.delay(1).first().subscribe((elem: HTMLInputElement) => elem.setSelectionRange(this.cursorPosition, this.cursorPosition));
+            }
+            this.changeDetectorRef.markForCheck();
+        }));
 
         this.subscriptions.push(keydown$
             .filter(() => this.showDropDown)
@@ -203,22 +238,10 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
 
     /** Init mask */
     public ngOnInit() {
-        if (!this.format) {
+        if (!this._format) {
             const time = this.time ? ' HH:mm' : '';
             this.format = `YYYY-MM-DD${time}`;
         }
-
-        let mask = [];
-        const array = this.format.match(DejaDatePickerComponent.formattingTokens);
-        array.forEach((val: string) => {
-            if (formatToMask[val]) {
-                mask = [...mask, ...formatToMask[val]];
-            } else {
-                mask.push(val);
-            }
-        });
-
-        this._mask = mask;
     }
 
     private get containerElement() {
@@ -246,6 +269,18 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
         return this._disabled;
     }
 
+    /** required property setter. Can be string or empty so you can use it like : <deja-date-picker required></deja-date-picker> */
+    @Input()
+    public set required(value: boolean | string) {
+        this._required = (value != null && `${value}` !== 'false') ? true : null;
+        this.changeDetectorRef.markForCheck();
+    }
+
+    /** required property getter. */
+    public get required() {
+        return this._required;
+    }
+
     /**
      * Time property setter. Can be string or empty so you can use it like : <deja-date-picker time></deja-date-picker>
      * Used to add time selector next to calendar
@@ -264,6 +299,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     /** Method to close date-picker dialog */
     public close() {
         this.showDropDown = false;
+        return false;
     }
 
     /** Method to open date-picker dialog */
@@ -288,14 +324,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     /** From ControlValueAccessor interface */
     public writeValue(value: Date) {
         if (value !== this.date) {
-            this.date = value;
-            this._inputModel = (this.format && this.date) ? moment(this.date).format(this.format) : (this.date) ? this.date.toLocaleString() : null;
-
-            // si la position du curseur était stockée, on la restaure apres avoir changé la valeur
-            if (this.cursorPosition) {
-                this.inputElement$.delay(1).first().subscribe((elem: HTMLInputElement) => elem.setSelectionRange(this.cursorPosition, this.cursorPosition));
-            }
-            this.changeDetectorRef.markForCheck();
+            this.dateChanged$.next(value);
         }
     }
 
@@ -361,8 +390,8 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
      * @param {string | Date} date new value of this model
      */
     public updateModel(date: string | Date) {
-        if (typeof date === 'string' && date.replace(/_/g, '').length === this.format.length) {
-            let d = moment(date, this.format).toDate();
+        if (typeof date === 'string' && date.replace(/_/g, '').length === this._format.length) {
+            let d = moment(date, this._format).toDate();
             if (!moment(d).isValid()) {
                 d = new Date();
             }

@@ -16,7 +16,7 @@ import { Component } from '@angular/core';
     templateUrl: './progress-circle-demo.html',
 })
 export class ProgressCircleDemoComponent {
-    protected tabIndex = 1;
+    public tabIndex = 1;
     constructor() {
 
     }

@@ -22,7 +22,7 @@ export class MenuDemoComponent {
         { text: 'Sign Out' },
     ];
 
-    protected tabIndex = 1;
+    public tabIndex = 1;
 
     @ViewChild('contextMenu') private contextMenu;
 

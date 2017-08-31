@@ -1,3 +1,157 @@
+### 2.8.0 (2017-08-30)
+
+##### BREAKING CHANGES
+
+* **MaterialColor:** Removed circular dependency warnings ([57c9715e](https://github.com/DSI-HUG/dejajs-components/commit/57c9715e7771198319e6953d1c02dfd3827f313b))
+
+##### Build System / Dependencies
+
+* **Dependencies:** Update all dependencies in latest version ([e2f16623](https://github.com/DSI-HUG/dejajs-components/commit/e2f166234a83eb835f27603ffdf095cdc8765262))
+
+##### Continuous Integration
+
+* **Travis:** Upgrade to node 8 ([1875c980](https://github.com/DSI-HUG/dejajs-components/commit/1875c980b11d079820feae86e5728572ff14c17e))
+
+##### New Features
+
+* **DejaGridDemo:** Added pre-selection demo feat(DejaTreeListDemo): Added pre-selection demo ([74a62d6e](https://github.com/DSI-HUG/dejajs-components/commit/74a62d6e391743977bae5d028954532f8bcf3f3c))
+* **DejaGrid:** Map selectedModel, selectedModels and selectedItem to the internal tree list ([6ecac951](https://github.com/DSI-HUG/dejajs-components/commit/6ecac951c6d7eac752dcd7ae524d3b8e046a72d8))
+
+##### Bug Fixes
+
+* **ItemListService:** Improvement of the comparison to pre-select one or more elements of a list ([7ede9515](https://github.com/DSI-HUG/dejajs-components/commit/7ede9515f88532ee136bdebead1befaa2b631d9b))
+* **Select:**
+  * Remove position relative on select ([e900d1ba](https://github.com/DSI-HUG/dejajs-components/commit/e900d1ba70d17c6402f09a13e8a97791d6162b77))
+  * Remove autocomplete on select search input ([cc4ec9ff](https://github.com/DSI-HUG/dejajs-components/commit/cc4ec9ff8659b9b09356e4ba3d47abb151b8ee25))
+* **DejaGrid:**
+  * Assign an empty array to the columns collection, clear columns and remove header component ([05c0b083](https://github.com/DSI-HUG/dejajs-components/commit/05c0b083278ee9a921475b1adad6594509a837f5))
+  * Row observable was subscribed two times ([36f51182](https://github.com/DSI-HUG/dejajs-components/commit/36f51182ee849fbdabcbc8021c522930321f6bbb))
+* **CircularPicker:** Update for to for...of to remove tslint error ([ad23fc17](https://github.com/DSI-HUG/dejajs-components/commit/ad23fc17e9e8a37a497b56ddf66cb4f70d3a5d25))
+
+##### Other Changes
+
+* **Travis:** Remove npm prune ([6afc69c5](https://github.com/DSI-HUG/dejajs-components/commit/6afc69c5da505f2e61becc377f269c02bbcb2813))
+* **DemoApp:** Add list loader demo ([66eaaeaa](https://github.com/DSI-HUG/dejajs-components/commit/66eaaeaa5bab1111229a6fa92541ace69c2c87f4))
+* **Changelog:**
+  * Fix changelog...... ([707ff2ac](https://github.com/DSI-HUG/dejajs-components/commit/707ff2ac149fab1f69a972eecff976fe5f36e858))
+  * fix duplicate commit info ([0e8ea9c4](https://github.com/DSI-HUG/dejajs-components/commit/0e8ea9c484c02c00976ec345f89b5bc438ee007c))
+
+### 2.7.0 (2017-08-17)
+
+##### Build System / Dependencies
+
+* **Dependencies:** Update all dependencies in latest version ([e2f16623](https://github.com/DSI-HUG/dejajs-components/commit/e2f166234a83eb835f27603ffdf095cdc8765262))
+
+##### Bug Fixes
+
+* **CircularPicker:** Update for to for...of to remove tslint error ([ad23fc17](https://github.com/DSI-HUG/dejajs-components/commit/ad23fc17e9e8a37a497b56ddf66cb4f70d3a5d25))
+
+#### 2.6.1 (2017-08-14)
+
+##### New Features
+
+* **DejaTag:** Add DejaTag component. ([b8228ce1](https://github.com/DSI-HUG/dejajs-components/commit/b8228ce1d668f751e13812396ad3fe7a5ad1ec08))
+
+##### Bug Fixes
+
+* **Global:** rxjs:5.4.3 ([f899fd59](https://github.com/DSI-HUG/dejajs-components/commit/f899fd5985e0fbae74ba0bdf0595a84b93d8d9a1))
+* **DejaTag:** Remove flex layout into the component ([80dc0519](https://github.com/DSI-HUG/dejajs-components/commit/80dc051925bb476c7c42868f8fbfdd64365652e3))
+* **Cloning:** Clone date in array of date ([4dfd752a](https://github.com/DSI-HUG/dejajs-components/commit/4dfd752a21632bc8375f02d83fc1841ce4d6397c))
+
+##### Other Changes
+
+* **License:** Add license ([70d5dcdc](https://github.com/DSI-HUG/dejajs-components/commit/70d5dcdc2cce9435fe8d4afa07d99cda17aaa10c))
+
+### 2.6.0 (2017-07-31)
+
+##### BREAKING CHANGES
+
+* **DejaTreelist:** Treelist NgModel to the selected items same as the DejaSelect ([5874d2d8](https://github.com/DSI-HUG/dejajs-components/commit/5874d2d8f467d63df2ecee40387caac5766f3ff0))
+* **DejaSelect:** NgModel type same as set ([87627bfb](https://github.com/DSI-HUG/dejajs-components/commit/87627bfb75834fa57b6e376f168015f114e1bba8))
+
+##### Bug Fixes
+
+* **SelectDemoComponent validator:** license header ([b7247f1c](https://github.com/DSI-HUG/dejajs-components/commit/b7247f1ccf4b08484946ae9e5d6548106d57d072))
+* **SelectDemoComponent:** validator declaration ([16d6249d](https://github.com/DSI-HUG/dejajs-components/commit/16d6249d5b71076c3da93fb2f0b2dea046af71c3))
+
+#### 2.5.0 (2017-07-20)
+
+##### BREAKING CHANGES
+
+* **Dependencies:** Update all dependencies (Angular 4.3 & Ngrx 4) ([62d612a0](https://github.com/DSI-HUG/dejajs-components/commit/62d612a0778ede150ae47a40a59b55a1598cd856))
+* **Fonts:** Remove fonts from the libraries ([1b4e8968](https://github.com/DSI-HUG/dejajs-components/commit/1b4e896816cb169ab7b42c03fb6a0c50b924be48))
+
+##### Documentation Changes
+
+* **DatePicker:** Update doc ([090b47ff](https://github.com/DSI-HUG/dejajs-components/commit/090b47ffef9a151d2a269c197ecf0b890504ec5d))
+
+##### New Features
+
+* **DatePicker:** Add required attribute and mdError templating ([2482cc06](https://github.com/DSI-HUG/dejajs-components/commit/2482cc06cbc1e7e8d56b4e726a79e7c271d9264e))
+
+##### Bug Fixes
+
+* **DatePicker:**
+  * button type ([d3ebb3df](https://github.com/DSI-HUG/dejajs-components/commit/d3ebb3dfca3347685aa276db293ada8313fb501e))
+  * add DejaChildValidatorDirective to datepicker input to make it work with reactive forms ([3afe12b1](https://github.com/DSI-HUG/dejajs-components/commit/3afe12b1d410ffd69116fad4cdd94f7971c6e9ed))
+  * update icon font-size to 100% ([cfaa4e64](https://github.com/DSI-HUG/dejajs-components/commit/cfaa4e647c5ff990739c693d5a97bae45e66611b))
+  * Fix reactive form implementation ([7b2a9185](https://github.com/DSI-HUG/dejajs-components/commit/7b2a9185a1cb6fdfeaf7fb158fb31943d5a5b216))
+* **flexLayout:** Add flexLayout import where it's needed ([d2c69acc](https://github.com/DSI-HUG/dejajs-components/commit/d2c69acc96bec08aee1ced3d1d1b97ef1f850be9))
+* **Global:** Update rxjs ([bbb55617](https://github.com/DSI-HUG/dejajs-components/commit/bbb556176605ce9a2218dbae01a80b9435dfb796))
+
+##### Other Changes
+
+* **Config:** Add npmrc file to force registry ([bfb5130d](https://github.com/DSI-HUG/dejajs-components/commit/bfb5130d33f5e617c1871811200e23bfe1741d7c))
+* **Global:** Update yarn.lock ([42b64e23](https://github.com/DSI-HUG/dejajs-components/commit/42b64e239554fc821dc92ae3afe1999bd63bc744))
+* **Fonts:** Update dejajs resources ([b4965147](https://github.com/DSI-HUG/dejajs-components/commit/b4965147da47b72467752f2a02916442bd2cd491))
+* **Conf:** Add lint on start ([fafd50a7](https://github.com/DSI-HUG/dejajs-components/commit/fafd50a7b85a2cebb045d5b95f9539053a503d39))
+
+#### 2.4.0 (2017-07-19)
+
+##### BREAKING CHANGES
+
+* **Fonts:** Remove fonts from the libraries ([1b4e8968](https://github.com/DSI-HUG/dejajs-components/commit/1b4e896816cb169ab7b42c03fb6a0c50b924be48))
+* **DejaChips:** CloseEvent is now a custom event containing item and index instead index only. The index is now available in event.index
+
+
+##### Documentation Changes
+
+* **DatePicker:** Update doc ([090b47ff](https://github.com/DSI-HUG/dejajs-components/commit/090b47ffef9a151d2a269c197ecf0b890504ec5d))
+
+##### New Features
+
+* **DatePicker:** Add required attribute and mdError templating ([2482cc06](https://github.com/DSI-HUG/dejajs-components/commit/2482cc06cbc1e7e8d56b4e726a79e7c271d9264e))
+
+##### Bug Fixes
+
+* **DatePicker:**
+  * add DejaChildValidatorDirective to datepicker input to make it work with reactive forms ([3afe12b1](https://github.com/DSI-HUG/dejajs-components/commit/3afe12b1d410ffd69116fad4cdd94f7971c6e9ed))
+  * update icon font-size to 100% ([cfaa4e64](https://github.com/DSI-HUG/dejajs-components/commit/cfaa4e647c5ff990739c693d5a97bae45e66611b))
+* **flexLayout:** Add flexLayout import where it's needed ([d2c69acc](https://github.com/DSI-HUG/dejajs-components/commit/d2c69acc96bec08aee1ced3d1d1b97ef1f850be9))
+
+##### Other Changes
+
+* **Global:** Update yarn.lock ([42b64e23](https://github.com/DSI-HUG/dejajs-components/commit/42b64e239554fc821dc92ae3afe1999bd63bc744))
+* **Fonts:** Update dejajs resources ([b4965147](https://github.com/DSI-HUG/dejajs-components/commit/b4965147da47b72467752f2a02916442bd2cd491))
+
+#### 2.3.5 (2017-07-17)
+
+##### Bug Fixes
+
+* **Global:** Update rxjs ([bbb55617](https://github.com/DSI-HUG/dejajs-components/commit/bbb556176605ce9a2218dbae01a80b9435dfb796))
+
+#### 2.3.4 (2017-07-17)
+
+##### Bug Fixes
+
+* **DatePicker:** Fix reactive form implementation ([7b2a9185](https://github.com/DSI-HUG/dejajs-components/commit/7b2a9185a1cb6fdfeaf7fb158fb31943d5a5b216))
+* **Demo:** add scrollbar to menu ([4bb32496](https://github.com/DSI-HUG/dejajs-components/commit/4bb32496b0ef7ba9cc9d3ab7af6f6ad4805f8c64))
+* **Grid:** Add debounce to calcColumnsLayout ([00fa4c93](https://github.com/DSI-HUG/dejajs-components/commit/00fa4c93732cc068ccdfb35555f2b9cbb658ee9f))
+
+##### Other Changes
+
+* **Conf:** Add lint on start ([fafd50a7](https://github.com/DSI-HUG/dejajs-components/commit/fafd50a7b85a2cebb045d5b95f9539053a503d39))
+
 #### 2.3.3 (2017-07-12)
 
 ##### New Features
@@ -7,7 +161,7 @@
 ##### Bug Fixes
 
 * **Demo:** add scrollbar to menu ([4bb32496](https://github.com/DSI-HUG/dejajs-components/commit/4bb32496b0ef7ba9cc9d3ab7af6f6ad4805f8c64))
-* **Grid:** Add debounce to calcColumnLayout ([00fa4c93](https://github.com/DSI-HUG/dejajs-components/commit/00fa4c93732cc068ccdfb35555f2b9cbb658ee9f))
+* **Grid:** Add debounce to calcColumnsLayout ([00fa4c93](https://github.com/DSI-HUG/dejajs-components/commit/00fa4c93732cc068ccdfb35555f2b9cbb658ee9f))
 * **DemoApp:** Fix datepicker demo ([4d9716b7](https://github.com/DSI-HUG/dejajs-components/commit/4d9716b7f3772b31900c798b83444f061f5bc795))
 
 ##### Other Changes

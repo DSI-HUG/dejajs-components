@@ -24,11 +24,11 @@ import { CountriesService, Country } from '../services/countries.service';
     encapsulation: ViewEncapsulation.None,
 })
 export class TilesDemoComponent implements OnInit {
-    protected tabIndex = 1;
+    public tabIndex = 1;
+    public messages$: Observable<IMessage[]>;
 
     protected designMode = false;
 
-    private messages$: Observable<IMessage[]>;
     private message$ = new Subject<IMessage>();
     private tiles1$: Observable<IDejaTile[]>;
     private tiles2$: Observable<IDejaTile[]>;

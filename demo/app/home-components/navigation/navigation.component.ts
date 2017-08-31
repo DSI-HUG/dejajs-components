@@ -14,9 +14,9 @@ import { Component } from '@angular/core';
     templateUrl: 'navigation.component.html',
 })
 export class NavigationComponent {
-    protected iframeOpened = false;
+    public iframeOpened = false;
 
-    protected openIFrame(e: Event) {
+    public openIFrame(e: Event) {
         this.iframeOpened = true;
         e.preventDefault();
         return false;

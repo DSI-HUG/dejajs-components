@@ -59,6 +59,7 @@ import {
     DejaSnackbarModule,
     DejaSortingModule,
     DejaSplitterModule,
+    DejaTagModule,
     DejaTilesModule,
     DejaTooltipModule,
     DejaTreeListModule,
@@ -87,6 +88,7 @@ import { ReactiveFormDemoComponent } from './reactive-form/reactive-form-demo';
 import { SelectDemoComponent } from './select/select-demo';
 import { DejaSnackbarDemoComponent } from './snackbar/snackbar-demo';
 import { DejaSplitterDemoComponent } from './splitter/splitter-demo';
+import { TagDemoComponent } from './tag/tag-demo.component';
 import { TextAreaDemoComponent } from './textarea/textarea-demo';
 import { TilesDemoComponent } from './tiles/tiles-demo';
 import { DejaTreeListDemoComponent } from './tree-list/tree-list-demo';
@@ -115,6 +117,7 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         SelectDemoComponent,
         DejaSnackbarDemoComponent,
         DejaSplitterDemoComponent,
+        TagDemoComponent,
         TextAreaDemoComponent,
         TilesDemoComponent,
         DejaTreeListDemoComponent,
@@ -161,14 +164,16 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         DejaSnackbarModule,
         DejaSortingModule,
         DejaSplitterModule,
+        DejaTagModule,
         DejaTilesModule,
         DejaTooltipModule,
         DejaTreeListModule,
         DejaViewPortModule,
         GroupingModule,
-        StoreModule.provideStore({
+        StoreModule.forRoot({}),
+        StoreModule.forFeature('userDemo', {
             user: userReducer,
-        })
+        }),
     ],
     providers: [
         CountriesService,

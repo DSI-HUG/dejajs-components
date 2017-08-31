@@ -116,10 +116,6 @@ export class ViewPortService implements OnDestroy {
         };
 
         const calcFixedSizeViewPort$ = (items: IViewPortItem[], containerSize: number, scrollPos: number, itemDefaultSize: number, ensureParams: IEnsureParams): Observable<IViewPort> => {
-            if (!itemDefaultSize) {
-                itemDefaultSize = ViewPortService.itemDefaultSize;
-            }
-
             const maxCount = Math.ceil(containerSize / itemDefaultSize);
             const startRow = Math.floor(scrollPos / itemDefaultSize);
 
@@ -162,10 +158,6 @@ export class ViewPortService implements OnDestroy {
         };
 
         const calcVariableSizeViewPort$ = (items: IViewPortItem[], containerSize: number, scrollPos: number, itemDefaultSize: number, ensureParams: IEnsureParams): Observable<IViewPort> => {
-            if (!itemDefaultSize) {
-                itemDefaultSize = ViewPortService.itemDefaultSize;
-            }
-
             const visibleList = [] as IViewPortItem[];
             let startIndex: number;
             let endIndex;
@@ -262,7 +254,7 @@ export class ViewPortService implements OnDestroy {
         };
 
         const calcAutoSizeViewPort$ = (items: IViewPortItem[], containerSize: number, scrollPos: number, element: HTMLElement, itemDefaultSize: number, ensureParams: IEnsureParams, isCalculation?: boolean): Observable<IViewPort> => {
-            return calcVariableSizeViewPort$(items, containerSize, scrollPos, itemDefaultSize || ViewPortService.itemDefaultSize, ensureParams)
+            return calcVariableSizeViewPort$(items, containerSize, scrollPos, itemDefaultSize, ensureParams)
                 .switchMap((viewPort) => {
                     const calculationRequired = !isCalculation && viewPort.visibleItems.find((item) => !item.size);
 
@@ -284,7 +276,7 @@ export class ViewPortService implements OnDestroy {
                                     }
                                 }
                             })
-                            .switchMap(() => calcVariableSizeViewPort$(items, containerSize, viewPort.scrollPos || scrollPos, itemDefaultSize || ViewPortService.itemDefaultSize, ensureParams));
+                            .switchMap(() => calcVariableSizeViewPort$(items, containerSize, viewPort.scrollPos || scrollPos, itemDefaultSize, ensureParams));
                     }
                 });
         };
@@ -537,12 +529,16 @@ export class ViewPortService implements OnDestroy {
             }));
 
         // Calc view port observable
-        this.subscriptions.push(Observable.combineLatest(items$, maxSize$, itemsSize$, ensureParams$, direction$, mode$, refresh$, element$)
+        this.subscriptions.push(Observable.combineLatest(items$, maxSize$, itemsSize$, ensureParams$)
+            .combineLatest(direction$, mode$, refresh$, element$)
             .debounceTime(1)
             .combineLatest(scrollPos$)
-            .filter(([[_items, _maxSize, _itemDefaultSize, _ensureParams, _direction, _mode, _refresh, element], _scrollPos]: [[IViewPortItem[], number | string, number, IEnsureParams, ViewportDirection, ViewportMode, IViewPortItem, HTMLElement], number]) => !!element)
+            .filter(([[[_items, _maxSize, _itemDefaultSize, _ensureParams], _direction, _mode, _refresh, element], _scrollPos]) => !!element)
             .do(() => consoleLog(`combineLatest`))
-            .switchMap(([[items, maxSize, itemDefaultSize, ensureParams, _direction, _mode, _refresh, element], _scrollPos]: [[IViewPortItem[], number | string, number, IEnsureParams, ViewportDirection, ViewportMode, IViewPortItem, HTMLElement], number]) => {
+            .switchMap(([[[items, maxSize, itemDefaultSize, ensureParams], _direction, _mode, _refresh, element], _scrollPos]) => {
+                if (!itemDefaultSize) {
+                    itemDefaultSize = ViewPortService.itemDefaultSize;
+                }
                 const listSize = this.lastCalculatedSize || maxSize || clientSize(element);
                 const scrollPos = this._scrollPosition;
                 let maxSizeValue = maxSize === 'auto' ? 0 : +maxSize;
@@ -552,8 +548,28 @@ export class ViewPortService implements OnDestroy {
                     this.viewPortResult$.next(this.measureViewPort);
                     // Wait next life cycle for the result
                     return Observable.timer(1)
-                        .map(() => maxSizeValue = this.lastCalculatedSize = clientSize(element))
-                        .map(() => ({ element, scrollPos, items, maxSizeValue, itemDefaultSize, ensureParams }));
+                        .map(() => {
+                            // Get mx size from container
+                            maxSizeValue = this.lastCalculatedSize = clientSize(element);
+                            // Ensure that max size is not more than the items size
+                            if (this.mode === ViewportMode.fixed) {
+                                if (items.length * itemDefaultSize < maxSizeValue) {
+                                    maxSizeValue = items.length * itemDefaultSize;
+                                }
+                            } else if (this.mode === ViewportMode.variable) {
+                                let maxItemsSize = 0;
+                                items.find((item) => {
+                                    maxItemsSize += item.size || itemDefaultSize;
+                                    return maxItemsSize > maxSizeValue;
+                                });
+                                if (maxItemsSize < maxSizeValue) {
+                                    maxSizeValue = maxItemsSize;
+                                }
+                            } else if (this.mode === ViewportMode.auto) {
+
+                            }
+                            return { element, scrollPos, items, maxSizeValue, itemDefaultSize, ensureParams };
+                        });
                 } else {
                     maxSizeValue = maxSizeValue || this.lastCalculatedSize;
                     return Observable.of({ element, scrollPos, items, maxSizeValue, itemDefaultSize, ensureParams });

@@ -16,7 +16,7 @@ import { ICircularRange } from './../../../src/component/circular-picker/circula
     templateUrl: './circular-picker-demo.html',
 })
 export class DejaCircularPickerDemoComponent implements OnInit {
-    protected tabIndex = 1;
+    public tabIndex = 1;
 
     public sm = 3;
     public sms = 10;

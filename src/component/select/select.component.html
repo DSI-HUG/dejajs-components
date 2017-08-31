@@ -1,6 +1,6 @@
 <deja-chips [items]="selectedItems" [readonly]="readonly" [disabled]="disabled" (close)="onCloseClicked($event)" [itemTemplateExternal]="selectedTemplate" *ngIf="isMultiSelect && selectedItems.length > 0 && selectedItemsPosition===0" [textField]="_textField"></deja-chips>
 <md-input-container id="input" [attr.wait]="waiter" [attr.multiselection]="isMultiSelect && selectedItems.length > 0" [attr.selection]="selectedItemsPosition===0 ? 'above' : null">
-	<input #inputElement deja-child-validator type="text" mdInput [readonly]="isModeSelect || readonly" (ngModelChange)="queryChanged($event)" [ngModel]="query" [disabled]="disabled">
+	<input #inputElement deja-child-validator type="text" mdInput [readonly]="isModeSelect || readonly" (ngModelChange)="queryChanged($event)" [ngModel]="query" [disabled]="disabled" autocomplete="false">
 	<md-placeholder>
 		<ng-template [ngTemplateOutlet]="placeHolderTemplate"></ng-template>
 		<span *ngIf="!placeHolderTemplate">{{ placeholder }}</span>
@@ -12,6 +12,9 @@
 	<md-hint *ngIf="hintTemplate">
 		<ng-template [ngTemplateOutlet]="hintTemplate"></ng-template>
 	</md-hint>
+	<md-error *ngIf="mdError">
+		<ng-template [ngTemplateOutlet]="mdError"></ng-template>
+	</md-error>
 	<span *ngIf="mdSuffix" mdSuffix>
 		<ng-template [ngTemplateOutlet]="mdSuffix"></ng-template>
 	</span>

@@ -28,7 +28,7 @@ Si le snackbar est une réponse à une action de l'utilisateur sur l'UI, veuille
       <!-- par exemple -->
       <div>
         <span>{{message.content}}</span>
-        <button (click)="message.gate = false"></button>
+        <button type="button" (click)="message.gate = false"></button>
       </div>
     </deja-snackbar>
   </ng-template>

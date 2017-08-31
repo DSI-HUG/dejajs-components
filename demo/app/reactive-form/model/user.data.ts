@@ -38,6 +38,8 @@ export const user = {
         code: 'CH',
     } as Country],
     name: 'Serge',
+    preferedJuice: 'Lemon',
+    preferedFruct: 'Durian',
     skills: ['angular2', 'ngrx', 'typescript', 'html5', 'css3'],
     remark: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 Mauris auctor sit amet odio et aliquet. Curabitur auctor eleifend mattis.

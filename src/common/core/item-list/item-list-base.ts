@@ -30,8 +30,6 @@ export abstract class ItemListBase implements OnDestroy {
     protected _multiSelect = false;
     protected _searchField: string;
     protected _maxHeight: number;
-    protected _textField: string;
-    protected _valueField: string;
     protected _currentItemIndex = -1;
     protected _currentItem: IItemBase;
     protected _hintLabel: string;
@@ -57,6 +55,9 @@ export abstract class ItemListBase implements OnDestroy {
     // Drag drop
     protected _ddStartIndex: number;
     protected _ddTargetIndex: number;
+
+    private _textField: string;
+    private _valueField: string;
 
     private waiter$sub: Subscription;
     private viewPort$sub: Subscription;
@@ -230,7 +231,7 @@ export abstract class ItemListBase implements OnDestroy {
     /**
      * Set a promise or an observable called before an item selection
      */
-    public setLoadingItems(fn: (query: string | RegExp, selectedItems: IItemBase[]) => Observable<IItemBase>) {
+    public setLoadingItems(fn: (query: string | RegExp, selectedItems: IItemBase[]) => Observable<IItemBase[]>) {
         this.getItemListService().setLoadingItems(fn);
     }
 
@@ -325,12 +326,16 @@ export abstract class ItemListBase implements OnDestroy {
     /** Change l'état d'expansion de tous les éléments.
      * @return {Observable} Observable résolu par la fonction.
      */
-    public toggleAll$(collapsed?: boolean) {
+    public toggleAll$(collapsed?: boolean): Observable<IItemTree[]> {
         this.allCollapsed = (collapsed !== undefined) ? collapsed : !this.allCollapsed;
         if (this.viewPort.mode === ViewportMode.disabled) {
             return Observable.from(this._itemList)
                 .filter((item: IItemTree) => item.$items && item.depth === 0 && item.collapsible !== false)
-                .switchMap((_item: IItemTree, index: number) => this.toggleCollapse$(index + this.vpStartRow, this.allCollapsed));
+                .switchMap((_item: IItemTree, index: number) => this.toggleCollapse$(index + this.vpStartRow, this.allCollapsed))
+                .reduce((acc, item) => {
+                    acc.push(item);
+                    return acc;
+                }, [] as IItemTree[]);
         } else {
             return this.getItemListService().toggleAll$(this.allCollapsed);
         }
@@ -341,7 +346,7 @@ export abstract class ItemListBase implements OnDestroy {
      * @param {boolean} collapse  Etat de l'élément. True pour réduire l'élément.
      * @return {Observable} Observable résolu par la fonction.
      */
-    public toggleCollapse$(index: number, collapsed: boolean): Observable<IItemTree[]> {
+    public toggleCollapse$(index: number, collapsed: boolean): Observable<IItemTree> {
         return this.getItemListService().toggleCollapse$(index, collapsed)
             .switchMap((toogleResult) => this.calcViewList$().first().map(() => toogleResult));
     }
@@ -440,7 +445,7 @@ export abstract class ItemListBase implements OnDestroy {
         if (this._itemListService) {
             this._itemListService.hideSelected = this._hideSelected;
             this._itemListService.childrenField = this._childrenField;
-            this._itemListService.valueField = this._valueField;
+            this._itemListService.valueField = this.getValueField();
             this.waiter$sub = Observable.from(this._itemListService.waiter$)
                 .subscribe((status: boolean) => {
                     this._waiter = status;
@@ -627,7 +632,7 @@ export abstract class ItemListBase implements OnDestroy {
 
     /** Retourne le champ utilisé comme valeur d'affichage.*/
     protected getTextField() {
-        return this._textField;
+        return this._textField || 'displayName';
     }
 
     /** Définit le champ à utiliser comme valeur de comparaison.
@@ -642,7 +647,7 @@ export abstract class ItemListBase implements OnDestroy {
 
     /** Retourne le champ utilisé comme valeur de comparaison.*/
     protected getValueField() {
-        return this._valueField;
+        return this._valueField || 'value';
     }
 
     /** Définit le champ à utiliser comme champ de recherche.
@@ -658,7 +663,7 @@ export abstract class ItemListBase implements OnDestroy {
      * Spécifier 0 pour que le composant determine sa hauteur à partir du container
      */
     protected setMaxHeight(value: number | string) {
-        this._maxHeight = value === 'auto' ? null : +value;
+        this._maxHeight = value === 'auto' ? null : +value || null;
         this.viewPort.maxSize$.next(value);
     }
 
@@ -734,15 +739,24 @@ export abstract class ItemListBase implements OnDestroy {
 
             itemBase.model = model;
 
-            const displayField = this._textField || 'displayName';
-            itemBase[displayField] = this.getTextValue(model);
+            const displayField = this.getTextField();
+            const valueField = this.getValueField();
 
-            if (this._searchField) {
-                itemBase[this._searchField] = model[this._searchField];
-            }
+            if (typeof model === 'string') {
+                itemBase[displayField] = model;
+                itemBase[valueField] = model;
 
-            if (this._valueField) {
-                itemBase[this._valueField] = model[this._valueField];
+                if (this._searchField) {
+                    itemBase[this._searchField] = model;
+                }
+
+            } else {
+                itemBase[displayField] = this.getTextValue(model);
+                itemBase[valueField] = model[this._valueField];
+
+                if (this._searchField) {
+                    itemBase[this._searchField] = model[this._searchField];
+                }
             }
 
             const childrenField = this.getItemListService().childrenField;
@@ -766,6 +780,35 @@ export abstract class ItemListBase implements OnDestroy {
         } else {
             return (item.size && item.size > ViewPortService.itemDefaultSize) ? item.size : this.getViewPortRowHeight();
         }
+    }
+
+    protected getVirtualSelectedEntities(value) {
+        if (value) {
+            const modelType = typeof value;
+            if (modelType === 'string' || modelType === 'number') {
+                if (this._multiSelect) {
+                    value = value.split(',')
+                        .map((v) => v.trim())
+                        .map((v) => {
+                            const model = {};
+                            const textField = this.getTextField();
+                            const valueField = this.getValueField();
+                            model[textField] = v;
+                            model[valueField] = v;
+                            return model;
+                        });
+                } else {
+                    const v = value.trim();
+                    value = {};
+                    const textField = this.getTextField();
+                    const valueField = this.getValueField();
+                    value[textField] = v;
+                    value[valueField] = v;
+                }
+            }
+        }
+
+        return value;
     }
 }
 

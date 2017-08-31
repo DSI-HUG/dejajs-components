@@ -349,10 +349,12 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
 
     public changeMonth(x: number) {
         this.setMonthIfPossible(this._displayedDate, x);
+        return false;
     }
 
     public changeYear(x: number) {
         this.setYearIfPossible(this._displayedDate, x);
+        return false;
     }
 
     protected updateHours(hours: number) {

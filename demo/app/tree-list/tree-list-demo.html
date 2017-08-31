@@ -8,6 +8,7 @@
 	<md-tab label="SIMPLE EXAMPLES"></md-tab>
 	<md-tab label="ADVANCED EXAMPLES"></md-tab>
 	<md-tab label="TEMPLATING"></md-tab>
+	<md-tab label="PRE-SELECTIONS"></md-tab>
 	<md-tab label="PRE-EVENTS AND ON_DEMAND"></md-tab>
 	<md-tab label="PERFORMANCES"></md-tab>
 </md-tab-group>
@@ -33,11 +34,11 @@
 			<div>Just passing an array of objects</div>
 			<div fxLayout="row">
 				<span fxFlex="0 0 45%" fxLayout="column">
-					<deja-tree-list fxFlex="0 0 400px" [selectedModels]="businessCountries" (selectedChange)="businessCountryChange($event.item?.model)" textField="naqme" valueField="code" [models]="countries"></deja-tree-list>
+					<deja-tree-list fxFlex="0 0 400px" [(ngModel)]="country" textField="naqme" valueField="code" [models]="countries"></deja-tree-list>
 				</span>
 				<span fxFlex="0 0 45%" fxFlexOffset="5%">
 					<h4>Selected country model :</h4>
-					<pre>{{businessCountries | json}}</pre>
+					<pre>{{country | json}}</pre>
 				</span>
 			</div>
 		</md-card-content>
@@ -48,7 +49,7 @@
 			<div>deja-tree-list has some keyboard navigation feature</div>
 			<div fxLayout="row">
 				<span fxFlex="0 0 45%" fxLayout="column">
-					<deja-tree-list fxFlex="0 0 400px" [selectedModels]="businessCountries" (selectedChange)="businessCountryChange($event.item?.model)" textField="naqme" valueField="code" [models]="countries"></deja-tree-list>
+					<deja-tree-list fxFlex="0 0 400px" [(ngModel)]="country" textField="naqme" valueField="code" [models]="countries"></deja-tree-list>
 				</span>
 				<ul fxFlex="0 0 50%" fxFlexOffset="5%" id="shortcut-list">
 					<li>Press
@@ -87,23 +88,23 @@
 		</md-card-content>
 	</md-card>
 	<md-card class="deja-treelist-demo demo-card demo-basic">
-		<md-toolbar color="primary">Treelis with options</md-toolbar>
+		<md-toolbar color="primary">Treelist with options</md-toolbar>
 		<md-card-content>
 			<div>These treelists has a list coming from html options</div>
 			<span fxLayout="row">
-				<deja-tree-list fxFlex="0 0 45%" class="demo-half-width optionstl" selectedModel="mango">
-					<deja-item value="apricots" text="Apricots"></deja-item>
-					<deja-item value="banana" text="Banana"></deja-item>
-					<deja-item value="cantaloupe" text="Cantaloupe"></deja-item>
-					<deja-item value="cherries" text="Cherries"></deja-item>
-					<deja-item value="coconut" text="Coconut"></deja-item>
-					<deja-item value="cranberries" text="Cranberries"></deja-item>
-					<deja-item value="durian" text="Durian"></deja-item>
-					<deja-item value="grapes" text="Grapes"></deja-item>
-					<deja-item value="lemon" text="Lemon"></deja-item>
-					<deja-item value="mango" text="Mango"></deja-item>
-					<deja-item value="pineapple" text="Pineapple"></deja-item>
-					<deja-item value="watermelon" text="Watermelon"></deja-item>
+				<deja-tree-list fxFlex="0 0 45%" class="demo-half-width optionstl" [(ngModel)]="fruct">
+					<deja-item value="apricots" text="My preferred fruct is Apricots"></deja-item>
+					<deja-item value="banana" text="My preferred fruct is Banana"></deja-item>
+					<deja-item value="cantaloupe" text="My preferred fruct is Cantaloupe"></deja-item>
+					<deja-item value="cherries" text="My preferred fruct is Cherries"></deja-item>
+					<deja-item value="coconut" text="My preferred fruct is Coconut"></deja-item>
+					<deja-item value="cranberries" text="My preferred fruct is Cranberries"></deja-item>
+					<deja-item value="durian" text="My preferred fruct is Durian"></deja-item>
+					<deja-item value="grapes" text="My preferred fruct is Grapes"></deja-item>
+					<deja-item value="lemon" text="My preferred fruct is Lemon"></deja-item>
+					<deja-item value="mango" text="My preferred fruct is Mango"></deja-item>
+					<deja-item value="pineapple" text="My preferred fruct is Pineapple"></deja-item>
+					<deja-item value="watermelon" text="My preferred fruct is Watermelon"></deja-item>
 				</deja-tree-list>
 				<deja-tree-list fxFlex="0 0 45%" fxFlexOffset="5%" class="demo-half-width optionstl" multiSelect="true" selectedModels="mango, apricots, coconut">
 					<deja-item value="apricots" text="Apricots"></deja-item>
@@ -123,12 +124,21 @@
 		</md-card-content>
 	</md-card>
 	<md-card class="deja-treelist-demo demo-card demo-basic">
+		<md-toolbar color="primary">String Array Model</md-toolbar>
+		<md-card-content>
+			<span fxLayout="row" fxLayoutAlign="start center">
+				<deja-tree-list class="demo-half-width" [(ngModel)]="fruct" [models]="fructs"></deja-tree-list>
+				<span fxFlex="0 0 50%" fxFlexOffset="5%">Selected fruct model is: {{ fruct }}</span>
+			</span>
+		</md-card-content>
+	</md-card>
+	<md-card class="deja-treelist-demo demo-card demo-basic">
 		<md-toolbar color="primary">Disabled tree-list</md-toolbar>
 		<md-card-content>
 			<div>
 				<md-checkbox [(ngModel)]="disabled" color="primary">Check me to disable tree-list below</md-checkbox>
 			</div>
-			<deja-tree-list searchArea class="demo-half-width" nodataholder="No record to display" maxHeight="auto" [disabled]="disabled" selectionClearable [selectedModels]="businessCountries" (selectedChange)="businessCountryChange($event.item?.model)" textField="naqme" valueField="code" [models]="countries"></deja-tree-list>
+			<deja-tree-list searchArea class="demo-half-width" nodataholder="No record to display" maxHeight="auto" [disabled]="disabled" selectionClearable [(ngModel)]="country" textField="naqme" valueField="code" [models]="countries"></deja-tree-list>
 		</md-card-content>
 	</md-card>
 </div>
@@ -253,6 +263,32 @@
 
 <div *ngIf="tabIndex === 4">
 	<md-card class="deja-treelist-demo demo-card demo-basic">
+		<md-toolbar color="primary">Pre-Selections from html inputs</md-toolbar>
+		<md-card-content>
+			<span fxLayout="row">
+				<div fxFlex="0 0 45%" class="demo-half-width">Preselection with the input selectedModel</div>
+				<div fxFlex="0 0 45%" fxFlexOffset="5%" class="demo-half-width">Preselections with the input selectedModels</div>
+			</span>
+			<span fxLayout="row">
+				<deja-tree-list fxFlex="0 0 45%" class="demo-half-width" selectedModel="Mango" [models]="fructs"></deja-tree-list>
+				<deja-tree-list fxFlex="0 0 45%" fxFlexOffset="5%" class="demo-half-width" multiSelect="true" selectedModels="Mango, Apricots, Coconut" [models]="fructs"></deja-tree-list>
+			</span>
+			<div fxFlex="0 0 45%" class="demo-half-width">Preselection with the input selectedItem</div>
+			<span fxLayout="row">
+				<deja-tree-list fxFlex="0 0 45%" class="demo-half-width" selectedItem="mango" [items]="fructItems"></deja-tree-list>
+			</span>
+		</md-card-content>
+		<md-toolbar color="primary">Pre-Selections from javascript</md-toolbar>
+		<md-card-content>
+            <div>The collection fructItemsWithPreSelection has a pre-selected item</div>
+    		<deja-tree-list fxFlex="0 0 45%" class="demo-half-width" [items]="fructItemsWithPreSelection"></deja-tree-list>
+		</md-card-content>
+	</md-card>
+</div>
+
+
+<div *ngIf="tabIndex === 5">
+	<md-card class="deja-treelist-demo demo-card demo-basic">
 		<md-toolbar color="primary">Pre-Events and on Demand</md-toolbar>
 		<md-card-content>
 			<h1>On Demand Loading </h1>
@@ -268,7 +304,7 @@
 	</md-card>
 </div>
 
-<div *ngIf="tabIndex === 5">
+<div *ngIf="tabIndex === 6">
 	<md-card class="deja-treelist-demo demo-card demo-basic">
 		<md-toolbar color="primary">Performance Examples</md-toolbar>
 		<md-card-content>

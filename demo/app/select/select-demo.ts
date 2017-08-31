@@ -7,6 +7,7 @@
  */
 
 import { ChangeDetectorRef, Component, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import 'rxjs/add/operator/toPromise';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -19,6 +20,7 @@ import { News } from '../common/news.model';
 import { CountriesListService } from '../services/countries-list.service';
 import { CountriesService, Country } from '../services/countries.service';
 import { NewsService } from '../services/news.service';
+import {cheeseValidator } from './validators';
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -27,9 +29,12 @@ import { NewsService } from '../services/news.service';
     templateUrl: './select-demo.html',
 })
 export class SelectDemoComponent implements OnDestroy {
+    public fruct = '';
+    public fructs = [] as string[];
+
     protected disabled: boolean;
     protected country: Country;
-    protected tabIndex = 1;
+    public tabIndex = 1;
     protected news$: Observable<News[]>;
     protected bigNews$: Observable<News[]>;
     protected bigCountries$: Observable<Country[]>;
@@ -41,6 +46,9 @@ export class SelectDemoComponent implements OnDestroy {
     protected dialogResponse$: Subject<string> = new Subject<string>();
     protected readonlyMultiSelect = false;
     protected disableMultiSelect = false;
+    protected fruitForm: FormGroup;
+    protected fruitFormModels: FormGroup;
+    protected fruits$: Observable<string[]>;
 
     private countries: Observable<Country[]>;
     private countriesForTemplate: Country[];
@@ -56,16 +64,16 @@ export class SelectDemoComponent implements OnDestroy {
     @ViewChild('ondemand') private onDemandSelect: DejaSelectComponent;
     @ViewChild('onexpand') private onExpandSelect: DejaSelectComponent;
 
-    protected set dialogVisible(value: boolean) {
+    public set dialogVisible(value: boolean) {
         this._dialogVisible = value;
         this.changeDetectorRef.markForCheck();
     }
 
-    protected get dialogVisible() {
+    public get dialogVisible() {
         return this._dialogVisible;
     }
 
-    constructor(private changeDetectorRef: ChangeDetectorRef, private countriesService: CountriesService, protected countriesListService: CountriesListService, newsService: NewsService) {
+    constructor(private changeDetectorRef: ChangeDetectorRef, private countriesService: CountriesService, protected countriesListService: CountriesListService, newsService: NewsService, private _fb: FormBuilder) {
         this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","displayName":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","displayName":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","displayName":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","displayName":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","displayName":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","displayName":"Dominica","depth":0,"odd":false,"selected":true}]');
         this.news$ = newsService.getNews$(50);
         this.bigNews$ = newsService.getNews$(10000);
@@ -78,6 +86,22 @@ export class SelectDemoComponent implements OnDestroy {
         this.country.color = 'rgb(211, 47, 47)';
 
         this.countries = this.countriesService.getCountries$();
+
+        this.fructs = [
+            'Apricots',
+            'Banana',
+            'Cantaloupe',
+            'Cherries',
+            'Coconut',
+            'Cranberries',
+            'Durian',
+            'Grapes',
+            'Lemon',
+            'Mango',
+            'Pineapple',
+            'Watermelon',
+        ];
+        this.fruits$ = Observable.of(this.fructs);
 
         this.subscriptions.push(this.countries
             .subscribe((value: Country[]) => {
@@ -143,6 +167,13 @@ export class SelectDemoComponent implements OnDestroy {
                 this.groupedCountries = result;
                 this.onDemandGroupedCountries = onDemandResult;
             }));
+
+        this.fruitForm = this._fb.group({
+            fruitName: ['', [cheeseValidator]],
+        });
+        this.fruitFormModels = this._fb.group({
+            fruitName: [''],
+        });
     }
 
     public ngOnDestroy() {
@@ -249,6 +280,7 @@ export class SelectDemoComponent implements OnDestroy {
             this.newsSelect.refreshViewPort(itemExt);
         }
     }
+
 }
 
 interface ISelectCountry extends IItemTree {

@@ -51,8 +51,8 @@ testem.log
 Thumbs.db
 
 # Ignore in source
-src/*.js
-src/*.js.map
+src/**/*.js
+src/**/*.js.map
 src/**/*.d.ts
 !src/send-action.js
 

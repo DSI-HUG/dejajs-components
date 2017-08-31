@@ -9,5 +9,7 @@
 import { IUser } from './user.interface';
 
 export interface IappState {
-    user: IUser;
+    userDemo: {
+        user: IUser;
+    };
 }

@@ -174,10 +174,10 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
                             if (this.outerLabels) {
                                 circle = circle.inflate(this.labelsDiameter);
 
-                                for (let i = 0; i < this.configs.length; i++) {
+                                for (const conf of this.configs) {
                                     contains = circle.containsPoint(new Position(event.pageX, event.pageY));
                                     if (contains) {
-                                        this.selectedConfig = this.configs[i];
+                                        this.selectedConfig = conf;
                                         break;
                                     } else {
                                         circle = circle.inflate(this.labelsDiameter);

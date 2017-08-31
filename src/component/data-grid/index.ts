@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule  } from '@angular/forms';
 import { DejaSortingModule } from '../../common/core/sorting/index';
+import { DejaChipsModule } from '../chips/index';
 import { DejaDragDropModule } from '../dragdrop/index';
 import { DejaTreeListModule } from '../tree-list/index';
 import { DejaGridGroupAreaComponent } from './data-grid-grouparea/data-grid-grouparea.component';
@@ -39,6 +40,7 @@ import { DejaGridComponent } from './data-grid.component';
         DejaTreeListModule,
         DejaDragDropModule,
         DejaSortingModule,
+        DejaChipsModule,
     ],
 })
 export class DejaGridModule {}

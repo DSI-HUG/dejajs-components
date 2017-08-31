@@ -31,9 +31,14 @@ import { NewsService } from '../services/news.service';
     templateUrl: './tree-list-demo.html',
 })
 export class DejaTreeListDemoComponent implements OnDestroy {
+    public fruct = 'apricots';
+    public fructs = [] as string[];
+    public fructItems = [] as IItemBase[];
+    public fructItemsWithPreSelection = [] as IItemBase[];
+
     protected disabled: boolean;
     protected country: Country;
-    protected tabIndex = 1;
+    public tabIndex = 1;
     protected news$: Observable<News[]>;
     protected bigNews$: Observable<News[]>;
     protected bigCountries$: Observable<Country[]>;
@@ -43,7 +48,6 @@ export class DejaTreeListDemoComponent implements OnDestroy {
     }[];
     protected viewPortInfos$: Subscription;
     protected dialogResponse$: Subject<string> = new Subject<string>();
-    protected businessCountries: Country[];
     protected loremList: IItemTree[] = [];
 
     private countries: Observable<Country[]>;
@@ -58,12 +62,12 @@ export class DejaTreeListDemoComponent implements OnDestroy {
     @ViewChild('news') private newsList: DejaTreeListComponent;
     @ViewChild('onexpand') private onExpandList: DejaTreeListComponent;
 
-    protected set dialogVisible(value: boolean) {
+    public set dialogVisible(value: boolean) {
         this._dialogVisible = value;
         this.changeDetectorRef.markForCheck();
     }
 
-    protected get dialogVisible() {
+    public get dialogVisible() {
         return this._dialogVisible;
     }
 
@@ -91,6 +95,32 @@ export class DejaTreeListDemoComponent implements OnDestroy {
         this.country.color = 'rgb(211, 47, 47)';
 
         this.countries = this.countriesService.getCountries$();
+
+        this.fructs = [
+            'Apricots',
+            'Banana',
+            'Cantaloupe',
+            'Cherries',
+            'Coconut',
+            'Cranberries',
+            'Durian',
+            'Grapes',
+            'Lemon',
+            'Mango',
+            'Pineapple',
+            'Watermelon',
+        ];
+
+        this.fructItems = this.fructs.map((fruct) => ({
+            displayName: fruct,
+            value: fruct.toLowerCase(),
+        } as IItemBase));
+
+        this.fructItemsWithPreSelection = this.fructs.map((fruct, index) => ({
+            displayName: fruct,
+            value: fruct.toLowerCase(),
+            selected: index === 1,
+        } as IItemBase));
 
         this.subscriptions.push(this.countries.subscribe((value: Country[]) => {
             const result = [] as any[];
@@ -243,10 +273,6 @@ export class DejaTreeListDemoComponent implements OnDestroy {
             itemExt.loaded = true;
             this.newsList.refreshViewPort(itemExt);
         }
-    }
-
-    protected businessCountryChange(country: Country) {
-        this.businessCountries = country ? [country] : null;
     }
 
     protected multiselectModelChange(countries: Country[]) {

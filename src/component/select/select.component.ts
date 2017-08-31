@@ -15,8 +15,10 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
+import { IViewListResult } from '../../common/core/item-list/item-list.service';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { DejaChildValidatorDirective } from '../../common/core/validation/child-validator.directive';
+import { DejaChipsCloseEvent } from '../chips/chips.component';
 import { DejaDropDownComponent, IDropDownResetParams } from '../dropdown/dropdown.component';
 import { IItemBase } from './../../common/core/item-list/item-base';
 import { DejaItemEvent } from './../../common/core/item-list/item-event';
@@ -60,12 +62,20 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @Input() public placeHolderTemplateExternal;
     /** Permet de définir un template pour l'élément de conseil ou d'affichage d'erreur. */
     @Input() public hintTemplateExternal;
-    /** Temps d'attente en ms avant que la recherche dans la liste soit lancée lorsque l'utilisateur tape dans le select */
-    @Input('delay-search-trigger') public delaySearchTrigger = 250;
     /** Exécuté lorsque le calcul du viewPort est terminé. */
     @Output() public viewPortChanged = new EventEmitter<IViewPort>();
     /** Exécuté lorsque l'utilisateur sélectionne ou désélectionne une ligne. */
     @Output() public selectedChange = new EventEmitter<DejaItemsEvent | DejaItemEvent>();
+
+    @ContentChild('hintTemplate') public hintTemplateInternal;
+    @ContentChild('placeHolderTemplate') public placeHolderTemplateInternal;
+    @ContentChild('itemTemplate') public itemTemplateInternal;
+    @ContentChild('parentItemTemplate') public parentItemTemplateInternal;
+    @ContentChild('selectedTemplate') public selectedTemplate;
+    @ContentChild('suffixTemplate') public _mdSuffix;
+    @ContentChildren(DejaItemComponent) public options: DejaItemComponent[];
+    /** Template for MdError inside md-input-container */
+    @ContentChild('errorTemplate') public mdError;
 
     // NgModel implementation
     protected onTouchedCallback: () => void = noop;
@@ -79,19 +89,10 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     private subscriptions: Subscription[] = [];
     private mouseUp$sub: Subscription;
 
-    @ContentChild('hintTemplate') protected hintTemplateInternal;
-    @ContentChild('placeHolderTemplate') protected placeHolderTemplateInternal;
-    @ContentChild('itemTemplate') protected itemTemplateInternal;
-    @ContentChild('parentItemTemplate') protected parentItemTemplateInternal;
-    @ContentChild('selectedTemplate') protected selectedTemplate;
-    @ContentChild('suffixTemplate') protected _mdSuffix;
-    @ContentChildren(DejaItemComponent) protected options: DejaItemComponent[];
-
     @ViewChild('inputElement') private _inputElement: ElementRef;
     @ViewChild(MdInputContainer) private inputContainer: MdInputContainer;
     @ViewChild(MdInputDirective) protected input: MdInputDirective;
     @ViewChild('listcontainer') private listContainer: any;
-
     @ViewChild(DejaDropDownComponent) private dropDownComponent: DejaDropDownComponent;
 
     @HostBinding('attr.disabled') private _disabled = null;
@@ -119,7 +120,11 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     private keyboardNavigation$ = new Subject();
 
+    private delaySearchTrigger$ = new BehaviorSubject<number>(250);
+
     private _selectedItemsPosition = DejaSelectSelectionPosition.above;
+
+    private modelIsValue = false;
 
     public get mdSuffix() {
         return this._mdSuffix;
@@ -157,8 +162,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         this.subscriptions.push(Observable.from(this.clearFilterExpression$)
             .debounceTime(750).subscribe(() => this.filterExpression = ''));
 
-        this.subscriptions.push(Observable.from(this.filterListComplete$)
-            .debounceTime(this.delaySearchTrigger)
+        this.subscriptions.push(Observable.combineLatest(this.delaySearchTrigger$, this.filterListComplete$)
+            .debounce(([delaySearchTrigger]) => Observable.timer(delaySearchTrigger))
             .subscribe(() => {
                 this._itemList = [];
                 this.reshowDropDown();
@@ -179,7 +184,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 this.viewPort.element$.next(null);
             }));
 
-        this.subscriptions.push(this.showDropDown$
+        this.subscriptions.push(Observable.from(this.showDropDown$)
             .debounceTime(50)
             .filter(() => (this.query || '').length >= this.minSearchlength && !this._readonly)
             .do(() => this.dropdownVisible = true)  // Ensure that dropdown container exists
@@ -201,19 +206,10 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 }
             })
             .switchMap(() => this.calcViewList$().first())
-            .filter(() => !!this.dropDownComponent)  // Show canceled by the hide$ observable if !dropdownVisible
             .delay(1)
             .filter(() => !!this.dropDownComponent)  // Show canceled by the hide$ observable if !dropdownVisible
-            .switchMap(() => {
-                if (this.viewPort.mode === ViewportMode.auto) {
-                    // reset the height to the  maxsize in auto mode to avoid measurment
-                    this.dropDownComponent.show({ height: this.maxHeight });
-                    return this.dropDownComponent.showed;
-                } else {
-                    this.dropDownComponent.show();
-                    return Observable.timer(1);
-                }
-            })
+            .do(() => this.dropDownComponent.show())
+            .delay(1)
             .subscribe(() => {
                 this.viewPort.element$.next(this.listElement);
             }));
@@ -238,7 +234,17 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             }));
 
         this.subscriptions.push(Observable.combineLatest(this.writeValue$, this.contentInitialized$)
-            .subscribe(([value]) => {
+            .map(([value]) => value)
+            .do((value) => {
+                const modelType = typeof value;
+                this.modelIsValue = value === '' || modelType === 'string' || modelType === 'number';
+                if (this.modelIsValue) {
+                    this.query = '';
+                }
+                return value;
+            })
+            .map((value) => this.getVirtualSelectedEntities(value))
+            .subscribe((value) => {
                 if (!value) {
                     if (this.selectedItems && this.selectedItems.length) {
                         this.removeSelection();
@@ -246,20 +252,11 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                     return;
                 }
 
-                if (typeof value === 'string') {
-                    if (this._multiSelect) {
-                        this.query = '';
-                        value = value.split(',').map((v) => ({ value: v.trim() }));
-                    } else {
-                        value = {
-                            value: value.trim(),
-                        };
-                    }
-                }
-
                 if (this._multiSelect) {
                     this.query = '';
                     super.setSelectedModels(value);
+                    super.getItemListService().ensureSelection();
+                    this.changeDetectorRef.markForCheck();
 
                 } else {
                     const item = super.mapToIItemBase([value])[0];
@@ -268,15 +265,15 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                         .map(() => super.getItemListService().ensureSelection())
                         .map((selectedItems) => selectedItems.length ? this.getTextValue(selectedItems[0]) : '')
                         .first()
-                        .subscribe((query) => this.query = query);
+                        .subscribe((query) => {
+                            this.query = query;
+                            this.changeDetectorRef.markForCheck();
+                        });
                 }
-
-                this.changeDetectorRef.markForCheck();
             })
         );
 
-        // this.maxHeight = 500;
-
+        this.maxHeight = 0;
     }
 
     /** Correspond au model du champ de filtrage ou recherche */
@@ -287,6 +284,12 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     public get query() {
         return this._query;
+    }
+
+    /** Temps d'attente en ms avant que la recherche dans la liste soit lancée lorsque l'utilisateur tape dans le select */
+    @Input('delay-search-trigger')
+    public set delaySearchTrigger(value: number) {
+        this.delaySearchTrigger$.next(value);
     }
 
     /** Ancre d'alignement de la liste déroulante. Valeurs possible: top, bottom, right, left. Une combinaison des ces valeurs peut également être utilisée, par exemple 'top left'. */
@@ -479,7 +482,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
      * Set an observable called before the list will be displayed
      */
     @Input()
-    public set loadingItems(fn: (query: string | RegExp, selectedItems: IItemBase[]) => Observable<IItemBase>) {
+    public set loadingItems(fn: (query: string | RegExp, selectedItems: IItemBase[]) => Observable<IItemBase[]>) {
         super.setLoadingItems(fn);
     }
 
@@ -970,9 +973,9 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     /** Change l'état d'expansion de toute les lignes parentes */
-    public toggleAll$(collapsed?: boolean): Observable<IItemTree> {
+    public toggleAll$(collapsed?: boolean): Observable<IItemTree[]> {
         return super.toggleAll$(collapsed)
-            .switchMap(() => this.calcViewList$().first());
+            .switchMap((items) => this.calcViewList$().first().map(() => items));
     }
 
     /** Change l'état d'expansion de la ligne spécifiée
@@ -980,7 +983,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
      * @param {boolean} collapse  Etat de l'élément. True pour réduire l'élément.
      * @return {Observable} Observable résolu par la fonction.
      */
-    public toggleCollapse$(index: number, collapsed: boolean): Observable<IItemTree[]> {
+    public toggleCollapse$(index: number, collapsed: boolean): Observable<IItemTree> {
         return super.toggleCollapse$(index, collapsed)
             .do(() => {
                 if (this.dropdownVisible) {
@@ -1040,11 +1043,11 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         }
     }
 
-    protected onCloseClicked(item?: IItemBase) {
+    protected onCloseClicked(event?: DejaChipsCloseEvent) {
         if (this._control) {
             this._control.control.markAsTouched();
         }
-        this.removeSelection(item);
+        this.removeSelection(event && event.item);
     }
     protected removeSelection(item?: IItemBase) {
         if (!this._multiSelect) {
@@ -1073,11 +1076,9 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         }
     }
 
-    protected calcViewList$(): Observable<IViewPort> {
+    protected calcViewList$(): Observable<IViewListResult> {
         return super.calcViewList$(this.dropDownQuery)
-            .do(() => {
-                this.changeDetectorRef.markForCheck();
-            });
+            .do(() => this.changeDetectorRef.markForCheck());
     }
 
     protected ensureItemVisible(item: IItemBase | number) {
@@ -1096,13 +1097,28 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                     items: items,
                     models: models,
                 } as DejaItemsEvent;
-                output = models;
+
+                if (this.modelIsValue) {
+                    const valueField = this.getValueField();
+                    if (models.find((m) => !!m[valueField])) {
+                        output = models.map((m) => m[valueField] || m);
+                    }
+                } else {
+                    output = models;
+                }
             } else {
+                const model = items.model;
                 outputEmitter = {
                     item: items,
-                    model: items.model,
+                    model: model,
                 } as DejaItemEvent;
-                output = items.model !== undefined ? items.model : items;
+
+                if (this.modelIsValue) {
+                    const valueField = this.getValueField();
+                    output = model[valueField] || model;
+                } else {
+                    output = items.model !== undefined ? items.model : items;
+                }
             }
         }
 

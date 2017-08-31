@@ -3,10 +3,7 @@
 
 @import 'components/loader';
 @import 'material/material';
-
-@import 'fonts/material-icons';
-@import 'fonts/roboto';
-
+@import 'mixins/deja-theme';
 
 /* See : http://stackoverflow.com/questions/826782/how-to-disable-text-selection-highlighting-using-css */
 .noselect {
@@ -32,5 +29,3 @@
         height: auto;
     }
 }
-
-@import 'mixins/deja-theme';

@@ -8,7 +8,10 @@
 
 import { AfterViewInit, Component, ContentChild, ElementRef, EventEmitter, HostListener, Input, OnDestroy, Optional, Output, Self, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs/Rx';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
 import { Rect } from '../../common/core/graphics/rect';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { IDropCursorInfos } from '../mouse-dragdrop/mouse-dragdrop.service';
@@ -77,7 +80,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     private layoutChanged$sub: Subscription;
     private _tiles$ = new BehaviorSubject<DejaTile[]>([]);
 
-    public get tiles$() {
+    public get tiles$(): BehaviorSubject<DejaTile[]> {
         return this._tiles$;
     }
 
@@ -112,7 +115,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     }
 
     // provide a public acccess
-    public get selectionRect$() {
+    public get selectionRect$(): Subject<Rect> {
         return this.layoutProvider.selectionRect$;
     }
 
