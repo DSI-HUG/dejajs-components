@@ -1200,17 +1200,16 @@ export class ItemListService {
                 return item2.model.equals(item1.model);
             } else {
                 const getValue = (item: any) => {
-                    if (item.model) {
-                        item = item.model;
-                    }
                     const valueField = this._valueField || 'value';
+                    if (item.model && item.model[valueField] !== undefined) {
+                        return item.model[valueField];
+                    }
                     if (item[valueField] !== undefined) {
                         return item[valueField];
                     } else {
-                        return item;
+                        return item.model || item;
                     }
                 };
-
                 return getValue(item1) === getValue(item2);
             }
         }
