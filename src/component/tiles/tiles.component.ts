@@ -359,21 +359,21 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
         } as IDejaMouseDroppableContext;
     }
 
-    protected onTileClosed(tile: DejaTile) {
+    public onTileClosed(tile: DejaTile) {
         this.layoutProvider.removeTiles([tile.id]);
     }
 
-    protected onTileModelChanged() {
+    public onTileModelChanged() {
         const event = new CustomEvent('DejaTilesModelEvent', { cancelable: false }) as IDejaTilesModelEvent;
         event.tiles = this.layoutProvider.tiles.map((t) => t.toTileModel());
         this.modelChanged.emit(event);
     }
 
-    protected onFocus() {
+    public onFocus() {
         this.hasFocus = true;
     }
 
-    protected onBlur() {
+    public onBlur() {
         this.hasFocus = false;
     }
 }
