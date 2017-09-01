@@ -1,3 +1,19 @@
+### 2.9.0 (2017-09-01)
+
+##### BREAKING CHANGES
+
+* **Dependencies:** Change dependencies to PeerDependencies ([ad4d8ebd](https://github.com/DSI-HUG/dejajs-components/commit/ad4d8ebdc1e2fcf6f5d45d6dd3c5ac036ca4e7d1))
+
+##### Continuous Integration
+
+* **Build:** Remove rollup warning ([acfc272f](https://github.com/DSI-HUG/dejajs-components/commit/acfc272fabd2cf37f491b7cc571e6b526d1144c1))
+
+##### Bug Fixes
+
+* **Tiles:** AOT Compilation ([4adecd9b](https://github.com/DSI-HUG/dejajs-components/commit/4adecd9bcb411abd02af5e4f844184e40321b907))
+* **Dependencies:** CDK Build error version ([21436239](https://github.com/DSI-HUG/dejajs-components/commit/21436239a4686c298b4a8060a389a36592c5a0ac))
+* **Global:** Build AOT part 1 ([73cfbe2b](https://github.com/DSI-HUG/dejajs-components/commit/73cfbe2b19a1b59f4170fb4bd66255e211d7a1da))
+
 #### 2.8.1 (2017-08-31)
 
 ##### BREAKING CHANGES
