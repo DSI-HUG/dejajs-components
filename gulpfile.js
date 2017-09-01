@@ -18,6 +18,19 @@ const tmpFolder = path.join(rootFolder, '.tmp');
 const buildFolder = path.join(rootFolder, 'build');
 const distFolder = path.join(rootFolder, 'dist');
 
+const ignoredRollUpMessages = [
+    'treating it as an external dependency',
+    'No name was provided for external module'
+];
+const displayWarning = function(warn) {
+    var isNotAnIgnoredMessage = ignoredRollUpMessages.every(function (mess) {
+        return warn.message.indexOf(mess) != -1;
+    });
+    if(isNotAnIgnoredMessage) {
+        console.log('WARNING : ', warn.message);
+    }
+}
+
 /**
  * Check if all TS files start by the HUG Licence
  */
@@ -110,7 +123,9 @@ gulp.task('rollup:fesm', function () {
 
             // Format of generated bundle
             // See https://github.com/rollup/rollup/wiki/JavaScript-API#format
-            format: 'es'
+            format: 'es',
+
+            onwarn: displayWarning,
         }))
         .pipe(gulp.dest(distFolder));
 });
@@ -164,7 +179,9 @@ gulp.task('rollup:umd', function () {
 
             plugins: [
                 uglify(),
-            ]
+            ],
+
+            onwarn: displayWarning,
 
         }))
         .pipe(rename('dejajs-component.umd.js'))
@@ -208,7 +225,7 @@ gulp.task('copy:manifest', function () {
         .pipe(jeditor(function (json) {
             var package = JSON.parse(fs.readFileSync(path.join(rootFolder, 'package.json')));
             json.version = package.version;
-            json.dependencies = package.dependencies;
+            json.peerDependencies = package.dependencies;
             return json;
         }))
         .pipe(gulp.dest(distFolder));
