@@ -14,7 +14,7 @@ import { Component } from '@angular/core';
     templateUrl: './message-box-demo.html',
 })
 export class MessageBoxDemoComponent {
-    protected tabIndex = 1;
+    public tabIndex = 1;
 
     protected toolTipModel = {
         text: 'Je suis un deja-tooltip'

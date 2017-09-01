@@ -31,7 +31,6 @@
 <div *ngIf="tabIndex === 1">
 	<md-card class="demo-card demo-basic">
         <md-toolbar color="primary">Simple Usage</md-toolbar>
-        <button (click)="clearButtonClicked()">Clear</button>
 		<md-card-content fxLayout="column">
 			<deja-grid searchArea columnsSortable columnsSizable sortable maxHeight="auto" [rows]="peopleRows" [columns]="peopleColumns" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid"></deja-grid>
 		</md-card-content>

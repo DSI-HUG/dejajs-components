@@ -6,10 +6,11 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { AfterViewInit, Component, ContentChild, ElementRef, EventEmitter, HostListener, Input, OnDestroy, Optional, Output, Self, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output, Self, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 import { Rect } from '../../common/core/graphics/rect';
 import { KeyCodes } from '../../common/core/keycodes.enum';
@@ -62,6 +63,11 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
      */
     @Output() public contentCopied = new EventEmitter<IDejaTilesEvent>();
 
+    /**
+     * Tab index of the focusable element
+     */
+    @Input() public tabIndex = 0;
+
     @ContentChild('tileTemplate') protected tileTemplate;
 
     // NgModel implementation
@@ -77,7 +83,12 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     private resize$sub: Subscription;
     private modelChanged$sub: Subscription;
     private layoutChanged$sub: Subscription;
-    private tiles$ = new BehaviorSubject<DejaTile[]>([]);
+    private _tiles$ = new BehaviorSubject<DejaTile[]>([]);
+    private hasFocus = false;
+
+    public get tiles$(): BehaviorSubject<DejaTile[]> {
+        return this._tiles$;
+    }
 
     @ViewChild('tilesContainer') private tilesContainer: ElementRef;
 
@@ -107,6 +118,11 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
         this.resize$sub = Observable.fromEvent(window, 'resize')
             .debounceTime(5)
             .subscribe(() => this.refresh({ resetWidth: true }));
+    }
+
+    // provide a public acccess
+    public get selectionRect$(): Subject<Rect> {
+        return this.layoutProvider.selectionRect$;
     }
 
     @Input()
@@ -153,7 +169,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
         if (value != null && `${value}` !== 'false' && !this.delete$sub) {
             this.delete$sub = this.keyup$
                 .filter(() => this.layoutProvider.designMode)
-                .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.Delete)
+                .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.Delete && this.hasFocus)
                 .subscribe(() => this.layoutProvider.deleteSelection());
 
         } else if (this.delete$sub) {
@@ -166,7 +182,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     public set canCopy(value: boolean) {
         if (value != null && `${value}` !== 'false' && !this.copy$sub) {
             this.copy$sub = this.keyup$
-                .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.KeyC && event.ctrlKey)
+                .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.KeyC && event.ctrlKey && this.hasFocus)
                 .subscribe(() => {
                     this.copySelection();
                 });
@@ -182,7 +198,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
         if (value != null && `${value}` !== 'false' && !this.cut$sub) {
             this.cut$sub = this.keyup$
                 .filter(() => this.layoutProvider.designMode)
-                .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.KeyX && event.ctrlKey)
+                .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.KeyX && event.ctrlKey && this.hasFocus)
                 .subscribe(() => {
                     this.cutSelection();
                 });
@@ -198,7 +214,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
         if (value != null && `${value}` !== 'false' && !this.paste$sub) {
             this.paste$sub = this.keyup$
                 .filter(() => this.layoutProvider.designMode)
-                .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.KeyV && event.ctrlKey)
+                .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.KeyV && event.ctrlKey && this.hasFocus)
                 .subscribe(() => this.layoutProvider.paste());
 
         } else if (this.paste$sub) {
@@ -215,7 +231,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     // ************* ControlValueAccessor Implementation **************
     public writeValue(models: any) {
         this._models = models || [];
-        this.tiles$.next(this.layoutProvider.tiles = (this._models.map((tile) => new DejaTile(tile))));
+        this._tiles$.next(this.layoutProvider.tiles = (this._models.map((tile) => new DejaTile(tile))));
     }
 
     public registerOnChange(fn: any) {
@@ -327,7 +343,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
         this.layoutProvider.moveTile(id, bounds);
     }
 
-    protected getDropContext() {
+    public getDropContext() {
         return {
             dragEnter: (dragContext, dragCursor) => {
                 return this.layoutProvider.dragEnter(dragContext, dragCursor) && {
@@ -343,19 +359,21 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
         } as IDejaMouseDroppableContext;
     }
 
-    protected onTileClosed(tile: DejaTile) {
+    public onTileClosed(tile: DejaTile) {
         this.layoutProvider.removeTiles([tile.id]);
     }
 
-    protected onTileModelChanged() {
+    public onTileModelChanged() {
         const event = new CustomEvent('DejaTilesModelEvent', { cancelable: false }) as IDejaTilesModelEvent;
         event.tiles = this.layoutProvider.tiles.map((t) => t.toTileModel());
         this.modelChanged.emit(event);
     }
 
-    @HostListener('mousedown', ['$event'])
-    protected onMouseDown(e: DragEvent) {
-        e.preventDefault();
-        return false;
+    public onFocus() {
+        this.hasFocus = true;
+    }
+
+    public onBlur() {
+        this.hasFocus = false;
     }
 }

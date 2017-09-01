@@ -67,27 +67,27 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     /** Exécuté lorsque l'utilisateur sélectionne ou désélectionne une ligne. */
     @Output() public selectedChange = new EventEmitter<DejaItemsEvent | DejaItemEvent>();
 
+    @ContentChild('hintTemplate') public hintTemplateInternal;
+    @ContentChild('placeHolderTemplate') public placeHolderTemplateInternal;
+    @ContentChild('itemTemplate') public itemTemplateInternal;
+    @ContentChild('parentItemTemplate') public parentItemTemplateInternal;
+    @ContentChild('selectedTemplate') public selectedTemplate;
+    @ContentChild('suffixTemplate') public _mdSuffix;
+    @ContentChildren(DejaItemComponent) public options: DejaItemComponent[];
+    /** Template for MdError inside md-input-container */
+    @ContentChild('errorTemplate') public mdError;
+
     // NgModel implementation
     protected onTouchedCallback: () => void = noop;
     protected onChangeCallback: (_: any) => void = noop;
     protected onValidatorChangeCallback: () => void = noop;
 
-    protected keyboardNavigation = false;
+    protected _keyboardNavigation = false;
     protected _waiter = false;
     protected isMobile = false;
 
     private subscriptions: Subscription[] = [];
     private mouseUp$sub: Subscription;
-
-    @ContentChild('hintTemplate') protected hintTemplateInternal;
-    @ContentChild('placeHolderTemplate') protected placeHolderTemplateInternal;
-    @ContentChild('itemTemplate') protected itemTemplateInternal;
-    @ContentChild('parentItemTemplate') protected parentItemTemplateInternal;
-    @ContentChild('selectedTemplate') protected selectedTemplate;
-    @ContentChild('suffixTemplate') protected mdSuffix;
-    @ContentChildren(DejaItemComponent) protected options: DejaItemComponent[];
-    /** Template for MdError inside md-input-container */
-    @ContentChild('errorTemplate') protected mdError;
 
     @ViewChild('inputElement') private _inputElement: ElementRef;
     @ViewChild(MdInputContainer) private inputContainer: MdInputContainer;
@@ -125,6 +125,14 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     private _selectedItemsPosition = DejaSelectSelectionPosition.above;
 
     private modelIsValue = false;
+
+    public get mdSuffix() {
+        return this._mdSuffix;
+    }
+
+    public get keyboardNavigation() {
+        return this._keyboardNavigation;
+    }
 
     constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, private elementRef: ElementRef, @Self() @Optional() public _control: NgControl, @Optional() private _parentForm: NgForm, @Optional() private _parentFormGroup: FormGroupDirective, media: ObservableMedia) {
         super(changeDetectorRef, viewPort);
@@ -209,10 +217,10 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         this._viewPortChanged = this.viewPortChanged;
 
         this.subscriptions.push(Observable.from(this.keyboardNavigation$)
-            .do(() => this.keyboardNavigation = true)
+            .do(() => this._keyboardNavigation = true)
             .debounceTime(1000)
             .subscribe(() => {
-                this.keyboardNavigation = false;
+                this._keyboardNavigation = false;
                 this.changeDetectorRef.markForCheck();
             }));
 
@@ -663,7 +671,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return this.getCurrentItemIndex();
     }
 
-    private get placeHolderTemplate() {
+    public get placeHolderTemplate() {
         return this.placeHolderTemplateExternal || this.placeHolderTemplateInternal;
     }
 
@@ -671,7 +679,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return this.itemTemplateExternal || this.itemTemplateInternal;
     }
 
-    private get hintTemplate() {
+    public get hintTemplate() {
         return this.hintTemplateExternal || this.hintTemplateInternal;
     }
 
@@ -683,12 +691,12 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return this._inputElement && this._inputElement.nativeElement as HTMLInputElement;
     }
 
-    private set dropdownVisible(value: boolean) {
+    public set dropdownVisible(value: boolean) {
         this._dropdownVisible = value;
         this.changeDetectorRef.markForCheck();
     }
 
-    private get dropdownVisible() {
+    public get dropdownVisible() {
         return this._dropdownVisible;
     }
 
@@ -1024,7 +1032,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             });
     }
 
-    protected queryChanged(value: string) {
+    public queryChanged(value: string) {
         this.query = value;
         if (!this.isModeSelect) {
             // Autocomplete or multiselect only

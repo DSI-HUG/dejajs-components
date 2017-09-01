@@ -61,7 +61,7 @@ export class DejaGridGroupAreaComponent {
         };
     }
 
-    protected getDropContext() {
+    public getDropContext() {
         if (!this.clipboardService) {
             return null;
         }
@@ -149,7 +149,7 @@ export class DejaGridGroupAreaComponent {
         };
     }
 
-    protected removeGroup(event: DejaChipsCloseEvent) {
+    public removeGroup(event: DejaChipsCloseEvent) {
         this.groupRemoved.emit(event);
         event.stopPropagation();
         return false;

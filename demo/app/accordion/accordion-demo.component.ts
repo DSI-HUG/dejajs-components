@@ -14,7 +14,7 @@ import { Component } from '@angular/core';
     templateUrl: './accordion-demo.component.html',
 })
 export class DejaAccordionDemoComponent {
-    protected tabIndex = 1;
+    public tabIndex = 1;
 
     constructor() {
     }

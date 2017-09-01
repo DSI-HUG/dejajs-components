@@ -46,7 +46,7 @@ export class DejaGridHeaderComponent implements OnDestroy {
     /** Template d'entête de colonne par defaut définit dans le HTML de la grille */
     @ContentChild('columnHeaderTemplate') protected columnHeaderTemplateInternal;
 
-    protected sizedColumn: IDejaGridColumn;
+    protected _sizedColumn: IDejaGridColumn;
     private _columnsDraggable = false;
     private _columnsSortable = false;
     private _columnsSizable = false;
@@ -83,6 +83,10 @@ export class DejaGridHeaderComponent implements OnDestroy {
      */
     public get columnsSortable() {
         return this._columnsSortable;
+    }
+
+    public get sizedColumn() {
+        return this._sizedColumn;
     }
 
     /** Définit si toutes les colonnes peuvent être redimensionées
@@ -134,7 +138,7 @@ export class DejaGridHeaderComponent implements OnDestroy {
                 if (target.hasAttribute('separator')) {
                     if (this.columnsSizable && column.sizeable !== false) {
                         // Size clicked column
-                        this.sizedColumn = column;
+                        this._sizedColumn = column;
                         const sizedOrigin = downEvent.pageX;
 
                         const kill$ = new Subject();
@@ -146,7 +150,7 @@ export class DejaGridHeaderComponent implements OnDestroy {
                             } as IDejaGridColumnSizeEvent;
                             this.columnSizeChanged.emit(e);
                             this.changeDetectorRef.markForCheck();
-                            this.sizedColumn = undefined;
+                            this._sizedColumn = undefined;
                         });
 
                         Observable.fromEvent(element.ownerDocument, 'mousemove')
@@ -154,7 +158,7 @@ export class DejaGridHeaderComponent implements OnDestroy {
                             .subscribe((moveEvent: MouseEvent) => {
                                 if (moveEvent.buttons === 1) {
                                     const e = {
-                                        column: this.sizedColumn,
+                                        column: this._sizedColumn,
                                         offsetWidth: moveEvent.pageX - sizedOrigin,
                                         originalEvent: moveEvent,
                                     } as IDejaGridColumnSizeEvent;
@@ -217,7 +221,7 @@ export class DejaGridHeaderComponent implements OnDestroy {
                 this.changeDetectorRef.markForCheck();
             },
             dragstartcallback: (event: IDejaDragEvent) => {
-                if (!this.sizedColumn) {
+                if (!this._sizedColumn) {
                     event.dragInfo[this.columnGroupKey] = column;
                     column.dragged = true;
 
@@ -231,7 +235,7 @@ export class DejaGridHeaderComponent implements OnDestroy {
         };
     }
 
-    protected getDropContext() {
+    public getDropContext() {
         if (!this.clipboardService) {
             return null;
         }

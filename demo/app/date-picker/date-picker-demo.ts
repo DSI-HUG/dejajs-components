@@ -13,7 +13,7 @@ import { Component, OnInit } from '@angular/core';
     templateUrl: './date-picker-demo.html',
 })
 export class DejaDatePickerDemoComponent implements OnInit {
-    protected tabIndex = 1;
+    public tabIndex = 1;
 
     public theDate: Date = new Date();
     public theDateSelected: Date = new Date();

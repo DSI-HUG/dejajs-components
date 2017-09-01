@@ -48,10 +48,10 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
     private _selectedSubIndex: number;
     private _disabled = false;
 
-    private colorFabs$: Observable<DejaColorFab[]>;
+    private _colorFabs$: Observable<DejaColorFab[]>;
     private selectedBaseIndex$ = new BehaviorSubject<number>(0);
 
-    private subColorFabs$: Observable<DejaColorFab[]>;
+    private _subColorFabs$: Observable<DejaColorFab[]>;
     private selectedSubIndex$ = new BehaviorSubject<number>(0);
 
     private hilightedBaseIndex: number;
@@ -62,6 +62,18 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
 
     private subscriptions = [] as Subscription[];
 
+    public get subColorFabs() {
+        return this._subColorFabs;
+    }
+
+    public get subColorFabs$() {
+        return this._subColorFabs$;
+    }
+
+    public get colorFabs$() {
+        return this._colorFabs$;
+    }
+
     constructor(elementRef: ElementRef, @Self() @Optional() public _control: NgControl) {
         const element = elementRef.nativeElement as HTMLElement;
 
@@ -69,7 +81,7 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
             this._control.valueAccessor = this;
         }
 
-        this.colorFabs$ = Observable.from(this._colors$)
+        this._colorFabs$ = Observable.from(this._colors$)
             .map((colors) => colors.map((color, index) => new DejaColorFab(color, this._disabled, index === this._selectedBaseIndex)))
             .do((colorFabs) => this._colorFabs = colorFabs);
 
@@ -90,7 +102,7 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
         const selectedBaseIndex$ = Observable.from(this.selectedBaseIndex$)
             .do((colorIndex) => this._selectedBaseIndex = colorIndex);
 
-        this.subColorFabs$ = Observable.merge(hilightedBaseIndex$, selectedBaseIndex$)
+        this._subColorFabs$ = Observable.merge(hilightedBaseIndex$, selectedBaseIndex$)
             .distinctUntilChanged()
             .do((colorIndex) => {
                 if (this._colorFabs) {

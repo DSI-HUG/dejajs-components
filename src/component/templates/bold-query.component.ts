@@ -19,7 +19,11 @@ import { Diacritics } from '../../common/core/diacritics/diacritics';
 export class DejaBoldQueryComponent {
     private _query: string;
     private _value: any;
-    private content: string;
+    private _content: string;
+
+    public get content() {
+        return this._content;
+    }
 
     @Input()
     set query(value) {
@@ -57,9 +61,9 @@ export class DejaBoldQueryComponent {
                     position += queryLength;
                 }
             });
-            this.content = contents.join('');
+            this._content = contents.join('');
         } else {
-            this.content = this._value;
+            this._content = this._value;
         }
     }
 }

@@ -20,7 +20,7 @@ import { NewsService } from '../services/news.service';
     templateUrl: './viewport-demo.html',
 })
 export class DejaViewPortDemoComponent {
-    protected tabIndex = 1;
+    public tabIndex = 1;
 
     @ViewChild('viewport') private viewport: DejaViewPortComponent;
 

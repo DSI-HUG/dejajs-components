@@ -16,7 +16,7 @@ import { MonacoEditorDemoService } from './monaco-editor-demo.service.';
     styleUrls: ['./monaco-editor-demo.scss'],
 })
 export class DejaMonacoEditorDemoComponent implements OnInit {
-    protected tabIndex = 1;
+    public tabIndex = 1;
 
     protected xmlContent: string;
     protected xmlContentToCompare: string;
