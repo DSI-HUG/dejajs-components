@@ -241,7 +241,7 @@ THE SOFTWARE.
 
 @angular/common@4.3.5 MIT
 
-css-loader@0.28.4 MIT
+css-loader@0.28.7 MIT
 Copyright JS Foundation and other contributors
 
 Permission is hereby granted, free of charge, to any person obtaining
