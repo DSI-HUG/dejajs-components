@@ -38,11 +38,11 @@ export class DejaGridParentRowComponent {
 
     private _columnLayout = {} as IDejaGridParentRowColumnLayout;
 
-    public columnLayoutOfColumn0() {
+    public get columnLayoutOfColumn0() {
         return this._columnLayout.column0;
     }
 
-    public columnLayoutOfColumns() {
+    public get columnLayoutOfColumns() {
         return this._columnLayout.columns;
     }
 

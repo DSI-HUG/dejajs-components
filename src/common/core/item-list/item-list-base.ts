@@ -101,7 +101,7 @@ export abstract class ItemListBase implements OnDestroy {
                 }
 
                 this.changeDetectorRef.markForCheck();
-                console.log(viewPortResult);
+                // console.log(viewPortResult);
 
                 if (this._viewPortChanged) {
                     this._viewPortChanged.emit(viewPortResult);
