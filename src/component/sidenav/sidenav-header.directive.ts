@@ -6,11 +6,11 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Directive, ElementRef } from '@angular/core';
+import { Directive } from '@angular/core';
 
 @Directive({
     selector: 'deja-sidenav-header, [deja-sidenav-header]'
 })
 export class DejaSidenavHeaderDirective {
-    constructor(el: ElementRef) { }
+    constructor() { }
 }
