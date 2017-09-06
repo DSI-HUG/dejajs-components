@@ -1,4 +1,6 @@
-.demo-events {
-  display: flex;
-  flex-flow: row wrap;
+:host {
+    // display: flex;
+    // flex-flow: row wrap;
+    flex: 1 1 100%;
+    padding: 1rem;
 }

@@ -1,3 +1,4 @@
+
 <md-tab-group [selectedIndex]="tabIndex" (selectChange)="tabIndex = $event.index">
     <!--<md-tab label="OVERVIEW">
         <md-card class="demo-card demo-basic">
@@ -9,7 +10,7 @@
 </md-tab-group>
 
 <md-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
-    <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/accordion/readme.md'"></deja-markdown>
+     <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/accordion/readme.md'"></deja-markdown> 
 </md-card>
 
 <div *ngIf="tabIndex === 1">

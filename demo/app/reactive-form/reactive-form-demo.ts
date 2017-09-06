@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { AfterContentInit, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { AfterContentInit, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -31,7 +31,6 @@ const formValidator = (control: AbstractControl): { [key: string]: string } => {
 };
 
 @Component({
-    encapsulation: ViewEncapsulation.None,
     selector: 'reactive-form-demo',
     styleUrls: ['./reactive-form-demo.scss'],
     templateUrl: './reactive-form-demo.html',

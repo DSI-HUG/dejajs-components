@@ -15,6 +15,7 @@
 @import '../../component/message-box/message-box-theme';
 @import '../../component/range/range-theme';
 @import '../../component/select/select-theme';
+@import '../../component/sidenav/sidenav-theme';
 @import '../../component/tree-list/tree-list-theme';
 @import '../../component/viewport/viewport-theme';
 
@@ -40,6 +41,7 @@
     @include message-box-theme($custom-theme);
     @include range-theme($custom-theme);
     @include select-theme($custom-theme);
+    @include sidenav-theme($custom-theme);
     @include tree-list-theme($custom-theme);
     @include viewport-theme($custom-theme);
 }

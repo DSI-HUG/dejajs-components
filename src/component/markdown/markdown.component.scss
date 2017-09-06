@@ -1,4 +1,5 @@
 .markdown-content {
+    overflow-y: auto; 
 
     @import "~prismjs/themes/prism.css";
     @import "~prismjs/themes/prism-coy.css";

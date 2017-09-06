@@ -10,9 +10,7 @@ import { Component } from '@angular/core';
 
 @Component({
     selector: 'deja-progress-circle-demo',
-    styleUrls: [
-        './progress-circle-demo.scss',
-    ],
+    styleUrls: ['./progress-circle-demo.scss'],
     templateUrl: './progress-circle-demo.html',
 })
 export class ProgressCircleDemoComponent {

@@ -1,14 +1,17 @@
 @import '../../../src/scss/components/tree-list-borders';
 
 grid-demo {
-	display: flex;
-	overflow: hidden;
-	flex-direction: column;
+	// display: flex;
+	// overflow: hidden;
+	// flex-direction: column;
+	flex: 1 1 100%;
+    padding: 1rem;
 
 	.demo-card {
 		deja-grid {
 			min-height: 8rem;
 			max-height: 600px;
+			width: 97%;
 			.listitem {
 				.color {
 					border-radius: 50%;

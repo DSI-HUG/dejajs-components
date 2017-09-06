@@ -1,7 +1,10 @@
 @import '../../../src/scss/components/tree-list-borders';
 
-.deja-treelist-demo {
-	&.demo-card {
+:host {
+	flex: 1 1 100%;
+	padding: 1rem;
+	
+	.demo-card {
 		margin: 16px;
 		md-card-content {
 			padding: 16px;
@@ -20,16 +23,16 @@
 			}
 		}
 	}
-	&.demo-basic {
+	.demo-basic {
 		padding: 0;
 	}
-	&.demo-full-width {
+	.demo-full-width {
 		width: 100%;
 	}
 	.demo-half-width {
 		width: 45%;
 	}
-	&.demo-icons {
+	.demo-icons {
 		font-size: 100%;
 		height: inherit;
 		vertical-align: top;

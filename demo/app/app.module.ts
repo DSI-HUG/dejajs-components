@@ -56,6 +56,7 @@ import {
     DejaMouseDragDropModule,
     DejaRangeModule,
     DejaSelectModule,
+    DejaSidenavModule,
     DejaSnackbarModule,
     DejaSortingModule,
     DejaSplitterModule,
@@ -74,8 +75,6 @@ import { DejaContentEditableDemoComponent } from './content-editable/content-edi
 import { DejaDatePickerDemoComponent } from './date-picker/date-picker-demo';
 import { GlobalEventsDemoComponent } from './global-events/global-events-demo';
 import { GridDemoComponent } from './grid/grid-demo';
-import { HomeComponentsComponent } from './home-components/home-components.component';
-import { NavigationComponent } from './home-components/navigation/navigation.component';
 import { HomeGuidesComponent } from './home-guides/home-guides.component';
 import { HomeComponent } from './home/home.component';
 import { MenuDemoComponent } from './menu/menu-demo';
@@ -98,8 +97,6 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
     declarations: [
         AppComponent,
         HomeComponent,
-        NavigationComponent,
-        HomeComponentsComponent,
         HomeGuidesComponent,
         DejaAccordionDemoComponent,
         DejaCircularPickerDemoComponent,
@@ -161,6 +158,7 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         DejaMouseDragDropModule.forRoot(),
         DejaRangeModule,
         DejaSelectModule,
+        DejaSidenavModule,
         DejaSnackbarModule,
         DejaSortingModule,
         DejaSplitterModule,
@@ -185,6 +183,6 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         MonacoEditorDemoService,
         UserService,
     ],
-    bootstrap: [AppComponent]
+    bootstrap: [AppComponent],
 })
 export class AppModule { }

@@ -1,4 +1,7 @@
-deja-range-demo {
+:host {
+	flex: 1 1 100%;
+	padding: 1rem;
+	
 	/* for demo purpose only*/
 	#custom-range-actions {
 		display: -webkit-box;

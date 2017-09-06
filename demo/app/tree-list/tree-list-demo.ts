@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectorRef, Component, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
@@ -25,7 +25,6 @@ import { CountriesService, Country } from '../services/countries.service';
 import { NewsService } from '../services/news.service';
 
 @Component({
-    encapsulation: ViewEncapsulation.None,
     selector: 'deja-tree-list-demo',
     styleUrls: ['./tree-list-demo.scss'],
     templateUrl: './tree-list-demo.html',
