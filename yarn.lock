@@ -91,7 +91,7 @@
   optionalDependencies:
     node-sass "^4.3.0"
 
-"@angular/common@4.3.5":
+"@angular/common@4.3.5", "@angular/common@^4.0.0":
   version "4.3.5"
   resolved "https://registry.yarnpkg.com/@angular/common/-/common-4.3.5.tgz#5f6b11347eae1dfc34623ccfd4c06c8f4c488e2d"
   dependencies:
@@ -105,13 +105,13 @@
     minimist "^1.2.0"
     reflect-metadata "^0.1.2"
 
-"@angular/compiler@4.3.5":
+"@angular/compiler@4.3.5", "@angular/compiler@^4.0.0":
   version "4.3.5"
   resolved "https://registry.yarnpkg.com/@angular/compiler/-/compiler-4.3.5.tgz#50d3c986657beff1fef4f6dd9a3fa58e24abd548"
   dependencies:
     tslib "^1.7.1"
 
-"@angular/core@4.3.5":
+"@angular/core@4.3.5", "@angular/core@^4.0.0":
   version "4.3.5"
   resolved "https://registry.yarnpkg.com/@angular/core/-/core-4.3.5.tgz#bd1efdbf1ebcfb9c27a238e2aa4c48159b0895bb"
   dependencies:
@@ -121,13 +121,13 @@
   version "2.0.0-beta.8"
   resolved "https://registry.yarnpkg.com/@angular/flex-layout/-/flex-layout-2.0.0-beta.8.tgz#b9cf57865a93ca158fe56d850952423f248d103b"
 
-"@angular/forms@4.3.5":
+"@angular/forms@4.3.5", "@angular/forms@^4.0.0":
   version "4.3.5"
   resolved "https://registry.yarnpkg.com/@angular/forms/-/forms-4.3.5.tgz#519aad0ad82a1b87019937fa93fc147734737787"
   dependencies:
     tslib "^1.7.1"
 
-"@angular/http@4.3.5":
+"@angular/http@4.3.5", "@angular/http@^4.0.0":
   version "4.3.5"
   resolved "https://registry.yarnpkg.com/@angular/http/-/http-4.3.5.tgz#81d4b0761c8ef035cb0b736300c237f36286f1f0"
   dependencies:
@@ -139,19 +139,19 @@
   dependencies:
     tslib "^1.7.1"
 
-"@angular/platform-browser-dynamic@4.3.5":
+"@angular/platform-browser-dynamic@4.3.5", "@angular/platform-browser-dynamic@^4.0.0":
   version "4.3.5"
   resolved "https://registry.yarnpkg.com/@angular/platform-browser-dynamic/-/platform-browser-dynamic-4.3.5.tgz#4a697b3b0aec805b33884fd4a9b3473065bab1e0"
   dependencies:
     tslib "^1.7.1"
 
-"@angular/platform-browser@4.3.5":
+"@angular/platform-browser@4.3.5", "@angular/platform-browser@^4.0.0":
   version "4.3.5"
   resolved "https://registry.yarnpkg.com/@angular/platform-browser/-/platform-browser-4.3.5.tgz#c0d03409499cc29f81677aab623c9086760d84ef"
   dependencies:
     tslib "^1.7.1"
 
-"@angular/router@4.3.5":
+"@angular/router@4.3.5", "@angular/router@^4.0.0":
   version "4.3.5"
   resolved "https://registry.yarnpkg.com/@angular/router/-/router-4.3.5.tgz#188082747bc9b6974f9d4b3f5557b434645d23cd"
   dependencies:
@@ -359,6 +359,22 @@ ambi@^2.2.0, ambi@^2.5.0:
 amdefine@>=0.0.4:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
+
+angular-io-slimscroll@^1.2.11:
+  version "1.2.11"
+  resolved "https://registry.yarnpkg.com/angular-io-slimscroll/-/angular-io-slimscroll-1.2.11.tgz#4b63e3e3f1fbe375eec2f7a09e54dbd3fb9c529d"
+  dependencies:
+    "@angular/common" "^4.0.0"
+    "@angular/compiler" "^4.0.0"
+    "@angular/core" "^4.0.0"
+    "@angular/forms" "^4.0.0"
+    "@angular/http" "^4.0.0"
+    "@angular/platform-browser" "^4.0.0"
+    "@angular/platform-browser-dynamic" "^4.0.0"
+    "@angular/router" "^4.0.0"
+    core-js "^2.4.1"
+    rxjs "^5.1.0"
+    zone.js "^0.8.4"
 
 angular2-text-mask@8.0.3:
   version "8.0.3"
@@ -1320,7 +1336,7 @@ cookie@0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.3.1.tgz#e7e0a1f9ef43b4c8ba925c5c5a96e806d16873bb"
 
-core-js@2.5.0, core-js@^2.2.0, core-js@^2.4.0:
+core-js@2.5.0, core-js@^2.2.0, core-js@^2.4.0, core-js@^2.4.1:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.5.0.tgz#569c050918be6486b3837552028ae0466b717086"
 
@@ -5770,7 +5786,7 @@ rx-lite@*, rx-lite@^4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/rx-lite/-/rx-lite-4.0.8.tgz#0b1e11af8bc44836f04a6407e92da42467b79444"
 
-rxjs@5.4.3, rxjs@^5.4.2:
+rxjs@5.4.3, rxjs@^5.1.0, rxjs@^5.4.2:
   version "5.4.3"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.4.3.tgz#0758cddee6033d68e0fd53676f0f3596ce3d483f"
   dependencies:
@@ -7195,16 +7211,9 @@ write-file-atomic@^2.0.0:
     imurmurhash "^0.1.4"
     signal-exit "^3.0.2"
 
-ws@1.1.2:
+ws@1.1.2, ws@^1.0.1:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/ws/-/ws-1.1.2.tgz#8a244fa052401e08c9886cf44a85189e1fd4067f"
-  dependencies:
-    options ">=0.0.5"
-    ultron "1.0.x"
-
-ws@^1.0.1:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-1.1.4.tgz#57f40d036832e5f5055662a397c4de76ed66bf61"
   dependencies:
     options ">=0.0.5"
     ultron "1.0.x"
@@ -7352,6 +7361,6 @@ yn@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/yn/-/yn-2.0.0.tgz#e5adabc8acf408f6385fc76495684c88e6af689a"
 
-zone.js@0.8.16, zone.js@^0.8.14:
+zone.js@0.8.16, zone.js@^0.8.14, zone.js@^0.8.4:
   version "0.8.16"
   resolved "https://registry.yarnpkg.com/zone.js/-/zone.js-0.8.16.tgz#ac31b6c418f88c0f918ad6acd8a402aca9313abb"

@@ -3,7 +3,7 @@
 :host {
     $large-sidenav-width: 320px;
     $small-sidenav-width: 280px;
-    $light-sidenav-width: 75px;
+    $light-sidenav-width: 58px;
 
     display: flex;
     flex: 1;
@@ -98,7 +98,7 @@
             }
 
             /deep/ deja-sidenav-menu {
-                overflow-y: auto;
+                // overflow-y: auto;
                 
                 /deep/ .mat-list-item {
                     /deep/ .mat-list-item-content {
