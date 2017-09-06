@@ -16,7 +16,6 @@ import { DejaContentEditableDemoComponent } from './content-editable/content-edi
 import { DejaDatePickerDemoComponent } from './date-picker/date-picker-demo';
 import { GlobalEventsDemoComponent } from './global-events/global-events-demo';
 import { GridDemoComponent } from './grid/grid-demo';
-import { HomeComponentsComponent } from './home-components/home-components.component';
 import { HomeGuidesComponent } from './home-guides/home-guides.component';
 import { HomeComponent } from './home/home.component';
 import { MenuDemoComponent } from './menu/menu-demo';
@@ -35,32 +34,30 @@ import { DejaTreeListDemoComponent } from './tree-list/tree-list-demo';
 import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
 
 const routes: Routes = [
-    { component: HomeComponent, path: '' },
-    { component: HomeComponentsComponent, path: 'components', children: [
-        { component: DejaAccordionDemoComponent, path: 'accordion' },
-        { component: DejaCircularPickerDemoComponent, path: 'circular-picker' },
-        { component: DejaColorSelectorDemoComponent, path: 'colorselector' },
-        { component: DejaContentEditableDemoComponent, path: 'contenteditableselector' },
-        { component: DejaDatePickerDemoComponent, path: 'date-picker' },
-        { component: GlobalEventsDemoComponent, path: 'events' },
-        { component: GridDemoComponent, path: 'grid' },
-        { component: MenuDemoComponent, path: 'menu' },
-        { component: MessageBoxDemoComponent, path: 'message-box' },
-        { component: DejaMonacoEditorDemoComponent, path: 'monaco-editor' },
-        { component: ProgressCircleDemoComponent, path: 'progress-circle' },
-        { component: DejaRangeDemoComponent, path: 'range' },
-        { component: ReactiveFormDemoComponent, path: 'reactive-form' },
-        { component: SelectDemoComponent, path: 'select' },
-        { component: DejaSnackbarDemoComponent, path: 'snackbar' },
-        { component: DejaSplitterDemoComponent, path: 'splitter' },
-        { component: TagDemoComponent, path: 'tag' },
-        { component: TextAreaDemoComponent, path: 'textarea' },
-        { component: TilesDemoComponent, path: 'tiles' },
-        { component: DejaTreeListDemoComponent, path: 'tree-list' },
-        { component: DejaViewPortDemoComponent, path: 'viewport' },
-        { path: '**', pathMatch: 'prefix', redirectTo: 'accordion'},
-    ]},
-    { component: HomeGuidesComponent, path: 'guides' },
+    { component: HomeComponent, path: 'home', data: { title: 'Home' } },
+    { component: DejaAccordionDemoComponent, path: 'accordion', data: { title: 'Accordion' } },
+    { component: DejaCircularPickerDemoComponent, path: 'circular-picker', data: { title: 'Circular Picker' } },
+    { component: DejaColorSelectorDemoComponent, path: 'colorselector', data: { title: 'Color Selector' } },
+    { component: DejaContentEditableDemoComponent, path: 'contenteditableselector', data: { title: 'Content Editable' } },
+    { component: DejaDatePickerDemoComponent, path: 'date-picker', data: { title: 'Date Picker' } },
+    { component: GlobalEventsDemoComponent, path: 'events', data: { title: 'Events' } },
+    { component: GridDemoComponent, path: 'grid', data: { title: 'Grid' } },
+    { component: MenuDemoComponent, path: 'menu', data: { title: 'Menu' } },
+    { component: MessageBoxDemoComponent, path: 'message-box', data: { title: 'Message Box' } },
+    { component: DejaMonacoEditorDemoComponent, path: 'monaco-editor', data: { title: 'Monaco Editor' } },
+    { component: ProgressCircleDemoComponent, path: 'progress-circle', data: { title: 'Progress Circle' } },
+    { component: DejaRangeDemoComponent, path: 'range', data: { title: 'Range' } },
+    { component: ReactiveFormDemoComponent, path: 'reactive-form', data: { title: 'Reactive Form' } },
+    { component: SelectDemoComponent, path: 'select', data: { title: 'Select' } },
+    { component: DejaSnackbarDemoComponent, path: 'snackbar', data: { title: 'Snackbar' } },
+    { component: DejaSplitterDemoComponent, path: 'splitter', data: { title: 'Splitter' } },
+    { component: TagDemoComponent, path: 'tag', data: { title: 'Tag' } },
+    { component: TextAreaDemoComponent, path: 'textarea', data: { title: 'Textarea' } },
+    { component: TilesDemoComponent, path: 'tiles', data: { title: 'Tiles' } },
+    { component: DejaTreeListDemoComponent, path: 'tree-list', data: { title: 'Tree List' } },
+    { component: DejaViewPortDemoComponent, path: 'viewport', data: { title: 'Viewport' } },
+    { component: HomeGuidesComponent, path: 'guides', data: { title: 'Guides' } },
+    { path: '**', pathMatch: 'prefix', redirectTo: 'home'},
 ];
 
 export const routing: ModuleWithProviders = RouterModule.forRoot(routes);

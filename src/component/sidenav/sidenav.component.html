@@ -1,0 +1,27 @@
+<md-sidenav-container fxFlex [class.sidenav-hidden]="hidden" [class.sidenav-light]="!hidden && !sidenav.opened">
+
+    <md-sidenav #sidenav mode="side" fxLayout="column" opened>
+        <md-toolbar class="header">
+            <md-icon class="header-icon">face</md-icon>
+            <span class="header-text">{{headerText}}</span>
+            <span fxFlex></span>
+            <button md-icon-button class="header-menu-btn" (click)="sidenav.toggle()">
+                <md-icon></md-icon>
+            </button>
+        </md-toolbar>
+        <ng-content select="deja-sidenav-menu"></ng-content>
+    </md-sidenav>
+
+    <div fxLayout="column" fxFlex>
+        <md-toolbar color="primary">
+            <button md-icon-button class="menu-btn" *ngIf="!sidenav.opened" (click)="sidenav.open()">
+                <md-icon>menu</md-icon>
+            </button>
+            <span>{{ title }}</span>
+            <span fxFlex></span>
+            <ng-content select="deja-sidenav-header"></ng-content>            
+        </md-toolbar>
+        <ng-content select="deja-sidenav-content"></ng-content>
+    </div>
+
+</md-sidenav-container>

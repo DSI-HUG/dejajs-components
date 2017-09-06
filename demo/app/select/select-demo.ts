@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectorRef, Component, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import 'rxjs/add/operator/toPromise';
 import { Observable } from 'rxjs/Observable';
@@ -23,7 +23,6 @@ import { NewsService } from '../services/news.service';
 import {cheeseValidator } from './validators';
 
 @Component({
-    encapsulation: ViewEncapsulation.None,
     selector: 'deja-select-demo',
     styleUrls: ['./select-demo.scss'],
     templateUrl: './select-demo.html',

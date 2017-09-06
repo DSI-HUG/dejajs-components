@@ -1,0 +1,143 @@
+@import '~@angular/material/theming';
+
+:host {
+    $large-sidenav-width: 320px;
+    $small-sidenav-width: 280px;
+    $light-sidenav-width: 75px;
+
+    display: flex;
+    flex: 1;
+
+    @mixin sidebar-light() {
+        .mat-sidenav {
+            transform: translate3d(calc(-100% + #{ $light-sidenav-width }), 0, 0);
+            visibility: visible;
+            
+            .header {
+                padding: 0 8px;
+                
+                .header-icon, .header-text {
+                    display: none;
+                }
+                
+                .header-menu-btn .mat-icon {
+                    &:after {
+                        content: 'menu';
+                    }
+                }
+            }
+
+            /deep/ deja-sidenav-menu {
+                /deep/ .mat-list-item {
+                    /deep/ .mat-list-item-content {
+                        justify-content: flex-end;
+                        
+                        .mat-list-icon {
+                            padding: 0;
+                        }
+                        
+                        .mat-list-text {
+                            display: none;
+                        }
+                    }
+                }
+            }
+        }
+
+        /deep/ .mat-sidenav-content {
+            margin-left: $light-sidenav-width !important;
+        }
+    }
+
+    @mixin sidebar-hidden() {
+        .mat-sidenav {
+            width: $small-sidenav-width;
+            .mat-toolbar {
+                border-right: none;
+            }
+        }
+    
+        /deep/ .mat-sidenav-content {
+            .mat-toolbar {
+                padding: 0 8px;
+                .menu-btn {
+                    margin-right: 8px;
+                    display: block !important;
+                }
+            }
+        }
+    }
+
+    .mat-sidenav-container {
+        &.sidenav-light {
+            @include sidebar-light;
+        }
+        &.sidenav-hidden {
+            @include sidebar-hidden;
+        }
+
+        .mat-sidenav {
+            overflow: visible;
+            width: $large-sidenav-width;
+
+            .header {
+                padding-right: 8px;
+                font-size: 14px;
+
+                .header-icon {
+                    padding: 4px;
+                }
+
+                .header-text {
+                    margin-left: 32px;
+                }
+
+                .header-menu-btn .mat-icon:after {
+                    content: 'keyboard_arrow_left';
+                }
+            }
+
+            /deep/ deja-sidenav-menu {
+                overflow-y: auto;
+                
+                /deep/ .mat-list-item {
+                    /deep/ .mat-list-item-content {
+                        .mat-list-text {
+                            padding-left: 32px;
+                            font-size: 14px;
+                        }
+                    }
+                }
+
+                .mat-divider {
+                    margin: 0.7rem 0;
+                }
+            }
+        }
+
+        /deep/ .mat-sidenav-content {
+            > div { 
+                overflow: hidden;
+            }
+
+            .mat-toolbar {
+                @include mat-elevation(3);
+                -webkit-font-smoothing: antialiased;
+                padding-right: 8px;
+            
+                .menu-btn {
+                    display: none;
+                }
+            }
+
+            deja-sidenav-content {
+                overflow-y: auto;
+
+                > * {
+                    overflow-x: hidden;
+                    overflow-y: auto;
+                }
+            }
+        }
+    }
+}

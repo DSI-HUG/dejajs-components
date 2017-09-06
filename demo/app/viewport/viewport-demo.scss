@@ -1,4 +1,7 @@
-deja-viewport-demo {
+:host {
+	flex: 1 1 100%;
+	padding: 1rem;
+	
 	deja-viewport {
 		margin-top: 1rem;
 		&[horizontal="false"] {

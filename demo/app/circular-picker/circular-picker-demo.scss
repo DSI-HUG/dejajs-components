@@ -1,4 +1,7 @@
-deja-circular-picker-demo {
+:host {
+	flex: 1 1 100%;
+    padding: 1rem;
+
 	.listContainer {
 		display: flex;
 		justify-content: center;

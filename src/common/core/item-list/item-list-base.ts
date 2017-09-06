@@ -101,6 +101,7 @@ export abstract class ItemListBase implements OnDestroy {
                 }
 
                 this.changeDetectorRef.markForCheck();
+                // console.log(viewPortResult);
 
                 if (this._viewPortChanged) {
                     this._viewPortChanged.emit(viewPortResult);
@@ -108,20 +109,20 @@ export abstract class ItemListBase implements OnDestroy {
             });
     }
 
-    public get isMultiSelect(){
+    public get isMultiSelect() {
         return this._multiSelect;
     }
 
-    public get itemList(){
+    public get itemList() {
         return this._itemList;
     }
 
-    public get ddStartIndex(){
+    public get ddStartIndex() {
         return this._ddStartIndex;
     }
 
     public get vpBeforeHeight() {
-       return this._vpBeforeHeight;
+        return this._vpBeforeHeight;
     }
 
     public get vpAfterHeight() {
@@ -132,7 +133,7 @@ export abstract class ItemListBase implements OnDestroy {
         return this._vpStartRow;
     }
 
-    public get vpEndRow(){
+    public get vpEndRow() {
         return this._vpEndRow;
     }
 

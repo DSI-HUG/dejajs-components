@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Rect } from '../../../src/common/core/graphics/rect';
@@ -21,7 +21,6 @@ import { CountriesService, Country } from '../services/countries.service';
     selector: 'deja-tiles-demo',
     styleUrls: ['./tiles-demo.scss'],
     templateUrl: './tiles-demo.html',
-    encapsulation: ViewEncapsulation.None,
 })
 export class TilesDemoComponent implements OnInit {
     public tabIndex = 1;

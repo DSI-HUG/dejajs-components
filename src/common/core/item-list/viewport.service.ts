@@ -49,6 +49,8 @@ export class ViewPortService implements OnDestroy {
     public element$ = new BehaviorSubject<HTMLElement>(null);
     public itemsSize$ = new BehaviorSubject<number>(0);
     public direction$ = new BehaviorSubject<ViewportDirection | string>(ViewportDirection.vertical);
+    public ensureParams$: Observable<IEnsureParams>;
+
     private subscriptions = [] as Subscription[];
 
     private refresh$ = new BehaviorSubject<IViewPortRefreshParams>(null);
@@ -116,7 +118,7 @@ export class ViewPortService implements OnDestroy {
         };
 
         const calcFixedSizeViewPort$ = (items: IViewPortItem[], containerSize: number, scrollPos: number, itemDefaultSize: number, ensureParams: IEnsureParams): Observable<IViewPort> => {
-            const maxCount = Math.ceil(containerSize / itemDefaultSize);
+            const maxCount = Math.ceil(containerSize / itemDefaultSize) + 1;
             const startRow = Math.floor(scrollPos / itemDefaultSize);
 
             const rowsCount = Math.min(items.length - startRow, maxCount);
@@ -138,7 +140,7 @@ export class ViewPortService implements OnDestroy {
             } else {
                 // Ensure visible from the end
                 startIndex = Math.max(0, ensureParams.index + 1 - Math.min(items.length, maxCount));
-                endIndex = Math.max(ensureParams.index, maxCount - 1);
+                endIndex = Math.max(ensureParams.index, rowsCount - 1);
                 newScrollPos = (endIndex + 1) * itemDefaultSize - containerSize;
             }
 
@@ -432,7 +434,7 @@ export class ViewPortService implements OnDestroy {
             .do(() => consoleLog('items'));
 
         // Ensure item visible by index or instance
-        const ensureParams$ = Observable.combineLatest(this.ensureItem$, items$)
+        this.ensureParams$ = Observable.combineLatest(this.ensureItem$, items$)
             .map(([ensureItem, items]) => {
                 const ensureParams = {} as IEnsureParams;
                 if (ensureItem !== undefined && ensureItem !== null && items && items.length) {
@@ -529,7 +531,7 @@ export class ViewPortService implements OnDestroy {
             }));
 
         // Calc view port observable
-        this.subscriptions.push(Observable.combineLatest(items$, maxSize$, itemsSize$, ensureParams$)
+        this.subscriptions.push(Observable.combineLatest(items$, maxSize$, itemsSize$, this.ensureParams$)
             .combineLatest(direction$, mode$, refresh$, element$)
             .debounceTime(1)
             .combineLatest(scrollPos$)
@@ -603,7 +605,7 @@ export class ViewPortService implements OnDestroy {
     }
 }
 
-interface IEnsureParams {
+export interface IEnsureParams {
     index: number;
     atEnd: boolean;
 }

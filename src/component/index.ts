@@ -30,6 +30,7 @@ export * from './monaco-editor/index';
 export * from './mouse-dragdrop/index';
 export * from './range/index';
 export * from './select/index';
+export * from './sidenav/index';
 export * from './snackbar/index';
 export * from './splitter/index';
 export * from './tag/index';

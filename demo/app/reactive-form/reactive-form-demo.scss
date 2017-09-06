@@ -1,13 +1,18 @@
-reactive-form-demo {
+:host {
+    flex: 1 1 100%;
+    padding: 1rem;
+    
     .placeholder {
         color: rgba(0, 0, 0, 0.38);
         font-size: 87%;
         margin-bottom: 0.2rem;
     }
+
     h3 {
         background-color: rgba(0, 0, 0, 0.07);
         padding: 0.5rem;
     }
+
     #addskill {
         margin-top: 0.5rem;
         .mdSuffix {
@@ -18,18 +23,22 @@ reactive-form-demo {
             }
         }
     }
+
     #toolbar {
         .mat-toolbar-row {
             display: flex;
             justify-content: space-between;
         }
     }
+
     .error {
         color: #f44336;
     }
+
     .errorfld {
         font-size: 75%;
     }
+    
     [formcontrolname="remark"] {
         min-height: 1rem;
     }

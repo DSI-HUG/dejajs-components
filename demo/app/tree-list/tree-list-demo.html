@@ -265,23 +265,30 @@
 	<md-card class="deja-treelist-demo demo-card demo-basic">
 		<md-toolbar color="primary">Pre-Selections from html inputs</md-toolbar>
 		<md-card-content>
-			<span fxLayout="row">
-				<div fxFlex="0 0 45%" class="demo-half-width">Preselection with the input selectedModel</div>
-				<div fxFlex="0 0 45%" fxFlexOffset="5%" class="demo-half-width">Preselections with the input selectedModels</div>
-			</span>
-			<span fxLayout="row">
-				<deja-tree-list fxFlex="0 0 45%" class="demo-half-width" selectedModel="Mango" [models]="fructs"></deja-tree-list>
-				<deja-tree-list fxFlex="0 0 45%" fxFlexOffset="5%" class="demo-half-width" multiSelect="true" selectedModels="Mango, Apricots, Coconut" [models]="fructs"></deja-tree-list>
-			</span>
-			<div fxFlex="0 0 45%" class="demo-half-width">Preselection with the input selectedItem</div>
-			<span fxLayout="row">
-				<deja-tree-list fxFlex="0 0 45%" class="demo-half-width" selectedItem="mango" [items]="fructItems"></deja-tree-list>
-			</span>
+			<div fxLayout="row">
+				<div fxFlex="40" fxLayout="column">
+					<div>Preselection with the input selectedModel</div>
+					<deja-tree-list class="fixed-height" selectedModel="Mango" [models]="fructs"></deja-tree-list>
+				</div>
+				<div fxFlex="40" fxFlexOffset="15" fxLayout="column">
+					<div>Preselections with the input selectedModels</div>
+					<deja-tree-list class="fixed-height" multiSelect="true" selectedModels="Mango, Apricots, Coconut" [models]="fructs"></deja-tree-list>
+				</div>
+			</div>
+			<div fxLayout="row">
+				<div fxFlex="40" fxLayout="column">
+					<div>Preselection with the input selectedItem</div>
+					<deja-tree-list class="fixed-height" selectedItem="mango" [items]="fructItems"></deja-tree-list>
+				</div>
+				<div fxFlex="40" fxFlexOffset="15">
+				</div>
+			</div>
 		</md-card-content>
+
 		<md-toolbar color="primary">Pre-Selections from javascript</md-toolbar>
 		<md-card-content>
             <div>The collection fructItemsWithPreSelection has a pre-selected item</div>
-    		<deja-tree-list fxFlex="0 0 45%" class="demo-half-width" [items]="fructItemsWithPreSelection"></deja-tree-list>
+    		<deja-tree-list class="fixed-height" [items]="fructItemsWithPreSelection"></deja-tree-list>
 		</md-card-content>
 	</md-card>
 </div>

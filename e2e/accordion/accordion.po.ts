@@ -6,14 +6,12 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { browser, by, element, ExpectedConditions } from 'protractor';
+import { browser, ExpectedConditions } from 'protractor';
 
 export class AccordionPage {
     navigateTo() {
-        browser.get('/');
-        return element(by.css('md-toolbar-row > a[href="/components"]')).click().then(() => {
-            return element(by.css('md-nav-list > a[ng-reflect-router-link="accordion"]')).click();
-        });
+        browser.get('/accordion');
+        // return element(by.css('deja-sidenav-menu md-list-item[routerlink="/components"]')).click();
     }
 
     headerIsOpen(body) {

@@ -1,11 +1,16 @@
-md-card-content {
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-    justify-content: center;
+:host {
+    flex: 1 1 100%;
+    padding: 1rem;
+    
+    md-card-content {
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        justify-content: center;
 
-    md-progress-spinner, md-progress-bar {
-        margin: 20px;
+        md-progress-spinner, md-progress-bar {
+            margin: 20px;
+        }
     }
 }
 
