@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { browser, by, element, ExpectedConditions } from 'protractor';
+import { browser, ExpectedConditions } from 'protractor';
 
 export class AccordionPage {
     navigateTo() {
