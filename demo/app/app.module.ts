@@ -15,7 +15,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { StoreModule } from '@ngrx/store';
-import { SlimScroll } from 'angular-io-slimscroll';
 import { routing } from './route';
 
 import { AppComponent } from './app.component';
@@ -58,6 +57,7 @@ import {
     DejaRangeModule,
     DejaSelectModule,
     DejaSidenavModule,
+    DejaSlimScrollModule,
     DejaSnackbarModule,
     DejaSortingModule,
     DejaSplitterModule,
@@ -121,7 +121,6 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         DejaTreeListDemoComponent,
         DejaViewPortDemoComponent,
         NewsCardComponent,
-        SlimScroll,
     ],
     imports: [
         FormsModule,
@@ -161,6 +160,7 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         DejaRangeModule,
         DejaSelectModule,
         DejaSidenavModule,
+        DejaSlimScrollModule,
         DejaSnackbarModule,
         DejaSortingModule,
         DejaSplitterModule,

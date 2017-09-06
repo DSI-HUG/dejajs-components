@@ -1,15 +1,16 @@
 /*
- *  @license
- *  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
- *
- *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
- */
+*  @license
+*  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
+*
+*  Use of this source code is governed by an Apache-2.0 license that can be
+*  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
+*/
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MdButtonModule, MdIconModule, MdSidenavModule, MdToolbarModule } from '@angular/material';
+import { DejaSlimScrollModule } from './../../common/core/slimscroll/index';
 import { DejaSidenavContentDirective } from './sidenav-content.directive';
 import { DejaSidenavHeaderDirective } from './sidenav-header.directive';
 import { DejaSidenavMenuDirective } from './sidenav-menu.directive';
@@ -38,6 +39,7 @@ import { DejaSidenavComponent } from './sidenav.component';
         MdToolbarModule,
         MdButtonModule,
         MdIconModule,
+        DejaSlimScrollModule,
     ],
 })
 export class DejaSidenavModule {

@@ -52,7 +52,6 @@
     "@deja-js/resources": "1.2.0",
     "@ngrx/core": "1.2.0",
     "@ngrx/store": "4.0.0",
-    "angular-io-slimscroll": "^1.2.11",
     "angular2-text-mask": "8.0.3",
     "core-js": "2.5.0",
     "custom-event-polyfill": "0.3.0",
