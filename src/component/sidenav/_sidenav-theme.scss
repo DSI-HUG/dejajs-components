@@ -1,0 +1,60 @@
+@import '~@angular/material/theming';
+
+@mixin sidenav-theme($theme) {
+    $primary: map-get($theme, primary);
+
+    deja-sidenav {
+        @mixin sidebar-light() {
+            .mat-sidenav {
+                .header {
+                    background: mat-color($primary);
+                    .header-menu-btn .mat-icon {
+                        color: rgba(255, 255, 255, 0.87);
+                    }
+                }
+            }
+        }
+
+        .mat-sidenav-container {
+            &.sidenav-light {
+                @include sidebar-light;
+            }
+
+            .mat-sidenav {
+                .header {
+                    border-right: 1px solid mat-color($primary);
+                    border-bottom: 1px solid rgba(0, 0, 0, 0.14);
+                    background: white;
+                }
+
+                /deep/ deja-sidenav-menu {
+                    border-right: 1px solid rgba(0, 0, 0, 0.14);
+                    
+                    /deep/ .mat-list-item {
+                        &.active {
+                            .mat-list-icon, .mat-list-text {
+                                color: mat-color($primary) !important;
+                            }
+                        }
+                        
+                        /deep/ .mat-list-item-content {
+                            .mat-list-icon {
+                                color: rgba(0, 0, 0, 0.54);
+                            }
+                            
+                            .mat-list-text {
+                                color: rgba(0, 0, 0, 0.87);
+                            }
+                        }
+                    }
+                }
+            }
+
+            /deep/ .mat-sidenav-content {
+                .mat-toolbar {
+                    border-bottom: 1px solid mat-color($primary);
+                }
+            }
+        }
+    }
+}
