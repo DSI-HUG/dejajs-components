@@ -1,3 +1,36 @@
+### 2.10.0 (2017-09-06)
+
+##### BREAKING CHANGES
+
+* **Dependencies:** Change dependencies to PeerDependencies ([76e7ee85](https://github.com/DSI-HUG/dejajs-components/commit/76e7ee85268e8e4827adc8656d045c908b1b87b0))
+
+##### Continuous Integration
+
+* **Build:** Remove rollup warning ([63abfa68](https://github.com/DSI-HUG/dejajs-components/commit/63abfa68dc03deaedf29b67c54bebca592e97c8b))
+
+##### New Features
+
+* **Sidenav:** Add sidenav component ([424c64e8](https://github.com/DSI-HUG/dejajs-components/commit/424c64e8a410d86f554d920ecf919dbb38052a5f))
+
+##### Bug Fixes
+
+* **DemoApp:** Demo style ([5f1cc9d8](https://github.com/DSI-HUG/dejajs-components/commit/5f1cc9d8d5ecd70965d2fdc9e74b30eadf877d15))
+* **DejaGrid:** Wrong binding on function ([dbffc967](https://github.com/DSI-HUG/dejajs-components/commit/dbffc967a14dc4e9200dca447de76304bd3dc73e))
+* **Sidenav:** unused variable ([a96fdf99](https://github.com/DSI-HUG/dejajs-components/commit/a96fdf993f9080841154991fc0e912123cd99124))
+* **Tiles:** AOT Compilation ([4adecd9b](https://github.com/DSI-HUG/dejajs-components/commit/4adecd9bcb411abd02af5e4f844184e40321b907))
+* **Dependencies:** CDK Build error version ([21436239](https://github.com/DSI-HUG/dejajs-components/commit/21436239a4686c298b4a8060a389a36592c5a0ac))
+* **Global:** Build AOT part 1 ([73cfbe2b](https://github.com/DSI-HUG/dejajs-components/commit/73cfbe2b19a1b59f4170fb4bd66255e211d7a1da))
+
+##### Refactors
+
+* **Demo:** Add new sidebar in demo app and css refactor ([a2cae2e4](https://github.com/DSI-HUG/dejajs-components/commit/a2cae2e4c824832e08fe6f6e3b80b18a7a85e89d))
+
+##### Tests
+
+* **Accordion:**
+  * Change route url ([b96f9841](https://github.com/DSI-HUG/dejajs-components/commit/b96f9841cb34d7bf356279c26fbb9955172b0495))
+  * Change route url ([3d8ed034](https://github.com/DSI-HUG/dejajs-components/commit/3d8ed034e9805cb05b50640854219f989f833bb5))
+
 ### 2.9.0 (2017-09-01)
 
 ##### BREAKING CHANGES
