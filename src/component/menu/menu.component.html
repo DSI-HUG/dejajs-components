@@ -1,4 +1,4 @@
-<ng-template cdk-connected-overlay hasBackdrop backdropClass="cdk-overlay-transparent-backdrop" [open]="isVisible" [origin]="overlayOrigin" (backdropClick)="close()" [cdkConnectedOverlayPositions]="positions" [width]="width">
+<ng-template cdk-connected-overlay cdkConnectedOverlayHasBackdrop cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop" [cdkConnectedOverlayOpen]="isVisible" [cdkConnectedOverlayOrigin]="overlayOrigin" (backdropClick)="close()" [cdkConnectedOverlayPositions]="positions" [cdkConnectedOverlayWidth]="width">
 	<div id="menucontent">
 		<ng-content></ng-content>
 	</div>
