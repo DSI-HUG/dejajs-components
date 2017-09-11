@@ -1,3 +1,57 @@
+### 2.11.0 (2017-09-11)
+
+##### BREAKING CHANGES
+
+* **Dependencies:**
+  * Upgrade dependencies ([8608d42a](https://github.com/DSI-HUG/dejajs-components/commit/8608d42af221d5dc66e40e6aa91f51e2d32b97da))
+  * Change dependencies to PeerDependencies ([76e7ee85](https://github.com/DSI-HUG/dejajs-components/commit/76e7ee85268e8e4827adc8656d045c908b1b87b0))
+
+##### Continuous Integration
+
+* **Build:**
+  * Fix rollup build ([2a683725](https://github.com/DSI-HUG/dejajs-components/commit/2a6837258e586846dab39ef3ac1c1f2d511d4352))
+  * Remove rollup warning ([63abfa68](https://github.com/DSI-HUG/dejajs-components/commit/63abfa68dc03deaedf29b67c54bebca592e97c8b))
+
+##### New Features
+
+* **SlimScroll:**
+  * Add slimScroll ([17ab898d](https://github.com/DSI-HUG/dejajs-components/commit/17ab898d668935c44559531937bdfc5b0c3d3685))
+  * Add slimScroll ([92878944](https://github.com/DSI-HUG/dejajs-components/commit/928789447826610e75d0a6e28a7e8d36faaceb9d))
+* **Sidenav:** Add sidenav component ([424c64e8](https://github.com/DSI-HUG/dejajs-components/commit/424c64e8a410d86f554d920ecf919dbb38052a5f))
+
+##### Bug Fixes
+
+* **Sidenav:**
+  * Mobile compliance ([356490a9](https://github.com/DSI-HUG/dejajs-components/commit/356490a9aa3cba9e8ad6ec10a2eb710ed0b99753))
+  * unused variable ([a96fdf99](https://github.com/DSI-HUG/dejajs-components/commit/a96fdf993f9080841154991fc0e912123cd99124))
+* **Select:** Material style ([b30ada73](https://github.com/DSI-HUG/dejajs-components/commit/b30ada7353f75d95609bb0975c94a90d137c1f7a))
+* **Global:**
+  * Update theme selector ([2c4a52a6](https://github.com/DSI-HUG/dejajs-components/commit/2c4a52a6ee711d65a476ebb503729d50a296616d))
+  * Build AOT part 1 ([73cfbe2b](https://github.com/DSI-HUG/dejajs-components/commit/73cfbe2b19a1b59f4170fb4bd66255e211d7a1da))
+* **DemoApp:** Demo style ([5f1cc9d8](https://github.com/DSI-HUG/dejajs-components/commit/5f1cc9d8d5ecd70965d2fdc9e74b30eadf877d15))
+* **DejaGrid:** Wrong binding on function ([dbffc967](https://github.com/DSI-HUG/dejajs-components/commit/dbffc967a14dc4e9200dca447de76304bd3dc73e))
+* **Tiles:** AOT Compilation ([4adecd9b](https://github.com/DSI-HUG/dejajs-components/commit/4adecd9bcb411abd02af5e4f844184e40321b907))
+* **Dependencies:** CDK Build error version ([21436239](https://github.com/DSI-HUG/dejajs-components/commit/21436239a4686c298b4a8060a389a36592c5a0ac))
+
+##### Other Changes
+
+* **License:** Fix ([52617536](https://github.com/DSI-HUG/dejajs-components/commit/526175360b206c435c59f1bc791b5d81f8751c61))
+* **Dependencies:** upgrade dependencies ([fd6aff26](https://github.com/DSI-HUG/dejajs-components/commit/fd6aff26e25ef75a0a3b266c99ca4f3bac68bb50))
+* **Sidenav:** Fix license ([1bc6f0f4](https://github.com/DSI-HUG/dejajs-components/commit/1bc6f0f42720f66f3d48f3bf3a01cd667eb91ce7))
+
+##### Refactors
+
+* **Demo:** Add new sidebar in demo app and css refactor ([a2cae2e4](https://github.com/DSI-HUG/dejajs-components/commit/a2cae2e4c824832e08fe6f6e3b80b18a7a85e89d))
+
+##### Tests
+
+* **Global:**
+  * Remove temporary E2E ([dc4521f0](https://github.com/DSI-HUG/dejajs-components/commit/dc4521f059d4cfddfdcd35645ab068d9875ed543))
+  * Remove temporary E2E ([97b7d004](https://github.com/DSI-HUG/dejajs-components/commit/97b7d00414ad6e2e95f0e01a0085646d8d6d0ffc))
+* **Accordion:**
+  * Change route url ([b96f9841](https://github.com/DSI-HUG/dejajs-components/commit/b96f9841cb34d7bf356279c26fbb9955172b0495))
+  * Change route url ([3d8ed034](https://github.com/DSI-HUG/dejajs-components/commit/3d8ed034e9805cb05b50640854219f989f833bb5))
+
 ### 2.10.0 (2017-09-06)
 
 ##### BREAKING CHANGES
