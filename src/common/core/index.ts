@@ -21,3 +21,4 @@ export * from './sorting/index';
 export * from './style/index';
 export * from './UUID';
 export * from './validation/index';
+export * from './overlay/index';

@@ -6,12 +6,13 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ConnectionPositionPair, OriginConnectionPosition, OverlayConnectionPosition, OverlayOrigin } from '@angular/cdk/overlay';
+import { OverlayOrigin } from '@angular/cdk/overlay';
 import { Component, ContentChild, ElementRef, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import 'rxjs/add/observable/fromEvent';
 import { Observable } from 'rxjs/Observable';
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
+import { DejaConnectionPositionPair } from '../../common/core/overlay/connection-position-pair';
 import { DejaTooltipService, ITooltipParams } from './tooltip.service';
 
 /**
@@ -57,34 +58,11 @@ export class DejaTooltipComponent implements OnInit {
             overlayX: 'center',
             overlayY: 'bottom',
         },
-    ] as ConnectionPositionPair[];
+    ] as DejaConnectionPositionPair[];
 
     @Input()
-    public set positions(value: ConnectionPositionPair[] | string) {
-        if (typeof value === 'string') {
-            const values = value.split(',');
-            this._positions = [];
-            values.forEach(pos => {
-                const poss = pos.split(' ');
-                if (poss.length !== 4) {
-                    throw new Error(`Invalid positions property for DejaMenuComponent. String entry must be of type 'positions="start top end bottom"'`);
-                }
-
-                const originPosition = {
-                    originX: poss[0],
-                    originY: poss[1],
-                } as OriginConnectionPosition;
-
-                const overlayPosition = {
-                    overlayX: poss[2],
-                    overlayY: poss[3],
-                } as OverlayConnectionPosition;
-
-                this._positions.push(new ConnectionPositionPair(originPosition, overlayPosition));
-            });
-        } else {
-            this._positions = value;
-        }
+    public set positions(value: DejaConnectionPositionPair[] | string) {
+        this._positions = typeof value === 'string' ? DejaConnectionPositionPair.parse(value) : value;
     }
 
     public get positions() {

@@ -6,10 +6,10 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ConnectionPositionPair } from '@angular/cdk/overlay';
 import { Directive, ElementRef, EventEmitter, Input, Output } from '@angular/core';
 import 'rxjs/add/operator/mergeMap';
 import { Observable } from 'rxjs/Observable';
+import { DejaConnectionPositionPair } from '../../common/core/overlay/connection-position-pair';
 import { DejaTooltipService } from './tooltip.service';
 
 @Directive({
@@ -18,7 +18,7 @@ import { DejaTooltipService } from './tooltip.service';
 export class DejaTooltipDirective {
     @Input('tooltip-model') public model: any;
     @Input('deja-tooltip') public name: string;
-    @Input('tooltip-positions') public positions: ConnectionPositionPair | string;
+    @Input('tooltip-positions') public positions: DejaConnectionPositionPair | string;
 
     // tslint:disable-next-line:no-output-rename
     @Output('tooltip-show') public show = new EventEmitter();
