@@ -13,6 +13,6 @@ import { Component, Input } from '@angular/core';
     template: '',
 })
 export class DejaItemComponent {
-    @Input() value: string;
-    @Input() text: String;
+    @Input() public value: string;
+    @Input() public text: String;
 }

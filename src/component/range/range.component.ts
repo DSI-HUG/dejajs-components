@@ -6,6 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { coerceBooleanProperty } from '@angular/cdk';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostListener, Input, Optional, Output, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import 'rxjs/add/operator/takeUntil';
@@ -59,7 +60,7 @@ export class DejaRangeComponent implements ControlValueAccessor {
     // read / write mode
     @Input()
     public set disabled(value: boolean | string) {
-        this._disabled = value != null && `${value}` !== 'false';
+        this._disabled = coerceBooleanProperty(value);
     }
 
     public get disabled() {
@@ -69,7 +70,7 @@ export class DejaRangeComponent implements ControlValueAccessor {
     // read / write mode
     @Input()
     public set readOnly(value: boolean | string) {
-        this._readOnly = value != null && `${value}` !== 'false';
+        this._readOnly = coerceBooleanProperty(value);
     }
 
     public get readOnly() {

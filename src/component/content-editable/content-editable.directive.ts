@@ -6,6 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { coerceBooleanProperty } from '@angular/cdk';
 import { Directive, ElementRef, HostBinding, Input, OnDestroy, Optional, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import 'rxjs/add/observable/fromEvent';
@@ -122,7 +123,7 @@ export class DejaEditableDirective implements ControlValueAccessor, OnDestroy {
     /** Définit une valeur indiquant si le contenu édité est obligatoire. Si la valeur est 'true' la sortie du mode édition ne sera pas possible tant qu'un contenu n'est pas ajouté. */
     @Input()
     public set mandatory(value: boolean | string) {
-        this._mandatory = value != null && `${value}` !== 'false';
+        this._mandatory = coerceBooleanProperty(value);
     }
 
     /** Retourne une valeur indiquant si le contenu édité est obligatoire. Si la valeur est 'true' la sortie du mode édition ne sera pas possible tant qu'un contenu n'est pas ajouté. */
@@ -133,7 +134,7 @@ export class DejaEditableDirective implements ControlValueAccessor, OnDestroy {
     /** Définit une valeur indiquant si le contenu édité est multiligne */
     @Input()
     public set multiline(value: boolean | string) {
-        this._multiline = value != null && `${value}` !== 'false';
+        this._multiline = coerceBooleanProperty(value);
     }
 
     /** Retourne une valeur indiquant si le contenu édité est multiligne */
@@ -144,7 +145,7 @@ export class DejaEditableDirective implements ControlValueAccessor, OnDestroy {
     /** Permet de désactiver le controle */
     @Input()
     public set disabled(value: boolean | string) {
-        const disabled = value != null && `${value}` !== 'false';
+        const disabled = coerceBooleanProperty(value);
         this._disabled = disabled || null;
         if (this.disabled) {
             this.edit$.next([false, false]);
@@ -158,7 +159,7 @@ export class DejaEditableDirective implements ControlValueAccessor, OnDestroy {
     /** Définit une valeur indiquant si l'édition est activée. */
     @Input('deja-editable')
     public set editMode(value: boolean | string) {
-        this._editMode = value != null && `${value}` !== 'false';
+        this._editMode = coerceBooleanProperty(value);
     }
 
     /** Retourne une valeur indiquant si l'édition est activée. */
@@ -172,7 +173,7 @@ export class DejaEditableDirective implements ControlValueAccessor, OnDestroy {
         if (this.disabled) {
             return;
         }
-        this.edit$.next([value != null && `${value}` !== 'false', false]);
+        this.edit$.next([coerceBooleanProperty(value), false]);
     }
 
     /** Retourne une valeur indiquant si l'élément est en édition. */

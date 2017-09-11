@@ -6,6 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { coerceBooleanProperty } from '@angular/cdk';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
@@ -185,7 +186,7 @@ export class DejaGridComponent implements OnDestroy {
     /** Permet de trier le tableau au clic sur l'entête de la colonne */
     @Input()
     public set sortable(value: boolean | string) {
-        this._sortable = value != null && `${value}` !== 'false';
+        this._sortable = coerceBooleanProperty(value);
     }
 
     public get sortable() {
@@ -199,7 +200,7 @@ export class DejaGridComponent implements OnDestroy {
     /** Affiche un barre de recherche au dessus du tableau. */
     @Input()
     public set searchArea(value: boolean | string) {
-        this._searchArea = value != null && `${value}` !== 'false';
+        this._searchArea = coerceBooleanProperty(value);
     }
 
     public get searchArea() {
@@ -209,7 +210,7 @@ export class DejaGridComponent implements OnDestroy {
     /** Affiche une zone de regroupement des colonnes par drag and drop. */
     @Input()
     public set groupArea(value: boolean | string) {
-        this._groupArea = value != null && `${value}` !== 'false';
+        this._groupArea = coerceBooleanProperty(value);
         if (this._columnsSortable && !this.clipboardService) {
             throw new Error('To use the DejaGrid.groupArea feature, please import and provide the DejaClipboardService in your application.');
         }
@@ -222,7 +223,7 @@ export class DejaGridComponent implements OnDestroy {
     /** Rend les lignes du tableau draggable vers un autre composant (ne pas confondre avec la propriété `sortable`) */
     @Input()
     public set rowsDraggable(value: boolean | string) {
-        this._rowsDraggable = value != null && `${value}` !== 'false';
+        this._rowsDraggable = coerceBooleanProperty(value);
     }
 
     public get rowsDraggable() {
@@ -232,7 +233,7 @@ export class DejaGridComponent implements OnDestroy {
     /** Rend les lignes du tableau triables par drag-and-drop */
     @Input()
     public set rowsSortable(value: boolean | string) {
-        this._rowsSortable = value != null && `${value}` !== 'false';
+        this._rowsSortable = coerceBooleanProperty(value);
     }
 
     public get rowsSortable() {
@@ -242,7 +243,7 @@ export class DejaGridComponent implements OnDestroy {
     /** Définit si toutes les colonnes peuvent être draggable vers un autre composant. */
     @Input()
     public set columnsDraggable(value: boolean | string) {
-        this._columnsDraggable = value != null && `${value}` !== 'false';
+        this._columnsDraggable = coerceBooleanProperty(value);
     }
 
     public get columnsDraggable() {
@@ -252,7 +253,7 @@ export class DejaGridComponent implements OnDestroy {
     /** Définit si toutes les colonnes peuvent être déplacées parmis les autres colonnes. */
     @Input()
     public set columnsSortable(value: boolean | string) {
-        this._columnsSortable = value != null && `${value}` !== 'false';
+        this._columnsSortable = coerceBooleanProperty(value);
         if (this._columnsSortable && !this.clipboardService) {
             throw new Error('To use the DejaGrid.columnsSortable feature, please import and provide the DejaClipboardService in your application.');
         }
@@ -265,7 +266,7 @@ export class DejaGridComponent implements OnDestroy {
     /** Permet de redimensionner manuellement les colonnes du tableau. */
     @Input()
     public set columnsSizable(value: boolean | string) {
-        this._columnsSizable = value != null && `${value}` !== 'false';
+        this._columnsSizable = coerceBooleanProperty(value);
     }
 
     public get columnsSizable() {
@@ -275,7 +276,7 @@ export class DejaGridComponent implements OnDestroy {
     /** Permet la sélection multiple des ligne de la grille (avec la touche shift ou ctrl) */
     @Input()
     public set multiSelect(value: boolean | string) {
-        this._multiSelect = value != null && `${value}` !== 'false';
+        this._multiSelect = coerceBooleanProperty(value);
     }
 
     public get multiSelect() {

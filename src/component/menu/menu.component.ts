@@ -36,7 +36,8 @@ export class DejaMenuComponent implements OnInit, OnDestroy {
     /** Renvoie ou définit l'élement du DOM sur lequel le menu devra s'aligner */
     @Input() public ownerElement: HTMLElement;
 
-    @Output() visibleChange = new EventEmitter<boolean>();
+    @Output()
+    public visibleChange = new EventEmitter<boolean>();
 
     protected dropDownPosition: Position;
     protected isMobile = false;

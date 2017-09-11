@@ -6,6 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { coerceBooleanProperty } from '@angular/cdk';
 import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import 'rxjs/add/operator/delay';
@@ -199,7 +200,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Affiche un barre de recherche au dessus de la liste. */
     @Input()
     public set searchArea(value: boolean | string) {
-        this._searchArea = value != null && `${value}` !== 'false';
+        this._searchArea = coerceBooleanProperty(value);
     }
 
     public get searchArea() {
@@ -209,7 +210,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Retourne ou définit une valeur indiquant si les lignes de la liste peuvent être déplacées manuelement par l'utilisateur */
     @Input()
     public set sortable(value: boolean | string) {
-        this._sortable = value != null && `${value}` !== 'false';
+        this._sortable = coerceBooleanProperty(value);
     }
 
     public get sortable() {
@@ -219,7 +220,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Retourne ou définit une valeur indiquant si les lignes peuvent être déplacées vers un autre composant */
     @Input()
     public set itemsDraggable(value: boolean | string) {
-        this._itemsDraggable = value != null && `${value}` !== 'false';
+        this._itemsDraggable = coerceBooleanProperty(value);
     }
 
     public get itemsDraggable() {
@@ -347,7 +348,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Définit une valeur indiquant si plusieurs lignes peuvent être sélectionées. */
     @Input()
     public set multiSelect(value: boolean | string) {
-        super.setMultiSelect(value != null && `${value}` !== 'false');
+        super.setMultiSelect(coerceBooleanProperty(value));
     }
 
     /** Retourne une valeur indiquant si plusieurs lignes peuvent être sélectionées. */
@@ -506,7 +507,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Permet de désactiver la liste */
     @Input()
     public set disabled(value: boolean | string) {
-        const disabled = value != null && `${value}` !== 'false';
+        const disabled = coerceBooleanProperty(value);
         this._disabled = disabled || null;
     }
 

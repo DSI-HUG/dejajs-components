@@ -6,6 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { coerceBooleanProperty } from '@angular/cdk';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, Input, OnDestroy, OnInit, Optional, Self, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import 'rxjs/add/observable/fromEvent';
@@ -64,7 +65,7 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
     /** disabled property setter. Can be string or empty so you can use it like : <circular-picker disabled></circular-picker> */
     @Input()
     public set disabled(value: boolean | string) {
-        this._disabled = value != null && `${value}` !== 'false';
+        this._disabled = coerceBooleanProperty(value);
     }
 
     /** To get disabled attribute. */

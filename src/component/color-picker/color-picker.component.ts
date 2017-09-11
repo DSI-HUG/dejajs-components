@@ -6,6 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { coerceBooleanProperty } from '@angular/cdk';
 import { Component, ElementRef, EventEmitter, HostBinding, Input, Optional, Output, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Color } from '../../common/core/graphics/color';
@@ -56,7 +57,7 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
     /** Retourne ou définit la taille du bouton. */
     @Input()
     public set small(value: boolean | string) {
-        this._small = value != null && `${value}` !== 'false';
+        this._small = coerceBooleanProperty(value);
     }
 
     public get small() {
@@ -66,7 +67,7 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
     /** Retourne ou definit si le selecteur est desactivé. */
     @Input()
     public set disabled(value: boolean | string) {
-        this._disabled = value != null && `${value}` !== 'false';
+        this._disabled = coerceBooleanProperty(value);
     }
 
     public get disabled() {

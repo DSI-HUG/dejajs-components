@@ -6,6 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { coerceNumberProperty } from '@angular/cdk';
 import { Directive, ElementRef, Input, Renderer } from '@angular/core';
 
 /**
@@ -19,8 +20,9 @@ export class SplitGutterDirective {
     /**
      * Order of the seperator
      */
-    @Input() set order(v: number) {
-        this.setStyle('order', v);
+    @Input()
+    public set order(v: number | string) {
+        this.setStyle('order', coerceNumberProperty(v));
     }
 
     private _direction: string;
@@ -28,7 +30,8 @@ export class SplitGutterDirective {
      * Direction of the separator
      * Can be `horizontal` or `vertical`
      */
-    @Input() set direction(v: string) {
+    @Input()
+    public set direction(v: string) {
         this._direction = v;
         this.refreshStyle();
     }
@@ -36,8 +39,9 @@ export class SplitGutterDirective {
     /**
      * Separator size in pixel
      */
-    @Input() set size(v) {
-        this.setStyle('flex-basis', `${v}px`);
+    @Input()
+    public set size(v: number | string) {
+        this.setStyle('flex-basis', `${coerceNumberProperty(v)}px`);
     }
 
     private _disabled = false;
@@ -45,7 +49,8 @@ export class SplitGutterDirective {
      * Disable the separator
      * By default `false`
      */
-    @Input() set disabled(v: boolean) {
+    @Input()
+    public set disabled(v: boolean) {
         this._disabled = v;
         this.refreshStyle();
     }

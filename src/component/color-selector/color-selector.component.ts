@@ -6,6 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { coerceBooleanProperty } from '@angular/cdk';
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import 'rxjs/add/observable/fromEvent';
@@ -175,7 +176,7 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
     /** Retourne ou definit si le selecteur est desactivé. */
     @Input()
     public set disabled(value: boolean | string) {
-        const disabled = (value != null && `${value}` !== 'false');
+        const disabled = coerceBooleanProperty(value);
         if (this._colorFabs) {
             this._colorFabs.forEach((colorFab) => colorFab.disabled = disabled);
         }

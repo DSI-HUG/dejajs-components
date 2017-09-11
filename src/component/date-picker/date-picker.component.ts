@@ -6,6 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { coerceBooleanProperty } from '@angular/cdk';
 import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, Input, OnDestroy, OnInit, Optional, Self, ViewChild } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
@@ -260,7 +261,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     /** disabled property setter. Can be string or empty so you can use it like : <deja-date-picker disabled></deja-date-picker> */
     @Input()
     public set disabled(value: boolean | string) {
-        this._disabled = (value != null && `${value}` !== 'false') ? true : null;
+        this._disabled = coerceBooleanProperty(value) ? true : null;
         this.changeDetectorRef.markForCheck();
     }
 
@@ -272,7 +273,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     /** required property setter. Can be string or empty so you can use it like : <deja-date-picker required></deja-date-picker> */
     @Input()
     public set required(value: boolean | string) {
-        this._required = (value != null && `${value}` !== 'false') ? true : null;
+        this._required = coerceBooleanProperty(value) ? true : null;
         this.changeDetectorRef.markForCheck();
     }
 
@@ -287,7 +288,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
      */
     @Input()
     public set time(value: boolean | string) {
-        this._time = (value != null && `${value}` !== 'false') ? true : null;
+        this._time = coerceBooleanProperty(value) ? true : null;
         this.changeDetectorRef.markForCheck();
     }
 

@@ -9,11 +9,11 @@
 import { browser, by, element } from 'protractor';
 
 export class HomePage {
-    navigateTo() {
+    public navigateTo() {
         return browser.get('/');
     }
 
-    getTitleText() {
+    public getTitleText() {
         return element(by.css('home header h1')).getText();
     }
 }

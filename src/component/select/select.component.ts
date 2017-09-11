@@ -6,6 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { coerceBooleanProperty } from '@angular/cdk';
 import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ObservableMedia } from '@angular/flex-layout';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
@@ -346,7 +347,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     /** Permet de désactiver le select */
     @Input()
     public set disabled(value: boolean | string) {
-        const disabled = value != null && `${value}` !== 'false';
+        const disabled = coerceBooleanProperty(value);
         this._disabled = disabled || null;
         this.changeDetectorRef.markForCheck();
     }
@@ -358,7 +359,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     /** Indique ou détermine si le bouton pour effacer la selection doit être affiché */
     @Input()
     public set selectionClearable(value: boolean | string) {
-        this._selectionClearable = value != null && `${value}` !== 'false';
+        this._selectionClearable = coerceBooleanProperty(value);
     }
 
     public get selectionClearable() {
@@ -377,7 +378,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @Input()
     /** Définit une valeur indiquant si les éléments selectionés doivent être masqué de la liste déroulante. */
     public set hideSelected(value: any) {
-        this.setHideSelected(value !== 'false');
+        this.setHideSelected(coerceBooleanProperty(value));
     }
 
     /** Renvoie une valeur indiquant si les éléments selectionés doivent être masqué de la liste déroulante. */
