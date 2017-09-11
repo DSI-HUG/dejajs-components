@@ -3,34 +3,27 @@
 @mixin menu-theme($theme) {
 	$primary: map-get($theme, primary);
 
-	deja-menu {
-		#menubackdrop {
-			&:not([mobile]) {
-				background-color: transparent;
-			}
-		}
-		#menudropdown {
-			background-color: #fff;
-			#menucontent {
-				border-color: rgba(0, 0, 0, 0.3);
-				>ul {
-					li {
-						background-color: #FFF;
-						color: mat-color($primary);
-						&:hover {
-							background-color: mat-color($primary);
-							color: #FFF;
-						}
-					}
-				}
-				>button,
-				>a {
+	.cdk-overlay-container {
+		#menucontent {
+			background-color: #FFF;
+			border-color: rgba(0, 0, 0, 0.3);
+			>ul {
+				li {
 					background-color: #FFF;
 					color: mat-color($primary);
 					&:hover {
 						background-color: mat-color($primary);
 						color: #FFF;
 					}
+				}
+			}
+			>button,
+			>a {
+				background-color: #FFF;
+				color: mat-color($primary);
+				&:hover {
+					background-color: mat-color($primary);
+					color: #FFF;
 				}
 			}
 		}

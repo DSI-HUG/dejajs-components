@@ -17,5 +17,4 @@ import { DejaDropDownComponent } from './dropdown.component';
 })
 export class DejaDropDownModule { }
 
-export * from './dropdown-container.service';
 export * from './dropdown.component';

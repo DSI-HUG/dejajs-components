@@ -28,7 +28,6 @@ export class AppComponent implements OnDestroy {
     private theme$sub: Subscription;
 
     constructor(elementRef: ElementRef) {
-        const elem = elementRef.nativeElement as HTMLElement;
         try {
             this._theme = localStorage.getItem('dejajs-demo-color');
         } catch (_e) {
@@ -39,7 +38,7 @@ export class AppComponent implements OnDestroy {
             this._theme = 'hug';
         }
         this.theme$ = new BehaviorSubject<any>(this._theme);
-        this.theme$sub = Observable.from(this.theme$).subscribe((theme) => elem.setAttribute('theme', theme));
+        this.theme$sub = Observable.from(this.theme$).subscribe((theme) => document.body.setAttribute('theme', theme));
     }
 
     public get theme() {
