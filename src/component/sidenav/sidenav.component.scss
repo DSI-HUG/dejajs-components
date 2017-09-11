@@ -11,7 +11,7 @@
     @mixin sidebar-light() {
         .mat-sidenav {
             transform: translate3d(calc(-100% + #{ $light-sidenav-width }), 0, 0);
-            visibility: visible;
+            visibility: visible !important;
             
             .header {
                 padding: 0 8px;
@@ -44,7 +44,7 @@
             }
         }
 
-        /deep/ .mat-sidenav-content {
+        /deep/ .mat-drawer-content {
             margin-left: $light-sidenav-width !important;
         }
     }
@@ -57,7 +57,7 @@
             }
         }
     
-        /deep/ .mat-sidenav-content {
+        /deep/ .mat-drawer-content {
             .mat-toolbar {
                 padding: 0 8px;
                 .menu-btn {
@@ -68,7 +68,7 @@
         }
     }
 
-    .mat-sidenav-container {
+    .mat-drawer-container {
         &.sidenav-light {
             @include sidebar-light;
         }
@@ -115,7 +115,7 @@
             }
         }
 
-        /deep/ .mat-sidenav-content {
+        /deep/ .mat-drawer-content {
             > div { 
                 overflow: hidden;
             }
