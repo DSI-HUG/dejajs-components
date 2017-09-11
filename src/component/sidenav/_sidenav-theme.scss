@@ -27,17 +27,17 @@
                     background: white;
                 }
 
-                /deep/ deja-sidenav-menu {
+                deja-sidenav-menu {
                     border-right: 1px solid rgba(0, 0, 0, 0.14);
                     
-                    /deep/ .mat-list-item {
+                    .mat-list-item {
                         &.active {
                             .mat-list-icon, .mat-list-text {
                                 color: mat-color($primary) !important;
                             }
                         }
                         
-                        /deep/ .mat-list-item-content {
+                        .mat-list-item-content {
                             .mat-list-icon {
                                 color: rgba(0, 0, 0, 0.54);
                             }
