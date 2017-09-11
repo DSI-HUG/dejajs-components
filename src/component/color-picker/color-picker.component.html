@@ -1,6 +1,5 @@
-<button type="button" *ngIf="!small" [disabled]="disabled" id="colorbtn" md-fab (click)="onClick($event)" [style.background-color]="value && value.toHex() || null"></button>
-<button type="button" *ngIf="small" [disabled]="disabled" id="colorbtn" md-mini-fab (click)="onClick($event)" [style.background-color]="value && value.toHex() || null"></button>
-<deja-dropdown id="deja-dropdown" *ngIf="isOpen" [ownerAlignment]="dropdownAlignment" [ownerElement]="elementRef.nativeElement" dropdownAlignment="left bottom" [containerElement]="containerElement">
-	<deja-color-selector [colors]="colors" [ngModel]="value" (colorhover)="colorhover.emit($event)" (ngModelChange)="onColorChange($event)"></deja-color-selector>
-</deja-dropdown>
-<deja-backdrop (click)="isOpen=false" *ngIf="isOpen"></deja-backdrop>
+<button type="button" *ngIf="!small" [disabled]="disabled" id="colorbtn" md-fab (click)="show($event)" [style.background-color]="value && value.toHex() || null"></button>
+<button type="button" *ngIf="small" [disabled]="disabled" id="colorbtn" md-mini-fab (click)="show($event)" [style.background-color]="value && value.toHex() || null"></button>
+<ng-template cdk-connected-overlay cdkConnectedOverlayHasBackdrop cdkConnectedOverlayBackdropClass="cdk-overlay-dark-backdrop" [cdkConnectedOverlayOpen]="isOpen" [cdkConnectedOverlayOrigin]="overlayOrigin" (backdropClick)="close()" [cdkConnectedOverlayPositions]="positions" [cdkConnectedOverlayWidth]="width">
+    <deja-color-selector [colors]="colors" [ngModel]="value" (colorhover)="colorhover.emit($event)" (ngModelChange)="onColorChange($event)"></deja-color-selector>
+</ng-template>

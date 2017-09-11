@@ -12,9 +12,7 @@ import { EventEmitter } from '@angular/core';
 import { ObservableMedia } from '@angular/flex-layout';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
-import { Subscription } from 'rxjs/Subscription';
 
-/** Menu avec placement optimisé (Voir DejaDropDownComponent) */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -30,14 +28,15 @@ export class DejaMenuComponent implements OnInit, OnDestroy {
     /** Renvoie ou définit l'élement sur lequel le menu devra s'aligner */
     @Input() public ownerElement: HTMLElement;
 
-    @Output()
-    public visibleChange = new EventEmitter<boolean>();
+    /** Déclenché lorsque la visibilité du menu change. */
+    @Output() public visibleChange = new EventEmitter<boolean>();
+
+    /** Internal use */
     public overlayOrigin: OverlayOrigin;
 
-    protected isMobile = false;
-
     private contentInitialized$ = new Subject();
-    private media$sub: Subscription;
+    private isMobile = false;
+    private isAlive = true;
 
     /**
      * This position config ensures that the top "start" corner of the overlay
@@ -117,7 +116,8 @@ export class DejaMenuComponent implements OnInit, OnDestroy {
     }
 
     constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef, media: ObservableMedia) {
-        this.media$sub = Observable.merge(this.contentInitialized$, media.asObservable())
+        Observable.merge(this.contentInitialized$, media.asObservable())
+            .takeWhile(() => this.isAlive)
             .subscribe(() => {
                 this.isMobile = media.isActive('xs') || media.isActive('sm');
                 this.changeDetectorRef.markForCheck();
@@ -125,9 +125,7 @@ export class DejaMenuComponent implements OnInit, OnDestroy {
     }
 
     public ngOnDestroy() {
-        if (this.media$sub) {
-            this.media$sub.unsubscribe();
-        }
+        this.isAlive = false;
     }
 
     public ngOnInit() {

@@ -9,8 +9,6 @@
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { FormsModule } from '@angular/forms';
 import { DejaMenuComponent } from './menu.component';
 
 @NgModule({
@@ -18,8 +16,6 @@ import { DejaMenuComponent } from './menu.component';
     exports: [DejaMenuComponent],
     imports: [
         CommonModule,
-        FlexLayoutModule,
-        FormsModule,
         OverlayModule,
     ],
 })
