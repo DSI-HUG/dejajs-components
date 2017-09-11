@@ -15,7 +15,7 @@
             }
         }
 
-        .mat-sidenav-container {
+        .mat-drawer-container {
             &.sidenav-light {
                 @include sidebar-light;
             }
@@ -47,12 +47,6 @@
                             }
                         }
                     }
-                }
-            }
-
-            /deep/ .mat-sidenav-content {
-                .mat-toolbar {
-                    border-bottom: 1px solid mat-color($primary);
                 }
             }
         }

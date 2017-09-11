@@ -1,5 +1,5 @@
 <deja-chips [items]="selectedItems" [readonly]="readonly" [disabled]="disabled" (close)="onCloseClicked($event)" [itemTemplateExternal]="selectedTemplate" *ngIf="isMultiSelect && selectedItems.length > 0 && selectedItemsPosition===0" [textField]="_textField"></deja-chips>
-<md-input-container id="input" [attr.wait]="waiter" [attr.multiselection]="isMultiSelect && selectedItems.length > 0" [attr.selection]="selectedItemsPosition===0 ? 'above' : null">
+<md-form-field id="input" [attr.wait]="waiter" [attr.multiselection]="isMultiSelect && selectedItems.length > 0" [attr.selection]="selectedItemsPosition===0 ? 'above' : null">
 	<input #inputElement deja-child-validator type="text" mdInput [readonly]="isModeSelect || readonly" (ngModelChange)="queryChanged($event)" [ngModel]="query" [disabled]="disabled" autocomplete="false">
 	<md-placeholder>
 		<ng-template [ngTemplateOutlet]="placeHolderTemplate"></ng-template>
@@ -18,7 +18,7 @@
 	<span *ngIf="mdSuffix" mdSuffix>
 		<ng-template [ngTemplateOutlet]="mdSuffix"></ng-template>
 	</span>
-</md-input-container>
+</md-form-field>
 <deja-chips [items]="selectedItems" [readonly]="readonly" [disabled]="disabled" (close)="onCloseClicked($event)" [itemTemplateExternal]="selectedTemplate" *ngIf="isMultiSelect && selectedItems.length > 0 && selectedItemsPosition===1" [textField]="_textField"></deja-chips>
 <deja-dropdown id="listcontainer" #listcontainer *ngIf="dropdownVisible" [attr.itemscount]="_itemList && _itemList.length" [mobile]="isMobile||null" [attr.depth-max]="_depthMax || null" [attr.keynav]="keyboardNavigation" [attr.vprowheight]="getViewPortRowHeight()" (mousedown)="mousedown($event)" (hide)="dropdownVisible=false" (scroll)="scroll($event)" [ownerAlignment]="getOwnerAlignment()" [dropdownAlignment]="getDropdownAlignment()" [ownerElement]="inputElement" [containerElement]="containerElement" ownerBottomMargin="-6" ownerTopMargin="-5" ownerRightMargin="-14" [style.max-height.px]="dropDownFullScreen ? null : maxHeight">
 	<div *ngIf="vpBeforeHeight" [style.height.px]="vpBeforeHeight"></div>

@@ -19,10 +19,10 @@
     <md-card-content id="reactiveFormContainer" fxLayout="row">
         <form novalidate [formGroup]="form" fxFlex="0 0 55%" fxLayout="column" (submit)="onSubmit()">
             <h3 fxFlex="0 0 auto">Material Input</h3>
-            <md-input-container fxFlex="0 0 auto">
+            <md-form-field fxFlex="0 0 auto">
                 <input mdInput pending-onfocus formControlName="name" placeholder="Name">
                 <md-error *ngIf="!!getError('name')">{{ getError('name') }}</md-error>
-            </md-input-container>
+            </md-form-field>
             <h3 fxFlex="0 0 auto">Deja Select</h3>
             <deja-select fxFlex="0 0 auto" placeholder="Country" selectionClearable formControlName="country" textField="naqme" valueField="code" [models]="countries">
                 <ng-template #errorTemplate *ngIf="!!getError('country')">
@@ -62,11 +62,11 @@
             <h3 fxFlex="0 0 auto">Deja Chips</h3>
             <div [class.error]="!!getError('skillsErrors')" class="placeholder" fxFlex="0 0 auto">Skills</div>
             <deja-chips fxFlex="0 0 auto" formControlName="skills"></deja-chips>
-            <md-input-container fxFlex="0 0 auto" id="addskill">
+            <md-form-field fxFlex="0 0 auto" id="addskill">
                 <input formControlName="skillsErrors" #skill mdInput (keydown)="onSkillKeyDown($event)" placeholder="Add Skill">
                 <div mdSuffix><i (click)="onAddSkill(skill)" class="material-icons mdSuffix">add</i></div>
                 <md-error *ngIf="!!getError('skillsErrors')">{{ getError('skillsErrors') }}</md-error>
-            </md-input-container>
+            </md-form-field>
             <h3 fxFlex="0 0 auto">Deja Editable</h3>
             <div [class.error]="!!getError('remark')" class="placeholder" fxFlex="0 0 auto">Remark</div>
             <span [deja-editable]="true" formControlName="remark" multiline></span>

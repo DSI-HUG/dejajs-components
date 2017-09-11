@@ -14,13 +14,13 @@
 <md-card class="demo-card demo-basic" *ngIf="tabIndex === 1">
     <md-toolbar color="primary">Textarea Autosized</md-toolbar>
     <md-card-content>
-        <md-input-container>
+        <md-form-field>
             <textarea deja-autosize mdInput placeholder="This is an autosize text area" [(ngModel)]="multitext"></textarea>
-        </md-input-container>
+        </md-form-field>
     </md-card-content>
     <md-card-content>
-        <md-input-container>
+        <md-form-field>
             <textarea deja-autosize mdInput placeholder="This is an empty text area" [(ngModel)]="multitext2"></textarea>
-        </md-input-container>
+        </md-form-field>
     </md-card-content>
 </md-card>
