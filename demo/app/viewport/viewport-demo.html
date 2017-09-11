@@ -21,9 +21,9 @@
             <md-checkbox [(ngModel)]="hasButtons">Buttons Scrolling (Tips: press ctrl to increase the step)</md-checkbox>
             <span fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1rem">
                 <span>Ensure index:</span>
-                <md-input-container fxFlex="0 0 3rem">
+                <md-form-field fxFlex="0 0 3rem">
                     <input mdInput type="number" [(ngModel)]="ensureIndex">
-                </md-input-container>
+                </md-form-field>
                 <button md-button (click)="viewport.ensureVisible(ensureIndex)">Go</button>
             </span>
         </div>

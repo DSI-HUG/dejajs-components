@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { coerceBooleanProperty } from '@angular/cdk';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Directive, ElementRef, HostBinding, Input, OnDestroy, Optional, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import 'rxjs/add/observable/fromEvent';

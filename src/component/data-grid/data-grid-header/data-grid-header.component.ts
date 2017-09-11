@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { coerceBooleanProperty } from '@angular/cdk';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output } from '@angular/core';
 import 'rxjs/add/operator/timeout';
 import { Observable } from 'rxjs/Observable';

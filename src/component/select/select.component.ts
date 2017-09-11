@@ -6,11 +6,11 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { coerceBooleanProperty } from '@angular/cdk';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ObservableMedia } from '@angular/flex-layout';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
-import { MdInputContainer, MdInputDirective } from '@angular/material';
+import { MdInput } from '@angular/material';
 import 'rxjs/add/operator/delayWhen';
 import 'rxjs/add/operator/takeWhile';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -92,8 +92,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     private mouseUp$sub: Subscription;
 
     @ViewChild('inputElement') private _inputElement: ElementRef;
-    @ViewChild(MdInputContainer) private inputContainer: MdInputContainer;
-    @ViewChild(MdInputDirective) protected input: MdInputDirective;
+    @ViewChild(MdInput) private inputContainer: MdInput;
+    @ViewChild(MdInput) protected input: MdInput;
     @ViewChild('listcontainer') private listContainer: any;
     @ViewChild(DejaDropDownComponent) private dropDownComponent: DejaDropDownComponent;
 
@@ -774,9 +774,9 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 .filter(() => !!this.input)
                 .subscribe(() => {
                     if (this._control.touched) {
-                        this.input._ngControl.control.markAsTouched();
+                        this.input.ngControl.control.markAsTouched();
                     }
-                    this.input._ngControl.control.updateValueAndValidity();
+                    this.input.ngControl.control.updateValueAndValidity();
                 });
         }
     }

@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { coerceNumberProperty } from '@angular/cdk';
+import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { Directive, ElementRef, Input, Renderer } from '@angular/core';
 
 /**
