@@ -1,9 +1,13 @@
-<md-input-container id="date-selector">
+<md-form-field id="date-selector">
     <input deja-child-validator #inputelement id="date-selector-input" mdInput [disabled]="disabled" [required]="required" [ngModel]="inputModel" (ngModelChange)="updateModel($event)" placeholder="{{placeholder}}" [textMask]="{mask: mask, showMask: true}">
 	<div mdSuffix>
 		<div id="action-icon-container">
-			<md-icon *ngIf="inputModel && !disabled" (click)="reset()" id="clear-button">clear</md-icon>
-			<md-icon *ngIf="!disabled" (click)="toggleDateSelector($event)" id="calendar-button">date_range</md-icon>
+			<button md-icon-button *ngIf="inputModel && !disabled" (click)="reset()" id="clear-button">
+				<md-icon>clear</md-icon>
+			</button>
+			<button md-icon-button *ngIf="!disabled" (click)="toggleDateSelector($event)" id="calendar-button">
+				<md-icon>date_range</md-icon>
+			</button>
 		</div>
 	</div>
 	<md-hint *ngIf="mdHint">
@@ -12,7 +16,7 @@
 	<md-error *ngIf="mdError">
 		<ng-template [ngTemplateOutlet]="mdError"></ng-template>
 	</md-error>
-</md-input-container>
+</md-form-field>
 <deja-dropdown *ngIf="showDropDown" id="deja-dropdown" [containerElement]="containerElement" [ownerElement]="elementRef.nativeElement" [ownerAlignment]="ownerAlignment" [dropdownAlignment]="dropdownAlignment" ownerBottomMargin=-4>
 	<deja-date-time-selector
 		[time]="time"

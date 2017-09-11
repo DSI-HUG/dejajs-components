@@ -318,9 +318,9 @@
 			<h1>10K items with Item Template </h1>
 			<div class="flexContainer" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1rem">
 				<span fxFlex="1 1 auto">An exemple with 10000 auto sized templatized items</span>
-				<md-input-container fxFlex="0 0 5rem">
+				<md-form-field fxFlex="0 0 5rem">
 					<input mdInput type="number" [(ngModel)]="ensureIndex">
-				</md-input-container>
+				</md-form-field>
 				<button fxFlex="0 0 auto" md-button (click)="news.ensureItemVisible(ensureIndex)">Ensure index</button>
 			</div>
 			<deja-tree-list #news class="news" viewportMode="auto" textField="title" searchField="description" [models]="bigNews$">

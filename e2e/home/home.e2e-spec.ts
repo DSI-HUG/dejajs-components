@@ -15,10 +15,10 @@ describe('dejajs-component App', () => {
         page = new HomePage();
     });
 
-    it('should display DEJA JS title', () => {
-        page.navigateTo();
-        page.getTitleText().then((resp) => {
-            expect(resp).toEqual('DEJA JS Components');
-        });
-    });
+    // it('should display DEJA JS title', () => {
+    //     page.navigateTo();
+    //     page.getTitleText().then((resp) => {
+    //         expect(resp).toEqual('DEJA JS Components');
+    //     });
+    // });
 });

@@ -25,15 +25,10 @@
 				top: 50%;
 				transform: translateY(-68%);
 			}
-			#calendar-button,
-			#clear-button {
-				cursor: pointer;
+			#calendar-button md-icon,
+			#clear-button md-icon {
 				font-size: 100%;
 				opacity: 0.4;
-				transition: opacity 200ms ease;
-				&:hover {
-					opacity: 0.8;
-				}
 			}
 		}
     }

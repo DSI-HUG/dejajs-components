@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { AfterViewInit, ChangeDetectorRef, Component, Input, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, NgZone, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MdSidenav } from '@angular/material';
 import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
 import 'rxjs/add/operator/filter';
@@ -16,6 +16,7 @@ import 'rxjs/add/operator/takeWhile';
 import { Subject } from 'rxjs/Subject';
 
 @Component({
+    encapsulation: ViewEncapsulation.None,
     selector: 'deja-sidenav',
     templateUrl: './sidenav.component.html',
     styleUrls: ['./sidenav.component.scss']

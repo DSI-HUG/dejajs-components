@@ -19,7 +19,7 @@
 <!-- <router-outlet></router-outlet> -->
 
 <deja-sidenav fxFlex headerText="DEJA-JS">
-	<deja-sidenav-menu fxFlex>
+	<deja-sidenav-menu fxFlex slimScroll>
 		<md-nav-list fxLayout="column" fxFlex>
 			<md-list-item title="Home" routerLink="/home" routerLinkActive="active">
 				<md-icon md-list-icon>home</md-icon>
@@ -122,13 +122,17 @@
 	</deja-sidenav-menu>
 
 	<deja-sidenav-header>
-		  <!-- <span id="theme-title">Sélectionnez un theme</span>
-		 <deja-select id="theme-selector" [ngModel]="theme" (ngModelChange)="theme = $event?.value">
-			<deja-item value="hug" text="HUG"></deja-item>
-			<deja-item value="pink" text="Pink"></deja-item>
-			<deja-item value="teal" text="Teal"></deja-item>
-			<deja-item value="amber" text="Amber"></deja-item>
-		</deja-select>    -->
+		<button md-icon-button>
+			<md-icon [mdMenuTriggerFor]="colorMenu">format_color_fill</md-icon>
+		</button>
+		<md-menu #colorMenu="mdMenu">
+			<md-button-toggle-group [(ngModel)]="theme" id="color-menu-toggle-group" vertical>
+				<md-button-toggle value="hug">HUG</md-button-toggle>
+				<md-button-toggle value="pink">Pink</md-button-toggle>
+				<md-button-toggle value="teal">Teal</md-button-toggle>
+				<md-button-toggle value="amber">Amber</md-button-toggle>
+			</md-button-toggle-group>
+		</md-menu>
 		<a fxFlex="0 0 auto" md-button href="https://github.com/DSI-HUG/dejajs-components" target="_blank">GITHUB</a>
 	</deja-sidenav-header>
 
