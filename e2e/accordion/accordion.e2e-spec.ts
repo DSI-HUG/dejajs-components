@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { by, element } from 'protractor';
+// import { by, element } from 'protractor';
 import { AccordionPage } from './accordion.po';
 
 describe('Accordion component', () => {
