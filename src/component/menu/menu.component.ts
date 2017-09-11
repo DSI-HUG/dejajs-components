@@ -6,13 +6,13 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { ConnectionPositionPair, OriginConnectionPosition, OverlayConnectionPosition, OverlayOrigin } from '@angular/cdk/overlay';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { ObservableMedia } from '@angular/flex-layout';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
-import { IOverlayOrigin, IOverlayPosition } from '../../common/core/overlay/index';
 
 /** Menu avec placement optimisé (Voir DejaDropDownComponent) */
 @Component({
@@ -32,7 +32,7 @@ export class DejaMenuComponent implements OnInit, OnDestroy {
 
     @Output()
     public visibleChange = new EventEmitter<boolean>();
-    private overlayOrigin: IOverlayOrigin;
+    public overlayOrigin: OverlayOrigin;
 
     protected isMobile = false;
 
@@ -64,10 +64,10 @@ export class DejaMenuComponent implements OnInit, OnDestroy {
             overlayX: 'end',
             overlayY: 'bottom',
         },
-    ] as IOverlayPosition[];
+    ] as ConnectionPositionPair[];
 
     @Input()
-    public set positions(value: IOverlayPosition[] | string) {
+    public set positions(value: ConnectionPositionPair[] | string) {
         if (typeof value === 'string') {
             const values = value.split(',');
             this._positions = [];
@@ -76,12 +76,18 @@ export class DejaMenuComponent implements OnInit, OnDestroy {
                 if (poss.length !== 4) {
                     throw new Error(`Invalid positions property for DejaMenuComponent. String entry must be of type 'positions="start top end bottom"'`);
                 }
-                this._positions.push({
+
+                const originPosition = {
                     originX: poss[0],
                     originY: poss[1],
+                } as OriginConnectionPosition;
+
+                const overlayPosition = {
                     overlayX: poss[2],
                     overlayY: poss[3],
-                } as IOverlayPosition);
+                } as OverlayConnectionPosition;
+
+                this._positions.push(new ConnectionPositionPair(originPosition, overlayPosition));
             });
         } else {
             this._positions = value;
@@ -89,14 +95,21 @@ export class DejaMenuComponent implements OnInit, OnDestroy {
     }
 
     public get positions() {
-        return !this.isMobile ? this._positions : [
-            {
-                originX: 'start',
-                originY: 'top',
-                overlayX: 'start',
-                overlayY: 'top',
-            },
-        ] as IOverlayPosition[];
+        if (!this.isMobile) {
+            return this._positions;
+        }
+
+        const originPosition = {
+            originX: 'start',
+            originY: 'top',
+        } as OriginConnectionPosition;
+
+        const overlayPosition = {
+            overlayX: 'start',
+            overlayY: 'top',
+        } as OverlayConnectionPosition;
+
+        return [new ConnectionPositionPair(originPosition, overlayPosition)];
     }
 
     public get width() {
@@ -123,10 +136,7 @@ export class DejaMenuComponent implements OnInit, OnDestroy {
 
     /** Affiche le menu. */
     public show(event: MouseEvent) {
-        this.overlayOrigin = {
-            elementRef: new ElementRef(this.ownerElement || (this.isMobile && document.body) || (event && event.target) || this.elementRef.nativeElement),
-        } as IOverlayOrigin;
-
+        this.overlayOrigin = new OverlayOrigin(new ElementRef(this.ownerElement || (this.isMobile && document.body) || (event && event.target) || this.elementRef.nativeElement));
         this.isVisible = true;
         this.visibleChange.emit(this.isVisible);
         this.changeDetectorRef.markForCheck();

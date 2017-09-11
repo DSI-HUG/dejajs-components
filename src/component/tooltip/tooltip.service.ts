@@ -6,6 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { ConnectionPositionPair } from '@angular/cdk/overlay';
 import { ElementRef, Injectable } from '@angular/core';
 
 /**
@@ -23,7 +24,6 @@ export class DejaTooltipService {
 export interface ITooltipParams {
     /** Renvoie ou définit l'élement du DOM sur lequel le conteneur déroulant devra s'aligner */
     ownerElement: ElementRef | HTMLElement;
-    ownerAlignment: string;
-    dropdownAlignment: string;
+    positions: ConnectionPositionPair | string;
     model: any;
 }

@@ -6,18 +6,19 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, ContentChild, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ConnectionPositionPair, OriginConnectionPosition, OverlayConnectionPosition, OverlayOrigin } from '@angular/cdk/overlay';
+import { Component, ContentChild, ElementRef, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import 'rxjs/add/observable/fromEvent';
 import { Observable } from 'rxjs/Observable';
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
-import { DejaDropDownComponent } from '../dropdown/dropdown.component';
 import { DejaTooltipService, ITooltipParams } from './tooltip.service';
 
 /**
  * Customizable tooltip component for Angular2
  */
 @Component({
+    encapsulation: ViewEncapsulation.None,
     selector: 'deja-tooltip',
     templateUrl: 'tooltip.component.html',
     styleUrls: [
@@ -25,20 +26,70 @@ import { DejaTooltipService, ITooltipParams } from './tooltip.service';
     ],
 })
 export class DejaTooltipComponent implements OnInit {
-    /** Element where tooltip can't overflow. Default is body. */
-    @Input() public containerElement: ElementRef | HTMLElement;
     /** Tooltip name. Mandatory, and need to be unic */
     @Input() public name: string;
     /** Event Emmited when hide action is called */
     @Output() public hide = new EventEmitter();
-    /** Reference to dropdown component inside this */
-    @ViewChild('dropdown') public dropdown: DejaDropDownComponent;
     /** Template for tooltip content */
     @ContentChild('tooltipTemplate') public tooltipTemplate;
 
     /** Parameters of the tooltip */
     public params: ITooltipParams;
+    public overlayOrigin: OverlayOrigin;
     private _model: any;
+
+    /**
+     * This position config ensures that the top "start" corner of the overlay
+     * is aligned with with the top "start" of the origin by default (overlapping
+     * the trigger completely). If the panel cannot fit below the trigger, it
+     * will fall back to a position above the trigger.
+     */
+    private _positions = [
+        {
+            originX: 'center',
+            originY: 'bottom',
+            overlayX: 'center',
+            overlayY: 'top',
+        },
+        {
+            originX: 'center',
+            originY: 'top',
+            overlayX: 'center',
+            overlayY: 'bottom',
+        },
+    ] as ConnectionPositionPair[];
+
+    @Input()
+    public set positions(value: ConnectionPositionPair[] | string) {
+        if (typeof value === 'string') {
+            const values = value.split(',');
+            this._positions = [];
+            values.forEach(pos => {
+                const poss = pos.split(' ');
+                if (poss.length !== 4) {
+                    throw new Error(`Invalid positions property for DejaMenuComponent. String entry must be of type 'positions="start top end bottom"'`);
+                }
+
+                const originPosition = {
+                    originX: poss[0],
+                    originY: poss[1],
+                } as OriginConnectionPosition;
+
+                const overlayPosition = {
+                    overlayX: poss[2],
+                    overlayY: poss[3],
+                } as OverlayConnectionPosition;
+
+                this._positions.push(new ConnectionPositionPair(originPosition, overlayPosition));
+            });
+        } else {
+            this._positions = value;
+        }
+    }
+
+    public get positions() {
+        return this._positions;
+    }
 
     public get model() {
         return this._model;
@@ -60,9 +111,15 @@ export class DejaTooltipComponent implements OnInit {
             .filter(() => this._model)
             .map((event: MouseEvent) => new Position(event.pageX, event.pageY))
             .filter((position) => {
-                const containerElement = this.dropdown.dropdownElement;
-                const containerBounds = new Rect(containerElement.getBoundingClientRect());
-                return !containerBounds.containsPoint(position);
+                const containerElement = document.elementFromPoint(position.left, position.top);
+                let parentElement = containerElement;
+                while (parentElement) {
+                    if (parentElement.className === 'cdk-overlay-pane') {
+                        return false;
+                    }
+                    parentElement = parentElement.parentElement;
+                }
+                return true;
             })
             .filter((position) => {
                 const ownerElement = (this.params.ownerElement as ElementRef).nativeElement || this.params.ownerElement;
@@ -82,6 +139,9 @@ export class DejaTooltipComponent implements OnInit {
             throw (new Error('Name is required'));
         }
         this.params = this.tooltipService.params[this.name];
+
+        const ownerElement = (this.params.ownerElement as ElementRef).nativeElement || this.params.ownerElement;
+        this.overlayOrigin = new OverlayOrigin(new ElementRef(ownerElement));
 
         const model$ = this.params.model as Observable<any>;
         if (!model$) {

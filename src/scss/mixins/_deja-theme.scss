@@ -16,6 +16,7 @@
 @import '../../component/range/range-theme';
 @import '../../component/select/select-theme';
 @import '../../component/sidenav/sidenav-theme';
+@import '../../component/tooltip/tooltip-theme';
 @import '../../component/tree-list/tree-list-theme';
 @import '../../component/viewport/viewport-theme';
 
@@ -43,5 +44,6 @@
     @include select-theme($custom-theme);
     @include sidenav-theme($custom-theme);
     @include tree-list-theme($custom-theme);
+    @include tooltip-theme($custom-theme);
     @include viewport-theme($custom-theme);
 }
