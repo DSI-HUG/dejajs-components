@@ -7,7 +7,7 @@
  */
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, Input, OnDestroy, OnInit, Optional, Self, ViewChild } from '@angular/core';
+import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, Input, OnDestroy, OnInit, Optional, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
@@ -27,7 +27,8 @@ const noop = () => { };
  * Date-picker component for Angular2
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.Default,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     selector: 'deja-date-picker',
     styleUrls: ['./date-picker.component.scss'],
     templateUrl: './date-picker.component.html',

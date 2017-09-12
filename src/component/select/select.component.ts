@@ -53,6 +53,8 @@ export enum DejaSelectSelectionPosition {
 export class DejaSelectComponent extends ItemListBase implements ControlValueAccessor, AfterViewInit, AfterContentInit {
     /** Texte à afficher par default dans la zone de recherche */
     @Input() public placeholder: string;
+    /** Offset de position hizontal de la zone de dropdown */
+    @Input() public overlayOffsetX = 0;
     /** ID de l'élement dans lequel la liste déroulante doit s'afficher (la liste déroulante ne peut dépasser de l'élement spécifié ici) */
     @Input() public dropdownContainerId: string;
     /** Permet de définir un template de ligne par binding */
@@ -80,6 +82,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     /** Internal use */
     public overlayOrigin: OverlayOrigin;
+    public dropDownMaxHeight: number = null;
 
     // NgModel implementation
     protected onTouchedCallback: () => void = noop;
@@ -147,6 +150,14 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     public get dropDownWidth() {
         const element = this.elementRef.nativeElement as HTMLElement;
         return !this.isMobile ? this._dropDownWidth || element.clientWidth : '100%';
+    }
+
+    public get overlayOffsetY() {
+        if (this.isMobile) {
+            return 0;
+        }
+
+        return 6;
     }
 
     public get mdSuffix() {
@@ -218,7 +229,22 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             .debounceTime(50)
             .filter(() => (this.query || '').length >= this.minSearchlength && !this._readonly)
             .do(() => {
-                this.overlayOrigin = new OverlayOrigin(new ElementRef((this.isMobile && document.body) || this.inputElement || this.elementRef.nativeElement));
+                // Set overlay origin element
+                const originElement: HTMLElement = (this.isMobile && document.body) || this.inputElement || this.elementRef.nativeElement;
+                this.overlayOrigin = new OverlayOrigin(new ElementRef(originElement));
+
+                // Calc max height
+                if (this.isMobile) {
+                    this.dropDownMaxHeight = document.body.clientHeight;
+                } else if (this.maxHeight) {
+                    this.dropDownMaxHeight = this.maxHeight;
+                } else {
+                    const originRect = originElement.getBoundingClientRect();
+                    const maxHeight = document.body.clientHeight;
+                    this.dropDownMaxHeight = Math.max(originRect.top, maxHeight - originRect.bottom, 20) - 20;
+                }
+
+                // Display overlay
                 this._dropdownVisible = true;
                 this.changeDetectorRef.markForCheck();
             })
@@ -247,16 +273,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             .subscribe(() => {
                 // View port calculated
                 this.overlay.overlayRef.updatePosition();
-                // TODO
-                // Observable.combineLatest(this.viewPort.ensureParams$, Observable.of(this.listElement.clientHeight), this.dropDownComponent.showed)
-                //     .first()
-                //     .subscribe(([ensureParams, listHeight]) => {
-                //         // Adjust the visibility of the selected items if the container is reduced by the dropdown control
-                //         if (this.listElement.clientHeight < listHeight && ensureParams.atEnd) {
-                //             const newScrollTop = Math.max(0, this.listElement.scrollTop + listHeight - this.listElement.clientHeight);
-                //             this.listElement.scrollTop = newScrollTop;
-                //         }
-                //     });
             });
 
         Observable.from(this.keyboardNavigation$)
@@ -320,7 +336,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
         this._viewPortChanged = this.viewPortChanged;
 
-        this.maxHeight = 500;
+        this.maxHeight = 0;
     }
 
     /** Correspond au model du champ de filtrage ou recherche */
@@ -411,7 +427,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         if (this._pageSize === 0) {
             const vpRowHeight = this.getViewPortRowHeight();
             const containerElement = this.listElement;
-            const containerHeight = this.maxHeight || containerElement && containerElement.clientHeight;
+            const containerHeight = containerElement && containerElement.clientHeight || this.dropDownMaxHeight;
             return Math.floor(containerHeight / vpRowHeight);
         }
 
@@ -1197,7 +1213,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             .do(() => this.refreshViewPort())
             .delay(1)
             .subscribe(() => {
-                 this.overlay.overlayRef.updatePosition();
+                this.overlay.overlayRef.updatePosition();
 
                 // Ensure selection
                 const item = this.getSelectedItems()[0];
