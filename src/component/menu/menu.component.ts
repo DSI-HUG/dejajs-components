@@ -54,11 +54,16 @@ export class DejaMenuComponent implements OnInit, OnDestroy {
         return !this.isMobile ? null : '100%';
     }
 
-    constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef, media: ObservableMedia) {
+    constructor(private changeDetectorRef: ChangeDetectorRef, elementRef: ElementRef, media: ObservableMedia) {
+        this.overlayOrigin = new OverlayOrigin(elementRef);
+
         Observable.merge(this.contentInitialized$, media.asObservable())
             .takeWhile(() => this.isAlive)
             .subscribe(() => {
                 this.isMobile = media.isActive('xs') || media.isActive('sm');
+                if (this.isMobile) {
+                    this.overlayOrigin.elementRef = new ElementRef(this.isMobile && document.body);
+                }
                 this.changeDetectorRef.markForCheck();
             });
     }
@@ -73,7 +78,10 @@ export class DejaMenuComponent implements OnInit, OnDestroy {
 
     /** Affiche le menu. */
     public show(event: MouseEvent) {
-        this.overlayOrigin = new OverlayOrigin(new ElementRef(this.ownerElement || (this.isMobile && document.body) || (event && event.target) || this.elementRef.nativeElement));
+        if (!this.isMobile && event) {
+            this.overlayOrigin.elementRef = new ElementRef(event && event.target);
+        }
+
         this.isVisible = true;
         this.visibleChange.emit(this.isVisible);
         this.changeDetectorRef.markForCheck();

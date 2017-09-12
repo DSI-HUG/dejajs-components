@@ -66,15 +66,20 @@ export class DejaColorPickerComponent implements ControlValueAccessor, OnInit, O
         return !this.isMobile ? null : '100%';
     }
 
-    constructor(private elementRef: ElementRef, @Self() @Optional() public _control: NgControl, private changeDetectorRef: ChangeDetectorRef, media: ObservableMedia) {
+    constructor(elementRef: ElementRef, @Self() @Optional() public _control: NgControl, private changeDetectorRef: ChangeDetectorRef, media: ObservableMedia) {
         if (this._control) {
             this._control.valueAccessor = this;
         }
+
+        this.overlayOrigin = new OverlayOrigin(elementRef);
 
         Observable.merge(this.contentInitialized$, media.asObservable())
             .takeWhile(() => this.isAlive)
             .subscribe(() => {
                 this.isMobile = media.isActive('xs') || media.isActive('sm');
+                if (this.isMobile) {
+                    this.overlayOrigin.elementRef = new ElementRef(this.isMobile && document.body);
+                }
                 this.changeDetectorRef.markForCheck();
             });
     }
@@ -143,7 +148,10 @@ export class DejaColorPickerComponent implements ControlValueAccessor, OnInit, O
             return false;
         }
 
-        this.overlayOrigin = new OverlayOrigin(new ElementRef((this.isMobile && document.body) || (event && event.target) || this.elementRef.nativeElement));
+        if (!this.isMobile && event) {
+            this.overlayOrigin.elementRef = new ElementRef(event && event.target);
+        }
+
         this.isOpen = true;
         this.changeDetectorRef.markForCheck();
         return false;

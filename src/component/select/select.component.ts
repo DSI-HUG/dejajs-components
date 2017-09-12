@@ -23,7 +23,6 @@ import { KeyCodes } from '../../common/core/keycodes.enum';
 import { DejaConnectionPositionPair } from '../../common/core/overlay/connection-position-pair';
 import { DejaChildValidatorDirective } from '../../common/core/validation/child-validator.directive';
 import { DejaChipsCloseEvent } from '../chips/chips.component';
-import { DejaDropDownComponent, IDropDownResetParams } from '../dropdown/dropdown.component';
 import { IItemBase } from './../../common/core/item-list/item-base';
 import { DejaItemEvent } from './../../common/core/item-list/item-event';
 import { ItemListBase } from './../../common/core/item-list/item-list-base';
@@ -95,10 +94,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     private mouseUp$sub: Subscription;
 
     @ViewChild('inputElement') private _inputElement: ElementRef;
-    @ViewChild(MdInput) private inputContainer: MdInput;
     @ViewChild(MdInput) protected input: MdInput;
-    @ViewChild('listcontainer') private listContainer: any;
-    @ViewChild(DejaDropDownComponent) private dropDownComponent: DejaDropDownComponent;
 
     @HostBinding('attr.disabled') private _disabled = null;
     private _type = 'select';
@@ -141,7 +137,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     public get width() {
-        return !this.isMobile ? null : '100%';
+        const element = this.elementRef.nativeElement as HTMLElement;
+        return !this.isMobile ? element.clientWidth : '100%';
     }
 
     public get mdSuffix() {
@@ -203,8 +200,9 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             .delayWhen((time) => Observable.timer(time || 0))
             .subscribe(() => {
                 delete this.selectingItemIndex;
-                // TODO this._dropdownVisible = false;
+                this._dropdownVisible = false;
                 this.viewPort.element$.next(null);
+                this.changeDetectorRef.markForCheck();
             });
 
         Observable.from(this.showDropDown$)
@@ -214,9 +212,10 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             .do(() => {
                 this.overlayOrigin = new OverlayOrigin(new ElementRef((this.isMobile && document.body) || this.inputElement || this.elementRef.nativeElement));
                 this._dropdownVisible = true;
-            })  // Ensure that dropdown container exists
+                this.changeDetectorRef.markForCheck();
+            })
             .delay(1)
-            .filter(() => !!this.dropDownComponent)  // Show canceled by the hide$ observable if !dropdownVisible
+            .filter(() => this.dropdownVisible)  // Show canceled by the hide$ observable if !dropdownVisible
             .switchMap(() => this.calcViewList$().first())
             .do(() => {
                 const selectedItems = this.getSelectedItems();
@@ -234,20 +233,20 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 }
             })
             .delay(1)
-            .filter(() => !!this.dropDownComponent)  // Show canceled by the hide$ observable if !dropdownVisible
+            .filter(() => this.dropdownVisible)  // Show canceled by the hide$ observable if !dropdownVisible
             .do(() => this.viewPort.element$.next(this.listElement))
             .delay(1)
             .subscribe(() => {
-                Observable.combineLatest(this.viewPort.ensureParams$, Observable.of(this.listElement.clientHeight), this.dropDownComponent.showed)
-                    .first()
-                    .subscribe(([ensureParams, listHeight]) => {
-                        // Adjust the visibility of the selected items if the container is reduced by the dropdown control
-                        if (this.listElement.clientHeight < listHeight && ensureParams.atEnd) {
-                            const newScrollTop = Math.max(0, this.listElement.scrollTop + listHeight - this.listElement.clientHeight);
-                            this.listElement.scrollTop = newScrollTop;
-                        }
-                    });
-                this.dropDownComponent.show();
+                // TODO
+                // Observable.combineLatest(this.viewPort.ensureParams$, Observable.of(this.listElement.clientHeight), this.dropDownComponent.showed)
+                //     .first()
+                //     .subscribe(([ensureParams, listHeight]) => {
+                //         // Adjust the visibility of the selected items if the container is reduced by the dropdown control
+                //         if (this.listElement.clientHeight < listHeight && ensureParams.atEnd) {
+                //             const newScrollTop = Math.max(0, this.listElement.scrollTop + listHeight - this.listElement.clientHeight);
+                //             this.listElement.scrollTop = newScrollTop;
+                //         }
+                //     });
             });
 
         this._viewPortChanged = this.viewPortChanged;
@@ -264,7 +263,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         Observable.from(this.query$)
             .takeWhile(() => this.isAlive)
             .do((query) => this._query = query)
-            .filter(() => !!this.inputContainer)
+            .filter(() => !!this.input)
             .delay(1)
             .subscribe(() => {
                 // **** Force place holder to refresh to escape input angular material issue ****
@@ -311,7 +310,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 }
             });
 
-        this.maxHeight = 0;
+        this.maxHeight = 500;
     }
 
     /** Correspond au model du champ de filtrage ou recherche */
@@ -659,10 +658,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         if (value) {
             value.parentControl = this._control;
         }
-    }
-
-    protected get listElement() {
-        return this.listContainer && this.listContainer.elementRef.nativeElement as HTMLElement;
     }
 
     private set currentItemIndex(value: number) {
@@ -1018,8 +1013,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
         this.selectingItemIndex = this.getItemIndexFromHTMLElement(e.target as HTMLElement);
 
-        const element = this.elementRef.nativeElement as HTMLElement;
-        this.mouseUp$sub = Observable.fromEvent(element, 'mouseup')
+        this.mouseUp$sub = Observable.fromEvent(this.listElement, 'mouseup')
             .subscribe((upEvent: MouseEvent) => {
                 const itemIndex = this.getItemIndexFromHTMLElement(upEvent.target as HTMLElement);
                 if (itemIndex === undefined || this.selectingItemIndex === undefined || itemIndex !== this.selectingItemIndex) {
@@ -1192,20 +1186,21 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         // Restore scroll Position
         this.listElement.scrollTop = this.lastScrollPosition;
 
-        this.calcViewList$()
-            .first()
-            .subscribe(() => {
-                this.dropDownComponent.show({
-                    height: true,
-                } as IDropDownResetParams);
+        // TODO
+        // this.calcViewList$()
+        //     .first()
+        //     .subscribe(() => {
+        //         this.dropDownComponent.show({
+        //             height: true,
+        //         } as IDropDownResetParams);
 
-                // Ensure selection
-                const item = this.getSelectedItems()[0];
-                const index = item && this.getItemIndex(item);
-                if (index >= 0) {
-                    this.currentItemIndex = index;
-                    this.ensureItemVisible(index);
-                }
-            });
+        //         // Ensure selection
+        //         const item = this.getSelectedItems()[0];
+        //         const index = item && this.getItemIndex(item);
+        //         if (index >= 0) {
+        //             this.currentItemIndex = index;
+        //             this.ensureItemVisible(index);
+        //         }
+        //     });
     }
 }

@@ -81,7 +81,6 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     @Output() public viewPortChanged = new EventEmitter<IViewPort>();
 
     /** Internal use */
-    @ViewChild('listcontainer') public listContainer: ElementRef;
     @ViewChild('inputelement') public input: ElementRef;
 
     // NgModel implementation
@@ -531,10 +530,6 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
         if (value) {
             value.parentControl = this._control;
         }
-    }
-
-    protected get listElement(): HTMLElement {
-        return this.listContainer && this.listContainer.nativeElement;
     }
 
     private set currentItemIndex(value: number) {

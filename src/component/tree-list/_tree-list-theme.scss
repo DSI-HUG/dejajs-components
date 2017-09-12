@@ -8,7 +8,7 @@
 
 	deja-tree-list {
 		&[disabled="true"] {
-			#listcontainer {
+			.deja-listcontainer {
 				background-color: rgba(0, 0, 0, 0.05);
 				color: rgba(0, 0, 0, 0.8);
 				#error-hint {
@@ -34,7 +34,7 @@
 			border-bottom: solid 1px rgba(mat-color($primary), 0.8);
 		}
 		&:not([disabled="true"]) {
-			#listcontainer {
+			.deja-listcontainer {
 				background-color: white;
 				&[keynav="false"]:not(.dragover) {
 					div.listitem:not(.unselectable):hover {

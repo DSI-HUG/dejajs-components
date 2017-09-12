@@ -37,6 +37,7 @@ export abstract class ItemListBase implements OnDestroy {
     protected _hideSelected: boolean;
     protected _childrenField: string;
     protected _minSearchLength = 0;
+    protected _listElementId: string;
 
     // Viewport
     protected _vpBeforeHeight = 0;
@@ -67,6 +68,9 @@ export abstract class ItemListBase implements OnDestroy {
     private _viewPortRowHeight = ViewPortService.itemDefaultSize;
 
     constructor(protected changeDetectorRef: ChangeDetectorRef, protected viewPort: ViewPortService) {
+
+        this._listElementId = `listcontainer_${(1000000000 * Math.random()).toString().substr(10)}`;
+
         this.viewPort$sub = viewPort.viewPort$
             .subscribe((viewPortResult: IViewPort) => {
                 delete this._hintLabel;
@@ -151,8 +155,6 @@ export abstract class ItemListBase implements OnDestroy {
         return this._itemListService.groupInfos;
     }
 
-    protected abstract get listElement(): HTMLElement;
-
     public ngOnDestroy() {
         this.viewPort$sub.unsubscribe();
         if (this.waiter$sub) {
@@ -184,7 +186,7 @@ export abstract class ItemListBase implements OnDestroy {
      * @return {number} Index sur la liste plate corespondant à l'élément HTML
      */
     public getItemIndexFromHTMLElement(element: HTMLElement): number {
-        while (element && element.parentElement && element.hasAttribute && !element.hasAttribute('flat') && element.parentElement.id !== 'listcontainer') {
+        while (element && element.parentElement && element.hasAttribute && !element.hasAttribute('flat') && element.parentElement.id !== this.listElementId) {
             element = element.parentElement;
         }
 
@@ -397,6 +399,15 @@ export abstract class ItemListBase implements OnDestroy {
      */
     public getParentListInfos$(item: IItemTree): Observable<IParentListInfoResult> {
         return this.getItemListService().getParentListInfos$(item, this._multiSelect);
+    }
+
+    public get listElementId() {
+        return this._listElementId;
+    }
+
+    public get listElement() {
+        // Can be an overlay
+        return document.getElementById(this.listElementId);
     }
 
     protected getSelectedModels() {

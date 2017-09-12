@@ -9,7 +9,7 @@
 			#listheader {
 				border-bottom: 0;
 			}
-			#listcontainer {
+			.deja-listcontainer {
 				>div.listitem {
 					&[current="true"] {
 						.cell-wrapper[current="true"] {
