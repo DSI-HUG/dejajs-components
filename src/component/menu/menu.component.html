@@ -1,6 +1,5 @@
-<deja-backdrop *ngIf="isVisible" id="menubackdrop" [attr.mobile]="isMobile||null" (mousedown)="close()"></deja-backdrop>
-<deja-dropdown *ngIf="isVisible" id="menudropdown" [mobile]="isMobile||null" [position]="dropDownPosition" [avoidOnwerOverflow]="!dropDownPosition" [dropdownAlignment]="menuAlignment" [ownerAlignment]="buttonAlignment" [containerElement]="containerElement" [ownerElement]="ownerElement">
+<ng-template cdk-connected-overlay cdkConnectedOverlayHasBackdrop cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop" [cdkConnectedOverlayOpen]="isVisible" [cdkConnectedOverlayOrigin]="overlayOrigin" (backdropClick)="close()" [cdkConnectedOverlayPositions]="positions" [cdkConnectedOverlayWidth]="width">
 	<div id="menucontent">
 		<ng-content></ng-content>
 	</div>
-</deja-dropdown>
+</ng-template>

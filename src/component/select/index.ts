@@ -6,15 +6,14 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
-import { MdIconModule, MdInputModule} from '@angular/material';
+import { MdIconModule, MdInputModule } from '@angular/material';
 import { DejaChildValidatorModule } from '../../common/core/validation/index';
-import { DejaBackdropModule } from '../backdrop/index';
 import { DejaChipsModule } from '../chips/index';
-import { DejaDropDownModule } from '../dropdown/index';
 import { DejaItemComponent } from './../../common/core/item-list/item.component';
 import { DejaSelectComponent } from './select.component';
 
@@ -31,14 +30,13 @@ import { DejaSelectComponent } from './select.component';
         CommonModule,
         FlexLayoutModule,
         FormsModule,
+        OverlayModule,
         MdIconModule,
         MdInputModule,
         DejaChildValidatorModule,
         DejaChipsModule,
-        DejaDropDownModule,
-        DejaBackdropModule,
     ],
 })
-export class DejaSelectModule {}
+export class DejaSelectModule { }
 
 export * from './select.component';

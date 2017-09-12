@@ -9,6 +9,7 @@
 import { Directive, ElementRef, EventEmitter, Input, Output } from '@angular/core';
 import 'rxjs/add/operator/mergeMap';
 import { Observable } from 'rxjs/Observable';
+import { DejaConnectionPositionPair } from '../../common/core/overlay/connection-position-pair';
 import { DejaTooltipService } from './tooltip.service';
 
 @Directive({
@@ -17,8 +18,7 @@ import { DejaTooltipService } from './tooltip.service';
 export class DejaTooltipDirective {
     @Input('tooltip-model') public model: any;
     @Input('deja-tooltip') public name: string;
-    @Input('tooltip-owner-alignment') public ownerAlignment: 'center top';
-    @Input('tooltip-alignment') public dropdownAlignment: 'center bottom';
+    @Input('tooltip-positions') public positions: DejaConnectionPositionPair | string;
 
     // tslint:disable-next-line:no-output-rename
     @Output('tooltip-show') public show = new EventEmitter();
@@ -34,8 +34,7 @@ export class DejaTooltipDirective {
                 tooltipService.params[this.name] = {
                     model: this.model,
                     ownerElement: elementRef,
-                    ownerAlignment: this.ownerAlignment,
-                    dropdownAlignment: this.dropdownAlignment,
+                    positions: this.positions,
                 };
 
                 this.show.emit();

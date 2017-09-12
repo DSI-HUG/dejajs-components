@@ -37,6 +37,8 @@ export abstract class ItemListBase implements OnDestroy {
     protected _hideSelected: boolean;
     protected _childrenField: string;
     protected _minSearchLength = 0;
+    protected _listElementId: string;
+    protected _isAlive = true;
 
     // Viewport
     protected _vpBeforeHeight = 0;
@@ -60,14 +62,17 @@ export abstract class ItemListBase implements OnDestroy {
     private _valueField: string;
 
     private waiter$sub: Subscription;
-    private viewPort$sub: Subscription;
 
     private _itemListService: ItemListService;
     private allCollapsed = false;
     private _viewPortRowHeight = ViewPortService.itemDefaultSize;
 
     constructor(protected changeDetectorRef: ChangeDetectorRef, protected viewPort: ViewPortService) {
-        this.viewPort$sub = viewPort.viewPort$
+
+        this._listElementId = `listcontainer_${(1000000000 * Math.random()).toString().substr(10)}`;
+
+        viewPort.viewPort$
+            .takeWhile(() => this._isAlive)
             .subscribe((viewPortResult: IViewPort) => {
                 delete this._hintLabel;
                 if (viewPort.mode === ViewportMode.disabled) {
@@ -104,7 +109,7 @@ export abstract class ItemListBase implements OnDestroy {
                 // console.log(viewPortResult);
 
                 if (this._viewPortChanged) {
-                    this._viewPortChanged.emit(viewPortResult);
+                    this._viewPortChanged.next(viewPortResult);
                 }
             });
     }
@@ -151,13 +156,8 @@ export abstract class ItemListBase implements OnDestroy {
         return this._itemListService.groupInfos;
     }
 
-    protected abstract get listElement(): HTMLElement;
-
     public ngOnDestroy() {
-        this.viewPort$sub.unsubscribe();
-        if (this.waiter$sub) {
-            this.waiter$sub.unsubscribe();
-        }
+        this._isAlive = false;
     }
 
     /** Définit une valeur indiquant si les éléments selectionés doivent être masqué. Ce flag est principalement utilisé dans le cas d'un multi-select
@@ -184,7 +184,7 @@ export abstract class ItemListBase implements OnDestroy {
      * @return {number} Index sur la liste plate corespondant à l'élément HTML
      */
     public getItemIndexFromHTMLElement(element: HTMLElement): number {
-        while (element && element.parentElement && element.hasAttribute && !element.hasAttribute('flat') && element.parentElement.id !== 'listcontainer') {
+        while (element && element.parentElement && element.hasAttribute && !element.hasAttribute('flat') && element.parentElement.id !== this.listElementId) {
             element = element.parentElement;
         }
 
@@ -399,6 +399,15 @@ export abstract class ItemListBase implements OnDestroy {
         return this.getItemListService().getParentListInfos$(item, this._multiSelect);
     }
 
+    public get listElementId() {
+        return this._listElementId;
+    }
+
+    public get listElement() {
+        // Can be an overlay
+        return document.getElementById(this.listElementId);
+    }
+
     protected getSelectedModels() {
         return this.getItemListService().getSelectedItems().map((itm) => itm.model !== undefined ? itm.model : itm);
     }
@@ -448,6 +457,7 @@ export abstract class ItemListBase implements OnDestroy {
             this._itemListService.childrenField = this._childrenField;
             this._itemListService.valueField = this.getValueField();
             this.waiter$sub = Observable.from(this._itemListService.waiter$)
+                .takeWhile(() => this._isAlive)
                 .subscribe((status: boolean) => {
                     this._waiter = status;
                     this.changeDetectorRef.markForCheck();

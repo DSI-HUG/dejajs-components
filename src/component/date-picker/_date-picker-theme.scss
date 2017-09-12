@@ -1,34 +1,32 @@
 @import '~@angular/material/theming';
 
 @mixin date-picker-theme($theme) {
-    $warn: map-get($theme, warn);
-    $deep: '/deep/';
+	$warn: map-get($theme, warn);
 
-    deja-date-picker {
-        #deja-dropdown {
-            .actions {
-                button {
-                    color: #FFF;
-                }
-            }
-        }
-        &.ng-invalid {
-            #{$deep} {
-                .mat-input-wrapper {
-                    .mat-input-underline {
-                        .mat-input-ripple {
-                            background-color: mat-color($warn);
-                        }
-                    }
-                    .mat-input-flex {
-                        .mat-input-infix {
-                            .mat-input-placeholder {
-                                color: mat-color($warn);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+	deja-date-picker {
+		&.ng-invalid {
+			.mat-input-wrapper {
+				.mat-input-underline {
+					.mat-input-ripple {
+						background-color: mat-color($warn);
+					}
+				}
+				.mat-input-flex {
+					.mat-input-infix {
+						.mat-input-placeholder {
+							color: mat-color($warn);
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+.cdk-overlay-container {
+	.actions {
+		button {
+			color: #FFF;
+		}
+	}
 }

@@ -7,11 +7,11 @@
     display: flex;
     align-items: center;
     justify-content: space-around;
-    margin: 0.35rem;
+    margin: 0.45rem;
     &[small] {
         width: 1.6rem;
         height: 1.6rem;
-        margin: 0.2rem;
+        margin: 0.35rem;
     }
     &[active] {
         transform: scale(1.4, 1.4);

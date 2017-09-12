@@ -6,7 +6,7 @@
 	$background: #fff;
 
 	&:not([disabled="true"]) {
-		#listcontainer {
+		.deja-listcontainer {
 			&[depth-max] {
 				>div.listitem {
 					&[depth] {

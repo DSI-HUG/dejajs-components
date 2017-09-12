@@ -6,15 +6,14 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { OverlayOrigin } from '@angular/cdk/overlay';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { ObservableMedia } from '@angular/flex-layout';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
-import { Subscription } from 'rxjs/Subscription';
-import { Position } from '../../common/core/graphics/position';
+import { DejaConnectionPositionPair } from '../../common/core/overlay/connection-position-pair';
 
-/** Menu avec placement optimisé (Voir DejaDropDownComponent) */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -25,44 +24,52 @@ import { Position } from '../../common/core/graphics/position';
     templateUrl: './menu.component.html',
 })
 export class DejaMenuComponent implements OnInit, OnDestroy {
-    /** ID de l'élement dans lequel le menu doit s'afficher (le menu ne peut dépasser de l'élement spécifié ici) */
-    @Input() public dropdownContainerId: string;
-    /** Point de référence du bouton pour l'alignement du menu. Valeurs possible: top, bottom, right, left. Une combinaison des ces valeurs peut également être utilisée, par exemple 'top left'. */
-    @Input() public buttonAlignment = 'left bottom';
-    /** Ancre d'alignement du menu. Valeurs possible: top, bottom, right, left. Une combinaison des ces valeurs peut également être utilisée, par exemple 'top left'. */
-    @Input() public menuAlignment = 'left bottom';
     /** Renvoie une valeur qui indique si le menu est affiché. */
     @Input() public isVisible = false;
-    /** Renvoie ou définit l'élement du DOM sur lequel le menu devra s'aligner */
+    /** Renvoie ou définit l'élement sur lequel le menu devra s'aligner */
     @Input() public ownerElement: HTMLElement;
 
-    @Output()
-    public visibleChange = new EventEmitter<boolean>();
+    /** Déclenché lorsque la visibilité du menu change. */
+    @Output() public visibleChange = new EventEmitter<boolean>();
 
-    protected dropDownPosition: Position;
-    protected isMobile = false;
+    /** Internal use */
+    public overlayOrigin: OverlayOrigin;
 
     private contentInitialized$ = new Subject();
-    private media$sub: Subscription;
+    private isMobile = false;
+    private isAlive = true;
 
-    constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef, media: ObservableMedia) {
-        this.ownerElement = this.elementRef.nativeElement;
+    private _positions = DejaConnectionPositionPair.default;
 
-        this.media$sub = Observable.merge(this.contentInitialized$, media.asObservable())
+    @Input()
+    public set positions(value: DejaConnectionPositionPair[] | string) {
+        this._positions = typeof value === 'string' ? DejaConnectionPositionPair.parse(value) : value;
+    }
+
+    public get positions() {
+        return !this.isMobile ? this._positions : DejaConnectionPositionPair.parse('start top start top');
+    }
+
+    public get width() {
+        return !this.isMobile ? null : '100%';
+    }
+
+    constructor(private changeDetectorRef: ChangeDetectorRef, elementRef: ElementRef, media: ObservableMedia) {
+        this.overlayOrigin = new OverlayOrigin(elementRef);
+
+        Observable.merge(this.contentInitialized$, media.asObservable())
+            .takeWhile(() => this.isAlive)
             .subscribe(() => {
                 this.isMobile = media.isActive('xs') || media.isActive('sm');
+                if (this.isMobile) {
+                    this.overlayOrigin.elementRef = new ElementRef(this.isMobile && document.body);
+                }
                 this.changeDetectorRef.markForCheck();
             });
     }
 
-    private get containerElement() {
-        return this.dropdownContainerId && this.elementRef.nativeElement.ownerDocument.getElementById(this.dropdownContainerId);
-    }
-
     public ngOnDestroy() {
-        if (this.media$sub) {
-            this.media$sub.unsubscribe();
-        }
+        this.isAlive = false;
     }
 
     public ngOnInit() {
@@ -71,10 +78,10 @@ export class DejaMenuComponent implements OnInit, OnDestroy {
 
     /** Affiche le menu. */
     public show(event: MouseEvent) {
-        if (!this.buttonAlignment) {
-            this.dropDownPosition = new Position(event.pageX, event.pageY);
+        if (!this.isMobile && event) {
+            this.overlayOrigin.elementRef = new ElementRef(event && event.target);
         }
-        this.ownerElement = (event && event.target) || this.elementRef.nativeElement;
+
         this.isVisible = true;
         this.visibleChange.emit(this.isVisible);
         this.changeDetectorRef.markForCheck();

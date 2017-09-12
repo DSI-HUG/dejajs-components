@@ -16,7 +16,7 @@
 	<md-card class="demo-card">
 		<md-toolbar color="primary">Menu</md-toolbar>
 		<md-card-content>
-			<deja-menu #contextMenu buttonAlignment="">
+			<deja-menu #contextMenu>
 				<ul>
 					<li (click)="contextMenu.close()">
 						<md-icon>delete_sweep</md-icon> Context menu
@@ -30,7 +30,7 @@
 				</ul>
 			</deja-menu>
 
-			<deja-menu #posYMenu buttonAlignment="left top">
+			<deja-menu #posYMenu>
 				<ul>
 					<li (click)="posYMenu.close()">
 						<md-icon>delete_sweep</md-icon> Supprimer
@@ -84,7 +84,7 @@
 						</button>
 					</md-toolbar>
 
-					<deja-menu #posXMenu class="before" buttonAlignment="right top" menuAlignment="right top">
+					<deja-menu #posXMenu class="before" positions="end bottom end top">
 						<button class="menu-item" *ngFor="let item of items" (click)="posXMenu.close()">
 							{{ item.text }}
 						</button>

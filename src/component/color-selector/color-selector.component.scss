@@ -11,19 +11,19 @@
         margin: 1rem 0;
         deja-color-fab {
             float: left;
-    }
+        }
         #subcolors {
             deja-color-fab {
                 opacity: 1;
-                }
             }
         }
+    }
     &[sub-tr] {
         #subcolors.colors-wrapper {
             deja-color-fab {
-        opacity: 0;
-        transform: scale(0, 0);
-    }
+                opacity: 0;
+                transform: scale(0, 0);
+            }
         }
     }
 }

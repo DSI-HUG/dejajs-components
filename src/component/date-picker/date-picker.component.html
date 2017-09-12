@@ -17,7 +17,7 @@
 		<ng-template [ngTemplateOutlet]="mdError"></ng-template>
 	</md-error>
 </md-form-field>
-<deja-dropdown *ngIf="showDropDown" id="deja-dropdown" [containerElement]="containerElement" [ownerElement]="elementRef.nativeElement" [ownerAlignment]="ownerAlignment" [dropdownAlignment]="dropdownAlignment" ownerBottomMargin=-4>
+ <ng-template cdk-connected-overlay cdkConnectedOverlayHasBackdrop cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop" [cdkConnectedOverlayOffsetY]="overlayOffsetY" [cdkConnectedOverlayOffsetX]="overlayOffsetX" [cdkConnectedOverlayOpen]="showDropDown" [cdkConnectedOverlayOrigin]="overlayOrigin" (backdropClick)="close()" (detach)="close()" [cdkConnectedOverlayPositions]="positions"> 
 	<deja-date-time-selector
 		[time]="time"
 		[disableDates]="disableDates"
@@ -32,5 +32,4 @@
 			<md-icon>close</md-icon>
 		</button>
 	</div>
-</deja-dropdown>
-<deja-backdrop (click)="close()" *ngIf="showDropDown"></deja-backdrop>
+</ng-template>
