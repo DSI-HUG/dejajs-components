@@ -53,7 +53,7 @@ export enum DejaSelectSelectionPosition {
 export class DejaSelectComponent extends ItemListBase implements ControlValueAccessor, AfterViewInit, AfterContentInit {
     /** Texte à afficher par default dans la zone de recherche */
     @Input() public placeholder: string;
-    /** Offset de position hizontal de la zone de dropdown */
+    /** Offset de position horizontal de la zone de dropdown */
     @Input() public overlayOffsetX = 0;
     /** ID de l'élement dans lequel la liste déroulante doit s'afficher (la liste déroulante ne peut dépasser de l'élement spécifié ici) */
     @Input() public dropdownContainerId: string;
@@ -76,7 +76,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @ContentChild('parentItemTemplate') public parentItemTemplateInternal;
     @ContentChild('selectedTemplate') public selectedTemplate;
     @ContentChild('suffixTemplate') public _mdSuffix;
-    @ContentChildren(DejaItemComponent) public options: DejaItemComponent[];
     /** Template for MdError inside md-input-container */
     @ContentChild('errorTemplate') public mdError;
 
@@ -166,6 +165,24 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     public get keyboardNavigation() {
         return this._keyboardNavigation;
+    }
+
+    @ContentChildren(DejaItemComponent)
+    public set options(options: DejaItemComponent[]) {
+        if (!this.items && options && options.length) {
+            this.valueField = 'value';
+            this.textField = 'text';
+            const models = options.map((option) => ({
+                text: option.text,
+                value: option.value,
+            }));
+            this.models = models;
+            if (models.length > 100) {
+                // tslint:disable-next-line:no-debugger
+                debugger;
+                console.error('Select options with more than 100 items can have performance options. Please bind directly the items in code behind with items or models input.');
+            }
+        }
     }
 
     constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, private elementRef: ElementRef, @Self() @Optional() public _control: NgControl, @Optional() private _parentForm: NgForm, @Optional() private _parentFormGroup: FormGroupDirective, media: ObservableMedia) {
@@ -748,21 +765,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     // ************* End of ControlValueAccessor Implementation **************
 
     public ngAfterContentInit() {
-        if (!this.items && this.options && this.options.length) {
-            this.valueField = 'value';
-            this.textField = 'text';
-            const models = this.options.map((option) => ({
-                text: option.text,
-                value: option.value,
-            }));
-            this.models = models;
-            if (models.length > 100) {
-                // tslint:disable-next-line:no-debugger
-                debugger;
-                console.error('Select options with more than 100 items can have performance options. Please bind directly the items in code behind with items or models input.');
-            }
-        }
-
         this.contentInitialized$.next(true);
 
         if (this._control) {

@@ -17,17 +17,14 @@
             }
         }
         #time-selector {
-            $deep: '/deep/';
-            #{$deep} {
-                deja-circular-picker {
-                    &.hours .circular-picker {
-                        background: transparent;
-                        &:before {
-                            background-color: mat-color($primary);
-                        }
-                        &.disabled:before {
-                            background: #AAA;
-                        }
+            deja-circular-picker {
+                &.hours .circular-picker {
+                    background: transparent;
+                    &:before {
+                        background-color: mat-color($primary);
+                    }
+                    &.disabled:before {
+                        background: #AAA;
                     }
                 }
             }

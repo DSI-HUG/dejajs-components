@@ -35,6 +35,6 @@ export class DejaConnectionPositionPair extends ConnectionPositionPair {
     }
 
     public static get default() {
-        return DejaConnectionPositionPair.parse('start bottom start top,start top start bottom, start top end bottom');
+        return DejaConnectionPositionPair.parse('start bottom start top,start top start bottom,end bottom end top,end top end bottom');
     }
 }

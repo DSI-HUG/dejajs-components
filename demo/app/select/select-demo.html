@@ -124,7 +124,9 @@
         <md-toolbar color="primary">String Array Model</md-toolbar>
         <md-card-content>
             <span fxLayout="row" fxLayoutAlign="start center">
-                <deja-select class="demo-half-width" placeholder="String Array Model" selectionClearable [(ngModel)]="fruct" [models]="fructs"></deja-select>
+                <deja-select class="demo-half-width" placeholder="String Array Model" selectionClearable [(ngModel)]="fruct">
+                    <deja-item [value]="f" [text]="f" *ngFor="let f of fructs"></deja-item> 
+                </deja-select>
                 <span fxFlex="0 0 50%" fxFlexOffset="5%">Selected fruct model is: {{ fruct }}</span>
             </span>
         </md-card-content>
