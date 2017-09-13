@@ -6,8 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { OverlayOrigin } from '@angular/cdk/overlay';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { ConnectedOverlayDirective, OverlayOrigin } from '@angular/cdk/overlay';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { ObservableMedia } from '@angular/flex-layout';
 import { Observable } from 'rxjs/Observable';
@@ -34,12 +34,17 @@ export class DejaMenuComponent implements OnInit, OnDestroy {
 
     /** Internal use */
     public overlayOrigin: OverlayOrigin;
+    public overlayOffsetX = 0;
+    public overlayOffsetY = 0;
 
     private contentInitialized$ = new Subject();
     private isMobile = false;
     private isAlive = true;
 
     private _positions = DejaConnectionPositionPair.default;
+
+    /** Overlay pane containing the options. */
+    @ViewChild(ConnectedOverlayDirective) private overlay: ConnectedOverlayDirective;
 
     @Input()
     public set positions(value: DejaConnectionPositionPair[] | string) {
@@ -54,16 +59,11 @@ export class DejaMenuComponent implements OnInit, OnDestroy {
         return !this.isMobile ? null : '100%';
     }
 
-    constructor(private changeDetectorRef: ChangeDetectorRef, elementRef: ElementRef, media: ObservableMedia) {
-        this.overlayOrigin = new OverlayOrigin(elementRef);
-
+    constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef, media: ObservableMedia) {
         Observable.merge(this.contentInitialized$, media.asObservable())
             .takeWhile(() => this.isAlive)
             .subscribe(() => {
                 this.isMobile = media.isActive('xs') || media.isActive('sm');
-                if (this.isMobile) {
-                    this.overlayOrigin.elementRef = new ElementRef(this.isMobile && document.body);
-                }
                 this.changeDetectorRef.markForCheck();
             });
     }
@@ -77,14 +77,20 @@ export class DejaMenuComponent implements OnInit, OnDestroy {
     }
 
     /** Affiche le menu. */
-    public show(event: MouseEvent) {
-        if (!this.isMobile && event) {
-            this.overlayOrigin.elementRef = new ElementRef(event && event.target);
-        }
-
+    public show(event: MouseEvent | number, offsetY?: number) {
+        this.overlayOffsetX = offsetY !== undefined ? +event : 0;
+        this.overlayOffsetY = offsetY || 0;
+        const e = event as MouseEvent;
+        const target = e && e.target;
+        this.overlayOrigin = new OverlayOrigin(new ElementRef((this.isMobile && document.body) || target || this.elementRef.nativeElement));
         this.isVisible = true;
         this.visibleChange.emit(this.isVisible);
         this.changeDetectorRef.markForCheck();
+        Observable.timer(1)
+            .first()
+            .subscribe(() => {
+                this.overlay.overlayRef.updatePosition();
+            });
     }
 
     /** Ferme le menu. */

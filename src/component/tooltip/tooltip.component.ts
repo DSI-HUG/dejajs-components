@@ -37,6 +37,7 @@ export class DejaTooltipComponent implements OnInit {
     /** Parameters of the tooltip */
     public params: ITooltipParams;
     public overlayOrigin: OverlayOrigin;
+    public overlayVisible = false;
     private _model: any;
 
     /**
@@ -86,7 +87,6 @@ export class DejaTooltipComponent implements OnInit {
         Observable.fromEvent(element.ownerDocument, 'mousemove')
             .takeUntil(hide$)
             .debounceTime(20)
-            .filter(() => this._model)
             .map((event: MouseEvent) => new Position(event.pageX, event.pageY))
             .filter((position) => {
                 const containerElement = document.elementFromPoint(position.left, position.top);
@@ -105,7 +105,10 @@ export class DejaTooltipComponent implements OnInit {
                 return !ownerRect.containsPoint(position);
             })
             .delay(300)
-            .subscribe(() => this.hide.emit());
+            .subscribe(() => {
+                this.hide.emit();
+                this.overlayVisible = false;
+            });
     }
 
     /**
@@ -124,16 +127,30 @@ export class DejaTooltipComponent implements OnInit {
         const model$ = this.params.model as Observable<any>;
         if (!model$) {
             this._model = undefined;
+            this.overlayVisible = true;
         } else if (model$.subscribe) {
-            model$.subscribe((model) => this._model = model, () => this.hide.emit());
+            model$.subscribe((model) => {
+                this._model = model;
+                this.overlayVisible = true;
+            }, () => {
+                this.hide.emit();
+                this.overlayVisible = false;
+            });
         } else {
             const promise = this.params.model as Promise<any>;
             if (promise.then) {
                 promise
-                    .then((model) => this._model = model)
-                    .catch(() => this.hide.emit());
+                    .then((model) => {
+                        this._model = model;
+                        this.overlayVisible = true;
+                    })
+                    .catch(() => {
+                        this.hide.emit();
+                        this.overlayVisible = false;
+                    });
             } else {
                 this._model = this.params.model;
+                this.overlayVisible = true;
             }
         }
     }

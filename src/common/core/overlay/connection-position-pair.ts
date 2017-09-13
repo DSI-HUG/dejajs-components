@@ -9,7 +9,7 @@
 import { ConnectionPositionPair, OriginConnectionPosition, OverlayConnectionPosition } from '@angular/cdk/overlay';
 
 export class DejaConnectionPositionPair extends ConnectionPositionPair {
-    public static parse(value: string) {
+    public static parse(value: string): ConnectionPositionPair[] {
         const values = value.trim().split(',');
         const positions = [] as ConnectionPositionPair[];
         values.forEach(pos => {
