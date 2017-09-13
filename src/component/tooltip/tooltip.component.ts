@@ -86,7 +86,7 @@ export class DejaTooltipComponent implements OnInit {
 
         Observable.fromEvent(element.ownerDocument, 'mousemove')
             .takeUntil(hide$)
-            .debounceTime(20)
+            .debounceTime(100)
             .map((event: MouseEvent) => new Position(event.pageX, event.pageY))
             .filter((position) => {
                 const containerElement = document.elementFromPoint(position.left, position.top);
