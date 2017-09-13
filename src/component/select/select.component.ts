@@ -55,8 +55,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @Input() public placeholder: string;
     /** Offset de position horizontal de la zone de dropdown */
     @Input() public overlayOffsetX = 0;
-    /** ID de l'élement dans lequel la liste déroulante doit s'afficher (la liste déroulante ne peut dépasser de l'élement spécifié ici) */
-    @Input() public dropdownContainerId: string;
     /** Permet de définir un template de ligne par binding */
     @Input() public itemTemplateExternal;
     /** Permet de définir un template de ligne parente par binding. */
