@@ -102,7 +102,7 @@
     "symlink-dir": "1.1.0",
     "ts-node": "3.3.0",
     "tslint": "5.7.0",
-    "typescript": "2.4.0"
+    "typescript": "2.3.3"
   },
   "config": {
     "commitizen": {

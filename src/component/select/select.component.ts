@@ -82,6 +82,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     /** Internal use */
     public overlayOrigin: OverlayOrigin;
     public dropDownMaxHeight: number = null;
+    public overlayOffsetY = 0;
 
     // NgModel implementation
     protected onTouchedCallback: () => void = noop;
@@ -149,14 +150,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     public get dropDownWidth() {
         const element = this.elementRef.nativeElement as HTMLElement;
         return !this.isMobile ? this._dropDownWidth || element.clientWidth : '100%';
-    }
-
-    public get overlayOffsetY() {
-        if (this.isMobile) {
-            return 0;
-        }
-
-        return 6;
     }
 
     public get mdSuffix() {
@@ -249,6 +242,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 // Set overlay origin element
                 const originElement: HTMLElement = (this.isMobile && document.body) || this.inputElement || this.elementRef.nativeElement;
                 this.overlayOrigin = new OverlayOrigin(new ElementRef(originElement));
+                this.overlayOffsetY = this.isMobile ? 0 : 6;
 
                 // Calc max height
                 if (this.isMobile) {
@@ -258,7 +252,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 } else {
                     const originRect = originElement.getBoundingClientRect();
                     const maxHeight = document.body.clientHeight;
-                    this.dropDownMaxHeight = Math.max(originRect.top, maxHeight - originRect.bottom, 20) - 20;
+                    this.dropDownMaxHeight = Math.max(originRect.top, maxHeight - originRect.bottom, 25) - 25;
                 }
 
                 // Display overlay
@@ -287,9 +281,25 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             .filter(() => this.dropdownVisible)  // Show canceled by the hide$ observable if !dropdownVisible
             .do(() => this.viewPort.element$.next(this.listElement))
             .delay(1)
-            .subscribe(() => {
+            .do(() => {
                 // View port calculated
                 this.overlay.overlayRef.updatePosition();
+            })
+            .subscribe(() => {
+                if (!this.isMobile) {
+                    const listRect = this.listElement.getBoundingClientRect();
+                    const originElement: HTMLElement = this.inputElement || this.elementRef.nativeElement;
+                    const originRect = originElement.getBoundingClientRect();
+                    if (listRect.top < originRect.top) {
+                        this.overlayOffsetY = -20;
+                        this.changeDetectorRef.markForCheck();
+                        Observable.timer(1)
+                            .first()
+                            .subscribe(() => {
+                                this.overlay.overlayRef.updatePosition();
+                            });
+                    }
+                }
             });
 
         Observable.from(this.keyboardNavigation$)
