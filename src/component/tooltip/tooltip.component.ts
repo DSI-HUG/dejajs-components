@@ -6,18 +6,20 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, ContentChild, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { OverlayOrigin } from '@angular/cdk/overlay';
+import { Component, ContentChild, ElementRef, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import 'rxjs/add/observable/fromEvent';
 import { Observable } from 'rxjs/Observable';
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
-import { DejaDropDownComponent } from '../dropdown/dropdown.component';
+import { DejaConnectionPositionPair } from '../../common/core/overlay/connection-position-pair';
 import { DejaTooltipService, ITooltipParams } from './tooltip.service';
 
 /**
  * Customizable tooltip component for Angular2
  */
 @Component({
+    encapsulation: ViewEncapsulation.None,
     selector: 'deja-tooltip',
     templateUrl: 'tooltip.component.html',
     styleUrls: [
@@ -25,20 +27,48 @@ import { DejaTooltipService, ITooltipParams } from './tooltip.service';
     ],
 })
 export class DejaTooltipComponent implements OnInit {
-    /** Element where tooltip can't overflow. Default is body. */
-    @Input() public containerElement: ElementRef | HTMLElement;
     /** Tooltip name. Mandatory, and need to be unic */
     @Input() public name: string;
     /** Event Emmited when hide action is called */
     @Output() public hide = new EventEmitter();
-    /** Reference to dropdown component inside this */
-    @ViewChild('dropdown') public dropdown: DejaDropDownComponent;
     /** Template for tooltip content */
     @ContentChild('tooltipTemplate') public tooltipTemplate;
 
     /** Parameters of the tooltip */
     public params: ITooltipParams;
+    public overlayOrigin: OverlayOrigin;
+    public overlayVisible = false;
     private _model: any;
+
+    /**
+     * This position config ensures that the top "start" corner of the overlay
+     * is aligned with with the top "start" of the origin by default (overlapping
+     * the trigger completely). If the panel cannot fit below the trigger, it
+     * will fall back to a position above the trigger.
+     */
+    private _positions = [
+        {
+            originX: 'center',
+            originY: 'bottom',
+            overlayX: 'center',
+            overlayY: 'top',
+        },
+        {
+            originX: 'center',
+            originY: 'top',
+            overlayX: 'center',
+            overlayY: 'bottom',
+        },
+    ] as DejaConnectionPositionPair[];
+
+    @Input()
+    public set positions(value: DejaConnectionPositionPair[] | string) {
+        this._positions = typeof value === 'string' ? DejaConnectionPositionPair.parse(value) : value;
+    }
+
+    public get positions() {
+        return this._positions;
+    }
 
     public get model() {
         return this._model;
@@ -56,13 +86,18 @@ export class DejaTooltipComponent implements OnInit {
 
         Observable.fromEvent(element.ownerDocument, 'mousemove')
             .takeUntil(hide$)
-            .debounceTime(20)
-            .filter(() => this._model)
+            .debounceTime(100)
             .map((event: MouseEvent) => new Position(event.pageX, event.pageY))
             .filter((position) => {
-                const containerElement = this.dropdown.dropdownElement;
-                const containerBounds = new Rect(containerElement.getBoundingClientRect());
-                return !containerBounds.containsPoint(position);
+                const containerElement = document.elementFromPoint(position.left, position.top);
+                let parentElement = containerElement;
+                while (parentElement) {
+                    if (parentElement.className === 'cdk-overlay-pane') {
+                        return false;
+                    }
+                    parentElement = parentElement.parentElement;
+                }
+                return true;
             })
             .filter((position) => {
                 const ownerElement = (this.params.ownerElement as ElementRef).nativeElement || this.params.ownerElement;
@@ -70,7 +105,10 @@ export class DejaTooltipComponent implements OnInit {
                 return !ownerRect.containsPoint(position);
             })
             .delay(300)
-            .subscribe(() => this.hide.emit());
+            .subscribe(() => {
+                this.hide.emit();
+                this.overlayVisible = false;
+            });
     }
 
     /**
@@ -83,19 +121,36 @@ export class DejaTooltipComponent implements OnInit {
         }
         this.params = this.tooltipService.params[this.name];
 
+        const ownerElement = (this.params.ownerElement as ElementRef).nativeElement || this.params.ownerElement;
+        this.overlayOrigin = new OverlayOrigin(new ElementRef(ownerElement));
+
         const model$ = this.params.model as Observable<any>;
         if (!model$) {
             this._model = undefined;
+            this.overlayVisible = true;
         } else if (model$.subscribe) {
-            model$.subscribe((model) => this._model = model, () => this.hide.emit());
+            model$.subscribe((model) => {
+                this._model = model;
+                this.overlayVisible = true;
+            }, () => {
+                this.hide.emit();
+                this.overlayVisible = false;
+            });
         } else {
             const promise = this.params.model as Promise<any>;
             if (promise.then) {
                 promise
-                    .then((model) => this._model = model)
-                    .catch(() => this.hide.emit());
+                    .then((model) => {
+                        this._model = model;
+                        this.overlayVisible = true;
+                    })
+                    .catch(() => {
+                        this.hide.emit();
+                        this.overlayVisible = false;
+                    });
             } else {
                 this._model = this.params.model;
+                this.overlayVisible = true;
             }
         }
     }

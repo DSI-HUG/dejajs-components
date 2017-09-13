@@ -8,7 +8,6 @@
 
 export * from './accordion/index';
 export * from './autosize-textarea/index';
-export * from './backdrop/index';
 export * from './chips/index';
 export * from './circular-picker/index';
 export * from './code-viewer/index';
@@ -20,7 +19,6 @@ export * from './date-picker/index';
 export * from './date-selector/index';
 export * from './dialog/index';
 export * from './dragdrop/index';
-export * from './dropdown/index';
 export * from './iframe/index';
 export * from './loaders/index';
 export * from './markdown/index';

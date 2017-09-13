@@ -6,7 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/merge';
@@ -47,7 +48,7 @@ const noop = () => { };
     ],
     templateUrl: './tree-list.component.html',
 })
-export class DejaTreeListComponent extends ItemListBase implements OnDestroy, AfterViewInit, AfterContentInit, ControlValueAccessor {
+export class DejaTreeListComponent extends ItemListBase implements AfterViewInit, AfterContentInit, ControlValueAccessor {
     /** Texte à afficher par default dans la zone de recherche */
     @Input() public placeholder: string;
     /** Texte affiché si aucune donnée n'est présente dans le tableau */
@@ -80,7 +81,6 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     @Output() public viewPortChanged = new EventEmitter<IViewPort>();
 
     /** Internal use */
-    @ViewChild('listcontainer') public listContainer: ElementRef;
     @ViewChild('inputelement') public input: ElementRef;
 
     // NgModel implementation
@@ -111,7 +111,6 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
 
     private keyboardNavigation$ = new Subject();
 
-    private subscriptions: Subscription[] = [];
     private mouseUp$sub: Subscription;
 
     private clearFilterExpression$ = new BehaviorSubject<void>(null);
@@ -129,31 +128,35 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
             this._control.valueAccessor = this;
         }
 
-        this.subscriptions.push(Observable.from(this.clearFilterExpression$)
+        Observable.from(this.clearFilterExpression$)
+            .takeWhile(() => this._isAlive)
             .debounceTime(400)
-            .subscribe(() => this.filterExpression = ''));
+            .subscribe(() => this.filterExpression = '');
 
-        this.subscriptions.push(Observable.from(this.filterListComplete$)
+        Observable.from(this.filterListComplete$)
+            .takeWhile(() => this._isAlive)
             .debounceTime(250)
             .do(() => this.setCurrentItem(undefined))
             .switchMap(() => this.calcViewList$())
-            .subscribe(noop));
+            .subscribe(noop);
 
-        this.subscriptions.push(Observable.from(this.keyboardNavigation$)
+        Observable.from(this.keyboardNavigation$)
+            .takeWhile(() => this._isAlive)
             .do(() => this._keyboardNavigation = true)
             .debounceTime(1000)
             .subscribe(() => {
                 this._keyboardNavigation = false;
                 this.changeDetectorRef.markForCheck();
-            }));
+            });
 
-        this.subscriptions.push(Observable.fromEvent(window, 'resize')
+        Observable.fromEvent(window, 'resize')
+            .takeWhile(() => this._isAlive)
             .debounceTime(5)
             .subscribe(() => {
                 this.viewPort.deleteSizeCache();
                 this.viewPort.refresh();
                 this.changeDetectorRef.markForCheck();
-            }));
+            });
 
         const selectItems$ = Observable.combineLatest(this.selectItems$, this.contentInitialized$)
             .map(([value]) => value)
@@ -172,14 +175,16 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
             .map((value) => this.getVirtualSelectedEntities(value))
             .do((value) => super.setSelectedModels(!value || this._multiSelect ? value : [value]));
 
-        this.subscriptions.push(Observable.merge(selectModels$, selectItems$)
+        Observable.merge(selectModels$, selectItems$)
+            .takeWhile(() => this._isAlive)
             .subscribe(() => {
                 super.getItemListService().ensureSelection();
                 this.changeDetectorRef.markForCheck();
-            }));
+            });
+
+        this._viewPortChanged = this.viewPortChanged;
 
         this.maxHeight = 0;
-        this._viewPortChanged = this.viewPortChanged;
     }
 
     public keyboardNavigation() {
@@ -199,7 +204,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Affiche un barre de recherche au dessus de la liste. */
     @Input()
     public set searchArea(value: boolean | string) {
-        this._searchArea = value != null && `${value}` !== 'false';
+        this._searchArea = coerceBooleanProperty(value);
     }
 
     public get searchArea() {
@@ -209,7 +214,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Retourne ou définit une valeur indiquant si les lignes de la liste peuvent être déplacées manuelement par l'utilisateur */
     @Input()
     public set sortable(value: boolean | string) {
-        this._sortable = value != null && `${value}` !== 'false';
+        this._sortable = coerceBooleanProperty(value);
     }
 
     public get sortable() {
@@ -219,7 +224,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Retourne ou définit une valeur indiquant si les lignes peuvent être déplacées vers un autre composant */
     @Input()
     public set itemsDraggable(value: boolean | string) {
-        this._itemsDraggable = value != null && `${value}` !== 'false';
+        this._itemsDraggable = coerceBooleanProperty(value);
     }
 
     public get itemsDraggable() {
@@ -347,7 +352,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Définit une valeur indiquant si plusieurs lignes peuvent être sélectionées. */
     @Input()
     public set multiSelect(value: boolean | string) {
-        super.setMultiSelect(value != null && `${value}` !== 'false');
+        super.setMultiSelect(coerceBooleanProperty(value));
     }
 
     /** Retourne une valeur indiquant si plusieurs lignes peuvent être sélectionées. */
@@ -506,7 +511,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
     /** Permet de désactiver la liste */
     @Input()
     public set disabled(value: boolean | string) {
-        const disabled = value != null && `${value}` !== 'false';
+        const disabled = coerceBooleanProperty(value);
         this._disabled = disabled || null;
     }
 
@@ -530,10 +535,6 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
         if (value) {
             value.parentControl = this._control;
         }
-    }
-
-    protected get listElement(): HTMLElement {
-        return this.listContainer && this.listContainer.nativeElement;
     }
 
     private set currentItemIndex(value: number) {
@@ -647,8 +648,8 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                 .subscribe(noop);
         }
 
-        this.subscriptions.push(Observable
-            .fromEvent(this.listElement, 'scroll')
+        Observable.fromEvent(this.listElement, 'scroll')
+            .takeWhile(() => this._isAlive)
             .map((event: any) => [event, event.target.scrollTop, event.target.scrollLeft])
             .map(([event, scrollTop, scrollLeft]: [Event, number, number]) => {
                 const e = {
@@ -660,7 +661,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                 this.scroll.emit(e);
                 return scrollTop;
             })
-            .subscribe((scrollPos) => this.viewPort.scrollPosition$.next(scrollPos)));
+            .subscribe((scrollPos) => this.viewPort.scrollPosition$.next(scrollPos));
 
         let keyDown$ = Observable.fromEvent(this.listElement, 'keydown');
         if (this.input) {
@@ -668,7 +669,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
             keyDown$ = keyDown$.merge(inputKeyDown$);
         }
 
-        this.subscriptions.push(keyDown$
+        keyDown$.takeWhile(() => this._isAlive)
             .filter(() => !this.disabled)
             .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.Home ||
                 event.keyCode === KeyCodes.End ||
@@ -806,7 +807,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                     event.preventDefault();
                     return false;
                 }
-            }));
+            });
 
         let keyUp$ = Observable.fromEvent(this.listElement, 'keyup');
         if (this.input) {
@@ -816,7 +817,7 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
         }
 
         // Ensure list cache
-        this.subscriptions.push(keyUp$
+        keyUp$.takeWhile(() => this._isAlive)
             .filter(() => !this.disabled)
             .do(() => {
                 if ((this.query || '').length < this.minSearchlength) {
@@ -867,13 +868,9 @@ export class DejaTreeListComponent extends ItemListBase implements OnDestroy, Af
                         this.filterListComplete$.next();
                     }
                 }
-            }));
+            });
 
         this.viewPort.element$.next(this.listElement);
-    }
-
-    public ngOnDestroy() {
-        this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
     }
 
     public mousedown(e: MouseEvent) {

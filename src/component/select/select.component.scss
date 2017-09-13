@@ -77,28 +77,6 @@ deja-select {
 		}
 	}
 
-	deja-dropdown {
-		&#listcontainer {
-			text-align: left;
-			overflow: auto;
-			position: absolute;
-			div.listitem {
-				white-space: nowrap;
-			}
-			&[valign="bottom"] {
-				border-top: none;
-			}
-			[current="true"] {
-				box-shadow: none;
-			}
-			&[keynav="false"] {
-				div.listitem:not(.unselectable):hover {
-					cursor: pointer;
-				}
-			}
-		}
-	}
-
 	@keyframes load {
 		0% {
 			left: -35%;
@@ -133,6 +111,27 @@ deja-select {
 		align-items: center;
 		md-icon {
 			margin-right: 0.5rem;
+		}
+	}
+}
+
+.cdk-overlay-container {
+	.deja-listcontainer {
+        text-align: left;
+        overflow-y: auto;
+		div.listitem {
+			white-space: nowrap;
+		}
+		&[valign="bottom"] {
+			border-top: none;
+		}
+		[current="true"] {
+			box-shadow: none;
+		}
+		&[keynav="false"] {
+			div.listitem:not(.unselectable):hover {
+				cursor: pointer;
+			}
 		}
 	}
 

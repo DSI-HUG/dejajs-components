@@ -6,6 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Component, ContentChild, Input, OnInit, ViewEncapsulation } from '@angular/core';
 
 @Component({
@@ -25,7 +26,7 @@ export class DejaMessageBoxComponent implements OnInit {
 
     @Input()
     public set horizontal(value: boolean | string) {
-        this._horizontal = value != null && `${value}` !== 'false';
+        this._horizontal = coerceBooleanProperty(value);
     }
 
     public get horizontal() {

@@ -20,7 +20,7 @@ import { News } from '../common/news.model';
 import { CountriesListService } from '../services/countries-list.service';
 import { CountriesService, Country } from '../services/countries.service';
 import { NewsService } from '../services/news.service';
-import {cheeseValidator } from './validators';
+import { cheeseValidator } from './validators';
 
 @Component({
     selector: 'deja-select-demo',
@@ -100,6 +100,7 @@ export class SelectDemoComponent implements OnDestroy {
             'Pineapple',
             'Watermelon',
         ];
+
         this.fruits$ = Observable.of(this.fructs);
 
         this.subscriptions.push(this.countries

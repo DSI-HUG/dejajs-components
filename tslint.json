@@ -23,10 +23,8 @@
         ],
         "interface-over-type-literal": true,
         "label-position": true,
-        "member-access": false,
-        "ordered-imports": [
-            true
-        ],
+        "member-access": true,
+        "ordered-imports": true,
         "member-ordering": [
             true,
             {
@@ -64,8 +62,10 @@
         "no-trailing-whitespace": true,
         "no-unused-expression": true,
         "no-unused-variable": [
-            true, 
-            {"ignore-pattern": "^_"}
+            false,
+            {
+                "ignore-pattern": "^_"
+            }
         ],
         "no-use-before-declare": true,
         "no-var-keyword": true,

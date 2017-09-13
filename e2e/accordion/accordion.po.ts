@@ -9,25 +9,25 @@
 import { browser, ExpectedConditions } from 'protractor';
 
 export class AccordionPage {
-    navigateTo() {
+    public navigateTo() {
         browser.get('/accordion');
         // return element(by.css('deja-sidenav-menu md-list-item[routerlink="/components"]')).click();
     }
 
-    headerIsOpen(body) {
+    public headerIsOpen(body) {
          return body.getCssValue('max-height').then((value) => {
             return value !== '0px';
          });
     }
 
-    headerIsOpenAfterAnimation(body) {
+    public headerIsOpenAfterAnimation(body) {
         return browser.wait(ExpectedConditions.visibilityOf(body))
         .then(() => {
             return this.headerIsOpen(body);
         });
     }
 
-    openHeader(header) {
+    public openHeader(header) {
         return header.click();
     }
 }

@@ -11,7 +11,7 @@ import { Action } from '@ngrx/store';
 export const USER_ON_GET = '[User] mocking get user server api';
 
 export class UserOnGetAction implements Action {
-  readonly type = USER_ON_GET;
+  public readonly type = USER_ON_GET;
   public payload: any;
 
   constructor() {}

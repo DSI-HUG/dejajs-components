@@ -6,6 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output } from '@angular/core';
 import 'rxjs/add/operator/timeout';
 import { Observable } from 'rxjs/Observable';
@@ -60,7 +61,7 @@ export class DejaGridHeaderComponent implements OnDestroy {
      */
     @Input()
     public set columnsDraggable(value: boolean | string) {
-        this._columnsDraggable = value != null && `${value}` !== 'false';
+        this._columnsDraggable = coerceBooleanProperty(value);
     }
 
     /** Retourne si toutes les colonnes peuvent être draggable vers un autre composant.
@@ -75,7 +76,7 @@ export class DejaGridHeaderComponent implements OnDestroy {
      */
     @Input()
     public set columnsSortable(value: boolean | string) {
-        this._columnsSortable = value != null && `${value}` !== 'false';
+        this._columnsSortable = coerceBooleanProperty(value);
     }
 
     /** Retourne si toutes les colonnes peuvent être déplacées parmis les autres colonnes.
@@ -94,7 +95,7 @@ export class DejaGridHeaderComponent implements OnDestroy {
      */
     @Input()
     public set columnsSizable(value: boolean | string) {
-        this._columnsSizable = value != null && `${value}` !== 'false';
+        this._columnsSizable = coerceBooleanProperty(value);
     }
 
     /** Retourne si toutes les colonnes peuvent être redimensionées

@@ -6,6 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Directive, ElementRef, HostBinding, Input, OnDestroy, Optional } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -23,7 +24,7 @@ export class DejaDroppableDirective implements OnDestroy {
      */
     @Input('continous-dragover')
     public set allEvents(value: boolean | string) {
-        this._allEvents = value != null && `${value}` !== 'false';
+        this._allEvents = coerceBooleanProperty(value);
     }
 
     @HostBinding('attr.droppable') private droppable = null;

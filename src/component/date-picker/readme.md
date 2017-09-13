@@ -50,28 +50,16 @@ Composant pour séléctionner une date sur un calendrier et l'affficher dans un 
     <td>Désactive les dates correspondantes. Prend un tableau qui contient des nombres (de 0 à 6 pour désactiver les jours) et/ou des dates pour désactiver une date specifique. TODO : prendre une fonction 8promise / observable) pour récupérer les disablesDates depuis un service.</td>
 </tr>
 <tr>
-    <td>dropdownAlignment</td>
+    <td>positions</td>
     <td>string</td>
-    <td>left right top bottom</td>
-    <td>Voir la documentation du *DejaDropdownComponent* pour plus d'informations</td>
-</tr>
-<tr>
-    <td>dropdownContainerId</td>
-    <td>string</td>
-    <td>null</td>
-    <td>Voir la documentation du *DejaDropdownComponent* pour plus d'informations</td>
+    <td>start bottom start top</td>
+    <td>Retourne ou définit l'alignement de la partie déroulante par rapport au bouton.</td>
 </tr>
 <tr>
     <td>format</td>
     <td>string</td>
     <td>null</td>
     <td>Le format de la date à afficher dans le champ texte. Par défaut ce aui est affiché est YYYY-MM-DD + HH:mm si c'est aussi un timepicker</td>
-</tr>
-<tr>
-    <td>ownerAlignment</td>
-    <td>string</td>
-    <td>left bottom</td>
-    <td>Voir la documentation du *DejaDropdownComponent* pour plus d'informations</td>
 </tr>
 <tr>
     <td>placeholder</td>

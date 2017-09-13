@@ -7,6 +7,7 @@
  */
 
 import { ElementRef, Injectable } from '@angular/core';
+import { DejaConnectionPositionPair } from '../../common/core/overlay/connection-position-pair';
 
 /**
  * Service to pass some params through tooltip module
@@ -23,7 +24,6 @@ export class DejaTooltipService {
 export interface ITooltipParams {
     /** Renvoie ou définit l'élement du DOM sur lequel le conteneur déroulant devra s'aligner */
     ownerElement: ElementRef | HTMLElement;
-    ownerAlignment: string;
-    dropdownAlignment: string;
+    positions: DejaConnectionPositionPair | string;
     model: any;
 }

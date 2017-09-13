@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, ViewEncapsulation } from '@angular/core';
 import 'rxjs/add/observable/from';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
@@ -27,8 +27,7 @@ export class AppComponent implements OnDestroy {
     protected theme$: BehaviorSubject<string>;
     private theme$sub: Subscription;
 
-    constructor(elementRef: ElementRef) {
-        const elem = elementRef.nativeElement as HTMLElement;
+    constructor() {
         try {
             this._theme = localStorage.getItem('dejajs-demo-color');
         } catch (_e) {
@@ -39,7 +38,7 @@ export class AppComponent implements OnDestroy {
             this._theme = 'hug';
         }
         this.theme$ = new BehaviorSubject<any>(this._theme);
-        this.theme$sub = Observable.from(this.theme$).subscribe((theme) => elem.setAttribute('theme', theme));
+        this.theme$sub = Observable.from(this.theme$).subscribe((theme) => document.body.setAttribute('theme', theme));
     }
 
     public get theme() {

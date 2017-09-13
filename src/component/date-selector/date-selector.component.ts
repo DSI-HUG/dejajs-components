@@ -6,7 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Optional, Output, Self } from '@angular/core';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Optional, Output, Self, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -28,6 +29,7 @@ const noop = () => { };
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     selector: 'deja-date-time-selector',
     styleUrls: ['./date-selector.scss'],
     templateUrl: './date-selector.component.html',
@@ -100,7 +102,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
      */
     @Input()
     public set time(value: boolean | string) {
-        this._time = (value != null && `${value}` !== 'false') ? true : null;
+        this._time = coerceBooleanProperty(value) ? true : null;
         this.changeDetectorRef.markForCheck();
     }
 
@@ -128,7 +130,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
     /** Disabled property setter. Can be string or empty so you can use it like : <deja-date-selector disabled></deja-date-selector> */
     @Input()
     public set disabled(value: boolean | string) {
-        this._disabled = (value != null && `${value}` !== 'false') ? true : null;
+        this._disabled = coerceBooleanProperty(value) ? true : null;
         // this.changeDetectorRef.markForCheck();
         this.bind();
     }

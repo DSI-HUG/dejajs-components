@@ -33,7 +33,6 @@ import { PeopleService } from './services/people.service';
 import {
     DejaAccordionModule,
     DejaAutosizeTextAreaModule,
-    DejaBackdropModule,
     DejaChipsModule,
     DejaCircularPickerModule,
     DejaClipboardModule,
@@ -44,7 +43,6 @@ import {
     DejaDateSelectorModule,
     DejaDialogModule,
     DejaDragDropModule,
-    DejaDropDownModule,
     DejaEditableModule,
     DejaGridModule,
     DejaIFrameModule,
@@ -136,7 +134,6 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
 
         DejaAccordionModule,
         DejaAutosizeTextAreaModule,
-        DejaBackdropModule,
         DejaChipsModule,
         DejaCircularPickerModule,
         DejaClipboardModule,
@@ -149,7 +146,6 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         DejaDateSelectorModule,
         DejaDialogModule,
         DejaDragDropModule,
-        DejaDropDownModule,
         DejaIFrameModule,
         DejaListLoaderModule,
         DejaMarkdownModule,

@@ -5,7 +5,7 @@ deja-grid {
 	max-width: 100%;
 	overflow: hidden;
 	&:not([viewportmode="auto"]) {
-		#listcontainer {
+		.deja-listcontainer {
 			>div.listitem {
 				deja-grid-row,
 				deja-grid-parent-row {
@@ -19,7 +19,7 @@ deja-grid {
 	}
 	#treelist {
 		flex: 1 1 auto;
-		#listcontainer {
+		.deja-listcontainer {
 			>div.listitem {
 				padding: 0;
 				&[current="true"] {
@@ -216,7 +216,7 @@ deja-grid {
 			}
 		}
 		&[nohscroll] {
-			#listcontainer {
+			.deja-listcontainer {
 				overflow-x: hidden;
 			}
 		}

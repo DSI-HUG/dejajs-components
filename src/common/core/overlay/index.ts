@@ -6,14 +6,4 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { browser, by, element } from 'protractor';
-
-export class HomePage {
-    public navigateTo() {
-        return browser.get('/');
-    }
-
-    public getTitleText() {
-        return element(by.css('home header h1')).getText();
-    }
-}
+export * from './connection-position-pair';

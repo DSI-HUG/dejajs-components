@@ -60,22 +60,10 @@ Crée une liste déroulante.
     <td>Désactive le select</td>
 </tr>
 <tr>
-    <td>dropdownContainerId</td>
+    <td>positions</td>
     <td>string</td>
-    <td></td>
-    <td>ID de l'élement dans lequel la liste déroulante doit s'afficher (la liste déroulante ne peut dépasser de l'élement spécifié ici)</td>
-</tr>
-<tr>
-    <td>dropdownContainerElement</td>
-    <td>ElementRef | HTMLElement</td>
-    <td></td>
-    <td>Element dans lequel la liste déroulante doit s'afficher (la liste déroulante ne peut dépasser de l'élement spécifié ici)</td>
-</tr>
-<tr>
-    <td>dropdownAlignment </td>
-    <td>string</td>
-    <td>left right bottom</td>
-    <td>Ancre d'alignement de la liste déroulante. Valeurs possible: top, bottom, right, left. Une combinaison des ces valeurs peut également être utilisée, par exemple 'top left'.</td>
+    <td>start bottom start top</td>
+    <td>Ancre d'alignement de la liste déroulante. Valeurs possibles: start top end bottom. Une combinaison des ces valeurs peut également être utilisée, par exemple 'start top end bottom, end top start bottom'.</td>
 </tr>
 <tr>
     <td>itemTemplateExternal </td>

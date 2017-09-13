@@ -44,16 +44,10 @@ Composant de selection d'une couleur sous forme d'un bouton.
     <td>Retourne ou définit les couleurs selectionables affichées.</td>
 </tr>
 <tr>
-    <td>dropdownContainerId</td>
+    <td>positions</td>
     <td>string</td>
-    <td>body</td>
-    <td>Retourne ou definit une référence sur le conteneur de la partie déroulante. Pare default le body sera seelctioné.</td>
-</tr>
-<tr>
-    <td>dropdownAlignment</td>
-    <td>string</td>
-    <td>left bottom</td>
-    <td>Retourne ou définit l'alignement de la partie déroulante par rapport au bouton. Les valeurs admissibles sont left right top bottom et peuvent être combinées.</td>
+    <td>start bottom start top</td>
+    <td>Retourne ou définit l'alignement de la partie déroulante par rapport au bouton.</td>
 </tr>
 <tr>
     <td>isOpen</td>
