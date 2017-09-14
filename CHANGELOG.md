@@ -1,3 +1,25 @@
+#### 2.12.1 (2017-09-14)
+
+##### BREAKING CHANGES
+
+* **DejaSelect:**
+  * Removed useless dropdownContainerId input. ([f027f51c](https://github.com/DSI-HUG/dejajs-components/commit/f027f51c94f52eb4c7fc8e3b6746cebe410da927))
+  * Using angular/cdk/overlay to open the dropdown in the body ([009723d4](https://github.com/DSI-HUG/dejajs-components/commit/009723d45a152c40d592c694f12b32bd881595e7))
+* **DejaDatePicker:** Using angular/cdk/overlay to open the dropdown in the body refactor(DejaDropDown): Removed. Replaced by the angular/cdk/overlay refactor(DejaBackDrop): Removed. Replaced by the angular/cdk/overlay ([e9fd7f72](https://github.com/DSI-HUG/dejajs-components/commit/e9fd7f7217c08dc322f4e2f8a2a362c9cfb12e87))
+* **DejaColorPicker:** Using angular/cdk/overlay to open the dropdown in the body ([0ee8b8a3](https://github.com/DSI-HUG/dejajs-components/commit/0ee8b8a391d11be5b6188d1bafc289224a43f601))
+* **DejaTooltip:** Using angular/cdk/overlay to open the dropdown in the body ([13c897d8](https://github.com/DSI-HUG/dejajs-components/commit/13c897d82c6b55fdf9eaa232fb73aa2b232e3b05))
+* **DejaMenu:** Using angular/cdk/overlay to open the dropdown in the body ([9298fb68](https://github.com/DSI-HUG/dejajs-components/commit/9298fb688709fc656b230fb796808da0f28c879a))
+
+##### New Features
+
+* **DejaToolTip:** Accept also ng-content feat(backdrop): backdrop css to create a backdrop with a simple div with a class name deja-backdrop ([acd4ee30](https://github.com/DSI-HUG/dejajs-components/commit/acd4ee30018d2a8d20aad06fa4ca20e149456ad4))
+* **DropDownContainerService:** Added DropDownContainerService ([f016e55c](https://github.com/DSI-HUG/dejajs-components/commit/f016e55c2a9180e889ccb36d68b0485518db5981))
+
+##### Bug Fixes
+
+* **DejaToolTip:** Hide timer on leave from 20ms to 100ms ([5025e585](https://github.com/DSI-HUG/dejajs-components/commit/5025e585f55836eb2d99834ca54cbd2080b06c6d))
+* **Global:** Member access mandatory feat(Global): Usage of angular/cdk/coercion ([bded9b45](https://github.com/DSI-HUG/dejajs-components/commit/bded9b4597afd6877d0aa47f45de7234374861ee))
+
 ### 2.12.0 (2017-09-13)
 
 ##### BREAKING CHANGES
