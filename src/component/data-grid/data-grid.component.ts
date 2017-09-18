@@ -348,7 +348,7 @@ export class DejaGridComponent implements OnDestroy {
 
     /** Retourne le service de liste utilisé par ce composant. */
     public get itemListService() {
-        return this.treeListComponent.itemListService;
+        return this._itemListService || this.treeListComponent.itemListService;
     }
 
     /** Retourne une valeur indiquant le nombre de niveau hierarchiques affichés par la grille. */
