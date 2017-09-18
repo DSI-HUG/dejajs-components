@@ -1,3 +1,17 @@
+#### 2.12.2 (2017-09-18)
+
+##### Bug Fixes
+
+* **DataGrid:** Fixed regression from AOT improvements ([e36f930f](https://github.com/DSI-HUG/dejajs-components/commit/e36f930ff18989df1272e0dd1823ee8225cab978))
+* **DejaTag:** Full width ([9e94aec8](https://github.com/DSI-HUG/dejajs-components/commit/9e94aec8528118f2be18d6215c3012791b61cc5a))
+* **DejaSplitter:** Gutter size can be 0 ([3a989f56](https://github.com/DSI-HUG/dejajs-components/commit/3a989f566e580d29b097a32d882a6f7b797a3532))
+* **DejaTreeList:** Selection can fail sometimes in multiselect mode. ([e630a4da](https://github.com/DSI-HUG/dejajs-components/commit/e630a4dab9768c1004dd8fc4fab5b0dd43e43757))
+* **MenuDemo:** ContextMenu position ([91a6e5b4](https://github.com/DSI-HUG/dejajs-components/commit/91a6e5b428a8c41488c08c2a8f5a84a574ef9038))
+
+##### Other Changes
+
+* **DejaSplitter:** Gutter size can be 0 (bis) ([49111eb7](https://github.com/DSI-HUG/dejajs-components/commit/49111eb7bad5c1a472f290ba3d4bb1435cf77461))
+
 #### 2.12.1 (2017-09-14)
 
 ##### BREAKING CHANGES
