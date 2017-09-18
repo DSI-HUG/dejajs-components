@@ -161,7 +161,8 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
         const selectItems$ = Observable.combineLatest(this.selectItems$, this.contentInitialized$)
             .map(([value]) => value)
             .map((value) => this.getVirtualSelectedEntities(value))
-            .do((value) => super.setSelectedItems(!value || this._multiSelect ? value : [value]));
+            .map((value) => value instanceof Array ? value : [value])
+            .do((values) => super.setSelectedItems(values));
 
         const selectModels$ = Observable.combineLatest(this.writeValue$, this.contentInitialized$)
             .map(([value]) => {

@@ -29,7 +29,9 @@ export class MenuDemoComponent {
     public select(text: string) { this.selected = text; }
 
     protected onContextMenu(event: MouseEvent) {
-        this.contextMenu.show(event);
+        const parent = event.currentTarget as HTMLElement;
+        const parentRect = parent.getBoundingClientRect();
+        this.contextMenu.show(event.pageX - parentRect.left, event.pageY - parentRect.top);
         event.preventDefault();
         return false;
     }

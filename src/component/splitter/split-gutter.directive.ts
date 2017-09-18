@@ -41,7 +41,13 @@ export class SplitGutterDirective {
      */
     @Input()
     public set size(v: number | string) {
-        this.setStyle('flex-basis', `${coerceNumberProperty(v)}px`);
+        if (!v) {
+            this.setStyle('flex-basis', '');
+        } else if (typeof v === 'string') {
+            this.setStyle('flex-basis', `${coerceNumberProperty(v)}px`);
+        } else {
+            this.setStyle('flex-basis', `${v}px`);
+        }
     }
 
     private _disabled = false;

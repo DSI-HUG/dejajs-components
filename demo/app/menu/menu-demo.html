@@ -13,23 +13,22 @@
 </md-card>
 
 <div *ngIf="tabIndex === 1" (contextmenu)="onContextMenu($event)">
+	<deja-menu #contextMenu>
+		<ul>
+			<li (click)="contextMenu.close()">
+				<md-icon>delete_sweep</md-icon> Context menu
+			</li>
+			<li (click)="contextMenu.close()">
+				<md-icon>content_copy</md-icon> Dupliquer
+			</li>
+			<li (click)="contextMenu.close()">
+				<md-icon>edit</md-icon> Editer
+			</li>
+		</ul>
+	</deja-menu>
 	<md-card class="demo-card">
 		<md-toolbar color="primary">Menu</md-toolbar>
 		<md-card-content>
-			<deja-menu #contextMenu>
-				<ul>
-					<li (click)="contextMenu.close()">
-						<md-icon>delete_sweep</md-icon> Context menu
-					</li>
-					<li (click)="contextMenu.close()">
-						<md-icon>content_copy</md-icon> Dupliquer
-					</li>
-					<li (click)="contextMenu.close()">
-						<md-icon>edit</md-icon> Editer
-					</li>
-				</ul>
-			</deja-menu>
-
 			<deja-menu #posYMenu>
 				<ul>
 					<li (click)="posYMenu.close()">
