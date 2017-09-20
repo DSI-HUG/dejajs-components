@@ -650,17 +650,34 @@ export class GridDemoComponent {
             ...this.peopleColumns,
         ];
 
-        this.variableHeightPeopleColumns = [...this.peopleColumns];
+        this.variableHeightPeopleColumns = this.peopleColumns.map((column) => ({
+            label: column.label,
+            width: column.width,
+            name: `p1.p2.person.${column.name}`,
+        } as IDejaGridColumn));
 
-        const addressCol = this.variableHeightPeopleColumns.find((column) => column.name === 'address');
+        const addressCol = this.variableHeightPeopleColumns.find((column) => column.name === 'p1.p2.person.address');
         addressCol.sizeable = true;
         addressCol.width = '250px';
 
-        const aboutCol = this.variableHeightPeopleColumns.find((column) => column.name === 'about');
+        const aboutCol = this.variableHeightPeopleColumns.find((column) => column.name === 'p1.p2.person.about');
         aboutCol.sizeable = true;
         aboutCol.width = '400px';
 
-        this.variableHeightPeopleRows$ = peopleService.getPeople$().switchMap((people) => cloningService.clone$(people));
+        this.variableHeightPeopleRows$ = peopleService.getPeople$()
+            .switchMap((people) => cloningService.clone$(people) as Observable<Person[]>)
+            .switchMap((people) => people)
+            .map((person) => ({
+                p1: {
+                    p2: {
+                        person: person,
+                    },
+                },
+            }))
+            .reduce((acc: any[], cur) => {
+                acc.push(cur);
+                return acc;
+            }, []);
 
         this.peopleService.getPeople$().subscribe((value: Person[]) => {
             const onDemandResult = [] as IPeopleGroup[];
