@@ -100,7 +100,7 @@
 				</ng-template>
 			</deja-grid>
 		</md-card-content>
-		<md-toolbar color="primary">Grouping Server Side and Drag Drop</md-toolbar>
+		 <md-toolbar color="primary">Grouping Server Side and Drag Drop</md-toolbar>
 		<md-card-content>
 			<div>Grouping example</div>
 			<div fxLayout="row">
@@ -119,10 +119,10 @@
 				</span>
 			</div>
 		</md-card-content>
-		<md-toolbar color="primary">Variable Rows Height</md-toolbar>
+		<md-toolbar color="primary">Variable Rows Height and Deep Model</md-toolbar>
 		<md-card-content fxLayout="column" class="listContainer">
-			<deja-grid id="variable" #variable maxHeight="auto" columnsSortable multiSelect columnsSizable sortable [rows]="variableHeightPeopleRows$" [columns]="variableHeightPeopleColumns" viewportMode="auto" nodataholder="No datas" searchField="name" valueField="guid" (columnSizeChanged)="onColumnSizeChanged($event, variable)"></deja-grid> 
-		</md-card-content>
+			<deja-grid id="variable" #variable maxHeight="auto" searchArea columnsSortable multiSelect columnsSizable sortable [rows]="variableHeightPeopleRows$" [columns]="variableHeightPeopleColumns" viewportMode="auto" nodataholder="No datas" searchField="p1.p2.person.name" valueField="p1.p2.person.guid" (columnSizeChanged)="onColumnSizeChanged($event, variable)"></deja-grid> 
+		</md-card-content> 
 	</md-card>
 </div>
 

@@ -269,7 +269,7 @@ export abstract class ItemListBase implements OnDestroy {
      * @return {string} Texte à afficher pour le modèle spécifié.
      */
     public getTextValue(value: any) {
-        return this.getItemListService().getTextValue(value, this._textField);
+        return ItemListService.getTextValue(value, this._textField);
     }
 
     /**
@@ -455,7 +455,7 @@ export abstract class ItemListBase implements OnDestroy {
         if (this._itemListService) {
             this._itemListService.hideSelected = this._hideSelected;
             this._itemListService.childrenField = this._childrenField;
-            this._itemListService.valueField = this.getValueField();
+            this._itemListService.valueField = this._valueField;
             this.waiter$sub = Observable.from(this._itemListService.waiter$)
                 .takeWhile(() => this._isAlive)
                 .subscribe((status: boolean) => {

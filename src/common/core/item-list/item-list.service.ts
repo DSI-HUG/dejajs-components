@@ -74,6 +74,54 @@ export class ItemListService {
     // champs à utiliser comme valeur de comparaison
     private _valueField: string;
 
+    /** Evalue la valeur à comparer pour l'élément spécifié.
+     * @param {any} value  Model à évaluer.
+     * @param {string} valueField (optional) Champs à traiter comme valeur.
+     * @return {string} Valeur à comparer pour le modèle spécifié.
+     */
+    public static getValueValue(item: any, valueField?: string) {
+        if (valueField) {
+            const fields = valueField.split('.');
+            let model = item.model && item.model[fields[0]] !== undefined ? item.model : item;
+            fields.forEach((fieldName) => {
+                model = model && model[fieldName];
+            });
+            if (model) {
+                return typeof model === 'function' ? model() : model;
+            }
+        }
+
+        return item.value || item.model || item;
+    }
+
+    /** Evalue le texte à afficher pour l'élément spécifié.
+     * @param {any} value  Model à évaluer.
+     * @param {string} textField (optional) Champs à traiter comme source du texte.
+     * @return {string} Texte à afficher pour le modèle spécifié.
+     */
+    public static getTextValue(value: any, textField?: string) {
+        if (!value) {
+            return '';
+        } else {
+            if (textField) {
+                const fields = textField.split('.');
+                let model = value.model && value.model[fields[0]] !== undefined ? value.model : value;
+                fields.forEach((fieldName) => {
+                    model = model && model[fieldName];
+                });
+                if (model !== undefined) {
+                    return typeof model === 'function' ? model() : model;
+                }
+            }
+
+            if (value.displayName) {
+                return typeof value.displayName === 'string' ? value.displayName : value.displayName();
+            } else if (typeof value.toString === 'function') {
+                return value.toString();
+            }
+        }
+    }
+
     /**
      * Set a observable called before the list will be displayed
      */
@@ -268,48 +316,6 @@ export class ItemListService {
      */
     public setGroupingService(value: GroupingService) {
         this._groupingService = value;
-    }
-
-    /** Evalue la valeur à comparer pour l'élément spécifié.
-     * @param {any} value  Model à évaluer.
-     * @param {string} valueField (optional) Champs à traiter comme valeur.
-     * @return {string} Valeur à comparer pour le modèle spécifié.
-     */
-    public getValueValue(item: any, valueField?: string) {
-        if (valueField) {
-            const fields = valueField.split('.');
-            let model = item.model && item.model[fields[0]] !== undefined ? item.model : item;
-            fields.forEach((fieldName) => {
-                model = model && model[fieldName];
-            });
-            return typeof model === 'function' ? model() : model;
-        } else {
-            return item.model || item;
-        }
-    }
-
-    /** Evalue le texte à afficher pour l'élément spécifié.
-     * @param {any} value  Model à évaluer.
-     * @param {string} textField (optional) Champs à traiter comme source du texte.
-     * @return {string} Texte à afficher pour le modèle spécifié.
-     */
-    public getTextValue(value: any, textField?: string) {
-        if (!value) {
-            return '';
-        } else {
-            if (textField) {
-                const fields = textField.split('.');
-                let model = value.model && value.model[fields[0]] !== undefined ? value.model : value;
-                fields.forEach((fieldName) => {
-                    model = model && model[fieldName];
-                });
-                return typeof model === 'function' ? model() : model;
-            } else if (value.displayName) {
-                return typeof value.displayName === 'string' ? value.displayName : value.displayName();
-            } else if (typeof value.toString === 'function') {
-                return value.toString();
-            }
-        }
     }
 
     /** Usage interne. Termine le drag and drop en cours. */
@@ -970,7 +976,7 @@ export class ItemListService {
      * @return {boolean} True si l'élément correspond aux critères de recherche.
      */
     protected itemMatch(item: IItemBase, searchField: string, regExp: RegExp) {
-        const value = typeof item[searchField] === 'function' ? item[searchField]() : (item[searchField] ? item[searchField] : this.getTextValue(item));
+        const value = typeof item[searchField] === 'function' ? item[searchField]() : (item[searchField] ? item[searchField] : ItemListService.getTextValue(item, searchField));
         return value && regExp.test(Diacritics.remove(value));
     }
 
@@ -1218,7 +1224,7 @@ export class ItemListService {
             } else if (item2.model && item2.model.equals) {
                 return item2.model.equals(item1.model);
             } else {
-                return this.getValueValue(item1, this._valueField) === this.getValueValue(item2, this._valueField);
+                return ItemListService.getValueValue(item1, this._valueField) === ItemListService.getValueValue(item2, this._valueField);
             }
         }
     }
