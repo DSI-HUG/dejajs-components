@@ -19,7 +19,7 @@ deja-message-box {
 		}
 		.mat-card-content {
 			margin: 0;
-			padding: 1rem;
+			padding: 0.75rem;
 			overflow: hidden;
 			h2 {
 				font-size: 1.3rem;
@@ -47,7 +47,7 @@ deja-message-box {
 					&:not([disabled]) {
 						box-shadow: none;
 					}
-					&.close {
+					&.action-button {
 						align-items: stretch;
 						display: flex;
 						height: 1rem;
@@ -95,7 +95,7 @@ deja-message-box {
 			.mat-card-content {
 				align-self: center;
 				flex: 1 1 auto;
-				padding: 1rem;
+				padding: 0.75rem;
 			}
 			.mat-card-actions {
 				margin: 0;
