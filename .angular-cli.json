@@ -16,9 +16,9 @@
             "index": "index.html",
             "main": "main.ts",
             "polyfills": "../src/polyfills.ts",
-            "test": "test.ts",
+            "test": "../src/test.ts",
             "tsconfig": "tsconfig.app.json",
-            "testTsconfig": "tsconfig.spec.json",
+            "testTsconfig": "../src/tsconfig.spec.json",
             "prefix": "app",
             "styles": [
                 "styles.scss"
@@ -45,7 +45,7 @@
             "project": "demo/tsconfig.app.json"
         },
         {
-            "project": "demo/tsconfig.spec.json"
+            "project": "src/tsconfig.spec.json"
         },
         {
             "project": "e2e/tsconfig.e2e.json"

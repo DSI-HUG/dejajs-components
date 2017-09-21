@@ -7,6 +7,7 @@
  */
 
 import { Injectable } from '@angular/core';
+import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/toPromise';
 import { Observable } from 'rxjs/Observable';
 
