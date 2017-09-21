@@ -20,10 +20,15 @@ deja-message-box {
 		.mat-card-content {
 			margin: 0;
 			padding: 1rem;
+			overflow: hidden;
 			h2 {
-				font-size: 1.5rem;
+				font-size: 1.3rem;
 				margin: 0;
-				line-height: 32px;
+				font-weight: 300;
+				line-height: 2rem;
+				text-overflow: ellipsis;
+				overflow: hidden;
+				white-space: nowrap;
 			}
 		}
 		.mat-card-actions {
@@ -96,8 +101,8 @@ deja-message-box {
 				margin: 0;
 				padding: 0;
 				position: absolute;
-				right: 0.1rem;
-				top: 0.1rem;
+				right: 0.2rem;
+    			top: 0.3rem;
 			}
 		}
 	}
