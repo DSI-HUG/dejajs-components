@@ -34,7 +34,8 @@
     "release:minor": "changelog -m && git add CHANGELOG.md && git commit -m \"updated CHANGELOG.md\" && npm version minor && git push origin",
     "release:patch": "changelog -p && git add CHANGELOG.md && git commit -m \"updated CHANGELOG.md\" && npm version patch && git push origin",
     "start": "yarn run copy:assets && yarn run lint && ng serve --port 5100",
-    "test": "ng test"
+    "test": "ng test --single-run",
+    "test:watch": "ng test"
   },
   "dependencies": {
     "@angular/animations": "4.3.6",
