@@ -269,7 +269,7 @@ export abstract class ItemListBase implements OnDestroy {
      * @return {string} Texte à afficher pour le modèle spécifié.
      */
     public getTextValue(value: any) {
-        return ItemListService.getTextValue(value, this._textField);
+        return this.getItemListService().getTextValue(value, this._textField);
     }
 
     /**

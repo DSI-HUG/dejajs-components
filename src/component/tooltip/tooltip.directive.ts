@@ -16,6 +16,7 @@ import { DejaTooltipService } from './tooltip.service';
     selector: '[deja-tooltip]',
 })
 export class DejaTooltipDirective {
+    @Input('tooltip-delay') public delay = 600;
     @Input('tooltip-model') public model: any;
     @Input('deja-tooltip') public name: string;
     @Input('tooltip-positions') public positions: DejaConnectionPositionPair | string;
@@ -29,7 +30,7 @@ export class DejaTooltipDirective {
         const leave$ = Observable.fromEvent(element, 'mouseleave');
 
         Observable.fromEvent(element, 'mouseenter')
-            .flatMap((e) => Observable.of(e).delay(200).takeUntil(leave$))
+            .flatMap((e) => Observable.of(e).delay(this.delay).takeUntil(leave$))
             .subscribe(() => {
                 tooltipService.params[this.name] = {
                     model: this.model,

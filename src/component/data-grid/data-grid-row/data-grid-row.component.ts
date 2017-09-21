@@ -74,6 +74,6 @@ export class DejaGridRowComponent implements OnDestroy {
     }
 
     public getCellText(row, textField) {
-        return ItemListService.getTextValue(row, textField);
+        return ItemListService.getItemText(row, textField);
     }
 }

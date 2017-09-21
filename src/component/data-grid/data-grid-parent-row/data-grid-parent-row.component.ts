@@ -79,7 +79,7 @@ export class DejaGridParentRowComponent {
     constructor(private changeDetectorRef: ChangeDetectorRef) { }
 
     public getCellText(row, textField) {
-        return ItemListService.getTextValue(row, textField);
+        return ItemListService.getItemText(row, textField);
     }
 }
 
