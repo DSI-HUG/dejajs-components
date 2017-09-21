@@ -79,7 +79,7 @@ export class ItemListService {
      * @param {string} valueField (optional) Champs à traiter comme valeur.
      * @return {string} Valeur à comparer pour le modèle spécifié.
      */
-    public static getValueValue(item: any, valueField?: string) {
+    public static getItemValue(item: any, valueField?: string) {
         if (valueField) {
             const fields = valueField.split('.');
             let model = item.model && item.model[fields[0]] !== undefined ? item.model : item;
@@ -99,7 +99,7 @@ export class ItemListService {
      * @param {string} textField (optional) Champs à traiter comme source du texte.
      * @return {string} Texte à afficher pour le modèle spécifié.
      */
-    public static getTextValue(value: any, textField?: string) {
+    public static getItemText(value: any, textField?: string) {
         if (!value) {
             return '';
         } else {
@@ -316,6 +316,24 @@ export class ItemListService {
      */
     public setGroupingService(value: GroupingService) {
         this._groupingService = value;
+    }
+
+    /** Evalue le texte à afficher pour l'élément spécifié.
+     * @param {any} value  Model à évaluer.
+     * @param {string} textField (optional) Champs à traiter comme source du texte.
+     * @return {string} Texte à afficher pour le modèle spécifié.
+     */
+    public getTextValue(value: any, textField?: string) {
+        return ItemListService.getItemText(value, textField);
+    }
+
+    /** Evalue la valeur à comparer pour l'élément spécifié.
+     * @param {any} value  Model à évaluer.
+     * @param {string} valueField (optional) Champs à traiter comme valeur.
+     * @return {string} Valeur à comparer pour le modèle spécifié.
+     */
+    public getValue(item: any, valueField?: string) {
+        return ItemListService.getItemValue(item, valueField);
     }
 
     /** Usage interne. Termine le drag and drop en cours. */
@@ -976,7 +994,7 @@ export class ItemListService {
      * @return {boolean} True si l'élément correspond aux critères de recherche.
      */
     protected itemMatch(item: IItemBase, searchField: string, regExp: RegExp) {
-        const value = typeof item[searchField] === 'function' ? item[searchField]() : (item[searchField] ? item[searchField] : ItemListService.getTextValue(item, searchField));
+        const value = typeof item[searchField] === 'function' ? item[searchField]() : (item[searchField] ? item[searchField] : this.getTextValue(item, searchField));
         return value && regExp.test(Diacritics.remove(value));
     }
 
@@ -1224,7 +1242,7 @@ export class ItemListService {
             } else if (item2.model && item2.model.equals) {
                 return item2.model.equals(item1.model);
             } else {
-                return ItemListService.getValueValue(item1, this._valueField) === ItemListService.getValueValue(item2, this._valueField);
+                return this.getValue(item1, this._valueField) === this.getValue(item2, this._valueField);
             }
         }
     }
