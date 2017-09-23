@@ -20,15 +20,32 @@ module.exports = function (config) {
             reports: ['html', 'lcovonly'],
             fixWebpackSourcePaths: true
         },
+        customLaunchers: {
+            ChromeHeadless: {
+                base: 'Chrome',
+                flags: [
+                    '--headless',
+                    '--disable-gpu',
+                    // Without a remote debugging port, Google Chrome exits immediately.
+                    '--remote-debugging-port=9222',
+                ],
+            }
+        },
         angularCli: {
             environment: 'dev'
         },
-        reporters: ['progress', 'kjhtml', 'mocha'],
+        reporters: config.angularCli && config.angularCli.codeCoverage
+        ? ['mocha', 'coverage-istanbul']
+        : ['mocha', 'kjhtml'],
+        // reporter options
+        mochaReporter: {
+            output: 'autowatch'
+        },
         port: 9876,
         colors: true,
         logLevel: config.LOG_INFO,
         autoWatch: true,
-        browsers: ['Chrome'],
+        browsers: ['ChromeHeadless'],
         singleRun: false
     });
 };
