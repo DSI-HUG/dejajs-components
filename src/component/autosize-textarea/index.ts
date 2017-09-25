@@ -9,7 +9,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MdInputModule } from '@angular/material';
+import { MatInputModule } from '@angular/material';
 import { DejaAutosizeTextAreaDirective } from './autosize-textarea.directive';
 
 /** @deprecated use mat-autosize instead */
@@ -19,7 +19,7 @@ import { DejaAutosizeTextAreaDirective } from './autosize-textarea.directive';
     imports: [
         CommonModule,
         FormsModule,
-        MdInputModule,
+        MatInputModule,
     ],
 })
 export class DejaAutosizeTextAreaModule { }

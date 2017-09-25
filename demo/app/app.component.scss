@@ -16,21 +16,21 @@ body {
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
 	}
-	[md-icon-button] {
+	[mat-icon-button] {
 		overflow: hidden;
 	}
-	md-sidenav-container.demo-root {
+	mat-sidenav-container.demo-root {
 		height: 100%;
-		md-sidenav {
+		mat-sidenav {
 			min-width: 15%;
-			[md-button] {
+			[mat-button] {
 				width: 100%;
 				position: relative;
 				bottom: 0;
 				margin: 24px 0;
 			}
 		}
-		md-content {
+		mat-content {
 			height: auto;
 			overflow: visible;
 		}
@@ -39,11 +39,11 @@ body {
 		margin: 32px;
 	}
 
-	md-card.demo-card {
+	mat-card.demo-card {
 		padding: 0 !important;
 		margin: 1rem 0;
 
-		md-card-content {
+		mat-card-content {
 			padding: 2rem;
 
 			&.no-padding {

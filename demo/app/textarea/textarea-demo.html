@@ -1,26 +1,26 @@
-<md-tab-group [selectedIndex]="tabIndex" (selectChange)="tabIndex = $event.index">
-    <!--<md-tab label="OVERVIEW">-->
-    <!--<md-card class="demo-card demo-basic">-->
+<mat-tab-group [selectedIndex]="tabIndex" (selectChange)="tabIndex = $event.index">
+    <!--<mat-tab label="OVERVIEW">-->
+    <!--<mat-card class="demo-card demo-basic">-->
     <!--TODO-->
-    <!--</md-card>-->
-    <!--</md-tab>-->
-    <md-tab label="API REFERENCE"></md-tab>
-    <md-tab label="EXAMPLES"></md-tab>
-</md-tab-group>
+    <!--</mat-card>-->
+    <!--</mat-tab>-->
+    <mat-tab label="API REFERENCE"></mat-tab>
+    <mat-tab label="EXAMPLES"></mat-tab>
+</mat-tab-group>
 
-<md-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
+<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
     TODO
-</md-card>
-<md-card class="demo-card demo-basic" *ngIf="tabIndex === 1">
-    <md-toolbar color="primary">Textarea Autosized</md-toolbar>
-    <md-card-content>
-        <md-form-field>
-            <textarea deja-autosize mdInput placeholder="This is an autosize text area" [(ngModel)]="multitext"></textarea>
-        </md-form-field>
-    </md-card-content>
-    <md-card-content>
-        <md-form-field>
-            <textarea deja-autosize mdInput placeholder="This is an empty text area" [(ngModel)]="multitext2"></textarea>
-        </md-form-field>
-    </md-card-content>
-</md-card>
+</mat-card>
+<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 1">
+    <mat-toolbar color="primary">Textarea Autosized</mat-toolbar>
+    <mat-card-content>
+        <mat-form-field>
+            <textarea deja-autosize matInput placeholder="This is an autosize text area" [(ngModel)]="multitext"></textarea>
+        </mat-form-field>
+    </mat-card-content>
+    <mat-card-content>
+        <mat-form-field>
+            <textarea deja-autosize matInput placeholder="This is an empty text area" [(ngModel)]="multitext2"></textarea>
+        </mat-form-field>
+    </mat-card-content>
+</mat-card>
