@@ -1,27 +1,27 @@
-<md-sidenav-container fxFlex [class.sidenav-hidden]="hidden" [class.sidenav-light]="!hidden && !sidenav.opened">
+<mat-sidenav-container fxFlex [class.sidenav-hidden]="hidden" [class.sidenav-light]="!hidden && !sidenav.opened">
 
-    <md-sidenav #sidenav mode="side" fxLayout="column" opened>
-        <md-toolbar class="header">
-            <md-icon class="header-icon">face</md-icon>
+    <mat-sidenav #sidenav mode="side" fxLayout="column" opened>
+        <mat-toolbar class="header">
+            <mat-icon class="header-icon">face</mat-icon>
             <span class="header-text">{{headerText}}</span>
             <span fxFlex></span>
-            <button md-icon-button class="header-menu-btn" (click)="sidenav.toggle()">
-                <md-icon></md-icon>
+            <button mat-icon-button class="header-menu-btn" (click)="sidenav.toggle()">
+                <mat-icon></mat-icon>
             </button>
-        </md-toolbar>
+        </mat-toolbar>
         <ng-content select="deja-sidenav-menu"></ng-content>
-    </md-sidenav>
+    </mat-sidenav>
 
     <div fxLayout="column" fxFlex>
-        <md-toolbar color="primary">
-            <button md-icon-button class="menu-btn" *ngIf="!sidenav.opened" (click)="sidenav.open()">
-                <md-icon>menu</md-icon>
+        <mat-toolbar color="primary">
+            <button mat-icon-button class="menu-btn" *ngIf="!sidenav.opened" (click)="sidenav.open()">
+                <mat-icon>menu</mat-icon>
             </button>
             <span>{{ title }}</span>
             <span fxFlex></span>
             <ng-content select="deja-sidenav-header"></ng-content>            
-        </md-toolbar>
+        </mat-toolbar>
         <ng-content select="deja-sidenav-content"></ng-content>
     </div>
 
-</md-sidenav-container>
+</mat-sidenav-container>

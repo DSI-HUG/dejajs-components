@@ -11,7 +11,7 @@ import { ConnectedOverlayDirective, OverlayOrigin } from '@angular/cdk/overlay';
 import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ObservableMedia } from '@angular/flex-layout';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
-import { MdInput } from '@angular/material';
+import { MatInput } from '@angular/material';
 import 'rxjs/add/operator/delayWhen';
 import 'rxjs/add/operator/takeWhile';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -73,8 +73,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @ContentChild('itemTemplate') public itemTemplateInternal;
     @ContentChild('parentItemTemplate') public parentItemTemplateInternal;
     @ContentChild('selectedTemplate') public selectedTemplate;
-    @ContentChild('suffixTemplate') public _mdSuffix;
-    /** Template for MdError inside md-input-container */
+    @ContentChild('suffixTemplate') public _matSuffix;
+    /** Template for MdError inside mat-input-container */
     @ContentChild('errorTemplate') public mdError;
 
     /** Internal use */
@@ -94,7 +94,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     private mouseUp$sub: Subscription;
 
     @ViewChild('inputElement') private _inputElement: ElementRef;
-    @ViewChild(MdInput) protected input: MdInput;
+    @ViewChild(MatInput) protected input: MatInput;
 
     @HostBinding('attr.disabled') private _disabled = null;
     private _type = 'select';
@@ -150,8 +150,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return !this.isMobile ? this._dropDownWidth || element.clientWidth : '100%';
     }
 
-    public get mdSuffix() {
-        return this._mdSuffix;
+    public get matSuffix() {
+        return this._matSuffix;
     }
 
     public get keyboardNavigation() {

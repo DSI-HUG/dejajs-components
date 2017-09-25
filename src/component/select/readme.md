@@ -319,8 +319,8 @@ Crée une liste déroulante.
 <ng-template #parentItemTemplate let-item let-flatindex="flatindex">
     <span>{{ item.label }} </span>
     <span flex></span>
-    <button type="button" md-icon-button (mouseup)="editSection($event, item)">
-        <md-icon>edit</md-icon>
+    <button type="button" mat-icon-button (mouseup)="editSection($event, item)">
+        <mat-icon>edit</mat-icon>
     </button>
 </ng-template>
 ```
@@ -337,7 +337,7 @@ Crée une liste déroulante.
   - `placeHolderTemplate`
 ```html
 <ng-template #placeHolderTemplate>
-    <md-icon role="img" class="material-icons mat-icon" aria-label="info_outline">info_outline</md-icon>
+    <mat-icon role="img" class="material-icons mat-icon" aria-label="info_outline">info_outline</mat-icon>
     <span>Liste des pays</span>
 </ng-template>
 ```

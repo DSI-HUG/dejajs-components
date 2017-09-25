@@ -10,7 +10,6 @@ import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import { MaterialModule } from '@angular/material';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
@@ -66,6 +65,7 @@ import {
     // } from '../../dist';
 } from '../../src/index';
 
+import { MatButtonModule, MatCheckboxModule, MatIconModule, MatInputModule, MatMenuModule, MatProgressSpinnerModule, MatSidenavModule, MatTabsModule, NoConflictStyleCompatibilityMode } from '@angular/material';
 import { DejaAccordionDemoComponent } from './accordion/accordion-demo.component';
 import { DejaCircularPickerDemoComponent } from './circular-picker/circular-picker-demo';
 import { DejaColorSelectorDemoComponent } from './color-selector/color-selector-demo';
@@ -125,10 +125,16 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         BrowserAnimationsModule,
         RouterModule,
         routing,
-
-        MaterialModule,
         FlexLayoutModule,
-
+        NoConflictStyleCompatibilityMode,
+        MatIconModule,
+        MatButtonModule,
+        MatInputModule,
+        MatMenuModule,
+        MatTabsModule,
+        MatProgressSpinnerModule,
+        MatCheckboxModule,
+        MatSidenavModule,
         DejaAccordionModule,
         DejaChipsModule,
         DejaCircularPickerModule,

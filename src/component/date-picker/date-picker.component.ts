@@ -52,9 +52,9 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     @Input() public disableDates: Array<DaysOfWeek | Date>; // | ((d: Date) => boolean);
     /** Reference to DejaDateSelectorComponent inside thic control */
     @ViewChild(DejaDateSelectorComponent) public dateSelectorComponent: DejaDateSelectorComponent;
-    /** Template for MdHint inside md-input-container */
+    /** Template for MdHint inside mat-input-container */
     @ContentChild('hintTemplate') public mdHint;
-    /** Template for MdError inside md-input-container */
+    /** Template for MdError inside mat-input-container */
     @ContentChild('errorTemplate') public mdError;
     /** Offset de position horizontal de la zone de dropdown */
     @Input() public overlayOffsetX = 0;
@@ -376,7 +376,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
 
     /**
      * Called when user click on the input of this component.
-     * If click is located on md-icon 'calendar' who is in the mdPrefix of md-input-container, the picker show off.
+     * If click is located on mat-icon 'calendar' who is in the matPrefix of mat-input-container, the picker show off.
      *
      * @param {Event} event
      */

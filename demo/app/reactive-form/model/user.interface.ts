@@ -11,7 +11,7 @@ import { IRange } from '../../../../src/component/range/range.interface';
 import { Country } from '../../services/countries.service';
 
 export interface IUser {
-    name: string;                       // MdInput
+    name: string;                       // matInput
     country: Country;                   // DejaSelect
     visitedCountries: Country[];        // DejaSelect => MultiSelect
     birthDate: Date;                    // DejaDatePicker && DejaDateSelector

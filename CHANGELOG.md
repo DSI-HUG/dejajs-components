@@ -1369,7 +1369,7 @@ Fix bugs
 # [1.1.1] (2017-01-??)
 
 ### Breaking changes from 1.0.0
-* **DejaAutosizeTextAreaDirective:** The directive deja-autositze is now placed on the textarea element inside an md-input-container. ngModel must be also declared on the textarea element.
+* **DejaAutosizeTextAreaDirective:** The directive deja-autositze is now placed on the textarea element inside an mat-input-container. ngModel must be also declared on the textarea element.
 * **BooleanFieldValue:**  The annotation BooleanFieldValue is removed due to an incompatibility with webpack. Now the angular material core coerceBooleanProperty is used instead.
 
 ### Bug Fixes

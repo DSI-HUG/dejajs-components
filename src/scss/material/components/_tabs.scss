@@ -3,7 +3,7 @@
 @mixin tabs-theme($theme) {
 	$primary: map-get($theme, primary);
 
-	md-tab-group {
+	mat-tab-group {
 		&[multi-lines] {
 			.mat-tab-labels {
 				flex-wrap: wrap;
@@ -35,7 +35,7 @@
 					}
 				}
 			}
-			md-ink-bar {
+			mat-ink-bar {
 				background-color: mat-color($primary) !important;
 				display: none;
 			}

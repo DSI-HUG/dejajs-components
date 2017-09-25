@@ -1,24 +1,24 @@
-<md-tab-group [selectedIndex]="tabIndex" (selectChange)="tabIndex = $event.index">
-    <!--<md-tab label="OVERVIEW">-->
-    <!--<md-card class="demo-card demo-basic">-->
+<mat-tab-group [selectedIndex]="tabIndex" (selectChange)="tabIndex = $event.index">
+    <!--<mat-tab label="OVERVIEW">-->
+    <!--<mat-card class="demo-card demo-basic">-->
     <!--TODO-->
-    <!--</md-card>-->
-    <!--</md-tab>-->
-    <md-tab label="API REFERENCE"></md-tab>
-    <md-tab label="EXAMPLES"></md-tab>
-</md-tab-group>
+    <!--</mat-card>-->
+    <!--</mat-tab>-->
+    <mat-tab label="API REFERENCE"></mat-tab>
+    <mat-tab label="EXAMPLES"></mat-tab>
+</mat-tab-group>
 
-<md-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
+<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
     <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/content-editable/readme.md'"></deja-markdown>
-</md-card>
+</mat-card>
 
-<md-card class="demo-card demo-basic" *ngIf="tabIndex === 1">
-    <md-toolbar color="primary">Content Editable Demo</md-toolbar>
-    <md-card-content>
-        <md-checkbox color="primary" [(ngModel)]="designMode">Design Mode</md-checkbox>
-        <md-checkbox color="primary" [(ngModel)]="disabled">Disabled</md-checkbox>
-    </md-card-content>
-    <md-card-content id="contentEditableContainer">
+<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 1">
+    <mat-toolbar color="primary">Content Editable Demo</mat-toolbar>
+    <mat-card-content>
+        <mat-checkbox color="primary" [(ngModel)]="designMode">Design Mode</mat-checkbox>
+        <mat-checkbox color="primary" [(ngModel)]="disabled">Disabled</mat-checkbox>
+    </mat-card-content>
+    <mat-card-content id="contentEditableContainer">
         <span [deja-editable]="designMode" [disabled]="disabled" multiline>
 			Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 			<br /> Mauris auctor sit amet odio et aliquet. Curabitur auctor eleifend mattis.
@@ -26,5 +26,5 @@
 			<br /> Nulla dictum nisi eu tortor lacinia porttitor. Donec eu arcu et enim cursus viverra.
 			<br /> Praesent pulvinar dui nisi, a tincidunt arcu finibus sed.
 		</span>
-    </md-card-content>
-</md-card>
+    </mat-card-content>
+</mat-card>

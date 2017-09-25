@@ -13,7 +13,7 @@ deja-message-box {
 			display: flex;
 			margin: 0;
 			padding: 0.8rem;
-			md-icon {
+			mat-icon {
 				margin-right: 0.5rem;
 			}
 		}
@@ -41,9 +41,9 @@ deja-message-box {
 			button {
 				margin-left: 0.2rem;
 
-				&.mat-blank[md-raised-button],
-				&.mat-blank[md-fab],
-				&.mat-blank[md-mini-fab] {
+				&.mat-blank[mat-raised-button],
+				&.mat-blank[mat-fab],
+				&.mat-blank[mat-mini-fab] {
 					&:not([disabled]) {
 						box-shadow: none;
 					}
@@ -58,7 +58,7 @@ deja-message-box {
 						.mat-button-wrapper {
 							height: 1rem;
 							width: 1rem;
-							md-icon {
+							mat-icon {
 								font-size: 1rem;
 								height: 1rem;
 								line-height: 1rem;
@@ -88,7 +88,7 @@ deja-message-box {
 				justify-content: center;
 				margin: 0;
 				text-align: center;
-				md-icon {
+				mat-icon {
 					margin: 0;
 				}
 			}

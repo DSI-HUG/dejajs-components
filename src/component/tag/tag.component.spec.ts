@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
-import { MdIconModule, MdInputModule } from '@angular/material';
+import { MatIconModule, MatInputModule } from '@angular/material';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DejaChipsModule } from '../chips/index';
@@ -35,8 +35,8 @@ describe('DejaTagComponent', () => {
                 CommonModule,
                 FlexLayoutModule,
                 FormsModule,
-                MdIconModule,
-                MdInputModule,
+                MatIconModule,
+                MatInputModule,
                 FlexLayoutModule,
                 DejaChipsModule,
                 BrowserAnimationsModule,
