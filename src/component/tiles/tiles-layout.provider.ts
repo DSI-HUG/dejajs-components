@@ -456,7 +456,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
     }
 
     public get tiles() {
-        return this._tiles;
+        return this._tiles || [];
     }
 
     public set selectedTiles(selectedIds: string[]) {
