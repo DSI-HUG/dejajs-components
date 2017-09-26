@@ -379,6 +379,11 @@ export class DejaMonacoEditorComponent implements OnDestroy, OnChanges, AfterVie
     }
 
     /**
+     * Event triggered when the value is loaded
+     */
+    @Output() public loaded = new EventEmitter();
+
+    /**
      * Event triggered when value change
      */
     @Output() public valueChange = new EventEmitter();
@@ -432,14 +437,20 @@ export class DejaMonacoEditorComponent implements OnDestroy, OnChanges, AfterVie
                     this.originalModelSub.dispose();
                     delete this.originalModelSub;
                 }
-                model.setValue(value);
+
+                let first = true;
                 this.originalModelSub = model.onDidChangeContent(() => {
                     const v = model.getValue();
-                    if (v !== value) {
+                    if (first) {
+                        this.loaded.emit(v);
+                        first = false;
+                    } else if (v !== value) {
                         console.log(value);
                         this.valueChange.emit(value);
                     }
                 });
+
+                model.setValue(value);
             });
 
         modified$
@@ -459,10 +470,13 @@ export class DejaMonacoEditorComponent implements OnDestroy, OnChanges, AfterVie
                 });
             });
 
-        Observable.combineLatest(this.editorElement$, Observable.fromEvent(window, 'resize'))
+        Observable.combineLatest(this.editorElement$, this.editor$, Observable.fromEvent(window, 'resize'))
             .takeWhile(() => this.isAlive)
             .debounceTime(5)
-            .subscribe(([element]) => setElementSize(element));
+            .subscribe(([element, editor]) => {
+                setElementSize(element);
+                editor.layout();
+            });
 
         Observable.combineLatest(this.editor$, this.options$)
             .takeWhile(() => this.isAlive)
