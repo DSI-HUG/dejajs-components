@@ -381,12 +381,12 @@ export class DejaMonacoEditorComponent implements OnDestroy, OnChanges, AfterVie
     /**
      * Event triggered when the value is loaded
      */
-    @Output() public loaded = new EventEmitter();
+    @Output() public loaded = new EventEmitter<string>();
 
     /**
      * Event triggered when value change
      */
-    @Output() public valueChange = new EventEmitter();
+    @Output() public valueChange = new EventEmitter<string>();
 
     /**
      * Event triggered when valueToCompare change
@@ -446,8 +446,9 @@ export class DejaMonacoEditorComponent implements OnDestroy, OnChanges, AfterVie
                         first = false;
                     } else if (v !== value) {
                         console.log(value);
-                        this.valueChange.emit(value);
+                        this.valueChange.emit(v);
                     }
+                    value = v;
                 });
 
                 model.setValue(value);
@@ -465,8 +466,9 @@ export class DejaMonacoEditorComponent implements OnDestroy, OnChanges, AfterVie
                     const v = model.getValue();
                     if (v !== value) {
                         console.log(value);
-                        this.valueToCompareChange.emit(value);
+                        this.valueToCompareChange.emit(v);
                     }
+                    value = v;
                 });
             });
 

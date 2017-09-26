@@ -29,7 +29,7 @@ export class MonacoEditorService {
         this.monacoApi$ = Observable.from(api$)
             .first()
             .publishLast()
-            .refCount()
+            .refCount();
 
         const onGotAmdLoader = () => {
             // Load monaco
