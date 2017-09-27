@@ -129,6 +129,7 @@ export class DejaColorPickerComponent implements ControlValueAccessor, OnInit, O
     // From ControlValueAccessor interface
     public writeValue(value: Color) {
         this._value = value;
+        this.changeDetectorRef.markForCheck();
     }
 
     // From ControlValueAccessor interface
@@ -162,7 +163,7 @@ export class DejaColorPickerComponent implements ControlValueAccessor, OnInit, O
         this.isOpen = false;
     }
 
-    protected onColorChange(color: Color) {
+    public onColorChange(color: Color) {
         this.isOpen = false;
         this.value = color;
     }
