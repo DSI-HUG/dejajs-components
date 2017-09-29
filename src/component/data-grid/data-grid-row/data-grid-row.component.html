@@ -1,6 +1,6 @@
 <div *ngIf="columnLayout.vpBeforeWidth" [style.flex-basis.px]="columnLayout.vpBeforeWidth"></div>
 <div *ngFor="let column of columnLayout.columns; let index=index" [attr.colindex]="index" [attr.colname]="column.name" [class.dragged]="column.dragged" [attr.current]="column.isCurrent || null" class="cell-wrapper" [style.flex-basis.px]="column.w">
-	<span *ngIf="!cellTemplate || !column.useCellTemplate" class="cell">{{ row[column.name] }}</span>
+	<span *ngIf="!cellTemplate || !column.useCellTemplate" class="cell">{{ getCellText(row, column.name) }}</span>
 	<ng-template [ngTemplateOutlet]="cellTemplate" *ngIf="cellTemplate && column.useCellTemplate" [ngTemplateOutletContext]="{ $implicit: row, flatIndex: flatIndex, column: column }"></ng-template>
 </div>
 <div *ngIf="columnLayout.vpAfterWidth" [style.flex-basis.px]="columnLayout.vpAfterWidth"></div>
