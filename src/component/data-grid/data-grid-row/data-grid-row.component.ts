@@ -9,6 +9,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, Input, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { ItemListService } from '../../../common/core/item-list/item-list.service';
 import { IDejaGridColumnLayout } from '../data-grid-column/data-grid-column-layout';
 import { IDejaGridRow } from './data-grid-row';
 
@@ -70,5 +71,9 @@ export class DejaGridRowComponent implements OnDestroy {
         if (this.refresh$sub) {
             this.refresh$sub.unsubscribe();
         }
+    }
+
+    public getCellText(row, textField) {
+        return ItemListService.getItemText(row, textField);
     }
 }

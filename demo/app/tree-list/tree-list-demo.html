@@ -138,7 +138,15 @@
 			<div>
 				<mat-checkbox [(ngModel)]="disabled" color="primary">Check me to disable tree-list below</mat-checkbox>
 			</div>
-			<deja-tree-list searchArea class="demo-half-width" nodataholder="No record to display" maxHeight="auto" [disabled]="disabled" selectionClearable [(ngModel)]="country" textField="naqme" valueField="code" [models]="countries"></deja-tree-list>
+			<div fxLayout="row">
+				<span fxFlex="0 0 45%" fxLayout="column">
+					<deja-tree-list searchArea nodataholder="No record to display" maxHeight="auto" [disabled]="disabled" selectionClearable [(ngModel)]="deepCountry" textField="l1.l2.name" valueField="l1.l2.value" [models]="deepCountries"></deja-tree-list>
+				</span>
+				<span fxFlex="0 0 45%" fxFlexOffset="5%">
+					<h4>Selected deep country model :</h4>
+					<pre>{{deepCountry | json}}</pre>
+				</span>
+			</div>
 		</mat-card-content>
 	</mat-card>
 </div>
@@ -287,8 +295,8 @@
 
 		<mat-toolbar color="primary">Pre-Selections from javascript</mat-toolbar>
 		<mat-card-content>
-            <div>The collection fructItemsWithPreSelection has a pre-selected item</div>
-    		<deja-tree-list class="fixed-height" [items]="fructItemsWithPreSelection"></deja-tree-list>
+			<div>The collection fructItemsWithPreSelection has a pre-selected item</div>
+			<deja-tree-list class="fixed-height" [items]="fructItemsWithPreSelection"></deja-tree-list>
 		</mat-card-content>
 	</mat-card>
 </div>

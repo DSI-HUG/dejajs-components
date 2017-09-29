@@ -47,3 +47,4 @@ after_deploy:
 - bash ./tools/scripts/tag.sh
 - bash ./tools/scripts/deploy-demo.sh
 - bash ./tools/scripts/deploy-doc.sh
+- bash ./tools/scripts/deploy-test.sh

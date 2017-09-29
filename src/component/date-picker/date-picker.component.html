@@ -10,11 +10,11 @@
 			</button>
 		</div>
 	</div>
-	<mat-hint *ngIf="mdHint">
-		<ng-template [ngTemplateOutlet]="mdHint"></ng-template>
+	<mat-hint *ngIf="matHint">
+		<ng-template [ngTemplateOutlet]="matHint"></ng-template>
 	</mat-hint>
-	<mat-error *ngIf="mdError">
-		<ng-template [ngTemplateOutlet]="mdError"></ng-template>
+	<mat-error *ngIf="matError">
+		<ng-template [ngTemplateOutlet]="matError"></ng-template>
 	</mat-error>
 </mat-form-field>
  <ng-template cdk-connected-overlay cdkConnectedOverlayHasBackdrop cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop" [cdkConnectedOverlayOffsetY]="overlayOffsetY" [cdkConnectedOverlayOffsetX]="overlayOffsetX" [cdkConnectedOverlayOpen]="showDropDown" [cdkConnectedOverlayOrigin]="overlayOrigin" (backdropClick)="close()" (detach)="close()" [cdkConnectedOverlayPositions]="positions"> 

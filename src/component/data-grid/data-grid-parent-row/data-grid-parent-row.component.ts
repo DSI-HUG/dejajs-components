@@ -7,6 +7,7 @@
  */
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, Input } from '@angular/core';
+import { ItemListService } from '../../../common/core/item-list/item-list.service';
 import { IDejaGridColumn } from '../data-grid-column/data-grid-column';
 import { IDejaGridParentRow } from './data-grid-parent-row';
 
@@ -52,7 +53,7 @@ export class DejaGridParentRowComponent {
         let left = 0;
         this._columnLayout.columns = [];
         columns.forEach((column) => {
-            if (this.row[column.name]) {
+            if (this.getCellText(this.row, column.name)) {
                 if (this._columnLayout.column0 === 0) {
                     this._columnLayout.column0 = left;
                 }
@@ -76,6 +77,10 @@ export class DejaGridParentRowComponent {
     }
 
     constructor(private changeDetectorRef: ChangeDetectorRef) { }
+
+    public getCellText(row, textField) {
+        return ItemListService.getItemText(row, textField);
+    }
 }
 
 export interface IDejaGridParentRowColumnLayout {

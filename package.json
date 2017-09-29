@@ -34,7 +34,7 @@
     "release:minor": "changelog -m && git add CHANGELOG.md && git commit -m \"updated CHANGELOG.md\" && npm version minor && git push origin",
     "release:patch": "changelog -p && git add CHANGELOG.md && git commit -m \"updated CHANGELOG.md\" && npm version patch && git push origin",
     "start": "yarn run copy:assets && yarn run lint && ng serve --port 5100",
-    "test": "ng test --single-run",
+    "test": "ng test --single-run --code-coverage",
     "test:watch": "ng test"
   },
   "dependencies": {
@@ -72,6 +72,7 @@
     "@compodoc/compodoc": "1.0.1",
     "@deja-js/generate-changelog": "1.3.1",
     "@types/jasmine": "2.5.54",
+    "@types/jasminewd2": "^2.0.3",
     "@types/node": "8.0.28",
     "@types/prismjs": "1.6.4",
     "codelyzer": "3.1.2",

@@ -1,6 +1,6 @@
 @import '../../../src/scss/components/tree-list-borders';
 
-:host {
+deja-tree-list-demo {
 	flex: 1 1 100%;
 	padding: 1rem;
 	
@@ -12,7 +12,6 @@
 			flex-direction: column;
 			deja-tree-list {
 				max-height: 400px;
-				border: 1px solid rgba(0,0,0,.2);
 				position: relative;
 				margin: 1rem 0;
 				&.fixed-height {

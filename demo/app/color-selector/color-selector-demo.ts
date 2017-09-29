@@ -19,8 +19,8 @@ import { MaterialColors } from '../../../src/common/core/style/material-colors';
 export class DejaColorSelectorDemoComponent {
     public tabIndex = 1;
 
-    protected selectedColor = Color.fromHex('#FFA000');
-    protected invalidColor = Color.fromHex('#FFA012');
+    protected selectedColor = Color.fromHex('#25C337');
+    protected invalidColor = Color.fromHex('#D02D06');
     private hoveredColor: Color;
 
     constructor(protected materialColors: MaterialColors) { }
