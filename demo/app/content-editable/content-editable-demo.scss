@@ -1,4 +1,9 @@
 :host {
     flex: 1 1 100%;
     padding: 1rem;
+    mat-card.demo-card {
+        mat-card-content {
+            padding: 1rem 2rem 0.5rem 2rem;
+        }
+    }
 }
