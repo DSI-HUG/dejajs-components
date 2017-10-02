@@ -57,4 +57,8 @@ src/**/*.d.ts
 !src/send-action.js
 
 # Ignore in demo
+demo/**/*.js
+demo/**/*.js.map
+demo/**/*.d.ts
 demo/vs
+/src/package-lock.json
