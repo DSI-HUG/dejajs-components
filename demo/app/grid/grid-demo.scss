@@ -54,7 +54,7 @@ grid-demo {
 		#news,
 		#variable {
 			.cell-wrapper {
-				&[colname="urlToImage"] {
+				&[colname="p1.p2.person.urlToImage"] {
 					.logo {
 						max-width: 100%;
 						max-height: 100%;
@@ -63,9 +63,9 @@ grid-demo {
 						object-fit: contain;
 					}
 				}
-				&[colname="description"],
-				&[colname="address"],
-				&[colname="about"] {
+				&[colname="p1.p2.person.description"],
+				&[colname="p1.p2.person.address"],
+				&[colname="p1.p2.person.about"] {
 					.cell {
 						white-space: normal;
 					}

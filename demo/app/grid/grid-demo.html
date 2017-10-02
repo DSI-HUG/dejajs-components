@@ -25,7 +25,7 @@
 
 <div *ngIf="tabIndex === 1">
 	<mat-card class="demo-card demo-basic">
-        <mat-toolbar color="primary">Simple Usage</mat-toolbar>
+		<mat-toolbar color="primary">Simple Usage</mat-toolbar>
 		<mat-card-content fxLayout="column">
 			<deja-grid searchArea columnsSortable columnsSizable sortable maxHeight="auto" [rows]="peopleRows" [columns]="peopleColumns" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid"></deja-grid>
 		</mat-card-content>
@@ -33,7 +33,7 @@
 	<mat-card class="demo-card demo-basic">
 		<mat-toolbar color="primary">Keyboard Navigation and Multi Selection</mat-toolbar>
 		<mat-card-content class="listContainer">
-			<div>deja-grid has some keyboard navigation feature</div> 
+			<div>deja-grid has some keyboard navigation feature</div>
 			<div fxLayout="row">
 				<span fxFlex="0 0 45%" fxLayout="column">
 					<deja-grid fxFlex="0 0 500px" columnsSortable multiSelect columnsSizable sortable [rows]="peopleForMultiselect$" [columns]="peopleColumns" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid"></deja-grid>
@@ -83,17 +83,17 @@
 						<span class="keyboard-key">Z</span>
 						<span class="keyboard-key">0</span>..
 						<span class="keyboard-key">9</span> to select the next row started with the pressed key</li>
-				</ul>  
-			</div> 
+				</ul>
+			</div>
 		</mat-card-content>
 	</mat-card>
 </div>
- 
+
 <div *ngIf="tabIndex === 2">
 	<mat-card class="deja-grid-demo demo-card demo-basic">
 		<mat-toolbar color="primary">Grouping Client Side</mat-toolbar>
 		<mat-card-content fxLayout="column" class="listContainer">
-			 <div>To allow the user grouping just add the groupArea directive</div>
+			<div>To allow the user grouping just add the groupArea directive</div>
 			<deja-grid fxFlex="0 0 600px" groupArea columnsSortable multiSelect columnsSizable sortable columnGroups="eyeColor" [rows]="people$" [columns]="peopleColumnsEx" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid">
 				<ng-template #cellTemplate let-row let-column="column">
 					<span *ngIf="column.name==='color'" class="color" [style.background-color]="row[column.name]"></span>
@@ -119,9 +119,9 @@
 				</span>
 			</div>
 		</mat-card-content>
-		<mat-toolbar color="primary">Variable Rows Height</mat-toolbar>
+		<mat-toolbar color="primary">Variable Rows Height and Deep Model</mat-toolbar>
 		<mat-card-content fxLayout="column" class="listContainer">
-			<deja-grid id="variable" #variable maxHeight="auto" columnsSortable multiSelect columnsSizable sortable [rows]="variableHeightPeopleRows$" [columns]="variableHeightPeopleColumns" viewportMode="auto" nodataholder="No datas" searchField="name" valueField="guid" (columnSizeChanged)="onColumnSizeChanged($event, variable)"></deja-grid> 
+			<deja-grid id="variable" #variable maxHeight="auto" searchArea columnsSortable multiSelect columnsSizable sortable [rows]="variableHeightPeopleRows$" [columns]="variableHeightPeopleColumns" viewportMode="auto" nodataholder="No datas" searchField="p1.p2.person.name" valueField="p1.p2.person.guid" (columnSizeChanged)="onColumnSizeChanged($event, variable)"></deja-grid>
 		</mat-card-content>
 	</mat-card>
 </div>
@@ -130,7 +130,7 @@
 	<mat-card class="deja-grid-demo demo-card demo-basic">
 		<mat-toolbar color="primary">Sizeable Columns</mat-toolbar>
 		<mat-card-content class="listContainer">
-			 <div>The horizontal scrollbar will be adjusted to match the total with of the columns</div>
+			<div>The horizontal scrollbar will be adjusted to match the total with of the columns</div>
 			<deja-splitter direction="horizontal">
 				<split-area [size]="60">
 					<deja-grid columnsSizable [rows]="people$" [columns]="peopleColumns" nodataholder="No datas" valueField="guid"> </deja-grid>
@@ -164,14 +164,14 @@
 		<mat-toolbar color="primary">Columns not Specified</mat-toolbar>
 		<mat-card-content fxLayout="column" class="listContainer">
 			<div>The columns are not specified. The grid will create columns based on the line model given. At that moment, the dynamic column model will be displayed in the browser console so that it can be copied and included in the code.</div>
-			<deja-grid columnsSizable maxHeight="auto" [rows]="people$" nodataholder="No datas" valueField="guid"> </deja-grid> 
+			<deja-grid columnsSizable maxHeight="auto" [rows]="people$" nodataholder="No datas" valueField="guid"> </deja-grid>
 		</mat-card-content>
 	</mat-card>
 </div>
 
 <div *ngIf="tabIndex === 4">
 	<mat-card class="deja-grid-demo demo-card demo-basic">
-		 <mat-toolbar color="primary">Templating Examples</mat-toolbar>
+		<mat-toolbar color="primary">Templating Examples</mat-toolbar>
 		<mat-card-content class="listContainer">
 			<h1>Cells Template</h1>
 			<deja-grid id="news" #news sortable columnsSizable multiSelect maxHeight="auto" [rows]="news$ | async" [columns]="newsColumns" viewportMode="auto" nodataholder="Pas de données" (columnSizeChanged)="onColumnSizeChanged($event, news)">
@@ -200,7 +200,7 @@
 						</ng-template>
 					</deja-grid>
 				</span>
-			</div> 
+			</div>
 		</mat-card-content>
 	</mat-card>
 </div>
@@ -209,7 +209,7 @@
 	<mat-card class="deja-grid-demo demo-card demo-basic">
 		<mat-toolbar color="primary">Pre-Selections from html inputs</mat-toolbar>
 		<mat-card-content class="listContainer">
-			 <span fxLayout="row">
+			<span fxLayout="row">
 				<div fxFlex="0 0 45%">Preselection with the inputs</div>
 				<div fxFlex="0 0 45%" fxFlexOffset="5%">Preselections with the input selectedModels</div>
 			</span>
@@ -235,7 +235,7 @@
 						<span *ngIf="column.name==='color'" class="color" [style.background-color]="row[column.name]"></span>
 					</ng-template>
 				</deja-grid>
-			</span> 
+			</span>
 		</mat-card-content>
 	</mat-card>
 </div>
@@ -244,7 +244,7 @@
 	<mat-card class="deja-grid-demo demo-card demo-basic">
 		<mat-toolbar color="primary">Pre-events and on-demand</mat-toolbar>
 		<mat-card-content class="listContainer">
-			 <h1>On Demand Loading </h1>
+			<h1>On Demand Loading </h1>
 			<div>The rows are loaded from the loading event</div>
 			<deja-grid #ondemand maxHeight="auto" textField="name" valueField="guid" [loadingRows]="loadingRows()" [columns]="peopleColumns"></deja-grid>
 			<h1>Confirm Selection</h1>
@@ -260,7 +260,7 @@
 				<ng-template #parentRowTemplate let-item let-query="query" let-flatindex="flatindex">
 					<span class="color" [style.background-color]="item.color"></span> {{item.color}}
 				</ng-template>
-			</deja-grid> 
+			</deja-grid>
 		</mat-card-content>
 	</mat-card>
 </div>
@@ -269,7 +269,7 @@
 	<mat-card class="deja-grid-demo demo-card demo-basic">
 		<mat-toolbar color="primary">Performance Examples</mat-toolbar>
 		<mat-card-content class="listContainer">
-			 <h1>10K rows with Item Template </h1>
+			<h1>10K rows with Item Template </h1>
 			<div>An exemple with 100000 fixed size rows</div>
 			<span fxLayout="columns">
 				<deja-grid id="news" #bigNews sortable columnsSizable multiSelect [rows]="bigNews$" [columns]="newsColumns" viewportMode="auto" nodataholder="Pas de données" (columnSizeChanged)="onColumnSizeChanged($event, bigNews)">
@@ -294,7 +294,7 @@
 						<span>{{info.value}}</span>
 					</div>
 				</span>
-			</span> 
+			</span>
 		</mat-card-content>
 	</mat-card>
-</div> 
+</div>

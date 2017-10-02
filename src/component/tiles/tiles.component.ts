@@ -7,7 +7,7 @@
  */
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { AfterViewInit, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output, Self, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output, Self, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
@@ -26,6 +26,7 @@ import { IDejaTilesAddEvent, IDejaTilesEvent, IDejaTilesModelEvent, IDejaTilesRe
 const noop = () => { };
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [DejaTilesLayoutProvider],
     selector: 'deja-tiles',
     styleUrls: [
@@ -93,7 +94,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
 
     @ViewChild('tilesContainer') private tilesContainer: ElementRef;
 
-    constructor(el: ElementRef, private layoutProvider: DejaTilesLayoutProvider, @Self() @Optional() public _control: NgControl) {
+    constructor(el: ElementRef, private changeDetectorRef: ChangeDetectorRef, private layoutProvider: DejaTilesLayoutProvider, @Self() @Optional() public _control: NgControl) {
         if (this._control) {
             this._control.valueAccessor = this;
         }
@@ -233,6 +234,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     public writeValue(models: any) {
         this._models = models || [];
         this._tiles$.next(this.layoutProvider.tiles = (this._models.map((tile) => new DejaTile(tile))));
+        this.changeDetectorRef.markForCheck();
     }
 
     public registerOnChange(fn: any) {

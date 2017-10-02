@@ -33,6 +33,10 @@
 				<mat-icon mat-list-icon>help</mat-icon>
 				<span mat-line>Documentation</span>
 			</a>
+			<a mat-list-item title="Test coverage" target="_blank" href="https://dsi-hug.github.io/dejajs-test/">
+				<mat-icon mat-list-icon>done_all</mat-icon>
+				<span mat-line>Test coverage</span>
+			</a>
 			<mat-divider></mat-divider>
 			<!-- <mat-list-item title="Accordion" routerLink="/accordion" routerLinkActive="active">
 				<mat-icon mat-list-icon>dns</mat-icon>
@@ -118,7 +122,7 @@
 	</deja-sidenav-menu>
 
 	<deja-sidenav-header>
-		<mat-menu #colorMenu>
+        <mat-menu #colorMenu="matMenu">
 			<mat-button-toggle-group id="color-menu-toggle-group" vertical>
 				<mat-button-toggle (click)="theme='hug'">HUG</mat-button-toggle>
 				<mat-button-toggle (click)="theme='pink'">Pink</mat-button-toggle>

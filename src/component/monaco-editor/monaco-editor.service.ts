@@ -7,6 +7,8 @@
  */
 
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Rx';
 
 /**
  * Monaco Editor Service
@@ -15,49 +17,34 @@ import { Injectable } from '@angular/core';
  */
 @Injectable()
 export class MonacoEditorService {
-
-    private _loading: boolean;
-    private _loader: Promise<any>;
+    public monacoApi$: Observable<any>;
 
     /**
      * Constructor
      */
-    constructor() { }
+    constructor() {
+        const win = window as any;
+        const api$ = new Subject<any>();
 
-    /**
-     * Load the Monaco Editor Library
-     *
-     * @return Resolved promise when the library is loaded
-     */
-    public initMonacoLib(): Promise<any> {
-        if (!this._loading) {
-            this.init();
+        this.monacoApi$ = Observable.from(api$)
+            .first()
+            .publishLast()
+            .refCount();
+
+        const onGotAmdLoader = () => {
+            // Load monaco
+            win.require(['vs/editor/editor.main'], () => api$.next(win.monaco));
+        };
+
+        // Load AMD loader if necessary
+        if (!win.require && !win.monaco) {
+            const loaderScript = document.createElement('script');
+            loaderScript.type = 'text/javascript';
+            loaderScript.src = 'vs/loader.js';
+            loaderScript.addEventListener('load', onGotAmdLoader);
+            document.body.appendChild(loaderScript);
+        } else {
+            onGotAmdLoader();
         }
-
-        return this._loader;
-    }
-
-    private init() {
-        this._loader = new Promise((resolve) => {
-            this._loading = true;
-
-            const onGotAmdLoader = () => {
-                // Load monaco
-                (<any>window).require(['vs/editor/editor.main'], () => {
-                    resolve();
-                });
-            };
-
-            // Load AMD loader if necessary
-            if (!(<any>window).require && !(<any>window).monaco) {
-                const loaderScript = document.createElement('script');
-                loaderScript.type = 'text/javascript';
-                loaderScript.src = 'vs/loader.js';
-                loaderScript.addEventListener('load', onGotAmdLoader);
-                document.body.appendChild(loaderScript);
-            } else {
-                onGotAmdLoader();
-            }
-        });
     }
 }

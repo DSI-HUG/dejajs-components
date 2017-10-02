@@ -456,7 +456,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
     }
 
     public get tiles() {
-        return this._tiles;
+        return this._tiles || [];
     }
 
     public set selectedTiles(selectedIds: string[]) {
@@ -1180,7 +1180,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         // Search a new target
         const newTargetBounds = this.ensureContainer(new Rect(minWidth * Math.round(this.dragTarget.left / minWidth), minHeight * Math.round(this.dragTarget.top / minHeight), this.dragTarget.width, this.dragTarget.height, ));
 
-        if (this.lastTargetBounds && Math.abs(newTargetBounds.left - this.lastTargetBounds.left) < 3 && Math.abs(newTargetBounds.top - this.lastTargetBounds.top) < 3) {
+        if (this.lastTargetBounds && Math.abs(newTargetBounds.left - this.lastTargetBounds.left) < minWidth && Math.abs(newTargetBounds.top - this.lastTargetBounds.top) < minHeight) {
             // Nothing change, wait for timers
             return;
         }
@@ -1412,27 +1412,27 @@ export class DejaTilesLayoutProvider implements OnDestroy {
     }
 
     private getTileMinPercentWidth(): number {
-        return this.getSizePercentLimit('tileMinWidth');
+        return Math.max(1, this.getSizePercentLimit('tileMinWidth'));
     }
 
     private getTileMaxPercentWidth(): number {
-        return this.getSizePercentLimit('tileMaxWidth');
+        return Math.max(5, this.getSizePercentLimit('tileMaxWidth'));
     }
 
     private getTileMinPercentHeight(): number {
-        return this.getSizePercentLimit('tileMinHeight');
+        return Math.max(1, this.getSizePercentLimit('tileMinHeight'));
     }
 
     private getTileMaxPercentHeight(): number {
-        return this.getSizePercentLimit('tileMaxHeight');
+        return Math.max(5, this.getSizePercentLimit('tileMaxHeight'));
     }
 
     private getMaxPercentWidth(): number {
-        return this.getSizePercentLimit('maxWidth');
+        return Math.max(5, this.getSizePercentLimit('maxWidth'));
     }
 
     private getMaxPercentHeight(): number {
-        return this.getSizePercentLimit('maxHeight');
+        return Math.max(5, this.getSizePercentLimit('maxHeight'));
     }
 
     private getCursorFromHTMLElement(x: number, y: number, element: HTMLElement) {
