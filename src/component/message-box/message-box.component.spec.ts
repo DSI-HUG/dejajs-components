@@ -123,7 +123,7 @@ describe('DejaMessageBoxComponent', () => {
                 {text: 'Yes', 'type': 'info', action: () => {}, 'icon': 'randomIcon'}
             ];
             fixture.detectChanges();
-
+          
             const el = fixture.debugElement.query(By.css('mat-card-actions > span > button')).nativeElement;
             expect(el.className).toEqual('with-icon');
         });
@@ -134,7 +134,7 @@ describe('DejaMessageBoxComponent', () => {
             ];
             component.ngOnInit = () => {}; // Prevent ngOnInit to set an icon from type
             fixture.detectChanges();
-
+          
             const el = fixture.debugElement.query(By.css('mat-card-actions > span > button')).nativeElement;
             expect(el.className).toBeFalsy();
         });
