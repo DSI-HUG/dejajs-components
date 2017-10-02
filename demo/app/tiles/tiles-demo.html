@@ -1,46 +1,46 @@
-<md-tab-group [selectedIndex]="tabIndex" (selectChange)="tabIndex = $event.index">
-    <!--<md-tab label="OVERVIEW">-->
-    <!--<md-card class="demo-card demo-basic">-->
+<mat-tab-group [selectedIndex]="tabIndex" (selectChange)="tabIndex = $event.index">
+    <!--<mat-tab label="OVERVIEW">-->
+    <!--<mat-card class="demo-card demo-basic">-->
     <!--TODO-->
-    <!--</md-card>-->
-    <!--</md-tab>-->
-	<md-tab label="API REFERENCE"></md-tab>
-	<md-tab label="EXAMPLES"></md-tab>
-</md-tab-group>
+    <!--</mat-card>-->
+    <!--</mat-tab>-->
+    <mat-tab label="API REFERENCE"></mat-tab>
+    <mat-tab label="EXAMPLES"></mat-tab>
+</mat-tab-group>
 
-<md-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
+<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
     <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/tiles/readme.txt'"></deja-markdown>
-</md-card>
+</mat-card>
 
 <ng-template ngFor let-message [ngForOf]="messages$ | async">
     <deja-snackbar alignment="bottom right" *ngIf="message.gate" [duration]="8000" (onAnimationDone)="message.cancel(false)">
         <deja-message-box type="{{message.type}}" title="{{message.title}}">
             {{message.content}}
             <ng-template #actionsTemplate>
-                <button md-raised-button (click)="message.cancel(false)" color="primary">
+                <button mat-raised-button (click)="message.cancel(false)" color="primary">
                     Ok
                 </button>
-                <button md-raised-button (click)="message.cancel(true)">
+                <button mat-raised-button (click)="message.cancel(true)">
                     Annuler
                 </button>
             </ng-template>
         </deja-message-box>
     </deja-snackbar>
 </ng-template>
-<md-card class="demo-card demo-basic" [class.debug]="debug" *ngIf="tabIndex === 1">
-    <md-toolbar color="primary">Tiles Demo</md-toolbar>
-    <md-card-content id="actions">
-        <md-checkbox [(ngModel)]="designMode">Design Mode</md-checkbox>
-        <button md-raised-button (click)="tiles2.addGroup()" color="primary">
+<mat-card class="demo-card demo-basic" [class.debug]="debug" *ngIf="tabIndex === 1">
+    <mat-toolbar color="primary">Tiles Demo</mat-toolbar>
+    <mat-card-content id="actions">
+        <mat-checkbox [(ngModel)]="designMode">Design Mode</mat-checkbox>
+        <button mat-raised-button (click)="tiles2.addGroup()" color="primary">
             Add Group
         </button>
-    </md-card-content>
-    <md-card-content>
+    </mat-card-content>
+    <mat-card-content>
         <span #dropArea id="droparea" [deja-mouse-droppable]="getDropContext(dropArea)">
             Drop Area
         </span>
-    </md-card-content>
-    <md-card-content>
+    </mat-card-content>
+    <mat-card-content>
         <deja-tiles #tiles1 id="tiles1" [models]="tiles1$ | async" [deja-mouse-draggable]="getDragContext()" (contentAdding)="onContentAdding($event)" (contentRemoving)="onContentRemoving($event)" maxwidth="100%" tileminwidth="5%" tileminheight="5%" tilemaxheight="50%" tilemaxwidth="50%">
             <ng-template #tileTemplate let-tile let-pressed="pressed" let-selected="selected">
                 <span class="tile-content noselect" [style.background-color]="tile.templateModel.color">{{ tile.templateModel.naqme }} ({{ id }})
@@ -49,8 +49,8 @@
                 </span>
             </ng-template>
         </deja-tiles>
-    </md-card-content>
-    <md-card-content>
+    </mat-card-content>
+    <mat-card-content>
         <deja-tiles #tiles2 id="tiles2" [models]="tiles2$ | async" (contentAdding)="onContentAdding($event)" (contentRemoving)="onContentRemoving($event)" canDelete canCopy canCut canPaste [designMode]="designMode" maxwidth="100%" tileminwidth="5%" tileminheight="5%" tilemaxheight="50%" tilemaxwidth="50%">
             <ng-template #tileTemplate let-tile let-pressed="pressed" let-selected="selected">
                 <span class="tile-content noselect" [style.background-color]="tile.templateModel.color">{{ tile.templateModel.naqme }} ({{ id }})
@@ -59,5 +59,5 @@
                 </span>
             </ng-template>
         </deja-tiles>
-    </md-card-content>
-</md-card>
+    </mat-card-content>
+</mat-card>

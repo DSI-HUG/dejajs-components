@@ -70,51 +70,51 @@ describe('DejaMessageBoxComponent', () => {
     });
 
     describe('input title', () => {
-        it('should display title in md-card-title', () => {
+        it('should display title in mat-card-title', () => {
             component.type = 'warn';
             component.title = 'Delete order';
             fixture.detectChanges();
 
-            const el = fixture.debugElement.query(By.css('md-card-title > span')).nativeElement;
+            const el = fixture.debugElement.query(By.css('mat-card-title > span')).nativeElement;
             expect(el.innerHTML).toEqual('Delete order');
         });
 
-        it('should display title in md-card-content in horizontalMode', () => {
+        it('should display title in mat-card-content in horizontalMode', () => {
             component.type = 'warn';
             component.title = 'Delete order';
             component.horizontal = true;
             fixture.detectChanges();
 
-            const el = fixture.debugElement.query(By.css('md-card-content > h2')).nativeElement;
+            const el = fixture.debugElement.query(By.css('mat-card-content > h2')).nativeElement;
             expect(el.innerHTML).toEqual('Delete order');
         });
     });
 
     describe('input icon', () => {
-        it('should display icon in md-card-title', () => {
+        it('should display icon in mat-card-title', () => {
             component.icon = 'randomIcon';
             fixture.detectChanges();
 
-            const el = fixture.debugElement.query(By.css('md-card-title > md-icon')).nativeElement;
+            const el = fixture.debugElement.query(By.css('mat-card-title > mat-icon')).nativeElement;
             expect(el.innerHTML).toEqual('randomIcon');
         });
 
-        it('should not display md-card-title if no icon', () => {
+        it('should not display mat-card-title if no icon', () => {
             component.icon = null;
             fixture.detectChanges();
-            expect(fixture.debugElement.query(By.css('md-card-title'))).toBeNull();
+            expect(fixture.debugElement.query(By.css('mat-card-title'))).toBeNull();
         });
     });
 
     describe('input actions', () => {
-        it('should display a button for each action in md-card-actions', () => {
+        it('should display a button for each action in mat-card-actions', () => {
             component.actions = [
                 {text: 'Yes', 'type': 'info', action: () => {}},
                 {text: 'No', type: 'warn', action: () => {}},
             ];
             fixture.detectChanges();
 
-            const els = fixture.debugElement.queryAll(By.css('md-card-actions > span > button'));
+            const els = fixture.debugElement.queryAll(By.css('mat-card-actions > span > button'));
             expect(els.length).toEqual(2);
         });
 
@@ -124,7 +124,7 @@ describe('DejaMessageBoxComponent', () => {
             ];
             fixture.detectChanges();
 
-            const el = fixture.debugElement.query(By.css('md-card-actions > span > button')).nativeElement;
+            const el = fixture.debugElement.query(By.css('mat-card-actions > span > button')).nativeElement;
             expect(el.className).toEqual('with-icon');
         });
 
@@ -135,18 +135,18 @@ describe('DejaMessageBoxComponent', () => {
             component.ngOnInit = () => {}; // Prevent ngOnInit to set an icon from type
             fixture.detectChanges();
 
-            const el = fixture.debugElement.query(By.css('md-card-actions > span > button')).nativeElement;
+            const el = fixture.debugElement.query(By.css('mat-card-actions > span > button')).nativeElement;
             expect(el.className).toBeFalsy();
         });
 
-        it('should display a button md-mini-fab if action has an icon but no text', () => {
+        it('should display a button mat-mini-fab if action has an icon but no text', () => {
             component.actions = [
                 {'type': 'info', action: () => {}, 'icon': 'randomIcon'}
             ];
             fixture.detectChanges();
 
-            const el = fixture.debugElement.query(By.css('md-card-actions > span > button')).nativeElement;
-            expect(el.attributes['md-mini-fab']).toBeTruthy();
+            const el = fixture.debugElement.query(By.css('mat-card-actions > span > button')).nativeElement;
+            expect(el.attributes['mat-mini-fab']).toBeTruthy();
         });
     });
 

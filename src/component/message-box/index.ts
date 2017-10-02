@@ -8,7 +8,7 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { MdButtonModule, MdCardModule, MdIconModule } from '@angular/material';
+import { MatButtonModule, MatCardModule, MatIconModule } from '@angular/material';
 import { DejaMessageBoxComponent } from './message-box.component';
 
 @NgModule({
@@ -20,9 +20,9 @@ import { DejaMessageBoxComponent } from './message-box.component';
     ],
     imports: [
         CommonModule,
-        MdCardModule,
-        MdIconModule,
-        MdButtonModule,
+        MatCardModule,
+        MatIconModule,
+        MatButtonModule,
     ],
 })
 export class DejaMessageBoxModule { }

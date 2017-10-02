@@ -18,7 +18,7 @@ export class MaterialColors {
     };
 
     private palet = {
-        'md-red': {
+        'mat-red': {
             50: '#ffebee',
             100: '#ffcdd2',
             200: '#ef9a9a',
@@ -30,7 +30,7 @@ export class MaterialColors {
             800: '#c62828',
             900: '#b71c1c',
         },
-        'md-pink': {
+        'mat-pink': {
             50: '#fce4ec',
             100: '#f8bbd0',
             200: '#f48fb1',
@@ -42,7 +42,7 @@ export class MaterialColors {
             800: '#ad1457',
             900: '#880e4f',
         },
-        'md-purple': {
+        'mat-purple': {
             50: '#f3e5f5',
             100: '#e1bee7',
             200: '#ce93d8',
@@ -54,7 +54,7 @@ export class MaterialColors {
             800: '#6a1b9a',
             900: '#4a148c',
         },
-        'md-deep-purple': {
+        'mat-deep-purple': {
             50: '#ede7f6',
             100: '#d1c4e9',
             200: '#b39ddb',
@@ -66,7 +66,7 @@ export class MaterialColors {
             800: '#4527a0',
             900: '#311b92',
         },
-        'md-indigo': {
+        'mat-indigo': {
             50: '#e8eaf6',
             100: '#c5cae9',
             200: '#9fa8da',
@@ -78,7 +78,7 @@ export class MaterialColors {
             800: '#283593',
             900: '#1a237e',
         },
-        'md-blue': {
+        'mat-blue': {
             50: '#e3f2fd',
             100: '#bbdefb',
             200: '#90caf9',
@@ -90,7 +90,7 @@ export class MaterialColors {
             800: '#1565c0',
             900: '#0d47a1',
         },
-        'md-light-blue': {
+        'mat-light-blue': {
             50: '#e1f5fe',
             100: '#b3e5fc',
             200: '#81d4fa',
@@ -102,7 +102,7 @@ export class MaterialColors {
             800: '#0277bd',
             900: '#01579b',
         },
-        'md-cyan': {
+        'mat-cyan': {
             50: '#e0f7fa',
             100: '#b2ebf2',
             200: '#80deea',
@@ -114,7 +114,7 @@ export class MaterialColors {
             800: '#00838f',
             900: '#006064',
         },
-        'md-teal': {
+        'mat-teal': {
             50: '#e0f2f1',
             100: '#b2dfdb',
             200: '#80cbc4',
@@ -126,7 +126,7 @@ export class MaterialColors {
             800: '#00695c',
             900: '#004d40',
         },
-        'md-green': {
+        'mat-green': {
             50: '#e8f5e9',
             100: '#c8e6c9',
             200: '#a5d6a7',
@@ -138,7 +138,7 @@ export class MaterialColors {
             800: '#2e7d32',
             900: '#1b5e20',
         },
-        'md-light-green': {
+        'mat-light-green': {
             50: '#f1f8e9',
             100: '#dcedc8',
             200: '#c5e1a5',
@@ -150,7 +150,7 @@ export class MaterialColors {
             800: '#558b2f',
             900: '#33691e',
         },
-        'md-lime': {
+        'mat-lime': {
             50: '#f9fbe7',
             100: '#f0f4c3',
             200: '#e6ee9c',
@@ -162,7 +162,7 @@ export class MaterialColors {
             800: '#9e9d24',
             900: '#827717',
         },
-        'md-yellow': {
+        'mat-yellow': {
             50: '#fffde7',
             100: '#fff9c4',
             200: '#fff59d',
@@ -174,7 +174,7 @@ export class MaterialColors {
             800: '#f9a825',
             900: '#f57f17',
         },
-        'md-amber': {
+        'mat-amber': {
             50: '#fff8e1',
             100: '#ffecb3',
             200: '#ffe082',
@@ -186,7 +186,7 @@ export class MaterialColors {
             800: '#ff8f00',
             900: '#ff6f00',
         },
-        'md-orange': {
+        'mat-orange': {
             50: '#fff3e0',
             100: '#ffe0b2',
             200: '#ffcc80',
@@ -198,7 +198,7 @@ export class MaterialColors {
             800: '#ef6c00',
             900: '#e65100',
         },
-        'md-deep-orange': {
+        'mat-deep-orange': {
             50: '#fbe9e7',
             100: '#ffccbc',
             200: '#ffab91',
@@ -210,7 +210,7 @@ export class MaterialColors {
             800: '#d84315',
             900: '#bf360c',
         },
-        'md-brown': {
+        'mat-brown': {
             50: '#efebe9',
             100: '#d7ccc8',
             200: '#bcaaa4',
@@ -222,7 +222,7 @@ export class MaterialColors {
             800: '#4e342e',
             900: '#3e2723',
         },
-        'md-grey': {
+        'mat-grey': {
             0: '#ffffff',
             50: '#fafafa',
             100: '#f5f5f5',
@@ -236,7 +236,7 @@ export class MaterialColors {
             900: '#212121',
             1000: '#000000',
         },
-        'md-blue-grey': {
+        'mat-blue-grey': {
             50: '#eceff1',
             100: '#cfd8dc',
             200: '#b0bec5',

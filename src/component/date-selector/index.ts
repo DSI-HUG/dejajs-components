@@ -9,7 +9,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MdButtonModule, MdIconModule } from '@angular/material';
+import { MatButtonModule, MatIconModule } from '@angular/material';
 import { DejaCircularPickerModule } from '../circular-picker/index';
 import { DejaDateSelectorComponent } from './date-selector.component';
 
@@ -20,8 +20,8 @@ import { DejaDateSelectorComponent } from './date-selector.component';
         DejaCircularPickerModule,
         CommonModule,
         FormsModule,
-        MdButtonModule,
-        MdIconModule,
+        MatButtonModule,
+        MatIconModule,
     ],
 })
 export class DejaDateSelectorModule { }

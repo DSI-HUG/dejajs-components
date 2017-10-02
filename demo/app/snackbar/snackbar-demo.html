@@ -1,16 +1,16 @@
-<md-tab-group [selectedIndex]="tabIndex" (selectChange)="tabIndex = $event.index">
-	<!--<md-tab label="OVERVIEW">-->
-	<!--<md-card class="demo-card demo-basic">-->
+<mat-tab-group [selectedIndex]="tabIndex" (selectChange)="tabIndex = $event.index">
+	<!--<mat-tab label="OVERVIEW">-->
+	<!--<mat-card class="demo-card demo-basic">-->
 	<!--TODO-->
-	<!--</md-card>-->
-	<!--</md-tab>-->
-	<md-tab label="API REFERENCE"></md-tab>
-	<md-tab label="EXAMPLES"></md-tab>
-</md-tab-group>
+	<!--</mat-card>-->
+	<!--</mat-tab>-->
+	<mat-tab label="API REFERENCE"></mat-tab>
+	<mat-tab label="EXAMPLES"></mat-tab>
+</mat-tab-group>
 
-<md-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
+<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
 	<deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/snackbar/readme.md'"></deja-markdown>
-</md-card>
+</mat-card>
 
 <div class="demo-card" *ngIf="tabIndex === 1">
 	<!--
@@ -22,7 +22,7 @@
 			note:
 			the graphic representation of the snackbar has no link with it's implementation beside it's size (see impl)
 			the graphic impl proposed here may be impl in the future as a separate component
-			it may be something that looks like a md-card but with context property defining the context (danger, warning, success, info, simple)
+			it may be something that looks like a mat-card but with context property defining the context (danger, warning, success, info, simple)
 			which will be translated to it's color and z index
 			-->
 
@@ -33,11 +33,11 @@
 		-->
 
 	<div id="btnContainer">
-		<button md-raised-button [style.background]="danger" (click)="push.emit('danger')">Danger</button>
-		<button md-raised-button [style.background]="warning" (click)="push.emit('warning')">Warning</button>
-		<button md-raised-button [style.background]="success" (click)="push.emit('success')">Success</button>
-		<button md-raised-button [style.background]="info" (click)="push.emit('info')">Info</button>
-		<button md-raised-button (click)="simpleGate = true">Simple</button>
+		<button mat-raised-button [style.background]="danger" (click)="push.emit('danger')">Danger</button>
+		<button mat-raised-button [style.background]="warning" (click)="push.emit('warning')">Warning</button>
+		<button mat-raised-button [style.background]="success" (click)="push.emit('success')">Success</button>
+		<button mat-raised-button [style.background]="info" (click)="push.emit('info')">Info</button>
+		<button mat-raised-button (click)="simpleGate = true">Simple</button>
 	</div>
 
 	<!-- simple use case, single snackbar -->
@@ -57,8 +57,8 @@
 				<deja-message-box type="primary" horizontal>
 					{{message.content}}
 					<ng-template #actionsTemplate>
-						<button md-mini-fab class="close" [color]="'blank'" (click)="message.gate = false">
-							<md-icon>clear</md-icon>
+						<button mat-mini-fab class="close" [color]="'blank'" (click)="message.gate = false">
+							<mat-icon>clear</mat-icon>
 						</button>
 					</ng-template>
 				</deja-message-box>
@@ -72,8 +72,8 @@
 			<deja-message-box type="success" horizontal>
 				{{message.content}}
 				<ng-template #actionsTemplate>
-					<button md-mini-fab class="close" [color]="'blank'" (click)="message.gate = false">
-						<md-icon>clear</md-icon>
+					<button mat-mini-fab class="close" [color]="'blank'" (click)="message.gate = false">
+						<mat-icon>clear</mat-icon>
 					</button>
 				</ng-template>
 			</deja-message-box>
@@ -85,8 +85,8 @@
 			<deja-message-box type="warn" horizontal>
 				{{message.content}}
 				<ng-template #actionsTemplate>
-					<button md-mini-fab class="close" [color]="'blank'" (click)="message.gate = false">
-						<md-icon>clear</md-icon>
+					<button mat-mini-fab class="close" [color]="'blank'" (click)="message.gate = false">
+						<mat-icon>clear</mat-icon>
 					</button>
 				</ng-template>
 			</deja-message-box>
@@ -98,8 +98,8 @@
 			<deja-message-box type="danger" horizontal>
 				{{message.content}}
 				<ng-template #actionsTemplate>
-					<button md-mini-fab class="close" [color]="'blank'" (click)="message.gate = false">
-						<md-icon>clear</md-icon>
+					<button mat-mini-fab class="close" [color]="'blank'" (click)="message.gate = false">
+						<mat-icon>clear</mat-icon>
 					</button>
 				</ng-template>
 			</deja-message-box>

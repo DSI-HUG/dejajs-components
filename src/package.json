@@ -17,5 +17,8 @@
     "url": "https://github.com/DSI-HUG/dejajs-components.git"
   },
   "module": "dejajs-component.js",
-  "typings": "dejajs-component.d.ts"
+  "typings": "dejajs-component.d.ts",
+  "dependencies": {
+    "codelyzer": "^3.2.0"
+  }
 }
