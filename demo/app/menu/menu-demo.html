@@ -1,44 +1,44 @@
-<md-tab-group [selectedIndex]="tabIndex" (selectChange)="tabIndex = $event.index">
-	<!--<md-tab label="OVERVIEW">-->
-	<!--<md-card class="demo-card demo-basic">-->
+<mat-tab-group [selectedIndex]="tabIndex" (selectChange)="tabIndex = $event.index">
+	<!--<mat-tab label="OVERVIEW">-->
+	<!--<mat-card class="demo-card demo-basic">-->
 	<!--TODO-->
-	<!--</md-card>-->
-	<!--</md-tab>-->
-	<md-tab label="API REFERENCE"> </md-tab>
-	<md-tab label="EXAMPLES"></md-tab>
-</md-tab-group>
+	<!--</mat-card>-->
+	<!--</mat-tab>-->
+	<mat-tab label="API REFERENCE"> </mat-tab>
+	<mat-tab label="EXAMPLES"></mat-tab>
+</mat-tab-group>
 
-<md-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
+<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
 	TODO
-</md-card>
+</mat-card>
 
 <div *ngIf="tabIndex === 1" (contextmenu)="onContextMenu($event)">
 	<deja-menu #contextMenu>
 		<ul>
 			<li (click)="contextMenu.close()">
-				<md-icon>delete_sweep</md-icon> Context menu
+				<mat-icon>delete_sweep</mat-icon> Context menu
 			</li>
 			<li (click)="contextMenu.close()">
-				<md-icon>content_copy</md-icon> Dupliquer
+				<mat-icon>content_copy</mat-icon> Dupliquer
 			</li>
 			<li (click)="contextMenu.close()">
-				<md-icon>edit</md-icon> Editer
+				<mat-icon>edit</mat-icon> Editer
 			</li>
 		</ul>
 	</deja-menu>
-	<md-card class="demo-card">
-		<md-toolbar color="primary">Menu</md-toolbar>
-		<md-card-content>
+	<mat-card class="demo-card">
+		<mat-toolbar color="primary">Menu</mat-toolbar>
+		<mat-card-content>
 			<deja-menu #posYMenu>
 				<ul>
 					<li (click)="posYMenu.close()">
-						<md-icon>delete_sweep</md-icon> Supprimer
+						<mat-icon>delete_sweep</mat-icon> Supprimer
 					</li>
 					<li (click)="posYMenu.close()">
-						<md-icon>content_copy</md-icon> Dupliquer
+						<mat-icon>content_copy</mat-icon> Dupliquer
 					</li>
 					<li (click)="posYMenu.close()">
-						<md-icon>edit</md-icon> Editer
+						<mat-icon>edit</mat-icon> Editer
 					</li>
 				</ul>
 			</deja-menu>
@@ -47,11 +47,11 @@
 				<div class="menu-section">
 					<p>You clicked on: {{ selected }}</p>
 
-					<md-toolbar>
-						<button md-icon-button (click)="menu.show($event)">
-							<md-icon>more_vert</md-icon>
+					<mat-toolbar>
+						<button mat-icon-button (click)="menu.show($event)">
+							<mat-icon>more_vert</mat-icon>
 						</button>
-					</md-toolbar>
+					</mat-toolbar>
 
 					<deja-menu #menu>
 						<button class="menu-item" *ngFor="let item of items" (click)="select(item.text); menu.close()">
@@ -61,11 +61,11 @@
 				</div>
 				<div class="menu-section">
 					<p> Clicking these will navigate:</p>
-					<md-toolbar>
-						<button md-icon-button (click)="anchorMenu.show($event)">
-							<md-icon>more_vert</md-icon>
+					<mat-toolbar>
+						<button mat-icon-button (click)="anchorMenu.show($event)">
+							<mat-icon>more_vert</mat-icon>
 						</button>
-					</md-toolbar>
+					</mat-toolbar>
 
 					<deja-menu #anchorMenu>
 						<a class="menu-item" *ngFor="let item of items" href="http://www.google.com">
@@ -77,11 +77,11 @@
 					<p>
 						With buttons position before
 					</p>
-					<md-toolbar class="end-icon">
-						<button md-icon-button (click)="posXMenu.show($event)">
-							<md-icon>more_vert</md-icon>
+					<mat-toolbar class="end-icon">
+						<button mat-icon-button (click)="posXMenu.show($event)">
+							<mat-icon>more_vert</mat-icon>
 						</button>
-					</md-toolbar>
+					</mat-toolbar>
 
 					<deja-menu #posXMenu class="before" positions="end bottom end top">
 						<button class="menu-item" *ngFor="let item of items" (click)="posXMenu.close()">
@@ -94,13 +94,13 @@
 					<p>
 						With ul/li, position top
 					</p>
-					<md-toolbar>
-						<button md-icon-button (click)="posYMenu.show($event)">
-							<md-icon>more_vert</md-icon>
+					<mat-toolbar>
+						<button mat-icon-button (click)="posYMenu.show($event)">
+							<mat-icon>more_vert</mat-icon>
 						</button>
-					</md-toolbar>
+					</mat-toolbar>
 				</div>
 			</div>
-		</md-card-content>
-	</md-card>
+		</mat-card-content>
+	</mat-card>
 </div>

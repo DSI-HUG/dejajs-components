@@ -11,7 +11,7 @@ import { browser, ExpectedConditions } from 'protractor';
 export class AccordionPage {
     public navigateTo() {
         browser.get('/accordion');
-        // return element(by.css('deja-sidenav-menu md-list-item[routerlink="/components"]')).click();
+        // return element(by.css('deja-sidenav-menu mat-list-item[routerlink="/components"]')).click();
     }
 
     public headerIsOpen(body) {

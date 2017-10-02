@@ -10,6 +10,8 @@
 
 # dependencies
 /node_modules
+/node_modules.disabled
+/src/node_modules
 
 # IDEs and editors
 /.idea

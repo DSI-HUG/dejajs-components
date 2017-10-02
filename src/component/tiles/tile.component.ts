@@ -6,13 +6,13 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, ElementRef, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import 'rxjs/add/operator/delay';
 import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
 import { DejaTile } from './tile.class';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'deja-tile',
     styleUrls: [
         './tile.component.scss',
@@ -28,9 +28,9 @@ export class DejaTileComponent implements OnDestroy {
     public element: HTMLElement;
 
     private _tile: DejaTile;
-    private subscriptions = [] as Subscription[];
+    private isAlive = true;
 
-    constructor(el: ElementRef) {
+    constructor(el: ElementRef, private changeDetectorRef: ChangeDetectorRef) {
         this.element = el.nativeElement as HTMLElement;
         this.element.setAttribute('hidden', '0');
     }
@@ -50,18 +50,27 @@ export class DejaTileComponent implements OnDestroy {
 
             if (tile.fading) {
                 this.element.setAttribute('fading', '0');
+                this.changeDetectorRef.markForCheck();
             }
 
-            this.subscriptions.push(Observable.from(tile.pixelBounds$)
+            Observable.from(tile.pixelBounds$)
+                .filter((bounds) => !!bounds)
                 .first()
+                .takeWhile(() => this.isAlive && !!this._tile)
                 .filter(() => tile.fading)
-                .do(() => this.element.setAttribute('fading', '1'))
+                .do(() => {
+                    this.element.setAttribute('fading', '1');
+                    this.changeDetectorRef.markForCheck();
+                })
                 .delay(200)
                 .subscribe(() => {
                     this.element.removeAttribute('fading');
-                }));
+                    this.changeDetectorRef.markForCheck();
+                });
 
-            this.subscriptions.push(Observable.from(tile.pixelBounds$)
+            Observable.from(tile.pixelBounds$)
+                .takeWhile(() => this.isAlive && !!this._tile)
+                .filter((bounds) => !!bounds)
                 .subscribe((bounds) => {
                     if (!tile.isHidden) {
                         this.element.removeAttribute('hidden');
@@ -70,16 +79,43 @@ export class DejaTileComponent implements OnDestroy {
                     this.element.style.top = `${bounds.top}px`;
                     this.element.style.width = `${bounds.width}px`;
                     this.element.style.height = `${bounds.height}px`;
-                }));
+                    this.changeDetectorRef.markForCheck();
+                });
 
-            this.subscriptions.push(Observable.from(tile.pressed$).subscribe((value) => toogleAttribute('pressed', value)));
-            this.subscriptions.push(Observable.from(tile.selected$).subscribe((value) => toogleAttribute('selected', value)));
-            this.subscriptions.push(Observable.from(tile.dragging$).subscribe((value) => toogleAttribute('drag', value)));
-            this.subscriptions.push(Observable.from(tile.dropping$).subscribe((value) => toogleAttribute('drop', value)));
-            this.subscriptions.push(Observable.from(tile.cutted$).subscribe((value) => toogleAttribute('cutted', value)));
-            this.subscriptions.push(Observable.from(tile.expanded$).subscribe((value) => toogleAttribute('expanded', value)));
+            Observable.from(tile.pressed$)
+                .takeWhile(() => this.isAlive && !!this._tile)
+                .do((value) => toogleAttribute('pressed', value))
+                .subscribe(() => this.changeDetectorRef.markForCheck());
 
-            this.subscriptions.push(Observable.from(tile.deleted$).subscribe(() => this.element.remove()));
+            Observable.from(tile.selected$)
+                .takeWhile(() => this.isAlive && !!this._tile)
+                .do((value) => toogleAttribute('selected', value))
+                .subscribe(() => this.changeDetectorRef.markForCheck());
+
+            Observable.from(tile.dragging$)
+                .takeWhile(() => this.isAlive && !!this._tile)
+                .do((value) => toogleAttribute('drag', value))
+                .subscribe(() => this.changeDetectorRef.markForCheck());
+
+            Observable.from(tile.dropping$)
+                .takeWhile(() => this.isAlive && !!this._tile)
+                .do((value) => toogleAttribute('drop', value))
+                .subscribe(() => this.changeDetectorRef.markForCheck());
+
+            Observable.from(tile.cutted$)
+                .takeWhile(() => this.isAlive && !!this._tile)
+                .do((value) => toogleAttribute('cutted', value))
+                .subscribe(() => this.changeDetectorRef.markForCheck());
+
+            Observable.from(tile.expanded$)
+                .takeWhile(() => this.isAlive && !!this._tile)
+                .do((value) => toogleAttribute('expanded', value))
+                .subscribe(() => this.changeDetectorRef.markForCheck());
+
+            Observable.from(tile.deleted$)
+                .takeWhile(() => this.isAlive && !!this._tile)
+                .do(() => this.element.remove())
+                .subscribe(() => this.changeDetectorRef.markForCheck());
 
             const tooogleHide$ = Observable.from(tile.hidden$)
                 .do((value) => {
@@ -87,20 +123,22 @@ export class DejaTileComponent implements OnDestroy {
                 });
 
             // Hide
-            this.subscriptions.push(tooogleHide$
+            tooogleHide$
+                .takeWhile(() => this.isAlive && !!this._tile)
                 .debounceTime(1000)
                 .filter((value) => value)
-                .subscribe(() => this.element.setAttribute('hidden', '0')));
+                .do(() => this.element.setAttribute('hidden', '0'))
+                .subscribe(() => this.changeDetectorRef.markForCheck());
 
             // Show
-            this.subscriptions.push(tooogleHide$
+            tooogleHide$
+                .takeWhile(() => this.isAlive && !!this._tile)
                 .debounceTime(1)
                 .filter((value) => !value)
-                .subscribe(() => this.element.removeAttribute('hidden')));
-
-        } else {
-            this.subscriptions.forEach((subscription) => subscription.unsubscribe());
-            this.subscriptions = [];
+                .do(() => this.element.removeAttribute('hidden'))
+                .subscribe(() => {
+                    this.changeDetectorRef.markForCheck();
+                });
         }
     }
 
@@ -109,7 +147,7 @@ export class DejaTileComponent implements OnDestroy {
     }
 
     public ngOnDestroy() {
-        this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+        this.isAlive = false;
     }
 
     protected onTitleChanged() {
