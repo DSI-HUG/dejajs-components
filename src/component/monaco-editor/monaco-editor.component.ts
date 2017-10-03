@@ -6,13 +6,12 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
-import { Observable, Subject } from 'rxjs/Rx';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MonacoEditorService } from './monaco-editor.service';
 import { EditorOptions } from './options/editor-options.model';
 import { EditorScrollbarOptions } from './options/editor-scrollbar-options.model';
+
+declare const monaco: any;
 
 /**
  * Monaco Editor Component for Angular
@@ -27,7 +26,7 @@ import { EditorScrollbarOptions } from './options/editor-scrollbar-options.model
     ],
     template: `<div #editor class='monaco-editor'></div>`,
 })
-export class DejaMonacoEditorComponent implements OnDestroy, OnChanges, AfterViewInit {
+export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnChanges {
     /**
      * Enable experimental screen reader support.
      * Defaults to `true`.
@@ -352,168 +351,75 @@ export class DejaMonacoEditorComponent implements OnDestroy, OnChanges, AfterVie
     /**
      * Enable the diff editor mode
      */
-    @Input() public set isDiffEditor(value: boolean) {
-        this._isDiffEditor$.next(value);
-    }
-
+    @Input() public isDiffEditor: boolean;
     /**
      * Content language
      */
-    @Input() public set language(value: 'bat' | 'c' | 'cpp' | 'csharp' | 'css' | 'dockerfile' | 'fsharp' | 'go' | 'handlebars' | 'html' | 'ini' | 'jade' | 'javascript' | 'json' | 'less' | 'lua' | 'markdown' | 'objective-c' | 'php' | 'csharp' | 'plaintext' | 'postiats' | 'powershell' | 'python' | 'r' | 'razor' | 'ruby' | 'scss' | 'sql' | 'swift' | 'typescript' | 'vb' | 'xml' | 'yaml') {
-        this._language$.next(value);
-    }
-
+    @Input() public language: 'bat' | 'c' | 'cpp' | 'csharp' | 'css' | 'dockerfile' | 'fsharp' | 'go' | 'handlebars' | 'html' | 'ini' | 'jade' | 'javascript' | 'json' | 'less' | 'lua' | 'markdown' | 'objective-c' | 'php' | 'csharp' | 'plaintext' | 'postiats' | 'powershell' | 'python' | 'r' | 'razor' | 'ruby' | 'scss' | 'sql' | 'swift' | 'typescript' | 'vb' | 'xml' | 'yaml';
     /**
      * Value to compare with the Value input
      * Used only when `isDiffEditor` is set to `true`
      */
     @Input() set valueToCompare(v: string) {
-        this._valueToCompare$.next(v);
-    }
+        if (v !== this._valueToCompare) {
+            this._valueToCompare = v;
 
+            if (this._valueToCompare === undefined || !this._valueToCompare || !this._editor) {
+                return;
+            }
+
+            if (this._editor.getEditorType() !== 'vs.editor.ICodeEditor') {
+                this.getModifiedModel().setValue(this._valueToCompare);
+            }
+        }
+    }
     /**
      * Value to show in the editor
      */
     @Input() set value(v: string) {
-        this._value$.next(v);
+        if (v !== this._value) {
+            this._value = v;
+
+            if (!this._editor) {
+                return;
+            }
+
+            if (this._value === undefined || !this._value) {
+                this._value = '';
+            }
+
+            this.getOriginalModel().setValue(this._value);
+        }
     }
-
-    /**
-     * Event triggered when the value is loaded
-     */
-    @Output() public loaded = new EventEmitter<string>();
-
     /**
      * Event triggered when value change
      */
-    @Output() public valueChange = new EventEmitter<string>();
-
+    @Output() public valueChange = new EventEmitter();
     /**
      * Event triggered when valueToCompare change
      */
     @Output() public valueToCompareChange = new EventEmitter();
 
-    public originalModel$ = new ReplaySubject<any>(1);
-    public modifiedModel$ = new ReplaySubject<any>(1);
+    @ViewChild('editor') private editorContent: ElementRef;
 
-    public originalModelSub: any;
-    public modifiedModelSub: any;
-
-    @ViewChild('editor')
-    private set editorContent(value: ElementRef) {
-        if (value) {
-            this.editorElement$.next(value.nativeElement);
-        }
-    }
-
-    private editorElement$ = new Subject<HTMLDivElement>();
-    private editor$ = new ReplaySubject<any>(1);
-    private isAlive = true;
-    private _value$ = new BehaviorSubject<string>('');
-    private _valueToCompare$ = new BehaviorSubject<string>('');
-    private _language$ = new Subject<string>();
-    private _isDiffEditor$ = new BehaviorSubject<boolean>(false);
-    private options$ = new Subject<EditorOptions>();
-    private contentInitialized$ = new Subject();
+    private _editor: any;
+    private _value = '';
+    private _valueToCompare = '';
 
     /**
      * Constructor
      */
-    constructor(monacoEditorService: MonacoEditorService) {
-        const setElementSize = (element: HTMLDivElement) => {
-            element.setAttribute('style', `height: ${element.parentElement.offsetHeight}px; width:100%;`);
-        };
+    constructor(
+        private monacoEditorService: MonacoEditorService
+    ) { }
 
-        const value$ = Observable.from(this._value$).distinctUntilChanged();
-        const original$ = Observable.combineLatest(this.originalModel$, value$);
-
-        const valueToCompare$ = Observable.from(this._valueToCompare$).distinctUntilChanged();
-        const modified$ = Observable.combineLatest(this.modifiedModel$, valueToCompare$);
-
-        original$
-            .takeWhile(() => this.isAlive)
-            .subscribe(([model, value]) => {
-                if (this.originalModelSub) {
-                    this.originalModelSub.dispose();
-                    delete this.originalModelSub;
-                }
-
-                let first = true;
-                this.originalModelSub = model.onDidChangeContent(() => {
-                    const v = model.getValue();
-                    if (first) {
-                        this.loaded.emit(v);
-                        first = false;
-                    } else if (v !== value) {
-                        console.log(value);
-                        this.valueChange.emit(v);
-                    }
-                    value = v;
-                });
-
-                model.setValue(value);
-            });
-
-        modified$
-            .takeWhile(() => this.isAlive)
-            .subscribe(([model, value]) => {
-                if (this.modifiedModelSub) {
-                    this.modifiedModelSub.dispose();
-                    delete this.modifiedModelSub;
-                }
-                model.setValue(value);
-                this.modifiedModelSub = model.onDidChangeContent(() => {
-                    const v = model.getValue();
-                    if (v !== value) {
-                        console.log(value);
-                        this.valueToCompareChange.emit(v);
-                    }
-                    value = v;
-                });
-            });
-
-        Observable.combineLatest(this.editorElement$, this.editor$, Observable.fromEvent(window, 'resize'))
-            .takeWhile(() => this.isAlive)
-            .debounceTime(5)
-            .subscribe(([element, editor]) => {
-                setElementSize(element);
-                editor.layout();
-            });
-
-        Observable.combineLatest(this.editor$, this.options$)
-            .takeWhile(() => this.isAlive)
-            .filter(([editor]) => !!editor)
-            .subscribe(([editor, options]) => editor.updateOptions(options));
-
-        Observable.combineLatest(this.editor$, this._language$, this._isDiffEditor$, monacoEditorService.monacoApi$)
-            .takeWhile(() => this.isAlive)
-            .subscribe(([editor, language, isDiffEditor, monacoApi]) => {
-                const originalModel = monacoApi.editor.createModel('', language);
-
-                if (isDiffEditor) {
-                    const modifiedModel = monacoApi.editor.createModel('', language);
-
-                    editor.setModel({
-                        modified: modifiedModel,
-                        original: originalModel,
-                    });
-
-                    this.originalModel$.next(originalModel);
-                    this.modifiedModel$.next(modifiedModel);
-                } else {
-                    editor.setModel(originalModel);
-                    this.originalModel$.next(originalModel);
-                }
-            });
-
-        Observable.combineLatest(this.editorElement$, this._isDiffEditor$, monacoEditorService.monacoApi$, this.contentInitialized$)
-            .takeWhile(() => this.isAlive)
-            .subscribe(([element, isDiffEditor, monacoApi]) => {
-                const options = this.getOptions();
-                const editor = isDiffEditor ? monacoApi.editor.createDiffEditor(element, options) : monacoApi.editor.create(element, options);
-                this.editor$.next(editor);
-                setElementSize(element);
-            });
+    /**
+     * Load Monaco Editor library
+     */
+    public ngAfterViewInit() {
+        this.monacoEditorService.initMonacoLib().then(() => {
+            this.initEditor();
+        });
     }
 
     /**
@@ -527,46 +433,98 @@ export class DejaMonacoEditorComponent implements OnDestroy, OnChanges, AfterVie
      * Lifecycle hook that is called when any data-bound property of a directive changes.
      */
     public ngOnChanges() {
-        this.options$.next(this.getOptions());
-    }
-
-    public ngAfterViewInit() {
-        this.contentInitialized$.next();
+        if (this._editor) {
+            this._editor.updateOptions(this.getOptions());
+        }
     }
 
     /**
      * Destroy the monaco component
      */
     public dispose() {
-        if (this.modifiedModelSub) {
-            this.modifiedModelSub.dispose();
-
-        }
-        if (this.originalModelSub) {
-            this.originalModelSub.dispose();
-        }
-
-        this.editor$.subscribe((editor) => {
-            editor.dispose();
-        });
-
-        this.editorElement$.subscribe((editorElement) => {
-            while (editorElement.hasChildNodes()) {
-                editorElement.removeChild(editorElement.firstChild);
+        const myDiv: HTMLDivElement = this.editorContent.nativeElement;
+        if (this._editor) {
+            this._editor.dispose();
+            while (myDiv.hasChildNodes()) {
+                myDiv.removeChild(myDiv.firstChild);
             }
-        });
-
-        this.isAlive = false;
+            this._editor = null;
+        }
     }
 
     /**
-     * Format the document
+     * Triggered when windows is resized
+     * Resize the component
      */
-    public format() {
-        Observable.from(this.editor$)
-            .first()
-            .filter((editor) => !!editor)
-            .subscribe((editor) => editor.trigger('', 'editor.action.formatDocument'));
+    @HostListener('window:resize', ['$event'])
+    protected onResize() {
+        // Manually set monaco size because MonacoEditor doesn't work with Flexbox css
+        const myDiv: HTMLDivElement = this.editorContent.nativeElement;
+        myDiv.setAttribute('style', `height: ${myDiv.parentElement.offsetHeight}px; width:100%;`);
+    }
+
+    /**
+     * Init the component
+     */
+    private initEditor() {
+        const myDiv: HTMLDivElement = this.editorContent.nativeElement;
+        const options = this.getOptions();
+        this.dispose();
+
+        if (!this.isDiffEditor) {
+            this._editor = this.initSimpleEditor(myDiv, options);
+        } else {
+            this._editor = this.initDiffEditor(myDiv, options);
+        }
+
+        // Manually set monaco size because MonacoEditor doesn't work with Flexbox css
+        myDiv.setAttribute('style', `height: ${myDiv.parentElement.offsetHeight}px; width:100%;`);
+
+        // Trigger on change event for simple editor
+        this.getOriginalModel().onDidChangeContent(() => {
+            const newVal: string = this.getOriginalModel().getValue();
+            if (this._value !== newVal) {
+                this.updateValue(newVal);
+            }
+        });
+
+        // Trigger on change event for diff editor
+        if (this.getModifiedModel()) {
+            this.getModifiedModel().onDidChangeContent(() => {
+                const newVal: string = this.getModifiedModel().getValue();
+                if (this._valueToCompare !== newVal) {
+                    this.updateValueToCompare(newVal);
+                }
+            });
+        }
+    }
+
+    /**
+     * Create a simple editor text
+     * @param div
+     * @param options
+     * @returns {IStandaloneCodeEditor}
+     */
+    private initSimpleEditor(div: HTMLDivElement, options: any) {
+        return monaco.editor.create(div, options);
+    }
+
+    /**
+     * Create a diff editor to compare two string (_value and _valueToCompare)
+     * @param div
+     * @returns {IStandaloneDiffEditor}
+     */
+    private initDiffEditor(div: HTMLDivElement, options: any) {
+        const originalModel = monaco.editor.createModel(this._value, this.language);
+        const modifiedModel = monaco.editor.createModel(this._valueToCompare, this.language);
+
+        const diffEditor = monaco.editor.createDiffEditor(div, options);
+        diffEditor.setModel({
+            modified: modifiedModel,
+            original: originalModel,
+        });
+
+        return diffEditor;
     }
 
     private getOptions(): EditorOptions {
@@ -630,9 +588,46 @@ export class DejaMonacoEditorComponent implements OnDestroy, OnChanges, AfterVie
         options.fontSize = this.fontSize;
         options.lineHeight = this.lineHeight;
         options.formatOnPaste = this.formatOnPaste;
-        options.value = '';
+        options.value = this._value;
+        options.language = this.language;
 
         Object.keys(options).forEach((key) => options[key] === undefined && delete options[key]); // Remove all undefined properties
         return options;
+    }
+
+    /**
+     * UpdateValue
+     *
+     * @param value
+     */
+    private updateValue(value: string) {
+        // this.value = value;
+        this._value = value;
+        this.valueChange.emit(value);
+    }
+
+    /**
+     * UpdateValue
+     *
+     * @param value
+     */
+    private updateValueToCompare(value: string) {
+        // this.valueToCompare = value;
+        this._valueToCompare = value;
+        this.valueToCompareChange.emit(value);
+    }
+
+    private getOriginalModel() {
+        if (this._editor) {
+            const model = this._editor.getModel();
+            return model.original ? model.original : model;
+        }
+    }
+
+    private getModifiedModel() {
+        if (this._editor) {
+            const model = this._editor.getModel();
+            return model.modified ? model.modified : null;
+        }
     }
 }

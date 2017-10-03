@@ -52,10 +52,10 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     @Input() public disableDates: Array<DaysOfWeek | Date>; // | ((d: Date) => boolean);
     /** Reference to DejaDateSelectorComponent inside thic control */
     @ViewChild(DejaDateSelectorComponent) public dateSelectorComponent: DejaDateSelectorComponent;
-    /** Template for MdHint inside mat-input-container */
-    @ContentChild('hintTemplate') public mdHint;
-    /** Template for MdError inside mat-input-container */
-    @ContentChild('errorTemplate') public mdError;
+    /** Template for MatHint inside mat-input-container */
+    @ContentChild('hintTemplate') public matHint;
+    /** Template for MatError inside mat-input-container */
+    @ContentChild('errorTemplate') public matError;
     /** Offset de position horizontal de la zone de dropdown */
     @Input() public overlayOffsetX = 0;
     /** Offset de position verticale de la zone de dropdown */
