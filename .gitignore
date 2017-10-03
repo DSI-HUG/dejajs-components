@@ -60,3 +60,4 @@ src/**/*.d.ts
 
 # Ignore in demo
 demo/vs
+/package-lock.json

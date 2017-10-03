@@ -1,5 +1,4 @@
 <mat-sidenav-container fxFlex [class.sidenav-hidden]="hidden" [class.sidenav-light]="!hidden && !sidenav.opened">
-
     <mat-sidenav #sidenav mode="side" fxLayout="column" opened>
         <mat-toolbar class="header">
             <mat-icon class="header-icon">face</mat-icon>
@@ -23,5 +22,4 @@
         </mat-toolbar>
         <ng-content select="deja-sidenav-content"></ng-content>
     </div>
-
 </mat-sidenav-container>
