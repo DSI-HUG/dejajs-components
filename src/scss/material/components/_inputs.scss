@@ -5,7 +5,7 @@
     $warn: map-get($theme, warn);
 
     // Fix allow to add an ICO into the placeholder
-	md-input-container {
+	mat-input-container {
 	    .mat-input-placeholder-wrapper {
             overflow: visible !important;
         }

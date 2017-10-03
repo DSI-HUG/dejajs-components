@@ -6,7 +6,7 @@
     form {
         
         /** RADIO BUTTON **/
-        md-radio-group.ng-invalid.ng-touched {
+        mat-radio-group.ng-invalid.ng-touched {
             label {
                 color: mat-color($warn);
 
@@ -27,7 +27,7 @@
         }
 
         /** INPUT **/
-        md-input-container {
+        mat-input-container {
             &.ng-invalid {
                 &:not(.ng-touched) {
                     .mat-input-wrapper {

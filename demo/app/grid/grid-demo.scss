@@ -1,9 +1,6 @@
 @import '../../../src/scss/components/tree-list-borders';
 
 grid-demo {
-	// display: flex;
-	// overflow: hidden;
-	// flex-direction: column;
 	flex: 1 1 100%;
     padding: 1rem;
 
@@ -23,11 +20,11 @@ grid-demo {
 					margin: 0.35rem;
 				}
 			}
-			[mdprefix] {
+			[matPrefix] {
 				cursor: default;
 				padding: 0 4px;
 			}
-			[mdSuffix] {
+			[matSuffix] {
 				padding: 0 4px;
 				display: flex;
 				justify-content: flex-end;
@@ -54,7 +51,7 @@ grid-demo {
 		#news,
 		#variable {
 			.cell-wrapper {
-				&[colname="p1.p2.person.urlToImage"] {
+				&[colname="urlToImage"] {
 					.logo {
 						max-width: 100%;
 						max-height: 100%;
@@ -63,9 +60,9 @@ grid-demo {
 						object-fit: contain;
 					}
 				}
-				&[colname="p1.p2.person.description"],
-				&[colname="p1.p2.person.address"],
-				&[colname="p1.p2.person.about"] {
+				&[colname="description"],
+				&[colname="address"],
+				&[colname="about"] {
 					.cell {
 						white-space: normal;
 					}

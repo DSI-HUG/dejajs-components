@@ -10,6 +10,8 @@
 
 # dependencies
 /node_modules
+/node_modules.disabled
+/src/node_modules
 
 # IDEs and editors
 /.idea
@@ -57,4 +59,8 @@ src/**/*.d.ts
 !src/send-action.js
 
 # Ignore in demo
+demo/**/*.js
+demo/**/*.js.map
+demo/**/*.d.ts
 demo/vs
+/src/package-lock.json

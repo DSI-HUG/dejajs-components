@@ -13,7 +13,7 @@ deja-select {
 		width: 100%;
 
 		.mat-input-suffix {
-			[mdSuffix] {
+			[matSuffix] {
 				display: table-cell;
 			}
 			.actions-suffix {
@@ -69,8 +69,8 @@ deja-select {
 			}
 		}
 
-		[mdSuffix] {
-			md-progress-spinner {
+		[matSuffix] {
+			mat-progress-spinner {
 				width: 1.5rem;
 				height: 1.5rem;
 			}
@@ -106,10 +106,10 @@ deja-select {
 		}
 	}
 
-	md-placeholder {
+	mat-placeholder {
 		display: flex;
 		align-items: center;
-		md-icon {
+		mat-icon {
 			margin-right: 0.5rem;
 		}
 	}

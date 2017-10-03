@@ -10,7 +10,7 @@
         #date-header {
             background-color: mat-color($primary);
             color: #FFF;
-            button[md-mini-fab] {
+            button[mat-mini-fab] {
                 background: mat-color($primary);
                 box-shadow: none;
                 color: #FFF;
@@ -32,7 +32,7 @@
         #date-selector {
             #sub-header {
                 .month {
-                    button[md-mini-fab] {
+                    button[mat-mini-fab] {
                         background: #FFF;
                         color: mat-color($primary);
                     }

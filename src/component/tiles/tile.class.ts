@@ -7,6 +7,7 @@
  */
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Subject } from 'rxjs/Subject';
 import { Rect } from '../../common/core/graphics/rect';
 import { IDejaTile } from './tile.interface';
@@ -20,10 +21,10 @@ export class DejaTile implements IDejaTile {
     public pressed$ = new BehaviorSubject<boolean>(false);
     public selected$ = new BehaviorSubject<boolean>(false);
     public expanded$ = new BehaviorSubject<boolean>(false);
-    public hidden$ = new Subject<boolean>();
+    public hidden$ = new ReplaySubject<boolean>(1);
     public pending$ = new BehaviorSubject<boolean>(false);
     public deleted$ = new Subject();
-    public pixelBounds$ = new Subject<Rect>();
+    public pixelBounds$ = new BehaviorSubject<Rect>(null);
     public isTemporary = false;
     public fading = false;
 
@@ -55,6 +56,7 @@ export class DejaTile implements IDejaTile {
         if (!this._id) {
             this._id = `#${DejaTile.currentId++}`;
         }
+        // console.log(`Creating tile ${this._id}`);
     }
 
     public get model() {
