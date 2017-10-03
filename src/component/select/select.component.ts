@@ -74,8 +74,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @ContentChild('parentItemTemplate') public parentItemTemplateInternal;
     @ContentChild('selectedTemplate') public selectedTemplate;
     @ContentChild('suffixTemplate') public _matSuffix;
-    /** Template for MdError inside mat-input-container */
-    @ContentChild('errorTemplate') public mdError;
+    /** Template for MatError inside mat-input-container */
+    @ContentChild('errorTemplate') public matError;
 
     /** Internal use */
     public overlayOrigin: OverlayOrigin;
