@@ -32,7 +32,6 @@ import { PeopleService } from './services/people.service';
 
 import {
     DejaAccordionModule,
-    DejaAutosizeTextAreaModule,
     DejaChipsModule,
     DejaCircularPickerModule,
     DejaClipboardModule,
@@ -87,7 +86,6 @@ import { SelectDemoComponent } from './select/select-demo';
 import { DejaSnackbarDemoComponent } from './snackbar/snackbar-demo';
 import { DejaSplitterDemoComponent } from './splitter/splitter-demo';
 import { TagDemoComponent } from './tag/tag-demo.component';
-import { TextAreaDemoComponent } from './textarea/textarea-demo';
 import { TilesDemoComponent } from './tiles/tiles-demo';
 import { DejaTreeListDemoComponent } from './tree-list/tree-list-demo';
 import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
@@ -114,7 +112,6 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         DejaSnackbarDemoComponent,
         DejaSplitterDemoComponent,
         TagDemoComponent,
-        TextAreaDemoComponent,
         TilesDemoComponent,
         DejaTreeListDemoComponent,
         DejaViewPortDemoComponent,
@@ -133,7 +130,6 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         FlexLayoutModule,
 
         DejaAccordionModule,
-        DejaAutosizeTextAreaModule,
         DejaChipsModule,
         DejaCircularPickerModule,
         DejaClipboardModule,

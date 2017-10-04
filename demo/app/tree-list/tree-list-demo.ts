@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectorRef, Component, OnDestroy, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
@@ -25,6 +25,7 @@ import { CountriesService, Country } from '../services/countries.service';
 import { NewsService } from '../services/news.service';
 
 @Component({
+    encapsulation: ViewEncapsulation.None,
     selector: 'deja-tree-list-demo',
     styleUrls: ['./tree-list-demo.scss'],
     templateUrl: './tree-list-demo.html',
@@ -37,6 +38,14 @@ export class DejaTreeListDemoComponent implements OnDestroy {
 
     protected disabled: boolean;
     protected country: Country;
+    protected deepCountry = {
+        l1: {
+            l2: {
+                name: 'Switzerland',
+                value: 'CH',
+            }
+        }
+    };
     public tabIndex = 1;
     protected news$: Observable<News[]>;
     protected bigNews$: Observable<News[]>;
@@ -50,6 +59,7 @@ export class DejaTreeListDemoComponent implements OnDestroy {
     protected loremList: IItemTree[] = [];
 
     private countries: Observable<Country[]>;
+    private deepCountries: Observable<any>;
     private countriesForTemplate: Country[];
     private countriesForMultiselect: Country[];
     private groupedCountries: ICountryGroup[];
@@ -94,6 +104,21 @@ export class DejaTreeListDemoComponent implements OnDestroy {
         this.country.color = 'rgb(211, 47, 47)';
 
         this.countries = this.countriesService.getCountries$();
+
+        this.deepCountries = this.countriesService.getCountries$()
+            .switchMap((countries) => countries)
+            .map((country) => ({
+                l1: {
+                    l2: {
+                        name: country.naqme,
+                        value: country.code,
+                    }
+                }
+            }))
+            .reduce((acc: any[], cur) => {
+                acc.push(cur);
+                return acc;
+            }, []);
 
         this.fructs = [
             'Apricots',

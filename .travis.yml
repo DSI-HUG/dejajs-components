@@ -1,12 +1,5 @@
 dist: trusty
 sudo: required
-addons:
-  firefox: latest
-  apt:
-    sources:
-     - google-chrome
-    packages:
-     - google-chrome-stable
 language: node_js
 cache:
   directories:
@@ -27,12 +20,11 @@ before_install:
 - rm -rf node_modules
 - bash ./tools/scripts/test-latest-versions.sh
 before_script:
-- "export DISPLAY=:99.0"
-- "sh -e /etc/init.d/xvfb start"
 - sleep 3
 - yarn run licensecheck
 - yarn run lint
 script:
+- yarn run test
 - yarn run e2e
 - yarn run build:lib
 env:
@@ -55,3 +47,4 @@ after_deploy:
 - bash ./tools/scripts/tag.sh
 - bash ./tools/scripts/deploy-demo.sh
 - bash ./tools/scripts/deploy-doc.sh
+- bash ./tools/scripts/deploy-test.sh

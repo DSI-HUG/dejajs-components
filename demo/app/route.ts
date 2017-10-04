@@ -28,7 +28,6 @@ import { SelectDemoComponent } from './select/select-demo';
 import { DejaSnackbarDemoComponent } from './snackbar/snackbar-demo';
 import { DejaSplitterDemoComponent } from './splitter/splitter-demo';
 import { TagDemoComponent } from './tag/tag-demo.component';
-import { TextAreaDemoComponent } from './textarea/textarea-demo';
 import { TilesDemoComponent } from './tiles/tiles-demo';
 import { DejaTreeListDemoComponent } from './tree-list/tree-list-demo';
 import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
@@ -52,7 +51,6 @@ const routes: Routes = [
     { component: DejaSnackbarDemoComponent, path: 'snackbar', data: { title: 'Snackbar' } },
     { component: DejaSplitterDemoComponent, path: 'splitter', data: { title: 'Splitter' } },
     { component: TagDemoComponent, path: 'tag', data: { title: 'Tag' } },
-    { component: TextAreaDemoComponent, path: 'textarea', data: { title: 'Textarea' } },
     { component: TilesDemoComponent, path: 'tiles', data: { title: 'Tiles' } },
     { component: DejaTreeListDemoComponent, path: 'tree-list', data: { title: 'Tree List' } },
     { component: DejaViewPortDemoComponent, path: 'viewport', data: { title: 'Viewport' } },

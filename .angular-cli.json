@@ -16,9 +16,9 @@
             "index": "index.html",
             "main": "main.ts",
             "polyfills": "../src/polyfills.ts",
-            "test": "test.ts",
+            "test": "../src/test.ts",
             "tsconfig": "tsconfig.app.json",
-            "testTsconfig": "tsconfig.spec.json",
+            "testTsconfig": "../src/tsconfig.spec.json",
             "prefix": "app",
             "styles": [
                 "styles.scss"
@@ -42,13 +42,16 @@
     },
     "lint": [
         {
-            "project": "demo/tsconfig.app.json"
+            "project": "demo/tsconfig.app.json",
+            "exclude": "**/node_modules/**"
         },
         {
-            "project": "demo/tsconfig.spec.json"
+            "project": "src/tsconfig.spec.json",
+            "exclude": "**/node_modules/**"
         },
         {
-            "project": "e2e/tsconfig.e2e.json"
+            "project": "e2e/tsconfig.e2e.json",
+            "exclude": "**/node_modules/**"
         }
     ],
     "test": {

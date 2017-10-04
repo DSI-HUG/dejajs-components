@@ -105,11 +105,11 @@ export class DejaChipsComponent implements ControlValueAccessor {
     }
     // ************* End of ControlValueAccessor Implementation **************
 
-    protected get itemTemplate() {
+    public get itemTemplate() {
         return this.itemTemplateExternal || this.itemTemplateInternal;
     }
 
-    protected getTextValue(value: any) {
+    public getTextValue(value: any) {
         if (!value) {
             return '';
         } else {
@@ -125,7 +125,7 @@ export class DejaChipsComponent implements ControlValueAccessor {
         }
     }
 
-    protected onClose(item: any, index: number) {
+    public onClose(item: any, index: number) {
         const event = new DejaChipsCloseEvent(item, index);
         this.items.splice(index, 1);
         this.onChangeCallback(this.items);

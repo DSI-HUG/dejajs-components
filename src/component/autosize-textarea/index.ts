@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { MdInputModule } from '@angular/material';
 import { DejaAutosizeTextAreaDirective } from './autosize-textarea.directive';
 
+/** @deprecated use mat-autosize instead */
 @NgModule({
     declarations: [DejaAutosizeTextAreaDirective],
     exports: [DejaAutosizeTextAreaDirective],

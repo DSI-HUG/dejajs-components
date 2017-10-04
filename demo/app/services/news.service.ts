@@ -9,7 +9,9 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { ObjectMapper } from 'json-object-mapper';
+import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/publishLast';
+import 'rxjs/add/operator/switchMap';
 import { Observable } from 'rxjs/Observable';
 import { News, NewsArticles, NewsSource, NewsSources } from '../common/news.model';
 import { CloningService } from './../../../src/common/core/cloning/cloning.service';
