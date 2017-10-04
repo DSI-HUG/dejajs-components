@@ -18,9 +18,9 @@ import { GlobalEventsDemoComponent } from './global-events/global-events-demo';
 import { GridDemoComponent } from './grid/grid-demo';
 import { HomeGuidesComponent } from './home-guides/home-guides.component';
 import { HomeComponent } from './home/home.component';
-import { MenuDemoComponent } from './menu/menu-demo';
 import { MessageBoxDemoComponent } from './message-box/message-box-demo';
 import { DejaMonacoEditorDemoComponent } from './monaco-editor/monaco-editor-demo';
+import { OverlayDemoComponent } from './overlay/overlay-demo';
 import { ProgressCircleDemoComponent } from './progress-circle/progress-circle-demo';
 import { DejaRangeDemoComponent } from './range/range-demo';
 import { ReactiveFormDemoComponent } from './reactive-form/reactive-form-demo';
@@ -41,7 +41,7 @@ const routes: Routes = [
     { component: DejaDatePickerDemoComponent, path: 'date-picker', data: { title: 'Date Picker' } },
     { component: GlobalEventsDemoComponent, path: 'events', data: { title: 'Events' } },
     { component: GridDemoComponent, path: 'grid', data: { title: 'Grid' } },
-    { component: MenuDemoComponent, path: 'menu', data: { title: 'Menu' } },
+    { component: OverlayDemoComponent, path: 'overlay', data: { title: 'Overlay' } },
     { component: MessageBoxDemoComponent, path: 'message-box', data: { title: 'Message Box' } },
     { component: DejaMonacoEditorDemoComponent, path: 'monaco-editor', data: { title: 'Monaco Editor' } },
     { component: ProgressCircleDemoComponent, path: 'progress-circle', data: { title: 'Progress Circle' } },

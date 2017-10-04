@@ -6,7 +6,6 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { OverlayOrigin } from '@angular/cdk/overlay';
 import { Component, ContentChild, ElementRef, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import 'rxjs/add/observable/fromEvent';
 import { Observable } from 'rxjs/Observable';
@@ -36,8 +35,8 @@ export class DejaTooltipComponent implements OnInit {
 
     /** Parameters of the tooltip */
     public params: ITooltipParams;
-    public overlayOrigin: OverlayOrigin;
     public overlayVisible = false;
+    public ownerElement: HTMLElement;
     private _model: any;
 
     /**
@@ -121,8 +120,7 @@ export class DejaTooltipComponent implements OnInit {
         }
         this.params = this.tooltipService.params[this.name];
 
-        const ownerElement = (this.params.ownerElement as ElementRef).nativeElement || this.params.ownerElement;
-        this.overlayOrigin = new OverlayOrigin(new ElementRef(ownerElement));
+        this.ownerElement = (this.params.ownerElement as ElementRef).nativeElement || this.params.ownerElement;
 
         const model$ = this.params.model as Observable<any>;
         if (!model$) {

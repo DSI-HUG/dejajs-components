@@ -9,11 +9,11 @@
 import { Component, ViewChild } from '@angular/core';
 
 @Component({
-    selector: 'deja-menu-demo',
-    styleUrls: ['./menu-demo.scss'],
-    templateUrl: './menu-demo.html',
+    selector: 'deja-overlay-demo',
+    styleUrls: ['./overlay-demo.scss'],
+    templateUrl: './overlay-demo.html',
 })
-export class MenuDemoComponent {
+export class OverlayDemoComponent {
     public selected = '';
     public items = [
         { text: 'Refresh' },

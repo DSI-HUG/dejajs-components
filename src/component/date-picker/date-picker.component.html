@@ -17,7 +17,7 @@
 		<ng-template [ngTemplateOutlet]="mdError"></ng-template>
 	</md-error>
 </md-form-field>
- <ng-template cdk-connected-overlay cdkConnectedOverlayHasBackdrop cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop" [cdkConnectedOverlayOffsetY]="overlayOffsetY" [cdkConnectedOverlayOffsetX]="overlayOffsetX" [cdkConnectedOverlayOpen]="showDropDown" [cdkConnectedOverlayOrigin]="overlayOrigin" (backdropClick)="close()" (detach)="close()" [cdkConnectedOverlayPositions]="positions"> 
+ <ng-template cdk-connected-overlay cdkConnectedOverlayHasBackdrop cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop" [cdkConnectedOverlayOffsetY]="overlayOffsetY" [cdkConnectedOverlayOffsetX]="overlayOffsetX" [cdkConnectedOverlayOpen]="showDropDown" [cdkConnectedOverlayOrigin]="overlayOrigin" (backdropClick)="close()" (detach)="close()" [cdkConnectedOverlayPositions]="positions">
 	<deja-date-time-selector
 		[time]="time"
 		[disableDates]="disableDates"

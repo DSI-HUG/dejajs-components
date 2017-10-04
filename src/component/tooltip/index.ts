@@ -6,9 +6,9 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { DejaOverlayModule } from '../overlay/index';
 import { DejaTooltipComponent } from './tooltip.component';
 import { DejaTooltipDirective } from './tooltip.directive';
 import { DejaTooltipService } from './tooltip.service';
@@ -24,7 +24,7 @@ import { DejaTooltipService } from './tooltip.service';
     ],
     imports: [
         CommonModule,
-        OverlayModule,
+        DejaOverlayModule
     ],
     providers: [
         DejaTooltipService,
