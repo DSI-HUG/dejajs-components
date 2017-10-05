@@ -37,6 +37,7 @@ export class DejaColorPickerComponent implements ControlValueAccessor, OnInit, O
     /** Déclenché lorsqu'une couleur est survolée par la souris. */
     @Output() public colorhover = new EventEmitter();
 
+    /** Internal use */
     public ownerElement: HTMLElement;
 
     protected onTouchedCallback: () => void = noop;

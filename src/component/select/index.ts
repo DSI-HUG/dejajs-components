@@ -6,16 +6,16 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { OverlayModule } from '@angular/cdk/overlay';
-import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { FormsModule } from '@angular/forms';
-import { MdIconModule, MdInputModule } from '@angular/material';
-import { DejaChildValidatorModule } from '../../common/core/validation/index';
-import { DejaChipsModule } from '../chips/index';
-import { DejaItemComponent } from './../../common/core/item-list/item.component';
-import { DejaSelectComponent } from './select.component';
+import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {FormsModule} from '@angular/forms';
+import {MdIconModule, MdInputModule} from '@angular/material';
+import {DejaChildValidatorModule} from '../../common/core/validation/index';
+import {DejaChipsModule} from '../chips/index';
+import {DejaOverlayModule} from '../overlay/index';
+import {DejaItemComponent} from './../../common/core/item-list/item.component';
+import {DejaSelectComponent} from './select.component';
 
 @NgModule({
     declarations: [
@@ -30,7 +30,7 @@ import { DejaSelectComponent } from './select.component';
         CommonModule,
         FlexLayoutModule,
         FormsModule,
-        OverlayModule,
+        DejaOverlayModule,
         MdIconModule,
         MdInputModule,
         DejaChildValidatorModule,

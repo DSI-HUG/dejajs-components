@@ -14,37 +14,41 @@
 
 <div *ngIf="tabIndex === 1" (contextmenu)="onContextMenu($event)">
 	<deja-overlay #contextMenu>
-		<ul>
-			<li (click)="contextMenu.close()">
-				<md-icon>delete_sweep</md-icon> Context menu
-			</li>
-			<li (click)="contextMenu.close()">
-				<md-icon>content_copy</md-icon> Dupliquer
-			</li>
-			<li (click)="contextMenu.close()">
-				<md-icon>edit</md-icon> Editer
-			</li>
-		</ul>
+        <div deja-menu-content>
+            <ul>
+                <li class="menu-item" (click)="contextMenu.close()">
+                    <md-icon>delete_sweep</md-icon> Context menu
+                </li>
+                <li class="menu-item" (click)="contextMenu.close()">
+                    <md-icon>content_copy</md-icon> Dupliquer
+                </li>
+                <li class="menu-item" (click)="contextMenu.close()">
+                    <md-icon>edit</md-icon> Editer
+                </li>
+            </ul>
+        </div>
 	</deja-overlay>
 	<md-card class="demo-card">
 		<md-toolbar color="primary">Overlay</md-toolbar>
 		<md-card-content>
 			<deja-overlay #posYMenu>
-				<ul>
-					<li (click)="posYMenu.close()">
-						<md-icon>delete_sweep</md-icon> Supprimer
-					</li>
-					<li (click)="posYMenu.close()">
-						<md-icon>content_copy</md-icon> Dupliquer
-					</li>
-					<li (click)="posYMenu.close()">
-						<md-icon>edit</md-icon> Editer
-					</li>
-				</ul>
+                <div deja-menu-content>
+                    <ul>
+                        <li class="menu-item" (click)="posYMenu.close()">
+                            <md-icon>delete_sweep</md-icon> Supprimer
+                        </li>
+                        <li class="menu-item" (click)="posYMenu.close()">
+                            <md-icon>content_copy</md-icon> Dupliquer
+                        </li>
+                        <li class="menu-item" (click)="posYMenu.close()">
+                            <md-icon>edit</md-icon> Editer
+                        </li>
+                    </ul>
+                </div>
 			</deja-overlay>
 
 			<div id="demo-deja-menu">
-				<div class="menu-section">
+				<div deja-menu-content>
 					<p>You clicked on: {{ selected }}</p>
 
 					<md-toolbar>
@@ -54,9 +58,11 @@
 					</md-toolbar>
 
 					<deja-overlay #menu>
-						<button class="menu-item" *ngFor="let item of items" (click)="select(item.text); menu.close()">
-							{{ item.text }}
-						</button>
+                        <div deja-menu-content>
+                            <button class="menu-item" *ngFor="let item of items" (click)="select(item.text); menu.close()">
+                                {{ item.text }}
+                            </button>
+                        </div>
 					</deja-overlay>
 				</div>
 				<div class="menu-section">
@@ -68,9 +74,11 @@
 					</md-toolbar>
 
 					<deja-overlay #anchorMenu>
-						<a class="menu-item" *ngFor="let item of items" href="http://www.google.com">
-							{{ item.text }}
-						</a>
+                        <div deja-menu-content>
+                            <a class="menu-item" *ngFor="let item of items" href="http://www.google.com">
+                                {{ item.text }}
+                            </a>
+                        </div>
 					</deja-overlay>
 				</div>
 				<div class="menu-section">
@@ -84,9 +92,11 @@
 					</md-toolbar>
 
 					<deja-overlay #posXMenu class="before" positions="end bottom end top">
-						<button class="menu-item" *ngFor="let item of items" (click)="posXMenu.close()">
-							{{ item.text }}
-						</button>
+                        <div deja-menu-content>
+                            <button class="menu-item" *ngFor="let item of items" (click)="posXMenu.close()">
+                                {{ item.text }}
+                            </button>
+                        </div>
 					</deja-overlay>
 				</div>
 

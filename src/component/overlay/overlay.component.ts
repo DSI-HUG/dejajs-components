@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import {ConnectedOverlayDirective, OverlayContainer, OverlayOrigin} from '@angular/cdk/overlay';
+import {ConnectedOverlayDirective, ConnectionPositionPair, OverlayContainer, OverlayOrigin} from '@angular/cdk/overlay';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -36,9 +36,25 @@ import {DejaConnectionPositionPair} from '../../common/core/overlay/connection-p
 })
 export class DejaOverlayComponent implements OnInit, OnDestroy {
     /** Renvoie une valeur qui indique si le dialog est affiché. */
-    @Input() public isVisible = false;
+    private _isVisible = false;
+
+    public get isVisible() {
+        return this._isVisible;
+    }
+    @Input() public set isVisible(value: boolean) {
+        this._isVisible = value;
+        this.visibleChange.emit(this.isVisible);
+    }
 
     @Input() public overlayBackdropClass = 'cdk-overlay-transparent-backdrop';
+
+    /** Si pas null, sera utilisé quand isMobile est vrai. Si null et si isMobile est vrai,
+     *  alors c'est la valeur 'start top start top' qui est utilisée.
+     * */
+    @Input() public positionsForMobile: ConnectionPositionPair[];
+
+    private _width = null;
+    private _widthForMobile = '100%';
 
     private _ownerElement: HTMLElement;
 
@@ -52,6 +68,9 @@ export class DejaOverlayComponent implements OnInit, OnDestroy {
 
     /** Déclenché lorsque la visibilité du dialog change. */
     @Output() public visibleChange = new EventEmitter<boolean>();
+
+    /** Déclenché lorsque l'overlay est fermé. */
+    @Output() public closed = new EventEmitter<boolean>();
 
     /** Internal use */
     public overlayOrigin: OverlayOrigin;
@@ -76,7 +95,13 @@ export class DejaOverlayComponent implements OnInit, OnDestroy {
     private _positions = DejaConnectionPositionPair.default;
 
     public get positions() {
-        return !this.isMobile ? this._positions : DejaConnectionPositionPair.parse('start top start top');
+        if (!this.isMobile) {
+            return this._positions;
+        } else if (this.positionsForMobile) {
+            return this.positionsForMobile;
+        } else {
+            return DejaConnectionPositionPair.parse('start top start top');
+        }
     }
 
     @Input()
@@ -85,7 +110,35 @@ export class DejaOverlayComponent implements OnInit, OnDestroy {
     }
 
     public get width() {
-        return !this.isMobile ? null : '100%';
+       return this._width;
+    }
+
+    @Input()
+    /**
+     * définit la largeur de l'overlay.
+     */
+    public set width(width: string) {
+        this._width = width;
+    }
+
+    public get widthForMobile() {
+        return this._widthForMobile;
+    }
+
+    @Input()
+    /**
+     * définit la largeur de l'overlay quand isMobile est true. '100%' par défaut.
+     */
+    public set widthForMobile(widthForMobile: string) {
+        this._widthForMobile = widthForMobile;
+    }
+
+    public get overlayWidth() {
+        if (!this.isMobile) {
+            return this._width;
+        } else {
+            return this._widthForMobile;
+        }
     }
 
     public ngOnDestroy() {
@@ -94,6 +147,12 @@ export class DejaOverlayComponent implements OnInit, OnDestroy {
 
     public ngOnInit() {
         this.contentInitialized$.next();
+    }
+
+    public updatePosition() {
+        if (this.overlay && this.overlay.overlayRef) {
+            this.overlay.overlayRef.updatePosition();
+        }
     }
 
     /** Affiche le dialog. */
@@ -105,19 +164,18 @@ export class DejaOverlayComponent implements OnInit, OnDestroy {
         const target = e && e.target;
         this.overlayOrigin = new OverlayOrigin(new ElementRef((this.isMobile && document.body) || target || this.ownerElement || this.elementRef.nativeElement));
         this.isVisible = true;
-        this.visibleChange.emit(this.isVisible);
         this.changeDetectorRef.markForCheck();
         Observable.timer(1)
             .first()
             .subscribe(() => {
-                this.overlay.overlayRef.updatePosition();
+                this.updatePosition();
             });
     }
 
     /** Ferme le dialog. */
     public close() {
         this.isVisible = false;
-        this.visibleChange.emit(this.isVisible);
+        this.closed.emit(true);
         this.changeDetectorRef.markForCheck();
     }
 }

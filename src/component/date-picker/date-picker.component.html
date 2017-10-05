@@ -17,19 +17,20 @@
 		<ng-template [ngTemplateOutlet]="mdError"></ng-template>
 	</md-error>
 </md-form-field>
- <ng-template cdk-connected-overlay cdkConnectedOverlayHasBackdrop cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop" [cdkConnectedOverlayOffsetY]="overlayOffsetY" [cdkConnectedOverlayOffsetX]="overlayOffsetX" [cdkConnectedOverlayOpen]="showDropDown" [cdkConnectedOverlayOrigin]="overlayOrigin" (backdropClick)="close()" (detach)="close()" [cdkConnectedOverlayPositions]="positions">
-	<deja-date-time-selector
-		[time]="time"
-		[disableDates]="disableDates"
-		[ngModel]="date"
-		(ngModelChange)="onDateChange($event)"
-		class="inside-dropdown"
-		[dateMax]="dateMax"
-		[dateMin]="dateMin"
-	></deja-date-time-selector>
-	<div class="actions">
-		<button md-mini-fab type="button" (click)="close()">
-			<md-icon>close</md-icon>
-		</button>
-	</div>
-</ng-template>
+
+<deja-overlay #dejaOverlay [ownerElement]="overlayOwnerElement" [isVisible]="_showDropDown" (closed)="close()" [positions]="positions" [overlayOffsetY]="overlayOffsetY" [overlayOffsetX]="overlayOffsetX" positionsForMobile="centre centre centre centre" [widthForMobile]="null">
+    <deja-date-time-selector
+        [time]="time"
+        [disableDates]="disableDates"
+        [ngModel]="date"
+        (ngModelChange)="onDateChange($event)"
+        class="inside-dropdown"
+        [dateMax]="dateMax"
+        [dateMin]="dateMin"
+    ></deja-date-time-selector>
+    <div class="actions">
+        <button md-mini-fab type="button" (click)="close()">
+            <md-icon>close</md-icon>
+        </button>
+    </div>
+</deja-overlay>

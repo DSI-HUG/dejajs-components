@@ -1,11 +1,5 @@
 <button type="button" *ngIf="!small" [disabled]="disabled" id="colorbtn" md-fab (click)="show($event)" [style.background-color]="value && value.toHex() || null"></button>
 <button type="button" *ngIf="small" [disabled]="disabled" id="colorbtn" md-mini-fab (click)="show($event)" [style.background-color]="value && value.toHex() || null"></button>
-<deja-overlay [ownerElement]="ownerElement" overlayBackdropClass="cdk-overlay-dark-backdrop" [isVisible]="isOpen" [positions]="positions">
+<deja-overlay [ownerElement]="ownerElement" overlayBackdropClass="cdk-overlay-dark-backdrop" [isVisible]="isOpen" (closed)="close()" [positions]="positions">
     <deja-color-selector [colors]="colors" [ngModel]="value" (colorhover)="colorhover.emit($event)" (ngModelChange)="onColorChange($event)"></deja-color-selector>
 </deja-overlay>
-
-<!--
-<ng-template cdk-connected-overlay cdkConnectedOverlayHasBackdrop cdkConnectedOverlayBackdropClass="cdk-overlay-dark-backdrop" [cdkConnectedOverlayOpen]="isOpen" [cdkConnectedOverlayOrigin]="overlayOrigin" (backdropClick)="close()" (detach)="close()" [cdkConnectedOverlayPositions]="positions" [cdkConnectedOverlayWidth]="width">
-    <deja-color-selector [colors]="colors" [ngModel]="value" (colorhover)="colorhover.emit($event)" (ngModelChange)="onColorChange($event)"></deja-color-selector>
-</ng-template>
--->
