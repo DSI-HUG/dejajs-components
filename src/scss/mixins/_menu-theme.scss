@@ -1,0 +1,31 @@
+@import '~@angular/material/theming';
+
+@mixin menu-theme($theme) {
+	$primary: map-get($theme, primary);
+
+	.cdk-overlay-container {
+		[deja-menu-content] {
+			background-color: #FFF;
+			border-color: rgba(0, 0, 0, 0.3);
+			>ul {
+				li {
+					background-color: #FFF;
+					color: mat-color($primary);
+					&:hover {
+						background-color: mat-color($primary);
+						color: #FFF;
+					}
+				}
+			}
+			>button,
+			>a {
+				background-color: #FFF;
+				color: mat-color($primary);
+				&:hover {
+					background-color: mat-color($primary);
+					color: #FFF;
+				}
+			}
+		}
+	}
+}

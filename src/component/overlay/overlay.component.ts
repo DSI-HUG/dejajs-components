@@ -61,9 +61,7 @@ export class DejaOverlayComponent implements OnInit, OnDestroy {
     /** Renvoie ou définit l'élement sur lequel le menu devra s'aligner */
     @Input() public set ownerElement(value: HTMLElement) {
         this._ownerElement = value;
-        if (this._ownerElement) {
-            this.overlayOrigin = new OverlayOrigin(new ElementRef((this.isMobile && document.body) || this._ownerElement || this.elementRef.nativeElement));
-        }
+        this.updateOriginOverlay();
     }
 
     /** Déclenché lorsque la visibilité du dialog change. */
@@ -78,7 +76,7 @@ export class DejaOverlayComponent implements OnInit, OnDestroy {
     @Input() public overlayOffsetY = 0;
 
     private contentInitialized$ = new Subject();
-    private isMobile = false;
+    private _isMobile = false;
     private isAlive = true;
     /** Overlay pane containing the options. */
     @ViewChild(ConnectedOverlayDirective) private overlay: ConnectedOverlayDirective;
@@ -107,6 +105,16 @@ export class DejaOverlayComponent implements OnInit, OnDestroy {
     @Input()
     public set positions(value: DejaConnectionPositionPair[] | string) {
         this._positions = typeof value === 'string' ? DejaConnectionPositionPair.parse(value) : value;
+    }
+
+    public get isMobile() {
+        return this._isMobile;
+    }
+
+    @Input()
+    public set isMobile(value: boolean) {
+        this._isMobile = value;
+        this.updateOriginOverlay();
     }
 
     public get width() {
@@ -177,5 +185,9 @@ export class DejaOverlayComponent implements OnInit, OnDestroy {
         this.isVisible = false;
         this.closed.emit(true);
         this.changeDetectorRef.markForCheck();
+    }
+
+    private updateOriginOverlay() {
+        this.overlayOrigin = new OverlayOrigin(new ElementRef((this.isMobile && document.body) || this._ownerElement || this.elementRef.nativeElement));
     }
 }
