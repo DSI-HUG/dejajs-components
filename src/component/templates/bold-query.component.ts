@@ -6,10 +6,11 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { Diacritics } from '../../common/core/diacritics/diacritics';
 
 @Component({
+    encapsulation: ViewEncapsulation.None,
     selector: 'deja-bold-query',
     styleUrls: [
         './bold-query.component.scss',
