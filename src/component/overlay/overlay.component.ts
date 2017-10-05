@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import {ConnectedOverlayDirective, ConnectionPositionPair, OverlayContainer, OverlayOrigin} from '@angular/cdk/overlay';
+import {ConnectedOverlayDirective, OverlayContainer, OverlayOrigin} from '@angular/cdk/overlay';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -15,16 +15,15 @@ import {
     EventEmitter,
     Input,
     OnDestroy,
-    OnInit,
     Output,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import {ObservableMedia} from '@angular/flex-layout';
 import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
+import { MediaService } from '../../common/core/media/media.service';
 import {DejaConnectionPositionPair} from '../../common/core/overlay/connection-position-pair';
 
+    // providers: [ MediaService ],
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -34,7 +33,7 @@ import {DejaConnectionPositionPair} from '../../common/core/overlay/connection-p
     ],
     templateUrl: './overlay.component.html',
 })
-export class DejaOverlayComponent implements OnInit, OnDestroy {
+export class DejaOverlayComponent implements OnDestroy {
     /** Renvoie une valeur qui indique si le dialog est affiché. */
     private _isVisible = false;
 
@@ -47,11 +46,6 @@ export class DejaOverlayComponent implements OnInit, OnDestroy {
     }
 
     @Input() public overlayBackdropClass = 'cdk-overlay-transparent-backdrop';
-
-    /** Si pas null, sera utilisé quand isMobile est vrai. Si null et si isMobile est vrai,
-     *  alors c'est la valeur 'start top start top' qui est utilisée.
-     * */
-    @Input() public positionsForMobile: ConnectionPositionPair[];
 
     private _width = null;
     private _widthForMobile = '100%';
@@ -75,28 +69,28 @@ export class DejaOverlayComponent implements OnInit, OnDestroy {
     @Input() public overlayOffsetX = 0;
     @Input() public overlayOffsetY = 0;
 
-    private contentInitialized$ = new Subject();
+    private _positions = DejaConnectionPositionPair.default;
+    private _positionsForMobile: DejaConnectionPositionPair[];
+
     private _isMobile = false;
     private isAlive = true;
     /** Overlay pane containing the options. */
     @ViewChild(ConnectedOverlayDirective) private overlay: ConnectedOverlayDirective;
 
-    constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef, media: ObservableMedia, private overlayContainer: OverlayContainer) {
-        Observable.merge(this.contentInitialized$, media.asObservable())
+    constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef, private overlayContainer: OverlayContainer, mediaService: MediaService) {
+        mediaService.isMobile$
             .takeWhile(() => this.isAlive)
-            .subscribe(() => {
-                this.isMobile = media.isActive('xs') || media.isActive('sm');
+            .subscribe((value) => {
+                this.isMobile = value;
                 this.changeDetectorRef.markForCheck();
             });
     }
 
-    private _positions = DejaConnectionPositionPair.default;
-
     public get positions() {
         if (!this.isMobile) {
             return this._positions;
-        } else if (this.positionsForMobile) {
-            return this.positionsForMobile;
+        } else if (this._positionsForMobile) {
+            return this._positionsForMobile;
         } else {
             return DejaConnectionPositionPair.parse('start top start top');
         }
@@ -105,6 +99,14 @@ export class DejaOverlayComponent implements OnInit, OnDestroy {
     @Input()
     public set positions(value: DejaConnectionPositionPair[] | string) {
         this._positions = typeof value === 'string' ? DejaConnectionPositionPair.parse(value) : value;
+    }
+
+    /** Si pas null, sera utilisé quand isMobile est vrai. Si null et si isMobile est vrai,
+     *  alors c'est la valeur 'start top start top' qui est utilisée.
+     * */
+    @Input()
+    public set positionsForMobile(value: DejaConnectionPositionPair[] | string) {
+        this._positionsForMobile = typeof value === 'string' ? DejaConnectionPositionPair.parse(value) : value;
     }
 
     public get isMobile() {
@@ -151,10 +153,6 @@ export class DejaOverlayComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy() {
         this.isAlive = false;
-    }
-
-    public ngOnInit() {
-        this.contentInitialized$.next();
     }
 
     public updatePosition() {

@@ -8,12 +8,12 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule, MatInputModule } from '@angular/material';
+import { MediaModule } from '../../common/core/media/index';
 import { DejaChildValidatorModule } from '../../common/core/validation/index';
 import { DejaChipsModule } from '../chips/index';
-import {DejaOverlayModule} from '../overlay/index';
+import { DejaOverlayModule } from '../overlay/index';
 import { DejaItemComponent } from './../../common/core/item-list/item.component';
 import { DejaSelectComponent } from './select.component';
 
@@ -28,13 +28,13 @@ import { DejaSelectComponent } from './select.component';
     ],
     imports: [
         CommonModule,
-        FlexLayoutModule,
         FormsModule,
         DejaOverlayModule,
         MatIconModule,
         MatInputModule,
         DejaChildValidatorModule,
         DejaChipsModule,
+        MediaModule,
     ],
 })
 export class DejaSelectModule { }

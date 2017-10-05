@@ -80,7 +80,6 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     private focus$ = new Subject();
     private _showDropDown = false;
     private _positions = DejaConnectionPositionPair.default;
-    private contentInitialized$ = new Subject();
 
     private date = new Date();
 
@@ -358,8 +357,6 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
 
     /** For reactive form. */
     public ngAfterContentInit() {
-        this.contentInitialized$.next(true);
-
         if (this.inputValidatorDirective) {
             this.inputValidatorDirective.parentControl = this._control;
         }

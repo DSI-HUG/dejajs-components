@@ -8,7 +8,6 @@
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ObservableMedia } from '@angular/flex-layout';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { MatInput } from '@angular/material';
 import 'rxjs/add/operator/delayWhen';
@@ -19,6 +18,7 @@ import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 import { IViewListResult } from '../../common/core/item-list/item-list.service';
 import { KeyCodes } from '../../common/core/keycodes.enum';
+import { MediaService } from '../../common/core/media/media.service';
 import { DejaConnectionPositionPair } from '../../common/core/overlay/connection-position-pair';
 import { DejaChildValidatorDirective } from '../../common/core/validation/child-validator.directive';
 import { DejaChipsCloseEvent } from '../chips/chips.component';
@@ -43,7 +43,7 @@ export enum DejaSelectSelectionPosition {
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    providers: [ViewPortService],
+    providers: [ViewPortService, MediaService],
     selector: 'deja-select',
     styleUrls: [
         './select.component.scss',
@@ -191,7 +191,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         }
     }
 
-    constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, private elementRef: ElementRef, @Self() @Optional() public _control: NgControl, @Optional() private _parentForm: NgForm, @Optional() private _parentFormGroup: FormGroupDirective, media: ObservableMedia) {
+    constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, private elementRef: ElementRef, @Self() @Optional() public _control: NgControl, @Optional() private _parentForm: NgForm, @Optional() private _parentFormGroup: FormGroupDirective, mediaService: MediaService) {
         super(changeDetectorRef, viewPort);
 
         this.overlayOwnerElement = this.elementRef.nativeElement;
@@ -200,10 +200,10 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             this._control.valueAccessor = this;
         }
 
-        Observable.merge(this.contentInitialized$, media.asObservable())
+        mediaService.isMobile$
             .takeWhile(() => this._isAlive)
-            .subscribe(() => {
-                this.isMobile = media.isActive('xs') || media.isActive('sm');
+            .subscribe((value) => {
+                this.isMobile = value;
                 this.changeDetectorRef.markForCheck();
             });
 

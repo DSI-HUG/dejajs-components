@@ -8,6 +8,7 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { MediaModule } from '../../common/core/media/index';
 import { DejaOverlayModule } from '../overlay/index';
 import { DejaTooltipComponent } from './tooltip.component';
 import { DejaTooltipDirective } from './tooltip.directive';
@@ -24,7 +25,8 @@ import { DejaTooltipService } from './tooltip.service';
     ],
     imports: [
         CommonModule,
-        DejaOverlayModule
+        DejaOverlayModule,
+        MediaModule,
     ],
     providers: [
         DejaTooltipService,

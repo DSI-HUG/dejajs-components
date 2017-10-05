@@ -6,11 +6,12 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, ContentChild, ElementRef, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import 'rxjs/add/observable/fromEvent';
 import { Observable } from 'rxjs/Observable';
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
+import { MediaService } from '../../common/core/media/media.service';
 import { DejaConnectionPositionPair } from '../../common/core/overlay/connection-position-pair';
 import { DejaTooltipService, ITooltipParams } from './tooltip.service';
 
@@ -19,13 +20,14 @@ import { DejaTooltipService, ITooltipParams } from './tooltip.service';
  */
 @Component({
     encapsulation: ViewEncapsulation.None,
+    providers: [MediaService],
     selector: 'deja-tooltip',
     templateUrl: 'tooltip.component.html',
     styleUrls: [
         './tooltip.component.scss',
     ],
 })
-export class DejaTooltipComponent implements OnInit {
+export class DejaTooltipComponent implements OnInit, OnDestroy {
     /** Tooltip name. Mandatory, and need to be unic */
     @Input() public name: string;
     /** Event Emmited when hide action is called */
@@ -38,6 +40,8 @@ export class DejaTooltipComponent implements OnInit {
     public overlayVisible = false;
     public ownerElement: HTMLElement;
     private _model: any;
+    private isMobile = false;
+    private isAlive = true;
 
     /**
      * This position config ensures that the top "start" corner of the overlay
@@ -77,11 +81,17 @@ export class DejaTooltipComponent implements OnInit {
      * Constructor
      * Subscribe to mouseover to know when tooltip must disappear.
      */
-    constructor(elementRef: ElementRef, private tooltipService: DejaTooltipService) {
+    constructor(elementRef: ElementRef, private tooltipService: DejaTooltipService, mediaService: MediaService) {
         const element = elementRef.nativeElement as HTMLElement;
 
         const hide$ = Observable.from(this.hide)
             .do(() => this._model = undefined);
+
+        mediaService.isMobile$
+            .takeWhile(() => this.isAlive)
+            .subscribe((value) => {
+                this.isMobile = value;
+            });
 
         Observable.fromEvent(element.ownerDocument, 'mousemove')
             .takeUntil(hide$)
@@ -151,5 +161,9 @@ export class DejaTooltipComponent implements OnInit {
                 this.overlayVisible = true;
             }
         }
+    }
+
+    public ngOnDestroy() {
+        this.isAlive = false;
     }
 }

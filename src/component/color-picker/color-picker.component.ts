@@ -7,10 +7,9 @@
  */
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Optional, Output, Self, ViewChild,
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Optional, Output, Self, ViewChild,
     ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { Subject } from 'rxjs/Subject';
 import { Color } from '../../common/core/graphics/color';
 import { DejaConnectionPositionPair } from '../../common/core/overlay/connection-position-pair';
 import { MaterialColor } from '../../common/core/style';
@@ -27,7 +26,7 @@ const noop = () => { };
     ],
     templateUrl: './color-picker.component.html',
 })
-export class DejaColorPickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
+export class DejaColorPickerComponent implements ControlValueAccessor, OnDestroy {
     /** Retourne ou definit les couleurs selectionables affichées. */
     @Input() public colors: MaterialColor[];
 
@@ -45,7 +44,6 @@ export class DejaColorPickerComponent implements ControlValueAccessor, OnInit, O
 
     private _small = false;
     private _value: Color;
-    private contentInitialized$ = new Subject();
     private isAlive = true;
     @HostBinding('attr.disabled') private _disabled = null;
 
@@ -73,10 +71,6 @@ export class DejaColorPickerComponent implements ControlValueAccessor, OnInit, O
 
     public ngOnDestroy() {
         this.isAlive = false;
-    }
-
-    public ngOnInit() {
-        this.contentInitialized$.next();
     }
 
     /** Retourne ou définit la taille du bouton. */

@@ -9,6 +9,7 @@
 import {OverlayModule} from '@angular/cdk/overlay';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
+import { MediaModule } from '../../common/core/media/index';
 import {DejaOverlayComponent} from './overlay.component';
 
 @NgModule({
@@ -17,6 +18,7 @@ import {DejaOverlayComponent} from './overlay.component';
     imports: [
         CommonModule,
         OverlayModule,
+        MediaModule,
     ],
 })
 export class DejaOverlayModule { }
