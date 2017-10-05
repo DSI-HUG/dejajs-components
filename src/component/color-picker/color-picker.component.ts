@@ -7,15 +7,13 @@
  */
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { OverlayOrigin } from '@angular/cdk/overlay';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Optional, Output, Self, ViewEncapsulation } from '@angular/core';
-import { ObservableMedia } from '@angular/flex-layout';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Optional, Output, Self, ViewChild,
+    ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
 import { Color } from '../../common/core/graphics/color';
 import { DejaConnectionPositionPair } from '../../common/core/overlay/connection-position-pair';
 import { MaterialColor } from '../../common/core/style';
+import {DejaOverlayComponent} from '../overlay/overlay.component';
 
 const noop = () => { };
 
@@ -28,7 +26,7 @@ const noop = () => { };
     ],
     templateUrl: './color-picker.component.html',
 })
-export class DejaColorPickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
+export class DejaColorPickerComponent implements ControlValueAccessor, OnDestroy {
     /** Retourne ou definit les couleurs selectionables affichées. */
     @Input() public colors: MaterialColor[];
 
@@ -39,17 +37,18 @@ export class DejaColorPickerComponent implements ControlValueAccessor, OnInit, O
     @Output() public colorhover = new EventEmitter();
 
     /** Internal use */
-    public overlayOrigin: OverlayOrigin;
+    public ownerElement: HTMLElement;
 
     protected onTouchedCallback: () => void = noop;
     protected onChangeCallback: (_: any) => void = noop;
 
     private _small = false;
     private _value: Color;
-    private contentInitialized$ = new Subject();
-    private isMobile = false;
     private isAlive = true;
     @HostBinding('attr.disabled') private _disabled = null;
+
+    /** Overlay pane containing the options. */
+    @ViewChild(DejaOverlayComponent) private dejaOverlayCmp: DejaOverlayComponent;
 
     private _positions = DejaConnectionPositionPair.default;
 
@@ -59,37 +58,19 @@ export class DejaColorPickerComponent implements ControlValueAccessor, OnInit, O
     }
 
     public get positions() {
-        return !this.isMobile ? this._positions : DejaConnectionPositionPair.parse('start top start top');
+        return this._positions;
     }
 
-    public get width() {
-        return !this.isMobile ? null : '100%';
-    }
-
-    constructor(elementRef: ElementRef, @Self() @Optional() public _control: NgControl, private changeDetectorRef: ChangeDetectorRef, media: ObservableMedia) {
+    constructor(elementRef: ElementRef, @Self() @Optional() public _control: NgControl, private changeDetectorRef: ChangeDetectorRef) {
         if (this._control) {
             this._control.valueAccessor = this;
         }
 
-        this.overlayOrigin = new OverlayOrigin(elementRef);
-
-        Observable.merge(this.contentInitialized$, media.asObservable())
-            .takeWhile(() => this.isAlive)
-            .subscribe(() => {
-                this.isMobile = media.isActive('xs') || media.isActive('sm');
-                if (this.isMobile) {
-                    this.overlayOrigin.elementRef = new ElementRef(this.isMobile && document.body);
-                }
-                this.changeDetectorRef.markForCheck();
-            });
+        this.ownerElement = elementRef.nativeElement;
     }
 
     public ngOnDestroy() {
         this.isAlive = false;
-    }
-
-    public ngOnInit() {
-        this.contentInitialized$.next();
     }
 
     /** Retourne ou définit la taille du bouton. */
@@ -149,10 +130,7 @@ export class DejaColorPickerComponent implements ControlValueAccessor, OnInit, O
             return false;
         }
 
-        if (!this.isMobile && event) {
-            this.overlayOrigin.elementRef = new ElementRef(event && event.target);
-        }
-
+        this.dejaOverlayCmp.show(event);
         this.isOpen = true;
         this.changeDetectorRef.markForCheck();
         return false;

@@ -6,15 +6,15 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MdButtonModule, MdIconModule, MdInputModule } from '@angular/material';
+import { MatButtonModule, MatIconModule, MatInputModule } from '@angular/material';
 import { TextMaskModule } from 'angular2-text-mask';
 import { DejaChildValidatorModule } from '../../common/core/validation/index';
 import { DejaCircularPickerModule } from '../circular-picker/index';
 import { DejaDateSelectorModule } from '../date-selector/index';
+import { DejaOverlayModule } from '../overlay/index';
 import { DejaDatePickerComponent } from './date-picker.component';
 
 @NgModule({
@@ -23,13 +23,13 @@ import { DejaDatePickerComponent } from './date-picker.component';
     imports: [
         CommonModule,
         FormsModule,
-        OverlayModule,
-        MdIconModule,
-        MdInputModule,
-        MdButtonModule,
+        MatIconModule,
+        MatInputModule,
+        MatButtonModule,
         DejaChildValidatorModule,
         DejaCircularPickerModule,
         DejaDateSelectorModule,
+        DejaOverlayModule,
         TextMaskModule,
     ],
 })

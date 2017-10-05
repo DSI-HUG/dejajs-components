@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
-import { MdIconModule, MdInputModule} from '@angular/material';
+import { MatIconModule, MatInputModule} from '@angular/material';
 import { DejaChipsModule } from '../chips/index';
 import { DejaTagComponent } from './tag.component';
 
@@ -21,8 +21,8 @@ import { DejaTagComponent } from './tag.component';
         CommonModule,
         FlexLayoutModule,
         FormsModule,
-        MdIconModule,
-        MdInputModule,
+        MatIconModule,
+        MatInputModule,
         FlexLayoutModule,
         DejaChipsModule,
     ],

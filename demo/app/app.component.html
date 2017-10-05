@@ -1,11 +1,11 @@
-<!-- <md-toolbar color="primary" id="toolbar-demo">
+<!-- <mat-toolbar color="primary" id="toolbar-demo">
 	<span id="logo" fxFlex="0 0 auto">
         <img src="assets/img/logo/hug-logo-bw.svg" alt="HUG Logo" height="30">
 	</span>
-	<a fxFlex="0 0 auto" md-button routerLink="/">DEJA JS</a>
-	<a fxFlex="0 0 auto" md-button routerLink="/components">COMPONENTS</a>
-	<a fxFlex="0 0 auto" md-button routerLink="/guides">GUIDES</a>
-	<a fxFlex="0 0 auto" md-button target="_blank" href="https://dsi-hug.github.io/dejajs-doc/">DOCUMENTATION</a>
+	<a fxFlex="0 0 auto" mat-button routerLink="/">DEJA JS</a>
+	<a fxFlex="0 0 auto" mat-button routerLink="/components">COMPONENTS</a>
+	<a fxFlex="0 0 auto" mat-button routerLink="/guides">GUIDES</a>
+	<a fxFlex="0 0 auto" mat-button target="_blank" href="https://dsi-hug.github.io/dejajs-doc/">DOCUMENTATION</a>
     <span id="theme-title" fxFlex="1 1 auto">Sélectionnez un theme</span>
 	<deja-select fxFlex="0 0 5rem" id="theme-selector" [ngModel]="theme" (ngModelChange)="theme = $event?.value">
 		<deja-item value="hug" text="HUG"></deja-item>
@@ -13,127 +13,127 @@
 		<deja-item value="teal" text="Teal"></deja-item>
 		<deja-item value="amber" text="Amber"></deja-item>
     </deja-select>
-	<a fxFlex="0 0 auto" md-button href="https://github.com/DSI-HUG/dejajs-components" target="_blank">GITHUB</a>
-</md-toolbar> -->
+	<a fxFlex="0 0 auto" mat-button href="https://github.com/DSI-HUG/dejajs-components" target="_blank">GITHUB</a>
+</mat-toolbar> -->
 
 <!-- <router-outlet></router-outlet> -->
 
 <deja-sidenav fxFlex headerText="DEJA-JS">
 	<deja-sidenav-menu fxFlex slimScroll>
-		<md-nav-list fxLayout="column" fxFlex>
-			<md-list-item title="Home" routerLink="/home" routerLinkActive="active">
-				<md-icon md-list-icon>home</md-icon>
-				<span md-line>Home</span>
-			</md-list-item>
-			<md-list-item title="Guides" routerLink="/guides" routerLinkActive="active">
-				<md-icon md-list-icon>settings</md-icon>
-				<span md-line>Guides</span>
-			</md-list-item>
-			<a md-list-item title="Documentation" target="_blank" href="https://dsi-hug.github.io/dejajs-doc/">
-				<md-icon md-list-icon>help</md-icon>
-				<span md-line>Documentation</span>
+		<mat-nav-list fxLayout="column" fxFlex>
+			<mat-list-item title="Home" routerLink="/home" routerLinkActive="active">
+				<mat-icon mat-list-icon>home</mat-icon>
+				<span mat-line>Home</span>
+			</mat-list-item>
+			<mat-list-item title="Guides" routerLink="/guides" routerLinkActive="active">
+				<mat-icon mat-list-icon>settings</mat-icon>
+				<span mat-line>Guides</span>
+			</mat-list-item>
+			<a mat-list-item title="Documentation" target="_blank" href="https://dsi-hug.github.io/dejajs-doc/">
+				<mat-icon mat-list-icon>help</mat-icon>
+				<span mat-line>Documentation</span>
 			</a>
-			<a md-list-item title="Test coverage" target="_blank" href="https://dsi-hug.github.io/dejajs-test/">
-				<md-icon md-list-icon>done_all</md-icon>
-				<span md-line>Test coverage</span>
+			<a mat-list-item title="Test coverage" target="_blank" href="https://dsi-hug.github.io/dejajs-test/">
+				<mat-icon mat-list-icon>done_all</mat-icon>
+				<span mat-line>Test coverage</span>
 			</a>
-			<md-divider></md-divider>
-			<!-- <md-list-item title="Accordion" routerLink="/accordion" routerLinkActive="active">
-				<md-icon md-list-icon>dns</md-icon>
-				<span md-line>Accordion</span>
-			</md-list-item> -->
-			<md-list-item title="Circular Picker" routerLink="/circular-picker" routerLinkActive="active">
-				<md-icon md-list-icon>access_time</md-icon>
-				<span md-line>Circular Picker</span>
-			</md-list-item>
-			<md-list-item title="Color Selector" routerLink="/colorselector" routerLinkActive="active">
-				<md-icon md-list-icon>format_color_fill</md-icon>
-				<span md-line>Color Selector</span>
-			</md-list-item>
-			<md-list-item title="Content Editable" routerLink="/contenteditableselector" routerLinkActive="active">
-				<md-icon md-list-icon>text_fields</md-icon>
-				<span md-line>Content Editable</span>
-			</md-list-item>
-			<md-list-item title="Date Picker" routerLink="/date-picker" routerLinkActive="active">
-				<md-icon md-list-icon>date_range</md-icon>
-				<span md-line>Date Picker</span>
-			</md-list-item>
-			<md-list-item title="Events" routerLink="/events" routerLinkActive="active">
-				<md-icon md-list-icon>event</md-icon>
-				<span md-line>Events</span>
-			</md-list-item>
-			<md-list-item title="Grid" routerLink="/grid" routerLinkActive="active">
-				<md-icon md-list-icon>grid_on</md-icon>
-				<span md-line>Grid</span>
-			</md-list-item>
-			<!-- <md-list-item title="Menu" routerLink="/menu" routerLinkActive="active">
-				<md-icon md-list-icon>menu</md-icon>
-				<span md-line>Menu</span>
-			</md-list-item> -->
-			<md-list-item title="Message Box" routerLink="/message-box" routerLinkActive="active">
-				<md-icon md-list-icon>message</md-icon>
-				<span md-line>Message Box</span>
-			</md-list-item>
-			<md-list-item title="Monaco Editor" routerLink="/monaco-editor" routerLinkActive="active">
-				<md-icon md-list-icon>code</md-icon>
-				<span md-line>Monaco Editor</span>
-			</md-list-item>
-			<md-list-item title="Progress Circle" routerLink="/progress-circle" routerLinkActive="active">
-				<md-icon md-list-icon>loop</md-icon>
-				<span md-line>Progress Circle</span>
-			</md-list-item>
-			<md-list-item title="Range" routerLink="/range" routerLinkActive="active">
-				<md-icon md-list-icon>repeat_one</md-icon>
-				<span md-line>Range</span>
-			</md-list-item>
-			<md-list-item title="Reactive Form" routerLink="/reactive-form" routerLinkActive="active">
-				<md-icon md-list-icon>mode_edit</md-icon>
-				<span md-line>Reactive Form</span>
-			</md-list-item>
-			<md-list-item title="Select" routerLink="/select" routerLinkActive="active">
-				<md-icon md-list-icon>arrow_drop_down</md-icon>
-				<span md-line>Select</span>
-			</md-list-item>
-			<md-list-item title="Snackbar" routerLink="/snackbar" routerLinkActive="active">
-				<md-icon md-list-icon>home</md-icon>
-				<span md-line>Snackbar</span>
-			</md-list-item>
-			<md-list-item title="Splitter" routerLink="/splitter" routerLinkActive="active">
-				<md-icon md-list-icon>call_split</md-icon>
-				<span md-line>Splitter</span>
-			</md-list-item>
-			<md-list-item title="Tag" routerLink="/tag" routerLinkActive="active">
-				<md-icon md-list-icon>bubble_chart</md-icon>
-				<span md-line>Tag</span>
-			</md-list-item>
-			<md-list-item title="Tiles" routerLink="/tiles" routerLinkActive="active">
-				<md-icon md-list-icon>dashboard</md-icon>
-				<span md-line>Tiles</span>
-			</md-list-item>
-			<md-list-item title="Tree List" routerLink="/tree-list" routerLinkActive="active">
-				<md-icon md-list-icon>list</md-icon>
-				<span md-line>Tree List</span>
-			</md-list-item>
-			<md-list-item title="Viewport" routerLink="/viewport" routerLinkActive="active">
-				<md-icon md-list-icon>view_list</md-icon>
-				<span md-line>Viewport</span>
-			</md-list-item>
-		</md-nav-list>
+			<mat-divider></mat-divider>
+			<!-- <mat-list-item title="Accordion" routerLink="/accordion" routerLinkActive="active">
+				<mat-icon mat-list-icon>dns</mat-icon>
+				<span mat-line>Accordion</span>
+			</mat-list-item> -->
+			<mat-list-item title="Circular Picker" routerLink="/circular-picker" routerLinkActive="active">
+				<mat-icon mat-list-icon>access_time</mat-icon>
+				<span mat-line>Circular Picker</span>
+			</mat-list-item>
+			<mat-list-item title="Color Selector" routerLink="/colorselector" routerLinkActive="active">
+				<mat-icon mat-list-icon>format_color_fill</mat-icon>
+				<span mat-line>Color Selector</span>
+			</mat-list-item>
+			<mat-list-item title="Content Editable" routerLink="/contenteditableselector" routerLinkActive="active">
+				<mat-icon mat-list-icon>text_fields</mat-icon>
+				<span mat-line>Content Editable</span>
+			</mat-list-item>
+			<mat-list-item title="Date Picker" routerLink="/date-picker" routerLinkActive="active">
+				<mat-icon mat-list-icon>date_range</mat-icon>
+				<span mat-line>Date Picker</span>
+			</mat-list-item>
+			<mat-list-item title="Events" routerLink="/events" routerLinkActive="active">
+				<mat-icon mat-list-icon>event</mat-icon>
+				<span mat-line>Events</span>
+			</mat-list-item>
+			<mat-list-item title="Grid" routerLink="/grid" routerLinkActive="active">
+				<mat-icon mat-list-icon>grid_on</mat-icon>
+				<span mat-line>Grid</span>
+			</mat-list-item>
+            <mat-list-item title="Overlay" routerLink="/overlay" routerLinkActive="active">
+                <mat-icon md-list-icon>menu</mat-icon>
+                <span md-line>Overlay</span>
+            </mat-list-item>
+			<mat-list-item title="Message Box" routerLink="/message-box" routerLinkActive="active">
+				<mat-icon mat-list-icon>message</mat-icon>
+				<span mat-line>Message Box</span>
+			</mat-list-item>
+			<mat-list-item title="Monaco Editor" routerLink="/monaco-editor" routerLinkActive="active">
+				<mat-icon mat-list-icon>code</mat-icon>
+				<span mat-line>Monaco Editor</span>
+			</mat-list-item>
+			<mat-list-item title="Progress Circle" routerLink="/progress-circle" routerLinkActive="active">
+				<mat-icon mat-list-icon>loop</mat-icon>
+				<span mat-line>Progress Circle</span>
+			</mat-list-item>
+			<mat-list-item title="Range" routerLink="/range" routerLinkActive="active">
+				<mat-icon mat-list-icon>repeat_one</mat-icon>
+				<span mat-line>Range</span>
+			</mat-list-item>
+			<mat-list-item title="Reactive Form" routerLink="/reactive-form" routerLinkActive="active">
+				<mat-icon mat-list-icon>mode_edit</mat-icon>
+				<span mat-line>Reactive Form</span>
+			</mat-list-item>
+			<mat-list-item title="Select" routerLink="/select" routerLinkActive="active">
+				<mat-icon mat-list-icon>arrow_drop_down</mat-icon>
+				<span mat-line>Select</span>
+			</mat-list-item>
+			<mat-list-item title="Snackbar" routerLink="/snackbar" routerLinkActive="active">
+				<mat-icon mat-list-icon>home</mat-icon>
+				<span mat-line>Snackbar</span>
+			</mat-list-item>
+			<mat-list-item title="Splitter" routerLink="/splitter" routerLinkActive="active">
+				<mat-icon mat-list-icon>call_split</mat-icon>
+				<span mat-line>Splitter</span>
+			</mat-list-item>
+			<mat-list-item title="Tag" routerLink="/tag" routerLinkActive="active">
+				<mat-icon mat-list-icon>bubble_chart</mat-icon>
+				<span mat-line>Tag</span>
+			</mat-list-item>
+			<mat-list-item title="Tiles" routerLink="/tiles" routerLinkActive="active">
+				<mat-icon mat-list-icon>dashboard</mat-icon>
+				<span mat-line>Tiles</span>
+			</mat-list-item>
+			<mat-list-item title="Tree List" routerLink="/tree-list" routerLinkActive="active">
+				<mat-icon mat-list-icon>list</mat-icon>
+				<span mat-line>Tree List</span>
+			</mat-list-item>
+			<mat-list-item title="Viewport" routerLink="/viewport" routerLinkActive="active">
+				<mat-icon mat-list-icon>view_list</mat-icon>
+				<span mat-line>Viewport</span>
+			</mat-list-item>
+		</mat-nav-list>
 	</deja-sidenav-menu>
 
 	<deja-sidenav-header>
-		<button md-icon-button>
-			<md-icon [mdMenuTriggerFor]="colorMenu">format_color_fill</md-icon>
+        <mat-menu #colorMenu="matMenu">
+			<mat-button-toggle-group id="color-menu-toggle-group" vertical>
+				<mat-button-toggle (click)="theme='hug'">HUG</mat-button-toggle>
+				<mat-button-toggle (click)="theme='pink'">Pink</mat-button-toggle>
+				<mat-button-toggle (click)="theme='teal'">Teal</mat-button-toggle>
+				<mat-button-toggle (click)="theme='amber'">Amber</mat-button-toggle>
+			</mat-button-toggle-group>
+		</mat-menu>
+		<button mat-icon-button>
+			<mat-icon [matMenuTriggerFor]="colorMenu">format_color_fill</mat-icon>
 		</button>
-		<md-menu #colorMenu="mdMenu">
-			<md-button-toggle-group [(ngModel)]="theme" id="color-menu-toggle-group" vertical>
-				<md-button-toggle value="hug">HUG</md-button-toggle>
-				<md-button-toggle value="pink">Pink</md-button-toggle>
-				<md-button-toggle value="teal">Teal</md-button-toggle>
-				<md-button-toggle value="amber">Amber</md-button-toggle>
-			</md-button-toggle-group>
-		</md-menu>
-		<a fxFlex="0 0 auto" md-button href="https://github.com/DSI-HUG/dejajs-components" target="_blank">GITHUB</a>
+		<a fxFlex="0 0 auto" mat-button href="https://github.com/DSI-HUG/dejajs-components" target="_blank">GITHUB</a>
 	</deja-sidenav-header>
 
 	<deja-sidenav-content fxLayout fxFlex>

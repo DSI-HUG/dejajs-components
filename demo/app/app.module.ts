@@ -10,7 +10,6 @@ import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import { MaterialModule } from '@angular/material';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
@@ -47,10 +46,10 @@ import {
     DejaIFrameModule,
     DejaListLoaderModule,
     DejaMarkdownModule,
-    DejaMenuModule,
     DejaMessageBoxModule,
     DejaMonacoEditorModule,
     DejaMouseDragDropModule,
+    DejaOverlayModule,
     DejaRangeModule,
     DejaSelectModule,
     DejaSidenavModule,
@@ -66,6 +65,7 @@ import {
     // } from '../../dist';
 } from '../../src/index';
 
+import { MatButtonModule, MatCardModule, MatCheckboxModule, MatIconModule, MatInputModule, MatListModule, MatMenuModule, MatProgressBarModule, MatProgressSpinnerModule, MatSidenavModule, MatTabsModule, MatToolbarModule, NoConflictStyleCompatibilityMode } from '@angular/material';
 import { DejaAccordionDemoComponent } from './accordion/accordion-demo.component';
 import { DejaCircularPickerDemoComponent } from './circular-picker/circular-picker-demo';
 import { DejaColorSelectorDemoComponent } from './color-selector/color-selector-demo';
@@ -75,10 +75,10 @@ import { GlobalEventsDemoComponent } from './global-events/global-events-demo';
 import { GridDemoComponent } from './grid/grid-demo';
 import { HomeGuidesComponent } from './home-guides/home-guides.component';
 import { HomeComponent } from './home/home.component';
-import { MenuDemoComponent } from './menu/menu-demo';
 import { MessageBoxDemoComponent } from './message-box/message-box-demo';
 import { DejaMonacoEditorDemoComponent } from './monaco-editor/monaco-editor-demo';
 import { MonacoEditorDemoService } from './monaco-editor/monaco-editor-demo.service.';
+import { OverlayDemoComponent } from './overlay/overlay-demo';
 import { ProgressCircleDemoComponent } from './progress-circle/progress-circle-demo';
 import { DejaRangeDemoComponent } from './range/range-demo';
 import { ReactiveFormDemoComponent } from './reactive-form/reactive-form-demo';
@@ -102,7 +102,7 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         DejaDatePickerDemoComponent,
         GlobalEventsDemoComponent,
         GridDemoComponent,
-        MenuDemoComponent,
+        OverlayDemoComponent,
         MessageBoxDemoComponent,
         DejaMonacoEditorDemoComponent,
         ProgressCircleDemoComponent,
@@ -125,10 +125,20 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         BrowserAnimationsModule,
         RouterModule,
         routing,
-
-        MaterialModule,
         FlexLayoutModule,
-
+        NoConflictStyleCompatibilityMode,
+        MatIconModule,
+        MatButtonModule,
+        MatCardModule,
+        MatInputModule,
+        MatMenuModule,
+        MatTabsModule,
+        MatProgressSpinnerModule,
+        MatProgressBarModule,
+        MatCheckboxModule,
+        MatListModule,
+        MatSidenavModule,
+        MatToolbarModule,
         DejaAccordionModule,
         DejaChipsModule,
         DejaCircularPickerModule,
@@ -145,7 +155,7 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         DejaIFrameModule,
         DejaListLoaderModule,
         DejaMarkdownModule,
-        DejaMenuModule,
+        DejaOverlayModule,
         DejaMessageBoxModule,
         DejaMonacoEditorModule,
         DejaMouseDragDropModule.forRoot(),

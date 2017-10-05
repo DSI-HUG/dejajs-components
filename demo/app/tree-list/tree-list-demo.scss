@@ -6,7 +6,7 @@ deja-tree-list-demo {
 	
 	.demo-card {
 		margin: 16px;
-		md-card-content {
+		mat-card-content {
 			padding: 16px;
 			display: flex;
 			flex-direction: column;
@@ -68,11 +68,11 @@ deja-tree-list-demo {
 			flex: 0 0 auto;
 		}
 	}
-	[mdprefix] {
+	[matPrefix] {
 		cursor: default;
 		padding: 4px;
 	}
-	[mdSuffix] {
+	[matSuffix] {
 		padding: 4px;
 		display: flex;
 		justify-content: flex-end;

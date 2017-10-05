@@ -43,46 +43,46 @@
 
 			.mat-card-actions {
 				button {
-					&.mat-success[md-icon-button]:not([disabled]) {
+					&.mat-success[mat-icon-button]:not([disabled]) {
 						color: $success !important;
 					}
 
-					&.mat-warn[md-icon-button]:not([disabled]) {
+					&.mat-warn[mat-icon-button]:not([disabled]) {
 						color: $warning !important;
 					}
 
-					&.mat-danger[md-icon-button]:not([disabled]) {
+					&.mat-danger[mat-icon-button]:not([disabled]) {
 						color: mat-color($warn) !important;
 					}
 
-					&.mat-success[md-raised-button],
-					&.mat-success[md-fab],
-					&.mat-success[md-mini-fab] {
+					&.mat-success[mat-raised-button],
+					&.mat-success[mat-fab],
+					&.mat-success[mat-mini-fab] {
 						&:not([disabled]) {
 							background-color: $success !important;
 							color: #FFF !important;
 						}
 					}
 
-					&.mat-warn[md-raised-button],
-					&.mat-warn[md-fab],
-					&.mat-warn[md-mini-fab] {
+					&.mat-warn[mat-raised-button],
+					&.mat-warn[mat-fab],
+					&.mat-warn[mat-mini-fab] {
 						background-color: $warning !important;
 						color: #FFF !important;
 					}
 
-					&.mat-danger[md-raised-button],
-					&.mat-danger[md-fab],
-					&.mat-danger[md-mini-fab] {
+					&.mat-danger[mat-raised-button],
+					&.mat-danger[mat-fab],
+					&.mat-danger[mat-mini-fab] {
 						&:not([disabled]) {
 							background-color: mat-color($warn) !important;
 							color: #FFF !important;
 						}
 					}
 
-					&.mat-blank[md-raised-button],
-					&.mat-blank[md-fab],
-					&.mat-blank[md-mini-fab] {
+					&.mat-blank[mat-raised-button],
+					&.mat-blank[mat-fab],
+					&.mat-blank[mat-mini-fab] {
 						&:not([disabled]) {
 							background-color: transparent !important;
 							color: rgba(0, 0, 0, 0.6) !important;

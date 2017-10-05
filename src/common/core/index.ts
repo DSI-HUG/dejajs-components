@@ -22,3 +22,4 @@ export * from './style/index';
 export * from './UUID';
 export * from './validation/index';
 export * from './overlay/index';
+export * from './media/index';

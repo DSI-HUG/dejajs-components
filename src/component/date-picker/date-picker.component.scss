@@ -9,8 +9,8 @@ deja-date-picker {
 			top: 50%;
 			transform: translateY(-68%);
 		}
-		#calendar-button md-icon,
-		#clear-button md-icon {
+		#calendar-button mat-icon,
+		#clear-button mat-icon {
 			font-size: 100%;
 			opacity: 0.4;
 		}
@@ -24,7 +24,7 @@ deja-date-picker {
 				}
 			}
 		}
-		md-hint {
+		mat-hint {
 			bottom: -0.8em;
 		}
 	}
