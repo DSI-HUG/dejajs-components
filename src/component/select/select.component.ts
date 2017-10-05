@@ -7,7 +7,6 @@
  */
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ConnectedOverlayDirective, OverlayOrigin } from '@angular/cdk/overlay';
 import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ObservableMedia } from '@angular/flex-layout';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
@@ -23,6 +22,7 @@ import { KeyCodes } from '../../common/core/keycodes.enum';
 import { DejaConnectionPositionPair } from '../../common/core/overlay/connection-position-pair';
 import { DejaChildValidatorDirective } from '../../common/core/validation/child-validator.directive';
 import { DejaChipsCloseEvent } from '../chips/chips.component';
+import { DejaOverlayComponent } from '../overlay/overlay.component';
 import { IItemBase } from './../../common/core/item-list/item-base';
 import { DejaItemEvent } from './../../common/core/item-list/item-event';
 import { ItemListBase } from './../../common/core/item-list/item-list-base';
@@ -78,7 +78,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @ContentChild('errorTemplate') public matError;
 
     /** Internal use */
-    public overlayOrigin: OverlayOrigin;
+    public overlayOwnerElement: HTMLElement;
     public dropDownMaxHeight: number = null;
     public overlayOffsetY = 0;
 
@@ -93,7 +93,22 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     private mouseUp$sub: Subscription;
 
-    @ViewChild('inputElement') private _inputElement: ElementRef;
+    private _inputElement: ElementRef;
+
+    @ViewChild('inputElement') private set inputElement(element: ElementRef) {
+        if (element) {
+            this._inputElement = element;
+            if (this._inputElement) {
+                this.overlayOwnerElement = this._inputElement.nativeElement;
+            } else {
+                this.overlayOwnerElement = this.elementRef.nativeElement;
+            }
+        } else {
+            this._inputElement = null;
+            this.overlayOwnerElement = this.elementRef.nativeElement;
+        }
+    }
+
     @ViewChild(MatInput) protected input: MatInput;
 
     @HostBinding('attr.disabled') private _disabled = null;
@@ -109,7 +124,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @HostBinding('attr.readonly') private _readonly = null;
 
     /** Overlay pane containing the options. */
-    @ViewChild(ConnectedOverlayDirective) private overlay: ConnectedOverlayDirective;
+    @ViewChild(DejaOverlayComponent) private overlay: DejaOverlayComponent;
 
     private clearFilterExpression$ = new BehaviorSubject<void>(null);
     private filterListComplete$ = new Subject();
@@ -137,7 +152,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     public get positions() {
-        return !this.isMobile ? this._positions : DejaConnectionPositionPair.parse('start top start top');
+        return this._positions;
     }
 
     @Input()
@@ -146,8 +161,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     public get dropDownWidth() {
-        const element = this.elementRef.nativeElement as HTMLElement;
-        return !this.isMobile ? this._dropDownWidth || element.clientWidth : '100%';
+        const element = this.elementRef && this.elementRef.nativeElement as HTMLElement;
+        return this._dropDownWidth || element.clientWidth;
     }
 
     public get matSuffix() {
@@ -178,6 +193,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, private elementRef: ElementRef, @Self() @Optional() public _control: NgControl, @Optional() private _parentForm: NgForm, @Optional() private _parentFormGroup: FormGroupDirective, media: ObservableMedia) {
         super(changeDetectorRef, viewPort);
+
+        this.overlayOwnerElement = this.elementRef.nativeElement;
 
         if (this._control) {
             this._control.valueAccessor = this;
@@ -238,8 +255,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             .filter(() => (this.query || '').length >= this.minSearchlength && !this._readonly)
             .do(() => {
                 // Set overlay origin element
-                const originElement: HTMLElement = (this.isMobile && document.body) || this.inputElement || this.elementRef.nativeElement;
-                this.overlayOrigin = new OverlayOrigin(new ElementRef(originElement));
+                const originElement: HTMLElement = (this.isMobile && document.body) || this.htmlInputElement || this.elementRef.nativeElement;
                 this.overlayOffsetY = this.isMobile ? 0 : 6;
 
                 // Calc max height
@@ -281,12 +297,12 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             .delay(1)
             .do(() => {
                 // View port calculated
-                this.overlay.overlayRef.updatePosition();
+                this.overlay.updatePosition();
             })
             .subscribe(() => {
                 if (!this.isMobile) {
                     const listRect = this.listElement.getBoundingClientRect();
-                    const originElement: HTMLElement = this.inputElement || this.elementRef.nativeElement;
+                    const originElement: HTMLElement = this.htmlInputElement || this.elementRef.nativeElement;
                     const originRect = originElement.getBoundingClientRect();
                     if (listRect.top < originRect.top) {
                         this.overlayOffsetY = -20;
@@ -294,7 +310,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                         Observable.timer(1)
                             .first()
                             .subscribe(() => {
-                                this.overlay.overlayRef.updatePosition();
+                                this.overlay.updatePosition();
                             });
                     }
                 }
@@ -736,7 +752,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return this.parentItemTemplateExternal || this.parentItemTemplateInternal;
     }
 
-    private get inputElement() {
+    private get htmlInputElement() {
         return this._inputElement && this._inputElement.nativeElement as HTMLInputElement;
     }
 
@@ -788,23 +804,23 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     public ngAfterViewInit() {
-        Observable.fromEvent(this.inputElement, 'click')
+        Observable.fromEvent(this.htmlInputElement, 'click')
             .takeWhile(() => this._isAlive)
             .filter(() => !this.dropdownVisible && !this.disabled)
             .subscribe((event: Event) => {
                 if (this.isModeSelect) {
                     this.showDropDown();
                 } else {
-                    this.inputElement.select();
+                    this.htmlInputElement.select();
                     this.filter$.next(event);
                 }
             });
 
-        Observable.fromEvent(this.inputElement, 'focus')
+        Observable.fromEvent(this.htmlInputElement, 'focus')
             .takeWhile(() => this._isAlive)
             .filter(() => !this.dropdownVisible && !this.disabled)
             .delay(10)
-            .filter(() => this.inputElement === document.activeElement)
+            .filter(() => this.htmlInputElement === document.activeElement)
             .subscribe((event: Event) => {
                 if (this.isModeSelect) {
                     this.showDropDown();
@@ -814,7 +830,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 }
             });
 
-        Observable.fromEvent(this.inputElement, 'blur')
+        Observable.fromEvent(this.htmlInputElement, 'blur')
             .takeWhile(() => this._isAlive)
             .filter(() => this.selectingItemIndex === undefined)
             .subscribe(() => {
@@ -822,7 +838,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 this.hideDropDown$.next(10);
             });
 
-        Observable.fromEvent(this.inputElement, 'keydown')
+        Observable.fromEvent(this.htmlInputElement, 'keydown')
             .takeWhile(() => this._isAlive)
             .filter((event: KeyboardEvent) =>
                 event.keyCode === KeyCodes.Home ||
@@ -939,7 +955,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             });
 
         const keyUp$ = Observable
-            .fromEvent(this.inputElement, 'keyup')
+            .fromEvent(this.htmlInputElement, 'keyup')
             .filter((event: KeyboardEvent) => event.keyCode >= KeyCodes.Key0 ||
                 event.keyCode === KeyCodes.Backspace ||
                 event.keyCode === KeyCodes.Space ||
@@ -1186,7 +1202,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             this.onModelChange();
         }
 
-        this.inputElement.focus();
+        this.htmlInputElement.focus();
         if (hideDropDown !== false) {
             this.hideDropDown();
         }
@@ -1223,7 +1239,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             .do(() => this.refreshViewPort())
             .delay(1)
             .subscribe(() => {
-                this.overlay.overlayRef.updatePosition();
+                this.overlay.updatePosition();
 
                 // Ensure selection
                 const item = this.getSelectedItems()[0];

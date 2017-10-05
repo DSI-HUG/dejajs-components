@@ -4,7 +4,7 @@
 	$primary: map-get($theme, primary);
 
 	.cdk-overlay-container {
-		#menucontent {
+		[deja-menu-content] {
 			background-color: #FFF;
 			border-color: rgba(0, 0, 0, 0.3);
 			>ul {

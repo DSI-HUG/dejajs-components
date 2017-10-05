@@ -1,0 +1,116 @@
+<mat-tab-group [selectedIndex]="tabIndex" (selectChange)="tabIndex = $event.index">
+	<!--<mat-tab label="OVERVIEW">-->
+	<!--<mat-card class="demo-card demo-basic">-->
+	<!--TODO-->
+	<!--</mat-card>-->
+	<!--</mat-tab>-->
+	<mat-tab label="API REFERENCE"> </mat-tab>
+	<mat-tab label="EXAMPLES"></mat-tab>
+</mat-tab-group>
+
+<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
+	TODO
+</mat-card>
+
+<div *ngIf="tabIndex === 1" (contextmenu)="onContextMenu($event)">
+	<deja-overlay #contextMenu>
+        <div deja-menu-content>
+            <ul>
+                <li class="menu-item" (click)="contextMenu.close()">
+                    <mat-icon>delete_sweep</mat-icon> Context menu
+                </li>
+                <li class="menu-item" (click)="contextMenu.close()">
+                    <mat-icon>content_copy</mat-icon> Dupliquer
+                </li>
+                <li class="menu-item" (click)="contextMenu.close()">
+                    <mat-icon>edit</mat-icon> Editer
+                </li>
+            </ul>
+        </div>
+	</deja-overlay>
+	<mat-card class="demo-card">
+		<mat-toolbar color="primary">Overlay</mat-toolbar>
+		<mat-card-content>
+			<deja-overlay #posYMenu>
+                <div deja-menu-content>
+                    <ul>
+                        <li class="menu-item" (click)="posYMenu.close()">
+                            <mat-icon>delete_sweep</mat-icon> Supprimer
+                        </li>
+                        <li class="menu-item" (click)="posYMenu.close()">
+                            <mat-icon>content_copy</mat-icon> Dupliquer
+                        </li>
+                        <li class="menu-item" (click)="posYMenu.close()">
+                            <mat-icon>edit</mat-icon> Editer
+                        </li>
+                    </ul>
+                </div>
+			</deja-overlay>
+
+			<div id="demo-deja-menu">
+				<div deja-menu-content>
+					<p>You clicked on: {{ selected }}</p>
+
+					<mat-toolbar>
+						<button mat-icon-button (click)="menu.show($event)">
+							<mat-icon>more_vert</mat-icon>
+						</button>
+					</mat-toolbar>
+
+					<deja-overlay #menu>
+                        <div deja-menu-content>
+                            <button class="menu-item" *ngFor="let item of items" (click)="select(item.text); menu.close()">
+                                {{ item.text }}
+                            </button>
+                        </div>
+					</deja-overlay>
+				</div>
+				<div class="menu-section">
+					<p> Clicking these will navigate:</p>
+					<mat-toolbar>
+						<button mat-icon-button (click)="anchorMenu.show($event)">
+							<mat-icon>more_vert</mat-icon>
+						</button>
+					</mat-toolbar>
+
+					<deja-overlay #anchorMenu>
+                        <div deja-menu-content>
+                            <a class="menu-item" *ngFor="let item of items" href="http://www.google.com">
+                                {{ item.text }}
+                            </a>
+                        </div>
+					</deja-overlay>
+				</div>
+				<div class="menu-section">
+					<p>
+						With buttons position before
+					</p>
+					<mat-toolbar class="end-icon">
+						<button mat-icon-button (click)="posXMenu.show($event)">
+							<mat-icon>more_vert</mat-icon>
+						</button>
+					</mat-toolbar>
+
+					<deja-overlay #posXMenu class="before" positions="end bottom end top">
+                        <div deja-menu-content>
+                            <button class="menu-item" *ngFor="let item of items" (click)="posXMenu.close()">
+                                {{ item.text }}
+                            </button>
+                        </div>
+					</deja-overlay>
+				</div>
+
+				<div class="menu-section">
+					<p>
+						With ul/li, position top
+					</p>
+					<mat-toolbar>
+						<button mat-icon-button (click)="posYMenu.show($event)">
+							<mat-icon>more_vert</mat-icon>
+						</button>
+					</mat-toolbar>
+				</div>
+			</div>
+		</mat-card-content>
+	</mat-card>
+</div>
