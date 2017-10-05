@@ -11,10 +11,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, El
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/observable/merge';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/sampleTime';
 import 'rxjs/add/operator/takeUntil';
 import { Observable } from 'rxjs/Observable';

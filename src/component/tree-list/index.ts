@@ -9,7 +9,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MdButtonModule, MdCheckboxModule, MdInputModule } from '@angular/material';
+import { MatButtonModule, MatCheckboxModule, MatInputModule } from '@angular/material';
 import { DejaChildValidatorModule } from './../../common/core/validation/index';
 import { DejaDragDropModule } from './../dragdrop/index';
 import { DejaListLoaderModule } from './../loaders/index';
@@ -24,9 +24,9 @@ import { DejaTreeListComponent } from './tree-list.component';
     imports: [
         CommonModule,
         FormsModule,
-        MdButtonModule,
-        MdInputModule,
-        MdCheckboxModule,
+        MatButtonModule,
+        MatInputModule,
+        MatCheckboxModule,
         DejaChildValidatorModule,
         DejaListLoaderModule,
         DejaDragDropModule,

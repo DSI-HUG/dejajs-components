@@ -2,8 +2,8 @@
 
 @mixin buttons-theme($theme) {
 
-	[md-menu-item].with-icon,
-	[md-raised-button].with-icon {
+	[mat-menu-item].with-icon,
+	[mat-raised-button].with-icon {
 		&:before {
 			content: attr(data-icon);
 			font-family: 'Material Icons';
@@ -13,7 +13,7 @@
 		}
 	}
 
-	[md-menu-item].with-icon {
+	[mat-menu-item].with-icon {
 		padding-left: 3rem;
 		&:before {
 			width: 3rem;
@@ -22,7 +22,7 @@
 		}
 	}
 
-	[md-raised-button].with-icon {
+	[mat-raised-button].with-icon {
 		padding-left: 2rem;
 		&:before {
 			width: 2rem;

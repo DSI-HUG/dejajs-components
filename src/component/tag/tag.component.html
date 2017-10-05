@@ -1,5 +1,5 @@
 <deja-chips [items]="items" [disabled]="disabled"></deja-chips>
-<md-form-field>
-    <input mdInput [(ngModel)]="text" mdInput (keydown)="onKeyDown($event)" [placeholder]="placeholder" [disabled]="disabled">
-    <div mdSuffix><i (click)="onAddItem(text)" class="material-icons mdSuffix">add</i></div>
-</md-form-field>
+<mat-form-field>
+    <input matInput [(ngModel)]="text" matInput (keydown)="onKeyDown($event)" [placeholder]="placeholder" [disabled]="disabled">
+    <div matSuffix><i (click)="onAddItem(text)" class="material-icons matSuffix">add</i></div>
+</mat-form-field>
