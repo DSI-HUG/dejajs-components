@@ -9,7 +9,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule  } from '@angular/forms';
-import { MdButtonModule } from '@angular/material';
+import { MatButtonModule } from '@angular/material';
 import { DejaColorSelectorModule  } from '../color-selector/index';
 import { DejaOverlayModule } from '../overlay/index';
 import { DejaColorPickerComponent  } from './color-picker.component';
@@ -21,8 +21,8 @@ import { DejaColorPickerComponent  } from './color-picker.component';
         CommonModule,
         FormsModule,
         DejaColorSelectorModule,
-        MdButtonModule,
-        DejaOverlayModule
+        MatButtonModule,
+        DejaOverlayModule,
     ],
 })
 export class DejaColorPickerModule { }

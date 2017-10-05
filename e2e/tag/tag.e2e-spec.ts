@@ -28,7 +28,7 @@ describe('Tag component', () => {
 
         const input = element(by.css('deja-tag input'));
         input.sendKeys('CSS3');
-        element(by.css('deja-tag md-form-field i')).click();
+        element(by.css('deja-tag mat-form-field i')).click();
         item = element(by.css('deja-tag deja-chips > span:last-child > span'));
         expect<any>(item.getText()).toBe('CSS3');
 

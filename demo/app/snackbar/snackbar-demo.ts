@@ -42,11 +42,11 @@ export class DejaSnackbarDemoComponent implements OnInit {
   public ngOnInit() {
     // tslint:disable-next-line:no-string-literal
     this.colors = new MaterialColors()['palet'];
-    this.danger = this.colors['md-red']['500'];
-    this.warning = this.colors['md-orange']['500'];
-    this.success = this.colors['md-green']['500'];
-    this.info = this.colors['md-blue']['500'];
-    this.default = this.colors['md-grey']['900'];
+    this.danger = this.colors['mat-red']['500'];
+    this.warning = this.colors['mat-orange']['500'];
+    this.success = this.colors['mat-green']['500'];
+    this.info = this.colors['mat-blue']['500'];
+    this.default = this.colors['mat-grey']['900'];
 
     this.dangers = Observable
         .from(this.push)

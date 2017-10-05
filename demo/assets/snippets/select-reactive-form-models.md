@@ -3,7 +3,7 @@
 <form novalidate [formGroup]="fruitForm">
     <div class="react-form-elem">
         <deja-select placeholder="Fruit" selectionClearable [models]="fruits$" formControlName="fruitName"></deja-select>
-        <md-error align="end">{{fruitForm.get('fruitName').errors ? fruitForm.get('fruitName').errors[0] : ''}}</md-error>
+        <mat-error align="end">{{fruitForm.get('fruitName').errors ? fruitForm.get('fruitName').errors[0] : ''}}</mat-error>
     </div>
 </form>
 

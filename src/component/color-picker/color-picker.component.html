@@ -1,5 +1,5 @@
-<button type="button" *ngIf="!small" [disabled]="disabled" id="colorbtn" md-fab (click)="show($event)" [style.background-color]="value && value.toHex() || null"></button>
-<button type="button" *ngIf="small" [disabled]="disabled" id="colorbtn" md-mini-fab (click)="show($event)" [style.background-color]="value && value.toHex() || null"></button>
+<button type="button" *ngIf="!small" [disabled]="disabled" id="colorbtn" mat-fab (click)="show($event)" [style.background-color]="value && value.toHex() || null"></button>
+<button type="button" *ngIf="small" [disabled]="disabled" id="colorbtn" mat-mini-fab (click)="show($event)" [style.background-color]="value && value.toHex() || null"></button>
 <deja-overlay [ownerElement]="ownerElement" overlayBackdropClass="cdk-overlay-dark-backdrop" [isVisible]="isOpen" (closed)="close()" [positions]="positions">
     <deja-color-selector [colors]="colors" [ngModel]="value" (colorhover)="colorhover.emit($event)" (ngModelChange)="onColorChange($event)"></deja-color-selector>
 </deja-overlay>

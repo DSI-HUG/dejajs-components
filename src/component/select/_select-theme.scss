@@ -46,8 +46,8 @@
 					}
 				}
 			}
-			[mdSuffix] {
-				md-progress-spinner {
+			[matSuffix] {
+				mat-progress-spinner {
 					svg path {
 						stroke: mat-color($primary);
 					}

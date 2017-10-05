@@ -7,7 +7,7 @@
  */
 
 import { AfterViewInit, ChangeDetectorRef, Component, Input, NgZone, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { MdSidenav } from '@angular/material';
+import { MatSidenav } from '@angular/material';
 import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
@@ -23,7 +23,7 @@ import { Subject } from 'rxjs/Subject';
     styleUrls: ['./sidenav.component.scss']
 })
 export class DejaSidenavComponent implements AfterViewInit, OnInit, OnDestroy {
-    @ViewChild('sidenav') public sidenav: MdSidenav;
+    @ViewChild('sidenav') public sidenav: MatSidenav;
 
     @Input()
     public headerText = 'TITLE';

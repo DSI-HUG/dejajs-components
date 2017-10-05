@@ -1,36 +1,36 @@
-<md-tab-group [selectedIndex]="tabIndex" (selectChange)="tabIndex = $event.index">
-	<!--<md-tab label="OVERVIEW">-->
-	<!--<md-card class="demo-card demo-basic">-->
+<mat-tab-group [selectedIndex]="tabIndex" (selectChange)="tabIndex = $event.index">
+	<!--<mat-tab label="OVERVIEW">-->
+	<!--<mat-card class="demo-card demo-basic">-->
 	<!--TODO-->
-	<!--</md-card>-->
-	<!--</md-tab>-->
-	<md-tab label="API REFERENCE"></md-tab>
-	<md-tab label="SIMPLE EXAMPLES"></md-tab>
-	<md-tab label="ADVANCED EXAMPLES"></md-tab>
-	<md-tab label="TEMPLATING"></md-tab>
-	<md-tab label="PRE-SELECTIONS"></md-tab>
-	<md-tab label="PRE-EVENTS AND ON_DEMAND"></md-tab>
-	<md-tab label="PERFORMANCES"></md-tab>
-</md-tab-group>
+	<!--</mat-card>-->
+	<!--</mat-tab>-->
+	<mat-tab label="API REFERENCE"></mat-tab>
+	<mat-tab label="SIMPLE EXAMPLES"></mat-tab>
+	<mat-tab label="ADVANCED EXAMPLES"></mat-tab>
+	<mat-tab label="TEMPLATING"></mat-tab>
+	<mat-tab label="PRE-SELECTIONS"></mat-tab>
+	<mat-tab label="PRE-EVENTS AND ON_DEMAND"></mat-tab>
+	<mat-tab label="PERFORMANCES"></mat-tab>
+</mat-tab-group>
 
 <deja-dialog *ngIf="dialogVisible">
 	<deja-message-box type="primary" title="Confirm">
 		Please confirm your operation!
 		<ng-template #actionsTemplate>
-			<button id="cancelbtn" md-raised-button (click)="dialogResponse$.next('cancel')">Cancel</button>
-			<button id="okbtn" md-raised-button color="primary" (click)="dialogResponse$.next('ok')">Ok</button>
+			<button id="cancelbtn" mat-raised-button (click)="dialogResponse$.next('cancel')">Cancel</button>
+			<button id="okbtn" mat-raised-button color="primary" (click)="dialogResponse$.next('ok')">Ok</button>
 		</ng-template>
 	</deja-message-box>
 </deja-dialog>
 
-<md-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
+<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
 	<deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/tree-list/readme.md'"></deja-markdown>
-</md-card>
+</mat-card>
 
 <div *ngIf="tabIndex === 1">
-	<md-card class="deja-treelist-demo demo-card demo-basic">
-		<md-toolbar color="primary">Simple Usage</md-toolbar>
-		<md-card-content>
+	<mat-card class="deja-treelist-demo demo-card demo-basic">
+		<mat-toolbar color="primary">Simple Usage</mat-toolbar>
+		<mat-card-content>
 			<div>Just passing an array of objects</div>
 			<div fxLayout="row">
 				<span fxFlex="0 0 45%" fxLayout="column">
@@ -41,11 +41,11 @@
 					<pre>{{country | json}}</pre>
 				</span>
 			</div>
-		</md-card-content>
-	</md-card>
-	<md-card class="deja-treelist-demo demo-card demo-basic">
-		<md-toolbar color="primary">Keyboard Navigation</md-toolbar>
-		<md-card-content>
+		</mat-card-content>
+	</mat-card>
+	<mat-card class="deja-treelist-demo demo-card demo-basic">
+		<mat-toolbar color="primary">Keyboard Navigation</mat-toolbar>
+		<mat-card-content>
 			<div>deja-tree-list has some keyboard navigation feature</div>
 			<div fxLayout="row">
 				<span fxFlex="0 0 45%" fxLayout="column">
@@ -85,11 +85,11 @@
 						<span class="keyboard-key">9</span> to select the next item started with the pressed key</li>
 				</ul>
 			</div>
-		</md-card-content>
-	</md-card>
-	<md-card class="deja-treelist-demo demo-card demo-basic">
-		<md-toolbar color="primary">Treelist with options</md-toolbar>
-		<md-card-content>
+		</mat-card-content>
+	</mat-card>
+	<mat-card class="deja-treelist-demo demo-card demo-basic">
+		<mat-toolbar color="primary">Treelist with options</mat-toolbar>
+		<mat-card-content>
 			<div>These treelists has a list coming from html options</div>
 			<span fxLayout="row">
 				<deja-tree-list fxFlex="0 0 45%" class="demo-half-width optionstl" [(ngModel)]="fruct">
@@ -121,22 +121,22 @@
 					<deja-item value="watermelon" text="Watermelon"></deja-item>
 				</deja-tree-list>
 			</span>
-		</md-card-content>
-	</md-card>
-	<md-card class="deja-treelist-demo demo-card demo-basic">
-		<md-toolbar color="primary">String Array Model</md-toolbar>
-		<md-card-content>
+		</mat-card-content>
+	</mat-card>
+	<mat-card class="deja-treelist-demo demo-card demo-basic">
+		<mat-toolbar color="primary">String Array Model</mat-toolbar>
+		<mat-card-content>
 			<span fxLayout="row" fxLayoutAlign="start center">
 				<deja-tree-list class="demo-half-width" [(ngModel)]="fruct" [models]="fructs"></deja-tree-list>
 				<span fxFlex="0 0 50%" fxFlexOffset="5%">Selected fruct model is: {{ fruct }}</span>
 			</span>
-		</md-card-content>
-	</md-card>
-	<md-card class="deja-treelist-demo demo-card demo-basic">
-		<md-toolbar color="primary">Disabled tree-list</md-toolbar>
-		<md-card-content>
+		</mat-card-content>
+	</mat-card>
+	<mat-card class="deja-treelist-demo demo-card demo-basic">
+		<mat-toolbar color="primary">Disabled tree-list</mat-toolbar>
+		<mat-card-content>
 			<div>
-				<md-checkbox [(ngModel)]="disabled" color="primary">Check me to disable tree-list below</md-checkbox>
+				<mat-checkbox [(ngModel)]="disabled" color="primary">Check me to disable tree-list below</mat-checkbox>
 			</div>
 			<div fxLayout="row">
 				<span fxFlex="0 0 45%" fxLayout="column">
@@ -147,14 +147,14 @@
 					<pre>{{deepCountry | json}}</pre>
 				</span>
 			</div>
-		</md-card-content>
-	</md-card>
+		</mat-card-content>
+	</mat-card>
 </div>
 
 <div *ngIf="tabIndex === 2">
-	<md-card class="deja-treelist-demo demo-card demo-basic">
-		<md-toolbar color="primary">Multi selection</md-toolbar>
-		<md-card-content>
+	<mat-card class="deja-treelist-demo demo-card demo-basic">
+		<mat-toolbar color="primary">Multi selection</mat-toolbar>
+		<mat-card-content>
 			<div>Multi selection example</div>
 			<div fxLayout="row">
 				<span fxFlex="0 0 45%" fxLayout="column">
@@ -182,9 +182,9 @@
 					</ul>
 				</span>
 			</div>
-		</md-card-content>
-		<md-toolbar color="primary">Grouping and Drag Drop</md-toolbar>
-		<md-card-content>
+		</mat-card-content>
+		<mat-toolbar color="primary">Grouping and Drag Drop</mat-toolbar>
+		<mat-card-content>
 			<div>Grouping example</div>
 			<div fxLayout="row">
 				<span fxFlex="0 0 45%" fxLayout="column">
@@ -199,28 +199,28 @@
 					<div #dropArea [deja-mouse-droppable]="getDropContext(dropArea)" [deja-droppable]="{dragovercallback: onDivDragOver, dragentercallback:onDivDragOver, dropcallback:onDivDropEvent}" style="border:1px solid red;min-height:150px;"></div>
 				</span>
 			</div>
-		</md-card-content>
-		<md-toolbar color="primary">Autocomplete</md-toolbar>
-		<md-card-content>
+		</mat-card-content>
+		<mat-toolbar color="primary">Autocomplete</mat-toolbar>
+		<mat-card-content>
 			<div>Autocomplete 2 characters minimum</div>
 			<deja-tree-list class="demo-half-width" nodataholder="No record to display" [itemListService]="countriesListService" textField="naqme" valueField="code" min-search-length="2"></deja-tree-list>
-		</md-card-content>
-		<md-toolbar color="primary">Variable Row Size</md-toolbar>
-		<md-card-content>
+		</mat-card-content>
+		<mat-toolbar color="primary">Variable Row Size</mat-toolbar>
+		<mat-card-content>
 			<div>Variable Row height example</div>
 			<div fxLayout="row">
 				<span fxFlex="0 0 45%" fxLayout="column">
 					<deja-tree-list [items]="loremList" multiSelect viewportMode="variable" searchArea sortable></deja-tree-list>
 				</span>
 			</div>
-		</md-card-content>
-	</md-card>
+		</mat-card-content>
+	</mat-card>
 </div>
 
 <div *ngIf="tabIndex === 3">
-	<md-card class="deja-treelist-demo demo-card demo-basic">
-		<md-toolbar color="primary">Templating Examples</md-toolbar>
-		<md-card-content>
+	<mat-card class="deja-treelist-demo demo-card demo-basic">
+		<mat-toolbar color="primary">Templating Examples</mat-toolbar>
+		<mat-card-content>
 			<h1>Item Template</h1>
 			<div>An exemple with auto sized item template</div>
 			<deja-tree-list #news class="news" viewportMode="auto" textField="title" searchField="description" [models]="news$">
@@ -246,7 +246,7 @@
 				<span fxFlex="0 0 45%" fxFlexOffset="5%" fxLayout="column">
 					<deja-tree-list textField="naqme" [items]="groupedCountries">
 						<ng-template #parentItemTemplate let-item>
-							<md-icon id="placeholder-icon">public</md-icon>&nbsp;
+							<mat-icon id="placeholder-icon">public</mat-icon>&nbsp;
 							<span>{{ item.groupName }}</span>
 						</ng-template>
 					</deja-tree-list>
@@ -257,22 +257,22 @@
 				<span fxFlex="0 0 45%" fxLayout="column">
 					<deja-tree-list searchArea class="placeholder-icon" textField="naqme" valueField="code" [items]="countries">
 						<ng-template #searchPrefixTemplate>
-							<md-icon (click)="onFilterTemplateClicked('Prefix')">public</md-icon>
+							<mat-icon (click)="onFilterTemplateClicked('Prefix')">public</mat-icon>
 						</ng-template>
 						<ng-template #searchSuffixTemplate>
-							<md-icon (click)="onFilterTemplateClicked('Suffix')">more_vert</md-icon>
+							<mat-icon (click)="onFilterTemplateClicked('Suffix')">more_vert</mat-icon>
 						</ng-template>
 					</deja-tree-list>
 				</span>
 			</div>
-		</md-card-content>
-	</md-card>
+		</mat-card-content>
+	</mat-card>
 </div>
 
 <div *ngIf="tabIndex === 4">
-	<md-card class="deja-treelist-demo demo-card demo-basic">
-		<md-toolbar color="primary">Pre-Selections from html inputs</md-toolbar>
-		<md-card-content>
+	<mat-card class="deja-treelist-demo demo-card demo-basic">
+		<mat-toolbar color="primary">Pre-Selections from html inputs</mat-toolbar>
+		<mat-card-content>
 			<div fxLayout="row">
 				<div fxFlex="40" fxLayout="column">
 					<div>Preselection with the input selectedModel</div>
@@ -291,21 +291,21 @@
 				<div fxFlex="40" fxFlexOffset="15">
 				</div>
 			</div>
-		</md-card-content>
+		</mat-card-content>
 
-		<md-toolbar color="primary">Pre-Selections from javascript</md-toolbar>
-		<md-card-content>
+		<mat-toolbar color="primary">Pre-Selections from javascript</mat-toolbar>
+		<mat-card-content>
 			<div>The collection fructItemsWithPreSelection has a pre-selected item</div>
 			<deja-tree-list class="fixed-height" [items]="fructItemsWithPreSelection"></deja-tree-list>
-		</md-card-content>
-	</md-card>
+		</mat-card-content>
+	</mat-card>
 </div>
 
 
 <div *ngIf="tabIndex === 5">
-	<md-card class="deja-treelist-demo demo-card demo-basic">
-		<md-toolbar color="primary">Pre-Events and on Demand</md-toolbar>
-		<md-card-content>
+	<mat-card class="deja-treelist-demo demo-card demo-basic">
+		<mat-toolbar color="primary">Pre-Events and on Demand</mat-toolbar>
+		<mat-card-content>
 			<h1>On Demand Loading </h1>
 			<div>The items are loaded from the loading event</div>
 			<deja-tree-list #ondemand class="demo-half-width fixed-height" textField="naqme" valueField="code" [loadingItems]="loadingItems()"></deja-tree-list>
@@ -315,21 +315,21 @@
 			<h1>Confirm Expand and Collapse </h1>
 			<div>A dialog will confirm the expand and collapse or an item if the children are not loaded. The children will be loaded asynchronously after the item expansion.</div>
 			<deja-tree-list #onexpand class="demo-half-width fixed-height" textField="naqme" valueField="code" [items]="onDemandGroupedCountries" [expandingItem]="expandingItems()" [collapsingItem]="collapsingItems()"></deja-tree-list>
-		</md-card-content>
-	</md-card>
+		</mat-card-content>
+	</mat-card>
 </div>
 
 <div *ngIf="tabIndex === 6">
-	<md-card class="deja-treelist-demo demo-card demo-basic">
-		<md-toolbar color="primary">Performance Examples</md-toolbar>
-		<md-card-content>
+	<mat-card class="deja-treelist-demo demo-card demo-basic">
+		<mat-toolbar color="primary">Performance Examples</mat-toolbar>
+		<mat-card-content>
 			<h1>10K items with Item Template </h1>
 			<div class="flexContainer" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1rem">
 				<span fxFlex="1 1 auto">An exemple with 10000 auto sized templatized items</span>
-				<md-form-field fxFlex="0 0 5rem">
-					<input mdInput type="number" [(ngModel)]="ensureIndex">
-				</md-form-field>
-				<button fxFlex="0 0 auto" md-button (click)="news.ensureItemVisible(ensureIndex)">Ensure index</button>
+				<mat-form-field fxFlex="0 0 5rem">
+					<input matInput type="number" [(ngModel)]="ensureIndex">
+				</mat-form-field>
+				<button fxFlex="0 0 auto" mat-button (click)="news.ensureItemVisible(ensureIndex)">Ensure index</button>
 			</div>
 			<deja-tree-list #news class="news" viewportMode="auto" textField="title" searchField="description" [models]="bigNews$">
 				<ng-template #itemTemplate let-item let-flatindex="flatindex">
@@ -349,6 +349,6 @@
 					</div>
 				</span>
 			</span>
-		</md-card-content>
-	</md-card>
+		</mat-card-content>
+	</mat-card>
 </div>

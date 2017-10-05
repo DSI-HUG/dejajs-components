@@ -67,7 +67,7 @@ deja-date-time-selector {
                     font-size: 1rem;
                     justify-content: center;
                     width: 50%;
-                    md-icon {
+                    mat-icon {
                         flex: 0 0 auto;
                         cursor: pointer;
                     }
@@ -89,7 +89,7 @@ deja-date-time-selector {
                         font-size: 1rem;
                         text-transform: capitalize;
                     }
-                    button[md-mini-fab] {
+                    button[mat-mini-fab] {
                         flex: 0 0 auto;
                         box-shadow: none;
                     }

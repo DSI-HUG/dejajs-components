@@ -1,36 +1,36 @@
-<md-tab-group [selectedIndex]="tabIndex" (selectChange)="tabIndex = $event.index">
-    <!--<md-tab label="OVERVIEW">-->
-    <!--<md-card class="demo-card demo-basic">-->
+<mat-tab-group [selectedIndex]="tabIndex" (selectChange)="tabIndex = $event.index">
+    <!--<mat-tab label="OVERVIEW">-->
+    <!--<mat-card class="demo-card demo-basic">-->
     <!--TODO-->
-    <!--</md-card>-->
-    <!--</md-tab>-->
-    <md-tab label="API REFERENCE"></md-tab>
-    <md-tab label="SIMPLE EXAMPLES"></md-tab>
-    <md-tab label="ADVANCED EXAMPLES"></md-tab>
-    <md-tab label="TEMPLATING"></md-tab>
-    <md-tab label="PRE-EVENTS AND ON_DEMAND"></md-tab>
-    <md-tab label="PERFORMANCES"></md-tab>
-    <md-tab label="REACTIVE FORM"></md-tab>
-</md-tab-group>
+    <!--</mat-card>-->
+    <!--</mat-tab>-->
+    <mat-tab label="API REFERENCE"></mat-tab>
+    <mat-tab label="SIMPLE EXAMPLES"></mat-tab>
+    <mat-tab label="ADVANCED EXAMPLES"></mat-tab>
+    <mat-tab label="TEMPLATING"></mat-tab>
+    <mat-tab label="PRE-EVENTS AND ON_DEMAND"></mat-tab>
+    <mat-tab label="PERFORMANCES"></mat-tab>
+    <mat-tab label="REACTIVE FORM"></mat-tab>
+</mat-tab-group>
 
 <deja-dialog *ngIf="dialogVisible">
     <deja-message-box type="primary" title="Confirm">
         Please confirm your operation!
         <ng-template #actionsTemplate>
-            <button id="cancelbtn" md-raised-button (click)="dialogResponse$.next('cancel')">Cancel</button>
-            <button id="okbtn" md-raised-button color="primary" (click)="dialogResponse$.next('ok')">Ok</button>
+            <button id="cancelbtn" mat-raised-button (click)="dialogResponse$.next('cancel')">Cancel</button>
+            <button id="okbtn" mat-raised-button color="primary" (click)="dialogResponse$.next('ok')">Ok</button>
         </ng-template>
     </deja-message-box>
 </deja-dialog>
 
-<md-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
+<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
     <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/select/readme.md'"></deja-markdown>
-</md-card>
+</mat-card>
 
 <div *ngIf="tabIndex === 1">
-    <md-card class="deja-select-demo demo-card demo-basic">
-        <md-toolbar color="primary">Simple Usage</md-toolbar>
-        <md-card-content>
+    <mat-card class="deja-select-demo demo-card demo-basic">
+        <mat-toolbar color="primary">Simple Usage</mat-toolbar>
+        <mat-card-content>
             <div>Just passing an array of objects</div>
             <div fxLayout="row">
                 <span fxFlex="0 0 45%" fxLayout="column">
@@ -42,11 +42,11 @@
 					<pre>{{businessCountry | json}}</pre>
 				</span>
             </div>
-        </md-card-content>
-    </md-card>
-    <md-card class="deja-select-demo demo-card demo-basic">
-        <md-toolbar color="primary">Keyboard Navigation</md-toolbar>
-        <md-card-content>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="deja-select-demo demo-card demo-basic">
+        <mat-toolbar color="primary">Keyboard Navigation</mat-toolbar>
+        <mat-card-content>
             <div>deja-select has some keyboard navigation feature</div>
             <div fxLayout="row">
                 <span fxFlex="0 0 45%" fxLayout="column">
@@ -82,11 +82,11 @@
                         <span class="keyboard-key">9</span> to select the next item started with the pressed key</li>
                 </ul>
             </div>
-        </md-card-content>
-    </md-card>
-    <md-card class="deja-select-demo demo-card demo-basic">
-        <md-toolbar color="primary">Select with options</md-toolbar>
-        <md-card-content>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="deja-select-demo demo-card demo-basic">
+        <mat-toolbar color="primary">Select with options</mat-toolbar>
+        <mat-card-content>
             <div>These selects has a list coming from html options</div>
             <span fxLayout="row" fxLayoutAlign="start end">
                 <deja-select fxFlex="0 0 45%" class="demo-half-width" placeholder="Options content"  [(ngModel)]="fruct" >
@@ -118,43 +118,43 @@
                     <deja-item value="Watermelon" text="Watermelon"></deja-item>
                 </deja-select>
             </span>
-        </md-card-content>
-    </md-card>
-    <md-card class="deja-select-demo demo-card demo-basic">
-        <md-toolbar color="primary">String Array Model</md-toolbar>
-        <md-card-content>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="deja-select-demo demo-card demo-basic">
+        <mat-toolbar color="primary">String Array Model</mat-toolbar>
+        <mat-card-content>
             <span fxLayout="row" fxLayoutAlign="start center">
                 <deja-select class="demo-half-width" placeholder="String Array Model" selectionClearable [(ngModel)]="fruct">
                     <deja-item [value]="f" [text]="f" *ngFor="let f of fructs"></deja-item> 
                 </deja-select>
                 <span fxFlex="0 0 50%" fxFlexOffset="5%">Selected fruct model is: {{ fruct }}</span>
             </span>
-        </md-card-content>
-    </md-card>
-    <md-card class="deja-select-demo demo-card demo-basic">
-        <md-toolbar color="primary">Clearable content</md-toolbar>
-        <md-card-content>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="deja-select-demo demo-card demo-basic">
+        <mat-toolbar color="primary">Clearable content</mat-toolbar>
+        <mat-card-content>
             <div>Add the selectionClearable attribute to enable the clear button</div>
             <deja-select class="demo-half-width" placeholder="Clearable content" selectionClearable [(ngModel)]="businessCountry" textField="naqme"
                 valueField="code" [models]="countries"></deja-select>
-        </md-card-content>
-    </md-card>
-    <md-card class="deja-select-demo demo-card demo-basic">
-        <md-toolbar color="primary">Disabled select</md-toolbar>
-        <md-card-content>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="deja-select-demo demo-card demo-basic">
+        <mat-toolbar color="primary">Disabled select</mat-toolbar>
+        <mat-card-content>
             <div>
-                <md-checkbox [(ngModel)]="disabled" color="primary">Check me to disable select below</md-checkbox>
+                <mat-checkbox [(ngModel)]="disabled" color="primary">Check me to disable select below</mat-checkbox>
             </div>
             <deja-select class="demo-half-width" placeholder="Disabled select" [disabled]="disabled" selectionClearable [(ngModel)]="businessCountry"
                 textField="naqme" valueField="code" [models]="countries"></deja-select>
-        </md-card-content>
-    </md-card>
+        </mat-card-content>
+    </mat-card>
 </div>
 
 <div *ngIf="tabIndex === 2">
-    <md-card class="deja-select-demo demo-card demo-basic">
-        <md-toolbar color="primary">Multiselect</md-toolbar>
-        <md-card-content>
+    <mat-card class="deja-select-demo demo-card demo-basic">
+        <mat-toolbar color="primary">Multiselect</mat-toolbar>
+        <mat-card-content>
             <div>Multiselect example</div>
             <div fxLayout="column">
                 <div fxLayout="row">
@@ -181,32 +181,32 @@
                     <span class="disable-check">Disable : </span>
                     </section>
                     <section fxLayout="column" fxFlexOffset="5%">
-                        <md-checkbox [(ngModel)]="readonlyMultiSelect" [color]="'primary'"></md-checkbox>
-                        <md-checkbox class="disable-check" [(ngModel)]="disableMultiSelect" [color]="'primary'"></md-checkbox>
+                        <mat-checkbox [(ngModel)]="readonlyMultiSelect" [color]="'primary'"></mat-checkbox>
+                        <mat-checkbox class="disable-check" [(ngModel)]="disableMultiSelect" [color]="'primary'"></mat-checkbox>
                     </section>
                     </section>
                     </span>
                 </div>
             </div>
-        </md-card-content>
-        <md-toolbar color="primary">Grouping</md-toolbar>
-        <md-card-content>
+        </mat-card-content>
+        <mat-toolbar color="primary">Grouping</mat-toolbar>
+        <mat-card-content>
             <div>Grouping example</div>
             <deja-select class="demo-half-width" textField="naqme" valueField="code" [items]="groupedCountries"></deja-select>
-        </md-card-content>
-        <md-toolbar color="primary">Autocomplete</md-toolbar>
-        <md-card-content>
+        </mat-card-content>
+        <mat-toolbar color="primary">Autocomplete</mat-toolbar>
+        <mat-card-content>
             <div>Autocomplete 2 characters minimum</div>
             <deja-select class="demo-half-width" type="autocomplete" [itemListService]="countriesListService" textField="naqme" valueField="code"
                 min-search-length="2"></deja-select>
-        </md-card-content>
-    </md-card>
+        </mat-card-content>
+    </mat-card>
 </div>
 
 <div *ngIf="tabIndex === 3">
-    <md-card class="deja-select-demo demo-card demo-basic">
-        <md-toolbar color="primary">Templating Examples</md-toolbar>
-        <md-card-content>
+    <mat-card class="deja-select-demo demo-card demo-basic">
+        <mat-toolbar color="primary">Templating Examples</mat-toolbar>
+        <mat-card-content>
             <h1>Item Template</h1>
             <div>An exemple with auto sized item template</div>
             <deja-select #news type="select" viewportMode="auto" textField="title" searchField="description" [models]="news$" >
@@ -232,13 +232,13 @@
             <span fxLayout="row">
 				<deja-select fxFlex="0 0 45%" type="autocomplete" class="placeholder-icon" textField="naqme" valueField="code" [items]="countries" >
 					<ng-template #placeHolderTemplate>
-						<md-icon id="placeholder-icon">public</md-icon>
+						<mat-icon id="placeholder-icon">public</mat-icon>
 						Place Holder Template
 					</ng-template>
 				</deja-select>
 				<deja-select fxFlex="0 0 45%" fxFlexOffset="5%" type="autocomplete" placeholder="Group Template" textField="naqme" [items]="groupedCountries" >
 					<ng-template #parentItemTemplate let-item>
-						<md-icon id="placeholder-icon">public</md-icon>&nbsp;
+						<mat-icon id="placeholder-icon">public</mat-icon>&nbsp;
 						<span>{{ item.groupName }}</span>
             </ng-template>
             </deja-select>
@@ -255,18 +255,18 @@
             <deja-select fxFlex="0 0 45%" fxFlexOffset="5%" placeholder="Suffix template selelct" textField="naqme" valueField="code"
                 [items]="countries" >
                 <ng-template #suffixTemplate>
-                    <md-icon id="placeholder-icon">public</md-icon>
+                    <mat-icon id="placeholder-icon">public</mat-icon>
                 </ng-template>
             </deja-select>
             </span>
-        </md-card-content>
-    </md-card>
+        </mat-card-content>
+    </mat-card>
 </div>
 
 <div *ngIf="tabIndex === 4">
-    <md-card class="deja-select-demo demo-card demo-basic">
-        <md-toolbar color="primary">Pre-Events and on Demand</md-toolbar>
-        <md-card-content>
+    <mat-card class="deja-select-demo demo-card demo-basic">
+        <mat-toolbar color="primary">Pre-Events and on Demand</mat-toolbar>
+        <mat-card-content>
             <h1>On Demand Loading </h1>
             <div>The items are loaded after the drop down is opened</div>
             <deja-select #ondemand class="demo-half-width" textField="naqme" valueField="code" [loadingItems]="loadingItems()" [placeholder]="onDemandPlaceHolder"
@@ -281,14 +281,14 @@
                 loaded asynchronously after the item expansion.</div>
             <deja-select #onexpand class="demo-half-width" textField="naqme" valueField="code" [items]="onDemandGroupedCountries" [expandingItem]="expandingItems()"
                 [collapsingItem]="collapsingItems()" ></deja-select>
-        </md-card-content>
-    </md-card>
+        </mat-card-content>
+    </mat-card>
 </div>
 
 <div *ngIf="tabIndex === 5">
-    <md-card class="deja-select-demo demo-card demo-basic">
-        <md-toolbar color="primary">Performance Examples</md-toolbar>
-        <md-card-content>
+    <mat-card class="deja-select-demo demo-card demo-basic">
+        <mat-toolbar color="primary">Performance Examples</mat-toolbar>
+        <mat-card-content>
             <h1>10K items with Item Template </h1>
             <div>An exemple with 10000 auto sized templatized items</div>
             <deja-select #news  placeholder="10000 items select" type="select" viewportMode="auto"
@@ -310,14 +310,14 @@
 </div>
 </span>
 </span>
-</md-card-content>
-</md-card>
+</mat-card-content>
+</mat-card>
 </div>
 
 <div *ngIf="tabIndex === 6">
-    <md-card class="deja-select-demo demo-card demo-basic">
-        <md-toolbar color="primary">Minimal case</md-toolbar>
-        <md-card-content>
+    <mat-card class="deja-select-demo demo-card demo-basic">
+        <mat-toolbar color="primary">Minimal case</mat-toolbar>
+        <mat-card-content>
 
             <form novalidate [formGroup]="fruitForm">
                 <div class="demo-half-width react-form-elem">
@@ -327,7 +327,7 @@
                         <deja-item value="banana" text="banana"></deja-item>
                         <deja-item value="gruyère" text="gruyère"></deja-item>
                     </deja-select>
-                    <md-error align="end">{{fruitForm.get('fruitName').errors ? fruitForm.get('fruitName').errors[0] : ''}}</md-error>
+                    <mat-error align="end">{{fruitForm.get('fruitName').errors ? fruitForm.get('fruitName').errors[0] : ''}}</mat-error>
                 </div>
             </form>
 
@@ -341,11 +341,11 @@
                 <deja-markdown [url]="'assets/snippets/select-reactive-form.md'"></deja-markdown>
             </div>
 
-        </md-card-content>
-    </md-card>
-    <md-card class="deja-select-demo demo-card demo-basic">
-        <md-toolbar color="primary">With models as an array of strings</md-toolbar>
-        <md-card-content>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="deja-select-demo demo-card demo-basic">
+        <mat-toolbar color="primary">With models as an array of strings</mat-toolbar>
+        <mat-card-content>
 
             <form novalidate [formGroup]="fruitFormModels">
                 <div class="demo-half-width react-form-elem">
@@ -364,6 +364,6 @@
                 <deja-markdown [url]="'assets/snippets/select-reactive-form-models.md'"></deja-markdown>
             </div>
 
-        </md-card-content>
-    </md-card>
+        </mat-card-content>
+    </mat-card>
 </div>
