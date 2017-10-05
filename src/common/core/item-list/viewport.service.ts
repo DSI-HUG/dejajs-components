@@ -302,7 +302,7 @@ export class ViewPortService implements OnDestroy {
                 items: items,
             } as IViewPort;
 
-            if (elements.length === 0 && bindIfAny !== false) {
+            if (elements.length !== items.length && bindIfAny !== false) {
                 this.viewPortResult$.next(viewPort);
                 return Observable.timer(1).switchMap(() => calcDisabledViewPort$(items, containerSize, scrollPos, element, ensureParams, false));
             }
@@ -581,7 +581,7 @@ export class ViewPortService implements OnDestroy {
             .subscribe((viewPort: IViewPort) => {
                 this.viewPortResult$.next(viewPort);
             }, ((error) => {
-                console.log(error);
+                console.error(error);
             })));
 
         // Cache last calculated viewport
