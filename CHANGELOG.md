@@ -1,3 +1,36 @@
+### 2.14.0 (2017-10-05)
+
+##### BREAKING CHANGES
+
+* **DejaMenuComponent:** DejaMenuComponent as DejaOverlayComponent ([fd1fea30](https://github.com/DSI-HUG/dejajs-components/commit/fd1fea30859c68ec6ee1abbd1954d371811c3ea6))
+
+##### New Features
+
+* **MonacoEditor:** Added loaded event after first load ([662e5695](https://github.com/DSI-HUG/dejajs-components/commit/662e56957b139a9b6722cae1492cd946944c809b))
+* **Global:** Material 11 compatibility ([1351371f](https://github.com/DSI-HUG/dejajs-components/commit/1351371f163e52b0159bd4355ae5ce1976a40f15))
+
+##### Bug Fixes
+
+* **ViewportService:** Fix crash when treelist parent is collapsed and viewport mode is disabled ([c3571929](https://github.com/DSI-HUG/dejajs-components/commit/c3571929d2abbae3cf6d28b2d91637a534840a32))
+* **DejaDatePickerComponent:** markForCheck() on close to avoid bug when close function isn't called by user action ([b5f17991](https://github.com/DSI-HUG/dejajs-components/commit/b5f17991f414b48e9023eeab08f300f45c2caef6))
+* **BoldQuery:** Removed encapsulation ([96ca2b5e](https://github.com/DSI-HUG/dejajs-components/commit/96ca2b5e6a987d0c9e887c3bc49f7981608de523))
+* **Global:**
+  * Material 11 Compatibility ([9d3a674e](https://github.com/DSI-HUG/dejajs-components/commit/9d3a674e7cdc156055b60117aa1576fdc7d6d2af))
+  * Ignore and remove .d.ts files ([64825216](https://github.com/DSI-HUG/dejajs-components/commit/64825216472bb0dcc1cfd98e7d58dedfe6bf8a0b))
+  * Ignore and remove .d.ts files ([b23644ff](https://github.com/DSI-HUG/dejajs-components/commit/b23644ffc42919c55ceb72e5afe50854e05fea3c))
+* **Demo:** Material10 Compatibility fix(Tiles): Small step move issue ([ba4131df](https://github.com/DSI-HUG/dejajs-components/commit/ba4131df1c1b588e144596fa52ba349beb7c6005))
+* **TilesComponent:** Work in push mode quiet(MonacoEditor): Fixed wrong value emitted by the event ([e800fd21](https://github.com/DSI-HUG/dejajs-components/commit/e800fd2187fb3f415eec5ad7e0d2555039b55102))
+* **MonacoEditor:** Use Observables to avoid life cycle issues ([0e5752dd](https://github.com/DSI-HUG/dejajs-components/commit/0e5752dda57dd73d8223fea12a9f2f32c140177f))
+
+##### Other Changes
+
+* **DejaTag:** Fix test Material 11 compatibility ([8bf1524c](https://github.com/DSI-HUG/dejajs-components/commit/8bf1524cade4efd5db1f4cbc9ba8357311e63d71))
+* **Global:**
+  * Fix issues due to the material 11 migration ([c3807044](https://github.com/DSI-HUG/dejajs-components/commit/c38070444327716400053b60e40548e822ed1bad))
+  * Fix issues due to the material 11 migration ([dec01d0d](https://github.com/DSI-HUG/dejajs-components/commit/dec01d0da79668b8fc43a0d2e3b5f301fb137020))
+* **GlobalEvent:** Restored .d.ts ([03b32dda](https://github.com/DSI-HUG/dejajs-components/commit/03b32ddacc001d1a50eaaed8de128a372df078ca))
+* **MonacoEditor:** Revrted: Use Observables to avoid life cycle issues ([d436aa14](https://github.com/DSI-HUG/dejajs-components/commit/d436aa143ba711fe8b276f386672907b212c5306))
+
 ### 2.13.0 (2017-10-04)
 
 ##### Continuous Integration
