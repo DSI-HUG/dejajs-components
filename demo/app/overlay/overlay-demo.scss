@@ -1,4 +1,4 @@
-:host {
+deja-overlay-demo {
 	flex: 1 1 100%;
 	padding: 1rem;
 
@@ -12,11 +12,10 @@
 		.end-icon {
 			align-items: flex-end;
 		}
-    }
+	}
+}
 
-    [deja-menu-content] .menu-item {
-        white-space: nowrap;
-        padding: 0.5rem 2rem;
-        color: #ff1d34 !important;
-    }
+[deja-menu-content]#anchorMenu .menu-item {
+	white-space: nowrap;
+    padding: 0.5rem 2rem;
 }

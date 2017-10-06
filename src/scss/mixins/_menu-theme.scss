@@ -3,20 +3,28 @@
 @mixin menu-theme($theme) {
 	$primary: map-get($theme, primary);
 
-	.cdk-overlay-container {
-		[deja-menu-content] {
+	@mixin ulcontent() {
+		li {
 			background-color: #FFF;
-			border-color: rgba(0, 0, 0, 0.3);
-			>ul {
-				li {
-					background-color: #FFF;
-					color: mat-color($primary);
-					&:hover {
-						background-color: mat-color($primary);
-						color: #FFF;
-					}
-				}
+			color: mat-color($primary);
+			&:hover {
+				background-color: mat-color($primary);
+				color: #FFF;
 			}
+		}
+	}
+
+	.cdk-overlay-container {
+		ul[deja-menu-content] {
+            @include ulcontent();
+        }
+        
+        [deja-menu-content] {
+			background-color: #FFF;
+            border-color: rgba(0, 0, 0, 0.3);
+			>ul {
+                @include ulcontent();
+            }
 			>button,
 			>a {
 				background-color: #FFF;
