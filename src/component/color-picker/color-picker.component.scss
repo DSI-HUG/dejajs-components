@@ -1,4 +1,10 @@
-.cdk-overlay-container {
+.deja-overlay-container {
+    [deja-menu-content] {
+        padding: 0 !important;
+        border-style: none !important;
+        box-shadow: none !important;
+    }
+
     deja-color-selector {
         &[disabled] {
             -webkit-filter: grayscale(100%);

@@ -1,5 +1,25 @@
-.cdk-overlay-container {
-	#menucontent {
+@mixin ulcontent() {
+	padding: 0;
+	margin: 0;
+	li {
+		cursor: pointer;
+		align-items: center;
+		display: flex;
+		justify-content: left;
+		list-style-type: none;
+		padding: 0.5rem 1rem 0.5rem 0.5rem;
+		md-icon {
+			margin: 0 0.5rem;
+		}
+	}
+}
+
+.deja-overlay-container {
+	ul[deja-menu-content] {
+		@include ulcontent();
+	}
+
+	[deja-menu-content] {
 		overflow-x: hidden;
 		overflow-y: auto;
 		height: 100%;
@@ -8,19 +28,7 @@
 		box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
 		padding: 0.5rem 0;
 		>ul {
-			padding: 0;
-			margin: 0;
-			li {
-				cursor: pointer;
-				align-items: center;
-				display: flex;
-				justify-content: left;
-				list-style-type: none;
-				padding: 0.5rem 1rem 0.5rem 0.5rem;
-				mat-icon {
-					margin: 0 0.5rem;
-				}
-			}
+			@include ulcontent();
 		}
 		>button,
 		>a {

@@ -6,14 +6,15 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 
 @Component({
-    selector: 'deja-menu-demo',
-    styleUrls: ['./menu-demo.scss'],
-    templateUrl: './menu-demo.html',
+    encapsulation: ViewEncapsulation.None,
+    selector: 'deja-overlay-demo',
+    styleUrls: ['./overlay-demo.scss'],
+    templateUrl: './overlay-demo.html',
 })
-export class MenuDemoComponent {
+export class OverlayDemoComponent {
     public selected = '';
     public items = [
         { text: 'Refresh' },

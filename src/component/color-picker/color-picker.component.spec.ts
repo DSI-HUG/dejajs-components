@@ -6,7 +6,6 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { OverlayModule } from '@angular/cdk/overlay';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
@@ -14,6 +13,7 @@ import { By } from '@angular/platform-browser';
 import { Color } from '../../common/core/graphics/color';
 import { MaterialColors } from '../../common/core/style/material-colors';
 import { DejaColorSelectorModule } from '../index';
+import { DejaOverlayModule } from '../overlay/index';
 import { DejaColorPickerComponent } from './color-picker.component';
 
 describe('DejaColorPicker', () => {
@@ -30,13 +30,12 @@ describe('DejaColorPicker', () => {
                 DejaColorSelectorModule,
                 FlexLayoutModule,
                 FormsModule,
-                OverlayModule
+                DejaOverlayModule
             ]
         }).compileComponents();
 
         fixture = TestBed.createComponent(DejaColorPickerComponent);
         component = fixture.componentInstance;
-
     }));
 
     it('should create the component', async(() => {

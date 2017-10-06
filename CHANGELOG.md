@@ -1,3 +1,83 @@
+### 2.14.0 (2017-10-05)
+
+##### BREAKING CHANGES
+
+* **DejaMenuComponent:** DejaMenuComponent as DejaOverlayComponent ([fd1fea30](https://github.com/DSI-HUG/dejajs-components/commit/fd1fea30859c68ec6ee1abbd1954d371811c3ea6))
+
+##### New Features
+
+* **MonacoEditor:** Added loaded event after first load ([662e5695](https://github.com/DSI-HUG/dejajs-components/commit/662e56957b139a9b6722cae1492cd946944c809b))
+* **Global:** Material 11 compatibility ([1351371f](https://github.com/DSI-HUG/dejajs-components/commit/1351371f163e52b0159bd4355ae5ce1976a40f15))
+
+##### Bug Fixes
+
+* **ViewportService:** Fix crash when treelist parent is collapsed and viewport mode is disabled ([c3571929](https://github.com/DSI-HUG/dejajs-components/commit/c3571929d2abbae3cf6d28b2d91637a534840a32))
+* **DejaDatePickerComponent:** markForCheck() on close to avoid bug when close function isn't called by user action ([b5f17991](https://github.com/DSI-HUG/dejajs-components/commit/b5f17991f414b48e9023eeab08f300f45c2caef6))
+* **BoldQuery:** Removed encapsulation ([96ca2b5e](https://github.com/DSI-HUG/dejajs-components/commit/96ca2b5e6a987d0c9e887c3bc49f7981608de523))
+* **Global:**
+  * Material 11 Compatibility ([9d3a674e](https://github.com/DSI-HUG/dejajs-components/commit/9d3a674e7cdc156055b60117aa1576fdc7d6d2af))
+  * Ignore and remove .d.ts files ([64825216](https://github.com/DSI-HUG/dejajs-components/commit/64825216472bb0dcc1cfd98e7d58dedfe6bf8a0b))
+  * Ignore and remove .d.ts files ([b23644ff](https://github.com/DSI-HUG/dejajs-components/commit/b23644ffc42919c55ceb72e5afe50854e05fea3c))
+* **Demo:** Material10 Compatibility fix(Tiles): Small step move issue ([ba4131df](https://github.com/DSI-HUG/dejajs-components/commit/ba4131df1c1b588e144596fa52ba349beb7c6005))
+* **TilesComponent:** Work in push mode quiet(MonacoEditor): Fixed wrong value emitted by the event ([e800fd21](https://github.com/DSI-HUG/dejajs-components/commit/e800fd2187fb3f415eec5ad7e0d2555039b55102))
+* **MonacoEditor:** Use Observables to avoid life cycle issues ([0e5752dd](https://github.com/DSI-HUG/dejajs-components/commit/0e5752dda57dd73d8223fea12a9f2f32c140177f))
+
+##### Other Changes
+
+* **DejaTag:** Fix test Material 11 compatibility ([8bf1524c](https://github.com/DSI-HUG/dejajs-components/commit/8bf1524cade4efd5db1f4cbc9ba8357311e63d71))
+* **Global:**
+  * Fix issues due to the material 11 migration ([c3807044](https://github.com/DSI-HUG/dejajs-components/commit/c38070444327716400053b60e40548e822ed1bad))
+  * Fix issues due to the material 11 migration ([dec01d0d](https://github.com/DSI-HUG/dejajs-components/commit/dec01d0da79668b8fc43a0d2e3b5f301fb137020))
+* **GlobalEvent:** Restored .d.ts ([03b32dda](https://github.com/DSI-HUG/dejajs-components/commit/03b32ddacc001d1a50eaaed8de128a372df078ca))
+* **MonacoEditor:** Revrted: Use Observables to avoid life cycle issues ([d436aa14](https://github.com/DSI-HUG/dejajs-components/commit/d436aa143ba711fe8b276f386672907b212c5306))
+
+### 2.13.0 (2017-10-04)
+
+##### Continuous Integration
+
+* **Test:**
+  * Depoy test coverage ([7e0aee82](https://github.com/DSI-HUG/dejajs-components/commit/7e0aee822f25b98e70330a939b5ad85b47cab221))
+  * Include a Material Theme in Karma config to remove warnings ([682529a4](https://github.com/DSI-HUG/dejajs-components/commit/682529a4971fb72fcbd073c6074050b5134b4406))
+  * Fix mocha reporter configuration ([3bee32d5](https://github.com/DSI-HUG/dejajs-components/commit/3bee32d5b1804b1a5e6dfe8645364465d574e276))
+  * Use Chrome Headless ([cdfb73a6](https://github.com/DSI-HUG/dejajs-components/commit/cdfb73a63e5cfd551ddca42cb6790abdaac2d8b7))
+  * Use Chrome Headless ([c93248d7](https://github.com/DSI-HUG/dejajs-components/commit/c93248d76fd6c4b4c37d05e6db49357f119b7304))
+  * Add Mocha reporter ([d89c802f](https://github.com/DSI-HUG/dejajs-components/commit/d89c802fc91dd2b4a8c2dde758f3ec83e61f319e))
+* **UnitTest:** Add unit test configuration ([3af15fa1](https://github.com/DSI-HUG/dejajs-components/commit/3af15fa1f3b104ea2c1c3c5d0e37336a3e80691b))
+
+##### New Features
+
+* **DejaGrid:** Deeo model for column name ([c67eae71](https://github.com/DSI-HUG/dejajs-components/commit/c67eae717c2ac5e1fbd06dc67a9f4ad705562828))
+* **DejaTreelist:** Deeo model for textField and valueField feat(DejaSelect): Deeo model for textField and valueField ([41e5e008](https://github.com/DSI-HUG/dejajs-components/commit/41e5e008e7005c144177a8de928366797179a5b2))
+* **AutosizeTextArea:** deja-autosize is deprecated, use mat-autosize instead ([e795fd67](https://github.com/DSI-HUG/dejajs-components/commit/e795fd6745f26e3ced07d79eb95f7879b02ee357))
+
+##### Bug Fixes
+
+* **DejaTreeListComponent:** remove null value inside array of selected values ([da374f1c](https://github.com/DSI-HUG/dejajs-components/commit/da374f1c28127fa3bb6fdd7d1f4884664b4a6b9d))
+* **DejaTiles:** Tiles min with and min height cant't be 0 ([b4dc3cc4](https://github.com/DSI-HUG/dejajs-components/commit/b4dc3cc4858adf68c6c916d96e9d82989c408c2b))
+* **DejaColorPicker:** Fix change detection bug and add unit test ([2b60a133](https://github.com/DSI-HUG/dejajs-components/commit/2b60a133bc2ab7885f4284d86a7a0fd9813f2edf))
+* **DejaDatePicker:** add weight to close button styling ([b3d93569](https://github.com/DSI-HUG/dejajs-components/commit/b3d935692a737caad5234299e9effc3b347884c1))
+* **Snackbar:**
+  * Snackbar internal layout ([32ab75df](https://github.com/DSI-HUG/dejajs-components/commit/32ab75dfc644fa09dfecca18616654b05c6ef125))
+  * Snackbar position ([82169b13](https://github.com/DSI-HUG/dejajs-components/commit/82169b13871e58c7e5100f09fea5eabeecd8fdec))
+* **DejaTreelistDemo:** Wrong borders ([a35a689d](https://github.com/DSI-HUG/dejajs-components/commit/a35a689d31568ffb653cea1ac2aa7cc922227036))
+* **DejaTag:** Full width ([946dd4f7](https://github.com/DSI-HUG/dejajs-components/commit/946dd4f73fa0694602392f9d7a9668e6bb178f08))
+
+##### Other Changes
+
+* **DejaColorSelector:** Change colors to see a problem more quickly ([83e3632b](https://github.com/DSI-HUG/dejajs-components/commit/83e3632b527bd5bf7451e7c29257cef702b2fe9b))
+* **Test:** Karma single run mode ([7ce94d06](https://github.com/DSI-HUG/dejajs-components/commit/7ce94d06cf245c974c5a13f1c3a808dcded692e4))
+* **ItemListService:** Keep possibility to override getTextValue and getValue ([ca9f7687](https://github.com/DSI-HUG/dejajs-components/commit/ca9f768755621dc96b0fd52c5e60455ba98afa06))
+
+##### Tests
+
+* **DejaMessageBox:** Add unit test ([c45d043c](https://github.com/DSI-HUG/dejajs-components/commit/c45d043c5107071de3a9646b28e1e69f71aebb30))
+* **DejaDialog:** Add unit test ([5275d11e](https://github.com/DSI-HUG/dejajs-components/commit/5275d11e1f774c39b82f2cec110ede1ac98139c1))
+* **DejaTag:**
+  * Improve test ([f5110748](https://github.com/DSI-HUG/dejajs-components/commit/f5110748d21488de16d3c7466ad9462bb9df6c7a))
+  * Add e2e tests ([cfe66900](https://github.com/DSI-HUG/dejajs-components/commit/cfe66900932088ffccf500617eabdc8d23846595))
+* **DejaCircularPickercomponent:** Add unit testing ([a0e50079](https://github.com/DSI-HUG/dejajs-components/commit/a0e50079154379b2a899e1a21fefaccaa385622b))
+* **DejaChipsComponent:** Add unit test on DejaChipsComponent ([e7d08afa](https://github.com/DSI-HUG/dejajs-components/commit/e7d08afa6f782b147bd7e40097a80008283b286b))
+
 #### 2.12.2 (2017-09-18)
 
 ##### Bug Fixes

@@ -22,7 +22,7 @@ export * from './dragdrop/index';
 export * from './iframe/index';
 export * from './loaders/index';
 export * from './markdown/index';
-export * from './menu/index';
+export * from './overlay/index';
 export * from './message-box/index';
 export * from './monaco-editor/index';
 export * from './mouse-dragdrop/index';

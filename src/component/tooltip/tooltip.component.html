@@ -1,4 +1,8 @@
-<ng-template #overlay cdk-connected-overlay [cdkConnectedOverlayOffsetY]="10" [cdkConnectedOverlayOffsetX]="0" [cdkConnectedOverlayOpen]="overlayVisible" (detach)="overlayVisible=false" [cdkConnectedOverlayOrigin]="overlayOrigin" [cdkConnectedOverlayPositions]="positions">
+<deja-overlay *ngIf="!isMobile" [overlayOffsetX]="0" [overlayOffsetY]="10" [ownerElement]="ownerElement" [isVisible]="overlayVisible" [positions]="positions">
     <ng-template *ngIf="!!tooltipTemplate" [ngTemplateOutlet]="tooltipTemplate" [ngTemplateOutletContext]="{ $implicit: model }"></ng-template>
     <ng-container *ngIf="!tooltipTemplate"><ng-content></ng-content></ng-container>
+</deja-overlay>
+<!--
+<ng-template #overlay cdk-connected-overlay [cdkConnectedOverlayOffsetY]="10" [cdkConnectedOverlayOffsetX]="0" [cdkConnectedOverlayOpen]="overlayVisible" (detach)="overlayVisible=false" [cdkConnectedOverlayOrigin]="overlayOrigin" [cdkConnectedOverlayPositions]="positions">
 </ng-template>
+-->

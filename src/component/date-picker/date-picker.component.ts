@@ -7,9 +7,7 @@
  */
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { OverlayOrigin } from '@angular/cdk/overlay';
 import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, Input, OnDestroy, OnInit, Optional, Self, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ObservableMedia } from '@angular/flex-layout';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import * as moment_ from 'moment';
 import { Observable } from 'rxjs/Observable';
@@ -68,7 +66,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     }
 
     /** Internal use */
-    public overlayOrigin: OverlayOrigin;
+    public overlayOwnerElement: HTMLElement;
 
     @ViewChild(DejaChildValidatorDirective) private inputValidatorDirective: DejaChildValidatorDirective;
 
@@ -82,8 +80,6 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     private focus$ = new Subject();
     private _showDropDown = false;
     private _positions = DejaConnectionPositionPair.default;
-    private isMobile = false;
-    private contentInitialized$ = new Subject();
 
     private date = new Date();
 
@@ -99,7 +95,14 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     private set inputElementRef(element: ElementRef) {
         if (element) {
             this.inputElement = element.nativeElement;
+            if (this.inputElement) {
+                this.overlayOwnerElement = this.inputElement;
+            } else {
+                this.overlayOwnerElement = this.elementRef.nativeElement;
+            }
             this.inputElement$.next(this.inputElement);
+        } else {
+            this.overlayOwnerElement = this.elementRef.nativeElement;
         }
     }
 
@@ -113,24 +116,18 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     }
 
     public get positions() {
-        return !this.isMobile ? this._positions : DejaConnectionPositionPair.parse('centre centre centre centre');
+        return this._positions;
     }
 
     /**
      * Constructor
      * subscribe on fifferent events needed inside this component
      */
-    constructor(private elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, @Self() @Optional() public _control: NgControl, @Optional() private _parentForm: NgForm, @Optional() private _parentFormGroup: FormGroupDirective, media: ObservableMedia) {
+    constructor(private elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, @Self() @Optional() public _control: NgControl, @Optional() private _parentForm: NgForm, @Optional() private _parentFormGroup: FormGroupDirective) {
         if (this._control) {
             this._control.valueAccessor = this;
         }
-
-        Observable.merge(this.contentInitialized$, media.asObservable())
-            .takeWhile(() => this.isAlive)
-            .subscribe(() => {
-                this.isMobile = media.isActive('xs') || media.isActive('sm');
-                this.changeDetectorRef.markForCheck();
-            });
+        this.overlayOwnerElement = this.elementRef.nativeElement;
 
         if (this._parentForm) {
             this._parentForm.ngSubmit.subscribe(() => {
@@ -316,14 +313,12 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     /** Method to close date-picker dialog */
     public close() {
         this._showDropDown = false;
+        this.changeDetectorRef.markForCheck();
         return false;
     }
 
     /** Method to open date-picker dialog */
     public open() {
-        // Set overlay origin element
-        const originElement: HTMLElement = (this.isMobile && document.body) || this.inputElement || this.elementRef.nativeElement;
-        this.overlayOrigin = new OverlayOrigin(new ElementRef(originElement));
         this._showDropDown = true;
         this.changeDetectorRef.markForCheck();
     }
@@ -362,8 +357,6 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
 
     /** For reactive form. */
     public ngAfterContentInit() {
-        this.contentInitialized$.next(true);
-
         if (this.inputValidatorDirective) {
             this.inputValidatorDirective.parentControl = this._control;
         }
@@ -390,11 +383,8 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
             return undefined;
         }
 
-        if (this.showDropDown) {
-            this.close();
-        } else {
-            this.open();
-        }
+        this.open();
+
         return false;
     }
 

@@ -1,0 +1,3 @@
+<ng-template #overlayCmp cdk-connected-overlay cdkConnectedOverlayHasBackdrop [cdkConnectedOverlayBackdropClass]="overlayBackdropClass" [cdkConnectedOverlayOpen]="isVisible" [cdkConnectedOverlayOffsetY]="overlayOffsetY" [cdkConnectedOverlayOffsetX]="overlayOffsetX" [cdkConnectedOverlayOrigin]="overlayOrigin" (backdropClick)="close()" (detach)="close()" [cdkConnectedOverlayPositions]="positions" [cdkConnectedOverlayWidth]="overlayWidth">
+    <ng-content></ng-content>
+</ng-template>

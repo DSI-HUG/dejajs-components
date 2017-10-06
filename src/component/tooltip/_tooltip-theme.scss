@@ -3,7 +3,7 @@
 @mixin tooltip-theme($theme) {
 	$primary: map-get($theme, primary);
 
-	.cdk-overlay-container {
+	.deja-overlay-container {
 		#tooltip {
 			background-color: mat-color($primary);
 			color: #fff;

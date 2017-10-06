@@ -6,19 +6,18 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { OverlayModule } from '@angular/cdk/overlay';
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { DejaMenuComponent } from './menu.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MediaService } from './media.service';
 
 @NgModule({
-    declarations: [DejaMenuComponent],
-    exports: [DejaMenuComponent],
+    providers: [
+        MediaService,
+    ],
     imports: [
-        CommonModule,
-        OverlayModule,
+        FlexLayoutModule,
     ],
 })
-export class DejaMenuModule { }
+export class MediaModule { }
 
-export * from './menu.component';
+export * from './media.service';
