@@ -16,10 +16,7 @@ describe('dejajs-component App', () => {
     });
 
     it('should display DEJA JS title', () => {
-        expect(true).toBeTruthy();
-    //     page.navigateTo();
-    //     page.getTitleText().then((resp) => {
-    //         expect(resp).toEqual('DEJA JS Components');
-    //     });
+        page.navigateTo();
+        expect(page.getTitleText()).toEqual('DEJA JS Components');
     });
 });
