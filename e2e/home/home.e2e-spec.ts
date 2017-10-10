@@ -6,20 +6,19 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { Util } from '../util/index';
 import { HomePage } from './home.po';
 
 describe('dejajs-component App', () => {
     let page: HomePage;
 
     beforeEach(() => {
+        Util.init();
         page = new HomePage();
     });
 
     it('should display DEJA JS title', () => {
-        expect(true).toBeTruthy();
-    //     page.navigateTo();
-    //     page.getTitleText().then((resp) => {
-    //         expect(resp).toEqual('DEJA JS Components');
-    //     });
+        page.navigateTo();
+        expect(page.getTitleText()).toEqual('DEJA JS Components');
     });
 });
