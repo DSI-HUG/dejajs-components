@@ -7,12 +7,14 @@
  */
 
 import { by, element } from 'protractor';
+import { Util } from '../util/index';
 import { TagPage } from './tag.po';
 
 describe('Tag component', () => {
     let page: TagPage;
 
     beforeEach(() => {
+        Util.init();
         page = new TagPage();
     });
 

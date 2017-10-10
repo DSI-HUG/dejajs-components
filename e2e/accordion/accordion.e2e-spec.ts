@@ -6,13 +6,15 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-// import { by, element } from 'protractor';
+// import { by, element, browser } from 'protractor';
+import { Util } from '../util/index';
 import { AccordionPage } from './accordion.po';
 
 describe('Accordion component', () => {
     let page: AccordionPage;
 
     beforeEach(() => {
+        Util.init();
         page = new AccordionPage();
     });
 

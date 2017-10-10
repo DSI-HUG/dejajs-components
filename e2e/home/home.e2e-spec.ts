@@ -6,12 +6,14 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { Util } from '../util/index';
 import { HomePage } from './home.po';
 
 describe('dejajs-component App', () => {
     let page: HomePage;
 
     beforeEach(() => {
+        Util.init();
         page = new HomePage();
     });
 

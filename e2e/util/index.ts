@@ -8,8 +8,10 @@
 
 import { browser } from 'protractor';
 
-export class TagPage {
-    public navigateTo() {
-        browser.get('/tag');
+export class Util {
+
+    public static init(): void {
+        browser.waitForAngularEnabled(false);
     }
+
 }
