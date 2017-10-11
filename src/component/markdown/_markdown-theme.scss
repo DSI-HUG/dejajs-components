@@ -21,7 +21,7 @@
             }
         }
 
-        pre[class*="language-"] {
+        pre[class*="language-"]>code {
             box-shadow: -1px 0px 0px 0px mat-color($primary), 0px 0px 0px 1px #dfdfdf;
             border-left: 10px solid mat-color($primary);
         }
