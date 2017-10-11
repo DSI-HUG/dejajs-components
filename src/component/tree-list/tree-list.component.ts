@@ -70,7 +70,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     /** Largeur des éléments par defaut si différent de 100% */
     @Input() public itemsWidth = null;
     /** Définit une valeur indiquant si en reactive form le model renvoyé doit être un obeject oue une valeur */
-    @Input() public modelIsValue = false;
+    @Input() public modelIsValue: boolean;
     /** Exécuté lorsque le déplacement d'une ligne est terminée. */
     @Output() public itemDragEnd = new EventEmitter<IDejaDragEvent>();
     /** Exécuté lorsque le déplacement d'une ligne commence. */
