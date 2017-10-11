@@ -43,6 +43,7 @@ describe('Sidenav component', () => {
     it('should be open by default on desktop', () => {
         sidenav.navigateTo();
         browser.driver.manage().window().setSize(1920, 1080);
+        browser.sleep(500);
 
         Util.waitForElement('deja-sidenav-menu mat-list-item.active');
         expect(element(by.css('deja-sidenav-menu mat-list-item.active')).isPresent()).toBe(true);
@@ -55,6 +56,7 @@ describe('Sidenav component', () => {
     it('should be hidden on mobile', () => {
         sidenav.navigateTo();
         browser.driver.manage().window().setSize(375, 667);
+        browser.sleep(500);
 
         Util.waitForElement('deja-sidenav-menu');
         expect(element(by.css('deja-sidenav-menu')).isDisplayed()).toBe(false, 'Should be hidden');
