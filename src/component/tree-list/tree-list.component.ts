@@ -69,6 +69,8 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     @Input() public searchSuffixTemplateExternal;
     /** Largeur des éléments par defaut si différent de 100% */
     @Input() public itemsWidth = null;
+    /** Définit une valeur indiquant si en reactive form le model renvoyé doit être un obeject oue une valeur */
+    @Input() public modelIsValue = false;
     /** Exécuté lorsque le déplacement d'une ligne est terminée. */
     @Output() public itemDragEnd = new EventEmitter<IDejaDragEvent>();
     /** Exécuté lorsque le déplacement d'une ligne commence. */
@@ -119,8 +121,6 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     private selectItems$ = new Subject<any>();
     private contentInitialized$ = new Subject();
 
-    private modelIsValue = false;
-
     constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, public elementRef: ElementRef, @Self() @Optional() public _control: NgControl, @Optional() private clipboardService: DejaClipboardService) {
         super(changeDetectorRef, viewPort);
 
@@ -166,8 +166,16 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
 
         const selectModels$ = Observable.combineLatest(this.writeValue$, this.contentInitialized$)
             .map(([value]) => {
-                const modelType = typeof value;
-                this.modelIsValue = value === '' || modelType === 'string' || modelType === 'number';
+                if (this.modelIsValue === undefined) {
+                    if (value instanceof Array) {
+                        const av = value || [];
+                        const modelType = av.length && typeof av[0];
+                        this.modelIsValue = modelType && modelType === 'string' || modelType === 'number';
+                    } else {
+                        const modelType = typeof value;
+                        this.modelIsValue = value === '' || modelType === 'string' || modelType === 'number';
+                    }
+                }
                 if (this.modelIsValue) {
                     this.query = '';
                 }
