@@ -15,23 +15,23 @@ export class JsonUtils {
 
     /**
      * deserializeJson is a method to deserialize a json into a typed object. The <T> say that we want to 'capture' the object type so we can return it.
-    * More details : https://www.typescriptlang.org/docs/handbook/generics.html
+     * More details : www.typescriptlang.org/docs/handbook/generics.html
+     *
+     * /!\ this is not a recursive function !
+     *      Object into object will stay as generic objects.
+     *      Re-use this function to deserialize them into typed objects.
+     *
+     * Usage : var obj = JsonUtils.deserializeJson(new TypedObj(), aJSON);
+     *          Where TypedObj is a valid TypeScript class.
+     *          After that, obj.constructor.name will be TypedObj
+     * {
+    * Example of use : plnkr.co/edit/11b0kzypP0N9I9B8AqPx?p=preview
     *
-    * /!\ this is not a recursive function !
-    *      Object into object will stay as generic objects.
-    *      Re-use this function to deserialize them into typed objects.
-    *
-    * Usage : var obj = JsonUtils.deserializeJson(new TypedObj(), aJSON);
-    *          Where TypedObj is a valid TypeScript class.
-    *          After that, obj.constructor.name will be TypedObj
-    * {
-    * Example of use : http://plnkr.co/edit/11b0kzypP0N9I9B8AqPx?p=preview
-    *
-    * @param {Object} obj : Object to deserialize into
-    * @param {Object | string} jsonObj : a JSON;
-    *
+     * @param {Object} obj : Object to deserialize into
+     * @param {Object | string} jsonObj : a JSON;
+     *
      * @return {<T>} obj : an object of 'T' type
-    */
+     */
     public static deserializeJson<T>(obj: T, jsonObj: any): T {
 
         if (typeof jsonObj === 'string') {

@@ -41,8 +41,10 @@ export class DejaOverlayComponent implements OnDestroy {
         return this._isVisible;
     }
     @Input() public set isVisible(value: boolean) {
-        this._isVisible = value;
-        this.visibleChange.emit(this.isVisible);
+        if (this._isVisible !== value) {
+            this._isVisible = value;
+            this.visibleChange.emit(this.isVisible);
+        }
     }
 
     @Input() public overlayBackdropClass = 'cdk-overlay-transparent-backdrop';
@@ -78,6 +80,8 @@ export class DejaOverlayComponent implements OnDestroy {
     @ViewChild(ConnectedOverlayDirective) private overlay: ConnectedOverlayDirective;
 
     constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef, private overlayContainer: OverlayContainer, mediaService: MediaService) {
+        this.overlayContainer.getContainerElement().classList.add('deja-overlay-container');
+
         mediaService.isMobile$
             .takeWhile(() => this.isAlive)
             .subscribe((value) => {
@@ -163,7 +167,6 @@ export class DejaOverlayComponent implements OnDestroy {
 
     /** Affiche le dialog. */
     public show(eventOrOffsetX: MouseEvent | number, offsetY?: number) {
-        this.overlayContainer.getContainerElement().classList.add('deja-overlay-container');
         this.overlayOffsetX = offsetY !== undefined ? +eventOrOffsetX : 0;
         this.overlayOffsetY = offsetY || 0;
         const e = eventOrOffsetX as MouseEvent;
