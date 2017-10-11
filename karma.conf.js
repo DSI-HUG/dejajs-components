@@ -40,6 +40,7 @@ module.exports = function (config) {
         logLevel: config.LOG_INFO,
         autoWatch: true,
         browsers: ['ChromeHeadless'],
+        browserNoActivityTimeout: 60000,
         singleRun: false
     });
 };
