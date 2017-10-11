@@ -179,6 +179,11 @@ export class DejaRangeComponent implements ControlValueAccessor {
         }
     }
 
+    /** Force control to rebind */
+    public refresh() {
+        this.changeDetectorRef.markForCheck();
+    }
+
     // set the new selected index and emit a IRangeEvent
     protected onSelect(e: Event, index: number): void {
         if (this.disabled) {

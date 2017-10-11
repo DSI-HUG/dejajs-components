@@ -20,7 +20,7 @@ export class Diacritics {
     public static remove = (str: string) => {
         const newStr = [] as string[];
         let alter = false;
-        const length = str.length;
+        const length = (str && str.length) || 0;
         try {
             for (let i = 0; i < length; i++) {
                 const c = str.charCodeAt(i);
