@@ -21,7 +21,6 @@ before_install:
 - bash ./tools/scripts/test-latest-versions.sh
 before_script:
 - sleep 3
-- tslint --version
 - yarn run licensecheck
 - yarn run lint
 script:
