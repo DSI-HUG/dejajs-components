@@ -64,7 +64,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     /** Permet de définir un template pour l'élément de conseil ou d'affichage d'erreur. */
     @Input() public hintTemplateExternal;
     /** Définit une valeur indiquant si en reactive form le model renvoyé doit être un obeject oue une valeur */
-    @Input() public modelIsValue = false;
+    @Input() public modelIsValue: boolean;
     /** Exécuté lorsque le calcul du viewPort est terminé. */
     @Output() public viewPortChanged = new EventEmitter<IViewPort>();
     /** Exécuté lorsque l'utilisateur sélectionne ou désélectionne une ligne. */
