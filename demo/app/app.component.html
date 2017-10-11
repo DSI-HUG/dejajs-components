@@ -123,11 +123,11 @@
 
 	<deja-sidenav-header>
         <mat-menu #colorMenu="matMenu">
-			<mat-button-toggle-group id="color-menu-toggle-group" vertical>
-				<mat-button-toggle (click)="theme='hug'">HUG</mat-button-toggle>
-				<mat-button-toggle (click)="theme='pink'">Pink</mat-button-toggle>
-				<mat-button-toggle (click)="theme='teal'">Teal</mat-button-toggle>
-				<mat-button-toggle (click)="theme='amber'">Amber</mat-button-toggle>
+			<mat-button-toggle-group [(ngModel)]="theme" id="color-menu-toggle-group" vertical>
+				<mat-button-toggle value="hug">HUG</mat-button-toggle>
+				<mat-button-toggle value="pink">Pink</mat-button-toggle>
+				<mat-button-toggle value="teal">Teal</mat-button-toggle>
+				<mat-button-toggle value="amber">Amber</mat-button-toggle>
 			</mat-button-toggle-group>
 		</mat-menu>
 		<button mat-icon-button>
