@@ -55,7 +55,7 @@ export class DejaViewPortComponent implements OnDestroy {
 
     private _items: IDejaViewPortItem[];
     private element: HTMLElement;
-    private subscriptions: Subscription[] = [];
+    private isAlive = true;
     private hasButtons$ = new Subject<boolean>();
     private buttonsStep = 20;
     private mouseDown$Sub: Subscription;
@@ -120,12 +120,13 @@ export class DejaViewPortComponent implements OnDestroy {
     private set wrapperElement(element: ElementRef) {
         this.element = element.nativeElement as HTMLElement;
         this.viewPort.element$.next(this.element);
-        this.subscriptions.push(this.scroll$Sub = Observable.fromEvent(this.element, 'scroll')
+        this.scroll$Sub = Observable.fromEvent(this.element, 'scroll')
+            .takeWhile(() => this.isAlive)
             .map((event: Event) => event.target as HTMLElement)
             .map((target) => Math.round(this._isHorizontal ? target.scrollLeft : target.scrollTop))
             .subscribe((scrollPos) => {
                 this.viewPort.scrollPosition$.next(scrollPos);
-            }));
+            });
     }
 
     private get itemTemplate() { return this.itemTemplateExternal || this.itemTemplateInternal; }
@@ -164,15 +165,17 @@ export class DejaViewPortComponent implements OnDestroy {
     }
 
     constructor(private changeDetectorRef: ChangeDetectorRef, private viewPort: ViewPortService) {
-        this.subscriptions.push(Observable.fromEvent(window, 'resize')
+        Observable.fromEvent(window, 'resize')
+            .takeWhile(() => this.isAlive)
             .debounceTime(5)
             .subscribe(() => {
                 this.viewPort.deleteSizeCache();
                 this.viewPort.refresh();
                 this.changeDetectorRef.markForCheck();
-            }));
+            });
 
-        this.subscriptions.push(viewPort.viewPort$
+        viewPort.viewPort$
+            .takeWhile(() => this.isAlive)
             .subscribe((viewPortResult: IViewPort) => {
                 if (viewPort.mode !== ViewportMode.disabled) {
                     this.vpItems = viewPortResult.visibleItems as IDejaViewPortItem[];
@@ -229,9 +232,10 @@ export class DejaViewPortComponent implements OnDestroy {
                 } else {
                     this.changeDetectorRef.markForCheck();
                 }
-            }));
+            });
 
-        this.subscriptions.push(Observable.from(this.hasButtons$)
+        Observable.from(this.hasButtons$)
+            .takeWhile(() => this.isAlive)
             .filter((value) => this._hasButtons !== value)
             .do((value) => this._hasButtons = value)
             .delay(1)
@@ -287,11 +291,11 @@ export class DejaViewPortComponent implements OnDestroy {
                 this.scrollPos = 0;
             })
             .delay(1)
-            .subscribe(() => this.viewPort.refresh()));
+            .subscribe(() => this.viewPort.refresh());
     }
 
     public ngOnDestroy() {
-        this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
+        this.isAlive = false;
         if (this.mouseDown$Sub) {
             this.mouseDown$Sub.unsubscribe();
         }
