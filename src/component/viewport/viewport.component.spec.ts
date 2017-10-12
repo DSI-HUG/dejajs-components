@@ -8,7 +8,7 @@
 
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { async, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { NoConflictStyleCompatibilityMode } from '@angular/material';
 import { By } from '@angular/platform-browser';
@@ -48,60 +48,89 @@ describe('DejaViewPortComponent', () => {
         }).compileComponents();
     }));
 
-    // it('should create the component', async(() => {
-    //     const fixture = TestBed.createComponent(DejaViewportContainerComponent);
-    //     fixture.detectChanges();
-    //     const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
-    //     const viewPortInstance = viewPortDebugElement.componentInstance;
-    //     expect(viewPortInstance).toBeTruthy();
-    // }));
+    const noop = () => { };
 
-    // it('should render all items width viewport disabled', async(() => {
-    //     const fixture = TestBed.createComponent(DejaViewportContainerComponent);
-    //     const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
-    //     const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
-    //     const viewPortService = viewPortDebugElement.injector.get(ViewPortService);
+    const observeViewPort$ = (fixture: ComponentFixture<DejaViewportContainerComponent>, elementCount: number, expectedBeforeSize: number, expectedAfterSize: number, expectedViewPortSize: number) => {
+        const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
+        const viewPortService = viewPortDebugElement.injector.get(ViewPortService);
 
-    //     Observable.from(viewPortService.viewPortResult$)
-    //         .filter((result) => result.viewPortSize > 0)
-    //         .do(() => fixture.detectChanges())
-    //         .map(() => fixture.debugElement.queryAll(By.css('deja-viewport > #viewport-wrapper > .listitem')))
-    //         .subscribe((listitems) => expect(listitems.length).toEqual(100));
+        return Observable.from(viewPortService.viewPortResult$)
+            .do(() => fixture.detectChanges())
+            .filter((result) => result.viewPortSize > 0)
+            .do((result) => {
+                const listitems = fixture.debugElement.queryAll(By.css('deja-viewport > #viewport-wrapper > .listitem'));
+                expect(listitems.length).toEqual(elementCount);
+                expect(result.beforeSize).toEqual(expectedBeforeSize);
+                expect(result.afterSize).toEqual(expectedAfterSize);
+                expect(result.viewPortSize).toEqual(expectedViewPortSize);
+            });
+    };
 
-    //     viewPortInstance.viewportMode = 'disabled';
-    //     viewPortInstance.itemSize = 20;
-    //     fixture.detectChanges();
-    // }));
+    it('should create the component', async(() => {
+        const fixture = TestBed.createComponent(DejaViewportContainerComponent);
+        fixture.detectChanges();
+        const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
+        const viewPortInstance = viewPortDebugElement.componentInstance;
+        expect(viewPortInstance).toBeTruthy();
+    }));
 
-    // it('should render 7 items width viewport fixed', async(() => {
-    //     const fixture = TestBed.createComponent(DejaViewportContainerComponent);
-    //     const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
-    //     const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
-    //     const viewPortService = viewPortDebugElement.injector.get(ViewPortService);
+    it('should render all items width viewport disabled', async(() => {
+        const fixture = TestBed.createComponent(DejaViewportContainerComponent);
+        const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
+        const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
 
-    //     Observable.from(viewPortService.viewPortResult$)
-    //         .do(() => fixture.detectChanges())
-    //         .filter((result) => result.viewPortSize > 0)
-    //         .map(() => fixture.debugElement.queryAll(By.css('deja-viewport > #viewport-wrapper > .listitem')))
-    //         .subscribe((listitems) => expect(listitems.length).toEqual(7));
+        observeViewPort$(fixture, 100, 0, 1860, 140).subscribe(noop);
 
-    //     viewPortInstance.viewportMode = 'fixed';
-    //     viewPortInstance.itemSize = 20;
-    //     fixture.detectChanges();
-    // }));
+        viewPortInstance.viewportMode = 'disabled';
+        viewPortInstance.itemSize = 20;
+        fixture.detectChanges();
+    }));
 
-    it('should render width viewport variable', async(() => {
+    it('should render width viewport fixed', async(() => {
+        const fixture = TestBed.createComponent(DejaViewportContainerComponent);
+        const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
+        const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
+
+        observeViewPort$(fixture, 7, 0, 1860, 140).subscribe(() => noop);
+
+        viewPortInstance.viewportMode = 'fixed';
+        viewPortInstance.itemSize = 20;
+        fixture.detectChanges();
+    }));
+
+    it('should render width viewport variable at position 0', async(() => {
+        const fixture = TestBed.createComponent(DejaViewportContainerComponent);
+        const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
+        const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
+
+        observeViewPort$(fixture, 9, 0, 1824, 126).subscribe(() => noop);
+
+        viewPortInstance.viewportMode = 'variable';
+        fixture.detectChanges();
+    }));
+
+    it('should render width viewport variable at position 90', async(() => {
         const fixture = TestBed.createComponent(DejaViewportContainerComponent);
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
         const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
         const viewPortService = viewPortDebugElement.injector.get(ViewPortService);
 
-        Observable.from(viewPortService.viewPortResult$)
-            .do(() => fixture.detectChanges())
-            .filter((result) => result.viewPortSize > 0)
-            .map(() => fixture.debugElement.queryAll(By.css('deja-viewport > #viewport-wrapper > .listitem')))
-            .subscribe((listitems) => expect(listitems.length).toEqual(9));
+        observeViewPort$(fixture, 8, 75, 1719, 156).subscribe(noop);
 
+        viewPortService.scrollPosition$.next(90);
+        viewPortInstance.viewportMode = 'variable';
+        fixture.detectChanges();
+    }));
+
+    it('should render width viewport variable at position 1200', async(() => {
+        const fixture = TestBed.createComponent(DejaViewportContainerComponent);
+        const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
+        const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
+        const viewPortService = viewPortDebugElement.injector.get(ViewPortService);
+
+        observeViewPort$(fixture, 9, 1191, 615, 144).subscribe(noop);
+
+        viewPortService.scrollPosition$.next(1200);
         viewPortInstance.viewportMode = 'variable';
         fixture.detectChanges();
     }));
