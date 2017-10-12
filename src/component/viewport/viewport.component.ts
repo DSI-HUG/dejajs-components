@@ -33,7 +33,6 @@ export enum DejaViewPortScrollStyle {
     templateUrl: './viewport.component.html',
 })
 export class DejaViewPortComponent implements OnDestroy {
-
     protected beforeSize: number;
     protected afterSize: number;
     protected vpItems: IDejaViewPortItem[];
@@ -70,12 +69,18 @@ export class DejaViewPortComponent implements OnDestroy {
     @ViewChild('down') private downButton: ElementRef;
     @ViewChild('up') private upButton: ElementRef;
 
+    /** Set the list of models to render inside the viewport control */
+    @Input()
+    public set models(models: any[]) {
+        this.items = models ? models.map((model) => ({
+            model: model,
+        } as IDejaViewPortItem)) : [];
+    }
+
     /** Set the list of items to render inside the viewport control */
     @Input()
     public set items(items: any[]) {
-        this._items = items ? items.map((item) => ({
-            model: item,
-        } as IDejaViewPortItem)) : [];
+        this._items = items || [];
         if (this.viewPort.mode === ViewportMode.disabled) {
             this.vpItems = this._items;
         }

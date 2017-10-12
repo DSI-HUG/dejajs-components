@@ -27,12 +27,10 @@
 				<button mat-button (click)="viewport.ensureVisible(ensureIndex)">Go</button>
 			</span>
 		</div>
-		<deja-viewport #viewport [items]="news$ | async" viewportMode="auto" [direction]="isHorizontal ? 'horizontal': 'vertical'" [scrollingStyle]="hasButtons ? 'buttons' : 'scrollbar'">
+		<deja-viewport #viewport [models]="news$ | async" viewportMode="auto" [direction]="isHorizontal ? 'horizontal': 'vertical'" [scrollingStyle]="hasButtons ? 'buttons' : 'scrollbar'">
 			<ng-template #itemTemplate let-item let-size="size">
 				<news-card [item]="item.model" (imageLoaded)="imageLoaded(item)"></news-card>
 			</ng-template>
 		</deja-viewport>
 	</mat-card-content>
-	<deja-viewport [items]="['angular', 'html']">
-	</deja-viewport>
 </mat-card>
