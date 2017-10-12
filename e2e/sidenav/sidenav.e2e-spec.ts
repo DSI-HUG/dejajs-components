@@ -18,15 +18,37 @@ describe('Sidenav component', () => {
         sidenav = new SidenavPage();
     });
 
-    it('should be visible by default', () => {
+    it('should be hidden on mobile', () => {
         sidenav.navigateTo();
-        expect(element(by.css('deja-sidenav-menu')).isPresent()).toBe(true);
-        expect(element(by.css('deja-sidenav-menu')).isDisplayed()).toBe(true);
+        browser.driver.manage().window().setSize(375, 667);
+        browser.sleep(500);
+
+        Util.waitForElement('deja-sidenav-menu');
+        expect(element(by.css('deja-sidenav-menu')).isDisplayed()).toBe(false, 'Should be hidden');
+
+        browser.driver.manage().window().setSize(1024, 768);
+        browser.sleep(500);
+    });
+
+    it('should be minimize on tablet', () => {
+        Util.waitForElement('deja-sidenav-menu');
+        expect(element(by.css('deja-sidenav-menu')).isDisplayed()).toBe(true, 'Should be visible');
+        expect(element(by.css('deja-sidenav-menu mat-list-item.active .mat-list-text')).isDisplayed()).toBe(false, 'Should be minimize');
+    });
+
+    it('should be open on desktop', () => {
+        browser.driver.manage().window().setSize(1250, 500);
+        browser.sleep(500);
+
+        Util.waitForElement('deja-sidenav-menu mat-list-item.active');
+        expect(element(by.css('deja-sidenav-menu mat-list-item.active')).isPresent()).toBe(true, 'Should be visible');
+        expect(element(by.css('deja-sidenav-menu mat-list-item.active .mat-list-text')).isDisplayed()).toBe(true, 'Should be open');
+
+        browser.driver.manage().window().setSize(1024, 768);
+        browser.sleep(500);
     });
 
     it('should open on menu click', () => {
-        sidenav.navigateTo();
-
         Util.waitForElement('deja-sidenav-menu mat-list-item.active');
         expect(element(by.css('deja-sidenav-menu mat-list-item.active')).isPresent()).toBe(true);
         expect(element(by.css('deja-sidenav-menu mat-list-item.active .mat-list-text')).isDisplayed()).toBe(false, 'Should be close by default');
@@ -38,34 +60,5 @@ describe('Sidenav component', () => {
         element(by.css('mat-sidenav .header-menu-btn')).click();
         browser.sleep(500);
         expect(element(by.css('deja-sidenav-menu mat-list-item.active .mat-list-text')).isDisplayed()).toBe(false, 'Should be close');
-    });
-
-    it('should be open by default on desktop', () => {
-        sidenav.navigateTo();
-        browser.driver.manage().window().setSize(1920, 1080);
-        browser.sleep(500);
-
-        Util.waitForElement('deja-sidenav-menu mat-list-item.active');
-        expect(element(by.css('deja-sidenav-menu mat-list-item.active')).isPresent()).toBe(true);
-        expect(element(by.css('deja-sidenav-menu mat-list-item.active .mat-list-text')).isDisplayed()).toBe(true, 'Should be open');
-
-        browser.driver.manage().window().setSize(1024, 768);
-        browser.sleep(500);
-    });
-
-    it('should be hidden on mobile', () => {
-        sidenav.navigateTo();
-        browser.driver.manage().window().setSize(375, 667);
-        browser.sleep(500);
-
-        Util.waitForElement('deja-sidenav-menu');
-        expect(element(by.css('deja-sidenav-menu')).isDisplayed()).toBe(false, 'Should be hidden');
-
-        element(by.css('mat-toolbar .menu-btn')).click();
-        browser.sleep(500);
-        expect(element(by.css('deja-sidenav-menu')).isDisplayed()).toBe(true, 'Should be visible');
-
-        browser.driver.manage().window().setSize(1024, 768);
-        browser.sleep(500);
     });
 });
