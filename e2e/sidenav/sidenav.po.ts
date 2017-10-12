@@ -8,8 +8,8 @@
 
 import { browser } from 'protractor';
 
-export class TagPage {
+export class SidenavPage {
     public navigateTo() {
-        browser.get('/tag');
+        browser.get('/');
     }
 }

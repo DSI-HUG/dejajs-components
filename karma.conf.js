@@ -13,6 +13,10 @@ module.exports = function (config) {
             require('karma-mocha-reporter'),
             require('@angular/cli/plugins/karma')
         ],
+        files: [		
+            // Include a Material theme in the test suite.		
+            {pattern: 'node_modules/@angular/material/prebuilt-themes/indigo-pink.css', included: true, watched: true},		
+        ],
         client: {
             clearContext: false // leave Jasmine Spec Runner output visible in browser
         },
@@ -34,12 +38,19 @@ module.exports = function (config) {
         angularCli: {
             environment: 'dev'
         },
-        reporters: ['progress', 'kjhtml', 'mocha'],
+        reporters: config.angularCli && config.angularCli.codeCoverage
+        ? ['mocha', 'coverage-istanbul']		
+        : ['mocha', 'kjhtml'],		
+        // reporter options		
+        mochaReporter: {		
+            output: 'autowatch'		
+        },
         port: 9876,
         colors: true,
         logLevel: config.LOG_INFO,
         autoWatch: true,
         browsers: ['ChromeHeadless'],
+        browserNoActivityTimeout: 60000,
         singleRun: false
     });
 };

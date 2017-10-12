@@ -6,10 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { browser } from 'protractor';
+import {Observable} from 'rxjs/Observable';
 
-export class TagPage {
-    public navigateTo() {
-        browser.get('/tag');
-    }
+export class MockMediaService {
+    public isMobile$: Observable<boolean> = Observable.of(false);
 }

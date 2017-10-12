@@ -63,6 +63,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @Input() public placeHolderTemplateExternal;
     /** Permet de définir un template pour l'élément de conseil ou d'affichage d'erreur. */
     @Input() public hintTemplateExternal;
+    /** Définit une valeur indiquant si en reactive form le model renvoyé doit être un obeject oue une valeur */
+    @Input() public modelIsValue: boolean;
     /** Exécuté lorsque le calcul du viewPort est terminé. */
     @Output() public viewPortChanged = new EventEmitter<IViewPort>();
     /** Exécuté lorsque l'utilisateur sélectionne ou désélectionne une ligne. */
@@ -141,8 +143,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     private delaySearchTrigger$ = new BehaviorSubject<number>(250);
 
     private _selectedItemsPosition = DejaSelectSelectionPosition.above;
-
-    private modelIsValue = false;
 
     private _positions = DejaConnectionPositionPair.default;
 
@@ -339,8 +339,16 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             .takeWhile(() => this._isAlive)
             .map(([value]) => value)
             .do((value) => {
-                const modelType = typeof value;
-                this.modelIsValue = value === '' || modelType === 'string' || modelType === 'number';
+                if (this.modelIsValue === undefined) {
+                    if (value instanceof Array) {
+                        const av = value || [];
+                        const modelType = av.length && typeof av[0];
+                        this.modelIsValue = modelType && modelType === 'string' || modelType === 'number';
+                    } else {
+                        const modelType = typeof value;
+                        this.modelIsValue = value === '' || modelType === 'string' || modelType === 'number';
+                    }
+                }
                 if (this.modelIsValue) {
                     this.query = '';
                 }
