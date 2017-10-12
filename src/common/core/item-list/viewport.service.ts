@@ -547,6 +547,7 @@ export class ViewPortService implements OnDestroy {
                 if (items && items.length && (listSize === 'auto' || listSize < 2 * ViewPortService.itemDefaultSize)) {
                     // Set the viewlist to the maximum height to measure the real max-height defined in the css
                     // Use a blank div to do that
+                    consoleLog(`viewPortResult for measure ${JSON.stringify(this.measureViewPort)}`);
                     this.viewPortResult$.next(this.measureViewPort);
                     // Wait next life cycle for the result
                     return Observable.timer(1)
@@ -570,6 +571,7 @@ export class ViewPortService implements OnDestroy {
                             } else if (this.mode === ViewportMode.auto) {
 
                             }
+                            console.log(`return`);
                             return { element, scrollPos, items, maxSizeValue, itemDefaultSize, ensureParams };
                         });
                 } else {
@@ -579,6 +581,7 @@ export class ViewPortService implements OnDestroy {
             })
             .switchMap(({ element, scrollPos, items, maxSizeValue, itemDefaultSize, ensureParams }) => calcViewPort$(items, maxSizeValue, scrollPos, element, itemDefaultSize, ensureParams))
             .subscribe((viewPort: IViewPort) => {
+                consoleLog(`viewPortResult final ${JSON.stringify(viewPort)}`);
                 this.viewPortResult$.next(viewPort);
             }, ((error) => {
                 console.error(error);
