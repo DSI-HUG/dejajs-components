@@ -1,3 +1,9 @@
+### 2.15.0 (2017-10-12)
+
+##### BREAKING CHANGES
+
+* **Dependencies:** upgrade dependencies ([4aad8a11](https://github.com/DSI-HUG/dejajs-components/commit/4aad8a112ffa8c408ce5aeebb563a80badde8826))
+
 #### 2.14.1 (2017-10-12)
 
 ##### Continuous Integration
