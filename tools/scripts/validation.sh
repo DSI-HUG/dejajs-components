@@ -25,10 +25,10 @@
 
 set -e
 
-license="yarn run licensecheck"
-lint="yarn run lint"
-test="yarn run test"
-e2e="yarn run e2e"
-lib="yarn run build:lib"
+license="yarn run licensecheck -s"
+lint="yarn run lint -s"
+test="yarn run test -s"
+e2e="yarn run e2e -s"
+lib="yarn run build:lib -s"
 
-node_modules/.bin/concurrently -n "license,lint,test,e2e,build:lib" -s "$license" "$lint" "$test" "$e2e" "$lib"
+node_modules/.bin/concurrently -p "[{name}]" -n "license,lint,test,e2e,build:lib" "$license" "$lint"
