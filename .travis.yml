@@ -26,8 +26,7 @@ before_script:
 - yarn run licensecheck
 - yarn run lint
 script:
-- yarn run test
-- yarn run e2e
+- bash ./tools/scripts/test.sh
 - yarn run build:lib
 env:
   global:
