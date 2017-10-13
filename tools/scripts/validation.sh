@@ -31,4 +31,4 @@ test="yarn run test"
 e2e="yarn run e2e"
 lib="yarn run build:lib"
 
-node_modules/.bin/concurrently -p "[{name}]" -n "license,lint,test,e2e,build:lib" "$license" "$lint"
+node_modules/.bin/concurrently -p "[{name}]" -n "license,lint,test,e2e,build:lib" "$license" "$lint" "$test" "$e2e" "$lib"
