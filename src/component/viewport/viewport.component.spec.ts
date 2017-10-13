@@ -14,7 +14,7 @@ import { NoConflictStyleCompatibilityMode } from '@angular/material';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Observable } from 'rxjs/Observable';
-import { IViewPortItem, ViewPortService } from '../../common/core/item-list/viewport.service';
+import { IViewPortItem, ViewPortService, ViewportMode } from '../../common/core/item-list/viewport.service';
 import { DejaViewPortModule } from './index';
 import { DejaViewPortComponent } from './viewport.component';
 
@@ -106,7 +106,10 @@ describe('DejaViewPortComponent', () => {
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
         const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
 
-        observeViewPort$(fixture, 51, 0, 980, 1020, 0, 50).subscribe(noop);
+        observeViewPort$(fixture, 51, 0, 980, 1020, 0, 50).subscribe(() => {
+            // tslint:disable-next-line:no-string-literal
+            expect(viewPortInstance['clientSize']).toEqual(1000);
+        });
 
         viewPortInstance.viewportMode = 'fixed';
         viewPortInstance.itemSize = 20;
@@ -122,6 +125,8 @@ describe('DejaViewPortComponent', () => {
         observeViewPort$(fixture, 100, 0, 1860, 140, 0, 99).subscribe(noop);
 
         viewPortInstance.viewportMode = 'disabled';
+        expect(ViewportMode.disabled === viewPortInstance.viewportMode as any);
+
         viewPortInstance.itemSize = 20;
         fixture.detectChanges();
     }));
@@ -134,6 +139,8 @@ describe('DejaViewPortComponent', () => {
         observeViewPort$(fixture, 7, 0, 1860, 140, 0, 6).subscribe(() => noop);
 
         viewPortInstance.viewportMode = 'fixed';
+        expect(ViewportMode.fixed === viewPortInstance.viewportMode as any);
+
         viewPortInstance.itemSize = 20;
         fixture.detectChanges();
     }));
@@ -158,6 +165,8 @@ describe('DejaViewPortComponent', () => {
         observeViewPort$(fixture, 9, 0, 1824, 126, 0, 8).subscribe(() => noop);
 
         viewPortInstance.viewportMode = 'variable';
+        expect(ViewportMode.variable === viewPortInstance.viewportMode as any);
+
         fixture.detectChanges();
     }));
 
@@ -242,8 +251,9 @@ describe('DejaViewPortComponent', () => {
         const fixture = TestBed.createComponent(DejaViewportAutoContainerComponent);
         fixture.detectChanges();
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
-        const viewPortInstance = viewPortDebugElement.componentInstance;
+        const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
         expect(viewPortInstance).toBeTruthy();
+        expect(ViewportMode.auto === viewPortInstance.viewportMode as ViewportMode);
     }));
 
     it('should render with viewport auto at position 0', async(() => {
@@ -267,10 +277,40 @@ describe('DejaViewPortComponent', () => {
         const fixture = TestBed.createComponent(DejaViewportAutoContainerComponent);
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
         const viewPortService = viewPortDebugElement.injector.get(ViewPortService);
+        const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
 
-        observeViewPort$(fixture, 6, 16480, 26532, 954, 412, 417).subscribe(noop);
+        observeViewPort$(fixture, 6, 16480, 26532, 954, 412, 417).subscribe(() => {
+            // tslint:disable-next-line:no-string-literal
+            expect(viewPortInstance['clientSize']).toEqual(800);
+        });
 
         viewPortService.scrollPosition$.next(16500);
+        fixture.detectChanges();
+    }));
+
+    it('should able to refresh the viewport and return the same values', async(() => {
+        const fixture = TestBed.createComponent(DejaViewportAutoContainerComponent);
+        const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
+        const viewPortService = viewPortDebugElement.injector.get(ViewPortService);
+        const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
+        let pass = 0;
+
+        observeViewPort$(fixture, 2, 9960, 42030, 1026, 249, 250).subscribe(() => {
+            if (++pass === 1) {
+                // tslint:disable-next-line:no-string-literal
+                viewPortInstance.refreshViewPort(viewPortInstance['_items'][249], true);
+            } else if (++pass === 2) {
+                // tslint:disable-next-line:no-string-literal
+                viewPortInstance.refreshViewPort(viewPortInstance['_items'][250], true);
+            } else if (++pass === 3) {
+                // tslint:disable-next-line:no-string-literal
+                viewPortInstance.refreshViewPort(viewPortInstance['_items'][0], true);
+            }
+
+        });
+
+        viewPortService.scrollPosition$.next(10000);
+        viewPortInstance.refreshViewPort();
         fixture.detectChanges();
     }));
 });
