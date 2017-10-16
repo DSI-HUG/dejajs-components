@@ -470,16 +470,23 @@ export class ViewPortService implements OnDestroy {
             .do((value) => consoleLog(`maxSize ${value}`));
 
         const refresh$ = Observable.from(this.refresh$)
-            .do((params: IViewPortRefreshParams) => {
+            .switchMap((params: IViewPortRefreshParams) => {
                 this.ignoreScrollCount = 0;
                 if (params) {
                     if (params.clearMeasuredSize) {
-                        this.lastCalculatedSize = undefined;
+                        return Observable.from(this.items$)
+                            .do((items) => {
+                                this.lastCalculatedSize = undefined;
+                                items.forEach((item) => item.size = undefined);
+                            })
+                            .map(() => params);
                     }
+
                     if (params.items) {
                         params.items.forEach((item) => item.size = undefined);
                     }
                 }
+                return Observable.of(params);
             })
             .do(() => consoleLog('refresh'));
 
