@@ -349,7 +349,7 @@ export class DejaViewPortComponent implements OnDestroy {
         Observable.merge(downButton$, upButton$)
             .delay(10)
             .subscribe((needToRefresh) => {
-                if (needToRefresh) { 
+                if (needToRefresh) {
                     this.viewPort.refresh();
                 }
             });
