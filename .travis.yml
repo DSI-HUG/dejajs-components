@@ -45,8 +45,6 @@ after_deploy:
 - bash ./tools/scripts/tag.sh
 - bash ./tools/scripts/deploy.sh
 after_failure:
-- cat license.log && rm license.log
-- cat lint.log && rm lint.log
-- cat test.log && rm test.log
-- cat e2e.log && rm e2e.log
-- cat lib.log && rm lib.log
+- bash ./tools/scripts/logs.sh
+after_success:
+- bash ./tools/scripts/logs.sh
