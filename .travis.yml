@@ -23,12 +23,8 @@ before_script:
 - "export DISPLAY=:99.0"
 - /sbin/start-stop-daemon --start --quiet --pidfile /tmp/cucumber_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 3000x1200x16
 - sleep 3
-- yarn run licensecheck
-- yarn run lint
 script:
-- yarn run test
-- yarn run e2e
-- yarn run build:lib
+- bash ./tools/scripts/validation.sh
 env:
   global:
   - ENCRYPTION_LABEL: d9215e5535f8
@@ -47,6 +43,4 @@ deploy:
 after_deploy:
 - cd ..
 - bash ./tools/scripts/tag.sh
-- bash ./tools/scripts/deploy-demo.sh
-- bash ./tools/scripts/deploy-doc.sh
-- bash ./tools/scripts/deploy-test.sh
+- bash ./tools/scripts/deploy.sh
