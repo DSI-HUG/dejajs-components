@@ -7,7 +7,7 @@
  */
 
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { NoConflictStyleCompatibilityMode } from '@angular/material';
@@ -29,6 +29,10 @@ import { DejaViewPortComponent } from './viewport.component';
                 </deja-viewport>`,
 })
 class DejaViewportContainerComponent {
+    @HostBinding('style.height') public height = '120px';
+    @HostBinding('style.width') public width = '1000px';
+    @HostBinding('style.overflow') public overflow = 'visible';
+
     public items = Array.from({ length: 100 }, (_v, k) => ({
         label: k,
         size: 10 + k % 20,
@@ -45,6 +49,9 @@ class DejaViewportContainerComponent {
                 </deja-viewport>`,
 })
 class DejaViewportAutoContainerComponent {
+    @HostBinding('style.height') public height = '120px';
+    @HostBinding('style.width') public width = '1000px';
+    @HostBinding('style.overflow') public overflow = 'visible';
     public models: string[];
 
     constructor() {
@@ -77,7 +84,7 @@ describe('DejaViewPortComponent', () => {
 
     const observeViewPort$ = (fixture: ComponentFixture<DejaViewportContainerComponent>, elementCount: number, expectedBeforeSize: number, expectedAfterSize: number, expectedViewPortSize: number, expectedViewPortStartIndex: number, expectedViewPortEndIndex: number) => {
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
-        const viewPortService = viewPortDebugElement.injector.get(ViewPortService);
+        const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
 
         return Observable.from(viewPortService.viewPortResult$)
             .do(() => fixture.detectChanges())
@@ -174,7 +181,7 @@ describe('DejaViewPortComponent', () => {
         const fixture = TestBed.createComponent(DejaViewportContainerComponent);
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
         const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
-        const viewPortService = viewPortDebugElement.injector.get(ViewPortService);
+        const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
 
         observeViewPort$(fixture, 8, 75, 1719, 156, 6, 13).subscribe(noop);
 
@@ -187,7 +194,7 @@ describe('DejaViewPortComponent', () => {
         const fixture = TestBed.createComponent(DejaViewportContainerComponent);
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
         const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
-        const viewPortService = viewPortDebugElement.injector.get(ViewPortService);
+        const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
 
         observeViewPort$(fixture, 9, 1191, 615, 144, 62, 70).subscribe(noop);
 
@@ -231,7 +238,7 @@ describe('DejaViewPortComponent', () => {
 
     const observeViewPort$ = (fixture: ComponentFixture<DejaViewportAutoContainerComponent>, elementCount: number, expectedBeforeSize: number, expectedAfterSize: number, expectedViewPortSize: number, expectedViewPortStartIndex: number, expectedViewPortEndIndex: number) => {
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
-        const viewPortService = viewPortDebugElement.injector.get(ViewPortService);
+        const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
 
         return Observable.from(viewPortService.viewPortResult$)
             .do(() => fixture.detectChanges())
@@ -265,7 +272,7 @@ describe('DejaViewPortComponent', () => {
     it('should render with viewport auto at position 10000', async(() => {
         const fixture = TestBed.createComponent(DejaViewportAutoContainerComponent);
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
-        const viewPortService = viewPortDebugElement.injector.get(ViewPortService);
+        const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
 
         observeViewPort$(fixture, 2, 9960, 42030, 1026, 249, 250).subscribe(noop);
 
@@ -276,7 +283,7 @@ describe('DejaViewPortComponent', () => {
     it('should render with viewport auto at position 16500', async(() => {
         const fixture = TestBed.createComponent(DejaViewportAutoContainerComponent);
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
-        const viewPortService = viewPortDebugElement.injector.get(ViewPortService);
+        const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
         const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
 
         observeViewPort$(fixture, 6, 16480, 26532, 954, 412, 417).subscribe(() => {
@@ -291,7 +298,7 @@ describe('DejaViewPortComponent', () => {
     it('should able to refresh the viewport and return the same values', async(() => {
         const fixture = TestBed.createComponent(DejaViewportAutoContainerComponent);
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
-        const viewPortService = viewPortDebugElement.injector.get(ViewPortService);
+        const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
         const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
         let pass = 0;
 
@@ -317,7 +324,7 @@ describe('DejaViewPortComponent', () => {
         const fixture = TestBed.createComponent(DejaViewportAutoContainerComponent);
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
         const viewPortElement = viewPortDebugElement.nativeElement;
-        const viewPortService = viewPortDebugElement.injector.get(ViewPortService);
+        const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
         const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
         const wrapperDebugElement = fixture.debugElement.query(By.css('deja-viewport > #viewport-wrapper'));
         const wrapperElement = wrapperDebugElement.nativeElement as HTMLElement;
