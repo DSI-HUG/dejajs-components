@@ -186,5 +186,4 @@ describe('DejaOverlayComponent', () => {
         fixture.detectChanges();
         comp.close();
     });
-
 });
