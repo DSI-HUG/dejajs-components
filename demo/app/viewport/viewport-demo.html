@@ -22,7 +22,7 @@
 			<span fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1rem">
 				<span>Ensure index:</span>
 				<mat-form-field fxFlex="0 0 3rem">
-					<input matInput type="number" [(ngModel)]="ensureIndex">
+					<input matInput type="number" [(ngModel)]="ensureIndex" autocomplete="off">
 				</mat-form-field>
 				<button mat-button (click)="viewport.ensureVisible(ensureIndex)">Go</button>
 			</span>

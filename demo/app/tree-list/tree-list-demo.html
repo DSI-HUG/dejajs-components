@@ -327,7 +327,7 @@
 			<div class="flexContainer" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1rem">
 				<span fxFlex="1 1 auto">An exemple with 10000 auto sized templatized items</span>
 				<mat-form-field fxFlex="0 0 5rem">
-					<input matInput type="number" [(ngModel)]="ensureIndex">
+					<input matInput type="number" [(ngModel)]="ensureIndex" autocomplete="off">
 				</mat-form-field>
 				<button fxFlex="0 0 auto" mat-button (click)="news.ensureItemVisible(ensureIndex)">Ensure index</button>
 			</div>

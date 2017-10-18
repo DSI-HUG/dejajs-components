@@ -843,7 +843,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             .filter(() => this.selectingItemIndex === undefined)
             .subscribe(() => {
                 this.onTouchedCallback();
-                this.hideDropDown$.next(10);
+                // this.hideDropDown$.next(10);
             });
 
         Observable.fromEvent(this.htmlInputElement, 'keydown')
