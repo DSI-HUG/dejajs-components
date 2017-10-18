@@ -139,6 +139,14 @@ export class DejaTileComponent implements OnDestroy {
                 .subscribe(() => {
                     this.changeDetectorRef.markForCheck();
                 });
+
+            // Refresh
+            Observable.from(tile.refresh$)
+                .takeWhile(() => this.isAlive && !!this._tile)
+                .debounceTime(1)
+                .subscribe(() => {
+                    this.changeDetectorRef.markForCheck();
+                });
         }
     }
 
