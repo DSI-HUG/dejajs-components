@@ -22,7 +22,7 @@ import { DejaViewPortComponent } from './viewport.component';
 // EnsureVisible
 
 @Component({
-    template: `<deja-viewport style="height: 120px;width: 1000px;font-family:'Times New Roman';font-size:16px;display:flex;flex-grow:0" [items]="items">
+    template: `<deja-viewport style="height: 120px;width: 1000px;" [items]="items">
                     <ng-template #itemTemplate let-item>
                         Item {{ item.label }}
                     </ng-template>
@@ -36,7 +36,7 @@ class DejaViewportContainerComponent {
 }
 
 @Component({
-    template: `<deja-viewport style="height: 800px;width: 100px;font-family:'Times New Roman';font-size:16px;display:flex;flex-grow:0" [models]="models" viewportMode="auto">
+    template: `<deja-viewport style="height: 800px;width: 100px" [models]="models" viewportMode="auto">
                     <ng-template #itemTemplate let-item>
                         <div style="width:100%;overflow:hidden;position:relative;" [style.height.px]="item.model">
                             Size is {{ item.model }}px
@@ -259,109 +259,109 @@ describe('DejaViewPortComponent', () => {
         fixture.detectChanges();
     }));
 
-    // it('should render with viewport auto at position 10000', async(() => {
-    //     const fixture = TestBed.createComponent(DejaViewportAutoContainerComponent);
-    //     const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
-    //     const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
+    it('should render with viewport auto at position 10000', async(() => {
+        const fixture = TestBed.createComponent(DejaViewportAutoContainerComponent);
+        const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
+        const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
 
-    //     observeViewPort$(fixture, 2, 9960, 42030, 1026, 249, 250).subscribe(noop);
+        observeViewPort$(fixture, 29, 9986, 28840, 820, 250, 278).subscribe(noop);
 
-    //     viewPortService.scrollPosition$.next(10000);
-    //     fixture.detectChanges();
-    // }));
+        viewPortService.scrollPosition$.next(10000);
+        fixture.detectChanges();
+    }));
 
-    // it('should render with viewport auto at position 16500', async(() => {
-    //     const fixture = TestBed.createComponent(DejaViewportAutoContainerComponent);
-    //     const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
-    //     const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
-    //     const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
+    it('should render with viewport auto at position 16500', async(() => {
+        const fixture = TestBed.createComponent(DejaViewportAutoContainerComponent);
+        const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
+        const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
+        const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
 
-    //     observeViewPort$(fixture, 6, 16480, 26532, 954, 412, 417).subscribe(() => {
-    //         // tslint:disable-next-line:no-string-literal
-    //         expect(viewPortInstance['clientSize']).toEqual(800);
-    //     });
+        observeViewPort$(fixture, 29, 16480, 22360, 828, 412, 440).subscribe(() => {
+            // tslint:disable-next-line:no-string-literal
+            expect(viewPortInstance['clientSize']).toEqual(800);
+        });
 
-    //     viewPortService.scrollPosition$.next(16500);
-    //     fixture.detectChanges();
-    // }));
+        viewPortService.scrollPosition$.next(16500);
+        fixture.detectChanges();
+    }));
 
-    // it('should able to refresh the viewport and return the same values', async(() => {
-    //     const fixture = TestBed.createComponent(DejaViewportAutoContainerComponent);
-    //     const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
-    //     const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
-    //     const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
-    //     let pass = 0;
+    it('should able to refresh the viewport and return the same values', async(() => {
+        const fixture = TestBed.createComponent(DejaViewportAutoContainerComponent);
+        const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
+        const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
+        const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
+        let pass = 0;
 
-    //     observeViewPort$(fixture, 2, 9960, 42030, 1026, 249, 250).subscribe(() => {
-    //         if (++pass === 1) {
-    //             // tslint:disable-next-line:no-string-literal
-    //             viewPortInstance.refreshViewPort(viewPortInstance['_items'][249], true);
-    //         } else if (++pass === 2) {
-    //             // tslint:disable-next-line:no-string-literal
-    //             viewPortInstance.refreshViewPort(viewPortInstance['_items'][250], true);
-    //         } else if (++pass === 3) {
-    //             // tslint:disable-next-line:no-string-literal
-    //             viewPortInstance.refreshViewPort(viewPortInstance['_items'][0], true);
-    //         }
-    //     });
+        observeViewPort$(fixture, 29, 9986, 28840, 820, 250, 278).subscribe(() => {
+            if (++pass === 1) {
+                // tslint:disable-next-line:no-string-literal
+                viewPortInstance.refreshViewPort(viewPortInstance['_items'][249], true);
+            } else if (++pass === 2) {
+                // tslint:disable-next-line:no-string-literal
+                viewPortInstance.refreshViewPort(viewPortInstance['_items'][250], true);
+            } else if (++pass === 3) {
+                // tslint:disable-next-line:no-string-literal
+                viewPortInstance.refreshViewPort(viewPortInstance['_items'][0], true);
+            }
+        });
 
-    //     viewPortService.scrollPosition$.next(10000);
-    //     viewPortInstance.refreshViewPort();
-    //     fixture.detectChanges();
-    // }));
+        viewPortService.scrollPosition$.next(10000);
+        viewPortInstance.refreshViewPort();
+        fixture.detectChanges();
+    }));
 
-    // it('should able to refresh the viewport when the window is resized or scroll', async(() => {
-    //     const fixture = TestBed.createComponent(DejaViewportAutoContainerComponent);
-    //     const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
-    //     const viewPortElement = viewPortDebugElement.nativeElement;
-    //     const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
-    //     const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
-    //     const wrapperDebugElement = fixture.debugElement.query(By.css('deja-viewport > #viewport-wrapper'));
-    //     const wrapperElement = wrapperDebugElement.nativeElement as HTMLElement;
-    //     let pass = 0;
-    //     let elementCount = 2;
-    //     let expectedBeforeSize = 9960;
-    //     let expectedAfterSize = 42030;
-    //     let expectedViewPortSize = 1026;
-    //     let expectedViewPortStartIndex = 249;
-    //     let expectedViewPortEndIndex = 250;
+    it('should able to refresh the viewport when the window is resized or scroll', async(() => {
+        const fixture = TestBed.createComponent(DejaViewportAutoContainerComponent);
+        const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
+        const viewPortElement = viewPortDebugElement.nativeElement;
+        const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
+        const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
+        const wrapperDebugElement = fixture.debugElement.query(By.css('deja-viewport > #viewport-wrapper'));
+        const wrapperElement = wrapperDebugElement.nativeElement as HTMLElement;
+        let pass = 0;
+        let elementCount = 29;
+        let expectedBeforeSize = 9986;
+        let expectedAfterSize = 28840;
+        let expectedViewPortSize = 820;
+        let expectedViewPortStartIndex = 250;
+        let expectedViewPortEndIndex = 278;
 
-    //     Observable.from(viewPortService.viewPortResult$)
-    //         .do(() => fixture.detectChanges())
-    //         .filter((result) => result.visibleItems && result.visibleItems.length && result.visibleItems[0].size > 0) // items must be sized
-    //         .subscribe((result) => {
-    //             const listitems = fixture.debugElement.queryAll(By.css('deja-viewport > #viewport-wrapper > .listitem'));
-    //             expect(listitems.length).toEqual(elementCount);
-    //             expect(result.beforeSize).toEqual(expectedBeforeSize);
-    //             expect(result.afterSize).toEqual(expectedAfterSize);
-    //             expect(result.viewPortSize).toEqual(expectedViewPortSize);
-    //             expect(result.startIndex).toEqual(expectedViewPortStartIndex);
-    //             expect(result.endIndex).toEqual(expectedViewPortEndIndex);
-    //             if (++pass === 1) {
-    //                 elementCount = 23;
-    //                 expectedBeforeSize = 9996;
-    //                 expectedAfterSize = 29080;
-    //                 expectedViewPortSize = 836;
-    //                 expectedViewPortStartIndex = 250;
-    //                 expectedViewPortEndIndex = 272;
-    //                 viewPortElement.style.width = '1500px';
-    //                 const event = new CustomEvent('resize', {});
-    //                 window.dispatchEvent(event);
-    //                 viewPortInstance.refresh();
-    //             } else if (pass === 2) {
-    //                 elementCount = 28;
-    //                 expectedBeforeSize = 996;
-    //                 expectedAfterSize = 37752;
-    //                 expectedViewPortSize = 806;
-    //                 expectedViewPortStartIndex = 26;
-    //                 expectedViewPortEndIndex = 53;
-    //                 wrapperElement.scrollTop = 1000;
-    //                 const event = new CustomEvent('scroll', {});
-    //                 wrapperElement.dispatchEvent(event);
-    //             }
-    //         });
+        Observable.from(viewPortService.viewPortResult$)
+            .do(() => fixture.detectChanges())
+            .filter((result) => result.visibleItems && result.visibleItems.length && result.visibleItems[0].size > 0) // items must be sized
+            .subscribe((result) => {
+                const listitems = fixture.debugElement.queryAll(By.css('deja-viewport > #viewport-wrapper > .listitem'));
+                expect(listitems.length).toEqual(elementCount);
+                expect(result.beforeSize).toEqual(expectedBeforeSize);
+                expect(result.afterSize).toEqual(expectedAfterSize);
+                expect(result.viewPortSize).toEqual(expectedViewPortSize);
+                expect(result.startIndex).toEqual(expectedViewPortStartIndex);
+                expect(result.endIndex).toEqual(expectedViewPortEndIndex);
+                if (++pass === 1) {
+                    elementCount = 29;
+                    expectedBeforeSize = 9986;
+                    expectedAfterSize = 28840;
+                    expectedViewPortSize = 820;
+                    expectedViewPortStartIndex = 250;
+                    expectedViewPortEndIndex = 278;
+                    viewPortElement.style.width = '1500px';
+                    const event = new CustomEvent('resize', {});
+                    window.dispatchEvent(event);
+                    viewPortInstance.refresh();
+                } else if (pass === 2) {
+                    elementCount = 29;
+                    expectedBeforeSize = 986;
+                    expectedAfterSize = 37486;
+                    expectedViewPortSize = 820;
+                    expectedViewPortStartIndex = 25;
+                    expectedViewPortEndIndex = 53;
+                    wrapperElement.scrollTop = 1000;
+                    const event = new CustomEvent('scroll', {});
+                    wrapperElement.dispatchEvent(event);
+                }
+            });
 
-    //     viewPortService.scrollPosition$.next(10000);
-    //     fixture.detectChanges();
-    // }));
+        viewPortService.scrollPosition$.next(10000);
+        fixture.detectChanges();
+    }));
 });
