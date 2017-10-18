@@ -27,6 +27,7 @@ export class DejaTile implements IDejaTile {
     public pixelBounds$ = new BehaviorSubject<Rect>(null);
     public isTemporary = false;
     public fading = false;
+    public refresh$ = new Subject();
 
     private _id: string;
     private _isCutted = false;
@@ -64,7 +65,7 @@ export class DejaTile implements IDejaTile {
     }
 
     public set color(value: string) {
-        this._color  = value;
+        this._color = value;
     }
 
     public get color() {
@@ -227,5 +228,9 @@ export class DejaTile implements IDejaTile {
                 selected: this.isSelected || undefined,
             }
         } as IDejaTile;
+    }
+
+    public refresh() {
+        this.refresh$.next();
     }
 }
