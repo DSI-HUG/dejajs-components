@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
 import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import 'rxjs/add/operator/delay';
@@ -243,7 +243,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     @Input()
     /** Définit le nombre de lignes à sauter en cas de pression sur les touches PageUp ou PageDown */
     public set pageSize(value: number) {
-        this._pageSize = value;
+        this._pageSize = coerceNumberProperty(value);
     }
 
     /** Retourne le nombre de lignes à sauter en cas de pression sur les touches PageUp ou PageDown */
