@@ -24,7 +24,7 @@ export class DejaViewPortDemoComponent {
     @ViewChild('viewport') private viewport: DejaViewPortComponent;
 
     protected exampleValue = `
-    <deja-viewport [items]="news$ | async" itemSize="120">
+    <deja-viewport [models]="news$ | async" itemSize="120">
         <ng-template #itemTemplate let-item>
             <div *ngIf="item" class="news" [attr.id]="id">
                 <img [attr.src]="item.urlsToLogos.medium" class="logo">

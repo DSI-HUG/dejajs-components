@@ -67,8 +67,8 @@
 				<span mat-line>Grid</span>
 			</mat-list-item>
             <mat-list-item title="Overlay" routerLink="/overlay" routerLinkActive="active">
-                <mat-icon md-list-icon>menu</mat-icon>
-                <span md-line>Overlay</span>
+                <mat-icon mat-list-icon>menu</mat-icon>
+                <span mat-line>Overlay</span>
             </mat-list-item>
 			<mat-list-item title="Message Box" routerLink="/message-box" routerLinkActive="active">
 				<mat-icon mat-list-icon>message</mat-icon>
@@ -123,11 +123,11 @@
 
 	<deja-sidenav-header>
         <mat-menu #colorMenu="matMenu">
-			<mat-button-toggle-group id="color-menu-toggle-group" vertical>
-				<mat-button-toggle (click)="theme='hug'">HUG</mat-button-toggle>
-				<mat-button-toggle (click)="theme='pink'">Pink</mat-button-toggle>
-				<mat-button-toggle (click)="theme='teal'">Teal</mat-button-toggle>
-				<mat-button-toggle (click)="theme='amber'">Amber</mat-button-toggle>
+			<mat-button-toggle-group [(ngModel)]="theme" id="color-menu-toggle-group" vertical>
+				<mat-button-toggle value="hug">HUG</mat-button-toggle>
+				<mat-button-toggle value="pink">Pink</mat-button-toggle>
+				<mat-button-toggle value="teal">Teal</mat-button-toggle>
+				<mat-button-toggle value="amber">Amber</mat-button-toggle>
 			</mat-button-toggle-group>
 		</mat-menu>
 		<button mat-icon-button>

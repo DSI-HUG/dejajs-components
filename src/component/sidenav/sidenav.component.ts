@@ -98,7 +98,7 @@ export class DejaSidenavComponent implements AfterViewInit, OnInit, OnDestroy {
     }
 
     private onLargeMediaMatchChange(e) {
-        if (e.matches) {
+        if (e.matches && this.sidenav.open) {
             this.zone.run(() => {
                 this.hidden = false;
                 this.sidenav.open();
@@ -109,7 +109,7 @@ export class DejaSidenavComponent implements AfterViewInit, OnInit, OnDestroy {
     }
 
     private onMediumMediaMatchChange(e) {
-        if (e.matches) {
+        if (e.matches && this.sidenav.close) {
             this.zone.run(() => {
                 this.hidden = false;
                 this.sidenav.close();
@@ -120,7 +120,7 @@ export class DejaSidenavComponent implements AfterViewInit, OnInit, OnDestroy {
     }
 
     private onSmallMediaMatchChange(e) {
-        if (e.matches) {
+        if (e.matches && this.sidenav.close) {
             this.zone.run(() => {
                 this.hidden = true;
                 this.sidenav.close();

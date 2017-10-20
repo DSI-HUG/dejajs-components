@@ -6,10 +6,14 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { browser } from 'protractor';
+import {ElementRef} from '@angular/core';
 
-export class TagPage {
-    public navigateTo() {
-        browser.get('/tag');
+export class MockElementRef extends ElementRef {
+    constructor() { super(null);
+        this.nativeElement = {
+            getBoundingClientRect() {
+                return { top : 0, left: 0};
+            }
+        };
     }
 }
