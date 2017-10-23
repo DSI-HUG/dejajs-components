@@ -1084,7 +1084,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                     output = models.map((m) => m[valueField] || m);
                 }
             } else {
-                output = output;
+                output = models;
             }
         } else {
             const model = this.selectedItems[0] && this.selectedItems[0].model;

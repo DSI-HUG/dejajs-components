@@ -64,7 +64,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
     protected _keyboardNavigation = false;
     private _keyboardNavigation$ = new Subject();
 
-    public get keyboardNavigation(){
+    public get keyboardNavigation() {
         return this._keyboardNavigation;
     }
 
