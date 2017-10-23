@@ -26,6 +26,9 @@ import { IItemTree } from './item-tree';
  * Il peut-être surchargé pour faire du lazy loading ou du paging.
  */
 export class ItemListService {
+    public static defaultChildrenField = 'items';
+    public static defaultTextField = 'displayName';
+    public static defaultValueField = 'value';
 
     // Waiter
     private _waiter$ = new BehaviorSubject<boolean>(false);
@@ -62,7 +65,7 @@ export class ItemListService {
     private _ddCurrentIndex: number;
     private _ddChildCount: number;
 
-    private _childrenField = 'items';
+    private _childrenField = ItemListService.defaultChildrenField;
 
     // Cnacelable pre events
     private loadingItems$: (query: string | RegExp, selectedItems: IItemBase[]) => Observable<IItemBase[]>;
@@ -169,7 +172,7 @@ export class ItemListService {
      * @param {string} value Nom du champ à utiliser comme collection d'enfants
      */
     public set childrenField(value: string) {
-        this._childrenField = value || 'items';
+        this._childrenField = value || ItemListService.defaultChildrenField;
         this.invalidateCache();
     }
 
@@ -197,6 +200,11 @@ export class ItemListService {
     /** Définit le champs à utiliser comme valeur de comparaison */
     public set valueField(valueField: string) {
         this._valueField = valueField;
+    }
+
+    /** Renvoie le champs à utiliser comme valeur de comparaison */
+    public get valueField() {
+        return this._valueField;
     }
 
     public get hasCache() {

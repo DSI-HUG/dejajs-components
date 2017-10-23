@@ -643,7 +643,7 @@ export abstract class ItemListBase implements OnDestroy {
 
     /** Retourne le champ utilisé comme valeur d'affichage.*/
     protected getTextField() {
-        return this._textField || 'displayName';
+        return this._textField || ItemListService.defaultTextField;
     }
 
     /** Définit le champ à utiliser comme valeur de comparaison.
@@ -658,7 +658,7 @@ export abstract class ItemListBase implements OnDestroy {
 
     /** Retourne le champ utilisé comme valeur de comparaison.*/
     protected getValueField() {
-        return this._valueField || 'value';
+        return this._valueField || ItemListService.defaultValueField;
     }
 
     /** Définit le champ à utiliser comme champ de recherche.
