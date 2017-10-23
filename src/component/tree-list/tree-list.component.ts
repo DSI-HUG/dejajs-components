@@ -202,8 +202,8 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
 
     /** Définit la longueur minimale de caractères dans le champ de recherche avant que la recherche ou le filtrage soient effectués */
     @Input('min-search-length')
-    public set minSearchlength(value: number) {
-        this._minSearchLength = value;
+    public set minSearchlength(value: number | string) {
+        this._minSearchLength = coerceNumberProperty(value);
     }
 
     public get minSearchlength() {
@@ -242,7 +242,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
 
     @Input()
     /** Définit le nombre de lignes à sauter en cas de pression sur les touches PageUp ou PageDown */
-    public set pageSize(value: number) {
+    public set pageSize(value: number | string) {
         this._pageSize = coerceNumberProperty(value);
     }
 
@@ -721,7 +721,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                         return false;
 
                     case KeyCodes.PageUp:
-                        const upindex = Math.max(0, this.currentItemIndex - this.pageSize);
+                        const upindex = Math.max(0, this.currentItemIndex - this._pageSize);
                         if (event.shiftKey) {
                             this.selectRange$(currentIndex, upindex).first().subscribe(noop);
                         } else if (!event.ctrlKey) {
@@ -732,7 +732,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                         return false;
 
                     case KeyCodes.PageDown:
-                        const dindex = Math.min(this.rowsCount - 1, this.currentItemIndex + this.pageSize);
+                        const dindex = Math.min(this.rowsCount - 1, this.currentItemIndex + this._pageSize);
                         if (event.shiftKey) {
                             this.selectRange$(currentIndex, dindex).first().subscribe(noop);
                         } else if (!event.ctrlKey) {
