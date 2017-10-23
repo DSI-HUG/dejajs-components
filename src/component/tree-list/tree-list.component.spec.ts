@@ -7,19 +7,23 @@
  */
 
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { async, TestBed } from '@angular/core/testing';
+import { Component, DebugElement } from '@angular/core';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { NoConflictStyleCompatibilityMode } from '@angular/material';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Observable } from 'rxjs/Observable';
 import { GroupingService } from '../../common/core/grouping/grouping.service';
+import { ItemListService } from '../../common/core/item-list/item-list.service';
 import { IItemTree } from '../../common/core/item-list/item-tree';
+import { ViewPortService } from '../../common/core/item-list/viewport.service';
+import { SortingService } from '../../common/core/sorting/sorting.service';
 import { DejaTreeListModule } from './index';
 import { DejaTreeListComponent } from './tree-list.component';
 
 @Component({
-    template: `<deja-tree-list style="height: 120px;width: 1000px;" [items]="items" multiSelect viewportMode="variable" searchArea sortable>
+    template: `<deja-tree-list style="height: 500px;width: 1000px;" [items]="itemList" multiSelect viewportMode="variable" searchArea sortable itemsDraggable pageSize="10">
                     <ng-template #itemTemplate let-item>
                         Item {{ item.displayName }}
                     </ng-template>
@@ -28,7 +32,7 @@ import { DejaTreeListComponent } from './tree-list.component';
         GroupingService,
     ],
 })
-class DejaViewportContainerComponent {
+class DejaTreeListContainerComponent {
     public itemList = [] as IItemTree[];
 
     constructor(groupingService: GroupingService) {
@@ -46,10 +50,15 @@ class DejaViewportContainerComponent {
 }
 
 describe('DejaTreeListComponent', () => {
+    let fixture: ComponentFixture<DejaTreeListContainerComponent>;
+    let treeListDebugElement: DebugElement;
+    let treeListInstance: DejaTreeListComponent;
+    let treeListElement: HTMLElement;
+
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                DejaViewportContainerComponent,
+                DejaTreeListContainerComponent,
             ],
             imports: [
                 BrowserAnimationsModule,
@@ -59,142 +68,150 @@ describe('DejaTreeListComponent', () => {
                 DejaTreeListModule,
             ],
         }).compileComponents();
+
+        fixture = TestBed.createComponent(DejaTreeListContainerComponent);
+        fixture.detectChanges();
+        treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
+        treeListInstance = treeListDebugElement.componentInstance;
+        treeListElement = treeListDebugElement.nativeElement as HTMLElement;
     }));
 
     // const noop = () => { };
 
-    // const observeTreeList$ = (fixture: ComponentFixture<DejaViewportContainerComponent>, elementCount: number, expectedBeforeSize: number, expectedAfterSize: number, expectedTreeListSize: number, expectedTreeListStartIndex: number, expectedTreeListEndIndex: number) => {
-    //     const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
-    //     const viewPortService = viewPortDebugElement.injector.get(TreeListService) as TreeListService;
+    const observeViewPort$ = () => {
+        const viewPortService = treeListDebugElement.injector.get(ViewPortService) as ViewPortService;
 
-    //     return Observable.from(viewPortService.viewPortResult$)
-    //         .do(() => fixture.detectChanges())
-    //         .filter((result) => result.viewPortSize > 0)
-    //         .do((result) => {
-    //             const listitems = fixture.debugElement.queryAll(By.css('deja-viewport > #viewport-wrapper > .listitem'));
-    //             expect(listitems.length).toEqual(elementCount);
-    //             expect(result.beforeSize).toEqual(expectedBeforeSize);
-    //             expect(result.afterSize).toEqual(expectedAfterSize);
-    //             expect(result.viewPortSize).toEqual(expectedTreeListSize);
-    //             expect(result.startIndex).toEqual(expectedTreeListStartIndex);
-    //             expect(result.endIndex).toEqual(expectedTreeListEndIndex);
-    //         });
-    // };
+        return Observable.from(viewPortService.viewPortResult$)
+            .do(() => fixture.detectChanges())
+            .filter((result) => result.viewPortSize > 0);
+    };
 
     it('should create the component', async(() => {
-        const fixture = TestBed.createComponent(DejaViewportContainerComponent);
-        fixture.detectChanges();
-        const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
-        const viewPortInstance = viewPortDebugElement.componentInstance;
-        expect(viewPortInstance).toBeTruthy();
+        expect(treeListInstance).toBeTruthy();
     }));
 
-    // it('should render horizontally', async(() => {
-    //     const fixture = TestBed.createComponent(DejaViewportContainerComponent);
-    //     const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
-    //     const viewPortInstance = viewPortDebugElement.componentInstance as DejaTreeListComponent;
+    it('should return the write property', async(() => {
+        const tl = treeListInstance as any;
+        const itemListService = treeListInstance.itemListService;
 
-    //     observeTreeList$(fixture, 51, 0, 980, 1020, 0, 50).subscribe(() => {
-    //         // tslint:disable-next-line:no-string-literal
-    //         expect(viewPortInstance['clientSize']).toEqual(1000);
-    //     });
+        expect(treeListInstance.sortable).toBeTruthy();
+        treeListInstance.sortable = 'false';
+        expect(treeListInstance.sortable).toBeFalsy();
 
-    //     viewPortInstance.viewportMode = 'fixed';
-    //     viewPortInstance.itemSize = 20;
-    //     viewPortInstance.direction = 'horizontal';
-    //     fixture.detectChanges();
-    // }));
+        expect(treeListInstance.itemsDraggable).toBeTruthy();
+        treeListInstance.itemsDraggable = 'false';
+        expect(treeListInstance.itemsDraggable).toBeFalsy();
 
-    // it('should render all items width viewport disabled', async(() => {
-    //     const fixture = TestBed.createComponent(DejaViewportContainerComponent);
-    //     const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
-    //     const viewPortInstance = viewPortDebugElement.componentInstance as DejaTreeListComponent;
+        expect(treeListInstance.pageSize).toBe(10);
+        treeListInstance.pageSize = '5';
+        expect(tl.pageSize).toBe(5);
+        treeListInstance.pageSize = 0;
+        expect(treeListInstance.pageSize).toBe(10);
 
-    //     observeTreeList$(fixture, 100, 0, 1860, 140, 0, 99).subscribe(noop);
+        expect(treeListInstance.hintLabel).toBeUndefined();
+        treeListInstance.hintLabel = 'I am a hint label';
+        expect(treeListInstance.hintLabel).toEqual(`I am a hint label`);
 
-    //     viewPortInstance.viewportMode = 'disabled';
-    //     expect(ViewportMode.disabled === viewPortInstance.viewportMode as any);
+        expect(tl._viewPortRowHeight).toBe(ViewPortService.itemDefaultSize);
+        treeListInstance.viewPortRowHeight = 100;
+        expect(tl._viewPortRowHeight).toBe(100);
 
-    //     viewPortInstance.itemSize = 20;
-    //     fixture.detectChanges();
-    // }));
+        expect(treeListInstance.childrenField).toBeUndefined();
+        expect(itemListService.childrenField).toEqual(ItemListService.defaultChildrenField);
+        treeListInstance.childrenField = 'children';
+        expect(treeListInstance.childrenField).toEqual('children');
+        expect(itemListService.childrenField).toEqual('children');
 
-    // it('should render with viewport fixed with an item size of 20', async(() => {
-    //     const fixture = TestBed.createComponent(DejaViewportContainerComponent);
-    //     const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
-    //     const viewPortInstance = viewPortDebugElement.componentInstance as DejaTreeListComponent;
+        expect(tl.getTextField()).toEqual(ItemListService.defaultTextField);
+        treeListInstance.textField = 'text';
+        expect(tl.getTextField()).toEqual('text');
 
-    //     observeTreeList$(fixture, 7, 0, 1860, 140, 0, 6).subscribe(() => noop);
+        expect(tl.getValueField()).toEqual(ItemListService.defaultValueField);
+        treeListInstance.valueField = 'my value field';
+        expect(tl.getValueField()).toEqual('my value field');
+        expect(itemListService.valueField).toEqual('my value field');
 
-    //     viewPortInstance.viewportMode = 'fixed';
-    //     expect(ViewportMode.fixed === viewPortInstance.viewportMode as any);
+        expect(treeListInstance.searchField).toBeUndefined();
+        treeListInstance.searchField = 'my search field';
+        expect(treeListInstance.searchField).toEqual('my search field');
 
-    //     viewPortInstance.itemSize = 20;
-    //     fixture.detectChanges();
-    // }));
+        expect(treeListInstance.multiSelect).toBeTruthy();
+        treeListInstance.multiSelect = 'false';
+        expect(treeListInstance.multiSelect).toBeFalsy();
 
-    // it('should render with viewport fixed with an item size of 35', async(() => {
-    //     const fixture = TestBed.createComponent(DejaViewportContainerComponent);
-    //     const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
-    //     const viewPortInstance = viewPortDebugElement.componentInstance as DejaTreeListComponent;
+        const myItemListService = new ItemListService();
+        expect(treeListInstance.itemListService).toBeDefined();
+        treeListInstance.itemListService = myItemListService;
+        expect(treeListInstance.itemListService).toBe(myItemListService);
 
-    //     observeTreeList$(fixture, 5, 0, 3325, 175, 0, 4).subscribe(() => noop);
+        const sortingService = new SortingService();
+        expect(myItemListService.getSortingService()).toBeDefined();
+        treeListInstance.sortingService = sortingService;
+        expect(myItemListService.getSortingService()).toBe(sortingService);
 
-    //     viewPortInstance.viewportMode = 'fixed';
-    //     viewPortInstance.itemSize = 35;
-    //     fixture.detectChanges();
-    // }));
+        const groupingService = new GroupingService();
+        expect(myItemListService.getGroupingService()).toBeDefined();
+        treeListInstance.groupingService = groupingService;
+        expect(myItemListService.getGroupingService()).toBe(groupingService);
 
-    // it('should render with viewport variable at position 0', async(() => {
-    //     const fixture = TestBed.createComponent(DejaViewportContainerComponent);
-    //     const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
-    //     const viewPortInstance = viewPortDebugElement.componentInstance as DejaTreeListComponent;
+        expect(treeListInstance.minSearchlength).toBe(0);
+        treeListInstance.minSearchlength = '3';
+        expect(tl.minSearchlength).toBe(3);
 
-    //     observeTreeList$(fixture, 9, 0, 1824, 126, 0, 8).subscribe(() => noop);
+        expect(treeListInstance.disabled).toBeNull();
+        treeListInstance.disabled = 'false';
+        expect(treeListInstance.disabled).toBeFalsy();
 
-    //     viewPortInstance.viewportMode = 'variable';
-    //     expect(ViewportMode.variable === viewPortInstance.viewportMode as any);
+        expect(treeListInstance.waiter).toBeFalsy();
+        treeListInstance.waiter = true;
+        expect(treeListInstance.waiter).toBeTruthy();
+    }));
 
-    //     fixture.detectChanges();
-    // }));
+    it('should return the write item class', async(() => {
+        const tl = treeListInstance as any;
+        const item = {
+            className: null,
+            collapsing: false,
+            expanding: false,
+            depth : 0,
+            collapsed: false,
+            selected: false,
+            odd : false,
+        } as IItemTree;
+        expect(tl.getItemClass(item)).toEqual('listitem');
 
-    // it('should render with viewport variable at position 90', async(() => {
-    //     const fixture = TestBed.createComponent(DejaViewportContainerComponent);
-    //     const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
-    //     const viewPortInstance = viewPortDebugElement.componentInstance as DejaTreeListComponent;
-    //     const viewPortService = viewPortDebugElement.injector.get(TreeListService) as TreeListService;
+        item.className = 'test';
+        expect(tl.getItemClass(item)).toEqual('listitem test');
 
-    //     observeTreeList$(fixture, 8, 75, 1719, 156, 6, 13).subscribe(noop);
+        item.collapsing = true;
+        expect(tl.getItemClass(item)).toEqual('listitem test hide');
 
-    //     viewPortService.scrollPosition$.next(90);
-    //     viewPortInstance.viewportMode = 'variable';
-    //     fixture.detectChanges();
-    // }));
+        item.collapsing = false;
+        expect(tl.getItemClass(item)).toEqual('listitem test');
 
-    // it('should render with viewport variable at position 1200', async(() => {
-    //     const fixture = TestBed.createComponent(DejaViewportContainerComponent);
-    //     const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
-    //     const viewPortInstance = viewPortDebugElement.componentInstance as DejaTreeListComponent;
-    //     const viewPortService = viewPortDebugElement.injector.get(TreeListService) as TreeListService;
+        item.expanding = true;
+        expect(tl.getItemClass(item)).toEqual('listitem test hide');
 
-    //     observeTreeList$(fixture, 9, 1191, 615, 144, 62, 70).subscribe(noop);
+        item.expanding = false;
+        expect(tl.getItemClass(item)).toEqual('listitem test');
 
-    //     viewPortService.scrollPosition$.next(1200);
-    //     viewPortInstance.viewportMode = 'variable';
-    //     fixture.detectChanges();
-    // }));
+        item.collapsed = true;
+        expect(tl.getItemClass(item)).toEqual('listitem test collapsed');
 
-    // it('should render with buttons instead scrollbar at position 0', async(() => {
-    //     const fixture = TestBed.createComponent(DejaViewportContainerComponent);
-    //     const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
-    //     const viewPortInstance = viewPortDebugElement.componentInstance as DejaTreeListComponent;
-    //     viewPortInstance.scrollingStyle = 'buttons';
-    //     fixture.detectChanges();
+        item.selected = true;
+        expect(tl.getItemClass(item)).toEqual('listitem test collapsed selected');
 
-    //     observeTreeList$(fixture, 5, 0, 1900, 100, 0, 4).subscribe(() => noop);
+        item.selectable  = true;
+        expect(tl.getItemClass(item)).toEqual('listitem test collapsed selected');
 
-    //     viewPortInstance.viewportMode = 'fixed';
-    //     viewPortInstance.itemSize = 20;
-    //     fixture.detectChanges();
-    // }));
+        item.selectable  = false;
+        expect(tl.getItemClass(item)).toEqual('listitem test collapsed selected unselectable');
+
+        item.odd  = true;
+        expect(tl.getItemClass(item)).toEqual('listitem test collapsed selected unselectable odd');
+
+        observeViewPort$().subscribe(() => {
+            expect(tl.getItemClass(item)).toEqual('listitem test parent collapsed selected unselectable');
+        });
+    }));
 });
