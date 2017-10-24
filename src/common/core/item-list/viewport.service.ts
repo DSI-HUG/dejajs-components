@@ -17,6 +17,7 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/filter';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Subscription } from 'rxjs/Subscription';
 import { IViewPort, IViewPortItem } from './viewport.service';
 
@@ -46,7 +47,7 @@ export class ViewPortService implements OnDestroy {
     public maxSize$ = new BehaviorSubject<number | string>(0);
     public ensureItem$ = new BehaviorSubject<IViewPortItem | number>(null);
     public scrollPosition$ = new BehaviorSubject<number>(0);
-    public element$ = new BehaviorSubject<HTMLElement>(null);
+    public element$ = new ReplaySubject<HTMLElement>(1);
     public itemsSize$ = new BehaviorSubject<number>(0);
     public direction$ = new BehaviorSubject<ViewportDirection | string>(ViewportDirection.vertical);
     public ensureParams$: Observable<IEnsureParams>;
@@ -434,7 +435,10 @@ export class ViewPortService implements OnDestroy {
                     // Return calculated viewport
                     return Observable.of(viewPort);
                 })
-                .do(() => ensureParams.index = undefined);
+                .do(() => {
+                    consoleLog(`clear ensureParams ${ensureParams && ensureParams.index}`);
+                    ensureParams.index = undefined;
+                });
         };
 
         const items$ = Observable.from(this.items$)
@@ -443,6 +447,7 @@ export class ViewPortService implements OnDestroy {
         // Ensure item visible by index or instance
         this.ensureParams$ = Observable.combineLatest(this.ensureItem$, items$)
             .map(([ensureItem, items]) => {
+                this.ignoreScrollCount = 0;
                 const ensureParams = {} as IEnsureParams;
                 if (ensureItem !== undefined && ensureItem !== null && items && items.length) {
                     let ensureIndex = ensureItem as number;
@@ -463,7 +468,7 @@ export class ViewPortService implements OnDestroy {
 
                 return ensureParams;
             })
-            .do(() => consoleLog('ensureParams'));
+            .do((ensureParams) => consoleLog(`ensureParams index:${ensureParams && ensureParams.index} atEnd:${ensureParams && ensureParams.atEnd}`));
 
         const maxSize$ = Observable.from(this.maxSize$)
             .distinctUntilChanged()
@@ -496,7 +501,7 @@ export class ViewPortService implements OnDestroy {
             .filter(() => {
                 if (this.ignoreScrollCount > 0) {
                     this.ignoreScrollCount--;
-                    console.log(`ignoreScrollCount ${this.ignoreScrollCount}`);
+                    consoleLog(`ignoreScrollCount ${this.ignoreScrollCount}`);
                     return false;
                 } else {
                     return true;
@@ -545,13 +550,13 @@ export class ViewPortService implements OnDestroy {
             }));
 
         // Calc view port observable
-        this.subscriptions.push(Observable.combineLatest(items$, maxSize$, itemsSize$, this.ensureParams$)
-            .combineLatest(direction$, mode$, refresh$, element$)
+        this.subscriptions.push(Observable.combineLatest(element$, items$, refresh$, this.ensureParams$)
+            .combineLatest(direction$, mode$, itemsSize$, maxSize$)
             .debounceTime(1)
             .combineLatest(scrollPos$)
-            .filter(([[[_items, _maxSize, _itemDefaultSize, _ensureParams], _direction, _mode, _refresh, element], _scrollPos]) => !!element)
-            .do(() => consoleLog(`combineLatest`))
-            .switchMap(([[[items, maxSize, itemDefaultSize, ensureParams], _direction, _mode, _refresh, element], _scrollPos]) => {
+            .do(([[[_element, _items, _refresh, ensureParams], _direction, _mode, _itemDefaultSize, _maxSize], _scrollPos]) => consoleLog(`combineLatest ${JSON.stringify(ensureParams)}`))
+            .switchMap(([[[element, items, _refresh, ensureParams], _direction, _mode, itemDefaultSize, maxSize], _scrollPos]) => {
+                consoleLog(`combineLatest ${ensureParams && ensureParams.index}`);
                 if (!itemDefaultSize) {
                     itemDefaultSize = ViewPortService.itemDefaultSize;
                 }
@@ -592,9 +597,12 @@ export class ViewPortService implements OnDestroy {
                     return Observable.of({ element, scrollPos, items, maxSizeValue, itemDefaultSize, ensureParams });
                 }
             })
-            .switchMap(({ element, scrollPos, items, maxSizeValue, itemDefaultSize, ensureParams }) => calcViewPort$(items, maxSizeValue, scrollPos, element, itemDefaultSize, ensureParams))
+            .switchMap(({ element, scrollPos, items, maxSizeValue, itemDefaultSize, ensureParams }) => {
+                consoleLog(`calcViewPort ${ensureParams && ensureParams.index}`);
+                return calcViewPort$(items, maxSizeValue, scrollPos, element, itemDefaultSize, ensureParams);
+            })
             .subscribe((viewPort: IViewPort) => {
-                consoleLog(`viewPortResult final ${JSON.stringify(viewPort)}`);
+                // consoleLog(`viewPortResult final ${JSON.stringify(viewPort)}`);
                 this.viewPortResult$.next(viewPort);
             }, ((error) => {
                 console.error(error);
