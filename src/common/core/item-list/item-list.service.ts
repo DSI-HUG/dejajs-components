@@ -83,18 +83,21 @@ export class ItemListService {
      * @return {string} Valeur à comparer pour le modèle spécifié.
      */
     public static getItemValue(item: any, valueField?: string) {
+        // tslint:disable-next-line:triple-equals
+        const isDefined = (value) => value != undefined;
+
         if (valueField) {
             const fields = valueField.split('.');
             let model = item.model && item.model[fields[0]] !== undefined ? item.model : item;
             fields.forEach((fieldName) => {
                 model = model && model[fieldName];
             });
-            if (model) {
+            if (isDefined(model)) {
                 return typeof model === 'function' ? model() : model;
             }
         }
 
-        return item.value || item.model || item;
+        return isDefined(item.value) ? item.value : (isDefined(item.model) ? item.model : item);
     }
 
     /** Evalue le texte à afficher pour l'élément spécifié.
@@ -1234,11 +1237,14 @@ export class ItemListService {
     }
 
     private compareItems = (item1: IItemBase, item2: IItemBase) => {
-        if (!item1 || !item2) {
+        // tslint:disable-next-line:triple-equals
+        const isDefined = (value) => value != undefined;
+
+        if (!isDefined(item1) || !isDefined(item2)) {
             return false;
-        } else if (item1 && !item2) {
+        } else if (isDefined(item1) && !isDefined(item2)) {
             return false;
-        } else if (!item1 && item2) {
+        } else if (!isDefined(item1) && isDefined(item2)) {
             return false;
         } else {
             if (item1.equals) {
