@@ -745,7 +745,8 @@ export abstract class ItemListBase implements OnDestroy {
     }
 
     protected mapToIItemBase(modls: any[], selected?: boolean): IItemBase[] {
-        return modls.map((model) => {
+        const m = modls || [];
+        return m.map((model) => {
             const itemBase: IItemBase = {};
 
             itemBase.model = model;
