@@ -55,9 +55,9 @@ class DejaTreeListContainerComponent {
 }
 
 @Component({
-    template: `<deja-tree-list style="height: 500px;width: 1000px;" [models]="modelsList$" multiSelect viewportMode="fixed" searchArea sortable itemsDraggable pageSize="10" valueField="model.id">
+    template: `<deja-tree-list style="height: 500px;width: 1000px;" [(ngModel)]="selectedModels" [models]="modelsList$" multiSelect viewportMode="fixed" searchArea sortable itemsDraggable pageSize="10" valueField="id">
                     <ng-template #itemTemplate let-item>
-                        Item {{ item.displayName }}
+                        Item {{ item.model.displayName }}
                     </ng-template>
                 </deja-tree-list>`,
     providers: [
@@ -66,6 +66,7 @@ class DejaTreeListContainerComponent {
 })
 class DejaTreeListByModelContainerComponent {
     public modelsList$: Observable<any[]>;
+    public selectedModels: any[];
 
     constructor(sortingService: SortingService) {
         const modelsList = Array.apply(null, { length: 2000 }).map((_n, i) => {
@@ -77,6 +78,7 @@ class DejaTreeListByModelContainerComponent {
             };
         });
 
+        this.selectedModels = [0, 1, 2];
         this.modelsList$ = sortingService.sort$(modelsList, { name: 'value' } as ISortInfos);
     }
 }
@@ -437,7 +439,8 @@ describe('DejaTreeListByModelContainerComponent', () => {
 
                 switch (++pass) {
                     case 1:
-                        expect(selectedModels.length).toBe(0);
+                        // Selection from HTML
+                        expect(vp.items.filter((item: IItemBase) => item.selected).length).toBe(3);
                         // Set selected models
                         treeListInstance.selectedModels = [models[vp.startIndex], models[vp.endIndex]];
                         expect(treeListInstance.selectedModels).toBeDefined();
