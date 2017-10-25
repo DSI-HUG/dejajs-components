@@ -680,14 +680,17 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
 
         keyDown$.takeWhile(() => this._isAlive)
             .filter(() => !this.disabled)
-            .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.Home ||
-                event.keyCode === KeyCodes.End ||
-                event.keyCode === KeyCodes.PageUp ||
-                event.keyCode === KeyCodes.PageDown ||
-                event.keyCode === KeyCodes.UpArrow ||
-                event.keyCode === KeyCodes.DownArrow ||
-                event.keyCode === KeyCodes.Space ||
-                event.keyCode === KeyCodes.Enter)
+            .filter((event: KeyboardEvent) => {
+                const keyCode = event.keyCode || KeyCodes[event.code];
+                return keyCode === KeyCodes.Home ||
+                    keyCode === KeyCodes.End ||
+                    keyCode === KeyCodes.PageUp ||
+                    keyCode === KeyCodes.PageDown ||
+                    keyCode === KeyCodes.UpArrow ||
+                    keyCode === KeyCodes.DownArrow ||
+                    keyCode === KeyCodes.Space ||
+                    keyCode === KeyCodes.Enter;
+            })
             .switchMap((event) => this.ensureListCaches$().map(() => event))
             .map((event: KeyboardEvent) => {
                 // Set current item from index for keyboard features only
@@ -699,7 +702,8 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
 
                 const currentIndex = this.rangeStartIndex >= 0 ? this.rangeStartIndex : this.rangeStartIndex = this.currentItemIndex;
 
-                switch (event.keyCode) {
+                const keyCode = event.keyCode || KeyCodes[event.code];
+                switch (keyCode) {
                     case KeyCodes.Home:
                         if (event.shiftKey) {
                             this.selectRange$(currentIndex, 0).first().subscribe(noop);
