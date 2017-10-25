@@ -1,3 +1,9 @@
+#### 2.15.2 (2017-10-25)
+
+##### Code Style Changes
+
+* **DejaDateSelectorComponent:** TsLint ([7e237bc4](https://github.com/DSI-HUG/dejajs-components/commit/7e237bc40273208b0313c7078d931bc9bce8df0f))
+
 #### 2.15.1 (2017-10-25)
 
 ##### BREAKING CHANGES
