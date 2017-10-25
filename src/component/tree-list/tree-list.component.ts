@@ -798,9 +798,9 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                     case KeyCodes.Enter:
                         const eitem = this.currentItem as IItemTree;
                         if (eitem) {
-                            if (this.isCollapsible(eitem) || eitem.selected) {
+                            if (this.isCollapsible(eitem)) {
                                 this.toggleCollapse$(currentIndex, !eitem.collapsed).first().subscribe(noop);
-                            } else if (eitem.selectable) {
+                            } else if (this.isSelectable(eitem)) {
                                 this.unselectAll$()
                                     .switchMap(() => this.toggleSelect$([eitem], true))
                                     .first()
