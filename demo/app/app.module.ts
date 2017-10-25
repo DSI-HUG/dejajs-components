@@ -89,6 +89,7 @@ import { TagDemoComponent } from './tag/tag-demo.component';
 import { TilesDemoComponent } from './tiles/tiles-demo';
 import { DejaTreeListDemoComponent } from './tree-list/tree-list-demo';
 import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
+import { DejaItemModule } from '../../src/common/core/item-list/index';
 
 @NgModule({
     declarations: [
@@ -172,6 +173,7 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         DejaTooltipModule,
         DejaTreeListModule,
         DejaViewPortModule,
+        DejaItemModule,
         GroupingModule,
         StoreModule.forRoot({}),
         StoreModule.forFeature('userDemo', {
