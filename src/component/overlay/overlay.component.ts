@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import {ConnectedOverlayDirective, OverlayContainer, OverlayOrigin} from '@angular/cdk/overlay';
+import { ConnectedOverlayDirective, OverlayContainer, OverlayOrigin } from '@angular/cdk/overlay';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -19,11 +19,11 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs/Observable';
 import { MediaService } from '../../common/core/media/media.service';
-import {DejaConnectionPositionPair} from '../../common/core/overlay/connection-position-pair';
+import { DejaConnectionPositionPair } from '../../common/core/overlay/connection-position-pair';
 
-    // providers: [ MediaService ],
+// providers: [ MediaService ],
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -80,7 +80,12 @@ export class DejaOverlayComponent implements OnDestroy {
     @ViewChild(ConnectedOverlayDirective) private overlay: ConnectedOverlayDirective;
 
     constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef, private overlayContainer: OverlayContainer, mediaService: MediaService) {
-        this.overlayContainer.getContainerElement().classList.add('deja-overlay-container');
+        const containerElement = this.overlayContainer.getContainerElement() as HTMLElement;
+        containerElement.classList.add('deja-overlay-container');
+        containerElement.addEventListener('contextmenu', (event: Event) => {
+            event.preventDefault();
+            return false;
+        });
 
         mediaService.isMobile$
             .takeWhile(() => this.isAlive)
@@ -124,7 +129,7 @@ export class DejaOverlayComponent implements OnDestroy {
     }
 
     public get width() {
-       return this._width;
+        return this._width;
     }
 
     @Input()

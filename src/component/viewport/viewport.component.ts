@@ -33,7 +33,6 @@ export enum DejaViewPortScrollStyle {
     templateUrl: './viewport.component.html',
 })
 export class DejaViewPortComponent implements OnDestroy {
-
     protected beforeSize: number;
     protected afterSize: number;
     protected vpItems: IDejaViewPortItem[];
@@ -55,10 +54,12 @@ export class DejaViewPortComponent implements OnDestroy {
 
     private _items: IDejaViewPortItem[];
     private element: HTMLElement;
-    private subscriptions: Subscription[] = [];
-    private hasButtons$ = new Subject<boolean>();
+    private isAlive = true;
+    private downButton$ = new Subject<HTMLElement>();
+    private upButton$ = new Subject<HTMLElement>();
     private buttonsStep = 20;
-    private mouseDown$Sub: Subscription;
+    private downButton$Sub: Subscription;
+    private upButton$Sub: Subscription;
     private mouseWheel$Sub: Subscription;
     private scrollPosition = 0;
     private scroll$Sub: Subscription;
@@ -67,15 +68,29 @@ export class DejaViewPortComponent implements OnDestroy {
     @Input() public itemTemplateExternal;
 
     @ContentChild('itemTemplate') private itemTemplateInternal;
-    @ViewChild('down') private downButton: ElementRef;
-    @ViewChild('up') private upButton: ElementRef;
+
+    @ViewChild('down')
+    private set downButton(element: ElementRef) {
+        this.downButton$.next((element && element.nativeElement) || null);
+    }
+
+    @ViewChild('up')
+    private set upButton(element: ElementRef) {
+        this.upButton$.next((element && element.nativeElement) || null);
+    }
+
+    /** Set the list of models to render inside the viewport control */
+    @Input()
+    public set models(models: any[]) {
+        this.items = models ? models.map((model) => ({
+            model: model,
+        } as IDejaViewPortItem)) : [];
+    }
 
     /** Set the list of items to render inside the viewport control */
     @Input()
     public set items(items: any[]) {
-        this._items = items ? items.map((item) => ({
-            model: item,
-        } as IDejaViewPortItem)) : [];
+        this._items = items || [];
         if (this.viewPort.mode === ViewportMode.disabled) {
             this.vpItems = this._items;
         }
@@ -89,7 +104,7 @@ export class DejaViewPortComponent implements OnDestroy {
     @Input()
     public set scrollingStyle(value: DejaViewPortScrollStyle | string) {
         const scrollingStyle = typeof value === 'string' ? DejaViewPortScrollStyle[value] : value;
-        this.hasButtons$.next(scrollingStyle === DejaViewPortScrollStyle.buttons);
+        this._hasButtons = scrollingStyle === DejaViewPortScrollStyle.buttons;
     }
 
     /** Set the direction of the items rendering
@@ -120,12 +135,13 @@ export class DejaViewPortComponent implements OnDestroy {
     private set wrapperElement(element: ElementRef) {
         this.element = element.nativeElement as HTMLElement;
         this.viewPort.element$.next(this.element);
-        this.subscriptions.push(this.scroll$Sub = Observable.fromEvent(this.element, 'scroll')
+        this.scroll$Sub = Observable.fromEvent(this.element, 'scroll')
+            .takeWhile(() => this.isAlive)
             .map((event: Event) => event.target as HTMLElement)
             .map((target) => Math.round(this._isHorizontal ? target.scrollLeft : target.scrollTop))
             .subscribe((scrollPos) => {
                 this.viewPort.scrollPosition$.next(scrollPos);
-            }));
+            });
     }
 
     private get itemTemplate() { return this.itemTemplateExternal || this.itemTemplateInternal; }
@@ -164,15 +180,17 @@ export class DejaViewPortComponent implements OnDestroy {
     }
 
     constructor(private changeDetectorRef: ChangeDetectorRef, private viewPort: ViewPortService) {
-        this.subscriptions.push(Observable.fromEvent(window, 'resize')
+        Observable.fromEvent(window, 'resize')
+            .takeWhile(() => this.isAlive)
             .debounceTime(5)
             .subscribe(() => {
                 this.viewPort.deleteSizeCache();
                 this.viewPort.refresh();
                 this.changeDetectorRef.markForCheck();
-            }));
+            });
 
-        this.subscriptions.push(viewPort.viewPort$
+        viewPort.viewPort$
+            .takeWhile(() => this.isAlive)
             .subscribe((viewPortResult: IViewPort) => {
                 if (viewPort.mode !== ViewportMode.disabled) {
                     this.vpItems = viewPortResult.visibleItems as IDejaViewPortItem[];
@@ -229,71 +247,121 @@ export class DejaViewPortComponent implements OnDestroy {
                 } else {
                     this.changeDetectorRef.markForCheck();
                 }
-            }));
+            });
 
-        this.subscriptions.push(Observable.from(this.hasButtons$)
-            .filter((value) => this._hasButtons !== value)
-            .do((value) => this._hasButtons = value)
-            .delay(1)
-            .do((value) => {
-                if (value) {
-                    const mousedown$ = Observable.merge(
-                        Observable.fromEvent(this.downButton.nativeElement, 'mousedown'),
-                        Observable.fromEvent(this.upButton.nativeElement, 'mousedown'));
-
-                    const mouseup$ = Observable.merge(
-                        Observable.fromEvent(this.downButton.nativeElement, 'mouseup'),
-                        Observable.fromEvent(this.upButton.nativeElement, 'mouseup'),
-                        Observable.fromEvent(this.downButton.nativeElement, 'mouseleave'),
-                        Observable.fromEvent(this.upButton.nativeElement, 'mouseleave'));
-
-                    this.mouseDown$Sub = mousedown$.subscribe((event: MouseEvent) => {
-                        const target = event.currentTarget as HTMLElement;
-                        const direction = target.id === 'up' ? -1 : +1;
-
-                        mouseup$.first()
-                            .subscribe((upEvent: MouseEvent) => {
-                                this.scrollPos += direction * (upEvent.ctrlKey ? this.clientSize : this.buttonsStep);
+        Observable.from(this.downButton$)
+            .takeWhile(() => this.isAlive)
+            .subscribe((downButton) => {
+                if (downButton) {
+                    if (!this.mouseWheel$Sub) {
+                        this.mouseWheel$Sub = Observable
+                            .fromEvent(this.element, 'mousewheel')
+                            .subscribe((event: MouseWheelEvent) => {
+                                this.scrollPos = this.scrollPos + event.deltaY;
                             });
+                    }
+                } else if (this.mouseWheel$Sub) {
+                    this.mouseWheel$Sub.unsubscribe();
+                    delete this.mouseWheel$Sub;
+                    this.scrollPos = 0;
+                }
+            });
 
-                        Observable.timer(750)
-                            .takeUntil(mouseup$)
-                            .subscribe(() => {
-                                Observable.interval(50)
-                                    .takeUntil(mouseup$)
-                                    .subscribe(() => {
-                                        this.scrollPos += direction * (event.ctrlKey ? this.clientSize : this.buttonsStep * 2);
-                                    });
-                            });
-                    });
+        const downButton$ = Observable.from(this.downButton$)
+            .takeWhile(() => this.isAlive)
+            .map((downButton) => {
+                if (downButton) {
+                    if (!this.downButton$Sub) {
+                        const mousedown$ = Observable.fromEvent(downButton, 'mousedown');
 
-                    this.mouseWheel$Sub = Observable
-                        .fromEvent(this.element, 'mousewheel')
-                        .subscribe((event: MouseWheelEvent) => {
-                            this.scrollPos = this.scrollPos + event.deltaY;
+                        const mouseup$ = Observable.merge(
+                            Observable.fromEvent(downButton, 'mouseup'),
+                            Observable.fromEvent(downButton, 'mouseleave'));
+
+                        this.downButton$Sub = mousedown$.subscribe((event: MouseEvent) => {
+                            mouseup$.first()
+                                .subscribe((upEvent: MouseEvent) => {
+                                    this.scrollPos += upEvent.ctrlKey ? this.clientSize : this.buttonsStep;
+                                });
+
+                            Observable.timer(750)
+                                .takeUntil(mouseup$)
+                                .subscribe(() => {
+                                    Observable.interval(50)
+                                        .takeUntil(mouseup$)
+                                        .subscribe(() => {
+                                            this.scrollPos += event.ctrlKey ? this.clientSize : this.buttonsStep * 2;
+                                        });
+                                });
                         });
 
-                } else {
-                    if (this.mouseDown$Sub) {
-                        this.mouseDown$Sub.unsubscribe();
-                        delete this.mouseDown$Sub;
+                        return true;
                     }
-                    if (this.mouseWheel$Sub) {
-                        this.mouseWheel$Sub.unsubscribe();
-                        delete this.mouseWheel$Sub;
-                    }
+                } else if (this.downButton$Sub) {
+                    this.downButton$Sub.unsubscribe();
+                    delete this.downButton$Sub;
+                    return true;
                 }
 
-                this.scrollPos = 0;
-            })
-            .delay(1)
-            .subscribe(() => this.viewPort.refresh()));
+                return false;
+            });
+
+        const upButton$ = Observable.from(this.upButton$)
+            .takeWhile(() => this.isAlive)
+            .map((upButton) => {
+                if (upButton) {
+                    if (!this.upButton$Sub) {
+                        const mousedown$ = Observable.fromEvent(upButton, 'mousedown');
+
+                        const mouseup$ = Observable.merge(
+                            Observable.fromEvent(upButton, 'mouseup'),
+                            Observable.fromEvent(upButton, 'mouseleave'));
+
+                        this.upButton$Sub = mousedown$.subscribe((event: MouseEvent) => {
+                            mouseup$
+                                .first()
+                                .subscribe((upEvent: MouseEvent) => {
+                                    this.scrollPos -= upEvent.ctrlKey ? this.clientSize : this.buttonsStep;
+                                });
+
+                            Observable.timer(750)
+                                .takeUntil(mouseup$)
+                                .subscribe(() => {
+                                    Observable.interval(50)
+                                        .takeUntil(mouseup$)
+                                        .subscribe(() => {
+                                            this.scrollPos -= event.ctrlKey ? this.clientSize : this.buttonsStep * 2;
+                                        });
+                                });
+                        });
+
+                        return true;
+                    }
+                } else if (this.upButton$Sub) {
+                    this.upButton$Sub.unsubscribe();
+                    delete this.upButton$Sub;
+                    return true;
+                }
+
+                return false;
+            });
+
+        Observable.merge(downButton$, upButton$)
+            .delay(10)
+            .subscribe((needToRefresh) => {
+                if (needToRefresh) {
+                    this.viewPort.refresh();
+                }
+            });
     }
 
     public ngOnDestroy() {
-        this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
-        if (this.mouseDown$Sub) {
-            this.mouseDown$Sub.unsubscribe();
+        this.isAlive = false;
+        if (this.downButton$Sub) {
+            this.downButton$Sub.unsubscribe();
+        }
+        if (this.upButton$Sub) {
+            this.upButton$Sub.unsubscribe();
         }
         if (this.mouseWheel$Sub) {
             this.mouseWheel$Sub.unsubscribe();

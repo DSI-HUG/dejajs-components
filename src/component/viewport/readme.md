@@ -13,7 +13,7 @@ Ensuite utiliser le composant comme ceci dans votre template :
  - impl&eacute;mentation :
 
 ```html
-<deja-viewport [items]="news$ | async" viewportMode="auto" direction="vertical">
+<deja-viewport [models]="news$ | async" viewportMode="auto" direction="vertical">
     <ng-template #itemTemplate let-item>
         <!-- Your content template here -->
     </ng-template>
