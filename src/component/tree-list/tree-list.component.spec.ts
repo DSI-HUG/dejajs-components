@@ -15,6 +15,7 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Observable } from 'rxjs/Observable';
 import { GroupingService } from '../../common/core/grouping/grouping.service';
+import { DejaItemModule } from '../../common/core/item-list/index';
 import { IItemBase } from '../../common/core/item-list/item-base';
 import { ItemListService } from '../../common/core/item-list/item-list.service';
 import { IItemTree } from '../../common/core/item-list/item-tree';
@@ -55,9 +56,11 @@ class DejaTreeListContainerComponent {
 }
 
 @Component({
-    template: `<deja-tree-list style="height: 500px;width: 1000px;" [(ngModel)]="selectedModels" [models]="modelsList$" multiSelect viewportMode="fixed" searchArea sortable itemsDraggable pageSize="10" valueField="id">
+    template: `<deja-tree-list style="height: 500px;width: 1000px;" [(ngModel)]="selectedModels" [models]="modelsList$" multiSelect viewportMode="fixed" searchArea pageSize="10" valueField="id">
                     <ng-template #itemTemplate let-item>
-                        Item {{ item.model.displayName }}
+                        <span [style.background-color]="backgroundColor(item)">
+                            Item {{ item.model.displayName }}
+                        </span>
                     </ng-template>
                 </deja-tree-list>`,
     providers: [
@@ -81,6 +84,30 @@ class DejaTreeListByModelContainerComponent {
         this.selectedModels = [0, 1, 2];
         this.modelsList$ = sortingService.sort$(modelsList, { name: 'value' } as ISortInfos);
     }
+
+    public backgroundColor(item: IItemBase) {
+        return item.selected ? '#888' : null;
+    }
+}
+
+@Component({
+    template: `<deja-tree-list style="height: 500px;width: 1000px;" viewportMode="fixed" searchArea sortable itemsDraggable>
+                    <deja-item value="Apricots" text="My preferred fruct is Apricots"></deja-item>
+                    <deja-item value="Banana" text="My preferred fruct is Banana"></deja-item>
+                    <deja-item value="Cantaloupe" text="My preferred fruct is Cantaloupe"></deja-item>
+                    <deja-item value="Cherries" text="My preferred fruct is Cherries"></deja-item>
+                    <deja-item value="Coconut" text="My preferred fruct is Coconut"></deja-item>
+                    <deja-item value="Cranberries" text="My preferred fruct is Cranberries"></deja-item>
+                    <deja-item value="Durian" text="My preferred fruct is Durian"></deja-item>
+                    <deja-item value="Grapes" text="My preferred fruct is Grapes"></deja-item>
+                    <deja-item value="Lemon" text="My preferred fruct is Lemon"></deja-item>
+                    <deja-item value="Mango" text="My preferred fruct is Mango"></deja-item>
+                    <deja-item value="Pineapple" text="My preferred fruct is Pineapple"></deja-item>
+                    <deja-item value="Watermelon" text="My preferred fruct is Watermelon"></deja-item>
+                </deja-tree-list>`,
+})
+class DejaTreeListByOptionsContainerComponent {
+    constructor() { }
 }
 
 describe('DejaTreeListComponent', () => {
@@ -188,7 +215,9 @@ describe('DejaTreeListComponent', () => {
         expect(tl.minSearchlength).toBe(3);
 
         expect(treeListInstance.disabled).toBeNull();
-        treeListInstance.disabled = 'false';
+        treeListInstance.disabled = 'true';
+        expect(treeListInstance.disabled).toBeTruthy();
+        treeListInstance.setDisabledState(false);
         expect(treeListInstance.disabled).toBeFalsy();
 
         expect(treeListInstance.waiter).toBeFalsy();
@@ -388,6 +417,93 @@ describe('DejaTreeListComponent', () => {
 
         fixture.detectChanges();
     }));
+
+    it('should toggle and collapse all the items', async(() => {
+        let pass = 0;
+        const fixture = TestBed.createComponent(DejaTreeListContainerComponent);
+        const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
+        const treeListInstance = treeListDebugElement.componentInstance as DejaTreeListComponent;
+
+        observeViewPort$(fixture)
+            .debounceTime(10)
+            .subscribe((vp) => {
+                // Bind view port
+                fixture.detectChanges();
+                const collapsed = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem.parent.collapsed'));
+                const collapsedItems = vp.items.filter((item: IItemTree) => item.collapsed);
+                const parentItems = vp.items.filter((item: IItemTree) => item.depth === 0);
+                switch (++pass) {
+                    case 1:
+                        expect(collapsed.length).toBe(0);
+                        expect(collapsedItems.length).toBe(0);
+                        // Toggle all items
+                        treeListInstance.toggleAll();
+                        treeListInstance.refreshViewPort();
+                        fixture.detectChanges();
+                        break;
+
+                    case 2:
+                        // Check collapsed items
+                        expect(collapsed.length).toBeGreaterThan(0);
+                        expect(collapsedItems.length).toBe(parentItems.length);
+                        // Clear toogle
+                        treeListInstance.toggleAll(false);
+                        treeListInstance.refreshViewPort();
+                        fixture.detectChanges();
+                        break;
+
+                    default:
+                        // Check no collapsed
+                        expect(collapsed.length).toBe(0);
+                        expect(collapsedItems.length).toBe(0);
+                }
+            });
+
+        fixture.detectChanges();
+    }));
+});
+
+describe('DejaTreeListByOptionsContainerComponent', () => {
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                DejaTreeListByOptionsContainerComponent,
+            ],
+            imports: [
+                BrowserAnimationsModule,
+                CommonModule,
+                FormsModule,
+                NoConflictStyleCompatibilityMode,
+                DejaTreeListModule,
+                DejaItemModule,
+            ],
+        }).compileComponents();
+    }));
+
+    const observeOptionsViewPort$ = (fixture: ComponentFixture<DejaTreeListByOptionsContainerComponent>) => {
+        const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
+        const viewPortService = treeListDebugElement.injector.get(ViewPortService) as ViewPortService;
+
+        return Observable.from(viewPortService.viewPortResult$)
+            .filter((result) => result.viewPortSize > 0);
+    };
+
+    it('should create the component', async(() => {
+        const fixture = TestBed.createComponent(DejaTreeListByOptionsContainerComponent);
+        const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
+        const treeListInstance = treeListDebugElement.componentInstance as DejaTreeListComponent;
+
+        observeOptionsViewPort$(fixture)
+            .debounceTime(100)
+            .subscribe(() => {
+                fixture.detectChanges();
+                const items = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem'));
+                expect(items.length).toBe(12);
+            });
+
+        fixture.detectChanges();
+        expect(treeListInstance).toBeTruthy();
+    }));
 });
 
 describe('DejaTreeListByModelContainerComponent', () => {
@@ -406,7 +522,7 @@ describe('DejaTreeListByModelContainerComponent', () => {
         }).compileComponents();
     }));
 
-    const observeViewModelPort$ = (fixture: ComponentFixture<DejaTreeListByModelContainerComponent>) => {
+    const observeModelViewPort$ = (fixture: ComponentFixture<DejaTreeListByModelContainerComponent>) => {
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const viewPortService = treeListDebugElement.injector.get(ViewPortService) as ViewPortService;
 
@@ -419,7 +535,6 @@ describe('DejaTreeListByModelContainerComponent', () => {
         fixture.detectChanges();
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const treeListInstance = treeListDebugElement.componentInstance as DejaTreeListComponent;
-        // const treeListElement = treeListDebugElement.nativeElement as HTMLElement;
         expect(treeListInstance).toBeTruthy();
     }));
 
@@ -429,7 +544,7 @@ describe('DejaTreeListByModelContainerComponent', () => {
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const treeListInstance = treeListDebugElement.componentInstance as DejaTreeListComponent;
 
-        observeViewModelPort$(fixture)
+        observeModelViewPort$(fixture)
             .debounceTime(10)
             .subscribe((vp) => {
                 // Bind view port
@@ -474,7 +589,28 @@ describe('DejaTreeListByModelContainerComponent', () => {
                         break;
 
                     case 4:
-                        // Check selected model
+                        // Check selected item
+                        expect(selectedModels.length).toBe(1);
+                        expect(vp.items.filter((item: IItemBase) => item.selected).length).toBe(1);
+                        // Clear selection
+                        treeListInstance.selectedModel = null;
+                        treeListInstance.refreshViewPort();
+                        fixture.detectChanges();
+                        break;
+
+                    case 5:
+                        // Check no selected
+                        expect(selectedModels.length).toBe(0);
+                        expect(vp.items.filter((item: IItemBase) => item.selected).length).toBe(0);
+                        // Set selection by value
+                        treeListInstance.value = models[4];
+                        expect((treeListInstance.value as IItemBase).model).toBe(models[4]);
+                        treeListInstance.refreshViewPort();
+                        fixture.detectChanges();
+                        break;
+
+                    case 6:
+                        // Check selected item
                         expect(selectedModels.length).toBe(1);
                         expect(vp.items.filter((item: IItemBase) => item.selected).length).toBe(1);
                         // Clear selection
@@ -491,5 +627,233 @@ describe('DejaTreeListByModelContainerComponent', () => {
             });
 
         fixture.detectChanges();
+    }));
+
+    it('should navigate with the keyboard', async(() => {
+        let pass = 0;
+        const fixture = TestBed.createComponent(DejaTreeListByModelContainerComponent);
+        const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
+        const treeListInstance = treeListDebugElement.componentInstance as DejaTreeListComponent;
+        const treeListElement = treeListDebugElement.nativeElement as HTMLElement;
+        let listElement: HTMLElement;
+
+        const sendKeyDown = (code: string, shiftKey?: boolean, ctrlKey?: boolean) => {
+            const event = new KeyboardEvent('keydown', {
+                code: code,
+                shiftKey: shiftKey,
+                ctrlKey: ctrlKey
+            } as KeyboardEventInit);
+            listElement.dispatchEvent(event);
+            treeListInstance.refreshViewPort();
+            fixture.detectChanges();
+        };
+
+        Observable.fromEvent(treeListElement, 'selectedchange')
+            .subscribe((_event) => {
+                debugger;
+            });
+
+        observeModelViewPort$(fixture)
+            .debounceTime(100)
+            .subscribe((vp) => {
+                fixture.detectChanges();
+                const selectedElements = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem.selected'));
+                const currentElement = fixture.debugElement.query(By.css('deja-tree-list > .deja-listcontainer > .listitem[current="true"]'));
+                const selectedItems = vp.items.filter((item: IItemBase) => item.selected);
+
+                switch (++pass) {
+                    case 1:
+                        // Selection from HTML
+                        expect(vp.items.filter((item: IItemBase) => item.selected).length).toBe(3);
+                        // Clear selection
+                        treeListInstance.selectedModel = null;
+                        treeListInstance.refreshViewPort();
+                        fixture.detectChanges();
+                        break;
+
+                    case 2:
+                        // Check no selected
+                        expect(selectedElements.length).toBe(0);
+                        expect(selectedItems.length).toBe(0);
+                        // Select first line by keydown
+                        sendKeyDown('DownArrow');
+                        break;
+
+                    case 3:
+                        // Check selected item
+                        expect(selectedElements.length).toBe(1);
+                        expect(selectedItems.length).toBe(1);
+                        expect(selectedElements[0].attributes.flat).toBe('0');
+                        // Select second line by keydown
+                        sendKeyDown('DownArrow');
+                        break;
+
+                    case 4:
+                        // Check selected item
+                        expect(selectedElements.length).toBe(1);
+                        expect(selectedItems.length).toBe(1);
+                        expect(selectedElements[0].attributes.flat).toBe('1');
+                        // Select first line by keyup
+                        sendKeyDown('UpArrow');
+                        break;
+
+                    case 5:
+                        // Check selected item
+                        expect(selectedElements.length).toBe(1);
+                        expect(selectedItems.length).toBe(1);
+                        expect(selectedElements[0].attributes.flat).toBe('0');
+                        // Select first and second lines by shift+keydown
+                        sendKeyDown('DownArrow', true);
+                        break;
+
+                    case 6:
+                        // Check selected item
+                        expect(selectedElements.length).toBe(2);
+                        expect(selectedItems.length).toBe(2);
+                        expect(selectedElements[0].attributes.flat).toBe('0');
+                        expect(selectedElements[1].attributes.flat).toBe('1');
+                        // Keep selection, but pass current line to the third line
+                        sendKeyDown('DownArrow', false, true);
+                        break;
+
+                    case 7:
+                        // Check selected item
+                        expect(selectedElements.length).toBe(2);
+                        expect(selectedItems.length).toBe(2);
+                        expect(selectedElements[0].attributes.flat).toBe('0');
+                        expect(selectedElements[1].attributes.flat).toBe('1');
+                        // Check current item
+                        expect(currentElement.attributes.flat).toBe('2');
+                        // Select third line only
+                        sendKeyDown('Space');
+                        break;
+
+                    case 8:
+                        // Check selected item
+                        expect(selectedElements.length).toBe(1);
+                        expect(selectedItems.length).toBe(1);
+                        expect(selectedElements[0].attributes.flat).toBe('2');
+                        // Select first line with Home
+                        sendKeyDown('Home', true);
+                        break;
+
+                    case 9:
+                        // Check selected item
+                        expect(selectedElements.length).toBe(1);
+                        expect(selectedItems.length).toBe(1);
+                        expect(selectedElements[0].attributes.flat).toBe('0');
+                        // Select last line with End
+                        sendKeyDown('End');
+                        break;
+
+                    case 10:
+                        // Check selected item
+                        expect(selectedElements.length).toBe(1);
+                        expect(selectedItems.length).toBe(1);
+                        expect(selectedElements[0].attributes.flat).toBe('1999');
+                        // Select the two last lines with Shift+PageUp
+                        sendKeyDown('UpArrow', true);
+                        break;
+
+                    case 11:
+                        // Check selected item
+                        expect(selectedElements.length).toBe(2);
+                        expect(selectedItems.length).toBe(2);
+                        expect(selectedElements[0].attributes.flat).toBe('1998');
+                        expect(selectedElements[1].attributes.flat).toBe('1999');
+                        // Keep selection, but pass current line to the first line
+                        sendKeyDown('Home', false, true);
+                        break;
+
+                    case 12:
+                        // Check selected item
+                        expect(selectedElements.length).toBe(0);
+                        expect(selectedItems.length).toBe(2);
+                        // Check current item
+                        expect(currentElement.attributes.flat).toBe('0');
+                        // Select line 11 (PageSize=10)
+                        sendKeyDown('PageDown');
+                        break;
+
+                    case 13:
+                        // Check selected item
+                        expect(selectedElements.length).toBe(1);
+                        expect(selectedItems.length).toBe(1);
+                        expect(selectedElements[0].attributes.flat).toBe('10');
+                        // Check current item
+                        expect(currentElement.attributes.flat).toBe('10');
+                        // Select from line 11 to last line
+                        sendKeyDown('End', true);
+                        break;
+
+                    case 14:
+                        // Check selected item
+                        expect(selectedElements.length).toBe(vp.visibleItems.length);
+                        expect(selectedItems.length).toBe(vp.items.length - 10);
+                        // Check current item
+                        expect(currentElement.attributes.flat).toBe('1999');
+                        // Select first line with Home
+                        sendKeyDown('Home');
+                        break;
+
+                    case 15:
+                        // Check selected item
+                        expect(selectedElements.length).toBe(1);
+                        expect(selectedItems.length).toBe(1);
+                        // Check current item
+                        expect(currentElement.attributes.flat).toBe('0');
+                        // Select until line 11
+                        sendKeyDown('PageDown', true);
+                        break;
+
+                    case 16:
+                        // Check selected item
+                        expect(selectedElements.length).toBe(11);
+                        expect(selectedItems.length).toBe(11);
+                        // Check current item
+                        expect(currentElement.attributes.flat).toBe('10');
+                        // Select next line only
+                        sendKeyDown('DownArrow');
+                        break;
+
+                    case 17:
+                        // Check selected item
+                        expect(selectedElements.length).toBe(1);
+                        expect(selectedItems.length).toBe(1);
+                        // Check current item
+                        expect(currentElement.attributes.flat).toBe('11');
+                        // Select second line with PageUp
+                        sendKeyDown('PageUp');
+                        break;
+
+                    case 18:
+                        // Check selected item
+                        expect(selectedElements.length).toBe(1);
+                        expect(selectedItems.length).toBe(1);
+                        // Check current item
+                        expect(currentElement.attributes.flat).toBe('1');
+                        // Select last line
+                        sendKeyDown('End');
+                        break;
+
+                    case 19:
+                        // Check selected item
+                        expect(selectedElements.length).toBe(1);
+                        expect(selectedItems.length).toBe(1);
+                        expect(selectedElements[0].attributes.flat).toBe('1999');
+                        // Check current item
+                        expect(currentElement.attributes.flat).toBe('1999');
+                        // Select from line 11 to last line
+                        sendKeyDown('PageUp', true);
+                        break;
+
+                    default:
+                        expect(selectedElements.length).toBe(11);
+                        expect(selectedItems.length).toBe(11);
+                }
+            });
+
+        fixture.detectChanges();
+        listElement = treeListInstance.listElement;
     }));
 });
