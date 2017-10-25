@@ -838,10 +838,13 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                     return;
                 }
             })
-            .filter((event: KeyboardEvent) => event.keyCode >= KeyCodes.Key0 ||
-                event.keyCode === KeyCodes.Backspace ||
-                event.keyCode === KeyCodes.Space ||
-                event.keyCode === KeyCodes.Delete)
+            .filter((event: KeyboardEvent) => {
+                const keyCode = event.keyCode || KeyCodes[event.code];
+                return keyCode >= KeyCodes.Key0 ||
+                    keyCode === KeyCodes.Backspace ||
+                    keyCode === KeyCodes.Space ||
+                    keyCode === KeyCodes.Delete;
+            })
             .subscribe((event: KeyboardEvent) => {
                 // Set current item from index for keyboard features only
                 const setCurrentIndex = (index: number) => {
@@ -877,7 +880,8 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                 } else {
                     // Autocomplete, filter the list
                     this.keyboardNavigation$.next();
-                    if (event.keyCode !== KeyCodes.Space) {
+                    const keyCode = event.keyCode || KeyCodes[event.code];
+                    if (keyCode !== KeyCodes.Space) {
                         this.filterListComplete$.next();
                     }
                 }
