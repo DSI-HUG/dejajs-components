@@ -1150,7 +1150,6 @@ describe('DejaTreeListByOptionsContainerComponent', () => {
                         expect(selectedElements.length).toBe(1);
                         expect(selectedItems.length).toBe(1);
                         expect(currentElement && currentElement.attributes.flat).toBe('6');
-                        console.log('done');
 
                 }
             });
