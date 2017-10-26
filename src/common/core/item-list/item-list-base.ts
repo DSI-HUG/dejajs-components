@@ -643,7 +643,7 @@ export abstract class ItemListBase implements OnDestroy {
 
     /** Retourne le champ utilisé comme valeur d'affichage.*/
     protected getTextField() {
-        return this._textField || 'displayName';
+        return this._textField || ItemListService.defaultTextField;
     }
 
     /** Définit le champ à utiliser comme valeur de comparaison.
@@ -658,7 +658,7 @@ export abstract class ItemListBase implements OnDestroy {
 
     /** Retourne le champ utilisé comme valeur de comparaison.*/
     protected getValueField() {
-        return this._valueField || 'value';
+        return this._valueField || ItemListService.defaultValueField;
     }
 
     /** Définit le champ à utiliser comme champ de recherche.
@@ -745,7 +745,8 @@ export abstract class ItemListBase implements OnDestroy {
     }
 
     protected mapToIItemBase(modls: any[], selected?: boolean): IItemBase[] {
-        return modls.map((model) => {
+        const m = modls || [];
+        return m.map((model) => {
             const itemBase: IItemBase = {};
 
             itemBase.model = model;
@@ -794,28 +795,26 @@ export abstract class ItemListBase implements OnDestroy {
     }
 
     protected getVirtualSelectedEntities(value) {
+        const map = (v) => {
+            const model = {};
+            const textField = this.getTextField();
+            const valueField = this.getValueField();
+            model[textField] = `${v}`.trim();
+            model[valueField] = v;
+            return model;
+        };
+
         if (value) {
             const modelType = typeof value;
             if (modelType === 'string' || modelType === 'number') {
-                if (this._multiSelect) {
-                    value = value.split(',')
-                        .map((v) => v.trim())
-                        .map((v) => {
-                            const model = {};
-                            const textField = this.getTextField();
-                            const valueField = this.getValueField();
-                            model[textField] = v;
-                            model[valueField] = v;
-                            return model;
-                        });
-                } else {
-                    const v = value.trim();
-                    value = {};
-                    const textField = this.getTextField();
-                    const valueField = this.getValueField();
-                    value[textField] = v;
-                    value[valueField] = v;
+                value = this._multiSelect ? value.split(',').map(map) : map(value);
+            } else if (value instanceof Array && value.length) {
+                const type = typeof value[0];
+                if (type === 'string' || type === 'number') {
+                    value = this._multiSelect ? value.map(map) : map(value[0]);
                 }
+            } else if (value instanceof Array && !this._multiSelect) {
+                value = null;
             }
         }
 
