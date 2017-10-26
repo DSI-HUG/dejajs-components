@@ -419,10 +419,13 @@ export class ViewPortService implements OnDestroy {
                             // Measure again container and recalc viewport
                             this.viewPortResult$.next(this.measureViewPort);
                             return Observable.timer(1).switchMap(() => calcViewPort$(items, maxSize, scrollPos, element, itemDefaultSize, ensureParams, true));
-                        } else if (items.length && endScrollPos > 0 && (viewPort.scrollPos || scrollPos) > endScrollPos) {
+                        } else if (endScrollPos < 0 || (items.length && endScrollPos > 0 && (viewPort.scrollPos || scrollPos) > endScrollPos)) {
                             // Scroll position is over the last item
                             // Ensure last item visible and recalc viewport
-                            return calcViewPort$(items, maxSize, endScrollPos, element, itemDefaultSize, {} as IEnsureParams, true);
+                            return calcViewPort$(items, maxSize, 0, element, itemDefaultSize, {
+                                index: items.length - 1,
+                                atEnd: true,
+                            } as IEnsureParams, true);
                         } else if (this.mode === ViewportMode.auto && viewPort.listSize < listSize) {
                             // Rendered viewport is to small, render again to complete
                             return calcViewPort$(items, maxSize, 0, element, itemDefaultSize, {
