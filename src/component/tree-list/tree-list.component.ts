@@ -830,7 +830,8 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
         }
 
         // Ensure list cache
-        keyUp$.takeWhile(() => this._isAlive)
+        keyUp$
+            .takeWhile(() => this._isAlive)
             .filter(() => !this.disabled)
             .do(() => {
                 if ((this.query || '').length < this.minSearchlength) {
@@ -891,28 +892,29 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     }
 
     public mousedown(e: MouseEvent) {
-        if (this.disabled) {
-            return undefined;
-        }
-
         if (this.mouseUp$sub) {
             this.mouseUp$sub.unsubscribe();
             this.mouseUp$sub = undefined;
         }
 
-        const itemIndex = this.getItemIndexFromHTMLElement(e.target as HTMLElement);
+        if (this.disabled) {
+            return undefined;
+        }
+
+        const target = e.target as HTMLElement;
+        const itemIndex = this.getItemIndexFromHTMLElement(target);
         if (itemIndex === undefined) {
             return undefined;
         }
 
-        const isExpandButton = (target: HTMLElement) => {
-            return target.id === 'expandbtn' || target.parentElement.id === 'expandbtn';
+        const isExpandButton = (el: HTMLElement) => {
+            return el.id === 'expandbtn' || el.parentElement.id === 'expandbtn';
         };
 
         const item = this._itemList[itemIndex - this.vpStartRow];
         this.clickedItem = item;
 
-        if ((!isExpandButton(e.target as HTMLElement) || !this.isCollapsible(item)) && this.isSelectable(item) && (!e.ctrlKey || !this.multiSelect) && (e.button === 0 || !item.selected)) {
+        if ((!isExpandButton(target) || !this.isCollapsible(item)) && this.isSelectable(item) && (!e.ctrlKey || !this.multiSelect) && (e.button === 0 || !item.selected)) {
             if (e.shiftKey && this.multiSelect) {
                 // Select all from current to clicked
                 this.selectRange$(itemIndex, this.currentItemIndex)
@@ -933,12 +935,15 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
             }
         }
 
-        const element = this.elementRef.nativeElement as HTMLElement;
-        this.mouseUp$sub = Observable.fromEvent(element, 'mouseup')
+        this.mouseUp$sub = Observable.fromEvent(this.listElement, 'mouseup')
             .first()
             .filter(() => !this.disabled)
             .subscribe((upevt: MouseEvent) => {
-                const upIndex = this.getItemIndexFromHTMLElement(upevt.target as HTMLElement);
+                // Because .first()
+                this.mouseUp$sub = undefined;
+
+                const upTarget = upevt.target as HTMLElement;
+                const upIndex = this.getItemIndexFromHTMLElement(upTarget);
                 if (upIndex === undefined) {
                     return;
                 }
@@ -957,7 +962,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                     return;
                 }
 
-                if (this.isCollapsible(upItem) && (isExpandButton(upevt.target as HTMLElement) || !this.isSelectable(upItem))) {
+                if (this.isCollapsible(upItem) && (isExpandButton(upTarget) || !this.isSelectable(upItem))) {
                     const treeItem = upItem as IItemTree;
                     this.toggleCollapse$(upIndex, !treeItem.collapsed).first().subscribe(() => {
                         this.currentItemIndex = upIndex;
