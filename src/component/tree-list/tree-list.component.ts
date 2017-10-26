@@ -116,10 +116,10 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     private mouseUp$sub: Subscription;
 
     private clearFilterExpression$ = new BehaviorSubject<void>(null);
-    private filterListComplete$ = new Subject();
     private writeValue$ = new Subject<any>();
     private selectItems$ = new Subject<any>();
     private contentInitialized$ = new Subject();
+    private setQuery$ = new Subject<string>();
 
     constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, public elementRef: ElementRef, @Self() @Optional() public _control: NgControl, @Optional() private clipboardService: DejaClipboardService) {
         super(changeDetectorRef, viewPort);
@@ -132,13 +132,6 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
             .takeWhile(() => this._isAlive)
             .debounceTime(400)
             .subscribe(() => this.filterExpression = '');
-
-        Observable.from(this.filterListComplete$)
-            .takeWhile(() => this._isAlive)
-            .debounceTime(250)
-            .do(() => this.setCurrentItem(undefined))
-            .switchMap(() => this.calcViewList$())
-            .subscribe(noop);
 
         Observable.from(this.keyboardNavigation$)
             .takeWhile(() => this._isAlive)
@@ -157,6 +150,16 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                 this.viewPort.refresh();
                 this.changeDetectorRef.markForCheck();
             });
+
+        Observable.from(this.setQuery$)
+            .takeWhile(() => this._isAlive)
+            .debounceTime(250)
+            .do((query) => {
+                this.query = query;
+                this.setCurrentItem(undefined);
+            })
+            .switchMap(() => this.calcViewList$())
+            .subscribe(noop);
 
         const selectItems$ = Observable.combineLatest(this.selectItems$, this.contentInitialized$)
             .map(([value]) => value)
@@ -881,10 +884,6 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                 } else {
                     // Autocomplete, filter the list
                     this.keyboardNavigation$.next();
-                    const keyCode = event.keyCode || KeyCodes[event.code];
-                    if (keyCode !== KeyCodes.Space) {
-                        this.filterListComplete$.next();
-                    }
                 }
             });
 

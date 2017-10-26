@@ -1,6 +1,6 @@
 <deja-chips [items]="selectedItems" [readonly]="readonly" [disabled]="disabled" (close)="onCloseClicked($event)" [itemTemplateExternal]="selectedTemplate" *ngIf="isMultiSelect && selectedItems.length > 0 && selectedItemsPosition===0" [textField]="_textField"></deja-chips>
 <mat-form-field cdk-overlay-origin id="input" [attr.wait]="waiter" [attr.multiselection]="isMultiSelect && selectedItems.length > 0" [attr.selection]="selectedItemsPosition===0 ? 'above' : null">
-	<input #inputElement deja-child-validator type="text" matInput [readonly]="isModeSelect || readonly" (ngModelChange)="queryChanged($event)" [ngModel]="query" [disabled]="disabled" autocomplete="false">
+	<input #inputElement deja-child-validator type="text" matInput [readonly]="isModeSelect || readonly" (ngModelChange)="queryChanged($event)" [ngModel]="query" [disabled]="disabled" autocomplete="off">
 	<mat-placeholder>
 		<ng-template [ngTemplateOutlet]="placeHolderTemplate"></ng-template>
 		<span *ngIf="!placeHolderTemplate">{{ placeholder }}</span>

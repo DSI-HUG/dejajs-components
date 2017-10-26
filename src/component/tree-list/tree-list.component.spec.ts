@@ -1017,8 +1017,9 @@ describe('DejaTreeListByOptionsContainerComponent', () => {
                         treeListInstance.searchArea = true;
                         fixture.detectChanges();
                         // Filter test
-                        treeListInstance.query = 'c';
-                        sendKeyUp('c');
+                        (<any>treeListInstance).setQuery$.next('c');
+                        treeListInstance.refreshViewPort();
+                        fixture.detectChanges();
                         break;
 
                     default:
