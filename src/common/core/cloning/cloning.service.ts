@@ -75,20 +75,20 @@ export class CloningService {
                 return tgt;
             };
 
-            const tgt = typeof target === 'object' ? target : new target();
-            if (Array.isArray(obj) !== Array.isArray(tgt)) {
+            const targetInstance = typeof target === 'object' ? target : new target();
+            if (Array.isArray(obj) !== Array.isArray(targetInstance)) {
                 throw new Error('obj and target must be of the same type. (object <> object or Array <> Array)');
             }
 
-            if (obj && Array.isArray(obj) && Array.isArray(tgt)) {
+            if (obj && Array.isArray(obj) && Array.isArray(targetInstance)) {
                 return obj.map((o) => {
                     const cloned = {};
                     this.cloneSync(o, cloned);
-                    tgt.push(cloned);
+                    targetInstance.push(cloned);
                 }) as any;
             }
 
-            return cloneInternal(obj, tgt);
+            return cloneInternal(obj, targetInstance);
         }
     }
 }
