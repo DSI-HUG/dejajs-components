@@ -1,6 +1,6 @@
 <div id="header" *ngIf="searchArea">
     <mat-form-field deja-child-validator id="input" *ngIf="searchArea">
-        <input #inputelement type="text" matInput tabindex="0" [ngModel]="query" [placeholder]="placeholder" [disabled]="disabled" (input)="onInput()">
+        <input #inputelement type="text" matInput tabindex="0" [ngModel]="query" [placeholder]="placeholder" [disabled]="disabled" (input)="setQuery$.next(model && model.value)" #model="ngModel">
         <span *ngIf="searchPrefixTemplate" matPrefix>
 			<ng-template [ngTemplateOutlet]="searchPrefixTemplate"></ng-template>
 		</span>

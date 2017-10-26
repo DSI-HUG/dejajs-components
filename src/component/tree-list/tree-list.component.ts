@@ -1077,11 +1077,6 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
         }
     }
 
-    public onInput() {
-        const inputElement = this.input.nativeElement as HTMLInputElement;
-        this.setQuery$.next(inputElement.value);
-    }
-
     protected onSelectionChange() {
         let outputEmitter = null;
 
