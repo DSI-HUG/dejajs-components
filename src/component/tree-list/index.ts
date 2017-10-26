@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule, MatCheckboxModule, MatInputModule } from '@angular/material';
+import { DejaItemModule } from './../../common/core/item-list/index';
 import { DejaChildValidatorModule } from './../../common/core/validation/index';
 import { DejaDragDropModule } from './../dragdrop/index';
 import { DejaListLoaderModule } from './../loaders/index';
@@ -20,7 +21,9 @@ import { DejaTreeListComponent } from './tree-list.component';
     declarations: [
         DejaTreeListComponent,
     ],
-    exports: [DejaTreeListComponent],
+    exports: [
+        DejaTreeListComponent,
+    ],
     imports: [
         CommonModule,
         FormsModule,
@@ -31,6 +34,7 @@ import { DejaTreeListComponent } from './tree-list.component';
         DejaListLoaderModule,
         DejaDragDropModule,
         DejaTextMetricsModule,
+        DejaItemModule,
     ],
 })
 export class DejaTreeListModule { }

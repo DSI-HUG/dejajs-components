@@ -22,4 +22,5 @@ export interface IDejaTile {
     color?: string;
     templateModel?: any;
     effects?: IDejaTileEffect;
+    refresh?(): void;
 }

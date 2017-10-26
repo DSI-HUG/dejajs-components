@@ -26,6 +26,9 @@ import { IItemTree } from './item-tree';
  * Il peut-être surchargé pour faire du lazy loading ou du paging.
  */
 export class ItemListService {
+    public static defaultChildrenField = 'items';
+    public static defaultTextField = 'displayName';
+    public static defaultValueField = 'value';
 
     // Waiter
     private _waiter$ = new BehaviorSubject<boolean>(false);
@@ -62,7 +65,7 @@ export class ItemListService {
     private _ddCurrentIndex: number;
     private _ddChildCount: number;
 
-    private _childrenField = 'items';
+    private _childrenField = ItemListService.defaultChildrenField;
 
     // Cnacelable pre events
     private loadingItems$: (query: string | RegExp, selectedItems: IItemBase[]) => Observable<IItemBase[]>;
@@ -80,18 +83,21 @@ export class ItemListService {
      * @return {string} Valeur à comparer pour le modèle spécifié.
      */
     public static getItemValue(item: any, valueField?: string) {
+        // tslint:disable-next-line:triple-equals
+        const isDefined = (value) => value != undefined;
+
         if (valueField) {
             const fields = valueField.split('.');
             let model = item.model && item.model[fields[0]] !== undefined ? item.model : item;
             fields.forEach((fieldName) => {
                 model = model && model[fieldName];
             });
-            if (model) {
+            if (isDefined(model)) {
                 return typeof model === 'function' ? model() : model;
             }
         }
 
-        return item.value || item.model || item;
+        return isDefined(item.value) ? item.value : (isDefined(item.model) ? item.model : item);
     }
 
     /** Evalue le texte à afficher pour l'élément spécifié.
@@ -169,7 +175,7 @@ export class ItemListService {
      * @param {string} value Nom du champ à utiliser comme collection d'enfants
      */
     public set childrenField(value: string) {
-        this._childrenField = value || 'items';
+        this._childrenField = value || ItemListService.defaultChildrenField;
         this.invalidateCache();
     }
 
@@ -197,6 +203,11 @@ export class ItemListService {
     /** Définit le champs à utiliser comme valeur de comparaison */
     public set valueField(valueField: string) {
         this._valueField = valueField;
+    }
+
+    /** Renvoie le champs à utiliser comme valeur de comparaison */
+    public get valueField() {
+        return this._valueField;
     }
 
     public get hasCache() {
@@ -1226,11 +1237,14 @@ export class ItemListService {
     }
 
     private compareItems = (item1: IItemBase, item2: IItemBase) => {
-        if (!item1 || !item2) {
+        // tslint:disable-next-line:triple-equals
+        const isDefined = (value) => value != undefined;
+
+        if (!isDefined(item1) || !isDefined(item2)) {
             return false;
-        } else if (item1 && !item2) {
+        } else if (isDefined(item1) && !isDefined(item2)) {
             return false;
-        } else if (!item1 && item2) {
+        } else if (!isDefined(item1) && isDefined(item2)) {
             return false;
         } else {
             if (item1.equals) {

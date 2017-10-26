@@ -1,3 +1,152 @@
+#### 2.15.2 (2017-10-25)
+
+##### Code Style Changes
+
+* **DejaDateSelectorComponent:** TsLint ([7e237bc4](https://github.com/DSI-HUG/dejajs-components/commit/7e237bc40273208b0313c7078d931bc9bce8df0f))
+
+#### 2.15.1 (2017-10-25)
+
+##### BREAKING CHANGES
+
+* **ViewPortComponent:** Property items become models and another property items is added and representing an array of IViewPortItems. That allow to control the size of each items. ([bb11027d](https://github.com/DSI-HUG/dejajs-components/commit/bb11027d2058fe3a33a9b26c5cecad0dd7bceed4))
+    => previous usage of the items input must be renamed to models
+
+
+##### Continuous Integration
+
+* **Travis:** Improve build performance (concurrent execution) ([d591582e](https://github.com/DSI-HUG/dejajs-components/commit/d591582ec5c1ac2334aabc7553c796ef7b732313))
+
+##### New Features
+
+* **DejaTileComponent:** Ability to refresh the tile ([d1d40b5a](https://github.com/DSI-HUG/dejajs-components/commit/d1d40b5a8ab26ddafa9868fdb713f8e6fdb074b8))
+* **ItemListBase:** Possibility to pass an array of items to RefreshViewPort ([7f71ec38](https://github.com/DSI-HUG/dejajs-components/commit/7f71ec38df18744ff9d5dc7930bc816d7005e8e2))
+
+##### Bug Fixes
+
+* **DejaTreeList:** model was not updated on multiselect mode ([611aaea1](https://github.com/DSI-HUG/dejajs-components/commit/611aaea1025e47edde19294a3059d4879ee7e559))
+* **DejaOverlay:**
+  * Avoid right click when overlay is open ([26bfc1f1](https://github.com/DSI-HUG/dejajs-components/commit/26bfc1f115aeeb7c95e1288263678ce80d65bc75))
+  * For display block for deja-menu-content ([55e8d7c8](https://github.com/DSI-HUG/dejajs-components/commit/55e8d7c80f23790391e984c066a6f097e3770fff))
+* **ViewPortService:** Clear items size when refresh with clearMeasuredSize is invoked ([4a3c9b52](https://github.com/DSI-HUG/dejajs-components/commit/4a3c9b52533e29470ba6ebf4598cfe87efb273ee))
+* **DejaViewportComponent:** Improve buttons binding during lifecycle in button scrolling mode ([8949a4c2](https://github.com/DSI-HUG/dejajs-components/commit/8949a4c25221b9fc52aeafc8aaa401f15bcccef5))
+* **DejaViewportService:** Prevent a possible infinite call of calcViewPort in fixed size mode ([bc3290b7](https://github.com/DSI-HUG/dejajs-components/commit/bc3290b79bad13deca332fe17871768cbaa4b16b))
+
+##### Refactors
+
+* **DejaViewport:** Refactoring of observables unsubscription ([62df1780](https://github.com/DSI-HUG/dejajs-components/commit/62df1780ebbbb68a7afa1842577e03754862dc8b))
+
+##### Tests
+
+* **DejaViewPortComponent:**
+  * improve unit test ([bdfb1294](https://github.com/DSI-HUG/dejajs-components/commit/bdfb12941979da00cd7b97ff4fad01d6f772b751))
+  * improve unit test ([54497242](https://github.com/DSI-HUG/dejajs-components/commit/544972426ec7c3a8b18aab0c8f8e9b2b2e988c3b))
+  * improve unit test ([6ab05a29](https://github.com/DSI-HUG/dejajs-components/commit/6ab05a2988d4fc6241d5ff8bcdacfc236354cdb3))
+  * improve unit test ([180681c3](https://github.com/DSI-HUG/dejajs-components/commit/180681c3588152f3dd26658a1ba1d8a8049a473a))
+  * added unit test ([b382ecc8](https://github.com/DSI-HUG/dejajs-components/commit/b382ecc8272dd0df93ac415143b7e18cfafc71e1))
+
+#### 2.15.1 (2017-10-25)
+
+##### BREAKING CHANGES
+
+* **ViewPortComponent:** Property items become models and another property items is added and representing an array of IViewPortItems. That allow to control the size of each items. ([bb11027d](https://github.com/DSI-HUG/dejajs-components/commit/bb11027d2058fe3a33a9b26c5cecad0dd7bceed4))
+    => previous usage of the items input must be renamed to models
+
+
+##### Continuous Integration
+
+* **Travis:** Improve build performance (concurrent execution) ([d591582e](https://github.com/DSI-HUG/dejajs-components/commit/d591582ec5c1ac2334aabc7553c796ef7b732313))
+
+##### New Features
+
+* **DejaTileComponent:** Ability to refresh the tile ([d1d40b5a](https://github.com/DSI-HUG/dejajs-components/commit/d1d40b5a8ab26ddafa9868fdb713f8e6fdb074b8))
+* **ItemListBase:** Possibility to pass an array of items to RefreshViewPort ([7f71ec38](https://github.com/DSI-HUG/dejajs-components/commit/7f71ec38df18744ff9d5dc7930bc816d7005e8e2))
+
+##### Bug Fixes
+
+* **DejaTreeList:** model was not updated on multiselect mode ([611aaea1](https://github.com/DSI-HUG/dejajs-components/commit/611aaea1025e47edde19294a3059d4879ee7e559))
+* **DejaOverlay:**
+  * Avoid right click when overlay is open ([26bfc1f1](https://github.com/DSI-HUG/dejajs-components/commit/26bfc1f115aeeb7c95e1288263678ce80d65bc75))
+  * For display block for deja-menu-content ([55e8d7c8](https://github.com/DSI-HUG/dejajs-components/commit/55e8d7c80f23790391e984c066a6f097e3770fff))
+* **ViewPortService:** Clear items size when refresh with clearMeasuredSize is invoked ([4a3c9b52](https://github.com/DSI-HUG/dejajs-components/commit/4a3c9b52533e29470ba6ebf4598cfe87efb273ee))
+* **DejaViewportComponent:** Improve buttons binding during lifecycle in button scrolling mode ([8949a4c2](https://github.com/DSI-HUG/dejajs-components/commit/8949a4c25221b9fc52aeafc8aaa401f15bcccef5))
+* **DejaViewportService:** Prevent a possible infinite call of calcViewPort in fixed size mode ([bc3290b7](https://github.com/DSI-HUG/dejajs-components/commit/bc3290b79bad13deca332fe17871768cbaa4b16b))
+
+##### Refactors
+
+* **DejaViewport:** Refactoring of observables unsubscription ([62df1780](https://github.com/DSI-HUG/dejajs-components/commit/62df1780ebbbb68a7afa1842577e03754862dc8b))
+
+##### Tests
+
+* **DejaViewPortComponent:**
+  * improve unit test ([bdfb1294](https://github.com/DSI-HUG/dejajs-components/commit/bdfb12941979da00cd7b97ff4fad01d6f772b751))
+  * improve unit test ([54497242](https://github.com/DSI-HUG/dejajs-components/commit/544972426ec7c3a8b18aab0c8f8e9b2b2e988c3b))
+  * improve unit test ([6ab05a29](https://github.com/DSI-HUG/dejajs-components/commit/6ab05a2988d4fc6241d5ff8bcdacfc236354cdb3))
+  * improve unit test ([180681c3](https://github.com/DSI-HUG/dejajs-components/commit/180681c3588152f3dd26658a1ba1d8a8049a473a))
+  * added unit test ([b382ecc8](https://github.com/DSI-HUG/dejajs-components/commit/b382ecc8272dd0df93ac415143b7e18cfafc71e1))
+
+### 2.15.0 (2017-10-12)
+
+##### BREAKING CHANGES
+
+* **Dependencies:** upgrade dependencies ([4aad8a11](https://github.com/DSI-HUG/dejajs-components/commit/4aad8a112ffa8c408ce5aeebb563a80badde8826))
+
+#### 2.14.1 (2017-10-12)
+
+##### Continuous Integration
+
+* **Test:** Increase karma timeout for PC with bad perf ([18f1d65a](https://github.com/DSI-HUG/dejajs-components/commit/18f1d65aa7a5a111106d2fae47524349d273b050))
+
+##### Documentation Changes
+
+* **DejaOverlayComponent:** ajouter entête licence HUG ([541cc49e](https://github.com/DSI-HUG/dejajs-components/commit/541cc49eccf673d4506414aec2610587039282cc))
+
+##### New Features
+
+* **RangeComponent:** Add refresh function ([96723d4d](https://github.com/DSI-HUG/dejajs-components/commit/96723d4d24351d8990d74e307f291fb244e6951e))
+
+##### Bug Fixes
+
+* **DejaMarkdown:** Fix color margin in code sample ([02795273](https://github.com/DSI-HUG/dejajs-components/commit/0279527369c8e41694f3ac6b10e5528f7e22beca))
+* **DejaTreeList:**
+  * modelIsValue property initialized to undefined and is determined by the first passed model ([1facb7ad](https://github.com/DSI-HUG/dejajs-components/commit/1facb7ada93baed4693769ceef0e0c28b44f8736))
+  * modelIsValue property can be defined for multiselect ([a2b9adec](https://github.com/DSI-HUG/dejajs-components/commit/a2b9adec3450a99bd623524f0904250782400c42))
+* **DejaSelect:**
+  * modelIsValue property initialized to undefined and is determined by the first passed model ([bd7dc3cf](https://github.com/DSI-HUG/dejajs-components/commit/bd7dc3cf9d6559c0ecf1837d2eef65a8330316eb))
+  * modelIsValue property can be defined for multiselect ([3d9c0673](https://github.com/DSI-HUG/dejajs-components/commit/3d9c0673d1e413686d77e28216e258312c763bf0))
+* **DejaOverlayComponent:**
+  * only throw visibilityChanged if old value is different from new value ([607aa9f0](https://github.com/DSI-HUG/dejajs-components/commit/607aa9f045a58393160b2902e2e127f9e5427093))
+  * tooltip style conflict with overlay style ([b3f6e3f1](https://github.com/DSI-HUG/dejajs-components/commit/b3f6e3f1e9e6fad1bd91049faf0916cd12005029))
+* **Diacritics:** Remove crash when null or undefined was passed. ([60afeca1](https://github.com/DSI-HUG/dejajs-components/commit/60afeca1fb0483b6ee56499f7bbebf0b3191de24))
+* **DejaOverlay:**
+  * Replacing class cdk-overlay-container with deja-overlay-container ([a86f130d](https://github.com/DSI-HUG/dejajs-components/commit/a86f130d11db94da9e9f5e0dd0badb1bf0b19336))
+  * Menu styling was broken ([bcb24836](https://github.com/DSI-HUG/dejajs-components/commit/bcb24836d872120f0ec0b61b2bcc04ade74d91d4))
+
+##### Other Changes
+
+* **Test:**
+  * Fix Test E2E ([f57edb43](https://github.com/DSI-HUG/dejajs-components/commit/f57edb4338f701fbf5b8c6065bf6b3a67f68c8e2))
+  *  conf travis ([f1447137](https://github.com/DSI-HUG/dejajs-components/commit/f14471370ee2c8f7dc8ac5a8486daeaebee51353))
+  * Restore Karma config ([5802639a](https://github.com/DSI-HUG/dejajs-components/commit/5802639a3b9f4f5fc5edc876018f8c4130ec820b))
+  * Test E2E conf ([70acfeff](https://github.com/DSI-HUG/dejajs-components/commit/70acfeff08119be7fee2d473aa4ec9da2c0763bf))
+  * Try e2e without chrome headless ([91031620](https://github.com/DSI-HUG/dejajs-components/commit/9103162083afadf9b7bf919c06d9e22c46349288))
+  * Try e2e without chrome headless ([e339cfe9](https://github.com/DSI-HUG/dejajs-components/commit/e339cfe96ddae18dd8d18a027a97772ebd53d561))
+  * Travis test ([9a0b5c38](https://github.com/DSI-HUG/dejajs-components/commit/9a0b5c38e746ee35f81d678cc2b6cc92183bb31f))
+  * Fix test ([8bb154da](https://github.com/DSI-HUG/dejajs-components/commit/8bb154dadbb633898075e14657d06bdab89be55a))
+
+##### Reverts
+
+* **DemoApp:** Revert updates on theme selector ([6e3434a8](https://github.com/DSI-HUG/dejajs-components/commit/6e3434a8e22b055a31ef4811daef8ca9d6e294ea))
+
+##### Code Style Changes
+
+* **TSLint:** Fix lint issue ([1038adff](https://github.com/DSI-HUG/dejajs-components/commit/1038adff260aefbc1bb6f2369d56b710ae522989))
+
+##### Tests
+
+* **DejaSidenav:** Add e2e test ([6c92482f](https://github.com/DSI-HUG/dejajs-components/commit/6c92482f427e26e8d42b16e3b0e2a307b22050fb))
+* **DejaOverlayComponent:** added unit test ([622b28aa](https://github.com/DSI-HUG/dejajs-components/commit/622b28aa63d1e2eb5e88eed006decc73f5b762d3))
+* **Sidenav:** Add sidenav tests ([95928040](https://github.com/DSI-HUG/dejajs-components/commit/95928040e70c7e537ce074c8d9645ce66df85b7a))
+
 ### 2.14.0 (2017-10-05)
 
 ##### BREAKING CHANGES
