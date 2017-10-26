@@ -22,7 +22,7 @@ export class CloningService {
      * @param type The type of object to clone
      * @return Observable resolving to the cloned object.
      */
-    public clone$<T>(object: any, type?: { new (): T } | object): Observable<T> {
+    public clone$<T>(object: any, type?: { new(): T } | object): Observable<T> {
         return Observable.of(this.cloneSync(object, type));
     }
 
@@ -33,7 +33,7 @@ export class CloningService {
      * @param target The type or an instance of the target
      * @return The cloned object.
      */
-    public cloneSync<T>(obj: object, target?: { new (): T } | object): T {
+    public cloneSync<T>(obj: object, target?: { new(): T } | object): T {
         if (!target) {
             return JSON.parse(JSON.stringify(obj));
         } else {
@@ -75,11 +75,20 @@ export class CloningService {
                 return tgt;
             };
 
-            if (obj && Array.isArray(obj)) {
-                return obj.map((o) => this.cloneSync(o, target)) as any;
+            const tgt = typeof target === 'object' ? target : new target();
+            if (Array.isArray(obj) !== Array.isArray(tgt)) {
+                throw new Error('obj and target must be of the same type. (object <> object or Array <> Array)');
             }
 
-            return cloneInternal(obj, typeof target === 'object' ? target : new target());
+            if (obj && Array.isArray(obj) && Array.isArray(tgt)) {
+                return obj.map((o) => {
+                    const cloned = {};
+                    this.cloneSync(o, cloned);
+                    tgt.push(cloned);
+                }) as any;
+            }
+
+            return cloneInternal(obj, tgt);
         }
     }
 }
