@@ -7,6 +7,7 @@
  */
 
 import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator/toPromise';
 import { Observable } from 'rxjs/Observable';
 import { IItemTree } from '../item-list/item-tree';
 import { SortingService } from '../sorting/sorting.service';
