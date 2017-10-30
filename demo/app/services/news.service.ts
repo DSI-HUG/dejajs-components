@@ -44,10 +44,10 @@ export class NewsService {
             .publishLast()
             .refCount()
             .map((news: News[]) => {
-                let returnNews = news;
+                const returnNews = news;
                 if (recordCount) {
                     while (recordCount > 0) {
-                        returnNews = returnNews.concat(this.cloningService.cloneSync(news, News));
+                        this.cloningService.cloneArray(news, returnNews);
                         recordCount -= news.length;
                     }
                 }

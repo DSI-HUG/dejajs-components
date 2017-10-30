@@ -16,7 +16,7 @@ import { Observable } from 'rxjs/Observable';
 @Injectable()
 export class CloningService {
     /**
-     * Sync cloning of an object
+     * Clone of an object asyncronously
      *
      * @param object  The object to clone.
      * @param type The type of object to clone
@@ -75,20 +75,51 @@ export class CloningService {
                 return tgt;
             };
 
-            if (typeof target === 'object' && Array.isArray(obj) !== Array.isArray(target)) {
-                throw new Error('obj and target must be of the same type. (object <> object or Array <> Array)');
+            /** deprecated, replaced by clone array because not working if target is an object */
+            if (obj && Array.isArray(obj)) {
+                return obj.map((o) => this.cloneSync(o, target)) as any;
             }
 
-            const targetInstance = typeof target === 'object' ? target : new target();
-            if (obj && Array.isArray(obj) && Array.isArray(targetInstance)) {
-                return obj.map((o) => {
-                    const cloned = {};
-                    this.cloneSync(o, cloned);
-                    targetInstance.push(cloned);
-                }) as any;
-            }
+            return cloneInternal(obj, typeof target === 'object' ? target : new target());
+        }
+    }
 
-            return cloneInternal(obj, targetInstance);
+    /**
+     * Clone an Array
+     *
+     * @param object  The Array to clone.
+     * @param target The type or an instance of the target
+     * @return The cloned Array.
+     */
+    public cloneArray<T>(obj: object[], target?: { new(): T } | T[]): T[] {
+        if (target && Array.isArray(target)) {
+            obj.forEach((o) => {
+                const cloned = this.cloneSync(o) as T;
+                target.push(cloned);
+            });
+            return target as T[];
+        } else {
+            return obj.map((o) => this.cloneSync(o, target));
+        }
+    }
+
+    /**
+     * Clone an array asyncronously
+     *
+     * @param object  The array to clone.
+     * @param target The type or an instance of the target
+     * @return Observable resolving to the cloned array.
+     */
+    public cloneArray$<T>(obj: any[], target?: { new(): T } | T[]): Observable<T> {
+        if (target && Array.isArray(target)) {
+            obj.forEach((o) => {
+                const cloned = this.cloneSync(o) as T;
+                target.push(cloned);
+            });
+            return Observable.from(target);
+        } else {
+            return Observable.from(obj)
+                .switchMap((o) => this.clone$(o, target));
         }
     }
 }

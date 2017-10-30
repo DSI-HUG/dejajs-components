@@ -90,7 +90,7 @@ describe('CloningService', () => {
 
     it('Should, clone a complex structure with a target array', () => {
         const cloned = [];
-        service.cloneSync(datas, cloned);
+        service.cloneArray(datas, cloned);
         expect(JSON.stringify(cloned)).toEqual(JSON.stringify(datas));
     });
 
