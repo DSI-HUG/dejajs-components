@@ -26,6 +26,7 @@ export * from './overlay/index';
 export * from './message-box/index';
 export * from './monaco-editor/index';
 export * from './mouse-dragdrop/index';
+export * from './numeric-stepper/index';
 export * from './range/index';
 export * from './select/index';
 export * from './sidenav/index';
