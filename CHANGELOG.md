@@ -1,3 +1,13 @@
+#### 2.16.2 (2017-10-30)
+
+##### Continuous Integration
+
+* **Dependencies:** upgrade dependencies ([7d9629ca](https://github.com/DSI-HUG/dejajs-components/commit/7d9629ca93090689fe6b58046f73287a796155aa))
+
+##### Bug Fixes
+
+* **DejaViewPort:** Removed debug infos ([c7c7f29d](https://github.com/DSI-HUG/dejajs-components/commit/c7c7f29dd67adab99d4a162d741b2ff330182a83))
+
 #### 2.16.1 (2017-10-30)
 
 ##### Refactors
