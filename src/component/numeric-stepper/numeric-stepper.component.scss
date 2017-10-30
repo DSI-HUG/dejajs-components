@@ -1,0 +1,62 @@
+:host {
+    display:flex;
+    align-items: stretch;
+
+    mat-form-field::ng-deep {
+        width: 100%;
+
+        input::-webkit-inner-spin-button, 
+        input::-webkit-outer-spin-button {
+            -webkit-appearance: none !important;
+            margin: 0 !important;
+            -moz-appearance: textfield !important;
+        }
+
+        .mat-input-infix {
+            flex: 0 0 auto;
+            .mat-input-placeholder-wrapper {
+                overflow: visible;
+                label {
+                    overflow: visible;
+                }
+            }
+        }
+        .mat-input-suffix {
+            color: rgba(0, 0, 0, 0.54);
+            flex: 1 1 auto;
+        }
+    }
+
+    .steppers {
+        display:flex;
+        flex-direction: column;
+        padding-bottom: calc(1.25rem - 2px);
+        button {
+            align-items: center;
+            // background-color: #e0e0e0;
+            border: none;
+            box-shadow: none;
+            // color: rgba(0, 0, 0, 0.54);
+            cursor: pointer;
+            display:flex;
+            flex: 1 1 auto;
+            font-family: 'Material Icons';
+            justify-content: center;
+            line-height: initial;
+            min-width: initial;
+            outline: none;
+            padding: 0;
+            transition: color 200ms ease;
+            width: 2rem;
+            &:first-child {
+                border-radius: 2px 2px 0 0;
+            }
+            &:last-child {
+                border-radius: 0 0 2px 0;
+            }
+            &:hover {
+                // color: #000;
+            }
+        }
+    }
+}
