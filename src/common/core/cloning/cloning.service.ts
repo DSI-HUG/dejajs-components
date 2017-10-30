@@ -75,11 +75,11 @@ export class CloningService {
                 return tgt;
             };
 
-            const targetInstance = typeof target === 'object' ? target : new target();
-            if (Array.isArray(obj) !== Array.isArray(targetInstance)) {
+            if (typeof target === 'object' && Array.isArray(obj) !== Array.isArray(target)) {
                 throw new Error('obj and target must be of the same type. (object <> object or Array <> Array)');
             }
 
+            const targetInstance = typeof target === 'object' ? target : new target();
             if (obj && Array.isArray(obj) && Array.isArray(targetInstance)) {
                 return obj.map((o) => {
                     const cloned = {};
