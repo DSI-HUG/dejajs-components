@@ -1,3 +1,9 @@
+#### 2.16.1 (2017-10-30)
+
+##### Refactors
+
+* **DejaTextMetricsModule:** Move text-metrics to src/common/core ([44e3f3c8](https://github.com/DSI-HUG/dejajs-components/commit/44e3f3c85295a18f8577888314c8293578b2599c))
+
 ### 2.16.0 (2017-10-30)
 
 ##### BREAKING CHANGES
