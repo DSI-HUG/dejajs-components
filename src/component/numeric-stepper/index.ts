@@ -11,7 +11,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule, MatFormFieldModule, MatIconModule, MatInputModule } from '@angular/material';
 
-import { DejaTextMetricsModule } from '../tree-list/text-metrics/index';
+import { DejaTextMetricsModule } from '../../common/core/text-metrics/index';
 import { DejaNumericStepperComponent } from './numeric-stepper.component';
 
 @NgModule({

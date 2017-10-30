@@ -12,7 +12,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 // import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DejaTextMetricsModule } from '../tree-list/text-metrics/index';
+import { DejaTextMetricsModule } from '../../common/core/text-metrics/index';
 // import { KeyCodes } from '../../common/core/keycodes.enum';
 import { DejaNumericStepperComponent } from './numeric-stepper.component';
 

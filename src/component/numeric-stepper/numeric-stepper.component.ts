@@ -10,7 +10,7 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, HostBinding, Input, OnInit, Optional, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 
-import { DejaTextMetricsService } from '../tree-list/text-metrics/text-metrics.service';
+import { DejaTextMetricsService } from '../../common/core/text-metrics/text-metrics.service';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
