@@ -49,6 +49,7 @@ import {
     DejaMessageBoxModule,
     DejaMonacoEditorModule,
     DejaMouseDragDropModule,
+    DejaNumericStepperModule,
     DejaOverlayModule,
     DejaRangeModule,
     DejaSelectModule,
@@ -66,6 +67,7 @@ import {
 } from '../../src/index';
 
 import { MatButtonModule, MatButtonToggleModule, MatCardModule, MatCheckboxModule, MatIconModule, MatInputModule, MatListModule, MatMenuModule, MatProgressBarModule, MatProgressSpinnerModule, MatSidenavModule, MatTabsModule, MatToolbarModule, NoConflictStyleCompatibilityMode } from '@angular/material';
+import { DejaItemModule } from '../../src/common/core/item-list/index';
 import { DejaAccordionDemoComponent } from './accordion/accordion-demo.component';
 import { DejaCircularPickerDemoComponent } from './circular-picker/circular-picker-demo';
 import { DejaColorSelectorDemoComponent } from './color-selector/color-selector-demo';
@@ -78,6 +80,7 @@ import { HomeComponent } from './home/home.component';
 import { MessageBoxDemoComponent } from './message-box/message-box-demo';
 import { DejaMonacoEditorDemoComponent } from './monaco-editor/monaco-editor-demo';
 import { MonacoEditorDemoService } from './monaco-editor/monaco-editor-demo.service.';
+import { DejaNumericStepperDemoComponent } from './numeric-stepper/numeric-stepper-demo.component';
 import { OverlayDemoComponent } from './overlay/overlay-demo';
 import { ProgressCircleDemoComponent } from './progress-circle/progress-circle-demo';
 import { DejaRangeDemoComponent } from './range/range-demo';
@@ -105,6 +108,7 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         OverlayDemoComponent,
         MessageBoxDemoComponent,
         DejaMonacoEditorDemoComponent,
+        DejaNumericStepperDemoComponent,
         ProgressCircleDemoComponent,
         DejaRangeDemoComponent,
         ReactiveFormDemoComponent,
@@ -156,6 +160,7 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         DejaIFrameModule,
         DejaListLoaderModule,
         DejaMarkdownModule,
+        DejaNumericStepperModule,
         DejaOverlayModule,
         DejaMessageBoxModule,
         DejaMonacoEditorModule,
@@ -172,6 +177,7 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         DejaTooltipModule,
         DejaTreeListModule,
         DejaViewPortModule,
+        DejaItemModule,
         GroupingModule,
         StoreModule.forRoot({}),
         StoreModule.forFeature('userDemo', {

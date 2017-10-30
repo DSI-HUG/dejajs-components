@@ -14,27 +14,26 @@ import { MediaModule } from '../../common/core/media/index';
 import { DejaChildValidatorModule } from '../../common/core/validation/index';
 import { DejaChipsModule } from '../chips/index';
 import { DejaOverlayModule } from '../overlay/index';
-import { DejaItemComponent } from './../../common/core/item-list/item.component';
+import { DejaItemModule } from './../../common/core/item-list/index';
 import { DejaSelectComponent } from './select.component';
 
 @NgModule({
     declarations: [
         DejaSelectComponent,
-        DejaItemComponent,
     ],
     exports: [
         DejaSelectComponent,
-        DejaItemComponent,
     ],
     imports: [
         CommonModule,
         FormsModule,
+        MediaModule,
         DejaOverlayModule,
         MatIconModule,
         MatInputModule,
         DejaChildValidatorModule,
         DejaChipsModule,
-        MediaModule,
+        DejaItemModule,
     ],
 })
 export class DejaSelectModule { }

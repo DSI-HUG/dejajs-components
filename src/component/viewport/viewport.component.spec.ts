@@ -293,15 +293,20 @@ describe('DejaViewPortComponent', () => {
         let pass = 0;
 
         observeViewPort$(fixture, 29, 9986, 28840, 820, 250, 278).subscribe(() => {
-            if (++pass === 1) {
-                // tslint:disable-next-line:no-string-literal
-                viewPortInstance.refreshViewPort(viewPortInstance['_items'][249], true);
-            } else if (++pass === 2) {
-                // tslint:disable-next-line:no-string-literal
-                viewPortInstance.refreshViewPort(viewPortInstance['_items'][250], true);
-            } else if (++pass === 3) {
-                // tslint:disable-next-line:no-string-literal
-                viewPortInstance.refreshViewPort(viewPortInstance['_items'][0], true);
+            switch (++pass) {
+                case 1:
+                    // tslint:disable-next-line:no-string-literal
+                    viewPortInstance.refreshViewPort(viewPortInstance['_items'][249], true);
+                    break;
+                case 2:
+                    // tslint:disable-next-line:no-string-literal
+                    viewPortInstance.refreshViewPort(viewPortInstance['_items'][250], true);
+                    break;
+                case 3:
+                    // tslint:disable-next-line:no-string-literal
+                    viewPortInstance.refreshViewPort(viewPortInstance['_items'][0], true);
+                    break;
+                default:
             }
         });
 

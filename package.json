@@ -1,6 +1,6 @@
 {
   "name": "@deja-js/component",
-  "version": "2.15.2",
+  "version": "2.16.1",
   "description": "Angular2 Components Library",
   "homepage": "https://github.com/DSI-HUG/dejajs-components",
   "bugs": "https://github.com/DSI-HUG/dejajs-components/issues",
@@ -27,6 +27,7 @@
     "docs:serve": "yarn run docs:build -- -s",
     "docs:watch": "yarn run docs:build -- -s -w",
     "e2e": "ng e2e",
+    "e2e:watch": "watch \"ng e2e\" src e2e --wait=1",
     "licensecheck": "gulp license",
     "lint": "ng lint --type-check",
     "ng": "ng",

@@ -843,7 +843,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             .filter(() => this.selectingItemIndex === undefined)
             .subscribe(() => {
                 this.onTouchedCallback();
-                this.hideDropDown$.next(10);
+                // this.hideDropDown$.next(10);
             });
 
         Observable.fromEvent(this.htmlInputElement, 'keydown')
@@ -1243,9 +1243,10 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         this.listElement.scrollTop = this.lastScrollPosition;
 
         this.calcViewList$()
-            .first()
             .do(() => this.refreshViewPort())
-            .delay(1)
+            .combineLatest(this.viewPortChanged) // Wait for viewport calculation
+            .first()
+            .delay(1) // Ensure viewport binding
             .subscribe(() => {
                 this.overlay.updatePosition();
 

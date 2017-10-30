@@ -20,7 +20,7 @@
         <form novalidate [formGroup]="form" fxFlex="0 0 55%" fxLayout="column" (submit)="onSubmit()">
             <h3 fxFlex="0 0 auto">Material Input</h3>
             <mat-form-field fxFlex="0 0 auto">
-                <input matInput pending-onfocus formControlName="name" placeholder="Name">
+                <input matInput pending-onfocus formControlName="name" placeholder="Name" autocomplete="off">
                 <mat-error *ngIf="!!getError('name')">{{ getError('name') }}</mat-error>
             </mat-form-field>
             <h3 fxFlex="0 0 auto">Deja Select</h3>
@@ -63,7 +63,7 @@
             <div [class.error]="!!getError('skillsErrors')" class="placeholder" fxFlex="0 0 auto">Skills</div>
             <deja-chips fxFlex="0 0 auto" formControlName="skills"></deja-chips>
             <mat-form-field fxFlex="0 0 auto" id="addskill">
-                <input formControlName="skillsErrors" #skill matInput (keydown)="onSkillKeyDown($event)" placeholder="Add Skill">
+                <input formControlName="skillsErrors" #skill matInput (keydown)="onSkillKeyDown($event)" placeholder="Add Skill" autocomplete="off">
                 <div matSuffix><i (click)="onAddSkill(skill)" class="material-icons matSuffix">add</i></div>
                 <mat-error *ngIf="!!getError('skillsErrors')">{{ getError('skillsErrors') }}</mat-error>
             </mat-form-field>
