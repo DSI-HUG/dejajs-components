@@ -67,6 +67,8 @@ export abstract class ItemListBase implements OnDestroy {
     private allCollapsed = false;
     private _viewPortRowHeight = ViewPortService.itemDefaultSize;
 
+    private _listElement: HTMLElement;
+
     constructor(protected changeDetectorRef: ChangeDetectorRef, protected viewPort: ViewPortService) {
 
         this._listElementId = `listcontainer_${(1000000000 * Math.random()).toString().substr(10)}`;
@@ -405,7 +407,11 @@ export abstract class ItemListBase implements OnDestroy {
 
     public get listElement() {
         // Can be an overlay
-        return document.getElementById(this.listElementId);
+        return this._listElement || document.getElementById(this.listElementId);
+    }
+
+    public set listElement(elem: HTMLElement) {
+        this._listElement = elem;
     }
 
     protected getSelectedModels() {
