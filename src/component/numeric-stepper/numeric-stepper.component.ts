@@ -93,7 +93,7 @@ export class DejaNumericStepperComponent implements OnInit, ControlValueAccessor
         } else if (value < this.min) {
             this._value = this.min;
         } else {
-            this._value = value ? value : 0;
+            this._value = value ? +value : 0;
         }
 
         this.checkSize(value);

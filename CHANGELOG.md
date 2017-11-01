@@ -1,3 +1,11 @@
+#### 2.16.3 (2017-11-01)
+
+##### Bug Fixes
+
+* **DejaTreeListComponent:** Updated listElement get method to avoid error when getElementById doesn't work ([07aaee30](https://github.com/DSI-HUG/dejajs-components/commit/07aaee309d0c80bd3726c1d47a6df31b4d12f166))
+* **DejaNumericStepperComponent:** Fix button type + hide hint when max isn't set ([f45ec771](https://github.com/DSI-HUG/dejajs-components/commit/f45ec771689b089d178a522c875fced8460d6db3))
+* **ViewPortService:** Fix view port crash if not element. ([40d4e8c5](https://github.com/DSI-HUG/dejajs-components/commit/40d4e8c5078eb6556e6d21893569c65500281117))
+
 #### 2.16.2 (2017-10-30)
 
 ##### Continuous Integration

@@ -199,6 +199,10 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
         this.maxHeight = 0;
     }
 
+    @ViewChild('listElement') public set listElememtRef(elem: ElementRef) {
+        this.listElement = elem.nativeElement;
+    }
+
     public keyboardNavigation() {
         return this._keyboardNavigation;
     }

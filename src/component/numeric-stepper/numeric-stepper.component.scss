@@ -30,7 +30,7 @@
     .steppers {
         display:flex;
         flex-direction: column;
-        padding-bottom: calc(1.25rem - 2px);
+        padding-bottom: 1.25em;
         button {
             align-items: center;
             // background-color: #e0e0e0;
