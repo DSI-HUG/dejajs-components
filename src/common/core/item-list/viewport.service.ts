@@ -557,6 +557,7 @@ export class ViewPortService implements OnDestroy {
             .combineLatest(direction$, mode$, itemsSize$, maxSize$)
             .debounceTime(1)
             .combineLatest(scrollPos$)
+            .filter(([[[element]]]) => !!element)
             // .do(([[[_element, _items, _refresh, ensureParams], _direction, _mode, _itemDefaultSize, _maxSize], _scrollPos]) => consoleLog(`combineLatest ${JSON.stringify(ensureParams)}`))
             .switchMap(([[[element, items, _refresh, ensureParams], _direction, _mode, itemDefaultSize, maxSize], _scrollPos]) => {
                 // consoleLog(`combineLatest ${ensureParams && ensureParams.index}`);
