@@ -33,6 +33,8 @@ const noop = () => { };
 export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestroy {
     private static indexAttribute = 'index';
 
+    @Input() public resetcolor: string = null;
+
     /** Evénement déclenché lorsqu'une couleur est survolée par la souris. */
     @Output() public colorhover = new EventEmitter();
 
@@ -188,6 +190,18 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
 
     public get disabled() {
         return this._disabled;
+    }
+
+    /**
+     * Retourne la meilleure couleur d'affichage pour une couleur donnée
+     */
+    public getBestTextColor(value: string) {
+        const backColor = Color.fromHex(value);
+        return backColor.bestTextColor.toHex();
+    }
+
+    public resetDefaultColor(value: string) {
+        this.value = Color.fromHex(value);
     }
 
     /**

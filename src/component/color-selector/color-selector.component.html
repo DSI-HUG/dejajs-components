@@ -4,3 +4,6 @@
 <div class="colors-wrapper" id="subcolors">
 	<deja-color-fab id="subcolor" *ngFor="let clrfab of subColorFabs$ | async; let index=index" [attr.index]="index" [style.transition-duration]="(100*index)+'ms'" [color]="clrfab"></deja-color-fab>
 </div>
+<div id="reset" *ngIf="resetcolor != undefined" (click)="resetDefaultColor(resetcolor)" [style.background-color]="resetcolor">
+	<mat-icon [style.color]="getBestTextColor(resetcolor)">undo</mat-icon>
+</div>

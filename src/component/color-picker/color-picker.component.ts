@@ -33,6 +33,8 @@ export class DejaColorPickerComponent implements ControlValueAccessor, OnDestroy
     /** Retourne ou definit si la partie déroulante est visible. */
     @Input() public isOpen = false;
 
+    @Input() public resetcolor: string = null;
+
     /** Déclenché lorsqu'une couleur est survolée par la souris. */
     @Output() public colorhover = new EventEmitter();
 
@@ -65,7 +67,6 @@ export class DejaColorPickerComponent implements ControlValueAccessor, OnDestroy
         if (this._control) {
             this._control.valueAccessor = this;
         }
-
         this.ownerElement = elementRef.nativeElement;
     }
 
