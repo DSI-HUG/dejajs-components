@@ -26,15 +26,18 @@ export class SortingService {
     public static compare(a: any, b: any, sortInfo: ISortInfos) {
         const orderfact = sortInfo.order === SortOrder.ascending ? 1 : -1;
 
-        if (!a && !b) {
+        // tslint:disable-next-line:triple-equals
+        if (a == undefined && b == undefined) {
             return 0;
         }
 
-        if (!a) {
+        // tslint:disable-next-line:triple-equals
+        if (a == undefined) {
             return -orderfact;
         }
 
-        if (!b) {
+        // tslint:disable-next-line:triple-equals
+        if (b == undefined) {
             return orderfact;
         }
 
@@ -44,15 +47,18 @@ export class SortingService {
         let flda = sortnamea ? a[sortnamea] : a;
         let fldb = sortnameb ? b[sortnameb] : b;
 
-        if (!flda && !fldb) {
+        // tslint:disable-next-line:triple-equals
+        if (flda == undefined && fldb == undefined) {
             return 0;
         }
 
-        if (!flda) {
+        // tslint:disable-next-line:triple-equals
+        if (flda == undefined) {
             return -orderfact;
         }
 
-        if (!fldb) {
+        // tslint:disable-next-line:triple-equals
+        if (fldb == undefined) {
             return orderfact;
         }
 
@@ -71,9 +77,7 @@ export class SortingService {
 
         if (typea === typeb) {
             if (typea === 'number') {
-                return orderfact * (fldb - flda);
-            } else if (typea === 'date') {
-                return orderfact * (flda.getTime() - fldb.getTime());
+                return orderfact * (flda - fldb);
             } else if (typea === 'object') {
                 typea = flda.constructor.name;
                 typeb = fldb.constructor.name;
