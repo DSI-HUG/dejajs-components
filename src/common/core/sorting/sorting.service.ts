@@ -23,7 +23,7 @@ export class SortingService {
      * @param {ISortInfos} sortInfos Modèle de tri à appliquer pour la comparaison.
      * @return {number} 0 si les objet sont égaux, 1 si b est après a, -1 si a après b
      */
-    public compare(a: any, b: any, sortInfo: ISortInfos) {
+    public static compare(a: any, b: any, sortInfo: ISortInfos) {
         const orderfact = sortInfo.order === SortOrder.ascending ? 1 : -1;
 
         if (!a && !b) {
@@ -117,7 +117,7 @@ export class SortingService {
                     let i = -1;
                     let result = 0;
                     while (++i < sortInfos.length && result === 0) {
-                        result = this.compare(a, b, sortInfos[i]);
+                        result = SortingService.compare(a, b, sortInfos[i]);
                     }
                     return result;
                 };
@@ -126,7 +126,7 @@ export class SortingService {
     }
 
     /**
-     * @deprecated
+     * @deprecated > 06.11.2017
      */
     public sort(list: any[], sortInfo: ISortInfos | ISortInfos[]) {
         return this.sort$(list, sortInfo).toPromise();
@@ -159,7 +159,7 @@ export class SortingService {
     }
 
     /**
-     * @deprecated
+     * @deprecated > 06.11.2017
      */
     public sortTree(tree: any[], sortInfo: ISortInfos | ISortInfos[], childrenField?: string) {
         return this.sortTree$(tree, sortInfo, childrenField).toPromise();
