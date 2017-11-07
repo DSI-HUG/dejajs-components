@@ -26,7 +26,7 @@ export class GlobalEventService {
                 this.listenersFn$[event] = (params: any[]) => {
                     // console.log('message received: ' + event + '  params: ' + params[0]);
                     observer.next(params);
-                }
+                };
                 this.globalEventEmmitter.on(event, this.listenersFn$[event]);
             });
         }
