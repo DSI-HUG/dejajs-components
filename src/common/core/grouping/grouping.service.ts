@@ -66,7 +66,7 @@ export class GroupingService {
     }
 
     /**
-     * @deprecated
+     * @deprecated > 06.11.2017
      */
     public group(tree: any[], groupInfos: IGroupInfo[] | IGroupInfo, childrenField?: string) {
         return this.group$(tree, groupInfos, childrenField).toPromise();
@@ -78,8 +78,8 @@ export class GroupingService {
             .reduce((groups: { [groupby: string]: IItemTree }, item) => {
                 let groupedBy = typeof groupInfo.groupByField === 'function' ? groupInfo.groupByField(item) : item[groupInfo.groupByField];
 
-                if (typeof groupedBy === 'function') {
-                    groupedBy = groupedBy();
+                if (typeof item[groupedBy] === 'function') {
+                    groupedBy = item[groupedBy]();
                 }
 
                 if (!groupedBy) {
