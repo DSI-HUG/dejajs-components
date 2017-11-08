@@ -69,6 +69,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @Output() public viewPortChanged = new EventEmitter<IViewPort>();
     /** Exécuté lorsque l'utilisateur sélectionne ou désélectionne une ligne. */
     @Output() public selectedChange = new EventEmitter<DejaItemsEvent | DejaItemEvent>();
+    /** For test only. */
+    @Output() public dropDownVisibleChange = new EventEmitter<boolean>();
 
     @ContentChild('hintTemplate') public hintTemplateInternal;
     @ContentChild('placeHolderTemplate') public placeHolderTemplateInternal;
@@ -200,6 +202,14 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             this._control.valueAccessor = this;
         }
 
+        const setDropDownVisible = (state: boolean) => {
+            if (state !== this._dropdownVisible) {
+                this._dropdownVisible = state;
+                this.dropDownVisibleChange.emit(state);
+                this.changeDetectorRef.markForCheck();
+            }
+        };
+
         mediaService.isMobile$
             .takeWhile(() => this._isAlive)
             .subscribe((value) => {
@@ -244,9 +254,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             .delayWhen((time) => Observable.timer(time || 0))
             .subscribe(() => {
                 delete this.selectingItemIndex;
-                this._dropdownVisible = false;
                 this.viewPort.element$.next(null);
-                this.changeDetectorRef.markForCheck();
+                setDropDownVisible(false);
             });
 
         Observable.from(this.showDropDown$)
@@ -270,12 +279,13 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 }
 
                 // Display overlay
-                this._dropdownVisible = true;
-                this.changeDetectorRef.markForCheck();
+                setDropDownVisible(true);
             })
             .delay(1)
             .filter(() => this.dropdownVisible)  // Show canceled by the hide$ observable if !dropdownVisible
-            .switchMap(() => this.calcViewList$().first())
+            .switchMap(() => {
+                return this.calcViewList$().first();
+            })
             .do(() => {
                 const selectedItems = this.getSelectedItems();
                 const first = selectedItems && selectedItems[0];
@@ -717,13 +727,14 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     @Input()
-    /** Retourne une valeur indiquant si le composant est en lecture seule */
+    /** Définit une valeur indiquant si le composant est en lecture seule */
     public set readonly(value: boolean) {
-        this._readonly = value || null;
+        const readonly = coerceBooleanProperty(value);
+        this._readonly = readonly || null;
         this.changeDetectorRef.markForCheck();
     }
 
-    /** Définit une valeur indiquant si le composant est en lecture seule */
+    /** Retourne une valeur indiquant si le composant est en lecture seule */
     public get readonly() {
         return this._readonly;
     }
@@ -843,7 +854,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             .filter(() => this.selectingItemIndex === undefined)
             .subscribe(() => {
                 this.onTouchedCallback();
-                // this.hideDropDown$.next(10);
+                this.hideDropDown$.next(10);
             });
 
         Observable.fromEvent(this.htmlInputElement, 'keydown')
@@ -1032,6 +1043,11 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             .switchMap((items) => this.calcViewList$().first().map(() => items));
     }
 
+    /** Change l'état d'expansion de toute les lignes parentes */
+    public toggleAll(collapsed?: boolean) {
+        this.toggleAll$(collapsed).first().subscribe(noop);
+    }
+
     /** Change l'état d'expansion de la ligne spécifiée
      * @param {number} index  Index sur la liste des éléments visibles de l'élément à changer.
      * @param {boolean} collapse  Etat de l'élément. True pour réduire l'élément.
@@ -1046,6 +1062,14 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             });
     }
 
+    /** Change l'état d'expansion de la ligne spécifiée
+     * @param {number} index  Index sur la liste des éléments visibles de l'élément à changer.
+     * @param {boolean} collapse  Etat de l'élément. True pour réduire l'élément.
+     */
+    public toggleCollapse(index: number, collapsed: boolean) {
+        this.toggleCollapse$(index, collapsed).first().subscribe(noop);
+    }
+    
     public queryChanged(value: string) {
         this.query = value;
         if (!this.isModeSelect) {
@@ -1240,7 +1264,10 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         delete this.selectingItemIndex;
 
         // Restore scroll Position
-        this.listElement.scrollTop = this.lastScrollPosition;
+        const listElement = this.listElement;
+        if (listElement) {
+            listElement.scrollTop = this.lastScrollPosition;
+        }
 
         this.calcViewList$()
             .do(() => this.refreshViewPort())
