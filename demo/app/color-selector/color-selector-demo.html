@@ -16,7 +16,7 @@
     <mat-card class="demo-card">
         <mat-toolbar color="primary">Color Picker width backdrop - Pick a color:    (selected color: {{ selectedColor.toHex() }});</mat-toolbar>
         <mat-card-content id="colorpickers">
-            <deja-color-picker name="1" class="colorpicker" [colors]="materialColors.colors" [(ngModel)]="selectedColor" (colorhover)="onColorPickerHover($event)" (ngModelChange)="onColorPickerChange($event)"></deja-color-picker>
+            <deja-color-picker name="1" [attr.hexx]="selectedColor && selectedColor.toHex()" class="colorpicker" [colors]="materialColors.colors" [(ngModel)]="selectedColor" (colorhover)="onColorPickerHover($event)" (ngModelChange)="onColorPickerChange($event)"></deja-color-picker>
             <deja-color-picker name="2" resetcolor="red" class="colorpicker" small [colors]="materialColors.colors" [(ngModel)]="invalidColor" (colorhover)="onColorPickerHover($event)" (ngModelChange)="onColorPickerChange($event)"></deja-color-picker>
             <deja-color-picker name="3" disabled small class="colorpicker" [colors]="materialColors.colors" [(ngModel)]="selectedColor" (colorhover)="onColorPickerHover($event)" (ngModelChange)="onColorPickerChange($event)"></deja-color-picker>
         </mat-card-content>
@@ -26,7 +26,7 @@
         <mat-toolbar color="primary">Color Selector - Pick a color:</mat-toolbar>
         <mat-card-content>
             <div id="hoveredColor" [style.background-color]="(hoveredColor && hoveredColor.toHex()) || selectedColor.toHex()">
-                <deja-color-selector resetcolor="green" name="4" [colors]="materialColors.colors" [(ngModel)]="selectedColor" (colorhover)="onColorPickerHover($event)" (ngModelChange)="onColorPickerChange($event)"></deja-color-selector>
+                <deja-color-selector name="4" [colors]="materialColors.colors" [(ngModel)]="selectedColor" (colorhover)="onColorPickerHover($event)" (ngModelChange)="onColorPickerChange($event)"></deja-color-selector>
             </div>
         </mat-card-content>
     </mat-card>

@@ -16,8 +16,8 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Color } from '../../common/core/graphics/color';
 import { ColorEvent } from '../../common/core/graphics/color-event';
-import { DejaColorFab } from './color-fab.class';
 import { MaterialColor } from '../../common/core/style/material-color';
+import { DejaColorFab } from './color-fab.class';
 
 const noop = () => { };
 
@@ -80,7 +80,10 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
 
     @Input() public set resetcolor(value: string | Color) {
         // TODO String vide => new Color();
+        console.log('inside resetcolor >>>>>>>>>>>:', value);
+        if (value === '') { value = new Color(); }
         const color = value && (typeof value === 'string' ? Color.parse(value) : value);
+        console.log('after treatment >>><>: ', color);
         this._resetcolor$.next(color || null);
     }
 
@@ -103,14 +106,28 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
                     return;
                 }
 
-                // TODO Search best reset color here: const a = 0.299 * resetcolor.r + 0.587 * resetcolor.g + 0.114 * resetcolor.b;
-                colors.forEach((color) => {
+                const allColors = colors.reduce((acc, color) => {
                     const materialColor = color as MaterialColor;
                     if (materialColor.subColors) {
-
+                        acc = [...acc, ...materialColor.subColors];
+                    } else {
+                        acc.push(color);
                     }
-                })
-                this._resetcolor = Color.parse('blue');
+                    return acc;
+                }, []);
+
+                let bestColor: Color;
+                allColors.reduce((bestDiff, color) => {
+                    // The best formula we found for our eye
+                    const diff = 0.3 * Math.abs(color.r - resetcolor.r) +  0.4 * Math.abs(color.g - resetcolor.g) +  0.25 * Math.abs(color.b - resetcolor.b);
+                    if (diff < bestDiff) {
+                        bestColor = color;
+                        return bestDiff = diff;
+                    }
+                    return bestDiff;
+                } , 3 * 255);
+
+                this._resetcolor = bestColor;
             });
 
         const hilightedBaseIndex$ = Observable.from(this.hilightedBaseIndex$)
