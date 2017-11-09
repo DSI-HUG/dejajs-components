@@ -12,8 +12,8 @@
 	<mat-hint *ngIf="hintTemplate">
 		<ng-template [ngTemplateOutlet]="hintTemplate"></ng-template>
 	</mat-hint>
-	<mat-error *ngIf="matError">
-		<ng-template [ngTemplateOutlet]="matError"></ng-template>
+	<mat-error *ngIf="errorTemplate">
+		<ng-template [ngTemplateOutlet]="errorTemplate"></ng-template>
 	</mat-error>
 	<span *ngIf="matSuffix" matSuffix>
 		<ng-template [ngTemplateOutlet]="matSuffix"></ng-template>
