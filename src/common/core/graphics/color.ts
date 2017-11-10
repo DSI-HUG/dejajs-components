@@ -5,6 +5,11 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
+export interface HSL {
+    h: number;
+    s: number;
+    l: number;
+}
 
 export class Color {
     private _r: number;
@@ -160,6 +165,45 @@ export class Color {
         return !c1 === !c2 && !c1.isEmpty() && c1.r === c2.r && c1.g === c2.g && c1.b === c2.b && c1.a === c2.a;
     }
 
+    public static fromHSL(h: number, s: number, l: number) {
+        let r: number;
+        let g: number;
+        let b: number;
+
+        if (s === 0) {
+            r = g = b = l; // achromatic
+        } else {
+
+            const hue2rgb = (p: number, q: number, t: number) => {
+                if (t < 0) {
+                    t += 1;
+                }
+                if (t > 1) {
+                    t -= 1;
+                }
+                if (t < 1 / 6) {
+                    return p + (q - p) * 6 * t;
+                }
+                if (t < 1 / 2) {
+                    return q;
+                }
+                if (t < 2 / 3) {
+                    return p + (q - p) * (2 / 3 - t) * 6;
+                }
+                return p;
+            };
+
+            const qq = l < 0.5 ? l * (1 + s) : l + s - l * s;
+            const pp = 2 * l - qq;
+
+            r = hue2rgb(pp, qq, h + 1 / 3);
+            g = hue2rgb(pp, qq, h);
+            b = hue2rgb(pp, qq, h - 1 / 3);
+        }
+
+        return new Color(Math.round(r * 255), Math.round(g * 255), Math.round(b * 255));
+    }
+
     /**
      * @param hex hexadecimal color value, exemple: #127bdc #FFF #127bdc56
      * @returns {Color}
@@ -279,5 +323,36 @@ export class Color {
         } else {
             return `#${toHex(this.r)}${toHex(this.g)}${toHex(this.b)}`;
         }
+    }
+
+    public toHSL(): HSL {
+        const r = this.r / 255;
+        const g = this.g / 255;
+        const b = this.b / 255;
+
+        const max = Math.max(r, g, b);
+        const min = Math.min(r, g, b);
+        let h = (max + min) / 2;
+        let s = h;
+        const l = h;
+
+        if (max === min) {
+            h = s = 0; // achromatic
+        } else {
+            const d = max - min;
+            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+
+            if (r > g && r > b) {
+                h = (g - b) / d + (g < b ? 6 : 0);
+            } else if (g > b) {
+                h = (b - r) / d + 2;
+            } else {
+                h = (r - g) / d + 4;
+            }
+
+            h /= 6;
+        }
+
+        return { h: h, s: s, l: l } as HSL;
     }
 }
