@@ -17,14 +17,17 @@ import { Observable } from 'rxjs/Observable';
 import { GroupingService } from '../../common/core/grouping/grouping.service';
 import { DejaItemModule } from '../../common/core/item-list/index';
 import { IItemBase } from '../../common/core/item-list/item-base';
+import { ItemListService } from '../../common/core/item-list/item-list.service';
 import { IItemTree } from '../../common/core/item-list/item-tree';
 import { ViewPortService } from '../../common/core/item-list/viewport.service';
 import { DejaConnectionPositionPair } from '../../common/core/overlay/connection-position-pair';
+import { ISortInfos } from '../../common/core/sorting/sort-infos.model';
+import { SortingService } from '../../common/core/sorting/sorting.service';
 import { DejaSelectModule } from './index';
 import { DejaSelectComponent } from './select.component';
 
 @Component({
-    template: `<deja-select style="width: 1000px;" [items]="itemList" multiSelect viewportMode="variable" searchArea sortable itemsDraggable pageSize="10">
+    template: `<deja-select style="width: 1000px;" [items]="itemList" viewportMode="variable" searchArea sortable itemsDraggable pageSize="10">
                     <ng-template #itemTemplate let-item>
                         Item {{ item.displayName }}
                     </ng-template>
@@ -56,43 +59,43 @@ class DejaSelectContainerComponent {
     }
 }
 
-// @Component({
-//     template: `<deja-select style="height: 500px;width: 1000px;" [(ngModel)]="selectedModels" [models]="modelsList$" multiSelect viewportMode="fixed" searchArea pageSize="10" valueField="id">
-//                     <ng-template #itemTemplate let-item>
-//                         <span [style.background-color]="backgroundColor(item)">
-//                             Item {{ item.model.displayName }}
-//                         </span>
-//                     </ng-template>
-//                 </deja-select>`,
-//     providers: [
-//         SortingService,
-//     ],
-// })
-// class DejaSelectByModelContainerComponent {
-//     public modelsList$: Observable<any[]>;
-//     public selectedModels: any[];
+@Component({
+    template: `<deja-select style="width: 1000px;" [(ngModel)]="selectedModels" [models]="modelsList$ | async" type="multiselect" viewportMode="fixed" valueField="id" selectionClearable>
+                    <ng-template #itemTemplate let-item>
+                        <span [style.background-color]="backgroundColor(item)">
+                            Item {{ item.model.displayName }}
+                        </span>
+                    </ng-template>
+                </deja-select>`,
+    providers: [
+        SortingService,
+    ],
+})
+class DejaSelectByModelContainerComponent {
+    public modelsList$: Observable<any[]>;
+    public selectedModels: any[];
 
-//     constructor(sortingService: SortingService) {
-// document.body.style.width = '1280px';
-// document.body.style.height = '1024px';
+    constructor(sortingService: SortingService) {
+        document.body.style.width = '1280px';
+        document.body.style.height = '1024px';
 
-//         const modelsList = Array.apply(null, { length: 2000 }).map((_n, i) => {
-//             const rand = Math.floor(Math.random() * (70 - 33 + 1)) + 33; // random de 33 à 70;
-//             return {
-//                 id: i,
-//                 value: rand,
-//                 displayName: `${i} - Une ligne de test avec une valeur de : ${rand}`,
-//             };
-//         });
+        const modelsList = Array.apply(null, { length: 2000 }).map((_n, i) => {
+            const rand = Math.floor(Math.random() * (70 - 33 + 1)) + 33; // random de 33 à 70;
+            return {
+                id: i,
+                value: rand,
+                displayName: `${i} - Une ligne de test avec une valeur de : ${rand}`,
+            };
+        });
 
-//         this.selectedModels = [0, 1, 2];
-//         this.modelsList$ = sortingService.sort$(modelsList, { name: 'value' } as ISortInfos);
-//     }
+        this.selectedModels = [1, 2, 3];
+        this.modelsList$ = sortingService.sort$(modelsList, { name: 'value' } as ISortInfos);
+    }
 
-//     public backgroundColor(item: IItemBase) {
-//         return item.selected ? '#888' : null;
-//     }
-// }
+    public backgroundColor(item: IItemBase) {
+        return item.selected ? '#888' : null;
+    }
+}
 
 @Component({
     template: `<deja-select style="width: 1000px;" viewportMode="fixed" type="multiselect" sortable itemsDraggable pageSize="5">
@@ -167,6 +170,7 @@ describe('DejaSelectComponent', () => {
         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
         const sl = selectInstance as any;
+        const itemListService = selectInstance.getItemListService();
 
         fixture.detectChanges();
 
@@ -180,6 +184,10 @@ describe('DejaSelectComponent', () => {
         expect(selectInstance.readonly).toBeNull();
         sl.readonly = 'true';
         expect(selectInstance.readonly).toBeTruthy();
+
+        expect(selectInstance.hideSelected).toBeUndefined();
+        sl.hideSelected = 'true';
+        expect(selectInstance.hideSelected).toBeTruthy();
 
         //     expect(selectInstance.sortable).toBeTruthy();
         //     selectInstance.sortable = 'false';
@@ -195,32 +203,31 @@ describe('DejaSelectComponent', () => {
         //     selectInstance.pageSize = 0;
         //     expect(selectInstance.pageSize).toBe(10);
 
-        //     expect(selectInstance.hintLabel).toBeUndefined();
-        //     selectInstance.hintLabel = 'I am a hint label';
-        //     expect(selectInstance.hintLabel).toEqual(`I am a hint label`);
+            expect(selectInstance.hintLabel).toBeUndefined();
+            selectInstance.hintLabel = 'I am a hint label';
+            expect(selectInstance.hintLabel).toEqual(`I am a hint label`);
 
-        //     expect(tl._viewPortRowHeight).toBe(ViewPortService.itemDefaultSize);
-        //     selectInstance.viewPortRowHeight = 100;
-        //     expect(tl._viewPortRowHeight).toBe(100);
+            expect(sl._viewPortRowHeight).toBe(ViewPortService.itemDefaultSize);
+            selectInstance.viewPortRowHeight = 100;
+            expect(sl._viewPortRowHeight).toBe(100);
 
-        //     expect(selectInstance.childrenField).toBeUndefined();
-        //     expect(itemListService.childrenField).toEqual(ItemListService.defaultChildrenField);
-        //     selectInstance.childrenField = 'children';
-        //     expect(selectInstance.childrenField).toEqual('children');
-        //     expect(itemListService.childrenField).toEqual('children');
+            expect(selectInstance.childrenField).toBeUndefined();
+            expect(itemListService.childrenField).toEqual(ItemListService.defaultChildrenField);
+            selectInstance.childrenField = 'children';
+            expect(selectInstance.childrenField).toEqual('children');
+            expect(itemListService.childrenField).toEqual('children');
 
-        //     expect(tl.getTextField()).toEqual(ItemListService.defaultTextField);
-        //     selectInstance.textField = 'text';
-        //     expect(tl.getTextField()).toEqual('text');
+            expect(selectInstance.textField).toEqual(ItemListService.defaultTextField);
+            selectInstance.textField = 'text';
+            expect(selectInstance.textField).toEqual('text');
 
-        //     expect(tl.getValueField()).toEqual(ItemListService.defaultValueField);
-        //     selectInstance.valueField = 'my value field';
-        //     expect(tl.getValueField()).toEqual('my value field');
-        //     expect(itemListService.valueField).toEqual('my value field');
+            expect(selectInstance.valueField).toEqual(ItemListService.defaultValueField);
+            selectInstance.valueField = 'my value field';
+            expect(selectInstance.valueField).toEqual('my value field');
 
-        //     expect(selectInstance.searchField).toBeUndefined();
-        //     selectInstance.searchField = 'my search field';
-        //     expect(selectInstance.searchField).toEqual('my search field');
+            expect(selectInstance.searchField).toBeUndefined();
+            selectInstance.searchField = 'my search field';
+            expect(selectInstance.searchField).toEqual('my search field');
 
         //     expect(selectInstance.multiSelect).toBeTruthy();
         //     selectInstance.multiSelect = 'false';
@@ -245,11 +252,11 @@ describe('DejaSelectComponent', () => {
         //     selectInstance.minSearchlength = '3';
         //     expect(tl.minSearchlength).toBe(3);
 
-        //     expect(selectInstance.disabled).toBeNull();
-        //     selectInstance.disabled = 'true';
-        //     expect(selectInstance.disabled).toBeTruthy();
-        //     selectInstance.setDisabledState(false);
-        //     expect(selectInstance.disabled).toBeFalsy();
+            expect(selectInstance.disabled).toBeNull();
+            selectInstance.disabled = 'true';
+            expect(selectInstance.disabled).toBeTruthy();
+            selectInstance.setDisabledState(false);
+            expect(selectInstance.disabled).toBeFalsy();
 
         //     expect(selectInstance.waiter).toBeFalsy();
         //     selectInstance.waiter = true;
@@ -281,7 +288,7 @@ describe('DejaSelectComponent', () => {
                         expect(state).toBeFalsy();
                 }
             })
-            .delay(10)
+            .delay(100)
             .subscribe(() => {
                 switch (pass) {
                     case 2:
@@ -302,7 +309,7 @@ describe('DejaSelectComponent', () => {
                 sl.hideDropDown();
             });
 
-        Observable.timer(3000).first().subscribe(() => expect(pass).toBe(4));
+        Observable.timer(2000).first().subscribe(() => expect(pass).toBe(4));
 
         sl.showDropDown();
         fixture.detectChanges();
@@ -370,7 +377,7 @@ describe('DejaSelectComponent', () => {
                 }
             });
 
-        Observable.timer(3000).first().subscribe(() => expect(pass).toBe(5));
+        Observable.timer(2000).first().subscribe(() => expect(pass).toBe(5));
 
         sl.showDropDown();
         fixture.detectChanges();
@@ -397,15 +404,17 @@ describe('DejaSelectComponent', () => {
                     case 1:
                         expect(listItems.length).toBe(0);
                         sl.queryChanged('33');
-                        fixture.detectChanges();
                         sl.filterListComplete$.next();
+                        selectInstance.refreshViewPort();
+                        fixture.detectChanges();
                         break;
 
                     case 2:
                         expect(listItems.length).toBeGreaterThan(0);
                         sl.queryChanged('44');
-                        fixture.detectChanges();
                         sl.filterListComplete$.next();
+                        selectInstance.refreshViewPort();
+                        fixture.detectChanges();
                         break;
 
                     default:
@@ -413,7 +422,7 @@ describe('DejaSelectComponent', () => {
                 }
             });
 
-        Observable.timer(4000).first().subscribe(() => expect(pass).toBe(3));
+        Observable.timer(2000).first().subscribe(() => expect(pass).toBe(3));
 
         selectInstance.minSearchlength = 2;
         selectInstance.type = 'autocomplete';
@@ -563,181 +572,6 @@ describe('DejaSelectComponent', () => {
 // }));
 // });
 
-// describe('DejaSelectByModelContainerComponent', () => {
-//     beforeEach(async(() => {
-//         TestBed.configureTestingModule({
-//             declarations: [
-//                 DejaSelectByModelContainerComponent,
-//             ],
-//             imports: [
-//                 BrowserAnimationsModule,
-//                 CommonModule,
-//                 FormsModule,
-//                 NoConflictStyleCompatibilityMode,
-//                 DejaSelectModule,
-//             ],
-//         }).compileComponents();
-//     }));
-
-//     const observeModelViewPort$ = (fixture: ComponentFixture<DejaSelectByModelContainerComponent>) => {
-//         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
-//         const viewPortService = selectDebugElement.injector.get(ViewPortService) as ViewPortService;
-
-//         return Observable.from(viewPortService.viewPortResult$)
-//             .filter((result) => result.viewPortSize > 0);
-//     };
-
-//     it('should create the component', async(() => {
-//         const fixture = TestBed.createComponent(DejaSelectByModelContainerComponent);
-//         fixture.detectChanges();
-//         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
-//         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
-//         expect(selectInstance).toBeTruthy();
-//     }));
-
-//     it('should set the selected models', async(() => {
-//         let pass = 0;
-//         const fixture = TestBed.createComponent(DejaSelectByModelContainerComponent);
-//         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
-//         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
-
-//         observeModelViewPort$(fixture)
-//             .debounceTime(10)
-//             .subscribe((vp) => {
-//                 // Bind view port
-//                 fixture.detectChanges();
-//                 const selectedModels = fixture.debugElement.queryAll(By.css('deja-select > .deja-listcontainer > .listitem.selected'));
-//                 const models = vp.visibleItems.map((item: IItemBase) => item.model);
-//                 const selectedItems = vp.items.filter((item: IItemBase) => item.selected);
-
-//                 switch (++pass) {
-//                     case 1:
-//                         // Selection from HTML
-//                         expect(selectedItems.length).toBe(3);
-//                         // Set selected models
-//                         selectInstance.selectedModels = [models[vp.startIndex], models[vp.endIndex]];
-//                         expect(selectInstance.selectedModels).toBeDefined();
-//                         expect(selectInstance.selectedModels.length).toBe(2);
-//                         selectInstance.refreshViewPort();
-//                         fixture.detectChanges();
-//                         break;
-
-//                     case 2:
-//                         // Check selected models
-//                         expect(selectedModels.length).toBe(2);
-//                         expect(selectedItems.length).toBe(2);
-//                         // Clear selection
-//                         selectInstance.selectedModels = null;
-//                         selectInstance.refreshViewPort();
-//                         fixture.detectChanges();
-//                         break;
-
-//                     case 3:
-//                         // Check no selected
-//                         expect(selectedModels.length).toBe(0);
-//                         expect(selectedItems.length).toBe(0);
-//                         // Single select list
-//                         selectInstance.multiSelect = false;
-//                         fixture.detectChanges();
-//                         // Set selected model
-//                         selectInstance.selectedModel = models[5];
-//                         expect(selectInstance.selectedModel).toBe(models[5]);
-//                         selectInstance.refreshViewPort();
-//                         fixture.detectChanges();
-//                         break;
-
-//                     case 4:
-//                         // Check selected item
-//                         expect(selectedModels.length).toBe(1);
-//                         expect(selectedItems.length).toBe(1);
-//                         // Clear selection
-//                         selectInstance.selectedModel = null;
-//                         selectInstance.refreshViewPort();
-//                         fixture.detectChanges();
-//                         break;
-
-//                     case 5:
-//                         // Check no selected
-//                         expect(selectedModels.length).toBe(0);
-//                         expect(selectedItems.length).toBe(0);
-//                         // Set selection by value
-//                         selectInstance.value = models[4];
-//                         expect((selectInstance.value as IItemBase).model).toBe(models[4]);
-//                         selectInstance.refreshViewPort();
-//                         fixture.detectChanges();
-//                         break;
-
-//                     case 6:
-//                         // Check selected item
-//                         expect(selectedModels.length).toBe(1);
-//                         expect(selectedItems.length).toBe(1);
-//                         // Clear selection
-//                         selectInstance.selectedModel = null;
-//                         selectInstance.refreshViewPort();
-//                         fixture.detectChanges();
-//                         break;
-
-//                     default:
-//                         // Check no selected
-//                         expect(selectedModels.length).toBe(0);
-//                         expect(selectedItems.length).toBe(0);
-//                 }
-//             });
-
-//         fixture.detectChanges();
-//     }));
-
-//     it('should flag pending keyboard navigation', async(() => {
-//         const fixture = TestBed.createComponent(DejaSelectByModelContainerComponent);
-//         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
-//         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
-//         let listElement: HTMLElement;
-
-//         observeModelViewPort$(fixture)
-//             .debounceTime(100)
-//             .do(() => expect(selectInstance.keyboardNavigation()).toBeTruthy())
-//             .delay(1000)
-//             .subscribe(() => expect(selectInstance.keyboardNavigation()).toBeFalsy());
-
-//         const sendKeyDown = (code: string, shiftKey?: boolean, ctrlKey?: boolean) => {
-//             const event = new KeyboardEvent('keydown', {
-//                 code: code,
-//                 shiftKey: shiftKey,
-//                 ctrlKey: ctrlKey
-//             } as KeyboardEventInit);
-//             listElement.dispatchEvent(event);
-//         };
-
-//         fixture.detectChanges();
-//         listElement = selectInstance.listElement;
-//         sendKeyDown('DownArrow');
-//     }));
-
-//     it('should refresh view port if windows is resized', async(() => {
-//         let pass = 0;
-//         const fixture = TestBed.createComponent(DejaSelectByModelContainerComponent);
-
-//         observeModelViewPort$(fixture)
-//             .debounceTime(100)
-//             .subscribe((vp) => {
-//                 fixture.detectChanges();
-
-//                 switch (++pass) {
-//                     case 1:
-//                         const event = new Event('resize', {});
-//                         window.dispatchEvent(event);
-//                         break;
-
-//                     default:
-//                         expect(vp.visibleItems.length).toBe(12);
-
-//                 }
-//             });
-
-//         fixture.detectChanges();
-//     }));
-// });
-
 describe('DejaSelectByOptionsContainerComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -770,6 +604,32 @@ describe('DejaSelectByOptionsContainerComponent', () => {
             });
     };
 
+    it('should open and close the dropdown programatically', async(() => {
+        const fixture = TestBed.createComponent(DejaSelectByOptionsContainerComponent);
+        const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
+        const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
+        const viewPortService = selectDebugElement.injector.get(ViewPortService) as ViewPortService;
+        const sl = selectInstance as any;
+        fixture.detectChanges();
+
+        Observable.from(selectInstance.dropDownVisibleChange)
+            .subscribe(() => fixture.detectChanges());
+
+        Observable.from(viewPortService.viewPortResult$)
+            .debounceTime(100)
+            .first()
+            .subscribe((vp) => {
+                // Bind view port
+                fixture.detectChanges();
+                expect(vp.items.length).toBeGreaterThan(0);
+                expect(vp.visibleItems.length).toBeGreaterThan(0);
+            });
+
+        sl.isMobile = false;
+        sl.showDropDown();
+        fixture.detectChanges();
+    }));
+
     it('should create the component', async(() => {
         const fixture = TestBed.createComponent(DejaSelectByOptionsContainerComponent);
         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
@@ -791,175 +651,6 @@ describe('DejaSelectByOptionsContainerComponent', () => {
         sl.showDropDown();
         fixture.detectChanges();
     }));
-
-    // it('should set the selected items', async(() => {
-    //     let pass = 0;
-    //     const fixture = TestBed.createComponent(DejaSelectByOptionsContainerComponent);
-    //     const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
-    //     const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
-    //     const sl = selectInstance as any;
-
-    //     observeOptionsViewPort$(fixture)
-    //         .debounceTime(10)
-    //         .subscribe((vp) => {
-    //             // Bind view port
-    //             fixture.detectChanges();
-    //             const selectedElements = fixture.debugElement.queryAll(By.css('.deja-overlay-container > .cdk-overlay-pane > .deja-listcontainer > .listitem.selected'));
-    //             const selectedItems = vp.items.filter((item: IItemBase) => item.selected);
-
-    //             switch (++pass) {
-    //                 case 1:
-    //                     expect(selectedElements.length).toBe(0);
-    //                     // Set selected items
-    //                     selectInstance.selectedItems = [vp.items[vp.startIndex], vp.items[vp.endIndex - 1]];
-    //                     expect(selectInstance.selectedItems).toBeDefined();
-    //                     expect(selectInstance.selectedItems.length).toBe(2);
-    //                     selectInstance.refreshViewPort();
-    //                     fixture.detectChanges();
-    //                     break;
-
-    //                 case 2:
-    //                     // Check selected items
-    //                     expect(selectedElements.length).toBe(2);
-    //                     expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe(`${vp.startIndex}`);
-    //                     expect(selectedElements[1] && selectedElements[1].attributes.flat).toBe(`${vp.endIndex - 1}`);
-    //                     expect(selectedItems.length).toBe(2);
-    //                     // Clear selection
-    //                     selectInstance.selectedItems = null;
-    //                     selectInstance.refreshViewPort();
-    //                     fixture.detectChanges();
-    //                     break;
-
-    //                 case 3:
-    //                     // Check no selected
-    //                     expect(selectedElements.length).toBe(0);
-    //                     expect(selectedItems.length).toBe(0);
-    //                     // Set selected item
-    //                     selectInstance.selectedItem = vp.items[5];
-    //                     expect(selectInstance.selectedItem).toBe(vp.items[5]);
-    //                     selectInstance.refreshViewPort();
-    //                     fixture.detectChanges();
-    //                     break;
-
-    //                 case 4:
-    //                     // Check selected item
-    //                     expect(selectedElements.length).toBe(1);
-    //                     expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe(`5`);
-    //                     expect(selectedItems.length).toBe(1);
-    //                     // Clear selection
-    //                     selectInstance.selectedItem = null;
-    //                     selectInstance.refreshViewPort();
-    //                     fixture.detectChanges();
-    //                     break;
-
-    //                 default:
-    //                     // Check no selected
-    //                     expect(selectedElements.length).toBe(0);
-    //                     expect(selectedItems.length).toBe(0);
-    //             }
-    //         });
-
-    //     Observable.timer(3000).first().subscribe(() => expect(pass).toBe(5));
-
-    //     sl.showDropDown();
-    //     fixture.detectChanges();
-    // }));
-
-    // it('should filter and select with the keyboard', async(() => {
-    //     let pass = 0;
-    //     const fixture = TestBed.createComponent(DejaSelectByOptionsContainerComponent);
-    //     const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
-    //     const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
-    //     const sl = selectInstance as any;
-
-    //     const sendKeyUp = (code: string) => {
-    //         const event = new KeyboardEvent('keyup', {
-    //             code: `Key${code.toUpperCase()}`,
-    //             key: code,
-    //         } as KeyboardEventInit);
-    //         selectInstance.listElement.dispatchEvent(event);
-    //         selectInstance.refreshViewPort();
-    //         fixture.detectChanges();
-    //     };
-
-    //     observeOptionsViewPort$(fixture)
-    //         .debounceTime(450) // Wait for the clear filter flag
-    //         .subscribe((vp) => {
-    //             fixture.detectChanges();
-    //             const selectedElements = fixture.debugElement.queryAll(By.css('.deja-overlay-container > .cdk-overlay-pane > .deja-listcontainer > .listitem.selected'));
-    //             const currentElement = fixture.debugElement.query(By.css('.deja-overlay-container > .cdk-overlay-pane > .deja-listcontainer > .listitem[current="true"]'));
-    //             const selectedItems = vp.items.filter((item: IItemBase) => item.selected);
-
-    //             switch (++pass) {
-    //                 case 1:
-    //                     // Check selected and current
-    //                     expect(selectedElements.length).toBe(0);
-    //                     expect(selectedItems.length).toBe(0);
-    //                     // Search first started with c
-    //                     sendKeyUp('c');
-    //                     break;
-
-    //                 case 2:
-    //                     // Check selected and current
-    //                     expect(selectedElements.length).toBe(0);
-    //                     expect(selectedItems.length).toBe(0);
-    //                     expect(currentElement && currentElement.attributes.flat).toBe('2');
-    //                     // Search next
-    //                     sendKeyUp('c');
-    //                     break;
-
-    //                 case 3:
-    //                     // Check selected and current
-    //                     expect(selectedElements.length).toBe(0);
-    //                     expect(selectedItems.length).toBe(0);
-    //                     expect(currentElement && currentElement.attributes.flat).toBe('3');
-    //                     // Search next
-    //                     sendKeyUp('c');
-    //                     break;
-
-    //                 case 4:
-    //                     // Check selected and current
-    //                     expect(selectedElements.length).toBe(0);
-    //                     expect(selectedItems.length).toBe(0);
-    //                     expect(currentElement && currentElement.attributes.flat).toBe('4');
-    //                     // Search next
-    //                     sendKeyUp('c');
-    //                     break;
-
-    //                 case 5:
-    //                     // Check selected and current
-    //                     expect(selectedElements.length).toBe(0);
-    //                     expect(selectedItems.length).toBe(0);
-    //                     expect(currentElement && currentElement.attributes.flat).toBe('5');
-    //                     // Search next
-    //                     sendKeyUp('c');
-    //                     break;
-
-    //                 case 6:
-    //                     // Check selected and current
-    //                     expect(selectedElements.length).toBe(0);
-    //                     expect(selectedItems.length).toBe(0);
-    //                     expect(currentElement && currentElement.attributes.flat).toBe('2');
-    //                     // Enable search area
-    //                     selectInstance.type = 'autocomplete';
-    //                     fixture.detectChanges();
-    //                     // Filter test
-    //                     (<any>selectInstance).setQuery$.next('c');
-    //                     selectInstance.refreshViewPort();
-    //                     fixture.detectChanges();
-    //                     break;
-
-    //                 default:
-    //                     expect(vp.visibleItems.length).toBe(5);
-
-    //             }
-    //         });
-
-    //     Observable.timer(6000).first().subscribe(() => expect(pass).toBe(7));
-
-    //     sl.showDropDown();
-    //     fixture.detectChanges();
-    // }));
 
     it('should navigate with the keyboard', async(() => {
         let pass = 0;
@@ -1055,7 +746,7 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                         expect(selectedItems.length).toBe(0);
                         expect(currentElement && currentElement.attributes.flat).toBe('0');
                         expect(selectedChips.length).toBe(0);
-                        // Current on Line 5 by pageDown 
+                        // Current on Line 5 by pageDown
                         sendKeyDown('PageDown');
                         break;
 
@@ -1079,195 +770,280 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                         break;
 
                     case 9:
-                    expect(selectedElements.length).toBe(1);
-                    expect(selectedItems.length).toBe(1);
-                    expect(currentElement && currentElement.attributes.flat).toBe('5');
-                    expect(selectedChips.length).toBe(1);
-                    debugger;
-                    //     expect(selectedElements.length).toBe(2);
-                    //     expect(selectedItems.length).toBe(2);
-                    //     expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('0');
-                    //     expect(selectedElements[1] && selectedElements[1].attributes.flat).toBe('1');
-                    //     // Keep selection, but pass current line to the third line
-                    //     sendKeyDown('DownArrow', false, true);
-                    //     break;
+                        expect(selectedElements.length).toBe(1);
+                        expect(selectedItems.length).toBe(1);
+                        expect(currentElement && currentElement.attributes.flat).toBe('5');
+                        expect(selectedChips.length).toBe(1);
 
-                    // case 6:
-                    //     // Check selection
-                    //     expect(selectedElements.length).toBe(2);
-                    //     expect(selectedItems.length).toBe(2);
-                    //     expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('0');
-                    //     expect(selectedElements[1] && selectedElements[1].attributes.flat).toBe('1');
-                    //     // Check current item
-                    //     expect(currentElement.attributes.flat).toBe('2');
-                    //     // Select third line only
-                    //     sendKeyDown('Space');
-                    //     break;
+                        // Select first line with enter in single select
+                        selectInstance.type = 'select';
+                        sendKeyDown('DownArrow');
+                        break;
 
-                    // case 7:
-                    //     // Check selection
-                    //     expect(selectedElements.length).toBe(1);
-                    //     expect(selectedItems.length).toBe(1);
-                    //     expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('2');
-                    //     // Select first line with Home
-                    //     sendKeyDown('Home', true);
-                    //     break;
-
-                    // case 8:
-                    //     // Check selection
-                    //     expect(selectedElements.length).toBe(1);
-                    //     expect(selectedItems.length).toBe(1);
-                    //     expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('0');
-                    //     // Select last line with End
-                    //     sendKeyDown('End');
-                    //     break;
-
-                    // case 9:
-                    //     // Check selection
-                    //     expect(selectedElements.length).toBe(1);
-                    //     expect(selectedItems.length).toBe(1);
-                    //     expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('1999');
-                    //     // Select the two last lines with Shift+PageUp
-                    //     sendKeyDown('UpArrow', true);
-                    //     break;
-
-                    // case 10:
-                    //     // Check selection
-                    //     expect(selectedElements.length).toBe(2);
-                    //     expect(selectedItems.length).toBe(2);
-                    //     expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('1998');
-                    //     expect(selectedElements[1] && selectedElements[1].attributes.flat).toBe('1999');
-                    //     // Keep selection, but pass current line to the first line
-                    //     sendKeyDown('Home', false, true);
-                    //     break;
-
-                    // case 11:
-                    //     // Check selection
-                    //     expect(selectedElements.length).toBe(0);
-                    //     expect(selectedItems.length).toBe(2);
-                    //     // Check current item
-                    //     expect(currentElement && currentElement.attributes.flat).toBe('0');
-                    //     // Select line 11 (PageSize=10)
-                    //     sendKeyDown('PageDown');
-                    //     break;
-
-                    // case 12:
-                    //     // Check selection
-                    //     expect(selectedElements.length).toBe(1);
-                    //     expect(selectedItems.length).toBe(1);
-                    //     expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('10');
-                    //     // Check current item
-                    //     expect(currentElement && currentElement.attributes.flat).toBe('10');
-                    //     // Select from line 11 to last line
-                    //     sendKeyDown('End', true);
-                    //     break;
-
-                    // case 13:
-                    //     // Check selection
-                    //     expect(selectedElements.length).toBe(vp.visibleItems.length);
-                    //     expect(selectedItems.length).toBe(vp.items.length - 10);
-                    //     // Check current item
-                    //     expect(currentElement && currentElement.attributes.flat).toBe('1999');
-                    //     // Select first line with Home
-                    //     sendKeyDown('Home');
-                    //     break;
-
-                    // case 14:
-                    //     // Check selection
-                    //     expect(selectedElements.length).toBe(1);
-                    //     expect(selectedItems.length).toBe(1);
-                    //     // Check current item
-                    //     expect(currentElement && currentElement.attributes.flat).toBe('0');
-                    //     // Select until line 11
-                    //     sendKeyDown('PageDown', true);
-                    //     break;
-
-                    // case 15:
-                    //     // Check selection
-                    //     expect(selectedElements.length).toBe(11);
-                    //     expect(selectedItems.length).toBe(11);
-                    //     // Check current item
-                    //     expect(currentElement && currentElement.attributes.flat).toBe('10');
-                    //     // Select next line only
-                    //     sendKeyDown('DownArrow');
-                    //     break;
-
-                    // case 16:
-                    //     // Check selection
-                    //     expect(selectedElements.length).toBe(1);
-                    //     expect(selectedItems.length).toBe(1);
-                    //     // Check current item
-                    //     expect(currentElement && currentElement.attributes.flat).toBe('11');
-                    //     // Select second line with PageUp
-                    //     sendKeyDown('PageUp');
-                    //     break;
-
-                    // case 17:
-                    //     // Check selection
-                    //     expect(selectedElements.length).toBe(1);
-                    //     expect(selectedItems.length).toBe(1);
-                    //     // Check current item
-                    //     expect(currentElement && currentElement.attributes.flat).toBe('1');
-                    //     // Select last line
-                    //     sendKeyDown('End');
-                    //     break;
-
-                    // case 18:
-                    //     // Check selection
-                    //     expect(selectedElements.length).toBe(1);
-                    //     expect(selectedItems.length).toBe(1);
-                    //     expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('1999');
-                    //     // Check current item
-                    //     expect(currentElement && currentElement.attributes.flat).toBe('1999');
-                    //     // Select from line 11 to last line
-                    //     sendKeyDown('PageUp', true);
-                    //     break;
-
-                    // case 19:
-                    //     // Check selection
-                    //     expect(selectedElements.length).toBe(11);
-                    //     expect(selectedItems.length).toBe(11);
-                    //     // Select first line
-                    //     sendKeyDown('Home');
-                    //     break;
-
-                    // case 20:
-                    //     // Check selection
-                    //     expect(selectedElements.length).toBe(1);
-                    //     expect(selectedItems.length).toBe(1);
-                    //     expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('0');
-                    //     // Check current item
-                    //     expect(currentElement && currentElement.attributes.flat).toBe('0');
-                    //     // Toggle first line selection with ctrl
-                    //     sendKeyDown('Space', false, true);
-                    //     break;
-
-                    // case 21:
-                    //     // Check selection
-                    //     expect(selectedElements.length).toBe(0);
-                    //     expect(selectedItems.length).toBe(0);
-                    //     // Check current item
-                    //     expect(currentElement && currentElement.attributes.flat).toBe('0');
-                    //     // Select first line with enter in single select
-                    //     selectInstance.type = 'autocomplete';
-                    //     fixture.detectChanges();
-                    //     sendKeyDown('Enter');
-                    //     break;
-
-                    // default:
-                    //     expect(selectedElements.length).toBe(1);
-                    //     expect(selectedItems.length).toBe(1);
-                    //     expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('0');
-                    //     expect(currentElement && currentElement.attributes.flat).toBe('0');
-
+                    default:
+                        expect(selectedElements.length).toBe(1);
+                        expect(selectedItems.length).toBe(1);
+                        expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('6');
+                        expect(selectedChips.length).toBe(0);
                 }
             });
 
-        // Observable.timer(6000).first().subscribe(() => expect(pass).toBe(22));
+        Observable.timer(6000).first().subscribe(() => expect(pass).toBe(10));
 
         sl.showDropDown();
         fixture.detectChanges();
     }));
+});
+
+describe('DejaSelectByModelContainerComponent', () => {
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                DejaSelectByModelContainerComponent,
+            ],
+            imports: [
+                BrowserAnimationsModule,
+                CommonModule,
+                FormsModule,
+                NoConflictStyleCompatibilityMode,
+                DejaSelectModule,
+            ],
+        }).compileComponents();
+    }));
+
+    // const observeModelViewPort$ = (fixture: ComponentFixture<DejaSelectByModelContainerComponent>) => {
+    //     const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
+    //     const viewPortService = selectDebugElement.injector.get(ViewPortService) as ViewPortService;
+
+    //     return Observable.from(viewPortService.viewPortResult$)
+    //         .filter((result) => result.viewPortSize > 0);
+    // };
+
+    it('should create the component', async(() => {
+        const fixture = TestBed.createComponent(DejaSelectByModelContainerComponent);
+        fixture.detectChanges();
+        const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
+        const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
+        expect(selectInstance).toBeTruthy();
+    }));
+
+    it('should close the selection in multiselect', async(() => {
+        const fixture = TestBed.createComponent(DejaSelectByModelContainerComponent);
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+
+            let selectedChips = fixture.debugElement.queryAll(By.css('deja-select > deja-chips > span > #close-button'));
+            expect(selectedChips.length).toBe(3);
+
+            selectedChips.forEach((closeButton) => closeButton.nativeElement.click());
+            fixture.detectChanges();
+
+            selectedChips = fixture.debugElement.queryAll(By.css('deja-select > deja-chips > span > #close-button'));
+            expect(selectedChips.length).toBe(0);
+        });
+    }));
+
+    it('should unselect all the elements in multiselect', async(() => {
+        const fixture = TestBed.createComponent(DejaSelectByModelContainerComponent);
+        const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
+        const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
+        const sl = selectDebugElement.componentInstance;
+
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+
+            let selectedChips = fixture.debugElement.queryAll(By.css('deja-select > deja-chips > span > #close-button'));
+            expect(selectedChips.length).toBe(3);
+            expect(selectInstance.selectedItems.length).toBe(3);
+            expect(selectInstance.selectedModels.length).toBe(3);
+
+            sl.removeSelection();
+            fixture.detectChanges();
+
+            selectedChips = fixture.debugElement.queryAll(By.css('deja-select > deja-chips > span > #close-button'));
+            expect(selectedChips.length).toBe(0);
+            expect(selectInstance.selectedItems.length).toBe(0);
+            expect(selectInstance.selectedModels.length).toBe(0);
+        });
+    }));
+
+    it('should close the selection in single select', async(() => {
+        const fixture = TestBed.createComponent(DejaSelectByModelContainerComponent);
+        const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
+        const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
+
+        fixture.detectChanges();
+
+        selectInstance.type = 'select';
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+
+            expect(selectInstance.selectedItems.length).toBe(1);
+            expect(selectInstance.selectedModels.length).toBe(1);
+            expect(selectInstance.selectedModel && selectInstance.selectedModel.id).toBe(1);
+
+            const closeButton = fixture.debugElement.query(By.css('deja-select #clear-button'));
+            closeButton.nativeElement.click();
+            fixture.detectChanges();
+
+            expect(selectInstance.selectedItems.length).toBe(0);
+            expect(selectInstance.selectedModels.length).toBe(0);
+
+            selectInstance.value = selectInstance.getItemListService().getItems()[2];
+            fixture.detectChanges();
+            expect(selectInstance.selectedItems.length).toBe(1);
+            expect(selectInstance.selectedModels.length).toBe(1);
+            expect(selectInstance.value).toBe(selectInstance.getItemListService().getItems()[2]);
+        });
+    }));
+
+    // it('should set the selected models', async(() => {
+    //     let pass = 0;
+    //     const fixture = TestBed.createComponent(DejaSelectByModelContainerComponent);
+    //     const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
+    //     const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
+
+    //     observeModelViewPort$(fixture)
+    //         .debounceTime(10)
+    //         .subscribe((vp) => {
+    //             // Bind view port
+    //             fixture.detectChanges();
+    //             const selectedModels = fixture.debugElement.queryAll(By.css('deja-select > .deja-listcontainer > .listitem.selected'));
+    //             const models = vp.visibleItems.map((item: IItemBase) => item.model);
+    //             const selectedItems = vp.items.filter((item: IItemBase) => item.selected);
+
+    //             switch (++pass) {
+    //                 case 1:
+    //                     // Selection from HTML
+    //                     expect(selectedItems.length).toBe(3);
+    //                     // Set selected models
+    //                     selectInstance.selectedModels = [models[vp.startIndex], models[vp.endIndex]];
+    //                     expect(selectInstance.selectedModels).toBeDefined();
+    //                     expect(selectInstance.selectedModels.length).toBe(2);
+    //                     selectInstance.refreshViewPort();
+    //                     fixture.detectChanges();
+    //                     break;
+
+    //                 case 2:
+    //                     // Check selected models
+    //                     expect(selectedModels.length).toBe(2);
+    //                     expect(selectedItems.length).toBe(2);
+    //                     // Clear selection
+    //                     selectInstance.selectedModels = null;
+    //                     selectInstance.refreshViewPort();
+    //                     fixture.detectChanges();
+    //                     break;
+
+    //                 case 3:
+    //                     // Check no selected
+    //                     expect(selectedModels.length).toBe(0);
+    //                     expect(selectedItems.length).toBe(0);
+    //                     // Single select list
+    //                     selectInstance.multiSelect = false;
+    //                     fixture.detectChanges();
+    //                     // Set selected model
+    //                     selectInstance.selectedModel = models[5];
+    //                     expect(selectInstance.selectedModel).toBe(models[5]);
+    //                     selectInstance.refreshViewPort();
+    //                     fixture.detectChanges();
+    //                     break;
+
+    //                 case 4:
+    //                     // Check selected item
+    //                     expect(selectedModels.length).toBe(1);
+    //                     expect(selectedItems.length).toBe(1);
+    //                     // Clear selection
+    //                     selectInstance.selectedModel = null;
+    //                     selectInstance.refreshViewPort();
+    //                     fixture.detectChanges();
+    //                     break;
+
+    //                 case 5:
+    //                     // Check no selected
+    //                     expect(selectedModels.length).toBe(0);
+    //                     expect(selectedItems.length).toBe(0);
+    //                     // Set selection by value
+    //                     selectInstance.value = models[4];
+    //                     expect((selectInstance.value as IItemBase).model).toBe(models[4]);
+    //                     selectInstance.refreshViewPort();
+    //                     fixture.detectChanges();
+    //                     break;
+
+    //                 case 6:
+    //                     // Check selected item
+    //                     expect(selectedModels.length).toBe(1);
+    //                     expect(selectedItems.length).toBe(1);
+    //                     // Clear selection
+    //                     selectInstance.selectedModel = null;
+    //                     selectInstance.refreshViewPort();
+    //                     fixture.detectChanges();
+    //                     break;
+
+    //                 default:
+    //                     // Check no selected
+    //                     expect(selectedModels.length).toBe(0);
+    //                     expect(selectedItems.length).toBe(0);
+    //             }
+    //         });
+
+    //     fixture.detectChanges();
+    // }));
+
+    // it('should flag pending keyboard navigation', async(() => {
+    //     const fixture = TestBed.createComponent(DejaSelectByModelContainerComponent);
+    //     const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
+    //     const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
+    //     let listElement: HTMLElement;
+
+    //     observeModelViewPort$(fixture)
+    //         .debounceTime(100)
+    //         .do(() => expect(selectInstance.keyboardNavigation()).toBeTruthy())
+    //         .delay(1000)
+    //         .subscribe(() => expect(selectInstance.keyboardNavigation()).toBeFalsy());
+
+    //     const sendKeyDown = (code: string, shiftKey?: boolean, ctrlKey?: boolean) => {
+    //         const event = new KeyboardEvent('keydown', {
+    //             code: code,
+    //             shiftKey: shiftKey,
+    //             ctrlKey: ctrlKey
+    //         } as KeyboardEventInit);
+    //         listElement.dispatchEvent(event);
+    //     };
+
+    //     fixture.detectChanges();
+    //     listElement = selectInstance.listElement;
+    //     sendKeyDown('DownArrow');
+    // }));
+
+    // it('should refresh view port if windows is resized', async(() => {
+    //     let pass = 0;
+    //     const fixture = TestBed.createComponent(DejaSelectByModelContainerComponent);
+
+    //     observeModelViewPort$(fixture)
+    //         .debounceTime(100)
+    //         .subscribe((vp) => {
+    //             fixture.detectChanges();
+
+    //             switch (++pass) {
+    //                 case 1:
+    //                     const event = new Event('resize', {});
+    //                     window.dispatchEvent(event);
+    //                     break;
+
+    //                 default:
+    //                     expect(vp.visibleItems.length).toBe(12);
+
+    //             }
+    //         });
+
+    //     fixture.detectChanges();
+    // }));
 });
 
     //     it('should select with the mouse', async(() => {
