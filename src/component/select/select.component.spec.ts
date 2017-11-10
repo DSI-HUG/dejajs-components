@@ -16,6 +16,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Observable } from 'rxjs/Observable';
 import { GroupingService } from '../../common/core/grouping/grouping.service';
 import { DejaItemModule } from '../../common/core/item-list/index';
+import { IItemBase } from '../../common/core/item-list/item-base';
 import { IItemTree } from '../../common/core/item-list/item-tree';
 import { ViewPortService } from '../../common/core/item-list/viewport.service';
 import { DejaConnectionPositionPair } from '../../common/core/overlay/connection-position-pair';
@@ -36,6 +37,9 @@ class DejaSelectContainerComponent {
     public itemList = [] as IItemTree[];
 
     constructor(groupingService: GroupingService) {
+        document.body.style.width = '1280px';
+        document.body.style.height = '1024px';
+
         const itemList = Array.apply(null, { length: 2000 }).map((_n, i) => {
             const rand = Math.floor(Math.random() * (70 - 33 + 1)) + 33; // random de 33 à 70
             return {
@@ -69,6 +73,9 @@ class DejaSelectContainerComponent {
 //     public selectedModels: any[];
 
 //     constructor(sortingService: SortingService) {
+// document.body.style.width = '1280px';
+// document.body.style.height = '1024px';
+
 //         const modelsList = Array.apply(null, { length: 2000 }).map((_n, i) => {
 //             const rand = Math.floor(Math.random() * (70 - 33 + 1)) + 33; // random de 33 à 70;
 //             return {
@@ -88,7 +95,7 @@ class DejaSelectContainerComponent {
 // }
 
 @Component({
-    template: `<deja-select style="width: 1000px;" viewportMode="fixed" multiSelect sortable itemsDraggable>
+    template: `<deja-select style="width: 1000px;" viewportMode="fixed" type="multiselect" sortable itemsDraggable pageSize="5">
                     <deja-item value="Apricots" text="Apricots"></deja-item>
                     <deja-item value="Banana" text="Banana"></deja-item>
                     <deja-item value="Cantaloupe" text="Cantaloupe"></deja-item>
@@ -101,10 +108,22 @@ class DejaSelectContainerComponent {
                     <deja-item value="Mango" text="Mango"></deja-item>
                     <deja-item value="Pineapple" text="Pineapple"></deja-item>
                     <deja-item value="Watermelon" text="Watermelon"></deja-item>
+                    <ng-template #itemTemplate let-item>
+                        <span [style.background-color]="backgroundColor(item)">
+                            {{ item.text }}
+                        </span>
+                    </ng-template>
                 </deja-select>`,
 })
 class DejaSelectByOptionsContainerComponent {
-    constructor() { }
+    constructor() {
+        document.body.style.width = '1280px';
+        document.body.style.height = '1024px';
+    }
+
+    public backgroundColor(item: IItemBase) {
+        return item.selected ? '#888' : null;
+    }
 }
 
 describe('DejaSelectComponent', () => {
@@ -247,23 +266,23 @@ describe('DejaSelectComponent', () => {
 
         Observable.from(selectInstance.dropDownVisibleChange)
             .do((state) => {
-                fixture.detectChanges()
+                fixture.detectChanges();
                 switch (++pass) {
                     case 1:
-                        expect(state).toBeTruthy();                        
+                        expect(state).toBeTruthy();
                         break;
                     case 2:
                         expect(state).toBeFalsy();
                         break;
                     case 3:
-                        expect(state).toBeTruthy()
+                        expect(state).toBeTruthy();
                         break;
                     default:
                         expect(state).toBeFalsy();
                 }
             })
             .delay(10)
-            .subscribe(() => { 
+            .subscribe(() => {
                 switch (pass) {
                     case 2:
                     case 3:
@@ -301,7 +320,6 @@ describe('DejaSelectComponent', () => {
             .subscribe((vp) => {
                 // Bind view port
                 fixture.detectChanges();
-                debugger;
                 const collapsed = fixture.debugElement.queryAll(By.css('.deja-overlay-container > .cdk-overlay-pane > .deja-listcontainer > .listitem.parent.collapsed'));
                 const collapsedItems = vp.items.filter((item: IItemTree) => item.collapsed);
                 const parentItems = vp.items.filter((item: IItemTree) => item.depth === 0);
@@ -319,6 +337,26 @@ describe('DejaSelectComponent', () => {
                         // Check collapsed items
                         expect(collapsed.length).toBeGreaterThan(0);
                         expect(collapsedItems.length).toBe(parentItems.length);
+                        // Toggle all items
+                        selectInstance.toggleAll();
+                        selectInstance.refreshViewPort();
+                        fixture.detectChanges();
+                        break;
+
+                    case 3:
+                        // Check collapsed items
+                        expect(collapsed.length).toBe(0);
+                        expect(collapsedItems.length).toBe(0);
+                        // Toogle only first
+                        selectInstance.toggleCollapse(0, true);
+                        selectInstance.refreshViewPort();
+                        fixture.detectChanges();
+                        break;
+
+                    case 4:
+                        // Check collapsed items
+                        expect(collapsed.length).toBe(1);
+                        expect(collapsedItems.length).toBe(1);
                         // Clear toogle
                         selectInstance.toggleAll(false);
                         selectInstance.refreshViewPort();
@@ -332,8 +370,8 @@ describe('DejaSelectComponent', () => {
                 }
             });
 
-        Observable.timer(3000).first().subscribe(() => expect(pass).toBe(3));
-        
+        Observable.timer(3000).first().subscribe(() => expect(pass).toBe(5));
+
         sl.showDropDown();
         fixture.detectChanges();
     }));
@@ -374,6 +412,8 @@ describe('DejaSelectComponent', () => {
                         expect(listItems.length).toBeGreaterThan(0);
                 }
             });
+
+        Observable.timer(4000).first().subscribe(() => expect(pass).toBe(3));
 
         selectInstance.minSearchlength = 2;
         selectInstance.type = 'autocomplete';
@@ -472,75 +512,6 @@ describe('DejaSelectComponent', () => {
 //                     expect(currentItems[0] && currentItems[0].attributes.flat).toBe('1');
 //                     expect(vp.startIndex).toBe(1);
 //                     expect(selectInstance.currentItem).toBe(vp.items[1]);
-//             }
-//         });
-
-//     fixture.detectChanges();
-// }));
-
-// it('should set the selected items', async(() => {
-//     let pass = 0;
-//     const fixture = TestBed.createComponent(DejaSelectContainerComponent);
-//     const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
-//     const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
-
-//     observeViewPort$(fixture)
-//         .debounceTime(10)
-//         .subscribe((vp) => {
-//             // Bind view port
-//             fixture.detectChanges();
-//             const selectedElements = fixture.debugElement.queryAll(By.css('deja-select > .deja-listcontainer > .listitem.selected'));
-//             const selectedItems = vp.items.filter((item: IItemBase) => item.selected);
-
-//             switch (++pass) {
-//                 case 1:
-//                     expect(selectedElements.length).toBe(0);
-//                     // Set selected items
-//                     selectInstance.selectedItems = [vp.items[vp.startIndex], vp.items[vp.endIndex], vp.items[vp.items.length - 1]];
-//                     expect(selectInstance.selectedItems).toBeDefined();
-//                     expect(selectInstance.selectedItems.length).toBe(3);
-//                     selectInstance.refreshViewPort();
-//                     fixture.detectChanges();
-//                     break;
-
-//                 case 2:
-//                     // Check selected items
-//                     expect(selectedElements.length).toBe(2);
-//                     expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe(`${vp.startIndex}`);
-//                     expect(selectedElements[1] && selectedElements[1].attributes.flat).toBe(`${vp.endIndex}`);
-//                     expect(selectedItems.length).toBe(3);
-//                     // Clear selection
-//                     selectInstance.selectedItems = null;
-//                     selectInstance.refreshViewPort();
-//                     fixture.detectChanges();
-//                     break;
-
-//                 case 3:
-//                     // Check no selected
-//                     expect(selectedElements.length).toBe(0);
-//                     expect(selectedItems.length).toBe(0);
-//                     // Set selected item
-//                     selectInstance.selectedItem = vp.items[5];
-//                     expect(selectInstance.selectedItem).toBe(vp.items[5]);
-//                     selectInstance.refreshViewPort();
-//                     fixture.detectChanges();
-//                     break;
-
-//                 case 4:
-//                     // Check selected item
-//                     expect(selectedElements.length).toBe(1);
-//                     expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe(`5`);
-//                     expect(selectedItems.length).toBe(1);
-//                     // Clear selection
-//                     selectInstance.selectedItem = null;
-//                     selectInstance.refreshViewPort();
-//                     fixture.detectChanges();
-//                     break;
-
-//                 default:
-//                     // Check no selected
-//                     expect(selectedElements.length).toBe(0);
-//                     expect(selectedItems.length).toBe(0);
 //             }
 //         });
 
@@ -742,262 +713,6 @@ describe('DejaSelectComponent', () => {
 //         sendKeyDown('DownArrow');
 //     }));
 
-//     it('should navigate with the keyboard', async(() => {
-//         let pass = 0;
-//         const fixture = TestBed.createComponent(DejaSelectByModelContainerComponent);
-//         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
-//         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
-//         let listElement: HTMLElement;
-
-//         const sendKeyDown = (code: string, shiftKey?: boolean, ctrlKey?: boolean) => {
-//             const event = new KeyboardEvent('keydown', {
-//                 code: code,
-//                 shiftKey: shiftKey,
-//                 ctrlKey: ctrlKey
-//             } as KeyboardEventInit);
-//             listElement.dispatchEvent(event);
-//             selectInstance.refreshViewPort();
-//             fixture.detectChanges();
-//         };
-
-//         observeModelViewPort$(fixture)
-//             .debounceTime(100)
-//             .subscribe((vp) => {
-//                 fixture.detectChanges();
-//                 const selectedElements = fixture.debugElement.queryAll(By.css('deja-select > .deja-listcontainer > .listitem.selected'));
-//                 const currentElement = fixture.debugElement.query(By.css('deja-select > .deja-listcontainer > .listitem[current="true"]'));
-//                 const selectedItems = vp.items.filter((item: IItemBase) => item.selected);
-
-//                 switch (++pass) {
-//                     case 1:
-//                         // Selection from HTML
-//                         expect(vp.items.filter((item: IItemBase) => item.selected).length).toBe(3);
-//                         // Clear selection
-//                         selectInstance.selectedModel = null;
-//                         selectInstance.refreshViewPort();
-//                         fixture.detectChanges();
-//                         break;
-
-//                     case 2:
-//                         // Check no selected
-//                         expect(selectedElements.length).toBe(0);
-//                         expect(selectedItems.length).toBe(0);
-//                         // Select first line by keydown
-//                         sendKeyDown('DownArrow');
-//                         break;
-
-//                     case 3:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(1);
-//                         expect(selectedItems.length).toBe(1);
-//                         expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('0');
-//                         // Select second line by keydown
-//                         sendKeyDown('DownArrow');
-//                         break;
-
-//                     case 4:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(1);
-//                         expect(selectedItems.length).toBe(1);
-//                         expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('1');
-//                         // Select first line by keyup
-//                         sendKeyDown('UpArrow');
-//                         break;
-
-//                     case 5:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(1);
-//                         expect(selectedItems.length).toBe(1);
-//                         expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('0');
-//                         // Select first and second lines by shift+keydown
-//                         sendKeyDown('DownArrow', true);
-//                         break;
-
-//                     case 6:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(2);
-//                         expect(selectedItems.length).toBe(2);
-//                         expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('0');
-//                         expect(selectedElements[1] && selectedElements[1].attributes.flat).toBe('1');
-//                         // Keep selection, but pass current line to the third line
-//                         sendKeyDown('DownArrow', false, true);
-//                         break;
-
-//                     case 7:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(2);
-//                         expect(selectedItems.length).toBe(2);
-//                         expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('0');
-//                         expect(selectedElements[1] && selectedElements[1].attributes.flat).toBe('1');
-//                         // Check current item
-//                         expect(currentElement.attributes.flat).toBe('2');
-//                         // Select third line only
-//                         sendKeyDown('Space');
-//                         break;
-
-//                     case 8:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(1);
-//                         expect(selectedItems.length).toBe(1);
-//                         expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('2');
-//                         // Select first line with Home
-//                         sendKeyDown('Home', true);
-//                         break;
-
-//                     case 9:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(1);
-//                         expect(selectedItems.length).toBe(1);
-//                         expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('0');
-//                         // Select last line with End
-//                         sendKeyDown('End');
-//                         break;
-
-//                     case 10:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(1);
-//                         expect(selectedItems.length).toBe(1);
-//                         expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('1999');
-//                         // Select the two last lines with Shift+PageUp
-//                         sendKeyDown('UpArrow', true);
-//                         break;
-
-//                     case 11:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(2);
-//                         expect(selectedItems.length).toBe(2);
-//                         expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('1998');
-//                         expect(selectedElements[1] && selectedElements[1].attributes.flat).toBe('1999');
-//                         // Keep selection, but pass current line to the first line
-//                         sendKeyDown('Home', false, true);
-//                         break;
-
-//                     case 12:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(0);
-//                         expect(selectedItems.length).toBe(2);
-//                         // Check current item
-//                         expect(currentElement && currentElement.attributes.flat).toBe('0');
-//                         // Select line 11 (PageSize=10)
-//                         sendKeyDown('PageDown');
-//                         break;
-
-//                     case 13:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(1);
-//                         expect(selectedItems.length).toBe(1);
-//                         expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('10');
-//                         // Check current item
-//                         expect(currentElement && currentElement.attributes.flat).toBe('10');
-//                         // Select from line 11 to last line
-//                         sendKeyDown('End', true);
-//                         break;
-
-//                     case 14:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(vp.visibleItems.length);
-//                         expect(selectedItems.length).toBe(vp.items.length - 10);
-//                         // Check current item
-//                         expect(currentElement && currentElement.attributes.flat).toBe('1999');
-//                         // Select first line with Home
-//                         sendKeyDown('Home');
-//                         break;
-
-//                     case 15:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(1);
-//                         expect(selectedItems.length).toBe(1);
-//                         // Check current item
-//                         expect(currentElement && currentElement.attributes.flat).toBe('0');
-//                         // Select until line 11
-//                         sendKeyDown('PageDown', true);
-//                         break;
-
-//                     case 16:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(11);
-//                         expect(selectedItems.length).toBe(11);
-//                         // Check current item
-//                         expect(currentElement && currentElement.attributes.flat).toBe('10');
-//                         // Select next line only
-//                         sendKeyDown('DownArrow');
-//                         break;
-
-//                     case 17:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(1);
-//                         expect(selectedItems.length).toBe(1);
-//                         // Check current item
-//                         expect(currentElement && currentElement.attributes.flat).toBe('11');
-//                         // Select second line with PageUp
-//                         sendKeyDown('PageUp');
-//                         break;
-
-//                     case 18:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(1);
-//                         expect(selectedItems.length).toBe(1);
-//                         // Check current item
-//                         expect(currentElement && currentElement.attributes.flat).toBe('1');
-//                         // Select last line
-//                         sendKeyDown('End');
-//                         break;
-
-//                     case 19:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(1);
-//                         expect(selectedItems.length).toBe(1);
-//                         expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('1999');
-//                         // Check current item
-//                         expect(currentElement && currentElement.attributes.flat).toBe('1999');
-//                         // Select from line 11 to last line
-//                         sendKeyDown('PageUp', true);
-//                         break;
-
-//                     case 20:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(11);
-//                         expect(selectedItems.length).toBe(11);
-//                         // Select first line
-//                         sendKeyDown('Home');
-//                         break;
-
-//                     case 21:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(1);
-//                         expect(selectedItems.length).toBe(1);
-//                         expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('0');
-//                         // Check current item
-//                         expect(currentElement && currentElement.attributes.flat).toBe('0');
-//                         // Toggle first line selection with ctrl
-//                         sendKeyDown('Space', false, true);
-//                         break;
-
-//                     case 22:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(0);
-//                         expect(selectedItems.length).toBe(0);
-//                         // Check current item
-//                         expect(currentElement && currentElement.attributes.flat).toBe('0');
-//                         // Select first line with enter in single select
-//                         selectInstance.multiSelect = false;
-//                         fixture.detectChanges();
-//                         sendKeyDown('Enter');
-//                         break;
-
-//                     default:
-//                         expect(selectedElements.length).toBe(1);
-//                         expect(selectedItems.length).toBe(1);
-//                         expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('0');
-//                         expect(currentElement && currentElement.attributes.flat).toBe('0');
-
-//                 }
-//             });
-
-//         fixture.detectChanges();
-//         listElement = selectInstance.listElement;
-//     }));
-
 //     it('should refresh view port if windows is resized', async(() => {
 //         let pass = 0;
 //         const fixture = TestBed.createComponent(DejaSelectByModelContainerComponent);
@@ -1047,11 +762,12 @@ describe('DejaSelectByOptionsContainerComponent', () => {
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
 
         Observable.from(selectInstance.dropDownVisibleChange)
-            .first()
             .subscribe(() => fixture.detectChanges());
 
         return Observable.from(viewPortService.viewPortResult$)
-            .filter((result) => result.viewPortSize > 0);
+            .filter((result) => {
+                return result.viewPortSize > 0;
+            });
     };
 
     it('should create the component', async(() => {
@@ -1075,101 +791,484 @@ describe('DejaSelectByOptionsContainerComponent', () => {
         sl.showDropDown();
         fixture.detectChanges();
     }));
-});
 
-    //     it('should filter and select with the keyboard', async(() => {
-    //         let pass = 0;
-    //         const fixture = TestBed.createComponent(DejaSelectByOptionsContainerComponent);
-    //         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
-    //         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
-    //         let listElement: HTMLElement;
+    // it('should set the selected items', async(() => {
+    //     let pass = 0;
+    //     const fixture = TestBed.createComponent(DejaSelectByOptionsContainerComponent);
+    //     const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
+    //     const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
+    //     const sl = selectInstance as any;
 
-    //         const sendKeyUp = (code: string) => {
-    //             const event = new KeyboardEvent('keyup', {
-    //                 code: `Key${code.toUpperCase()}`,
-    //                 key: code,
-    //             } as KeyboardEventInit);
-    //             listElement.dispatchEvent(event);
-    //             selectInstance.refreshViewPort();
+    //     observeOptionsViewPort$(fixture)
+    //         .debounceTime(10)
+    //         .subscribe((vp) => {
+    //             // Bind view port
     //             fixture.detectChanges();
-    //         };
+    //             const selectedElements = fixture.debugElement.queryAll(By.css('.deja-overlay-container > .cdk-overlay-pane > .deja-listcontainer > .listitem.selected'));
+    //             const selectedItems = vp.items.filter((item: IItemBase) => item.selected);
 
-    //         observeOptionsViewPort$(fixture)
-    //             .debounceTime(450) // Wait for the clear filter flag
-    //             .subscribe((vp) => {
-    //                 fixture.detectChanges();
-    //                 const selectedElements = fixture.debugElement.queryAll(By.css('deja-select > .deja-listcontainer > .listitem.selected'));
-    //                 const currentElement = fixture.debugElement.query(By.css('deja-select > .deja-listcontainer > .listitem[current="true"]'));
-    //                 const selectedItems = vp.items.filter((item: IItemBase) => item.selected);
+    //             switch (++pass) {
+    //                 case 1:
+    //                     expect(selectedElements.length).toBe(0);
+    //                     // Set selected items
+    //                     selectInstance.selectedItems = [vp.items[vp.startIndex], vp.items[vp.endIndex - 1]];
+    //                     expect(selectInstance.selectedItems).toBeDefined();
+    //                     expect(selectInstance.selectedItems.length).toBe(2);
+    //                     selectInstance.refreshViewPort();
+    //                     fixture.detectChanges();
+    //                     break;
 
-    //                 switch (++pass) {
-    //                     case 1:
-    //                         // Check selected and current
-    //                         expect(selectedElements.length).toBe(0);
-    //                         expect(selectedItems.length).toBe(0);
-    //                         // Search first started with c
-    //                         sendKeyUp('c');
-    //                         break;
+    //                 case 2:
+    //                     // Check selected items
+    //                     expect(selectedElements.length).toBe(2);
+    //                     expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe(`${vp.startIndex}`);
+    //                     expect(selectedElements[1] && selectedElements[1].attributes.flat).toBe(`${vp.endIndex - 1}`);
+    //                     expect(selectedItems.length).toBe(2);
+    //                     // Clear selection
+    //                     selectInstance.selectedItems = null;
+    //                     selectInstance.refreshViewPort();
+    //                     fixture.detectChanges();
+    //                     break;
 
-    //                     case 2:
-    //                         // Check selected and current
-    //                         expect(selectedElements.length).toBe(0);
-    //                         expect(selectedItems.length).toBe(0);
-    //                         expect(currentElement && currentElement.attributes.flat).toBe('2');
-    //                         // Search next
-    //                         sendKeyUp('c');
-    //                         break;
+    //                 case 3:
+    //                     // Check no selected
+    //                     expect(selectedElements.length).toBe(0);
+    //                     expect(selectedItems.length).toBe(0);
+    //                     // Set selected item
+    //                     selectInstance.selectedItem = vp.items[5];
+    //                     expect(selectInstance.selectedItem).toBe(vp.items[5]);
+    //                     selectInstance.refreshViewPort();
+    //                     fixture.detectChanges();
+    //                     break;
 
-    //                     case 3:
-    //                         // Check selected and current
-    //                         expect(selectedElements.length).toBe(0);
-    //                         expect(selectedItems.length).toBe(0);
-    //                         expect(currentElement && currentElement.attributes.flat).toBe('3');
-    //                         // Search next
-    //                         sendKeyUp('c');
-    //                         break;
+    //                 case 4:
+    //                     // Check selected item
+    //                     expect(selectedElements.length).toBe(1);
+    //                     expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe(`5`);
+    //                     expect(selectedItems.length).toBe(1);
+    //                     // Clear selection
+    //                     selectInstance.selectedItem = null;
+    //                     selectInstance.refreshViewPort();
+    //                     fixture.detectChanges();
+    //                     break;
 
-    //                     case 4:
-    //                         // Check selected and current
-    //                         expect(selectedElements.length).toBe(0);
-    //                         expect(selectedItems.length).toBe(0);
-    //                         expect(currentElement && currentElement.attributes.flat).toBe('4');
-    //                         // Search next
-    //                         sendKeyUp('c');
-    //                         break;
+    //                 default:
+    //                     // Check no selected
+    //                     expect(selectedElements.length).toBe(0);
+    //                     expect(selectedItems.length).toBe(0);
+    //             }
+    //         });
 
-    //                     case 5:
-    //                         // Check selected and current
-    //                         expect(selectedElements.length).toBe(0);
-    //                         expect(selectedItems.length).toBe(0);
-    //                         expect(currentElement && currentElement.attributes.flat).toBe('5');
-    //                         // Search next
-    //                         sendKeyUp('c');
-    //                         break;
+    //     Observable.timer(3000).first().subscribe(() => expect(pass).toBe(5));
 
-    //                     case 6:
-    //                         // Check selected and current
-    //                         expect(selectedElements.length).toBe(0);
-    //                         expect(selectedItems.length).toBe(0);
-    //                         expect(currentElement && currentElement.attributes.flat).toBe('2');
-    //                         // Enable search area
-    //                         selectInstance.searchArea = true;
-    //                         fixture.detectChanges();
-    //                         // Filter test
-    //                         (<any>selectInstance).setQuery$.next('c');
-    //                         selectInstance.refreshViewPort();
-    //                         fixture.detectChanges();
-    //                         break;
+    //     sl.showDropDown();
+    //     fixture.detectChanges();
+    // }));
 
-    //                     default:
-    //                         expect(vp.visibleItems.length).toBe(5);
+    // it('should filter and select with the keyboard', async(() => {
+    //     let pass = 0;
+    //     const fixture = TestBed.createComponent(DejaSelectByOptionsContainerComponent);
+    //     const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
+    //     const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
+    //     const sl = selectInstance as any;
 
-    //                 }
-    //             });
-
+    //     const sendKeyUp = (code: string) => {
+    //         const event = new KeyboardEvent('keyup', {
+    //             code: `Key${code.toUpperCase()}`,
+    //             key: code,
+    //         } as KeyboardEventInit);
+    //         selectInstance.listElement.dispatchEvent(event);
+    //         selectInstance.refreshViewPort();
     //         fixture.detectChanges();
-    //         listElement = selectInstance.listElement;
-    //     }));
+    //     };
+
+    //     observeOptionsViewPort$(fixture)
+    //         .debounceTime(450) // Wait for the clear filter flag
+    //         .subscribe((vp) => {
+    //             fixture.detectChanges();
+    //             const selectedElements = fixture.debugElement.queryAll(By.css('.deja-overlay-container > .cdk-overlay-pane > .deja-listcontainer > .listitem.selected'));
+    //             const currentElement = fixture.debugElement.query(By.css('.deja-overlay-container > .cdk-overlay-pane > .deja-listcontainer > .listitem[current="true"]'));
+    //             const selectedItems = vp.items.filter((item: IItemBase) => item.selected);
+
+    //             switch (++pass) {
+    //                 case 1:
+    //                     // Check selected and current
+    //                     expect(selectedElements.length).toBe(0);
+    //                     expect(selectedItems.length).toBe(0);
+    //                     // Search first started with c
+    //                     sendKeyUp('c');
+    //                     break;
+
+    //                 case 2:
+    //                     // Check selected and current
+    //                     expect(selectedElements.length).toBe(0);
+    //                     expect(selectedItems.length).toBe(0);
+    //                     expect(currentElement && currentElement.attributes.flat).toBe('2');
+    //                     // Search next
+    //                     sendKeyUp('c');
+    //                     break;
+
+    //                 case 3:
+    //                     // Check selected and current
+    //                     expect(selectedElements.length).toBe(0);
+    //                     expect(selectedItems.length).toBe(0);
+    //                     expect(currentElement && currentElement.attributes.flat).toBe('3');
+    //                     // Search next
+    //                     sendKeyUp('c');
+    //                     break;
+
+    //                 case 4:
+    //                     // Check selected and current
+    //                     expect(selectedElements.length).toBe(0);
+    //                     expect(selectedItems.length).toBe(0);
+    //                     expect(currentElement && currentElement.attributes.flat).toBe('4');
+    //                     // Search next
+    //                     sendKeyUp('c');
+    //                     break;
+
+    //                 case 5:
+    //                     // Check selected and current
+    //                     expect(selectedElements.length).toBe(0);
+    //                     expect(selectedItems.length).toBe(0);
+    //                     expect(currentElement && currentElement.attributes.flat).toBe('5');
+    //                     // Search next
+    //                     sendKeyUp('c');
+    //                     break;
+
+    //                 case 6:
+    //                     // Check selected and current
+    //                     expect(selectedElements.length).toBe(0);
+    //                     expect(selectedItems.length).toBe(0);
+    //                     expect(currentElement && currentElement.attributes.flat).toBe('2');
+    //                     // Enable search area
+    //                     selectInstance.type = 'autocomplete';
+    //                     fixture.detectChanges();
+    //                     // Filter test
+    //                     (<any>selectInstance).setQuery$.next('c');
+    //                     selectInstance.refreshViewPort();
+    //                     fixture.detectChanges();
+    //                     break;
+
+    //                 default:
+    //                     expect(vp.visibleItems.length).toBe(5);
+
+    //             }
+    //         });
+
+    //     Observable.timer(6000).first().subscribe(() => expect(pass).toBe(7));
+
+    //     sl.showDropDown();
+    //     fixture.detectChanges();
+    // }));
+
+    it('should navigate with the keyboard', async(() => {
+        let pass = 0;
+        const fixture = TestBed.createComponent(DejaSelectByOptionsContainerComponent);
+        const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
+        const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
+        const sl = selectInstance as any;
+
+        const sendKeyDown = (code: string, shiftKey?: boolean, altKey?: boolean, ctrlKey?: boolean) => {
+            const event = new KeyboardEvent('keydown', {
+                code: code,
+                shiftKey: shiftKey,
+                altKey: altKey,
+                ctrlKey: ctrlKey,
+            } as KeyboardEventInit);
+            sl.htmlInputElement.dispatchEvent(event);
+            selectInstance.refreshViewPort();
+            fixture.detectChanges();
+        };
+
+        observeOptionsViewPort$(fixture)
+            .debounceTime(100)
+            .subscribe((vp) => {
+                fixture.detectChanges();
+                const selectedChips = fixture.debugElement.queryAll(By.css('deja-select > deja-chips > span'));
+                const selectedElements = fixture.debugElement.queryAll(By.css('.deja-overlay-container > .cdk-overlay-pane > .deja-listcontainer > .listitem.selected'));
+                const currentElement = fixture.debugElement.query(By.css('.deja-overlay-container > .cdk-overlay-pane > .deja-listcontainer > .listitem[current="true"]'));
+                const selectedItems = vp.items.filter((item: IItemBase) => item.selected);
+
+                switch (++pass) {
+                    case 1:
+                        // Check no selected
+                        expect(selectedElements.length).toBe(0);
+                        expect(selectedItems.length).toBe(0);
+                        expect(selectedChips.length).toBe(0);
+                        // Current on first line by keydown
+                        sendKeyDown('DownArrow');
+                        break;
+
+                    case 2:
+                        // Check selection
+                        expect(selectedElements.length).toBe(0);
+                        expect(selectedItems.length).toBe(0);
+                        expect(currentElement && currentElement.attributes.flat).toBe('0');
+                        expect(selectedChips.length).toBe(0);
+                        // Current on second line by keydown
+                        sendKeyDown('DownArrow');
+                        break;
+
+                    case 3:
+                        // Check selection
+                        expect(selectedElements.length).toBe(0);
+                        expect(selectedItems.length).toBe(0);
+                        expect(currentElement && currentElement.attributes.flat).toBe('1');
+                        expect(selectedChips.length).toBe(0);
+                        // Current on first line by keyup
+                        sendKeyDown('UpArrow');
+                        break;
+
+                    case 4:
+                        // Check selection
+                        expect(selectedElements.length).toBe(0);
+                        expect(selectedItems.length).toBe(0);
+                        expect(currentElement && currentElement.attributes.flat).toBe('0');
+                        expect(selectedChips.length).toBe(0);
+                        // Current on last line
+                        sendKeyDown('End');
+                        break;
+
+                    case 5:
+                        // Check selection
+                        expect(selectedElements.length).toBe(0);
+                        expect(selectedItems.length).toBe(0);
+                        expect(currentElement && currentElement.attributes.flat).toBe('11');
+                        expect(selectedChips.length).toBe(0);
+                        // Current on line 6 by pageUp
+                        sendKeyDown('PageUp');
+                        break;
+
+                    case 6:
+                        // Check selection
+                        expect(selectedElements.length).toBe(0);
+                        expect(selectedItems.length).toBe(0);
+                        expect(currentElement && currentElement.attributes.flat).toBe('6');
+                        expect(selectedChips.length).toBe(0);
+                        // Current on firstLine by Home
+                        sendKeyDown('Home');
+                        break;
+
+                    case 7:
+                        // Check selection
+                        expect(selectedElements.length).toBe(0);
+                        expect(selectedItems.length).toBe(0);
+                        expect(currentElement && currentElement.attributes.flat).toBe('0');
+                        expect(selectedChips.length).toBe(0);
+                        // Current on Line 5 by pageDown 
+                        sendKeyDown('PageDown');
+                        break;
+
+                    case 8:
+                        // Check selection
+                        expect(selectedElements.length).toBe(0);
+                        expect(selectedItems.length).toBe(0);
+                        expect(currentElement && currentElement.attributes.flat).toBe('5');
+                        expect(selectedChips.length).toBe(0);
+
+                        // Select the lines with Enter
+                        sendKeyDown('Enter');
+
+                        Observable.from(selectInstance.dropDownVisibleChange)
+                            .first()
+                            .delay(10)
+                            .subscribe(() => {
+                                sl.htmlInputElement.click();
+                            });
+
+                        break;
+
+                    case 9:
+                    expect(selectedElements.length).toBe(1);
+                    expect(selectedItems.length).toBe(1);
+                    expect(currentElement && currentElement.attributes.flat).toBe('5');
+                    expect(selectedChips.length).toBe(1);
+                    debugger;
+                    //     expect(selectedElements.length).toBe(2);
+                    //     expect(selectedItems.length).toBe(2);
+                    //     expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('0');
+                    //     expect(selectedElements[1] && selectedElements[1].attributes.flat).toBe('1');
+                    //     // Keep selection, but pass current line to the third line
+                    //     sendKeyDown('DownArrow', false, true);
+                    //     break;
+
+                    // case 6:
+                    //     // Check selection
+                    //     expect(selectedElements.length).toBe(2);
+                    //     expect(selectedItems.length).toBe(2);
+                    //     expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('0');
+                    //     expect(selectedElements[1] && selectedElements[1].attributes.flat).toBe('1');
+                    //     // Check current item
+                    //     expect(currentElement.attributes.flat).toBe('2');
+                    //     // Select third line only
+                    //     sendKeyDown('Space');
+                    //     break;
+
+                    // case 7:
+                    //     // Check selection
+                    //     expect(selectedElements.length).toBe(1);
+                    //     expect(selectedItems.length).toBe(1);
+                    //     expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('2');
+                    //     // Select first line with Home
+                    //     sendKeyDown('Home', true);
+                    //     break;
+
+                    // case 8:
+                    //     // Check selection
+                    //     expect(selectedElements.length).toBe(1);
+                    //     expect(selectedItems.length).toBe(1);
+                    //     expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('0');
+                    //     // Select last line with End
+                    //     sendKeyDown('End');
+                    //     break;
+
+                    // case 9:
+                    //     // Check selection
+                    //     expect(selectedElements.length).toBe(1);
+                    //     expect(selectedItems.length).toBe(1);
+                    //     expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('1999');
+                    //     // Select the two last lines with Shift+PageUp
+                    //     sendKeyDown('UpArrow', true);
+                    //     break;
+
+                    // case 10:
+                    //     // Check selection
+                    //     expect(selectedElements.length).toBe(2);
+                    //     expect(selectedItems.length).toBe(2);
+                    //     expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('1998');
+                    //     expect(selectedElements[1] && selectedElements[1].attributes.flat).toBe('1999');
+                    //     // Keep selection, but pass current line to the first line
+                    //     sendKeyDown('Home', false, true);
+                    //     break;
+
+                    // case 11:
+                    //     // Check selection
+                    //     expect(selectedElements.length).toBe(0);
+                    //     expect(selectedItems.length).toBe(2);
+                    //     // Check current item
+                    //     expect(currentElement && currentElement.attributes.flat).toBe('0');
+                    //     // Select line 11 (PageSize=10)
+                    //     sendKeyDown('PageDown');
+                    //     break;
+
+                    // case 12:
+                    //     // Check selection
+                    //     expect(selectedElements.length).toBe(1);
+                    //     expect(selectedItems.length).toBe(1);
+                    //     expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('10');
+                    //     // Check current item
+                    //     expect(currentElement && currentElement.attributes.flat).toBe('10');
+                    //     // Select from line 11 to last line
+                    //     sendKeyDown('End', true);
+                    //     break;
+
+                    // case 13:
+                    //     // Check selection
+                    //     expect(selectedElements.length).toBe(vp.visibleItems.length);
+                    //     expect(selectedItems.length).toBe(vp.items.length - 10);
+                    //     // Check current item
+                    //     expect(currentElement && currentElement.attributes.flat).toBe('1999');
+                    //     // Select first line with Home
+                    //     sendKeyDown('Home');
+                    //     break;
+
+                    // case 14:
+                    //     // Check selection
+                    //     expect(selectedElements.length).toBe(1);
+                    //     expect(selectedItems.length).toBe(1);
+                    //     // Check current item
+                    //     expect(currentElement && currentElement.attributes.flat).toBe('0');
+                    //     // Select until line 11
+                    //     sendKeyDown('PageDown', true);
+                    //     break;
+
+                    // case 15:
+                    //     // Check selection
+                    //     expect(selectedElements.length).toBe(11);
+                    //     expect(selectedItems.length).toBe(11);
+                    //     // Check current item
+                    //     expect(currentElement && currentElement.attributes.flat).toBe('10');
+                    //     // Select next line only
+                    //     sendKeyDown('DownArrow');
+                    //     break;
+
+                    // case 16:
+                    //     // Check selection
+                    //     expect(selectedElements.length).toBe(1);
+                    //     expect(selectedItems.length).toBe(1);
+                    //     // Check current item
+                    //     expect(currentElement && currentElement.attributes.flat).toBe('11');
+                    //     // Select second line with PageUp
+                    //     sendKeyDown('PageUp');
+                    //     break;
+
+                    // case 17:
+                    //     // Check selection
+                    //     expect(selectedElements.length).toBe(1);
+                    //     expect(selectedItems.length).toBe(1);
+                    //     // Check current item
+                    //     expect(currentElement && currentElement.attributes.flat).toBe('1');
+                    //     // Select last line
+                    //     sendKeyDown('End');
+                    //     break;
+
+                    // case 18:
+                    //     // Check selection
+                    //     expect(selectedElements.length).toBe(1);
+                    //     expect(selectedItems.length).toBe(1);
+                    //     expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('1999');
+                    //     // Check current item
+                    //     expect(currentElement && currentElement.attributes.flat).toBe('1999');
+                    //     // Select from line 11 to last line
+                    //     sendKeyDown('PageUp', true);
+                    //     break;
+
+                    // case 19:
+                    //     // Check selection
+                    //     expect(selectedElements.length).toBe(11);
+                    //     expect(selectedItems.length).toBe(11);
+                    //     // Select first line
+                    //     sendKeyDown('Home');
+                    //     break;
+
+                    // case 20:
+                    //     // Check selection
+                    //     expect(selectedElements.length).toBe(1);
+                    //     expect(selectedItems.length).toBe(1);
+                    //     expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('0');
+                    //     // Check current item
+                    //     expect(currentElement && currentElement.attributes.flat).toBe('0');
+                    //     // Toggle first line selection with ctrl
+                    //     sendKeyDown('Space', false, true);
+                    //     break;
+
+                    // case 21:
+                    //     // Check selection
+                    //     expect(selectedElements.length).toBe(0);
+                    //     expect(selectedItems.length).toBe(0);
+                    //     // Check current item
+                    //     expect(currentElement && currentElement.attributes.flat).toBe('0');
+                    //     // Select first line with enter in single select
+                    //     selectInstance.type = 'autocomplete';
+                    //     fixture.detectChanges();
+                    //     sendKeyDown('Enter');
+                    //     break;
+
+                    // default:
+                    //     expect(selectedElements.length).toBe(1);
+                    //     expect(selectedItems.length).toBe(1);
+                    //     expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('0');
+                    //     expect(currentElement && currentElement.attributes.flat).toBe('0');
+
+                }
+            });
+
+        // Observable.timer(6000).first().subscribe(() => expect(pass).toBe(22));
+
+        sl.showDropDown();
+        fixture.detectChanges();
+    }));
+});
 
     //     it('should select with the mouse', async(() => {
     //         let pass = 0;
