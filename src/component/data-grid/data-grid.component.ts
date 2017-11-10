@@ -540,7 +540,11 @@ export class DejaGridComponent implements OnDestroy {
             this.treeListComponent.refresh();
         }
         if (this.columnLayout) {
-            this.columnLayout.refresh$.next();
+            if (this.hasPercentageColumns) {
+                this.calcColumnsLayout();
+            } else {
+                this.columnLayout.refresh$.next();
+            }
         }
         this.changeDetectorRef.markForCheck();
     }

@@ -1,0 +1,14 @@
+<mat-form-field>
+    <input [placeholder]="placeholder" matInput [disabled]="disabled" #inputStepper type="number" [(ngModel)]="value" [min]="min" [max]="max" [step]="step" [style.width.px]="size" (blur)="inputStepper.value = value; this.checkSize()" /><!-- [pattern]="'\\d{0,'+max.toString().length+'}'" -->
+    <div matSuffix *ngIf="value !== undefined && value !== null">
+        <span class="unit">{{unit}}</span>
+    </div>
+    <mat-hint align="end" *ngIf="max">{{value}} / {{max}}</mat-hint>
+    <mat-error *ngIf="matError">
+        <ng-template [ngTemplateOutlet]="matError"></ng-template>
+    </mat-error>
+</mat-form-field>
+<span class="steppers">
+    <button [disabled]="disabled || value === max" (click)="value = (value || 0) + step" mat-raised-button color="primary" type="button">add</button>
+    <button [disabled]="disabled || value === min" (click)="value = (value || 0) - step" mat-raised-button color="primary" type="button">remove</button>
+</span>

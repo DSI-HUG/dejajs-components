@@ -23,3 +23,4 @@ export * from './UUID';
 export * from './validation/index';
 export * from './overlay/index';
 export * from './media/index';
+export * from './text-metrics/index';

@@ -1,6 +1,6 @@
 <div id="header" *ngIf="searchArea">
     <mat-form-field deja-child-validator id="input" *ngIf="searchArea">
-        <input #inputelement type="text" matInput tabindex="0" [(ngModel)]="query" [placeholder]="placeholder" [disabled]="disabled">
+        <input #inputelement type="text" matInput tabindex="0" [ngModel]="query" [placeholder]="placeholder" [disabled]="disabled" (input)="setQuery$.next(model && model.value)" #model="ngModel">
         <span *ngIf="searchPrefixTemplate" matPrefix>
 			<ng-template [ngTemplateOutlet]="searchPrefixTemplate"></ng-template>
 		</span>
@@ -12,7 +12,7 @@
 <div id="listheader" *ngIf="headerTemplate">
     <ng-template [ngTemplateOutlet]="headerTemplate"></ng-template>
 </div>
-<div [id]="listElementId" class="deja-listcontainer" [attr.itemscount]="_itemList && _itemList.length" [attr.depth-max]="depthMax || null" [attr.vp-rowheight]="getViewPortRowHeight()" [style.max-height.px]="maxHeight || null" tabindex="1" [class.hasheader]="headerTemplate" [class.dragover]="ddStartIndex !== undefined ? ddStartIndex : null" [attr.keynav]="keyboardNavigation" (dragleave)="sortable ? dragLeave($event): null" (mousedown)="mousedown($event)" [deja-droppable]="getDropContext()">
+<div [id]="listElementId" #listElement class="deja-listcontainer" [attr.itemscount]="_itemList && _itemList.length" [attr.depth-max]="depthMax || null" [attr.vp-rowheight]="getViewPortRowHeight()" [style.max-height.px]="maxHeight || null" tabindex="1" [class.hasheader]="headerTemplate" [class.dragover]="ddStartIndex !== undefined ? ddStartIndex : null" [attr.keynav]="keyboardNavigation" (dragleave)="sortable ? dragLeave($event): null" (mousedown)="mousedown($event)" [deja-droppable]="getDropContext()">
     <div id="nodata-holder" *ngIf="(!itemList || itemList.length === 0) && !waiter">{{ nodataholder }}</div>
     <div id="error-hint" *ngIf="hintLabel">{{ hintLabel }}</div>
     <div *ngIf="vpBeforeHeight && !waiter" [style.height.px]="vpBeforeHeight"></div>

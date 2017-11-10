@@ -63,6 +63,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @Input() public placeHolderTemplateExternal;
     /** Permet de définir un template pour l'élément de conseil ou d'affichage d'erreur. */
     @Input() public hintTemplateExternal;
+    /** Permet de définir un template pour le MatError à l'intérieur du mat-input-container. */
+    @Input() public errorTemplateExternal;
     /** Définit une valeur indiquant si en reactive form le model renvoyé doit être un obeject oue une valeur */
     @Input() public modelIsValue: boolean;
     /** Exécuté lorsque le calcul du viewPort est terminé. */
@@ -77,7 +79,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @ContentChild('selectedTemplate') public selectedTemplate;
     @ContentChild('suffixTemplate') public _matSuffix;
     /** Template for MatError inside mat-input-container */
-    @ContentChild('errorTemplate') public matError;
+    @ContentChild('errorTemplate') public errorTemplateInternal;
 
     /** Internal use */
     public overlayOwnerElement: HTMLElement;
@@ -756,6 +758,10 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return this.hintTemplateExternal || this.hintTemplateInternal;
     }
 
+    private get errorTemplate() {
+        return this.errorTemplateExternal || this.errorTemplateInternal;
+    }
+
     private get parentItemTemplate() {
         return this.parentItemTemplateExternal || this.parentItemTemplateInternal;
     }
@@ -843,7 +849,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             .filter(() => this.selectingItemIndex === undefined)
             .subscribe(() => {
                 this.onTouchedCallback();
-                this.hideDropDown$.next(10);
+                // this.hideDropDown$.next(10);
             });
 
         Observable.fromEvent(this.htmlInputElement, 'keydown')
@@ -1243,9 +1249,10 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         this.listElement.scrollTop = this.lastScrollPosition;
 
         this.calcViewList$()
-            .first()
             .do(() => this.refreshViewPort())
-            .delay(1)
+            .combineLatest(this.viewPortChanged) // Wait for viewport calculation
+            .first()
+            .delay(1) // Ensure viewport binding
             .subscribe(() => {
                 this.overlay.updatePosition();
 
