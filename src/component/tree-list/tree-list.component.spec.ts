@@ -162,7 +162,7 @@ describe('DejaTreeListComponent', () => {
         treeListInstance.pageSize = '5';
         expect(tl.pageSize).toBe(5);
         treeListInstance.pageSize = 0;
-        expect(treeListInstance.pageSize).toBe(10);
+        expect(treeListInstance.pageSize).toBe(17);
 
         expect(treeListInstance.hintLabel).toBeUndefined();
         treeListInstance.hintLabel = 'I am a hint label';
@@ -887,7 +887,7 @@ describe('DejaTreeListByModelContainerComponent', () => {
                         break;
 
                     default:
-                        expect(vp.visibleItems.length).toBe(12);
+                        expect(vp.visibleItems.length).toBe(19);
 
                 }
             });
