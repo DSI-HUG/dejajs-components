@@ -79,11 +79,8 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
     }
 
     @Input() public set resetcolor(value: string | Color) {
-        // TODO String vide => new Color();
-        console.log('inside resetcolor >>>>>>>>>>>:', value);
         if (value === '') { value = new Color(); }
         const color = value && (typeof value === 'string' ? Color.parse(value) : value);
-        console.log('after treatment >>><>: ', color);
         this._resetcolor$.next(color || null);
     }
 
