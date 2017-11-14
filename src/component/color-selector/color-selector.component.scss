@@ -6,9 +6,8 @@
         flex-direction: row;
         align-items: center;
         justify-content: center;
-        width: 100%;
         flex-wrap: wrap;
-        margin: 1rem 0;
+        margin: 1rem 0.5rem;
         deja-color-fab {
             float: left;
         }
@@ -25,5 +24,11 @@
                 transform: scale(0, 0);
             }
         }
+    }
+
+    #reset {
+        padding: 0.5rem 0;
+        cursor: pointer;
+        text-align: center;
     }
 }

@@ -9,6 +9,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule  } from '@angular/forms';
+import { MatButtonModule, MatIconModule } from '@angular/material';
 import { DejaColorFabComponent } from './color-fab.component';
 import { DejaColorSelectorComponent } from './color-selector.component';
 
@@ -18,6 +19,8 @@ import { DejaColorSelectorComponent } from './color-selector.component';
     imports: [
         CommonModule,
         FormsModule,
+        MatIconModule,
+        MatButtonModule
     ],
 })
 export class DejaColorSelectorModule { }
