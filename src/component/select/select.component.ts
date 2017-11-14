@@ -376,12 +376,9 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                     this.unselectAll$()
                         .switchMap(() => item ? this.toggleSelect$([item], true) : [])
                         .map(() => super.getItemListService().ensureSelection())
-                        .map((selectedItems) => selectedItems.length ? this.getTextValue(selectedItems[0]) : '')
+                        .do(() => this.ensureSelection())
                         .first()
-                        .subscribe((query) => {
-                            this.query = query;
-                            this.changeDetectorRef.markForCheck();
-                        });
+                        .subscribe(() =>this.changeDetectorRef.markForCheck());
                 }
             });
 
@@ -685,6 +682,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     public set items(items: IItemBase[] | Promise<IItemBase[]> | Observable<IItemBase[]>) {
         super.setItems$(items)
             .first()
+            .do(() => this.ensureSelection())
             .switchMap(() => this.calcViewList$())
             .subscribe(noop);
     }
@@ -694,6 +692,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     public set models(items: any[] | Observable<any[]>) {
         super.setModels$(items)
             .first()
+            .do(() => this.ensureSelection())
             .switchMap(() => this.calcViewList$())
             .subscribe(noop);
     }
@@ -1264,5 +1263,13 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                     this.ensureItemVisible(index);
                 }
             });
+    }
+
+    private ensureSelection() {
+        if (this._multiSelect) {
+            // Do nothing yet
+        } else {
+            this.query = this.selectedItems.length ? this.getTextValue(this.selectedItems[0]) : '';
+        }
     }
 }
