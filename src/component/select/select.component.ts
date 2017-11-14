@@ -245,7 +245,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             .takeWhile(() => this._isAlive)
             .subscribe((scrollPos) => {
                 this.viewPort.scrollPosition$.next(scrollPos);
-                this.lastScrollPosition = scrollPos; // TODO ItemListBase scrollPos defined
+                this.lastScrollPosition = scrollPos;
             });
 
         Observable.from(this.hideDropDown$)
@@ -575,6 +575,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         }
         this._type = type;
         this.setMultiSelect(this._type === 'multiselect');
+        this.changeDetectorRef.markForCheck();
     }
 
     /**
@@ -641,7 +642,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     /** Définit l'éléments selectioné en mode single select */
     @Input()
     public set selectedItem(value: IItemBase) {
-        this.setSelectedItems([value]);
+        this.setSelectedItems(value !== undefined && value !== null ? [value] : []);
     }
 
     /** Retourne l'élément selectioné en mode single select */
@@ -859,15 +860,17 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
         Observable.fromEvent(this.htmlInputElement, 'keydown')
             .takeWhile(() => this._isAlive)
-            .filter((event: KeyboardEvent) =>
-                event.keyCode === KeyCodes.Home ||
-                event.keyCode === KeyCodes.End ||
-                event.keyCode === KeyCodes.PageUp ||
-                event.keyCode === KeyCodes.PageDown ||
-                event.keyCode === KeyCodes.UpArrow ||
-                event.keyCode === KeyCodes.DownArrow ||
-                event.keyCode === KeyCodes.Space ||
-                event.keyCode === KeyCodes.Enter)
+            .filter((event: KeyboardEvent) => {
+                const keyCode = event.keyCode || KeyCodes[event.code];
+                return keyCode === KeyCodes.Home ||
+                    keyCode === KeyCodes.End ||
+                    keyCode === KeyCodes.PageUp ||
+                    keyCode === KeyCodes.PageDown ||
+                    keyCode === KeyCodes.UpArrow ||
+                    keyCode === KeyCodes.DownArrow ||
+                    keyCode === KeyCodes.Space ||
+                    keyCode === KeyCodes.Enter;
+            })
             .switchMap((event) => this.ensureListCaches$().map(() => event))
             .map((event: KeyboardEvent) => {
                 // Set and get current index for keyboard features only
@@ -884,7 +887,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                     }
                 };
 
-                switch (event.keyCode) {
+                const keyCode = event.keyCode || KeyCodes[event.code];
+                switch (keyCode) {
                     case KeyCodes.Home:
                         if (event.altKey || this._multiSelect && !this.dropdownVisible) {
                             this.toggleDropDown();
@@ -975,10 +979,13 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
         const keyUp$ = Observable
             .fromEvent(this.htmlInputElement, 'keyup')
-            .filter((event: KeyboardEvent) => event.keyCode >= KeyCodes.Key0 ||
-                event.keyCode === KeyCodes.Backspace ||
-                event.keyCode === KeyCodes.Space ||
-                event.keyCode === KeyCodes.Delete);
+            .filter((event: KeyboardEvent) => {
+                const keyCode = event.keyCode || KeyCodes[event.code];
+                return keyCode >= KeyCodes.Key0 ||
+                    keyCode === KeyCodes.Backspace ||
+                    keyCode === KeyCodes.Space ||
+                    keyCode === KeyCodes.Delete;
+            });
 
         Observable.merge(keyUp$, this.filter$)
             .takeWhile(() => this._isAlive)
@@ -1049,7 +1056,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     /** Change l'état d'expansion de la ligne spécifiée
-     * @param {number} index  Index sur la liste des éléments visibles de l'élément à changer.
+     * @param {number} index  Index sur la liste des éléments visibles  l'élément à changer.
      * @param {boolean} collapse  Etat de l'élément. True pour réduire l'élément.
      * @return {Observable} Observable résolu par la fonction.
      */
@@ -1069,7 +1076,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     public toggleCollapse(index: number, collapsed: boolean) {
         this.toggleCollapse$(index, collapsed).first().subscribe(noop);
     }
-    
+
     public queryChanged(value: string) {
         this.query = value;
         if (!this.isModeSelect) {
