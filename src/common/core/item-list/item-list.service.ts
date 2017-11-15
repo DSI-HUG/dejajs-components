@@ -78,9 +78,9 @@ export class ItemListService {
     private _valueField: string;
 
     /** Evalue la valeur à comparer pour l'élément spécifié.
-     * @param {any} value  Model à évaluer.
-     * @param {string} valueField (optional) Champs à traiter comme valeur.
-     * @return {string} Valeur à comparer pour le modèle spécifié.
+     * @param value  Model à évaluer.
+     * @param valueField (optional) Champs à traiter comme valeur.
+     * @return Valeur à comparer pour le modèle spécifié.
      */
     public static getItemValue(item: any, valueField?: string) {
         // tslint:disable-next-line:triple-equals
@@ -101,9 +101,9 @@ export class ItemListService {
     }
 
     /** Evalue le texte à afficher pour l'élément spécifié.
-     * @param {any} value  Model à évaluer.
-     * @param {string} textField (optional) Champs à traiter comme source du texte.
-     * @return {string} Texte à afficher pour le modèle spécifié.
+     * @param value  Model à évaluer.
+     * @param textField (optional) Champs à traiter comme source du texte.
+     * @return Texte à afficher pour le modèle spécifié.
      */
     public static getItemText(value: any, textField?: string) {
         if (!value) {
@@ -165,14 +165,14 @@ export class ItemListService {
 
     /**
      * Permet de controler l'affichage du waiter
-     * @returns {BehaviorSubject<boolean>}
+     * @return un sujet contenant la valeur du waiter
      */
     public get waiter$(): BehaviorSubject<boolean> {
         return this._waiter$;
     }
 
     /** Définit le champs utilisé comme collection pour les enfants d'un parent.
-     * @param {string} value Nom du champ à utiliser comme collection d'enfants
+     * @param value Nom du champ à utiliser comme collection d'enfants
      */
     public set childrenField(value: string) {
         this._childrenField = value || ItemListService.defaultChildrenField;
@@ -180,21 +180,21 @@ export class ItemListService {
     }
 
     /** Renvoie le champs utilisé comme collection pour les enfants d'un parent
-     * @return {string} value Nom du champ à utilisé comme collection d'enfants.
+     * @return value Nom du champ à utilisé comme collection d'enfants.
      */
     public get childrenField() {
         return this._childrenField;
     }
 
     /** Définit une valeur indiquant si les éléments selectionés doivent être masqué. Ce flag est principalement utilisé dans le cas d'un multi-select
-     * @param {boolean} value True si les éléments selectionés doivent être masqués
+     * @param value True si les éléments selectionés doivent être masqués
      */
     public set hideSelected(value: boolean) {
         this._hideSelected = value;
     }
 
     /** Renvoie une valeur indiquant si les éléments selectionés doivent être masqué.
-     * @return {boolean} value True si les éléments selectionés sont masqués
+     * @return value True si les éléments selectionés sont masqués
      */
     public get hideSelected() {
         return this._hideSelected;
@@ -268,7 +268,7 @@ export class ItemListService {
     }
 
     /** Renvoie le modèle de grouping ajouté à la liste de base par le service. Ce modèle ne modifie pas la donée, mais est jsute ajouté à l'affichage
-     * @return {IGroupInfo[]} value Modèle de grouping d'affichage de la liste.
+     * @return value Modèle de grouping d'affichage de la liste.
      */
     public get groupInfos() {
         return this._groupInfos;
@@ -280,23 +280,23 @@ export class ItemListService {
     }
 
     /** Retourne l'élément corresondant à l'index spéficié dans la liste des éléments visibles.
-     * @param {number} index Index de l'élément à chercher sur la liste des éléments visibles.
-     * @return {IItemBase} Element correspondant à l'index recherché.
+     * @param index Index de l'élément à chercher sur la liste des éléments visibles.
+     * @return Element correspondant à l'index recherché.
      */
     public getItemFromIndex(index: number) {
         return this._cache.visibleList ? this._cache.visibleList[index] : null;
     }
 
     /** Retourne l'index correspondant à l'élément spéficié dans la liste des éléments visibles
-     * @param {IItemBase} item Element à chercher sur la liste des éléments visibles.
-     * @return {number} Index correspondant à l'élément recherché.
+     * @param item Element à chercher sur la liste des éléments visibles.
+     * @return Index correspondant à l'élément recherché.
      */
     public getItemIndex(item: IItemBase) {
         return this._cache.visibleList ? this._cache.visibleList.findIndex((itm) => this.compareItems(item, itm)) : -1;
     }
 
     /** Renvoie le service utilisé pour le tri de la liste
-     * @return {SortingService} Service utilisé pour le tri.
+     * @return Service utilisé pour le tri.
      */
     public getSortingService() {
         if (!this._sortingService) {
@@ -306,14 +306,14 @@ export class ItemListService {
     }
 
     /** Définit le service utilisé pour le tri de la liste
-     * @param {SortingService} value  Service à utiliser pour le tri.
+     * @param value  Service à utiliser pour le tri.
      */
     public setSortingService(value: SortingService) {
         this._sortingService = value;
     }
 
     /** Renvoie le service utilisé pour le regroupement de la liste
-     * @return {GroupingService} Service utilisé pour le regroupement.
+     * @return Service utilisé pour le regroupement.
      */
     public getGroupingService() {
         if (!this._groupingService) {
@@ -323,25 +323,25 @@ export class ItemListService {
     }
 
     /** Définit le service utilisé pour le regroupement de la liste
-     * @param {GroupingService} value  Service à utiliser pour le regroupement.
+     * @param value Service à utiliser pour le regroupement.
      */
     public setGroupingService(value: GroupingService) {
         this._groupingService = value;
     }
 
     /** Evalue le texte à afficher pour l'élément spécifié.
-     * @param {any} value  Model à évaluer.
-     * @param {string} textField (optional) Champs à traiter comme source du texte.
-     * @return {string} Texte à afficher pour le modèle spécifié.
+     * @param value  Model à évaluer.
+     * @param textField (optional) Champs à traiter comme source du texte.
+     * @return Texte à afficher pour le modèle spécifié.
      */
     public getTextValue(value: any, textField?: string) {
         return ItemListService.getItemText(value, textField);
     }
 
     /** Evalue la valeur à comparer pour l'élément spécifié.
-     * @param {any} value  Model à évaluer.
-     * @param {string} valueField (optional) Champs à traiter comme valeur.
-     * @return {string} Valeur à comparer pour le modèle spécifié.
+     * @param value  Model à évaluer.
+     * @param valueField (optional) Champs à traiter comme valeur.
+     * @return Valeur à comparer pour le modèle spécifié.
      */
     public getValue(item: any, valueField?: string) {
         return ItemListService.getItemValue(item, valueField);
@@ -501,8 +501,8 @@ export class ItemListService {
     }
 
     /** Change l'état d'expansion de tous les éléments.
-     * @param {boolean} collapsed  True si les éléments doivent être réduits.
-     * @return {Observable} Observable résolu par la fonction.
+     * @param collapsed True si les éléments doivent être réduits.
+     * @return Observable résolu par la fonction.
      */
     public toggleAll$(collapsed: boolean): Observable<IItemTree[]> {
         return Observable.of(this._cache.flatList)
@@ -512,9 +512,9 @@ export class ItemListService {
     }
 
     /** Change l'état d'expansion de l'élément spécifié par son index sur la liste des éléments visibles.
-     * @param {number} index  Index sur la liste des éléments visibles de l'élément à changer.
-     * @param {boolean} collapse  Etat de l'élément. True pour réduire l'élément.
-     * @return {Observable} Observable résolu par la fonction.
+     * @param index Index sur la liste des éléments visibles de l'élément à changer.
+     * @param collapse Etat de l'élément. True pour réduire l'élément.
+     * @return Observable résolu par la fonction.
      */
     public toggleCollapse$(index: number, collapse?: boolean): Observable<IItemTree> {
         const visibleList = this._cache.visibleList;
@@ -532,8 +532,8 @@ export class ItemListService {
     }
 
     /** Etends les éléments spécifiés.
-     * @param {IItemBase[]} items  Liste des éléments à étendre.
-     * @return {Observable} Observable résolu par la fonction.
+     * @param items Liste des éléments à étendre.
+     * @return Observable résolu par la fonction.
      */
     public expandItems$(items: IItemBase[]): Observable<IItemBase[]> {
         return Observable.from(items || [])
@@ -545,8 +545,8 @@ export class ItemListService {
     }
 
     /** Reduits les éléments spécifiés.
-     * @param {IItemBase[]} items  Liste des éléments à réduire.
-     * @return {Observable} Observable résolu par la fonction.
+     * @param items Liste des éléments à réduire.
+     * @return Observable résolu par la fonction.
      */
     public collapseItems$(items: IItemBase[]): Observable<IItemBase[]> {
         return Observable.from(items || [])
@@ -558,8 +558,8 @@ export class ItemListService {
     }
 
     /** Etends l'élément spécifié.
-     * @param {IItemBase[]} items  Eléments à étendre.
-     * @return {Observable} Observable résolu par la fonction.
+     * @param items Eléments à étendre.
+     * @return Observable résolu par la fonction.
      */
     public expandItem$(item: IItemTree) {
         return Observable.of(item)
@@ -574,8 +574,8 @@ export class ItemListService {
     }
 
     /** Réduit l'élément spécifié.
-     * @param {IItemBase[]} items  Eléments à réduire.
-     * @return {Observable} Observable résolu par la fonction.
+     * @param items Eléments à réduire.
+     * @return Observable résolu par la fonction.
      */
     public collapseItem$(item: IItemTree) {
         return Observable.of(item)
@@ -590,14 +590,14 @@ export class ItemListService {
     }
 
     /** Retourne la liste des éléments sélectionés.
-     * @return {IItemBase[]} Liste des éléments selectionés.
+     * @return Liste des éléments selectionés.
      */
     public getSelectedItems() {
         return this.selectedList || [];
     }
 
     /** Définit la liste des éléments sélectionés.
-     * @param {IItemBase[]} items Liste des éléments a selectioner.
+     * @param items Liste des éléments a selectioner.
      */
     public setSelectedItems(items: IItemBase[]) {
         if (this.selectedList) {
@@ -614,7 +614,7 @@ export class ItemListService {
     }
 
     /** Déselectionne tous les éléments sélectionés.
-     * @return {Observable} Observable résolu par la fonction.
+     * @return Observable résolu par la fonction.
      */
     public unselectAll$(): Observable<IItemBase[]> {
         if (this.hideSelected) {
@@ -628,9 +628,9 @@ export class ItemListService {
     }
 
     /** Sélectionne une plage d'éléments en fonction de l'index de début et l'index de fin sur la liste des éléments visibles.
-     * @param {number} indexFrom index sur la liste des éléments visibles du premier élément à sélectioner.
-     * @param {number} indexTo index sur la liste des éléments visibles du dernier élément à sélectioner.
-     * @return {Observable} Observable résolu par la fonction.
+     * @param indexFrom index sur la liste des éléments visibles du premier élément à sélectioner.
+     * @param indexTo index sur la liste des éléments visibles du dernier élément à sélectioner.
+     * @return Observable résolu par la fonction.
      */
     public selectRange$(indexFrom: number, indexTo?: number): Observable<number> {
         if (indexTo === undefined) {
@@ -655,9 +655,9 @@ export class ItemListService {
     }
 
     /** Change l'état de selection de l'élément spécifié.
-     * @param {IItemBase[]} items Liste des éléments à modifier.
-     * @param {boolean} selected True si les éléments divent être sélectionés, False si ils doivent être déselectionés.
-     * @return {Observable} Observable résolu par la fonction.
+     * @param items Liste des éléments à modifier.
+     * @param selected True si les éléments divent être sélectionés, False si ils doivent être déselectionés.
+     * @return Observable résolu par la fonction.
      */
     public toggleSelect$(items: IItemBase[], selected: boolean) {
         items = items || [];
@@ -671,8 +671,8 @@ export class ItemListService {
     }
 
     /** Sélectionne les éléments spécifiés
-     * @param {IItemBase[]} items Liste des éléments à sélectioner.
-     * @return {Observable} Observable résolu par la fonction.
+     * @param items Liste des éléments à sélectioner.
+     * @return Observable résolu par la fonction.
      */
     public selectItems$(items: IItemBase[]): Observable<IItemBase[]> {
         return Observable.from(items || [])
@@ -684,8 +684,8 @@ export class ItemListService {
     }
 
     /** Déselectionne les éléments spécifiés
-     * @param {IItemBase[]} items Liste des éléments à déselectioner.
-     * @return {Observable} Observable résolu par la fonction.
+     * @param items Liste des éléments à déselectioner.
+     * @return Observable résolu par la fonction.
      */
     public unSelectItems$(items: IItemBase[]): Observable<IItemBase[]> {
         return Observable.from(items || [])
@@ -698,8 +698,8 @@ export class ItemListService {
     }
 
     /** Sélectionne l'élément spécifié
-     * @param {IItemBase} item Elément à sélectioner.
-     * @return {Observable} Observable résolu par la fonction.
+     * @param item Elément à sélectioner.
+     * @return Observable résolu par la fonction.
      */
     public selectItem$(item: IItemBase) {
         return Observable.of(item)
@@ -717,8 +717,8 @@ export class ItemListService {
     }
 
     /** Déselectionne l'élément spécifié
-     * @param {IItemBase} item Elément à déselectioner.
-     * @return {Observable} Observable résolu par la fonction.
+     * @param item Elément à déselectioner.
+     * @return Observable résolu par la fonction.
      */
     public unSelectItem$(item: IItemBase) {
         return Observable.of(item)
@@ -737,9 +737,9 @@ export class ItemListService {
     }
 
     /** Trouve l'élément suivant répondant à la fonction de comparaison spécifiée.
-     * @param {Function} compare Function de comparaison pour la recherche de l'élément.
-     * @param {number} startIndex Index de départ sur la liste des éléments visibles.
-     * @return {Observable} Observable résolu par la fonction.
+     * @param compare Function de comparaison pour la recherche de l'élément.
+     * @param startIndex Index de départ sur la liste des éléments visibles.
+     * @return Observable résolu par la fonction.
      */
     public findNextMatch$(compare?: (item: IItemBase, index: number) => boolean, startIndex?: number): Observable<IFindItemResult> {
         let result = { index: -1 } as IFindItemResult;
@@ -776,8 +776,8 @@ export class ItemListService {
     }
 
     /** Trie les éléments en fonction du modèle de tri spécifié
-     * @param {ISortInfos} sortInfos Modèle de tri à appliquer.
-     * @return {Observable} Observable résolu par la fonction.
+     * @param sortInfos Modèle de tri à appliquer.
+     * @return Observable résolu par la fonction.
      */
     public sort$(sortInfos: ISortInfos) {
         if (!this.items) {
@@ -801,8 +801,8 @@ export class ItemListService {
     }
 
     /** Groupe les éléments en fonction du modèle de groupe spécifié
-     * @param {IGroupInfo} groupInfos Modèle de groupe à appliquer.
-     * @return {Observable} Observable résolu par la fonction.
+     * @param groupInfos Modèle de groupe à appliquer.
+     * @return Observable résolu par la fonction.
      */
     public group$(groupInfos: IGroupInfo[]) {
         this._groupInfos = groupInfos;
@@ -812,8 +812,8 @@ export class ItemListService {
     }
 
     /** Retire les groupe correspondants au modèle de groupe spécifié
-     * @param {IGroupInfo} groupInfos Modèle de groupe à retirer.
-     * @return {Observable} Observable résolu par la fonction.
+     * @param groupInfos Modèle de groupe à retirer.
+     * @return Observable résolu par la fonction.
      */
     public ungroup$(groupInfo: IGroupInfo) {
         const groupIndex = this._groupInfos ? this._groupInfos.findIndex((gi) => gi.groupByField === groupInfo.groupByField) : -1;
@@ -827,8 +827,8 @@ export class ItemListService {
     }
 
     /** Retrouve les informations du parent de l'élément spécifié
-     * @param {IItemTree} item Element enfant du parent à retrouver.
-     * @return {Observable<IParentListInfoResult>} Observable résolu par la fonction, qui retourne les informations sur le parent de l'élément spécifié
+     * @param item Element enfant du parent à retrouver.
+     * @return Observable résolu par la fonction, qui retourne les informations sur le parent de l'élément spécifié
      */
     public getParentListInfos$(item: IItemTree, multiSelect: boolean): Observable<IParentListInfoResult> {
         const search$ = (flatList: IItemBase[]) => {
@@ -990,19 +990,19 @@ export class ItemListService {
 
     /** Retourne la liste à utilise pour la création des caches. Surcharger cetee méthode pour fournir une liste de façon lazy.
      * En cas de surcharge, retourner une nouvelle instance de la liste originale pour que le service regénère ses caches.
-     * @param {string} query Texte ou regular expression par laquelle la liste doit être filtrée.
-     * @param {IItemBase[]} selectedItems Liste des éléments selectionés.
-     * @return {Observable} Observable résolu par la fonction, qui retourne la liste à utiliser.
+     * @param query Texte ou regular expression par laquelle la liste doit être filtrée.
+     * @param selectedItems Liste des éléments selectionés.
+     * @return Observable résolu par la fonction, qui retourne la liste à utiliser.
      */
     protected getItemList$(query?: RegExp | string, selectedItems?: IItemBase[]): Observable<IItemBase[]> {
         return this.loadingItems$ ? this.loadingItems$(query, selectedItems) : Observable.of(this.items);
     }
 
     /** Retourne une valeur indiquant si l'élément spécifié correspond aux critères de recherche spécifiés
-     * @param {IItemBase} item Elément à analyser.
-     * @param {string} searchField Nom du champ à utiliser pour la recherche. Le champ représenté peut-être une valeur ou une function.
-     * @param {RegExp} regExp Expression de test sur le champs spécifié.
-     * @return {boolean} True si l'élément correspond aux critères de recherche.
+     * @param item Elément à analyser.
+     * @param searchField Nom du champ à utiliser pour la recherche. Le champ représenté peut-être une valeur ou une function.
+     * @param regExp Expression de test sur le champs spécifié.
+     * @return True si l'élément correspond aux critères de recherche.
      */
     protected itemMatch(item: IItemBase, searchField: string, regExp: RegExp) {
         const value = typeof item[searchField] === 'function' ? item[searchField]() : (item[searchField] ? item[searchField] : this.getTextValue(item, searchField));
@@ -1011,8 +1011,8 @@ export class ItemListService {
 
     /** Retourne une liste groupée si un modèle de groupe interne est spécifié.
      * En cas de surcharge, retourner une nouvelle instance de la liste originale pour que le service regénère ses caches.
-     * @param {IItemBase[]} items Liste des éléments à grouper.
-     * @return {Observable} Observable résolu par la fonction, qui retourne la liste groupés.
+     * @param items Liste des éléments à grouper.
+     * @return Observable résolu par la fonction, qui retourne la liste groupés.
      */
     protected getGroupedList$(items: IItemBase[]): Observable<IItemTree[]> {
         return items ? this.getGroupingService().group$(this.items, this.groupInfos, '$items') : Observable.of([]);
@@ -1020,11 +1020,11 @@ export class ItemListService {
 
     /** Retourne la liste des éléments visibles. Si la liste des éléments est hièrarchique, cette fonction retourne une liste plate. Cette liste est utilisé pour calculer la portion de la liste à afficher.
      * En cas de surcharge, retourner une nouvelle instance de la liste originale pour que le service regénère ses caches.
-     * @param {IItemBase[]} items Liste des éléments à traiter.
-     * @param {string} searchField Nom du champ à utiliser pour la recherche. Le champ représenté peut-être une valeur ou une function.
-     * @param {RegExp} regExp Expression de test à appliquer sur le champ de recherche.
-     * @param {expandTree} Auto expand parents on search query.
-     * @return {Observable} Observable résolu par la fonction, qui retourne la liste visibles.
+     * @param items Liste des éléments à traiter.
+     * @param searchField Nom du champ à utiliser pour la recherche. Le champ représenté peut-être une valeur ou une function.
+     * @param regExp Expression de test à appliquer sur le champ de recherche.
+     * @param Auto expand parents on search query.
+     * @return Observable résolu par la fonction, qui retourne la liste visibles.
      */
     protected getVisibleList$(items: IItemBase[], searchField: string, regExp: RegExp, expandTree: boolean, multiSelect: boolean): Observable<IItemBase[]> {
         if (!items) {
@@ -1123,8 +1123,8 @@ export class ItemListService {
 
     /** Retourne une liste plate depuis la liste originale sans hierarchie.
      * En cas de surcharge, retourner une nouvelle instance de la liste originale pour que le service regénère ses caches.
-     * @param {IItemBase[]} items Liste des éléments hierarchique.
-     * @return {Observable} Observable résolu par la fonction, qui retourne la liste hierarchique mise à plat.
+     * @param items Liste des éléments hierarchique.
+     * @return Observable résolu par la fonction, qui retourne la liste hierarchique mise à plat.
      */
     protected getFlatList$(items: IItemBase[], isFiltered: boolean, multiSelect: boolean): Observable<IItemBase[]> {
         if (!items) {

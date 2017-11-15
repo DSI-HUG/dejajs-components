@@ -19,7 +19,6 @@ export class DateUtils {
     /**
      * Fromat a javascript date object to a 'yyyy-MM-dd HH:mm:ss' String Format
      * @param date
-     * @returns {string}
      */
     public static formatSystem(date: Date): string {
         return DateUtils.datePipe.transform(date, DateUtils.SYSTEM_DATE_FORMAT);

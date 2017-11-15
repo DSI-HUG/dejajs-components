@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
-import { MatIconModule, MatInputModule, NoConflictStyleCompatibilityMode } from '@angular/material';
+import { MatIconModule, MatInputModule } from '@angular/material';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KeyCodes } from '../../common/core/keycodes.enum';
@@ -36,7 +36,6 @@ describe('DejaTagComponent', () => {
                 CommonModule,
                 FlexLayoutModule,
                 FormsModule,
-                NoConflictStyleCompatibilityMode,
                 MatIconModule,
                 MatInputModule,
                 FlexLayoutModule,

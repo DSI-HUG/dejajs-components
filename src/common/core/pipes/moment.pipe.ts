@@ -19,7 +19,7 @@ export class StringToDateFormatPipe implements PipeTransform {
     /**
      * Create a date from a string given in parameter using moment
      *
-     * @param {string} dateString date in string format 'DD.MM.YYYY HH:mm:ss'
+     * @param dateString date in string format 'DD.MM.YYYY HH:mm:ss'
      * @param format format choosen for the date
      */
     public transform(dateString, format: string): any {

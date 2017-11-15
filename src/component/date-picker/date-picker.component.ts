@@ -371,7 +371,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
      * Called when user click on the input of this component.
      * If click is located on mat-icon 'calendar' who is in the matPrefix of mat-input-container, the picker show off.
      *
-     * @param {Event} event
+     * @param event
      */
     protected toggleDateSelector(event: Event) {
         if (this.disabled) {
@@ -391,7 +391,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     /**
      * ngModelChange of date-selector.
      *
-     * @param {Date} newDate Date to set.
+     * @param newDate Date to set.
      */
     protected onDateChange(newDate: Date) {
         this.value = newDate;
@@ -404,7 +404,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     /**
      * Called when input change. If it's a string it's because user set the date manually. So we need to convert it into date with MomentJs.
      *
-     * @param {string | Date} date new value of this model
+     * @param date new value of this model
      */
     public updateModel(date: string | Date) {
         if (typeof date === 'string' && date.replace(/_/g, '').length === this._format.length) {
