@@ -14,10 +14,9 @@ import 'rxjs/add/observable/merge';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
-import { Subscription } from 'rxjs/Subscription';
 import { Color } from '../../common/core/graphics/color';
 import { ColorEvent } from '../../common/core/graphics/color-event';
-import { MaterialColor } from '../../common/core/style';
+import { MaterialColor } from '../../common/core/style/material-color';
 import { DejaColorFab } from './color-fab.class';
 
 const noop = () => { };
@@ -36,12 +35,16 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
     /** Evénement déclenché lorsqu'une couleur est survolée par la souris. */
     @Output() public colorhover = new EventEmitter();
 
+    public _resetcolor: Color;
+
     // ngModel
     private _value: Color;
     protected onTouchedCallback: () => void = noop;
     protected onChangeCallback: (_: any) => void = noop;
 
     private _colors$ = new BehaviorSubject<Color[]>([]);
+
+    private _resetcolor$ = new BehaviorSubject<Color>(null);
 
     private _colorFabs = [] as DejaColorFab[];
     private _subColorFabs = [] as DejaColorFab[];
@@ -61,7 +64,7 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
     private hilightedSubIndex: number;
     private hilightedSubIndex$ = new Subject<number>();
 
-    private subscriptions = [] as Subscription[];
+    private isAlive = true;
 
     public get subColorFabs() {
         return this._subColorFabs;
@@ -75,6 +78,12 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
         return this._colorFabs$;
     }
 
+    @Input() public set resetcolor(value: string | Color) {
+        if (value === '') { value = new Color(); }
+        const color = value && (typeof value === 'string' ? Color.parse(value) : value);
+        this._resetcolor$.next(color || null);
+    }
+
     constructor(elementRef: ElementRef, @Self() @Optional() public _control: NgControl) {
         const element = elementRef.nativeElement as HTMLElement;
 
@@ -85,6 +94,38 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
         this._colorFabs$ = Observable.from(this._colors$)
             .map((colors) => colors.map((color, index) => new DejaColorFab(color, this._disabled, index === this._selectedBaseIndex)))
             .do((colorFabs) => this._colorFabs = colorFabs);
+
+        Observable.combineLatest(this._colors$, this._resetcolor$)
+            .takeWhile(() => this.isAlive)
+            .subscribe(([colors, resetcolor]) => {
+                if (!colors || !colors.length || !resetcolor) {
+                    this._resetcolor = undefined;
+                    return;
+                }
+
+                const allColors = colors.reduce((acc, color) => {
+                    const materialColor = color as MaterialColor;
+                    if (materialColor.subColors) {
+                        acc = [...acc, ...materialColor.subColors];
+                    } else {
+                        acc.push(color);
+                    }
+                    return acc;
+                }, []);
+
+                let bestColor: Color;
+                allColors.reduce((bestDiff, color) => {
+                    // The best formula we found for our eye
+                    const diff = 0.3 * Math.abs(color.r - resetcolor.r) +  0.4 * Math.abs(color.g - resetcolor.g) +  0.25 * Math.abs(color.b - resetcolor.b);
+                    if (diff < bestDiff) {
+                        bestColor = color;
+                        return bestDiff = diff;
+                    }
+                    return bestDiff;
+                } , 3 * 255);
+
+                this._resetcolor = bestColor;
+            });
 
         const hilightedBaseIndex$ = Observable.from(this.hilightedBaseIndex$)
             .distinctUntilChanged()
@@ -139,14 +180,16 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
             .distinctUntilChanged()
             .do((subColorIndex) => this._selectedSubIndex = subColorIndex);
 
-        this.subscriptions.push(Observable.merge(hilightedSubIndex$, selectedSubIndex$)
+        Observable.merge(hilightedSubIndex$, selectedSubIndex$)
+            .takeWhile(() => this.isAlive)
             .subscribe((subColorIndex) => {
                 if (this._subColorFabs) {
                     this._subColorFabs.forEach((colorFab, index) => colorFab.active$.next(index === subColorIndex));
                 }
-            }));
+            });
 
-        this.subscriptions.push(Observable.fromEvent(element, 'mousemove')
+        Observable.fromEvent(element, 'mousemove')
+            .takeWhile(() => this.isAlive)
             .filter((_event) => !this._disabled)
             .subscribe((event: Event) => {
                 const { id, attributes } = event.target as HTMLElement;
@@ -161,16 +204,17 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
                     this.hilightedBaseIndex$.next();
                     this.hilightedSubIndex$.next();
                 }
-            }));
+            });
 
-        this.subscriptions.push(Observable.fromEvent(element, 'click')
+        Observable.fromEvent(element, 'click')
+            .takeWhile(() => this.isAlive)
             .filter((_event) => !this._disabled)
             .subscribe((event: Event) => {
                 const target = event.target as HTMLElement;
                 if (target.id === 'basecolor' || target.id === 'subcolor') {
                     this.value = Color.parse(target.style.backgroundColor);
                 }
-            }));
+            });
     }
 
     /** Retourne ou definit si le selecteur est desactivé. */
@@ -188,6 +232,18 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
 
     public get disabled() {
         return this._disabled;
+    }
+
+    /**
+     * Retourne la meilleure couleur d'affichage pour une couleur donnée
+     */
+    public getBestTextColor(value: string) {
+        const backColor = Color.fromHex(value);
+        return backColor.bestTextColor.toHex();
+    }
+
+    public resetDefaultColor() {
+        this.value = this._resetcolor;
     }
 
     /**
@@ -258,6 +314,6 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
     // ************* End of ControlValueAccessor Implementation **************
 
     public ngOnDestroy() {
-        this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
+        this.isAlive = false;
     }
 }

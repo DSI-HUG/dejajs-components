@@ -4,14 +4,17 @@
 
     mat-form-field::ng-deep {
         width: 100%;
-
         input::-webkit-inner-spin-button, 
         input::-webkit-outer-spin-button {
             -webkit-appearance: none !important;
             margin: 0 !important;
             -moz-appearance: textfield !important;
         }
-
+        .mat-input-wrapper {
+            .mat-input-flex {
+                padding-right: 0.5rem;
+            }
+        }
         .mat-input-infix {
             flex: 0 0 auto;
             .mat-input-placeholder-wrapper {

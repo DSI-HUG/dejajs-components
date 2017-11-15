@@ -63,6 +63,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @Input() public placeHolderTemplateExternal;
     /** Permet de définir un template pour l'élément de conseil ou d'affichage d'erreur. */
     @Input() public hintTemplateExternal;
+    /** Permet de définir un template pour le MatError à l'intérieur du mat-input-container. */
+    @Input() public errorTemplateExternal;
     /** Définit une valeur indiquant si en reactive form le model renvoyé doit être un obeject oue une valeur */
     @Input() public modelIsValue: boolean;
     /** Exécuté lorsque le calcul du viewPort est terminé. */
@@ -77,7 +79,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @ContentChild('selectedTemplate') public selectedTemplate;
     @ContentChild('suffixTemplate') public _matSuffix;
     /** Template for MatError inside mat-input-container */
-    @ContentChild('errorTemplate') public matError;
+    @ContentChild('errorTemplate') public errorTemplateInternal;
 
     /** Internal use */
     public overlayOwnerElement: HTMLElement;
@@ -374,12 +376,9 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                     this.unselectAll$()
                         .switchMap(() => item ? this.toggleSelect$([item], true) : [])
                         .map(() => super.getItemListService().ensureSelection())
-                        .map((selectedItems) => selectedItems.length ? this.getTextValue(selectedItems[0]) : '')
+                        .do(() => this.ensureSelection())
                         .first()
-                        .subscribe((query) => {
-                            this.query = query;
-                            this.changeDetectorRef.markForCheck();
-                        });
+                        .subscribe(() =>this.changeDetectorRef.markForCheck());
                 }
             });
 
@@ -683,6 +682,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     public set items(items: IItemBase[] | Promise<IItemBase[]> | Observable<IItemBase[]>) {
         super.setItems$(items)
             .first()
+            .do(() => this.ensureSelection())
             .switchMap(() => this.calcViewList$())
             .subscribe(noop);
     }
@@ -692,6 +692,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     public set models(items: any[] | Observable<any[]>) {
         super.setModels$(items)
             .first()
+            .do(() => this.ensureSelection())
             .switchMap(() => this.calcViewList$())
             .subscribe(noop);
     }
@@ -754,6 +755,10 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     public get hintTemplate() {
         return this.hintTemplateExternal || this.hintTemplateInternal;
+    }
+
+    private get errorTemplate() {
+        return this.errorTemplateExternal || this.errorTemplateInternal;
     }
 
     private get parentItemTemplate() {
@@ -1258,5 +1263,13 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                     this.ensureItemVisible(index);
                 }
             });
+    }
+
+    private ensureSelection() {
+        if (this._multiSelect) {
+            // Do nothing yet
+        } else {
+            this.query = this.selectedItems.length ? this.getTextValue(this.selectedItems[0]) : '';
+        }
     }
 }

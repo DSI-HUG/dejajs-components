@@ -122,4 +122,20 @@ describe('CloningService', () => {
                 expect(cloned instanceof MyTypedObject).toBeTruthy();
             });
     });
+
+    it('Should, clone an array asynchronously', () => {
+        service.cloneArray$(datas)
+            .first()
+            .subscribe((cloned) => {
+                expect(JSON.stringify(cloned)).toEqual(JSON.stringify(datas));
+                expect(cloned instanceof Array).toBeTruthy();
+            });
+    });
+
+    it('Should, clone an array asynchronously to an existing array', () => {
+        const cloned = [];
+        service.cloneArray$(datas, cloned)
+            .first()
+            .subscribe(() => expect(JSON.stringify(cloned)).toEqual(JSON.stringify(datas)));
+    });
 });

@@ -38,6 +38,10 @@ export class CloningService {
             return JSON.parse(JSON.stringify(obj));
         } else {
             const cloneInternal = (src: any, tgt?: any) => {
+                if (src instanceof Date) {
+                    return new Date(src.getTime());
+                }
+
                 if (!src || typeof src !== 'object') {
                     return src;
                 }
@@ -110,16 +114,15 @@ export class CloningService {
      * @param target The type or an instance of the target
      * @return Observable resolving to the cloned array.
      */
-    public cloneArray$<T>(obj: any[], target?: { new(): T } | T[]): Observable<T> {
+    public cloneArray$<T>(obj: any[], target?: { new(): T } | T[]): Observable<T[]> {
         if (target && Array.isArray(target)) {
             obj.forEach((o) => {
                 const cloned = this.cloneSync(o) as T;
                 target.push(cloned);
             });
-            return Observable.from(target);
+            return Observable.of(target);
         } else {
-            return Observable.from(obj)
-                .switchMap((o) => this.clone$(o, target));
+            return Observable.of(this.cloneArray(obj, target));
         }
     }
 }
