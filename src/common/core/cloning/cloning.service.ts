@@ -38,6 +38,10 @@ export class CloningService {
             return JSON.parse(JSON.stringify(obj));
         } else {
             const cloneInternal = (src: any, tgt?: any) => {
+                if (src instanceof Date) {
+                    return new Date(src.getTime());;
+                }
+
                 if (!src || typeof src !== 'object') {
                     return src;
                 }
