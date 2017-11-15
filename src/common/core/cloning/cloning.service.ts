@@ -39,7 +39,7 @@ export class CloningService {
         } else {
             const cloneInternal = (src: any, tgt?: any) => {
                 if (src instanceof Date) {
-                    return new Date(src.getTime());;
+                    return new Date(src.getTime());
                 }
 
                 if (!src || typeof src !== 'object') {
