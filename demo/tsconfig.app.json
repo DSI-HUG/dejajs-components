@@ -9,5 +9,10 @@
   "exclude": [
     "test.ts",
     "**/*.spec.ts"
+  ],
+  "include": [
+    "../index.ts",
+    "./**/*",
+    "../src/*"
   ]
 }

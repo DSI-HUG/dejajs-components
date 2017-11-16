@@ -10,7 +10,6 @@ import { CommonModule } from '@angular/common';
 import { Component, DebugElement } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { NoConflictStyleCompatibilityMode } from '@angular/material';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Observable } from 'rxjs/Observable';
@@ -120,7 +119,6 @@ describe('DejaTreeListComponent', () => {
                 BrowserAnimationsModule,
                 CommonModule,
                 FormsModule,
-                NoConflictStyleCompatibilityMode,
                 DejaTreeListModule,
             ],
         }).compileComponents();
@@ -475,7 +473,6 @@ describe('DejaTreeListByModelContainerComponent', () => {
                 BrowserAnimationsModule,
                 CommonModule,
                 FormsModule,
-                NoConflictStyleCompatibilityMode,
                 DejaTreeListModule,
             ],
         }).compileComponents();
@@ -906,7 +903,6 @@ describe('DejaTreeListByOptionsContainerComponent', () => {
                 BrowserAnimationsModule,
                 CommonModule,
                 FormsModule,
-                NoConflictStyleCompatibilityMode,
                 DejaTreeListModule,
                 DejaItemModule,
             ],

@@ -70,6 +70,11 @@ describe('CloningService', () => {
                 }
             ],
             date: new Date(1968, 5, 1, 10, 1, 56, 34),
+            dates: [
+                new Date(1968, 5, 1, 10, 1, 56, 34),
+                new Date(1969, 5, 1, 10, 1, 56, 34),
+                new Date(1970, 5, 1, 10, 1, 56, 34)
+            ],
             regexp: new RegExp(/\test/, 'i'),
             item: {
                 name: 'Bonanza',

@@ -206,7 +206,6 @@ export class Color {
 
     /**
      * @param hex hexadecimal color value, exemple: #127bdc #FFF #127bdc56
-     * @returns {Color}
      */
     public static fromHex(hex: string) {
         if (!hex || hex.length < 3) {

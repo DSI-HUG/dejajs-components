@@ -8,9 +8,6 @@
 
 /**
  * IRange interface
- *
- * @export
- * @interface IRange
  */
 export interface IRange {
     min: number;
@@ -20,10 +17,6 @@ export interface IRange {
 
 /**
  * IRange Generic Event
- *
- * @export
- * @interface IRangeEvent
- * @extends {Event}
  */
 export interface IRangeEvent extends Event {
     range: IRange;
@@ -33,10 +26,6 @@ export interface IRangeEvent extends Event {
 
 /**
  * IRange Step Event
- *
- * @export
- * @interface IStepRangeEvent
- * @extends {IRangeEvent}
  */
 export interface IStepRangeEvent extends IRangeEvent {
     newMax: number;
@@ -44,10 +33,6 @@ export interface IStepRangeEvent extends IRangeEvent {
 
 /**
  * IRange class implementation
- *
- * @export
- * @class Range
- * @implements {IRange}
  */
 export class Range implements IRange {
     constructor(public min: number, public max: number, public $width?: number) { }

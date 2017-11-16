@@ -56,7 +56,7 @@ export class DejaDialogComponent implements OnDestroy {
      * Listen on click on dialogComponent.
      * If click is not inside the dialog, close action is called.
      *
-     * @param {MouseEvent} event
+     * @param event
      */
     @HostListener('click', ['$event'])
     public close(event: MouseEvent) {
