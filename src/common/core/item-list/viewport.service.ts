@@ -38,7 +38,7 @@ export enum ViewportDirection {
  */
 @Injectable()
 export class ViewPortService implements OnDestroy {
-    public static itemDefaultSize = 25;
+    public static itemDefaultSize = 40;
 
     public viewPort$: Observable<IViewPort>;
 
