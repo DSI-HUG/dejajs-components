@@ -9,7 +9,6 @@
 export class JsonUtils {
     /**
      * Cache for getOneFrom() method
-     * @type {{}}
      */
     private static mapCaches: any = {};
 
@@ -27,10 +26,10 @@ export class JsonUtils {
      * {
     * Example of use : plnkr.co/edit/11b0kzypP0N9I9B8AqPx?p=preview
     *
-     * @param {Object} obj : Object to deserialize into
-     * @param {Object | string} jsonObj : a JSON;
+     * @param obj Object to deserialize into
+     * @param jsonObj a JSON;
      *
-     * @return {<T>} obj : an object of 'T' type
+     * @return an object of 'T' type
      */
     public static deserializeJson<T>(obj: T, jsonObj: any): T {
 
@@ -58,7 +57,7 @@ export class JsonUtils {
      * @param clazz The class of the object created
      * @param sourceObj The JSON object
      * @param caseTransform
-     * @returns {T} : An object of 'T' type
+     * @returns An object of 'T' type
      */
     public static deserializeJson2<T>(clazz: { new (): T }, sourceObj: any, caseTransform = false): T {
         const castedObj: T = new clazz();
@@ -84,7 +83,7 @@ export class JsonUtils {
      * @param clazz
      * @param sourceList
      * @param caseTransform
-     * @returns {any[]}
+     * @return An array of object of 'T' type
      */
     public static deserializeJsonList<T>(clazz: { new (): T }, sourceList: any[], caseTransform = false): T[] {
         return sourceList.map((sourceObj) => this.deserializeJson2<T>(clazz, sourceObj, caseTransform));
@@ -94,7 +93,7 @@ export class JsonUtils {
      * Convert a list of object into a "Map Object" where attributes name are IDs and values are the objects
      * @param objList : List of object with an attribute "id" or "ID" or "Id"
      * @param idFieldName : Field name to use insetead of id.
-     * @returns {any}
+     * @return a map
      */
     public static toMap(objList: any[], idFieldName: string = null): any {
         const mapObj: any = {};
@@ -114,7 +113,7 @@ export class JsonUtils {
      * @param id: The ID we want to get
      * @param cacheName: The cache key to store it
      * @param idFieldName : Field name to use insetead of id.
-     * @returns {Promise<any>} One Promise with the selected element
+     * @return One Promise with the selected element
      */
     public static getOneFrom(listPromise: Promise<any>, id: string, cacheName: string, idFieldName: string = null): Promise<any> {
         let currentcache = JsonUtils.mapCaches[cacheName];
