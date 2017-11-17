@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
 import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { MatInput } from '@angular/material';
@@ -16,10 +16,12 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
+import { GroupingService } from '../../../index';
 import { IViewListResult } from '../../common/core/item-list/item-list.service';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { MediaService } from '../../common/core/media/media.service';
 import { DejaConnectionPositionPair } from '../../common/core/overlay/connection-position-pair';
+import { SortingService } from '../../common/core/sorting/sorting.service';
 import { DejaChildValidatorDirective } from '../../common/core/validation/child-validator.directive';
 import { DejaChipsCloseEvent } from '../chips/chips.component';
 import { DejaOverlayComponent } from '../overlay/overlay.component';
@@ -388,7 +390,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                         .map(() => super.getItemListService().ensureSelection())
                         .do(() => this.ensureSelection())
                         .first()
-                        .subscribe(() =>this.changeDetectorRef.markForCheck());
+                        .subscribe(() => this.changeDetectorRef.markForCheck());
                 }
             });
 
@@ -476,8 +478,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     /** Définit le nombre de lignes à sauter en cas de pression sur les touches PageUp ou PageDown */
     @Input()
-    public set pageSize(value: number) {
-        this._pageSize = value;
+    public set pageSize(value: number | string) {
+        this._pageSize = coerceNumberProperty(value);
     }
 
     /** Retourne le nombre de lignes à sauter en cas de pression sur les touches PageUp ou PageDown */
@@ -673,10 +675,27 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return super.getSelectedModels();
     }
 
-    /** Definit le service de liste utilisé par ce composant. Ce srevice permet de controller dynamiquement la liste, ou de faire du lazyloading. */
+    /** Definit le service de liste utilisé par ce composant. Ce service permet de controller dynamiquement la liste, ou de faire du lazyloading. */
     @Input()
     public set itemListService(value: ItemListService) {
         this.setItemListService(value);
+    }
+
+    /** Retourne le service de liste utilisé par ce composant. Ce service permet de controller dynamiquement la liste, ou de faire du lazyloading. */
+    public get itemListService() {
+        return this.getItemListService();
+    }
+
+    /** Definit le service utilisé pour le tri de la liste */
+    @Input()
+    public set sortingService(value: SortingService) {
+        this.setSortingService(value);
+    }
+
+    /** Definit le service utilisé pour le regroupement de la liste */
+    @Input()
+    public set groupingService(value: GroupingService) {
+        this.setGroupingService(value);
     }
 
     /** Definit si le waiter doit être affiché dans le select. */
@@ -914,7 +933,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                         if (event.altKey || this._multiSelect && !this.dropdownVisible) {
                             this.toggleDropDown();
                         } else {
-                            const index = Math.max(0, this.currentItemIndex - this.pageSize);
+                            const index = Math.max(0, this.currentItemIndex - this._pageSize);
                             setCurrentIndex(index);
                         }
                         return false;
@@ -923,7 +942,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                         if (event.altKey || this._multiSelect && !this.dropdownVisible) {
                             this.toggleDropDown();
                         } else {
-                            const index = Math.min(this.rowsCount - 1, this.currentItemIndex + this.pageSize);
+                            const index = Math.min(this.rowsCount - 1, this.currentItemIndex + this._pageSize);
                             setCurrentIndex(index);
                         }
                         return false;
@@ -1219,31 +1238,32 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     private select(item: IItemBase, hideDropDown?: boolean) {
-        if (!item || !this.isSelectable(item)) {
+        if (!this.isSelectable(item)) {
             return;
         }
 
-        if (item) {
-            if (this._multiSelect) {
-                this.toggleSelect$([item], true)
-                    .first()
-                    .subscribe((selectedItems) => {
-                        const selected = selectedItems ? [...selectedItems] : [];
-                        this.setSelectedItems(selected);
-                        this.onModelChange(selected);
-                        this.query = '';
-                        this.dropDownQuery = '';
-                    });
-            } else {
-                this.query = this.getTextValue(item);
-                this.setSelectedItems([item]);
-                this.onModelChange(item);
-            }
+        if (!item) {
+            // this.query = '';
+            // this.dropDownQuery = '';
+            // this.setSelectedItems(undefined);
+            // this.onModelChange();
+            return;
+        }
+
+        if (this._multiSelect) {
+            this.toggleSelect$([item], true)
+                .first()
+                .subscribe((selectedItems) => {
+                    const selected = selectedItems ? [...selectedItems] : [];
+                    this.setSelectedItems(selected);
+                    this.onModelChange(selected);
+                    this.query = '';
+                    this.dropDownQuery = '';
+                });
         } else {
-            this.query = '';
-            this.dropDownQuery = '';
-            this.setSelectedItems(undefined);
-            this.onModelChange();
+            this.query = this.getTextValue(item);
+            this.setSelectedItems([item]);
+            this.onModelChange(item);
         }
 
         this.htmlInputElement.focus();
