@@ -24,7 +24,7 @@
     },
     "angularCompilerOptions": {
         "annotateForClosureCompiler": true,
-        "strictMetadataEmit": true,
+        "strictMetadataEmit": false,
         "skipTemplateCodegen": true,
         "flatModuleOutFile": "dejajs-component.js",
         "flatModuleId": "@deja-js/component"

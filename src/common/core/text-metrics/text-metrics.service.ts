@@ -48,10 +48,10 @@ export class DejaTextMetricsService {
     /**
      * Calcule la longeur (en pixels) d'une chaine de caractères
      *
-     * @param {string} text Le texte à mesurer
-     * @param {HTMLElement} elem Le conteneur du texte
+     * @param text Le texte à mesurer
+     * @param elem Le conteneur du texte
      *
-     * @return {number} la largeur du texte donné
+     * @return la largeur du texte donné
      */
     public getTextWidth(text: string, elem: HTMLElement): number {
         this.computedStyles = window.getComputedStyle(elem);
@@ -68,10 +68,10 @@ export class DejaTextMetricsService {
     /**
      * Retourne la largeur maximum d'un tableau de strings.
      *
-     * @param {string[]} texts les textes à comparer.
-     * @param {HTMLElement} elem Le conteneur du texte
+     * @param texts les textes à comparer.
+     * @param elem Le conteneur du texte
      *
-     * @return {number} la width du texte le plus long dans le tableau donné en param.
+     * @return la width du texte le plus long dans le tableau donné en param.
      */
     public getTextMaxWidth(texts: string[], elem: HTMLElement): number {
         let maxWidth = 0;
@@ -89,10 +89,10 @@ export class DejaTextMetricsService {
     /**
      * Mesure la heuteur théorique d'un texte contenu dans un conteneur d'une taille donnée.
      *
-     * @param {number} maxWidth taille du conteneur
-     * @param {string} text texte à mesurer
+     * @param maxWidth taille du conteneur
+     * @param text texte à mesurer
      *
-     * @return {number} Hauteur théorique du conteneur.
+     * @return Hauteur théorique du conteneur.
      */
     public getTextHeight(maxWidth: number, text: string): Observable<number> {
         return this.getNumberOfLines(maxWidth, text)
@@ -109,10 +109,10 @@ export class DejaTextMetricsService {
     /**
      * Calcule le nombre de lignes qu'un texte va prendre en fonction de la largeur de son conteneur.
      *
-     * @param {number} maxWidth taille du conteneur
-     * @param {string} text texte à mesurer
+     * @param maxWidth taille du conteneur
+     * @param text texte à mesurer
      *
-     * @return {number} Nombre de lignes théoriques du conteneur.
+     * @return Nombre de lignes théoriques du conteneur.
      */
     private getNumberOfLines(maxWidth: number, text: string): Observable<number> {
         return this.charSize$

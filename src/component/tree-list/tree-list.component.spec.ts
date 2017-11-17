@@ -10,7 +10,6 @@ import { CommonModule } from '@angular/common';
 import { Component, DebugElement } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { NoConflictStyleCompatibilityMode } from '@angular/material';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Observable } from 'rxjs/Observable';
@@ -120,7 +119,6 @@ describe('DejaTreeListComponent', () => {
                 BrowserAnimationsModule,
                 CommonModule,
                 FormsModule,
-                NoConflictStyleCompatibilityMode,
                 DejaTreeListModule,
             ],
         }).compileComponents();
@@ -162,7 +160,7 @@ describe('DejaTreeListComponent', () => {
         treeListInstance.pageSize = '5';
         expect(tl.pageSize).toBe(5);
         treeListInstance.pageSize = 0;
-        expect(treeListInstance.pageSize).toBe(17);
+        expect(treeListInstance.pageSize).toBe(10);
 
         expect(treeListInstance.hintLabel).toBeUndefined();
         treeListInstance.hintLabel = 'I am a hint label';
@@ -475,7 +473,6 @@ describe('DejaTreeListByModelContainerComponent', () => {
                 BrowserAnimationsModule,
                 CommonModule,
                 FormsModule,
-                NoConflictStyleCompatibilityMode,
                 DejaTreeListModule,
             ],
         }).compileComponents();
@@ -887,7 +884,7 @@ describe('DejaTreeListByModelContainerComponent', () => {
                         break;
 
                     default:
-                        expect(vp.visibleItems.length).toBe(19);
+                        expect(vp.visibleItems.length).toBe(12);
 
                 }
             });
@@ -906,7 +903,6 @@ describe('DejaTreeListByOptionsContainerComponent', () => {
                 BrowserAnimationsModule,
                 CommonModule,
                 FormsModule,
-                NoConflictStyleCompatibilityMode,
                 DejaTreeListModule,
                 DejaItemModule,
             ],

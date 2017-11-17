@@ -1078,9 +1078,9 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     /** Change l'état d'expansion de la ligne spécifiée
-     * @param {number} index  Index sur la liste des éléments visibles  l'élément à changer.
-     * @param {boolean} collapse  Etat de l'élément. True pour réduire l'élément.
-     * @return {Observable} Observable résolu par la fonction.
+     * @param index  Index sur la liste des éléments visibles de l'élément à changer.
+     * @param collapse  Etat de l'élément. True pour réduire l'élément.
+     * @return Observable résolu par la fonction.
      */
     public toggleCollapse$(index: number, collapsed: boolean): Observable<IItemTree> {
         return super.toggleCollapse$(index, collapsed)

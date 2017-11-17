@@ -10,7 +10,6 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { NoConflictStyleCompatibilityMode } from '@angular/material';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Observable } from 'rxjs/Observable';
@@ -64,7 +63,6 @@ describe('DejaViewPortComponent', () => {
                 BrowserAnimationsModule,
                 CommonModule,
                 FormsModule,
-                NoConflictStyleCompatibilityMode,
                 DejaViewPortModule,
             ],
         }).compileComponents();
@@ -218,7 +216,6 @@ describe('DejaViewPortComponent', () => {
                 BrowserAnimationsModule,
                 CommonModule,
                 FormsModule,
-                NoConflictStyleCompatibilityMode,
                 DejaViewPortModule,
             ],
         }).compileComponents();
@@ -255,7 +252,7 @@ describe('DejaViewPortComponent', () => {
 
     it('should render with viewport auto at position 0', async(() => {
         const fixture = TestBed.createComponent(DejaViewportAutoContainerComponent);
-        observeViewPort$(fixture, 34, 0, 24150, 817, 0, 33).subscribe(noop);
+        observeViewPort$(fixture, 29, 0, 38840, 820, 0, 28).subscribe(noop);
         fixture.detectChanges();
     }));
 
@@ -264,7 +261,7 @@ describe('DejaViewPortComponent', () => {
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
         const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
 
-        observeViewPort$(fixture, 35, 9975, 14150, 843, 399, 433).subscribe(noop);
+        observeViewPort$(fixture, 29, 9986, 28840, 820, 250, 278).subscribe(noop);
 
         viewPortService.scrollPosition$.next(10000);
         fixture.detectChanges();
@@ -276,7 +273,7 @@ describe('DejaViewPortComponent', () => {
         const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
         const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
 
-        observeViewPort$(fixture, 35, 16475, 7650, 843, 659, 693).subscribe(() => {
+        observeViewPort$(fixture, 29, 16480, 22360, 828, 412, 440).subscribe(() => {
             // tslint:disable-next-line:no-string-literal
             expect(viewPortInstance['clientSize']).toEqual(800);
         });
@@ -292,7 +289,7 @@ describe('DejaViewPortComponent', () => {
         const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
         let pass = 0;
 
-        observeViewPort$(fixture, 35, 9975, 14150, 843, 399, 433).subscribe(() => {
+        observeViewPort$(fixture, 29, 9986, 28840, 820, 250, 278).subscribe(() => {
             switch (++pass) {
                 case 1:
                     // tslint:disable-next-line:no-string-literal
@@ -324,12 +321,12 @@ describe('DejaViewPortComponent', () => {
         const wrapperDebugElement = fixture.debugElement.query(By.css('deja-viewport > #viewport-wrapper'));
         const wrapperElement = wrapperDebugElement.nativeElement as HTMLElement;
         let pass = 0;
-        let elementCount = 35;
-        let expectedBeforeSize = 9975;
-        let expectedAfterSize = 14150;
-        let expectedViewPortSize = 843;
-        let expectedViewPortStartIndex = 399;
-        let expectedViewPortEndIndex = 433;
+        let elementCount = 29;
+        let expectedBeforeSize = 9986;
+        let expectedAfterSize = 28840;
+        let expectedViewPortSize = 820;
+        let expectedViewPortStartIndex = 250;
+        let expectedViewPortEndIndex = 278;
 
         Observable.from(viewPortService.viewPortResult$)
             .do(() => fixture.detectChanges())
@@ -343,23 +340,23 @@ describe('DejaViewPortComponent', () => {
                 expect(result.startIndex).toEqual(expectedViewPortStartIndex);
                 expect(result.endIndex).toEqual(expectedViewPortEndIndex);
                 if (++pass === 1) {
-                    elementCount = 35;
-                    expectedBeforeSize = 9975;
-                    expectedAfterSize = 14150;
-                    expectedViewPortSize = 843;
-                    expectedViewPortStartIndex = 399;
-                    expectedViewPortEndIndex = 433;
+                    elementCount = 29;
+                    expectedBeforeSize = 9986;
+                    expectedAfterSize = 28840;
+                    expectedViewPortSize = 820;
+                    expectedViewPortStartIndex = 250;
+                    expectedViewPortEndIndex = 278;
                     viewPortElement.style.width = '1500px';
                     const event = new CustomEvent('resize', {});
                     window.dispatchEvent(event);
                     viewPortInstance.refresh();
                 } else if (pass === 2) {
-                    elementCount = 35;
-                    expectedBeforeSize = 975;
-                    expectedAfterSize = 23118;
-                    expectedViewPortSize = 843;
-                    expectedViewPortStartIndex = 39;
-                    expectedViewPortEndIndex = 73;
+                    elementCount = 29;
+                    expectedBeforeSize = 986;
+                    expectedAfterSize = 37486;
+                    expectedViewPortSize = 820;
+                    expectedViewPortStartIndex = 25;
+                    expectedViewPortEndIndex = 53;
                     wrapperElement.scrollTop = 1000;
                     const event = new CustomEvent('scroll', {});
                     wrapperElement.dispatchEvent(event);

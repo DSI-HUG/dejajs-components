@@ -274,11 +274,11 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
     /**
      * Take a point in parameter and return corresponding value
      *
-     * @param {number} x xPos of point
-     * @param {number} y yPos of point
-     * @param {IConfig} config config where the point is located
+     * @param x xPos of point
+     * @param y yPos of point
+     * @param config config where the point is located
      *
-     * @return {number} value
+     * @return value
      */
     protected pointToValue(x: number, y: number, config: IConfig) {
         const angleAtPoint: number = this.pointToAngle(x - this._radius, y - this._radius, config);
@@ -300,7 +300,7 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
      * @param radiusOffset Radius to ckeck (if outerLabels are on, the radius offset = fullDiameter + labelsDiameter)
      * @param config the config where to check
      *
-     * @returns {Position} the position of value
+     * @return the position of value
      */
     protected valueToPoint(value: number, radiusOffset: number, config: IConfig): Position {
         const position = new Position();

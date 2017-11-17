@@ -503,7 +503,7 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
      * Create a simple editor text
      * @param div
      * @param options
-     * @returns {IStandaloneCodeEditor}
+     * @return instance of monaco
      */
     private initSimpleEditor(div: HTMLDivElement, options: any) {
         return monaco.editor.create(div, options);
@@ -512,7 +512,7 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
     /**
      * Create a diff editor to compare two string (_value and _valueToCompare)
      * @param div
-     * @returns {IStandaloneDiffEditor}
+     * @return instance of monaco
      */
     private initDiffEditor(div: HTMLDivElement, options: any) {
         const originalModel = monaco.editor.createModel(this._value, this.language);

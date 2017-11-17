@@ -18,10 +18,10 @@ import { SortOrder } from './sort-order.model';
 /** Classe de tri d'une liste plate ou hierarchique */
 export class SortingService {
     /** Fonction de comparaison de deux objets
-     * @param {any} a Objet 1.
-     * @param {any} b Objet 2.
-     * @param {ISortInfos} sortInfos Modèle de tri à appliquer pour la comparaison.
-     * @return {number} 0 si les objet sont égaux, 1 si b est après a, -1 si a après b
+     * @param a Objet 1.
+     * @param b Objet 2.
+     * @param sortInfos Modèle de tri à appliquer pour la comparaison.
+     * @return 0 si les objet sont égaux, 1 si b est après a, -1 si a après b
      */
     public static compare(a: any, b: any, sortInfo: ISortInfos) {
         const orderfact = sortInfo.order === SortOrder.ascending ? 1 : -1;
@@ -109,9 +109,9 @@ export class SortingService {
     }
 
     /** Trie les éléments de la liste plate spécifiée en fonction du modèle de tri spécifié
-     * @param {any[]} list Liste à trier.
-     * @param {ISortInfos} sortInfos Modèle de tri à appliquer.
-     * @return {Observable} Observable résolu par la fonction.
+     * @param list Liste à trier.
+     * @param sortInfos Modèle de tri à appliquer.
+     * @return Observable résolu par la fonction.
      */
     public sort$(list: any[], sortInfo: ISortInfos | ISortInfos[]) {
         return Observable.of(sortInfo)
@@ -137,10 +137,10 @@ export class SortingService {
     }
 
     /** Trie les éléments de la liste hierarchique spécifiée en fonction du modèle de tri spécifié
-     * @param {any[]} tree Liste à trier.
-     * @param {ISortInfos} sortInfos Modèle de tri à appliquer.
-     * @param {string} childrenField Champ à utiliser pour la recherche dans les enfants d'un parent.
-     * @return {Observable} Observable résolue par la fonction.
+     * @param tree Liste à trier.
+     * @param sortInfos Modèle de tri à appliquer.
+     * @param childrenField Champ à utiliser pour la recherche dans les enfants d'un parent.
+     * @return Observable résolue par la fonction.
      */
     public sortTree$(tree: any[], sortInfo: ISortInfos | ISortInfos[], childrenField?: string) {
         childrenField = childrenField || 'items';

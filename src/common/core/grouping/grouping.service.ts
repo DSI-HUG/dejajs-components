@@ -16,11 +16,11 @@ import { IGroupInfo } from './group-infos';
 /** Service de regroupement d'un tableau de modèles */
 export class GroupingService {
     /** Groupe les éléments de la liste hierarchique spécifiée à partir du niveau spécifié, et en fonction du modèle de groupe spécifié
-     * @param {any[]} tree Liste à trier.
-     * @param {IGroupInfo} groupInfos Modèle de groupe à appliquer.
-     * @param {string} childrenField Champs à utiliser comme collection des enfants d'un parent.
-     * @param {number} depth Niveau à partir duquel le modèle de regroupement doit être appliqué.
-     * @return {Observable} Observable résolu par la fonction.
+     * @param tree Liste à trier.
+     * @param groupInfos Modèle de groupe à appliquer.
+     * @param childrenField Champs à utiliser comme collection des enfants d'un parent.
+     * @param depth Niveau à partir duquel le modèle de regroupement doit être appliqué.
+     * @return Observable résolu par la fonction.
      */
     public group$(tree: any[], groupInfos: IGroupInfo[] | IGroupInfo, childrenField = 'items'): Observable<any[]> {
         if (!tree || tree.length === 0 || !groupInfos) {
