@@ -11,7 +11,6 @@ import { Component } from '@angular/core';
 import { DebugElement } from '@angular/core/src/debug/debug_node';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { NoConflictStyleCompatibilityMode } from '@angular/material';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Observable } from 'rxjs/Observable';
@@ -141,7 +140,6 @@ describe('DejaSelectComponent', () => {
                 BrowserAnimationsModule,
                 CommonModule,
                 FormsModule,
-                NoConflictStyleCompatibilityMode,
                 DejaSelectModule,
             ],
         }).compileComponents();
@@ -454,7 +452,6 @@ describe('DejaSelectByModelContainerComponent', () => {
                 BrowserAnimationsModule,
                 CommonModule,
                 FormsModule,
-                NoConflictStyleCompatibilityMode,
                 DejaSelectModule,
             ],
         }).compileComponents();
@@ -555,7 +552,6 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                 BrowserAnimationsModule,
                 CommonModule,
                 FormsModule,
-                NoConflictStyleCompatibilityMode,
                 DejaSelectModule,
                 DejaItemModule,
             ],
