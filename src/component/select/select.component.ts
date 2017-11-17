@@ -16,7 +16,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
-import { GroupingService } from '../../../index';
+import { GroupingService } from '../../common/core/grouping/grouping.service';
 import { IViewListResult } from '../../common/core/item-list/item-list.service';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { MediaService } from '../../common/core/media/media.service';
