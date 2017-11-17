@@ -210,7 +210,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             if (state !== this._dropdownVisible) {
                 this._dropdownVisible = state;
                 this.dropDownVisibleChange.emit(state);
-                this.changeDetectorRef.markForCheck();
             }
         };
 
@@ -258,9 +257,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             .delayWhen((time) => Observable.timer(time || 0))
             .subscribe(() => {
                 delete this.selectingItemIndex;
-                this._dropdownVisible = false;
+                setDropDownVisible(false);
                 this.viewPort.element$.next(null);
-                this.changeDetectorRef.markForCheck();
             });
 
         Observable.from(this.showDropDown$)
@@ -284,7 +282,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 }
 
                 // Display overlay
-                this._dropdownVisible = true;
+                setDropDownVisible(true);
                 this.changeDetectorRef.markForCheck();
             })
             .delay(1)
