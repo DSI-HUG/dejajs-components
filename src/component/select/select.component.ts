@@ -258,8 +258,9 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             .delayWhen((time) => Observable.timer(time || 0))
             .subscribe(() => {
                 delete this.selectingItemIndex;
+                this._dropdownVisible = false;
                 this.viewPort.element$.next(null);
-                setDropDownVisible(false);
+                this.changeDetectorRef.markForCheck();
             });
 
         Observable.from(this.showDropDown$)
@@ -283,13 +284,12 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 }
 
                 // Display overlay
-                setDropDownVisible(true);
+                this._dropdownVisible = true;
+                this.changeDetectorRef.markForCheck();
             })
             .delay(1)
             .filter(() => this.dropdownVisible)  // Show canceled by the hide$ observable if !dropdownVisible
-            .switchMap(() => {
-                return this.calcViewList$().first();
-            })
+            .switchMap(() => this.calcViewList$().first())
             .do(() => {
                 const selectedItems = this.getSelectedItems();
                 const first = selectedItems && selectedItems[0];
