@@ -67,6 +67,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
 
     /** Internal use */
     public overlayOwnerElement: HTMLElement;
+    public date = new Date();
 
     @ViewChild(DejaChildValidatorDirective) private inputValidatorDirective: DejaChildValidatorDirective;
 
@@ -80,8 +81,6 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     private focus$ = new Subject();
     private _showDropDown = false;
     private _positions = DejaConnectionPositionPair.default;
-
-    private date = new Date();
 
     private _inputModel;
     private cursorPosition: number;
@@ -393,7 +392,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
      *
      * @param newDate Date to set.
      */
-    protected onDateChange(newDate: Date) {
+    public onDateChange(newDate: Date) {
         this.value = newDate;
         // TODO
         // if (this.value.getHours() === newDate.getHours() && this.value.getMinutes() === newDate.getMinutes() && this.value.getSeconds() === newDate.getSeconds()) {

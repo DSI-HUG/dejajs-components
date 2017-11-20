@@ -39,8 +39,8 @@ export class DejaTooltipComponent implements OnInit, OnDestroy {
     public params: ITooltipParams;
     public overlayVisible = false;
     public ownerElement: HTMLElement;
+    public isMobile = false;
     private _model: any;
-    private isMobile = false;
     private isAlive = true;
 
     /**

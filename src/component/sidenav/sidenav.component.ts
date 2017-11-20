@@ -28,12 +28,16 @@ export class DejaSidenavComponent implements AfterViewInit, OnInit, OnDestroy {
     @Input()
     public headerText = 'TITLE';
 
+    @Input()
+    public headerIcon = 'face';
+
+    public hidden = false;
+    public title: string;
+
     private largeMql: MediaQueryList;
     private mediumMql: MediaQueryList;
     private smallMql: MediaQueryList;
 
-    private hidden = false;
-    private title: string;
     private ngUnsubscribe: Subject<void> = new Subject<void>();
 
     constructor(
