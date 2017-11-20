@@ -33,6 +33,11 @@ export class Circle {
         return new Circle(center, radius);
     }
 
+    /** Return a boolean indicating if the two circle are equals */
+    public static equals(c1: Circle, c2: Circle) {
+        return !c1 === !c2 && Position.equals(c1.center, c2.center) && c1.radius === c2.radius;
+    }
+
     /** Create e new circle instance from the center position and the radius */
     constructor(public center: Position, public radius: number) {
 
