@@ -1,3 +1,17 @@
+#### 2.18.1 (2017-11-20)
+
+##### Continuous Integration
+
+* **Dependencies:** upgrade dependencies ([e56e591f](https://github.com/DSI-HUG/dejajs-components/commit/e56e591fcc24148c2ec5600765b5773899e10675))
+
+##### New Features
+
+* **SideNav:** Add the possibility to specify the header's icon ([dd2432c5](https://github.com/DSI-HUG/dejajs-components/commit/dd2432c55685beab59c82a98e6e976680da4bb0b))
+
+##### Bug Fixes
+
+* **Global:** Remove private access inside template to fix AOT build ([ccafaec8](https://github.com/DSI-HUG/dejajs-components/commit/ccafaec889a1c0d08c2ca6694660603f5b908b50))
+
 ### 2.18.0 (2017-11-16)
 
 ##### BREAKING CHANGES
