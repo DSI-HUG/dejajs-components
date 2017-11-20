@@ -10,6 +10,7 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { MatInput } from '@angular/material';
+import 'rxjs/add/operator/debounce';
 import 'rxjs/add/operator/delayWhen';
 import 'rxjs/add/operator/takeWhile';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -757,7 +758,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return this.hintTemplateExternal || this.hintTemplateInternal;
     }
 
-    private get errorTemplate() {
+    public get errorTemplate() {
         return this.errorTemplateExternal || this.errorTemplateInternal;
     }
 
@@ -1062,11 +1063,15 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         }
     }
 
-    protected scroll(event: Event) {
+    public hideDropDown() {
+        this.hideDropDown$.next();
+    }
+
+    public scroll(event: Event) {
         const element = event.target as HTMLElement;
         this.storeScrollPosition$.next(element.scrollTop);
     }
-    protected mousedown(e: MouseEvent) {
+    public mousedown(e: MouseEvent) {
         if (this.mouseUp$sub) {
             this.mouseUp$sub.unsubscribe();
             this.mouseUp$sub = undefined;
@@ -1227,10 +1232,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         } else {
             this.showDropDown();
         }
-    }
-
-    private hideDropDown() {
-        this.hideDropDown$.next();
     }
 
     private showDropDown() {
