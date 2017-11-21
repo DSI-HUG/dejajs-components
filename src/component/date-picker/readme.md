@@ -73,5 +73,11 @@ Composant pour séléctionner une date sur un calendrier et l'affficher dans un 
     <td>false</td>
     <td>Rend le champ obligatoire</td>
 </tr>
+<tr>
+    <td>layout</td>
+    <td>DateComponentLayout | number</td>
+    <td>DateOnly</td>
+    <td>Layout: DateOnly, DateTime, TimeOnly</td>
+</tr>
 </tbody>
 </table>

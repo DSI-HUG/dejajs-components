@@ -6,9 +6,10 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Optional, Output, Self, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
+
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
@@ -23,6 +24,12 @@ export enum DaysOfWeek {
     Thursday = 4,
     Friday = 5,
     Saturday = 6,
+}
+
+export enum DateComponentLayout {
+    dateonly = 1,
+    datetime,
+    timeonly,
 }
 
 const noop = () => { };
@@ -97,12 +104,29 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
     private onChangeCallback: (_: any) => void = noop;
 
     /**
+     * Component Layout
+     */
+    @Input()
+    public set layout(value: DateComponentLayout) {
+        if (value) {
+            this.layoutId = value;
+            this.layoutClass = DateComponentLayout[value];
+        }
+        this.changeDetectorRef.markForCheck();
+    }
+    public layoutClass: string;
+    public layoutId: number;
+
+    /**
      * Time property setter. Can be string or empty so you can use it like : <deja-date-selector time></deja-date-selector>
      * Used to add time selector next to calendar
      */
     @Input()
     public set time(value: boolean | string) {
         this._time = coerceBooleanProperty(value) ? true : null;
+        if (this._time) {
+            this.layout = DateComponentLayout.datetime;
+        }
         this.changeDetectorRef.markForCheck();
     }
 
@@ -167,6 +191,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
                         this.changeDetectorRef.markForCheck();
                     });
             }));
+        this.layout = DateComponentLayout.dateonly;
     }
 
     public ngOnInit() {
@@ -201,8 +226,15 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
                 const h = (value) ? value.getHours() : 0;
                 const m = (value) ? value.getMinutes() : 0;
                 if (value && (
-                    (!this.time && this.selectedDate.toLocaleTimeString() !== value.toLocaleTimeString())
-                    || (this.time && ((this.selectedDate.getHours() === 0 && this.selectedDate.getMinutes() === 0) && (h !== 0 && m !== 0) || (this.selectedDate.toLocaleDateString() !== value.toLocaleDateString())))
+                    (!this.layoutId
+                        && this.selectedDate.toLocaleTimeString() !== value.toLocaleTimeString()
+                    )
+                    || (this.layoutId > 1
+                        && (
+                            (this.selectedDate.getHours() === 0 && this.selectedDate.getMinutes() === 0) && (h !== 0 && m !== 0)
+                            || (this.selectedDate.toLocaleDateString() !== value.toLocaleDateString())
+                        )
+                    )
                 )) {
                     value.setHours(this.selectedDate.getHours(), this.selectedDate.getMinutes(), this.selectedDate.getSeconds());
                 }

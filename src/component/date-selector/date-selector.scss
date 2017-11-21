@@ -8,6 +8,13 @@ deja-date-time-selector {
         &[with-time] {
             width: 663px;
         }
+        &.datetime {
+            width: 663px;
+        }
+        &.timeonly {
+            width: 361px;
+            height: 452px;
+        }
         #time-header,
         #date-header {
             align-items: center;
@@ -21,7 +28,7 @@ deja-date-time-selector {
         }
         #time-selector {
             position: relative;
-            width: 353px;
+            width: 361px;
             #time-body {
                 height: calc(100% - 94px);
                 position: relative;

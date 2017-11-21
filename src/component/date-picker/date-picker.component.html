@@ -1,35 +1,30 @@
 <mat-form-field id="date-selector">
-    <input deja-child-validator #inputelement id="date-selector-input" matInput autocomplete="off" [disabled]="disabled" [required]="required" [ngModel]="inputModel" (ngModelChange)="updateModel($event)" placeholder="{{placeholder}}" [textMask]="{mask: mask, showMask: true}">
-	<div matSuffix>
-		<div id="action-icon-container">
-			<button mat-icon-button *ngIf="inputModel && !disabled" (click)="reset()" id="clear-button">
-				<mat-icon>clear</mat-icon>
-			</button>
-			<button mat-icon-button *ngIf="!disabled" (click)="toggleDateSelector($event)" id="calendar-button">
-				<mat-icon>date_range</mat-icon>
-			</button>
-		</div>
-	</div>
-	<mat-hint *ngIf="matHint">
-		<ng-template [ngTemplateOutlet]="matHint"></ng-template>
-	</mat-hint>
-	<mat-error *ngIf="matError">
-		<ng-template [ngTemplateOutlet]="matError"></ng-template>
-	</mat-error>
+    <input deja-child-validator #inputelement id="date-selector-input" matInput autocomplete="off" [disabled]="disabled" [required]="required"
+        [ngModel]="inputModel" (ngModelChange)="updateModel($event)" placeholder="{{placeholder}}" [textMask]="{mask: mask, showMask: true}">
+    <div matSuffix>
+        <div id="action-icon-container">
+            <button mat-icon-button *ngIf="inputModel && !disabled" (click)="reset()" id="clear-button">
+                <mat-icon>clear</mat-icon>
+            </button>
+            <button mat-icon-button *ngIf="!disabled" (click)="toggleDateSelector($event)" id="calendar-button">
+                <mat-icon>date_range</mat-icon>
+            </button>
+        </div>
+    </div>
+    <mat-hint *ngIf="matHint">
+        <ng-template [ngTemplateOutlet]="matHint"></ng-template>
+    </mat-hint>
+    <mat-error *ngIf="matError">
+        <ng-template [ngTemplateOutlet]="matError"></ng-template>
+    </mat-error>
 </mat-form-field>
-<deja-overlay #dejaOverlay [ownerElement]="overlayOwnerElement" [isVisible]="showDropDown" (closed)="close()" [positions]="positions" [overlayOffsetY]="overlayOffsetY" [overlayOffsetX]="overlayOffsetX">
-    <deja-date-time-selector
-		[time]="time"
-		[disableDates]="disableDates"
-		[ngModel]="date"
-		(ngModelChange)="onDateChange($event)"
-		class="inside-dropdown"
-		[dateMax]="dateMax"
-		[dateMin]="dateMin"
-	></deja-date-time-selector>
-	<div class="actions">
-		<button mat-mini-fab type="button" (click)="close()">
-			<mat-icon>close</mat-icon>
-		</button>
-	</div>
+<deja-overlay #dejaOverlay [ownerElement]="overlayOwnerElement" [isVisible]="showDropDown" (closed)="close()" [positions]="positions"
+    [overlayOffsetY]="overlayOffsetY" [overlayOffsetX]="overlayOffsetX">
+    <deja-date-time-selector [layout]="layoutId" [time]="time" [disableDates]="disableDates" [ngModel]="date" (ngModelChange)="onDateChange($event)"
+        class="inside-dropdown" [dateMax]="dateMax" [dateMin]="dateMin" [layout]="layout"></deja-date-time-selector>
+    <div class="actions">
+        <button mat-mini-fab type="button" (click)="close()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
 </deja-overlay>
