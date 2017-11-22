@@ -139,8 +139,8 @@
                     <h3>DateTime Range Picker :</h3>
                     <deja-date-picker format="DD.MM.YYYY HH:mm" #dtfrom [disableDates]="disabledDate" [(ngModel)]="datetimeRangeFrom" time></deja-date-picker>
                     <deja-date-picker format="DD.MM.YYYY HH:mm" #dtto [disableDates]="disabledDate" [(ngModel)]="datetimeRangeTo" time></deja-date-picker>
-                    <p>Selected date : from {{datetimeRangeFrom | date:'yyyy-MM-dd HH:mm:ss'}} to {{datetimeRangeTo | date:'yyyy-MM-dd
-                        HH:mm:ss'}}
+                    <p>
+                        Selected date : from {{datetimeRangeFrom | date:'yyyy-MM-dd HH:mm:ss'}} to {{datetimeRangeTo | date:'yyyy-MM-dd HH:mm:ss'}}
                     </p>
                 </div>
             </div>

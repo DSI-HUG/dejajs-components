@@ -6,18 +6,18 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import * as moment_ from 'moment';
 
 import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, Input, OnDestroy, OnInit, Optional, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
-import { DaysOfWeek, DejaDateSelectorComponent } from '../date-selector/date-selector.component';
+import { DateComponentLayout, DaysOfWeek, DejaDateSelectorComponent } from '../date-selector/date-selector.component';
 import { formatToMask, formatToUnitOfTime } from './format-to-mask';
+
+import * as moment_ from 'moment';
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Subject } from 'rxjs/Subject';
-import { DateComponentLayout } from '../../../index';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { DejaConnectionPositionPair } from '../../common/core/overlay/connection-position-pair';
 import { DejaChildValidatorDirective } from '../../common/core/validation/child-validator.directive';
@@ -266,13 +266,13 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     public ngOnInit() {
         if (!this._format) {
             if (!this.layoutId || this.layoutId === DateComponentLayout.dateonly) {
-                this.format = `YYYY-MM-DD`;
+                this.format = 'YYYY-MM-DD';
             } else if (this.layoutId === DateComponentLayout.datetime) {
-                this.format = `YYYY-MM-DD HH:mm`;
+                this.format = 'YYYY-MM-DD HH:mm';
             } else if (this.layoutId === DateComponentLayout.timeonly) {
-                this.format = `HH:mm`;
+                this.format = 'HH:mm';
             } else {
-                this.format = `YYYY-MM-DD`;
+                this.format = 'YYYY-MM-DD';
             }
         }
     }
