@@ -65,3 +65,7 @@ demo/**/*.js.map
 demo/**/*.d.ts
 demo/vs
 /src/package-lock.json
+
+git-proxy\.bat
+
+git-unset-proxy\.bat

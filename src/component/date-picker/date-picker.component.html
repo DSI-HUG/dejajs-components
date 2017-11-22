@@ -20,7 +20,7 @@
 </mat-form-field>
 <deja-overlay #dejaOverlay [ownerElement]="overlayOwnerElement" [isVisible]="showDropDown" (closed)="close()" [positions]="positions"
     [overlayOffsetY]="overlayOffsetY" [overlayOffsetX]="overlayOffsetX">
-    <deja-date-time-selector [layout]="layoutId" [time]="time" [disableDates]="disableDates" [ngModel]="date" (ngModelChange)="onDateChange($event)"
+    <deja-date-time-selector [layout]="layoutId" [disableDates]="disableDates" [ngModel]="date" (ngModelChange)="onDateChange($event)"
         class="inside-dropdown" [dateMax]="dateMax" [dateMin]="dateMin" [layout]="layout"></deja-date-time-selector>
     <div class="actions">
         <button mat-mini-fab type="button" (click)="close()">

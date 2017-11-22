@@ -312,11 +312,9 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     public set layout(value: DateComponentLayout) {
         if (value) {
             this.layoutId = value;
-            // this.layoutClass = DateComponentLayout[value];
         }
         this.changeDetectorRef.markForCheck();
     }
-    // public layoutClass: string;
     public layoutId: number;
 
     /**
