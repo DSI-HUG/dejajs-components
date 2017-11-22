@@ -185,7 +185,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                 return value;
             })
             .map((value) => this.getVirtualSelectedEntities(value))
-            .do((value) => super.setSelectedModels(!value || this._multiSelect ? value : [value]));
+            .do((value) => super.setSelectedModels(!value || this._multiSelect || value instanceof Array ? value : [value]));
 
         Observable.merge(selectModels$, selectItems$)
             .takeWhile(() => this._isAlive)
@@ -637,13 +637,23 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
 
     public ngAfterContentInit() {
         if (!this.items && this.options && this.options.length) {
+            const selectedModels = [];
             this.valueField = 'value';
             this.textField = 'text';
-            const models = this.options.map((option) => ({
-                text: option.text,
-                value: option.value,
-            }));
+            const models = this.options.map((option) => {
+                const model = {
+                    text: option.text,
+                    value: option.value,
+                };
+                if (option.selected) {
+                    selectedModels.push(model);
+                }
+                return model;
+            });
             this.models = models;
+            if (selectedModels.length) {
+                this.selectedModels = selectedModels;
+            }
             if (models.length > 100) {
                 // tslint:disable-next-line:no-debugger
                 debugger;

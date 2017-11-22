@@ -179,13 +179,23 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @ContentChildren(DejaItemComponent)
     public set options(options: DejaItemComponent[]) {
         if (!this.items && options && options.length) {
+            const selectedModels = [];
             this.valueField = 'value';
             this.textField = 'text';
-            const models = options.map((option) => ({
-                text: option.text,
-                value: option.value,
-            }));
+            const models = options.map((option) => {
+                const model = {
+                    text: option.text,
+                    value: option.value,
+                };
+                if (option.selected) {
+                    selectedModels.push(model);
+                }
+                return model;
+            });
             this.models = models;
+            if (selectedModels.length) {
+                this.selectedModels = selectedModels;
+            }
             if (models.length > 100) {
                 // tslint:disable-next-line:no-debugger
                 debugger;
@@ -373,13 +383,14 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                     this.changeDetectorRef.markForCheck();
 
                 } else {
-                    const item = super.mapToIItemBase([value])[0];
+                    const v = value instanceof Array ? [value[0]] : [value];
+                    const item = super.mapToIItemBase(v)[0];
                     this.unselectAll$()
                         .switchMap(() => item ? this.toggleSelect$([item], true) : [])
                         .map(() => super.getItemListService().ensureSelection())
                         .do(() => this.ensureSelection())
                         .first()
-                        .subscribe(() =>this.changeDetectorRef.markForCheck());
+                        .subscribe(() => this.changeDetectorRef.markForCheck());
                 }
             });
 

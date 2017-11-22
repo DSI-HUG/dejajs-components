@@ -803,10 +803,13 @@ export abstract class ItemListBase implements OnDestroy {
 
     protected getVirtualSelectedEntities(value) {
         const map = (v) => {
+            if (typeof v === 'string') {
+                v = v.trim();
+            }
             const model = {};
             const textField = this.getTextField();
             const valueField = this.getValueField();
-            model[textField] = `${v}`.trim();
+            model[textField] = v.toString();
             model[valueField] = v;
             return model;
         };

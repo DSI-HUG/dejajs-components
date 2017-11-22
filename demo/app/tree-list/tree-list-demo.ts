@@ -59,12 +59,11 @@ export class DejaTreeListDemoComponent implements OnDestroy {
     protected loremList: IItemTree[] = [];
 
     private countries: Observable<Country[]>;
-    private deepCountries: Observable<any>;
-    private countriesForTemplate: Country[];
+    public deepCountries: Observable<any>;
     private countriesForMultiselect: Country[];
     private groupedCountries: ICountryGroup[];
-    private onDemandGroupedCountries: ICountryGroup[];
-    private multiselectModel: IItemTree[];
+    public onDemandGroupedCountries: ICountryGroup[];
+    public multiselectModel: IItemTree[];
     private _dialogVisible = false;
     private subscriptions = [] as Subscription[];
 
@@ -145,15 +144,6 @@ export class DejaTreeListDemoComponent implements OnDestroy {
             value: fruct.toLowerCase(),
             selected: index === 1,
         } as IItemBase));
-
-        this.subscriptions.push(this.countries.subscribe((value: Country[]) => {
-            const result = [] as any[];
-            value.map((s) => {
-                s.toString = () => `${s.code} - ${s.naqme}`;
-                result.push(s);
-            });
-            this.countriesForTemplate = result;
-        }));
 
         this.subscriptions.push(this.countries
             .do((value) => this.countriesForMultiselect = value)
