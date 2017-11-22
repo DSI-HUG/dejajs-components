@@ -277,7 +277,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
 
     /** Définit la hauteur d'une ligne pour le calcul du viewport en pixels (la valeur par défaut sera utilisée si aucune valeur n'est setté). */
     @Input()
-    public set viewPortRowHeight(value: number) {
+    public set viewPortRowHeight(value: number | string) {
         this.setViewPortRowHeight(value);
     }
 
@@ -287,7 +287,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
      * est suceptible de contenir beaucoup d'éléments.
      */
     @Input()
-    public set viewportMode(mode: ViewportMode) {
+    public set viewportMode(mode: ViewportMode | string) {
         this.setViewportMode(mode);
     }
 
