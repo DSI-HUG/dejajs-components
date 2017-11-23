@@ -64,7 +64,7 @@ export class DejaGridComponent implements OnDestroy {
     /** Définit le nombre de lignes à sauter en cas de pression sur les touches PageUp ou PageDown */
     @Input() public pageSize = 0;
     /** Définit un texte de conseil en cas d'erreur de validation ou autre */
-    @Input() public hintLabel = '';
+    @Input() public hintLabel: string;
     /** Définit la hauteur d'une ligne pour le calcul du viewport en pixels */
     @Input() public viewPortRowHeight = ViewPortService.itemDefaultSize;
     /** Les trois valeurs acceptés en paramètre se trouvent dans l'enum ViewportMode (disabled, fixed, variable ou auto)
