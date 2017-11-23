@@ -155,12 +155,6 @@ export class DejaGridGroupAreaComponent {
         return false;
     }
 
-    protected getGroupColumnFromHTMLElement(element: HTMLElement): IDejaGridColumn {
-        const groupElement = this.getGroupElementFromHTMLElement(element);
-        const groupName = groupElement && groupElement.getAttribute('groupname');
-        return groupName && this.groups.find((column) => column.name === groupName);
-    }
-
     private getGroupElementFromHTMLElement(element: HTMLElement): HTMLElement {
         let parentElement = element;
 

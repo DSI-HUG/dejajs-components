@@ -284,8 +284,8 @@ export class DejaGridComponent implements OnDestroy {
         return this._multiSelect;
     }
 
-    @Input()
     /** Définit la structure des colonnes de la grille. */
+    @Input()
     public set columns(columns: IDejaGridColumn[]) {
         this.columns$.next(columns);
     }
@@ -295,8 +295,8 @@ export class DejaGridComponent implements OnDestroy {
         return this._columns;
     }
 
-    @Input()
     /** Définit le modèle affiché dans les lignes de la grille. */
+    @Input()
     public set rows(rows: IItemBase[] | Promise<IItemBase[]> | Observable<IItemBase[]>) {
         this._rows = rows;
         if (this._rows && !this._columns) {
@@ -436,17 +436,15 @@ export class DejaGridComponent implements OnDestroy {
             .subscribe(() => this.changeDetectorRef.markForCheck()));
 
         this.subscriptions.push(Observable.from(this.columns$)
+            .do((columns) => this._columns = columns)
             .debounceTime(1)
-            .subscribe((columns) => {
-                this._columns = columns;
-                this.calcColumnsLayout();
-            }));
+            .subscribe(() => this.calcColumnsLayout()));
 
         this.subscriptions.push(Observable.from(this.printColumnLayout$)
             .debounceTime(1000)
             .subscribe(() => {
                 console.log('');
-                console.log('Column layout:');
+                console.log('Auto columns layout:');
                 console.log(JSON.stringify(this._columns, null, 4));
                 console.log('');
             }));

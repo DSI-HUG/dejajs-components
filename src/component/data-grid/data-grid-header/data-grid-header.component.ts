@@ -131,7 +131,7 @@ export class DejaGridHeaderComponent implements OnDestroy {
         const element = elementRef.nativeElement as HTMLElement;
 
         this.subscriptions.push(Observable.fromEvent(element, 'mousedown')
-            .filter((event: MouseEvent) => event.buttons === 1)
+            .filter((event: MouseEvent) => event.buttons === 1 || event.button === 1)
             .subscribe((downEvent: MouseEvent) => {
                 const target = downEvent.target as HTMLElement;
                 const column = this.getColumnFromHTMLElement(downEvent.target as HTMLElement);
@@ -157,7 +157,7 @@ export class DejaGridHeaderComponent implements OnDestroy {
                         Observable.fromEvent(element.ownerDocument, 'mousemove')
                             .takeUntil(Observable.merge(mouseUp$, kill$))
                             .subscribe((moveEvent: MouseEvent) => {
-                                if (moveEvent.buttons === 1) {
+                                if (moveEvent.buttons === 1 || moveEvent.button === 1) {
                                     const e = {
                                         column: this._sizedColumn,
                                         offsetWidth: moveEvent.pageX - sizedOrigin,

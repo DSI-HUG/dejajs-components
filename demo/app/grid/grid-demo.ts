@@ -382,7 +382,7 @@ export class GridDemoComponent {
         },
         {
             label: 'Vitamin B2',
-            name: 'VitaminB1',
+            name: 'VitaminB2',
         },
         {
             label: 'Vitamin C',

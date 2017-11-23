@@ -8,25 +8,22 @@
 
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { async, TestBed } from '@angular/core/testing';
+import { DebugElement } from '@angular/core/src/debug/debug_node';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-// import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs/Observable';
 import { DejaClipboardModule } from '../../common/core/clipboard/index';
 import { GroupingService } from '../../common/core/grouping/grouping.service';
-// import { DejaItemModule } from '../../common/core/item-list/index';
-// import { IItemBase } from '../../common/core/item-list/item-base';
 import { ItemListService } from '../../common/core/item-list/item-list.service';
-// import { IItemTree } from '../../common/core/item-list/item-tree';
 import { ViewPortService } from '../../common/core/item-list/viewport.service';
-// import { ISortInfos } from '../../common/core/sorting/sort-infos.model';
 import { SortingService } from '../../common/core/sorting/sorting.service';
 import { IDejaGridColumn } from './data-grid-column/data-grid-column';
 import { DejaGridComponent } from './data-grid.component';
 import { DejaGridModule } from './index';
 
-export const fructs = [
+const FRUCTS = [
     {
         name: 'Peach',
         value: 'peach',
@@ -323,38 +320,42 @@ export const fructs = [
     },
 ] as any[];
 
-export const fructsColumns = [
+const FRUCTS_COLUMNS = [
     {
         label: 'Color',
         name: 'color',
-        width: '64px',
+        width: '250px',
         useCellTemplate: true,
     },
     {
         label: 'Name',
         name: 'name',
-        width: '130px',
+        width: '250px',
     },
     {
         label: 'Vitamin A',
         name: 'VitaminA',
+        width: '250px',
     },
     {
         label: 'Vitamin B1',
         name: 'VitaminB1',
+        width: '250px',
     },
     {
         label: 'Vitamin B2',
-        name: 'VitaminB1',
+        name: 'VitaminB2',
+        width: '250px',
     },
     {
         label: 'Vitamin C',
         name: 'VitaminC',
+        width: '250px',
     },
 ] as IDejaGridColumn[];
 
 @Component({
-    template: `<deja-grid style="height: 500px;width: 1000px;" selectedItem="mango" maxHeight="auto" sortable searchArea groupArea rowsDraggable rowsSortable columnsDraggable columnsSortable columnsSizable multiSelect [rows]="fructs" [columns]="fructsColumns" valueField="value">
+    template: `<deja-grid style="height: 1000px;width: 1000px;" [rows]="fructs" [columns]="fructsColumns" valueField="value" selectedItem="mango" maxHeight="auto" sortable searchArea groupArea rowsDraggable rowsSortable columnsDraggable columnsSortable columnsSizable multiSelect>
                     <ng-template #cellTemplate let-row let-column="column">
                         <span *ngIf="column.name==='color'" class="color" [style.background-color]="row[column.name]"></span>
                     </ng-template>
@@ -364,6 +365,9 @@ export const fructsColumns = [
     ],
 })
 class DejaGridContainerComponent {
+    public fructs = FRUCTS;
+    public fructsColumns = FRUCTS_COLUMNS;
+
     constructor() {
     }
 }
@@ -384,13 +388,13 @@ describe('DejaGridComponent', () => {
         }).compileComponents();
     }));
 
-    // const observeViewPort$ = (fixture: ComponentFixture<DejaGridContainerComponent>) => {
-    //     const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
-    //     const viewPortService = gridDebugElement.injector.get(ViewPortService) as ViewPortService;
+    const observeViewPort$ = (fixture: ComponentFixture<DejaGridContainerComponent>) => {
+        const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
+        const gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
 
-    //     return Observable.from(viewPortService.viewPortResult$)
-    //         .filter((result) => result.viewPortSize > 0);
-    // };
+        return Observable.from(gridInstance.viewPort.viewPortResult$)
+            .filter((result) => result.viewPortSize > 0);
+    };
 
     it('should create the component', async(() => {
         const fixture = TestBed.createComponent(DejaGridContainerComponent);
@@ -492,19 +496,160 @@ describe('DejaGridComponent', () => {
         gridInstance.columnsSizable = 'false';
         expect(gridInstance.columnsSizable).toBeFalsy();
 
-        // expect(gridInstance.minSearchlength).toBe(0);
-        // gridInstance.minSearchlength = '3';
-        // expect(grid.minSearchlength).toBe(3);
-
-        // expect(gridInstance.disabled).toBeNull();
-        // gridInstance.disabled = 'true';
-        // expect(gridInstance.disabled).toBeTruthy();
-        // gridInstance.setDisabledState(false);
-        // expect(gridInstance.disabled).toBeFalsy();
-
         expect(gridInstance.waiter).toBeFalsy();
         gridInstance.waiter = true;
         expect(gridInstance.waiter).toBeTruthy();
+
+        expect(gridInstance.columns && gridInstance.columns.length).toBe(6);
+
+        expect(gridInstance.depthMax).toBe(0);
+    }));
+
+    it('should set and ensure the current cell', async(() => {
+        const fixture = TestBed.createComponent(DejaGridContainerComponent);
+        const gridContainerInstance = fixture.componentInstance as DejaGridContainerComponent;
+        const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
+        const gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
+        let pass = 0;
+
+        observeViewPort$(fixture)
+            .debounceTime(100) // Debounce here, because ensureVisible move the scroll and more than one viewPort can be raised
+            .subscribe((vp) => {
+                // Bind view port
+                fixture.detectChanges();
+                const listContainer = fixture.debugElement.query(By.css('deja-grid > deja-tree-list > .deja-listcontainer'));
+                const listElement = listContainer.nativeElement as HTMLElement;
+                const currentCells = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > .deja-listcontainer .cell-wrapper[current="true"]'));
+                const currentRow = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > .deja-listcontainer > .listitem[current="true"]'));
+
+                switch (++pass) {
+                    case 1:
+                        expect(gridInstance.currentColumn).toBeUndefined();
+                        // Set current column
+                        gridInstance.currentColumn = gridContainerInstance.fructsColumns[4];
+                        gridInstance.currentRow = gridContainerInstance.fructs[4];
+                        gridInstance.refresh();
+                        fixture.detectChanges();
+                        break;
+
+                    default:
+                        // Check current column
+                        expect(vp.visibleItems.length).toBe(12);
+                        expect(gridInstance.currentColumn).toBeDefined();
+                        expect(gridInstance.currentColumn.name).toEqual('VitaminB2');
+                        expect(listElement.scrollLeft).toBe(250);
+                        expect(currentCells.length).toBe(12);
+                        expect(currentCells[0] && currentCells[0].attributes.colindex).toBe('4');
+                        expect(currentRow.length).toBe(1);
+                        expect(currentRow[0] && currentRow[0].attributes.flat).toBe('4');
+                        break;
+                }
+            });
+
+        fixture.detectChanges();
+    }));
+
+    it('should group with the grouping area', async(() => {
+        const fixture = TestBed.createComponent(DejaGridContainerComponent);
+        const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
+        const gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
+        let pass = 0;
+
+        observeViewPort$(fixture)
+            .debounceTime(10)
+            .subscribe((vp) => {
+                // Bind view port
+                fixture.detectChanges();
+                const groupChips = fixture.debugElement.queryAll(By.css('deja-grid > deja-grid-grouparea > #deja-grid-grouparea > deja-chips #close-button'));
+
+                switch (++pass) {
+                    case 1:
+                        expect(vp.visibleItems.length).toBe(12);
+                        expect(groupChips.length).toBe(0);
+                        gridInstance.columnGroups = 'name';
+                        gridInstance.refresh();
+                        fixture.detectChanges();
+                        break;
+
+                    case 2:
+                        expect(vp.visibleItems.length).toBe(24);
+                        expect(groupChips.length).toBe(1);
+                        if (groupChips.length) {
+                            groupChips[0].nativeElement.click();
+                            gridInstance.refresh();
+                            fixture.detectChanges();
+                        }
+                        break;
+
+                    default:
+                        expect(groupChips.length).toBe(0);
+                        expect(vp.visibleItems.length).toBe(12);
+                        break;
+                }
+            });
+
+        fixture.detectChanges();
+    }));
+
+    it('should sort when user click on the header', async(() => {
+        const fixture = TestBed.createComponent(DejaGridContainerComponent);
+        const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
+        const gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
+        let pass = 0;
+
+        const sendMouseClick = (element: DebugElement) => {
+            // Simulate a mouse click on the header
+            const event = document.createEvent('MouseEvents') as MouseEvent;
+            const gridHeader = fixture.debugElement.query(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header'));
+            event.initMouseEvent('mousedown', true, true, document.defaultView, 0, 0, 0, 0, 0, false, false, false, false, 1, gridHeader.nativeElement);
+            element.nativeElement.dispatchEvent(event);
+            fixture.detectChanges();
+            Observable.timer(100)
+                .first()
+                .subscribe(() => {
+                    const upEvent = document.createEvent('MouseEvents') as MouseEvent;
+                    upEvent.initMouseEvent('mouseup', true, true, document.defaultView, 0, 0, 0, 0, 0, false, false, false, false, 1, gridHeader.nativeElement);
+                    element.nativeElement.dispatchEvent(upEvent);
+                    gridInstance.refreshViewPort();
+                    fixture.detectChanges();
+                });
+        };
+
+        observeViewPort$(fixture)
+            .debounceTime(10)
+            .subscribe((vp) => {
+                // Bind view port
+                fixture.detectChanges();
+                const columnHeaders = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header .column-header'));
+
+                switch (++pass) {
+                    case 1:
+                        expect(vp.visibleItems.length).toBe(12);
+                        expect(columnHeaders.length).toBeGreaterThan(0);
+                        if (columnHeaders.length) {
+                            sendMouseClick(columnHeaders[1]);
+                        }
+                        break;
+
+                    case 2:
+                        debugger;
+                        // expect(vp.visibleItems.length).toBe(24);
+                        // expect(groupChips.length).toBe(1);
+                        // if (groupChips.length) {
+                        //     groupChips[0].nativeElement.click();
+                        //     gridInstance.refresh();
+                        //     fixture.detectChanges();
+                        // }
+                        break;
+
+                    default:
+                        // expect(groupChips.length).toBe(0);
+                        // expect(vp.visibleItems.length).toBe(12);
+                        break;
+                }
+            });
+
+        fixture.detectChanges();
     }));
 
     // it('should return the write item class', (() => {
@@ -555,52 +700,6 @@ describe('DejaGridComponent', () => {
     //     item.odd = true;
     //     item.depth = 1;
     //     expect(grid.getItemClass(item)).toEqual('listitem test collapsed selected unselectable odd');
-    // }));
-
-    // it('should set and ensure the current item', async(() => {
-    //     const fixture = TestBed.createComponent(DejaGridContainerComponent);
-    //     const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
-    //     const gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
-    //     const grid = gridInstance as any;
-    //     let pass = 0;
-
-    //     observeViewPort$(fixture)
-    //         .debounceTime(100) // Debounce here, because ensureVisible move the scroll and more than one viewPort can be raised
-    //         .subscribe((vp) => {
-    //             fixture.detectChanges();
-    //             const currentItems = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem[current="true"]'));
-
-    //             switch (++pass) {
-    //                 case 1:
-    //                     expect(currentItems.length).toBe(0);
-    //                     // Set current item by index
-    //                     grid.currentItemIndex = 20;
-    //                     expect(grid.currentItemIndex).toBe(20);
-    //                     gridInstance.ensureItemVisible(grid.currentItemIndex);
-    //                     fixture.detectChanges();
-    //                     break;
-
-    //                 case 2:
-    //                     // Check currentItem by index
-    //                     expect(currentItems.length).toBe(1);
-    //                     expect(currentItems[0] && currentItems[0].attributes.flat).toBe('20');
-    //                     expect(vp.endIndex).toBe(20);
-    //                     expect(gridInstance.currentItem).toBe(vp.items[20]);
-    //                     // Set current item by item
-    //                     gridInstance.currentItem = vp.items[1];
-    //                     fixture.detectChanges();
-    //                     break;
-
-    //                 default:
-    //                     // Check currentItem by item
-    //                     expect(currentItems.length).toBe(1);
-    //                     expect(currentItems[0] && currentItems[0].attributes.flat).toBe('1');
-    //                     expect(vp.startIndex).toBe(1);
-    //                     expect(gridInstance.currentItem).toBe(vp.items[1]);
-    //             }
-    //         });
-
-    //     fixture.detectChanges();
     // }));
 
     // it('should not load items if minSearchlength is defined', async(() => {
