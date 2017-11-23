@@ -58,8 +58,8 @@ export class Rect {
             const bounds = left as any || {};
             this.left = bounds.left || 0;
             this.top = bounds.top || 0;
-            this.width = bounds.width || 0;
-            this.height = bounds.height || 0;
+            this.width = bounds.right !== undefined ? bounds.right - this.left : bounds.width || 0;
+            this.height = bounds.bottom !== undefined ? bounds.bottom - this.top : bounds.height || 0;
         } else {
             this.left = left || 0;
             this.top = top || 0;
@@ -133,15 +133,15 @@ export class Rect {
             top: this.top,
             bottom: this.bottom,
             right: this.right,
-        } as ClientRect;
-    }
-
-    public toRectStruct() {
-        return {
-            left: this.left,
-            top: this.top,
             width: this.width,
             height: this.height,
         } as ClientRect;
+    }
+
+    /**
+     * @deprecated use toClientRect instead
+     */
+    public toRectStruct() {
+        return this.toClientRect();
     }
 }
