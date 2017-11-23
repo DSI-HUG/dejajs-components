@@ -1058,7 +1058,9 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             // Autocomplete or multiselect only
             this.dropDownQuery = this.query;
             if (this.isModeAutocomplete) {
-                this.unselectAll$().first().subscribe(noop);
+                this.unselectAll$()
+                    .first()
+                    .subscribe(() => this.onModelChange());
             }
         }
     }
