@@ -632,7 +632,7 @@ describe('DejaGridComponent', () => {
                         break;
 
                     case 2:
-                        debugger;
+                        // debugger;
                         // expect(vp.visibleItems.length).toBe(24);
                         // expect(groupChips.length).toBe(1);
                         // if (groupChips.length) {
