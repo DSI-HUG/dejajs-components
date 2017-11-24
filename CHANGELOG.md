@@ -49,14 +49,15 @@
 
 ##### Bug Fixes
 
-* **DejaItemBase:** viewPortRowHeight and viewPortRowMode don't use coercion ([fc173f00](https://github.com/DSI-HUG/dejajs-components/commit/fc173f00b5e80abbff31ef87c8cad2f20d89c9f5))
 * **DejaSelect:**
+  * Autocomplete clear model when text is changed DEJS-246 ([14efbbde](https://github.com/DSI-HUG/dejajs-components/commit/14efbbde2140745ea1e62f5163645d908f63255d))
   * Width regression from material rc0 migration ([6188733f](https://github.com/DSI-HUG/dejajs-components/commit/6188733fe54d2913a13b9c5990534ca40dbfcf1a))
   * Ensure selection when models setted after selected item (mode autocomplete and sele ([d18f9393](https://github.com/DSI-HUG/dejajs-components/commit/d18f9393b3c01bc5dd8d5dc0aa7012ba2eaeb6b1))
   * Current item was not displayed in multiselect mode ([dee99746](https://github.com/DSI-HUG/dejajs-components/commit/dee99746a94f7e469b8f9ac090f54d684a8a4562))
   * Fix an issue where the render of the ViewPort can be sometimes incomplete. ([8dfc2ea3](https://github.com/DSI-HUG/dejajs-components/commit/8dfc2ea3212398d66c5a1834cd04a9fec957eb9f))
   * modelIsValue property initialized to undefined and is determined by the first passed model ([bd7dc3cf](https://github.com/DSI-HUG/dejajs-components/commit/bd7dc3cf9d6559c0ecf1837d2eef65a8330316eb))
   * modelIsValue property can be defined for multiselect ([3d9c0673](https://github.com/DSI-HUG/dejajs-components/commit/3d9c0673d1e413686d77e28216e258312c763bf0))
+* **DejaItemBase:** viewPortRowHeight and viewPortRowMode don't use coercion ([fc173f00](https://github.com/DSI-HUG/dejajs-components/commit/fc173f00b5e80abbff31ef87c8cad2f20d89c9f5))
 * **Global:**
   * Remove private access inside template to fix AOT build ([ccafaec8](https://github.com/DSI-HUG/dejajs-components/commit/ccafaec889a1c0d08c2ca6694660603f5b908b50))
   * Disable chromium autocomplete for all controls using an input, except the treelist where the binding is modified to use autocomplete ([718408f3](https://github.com/DSI-HUG/dejajs-components/commit/718408f3fa4d02d2ef13772902e88b8820af0285))
@@ -129,10 +130,6 @@
 
 ##### Tests
 
-* **DejaGrid:**
-  * Improve unit test ([1e1ae0ce](https://github.com/DSI-HUG/dejajs-components/commit/1e1ae0ceaf43f57436573bf5af8b002b59cc5b94))
-  * Improve unit test ([72c6ac49](https://github.com/DSI-HUG/dejajs-components/commit/72c6ac49861bd2b5695689439b39c1395f2f12e2))
-  * Added unit test ([9650633a](https://github.com/DSI-HUG/dejajs-components/commit/9650633a7fd50beb924ba7d896683f78ce253289))
 * **DejaEditable:** Add unit test ([4d9434c3](https://github.com/DSI-HUG/dejajs-components/commit/4d9434c378341d3f3abde8cde0de008d795dfd1f))
 * **Graphics:**
   * Improve unit test ([99158c83](https://github.com/DSI-HUG/dejajs-components/commit/99158c83ce9a9bdaca66683c26fbb1f89f83db68))
