@@ -17,7 +17,7 @@
 		<ng-template [ngTemplateOutlet]="matError"></ng-template>
 	</mat-error>
 </mat-form-field>
-<deja-overlay #dejaOverlay [ownerElement]="overlayOwnerElement" [isVisible]="_showDropDown" (closed)="close()" [positions]="positions" [overlayOffsetY]="overlayOffsetY" [overlayOffsetX]="overlayOffsetX">
+<deja-overlay #dejaOverlay [ownerElement]="overlayOwnerElement" [isVisible]="showDropDown" (closed)="close()" [positions]="positions" [overlayOffsetY]="overlayOffsetY" [overlayOffsetX]="overlayOffsetX">
     <deja-date-time-selector
 		[time]="time"
 		[disableDates]="disableDates"

@@ -227,9 +227,9 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
     // ************* End of ControlValueAccessor Implementation **************
 
     /**
-     * @param {number} month (attention : Janvier = 0, Décembre = 11)
-     * @param {number} year
-     * @return {IDateSelectorItem[]} Jours du mois au format IDateSelectorItem
+     * @param month (attention : Janvier = 0, Décembre = 11)
+     * @param year
+     * @return Jours du mois au format IDateSelectorItem
      */
     public getAllDaysInMonth(month: number, year: number): IDateSelectorItem[] {
         const days: IDateSelectorItem[] = [];
@@ -414,11 +414,11 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
     /**
      * Vérifie si la date passée en param est désactivée.
      *
-     * @param {Date} date
-     * @return {boolean} sera false si this.disableDates n'existe pas / n'est pas un tableau,
-     *                   si la date envoyée en param est valide,
-     *                   si la date est superieure a dateMax
-     *                   ou si la date est inférieure a dateMin
+     * @param date
+     * @return sera false si this.disableDates n'existe pas / n'est pas un tableau,
+     *         si la date envoyée en param est valide,
+     *         si la date est superieure a dateMax
+     *         ou si la date est inférieure a dateMin
      */
     private isDisabledDate(date: Date): boolean {
         if (this._disabled) {
@@ -448,8 +448,8 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
      * Fonction récursive. Si le jour séléctionné + num est invalide, la fonction
      * se rappelle pour séléctionner le jour suivant (ou précédent)
      *
-     * @param {Date} date
-     * @param {number} num : nombre de jours à ajouter à date.
+     * @param date
+     * @param num : nombre de jours à ajouter à date.
      */
     private setDateIfPossible(date: Date, num: number): void {
         const d = new Date(date);
@@ -470,8 +470,8 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
      * Fonction récursive. Si le mois séléctionné + num est invalide, la fonction
      * se rappelle pour séléctionner le jour suivant (ou précédent)
      *
-     * @param {Date} date
-     * @param {number} num : nombre de mois à ajouter à date.
+     * @param date
+     * @param num : nombre de mois à ajouter à date.
      */
     private setMonthIfPossible(date: Date, num: number): void {
         const d = new Date(date);
@@ -490,8 +490,8 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
      * Fonction récursive. Si l'année séléctionné + num est invalide, la fonction
      * se rappelle pour séléctionner le jour suivant (ou précédent)
      *
-     * @param {Date} date
-     * @param {number} num : nombre de jours à ajouter à date.
+     * @param date
+     * @param num : nombre de jours à ajouter à date.
      */
     private setYearIfPossible(date: Date, num: number): void {
         const d = new Date(date);

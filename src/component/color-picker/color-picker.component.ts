@@ -12,7 +12,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Even
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Color } from '../../common/core/graphics/color';
 import { DejaConnectionPositionPair } from '../../common/core/overlay/connection-position-pair';
-import { MaterialColor } from '../../common/core/style';
 import {DejaOverlayComponent} from '../overlay/overlay.component';
 
 const noop = () => { };
@@ -28,10 +27,12 @@ const noop = () => { };
 })
 export class DejaColorPickerComponent implements ControlValueAccessor, OnDestroy {
     /** Retourne ou definit les couleurs selectionables affichées. */
-    @Input() public colors: MaterialColor[];
+    @Input() public colors: Color[];
 
     /** Retourne ou definit si la partie déroulante est visible. */
     @Input() public isOpen = false;
+
+    @Input() public resetcolor: string = null;
 
     /** Déclenché lorsqu'une couleur est survolée par la souris. */
     @Output() public colorhover = new EventEmitter();
@@ -65,7 +66,6 @@ export class DejaColorPickerComponent implements ControlValueAccessor, OnDestroy
         if (this._control) {
             this._control.valueAccessor = this;
         }
-
         this.ownerElement = elementRef.nativeElement;
     }
 

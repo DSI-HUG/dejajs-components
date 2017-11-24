@@ -58,8 +58,8 @@ export class ReactiveFormDemoComponent implements AfterContentInit, OnInit, OnDe
         'Watermelon',
     ];
 
+    protected countries: Observable<Country[]>;
     private _readonly = false;
-    private countries: Observable<Country[]>;
 
     private valueChanges$sub: Subscription;
     private user$sub: Subscription;

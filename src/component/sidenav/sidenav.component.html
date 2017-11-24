@@ -1,7 +1,7 @@
 <mat-sidenav-container fxFlex [class.sidenav-hidden]="hidden" [class.sidenav-light]="!hidden && !sidenav.opened">
     <mat-sidenav #sidenav mode="side" fxLayout="column" opened>
         <mat-toolbar class="header">
-            <mat-icon class="header-icon">face</mat-icon>
+            <mat-icon class="header-icon">{{headerIcon}}</mat-icon>
             <span class="header-text">{{headerText}}</span>
             <span fxFlex></span>
             <button mat-icon-button class="header-menu-btn" (click)="sidenav.toggle()">

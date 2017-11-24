@@ -261,7 +261,7 @@ export class ViewPortService implements OnDestroy {
         const calcAutoSizeViewPort$ = (items: IViewPortItem[], containerSize: number, scrollPos: number, element: HTMLElement, itemDefaultSize: number, ensureParams: IEnsureParams, isCalculation?: boolean): Observable<IViewPort> => {
             // consoleLog(`calcAutoSizeViewPort`);
             return calcVariableSizeViewPort$(items, containerSize, scrollPos, itemDefaultSize, ensureParams)
-                .switchMap((viewPort) => {
+                .switchMap((viewPort: IViewPort) => {
                     const calculationRequired = !isCalculation && viewPort.visibleItems.find((item) => !item.size);
 
                     if (!calculationRequired) {
@@ -281,6 +281,8 @@ export class ViewPortService implements OnDestroy {
                                         item.size = clientSize(itemElement);
                                     }
                                 }
+                                // Recalc Viewport size
+                                viewPort.viewPortSize = viewPort.visibleItems.reduce((size, item) => size += item.size || itemDefaultSize, 0);
                             })
                             .switchMap(() => calcVariableSizeViewPort$(items, containerSize, viewPort.scrollPos || scrollPos, itemDefaultSize, ensureParams));
                     }
@@ -426,7 +428,7 @@ export class ViewPortService implements OnDestroy {
                                 index: items.length - 1,
                                 atEnd: true,
                             } as IEnsureParams, true);
-                        } else if (this.mode === ViewportMode.auto && viewPort.listSize < listSize) {
+                        } else if (this.mode === ViewportMode.auto && viewPort.viewPortSize < listSize) {
                             // Rendered viewport is to small, render again to complete
                             return calcViewPort$(items, maxSize, 0, element, itemDefaultSize, {
                                 index: items.length - 1,

@@ -11,7 +11,9 @@ deja-select {
 
 	#input {
 		width: 100%;
-
+        .mat-input-infix {
+            width: 100%;
+        }
 		.mat-input-suffix {
 			[matSuffix] {
 				display: table-cell;

@@ -17,8 +17,8 @@ export class UnitValue {
     constructor(value?: number | string, unit?: string) {
         if (typeof value === 'string') {
             const match = value.match(/([0-9\.]+)(.*)/);
-            this.value = match.length >= 2 && parseInt(match[1], 10);
-            this.unit = match.length >= 3 &&  match[2];
+            this.value = match && match.length >= 2 && parseInt(match[1], 10);
+            this.unit = match && match.length >= 3 &&  match[2];
         } else {
             this.value = value;
             this.unit = unit;
@@ -34,6 +34,6 @@ export class UnitValue {
     }
 
     public isInvalid() {
-        return this.value && isNaN(this.value);
+        return this.value === undefined || this.value === null || isNaN(this.value);
     }
 }

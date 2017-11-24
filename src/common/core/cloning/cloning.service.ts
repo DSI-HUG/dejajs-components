@@ -42,6 +42,10 @@ export class CloningService {
                     return src;
                 }
 
+                if (src instanceof Date) {
+                    return new Date(src.getTime());
+                }
+
                 if (!tgt) {
                     tgt = new src.constructor();
                 }

@@ -27,7 +27,7 @@ export class DejaAccordionComponent {
     /**
      * Add a group to the current Accordion Component
      *
-     * @param {DejaAccordionGroupComponent} group
+     * @param group
      */
     public addGroup(group: DejaAccordionGroupComponent): void {
         this.groups.push(group);
@@ -60,7 +60,7 @@ export class DejaAccordionGroupComponent {
      * Subscription to "click" event.
      * Check if click is on header and then it toggle the group.
      *
-     * @param {MouseEvent} event
+     * @param event
      */
     @HostListener('click', ['$event'])
     public toggleOpen(event: MouseEvent): void {

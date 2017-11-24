@@ -18,7 +18,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { DejaClipboardService } from '../../common/core/clipboard/clipboard.service';
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
-import { GroupingService } from '../../common/core/grouping';
+import { GroupingService } from '../../common/core/grouping/index';
 import { IItemBase } from '../../common/core/item-list/item-base';
 import { DejaItemEvent } from '../../common/core/item-list/item-event';
 import { ItemListBase } from '../../common/core/item-list/item-list-base';
@@ -29,7 +29,7 @@ import { ViewportMode } from '../../common/core/item-list/viewport.service';
 import { IViewPort } from '../../common/core/item-list/viewport.service';
 import { ViewPortService } from '../../common/core/item-list/viewport.service';
 import { KeyCodes } from '../../common/core/keycodes.enum';
-import { SortingService } from '../../common/core/sorting';
+import { SortingService } from '../../common/core/sorting/index';
 import { DejaChildValidatorDirective } from '../../common/core/validation/child-validator.directive';
 import { IDejaDragEvent } from '../dragdrop';
 import { DejaItemComponent } from './../../common/core/item-list/item.component';
@@ -277,7 +277,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
 
     /** Définit la hauteur d'une ligne pour le calcul du viewport en pixels (la valeur par défaut sera utilisée si aucune valeur n'est setté). */
     @Input()
-    public set viewPortRowHeight(value: number) {
+    public set viewPortRowHeight(value: number | string) {
         this.setViewPortRowHeight(value);
     }
 
@@ -287,7 +287,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
      * est suceptible de contenir beaucoup d'éléments.
      */
     @Input()
-    public set viewportMode(mode: ViewportMode) {
+    public set viewportMode(mode: ViewportMode | string) {
         this.setViewportMode(mode);
     }
 

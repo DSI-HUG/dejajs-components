@@ -67,6 +67,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
 
     /** Internal use */
     public overlayOwnerElement: HTMLElement;
+    public date = new Date();
 
     @ViewChild(DejaChildValidatorDirective) private inputValidatorDirective: DejaChildValidatorDirective;
 
@@ -80,8 +81,6 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     private focus$ = new Subject();
     private _showDropDown = false;
     private _positions = DejaConnectionPositionPair.default;
-
-    private date = new Date();
 
     private _inputModel;
     private cursorPosition: number;
@@ -371,7 +370,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
      * Called when user click on the input of this component.
      * If click is located on mat-icon 'calendar' who is in the matPrefix of mat-input-container, the picker show off.
      *
-     * @param {Event} event
+     * @param event
      */
     protected toggleDateSelector(event: Event) {
         if (this.disabled) {
@@ -391,9 +390,9 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     /**
      * ngModelChange of date-selector.
      *
-     * @param {Date} newDate Date to set.
+     * @param newDate Date to set.
      */
-    protected onDateChange(newDate: Date) {
+    public onDateChange(newDate: Date) {
         this.value = newDate;
         // TODO
         // if (this.value.getHours() === newDate.getHours() && this.value.getMinutes() === newDate.getMinutes() && this.value.getSeconds() === newDate.getSeconds()) {
@@ -404,7 +403,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     /**
      * Called when input change. If it's a string it's because user set the date manually. So we need to convert it into date with MomentJs.
      *
-     * @param {string | Date} date new value of this model
+     * @param date new value of this model
      */
     public updateModel(date: string | Date) {
         if (typeof date === 'string' && date.replace(/_/g, '').length === this._format.length) {

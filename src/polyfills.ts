@@ -52,4 +52,3 @@ import 'custom-event-polyfill/custom-event-polyfill';
 // NgClass on SVG elements
 // Needed for: IE10, IE11
 // import 'classlist.js';
-

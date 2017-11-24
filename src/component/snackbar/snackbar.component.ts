@@ -7,6 +7,7 @@
  */
 
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import 'rxjs/add/operator/debounce';
 import 'rxjs/add/operator/delay';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -30,131 +31,76 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * all snackbar instances
-     *
-     * @private
-     * @static
-     * @type {Array<DejaSnackbarComponent>}
-     * @memberOf DejaSnackbarComponent
      */
     private static instances: DejaSnackbarComponent[];
 
     /**
      * inner container
-     *
-     * @memberOf DejaSnackbarComponent
      */
     // @ViewChild('container') public host;
 
     /**
      * specify delay for the enter animation
-     *
-     * @type {number}
-     * @memberOf DejaSnackbarComponent
      */
     @Input() public delay = 0;
 
     /**
      * specify lifetime of the snackbar on the screen
-     *
-     * @type {number}
-     * @memberOf DejaSnackbarComponent
      */
     @Input() public duration = 0;
 
     /**
      * set a container for the snackbar instead of default behavior (viewport)
-     *
-     * @type {HTMLElement}
-     * @memberOf DejaSnackbarComponent
      */
     @Input() public outerContainerElement: HTMLElement;
 
     /**
      * callback used to negate the boolean responsible for the presence of the snackbar on the dom (see demo)
-     *
-     * @type {EventEmitter<any>}
-     * @memberOf DejaSnackbarComponent
      */
     @Output() public onAnimationDone: EventEmitter<any> = new EventEmitter();
 
     /**
      * inner container element, represent the snackbar since the host has no height width and a position relative to it's html declaration
-     *
-     * @private
-     * @type {HTMLElement}
-     * @memberOf DejaSnackbarComponent
      */
     private host: HTMLElement;
 
     /**
      * height of the inner container element
-     *
-     * @private
-     * @type {number}
-     * @memberOf DejaSnackbarComponent
      */
     private height: number;
 
     /**
      * vertical space between snackbar
-     *
-     * @private
-     * @type {number}
-     * @memberOf DejaSnackbarComponent
      */
     private marginTop = 6;
 
     /**
      * snackbar creation timestamp, used for calculation, forthe adapt animation
-     *
-     * @private
-     * @type {number}
-     * @memberOf DejaSnackbarComponent
      */
     private timestamp: number = +new Date();
 
     /**
      * enter animation duration
-     *
-     * @private
-     * @type {number}
-     * @memberOf DejaSnackbarComponent
      */
     private enterAnimationDuration = 350;
 
     /**
      * leave animation duration
-     *
-     * @private
-     * @type {number}
-     * @memberOf DejaSnackbarComponent
      */
     private leaveAnimationDuration = 175;
 
     /**
      * adapt animation duration
-     *
-     * @private
-     * @type {number}
-     * @memberOf DejaSnackbarComponent
      */
     private adaptAnimationDuration = 225;
 
     /**
      * string representation of the alignment, used for statements and initial final position
-     *
-     * @private
-     * @type {string}
-     * @memberOf DejaSnackbarComponent
      */
     private anchor: string;
 
     /**
      * object representation of the alignment, used to filter incompatible alignments and build the string representation
-     *
-     * @private
-     * @type {{ top: boolean, right: boolean, bottom: boolean, left: boolean }}
-     * @memberOf DejaSnackbarComponent
      */
     private alignents: { top: boolean; right: boolean; bottom: boolean; left: boolean };
 
@@ -163,8 +109,6 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * alignents setter
-     *
-     * @memberOf DejaSnackbarComponent
      */
     @Input() public set alignment(value: string) {
         this.alignents = {
@@ -189,10 +133,8 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Creates an instance of DejaSnackbarComponent.
      *
-     * @param {ElementRef} elementRef
-     * @param {Renderer} renderer
-     *
-     * @memberOf DejaSnackbarComponent
+     * @param elementRef
+     * @param renderer
      */
     constructor(private elementRef: ElementRef) {
         if (!DejaSnackbarComponent.instances) {
@@ -228,9 +170,7 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * used to recalculate the position of the snackbar on the X axis when resizing / changing from landscape to portrait and vice versa
      *
-     * @param {any} event
-     *
-     * @memberOf DejaSnackbarComponent
+     * @param event
      */
     @HostListener('window:resize', ['$event']) public onResize() {
         this.setNewWidth();
@@ -238,8 +178,6 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * onInit hook
-     *
-     * @memberOf DejaSnackbarComponent
      */
     public ngOnInit(): void {
         // Choose animation depending on alignment
@@ -266,9 +204,6 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * afterviewInit hook
-     *
-     *
-     * @memberOf DejaSnackbarComponent
      */
     public ngAfterViewInit(): void {
         this.host = this.elementRef.nativeElement as HTMLElement;
@@ -299,8 +234,6 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * onDestroy hook
-     *
-     * @memberOf DejaSnackbarComponent
      */
     public ngOnDestroy(): void {
         // check if snackbars have to move (if they were created after the one deleted)
@@ -324,10 +257,7 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * emit animation done
      *
-     * @protected
-     * @param {Event} event
-     *
-     * @memberOf DejaSnackbarComponent
+     * @param event
      */
     protected animationDone(event: Event): void {
         this.onAnimationDone.emit(event);
@@ -346,10 +276,7 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * compute cumulated height of all snackbars, precedent instance height, width and height of the innerContainer
      *
-     * @private
-     * @returns
-     *
-     * @memberOf DejaSnackbarComponent
+     * @return cumulated height of all snackbars, precedent instance height, width and height of the innerContainer
      */
     private computePosition(): any {
         // Inner container
@@ -395,10 +322,6 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * set the final position of the snackbar
-     *
-     * @private
-     *
-     * @memberOf DejaSnackbarComponent
      */
     private setPosition(): void {
 
@@ -442,10 +365,6 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * recalculate X position for the snackbar (see @HostListener)
-     *
-     * @private
-     *
-     * @memberOf DejaSnackbarComponent
      */
     private setNewWidth(): void {
         const { innerContainerWidth } = this.computePosition();
@@ -463,10 +382,7 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
      * there is also a known bug, if you close a snackbar which share anchor and container with an other one created at the same moment
      * adaptation of the position will not be performed correctly, see demo for more information about how to avoid this behavior
      *
-     * @private
-     * @param {number} height
-     *
-     * @memberOf DejaSnackbarComponent
+     * @param height
      */
     private launchAdaptAnimation(height: number) {
 
@@ -495,10 +411,6 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * launch enter animation (snackbar instanciation trigger this method)
-     *
-     * @private
-     *
-     * @memberOf DejaSnackbarComponent
      */
     private launchEnterAnimation() {
         let direction = -1;
@@ -523,10 +435,6 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * launch leave animation (snackbar lifetime flow trigger this animation)
-     *
-     * @private
-     *
-     * @memberOf DejaSnackbarComponent
      */
     private launchLeaveAnimation() {
         this.animate$.next({
