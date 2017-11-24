@@ -354,8 +354,39 @@ const FRUCTS_COLUMNS = [
     },
 ] as IDejaGridColumn[];
 
+const PERCENT_COLUMNS = [
+    {
+        label: 'Color',
+        name: 'color',
+        width: '20%',
+        useCellTemplate: true,
+    },
+    {
+        label: 'Name',
+        name: 'name',
+        width: '20%',
+    },
+    {
+        label: 'Vitamin A',
+        name: 'VitaminA',
+        width: '20%',
+    },
+    {
+        label: 'Vitamin B1',
+        name: 'VitaminB1',
+        width: '100px',
+        responsive: true,
+    },
+    {
+        label: 'Vitamin B2',
+        name: 'VitaminB2',
+        width: '100px',
+        responsive: true,
+    },
+] as IDejaGridColumn[];
+
 @Component({
-    template: `<deja-grid style="height: 1000px;width: 1000px;" [rows]="fructs" [columns]="fructsColumns" valueField="value" selectedItem="mango" maxHeight="auto" sortable searchArea groupArea rowsDraggable rowsSortable columnsDraggable columnsSortable columnsSizable multiSelect>
+    template: `<deja-grid style="height: 1000px;width: 1000px;" [rows]="fructs" [columns]="columns" valueField="value" selectedItem="mango" maxHeight="auto" sortable searchArea groupArea rowsDraggable rowsSortable columnsDraggable columnsSortable columnsSizable multiSelect>
                     <ng-template #cellTemplate let-row let-column="column">
                         <span *ngIf="column.name==='color'" class="color" [style.background-color]="row[column.name]"></span>
                     </ng-template>
@@ -367,8 +398,11 @@ const FRUCTS_COLUMNS = [
 class DejaGridContainerComponent {
     public fructs = FRUCTS;
     public fructsColumns = FRUCTS_COLUMNS;
+    public percentColumns = PERCENT_COLUMNS;
+    public columns: any[];
 
     constructor() {
+        this.columns = this.fructsColumns;
     }
 }
 
@@ -537,7 +571,7 @@ describe('DejaGridComponent', () => {
                         expect(vp.visibleItems.length).toBe(12);
                         expect(gridInstance.currentColumn).toBeDefined();
                         expect(gridInstance.currentColumn.name).toEqual('VitaminB2');
-                        expect(listElement.scrollLeft).toBe(250);
+                        expect(listElement.scrollLeft).toBeGreaterThanOrEqual(250);
                         expect(currentCells.length).toBe(12);
                         expect(currentCells[0] && currentCells[0].attributes.colindex).toBe('4');
                         expect(currentRow.length).toBe(1);
@@ -599,16 +633,30 @@ describe('DejaGridComponent', () => {
 
         const sendMouseClick = (element: DebugElement) => {
             // Simulate a mouse click on the header
-            const event = document.createEvent('MouseEvents') as MouseEvent;
             const gridHeader = fixture.debugElement.query(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header'));
-            event.initMouseEvent('mousedown', true, true, document.defaultView, 0, 0, 0, 0, 0, false, false, false, false, 1, gridHeader.nativeElement);
+            const eventInit = () => ({
+                bubbles: true,
+                cancelable: true,
+                view: document.defaultView,
+                altKey: false,
+                ctrlKey: false,
+                metaKey: false,
+                shiftKey: false,
+                button: 0,
+                buttons: 1,
+                clientX: 0,
+                clientY: 0,
+                relatedTarget: gridHeader.nativeElement,
+                screenX: 0,
+                screenY: 0,
+            } as MouseEventInit);
+            const event = new MouseEvent('mousedown', eventInit());
             element.nativeElement.dispatchEvent(event);
             fixture.detectChanges();
             Observable.timer(100)
                 .first()
                 .subscribe(() => {
-                    const upEvent = document.createEvent('MouseEvents') as MouseEvent;
-                    upEvent.initMouseEvent('mouseup', true, true, document.defaultView, 0, 0, 0, 0, 0, false, false, false, false, 1, gridHeader.nativeElement);
+                    const upEvent = new MouseEvent('mouseup', eventInit());
                     element.nativeElement.dispatchEvent(upEvent);
                     gridInstance.refreshViewPort();
                     fixture.detectChanges();
@@ -631,26 +679,203 @@ describe('DejaGridComponent', () => {
                         }
                         break;
 
-                    case 2:
-                        // debugger;
-                        // expect(vp.visibleItems.length).toBe(24);
-                        // expect(groupChips.length).toBe(1);
-                        // if (groupChips.length) {
-                        //     groupChips[0].nativeElement.click();
-                        //     gridInstance.refresh();
-                        //     fixture.detectChanges();
-                        // }
-                        break;
-
                     default:
-                        // expect(groupChips.length).toBe(0);
-                        // expect(vp.visibleItems.length).toBe(12);
+                        expect((<any>vp.items[0]).name).toEqual('Banana');
+                        expect((<any>vp.items[8]).name).toEqual('Mango');
                         break;
                 }
             });
 
         fixture.detectChanges();
     }));
+
+    it('should size the column when user click on the header separator', async(() => {
+        const fixture = TestBed.createComponent(DejaGridContainerComponent);
+        const gridContainerInstance = fixture.componentInstance as DejaGridContainerComponent;
+        const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
+        const gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
+        let pass = 0;
+
+        const sendMouseMove = (element: DebugElement) => {
+            // Simulate a mouse click on the header
+            const gridHeader = fixture.debugElement.query(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header'));
+            const eventInit = () => ({
+                bubbles: true,
+                cancelable: true,
+                view: document.defaultView,
+                altKey: false,
+                ctrlKey: false,
+                metaKey: false,
+                shiftKey: false,
+                button: 0,
+                buttons: 1,
+                clientX: 0,
+                clientY: 0,
+                relatedTarget: gridHeader.nativeElement,
+                screenX: 0,
+                screenY: 0,
+            } as MouseEventInit);
+            const event = new MouseEvent('mousedown', eventInit());
+            element.nativeElement.dispatchEvent(event);
+            fixture.detectChanges();
+            Observable.timer(100)
+                .first()
+                .do(() => {
+                    const ei = eventInit();
+                    ei.screenX = 100;
+                    const moveEvent = new MouseEvent('mousemove', ei);
+                    element.nativeElement.dispatchEvent(moveEvent);
+                    fixture.detectChanges();
+                })
+                .delay(100)
+                .subscribe(() => {
+                    const ei = eventInit();
+                    ei.screenX = 100;
+                    const upEvent = new MouseEvent('mouseup', ei);
+                    element.nativeElement.dispatchEvent(upEvent);
+                    gridInstance.refreshViewPort();
+                    fixture.detectChanges();
+                });
+        };
+
+        observeViewPort$(fixture)
+            .debounceTime(10)
+            .subscribe((vp) => {
+                // Bind view port
+                fixture.detectChanges();
+                const columnSeparators = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header [separator]'));
+                const cells = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > .deja-listcontainer .cell-wrapper'));
+
+                switch (++pass) {
+                    case 1:
+                        expect(vp.visibleItems.length).toBe(12);
+                        expect(columnSeparators.length).toBeGreaterThan(0);
+                        if (columnSeparators.length) {
+                            sendMouseMove(columnSeparators[1]);
+                        }
+                        break;
+
+                    case 2:
+                        expect(cells[1].nativeElement.clientWidth).toBe(350);
+                        gridContainerInstance.columns = gridContainerInstance.percentColumns;
+                        sendMouseMove(columnSeparators[2]);
+                        gridInstance.refreshViewPort();
+                        fixture.detectChanges();
+                        break;
+
+                    default:
+                        expect(cells[2].nativeElement.clientWidth).toBe(266);
+                        break;
+                }
+            });
+
+        fixture.detectChanges();
+    }));
+
+    it('should refresh view port if windows is resized', async(() => {
+        let pass = 0;
+        const fixture = TestBed.createComponent(DejaGridContainerComponent);
+        const gridContainerInstance = fixture.componentInstance as DejaGridContainerComponent;
+
+        observeViewPort$(fixture)
+            .debounceTime(10)
+            .subscribe((_vp) => {
+                // Bind view port
+                fixture.detectChanges();
+                // const cells = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > .deja-listcontainer .cell-wrapper'));
+
+                switch (++pass) {
+                    case 1:
+                        const event = new Event('resize', {});
+                        window.dispatchEvent(event);
+                        break;
+
+                    default:
+                        debugger;
+
+                }
+            });
+
+        gridContainerInstance.columns = gridContainerInstance.percentColumns;
+        fixture.detectChanges();
+    }));
+
+
+    // it('should able to resize percent columns when control is resized', async(() => {
+    //     const fixture = TestBed.createComponent(DejaGridContainerComponent);
+    //     const gridContainerInstance = fixture.componentInstance as DejaGridContainerComponent;
+    //     const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
+    //     const gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
+    //     let pass = 0;
+
+    //     const sendMouseMove = (element: DebugElement) => {
+    //         // Simulate a mouse click on the header
+    //         const gridHeader = fixture.debugElement.query(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header'));
+    //         const eventInit = () => ({
+    //             bubbles: true,
+    //             cancelable: true,
+    //             view: document.defaultView,
+    //             altKey: false,
+    //             ctrlKey: false,
+    //             metaKey: false,
+    //             shiftKey: false,
+    //             button: 0,
+    //             buttons: 1,
+    //             clientX: 0,
+    //             clientY: 0,
+    //             relatedTarget: gridHeader.nativeElement,
+    //             screenX: 0,
+    //             screenY: 0,
+    //         } as MouseEventInit);
+    //         const event = new MouseEvent('mousedown', eventInit());
+    //         element.nativeElement.dispatchEvent(event);
+    //         fixture.detectChanges();
+    //         Observable.timer(100)
+    //             .first()
+    //             .do(() => {
+    //                 const ei = eventInit();
+    //                 ei.screenX = 100;
+    //                 const moveEvent = new MouseEvent('mousemove', ei);
+    //                 element.nativeElement.dispatchEvent(moveEvent);
+    //                 fixture.detectChanges();
+    //             })
+    //             .delay(100)
+    //             .subscribe(() => {
+    //                 const ei = eventInit();
+    //                 ei.screenX = 100;
+    //                 const upEvent = new MouseEvent('mouseup', ei);
+    //                 element.nativeElement.dispatchEvent(upEvent);
+    //                 gridInstance.refreshViewPort();
+    //                 fixture.detectChanges();
+    //             });
+    //     };
+
+    //     observeViewPort$(fixture)
+    //         .debounceTime(10)
+    //         .subscribe((vp) => {
+    //             // Bind view port
+    //             fixture.detectChanges();
+    //             const columnSeparators = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header [separator]'));
+    //             const cells = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > .deja-listcontainer .cell-wrapper'));
+
+    //             switch (++pass) {
+    //                 case 1:
+    //                     expect(vp.visibleItems.length).toBe(12);
+    //                     expect(columnSeparators.length).toBeGreaterThan(0);
+    //                     if (columnSeparators.length) {
+    //                         sendMouseMove(columnSeparators[1]);
+    //                     }
+    //                     break;
+
+    //                 default:
+    //                     expect(cells[1].nativeElement.clientWidth).toBe(367);
+    //                     break;
+    //             }
+    //         });
+
+    //     gridContainerInstance.columns = gridContainerInstance.percentColumns;
+    //     fixture.detectChanges();
+    // }));
 
     // it('should return the write item class', (() => {
     //     const fixture = TestBed.createComponent(DejaGridContainerComponent);
