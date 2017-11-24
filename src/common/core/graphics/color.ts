@@ -291,12 +291,18 @@ export class Color {
     }
 
     public get bestTextColor() {
+        if (this.isEmpty()) {
+            return new Color();
+        }
         const a = 1 - (0.299 * this.r + 0.587 * this.g + 0.114 * this.b) / 255;
         const d = a < 0.5 ? 0 : 255;
         return new Color(d, d, d, this.a);
     }
 
     public get grayScale() {
+        if (this.isEmpty()) {
+            return new Color();
+        }
         const g = Math.round((this.r + this.g + this.b) / 3);
         return new Color(g, g, g, this.a);
     }
