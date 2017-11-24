@@ -1037,15 +1037,29 @@ describe('DejaTreeListByOptionsContainerComponent', () => {
 
         const sendMouseClick = (element: DebugElement, shiftKey?: boolean, ctrlKey?: boolean, upElement?: DebugElement) => {
             // Simulate a mouse click
-            const event = document.createEvent('MouseEvents') as MouseEvent;
-            event.initMouseEvent('mousedown', true, true, document.defaultView, 0, 0, 0, 0, 0, ctrlKey, false, shiftKey, false, 0, listElement.nativeElement);
+            const eventInit = () => ({
+                bubbles: true,
+                cancelable: true,
+                view: document.defaultView,
+                altKey: false,
+                ctrlKey: ctrlKey,
+                metaKey: false,
+                shiftKey: shiftKey,
+                button: 0,
+                buttons: 1,
+                clientX: 0,
+                clientY: 0,
+                relatedTarget: listElement.nativeElement,
+                screenX: 0,
+                screenY: 0,
+            } as MouseEventInit);
+            const event = new MouseEvent('mousedown', eventInit());
             element.nativeElement.dispatchEvent(event);
             fixture.detectChanges();
             Observable.timer(100)
                 .first()
                 .subscribe(() => {
-                    const upEvent = document.createEvent('MouseEvents') as MouseEvent;
-                    upEvent.initMouseEvent('mouseup', true, true, document.defaultView, 0, 0, 0, 0, 0, ctrlKey, false, shiftKey, false, 0, listElement.nativeElement);
+                    const upEvent = new MouseEvent('mouseup', eventInit());
                     (upElement || element).nativeElement.dispatchEvent(upEvent);
                     treeListInstance.refreshViewPort();
                     fixture.detectChanges();
