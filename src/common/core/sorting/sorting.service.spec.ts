@@ -200,6 +200,21 @@ describe('SortingService', () => {
             });
     });
 
+    it('Should, sort by date when type date is specified', () => {
+        const si = {
+            name: 'date',
+            order: SortOrder.ascending,
+            type: 'date',
+        } as ISortInfos;
+
+        service.sort$(fructs, si)
+            .first()
+            .subscribe((sorted) => {
+                expect(sorted.length).toBe(fructs.length);
+                sorted.forEach((value, i) => expect(value.value).toEqual(i));
+            });
+    });
+
     it('Should, sort a tree', () => {
         const si = [{
             name: 'name',
