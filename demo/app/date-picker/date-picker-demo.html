@@ -84,7 +84,7 @@
                 </div>
                 <div fxFlex="1 1 auto">
                     <h3>Time Picker :</h3>
-                    <deja-date-picker [disableDates]="disabledDate" [(ngModel)]="theTimePicker" [layout]="myLayout"></deja-date-picker>
+                    <deja-date-picker [disableDates]="disabledDate" [(ngModel)]="theTimePicker" [layout]="'timeonly'"></deja-date-picker>
                     <p>Selected date : {{theTimePicker | date:'HH:mm:ss'}}</p>
                 </div>
             </div>
@@ -95,26 +95,19 @@
                     <ul>
                         <li> Inside input :
                             <ul>
-                                <li>Press
-                                    <span class="keyboard-key">D</span> to select the current date.</li>
-                                <li>Press
-                                    <span class="keyboard-key">↑</span> to increase the selected number of 1 day.</li>
-                                <li>Press
-                                    <span class="keyboard-key">↓</span> to decrease the selected number of 1 day.</li>
+                                <li>Press<span class="keyboard-key">D</span> to select the current date.</li>
+                                <li>Press<span class="keyboard-key">↑</span> to increase the selected number of 1 day.</li>
+                                <li>Press<span class="keyboard-key">↓</span> to decrease the selected number of 1 day.</li>
                             </ul>
                         </li>
                     </ul>
                     <ul>
                         <li> Inside date selector :
                             <ul>
-                                <li>Press
-                                    <span class="keyboard-key">↑</span> to decrease the selected date of 7 day.</li>
-                                <li>Press
-                                    <span class="keyboard-key">↓</span> to increase the selected date of 7 day.</li>
-                                <li>Press
-                                    <span class="keyboard-key">←</span> to decrease the selected date of 1 day.</li>
-                                <li>Press
-                                    <span class="keyboard-key">→</span> to increase the selected date of 1 day.</li>
+                                <li>Press<span class="keyboard-key">↑</span> to decrease the selected date of 7 day.</li>
+                                <li>Press<span class="keyboard-key">↓</span> to increase the selected date of 7 day.</li>
+                                <li>Press<span class="keyboard-key">←</span> to decrease the selected date of 1 day.</li>
+                                <li>Press<span class="keyboard-key">→</span> to increase the selected date of 1 day.</li>
                             </ul>
                         </li>
                     </ul>
@@ -139,9 +132,7 @@
                     <h3>DateTime Range Picker :</h3>
                     <deja-date-picker format="DD.MM.YYYY HH:mm" #dtfrom [disableDates]="disabledDate" [(ngModel)]="datetimeRangeFrom" time></deja-date-picker>
                     <deja-date-picker format="DD.MM.YYYY HH:mm" #dtto [disableDates]="disabledDate" [(ngModel)]="datetimeRangeTo" time></deja-date-picker>
-                    <p>
-                        Selected date : from {{datetimeRangeFrom | date:'yyyy-MM-dd HH:mm:ss'}} to {{datetimeRangeTo | date:'yyyy-MM-dd HH:mm:ss'}}
-                    </p>
+                    <p>Selected date : from {{datetimeRangeFrom | date:'yyyy-MM-dd HH:mm:ss'}} to {{datetimeRangeTo | date:'yyyy-MM-dd HH:mm:ss'}}</p>
                 </div>
             </div>
         </mat-card-content>

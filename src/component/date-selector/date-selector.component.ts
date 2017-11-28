@@ -6,10 +6,9 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Optional, Output, Self, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
@@ -107,10 +106,18 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
      * Component Layout
      */
     @Input()
-    public set layout(value: DateComponentLayout) {
+    public set layout(value: DateComponentLayout | string) {
         if (value) {
-            this.layoutId = value;
-            this.layoutClass = DateComponentLayout[value];
+            if(typeof value === 'string') {
+                this.layoutId = DateComponentLayout[value];
+                if(!this.layoutId) {
+                    throw new Error('Invalid type for DateComponentLayout');
+                }
+                this.layoutClass = value;
+            } else {
+                this.layoutId = value;
+                this.layoutClass = DateComponentLayout[value];
+            }
         }
         this.changeDetectorRef.markForCheck();
     }
@@ -225,21 +232,10 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
             if (this.selectedDate) {
                 const h = (value) ? value.getHours() : 0;
                 const m = (value) ? value.getMinutes() : 0;
-                if (value && (
-                    (!this.layoutId
-                        && this.selectedDate.toLocaleTimeString() !== value.toLocaleTimeString()
-                    )
-                    || (this.layoutId > 1
-                        && (
-                            (this.selectedDate.getHours() === 0 && this.selectedDate.getMinutes() === 0) && (h !== 0 && m !== 0)
-                            || (this.selectedDate.toLocaleDateString() !== value.toLocaleDateString())
-                        )
-                    )
-                )) {
+                if (value && ((!this.layoutId && this.selectedDate.toLocaleTimeString() !== value.toLocaleTimeString()) || (this.layoutId > 1 && ((this.selectedDate.getHours() === 0 && this.selectedDate.getMinutes() === 0) && (h !== 0 && m !== 0)|| (this.selectedDate.toLocaleDateString() !== value.toLocaleDateString()))))) {
                     value.setHours(this.selectedDate.getHours(), this.selectedDate.getMinutes(), this.selectedDate.getSeconds());
                 }
             }
-
             this.selectedDate = value;
             this._displayedDate = value || this._currentDate;
 

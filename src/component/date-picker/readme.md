@@ -75,9 +75,9 @@ Composant pour séléctionner une date sur un calendrier et l'affficher dans un 
 </tr>
 <tr>
     <td>layout</td>
-    <td>DateComponentLayout | number</td>
-    <td>DateOnly</td>
-    <td>Layout: DateOnly, DateTime, TimeOnly</td>
+    <td>DateComponentLayout | string</td>
+    <td>dateonly</td>
+    <td>Layout: dateonly, datetime, timeonly</td>
 </tr>
 </tbody>
 </table>

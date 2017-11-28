@@ -11,9 +11,8 @@ import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@an
 import { DateComponentLayout, DaysOfWeek, DejaDateSelectorComponent } from '../date-selector/date-selector.component';
 import { formatToMask, formatToUnitOfTime } from './format-to-mask';
 
-import * as moment_ from 'moment';
-
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import * as moment_ from 'moment';
 import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Subject } from 'rxjs/Subject';
@@ -264,11 +263,11 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     /** Init mask */
     public ngOnInit() {
         if (!this._format) {
-            if (!this.layoutId || this.layoutId === DateComponentLayout.dateonly) {
+            if (!this.layout || this.layout === DateComponentLayout.dateonly || this.layout === 'dateonly') {
                 this.format = 'YYYY-MM-DD';
-            } else if (this.layoutId === DateComponentLayout.datetime) {
+            } else if (this.layout === DateComponentLayout.datetime || this.layout === 'datetime') {
                 this.format = 'YYYY-MM-DD HH:mm';
-            } else if (this.layoutId === DateComponentLayout.timeonly) {
+            } else if (this.layout === DateComponentLayout.timeonly || this.layout === 'timeonly') {
                 this.format = 'HH:mm';
             } else {
                 this.format = 'YYYY-MM-DD';
@@ -308,13 +307,16 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
      * Component Layout
      */
     @Input()
-    public set layout(value: DateComponentLayout) {
+    public set layout(value: DateComponentLayout | string) {
         if (value) {
-            this.layoutId = value;
+            this._layout = value;
         }
         this.changeDetectorRef.markForCheck();
     }
-    public layoutId: number;
+    public _layout: number | string;
+    public get layout() {
+        return this._layout;
+    }
 
     /**
      * Time property setter. Can be string or empty so you can use it like : <deja-date-picker time></deja-date-picker>
