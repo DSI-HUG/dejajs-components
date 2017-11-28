@@ -27,7 +27,7 @@ export class DejaDroppableDirective implements OnDestroy {
         this._allEvents = coerceBooleanProperty(value);
     }
 
-    @HostBinding('attr.droppable') private droppable = null;
+    @HostBinding('attr.droppable') public droppable = null;
     private draginfokey = 'draginfos';
     private objectKey = 'object';
     private droppedKey = 'dropped';
@@ -66,7 +66,7 @@ export class DejaDroppableDirective implements OnDestroy {
                     }
                     inDrag = true;
 
-                    console.log('DejaDragEnter');
+                    // console.log('DejaDragEnter');
                     if (this.context.dragentercallback) {
                         const dragInfos = this.clipboardService.get(this.draginfokey) as { [key: string]: any };
                         const e = dragEvent as IDejaDropEvent;
@@ -85,7 +85,7 @@ export class DejaDroppableDirective implements OnDestroy {
                         Observable.fromEvent(element, 'drop')
                             .takeUntil(dragEnd$)
                             .subscribe((dropEvent: DragEvent) => {
-                                console.log('DejaDrop');
+                                // console.log('DejaDrop');
                                 if (this.context.dropcallback) {
                                     if (dragInfos) {
                                         const evt = dropEvent as IDejaDropEvent;
@@ -111,7 +111,7 @@ export class DejaDroppableDirective implements OnDestroy {
                         Observable.fromEvent(element, 'dragover')
                             .takeUntil(dragEnd$)
                             .subscribe((overEvent: DragEvent) => {
-                                console.log('DejaDragOver');
+                                // console.log('DejaDragOver');
                                 if (!this._allEvents && this.lastTarget && this.lastTarget === overEvent.target) {
                                     if (this.lastAccept) {
                                         overEvent.preventDefault();
@@ -144,7 +144,7 @@ export class DejaDroppableDirective implements OnDestroy {
                             });
                     }
                 } else {
-                    console.log('DejaDragLeave');
+                    // console.log('DejaDragLeave');
                     if (this.context.dragleavecallback) {
                         const e = new CustomEvent('DejaDragLeave', { cancelable: false });
                         this.context.dragleavecallback(e);

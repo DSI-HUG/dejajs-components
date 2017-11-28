@@ -247,7 +247,7 @@ export class DejaGridHeaderComponent implements OnDestroy {
             }
 
             const targetElement = this.getColumnElementFromHTMLElement(event.target as HTMLElement);
-            const targetBounds = targetElement.getBoundingClientRect();
+            const targetBounds = targetElement && targetElement.getBoundingClientRect();
             const targetIndex = targetElement && +targetElement.getAttribute('index');
             if (targetIndex === undefined) {
                 return;

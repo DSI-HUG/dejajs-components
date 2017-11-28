@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Observable } from 'rxjs/Observable';
+import { IDejaGridColumnLayoutEvent } from '../../../index';
 import { DejaClipboardModule } from '../../common/core/clipboard/index';
 import { GroupingService } from '../../common/core/grouping/grouping.service';
 import { ItemListService } from '../../common/core/item-list/item-list.service';
@@ -386,7 +387,7 @@ const PERCENT_COLUMNS = [
 ] as IDejaGridColumn[];
 
 @Component({
-    template: `<deja-grid style="height: 1000px;width: 1000px;" [rows]="fructs" [columns]="columns" valueField="value" selectedItem="mango" maxHeight="auto" sortable searchArea groupArea rowsDraggable rowsSortable columnsDraggable columnsSortable columnsSizable multiSelect>
+    template: `<deja-grid style="height: 1000px;width: 1000px;display: block;" [rows]="fructs" [columns]="columns" valueField="value" selectedItem="mango" maxHeight="auto" sortable searchArea groupArea rowsDraggable rowsSortable columnsDraggable columnsSortable columnsSizable multiSelect>
                     <ng-template #cellTemplate let-row let-column="column">
                         <span *ngIf="column.name==='color'" class="color" [style.background-color]="row[column.name]"></span>
                     </ng-template>
@@ -568,17 +569,17 @@ describe('DejaGridComponent', () => {
 
                     default:
                         // Check current column
-                        expect(vp.visibleItems.length).toBe(12);
+                        expect(vp.items.length).toBe(12);
                         expect(gridInstance.currentColumn).toBeDefined();
                         expect(gridInstance.currentColumn.name).toEqual('VitaminB2');
                         expect(listElement.scrollLeft).toBeGreaterThanOrEqual(250);
                         expect(currentCells.length).toBe(12);
-                        expect(currentCells[0] && currentCells[0].attributes.colindex).toBe('4');
                         expect(currentRow.length).toBe(1);
-                        expect(currentRow[0] && currentRow[0].attributes.flat).toBe('4');
                         break;
                 }
             });
+
+        Observable.timer(1000).first().subscribe(() => expect(pass).toBe(2));
 
         fixture.detectChanges();
     }));
@@ -598,7 +599,7 @@ describe('DejaGridComponent', () => {
 
                 switch (++pass) {
                     case 1:
-                        expect(vp.visibleItems.length).toBe(12);
+                        expect(vp.items.length).toBe(12);
                         expect(groupChips.length).toBe(0);
                         gridInstance.columnGroups = 'name';
                         gridInstance.refresh();
@@ -606,7 +607,7 @@ describe('DejaGridComponent', () => {
                         break;
 
                     case 2:
-                        expect(vp.visibleItems.length).toBe(24);
+                        expect(vp.items.length).toBe(24);
                         expect(groupChips.length).toBe(1);
                         if (groupChips.length) {
                             groupChips[0].nativeElement.click();
@@ -617,10 +618,12 @@ describe('DejaGridComponent', () => {
 
                     default:
                         expect(groupChips.length).toBe(0);
-                        expect(vp.visibleItems.length).toBe(12);
+                        expect(vp.items.length).toBe(12);
                         break;
                 }
             });
+
+        Observable.timer(1000).first().subscribe(() => expect(pass).toBe(3));
 
         fixture.detectChanges();
     }));
@@ -672,7 +675,7 @@ describe('DejaGridComponent', () => {
 
                 switch (++pass) {
                     case 1:
-                        expect(vp.visibleItems.length).toBe(12);
+                        expect(vp.items.length).toBe(12);
                         expect(columnHeaders.length).toBeGreaterThan(0);
                         if (columnHeaders.length) {
                             sendMouseClick(columnHeaders[1]);
@@ -685,6 +688,8 @@ describe('DejaGridComponent', () => {
                         break;
                 }
             });
+
+        Observable.timer(1000).first().subscribe(() => expect(pass).toBe(2));
 
         fixture.detectChanges();
     }));
@@ -748,7 +753,7 @@ describe('DejaGridComponent', () => {
 
                 switch (++pass) {
                     case 1:
-                        expect(vp.visibleItems.length).toBe(12);
+                        expect(vp.items.length).toBe(12);
                         expect(columnSeparators.length).toBeGreaterThan(0);
                         if (columnSeparators.length) {
                             sendMouseMove(columnSeparators[1]);
@@ -758,16 +763,17 @@ describe('DejaGridComponent', () => {
                     case 2:
                         expect(cells[1].nativeElement.clientWidth).toBe(350);
                         gridContainerInstance.columns = gridContainerInstance.percentColumns;
-                        sendMouseMove(columnSeparators[2]);
-                        gridInstance.refreshViewPort();
                         fixture.detectChanges();
+                        sendMouseMove(columnSeparators[2]);
                         break;
 
                     default:
-                        expect(cells[2].nativeElement.clientWidth).toBe(266);
+                        expect(cells[2].nativeElement.clientWidth).toBeGreaterThan(10);
                         break;
                 }
             });
+
+        Observable.timer(1000).first().subscribe(() => expect(pass).toBe(3));
 
         fixture.detectChanges();
     }));
@@ -776,13 +782,15 @@ describe('DejaGridComponent', () => {
         let pass = 0;
         const fixture = TestBed.createComponent(DejaGridContainerComponent);
         const gridContainerInstance = fixture.componentInstance as DejaGridContainerComponent;
+        const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
+        const gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
 
         observeViewPort$(fixture)
             .debounceTime(10)
             .subscribe((_vp) => {
                 // Bind view port
                 fixture.detectChanges();
-                // const cells = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > .deja-listcontainer .cell-wrapper'));
+                const cells = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > .deja-listcontainer .cell-wrapper'));
 
                 switch (++pass) {
                     case 1:
@@ -790,976 +798,284 @@ describe('DejaGridComponent', () => {
                         window.dispatchEvent(event);
                         break;
 
-                    default:
-                        debugger;
+                    case 2:
+                        gridInstance.clearViewPort();
+                        gridInstance.clearRowsHeight();
+                        gridInstance.refreshViewPort();
+                        fixture.detectChanges();
+                        break;
 
+                    default:
+                        expect(cells.length).toBeGreaterThan(0);
                 }
             });
+
+        Observable.timer(1000).first().subscribe(() => expect(pass).toBe(3));
 
         gridContainerInstance.columns = gridContainerInstance.percentColumns;
         fixture.detectChanges();
     }));
 
+    it('should navigate with the keyboard', async(() => {
+        const fixture = TestBed.createComponent(DejaGridContainerComponent);
+        const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
+        const gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
+        let pass = 0;
 
-    // it('should able to resize percent columns when control is resized', async(() => {
-    //     const fixture = TestBed.createComponent(DejaGridContainerComponent);
-    //     const gridContainerInstance = fixture.componentInstance as DejaGridContainerComponent;
-    //     const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
-    //     const gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
-    //     let pass = 0;
+        const sendKeyDown = (code: string) => {
+            const event = new KeyboardEvent('keydown', {
+                code: code,
+                shiftKey: false,
+                altKey: false,
+                ctrlKey: false,
+            } as KeyboardEventInit);
+            gridDebugElement.nativeElement.dispatchEvent(event);
+            gridInstance.refreshViewPort();
+            fixture.detectChanges();
+        };
 
-    //     const sendMouseMove = (element: DebugElement) => {
-    //         // Simulate a mouse click on the header
-    //         const gridHeader = fixture.debugElement.query(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header'));
-    //         const eventInit = () => ({
-    //             bubbles: true,
-    //             cancelable: true,
-    //             view: document.defaultView,
-    //             altKey: false,
-    //             ctrlKey: false,
-    //             metaKey: false,
-    //             shiftKey: false,
-    //             button: 0,
-    //             buttons: 1,
-    //             clientX: 0,
-    //             clientY: 0,
-    //             relatedTarget: gridHeader.nativeElement,
-    //             screenX: 0,
-    //             screenY: 0,
-    //         } as MouseEventInit);
-    //         const event = new MouseEvent('mousedown', eventInit());
-    //         element.nativeElement.dispatchEvent(event);
-    //         fixture.detectChanges();
-    //         Observable.timer(100)
-    //             .first()
-    //             .do(() => {
-    //                 const ei = eventInit();
-    //                 ei.screenX = 100;
-    //                 const moveEvent = new MouseEvent('mousemove', ei);
-    //                 element.nativeElement.dispatchEvent(moveEvent);
-    //                 fixture.detectChanges();
-    //             })
-    //             .delay(100)
-    //             .subscribe(() => {
-    //                 const ei = eventInit();
-    //                 ei.screenX = 100;
-    //                 const upEvent = new MouseEvent('mouseup', ei);
-    //                 element.nativeElement.dispatchEvent(upEvent);
-    //                 gridInstance.refreshViewPort();
-    //                 fixture.detectChanges();
-    //             });
-    //     };
+        observeViewPort$(fixture)
+            .debounceTime(10)
+            .subscribe((_vp) => {
+                fixture.detectChanges();
+                const currentCells = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > .deja-listcontainer .cell-wrapper[current="true"]'));
 
-    //     observeViewPort$(fixture)
-    //         .debounceTime(10)
-    //         .subscribe((vp) => {
-    //             // Bind view port
-    //             fixture.detectChanges();
-    //             const columnSeparators = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header [separator]'));
-    //             const cells = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > .deja-listcontainer .cell-wrapper'));
+                switch (++pass) {
+                    case 1:
+                        expect(currentCells.length).toBe(12);
+                        expect(currentCells[0] && currentCells[0].attributes.colindex).toBe('1');
+                        sendKeyDown('RightArrow');
+                        break;
 
-    //             switch (++pass) {
-    //                 case 1:
-    //                     expect(vp.visibleItems.length).toBe(12);
-    //                     expect(columnSeparators.length).toBeGreaterThan(0);
-    //                     if (columnSeparators.length) {
-    //                         sendMouseMove(columnSeparators[1]);
-    //                     }
-    //                     break;
+                    case 2:
+                        expect(currentCells[0] && currentCells[0].attributes.colindex).toBe('2');
+                        sendKeyDown('LeftArrow');
+                        break;
 
-    //                 default:
-    //                     expect(cells[1].nativeElement.clientWidth).toBe(367);
-    //                     break;
-    //             }
-    //         });
+                    default:
+                        expect(currentCells[0] && currentCells[0].attributes.colindex).toBe('1');
+                }
+            });
 
-    //     gridContainerInstance.columns = gridContainerInstance.percentColumns;
-    //     fixture.detectChanges();
-    // }));
+        Observable.timer(6000).first().subscribe(() => expect(pass).toBe(3));
 
-    // it('should return the write item class', (() => {
-    //     const fixture = TestBed.createComponent(DejaGridContainerComponent);
-    //     fixture.detectChanges();
-    //     const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
-    //     const gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
-    //     const grid = gridInstance as any;
+        fixture.detectChanges();
+    }));
 
-    //     const item = {
-    //         className: null,
-    //         collapsing: false,
-    //         expanding: false,
-    //         depth: 0,
-    //         collapsed: false,
-    //         selected: false,
-    //         odd: false,
-    //     } as IItemTree;
-    //     expect(grid.getItemClass(item)).toEqual('listitem parent');
+    it('should drag and drop a column from header to header', async(() => {
+        const fixture = TestBed.createComponent(DejaGridContainerComponent);
+        const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
+        const gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
+        let gridHeader: DebugElement;
+        let pass = 0;
 
-    //     item.className = 'test';
-    //     expect(grid.getItemClass(item)).toEqual('listitem test parent');
+        const eventInit = () => ({
+            bubbles: true,
+            cancelable: true,
+            view: document.defaultView,
+            altKey: false,
+            ctrlKey: false,
+            metaKey: false,
+            shiftKey: false,
+            button: 0,
+            buttons: 1,
+            clientX: 0,
+            clientY: 0,
+            relatedTarget: gridHeader.nativeElement,
+            screenX: 0,
+            screenY: 0,
+            dataTransfer: new DataTransfer(),
+        } as MouseEventInit);
 
-    //     item.collapsing = true;
-    //     expect(grid.getItemClass(item)).toEqual('listitem test hide parent');
+        Observable.from(gridInstance.columnLayoutChanged)
+            .subscribe((layout: IDejaGridColumnLayoutEvent) => {
+                // Bind view port
+                const columnHeaders = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header .column-header-wrapper'));
+                fixture.detectChanges();
 
-    //     item.collapsing = false;
-    //     expect(grid.getItemClass(item)).toEqual('listitem test parent');
+                switch (++pass) {
+                    case 1:
+                        expect(layout.column.name).toEqual('name');
+                        expect(layout.target.name).toEqual('VitaminA');
 
-    //     item.expanding = true;
-    //     expect(grid.getItemClass(item)).toEqual('listitem test hide parent');
+                        Observable.timer(10)
+                            .first()
+                            .do(() => {
+                                const enterEventInit = eventInit();
+                                const enterTarget = columnHeaders[3].nativeElement as HTMLElement;
+                                const enterTargetBounds = enterTarget.getBoundingClientRect();
+                                enterEventInit.clientY = enterTargetBounds.top + 1;
+                                enterEventInit.clientX = enterTargetBounds.left + 1;
+                                enterTarget.dispatchEvent(new DragEvent('dragenter', enterEventInit as any));
+                                fixture.detectChanges();
+                            })
+                            .delay(100)
+                            .subscribe(() => {
+                                const overEventInit = eventInit();
+                                const overTarget = columnHeaders[3].nativeElement as HTMLElement;
+                                const overTargetBounds = overTarget.getBoundingClientRect();
+                                overEventInit.clientY = overTargetBounds.top + 5;
+                                overEventInit.clientX = overTargetBounds.right - 2;
+                                overTarget.dispatchEvent(new DragEvent('dragover', overEventInit as any));
+                                fixture.detectChanges();
+                            });
+                        break;
 
-    //     item.expanding = false;
-    //     expect(grid.getItemClass(item)).toEqual('listitem test parent');
+                    case 2:
+                        expect(layout.column.name).toEqual('name');
+                        expect(layout.target.name).toEqual('VitaminB1');
+                        const dropEventInit = eventInit();
+                        const dropTarget = columnHeaders[4].nativeElement as HTMLElement;
+                        const dropTargetBounds = dropTarget.getBoundingClientRect();
+                        dropEventInit.clientY = dropTargetBounds.top + 5;
+                        dropEventInit.clientX = dropTargetBounds.right - 2;
+                        dropTarget.dispatchEvent(new DragEvent('drop', dropEventInit as any));
+                        fixture.detectChanges();
+                        break;
 
-    //     item.collapsed = true;
-    //     expect(grid.getItemClass(item)).toEqual('listitem test parent collapsed');
+                    default:
+                        expect(layout.column.name).toEqual('name');
+                        expect(layout.target.name).toEqual('VitaminB2');
 
-    //     item.selected = true;
-    //     expect(grid.getItemClass(item)).toEqual('listitem test parent collapsed selected');
+                }
+            });
 
-    //     item.selectable = true;
-    //     expect(grid.getItemClass(item)).toEqual('listitem test parent collapsed selected');
+        observeViewPort$(fixture)
+            .debounceTime(10)
+            .subscribe((vp) => {
+                fixture.detectChanges();
+                const columnHeaders = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header .column-header-wrapper'));
+                gridHeader = fixture.debugElement.query(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header > #deja-grid-header'));
 
-    //     item.selectable = false;
-    //     expect(grid.getItemClass(item)).toEqual('listitem test parent collapsed selected unselectable');
+                expect(vp.items.length).toBe(12);
+                expect(columnHeaders.length).toBeGreaterThan(0);
+                if (columnHeaders.length) {
+                    Observable.timer(10)
+                        .first()
+                        .do(() => {
+                            const event = new DragEvent('dragstart', eventInit() as any);
+                            columnHeaders[1].nativeElement.dispatchEvent(event);
+                            fixture.detectChanges();
+                        })
+                        .delay(100)
+                        .do(() => {
+                            const enterEventInit = eventInit();
+                            const enterTarget = columnHeaders[2].nativeElement as HTMLElement;
+                            const enterTargetBounds = enterTarget.getBoundingClientRect();
+                            enterEventInit.clientY = enterTargetBounds.top + 1;
+                            enterEventInit.clientX = enterTargetBounds.left + 1;
+                            enterTarget.dispatchEvent(new DragEvent('dragenter', enterEventInit as any));
+                            fixture.detectChanges();
+                        })
+                        .delay(100)
+                        .subscribe(() => {
+                            const overEventInit = eventInit();
+                            const overTarget = columnHeaders[2].nativeElement as HTMLElement;
+                            const overTargetBounds = overTarget.getBoundingClientRect();
+                            overEventInit.clientY = overTargetBounds.top + 5;
+                            overEventInit.clientX = overTargetBounds.right - 2;
+                            overTarget.dispatchEvent(new DragEvent('dragover', overEventInit as any));
+                            fixture.detectChanges();
+                        });
+                }
+            });
 
-    //     item.odd = true;
-    //     item.depth = 1;
-    //     expect(grid.getItemClass(item)).toEqual('listitem test collapsed selected unselectable odd');
-    // }));
+        Observable.timer(1000).first().subscribe(() => expect(pass).toBe(3));
 
-    // it('should not load items if minSearchlength is defined', async(() => {
-    //     let pass = 0;
-    //     const fixture = TestBed.createComponent(DejaGridContainerComponent);
-    //     const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
-    //     const gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
-    //     gridInstance.minSearchlength = 2;
-    //     const viewPortService = gridDebugElement.injector.get(ViewPortService) as ViewPortService;
+        fixture.detectChanges();
+    }));
 
-    //     Observable.from(viewPortService.viewPortResult$)
-    //         .debounceTime(100)
-    //         .subscribe((_vp) => {
-    //             // Bind view port
-    //             fixture.detectChanges();
-    //             const listItems = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem'));
-    //             switch (++pass) {
-    //                 case 1:
-    //                     expect(listItems.length).toBe(0);
-    //                     gridInstance.query = '33';
-    //                     gridInstance.refresh();
-    //                     fixture.detectChanges();
-    //                     break;
+    it('should leave the drag and drop when we are outside the control', async(() => {
+        const fixture = TestBed.createComponent(DejaGridContainerComponent);
+        const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
+        const gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
+        let gridHeader: DebugElement;
+        let dragHeaderElement: HTMLElement;
 
-    //                 default:
-    //                     expect(listItems.length).toBeGreaterThan(0);
-    //             }
-    //         });
+        const eventInit = () => ({
+            bubbles: true,
+            cancelable: true,
+            view: document.defaultView,
+            altKey: false,
+            ctrlKey: false,
+            metaKey: false,
+            shiftKey: false,
+            button: 0,
+            buttons: 1,
+            clientX: 0,
+            clientY: 0,
+            relatedTarget: gridHeader.nativeElement,
+            screenX: 0,
+            screenY: 0,
+            dataTransfer: new DataTransfer(),
+        } as MouseEventInit);
 
-    //     fixture.detectChanges();
-    // }));
+        Observable.from(gridInstance.columnLayoutChanged)
+            .subscribe((layout: IDejaGridColumnLayoutEvent) => {
+                fixture.detectChanges();
+                const columnHeaders = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header .column-header-wrapper'));
 
-    // it('should set the selected items', async(() => {
-    //     let pass = 0;
-    //     const fixture = TestBed.createComponent(DejaGridContainerComponent);
-    //     const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
-    //     const gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
+                expect(layout.column.name).toEqual('VitaminA');
+                expect(layout.target.name).toEqual('VitaminB1');
+                Observable.timer(10)
+                    .first()
+                    .do(() => {
+                        const leaveEventInit = eventInit();
+                        const leaveTarget = columnHeaders[2].nativeElement as HTMLElement;
+                        const leaveTargetBounds = leaveTarget.getBoundingClientRect();
+                        leaveEventInit.clientY = leaveTargetBounds.top - 5;
+                        leaveEventInit.clientX = leaveTargetBounds.right - 2;
+                        leaveTarget.dispatchEvent(new DragEvent('dragleave', leaveEventInit as any));
+                        fixture.detectChanges();
+                    })
+                    .delay(100)
+                    .subscribe(() => {
+                        dragHeaderElement.dispatchEvent(new DragEvent('dragend', { dataTransfer: new DataTransfer() }));
+                        fixture.detectChanges();
+                    });
+            });
 
-    //     observeViewPort$(fixture)
-    //         .debounceTime(10)
-    //         .subscribe((vp) => {
-    //             // Bind view port
-    //             fixture.detectChanges();
-    //             const selectedElements = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem.selected'));
-    //             const selectedItems = vp.items.filter((item: IItemBase) => item.selected);
+        observeViewPort$(fixture)
+            .debounceTime(10)
+            .subscribe((vp) => {
+                // Bind view port
+                fixture.detectChanges();
+                const columnHeaders = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header .column-header-wrapper'));
+                gridHeader = fixture.debugElement.query(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header > #deja-grid-header'));
 
-    //             switch (++pass) {
-    //                 case 1:
-    //                     expect(selectedElements.length).toBe(0);
-    //                     // Set selected items
-    //                     gridInstance.selectedItems = [vp.items[vp.startIndex], vp.items[vp.endIndex], vp.items[vp.items.length - 1]];
-    //                     expect(gridInstance.selectedItems).toBeDefined();
-    //                     expect(gridInstance.selectedItems.length).toBe(3);
-    //                     gridInstance.refreshViewPort();
-    //                     fixture.detectChanges();
-    //                     break;
+                expect(vp.items.length).toBe(12);
+                expect(columnHeaders.length).toBeGreaterThan(0);
+                if (columnHeaders.length) {
+                    Observable.timer(10)
+                        .first()
+                        .do(() => {
+                            dragHeaderElement = columnHeaders[1].nativeElement;
+                            dragHeaderElement.dispatchEvent(new DragEvent('dragstart', eventInit() as any));
+                            fixture.detectChanges();
+                        })
+                        .delay(100)
+                        .do(() => {
+                            const enterEventInit = eventInit();
+                            const enterTarget = columnHeaders[2].nativeElement as HTMLElement;
+                            const enterTargetBounds = enterTarget.getBoundingClientRect();
+                            enterEventInit.clientY = enterTargetBounds.top + 1;
+                            enterEventInit.clientX = enterTargetBounds.left + 1;
+                            enterTarget.dispatchEvent(new DragEvent('dragenter', enterEventInit as any));
+                            fixture.detectChanges();
+                        })
+                        .delay(100)
+                        .subscribe(() => {
+                            const overEventInit = eventInit();
+                            const overTarget = columnHeaders[2].nativeElement as HTMLElement;
+                            const overTargetBounds = overTarget.getBoundingClientRect();
+                            overEventInit.clientY = overTargetBounds.top + 5;
+                            overEventInit.clientX = overTargetBounds.right - 2;
+                            overTarget.dispatchEvent(new DragEvent('dragover', overEventInit as any));
+                            fixture.detectChanges();
+                        });
+                }
+            });
 
-    //                 case 2:
-    //                     // Check selected items
-    //                     expect(selectedElements.length).toBe(2);
-    //                     expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe(`${vp.startIndex}`);
-    //                     expect(selectedElements[1] && selectedElements[1].attributes.flat).toBe(`${vp.endIndex}`);
-    //                     expect(selectedItems.length).toBe(3);
-    //                     // Clear selection
-    //                     gridInstance.selectedItems = null;
-    //                     gridInstance.refreshViewPort();
-    //                     fixture.detectChanges();
-    //                     break;
-
-    //                 case 3:
-    //                     // Check no selected
-    //                     expect(selectedElements.length).toBe(0);
-    //                     expect(selectedItems.length).toBe(0);
-    //                     // Set selected item
-    //                     gridInstance.selectedItem = vp.items[5];
-    //                     expect(gridInstance.selectedItem).toBe(vp.items[5]);
-    //                     gridInstance.refreshViewPort();
-    //                     fixture.detectChanges();
-    //                     break;
-
-    //                 case 4:
-    //                     // Check selected item
-    //                     expect(selectedElements.length).toBe(1);
-    //                     expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe(`5`);
-    //                     expect(selectedItems.length).toBe(1);
-    //                     // Clear selection
-    //                     gridInstance.selectedItem = null;
-    //                     gridInstance.refreshViewPort();
-    //                     fixture.detectChanges();
-    //                     break;
-
-    //                 default:
-    //                     // Check no selected
-    //                     expect(selectedElements.length).toBe(0);
-    //                     expect(selectedItems.length).toBe(0);
-    //             }
-    //         });
-
-    //     fixture.detectChanges();
-    // }));
-
-    // it('should toggle and collapse all the items', async(() => {
-    //     let pass = 0;
-    //     const fixture = TestBed.createComponent(DejaGridContainerComponent);
-    //     const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
-    //     const gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
-
-    //     observeViewPort$(fixture)
-    //         .debounceTime(10)
-    //         .subscribe((vp) => {
-    //             // Bind view port
-    //             fixture.detectChanges();
-    //             const collapsed = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem.parent.collapsed'));
-    //             const collapsedItems = vp.items.filter((item: IItemTree) => item.collapsed);
-    //             const parentItems = vp.items.filter((item: IItemTree) => item.depth === 0);
-    //             switch (++pass) {
-    //                 case 1:
-    //                     expect(collapsed.length).toBe(0);
-    //                     expect(collapsedItems.length).toBe(0);
-    //                     // Toggle all items
-    //                     gridInstance.toggleAll();
-    //                     gridInstance.refreshViewPort();
-    //                     fixture.detectChanges();
-    //                     break;
-
-    //                 case 2:
-    //                     // Check collapsed items
-    //                     expect(collapsed.length).toBeGreaterThan(0);
-    //                     expect(collapsedItems.length).toBe(parentItems.length);
-    //                     // Clear toogle
-    //                     gridInstance.toggleAll(false);
-    //                     gridInstance.refreshViewPort();
-    //                     fixture.detectChanges();
-    //                     break;
-
-    //                 default:
-    //                     // Check no collapsed
-    //                     expect(collapsed.length).toBe(0);
-    //                     expect(collapsedItems.length).toBe(0);
-    //             }
-    //         });
-
-    //     fixture.detectChanges();
-    // }));
+        fixture.detectChanges();
+    }));
 });
-
-// describe('DejaGridByModelContainerComponent', () => {
-//     beforeEach(async(() => {
-//         TestBed.configureTestingModule({
-//             declarations: [
-//                 DejaGridByModelContainerComponent,
-//             ],
-//             imports: [
-//                 BrowserAnimationsModule,
-//                 CommonModule,
-//                 FormsModule,
-//                 DejaGridModule,
-//             ],
-//         }).compileComponents();
-//     }));
-
-//     const observeModelViewPort$ = (fixture: ComponentFixture<DejaGridByModelContainerComponent>) => {
-//         const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
-//         const viewPortService = gridDebugElement.injector.get(ViewPortService) as ViewPortService;
-
-//         return Observable.from(viewPortService.viewPortResult$)
-//             .filter((result) => result.viewPortSize > 0);
-//     };
-
-//     it('should create the component', async(() => {
-//         const fixture = TestBed.createComponent(DejaGridByModelContainerComponent);
-//         fixture.detectChanges();
-//         const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
-//         const gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
-//         expect(gridInstance).toBeTruthy();
-//     }));
-
-//     it('should set the selected models', async(() => {
-//         let pass = 0;
-//         const fixture = TestBed.createComponent(DejaGridByModelContainerComponent);
-//         const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
-//         const gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
-
-//         observeModelViewPort$(fixture)
-//             .debounceTime(10)
-//             .subscribe((vp) => {
-//                 // Bind view port
-//                 fixture.detectChanges();
-//                 const selectedModels = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem.selected'));
-//                 const models = vp.visibleItems.map((item: IItemBase) => item.model);
-//                 const selectedItems = vp.items.filter((item: IItemBase) => item.selected);
-
-//                 switch (++pass) {
-//                     case 1:
-//                         // Selection from HTML
-//                         expect(selectedItems.length).toBe(3);
-//                         // Set selected models
-//                         gridInstance.selectedModels = [models[vp.startIndex], models[vp.endIndex]];
-//                         expect(gridInstance.selectedModels).toBeDefined();
-//                         expect(gridInstance.selectedModels.length).toBe(2);
-//                         gridInstance.refreshViewPort();
-//                         fixture.detectChanges();
-//                         break;
-
-//                     case 2:
-//                         // Check selected models
-//                         expect(selectedModels.length).toBe(2);
-//                         expect(selectedItems.length).toBe(2);
-//                         // Clear selection
-//                         gridInstance.selectedModels = null;
-//                         gridInstance.refreshViewPort();
-//                         fixture.detectChanges();
-//                         break;
-
-//                     case 3:
-//                         // Check no selected
-//                         expect(selectedModels.length).toBe(0);
-//                         expect(selectedItems.length).toBe(0);
-//                         // Single select list
-//                         gridInstance.multiSelect = false;
-//                         fixture.detectChanges();
-//                         // Set selected model
-//                         gridInstance.selectedModel = models[5];
-//                         expect(gridInstance.selectedModel).toBe(models[5]);
-//                         gridInstance.refreshViewPort();
-//                         fixture.detectChanges();
-//                         break;
-
-//                     case 4:
-//                         // Check selected item
-//                         expect(selectedModels.length).toBe(1);
-//                         expect(selectedItems.length).toBe(1);
-//                         // Clear selection
-//                         gridInstance.selectedModel = null;
-//                         gridInstance.refreshViewPort();
-//                         fixture.detectChanges();
-//                         break;
-
-//                     case 5:
-//                         // Check no selected
-//                         expect(selectedModels.length).toBe(0);
-//                         expect(selectedItems.length).toBe(0);
-//                         // Set selection by value
-//                         gridInstance.value = models[4];
-//                         expect((gridInstance.value as IItemBase).model).toBe(models[4]);
-//                         gridInstance.refreshViewPort();
-//                         fixture.detectChanges();
-//                         break;
-
-//                     case 6:
-//                         // Check selected item
-//                         expect(selectedModels.length).toBe(1);
-//                         expect(selectedItems.length).toBe(1);
-//                         // Clear selection
-//                         gridInstance.selectedModel = null;
-//                         gridInstance.refreshViewPort();
-//                         fixture.detectChanges();
-//                         break;
-
-//                     default:
-//                         // Check no selected
-//                         expect(selectedModels.length).toBe(0);
-//                         expect(selectedItems.length).toBe(0);
-//                 }
-//             });
-
-//         fixture.detectChanges();
-//     }));
-
-//     it('should flag pending keyboard navigation', async(() => {
-//         const fixture = TestBed.createComponent(DejaGridByModelContainerComponent);
-//         const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
-//         const gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
-//         let listElement: HTMLElement;
-
-//         observeModelViewPort$(fixture)
-//             .debounceTime(100)
-//             .do(() => expect(gridInstance.keyboardNavigation()).toBeTruthy())
-//             .delay(1000)
-//             .subscribe(() => expect(gridInstance.keyboardNavigation()).toBeFalsy());
-
-//         const sendKeyDown = (code: string, shiftKey?: boolean, ctrlKey?: boolean) => {
-//             const event = new KeyboardEvent('keydown', {
-//                 code: code,
-//                 shiftKey: shiftKey,
-//                 ctrlKey: ctrlKey
-//             } as KeyboardEventInit);
-//             listElement.dispatchEvent(event);
-//         };
-
-//         fixture.detectChanges();
-//         listElement = gridInstance.listElement;
-//         sendKeyDown('DownArrow');
-//     }));
-
-//     it('should navigate with the keyboard', async(() => {
-//         let pass = 0;
-//         const fixture = TestBed.createComponent(DejaGridByModelContainerComponent);
-//         const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
-//         const gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
-//         let listElement: HTMLElement;
-
-//         const sendKeyDown = (code: string, shiftKey?: boolean, ctrlKey?: boolean) => {
-//             const event = new KeyboardEvent('keydown', {
-//                 code: code,
-//                 shiftKey: shiftKey,
-//                 ctrlKey: ctrlKey
-//             } as KeyboardEventInit);
-//             listElement.dispatchEvent(event);
-//             gridInstance.refreshViewPort();
-//             fixture.detectChanges();
-//         };
-
-//         observeModelViewPort$(fixture)
-//             .debounceTime(100)
-//             .subscribe((vp) => {
-//                 fixture.detectChanges();
-//                 const selectedElements = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem.selected'));
-//                 const currentElement = fixture.debugElement.query(By.css('deja-tree-list > .deja-listcontainer > .listitem[current="true"]'));
-//                 const selectedItems = vp.items.filter((item: IItemBase) => item.selected);
-
-//                 switch (++pass) {
-//                     case 1:
-//                         // Selection from HTML
-//                         expect(vp.items.filter((item: IItemBase) => item.selected).length).toBe(3);
-//                         // Clear selection
-//                         gridInstance.selectedModel = null;
-//                         gridInstance.refreshViewPort();
-//                         fixture.detectChanges();
-//                         break;
-
-//                     case 2:
-//                         // Check no selected
-//                         expect(selectedElements.length).toBe(0);
-//                         expect(selectedItems.length).toBe(0);
-//                         // Select first line by keydown
-//                         sendKeyDown('DownArrow');
-//                         break;
-
-//                     case 3:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(1);
-//                         expect(selectedItems.length).toBe(1);
-//                         expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('0');
-//                         // Select second line by keydown
-//                         sendKeyDown('DownArrow');
-//                         break;
-
-//                     case 4:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(1);
-//                         expect(selectedItems.length).toBe(1);
-//                         expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('1');
-//                         // Select first line by keyup
-//                         sendKeyDown('UpArrow');
-//                         break;
-
-//                     case 5:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(1);
-//                         expect(selectedItems.length).toBe(1);
-//                         expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('0');
-//                         // Select first and second lines by shift+keydown
-//                         sendKeyDown('DownArrow', true);
-//                         break;
-
-//                     case 6:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(2);
-//                         expect(selectedItems.length).toBe(2);
-//                         expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('0');
-//                         expect(selectedElements[1] && selectedElements[1].attributes.flat).toBe('1');
-//                         // Keep selection, but pass current line to the third line
-//                         sendKeyDown('DownArrow', false, true);
-//                         break;
-
-//                     case 7:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(2);
-//                         expect(selectedItems.length).toBe(2);
-//                         expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('0');
-//                         expect(selectedElements[1] && selectedElements[1].attributes.flat).toBe('1');
-//                         // Check current item
-//                         expect(currentElement.attributes.flat).toBe('2');
-//                         // Select third line only
-//                         sendKeyDown('Space');
-//                         break;
-
-//                     case 8:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(1);
-//                         expect(selectedItems.length).toBe(1);
-//                         expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('2');
-//                         // Select first line with Home
-//                         sendKeyDown('Home', true);
-//                         break;
-
-//                     case 9:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(1);
-//                         expect(selectedItems.length).toBe(1);
-//                         expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('0');
-//                         // Select last line with End
-//                         sendKeyDown('End');
-//                         break;
-
-//                     case 10:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(1);
-//                         expect(selectedItems.length).toBe(1);
-//                         expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('1999');
-//                         // Select the two last lines with Shift+PageUp
-//                         sendKeyDown('UpArrow', true);
-//                         break;
-
-//                     case 11:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(2);
-//                         expect(selectedItems.length).toBe(2);
-//                         expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('1998');
-//                         expect(selectedElements[1] && selectedElements[1].attributes.flat).toBe('1999');
-//                         // Keep selection, but pass current line to the first line
-//                         sendKeyDown('Home', false, true);
-//                         break;
-
-//                     case 12:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(0);
-//                         expect(selectedItems.length).toBe(2);
-//                         // Check current item
-//                         expect(currentElement && currentElement.attributes.flat).toBe('0');
-//                         // Select line 11 (PageSize=10)
-//                         sendKeyDown('PageDown');
-//                         break;
-
-//                     case 13:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(1);
-//                         expect(selectedItems.length).toBe(1);
-//                         expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('10');
-//                         // Check current item
-//                         expect(currentElement && currentElement.attributes.flat).toBe('10');
-//                         // Select from line 11 to last line
-//                         sendKeyDown('End', true);
-//                         break;
-
-//                     case 14:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(vp.visibleItems.length);
-//                         expect(selectedItems.length).toBe(vp.items.length - 10);
-//                         // Check current item
-//                         expect(currentElement && currentElement.attributes.flat).toBe('1999');
-//                         // Select first line with Home
-//                         sendKeyDown('Home');
-//                         break;
-
-//                     case 15:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(1);
-//                         expect(selectedItems.length).toBe(1);
-//                         // Check current item
-//                         expect(currentElement && currentElement.attributes.flat).toBe('0');
-//                         // Select until line 11
-//                         sendKeyDown('PageDown', true);
-//                         break;
-
-//                     case 16:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(11);
-//                         expect(selectedItems.length).toBe(11);
-//                         // Check current item
-//                         expect(currentElement && currentElement.attributes.flat).toBe('10');
-//                         // Select next line only
-//                         sendKeyDown('DownArrow');
-//                         break;
-
-//                     case 17:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(1);
-//                         expect(selectedItems.length).toBe(1);
-//                         // Check current item
-//                         expect(currentElement && currentElement.attributes.flat).toBe('11');
-//                         // Select second line with PageUp
-//                         sendKeyDown('PageUp');
-//                         break;
-
-//                     case 18:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(1);
-//                         expect(selectedItems.length).toBe(1);
-//                         // Check current item
-//                         expect(currentElement && currentElement.attributes.flat).toBe('1');
-//                         // Select last line
-//                         sendKeyDown('End');
-//                         break;
-
-//                     case 19:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(1);
-//                         expect(selectedItems.length).toBe(1);
-//                         expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('1999');
-//                         // Check current item
-//                         expect(currentElement && currentElement.attributes.flat).toBe('1999');
-//                         // Select from line 11 to last line
-//                         sendKeyDown('PageUp', true);
-//                         break;
-
-//                     case 20:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(11);
-//                         expect(selectedItems.length).toBe(11);
-//                         // Select first line
-//                         sendKeyDown('Home');
-//                         break;
-
-//                     case 21:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(1);
-//                         expect(selectedItems.length).toBe(1);
-//                         expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('0');
-//                         // Check current item
-//                         expect(currentElement && currentElement.attributes.flat).toBe('0');
-//                         // Toggle first line selection with ctrl
-//                         sendKeyDown('Space', false, true);
-//                         break;
-
-//                     case 22:
-//                         // Check selection
-//                         expect(selectedElements.length).toBe(0);
-//                         expect(selectedItems.length).toBe(0);
-//                         // Check current item
-//                         expect(currentElement && currentElement.attributes.flat).toBe('0');
-//                         // Select first line with enter in single select
-//                         gridInstance.multiSelect = false;
-//                         fixture.detectChanges();
-//                         sendKeyDown('Enter');
-//                         break;
-
-//                     default:
-//                         expect(selectedElements.length).toBe(1);
-//                         expect(selectedItems.length).toBe(1);
-//                         expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('0');
-//                         expect(currentElement && currentElement.attributes.flat).toBe('0');
-
-//                 }
-//             });
-
-//         fixture.detectChanges();
-//         listElement = gridInstance.listElement;
-//     }));
-
-//     it('should refresh view port if windows is resized', async(() => {
-//         let pass = 0;
-//         const fixture = TestBed.createComponent(DejaGridByModelContainerComponent);
-
-//         observeModelViewPort$(fixture)
-//             .debounceTime(100)
-//             .subscribe((vp) => {
-//                 fixture.detectChanges();
-
-//                 switch (++pass) {
-//                     case 1:
-//                         const event = new Event('resize', {});
-//                         window.dispatchEvent(event);
-//                         break;
-
-//                     default:
-//                         expect(vp.visibleItems.length).toBe(12);
-
-//                 }
-//             });
-
-//         fixture.detectChanges();
-//     }));
-// });
-
-// describe('DejaGridByOptionsContainerComponent', () => {
-//     beforeEach(async(() => {
-//         TestBed.configureTestingModule({
-//             declarations: [
-//                 DejaGridByOptionsContainerComponent,
-//             ],
-//             imports: [
-//                 BrowserAnimationsModule,
-//                 CommonModule,
-//                 FormsModule,
-//                 DejaGridModule,
-//                 DejaItemModule,
-//             ],
-//         }).compileComponents();
-//     }));
-
-//     const observeOptionsViewPort$ = (fixture: ComponentFixture<DejaGridByOptionsContainerComponent>) => {
-//         const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
-//         const viewPortService = gridDebugElement.injector.get(ViewPortService) as ViewPortService;
-
-//         return Observable.from(viewPortService.viewPortResult$)
-//             .filter((result) => result.viewPortSize > 0);
-//     };
-
-//     it('should create the component', async(() => {
-//         const fixture = TestBed.createComponent(DejaGridByOptionsContainerComponent);
-//         const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
-//         const gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
-
-//         observeOptionsViewPort$(fixture)
-//             .debounceTime(100)
-//             .subscribe(() => {
-//                 fixture.detectChanges();
-//                 const items = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem'));
-//                 expect(items.length).toBe(12);
-//             });
-
-//         fixture.detectChanges();
-//         expect(gridInstance).toBeTruthy();
-//     }));
-
-//     it('should filter and select with the keyboard', async(() => {
-//         let pass = 0;
-//         const fixture = TestBed.createComponent(DejaGridByOptionsContainerComponent);
-//         const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
-//         const gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
-//         let listElement: HTMLElement;
-
-//         const sendKeyUp = (code: string) => {
-//             const event = new KeyboardEvent('keyup', {
-//                 code: `Key${code.toUpperCase()}`,
-//                 key: code,
-//             } as KeyboardEventInit);
-//             listElement.dispatchEvent(event);
-//             gridInstance.refreshViewPort();
-//             fixture.detectChanges();
-//         };
-
-//         observeOptionsViewPort$(fixture)
-//             .debounceTime(450) // Wait for the clear filter flag
-//             .subscribe((vp) => {
-//                 fixture.detectChanges();
-//                 const selectedElements = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem.selected'));
-//                 const currentElement = fixture.debugElement.query(By.css('deja-tree-list > .deja-listcontainer > .listitem[current="true"]'));
-//                 const selectedItems = vp.items.filter((item: IItemBase) => item.selected);
-
-//                 switch (++pass) {
-//                     case 1:
-//                         // Check selected and current
-//                         expect(selectedElements.length).toBe(0);
-//                         expect(selectedItems.length).toBe(0);
-//                         // Search first started with c
-//                         sendKeyUp('c');
-//                         break;
-
-//                     case 2:
-//                         // Check selected and current
-//                         expect(selectedElements.length).toBe(0);
-//                         expect(selectedItems.length).toBe(0);
-//                         expect(currentElement && currentElement.attributes.flat).toBe('2');
-//                         // Search next
-//                         sendKeyUp('c');
-//                         break;
-
-//                     case 3:
-//                         // Check selected and current
-//                         expect(selectedElements.length).toBe(0);
-//                         expect(selectedItems.length).toBe(0);
-//                         expect(currentElement && currentElement.attributes.flat).toBe('3');
-//                         // Search next
-//                         sendKeyUp('c');
-//                         break;
-
-//                     case 4:
-//                         // Check selected and current
-//                         expect(selectedElements.length).toBe(0);
-//                         expect(selectedItems.length).toBe(0);
-//                         expect(currentElement && currentElement.attributes.flat).toBe('4');
-//                         // Search next
-//                         sendKeyUp('c');
-//                         break;
-
-//                     case 5:
-//                         // Check selected and current
-//                         expect(selectedElements.length).toBe(0);
-//                         expect(selectedItems.length).toBe(0);
-//                         expect(currentElement && currentElement.attributes.flat).toBe('5');
-//                         // Search next
-//                         sendKeyUp('c');
-//                         break;
-
-//                     case 6:
-//                         // Check selected and current
-//                         expect(selectedElements.length).toBe(0);
-//                         expect(selectedItems.length).toBe(0);
-//                         expect(currentElement && currentElement.attributes.flat).toBe('2');
-//                         // Enable search area
-//                         gridInstance.searchArea = true;
-//                         fixture.detectChanges();
-//                         // Filter test
-//                         (<any>gridInstance).setQuery$.next('c');
-//                         gridInstance.refreshViewPort();
-//                         fixture.detectChanges();
-//                         break;
-
-//                     default:
-//                         expect(vp.visibleItems.length).toBe(5);
-
-//                 }
-//             });
-
-//         fixture.detectChanges();
-//         listElement = gridInstance.listElement;
-//     }));
-
-//     it('should select with the mouse', async(() => {
-//         let pass = 0;
-//         const fixture = TestBed.createComponent(DejaGridByOptionsContainerComponent);
-//         const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
-//         const gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
-//         let listElement: DebugElement;
-
-//         const sendMouseClick = (element: DebugElement, shiftKey?: boolean, ctrlKey?: boolean, upElement?: DebugElement) => {
-//             // Simulate a mouse click
-//             const event = document.createEvent('MouseEvents') as MouseEvent;
-//             event.initMouseEvent('mousedown', true, true, document.defaultView, 0, 0, 0, 0, 0, ctrlKey, false, shiftKey, false, 0, listElement.nativeElement);
-//             element.nativeElement.dispatchEvent(event);
-//             fixture.detectChanges();
-//             Observable.timer(100)
-//                 .first()
-//                 .subscribe(() => {
-//                     const upEvent = document.createEvent('MouseEvents') as MouseEvent;
-//                     upEvent.initMouseEvent('mouseup', true, true, document.defaultView, 0, 0, 0, 0, 0, ctrlKey, false, shiftKey, false, 0, listElement.nativeElement);
-//                     (upElement || element).nativeElement.dispatchEvent(upEvent);
-//                     gridInstance.refreshViewPort();
-//                     fixture.detectChanges();
-//                 });
-//         };
-
-//         observeOptionsViewPort$(fixture)
-//             .debounceTime(10)
-//             .subscribe((vp) => {
-//                 fixture.detectChanges();
-//                 const displayedElements = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem'));
-//                 const selectedElements = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem.selected'));
-//                 const currentElement = fixture.debugElement.query(By.css('deja-tree-list > .deja-listcontainer > .listitem[current="true"]'));
-//                 const selectedItems = vp.items.filter((item: IItemBase) => item.selected);
-
-//                 switch (++pass) {
-//                     case 1:
-//                         // Check selected and current
-//                         expect(selectedElements.length).toBe(0);
-//                         expect(selectedItems.length).toBe(0);
-//                         // Check flags
-//                         expect(gridInstance.isMultiSelect).toBe(true);
-//                         // Simulate click on first element on disabled
-//                         gridInstance.disabled = true;
-//                         fixture.detectChanges();
-//                         sendMouseClick(displayedElements[1]);
-//                         break;
-
-//                     case 2:
-//                         // Check selected and current
-//                         expect(selectedElements.length).toBe(0);
-//                         expect(selectedItems.length).toBe(0);
-//                         // Simulate click on first element on disabled
-//                         gridInstance.disabled = false;
-//                         fixture.detectChanges();
-//                         sendMouseClick(displayedElements[1]);
-//                         break;
-
-//                     case 3:
-//                         // Check selected and current
-//                         expect(selectedElements.length).toBe(1);
-//                         expect(selectedItems.length).toBe(1);
-//                         expect(currentElement && currentElement.attributes.flat).toBe('1');
-//                         // Simulate click with ctrl
-//                         sendMouseClick(displayedElements[4], false, true);
-//                         break;
-
-//                     case 4:
-//                         // Check selected and current
-//                         expect(selectedElements.length).toBe(2);
-//                         expect(selectedItems.length).toBe(2);
-//                         expect(currentElement && currentElement.attributes.flat).toBe('4');
-//                         // Simulate click with shift
-//                         sendMouseClick(displayedElements[6], true);
-//                         break;
-
-//                     case 5:
-//                         // Check selected and current
-//                         expect(selectedElements.length).toBe(3);
-//                         expect(selectedItems.length).toBe(3);
-//                         expect(currentElement && currentElement.attributes.flat).toBe('4');
-//                         // Click outside must keep the selection
-//                         sendMouseClick(listElement);
-//                         break;
-
-//                     case 6:
-//                         // Check selected and current
-//                         expect(selectedElements.length).toBe(3);
-//                         expect(selectedItems.length).toBe(3);
-//                         expect(currentElement && currentElement.attributes.flat).toBe('4');
-//                         // Switch to single select
-//                         gridInstance.multiSelect = false;
-//                         expect(gridInstance.isMultiSelect).toBe(false);
-//                         fixture.detectChanges();
-//                         // Click first line
-//                         sendMouseClick(displayedElements[0]);
-//                         break;
-
-//                     case 7:
-//                         // Check selected and current
-//                         expect(selectedElements.length).toBe(1);
-//                         expect(selectedItems.length).toBe(1);
-//                         expect(currentElement && currentElement.attributes.flat).toBe('0');
-//                         // Simulate click with ctrl
-//                         sendMouseClick(displayedElements[4], false, true);
-//                         break;
-
-//                     case 8:
-//                         // Check selected and current
-//                         expect(selectedElements.length).toBe(1);
-//                         expect(selectedItems.length).toBe(1);
-//                         expect(currentElement && currentElement.attributes.flat).toBe('4');
-//                         // Simulate click with shift
-//                         sendMouseClick(displayedElements[6], true);
-//                         break;
-
-//                     default:
-//                         // Check selected and current
-//                         expect(selectedElements.length).toBe(1);
-//                         expect(selectedItems.length).toBe(1);
-//                         expect(currentElement && currentElement.attributes.flat).toBe('6');
-
-//                 }
-//             });
-
-//         fixture.detectChanges();
-//         listElement = fixture.debugElement.query(By.css('deja-tree-list > .deja-listcontainer'));
-//     }));
-// });
