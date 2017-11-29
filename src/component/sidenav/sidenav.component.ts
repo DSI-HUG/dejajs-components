@@ -9,11 +9,14 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Input, NgZone, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatSidenav } from '@angular/material';
 import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
+import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/takeUntil';
 import 'rxjs/add/operator/takeWhile';
+import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
 @Component({
@@ -77,11 +80,13 @@ export class DejaSidenavComponent implements AfterViewInit, OnInit, OnDestroy {
     }
 
     public ngAfterViewInit() {
-        setTimeout(() => {
-            this.onLargeMediaMatchChange(this.largeMql);
-            this.onMediumMediaMatchChange(this.mediumMql);
-            this.onSmallMediaMatchChange(this.smallMql);
-        });
+        Observable.timer(1)
+            .first()
+            .subscribe(() => {
+                this.onLargeMediaMatchChange(this.largeMql);
+                this.onMediumMediaMatchChange(this.mediumMql);
+                this.onSmallMediaMatchChange(this.smallMql);
+            });
     }
 
     public ngOnDestroy() {

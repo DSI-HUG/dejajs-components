@@ -21,10 +21,8 @@ import { Observable } from 'rxjs/Observable';
 })
 export class AppComponent implements OnDestroy {
     public version: string;
-    protected navOpened = true;
-
     private _theme: string;
-    protected theme$: BehaviorSubject<string>;
+    private theme$: BehaviorSubject<string>;
     private isAlive = true;
 
     constructor() {
@@ -60,10 +58,5 @@ export class AppComponent implements OnDestroy {
 
     public ngOnDestroy() {
         this.isAlive = false;
-    }
-
-    protected get debug() {
-        // console.log('Binding ' + Date.now());
-        return null;
     }
 }

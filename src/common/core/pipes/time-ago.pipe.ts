@@ -22,7 +22,7 @@ export class TimeAgoPipe implements PipeTransform, OnDestroy {
     private lastOmitSuffix: boolean;
     private lastText: string;
     private createTimer$ = new Subject();
-    private isAlive = true;;
+    private isAlive = true;
 
     constructor(private cdRef: ChangeDetectorRef, private ngZone: NgZone) {
         Observable.from(this.createTimer$)

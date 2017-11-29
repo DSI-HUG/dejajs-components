@@ -9,8 +9,18 @@
 import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
 import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import 'rxjs/add/operator/delay';
-import 'rxjs/add/operator/merge';
+import 'rxjs/add/observable/combineLatest';
+import 'rxjs/add/observable/from';
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/observable/merge';
+import 'rxjs/add/observable/timer';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/first';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/takeWhile';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -86,10 +96,10 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     @ViewChild('inputelement') public input: ElementRef;
 
     // NgModel implementation
-    protected onTouchedCallback: () => void = noop;
-    protected onChangeCallback: (_: any) => void = noop;
+    public onTouchedCallback: () => void = noop;
+    public onChangeCallback: (_: any) => void = noop;
 
-    protected _keyboardNavigation = false;
+    private _keyboardNavigation = false;
 
     // Templates
     @ContentChild('itemTemplate') private itemTemplateInternal;
@@ -98,7 +108,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     @ContentChild('headerTemplate') private headerTemplateInternal;
     @ContentChild('searchPrefixTemplate') private searchPrefixTemplateInternal;
     @ContentChild('searchSuffixTemplate') private searchSuffixTemplateInternal;
-    @ContentChildren(DejaItemComponent) protected options: DejaItemComponent[];
+    @ContentChildren(DejaItemComponent) public options: DejaItemComponent[];
 
     // protected _items: IItemBase[]; In the base class, correspond to the model
     private clickedItem: IItemBase;
@@ -547,7 +557,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     public get waiter() { return this._waiter; }
 
     @ViewChild(DejaChildValidatorDirective)
-    protected set inputValidatorDirective(value: DejaChildValidatorDirective) {
+    public set inputValidatorDirective(value: DejaChildValidatorDirective) {
         if (value) {
             value.parentControl = this._control;
         }
@@ -993,7 +1003,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
             });
     }
 
-    protected getDragContext(index: number) {
+    public getDragContext(index: number) {
         if (!this.clipboardService || (!this.sortable && !this.itemsDraggable)) {
             return null;
         }
@@ -1081,7 +1091,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
         }
     }
 
-    protected onSelectionChange() {
+    public onSelectionChange() {
         let outputEmitter = null;
 
         let output = null;
@@ -1122,7 +1132,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
         this.selectedChange.emit(outputEmitter);
     }
 
-    protected selectRange$(indexFrom: number, indexTo?: number): Observable<number> {
+    public selectRange$(indexFrom: number, indexTo?: number): Observable<number> {
         return super.selectRange$(indexFrom, indexTo).do((selectedCount) => {
             if (selectedCount) {
                 // Raise event
@@ -1132,7 +1142,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
         }).do(() => this.changeDetectorRef.markForCheck());
     }
 
-    protected toggleSelect$(items: IItemBase[], state: boolean): Observable<IItemBase[]> {
+    public toggleSelect$(items: IItemBase[], state: boolean): Observable<IItemBase[]> {
         if (!this._multiSelect && !items[0].selected === !state) {
             return Observable.of(items);
         } else {
@@ -1144,12 +1154,12 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
         }
     }
 
-    protected calcViewList$(): Observable<IViewListResult> {
+    public calcViewList$(): Observable<IViewListResult> {
         return super.calcViewList$(this.query)
             .do(() => this.changeDetectorRef.markForCheck());
     }
 
-    protected getItemClass(item: IItemTree) {
+    public getItemClass(item: IItemTree) {
         const classNames = ['listitem'] as string[];
         if (item.className) {
             classNames.push(item.className);
