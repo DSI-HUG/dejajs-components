@@ -274,6 +274,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 delete this.selectingItemIndex;
                 setDropDownVisible(false);
                 this.viewPort.element$.next(null);
+                this.changeDetectorRef.markForCheck();
             });
 
         Observable.from(this.showDropDown$)
