@@ -8,7 +8,15 @@
 
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { ChangeDetectorRef, EventEmitter, OnDestroy } from '@angular/core';
+import 'rxjs/add/observable/from';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/observable/timer';
+import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/first';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/reduce';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/takeWhile';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { IGroupInfo } from '../grouping/group-infos';

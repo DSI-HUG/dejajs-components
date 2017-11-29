@@ -7,6 +7,9 @@
  */
 
 import { Component, ElementRef, Input, OnDestroy } from '@angular/core';
+import 'rxjs/add/observable/combineLatest';
+import 'rxjs/add/observable/from';
+import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { DejaColorFab } from './color-fab.class';
@@ -41,9 +44,12 @@ export class DejaColorFabComponent implements OnDestroy {
                     }
             };
 
-            this.subscriptions.push(Observable.from(colorFab.active$).subscribe((value) => toogleAttribute('active', value)));
+            this.subscriptions.push(Observable
+                .from(colorFab.active$)
+                .subscribe((value) => toogleAttribute('active', value)));
 
-            this.subscriptions.push(Observable.combineLatest(colorFab.color$, colorFab.disabled$)
+            this.subscriptions.push(Observable
+                .combineLatest(colorFab.color$, colorFab.disabled$)
                 .map(([color, disabled]) => color && disabled ? color.grayScale : color)
                 .subscribe((color) => this.element.style.backgroundColor = color ? color.toHex() : ''));
 

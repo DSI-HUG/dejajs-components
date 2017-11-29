@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Rect } from '../../../src/common/core/graphics/rect';
@@ -18,6 +18,7 @@ import { IDejaTilesAddEvent, IDejaTilesRemoveEvent } from '../../../src/componen
 import { CountriesService, Country } from '../services/countries.service';
 
 @Component({
+    encapsulation: ViewEncapsulation.None,
     selector: 'deja-tiles-demo',
     styleUrls: ['./tiles-demo.scss'],
     templateUrl: './tiles-demo.html',
@@ -25,12 +26,11 @@ import { CountriesService, Country } from '../services/countries.service';
 export class TilesDemoComponent implements OnInit {
     public tabIndex = 1;
     public messages$: Observable<IMessage[]>;
-
-    protected designMode = false;
+    public tiles1$: Observable<IDejaTile[]>;
+    public tiles2$: Observable<IDejaTile[]>;
+    public designMode = false;
 
     private message$ = new Subject<IMessage>();
-    private tiles1$: Observable<IDejaTile[]>;
-    private tiles2$: Observable<IDejaTile[]>;
 
     constructor(private countriesService: CountriesService) {
         this.messages$ = Observable.from(this.message$)

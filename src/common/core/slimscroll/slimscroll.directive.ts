@@ -6,11 +6,12 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
- /**
- * Licensed under MIT https://github.com/rd-dev-ukraine/angular-io-slimscroll/blob/master/LICENSE
- */
+/**
+* Licensed under MIT https://github.com/rd-dev-ukraine/angular-io-slimscroll/blob/master/LICENSE
+*/
 
 import { Directive, ElementRef, HostListener, Input, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
 interface SlimScrollOptions {
     // width in pixels of the visible scroll area
@@ -130,7 +131,7 @@ export class DejaSlimScrollDirective implements OnInit, OnDestroy {
     private _releaseScroll = false;
     private _options: SlimScrollOptions;
     private _previousHeight: number;
-    private _queueHide: number;
+    private _queueHide = false;
     private _changesTracker: number;
 
     public constructor(private _renderer: Renderer2,
@@ -353,7 +354,7 @@ export class DejaSlimScrollDirective implements OnInit, OnDestroy {
     private showBar(): void {
         // recalculate bar height
         this.getBarHeight();
-        clearTimeout(this._queueHide);
+        this._queueHide = true;
 
         // when bar reached top or bottom
         // tslint:disable-next-line:no-bitwise
@@ -378,12 +379,16 @@ export class DejaSlimScrollDirective implements OnInit, OnDestroy {
     private hideBar(): void {
         // only hide when options allow it
         if (!this._options.alwaysVisible) {
-            this._queueHide = window.setTimeout(() => {
-                if (!(this._options.disableFadeOut && this._isOverPanel) && !this._isOverBar && !this._isDragg) {
-                    this._renderer.setStyle(this._bar, 'opacity', '0');
-                    this._renderer.setStyle(this._rail, 'opacity', '0');
-                }
-            }, 1000);
+            this._queueHide = false;
+            Observable.timer(1000)
+                .first()
+                .filter(() => !this._queueHide)
+                .subscribe(() => {
+                    if (!(this._options.disableFadeOut && this._isOverPanel) && !this._isOverBar && !this._isDragg) {
+                        this._renderer.setStyle(this._bar, 'opacity', '0');
+                        this._renderer.setStyle(this._rail, 'opacity', '0');
+                    }
+                });
         }
     }
 

@@ -7,7 +7,10 @@
  */
 
 import { Directive, ElementRef, EventEmitter, Input, Output } from '@angular/core';
-import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/delay';
+import 'rxjs/add/operator/takeUntil';
 import { Observable } from 'rxjs/Observable';
 import { DejaConnectionPositionPair } from '../../common/core/overlay/connection-position-pair';
 import { DejaTooltipService } from './tooltip.service';

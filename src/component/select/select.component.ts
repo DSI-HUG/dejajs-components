@@ -10,8 +10,21 @@ import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coerci
 import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { MatInput } from '@angular/material';
+import 'rxjs/add/observable/combineLatest';
+import 'rxjs/add/observable/from';
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/observable/merge';
+import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/debounce';
+import 'rxjs/add/operator/debounce';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/delayWhen';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/first';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/takeWhile';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
@@ -92,9 +105,9 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     public overlayOffsetY = 0;
 
     // NgModel implementation
-    protected onTouchedCallback: () => void = noop;
-    protected onChangeCallback: (_: any) => void = noop;
-    protected onValidatorChangeCallback: () => void = noop;
+    public onTouchedCallback: () => void = noop;
+    public onChangeCallback: (_: any) => void = noop;
+    public onValidatorChangeCallback: () => void = noop;
 
     protected _keyboardNavigation = false;
     protected _waiter = false;
@@ -235,7 +248,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
         Observable.from(this.clearFilterExpression$)
             .takeWhile(() => this._isAlive)
-            .debounceTime(750).subscribe(() => this.filterExpression = '');
+            .debounceTime(750)
+            .subscribe(() => this.filterExpression = '');
 
         Observable.combineLatest(this.delaySearchTrigger$, this.filterListComplete$)
             .takeWhile(() => this._isAlive)
@@ -260,6 +274,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 delete this.selectingItemIndex;
                 setDropDownVisible(false);
                 this.viewPort.element$.next(null);
+                this.changeDetectorRef.markForCheck();
             });
 
         Observable.from(this.showDropDown$)

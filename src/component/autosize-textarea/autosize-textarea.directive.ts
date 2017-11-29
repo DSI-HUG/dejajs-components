@@ -8,9 +8,12 @@
 
 import { AfterViewInit, Directive, ElementRef, forwardRef, OnDestroy } from '@angular/core';
 import { NG_VALIDATORS, Validator } from '@angular/forms';
+import 'rxjs/add/observable/from';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/first';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
-import { Subscription } from 'rxjs/Subscription';
 
 /**
  * Directive pour rendre un textarea material redimensioné automatiquement au contenu.
@@ -25,7 +28,7 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class DejaAutosizeTextAreaDirective implements AfterViewInit, Validator, OnDestroy {
     private resize$ = new Subject<void>();
-    private resize$sub: Subscription;
+    private isAlive = true;
 
     constructor(private elementRef: ElementRef) {
         const textAreaElement = this.elementRef.nativeElement as HTMLTextAreaElement;
@@ -37,7 +40,8 @@ export class DejaAutosizeTextAreaDirective implements AfterViewInit, Validator, 
                 textAreaElement.style.overflowY = 'hidden';
             });
 
-        this.resize$sub = Observable.from(this.resize$)
+        Observable.from(this.resize$)
+            .takeWhile(() => this.isAlive)
             .debounceTime(5)
             .do(() => textAreaElement.style.height = '18px')
             .subscribe(() => {
@@ -46,7 +50,7 @@ export class DejaAutosizeTextAreaDirective implements AfterViewInit, Validator, 
     }
 
     public ngOnDestroy() {
-        this.resize$sub.unsubscribe();
+        this.isAlive = false;
     }
 
     public ngAfterViewInit() {

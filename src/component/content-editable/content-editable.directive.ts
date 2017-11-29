@@ -10,10 +10,14 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Directive, ElementRef, HostBinding, Input, OnDestroy, Optional, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/observable/timer';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/first';
+import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/takeUntil';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 
 const noop = () => { };
@@ -22,16 +26,16 @@ const noop = () => { };
     selector: '[deja-editable]',
 })
 export class DejaEditableDirective implements ControlValueAccessor, OnDestroy {
+    public onTouchedCallback: () => void = noop;
+    public onChangeCallback: (_: any) => void = noop;
     private model: string;
     private _inEdition = false;
     private _editMode = false;
     private _mandatory = false;
     private _multiline = false;
-    private onTouchedCallback: () => void = noop;
-    private onChangeCallback: (_: any) => void = noop;
     private edit$ = new BehaviorSubject<[boolean, boolean]>([false, false]);
     private element: HTMLElement;
-    private subscriptions = [] as Subscription[];
+    private isAlive = true;
 
     @HostBinding('attr.disabled') private _disabled = null;
 
@@ -42,7 +46,8 @@ export class DejaEditableDirective implements ControlValueAccessor, OnDestroy {
 
         this.element = elementRef.nativeElement as HTMLElement;
 
-        this.subscriptions.push(Observable.fromEvent(this.element, 'mousedown')
+        Observable.fromEvent(this.element, 'mousedown')
+            .takeWhile(() => this.isAlive)
             .subscribe((e: MouseEvent) => {
                 if (this.inEdition || this.disabled) {
                     e.cancelBubble = true;
@@ -52,7 +57,7 @@ export class DejaEditableDirective implements ControlValueAccessor, OnDestroy {
                     e.cancelBubble = true;
                     return false;
                 }
-            }));
+            });
 
         const inEdition$ = Observable.from(this.edit$)
             .map(([value, selectOnFocus]) => {
@@ -78,7 +83,7 @@ export class DejaEditableDirective implements ControlValueAccessor, OnDestroy {
         const kill$ = inEdition$
             .filter((value) => !value);
 
-        this.subscriptions.push(inEdition$
+        inEdition$
             .filter((value) => value)
             .subscribe(() => {
                 Observable.fromEvent(this.element.ownerDocument, 'mousedown')
@@ -117,7 +122,7 @@ export class DejaEditableDirective implements ControlValueAccessor, OnDestroy {
                         }
                         return false;
                     });
-            }));
+            });
     }
 
     /** Définit une valeur indiquant si le contenu édité est obligatoire. Si la valeur est 'true' la sortie du mode édition ne sera pas possible tant qu'un contenu n'est pas ajouté. */
@@ -213,7 +218,7 @@ export class DejaEditableDirective implements ControlValueAccessor, OnDestroy {
     // ************* End of ControlValueAccessor Implementation **************
 
     public ngOnDestroy() {
-        this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
+        this.isAlive = false;
     }
 
     /** Donne le focus à la zone d'édition. */
