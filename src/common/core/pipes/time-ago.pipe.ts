@@ -7,10 +7,10 @@
  */
 
 import { ChangeDetectorRef, NgZone, OnDestroy, Pipe, PipeTransform } from '@angular/core';
+import 'rxjs/add/observable/from';
 import 'rxjs/add/operator/debounce';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
-import { Subscription } from 'rxjs/Subscription';
 
 import * as moment_ from 'moment';
 const moment: (value?: any, format?: string) => moment_.Moment = (<any>moment_).default || moment_;
@@ -22,10 +22,11 @@ export class TimeAgoPipe implements PipeTransform, OnDestroy {
     private lastOmitSuffix: boolean;
     private lastText: string;
     private createTimer$ = new Subject();
-    private createTimer$sub: Subscription;
+    private isAlive = true;;
 
     constructor(private cdRef: ChangeDetectorRef, private ngZone: NgZone) {
-        this.createTimer$sub = Observable.from(this.createTimer$)
+        Observable.from(this.createTimer$)
+            .takeWhile(() => this.isAlive)
             .debounce(() => {
                 const momentInstance = moment(this.lastValue);
                 const timeToUpdate = this.getSecondsUntilUpdate(momentInstance) * 1000;
@@ -40,7 +41,7 @@ export class TimeAgoPipe implements PipeTransform, OnDestroy {
     }
 
     public ngOnDestroy() {
-        this.createTimer$sub.unsubscribe();
+        this.isAlive = false;
     }
 
     public transform(value: Date | moment_.Moment, omitSuffix?: boolean): string {
