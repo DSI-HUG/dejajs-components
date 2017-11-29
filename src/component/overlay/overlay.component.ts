@@ -7,18 +7,10 @@
  */
 
 import { ConnectedOverlayDirective, OverlayContainer, OverlayOrigin } from '@angular/cdk/overlay';
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    EventEmitter,
-    Input,
-    OnDestroy,
-    Output,
-    ViewChild,
-    ViewEncapsulation
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import 'rxjs/add/observable/timer';
+import 'rxjs/add/operator/first';
+import 'rxjs/add/operator/takeWhile';
 import { Observable } from 'rxjs/Observable';
 import { MediaService } from '../../common/core/media/media.service';
 import { DejaConnectionPositionPair } from '../../common/core/overlay/connection-position-pair';
