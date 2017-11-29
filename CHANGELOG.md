@@ -1,3 +1,28 @@
+#### 2.18.4 (2017-11-29)
+
+##### Bug Fixes
+
+* **SortingService:** Re-add test to check as a date when type date is specified inside SortInfo. ([8a945be7](https://github.com/DSI-HUG/dejajs-components/commit/8a945be78c5aa00857fffdc1feb69a668f494821))
+* **DejaSelect:**
+  * Autocomplete clear model when text is changed DEJS-246 ([14efbbde](https://github.com/DSI-HUG/dejajs-components/commit/14efbbde2140745ea1e62f5163645d908f63255d))
+  * Width regression from material rc0 migration ([6188733f](https://github.com/DSI-HUG/dejajs-components/commit/6188733fe54d2913a13b9c5990534ca40dbfcf1a))
+* **DejaItemBase:** viewPortRowHeight and viewPortRowMode don't use coercion ([fc173f00](https://github.com/DSI-HUG/dejajs-components/commit/fc173f00b5e80abbff31ef87c8cad2f20d89c9f5))
+* **DejaSelectComponent:** Issues fixing find by unit test ([279f5942](https://github.com/DSI-HUG/dejajs-components/commit/279f59420783ca4b7c4513aa6860fc4c97157850))
+
+##### Tests
+
+* **DejaEditable:** Add unit test ([4d9434c3](https://github.com/DSI-HUG/dejajs-components/commit/4d9434c378341d3f3abde8cde0de008d795dfd1f))
+* **Graphics:**
+  * Improve unit test ([99158c83](https://github.com/DSI-HUG/dejajs-components/commit/99158c83ce9a9bdaca66683c26fbb1f89f83db68))
+  * Add unit test ([c943744b](https://github.com/DSI-HUG/dejajs-components/commit/c943744b60dd420ab165dded9d81022111832d44))
+* **DejaClipboardService:** Add unit test ([11488b1d](https://github.com/DSI-HUG/dejajs-components/commit/11488b1de61254b2c19bf6dc1cea3555dad1f5a8))
+* **DejaSelectComponent:**
+  * Improve unit test ([c645bdb4](https://github.com/DSI-HUG/dejajs-components/commit/c645bdb4b3fd6cb20e4a4b4aa5978ff39a8ded83))
+  * Added unit test ([1a6c2e5a](https://github.com/DSI-HUG/dejajs-components/commit/1a6c2e5a37254ce215df1ded01a6ec5238e66767))
+* **DejaSelect:**
+  * Improve Unit Test ([18263df4](https://github.com/DSI-HUG/dejajs-components/commit/18263df459b104a9a05c79dee58cc5289ed603c4))
+  * Improve Unit Test ([6eedd9f4](https://github.com/DSI-HUG/dejajs-components/commit/6eedd9f4506e1dea6d9758182c8f65df2d3f4ca2))
+
 #### 2.18.3 (2017-11-28)
 
 ##### Bug Fixes
