@@ -9,10 +9,13 @@
 import { Directive, ElementRef, Input, OnDestroy } from '@angular/core';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/observable/merge';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/takeUntil';
+import 'rxjs/add/operator/takeWhile';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
-import { Subscription } from 'rxjs/Subscription';
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
 import { DejaMouseDragDropService, IDragCursorInfos } from './mouse-dragdrop.service';
@@ -22,7 +25,7 @@ import { DejaMouseDragDropService, IDragCursorInfos } from './mouse-dragdrop.ser
 })
 export class DejaMouseDraggableDirective implements OnDestroy {
     private _context: IDejaMouseDraggableContext;
-    private mouseenter$sub: Subscription;
+    private isAlive = true;
 
     @Input('deja-mouse-draggable')
     public set context(value: IDejaMouseDraggableContext) {
@@ -40,7 +43,8 @@ export class DejaMouseDraggableDirective implements OnDestroy {
 
         const mouseUp$ = Observable.fromEvent(element.ownerDocument, 'mouseup');
 
-        this.mouseenter$sub = Observable.fromEvent(element, 'mouseenter')
+        Observable.fromEvent(element, 'mouseenter')
+            .takeWhile(() => this.isAlive)
             .subscribe(() => {
                 Observable.fromEvent(element, 'mousedown')
                     .takeUntil(leave$)
@@ -57,9 +61,9 @@ export class DejaMouseDraggableDirective implements OnDestroy {
                             const kill$ = Observable.merge(mouseUp$, moveUp$)
                                 .first()
                                 .do(() => {
-                                dragDropService.dragCursor$.next(undefined);
-                                dragDropService.dragging$.next(false);
-                            });
+                                    dragDropService.dragCursor$.next(undefined);
+                                    dragDropService.dragging$.next(false);
+                                });
 
                             Observable.fromEvent(element.ownerDocument, 'mousemove')
                                 .takeUntil(kill$)
@@ -110,7 +114,7 @@ export class DejaMouseDraggableDirective implements OnDestroy {
                                             .subscribe((ddctx) => {
                                                 dragDropService.context = ddctx;
                                                 if (ddctx) {
-                                                startDrag();
+                                                    startDrag();
                                                 }
                                             });
                                         return;
@@ -126,7 +130,7 @@ export class DejaMouseDraggableDirective implements OnDestroy {
     }
 
     public ngOnDestroy() {
-        this.mouseenter$sub.unsubscribe();
+        this.isAlive = false;
     }
 }
 

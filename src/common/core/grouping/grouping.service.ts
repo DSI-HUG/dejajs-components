@@ -6,7 +6,13 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import 'rxjs/add/observable/from';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator/reduce';
+import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/toPromise';
 import { Observable } from 'rxjs/Observable';
 import { IItemTree } from '../item-list/item-tree';

@@ -9,12 +9,18 @@
 // TODO Key events
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, HostBinding, Input, OnDestroy, ViewChild } from '@angular/core';
+import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/observable/interval';
 import 'rxjs/add/observable/interval';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/observable/timer';
+import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/delay';
+import 'rxjs/add/operator/first';
+import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/takeUntil';
+import 'rxjs/add/operator/takeWhile';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';

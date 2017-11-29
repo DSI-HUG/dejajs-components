@@ -7,7 +7,20 @@
  */
 
 import { EventEmitter, Injectable, OnDestroy, Optional } from '@angular/core';
+import 'rxjs/add/observable/from';
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/observable/merge';
+import 'rxjs/add/observable/timer';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/delay';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/first';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/reduce';
 import 'rxjs/add/operator/take';
+import 'rxjs/add/operator/takeUntil';
+import 'rxjs/add/operator/takeWhile';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -102,12 +115,13 @@ export class DejaTilesLayoutProvider implements OnDestroy {
     private currentTile: DejaTile;
     private hundredPercentWith: number;
     private dragTarget: Rect;
-    private subscriptions: Subscription[] = [];
+    private isAlive = true;
 
     private selectedIds = [] as string[];
 
     constructor( @Optional() private clipboardService: DejaClipboardService) {
-        this.subscriptions.push(Observable.from(this.refreshTiles$)
+        Observable.from(this.refreshTiles$)
+            .takeWhile(() => this.isAlive)
             .debounceTime(30)
             .do(() => {
                 this.container.style.width = '';
@@ -195,7 +209,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                 }
 
                 this.selectedTiles = selectedTileIds;
-            }));
+            });
 
         const ensureTile$ = Observable.from(this.ensureVisible$)
             .delay(1)
@@ -203,7 +217,8 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             .filter((tile) => !!tile)
             .map((tile) => tile.percentBounds);
 
-        this.subscriptions.push(Observable.merge(this.ensureBounds$, ensureTile$)
+        Observable.merge(this.ensureBounds$, ensureTile$)
+            .takeWhile(() => this.isAlive)
             .subscribe((percentBounds) => {
                 const { left, right, top, bottom } = this.getPixelBounds(percentBounds);
 
@@ -234,9 +249,10 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                 } else if (bottom + containerBounds.top > scrollBounds.bottom) {
                     scrollContainer.scrollTop += bottom + containerBounds.top - scrollBounds.bottom;
                 }
-            }));
+            });
 
-        this.subscriptions.push(Observable.from(this.dragSelection$)
+        Observable.from(this.dragSelection$)
+            .takeWhile(() => this.isAlive)
             .subscribe((dragSelection) => {
                 const mouseUp$ = Observable
                     .fromEvent(this._container.ownerDocument, 'mouseup')
@@ -256,11 +272,12 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                         const selection = this.HitTest(dragSelection.selectedRect);
                         this.selectedTiles = selection.map((tile) => tile.id);
                     });
-            }));
+            });
 
         const leave$ = Observable.from(this.dragleave$);
 
-        this.subscriptions.push(Observable.from(this.dragDropInfos$)
+        Observable.from(this.dragDropInfos$)
+            .takeWhile(() => this.isAlive)
             .subscribe((dragDropInfos) => {
                 if (!dragDropInfos || !dragDropInfos.tiles || !dragDropInfos.tiles.length) {
                     return;
@@ -342,11 +359,12 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                             this.drag(dragDropInfos.tiles, x, y);
                         }
                     });
-            }));
+            });
 
         // Delete stream for clipboard
-        this.subscriptions.push(Observable.from(this.deleteTiles$)
-            .subscribe((tilesToDelete) => this.deleteTiles(tilesToDelete)));
+        Observable.from(this.deleteTiles$)
+            .takeWhile(() => this.isAlive)
+            .subscribe((tilesToDelete) => this.deleteTiles(tilesToDelete));
     }
 
     public set container(container: HTMLElement) {
@@ -527,7 +545,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
     }
 
     public ngOnDestroy() {
-        this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
+        this.isAlive = false;
     }
 
     public copySelection() {

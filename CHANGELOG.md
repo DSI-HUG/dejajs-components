@@ -1,3 +1,15 @@
+#### 2.18.5 (2017-11-29)
+
+##### Bug Fixes
+
+* **DemoTiles:** Drag cursor is missing ([cfccdeba](https://github.com/DSI-HUG/dejajs-components/commit/cfccdeba2c523676bb1c820f5b4244a4c00cb86e))
+* **DejaSelect:** Hide when an element is clicked ([6236f108](https://github.com/DSI-HUG/dejajs-components/commit/6236f108d4fe175dc3ced30e08fbcf53863a64b8))
+* **ColorPicker:** Disabled style ([3217117d](https://github.com/DSI-HUG/dejajs-components/commit/3217117d656dec93eef8c38e82b9e1ee827df23c))
+* **Global:**
+  * RxJs Imports ([751fbebe](https://github.com/DSI-HUG/dejajs-components/commit/751fbebe16ae2488129c8fcbb1c00e374841cbdc))
+  * RxJs Imports ([dd445747](https://github.com/DSI-HUG/dejajs-components/commit/dd445747d8e333428d62e24328f3a10bb0318633))
+  * RxJs Imports ([4047f5d2](https://github.com/DSI-HUG/dejajs-components/commit/4047f5d2074b3f608644b1255e47af969cb417a1))
+
 #### 2.18.4 (2017-11-29)
 
 ##### Bug Fixes

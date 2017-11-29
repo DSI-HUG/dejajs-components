@@ -8,9 +8,9 @@
 
 import { ChangeDetectionStrategy, Component, OnDestroy, ViewEncapsulation } from '@angular/core';
 import 'rxjs/add/observable/from';
+import 'rxjs/add/operator/takeWhile';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,11 +21,9 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class AppComponent implements OnDestroy {
     public version: string;
-    protected navOpened = true;
-
     private _theme: string;
-    protected theme$: BehaviorSubject<string>;
-    private theme$sub: Subscription;
+    private theme$: BehaviorSubject<string>;
+    private isAlive = true;
 
     constructor() {
         try {
@@ -38,7 +36,9 @@ export class AppComponent implements OnDestroy {
             this._theme = 'hug';
         }
         this.theme$ = new BehaviorSubject<any>(this._theme);
-        this.theme$sub = Observable.from(this.theme$).subscribe((theme) => document.body.setAttribute('theme', theme));
+        Observable.from(this.theme$)
+            .takeWhile(() => this.isAlive)
+            .subscribe((theme) => document.body.setAttribute('theme', theme));
     }
 
     public get theme() {
@@ -57,11 +57,6 @@ export class AppComponent implements OnDestroy {
     }
 
     public ngOnDestroy() {
-        this.theme$sub.unsubscribe();
-    }
-
-    protected get debug() {
-        // console.log('Binding ' + Date.now());
-        return null;
+        this.isAlive = false;
     }
 }
