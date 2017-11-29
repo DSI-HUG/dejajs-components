@@ -48,7 +48,7 @@ export class DejaGridGroupAreaComponent {
             return null;
         }
 
-        // console.log(`getDragContext ` + group.column.name + ' ' + Date.now();
+        // console.log(`getDragContext ` + group.name + ' ' + Date.now());
         return {
             dragendcallback: (event: IDejaDragEvent) => {
                 if (!event.dragInfo.hasOwnProperty(this.columnGroupKey)) {
