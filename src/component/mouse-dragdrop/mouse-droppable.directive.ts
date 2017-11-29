@@ -7,8 +7,12 @@
  */
 
 import { Directive, ElementRef, Input, OnDestroy } from '@angular/core';
+import 'rxjs/add/observable/from';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/first';
+import 'rxjs/add/operator/takeUntil';
+import 'rxjs/add/operator/takeWhile';
 import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
 import { DejaMouseDragDropService, IDragCursorInfos, IDragDropContext, IDropCursorInfos } from './mouse-dragdrop.service';
@@ -19,7 +23,7 @@ import { DejaMouseDragDropService, IDragCursorInfos, IDragDropContext, IDropCurs
 export class DejaMouseDroppableDirective implements OnDestroy {
     private _context: IDejaMouseDroppableContext;
     private _dragContext: IDragDropContext;
-    private dragging$sub: Subscription;
+    private isAlive = true;
 
     @Input('deja-mouse-droppable')
     public set context(value: IDejaMouseDroppableContext) {
@@ -38,7 +42,8 @@ export class DejaMouseDroppableDirective implements OnDestroy {
         const kill$ = dragging$
             .filter((value) => !value);
 
-        this.dragging$sub = dragging$
+        dragging$
+            .takeWhile(() => this.isAlive)
             .filter((value) => value)
             .subscribe(() => {
                 kill$
@@ -79,8 +84,8 @@ export class DejaMouseDroppableDirective implements OnDestroy {
                                             }
                                         }
                                     }
-                                    } else if (this.context.dragOver) {
-                                        const overContext = this.context.dragOver(this._dragContext, dragCursor);
+                                } else if (this.context.dragOver) {
+                                    const overContext = this.context.dragOver(this._dragContext, dragCursor);
                                     if (overContext) {
                                         dragDropService.dropCursor$.next(overContext);
                                     }
@@ -98,7 +103,7 @@ export class DejaMouseDroppableDirective implements OnDestroy {
     }
 
     public ngOnDestroy() {
-        this.dragging$sub.unsubscribe();
+        this.isAlive = false;
     }
 }
 

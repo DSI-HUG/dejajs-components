@@ -9,9 +9,11 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Optional, Output, Self, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
+import 'rxjs/add/observable/from';
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/operator/first';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
-import { Subscription } from 'rxjs/Subscription';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { IDateSelectorItem } from './date-selector-item.model';
 
@@ -86,7 +88,10 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
         return this._local;
     }
 
-    private subscriptions: Subscription[] = [];
+    public onTouchedCallback: () => void = noop;
+    public onChangeCallback: (_: any) => void = noop;
+
+    private isAlive = true;
 
     private _currentDays: IDateSelectorItem[];
     private _currentDate: Date = new Date();
@@ -98,9 +103,6 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
     private _emptyDays: any[];
     private _time: boolean;
     private _disabled: boolean;
-
-    private onTouchedCallback: () => void = noop;
-    private onChangeCallback: (_: any) => void = noop;
 
     /**
      * Component Layout
@@ -178,17 +180,20 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
             this._control.valueAccessor = this;
         }
 
-        this.subscriptions.push(Observable.fromEvent(element, 'click').subscribe((event: Event) => {
-            const target = event.target as HTMLElement;
-            if (target.hasAttribute('dateindex')) {
-                const dateSelectorItem = this._currentDays[+target.getAttribute('dateindex')];
-                if (!dateSelectorItem.disabled) {
-                    this.value = dateSelectorItem.date;
+        Observable.fromEvent(element, 'click')
+            .takeWhile(() => this.isAlive)
+            .subscribe((event: Event) => {
+                const target = event.target as HTMLElement;
+                if (target.hasAttribute('dateindex')) {
+                    const dateSelectorItem = this._currentDays[+target.getAttribute('dateindex')];
+                    if (!dateSelectorItem.disabled) {
+                        this.value = dateSelectorItem.date;
+                    }
                 }
-            }
-        }));
+            });
 
-        this.subscriptions.push(Observable.from(this._keyboardNavigation$)
+        Observable.from(this._keyboardNavigation$)
+            .takeWhile(() => this.isAlive)
             .subscribe(() => {
                 this._keyboardNavigation = true;
                 Observable.fromEvent(element, 'mouseenter')
@@ -209,7 +214,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
     }
 
     public ngOnDestroy() {
-        this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
+        this.isAlive = false;
     }
 
     // ************* ControlValueAccessor Implementation **************

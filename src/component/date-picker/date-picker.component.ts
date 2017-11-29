@@ -13,6 +13,16 @@ import { formatToMask, formatToUnitOfTime } from './format-to-mask';
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import * as moment_ from 'moment';
+import 'rxjs/add/observable/combineLatest';
+import 'rxjs/add/observable/from';
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/observable/merge';
+import 'rxjs/add/operator/delay';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/first';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/switchMap';
 import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Subject } from 'rxjs/Subject';
@@ -67,6 +77,9 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
         return this._mask;
     }
 
+    public onTouchedCallback: () => void = noop;
+    public onChangeCallback: (_: any) => void = noop;
+
     /** Internal use */
     public overlayOwnerElement: HTMLElement;
     public date = new Date();
@@ -88,9 +101,6 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     private cursorPosition: number;
     private formatChanged$ = new Subject<string>();
     private dateChanged$ = new Subject<Date>();
-
-    private onTouchedCallback: () => void = noop;
-    private onChangeCallback: (_: any) => void = noop;
 
     @ViewChild('inputelement')
     private set inputElementRef(element: ElementRef) {
@@ -231,7 +241,10 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
 
                 // si la position du curseur était stockée, on la restaure apres avoir changé la valeur
                 if (this.cursorPosition) {
-                    this.inputElement$.delay(1).first().subscribe((elem: HTMLInputElement) => elem.setSelectionRange(this.cursorPosition, this.cursorPosition));
+                    this.inputElement$
+                        .delay(1)
+                        .first()
+                        .subscribe((elem: HTMLInputElement) => elem.setSelectionRange(this.cursorPosition, this.cursorPosition));
                 }
                 this.changeDetectorRef.markForCheck();
             });

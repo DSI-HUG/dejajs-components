@@ -8,9 +8,9 @@
 
 import { Directive, ElementRef, HostBinding, Input, OnDestroy, Optional } from '@angular/core';
 import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/operator/takeUntil';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/first';
 import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
 import { DejaClipboardService } from '../../common/core/clipboard/clipboard.service';
 import { UUID } from '../../common/core/UUID';
 
@@ -18,14 +18,14 @@ import { UUID } from '../../common/core/UUID';
     selector: '[deja-draggable]',
 })
 export class DejaDraggableDirective implements OnDestroy {
+    @HostBinding('attr.draggable') public draggable = null;
     @HostBinding('attr.dragdropid') private dragdropid;
-    @HostBinding('attr.draggable') private draggable = null;
     private draginfokey = 'draginfos';
     private objectKey = 'object';
     private elementKey = 'element';
     private uuidKey = 'uuid';
     private _context: IDejaDragContext;
-    private dragstart$sub: Subscription;
+    private isAlive = true;
 
     @Input('deja-draggable')
     public set context(value: IDejaDragContext) {
@@ -40,7 +40,8 @@ export class DejaDraggableDirective implements OnDestroy {
     constructor(elementRef: ElementRef, @Optional() private clipboardService: DejaClipboardService) {
         const element = elementRef.nativeElement as HTMLElement;
 
-        this.dragstart$sub = Observable.fromEvent(element, 'dragstart')
+        Observable.fromEvent(element, 'dragstart')
+            .takeWhile(() => this.isAlive)
             .filter(() => !!this.context)
             .subscribe((event: DragEvent) => {
                 if (!clipboardService) {
@@ -77,6 +78,7 @@ export class DejaDraggableDirective implements OnDestroy {
                 }
 
                 Observable.fromEvent(element, 'dragend')
+                    .takeWhile(() => this.isAlive)
                     .first()
                     .subscribe((evt: DragEvent) => {
                         // console.log('dragend');
@@ -105,7 +107,7 @@ export class DejaDraggableDirective implements OnDestroy {
     }
 
     public ngOnDestroy() {
-        this.dragstart$sub.unsubscribe();
+        this.isAlive = false;
     }
 }
 
