@@ -27,7 +27,7 @@ export class DejaDroppableDirective implements OnDestroy {
         this._allEvents = coerceBooleanProperty(value);
     }
 
-    @HostBinding('attr.droppable') private droppable = null;
+    @HostBinding('attr.droppable') public droppable = null;
     private draginfokey = 'draginfos';
     private objectKey = 'object';
     private droppedKey = 'dropped';

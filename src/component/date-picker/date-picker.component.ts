@@ -65,6 +65,9 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
         return this._mask;
     }
 
+    public onTouchedCallback: () => void = noop;
+    public onChangeCallback: (_: any) => void = noop;
+
     /** Internal use */
     public overlayOwnerElement: HTMLElement;
     public date = new Date();
@@ -86,9 +89,6 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     private cursorPosition: number;
     private formatChanged$ = new Subject<string>();
     private dateChanged$ = new Subject<Date>();
-
-    private onTouchedCallback: () => void = noop;
-    private onChangeCallback: (_: any) => void = noop;
 
     @ViewChild('inputelement')
     private set inputElementRef(element: ElementRef) {
