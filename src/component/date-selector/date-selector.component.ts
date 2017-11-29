@@ -110,9 +110,9 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
     @Input()
     public set layout(value: DateComponentLayout | string) {
         if (value) {
-            if(typeof value === 'string') {
+            if (typeof value === 'string') {
                 this.layoutId = DateComponentLayout[value];
-                if(!this.layoutId) {
+                if (!this.layoutId) {
                     throw new Error('Invalid type for DateComponentLayout');
                 }
                 this.layoutClass = value;
@@ -202,7 +202,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
                         this._keyboardNavigation = false;
                         this.changeDetectorRef.markForCheck();
                     });
-            }));
+            });
         this.layout = DateComponentLayout.dateonly;
     }
 
@@ -237,7 +237,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
             if (this.selectedDate) {
                 const h = (value) ? value.getHours() : 0;
                 const m = (value) ? value.getMinutes() : 0;
-                if (value && ((!this.layoutId && this.selectedDate.toLocaleTimeString() !== value.toLocaleTimeString()) || (this.layoutId > 1 && ((this.selectedDate.getHours() === 0 && this.selectedDate.getMinutes() === 0) && (h !== 0 && m !== 0)|| (this.selectedDate.toLocaleDateString() !== value.toLocaleDateString()))))) {
+                if (value && ((!this.layoutId && this.selectedDate.toLocaleTimeString() !== value.toLocaleTimeString()) || (this.layoutId > 1 && ((this.selectedDate.getHours() === 0 && this.selectedDate.getMinutes() === 0) && (h !== 0 && m !== 0) || (this.selectedDate.toLocaleDateString() !== value.toLocaleDateString()))))) {
                     value.setHours(this.selectedDate.getHours(), this.selectedDate.getMinutes(), this.selectedDate.getSeconds());
                 }
             }
