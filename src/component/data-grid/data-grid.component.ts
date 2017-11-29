@@ -445,7 +445,6 @@ export class DejaGridComponent implements OnDestroy {
 
         Observable.from(this.columns$)
             .takeWhile(() => this.isAlive)
-            .debounceTime(1)
             .do((columns) => this._columns = columns)
             .debounceTime(1)
             .subscribe(() => this.calcColumnsLayout());
