@@ -11,6 +11,10 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, El
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/observable/merge';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/sampleTime';
 import 'rxjs/add/operator/takeUntil';
 import { Observable } from 'rxjs/Observable';
@@ -73,6 +77,9 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
         return this._disabled;
     }
 
+    public onTouchedCallback: () => void = noop;
+    public onChangeCallback: (_: any) => void = noop;
+
     private _disabled = false;
 
     private _value: number;
@@ -92,9 +99,6 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
     private cursorElement: HTMLElement;
 
     private clickedTime: number;
-
-    private onTouchedCallback: () => void = noop;
-    private onChangeCallback: (_: any) => void = noop;
 
     private mousedown$sub: Subscription;
 

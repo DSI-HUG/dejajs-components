@@ -9,12 +9,18 @@
 // TODO Key events
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, HostBinding, Input, OnDestroy, ViewChild } from '@angular/core';
+import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/observable/interval';
 import 'rxjs/add/observable/interval';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/observable/timer';
+import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/delay';
+import 'rxjs/add/operator/first';
+import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/takeUntil';
+import 'rxjs/add/operator/takeWhile';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
@@ -62,7 +68,6 @@ export class DejaViewPortComponent implements OnDestroy {
     private upButton$Sub: Subscription;
     private mouseWheel$Sub: Subscription;
     private scrollPosition = 0;
-    private scroll$Sub: Subscription;
 
     /** Permet de définir un template d'élément par binding */
     @Input() public itemTemplateExternal;
@@ -135,7 +140,7 @@ export class DejaViewPortComponent implements OnDestroy {
     private set wrapperElement(element: ElementRef) {
         this.element = element.nativeElement as HTMLElement;
         this.viewPort.element$.next(this.element);
-        this.scroll$Sub = Observable.fromEvent(this.element, 'scroll')
+        Observable.fromEvent(this.element, 'scroll')
             .takeWhile(() => this.isAlive)
             .map((event: Event) => event.target as HTMLElement)
             .map((target) => Math.round(this._isHorizontal ? target.scrollLeft : target.scrollTop))

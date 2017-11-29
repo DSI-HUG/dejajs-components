@@ -8,7 +8,7 @@
 
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator/reduce';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/toPromise';
 import { Observable } from 'rxjs/Observable';
@@ -78,6 +78,9 @@ export class SortingService {
         if (typea === typeb) {
             if (typea === 'number') {
                 return orderfact * (flda - fldb);
+            } else if (typea === 'date') {
+                // If the type is specified on the sortInfo
+                return orderfact * (flda.getTime() - fldb.getTime());
             } else if (typea === 'object') {
                 typea = flda.constructor.name;
                 typeb = fldb.constructor.name;

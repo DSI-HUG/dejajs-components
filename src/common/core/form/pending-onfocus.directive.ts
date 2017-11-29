@@ -8,29 +8,29 @@
 
 import { AfterContentInit, Directive, HostListener, OnDestroy } from '@angular/core';
 import { NgControl } from '@angular/forms';
-import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/takeWhile';
 
 @Directive({
     selector: '[pending-onfocus]',
 })
 export class PendingOnFocusDirective implements AfterContentInit, OnDestroy {
     private hasFocus = false;
-    private valueChanges$sub: Subscription;
+    private isAlive = true;
 
     constructor(public formControl: NgControl) {
 
     }
 
     public ngAfterContentInit() {
-        this.valueChanges$sub = this.formControl.control.valueChanges
+        this.formControl.control.valueChanges
+            .takeWhile(() => this.isAlive)
             .filter(() => this.hasFocus)
             .subscribe(() => this.formControl.control.markAsPending());
     }
 
     public ngOnDestroy() {
-        if (this.valueChanges$sub) {
-            this.valueChanges$sub.unsubscribe();
-        }
+        this.isAlive = false;
     }
 
     @HostListener('focus')

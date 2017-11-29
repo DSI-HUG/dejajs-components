@@ -10,6 +10,8 @@
  * Dragdrop service for mouse drag and drop
  */
 import { Injectable } from '@angular/core';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/filter';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
 import { Position } from '../../common/core/graphics/position';

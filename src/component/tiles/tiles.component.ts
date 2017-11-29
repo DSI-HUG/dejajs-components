@@ -9,6 +9,10 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output, Self, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/takeWhile';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -82,9 +86,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     private cut$sub: Subscription;
     private paste$sub: Subscription;
     private keyup$: Observable<KeyboardEvent>;
-    private resize$sub: Subscription;
-    private modelChanged$sub: Subscription;
-    private layoutChanged$sub: Subscription;
+    private isAlive = true;
     private _tiles$ = new BehaviorSubject<DejaTile[]>([]);
     private hasFocus = false;
 
@@ -105,19 +107,24 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
         this.contentAdding = this.layoutProvider.contentAdding;
         this.contentRemoving = this.layoutProvider.contentRemoving;
 
-        this.modelChanged$sub = this.layoutProvider.modelChanged.subscribe((event) => {
-            this.modelChanged.emit(event);
-            this.onChangeCallback(event.tiles);
-        });
+        this.layoutProvider.modelChanged
+            .takeWhile(() => this.isAlive)
+            .subscribe((event) => {
+                this.modelChanged.emit(event);
+                this.onChangeCallback(event.tiles);
+            });
 
-        this.layoutChanged$sub = this.layoutProvider.layoutChanged.subscribe((event) => {
-            this.layoutChanged.emit(event);
-            this.onChangeCallback(event.tiles);
-        });
+        this.layoutProvider.layoutChanged
+            .takeWhile(() => this.isAlive)
+            .subscribe((event) => {
+                this.layoutChanged.emit(event);
+                this.onChangeCallback(event.tiles);
+            });
 
         this.keyup$ = Observable.fromEvent(element.ownerDocument, 'keyup');
 
-        this.resize$sub = Observable.fromEvent(window, 'resize')
+        Observable.fromEvent(window, 'resize')
+            .takeWhile(() => this.isAlive)
             .debounceTime(5)
             .subscribe(() => this.refresh({ resetWidth: true }));
     }
@@ -256,9 +263,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
         this.canCut = false;
         this.canDelete = false;
         this.canPaste = false;
-        this.resize$sub.unsubscribe();
-        this.modelChanged$sub.unsubscribe();
-        this.layoutChanged$sub.unsubscribe();
+        this.isAlive = false;
     }
 
     public copySelection() {

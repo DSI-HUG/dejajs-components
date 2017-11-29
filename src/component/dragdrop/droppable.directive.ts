@@ -8,9 +8,12 @@
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Directive, ElementRef, HostBinding, Input, OnDestroy, Optional } from '@angular/core';
+import 'rxjs/add/observable/from';
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/filter';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
-import { Subscription } from 'rxjs/Subscription';
 import { DejaClipboardService } from '../../common/core/clipboard/clipboard.service';
 import { IDejaDragEvent } from './draggable.directive';
 
@@ -36,7 +39,7 @@ export class DejaDroppableDirective implements OnDestroy {
     private lastAccept: boolean;
     private _allEvents = false;
     private _context: IDejaDropContext;
-    private subscriptions = [] as Subscription[];
+    private isAlive = true;
 
     @Input('deja-droppable')
     public set context(value: IDejaDropContext) {
@@ -58,7 +61,8 @@ export class DejaDroppableDirective implements OnDestroy {
             .do(() => inDrag = false)
             .filter((value) => !value);
 
-        this.subscriptions.push(Observable.from(dragDrop$)
+        Observable.from(dragDrop$)
+            .takeWhile(() => this.isAlive)
             .subscribe((dragEvent) => {
                 if (dragEvent.type === 'dragenter') {
                     if (inDrag) {
@@ -154,9 +158,10 @@ export class DejaDroppableDirective implements OnDestroy {
                     }
                     kill$.next();
                 }
-            }));
+            });
 
-        this.subscriptions.push(Observable.fromEvent(element, 'dragenter')
+        Observable.fromEvent(element, 'dragenter')
+            .takeWhile(() => this.isAlive)
             .filter(() => !!this.context)
             .filter(() => !!this.clipboardService.get(this.draginfokey))
             .subscribe((event: DragEvent) => {
@@ -164,9 +169,10 @@ export class DejaDroppableDirective implements OnDestroy {
                     throw new Error('To use the DejaDroppableDirective, please import and provide the DejaClipboardService in your application.');
                 }
                 dragDrop$.next(event);
-            }));
+            });
 
-        this.subscriptions.push(Observable.fromEvent(element, 'dragleave')
+        Observable.fromEvent(element, 'dragleave')
+            .takeWhile(() => this.isAlive)
             .filter(() => !!this.context)
             .filter(() => !!this.clipboardService.get(this.draginfokey))
             .subscribe((leaveEvent: DragEvent) => {
@@ -176,11 +182,11 @@ export class DejaDroppableDirective implements OnDestroy {
                 if (!inside) {
                     dragDrop$.next(leaveEvent);
                 }
-            }));
+            });
     }
 
     public ngOnDestroy() {
-        this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
+        this.isAlive = true;
     }
 }
 
