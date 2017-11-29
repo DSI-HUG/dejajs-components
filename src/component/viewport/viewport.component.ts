@@ -62,7 +62,6 @@ export class DejaViewPortComponent implements OnDestroy {
     private upButton$Sub: Subscription;
     private mouseWheel$Sub: Subscription;
     private scrollPosition = 0;
-    private scroll$Sub: Subscription;
 
     /** Permet de définir un template d'élément par binding */
     @Input() public itemTemplateExternal;
@@ -135,7 +134,7 @@ export class DejaViewPortComponent implements OnDestroy {
     private set wrapperElement(element: ElementRef) {
         this.element = element.nativeElement as HTMLElement;
         this.viewPort.element$.next(this.element);
-        this.scroll$Sub = Observable.fromEvent(this.element, 'scroll')
+        Observable.fromEvent(this.element, 'scroll')
             .takeWhile(() => this.isAlive)
             .map((event: Event) => event.target as HTMLElement)
             .map((target) => Math.round(this._isHorizontal ? target.scrollLeft : target.scrollTop))

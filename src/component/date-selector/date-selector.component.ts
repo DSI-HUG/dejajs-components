@@ -80,6 +80,9 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
         return this._local;
     }
 
+    public onTouchedCallback: () => void = noop;
+    public onChangeCallback: (_: any) => void = noop;
+
     private subscriptions: Subscription[] = [];
 
     private _currentDays: IDateSelectorItem[];
@@ -92,9 +95,6 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
     private _emptyDays: any[];
     private _time: boolean;
     private _disabled: boolean;
-
-    private onTouchedCallback: () => void = noop;
-    private onChangeCallback: (_: any) => void = noop;
 
     /**
      * Time property setter. Can be string or empty so you can use it like : <deja-date-selector time></deja-date-selector>

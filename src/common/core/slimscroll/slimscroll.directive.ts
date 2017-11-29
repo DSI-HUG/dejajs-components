@@ -126,7 +126,6 @@ export class DejaSlimScrollDirective implements OnInit, OnDestroy {
     private _touchDif: number;
     private _barHeight: number;
     private _percentScroll: number;
-    private _lastScroll: number;
     private _minBarHeight = 30;
     private _releaseScroll = false;
     private _options: SlimScrollOptions;
@@ -364,8 +363,6 @@ export class DejaSlimScrollDirective implements OnInit, OnDestroy {
         } else {
             this._releaseScroll = false;
         }
-
-        this._lastScroll = this._percentScroll;
 
         // show only when required
         if (this._barHeight >= this._me.offsetHeight) {
