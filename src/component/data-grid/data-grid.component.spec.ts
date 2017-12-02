@@ -22,6 +22,7 @@ import { ItemListService } from '../../common/core/item-list/item-list.service';
 import { ViewPortService } from '../../common/core/item-list/viewport.service';
 import { SortingService } from '../../common/core/sorting/sorting.service';
 import { IDejaGridColumn } from './data-grid-column/data-grid-column';
+
 import { DejaGridComponent } from './data-grid.component';
 import { DejaGridModule } from './index';
 
@@ -411,7 +412,7 @@ class DejaGridContainerComponent {
 
 describe('DejaGridComponent', () => {
     let gridInstance: DejaGridComponent;
-    let gridContainerInstance: DejaGridContainerComponent;    
+    let gridContainerInstance: DejaGridContainerComponent;
     let fixture: ComponentFixture<DejaGridContainerComponent>;
     let gridDebugElement: DebugElement;
 
@@ -438,10 +439,7 @@ describe('DejaGridComponent', () => {
         gridContainerInstance = fixture.componentInstance as DejaGridContainerComponent;
     }));
 
-    const observeViewPort$ = (fixture: ComponentFixture<DejaGridContainerComponent>) => {
-        const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
-        const gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
-
+    const observeViewPort$ = () => {
         return Observable.from(gridInstance.viewPort.viewPortResult$)
             .filter((result) => result.viewPortSize > 0);
     };
@@ -552,7 +550,7 @@ describe('DejaGridComponent', () => {
     it('should set and ensure the current cell', async(() => {
         let pass = 0;
 
-        observeViewPort$(fixture)
+        observeViewPort$()
             .debounceTime(100) // Debounce here, because ensureVisible move the scroll and more than one viewPort can be raised
             .subscribe((vp) => {
                 // Bind view port
@@ -592,7 +590,7 @@ describe('DejaGridComponent', () => {
     it('should group with the grouping area', async(() => {
         let pass = 0;
 
-        observeViewPort$(fixture)
+        observeViewPort$()
             .debounceTime(10)
             .subscribe((vp) => {
                 // Bind view port
@@ -665,7 +663,7 @@ describe('DejaGridComponent', () => {
                 });
         };
 
-        observeViewPort$(fixture)
+        observeViewPort$()
             .debounceTime(10)
             .subscribe((vp) => {
                 // Bind view port
@@ -738,7 +736,7 @@ describe('DejaGridComponent', () => {
                 });
         };
 
-        observeViewPort$(fixture)
+        observeViewPort$()
             .debounceTime(10)
             .subscribe((vp) => {
                 // Bind view port
@@ -776,7 +774,7 @@ describe('DejaGridComponent', () => {
     it('should refresh view port if windows is resized', async(() => {
         let pass = 0;
 
-        observeViewPort$(fixture)
+        observeViewPort$()
             .debounceTime(10)
             .subscribe((_vp) => {
                 // Bind view port
@@ -822,7 +820,7 @@ describe('DejaGridComponent', () => {
             fixture.detectChanges();
         };
 
-        observeViewPort$(fixture)
+        observeViewPort$()
             .debounceTime(10)
             .subscribe((_vp) => {
                 fixture.detectChanges();
@@ -932,7 +930,7 @@ describe('DejaGridComponent', () => {
                 }
             });
 
-        observeViewPort$(fixture)
+        observeViewPort$()
             .debounceTime(10)
             .subscribe((vp) => {
                 fixture.detectChanges();
@@ -1024,7 +1022,7 @@ describe('DejaGridComponent', () => {
                     });
             });
 
-        observeViewPort$(fixture)
+        observeViewPort$()
             .debounceTime(10)
             .subscribe((vp) => {
                 // Bind view port
@@ -1092,7 +1090,7 @@ describe('DejaGridComponent', () => {
             dataTransfer: new DataTransfer(),
         } as MouseEventInit);
 
-        observeViewPort$(fixture)
+        observeViewPort$()
             .debounceTime(10)
             .subscribe((vp) => {
                 // Bind view port
