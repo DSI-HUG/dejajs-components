@@ -410,6 +410,11 @@ class DejaGridContainerComponent {
 }
 
 describe('DejaGridComponent', () => {
+    let gridInstance: DejaGridComponent;
+    let gridContainerInstance: DejaGridContainerComponent;    
+    let fixture: ComponentFixture<DejaGridContainerComponent>;
+    let gridDebugElement: DebugElement;
+
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -426,6 +431,11 @@ describe('DejaGridComponent', () => {
 
         document.body.style.width = '1200px';
         document.body.style.height = '1200px';
+
+        fixture = TestBed.createComponent(DejaGridContainerComponent);
+        gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
+        gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
+        gridContainerInstance = fixture.componentInstance as DejaGridContainerComponent;
     }));
 
     const observeViewPort$ = (fixture: ComponentFixture<DejaGridContainerComponent>) => {
@@ -437,19 +447,13 @@ describe('DejaGridComponent', () => {
     };
 
     it('should create the component', async(() => {
-        const fixture = TestBed.createComponent(DejaGridContainerComponent);
         fixture.detectChanges();
-        const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
-        const gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
         expect(gridInstance).toBeTruthy();
     }));
 
     it('should return the write property', (() => {
-        const fixture = TestBed.createComponent(DejaGridContainerComponent);
-        const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
-        const gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
-        const grid = gridInstance as any;
         const itemListService = gridInstance.itemListService;
+
         fixture.detectChanges();
 
         expect(gridInstance.sortable).toBeTruthy();
@@ -458,15 +462,15 @@ describe('DejaGridComponent', () => {
 
         expect(gridInstance.pageSize).toBe(0);
         gridInstance.pageSize = 5;
-        expect(grid.pageSize).toBe(5);
+        expect(gridInstance.pageSize).toBe(5);
 
         expect(gridInstance.hintLabel).toBeUndefined();
         gridInstance.hintLabel = 'I am a hint label';
         expect(gridInstance.hintLabel).toEqual(`I am a hint label`);
 
-        expect(grid.viewPortRowHeight).toBe(ViewPortService.itemDefaultSize);
+        expect(gridInstance.viewPortRowHeight).toBe(ViewPortService.itemDefaultSize);
         gridInstance.viewPortRowHeight = 100;
-        expect(grid.viewPortRowHeight).toBe(100);
+        expect(gridInstance.viewPortRowHeight).toBe(100);
 
         expect(gridInstance.childrenField).toBeUndefined();
         expect(itemListService.childrenField).toEqual(ItemListService.defaultChildrenField);
@@ -477,9 +481,9 @@ describe('DejaGridComponent', () => {
         gridInstance.textField = 'text';
         expect(gridInstance.textField).toEqual('text');
 
-        expect(grid.valueField).toEqual('value');
+        expect(gridInstance.valueField).toEqual('value');
         gridInstance.valueField = 'my value field';
-        expect(grid.valueField).toEqual('my value field');
+        expect(gridInstance.valueField).toEqual('my value field');
 
         expect(gridInstance.searchField).toBeUndefined();
         gridInstance.searchField = 'my search field';
@@ -546,10 +550,6 @@ describe('DejaGridComponent', () => {
     }));
 
     it('should set and ensure the current cell', async(() => {
-        const fixture = TestBed.createComponent(DejaGridContainerComponent);
-        const gridContainerInstance = fixture.componentInstance as DejaGridContainerComponent;
-        const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
-        const gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
         let pass = 0;
 
         observeViewPort$(fixture)
@@ -590,9 +590,6 @@ describe('DejaGridComponent', () => {
     }));
 
     it('should group with the grouping area', async(() => {
-        const fixture = TestBed.createComponent(DejaGridContainerComponent);
-        const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
-        const gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
         let pass = 0;
 
         observeViewPort$(fixture)
@@ -634,9 +631,6 @@ describe('DejaGridComponent', () => {
     }));
 
     it('should sort when user click on the header', async(() => {
-        const fixture = TestBed.createComponent(DejaGridContainerComponent);
-        const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
-        const gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
         let pass = 0;
 
         const sendMouseClick = (element: DebugElement) => {
@@ -700,10 +694,6 @@ describe('DejaGridComponent', () => {
     }));
 
     it('should size the column when user click on the header separator', async(() => {
-        const fixture = TestBed.createComponent(DejaGridContainerComponent);
-        const gridContainerInstance = fixture.componentInstance as DejaGridContainerComponent;
-        const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
-        const gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
         let pass = 0;
 
         const sendMouseMove = (element: DebugElement) => {
@@ -785,10 +775,6 @@ describe('DejaGridComponent', () => {
 
     it('should refresh view port if windows is resized', async(() => {
         let pass = 0;
-        const fixture = TestBed.createComponent(DejaGridContainerComponent);
-        const gridContainerInstance = fixture.componentInstance as DejaGridContainerComponent;
-        const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
-        const gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
 
         observeViewPort$(fixture)
             .debounceTime(10)
@@ -822,9 +808,6 @@ describe('DejaGridComponent', () => {
     }));
 
     it('should navigate with the keyboard', async(() => {
-        const fixture = TestBed.createComponent(DejaGridContainerComponent);
-        const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
-        const gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
         let pass = 0;
 
         const sendKeyDown = (code: string) => {
@@ -875,9 +858,6 @@ describe('DejaGridComponent', () => {
     }));
 
     it('should drag and drop a column from header to header', async(() => {
-        const fixture = TestBed.createComponent(DejaGridContainerComponent);
-        const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
-        const gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
         let gridHeader: DebugElement;
         let pass = 0;
 
@@ -998,9 +978,6 @@ describe('DejaGridComponent', () => {
     }));
 
     it('should leave the drag and drop when we are outside the control', async(() => {
-        const fixture = TestBed.createComponent(DejaGridContainerComponent);
-        const gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
-        const gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
         let gridHeader: DebugElement;
         let dragHeaderElement: HTMLElement;
 
@@ -1092,7 +1069,6 @@ describe('DejaGridComponent', () => {
     }));
 
     it('should drag and drop an header to the group area', async(() => {
-        const fixture = TestBed.createComponent(DejaGridContainerComponent);
         let gridHeader: DebugElement;
         let gridGroupArea: DebugElement;
         let dragHeaderElement: HTMLElement;
