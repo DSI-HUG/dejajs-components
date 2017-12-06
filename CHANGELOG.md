@@ -1,3 +1,13 @@
+#### 2.18.8 (2017-12-06)
+
+##### Bug Fixes
+
+* **DejaSelect:** rxjs imports ([c0ca4ba9](https://github.com/DSI-HUG/dejajs-components/commit/c0ca4ba911bed823fc152d939da889618cb1ce0e))
+
+##### Tests
+
+* **ViewPortTest:** fix ([835bc644](https://github.com/DSI-HUG/dejajs-components/commit/835bc644e80ae5fd8c5f9dadf5d603aa56949968))
+
 #### 2.18.7 (2017-12-06)
 
 ##### Chores
