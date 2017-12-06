@@ -1,3 +1,26 @@
+#### 2.18.7 (2017-12-06)
+
+##### Chores
+
+* **Dependencies:** Get RXJS from Angular CLI ([fbd0596b](https://github.com/DSI-HUG/dejajs-components/commit/fbd0596b2fe0567c22c51bfc19675217aca0150f))
+
+##### Refactors
+
+* **DejaGrid:** Fix Lint errors and change signature observeViewPort$ ([1fad0139](https://github.com/DSI-HUG/dejajs-components/commit/1fad0139a05d9f6aa76b335170818c09bf7ea167))
+
+##### Tests
+
+* **ViewPortTest:** fix ([753c95db](https://github.com/DSI-HUG/dejajs-components/commit/753c95db13c78ba3e68b2f252f6bb9442a5b3906))
+* **DejaGrid:**
+  * Fix travis test timing issue ([c8d7fc7b](https://github.com/DSI-HUG/dejajs-components/commit/c8d7fc7b5c7f1de2d75cd8b9fd8155ad937204fd))
+  * Improve unit test ([5721cc8e](https://github.com/DSI-HUG/dejajs-components/commit/5721cc8e6ea1f79343976a3ad48920d9cfd21822))
+  * Improve unit test ([06febec8](https://github.com/DSI-HUG/dejajs-components/commit/06febec870c666d250f3be8df7d63878ebfabbdb))
+  * Improve unit test ([ffcc0a06](https://github.com/DSI-HUG/dejajs-components/commit/ffcc0a066fa9e7dbf2049b27eee289c296bc0e98))
+  * Improve unit test ([1e1ae0ce](https://github.com/DSI-HUG/dejajs-components/commit/1e1ae0ceaf43f57436573bf5af8b002b59cc5b94))
+  * Improve unit test ([72c6ac49](https://github.com/DSI-HUG/dejajs-components/commit/72c6ac49861bd2b5695689439b39c1395f2f12e2))
+  * Added unit test ([9650633a](https://github.com/DSI-HUG/dejajs-components/commit/9650633a7fd50beb924ba7d896683f78ce253289))
+* **Global:** Replaced deprecated function to initiate MouseEvent ([e9edb056](https://github.com/DSI-HUG/dejajs-components/commit/e9edb056ec4b535edd7971ceeeaa4965f94acbba))
+
 #### 2.18.6 (2017-11-29)
 
 #### 2.18.5 (2017-11-29)
