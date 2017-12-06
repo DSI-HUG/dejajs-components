@@ -15,6 +15,7 @@ import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/observable/timer';
+import 'rxjs/add/operator/combineLatest';
 import 'rxjs/add/operator/debounce';
 import 'rxjs/add/operator/debounce';
 import 'rxjs/add/operator/debounceTime';
