@@ -334,6 +334,7 @@ describe('DejaViewPortComponent', () => {
         let expectedViewPortEndIndex = 278;
 
         Observable.from(viewPortService.viewPortResult$)
+            .debounceTime(10)
             .do(() => fixture.detectChanges())
             .filter((result) => result.visibleItems && result.visibleItems.length && result.visibleItems[0].size > 0) // items must be sized
             .subscribe((result) => {
