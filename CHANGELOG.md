@@ -1,3 +1,26 @@
+#### 2.18.7 (2017-12-06)
+
+##### Chores
+
+* **Dependencies:** Get RXJS from Angular CLI ([fbd0596b](https://github.com/DSI-HUG/dejajs-components/commit/fbd0596b2fe0567c22c51bfc19675217aca0150f))
+
+##### Refactors
+
+* **DejaGrid:** Fix Lint errors and change signature observeViewPort$ ([1fad0139](https://github.com/DSI-HUG/dejajs-components/commit/1fad0139a05d9f6aa76b335170818c09bf7ea167))
+
+##### Tests
+
+* **ViewPortTest:** fix ([753c95db](https://github.com/DSI-HUG/dejajs-components/commit/753c95db13c78ba3e68b2f252f6bb9442a5b3906))
+* **DejaGrid:**
+  * Fix travis test timing issue ([c8d7fc7b](https://github.com/DSI-HUG/dejajs-components/commit/c8d7fc7b5c7f1de2d75cd8b9fd8155ad937204fd))
+  * Improve unit test ([5721cc8e](https://github.com/DSI-HUG/dejajs-components/commit/5721cc8e6ea1f79343976a3ad48920d9cfd21822))
+  * Improve unit test ([06febec8](https://github.com/DSI-HUG/dejajs-components/commit/06febec870c666d250f3be8df7d63878ebfabbdb))
+  * Improve unit test ([ffcc0a06](https://github.com/DSI-HUG/dejajs-components/commit/ffcc0a066fa9e7dbf2049b27eee289c296bc0e98))
+  * Improve unit test ([1e1ae0ce](https://github.com/DSI-HUG/dejajs-components/commit/1e1ae0ceaf43f57436573bf5af8b002b59cc5b94))
+  * Improve unit test ([72c6ac49](https://github.com/DSI-HUG/dejajs-components/commit/72c6ac49861bd2b5695689439b39c1395f2f12e2))
+  * Added unit test ([9650633a](https://github.com/DSI-HUG/dejajs-components/commit/9650633a7fd50beb924ba7d896683f78ce253289))
+* **Global:** Replaced deprecated function to initiate MouseEvent ([e9edb056](https://github.com/DSI-HUG/dejajs-components/commit/e9edb056ec4b535edd7971ceeeaa4965f94acbba))
+
 #### 2.18.6 (2017-11-29)
 
 #### 2.18.5 (2017-11-29)
@@ -11,56 +34,6 @@
   * RxJs Imports ([751fbebe](https://github.com/DSI-HUG/dejajs-components/commit/751fbebe16ae2488129c8fcbb1c00e374841cbdc))
   * RxJs Imports ([dd445747](https://github.com/DSI-HUG/dejajs-components/commit/dd445747d8e333428d62e24328f3a10bb0318633))
   * RxJs Imports ([4047f5d2](https://github.com/DSI-HUG/dejajs-components/commit/4047f5d2074b3f608644b1255e47af969cb417a1))
-
-#### 2.18.4 (2017-11-29)
-
-##### Bug Fixes
-
-* **SortingService:** Re-add test to check as a date when type date is specified inside SortInfo. ([8a945be7](https://github.com/DSI-HUG/dejajs-components/commit/8a945be78c5aa00857fffdc1feb69a668f494821))
-* **DejaSelect:**
-  * Autocomplete clear model when text is changed DEJS-246 ([14efbbde](https://github.com/DSI-HUG/dejajs-components/commit/14efbbde2140745ea1e62f5163645d908f63255d))
-  * Width regression from material rc0 migration ([6188733f](https://github.com/DSI-HUG/dejajs-components/commit/6188733fe54d2913a13b9c5990534ca40dbfcf1a))
-* **DejaItemBase:** viewPortRowHeight and viewPortRowMode don't use coercion ([fc173f00](https://github.com/DSI-HUG/dejajs-components/commit/fc173f00b5e80abbff31ef87c8cad2f20d89c9f5))
-* **DejaSelectComponent:** Issues fixing find by unit test ([279f5942](https://github.com/DSI-HUG/dejajs-components/commit/279f59420783ca4b7c4513aa6860fc4c97157850))
-
-##### Tests
-
-* **DejaEditable:** Add unit test ([4d9434c3](https://github.com/DSI-HUG/dejajs-components/commit/4d9434c378341d3f3abde8cde0de008d795dfd1f))
-* **Graphics:**
-  * Improve unit test ([99158c83](https://github.com/DSI-HUG/dejajs-components/commit/99158c83ce9a9bdaca66683c26fbb1f89f83db68))
-  * Add unit test ([c943744b](https://github.com/DSI-HUG/dejajs-components/commit/c943744b60dd420ab165dded9d81022111832d44))
-* **DejaClipboardService:** Add unit test ([11488b1d](https://github.com/DSI-HUG/dejajs-components/commit/11488b1de61254b2c19bf6dc1cea3555dad1f5a8))
-* **DejaSelectComponent:**
-  * Improve unit test ([c645bdb4](https://github.com/DSI-HUG/dejajs-components/commit/c645bdb4b3fd6cb20e4a4b4aa5978ff39a8ded83))
-  * Added unit test ([1a6c2e5a](https://github.com/DSI-HUG/dejajs-components/commit/1a6c2e5a37254ce215df1ded01a6ec5238e66767))
-* **DejaSelect:**
-  * Improve Unit Test ([18263df4](https://github.com/DSI-HUG/dejajs-components/commit/18263df459b104a9a05c79dee58cc5289ed603c4))
-  * Improve Unit Test ([6eedd9f4](https://github.com/DSI-HUG/dejajs-components/commit/6eedd9f4506e1dea6d9758182c8f65df2d3f4ca2))
-
-#### 2.18.4 (2017-11-29)
-
-##### Bug Fixes
-
-* **SortingService:** Re-add test to check as a date when type date is specified inside SortInfo. ([8a945be7](https://github.com/DSI-HUG/dejajs-components/commit/8a945be78c5aa00857fffdc1feb69a668f494821))
-* **DejaSelect:**
-  * Autocomplete clear model when text is changed DEJS-246 ([14efbbde](https://github.com/DSI-HUG/dejajs-components/commit/14efbbde2140745ea1e62f5163645d908f63255d))
-  * Width regression from material rc0 migration ([6188733f](https://github.com/DSI-HUG/dejajs-components/commit/6188733fe54d2913a13b9c5990534ca40dbfcf1a))
-* **DejaItemBase:** viewPortRowHeight and viewPortRowMode don't use coercion ([fc173f00](https://github.com/DSI-HUG/dejajs-components/commit/fc173f00b5e80abbff31ef87c8cad2f20d89c9f5))
-* **DejaSelectComponent:** Issues fixing find by unit test ([279f5942](https://github.com/DSI-HUG/dejajs-components/commit/279f59420783ca4b7c4513aa6860fc4c97157850))
-
-##### Tests
-
-* **DejaEditable:** Add unit test ([4d9434c3](https://github.com/DSI-HUG/dejajs-components/commit/4d9434c378341d3f3abde8cde0de008d795dfd1f))
-* **Graphics:**
-  * Improve unit test ([99158c83](https://github.com/DSI-HUG/dejajs-components/commit/99158c83ce9a9bdaca66683c26fbb1f89f83db68))
-  * Add unit test ([c943744b](https://github.com/DSI-HUG/dejajs-components/commit/c943744b60dd420ab165dded9d81022111832d44))
-* **DejaClipboardService:** Add unit test ([11488b1d](https://github.com/DSI-HUG/dejajs-components/commit/11488b1de61254b2c19bf6dc1cea3555dad1f5a8))
-* **DejaSelectComponent:**
-  * Improve unit test ([c645bdb4](https://github.com/DSI-HUG/dejajs-components/commit/c645bdb4b3fd6cb20e4a4b4aa5978ff39a8ded83))
-  * Added unit test ([1a6c2e5a](https://github.com/DSI-HUG/dejajs-components/commit/1a6c2e5a37254ce215df1ded01a6ec5238e66767))
-* **DejaSelect:**
-  * Improve Unit Test ([18263df4](https://github.com/DSI-HUG/dejajs-components/commit/18263df459b104a9a05c79dee58cc5289ed603c4))
-  * Improve Unit Test ([6eedd9f4](https://github.com/DSI-HUG/dejajs-components/commit/6eedd9f4506e1dea6d9758182c8f65df2d3f4ca2))
 
 #### 2.18.4 (2017-11-29)
 

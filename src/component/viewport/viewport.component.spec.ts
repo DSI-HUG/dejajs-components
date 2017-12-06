@@ -78,6 +78,7 @@ describe('DejaViewPortComponent', () => {
         const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
 
         return Observable.from(viewPortService.viewPortResult$)
+            .debounceTime(10)
             .do(() => fixture.detectChanges())
             .filter((result) => result.viewPortSize > 0)
             .do((result) => {
@@ -120,7 +121,7 @@ describe('DejaViewPortComponent', () => {
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
         const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
 
-        observeViewPort$(fixture, 100, 0, 1860, 140, 0, 99).subscribe(noop);
+        observeViewPort$(fixture, 100, 0, 0, 1800, 0, 6).subscribe(noop);
 
         viewPortInstance.viewportMode = 'disabled';
         expect(ViewportMode.disabled === viewPortInstance.viewportMode as any);
@@ -231,6 +232,7 @@ describe('DejaViewPortComponent', () => {
         const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
 
         return Observable.from(viewPortService.viewPortResult$)
+            .debounceTime(10)
             .do(() => fixture.detectChanges())
             .filter((result) => result.visibleItems && result.visibleItems.length && result.visibleItems[0].size > 0) // items must be sized
             .do((result) => {
@@ -332,6 +334,7 @@ describe('DejaViewPortComponent', () => {
         let expectedViewPortEndIndex = 278;
 
         Observable.from(viewPortService.viewPortResult$)
+            .debounceTime(10)
             .do(() => fixture.detectChanges())
             .filter((result) => result.visibleItems && result.visibleItems.length && result.visibleItems[0].size > 0) // items must be sized
             .subscribe((result) => {

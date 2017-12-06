@@ -48,7 +48,7 @@ export class DejaGridGroupAreaComponent {
             return null;
         }
 
-        // console.log(`getDragContext ` + group.column.name + ' ' + Date.now();
+        // console.log(`getDragContext ` + group.name + ' ' + Date.now());
         return {
             dragendcallback: (event: IDejaDragEvent) => {
                 if (!event.dragInfo.hasOwnProperty(this.columnGroupKey)) {
@@ -153,12 +153,6 @@ export class DejaGridGroupAreaComponent {
         this.groupRemoved.emit(event);
         event.stopPropagation();
         return false;
-    }
-
-    protected getGroupColumnFromHTMLElement(element: HTMLElement): IDejaGridColumn {
-        const groupElement = this.getGroupElementFromHTMLElement(element);
-        const groupName = groupElement && groupElement.getAttribute('groupname');
-        return groupName && this.groups.find((column) => column.name === groupName);
     }
 
     private getGroupElementFromHTMLElement(element: HTMLElement): HTMLElement {

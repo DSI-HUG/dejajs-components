@@ -71,7 +71,7 @@ export class DejaGridComponent implements OnDestroy {
     /** Définit le nombre de lignes à sauter en cas de pression sur les touches PageUp ou PageDown */
     @Input() public pageSize = 0;
     /** Définit un texte de conseil en cas d'erreur de validation ou autre */
-    @Input() public hintLabel = '';
+    @Input() public hintLabel: string;
     /** Définit la hauteur d'une ligne pour le calcul du viewport en pixels */
     @Input() public viewPortRowHeight = ViewPortService.itemDefaultSize;
     /** Les trois valeurs acceptés en paramètre se trouvent dans l'enum ViewportMode (disabled, fixed, variable ou auto)
@@ -291,8 +291,8 @@ export class DejaGridComponent implements OnDestroy {
         return this._multiSelect;
     }
 
-    @Input()
     /** Définit la structure des colonnes de la grille. */
+    @Input()
     public set columns(columns: IDejaGridColumn[]) {
         this.columns$.next(columns);
     }
@@ -302,8 +302,8 @@ export class DejaGridComponent implements OnDestroy {
         return this._columns;
     }
 
-    @Input()
     /** Définit le modèle affiché dans les lignes de la grille. */
+    @Input()
     public set rows(rows: IItemBase[] | Promise<IItemBase[]> | Observable<IItemBase[]>) {
         this._rows = rows;
         if (this._rows && !this._columns) {
@@ -445,18 +445,16 @@ export class DejaGridComponent implements OnDestroy {
 
         Observable.from(this.columns$)
             .takeWhile(() => this.isAlive)
+            .do((columns) => this._columns = columns)
             .debounceTime(1)
-            .subscribe((columns) => {
-                this._columns = columns;
-                this.calcColumnsLayout();
-            });
+            .subscribe(() => this.calcColumnsLayout());
 
         Observable.from(this.printColumnLayout$)
             .takeWhile(() => this.isAlive)
             .debounceTime(1000)
             .subscribe(() => {
                 console.log('');
-                console.log('Column layout:');
+                console.log('Auto columns layout:');
                 console.log(JSON.stringify(this._columns, null, 4));
                 console.log('');
             });
@@ -501,7 +499,8 @@ export class DejaGridComponent implements OnDestroy {
                     return this.currentColumn;
                 };
 
-                switch (event.keyCode) {
+                const keyCode = event.keyCode || KeyCodes[event.code];
+                switch (keyCode) {
                     case KeyCodes.LeftArrow:
                         this.currentColumn = this.columns && findPrev(this.columns.findIndex((c) => c.isCurrent));
                         event.preventDefault();

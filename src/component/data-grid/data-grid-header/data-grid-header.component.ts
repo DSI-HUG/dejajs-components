@@ -143,10 +143,10 @@ export class DejaGridHeaderComponent implements OnDestroy {
                     if (this.columnsSizable && column.sizeable !== false) {
                         // Size clicked column
                         this._sizedColumn = column;
-                        const sizedOrigin = downEvent.pageX;
+                        const sizedOrigin = downEvent.screenX;
 
                         const kill$ = new Subject();
-                        const mouseUp$ = Observable.fromEvent(document, 'mouseup');
+                        const mouseUp$ = Observable.fromEvent(element.ownerDocument, 'mouseup');
 
                         mouseUp$.first().subscribe(() => {
                             const e = {
@@ -163,7 +163,7 @@ export class DejaGridHeaderComponent implements OnDestroy {
                                 if (moveEvent.buttons === 1) {
                                     const e = {
                                         column: this._sizedColumn,
-                                        offsetWidth: moveEvent.pageX - sizedOrigin,
+                                        offsetWidth: moveEvent.screenX - sizedOrigin,
                                         originalEvent: moveEvent,
                                     } as IDejaGridColumnSizeEvent;
                                     this.columnSizeChanged.emit(e);
@@ -249,7 +249,7 @@ export class DejaGridHeaderComponent implements OnDestroy {
             }
 
             const targetElement = this.getColumnElementFromHTMLElement(event.target as HTMLElement);
-            const targetBounds = targetElement.getBoundingClientRect();
+            const targetBounds = targetElement && targetElement.getBoundingClientRect();
             const targetIndex = targetElement && +targetElement.getAttribute('index');
             if (targetIndex === undefined) {
                 return;
