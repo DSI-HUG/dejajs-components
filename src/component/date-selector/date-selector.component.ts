@@ -12,6 +12,7 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/first';
+import 'rxjs/add/operator/takeWhile';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { KeyCodes } from '../../common/core/keycodes.enum';

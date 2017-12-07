@@ -11,6 +11,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, El
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/first';
+import 'rxjs/add/operator/takeWhile';
 import 'rxjs/add/operator/timeout';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';

@@ -10,6 +10,7 @@ import { Directive, ElementRef, HostBinding, Input, OnDestroy, Optional } from '
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/first';
+import 'rxjs/add/operator/takeWhile';
 import { Observable } from 'rxjs/Observable';
 import { DejaClipboardService } from '../../common/core/clipboard/clipboard.service';
 import { UUID } from '../../common/core/UUID';

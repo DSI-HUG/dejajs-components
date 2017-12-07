@@ -9,6 +9,7 @@
 import { ChangeDetectorRef, NgZone, OnDestroy, Pipe, PipeTransform } from '@angular/core';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/operator/debounce';
+import 'rxjs/add/operator/takeWhile';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
