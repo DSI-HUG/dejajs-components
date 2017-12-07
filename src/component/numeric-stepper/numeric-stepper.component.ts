@@ -81,6 +81,15 @@ export class DejaNumericStepperComponent implements OnInit, ControlValueAccessor
 
     public set value(val: number) {
         if (!this.disabled) {
+            if (val === undefined || val === null) {
+                val = null;
+            } else if (val > this.max) {
+                val = this.max;
+            } else if (val < this.min) {
+                val = this.min;
+            } else {
+                val = +val;
+            }
             this.writeValue(val);
             this.onChangeCallback(val);
             this.onTouchedCallback();
@@ -88,14 +97,7 @@ export class DejaNumericStepperComponent implements OnInit, ControlValueAccessor
     }
 
     public writeValue(value: number) {
-        if (value > this.max) {
-            this._value = this.max;
-        } else if (value < this.min) {
-            this._value = this.min;
-        } else {
-            this._value = value ? +value : 0;
-        }
-
+        this._value = value;
         this.checkSize(value);
         this.changeDetectorRef.markForCheck();
     }
