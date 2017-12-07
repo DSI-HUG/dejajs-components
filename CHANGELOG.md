@@ -1,3 +1,41 @@
+#### 2.18.9 (2017-12-07)
+
+##### Chores
+
+* **Dependencies:** Get RXJS from Angular CLI ([fbd0596b](https://github.com/DSI-HUG/dejajs-components/commit/fbd0596b2fe0567c22c51bfc19675217aca0150f))
+
+##### Bug Fixes
+
+* **DejaNumericStepperComponent:** add possibility to remove value and fix onChangeCallback out of range. ([20376c3d](https://github.com/DSI-HUG/dejajs-components/commit/20376c3dd90597839c1a0bb38c11e99776cf14f7))
+* **DejaSelect:**
+  * rxjs imports ([c0ca4ba9](https://github.com/DSI-HUG/dejajs-components/commit/c0ca4ba911bed823fc152d939da889618cb1ce0e))
+  * Hide when an element is clicked ([6236f108](https://github.com/DSI-HUG/dejajs-components/commit/6236f108d4fe175dc3ced30e08fbcf53863a64b8))
+* **DemoTiles:** Drag cursor is missing ([cfccdeba](https://github.com/DSI-HUG/dejajs-components/commit/cfccdeba2c523676bb1c820f5b4244a4c00cb86e))
+* **ColorPicker:** Disabled style ([3217117d](https://github.com/DSI-HUG/dejajs-components/commit/3217117d656dec93eef8c38e82b9e1ee827df23c))
+* **Global:**
+  * RxJs Imports ([751fbebe](https://github.com/DSI-HUG/dejajs-components/commit/751fbebe16ae2488129c8fcbb1c00e374841cbdc))
+  * RxJs Imports ([dd445747](https://github.com/DSI-HUG/dejajs-components/commit/dd445747d8e333428d62e24328f3a10bb0318633))
+  * RxJs Imports ([4047f5d2](https://github.com/DSI-HUG/dejajs-components/commit/4047f5d2074b3f608644b1255e47af969cb417a1))
+
+##### Refactors
+
+* **DejaGrid:** Fix Lint errors and change signature observeViewPort$ ([1fad0139](https://github.com/DSI-HUG/dejajs-components/commit/1fad0139a05d9f6aa76b335170818c09bf7ea167))
+
+##### Tests
+
+* **ViewPortTest:**
+  * fix ([835bc644](https://github.com/DSI-HUG/dejajs-components/commit/835bc644e80ae5fd8c5f9dadf5d603aa56949968))
+  * fix ([753c95db](https://github.com/DSI-HUG/dejajs-components/commit/753c95db13c78ba3e68b2f252f6bb9442a5b3906))
+* **DejaGrid:**
+  * Fix travis test timing issue ([c8d7fc7b](https://github.com/DSI-HUG/dejajs-components/commit/c8d7fc7b5c7f1de2d75cd8b9fd8155ad937204fd))
+  * Improve unit test ([5721cc8e](https://github.com/DSI-HUG/dejajs-components/commit/5721cc8e6ea1f79343976a3ad48920d9cfd21822))
+  * Improve unit test ([06febec8](https://github.com/DSI-HUG/dejajs-components/commit/06febec870c666d250f3be8df7d63878ebfabbdb))
+  * Improve unit test ([ffcc0a06](https://github.com/DSI-HUG/dejajs-components/commit/ffcc0a066fa9e7dbf2049b27eee289c296bc0e98))
+  * Improve unit test ([1e1ae0ce](https://github.com/DSI-HUG/dejajs-components/commit/1e1ae0ceaf43f57436573bf5af8b002b59cc5b94))
+  * Improve unit test ([72c6ac49](https://github.com/DSI-HUG/dejajs-components/commit/72c6ac49861bd2b5695689439b39c1395f2f12e2))
+  * Added unit test ([9650633a](https://github.com/DSI-HUG/dejajs-components/commit/9650633a7fd50beb924ba7d896683f78ce253289))
+* **Global:** Replaced deprecated function to initiate MouseEvent ([e9edb056](https://github.com/DSI-HUG/dejajs-components/commit/e9edb056ec4b535edd7971ceeeaa4965f94acbba))
+
 #### 2.18.8 (2017-12-06)
 
 ##### Bug Fixes
