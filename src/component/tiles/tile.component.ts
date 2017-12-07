@@ -32,6 +32,7 @@ export class DejaTileComponent implements OnDestroy {
     @Output() public close = new EventEmitter<Event>();
 
     public element: HTMLElement;
+    public progressDiameter = 100;
 
     private _tile: DejaTile;
     private isAlive = true;
@@ -85,6 +86,7 @@ export class DejaTileComponent implements OnDestroy {
                     this.element.style.top = `${bounds.top}px`;
                     this.element.style.width = `${bounds.width}px`;
                     this.element.style.height = `${bounds.height}px`;
+                    this.progressDiameter = Math.min(100, Math.round(Math.max(bounds.width * 0.4, bounds.height* 0.4)));
                     this.changeDetectorRef.markForCheck();
                 });
 

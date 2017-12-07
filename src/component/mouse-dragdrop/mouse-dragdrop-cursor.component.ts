@@ -11,6 +11,7 @@ import 'rxjs/add/observable/from';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/takeWhile';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Position } from './../../common/core/graphics/position';

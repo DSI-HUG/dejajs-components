@@ -1,3 +1,11 @@
+#### 2.18.10 (2017-12-07)
+
+##### Bug Fixes
+
+* **DejaTile:** Spinner position (Regression due to mateial spinner changes) ([5b773940](https://github.com/DSI-HUG/dejajs-components/commit/5b773940dc7f0def46ff8997fc51ababb02c879e))
+* **Global:** rxjs imports ([409c7808](https://github.com/DSI-HUG/dejajs-components/commit/409c78089e43fe06e9b64ac6cf908591d28e6eb4))
+* **DejaNumericStepperComponent:** add possibility to remove value and fix onChangeCallback out of range. ([20376c3d](https://github.com/DSI-HUG/dejajs-components/commit/20376c3dd90597839c1a0bb38c11e99776cf14f7))
+
 #### 2.18.9 (2017-12-07)
 
 ##### Chores
