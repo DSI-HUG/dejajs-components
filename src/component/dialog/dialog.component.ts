@@ -9,6 +9,7 @@
 import { Component, ContentChild, ElementRef, EventEmitter, HostListener, OnDestroy, Output } from '@angular/core';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/takeWhile';
 import { Observable } from 'rxjs/Observable';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 

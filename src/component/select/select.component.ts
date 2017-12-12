@@ -15,6 +15,7 @@ import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/observable/timer';
+import 'rxjs/add/operator/combineLatest';
 import 'rxjs/add/operator/debounce';
 import 'rxjs/add/operator/debounce';
 import 'rxjs/add/operator/debounceTime';
@@ -295,6 +296,11 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                     const originRect = originElement.getBoundingClientRect();
                     const maxHeight = document.body.clientHeight;
                     this.dropDownMaxHeight = Math.max(originRect.top, maxHeight - originRect.bottom, 25) - 25;
+                }
+
+                // Ensure dropDowsQuery if autocomplete and minSearchLength
+                if (!this.dropDownQuery && this.isModeAutocomplete && this.minSearchlength > 0 && this.query && this.query.length > this.minSearchlength) {
+                    this.dropDownQuery = this.query;
                 }
 
                 // Display overlay

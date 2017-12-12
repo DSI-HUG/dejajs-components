@@ -14,7 +14,6 @@ import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/takeUntil';
-import 'rxjs/add/operator/takeWhile';
 import { Observable } from 'rxjs/Observable';
 import { IRange, IRangeEvent, IStepRangeEvent, Range } from './range.interface';
 
