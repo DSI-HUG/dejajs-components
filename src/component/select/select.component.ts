@@ -298,6 +298,11 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                     this.dropDownMaxHeight = Math.max(originRect.top, maxHeight - originRect.bottom, 25) - 25;
                 }
 
+                // Ensure dropDowsQuery if autocomplete and minSearchLength
+                if (!this.dropDownQuery && this.isModeAutocomplete && this.minSearchlength > 0 && this.query && this.query.length > this.minSearchlength) {
+                    this.dropDownQuery = this.query;
+                }
+
                 // Display overlay
                 setDropDownVisible(true);
                 this.changeDetectorRef.markForCheck();
