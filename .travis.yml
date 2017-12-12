@@ -1,6 +1,8 @@
 dist: trusty
 sudo: required
 language: node_js
+addons:
+  chrome: stable
 cache:
   directories:
   - node_modules
