@@ -28,7 +28,6 @@ export class FoldersService {
     }
 
     public getFolders(): any[] {
-        console.log('folders', this.folders);
         return this.folders;
     }
 
@@ -37,12 +36,10 @@ export class FoldersService {
             return;
         }
 
-        // for (let i = 1; i <= 10; i++) {
-            const child = new Folder(level, 1);
-            this.addLevel(level + 1, child.children);
+        const child = new Folder(level, 1);
+        this.addLevel(level + 1, child.children);
 
-            children.push(child);
-        // }
+        children.push(child);
 
     }
 }
