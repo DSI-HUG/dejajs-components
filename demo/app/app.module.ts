@@ -26,6 +26,7 @@ import { userReducer } from './reactive-form/model/user.reducer';
 import { UserService } from './reactive-form/service/user.service';
 import { CountriesListService } from './services/countries-list.service';
 import { CountriesService } from './services/countries.service';
+import { FoldersService } from './services/folders.service';
 import { NewsService } from './services/news.service';
 import { PeopleService } from './services/people.service';
 
@@ -185,6 +186,7 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
     ],
     providers: [
         CountriesService,
+        FoldersService,
         CountriesListService,
         PeopleService,
         GlobalEventService,
