@@ -1198,11 +1198,7 @@ export class ItemListService {
     }
 
     private ensureSelectedItems(items: IItemBase[]) {
-        if (this.selectedList) {
-            if (this.selectedList.length === 0) {
-                return [];
-            }
-
+        if (this.selectedList && this.selectedList.length > 0) {
             // Ensure selected flag
             this.selectedList.forEach((item) => item.selected = true);
 
@@ -1236,6 +1232,10 @@ export class ItemListService {
 
         } else {
             this.selectedList = [];
+
+            if (!items) {
+                return this.selectedList;
+            }
 
             const ensureSelectedChildren = (children: IItemTree[]) => {
                 children.forEach((item) => {
