@@ -487,15 +487,19 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         const previousIdsDic = {};
         this.selectedIds.forEach((id) => previousIdsDic[id] = true);
 
-        this.tiles.forEach((tile: DejaTile) => {
-            if (idsDic[tile.id] !== previousIdsDic[tile.id]) {
-                raiseEvent = true;
-            }
-            tile.isSelected = idsDic[tile.id];
-            if (tile.isSelected) {
-                selectedTiles.push(tile);
-            }
-        });
+        if (this.tiles.length) {
+            this.tiles.forEach((tile: DejaTile) => {
+                if (idsDic[tile.id] !== previousIdsDic[tile.id]) {
+                    raiseEvent = true;
+                }
+                tile.isSelected = idsDic[tile.id];
+                if (tile.isSelected) {
+                    selectedTiles.push(tile);
+                }
+            });
+        } else {
+            raiseEvent = this.selectedIds.length > 0;
+        }
 
         this.selectedIds = selectedIds;
 

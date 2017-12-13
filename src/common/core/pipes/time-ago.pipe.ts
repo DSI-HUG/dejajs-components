@@ -8,7 +8,9 @@
 
 import { ChangeDetectorRef, NgZone, OnDestroy, Pipe, PipeTransform } from '@angular/core';
 import 'rxjs/add/observable/from';
+import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/debounce';
+import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/takeWhile';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -31,13 +33,15 @@ export class TimeAgoPipe implements PipeTransform, OnDestroy {
             .debounce(() => {
                 const momentInstance = moment(this.lastValue);
                 const timeToUpdate = this.getSecondsUntilUpdate(momentInstance) * 1000;
-                return Observable.of(timeToUpdate);
+                return Observable.timer(timeToUpdate);
             })
             .subscribe(() => {
-                this.ngZone.runOutsideAngular(() => {
-                    this.lastText = moment(this.lastValue).from(moment(), this.lastOmitSuffix);
-                    this.ngZone.run(() => this.cdRef.markForCheck());
-                });
+                if (this.ngZone && this.cdRef) {
+                    this.ngZone.runOutsideAngular(() => {
+                        this.lastText = moment(this.lastValue).from(moment(), this.lastOmitSuffix);
+                        this.ngZone.run(() => this.cdRef.markForCheck());
+                    });
+                }
             });
     }
 
@@ -60,7 +64,7 @@ export class TimeAgoPipe implements PipeTransform, OnDestroy {
         return this.lastText;
     }
 
-    private getSecondsUntilUpdate(momentInstance: moment_.Moment) {
+    private getSecondsUntilUpdate(momentInstance: moment_.Moment): number {
         const howOld = Math.abs(moment().diff(momentInstance, 'minute'));
         if (howOld < 1) {
             return 1;

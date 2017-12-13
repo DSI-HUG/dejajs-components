@@ -1,3 +1,15 @@
+#### 2.18.11 (2017-12-13)
+
+##### Bug Fixes
+
+* **DejaGrid:** Header bottom line style ([23fbe33c](https://github.com/DSI-HUG/dejajs-components/commit/23fbe33c6604e1db68bc468a49cce612e1164662))
+* **DejaSelect:** Ensure SearchCriteria in auto-complete when min search length is set and a value already selected ([e11e666b](https://github.com/DSI-HUG/dejajs-components/commit/e11e666bdfa0b0e8a7bdb369bb1f56f305091b0f))
+* **DejaTiles:** Remove selection when tiles are empties ([55da6084](https://github.com/DSI-HUG/dejajs-components/commit/55da6084a9b331e51a4887abe901c8fc1f101c43))
+
+##### Tests
+
+* **TimeAgoPipe:** Add unit test for TimeAgo pipe ([f7036292](https://github.com/DSI-HUG/dejajs-components/commit/f7036292219dfa2c895f4ec7c1c99a493a16e595))
+
 #### 2.18.10 (2017-12-07)
 
 ##### Bug Fixes
