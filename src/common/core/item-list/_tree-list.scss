@@ -1,70 +1,11 @@
-.deja-listcontainer  {
-	&[depth-max] {
-        >div.listitem {
-			&[depth] {
-				padding-left: 2.25rem;
-			}
-			&[depth="0"] {
-				padding-left: 0;
-			}
-			&[depth="1"] {
-				padding-left: 0.45rem;
-			}
-			&[depth="2"] {
-				padding-left: 0.9rem;
-			}
-			&[depth="3"] {
-				padding-left: 1.35rem;
-			}
-			&[depth="4"] {
-				padding-left: 1.8rem;
-			}
-		}
-	}
-	&[depth-max="1"] {
-        >div.listitem {
-			&[depth="1"] {
-				padding-left: 1rem;
-			}
-		}
-	}
-	&[depth-max="2"] {
-        >div.listitem {
-			&[depth="1"] {
-				padding-left: 0.7rem;
-			}
-			&[depth="2"] {
-				padding-left: 1.4rem;
-			}
-		}
-	}
-	&[depth-max="3"] {
-        >div.listitem {
-			&[depth="1"] {
-				padding-left: 0.6rem;
-			}
-			&[depth="2"] {
-				padding-left: 1.2rem;
-			}
-			&[depth="3"] {
-				padding-left: 1.8rem;
-			}
-		}
-	}
-	&[depth-max="4"] {
-        >div.listitem {
-			&[depth="1"] {
-				padding-left: 0.5rem;
-			}
-			&[depth="2"] {
-				padding-left: 1rem;
-			}
-			&[depth="3"] {
-				padding-left: 1.5rem;
-			}
-			&[depth="4"] {
-				padding-left: 2rem;
-			}
+@mixin depth-padding($depth) {
+	padding-left: 0rem + $depth;
+}
+
+.deja-listcontainer {
+	@for $i from 0 through 50 {
+		[depth="#{$i}"] {
+			@include depth-padding($i);
 		}
 	}
 }

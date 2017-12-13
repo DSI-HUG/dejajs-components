@@ -22,6 +22,7 @@ import { DejaTreeListComponent } from '../../../src/component/tree-list/tree-lis
 import { News } from '../common/news.model';
 import { CountriesListService } from '../services/countries-list.service';
 import { CountriesService, Country } from '../services/countries.service';
+import { Folder, FoldersService } from '../services/folders.service';
 import { NewsService } from '../services/news.service';
 
 @Component({
@@ -35,6 +36,7 @@ export class DejaTreeListDemoComponent implements OnDestroy {
     public fructs = [] as string[];
     public fructItems = [] as IItemBase[];
     public fructItemsWithPreSelection = [] as IItemBase[];
+    public folders: Folder[];
 
     protected disabled: boolean;
     protected country: Country;
@@ -80,7 +82,14 @@ export class DejaTreeListDemoComponent implements OnDestroy {
         return this._dialogVisible;
     }
 
-    constructor(private changeDetectorRef: ChangeDetectorRef, private countriesService: CountriesService, protected countriesListService: CountriesListService, newsService: NewsService, groupingService: GroupingService) {
+    constructor(
+        private changeDetectorRef: ChangeDetectorRef,
+        private countriesService: CountriesService,
+        private folderService: FoldersService,
+        protected countriesListService: CountriesListService,
+        public newsService: NewsService,
+        public groupingService: GroupingService
+    ) {
         this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","displayName":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","displayName":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","displayName":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","displayName":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","displayName":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","displayName":"Dominica","depth":0,"odd":false,"selected":true}]');
         this.news$ = newsService.getNews$(50);
         this.bigNews$ = newsService.getNews$(10000);
@@ -104,6 +113,8 @@ export class DejaTreeListDemoComponent implements OnDestroy {
         this.country.color = 'rgb(211, 47, 47)';
 
         this.countries = this.countriesService.getCountries$();
+
+        this.folders = this.folderService.getFolders();
 
         this.deepCountries = this.countriesService.getCountries$()
             .switchMap((countries) => countries)

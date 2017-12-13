@@ -28,7 +28,7 @@
 </mat-card>
 
 <div *ngIf="tabIndex === 1">
-	<mat-card class="deja-treelist-demo demo-card demo-basic">
+	 <mat-card class="deja-treelist-demo demo-card demo-basic">
 		<mat-toolbar color="primary">Simple Usage</mat-toolbar>
 		<mat-card-content>
 			<div>Just passing an array of objects</div>
@@ -131,8 +131,8 @@
 				<span fxFlex="0 0 50%" fxFlexOffset="5%">Selected fruct model is: {{ fruct }}</span>
 			</span>
 		</mat-card-content>
-	</mat-card>
-	<mat-card class="deja-treelist-demo demo-card demo-basic">
+	</mat-card> 
+	 <mat-card class="deja-treelist-demo demo-card demo-basic">
 		<mat-toolbar color="primary">Disabled tree-list</mat-toolbar>
 		<mat-card-content>
 			<div>
@@ -148,10 +148,20 @@
 				</span>
 			</div>
 		</mat-card-content>
+	</mat-card> 
+	<mat-card class="deja-treelist-demo demo-card demo-basic">
+		<mat-toolbar color="primary">Multi level</mat-toolbar>
+		<mat-card-content>
+			<div fxLayout="row">
+				<span fxFlex="0 0 45%" fxLayout="column">
+					<deja-tree-list nodataholder="No record to display" maxHeight="auto" [models]="folders" textField="label" childrenField="children"></deja-tree-list>
+				</span>
+			</div>
+		</mat-card-content>
 	</mat-card>
 </div>
 
-<div *ngIf="tabIndex === 2">
+ <div *ngIf="tabIndex === 2">
 	<mat-card class="deja-treelist-demo demo-card demo-basic">
 		<mat-toolbar color="primary">Multi selection</mat-toolbar>
 		<mat-card-content>
@@ -215,9 +225,9 @@
 			</div>
 		</mat-card-content>
 	</mat-card>
-</div>
+</div> 
 
-<div *ngIf="tabIndex === 3">
+ <div *ngIf="tabIndex === 3">
 	<mat-card class="deja-treelist-demo demo-card demo-basic">
 		<mat-toolbar color="primary">Templating Examples</mat-toolbar>
 		<mat-card-content>
@@ -351,4 +361,4 @@
 			</span>
 		</mat-card-content>
 	</mat-card>
-</div>
+</div> 
