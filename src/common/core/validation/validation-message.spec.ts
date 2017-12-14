@@ -1,6 +1,6 @@
 import { ValidationMessages } from './validation-messages';
 
-fdescribe('ValidationMessages', () => {
+describe('ValidationMessages', () => {
 
     const validationMessages = new ValidationMessages();
 
