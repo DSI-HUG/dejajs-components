@@ -28,6 +28,12 @@ export enum DaysOfWeek {
     Saturday = 6,
 }
 
+export enum DateComponentLayout {
+    dateonly = 1,
+    datetime,
+    timeonly,
+}
+
 const noop = () => { };
 
 @Component({
@@ -100,12 +106,37 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
     private _disabled: boolean;
 
     /**
+     * Component Layout
+     */
+    @Input()
+    public set layout(value: DateComponentLayout | string) {
+        if (value) {
+            if (typeof value === 'string') {
+                this.layoutId = DateComponentLayout[value];
+                if (!this.layoutId) {
+                    throw new Error('Invalid type for DateComponentLayout');
+                }
+                this.layoutClass = value;
+            } else {
+                this.layoutId = value;
+                this.layoutClass = DateComponentLayout[value];
+            }
+        }
+        this.changeDetectorRef.markForCheck();
+    }
+    public layoutClass: string;
+    public layoutId: number;
+
+    /**
      * Time property setter. Can be string or empty so you can use it like : <deja-date-selector time></deja-date-selector>
      * Used to add time selector next to calendar
      */
     @Input()
     public set time(value: boolean | string) {
         this._time = coerceBooleanProperty(value) ? true : null;
+        if (this._time) {
+            this.layout = DateComponentLayout.datetime;
+        }
         this.changeDetectorRef.markForCheck();
     }
 
@@ -173,6 +204,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
                         this.changeDetectorRef.markForCheck();
                     });
             });
+        this.layout = DateComponentLayout.dateonly;
     }
 
     public ngOnInit() {
@@ -206,14 +238,10 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
             if (this.selectedDate) {
                 const h = (value) ? value.getHours() : 0;
                 const m = (value) ? value.getMinutes() : 0;
-                if (value && (
-                    (!this.time && this.selectedDate.toLocaleTimeString() !== value.toLocaleTimeString())
-                    || (this.time && ((this.selectedDate.getHours() === 0 && this.selectedDate.getMinutes() === 0) && (h !== 0 && m !== 0) || (this.selectedDate.toLocaleDateString() !== value.toLocaleDateString())))
-                )) {
+                if (value && ((!this.layoutId && this.selectedDate.toLocaleTimeString() !== value.toLocaleTimeString()) || (this.layoutId > 1 && ((this.selectedDate.getHours() === 0 && this.selectedDate.getMinutes() === 0) && (h !== 0 && m !== 0) || (this.selectedDate.toLocaleDateString() !== value.toLocaleDateString()))))) {
                     value.setHours(this.selectedDate.getHours(), this.selectedDate.getMinutes(), this.selectedDate.getSeconds());
                 }
             }
-
             this.selectedDate = value;
             this._displayedDate = value || this._currentDate;
 

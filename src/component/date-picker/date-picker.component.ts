@@ -6,9 +6,12 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, Input, OnDestroy, OnInit, Optional, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
+import { DateComponentLayout, DaysOfWeek, DejaDateSelectorComponent } from '../date-selector/date-selector.component';
+import { formatToMask, formatToUnitOfTime } from './format-to-mask';
+
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import * as moment_ from 'moment';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/observable/from';
@@ -27,8 +30,7 @@ import { Subject } from 'rxjs/Subject';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { DejaConnectionPositionPair } from '../../common/core/overlay/connection-position-pair';
 import { DejaChildValidatorDirective } from '../../common/core/validation/child-validator.directive';
-import { DaysOfWeek, DejaDateSelectorComponent } from '../date-selector/date-selector.component';
-import { formatToMask, formatToUnitOfTime } from './format-to-mask';
+
 const moment: (value?: any, format?: string) => moment_.Moment = (<any>moment_).default || moment_;
 
 const noop = () => { };
@@ -275,8 +277,15 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     /** Init mask */
     public ngOnInit() {
         if (!this._format) {
-            const time = this.time ? ' HH:mm' : '';
-            this.format = `YYYY-MM-DD${time}`;
+            if (!this.layout || this.layout === DateComponentLayout.dateonly || this.layout === 'dateonly') {
+                this.format = 'YYYY-MM-DD';
+            } else if (this.layout === DateComponentLayout.datetime || this.layout === 'datetime') {
+                this.format = 'YYYY-MM-DD HH:mm';
+            } else if (this.layout === DateComponentLayout.timeonly || this.layout === 'timeonly') {
+                this.format = 'HH:mm';
+            } else {
+                this.format = 'YYYY-MM-DD';
+            }
         }
     }
 
@@ -309,12 +318,30 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     }
 
     /**
+     * Component Layout
+     */
+    @Input()
+    public set layout(value: DateComponentLayout | string) {
+        if (value) {
+            this._layout = value;
+        }
+        this.changeDetectorRef.markForCheck();
+    }
+    public _layout: number | string;
+    public get layout() {
+        return this._layout;
+    }
+
+    /**
      * Time property setter. Can be string or empty so you can use it like : <deja-date-picker time></deja-date-picker>
      * Used to add time selector next to calendar
      */
     @Input()
     public set time(value: boolean | string) {
         this._time = coerceBooleanProperty(value) ? true : null;
+        if (this._time) {
+            this.layout = DateComponentLayout.datetime;
+        }
         this.changeDetectorRef.markForCheck();
     }
 
