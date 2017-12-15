@@ -1,7 +1,5 @@
 ### 2.19.0 (2017-12-15)
 
-#### 2.18.12 (2017-12-15)
-
 ##### BREAKING CHANGES
 
 * **DejaTreeList:** Fix limited depth ([7f19da35](https://github.com/DSI-HUG/dejajs-components/commit/7f19da35906d035b617c49492c8afebd7b437a94))
@@ -12,6 +10,7 @@ parent items
 
 DEJS-221
 
+* **DateValidator:** Remove the dateValidator because it makes useless validation (DEJS-264)
 
 ##### New Features
 
