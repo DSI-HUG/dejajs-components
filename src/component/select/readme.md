@@ -5,7 +5,7 @@ Crée une liste déroulante.
 > Ne pas oublier d'importer le `DejaSelectModule` dans les `imports` de votre module concerné !
 
 ```html
-<deja-select required selectionClearable placeholder="Liste des pays, avec templating" valueField="code" [(ngModel)]="countryForTemnplate" [models]="countriesForTemplate">
+<deja-select required selectionClearable placeholder="Liste des pays, avec templating" valueField="code" [(ngModel)]="country" [models]="countries">
     <ng-template #itemTemplate let-item>
         <span>{{ item.model.naqme }}</span>
         <span>{{ item.model.code }}</span>

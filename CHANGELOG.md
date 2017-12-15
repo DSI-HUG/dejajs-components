@@ -1,3 +1,40 @@
+### 2.19.0 (2017-12-15)
+
+##### BREAKING CHANGES
+
+* **DejaTreeList:** Fix limited depth ([7f19da35](https://github.com/DSI-HUG/dejajs-components/commit/7f19da35906d035b617c49492c8afebd7b437a94))
+    => Fix limited padding depth to 4 and remove background gradient for parent items
+
+Padding of the parent element can change. There is no more background gradient for
+parent items
+
+DEJS-221
+
+* **DateValidator:** Remove the dateValidator because it makes useless validation (DEJS-264)
+
+##### New Features
+
+* **DatePicker:**
+  * layout as a string ([235e0f37](https://github.com/DSI-HUG/dejajs-components/commit/235e0f376236030b430ddff710ea4be77083828a))
+  * time picker and time selector ([142b977b](https://github.com/DSI-HUG/dejajs-components/commit/142b977b5e9a9d3aa041bdc53027eea0a43909df))
+* **DejaItem:** Add selected input to deja item DEJS-250 ([c23d0405](https://github.com/DSI-HUG/dejajs-components/commit/c23d0405125f3d0af17a50fcae8901fb73de3f3b))
+
+##### Bug Fixes
+
+* **DejaTile:** Removed useless this in html ([ef9657ca](https://github.com/DSI-HUG/dejajs-components/commit/ef9657ca45856177b81cdfb41319fbcbeda6a25f))
+* **ViewPortService:** ViewportService sometimes blocked when the last item is displayed and the scoll button up is pressed ([b5ba5520](https://github.com/DSI-HUG/dejajs-components/commit/b5ba5520025c62febb3910142cdc39add74f8c53))
+* **DatePicker:**
+  * conflicts with 2.18.6 ([361de340](https://github.com/DSI-HUG/dejajs-components/commit/361de340e0c7eec131f102ceb58187af71209d95))
+  * consecutives blank lines ([a7f41908](https://github.com/DSI-HUG/dejajs-components/commit/a7f4190841f84c467af188dfbc41f7fc59693d7a))
+  * fixed circular dependencies ([1901ec17](https://github.com/DSI-HUG/dejajs-components/commit/1901ec170db4ac834b24da251fc0cbf1aa95f0c4))
+* **ItemListService:** Ensure pre-selection from items object DEJS-256 ([70177209](https://github.com/DSI-HUG/dejajs-components/commit/70177209bac03daa97d4a2340b26661dc6b98b7a))
+
+##### Refactors
+
+* **DatePicker:**
+  * check removed for layout classname in template ([04ac3db0](https://github.com/DSI-HUG/dejajs-components/commit/04ac3db07a6eea318fe3e91d30406dfdaad65e9d))
+  * cleanup after time picker ([1c5d7c2d](https://github.com/DSI-HUG/dejajs-components/commit/1c5d7c2d931de27282ca88f531201a14464e2d46))
+
 #### 2.18.11 (2017-12-13)
 
 ##### Bug Fixes

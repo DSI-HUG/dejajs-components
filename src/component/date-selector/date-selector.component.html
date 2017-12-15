@@ -1,10 +1,14 @@
-<div id="date-time-selector" [attr.with-time]="time" tabindex="-1">
-    <div id="date-selector">
+<div id="date-time-selector" [ngClass]="layoutClass" tabindex="-1">
+    <div id="date-selector" *ngIf="layoutId < 3">
         <div id="date-header">
             <div class="year">
-                <button mat-mini-fab type="button" (click)="changeYear(-1)" [disabled]="disabled"><mat-icon>navigate_before</mat-icon></button>
+                <button mat-mini-fab type="button" (click)="changeYear(-1)" [disabled]="disabled">
+                    <mat-icon>navigate_before</mat-icon>
+                </button>
                 <div>{{displayedDate.getFullYear()}}</div>
-                <button mat-mini-fab type="button" (click)="changeYear(1)" [disabled]="disabled"><mat-icon>navigate_next</mat-icon></button>
+                <button mat-mini-fab type="button" (click)="changeYear(1)" [disabled]="disabled">
+                    <mat-icon>navigate_next</mat-icon>
+                </button>
             </div>
             <div current>
                 {{displayedDate && displayedDate.toLocaleDateString()}}
@@ -12,9 +16,17 @@
         </div>
         <div id="sub-header">
             <div class="month">
-                <div class="previous"><button mat-mini-fab type="button" (click)="changeMonth(-1)" [disabled]="disabled"><mat-icon>navigate_before</mat-icon></button></div>
+                <div class="previous">
+                    <button mat-mini-fab type="button" (click)="changeMonth(-1)" [disabled]="disabled">
+                        <mat-icon>navigate_before</mat-icon>
+                    </button>
+                </div>
                 <span>{{displayedDate.toLocaleString(local, { month: 'long' })}} {{displayedDate.getFullYear()}}</span>
-                <div class="next"><button mat-mini-fab type="button" (click)="changeMonth(1)" [disabled]="disabled"><mat-icon>navigate_next</mat-icon></button></div>
+                <div class="next">
+                    <button mat-mini-fab type="button" (click)="changeMonth(1)" [disabled]="disabled">
+                        <mat-icon>navigate_next</mat-icon>
+                    </button>
+                </div>
             </div>
             <div class="days">
                 <span *ngFor="let day of days">{{day}}</span>
@@ -22,20 +34,23 @@
         </div>
         <div id="date-body" (keydown)="keyDown($event)" tabindex="0" [attr.keyboardNavigation]="keyboardNavigation">
             <div class="date" *ngFor="let dateSelectorItem of currentDays; let index=index">
-                <div class="day" [attr.dateindex]="index" [class.background]="dateSelectorItem.background" [class.disabled]="dateSelectorItem.disabled" [attr.current]="dateSelectorItem.currentDate || null" [attr.selected]="dateSelectorItem.selected || null">
+                <div class="day" [attr.dateindex]="index" [class.background]="dateSelectorItem.background" [class.disabled]="dateSelectorItem.disabled"
+                    [attr.current]="dateSelectorItem.currentDate || null" [attr.selected]="dateSelectorItem.selected || null">
                     {{dateSelectorItem.date.getDate()}}
                 </div>
             </div>
             <div class="date" *ngFor="let emptyDay of emptyDays"></div>
         </div>
     </div>
-    <div id="time-selector" *ngIf="time">
+    <div id="time-selector" *ngIf="layoutId > 1">
         <div id="time-header">
             {{('0'+displayedDate.getHours()).slice(-2)}}:{{('0'+displayedDate.getMinutes()).slice(-2)}}
         </div>
         <div id="time-body">
-            <deja-circular-picker [ngModel]="(this.displayedDate) ? this.displayedDate.getMinutes() : 0" (ngModelChange)="updateMinutes($event)" [ranges]="clocks.minutes.ranges" [outerLabels]="true" class="minutes" [disabled]="disabled"></deja-circular-picker>
-            <deja-circular-picker [ngModel]="(this.displayedDate) ? this.displayedDate.getHours() : 24" (ngModelChange)="updateHours($event)" [ranges]="clocks.hours.ranges" class="hours" [disabled]="disabled">
+            <deja-circular-picker [ngModel]="(this.displayedDate) ? this.displayedDate.getMinutes() : 0" (ngModelChange)="updateMinutes($event)"
+                [ranges]="clocks.minutes.ranges" [outerLabels]="true" class="minutes" [disabled]="disabled"></deja-circular-picker>
+            <deja-circular-picker [ngModel]="(this.displayedDate) ? this.displayedDate.getHours() : 24" (ngModelChange)="updateHours($event)"
+                [ranges]="clocks.hours.ranges" class="hours" [disabled]="disabled">
                 <ng-template #cursorTemplate #labelTemplate let-value>
                     {{ value === 24 ? 0 : value }}
                 </ng-template>

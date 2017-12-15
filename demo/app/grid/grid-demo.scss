@@ -62,7 +62,9 @@ grid-demo {
 				}
 				&[colname="description"],
 				&[colname="address"],
-				&[colname="about"] {
+                &[colname="about"],
+                &[colname="p1.p2.person.address"],
+				&[colname="p1.p2.person.about"] {
 					.cell {
 						white-space: normal;
 					}
