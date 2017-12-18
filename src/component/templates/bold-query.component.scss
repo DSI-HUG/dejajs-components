@@ -1,8 +1,16 @@
 deja-bold-query {
-	span {
-		display: block;
-		overflow: hidden;
-		text-overflow: ellipsis;
+    div {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
         white-space: nowrap;
-	}
+    }
+    .highlight {
+        font-weight: bold;
+    }
+    .yellowBackgroundColorHighlight {
+        font-weight: inherit;
+        background-color: yellow;
+        color: #111;
+    }
 }
