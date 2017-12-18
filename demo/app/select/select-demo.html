@@ -125,7 +125,7 @@
         <mat-card-content>
             <span fxLayout="row" fxLayoutAlign="start center">
                 <deja-select class="demo-half-width" placeholder="String Array Model" selectionClearable [(ngModel)]="fruct">
-                    <deja-item [value]="f" [text]="f" *ngFor="let f of fructs"></deja-item> 
+                    <deja-item [value]="f" [text]="f" *ngFor="let f of fructs"></deja-item>
                 </deja-select>
                 <span fxFlex="0 0 50%" fxFlexOffset="5%">Selected fruct model is: {{ fruct }}</span>
             </span>
@@ -259,6 +259,25 @@
                 </ng-template>
             </deja-select>
             </span>
+            <h1>Query Bold Template</h1>
+            <span>
+                <label>Highlight options:</label>
+            </span>
+            <div fxLayout="column">
+                <mat-checkbox [(ngModel)]="firstOccurenceOnly" color="primary">First occurence only ( [firstOccurenceOnly]='{{firstOccurenceOnly}}' )</mat-checkbox>
+                <mat-checkbox [(ngModel)]="firstOccurencePerWordOnly" color="primary">First occurence per word only ( [firstOccurencePerWordOnly]='{{firstOccurencePerWordOnly}}' )</mat-checkbox>
+                <mat-checkbox [(ngModel)]="atTheBeginningOfWordOnly" color="primary">At the beginning of word only ( [atTheBeginningOfWordOnly]='{{atTheBeginningOfWordOnly}}' )</mat-checkbox>
+                <mat-checkbox [(ngModel)]="yellowBackgroundColorHighlight" color="primary">Highlight class name ( [highlightClassName]={{yellowBackgroundColorHighlight?'yellowBackgroundColorHighlight':'highlight'}})</mat-checkbox>
+            </div>
+            <div fxLayout="row">
+                <deja-select fxFlex="0 0 45%" placeholder="Bold query template select" type="autocomplete" textField="naqme" valueField="code" [items]="countries" >
+                    <ng-template #itemTemplate let-query="query" let-item>
+                        <deja-bold-query [query]="query" [value]="item.naqme" [firstOccurenceOnly]="firstOccurenceOnly" [firstOccurencePerWordOnly]="firstOccurencePerWordOnly" [atTheBeginningOfWordOnly]="atTheBeginningOfWordOnly" [highlightClassName]="yellowBackgroundColorHighlight?'yellowBackgroundColorHighlight':'highlight'"></deja-bold-query>
+                    </ng-template>
+                    <ng-template #hintTemplate>
+                    </ng-template>
+                </deja-select>
+            </div>
         </mat-card-content>
     </mat-card>
 </div>
