@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, Input, OnDestroy, OnInit, Optional, Self, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { DateComponentLayout, DaysOfWeek, DejaDateSelectorComponent } from '../date-selector/date-selector.component';
 import { formatToMask, formatToUnitOfTime } from './format-to-mask';
@@ -71,6 +71,10 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     @Input() public overlayOffsetX = 0;
     /** Offset de position verticale de la zone de dropdown */
     @Input() public overlayOffsetY = 6;
+
+    @Output() public dateChange = new EventEmitter();
+    @Output() public timeChange = new EventEmitter();
+
     /** Mask for input */
     protected _mask: any[];
 
