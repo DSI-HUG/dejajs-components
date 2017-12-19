@@ -7,7 +7,7 @@
  */
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Component, ContentChild, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import {Component, ContentChild, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -19,7 +19,10 @@ export class DejaMessageBoxComponent implements OnInit {
     @Input() public type: 'info' | 'primary' | 'success' | 'warn' | 'danger';
     @Input() public title: string;
     @Input() public icon: string;
+    @Input() public showCloseIcon = false;
     @Input() public actions: Array<{text?: string; type?: 'info' | 'primary' | 'success' | 'warn' | 'danger'; icon?: string; action(): any}>;
+    /** Event Emmited when the close action is called */
+    @Output() public close = new EventEmitter();
     @ContentChild('actionsTemplate') public actionsTemplate;
 
     private _horizontal: boolean;
@@ -47,6 +50,10 @@ export class DejaMessageBoxComponent implements OnInit {
                 }
             });
         }
+    }
+
+    public onClose() {
+        this.close.emit();
     }
 
     private getIconFromType(type: 'info' | 'primary' | 'success' | 'warn' | 'danger'): string {

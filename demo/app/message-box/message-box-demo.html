@@ -14,7 +14,7 @@
 
 <div *ngIf="tabIndex === 1" class="example">
     <deja-dialog *ngIf="dialogTitle" (closed)="dialogTitle = null">
-        <deja-message-box type="primary" title="Title">
+        <deja-message-box type="primary" title="Title" [showCloseIcon]="true" (close)="dialogTitle = null">
             <span [innerHtml]="dialogTitle"></span>
             <ng-template #actionsTemplate>
                 <button mat-raised-button (click)="dialogTitle = null">
