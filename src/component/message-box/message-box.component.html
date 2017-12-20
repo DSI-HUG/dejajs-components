@@ -1,7 +1,12 @@
 <mat-card id="msgbox" class="{{type}}">
-    <mat-card-title *ngIf="icon">
+    <mat-card-title *ngIf="icon || showCloseIcon">
         <mat-icon *ngIf="icon">{{icon}}</mat-icon>
         <span id="title" *ngIf="!horizontal">{{title}}</span>
+        <div class="header-actions">
+            <button *ngIf="showCloseIcon" mat-mini-fab type="button" class="close" (click)="onClose()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
     </mat-card-title>
     <mat-card-content>
         <h2 id="title" *ngIf="horizontal && title">{{title}}</h2>
