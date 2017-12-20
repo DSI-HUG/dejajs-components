@@ -50,6 +50,11 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     @Output() public layoutChanged = new EventEmitter<IDejaTilesEvent>();
 
     /**
+     * Raised when the layout is completed and all tiles are binded
+     */
+    @Output() public layoutCompleted = new EventEmitter<IDejaTilesEvent>();
+
+    /**
      * Raised before some tiles will be added to the data model with a paste
      */
     @Output() public contentAdding = new EventEmitter<IDejaTilesAddEvent>();
@@ -120,6 +125,10 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
                 this.layoutChanged.emit(event);
                 this.onChangeCallback(event.tiles);
             });
+
+        this.layoutProvider.layoutCompleted
+            .takeWhile(() => this.isAlive)
+            .subscribe((event) => this.layoutCompleted.emit(event));
 
         this.keyup$ = Observable.fromEvent(element.ownerDocument, 'keyup');
 

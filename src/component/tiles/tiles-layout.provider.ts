@@ -80,6 +80,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
     public deleteTiles$ = new Subject<DejaTile[]>();
     public designMode = false;
 
+    public layoutCompleted = new EventEmitter<IDejaTilesEvent>();
     public layoutChanged = new EventEmitter<IDejaTilesEvent>();
     public modelChanged = new EventEmitter<IDejaTilesModelEvent>();
     public selectionChanged = new EventEmitter<IDejaTilesEvent>();
@@ -209,6 +210,10 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                 }
 
                 this.selectedTiles = selectedTileIds;
+
+                const event = new CustomEvent('DejaTilesEvent', { cancelable: false }) as IDejaTilesEvent;
+                event.tiles = tiles.map((tile) => tile.toTileModel());
+                this.layoutCompleted.emit(event);
             });
 
         const ensureTile$ = Observable.from(this.ensureVisible$)
