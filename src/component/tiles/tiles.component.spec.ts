@@ -7,22 +7,25 @@
  */
 
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { async, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Observable } from 'rxjs/Observable';
 import { Rect } from '../../common/core/graphics/rect';
 import { DejaTilesModule } from './index';
 import { IDejaTile } from './tile.interface';
 import { DejaTilesComponent } from './tiles.component';
 
 @Component({
-    template: `<deja-tiles style="height: 500px;width: 400px;display: block;" [models]="tiles" canDelete canCopy canCut canPaste designMode="true" maxwidth="100%" tileminwidth="25%" tileminheight="25%" tilemaxheight="50%" tilemaxwidth="50%">
+    encapsulation: ViewEncapsulation.None,
+    template: `<deja-tiles style="height: 500px;width: 400px;display: block;" [(models)]="tiles" canDelete canCopy canCut canPaste designMode="true" maxwidth="100%" tileminwidth="25%" tileminheight="25%" tilemaxheight="50%" tilemaxwidth="50%">
                     <ng-template #tileTemplate let-tile let-pressed="pressed" let-selected="selected">
                         <span style="width: 100%;height: 100%;display: block;" class="tile-content noselect" [style.background-color]="tile.templateModel.color" [attr.selected]="selected" [attr.pressed]="pressed">{{ tile.templateModel.name }}</span>
                     </ng-template>
                 </deja-tiles>`,
+    styles: [`* { transition: unset !important; }`]
 })
 class DejaTilesContainerComponent {
     protected fructs = [
@@ -117,11 +120,110 @@ describe('DejaTilesComponent', () => {
         }).compileComponents();
     }));
 
-    fit('should create the component', async(() => {
+    it('should create the component', async(() => {
         const fixture = TestBed.createComponent(DejaTilesContainerComponent);
         fixture.detectChanges();
         const tilesDebugElement = fixture.debugElement.query(By.directive(DejaTilesComponent));
         const tilesInstance = tilesDebugElement.componentInstance;
         expect(tilesInstance).toBeTruthy();
+    }));
+
+    it('should insert a new tile without bounds at the end', async(() => {
+        let pass = 0;
+        const fixture = TestBed.createComponent(DejaTilesContainerComponent);
+        const tilesContainerInstance = fixture.componentInstance as DejaTilesContainerComponent;
+        const tilesDebugElement = fixture.debugElement.query(By.directive(DejaTilesComponent));
+        const tilesInstance = tilesDebugElement.componentInstance as DejaTilesComponent;
+
+        Observable.from(tilesInstance.layoutCompleted)
+            .subscribe(() => {
+                fixture.detectChanges();
+                const tileElements = fixture.debugElement.queryAll(By.css('deja-tiles > #tiles > deja-tile'));
+                switch (++pass) {
+                    case 1:
+                        expect(tileElements.length).toBe(12);
+                        break;
+
+                    default:
+                        expect(tileElements.length).toBe(13);
+                        const beerTile = tileElements.find((t) => t.nativeElement.id === 'Beer');
+                        expect(beerTile).toBeDefined();
+                        expect(beerTile.nativeElement.offsetTop).toBe(400);
+                }
+            });
+
+        Observable.timer(1000).first().subscribe(() => expect(pass).toBe(2));
+
+        fixture.detectChanges();
+
+        tilesContainerInstance.tiles.unshift({
+            id: 'Beer',
+            color: '#FBC02D',
+            templateModel: {
+                name: 'Beer',
+                color: '#FBC02D',
+            },
+        } as IDejaTile);
+
+        tilesContainerInstance.tiles = [...tilesContainerInstance.tiles];
+        tilesInstance.refresh();
+    }));
+
+    fit('should select the specified tiles', async(() => {
+        let pass = 0;
+        const fixture = TestBed.createComponent(DejaTilesContainerComponent);
+        const tilesDebugElement = fixture.debugElement.query(By.directive(DejaTilesComponent));
+        const tilesInstance = tilesDebugElement.componentInstance as DejaTilesComponent;
+
+        Observable.from(tilesInstance.layoutCompleted)
+            .subscribe(() => {
+                fixture.detectChanges();
+                const tileElements = fixture.debugElement.queryAll(By.css('deja-tiles > #tiles > deja-tile[selected="true"]'));
+                switch (++pass) {
+                    case 1:
+                        expect(tileElements.length).toBe(0);
+                        tilesInstance.selectedTiles = ['Peach', 'Cherries'];
+                        tilesInstance.refresh();
+                        break;
+
+                    default:
+                        debugger;
+                        expect(tileElements.length).toBe(2);
+                }
+            });
+
+        Observable.timer(1000).first().subscribe(() => expect(pass).toBe(2));
+
+        fixture.detectChanges();
+        tilesInstance.refresh();
+    }));
+
+    fit('should delete the selected tiles', async(() => {
+        let pass = 0;
+        const fixture = TestBed.createComponent(DejaTilesContainerComponent);
+        const tilesDebugElement = fixture.debugElement.query(By.directive(DejaTilesComponent));
+        const tilesInstance = tilesDebugElement.componentInstance as DejaTilesComponent;
+
+        Observable.from(tilesInstance.layoutCompleted)
+            .subscribe(() => {
+                fixture.detectChanges();
+                const tileElements = fixture.debugElement.queryAll(By.css('deja-tiles > #tiles > deja-tile'));
+                switch (++pass) {
+                    case 1:
+                        expect(tileElements.length).toBe(12);
+                        tilesInstance.deleteSelection();
+                        break;
+
+                    default:
+                        debugger;
+                        expect(tileElements.length).toBe(10);
+                }
+            });
+
+        Observable.timer(1000).first().subscribe(() => expect(pass).toBe(2));
+
+        fixture.detectChanges();
+        tilesInstance.selectedTiles = ['Peach', 'Cherries'];
+        tilesInstance.refresh();
     }));
 });
