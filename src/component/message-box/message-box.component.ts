@@ -19,7 +19,6 @@ export class DejaMessageBoxComponent implements OnInit {
     @Input() public type: 'info' | 'primary' | 'success' | 'warn' | 'danger';
     @Input() public title: string;
     @Input() public icon: string;
-    @Input() public showCloseIcon = false;
     @Input() public actions: Array<{text?: string; type?: 'info' | 'primary' | 'success' | 'warn' | 'danger'; icon?: string; action(): any}>;
     /** Event Emmited when the close action is called */
     @Output() public close = new EventEmitter();
@@ -34,6 +33,16 @@ export class DejaMessageBoxComponent implements OnInit {
 
     public get horizontal() {
         return this._horizontal;
+    }
+
+    private _showCloseIcon = false;
+    @Input()
+    public set showCloseIcon(value: boolean | string) {
+        this._showCloseIcon = coerceBooleanProperty(value);
+    }
+
+    public get showCloseIcon() {
+        return this._showCloseIcon;
     }
 
     constructor() { }
