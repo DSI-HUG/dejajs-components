@@ -451,12 +451,24 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
      * @param date new value of this model
      */
     public updateModel(date: string | Date) {
-        if (typeof date === 'string' && date.replace(/_/g, '').length === this._format.length) {
-            let d = moment(date, this._format).toDate();
-            if (!moment(d).isValid()) {
-                d = new Date();
+        if (typeof date === 'string') { // && date.replace(/_/g, '').length === this._format.length) {
+            if (date.replace(/_/g, '').length === this._format.length) { // If mask is fully filled
+                let d = moment(date, this._format).toDate();
+                if (!moment(d).isValid()) {
+                    console.warn('[DatePicker]: Invalid Date');
+                    d = null;
+                    this._control.control.setErrors({ invalidMask: true });
+                    this.changeDetectorRef.markForCheck();
+                }
+                date = d;
+            } else if (!date.match(/[0-9]/)) { // if mask is empty - do nothing
+                return;
+            } else { // If mask is partially filled
+                date = null;
+                console.warn('[DatePicker]: Invalid Date');
+                this._control.control.setErrors({ invalidMask: true });
+                this.changeDetectorRef.markForCheck();
             }
-            date = d;
         }
 
         if (typeof date !== 'string') {
