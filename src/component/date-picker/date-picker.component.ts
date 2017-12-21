@@ -472,7 +472,21 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
         }
 
         if (typeof date !== 'string') {
+
+            let event: EventEmitter<any>;
+
+            // now we check if it's date or time who is updated to raise correct event
+            if (this.value && moment(date).isAfter(this.value, 'day')) {
+                event = this.dateChange;
+            } else if (this.value && moment(date).isAfter(this.value, 'millisecond')) {
+                event = this.timeChange;
+            } else {
+                event = this.dateChange;
+            }
+
             this.value = date;
+            event.emit();
+            this.changeDetectorRef.markForCheck();
         }
     }
 
