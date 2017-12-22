@@ -69,6 +69,7 @@ import {
 
 import { MatButtonModule, MatButtonToggleModule, MatCardModule, MatCheckboxModule, MatIconModule, MatInputModule, MatListModule, MatMenuModule, MatProgressBarModule, MatProgressSpinnerModule, MatSidenavModule, MatTabsModule, MatToolbarModule } from '@angular/material';
 import { DejaItemModule } from '../../src/common/core/item-list/index';
+import { DejaBoldQueryModule } from '../../src/component';
 import { DejaAccordionDemoComponent } from './accordion/accordion-demo.component';
 import { DejaCircularPickerDemoComponent } from './circular-picker/circular-picker-demo';
 import { DejaColorSelectorDemoComponent } from './color-selector/color-selector-demo';
@@ -145,6 +146,7 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         MatSidenavModule,
         MatToolbarModule,
         DejaAccordionModule,
+        DejaBoldQueryModule,
         DejaChipsModule,
         DejaCircularPickerModule,
         DejaClipboardModule,

@@ -57,6 +57,7 @@ export class SelectDemoComponent implements OnDestroy {
     private _dialogVisible = false;
     public onDemandPlaceHolder = 'Open to load';
     private subscriptions = [] as Subscription[];
+    public yellowBackgroundColorHighlight = true;
 
     @ViewChild('news') private newsSelect: DejaSelectComponent;
     @ViewChild('ondemand') private onDemandSelect: DejaSelectComponent;

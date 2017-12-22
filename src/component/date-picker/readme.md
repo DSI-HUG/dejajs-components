@@ -81,3 +81,24 @@ Composant pour séléctionner une date sur un calendrier et l'affficher dans un 
 </tr>
 </tbody>
 </table>
+
+### Evénements
+
+<table>
+<thead>
+<tr>
+    <th>Nom</th>
+    <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+    <td>dateChange</td>
+    <td>Déclenché lorsque la date change.</td>
+</tr>
+<tr>
+    <td>timeChange</td>
+    <td>Déclenché lorsque l'heure change.</td>
+</tr>
+</tbody>
+</table>

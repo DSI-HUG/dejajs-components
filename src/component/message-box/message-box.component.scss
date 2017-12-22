@@ -13,9 +13,17 @@ deja-message-box {
 			display: flex;
 			margin: 0;
 			padding: 0.8rem;
-			mat-icon {
+			> mat-icon {
 				margin-right: 0.5rem;
 			}
+            .header-actions {
+                margin-left: auto;
+                button.mat-mini-fab {
+                    background: none;
+                    border: none;
+                    box-shadow: none;
+                }
+            }
 		}
 		.mat-card-content {
 			margin: 0;

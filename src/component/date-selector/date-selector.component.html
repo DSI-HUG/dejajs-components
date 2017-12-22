@@ -49,7 +49,7 @@
         <div id="time-body">
             <deja-circular-picker [ngModel]="(this.displayedDate) ? this.displayedDate.getMinutes() : 0" (ngModelChange)="updateMinutes($event)"
                 [ranges]="clocks.minutes.ranges" [outerLabels]="true" class="minutes" [disabled]="disabled"></deja-circular-picker>
-            <deja-circular-picker [ngModel]="(this.displayedDate) ? this.displayedDate.getHours() : 24" (ngModelChange)="updateHours($event)"
+            <deja-circular-picker [ngModel]="(this.displayedDate && this.displayedDate.getHours() != 0) ? this.displayedDate.getHours() : 24" (ngModelChange)="updateHours($event)"
                 [ranges]="clocks.hours.ranges" class="hours" [disabled]="disabled">
                 <ng-template #cursorTemplate #labelTemplate let-value>
                     {{ value === 24 ? 0 : value }}

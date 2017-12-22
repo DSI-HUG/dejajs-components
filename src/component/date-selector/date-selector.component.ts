@@ -50,6 +50,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
     @Input() public dateMin: Date;
 
     @Output() public dateChange = new EventEmitter();
+    @Output() public timeChange = new EventEmitter();
 
     protected _local = 'fr';
 
@@ -189,6 +190,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
                     const dateSelectorItem = this._currentDays[+target.getAttribute('dateindex')];
                     if (!dateSelectorItem.disabled) {
                         this.value = dateSelectorItem.date;
+                        this.dateChange.emit(this.value);
                     }
                 }
             });
@@ -409,6 +411,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
 
         d.setHours(hours);
         this.value = d;
+        this.timeChange.emit(this.value);
     }
 
     protected updateMinutes(minutes: number) {
@@ -423,6 +426,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
 
         d.setMinutes(minutes);
         this.value = d;
+        this.timeChange.emit(this.value);
     }
 
     private bind() {
@@ -491,12 +495,14 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
         if ((this.dateMin && d.getTime() < this.dateMin.getTime()) || (this.dateMax && d.getTime() > this.dateMax.getTime())) {
             this._displayedDate = d;
             this.bind();
+            this.dateChange.emit(this._displayedDate);
         } else if (this.disableDates && this.isDisabledDate(d)) {
             this.setDateIfPossible(d, num);
         } else {
             this.selectedDate = d;
             this._displayedDate = d;
             this.bind();
+            this.dateChange.emit(this._displayedDate);
         }
     }
 
@@ -517,6 +523,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
             this.selectedDate = d;
             this._displayedDate = d;
             this.bind();
+            this.dateChange.emit(this._displayedDate);
         }
     }
 
@@ -537,6 +544,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
             this.selectedDate = d;
             this._displayedDate = d;
             this.bind();
+            this.dateChange.emit(this._displayedDate);
         }
     }
 }

@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, Input, OnDestroy, OnInit, Optional, Self, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { DateComponentLayout, DaysOfWeek, DejaDateSelectorComponent } from '../date-selector/date-selector.component';
 import { formatToMask, formatToUnitOfTime } from './format-to-mask';
@@ -71,6 +71,10 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     @Input() public overlayOffsetX = 0;
     /** Offset de position verticale de la zone de dropdown */
     @Input() public overlayOffsetY = 6;
+
+    @Output() public dateChange = new EventEmitter();
+    @Output() public timeChange = new EventEmitter();
+
     /** Mask for input */
     protected _mask: any[];
 
@@ -429,34 +433,47 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     }
 
     /**
-     * ngModelChange of date-selector.
-     *
-     * @param newDate Date to set.
-     */
-    public onDateChange(newDate: Date) {
-        this.value = newDate;
-        // TODO
-        // if (this.value.getHours() === newDate.getHours() && this.value.getMinutes() === newDate.getMinutes() && this.value.getSeconds() === newDate.getSeconds()) {
-        //     this.setFocus();
-        // }
-    }
-
-    /**
      * Called when input change. If it's a string it's because user set the date manually. So we need to convert it into date with MomentJs.
      *
      * @param date new value of this model
      */
     public updateModel(date: string | Date) {
-        if (typeof date === 'string' && date.replace(/_/g, '').length === this._format.length) {
-            let d = moment(date, this._format).toDate();
-            if (!moment(d).isValid()) {
-                d = new Date();
+        if (typeof date === 'string') { // && date.replace(/_/g, '').length === this._format.length) {
+            if (date.replace(/_/g, '').length === this._format.length) { // If mask is fully filled
+                let d = moment(date, this._format).toDate();
+                if (!moment(d).isValid()) {
+                    console.warn('[DatePicker]: Invalid Date');
+                    d = null;
+                    this._control.control.setErrors({ invalidMask: true });
+                    this.changeDetectorRef.markForCheck();
+                }
+                date = d;
+            } else if (!date.match(/[0-9]/)) { // if mask is empty - do nothing
+                return;
+            } else { // If mask is partially filled
+                date = null;
+                console.warn('[DatePicker]: Invalid Date');
+                this._control.control.setErrors({ invalidMask: true });
+                this.changeDetectorRef.markForCheck();
             }
-            date = d;
         }
 
         if (typeof date !== 'string') {
+
+            let event: EventEmitter<any>;
+
+            // now we check if it's date or time who is updated to raise correct event
+            if (this.value && moment(date).isAfter(this.value, 'day')) {
+                event = this.dateChange;
+            } else if (this.value && moment(date).isAfter(this.value, 'millisecond')) {
+                event = this.timeChange;
+            } else {
+                event = this.dateChange;
+            }
+
             this.value = date;
+            event.emit(date);
+            this.changeDetectorRef.markForCheck();
         }
     }
 

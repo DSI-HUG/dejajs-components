@@ -1,3 +1,56 @@
+### 2.20.0 (2017-12-22)
+
+##### BREAKING CHANGES
+
+* **DejaTreeList:** Fix limited depth ([7f19da35](https://github.com/DSI-HUG/dejajs-components/commit/7f19da35906d035b617c49492c8afebd7b437a94))
+    => Fix limited padding depth to 4 and remove background gradient for parent items
+
+Padding of the parent element can change. There is no more background gradient for
+parent items
+
+DEJS-221
+
+
+##### New Features
+
+* **DejaMessageBoxComponent:** add showCloseIcon property in order to display a close icon at the top and on the right of the title bar. ([7867617a](https://github.com/DSI-HUG/dejajs-components/commit/7867617a4a9fe9323c477cea9c0f33d8a62cdd42))
+* **DejaDatePickerComponent:** Add event onDateChange and onTimeChange ([f3fa96f3](https://github.com/DSI-HUG/dejajs-components/commit/f3fa96f31c86b1dc4cf12e46891783c53c1305cb))
+* **DejaBoldQueryComponent:** added new properties firstOccurenceOnly, firstOccurencePerWordOnly, atTheBeginningOfWordOnly, highlightClassName. ([3ccf5caa](https://github.com/DSI-HUG/dejajs-components/commit/3ccf5caa1a8382d1a295c4d9323128b568509b85))
+* **DatePicker:**
+  * layout as a string ([235e0f37](https://github.com/DSI-HUG/dejajs-components/commit/235e0f376236030b430ddff710ea4be77083828a))
+  * time picker and time selector ([142b977b](https://github.com/DSI-HUG/dejajs-components/commit/142b977b5e9a9d3aa041bdc53027eea0a43909df))
+* **DejaItem:** Add selected input to deja item DEJS-250 ([c23d0405](https://github.com/DSI-HUG/dejajs-components/commit/c23d0405125f3d0af17a50fcae8901fb73de3f3b))
+
+##### Bug Fixes
+
+* **DejadatePickerComponent:** Raise change events on keyboard navigation ([d9c43cf9](https://github.com/DSI-HUG/dejajs-components/commit/d9c43cf960e129d9d6fd5ecdbc4e6eb3d5fc0e6d))
+* **DejaDatePickerComponent:** #94 check mask on blur and make control invalid if mask isn't ok ([7c25cf70](https://github.com/DSI-HUG/dejajs-components/commit/7c25cf70cf9264aa8345270f94e1edb704f2d5c9))
+* **DejaDateSelectorComponent:** Hour cursor was displayed on 12 when click on 0 ([bfa740d9](https://github.com/DSI-HUG/dejajs-components/commit/bfa740d95bde9463c3e662897716d48a7b7c7ac4))
+* **DejaTile:**
+  * Removed useless this in html ([ef9657ca](https://github.com/DSI-HUG/dejajs-components/commit/ef9657ca45856177b81cdfb41319fbcbeda6a25f))
+  * Spinner position (Regression due to mateial spinner changes) ([5b773940](https://github.com/DSI-HUG/dejajs-components/commit/5b773940dc7f0def46ff8997fc51ababb02c879e))
+* **ViewPortService:** ViewportService sometimes blocked when the last item is displayed and the scoll button up is pressed ([b5ba5520](https://github.com/DSI-HUG/dejajs-components/commit/b5ba5520025c62febb3910142cdc39add74f8c53))
+* **DejaGrid:** Header bottom line style ([23fbe33c](https://github.com/DSI-HUG/dejajs-components/commit/23fbe33c6604e1db68bc468a49cce612e1164662))
+* **DejaSelect:** Ensure SearchCriteria in auto-complete when min search length is set and a value already selected ([e11e666b](https://github.com/DSI-HUG/dejajs-components/commit/e11e666bdfa0b0e8a7bdb369bb1f56f305091b0f))
+* **DejaTiles:** Remove selection when tiles are empties ([55da6084](https://github.com/DSI-HUG/dejajs-components/commit/55da6084a9b331e51a4887abe901c8fc1f101c43))
+* **Global:** rxjs imports ([409c7808](https://github.com/DSI-HUG/dejajs-components/commit/409c78089e43fe06e9b64ac6cf908591d28e6eb4))
+* **DatePicker:**
+  * conflicts with 2.18.6 ([361de340](https://github.com/DSI-HUG/dejajs-components/commit/361de340e0c7eec131f102ceb58187af71209d95))
+  * consecutives blank lines ([a7f41908](https://github.com/DSI-HUG/dejajs-components/commit/a7f4190841f84c467af188dfbc41f7fc59693d7a))
+  * fixed circular dependencies ([1901ec17](https://github.com/DSI-HUG/dejajs-components/commit/1901ec170db4ac834b24da251fc0cbf1aa95f0c4))
+* **ItemListService:** Ensure pre-selection from items object DEJS-256 ([70177209](https://github.com/DSI-HUG/dejajs-components/commit/70177209bac03daa97d4a2340b26661dc6b98b7a))
+
+##### Refactors
+
+* **DatePicker:**
+  * check removed for layout classname in template ([04ac3db0](https://github.com/DSI-HUG/dejajs-components/commit/04ac3db07a6eea318fe3e91d30406dfdaad65e9d))
+  * cleanup after time picker ([1c5d7c2d](https://github.com/DSI-HUG/dejajs-components/commit/1c5d7c2d931de27282ca88f531201a14464e2d46))
+
+##### Tests
+
+* **DejaBoldQueryComponent:** add junit test. ([d3f33ae5](https://github.com/DSI-HUG/dejajs-components/commit/d3f33ae5b3d2d81b4430ff40921605237aaaf719))
+* **TimeAgoPipe:** Add unit test for TimeAgo pipe ([f7036292](https://github.com/DSI-HUG/dejajs-components/commit/f7036292219dfa2c895f4ec7c1c99a493a16e595))
+
 ### 2.19.0 (2017-12-15)
 
 ##### BREAKING CHANGES
