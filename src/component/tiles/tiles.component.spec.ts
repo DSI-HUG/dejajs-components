@@ -13,6 +13,7 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Observable } from 'rxjs/Observable';
+import { DejaClipboardModule } from '../../common/core/clipboard/index';
 import { Rect } from '../../common/core/graphics/rect';
 import { DejaTilesModule } from './index';
 import { IDejaTile } from './tile.interface';
@@ -121,7 +122,8 @@ describe('DejaTilesComponent', () => {
                 CommonModule,
                 FormsModule,
                 DejaTilesModule,
-            ],
+                DejaClipboardModule.forRoot(),
+            ]
         }).compileComponents();
     }));
 
@@ -131,7 +133,7 @@ describe('DejaTilesComponent', () => {
         return Observable.from(layoutProvider.layoutCompleted);
     };
 
-    it('should create the component', async(() => {
+    fit('should create the component', async(() => {
         const fixture = TestBed.createComponent(DejaTilesContainerComponent);
         fixture.detectChanges();
         const tilesDebugElement = fixture.debugElement.query(By.directive(DejaTilesComponent));
@@ -139,13 +141,14 @@ describe('DejaTilesComponent', () => {
         expect(tilesInstance).toBeTruthy();
     }));
 
-    it('should insert a new tile without bounds at the end', async(() => {
+    fit('should insert a new tile without bounds at the end', async(() => {
         const fixture = TestBed.createComponent(DejaTilesContainerComponent);
         const tilesContainerInstance = fixture.componentInstance as DejaTilesContainerComponent;
         const tilesDebugElement = fixture.debugElement.query(By.directive(DejaTilesComponent));
         const tilesInstance = tilesDebugElement.componentInstance as DejaTilesComponent;
 
         observeDom$(fixture)
+            .first()
             .subscribe(() => {
                 fixture.detectChanges();
                 const tileElements = fixture.debugElement.queryAll(By.css('deja-tiles > #tiles > deja-tile'));
@@ -172,11 +175,11 @@ describe('DejaTilesComponent', () => {
 
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(tilesContainerInstance.testDone).toHaveBeenCalled()
+            expect(tilesContainerInstance.testDone).toHaveBeenCalled();
         });
     }));
 
-    it('should select the specified tiles', async(() => {
+    fit('should select the specified tiles', async(() => {
         let pass = 0;
         const fixture = TestBed.createComponent(DejaTilesContainerComponent);
         const tilesContainerInstance = fixture.componentInstance as DejaTilesContainerComponent;
@@ -184,7 +187,7 @@ describe('DejaTilesComponent', () => {
         const tilesInstance = tilesDebugElement.componentInstance as DejaTilesComponent;
 
         observeDom$(fixture)
-            .do(() => {
+            .subscribe(() => {
                 fixture.detectChanges();
                 const tileElements = fixture.debugElement.queryAll(By.css('deja-tiles > #tiles > deja-tile[selected="true"]'));
                 switch (++pass) {
@@ -195,23 +198,21 @@ describe('DejaTilesComponent', () => {
                         break;
 
                     default:
-                        expect(tileElements.length).toBe(2);
                         tilesContainerInstance.testDone();
+                        expect(tileElements.length).toBe(2);
                 }
-            })
-            .takeWhile(() => pass < 2)
-            .subscribe(() => { });
+            });
 
         spyOn(tilesContainerInstance, 'testDone');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(tilesContainerInstance.testDone).toHaveBeenCalled()
+            expect(tilesContainerInstance.testDone).toHaveBeenCalled();
         });
     }));
 
-    it('should delete the selected tiles', async(() => {
+    fit('should delete the selected tiles', async(() => {
         let pass = 0;
         const fixture = TestBed.createComponent(DejaTilesContainerComponent);
         const tilesContainerInstance = fixture.componentInstance as DejaTilesContainerComponent;
@@ -219,7 +220,7 @@ describe('DejaTilesComponent', () => {
         const tilesInstance = tilesDebugElement.componentInstance as DejaTilesComponent;
 
         observeDom$(fixture)
-            .do(() => {
+            .subscribe(() => {
                 fixture.detectChanges();
                 const tileElements = fixture.debugElement.queryAll(By.css('deja-tiles > #tiles > deja-tile'));
                 switch (++pass) {
@@ -229,20 +230,106 @@ describe('DejaTilesComponent', () => {
                         break;
 
                     default:
-                        expect(tileElements.length).toBe(10);
                         tilesContainerInstance.testDone();
+                        expect(tileElements.length).toBe(10);
                 }
-            })
-            .takeWhile(() => pass < 2)
-            .subscribe(() => { });
+            });
 
         spyOn(tilesContainerInstance, 'testDone');
 
         fixture.detectChanges();
         tilesInstance.selectedTiles = ['Guava', 'Mango'];
+
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(tilesContainerInstance.testDone).toHaveBeenCalled()
+            expect(tilesContainerInstance.testDone).toHaveBeenCalled();
+        });
+    }));
+
+    fit('should cut, and paste the selected tiles', async(() => {
+        let pass = 0;
+        const fixture = TestBed.createComponent(DejaTilesContainerComponent);
+        const tilesContainerInstance = fixture.componentInstance as DejaTilesContainerComponent;
+        const tilesDebugElement = fixture.debugElement.query(By.directive(DejaTilesComponent));
+        const tilesInstance = tilesDebugElement.componentInstance as DejaTilesComponent;
+
+        observeDom$(fixture)
+            .subscribe(() => {
+                fixture.detectChanges();
+                const tileElements = fixture.debugElement.queryAll(By.css('deja-tiles > #tiles > deja-tile:not[cutted]'));
+                switch (++pass) {
+                    case 1:
+                        expect(tileElements.length).toBe(12);
+                        tilesInstance.cutSelection();
+                        tilesInstance.refresh();
+                        break;
+
+                    case 2:
+                        expect(tileElements.length).toBe(10);
+                        tilesInstance.copySelection();
+                        tilesInstance.refresh();
+                        break;
+
+                    default:
+                        tilesContainerInstance.testDone();
+                        expect(tileElements.length).toBe(12);
+                        break;
+
+                }
+            });
+
+        spyOn(tilesContainerInstance, 'testDone');
+
+        fixture.detectChanges();
+        tilesInstance.selectedTiles = ['Guava', 'Mango'];
+
+        fixture.whenStable().then(() => {
+            tilesInstance.refresh();
+            expect(tilesContainerInstance.testDone).toHaveBeenCalled();
+        });
+    }));
+
+    fit('should copy, and paste the selected tiles', async(() => {
+        let pass = 0;
+        const fixture = TestBed.createComponent(DejaTilesContainerComponent);
+        const tilesContainerInstance = fixture.componentInstance as DejaTilesContainerComponent;
+        const tilesDebugElement = fixture.debugElement.query(By.directive(DejaTilesComponent));
+        const tilesInstance = tilesDebugElement.componentInstance as DejaTilesComponent;
+
+        observeDom$(fixture)
+            .subscribe(() => {
+                fixture.detectChanges();
+                const tileElements = fixture.debugElement.queryAll(By.css('deja-tiles > #tiles > deja-tile'));
+                switch (++pass) {
+                    case 1:
+                        expect(tileElements.length).toBe(12);
+                        tilesInstance.copySelection();
+                        tilesInstance.refresh();
+                        break;
+
+                    case 2:
+                        expect(tileElements.length).toBe(12);
+                        tilesInstance.paste();
+                        tilesInstance.refresh();
+                        break;
+
+                    default:
+                        tilesContainerInstance.testDone();
+                        expect(tileElements.length).toBe(14);
+                        break;
+
+                }
+            });
+
+        spyOn(tilesContainerInstance, 'testDone');
+
+        fixture.detectChanges();
+        tilesInstance.selectedTiles = ['Guava', 'Mango'];
+
+        fixture.whenStable().then(() => {
+
+            tilesInstance.refresh();
+            expect(tilesContainerInstance.testDone).toHaveBeenCalled();
         });
     }));
 });
