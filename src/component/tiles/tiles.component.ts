@@ -108,25 +108,33 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
 
         const element = el.nativeElement as HTMLElement;
 
-        this.selectionChanged = this.layoutProvider.selectionChanged;
-        this.contentAdding = this.layoutProvider.contentAdding;
-        this.contentRemoving = this.layoutProvider.contentRemoving;
+        Observable.from(this.layoutProvider.selectionChanged)
+            .takeWhile(() => this.isAlive)
+            .subscribe((e) => this.selectionChanged.emit(e));
 
-        this.layoutProvider.modelChanged
+        Observable.from(this.layoutProvider.contentAdding)
+            .takeWhile(() => this.isAlive)
+            .subscribe((e) => this.contentAdding.emit(e));
+
+        Observable.from(this.layoutProvider.contentRemoving)
+            .takeWhile(() => this.isAlive)
+            .subscribe((e) => this.contentRemoving.emit(e));
+
+        Observable.from(this.layoutProvider.modelChanged)
             .takeWhile(() => this.isAlive)
             .subscribe((event) => {
                 this.modelChanged.emit(event);
                 this.onChangeCallback(event.tiles);
             });
 
-        this.layoutProvider.layoutChanged
+        Observable.from(this.layoutProvider.layoutChanged)
             .takeWhile(() => this.isAlive)
             .subscribe((event) => {
                 this.layoutChanged.emit(event);
                 this.onChangeCallback(event.tiles);
             });
 
-        this.layoutProvider.layoutCompleted
+        Observable.from(this.layoutProvider.layoutCompleted)
             .takeWhile(() => this.isAlive)
             .subscribe((event) => this.layoutCompleted.emit(event));
 
@@ -268,6 +276,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     }
 
     public ngOnDestroy() {
+        this.layoutProvider.ngOnDestroy();
         this.canCopy = false;
         this.canCut = false;
         this.canDelete = false;
