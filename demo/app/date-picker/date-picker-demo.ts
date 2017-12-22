@@ -42,11 +42,11 @@ export class DejaDatePickerDemoComponent implements OnInit {
         console.log(this.dateMax);
     }
 
-    public dateChange() {
-        console.log('dateChange');
+    public dateChange(date: Date) {
+        console.log('dateChange', date);
     }
 
-    public timeChange() {
-        console.log('timeChange');
+    public timeChange(date: Date) {
+        console.log('timeChange', date);
     }
 }

@@ -27,8 +27,8 @@
     <mat-error *ngIf="matError"><ng-template [ngTemplateOutlet]="matError"></ng-template></mat-error>
 </mat-form-field>
 <deja-overlay #dejaOverlay [ownerElement]="overlayOwnerElement" [isVisible]="showDropDown" (closed)="close()" [positions]="positions" [overlayOffsetY]="overlayOffsetY" [overlayOffsetX]="overlayOffsetX">
-    <deja-date-time-selector [layout]="layout" [disableDates]="disableDates" [ngModel]="date" (ngModelChange)="onDateChange($event)"
-        class="inside-dropdown" [dateMax]="dateMax" [dateMin]="dateMin" [layout]="layout" (dateChange)="dateChange.emit()" (timeChange)="timeChange.emit()"></deja-date-time-selector>
+    <deja-date-time-selector [layout]="layout" [disableDates]="disableDates" [ngModel]="date" (ngModelChange)="updateModel($event)"
+        class="inside-dropdown" [dateMax]="dateMax" [dateMin]="dateMin" [layout]="layout" (dateChange)="dateChange.emit($event)" (timeChange)="timeChange.emit($event)"></deja-date-time-selector>
     <div class="actions">
         <button mat-mini-fab type="button" (click)="close()">
             <mat-icon>close</mat-icon>

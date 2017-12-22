@@ -433,19 +433,6 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     }
 
     /**
-     * ngModelChange of date-selector.
-     *
-     * @param newDate Date to set.
-     */
-    public onDateChange(newDate: Date) {
-        this.value = newDate;
-        // TODO
-        // if (this.value.getHours() === newDate.getHours() && this.value.getMinutes() === newDate.getMinutes() && this.value.getSeconds() === newDate.getSeconds()) {
-        //     this.setFocus();
-        // }
-    }
-
-    /**
      * Called when input change. If it's a string it's because user set the date manually. So we need to convert it into date with MomentJs.
      *
      * @param date new value of this model
@@ -485,7 +472,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
             }
 
             this.value = date;
-            event.emit();
+            event.emit(date);
             this.changeDetectorRef.markForCheck();
         }
     }
