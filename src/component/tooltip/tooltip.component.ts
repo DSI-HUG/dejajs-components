@@ -70,6 +70,30 @@ export class DejaTooltipComponent implements OnInit, OnDestroy {
             overlayX: 'center',
             overlayY: 'bottom',
         },
+        {
+            originX: 'left',
+            originY: 'bottom',
+            overlayX: 'left',
+            overlayY: 'top',
+        },
+        {
+            originX: 'left',
+            originY: 'top',
+            overlayX: 'left',
+            overlayY: 'bottom',
+        },
+        {
+            originX: 'right',
+            originY: 'bottom',
+            overlayX: 'right',
+            overlayY: 'top',
+        },
+        {
+            originX: 'right',
+            originY: 'top',
+            overlayX: 'right',
+            overlayY: 'bottom',
+        },
     ] as DejaConnectionPositionPair[];
 
     @Input()
