@@ -604,7 +604,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         const targetBounds = this.getFreePlace(new Rect(0, 0, bounds.width, bounds.height));
 
         const newTiles = sourceTiles.map((tile) => {
-            const newTile = this.createTile({
+            const newTile = new DejaTile({
                 type: tile.type,
                 bounds: new Rect(targetBounds.left + tile.percentBounds.left - bounds.left, targetBounds.top + tile.percentBounds.top - bounds.top, tile.percentBounds.width, tile.percentBounds.height, ),
                 templateModel: tile.templateModel,
@@ -693,7 +693,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             });
 
         // Remove immediately
-        Observable.timer(1000)
+        Observable.timer(10)
             .first()
             .filter(() => !event.defaultPrevented)
             .subscribe(() => {
@@ -710,7 +710,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             return;
         }
 
-        this.addTiles(tiles.map((tile) => this.createTile(tile)));
+        this.addTiles(tiles.map((tile) => new DejaTile(tile)));
     }
 
     public getFreePlace(idealBounds: Rect) {
@@ -1017,6 +1017,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             if (!this.tiles.find((t) => t.id === newTile.id)) {
                 newTile.percentBounds = this.getFreePlace(newTile.percentBounds);
                 this._tiles.push(newTile);
+                this.tilesDic[newTile.id] = newTile;
             }
         });
 
@@ -1089,7 +1090,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             });
 
         // Add immediately
-        Observable.timer(1000)
+        Observable.timer(10)
             .first()
             .filter(() => !event.defaultPrevented)
             .subscribe(() => {
@@ -1679,13 +1680,6 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         }
 
         return overflow;
-    }
-
-    private createTile(tile: IDejaTile) {
-        const newTile = new DejaTile(tile);
-        this.tiles.push(newTile);
-        this.tilesDic[newTile.id] = newTile;
-        return newTile;
     }
 
     private copyTiles(tiles: DejaTile[], isCut?: boolean) {
