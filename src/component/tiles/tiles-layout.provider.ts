@@ -321,9 +321,8 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                         const containerBounds = this._container.getBoundingClientRect();
                         const x = event.pageX - containerBounds.left;
                         const y = event.pageY - containerBounds.top;
-
                         if (!dragDropInfos.enabled) {
-                            if (Math.abs(dragDropInfos.startX - x) > 10 || Math.abs(dragDropInfos.startY - y) > 10) {
+                            if (Math.abs(dragDropInfos.startX - x) >= 10 || Math.abs(dragDropInfos.startY - y) >= 10) {
                                 // Allow drag and drop of new tiles from outside the component
                                 if (dragDropInfos.tiles.length === 1 && !this.tiles.find((t) => t === dragDropInfos.tiles[0])) {
                                     const tempTile = dragDropInfos.tiles[0];
