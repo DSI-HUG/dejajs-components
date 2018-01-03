@@ -327,7 +327,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     }
 
     public addTiles(tiles: IDejaTile[]) {
-        this.layoutProvider.addTiles(tiles.map((tile) => new DejaTile(tile)));
+        this.layoutProvider.addTiles(tiles.map((tile) =>  new DejaTile(tile)));
     }
 
     public removeTiles(tileIds: string[]) {
