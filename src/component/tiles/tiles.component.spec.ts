@@ -1348,7 +1348,7 @@ describe('DejaTilesComponent', () => {
         });
     }));
 
-    fit('should select by drag and drop with the mouse', async(() => {
+    it('should select by drag and drop with the mouse', async(() => {
         const fixture = TestBed.createComponent(DejaTilesContainerComponent);
         const tilesContainerInstance = fixture.componentInstance as DejaTilesContainerComponent;
         const tilesDebugElement = fixture.debugElement.query(By.directive(DejaTilesComponent));
