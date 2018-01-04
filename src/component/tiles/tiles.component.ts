@@ -144,6 +144,9 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
             .takeWhile(() => this.isAlive)
             .debounceTime(5)
             .subscribe(() => this.refresh({ resetWidth: true }));
+
+        Observable.from(this._tiles$)
+            .subscribe((tiles) => this.layoutProvider.tiles = tiles);
     }
 
     // provide a public acccess
@@ -195,7 +198,10 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
         if (coerceBooleanProperty(value) && !this.delete$sub) {
             this.delete$sub = this.keyup$
                 .filter(() => this.layoutProvider.designMode)
-                .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.Delete && this.hasFocus)
+                .filter((event: KeyboardEvent) => {
+                    const keyCode = event.keyCode || KeyCodes[event.code];
+                    return keyCode === KeyCodes.Delete && this.hasFocus;
+                })
                 .subscribe(() => this.layoutProvider.deleteSelection());
 
         } else if (this.delete$sub) {
@@ -208,7 +214,10 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     public set canCopy(value: boolean) {
         if (coerceBooleanProperty(value) && !this.copy$sub) {
             this.copy$sub = this.keyup$
-                .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.KeyC && event.ctrlKey && this.hasFocus)
+                .filter((event: KeyboardEvent) => {
+                    const keyCode = event.keyCode || KeyCodes[event.code];
+                    return keyCode === KeyCodes.KeyC && event.ctrlKey && this.hasFocus;
+                })
                 .subscribe(() => {
                     this.copySelection();
                 });
@@ -224,7 +233,10 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
         if (coerceBooleanProperty(value) && !this.cut$sub) {
             this.cut$sub = this.keyup$
                 .filter(() => this.layoutProvider.designMode)
-                .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.KeyX && event.ctrlKey && this.hasFocus)
+                .filter((event: KeyboardEvent) => {
+                    const keyCode = event.keyCode || KeyCodes[event.code];
+                    return keyCode === KeyCodes.KeyX && event.ctrlKey && this.hasFocus;
+                })
                 .subscribe(() => {
                     this.cutSelection();
                 });
@@ -240,8 +252,11 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
         if (coerceBooleanProperty(value) && !this.paste$sub) {
             this.paste$sub = this.keyup$
                 .filter(() => this.layoutProvider.designMode)
-                .filter((event: KeyboardEvent) => event.keyCode === KeyCodes.KeyV && event.ctrlKey && this.hasFocus)
-                .subscribe(() => this.layoutProvider.paste());
+                .filter((event: KeyboardEvent) => {
+                    const keyCode = event.keyCode || KeyCodes[event.code];
+                    return keyCode === KeyCodes.KeyV && event.ctrlKey && this.hasFocus;
+                })
+                .subscribe(() => this.paste());
 
         } else if (this.paste$sub) {
             this.paste$sub.unsubscribe();
@@ -257,7 +272,8 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     // ************* ControlValueAccessor Implementation **************
     public writeValue(models: any) {
         this._models = models || [];
-        this._tiles$.next(this.layoutProvider.tiles = (this._models.map((tile) => new DejaTile(tile))));
+        const tiles = this._models.map((tile) => new DejaTile(tile));
+        this._tiles$.next(tiles);
         this.changeDetectorRef.markForCheck();
     }
 
@@ -303,11 +319,15 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     }
 
     public deleteSelection() {
-        return this.layoutProvider.deleteSelection();
+        const tiles = this.layoutProvider.deleteSelection();
+        this.changeDetectorRef.markForCheck();
+        return tiles;
     }
 
     public paste() {
-        return this.layoutProvider.paste();
+        const tiles = this.layoutProvider.paste();
+        this.changeDetectorRef.markForCheck();
+        return tiles;
     }
 
     public ensureVisible(id: string) {
@@ -327,7 +347,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     }
 
     public addTiles(tiles: IDejaTile[]) {
-        this.layoutProvider.addTiles(tiles.map((tile) =>  new DejaTile(tile)));
+        this.layoutProvider.addTiles(tiles.map((tile) => new DejaTile(tile)));
     }
 
     public removeTiles(tileIds: string[]) {

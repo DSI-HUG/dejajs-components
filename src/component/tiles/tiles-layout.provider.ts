@@ -482,7 +482,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
     }
 
     public get tiles() {
-        return this._tiles || [];
+        return this._tiles;
     }
 
     public set selectedTiles(selectedIds: string[]) {
@@ -1021,7 +1021,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             }
         });
 
-        const event = new CustomEvent('DejaTilesAddEvent', { cancelable: true }) as IDejaTilesAddEvent;
+        const event = new CustomEvent('DejaTilesAddEvent', { cancelable: false }) as IDejaTilesAddEvent;
         event.tiles = this.tiles.map((tile) => tile.toTileModel());
         event.added = newTiles.map((tile) => tile.toTileModel());
         event.cancel$ = new Subject();
