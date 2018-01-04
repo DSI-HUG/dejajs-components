@@ -7,13 +7,12 @@
  */
 
 import { ChangeDetectorRef } from '@angular/core';
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { BaseRequestOptions, Http, RequestOptionsArgs, Response, ResponseOptions } from '@angular/http';
-import { MockBackend, MockConnection } from '@angular/http/testing';
-import { Observable } from 'rxjs/Observable';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { BaseRequestOptions, Http, Response, ResponseOptions } from '@angular/http';
+import { MockBackend } from '@angular/http/testing';
 import { DejaMarkdownComponent } from './markdown.component';
 
-fdescribe('DejaMarkdownComponent', () => {
+describe('DejaMarkdownComponent', () => {
     let component: DejaMarkdownComponent;
     let fixture: ComponentFixture<DejaMarkdownComponent>;
     let backend: MockBackend;
