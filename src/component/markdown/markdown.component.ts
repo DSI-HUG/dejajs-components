@@ -38,7 +38,7 @@ export class DejaMarkdownComponent implements OnInit, AfterViewChecked {
         this._http.get(url, { responseType: ResponseContentType.Text }).subscribe((response) => {
             this.value = response.text();
             this.changeDetectorRef.markForCheck();
-        });
+        }, (error) => console.log('Err: ', error));
     }
 
     private _initialised = false;
