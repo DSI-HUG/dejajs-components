@@ -29,16 +29,17 @@ export class DejaMarkdownComponent implements OnInit, AfterViewChecked {
         if (value) {
             const tmp = this._converter.makeHtml(value);
             this._html = this.sanitized.bypassSecurityTrustHtml(tmp);
-            this.changeDetectorRef.markForCheck();
+        } else {
+            this._html = '';
         }
+        this.changeDetectorRef.markForCheck();
     }
 
     @Input()
     set url(url: string) {
         this._http.get(url, { responseType: ResponseContentType.Text }).subscribe((response) => {
             this.value = response.text();
-            this.changeDetectorRef.markForCheck();
-        }, (error) => console.log('Err: ', error));
+        }, (error) => this.value = `${error}`);
     }
 
     private _initialised = false;

@@ -13,7 +13,7 @@ import { MockBackend, MockConnection } from '@angular/http/testing';
 import { Observable } from 'rxjs/Observable';
 import { DejaMarkdownComponent } from './markdown.component';
 
-describe('DejaMarkdownComponent', () => {
+fdescribe('DejaMarkdownComponent', () => {
     let component: DejaMarkdownComponent;
     let fixture: ComponentFixture<DejaMarkdownComponent>;
     let backend: MockBackend;
@@ -40,6 +40,12 @@ describe('DejaMarkdownComponent', () => {
 
     it('should init component', () => {
         expect(component).toBeTruthy();
+    });
+
+    it('should do nothing if value is null', () => {
+        component.value = null;
+        fixture.detectChanges();
+        expect(fixture.nativeElement.innerText).toEqual('');
     });
 
     it('should convert string value to html', () => {
@@ -77,7 +83,7 @@ describe('DejaMarkdownComponent', () => {
         component.url = 'aWrongUrl';
         fixture.detectChanges();
         console.log('test log comp: ', component);
-        expect(fixture.nativeElement.querySelector('h1')).toBeNull();
+        expect(fixture.nativeElement.innerText).toEqual('Error: some error');
     });
 
 });
