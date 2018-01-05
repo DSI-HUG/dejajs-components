@@ -6,20 +6,20 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {OverlayModule} from '@angular/cdk/overlay';
-import {ObservableMedia} from '@angular/flex-layout';
-import {MediaModule} from '../../common/core/media/index';
-import {MediaService} from '../../common/core/media/media.service';
-import {DejaConnectionPositionPair} from '../../common/core/overlay/connection-position-pair';
-import {DejaOverlayComponent} from './overlay.component';
-import {MockMediaService} from './test/MockMediaService';
-import {MockObservableMedia} from './test/MockObservableMedia';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { ObservableMedia } from '@angular/flex-layout';
+import { MediaModule } from '../../common/core/media/index';
+import { MediaService } from '../../common/core/media/media.service';
+import { DejaConnectionPositionPair } from '../../common/core/overlay/connection-position-pair';
+import { DejaOverlayComponent } from './overlay.component';
+import { MockMediaService } from './test/MockMediaService';
+import { MockObservableMedia } from './test/MockObservableMedia';
 
 describe('DejaOverlayComponent', () => {
 
-    let comp:    DejaOverlayComponent;
+    let comp: DejaOverlayComponent;
     let fixture: ComponentFixture<DejaOverlayComponent>;
     let cdkOverlayContainerEl: HTMLElement;
 
@@ -27,16 +27,19 @@ describe('DejaOverlayComponent', () => {
         // Remove any stale overlay containers from previous tests that didn't clean up correctly.
         const staleContainers = document.querySelectorAll('.cdk-overlay-container');
         for (let i = staleContainers.length - 1; i >= 0; i--) {
-            staleContainers[i].parentNode!.removeChild(staleContainers[i]);
+            staleContainers[i].parentNode.removeChild(staleContainers[i]);
         }
     };
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ DejaOverlayComponent ], // declare the test component
+            declarations: [DejaOverlayComponent], // declare the test component
             imports: [MediaModule, OverlayModule],
-            providers: [{ provide: ObservableMedia, useClass: MockObservableMedia }, { provide: MediaService, useClass:
-                MockMediaService }]}).compileComponents();
+            providers: [{ provide: ObservableMedia, useClass: MockObservableMedia }, {
+                provide: MediaService, useClass:
+                    MockMediaService
+            }]
+        }).compileComponents();
     }));
 
     beforeAll(() => {
@@ -49,7 +52,7 @@ describe('DejaOverlayComponent', () => {
         cdkOverlayContainerEl = document.querySelector('.cdk-overlay-container') as HTMLElement;
     });
 
-    afterEach( () => {
+    afterEach(() => {
         fixture.destroy();
         removeStaledOverlayContainersFunction();
     });
@@ -143,12 +146,12 @@ describe('DejaOverlayComponent', () => {
         comp.positionsForMobile = positionsForMobile;
         fixture.detectChanges();
         returnedPositions = comp.positions;
-        expect(returnedPositions).toBe( normalPosition );
+        expect(returnedPositions).toBe(normalPosition);
 
         comp.isMobile = true;
         fixture.detectChanges();
         returnedPositions = comp.positions;
-        expect(returnedPositions).toBe( positionsForMobile );
+        expect(returnedPositions).toBe(positionsForMobile);
     });
 
     it('should use widthForMobile if isMobile=true', () => {
