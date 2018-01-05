@@ -1,6 +1,5 @@
 @import '~@angular/material/theming';
 @import '../../common/core/item-list/item-list-theme';
-@import '../../common/core/item-list/tree-list-theme';
 
 @mixin tree-list-theme($theme) {
 	$primary: map-get($theme, primary);
@@ -49,6 +48,5 @@
 		}
 
 		@include sub-item-list-theme($theme);
-		@include sub-tree-list-theme($theme);
 	}
 }

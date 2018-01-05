@@ -15,18 +15,27 @@ import { Diacritics } from '../../common/core/diacritics/diacritics';
     styleUrls: [
         './bold-query.component.scss',
     ],
-    template: `<span [innerHTML]="content"></span>`,
+    template: `<div [innerHTML]="content"></div>`,
 })
 export class DejaBoldQueryComponent {
     private _query: string;
     private _value: any;
     private _content: string;
+    private _regexpOptions = 'i';
+    private _firstOccurenceOnly = false;
+    private _firstOccurencePerWordOnly = false;
+    private _atTheBeginningOfWordOnly = false;
+    private _highlightClassName = 'highlight';
 
     public get content() {
         return this._content;
     }
 
     @Input()
+    /*
+     * The search term query.
+     *
+     */
     set query(value) {
         value = Diacritics.remove(value);
         if (this._query !== value) {
@@ -36,31 +45,96 @@ export class DejaBoldQueryComponent {
     }
 
     @Input()
+    /*
+     * The model value. Usually the model display label.
+     */
     public set value(value: any) {
         this._value = value;
         this.refresh();
     }
 
+    @Input()
+    /*
+     * The RegExp optional Flags. Optional. Default value is 'i' (case insensitive).
+     *
+     */
+    public set regexpOption(value: string) {
+        this._regexpOptions = value;
+        this.refresh();
+    }
+
+    @Input()
+    /*
+     * If true, highlight only the first occurence. False by default.
+     */
+    public set firstOccurenceOnly(value: boolean) {
+        this._firstOccurenceOnly = value;
+        this.refresh();
+    }
+
+    @Input()
+    public set firstOccurencePerWordOnly(value: boolean) {
+        this._firstOccurencePerWordOnly = value;
+        this.refresh();
+    }
+
+    @Input()
+    public set atTheBeginningOfWordOnly(value: boolean) {
+        this._atTheBeginningOfWordOnly = value;
+        this.refresh();
+    }
+
+    public get highlightClassName() {
+        return this._highlightClassName;
+    }
+
+    @Input()
+    public set highlightClassName(value: string) {
+        this._highlightClassName = value;
+        if (!this._highlightClassName) {
+            this._highlightClassName = 'highlight';
+        }
+        this.refresh();
+    }
+
     private refresh() {
-        if (this._value && this._query && this._query.length) {
-            const sc = new RegExp(this._query, 'i');
+        if (this._value && this._query && this._query.length>0) {
+            const regexpPattern = this._atTheBeginningOfWordOnly?(`\\b${this._query}`): this._query;
+            const sc =  new RegExp(regexpPattern, this._regexpOptions);
             const value = this._value.toString() as string;
             const search = Diacritics.remove(value);
             const splitted = search.split(sc);
             let position = 0;
             const queryLength = this._query.length;
             const contents = [] as string[];
+            let firstOccurence = true;
+            let lastText: string = null;
+            let nbOccurence = 0;
             splitted.forEach((text) => {
                 if (text) {
                     contents.push(value.slice(position, position + text.length));
                     position += text.length;
                 }
                 if (position + queryLength <= value.length) {
-                    contents.push('<b>');
+                    nbOccurence+=1;
+                    let skipHighlight = false;
+                    if (this._firstOccurencePerWordOnly && nbOccurence>1) {
+                        const words = text.split(/[^a-zA-Z\d]/g);
+                        if (words.length===1) {
+                            skipHighlight = true;
+                        }
+                    }
+                    if (!skipHighlight && ( !this._firstOccurenceOnly || firstOccurence )) {
+                        contents.push(`<span class="${this._highlightClassName}">`);
+                    }
                     contents.push(value.slice(position, position + queryLength));
-                    contents.push('</b>');
+                    if (!skipHighlight && (!this._firstOccurenceOnly || firstOccurence )) {
+                        contents.push('</span>');
+                    }
                     position += queryLength;
                 }
+                lastText = text;
+                firstOccurence = false;
             });
             this._content = contents.join('');
         } else {

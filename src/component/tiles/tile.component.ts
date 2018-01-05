@@ -7,7 +7,13 @@
  */
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import 'rxjs/add/observable/from';
+import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/delay';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/first';
+import 'rxjs/add/operator/takeWhile';
 import { Observable } from 'rxjs/Observable';
 import { DejaTile } from './tile.class';
 
@@ -26,6 +32,7 @@ export class DejaTileComponent implements OnDestroy {
     @Output() public close = new EventEmitter<Event>();
 
     public element: HTMLElement;
+    public progressDiameter = 100;
 
     private _tile: DejaTile;
     private isAlive = true;
@@ -79,6 +86,7 @@ export class DejaTileComponent implements OnDestroy {
                     this.element.style.top = `${bounds.top}px`;
                     this.element.style.width = `${bounds.width}px`;
                     this.element.style.height = `${bounds.height}px`;
+                    this.progressDiameter = Math.min(100, Math.round(Math.max(bounds.width * 0.4, bounds.height* 0.4)));
                     this.changeDetectorRef.markForCheck();
                 });
 
@@ -118,9 +126,7 @@ export class DejaTileComponent implements OnDestroy {
                 .subscribe(() => this.changeDetectorRef.markForCheck());
 
             const tooogleHide$ = Observable.from(tile.hidden$)
-                .do((value) => {
-                    toogleAttribute('hidden', value ? '1' : '2');
-                });
+                .do((value) => toogleAttribute('hidden', value ? '1' : '2'));
 
             // Hide
             tooogleHide$
@@ -136,17 +142,13 @@ export class DejaTileComponent implements OnDestroy {
                 .debounceTime(1)
                 .filter((value) => !value)
                 .do(() => this.element.removeAttribute('hidden'))
-                .subscribe(() => {
-                    this.changeDetectorRef.markForCheck();
-                });
+                .subscribe(() => this.changeDetectorRef.markForCheck());
 
             // Refresh
             Observable.from(tile.refresh$)
                 .takeWhile(() => this.isAlive && !!this._tile)
                 .debounceTime(1)
-                .subscribe(() => {
-                    this.changeDetectorRef.markForCheck();
-                });
+                .subscribe(() => this.changeDetectorRef.markForCheck());
         }
     }
 

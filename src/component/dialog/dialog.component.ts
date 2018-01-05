@@ -8,8 +8,9 @@
 
 import { Component, ContentChild, ElementRef, EventEmitter, HostListener, OnDestroy, Output } from '@angular/core';
 import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/takeWhile';
 import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 
 /**
@@ -27,7 +28,7 @@ export class DejaDialogComponent implements OnDestroy {
     @ContentChild('okaction') private okButton;
     @ContentChild('cancelaction') private cancelButton;
 
-    private keyup$sub: Subscription;
+    private isAlive = true;
 
     /**
      * Constructor
@@ -35,7 +36,8 @@ export class DejaDialogComponent implements OnDestroy {
     constructor(elementRef: ElementRef) {
         const element = elementRef.nativeElement as HTMLElement;
 
-        this.keyup$sub = Observable.fromEvent(element.ownerDocument, 'keyup')
+        Observable.fromEvent(element.ownerDocument, 'keyup')
+            .takeWhile(() => this.isAlive)
             .filter((event: KeyboardEvent) => !!(event.keyCode === KeyCodes.Enter && this.okButton && this.okButton._elementRef) || !!(event.keyCode === KeyCodes.Escape && this.cancelButton && this.cancelButton._elementRef))
             .subscribe((event: KeyboardEvent) => {
                 if (event.keyCode === KeyCodes.Enter) {
@@ -49,7 +51,7 @@ export class DejaDialogComponent implements OnDestroy {
 
     /** Unsubscribe to all observables when component is destroyed */
     public ngOnDestroy() {
-        this.keyup$sub.unsubscribe();
+        this.isAlive = false;
     }
 
     /**

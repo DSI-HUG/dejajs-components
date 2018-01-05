@@ -26,6 +26,7 @@ import { userReducer } from './reactive-form/model/user.reducer';
 import { UserService } from './reactive-form/service/user.service';
 import { CountriesListService } from './services/countries-list.service';
 import { CountriesService } from './services/countries.service';
+import { FoldersService } from './services/folders.service';
 import { NewsService } from './services/news.service';
 import { PeopleService } from './services/people.service';
 
@@ -68,6 +69,7 @@ import {
 
 import { MatButtonModule, MatButtonToggleModule, MatCardModule, MatCheckboxModule, MatIconModule, MatInputModule, MatListModule, MatMenuModule, MatProgressBarModule, MatProgressSpinnerModule, MatSidenavModule, MatTabsModule, MatToolbarModule } from '@angular/material';
 import { DejaItemModule } from '../../src/common/core/item-list/index';
+import { DejaBoldQueryModule } from '../../src/component';
 import { DejaAccordionDemoComponent } from './accordion/accordion-demo.component';
 import { DejaCircularPickerDemoComponent } from './circular-picker/circular-picker-demo';
 import { DejaColorSelectorDemoComponent } from './color-selector/color-selector-demo';
@@ -144,6 +146,7 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         MatSidenavModule,
         MatToolbarModule,
         DejaAccordionModule,
+        DejaBoldQueryModule,
         DejaChipsModule,
         DejaCircularPickerModule,
         DejaClipboardModule,
@@ -185,6 +188,7 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
     ],
     providers: [
         CountriesService,
+        FoldersService,
         CountriesListService,
         PeopleService,
         GlobalEventService,

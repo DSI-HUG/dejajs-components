@@ -13,6 +13,14 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import 'rxjs/add/observable/from';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/observable/timer';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/delay';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/first';
 import { Observable } from 'rxjs/Observable';
 import { GroupingService } from '../../common/core/grouping/grouping.service';
 import { DejaItemModule } from '../../common/core/item-list/index';
@@ -58,6 +66,10 @@ class DejaSelectContainerComponent {
                 this.itemList = groupedResult;
             });
     }
+
+    public testDone() {
+        return true;
+    }
 }
 
 @Component({
@@ -96,6 +108,10 @@ class DejaSelectByModelContainerComponent {
     public backgroundColor(item: IItemBase) {
         return item.selected ? '#888' : null;
     }
+
+    public testDone() {
+        return true;
+    }
 }
 
 @Component({
@@ -127,6 +143,10 @@ class DejaSelectByOptionsContainerComponent {
 
     public backgroundColor(item: IItemBase) {
         return item.selected ? '#888' : null;
+    }
+
+    public testDone() {
+        return true;
     }
 }
 
@@ -277,6 +297,7 @@ describe('DejaSelectComponent', () => {
     it('should open and close the dropdown programatically', async(() => {
         let pass = 0;
         const fixture = TestBed.createComponent(DejaSelectContainerComponent);
+        const selectContainerInstance = fixture.componentInstance as DejaSelectContainerComponent;
         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
         const viewPortService = selectDebugElement.injector.get(ViewPortService) as ViewPortService;
@@ -318,17 +339,23 @@ describe('DejaSelectComponent', () => {
                 expect(vp.items.length).toBeGreaterThan(0);
                 expect(vp.visibleItems.length).toBeGreaterThan(0);
                 sl.hideDropDown();
+                selectContainerInstance.testDone();
             });
 
-        Observable.timer(2000).first().subscribe(() => expect(pass).toBe(4));
-
         sl.showDropDown();
+
+        spyOn(selectContainerInstance, 'testDone');
+
         fixture.detectChanges();
+        fixture.whenStable().then(() => {
+            expect(selectContainerInstance.testDone).toHaveBeenCalled();
+        });
     }));
 
     it('should toggle and collapse parent items', async(() => {
         let pass = 0;
         const fixture = TestBed.createComponent(DejaSelectContainerComponent);
+        const selectContainerInstance = fixture.componentInstance as DejaSelectContainerComponent;
         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
         const sl = selectInstance as any;
@@ -385,18 +412,24 @@ describe('DejaSelectComponent', () => {
                         // Check no collapsed
                         expect(collapsed.length).toBe(0);
                         expect(collapsedItems.length).toBe(0);
+                        selectContainerInstance.testDone();
                 }
             });
 
-        Observable.timer(2000).first().subscribe(() => expect(pass).toBe(5));
-
         sl.showDropDown();
+
+        spyOn(selectContainerInstance, 'testDone');
+
         fixture.detectChanges();
+        fixture.whenStable().then(() => {
+            expect(selectContainerInstance.testDone).toHaveBeenCalled();
+        });
     }));
 
     it('should not load items if minSearchlength is defined', async(() => {
         let pass = 0;
         const fixture = TestBed.createComponent(DejaSelectContainerComponent);
+        const selectContainerInstance = fixture.componentInstance as DejaSelectContainerComponent;
         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
         const viewPortService = selectDebugElement.injector.get(ViewPortService) as ViewPortService;
@@ -430,15 +463,20 @@ describe('DejaSelectComponent', () => {
 
                     default:
                         expect(listItems.length).toBeGreaterThan(0);
+                        selectContainerInstance.testDone();
                 }
             });
-
-        Observable.timer(2000).first().subscribe(() => expect(pass).toBe(3));
 
         selectInstance.minSearchlength = 2;
         selectInstance.type = 'autocomplete';
         sl.showDropDown();
+
+        spyOn(selectContainerInstance, 'testDone');
+
         fixture.detectChanges();
+        fixture.whenStable().then(() => {
+            expect(selectContainerInstance.testDone).toHaveBeenCalled();
+        });
     }));
 });
 
@@ -575,6 +613,7 @@ describe('DejaSelectByOptionsContainerComponent', () => {
 
     it('should open and close the dropdown programatically', async(() => {
         const fixture = TestBed.createComponent(DejaSelectByOptionsContainerComponent);
+        const selectContainerInstance = fixture.componentInstance as DejaSelectByOptionsContainerComponent;
         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
         const viewPortService = selectDebugElement.injector.get(ViewPortService) as ViewPortService;
@@ -592,38 +631,55 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                 fixture.detectChanges();
                 expect(vp.items.length).toBeGreaterThan(0);
                 expect(vp.visibleItems.length).toBeGreaterThan(0);
+                selectContainerInstance.testDone();
             });
 
         sl.isMobile = false;
         sl.showDropDown();
+
+        spyOn(selectContainerInstance, 'testDone');
+
         fixture.detectChanges();
+        fixture.whenStable().then(() => {
+            expect(selectContainerInstance.testDone).toHaveBeenCalled();
+        });
     }));
 
     it('should create the component', async(() => {
         const fixture = TestBed.createComponent(DejaSelectByOptionsContainerComponent);
+        const selectContainerInstance = fixture.componentInstance as DejaSelectByOptionsContainerComponent;
         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
         const sl = selectInstance as any;
 
         observeOptionsViewPort$(fixture)
             .debounceTime(100)
+            .first()
             .subscribe(() => {
                 fixture.detectChanges();
 
                 const items = fixture.debugElement.queryAll(By.css('.deja-overlay-container > .cdk-overlay-pane > .deja-listcontainer > .listitem'));
                 expect(items.length).toBe(12);
+                selectContainerInstance.testDone();
             });
 
         fixture.detectChanges();
         expect(selectInstance).toBeTruthy();
 
         sl.showDropDown();
+
+        spyOn(selectContainerInstance, 'testDone');
+
         fixture.detectChanges();
+        fixture.whenStable().then(() => {
+            expect(selectContainerInstance.testDone).toHaveBeenCalled();
+        });
     }));
 
     it('should navigate with the keyboard', async(() => {
         let pass = 0;
         const fixture = TestBed.createComponent(DejaSelectByOptionsContainerComponent);
+        const selectContainerInstance = fixture.componentInstance as DejaSelectByOptionsContainerComponent;
         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
         const sl = selectInstance as any;
@@ -754,18 +810,23 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                         expect(selectedItems.length).toBe(1);
                         expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('6');
                         expect(selectedChips.length).toBe(0);
+                        selectContainerInstance.testDone();
                 }
             });
 
-        Observable.timer(6000).first().subscribe(() => expect(pass).toBe(10));
-
         sl.showDropDown();
+
+        spyOn(selectContainerInstance, 'testDone');
+
         fixture.detectChanges();
+        fixture.whenStable().then(() => {
+            expect(selectContainerInstance.testDone).toHaveBeenCalled();
+        });
     }));
 
     it('should select with the mouse', async(() => {
-        let pass = 0;
         const fixture = TestBed.createComponent(DejaSelectByOptionsContainerComponent);
+        const selectContainerInstance = fixture.componentInstance as DejaSelectByOptionsContainerComponent;
         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
         const sl = selectInstance as any;
@@ -773,15 +834,29 @@ describe('DejaSelectByOptionsContainerComponent', () => {
         const sendMouseClick = (element: DebugElement, shiftKey?: boolean, ctrlKey?: boolean, upElement?: DebugElement) => {
             // Simulate a mouse click
             const listElement = fixture.debugElement.query(By.css('.deja-overlay-container > .cdk-overlay-pane > .deja-listcontainer'));
-            const event = document.createEvent('MouseEvents') as MouseEvent;
-            event.initMouseEvent('mousedown', true, true, document.defaultView, 0, 0, 0, 0, 0, ctrlKey, false, shiftKey, false, 0, listElement.nativeElement);
+            const eventInit = () => ({
+                bubbles: true,
+                cancelable: true,
+                view: document.defaultView,
+                altKey: false,
+                ctrlKey: ctrlKey,
+                metaKey: false,
+                shiftKey: shiftKey,
+                button: 0,
+                buttons: 1,
+                clientX: 0,
+                clientY: 0,
+                relatedTarget: listElement.nativeElement,
+                screenX: 0,
+                screenY: 0,
+            } as MouseEventInit);
+            const event = new MouseEvent('mousedown', eventInit());
             element.nativeElement.dispatchEvent(event);
             fixture.detectChanges();
             Observable.timer(100)
                 .first()
                 .subscribe(() => {
-                    const upEvent = document.createEvent('MouseEvents') as MouseEvent;
-                    upEvent.initMouseEvent('mouseup', true, true, document.defaultView, 0, 0, 0, 0, 0, ctrlKey, false, shiftKey, false, 0, listElement.nativeElement);
+                    const upEvent = new MouseEvent('mouseup', eventInit());
                     (upElement || element).nativeElement.dispatchEvent(upEvent);
                     selectInstance.refreshViewPort();
                     fixture.detectChanges();
@@ -790,36 +865,40 @@ describe('DejaSelectByOptionsContainerComponent', () => {
 
         observeOptionsViewPort$(fixture)
             .debounceTime(10)
+            .first()
             .subscribe((vp) => {
                 fixture.detectChanges();
                 const displayedElements = fixture.debugElement.queryAll(By.css('.deja-overlay-container > .cdk-overlay-pane > .deja-listcontainer > .listitem'));
                 const selectedElements = fixture.debugElement.queryAll(By.css('.deja-overlay-container > .cdk-overlay-pane > .deja-listcontainer > .listitem.selected'));
                 const selectedItems = vp.items.filter((item: IItemBase) => item.selected);
 
-                switch (++pass) {
-                    case 1:
-                        // Check selected and current
-                        expect(selectedElements.length).toBe(0);
-                        expect(selectedItems.length).toBe(0);
-                        // Check flags
-                        expect(selectInstance.isMultiSelect).toBe(true);
-                        // Simulate click on first element on disabled
-                        selectInstance.disabled = true;
-                        fixture.detectChanges();
+                // Check selected and current
+                expect(selectedElements.length).toBe(0);
+                expect(selectedItems.length).toBe(0);
+                // Check flags
+                expect(selectInstance.isMultiSelect).toBe(true);
+                // Simulate click on first element on disabled
+                selectInstance.disabled = true;
+                fixture.detectChanges();
 
-                        Observable.from(selectInstance.selectedChange)
-                            .first()
-                            .subscribe(() => expect(selectInstance.selectedItems && selectInstance.selectedItems.length).toBe(1));
+                Observable.from(selectInstance.selectedChange)
+                    .first()
+                    .subscribe(() => {
+                        expect(selectInstance.selectedItems && selectInstance.selectedItems.length).toBe(1);
+                        selectContainerInstance.testDone();
+                    });
 
-                        sendMouseClick(displayedElements[1]);
-                        break;
-                }
+                sendMouseClick(displayedElements[1]);
             });
 
-        Observable.timer(100).first().subscribe(() => expect(pass).toBe(1));
-
         sl.showDropDown();
+
+        spyOn(selectContainerInstance, 'testDone');
+
         fixture.detectChanges();
+        fixture.whenStable().then(() => {
+            expect(selectContainerInstance.testDone).toHaveBeenCalled();
+        });
     }));
 
     it('should select programatically', async(() => {

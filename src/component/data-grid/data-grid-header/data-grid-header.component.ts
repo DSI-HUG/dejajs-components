@@ -8,10 +8,13 @@
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output } from '@angular/core';
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/first';
+import 'rxjs/add/operator/takeWhile';
 import 'rxjs/add/operator/timeout';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
-import { Subscription } from 'rxjs/Subscription';
 import { DejaClipboardService } from '../../../common/core/clipboard/clipboard.service';
 import { ISortInfos } from '../../../common/core/sorting/sort-infos.model';
 import { IDejaDragEvent } from '../../dragdrop/draggable.directive';
@@ -54,7 +57,7 @@ export class DejaGridHeaderComponent implements OnDestroy {
     private _columnLayout = {} as IDejaGridColumnLayout;
     private backupColumnOrder = [] as IDejaGridColumn[];
     private columnGroupKey = 'deja-grid-column';
-    private subscriptions = [] as Subscription[];
+    private isAlive = true;
 
     /** Définit si toutes les colonnes peuvent être draggable vers un autre composant.
      * Si une valeur spécifique à une colonne est spécifiée dans le modèle de la colonne, cette dernière sera prioritaire.
@@ -130,7 +133,8 @@ export class DejaGridHeaderComponent implements OnDestroy {
     constructor(elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, @Optional() private clipboardService: DejaClipboardService) {
         const element = elementRef.nativeElement as HTMLElement;
 
-        this.subscriptions.push(Observable.fromEvent(element, 'mousedown')
+        Observable.fromEvent(element, 'mousedown')
+            .takeWhile(() => this.isAlive)
             .filter((event: MouseEvent) => event.buttons === 1)
             .subscribe((downEvent: MouseEvent) => {
                 const target = downEvent.target as HTMLElement;
@@ -140,10 +144,10 @@ export class DejaGridHeaderComponent implements OnDestroy {
                     if (this.columnsSizable && column.sizeable !== false) {
                         // Size clicked column
                         this._sizedColumn = column;
-                        const sizedOrigin = downEvent.pageX;
+                        const sizedOrigin = downEvent.screenX;
 
                         const kill$ = new Subject();
-                        const mouseUp$ = Observable.fromEvent(document, 'mouseup');
+                        const mouseUp$ = Observable.fromEvent(element.ownerDocument, 'mouseup');
 
                         mouseUp$.first().subscribe(() => {
                             const e = {
@@ -160,7 +164,7 @@ export class DejaGridHeaderComponent implements OnDestroy {
                                 if (moveEvent.buttons === 1) {
                                     const e = {
                                         column: this._sizedColumn,
-                                        offsetWidth: moveEvent.pageX - sizedOrigin,
+                                        offsetWidth: moveEvent.screenX - sizedOrigin,
                                         originalEvent: moveEvent,
                                     } as IDejaGridColumnSizeEvent;
                                     this.columnSizeChanged.emit(e);
@@ -194,11 +198,11 @@ export class DejaGridHeaderComponent implements OnDestroy {
                             }
                         }, (_error) => { });
                 }
-            }));
+            });
     }
 
     public ngOnDestroy() {
-        this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
+        this.isAlive = false;
     }
 
     public refresh() {
@@ -227,8 +231,7 @@ export class DejaGridHeaderComponent implements OnDestroy {
                     column.dragged = true;
 
                     // Backup column layout
-                    this.backupColumnOrder = [];
-                    this._columnLayout.columns.forEach((col) => this.backupColumnOrder.push(col));
+                    this.backupColumnOrder = this._columnLayout.columns.map((col) => col);
                 } else {
                     event.preventDefault();
                 }
@@ -247,7 +250,7 @@ export class DejaGridHeaderComponent implements OnDestroy {
             }
 
             const targetElement = this.getColumnElementFromHTMLElement(event.target as HTMLElement);
-            const targetBounds = targetElement.getBoundingClientRect();
+            const targetBounds = targetElement && targetElement.getBoundingClientRect();
             const targetIndex = targetElement && +targetElement.getAttribute('index');
             if (targetIndex === undefined) {
                 return;
@@ -288,8 +291,7 @@ export class DejaGridHeaderComponent implements OnDestroy {
             dragleavecallback: () => {
                 if (this.backupColumnOrder.length) {
                     // Restore original column layout
-                    this._columnLayout.columns = [];
-                    this.backupColumnOrder.forEach((col) => this._columnLayout.columns.push(col));
+                    this._columnLayout.columns = this.backupColumnOrder.map((col) => col);
                 }
             },
             dragentercallback: dragCallback,

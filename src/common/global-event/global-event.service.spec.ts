@@ -6,6 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { GlobalEventEmmitter } from './global-event-emmitter';
 import { GlobalEventService } from './global-event.service';
 
 describe('GlobalEventService', () => {
@@ -23,6 +24,6 @@ describe('GlobalEventService', () => {
                 expect(service['globalEventEmmitter'].hasListeners('sendaction')).toBeFalsy();
             });
 
-        (<any>window).sendAction(true, false, null, 1);
+        GlobalEventEmmitter.instance.emit('sendaction', [true, false, null, 1]);
     });
 });

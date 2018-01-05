@@ -10,8 +10,22 @@ import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coerci
 import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { MatInput } from '@angular/material';
+import 'rxjs/add/observable/combineLatest';
+import 'rxjs/add/observable/from';
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/observable/merge';
+import 'rxjs/add/observable/timer';
+import 'rxjs/add/operator/combineLatest';
 import 'rxjs/add/operator/debounce';
+import 'rxjs/add/operator/debounce';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/delayWhen';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/first';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/takeWhile';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
@@ -92,9 +106,9 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     public overlayOffsetY = 0;
 
     // NgModel implementation
-    protected onTouchedCallback: () => void = noop;
-    protected onChangeCallback: (_: any) => void = noop;
-    protected onValidatorChangeCallback: () => void = noop;
+    public onTouchedCallback: () => void = noop;
+    public onChangeCallback: (_: any) => void = noop;
+    public onValidatorChangeCallback: () => void = noop;
 
     protected _keyboardNavigation = false;
     protected _waiter = false;
@@ -183,13 +197,23 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @ContentChildren(DejaItemComponent)
     public set options(options: DejaItemComponent[]) {
         if (!this.items && options && options.length) {
+            const selectedModels = [];
             this.valueField = 'value';
             this.textField = 'text';
-            const models = options.map((option) => ({
-                text: option.text,
-                value: option.value,
-            }));
+            const models = options.map((option) => {
+                const model = {
+                    text: option.text,
+                    value: option.value,
+                };
+                if (option.selected) {
+                    selectedModels.push(model);
+                }
+                return model;
+            });
             this.models = models;
+            if (selectedModels.length) {
+                this.selectedModels = selectedModels;
+            }
             if (models.length > 100) {
                 // tslint:disable-next-line:no-debugger
                 debugger;
@@ -235,7 +259,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
         Observable.from(this.clearFilterExpression$)
             .takeWhile(() => this._isAlive)
-            .debounceTime(750).subscribe(() => this.filterExpression = '');
+            .debounceTime(750)
+            .subscribe(() => this.filterExpression = '');
 
         Observable.combineLatest(this.delaySearchTrigger$, this.filterListComplete$)
             .takeWhile(() => this._isAlive)
@@ -260,6 +285,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 delete this.selectingItemIndex;
                 setDropDownVisible(false);
                 this.viewPort.element$.next(null);
+                this.changeDetectorRef.markForCheck();
             });
 
         Observable.from(this.showDropDown$)
@@ -280,6 +306,11 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                     const originRect = originElement.getBoundingClientRect();
                     const maxHeight = document.body.clientHeight;
                     this.dropDownMaxHeight = Math.max(originRect.top, maxHeight - originRect.bottom, 25) - 25;
+                }
+
+                // Ensure dropDowsQuery if autocomplete and minSearchLength
+                if (!this.dropDownQuery && this.isModeAutocomplete && this.minSearchlength > 0 && this.query && this.query.length > this.minSearchlength) {
+                    this.dropDownQuery = this.query;
                 }
 
                 // Display overlay
@@ -383,7 +414,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                     this.changeDetectorRef.markForCheck();
 
                 } else {
-                    const item = super.mapToIItemBase([value])[0];
+                    const v = value instanceof Array ? [value[0]] : [value];
+                    const item = super.mapToIItemBase(v)[0];
                     this.unselectAll$()
                         .switchMap(() => item ? this.toggleSelect$([item], true) : [])
                         .map(() => super.getItemListService().ensureSelection())
@@ -1093,8 +1125,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     /** Change l'état d'expansion de la ligne spécifiée
-     * @param {number} index  Index sur la liste des éléments visibles de l'élément à changer.
-     * @param {boolean} collapse  Etat de l'élément. True pour réduire l'élément.
+     * @param index  Index sur la liste des éléments visibles de l'élément à changer.
+     * @param collapse  Etat de l'élément. True pour réduire l'élément.
      */
     public toggleCollapse(index: number, collapsed: boolean) {
         this.toggleCollapse$(index, collapsed).first().subscribe(noop);

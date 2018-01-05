@@ -9,9 +9,12 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Optional, Output, Self, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
+import 'rxjs/add/observable/from';
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/operator/first';
+import 'rxjs/add/operator/takeWhile';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
-import { Subscription } from 'rxjs/Subscription';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { IDateSelectorItem } from './date-selector-item.model';
 
@@ -23,6 +26,12 @@ export enum DaysOfWeek {
     Thursday = 4,
     Friday = 5,
     Saturday = 6,
+}
+
+export enum DateComponentLayout {
+    dateonly = 1,
+    datetime,
+    timeonly,
 }
 
 const noop = () => { };
@@ -41,6 +50,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
     @Input() public dateMin: Date;
 
     @Output() public dateChange = new EventEmitter();
+    @Output() public timeChange = new EventEmitter();
 
     protected _local = 'fr';
 
@@ -80,7 +90,10 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
         return this._local;
     }
 
-    private subscriptions: Subscription[] = [];
+    public onTouchedCallback: () => void = noop;
+    public onChangeCallback: (_: any) => void = noop;
+
+    private isAlive = true;
 
     private _currentDays: IDateSelectorItem[];
     private _currentDate: Date = new Date();
@@ -93,8 +106,27 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
     private _time: boolean;
     private _disabled: boolean;
 
-    private onTouchedCallback: () => void = noop;
-    private onChangeCallback: (_: any) => void = noop;
+    /**
+     * Component Layout
+     */
+    @Input()
+    public set layout(value: DateComponentLayout | string) {
+        if (value) {
+            if (typeof value === 'string') {
+                this.layoutId = DateComponentLayout[value];
+                if (!this.layoutId) {
+                    throw new Error('Invalid type for DateComponentLayout');
+                }
+                this.layoutClass = value;
+            } else {
+                this.layoutId = value;
+                this.layoutClass = DateComponentLayout[value];
+            }
+        }
+        this.changeDetectorRef.markForCheck();
+    }
+    public layoutClass: string;
+    public layoutId: number;
 
     /**
      * Time property setter. Can be string or empty so you can use it like : <deja-date-selector time></deja-date-selector>
@@ -103,6 +135,9 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
     @Input()
     public set time(value: boolean | string) {
         this._time = coerceBooleanProperty(value) ? true : null;
+        if (this._time) {
+            this.layout = DateComponentLayout.datetime;
+        }
         this.changeDetectorRef.markForCheck();
     }
 
@@ -147,17 +182,21 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
             this._control.valueAccessor = this;
         }
 
-        this.subscriptions.push(Observable.fromEvent(element, 'click').subscribe((event: Event) => {
-            const target = event.target as HTMLElement;
-            if (target.hasAttribute('dateindex')) {
-                const dateSelectorItem = this._currentDays[+target.getAttribute('dateindex')];
-                if (!dateSelectorItem.disabled) {
-                    this.value = dateSelectorItem.date;
+        Observable.fromEvent(element, 'click')
+            .takeWhile(() => this.isAlive)
+            .subscribe((event: Event) => {
+                const target = event.target as HTMLElement;
+                if (target.hasAttribute('dateindex')) {
+                    const dateSelectorItem = this._currentDays[+target.getAttribute('dateindex')];
+                    if (!dateSelectorItem.disabled) {
+                        this.value = dateSelectorItem.date;
+                        this.dateChange.emit(this.value);
+                    }
                 }
-            }
-        }));
+            });
 
-        this.subscriptions.push(Observable.from(this._keyboardNavigation$)
+        Observable.from(this._keyboardNavigation$)
+            .takeWhile(() => this.isAlive)
             .subscribe(() => {
                 this._keyboardNavigation = true;
                 Observable.fromEvent(element, 'mouseenter')
@@ -166,7 +205,8 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
                         this._keyboardNavigation = false;
                         this.changeDetectorRef.markForCheck();
                     });
-            }));
+            });
+        this.layout = DateComponentLayout.dateonly;
     }
 
     public ngOnInit() {
@@ -177,7 +217,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
     }
 
     public ngOnDestroy() {
-        this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
+        this.isAlive = false;
     }
 
     // ************* ControlValueAccessor Implementation **************
@@ -200,14 +240,10 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
             if (this.selectedDate) {
                 const h = (value) ? value.getHours() : 0;
                 const m = (value) ? value.getMinutes() : 0;
-                if (value && (
-                    (!this.time && this.selectedDate.toLocaleTimeString() !== value.toLocaleTimeString())
-                    || (this.time && ((this.selectedDate.getHours() === 0 && this.selectedDate.getMinutes() === 0) && (h !== 0 && m !== 0) || (this.selectedDate.toLocaleDateString() !== value.toLocaleDateString())))
-                )) {
+                if (value && ((!this.layoutId && this.selectedDate.toLocaleTimeString() !== value.toLocaleTimeString()) || (this.layoutId > 1 && ((this.selectedDate.getHours() === 0 && this.selectedDate.getMinutes() === 0) && (h !== 0 && m !== 0) || (this.selectedDate.toLocaleDateString() !== value.toLocaleDateString()))))) {
                     value.setHours(this.selectedDate.getHours(), this.selectedDate.getMinutes(), this.selectedDate.getSeconds());
                 }
             }
-
             this.selectedDate = value;
             this._displayedDate = value || this._currentDate;
 
@@ -375,6 +411,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
 
         d.setHours(hours);
         this.value = d;
+        this.timeChange.emit(this.value);
     }
 
     protected updateMinutes(minutes: number) {
@@ -389,6 +426,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
 
         d.setMinutes(minutes);
         this.value = d;
+        this.timeChange.emit(this.value);
     }
 
     private bind() {
@@ -457,12 +495,14 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
         if ((this.dateMin && d.getTime() < this.dateMin.getTime()) || (this.dateMax && d.getTime() > this.dateMax.getTime())) {
             this._displayedDate = d;
             this.bind();
+            this.dateChange.emit(this._displayedDate);
         } else if (this.disableDates && this.isDisabledDate(d)) {
             this.setDateIfPossible(d, num);
         } else {
             this.selectedDate = d;
             this._displayedDate = d;
             this.bind();
+            this.dateChange.emit(this._displayedDate);
         }
     }
 
@@ -483,6 +523,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
             this.selectedDate = d;
             this._displayedDate = d;
             this.bind();
+            this.dateChange.emit(this._displayedDate);
         }
     }
 
@@ -503,6 +544,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
             this.selectedDate = d;
             this._displayedDate = d;
             this.bind();
+            this.dateChange.emit(this._displayedDate);
         }
     }
 }

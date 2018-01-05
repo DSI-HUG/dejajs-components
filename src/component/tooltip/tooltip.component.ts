@@ -7,7 +7,15 @@
  */
 
 import { Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/delay';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/takeUntil';
+import 'rxjs/add/operator/takeWhile';
 import { Observable } from 'rxjs/Observable';
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
@@ -60,6 +68,30 @@ export class DejaTooltipComponent implements OnInit, OnDestroy {
             originX: 'center',
             originY: 'top',
             overlayX: 'center',
+            overlayY: 'bottom',
+        },
+        {
+            originX: 'left',
+            originY: 'bottom',
+            overlayX: 'left',
+            overlayY: 'top',
+        },
+        {
+            originX: 'left',
+            originY: 'top',
+            overlayX: 'left',
+            overlayY: 'bottom',
+        },
+        {
+            originX: 'right',
+            originY: 'bottom',
+            overlayX: 'right',
+            overlayY: 'top',
+        },
+        {
+            originX: 'right',
+            originY: 'top',
+            overlayX: 'right',
             overlayY: 'bottom',
         },
     ] as DejaConnectionPositionPair[];

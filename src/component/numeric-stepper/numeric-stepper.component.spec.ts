@@ -50,6 +50,13 @@ describe('DejaNumericStepperComponent', () => {
         expect(comp.value).toBe(10);
     }));
 
+    it('should set the value to null', async(() => {
+        comp.value = null;
+
+        fixture.detectChanges();
+        expect(comp.value).toBe(null);
+    }));
+
     it('should not update the value mor than max or less than min', async(() => {
         comp.max = 10;
         comp.min = 5;

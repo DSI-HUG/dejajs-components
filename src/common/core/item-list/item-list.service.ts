@@ -7,9 +7,15 @@
  */
 
 import 'rxjs/add/observable/concat';
+import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/fromPromise';
 import 'rxjs/add/observable/if';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/reduce';
+import 'rxjs/add/operator/switchMap';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subscriber } from 'rxjs/Subscriber';
@@ -1198,40 +1204,58 @@ export class ItemListService {
     }
 
     private ensureSelectedItems(items: IItemBase[]) {
-        if (!this.selectedList || this.selectedList.length === 0) {
-            return [];
+        if (this.selectedList && this.selectedList.length > 0) {
+            // Ensure selected flag
+            this.selectedList.forEach((item) => item.selected = true);
+
+            if (!items) {
+                return this.selectedList;
+            }
+
+            const newSelectedList = [] as IItemBase[];
+            const ensureSelectedChildren = (children: IItemTree[]) => {
+                children.forEach((item) => {
+                    const selectedItem = this.selectedList.find((selected) => this.compareItems(selected, item));
+                    if (selectedItem) {
+                        selectedItem.selected = false;
+                        newSelectedList.push(item);
+                    }
+                    if (item.$items) {
+                        ensureSelectedChildren(item.$items);
+                    }
+                });
+            };
+
+            ensureSelectedChildren(items);
+
+            // Add not found selected items
+            this.selectedList.filter((item) => item.selected).forEach((item) => newSelectedList.push(item));
+
+            this.selectedList = newSelectedList;
+
+            // Ensure selected flag for the new items
+            this.selectedList.forEach((item) => item.selected = true);
+
+        } else {
+            this.selectedList = [];
+
+            if (!items) {
+                return this.selectedList;
+            }
+
+            const ensureSelectedChildren = (children: IItemTree[]) => {
+                children.forEach((item) => {
+                    if (item.selected) {
+                        this.selectedList.push(item);
+                    }
+                    if (item.$items) {
+                        ensureSelectedChildren(item.$items);
+                    }
+                });
+            };
+
+            ensureSelectedChildren(items);
         }
-
-        // Ensure selected flag
-        this.selectedList.forEach((item) => item.selected = true);
-
-        if (!items) {
-            return this.selectedList;
-        }
-
-        const newSelectedList = [] as IItemBase[];
-        const ensureSelectedChildren = (children: IItemTree[]) => {
-            children.forEach((item) => {
-                const selectedItem = this.selectedList.find((selected) => this.compareItems(selected, item));
-                if (selectedItem) {
-                    selectedItem.selected = false;
-                    newSelectedList.push(item);
-                }
-                if (item.$items) {
-                    ensureSelectedChildren(item.$items);
-                }
-            });
-        };
-
-        ensureSelectedChildren(items);
-
-        // Add not found selected items
-        this.selectedList.filter((item) => item.selected).forEach((item) => newSelectedList.push(item));
-
-        this.selectedList = newSelectedList;
-
-        // Ensure selected flag for the new items
-        this.selectedList.forEach((item) => item.selected = true);
 
         return this.selectedList;
     }

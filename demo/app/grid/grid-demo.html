@@ -121,7 +121,7 @@
 		</mat-card-content>
 		<mat-toolbar color="primary">Variable Rows Height and Deep Model</mat-toolbar>
 		<mat-card-content fxLayout="column" class="listContainer">
-			<deja-grid id="variable" #variable maxHeight="auto" searchArea columnsSortable multiSelect columnsSizable sortable [rows]="variableHeightPeopleRows$" [columns]="variableHeightPeopleColumns" viewportMode="auto" nodataholder="No datas" searchField="p1.p2.person.name" valueField="p1.p2.person.guid" (columnSizeChanged)="onColumnSizeChanged($event, variable)"></deja-grid>
+			<deja-grid id="variable" #variable maxHeight="auto" searchArea columnsSortable multiSelect columnsSizable sortable [rows]="variableHeightPeopleRows$" [columns]="variableHeightPeopleColumns" viewportMode="auto" viewPortRowHeight="25" nodataholder="No datas" searchField="p1.p2.person.name" valueField="p1.p2.person.guid" (columnSizeChanged)="onColumnSizeChanged($event, variable)"></deja-grid>
 		</mat-card-content>
 	</mat-card>
 </div>

@@ -8,6 +8,8 @@
 
 import { Component, OnInit } from '@angular/core';
 
+import { DateComponentLayout } from '../../../index';
+
 @Component({
     selector: 'dejadate-picker-demo',
     styleUrls: ['date-picker-demo.scss'],
@@ -26,6 +28,8 @@ export class DejaDatePickerDemoComponent implements OnInit {
     public dateMin: Date;
     public dateMax: Date;
 
+    public myLayout = DateComponentLayout.timeonly;
+
     constructor() {
     }
 
@@ -36,5 +40,13 @@ export class DejaDatePickerDemoComponent implements OnInit {
         this.theDateSelected = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
         console.log(this.dateMin);
         console.log(this.dateMax);
+    }
+
+    public dateChange(date: Date) {
+        console.log('dateChange', date);
+    }
+
+    public timeChange(date: Date) {
+        console.log('timeChange', date);
     }
 }

@@ -12,13 +12,13 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import 'rxjs/add/observable/from';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/filter';
 import { Observable } from 'rxjs/Observable';
 import { IViewPortItem, ViewportMode, ViewPortService } from '../../common/core/item-list/viewport.service';
 import { DejaViewPortModule } from './index';
 import { DejaViewPortComponent } from './viewport.component';
-
-// TODO
-// EnsureVisible
 
 @Component({
     template: `<deja-viewport style="height: 120px;width: 1000px;" [items]="items">
@@ -75,6 +75,7 @@ describe('DejaViewPortComponent', () => {
         const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
 
         return Observable.from(viewPortService.viewPortResult$)
+            .debounceTime(10)
             .do(() => fixture.detectChanges())
             .filter((result) => result.viewPortSize > 0)
             .do((result) => {
@@ -117,7 +118,7 @@ describe('DejaViewPortComponent', () => {
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
         const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
 
-        observeViewPort$(fixture, 100, 0, 1860, 140, 0, 99).subscribe(noop);
+        observeViewPort$(fixture, 100, 0, 0, 1800, 0, 6).subscribe(noop);
 
         viewPortInstance.viewportMode = 'disabled';
         expect(ViewportMode.disabled === viewPortInstance.viewportMode as any);
@@ -228,6 +229,7 @@ describe('DejaViewPortComponent', () => {
         const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
 
         return Observable.from(viewPortService.viewPortResult$)
+            .debounceTime(10)
             .do(() => fixture.detectChanges())
             .filter((result) => result.visibleItems && result.visibleItems.length && result.visibleItems[0].size > 0) // items must be sized
             .do((result) => {
@@ -285,7 +287,6 @@ describe('DejaViewPortComponent', () => {
     it('should able to refresh the viewport and return the same values', async(() => {
         const fixture = TestBed.createComponent(DejaViewportAutoContainerComponent);
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
-        const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
         const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
         let pass = 0;
 
@@ -307,7 +308,8 @@ describe('DejaViewPortComponent', () => {
             }
         });
 
-        viewPortService.scrollPosition$.next(10000);
+        (<any>viewPortInstance).scrollPos = 10000;
+        viewPortInstance.refresh();
         viewPortInstance.refreshViewPort();
         fixture.detectChanges();
     }));
@@ -329,6 +331,7 @@ describe('DejaViewPortComponent', () => {
         let expectedViewPortEndIndex = 278;
 
         Observable.from(viewPortService.viewPortResult$)
+            .debounceTime(10)
             .do(() => fixture.detectChanges())
             .filter((result) => result.visibleItems && result.visibleItems.length && result.visibleItems[0].size > 0) // items must be sized
             .subscribe((result) => {
@@ -364,6 +367,39 @@ describe('DejaViewPortComponent', () => {
             });
 
         viewPortService.scrollPosition$.next(10000);
+        fixture.detectChanges();
+    }));
+
+    it('should refresh view port if windows is resized', async(() => {
+        const fixture = TestBed.createComponent(DejaViewportAutoContainerComponent);
+        const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
+        const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
+        let pass = 0;
+
+        Observable.from(viewPortService.viewPortResult$)
+            .debounceTime(10)
+            .do(() => fixture.detectChanges())
+            .subscribe((vp) => {
+                // Bind view port
+                fixture.detectChanges();
+                expect(vp.beforeSize).toEqual(0);
+                expect(vp.afterSize).toBeGreaterThan(0);
+                expect(vp.viewPortSize).toBeGreaterThan(0);
+                expect(vp.startIndex).toEqual(0);
+                expect(vp.endIndex).toBeGreaterThan(0);
+
+                switch (++pass) {
+                    case 1:
+                        const event = new Event('resize', {});
+                        window.dispatchEvent(event);
+                        break;
+
+                    default:
+                        break;
+
+                }
+            });
+
         fixture.detectChanges();
     }));
 });

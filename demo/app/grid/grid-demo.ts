@@ -38,7 +38,7 @@ export class GridDemoComponent {
     protected people$: Observable<Person[]>;
     protected peopleForMultiselect$: Observable<Person[]>;
     protected groupedByGenderPeople$: Observable<Person[]>;
-    protected variableHeightPeopleRows$: Observable<Person[]>;
+    protected variableHeightPeopleRows$: Observable<IDejaGridRow[]>;
     protected groupedByEyesColorPeople$: Observable<Person[]>;
     protected groupedByColorPeople: {
         items: Person[];
@@ -382,7 +382,7 @@ export class GridDemoComponent {
         },
         {
             label: 'Vitamin B2',
-            name: 'VitaminB1',
+            name: 'VitaminB2',
         },
         {
             label: 'Vitamin C',
@@ -654,6 +654,7 @@ export class GridDemoComponent {
             label: column.label,
             width: column.width,
             name: `p1.p2.person.${column.name}`,
+            sizeable: column.name === 'address' || column.name === 'about',
         } as IDejaGridColumn));
 
         const addressCol = this.variableHeightPeopleColumns.find((column) => column.name === 'p1.p2.person.address');
@@ -726,6 +727,8 @@ export class GridDemoComponent {
             case 'urlToImage':
             case 'address':
             case 'about':
+            case 'p1.p2.person.address':
+            case 'p1.p2.person.about':
                 grid.clearRowsHeight();
                 grid.refreshViewPort();
                 break;

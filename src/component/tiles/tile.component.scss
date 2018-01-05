@@ -47,12 +47,8 @@
     mat-progress-spinner {
         position: absolute;
         z-index: 1;
-        right: 0;
-        bottom: 0;
-        width: 20%;
-        height: 20%;
-        max-width: 4rem;
-        max-height: 4rem;
+        right: 0.2rem;
+        bottom: 0.2rem;
         transform: translate(-60%, -60%);
     }
 }

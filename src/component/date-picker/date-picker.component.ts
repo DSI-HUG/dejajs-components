@@ -6,18 +6,31 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, Input, OnDestroy, OnInit, Optional, Self, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
+import { DateComponentLayout, DaysOfWeek, DejaDateSelectorComponent } from '../date-selector/date-selector.component';
+import { formatToMask, formatToUnitOfTime } from './format-to-mask';
+
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import * as moment_ from 'moment';
+import 'rxjs/add/observable/combineLatest';
+import 'rxjs/add/observable/from';
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/observable/merge';
+import 'rxjs/add/operator/delay';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/first';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/takeWhile';
 import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Subject } from 'rxjs/Subject';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { DejaConnectionPositionPair } from '../../common/core/overlay/connection-position-pair';
 import { DejaChildValidatorDirective } from '../../common/core/validation/child-validator.directive';
-import { DaysOfWeek, DejaDateSelectorComponent } from '../date-selector/date-selector.component';
-import { formatToMask, formatToUnitOfTime } from './format-to-mask';
+
 const moment: (value?: any, format?: string) => moment_.Moment = (<any>moment_).default || moment_;
 
 const noop = () => { };
@@ -58,12 +71,19 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     @Input() public overlayOffsetX = 0;
     /** Offset de position verticale de la zone de dropdown */
     @Input() public overlayOffsetY = 6;
+
+    @Output() public dateChange = new EventEmitter();
+    @Output() public timeChange = new EventEmitter();
+
     /** Mask for input */
     protected _mask: any[];
 
     public get mask() {
         return this._mask;
     }
+
+    public onTouchedCallback: () => void = noop;
+    public onChangeCallback: (_: any) => void = noop;
 
     /** Internal use */
     public overlayOwnerElement: HTMLElement;
@@ -86,9 +106,6 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     private cursorPosition: number;
     private formatChanged$ = new Subject<string>();
     private dateChanged$ = new Subject<Date>();
-
-    private onTouchedCallback: () => void = noop;
-    private onChangeCallback: (_: any) => void = noop;
 
     @ViewChild('inputelement')
     private set inputElementRef(element: ElementRef) {
@@ -229,7 +246,10 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
 
                 // si la position du curseur était stockée, on la restaure apres avoir changé la valeur
                 if (this.cursorPosition) {
-                    this.inputElement$.delay(1).first().subscribe((elem: HTMLInputElement) => elem.setSelectionRange(this.cursorPosition, this.cursorPosition));
+                    this.inputElement$
+                        .delay(1)
+                        .first()
+                        .subscribe((elem: HTMLInputElement) => elem.setSelectionRange(this.cursorPosition, this.cursorPosition));
                 }
                 this.changeDetectorRef.markForCheck();
             });
@@ -261,8 +281,15 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     /** Init mask */
     public ngOnInit() {
         if (!this._format) {
-            const time = this.time ? ' HH:mm' : '';
-            this.format = `YYYY-MM-DD${time}`;
+            if (!this.layout || this.layout === DateComponentLayout.dateonly || this.layout === 'dateonly') {
+                this.format = 'YYYY-MM-DD';
+            } else if (this.layout === DateComponentLayout.datetime || this.layout === 'datetime') {
+                this.format = 'YYYY-MM-DD HH:mm';
+            } else if (this.layout === DateComponentLayout.timeonly || this.layout === 'timeonly') {
+                this.format = 'HH:mm';
+            } else {
+                this.format = 'YYYY-MM-DD';
+            }
         }
     }
 
@@ -295,12 +322,30 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     }
 
     /**
+     * Component Layout
+     */
+    @Input()
+    public set layout(value: DateComponentLayout | string) {
+        if (value) {
+            this._layout = value;
+        }
+        this.changeDetectorRef.markForCheck();
+    }
+    public _layout: number | string;
+    public get layout() {
+        return this._layout;
+    }
+
+    /**
      * Time property setter. Can be string or empty so you can use it like : <deja-date-picker time></deja-date-picker>
      * Used to add time selector next to calendar
      */
     @Input()
     public set time(value: boolean | string) {
         this._time = coerceBooleanProperty(value) ? true : null;
+        if (this._time) {
+            this.layout = DateComponentLayout.datetime;
+        }
         this.changeDetectorRef.markForCheck();
     }
 
@@ -388,34 +433,47 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     }
 
     /**
-     * ngModelChange of date-selector.
-     *
-     * @param newDate Date to set.
-     */
-    public onDateChange(newDate: Date) {
-        this.value = newDate;
-        // TODO
-        // if (this.value.getHours() === newDate.getHours() && this.value.getMinutes() === newDate.getMinutes() && this.value.getSeconds() === newDate.getSeconds()) {
-        //     this.setFocus();
-        // }
-    }
-
-    /**
      * Called when input change. If it's a string it's because user set the date manually. So we need to convert it into date with MomentJs.
      *
      * @param date new value of this model
      */
     public updateModel(date: string | Date) {
-        if (typeof date === 'string' && date.replace(/_/g, '').length === this._format.length) {
-            let d = moment(date, this._format).toDate();
-            if (!moment(d).isValid()) {
-                d = new Date();
+        if (typeof date === 'string') { // && date.replace(/_/g, '').length === this._format.length) {
+            if (date.replace(/_/g, '').length === this._format.length) { // If mask is fully filled
+                let d = moment(date, this._format).toDate();
+                if (!moment(d).isValid()) {
+                    console.warn('[DatePicker]: Invalid Date');
+                    d = null;
+                    this._control.control.setErrors({ invalidMask: true });
+                    this.changeDetectorRef.markForCheck();
+                }
+                date = d;
+            } else if (!date.match(/[0-9]/)) { // if mask is empty - do nothing
+                return;
+            } else { // If mask is partially filled
+                date = null;
+                console.warn('[DatePicker]: Invalid Date');
+                this._control.control.setErrors({ invalidMask: true });
+                this.changeDetectorRef.markForCheck();
             }
-            date = d;
         }
 
         if (typeof date !== 'string') {
+
+            let event: EventEmitter<any>;
+
+            // now we check if it's date or time who is updated to raise correct event
+            if (this.value && moment(date).isAfter(this.value, 'day')) {
+                event = this.dateChange;
+            } else if (this.value && moment(date).isAfter(this.value, 'millisecond')) {
+                event = this.timeChange;
+            } else {
+                event = this.dateChange;
+            }
+
             this.value = date;
+            event.emit(date);
+            this.changeDetectorRef.markForCheck();
         }
     }
 

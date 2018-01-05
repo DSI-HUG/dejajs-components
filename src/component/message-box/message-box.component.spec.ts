@@ -148,6 +148,19 @@ describe('DejaMessageBoxComponent', () => {
             const el = fixture.debugElement.query(By.css('mat-card-actions > span > button')).nativeElement;
             expect(el.attributes['mat-mini-fab']).toBeTruthy();
         });
+
+    });
+
+    describe('close icon', () => {
+        it('should emit close event when the close icon is clicked', (done) => {
+            component.showCloseIcon = true;
+            component.close.subscribe(() => {
+                done();
+            });
+            fixture.detectChanges();
+            const closeButtonEl = fixture.debugElement.query(By.css('button.close')).nativeElement;
+            closeButtonEl.click();
+        });
     });
 
 });

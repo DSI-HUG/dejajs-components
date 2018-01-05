@@ -50,14 +50,14 @@ export class SelectDemoComponent implements OnDestroy {
     protected fruits$: Observable<string[]>;
 
     private countries: Observable<Country[]>;
-    private countriesForTemplate: Country[];
     private countriesForMultiselect: Country[];
     private groupedCountries: ICountryGroup[];
-    private onDemandGroupedCountries: ICountryGroup[];
-    private multiselectModel: IItemTree[];
+    public onDemandGroupedCountries: ICountryGroup[];
+    public multiselectModel: IItemTree[];
     private _dialogVisible = false;
-    private onDemandPlaceHolder = 'Open to load';
+    public onDemandPlaceHolder = 'Open to load';
     private subscriptions = [] as Subscription[];
+    public yellowBackgroundColorHighlight = true;
 
     @ViewChild('news') private newsSelect: DejaSelectComponent;
     @ViewChild('ondemand') private onDemandSelect: DejaSelectComponent;
@@ -102,16 +102,6 @@ export class SelectDemoComponent implements OnDestroy {
         ];
 
         this.fruits$ = Observable.of(this.fructs);
-
-        this.subscriptions.push(this.countries
-            .subscribe((value: Country[]) => {
-                const result = [] as any[];
-                value.map((s) => {
-                    s.toString = () => `${s.code}-${s.naqme}`;
-                    result.push(s);
-                });
-                this.countriesForTemplate = result;
-            }));
 
         this.subscriptions.push(this.countries
             .do((value) => this.countriesForMultiselect = value)
