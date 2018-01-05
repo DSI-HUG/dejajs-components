@@ -86,7 +86,7 @@ export class DejaTileComponent implements OnDestroy {
                     this.element.style.top = `${bounds.top}px`;
                     this.element.style.width = `${bounds.width}px`;
                     this.element.style.height = `${bounds.height}px`;
-                    this.progressDiameter = Math.min(100, Math.round(Math.max(bounds.width * 0.4, bounds.height* 0.4)));
+                    this.progressDiameter = Math.min(100, Math.round(Math.max(bounds.width * 0.4, bounds.height * 0.4)));
                     this.changeDetectorRef.markForCheck();
                 });
 

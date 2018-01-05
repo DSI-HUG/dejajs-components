@@ -89,6 +89,8 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     public overlayOwnerElement: HTMLElement;
     public date = new Date();
 
+    public _layout: number | string;
+
     @ViewChild(DejaChildValidatorDirective) private inputValidatorDirective: DejaChildValidatorDirective;
 
     private isAlive = true;
@@ -331,7 +333,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
         }
         this.changeDetectorRef.markForCheck();
     }
-    public _layout: number | string;
+
     public get layout() {
         return this._layout;
     }

@@ -12,11 +12,6 @@ export interface HSL {
 }
 
 export class Color {
-    private _r: number;
-    private _g: number;
-    private _b: number;
-    private _a: number;
-
     private static colorNames = {
         aliceblue: '#f0f8ff',
         antiquewhite: '#faebd7',
@@ -160,6 +155,11 @@ export class Color {
         yellow: '#ffff00',
         yellowgreen: '#9acd3',
     };
+
+    private _r: number;
+    private _g: number;
+    private _b: number;
+    private _a: number;
 
     public static equals(c1: Color, c2: Color) {
         return !c1 === !c2 && !c1.isEmpty() && c1.r === c2.r && c1.g === c2.g && c1.b === c2.b && c1.a === c2.a;

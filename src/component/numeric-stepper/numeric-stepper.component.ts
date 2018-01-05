@@ -46,6 +46,8 @@ export class DejaNumericStepperComponent implements OnInit, ControlValueAccessor
         this.changeDetectorRef.markForCheck();
     }
 
+    private _value: number;
+
     /**
      * Get disable value
      */
@@ -58,8 +60,6 @@ export class DejaNumericStepperComponent implements OnInit, ControlValueAccessor
     protected onTouchedCallback: () => void = () => { };
     protected onChangeCallback: (_: any) => void = () => { };
     protected onValidatorChangeCallback: () => void = () => { };
-
-    private _value: number;
 
     constructor(
         public dejaTextMetricsService: DejaTextMetricsService,
