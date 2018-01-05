@@ -81,6 +81,7 @@ describe('DejaMarkdownComponent', () => {
 
         component.url = 'aWrongUrl';
         fixture.detectChanges();
+        console.log('test log comp: ', component);
         expect(fixture.nativeElement.innerText).toEqual('Error: some error');
     });
 
