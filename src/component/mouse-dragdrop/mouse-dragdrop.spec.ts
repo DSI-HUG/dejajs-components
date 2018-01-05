@@ -105,7 +105,7 @@ describe('DejaMouseDragDrop', () => {
         expect(droppableInstance).toBeTruthy();
     }));
 
-    fit('should be able to drag and drop from the first div to the second', async(() => {
+    it('should be able to drag and drop from the first div to the second', async(() => {
         const fixture = TestBed.createComponent(DejaMouseDragDropComponent);
         const dragDropContainerElement = fixture.nativeElement as HTMLElement;
 
