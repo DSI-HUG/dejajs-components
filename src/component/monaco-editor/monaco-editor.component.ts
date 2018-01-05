@@ -7,19 +7,19 @@
  */
 
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import 'rxjs/add/observable/combineLatest';
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/takeWhile';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Observable } from 'rxjs/Observable';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Subject } from 'rxjs/Subject';
 import { MonacoEditorService } from './monaco-editor.service';
 import { EditorOptions } from './options/editor-options.model';
 import { EditorScrollbarOptions } from './options/editor-scrollbar-options.model';
-import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/takeWhile';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/filter';
 
 /**
  * Monaco Editor Component for Angular

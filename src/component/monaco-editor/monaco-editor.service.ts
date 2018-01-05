@@ -7,11 +7,11 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/publishLast';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 
 /**
  * Monaco Editor Service
