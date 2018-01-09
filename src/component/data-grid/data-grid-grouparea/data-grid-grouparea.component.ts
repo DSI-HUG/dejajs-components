@@ -66,6 +66,17 @@ export class DejaGridGroupAreaComponent {
             return null;
         }
 
+        const raiseEvent = (group: IDejaGridColumn) => {
+            const e = {
+                column: group,
+                columns: this.groups,
+                originalEvent: event,
+            } as IDejaGridGroupsEvent;
+
+            this.groupsChanged.emit(e);
+            event.preventDefault();
+        };
+
         const dragcallback = (event: IDejaDropEvent) => {
             if (event.dragInfo.hasOwnProperty(this.columnGroupKey)) {
                 const sourceColumn = event.dragInfo[this.columnGroupKey] as IDejaGridColumn;
@@ -93,6 +104,8 @@ export class DejaGridGroupAreaComponent {
                 this.groups.splice(sourceIndex, 1);
                 this.groups.splice(targetIndex, 0, sourceColumn);
 
+                raiseEvent(sourceColumn);
+
                 this.changeDetectorRef.markForCheck();
 
                 event.preventDefault();
@@ -106,17 +119,6 @@ export class DejaGridGroupAreaComponent {
             dragentercallback: dragcallback,
             dragovercallback: dragcallback,
             dropcallback: (event: IDejaDropEvent) => {
-                const raiseEvent = (group: IDejaGridColumn) => {
-                    const e = {
-                        column: group,
-                        columns: this.groups,
-                        originalEvent: event,
-                    } as IDejaGridGroupsEvent;
-
-                    this.groupsChanged.emit(e);
-                    event.preventDefault();
-                };
-
                 if (event.dragInfo.hasOwnProperty(this.columnGroupKey)) {
                     const sourceColumn = event.dragInfo[this.columnGroupKey] as IDejaGridColumn;
 
