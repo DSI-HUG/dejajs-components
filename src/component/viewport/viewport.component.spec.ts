@@ -20,9 +20,6 @@ import { IViewPortItem, ViewportMode, ViewPortService } from '../../common/core/
 import { DejaViewPortModule } from './index';
 import { DejaViewPortComponent } from './viewport.component';
 
-// TODO
-// EnsureVisible
-
 @Component({
     template: `<deja-viewport style="height: 120px;width: 1000px;" [items]="items">
                     <ng-template #itemTemplate let-item>
@@ -290,7 +287,6 @@ describe('DejaViewPortComponent', () => {
     it('should able to refresh the viewport and return the same values', async(() => {
         const fixture = TestBed.createComponent(DejaViewportAutoContainerComponent);
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
-        const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
         const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
         let pass = 0;
 
@@ -312,7 +308,8 @@ describe('DejaViewPortComponent', () => {
             }
         });
 
-        viewPortService.scrollPosition$.next(10000);
+        (<any>viewPortInstance).scrollPos = 10000;
+        viewPortInstance.refresh();
         viewPortInstance.refreshViewPort();
         fixture.detectChanges();
     }));
@@ -370,6 +367,39 @@ describe('DejaViewPortComponent', () => {
             });
 
         viewPortService.scrollPosition$.next(10000);
+        fixture.detectChanges();
+    }));
+
+    it('should refresh view port if windows is resized', async(() => {
+        const fixture = TestBed.createComponent(DejaViewportAutoContainerComponent);
+        const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
+        const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
+        let pass = 0;
+
+        Observable.from(viewPortService.viewPortResult$)
+            .debounceTime(10)
+            .do(() => fixture.detectChanges())
+            .subscribe((vp) => {
+                // Bind view port
+                fixture.detectChanges();
+                expect(vp.beforeSize).toEqual(0);
+                expect(vp.afterSize).toBeGreaterThan(0);
+                expect(vp.viewPortSize).toBeGreaterThan(0);
+                expect(vp.startIndex).toEqual(0);
+                expect(vp.endIndex).toBeGreaterThan(0);
+
+                switch (++pass) {
+                    case 1:
+                        const event = new Event('resize', {});
+                        window.dispatchEvent(event);
+                        break;
+
+                    default:
+                        break;
+
+                }
+            });
+
         fixture.detectChanges();
     }));
 });
