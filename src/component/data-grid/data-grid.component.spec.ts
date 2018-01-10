@@ -1128,7 +1128,7 @@ describe('DejaGridComponent', () => {
         } as MouseEventInit);
 
         observeViewPort$()
-            .debounceTime(10)
+            .debounceTime(20)
             .subscribe((vp) => {
                 // Bind view port
                 fixture.detectChanges();
