@@ -63,7 +63,7 @@ describe('DejaTextMetricsService', () => {
         const maxWidth = service.getTextMaxWidth(values, spanElement);
         expect(maxWidth).toBeGreaterThan(0);
         expect(maxWidth).toBeLessThan(10 * 7); // 10px * 5 chars ('content')
-        expect(maxWidth).toBeGreaterThan(0.52 * 10 * 7); // (Arial width/height ratio) * 10px * 7 chars
+        expect(maxWidth).toBeGreaterThan(0.5 * 10 * 7); // (Arial width/height ratio) * 10px * 7 chars
     });
 
 });
