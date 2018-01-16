@@ -36,7 +36,6 @@ import { DejaTilesComponent } from './tiles.component';
     deja-tiles {
         left: 100px;
         top: 100px;
-        postion: absolute;
     }`]
 })
 class DejaTilesContainerComponent {
