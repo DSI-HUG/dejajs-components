@@ -122,25 +122,37 @@ export class DejaTextMetricsService {
         return this.charSize$
             .filter((charSize) => charSize !== null)
             .map((charSize) => {
-                const arr = text.split(' ');
 
                 let tmpSize = 0;
+                let tmpStr = '';
                 let numberOfLines = 1;
-                arr.forEach((txt: string) => {
-                    let w = 0;
-                    for (let j = 0; j < txt.length; j++) {
-                        const charCode = txt.charCodeAt(j);
-                        // Si le caractère fait partie de la table ascii qu'on a calculé dans this.getAllCharsize() on incrémente la taille du mot de sa taille.
-                        // Sinon, on ajoute la moyenne des tailles calculées (qui correspond théoriquement à la taille moyenne d'un caractère)
-                        w += (charSize[charCode]) ? charSize[charCode] : charSize.reduce((a, b) => a + b, 0) / charSize.length;
-                    }
-                    if (tmpSize + w > maxWidth) {
-                        tmpSize = w;
-                        numberOfLines++;
-                    } else {
-                        tmpSize += w;
-                    }
-                });
+                let averageCharSize = 0;
+                if (text.length>0) {
+                    const arr = text.split(' ');
+                    let spaceWidth = 0;
+                    const printableCharSizeArray = charSize.filter((size)=> size > 0);
+                    averageCharSize = printableCharSizeArray.reduce((a, b) => a + b, 0) / printableCharSizeArray.length;
+                    arr.forEach((txt: string) => {
+                        let w = 0;
+                        for (let j = 0; j < txt.length; j++) {
+                            const charCode = txt.charCodeAt(j);
+                            // Si le caractère fait partie de la table ascii qu'on a calculé dans this.getAllCharsize() on incrémente la taille du mot de sa taille.
+                            // Sinon, on ajoute la moyenne des tailles calculées (qui correspond théoriquement à la taille moyenne d'un caractère)
+                            w += (charSize[charCode]) ? charSize[charCode] : averageCharSize;
+                        }
+                        if ((tmpSize + w + spaceWidth) > maxWidth) {
+                            tmpStr = txt;
+                            tmpSize = w;
+                            numberOfLines++;
+                        } else {
+                            tmpStr += (spaceWidth>0? ' ' : '') + txt;
+                            tmpSize += w + spaceWidth;
+                        }
+                        if (spaceWidth === 0) {
+                            spaceWidth = charSize[32];
+                        }
+                    });
+                }
 
                 return numberOfLines;
             });
