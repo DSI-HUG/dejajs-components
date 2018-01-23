@@ -1,0 +1,101 @@
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { MatDialogRef } from '@angular/material';
+import { Observable } from 'rxjs/Observable';
+import { DejaPopupAction } from '../../model/popup-action.model';
+import { DejaPopupBase } from '../../model/popup-base.class';
+import { DejaPopupService } from '../../service/popup.service';
+
+@Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'popup-tray',
+    templateUrl: './popup-tray.component.html',
+    styleUrls: ['./popup-tray.component.scss']
+})
+export class DejaPopupTrayComponent implements OnInit {
+
+    public dialogs$: Observable<MatDialogRef<DejaPopupBase>[]>;
+
+    constructor(
+        public dialogSrv: DejaPopupService,
+    ) { }
+
+    public ngOnInit() {
+
+        this.dialogs$ =
+            this.dialogSrv.afterOpen
+                .merge(this.dialogSrv.dpiDialogCom$
+                    .filter((action: DejaPopupAction) => !!action && action.target === 'popup-tray')
+                    .map((action: DejaPopupAction) => {
+                        if (action.name === 'do-minify') {
+                            this.minify(action);
+                            action.refreshDrawer = false;
+                        }
+                        return action;
+                    })
+                    .filter((action: DejaPopupAction) => action.refreshDrawer)
+                )
+                .debounceTime(500)
+                .do((x) => {
+                    console.log('tray', x);
+                })
+                .map(() => this.dialogSrv.openDialogs);
+
+    }
+
+    public minify(action: DejaPopupAction) {
+        const el = document.querySelector(action.panelClass) as HTMLElement;
+        if (!el) {
+            return false;
+        }
+        el.style.display = 'none';
+        this.refresh();
+    }
+
+    public maxify(action: DejaPopupAction) {
+        const el = document.querySelector(action.panelClass) as HTMLElement;
+        if (!el) {
+            return false;
+        }
+        el.style.display = 'initial';
+        this.refresh();
+    }
+
+    public doAction(action: DejaPopupAction) {
+        if (action.name === 'toolbar-minify') {
+            this.minify(action);
+        } else if (action.name === 'toolbar-fullscreen') {
+            this.maxify(action);
+        } else {
+            this.dialogSrv.dpiDialogCom$.next(action);
+        }
+    }
+
+    public closeAll() {
+        this.dialogSrv.closeAll();
+        this.refresh();
+    }
+
+    public minimizeAll() {
+        this.dialogSrv.openDialogs.forEach((d: MatDialogRef<DejaPopupBase>) => {
+            const a = new DejaPopupAction('minify-all', 'popup-tray');
+            d.componentInstance.isMinified = true;
+            a.panelClass = d.componentInstance.config.dialogPanelId;
+            this.minify(a);
+        });
+    }
+
+    public showAll() {
+        this.dialogSrv.openDialogs.forEach((d: MatDialogRef<DejaPopupBase>) => {
+            const a = new DejaPopupAction('show-all', 'popup-tray');
+            d.componentInstance.isMinified = false;
+            a.panelClass = d.componentInstance.config.dialogPanelId;
+            this.maxify(a);
+        });
+    }
+
+    private refresh() {
+        const a = new DejaPopupAction('tray-refresh', 'popup-tray');
+        this.dialogSrv.dpiDialogCom$.next(a);
+    }
+
+}

@@ -1,0 +1,6 @@
+<div class="popup-spacer">&nbsp;</div>
+<ng-container *ngFor="let but of buttons">
+    <button mat-raised-button color="primary" [name]="but.name" (click)="emit(but)">
+        <mat-icon class="mat-icon material-icons" role="img" aria-hidden="true">{{but.icon}}</mat-icon>&nbsp;{{but.label}}
+    </button>
+</ng-container>

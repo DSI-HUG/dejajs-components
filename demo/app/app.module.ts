@@ -52,6 +52,7 @@ import {
     DejaMouseDragDropModule,
     DejaNumericStepperModule,
     DejaOverlayModule,
+    DejaPopuModule,
     DejaRangeModule,
     DejaSelectModule,
     DejaSidenavModule,
@@ -84,6 +85,7 @@ import { DejaMonacoEditorDemoComponent } from './monaco-editor/monaco-editor-dem
 import { MonacoEditorDemoService } from './monaco-editor/monaco-editor-demo.service.';
 import { DejaNumericStepperDemoComponent } from './numeric-stepper/numeric-stepper-demo.component';
 import { OverlayDemoComponent } from './overlay/overlay-demo';
+import { PopupDemoComponent } from './popup/popup-demo';
 import { ProgressCircleDemoComponent } from './progress-circle/progress-circle-demo';
 import { DejaRangeDemoComponent } from './range/range-demo';
 import { ReactiveFormDemoComponent } from './reactive-form/reactive-form-demo';
@@ -112,6 +114,7 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         DejaMonacoEditorDemoComponent,
         DejaNumericStepperDemoComponent,
         ProgressCircleDemoComponent,
+        PopupDemoComponent,
         DejaRangeDemoComponent,
         ReactiveFormDemoComponent,
         SelectDemoComponent,
@@ -167,6 +170,7 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         DejaMessageBoxModule,
         DejaMonacoEditorModule,
         DejaMouseDragDropModule.forRoot(),
+        DejaPopuModule,
         DejaRangeModule,
         DejaSelectModule,
         DejaSidenavModule,

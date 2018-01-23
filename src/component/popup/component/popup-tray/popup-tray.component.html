@@ -1,0 +1,24 @@
+<span class="popup-box-container">
+    <ng-container *ngFor="let dialog of (dialogs$ | async)">
+        <popup-box [dialog]="dialog" (action)="doAction($event)"></popup-box>
+    </ng-container>
+</span>
+
+<button mat-icon-button (click)="posYMenu.show($event)">
+    <mat-icon>more_vert</mat-icon>
+</button>
+
+<deja-overlay #posYMenu>
+    <div deja-menu-content>
+        <ul class="popup-no-disc">
+            <li class="menu-item" (click)="closeAll();posYMenu.close()">
+                <mat-icon>close</mat-icon> Tout Fermer
+            </li>
+            <li class="menu-item" (click)="showAll();posYMenu.close()">
+                <mat-icon>fullscreen</mat-icon> Tout Montrer
+            </li>
+            <li class="menu-item" (click)="minimizeAll();posYMenu.close()">
+                <mat-icon>remove</mat-icon> Tout Réduire
+            </li>
+        </ul>
+    </div>

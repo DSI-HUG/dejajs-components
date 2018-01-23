@@ -1,0 +1,9 @@
+popup {
+    .mat-dialog-content {
+        padding: 24px;
+        margin: 0;
+    } 
+    .mat-dialog-actions:last-child {
+        margin: 0 24px !important;
+    }
+}

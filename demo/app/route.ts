@@ -22,6 +22,7 @@ import { MessageBoxDemoComponent } from './message-box/message-box-demo';
 import { DejaMonacoEditorDemoComponent } from './monaco-editor/monaco-editor-demo';
 import { DejaNumericStepperDemoComponent } from './numeric-stepper/numeric-stepper-demo.component';
 import { OverlayDemoComponent } from './overlay/overlay-demo';
+import { PopupDemoComponent } from './popup/popup-demo';
 import { ProgressCircleDemoComponent } from './progress-circle/progress-circle-demo';
 import { DejaRangeDemoComponent } from './range/range-demo';
 import { ReactiveFormDemoComponent } from './reactive-form/reactive-form-demo';
@@ -46,6 +47,7 @@ const routes: Routes = [
     { component: MessageBoxDemoComponent, path: 'message-box', data: { title: 'Message Box' } },
     { component: DejaMonacoEditorDemoComponent, path: 'monaco-editor', data: { title: 'Monaco Editor' } },
     { component: DejaNumericStepperDemoComponent, path: 'numeric-stepper', data: { title: 'Numeric Stepper' } },
+    { component: PopupDemoComponent, path: 'popup', data: { title: 'Popup' } },
     { component: ProgressCircleDemoComponent, path: 'progress-circle', data: { title: 'Progress Circle' } },
     { component: DejaRangeDemoComponent, path: 'range', data: { title: 'Range' } },
     { component: ReactiveFormDemoComponent, path: 'reactive-form', data: { title: 'Reactive Form' } },
@@ -57,7 +59,7 @@ const routes: Routes = [
     { component: DejaTreeListDemoComponent, path: 'tree-list', data: { title: 'Tree List' } },
     { component: DejaViewPortDemoComponent, path: 'viewport', data: { title: 'Viewport' } },
     { component: HomeGuidesComponent, path: 'guides', data: { title: 'Guides' } },
-    { path: '**', pathMatch: 'prefix', redirectTo: 'home'},
+    { path: '**', pathMatch: 'prefix', redirectTo: 'home' },
 ];
 
 export const routing: ModuleWithProviders = RouterModule.forRoot(routes);

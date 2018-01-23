@@ -1,0 +1,9 @@
+<popup-toolbar *ngIf="config && config.title" [config]="config" (actionSelected)="doAction($event)"></popup-toolbar>
+
+<div mat-dialog-content>
+    <popup-content *ngIf="config?.hasContent()" [config]="config"></popup-content>
+</div>
+
+<div mat-dialog-actions *ngIf="config.hasActions()">
+    <div [cdkPortalOutlet]="actionsPortal"></div>
+</div>

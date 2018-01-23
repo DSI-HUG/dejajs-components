@@ -1,0 +1,32 @@
+<div tabindex="0"></div>
+<mat-toolbar *ngIf="!type || type==='base'" [color]="color" class="popup-toolbar">
+    <mat-icon *ngIf="iconName">{{iconName}}</mat-icon>
+    <span>
+        {{title}}
+    </span>
+</mat-toolbar>
+
+<div *ngIf="type && type==='window'" class="popup-toolbar-mini">
+
+    <span class="popup-toolbar-spacer popup-toolbar-content" (click)="doEmit(buttonMove)">
+        <mat-icon *ngIf="iconName">{{iconName}}</mat-icon>
+        <span> {{title}} </span>
+    </span>
+
+    <span class="popup-toolbar-actions popup-toolbar-content">
+        <ng-container *ngFor="let action of actions">
+            <button mat-icon-button (click)="doEmit(action)">
+                <mat-icon aria-label="action.name">{{action.icon}}</mat-icon>
+            </button>
+        </ng-container>
+    </span>
+
+    <span class="popup-toolbar-actions popup-toolbar-content">
+        <ng-container *ngFor="let action of defaultActions">
+            <button mat-icon-button (click)="doEmit(action)">
+                <mat-icon aria-label="action.name">{{action.icon}}</mat-icon>
+            </button>
+        </ng-container>
+    </span>
+
+</div>

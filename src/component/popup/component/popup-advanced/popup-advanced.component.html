@@ -1,0 +1,22 @@
+<div class="popup-container" fxLayout="column" fxLayoutAlign="start stretch" [ngClass]="{'dpi-full': isFullscreen}">
+
+    <div *ngIf="dragstart" class="dialog-overlay" fxFlex="none" (click)="freeze($event)">&nbsp;</div>
+
+    <popup-toolbar fxFlex="none" *ngIf="config && config.toolbarType" [config]="config" (actionSelected)="doAction($event)" [ngClass]="dragstart?'grabbing':''"></popup-toolbar>
+
+    <div mat-dialog-content [ngClass]="{'frame-full': !config.padding, 'frame-padding': !!config.padding}" fxFlex="grow" fxLayout="column"
+        fxLayoutAlign="start stretch">
+
+        <popup-content *ngIf="config?.hasContent()" [config]="config" fxFlex="grow"></popup-content>
+
+        <div *ngIf="config?.url" class="iframe-wrapper" fxFlex="grow">
+            <deja-iframe [sourceUrl]="config?.url"></deja-iframe>
+        </div>
+
+    </div>
+
+    <div mat-dialog-actions fxFlex="none" *ngIf="config.hasActions()">
+        <div [cdkPortalOutlet]="actionsPortal"></div>
+    </div>
+
+</div>

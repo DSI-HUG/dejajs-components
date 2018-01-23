@@ -1,0 +1,69 @@
+<mat-card id="demo" class="demo-card demo-basic">
+    <mat-toolbar color="primary">Popup</mat-toolbar>
+    <mat-card-content>
+
+        <div id="button-container">
+
+            <div>
+                <button mat-raised-button class="mat-primary" (click)="askConfirmation1()">Enregistrer et annuler</button>
+            </div>
+
+            <div>
+                <button mat-raised-button class="mat-primary" (click)="askConfirmation2()">Oui non, ou annuler avec format</button>
+            </div>
+
+            <div>
+                <button mat-raised-button class="mat-primary" (click)="askConfirmationCustom()">Confirmer ou annuler avec dialog custom</button>
+            </div>
+
+            <div>
+                <button mat-raised-button class="mat-primary" (click)="customWithDpiComponent()">Dialog Custom avec composant DPI</button>
+            </div>
+
+            <div>
+                <button mat-raised-button class="mat-primary" (click)="customWithDpiForm()">Dialog Custom avec form</button>
+            </div>
+
+            <div>
+                <button mat-raised-button class="mat-primary" (click)="showUrlImg()">Afficher un'image a partir d'une url</button>
+            </div>
+
+            <div>
+                <button mat-raised-button class="mat-primary" (click)="useAdvancedComponent()">Composant avancé</button>
+            </div>
+
+            <div>
+                <button mat-raised-button class="mat-primary" (click)="showUrlPdf()">Afficher un document pdf a partir d'une url</button>
+            </div>
+
+            <div>
+                <button mat-raised-button class="mat-primary" (click)="showUrlPdfFullscreen()">Afficher un document pdf directement en fullscreen</button>
+            </div>
+
+            <div>
+                <button mat-raised-button class="mat-primary" (click)="showPopUp()">Pop Up</button>
+            </div>
+
+            <div>
+                <button mat-raised-button class="mat-primary" (click)="showPopUpPdf()">Pop Up Pdf</button>
+            </div>
+
+            <div>
+                <button mat-raised-button class="mat-primary" (click)="showCustomPortal()">Custom Portal</button>
+            </div>
+
+        </div>
+
+        <br/>
+
+    </mat-card-content>
+
+</mat-card>
+<ng-template ngFor let-message [ngForOf]="dpiDialogService.dpiDialogCom$ | async">
+    <deja-snackbar *ngIf="message.gate" alignment="left" [duration]="5000" (onAnimationDone)="message.gate = false">
+        <deja-message-box type="primary" horizontal>
+            {{message.content}}
+        </deja-message-box>
+    </deja-snackbar>
+</ng-template>
+<popup-tray></popup-tray>
