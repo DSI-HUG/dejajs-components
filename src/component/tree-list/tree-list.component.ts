@@ -1117,7 +1117,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
             if (this.modelIsValue) {
                 const valueField = this.getValueField();
                 if (models.find((m) => !!m[valueField])) {
-                    output = models.map((m) => m[valueField] || m);
+                    output = models.map((m) => m[valueField] !== undefined ? m[valueField] : m);
                 }
             } else {
                 output = models;
@@ -1132,7 +1132,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
 
             if (this.modelIsValue) {
                 const valueField = this.getValueField();
-                output = model[valueField] || model;
+                output = model[valueField] !== undefined ? model[valueField] : model;
             } else {
                 output = model;
             }
