@@ -269,6 +269,16 @@ Crée une liste récursive.
             <td>EventEmitter<IViewPort><any[]></td>
             <td>Exécuté lorsque le calcul du viewPort est terminé.</td>
         </tr>
+        <tr>
+            <td>sortChanged</td>
+            <td>EventEmitter<ISortInfos><any[]></td>
+            <td>Exécuté lorsque le sorting à changé.</td>
+        </tr>
+        <tr>
+            <td>groupChanged</td>
+            <td>EventEmitter<IGroupInfo[]><any[]></td>
+            <td>Exécuté lorsque le grouping à changé.</td>
+        </tr>
     </tbody>
 </table>
 
