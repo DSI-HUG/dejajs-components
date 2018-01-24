@@ -7,7 +7,7 @@ import { DejaPopupService } from '../../service/popup.service';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    selector: 'popup-tray',
+    selector: 'deja-popup-tray',
     templateUrl: './popup-tray.component.html',
     styleUrls: ['./popup-tray.component.scss']
 })
@@ -23,7 +23,7 @@ export class DejaPopupTrayComponent implements OnInit {
 
         this.dialogs$ =
             this.dialogSrv.afterOpen
-                .merge(this.dialogSrv.dpiDialogCom$
+                .merge(this.dialogSrv.dejaPopupCom$
                     .filter((action: DejaPopupAction) => !!action && action.target === 'popup-tray')
                     .map((action: DejaPopupAction) => {
                         if (action.name === 'do-minify') {
@@ -38,7 +38,16 @@ export class DejaPopupTrayComponent implements OnInit {
                 .do((x) => {
                     console.log('tray', x);
                 })
-                .map(() => this.dialogSrv.openDialogs);
+                .map(() => {
+                    const dialogs = this.dialogSrv.openDialogs;
+                    // dialogs.forEach((d: MatDialogRef<DejaPopupBase>) => {
+                    //     d.beforeClose()
+                    //         .first()
+                    //         .do(() => this.refresh())
+                    //         .subscribe();
+                    // });
+                    return dialogs;
+                });
 
     }
 
@@ -66,7 +75,7 @@ export class DejaPopupTrayComponent implements OnInit {
         } else if (action.name === 'toolbar-fullscreen') {
             this.maxify(action);
         } else {
-            this.dialogSrv.dpiDialogCom$.next(action);
+            this.dialogSrv.dejaPopupCom$.next(action);
         }
     }
 
@@ -95,7 +104,7 @@ export class DejaPopupTrayComponent implements OnInit {
 
     private refresh() {
         const a = new DejaPopupAction('tray-refresh', 'popup-tray');
-        this.dialogSrv.dpiDialogCom$.next(a);
+        this.dialogSrv.dejaPopupCom$.next(a);
     }
 
 }

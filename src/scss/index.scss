@@ -23,9 +23,11 @@
 }
 
 /* Added for status managment */
-#dpi {
-    .mat-dialog-container {
-        padding: 0;
-        height: auto;
+#dpi {    
+    div[class^='deja-popup-pane-'], div[class*=' deja-popup-pane-']{
+        .mat-dialog-container {
+            padding: 0;
+            height: 100%;
+        }
     }
 }

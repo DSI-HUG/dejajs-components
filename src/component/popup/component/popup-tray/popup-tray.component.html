@@ -1,6 +1,7 @@
-<span class="popup-box-container">
+<span class="deja-popup-box-container">
     <ng-container *ngFor="let dialog of (dialogs$ | async)">
-        <popup-box [dialog]="dialog" (action)="doAction($event)"></popup-box>
+        <deja-popup-box [dialog]="dialog" (action)="doAction($event)">
+        </deja-popup-box>
     </ng-container>
 </span>
 
@@ -10,15 +11,15 @@
 
 <deja-overlay #posYMenu>
     <div deja-menu-content>
-        <ul class="popup-no-disc">
+        <ul class="deja-popup-no-disc">
             <li class="menu-item" (click)="closeAll();posYMenu.close()">
-                <mat-icon>close</mat-icon> Tout Fermer
+                <mat-icon>close</mat-icon> Close all
             </li>
             <li class="menu-item" (click)="showAll();posYMenu.close()">
-                <mat-icon>fullscreen</mat-icon> Tout Montrer
+                <mat-icon>fullscreen</mat-icon> Show all
             </li>
             <li class="menu-item" (click)="minimizeAll();posYMenu.close()">
-                <mat-icon>remove</mat-icon> Tout Réduire
+                <mat-icon>remove</mat-icon> Dock all
             </li>
         </ul>
     </div>

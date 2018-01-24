@@ -6,7 +6,7 @@ import { DejaPopupBase } from '../../model/popup-base.class';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    selector: 'popup-box',
+    selector: 'deja-popup-box',
     templateUrl: './popup-box.component.html',
     styleUrls: ['./popup-box.component.scss']
 })
@@ -27,19 +27,19 @@ export class DejaPopupBoxComponent {
     public buttonClose: DejaPopupAction = {
         name: 'toolbar-close',
         icon: 'close',
-        label: 'Fermer',
+        label: 'Close',
     };
 
     public buttonFullscreen: DejaPopupAction = {
         name: 'toolbar-fullscreen',
         icon: 'fullscreen',
-        label: 'Maximiser',
+        label: 'Fullscreen',
     };
 
     public buttonMinimize: DejaPopupAction = {
         name: 'toolbar-minify',
         icon: 'remove',
-        label: 'Réduire',
+        label: 'Minify',
     };
 
     public doEmit(action: DejaPopupAction) {

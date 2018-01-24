@@ -5,7 +5,7 @@ import { DejaPopupConfig } from '../../model/popup-config.model';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    selector: 'popup-actions',
+    selector: 'deja-popup-actions',
     templateUrl: './popup-actions.component.html',
     styleUrls: ['./popup-actions.component.scss']
 })

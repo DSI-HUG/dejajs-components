@@ -44,7 +44,7 @@ Exemple
     @Component({
         selector: 'custom-dialog',
         template: `
-    <popup title="Custom dialog"
+    <deja-popup title="Custom dialog"
                 type="warn"
                 [actions]="actions" >
                 <p> This is a custom defined by the component <i>popup-custom.component</i></p>
@@ -55,7 +55,7 @@ Exemple
                     placeholder="Ceci est un test de saisie" >
             </textarea>
             </mat-form-field>
-    </popup>`,
+    </deja-popup>`,
     })
     export class DpiDialogDemoComponent extends DpiDialogComponent {
         public inputText: string;

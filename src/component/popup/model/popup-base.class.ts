@@ -1,8 +1,10 @@
 import { ComponentPortal, Portal } from '@angular/cdk/portal';
 import { ElementRef, Injector, OnInit, Renderer2 } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
+import { Subscription } from 'rxjs/Subscription';
 import { DejaPopupAction } from './popup-action.model';
 import { DejaPopupConfig } from './popup-config.model';
+// import { DejaPopupReponse } from './popup-response.model';
 
 export abstract class DejaPopupBase implements OnInit {
 
@@ -18,15 +20,21 @@ export abstract class DejaPopupBase implements OnInit {
     protected elRef?: ElementRef;
     protected unlisten?;
 
+    private aSub: Subscription[];
+
     public abstract doAction(action: DejaPopupAction);
 
     public ngOnInit() {
+        this.aSub = [];
         this.dialogRef.beforeClose()
             .first()
             .do(() => {
                 if (this.unlisten) {
                     this.unlisten();
                 }
+
+                this.destroy();
+
                 if (this.config.dejaPopupCom$) {
                     const action = new DejaPopupAction('dialog-close', 'popup-tray');
                     this.config.dejaPopupCom$.next(action);
@@ -34,20 +42,30 @@ export abstract class DejaPopupBase implements OnInit {
             })
             .subscribe();
 
-        this.actionsPortal = new ComponentPortal(this.config.actionComponentRef, undefined, this.injector);
+        if (this.config.actionComponentRef) {
+            this.actionsPortal = new ComponentPortal(this.config.actionComponentRef, undefined, this.injector);
+        }
 
         if (this.config.dejaPopupCom$) {
-            this.config.dejaPopupCom$
-                .do((x) => {
-                    console.log('dialog com ', x);
-                })
-                .filter((a: DejaPopupAction) => !!a && !!a.target && a.target === this.config.id)
-                .do((a: DejaPopupAction) => this.doAction(a))
-                .subscribe();
+            this.aSub.push(
+                this.config.dejaPopupCom$
+                    .do((x) => {
+                        console.log('dialog com ', x);
+                    })
+                    .filter((a: DejaPopupAction) => !!a && !!a.target && a.target === this.config.id)
+                    .do((a: DejaPopupAction) => this.doAction(a))
+                    .do((action: DejaPopupAction) => {
+                        this.actionSelected = action;
+                        if (action.isFinalAction) {
+                            // const res = new DejaPopupReponse(action.name, this.dialogRef.componentInstance, action);
+                            this.dialogRef.close(action);
+                        }
+                    })
+                    .subscribe()
+            );
         }
     }
 
-    // public dispatchAction(action: DpiDialogAction, e?) {
     public dispatchAction(action: DejaPopupAction) {
 
         if (!action) {
@@ -62,6 +80,10 @@ export abstract class DejaPopupBase implements OnInit {
             this.config.dejaPopupCom$.next(action);
         }
 
+    }
+
+    protected destroy() {
+        this.aSub.forEach((s: Subscription) => s.unsubscribe());
     }
 
 }

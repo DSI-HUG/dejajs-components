@@ -85,6 +85,7 @@ import { DejaMonacoEditorDemoComponent } from './monaco-editor/monaco-editor-dem
 import { MonacoEditorDemoService } from './monaco-editor/monaco-editor-demo.service.';
 import { DejaNumericStepperDemoComponent } from './numeric-stepper/numeric-stepper-demo.component';
 import { OverlayDemoComponent } from './overlay/overlay-demo';
+import { DejaPopupCustomDemoComponent } from './popup/popup-custom.component';
 import { PopupDemoComponent } from './popup/popup-demo';
 import { ProgressCircleDemoComponent } from './progress-circle/progress-circle-demo';
 import { DejaRangeDemoComponent } from './range/range-demo';
@@ -125,6 +126,7 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         DejaTreeListDemoComponent,
         DejaViewPortDemoComponent,
         NewsCardComponent,
+        DejaPopupCustomDemoComponent,
     ],
     imports: [
         FormsModule,
@@ -202,5 +204,8 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         UserService,
     ],
     bootstrap: [AppComponent],
+    entryComponents: [
+        DejaPopupCustomDemoComponent,
+    ]
 })
 export class AppModule { }

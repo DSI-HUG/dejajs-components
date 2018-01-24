@@ -9,11 +9,11 @@
     width: 100%;
     height: 36px;
     overflow-x: hidden;
-    .popup-box-container {
+    .deja-popup-box-container {
         flex: 1;
         display: flex;
         overflow: hidden;
-        popup-box {
+        deja-popup-box {
             flex: 1;
             max-width: 25%;
             min-width: 36px;

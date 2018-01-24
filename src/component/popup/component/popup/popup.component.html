@@ -1,7 +1,9 @@
-<popup-toolbar *ngIf="config && config.title" [config]="config" (actionSelected)="doAction($event)"></popup-toolbar>
+<deja-popup-toolbar *ngIf="config && config.title" [config]="config" (actionSelected)="dispatchAction($event)">
+</deja-popup-toolbar>
 
 <div mat-dialog-content>
-    <popup-content *ngIf="config?.hasContent()" [config]="config"></popup-content>
+    <deja-popup-content *ngIf="config?.hasContent()" [config]="config">
+    </deja-popup-content>
 </div>
 
 <div mat-dialog-actions *ngIf="config.hasActions()">

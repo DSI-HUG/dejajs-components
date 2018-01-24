@@ -14,7 +14,7 @@ import { DejaPopupConfig } from '../../../src/component/popup/model/popup-config
     </div>
     `,
 })
-export class DpiDialogPortalDemoComponent extends DejaPopupComponent implements OnInit {
+export class DejaPopupPortalDemoComponent extends DejaPopupComponent implements OnInit {
 
     public portalInstance: Portal<any>;
 

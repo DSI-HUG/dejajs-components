@@ -2,10 +2,10 @@
 
 @mixin popup-theme($theme) {
     $primary: map-get($theme, primary);
-    popup-box{
+    deja-popup-box{
         background-color: mat-color($primary);
     }
-    popup-toolbar{
+    deja-popup-toolbar{
         background-color: mat-color($primary);
     }
 

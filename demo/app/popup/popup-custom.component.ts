@@ -5,30 +5,42 @@ import { DejaPopupAction } from '../../../src/component/popup/model/popup-action
 @Component({
     selector: 'custom-dialog',
     template: `
+    <deja-popup-toolbar [config]="config" (actionSelected)="doAction($event)"></deja-popup-toolbar>
 
-    <dpi-dialog-toolbar [config]="config" (actionSelected)="doAction($event)"></dpi-dialog-toolbar>
-
-    <div mat-dialog-content class="dpi-dialog-custom-content">
+    <div mat-dialog-content class="deja-popup-custom-content">
 
         <p>{{content}}</p>
 
-        <p> Le texte suivant est un parametre en entrée: '<b>{{inputparam}}</b>'</p>
-
+        <p> This is an input parameter: '<b>{{inputparam}}</b>'</p>
         <mat-form-field>
-            <textarea type="text" mat-autosize matInput [(ngModel)]="inputText" placeholder="Ceci est un test de saisie" ></textarea>
+            <input matInput type="text" [(ngModel)]="inputText" placeholder="Input text">
         </mat-form-field>
 
         <div *ngFor="let i of items">{{i}}</div>
 
     </div>
 
-    <div mat-dialog-actions *ngIf="!!config.hasActions()" class="dpi-dialog-custom-actions">
-        <dpi-dialog-actions></dpi-dialog-actions>
+    <div mat-dialog-actions *ngIf="!!config.hasActions()" class="deja-popup-custom-actions">
+        <deja-popup-actions></deja-popup-actions>
     </div>
-
     `,
+    styles: [
+        `
+        :host{
+            overflow: hidden;
+        }
+        .deja-popup-custom-content{
+            overflow: auto;
+            height: 300px;
+            padding: 0 1rem;
+        }
+        .deja-popup-custom-actions{
+            padding: 1rem;
+        }
+        `
+    ]
 })
-export class DpiDialogCustomDemoComponent extends DejaPopupComponent implements OnInit {
+export class DejaPopupCustomDemoComponent extends DejaPopupComponent implements OnInit {
 
     public content: string;
     public inputparam: string;
@@ -37,7 +49,7 @@ export class DpiDialogCustomDemoComponent extends DejaPopupComponent implements 
 
     public ngOnInit(): void {
         super.ngOnInit();
-        this.content = 'Ceci un on dialog custom. qui est défini dans un composant séparé. Il doit étendre la class DpiDialogComponent. On lui passe également des paramètre en entrée.';
+        this.content = 'Some content here.';
         this.inputparam = this.config.data.test;
         for (let i = 0; i < 50; i++) {
             this.items.push(i);

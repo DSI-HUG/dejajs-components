@@ -1,22 +1,24 @@
 
-import { AfterViewInit, Component, ElementRef, Inject, Injector, OnInit, Renderer2, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Inject, Injector, Renderer2, ViewEncapsulation } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { Subscription } from 'rxjs/Subscription';
 import { DejaPopupAction } from '../../model/popup-action.model';
 import { DejaPopupBase } from '../../model/popup-base.class';
 import { DejaPopupConfig } from '../../model/popup-config.model';
 
 @Component({
     encapsulation: ViewEncapsulation.None,
-    selector: 'popup-advanced',
+    selector: 'deja-popup-advanced',
     styleUrls: ['popup-advanced.component.scss'],
     templateUrl: 'popup-advanced.component.html',
 })
-export class DejaPopupAdvancedComponent extends DejaPopupBase implements OnInit, AfterViewInit {
+export class DejaPopupAdvancedComponent extends DejaPopupBase implements AfterViewInit {
 
     private left: number;
     private top: number;
     public dragstart = false;
     public lastEvent = null;
+    private subKeyEvent: Subscription;
 
     constructor(
         public dialogRef: MatDialogRef<DejaPopupBase>,
@@ -41,7 +43,7 @@ export class DejaPopupAdvancedComponent extends DejaPopupBase implements OnInit,
 
     public doAction(action: DejaPopupAction) {
 
-        console.log('do action', action);
+        console.log('do action advanced', action);
 
         this.actionSelected = action;
 
@@ -49,7 +51,7 @@ export class DejaPopupAdvancedComponent extends DejaPopupBase implements OnInit,
 
             case 'toolbar-close':
             case 'close':
-                this.dialogRef.close(action);
+                action.isFinalAction = true;
                 break;
 
             case 'toolbar-fullscreen':
@@ -108,8 +110,7 @@ export class DejaPopupAdvancedComponent extends DejaPopupBase implements OnInit,
                 }
             });
 
-            this.dialogRef.keydownEvents()
-                .first()
+            this.subKeyEvent = this.dialogRef.keydownEvents()
                 .do(() => this.freeze())
                 .subscribe();
 
@@ -129,6 +130,10 @@ export class DejaPopupAdvancedComponent extends DejaPopupBase implements OnInit,
             this.dragstart = false;
             this.unlisten();
             this.lastEvent = null;
+            this.unlisten = null;
+        }
+        if (this.subKeyEvent) {
+            this.subKeyEvent.unsubscribe();
         }
     }
 

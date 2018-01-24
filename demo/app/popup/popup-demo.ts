@@ -1,42 +1,54 @@
-import { Portal } from '@angular/cdk/portal';
-import { Component } from '@angular/core';
-import { OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { DialogPosition } from '@angular/material';
-import { DejaPopupButton } from '../../../src/component/popup/model/popup-action.model';
+import { DejaPopupAction, DejaPopupButton } from '../../../src/component/popup/model/popup-action.model';
 import { DejaPopupConfig } from '../../../src/component/popup/model/popup-config.model';
 import { DejaPopupReponse } from '../../../src/component/popup/model/popup-response.model';
 import { DejaPopupService } from '../../../src/component/popup/service/popup.service';
-import { DpiDialogCustomComponentDemoComponent } from './popup-custom-component.component';
-import { DpiDialogCustomFormDemoComponent } from './popup-custom-form.component';
-import { DpiDialogPortalDemoComponent } from './popup-custom-portal.component';
-import { DpiDialogCustomDemoComponent } from './popup-custom.component';
+import { DejaPopupPortalDemoComponent } from './popup-custom-portal.component';
+import { DejaPopupCustomDemoComponent } from './popup-custom.component';
 
 @Component({
     selector: 'popup-demo',
     styleUrls: ['popup-demo.scss'],
     templateUrl: 'popup-demo.html',
 })
-export class PopupDemoComponent implements OnInit {
+export class PopupDemoComponent {
 
-    public portalInstance: Portal<any>;
+    private dummyPdfUrl = 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
+    private dummyImgUrl = 'http://lorempixel.com/800/600/abstract/';
+
+    public message = {
+        type: 'info',
+        text: '',
+    };
+    public openGate = false;
 
     constructor(
-        private dpiDialogService: DejaPopupService,
-    ) { }
-
-    public ngOnInit(): void { }
+        public dejaPopupService: DejaPopupService,
+        protected changeDetectorRef: ChangeDetectorRef,
+    ) {
+        this.dejaPopupService.dejaPopupCom$
+            .filter((action: DejaPopupAction) => !!action && action.target !== 'popup-tray' && !action.isFinalAction)
+            .map((action: DejaPopupAction) => {
+                console.log('gate', action);
+                this.message.type = 'primary';
+                this.message.text = action.label || action.name;
+                this.openGate = true;
+                this.changeDetectorRef.markForCheck();
+            })
+            .subscribe();
+    }
 
     public askConfirmation1() {
         const butSave = new DejaPopupButton('save', 'Save', 'save');
         const butCancel = new DejaPopupButton('cancel', 'Cancel', 'cancel');
-        this.dpiDialogService
+        this.dejaPopupService
             .openInline(
             'Inscription à la formation',
             'Etes-vous sure de vouloir faire cela ?',
             [butSave, butCancel])
             .subscribe((response: DejaPopupReponse) => {
-                console.log('response', response);
-
+                this.showResponse(response);
             });
     }
 
@@ -49,11 +61,9 @@ export class PopupDemoComponent implements OnInit {
         config.position = pos;
         config.disableClose = true;
 
-        const title = 'Titre Confirmation';
+        const title = 'System failure!';
 
-        const body = '<p></p><b>Atttention attention!</b> Etes-vous sure de vouloire faire cela ? </p>' +
-            '<p><i>Parce que si vous voulez le faire, et bien il faut mieux le faire sinon vous ne le ferez pas et ca c\'est mal.' +
-            ' Car comme dit <b>le dicton populaire</b> bien connu, nul n\'y fait qui mal y pense. Donc faites-le, c\'est mieux</i>.</p>';
+        const body = '<p>You don\'t want to <b>Cancel</b> the operation.<br> Or you don\'t? </p>';
 
         const butYes = new DejaPopupButton('yes', 'Yes', 'check');
         const butNo = new DejaPopupButton('no', 'No', 'not_interested');
@@ -61,10 +71,10 @@ export class PopupDemoComponent implements OnInit {
 
         const actions = [butYes, butNo, butCancel];
 
-        this.dpiDialogService
+        this.dejaPopupService
             .openInline(title, body, actions, config)
             .subscribe((response: DejaPopupReponse) => {
-                console.log('response', response);
+                this.showResponse(response);
             });
     }
 
@@ -75,36 +85,19 @@ export class PopupDemoComponent implements OnInit {
         config.toolbarIconName = 'accessibility';
         config.toolbarColor = 'accent';
         config.title = 'Dialog custom';
+
         config.actions = [
             new DejaPopupButton('confirm', 'Confirm', 'check'),
             new DejaPopupButton('undo', 'Undo', 'undo'),
             new DejaPopupButton('cancel', 'Cancel', 'cancel'),
         ];
 
-        this.dpiDialogService.openCustom(
-            DpiDialogCustomDemoComponent,
+        this.dejaPopupService.openCustom(
+            DejaPopupCustomDemoComponent,
             config,
         )
             .subscribe((response: DejaPopupReponse) => {
-                console.log('response', response);
-            });
-    }
-
-    public customWithDpiComponent() {
-
-        const config = new DejaPopupConfig();
-        config.actions = [
-            new DejaPopupButton('confirm', 'Confirm', 'check'),
-            new DejaPopupButton('cancel', 'Cancel', 'cancel'),
-        ];
-        config.title = 'Dialog DejaDataGrid';
-
-        this.dpiDialogService.openCustom(
-            DpiDialogCustomComponentDemoComponent,
-            config,
-        )
-            .subscribe((response: DejaPopupReponse) => {
-                console.log('response', response);
+                this.showResponse(response);
             });
     }
 
@@ -117,38 +110,19 @@ export class PopupDemoComponent implements OnInit {
         ];
         config.height = '25vh';
         config.width = '25vw';
-        this.dpiDialogService.openCustom(
-            DpiDialogPortalDemoComponent,
+        this.dejaPopupService.openCustom(
+            DejaPopupPortalDemoComponent,
             config,
         )
             .subscribe((response: DejaPopupReponse) => {
-                console.log('response', response);
-            });
-    }
-
-    public customWithDpiForm() {
-
-        const config = new DejaPopupConfig();
-        config.actions = [
-            new DejaPopupButton('confirm', 'Confirm', 'check'),
-            new DejaPopupButton('cancel', 'Cancel', 'cancel'),
-        ];
-        config.title = 'Dialog Form';
-
-        this.dpiDialogService.openCustom(
-            DpiDialogCustomFormDemoComponent,
-            config,
-        )
-            .subscribe((response: DejaPopupReponse) => {
-                console.log('response', response);
+                this.showResponse(response);
             });
     }
 
     public showUrlImg() {
-        const url = 'http://vmyao.hcuge.ch:8032/dpireferentiel/file/IMG/logo_hug.png';
-        this.dpiDialogService.openUrl(url)
+        this.dejaPopupService.openUrl(this.dummyImgUrl)
             .subscribe((response: DejaPopupReponse) => {
-                console.log('response', response);
+                this.showResponse(response);
             });
     }
 
@@ -161,10 +135,9 @@ export class PopupDemoComponent implements OnInit {
         ];
         conf.toolbarType = 'window';
 
-        const url = 'http://vmyao.hcuge.ch:8032/dpireferentiel/file/DPIRULEMANAGER/vaccino.pdf';
-        this.dpiDialogService.openUrl(url, conf)
+        this.dejaPopupService.openUrl(this.dummyPdfUrl, conf)
             .subscribe((response: DejaPopupReponse) => {
-                console.log('response', response);
+                this.showResponse(response);
             });
     }
 
@@ -187,9 +160,9 @@ export class PopupDemoComponent implements OnInit {
             'Many Lines of Content',
         ];
 
-        this.dpiDialogService.openAdvanced(conf)
+        this.dejaPopupService.openAdvanced$(conf)
             .subscribe((response: DejaPopupReponse) => {
-                console.log('response', response);
+                this.showResponse(response);
             });
     }
 
@@ -208,29 +181,41 @@ export class PopupDemoComponent implements OnInit {
         config.width = '500px';
         config.height = '400px';
 
-        this.dpiDialogService.openPopUp(config)
-            .filter((resp: DejaPopupReponse) => !!resp)
+        this.dejaPopupService.openPopUp(config)
+            // .filter((resp: DejaPopupReponse) => !!resp)
             .subscribe((response: DejaPopupReponse) => {
-                console.log('response', response);
+                this.showResponse(response);
             });
     }
 
     public showPopUpPdf() {
         const config = new DejaPopupConfig();
         config.title = `Pdf ${DejaPopupConfig.dialogCount}`;
-        config.url = 'http://vmyao.hcuge.ch:8032/dpireferentiel/file/DPIRULEMANAGER/vaccino.pdf';
+        config.url = this.dummyPdfUrl;
         config.padding = false;
 
         config.toolbarActions = [
-            new DejaPopupButton('account', 'User', 'account_circle'),
-            new DejaPopupButton('view', 'Show', 'visibility'),
+            new DejaPopupButton('account', 'User', 'account_circle', false),
+            new DejaPopupButton('view', 'Show', 'visibility', false),
         ];
 
-        this.dpiDialogService.openPopUp(config)
+        this.dejaPopupService.openPopUp(config)
             .filter((resp: DejaPopupReponse) => !!resp)
             .subscribe((response: DejaPopupReponse) => {
-                console.log('response', response);
+                this.showResponse(response);
             });
+    }
+
+    private showResponse(resp: DejaPopupReponse) {
+        console.log('response', resp);
+        if (resp.accepted) {
+            this.message.type = 'success';
+        } else {
+            this.message.type = 'warn';
+        }
+        this.message.text = resp.lastAction.label.length ? resp.lastAction.label : resp.lastAction.name;
+        this.openGate = true;
+        this.changeDetectorRef.markForCheck();
     }
 
 }

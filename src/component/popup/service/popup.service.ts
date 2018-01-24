@@ -12,15 +12,12 @@ import { DejaPopupBase } from '../model/popup-base.class';
 import { DejaPopupConfig } from '../model/popup-config.model';
 import { DejaPopupReponse } from '../model/popup-response.model';
 
-/**
- * Open dialog that respect DPI Standards
- */
 @Injectable()
 export class DejaPopupService extends MatDialog {
 
     private _dialogCom$: BehaviorSubject<DejaPopupAction>;
     public readonly openDialogs: MatDialogRef<DejaPopupBase>[];
-    public get dpiDialogCom$(): BehaviorSubject<DejaPopupAction> {
+    public get dejaPopupCom$(): BehaviorSubject<DejaPopupAction> {
         if (!this._dialogCom$) {
             this._dialogCom$ = new BehaviorSubject(null);
         }
@@ -92,14 +89,18 @@ export class DejaPopupService extends MatDialog {
 
     public openAdvanced(
         config: DejaPopupConfig = new DejaPopupConfig(),
-    ): Observable<DejaPopupReponse> {
-
-        if (config.actions) {
-            config.actionComponentRef = DejaPopupActionsComponent;
-        }
+    ): MatDialogRef<DejaPopupAdvancedComponent> {
 
         const dialogRef: MatDialogRef<DejaPopupAdvancedComponent> = this.open(DejaPopupAdvancedComponent, config);
 
+        return dialogRef;
+
+    }
+    public openAdvanced$(
+        config: DejaPopupConfig = new DejaPopupConfig(),
+    ): Observable<DejaPopupReponse> {
+
+        const dialogRef = this.openAdvanced(config);
         return dialogRef.afterClosed()
             .map((resp: any) => {
                 return new DejaPopupReponse(resp, dialogRef.componentInstance);
@@ -123,7 +124,7 @@ export class DejaPopupService extends MatDialog {
             config.toolbarType = 'window';
         }
 
-        return this.openAdvanced(config);
+        return this.openAdvanced$(config);
     }
 
     /**
@@ -137,10 +138,17 @@ export class DejaPopupService extends MatDialog {
         componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
         config?: DejaPopupConfig
     ): MatDialogRef<T> {
+
+        if (config.shareActions && !config.dejaPopupCom$) {
+            config.dejaPopupCom$ = this.dejaPopupCom$;
+        }
+
         if (!config.actionComponentRef && this.defaultActionComponent) {
             config.actionComponentRef = this.defaultActionComponent;
         }
+
         return super.open(componentOrTemplateRef, config.getMatDialogConfig());
+
     }
 
 }

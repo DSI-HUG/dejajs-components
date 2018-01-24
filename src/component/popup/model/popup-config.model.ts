@@ -8,13 +8,7 @@ export class DejaPopupConfig extends MatDialogConfig {
     public readonly positionStart = { top: 100, left: 100 };
     public readonly dimensionDefault = { width: '60vw', height: '65vh' };
 
-    private _dejaPopupCom$?: BehaviorSubject<DejaPopupAction>;
-    public get dejaPopupCom$(): BehaviorSubject<DejaPopupAction> {
-        if (!this._dejaPopupCom$) {
-            this._dejaPopupCom$ = new BehaviorSubject(new DejaPopupAction('deja-popup-init'));
-        }
-        return this._dejaPopupCom$;
-    }
+    public dejaPopupCom$?: BehaviorSubject<DejaPopupAction>;
 
     public aContent?: string[];
     public actionComponentRef: any;
@@ -28,6 +22,7 @@ export class DejaPopupConfig extends MatDialogConfig {
     public isModal = true;
     public label = true; // todo remove?
     public maxWidth = '100vw';
+    public maxHeight = '100vh';
     public padding?: boolean;
     public shareActions = true;
     public title?: string;
@@ -119,7 +114,7 @@ export class DejaPopupConfig extends MatDialogConfig {
     }
 
     public hasActions(): boolean {
-        return !!this.actions || !!this.actionComponentRef;
+        return !!this.actions && !!this.actionComponentRef;
     }
 
     public ensurePosition() {

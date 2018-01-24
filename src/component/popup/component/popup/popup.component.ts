@@ -3,11 +3,10 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { DejaPopupAction } from '../../model/popup-action.model';
 import { DejaPopupBase } from '../../model/popup-base.class';
 import { DejaPopupConfig } from '../../model/popup-config.model';
-import { DejaPopupReponse } from '../../model/popup-response.model';
 
 @Component({
     encapsulation: ViewEncapsulation.None,
-    selector: 'popup',
+    selector: 'deja-popup',
     styleUrls: ['popup.component.scss'],
     templateUrl: 'popup.component.html',
 })
@@ -29,10 +28,6 @@ export class DejaPopupComponent extends DejaPopupBase {
         if (!action) {
             return false;
         }
-
-        const res = new DejaPopupReponse(action, this.dialogRef.componentInstance);
-        res.lastAction = action;
-        this.dialogRef.close(res);
 
     }
 

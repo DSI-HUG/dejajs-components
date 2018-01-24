@@ -3,7 +3,7 @@ import { DejaPopupAction } from '../../model/popup-action.model';
 import { DejaPopupConfig, DialogToolbarColor, DialogToolbarType } from '../../model/popup-config.model';
 
 @Component({
-    selector: 'popup-toolbar',
+    selector: 'deja-popup-toolbar',
     templateUrl: './popup-toolbar.component.html',
     styleUrls: ['./popup-toolbar.component.scss']
 })
@@ -43,31 +43,31 @@ export class DejaPopupToolbarComponent implements OnInit {
     private buttonClose: DejaPopupAction = {
         name: 'toolbar-close',
         icon: 'close',
-        label: 'Fermer',
+        label: 'Close',
     };
 
     private buttonFullscreen: DejaPopupAction = {
         name: 'toolbar-fullscreen',
         icon: 'fullscreen',
-        label: 'Maximiser',
+        label: 'Fullscreen',
     };
 
     private buttonFullscreenExit: DejaPopupAction = {
         name: 'toolbar-fullscreen-exit',
         icon: 'fullscreen_exit',
-        label: 'Normal',
+        label: 'Exit fullscreen',
     };
 
     private buttonMinimize: DejaPopupAction = {
         name: 'toolbar-minify',
         icon: 'remove',
-        label: 'Réduire',
+        label: 'Dock',
     };
 
     public buttonMove: DejaPopupAction = {
         name: 'toolbar-move',
         icon: 'move',
-        label: 'Deplacer',
+        label: 'Move',
     };
 
     constructor() {
@@ -77,7 +77,7 @@ export class DejaPopupToolbarComponent implements OnInit {
     public ngOnInit() { }
 
     public doEmit(action: DejaPopupAction) {
-        if (action.name !== this.buttonMove.name) {
+        if (action.name === this.buttonFullscreen.name || action.name === this.buttonFullscreenExit.name) {
             this.toggleFullScreenButton();
         }
         action.target = this.dialogId;

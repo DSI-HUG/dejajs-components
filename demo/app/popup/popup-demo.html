@@ -1,44 +1,49 @@
 <mat-card id="demo" class="demo-card demo-basic">
-    <mat-toolbar color="primary">Popup</mat-toolbar>
+    <mat-toolbar color="primary">Dialogs</mat-toolbar>
     <mat-card-content>
 
         <div id="button-container">
 
             <div>
-                <button mat-raised-button class="mat-primary" (click)="askConfirmation1()">Enregistrer et annuler</button>
+                <button mat-raised-button class="mat-primary" (click)="askConfirmation1()">Save or Cancel</button>
             </div>
 
             <div>
-                <button mat-raised-button class="mat-primary" (click)="askConfirmation2()">Oui non, ou annuler avec format</button>
+                <button mat-raised-button class="mat-primary" (click)="askConfirmation2()">Yes, No, Cancel</button>
             </div>
 
             <div>
-                <button mat-raised-button class="mat-primary" (click)="askConfirmationCustom()">Confirmer ou annuler avec dialog custom</button>
+                <button mat-raised-button class="mat-primary" (click)="askConfirmationCustom()">Custom Dialog</button>
             </div>
 
             <div>
-                <button mat-raised-button class="mat-primary" (click)="customWithDpiComponent()">Dialog Custom avec composant DPI</button>
+                <button mat-raised-button class="mat-primary" (click)="showUrlImg()">Show an image from an url</button>
             </div>
 
             <div>
-                <button mat-raised-button class="mat-primary" (click)="customWithDpiForm()">Dialog Custom avec form</button>
+                <button mat-raised-button class="mat-primary" (click)="useAdvancedComponent()">Advanced Dialog</button>
             </div>
 
             <div>
-                <button mat-raised-button class="mat-primary" (click)="showUrlImg()">Afficher un'image a partir d'une url</button>
+                <button mat-raised-button class="mat-primary" (click)="showUrlPdf()">Show a pdf document from an url</button>
             </div>
 
             <div>
-                <button mat-raised-button class="mat-primary" (click)="useAdvancedComponent()">Composant avancé</button>
+                <button mat-raised-button class="mat-primary" (click)="showUrlPdfFullscreen()">Show a pdf document starting in fullscreen</button>
             </div>
 
-            <div>
-                <button mat-raised-button class="mat-primary" (click)="showUrlPdf()">Afficher un document pdf a partir d'une url</button>
-            </div>
+        </div>
 
-            <div>
-                <button mat-raised-button class="mat-primary" (click)="showUrlPdfFullscreen()">Afficher un document pdf directement en fullscreen</button>
-            </div>
+        <br/>
+
+    </mat-card-content>
+
+</mat-card>
+<mat-card id="demo" class="demo-card demo-basic">
+    <mat-toolbar color="primary">Popup</mat-toolbar>
+    <mat-card-content>
+
+        <div id="button-container">
 
             <div>
                 <button mat-raised-button class="mat-primary" (click)="showPopUp()">Pop Up</button>
@@ -59,11 +64,9 @@
     </mat-card-content>
 
 </mat-card>
-<ng-template ngFor let-message [ngForOf]="dpiDialogService.dpiDialogCom$ | async">
-    <deja-snackbar *ngIf="message.gate" alignment="left" [duration]="5000" (onAnimationDone)="message.gate = false">
-        <deja-message-box type="primary" horizontal>
-            {{message.content}}
-        </deja-message-box>
-    </deja-snackbar>
-</ng-template>
-<popup-tray></popup-tray>
+<deja-snackbar *ngIf="openGate" alignment="bottom" [duration]="2000" (onAnimationDone)="openGate = false">
+    <deja-message-box [type]="message.type" horizontal>
+        {{message.text}}
+    </deja-message-box>
+</deja-snackbar>
+<deja-popup-tray></deja-popup-tray>

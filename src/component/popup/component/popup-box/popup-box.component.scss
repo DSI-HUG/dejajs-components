@@ -7,17 +7,17 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    .popup-box-title {
+    .deja-popup-box-title {
         padding: 0 .8rem;
     }
-    .popup-box-actions {
+    .deja-popup-box-actions {
         background-color: rgba(0, 0, 0, 0.4);
         position: absolute;
         width: 100%;
         top: 0;
         left: 0;
         text-align: right;
-        .popup-box-content {
+        .deja-popup-box-content {
             padding-right: 1rem;
             button {
                 &:hover {
