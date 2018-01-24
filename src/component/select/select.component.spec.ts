@@ -115,7 +115,8 @@ class DejaSelectByModelContainerComponent {
 }
 
 @Component({
-    template: `<deja-select style="width: 1000px;" viewportMode="fixed" type="multiselect" sortable itemsDraggable pageSize="5">
+    template: `<deja-select style="width: 1000px;" viewportMode="fixed" type="multiselect" sortable itemsDraggable pageSize="5" modelIsValue="true">
+                    <deja-item value="" text=""></deja-item>
                     <deja-item value="Apricots" text="Apricots"></deja-item>
                     <deja-item value="Banana" text="Banana"></deja-item>
                     <deja-item value="Cantaloupe" text="Cantaloupe"></deja-item>
@@ -659,7 +660,7 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                 fixture.detectChanges();
 
                 const items = fixture.debugElement.queryAll(By.css('.deja-overlay-container > .cdk-overlay-pane > .deja-listcontainer > .listitem'));
-                expect(items.length).toBe(12);
+                expect(items.length).toBe(13);
                 selectContainerInstance.testDone();
             });
 
@@ -749,7 +750,7 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                         // Check selection
                         expect(selectedElements.length).toBe(0);
                         expect(selectedItems.length).toBe(0);
-                        expect(currentElement && currentElement.attributes.flat).toBe('11');
+                        expect(currentElement && currentElement.attributes.flat).toBe('12');
                         expect(selectedChips.length).toBe(0);
                         // Current on line 6 by pageUp
                         sendKeyDown('PageUp');
@@ -759,7 +760,7 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                         // Check selection
                         expect(selectedElements.length).toBe(0);
                         expect(selectedItems.length).toBe(0);
-                        expect(currentElement && currentElement.attributes.flat).toBe('6');
+                        expect(currentElement && currentElement.attributes.flat).toBe('7');
                         expect(selectedChips.length).toBe(0);
                         // Current on firstLine by Home
                         sendKeyDown('Home');
@@ -915,15 +916,17 @@ describe('DejaSelectByOptionsContainerComponent', () => {
         const apricots = selectInstance.selectedItems && selectInstance.selectedItems.length && selectInstance.selectedItems[0];
         expect(apricots.model.value).toEqual('Apricots');
 
-        selectInstance.selectedModels = ['Banana', 'Lemon', 'Cantaloupe'];
+        selectInstance.selectedModels = ['', 'Banana', 'Lemon', 'Cantaloupe'];
         fixture.detectChanges();
 
-        expect(selectInstance.selectedItems && selectInstance.selectedItems.length).toBe(3);
-        const banana = selectInstance.selectedItems && selectInstance.selectedItems.length && selectInstance.selectedItems[0];
+        expect(selectInstance.selectedItems && selectInstance.selectedItems.length).toBe(4);
+        const empty = selectInstance.selectedItems && selectInstance.selectedItems.length && selectInstance.selectedItems[0];
+        expect(empty.model.value).toEqual('');
+        const banana = selectInstance.selectedItems && selectInstance.selectedItems.length && selectInstance.selectedItems[1];
         expect(banana.model.value).toEqual('Banana');
-        const cantaloupe = selectInstance.selectedItems && selectInstance.selectedItems.length && selectInstance.selectedItems[1];
+        const cantaloupe = selectInstance.selectedItems && selectInstance.selectedItems.length && selectInstance.selectedItems[2];
         expect(cantaloupe.model.value).toEqual('Cantaloupe');
-        const lemon = selectInstance.selectedItems && selectInstance.selectedItems.length && selectInstance.selectedItems[2];
+        const lemon = selectInstance.selectedItems && selectInstance.selectedItems.length && selectInstance.selectedItems[3];
         expect(lemon.model.value).toEqual('Lemon');
 
         selectInstance.selectedItem = apricots;
