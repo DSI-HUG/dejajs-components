@@ -28,6 +28,7 @@ import { ItemListService } from '../../common/core/item-list/item-list.service';
 import { IItemTree } from '../../common/core/item-list/item-tree';
 import { IViewPort, ViewportMode } from '../../common/core/item-list/viewport.service';
 import { KeyCodes } from '../../common/core/keycodes.enum';
+import { ISortInfos } from '../../common/core/sorting/sort-infos.model';
 import { SortingService } from '../../common/core/sorting/sorting.service';
 import { DejaChipsCloseEvent } from '../chips/chips.component';
 import { IDejaDragEvent } from '../dragdrop/draggable.directive';
@@ -42,7 +43,6 @@ import { DejaGridHeaderComponent } from './data-grid-header/data-grid-header.com
 import { IDejaGridRow } from './data-grid-row/data-grid-row';
 import { DejaGridRowEvent } from './data-grid-row/data-grid-row-event';
 import { DejaGridRowsEvent } from './data-grid-row/data-grid-rows-event';
-import { ISortInfos } from '../../common/core/sorting/sort-infos.model';
 
 const noop = () => { };
 
