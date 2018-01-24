@@ -43,7 +43,6 @@ import { DejaGridHeaderComponent } from './data-grid-header/data-grid-header.com
 import { IDejaGridRow } from './data-grid-row/data-grid-row';
 import { DejaGridRowEvent } from './data-grid-row/data-grid-row-event';
 import { DejaGridRowsEvent } from './data-grid-row/data-grid-rows-event';
-import { ISortInfos } from '../../common/core/sorting/sort-infos.model';
 
 const noop = () => { };
 
