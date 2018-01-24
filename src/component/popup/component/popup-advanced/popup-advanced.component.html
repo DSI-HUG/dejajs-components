@@ -14,6 +14,10 @@
             <deja-iframe [sourceUrl]="config?.url"></deja-iframe>
         </div>
 
+        <ng-container *ngIf="config?.contentComponentRef">
+            <div [cdkPortalOutlet]="componentPortal"></div>
+        </ng-container>
+
     </div>
 
     <div mat-dialog-actions fxFlex="none" *ngIf="config.hasActions()">

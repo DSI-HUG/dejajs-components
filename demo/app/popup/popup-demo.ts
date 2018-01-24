@@ -1,10 +1,12 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { DialogPosition } from '@angular/material';
+import { Color } from '../../../src/common/core/graphics/color';
 import { DejaPopupAction, DejaPopupButton } from '../../../src/component/popup/model/popup-action.model';
 import { DejaPopupConfig } from '../../../src/component/popup/model/popup-config.model';
 import { DejaPopupReponse } from '../../../src/component/popup/model/popup-response.model';
 import { DejaPopupService } from '../../../src/component/popup/service/popup.service';
-import { DejaPopupPortalDemoComponent } from './popup-custom-portal.component';
+import { DummyComponent } from './dummy/dummy.component';
+// import { DejaPopupPortalDemoComponent } from './popup-custom-portal.component';
 import { DejaPopupCustomDemoComponent } from './popup-custom.component';
 
 @Component({
@@ -16,6 +18,8 @@ export class PopupDemoComponent {
 
     private dummyPdfUrl = 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
     private dummyImgUrl = 'http://lorempixel.com/800/600/abstract/';
+
+    public hoveredColor: Color;
 
     public message = {
         type: 'info',
@@ -34,6 +38,9 @@ export class PopupDemoComponent {
                 this.message.type = 'primary';
                 this.message.text = action.label || action.name;
                 this.openGate = true;
+                if (action.name === 'color-change') {
+                    this.hoveredColor = action.data;
+                }
                 this.changeDetectorRef.markForCheck();
             })
             .subscribe();
@@ -101,26 +108,11 @@ export class PopupDemoComponent {
             });
     }
 
-    public showCustomPortal() {
-
-        const config = new DejaPopupConfig();
-        config.actions = [
-            new DejaPopupButton('confirm', 'Confirm', 'check'),
-            new DejaPopupButton('cancel', 'Cancel', 'cancel'),
-        ];
-        config.height = '25vh';
-        config.width = '25vw';
-        this.dejaPopupService.openCustom(
-            DejaPopupPortalDemoComponent,
-            config,
-        )
-            .subscribe((response: DejaPopupReponse) => {
-                this.showResponse(response);
-            });
-    }
-
     public showUrlImg() {
-        this.dejaPopupService.openUrl(this.dummyImgUrl)
+        const config = new DejaPopupConfig();
+        config.height = '600px';
+        config.width = '800px';
+        this.dejaPopupService.openUrl(this.dummyImgUrl, config)
             .subscribe((response: DejaPopupReponse) => {
                 this.showResponse(response);
             });
@@ -204,6 +196,20 @@ export class PopupDemoComponent {
             .subscribe((response: DejaPopupReponse) => {
                 this.showResponse(response);
             });
+    }
+
+    public showComponentInjection() {
+
+        const config = new DejaPopupConfig();
+        config.title = 'Pick a color';
+        config.height = 'auto';
+        config.width = 'auto';
+        config.contentComponentRef = DummyComponent;
+        this.dejaPopupService.openPopUp(config)
+            .subscribe((response: DejaPopupReponse) => {
+                this.showResponse(response);
+            });
+
     }
 
     private showResponse(resp: DejaPopupReponse) {

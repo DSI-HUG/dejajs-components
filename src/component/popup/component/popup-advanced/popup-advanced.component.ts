@@ -1,5 +1,6 @@
 
-import { AfterViewInit, Component, ElementRef, Inject, Injector, Renderer2, ViewEncapsulation } from '@angular/core';
+import { ComponentPortal, Portal } from '@angular/cdk/portal';
+import { AfterViewInit, Component, ElementRef, Inject, Injector, OnInit, Renderer2, ViewEncapsulation } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { Subscription } from 'rxjs/Subscription';
 import { DejaPopupAction } from '../../model/popup-action.model';
@@ -12,12 +13,13 @@ import { DejaPopupConfig } from '../../model/popup-config.model';
     styleUrls: ['popup-advanced.component.scss'],
     templateUrl: 'popup-advanced.component.html',
 })
-export class DejaPopupAdvancedComponent extends DejaPopupBase implements AfterViewInit {
+export class DejaPopupAdvancedComponent extends DejaPopupBase implements AfterViewInit, OnInit {
 
     private left: number;
     private top: number;
     public dragstart = false;
     public lastEvent = null;
+    public componentPortal: Portal<any>;
     private subKeyEvent: Subscription;
 
     constructor(
@@ -28,6 +30,13 @@ export class DejaPopupAdvancedComponent extends DejaPopupBase implements AfterVi
         protected elRef: ElementRef,
     ) {
         super();
+    }
+
+    public ngOnInit() {
+        super.ngOnInit();
+        if (this.config.contentComponentRef) {
+            this.componentPortal = new ComponentPortal(this.config.contentComponentRef, undefined, this.injector);
+        }
     }
 
     public ngAfterViewInit() {

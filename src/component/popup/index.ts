@@ -6,7 +6,6 @@ import { MatButtonModule, MatDialogModule, MatIconModule, MatToolbarModule } fro
 import { DejaIFrameModule } from '../iframe/index';
 import { DejaOverlayModule } from '../overlay/index';
 
-import { DummyComponent } from './component/dummy/dummy.component';
 import { DejaPopupActionsComponent } from './component/popup-actions/popup-actions.component';
 import { DejaPopupAdvancedComponent } from './component/popup-advanced/popup-advanced.component';
 import { DejaPopupBoxComponent } from './component/popup-box/popup-box.component';
@@ -25,13 +24,11 @@ import { DejaPopupService } from './service/popup.service';
         DejaPopupContentComponent,
         DejaPopupComponent,
         DejaPopupBoxComponent,
-        DummyComponent,
         DejaPopupActionsComponent,
     ],
     entryComponents: [
         DejaPopupComponent,
         DejaPopupAdvancedComponent,
-        DummyComponent,
         DejaPopupActionsComponent,
     ],
     exports: [
@@ -42,7 +39,6 @@ import { DejaPopupService } from './service/popup.service';
         DejaPopupContentComponent,
         DejaPopupComponent,
         PortalModule,
-        DummyComponent,
         DejaPopupActionsComponent,
     ],
     imports: [

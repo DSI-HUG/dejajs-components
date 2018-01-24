@@ -12,6 +12,7 @@ export class DejaPopupConfig extends MatDialogConfig {
 
     public aContent?: string[];
     public actionComponentRef: any;
+    public contentComponentRef: any;
     public actions: DejaPopupAction[];
     public autoFocus = false;
     public autoposition?: boolean;
@@ -69,7 +70,7 @@ export class DejaPopupConfig extends MatDialogConfig {
             this.ensurePosition();
         }
         if (!this.title) {
-            this.title = `Dialog ${DejaPopupConfig.dialogCount}`;
+            this.title = `Popup ${DejaPopupConfig.dialogCount}`;
         }
 
         const config: MatDialogConfig<DejaPopupConfig> = new MatDialogConfig();

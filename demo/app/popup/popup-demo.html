@@ -41,7 +41,7 @@
 </mat-card>
 <mat-card id="demo" class="demo-card demo-basic">
     <mat-toolbar color="primary">Popup</mat-toolbar>
-    <mat-card-content>
+    <mat-card-content [style.background-color]="(hoveredColor && hoveredColor.toHex())">
 
         <div id="button-container">
 
@@ -54,7 +54,7 @@
             </div>
 
             <div>
-                <button mat-raised-button class="mat-primary" (click)="showCustomPortal()">Custom Portal</button>
+                <button mat-raised-button class="mat-primary" (click)="showComponentInjection()">Component injection</button>
             </div>
 
         </div>
