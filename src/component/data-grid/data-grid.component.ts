@@ -42,6 +42,7 @@ import { DejaGridHeaderComponent } from './data-grid-header/data-grid-header.com
 import { IDejaGridRow } from './data-grid-row/data-grid-row';
 import { DejaGridRowEvent } from './data-grid-row/data-grid-row-event';
 import { DejaGridRowsEvent } from './data-grid-row/data-grid-rows-event';
+import { ISortInfos } from '../../common/core/sorting/sort-infos.model';
 
 const noop = () => { };
 
@@ -142,6 +143,10 @@ export class DejaGridComponent implements OnDestroy {
     @Output() public columnSizeChanged = new EventEmitter<IDejaGridColumnSizeEvent>();
     /** Exécuté lorsque le calcul du viewPort est executé. */
     @Output() public viewPortChanged = new EventEmitter<IViewPort>();
+    /** Exécuté lorsque le sorting à changé. */
+    @Output() public sortChanged = new EventEmitter<ISortInfos>();
+    /** Exécuté lorsque le grouping à changé. */
+    @Output() public groupChanged = new EventEmitter<IGroupInfo[]>();
     /** retourne la largeur calculée des lignes */
     public rowsWidth = null;
 
@@ -441,8 +446,11 @@ export class DejaGridComponent implements OnDestroy {
                 });
                 return groupInfos;
             })
-            .switchMap((groupInfos) => this.treeListComponent.group$(groupInfos))
-            .subscribe(() => this.changeDetectorRef.markForCheck());
+            .switchMap((groupInfos) => this.treeListComponent.group$(groupInfos).map(() => groupInfos))
+            .subscribe((groupInfos) => {
+                this.groupChanged.emit(groupInfos);
+                this.changeDetectorRef.markForCheck();
+            });
 
         Observable.from(this.columns$)
             .takeWhile(() => this.isAlive)
@@ -614,6 +622,32 @@ export class DejaGridComponent implements OnDestroy {
         }
     }
 
+    /** Trie la liste par le champs spécifié. */
+    public sort(name?: string) {
+        this.treeListComponent.sort(name);
+    }
+
+    /** Trie la liste par le champs spécifié. */
+    public sort$(name?: string) {
+        return this.treeListComponent.sort$(name);
+    }
+
+    /** Groupe les éléments en fonction du modèle de groupe spécifié
+     * @param groupInfos Modèle de groupe à appliquer.
+     * @return Observable résolu par la fonction.
+     */
+    public group$(groups: IGroupInfo[]) {
+        return this.treeListComponent.group$(groups);
+    }
+
+    /** Retire les groupe correspondants au modèle de groupe spécifié
+     * @param groupInfos Modèle de groupe à retirer.
+     * @return Observable résolu par la fonction.
+     */
+    public ungroup$(groupInfo: IGroupInfo) {
+        return this.treeListComponent.ungroup$(groupInfo);
+    }
+
     protected onColumnHeaderClicked(event: IDejaGridColumnEvent) {
         if (this.treeListComponent && !this.sortable || event.column.sortable === false) {
             return;
@@ -630,9 +664,10 @@ export class DejaGridComponent implements OnDestroy {
 
         Observable.timer(1)
             .first()
-            .switchMap(() => this.treeListComponent.sort$(event.column.name))
+            .switchMap(() => this.sort$(event.column.name))
             .subscribe(() => {
                 hideSpinner();
+                this.sortChanged.emit(this.treeListComponent.sortInfos);
             }, (error) => {
                 hideSpinner();
                 throw error.toString();
