@@ -18,6 +18,7 @@
 @import '../../component/tooltip/tooltip-theme';
 @import '../../component/tree-list/tree-list-theme';
 @import '../../component/viewport/viewport-theme';
+@import '../../component/numeric-stepper/numeric-stepper-theme';
 @import './menu-theme';
 
 @import '../utils/form-validation';
@@ -46,4 +47,5 @@
     @include tree-list-theme($custom-theme);
     @include tooltip-theme($custom-theme);
     @include viewport-theme($custom-theme);
+    @include numeric-stepper-theme($custom-theme);
 }
