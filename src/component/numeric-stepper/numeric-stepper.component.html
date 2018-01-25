@@ -1,5 +1,5 @@
-<mat-form-field>
-    <input [placeholder]="placeholder" matInput [disabled]="disabled" #inputStepper type="number" [(ngModel)]="value" [min]="min" [max]="max" [step]="step" [style.width.px]="size" (blur)="inputStepper.value = value; this.checkSize()" /><!-- [pattern]="'\\d{0,'+max.toString().length+'}'" -->
+<mat-form-field >
+    <input matInput [placeholder]="placeholder" [ngClass]="value < min || value > max ? 'off-limits' : ''" [disabled]="disabled" #inputStepper type="number" [(ngModel)]="value" [min]="min" [max]="max" [step]="step" [style.width.px]="size" (blur)="checkLimits(value)" /><!-- [pattern]="'\\d{0,'+max.toString().length+'}'" -->
     <div matSuffix *ngIf="value !== undefined && value !== null">
         <span class="unit">{{unit}}</span>
     </div>
@@ -9,6 +9,6 @@
     </mat-error>
 </mat-form-field>
 <span class="steppers">
-    <button [disabled]="disabled || value === max" (click)="value = (value || 0) + step" mat-raised-button color="primary" type="button">add</button>
-    <button [disabled]="disabled || value === min" (click)="value = (value || 0) - step" mat-raised-button color="primary" type="button">remove</button>
+    <button [disabled]="disabled || value === max" (click)="value = (value || 0) + step; checkLimits(value)" mat-raised-button color="primary" type="button">add</button>
+    <button [disabled]="disabled || value === min" (click)="value = (value || 0) - step; checkLimits(value)" mat-raised-button color="primary" type="button">remove</button>
 </span>
