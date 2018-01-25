@@ -12,6 +12,8 @@ Composant de sélection de nombres.
 
 ### Propriétés
 
+- `@input`
+
 <table>
 <thead>
 <tr>
@@ -61,12 +63,30 @@ Composant de sélection de nombres.
 </tbody>
 </table>
 
+- `@Output`
+
+<table>
+<thead>
+<tr>
+    <th>Nom</th>
+    <th>Type</th>
+    <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+    <td>textChange</td>
+    <td>EventEmitter</td>
+    <td>Executé lorsque la valeur du numeric-stepper change</td>
+</tr>
+</tbody>
+</table>
 
 ### Templating
   
   - `errorTemplate`
 ```html
 <ng-template #errorTemplate>
-    Template pour les erruers de validation (se retroivera dans le <mat-error></mat-error> de l'input)
+    Template pour les erreurs de validation (se retrouvera dans le <mat-error></mat-error> de l'input)
 </ng-template>
 ```
