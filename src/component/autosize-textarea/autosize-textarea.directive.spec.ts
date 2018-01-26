@@ -17,7 +17,7 @@ import { DejaAutosizeTextAreaModule } from './index';
 
 @Component({
     encapsulation: ViewEncapsulation.None,
-    template: `<textarea deja-autosize></textarea>`,
+    template: `<textarea deja-autosize rows="18" [ngModel]="text"></textarea>`,
     styles: [`* { transition: unset !important; }
     textarea {
         left: 100px;
@@ -26,7 +26,9 @@ import { DejaAutosizeTextAreaModule } from './index';
         postion: absolute;
     }`]
 })
-class DejaAutosizeTextAreaComponent { }
+class DejaAutosizeTextAreaComponent {
+    public text = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br /> Mauris auctor sit amet odio et aliquet. Curabitur auctor eleifend mattis. <br /> Nullam sit amet quam tellus. Ut mattis tellus sed erat ultricies ornare. <br /> Nulla dictum nisi eu tortor lacinia porttitor. Donec eu arcu et enim cursus viverra. <br /> Praesent pulvinar dui nisi, a tincidunt arcu finibus sed.';
+}
 
 describe('DejaAutosizeTextAreaDirective', () => {
     beforeEach(async(() => {
@@ -51,13 +53,13 @@ describe('DejaAutosizeTextAreaDirective', () => {
         expect(instance).toBeTruthy();
     }));
 
-    it('should be by default at 26px height', async(() => {
+    it('should be by default at 4 lines height', async(() => {
         const fixture = TestBed.createComponent(DejaAutosizeTextAreaComponent);
         fixture.detectChanges();
         const textArea = fixture.debugElement.query(By.css('textarea[deja-autosize]'));
         const textAreaElement = textArea.nativeElement as HTMLElement;
         fixture.whenStable().then(() => {
-            expect(textAreaElement.clientHeight).toBe(26);
+            expect(textAreaElement.clientHeight).toBeGreaterThan(50);
         });
     }));
 
@@ -66,7 +68,6 @@ describe('DejaAutosizeTextAreaDirective', () => {
         fixture.detectChanges();
         const textArea = fixture.debugElement.query(By.css('textarea[deja-autosize]'));
         const textAreaElement = textArea.nativeElement as HTMLTextAreaElement;
-        textAreaElement.value = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br /> Mauris auctor sit amet odio et aliquet. Curabitur auctor eleifend mattis. <br /> Nullam sit amet quam tellus. Ut mattis tellus sed erat ultricies ornare. <br /> Nulla dictum nisi eu tortor lacinia porttitor. Donec eu arcu et enim cursus viverra. <br /> Praesent pulvinar dui nisi, a tincidunt arcu finibus sed.';
         fixture.detectChanges();
         fixture.whenStable().then(() => {
             expect(textAreaElement.clientHeight).toBeGreaterThan(200);
