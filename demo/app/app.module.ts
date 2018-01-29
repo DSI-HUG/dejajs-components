@@ -79,7 +79,6 @@ import { GridDemoComponent } from './grid/grid-demo';
 import { HomeGuidesComponent } from './home-guides/home-guides.component';
 import { HomeComponent } from './home/home.component';
 import { MessageBoxDemoComponent } from './message-box/message-box-demo';
-import { MonacoEditorDemoModule } from './monaco-editor/monaco-editor-demo.module';
 import { MonacoEditorDemoService } from './monaco-editor/monaco-editor-demo.service.';
 import { DejaNumericStepperDemoComponent } from './numeric-stepper/numeric-stepper-demo.component';
 import { OverlayDemoComponent } from './overlay/overlay-demo';
