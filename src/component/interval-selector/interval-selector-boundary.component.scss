@@ -1,0 +1,12 @@
+deja-interval-selector-boundary {
+    span.boundaryMarker {
+        padding: 5px;
+        width: 15px;
+        height: 20px;
+        font-weight: bold;
+        &[active='true'] {
+            padding: 0px 5px 0px 5px;
+            text-align: center;
+        }
+    }
+}

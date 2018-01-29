@@ -133,7 +133,7 @@ export class DejaRangeDemoComponent {
      *
      * @private
      *
-     * @memberOf DejaRangeDemoComponent
+     * @memberOf DejaIntervalSelectorDemoComponent
      */
     protected increase(): void {
         this.weights[this.weights.length - 1].maxWeight++;
@@ -145,7 +145,7 @@ export class DejaRangeDemoComponent {
      *
      * @private
      *
-     * @memberOf DejaRangeDemoComponent
+     * @memberOf DejaIntervalSelectorDemoComponent
      */
     protected decrease(): void {
         if (this.weights[0].minWeight > 0) {
@@ -159,7 +159,7 @@ export class DejaRangeDemoComponent {
      *
      * @private
      *
-     * @memberOf DejaRangeDemoComponent
+     * @memberOf DejaIntervalSelectorDemoComponent
      */
     private computeRangeFromWeight() {
         let min = 0;
