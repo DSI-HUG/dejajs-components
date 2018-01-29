@@ -1,3 +1,42 @@
+#### 2.22.1 (2018-01-29)
+
+##### BREAKING CHANGES
+
+* **SortingService:** Usage of lodash for the sorting algorithm ([0fc1d971](https://github.com/DSI-HUG/dejajs-components/commit/0fc1d971612d93bff0c3a97b2f2723e4ce787f4c))
+    => deprecated sort (returned a promise) is now a synchronous function. Compare is removed, use lodash instead.
+
+* **ISortInfos:** Modified to match lodash sorting ([07271772](https://github.com/DSI-HUG/dejajs-components/commit/07271772ddf2554f582988fed162e78d06568c69))
+    => name is mandatory and only a string and type is removed (Automatic detection of sorting type)
+
+
+##### Continuous Integration
+
+* **Dependencies:** upgrade dependencies ([98ff0d20](https://github.com/DSI-HUG/dejajs-components/commit/98ff0d20350f4d21379d9bb4b3a92da8579ad0a9))
+
+##### New Features
+
+* **DejaGrid:** Add events when grouping or sorting are raised form the component ([d0d1e706](https://github.com/DSI-HUG/dejajs-components/commit/d0d1e706dc8212b906e10dac9cc10e8e5a55e647))
+* **Global:** Cloning service is deprecated, replaced by lodash._cloneDeep ([9adbe458](https://github.com/DSI-HUG/dejajs-components/commit/9adbe4589c493e1078a564b835485baf48afa2d5))
+
+##### Bug Fixes
+
+* **DejaGridComponent:** Fix missing returned type for some function ([4cabf658](https://github.com/DSI-HUG/dejajs-components/commit/4cabf658c9cc0fb748c2361a1d0017b1b898a78a))
+* **DejaSelectComponent:** Selection for empty or null key object in reactiveForm ([baa02deb](https://github.com/DSI-HUG/dejajs-components/commit/baa02debc5e07fe7a7960c9667e130b47e75d373))
+* **DejaTextMetricsService:**
+  * improve text height calculation by taking in account white space separator ([41d360a5](https://github.com/DSI-HUG/dejajs-components/commit/41d360a559d19c409df980f1433251111e5fb2e2))
+  * adjust text width with linux lower font ratio. ([3aa8f485](https://github.com/DSI-HUG/dejajs-components/commit/3aa8f485295d574ec8076f85d1d1e542d57402bf))
+* **DejaGridGroupAreaComponent:** Fix grouping refresh when to chips are inverted in the group area ([5b08c11b](https://github.com/DSI-HUG/dejajs-components/commit/5b08c11b16ceecd3dcb2fccf9c0263cb335e5818))
+
+##### Code Style Changes
+
+* **NumericStepperComponent:** Use change instead of blur + add tabIndex=-1 on buttons to remove tabs focus + use class.off-limits instead of ng-class ([f7769870](https://github.com/DSI-HUG/dejajs-components/commit/f776987060b093fde2c2ed8dcb1daeb11ad72ec3))
+
+##### Tests
+
+* **CodeViewer:** Added unit test ([684056b4](https://github.com/DSI-HUG/dejajs-components/commit/684056b4a26960dd0fd80d34da56cdedd5717d01))
+* **DejaTextMetricsService:** test. ([574076de](https://github.com/DSI-HUG/dejajs-components/commit/574076de47fbdf9e4454c943eae0a5221a7905f5))
+* **CloningService:** Added unit lodash test to compare with the previous cloning service test ([19c88289](https://github.com/DSI-HUG/dejajs-components/commit/19c88289a25a285852d9239b727f09ec99b9891a))
+
 ### 2.22.0 (2018-01-29)
 
 ##### BREAKING CHANGES
