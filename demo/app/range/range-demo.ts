@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import {Component, EventEmitter, Output, ViewChild, ViewEncapsulation} from '@angular/core';
 import 'rxjs/add/operator/defaultIfEmpty';
 import 'rxjs/add/operator/scan';
 import { Observable } from 'rxjs/Observable';
@@ -15,6 +15,7 @@ import { ranges, rangesWithInterval, readOnlyRanges, steps, weights } from './ra
 import { IWeight, Weight } from './weight.interface';
 
 @Component({
+    encapsulation: ViewEncapsulation.None,
     selector: 'deja-range-demo',
     styleUrls: ['./range-demo.scss'],
     templateUrl: './range-demo.html',
@@ -133,7 +134,7 @@ export class DejaRangeDemoComponent {
      *
      * @private
      *
-     * @memberOf DejaIntervalSelectorDemoComponent
+     * @memberOf DejaRangeDemoComponent
      */
     protected increase(): void {
         this.weights[this.weights.length - 1].maxWeight++;
@@ -145,7 +146,7 @@ export class DejaRangeDemoComponent {
      *
      * @private
      *
-     * @memberOf DejaIntervalSelectorDemoComponent
+     * @memberOf DejaRangeDemoComponent
      */
     protected decrease(): void {
         if (this.weights[0].minWeight > 0) {
@@ -159,7 +160,7 @@ export class DejaRangeDemoComponent {
      *
      * @private
      *
-     * @memberOf DejaIntervalSelectorDemoComponent
+     * @memberOf DejaRangeDemoComponent
      */
     private computeRangeFromWeight() {
         let min = 0;
