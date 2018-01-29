@@ -35,17 +35,8 @@ export class DejaPopupTrayComponent implements OnInit {
                     .filter((action: DejaPopupAction) => action.refreshDrawer)
                 )
                 .debounceTime(500)
-                .do((x) => {
-                    console.log('tray', x);
-                })
                 .map(() => {
                     const dialogs = this.dialogSrv.openDialogs;
-                    // dialogs.forEach((d: MatDialogRef<DejaPopupBase>) => {
-                    //     d.beforeClose()
-                    //         .first()
-                    //         .do(() => this.refresh())
-                    //         .subscribe();
-                    // });
                     return dialogs;
                 });
 

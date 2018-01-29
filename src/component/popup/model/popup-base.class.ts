@@ -4,7 +4,6 @@ import { MatDialogRef } from '@angular/material';
 import { Subscription } from 'rxjs/Subscription';
 import { DejaPopupAction } from './popup-action.model';
 import { DejaPopupConfig } from './popup-config.model';
-// import { DejaPopupReponse } from './popup-response.model';
 
 export abstract class DejaPopupBase implements OnInit {
 
@@ -22,7 +21,7 @@ export abstract class DejaPopupBase implements OnInit {
 
     private aSub: Subscription[];
 
-    public abstract doAction(action: DejaPopupAction);
+    public abstract doAction(action: DejaPopupAction): any;
 
     public ngOnInit() {
         this.aSub = [];
@@ -49,15 +48,11 @@ export abstract class DejaPopupBase implements OnInit {
         if (this.config.dejaPopupCom$) {
             this.aSub.push(
                 this.config.dejaPopupCom$
-                    .do((x) => {
-                        console.log('dialog com ', x);
-                    })
                     .filter((a: DejaPopupAction) => !!a && !!a.target && a.target === this.config.id)
                     .do((a: DejaPopupAction) => this.doAction(a))
                     .do((action: DejaPopupAction) => {
                         this.actionSelected = action;
                         if (action.isFinalAction) {
-                            // const res = new DejaPopupReponse(action.name, this.dialogRef.componentInstance, action);
                             this.dialogRef.close(action);
                         }
                     })
@@ -71,10 +66,6 @@ export abstract class DejaPopupBase implements OnInit {
         if (!action) {
             return false;
         }
-
-        // if (e) {
-        //     this.lastEvent = e;
-        // }
 
         if (this.config.dejaPopupCom$) {
             this.config.dejaPopupCom$.next(action);

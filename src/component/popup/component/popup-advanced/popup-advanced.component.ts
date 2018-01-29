@@ -52,8 +52,6 @@ export class DejaPopupAdvancedComponent extends DejaPopupBase implements AfterVi
 
     public doAction(action: DejaPopupAction) {
 
-        console.log('do action advanced', action);
-
         this.actionSelected = action;
 
         switch (action.name ? action.name : action) {
@@ -84,10 +82,6 @@ export class DejaPopupAdvancedComponent extends DejaPopupBase implements AfterVi
                     actionOut.panelClass = this.config.dialogPanelId;
                     this.config.dejaPopupCom$.next(actionOut);
                 }
-                break;
-
-            default:
-                console.log('action', action);
                 break;
 
         }

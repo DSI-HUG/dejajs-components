@@ -10,13 +10,11 @@ export class DejaPopupReponse {
         public resp: any,
         public componentInstance: DejaPopupBase,
     ) {
-        // if (!lastAction) {
         if (componentInstance && componentInstance.actionSelected) {
             this.lastAction = this.componentInstance.actionSelected;
         } else {
             this.lastAction = new DejaPopupAction('cancel');
         }
-        // }
     }
 
     public get accepted(): boolean {

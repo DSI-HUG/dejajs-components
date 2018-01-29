@@ -34,7 +34,6 @@ export class PopupDemoComponent {
         this.dejaPopupService.dejaPopupCom$
             .filter((action: DejaPopupAction) => !!action && action.target !== 'popup-tray' && !action.isFinalAction)
             .map((action: DejaPopupAction) => {
-                console.log('gate', action);
                 this.message.type = 'primary';
                 this.message.text = action.label || action.name;
                 this.openGate = true;
@@ -213,7 +212,6 @@ export class PopupDemoComponent {
     }
 
     private showResponse(resp: DejaPopupReponse) {
-        console.log('response', resp);
         if (resp.accepted) {
             this.message.type = 'success';
         } else {

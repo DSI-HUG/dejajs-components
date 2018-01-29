@@ -56,4 +56,17 @@ import { DejaPopupService } from './service/popup.service';
         DejaPopupService,
     ],
 })
-export class DejaPopuModule { }
+export class DejaPopupModule { }
+
+export * from './service/popup.service';
+export * from './model/popup-action.model';
+export * from './model/popup-base.class';
+export * from './model/popup-config.model';
+export * from './model/popup-response.model';
+export * from './component/popup/popup.component';
+export * from './component/popup-actions/popup-actions.component';
+export * from './component/popup-advanced/popup-advanced.component';
+export * from './component/popup-box/popup-box.component';
+export * from './component/popup-content/popup-content.component';
+export * from './component/popup-toolbar/popup-toolbar.component';
+export * from './component/popup-tray/popup-tray.component';

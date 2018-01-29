@@ -4,7 +4,7 @@ import { DejaPopupAction } from './popup-action.model';
 
 export class DejaPopupConfig extends MatDialogConfig {
 
-    public static dialogCount = -1;
+    public static dialogCount = 0;
     public readonly positionStart = { top: 100, left: 100 };
     public readonly dimensionDefault = { width: '60vw', height: '65vh' };
 

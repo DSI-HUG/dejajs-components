@@ -22,17 +22,6 @@
     mat-icon {
         color: whitesmoke;
     }
-    #demo-deja-menu {
-        display: flex;
-        flex-flow: row;
-        .menu-section {
-            width: 300px;
-            margin: 0.5rem;
-        }
-        .end-icon {
-            align-items: flex-end;
-        }
-    }
     button {
         width: 36px;
         height: 36px;

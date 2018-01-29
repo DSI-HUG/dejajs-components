@@ -12,8 +12,12 @@ export class DejaPopupAction {
         public name: string,
         public target?: string,
     ) {
-        this.icon = name;
-        this.label = name;
+        if (!this.icon) {
+            this.icon = name;
+        }
+        if (!this.label) {
+            this.label = name;
+        }
     }
 
 }
@@ -22,8 +26,8 @@ export class DejaPopupButton extends DejaPopupAction {
 
     constructor(
         public name: string,
-        public label: string,
-        public icon: string,
+        public label?: string,
+        public icon?: string,
         public isFinalAction = true,
     ) {
         super(name);

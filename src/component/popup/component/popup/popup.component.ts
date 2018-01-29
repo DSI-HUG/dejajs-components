@@ -23,12 +23,6 @@ export class DejaPopupComponent extends DejaPopupBase {
         super();
     }
 
-    public doAction(action: DejaPopupAction) {
-
-        if (!action) {
-            return false;
-        }
-
-    }
+    public doAction(_action: DejaPopupAction) { }
 
 }
