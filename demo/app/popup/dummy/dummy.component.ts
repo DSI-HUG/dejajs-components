@@ -20,14 +20,14 @@ import { DejaPopupConfig } from '../../../../src/component/popup/model/popup-con
 })
 export class DummyComponent {
 
-    protected selectedColor = new Color(233, 30, 99);
+    public selectedColor = new Color(233, 30, 99);
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public config: DejaPopupConfig,
-        protected materialColors: MaterialColors,
+        public materialColors: MaterialColors,
     ) { }
 
-    protected onColorPickerChange(event: ColorEvent) {
+    public onColorPickerChange(event: ColorEvent) {
         const action = new DejaPopupAction('color-change', 'ground-control');
         action.data = event;
         this.config.dejaPopupCom$.next(action);
