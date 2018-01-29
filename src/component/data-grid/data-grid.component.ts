@@ -24,7 +24,7 @@ import { DejaClipboardService } from '../../common/core/clipboard/clipboard.serv
 import { IGroupInfo } from '../../common/core/grouping/group-infos';
 import { GroupingService } from '../../common/core/grouping/grouping.service';
 import { IItemBase } from '../../common/core/item-list/item-base';
-import { ItemListService } from '../../common/core/item-list/item-list.service';
+import { ItemListService, IViewListResult } from '../../common/core/item-list/item-list.service';
 import { IItemTree } from '../../common/core/item-list/item-tree';
 import { IViewPort, ViewportMode } from '../../common/core/item-list/viewport.service';
 import { KeyCodes } from '../../common/core/keycodes.enum';
@@ -628,7 +628,7 @@ export class DejaGridComponent implements OnDestroy {
     }
 
     /** Trie la liste par le champs spécifié. */
-    public sort$(name?: string) {
+    public sort$(name?: string): Observable<IViewListResult> {
         return this.treeListComponent.sort$(name);
     }
 
@@ -636,7 +636,7 @@ export class DejaGridComponent implements OnDestroy {
      * @param groupInfos Modèle de groupe à appliquer.
      * @return Observable résolu par la fonction.
      */
-    public group$(groups: IGroupInfo[]) {
+    public group$(groups: IGroupInfo[]): Observable<IViewListResult> {
         return this.treeListComponent.group$(groups);
     }
 
@@ -644,7 +644,7 @@ export class DejaGridComponent implements OnDestroy {
      * @param groupInfos Modèle de groupe à retirer.
      * @return Observable résolu par la fonction.
      */
-    public ungroup$(groupInfo: IGroupInfo) {
+    public ungroup$(groupInfo: IGroupInfo): Observable<IViewListResult> {
         return this.treeListComponent.ungroup$(groupInfo);
     }
 
