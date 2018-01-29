@@ -12,16 +12,19 @@ import { MonacoEditorDemoService } from './monaco-editor-demo.service.';
 @Component({
     providers: [MonacoEditorDemoService],
     selector: 'deja-monaco-editor-demo',
-    templateUrl: './monaco-editor-demo.html',
-    styleUrls: ['./monaco-editor-demo.scss'],
+    templateUrl: './monaco-editor-demo.component.html',
+    styleUrls: ['./monaco-editor-demo.component.scss'],
 })
 export class DejaMonacoEditorDemoComponent implements OnInit {
     public tabIndex = 1;
 
-    protected xmlContent: string;
-    protected xmlContentToCompare: string;
-    protected jsonContent: string;
-    protected jsonContentToCompare: string;
+    public xmlContent: string;
+    public xmlContentToCompare: string;
+    public jsonContent: string;
+    public jsonContentToCompare: string;
+
+    public dynamicContent: string;
+    public dynamicLanguage: string;
 
     constructor(
         private fileService: MonacoEditorDemoService
@@ -32,6 +35,8 @@ export class DejaMonacoEditorDemoComponent implements OnInit {
         this.fileService.getFile$('xmlFileToCompare.xml').subscribe((val) => this.xmlContentToCompare = val);
         this.fileService.getFile$('jsonFile.json').subscribe((val) => this.jsonContent = val);
         this.fileService.getFile$('jsonFileToCompare.json').subscribe((val) => this.jsonContentToCompare = val);
+
+        this.updateLanguage('xml');
     }
 
     public onValueChange() {
@@ -40,5 +45,18 @@ export class DejaMonacoEditorDemoComponent implements OnInit {
 
     public onValueToCompareChange() {
         // console.log('ValueToCompare changed');
+    }
+
+    public updateLanguage(lang: string) {
+        switch (lang) {
+            case 'json':
+                this.dynamicContent = this.jsonContent;
+                this.dynamicLanguage = lang;
+                break;
+            default:
+                this.dynamicContent = this.xmlContent;
+                this.dynamicLanguage = 'xml';
+                break;
+        }
     }
 }
