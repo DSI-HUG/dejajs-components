@@ -410,6 +410,10 @@ class DejaGridContainerComponent {
     public testDone() {
         return true;
     }
+
+    public eventCalled() {
+        return true;
+    }
 }
 
 describe('DejaGridComponent', () => {
@@ -630,11 +634,20 @@ describe('DejaGridComponent', () => {
                 }
             });
 
+        gridInstance.groupChanged.first().subscribe((groupInfos) => {
+            expect(groupInfos.length).toBe(1);
+            expect(groupInfos[0].groupByField).toEqual('name');
+            expect(groupInfos[0].groupTextField).toEqual('name');
+            gridContainerInstance.eventCalled();
+        });
+
         spyOn(gridContainerInstance, 'testDone');
+        spyOn(gridContainerInstance, 'eventCalled');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
             expect(gridContainerInstance.testDone).toHaveBeenCalled();
+            expect(gridContainerInstance.eventCalled).toHaveBeenCalled();
         });
     }));
 
@@ -697,11 +710,18 @@ describe('DejaGridComponent', () => {
                 }
             });
 
+        gridInstance.sortChanged.first().subscribe((sortInfos) => {
+            expect(sortInfos.name).toEqual('name');
+            gridContainerInstance.eventCalled();
+        });
+
         spyOn(gridContainerInstance, 'testDone');
+        spyOn(gridContainerInstance, 'eventCalled');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
             expect(gridContainerInstance.testDone).toHaveBeenCalled();
+            expect(gridContainerInstance.eventCalled).toHaveBeenCalled();
         });
     }));
 
