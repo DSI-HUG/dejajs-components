@@ -11,7 +11,7 @@ import 'rxjs/add/observable/of';
 import { Observable } from 'rxjs/Observable';
 
 /**
- * Service for cloning or copying an object
+ * @deprecated 09.01.2017 Use lodash cloneDeep instead
  */
 @Injectable()
 export class CloningService {

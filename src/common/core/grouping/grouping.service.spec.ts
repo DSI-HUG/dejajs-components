@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { CloningService } from '../cloning/cloning.service';
+import * as _ from 'lodash';
 import { ISortInfos } from '../sorting/sort-infos.model';
 import { SortOrder } from '../sorting/sort-order.model';
 import { IGroupInfo } from './group-infos';
@@ -120,8 +120,7 @@ describe('GroupingService', () => {
 
     beforeEach(() => {
         service = new GroupingService();
-        const cloningService = new CloningService();
-        datas = cloningService.cloneArray(d, Object);
+        datas = _.cloneDeep(d);
     });
 
     it('Should, group an empty array', () => {

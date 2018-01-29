@@ -9,16 +9,16 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { ObjectMapper } from 'json-object-mapper';
+import * as _ from 'lodash';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/publishLast';
 import 'rxjs/add/operator/switchMap';
 import { Observable } from 'rxjs/Observable';
 import { News, NewsArticles, NewsSource, NewsSources } from '../common/news.model';
-import { CloningService } from './../../../src/common/core/cloning/cloning.service';
 
 @Injectable()
 export class NewsService {
-    constructor(private http: Http, private cloningService: CloningService) { }
+    constructor(private http: Http) { }
 
     public getNews$(recordCount?: number): Observable<News[]> {
         return this.http.get('https://newsapi.org/v1/sources?language=en')
@@ -44,10 +44,10 @@ export class NewsService {
             .publishLast()
             .refCount()
             .map((news: News[]) => {
-                const returnNews = news;
+                let returnNews = news;
                 if (recordCount) {
                     while (recordCount > 0) {
-                        this.cloningService.cloneArray(news, returnNews);
+                        returnNews = returnNews.concat(_.cloneDeep(news));
                         recordCount -= news.length;
                     }
                 }

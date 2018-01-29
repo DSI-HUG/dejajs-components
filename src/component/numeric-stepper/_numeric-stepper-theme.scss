@@ -1,0 +1,9 @@
+@import '~@angular/material/theming';
+
+@mixin numeric-stepper-theme($theme) {
+    $warn: map-get($theme, warn);
+
+    .off-limits {
+        color: mat-color($warn);
+    }
+}

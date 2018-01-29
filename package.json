@@ -1,6 +1,6 @@
 {
   "name": "@deja-js/component",
-  "version": "2.21.0",
+  "version": "2.22.0",
   "description": "Angular2 Components Library",
   "homepage": "https://github.com/DSI-HUG/dejajs-components",
   "bugs": "https://github.com/DSI-HUG/dejajs-components/issues",
@@ -59,6 +59,7 @@
     "custom-event-polyfill": "0.3.0",
     "hammerjs": "2.0.8",
     "json-object-mapper": "1.5.1",
+    "lodash": "4.17.4",
     "moment": "2.20.1",
     "monaco-editor": "0.10.1",
     "prismjs": "1.9.0",
@@ -75,6 +76,7 @@
     "@types/jasminewd2": "2.0.3",
     "@types/node": "9.3.0",
     "@types/prismjs": "1.9.0",
+    "@types/lodash": "4.14.92",
     "codelyzer": "4.0.2",
     "concurrently": "3.5.1",
     "cz-conventional-changelog": "2.1.0",

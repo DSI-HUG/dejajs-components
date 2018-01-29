@@ -6,10 +6,12 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import * as _ from 'lodash';
 import { CloningService } from './cloning.service';
 
 describe('CloningService', () => {
     let service: CloningService;
+    let _cloned: any[];
 
     class MyTypedObject {
         public datas: any;
@@ -86,17 +88,20 @@ describe('CloningService', () => {
 
     beforeEach(() => {
         service = new CloningService();
+        _cloned = _.cloneDeep(datas);
     });
 
     it('Should, clone a complex structure without target', () => {
         const cloned = service.cloneSync(datas);
         expect(JSON.stringify(cloned)).toEqual(JSON.stringify(datas));
+        expect(JSON.stringify(cloned)).toEqual(JSON.stringify(_cloned));
     });
 
     it('Should, clone a complex structure with a target array', () => {
         const cloned = [];
         service.cloneArray(datas, cloned);
         expect(JSON.stringify(cloned)).toEqual(JSON.stringify(datas));
+        expect(JSON.stringify(cloned)).toEqual(JSON.stringify(_cloned));
     });
 
     it('Should, clone a complex structure with a target object', () => {
@@ -104,11 +109,13 @@ describe('CloningService', () => {
         const d = { datas: datas };
         service.cloneSync(d, cloned);
         expect(JSON.stringify(cloned)).toEqual(JSON.stringify(d));
+        expect(JSON.stringify(cloned)).toEqual(JSON.stringify(_.cloneDeep(d)));
     });
 
     it('Should, clone a null value', () => {
         const cloned = {};
         expect(service.cloneSync(null, cloned)).toBeNull();
+        expect(_.cloneDeep(null)).toBeNull();
     });
 
     it('Should, clone a typed object', () => {
@@ -116,6 +123,7 @@ describe('CloningService', () => {
         const cloned = service.cloneSync(d, MyTypedObject);
         expect(JSON.stringify(cloned)).toEqual(JSON.stringify(d));
         expect(cloned instanceof MyTypedObject).toBeTruthy();
+        expect(_.cloneDeep(d) instanceof MyTypedObject).toBeTruthy();
     });
 
     it('Should, clone asynchronously', () => {
@@ -125,6 +133,7 @@ describe('CloningService', () => {
             .subscribe((cloned) => {
                 expect(JSON.stringify(cloned)).toEqual(JSON.stringify(d));
                 expect(cloned instanceof MyTypedObject).toBeTruthy();
+                expect(_.cloneDeep(d) instanceof MyTypedObject).toBeTruthy();
             });
     });
 
@@ -134,6 +143,7 @@ describe('CloningService', () => {
             .subscribe((cloned) => {
                 expect(JSON.stringify(cloned)).toEqual(JSON.stringify(datas));
                 expect(cloned instanceof Array).toBeTruthy();
+                expect(_cloned instanceof Array).toBeTruthy();
             });
     });
 
@@ -141,6 +151,9 @@ describe('CloningService', () => {
         const cloned = [];
         service.cloneArray$(datas, cloned)
             .first()
-            .subscribe(() => expect(JSON.stringify(cloned)).toEqual(JSON.stringify(datas)));
+            .subscribe(() => {
+                expect(JSON.stringify(cloned)).toEqual(JSON.stringify(datas));
+                expect(JSON.stringify(cloned)).toEqual(JSON.stringify(_cloned));
+            });
     });
 });

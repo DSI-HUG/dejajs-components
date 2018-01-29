@@ -10,7 +10,6 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material';
-import { CloningService } from '../../common/core/cloning/cloning.service';
 import { DejaEditableModule } from '../content-editable/index';
 import { DejaMouseDragDropModule } from './../mouse-dragdrop/index';
 import { DejaMouseDragDropService } from './../mouse-dragdrop/mouse-dragdrop.service';
@@ -30,7 +29,6 @@ import { DejaTilesComponent } from './tiles.component';
         DejaEditableModule,
     ],
     providers: [
-        CloningService,
         DejaMouseDragDropService,
     ]
 })

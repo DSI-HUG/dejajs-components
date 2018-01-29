@@ -7,7 +7,7 @@
  */
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, HostBinding, Input, OnInit, Optional, Self } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, OnInit, Optional, Output, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 
 import { DejaTextMetricsService } from '../../common/core/text-metrics/text-metrics.service';
@@ -46,6 +46,10 @@ export class DejaNumericStepperComponent implements OnInit, ControlValueAccessor
         this.changeDetectorRef.markForCheck();
     }
 
+    /** Output to get the event when the value is modified (no validation)  */
+    @Output()
+    public textChange: EventEmitter<number> = new EventEmitter<number>();
+
     /**
      * Get disable value
      */
@@ -81,6 +85,13 @@ export class DejaNumericStepperComponent implements OnInit, ControlValueAccessor
 
     public set value(val: number) {
         if (!this.disabled) {
+            this.writeValue(val);
+            this.onTouchedCallback();
+        }
+    }
+
+    public checkLimits(val: number) {
+        if (!this.disabled) {
             if (val === undefined || val === null) {
                 val = null;
             } else if (val > this.max) {
@@ -100,6 +111,7 @@ export class DejaNumericStepperComponent implements OnInit, ControlValueAccessor
         this._value = value;
         this.checkSize(value);
         this.changeDetectorRef.markForCheck();
+        this.textChange.emit(value);
     }
 
     public registerOnChange(fn: any) {

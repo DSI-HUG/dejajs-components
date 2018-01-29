@@ -9,12 +9,12 @@
 import { Injectable } from '@angular/core';
 import { Http, ResponseContentType } from '@angular/http';
 import { JsonProperty, ObjectMapper } from 'json-object-mapper';
+import * as _ from 'lodash';
 import 'rxjs/add/operator/publishLast';
 import { Observable } from 'rxjs/Observable';
 import { Color } from '../../../src/common/core/graphics/color';
 import { MaterialColors } from '../../../src/common/core/style/material-colors';
 import { UUID } from '../../../src/common/core/UUID';
-import { CloningService } from './../../../src/common/core/cloning/cloning.service';
 
 export class Friend {
     public id: number = void 0;
@@ -55,7 +55,7 @@ export class PeopleService {
     private peopleDic = {} as { [code: string]: Person };
     private materialColors: Color[];
 
-    constructor(private http: Http, materialColors: MaterialColors, private cloningService: CloningService) {
+    constructor(private http: Http, materialColors: MaterialColors) {
         this.materialColors = materialColors.getPalet('700');
     }
 
@@ -101,7 +101,7 @@ export class PeopleService {
                 let returnPeople = people;
                 if (recordCount) {
                     while (recordCount > 0) {
-                        const clonedPeople = people.map((person) => this.cloningService.cloneSync(person, Person));
+                        const clonedPeople = people.map((person) => _.cloneDeep(person));
                         returnPeople = returnPeople.concat(clonedPeople.map((person) => {
                             person.guid = (new UUID()).toString();
                             return person;

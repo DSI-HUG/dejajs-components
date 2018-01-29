@@ -7,6 +7,7 @@
  */
 
 import { ChangeDetectorRef, Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import * as _ from 'lodash';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
@@ -19,7 +20,6 @@ import { News } from '../common/news.model';
 import { NewsService } from '../services/news.service';
 import { PeopleService, Person } from '../services/people.service';
 import { IExtendedViewPortItem } from '../tree-list/tree-list-demo';
-import { CloningService } from './../../../src/common/core/cloning/cloning.service';
 import { IGroupInfo } from './../../../src/common/core/grouping/group-infos';
 import { GroupingService } from './../../../src/common/core/grouping/grouping.service';
 import { IDejaDragContext } from './../../../src/component/dragdrop/draggable.directive';
@@ -615,13 +615,13 @@ export class GridDemoComponent {
             });
     }
 
-    constructor(private changeDetectorRef: ChangeDetectorRef, private peopleService: PeopleService, newsService: NewsService, cloningService: CloningService, groupingService: GroupingService) {
+    constructor(private changeDetectorRef: ChangeDetectorRef, private peopleService: PeopleService, newsService: NewsService, groupingService: GroupingService) {
         this.news$ = newsService.getNews$(50);
         this.bigNews$ = newsService.getNews$(10000);
         this.people$ = peopleService.getPeople$();
         this.bigPeople$ = peopleService.getPeople$(undefined, 100000);
 
-        this.peopleForMultiselect$ = peopleService.getPeople$().switchMap((people) => cloningService.clone$(people));
+        this.peopleForMultiselect$ = peopleService.getPeople$().map((people) => _.cloneDeep(people));
         this.groupedByGenderPeople$ = peopleService.getPeople$()
             .switchMap((people) => groupingService.group$(people, {
                 groupByField: 'gender',
@@ -666,7 +666,7 @@ export class GridDemoComponent {
         aboutCol.width = '400px';
 
         this.variableHeightPeopleRows$ = peopleService.getPeople$()
-            .switchMap((people) => cloningService.clone$(people) as Observable<Person[]>)
+            .map((people) => _.cloneDeep(people))
             .switchMap((people) => people)
             .map((person) => ({
                 p1: {
@@ -711,11 +711,11 @@ export class GridDemoComponent {
         });
 
         this.fructsForMultiSelection = this.fructs
-            .map((fruct) => cloningService.cloneSync(fruct));
+            .map((fruct) => _.cloneDeep(fruct));
 
         this.fructsWithPreSelection = this.fructs
             .map((fruct) => {
-                const f = cloningService.cloneSync(fruct) as any;
+                const f = _.cloneDeep(fruct);
                 f.selected = fruct.value === 'banana';
                 return f;
             });

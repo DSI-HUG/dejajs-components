@@ -13,16 +13,15 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import * as _ from 'lodash';
 import { Observable } from 'rxjs/Observable';
 import { IDejaGridColumnLayoutEvent } from '../../../index';
 import { DejaClipboardModule } from '../../common/core/clipboard/index';
-import { CloningService } from '../../common/core/cloning/cloning.service';
 import { GroupingService } from '../../common/core/grouping/grouping.service';
 import { ItemListService } from '../../common/core/item-list/item-list.service';
 import { ViewPortService } from '../../common/core/item-list/viewport.service';
 import { SortingService } from '../../common/core/sorting/sorting.service';
 import { IDejaGridColumn } from './data-grid-column/data-grid-column';
-
 import { DejaGridComponent } from './data-grid.component';
 import { DejaGridModule } from './index';
 
@@ -396,7 +395,6 @@ const PERCENT_COLUMNS = [
                 </deja-grid>`,
     providers: [
         GroupingService,
-        CloningService,
     ],
 })
 class DejaGridContainerComponent {
@@ -405,11 +403,15 @@ class DejaGridContainerComponent {
     public percentColumns = PERCENT_COLUMNS;
     public columns: any[];
 
-    constructor(cloningService: CloningService) {
-        this.columns = cloningService.cloneArray(this.fructsColumns);
+    constructor() {
+        this.columns = _.cloneDeep(this.fructsColumns);
     }
 
     public testDone() {
+        return true;
+    }
+
+    public eventCalled() {
         return true;
     }
 }
@@ -632,11 +634,20 @@ describe('DejaGridComponent', () => {
                 }
             });
 
+        gridInstance.groupChanged.first().subscribe((groupInfos) => {
+            expect(groupInfos.length).toBe(1);
+            expect(groupInfos[0].groupByField).toEqual('name');
+            expect(groupInfos[0].groupTextField).toEqual('name');
+            gridContainerInstance.eventCalled();
+        });
+
         spyOn(gridContainerInstance, 'testDone');
+        spyOn(gridContainerInstance, 'eventCalled');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
             expect(gridContainerInstance.testDone).toHaveBeenCalled();
+            expect(gridContainerInstance.eventCalled).toHaveBeenCalled();
         });
     }));
 
@@ -699,11 +710,18 @@ describe('DejaGridComponent', () => {
                 }
             });
 
+        gridInstance.sortChanged.first().subscribe((sortInfos) => {
+            expect(sortInfos.name).toEqual('name');
+            gridContainerInstance.eventCalled();
+        });
+
         spyOn(gridContainerInstance, 'testDone');
+        spyOn(gridContainerInstance, 'eventCalled');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
             expect(gridContainerInstance.testDone).toHaveBeenCalled();
+            expect(gridContainerInstance.eventCalled).toHaveBeenCalled();
         });
     }));
 
@@ -1130,7 +1148,7 @@ describe('DejaGridComponent', () => {
         } as MouseEventInit);
 
         observeViewPort$()
-            .debounceTime(10)
+            .debounceTime(20)
             .subscribe((vp) => {
                 // Bind view port
                 fixture.detectChanges();
@@ -1215,7 +1233,7 @@ describe('DejaGridComponent', () => {
 
                     case 2:
                         expect(vp.items.length).toBe(24);
-                        expect((<any>vp.items[0]).$text).toEqual('Banana');
+                        expect((<any>vp.items[0]).$text).toEqual('Peach');
                         expect(chipsDraggable.length).toBe(1);
                         expect(chipsDraggable[0].nativeElement.innerText).toEqual('Name');
                         // Drag a second column to the group area
@@ -1250,8 +1268,8 @@ describe('DejaGridComponent', () => {
 
                     case 3:
                         expect(vp.items.length).toBe(36);
-                        expect((<any>vp.items[0]).$text).toEqual('Banana');
-                        expect((<any>vp.items[1]).$text).toEqual('#FFEB3B');
+                        expect((<any>vp.items[0]).$text).toEqual('Peach');
+                        expect((<any>vp.items[1]).$text).toEqual('#FF6F00');
                         expect(chipsDraggable.length).toBe(2);
                         expect(chipsDraggable[0].nativeElement.innerText).toEqual('Name');
 
@@ -1261,8 +1279,8 @@ describe('DejaGridComponent', () => {
 
                     case 4:
                         expect(vp.items.length).toBe(36);
-                        expect((<any>vp.items[0]).$text).toEqual('#FFEB3B');
-                        expect((<any>vp.items[1]).$text).toEqual('Banana');
+                        expect((<any>vp.items[1]).$text).toEqual('Peach');
+                        expect((<any>vp.items[0]).$text).toEqual('#FF6F00');
                         expect(chipsDraggable.length).toBe(2);
 
                         // Re-invert group in grouping area
@@ -1271,8 +1289,8 @@ describe('DejaGridComponent', () => {
 
                     case 5:
                         expect(vp.items.length).toBe(36);
-                        expect((<any>vp.items[0]).$text).toEqual('Banana');
-                        expect((<any>vp.items[1]).$text).toEqual('#FFEB3B');
+                        expect((<any>vp.items[0]).$text).toEqual('Peach');
+                        expect((<any>vp.items[1]).$text).toEqual('#FF6F00');
                         expect(chipsDraggable.length).toBe(2);
 
                         // Close name group
@@ -1282,7 +1300,7 @@ describe('DejaGridComponent', () => {
 
                     default:
                         expect(vp.items.length).toBe(24);
-                        expect((<any>vp.items[0]).$text).toEqual('#FFEB3B');
+                        expect((<any>vp.items[0]).$text).toEqual('#FF6F00');
                         expect(chipsDraggable.length).toBe(1);
                         gridContainerInstance.testDone();
                 }
