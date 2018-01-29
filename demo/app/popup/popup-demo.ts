@@ -1,3 +1,10 @@
+/*
+ *  @license
+ *  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
+ *
+ *  Use of this source code is governed by an Apache-2.0 license that can be
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
+ */
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { DialogPosition } from '@angular/material';
 import { Color } from '../../../src/common/core/graphics/color';
@@ -6,7 +13,6 @@ import { DejaPopupConfig } from '../../../src/component/popup/model/popup-config
 import { DejaPopupReponse } from '../../../src/component/popup/model/popup-response.model';
 import { DejaPopupService } from '../../../src/component/popup/service/popup.service';
 import { DummyComponent } from './dummy/dummy.component';
-// import { DejaPopupPortalDemoComponent } from './popup-custom-portal.component';
 import { DejaPopupCustomDemoComponent } from './popup-custom.component';
 
 @Component({
