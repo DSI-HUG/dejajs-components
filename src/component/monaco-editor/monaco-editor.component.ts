@@ -461,7 +461,7 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
         }
 
         if (this._editor) {
-            this._editor.dispose();
+            // this._editor.dispose();
             while (myDiv.hasChildNodes()) {
                 myDiv.removeChild(myDiv.firstChild);
             }

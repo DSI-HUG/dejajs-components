@@ -50,12 +50,12 @@ export class DejaMonacoEditorDemoComponent implements OnInit {
     public updateLanguage(lang: string) {
         switch (lang) {
             case 'json':
-                this.dynamicContent = this.jsonContent;
                 this.dynamicLanguage = lang;
+                this.dynamicContent = this.jsonContent;
                 break;
             default:
-                this.dynamicContent = this.xmlContent;
                 this.dynamicLanguage = 'xml';
+                this.dynamicContent = this.xmlContent;
                 break;
         }
     }
