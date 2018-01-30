@@ -1,7 +1,7 @@
 # Interval Selector
 Service and Component to select lower and upper boundary values of an interval.
 
-You can either define an interval by maintaining pressed the **ALT**or **CTRL** keys and mouse **Click** for multiple rows selection. Or you can click on the opening boundary marker ** [ ** or closing boundary marker **]** to define an interval.
+You can either define an interval by maintaining pressed the **ALT** or **CTRL** keys and mouse **Click** for multiple rows selection. Or you can click on the opening boundary marker **[** or closing boundary marker **]** to define an interval.
 
 ### Usage
 > Don't forget to import the `DejaIntervalSelectorModule` in the `imports` of your modules !
