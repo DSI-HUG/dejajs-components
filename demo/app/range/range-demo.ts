@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import {Component, EventEmitter, Output, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, EventEmitter, Output, ViewChild} from '@angular/core';
 import 'rxjs/add/operator/defaultIfEmpty';
 import 'rxjs/add/operator/scan';
 import { Observable } from 'rxjs/Observable';
@@ -15,7 +15,6 @@ import { ranges, rangesWithInterval, readOnlyRanges, steps, weights } from './ra
 import { IWeight, Weight } from './weight.interface';
 
 @Component({
-    encapsulation: ViewEncapsulation.None,
     selector: 'deja-range-demo',
     styleUrls: ['./range-demo.scss'],
     templateUrl: './range-demo.html',
