@@ -20,15 +20,17 @@ You can either define an interval by maintaining pressed the **ALT**or **CTRL** 
     to handle boundaries selection for your list of models.
     
      constructor(public intervalSelectorService: IntervalSelectorService) {
-        this.intervalSelectorService.addInterval('events', (event1: Event, 	event2: Event) => {
-            return this.eventCompareFunction(event1, event2);
+        this.intervalSelectorService.addInterval('events', (event1: Event, 
+            event2: Event) => {
+                return this.eventCompareFunction(event1, event2);
         });
     }
 ```
 
 
 ```html
-Example of usage within the DejaTreeComponent. You encapsulate the item label inside the deja-interval-selector component.
+Example of usage within the DejaTreeComponent. You encapsulate the item label 
+inside the deja-interval-selector component.
 
 <!--template for tree item -->
 <ng-template #externalItemTemplate let-item>
@@ -36,12 +38,11 @@ Example of usage within the DejaTreeComponent. You encapsulate the item label in
 	{'model':item.model,  'intervalId':'events'}">
 		<span>{{item.model.date | date: 'dd/MM/yyyy'}} : {{ item.model.label }}</span>
 	</deja-interval-selector>
-</ng-template>```
-
+</ng-template>
+```
 
 ### Properties
 
-```
 <table>
 <thead>
 <tr>
@@ -57,8 +58,10 @@ Example of usage within the DejaTreeComponent. You encapsulate the item label in
     <td>IntervalSelectorData</td>
     <td>null</td>
     <td>This object requires two members:
-	- **'intervalId'** (of string type): a unique identifier of your list of data.
-	- **'model'** (of any type): the data model of your list of data models.</td>
+    <ul>
+	    <li><b>'intervalId'</b> (of string type): a unique identifier of your list of data.</li>
+	    <li><b>'model'</b> (of any type): the data model of your list of data models.</td></li>
+    </ul>
 </tr>
 </tbody>
 </table>
@@ -70,7 +73,8 @@ Events are provided throught the IntervalSelectorService service. Your component
 Your component should listen to interval boundary selection changes and set the lower and upper date as expected.
 
 ```html
-Observable.from(this.intervalSelectorService.intervalSelectionChanged$).takeWhile(() => this._isAlive)
+Observable.from(this.intervalSelectorService.intervalSelectionChanged$)
+  .takeWhile(() => this._isAlive)
   .subscribe((boundary:IntervalBoundary) => {
     const event:Event = boundary.model as Event;
     if (boundary.intervalId === 'events') {
@@ -88,9 +92,9 @@ Observable.from(this.intervalSelectorService.intervalSelectionChanged$).takeWhil
           }
       }
     }
-  })```
-  
+  })
 ```
+
 <table>
 <thead>
 <tr>
