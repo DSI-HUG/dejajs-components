@@ -24,3 +24,9 @@ import {DejaIntervalSelectorComponent} from './interval-selector.component';
     providers: [],
 })
 export class DejaIntervalSelectorModule { }
+
+export * from './interval-selector-boundary.model';
+export * from './interval-selector-compare-function.model';
+export * from './interval-selector-interval.model';
+export * from './interval-selector-data.model';
+export * from './interval-selector-event-data.model';

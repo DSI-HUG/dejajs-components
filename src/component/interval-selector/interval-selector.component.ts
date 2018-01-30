@@ -6,13 +6,12 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import {Component, HostListener, Input, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, HostListener, Input, ViewChild} from '@angular/core';
 import {DejaIntervalSelectorBoundaryComponent} from './interval-selector-boundary.component';
-import {IntervalSelectorData} from './interval-selector.model';
+import {IntervalSelectorData} from './interval-selector-data.model';
 import {IntervalSelectorService} from './interval-selector.service';
 
 @Component({
-    encapsulation: ViewEncapsulation.None,
     selector: 'deja-interval-selector',
     styleUrls: ['./interval-selector.component.scss'],
     templateUrl: './interval-selector.component.html',
@@ -45,11 +44,11 @@ export class DejaIntervalSelectorComponent {
         }
     }
 
-    protected onItemMouseOver() {
+    public onItemMouseOver() {
         this.intervalSelectorService.displayBoundary(this._intervalSelectorData.intervalId, this._intervalSelectorData.model);
     }
 
-    protected onItemMouseLeave() {
+    public onItemMouseLeave() {
         this.intervalSelectorService.hideBoundary(this._intervalSelectorData.intervalId, this._intervalSelectorData.model);
     }
 }

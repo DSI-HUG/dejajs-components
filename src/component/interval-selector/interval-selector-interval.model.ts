@@ -6,32 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-/**
- * data structure used to pass the model and the intervalId information to the DejaIntervalSelectorComponent component.
- *
- */
-export class IntervalSelectorData {
-
-    constructor(public intervalId: string, public model: any) {
-    }
-}
-
-/**
- * data structure used internally by the IntervalSelectorService to notify interval boundary selection changes.
- *
- */
-export class IntervalBoundary {
-
-    constructor(public intervalId: string, public model: any, public openingBoundary: boolean, public selected: boolean) {
-    }
-}
-
-/**
- * the model compare function signature. This function must return 1 if model1 is displayed before model2
- * within the list interval.
- *
- */
-export type ModelCompareFunction = (model1: any, model2: any) => number;
+import {IntervalBoundary} from './interval-selector-boundary.model';
+import {ModelCompareFunction} from './interval-selector-compare-function.model';
 
 /**
  * data structure used internally by the IntervalSelectorService to track interval boundary selection for a given interval.
@@ -77,14 +53,5 @@ export class Interval {
                 boundary.selected = false;
             }
         }
-    }
-}
-
-/**
- * data structure used by the IntervalSelectorService to dispatch events throught the displayModelBoundaries$ and hideModelBoundaries$ Subjects.
- */
-export class IntervalSelectorEventData {
-
-    constructor(public intervalId: string, public model: any, public openingBoundary: boolean, public selected: boolean, public bothOpeningAndClosingBoundary = false) {
     }
 }

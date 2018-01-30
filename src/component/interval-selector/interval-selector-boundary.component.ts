@@ -6,13 +6,13 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, Input, OnDestroy, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, Input, OnDestroy} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
-import {IntervalBoundary, IntervalSelectorEventData} from './interval-selector.model';
+import {IntervalBoundary} from './interval-selector-boundary.model';
+import {IntervalSelectorEventData} from './interval-selector-event-data.model';
 import {IntervalSelectorService} from './interval-selector.service';
 
 @Component({
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'deja-interval-selector-boundary',
     styleUrls: ['./interval-selector-boundary.component.scss'],

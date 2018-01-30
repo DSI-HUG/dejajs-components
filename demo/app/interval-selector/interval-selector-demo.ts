@@ -10,7 +10,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {ISortInfos, SortOrder} from '../../../src/common/core';
 import {IDejaGridColumn} from '../../../src/component/data-grid/data-grid-column/data-grid-column';
-import {IntervalBoundary} from '../../../src/component/interval-selector/interval-selector.model';
+import {IntervalBoundary} from '../../../src/component/interval-selector/interval-selector-boundary.model';
 import {IntervalSelectorService} from '../../../src/component/interval-selector/interval-selector.service';
 import { Event, events as mockEvents } from './events.mock';
 
@@ -22,15 +22,11 @@ import { Event, events as mockEvents } from './events.mock';
 })
 export class DejaIntervalSelectorDemoComponent implements OnInit, OnDestroy {
 
-    public tabIndex = 0;
+    public tabIndex = 1;
     public lowerDate: Date;
     public upperDate: Date;
-
-    private _isAlive = true;
-    private ascendingDateOrdering = false;
-    protected events: Event[] = mockEvents;
-
-    protected eventsColumns = [
+    public events: Event[] = mockEvents;
+    public eventsColumns = [
         {
             label: 'Date',
             name: 'date',
@@ -44,6 +40,9 @@ export class DejaIntervalSelectorDemoComponent implements OnInit, OnDestroy {
             useCellTemplate: true,
         },
     ] as IDejaGridColumn[];
+
+    private _isAlive = true;
+    private ascendingDateOrdering = false;
 
     constructor(public intervalSelectorService: IntervalSelectorService) {
         // descending ordered events
@@ -114,7 +113,7 @@ export class DejaIntervalSelectorDemoComponent implements OnInit, OnDestroy {
         this._isAlive = false;
     }
 
-    protected gridSortChanged(sortInfo: ISortInfos) {
+    public gridSortChanged(sortInfo: ISortInfos) {
         if (sortInfo.name === 'date') {
             this.intervalSelectorService.changeIntervalEnabledStatus('gridEvents', true);
             const isAscendingDateOrdering = sortInfo.order === SortOrder.ascending;
@@ -130,7 +129,7 @@ export class DejaIntervalSelectorDemoComponent implements OnInit, OnDestroy {
         }
     }
 
-    protected treeMultiselectModelChange(events: Event[]) {
+    public treeMultiselectModelChange(events: Event[]) {
         if (events && events.length>1) {
             events = events.sort((event1: Event, event2: Event) => {
                 return this.treeEventCompareFunction(event1, event2);
@@ -141,7 +140,7 @@ export class DejaIntervalSelectorDemoComponent implements OnInit, OnDestroy {
         }
     }
 
-    protected gridEventsSelectedChange(events: Event[]) {
+    public gridEventsSelectedChange(events: Event[]) {
         if (events) {
             events.sort((event1: Event, event2: Event) => {
                 return this.gridEventCompareFunction(this, event1, event2);

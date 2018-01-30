@@ -9,7 +9,10 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-import {Interval, IntervalBoundary, IntervalSelectorEventData, ModelCompareFunction} from './interval-selector.model';
+import {IntervalBoundary} from './interval-selector-boundary.model';
+import {ModelCompareFunction} from './interval-selector-compare-function.model';
+import {IntervalSelectorEventData} from './interval-selector-event-data.model';
+import {Interval} from './interval-selector-interval.model';
 
 @Injectable()
 /**
@@ -53,8 +56,7 @@ export class IntervalSelectorService {
      * @param {Function} compareFunction ther interval compare Function used to determinate the order of model.
      */
     public addInterval(intervalId: string, compareFunction: ModelCompareFunction) {
-        const interval: Interval =
-            new Interval(intervalId, compareFunction);
+        const interval: Interval = new Interval(intervalId, compareFunction);
         this._intervalMap.set(intervalId, interval);
     }
 
@@ -140,45 +142,45 @@ export class IntervalSelectorService {
                 // un interval est déjà sélectionné
                 modelCompareResult = interval.compare(openingBoundary.model, model);
                 if (modelCompareResult<0) {
-                    this._deselectBoundary(openingBoundary);
+                    this.updateIntervalSelection(openingBoundary, false);
                     openingBoundary = new IntervalBoundary(intervalId, model, true, true);
-                    this._selectBoundary(openingBoundary);
+                    this.updateIntervalSelection(openingBoundary, true);
                 } else if (closingBoundary.model !== model) {
-                    this._deselectBoundary(closingBoundary);
+                    this.updateIntervalSelection(closingBoundary, false);
                     closingBoundary = new IntervalBoundary(intervalId, model, false, true);
-                    this._selectBoundary(closingBoundary);
+                    this.updateIntervalSelection(closingBoundary, true);
                 } else if (closingBoundary.model === model) {
-                    this._deselectBoundary(closingBoundary);
+                    this.updateIntervalSelection(closingBoundary, false);
                 }
             } else if (openingBoundary && openingBoundary.model !== model) {
                 // seul la borne d'ouverture est présente
                 modelCompareResult = interval.compare(openingBoundary.model, model);
                 if (modelCompareResult<0) {
-                    this._deselectBoundary(openingBoundary);
+                    this.updateIntervalSelection(openingBoundary, false);
                     closingBoundary = new IntervalBoundary(intervalId, openingBoundary.model, false, true);
-                    this._selectBoundary(closingBoundary);
+                    this.updateIntervalSelection(closingBoundary, true);
                     openingBoundary = new IntervalBoundary(intervalId, model, true, true);
-                    this._selectBoundary(openingBoundary);
+                    this.updateIntervalSelection(openingBoundary, true);
                 } else if (modelCompareResult>0) {
                     closingBoundary = new IntervalBoundary(intervalId, model, false, true);
-                    this._selectBoundary(closingBoundary);
+                    this.updateIntervalSelection(closingBoundary, true);
                 }
             } else if (closingBoundary && closingBoundary.model !== model) {
                 // seul la borne de fermeture est présente
                 modelCompareResult = interval.compare(closingBoundary.model, model);
                 if (modelCompareResult<0) {
                     openingBoundary = new IntervalBoundary(intervalId, model, true, true);
-                    this._selectBoundary(openingBoundary);
+                    this.updateIntervalSelection(openingBoundary, true);
                 } else if (modelCompareResult>0) {
-                    this._deselectBoundary(closingBoundary);
+                    this.updateIntervalSelection(closingBoundary, false);
                     openingBoundary = new IntervalBoundary(intervalId, closingBoundary.model, true, true);
-                    this._selectBoundary(openingBoundary);
+                    this.updateIntervalSelection(openingBoundary, true);
                     closingBoundary = new IntervalBoundary(intervalId, model, false, true);
-                    this._selectBoundary(closingBoundary);
+                    this.updateIntervalSelection(closingBoundary, true);
                 }
             } else if (!closingBoundary && !openingBoundary) {
                 openingBoundary = new IntervalBoundary(intervalId, model, true, true);
-                this._selectBoundary(openingBoundary);
+                this.updateIntervalSelection(openingBoundary, true);
             }
         });
     }
@@ -189,10 +191,9 @@ export class IntervalSelectorService {
      *
      * @param {string} intervalId
      * @param {data} model
-     * @param openingBoundary
      */
     public displayBoundary(intervalId: string, model: any) {
-        const boundary: IntervalSelectorEventData = new IntervalSelectorEventData(intervalId, model, false, false, true);
+        const boundary: IntervalSelectorEventData = new IntervalSelectorEventData(intervalId, model, false, false);
         this.displayModelBoundaries$.next(boundary);
     }
 
@@ -203,7 +204,7 @@ export class IntervalSelectorService {
      * @param {data} model
      */
     public hideBoundary(intervalId: string, model: any) {
-        const boundary: IntervalSelectorEventData = new IntervalSelectorEventData(intervalId, model, false, false, true);
+        const boundary: IntervalSelectorEventData = new IntervalSelectorEventData(intervalId, model, false, false);
         this.hideModelBoundaries$.next(boundary);
     }
 
@@ -275,35 +276,18 @@ export class IntervalSelectorService {
             model2Boundary.openingBoundary = false;
             interval.openingBoundary = model1Boundary;
             interval.closingBoundary = model2Boundary;
-            this._selectBoundary(model1Boundary);
-            this._selectBoundary(model2Boundary);
+            this.updateIntervalSelection(model1Boundary, true);
+            this.updateIntervalSelection(model2Boundary, true);
         } else if (comparingResult === -1) {
             model1Boundary.openingBoundary = false;
             model2Boundary.openingBoundary = true;
             interval.openingBoundary = model2Boundary;
             interval.closingBoundary = model1Boundary;
-            this._selectBoundary(model1Boundary);
-            this._selectBoundary(model2Boundary);
+            this.updateIntervalSelection(model1Boundary, true);
+            this.updateIntervalSelection(model2Boundary, true);
         }
         this.intervalSelectionChanged$.next(interval.openingBoundary);
         this.intervalSelectionChanged$.next(interval.closingBoundary);
-    }
-
-    /**
-     * use this method to change the selected status of the given boundary to true.
-     *
-     * @param {IntervalBoundary} boundary
-     */
-    protected _selectBoundary(boundary: IntervalBoundary): void {
-        this.updateIntervalSelection(boundary, true);
-    }
-
-    /**
-     *
-     * @param {IntervalBoundary} boundary
-     */
-    private _deselectBoundary(boundary: IntervalBoundary): void {
-        this.updateIntervalSelection(boundary, false);
     }
 
     /**
