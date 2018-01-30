@@ -1,0 +1,74 @@
+<mat-tab-group [selectedIndex]="tabIndex" (selectChange)="tabIndex = $event.index">
+    <!--<mat-tab label="OVERVIEW">-->
+        <!--<mat-card class="demo-card demo-basic">-->
+            <!--TODO-->
+        <!--</mat-card>-->
+    <!--</mat-tab>-->
+    <mat-tab label="API REFERENCE"></mat-tab>
+    <mat-tab label="EXAMPLES"></mat-tab>
+</mat-tab-group>
+
+<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
+    <deja-markdown [url]="'assets/snippets/interval-selector.md'"></deja-markdown>
+</mat-card>
+
+<div *ngIf="tabIndex === 1">
+    <mat-card class="demo-card">
+        <mat-toolbar color="primary">Simple</mat-toolbar>
+        <mat-card-content>
+            <div fxLayout="column" fxLayoutGap="1rem">
+                <div fxLayout="row">
+                    <span>You can either define an interval by maintaining pressed the <b>ALT</b>or <b>CTRL</b> keys and mouse <b>Click</b> for multiple rows selection.
+            Or you can click on the opening boundary marker <b>[</b> or closing boundary marker <b>]</b> to define an interval.</span>
+                </div>
+                <div fxLayout="row" fxLayoutAlign="left center" fxLayoutGap="1rem">
+                    <div>
+                        <deja-date-picker fxFlex="1 0 auto" [(ngModel)]="lowerDate" placeholder="selected lower event date" disabled="true"></deja-date-picker>
+                        <deja-date-picker fxFlex="1 0 auto" [(ngModel)]="upperDate" placeholder="selected upper event date" disabled="true"></deja-date-picker>
+
+                    </div>
+                </div>
+                <deja-tree-list class="demo-half-width optionstl" [maxHeight]="150"
+                                textField="label" valueField="id" [models]="events" [itemTemplateExternal]="externalItemTemplate" [parentItemTemplateExternal]="externalItemTemplate" [multiSelect]="true"
+                                (selectedChange)="treeMultiselectModelChange($event.models)">
+                </deja-tree-list>
+
+                <!--template pour le tree-->
+                <ng-template #externalItemTemplate let-item>
+                    <deja-interval-selector [intervalSelectorData]="{'model':item.model, 'intervalId':'events'}">
+                        <span>{{item.model.date | date: 'dd/MM/yyyy'}} : {{ item.model.label }}</span>
+                    </deja-interval-selector>
+                </ng-template>
+            </div>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="demo-card">
+        <mat-toolbar color="primary">Handling Grid sorting</mat-toolbar>
+        <mat-card-content fxLayout="column" fxLayoutGap="1rem">
+            <span>This example demonstrates how to handle sorting on Date column. Note that the boundaries are not displayed when the grid is sorted on event's label.
+                But you can still define an interval by maintaining pressed the <b>ALT</b> or <b>CTRL</b> keys and mouse <b>Click</b> for multiple rows selection.</span>
+            <div fxLayout="row" fxLayoutAlign="left center" fxLayoutGap="1rem">
+                <div>
+                    <deja-date-picker fxFlex="1 0 auto" [(ngModel)]="lowerDate" placeholder="selected lower event date" disabled="true"></deja-date-picker>
+                    <deja-date-picker fxFlex="1 0 auto" [(ngModel)]="upperDate" placeholder="selected upper event date" disabled="true"></deja-date-picker>
+                </div>
+            </div>
+
+            <deja-grid columnsSortable columnsSizable sortable maxHeight="auto" [rows]="events" [columns]="eventsColumns" nodataholder="No datas" valueField="id" [multiSelect]="true" (sortChanged)="gridSortChanged($event)"
+            (selectedChange)="gridEventsSelectedChange($event.models)">
+                <ng-template #cellTemplate let-item let-column="column">
+                    <div *ngIf="column.name==='date'">
+                        <deja-interval-selector [intervalSelectorData]="{'model':item, 'intervalId':'gridEvents'}">
+                            <span class="white-space-nowrap">{{item.date | date:'dd.MM.yyyy HH:mm'}}</span>
+                        </deja-interval-selector>
+                    </div>
+                    <div *ngIf="column.name==='label'">
+                        <span>{{item.label}}</span>
+                    </div>
+                </ng-template>
+            </deja-grid>
+        </mat-card-content>
+    </mat-card>
+
+</div>

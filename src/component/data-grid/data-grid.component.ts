@@ -28,6 +28,7 @@ import { ItemListService } from '../../common/core/item-list/item-list.service';
 import { IItemTree } from '../../common/core/item-list/item-tree';
 import { IViewPort, ViewportMode } from '../../common/core/item-list/viewport.service';
 import { KeyCodes } from '../../common/core/keycodes.enum';
+import { ISortInfos } from '../../common/core/sorting/sort-infos.model';
 import { SortingService } from '../../common/core/sorting/sorting.service';
 import { DejaChipsCloseEvent } from '../chips/chips.component';
 import { IDejaDragEvent } from '../dragdrop/draggable.directive';
