@@ -19,7 +19,6 @@ import { GridDemoComponent } from './grid/grid-demo';
 import { HomeGuidesComponent } from './home-guides/home-guides.component';
 import { HomeComponent } from './home/home.component';
 import { MessageBoxDemoComponent } from './message-box/message-box-demo';
-import { DejaMonacoEditorDemoComponent } from './monaco-editor/monaco-editor-demo';
 import { DejaNumericStepperDemoComponent } from './numeric-stepper/numeric-stepper-demo.component';
 import { OverlayDemoComponent } from './overlay/overlay-demo';
 import { ProgressCircleDemoComponent } from './progress-circle/progress-circle-demo';
@@ -44,7 +43,7 @@ const routes: Routes = [
     { component: GridDemoComponent, path: 'grid', data: { title: 'Grid' } },
     { component: OverlayDemoComponent, path: 'overlay', data: { title: 'Overlay' } },
     { component: MessageBoxDemoComponent, path: 'message-box', data: { title: 'Message Box' } },
-    { component: DejaMonacoEditorDemoComponent, path: 'monaco-editor', data: { title: 'Monaco Editor' } },
+    { path: 'monaco-editor', loadChildren: './monaco-editor/monaco-editor-demo.module#MonacoEditorDemoModule', data: {title: 'Monaco Editor'} },
     { component: DejaNumericStepperDemoComponent, path: 'numeric-stepper', data: { title: 'Numeric Stepper' } },
     { component: ProgressCircleDemoComponent, path: 'progress-circle', data: { title: 'Progress Circle' } },
     { component: DejaRangeDemoComponent, path: 'range', data: { title: 'Range' } },
