@@ -1,3 +1,9 @@
+#### 2.22.2 (2018-01-31)
+
+##### New Features
+
+* **DejaMonacoEditor:** autosize when parent is resizing + dynamicaly change language ([4e32ab03](https://github.com/DSI-HUG/dejajs-components/commit/4e32ab03600404c4a4bb427d898cfcefb2007221))
+
 #### 2.22.1 (2018-01-29)
 
 ##### BREAKING CHANGES
