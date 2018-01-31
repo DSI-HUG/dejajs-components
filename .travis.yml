@@ -3,15 +3,6 @@ sudo: required
 language: node_js
 addons:
   chrome: stable
-  sonarcloud:
-    organization: "hug-dsi"
-    token:
-      secure: "0kc9lSIG7ksV8G7hjGpBUvgw1oN8bfuCeb4v+oCHDPBuDl7Caj26VlLCF4ilbPeIO3t2ADeQQ3uUn0NXC3lPgtOz65HjzMxkrSKNxMRi5Nvrt9ieHCVs1Um8dm7Ra0V+3ZfQU3aAPYuBz78WfPOq1meatmG+l425l/uMBfNLQCeIl98/D5MohDkhtWMmJZ1286dyzclUjEztqv4pVjuOPkbk12X4LO3Le8FlnTWIIQoyo71cugEQeH35G5Y2X7RmiF+dcd8/HrsN29uwyz1UoVpTPgtkgDYLgNDi/TsUsgNDIBNpUm6wrJ0XhNha82Z0lDSgEa8/UrrVOWWoE/TBj8HC1GQel5UmyWD7n7+WeYZ+vaDKgoN5oTAlBK+hkeiHEjTI4oFOIn/cr0hPbiezwq/XxwD3YLVHqFrstucXbkzGFUVmb8fnjzH5ZHJ0pWpxphRFfyS6wC3tii583MnfjhBEpX/B6skcVPBukBPme5xeF259yr24H2g6f8lEgcfQVQvX5pPRD9dNLMpnzTyIHpvlwchYET2Z5bqMbmfj1pcDG8Cl+yIhJvMfJOxYA06bdF8cty8VOKwDE9eoR9bNWsGDD7BQZ+SQ9GQ9XYsJgoe1xBsYue3lM0TsjvriJemcMUBfKxMsCPTCyI5GnW1163yg2wKm2DmcWKpBz9R9+Rc="
-    github_token:
-      secure: "Q3c1QvywMZ4VyPof/esv9sNanHC+kjMFUr5PY8Fxc2eATePBKYNW+IsCydGGXnXupvfKj48xDzj9I1tHis0Qlc10/vHs1AhQDlebJlG7NWEdOlNiJ1XTi8XN0rrryL7NFEjRlALCVDaqeF3SldtmGH1Wg2SLzjBui4/xtCaif7qWGFld3V0Hr7qXF+r1ktT86R9P7Vwyqemb9CdTpbwS8bxJW9q9uIhL24JV4aRfamZlVDgfPT1dhw9jSOTsYUI8+eDmmpdpHdoHmDYSxyJ6QQFsY4Mw15BQ6qy4QyELr7gVnZEiMiEeSSZ5vhIQsvSlDltc/KBe3vwqRljC1XilgdxRuC9kTiQnCxMnX5aM6iZ0m33OAuGGtPji4siO1641TH/dbSdsFfEmWMepDtB0xTt7kpZpT8X64jA+NnWbg7kGcbDPHvyrnZHYg0EiDss1pIotOY1QUdkbTSmgmivN/s8l2Ai0aIvyiNwRzToiYWFT+vFfe/W89/BesSfuCDE7Wmgl+R1eOQiG0mC6LFnvGOJk0qdmgV/BvPA3qe7eo8UAa/+t0lpHOEfj9+L9LAguP6GblhKEfbaiyCS2U/uguOpWWt1hwNGUYNeKYMk8bNtKsMAmZ8hFTWI2ziFJ1ctjb7Z6+XXlsKr1pUltlX87/cKBJlgFNBy04SR68/GZnm0="
-    branches:
-      - master
-      - dev
 cache:
   directories:
   - node_modules
@@ -39,7 +30,7 @@ before_script:
 - sleep 3
 script:
 - bash ./tools/scripts/validation.sh
-- sonar-scanner
+- bash ./tools/scripts/sonar.sh
 env:
   global:
   - ENCRYPTION_LABEL: d9215e5535f8
