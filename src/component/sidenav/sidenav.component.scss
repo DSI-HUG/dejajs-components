@@ -1,42 +1,35 @@
 @import '~@angular/material/theming';
-
 deja-sidenav {
     $large-sidenav-width: 320px;
     $small-sidenav-width: 280px;
     $light-sidenav-width: 58px;
-
     display: flex;
     flex: 1 1 100%;
     height: 100%;
-
     @mixin sidebar-light() {
         .mat-sidenav {
             transform: translate3d(calc(-100% + #{ $light-sidenav-width }), 0, 0);
             visibility: visible !important;
-            
             .header {
                 padding: 0 8px;
-                
-                .header-icon, .header-text {
+                justify-content: flex-end;
+                .header-icon,
+                .header-text {
                     display: none;
                 }
-                
                 .header-menu-btn .mat-icon {
                     &:after {
                         content: 'menu';
                     }
                 }
             }
-
             deja-sidenav-menu {
                 .mat-list-item {
                     .mat-list-item-content {
                         justify-content: flex-end;
-                        
                         .mat-list-icon {
                             padding: 0;
                         }
-                        
                         .mat-list-text {
                             display: none;
                         }
@@ -44,12 +37,10 @@ deja-sidenav {
                 }
             }
         }
-
         .mat-drawer-content {
             margin-left: $light-sidenav-width !important;
         }
     }
-
     @mixin sidebar-hidden() {
         .mat-sidenav {
             width: $small-sidenav-width;
@@ -57,7 +48,6 @@ deja-sidenav {
                 border-right: none;
             }
         }
-    
         .mat-drawer-content {
             .mat-toolbar {
                 padding: 0 8px;
@@ -68,41 +58,36 @@ deja-sidenav {
             }
         }
     }
-
     .mat-drawer-container {
         height: 100%;
-        
+        flex: 1 1 100%;
         &.sidenav-light {
             @include sidebar-light;
         }
         &.sidenav-hidden {
             @include sidebar-hidden;
         }
-
         .mat-sidenav {
             overflow: visible;
             width: $large-sidenav-width;
-
+            display: flex;
+            flex-direction: column;
             .header {
                 padding-right: 8px;
                 font-size: 14px;
-
                 .header-icon {
                     padding: 4px;
                 }
-
                 .header-text {
                     margin-left: 32px;
+                    flex: 1 1 auto;
                 }
-
                 .header-menu-btn .mat-icon:after {
                     content: 'keyboard_arrow_left';
                 }
             }
-
             deja-sidenav-menu {
                 // overflow-y: auto;
-                
                 .mat-list-item {
                     .mat-list-item-content {
                         .mat-list-text {
@@ -111,35 +96,33 @@ deja-sidenav {
                         }
                     }
                 }
-
                 .mat-divider {
                     margin: 0.7rem 0;
                 }
             }
         }
-
         .mat-drawer-content {
-            height: 100%; 
-
-            > div { 
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            >div {
                 overflow: hidden;
                 height: 100%;
             }
-
             .mat-toolbar {
                 @include mat-elevation(3);
                 -webkit-font-smoothing: antialiased;
                 padding-right: 8px;
-            
+                .menu-title {
+                    flex: 1 1 auto;
+                }
                 .menu-btn {
                     display: none;
                 }
             }
-
             deja-sidenav-content {
                 overflow-y: auto;
-
-                > * {
+                >* {
                     overflow-x: hidden;
                     overflow-y: auto;
                 }
