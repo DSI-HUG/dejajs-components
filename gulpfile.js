@@ -220,14 +220,14 @@ gulp.task('copy:manifest', function () {
             Object.entries(finalPackage.dependencies).forEach(function (line) {
                 var packageName = line[0];
                 var packageVersion = rootPackage.dependencies[line[0]];
-                finalPackage.dependencies[packageName] = packageVersion;
+                finalPackage.dependencies[packageName] = `^${packageVersion}`;
             });
             Object.entries(finalPackage.peerDependencies).forEach(function (line) {
                 var packageName = line[0];
                 var packageVersion = rootPackage.dependencies[line[0]];
-                finalPackage.peerDependencies[packageName] = packageVersion;
+                finalPackage.peerDependencies[packageName] = `^${packageVersion}`;
             });
-
+            
             finalPackage.version = rootPackage.version;
             return finalPackage;
         }))
