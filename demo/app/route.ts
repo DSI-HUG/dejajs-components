@@ -18,6 +18,7 @@ import { GlobalEventsDemoComponent } from './global-events/global-events-demo';
 import { GridDemoComponent } from './grid/grid-demo';
 import { HomeGuidesComponent } from './home-guides/home-guides.component';
 import { HomeComponent } from './home/home.component';
+import {DejaIntervalSelectorDemoComponent} from './interval-selector/interval-selector-demo';
 import { MessageBoxDemoComponent } from './message-box/message-box-demo';
 import { DejaNumericStepperDemoComponent } from './numeric-stepper/numeric-stepper-demo.component';
 import { OverlayDemoComponent } from './overlay/overlay-demo';
@@ -49,6 +50,7 @@ const routes: Routes = [
     { component: PopupDemoComponent, path: 'popup', data: { title: 'Popup' } },
     { component: ProgressCircleDemoComponent, path: 'progress-circle', data: { title: 'Progress Circle' } },
     { component: DejaRangeDemoComponent, path: 'range', data: { title: 'Range' } },
+    { component: DejaIntervalSelectorDemoComponent, path: 'intervalSelector', data: { title: 'Interval Selector' } },
     { component: ReactiveFormDemoComponent, path: 'reactive-form', data: { title: 'Reactive Form' } },
     { component: SelectDemoComponent, path: 'select', data: { title: 'Select' } },
     { component: DejaSnackbarDemoComponent, path: 'snackbar', data: { title: 'Snackbar' } },
