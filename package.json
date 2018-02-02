@@ -106,6 +106,7 @@
     "rollup": "0.53.3",
     "rollup-plugin-uglify": "2.0.1",
     "run-sequence": "2.2.1",
+    "sonarqube-scanner": "^2.0.2",
     "symlink-dir": "1.1.0",
     "ts-node": "3.3.0",
     "tslint": "5.8.0",
