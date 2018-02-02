@@ -51,6 +51,7 @@ import {
     DejaMouseDragDropModule,
     DejaNumericStepperModule,
     DejaOverlayModule,
+    DejaPopupModule,
     DejaRangeModule,
     DejaSelectModule,
     DejaSidenavModule,
@@ -82,6 +83,9 @@ import { MessageBoxDemoComponent } from './message-box/message-box-demo';
 import { MonacoEditorDemoService } from './monaco-editor/monaco-editor-demo.service.';
 import { DejaNumericStepperDemoComponent } from './numeric-stepper/numeric-stepper-demo.component';
 import { OverlayDemoComponent } from './overlay/overlay-demo';
+import { DummyComponent } from './popup/dummy/dummy.component';
+import { DejaPopupCustomDemoComponent } from './popup/popup-custom.component';
+import { PopupDemoComponent } from './popup/popup-demo';
 import { ProgressCircleDemoComponent } from './progress-circle/progress-circle-demo';
 import { DejaRangeDemoComponent } from './range/range-demo';
 import { ReactiveFormDemoComponent } from './reactive-form/reactive-form-demo';
@@ -109,6 +113,7 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         MessageBoxDemoComponent,
         DejaNumericStepperDemoComponent,
         ProgressCircleDemoComponent,
+        PopupDemoComponent,
         DejaRangeDemoComponent,
         ReactiveFormDemoComponent,
         SelectDemoComponent,
@@ -119,6 +124,9 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         DejaTreeListDemoComponent,
         DejaViewPortDemoComponent,
         NewsCardComponent,
+        DejaPopupCustomDemoComponent,
+        DummyComponent,
+
     ],
     imports: [
         FormsModule,
@@ -163,6 +171,7 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         DejaOverlayModule,
         DejaMessageBoxModule,
         DejaMouseDragDropModule.forRoot(),
+        DejaPopupModule,
         DejaRangeModule,
         DejaSelectModule,
         DejaSidenavModule,
@@ -194,5 +203,9 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         UserService,
     ],
     bootstrap: [AppComponent],
+    entryComponents: [
+        DejaPopupCustomDemoComponent,
+        DummyComponent,
+    ]
 })
 export class AppModule { }

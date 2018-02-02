@@ -1,0 +1,27 @@
+<div class="deja-popup-container" fxLayout="column" fxLayoutAlign="start stretch">
+
+    <div *ngIf="dragstart" class="dialog-overlay" fxFlex="none" (click)="freeze($event)">&nbsp;</div>
+
+    <deja-popup-toolbar fxFlex="none" *ngIf="config && config.toolbarType" [config]="config" (actionSelected)="dispatchAction($event)"></deja-popup-toolbar>
+
+    <div mat-dialog-content [ngClass]="{'frame-full': !config.padding, 'frame-padding': !!config.padding}" fxFlex="grow" fxLayout="column"
+        fxLayoutAlign="start stretch">
+
+        <deja-popup-content *ngIf="config?.hasContent()" [config]="config" fxFlex="grow">
+        </deja-popup-content>
+
+        <div *ngIf="config?.url" class="iframe-wrapper" fxFlex="grow">
+            <deja-iframe [sourceUrl]="config?.url"></deja-iframe>
+        </div>
+
+        <ng-container *ngIf="config?.contentComponentRef">
+            <div [cdkPortalOutlet]="componentPortal"></div>
+        </ng-container>
+
+    </div>
+
+    <div mat-dialog-actions fxFlex="none" *ngIf="config.hasActions()">
+        <div [cdkPortalOutlet]="actionsPortal"></div>
+    </div>
+
+</div>

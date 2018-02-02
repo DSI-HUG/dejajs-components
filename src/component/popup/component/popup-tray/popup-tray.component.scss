@@ -1,0 +1,30 @@
+@import '~@angular/material/theming';
+:host {
+    display: flex;
+    flex-direction: row;
+    background-color: slategrey;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 36px;
+    overflow-x: hidden;
+    .deja-popup-box-container {
+        flex: 1;
+        display: flex;
+        overflow: hidden;
+        deja-popup-box {
+            flex: 1;
+            max-width: 25%;
+            min-width: 36px;
+        }
+    }
+    mat-icon {
+        color: whitesmoke;
+    }
+    button {
+        width: 36px;
+        height: 36px;
+        line-height: 36px;
+    }
+}

@@ -1,0 +1,72 @@
+<mat-card id="demo" class="demo-card demo-basic">
+    <mat-toolbar color="primary">Dialogs</mat-toolbar>
+    <mat-card-content>
+
+        <div id="button-container">
+
+            <div>
+                <button mat-raised-button class="mat-primary" (click)="askConfirmation1()">Save or Cancel</button>
+            </div>
+
+            <div>
+                <button mat-raised-button class="mat-primary" (click)="askConfirmation2()">Yes, No, Cancel</button>
+            </div>
+
+            <div>
+                <button mat-raised-button class="mat-primary" (click)="askConfirmationCustom()">Custom Dialog</button>
+            </div>
+
+            <div>
+                <button mat-raised-button class="mat-primary" (click)="showUrlImg()">Show an image from an url</button>
+            </div>
+
+            <div>
+                <button mat-raised-button class="mat-primary" (click)="useAdvancedComponent()">Advanced Dialog</button>
+            </div>
+
+            <div>
+                <button mat-raised-button class="mat-primary" (click)="showUrlPdf()">Show a pdf document from an url</button>
+            </div>
+
+            <div>
+                <button mat-raised-button class="mat-primary" (click)="showUrlPdfFullscreen()">Show a pdf document starting in fullscreen</button>
+            </div>
+
+        </div>
+
+        <br/>
+
+    </mat-card-content>
+
+</mat-card>
+<mat-card id="demo" class="demo-card demo-basic">
+    <mat-toolbar color="primary">Popup</mat-toolbar>
+    <mat-card-content [style.background-color]="(hoveredColor && hoveredColor.toHex())">
+
+        <div id="button-container">
+
+            <div>
+                <button mat-raised-button class="mat-primary" (click)="showPopUp()">Pop Up</button>
+            </div>
+
+            <div>
+                <button mat-raised-button class="mat-primary" (click)="showPopUpPdf()">Pop Up Pdf</button>
+            </div>
+
+            <div>
+                <button mat-raised-button class="mat-primary" (click)="showComponentInjection()">Component injection</button>
+            </div>
+
+        </div>
+
+        <br/>
+
+    </mat-card-content>
+
+</mat-card>
+<deja-snackbar *ngIf="openGate" alignment="bottom" [duration]="2000" (onAnimationDone)="openGate = false">
+    <deja-message-box [type]="message.type" horizontal>
+        {{message.text}}
+    </deja-message-box>
+</deja-snackbar>
+<deja-popup-tray></deja-popup-tray>
