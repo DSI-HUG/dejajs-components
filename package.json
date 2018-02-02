@@ -18,7 +18,7 @@
   },
   "scripts": {
     "build": "ng build",
-    "build:prod": "del-cli .tmp && yarn run copy:assets && ng build --prod --env=prod --base-href https://dsi-hug.github.io/dejajs-components/",
+    "build:prod": "del-cli .tmp && yarn run copy:assets && ng build --aot --prod --env=prod --base-href https://dsi-hug.github.io/dejajs-components/",
     "build:lib": "gulp build",
     "build:lib:watch": "gulp",
     "copy:assets": "del-cli demo/vs && symlink-dir ./node_modules/monaco-editor/min/vs demo/vs",
@@ -39,6 +39,7 @@
     "test:watch": "ng test --code-coverage"
   },
   "dependencies": {
+    "@angular-devkit/core": "^0.2.0",
     "@angular/animations": "5.1.3",
     "@angular/cdk": "5.0.3",
     "@angular/common": "5.1.3",
@@ -60,11 +61,11 @@
     "custom-event-polyfill": "0.3.0",
     "hammerjs": "2.0.8",
     "json-object-mapper": "1.5.1",
-    "lodash": "4.17.4",
     "moment": "2.20.1",
     "monaco-editor": "0.10.1",
     "prismjs": "1.9.0",
     "reflect-metadata": "0.1.10",
+    "rxjs": "^5.5.6",
     "showdown": "1.8.6",
     "zone.js": "0.8.19"
   },
