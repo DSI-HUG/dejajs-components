@@ -30,6 +30,7 @@ before_script:
 - sleep 3
 script:
 - bash ./tools/scripts/validation.sh
+- bash ./tools/scripts/sonar.sh
 env:
   global:
   - ENCRYPTION_LABEL: d9215e5535f8

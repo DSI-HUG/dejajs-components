@@ -2,6 +2,7 @@
 @import 'utils/flex';
 
 @import 'components/loader';
+@import 'components/popup';
 @import 'material/material';
 @import 'mixins/deja-theme';
 
@@ -23,9 +24,4 @@
 }
 
 /* Added for status managment */
-#dpi {
-    .mat-dialog-container {
-        padding: 0;
-        height: auto;
-    }
-}
+// #dpi {}

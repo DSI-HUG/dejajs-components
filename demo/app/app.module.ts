@@ -50,10 +50,10 @@ import {
     DejaListLoaderModule,
     DejaMarkdownModule,
     DejaMessageBoxModule,
-    DejaMonacoEditorModule,
     DejaMouseDragDropModule,
     DejaNumericStepperModule,
     DejaOverlayModule,
+    DejaPopupModule,
     DejaRangeModule,
     DejaSelectModule,
     DejaSidenavModule,
@@ -84,10 +84,12 @@ import { HomeGuidesComponent } from './home-guides/home-guides.component';
 import { HomeComponent } from './home/home.component';
 import { DejaIntervalSelectorDemoComponent } from './interval-selector/interval-selector-demo';
 import { MessageBoxDemoComponent } from './message-box/message-box-demo';
-import { DejaMonacoEditorDemoComponent } from './monaco-editor/monaco-editor-demo';
 import { MonacoEditorDemoService } from './monaco-editor/monaco-editor-demo.service.';
 import { DejaNumericStepperDemoComponent } from './numeric-stepper/numeric-stepper-demo.component';
 import { OverlayDemoComponent } from './overlay/overlay-demo';
+import { DummyComponent } from './popup/dummy/dummy.component';
+import { DejaPopupCustomDemoComponent } from './popup/popup-custom.component';
+import { PopupDemoComponent } from './popup/popup-demo';
 import { ProgressCircleDemoComponent } from './progress-circle/progress-circle-demo';
 import { DejaRangeDemoComponent } from './range/range-demo';
 import { ReactiveFormDemoComponent } from './reactive-form/reactive-form-demo';
@@ -115,9 +117,9 @@ registerLocaleData(localeFrCH);
         GridDemoComponent,
         OverlayDemoComponent,
         MessageBoxDemoComponent,
-        DejaMonacoEditorDemoComponent,
         DejaNumericStepperDemoComponent,
         ProgressCircleDemoComponent,
+        PopupDemoComponent,
         DejaRangeDemoComponent,
         DejaIntervalSelectorDemoComponent,
         ReactiveFormDemoComponent,
@@ -129,6 +131,9 @@ registerLocaleData(localeFrCH);
         DejaTreeListDemoComponent,
         DejaViewPortDemoComponent,
         NewsCardComponent,
+        DejaPopupCustomDemoComponent,
+        DummyComponent,
+
     ],
     imports: [
         FormsModule,
@@ -172,8 +177,8 @@ registerLocaleData(localeFrCH);
         DejaNumericStepperModule,
         DejaOverlayModule,
         DejaMessageBoxModule,
-        DejaMonacoEditorModule,
         DejaMouseDragDropModule.forRoot(),
+        DejaPopupModule,
         DejaRangeModule,
         DejaIntervalSelectorModule,
         DejaSelectModule,
@@ -206,5 +211,9 @@ registerLocaleData(localeFrCH);
         UserService,
     ],
     bootstrap: [AppComponent],
+    entryComponents: [
+        DejaPopupCustomDemoComponent,
+        DummyComponent,
+    ]
 })
 export class AppModule { }
