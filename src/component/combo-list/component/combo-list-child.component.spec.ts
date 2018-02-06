@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ComboListComponent } from './combo-list.component';
+import { ComboListChildComponent } from './combo-list-child.component';
 
-describe('ComboListComponent', () => {
-  let component: ComboListComponent;
-  let fixture: ComponentFixture<ComboListComponent>;
+describe('ComboListChildComponent', () => {
+  let component: ComboListChildComponent;
+  let fixture: ComponentFixture<ComboListChildComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ComboListComponent ]
+      declarations: [ ComboListChildComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ComboListComponent);
+    fixture = TestBed.createComponent(ComboListChildComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

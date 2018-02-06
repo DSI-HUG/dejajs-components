@@ -1,0 +1,13 @@
+<deja-combo-list-child [items]="itemsToSelect" (itemSelected)="selected($event)" fxFlex="45">
+</deja-combo-list-child>
+
+<div fxLayout="column" fxLayoutAlign="center stretch" fxLayoutGap="1rem" class="action" fxFlex>
+    <button mat-icon-button title="Tout selectionner" (click)="selectAll()" color="primary">
+        <mat-icon class="md-24" aria-label="Tout selectionner">arrow_forward</mat-icon>
+    </button>
+    <button mat-icon-button title="Tout deselectionner" (click)="selectNone()" color="primary">
+        <mat-icon class="md-24" aria-label="Tout deselectionner">arrow_back</mat-icon>
+    </button>
+</div>
+
+<deja-combo-list-child [items]="itemsSelected" (itemSelected)="unselect($event)" fxFlex="45"></deja-combo-list-child>

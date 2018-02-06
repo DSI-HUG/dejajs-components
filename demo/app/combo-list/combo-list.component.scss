@@ -2,6 +2,9 @@
 :host {
     flex: 1 1 100%;
     padding: 1rem;
+    .combo-demo-container{
+        height: 20vh;
+    }
     #demo {
         .h1 {
             margin-top: 2rem;
@@ -32,10 +35,6 @@
             height: inherit;
             vertical-align: top;
             width: inherit;
-        }
-        #flight {
-            display: flex;
-            align-items: center;
         }
     }
 }
