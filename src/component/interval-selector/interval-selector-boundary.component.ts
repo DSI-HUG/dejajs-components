@@ -119,8 +119,8 @@ export class DejaIntervalSelectorBoundaryComponent implements OnDestroy {
     }
 
     // internal usage
-    protected isVisible = false;
-    protected charToDisplay = '&nbsp;';
+    public isVisible = false;
+    public charToDisplay = '&nbsp;';
     private boundaryChar = '[';
 
     @HostListener('click', ['$event'])
