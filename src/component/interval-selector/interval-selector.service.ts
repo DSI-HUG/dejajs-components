@@ -24,22 +24,16 @@ export class IntervalSelectorService {
 
     /**
      * boundary selection changes are notified throught this subject.
-     *
-     * @type {Subject<IntervalBoundary>}
      */
     public intervalSelectionChanged$:Subject<IntervalBoundary> = new Subject<IntervalBoundary>();
 
     /**
      * for internal usage by the DejaIntervalSelectorBoundaryComponent component.
-     *
-     * @type {Subject<IntervalSelectorEventData>}
      */
     public displayModelBoundaries$:Subject<IntervalSelectorEventData> = new Subject<IntervalSelectorEventData>();
 
     /**
      * for internal usage by the DejaIntervalSelectorBoundaryComponent component.
-     *
-     * @type {Subject<IntervalSelectorEventData>}
      */
     public hideModelBoundaries$:Subject<IntervalSelectorEventData> = new Subject<IntervalSelectorEventData>();
 
@@ -52,8 +46,8 @@ export class IntervalSelectorService {
     /**
      * adds the interval identified by an unique idenfifier and a compare function.
      *
-     * @param {string} intervalId the interval unique identifier
-     * @param {Function} compareFunction ther interval compare Function used to determinate the order of model.
+     * @param intervalId the interval unique identifier
+     * @param compareFunction ther interval compare Function used to determinate the order of model.
      */
     public addInterval(intervalId: string, compareFunction: ModelCompareFunction) {
         const interval: Interval = new Interval(intervalId, compareFunction);
@@ -63,7 +57,7 @@ export class IntervalSelectorService {
     /**
      * removes the interval for the given interval id.
      *
-     * @param {string} intervalId the interval id
+     * @param intervalId the interval id
      */
     public removeInterval(intervalId: string) {
         if (intervalId) {
@@ -74,8 +68,8 @@ export class IntervalSelectorService {
     /**
      * enable or disable selection for the given interval.
      *
-     * @param {string} intervalId
-     * @param {boolean} enabled
+     * @param intervalId
+     * @param enabled
      */
     public changeIntervalEnabledStatus(intervalId: string, enabled: boolean) {
         const interval: Interval = this._intervalMap.get(intervalId);
@@ -90,9 +84,9 @@ export class IntervalSelectorService {
     /**
      * use this method to change the selected status of the given boundary to true.
      *
-     * @param {string} intervalId
+     * @param intervalId
      * @param model
-     * @param {boolean} openingBoundary
+     * @param openingBoundary
      */
     public selectBoundary(intervalId: string, model: any, openingBoundary: boolean): void {
         const boundary: IntervalBoundary = new IntervalBoundary(intervalId, model, openingBoundary, true);
@@ -102,9 +96,9 @@ export class IntervalSelectorService {
     /**
      * use this method to change the selected status of the given boundary to false.
      *
-     * @param {string} intervalId
+     * @param intervalId
      * @param model
-     * @param {boolean} openingBoundary
+     * @param openingBoundary
      */
     public deselectBoundary(intervalId: string, model: any, openingBoundary: boolean): void {
         const boundary: IntervalBoundary = new IntervalBoundary(intervalId, model, openingBoundary, false);
@@ -114,7 +108,7 @@ export class IntervalSelectorService {
     /**
      * use this method to indicate that a data model has been clicked.
      *
-     * @param {string} intervalId
+     * @param intervalId
      * @param model
      */
     public modelClicked(intervalId: string, model: any): void {
@@ -189,8 +183,8 @@ export class IntervalSelectorService {
      * use this method to display both boundaries for the given modem, but without selecting it.
      * It will act like the mouse is over the boundary.
      *
-     * @param {string} intervalId
-     * @param {data} model
+     * @param intervalId
+     * @param model
      */
     public displayBoundary(intervalId: string, model: any) {
         const boundary: IntervalSelectorEventData = new IntervalSelectorEventData(intervalId, model, false, false);
@@ -200,8 +194,8 @@ export class IntervalSelectorService {
     /**
      * use this method to hide a boundary that has been displayed using the method {@link displayBoundary(any, string)}.
      *
-     * @param {string} intervalId
-     * @param {data} model
+     * @param intervalId
+     * @param model
      */
     public hideBoundary(intervalId: string, model: any) {
         const boundary: IntervalSelectorEventData = new IntervalSelectorEventData(intervalId, model, false, false);
@@ -211,9 +205,9 @@ export class IntervalSelectorService {
     /**
      * use this method to restore the selected status of a given boundary.
      *
-     * @param {string} intervalId
+     * @param intervalId
      * @param model
-     * @param {boolean} openingBoundary
+     * @param openingBoundary
      */
     public restoreSelectedBoundaryState(intervalId: string, model: any, openingBoundary: boolean): void {
         const interval: Interval = this._intervalMap.get(intervalId);
@@ -231,7 +225,7 @@ export class IntervalSelectorService {
     /**
      * reset interval selection for a given interval id.
      *
-     * @param {string} intervalId the interval unique identifier
+     * @param intervalId the interval unique identifier
      */
     public resetIntervalSelectionById(intervalId: string) {
         const interval: Interval = this._intervalMap.get(intervalId);
@@ -241,8 +235,7 @@ export class IntervalSelectorService {
     /**
      * returns the enabled status for the given items list id.
      *
-     * @param {string} intervalId
-     * @returns {boolean}
+     * @param intervalId
      */
     public isIntervalEnabled(intervalId: string): boolean {
         const interval: Interval = this._intervalMap.get(intervalId);
@@ -255,7 +248,7 @@ export class IntervalSelectorService {
     /**
      * use this method to define both the lower and upper boundaries.
      *
-     * @param {string} intervalId
+     * @param intervalId
      * @param model1
      * @param model2
      */
@@ -293,7 +286,7 @@ export class IntervalSelectorService {
     /**
      * reset interval selection for a given interval.
      *
-     * @param {Interval} interval
+     * @param interval
      */
     private resetIntervalSelection(interval: Interval) {
         if (!interval) {
