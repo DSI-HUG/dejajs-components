@@ -1,0 +1,15 @@
+<span class="deja-popup-box-title">{{dialog.componentInstance.config.title}}</span>
+
+<span *ngIf="showActions" class="deja-popup-box-actions">
+    <span class="deja-popup-box-content">
+        <button *ngIf="!dialog.componentInstance.isMinified" mat-icon-button (click)="doEmit(buttonMinimize)" tabindex="0">
+            <mat-icon aria-label="buttonMinimize.label">{{buttonMinimize.icon}}</mat-icon>
+        </button>
+        <button *ngIf="dialog.componentInstance.isMinified" mat-icon-button (click)="doEmit(buttonFullscreen)" tabindex="0">
+            <mat-icon aria-label="buttonFullscreen.label">{{buttonFullscreen.icon}}</mat-icon>
+        </button>
+        <button mat-icon-button (click)="doClose()" tabindex="0">
+            <mat-icon aria-label="buttonClose.label">{{buttonClose.icon}}</mat-icon>
+        </button>
+    </span>
+</span>

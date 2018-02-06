@@ -6,6 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import localeFrCH from '@angular/common/locales/fr-CH';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -45,12 +46,14 @@ import {
     DejaEditableModule,
     DejaGridModule,
     DejaIFrameModule,
+    DejaIntervalSelectorModule,
     DejaListLoaderModule,
     DejaMarkdownModule,
     DejaMessageBoxModule,
     DejaMouseDragDropModule,
     DejaNumericStepperModule,
     DejaOverlayModule,
+    DejaPopupModule,
     DejaRangeModule,
     DejaSelectModule,
     DejaSidenavModule,
@@ -66,6 +69,7 @@ import {
     // } from '../../dist';
 } from '../../src/index';
 
+import {registerLocaleData} from '@angular/common';
 import { MatButtonModule, MatButtonToggleModule, MatCardModule, MatCheckboxModule, MatIconModule, MatInputModule, MatListModule, MatMenuModule, MatProgressBarModule, MatProgressSpinnerModule, MatSidenavModule, MatTabsModule, MatToolbarModule } from '@angular/material';
 import { DejaItemModule } from '../../src/common/core/item-list/index';
 import { DejaBoldQueryModule } from '../../src/component';
@@ -78,10 +82,14 @@ import { GlobalEventsDemoComponent } from './global-events/global-events-demo';
 import { GridDemoComponent } from './grid/grid-demo';
 import { HomeGuidesComponent } from './home-guides/home-guides.component';
 import { HomeComponent } from './home/home.component';
+import { DejaIntervalSelectorDemoComponent } from './interval-selector/interval-selector-demo';
 import { MessageBoxDemoComponent } from './message-box/message-box-demo';
 import { MonacoEditorDemoService } from './monaco-editor/monaco-editor-demo.service.';
 import { DejaNumericStepperDemoComponent } from './numeric-stepper/numeric-stepper-demo.component';
 import { OverlayDemoComponent } from './overlay/overlay-demo';
+import { DummyComponent } from './popup/dummy/dummy.component';
+import { DejaPopupCustomDemoComponent } from './popup/popup-custom.component';
+import { PopupDemoComponent } from './popup/popup-demo';
 import { ProgressCircleDemoComponent } from './progress-circle/progress-circle-demo';
 import { DejaRangeDemoComponent } from './range/range-demo';
 import { ReactiveFormDemoComponent } from './reactive-form/reactive-form-demo';
@@ -92,6 +100,8 @@ import { TagDemoComponent } from './tag/tag-demo.component';
 import { TilesDemoComponent } from './tiles/tiles-demo';
 import { DejaTreeListDemoComponent } from './tree-list/tree-list-demo';
 import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
+
+registerLocaleData(localeFrCH);
 
 @NgModule({
     declarations: [
@@ -109,7 +119,9 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         MessageBoxDemoComponent,
         DejaNumericStepperDemoComponent,
         ProgressCircleDemoComponent,
+        PopupDemoComponent,
         DejaRangeDemoComponent,
+        DejaIntervalSelectorDemoComponent,
         ReactiveFormDemoComponent,
         SelectDemoComponent,
         DejaSnackbarDemoComponent,
@@ -119,6 +131,9 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         DejaTreeListDemoComponent,
         DejaViewPortDemoComponent,
         NewsCardComponent,
+        DejaPopupCustomDemoComponent,
+        DummyComponent,
+
     ],
     imports: [
         FormsModule,
@@ -163,7 +178,9 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         DejaOverlayModule,
         DejaMessageBoxModule,
         DejaMouseDragDropModule.forRoot(),
+        DejaPopupModule,
         DejaRangeModule,
+        DejaIntervalSelectorModule,
         DejaSelectModule,
         DejaSidenavModule,
         DejaSlimScrollModule,
@@ -194,5 +211,9 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         UserService,
     ],
     bootstrap: [AppComponent],
+    entryComponents: [
+        DejaPopupCustomDemoComponent,
+        DummyComponent,
+    ]
 })
 export class AppModule { }

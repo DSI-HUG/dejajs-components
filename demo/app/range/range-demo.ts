@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import {Component, EventEmitter, Output, ViewChild} from '@angular/core';
 import 'rxjs/add/operator/defaultIfEmpty';
 import 'rxjs/add/operator/scan';
 import { Observable } from 'rxjs/Observable';
