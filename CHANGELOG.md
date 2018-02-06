@@ -1,3 +1,9 @@
+#### 2.23.3 (2018-02-06)
+
+##### Bug Fixes
+
+* **DejaIntervalSelectorBoundaryComponent:** protected access in template... ([7de6edec](https://github.com/DSI-HUG/dejajs-components/commit/7de6edec0d8400b55e2c82d6442b6cc193e5c58f))
+
 #### 2.23.2 (2018-02-06)
 
 ##### Bug Fixes
