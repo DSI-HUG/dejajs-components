@@ -1,5 +1,5 @@
 <div (mouseover)="onItemMouseOver()" (mouseout)="onItemMouseLeave()">
-    <deja-interval-selector-boundary #openingBoundary [openingBoundary]="true" [model]="_intervalSelectorData.model" [intervalId]="_intervalSelectorData.intervalId"></deja-interval-selector-boundary>
+    <deja-interval-selector-boundary #openingBoundary [openingBoundary]="true" [model]="intervalSelectorData.model" [intervalId]="intervalSelectorData.intervalId"></deja-interval-selector-boundary>
     <ng-content></ng-content>
-    <deja-interval-selector-boundary #closingBoundary [configureBoundary]="{'model':_intervalSelectorData.model, 'intervalId':_intervalSelectorData.intervalId, 'openingBoundary': false}"></deja-interval-selector-boundary>
+    <deja-interval-selector-boundary #closingBoundary [configureBoundary]="{'model':intervalSelectorData.model, 'intervalId':intervalSelectorData.intervalId, 'openingBoundary': false}"></deja-interval-selector-boundary>
 </div>
