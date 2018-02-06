@@ -1,3 +1,11 @@
+#### 2.23.2 (2018-02-06)
+
+##### Bug Fixes
+
+* **DejaIntervalSelectorComponent:** Access private member inside template ([8583d67b](https://github.com/DSI-HUG/dejajs-components/commit/8583d67b09e3e80415c6fb7870cdc22c79fea530))
+* **DejaPopupConfig:** Remove config.data=this ([7ab0f6ca](https://github.com/DSI-HUG/dejajs-components/commit/7ab0f6caa8e4a5e1ca9b8c7af41afa011c727277))
+* **Dependencies:** Fix dependencies management ([61cc9a59](https://github.com/DSI-HUG/dejajs-components/commit/61cc9a5991e8a6dea27b257389e86a458f072c8b))
+
 #### 2.23.1 (2018-02-06)
 
 ##### Build System / Dependencies
