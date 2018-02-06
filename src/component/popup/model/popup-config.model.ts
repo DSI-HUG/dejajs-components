@@ -100,7 +100,6 @@ export class DejaPopupConfig extends MatDialogConfig {
         config.viewContainerRef = this.viewContainerRef;
         config.width = this.width;
 
-        config.data = this;
         return config;
 
     }
