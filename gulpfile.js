@@ -219,12 +219,12 @@ gulp.task('copy:manifest', function () {
             // For each entries in final Package.json, cope version of the root package.json, to update version
             Object.entries(finalPackage.dependencies).forEach(function (line) {
                 var packageName = line[0];
-                var packageVersion = rootPackage.dependencies[line[0]];
-                finalPackage.dependencies[packageName] = `^${packageVersion}`;
+                var packageVersion = rootPackage.dependencies[line[0]].replace('^', '');
+                finalPackage.dependencies[packageName] = `${packageVersion}`;
             });
             Object.entries(finalPackage.peerDependencies).forEach(function (line) {
                 var packageName = line[0];
-                var packageVersion = rootPackage.dependencies[line[0]];
+                var packageVersion = rootPackage.dependencies[line[0]].replace('^', '');
                 finalPackage.peerDependencies[packageName] = `^${packageVersion}`;
             });
             
