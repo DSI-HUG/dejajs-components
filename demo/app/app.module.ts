@@ -39,6 +39,7 @@ import {
     DejaCodeViewerModule,
     DejaColorPickerModule,
     DejaColorSelectorModule,
+    DejaComboListModule,
     DejaDatePickerModule,
     DejaDateSelectorModule,
     DejaDialogModule,
@@ -69,13 +70,14 @@ import {
     // } from '../../dist';
 } from '../../src/index';
 
-import {registerLocaleData} from '@angular/common';
+import { registerLocaleData } from '@angular/common';
 import { MatButtonModule, MatButtonToggleModule, MatCardModule, MatCheckboxModule, MatIconModule, MatInputModule, MatListModule, MatMenuModule, MatProgressBarModule, MatProgressSpinnerModule, MatSidenavModule, MatTabsModule, MatToolbarModule } from '@angular/material';
 import { DejaItemModule } from '../../src/common/core/item-list/index';
 import { DejaBoldQueryModule } from '../../src/component';
 import { DejaAccordionDemoComponent } from './accordion/accordion-demo.component';
 import { DejaCircularPickerDemoComponent } from './circular-picker/circular-picker-demo';
 import { DejaColorSelectorDemoComponent } from './color-selector/color-selector-demo';
+import { ComboListDemoComponent } from './combo-list/combo-list.component';
 import { DejaContentEditableDemoComponent } from './content-editable/content-editable-demo';
 import { DejaDatePickerDemoComponent } from './date-picker/date-picker-demo';
 import { GlobalEventsDemoComponent } from './global-events/global-events-demo';
@@ -133,7 +135,7 @@ registerLocaleData(localeFrCH);
         NewsCardComponent,
         DejaPopupCustomDemoComponent,
         DummyComponent,
-
+        ComboListDemoComponent,
     ],
     imports: [
         FormsModule,
@@ -165,6 +167,7 @@ registerLocaleData(localeFrCH);
         DejaCodeViewerModule,
         DejaColorPickerModule,
         DejaColorSelectorModule,
+        DejaComboListModule,
         DejaEditableModule,
         DejaGridModule,
         DejaDatePickerModule,
