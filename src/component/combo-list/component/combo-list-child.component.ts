@@ -12,10 +12,14 @@ import {
 })
 export class DejaComboListChildComponent<T> {
     @Input() public items: T;
+    @Input() public labelFieldName: string;
+    @Input() public disabled: boolean;
     @Output() public itemSelected = new EventEmitter<T>();
 
     public toggleItem(item: T) {
-        this.itemSelected.emit(item);
+        if (!this.disabled) {
+            this.itemSelected.emit(item);
+        }
     }
 
 }

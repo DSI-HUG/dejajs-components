@@ -1,5 +1,16 @@
 @import '~@angular/material/theming';
 :host{
-    // border: 1px solid blue;
     @include mat-elevation(1);
+    overflow-y: auto;
+    background-color: white;
+    mat-list-item{
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        &.list-disabled{
+            /deep/> div{
+                cursor: not-allowed;
+            }
+        } 
+    }
 }

@@ -72,6 +72,9 @@ import {
 
 import { registerLocaleData } from '@angular/common';
 import { MatButtonModule, MatButtonToggleModule, MatCardModule, MatCheckboxModule, MatIconModule, MatInputModule, MatListModule, MatMenuModule, MatProgressBarModule, MatProgressSpinnerModule, MatSidenavModule, MatTabsModule, MatToolbarModule } from '@angular/material';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSelectModule } from '@angular/material/select';
 import { DejaItemModule } from '../../src/common/core/item-list/index';
 import { DejaBoldQueryModule } from '../../src/component';
 import { DejaAccordionDemoComponent } from './accordion/accordion-demo.component';
@@ -150,11 +153,14 @@ registerLocaleData(localeFrCH);
         MatButtonModule,
         MatButtonToggleModule,
         MatCardModule,
+        MatDividerModule,
         MatInputModule,
         MatMenuModule,
         MatTabsModule,
         MatProgressSpinnerModule,
         MatProgressBarModule,
+        MatRadioModule,
+        MatSelectModule,
         MatCheckboxModule,
         MatListModule,
         MatSidenavModule,

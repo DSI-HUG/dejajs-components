@@ -1,13 +1,18 @@
-<deja-combo-list-child [items]="itemsToSelect" (itemSelected)="selected($event)" fxFlex="45">
-</deja-combo-list-child>
+<deja-combo-list-child [items]="itemsToSelect" [labelFieldName]="labelFieldName" (itemSelected)="selected($event)" fxFlex="45"
+    [disabled]="disabled"></deja-combo-list-child>
 
-<div fxLayout="column" fxLayoutAlign="center stretch" fxLayoutGap="1rem" class="action" fxFlex>
-    <button mat-icon-button title="Tout selectionner" (click)="selectAll()" color="primary">
-        <mat-icon class="md-24" aria-label="Tout selectionner">arrow_forward</mat-icon>
-    </button>
-    <button mat-icon-button title="Tout deselectionner" (click)="selectNone()" color="primary">
-        <mat-icon class="md-24" aria-label="Tout deselectionner">arrow_back</mat-icon>
-    </button>
+<div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="1rem" class="combo-list-action" fxFlex>
+    <span fxFlex fxLayout="row" fxLayoutAlign="start center">
+        <button mat-icon-button title="Select all" (click)="selectAll()" color="primary" [disabled]="disabled || disableFastActions">
+            <mat-icon class="md-24" aria-label="Select all">fast_forward</mat-icon>
+        </button>
+    </span>
+    <span fxFlex fxLayout="row" fxLayoutAlign="start center">
+        <button mat-icon-button title="Deselect All" (click)="selectNone()" color="primary" [disabled]="disabled || disableFastActions">
+            <mat-icon class="md-24" aria-label="Deselect All">fast_rewind</mat-icon>
+        </button>
+    </span>
 </div>
 
-<deja-combo-list-child [items]="itemsSelected" (itemSelected)="unselect($event)" fxFlex="45"></deja-combo-list-child>
+<deja-combo-list-child [items]="itemsSelected" [labelFieldName]="labelFieldName" (itemSelected)="deselect($event)" fxFlex="45"
+    [disabled]="disabled"></deja-combo-list-child>

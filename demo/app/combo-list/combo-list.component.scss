@@ -4,8 +4,18 @@
     padding: 1rem;
     .combo-demo-container{
         height: 20vh;
+        &.medium{
+            > *{
+                width: 60vw;
+            }
+        }
+        &.small{
+            > *{
+                width: 20vw;
+            }
+        }
     }
-    #demo {
+    .demo {
         .h1 {
             margin-top: 2rem;
         }
@@ -15,12 +25,10 @@
                 padding: 16px;
                 display: flex;
                 flex-direction: column;
-                deja-select {
-                    flex-basis: 50%;
-                    flex-grow: 0;
-                    flex-shrink: 0;
-                    position: relative;
-                    margin-top: 2rem;
+                overflow-y: auto;
+                .combo-demo{
+                    height: 400px;
+                    overflow-y: auto;
                 }
             }
         }
@@ -37,4 +45,33 @@
             width: inherit;
         }
     }
+
+    .combo-radio-group {
+        display: inline-flex;
+        flex-direction: row;
+      }
+      
+      .combo-radio-button {
+        margin: 5px;
+      }
+      
+      .combo-selected-value {
+        margin: 15px 0;
+      }
+
+    .example-h2 {
+        margin: 10px;
+      }
+      
+      .example-section {
+        display: flex;
+        align-content: center;
+        align-items: center;
+        height: 60px;
+      }
+      
+      .example-margin {
+        margin: 10px;
+      }
+
 }

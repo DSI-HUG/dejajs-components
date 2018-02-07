@@ -1,3 +1,3 @@
-<mat-nav-list dense>
-    <mat-list-item *ngFor="let item of items" (click)="toggleItem(item)">{{item.label}}</mat-list-item>
+<mat-nav-list dense [disableRipple]="disabled">
+    <mat-list-item *ngFor="let item of items" (click)="toggleItem(item)" [ngClass]="disabled?'list-disabled':''">{{item[labelFieldName]}}</mat-list-item>
 </mat-nav-list>
