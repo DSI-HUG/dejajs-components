@@ -1,3 +1,9 @@
+#### 2.23.4 (2018-02-07)
+
+##### Bug Fixes
+
+* **DejaPopupConfig:** config.data ([3870b52f](https://github.com/DSI-HUG/dejajs-components/commit/3870b52fe54a8c41dd00b78451f683476facbb7d))
+
 #### 2.23.3 (2018-02-06)
 
 ##### Bug Fixes
