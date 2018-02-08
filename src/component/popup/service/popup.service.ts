@@ -62,15 +62,11 @@ export class DejaPopupService extends MatDialog {
     }
 
     public openCustom(
-        customComponent: ComponentType<DejaPopupBase>,
+        customComponent: ComponentType<DejaPopupBase> | TemplateRef<any>,
         config: DejaPopupConfig = new DejaPopupConfig(),
     ): Observable<DejaPopupReponse> {
 
         const dialogRef: MatDialogRef<DejaPopupBase> = this.open(customComponent, config);
-
-        if (!(dialogRef.componentInstance instanceof DejaPopupBase)) {
-            throw new Error('customComponent does not extend [DejaPopupBase]');
-        }
 
         return dialogRef.afterClosed()
             .map((resp: any) => {

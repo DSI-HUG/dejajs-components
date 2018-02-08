@@ -7,6 +7,7 @@
  */
 import { MatDialogConfig } from '@angular/material';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { ComponentType } from '@angular/cdk/portal';
 import { DejaPopupAction } from './popup-action.model';
 
 export class DejaPopupConfig extends MatDialogConfig {
@@ -18,8 +19,8 @@ export class DejaPopupConfig extends MatDialogConfig {
     public dejaPopupCom$?: BehaviorSubject<DejaPopupAction>;
 
     public aContent?: string[];
-    public actionComponentRef: any;
-    public contentComponentRef: any;
+    public actionComponentRef: ComponentType<any>;
+    public contentComponentRef: ComponentType<any>;
     public actions: DejaPopupAction[];
     public autoFocus = false;
     public autoposition?: boolean;
