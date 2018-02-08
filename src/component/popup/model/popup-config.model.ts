@@ -18,7 +18,6 @@ export class DejaPopupConfig extends MatDialogConfig {
 
     public dejaPopupCom$?: BehaviorSubject<DejaPopupAction>;
 
-    // public aContent?: string[];
     public actionComponentRef: ComponentType<any>;
     public contentComponentRef: ComponentType<any>;
     public actions: DejaPopupAction[];
@@ -28,8 +27,7 @@ export class DejaPopupConfig extends MatDialogConfig {
     public data?: any;
     public dialogPanelId: string;
     public fullscreen = false;
-    public isModal = true;
-    public label = true; // todo remove?
+    // public isModal = true;
     public maxWidth = '100vw';
     public maxHeight = '100vh';
     public padding?: boolean;

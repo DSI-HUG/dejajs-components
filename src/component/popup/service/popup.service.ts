@@ -116,9 +116,9 @@ export class DejaPopupService extends MatDialog {
     ): Observable<DejaPopupReponse> {
 
         config.hasBackdrop = false;
-        config.isModal = false;
+        // config.isModal = false;
 
-        config.ensureDimension();
+        // config.ensureDimension();
         if (config.autoposition === undefined) {
             config.autoposition = true;
         }
