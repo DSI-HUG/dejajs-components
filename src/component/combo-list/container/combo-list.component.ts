@@ -39,7 +39,8 @@ export class DejaComboListComponent<T> implements OnChanges, ControlValueAccesso
     public onChangeCallback: (_: any) => void = noop;
 
     constructor() {
-        this.init();
+        this.itemsSelected = [];
+        this.itemsToSelect = [];
     }
 
     public ngOnChanges() {
@@ -114,11 +115,6 @@ export class DejaComboListComponent<T> implements OnChanges, ControlValueAccesso
     }
 
     // ************* End of ControlValueAccessor Implementation **************
-
-    private init() {
-        this.itemsSelected = [];
-        this.itemsToSelect = [];
-    }
 
     private emit(type: string, currentItem: T = null) {
         const action: IDejaComboListAction<T> = {
