@@ -18,8 +18,8 @@ import { GlobalEventsDemoComponent } from './global-events/global-events-demo';
 import { GridDemoComponent } from './grid/grid-demo';
 import { HomeGuidesComponent } from './home-guides/home-guides.component';
 import { HomeComponent } from './home/home.component';
+import {DejaIntervalSelectorDemoComponent} from './interval-selector/interval-selector-demo';
 import { MessageBoxDemoComponent } from './message-box/message-box-demo';
-import { DejaMonacoEditorDemoComponent } from './monaco-editor/monaco-editor-demo';
 import { DejaNumericStepperDemoComponent } from './numeric-stepper/numeric-stepper-demo.component';
 import { OverlayDemoComponent } from './overlay/overlay-demo';
 import { PopupDemoComponent } from './popup/popup-demo';
@@ -45,11 +45,12 @@ const routes: Routes = [
     { component: GridDemoComponent, path: 'grid', data: { title: 'Grid' } },
     { component: OverlayDemoComponent, path: 'overlay', data: { title: 'Overlay' } },
     { component: MessageBoxDemoComponent, path: 'message-box', data: { title: 'Message Box' } },
-    { component: DejaMonacoEditorDemoComponent, path: 'monaco-editor', data: { title: 'Monaco Editor' } },
+    { path: 'monaco-editor', loadChildren: './monaco-editor/monaco-editor-demo.module#MonacoEditorDemoModule', data: {title: 'Monaco Editor'} },
     { component: DejaNumericStepperDemoComponent, path: 'numeric-stepper', data: { title: 'Numeric Stepper' } },
     { component: PopupDemoComponent, path: 'popup', data: { title: 'Popup' } },
     { component: ProgressCircleDemoComponent, path: 'progress-circle', data: { title: 'Progress Circle' } },
     { component: DejaRangeDemoComponent, path: 'range', data: { title: 'Range' } },
+    { component: DejaIntervalSelectorDemoComponent, path: 'intervalSelector', data: { title: 'Interval Selector' } },
     { component: ReactiveFormDemoComponent, path: 'reactive-form', data: { title: 'Reactive Form' } },
     { component: SelectDemoComponent, path: 'select', data: { title: 'Select' } },
     { component: DejaSnackbarDemoComponent, path: 'snackbar', data: { title: 'Snackbar' } },

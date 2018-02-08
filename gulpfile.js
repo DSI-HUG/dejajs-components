@@ -213,11 +213,23 @@ gulp.task('copy:scss', function () {
  */
 gulp.task('copy:manifest', function () {
     return gulp.src([`${srcFolder}/package.json`])
-        .pipe(jeditor(function (json) {
-            var package = JSON.parse(fs.readFileSync(path.join(rootFolder, 'package.json')));
-            json.version = package.version;
-            json.peerDependencies = package.dependencies;
-            return json;
+        .pipe(jeditor(function (finalPackage) {
+            var rootPackage = JSON.parse(fs.readFileSync(path.join(rootFolder, 'package.json')));
+
+            // For each entries in final Package.json, cope version of the root package.json, to update version
+            Object.entries(finalPackage.dependencies).forEach(function (line) {
+                var packageName = line[0];
+                var packageVersion = rootPackage.dependencies[line[0]].replace('^', '');
+                finalPackage.dependencies[packageName] = `${packageVersion}`;
+            });
+            Object.entries(finalPackage.peerDependencies).forEach(function (line) {
+                var packageName = line[0];
+                var packageVersion = rootPackage.dependencies[line[0]].replace('^', '');
+                finalPackage.peerDependencies[packageName] = `^${packageVersion}`;
+            });
+            
+            finalPackage.version = rootPackage.version;
+            return finalPackage;
         }))
         .pipe(gulp.dest(distFolder));
 });

@@ -19,6 +19,36 @@
   "module": "dejajs-component.js",
   "typings": "dejajs-component.d.ts",
   "dependencies": {
-    "codelyzer": "^3.2.0"
+    "@angular/animations": "x.x.x",
+    "@angular/cdk": "x.x.x",
+    "@angular-devkit/core": "x.x.x",
+    "@angular/flex-layout": "x.x.x",
+    "@angular/material": "x.x.x",
+    "@deja-js/resources": "x.x.x",
+    "@ngrx/core": "x.x.x",
+    "@ngrx/store": "x.x.x",
+    "angular2-text-mask": "x.x.x",
+    "css-element-queries": "x.x.x",
+    "custom-event-polyfill": "x.x.x",
+    "hammerjs": "x.x.x",
+    "json-object-mapper": "x.x.x",
+    "moment": "x.x.x",
+    "monaco-editor": "x.x.x",
+    "prismjs": "x.x.x",
+    "reflect-metadata": "x.x.x",
+    "showdown": "x.x.x"
+  },
+  "peerDependencies": {
+    "@angular/common": "x.x.x",
+    "@angular/compiler": "x.x.x",
+    "@angular/core": "x.x.x",
+    "@angular/forms": "x.x.x",
+    "@angular/http": "x.x.x",
+    "@angular/platform-browser": "x.x.x",
+    "@angular/platform-browser-dynamic": "x.x.x",
+    "@angular/router": "x.x.x",
+    "core-js": "x.x.x",
+    "rxjs": "x.x.x",
+    "zone.js": "x.x.x"
   }
 }

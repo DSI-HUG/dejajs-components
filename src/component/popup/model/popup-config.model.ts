@@ -85,7 +85,6 @@ export class DejaPopupConfig extends MatDialogConfig {
 
         config.ariaDescribedBy = this.ariaDescribedBy;
         config.backdropClass = this.backdropClass;
-        config.data = this.data;
         config.direction = this.direction;
         config.disableClose = this.disableClose;
         config.hasBackdrop = this.hasBackdrop;

@@ -1234,7 +1234,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         let outputEmitter = null;
 
         let output = null;
-
         if (items) {
             if (Array.isArray(items)) {
                 const models = items.map((itm) => itm.model !== undefined ? itm.model : itm);
@@ -1246,7 +1245,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                 if (this.modelIsValue) {
                     const valueField = this.getValueField();
                     if (models.find((m) => !!m[valueField])) {
-                        output = models.map((m) => m[valueField] || m);
+                        output = models.map((m) => m[valueField] !== undefined ? m[valueField] : m);
                     }
                 } else {
                     output = models;
@@ -1260,7 +1259,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
                 if (this.modelIsValue) {
                     const valueField = this.getValueField();
-                    output = model[valueField] || model;
+                    output = model[valueField] !== undefined ? model[valueField] : model;
                 } else {
                     output = items.model !== undefined ? items.model : items;
                 }

@@ -299,7 +299,7 @@ export abstract class ItemListBase implements OnDestroy {
     }
 
     /** Trie la liste par le champs spécifié. */
-    public sort$(name?: string) {
+    public sort$(name?: string): Observable<IViewListResult> {
         const sortField = name || this._textField;
 
         if (!this._sortInfos) {
@@ -322,7 +322,7 @@ export abstract class ItemListBase implements OnDestroy {
      * @param groupInfos Modèle de groupe à appliquer.
      * @return Observable résolu par la fonction.
      */
-    public group$(groups: IGroupInfo[]) {
+    public group$(groups: IGroupInfo[]): Observable<IViewListResult> {
         return this.getItemListService().group$(groups)
             .switchMap(() => this.calcViewList$().first());
     }
@@ -331,7 +331,7 @@ export abstract class ItemListBase implements OnDestroy {
      * @param groupInfos Modèle de groupe à retirer.
      * @return Observable résolu par la fonction.
      */
-    public ungroup$(groupInfo: IGroupInfo) {
+    public ungroup$(groupInfo: IGroupInfo): Observable<IViewListResult> {
         return this.getItemListService().ungroup$(groupInfo)
             .switchMap(() => this.calcViewList$().first());
     }
