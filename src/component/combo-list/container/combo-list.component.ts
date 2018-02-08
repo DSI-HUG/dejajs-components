@@ -3,8 +3,10 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IDejaComboListAction } from '../model/combo-list-action.interface';
 
 const noop = () => { };
+
 export const DEFAULT_VALUE_ACCESSOR: any = {
     provide: NG_VALUE_ACCESSOR,
+    // tslint:disable-next-line:no-use-before-declare
     useExisting: forwardRef(() => DejaComboListComponent),
     multi: true
 };
