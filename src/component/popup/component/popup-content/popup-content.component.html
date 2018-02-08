@@ -1,4 +1,3 @@
-<div *ngIf="typeof config?.content === 'string'" [innerHTML]="config.content"></div>
-<ng-container *ngIf="config?.content | Array.isArray(config?.content)">
-    <div *ngFor="let content of config.content" [innerHTML]="content"></div>
+<ng-container *ngIf="content.length">
+    <div *ngFor="let html of content" [innerHTML]="html"></div>
 </ng-container>

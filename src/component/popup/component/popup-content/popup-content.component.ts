@@ -15,7 +15,18 @@ import { DejaPopupConfig } from '../../model/popup-config.model';
 })
 export class DejaPopupContentComponent implements OnInit {
 
-    @Input() public config: DejaPopupConfig;
+    public content: string[];
+
+    @Input()
+    public set config(value: DejaPopupConfig) {
+        if (!value.content) {
+            this.content = [];
+        } else if (typeof value.content === 'string') {
+            this.content = [value.content];
+        } else {
+            this.content = value.content;
+        }
+    }
 
     constructor() { }
 
