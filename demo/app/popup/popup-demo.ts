@@ -151,7 +151,7 @@ export class PopupDemoComponent {
         ];
         conf.toolbarType = 'window';
         conf.padding = true;
-        conf.aContent = [
+        conf.content = [
             'One Line of Content',
             'Two Lines of Content',
             'Many Lines of Content',
@@ -167,7 +167,7 @@ export class PopupDemoComponent {
         const config = new DejaPopupConfig();
         config.title = `Movable ${DejaPopupConfig.dialogCount + 1}`;
         config.content = '<h2>Movable Popup No Modal</h2>';
-        config.aContent = [
+        config.content = [
             '<p><h3>First</h3> html line</p>',
             '<p><h3>Second</h3> html line</p><br><div> One More Line</div>',
         ];
