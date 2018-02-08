@@ -6,6 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import localeFrCH from '@angular/common/locales/fr-CH';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -45,10 +46,10 @@ import {
     DejaEditableModule,
     DejaGridModule,
     DejaIFrameModule,
+    DejaIntervalSelectorModule,
     DejaListLoaderModule,
     DejaMarkdownModule,
     DejaMessageBoxModule,
-    DejaMonacoEditorModule,
     DejaMouseDragDropModule,
     DejaNumericStepperModule,
     DejaOverlayModule,
@@ -68,6 +69,7 @@ import {
     // } from '../../dist';
 } from '../../src/index';
 
+import {registerLocaleData} from '@angular/common';
 import { MatButtonModule, MatButtonToggleModule, MatCardModule, MatCheckboxModule, MatIconModule, MatInputModule, MatListModule, MatMenuModule, MatProgressBarModule, MatProgressSpinnerModule, MatSidenavModule, MatTabsModule, MatToolbarModule } from '@angular/material';
 import { DejaItemModule } from '../../src/common/core/item-list/index';
 import { DejaBoldQueryModule } from '../../src/component';
@@ -80,8 +82,8 @@ import { GlobalEventsDemoComponent } from './global-events/global-events-demo';
 import { GridDemoComponent } from './grid/grid-demo';
 import { HomeGuidesComponent } from './home-guides/home-guides.component';
 import { HomeComponent } from './home/home.component';
+import { DejaIntervalSelectorDemoComponent } from './interval-selector/interval-selector-demo';
 import { MessageBoxDemoComponent } from './message-box/message-box-demo';
-import { DejaMonacoEditorDemoComponent } from './monaco-editor/monaco-editor-demo';
 import { MonacoEditorDemoService } from './monaco-editor/monaco-editor-demo.service.';
 import { DejaNumericStepperDemoComponent } from './numeric-stepper/numeric-stepper-demo.component';
 import { OverlayDemoComponent } from './overlay/overlay-demo';
@@ -99,6 +101,8 @@ import { TilesDemoComponent } from './tiles/tiles-demo';
 import { DejaTreeListDemoComponent } from './tree-list/tree-list-demo';
 import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
 
+registerLocaleData(localeFrCH);
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -113,11 +117,11 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         GridDemoComponent,
         OverlayDemoComponent,
         MessageBoxDemoComponent,
-        DejaMonacoEditorDemoComponent,
         DejaNumericStepperDemoComponent,
         ProgressCircleDemoComponent,
         PopupDemoComponent,
         DejaRangeDemoComponent,
+        DejaIntervalSelectorDemoComponent,
         ReactiveFormDemoComponent,
         SelectDemoComponent,
         DejaSnackbarDemoComponent,
@@ -173,10 +177,10 @@ import { DejaViewPortDemoComponent } from './viewport/viewport-demo';
         DejaNumericStepperModule,
         DejaOverlayModule,
         DejaMessageBoxModule,
-        DejaMonacoEditorModule,
         DejaMouseDragDropModule.forRoot(),
         DejaPopupModule,
         DejaRangeModule,
+        DejaIntervalSelectorModule,
         DejaSelectModule,
         DejaSidenavModule,
         DejaSlimScrollModule,
