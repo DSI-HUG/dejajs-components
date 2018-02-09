@@ -18,6 +18,10 @@
             <div [cdkPortalOutlet]="componentPortal"></div>
         </ng-container>
 
+        <ng-container *ngIf="config?.contentTemplate">
+            <ng-template [ngTemplateOutlet]="config?.contentTemplate.templateRef" [ngTemplateOutletContext]="config?.contentTemplate.templateContext"></ng-template>
+        </ng-container>
+
     </div>
 
     <div mat-dialog-actions fxFlex="none" *ngIf="config.hasActions()">
