@@ -6,9 +6,9 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { ComponentType } from '@angular/cdk/portal';
+import { TemplateRef } from '@angular/core';
 import { MatDialogConfig } from '@angular/material';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { TemplateRef } from '@angular/core';
 import { DejaPopupAction } from './popup-action.model';
 
 export class DejaPopupConfig extends MatDialogConfig {
@@ -39,10 +39,6 @@ export class DejaPopupConfig extends MatDialogConfig {
     public toolbarIconName?: string;
     public toolbarType?: DialogToolbarType;
     public url?: string;
-    //     <ng-container *ngIf="item.$items && parentItemTemplate">
-    //     <ng-template [ngTemplateOutlet]="parentItemTemplate" [ngTemplateOutletContext]="{ $implicit: item, query: query, flatindex: vpStartRow+index }"></ng-template>
-    // </ng-container>
-
 
     constructor() {
         super();
