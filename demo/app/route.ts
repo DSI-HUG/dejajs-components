@@ -12,13 +12,14 @@ import { RouterModule, Routes } from '@angular/router';
 import { DejaAccordionDemoComponent } from './accordion/accordion-demo.component';
 import { DejaCircularPickerDemoComponent } from './circular-picker/circular-picker-demo';
 import { DejaColorSelectorDemoComponent } from './color-selector/color-selector-demo';
+import { ComboListDemoComponent } from './combo-list/combo-list.component';
 import { DejaContentEditableDemoComponent } from './content-editable/content-editable-demo';
 import { DejaDatePickerDemoComponent } from './date-picker/date-picker-demo';
 import { GlobalEventsDemoComponent } from './global-events/global-events-demo';
 import { GridDemoComponent } from './grid/grid-demo';
 import { HomeGuidesComponent } from './home-guides/home-guides.component';
 import { HomeComponent } from './home/home.component';
-import {DejaIntervalSelectorDemoComponent} from './interval-selector/interval-selector-demo';
+import { DejaIntervalSelectorDemoComponent } from './interval-selector/interval-selector-demo';
 import { MessageBoxDemoComponent } from './message-box/message-box-demo';
 import { DejaNumericStepperDemoComponent } from './numeric-stepper/numeric-stepper-demo.component';
 import { OverlayDemoComponent } from './overlay/overlay-demo';
@@ -45,8 +46,9 @@ const routes: Routes = [
     { component: GridDemoComponent, path: 'grid', data: { title: 'Grid' } },
     { component: OverlayDemoComponent, path: 'overlay', data: { title: 'Overlay' } },
     { component: MessageBoxDemoComponent, path: 'message-box', data: { title: 'Message Box' } },
-    { path: 'monaco-editor', loadChildren: './monaco-editor/monaco-editor-demo.module#MonacoEditorDemoModule', data: {title: 'Monaco Editor'} },
+    { path: 'monaco-editor', loadChildren: './monaco-editor/monaco-editor-demo.module#MonacoEditorDemoModule', data: { title: 'Monaco Editor' } },
     { component: DejaNumericStepperDemoComponent, path: 'numeric-stepper', data: { title: 'Numeric Stepper' } },
+    { component: ComboListDemoComponent, path: 'combo-list', data: { title: 'Combo List' } },
     { component: PopupDemoComponent, path: 'popup', data: { title: 'Popup' } },
     { component: ProgressCircleDemoComponent, path: 'progress-circle', data: { title: 'Progress Circle' } },
     { component: DejaRangeDemoComponent, path: 'range', data: { title: 'Range' } },

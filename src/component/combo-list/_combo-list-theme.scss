@@ -1,0 +1,12 @@
+@import '~@angular/material/theming';
+
+@mixin combo-list-theme($theme) {
+    $primary: map-get($theme, primary);
+    // deja-combo-list{
+    //     background-color: mat-color($primary);
+    // }
+    // deja-combo-list-child{
+    //     background-color: whitesmoke;
+    // }
+
+}
