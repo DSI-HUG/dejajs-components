@@ -196,6 +196,8 @@ export class PopupDemoComponent {
             new DejaPopupButton('view', 'Show', 'visibility', false),
         ];
 
+        config.ensureDimension();
+
         this.dejaPopupService.openPopUp(config)
             .filter((resp: DejaPopupReponse) => !!resp)
             .subscribe((response: DejaPopupReponse) => {

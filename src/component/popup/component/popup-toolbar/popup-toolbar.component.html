@@ -8,7 +8,7 @@
 
 <div *ngIf="type && type==='window'" class="deja-popup-toolbar-mini">
 
-    <span class="deja-popup-toolbar-spacer deja-popup-toolbar-content" (click)="doEmit(buttonMove)">
+    <span class="deja-popup-toolbar-spacer deja-popup-toolbar-content" (mousedown)="doEmit(buttonMove)">
         <mat-icon *ngIf="iconName">{{iconName}}</mat-icon>
         <span> {{title}} </span>
     </span>

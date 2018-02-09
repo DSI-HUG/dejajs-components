@@ -27,6 +27,8 @@ export class DejaPopupAdvancedComponent extends DejaPopupBase implements AfterVi
     public lastEvent = null;
     public componentPortal: Portal<any>;
     private subKeyEvent: Subscription;
+    private timer: number;
+    private readonly clickTreshold = 600;
 
     constructor(
         public dialogRef: MatDialogRef<DejaPopupBase>,
@@ -56,6 +58,14 @@ export class DejaPopupAdvancedComponent extends DejaPopupBase implements AfterVi
         }
     }
 
+    public onMouseUp(e: any) {
+        console.log('onMouseUp', e);
+        const now = Date.now();
+        if (now - this.timer > this.clickTreshold) {
+            this.freeze();
+        }
+    }
+
     public doAction(action: DejaPopupAction) {
 
         this.actionSelected = action;
@@ -76,6 +86,7 @@ export class DejaPopupAdvancedComponent extends DejaPopupBase implements AfterVi
                 break;
 
             case 'toolbar-move':
+                this.timer = Date.now();
                 this.dragstart = !this.dragstart;
                 this.lastEvent = null;
                 this.listen();
@@ -144,6 +155,7 @@ export class DejaPopupAdvancedComponent extends DejaPopupBase implements AfterVi
         if (this.subKeyEvent) {
             this.subKeyEvent.unsubscribe();
         }
+
     }
 
     private move(me: MouseEvent) {

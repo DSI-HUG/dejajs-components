@@ -1,6 +1,6 @@
 <div class="deja-popup-container" fxLayout="column" fxLayoutAlign="start stretch">
 
-    <div *ngIf="dragstart" class="dialog-overlay" fxFlex="none" (click)="freeze($event)">&nbsp;</div>
+    <div *ngIf="dragstart" class="dialog-overlay" fxFlex="none" (mouseup)="onMouseUp($event)" (click)="freeze($event)">&nbsp;</div>
 
     <deja-popup-toolbar fxFlex="none" *ngIf="config && config.toolbarType" [config]="config" (actionSelected)="dispatchAction($event)"></deja-popup-toolbar>
 
