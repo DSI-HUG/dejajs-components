@@ -1,4 +1,3 @@
-<div *ngIf="config?.content" [innerHTML]="config.content"></div>
-<ng-container *ngIf="config?.aContent">
-    <div *ngFor="let content of config.aContent" [innerHTML]="content"></div>
+<ng-container *ngIf="content.length">
+    <div *ngFor="let html of content" [innerHTML]="html"></div>
 </ng-container>
