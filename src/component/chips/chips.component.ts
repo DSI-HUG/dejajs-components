@@ -12,7 +12,6 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 
 const noop = () => { };
 
-
 export class DejaChipsCloseEvent extends CustomEvent {
     public item: any;
     public index: number;
