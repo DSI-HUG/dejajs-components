@@ -27,6 +27,9 @@ export class ComboListDemoComponent implements OnInit {
     public fields: string[];
     public comboCtrl;
     public tabIndex = 1;
+    public sort;
+    public disabled: boolean;
+    public disableFastActions: boolean;
 
     constructor() {}
 
