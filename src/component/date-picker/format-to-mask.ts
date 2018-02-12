@@ -66,7 +66,7 @@ export const formatToMask = {
     ZZ: null,
     X: null,
     x: null,
-};
+} as {[f: string]: any[]};
 
 export const formatToUnitOfTime = {
     M: null,
@@ -123,4 +123,4 @@ export const formatToUnitOfTime = {
     ZZ: null,
     X: null,
     x: null,
-};
+} as {[f: string]: string};

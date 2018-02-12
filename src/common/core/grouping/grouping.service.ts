@@ -46,7 +46,7 @@ export class GroupingService {
                 return this.groupChildren$(tree, groupInfo, 0, childrenField);
             }
 
-            const groupTree$ = (t: any[], curDepth: number) => {
+            const groupTree$: any = (t: any[], curDepth: number) => {
                 return Observable.from(t)
                     .flatMap((treeItem) => {
                         const children = treeItem[childrenField];
@@ -101,10 +101,10 @@ export class GroupingService {
                         toString: () => groupLabel,
                         $text: groupLabel,
                     } as IItemTree;
-                    parent[childrenField] = [];
+                    (<any>parent)[childrenField] = [];
                 }
 
-                parent[childrenField].push(item);
+                (<any>parent)[childrenField].push(item);
                 return groups;
             }, {})
             .map((grps: { [groupby: string]: any }) => Object.keys(grps).map((key) => grps[key]))

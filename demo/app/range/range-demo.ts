@@ -31,8 +31,8 @@ export class DejaRangeDemoComponent {
     public errors: Observable<any[]>;
     @Output() protected errorFeed: EventEmitter<any> = new EventEmitter();
 
-    @ViewChild('dejaRange') protected rangeRef;
-    @ViewChild('dejaWeight') protected weightRef;
+    @ViewChild('dejaRange') protected rangeRef: any;
+    @ViewChild('dejaWeight') protected weightRef: any;
 
     constructor() {
         this.readOnlyRanges = readOnlyRanges;

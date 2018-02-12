@@ -36,7 +36,7 @@ export class DejaNumericStepperComponent implements OnInit, ControlValueAccessor
     @Input() public placeholder: string;
 
     /** Template for MatError inside mat-input-container */
-    @ContentChild('errorTemplate') public matError;
+    @ContentChild('errorTemplate') public matError: any;
 
     /** Allow to disabled the component */
     @Input()
@@ -56,7 +56,7 @@ export class DejaNumericStepperComponent implements OnInit, ControlValueAccessor
     public get disabled() {
         return this._control ? this._control.disabled : this._disabled;
     }
-    @HostBinding('attr.disabled') private _disabled = null;
+    @HostBinding('attr.disabled') private _disabled: boolean = null;
 
     // NgModel implementation
     protected onTouchedCallback: () => void = () => { };

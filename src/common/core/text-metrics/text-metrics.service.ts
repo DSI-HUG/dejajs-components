@@ -21,7 +21,7 @@ import { Subject } from 'rxjs/Subject';
  */
 @Injectable()
 export class DejaTextMetricsService {
-    private canvas;
+    private canvas: HTMLCanvasElement;
     private element$: Subject<HTMLElement> = new Subject();
     private computedStyles: CSSStyleDeclaration;
     private charSize$ = new BehaviorSubject<number[]>(null);

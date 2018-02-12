@@ -32,7 +32,7 @@ export class DejaComboListComponent<T> implements OnChanges, ControlValueAccesso
     @Input() public disabled = false;
     @Input() public disableFastActions = false;
     @Input() public labelFieldName = 'label';
-    @Input() public sortDirection = null; // or 'asc' or 'desc'
+    @Input() public sortDirection: 'asc' | 'desc';
     @Output() public action = new EventEmitter<IDejaComboListAction<T>>();
 
     public onTouchedCallback: () => void = noop;
@@ -139,7 +139,7 @@ export class DejaComboListComponent<T> implements OnChanges, ControlValueAccesso
         }
         const fieldname = this.labelFieldName;
         const coeff = this.sortDirection === 'asc' ? 1 : -1;
-        return aItem.sort((a, b) => {
+        return aItem.sort((a: any, b: any) => {
             if (a[fieldname] < b[fieldname]) { return -1 * coeff; }
             if (a[fieldname] > b[fieldname]) { return 1 * coeff; }
             return 0;

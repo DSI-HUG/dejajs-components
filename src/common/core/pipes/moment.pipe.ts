@@ -22,7 +22,7 @@ export class StringToDateFormatPipe implements PipeTransform {
      * @param dateString date in string format 'DD.MM.YYYY HH:mm:ss'
      * @param format format choosen for the date
      */
-    public transform(dateString, format: string): any {
+    public transform(dateString: any, format: string): any {
         return moment(dateString, 'DD.MM.YYYY HH:mm:ss').format(format);
     }
 }

@@ -23,7 +23,7 @@ export class DejaIntervalSelectorBoundaryComponent implements OnDestroy {
 
     private _intervalId: string;
     private _model: any;
-    private _openingBoundary;
+    private _openingBoundary: boolean;
     private _selected = false;
 
     private _isAlive = true;
@@ -124,7 +124,7 @@ export class DejaIntervalSelectorBoundaryComponent implements OnDestroy {
     private boundaryChar = '[';
 
     @HostListener('click', ['$event'])
-    public clickHandler(_event) {
+    public clickHandler(_event: Event) {
         _event.stopPropagation();
         this.selected = !this.selected;
     }

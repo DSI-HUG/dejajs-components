@@ -64,9 +64,9 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     /** Reference to DejaDateSelectorComponent inside thic control */
     @ViewChild(DejaDateSelectorComponent) public dateSelectorComponent: DejaDateSelectorComponent;
     /** Template for MatHint inside mat-input-container */
-    @ContentChild('hintTemplate') public matHint;
+    @ContentChild('hintTemplate') public matHint: any;
     /** Template for MatError inside mat-input-container */
-    @ContentChild('errorTemplate') public matError;
+    @ContentChild('errorTemplate') public matError: any;
     /** Offset de position horizontal de la zone de dropdown */
     @Input() public overlayOffsetX = 0;
     /** Offset de position verticale de la zone de dropdown */
@@ -102,7 +102,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     private _showDropDown = false;
     private _positions = DejaConnectionPositionPair.default;
 
-    private _inputModel;
+    private _inputModel: string;
     private cursorPosition: number;
     private formatChanged$ = new Subject<string>();
     private dateChanged$ = new Subject<Date>();
@@ -226,7 +226,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
 
         const valueUpdated$ = Observable.combineLatest(this.formatChanged$, this.dateChanged$)
             .do(([format]) => {
-                let mask = [];
+                let mask = [] as string[];
                 const array = format.match(DejaDatePickerComponent.formattingTokens);
                 array.forEach((val: string) => {
                     if (formatToMask[val]) {

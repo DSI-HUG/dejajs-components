@@ -26,8 +26,8 @@ import { DejaTile } from './tile.class';
     templateUrl: './tile.component.html',
 })
 export class DejaTileComponent implements OnDestroy {
-    @Input() public template;
-    @Input() public designMode;
+    @Input() public template: any;
+    @Input() public designMode: boolean;
     @Output() public modelChanged = new EventEmitter();
     @Output() public close = new EventEmitter<Event>();
 

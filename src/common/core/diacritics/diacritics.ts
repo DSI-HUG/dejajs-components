@@ -24,7 +24,7 @@ export class Diacritics {
         try {
             for (let i = 0; i < length; i++) {
                 const c = str.charCodeAt(i);
-                const replacement = Diacritics.map[c];
+                const replacement = (<any>Diacritics.map)[c];
                 if (replacement) {
                     newStr.push(replacement);
                     alter = true;

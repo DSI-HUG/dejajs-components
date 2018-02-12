@@ -12,7 +12,7 @@ export class ValidationMessages {
         duplicatename: 'Ce nom existe déjà.',
         invalideDate: 'Date invalide',
         required: 'Ce champ est obligatoire.',
-    };
+    } as { [key: string]: string };
 
     public getMessage(key: string) {
         return this.messages[key];

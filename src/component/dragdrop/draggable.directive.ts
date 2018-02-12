@@ -19,8 +19,8 @@ import { UUID } from '../../common/core/UUID';
     selector: '[deja-draggable]',
 })
 export class DejaDraggableDirective implements OnDestroy {
-    @HostBinding('attr.draggable') public draggable = null;
-    @HostBinding('attr.dragdropid') private dragdropid;
+    @HostBinding('attr.draggable') public draggable: boolean = null;
+    @HostBinding('attr.dragdropid') private dragdropid: string;
     private draginfokey = 'draginfos';
     private objectKey = 'object';
     private elementKey = 'element';

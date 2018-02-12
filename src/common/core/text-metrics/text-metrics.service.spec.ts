@@ -34,14 +34,14 @@ describe('DejaTextMetricsService', () => {
     });
 
     // remove the html fixture from the DOM
-    afterEach((done)=> {
+    afterEach((done: Function)=> {
         Observable.timer(2000).subscribe(()=> {
             document.body.removeChild(document.getElementById('testSpan'));
             done();
         });
     });
 
-    it('getTextHeight() should return more than 80 for maxWidth=100', async(done) => {
+    it('getTextHeight() should return more than 80 for maxWidth=100', async(done: Function) => {
         service.getTextHeight(100, testText).subscribe((textHeight: number) => {
             // console.log(`text height: ${textHeight}`);
             // valeurs aprox = line height * font size = (6 lignes * 1.5) * 10 px = 90
@@ -50,7 +50,7 @@ describe('DejaTextMetricsService', () => {
         });
     });
 
-    it('getTextHeight() should return 15 for maxWidth=2000', async(done) => {
+    it('getTextHeight() should return 15 for maxWidth=2000', async(done: Function) => {
         service.getTextHeight(2000, testText).subscribe((textHeight: number) => {
             // console.log(`text height: ${textHeight}`);
             expect(textHeight).toEqual(15); // 10px * 1.5 * 1 line

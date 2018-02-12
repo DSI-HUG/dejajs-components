@@ -31,9 +31,9 @@ export class GlobalEventsDemoComponent implements OnDestroy {
                 zone.run(() => {
                     this.model.date = new Date(params[0]);
                     changeDetectorRef.markForCheck();
-
-                    if (window.parent && window.parent !== window && window.parent[`sendAction`]) {
-                        window.parent[`sendAction`]('From IFrame');
+                    const parentWindow = window.parent as any;
+                    if (parentWindow && parentWindow !== window && parentWindow[`sendAction`]) {
+                        parentWindow[`sendAction`]('From IFrame');
                     }
                 });
             });

@@ -315,7 +315,7 @@ export abstract class ItemListBase implements OnDestroy {
         }
         return this.getItemListService().sort$(this._sortInfos)
             .first()
-            .switchMap((si) => this.calcViewList$().first().map(() => si));
+            .switchMap((si: any) => this.calcViewList$().first().map(() => si));
     }
 
     /** Groupe les éléments en fonction du modèle de groupe spécifié
@@ -771,25 +771,25 @@ export abstract class ItemListBase implements OnDestroy {
             const valueField = this.getValueField();
 
             if (typeof model === 'string') {
-                itemBase[displayField] = model;
-                itemBase[valueField] = model;
+                (<any>itemBase)[displayField] = model;
+                (<any>itemBase)[valueField] = model;
 
                 if (this._searchField) {
-                    itemBase[this._searchField] = model;
+                    (<any>itemBase)[this._searchField] = model;
                 }
 
             } else {
-                itemBase[displayField] = this.getTextValue(model);
-                itemBase[valueField] = model[this._valueField];
+                (<any>itemBase)[displayField] = this.getTextValue(model);
+                (<any>itemBase)[valueField] = model[this._valueField];
 
                 if (this._searchField) {
-                    itemBase[this._searchField] = model[this._searchField];
+                    (<any>itemBase)[this._searchField] = model[this._searchField];
                 }
             }
 
             const childrenField = this.getItemListService().childrenField;
             if (model[childrenField]) {
-                itemBase[childrenField] = this.mapToIItemBase(model[childrenField], selected);
+                (<any>itemBase)[childrenField] = this.mapToIItemBase(model[childrenField], selected);
             } else {
                 itemBase.selected = selected || undefined;
             }
@@ -810,16 +810,16 @@ export abstract class ItemListBase implements OnDestroy {
         }
     }
 
-    protected getVirtualSelectedEntities(value) {
-        const map = (v) => {
+    protected getVirtualSelectedEntities(value: any) {
+        const map = (v: any) => {
             if (typeof v === 'string') {
                 v = v.trim();
             }
             const model = {};
             const textField = this.getTextField();
             const valueField = this.getValueField();
-            model[textField] = v.toString();
-            model[valueField] = v;
+            (<any>model)[textField] = v.toString();
+            (<any>model)[valueField] = v;
             return model;
         };
 

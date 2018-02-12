@@ -52,7 +52,7 @@ class DejaSelectContainerComponent {
         document.body.style.width = '1280px';
         document.body.style.height = '1024px';
 
-        const itemList = Array.apply(null, { length: 2000 }).map((_n, i) => {
+        const itemList = Array.apply(null, { length: 2000 }).map((_n: any, i: number) => {
             const rand = Math.floor(Math.random() * (70 - 33 + 1)) + 33; // random de 33 à 70
             return {
                 size: rand,
@@ -92,7 +92,7 @@ class DejaSelectByModelContainerComponent {
         document.body.style.width = '1280px';
         document.body.style.height = '1024px';
 
-        const modelsList = Array.apply(null, { length: 2000 }).map((_n, i) => {
+        const modelsList = Array.apply(null, { length: 2000 }).map((_n: any, i: number) => {
             const rand = Math.floor(Math.random() * (70 - 33 + 1)) + 33; // random de 33 à 70;
             return {
                 id: i,

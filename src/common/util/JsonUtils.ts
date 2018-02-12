@@ -39,7 +39,7 @@ export class JsonUtils {
 
         Object.keys(jsonObj).forEach((propName) => {
             if (!(jsonObj[propName] instanceof Object)) {
-                obj[propName] = jsonObj[propName];
+                (<any>obj)[propName] = jsonObj[propName];
             }
         });
 
@@ -68,9 +68,9 @@ export class JsonUtils {
                 // Boolean managment
                 const value = sourceObj[sourcePropName] ;
                 if (value && !(value instanceof Array) && value.length === 4 && (value.toLowerCase() === 'true' ||  value.toLowerCase() === 'false')) {
-                    castedObj[targetPropName] = JSON.parse(value.toLowerCase());
+                    (<any>castedObj)[targetPropName] = JSON.parse(value.toLowerCase());
                 } else {
-                    castedObj[targetPropName] = value;
+                    (<any>castedObj)[targetPropName] = value;
                 }
             }
         }

@@ -36,7 +36,7 @@ export class DejaBoldQueryComponent {
      * The search term query.
      *
      */
-    set query(value) {
+    public set query(value: string) {
         value = Diacritics.remove(value);
         if (this._query !== value) {
             this._query = value;
@@ -108,7 +108,6 @@ export class DejaBoldQueryComponent {
             const queryLength = this._query.length;
             const contents = [] as string[];
             let firstOccurence = true;
-            let lastText: string = null;
             let nbOccurence = 0;
             splitted.forEach((text) => {
                 if (text) {
@@ -133,7 +132,6 @@ export class DejaBoldQueryComponent {
                     }
                     position += queryLength;
                 }
-                lastText = text;
                 firstOccurence = false;
             });
             this._content = contents.join('');

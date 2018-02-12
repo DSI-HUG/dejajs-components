@@ -159,7 +159,7 @@ export class Color {
         whitesmoke: '#f5f5f5',
         yellow: '#ffff00',
         yellowgreen: '#9acd3',
-    };
+    } as {[color: string]: string};
 
     public static equals(c1: Color, c2: Color) {
         return !c1 === !c2 && !c1.isEmpty() && c1.r === c2.r && c1.g === c2.g && c1.b === c2.b && c1.a === c2.a;
@@ -316,7 +316,7 @@ export class Color {
     }
 
     public toHex() {
-        const toHex = (d) => {
+        const toHex = (d: number) => {
             const s = Number(d).toString(16);
             return `0${s}`.slice(-2).toUpperCase();
         };
