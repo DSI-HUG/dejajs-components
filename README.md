@@ -50,6 +50,7 @@ and navigate to `http://localhost:5100`.
 | Color Selector     |             yes|                  yes|yes|yes|yes|yes|yes|available| |
 | Color Picker       |             yes|                  yes|yes|yes|yes|yes|yes|available| |
 | Content Editable   |             yes|                  yes|yes|yes|yes|yes|yes|available|New line issue on IE11. IE11 add p instead br |
+| Combo List         |             yes|                  yes|yes|yes|yes|yes|yes|available| |
 | Date Selector      |             yes|                  yes|yes|yes|yes|yes|yes|available| |
 | Date Picker        |             yes|                  yes|yes|yes|yes|yes|yes|available| |
 | Dialog             |             yes|                  N/A|yes|yes|yes|yes|yes|Message Box| |
@@ -59,6 +60,7 @@ and navigate to `http://localhost:5100`.
 | Menu               |             yes|                  N/A|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>| |
 | Message Box        |             yes|                  N/A|yes|yes|yes|yes|yes|available| |
 | Monaco Editor      |             yes|                  N/A|yes|yes|yes|yes|yes|available| |
+| Popup              |             yes|                  yes|yes|yes|yes|yes|yes|available| |
 | Range              |             yes|                  yes|yes|yes|yes|yes|yes|available| |
 | Select             |             yes|                  yes|yes|yes|yes|yes|yes|available|Place Holder placement in FF, Edge and IE11 |
 | Snackbar           |             yes|                  N/A|yes|yes|yes|yes|yes|available| |

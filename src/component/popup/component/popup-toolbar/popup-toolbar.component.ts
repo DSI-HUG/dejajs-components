@@ -31,7 +31,7 @@ export class DejaPopupToolbarComponent implements OnInit {
             this.defaultActions.unshift(this.buttonFullscreen);
         }
 
-        if (!conf.isModal) {
+        if (!conf.hasBackdrop) {
             this.defaultActions.unshift(this.buttonMinimize);
         }
     }

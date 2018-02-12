@@ -5,6 +5,8 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
+import { ComponentType } from '@angular/cdk/portal';
+import { TemplateRef } from '@angular/core';
 import { MatDialogConfig } from '@angular/material';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { DejaPopupAction } from './popup-action.model';
@@ -17,18 +19,16 @@ export class DejaPopupConfig extends MatDialogConfig {
 
     public dejaPopupCom$?: BehaviorSubject<DejaPopupAction>;
 
-    public aContent?: string[];
-    public actionComponentRef: any;
-    public contentComponentRef: any;
+    public actionComponentRef: ComponentType<any>;
+    public contentComponentRef: ComponentType<any>;
+    public contentTemplate: DejaPopupContentTemplate<any>;
     public actions: DejaPopupAction[];
     public autoFocus = false;
     public autoposition?: boolean;
-    public content?: string;
+    public content?: string | string[];
     public data?: any;
     public dialogPanelId: string;
     public fullscreen = false;
-    public isModal = true;
-    public label = true; // todo remove?
     public maxWidth = '100vw';
     public maxHeight = '100vh';
     public padding?: boolean;
@@ -117,7 +117,7 @@ export class DejaPopupConfig extends MatDialogConfig {
     }
 
     public hasContent(): boolean {
-        return !!this.content || (!!this.aContent && this.aContent.length > 0);
+        return !!this.content && this.content.length > 0;
     }
 
     public hasActions(): boolean {
@@ -152,3 +152,7 @@ export class DejaPopupConfig extends MatDialogConfig {
 
 export type DialogToolbarType = 'base' | 'window';
 export type DialogToolbarColor = null | 'primary' | 'accent' | 'warn';
+export interface DejaPopupContentTemplate<T> {
+    templateRef: TemplateRef<T>;
+    templateContext?: any;
+}
