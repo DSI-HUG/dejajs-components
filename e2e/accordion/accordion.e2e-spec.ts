@@ -8,14 +8,14 @@
 
 // import { by, element, browser } from 'protractor';
 import { Util } from '../util/index';
-import { AccordionPage } from './accordion.po';
+// import { AccordionPage } from './accordion.po';
 
 describe('Accordion component', () => {
-    let page: AccordionPage;
+    // let page: AccordionPage;
 
     beforeEach(() => {
         Util.init();
-        page = new AccordionPage();
+        // page = new AccordionPage();
     });
 
     // it('all accordion should be opening on click', () => {
