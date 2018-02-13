@@ -13,10 +13,9 @@ import { comboListData } from './combo-test.data';
 @Component({
     selector: 'demo-combo-list',
     templateUrl: './combo-list.component.html',
-    styleUrls: ['./combo-list.component.scss']
+    styleUrls: ['./combo-list.component.scss'],
 })
 export class ComboListDemoComponent implements OnInit {
-
     public items: ComboListTestModel[] = [];
     public itemToSelect: ComboListTestModel[];
     public itemSelected: ComboListTestModel[];
@@ -27,13 +26,21 @@ export class ComboListDemoComponent implements OnInit {
     public fieldName = 'label';
     public fields: string[];
     public comboCtrl;
+    public tabIndex = 1;
+    public sort;
+    public disabled: boolean;
+    public disableFastActions: boolean;
 
-    constructor() { }
+    constructor() {}
 
     public ngOnInit() {
         this.items = comboListData;
-        this.itemToSelect = this.items.filter((i: ComboListTestModel) => i.id < 10);
-        this.itemSelected = this.items.filter((i: ComboListTestModel) => i.id >= 10);
+        this.itemToSelect = this.items.filter(
+            (i: ComboListTestModel) => i.id < 10
+        );
+        this.itemSelected = this.items.filter(
+            (i: ComboListTestModel) => i.id >= 10
+        );
 
         this.comboCtrl = new FormControl(this.itemSelected);
         this.fields = Object.keys(comboListData[0]);
@@ -49,7 +56,6 @@ export class ComboListDemoComponent implements OnInit {
     public log() {
         console.log('ctrl', this.comboCtrl);
     }
-
 }
 
 export class ComboListTestModel {
