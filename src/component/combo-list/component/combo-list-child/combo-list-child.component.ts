@@ -7,34 +7,51 @@
 */
 import {
     Component,
-    // Input,
+    EventEmitter,
+    Input,
+    Output,
 } from '@angular/core';
-import { ControlValueAccessor } from '@angular/forms';
-import { valueAccessorFactory } from '../../model/combo-list.accessor';
-import { DejaComboListBase } from '../../model/combo-list.base';
+import { IDejaAction } from '../../../../common/core/action.interface';
+// import { IDejaComboListAction } from '../../model/combo-list-action.interface';
 
 @Component({
     selector: 'deja-combo-list-child',
     templateUrl: './combo-list-child.component.html',
     styleUrls: ['./combo-list-child.component.scss'],
-    providers: [valueAccessorFactory(DejaComboListChildComponent)]
 })
-export class DejaComboListChildComponent<T> extends DejaComboListBase<T> implements ControlValueAccessor {
+export class DejaComboListChildComponent<T> {
+    @Input() public itemsDisplay: Array<T>;
+    @Input() public set trigger(a: IDejaAction) {
+        console.log('set trigger', a);
+        if (!a) {
+            return;
+        }
+        if (a.type === 'move_buffer') {
+            this.emit('flush_buffer', this.itemsBuffer.concat([]));
+        }
+        this.itemsBuffer = [];
+    }
+    @Input() public labelFieldName: string;
+    @Input() public disabled: boolean;
+    @Output() public action = new EventEmitter<IDejaAction>();
 
-    public itemsSelectBuffer: Array<T> = [];
+    public itemsBuffer: Array<T> = [];
+
     private lastClick = Date.now();
 
-    public toggleItem(item: T) {
+    public onClick(item: T) {
         const now = Date.now();
 
         if (this.disabled) {
             return;
         }
         if (now - this.lastClick < 300) {
+            console.log('double', item);
+            this.toggleItem(item, false);
             this.emit('double', item);
         } else {
-            this.emit('single', item);
-            this.bufferToggle(item);
+            console.log('single', item);
+            this.toggleItem(item);
         }
         this.lastClick = now;
     }
@@ -46,20 +63,25 @@ export class DejaComboListChildComponent<T> extends DejaComboListBase<T> impleme
             classNames.push('list-disabled');
         }
 
-        if (this.itemsSelectBuffer.includes(item)) {
+        if (this.itemsBuffer.includes(item)) {
             classNames.push('list-selected');
         }
 
         return classNames;
     }
 
-    private bufferToggle(item: T) {
-        const index = this.itemsSelectBuffer.indexOf(item, 0);
+    private toggleItem(item: T, add = true) {
+        const index = this.itemsBuffer.indexOf(item, 0);
         if (index > -1) {
-            this.itemsSelectBuffer.splice(index, 1);
-        } else {
-            this.itemsSelectBuffer.push(item);
+            this.itemsBuffer.splice(index, 1);
+        } else if (add) {
+            this.itemsBuffer.push(item);
         }
+    }
+
+    private emit(type: string, payload: T | Array<T>) {
+        const newAction: IDejaAction = { type, payload };
+        this.action.emit(newAction);
     }
 
 }

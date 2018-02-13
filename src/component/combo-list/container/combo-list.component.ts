@@ -7,7 +7,8 @@
  */
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
-import { IDejaComboListAction } from '../model/combo-list-action.interface';
+import { IDejaAction } from '../../../common/core/action.interface';
+// import { IDejaComboListAction } from '../model/combo-list-action.interface';
 import { valueAccessorFactory } from '../model/combo-list.accessor';
 import { DejaComboListBase } from '../model/combo-list.base';
 
@@ -21,14 +22,15 @@ import { DejaComboListBase } from '../model/combo-list.base';
 export class DejaComboListComponent<T> extends DejaComboListBase<T> implements OnChanges, ControlValueAccessor {
 
     @Input() public itemsToSelect: T[];
-    @Input() public itemsSelectBuffer: T[];
     @Input() public disableFastActions = false;
     @Input() public sortDirection = null; // or 'asc' or 'desc'
+
+    public toSelectTrigger: IDejaAction;
+    public selectedTrigger: IDejaAction;
 
     constructor() {
         super();
         this.itemsToSelect = [];
-        this.itemsSelectBuffer = [];
     }
 
     public ngOnChanges() {
@@ -36,18 +38,26 @@ export class DejaComboListComponent<T> extends DejaComboListBase<T> implements O
     }
 
     // Select
-    public toSelectListClick(listAction: IDejaComboListAction<T>): void {
-        if (listAction.type === 'single') {
-            this.itemsSelectBuffer.push(listAction.payload.currentItem);
+    public toSelectListAction(listAction: IDejaAction): void {
+        debugger;
+        console.log('toSelectListAction', listAction);
+
+        if (listAction.type === 'flush_buffer') {
+
+            this.itemsToSelect = this.itemsToSelect.filter((item: T) => this.doSelect(item));
+
         } else if (listAction.type === 'double') {
-            this.itemsSelectBuffer.push(listAction.payload.currentItem);
+            this.items.push(listAction.payload.currentItem);
         }
     }
 
-    public toSelectArrowClick() {
-        console.log('Select');
-        this.itemsSelectBuffer = this.itemsSelectBuffer.filter((item: T) => this.doSelect(item));
-    }
+    // public toSelectMove(type: 'move_buffer' | 'move_all') {
+    //     const newAction: IDejaAction = {
+    //         type,
+    //         payload: Date.now()
+    //     };
+    //     this.toSelectTrigger = newAction;
+    // }
 
     public doSelect(item: T): boolean {
         const index = this.itemsToSelect.indexOf(item, 0);
@@ -62,6 +72,7 @@ export class DejaComboListComponent<T> extends DejaComboListBase<T> implements O
     }
 
     public selectAll() {
+        debugger;
         this.items = this.items.concat(this.itemsToSelect);
         this.onChangeCallback(this.items);
         this.itemsToSelect = [];
@@ -70,15 +81,26 @@ export class DejaComboListComponent<T> extends DejaComboListBase<T> implements O
     }
 
     // Deselect
-
-    public selectedListClick(item: T): void {
-        this.itemsSelectBuffer.push(item);
+    public selectedListAction(listAction: IDejaAction): void {
+        if (listAction.type === 'flush_buffer') {
+            this.itemsToSelect.forEach((item: T) => this.doDeselect(item));
+            // this.items = this.items.filter((item: T) => this.doDeselect(item));
+        } else if (listAction.type === 'double') {
+            this.items.push(listAction.payload.currentItem);
+        }
     }
 
-    public selectedArrowClick() {
-        console.log('deSelect');
-        this.itemsSelectBuffer = this.itemsSelectBuffer.filter((item: T) => this.doDeselect(item));
-    }
+    // public selectedArrowClick() {
+    //     console.log('deSelect');
+    // }
+
+    // public selectedMove(type: 'move_buffer' | 'move_all') {
+    //     const newAction: IDejaAction = {
+    //         type,
+    //         payload: Date.now()
+    //     };
+    //     this.selectedTrigger = newAction;
+    // }
 
     public doDeselect(item: T): boolean {
         const index = this.items.indexOf(item, 0);
@@ -102,11 +124,31 @@ export class DejaComboListComponent<T> extends DejaComboListBase<T> implements O
 
     // from actionBar
 
-    public onActionSelected(act: any) {
+    public onActionSelected(act: IDejaAction) {
         console.log('action', act);
         // tslint:disable-next-line:no-string-literal
-        this[act]();
+        // this[act]();
+        // this.trigger = act;
+        if (act.payload === 'toSelect') {
+            if (act.type === 'move_all') {
+                this.selectAll();
+            }
+            this.toSelectTrigger = act;
+        } else {
+            this.selectedTrigger = act;
+            if (act.type === 'move_all') {
+                this.selectNone();
+            }
+        }
     }
+
+    // public toSelectMove(type: 'move_buffer' | 'move_all') {
+    //     const newAction: IDejaAction = {
+    //         type,
+    //         payload: Date.now()
+    //     };
+    //     this.toSelectTrigger = newAction;
+    // }
 
     protected sortAll() {
         this.sort(this.items);
@@ -127,4 +169,5 @@ export class DejaComboListComponent<T> extends DejaComboListBase<T> implements O
     }
 
     // private destroyEle;
+    // 'selectAll' | 'toSelectArrowClick' | 'selectedArrowClick' | 'selectNone'
 }
