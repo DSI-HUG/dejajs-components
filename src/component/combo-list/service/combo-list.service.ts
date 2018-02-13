@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
+import { IDejaComboListAction } from '../model/combo-list-action.interface';
 import { noop } from '../model/combo-list.accessor';
 
 @Injectable()
@@ -12,14 +13,18 @@ export class DejaComboListService<T> {
     public labelFieldName = 'label';
     public sortDirection: string;
 
+    public action = new EventEmitter<IDejaComboListAction<T>>();
+
     public onChangeCallback: (_: any) => void = noop;
 
     public toggleSelectable(item: T, add = true) {
         const index = this.selectableBuffer.indexOf(item, 0);
         if (index > -1) {
             this.selectableBuffer = this.selectableBuffer.filter((_, idx) => idx !== index);
+            this.emit('selectable_selected', item);
         } else if (add) {
             this.selectableBuffer = this.selectableBuffer.concat([item]);
+            this.emit('selectable_deselected', item);
         }
     }
 
@@ -27,8 +32,10 @@ export class DejaComboListService<T> {
         const index = this.selectedBuffer.indexOf(item, 0);
         if (index > -1) {
             this.selectedBuffer = this.selectedBuffer.filter((_, idx) => idx !== index);
+            this.emit('selected_selected', item);
         } else if (add) {
             this.selectedBuffer = this.selectedBuffer.concat([item]);
+            this.emit('selected_deselected', item);
         }
     }
 
@@ -37,6 +44,7 @@ export class DejaComboListService<T> {
         this.selected = this.selectableBuffer.concat(this.selected);
         this.selectableBuffer = [];
         this.sortAll();
+        this.emit('selectable_raised');
     }
 
     public dropBuffer() {
@@ -44,6 +52,7 @@ export class DejaComboListService<T> {
         this.selectable = this.selectedBuffer.concat(this.selectable);
         this.selectedBuffer = [];
         this.sortAll();
+        this.emit('selected_dropped');
     }
 
     public raiseOne(item: T) {
@@ -53,6 +62,7 @@ export class DejaComboListService<T> {
             this.selected = [item].concat(this.selected);
         }
         this.sortAll();
+        this.emit('raised_one', item);
     }
 
     public dropOne(item: T) {
@@ -62,6 +72,7 @@ export class DejaComboListService<T> {
             this.selectable = [item].concat(this.selectable);
         }
         this.sortAll();
+        this.emit('dropped_one', item);
     }
 
     public raiseAll() {
@@ -69,6 +80,7 @@ export class DejaComboListService<T> {
         this.selectable = [];
         this.selectableBuffer = [];
         this.sortAll();
+        this.emit('raised_all');
     }
 
     public dropAll() {
@@ -76,6 +88,7 @@ export class DejaComboListService<T> {
         this.selected = [];
         this.selectedBuffer = [];
         this.sortAll();
+        this.emit('dropped_all');
     }
 
     public sortAll() {
@@ -95,6 +108,17 @@ export class DejaComboListService<T> {
             if (a[fieldname] > b[fieldname]) { return 1 * coeff; }
             return 0;
         });
+    }
+
+    private emit(type: string, currentItem: T = null, selectedItems = this.selected) {
+        const action: IDejaComboListAction<T> = {
+            type,
+            payload: {
+                currentItem,
+                selectedItems,
+            }
+        };
+        this.action.emit(action);
     }
 
 }

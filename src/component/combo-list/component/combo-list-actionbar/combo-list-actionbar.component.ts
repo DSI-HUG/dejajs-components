@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-// import { IDejaAction } from '../../../../common/core/action.interface';
 import { DejaComboListService } from '../../service/combo-list.service';
 
 @Component({
@@ -10,16 +9,8 @@ import { DejaComboListService } from '../../service/combo-list.service';
 export class DejaComboListActionbarComponent<T> {
 
     @Input() public disabled: boolean;
-    // @Output() public actionSelected = new EventEmitter<IDejaAction>();
+    @Input() public disableFastActions: boolean;
 
     constructor(public srv: DejaComboListService<T>) { }
-
-    // public doAction(target: string, actionName: string) {
-    //     const newAction: IDejaAction = {
-    //         type: actionName,
-    //         payload: target,
-    //     };
-    //     // this.actionSelected.emit(newAction);
-    // }
 
 }

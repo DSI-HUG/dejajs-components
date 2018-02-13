@@ -43,11 +43,6 @@ export abstract class DejaComboListBase<T> implements ControlValueAccessor {
 
     public srv: DejaComboListService<T>;
 
-    // public ngOnInit() {
-    // this.srv.labelFieldName = 'label';
-    // this.srv.sortDirection = 'asc';
-    // }
-
     // ************* ControlValueAccessor Implementation **************
 
     /** get accessor */
@@ -80,16 +75,5 @@ export abstract class DejaComboListBase<T> implements ControlValueAccessor {
     }
 
     // ************* End of ControlValueAccessor Implementation **************
-
-    protected emit(type: string, currentItem: T = null, selectedItems = this.items) {
-        const action: IDejaComboListAction<T> = {
-            type,
-            payload: {
-                currentItem,
-                selectedItems,
-            }
-        };
-        this.action.emit(action);
-    }
 
 }

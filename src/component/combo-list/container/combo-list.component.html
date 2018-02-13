@@ -1,8 +1,8 @@
 <deja-combo-list-child [items]="srv.selectable" [itemsBuffer]="srv.selectableBuffer" [labelFieldName]="labelFieldName" (action)="toSelectListAction($event)"
     fxFlex="45" [disabled]="disabled"></deja-combo-list-child>
 
-<deja-combo-list-actionbar [disabled]="disabled || disableFastActions" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="1rem"
-    class="combo-list-action" fxFlex></deja-combo-list-actionbar>
+<deja-combo-list-actionbar [disabled]="disabled" [disableFastActions]="disableFastActions" fxLayout="column" fxLayoutAlign="start center"
+    fxLayoutGap="1rem" class="combo-list-action" fxFlex></deja-combo-list-actionbar>
 
 <deja-combo-list-child [items]="srv.selected" [itemsBuffer]="srv.selectedBuffer" [labelFieldName]="labelFieldName" (action)="selectedListAction($event)"
     fxFlex="45" [disabled]="disabled"></deja-combo-list-child>

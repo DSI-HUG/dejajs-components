@@ -26,18 +26,20 @@ export class DejaComboListChildComponent<T> {
     @Output() public action = new EventEmitter<IDejaAction>();
 
     private lastClick = Date.now();
+    private lastItem: T;
 
     public onClick(item: T) {
         const now = Date.now();
         if (this.disabled) {
             return;
         }
-        if (now - this.lastClick < 300) {
+        if (now - this.lastClick < 300 && this.lastItem === item) {
             this.emit('double', item);
         } else {
             this.emit('single', item);
         }
         this.lastClick = now;
+        this.lastItem = item;
     }
 
     public getClass(item: T) {
@@ -53,15 +55,6 @@ export class DejaComboListChildComponent<T> {
 
         return classNames;
     }
-
-    // private toggleItem(item: T, add = true) {
-    //     const index = this.itemsBuffer.indexOf(item, 0);
-    //     if (index > -1) {
-    //         this.itemsBuffer.splice(index, 1);
-    //     } else if (add) {
-    //         this.itemsBuffer.push(item);
-    //     }
-    // }
 
     private emit(type: string, payload: T) {
         const action: IDejaAction = {

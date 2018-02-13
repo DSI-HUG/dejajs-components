@@ -10,7 +10,7 @@ Select items moving them to the "Selected" List
 <table>
 <thead>
 <tr>
-    <th>Nom</th>
+    <th>Name</th>
     <th>Type</th>
     <th>Default</th>
     <th>Description</th>
@@ -31,14 +31,14 @@ Select items moving them to the "Selected" List
 </tr>
 <tr>
     <td>itemsToSelect</td>
-    <td>T[]</td>
-    <td>[]</td>
+    <td>T[ ]</td>
+    <td>[ ]</td>
     <td>The array of items of any type that are not yet selected.</td>
 </tr>
 <tr>
     <td>itemsSelected</td>
-    <td>T[]</td>
-    <td>[]</td>
+    <td>T[ ]</td>
+    <td>[ ]</td>
     <td>The array of items of any type that are already selected.</td>
 </tr>
 <tr>
@@ -61,7 +61,7 @@ Select items moving them to the "Selected" List
 <table>
 <thead>
 <tr>
-    <th>Nom</th>
+    <th>Name</th>
     <th>Type</th>
     <th>Description</th>
 </tr>
@@ -70,7 +70,7 @@ Select items moving them to the "Selected" List
 <tr>
     <td>action</td>
     <td>IDejaComboListAction</td>
-    <td>Emitted for each selection/deselection event.</td>
+    <td>Emitted on each event.</td>
 </tr>
 </tbody>
 </table>
