@@ -6,8 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import {Observable} from 'rxjs/Observable';
-import {DejaTextMetricsService} from './text-metrics.service';
+import { Observable } from 'rxjs/Observable';
+import { DejaTextMetricsService } from './text-metrics.service';
 
 describe('DejaTextMetricsService', () => {
     let service: DejaTextMetricsService;
@@ -29,19 +29,19 @@ describe('DejaTextMetricsService', () => {
 
         spanElement = document.getElementById('testSpan');
         service.metricsElem = spanElement;
-        Observable.timer(500).subscribe(()=> {
+        Observable.timer(500).subscribe(() => {
         });
     });
 
     // remove the html fixture from the DOM
-    afterEach((done: Function)=> {
-        Observable.timer(2000).subscribe(()=> {
+    afterEach((done: Function) => {
+        Observable.timer(2000).subscribe(() => {
             document.body.removeChild(document.getElementById('testSpan'));
             done();
         });
     });
 
-    it('getTextHeight() should return more than 80 for maxWidth=100', async(done: Function) => {
+    it('getTextHeight() should return more than 80 for maxWidth=100', async (done: Function) => {
         service.getTextHeight(100, testText).subscribe((textHeight: number) => {
             // console.log(`text height: ${textHeight}`);
             // valeurs aprox = line height * font size = (6 lignes * 1.5) * 10 px = 90
@@ -50,7 +50,7 @@ describe('DejaTextMetricsService', () => {
         });
     });
 
-    it('getTextHeight() should return 15 for maxWidth=2000', async(done: Function) => {
+    it('getTextHeight() should return 15 for maxWidth=2000', async (done: Function) => {
         service.getTextHeight(2000, testText).subscribe((textHeight: number) => {
             // console.log(`text height: ${textHeight}`);
             expect(textHeight).toEqual(15); // 10px * 1.5 * 1 line
@@ -58,7 +58,7 @@ describe('DejaTextMetricsService', () => {
         });
     });
 
-    it('getTextMaxWidth() should return a value greater than 0', async() => {
+    it('getTextMaxWidth() should return a value greater than 0', async () => {
         const values: string[] = 'test content'.split(' ');
         const maxWidth = service.getTextMaxWidth(values, spanElement);
         expect(maxWidth).toBeGreaterThan(0);

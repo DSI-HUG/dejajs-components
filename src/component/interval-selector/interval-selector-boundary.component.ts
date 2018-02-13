@@ -6,11 +6,11 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, Input, OnDestroy} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import {IntervalBoundary} from './interval-selector-boundary.model';
-import {IntervalSelectorEventData} from './interval-selector-event-data.model';
-import {IntervalSelectorService} from './interval-selector.service';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, Input, OnDestroy } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { IntervalBoundary } from './interval-selector-boundary.model';
+import { IntervalSelectorEventData } from './interval-selector-event-data.model';
+import { IntervalSelectorService } from './interval-selector.service';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,25 +28,30 @@ export class DejaIntervalSelectorBoundaryComponent implements OnDestroy {
 
     private _isAlive = true;
 
+    // internal usage
+    public isVisible = false;
+    public charToDisplay = '&nbsp;';
+    private boundaryChar = '[';
+
     constructor(private changeDetectorRef: ChangeDetectorRef, public intervalSelectorService: IntervalSelectorService) {
         Observable.from(intervalSelectorService.intervalSelectionChanged$).takeWhile(() => this._isAlive)
-            .subscribe((boundary:IntervalBoundary) => {
-                if ( (boundary.intervalId === this._intervalId && boundary.model === this._model && boundary.openingBoundary === this._openingBoundary) ) {
+            .subscribe((boundary: IntervalBoundary) => {
+                if ((boundary.intervalId === this._intervalId && boundary.model === this._model && boundary.openingBoundary === this._openingBoundary)) {
                     this._selected = boundary.selected;
                     // console.log(`DejaIntervalSelectorBoundaryComponent: intervalSelectionChanged$(): date=${DateUtils.formatSystem(boundary.model.date)}, opening=${boundary.openingBoundary}`);
                     this.updateState();
                 }
-        });
+            });
 
         Observable.from(intervalSelectorService.displayModelBoundaries$).takeWhile(() => this._isAlive)
-            .subscribe((eventData:IntervalSelectorEventData) => {
+            .subscribe((eventData: IntervalSelectorEventData) => {
                 if (eventData.model === this._model && eventData.intervalId === this._intervalId) {
                     this.mouseOver();
                 }
-        });
+            });
 
         Observable.from(intervalSelectorService.hideModelBoundaries$).takeWhile(() => this._isAlive)
-            .subscribe((eventData:IntervalSelectorEventData) => {
+            .subscribe((eventData: IntervalSelectorEventData) => {
                 if (eventData.model === this._model && eventData.intervalId === this._intervalId) {
                     this.mouseLeave();
                 }
@@ -117,11 +122,6 @@ export class DejaIntervalSelectorBoundaryComponent implements OnDestroy {
     public get intervalId(): string {
         return this._intervalId;
     }
-
-    // internal usage
-    public isVisible = false;
-    public charToDisplay = '&nbsp;';
-    private boundaryChar = '[';
 
     @HostListener('click', ['$event'])
     public clickHandler(_event: Event) {

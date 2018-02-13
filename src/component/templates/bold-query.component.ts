@@ -98,9 +98,9 @@ export class DejaBoldQueryComponent {
     }
 
     private refresh() {
-        if (this._value && this._query && this._query.length>0) {
-            const regexpPattern = this._atTheBeginningOfWordOnly?(`\\b${this._query}`): this._query;
-            const sc =  new RegExp(regexpPattern, this._regexpOptions);
+        if (this._value && this._query && this._query.length > 0) {
+            const regexpPattern = this._atTheBeginningOfWordOnly ? (`\\b${this._query}`) : this._query;
+            const sc = new RegExp(regexpPattern, this._regexpOptions);
             const value = this._value.toString() as string;
             const search = Diacritics.remove(value);
             const splitted = search.split(sc);
@@ -115,19 +115,19 @@ export class DejaBoldQueryComponent {
                     position += text.length;
                 }
                 if (position + queryLength <= value.length) {
-                    nbOccurence+=1;
+                    nbOccurence += 1;
                     let skipHighlight = false;
-                    if (this._firstOccurencePerWordOnly && nbOccurence>1) {
+                    if (this._firstOccurencePerWordOnly && nbOccurence > 1) {
                         const words = text.split(/[^a-zA-Z\d]/g);
-                        if (words.length===1) {
+                        if (words.length === 1) {
                             skipHighlight = true;
                         }
                     }
-                    if (!skipHighlight && ( !this._firstOccurenceOnly || firstOccurence )) {
+                    if (!skipHighlight && (!this._firstOccurenceOnly || firstOccurence)) {
                         contents.push(`<span class="${this._highlightClassName}">`);
                     }
                     contents.push(value.slice(position, position + queryLength));
-                    if (!skipHighlight && (!this._firstOccurenceOnly || firstOccurence )) {
+                    if (!skipHighlight && (!this._firstOccurenceOnly || firstOccurence)) {
                         contents.push('</span>');
                     }
                     position += queryLength;

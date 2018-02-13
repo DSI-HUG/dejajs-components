@@ -361,9 +361,9 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
      */
     @Input()
     public set language(val: 'bat' | 'c' | 'cpp' | 'csharp' | 'css' | 'dockerfile' | 'fsharp' | 'go' | 'handlebars' | 'html' | 'ini' | 'jade' | 'javascript' | 'json' | 'less' | 'lua' | 'markdown' | 'objective-c' | 'php' | 'csharp' | 'plaintext' | 'postiats' | 'powershell' | 'python' | 'r' | 'razor' | 'ruby' | 'scss' | 'sql' | 'swift' | 'typescript' | 'vb' | 'xml' | 'yaml') {
-        if(val) {
+        if (val) {
             this._language = val;
-            if(this._editor) {
+            if (this._editor) {
                 this.ngAfterViewInit();
             }
         }
@@ -459,7 +459,7 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
      */
     public dispose() {
         const myDiv: HTMLDivElement = this.editorContent.nativeElement;
-        if(this.resizeSensor) {
+        if (this.resizeSensor) {
             this.resizeSensor = null;
         }
 
@@ -481,7 +481,7 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
         // Manually set monaco size because MonacoEditor doesn't work with Flexbox css
         const myDiv: HTMLDivElement = this.editorContent.nativeElement;
         myDiv.setAttribute('style', `height: 100%; width: 100%;`);
-        if(this._editor) {
+        if (this._editor) {
             this._editor.layout();
         }
     }

@@ -48,6 +48,8 @@ const noop = () => { };
 export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, AfterContentInit, OnDestroy {
     private static formattingTokens = /(\[[^\[]*\])|(\\)?([Hh]mm(ss)?|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Qo?|YYYYYY|YYYYY|YYYY|YY|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|kk?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g;
 
+    public _layout: number | string;
+
     /** Maximum date avaliable inside date-picker */
     @Input() public dateMax: Date;
     /** Minimum date avaliable inside date-picker */
@@ -331,7 +333,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
         }
         this.changeDetectorRef.markForCheck();
     }
-    public _layout: number | string;
+
     public get layout() {
         return this._layout;
     }
