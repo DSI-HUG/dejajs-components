@@ -7,23 +7,46 @@
  */
 import { EventEmitter, Input, Output } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
-import { IDejaAction } from '../../../common/core/action.interface';
 import { IDejaComboListAction } from '../model/combo-list-action.interface';
 import { noop } from '../model/combo-list.accessor';
+import { DejaComboListService } from '../service/combo-list.service';
 
 export abstract class DejaComboListBase<T> implements ControlValueAccessor {
 
-    @Input() public items: T[];
+    @Input() public set items(aItem: T[]) {
+        this.srv.selected = aItem;
+    }
+    public get items(): T[] {
+        return this.srv.selected;
+    }
+
+    @Input() public set labelFieldName(fieldName: string) {
+        if (fieldName) {
+            this.srv.labelFieldName = fieldName;
+            this.srv.sortAll();
+        }
+    }
+    public get labelFieldName(): string {
+        return this.srv.labelFieldName;
+    }
+
+    @Input() public set sortDirection(direction: null | 'asc' | 'desc') {
+        this.srv.sortDirection = direction || null;
+        this.srv.sortAll();
+    }
+
     @Input() public disabled = false;
-    @Input() public labelFieldName = 'label';
-    @Output() public action = new EventEmitter<IDejaAction>();
+
+    @Output() public action = new EventEmitter<IDejaComboListAction<T>>();
 
     public onTouchedCallback: () => void = noop;
-    public onChangeCallback: (_: any) => void = noop;
 
-    constructor() {
-        this.items = [];
-    }
+    public srv: DejaComboListService<T>;
+
+    // public ngOnInit() {
+    // this.srv.labelFieldName = 'label';
+    // this.srv.sortDirection = 'asc';
+    // }
 
     // ************* ControlValueAccessor Implementation **************
 
@@ -36,14 +59,14 @@ export abstract class DejaComboListBase<T> implements ControlValueAccessor {
     public writeValue(value: T[]): void {
         if (value !== this.items) {
             this.items = value;
-            this.onChangeCallback(this.value);
-            this.sortAll();
+            this.srv.onChangeCallback(this.value);
+            this.srv.sortAll();
         }
     }
 
     /** From ControlValueAccessor interface */
     public registerOnChange(fn: any) {
-        this.onChangeCallback = fn;
+        this.srv.onChangeCallback = fn;
     }
 
     /** From ControlValueAccessor interface */
@@ -69,5 +92,4 @@ export abstract class DejaComboListBase<T> implements ControlValueAccessor {
         this.action.emit(action);
     }
 
-    protected sortAll() { }
 }

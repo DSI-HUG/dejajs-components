@@ -17,11 +17,11 @@ import { comboListData } from './combo-test.data';
 })
 export class ComboListDemoComponent implements OnInit {
     public items: ComboListTestModel[] = [];
-    public itemToSelect: ComboListTestModel[];
-    public itemSelected: ComboListTestModel[];
+    public itemToSelect: ComboListTestModel[] = [];
+    public itemSelected: ComboListTestModel[] = [];
     public comboAction: IDejaComboListAction<ComboListTestModel>;
     public currentItem: ComboListTestModel;
-    public selectedItems: ComboListTestModel[];
+    public selectedItems: ComboListTestModel[] = [];
     public selectedList: ComboListTestModel[] = [];
     public fieldName = 'label';
     public fields: string[];
@@ -31,9 +31,13 @@ export class ComboListDemoComponent implements OnInit {
     public disabled: boolean;
     public disableFastActions: boolean;
 
-    constructor() {}
+    constructor() { }
 
     public ngOnInit() {
+        this.init();
+    }
+
+    public init() {
         this.items = comboListData;
         this.itemToSelect = this.items.filter(
             (i: ComboListTestModel) => i.id < 10

@@ -1,23 +1,18 @@
 import { Injectable } from '@angular/core';
+import { noop } from '../model/combo-list.accessor';
 
 @Injectable()
 export class DejaComboListService<T> {
 
-    public selectable: T[];
-    public selectableBuffer: T[];
-    public selected: T[];
-    public selectedBuffer: T[];
+    public selectable: T[] = [];
+    public selectableBuffer: T[] = [];
+    public selected: T[] = [];
+    public selectedBuffer: T[] = [];
 
-    constructor() { }
+    public labelFieldName = 'label';
+    public sortDirection: string;
 
-    // public toggleSelectable(item: T, add = true) {
-    //     const index = this.selectableBuffer.indexOf(item, 0);
-    //     if (index > -1) {
-    //         this.selectableBuffer.splice(index, 1);
-    //     } else if (add) {
-    //         this.selectableBuffer.push(item);
-    //     }
-    // }
+    public onChangeCallback: (_: any) => void = noop;
 
     public toggleSelectable(item: T, add = true) {
         const index = this.selectableBuffer.indexOf(item, 0);
@@ -38,54 +33,68 @@ export class DejaComboListService<T> {
     }
 
     public raiseBuffer() {
-        // this.selectableBuffer.forEach((item: T) => this.raiseOne(item));
-        this.selectable = this.selectable.filter((i: T) => this.selectableBuffer.some((item: T) => i === item));
-        this.selected = this.selected.concat(this.selectableBuffer);
+        this.selectable = this.selectable.filter((i: T) => this.selectableBuffer.indexOf(i, 0) === -1);
+        this.selected = this.selectableBuffer.concat(this.selected);
         this.selectableBuffer = [];
         this.sortAll();
     }
 
     public dropBuffer() {
-        this.selectedBuffer.forEach((item: T) => this.dropOne(item));
+        this.selected = this.selected.filter((i: T) => this.selectedBuffer.indexOf(i, 0) === -1);
+        this.selectable = this.selectedBuffer.concat(this.selectable);
+        this.selectedBuffer = [];
+        this.sortAll();
     }
 
     public raiseOne(item: T) {
         this.selectable = this.selectable.filter((i: T) => i !== item);
-        this.selected = this.selected.concat([item]);
+        this.selectableBuffer = this.selectableBuffer.filter((i: T) => i !== item);
+        if (this.selected.indexOf(item, 0) === -1) {
+            this.selected = [item].concat(this.selected);
+        }
         this.sortAll();
-        // const index = this.selectable.indexOf(item, 0);
-        // if (index > -1) {
-        //     this.selected.unshift(this.selectable.splice(index, 1)[0]);
-        //     this.sortAll();
-        //     return false;
-        // }
-        // return true;
     }
 
     public dropOne(item: T) {
-        this.selectable = this.selectable.filter((i: T) => i !== item);
+        this.selected = this.selected.filter((i: T) => i !== item);
+        this.selectedBuffer = this.selectedBuffer.filter((i: T) => i !== item);
+        if (this.selectable.indexOf(item, 0) === -1) {
+            this.selectable = [item].concat(this.selectable);
+        }
         this.sortAll();
-        // const index = this.selected.indexOf(item, 0);
-        // if (index > -1) {
-        //     this.selectable.unshift(this.selected.splice(index, 1)[0]);
-        //     this.sortAll();
-        //     return false;
-        // }
-        // return true;
     }
 
     public raiseAll() {
-        this.selected = this.selected.concat(this.selectable);
+        this.selected = this.selectable.concat(this.selected);
+        this.selectable = [];
         this.selectableBuffer = [];
+        this.sortAll();
     }
 
     public dropAll() {
-        this.selectable = this.selectable.concat(this.selected);
+        this.selectable = this.selected.concat(this.selectable);
+        this.selected = [];
         this.selectedBuffer = [];
+        this.sortAll();
     }
 
-    private sortAll() {
-        // todo
+    public sortAll() {
+        this.sort(this.selectable);
+        this.sort(this.selected);
+        this.onChangeCallback(this.selected);
+    }
+
+    private sort(aItem: T[]): T[] {
+        if (!this.sortDirection) {
+            return aItem;
+        }
+        const fieldname = this.labelFieldName;
+        const coeff = this.sortDirection === 'asc' ? 1 : -1;
+        return aItem.sort((a, b) => {
+            if (a[fieldname] < b[fieldname]) { return -1 * coeff; }
+            if (a[fieldname] > b[fieldname]) { return 1 * coeff; }
+            return 0;
+        });
     }
 
 }

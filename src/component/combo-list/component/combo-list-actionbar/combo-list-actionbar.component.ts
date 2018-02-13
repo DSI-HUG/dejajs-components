@@ -1,26 +1,25 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { IDejaAction } from '../../../../common/core/action.interface';
+import { Component, Input } from '@angular/core';
+// import { IDejaAction } from '../../../../common/core/action.interface';
+import { DejaComboListService } from '../../service/combo-list.service';
 
 @Component({
     selector: 'deja-combo-list-actionbar',
     templateUrl: './combo-list-actionbar.component.html',
     styleUrls: ['./combo-list-actionbar.component.scss']
 })
-export class DejaComboListActionbarComponent implements OnInit {
+export class DejaComboListActionbarComponent<T> {
 
     @Input() public disabled: boolean;
-    @Output() public actionSelected = new EventEmitter<IDejaAction>();
+    // @Output() public actionSelected = new EventEmitter<IDejaAction>();
 
-    constructor() { }
+    constructor(public srv: DejaComboListService<T>) { }
 
-    public ngOnInit() { }
-
-    public doAction(target: string, actionName: string) {
-        const newAction: IDejaAction = {
-            type: actionName,
-            payload: target,
-        };
-        this.actionSelected.emit(newAction);
-    }
+    // public doAction(target: string, actionName: string) {
+    //     const newAction: IDejaAction = {
+    //         type: actionName,
+    //         payload: target,
+    //     };
+    //     // this.actionSelected.emit(newAction);
+    // }
 
 }

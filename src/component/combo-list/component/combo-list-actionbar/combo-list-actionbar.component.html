@@ -1,20 +1,20 @@
 <span fxFlex fxLayout="row" fxLayoutAlign="start center">
-    <button mat-icon-button title="Select all" (click)="doAction('toSelect','move_all')" color="primary" [disabled]="disabled">
+    <button mat-icon-button title="Select all" (click)="srv.raiseAll()" color="primary" [disabled]="disabled">
         <mat-icon class="md-24" aria-label="Select all">fast_forward</mat-icon>
     </button>
 </span>
 <span fxFlex fxLayout="row" fxLayoutAlign="start center">
-    <button mat-icon-button title="Select" (click)="doAction('toSelect','move_buffer')" color="primary" [disabled]="disabled || disableSlowActions">
+    <button mat-icon-button title="Select" (click)="srv.raiseBuffer()" color="primary" [disabled]="disabled || disableSlowActions">
         <mat-icon class="md-24" aria-label="Select">chevron_right</mat-icon>
     </button>
 </span>
 <span fxFlex fxLayout="row" fxLayoutAlign="start center">
-    <button mat-icon-button title="Deselect" (click)="doAction('selected','move_buffer')" color="primary" [disabled]="disabled || disableSlowActions">
+    <button mat-icon-button title="Deselect" (click)="srv.dropBuffer()" color="primary" [disabled]="disabled || disableSlowActions">
         <mat-icon class="md-24" aria-label="Deselect">chevron_left</mat-icon>
     </button>
 </span>
 <span fxFlex fxLayout="row" fxLayoutAlign="start center">
-    <button mat-icon-button title="Deselect All" (click)="doAction('selected','move_all')" color="primary" [disabled]="disabled">
+    <button mat-icon-button title="Deselect All" (click)="srv.dropAll()" color="primary" [disabled]="disabled">
         <mat-icon class="md-24" aria-label="Deselect All">fast_rewind</mat-icon>
     </button>
 </span>
