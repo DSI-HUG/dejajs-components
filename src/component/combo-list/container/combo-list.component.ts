@@ -39,7 +39,6 @@ export class DejaComboListComponent<T> extends DejaComboListBase<T> implements O
 
     // Select
     public toSelectListAction(listAction: IDejaAction): void {
-        debugger;
         console.log('toSelectListAction', listAction);
 
         if (listAction.type === 'flush_buffer') {

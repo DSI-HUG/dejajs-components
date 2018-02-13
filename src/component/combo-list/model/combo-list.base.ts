@@ -7,6 +7,7 @@
  */
 import { EventEmitter, Input, Output } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
+import { IDejaAction } from '../../../common/core/action.interface';
 import { IDejaComboListAction } from '../model/combo-list-action.interface';
 import { noop } from '../model/combo-list.accessor';
 
@@ -15,7 +16,7 @@ export abstract class DejaComboListBase<T> implements ControlValueAccessor {
     @Input() public items: T[];
     @Input() public disabled = false;
     @Input() public labelFieldName = 'label';
-    @Output() public action = new EventEmitter<IDejaComboListAction<T>>();
+    @Output() public action = new EventEmitter<IDejaAction>();
 
     public onTouchedCallback: () => void = noop;
     public onChangeCallback: (_: any) => void = noop;
@@ -57,12 +58,12 @@ export abstract class DejaComboListBase<T> implements ControlValueAccessor {
 
     // ************* End of ControlValueAccessor Implementation **************
 
-    protected emit(type: string, currentItem: T = null) {
+    protected emit(type: string, currentItem: T = null, selectedItems = this.items) {
         const action: IDejaComboListAction<T> = {
             type,
             payload: {
                 currentItem,
-                selectedItems: this.items,
+                selectedItems,
             }
         };
         this.action.emit(action);

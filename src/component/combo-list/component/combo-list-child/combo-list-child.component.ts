@@ -11,23 +11,25 @@ import {
     Input,
     Output,
 } from '@angular/core';
+import { ControlValueAccessor } from '@angular/forms';
 import { IDejaAction } from '../../../../common/core/action.interface';
-// import { IDejaComboListAction } from '../../model/combo-list-action.interface';
+import { valueAccessorFactory } from '../../model/combo-list.accessor';
+import { DejaComboListBase } from '../../model/combo-list.base';
 
 @Component({
     selector: 'deja-combo-list-child',
     templateUrl: './combo-list-child.component.html',
     styleUrls: ['./combo-list-child.component.scss'],
+    providers: [valueAccessorFactory(DejaComboListChildComponent)]
 })
-export class DejaComboListChildComponent<T> {
-    @Input() public itemsDisplay: Array<T>;
+export class DejaComboListChildComponent<T> extends DejaComboListBase<T> implements ControlValueAccessor {
     @Input() public set trigger(a: IDejaAction) {
         console.log('set trigger', a);
         if (!a) {
             return;
         }
         if (a.type === 'move_buffer') {
-            this.emit('flush_buffer', this.itemsBuffer.concat([]));
+            this.emit('flush_buffer', null, this.itemsBuffer.concat([]));
         }
         this.itemsBuffer = [];
     }
@@ -36,21 +38,17 @@ export class DejaComboListChildComponent<T> {
     @Output() public action = new EventEmitter<IDejaAction>();
 
     public itemsBuffer: Array<T> = [];
-
     private lastClick = Date.now();
 
     public onClick(item: T) {
         const now = Date.now();
-
         if (this.disabled) {
             return;
         }
         if (now - this.lastClick < 300) {
-            console.log('double', item);
             this.toggleItem(item, false);
             this.emit('double', item);
         } else {
-            console.log('single', item);
             this.toggleItem(item);
         }
         this.lastClick = now;
@@ -77,11 +75,6 @@ export class DejaComboListChildComponent<T> {
         } else if (add) {
             this.itemsBuffer.push(item);
         }
-    }
-
-    private emit(type: string, payload: T | Array<T>) {
-        const newAction: IDejaAction = { type, payload };
-        this.action.emit(newAction);
     }
 
 }
