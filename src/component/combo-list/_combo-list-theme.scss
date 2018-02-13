@@ -2,11 +2,10 @@
 
 @mixin combo-list-theme($theme) {
     $primary: map-get($theme, primary);
-    // deja-combo-list{
-    //     background-color: mat-color($primary);
-    // }
-    // deja-combo-list-child{
-    //     background-color: whitesmoke;
-    // }
+    deja-combo-list-child{
+        mat-list-item.list-selected > div{
+                background-color: mat-color($primary, 200);
+        }
+    }
 
 }

@@ -1,0 +1,4 @@
+<mat-nav-list dense [disableRipple]="disabled">
+    <mat-list-item *ngFor="let item of items" [disableRipple]="disabled" (click)="disabled ? $event.preventDefault() : onClick(item)"
+        [ngClass]="getClass(item)">{{item[labelFieldName]}}</mat-list-item>
+</mat-nav-list>
