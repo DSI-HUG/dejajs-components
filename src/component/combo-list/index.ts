@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { DejaComboListActionbarComponent } from './component/combo-list-actionbar/combo-list-actionbar.component';
 import { DejaComboListChildComponent } from './component/combo-list-child/combo-list-child.component';
 import { DejaComboListComponent } from './container/combo-list.component';
+import { DejaComboListService } from './service/combo-list.service';
 
 import {
     MatButtonModule,
@@ -36,7 +37,8 @@ import {
     exports: [
         DejaComboListComponent,
         DejaComboListChildComponent,
-    ]
+    ],
+    providers: [DejaComboListService]
 })
 export class DejaComboListModule { }
 
