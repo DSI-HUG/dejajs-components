@@ -1,4 +1,8 @@
+// Import theming functions
 @import '~@angular/material/theming';
+// Import your custom theme
+// @import 'src/scss/variables/palette';
+
 :host{
     @include mat-elevation(1);
     overflow-y: auto;
