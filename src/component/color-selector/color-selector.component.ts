@@ -323,7 +323,7 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
         this.onTouchedCallback = fn;
     }
 
-    public setDisabledState?(isDisabled: boolean) {
+    public setDisabledState(isDisabled: boolean) {
         this.disabled = isDisabled;
     }
     // ************* End of ControlValueAccessor Implementation **************

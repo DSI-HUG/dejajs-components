@@ -109,7 +109,7 @@ export class DejaRangeComponent implements ControlValueAccessor {
         }
     }
 
-    public setDisabledState?(isDisabled: boolean) {
+    public setDisabledState(isDisabled: boolean) {
         this.disabled = isDisabled;
     }
     // End of ControlValueAccessor implementation
