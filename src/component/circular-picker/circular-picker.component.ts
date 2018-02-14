@@ -70,6 +70,7 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
     @Input()
     public set disabled(value: boolean | string) {
         this._disabled = coerceBooleanProperty(value);
+        this.changeDetectorRef.markForCheck();
     }
 
     /** To get disabled attribute. */
@@ -272,6 +273,10 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
     /** From ControlValueAccessor interface */
     public registerOnTouched(fn: any) {
         this.onTouchedCallback = fn;
+    }
+
+    public setDisabledState(isDisabled: boolean) {
+        this.disabled = isDisabled;
     }
     // ************* End of ControlValueAccessor Implementation **************
 

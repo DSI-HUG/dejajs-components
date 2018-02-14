@@ -216,6 +216,10 @@ export class DejaEditableDirective implements ControlValueAccessor, OnDestroy {
     public registerOnTouched(fn: any) {
         this.onTouchedCallback = fn;
     }
+
+    public setDisabledState(isDisabled: boolean) {
+        this.disabled = isDisabled;
+    }
     // ************* End of ControlValueAccessor Implementation **************
 
     public ngOnDestroy() {
