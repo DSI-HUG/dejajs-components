@@ -112,9 +112,7 @@ export class ItemListService {
      * @return Texte à afficher pour le modèle spécifié.
      */
     public static getItemText(value: any, textField?: string) {
-        if (!value) {
-            return '';
-        } else {
+        if (value) {
             if (textField) {
                 const fields = textField.split('.');
                 let model = value.model && value.model[fields[0]] !== undefined ? value.model : value;
@@ -124,6 +122,7 @@ export class ItemListService {
                 if (model !== undefined) {
                     return typeof model === 'function' ? model() : model;
                 }
+                return '';
             }
 
             if (value.displayName) {
@@ -132,6 +131,7 @@ export class ItemListService {
                 return value.toString();
             }
         }
+        return '';
     }
 
     /**
