@@ -19,6 +19,7 @@ import { IDejaAction } from '../../../../common/core/action.interface';
     styleUrls: ['./combo-list-child.component.scss'],
 })
 export class DejaComboListChildComponent<T> {
+
     @Input() public items: Array<T>;
     @Input() public itemsBuffer: Array<T> = [];
     @Input() public labelFieldName: string;
@@ -49,7 +50,7 @@ export class DejaComboListChildComponent<T> {
             classNames.push('list-disabled');
         }
 
-        if (!!this.itemsBuffer && this.itemsBuffer.includes(item)) {
+        if (!!this.itemsBuffer && this.itemsBuffer.some((i: T) => i === item)) {
             classNames.push('list-selected');
         }
 
