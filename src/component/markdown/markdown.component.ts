@@ -10,7 +10,7 @@ import { AfterViewChecked, ChangeDetectionStrategy, ChangeDetectorRef, Component
 import { Http, ResponseContentType } from '@angular/http';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
-import * as Prism from 'prismjs/prism';
+import * as Prism from 'prismjs';
 import * as Showdown from 'showdown';
 
 @Component({

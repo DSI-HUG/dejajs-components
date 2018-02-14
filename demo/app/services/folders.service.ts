@@ -21,7 +21,7 @@ export class Folder {
 @Injectable()
 export class FoldersService {
 
-    private folders = [];
+    private folders = [] as any[];
 
     constructor() {
         this.addLevel(1, this.folders);

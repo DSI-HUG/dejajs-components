@@ -42,7 +42,7 @@ interface ILayoutInfo {
 }
 
 interface ILayoutInfos {
-    infos: { [id: string]: ILayoutInfo };
+    [id: string]: any;
     height: number;
     targetBounds: Rect;
     validBounds: Rect;
@@ -141,7 +141,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                 let width = containerBounds.width - 20;
                 const tiles = this.tiles || [];
 
-                const selectedTileIds = [];
+                const selectedTileIds = [] as string[];
 
                 tiles.forEach((tile: DejaTile) => {
                     if (tile.percentBounds && !tile.percentBounds.isEmpty()) {
@@ -486,13 +486,13 @@ export class DejaTilesLayoutProvider implements OnDestroy {
     }
 
     public set selectedTiles(selectedIds: string[]) {
-        const selectedTiles = [];
+        const selectedTiles = [] as DejaTile[];
         let raiseEvent = false;
 
-        const idsDic = {};
+        const idsDic = {} as { [id: string]: boolean };
         selectedIds.forEach((id) => idsDic[id] = true);
 
-        const previousIdsDic = {};
+        const previousIdsDic = {} as { [id: string]: boolean };
         this.selectedIds.forEach((id) => previousIdsDic[id] = true);
 
         if (this.tiles.length) {
@@ -730,7 +730,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         if (freePlaces.length > 0) {
             // add at the nearest free place
             freePlaces.sort((bounds1, bounds2) => {
-                const calcDistance = (bounds) => Math.min(Math.abs(bounds.left - idealBounds.left), Math.abs(bounds.right - idealBounds.right)) + 2 * Math.min(Math.abs(bounds.top - idealBounds.top), Math.abs(bounds.bottom - idealBounds.bottom));
+                const calcDistance = (bounds: Rect) => Math.min(Math.abs(bounds.left - idealBounds.left), Math.abs(bounds.right - idealBounds.right)) + 2 * Math.min(Math.abs(bounds.top - idealBounds.top), Math.abs(bounds.bottom - idealBounds.bottom));
                 return calcDistance(bounds1) - calcDistance(bounds2);
             });
 
@@ -1418,20 +1418,22 @@ export class DejaTilesLayoutProvider implements OnDestroy {
     }
 
     private getSizePercentLimit(prop: string): number {
-        const unit = this[`${prop}Unit`];
+        const self = this as { [prop: string]: any };
+        const unit = self[`${prop}Unit`];
         if (!unit || unit === 'px') {
-            return this.getPercentSize(this[prop]);
+            return this.getPercentSize(self[prop]);
         } else {
-            return this[prop];
+            return self[prop];
         }
     }
 
     private getSizePixelLimit(prop: string): number {
-        const unit = this[`${prop}Unit`];
+        const self = this as { [prop: string]: any };
+        const unit = self[`${prop}Unit`];
         if (!unit || unit === 'px') {
-            return this[prop];
+            return self[prop];
         } else {
-            return this.getPixelSize(this[prop]);
+            return this.getPixelSize(self[prop]);
         }
     }
 
@@ -1507,11 +1509,12 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         const matches = regexp.exec(value);
 
         if (matches && matches.length >= 1) {
-            this[prop] = parseInt(matches[1], 10);
+            const self = this as { [prop: string]: any };
+            self[prop] = parseInt(matches[1], 10);
             if (matches.length >= 2) {
-                this[`${prop}Unit`] = matches[2];
+                self[`${prop}Unit`] = matches[2];
             } else {
-                this[`${prop}Unit`] = 'px';
+                self[`${prop}Unit`] = 'px';
             }
         }
     }
@@ -1523,7 +1526,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         });
     }
 
-    private calcHorizontalOverflow(direction: number, tiles: DejaTile[], offset: number, blackList?: Object): number {
+    private calcHorizontalOverflow(direction: number, tiles: DejaTile[], offset: number, blackList?: { [id: string]: string}): number {
         let overflow = 0;
         blackList = blackList || {};
 
@@ -1555,7 +1558,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         return overflow;
     }
 
-    private moveHorizontal(direction: number, tiles: DejaTile[], offset: number, targetBounds: { [id: number]: Rect }) {
+    private moveHorizontal(direction: number, tiles: DejaTile[], offset: number, targetBounds: { [id: string]: Rect }) {
         tiles.forEach((t) => {
             if (!targetBounds[t.id]) {
                 // Offset tile
@@ -1571,7 +1574,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
 
     private pushHorizontal(bounds: Rect, direction: number, tiles?: DejaTile[], offset?: number): number {
         let overflow = 0;
-        const targetBounds = {} as { [id: number]: Rect };
+        const targetBounds = {} as { [id: string]: Rect };
 
         if (!offset) {
             offset = 0;
@@ -1602,7 +1605,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         return overflow;
     }
 
-    private calcVerticalOverflow(direction: number, tiles: DejaTile[], offset: number, blackList?: Object): number {
+    private calcVerticalOverflow(direction: number, tiles: DejaTile[], offset: number, blackList?: {[id: string]: string}): number {
         let overflow = 0;
         blackList = blackList || {};
 
@@ -1635,7 +1638,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         return overflow;
     }
 
-    private moveVertical(direction: number, tiles: DejaTile[], offset: number, targetBounds: { [id: number]: Rect }) {
+    private moveVertical(direction: number, tiles: DejaTile[], offset: number, targetBounds: { [id: string]: Rect }) {
         tiles.forEach((t) => {
             if (!targetBounds[t.id]) {
                 // Offset tile
@@ -1651,7 +1654,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
 
     private pushVertical(bounds: Rect, direction: number, tiles: DejaTile[], offset?: number): number {
         let overflow = 0;
-        const targetBounds = {} as { [id: number]: Rect };
+        const targetBounds = {} as { [id: string]: Rect };
 
         if (!offset) {
             offset = 0;

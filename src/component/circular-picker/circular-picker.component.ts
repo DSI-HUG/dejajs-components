@@ -62,14 +62,15 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
     @Input() public ranges: ICircularRange[];
 
     /** Template for labels inside picker. Use it to customize labels */
-    @ContentChild('labelTemplate') public labelTemplate;
+    @ContentChild('labelTemplate') public labelTemplate: any;
     /** template for cursor inside picker. Use it to customize labels */
-    @ContentChild('cursorTemplate') public cursorTemplate;
+    @ContentChild('cursorTemplate') public cursorTemplate: any;
 
     /** disabled property setter. Can be string or empty so you can use it like : <circular-picker disabled></circular-picker> */
     @Input()
     public set disabled(value: boolean | string) {
         this._disabled = coerceBooleanProperty(value);
+        this.changeDetectorRef.markForCheck();
     }
 
     /** To get disabled attribute. */
@@ -272,6 +273,10 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
     /** From ControlValueAccessor interface */
     public registerOnTouched(fn: any) {
         this.onTouchedCallback = fn;
+    }
+
+    public setDisabledState(isDisabled: boolean) {
+        this.disabled = isDisabled;
     }
     // ************* End of ControlValueAccessor Implementation **************
 

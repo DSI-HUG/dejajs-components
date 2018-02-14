@@ -41,7 +41,8 @@ export class DejaTooltipComponent implements OnInit, OnDestroy {
     /** Event Emmited when hide action is called */
     @Output() public hide = new EventEmitter();
     /** Template for tooltip content */
-    @ContentChild('tooltipTemplate') public tooltipTemplate;
+    @ContentChild('tooltipTemplate')
+    public tooltipTemplate: any;
 
     /** Parameters of the tooltip */
     public params: ITooltipParams;

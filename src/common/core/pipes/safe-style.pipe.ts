@@ -20,7 +20,7 @@ export class SafeStylePipe implements PipeTransform {
         this.sanitizer = sanitizer;
     }
 
-    public transform(style) {
+    public transform(style: string) {
         return this.sanitizer.bypassSecurityTrustStyle(style) as any;
     }
 }

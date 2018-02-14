@@ -24,7 +24,7 @@ export abstract class DejaPopupBase implements OnInit {
     protected injector: Injector;
     protected renderer?: Renderer2;
     protected elRef?: ElementRef;
-    protected unlisten?;
+    protected unlisten?: () => void;
 
     private aSub: Subscription[];
 

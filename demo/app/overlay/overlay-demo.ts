@@ -7,6 +7,7 @@
  */
 
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { DejaOverlayComponent } from '../../../src/component/overlay/overlay.component';
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -25,7 +26,8 @@ export class OverlayDemoComponent {
 
     public tabIndex = 1;
 
-    @ViewChild('contextMenu') private contextMenu;
+    @ViewChild('contextMenu')
+    private contextMenu: DejaOverlayComponent;
 
     public select(text: string) { this.selected = text; }
 

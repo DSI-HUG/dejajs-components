@@ -40,7 +40,7 @@ interface IGlobalEventEmmitter {
      * @param args Optional arguments to emit with the event
      * @return Emitter
      */
-    emit(event: string, ...params): IGlobalEventEmmitter;
+    emit(event: string, ...params: any[]): IGlobalEventEmmitter;
 
     /**
      * Returns all the callbacks for a particular event

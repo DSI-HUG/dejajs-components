@@ -29,10 +29,10 @@
             true,
             {
                 "order": [
-                    "public-static-field",
-                    "protected-static-field",
-                    "public-static-method",
-                    "protected-static-method"
+                    "static-field",
+                    "instance-field",
+                    "static-method",
+                    "instance-method"
                 ]
             }
         ],
@@ -105,7 +105,12 @@
         "unified-signatures": true,
         "variable-name": false,
         "whitespace": [
-            true
+            true,
+            "check-branch",
+            "check-decl",
+            "check-operator",
+            "check-separator",
+            "check-type"
         ],
         "use-input-property-decorator": true,
         "use-output-property-decorator": true,

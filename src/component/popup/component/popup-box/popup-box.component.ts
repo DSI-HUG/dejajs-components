@@ -19,15 +19,6 @@ import { DejaPopupBase } from '../../model/popup-base.class';
 })
 export class DejaPopupBoxComponent {
 
-    @Input() public dialog: MatDialogRef<DejaPopupBase>;
-    @Output() public action = new EventEmitter();
-    @HostListener('mouseenter') public onMouseEnter() {
-        this.showActions = true;
-    }
-    @HostListener('mouseleave') public onMouseLeave() {
-        this.showActions = false;
-    }
-
     public showActions = false;
     public aActions: DejaPopupAction[];
 
@@ -48,6 +39,15 @@ export class DejaPopupBoxComponent {
         icon: 'remove',
         label: 'Minify',
     };
+
+    @Input() public dialog: MatDialogRef<DejaPopupBase>;
+    @Output() public action = new EventEmitter();
+    @HostListener('mouseenter') public onMouseEnter() {
+        this.showActions = true;
+    }
+    @HostListener('mouseleave') public onMouseLeave() {
+        this.showActions = false;
+    }
 
     public doEmit(action: DejaPopupAction) {
         action.target = 'popup-tray';

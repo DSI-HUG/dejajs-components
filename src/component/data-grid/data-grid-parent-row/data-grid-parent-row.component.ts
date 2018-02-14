@@ -9,6 +9,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, Input } from '@angular/core';
 import { ItemListService } from '../../../common/core/item-list/item-list.service';
 import { IDejaGridColumn } from '../data-grid-column/data-grid-column';
+import { IDejaGridRow } from '../data-grid-row/data-grid-row';
 import { IDejaGridParentRow } from './data-grid-parent-row';
 
 /** Composant représentant une ligne parente d'une structure de ligne hierarchique */
@@ -23,19 +24,19 @@ export class DejaGridParentRowComponent {
     @Input() public row: IDejaGridParentRow;
 
     /** Template de cellule si définit extérieurement à la grille */
-    @Input() public cellTemplateExternal;
+    @Input() public cellTemplateExternal: any;
 
     /** Template de titre si définit extérieurement à la grille */
-    @Input() public parentTitleTemplateExternal;
+    @Input() public parentTitleTemplateExternal: any;
 
     /** Index de la ligne sur la liste plate de ItemListService */
     @Input() public flatIndex: number;
 
     /** Template de titre par defaut définit dans le HTML de la grille */
-    @ContentChild('parentTitleTemplate') protected parentTitleTemplateInternal;
+    @ContentChild('parentTitleTemplate') protected parentTitleTemplateInternal: any;
 
     /** Template de cellule par defaut  définit dans le HTML de la grille */
-    @ContentChild('cellTemplate') protected cellTemplateInternal;
+    @ContentChild('cellTemplate') protected cellTemplateInternal: any;
 
     private _columnLayout = {} as IDejaGridParentRowColumnLayout;
 
@@ -78,7 +79,7 @@ export class DejaGridParentRowComponent {
 
     constructor(private changeDetectorRef: ChangeDetectorRef) { }
 
-    public getCellText(row, textField) {
+    public getCellText(row: IDejaGridRow, textField: string) {
         return ItemListService.getItemText(row, textField);
     }
 }

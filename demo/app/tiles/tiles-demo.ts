@@ -38,12 +38,6 @@ export class TilesDemoComponent implements OnInit {
             .defaultIfEmpty([]);
     }
 
-    protected get debug() {
-        // Check binding
-        // console.log('bind ' + Date.now());
-        return null;
-    }
-
     public ngOnInit() {
         let x1 = 0;
         let y1 = 0;

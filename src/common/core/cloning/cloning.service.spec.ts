@@ -98,7 +98,7 @@ describe('CloningService', () => {
     });
 
     it('Should, clone a complex structure with a target array', () => {
-        const cloned = [];
+        const cloned = [] as any[];
         service.cloneArray(datas, cloned);
         expect(JSON.stringify(cloned)).toEqual(JSON.stringify(datas));
         expect(JSON.stringify(cloned)).toEqual(JSON.stringify(_cloned));
@@ -148,7 +148,7 @@ describe('CloningService', () => {
     });
 
     it('Should, clone an array asynchronously to an existing array', () => {
-        const cloned = [];
+        const cloned = [] as any[];
         service.cloneArray$(datas, cloned)
             .first()
             .subscribe(() => {
