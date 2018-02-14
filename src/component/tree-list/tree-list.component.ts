@@ -539,6 +539,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     public set disabled(value: boolean | string) {
         const disabled = coerceBooleanProperty(value);
         this._disabled = disabled || null;
+        this.changeDetectorRef.markForCheck();
     }
 
     public get disabled() {

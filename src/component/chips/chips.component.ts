@@ -103,6 +103,10 @@ export class DejaChipsComponent implements ControlValueAccessor {
     public registerOnTouched(fn: any) {
         this.onTouchedCallback = fn;
     }
+
+    public setDisabledState?(isDisabled: boolean) {
+        this.disabled = isDisabled;
+    }
     // ************* End of ControlValueAccessor Implementation **************
 
     public get itemTemplate() {

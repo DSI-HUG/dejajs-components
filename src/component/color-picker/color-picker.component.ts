@@ -7,12 +7,14 @@
  */
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, Optional, Output, Self, ViewChild,
-    ViewEncapsulation } from '@angular/core';
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, Optional, Output, Self, ViewChild,
+    ViewEncapsulation
+} from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Color } from '../../common/core/graphics/color';
 import { DejaConnectionPositionPair } from '../../common/core/overlay/connection-position-pair';
-import {DejaOverlayComponent} from '../overlay/overlay.component';
+import { DejaOverlayComponent } from '../overlay/overlay.component';
 
 const noop = () => { };
 
@@ -82,6 +84,7 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
     @Input()
     public set disabled(value: boolean | string) {
         this._disabled = coerceBooleanProperty(value);
+        this.changeDetectorRef.markForCheck();
     }
 
     public get disabled() {
@@ -116,6 +119,10 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
     // From ControlValueAccessor interface
     public registerOnTouched(fn: any) {
         this.onTouchedCallback = fn;
+    }
+
+    public setDisabledState?(isDisabled: boolean) {
+        this.disabled = isDisabled;
     }
     // ************* End of ControlValueAccessor Implementation **************
 

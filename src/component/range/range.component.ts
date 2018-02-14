@@ -65,6 +65,7 @@ export class DejaRangeComponent implements ControlValueAccessor {
     @Input()
     public set disabled(value: boolean | string) {
         this._disabled = coerceBooleanProperty(value);
+        this.changeDetectorRef.markForCheck();
     }
 
     public get disabled() {
@@ -107,6 +108,11 @@ export class DejaRangeComponent implements ControlValueAccessor {
             this.changeDetectorRef.markForCheck();
         }
     }
+
+    public setDisabledState?(isDisabled: boolean) {
+        this.disabled = isDisabled;
+    }
+    // End of ControlValueAccessor implementation
 
     @HostListener('window:resize', ['$event'])
     public onResize() {

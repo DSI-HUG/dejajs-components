@@ -260,6 +260,10 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
     public registerOnTouched(fn: any) {
         this.onTouchedCallback = fn;
     }
+
+    public setDisabledState?(isDisabled: boolean) {
+        this.disabled = isDisabled;
+    }
     // ************* End of ControlValueAccessor Implementation **************
 
     /**
