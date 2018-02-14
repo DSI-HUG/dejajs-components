@@ -103,9 +103,9 @@ describe('DejaOverlayComponent', () => {
         expect(comp.isVisible).toBeTruthy();
     });
 
-    it('should have isVisible=false and emit closed event when invoking close() method', (done) => {
+    it('should have isVisible=false and emit closed event when invoking close() method', (done: Function) => {
         fixture.detectChanges();
-        comp.closed.subscribe(g => {
+        comp.closed.subscribe((g: boolean) => {
             expect(g).toBe(true);
             done();
         });
@@ -116,9 +116,9 @@ describe('DejaOverlayComponent', () => {
         expect(comp.isVisible).toBeFalsy();
     });
 
-    it('should have isVisible=false and emit closed event when clicking on backdrop div', (done) => {
+    it('should have isVisible=false and emit closed event when clicking on backdrop div', (done: Function) => {
         fixture.detectChanges();
-        comp.closed.subscribe(g => {
+        comp.closed.subscribe((g: boolean) => {
             expect(g).toEqual(true);
             done();
         });
@@ -166,9 +166,9 @@ describe('DejaOverlayComponent', () => {
         expect(returnedWidth).toEqual('50%');
     });
 
-    it('should emit visibleChange event when isVisible change', (done) => {
+    it('should emit visibleChange event when isVisible change', (done: Function) => {
         fixture.detectChanges();
-        comp.visibleChange.subscribe(g => {
+        comp.visibleChange.subscribe((g: boolean) => {
             expect(g).toEqual(true);
             done();
         });
@@ -176,9 +176,9 @@ describe('DejaOverlayComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should emit closed event when invoking close()', (done) => {
+    it('should emit closed event when invoking close()', (done: Function) => {
         fixture.detectChanges();
-        comp.closed.subscribe(g => {
+        comp.closed.subscribe((g: boolean) => {
             expect(g).toEqual(true);
             done();
         });

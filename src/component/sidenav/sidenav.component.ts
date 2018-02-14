@@ -105,7 +105,7 @@ export class DejaSidenavComponent implements AfterViewInit, OnInit, OnDestroy {
         return route;
     }
 
-    private onLargeMediaMatchChange(e) {
+    private onLargeMediaMatchChange(e: MediaQueryList) {
         if (e.matches && this.sidenav.open) {
             this.zone.run(() => {
                 this.hidden = false;
@@ -116,7 +116,7 @@ export class DejaSidenavComponent implements AfterViewInit, OnInit, OnDestroy {
         }
     }
 
-    private onMediumMediaMatchChange(e) {
+    private onMediumMediaMatchChange(e: MediaQueryList) {
         if (e.matches && this.sidenav.close) {
             this.zone.run(() => {
                 this.hidden = false;
@@ -127,7 +127,7 @@ export class DejaSidenavComponent implements AfterViewInit, OnInit, OnDestroy {
         }
     }
 
-    private onSmallMediaMatchChange(e) {
+    private onSmallMediaMatchChange(e: MediaQueryList) {
         if (e.matches && this.sidenav.close) {
             this.zone.run(() => {
                 this.hidden = true;

@@ -38,7 +38,7 @@ export class DejaIntervalSelectorComponent {
     }
 
     @HostListener('click', ['$event'])
-    public clickHandler(_event) {
+    public clickHandler(_event: Event) {
         if (!this._openingBoundary.selected && !this._closingBoundary.selected) {
             this.intervalSelectorService.modelClicked(this._intervalSelectorData.intervalId, this._intervalSelectorData.model);
         }

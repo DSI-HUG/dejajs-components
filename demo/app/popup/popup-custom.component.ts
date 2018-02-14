@@ -52,7 +52,7 @@ export class DejaPopupCustomDemoComponent extends DejaPopupComponent implements 
     public content: string;
     public inputparam: string;
     public inputText: string;
-    public items = [];
+    public items = [] as number[];
 
     public ngOnInit(): void {
         super.ngOnInit();
@@ -82,7 +82,5 @@ export class DejaPopupCustomDemoComponent extends DejaPopupComponent implements 
                 break;
 
         }
-
     }
-
 }

@@ -18,7 +18,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
-import { DejaMouseDragDropService, IDragCursorInfos } from './mouse-dragdrop.service';
+import { DejaMouseDragDropService, IDragCursorInfos, IDragDropContext } from './mouse-dragdrop.service';
 
 @Directive({
     selector: '[deja-mouse-draggable]',
@@ -111,7 +111,7 @@ export class DejaMouseDraggableDirective implements OnDestroy {
                                         // Observable
                                         dragContext
                                             .first()
-                                            .subscribe((ddctx) => {
+                                            .subscribe((ddctx: IDragDropContext) => {
                                                 dragDropService.context = ddctx;
                                                 if (ddctx) {
                                                     startDrag();
@@ -137,5 +137,5 @@ export class DejaMouseDraggableDirective implements OnDestroy {
 export interface IDejaMouseDraggableContext {
     target?: string; // Tagname or #id or [attribute]
     className?: string;
-    dragStart?(HTMLElement): any; // Return object or observable<object>
+    dragStart?(element: HTMLElement): any; // Return object or observable<object>
 }

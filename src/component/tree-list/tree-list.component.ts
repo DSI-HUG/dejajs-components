@@ -66,19 +66,19 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     /** Correspond au ngModel du champ de filtrage ou recherche */
     @Input() public query = '';
     /** Permet de définir un template de ligne par binding */
-    @Input() public itemTemplateExternal;
+    @Input() public itemTemplateExternal: any;
     /** Permet de définir un template de ligne parente par binding. */
-    @Input() public parentItemTemplateExternal;
+    @Input() public parentItemTemplateExternal: any;
     /** Permet de définir un template pour le loader par binding. */
-    @Input() public loaderTemplateExternal;
+    @Input() public loaderTemplateExternal: any;
     /** Permet de définir un template d'entête de colonne par binding. */
-    @Input() public headerTemplateExternal;
+    @Input() public headerTemplateExternal: any;
     /** Permet de définir un template comme prefixe de la zone de recherche par binding. */
-    @Input() public searchPrefixTemplateExternal;
+    @Input() public searchPrefixTemplateExternal: any;
     /** Permet de définir un template comme suffixe de la zone de recherche par binding. */
-    @Input() public searchSuffixTemplateExternal;
+    @Input() public searchSuffixTemplateExternal: any;
     /** Largeur des éléments par defaut si différent de 100% */
-    @Input() public itemsWidth = null;
+    @Input() public itemsWidth: number = null;
     /** Définit une valeur indiquant si en reactive form le model renvoyé doit être un obeject oue une valeur */
     @Input() public modelIsValue: boolean;
     /** Exécuté lorsque le déplacement d'une ligne est terminée. */
@@ -102,12 +102,12 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     private _keyboardNavigation = false;
 
     // Templates
-    @ContentChild('itemTemplate') private itemTemplateInternal;
-    @ContentChild('parentItemTemplate') private parentItemTemplateInternal;
-    @ContentChild('loaderTemplate') private loaderTemplateInternal;
-    @ContentChild('headerTemplate') private headerTemplateInternal;
-    @ContentChild('searchPrefixTemplate') private searchPrefixTemplateInternal;
-    @ContentChild('searchSuffixTemplate') private searchSuffixTemplateInternal;
+    @ContentChild('itemTemplate') private itemTemplateInternal: any;
+    @ContentChild('parentItemTemplate') private parentItemTemplateInternal: any;
+    @ContentChild('loaderTemplate') private loaderTemplateInternal: any;
+    @ContentChild('headerTemplate') private headerTemplateInternal: any;
+    @ContentChild('searchPrefixTemplate') private searchPrefixTemplateInternal: any;
+    @ContentChild('searchSuffixTemplate') private searchSuffixTemplateInternal: any;
     @ContentChildren(DejaItemComponent) public options: DejaItemComponent[];
 
     // protected _items: IItemBase[]; In the base class, correspond to the model
@@ -119,7 +119,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     private _itemsDraggable = false;
     private hasCustomService = false;
     private hasLoadingEvent = false;
-    @HostBinding('attr.disabled') private _disabled = null;
+    @HostBinding('attr.disabled') private _disabled: boolean = null;
 
     private keyboardNavigation$ = new Subject();
 
@@ -572,11 +572,11 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
         return this.getCurrentItemIndex();
     }
 
-    private get itemTemplate() {
+    public get itemTemplate() {
         return this.itemTemplateExternal || this.itemTemplateInternal;
     }
 
-    private get parentItemTemplate() {
+    public get parentItemTemplate() {
         return this.parentItemTemplateExternal || this.parentItemTemplateInternal;
     }
 
@@ -588,11 +588,11 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
         return this.headerTemplateExternal || this.headerTemplateInternal;
     }
 
-    private get searchPrefixTemplate() {
+    public get searchPrefixTemplate() {
         return this.searchPrefixTemplateExternal || this.searchPrefixTemplateInternal;
     }
 
-    private get searchSuffixTemplate() {
+    public get searchSuffixTemplate() {
         return this.searchSuffixTemplateExternal || this.searchSuffixTemplateInternal;
     }
 
@@ -647,7 +647,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
 
     public ngAfterContentInit() {
         if (!this.items && this.options && this.options.length) {
-            const selectedModels = [];
+            const selectedModels = [] as any[];
             this.valueField = 'value';
             this.textField = 'text';
             const models = this.options.map((option) => {
@@ -708,7 +708,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
         keyDown$.takeWhile(() => this._isAlive)
             .filter(() => !this.disabled)
             .filter((event: KeyboardEvent) => {
-                const keyCode = event.keyCode || KeyCodes[event.code];
+                const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
                 return keyCode === KeyCodes.Home ||
                     keyCode === KeyCodes.End ||
                     keyCode === KeyCodes.PageUp ||
@@ -729,7 +729,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
 
                 const currentIndex = this.rangeStartIndex >= 0 ? this.rangeStartIndex : this.rangeStartIndex = this.currentItemIndex;
 
-                const keyCode = event.keyCode || KeyCodes[event.code];
+                const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
                 switch (keyCode) {
                     case KeyCodes.Home:
                         if (event.shiftKey) {
@@ -867,7 +867,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                 }
             })
             .filter((event: KeyboardEvent) => {
-                const keyCode = event.keyCode || KeyCodes[event.code];
+                const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
                 return keyCode >= KeyCodes.Key0 ||
                     keyCode === KeyCodes.Backspace ||
                     keyCode === KeyCodes.Space ||

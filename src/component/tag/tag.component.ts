@@ -53,7 +53,7 @@ export class DejaTagComponent implements ControlValueAccessor {
         return this._control ? this._control.disabled : this._disabled;
     }
 
-    @HostBinding('attr.disabled') private _disabled = null;
+    @HostBinding('attr.disabled') private _disabled: boolean = null;
 
     // NgModel implementation
     protected onTouchedCallback: () => void = noop;

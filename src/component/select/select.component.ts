@@ -73,15 +73,15 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     /** Offset de position horizontal de la zone de dropdown */
     @Input() public overlayOffsetX = 0;
     /** Permet de définir un template de ligne par binding */
-    @Input() public itemTemplateExternal;
+    @Input() public itemTemplateExternal: any;
     /** Permet de définir un template de ligne parente par binding. */
-    @Input() public parentItemTemplateExternal;
+    @Input() public parentItemTemplateExternal: any;
     /** Permet de définir un template pour la zone de texte d'information. */
-    @Input() public placeHolderTemplateExternal;
+    @Input() public placeHolderTemplateExternal: any;
     /** Permet de définir un template pour l'élément de conseil ou d'affichage d'erreur. */
-    @Input() public hintTemplateExternal;
+    @Input() public hintTemplateExternal: any;
     /** Permet de définir un template pour le MatError à l'intérieur du mat-input-container. */
-    @Input() public errorTemplateExternal;
+    @Input() public errorTemplateExternal: any;
     /** Définit une valeur indiquant si en reactive form le model renvoyé doit être un obeject oue une valeur */
     @Input() public modelIsValue: boolean;
     /** Exécuté lorsque le calcul du viewPort est terminé. */
@@ -91,14 +91,14 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     /** For test only. */
     @Output() public dropDownVisibleChange = new EventEmitter<boolean>();
 
-    @ContentChild('hintTemplate') public hintTemplateInternal;
-    @ContentChild('placeHolderTemplate') public placeHolderTemplateInternal;
-    @ContentChild('itemTemplate') public itemTemplateInternal;
-    @ContentChild('parentItemTemplate') public parentItemTemplateInternal;
-    @ContentChild('selectedTemplate') public selectedTemplate;
-    @ContentChild('suffixTemplate') public _matSuffix;
+    @ContentChild('hintTemplate') public hintTemplateInternal: any;
+    @ContentChild('placeHolderTemplate') public placeHolderTemplateInternal: any;
+    @ContentChild('itemTemplate') public itemTemplateInternal: any;
+    @ContentChild('parentItemTemplate') public parentItemTemplateInternal: any;
+    @ContentChild('selectedTemplate') public selectedTemplate: any;
+    @ContentChild('suffixTemplate') public _matSuffix: any;
     /** Template for MatError inside mat-input-container */
-    @ContentChild('errorTemplate') public errorTemplateInternal;
+    @ContentChild('errorTemplate') public errorTemplateInternal: any;
 
     /** Internal use */
     public overlayOwnerElement: HTMLElement;
@@ -118,7 +118,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     private _inputElement: ElementRef;
 
-    @ViewChild('inputElement') private set inputElement(element: ElementRef) {
+    @ViewChild('inputElement')
+    public set inputElement(element: ElementRef) {
         if (element) {
             this._inputElement = element;
             if (this._inputElement) {
@@ -134,7 +135,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     @ViewChild(MatInput) protected input: MatInput;
 
-    @HostBinding('attr.disabled') private _disabled = null;
+    @HostBinding('attr.disabled') private _disabled: boolean = null;
     private _type = 'select';
     private selectingItemIndex: number;
     private dropDownQuery = '';
@@ -144,7 +145,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     private _selectionClearable = false;
     private _dropDownWidth: string;
     private _query = '';
-    @HostBinding('attr.readonly') private _readonly = null;
+    @HostBinding('attr.readonly') private _readonly: boolean = null;
 
     /** Overlay pane containing the options. */
     @ViewChild(DejaOverlayComponent) private overlay: DejaOverlayComponent;
@@ -197,7 +198,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @ContentChildren(DejaItemComponent)
     public set options(options: DejaItemComponent[]) {
         if (!this.items && options && options.length) {
-            const selectedModels = [];
+            const selectedModels = [] as any[];
             this.valueField = 'value';
             this.textField = 'text';
             const models = options.map((option) => {
@@ -480,7 +481,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     @Input()
     public set selectedItemsPosition(value: string | DejaSelectSelectionPosition) {
-        this._selectedItemsPosition = typeof value === 'string' ? DejaSelectSelectionPosition[value] : value;
+        this._selectedItemsPosition = typeof value === 'string' ? (<any>DejaSelectSelectionPosition)[value] : value;
     }
 
     public get selectedItemsPosition() {
@@ -811,7 +812,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return this.placeHolderTemplateExternal || this.placeHolderTemplateInternal;
     }
 
-    private get itemTemplate() {
+    public get itemTemplate() {
         return this.itemTemplateExternal || this.itemTemplateInternal;
     }
 
@@ -823,7 +824,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return this.errorTemplateExternal || this.errorTemplateInternal;
     }
 
-    private get parentItemTemplate() {
+    public get parentItemTemplate() {
         return this.parentItemTemplateExternal || this.parentItemTemplateInternal;
     }
 
@@ -916,7 +917,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         Observable.fromEvent(this.htmlInputElement, 'keydown')
             .takeWhile(() => this._isAlive)
             .filter((event: KeyboardEvent) => {
-                const keyCode = event.keyCode || KeyCodes[event.code];
+                const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
                 return keyCode === KeyCodes.Home ||
                     keyCode === KeyCodes.End ||
                     keyCode === KeyCodes.PageUp ||
@@ -942,7 +943,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
                     }
                 };
 
-                const keyCode = event.keyCode || KeyCodes[event.code];
+                const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
                 switch (keyCode) {
                     case KeyCodes.Home:
                         if (event.altKey || this._multiSelect && !this.dropdownVisible) {
@@ -1035,7 +1036,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         const keyUp$ = Observable
             .fromEvent(this.htmlInputElement, 'keyup')
             .filter((event: KeyboardEvent) => {
-                const keyCode = event.keyCode || KeyCodes[event.code];
+                const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
                 return keyCode >= KeyCodes.Key0 ||
                     keyCode === KeyCodes.Backspace ||
                     keyCode === KeyCodes.Space ||
@@ -1234,6 +1235,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         let outputEmitter = null;
 
         let output = null;
+
         if (items) {
             if (Array.isArray(items)) {
                 const models = items.map((itm) => itm.model !== undefined ? itm.model : itm);

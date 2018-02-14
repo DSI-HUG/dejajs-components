@@ -106,7 +106,13 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * object representation of the alignment, used to filter incompatible alignments and build the string representation
      */
-    private alignents: { top: boolean; right: boolean; bottom: boolean; left: boolean };
+    private alignents: {
+        [prop: string]: boolean;
+        top: boolean;
+        right: boolean;
+        bottom: boolean;
+        left: boolean;
+    };
 
     private animate$ = new Subject<IAnimation>();
     private animate$sub: Subscription;
@@ -149,7 +155,7 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
         const applyParams = (styles: CSSStyleDeclaration) => {
             Object.keys(styles)
                 .forEach((key) => {
-                    this.host.style[key] = styles[key];
+                    (<any>this.host.style)[key] = (<any>styles)[key];
                 });
         };
 
@@ -185,7 +191,7 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     public ngOnInit(): void {
         // Choose animation depending on alignment
-        const anchors = [];
+        const anchors = [] as string[];
 
         Object.keys(this.alignents).forEach((key) => {
             if (this.alignents[key]) {

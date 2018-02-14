@@ -33,7 +33,7 @@ export class DejaTileGroupComponent implements OnDestroy {
     @Output() public titleChanged = new EventEmitter<string>();
 
     @HostBinding('style.background-color') protected backgroundColor = DejaTileGroupComponent.defaultColor;
-    @HostBinding('style.color') protected foregroundColor = null;
+    @HostBinding('style.color') protected foregroundColor: string = null;
 
     private edit$ = new Subject<void>();
     private isAlive = true;

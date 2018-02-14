@@ -30,7 +30,7 @@ import { IDejaGridColumnLayout } from '../data-grid-column/data-grid-column-layo
 })
 export class DejaGridHeaderComponent implements OnDestroy {
     /** Template d'entête de colonne si définit extérieurement à la grille */
-    @Input() public columnHeaderTemplateExternal;
+    @Input() public columnHeaderTemplateExternal: any;
 
     /** Infos de tri à afficher dans les entêtes */
     @Input() public sortInfos: ISortInfos;
@@ -48,7 +48,7 @@ export class DejaGridHeaderComponent implements OnDestroy {
     @Output() public columnDragEnd = new EventEmitter();
 
     /** Template d'entête de colonne par defaut définit dans le HTML de la grille */
-    @ContentChild('columnHeaderTemplate') protected columnHeaderTemplateInternal;
+    @ContentChild('columnHeaderTemplate') protected columnHeaderTemplateInternal: any;
 
     protected _sizedColumn: IDejaGridColumn;
     private _columnsDraggable = false;

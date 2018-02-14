@@ -248,7 +248,7 @@ export class MaterialColors {
             800: '#37474f',
             900: '#263238',
         },
-    };
+    } as { [color: string]:  { [nuance: string]: string }};
 
     public get colors() {
         if (!this._colors) {

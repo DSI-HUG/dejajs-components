@@ -207,8 +207,8 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
             y: startEvent.screenY,
         };
 
-        this.eventsDragFct.push(this.renderer.listenGlobal('document', 'mousemove', (e) => this.dragEvent(e, start, areaA, areaB)));
-        this.eventsDragFct.push(this.renderer.listenGlobal('document', 'touchmove', (e) => this.dragEvent(e, start, areaA, areaB)));
+        this.eventsDragFct.push(this.renderer.listenGlobal('document', 'mousemove', (e: MouseEvent) => this.dragEvent(e, start, areaA, areaB)));
+        this.eventsDragFct.push(this.renderer.listenGlobal('document', 'touchmove', (e: MouseEvent) => this.dragEvent(e, start, areaA, areaB)));
         this.eventsDragFct.push(this.renderer.listenGlobal('document', 'mouseup', () => this.stopDragging()));
         this.eventsDragFct.push(this.renderer.listenGlobal('document', 'touchend', () => this.stopDragging()));
         this.eventsDragFct.push(this.renderer.listenGlobal('document', 'touchcancel', () => this.stopDragging()));
