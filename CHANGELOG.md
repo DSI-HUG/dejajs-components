@@ -1,3 +1,23 @@
+#### 2.24.2 (2018-02-14)
+
+##### Bug Fixes
+
+* **Global:**
+  * fix missing implementation for setDisabledState. ([335f3d6d](https://github.com/DSI-HUG/dejajs-components/commit/335f3d6d4e15eb26cfc731ed84f4bf17c064ebe6))
+  * Correct noImplicitAny compile errors ([9351b036](https://github.com/DSI-HUG/dejajs-components/commit/9351b03653231693311f85c642cb14aae47b551b))
+* **DejaGrid:** Fix Object-Object displayed in the cell content when the value field is undefined ([72f0b9a3](https://github.com/DSI-HUG/dejajs-components/commit/72f0b9a364196caddbd71ea988acd27c9cfcc919))
+* **DejaNumericStepperModule:** Export numericStepper component ([3af6735a](https://github.com/DSI-HUG/dejajs-components/commit/3af6735ab37a7bcaf84d1a80ac8e968aeb805641))
+* **MonacoEditor:** Added typings for css-element-queries ([f98362e4](https://github.com/DSI-HUG/dejajs-components/commit/f98362e40576cd314771a213610817fc29569284))
+* **DejaPopup:** fix tabindex bug in demo app ([7a0b7665](https://github.com/DSI-HUG/dejajs-components/commit/7a0b7665e96dfbc8cfda1b077b9ab55a38c4b0c8))
+
+##### Refactors
+
+* **DejaPopup:** readme and temaplate variables in component ([eb06d19e](https://github.com/DSI-HUG/dejajs-components/commit/eb06d19e8fd7aa6f3b93a8b9991bb888bf0f79bf))
+
+##### Tests
+
+* **accordion e2e:** Fix noImplicitAny compilation ([049c236a](https://github.com/DSI-HUG/dejajs-components/commit/049c236a1ff50e64eac20cce8ee79bcc88b76902))
+
 #### 2.24.1 (2018-02-13)
 
 ##### Documentation Changes
