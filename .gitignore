@@ -57,7 +57,6 @@ src/**/*.js
 src/**/*.js.map
 src/**/*.d.ts
 !src/common/global-event/typings/global-event-emmitter.d.ts
-!src/component/monaco-editor/typings/css-element-queries.d.ts
 !src/send-action.js
 
 # Ignore in demo
