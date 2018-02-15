@@ -40,7 +40,7 @@ class ResizeListenerContainerComponent {
     }
 }
 
-fdescribe('DejaResizeListenerDirective', () => {
+describe('DejaResizeListenerDirective', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -78,6 +78,7 @@ fdescribe('DejaResizeListenerDirective', () => {
                 .first()
                 .subscribe(() => {
                     // Check div resized by the event
+                    fixture.detectChanges();
                     expect(debugElement.clientWidth).toBe(200);
                 });
         });
