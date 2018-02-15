@@ -6,14 +6,10 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-/// <reference path="typings/css-element-queries.d.ts" />
-
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MonacoEditorService } from './monaco-editor.service';
 import { EditorOptions } from './options/editor-options.model';
 import { EditorScrollbarOptions } from './options/editor-scrollbar-options.model';
-
-import * as CssMediaQueries from 'css-element-queries';
 
 declare const monaco: any;
 
@@ -420,7 +416,6 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
     private _value = '';
     private _valueToCompare = '';
     private _language: 'bat' | 'c' | 'cpp' | 'csharp' | 'css' | 'dockerfile' | 'fsharp' | 'go' | 'handlebars' | 'html' | 'ini' | 'jade' | 'javascript' | 'json' | 'less' | 'lua' | 'markdown' | 'objective-c' | 'php' | 'csharp' | 'plaintext' | 'postiats' | 'powershell' | 'python' | 'r' | 'razor' | 'ruby' | 'scss' | 'sql' | 'swift' | 'typescript' | 'vb' | 'xml' | 'yaml';
-    private resizeSensor: CssMediaQueries.ResizeSensor;
 
     /**
      * Constructor
@@ -459,10 +454,6 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
      */
     public dispose() {
         const myDiv: HTMLDivElement = this.editorContent.nativeElement;
-        if (this.resizeSensor) {
-            this.resizeSensor = null;
-        }
-
         if (this._editor) {
             // this._editor.dispose();
             while (myDiv.hasChildNodes()) {
@@ -502,7 +493,7 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
 
         this.onResize();
 
-        this.resizeSensor = new CssMediaQueries.ResizeSensor(myDiv, () => this.onResize());
+        // this.resizeSensor = new CssMediaQueries.ResizeSensor(myDiv, () => this.onResize());
 
         // Trigger on change event for simple editor
         this.getOriginalModel().onDidChangeContent(() => {
