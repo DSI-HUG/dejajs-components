@@ -24,7 +24,7 @@ declare const monaco: any;
     styleUrls: [
         './monaco-editor.component.scss',
     ],
-    template: `<div #editor class='monaco-editor'></div>`,
+    template: `<div #editor resize-listener (sizeChanged)="onResize($event)" class='monaco-editor'></div>`,
 })
 export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnChanges {
     /**
@@ -492,8 +492,6 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
         }
 
         this.onResize();
-
-        // this.resizeSensor = new CssMediaQueries.ResizeSensor(myDiv, () => this.onResize());
 
         // Trigger on change event for simple editor
         this.getOriginalModel().onDidChangeContent(() => {
