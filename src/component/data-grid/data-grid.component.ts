@@ -30,7 +30,7 @@ import { IViewPort, ViewportMode } from '../../common/core/item-list/viewport.se
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { ISortInfos } from '../../common/core/sorting/sort-infos.model';
 import { SortingService } from '../../common/core/sorting/sorting.service';
-import { DejaChipsCloseEvent } from '../chips/chips.component';
+import { IDejaChipsComponentCloseEvent } from '../chips/chips.component';
 import { IDejaDragEvent } from '../dragdrop/draggable.directive';
 import { DejaTreeListScrollEvent } from '../tree-list/tree-list-scroll-event';
 import { DejaTreeListComponent } from '../tree-list/tree-list.component';
@@ -397,11 +397,11 @@ export class DejaGridComponent implements OnDestroy {
         return this.parentRowTemplateExternal || this.parentRowTemplateInternal;
     }
 
-    private get cellTemplate() {
+    public get cellTemplate() {
         return this._cellTemplate;
     }
 
-    private get parentTitleTemplate() {
+    public get parentTitleTemplate() {
         return this._parentTitleTemplate;
     }
 
@@ -409,7 +409,7 @@ export class DejaGridComponent implements OnDestroy {
         return this.headerTemplateExternal || this.headerTemplateInternal;
     }
 
-    private get columnHeaderTemplate() {
+    public get columnHeaderTemplate() {
         return this.columnHeaderTemplateExternal || this._columnHeaderTemplate;
     }
 
@@ -740,7 +740,7 @@ export class DejaGridComponent implements OnDestroy {
         this.columnSizeChanged.emit(e);
     }
 
-    protected onGroupRemoved(event: DejaChipsCloseEvent) {
+    protected onGroupRemoved(event: IDejaChipsComponentCloseEvent) {
         const column = event.item;
 
         const groupInfo = {
