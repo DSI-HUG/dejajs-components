@@ -27,7 +27,7 @@ describe('DejaOverlayComponent', () => {
         // Remove any stale overlay containers from previous tests that didn't clean up correctly.
         const staleContainers = document.querySelectorAll('.cdk-overlay-container');
         for (let i = staleContainers.length - 1; i >= 0; i--) {
-            staleContainers[i].parentNode.removeChild(staleContainers[i]);
+            staleContainers[i].parentNode!.removeChild(staleContainers[i]);
         }
     };
 

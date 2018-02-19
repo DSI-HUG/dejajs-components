@@ -1,21 +1,21 @@
 {
-  "name": "@deja-js/component",
+    "name": "@deja-js/component",
     "version": "3.0.0",
-  "description": "Angular2 Components Library",
-  "homepage": "https://github.com/DSI-HUG/dejajs-components",
-  "bugs": "https://github.com/DSI-HUG/dejajs-components/issues",
-  "author": "Team DSI-HUG - Hôpital Univesitaire de Genève - DSI - Domaine Patient",
-  "license": "Apache-2.0",
-  "keywords": [
-    "angular",
-    "material",
-    "component",
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/DSI-HUG/dejajs-components.git"
-  },
-  "scripts": {
+    "description": "Angular2 Components Library",
+    "homepage": "https://github.com/DSI-HUG/dejajs-components",
+    "bugs": "https://github.com/DSI-HUG/dejajs-components/issues",
+    "author": "Team DSI-HUG - Hôpital Univesitaire de Genève - DSI - Domaine Patient",
+    "license": "Apache-2.0",
+    "keywords": [
+        "angular",
+        "material",
+        "component"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DSI-HUG/dejajs-components.git"
+    },
+    "scripts": {
         "start": "gulp build",
         "build": "gulp build",
         "test": " gulp test",
@@ -23,7 +23,7 @@
         "demo": " gulp build:demo",
         "check-travis": " travis-status --repo=? --branch=master --fail-pending || echo 'Not yet passing'",
         "lint": "tslint --type-check --project tsconfig.json src/**/*.ts"
-  },
+    },
     "dependencies": {
         "angular2-text-mask": "8.0.4",
         "moment": "2.20.1",
@@ -120,7 +120,6 @@
         "raw-loader": "0.5.1",
         "source-map-loader": "0.2.2",
         "travis-status": "2.0.0",
-        "lodash": "4.17.4",
         "yargs": "10.0.3",
         "sonarqube-scanner": "^2.0.2"
     },
@@ -143,4 +142,4 @@
         ],
         "scope": "\\S+.*"
     }
-
+}
