@@ -106,21 +106,21 @@ describe('DejaChipsComponent', () => {
         const closeButtons = fixture.debugElement.queryAll(By.css('i'));
         expect(closeButtons.length).toEqual(3);
 
-        spyOn(component, 'onClose');
+        const spy = spyOn(component, 'onClose');
 
         closeButtons[1].nativeElement.click();
-        expect(component.onClose).toHaveBeenCalledWith('Java', 1);
+        expect(spy).toHaveBeenCalledWith('Java', 1);
     });
 
-    it('onClose should remove item and emit an DejaChipsCloseEvent', () => {
+    it('onClose should remove item and emit an IDejaChipsComponentCloseEvent', () => {
         component.items = ['Angular 2', 'Java', 'Oracle'];
         fixture.detectChanges();
 
-        spyOn(component.close, 'emit');
+        const spy = spyOn(component.close, 'emit');
         component.onClose('Oracle', 2);
 
         expect(component.items.length).toBe(2);
-        expect(component.close.emit).toHaveBeenCalled();
+        expect(spy).toHaveBeenCalled();
     });
 
     it('should not display closeButton if component is readOnly', () => {
