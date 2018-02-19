@@ -57,7 +57,7 @@ export class SortingService {
         childrenField = childrenField || 'items';
         return this.sort$(tree, sortInfos)
             .switchMap((child) => child)
-            .flatMap((child) => {
+            .switchMap((child) => {
                 if (!child || !child[childrenField]) {
                     return Observable.of(child);
                 }
