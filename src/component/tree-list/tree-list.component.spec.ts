@@ -173,11 +173,11 @@ describe('DejaTreeListComponent', () => {
         treeListInstance.itemsDraggable = 'false';
         expect(treeListInstance.itemsDraggable).toBeFalsy();
 
-        expect(treeListInstance.pageSize).toBe(10);
+        expect(treeListInstance.pageSize).toBeGreaterThanOrEqual(10);
         treeListInstance.pageSize = '5';
         expect(tl.pageSize).toBe(5);
         treeListInstance.pageSize = 0;
-        expect(treeListInstance.pageSize).toBe(10);
+        expect(treeListInstance.pageSize).toBeGreaterThanOrEqual(10);
 
         expect(treeListInstance.hintLabel).toBeUndefined();
         treeListInstance.hintLabel = 'I am a hint label';
@@ -335,11 +335,11 @@ describe('DejaTreeListComponent', () => {
                 }
             });
 
-        spyOn(treeListContainerInstance, 'testDone');
+        const spy = spyOn(treeListContainerInstance, 'testDone');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
-            expect(treeListContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 
@@ -372,11 +372,11 @@ describe('DejaTreeListComponent', () => {
                 }
             });
 
-        spyOn(treeListContainerInstance, 'testDone');
+        const spy = spyOn(treeListContainerInstance, 'testDone');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
-            expect(treeListContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 
@@ -448,11 +448,11 @@ describe('DejaTreeListComponent', () => {
                 }
             });
 
-        spyOn(treeListContainerInstance, 'testDone');
+        const spy = spyOn(treeListContainerInstance, 'testDone');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
-            expect(treeListContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 
@@ -499,11 +499,11 @@ describe('DejaTreeListComponent', () => {
                 }
             });
 
-        spyOn(treeListContainerInstance, 'testDone');
+        const spy = spyOn(treeListContainerInstance, 'testDone');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
-            expect(treeListContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 });
@@ -630,11 +630,11 @@ describe('DejaTreeListByModelContainerComponent', () => {
                 }
             });
 
-        spyOn(treeListContainerInstance, 'testDone');
+        const spy = spyOn(treeListContainerInstance, 'testDone');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
-            expect(treeListContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 
@@ -663,11 +663,11 @@ describe('DejaTreeListByModelContainerComponent', () => {
             listElement.dispatchEvent(event);
         };
 
-        spyOn(treeListContainerInstance, 'testDone');
+        const spy = spyOn(treeListContainerInstance, 'testDone');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
-            expect(treeListContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
 
         listElement = treeListInstance.listElement;
@@ -927,11 +927,11 @@ describe('DejaTreeListByModelContainerComponent', () => {
                 }
             });
 
-        spyOn(treeListContainerInstance, 'testDone');
+        const spy = spyOn(treeListContainerInstance, 'testDone');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
-            expect(treeListContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
 
         listElement = treeListInstance.listElement;
@@ -954,17 +954,17 @@ describe('DejaTreeListByModelContainerComponent', () => {
                         break;
 
                     default:
-                        expect(vp.visibleItems.length).toBe(12);
+                        expect(vp.visibleItems.length).toBeGreaterThan(10);
                         treeListContainerInstance.testDone();
 
                 }
             });
 
-        spyOn(treeListContainerInstance, 'testDone');
+        const spy = spyOn(treeListContainerInstance, 'testDone');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
-            expect(treeListContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 });
@@ -1008,11 +1008,11 @@ describe('DejaTreeListByOptionsContainerComponent', () => {
                 treeListContainerInstance.testDone();
             });
 
-        spyOn(treeListContainerInstance, 'testDone');
+        const spy = spyOn(treeListContainerInstance, 'testDone');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
-            expect(treeListContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
 
         expect(treeListInstance).toBeTruthy();
@@ -1110,11 +1110,11 @@ describe('DejaTreeListByOptionsContainerComponent', () => {
                 }
             });
 
-        spyOn(treeListContainerInstance, 'testDone');
+        const spy = spyOn(treeListContainerInstance, 'testDone');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
-            expect(treeListContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
 
         listElement = treeListInstance.listElement;
@@ -1259,11 +1259,11 @@ describe('DejaTreeListByOptionsContainerComponent', () => {
                 }
             });
 
-        spyOn(treeListContainerInstance, 'testDone');
+        const spy = spyOn(treeListContainerInstance, 'testDone');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
-            expect(treeListContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
 
         listElement = fixture.debugElement.query(By.css('deja-tree-list > .deja-listcontainer'));
