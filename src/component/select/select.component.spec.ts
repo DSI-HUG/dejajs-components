@@ -345,11 +345,11 @@ describe('DejaSelectComponent', () => {
 
         sl.showDropDown();
 
-        spyOn(selectContainerInstance, 'testDone');
+        const spy = spyOn(selectContainerInstance, 'testDone');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
-            expect(selectContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 
@@ -419,11 +419,11 @@ describe('DejaSelectComponent', () => {
 
         sl.showDropDown();
 
-        spyOn(selectContainerInstance, 'testDone');
+        const spy = spyOn(selectContainerInstance, 'testDone');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
-            expect(selectContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 
@@ -472,11 +472,11 @@ describe('DejaSelectComponent', () => {
         selectInstance.type = 'autocomplete';
         sl.showDropDown();
 
-        spyOn(selectContainerInstance, 'testDone');
+        const spy = spyOn(selectContainerInstance, 'testDone');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
-            expect(selectContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 });
@@ -638,11 +638,11 @@ describe('DejaSelectByOptionsContainerComponent', () => {
         sl.isMobile = false;
         sl.showDropDown();
 
-        spyOn(selectContainerInstance, 'testDone');
+        const spy = spyOn(selectContainerInstance, 'testDone');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
-            expect(selectContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 
@@ -669,11 +669,11 @@ describe('DejaSelectByOptionsContainerComponent', () => {
 
         sl.showDropDown();
 
-        spyOn(selectContainerInstance, 'testDone');
+        const spy = spyOn(selectContainerInstance, 'testDone');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
-            expect(selectContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 
@@ -817,11 +817,11 @@ describe('DejaSelectByOptionsContainerComponent', () => {
 
         sl.showDropDown();
 
-        spyOn(selectContainerInstance, 'testDone');
+        const spy = spyOn(selectContainerInstance, 'testDone');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
-            expect(selectContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 
@@ -894,11 +894,11 @@ describe('DejaSelectByOptionsContainerComponent', () => {
 
         sl.showDropDown();
 
-        spyOn(selectContainerInstance, 'testDone');
+        const spy = spyOn(selectContainerInstance, 'testDone');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
-            expect(selectContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 
