@@ -110,7 +110,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     private dateChanged$ = new Subject<Date>();
 
     @ViewChild('inputelement')
-    private set inputElementRef(element: ElementRef) {
+    public set inputElementRef(element: ElementRef) {
         if (element) {
             this.inputElement = element.nativeElement;
             if (this.inputElement) {
