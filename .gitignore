@@ -2,17 +2,11 @@
 
 # compiled output
 /dist
-/dist-demo
-/build
-/.tmp
 /tmp
-/out-tsc
 /docs
 
 # dependencies
 /node_modules
-/node_modules.disabled
-/src/node_modules
 
 # IDEs and editors
 /.idea
@@ -44,11 +38,6 @@
 npm-debug.log
 yarn-error.log
 testem.log
-/typings
-
-# e2e
-/e2e/*.js
-/e2e/*.map
 
 # System Files
 .DS_Store
@@ -58,12 +47,23 @@ Thumbs.db
 src/**/*.js
 src/**/*.js.map
 src/**/*.d.ts
-/src/package-lock.json
 !src/common/global-event/typings/global-event-emmitter.d.ts
-!src/send-action.js
 
 # Ignore in demo
 demo/**/*.js
 demo/**/*.js.map
 demo/**/*.d.ts
 demo/vs
+
+# demo compiled output
+demodist
+demo/tmp
+demo/out-tsc
+
+# demo dependencies
+demo/node_modules
+
+# demo e2e
+demo/e2e/*.js
+demo/e2e/*.map
+
