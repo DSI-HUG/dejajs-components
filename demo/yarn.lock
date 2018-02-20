@@ -20,33 +20,12 @@
     rxjs "^5.5.6"
     source-map "^0.5.6"
 
-"@angular-devkit/core@0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@angular-devkit/core/-/core-0.4.0.tgz#d1c8323150946f6738f997b6315d73f174055639"
-  dependencies:
-    ajv "~5.5.1"
-    chokidar "^1.7.0"
-    rxjs "^5.5.6"
-    source-map "^0.5.6"
-
 "@angular-devkit/schematics@0.0.52":
   version "0.0.52"
   resolved "https://registry.yarnpkg.com/@angular-devkit/schematics/-/schematics-0.0.52.tgz#cbd2f42778b50d6422a254ffaec05ad4ef3cb6c0"
   dependencies:
     "@ngtools/json-schema" "^1.1.0"
     rxjs "^5.5.6"
-
-"@angular/animations@5.2.5":
-  version "5.2.5"
-  resolved "https://registry.yarnpkg.com/@angular/animations/-/animations-5.2.5.tgz#3e72184321c4979305619c74902b8be92d76db70"
-  dependencies:
-    tslib "^1.7.1"
-
-"@angular/cdk@5.2.5":
-  version "5.2.1"
-  resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-5.2.1.tgz#11500502deeaf42f88f92ca7d78d9a7642b07761"
-  dependencies:
-    tslib "^1.7.1"
 
 "@angular/cli@1.6.8":
   version "1.6.8"
@@ -138,12 +117,6 @@
   dependencies:
     tslib "^1.7.1"
 
-"@angular/flex-layout@2.0.0-beta.12":
-  version "2.0.0-beta.12"
-  resolved "https://registry.yarnpkg.com/@angular/flex-layout/-/flex-layout-2.0.0-beta.12.tgz#80970dc1d60f27fa41537659926f3238f759f343"
-  dependencies:
-    tslib "^1.7.1"
-
 "@angular/forms@5.2.5":
   version "5.2.5"
   resolved "https://registry.yarnpkg.com/@angular/forms/-/forms-5.2.5.tgz#2ad7a420c6ef6cd87a34071c5319ec83f7ed56aa"
@@ -159,12 +132,6 @@
 "@angular/language-service@5.2.5":
   version "5.2.5"
   resolved "https://registry.yarnpkg.com/@angular/language-service/-/language-service-5.2.5.tgz#7c3021f347dd4b28ae0a867700894f3de4930f48"
-
-"@angular/material@5.2.5":
-  version "5.2.1"
-  resolved "https://registry.yarnpkg.com/@angular/material/-/material-5.2.1.tgz#c0433edf98904dc35ae15dfa93ede755418843dd"
-  dependencies:
-    tslib "^1.7.1"
 
 "@angular/platform-browser-dynamic@5.2.5":
   version "5.2.5"
