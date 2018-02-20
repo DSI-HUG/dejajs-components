@@ -18,11 +18,11 @@ import { StoreModule } from '@ngrx/store';
 import { GroupingModule } from '../../../src/common/core/grouping/index';
 import { MaterialColors } from '../../../src/common/core/style/material-colors';
 import { GlobalEventService } from '../../../src/common/global-event/global-event.service';
+import { routing } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NewsCardComponent } from './common/news-card.component';
 import { userReducer } from './reactive-form/model/user.reducer';
 import { UserService } from './reactive-form/service/user.service';
-import { routing } from './route';
 import { CountriesListService } from './services/countries-list.service';
 import { CountriesService } from './services/countries.service';
 import { FoldersService } from './services/folders.service';
@@ -139,13 +139,12 @@ registerLocaleData(localeFrCH);
         ComboListDemoComponent,
     ],
     imports: [
+        BrowserModule.withServerTransition({appId: 'dejajs-components-demo-id'}),
+        BrowserAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
         HttpModule,
-        BrowserModule,
-        BrowserAnimationsModule,
         RouterModule,
-        routing,
         FlexLayoutModule,
         MatIconModule,
         MatButtonModule,
@@ -205,6 +204,7 @@ registerLocaleData(localeFrCH);
         StoreModule.forFeature('userDemo', {
             user: userReducer,
         }),
+        routing
     ],
     providers: [
         CountriesService,
