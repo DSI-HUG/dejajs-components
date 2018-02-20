@@ -6,9 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 export class DejaPopupAction {
-
-    public refreshDrawer?= true;
-    public isFinalAction?= false;
+    public refreshDrawer = true;
+    public isFinalAction = false;
     public panelClass?: string;
     public data?: any;
     public icon?: string;
@@ -29,7 +28,6 @@ export class DejaPopupAction {
 }
 
 export class DejaPopupButton extends DejaPopupAction {
-
     constructor(
         public name: string,
         public label?: string,
