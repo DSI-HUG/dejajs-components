@@ -7,18 +7,22 @@
  */
 
 import { ChangeDetectorRef, Component, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
+import 'rxjs/add/observable/from';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/first';
+import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
-import { GroupingService } from '../../../src/common/core/grouping/grouping.service';
-import { IItemBase } from '../../../src/common/core/item-list/item-base';
-import { IItemTree } from '../../../src/common/core/item-list/item-tree';
-import { IViewPortItem } from '../../../src/common/core/item-list/viewport.service';
-import { IDejaDragEvent } from '../../../src/component/dragdrop/draggable.directive';
-import { IDropCursorInfos } from '../../../src/component/mouse-dragdrop/mouse-dragdrop.service';
-import { IDejaMouseDraggableContext } from '../../../src/component/mouse-dragdrop/mouse-draggable.directive';
-import { IDejaMouseDroppableContext } from '../../../src/component/mouse-dragdrop/mouse-droppable.directive';
-import { DejaTreeListComponent } from '../../../src/component/tree-list/tree-list.component';
+import { GroupingService } from '../../../../src/common/core/grouping/grouping.service';
+import { IItemBase } from '../../../../src/common/core/item-list/item-base';
+import { IItemTree } from '../../../../src/common/core/item-list/item-tree';
+import { IViewPortItem } from '../../../../src/common/core/item-list/viewport.service';
+import { IDejaDragEvent } from '../../../../src/component/dragdrop/draggable.directive';
+import { IDropCursorInfos } from '../../../../src/component/mouse-dragdrop/mouse-dragdrop.service';
+import { IDejaMouseDraggableContext } from '../../../../src/component/mouse-dragdrop/mouse-draggable.directive';
+import { IDejaMouseDroppableContext } from '../../../../src/component/mouse-dragdrop/mouse-droppable.directive';
+import { DejaTreeListComponent } from '../../../../src/component/tree-list/tree-list.component';
 import { News } from '../common/news.model';
 import { CountriesListService } from '../services/countries-list.service';
 import { CountriesService, Country } from '../services/countries.service';

@@ -7,7 +7,7 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { IDejaComboListAction } from '../../../src/component/combo-list/model/combo-list-action.interface';
+import { IDejaComboListAction } from '../../../../src/component/combo-list/model/combo-list-action.interface';
 import { comboListData } from './combo-test.data';
 
 @Component({

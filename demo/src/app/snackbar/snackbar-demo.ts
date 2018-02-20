@@ -7,8 +7,13 @@
  */
 
 import { Component, EventEmitter, OnInit } from '@angular/core';
+import 'rxjs/add/observable/from';
+import 'rxjs/add/operator/defaultIfEmpty';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/scan';
 import { Observable } from 'rxjs/Observable';
-import { MaterialColors } from '../../../src/common/core/style/material-colors';
+import { MaterialColors } from '../../../../src/common/core/style/material-colors';
 import { Message } from './message.class';
 
 @Component({

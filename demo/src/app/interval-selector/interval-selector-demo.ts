@@ -7,11 +7,12 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import 'rxjs/add/observable/from';
 import { Observable } from 'rxjs/Observable';
-import { ISortInfos, SortOrder } from '../../../src/common/core';
-import { IDejaGridColumn } from '../../../src/component/data-grid/data-grid-column/data-grid-column';
-import { IntervalBoundary } from '../../../src/component/interval-selector/interval-selector-boundary.model';
-import { IntervalSelectorService } from '../../../src/component/interval-selector/interval-selector.service';
+import { ISortInfos, SortOrder } from '../../../../src/common/core';
+import { IDejaGridColumn } from '../../../../src/component/data-grid/data-grid-column/data-grid-column';
+import { IntervalBoundary } from '../../../../src/component/interval-selector/interval-selector-boundary.model';
+import { IntervalSelectorService } from '../../../../src/component/interval-selector/interval-selector.service';
 import { Event, events as mockEvents } from './events.mock';
 
 @Component({

@@ -14,8 +14,8 @@ import 'rxjs/add/operator/publishLast';
 import 'rxjs/add/operator/reduce';
 import 'rxjs/add/operator/switchMap';
 import { Observable } from 'rxjs/Observable';
-import { Color } from '../../../src/common/core/graphics/color';
-import { MaterialColors } from '../../../src/common/core/style/material-colors';
+import { Color } from '../../../../src/common/core/graphics/color';
+import { MaterialColors } from '../../../../src/common/core/style/material-colors';
 
 export class Country {
     public displayName: string = void 0;

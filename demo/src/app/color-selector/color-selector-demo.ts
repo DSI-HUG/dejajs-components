@@ -7,9 +7,9 @@
  */
 
 import { Component } from '@angular/core';
-import { Color } from '../../../src/common/core/graphics/color';
-import { ColorEvent } from '../../../src/common/core/graphics/color-event';
-import { MaterialColors } from '../../../src/common/core/style/material-colors';
+import { Color } from '../../../../src/common/core/graphics/color';
+import { MaterialColors } from '../../../../src/common/core/style/material-colors';
+import { IColorEvent } from '../../../../src/component/color-selector/color-selector.component';
 
 @Component({
     selector: 'deja-color-selector-demo',
@@ -25,11 +25,11 @@ export class DejaColorSelectorDemoComponent {
 
     constructor(protected materialColors: MaterialColors) { }
 
-    protected onColorPickerHover(event: ColorEvent) {
+    protected onColorPickerHover(event: IColorEvent) {
         this.hoveredColor = event.color;
     }
 
-    protected onColorPickerChange(event: ColorEvent) {
+    protected onColorPickerChange(event: IColorEvent) {
         this.hoveredColor = event.color;
     }
 }

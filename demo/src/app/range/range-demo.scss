@@ -49,7 +49,7 @@
 	}
 	/* copy the styles below if you want to use custom demo as is*/
 	#custom-range {
-		@import "../../../src/scss/variables/_colors.scss";
+		@import "../../../../src/scss/variables/_colors.scss";
 		/* change the height of the component using this variable only*/
 		$height: 24px;
 		-ms-flex-preferred-size: max-content;

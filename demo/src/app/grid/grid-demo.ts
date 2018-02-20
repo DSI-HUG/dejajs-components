@@ -8,22 +8,28 @@
 
 import { ChangeDetectorRef, Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import * as _ from 'lodash';
+import 'rxjs/add/observable/from';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/delay';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/switchMap';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
-import { IItemTree } from '../../../src/common/core/item-list/item-tree';
-import { IViewPortItem } from '../../../src/common/core/item-list/viewport.service';
-import { IDejaGridColumn, IDejaGridColumnSizeEvent } from '../../../src/component/data-grid/data-grid-column/data-grid-column';
-import { IDejaGridRow } from '../../../src/component/data-grid/data-grid-row/data-grid-row';
-import { DejaGridComponent } from '../../../src/component/data-grid/data-grid.component';
+import { IGroupInfo } from '../../../../src/common/core/grouping/group-infos';
+import { GroupingService } from '../../../../src/common/core/grouping/grouping.service';
+import { IItemTree } from '../../../../src/common/core/item-list/item-tree';
+import { IViewPortItem } from '../../../../src/common/core/item-list/viewport.service';
+import { IDejaGridColumn, IDejaGridColumnSizeEvent } from '../../../../src/component/data-grid/data-grid-column/data-grid-column';
+import { IDejaGridRow } from '../../../../src/component/data-grid/data-grid-row/data-grid-row';
+import { DejaGridComponent } from '../../../../src/component/data-grid/data-grid.component';
+import { IDejaDragContext } from '../../../../src/component/dragdrop/draggable.directive';
+import { IDejaDropContext, IDejaDropEvent } from '../../../../src/component/dragdrop/droppable.directive';
 import { News } from '../common/news.model';
 import { NewsService } from '../services/news.service';
 import { PeopleService, Person } from '../services/people.service';
 import { IExtendedViewPortItem } from '../tree-list/tree-list-demo';
-import { IGroupInfo } from './../../../src/common/core/grouping/group-infos';
-import { GroupingService } from './../../../src/common/core/grouping/grouping.service';
-import { IDejaDragContext } from './../../../src/component/dragdrop/draggable.directive';
-import { IDejaDropContext, IDejaDropEvent } from './../../../src/component/dragdrop/droppable.directive';
 
 @Component({
     encapsulation: ViewEncapsulation.None,

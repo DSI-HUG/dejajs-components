@@ -15,9 +15,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule, Routes } from '@angular/router';
-import { DejaMarkdownModule } from '../../../src/component/markdown/index';
-import { DejaMonacoEditorModule } from '../../../src/component/monaco-editor/index';
-import { DejaSplitterModule } from '../../../src/component/splitter/index';
+import { DejaMonacoEditorModule } from '../../../../src/component/monaco-editor/index';
+import { DejaSplitterModule } from '../../../../src/component/splitter/index';
+import { DejaMarkdownModule } from '../../component/markdown/index';
 import { DejaMonacoEditorDemoComponent } from './monaco-editor-demo.component';
 import { MonacoEditorDemoService } from './monaco-editor-demo.service.';
 

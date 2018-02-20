@@ -15,16 +15,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { StoreModule } from '@ngrx/store';
-import { routing } from './route';
-
+import { GroupingModule } from '../../../src/common/core/grouping/index';
+import { MaterialColors } from '../../../src/common/core/style/material-colors';
+import { GlobalEventService } from '../../../src/common/global-event/global-event.service';
 import { AppComponent } from './app.component';
-
-import { GroupingModule } from '../../src/common/core/grouping/index';
-import { MaterialColors } from '../../src/common/core/style/material-colors';
-import { GlobalEventService } from './../../src/common/global-event/global-event.service';
 import { NewsCardComponent } from './common/news-card.component';
 import { userReducer } from './reactive-form/model/user.reducer';
 import { UserService } from './reactive-form/service/user.service';
+import { routing } from './route';
 import { CountriesListService } from './services/countries-list.service';
 import { CountriesService } from './services/countries.service';
 import { FoldersService } from './services/folders.service';
@@ -36,7 +34,6 @@ import {
     DejaChipsModule,
     DejaCircularPickerModule,
     DejaClipboardModule,
-    DejaCodeViewerModule,
     DejaColorPickerModule,
     DejaColorSelectorModule,
     DejaComboListModule,
@@ -49,7 +46,6 @@ import {
     DejaIFrameModule,
     DejaIntervalSelectorModule,
     DejaListLoaderModule,
-    DejaMarkdownModule,
     DejaMessageBoxModule,
     DejaMouseDragDropModule,
     DejaNumericStepperModule,
@@ -68,15 +64,17 @@ import {
     DejaTreeListModule,
     DejaViewPortModule,
     // } from '../../dist';
-} from '../../src/index';
+} from '../../../src/index';
 
 import { registerLocaleData } from '@angular/common';
 import { MatButtonModule, MatButtonToggleModule, MatCardModule, MatCheckboxModule, MatIconModule, MatInputModule, MatListModule, MatMenuModule, MatProgressBarModule, MatProgressSpinnerModule, MatSidenavModule, MatTabsModule, MatToolbarModule } from '@angular/material';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
-import { DejaItemModule } from '../../src/common/core/item-list/index';
-import { DejaBoldQueryModule } from '../../src/component';
+import { DejaItemModule } from '../../../src/common/core/item-list/index';
+import { DejaBoldQueryModule } from '../../../src/component';
+import { DejaCodeViewerModule } from '../component/code-viewer/index';
+import { DejaMarkdownModule } from '../component/markdown/index';
 import { DejaAccordionDemoComponent } from './accordion/accordion-demo.component';
 import { DejaCircularPickerDemoComponent } from './circular-picker/circular-picker-demo';
 import { DejaColorSelectorDemoComponent } from './color-selector/color-selector-demo';

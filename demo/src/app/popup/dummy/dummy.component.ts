@@ -7,11 +7,11 @@
  */
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material';
-import { Color } from '../../../../src/common/core/graphics/color';
-import { ColorEvent } from '../../../../src/common/core/graphics/color-event';
-import { MaterialColors } from '../../../../src/common/core/style/material-colors';
-import { DejaPopupAction } from '../../../../src/component/popup/model/popup-action.model';
-import { DejaPopupConfig } from '../../../../src/component/popup/model/popup-config.model';
+import { Color } from '.../../../../src/common/core/graphics/color';
+import { MaterialColors } from '.../../../../src/common/core/style/material-colors';
+import { DejaPopupAction } from '.../../../../src/component/popup/model/popup-action.model';
+import { DejaPopupConfig } from '.../../../../src/component/popup/model/popup-config.model';
+import { IColorEvent } from '../../../../../src/component/color-selector/color-selector.component';
 
 @Component({
     selector: 'deja-dummy',
@@ -27,7 +27,7 @@ export class DummyComponent {
         public materialColors: MaterialColors,
     ) { }
 
-    public onColorPickerChange(event: ColorEvent) {
+    public onColorPickerChange(event: IColorEvent) {
         const action = new DejaPopupAction('color-change', 'ground-control');
         action.data = event;
         this.config.dejaPopupCom$.next(action);

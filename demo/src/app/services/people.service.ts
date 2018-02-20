@@ -12,9 +12,9 @@ import { JsonProperty, ObjectMapper } from 'json-object-mapper';
 import * as _ from 'lodash';
 import 'rxjs/add/operator/publishLast';
 import { Observable } from 'rxjs/Observable';
-import { Color } from '../../../src/common/core/graphics/color';
-import { MaterialColors } from '../../../src/common/core/style/material-colors';
-import { UUID } from '../../../src/common/core/UUID';
+import { Color } from '../../../../src/common/core/graphics/color';
+import { MaterialColors } from '../../../../src/common/core/style/material-colors';
+import { UUID } from '../../../../src/common/core/UUID';
 
 export class Friend {
     public id: number = void 0;

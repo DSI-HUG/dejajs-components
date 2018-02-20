@@ -7,11 +7,11 @@
  */
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { DialogPosition } from '@angular/material';
-import { Color } from '../../../src/common/core/graphics/color';
-import { DejaPopupAction, DejaPopupButton } from '../../../src/component/popup/model/popup-action.model';
-import { DejaPopupConfig } from '../../../src/component/popup/model/popup-config.model';
-import { DejaPopupReponse } from '../../../src/component/popup/model/popup-response.model';
-import { DejaPopupService } from '../../../src/component/popup/service/popup.service';
+import { Color } from '../../../../src/common/core/graphics/color';
+import { DejaPopupAction, DejaPopupButton } from '../../../../src/component/popup/model/popup-action.model';
+import { DejaPopupConfig } from '../../../../src/component/popup/model/popup-config.model';
+import { DejaPopupReponse } from '../../../../src/component/popup/model/popup-response.model';
+import { DejaPopupService } from '../../../../src/component/popup/service/popup.service';
 import { DummyComponent } from './dummy/dummy.component';
 import { DejaPopupCustomDemoComponent } from './popup-custom.component';
 

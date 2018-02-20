@@ -15,8 +15,8 @@ import { Country } from '../services/countries.service';
 
 // ngrx
 import { Store } from '@ngrx/store';
-import { KeyCodes } from '../../../src/common/core/keycodes.enum';
-import { MaterialColors } from '../../../src/common/core/style/material-colors';
+import { KeyCodes } from '../../../../src/common/core/keycodes.enum';
+import { MaterialColors } from '../../../../src/common/core/style/material-colors';
 import { IappState } from './model/app-state.interface';
 import { IUser } from './model/user.interface';
 import { UserService } from './service/user.service';

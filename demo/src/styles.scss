@@ -6,6 +6,7 @@
 @import '~@angular/material/theming';
 @import '../src/scss/variables/themeHUG';
 @import '~@deja-js/resources/src/index.scss';
+@import './component/markdown/markdown-theme';
 
 @include deja-fonts();
 
@@ -23,7 +24,8 @@
 	$fake-theme: mat-light-theme($primary, $primary, $warn);
 	@include mat-radio-theme($fake-theme);
 	@include deja-theme($theme);
-	@include home-demo-theme($theme);
+    @include home-demo-theme($theme);
+    @include markdown-theme($theme);
 }
 
 body {
