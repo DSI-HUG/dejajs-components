@@ -7,7 +7,7 @@
  */
 
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
-import { DejaOverlayComponent } from '../../../../src/component/overlay/overlay.component';
+import { DejaOverlayComponent } from '@deja-js/component';
 
 @Component({
     encapsulation: ViewEncapsulation.None,

@@ -30,3 +30,4 @@ export * from './interval-selector-compare-function.model';
 export * from './interval-selector-interval.model';
 export * from './interval-selector-data.model';
 export * from './interval-selector-event-data.model';
+export * from './interval-selector.service';

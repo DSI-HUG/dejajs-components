@@ -7,6 +7,15 @@
  */
 
 import { ChangeDetectorRef, Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { GroupingService } from '@deja-js/component';
+import { IDejaDropContext, IDejaDropEvent } from '@deja-js/component';
+import { IDejaDragContext } from '@deja-js/component';
+import { DejaGridComponent } from '@deja-js/component';
+import { IDejaGridRow } from '@deja-js/component';
+import { IDejaGridColumn, IDejaGridColumnSizeEvent } from '@deja-js/component';
+import { IViewPortItem } from '@deja-js/component';
+import { IItemTree } from '@deja-js/component';
+import { IGroupInfo } from '@deja-js/component';
 import * as _ from 'lodash';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/of';
@@ -17,15 +26,6 @@ import 'rxjs/add/operator/switchMap';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
-import { IGroupInfo } from '../../../../src/common/core/grouping/group-infos';
-import { GroupingService } from '../../../../src/common/core/grouping/grouping.service';
-import { IItemTree } from '../../../../src/common/core/item-list/item-tree';
-import { IViewPortItem } from '../../../../src/common/core/item-list/viewport.service';
-import { IDejaGridColumn, IDejaGridColumnSizeEvent } from '../../../../src/component/data-grid/data-grid-column/data-grid-column';
-import { IDejaGridRow } from '../../../../src/component/data-grid/data-grid-row/data-grid-row';
-import { DejaGridComponent } from '../../../../src/component/data-grid/data-grid.component';
-import { IDejaDragContext } from '../../../../src/component/dragdrop/draggable.directive';
-import { IDejaDropContext, IDejaDropEvent } from '../../../../src/component/dragdrop/droppable.directive';
 import { News } from '../common/news.model';
 import { NewsService } from '../services/news.service';
 import { PeopleService, Person } from '../services/people.service';

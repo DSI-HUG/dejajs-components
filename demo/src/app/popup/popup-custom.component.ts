@@ -6,8 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { Component, OnInit } from '@angular/core';
-import { DejaPopupComponent } from '../../../../src/component/popup/component/popup/popup.component';
-import { DejaPopupAction } from '../../../../src/component/popup/model/popup-action.model';
+import { DejaPopupComponent } from '@deja-js/component';
+import { DejaPopupAction } from '@deja-js/component';
 
 @Component({
     selector: 'custom-dialog',

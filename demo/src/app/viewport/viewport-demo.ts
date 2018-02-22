@@ -7,9 +7,9 @@
  */
 
 import { Component, ViewChild } from '@angular/core';
+import { IViewPortItem } from '@deja-js/component';
+import { DejaViewPortComponent } from '@deja-js/component';
 import { Observable } from 'rxjs/Observable';
-import { IViewPortItem } from '../../../../src/common/core/item-list/viewport.service';
-import { DejaViewPortComponent } from '../../../../src/component/viewport/viewport.component';
 import { News } from '../common/news.model';
 import { NewsService } from '../services/news.service';
 

@@ -7,11 +7,11 @@
  */
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material';
-import { Color } from '.../../../../src/common/core/graphics/color';
-import { MaterialColors } from '.../../../../src/common/core/style/material-colors';
-import { DejaPopupAction } from '.../../../../src/component/popup/model/popup-action.model';
-import { DejaPopupConfig } from '.../../../../src/component/popup/model/popup-config.model';
-import { IColorEvent } from '../../../../../src/component/color-selector/color-selector.component';
+import { Color } from '@deja-js/component';
+import { MaterialColors } from '@deja-js/component';
+import { DejaPopupAction } from '@deja-js/component';
+import { DejaPopupConfig } from '@deja-js/component';
+import { IColorEvent } from '@deja-js/component';
 
 @Component({
     selector: 'deja-dummy',

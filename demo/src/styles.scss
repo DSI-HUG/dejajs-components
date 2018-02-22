@@ -1,14 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import '../src/scss/index.scss';
-@import '../src/scss/components/menu.scss';
+@import '../../src/scss/index.scss';
+@import '../../src/scss/components/menu.scss';
 @import './app/home/home-theme';
 @import '~@angular/material/theming';
-@import '../src/scss/variables/themeHUG';
-@import '~@deja-js/resources/src/index.scss';
+@import '../../src/scss/variables/themeHUG';
 @import './component/markdown/markdown-theme';
-
-@include deja-fonts();
 
 @mixin create-theme($color1, $color2) {
 	@include mat-core(); // Define color scheme

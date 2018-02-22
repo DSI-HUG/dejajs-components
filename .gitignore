@@ -55,6 +55,9 @@ demo/**/*.js.map
 demo/**/*.d.ts
 demo/vs
 
+# Ignore backup of demo folder
+demo.*
+
 # demo compiled output
 demodist
 demo/tmp
@@ -66,4 +69,3 @@ demo/node_modules
 # demo e2e
 demo/e2e/*.js
 demo/e2e/*.map
-

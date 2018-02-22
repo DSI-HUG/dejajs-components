@@ -7,10 +7,10 @@
  */
 
 import {Component, EventEmitter, Output, ViewChild} from '@angular/core';
+import { IStepRangeEvent, Range } from '@deja-js/component';
 import 'rxjs/add/operator/defaultIfEmpty';
 import 'rxjs/add/operator/scan';
 import { Observable } from 'rxjs/Observable';
-import { IStepRangeEvent, Range } from '../../../../src/component/range/range.interface';
 import { ranges, rangesWithInterval, readOnlyRanges, steps, weights } from './ranges.mock';
 import { IWeight, Weight } from './weight.interface';
 

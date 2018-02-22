@@ -8,14 +8,17 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import {DejaMarkdownComponent} from './markdown.component';
+import { HttpModule } from '@angular/http';
+import { DejaMarkdownComponent } from './markdown.component';
 
 @NgModule({
     declarations: [DejaMarkdownComponent],
     exports: [DejaMarkdownComponent],
     imports: [
         CommonModule,
+        HttpModule,
     ],
+    providers: []
 })
 export class DejaMarkdownModule {
 

@@ -36,5 +36,6 @@ import {
 })
 export class DejaComboListModule { }
 
+export * from './model/combo-list-action.interface';
 export * from './component/combo-list-child.component';
 export * from './container/combo-list.component';

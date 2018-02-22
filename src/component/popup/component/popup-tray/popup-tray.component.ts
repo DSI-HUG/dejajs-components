@@ -7,6 +7,10 @@
  */
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/merge';
 import { Observable } from 'rxjs/Observable';
 import { DejaPopupAction } from '../../model/popup-action.model';
 import { DejaPopupBase } from '../../model/popup-base.class';
@@ -28,24 +32,23 @@ export class DejaPopupTrayComponent implements OnInit {
 
     public ngOnInit() {
 
-        this.dialogs$ =
-            this.dialogSrv.afterOpen
-                .merge(this.dialogSrv.dejaPopupCom$
-                    .filter((action: DejaPopupAction) => !!action && action.target === 'popup-tray')
-                    .map((action: DejaPopupAction) => {
-                        if (action.name === 'do-minify') {
-                            this.minify(action);
-                            action.refreshDrawer = false;
-                        }
-                        return action;
-                    })
-                    .filter((action: DejaPopupAction) => action.refreshDrawer)
-                )
-                .debounceTime(500)
-                .map(() => {
-                    const dialogs = this.dialogSrv.openDialogs;
-                    return dialogs;
-                });
+        this.dialogs$ = Observable.from(this.dialogSrv.afterOpen)
+            .merge(this.dialogSrv.dejaPopupCom$
+                .filter((action: DejaPopupAction) => !!action && action.target === 'popup-tray')
+                .map((action: DejaPopupAction) => {
+                    if (action.name === 'do-minify') {
+                        this.minify(action);
+                        action.refreshDrawer = false;
+                    }
+                    return action;
+                })
+                .filter((action: DejaPopupAction) => action.refreshDrawer)
+            )
+            .debounceTime(500)
+            .map(() => {
+                const dialogs = this.dialogSrv.openDialogs;
+                return dialogs;
+            });
 
     }
 

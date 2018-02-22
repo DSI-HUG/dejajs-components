@@ -6,8 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Color } from '.../../../../src/common/core/graphics/color';
-import { IRange } from '.../../../../src/component/range/range.interface';
+import { Color } from '@deja-js/component';
+import { IRange } from '@deja-js/component';
 import { Country } from '../../services/countries.service';
 
 export interface IUser {

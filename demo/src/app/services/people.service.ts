@@ -8,13 +8,13 @@
 
 import { Injectable } from '@angular/core';
 import { Http, ResponseContentType } from '@angular/http';
+import { Color } from '@deja-js/component';
+import { MaterialColors } from '@deja-js/component';
+import { UUID } from '@deja-js/component';
 import { JsonProperty, ObjectMapper } from 'json-object-mapper';
 import * as _ from 'lodash';
 import 'rxjs/add/operator/publishLast';
 import { Observable } from 'rxjs/Observable';
-import { Color } from '../../../../src/common/core/graphics/color';
-import { MaterialColors } from '../../../../src/common/core/style/material-colors';
-import { UUID } from '../../../../src/common/core/UUID';
 
 export class Friend {
     public id: number = void 0;

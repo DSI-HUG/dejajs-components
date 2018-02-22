@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Range } from '../../../../src/component/range/range.interface';
+import { Range } from '@deja-js/component';
 import { Weight } from './weight.interface';
 
 export const readOnlyRanges = [

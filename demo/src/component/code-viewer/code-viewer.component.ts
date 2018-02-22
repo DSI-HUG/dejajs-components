@@ -7,7 +7,6 @@
  */
 
 import { AfterViewChecked, Component, Input, ViewEncapsulation } from '@angular/core';
-
 import * as Prism from 'prismjs';
 
 /**

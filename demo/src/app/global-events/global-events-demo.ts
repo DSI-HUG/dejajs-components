@@ -7,8 +7,8 @@
  */
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, NgZone, OnDestroy } from '@angular/core';
+import { GlobalEventService } from '@deja-js/component';
 import 'rxjs/add/operator/takeWhile';
-import { GlobalEventService } from '../../../../src/common/global-event/global-event.service';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,26 +1,6 @@
-<!-- <mat-toolbar color="primary" id="toolbar-demo">
-	<span id="logo" fxFlex="0 0 auto">
-        <img src="assets/img/logo/hug-logo-bw.svg" alt="HUG Logo" height="30">
-	</span>
-	<a fxFlex="0 0 auto" mat-button routerLink="/">DEJA JS</a>
-	<a fxFlex="0 0 auto" mat-button routerLink="/components">COMPONENTS</a>
-	<a fxFlex="0 0 auto" mat-button routerLink="/guides">GUIDES</a>
-	<a fxFlex="0 0 auto" mat-button target="_blank" href="https://dsi-hug.github.io/dejajs-doc/">DOCUMENTATION</a>
-    <span id="theme-title" fxFlex="1 1 auto">Sélectionnez un theme</span>
-	<deja-select fxFlex="0 0 5rem" id="theme-selector" [ngModel]="theme" (ngModelChange)="theme = $event?.value">
-		<deja-item value="hug" text="HUG"></deja-item>
-		<deja-item value="pink" text="Pink"></deja-item>
-		<deja-item value="teal" text="Teal"></deja-item>
-		<deja-item value="amber" text="Amber"></deja-item>
-    </deja-select>
-	<a fxFlex="0 0 auto" mat-button href="https://github.com/DSI-HUG/dejajs-components" target="_blank">GITHUB</a>
-</mat-toolbar> -->
-
-<!-- <router-outlet></router-outlet> -->
-
-<deja-sidenav fxFlex headerText="DEJA-JS">
-    <deja-sidenav-menu fxFlex slimScroll>
-        <mat-nav-list fxLayout="column" fxFlex>
+<deja-sidenav headerText="DEJA-JS">
+    <deja-sidenav-menu slimScroll>
+        <mat-nav-list>
             <mat-list-item title="Home" routerLink="/home" routerLinkActive="active">
                 <mat-icon mat-list-icon>home</mat-icon>
                 <span mat-line>Home</span>
@@ -149,10 +129,10 @@
         <button mat-icon-button>
             <mat-icon [matMenuTriggerFor]="colorMenu">format_color_fill</mat-icon>
         </button>
-        <a fxFlex="0 0 auto" mat-button href="https://github.com/DSI-HUG/dejajs-components" target="_blank">GITHUB</a>
+        <a mat-button href="https://github.com/DSI-HUG/dejajs-components" target="_blank">GITHUB</a>
     </deja-sidenav-header>
 
-    <deja-sidenav-content fxLayout fxFlex>
+    <deja-sidenav-content>
         <router-outlet></router-outlet>
     </deja-sidenav-content>
 </deja-sidenav>

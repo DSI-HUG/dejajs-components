@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { DejaMarkdownModule } from '../../component/markdown/index';
-import { HomeComponent } from './home.component';
-import { routing } from './home.routes';
+import { HomeGuidesComponent } from './home-guides.component';
+import { routing } from './home-guides.routes';
 
 @NgModule({
-    declarations: [HomeComponent],
-    exports: [HomeComponent],
+    declarations: [HomeGuidesComponent],
+    exports: [HomeGuidesComponent],
     imports: [
         CommonModule,
         DejaMarkdownModule,
@@ -15,4 +15,4 @@ import { routing } from './home.routes';
     providers: [
     ],
 })
-export class HomeModule { }
+export class HomeGuidesModule { }

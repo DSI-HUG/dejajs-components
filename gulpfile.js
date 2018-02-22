@@ -78,7 +78,7 @@ const argv = yargs
     .argv;
 
 const config = {
-    libraryName: 'dejajs-component',
+    libraryName: '@deja-js/component',
     unscopedLibraryName: 'dejajs-component',
     allSrc: 'src/**/*',
     allTs: 'src/**/!(*.spec).ts',
