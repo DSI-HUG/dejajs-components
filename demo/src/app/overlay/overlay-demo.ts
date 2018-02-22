@@ -15,7 +15,7 @@ import { DejaOverlayComponent } from '@deja-js/component';
     styleUrls: ['./overlay-demo.scss'],
     templateUrl: './overlay-demo.html',
 })
-export class OverlayDemoComponent {
+export class DejaOverlayDemoComponent {
     public selected = '';
     public items = [
         { text: 'Refresh' },

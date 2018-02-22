@@ -35,7 +35,7 @@ const formValidator = (control: AbstractControl): { [key: string]: string } => {
     styleUrls: ['./reactive-form-demo.scss'],
     templateUrl: './reactive-form-demo.html',
 })
-export class ReactiveFormDemoComponent implements AfterContentInit, OnInit, OnDestroy {
+export class DejaReactiveFormDemoComponent implements AfterContentInit, OnInit, OnDestroy {
     public tabIndex = 1;
     protected form: FormGroup;
 

@@ -16,7 +16,7 @@ import 'rxjs/add/operator/takeWhile';
     styleUrls: ['./global-events-demo.scss'],
     templateUrl: './global-events-demo.html',
 })
-export class GlobalEventsDemoComponent implements OnDestroy {
+export class DejaGlobalEventsDemoComponent implements OnDestroy {
     public tabIndex = 1;
 
     private model = {

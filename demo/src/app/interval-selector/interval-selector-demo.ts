@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { ISortInfos, SortOrder } from '@deja-js/component';
 import { IDejaGridColumn } from '@deja-js/component';
 import { IntervalBoundary } from '@deja-js/component';
@@ -16,6 +16,7 @@ import { Observable } from 'rxjs/Observable';
 import { Event, events as mockEvents } from './events.mock';
 
 @Component({
+    encapsulation: ViewEncapsulation.None,
     selector: 'deja-interval-selector-demo',
     styleUrls: ['./interval-selector-demo.scss'],
     templateUrl: './interval-selector-demo.html',

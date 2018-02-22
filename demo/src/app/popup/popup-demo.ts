@@ -20,7 +20,7 @@ import { DejaPopupCustomDemoComponent } from './popup-custom.component';
     styleUrls: ['popup-demo.scss'],
     templateUrl: 'popup-demo.html',
 })
-export class PopupDemoComponent {
+export class DejaPopupDemoComponent {
 
     private dummyPdfUrl = 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
     private dummyImgUrl = 'http://lorempixel.com/800/600/abstract/';

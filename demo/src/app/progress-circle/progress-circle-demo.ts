@@ -13,7 +13,7 @@ import { Component } from '@angular/core';
     styleUrls: ['./progress-circle-demo.scss'],
     templateUrl: './progress-circle-demo.html',
 })
-export class ProgressCircleDemoComponent {
+export class DejaProgressCircleDemoComponent {
     public tabIndex = 1;
     constructor() {
 

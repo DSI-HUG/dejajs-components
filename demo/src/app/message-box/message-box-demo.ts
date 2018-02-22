@@ -13,7 +13,7 @@ import { Component } from '@angular/core';
     styleUrls: ['./message-box-demo.scss'],
     templateUrl: './message-box-demo.html',
 })
-export class MessageBoxDemoComponent {
+export class DejaMessageBoxDemoComponent {
     public tabIndex = 1;
 
     protected toolTipModel = {

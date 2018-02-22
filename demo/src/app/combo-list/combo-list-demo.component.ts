@@ -8,12 +8,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { IDejaComboListAction } from '@deja-js/component';
-import { comboListData } from './combo-test.data';
+import { comboListDemoDatas } from './combo-list-demo.data';
 
 @Component({
     selector: 'demo-combo-list',
-    templateUrl: './combo-list.component.html',
-    styleUrls: ['./combo-list.component.scss'],
+    templateUrl: './combo-list-demo.component.html',
+    styleUrls: ['./combo-list-demo.component.scss'],
 })
 export class ComboListDemoComponent implements OnInit {
     public items: ComboListTestModel[] = [];
@@ -34,7 +34,7 @@ export class ComboListDemoComponent implements OnInit {
     constructor() {}
 
     public ngOnInit() {
-        this.items = comboListData;
+        this.items = comboListDemoDatas;
         this.itemToSelect = this.items.filter(
             (i: ComboListTestModel) => i.id < 10
         );
@@ -43,7 +43,7 @@ export class ComboListDemoComponent implements OnInit {
         );
 
         this.comboCtrl = new FormControl(this.itemSelected);
-        this.fields = Object.keys(comboListData[0]);
+        this.fields = Object.keys(comboListDemoDatas[0]);
     }
 
     public showAction(event: IDejaComboListAction<ComboListTestModel>) {

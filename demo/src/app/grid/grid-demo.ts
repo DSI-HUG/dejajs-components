@@ -7,15 +7,7 @@
  */
 
 import { ChangeDetectorRef, Component, ViewChild, ViewEncapsulation } from '@angular/core';
-import { GroupingService } from '@deja-js/component';
-import { IDejaDropContext, IDejaDropEvent } from '@deja-js/component';
-import { IDejaDragContext } from '@deja-js/component';
-import { DejaGridComponent } from '@deja-js/component';
-import { IDejaGridRow } from '@deja-js/component';
-import { IDejaGridColumn, IDejaGridColumnSizeEvent } from '@deja-js/component';
-import { IViewPortItem } from '@deja-js/component';
-import { IItemTree } from '@deja-js/component';
-import { IGroupInfo } from '@deja-js/component';
+import { DejaGridComponent, GroupingService, IDejaDragContext, IDejaDropContext, IDejaDropEvent, IDejaGridColumn, IDejaGridColumnSizeEvent, IDejaGridRow, IGroupInfo, IItemTree, IViewPortItem } from '@deja-js/component';
 import * as _ from 'lodash';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/of';
@@ -37,7 +29,7 @@ import { IExtendedViewPortItem } from '../tree-list/tree-list-demo';
     styleUrls: ['./grid-demo.scss'],
     templateUrl: './grid-demo.html',
 })
-export class GridDemoComponent {
+export class DejaGridDemoComponent {
     public tabIndex = 1;
     protected fructsForMultiSelection: IDejaGridRow[];
     protected fructsWithPreSelection: IDejaGridRow[];

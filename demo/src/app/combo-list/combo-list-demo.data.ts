@@ -5,7 +5,7 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-export const comboListData = [
+export const comboListDemoDatas = [
     {
         'id': 0,
         'name': 'Willa Arnold',
