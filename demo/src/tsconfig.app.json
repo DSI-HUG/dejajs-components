@@ -1,18 +1,24 @@
 {
-  "extends": "../tsconfig.json",
-  "compilerOptions": {
-    "outDir": "../out-tsc/app",
-    "baseUrl": "./",
-    "module": "es2015",
-    "types": [],
-    "paths": {
-        "@angular/*": ["../node_modules/@angular/*"],
-        "rxjs/*": ["../node_modules/rxjs/*"],
-        "@deja-js/component": ["../node_modules/@deja-js/component/src"]
-      }
-  },
-  "exclude": [
-    "test.ts",
-    "**/*.spec.ts"
-  ]
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "outDir": "../out-tsc/app",
+        "baseUrl": "./",
+        "module": "es2015",
+        "types": [],
+        "paths": {
+            "@angular/*": [
+                "../node_modules/@angular/*"
+            ],
+            "rxjs/*": [
+                "../node_modules/rxjs/*"
+            ],
+            "@deja-js/component": [
+                "../node_modules/@deja-js/component/src"
+            ]
+        }
+    },
+    "exclude": [
+        "test.ts",
+        "**/*.spec.ts"
+    ]
 }

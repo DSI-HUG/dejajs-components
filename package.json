@@ -23,7 +23,10 @@
         "test:watch": " gulp test:watch",
         "demo": " gulp build:demo",
         "check-travis": " travis-status --repo=? --branch=master --fail-pending || echo 'Not yet passing'",
-        "lint": "tslint --type-check --project tsconfig.json src/**/*.ts"
+        "lint": "tslint --type-check --project tsconfig.json src/**/*.ts",
+        "release:major": "changelog -M",
+        "release:minor": "changelog -m",
+        "release:patch": "changelog -p"
     },
     "dependencies": {
         "@angular-devkit/core": "0.4.0",

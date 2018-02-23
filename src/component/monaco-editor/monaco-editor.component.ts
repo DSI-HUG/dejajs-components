@@ -370,7 +370,8 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
      * Value to compare with the Value input
      * Used only when `isDiffEditor` is set to `true`
      */
-    @Input() set valueToCompare(v: string) {
+    @Input()
+    public set valueToCompare(v: string) {
         if (v !== this._valueToCompare) {
             this._valueToCompare = v;
 
@@ -386,7 +387,8 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
     /**
      * Value to show in the editor
      */
-    @Input() set value(v: string) {
+    @Input()
+    public set value(v: string) {
         if (v !== this._value) {
             this._value = v;
 
@@ -404,13 +406,16 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
     /**
      * Event triggered when value change
      */
-    @Output() public valueChange = new EventEmitter();
+    @Output()
+    public valueChange = new EventEmitter();
     /**
      * Event triggered when valueToCompare change
      */
-    @Output() public valueToCompareChange = new EventEmitter();
+    @Output()
+    public valueToCompareChange = new EventEmitter();
 
-    @ViewChild('editor') private editorContent: ElementRef;
+    @ViewChild('editor')
+    private editorContent: ElementRef;
 
     private _editor: any;
     private _value = '';

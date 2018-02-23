@@ -291,6 +291,11 @@ gulp.task('compile', (cb) => {
     runSequence('lint', 'pre-compile', 'inline-templates', 'ng-compile', cb);
 });
 
+// Prepare Build, , Sass to css, Inline templates & Styles and Ng-Compile
+gulp.task('compile-no-lint', (cb) => {
+    runSequence('pre-compile', 'inline-templates', 'ng-compile', cb);
+});
+
 // Build the 'dist' folder (without publishing it to NPM)
 gulp.task('build', ['clean'], (cb) => {
     runSequence('compile', 'test', 'npm-package', 'rollup-bundle', cb);
@@ -303,7 +308,7 @@ gulp.task('build-watch', (cb) => {
 
 // Same as 'build-watch' but without running tests
 gulp.task('build-watch-no-tests', (cb) => {
-    runSequence('compile', 'npm-package', 'rollup-bundle', cb);
+    runSequence('compile-no-lint', 'npm-package', 'rollup-bundle', cb);
 });
 
 // Watch changes on (*.ts, *.html, *.sass) and Re-build library
