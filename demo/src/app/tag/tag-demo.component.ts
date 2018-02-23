@@ -12,7 +12,7 @@ import { Component } from '@angular/core';
     styleUrls: ['tag-demo.component.scss'],
     templateUrl: 'tag-demo.component.html'
 })
-export class TagDemoComponent {
+export class DejaTagDemoComponent {
 
     public tabIndex = 1;
 

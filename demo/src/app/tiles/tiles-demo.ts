@@ -23,7 +23,7 @@ import { CountriesService, Country } from '../services/countries.service';
     styleUrls: ['./tiles-demo.scss'],
     templateUrl: './tiles-demo.html',
 })
-export class TilesDemoComponent implements OnInit {
+export class DejaTilesDemoComponent implements OnInit {
     public tabIndex = 1;
     public messages$: Observable<IMessage[]>;
     public tiles1$: Observable<IDejaTile[]>;
