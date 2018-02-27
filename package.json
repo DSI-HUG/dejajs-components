@@ -1,6 +1,6 @@
 {
     "name": "@deja-js/component",
-    "version": "3.0.0",
+    "version": "3.0.0-beta.0",
     "description": "Angular2 Components Library",
     "homepage": "https://github.com/DSI-HUG/dejajs-components",
     "bugs": "https://github.com/DSI-HUG/dejajs-components/issues",
@@ -18,12 +18,13 @@
     "scripts": {
         "link": "gulp link",
         "start": "gulp build",
+        "licensecheck": "gulp license",
         "build": "gulp build",
         "test": " gulp test",
         "test:watch": " gulp test:watch",
         "demo": " gulp build:demo",
         "check-travis": " travis-status --repo=? --branch=master --fail-pending || echo 'Not yet passing'",
-        "lint": "tslint --type-check --project tsconfig.json src/**/*.ts",
+        "lint": "tslint --project tsconfig.json src/**/*.ts",
         "release:major": "changelog -M",
         "release:minor": "changelog -m",
         "release:patch": "changelog -p"
@@ -104,6 +105,7 @@
         "gulp-inline-ng2-template": "4.1.0",
         "gulp-hub": "0.8.0",
         "gulp-util": "3.0.8",
+        "gulp-license-check": "1.2.1",
         "html-loader": "0.5.5",
         "is-docker": "1.1.0",
         "pump": "3.0.0",
@@ -126,7 +128,8 @@
         "source-map-loader": "0.2.3",
         "travis-status": "2.0.0",
         "yargs": "11.0.0",
-        "sonarqube-scanner": "^2.0.2"
+        "sonarqube-scanner": "^2.0.2",
+        "concurrently": "3.5.1"
     },
     "engines": {
         "node": ">=6.0.0"

@@ -17,16 +17,22 @@ module.exports = function(config) {
 			require('karma-jasmine-html-reporter'),
 		],
         customLaunchers: {
-            ChromeHeadless: {
-                base: 'Chrome',
-                flags: [
-                    '--headless',
-                    '--disable-gpu',
-                    // Without a remote debugging port, Google Chrome exits immediately.
-                    '--remote-debugging-port=9222',
-                ],
+			// Chrome setup for CI (Travis, Docker, ...)
+			ChromeHeadlessCI: {
+				base: 'ChromeHeadless',
+				flags: ['--no-sandbox']
             }
-        },		files: [{
+			// ChromeHeadless: {
+			//     base: 'Chrome',
+			//     flags: [
+			//         '--headless',
+			//         '--disable-gpu',
+			//         // Without a remote debugging port, Google Chrome exits immediately.
+			//         '--remote-debugging-port=9222',
+			//     ],
+			// }
+		},
+		files: [{
 			pattern: './config/karma-test-shim.js',
 			watched: false
 		}],

@@ -1,4 +1,12 @@
-// This file is required by karma.conf.js and loads recursively all the .spec and framework files
+/*
+ *  @license
+ *  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
+ *
+ *  Use of this source code is governed by an Apache-2.0 license that can be
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
+ */
+
+ // This file is required by karma.conf.js and loads recursively all the .spec and framework files
 
 import { getTestBed } from '@angular/core/testing';
 import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';

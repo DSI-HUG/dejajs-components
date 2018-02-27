@@ -77,6 +77,8 @@ const argv = yargs
     .version(false) // disable default --version from yargs( since v9.0.0)
     .argv;
 
+const license = require('gulp-license-check');
+
 const config = {
     libraryName: '@deja-js/component',
     unscopedLibraryName: 'dejajs-component',
@@ -88,13 +90,15 @@ const config = {
     buildDir: 'tmp/',
     outputDir: 'dist/',
     outputDemoDir: 'demo/dist/browser/',
-    coverageDir: 'coverage/'
+    coverageDir: 'coverage/',
+    docDir: 'doc/'
 };
 
 const rootFolder = path.join(__dirname);
 const buildFolder = path.join(rootFolder, `${config.buildDir}`);
 const distFolder = path.join(rootFolder, `${config.outputDir}`);
 const outputFolder = path.join(buildFolder, 'lib');
+// const docFolder = path.join(rootFolder, `${config.docDir}`);
 
 const ignoredRollUpMessages = [
     'treating it as an external dependency',
@@ -228,7 +232,7 @@ gulp.task('clean:coverage', () => {
 });
 
 gulp.task('clean:doc', () => {
-    return del(`${config.outputDir}/doc`);
+    return del(`${config.docDir}`);
 });
 
 gulp.task('clean', ['clean:dist', 'clean:coverage', 'clean:build']);
@@ -481,7 +485,7 @@ gulp.task('build:doc', (cb) => {
             tsconfig: 'src/tsconfig.es5.json',
             hideGenerator: true,
             disableCoverage: true,
-            output: `${config.outputDir}/doc/`
+            output: `${config.docDir}/`
         })
     ], cb);
 });
@@ -492,13 +496,13 @@ gulp.task('serve:doc', ['clean:doc'], (cb) => {
         gulpCompodoc({
             tsconfig: 'src/tsconfig.es5.json',
             serve: true,
-            output: `${config.outputDir}/doc/`
+            output: `${config.docDir}/`
         })
     ], cb);
 });
 
 gulp.task('push:doc', () => {
-    return execCmd('ngh', `--dir ${config.outputDir}/doc/ --message="chore(doc): :rocket: deploy new version"`);
+    return execCmd('ngh', `--dir ${config.docDir}/ --message="chore(doc): :rocket: deploy new version"`);
 });
 
 /////////////////////////////////////////////////////////////////////////////
@@ -634,6 +638,19 @@ gulp.task('release', (cb) => {
                 cb(error);
             });
     }
+});
+
+/////////////////////////////////////////////////////////////////////////////
+// Check if all TS files start by the HUG Licence
+/////////////////////////////////////////////////////////////////////////////
+gulp.task('license', function () {
+    return gulp.src(['**/*.ts', '!**/*.d.ts', '!node_modules/**'])
+        .pipe(license({
+            path: `${rootFolder}/header-license.txt`,
+            blocking: true,
+            logInfo: false,
+            logError: true
+        }));
 });
 
 /////////////////////////////////////////////////////////////////////////////
