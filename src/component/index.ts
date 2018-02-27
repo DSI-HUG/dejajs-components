@@ -12,7 +12,6 @@ export * from './chips/index';
 export * from './circular-picker/index';
 export * from './color-picker/index';
 export * from './color-selector/index';
-export * from './combo-list/index';
 export * from './content-editable/index';
 export * from './data-grid/index';
 export * from './date-picker/index';

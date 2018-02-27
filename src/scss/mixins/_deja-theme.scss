@@ -12,7 +12,6 @@
 @import '../../component/loaders/list-loader-theme';
 @import '../../component/message-box/message-box-theme';
 @import '../../component/popup/popup-theme';
-@import '../../component/combo-list/_combo-list-theme';
 @import '../../component/range/range-theme';
 @import '../../component/select/select-theme';
 @import '../../component/sidenav/sidenav-theme';
@@ -31,7 +30,6 @@
     @include accordion-theme($custom-theme);
     @include chips-theme($custom-theme);
     @include circular-picker-theme($custom-theme);
-    @include combo-list-theme($custom-theme);
     @include data-grid-theme($custom-theme);
     @include date-picker-theme($custom-theme);
     @include date-selector-theme($custom-theme);

@@ -8,7 +8,6 @@ const routes: Routes = [
     { path: 'accordion', loadChildren: './accordion/accordion-demo.module#DejaAccordionDemoModule', data: { title: 'Accordion' } },
     { path: 'circular-picker', loadChildren: './circular-picker/circular-picker-demo.module#DejaCircularPickerDemoModule', data: { title: 'Circular Picker' } },
     { path: 'colorselector', loadChildren: './color-selector/color-selector-demo.module#DejaColorSelectorDemoModule', data: { title: 'Color Selector' } },
-    { path: 'combo-list', loadChildren: './combo-list/combo-list-demo.module#ComboListDemoModule', data: { title: 'Combo List' } },
     { path: 'contenteditableselector', loadChildren: './content-editable/content-editable-demo.module#DejaContentEditableDemoModule', data: { title: 'Content Editable' } },
     { path: 'date-picker', loadChildren: './date-picker/date-picker-demo.module#DejaDatePickerDemoModule', data: { title: 'Date Picker' } },
     { path: 'events', loadChildren: './global-events/global-events-demo.module#DejaGlobalEventsDemoModule', data: { title: 'Events' } },
