@@ -1,4 +1,3 @@
-Monaco Editor copy js
 Styles de la demo
-Doc dans ${docDir} au lieu de dist
 Change log
+Publication de la demo
