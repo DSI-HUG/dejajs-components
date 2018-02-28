@@ -643,7 +643,7 @@ gulp.task('release', (cb) => {
 // Check if all TS files start by the HUG Licence
 /////////////////////////////////////////////////////////////////////////////
 gulp.task('license', function () {
-    return gulp.src(['**/*.ts', '!**/*.d.ts', '!node_modules/**'])
+    return gulp.src(['**/*.ts', '!**/*.d.ts', '!**/node_modules/**'])
         .pipe(license({
             path: `${rootFolder}/header-license.txt`,
             blocking: true,
