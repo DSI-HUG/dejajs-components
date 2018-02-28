@@ -24,7 +24,7 @@ export class DejaPopupAdvancedComponent extends DejaPopupBase implements AfterVi
     private left: number;
     private top: number;
     public dragstart = false;
-    public lastEvent = null;
+    public lastEvent: MouseEvent = null;
     public componentPortal: Portal<any>;
     private subKeyEvent: Subscription;
     private timer: number;

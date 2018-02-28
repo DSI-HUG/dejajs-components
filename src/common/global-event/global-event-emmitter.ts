@@ -18,13 +18,13 @@ export class GlobalEventEmmitter implements IGlobalEventEmmitter {
         return this._instance;
     }
 
-    private _callbacks = {};
+    private _callbacks = {} as any;
 
-    public off = (event, fn) => {
+    public off = (event: string, fn: () => void) => {
         return this.removeEventListener(event, fn);
     }
 
-    public removeListener = (event, fn) => {
+    public removeListener = (event: string, fn: () => void) => {
         return this.removeEventListener(event, fn);
     }
 
@@ -65,7 +65,7 @@ export class GlobalEventEmmitter implements IGlobalEventEmmitter {
         return this;
     }
 
-    public emit = (event: string, ...params) => {
+    public emit = (event: string, ...params: any[]) => {
         this._callbacks = this._callbacks || {};
         let callbacks = this._callbacks[`$${event}`];
 
@@ -80,12 +80,12 @@ export class GlobalEventEmmitter implements IGlobalEventEmmitter {
         return this;
     }
 
-    public listeners = (event) => {
+    public listeners = (event: string) => {
         this._callbacks = this._callbacks || {};
         return this._callbacks[`$${event}`] || [];
     }
 
-    public hasListeners = (event) => {
+    public hasListeners = (event: string) => {
         return !!this.listeners(event).length;
     }
 
@@ -101,4 +101,4 @@ export class GlobalEventEmmitter implements IGlobalEventEmmitter {
 }
 
 // tslint:disable-next-line
-window['GlobalEventEmmitter'] = GlobalEventEmmitter;
+(<any>window)['GlobalEventEmmitter'] = GlobalEventEmmitter;

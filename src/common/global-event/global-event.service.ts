@@ -13,8 +13,8 @@ import { GlobalEventEmmitter } from './global-event-emmitter';
 @Injectable()
 export class GlobalEventService {
     private globalEventEmmitter: GlobalEventEmmitter;
-    private listeners$ = {};
-    private listenersFn$ = {};
+    private listeners$ = {} as {[index: string]: Observable<any>};
+    private listenersFn$ = {} as { [index: string]: (params?: any[]) => void };
 
     constructor() {
         this.globalEventEmmitter = GlobalEventEmmitter.instance;

@@ -70,17 +70,17 @@ export class DejaViewPortComponent implements OnDestroy {
     private scrollPosition = 0;
 
     /** Permet de définir un template d'élément par binding */
-    @Input() public itemTemplateExternal;
+    @Input() public itemTemplateExternal: any;
 
-    @ContentChild('itemTemplate') private itemTemplateInternal;
+    @ContentChild('itemTemplate') private itemTemplateInternal: any;
 
     @ViewChild('down')
-    private set downButton(element: ElementRef) {
+    public set downButton(element: ElementRef) {
         this.downButton$.next((element && element.nativeElement) || null);
     }
 
     @ViewChild('up')
-    private set upButton(element: ElementRef) {
+    public set upButton(element: ElementRef) {
         this.upButton$.next((element && element.nativeElement) || null);
     }
 
@@ -108,7 +108,7 @@ export class DejaViewPortComponent implements OnDestroy {
       */
     @Input()
     public set scrollingStyle(value: DejaViewPortScrollStyle | string) {
-        const scrollingStyle = typeof value === 'string' ? DejaViewPortScrollStyle[value] : value;
+        const scrollingStyle = typeof value === 'string' ? DejaViewPortScrollStyle[value as any] : value;
         this._hasButtons = scrollingStyle === DejaViewPortScrollStyle.buttons;
     }
 
@@ -118,7 +118,7 @@ export class DejaViewPortComponent implements OnDestroy {
      */
     @Input()
     public set direction(value: ViewportDirection | string) {
-        const direction = typeof value === 'string' ? ViewportDirection[value] : value;
+        const direction = typeof value === 'string' ? ViewportDirection[value as any] : value;
         this.viewPort.direction$.next(direction);
         this._isHorizontal = direction === ViewportDirection.horizontal;
         this.changeDetectorRef.markForCheck();
@@ -137,7 +137,7 @@ export class DejaViewPortComponent implements OnDestroy {
     }
 
     @ViewChild('wrapper')
-    private set wrapperElement(element: ElementRef) {
+    public set wrapperElement(element: ElementRef) {
         this.element = element.nativeElement as HTMLElement;
         this.viewPort.element$.next(this.element);
         Observable.fromEvent(this.element, 'scroll')
@@ -149,7 +149,7 @@ export class DejaViewPortComponent implements OnDestroy {
             });
     }
 
-    private get itemTemplate() { return this.itemTemplateExternal || this.itemTemplateInternal; }
+    public get itemTemplate() { return this.itemTemplateExternal || this.itemTemplateInternal; }
 
     private get clientSize() {
         if (!this.element) {
@@ -239,8 +239,12 @@ export class DejaViewPortComponent implements OnDestroy {
                 };
 
                 if (viewPortResult.scrollPos !== undefined) {
-                    const listItems = this.element ? this.element.getElementsByClassName('listitem') : [];
-                    const rebind = listItems.length !== viewPortResult.visibleItems.length;
+                    let length = 0;
+                    if (this.element) {
+                        const listItems = this.element.getElementsByClassName('listitem');
+                        length = listItems.length;
+                    }
+                    const rebind = length !== viewPortResult.visibleItems.length;
                     if (!rebind) {
                         scroll(viewPortResult);
                     } else {

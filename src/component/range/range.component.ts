@@ -35,8 +35,8 @@ export class DejaRangeComponent implements ControlValueAccessor {
     // error emitter, used to notify the outside when forbidden actions are performed
     @Output() public errorFeedback: EventEmitter<any> = new EventEmitter();
     // custom templates
-    @ContentChild('rangeTemplate') protected rangeTemplate;
-    @ContentChild('separatorTemplate') protected separatorTemplate;
+    @ContentChild('rangeTemplate') protected rangeTemplate: any;
+    @ContentChild('separatorTemplate') protected separatorTemplate: any;
     // minimum range percentage, used to avoid 2 separator being on the same visual space
     private minimumRangePercentage = 0.01;
 
@@ -65,6 +65,7 @@ export class DejaRangeComponent implements ControlValueAccessor {
     @Input()
     public set disabled(value: boolean | string) {
         this._disabled = coerceBooleanProperty(value);
+        this.changeDetectorRef.markForCheck();
     }
 
     public get disabled() {
@@ -107,6 +108,11 @@ export class DejaRangeComponent implements ControlValueAccessor {
             this.changeDetectorRef.markForCheck();
         }
     }
+
+    public setDisabledState(isDisabled: boolean) {
+        this.disabled = isDisabled;
+    }
+    // End of ControlValueAccessor implementation
 
     @HostListener('window:resize', ['$event'])
     public onResize() {

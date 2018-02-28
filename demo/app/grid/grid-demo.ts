@@ -51,7 +51,7 @@ export class GridDemoComponent {
     protected bigPeople$: Observable<Person[]>;
     protected columnGroups = [] as IDejaGridColumn[];
     protected peopleRows = [] as Person[];
-    protected draggedPerson;
+    protected draggedPerson: Person;
 
     protected viewPortInfos: {
         name: string;
@@ -826,7 +826,7 @@ export class GridDemoComponent {
             dragentercallback: drag,
             dragovercallback: drag,
             dropcallback: (event: IDejaDropEvent) => {
-                this.draggedPerson = event.dragInfo.object as Person;
+                this.draggedPerson = event.dragInfo.object;
                 this.changeDetectorRef.markForCheck();
             },
         } as IDejaDropContext;

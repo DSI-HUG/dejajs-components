@@ -168,7 +168,7 @@ export class ViewPortService implements OnDestroy {
             // consoleLog(`calcVariableSizeViewPort`);
             const visibleList = [] as IViewPortItem[];
             let startIndex: number;
-            let endIndex;
+            let endIndex: number;
             let beforeSize = 0;
             let viewPortSize = 0;
             let afterSize = 0;
@@ -385,7 +385,7 @@ export class ViewPortService implements OnDestroy {
             return Observable.of(viewPort);
         };
 
-        const calcViewPort$ = (items: IViewPortItem[], maxSize: number, scrollPos: number, element: HTMLElement, itemDefaultSize: number, ensureParams: IEnsureParams, fromMeasure?: boolean) => {
+        const calcViewPort$: any = (items: IViewPortItem[], maxSize: number, scrollPos: number, element: HTMLElement, itemDefaultSize: number, ensureParams: IEnsureParams, fromMeasure?: boolean) => {
             // consoleLog(`calcViewPort`);
             if (!items || !items.length) {
                 return Observable.of(this.emptyViewPort);
@@ -520,7 +520,7 @@ export class ViewPortService implements OnDestroy {
 
         const mode$ = Observable.from(this.mode$)
             .map((mode) => {
-                this._mode = typeof mode === 'string' ? ViewportMode[mode] : mode;
+                this._mode = typeof mode === 'string' ? (<any>ViewportMode)[mode] : mode;
                 return this._mode;
             })
             .distinctUntilChanged();
@@ -528,7 +528,7 @@ export class ViewPortService implements OnDestroy {
 
         const direction$ = Observable.from(this.direction$)
             .map((direction) => {
-                this._direction = typeof direction === 'string' ? ViewportDirection[direction] : direction;
+                this._direction = typeof direction === 'string' ? (<any>ViewportDirection)[direction] : direction;
                 return this._direction;
             })
             .distinctUntilChanged();

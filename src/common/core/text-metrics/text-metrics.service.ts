@@ -21,7 +21,7 @@ import { Subject } from 'rxjs/Subject';
  */
 @Injectable()
 export class DejaTextMetricsService {
-    private canvas;
+    private canvas: HTMLCanvasElement;
     private element$: Subject<HTMLElement> = new Subject();
     private computedStyles: CSSStyleDeclaration;
     private charSize$ = new BehaviorSubject<number[]>(null);
@@ -124,13 +124,12 @@ export class DejaTextMetricsService {
             .map((charSize) => {
 
                 let tmpSize = 0;
-                let tmpStr = '';
                 let numberOfLines = 1;
                 let averageCharSize = 0;
-                if (text.length>0) {
+                if (text.length > 0) {
                     const arr = text.split(' ');
                     let spaceWidth = 0;
-                    const printableCharSizeArray = charSize.filter((size)=> size > 0);
+                    const printableCharSizeArray = charSize.filter((size) => size > 0);
                     averageCharSize = printableCharSizeArray.reduce((a, b) => a + b, 0) / printableCharSizeArray.length;
                     arr.forEach((txt: string) => {
                         let w = 0;
@@ -141,11 +140,9 @@ export class DejaTextMetricsService {
                             w += (charSize[charCode]) ? charSize[charCode] : averageCharSize;
                         }
                         if ((tmpSize + w + spaceWidth) > maxWidth) {
-                            tmpStr = txt;
                             tmpSize = w;
                             numberOfLines++;
                         } else {
-                            tmpStr += (spaceWidth>0? ' ' : '') + txt;
                             tmpSize += w + spaceWidth;
                         }
                         if (spaceWidth === 0) {

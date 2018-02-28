@@ -18,6 +18,7 @@ import { DejaComboListService } from '../service/combo-list.service';
     styleUrls: ['./combo-list.component.scss'],
     providers: [valueAccessorFactory(DejaComboListComponent)]
 })
+
 export class DejaComboListComponent<T> extends DejaComboListBase<T> implements ControlValueAccessor {
 
     @Input() public set itemsToSelect(aItem: T[]) {

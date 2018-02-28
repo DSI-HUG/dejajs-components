@@ -6,12 +6,12 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import {ISortInfos, SortOrder} from '../../../src/common/core';
-import {IDejaGridColumn} from '../../../src/component/data-grid/data-grid-column/data-grid-column';
-import {IntervalBoundary} from '../../../src/component/interval-selector/interval-selector-boundary.model';
-import {IntervalSelectorService} from '../../../src/component/interval-selector/interval-selector.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { ISortInfos, SortOrder } from '../../../src/common/core';
+import { IDejaGridColumn } from '../../../src/component/data-grid/data-grid-column/data-grid-column';
+import { IntervalBoundary } from '../../../src/component/interval-selector/interval-selector-boundary.model';
+import { IntervalSelectorService } from '../../../src/component/interval-selector/interval-selector.service';
 import { Event, events as mockEvents } from './events.mock';
 
 @Component({
@@ -54,8 +54,8 @@ export class DejaIntervalSelectorDemoComponent implements OnInit, OnDestroy {
             return this.gridEventCompareFunction(this, event1, event2);
         });
         Observable.from(this.intervalSelectorService.intervalSelectionChanged$).takeWhile(() => this._isAlive)
-            .subscribe((boundary:IntervalBoundary) => {
-                const event:Event = boundary.model as Event;
+            .subscribe((boundary: IntervalBoundary) => {
+                const event: Event = boundary.model as Event;
                 if (event) {
                     if (boundary.intervalId === 'events') {
                         if (!boundary.openingBoundary) {
@@ -130,12 +130,12 @@ export class DejaIntervalSelectorDemoComponent implements OnInit, OnDestroy {
     }
 
     public treeMultiselectModelChange(events: Event[]) {
-        if (events && events.length>1) {
+        if (events && events.length > 1) {
             events = events.sort((event1: Event, event2: Event) => {
                 return this.treeEventCompareFunction(event1, event2);
             });
             const lowerEvent: Event = events[0];
-            const upperEvent: Event = events[events.length-1];
+            const upperEvent: Event = events[events.length - 1];
             this.intervalSelectorService.selectBoundaries('events', lowerEvent, upperEvent);
         }
     }
@@ -145,9 +145,9 @@ export class DejaIntervalSelectorDemoComponent implements OnInit, OnDestroy {
             events.sort((event1: Event, event2: Event) => {
                 return this.gridEventCompareFunction(this, event1, event2);
             });
-            if (events.length>1) {
+            if (events.length > 1) {
                 const lowerEvent: Event = events[0];
-                const upperEvent: Event = events[events.length-1];
+                const upperEvent: Event = events[events.length - 1];
                 this.intervalSelectorService.selectBoundaries('gridEvents', lowerEvent, upperEvent);
             }
         }
@@ -155,10 +155,10 @@ export class DejaIntervalSelectorDemoComponent implements OnInit, OnDestroy {
 
     private treeEventCompareFunction(event1: Event, event2: Event) {
         // événements triés descendant
-        if (event1.date.getTime()<event2.date.getTime()) {
+        if (event1.date.getTime() < event2.date.getTime()) {
             // pour indiquer que c'est après
             return -1;
-        } else if (event1.date.getTime()>event2.date.getTime()) {
+        } else if (event1.date.getTime() > event2.date.getTime()) {
             // pour indiquer que c'est avant
             return 1;
         }
@@ -168,16 +168,16 @@ export class DejaIntervalSelectorDemoComponent implements OnInit, OnDestroy {
     private gridEventCompareFunction(self: any, event1: Event, event2: Event) {
         if (!self.ascendingDateOrdering) {
             // descending ordered events
-            if (event1.date.getTime()<event2.date.getTime()) {
+            if (event1.date.getTime() < event2.date.getTime()) {
                 return -1;
-            } else if (event1.date.getTime()>event2.date.getTime()) {
+            } else if (event1.date.getTime() > event2.date.getTime()) {
                 return 1;
             }
         } else {
             // descending ordered events
-            if (event1.date.getTime()<event2.date.getTime()) {
+            if (event1.date.getTime() < event2.date.getTime()) {
                 return 1;
-            } else if (event1.date.getTime()>event2.date.getTime()) {
+            } else if (event1.date.getTime() > event2.date.getTime()) {
                 return -1;
             }
         }

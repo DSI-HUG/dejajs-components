@@ -204,7 +204,7 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
             .filter((_event) => !this._disabled)
             .subscribe((event: Event) => {
                 const { id, attributes } = event.target as HTMLElement;
-                const targetIndex = attributes[DejaColorSelectorComponent.indexAttribute];
+                const targetIndex = (<any>attributes)[DejaColorSelectorComponent.indexAttribute];
                 if (id === 'basecolor') {
                     this.hilightedBaseIndex$.next(+targetIndex.value);
                     this.hilightedSubIndex$.next(this.hilightedSubIndex);
@@ -321,6 +321,10 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
     // From ControlValueAccessor interface
     public registerOnTouched(fn: any) {
         this.onTouchedCallback = fn;
+    }
+
+    public setDisabledState(isDisabled: boolean) {
+        this.disabled = isDisabled;
     }
     // ************* End of ControlValueAccessor Implementation **************
 

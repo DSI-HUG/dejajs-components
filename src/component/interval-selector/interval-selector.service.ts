@@ -6,13 +6,13 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
-import {IntervalBoundary} from './interval-selector-boundary.model';
-import {ModelCompareFunction} from './interval-selector-compare-function.model';
-import {IntervalSelectorEventData} from './interval-selector-event-data.model';
-import {Interval} from './interval-selector-interval.model';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import { IntervalBoundary } from './interval-selector-boundary.model';
+import { ModelCompareFunction } from './interval-selector-compare-function.model';
+import { IntervalSelectorEventData } from './interval-selector-event-data.model';
+import { Interval } from './interval-selector-interval.model';
 
 @Injectable()
 /**
@@ -25,17 +25,17 @@ export class IntervalSelectorService {
     /**
      * boundary selection changes are notified throught this subject.
      */
-    public intervalSelectionChanged$:Subject<IntervalBoundary> = new Subject<IntervalBoundary>();
+    public intervalSelectionChanged$: Subject<IntervalBoundary> = new Subject<IntervalBoundary>();
 
     /**
      * for internal usage by the DejaIntervalSelectorBoundaryComponent component.
      */
-    public displayModelBoundaries$:Subject<IntervalSelectorEventData> = new Subject<IntervalSelectorEventData>();
+    public displayModelBoundaries$: Subject<IntervalSelectorEventData> = new Subject<IntervalSelectorEventData>();
 
     /**
      * for internal usage by the DejaIntervalSelectorBoundaryComponent component.
      */
-    public hideModelBoundaries$:Subject<IntervalSelectorEventData> = new Subject<IntervalSelectorEventData>();
+    public hideModelBoundaries$: Subject<IntervalSelectorEventData> = new Subject<IntervalSelectorEventData>();
 
     private _intervalMap: Map<string, Interval> = new Map<string, Interval>();
     private _lastSelectBoundariesCall: Date;
@@ -113,12 +113,12 @@ export class IntervalSelectorService {
      */
     public modelClicked(intervalId: string, model: any): void {
         // console.log('modelClicked()');
-        const timer$:Observable<any> = Observable.timer(150);
-        const now:Date = new Date();
-        timer$.subscribe(()=> {
+        const timer$: Observable<any> = Observable.timer(150);
+        const now: Date = new Date();
+        timer$.subscribe(() => {
             // console.log('modelClicked() after timer');
             const _lastSelectBoundariesCall = this._lastSelectBoundariesCall;
-            if (_lastSelectBoundariesCall && _lastSelectBoundariesCall.getTime() > (now.getTime()-300) ) {
+            if (_lastSelectBoundariesCall && _lastSelectBoundariesCall.getTime() > (now.getTime() - 300)) {
                 // il y a eu un appel à selectBoundaries() moins de 150 ms. On ignore ce click.
                 return;
             }
@@ -135,7 +135,7 @@ export class IntervalSelectorService {
             if (openingBoundary && closingBoundary) {
                 // un interval est déjà sélectionné
                 modelCompareResult = interval.compare(openingBoundary.model, model);
-                if (modelCompareResult<0) {
+                if (modelCompareResult < 0) {
                     this.updateIntervalSelection(openingBoundary, false);
                     openingBoundary = new IntervalBoundary(intervalId, model, true, true);
                     this.updateIntervalSelection(openingBoundary, true);
@@ -149,23 +149,23 @@ export class IntervalSelectorService {
             } else if (openingBoundary && openingBoundary.model !== model) {
                 // seul la borne d'ouverture est présente
                 modelCompareResult = interval.compare(openingBoundary.model, model);
-                if (modelCompareResult<0) {
+                if (modelCompareResult < 0) {
                     this.updateIntervalSelection(openingBoundary, false);
                     closingBoundary = new IntervalBoundary(intervalId, openingBoundary.model, false, true);
                     this.updateIntervalSelection(closingBoundary, true);
                     openingBoundary = new IntervalBoundary(intervalId, model, true, true);
                     this.updateIntervalSelection(openingBoundary, true);
-                } else if (modelCompareResult>0) {
+                } else if (modelCompareResult > 0) {
                     closingBoundary = new IntervalBoundary(intervalId, model, false, true);
                     this.updateIntervalSelection(closingBoundary, true);
                 }
             } else if (closingBoundary && closingBoundary.model !== model) {
                 // seul la borne de fermeture est présente
                 modelCompareResult = interval.compare(closingBoundary.model, model);
-                if (modelCompareResult<0) {
+                if (modelCompareResult < 0) {
                     openingBoundary = new IntervalBoundary(intervalId, model, true, true);
                     this.updateIntervalSelection(openingBoundary, true);
-                } else if (modelCompareResult>0) {
+                } else if (modelCompareResult > 0) {
                     this.updateIntervalSelection(closingBoundary, false);
                     openingBoundary = new IntervalBoundary(intervalId, closingBoundary.model, true, true);
                     this.updateIntervalSelection(openingBoundary, true);
@@ -333,13 +333,13 @@ export class IntervalSelectorService {
             }
             if (openingBoundary && interval.closingBoundary) {
                 modelCompareResult = interval.compare(boundary.model, interval.closingBoundary.model);
-                if (modelCompareResult<0) {
+                if (modelCompareResult < 0) {
                     interval.closingBoundary.selected = false;
                 }
             }
             if (!openingBoundary && interval.openingBoundary) {
                 modelCompareResult = interval.compare(boundary.model, interval.openingBoundary.model);
-                if (modelCompareResult>0) {
+                if (modelCompareResult > 0) {
                     interval.openingBoundary.selected = false;
                 }
             }

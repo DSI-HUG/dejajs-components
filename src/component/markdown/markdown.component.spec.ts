@@ -8,7 +8,7 @@
 
 import { ChangeDetectorRef } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { BaseRequestOptions, Http, Response, ResponseOptions } from '@angular/http';
+import { BaseRequestOptions, ConnectionBackend, Http, Response, ResponseOptions } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { DejaMarkdownComponent } from './markdown.component';
 
@@ -26,7 +26,7 @@ describe('DejaMarkdownComponent', () => {
                 BaseRequestOptions,
                 {
                     provide: Http,
-                    useFactory: (b, options) => new Http(b, options),
+                    useFactory: (b: ConnectionBackend, options: BaseRequestOptions) => new Http(b, options),
                     deps: [MockBackend, BaseRequestOptions]
                   }
             ]
@@ -63,7 +63,7 @@ describe('DejaMarkdownComponent', () => {
     });
 
     it('should get html from url', () => {
-        backend.connections.subscribe(connection => {
+        backend.connections.subscribe((connection: any) => {
             connection.mockRespond(new Response(<ResponseOptions>{
                 body: '<h1>qwertzqwertz</h1>'
             }));
@@ -75,7 +75,7 @@ describe('DejaMarkdownComponent', () => {
     });
 
     it('should process http error', () => {
-        backend.connections.subscribe(connection => {
+        backend.connections.subscribe((connection: any) => {
             connection.mockError(new Error('some error'));
         });
 

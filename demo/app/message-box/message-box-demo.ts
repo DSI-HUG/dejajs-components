@@ -45,7 +45,7 @@ export class MessageBoxDemoComponent {
         },
     ];
 
-    private dialogTitle;
+    public dialogTitle: string;
 
     constructor() { }
 

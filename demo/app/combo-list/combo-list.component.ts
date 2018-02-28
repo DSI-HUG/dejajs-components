@@ -25,9 +25,9 @@ export class ComboListDemoComponent implements OnInit {
     public selectedList: ComboListTestModel[] = [];
     public fieldName = 'label';
     public fields: string[];
-    public comboCtrl;
+    public comboCtrl: FormControl;
     public tabIndex = 1;
-    public sort;
+    public sort: boolean;
     public disabled: boolean;
     public disableFastActions: boolean;
 

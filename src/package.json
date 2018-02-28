@@ -28,7 +28,6 @@
     "@ngrx/core": "x.x.x",
     "@ngrx/store": "x.x.x",
     "angular2-text-mask": "x.x.x",
-    "css-element-queries": "x.x.x",
     "custom-event-polyfill": "x.x.x",
     "hammerjs": "x.x.x",
     "json-object-mapper": "x.x.x",

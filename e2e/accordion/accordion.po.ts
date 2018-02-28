@@ -14,20 +14,20 @@ export class AccordionPage {
         // return element(by.css('deja-sidenav-menu mat-list-item[routerlink="/components"]')).click();
     }
 
-    public headerIsOpen(body) {
-         return body.getCssValue('max-height').then((value) => {
+    public headerIsOpen(body: any) {
+         return body.getCssValue('max-height').then((value: string) => {
             return value !== '0px';
          });
     }
 
-    public headerIsOpenAfterAnimation(body) {
+    public headerIsOpenAfterAnimation(body: any) {
         return browser.wait(ExpectedConditions.visibilityOf(body))
         .then(() => {
             return this.headerIsOpen(body);
         });
     }
 
-    public openHeader(header) {
+    public openHeader(header: any) {
         return header.click();
     }
 }

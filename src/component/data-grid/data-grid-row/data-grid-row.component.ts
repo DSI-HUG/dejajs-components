@@ -26,13 +26,13 @@ export class DejaGridRowComponent implements OnDestroy {
     @Input() public row: IDejaGridRow;
 
     /** Template de cellule si définit extérieurement à la grille */
-    @Input() public cellTemplateExternal;
+    @Input() public cellTemplateExternal: any;
 
     /** Index de la ligne sur la liste plate de ItemListService */
     @Input() public flatIndex: number;
 
     /** Template de cellule par defaut  définit dans le HTML de la grille */
-    @ContentChild('cellTemplate') protected cellTemplateInternal;
+    @ContentChild('cellTemplate') protected cellTemplateInternal: any;
 
     private _columnLayout = {} as IDejaGridColumnLayout;
     private refresh$sub: Subscription;
@@ -74,7 +74,7 @@ export class DejaGridRowComponent implements OnDestroy {
         }
     }
 
-    public getCellText(row, textField) {
+    public getCellText(row: IDejaGridRow, textField: string) {
         return ItemListService.getItemText(row, textField);
     }
 }
