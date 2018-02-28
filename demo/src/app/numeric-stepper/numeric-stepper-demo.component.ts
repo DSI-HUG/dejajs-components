@@ -10,7 +10,6 @@ import { Component } from '@angular/core';
 
 @Component({
     selector: 'deja-numeric-stepper-demo',
-    styleUrls: ['./numeric-stepper-demo.component.scss'],
     templateUrl: './numeric-stepper-demo.component.html',
 })
 export class DejaNumericStepperDemoComponent {

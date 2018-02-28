@@ -7,12 +7,19 @@
  */
 
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { Rect } from '@deja-js/component';
 import { IDropCursorInfos } from '@deja-js/component';
 import { IDejaMouseDraggableContext } from '@deja-js/component';
 import { IDejaMouseDroppableContext } from '@deja-js/component';
 import { IDejaTile } from '@deja-js/component';
 import { IDejaTilesAddEvent, IDejaTilesRemoveEvent } from '@deja-js/component';
+import { Rect } from '@deja-js/component';
+import 'rxjs/add/observable/from';
+import 'rxjs/add/operator/defaultIfEmpty';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/reduce';
+import 'rxjs/add/operator/scan';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/take';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { CountriesService, Country } from '../services/countries.service';

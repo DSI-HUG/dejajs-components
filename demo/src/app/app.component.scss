@@ -18,7 +18,13 @@ body {
 	}
 	[mat-icon-button] {
 		overflow: hidden;
-	}
+    }
+    mat-nav-list {
+        flex-direction: column;
+        box-sizing: border-box;
+        display: flex;
+        flex: 1 1 auto;        
+    }
 	mat-sidenav-container.demo-root {
 		height: 100%;
 		mat-sidenav {
@@ -34,9 +40,6 @@ body {
 			height: auto;
 			overflow: visible;
 		}
-	}
-	.demo-content {
-		margin: 32px;
 	}
 	mat-card.demo-card {
 		padding: 0 !important;
@@ -61,6 +64,21 @@ body {
 		box-sizing: border-box;
 		flex-direction: row;
 		display: flex;
+	}
+	deja-sidenav-content {
+        display: flex;
+        flex-direction: column;
+		flex: 1 1 auto;
+
+		router-outlet {
+            display: none;
+		}
+
+		>* {
+			padding: 1rem;
+			flex: 1 1 100%;
+			display: block;
+		}
 	}
 }
 

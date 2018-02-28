@@ -13,7 +13,6 @@ import 'rxjs/add/operator/takeWhile';
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'events-demo',
-    styleUrls: ['./global-events-demo.scss'],
     templateUrl: './global-events-demo.html',
 })
 export class DejaGlobalEventsDemoComponent implements OnDestroy {

@@ -1,3 +1,2 @@
-Styles de la demo
 Change log
 Publication de la demo

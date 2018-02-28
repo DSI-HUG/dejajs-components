@@ -11,7 +11,6 @@ import { DateComponentLayout } from '@deja-js/component';
 
 @Component({
     selector: 'dejadate-picker-demo',
-    styleUrls: ['date-picker-demo.scss'],
     templateUrl: './date-picker-demo.html',
 })
 export class DejaDatePickerDemoComponent implements OnInit {

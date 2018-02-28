@@ -10,13 +10,13 @@ import { Component } from '@angular/core';
 
 @Component({
     selector: 'deja-content-editable-demo',
-    styleUrls: ['./content-editable-demo.scss'],
     templateUrl: './content-editable-demo.html',
 })
 export class DejaContentEditableDemoComponent {
     public tabIndex = 1;
 
-    protected designMode = false;
+    public designMode = false;
+    public disabled = false;
 
     constructor() { }
 
