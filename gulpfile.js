@@ -534,11 +534,10 @@ gulp.task('changelog', (cb) => {
     pump(
         [
             gulp.src('CHANGELOG.md', {
-                buffer: false
+                buffer: true
             }),
             gulpConventionalChangelog({
-                preset: 'angular',
-                releaseCount: 0
+                preset: 'angular'
             }),
             gulp.dest('./')
         ], cb);
