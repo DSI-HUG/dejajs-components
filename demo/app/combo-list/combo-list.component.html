@@ -1,4 +1,4 @@
-<mat-tab-group [selectedIndex]="tabIndex" (selectChange)="tabIndex = $event.index">
+<mat-tab-group [selectedIndex]="tabIndex" (selectChange)="init(); tabIndex = $event.index;">
     <mat-tab label="API REFERENCE"></mat-tab>
     <mat-tab label="Basic Example"></mat-tab>
     <mat-tab label="Reactive Form"></mat-tab>
@@ -13,7 +13,7 @@
 
 <ng-container *ngIf="tabIndex === 1">
     <div class="combo-demo-container">
-        <deja-combo-list [itemsToSelect]="itemToSelect" [labelFieldName]="fieldName" [itemsSelected]="itemSelected" (action)="showAction($event)"
+        <deja-combo-list [itemsToSelect]="itemToSelect" [labelFieldName]="fieldName" [items]="itemSelected" (action)="showAction($event)"
             [sortDirection]="sort" [disabled]="disabled" [disableFastActions]="disableFastActions"></deja-combo-list>
     </div>
 
@@ -91,11 +91,6 @@
                 <div>Selected Items:</div>
                 <pre>{{(selectedList | json) }}</pre>
             </div>
-            <!--
-            <section class="example-section">
-                <button mat-raised-button (click)="log()">Log</button>
-            </section> -->
-
         </mat-card-content>
 
     </mat-card>
