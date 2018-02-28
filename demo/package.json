@@ -64,7 +64,6 @@
         "typescript": "~2.4.2",
         "node-sass": "4.7.2",
         "node-sass-tilde-importer": "1.0.1",
-        "symlink-dir": "1.1.0",
         "del-cli": "1.1.0"
     }
 }
