@@ -13,7 +13,7 @@ rm -rf dist-prod
 rm -rf docs
 
 # Run our compile script and deploy dist directory into th GH-PAGES branch
-demo="yarn run build:prod && node_modules/.bin/gh-pages -d dist-demo --repo https://rtrompier:${GITHUB_TOKEN}@github.com/DSI-HUG/dejajs-components.git > demo.log"
+demo="cd demo && yarn run build && node_modules/.bin/gh-pages -d dist --repo https://rtrompier:${GITHUB_TOKEN}@github.com/DSI-HUG/dejajs-components.git > demo.log"
 # Run our compile script and deploy docs directory into th GH-PAGES branch
 docs="yarn run docs:build && node_modules/.bin/gh-pages -d docs --repo https://rtrompier:${GITHUB_TOKEN}@github.com/DSI-HUG/dejajs-doc.git > docs.log"
 # Deploy dist directory into th GH-PAGES branch

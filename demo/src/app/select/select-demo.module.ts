@@ -16,12 +16,12 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { DejaBoldQueryModule, DejaDialogModule, DejaItemModule, DejaMessageBoxModule, DejaSelectModule } from '@deja-js/component';
 import { DejaMarkdownModule } from '../../component/markdown/index';
 import { NewsCardComponent } from '../common/news-card.component';
+import { NewsCardModule } from '../common/news-card.module';
 import { SelectDemoComponent } from './select-demo';
 import { routing } from './select-demo.routes';
 
 @NgModule({
     declarations: [
-        NewsCardComponent,
         SelectDemoComponent,
     ],
     exports: [SelectDemoComponent],
@@ -35,13 +35,14 @@ import { routing } from './select-demo.routes';
         MatCheckboxModule,
         MatTabsModule,
         MatToolbarModule,
+        MatInputModule,
         DejaSelectModule,
         DejaMarkdownModule,
         DejaMessageBoxModule,
         DejaDialogModule,
         DejaItemModule,
         DejaBoldQueryModule,
-        MatInputModule,
+        NewsCardModule,
         routing,
     ],
     providers: [

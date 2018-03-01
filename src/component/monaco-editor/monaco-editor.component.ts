@@ -24,7 +24,7 @@ declare const monaco: any;
     styleUrls: [
         './monaco-editor.component.scss',
     ],
-    template: `<div #editor resize-listener (sizeChanged)="onResize($event)" class='monaco-editor'></div>`,
+    template: `<div #editor resize-listener (sizeChanged)="onResize()" class='monaco-editor'></div>`,
 })
 export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnChanges {
     /**
