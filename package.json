@@ -16,13 +16,15 @@
         "url": "https://github.com/DSI-HUG/dejajs-components.git"
     },
     "scripts": {
-        "start": "gulp build:watch-fast",
+        "start": "concurrently \"gulp build:watch-fast\" \"gulp serve:demo\"",
         "build": "gulp build",
+        "build:demo": "gulp build:demo",
+        "build:doc": "gulp build:doc",
         "link": "gulp link",
         "licensecheck": "gulp license",
         "test": "gulp test",
         "test:watch": "gulp test:watch",
-        "demo": "gulp build:demo",
+        "test:demo": "gulp test:demo",
         "check-travis": "travis-status --repo=? --branch=master --fail-pending || echo 'Not yet passing'",
         "lint": "tslint --project tsconfig.json src/**/*.ts",
         "release:major": "gulp release --version=major --ghToken=YOUR_GITHUB_TOKEN",

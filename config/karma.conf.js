@@ -16,21 +16,12 @@ module.exports = function(config) {
 			require('karma-mocha-reporter'),
 			require('karma-jasmine-html-reporter'),
 		],
-        customLaunchers: {
+		customLaunchers: {
 			// Chrome setup for CI (Travis, Docker, ...)
 			ChromeHeadlessCI: {
 				base: 'ChromeHeadless',
 				flags: ['--no-sandbox']
-            }
-			// ChromeHeadless: {
-			//     base: 'Chrome',
-			//     flags: [
-			//         '--headless',
-			//         '--disable-gpu',
-			//         // Without a remote debugging port, Google Chrome exits immediately.
-			//         '--remote-debugging-port=9222',
-			//     ],
-			// }
+			}
 		},
 		files: [{
 			pattern: './config/karma-test-shim.js',
@@ -76,7 +67,7 @@ module.exports = function(config) {
 		logLevel: config.LOG_INFO,
 		failOnEmptyTestSuite: false,
 		autoWatch: true,
-        browsers: ['ChromeHeadless'],
+		browsers: ['ChromeHeadless'],
 		singleRun: true
 	};
 
