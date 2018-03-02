@@ -1,5 +1,10 @@
-<a name="3.0.0"></a>
-# [3.0.0](https://github.com/DSI-HUG/dejajs-components/compare/2.18.1...3.0.0) (2018-02-28)
+<a name="3.0.0-beta.1"></a>
+## [3.0.0-beta.1](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.2) (2018-03-02)
+
+
+
+<a name="3.0.0-beta.0"></a>
+# [3.0.0-beta.0](https://github.com/DSI-HUG/dejajs-components/compare/2.18.1...3.0.0) (2018-02-28)
 
 
 ### Bug Fixes

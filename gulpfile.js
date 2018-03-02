@@ -146,22 +146,6 @@ const isOK = condition => {
 	return condition ? gulpUtil.colors.green('[OK]') : gulpUtil.colors.red('[KO]');
 };
 
-const readyToRelease = () => {
-	let isTravisPassing = /build #\d+ passed/.test(execSync('npm run check-travis').toString().trim());
-	let onMasterBranch = execSync('git symbolic-ref --short -q HEAD').toString().trim() === 'master';
-	let canBump = !!argv.version;
-	let canGhRelease = argv.ghToken || process.env.CONVENTIONAL_GITHUB_RELEASER_TOKEN;
-	let canNpmPublish = !!execSync('npm whoami').toString().trim() && execSync('npm config get registry').toString().trim() === 'https://registry.npmjs.org/';
-
-	gulpUtil.log(`[travis-ci]      Travis build on 'master' branch is passing............................................${isOK(isTravisPassing)}`);
-	gulpUtil.log(`[git-branch]     User is currently on 'master' branch..................................................${isOK(onMasterBranch)}`);
-	gulpUtil.log(`[npm-publish]    User is currently logged in to NPM Registry...........................................${isOK(canNpmPublish)}`);
-	gulpUtil.log(`[bump-version]   Option '--version' provided, with value : 'major', 'minor' or 'patch'.................${isOK(canBump)}`);
-	gulpUtil.log(`[github-release] Option '--ghToken' provided or 'CONVENTIONAL_GITHUB_RELEASER_TOKEN' variable set......${isOK(canGhRelease)}`);
-
-	return isTravisPassing && onMasterBranch && canBump && canGhRelease && canNpmPublish;
-};
-
 const execCmd = (name, args, opts, ...subFolders) => {
 	const cmd = helpers.root(subFolders, helpers.binPath(`${name}`));
 	return helpers.execp(`${cmd} ${args}`, opts)
@@ -652,37 +636,20 @@ gulp.task('npm-publish', ['build'], () => {
 	return execExternalCmd('npm', `publish ${config.outputDir}`)
 });
 
-// Perfom pre-release checks (no actual release)
-gulp.task('pre-release', cb => {
-	readyToRelease();
-	cb();
-});
-
 gulp.task('release', (cb) => {
-	gulpUtil.log('# Performing Pre-Release Checks...');
-	if (!readyToRelease()) {
-		gulpUtil.log(gulpUtil.colors.red('# Pre-Release Checks have failed. Please fix them and try again. Aborting...'));
-		cb();
-	} else {
-		gulpUtil.log(gulpUtil.colors.green('# Pre-Release Checks have succeeded. Continuing...'));
-		runSequence(
-			'bump-version',
-			'changelog',
-			'commit-changes',
-			'push-changes',
-			'create-new-tag',
-			'github-release',
-			'npm-publish',
-			'deploy:doc',
-			(error) => {
-				if (error) {
-					gulpUtil.log(gulpUtil.colors.red(error.message));
-				} else {
-					gulpUtil.log(gulpUtil.colors.green('RELEASE FINISHED SUCCESSFULLY'));
-				}
-				cb(error);
-			});
-	}
+	runSequence(
+		'bump-version',
+		'changelog',
+		'commit-changes',
+		'push-changes',
+		(error) => {
+			if (error) {
+				gulpUtil.log(gulpUtil.colors.red(error.message));
+			} else {
+				gulpUtil.log(gulpUtil.colors.green('RELEASE FINISHED SUCCESSFULLY'));
+			}
+			cb(error);
+		});
 });
 
 /////////////////////////////////////////////////////////////////////////////
