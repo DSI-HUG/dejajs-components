@@ -89,7 +89,7 @@ const config = {
 	demoDir: 'demo/',
 	buildDir: 'tmp/',
 	outputDir: 'dist/',
-	outputDemoDir: 'demo/dist/browser/',
+	outputDemoDir: 'demo/dist/',
 	coverageDir: 'coverage/',
 	docDir: 'doc/'
 };
@@ -216,10 +216,14 @@ gulp.task('clean:coverage', () => {
 });
 
 gulp.task('clean:doc', () => {
-	return del(`${config.docDir}`);
+	return del(config.docDir);
 });
 
-gulp.task('clean', ['clean:dist', 'clean:coverage', 'clean:build']);
+gulp.task('clean:demo', () => {
+	return del(`${config.outputDemoDir}`);
+});
+
+gulp.task('clean', ['clean:dist', 'clean:coverage', 'clean:doc', 'clean:build', 'clean:demo']);
 
 /////////////////////////////////////////////////////////////////////////////
 // Compilation Tasks
@@ -286,7 +290,7 @@ gulp.task('compile-no-lint', (cb) => {
 
 // Build the 'dist' folder (without publishing it to NPM)
 gulp.task('build', ['clean'], (cb) => {
-	runSequence('license', 'compile', 'test', 'npm-package', 'rollup-bundle', cb);
+	runSequence('license', 'compile', 'test', 'npm-package', 'rollup-bundle', 'build:doc', cb);
 });
 
 // Same as 'build' but without cleaning temp folders (to avoid breaking demo app, if currently being served)
@@ -462,7 +466,7 @@ gulp.task('rollup-bundle', (cb) => {
 /////////////////////////////////////////////////////////////////////////////
 // Documentation Tasks
 /////////////////////////////////////////////////////////////////////////////
-gulp.task('build:doc', (cb) => {
+gulp.task('build:doc', ['clean:doc'], (cb) => {
 	pump([
 		gulp.src('src/**/*.ts'),
 		gulpCompodoc({
@@ -483,10 +487,6 @@ gulp.task('serve:doc', ['clean:doc'], (cb) => {
 			output: `${config.docDir}/`
 		})
 	], cb);
-});
-
-gulp.task('push:doc', () => {
-	return execCmd('ngh', `--dir ${config.docDir}/ --message="chore(doc): :rocket: deploy new version"`);
 });
 
 /////////////////////////////////////////////////////////////////////////////
@@ -521,18 +521,10 @@ gulp.task('serve:demo', () => {
 	});
 });
 
-gulp.task('build:demo', () => {
+gulp.task('build:demo', ['clean:demo'], () => {
 	return execDemoCmd(`build --preserve-symlinks --prod --aot --build-optimizer`, {
 		cwd: `${config.demoDir}`
 	});
-});
-
-gulp.task('push:demo', () => {
-	return execCmd('ngh', `--dir ${config.outputDemoDir} --message="chore(demo): :rocket: deploy new version"`);
-});
-
-gulp.task('deploy:demo', (cb) => {
-	runSequence('build:demo', 'build:doc', 'push:demo', cb);
 });
 
 /////////////////////////////////////////////////////////////////////////////

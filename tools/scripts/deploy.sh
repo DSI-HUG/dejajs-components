@@ -9,15 +9,11 @@ if [ "$TRAVIS_PULL_REQUEST" != "false" -o "$TRAVIS_BRANCH" != "$SOURCE_BRANCH" ]
 fi
 
 # Run our compile script and deploy dist directory into th GH-PAGES branch
-rm -rf demo/dist
 gulp build:demo
 node_modules/.bin/gh-pages -d demo/dist --repo https://rtrompier:${GITHUB_TOKEN}@github.com/DSI-HUG/dejajs-components.git
 
-# Run our compile script and deploy doc directory into th GH-PAGES branch
-rm -rf doc
-gulp build:doc
+# Deploy doc directory into th GH-PAGES branch
 node_modules/.bin/gh-pages -d doc --repo https://rtrompier:${GITHUB_TOKEN}@github.com/DSI-HUG/dejajs-doc.git
 
-# Deploy dist directory into th GH-PAGES branch
-rm -rf coverage
+# Deploy coverage directory into th GH-PAGES branch
 node_modules/.bin/gh-pages -d coverage --repo https://rtrompier:${GITHUB_TOKEN}@github.com/DSI-HUG/dejajs-test.git
