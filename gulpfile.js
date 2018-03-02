@@ -286,7 +286,7 @@ gulp.task('compile-no-lint', (cb) => {
 
 // Build the 'dist' folder (without publishing it to NPM)
 gulp.task('build', ['clean'], (cb) => {
-	runSequence('compile', 'test', 'npm-package', 'rollup-bundle', cb);
+	runSequence('license', 'compile', 'test', 'npm-package', 'rollup-bundle', cb);
 });
 
 // Same as 'build' but without cleaning temp folders (to avoid breaking demo app, if currently being served)
