@@ -30,8 +30,8 @@ const runSequence = require('run-sequence');
 
 /** To compile & bundle the library with Angular & Rollup */
 const ngc = (args) => new Promise((resolve, reject) => { // Promisify version of the ngc compiler
-	let exitCode = require('@angular/compiler-cli/src/main').main(args);
-	resolve(exitCode);
+    let exitCode = require('@angular/compiler-cli/src/main').main(args);
+    resolve(exitCode);
 });
 const rollup = require('rollup');
 const rollupUglify = require('rollup-plugin-uglify');
@@ -63,36 +63,36 @@ const gulpCompodoc = require('@compodoc/gulp-compodoc');
 
 const yargs = require('yargs');
 const argv = yargs
-	.option('version', {
-		alias: 'v',
-		describe: 'Enter Version to bump to',
-		choices: ['patch', 'minor', 'major'],
-		type: "string"
-	})
-	.option('ghToken', {
-		alias: 'gh',
-		describe: 'Enter Github Token for releasing',
-		type: "string"
-	})
-	.version(false) // disable default --version from yargs( since v9.0.0)
-	.argv;
+    .option('version', {
+        alias: 'v',
+        describe: 'Enter Version to bump to',
+        choices: ['patch', 'minor', 'major'],
+        type: "string"
+    })
+    .option('ghToken', {
+        alias: 'gh',
+        describe: 'Enter Github Token for releasing',
+        type: "string"
+    })
+    .version(false) // disable default --version from yargs( since v9.0.0)
+    .argv;
 
 const license = require('gulp-license-check');
 
 const config = {
-	libraryName: '@deja-js/component',
-	unscopedLibraryName: 'dejajs-component',
-	allSrc: 'src/**/*',
-	allTs: 'src/**/!(*.spec).ts',
-	allSass: 'src/**/*.+(scss|sass)',
-	allHtml: 'src/**/*.html',
-	demoDir: 'demo/',
-	buildDir: 'tmp/',
-	outputDir: 'dist/',
-	outputDemoDist: 'demo/dist',
-	outputDemoDir: 'demo/dist/browser/',
-	coverageDir: 'coverage/',
-	docDir: 'doc/'
+    libraryName: '@deja-js/component',
+    unscopedLibraryName: 'dejajs-component',
+    allSrc: 'src/**/*',
+    allTs: 'src/**/!(*.spec).ts',
+    allSass: 'src/**/*.+(scss|sass)',
+    allHtml: 'src/**/*.html',
+    demoDir: 'demo/',
+    buildDir: 'tmp/',
+    outputDir: 'dist/',
+    outputDemoDist: 'demo/dist',
+    outputDemoDir: 'demo/dist/browser/',
+    coverageDir: 'coverage/',
+    docDir: 'doc/'
 };
 
 const rootFolder = path.join(__dirname);
@@ -102,126 +102,126 @@ const outputFolder = path.join(buildFolder, 'lib');
 // const docFolder = path.join(rootFolder, `${config.docDir}`);
 
 const ignoredRollUpMessages = [
-	'treating it as an external dependency',
-	'No name was provided for external module'
+    'treating it as an external dependency',
+    'No name was provided for external module'
 ];
 const displayWarning = function(warn) {
-	var isNotAnIgnoredMessage = ignoredRollUpMessages.every(function(mess) {
-		return warn.message.indexOf(mess) != -1;
-	});
-	if (isNotAnIgnoredMessage) {
-		console.log('WARNING : ', warn.message);
-	}
+    var isNotAnIgnoredMessage = ignoredRollUpMessages.every(function(mess) {
+        return warn.message.indexOf(mess) != -1;
+    });
+    if (isNotAnIgnoredMessage) {
+        console.log('WARNING : ', warn.message);
+    }
 }
 
 //Helper functions
 const startKarmaServer = (isTddMode, hasCoverage, cb) => {
-	const karmaServer = require('karma').Server;
-	const isCI = process.env.TRAVIS || isDocker();
+    const karmaServer = require('karma').Server;
+    const isCI = process.env.TRAVIS || isDocker();
 
-	let config = {
-		configFile: `${__dirname}/karma.conf.js`,
-		singleRun: !isTddMode,
-		autoWatch: isTddMode
-	};
+    let config = {
+        configFile: `${__dirname}/karma.conf.js`,
+        singleRun: !isTddMode,
+        autoWatch: isTddMode
+    };
 
-	if (isCI) {
-		config['browsers'] = ['ChromeHeadlessCI'];
-	}
+    if (isCI) {
+        config['browsers'] = ['ChromeHeadlessCI'];
+    }
 
-	config['hasCoverage'] = hasCoverage;
+    config['hasCoverage'] = hasCoverage;
 
-	new karmaServer(config, cb).start();
+    new karmaServer(config, cb).start();
 };
 
 const getPackageJsonVersion = () => {
-	// We parse the json file instead of using require because require caches
-	// multiple calls so the version number won't be updated
-	return JSON.parse(fs.readFileSync('./package.json', 'utf8')).version;
+    // We parse the json file instead of using require because require caches
+    // multiple calls so the version number won't be updated
+    return JSON.parse(fs.readFileSync('./package.json', 'utf8')).version;
 };
 
 const isOK = condition => {
-	if (condition === undefined) {
-		return gulpUtil.colors.yellow('[SKIPPED]');
-	}
-	return condition ? gulpUtil.colors.green('[OK]') : gulpUtil.colors.red('[KO]');
+    if (condition === undefined) {
+        return gulpUtil.colors.yellow('[SKIPPED]');
+    }
+    return condition ? gulpUtil.colors.green('[OK]') : gulpUtil.colors.red('[KO]');
 };
 
 const execCmd = (name, args, opts, ...subFolders) => {
-	const cmd = helpers.root(subFolders, helpers.binPath(`${name}`));
-	return helpers.execp(`${cmd} ${args}`, opts)
-		.catch(e => {
-			gulpUtil.log(gulpUtil.colors.red(`${name} command failed. See below for errors.\n`));
-			gulpUtil.log(gulpUtil.colors.red(e));
-			process.exit(1);
-		});
+    const cmd = helpers.root(subFolders, helpers.binPath(`${name}`));
+    return helpers.execp(`${cmd} ${args}`, opts)
+        .catch(e => {
+            gulpUtil.log(gulpUtil.colors.red(`${name} command failed. See below for errors.\n`));
+            gulpUtil.log(gulpUtil.colors.red(e));
+            process.exit(1);
+        });
 };
 
 const execExternalCmd = (name, args, opts) => {
-	return helpers.execp(`${name} ${args}`, opts)
-		.catch(e => {
-			gulpUtil.log(gulpUtil.colors.red(`${name} command failed. See below for errors.\n`));
-			gulpUtil.log(gulpUtil.colors.red(e));
-			process.exit(1);
-		});
+    return helpers.execp(`${name} ${args}`, opts)
+        .catch(e => {
+            gulpUtil.log(gulpUtil.colors.red(`${name} command failed. See below for errors.\n`));
+            gulpUtil.log(gulpUtil.colors.red(e));
+            process.exit(1);
+        });
 };
 
 // Compile Sass to css
 const styleProcessor = (stylePath, ext, styleFile, callback) => {
-	/**
-	 * Remove comments, autoprefixer, Minifier
-	 */
-	const processors = [
-		stripInlineComments,
-		autoprefixer,
-		cssnano
-	];
+    /**
+     * Remove comments, autoprefixer, Minifier
+     */
+    const processors = [
+        stripInlineComments,
+        autoprefixer,
+        cssnano
+    ];
 
-	const postProcessCss = css => {
-		postcss(processors).process(css).then(result => {
-			result.warnings().forEach(function(warn) {
-				gutil.warn(warn.toString());
-			});
-			styleFile = result.css;
-			callback(null, styleFile);
-		});
-	};
+    const postProcessCss = css => {
+        postcss(processors).process(css).then(result => {
+            result.warnings().forEach(function(warn) {
+                gutil.warn(warn.toString());
+            });
+            styleFile = result.css;
+            callback(null, styleFile);
+        });
+    };
 
-	if (/\.(scss|sass)$/.test(ext[0])) {
-		let sassObj = sass.renderSync({
-			file: stylePath,
-			importer: tildeImporter
-		});
-		if (sassObj && sassObj['css']) {
-			let css = sassObj.css.toString('utf8');
-			postProcessCss(css);
-		}
-	} else if (/\.css$/.test(ext[0])) {
-		postProcessCss(styleFile);
-	}
+    if (/\.(scss|sass)$/.test(ext[0])) {
+        let sassObj = sass.renderSync({
+            file: stylePath,
+            importer: tildeImporter
+        });
+        if (sassObj && sassObj['css']) {
+            let css = sassObj.css.toString('utf8');
+            postProcessCss(css);
+        }
+    } else if (/\.css$/.test(ext[0])) {
+        postProcessCss(styleFile);
+    }
 };
 
 /////////////////////////////////////////////////////////////////////////////
 // Cleaning Tasks
 /////////////////////////////////////////////////////////////////////////////
 gulp.task('clean:dist', () => {
-	return del(config.outputDir);
+    return del(config.outputDir);
 });
 
 gulp.task('clean:build', () => {
-	return del(config.buildDir);
+    return del(config.buildDir);
 });
 
 gulp.task('clean:coverage', () => {
-	return del(config.coverageDir);
+    return del(config.coverageDir);
 });
 
 gulp.task('clean:doc', () => {
-	return del(config.docDir);
+    return del(config.docDir);
 });
 
 gulp.task('clean:demo', () => {
-	return del(`${config.outputDemoDist}`);
+    return del(`${config.outputDemoDist}`);
 });
 
 gulp.task('clean', ['clean:dist', 'clean:coverage', 'clean:doc', 'clean:build', 'clean:demo']);
@@ -231,87 +231,87 @@ gulp.task('clean', ['clean:dist', 'clean:coverage', 'clean:doc', 'clean:build', 
 /////////////////////////////////////////////////////////////////////////////
 
 gulp.task('lint', (cb) => {
-	pump([
-		gulp.src(config.allTs),
-		gulpTslint({
-			program: tslint.Linter.createProgram('./tsconfig.json'),
-			formatter: 'verbose',
-			configuration: 'tslint.json'
-		}),
-		gulpTslint.report()
-	], cb);
+    pump([
+        gulp.src(config.allTs),
+        gulpTslint({
+            program: tslint.Linter.createProgram('./tsconfig.json'),
+            formatter: 'verbose',
+            configuration: 'tslint.json'
+        }),
+        gulpTslint.report()
+    ], cb);
 });
 
 // Inline Styles and Templates into components
 gulp.task('inline-templates', (cb) => {
-	const options = {
-		base: `${config.buildDir}`,
-		styleProcessor: styleProcessor,
-		useRelativePaths: true
-	};
-	pump(
-		[
-			gulp.src(config.allTs),
-			gulpInlineNgTemplate(options),
-			gulp.dest(`${config.buildDir}`)
-		],
-		cb);
+    const options = {
+        base: `${config.buildDir}`,
+        styleProcessor: styleProcessor,
+        useRelativePaths: true
+    };
+    pump(
+        [
+            gulp.src(config.allTs),
+            gulpInlineNgTemplate(options),
+            gulp.dest(`${config.buildDir}`)
+        ],
+        cb);
 });
 
 // Prepare files for compilation
 gulp.task('pre-compile', (cb) => {
-	pump([
-		gulp.src([config.allSrc]),
-		gulp.dest(config.buildDir)
-	], cb);
+    pump([
+        gulp.src([config.allSrc]),
+        gulp.dest(config.buildDir)
+    ], cb);
 });
 
 gulp.task('ng-compile', () => {
-	return Promise.resolve()
-		.then(() => ngc(['--project', `${buildFolder}/tsconfig.es5.json`])
-			.then(exitCode => exitCode === 0 ? Promise.resolve() : Promise.reject())
-			.then(() => gulpUtil.log('ES5 compilation succeeded.'))
-		)
-		.catch(e => {
-			gulpUtil.log(gulpUtil.colors.red('ng-compilation failed. See below for errors.\n'));
-			gulpUtil.log(gulpUtil.colors.red(e));
-			process.exit(1);
-		});
+    return Promise.resolve()
+        .then(() => ngc(['--project', `${buildFolder}/tsconfig.es5.json`])
+            .then(exitCode => exitCode === 0 ? Promise.resolve() : Promise.reject())
+            .then(() => gulpUtil.log('ES5 compilation succeeded.'))
+        )
+        .catch(e => {
+            gulpUtil.log(gulpUtil.colors.red('ng-compilation failed. See below for errors.\n'));
+            gulpUtil.log(gulpUtil.colors.red(e));
+            process.exit(1);
+        });
 });
 
 // Lint, Prepare Build, , Sass to css, Inline templates & Styles and Ng-Compile
 gulp.task('compile', (cb) => {
-	runSequence('lint', 'pre-compile', 'inline-templates', 'ng-compile', cb);
+    runSequence('lint', 'pre-compile', 'inline-templates', 'ng-compile', cb);
 });
 
 // Prepare Build, , Sass to css, Inline templates & Styles and Ng-Compile
 gulp.task('compile-no-lint', (cb) => {
-	runSequence('pre-compile', 'inline-templates', 'ng-compile', cb);
+    runSequence('pre-compile', 'inline-templates', 'ng-compile', cb);
 });
 
 // Build the 'dist' folder (without publishing it to NPM)
 gulp.task('build', ['clean'], (cb) => {
-	runSequence('license', 'compile', 'test', 'npm-package', 'rollup-bundle', 'build:doc', cb);
+    runSequence('license', 'compile', 'test', 'npm-package', 'rollup-bundle', 'build:doc', cb);
 });
 
 // Same as 'build' but without cleaning temp folders (to avoid breaking demo app, if currently being served)
 gulp.task('build-watch', (cb) => {
-	runSequence('compile', 'test', 'npm-package', 'rollup-bundle', cb);
+    runSequence('compile', 'test', 'npm-package', 'rollup-bundle', cb);
 });
 
 // Same as 'build-watch' but without running tests
 gulp.task('build-watch-no-tests', (cb) => {
-	runSequence('compile-no-lint', 'npm-package', 'rollup-bundle', cb);
+    runSequence('compile-no-lint', 'npm-package', 'rollup-bundle', cb);
 });
 
 // Watch changes on (*.ts, *.html, *.sass) and Re-build library
 gulp.task('build:watch', ['build-watch'], () => {
-	gulp.watch([config.allTs, config.allHtml, config.allSass], ['build-watch']);
+    gulp.watch([config.allTs, config.allHtml, config.allSass], ['build-watch']);
 });
 
 // Watch changes on (*.ts, *.html, *.sass) and Re-build library (without running tests)
 gulp.task('build:watch-fast', ['build-watch-no-tests'], () => {
-	gulp.watch([config.allTs, config.allHtml, config.allSass], ['build-watch-no-tests']);
+    gulp.watch([config.allTs, config.allHtml, config.allSass], ['build-watch-no-tests']);
 });
 
 /////////////////////////////////////////////////////////////////////////////
@@ -320,342 +320,342 @@ gulp.task('build:watch-fast', ['build-watch-no-tests'], () => {
 
 // Prepare 'dist' folder for publication to NPM
 gulp.task('npm-package', (cb) => {
-	let pkgJson = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
-	let targetPkgJson = {};
-	let fieldsToCopy = ['version', 'description', 'keywords', 'author', 'repository', 'license', 'bugs', 'homepage'];
+    let pkgJson = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
+    let targetPkgJson = {};
+    let fieldsToCopy = ['version', 'description', 'keywords', 'author', 'repository', 'license', 'bugs', 'homepage'];
 
-	targetPkgJson['name'] = config.libraryName;
+    targetPkgJson['name'] = config.libraryName;
 
-	//only copy needed properties from project's package json
-	fieldsToCopy.forEach((field) => {
-		targetPkgJson[field] = pkgJson[field];
-	});
+    //only copy needed properties from project's package json
+    fieldsToCopy.forEach((field) => {
+        targetPkgJson[field] = pkgJson[field];
+    });
 
-	targetPkgJson['main'] = `./bundles/${config.unscopedLibraryName}.umd.js`;
-	targetPkgJson['module'] = `./esm5/${config.unscopedLibraryName}.es5.js`;
-	targetPkgJson['typings'] = `./${config.unscopedLibraryName}.d.ts`;
+    targetPkgJson['main'] = `./bundles/${config.unscopedLibraryName}.umd.js`;
+    targetPkgJson['module'] = `./esm5/${config.unscopedLibraryName}.es5.js`;
+    targetPkgJson['typings'] = `./${config.unscopedLibraryName}.d.ts`;
 
-	// defines project's dependencies as 'peerDependencies' for final users
-	targetPkgJson.peerDependencies = {};
-	Object.keys(pkgJson.dependencies).forEach((dependency) => {
-		// versions are defined as '^' by default, but you can customize it by editing "dependenciesRange" in '.yo-rc.json' file
-		targetPkgJson.peerDependencies[dependency] = `^${pkgJson.dependencies[dependency].replace(/[\^~><=]/,'')}`;
-	});
+    // defines project's dependencies as 'peerDependencies' for final users
+    targetPkgJson.peerDependencies = {};
+    Object.keys(pkgJson.dependencies).forEach((dependency) => {
+        // versions are defined as '^' by default, but you can customize it by editing "dependenciesRange" in '.yo-rc.json' file
+        targetPkgJson.peerDependencies[dependency] = `^${pkgJson.dependencies[dependency].replace(/[\^~><=]/,'')}`;
+    });
 
-	// copy the needed additional files in the 'dist' folder
-	pump(
-		[
-			gulp.src(['README.md', 'LICENSE', 'CHANGELOG.md',
-				`${config.buildDir}/lib/**/*.d.ts`,
-				`${config.buildDir}/lib/**/*.metadata.json`
-			]),
-			gulpFile('package.json', JSON.stringify(targetPkgJson, null, 2)),
-			gulp.dest(config.outputDir)
-		], cb);
+    // copy the needed additional files in the 'dist' folder
+    pump(
+        [
+            gulp.src(['README.md', 'LICENSE', 'CHANGELOG.md',
+                `${config.buildDir}/lib/**/*.d.ts`,
+                `${config.buildDir}/lib/**/*.metadata.json`
+            ]),
+            gulpFile('package.json', JSON.stringify(targetPkgJson, null, 2)),
+            gulp.dest(config.outputDir)
+        ], cb);
 });
 
 // Bundles the library as UMD/FESM bundles using RollupJS
 gulp.task('rollup-bundle', (cb) => {
-	return Promise.resolve()
-		// Bundle lib.
-		.then(() => {
-			// Base configuration.
-			const input = path.join(outputFolder, `${config.unscopedLibraryName}.js`);
-			const globals = {
-				// The key here is library name, and the value is the name of the global variable name
-				// the window object.
-				// See https://github.com/rollup/rollup/wiki/JavaScript-API#globals for more.
+    return Promise.resolve()
+        // Bundle lib.
+        .then(() => {
+            // Base configuration.
+            const input = path.join(outputFolder, `${config.unscopedLibraryName}.js`);
+            const globals = {
+                // The key here is library name, and the value is the name of the global variable name
+                // the window object.
+                // See https://github.com/rollup/rollup/wiki/JavaScript-API#globals for more.
 
-				// Angular dependencies 
-				'@angular/core': 'ng.core',
-				'@angular/common': 'ng.common',
+                // Angular dependencies 
+                '@angular/core': 'ng.core',
+                '@angular/common': 'ng.common',
 
-				// Rxjs dependencies
-				'rxjs/Subject': 'Rx',
-				'rxjs/Observable': 'Rx',
-				'rxjs/add/observable/fromEvent': 'Rx.Observable',
-				'rxjs/add/observable/forkJoin': 'Rx.Observable',
-				'rxjs/add/observable/of': 'Rx.Observable',
-				'rxjs/add/observable/merge': 'Rx.Observable',
-				'rxjs/add/observable/throw': 'Rx.Observable',
-				'rxjs/add/operator/auditTime': 'Rx.Observable.prototype',
-				'rxjs/add/operator/toPromise': 'Rx.Observable.prototype',
-				'rxjs/add/operator/map': 'Rx.Observable.prototype',
-				'rxjs/add/operator/filter': 'Rx.Observable.prototype',
-				'rxjs/add/operator/do': 'Rx.Observable.prototype',
-				'rxjs/add/operator/share': 'Rx.Observable.prototype',
-				'rxjs/add/operator/finally': 'Rx.Observable.prototype',
-				'rxjs/add/operator/catch': 'Rx.Observable.prototype',
-				'rxjs/add/observable/empty': 'Rx.Observable.prototype',
-				'rxjs/add/operator/first': 'Rx.Observable.prototype',
-				'rxjs/add/operator/startWith': 'Rx.Observable.prototype',
-				'rxjs/add/operator/switchMap': 'Rx.Observable.prototype',
+                // Rxjs dependencies
+                'rxjs/Subject': 'Rx',
+                'rxjs/Observable': 'Rx',
+                'rxjs/add/observable/fromEvent': 'Rx.Observable',
+                'rxjs/add/observable/forkJoin': 'Rx.Observable',
+                'rxjs/add/observable/of': 'Rx.Observable',
+                'rxjs/add/observable/merge': 'Rx.Observable',
+                'rxjs/add/observable/throw': 'Rx.Observable',
+                'rxjs/add/operator/auditTime': 'Rx.Observable.prototype',
+                'rxjs/add/operator/toPromise': 'Rx.Observable.prototype',
+                'rxjs/add/operator/map': 'Rx.Observable.prototype',
+                'rxjs/add/operator/filter': 'Rx.Observable.prototype',
+                'rxjs/add/operator/do': 'Rx.Observable.prototype',
+                'rxjs/add/operator/share': 'Rx.Observable.prototype',
+                'rxjs/add/operator/finally': 'Rx.Observable.prototype',
+                'rxjs/add/operator/catch': 'Rx.Observable.prototype',
+                'rxjs/add/observable/empty': 'Rx.Observable.prototype',
+                'rxjs/add/operator/first': 'Rx.Observable.prototype',
+                'rxjs/add/operator/startWith': 'Rx.Observable.prototype',
+                'rxjs/add/operator/switchMap': 'Rx.Observable.prototype',
 
-				// ATTENTION:
-				// Add any other dependency or peer dependency of your library here
-				// This is required for UMD bundle users.
-				// See https://github.com/tinesoft/generator-ngx-library/TROUBLESHOUTING.md if trouble
+                // ATTENTION:
+                // Add any other dependency or peer dependency of your library here
+                // This is required for UMD bundle users.
+                // See https://github.com/tinesoft/generator-ngx-library/TROUBLESHOUTING.md if trouble
 
-			};
-			const rollupBaseConfig = {
-				output: {
-					name: _.camelCase(config.libraryName),
-					sourcemap: true,
-					globals: globals
-				},
-				// List of dependencies
-				// See https://github.com/rollup/rollup/wiki/JavaScript-API#external for more.
-				external: Object.keys(globals),
-				plugins: [
-					rollupCommonjs({
-						include: ['node_modules/rxjs/**']
-					}),
-					rollupSourcemaps(),
-					rollupNodeResolve({
-						jsnext: true,
-						module: true,
-						jail: distFolder, // to use final 'package.json' from 'dist/'
-					})
-				],
-				onwarn: displayWarning
-			};
+            };
+            const rollupBaseConfig = {
+                output: {
+                    name: _.camelCase(config.libraryName),
+                    sourcemap: true,
+                    globals: globals
+                },
+                // List of dependencies
+                // See https://github.com/rollup/rollup/wiki/JavaScript-API#external for more.
+                external: Object.keys(globals),
+                plugins: [
+                    rollupCommonjs({
+                        include: ['node_modules/rxjs/**']
+                    }),
+                    rollupSourcemaps(),
+                    rollupNodeResolve({
+                        jsnext: true,
+                        module: true,
+                        jail: distFolder, // to use final 'package.json' from 'dist/'
+                    })
+                ],
+                onwarn: displayWarning
+            };
 
-			// UMD bundle.
-			const umdConfig = _.merge({}, rollupBaseConfig, {
-				input: input,
-				output: {
-					format: 'umd',
-					file: path.join(distFolder, `bundles`, `${config.unscopedLibraryName}.umd.js`)
-				}
-			});
+            // UMD bundle.
+            const umdConfig = _.merge({}, rollupBaseConfig, {
+                input: input,
+                output: {
+                    format: 'umd',
+                    file: path.join(distFolder, `bundles`, `${config.unscopedLibraryName}.umd.js`)
+                }
+            });
 
-			// Minified UMD bundle.
-			const minifiedUmdConfig = _.merge({}, rollupBaseConfig, {
-				input: input,
-				output: {
-					format: 'umd',
-					file: path.join(distFolder, `bundles`, `${config.unscopedLibraryName}.umd.min.js`),
-				},
-				plugins: rollupBaseConfig.plugins.concat([rollupUglify({})])
-			});
+            // Minified UMD bundle.
+            const minifiedUmdConfig = _.merge({}, rollupBaseConfig, {
+                input: input,
+                output: {
+                    format: 'umd',
+                    file: path.join(distFolder, `bundles`, `${config.unscopedLibraryName}.umd.min.js`),
+                },
+                plugins: rollupBaseConfig.plugins.concat([rollupUglify({})])
+            });
 
-			// flat module bundle.
-			const fesm5config = _.merge({}, rollupBaseConfig, {
-				input: input,
-				output: {
-					format: 'es',
-					file: path.join(distFolder, 'esm5', `${config.unscopedLibraryName}.es5.js`),
-				}
-			});
+            // flat module bundle.
+            const fesm5config = _.merge({}, rollupBaseConfig, {
+                input: input,
+                output: {
+                    format: 'es',
+                    file: path.join(distFolder, 'esm5', `${config.unscopedLibraryName}.es5.js`),
+                }
+            });
 
-			const allBundles = [
-				umdConfig,
-				minifiedUmdConfig,
-				fesm5config
-			].map(cfg => rollup.rollup(cfg).then(bundle => bundle.write(cfg.output)));
+            const allBundles = [
+                umdConfig,
+                minifiedUmdConfig,
+                fesm5config
+            ].map(cfg => rollup.rollup(cfg).then(bundle => bundle.write(cfg.output)));
 
-			return Promise.all(allBundles)
-				.then(() => gulpUtil.log('All bundles generated successfully.'))
-		})
-		.catch(e => {
-			gulpUtil.log(gulpUtil.colors.red('rollup-bundling failed. See below for errors.\n'));
-			gulpUtil.log(gulpUtil.colors.red(e));
-			process.exit(1);
-		});
+            return Promise.all(allBundles)
+                .then(() => gulpUtil.log('All bundles generated successfully.'))
+        })
+        .catch(e => {
+            gulpUtil.log(gulpUtil.colors.red('rollup-bundling failed. See below for errors.\n'));
+            gulpUtil.log(gulpUtil.colors.red(e));
+            process.exit(1);
+        });
 });
 
 /////////////////////////////////////////////////////////////////////////////
 // Documentation Tasks
 /////////////////////////////////////////////////////////////////////////////
 gulp.task('build:doc', ['clean:doc'], (cb) => {
-	pump([
-		gulp.src('src/**/*.ts'),
-		gulpCompodoc({
-			tsconfig: 'src/tsconfig.es5.json',
-			hideGenerator: true,
-			disableCoverage: true,
-			output: `${config.docDir}/`
-		})
-	], cb);
+    pump([
+        gulp.src('src/**/*.ts'),
+        gulpCompodoc({
+            tsconfig: 'src/tsconfig.es5.json',
+            hideGenerator: true,
+            disableCoverage: true,
+            output: `${config.docDir}/`
+        })
+    ], cb);
 });
 
 gulp.task('serve:doc', ['clean:doc'], (cb) => {
-	pump([
-		gulp.src('src/**/*.ts'),
-		gulpCompodoc({
-			tsconfig: 'src/tsconfig.es5.json',
-			serve: true,
-			output: `${config.docDir}/`
-		})
-	], cb);
+    pump([
+        gulp.src('src/**/*.ts'),
+        gulpCompodoc({
+            tsconfig: 'src/tsconfig.es5.json',
+            serve: true,
+            output: `${config.docDir}/`
+        })
+    ], cb);
 });
 
 /////////////////////////////////////////////////////////////////////////////
 // Demo Tasks
 /////////////////////////////////////////////////////////////////////////////
 const execDemoCmd = (args, opts) => {
-	if (fs.existsSync(`${config.demoDir}/node_modules`)) {
-		return execCmd('ng', args, opts, `/${config.demoDir}`);
-	} else {
-		gulpUtil.log(gulpUtil.colors.yellow(`No 'node_modules' found in '${config.demoDir}'. Installing dependencies for you...`));
-		return helpers.installDependencies({
-				cwd: `${config.demoDir}`
-			})
-			.then(exitCode => exitCode === 0 ? execCmd('ng', args, opts, `/${config.demoDir}`) : Promise.reject())
-			.catch(e => {
-				gulpUtil.log(gulpUtil.colors.red(`ng command failed. See below for errors.\n`));
-				gulpUtil.log(gulpUtil.colors.red(e));
-				process.exit(1);
-			});
-	}
+    if (fs.existsSync(`${config.demoDir}/node_modules`)) {
+        return execCmd('ng', args, opts, `/${config.demoDir}`);
+    } else {
+        gulpUtil.log(gulpUtil.colors.yellow(`No 'node_modules' found in '${config.demoDir}'. Installing dependencies for you...`));
+        return helpers.installDependencies({
+                cwd: `${config.demoDir}`
+            })
+            .then(exitCode => exitCode === 0 ? execCmd('ng', args, opts, `/${config.demoDir}`) : Promise.reject())
+            .catch(e => {
+                gulpUtil.log(gulpUtil.colors.red(`ng command failed. See below for errors.\n`));
+                gulpUtil.log(gulpUtil.colors.red(e));
+                process.exit(1);
+            });
+    }
 };
 
 gulp.task('test:demo', () => {
-	return execDemoCmd('test --preserve-symlinks', {
-		cwd: `${config.demoDir}`
-	});
+    return execDemoCmd('test --preserve-symlinks', {
+        cwd: `${config.demoDir}`
+    });
 });
 
 gulp.task('serve:demo', () => {
-	return execDemoCmd('serve --preserve-symlinks --aot --port 5100 --base-href /', {
-		cwd: `${config.demoDir}`
-	});
+    return execDemoCmd('serve --preserve-symlinks --aot --port 5100 --base-href /', {
+        cwd: `${config.demoDir}`
+    });
 });
 
 gulp.task('build:demo', ['clean:demo'], () => {
-	return execDemoCmd(`build --preserve-symlinks --prod --aot --build-optimizer`, {
-		cwd: `${config.demoDir}`
-	});
+    return execDemoCmd(`build --preserve-symlinks --prod --aot --build-optimizer --env=prod --base-href https://dsi-hug.github.io/dejajs-components/`, {
+        cwd: `${config.demoDir}`
+    });
 });
 
 /////////////////////////////////////////////////////////////////////////////
 // Test Tasks
 /////////////////////////////////////////////////////////////////////////////
 gulp.task('test', (cb) => {
-	const ENV = process.env.NODE_ENV = process.env.ENV = 'test';
-	startKarmaServer(false, true, cb);
+    const ENV = process.env.NODE_ENV = process.env.ENV = 'test';
+    startKarmaServer(false, true, cb);
 });
 
 gulp.task('test:ci', ['clean'], (cb) => {
-	runSequence('compile', 'test');
+    runSequence('compile', 'test');
 });
 
 gulp.task('test:watch', (cb) => {
-	const ENV = process.env.NODE_ENV = process.env.ENV = 'test';
-	startKarmaServer(true, true, cb);
+    const ENV = process.env.NODE_ENV = process.env.ENV = 'test';
+    startKarmaServer(true, true, cb);
 });
 
 gulp.task('test:watch-no-cc', (cb) => { //no coverage (useful for debugging failing tests in browser)
-	const ENV = process.env.NODE_ENV = process.env.ENV = 'test';
-	startKarmaServer(true, false, cb);
+    const ENV = process.env.NODE_ENV = process.env.ENV = 'test';
+    startKarmaServer(true, false, cb);
 });
 
 /////////////////////////////////////////////////////////////////////////////
 // Release Tasks
 /////////////////////////////////////////////////////////////////////////////
 gulp.task('changelog', (cb) => {
-	pump(
-		[
-			gulp.src('CHANGELOG.md', {
-				buffer: true
-			}),
-			gulpConventionalChangelog({
-				preset: 'angular'
-			}),
-			gulp.dest('./')
-		], cb);
+    pump(
+        [
+            gulp.src('CHANGELOG.md', {
+                buffer: true
+            }),
+            gulpConventionalChangelog({
+                preset: 'angular'
+            }),
+            gulp.dest('./')
+        ], cb);
 });
 
 gulp.task('github-release', (cb) => {
-	if (!argv.ghToken && !process.env.CONVENTIONAL_GITHUB_RELEASER_TOKEN) {
-		gulpUtil.log(gulpUtil.colors.red(`You must specify a Github Token via '--ghToken' or set environment variable 'CONVENTIONAL_GITHUB_RELEASER_TOKEN' to allow releasing on Github`));
-		throw new Error(`Missing '--ghToken' argument and environment variable 'CONVENTIONAL_GITHUB_RELEASER_TOKEN' not set`);
-	}
+    if (!argv.ghToken && !process.env.CONVENTIONAL_GITHUB_RELEASER_TOKEN) {
+        gulpUtil.log(gulpUtil.colors.red(`You must specify a Github Token via '--ghToken' or set environment variable 'CONVENTIONAL_GITHUB_RELEASER_TOKEN' to allow releasing on Github`));
+        throw new Error(`Missing '--ghToken' argument and environment variable 'CONVENTIONAL_GITHUB_RELEASER_TOKEN' not set`);
+    }
 
-	conventionalGithubReleaser({
-			type: 'oauth',
-			token: argv.ghToken || process.env.CONVENTIONAL_GITHUB_RELEASER_TOKEN
-		}, {
-			preset: 'angular'
-		},
-		cb);
+    conventionalGithubReleaser({
+            type: 'oauth',
+            token: argv.ghToken || process.env.CONVENTIONAL_GITHUB_RELEASER_TOKEN
+        }, {
+            preset: 'angular'
+        },
+        cb);
 });
 
 gulp.task('bump-version', (cb) => {
-	if (!argv.version) {
-		gulpUtil.log(gulpUtil.colors.red(`You must specify which version to bump to (Possible values: 'major', 'minor', and 'patch')`));
-		throw new Error(`Missing '--version' argument`);
-	}
+    if (!argv.version) {
+        gulpUtil.log(gulpUtil.colors.red(`You must specify which version to bump to (Possible values: 'major', 'minor', and 'patch')`));
+        throw new Error(`Missing '--version' argument`);
+    }
 
-	pump(
-		[
-			gulp.src('./package.json'),
-			gulpBump({
-				type: argv.version
-			}),
-			gulp.dest('./'),
-		], cb);
+    pump(
+        [
+            gulp.src('./package.json'),
+            gulpBump({
+                type: argv.version
+            }),
+            gulp.dest('./'),
+        ], cb);
 });
 
 gulp.task('commit-changes', (cb) => {
-	let version = getPackageJsonVersion();
-	pump(
-		[
-			gulp.src('.'),
-			gulpGit.add(),
-			gulpGit.commit(`chore(release): bump version number to ${version}`)
-		], cb);
+    let version = getPackageJsonVersion();
+    pump(
+        [
+            gulp.src('.'),
+            gulpGit.add(),
+            gulpGit.commit(`chore(release): bump version number to ${version}`)
+        ], cb);
 });
 
 gulp.task('push-changes', (cb) => {
-	gulpGit.push('origin', 'master', cb);
+    gulpGit.push('origin', 'master', cb);
 });
 
 gulp.task('create-new-tag', (cb) => {
-	let version = `v${getPackageJsonVersion()}`;
-	gulpGit.tag(version, `chore(release): :sparkles: :tada: create tag for version v${version}`, (error) => {
-		if (error) {
-			return cb(error);
-		}
-		gulpGit.push('origin', 'master', {
-			args: '--tags'
-		}, cb);
-	});
+    let version = `v${getPackageJsonVersion()}`;
+    gulpGit.tag(version, `chore(release): :sparkles: :tada: create tag for version v${version}`, (error) => {
+        if (error) {
+            return cb(error);
+        }
+        gulpGit.push('origin', 'master', {
+            args: '--tags'
+        }, cb);
+    });
 
 });
 
 // Build and then Publish 'dist' folder to NPM
 gulp.task('npm-publish', ['build'], () => {
-	return execExternalCmd('npm', `publish ${config.outputDir}`)
+    return execExternalCmd('npm', `publish ${config.outputDir}`)
 });
 
 gulp.task('release', (cb) => {
-	runSequence(
-		'bump-version',
-		'changelog',
-		'commit-changes',
-		'push-changes',
-		(error) => {
-			if (error) {
-				gulpUtil.log(gulpUtil.colors.red(error.message));
-			} else {
-				gulpUtil.log(gulpUtil.colors.green('RELEASE FINISHED SUCCESSFULLY'));
-			}
-			cb(error);
-		});
+    runSequence(
+        'bump-version',
+        'changelog',
+        'commit-changes',
+        'push-changes',
+        (error) => {
+            if (error) {
+                gulpUtil.log(gulpUtil.colors.red(error.message));
+            } else {
+                gulpUtil.log(gulpUtil.colors.green('RELEASE FINISHED SUCCESSFULLY'));
+            }
+            cb(error);
+        });
 });
 
 /////////////////////////////////////////////////////////////////////////////
 // Check if all TS files start by the HUG Licence
 /////////////////////////////////////////////////////////////////////////////
 gulp.task('license', function() {
-	return gulp.src(['**/*.ts', '!**/*.d.ts', '!**/node_modules/**'])
-		.pipe(license({
-			path: `${rootFolder}/header-license.txt`,
-			blocking: true,
-			logInfo: false,
-			logError: true
-		}));
+    return gulp.src(['**/*.ts', '!**/*.d.ts', '!**/node_modules/**'])
+        .pipe(license({
+            path: `${rootFolder}/header-license.txt`,
+            blocking: true,
+            logInfo: false,
+            logError: true
+        }));
 });
 
 /////////////////////////////////////////////////////////////////////////////
@@ -667,24 +667,24 @@ gulp.task('license', function() {
 // and, thanks to 'npm link ng-scrollreveal' on demo project, be sure to always use the latest built
 // version of the library ( which is in 'dist/' folder)
 gulp.task('link', () => {
-	return execExternalCmd('yarn', 'link', {
-		cwd: `${config.outputDir}`
-	});
+    return execExternalCmd('yarn', 'link', {
+        cwd: `${config.outputDir}`
+    });
 });
 
 gulp.task('unlink', () => {
-	return execExternalCmd('yarn', 'unlink', {
-		cwd: `${config.outputDir}`
-	});
+    return execExternalCmd('yarn', 'unlink', {
+        cwd: `${config.outputDir}`
+    });
 });
 
 // Upload code coverage report to coveralls.io (will be triggered by Travis CI on successful build)
 gulp.task('coveralls', (cb) => {
-	pump(
-		[
-			gulp.src(`${config.coverageDir}/coverage.lcov`),
-			gulpCoveralls()
-		], cb);
+    pump(
+        [
+            gulp.src(`${config.coverageDir}/coverage.lcov`),
+            gulpCoveralls()
+        ], cb);
 });
 
 gulp.task('default', ['build']);
