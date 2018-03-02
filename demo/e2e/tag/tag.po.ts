@@ -10,6 +10,6 @@ import { browser } from 'protractor';
 
 export class TagPage {
     public navigateTo() {
-        browser.get('/tag');
+        return browser.get('/tag');
     }
 }

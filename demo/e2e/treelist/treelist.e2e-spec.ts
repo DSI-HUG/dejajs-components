@@ -6,18 +6,18 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Util } from '../util/index';
+import { browser } from 'protractor';
 import { TreeListPage } from './treelist.po';
 
 describe('TreeList component', () => {
     let page: TreeListPage;
 
     beforeEach(() => {
-        Util.init();
+        browser.ignoreSynchronization = true;
         page = new TreeListPage();
     });
 
     it('should have 2 default items', async () => {
-        page.navigateTo();
+        page.navigateTo().then(() => { });
     });
 });

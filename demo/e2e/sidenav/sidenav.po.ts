@@ -10,6 +10,6 @@ import { browser } from 'protractor';
 
 export class SidenavPage {
     public navigateTo() {
-        browser.get('/');
+        return browser.get('/');
     }
 }

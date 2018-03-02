@@ -6,19 +6,22 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Util } from '../util/index';
+import { browser } from 'protractor';
 import { HomePage } from './home.po';
 
-describe('dejajs-component App', () => {
+describe('dejajs-components-demo Home', () => {
     let page: HomePage;
 
     beforeEach(() => {
-        Util.init();
+        browser.ignoreSynchronization = true;
         page = new HomePage();
     });
 
-    it('should display DEJA JS title', () => {
-        page.navigateTo();
-        expect(page.getTitleText()).toEqual('DEJA JS Components');
+    it('should display DEJA JS title', async () => {
+        page.navigateTo().then(() => {
+            browser.waitForAngular().then(() => {
+                expect(page.getTitleText()).toEqual('DEJA JS Components');
+            });
+        });
     });
 });

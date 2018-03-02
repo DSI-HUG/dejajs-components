@@ -6,17 +6,22 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { browser } from 'protractor';
 import { DejajsComponentsDemoPage } from './app.po';
 
 describe('dejajs-components-demo App', () => {
-  let page: DejajsComponentsDemoPage;
+    let page: DejajsComponentsDemoPage;
 
-  beforeEach(() => {
-    page = new DejajsComponentsDemoPage ();
-  });
+    beforeEach(() => {
+        browser.ignoreSynchronization = true;
+        page = new DejajsComponentsDemoPage();
+    });
 
-  it('should display message saying app works', () => {
-    page.navigateTo();
-    expect(page.getParagraphText()).toEqual('app works!');
-  });
+    it('should have a sidenav', async () => {
+        page.navigateTo().then(() => {
+            browser.waitForAngular().then(() => {
+                expect(page.getSideNav()).toBeDefined();
+            });
+        });
+    });
 });

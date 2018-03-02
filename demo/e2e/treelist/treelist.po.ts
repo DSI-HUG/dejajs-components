@@ -10,6 +10,6 @@ import { browser } from 'protractor';
 
 export class TreeListPage {
     public navigateTo() {
-        browser.get('/treelist');
+        return browser.get('/treelist');
     }
 }

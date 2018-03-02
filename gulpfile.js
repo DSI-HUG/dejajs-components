@@ -537,52 +537,10 @@ gulp.task('serve:demo', () => {
 	});
 });
 
-gulp.task('serve:demo-hmr', () => {
-	return execDemoCmd('serve --hmr -e=hmr --preserve-symlinks --aot --port 5100 --base-href /', {
-		cwd: `${config.demoDir}`
-	});
-});
-
 gulp.task('build:demo', () => {
 	return execDemoCmd(`build --preserve-symlinks --prod --aot --build-optimizer`, {
 		cwd: `${config.demoDir}`
 	});
-});
-
-gulp.task('serve:demo-ssr', ['build:demo'], () => {
-	return execDemoCmd(`build --preserve-symlinks --prod --aot --build-optimizer --app ssr --output-hashing=none --port 5100 --base-href /`, {
-			cwd: `${config.demoDir}`
-		})
-		.then(exitCode => {
-			if (exitCode === 0) {
-				execCmd('webpack', '--config webpack.server.config.js --progress --colors', {
-						cwd: `${config.demoDir}`
-					}, `/${config.demoDir}`)
-					.then(exitCode => exitCode === 0 ? execExternalCmd('node', 'dist/server.js', {
-						cwd: `${config.demoDir}`
-					}, `/${config.demoDir}`) : Promise.reject(1));
-			} else {
-				Promise.reject(1);
-			}
-		});
-});
-
-gulp.task('build:demo-ssr', ['build:demo'], () => {
-	return execDemoCmd(`build --preserve-symlinks --prod --aot --build-optimizer --app ssr --output-hashing=none`, {
-			cwd: `${config.demoDir}`
-		})
-		.then(exitCode => {
-			if (exitCode === 0) {
-				execCmd('webpack', '--config webpack.server.config.js --progress --colors', {
-						cwd: `${config.demoDir}`
-					}, `/${config.demoDir}`)
-					.then(exitCode => exitCode === 0 ? execExternalCmd('node', 'dist/prerender.js', {
-						cwd: `${config.demoDir}`
-					}, `/${config.demoDir}`) : Promise.reject(1));
-			} else {
-				Promise.reject(1);
-			}
-		});
 });
 
 gulp.task('push:demo', () => {
