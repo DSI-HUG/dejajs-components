@@ -29,7 +29,8 @@
         "lint": "tslint --project tsconfig.json src/**/*.ts",
         "release:major": "gulp release --version=major",
         "release:minor": "gulp release --version=minor",
-        "release:patch": "gulp release --version=patch"
+        "release:patch": "gulp release --version=patch",
+        "postinstall": "gulp build && gulp link"
     },
     "dependencies": {
         "@angular-devkit/core": "0.4.0",
