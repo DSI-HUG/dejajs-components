@@ -10,6 +10,7 @@
             "assets": [
                 "assets",
                 "favicon.ico",
+                "404.html",
                 { "glob": "**/*", "input": "../node_modules/monaco-editor/min", "output": "./assets/monaco/" }
             ],
             "index": "index.html",
