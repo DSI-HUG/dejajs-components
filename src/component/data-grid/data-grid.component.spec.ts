@@ -15,13 +15,12 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import * as _ from 'lodash';
 import { Observable } from 'rxjs/Observable';
-import { IDejaGridColumnLayoutEvent } from '../../../index';
 import { DejaClipboardModule } from '../../common/core/clipboard/index';
 import { GroupingService } from '../../common/core/grouping/grouping.service';
 import { ItemListService } from '../../common/core/item-list/item-list.service';
 import { ViewPortService } from '../../common/core/item-list/viewport.service';
 import { SortingService } from '../../common/core/sorting/sorting.service';
-import { IDejaGridColumn } from './data-grid-column/data-grid-column';
+import { IDejaGridColumn, IDejaGridColumnLayoutEvent } from './data-grid-column/data-grid-column';
 import { DejaGridComponent } from './data-grid.component';
 import { DejaGridModule } from './index';
 
@@ -589,11 +588,11 @@ describe('DejaGridComponent', () => {
                 }
             });
 
-        spyOn(gridContainerInstance, 'testDone');
+        const spy = spyOn(gridContainerInstance, 'testDone');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
-            expect(gridContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 
@@ -641,13 +640,13 @@ describe('DejaGridComponent', () => {
             gridContainerInstance.eventCalled();
         });
 
-        spyOn(gridContainerInstance, 'testDone');
-        spyOn(gridContainerInstance, 'eventCalled');
+        const spy1 = spyOn(gridContainerInstance, 'testDone');
+        const spy2 = spyOn(gridContainerInstance, 'eventCalled');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
-            expect(gridContainerInstance.testDone).toHaveBeenCalled();
-            expect(gridContainerInstance.eventCalled).toHaveBeenCalled();
+            expect(spy1).toHaveBeenCalled();
+            expect(spy2).toHaveBeenCalled();
         });
     }));
 
@@ -715,13 +714,13 @@ describe('DejaGridComponent', () => {
             gridContainerInstance.eventCalled();
         });
 
-        spyOn(gridContainerInstance, 'testDone');
-        spyOn(gridContainerInstance, 'eventCalled');
+        const spy1 = spyOn(gridContainerInstance, 'testDone');
+        const spy2 = spyOn(gridContainerInstance, 'eventCalled');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
-            expect(gridContainerInstance.testDone).toHaveBeenCalled();
-            expect(gridContainerInstance.eventCalled).toHaveBeenCalled();
+            expect(spy1).toHaveBeenCalled();
+            expect(spy2).toHaveBeenCalled();
         });
     }));
 
@@ -801,11 +800,11 @@ describe('DejaGridComponent', () => {
                 }
             });
 
-        spyOn(gridContainerInstance, 'testDone');
+        const spy = spyOn(gridContainerInstance, 'testDone');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
-            expect(gridContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 
@@ -840,11 +839,11 @@ describe('DejaGridComponent', () => {
 
         gridContainerInstance.columns = gridContainerInstance.percentColumns;
 
-        spyOn(gridContainerInstance, 'testDone');
+        const spy = spyOn(gridContainerInstance, 'testDone');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
-            expect(gridContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 
@@ -894,11 +893,11 @@ describe('DejaGridComponent', () => {
                 }
             });
 
-        spyOn(gridContainerInstance, 'testDone');
+        const spy = spyOn(gridContainerInstance, 'testDone');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
-            expect(gridContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 
@@ -1018,11 +1017,11 @@ describe('DejaGridComponent', () => {
                 }
             });
 
-        spyOn(gridContainerInstance, 'testDone');
+        const spy = spyOn(gridContainerInstance, 'testDone');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
-            expect(gridContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 
@@ -1115,11 +1114,11 @@ describe('DejaGridComponent', () => {
                 }
             });
 
-        spyOn(gridContainerInstance, 'testDone');
+        const spy = spyOn(gridContainerInstance, 'testDone');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
-            expect(gridContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 
@@ -1306,11 +1305,11 @@ describe('DejaGridComponent', () => {
                 }
             });
 
-        spyOn(gridContainerInstance, 'testDone');
+        const spy = spyOn(gridContainerInstance, 'testDone');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
-            expect(gridContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 });

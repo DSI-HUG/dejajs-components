@@ -12,15 +12,9 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 
 const noop = () => { };
 
-export class DejaChipsCloseEvent extends CustomEvent {
-    public item: any;
-    public index: number;
-
-    constructor(item: any, index: number) {
-        super('DejaChipsCloseEvent');
-        this.item = item;
-        this.index = index;
-    }
+export interface IDejaChipsComponentCloseEvent extends CustomEvent {
+    item: any;
+    index: number;
 }
 
 @Component({
@@ -43,7 +37,7 @@ export class DejaChipsComponent implements ControlValueAccessor {
     /** Lecture seule */
     @Input() public readonly = false;
 
-    @Output() public close = new EventEmitter<DejaChipsCloseEvent>();
+    @Output() public close = new EventEmitter<IDejaChipsComponentCloseEvent>();
 
     protected onTouchedCallback: () => void = noop;
     protected onChangeCallback: (_: any) => void = noop;
@@ -130,7 +124,9 @@ export class DejaChipsComponent implements ControlValueAccessor {
     }
 
     public onClose(item: any, index: number) {
-        const event = new DejaChipsCloseEvent(item, index);
+        const event = new CustomEvent('DejaChipsCloseEvent', {}) as IDejaChipsComponentCloseEvent;
+        event.item = item;
+        event.index = index;
         this.items.splice(index, 1);
         this.onChangeCallback(this.items);
         this.close.emit(event);

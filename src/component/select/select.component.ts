@@ -17,7 +17,6 @@ import 'rxjs/add/observable/merge';
 import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/combineLatest';
 import 'rxjs/add/operator/debounce';
-import 'rxjs/add/operator/debounce';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/delayWhen';
@@ -38,7 +37,7 @@ import { MediaService } from '../../common/core/media/media.service';
 import { DejaConnectionPositionPair } from '../../common/core/overlay/connection-position-pair';
 import { SortingService } from '../../common/core/sorting/sorting.service';
 import { DejaChildValidatorDirective } from '../../common/core/validation/child-validator.directive';
-import { DejaChipsCloseEvent } from '../chips/chips.component';
+import { IDejaChipsComponentCloseEvent } from '../chips/chips.component';
 import { DejaOverlayComponent } from '../overlay/overlay.component';
 import { IItemBase } from './../../common/core/item-list/item-base';
 import { DejaItemEvent } from './../../common/core/item-list/item-event';
@@ -1189,7 +1188,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             });
     }
 
-    protected onCloseClicked(event?: DejaChipsCloseEvent) {
+    protected onCloseClicked(event?: IDejaChipsComponentCloseEvent) {
         if (this._control) {
             this._control.control.markAsTouched();
         }

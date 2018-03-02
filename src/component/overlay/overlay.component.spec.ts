@@ -35,8 +35,11 @@ describe('DejaOverlayComponent', () => {
         TestBed.configureTestingModule({
             declarations: [ DejaOverlayComponent ], // declare the test component
             imports: [MediaModule, OverlayModule],
-            providers: [{ provide: ObservableMedia, useClass: MockObservableMedia }, { provide: MediaService, useClass:
-                MockMediaService }]}).compileComponents();
+            providers: [{ provide: ObservableMedia, useClass: MockObservableMedia }, {
+                provide: MediaService, useClass:
+                    MockMediaService
+            }]
+        }).compileComponents();
     }));
 
     beforeAll(() => {

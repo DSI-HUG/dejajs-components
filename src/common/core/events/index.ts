@@ -6,4 +6,4 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-export * from './cancelable-event';
+export * from './cancelable-event.interface';
