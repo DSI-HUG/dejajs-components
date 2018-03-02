@@ -707,13 +707,13 @@ gulp.task('license', function() {
 // and, thanks to 'npm link ng-scrollreveal' on demo project, be sure to always use the latest built
 // version of the library ( which is in 'dist/' folder)
 gulp.task('link', () => {
-	return execExternalCmd('npm', 'link', {
+	return execExternalCmd('yarn', 'link', {
 		cwd: `${config.outputDir}`
 	});
 });
 
 gulp.task('unlink', () => {
-	return execExternalCmd('npm', 'unlink', {
+	return execExternalCmd('yarn', 'unlink', {
 		cwd: `${config.outputDir}`
 	});
 });

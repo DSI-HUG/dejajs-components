@@ -27,9 +27,9 @@
         "test:demo": "gulp test:demo",
         "check-travis": "travis-status --repo=? --branch=master --fail-pending || echo 'Not yet passing'",
         "lint": "tslint --project tsconfig.json src/**/*.ts",
-        "release:major": "gulp release --version=major --ghToken=YOUR_GITHUB_TOKEN",
-        "release:minor": "gulp release --version=minor --ghToken=YOUR_GITHUB_TOKEN",
-        "release:patch": "gulp release --version=patch --ghToken=YOUR_GITHUB_TOKEN"
+        "release:major": "gulp release --version=major",
+        "release:minor": "gulp release --version=minor",
+        "release:patch": "gulp release --version=patch"
     },
     "dependencies": {
         "@angular-devkit/core": "0.4.0",

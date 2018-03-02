@@ -11,7 +11,7 @@
         "lint": "ng lint",
         "e2e": "ng e2e --preserve-symlinks",
         "e2e:watch": "watch \"yarn run e2e\" src e2e --wait=1",
-        "postinstall": "npm link @deja-js/component"
+        "postinstall": "yarn link @deja-js/component"
     },
     "dependencies": {
         "@angular/animations": "5.2.5",
