@@ -91,7 +91,7 @@ export class DejaRangeComponent implements ControlValueAccessor {
     // ControlValueAccessor implementation
     public writeValue(ranges: IRange[]): void {
         if (!!ranges && !!ranges.length) {
-            const host = this.elementRef.nativeElement.firstChild as HTMLElement;
+            const host = this.elementRef.nativeElement.firstElementChild as HTMLElement;
             const hostWidth = host.getBoundingClientRect().width;
             const totalDifference = ranges[ranges.length - 1].max - ranges[0].min;
 
@@ -233,7 +233,7 @@ export class DejaRangeComponent implements ControlValueAccessor {
             const kill$ = Observable.merge(up$, leave$)
                 .first()
                 .do(() => {
-                    const host = this.elementRef.nativeElement.firstChild as HTMLElement;
+                    const host = this.elementRef.nativeElement.firstElementChild as HTMLElement;
                     host.ownerDocument.body.classList.remove('noselect');
 
                     this._onChangeCallback(this._ranges);
@@ -252,7 +252,7 @@ export class DejaRangeComponent implements ControlValueAccessor {
                     const totalDifference = ranges[ranges.length - 1].max - ranges[0].min;
 
                     // calculate new width of the range, get host width
-                    const host = this.elementRef.nativeElement.firstChild as HTMLElement;
+                    const host = this.elementRef.nativeElement.firstElementChild as HTMLElement;
                     const hostWidth = host.getBoundingClientRect().width;
 
                     // avoid drag

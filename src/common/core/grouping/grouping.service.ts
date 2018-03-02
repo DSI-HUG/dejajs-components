@@ -48,7 +48,7 @@ export class GroupingService {
 
             const groupTree$: any = (t: any[], curDepth: number) => {
                 return Observable.from(t)
-                    .flatMap((treeItem) => {
+                    .switchMap((treeItem) => {
                         const children = treeItem[childrenField];
                         if (children[0] && children[0][childrenField]) {
                             return groupTree$(children, curDepth + 1).map(() => treeItem);

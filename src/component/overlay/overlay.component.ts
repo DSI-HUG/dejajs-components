@@ -20,6 +20,7 @@ import { DejaConnectionPositionPair } from '../../common/core/overlay/connection
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     selector: 'deja-overlay',
+    styleUrls: ['./overlay.component.scss'],
     templateUrl: './overlay.component.html',
 })
 export class DejaOverlayComponent implements OnDestroy {

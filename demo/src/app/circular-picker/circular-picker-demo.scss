@@ -1,0 +1,31 @@
+:host {
+	.listContainer {
+		display: flex;
+		justify-content: center;
+		margin-top: 15px;
+		padding: 2rem 0;
+		>div {
+			flex: 1 1 auto;
+			deja-circular-picker {
+				align-items: center;
+				display: flex;
+				justify-content: center;
+			}
+		}
+		&#complex-wrapper {
+			position: relative;
+			height: 333px;
+			#outside,
+			#inside {
+				left: 50%;
+				position: absolute !important;
+				top: 50%;
+				transform: translate(-50%, -50%);
+			}
+			#inside .circular-picker {
+				background: transparent;
+				border: none;
+			}
+		}
+	}
+}

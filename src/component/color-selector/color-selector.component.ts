@@ -25,11 +25,14 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Color } from '../../common/core/graphics/color';
-import { ColorEvent } from '../../common/core/graphics/color-event';
 import { MaterialColor } from '../../common/core/style/material-color';
 import { DejaColorFab } from './color-fab.class';
 
 const noop = () => { };
+
+export interface IColorEvent extends CustomEvent {
+    color: Color;
+}
 
 /** Composant de selection d'une couleur. */
 @Component({
@@ -43,7 +46,7 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
     private static indexAttribute = 'index';
 
     /** Evénement déclenché lorsqu'une couleur est survolée par la souris. */
-    @Output() public colorhover = new EventEmitter();
+    @Output() public colorhover = new EventEmitter<IColorEvent>();
 
     public _resetcolor: Color;
 
@@ -143,12 +146,9 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
             .debounce((colorIndex) => Observable.timer(colorIndex !== undefined ? 100 : 1000))
             .do((colorIndex) => {
                 this.hilightedBaseIndex = colorIndex;
-                if (colorIndex) {
-                    const subColor = this._colorFabs && this._colorFabs[colorIndex] && this._colorFabs[colorIndex].color;
-                    this.colorhover.emit(new ColorEvent(subColor));
-                } else {
-                    this.colorhover.emit(new ColorEvent(this.value));
-                }
+                const event = new CustomEvent('ColorEvent', {}) as IColorEvent;
+                event.color = colorIndex ? this._colorFabs && this._colorFabs[colorIndex] && this._colorFabs[colorIndex].color : this.value;
+                this.colorhover.emit(event);
             })
             .map((colorIndex) => colorIndex !== undefined ? colorIndex : this._selectedBaseIndex || 0);
 
@@ -178,12 +178,9 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
             .debounce((subColorIndex) => Observable.timer(subColorIndex !== undefined ? 200 : 1100))
             .do((subColorIndex) => {
                 this.hilightedSubIndex = subColorIndex;
-                if (subColorIndex !== undefined) {
-                    const subColor = this._subColorFabs && this._subColorFabs[subColorIndex] && this._subColorFabs[subColorIndex].color;
-                    this.colorhover.emit(new ColorEvent(subColor));
-                } else {
-                    this.colorhover.emit(new ColorEvent(this.value));
-                }
+                const event = new CustomEvent('ColorEvent', {}) as IColorEvent;
+                event.color = subColorIndex !== undefined ? this._subColorFabs && this._subColorFabs[subColorIndex] && this._subColorFabs[subColorIndex].color : this.value;
+                this.colorhover.emit(event);
             })
             .map((subColorIndex) => subColorIndex !== undefined ? subColorIndex : this._selectedSubIndex || 0);
 

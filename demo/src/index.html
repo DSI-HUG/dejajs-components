@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>DEJA-JS Demo App</title>
+	<base href="/">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="This is the home for the Hôpital Univesitaire de Genève - DSI - Domaine Patient team's Angular2 components for Angular 2 and material.">
+	<link rel="icon" type="image/x-icon" href="favicon.ico">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+	<style>
+		.page-loader {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			margin-top: -2.5rem;
+			margin-left: -2.5rem;
+		}
+
+		.page-loader:after,
+		.page-loader:before {
+			content: '';
+			width: 5rem;
+			height: 5rem;
+			border-radius: 50%;
+			background-color: rgba(0, 0, 0, 0.25);
+			opacity: 0.6;
+			position: absolute;
+			top: 0;
+			left: 0;
+			-webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+			animation: sk-bounce 2.0s infinite ease-in-out;
+		}
+
+		.page-loader:before {
+			-webkit-animation-delay: -1.0s;
+			animation-delay: -1.0s;
+		}
+
+		@-webkit-keyframes sk-bounce {
+			0%,
+			100% {
+				-webkit-transform: scale(0.0)
+			}
+			50% {
+				-webkit-transform: scale(1.0)
+			}
+		}
+
+		@keyframes sk-bounce {
+			0%,
+			100% {
+				transform: scale(0.0);
+				-webkit-transform: scale(0.0);
+			}
+			50% {
+				transform: scale(1.0);
+				-webkit-transform: scale(1.0);
+			}
+		}
+	</style>
+</head>
+
+<body id="dpi">
+	<app-root>
+		<div class="page-loader"></div>
+	</app-root>
+
+	<script>
+		if (sessionStorage && history) {
+			// simulate html5 mode server behavior on github pages - see 404.html
+			var redirect = sessionStorage.redirect;
+			delete sessionStorage.redirect;
+			if (redirect && redirect != location.href) {
+				history.replaceState(null, null, redirect);
+			}
+		}
+	</script>
+
+	<script>
+		(function() {
+			setInterval(function() {
+				if (typeof GlobalEventEmmitter === "function") {
+					GlobalEventEmmitter.instance.emit("sendaction", [(new Date()).getTime(), "This is a date"]);
+				}
+			}, 1000);
+		})();
+	</script>
+
+	<script>
+		(function(i, s, o, g, r, a, m) {
+			i['GoogleAnalyticsObject'] = r;
+			i[r] = i[r] || function() {
+				(i[r].q = i[r].q || []).push(arguments)
+			}, i[r].l = 1 * new Date();
+			a = s.createElement(o),
+				m = s.getElementsByTagName(o)[0];
+			a.async = 1;
+			a.src = g;
+			m.parentNode.insertBefore(a, m)
+		})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+		ga('create', 'UA-92183749-1', 'auto');
+		ga('send', 'pageview');
+
+		(function(history) {
+			var pushState = history.pushState;
+			history.pushState = function(state) {
+				if (typeof history.onpushstate == "function") {
+					history.onpushstate({
+						state: state
+					});
+				}
+				return pushState.apply(history, arguments);
+			}
+		})(window.history);
+		window.onpopstate = history.onpushstate = function(event) {
+			ga('send', {
+				hitType: 'pageview',
+				page: location.pathname
+			});
+		};
+	</script>
+</body>
+
+</html>

@@ -189,7 +189,7 @@ describe('DejaTilesComponent', () => {
                 tilesContainerInstance.testDone();
             });
 
-        spyOn(tilesContainerInstance, 'testDone');
+        const spy = spyOn(tilesContainerInstance, 'testDone');
 
         tilesContainerInstance.tiles.unshift({
             id: 'Beer',
@@ -205,7 +205,7 @@ describe('DejaTilesComponent', () => {
 
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(tilesContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 
@@ -233,12 +233,12 @@ describe('DejaTilesComponent', () => {
                 }
             });
 
-        spyOn(tilesContainerInstance, 'testDone');
+        const spy = spyOn(tilesContainerInstance, 'testDone');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(tilesContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 
@@ -265,14 +265,14 @@ describe('DejaTilesComponent', () => {
                 }
             });
 
-        spyOn(tilesContainerInstance, 'testDone');
+        const spy = spyOn(tilesContainerInstance, 'testDone');
 
         fixture.detectChanges();
         tilesInstance.selectedTiles = ['Guava', 'Mango'];
 
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(tilesContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 
@@ -292,6 +292,7 @@ describe('DejaTilesComponent', () => {
 
         observeDom$(fixture)
             .debounceTime(10)
+            .first()
             .map(() => {
                 fixture.detectChanges();
                 const tileElements = fixture.debugElement.queryAll(By.css('deja-tiles#tiles1 > #tiles > deja-tile'));
@@ -357,14 +358,14 @@ describe('DejaTilesComponent', () => {
                 tilesContainerInstance.testDone();
             });
 
-        spyOn(tilesContainerInstance, 'testDone');
+        const spy = spyOn(tilesContainerInstance, 'testDone');
 
         fixture.detectChanges();
         tilesInstance.selectedTiles = ['Cherries'];
 
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(tilesContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 
@@ -411,13 +412,13 @@ describe('DejaTilesComponent', () => {
             })
             .subscribe(() => tilesContainerInstance.testDone());
 
-        spyOn(tilesContainerInstance, 'testDone');
+        const spy = spyOn(tilesContainerInstance, 'testDone');
 
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(tilesContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 
@@ -439,13 +440,13 @@ describe('DejaTilesComponent', () => {
             })
             .subscribe(() => tilesContainerInstance.testDone());
 
-        spyOn(tilesContainerInstance, 'testDone');
+        const spy = spyOn(tilesContainerInstance, 'testDone');
 
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(tilesContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 
@@ -513,13 +514,13 @@ describe('DejaTilesComponent', () => {
                 tilesContainerInstance.testDone();
             });
 
-        spyOn(tilesContainerInstance, 'testDone');
+        const spy = spyOn(tilesContainerInstance, 'testDone');
 
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(tilesContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 
@@ -600,7 +601,7 @@ describe('DejaTilesComponent', () => {
                 tilesContainerInstance.testDone();
             });
 
-        spyOn(tilesContainerInstance, 'testDone');
+        const spy = spyOn(tilesContainerInstance, 'testDone');
 
         fixture.detectChanges();
         tiles1Instance.selectedTiles = ['Guava', 'Mango'];
@@ -608,7 +609,7 @@ describe('DejaTilesComponent', () => {
         fixture.whenStable().then(() => {
             tiles1Instance.refresh();
             tiles1Instance.onBlur();
-            expect(tilesContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 
@@ -681,13 +682,13 @@ describe('DejaTilesComponent', () => {
                 tilesContainerInstance.testDone();
             });
 
-        spyOn(tilesContainerInstance, 'testDone');
+        const spy = spyOn(tilesContainerInstance, 'testDone');
 
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(tilesContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 
@@ -763,13 +764,13 @@ describe('DejaTilesComponent', () => {
                 tilesContainerInstance.testDone();
             });
 
-        spyOn(tilesContainerInstance, 'testDone');
+        const spy = spyOn(tilesContainerInstance, 'testDone');
 
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(tilesContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 
@@ -845,13 +846,13 @@ describe('DejaTilesComponent', () => {
                 tilesContainerInstance.testDone();
             });
 
-        spyOn(tilesContainerInstance, 'testDone');
+        const spy = spyOn(tilesContainerInstance, 'testDone');
 
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(tilesContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 
@@ -927,13 +928,13 @@ describe('DejaTilesComponent', () => {
                 tilesContainerInstance.testDone();
             });
 
-        spyOn(tilesContainerInstance, 'testDone');
+        const spy = spyOn(tilesContainerInstance, 'testDone');
 
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(tilesContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 
@@ -1009,13 +1010,13 @@ describe('DejaTilesComponent', () => {
                 tilesContainerInstance.testDone();
             });
 
-        spyOn(tilesContainerInstance, 'testDone');
+        const spy = spyOn(tilesContainerInstance, 'testDone');
 
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(tilesContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 
@@ -1091,13 +1092,13 @@ describe('DejaTilesComponent', () => {
                 tilesContainerInstance.testDone();
             });
 
-        spyOn(tilesContainerInstance, 'testDone');
+        const spy = spyOn(tilesContainerInstance, 'testDone');
 
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(tilesContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 
@@ -1173,13 +1174,13 @@ describe('DejaTilesComponent', () => {
                 tilesContainerInstance.testDone();
             });
 
-        spyOn(tilesContainerInstance, 'testDone');
+        const spy = spyOn(tilesContainerInstance, 'testDone');
 
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(tilesContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 
@@ -1255,13 +1256,13 @@ describe('DejaTilesComponent', () => {
                 tilesContainerInstance.testDone();
             });
 
-        spyOn(tilesContainerInstance, 'testDone');
+        const spy = spyOn(tilesContainerInstance, 'testDone');
 
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(tilesContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 
@@ -1337,13 +1338,13 @@ describe('DejaTilesComponent', () => {
                 tilesContainerInstance.testDone();
             });
 
-        spyOn(tilesContainerInstance, 'testDone');
+        const spy = spyOn(tilesContainerInstance, 'testDone');
 
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(tilesContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 
@@ -1397,13 +1398,13 @@ describe('DejaTilesComponent', () => {
                 tilesContainerInstance.testDone();
             });
 
-        spyOn(tilesContainerInstance, 'testDone');
+        const spy = spyOn(tilesContainerInstance, 'testDone');
 
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(tilesContainerInstance.testDone).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
     }));
 });

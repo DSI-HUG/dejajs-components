@@ -1,0 +1,28 @@
+deja-overlay-demo {
+    #demo-deja-menu {
+        display: flex;
+        flex-flow: row;
+        .menu-section {
+            width: 300px;
+            margin: 0.5rem;
+        }
+        .end-icon {
+            align-items: flex-end;
+        }
+    }
+}
+
+.deja-overlay-container {
+    [deja-menu-content]#anchorMenu {
+        .menu-item {
+            white-space: nowrap;
+            padding: 0.5rem 2rem;
+        }
+    }
+
+    [deja-menu-content] {
+        .mat-icon {
+            margin-right: 0.5rem;
+        }
+    }
+}
