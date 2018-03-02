@@ -89,7 +89,8 @@ const config = {
 	demoDir: 'demo/',
 	buildDir: 'tmp/',
 	outputDir: 'dist/',
-	outputDemoDir: 'demo/dist/',
+	outputDemoDist: 'demo/dist',
+	outputDemoDir: 'demo/dist/browser/',
 	coverageDir: 'coverage/',
 	docDir: 'doc/'
 };
@@ -220,7 +221,7 @@ gulp.task('clean:doc', () => {
 });
 
 gulp.task('clean:demo', () => {
-	return del(`${config.outputDemoDir}`);
+	return del(`${config.outputDemoDist}`);
 });
 
 gulp.task('clean', ['clean:dist', 'clean:coverage', 'clean:doc', 'clean:build', 'clean:demo']);
