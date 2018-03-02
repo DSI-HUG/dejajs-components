@@ -10,10 +10,13 @@ fi
 
 # Run our compile script and deploy dist directory into th GH-PAGES branch
 gulp build:demo
+gh-pages --clean
 node_modules/.bin/gh-pages -d demo/dist --repo https://rtrompier:${GITHUB_TOKEN}@github.com/DSI-HUG/dejajs-components.git
 
 # Deploy doc directory into th GH-PAGES branch
+gh-pages --clean
 node_modules/.bin/gh-pages -d doc --repo https://rtrompier:${GITHUB_TOKEN}@github.com/DSI-HUG/dejajs-doc.git
 
 # Deploy coverage directory into th GH-PAGES branch
+gh-pages --clean
 node_modules/.bin/gh-pages -d coverage/html --repo https://rtrompier:${GITHUB_TOKEN}@github.com/DSI-HUG/dejajs-test.git
