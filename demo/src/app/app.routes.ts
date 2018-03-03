@@ -36,7 +36,7 @@ const routes: Routes = [
     { path: 'tree-list', loadChildren: './tree-list/tree-list-demo.module#DejaTreeListDemoModule', data: { title: 'Tree List' } },
     { path: 'viewport', loadChildren: './viewport/viewport-demo.module#DejaViewPortDemoModule', data: { title: 'Viewport' } },
     { path: 'monaco-editor', loadChildren: './monaco-editor/monaco-editor-demo.module#MonacoEditorDemoModule', data: { title: 'Monaco Editor' } },
-    { path: '**', redirectTo: 'home', pathMatch: 'full' },
+    { path: '**', redirectTo: 'home', pathMatch: 'prefix' },
 ];
 
 export const appRoutingProviders: any[] = [

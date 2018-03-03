@@ -1,77 +1,73 @@
 @import '~@angular/material/theming';
-@import '../../common/core/item-list/item-list-theme';
-
 @mixin select-theme($theme) {
-	$primary: map-get($theme, primary);
-	$warn: map-get($theme, warn);
-	$background: #FFF;
-	$foreground: #000;
-
-	deja-select {
-		&.ng-invalid {
-			#input {
-				.mat-input-wrapper {
-					.mat-input-underline {
-						.mat-input-ripple {
-							background-color: mat-color($warn);
-						}
-					}
-					.mat-input-placeholder.mat-focused {
-						color: mat-color($warn) !important;
-					}
-				}
-			}
-		}
-		#input {
-			.mat-input-suffix {
-				#clear-button {
-					&:hover {
-						color: mat-color($primary);
-					}
-				}
-			}
-			&[wait="true"] {
-				.mat-input-wrapper {
-					.mat-input-underline {
-						&:before {
-							background-color: mat-color($primary);
-						}
-						&:after {
-							background-color: mat-color($primary);
-						}
-						.mat-input-ripple {
-							background-color: transparent;
-						}
-					}
-				}
-			}
-			[matSuffix] {
-				mat-progress-spinner {
-					svg path {
-						stroke: mat-color($primary);
-					}
-				}
-			}
-		}
-		#select-backdrop {
-			&:not([mobile]) {
-				background-color: transparent !important;
-			}
-		}
-	}
-
-	.deja-overlay-container {
-		.deja-listcontainer {
-            box-shadow: 0 5px 5px -3px rgba(0, 0, 0, .2), 0 8px 10px 1px rgba(0, 0, 0, .14), 0 3px 14px 2px rgba(0, 0, 0, .12); 
+    $primary: map-get($theme, primary);
+    $warn: map-get($theme, warn);
+    $background: #FFF;
+    $foreground: #000;
+    deja-select {
+        &.ng-invalid {
+            #input {
+                .mat-input-wrapper {
+                    .mat-input-underline {
+                        .mat-input-ripple {
+                            background-color: mat-color($warn);
+                        }
+                    }
+                    .mat-input-placeholder.mat-focused {
+                        color: mat-color($warn) !important;
+                    }
+                }
+            }
+        }
+        #input {
+            .mat-input-suffix {
+                #clear-button {
+                    &:hover {
+                        color: mat-color($primary);
+                    }
+                }
+            }
+            &[wait="true"] {
+                .mat-input-wrapper {
+                    .mat-input-underline {
+                        &:before {
+                            background-color: mat-color($primary);
+                        }
+                        &:after {
+                            background-color: mat-color($primary);
+                        }
+                        .mat-input-ripple {
+                            background-color: transparent;
+                        }
+                    }
+                }
+            }
+            [matSuffix] {
+                mat-progress-spinner {
+                    svg path {
+                        stroke: mat-color($primary);
+                    }
+                }
+            }
+        }
+        #select-backdrop {
+            &:not([mobile]) {
+                background-color: transparent !important;
+            }
+        }
+    }
+    .deja-overlay-container {
+        .deja-listcontainer {
+            box-shadow: 0 5px 5px -3px rgba(0, 0, 0, .2), 0 8px 10px 1px rgba(0, 0, 0, .14), 0 3px 14px 2px rgba(0, 0, 0, .12);
             background-color: $background !important;
-			color: $foreground !important;
-			&[keynav="false"] {
-				div.listitem:not(.unselectable):hover {
-					background-color: mat-color($primary);
-					color: #fff;
-				}
-			}
-		}
-		@include sub-item-list-theme($theme);
-	}
+            color: $foreground !important;
+            &[keynav="false"] {
+                div.listitem:not(.unselectable):hover {
+                    background-color: mat-color($primary);
+                    color: #fff;
+                }
+            }
+        }
+        @include sub-item-list-theme($theme);
+    }
 }

@@ -20,7 +20,7 @@
 @import '../../component/viewport/viewport-theme';
 @import '../../component/numeric-stepper/numeric-stepper-theme';
 @import './menu-theme';
-@import '../utils/form-validation';
+@import './form-validation';
 @import '../components/loader';
 // Create a theme.
 @mixin deja-theme($custom-theme) {

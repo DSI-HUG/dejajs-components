@@ -1,104 +1,102 @@
-@import '../../../../src/scss/components/tree-list-borders';
-
 deja-tree-list-demo {
-	.demo-card {
-		margin: 16px;
-		mat-card-content {
-			padding: 16px;
-			display: flex;
-			flex-direction: column;
-			deja-tree-list {
-				max-height: 400px;
-				position: relative;
-				margin: 1rem 0;
-				&.fixed-height {
-					height: 400px;
-				}
-				&.news {
-					max-height: 600px;
-				}
-			}
-		}
-	}
-	.demo-basic {
-		padding: 0;
-	}
-	.demo-full-width {
-		width: 100%;
-	}
-	.demo-half-width {
-		width: 45%;
-	}
-	.demo-icons {
-		font-size: 100%;
-		height: inherit;
-		vertical-align: top;
-		width: inherit;
-	}
-	#flight {
-		display: flex;
-		align-items: center;
-	}
-	news-card {
-		width: 100%;
-		.text {
-			overflow-x: hidden;
-		}
-	}
-	.vpinfoname {
-		display: inline-block;
-		width: 7rem;
-	}
-	#bigCountries {
-		height: 400px;
-	}
-	#headerTemplateContent {
-		padding: 0.4rem;
-		display: block;
-		background-color: #aaa;
-		cursor: pointer;
-		display: flex;
-		#title {
-			flex: 1 0 auto;
-		}
-		step-indicator {
-			flex: 0 0 auto;
-		}
-	}
-	[matPrefix] {
-		cursor: default;
-		padding: 4px;
-	}
-	[matSuffix] {
-		padding: 4px;
-		display: flex;
-		justify-content: flex-end;
-		cursor: pointer;
-	}
-	[ddid] {
-		width: 100%;
-		height: 100%;
-		display: flex;
-		align-items: center;
-	}
-	.optionstl {
-		overflow: visible;
-	}
+    .demo-card {
+        margin: 16px;
+        mat-card-content {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            deja-tree-list {
+                max-height: 400px;
+                position: relative;
+                margin: 1rem 0;
+                &.fixed-height {
+                    height: 400px;
+                }
+                &.news {
+                    max-height: 600px;
+                }
+            }
+        }
+    }
+    .demo-basic {
+        padding: 0;
+    }
+    .demo-full-width {
+        width: 100%;
+    }
+    .demo-half-width {
+        width: 45%;
+    }
+    .demo-icons {
+        font-size: 100%;
+        height: inherit;
+        vertical-align: top;
+        width: inherit;
+    }
+    #flight {
+        display: flex;
+        align-items: center;
+    }
+    news-card {
+        width: 100%;
+        .text {
+            overflow-x: hidden;
+        }
+    }
+    .vpinfoname {
+        display: inline-block;
+        width: 7rem;
+    }
+    #bigCountries {
+        height: 400px;
+    }
+    #headerTemplateContent {
+        padding: 0.4rem;
+        display: block;
+        background-color: #aaa;
+        cursor: pointer;
+        display: flex;
+        #title {
+            flex: 1 0 auto;
+        }
+        step-indicator {
+            flex: 0 0 auto;
+        }
+    }
+    [matPrefix] {
+        cursor: default;
+        padding: 4px;
+    }
+    [matSuffix] {
+        padding: 4px;
+        display: flex;
+        justify-content: flex-end;
+        cursor: pointer;
+    }
+    [ddid] {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+    }
+    .optionstl {
+        overflow: visible;
+    }
 }
 
 .item-base-cursor,
 .country-target-cursor {
-	#content {
-		background-color: #222 !important;
-		color: #fff;
-		opacity: 0.8;
-		display: flex;
-		align-items: center;
-		cursor: pointer;
-		&::before {
-			display: block;
-			width: 0.5rem;
-			content: " ";
-		}
-	}
+    #content {
+        background-color: #222 !important;
+        color: #fff;
+        opacity: 0.8;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        &::before {
+            display: block;
+            width: 0.5rem;
+            content: " ";
+        }
+    }
 }

@@ -48,6 +48,8 @@ const cssnano = require('cssnano');
 const postcss = require('postcss');
 const autoprefixer = require('autoprefixer');
 const stripInlineComments = require('postcss-strip-inline-comments');
+const concat = require('gulp-concat');
+const stripLine = require('gulp-strip-line');
 
 //Bumping, Releasing tools
 const gulpGit = require('gulp-git');
@@ -86,6 +88,8 @@ const config = {
     allTs: 'src/**/!(*.spec).ts',
     allSass: 'src/**/*.+(scss|sass)',
     allHtml: 'src/**/*.html',
+    themesSass: 'src/**/*-theme.scss',
+    scssSass: 'src/scss/**/*.+(scss|sass)',
     demoDir: 'demo/',
     buildDir: 'tmp/',
     outputDir: 'dist/',
@@ -179,6 +183,7 @@ const styleProcessor = (stylePath, ext, styleFile, callback) => {
 
     const postProcessCss = css => {
         postcss(processors).process(css).then(result => {
+            from: 'undefined',
             result.warnings().forEach(function(warn) {
                 gutil.warn(warn.toString());
             });
@@ -258,6 +263,14 @@ gulp.task('inline-templates', (cb) => {
         cb);
 });
 
+gulp.task('build:scss', function() {
+    return gulp.src([config.scssSass, config.themesSass])
+        .pipe(concat('scss-files.scss'))
+        .pipe(concat('_theming.scss'))
+        .pipe(stripLine(/^\@import/))
+        .pipe(gulp.dest(config.outputDir));
+});
+
 // Prepare files for compilation
 gulp.task('pre-compile', (cb) => {
     pump([
@@ -291,17 +304,17 @@ gulp.task('compile-no-lint', (cb) => {
 
 // Build the 'dist' folder (without publishing it to NPM)
 gulp.task('build', ['clean'], (cb) => {
-    runSequence('license', 'compile', 'test', 'npm-package', 'rollup-bundle', 'build:doc', cb);
+    runSequence('license', 'compile', 'test', 'npm-package', 'rollup-bundle', 'build:scss', 'build:doc', cb);
 });
 
 // Same as 'build' but without cleaning temp folders (to avoid breaking demo app, if currently being served)
 gulp.task('build-watch', (cb) => {
-    runSequence('compile', 'test', 'npm-package', 'rollup-bundle', cb);
+    runSequence('compile', 'test', 'npm-package', 'rollup-bundle', 'build:scss', cb);
 });
 
 // Same as 'build-watch' but without running tests
 gulp.task('build-watch-no-tests', (cb) => {
-    runSequence('compile-no-lint', 'npm-package', 'rollup-bundle', cb);
+    runSequence('compile-no-lint', 'npm-package', 'rollup-bundle', 'build:scss', cb);
 });
 
 // Watch changes on (*.ts, *.html, *.sass) and Re-build library
@@ -522,10 +535,21 @@ gulp.task('serve:demo', () => {
     });
 });
 
-gulp.task('build:demo', ['clean:demo'], () => {
-    return execDemoCmd(`build --preserve-symlinks --prod --aot --build-optimizer --env=prod --base-href https://dsi-hug.github.io/dejajs-components/`, {
+gulp.task('build-demo', () => {
+    const build = execDemoCmd(`build --preserve-symlinks --prod --aot --build-optimizer --env=prod --base-href https://dsi-hug.github.io/dejajs-components/`, {
         cwd: `${config.demoDir}`
     });
+});
+
+gulp.task('build:demo', ['clean:demo'], (cb) => {
+    runSequence('build-demo', 'copy:demoassets', cb);
+});
+
+/**
+ * Copy Demo Assets to /dist
+ */
+gulp.task('copy:demoassets', function() {
+    return gulp.src([`${config.demoDir}src/404.html`]).pipe(gulp.dest(config.outputDemoDist));
 });
 
 /////////////////////////////////////////////////////////////////////////////
