@@ -41,4 +41,11 @@ body {
     &[theme="amber"] {
         @include create-theme($mat-amber, $mat-orange);
     }
+
+    [text-ellipsis] {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 }
