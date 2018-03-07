@@ -3,14 +3,13 @@
     "compilerOptions": {
         "declaration": true,
         "outDir": "../tmp/lib/",
-        "target": "es5",
+        "module": "es2015",
         "rootDir": ".",
         "baseUrl": ".",
         "types": [
             "node",
             "moment"
-        ],
-        "module": "es2015"
+        ]
     },
     "files": [
         "./index.ts"

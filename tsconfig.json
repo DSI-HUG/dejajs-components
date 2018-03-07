@@ -1,21 +1,24 @@
 {
     "compilerOptions": {
-        "target": "es5",
-        "module": "es2015",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,        
         "moduleResolution": "node",
         "sourceMap": true,
         "inlineSources": true,
         "declaration": true,
-        "experimentalDecorators": true,
         "noImplicitAny": true,
         "suppressImplicitAnyIndexErrors": true,
         "skipLibCheck": true,
         "stripInternal": true,
         "noUnusedParameters": true,
         "noUnusedLocals": true,
+        "target": "es5",
         "lib": [
             "es2017",
             "dom"
+        ],
+        "typeRoots": [
+            "node_modules/@types"
         ]
     },
     "exclude": [
