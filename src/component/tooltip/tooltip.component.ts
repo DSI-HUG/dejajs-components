@@ -28,7 +28,6 @@ import { DejaTooltipService, ITooltipParams } from './tooltip.service';
  */
 @Component({
     encapsulation: ViewEncapsulation.None,
-    providers: [MediaService],
     selector: 'deja-tooltip',
     templateUrl: 'tooltip.component.html',
     styleUrls: [

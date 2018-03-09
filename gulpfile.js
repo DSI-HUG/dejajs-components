@@ -292,14 +292,26 @@ gulp.task('ng-compile', () => {
         });
 });
 
+gulp.task('ng-compile-fordev', () => {
+    return Promise.resolve()
+        .then(() => ngc(['--project', `${buildFolder}/tsconfig.es5.json`])
+            .then(exitCode => exitCode === 0 ? Promise.resolve() : Promise.reject())
+            .then(() => gulpUtil.log('ES5 compilation succeeded.'))
+        )
+        .catch(e => {
+            gulpUtil.log(gulpUtil.colors.red('ng-compilation failed. See below for errors.\n'));
+            gulpUtil.log(gulpUtil.colors.red(e));
+        });
+});
+
 // Lint, Prepare Build, , Sass to css, Inline templates & Styles and Ng-Compile
 gulp.task('compile', (cb) => {
     runSequence('lint', 'pre-compile', 'inline-templates', 'ng-compile', cb);
 });
 
 // Prepare Build, , Sass to css, Inline templates & Styles and Ng-Compile
-gulp.task('compile-no-lint', (cb) => {
-    runSequence('pre-compile', 'inline-templates', 'ng-compile', cb);
+gulp.task('compile-fordev', (cb) => {
+    runSequence('pre-compile', 'inline-templates', 'ng-compile-fordev', cb);
 });
 
 // Build the 'dist' folder (without publishing it to NPM)
@@ -313,8 +325,8 @@ gulp.task('build-watch', (cb) => {
 });
 
 // Same as 'build-watch' but without running tests
-gulp.task('build-watch-no-tests', (cb) => {
-    runSequence('compile-no-lint', 'npm-package', 'rollup-bundle', 'build:scss', cb);
+gulp.task('build-watch-fordev', (cb) => {
+    runSequence('compile-fordev', 'npm-package', 'rollup-bundle', 'build:scss', cb);
 });
 
 // Watch changes on (*.ts, *.html, *.sass) and Re-build library
@@ -323,8 +335,8 @@ gulp.task('build:watch', ['build-watch'], () => {
 });
 
 // Watch changes on (*.ts, *.html, *.sass) and Re-build library (without running tests)
-gulp.task('build:watch-fast', ['build-watch-no-tests'], () => {
-    gulp.watch([config.allTs, config.allHtml, config.allSass], ['build-watch-no-tests']);
+gulp.task('build:watch-fordev', ['build-watch-fordev'], (cb) => {
+    gulp.watch([config.allTs, config.allHtml, config.allSass], ['build-watch-fordev']).on('error', cb);
 });
 
 /////////////////////////////////////////////////////////////////////////////

@@ -59,7 +59,7 @@ export enum DejaSelectSelectionPosition {
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    providers: [ViewPortService, MediaService],
+    providers: [ViewPortService],
     selector: 'deja-select',
     styleUrls: [
         './select.component.scss',
