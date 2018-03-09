@@ -182,8 +182,7 @@ const styleProcessor = (stylePath, ext, styleFile, callback) => {
     ];
 
     const postProcessCss = css => {
-        postcss(processors).process(css).then(result => {
-            from: 'undefined',
+        postcss(processors).process(css, { from: undefined }).then(result => {
             result.warnings().forEach(function(warn) {
                 gutil.warn(warn.toString());
             });
@@ -319,24 +318,14 @@ gulp.task('build', ['clean'], (cb) => {
     runSequence('license', 'compile', 'test', 'npm-package', 'rollup-bundle', 'build:scss', 'build:doc', cb);
 });
 
-// Same as 'build' but without cleaning temp folders (to avoid breaking demo app, if currently being served)
-gulp.task('build-watch', (cb) => {
-    runSequence('compile', 'test', 'npm-package', 'rollup-bundle', 'build:scss', cb);
-});
-
-// Same as 'build-watch' but without running tests
-gulp.task('build-watch-fordev', (cb) => {
+// Faster build for dev
+gulp.task('build-fordev', (cb) => {
     runSequence('compile-fordev', 'npm-package', 'rollup-bundle', 'build:scss', cb);
 });
 
-// Watch changes on (*.ts, *.html, *.sass) and Re-build library
-gulp.task('build:watch', ['build-watch'], () => {
-    gulp.watch([config.allTs, config.allHtml, config.allSass], ['build-watch']);
-});
-
 // Watch changes on (*.ts, *.html, *.sass) and Re-build library (without running tests)
-gulp.task('build:watch-fordev', ['build-watch-fordev'], (cb) => {
-    gulp.watch([config.allTs, config.allHtml, config.allSass], ['build-watch-fordev']).on('error', cb);
+gulp.task('build:watch-fordev', ['build-fordev'], (cb) => {
+    gulp.watch([config.allTs, config.allHtml, config.allSass], ['build-fordev']).on('error', cb);
 });
 
 /////////////////////////////////////////////////////////////////////////////
