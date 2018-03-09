@@ -7,7 +7,6 @@
  */
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Color } from '../../common/core/graphics/color';
@@ -28,7 +27,6 @@ describe('DejaColorPicker', () => {
             ],
             imports: [
                 DejaColorSelectorModule,
-                FlexLayoutModule,
                 FormsModule,
                 DejaOverlayModule
             ]

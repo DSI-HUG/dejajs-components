@@ -8,7 +8,6 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule, MatIconModule, MatSidenavModule, MatToolbarModule } from '@angular/material';
 import { DejaSlimScrollModule } from './../../common/core/slimscroll/index';
 import { DejaSidenavContentDirective } from './sidenav-content.directive';
@@ -34,7 +33,6 @@ import { DejaSidenavComponent } from './sidenav.component';
     ],
     imports: [
         CommonModule,
-        FlexLayoutModule,
         MatSidenavModule,
         MatToolbarModule,
         MatButtonModule,

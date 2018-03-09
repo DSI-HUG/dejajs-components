@@ -8,13 +8,11 @@
 
 import { OverlayModule } from '@angular/cdk/overlay';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ObservableMedia } from '@angular/flex-layout';
 import { MediaModule } from '../../common/core/media/index';
 import { MediaService } from '../../common/core/media/media.service';
 import { DejaConnectionPositionPair } from '../../common/core/overlay/connection-position-pair';
 import { DejaOverlayComponent } from './overlay.component';
 import { MockMediaService } from './test/MockMediaService';
-import { MockObservableMedia } from './test/MockObservableMedia';
 
 describe('DejaOverlayComponent', () => {
 
@@ -34,10 +32,12 @@ describe('DejaOverlayComponent', () => {
         TestBed.configureTestingModule({
             declarations: [DejaOverlayComponent], // declare the test component
             imports: [MediaModule, OverlayModule],
-            providers: [{ provide: ObservableMedia, useClass: MockObservableMedia }, {
-                provide: MediaService, useClass:
-                    MockMediaService
-            }]
+            providers: [
+                {
+                    provide: MediaService, useClass:
+                        MockMediaService
+                }
+            ]
         }).compileComponents();
     }));
 

@@ -8,7 +8,6 @@
 
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed  } from '@angular/core/testing';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterTestingModule } from '@angular/router/testing';
 import { DejaSidenavComponent } from './sidenav.component';
 
@@ -22,7 +21,7 @@ describe('DejaSidenavComponent', () => {
             declarations: [
                 DejaSidenavComponent
             ],
-            imports: [FlexLayoutModule, RouterTestingModule],
+            imports: [RouterTestingModule],
             schemas: [NO_ERRORS_SCHEMA],
         }).compileComponents();
 
