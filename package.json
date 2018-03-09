@@ -16,7 +16,7 @@
         "url": "https://github.com/DSI-HUG/dejajs-components.git"
     },
     "scripts": {
-        "start": "concurrently \"gulp build:watch-fast\" \"gulp serve:demo\"",
+        "start": "gulp build:watch-fast",
         "build": "gulp build",
         "build:demo": "gulp build:demo",
         "build:doc": "gulp build:doc",

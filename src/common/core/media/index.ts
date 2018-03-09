@@ -7,15 +7,11 @@
  */
 
 import { NgModule } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { MediaService } from './media.service';
 
 @NgModule({
     providers: [
         MediaService,
-    ],
-    imports: [
-        FlexLayoutModule,
     ],
 })
 export class MediaModule { }
