@@ -1,16 +1,15 @@
-<div class="deja-popup-container" fxLayout="column" fxLayoutAlign="start stretch">
+<div class="deja-popup-container">
 
-    <div *ngIf="dragstart" class="dialog-overlay" fxFlex="none" (mouseup)="onMouseUp($event)" (click)="freeze($event)">&nbsp;</div>
+    <div *ngIf="dragstart" class="dialog-overlay" (mouseup)="onMouseUp($event)" (click)="freeze($event)">&nbsp;</div>
 
-    <deja-popup-toolbar fxFlex="none" *ngIf="config && config.toolbarType" [config]="config" (actionSelected)="dispatchAction($event)"></deja-popup-toolbar>
+    <deja-popup-toolbar *ngIf="config && config.toolbarType" [config]="config" (actionSelected)="dispatchAction($event)"></deja-popup-toolbar>
 
-    <div mat-dialog-content [ngClass]="{'frame-full': !config.padding, 'frame-padding': !!config.padding}" fxFlex="grow" fxLayout="column"
-        fxLayoutAlign="start stretch">
+    <div mat-dialog-content [ngClass]="{'frame-full': !config.padding, 'frame-padding': !!config.padding}">
 
-        <deja-popup-content *ngIf="config?.hasContent()" [config]="config" fxFlex="grow">
+        <deja-popup-content *ngIf="config?.hasContent()" [config]="config">
         </deja-popup-content>
 
-        <div *ngIf="config?.url" class="iframe-wrapper" fxFlex="grow">
+        <div *ngIf="config?.url" class="iframe-wrapper">
             <deja-iframe [sourceUrl]="config?.url"></deja-iframe>
         </div>
 
@@ -24,7 +23,7 @@
 
     </div>
 
-    <div mat-dialog-actions fxFlex="none" *ngIf="config.hasActions()">
+    <div mat-dialog-actions *ngIf="config.hasActions()">
         <div [cdkPortalOutlet]="actionsPortal"></div>
     </div>
 
