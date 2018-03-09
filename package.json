@@ -17,12 +17,14 @@
     },
     "scripts": {
         "start": "concurrently \"gulp build:watch-fordev\" \"gulp serve:demo\"",
+        "clean": "gulp clean && rm -rf demo/node_modules && rm -rf node_modules",
         "build": "gulp build",
         "build:demo": "gulp build:demo",
         "build:doc": "gulp build:doc",
         "link": "gulp link",
         "licensecheck": "gulp license",
         "test": "gulp test",
+        "install:demo": "gulp install:demo",
         "test:watch": "gulp test:watch",
         "test:demo": "gulp test:demo",
         "check-travis": "travis-status --repo=? --branch=master --fail-pending || echo 'Not yet passing'",
@@ -30,7 +32,7 @@
         "release:major": "gulp release --version=major",
         "release:minor": "gulp release --version=minor",
         "release:patch": "gulp release --version=patch",
-        "postinstall": "gulp build && gulp link"
+        "postinstall": "gulp build-fordev && gulp link && gulp install:demo"
     },
     "dependencies": {
         "@angular-devkit/core": "0.4.3",
