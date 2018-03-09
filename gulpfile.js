@@ -530,7 +530,7 @@ gulp.task('test:demo', () => {
 });
 
 gulp.task('serve:demo', () => {
-    return execDemoCmd('serve --preserve-symlinks --aot --port 5100 --base-href /', {
+    return execDemoCmd('serve --preserve-symlinks --port 5100 --base-href /', {
         cwd: `${config.demoDir}`
     });
 });
