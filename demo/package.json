@@ -6,9 +6,7 @@
     "scripts": {
         "ng": "ng",
         "start": "ng lint && ng serve --preserve-symlinks --port 5100 --base-href /",
-        "start2": "ng lint && ng serve --preserve-symlinks --port 5101 --base-href /",
-        "sass": "node-sass -r -x src -o src",
-        "build": "del-cli .tmp && ng build --prod --env=prod --base-href /",
+        "build": "del-cli .tmp && ng build --preserve-symlinks --prod --aot --build-optimizer --env=prod --base-href /",
         "test": "ng test --preserve-symlinks",
         "lint": "ng lint",
         "e2e": "ng e2e --preserve-symlinks",

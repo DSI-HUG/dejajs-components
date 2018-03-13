@@ -16,11 +16,12 @@
         "url": "https://github.com/DSI-HUG/dejajs-components.git"
     },
     "scripts": {
-        "start": "gulp serve:demo",
+        "start": "concurrently \"gulp build:watch-scss\" \"gulp serve:demo\"",
         "clean": "gulp clean:all",
         "build": "gulp build",
         "build:demo": "gulp build:demo",
         "build:doc": "gulp build:doc",
+        "sass:watch": "gulp build:watch-scss",
         "link": "gulp link",
         "unlink": "gulp unlink",
         "licensecheck": "gulp license",
@@ -95,6 +96,7 @@
         "gulp-git": "2.5.2",
         "gulp-hub": "0.8.0",
         "gulp-inline-ng2-template": "4.1.0",
+        "gulp-insert": "0.5.0",
         "gulp-license-check": "1.2.1",
         "gulp-strip-line": "0.0.1",
         "gulp-tslint": "8.1.3",

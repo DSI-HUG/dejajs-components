@@ -1,43 +1,43 @@
 @import '~@angular/material/theming';
 
 @mixin circular-picker-theme($theme) {
-    $primary: map-get($theme, primary);
+	$primary: map-get($theme, primary);
 
-    .circular-picker {
-        border: 1px solid green;
-        background-color: #dfdfdf;
+	.circular-picker {
+		border: 1px solid#dfdfdf;
+		background-color: #dfdfdf;
 
-        &.disabled {
-             .value {
-                &:hover {
-                    background-color: transparent;
-                    color: initial;
-                    cursor: not-allowed;
-                }
-            }
-            .cursor-container {
-                .cursor {
-                    background-color: #AAA;
-                }
-                .cursorHand {
-                    background-color: #AAA;
-                }
-            }
-        }
-        .value {
-            &:hover {
-                background-color: mat-color($primary);
-                color: #FFF;
-            }
-        }
-        .cursor-container {
-            .cursor {
-                background-color: mat-color($primary);
-                color: #FFF;
-            }
-            .cursorHand {
-                background-color: mat-color($primary);
-            }
-        }
-    }
+		&.disabled {
+			.value {
+				&:hover {
+					background-color: transparent;
+					color: initial;
+					cursor: not-allowed;
+				}
+			}
+			.cursor-container {
+				.cursor {
+					background-color: #AAA;
+				}
+				.cursorHand {
+					background-color: #AAA;
+				}
+			}
+		}
+		.value {
+			&:hover {
+				background-color: mat-color($primary);
+				color: #FFF;
+			}
+		}
+		.cursor-container {
+			.cursor {
+				background-color: mat-color($primary);
+				color: #FFF;
+			}
+			.cursorHand {
+				background-color: mat-color($primary);
+			}
+		}
+	}
 }
