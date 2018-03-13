@@ -619,8 +619,11 @@ gulp.task('unlink:demo', (cb) => {
 /**
  * Copy Demo Assets to /dist
  */
-gulp.task('copy:demoassets', function() {
-    return gulp.src([`${config.demoDir}src/404.html`]).pipe(gulp.dest(config.outputDemoDist));
+gulp.task('copy:demoassets', function(cb) {
+    pump([
+        gulp.src([`${config.demoDir}404.html`]),
+        gulp.dest(config.outputDemoDist)
+    ], cb);
 });
 
 /////////////////////////////////////////////////////////////////////////////
