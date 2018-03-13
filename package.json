@@ -59,6 +59,7 @@
         "zone.js": "0.8.20"
     },
     "devDependencies": {
+        "@angular/animations": "5.2.7",
         "@angular/common": "5.2.7",
         "@angular/compiler": "5.2.5",
         "@angular/compiler-cli": "5.2.5",
