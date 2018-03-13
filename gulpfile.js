@@ -243,25 +243,17 @@ gulp.task('clean:tmp', () => {
     return del(`${config.outputDemoDist}`);
 });
 
-gulp.task('clean:yarn-lock', () => {
-    return del(`yarn.lock`);
-});
-
-gulp.task('clean:yarn-log', () => {
-    return del(`yarn-error.log`)
+gulp.task('clean:lock', () => {
+    return del([`yarn.lock`, `yarn-error.log`, `package-lock.json`, `${config.demoDir}yarn.lock`, `${config.demoDir}yarn-error.log`, `${config.demoDir}package-lock.json`]);
 });
 
 gulp.task('clean:node-modules', () => {
-    return del(`node_modules`);
-});
-
-gulp.task('clean:demo-node-modules', () => {
-    return del(`demo/node_modules`);
+    return del([`demo/node_modules`, `node_modules`]);
 });
 
 gulp.task('clean', ['clean:dist', 'clean:coverage', 'clean:doc', 'clean:tmp', 'clean:build', 'clean:demo']);
 
-gulp.task('clean:all', ['clean', 'clean:yarn-lock', 'clean:yarn-log', 'clean:demo-node-modules', 'clean:node-modules']);
+gulp.task('clean:all', ['clean', 'clean:lock', 'clean:node-modules']);
 
 /////////////////////////////////////////////////////////////////////////////
 // Compilation Tasks
@@ -568,14 +560,9 @@ const execDemoCmd = (args, opts) => {
 };
 
 gulp.task('install:demo', () => {
-    return helpers.installDependencies({
-            cwd: `${config.demoDir}`
-        })
-        .catch(e => {
-            gulpUtil.log(gulpUtil.colors.red(`Installing demo fail. See below for errors.\n`));
-            gulpUtil.log(gulpUtil.colors.red(e));
-            process.exit(1);
-        });
+    return execExternalCmd('yarn', '', {
+        cwd: `${config.demoDir}`
+    });
 });
 
 gulp.task('test:demo', () => {
@@ -619,8 +606,11 @@ gulp.task('unlink:demo', (cb) => {
 /**
  * Copy Demo Assets to /dist
  */
-gulp.task('copy:demoassets', function() {
-    return gulp.src([`${config.demoDir}src/404.html`]).pipe(gulp.dest(config.outputDemoDist));
+gulp.task('copy:demoassets', function(cb) {
+    pump([
+        gulp.src([`${config.demoDir}404.html`]),
+        gulp.dest(config.outputDemoDist)
+    ], cb);
 });
 
 /////////////////////////////////////////////////////////////////////////////
