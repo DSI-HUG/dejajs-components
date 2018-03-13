@@ -1,15 +1,8 @@
 {
-  "extends": "../tsconfig.json",
-  "compilerOptions": {
-    "baseUrl": "",
-    "module": "commonjs",
-    "declaration": false,
-    "emitDecoratorMetadata": true,
-    "typeRoots": [
-      "../node_modules/@types"
-    ]
-  },
-  "awesomeTypescriptLoaderOptions": {
-    "useWebpackText": true
-  }
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "outDir": "../out-tsc/spec",
+        "baseUrl": "",
+        "module": "commonjs"
+    }
 }

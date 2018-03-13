@@ -34,27 +34,27 @@ export class SelectDemoComponent implements OnDestroy {
     public fruct = '';
     public fructs = [] as string[];
 
-    protected disabled: boolean;
-    protected country: Country;
+    public disabled: boolean;
+    public country: Country;
     public tabIndex = 1;
-    protected news$: Observable<News[]>;
-    protected bigNews$: Observable<News[]>;
-    protected bigCountries$: Observable<Country[]>;
-    protected viewPortInfos: {
+    public news$: Observable<News[]>;
+    public bigNews$: Observable<News[]>;
+    public bigCountries$: Observable<Country[]>;
+    public viewPortInfos: {
         name: string;
         value: string;
     }[];
-    protected viewPortInfos$: Subscription;
-    protected dialogResponse$: Subject<string> = new Subject<string>();
-    protected readonlyMultiSelect = false;
-    protected disableMultiSelect = false;
-    protected fruitForm: FormGroup;
-    protected fruitFormModels: FormGroup;
-    protected fruits$: Observable<string[]>;
+    public viewPortInfos$: Subscription;
+    public dialogResponse$: Subject<string> = new Subject<string>();
+    public readonlyMultiSelect = false;
+    public disableMultiSelect = false;
+    public fruitForm: FormGroup;
+    public fruitFormModels: FormGroup;
+    public fruits$: Observable<string[]>;
 
-    private countries: Observable<Country[]>;
-    private countriesForMultiselect: Country[];
-    private groupedCountries: ICountryGroup[];
+    public countries: Observable<Country[]>;
+    public countriesForMultiselect: Country[];
+    public groupedCountries: ICountryGroup[];
     public onDemandGroupedCountries: ICountryGroup[];
     public multiselectModel: IItemTree[];
     private _dialogVisible = false;
@@ -62,9 +62,15 @@ export class SelectDemoComponent implements OnDestroy {
     private subscriptions = [] as Subscription[];
     public yellowBackgroundColorHighlight = true;
 
+    public firstOccurenceOnly = false;
+    public firstOccurencePerWordOnly = false;
+    public atTheBeginningOfWordOnly = false;
+
     @ViewChild('news') private newsSelect: DejaSelectComponent;
     @ViewChild('ondemand') private onDemandSelect: DejaSelectComponent;
     @ViewChild('onexpand') private onExpandSelect: DejaSelectComponent;
+
+    public businessCountry: Country;
 
     public set dialogVisible(value: boolean) {
         this._dialogVisible = value;

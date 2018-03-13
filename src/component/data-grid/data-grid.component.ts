@@ -191,6 +191,7 @@ export class DejaGridComponent implements OnDestroy {
     private _columnsSortable = false;
     private _columnsSizable = false;
     private _multiSelect = false;
+    private _noborders = false;
     private noColumnsSpecified = false;
 
     private columnGroups$ = new Subject<IDejaGridColumn[] | string>();
@@ -295,6 +296,16 @@ export class DejaGridComponent implements OnDestroy {
 
     public get multiSelect() {
         return this._multiSelect;
+    }
+
+    /** Definit si la grille à un bord */
+    @Input()
+    public set noborders(value: boolean | string) {
+        this._noborders = coerceBooleanProperty(value);
+    }
+
+    public get noborders() {
+        return this._noborders;
     }
 
     /** Définit la structure des colonnes de la grille. */

@@ -4,21 +4,14 @@
         "outDir": "../out-tsc/app",
         "baseUrl": "./",
         "module": "es2015",
-        "types": [],
-        "paths": {
-            "@angular/*": [
-                "../node_modules/@angular/*"
-            ],
-            "rxjs/*": [
-                "../node_modules/rxjs/*"
-            ],
-            "@deja-js/component": [
-                "../node_modules/@deja-js/component/src"
-            ]
-        }
+        "types": []
     },
     "exclude": [
         "test.ts",
         "**/*.spec.ts"
+    ],
+    "include": [
+        "../node_modules/@deja-js/component/index.ts",
+        "./**/*"
     ]
 }

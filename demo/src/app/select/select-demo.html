@@ -272,7 +272,7 @@
             <div fxLayout="row">
                 <deja-select fxFlex="0 0 45%" placeholder="Bold query template select" type="autocomplete" textField="naqme" valueField="code" [items]="countries" >
                     <ng-template #itemTemplate let-query="query" let-item>
-                        <deja-bold-query [query]="query" [value]="item.naqme" [firstOccurenceOnly]="firstOccurenceOnly" [firstOccurencePerWordOnly]="firstOccurencePerWordOnly" [atTheBeginningOfWordOnly]="atTheBeginningOfWordOnly" [highlightClassName]="yellowBackgroundColorHighlight?'yellowBackgroundColorHighlight':'highlight'"></deja-bold-query>
+                        <deja-bold-query text-ellipsis [query]="query" [value]="item.naqme+item.naqme+item.naqme+item.naqme+item.naqme" [firstOccurenceOnly]="firstOccurenceOnly" [firstOccurencePerWordOnly]="firstOccurencePerWordOnly" [atTheBeginningOfWordOnly]="atTheBeginningOfWordOnly" [highlightClassName]="yellowBackgroundColorHighlight?'yellowBackgroundColorHighlight':'highlight'"></deja-bold-query>
                     </ng-template>
                     <ng-template #hintTemplate>
                     </ng-template>

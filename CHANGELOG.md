@@ -1,3 +1,27 @@
+<a name="3.0.0-beta.2"></a>
+# [3.0.0-beta.1](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.1) (2018-03-13)
+
+
+### Bug Fixes
+
+* **BoldQuery:** DejaBoldQuery force inline-style and ellipsis. This is not the role of DejaBoldQuery to decide the inline-style of his content. ([4707ac3](https://github.com/DSI-HUG/dejajs-components/commit/4707ac3))
+* **Config:** Faster install, removed from warning ([3ef96b5](https://github.com/DSI-HUG/dejajs-components/commit/3ef96b5))
+* **DejaSidenav:** Fix wrong import on test ([b002070](https://github.com/DSI-HUG/dejajs-components/commit/b002070))
+* **Demo:** Fix synchronisation between demo and lib in dev ([2bea4e9](https://github.com/DSI-HUG/dejajs-components/commit/2bea4e9))
+* **Global:** Link to source instead bundle ([d3f8fce](https://github.com/DSI-HUG/dejajs-components/commit/d3f8fce))
+* **Global:** SCSS concatenation in one _theming.scss file ([23a5089](https://github.com/DSI-HUG/dejajs-components/commit/23a5089))
+* **MediaService:** Removed flex-layout dependencies ([a0594b4](https://github.com/DSI-HUG/dejajs-components/commit/a0594b4))
+* **SideNav:** Use MediaService instead javascript native code ([dcda8e5](https://github.com/DSI-HUG/dejajs-components/commit/dcda8e5))
+* **Theming:** Build _theming.scss for prod and demo. ([c21b7c3](https://github.com/DSI-HUG/dejajs-components/commit/c21b7c3))
+
+
+### BREAKING CHANGES
+
+* **BoldQuery:** DejaBoldQuery don't ellipsis anymore. Add a text-ellipsis attribute to bold-query to get the ellipsis feature.
+* **Global:** By default dejaTreeList and dejaGrid has border. To avoid borders add a noborders attribute. Removed useless _flex util files, use angular-flex-layout or display: flex instead.
+
+
+
 <a name="3.0.0-beta.1"></a>
 ## [3.0.0-beta.1](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.2) (2018-03-02)
 

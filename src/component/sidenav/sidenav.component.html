@@ -1,5 +1,5 @@
 <mat-sidenav-container [class.sidenav-hidden]="hidden" [class.sidenav-light]="!hidden && !sidenav.opened">
-    <mat-sidenav #sidenav mode="side" opened>
+    <mat-sidenav #sidenav mode="side" [opened]="opened || null" [mode]="mode">
         <mat-toolbar class="header">
             <mat-icon class="header-icon">{{headerIcon}}</mat-icon>
             <span class="header-text">{{headerText}}</span>

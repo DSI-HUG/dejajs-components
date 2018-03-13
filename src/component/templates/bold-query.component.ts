@@ -25,7 +25,7 @@ export class DejaBoldQueryComponent {
     private _firstOccurenceOnly = false;
     private _firstOccurencePerWordOnly = false;
     private _atTheBeginningOfWordOnly = false;
-    private _highlightClassName = 'highlight';
+    private _highlightClassName = 'highlight | yellowBackgroundColorHighlight';
 
     public get content() {
         return this._content;

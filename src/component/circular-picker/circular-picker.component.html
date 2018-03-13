@@ -8,7 +8,7 @@
 				[style.left.px]="circle.center.left - circle.radius"
 				[style.width.px]="circle.radius * 2"
 				[style.height.px]="circle.radius * 2"
-		></div-->
+        ></div-->
 		<div class="cursor-container">
 			<div class="cursor" cursor *ngIf="cursor.value !== undefined" [style.top.px]="cursor.position.top" [style.left.px]="cursor.position.left">
 				<ng-template *ngIf="cursorTemplate" [ngTemplateOutlet]="cursorTemplate" [ngTemplateOutletContext]="{ $implicit: cursor.value }"></ng-template>

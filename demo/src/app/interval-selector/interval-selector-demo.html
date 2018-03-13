@@ -23,9 +23,7 @@
 
                     </div>
                 </div>
-                <deja-tree-list class="demo-half-width optionstl" [maxHeight]="150"
-                                textField="label" valueField="id" [models]="events" [itemTemplateExternal]="externalItemTemplate" [parentItemTemplateExternal]="externalItemTemplate" [multiSelect]="true"
-                                (selectedChange)="treeMultiselectModelChange($event.models)">
+                <deja-tree-list class="demo-half-width optionstl" [maxHeight]="150" textField="label" valueField="id" [models]="events" [itemTemplateExternal]="externalItemTemplate" [parentItemTemplateExternal]="externalItemTemplate" [multiSelect]="true" (selectedChange)="treeMultiselectModelChange($event.models)">
                 </deja-tree-list>
 
                 <!--template pour le tree-->
@@ -50,8 +48,7 @@
                 </div>
             </div>
 
-            <deja-grid columnsSortable columnsSizable sortable maxHeight="auto" [rows]="events" [columns]="eventsColumns" nodataholder="No datas" valueField="id" [multiSelect]="true" (sortChanged)="gridSortChanged($event)"
-            (selectedChange)="gridEventsSelectedChange($event.models)">
+            <deja-grid columnsSortable columnsSizable sortable maxHeight="auto" [rows]="events" [columns]="eventsColumns" nodataholder="No datas" valueField="id" [multiSelect]="true" (sortChanged)="gridSortChanged($event)" (selectedChange)="gridEventsSelectedChange($event.models)">
                 <ng-template #cellTemplate let-item let-column="column">
                     <div *ngIf="column.name==='date'">
                         <deja-interval-selector [intervalSelectorData]="{'model':item, 'intervalId':'gridEvents'}">

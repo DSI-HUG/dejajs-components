@@ -4,6 +4,7 @@
 /dist
 /tmp
 /doc
+/out-tsc
 
 # dependencies
 /node_modules
@@ -38,6 +39,7 @@
 npm-debug.log
 yarn-error.log
 testem.log
+.prettierignore
 
 # System Files
 .DS_Store
@@ -54,6 +56,7 @@ demo/**/*.js
 demo/**/*.js.map
 demo/**/*.d.ts
 demo/vs
+demo/.prettierignore
 
 # Ignore backup of demo folder
 demo.*

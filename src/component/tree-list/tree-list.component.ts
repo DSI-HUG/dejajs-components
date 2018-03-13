@@ -564,12 +564,12 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
         }
     }
 
-    private set currentItemIndex(value: number) {
+    public set currentItemIndex(value: number) {
         super.setCurrentItemIndex(value);
         this.changeDetectorRef.markForCheck();
     }
 
-    private get currentItemIndex() {
+    public get currentItemIndex() {
         return this.getCurrentItemIndex();
     }
 

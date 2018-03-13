@@ -1,0 +1,6 @@
+{
+    "name": "@deja-js/component",
+    "module": "dejajs-component.js",
+    "typings": "dejajs-component.d.ts",
+    "license": "Apache-2.0"
+}

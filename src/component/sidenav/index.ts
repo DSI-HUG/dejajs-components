@@ -8,8 +8,9 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule, MatIconModule, MatSidenavModule, MatToolbarModule } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MediaModule } from '../../common/core/media/index';
 import { DejaSlimScrollModule } from './../../common/core/slimscroll/index';
 import { DejaSidenavContentDirective } from './sidenav-content.directive';
 import { DejaSidenavHeaderDirective } from './sidenav-header.directive';
@@ -33,14 +34,16 @@ import { DejaSidenavComponent } from './sidenav.component';
         DejaSidenavHeaderDirective,
     ],
     imports: [
+        BrowserAnimationsModule,
         CommonModule,
-        FlexLayoutModule,
         MatSidenavModule,
         MatToolbarModule,
         MatButtonModule,
         MatIconModule,
+        MediaModule,
         DejaSlimScrollModule,
     ],
+    providers: [],
 })
 export class DejaSidenavModule {
 
