@@ -1,3 +1,12 @@
+<a name="3.0.0-beta.3"></a>
+# [3.0.0-beta.3](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.3) (2018-03-13)
+
+
+### Bug Fixes
+
+* **gulp:** Fix copy of 404.html and clean task ([1439f35](https://github.com/DSI-HUG/dejajs-components/commit/1439f35))
+
+
 <a name="3.0.0-beta.2"></a>
 # [3.0.0-beta.1](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.1) (2018-03-13)
 

@@ -1,6 +1,6 @@
 {
     "name": "@deja-js/component",
-    "version": "3.0.0-beta.2",
+    "version": "3.0.0-beta.3",
     "description": "Angular2 Components Library",
     "homepage": "https://github.com/DSI-HUG/dejajs-components",
     "bugs": "https://github.com/DSI-HUG/dejajs-components/issues",
@@ -16,7 +16,7 @@
         "url": "https://github.com/DSI-HUG/dejajs-components.git"
     },
     "scripts": {
-        "start": "concurrently \"gulp build:watch-scss\" \"gulp serve:demo\"",
+        "start": "gulp start",
         "clean": "gulp clean:all",
         "build": "gulp build",
         "build:demo": "gulp build:demo",
@@ -33,7 +33,7 @@
         "release:major": "gulp release --version=major",
         "release:minor": "gulp release --version=minor",
         "release:patch": "gulp release --version=patch",
-        "postinstall": "gulp unlink && gulp link && gulp install:demo"
+        "postinstall": "gulp link && gulp install:demo"
     },
     "dependencies": {
         "@angular-devkit/core": "0.4.3",
@@ -80,7 +80,6 @@
         "awesome-typescript-loader": "3.4.1",
         "codelyzer": "4.1.0",
         "commitplease": "3.2.0",
-        "concurrently": "3.5.1",
         "conventional-github-releaser": "2.0.0",
         "core-js": "2.5.3",
         "css-loader": "0.28.9",
