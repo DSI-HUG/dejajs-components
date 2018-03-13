@@ -1,9 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
-
-@import './app/home/home-theme';
-@import '~@deja-js/component/theming';
 @import '~@angular/material/theming';
+@import '~@deja-js/component/theming';
 @import './component/markdown/markdown-theme';
+@import './app/home/home-theme';
+
 @mixin create-theme($color1, $color2) {
     @include mat-core(); // Define color scheme
     $primary: mat-palette($color1);

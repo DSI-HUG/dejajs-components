@@ -92,6 +92,7 @@ const config = {
 	scssSass: 'src/scss/**/*.+(scss|sass)',
 	demoDir: 'demo/',
 	buildDir: 'tmp/',
+	sourceDir: 'src/',
 	outputDir: 'dist/',
 	outputDemoDist: 'demo/dist',
 	outputDemoDir: 'demo/dist/browser/',
@@ -170,6 +171,13 @@ const execExternalCmd = (name, args, opts) => {
 		});
 };
 
+const execExternalCmdNoErrors = (name, args, opts) => {
+	return helpers.execp(`${name} ${args}`, opts)
+		.catch(e => {
+			gulpUtil.log(gulpUtil.colors.white(e));
+		});
+};
+
 // Compile Sass to css
 const styleProcessor = (stylePath, ext, styleFile, callback) => {
 	/**
@@ -234,7 +242,25 @@ gulp.task('clean:tmp', () => {
 	return del(`${config.outputDemoDist}`);
 });
 
+gulp.task('clean:yarn-lock', () => {
+	return del(`yarn.lock`);
+});
+
+gulp.task('clean:yarn-log', () => {
+	return del(`yarn-error.log`)
+});
+
+gulp.task('clean:node-modules', () => {
+	return del(`node_modules`);
+});
+
+gulp.task('clean:demo-node-modules', () => {
+	return del(`demo/node_modules`);
+});
+
 gulp.task('clean', ['clean:dist', 'clean:coverage', 'clean:doc', 'clean:tmp', 'clean:build', 'clean:demo']);
+
+gulp.task('clean:all', ['unlink:demo', 'unlink', 'clean:yarn-lock', 'clean:yarn-log', 'clean:demo-node-modules', 'clean:node-modules']);
 
 /////////////////////////////////////////////////////////////////////////////
 // Compilation Tasks
@@ -326,7 +352,7 @@ gulp.task('build', ['clean'], (cb) => {
 
 // Faster build for dev
 gulp.task('build-fordev', (cb) => {
-	runSequence('compile-fordev', 'npm-package', 'rollup-bundle', 'build:scss', cb);
+	runSequence('compile-fordev', 'npm-package', 'build:scss', 'rollup-bundle', cb);
 });
 
 // Watch changes on (*.ts, *.html, *.sass) and Re-build library (without running tests)
@@ -547,13 +573,19 @@ gulp.task('serve:demo', () => {
 });
 
 gulp.task('build-demo', () => {
-	const build = execDemoCmd(`build --preserve-symlinks --prod --aot --build-optimizer --env=prod --base-href https://dsi-hug.github.io/dejajs-components/`, {
+	return execDemoCmd(`build --preserve-symlinks --prod --aot --build-optimizer --env=prod --base-href https://dsi-hug.github.io/dejajs-components/`, {
 		cwd: `${config.demoDir}`
 	});
 });
 
 gulp.task('build:demo', ['clean:demo'], (cb) => {
 	runSequence('build-demo', 'copy:demoassets', cb);
+});
+
+gulp.task('unlink:demo', (cb) => {
+	return execExternalCmdNoErrors('yarn', 'unlink @deja-js/component', {
+		cwd: `${config.demoDir}`
+	}).catch();
 });
 
 /**
@@ -703,14 +735,14 @@ gulp.task('license', function() {
 // version of the library ( which is in 'dist/' folder)
 gulp.task('link', () => {
 	return execExternalCmd('yarn', 'link', {
-		cwd: `${config.outputDir}`
+		cwd: `${config.sourceDir}`
 	});
 });
 
 gulp.task('unlink', () => {
-	return execExternalCmd('yarn', 'unlink', {
-		cwd: `${config.outputDir}`
-	});
+	return execExternalCmdNoErrors('yarn', 'unlink', {
+		cwd: `${config.sourceDir}`
+	}).catch();
 });
 
 // Upload code coverage report to coveralls.io (will be triggered by Travis CI on successful build)
