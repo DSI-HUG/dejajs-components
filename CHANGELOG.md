@@ -1,3 +1,12 @@
+<a name="3.0.0-beta.5"></a>
+# [3.0.0-beta.5](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.5) (2018-03-14)
+
+
+### Bug Fixes
+
+* **Global:** Fix dependencies in prod ([7e0497e](https://github.com/DSI-HUG/dejajs-components/commit/7e0497e))
+
+
 <a name="3.0.0-beta.4"></a>
 # [3.0.0-beta.4](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.4) (2018-03-13)
 
