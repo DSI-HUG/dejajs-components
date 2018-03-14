@@ -46,7 +46,6 @@
 	}
 	/* copy the styles below if you want to use custom demo as is*/
 	#custom-range {
-		@import "../../../../src/scss/variables/_colors.scss";
 		/* change the height of the component using this variable only*/
 		$height: 24px;
 		-ms-flex-preferred-size: max-content;
@@ -77,7 +76,7 @@
 			$triangle-height: 5px;
 			svg.triangle {
 				polygon {
-					fill: $secondary;
+					fill: #333;
 				}
 				margin-top: 0px - $triangle-height;
 				width: $triangle-height * 2;
@@ -87,7 +86,7 @@
 				height: $height + 2 * $triangle-height;
 				margin-top: 0px - $triangle-height;
 				rect {
-					fill: $secondary;
+					fill: #333;
 					height: $height + 2 * $triangle-height;
 					width: 1px;
 				}

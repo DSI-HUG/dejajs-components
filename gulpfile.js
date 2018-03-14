@@ -248,7 +248,7 @@ gulp.task('clean:lock', () => {
 });
 
 gulp.task('clean:node-modules', () => {
-    return del([`demo/node_modules`, `node_modules`]);
+    return del([`src/node_modules`, `demo/node_modules`, `node_modules`]);
 });
 
 gulp.task('clean', ['clean:dist', 'clean:coverage', 'clean:doc', 'clean:tmp', 'clean:build', 'clean:demo']);
@@ -307,6 +307,15 @@ gulp.task('build:scss', (cb) => {
         });
 });
 
+gulp.task('scss', (cb) => {
+    return Promise.resolve()
+        .then(() => buildCss(config.sourceDir))
+        .catch(e => {
+            gulpUtil.log(gulpUtil.colors.red('sass compilation failed. See below for errors.\n'));
+            gulpUtil.log(gulpUtil.colors.red(e));
+        });
+});
+
 // Prepare files for compilation
 gulp.task('pre-compile', (cb) => {
     pump([
@@ -328,26 +337,9 @@ gulp.task('ng-compile', () => {
         });
 });
 
-gulp.task('ng-compile-fordev', () => {
-    return Promise.resolve()
-        .then(() => ngc(['--project', `${buildFolder}/tsconfig.es5.json`])
-            .then(exitCode => exitCode === 0 ? Promise.resolve() : Promise.reject())
-            .then(() => gulpUtil.log('ES5 compilation succeeded.'))
-        )
-        .catch(e => {
-            gulpUtil.log(gulpUtil.colors.red('ng-compilation failed. See below for errors.\n'));
-            gulpUtil.log(gulpUtil.colors.red(e));
-        });
-});
-
 // Lint, Prepare Build, , Sass to css, Inline templates & Styles and Ng-Compile
 gulp.task('compile', (cb) => {
     runSequence('lint', 'pre-compile', 'inline-templates', 'ng-compile', cb);
-});
-
-// Prepare Build, , Sass to css, Inline templates & Styles and Ng-Compile
-gulp.task('compile-fordev', (cb) => {
-    runSequence('pre-compile', 'inline-templates', 'ng-compile-fordev', cb);
 });
 
 // Build the 'dist' folder (without publishing it to NPM)
@@ -355,19 +347,9 @@ gulp.task('build', ['clean'], (cb) => {
     runSequence('license', 'compile', 'test', 'npm-package', 'rollup-bundle', 'build:scss', 'build:doc', cb);
 });
 
-// Faster build for dev
-gulp.task('build-fordev', (cb) => {
-    runSequence('compile-fordev', 'npm-package', 'rollup-bundle', 'build:scss', cb);
-});
-
-// Watch changes on (*.ts, *.html, *.sass) and Re-build library (without running tests)
-gulp.task('build:watch-fordev', ['build-fordev'], (cb) => {
-    gulp.watch([config.allTs, config.allHtml, config.allSass], ['build-fordev']).on('error', cb);
-});
-
 // Watch changes on (*.sass) Re-build _theming file in demo folder
-gulp.task('build:watch-scss', ['build:demo-scss'], (cb) => {
-    gulp.watch([config.allSass], ['build:demo-scss']).on('error', cb);
+gulp.task('build:watch-scss', ['scss', 'scss:demo'], (cb) => {
+    gulp.watch([config.allSass], ['scss', 'scss:demo']).on('error', cb);
 });
 
 /////////////////////////////////////////////////////////////////////////////
@@ -583,7 +565,7 @@ gulp.task('build:demo', () => {
     });
 });
 
-gulp.task('build:demo-scss', (cb) => {
+gulp.task('scss:demo', (cb) => {
     return Promise.resolve()
         .then(() => buildCss(`${config.demoDir}src`))
         .catch(e => {
@@ -591,8 +573,6 @@ gulp.task('build:demo-scss', (cb) => {
             gulpUtil.log(gulpUtil.colors.red(e));
         });
 });
-
-
 gulp.task('unlink:demo', (cb) => {
     return execExternalCmdNoErrors('yarn', 'unlink @deja-js/component', {
         cwd: `${config.demoDir}`
