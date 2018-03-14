@@ -577,14 +577,10 @@ gulp.task('serve:demo', () => {
     });
 });
 
-gulp.task('build-demo', () => {
+gulp.task('build:demo', () => {
     return execDemoCmd(`build --preserve-symlinks --prod --aot --build-optimizer --env=prod --base-href https://dsi-hug.github.io/dejajs-components/`, {
         cwd: `${config.demoDir}`
     });
-});
-
-gulp.task('build:demo', (cb) => {
-    runSequence('build-demo', 'copy:demoassets', cb);
 });
 
 gulp.task('build:demo-scss', (cb) => {
@@ -601,16 +597,6 @@ gulp.task('unlink:demo', (cb) => {
     return execExternalCmdNoErrors('yarn', 'unlink @deja-js/component', {
         cwd: `${config.demoDir}`
     });
-});
-
-/**
- * Copy Demo Assets to /dist
- */
-gulp.task('copy:demoassets', function(cb) {
-    pump([
-        gulp.src([`${config.demoDir}404.html`]),
-        gulp.dest(config.outputDemoDist)
-    ], cb);
 });
 
 /////////////////////////////////////////////////////////////////////////////
