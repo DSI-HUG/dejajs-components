@@ -378,7 +378,7 @@ gulp.task('build:watch-scss', ['build:demo-scss'], (cb) => {
 gulp.task('npm-package', (cb) => {
     let pkgJson = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
     let targetPkgJson = {};
-    let fieldsToCopy = ['version', 'description', 'keywords', 'author', 'repository', 'license', 'bugs', 'homepage'];
+    let fieldsToCopy = ['version', 'description', 'keywords', 'author', 'repository', 'license', 'bugs', 'homepage', 'dependencies', 'peerDependencies'];
 
     targetPkgJson['name'] = config.libraryName;
 
@@ -392,11 +392,11 @@ gulp.task('npm-package', (cb) => {
     targetPkgJson['typings'] = `./${config.unscopedLibraryName}.d.ts`;
 
     // defines project's dependencies as 'peerDependencies' for final users
-    targetPkgJson.peerDependencies = {};
-    Object.keys(pkgJson.dependencies).forEach((dependency) => {
-        // versions are defined as '^' by default, but you can customize it by editing "dependenciesRange" in '.yo-rc.json' file
-        targetPkgJson.peerDependencies[dependency] = `^${pkgJson.dependencies[dependency].replace(/[\^~><=]/,'')}`;
-    });
+    // targetPkgJson.peerDependencies = {};
+    // Object.keys(pkgJson.dependencies).forEach((dependency) => {
+    //     // versions are defined as '^' by default, but you can customize it by editing "dependenciesRange" in '.yo-rc.json' file
+    //     targetPkgJson.peerDependencies[dependency] = `^${pkgJson.dependencies[dependency].replace(/[\^~><=]/,'')}`;
+    // });
 
     // copy the needed additional files in the 'dist' folder
     pump(
