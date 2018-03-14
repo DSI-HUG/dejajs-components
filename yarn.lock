@@ -1577,6 +1577,10 @@ commander@2.9.0:
   dependencies:
     graceful-readlink ">= 1.0.0"
 
+commander@~2.13.0:
+  version "2.13.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-2.13.0.tgz#6964bca67685df7c1f1430c584f07d7597885b9c"
+
 commander@~2.8.1:
   version "2.8.1"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.8.1.tgz#06be367febfda0c330aa1e2a072d3dc9762425d4"
@@ -2974,8 +2978,8 @@ extend@3.0.0:
   resolved "https://registry.yarnpkg.com/extend/-/extend-3.0.0.tgz#5a474353b9f3353ddd8176dfd37b91c83a46f1d4"
 
 extendr@^3.2.0, extendr@^3.2.2:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/extendr/-/extendr-3.3.1.tgz#be3b69ccfeefa999bec5ccfb30f3f9aa76178d6c"
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/extendr/-/extendr-3.3.0.tgz#6a61ad3ad8b9b03afa561696c48bef47de053e37"
   dependencies:
     editions "^1.3.3"
     typechecker "^4.4.1"
@@ -8959,10 +8963,10 @@ typescript@2.7.2, typescript@^2.4.2, typescript@^2.4.x:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.7.2.tgz#2d615a1ef4aee4f574425cdff7026edf81919836"
 
 uglify-es@^3.3.7:
-  version "3.3.10"
-  resolved "https://registry.yarnpkg.com/uglify-es/-/uglify-es-3.3.10.tgz#8b0b7992cebe20edc26de1bf325cef797b8f3fa5"
+  version "3.3.9"
+  resolved "https://registry.yarnpkg.com/uglify-es/-/uglify-es-3.3.9.tgz#0c1c4f0700bed8dbc124cdb304d2592ca203e677"
   dependencies:
-    commander "~2.14.1"
+    commander "~2.13.0"
     source-map "~0.6.1"
 
 uglify-js@3.3.x:
