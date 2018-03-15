@@ -7,7 +7,16 @@
 		[deja-menu-content] {
 			background-color: #FFF;
 			border-color: rgba(0, 0, 0, 0.3);
-			&ul,
+			&ul {
+				li {
+					background-color: #FFF;
+					color: mat-color($primary);
+					&:hover {
+						background-color: mat-color($primary);
+						color: #FFF;
+					}
+				}
+			}
 			>ul {
 				li {
 					background-color: #FFF;
