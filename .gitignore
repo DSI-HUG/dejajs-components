@@ -48,6 +48,7 @@ Thumbs.db
 src/**/*.js
 src/**/*.js.map
 src/**/*.d.ts
+src/_theming.scss
 !src/common/global-event/typings/global-event-emmitter.d.ts
 
 # Ignore in demo
@@ -63,6 +64,7 @@ demo.*
 # demo compiled output
 demodist
 demo/tmp
+demo/_theming.scss
 
 # demo dependencies
 demo/node_modules
