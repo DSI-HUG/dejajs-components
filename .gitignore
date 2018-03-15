@@ -4,7 +4,6 @@
 /dist
 /tmp
 /doc
-/out-tsc
 
 # dependencies
 /node_modules
@@ -64,7 +63,6 @@ demo.*
 # demo compiled output
 demodist
 demo/tmp
-demo/out-tsc
 
 # demo dependencies
 demo/node_modules
