@@ -64,7 +64,7 @@ demo.*
 # demo compiled output
 demodist
 demo/tmp
-demo/_theming.scss
+demo/src/_theming.scss
 
 # demo dependencies
 demo/node_modules
