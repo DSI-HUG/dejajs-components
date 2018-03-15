@@ -1,3 +1,23 @@
+<a name="3.0.0-beta.6"></a>
+# [3.0.0-beta.6](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.6) (2018-03-15)
+
+
+### Bug Fixes
+
+* **Demo:** Fix assets in wrong place ([46e1004](https://github.com/DSI-HUG/dejajs-components/commit/46e1004))
+* **Global:** Moving HUG theme form-validation and colors to dejajs-dpi ([5070aea](https://github.com/DSI-HUG/dejajs-components/commit/5070aea))
+* **TsConfig:** Output folders ([9b6ab0f](https://github.com/DSI-HUG/dejajs-components/commit/9b6ab0f))
+
+
+
+### BREAKING CHANGES
+
+* **Global:** HUG theme form-validation and colors are now in dejajs-dpi
+* **BoldQuery:** DejaBoldQuery don't ellipsis anymore. Add a text-ellipsis attribute to bold-query to get the ellipsis feature.
+* **Global:** By default dejaTreeList and dejaGrid has border. To avoid borders add a noborders attribute. Removed useless _flex util files, use angular-flex-layout or display: flex instead.
+
+
+
 <a name="3.0.0-beta.5"></a>
 # [3.0.0-beta.5](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.5) (2018-03-14)
 
