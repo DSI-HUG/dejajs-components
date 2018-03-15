@@ -4,23 +4,8 @@
 
 ### Bug Fixes
 
-* **BoldQuery:** DejaBoldQuery force inline-style and ellipsis. This is not the role of DejaBoldQuery to decide the inline-style of his content. ([4707ac3](https://github.com/DSI-HUG/dejajs-components/commit/4707ac3))
-* **Config:** Faster install, removed from warning ([3ef96b5](https://github.com/DSI-HUG/dejajs-components/commit/3ef96b5))
-* **DejaSidenav:** Fix wrong import on test ([b002070](https://github.com/DSI-HUG/dejajs-components/commit/b002070))
-* **demo:** Fix 404.html copy for page correct redirection ([c65184e](https://github.com/DSI-HUG/dejajs-components/commit/c65184e))
-* **Demo:** Fix assets in wrong place ([46e1004](https://github.com/DSI-HUG/dejajs-components/commit/46e1004))
-* **Demo:** Fix synchronisation between demo and lib in dev ([2bea4e9](https://github.com/DSI-HUG/dejajs-components/commit/2bea4e9))
-* **Global:** Fix dependencies in prod ([7e0497e](https://github.com/DSI-HUG/dejajs-components/commit/7e0497e))
-* **Global:** Link to source instead bundle ([d3f8fce](https://github.com/DSI-HUG/dejajs-components/commit/d3f8fce))
-* **Global:** Moving HUG theme form-validation and colors to dejajs-dpi ([5070aea](https://github.com/DSI-HUG/dejajs-components/commit/5070aea))
-* **Global:** SCSS concatenation in one _theming.scss file ([23a5089](https://github.com/DSI-HUG/dejajs-components/commit/23a5089))
-* **gulp:** Fix copy of 404.html and clean task ([1439f35](https://github.com/DSI-HUG/dejajs-components/commit/1439f35))
-* **gulp:** Fix install sequence with npm ([60ad4d4](https://github.com/DSI-HUG/dejajs-components/commit/60ad4d4))
-* **MediaService:** Removed flex-layout dependencies ([a0594b4](https://github.com/DSI-HUG/dejajs-components/commit/a0594b4))
-* **SideNav:** Use MediaService instead javascript native code ([dcda8e5](https://github.com/DSI-HUG/dejajs-components/commit/dcda8e5))
 * **theming:** imports and mixins for global theming ([e9ab425](https://github.com/DSI-HUG/dejajs-components/commit/e9ab425))
-* **Theming:** Build _theming.scss for prod and demo. ([c21b7c3](https://github.com/DSI-HUG/dejajs-components/commit/c21b7c3))
-* **TsConfig:** Output folders ([9b6ab0f](https://github.com/DSI-HUG/dejajs-components/commit/9b6ab0f))
+
 
 
 ### BREAKING CHANGES
