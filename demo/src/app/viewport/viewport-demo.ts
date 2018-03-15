@@ -20,6 +20,9 @@ import { NewsService } from '../services/news.service';
 })
 export class DejaViewPortDemoComponent {
     public tabIndex = 1;
+    public isHorizontal = false;
+    public hasButtons = false;
+    public ensureIndex: number;
 
     @ViewChild('viewport') private viewport: DejaViewPortComponent;
 
