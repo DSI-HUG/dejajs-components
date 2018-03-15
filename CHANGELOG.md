@@ -1,3 +1,19 @@
+<a name="3.0.0-beta.8"></a>
+# [3.0.0-beta.8](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.8) (2018-03-15)
+
+
+### Bug Fixes
+
+* **mixins:** Treelist borders is now a mixin [@include](https://github.com/include) tree-list-borders() and Fix menu mixin ([a485f91](https://github.com/DSI-HUG/dejajs-components/commit/a485f91))
+* **NewsCard:** Fix wrong image layout on demo ([4f8f720](https://github.com/DSI-HUG/dejajs-components/commit/4f8f720))
+
+
+### BREAKING CHANGES
+
+* **Global:** By default dejaTreeList and dejaGrid has border. To avoid borders add a noborders attribute. Removed useless _flex util files, use angular-flex-layout or display: flex instead.
+
+
+
 <a name="3.0.0-beta.7"></a>
 # [3.0.0-beta.7](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.7) (2018-03-15)
 
