@@ -20,12 +20,10 @@
 @import '../../component/viewport/viewport-theme';
 @import '../../component/numeric-stepper/numeric-stepper-theme';
 @import './menu-theme';
-@import './form-validation';
 @import '../components/loader';
 // Create a theme.
 @mixin deja-theme($custom-theme) {
     @include loader-theme($custom-theme);
-    @include form-validation-theme($custom-theme);
     @include deja-material-theme($custom-theme);
     @include accordion-theme($custom-theme);
     @include chips-theme($custom-theme);
@@ -34,7 +32,6 @@
     @include date-picker-theme($custom-theme);
     @include date-selector-theme($custom-theme);
     @include list-loader-theme($custom-theme);
-    @include markdown-theme($custom-theme);
     @include menu-theme($custom-theme);
     @include message-box-theme($custom-theme);
     @include numeric-stepper-theme($custom-theme);

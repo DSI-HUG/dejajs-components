@@ -33,7 +33,7 @@ export class AppComponent implements OnDestroy {
         }
 
         if (!this._theme) {
-            this._theme = 'hug';
+            this._theme = 'blue';
         }
         this.theme$ = new BehaviorSubject<any>(this._theme);
         Observable.from(this.theme$)
