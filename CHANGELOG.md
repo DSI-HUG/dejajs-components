@@ -1,3 +1,22 @@
+<a name="3.0.0-beta.7"></a>
+# [3.0.0-beta.7](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.7) (2018-03-15)
+
+
+### Bug Fixes
+
+* **theming:** imports and mixins for global theming ([e9ab425](https://github.com/DSI-HUG/dejajs-components/commit/e9ab425))
+
+
+
+### BREAKING CHANGES
+
+* **theming:** deja-menu, deja-popup, and deja-backdrop are now mixins to import special css for the related component or feature
+* **Global:** HUG theme form-validation and colors are now in dejajs-dpi
+* **BoldQuery:** DejaBoldQuery don't ellipsis anymore. Add a text-ellipsis attribute to bold-query to get the ellipsis feature.
+* **Global:** By default dejaTreeList and dejaGrid has border. To avoid borders add a noborders attribute. Removed useless _flex util files, use angular-flex-layout or display: flex instead.
+
+
+
 <a name="3.0.0-beta.6"></a>
 # [3.0.0-beta.6](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.6) (2018-03-15)
 
