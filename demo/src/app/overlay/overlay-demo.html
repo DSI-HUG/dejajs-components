@@ -14,7 +14,7 @@
 
 <div *ngIf="tabIndex === 1" (contextmenu)="onContextMenu($event)">
 	<deja-overlay #contextMenu>
-		<div deja-menu-content>
+		<div class="deja-menu-content">
 			<ul>
 				<li class="menu-item" (click)="contextMenu.close()">
 					<mat-icon>delete_sweep</mat-icon> Context menu
@@ -32,7 +32,7 @@
 		<mat-toolbar color="primary">Overlay</mat-toolbar>
 		<mat-card-content>
 			<deja-overlay #posYMenu>
-				<div deja-menu-content>
+				<div class="deja-menu-content">
 					<ul>
 						<li class="menu-item" (click)="posYMenu.close()">
 							<mat-icon>delete_sweep</mat-icon> Supprimer
@@ -58,7 +58,7 @@
 					</mat-toolbar>
 
 					<deja-overlay #menu>
-						<div deja-menu-content>
+						<div class="deja-menu-content">
 							<button class="menu-item" *ngFor="let item of items" (click)="select(item.text); menu.close()">
 								{{ item.text }}
 							</button>
@@ -74,7 +74,7 @@
 					</mat-toolbar>
 
 					<deja-overlay #anchorMenu>
-						<div id="anchorMenu" deja-menu-content>
+						<div id="anchorMenu" class="deja-menu-content">
 							<a class="menu-item" *ngFor="let item of items" href="http://www.google.com">
                                 {{ item.text }}
                             </a>
@@ -92,7 +92,7 @@
 					</mat-toolbar>
 
 					<deja-overlay #posXMenu class="before" positions="end bottom end top">
-						<div deja-menu-content>
+						<div class="deja-menu-content">
 							<button class="menu-item" *ngFor="let item of items" (click)="posXMenu.close()">
 								{{ item.text }}
 							</button>
