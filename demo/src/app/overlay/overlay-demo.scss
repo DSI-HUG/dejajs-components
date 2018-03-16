@@ -1,4 +1,3 @@
-
 deja-overlay-demo {
 	#demo-deja-menu {
 		display: flex;
@@ -14,14 +13,14 @@ deja-overlay-demo {
 }
 
 .deja-overlay-container {
-	[deja-menu-content]#anchorMenu {
-		.menu-item {
-			white-space: nowrap;
-			padding: 0.5rem 2rem;
+	.deja-menu-content {
+		&#anchorMenu {
+			.menu-item {
+				white-space: nowrap;
+				padding: 0.5rem 2rem;
+			}
 		}
-	}
 
-	[deja-menu-content] {
 		.mat-icon {
 			margin-right: 0.5rem;
 		}
