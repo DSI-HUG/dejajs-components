@@ -1,3 +1,13 @@
+<a name="3.0.0-beta.9"></a>
+# [3.0.0-beta.9](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.9) (2018-03-16)
+
+
+### Bug Fixes
+
+* **MenuMixin:** Fix menu mixin was not working with ul>li ([484d57c](https://github.com/DSI-HUG/dejajs-components/commit/484d57c))
+
+
+
 <a name="3.0.0-beta.8"></a>
 # [3.0.0-beta.8](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.8) (2018-03-15)
 

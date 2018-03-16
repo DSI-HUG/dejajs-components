@@ -20,9 +20,22 @@
 			>a {
 				text-decoration: none;
 			}
-			&ul,
+			&ul {
+				padding: 0;
+				margin: 0;
+				li {
+					cursor: pointer;
+					align-items: center;
+					display: flex;
+					justify-content: left;
+					list-style-type: none;
+					padding: 0.5rem 1rem 0.5rem 0.5rem;
+					md-icon {
+						margin: 0 0.5rem;
+					}
+				}
+			}
 			>ul {
-				background-color: brown !important;
 				padding: 0;
 				margin: 0;
 				li {
