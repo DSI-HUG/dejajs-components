@@ -1,3 +1,18 @@
+<a name="3.0.0-beta.10"></a>
+# [3.0.0-beta.10](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.10) (2018-03-16)
+
+
+### Bug Fixes
+
+* **theming:** Changed attribute deja-menu-content with a class name to fix a issue with ul and li, that make css not applied ([f618802](https://github.com/DSI-HUG/dejajs-components/commit/f618802))
+
+
+### BREAKING CHANGES
+
+* **theming:** deja-menu-content is now a class name instead an attribute
+
+
+
 <a name="3.0.0-beta.9"></a>
 # [3.0.0-beta.9](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.9) (2018-03-16)
 
