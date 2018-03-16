@@ -344,7 +344,7 @@ gulp.task('compile', (cb) => {
 
 // Build the 'dist' folder (without publishing it to NPM)
 gulp.task('build', ['clean'], (cb) => {
-    runSequence('license', 'compile', 'test', 'npm-package', 'rollup-bundle', 'build:scss', 'build:doc', 'clean:tmp', cb);
+    runSequence('license', 'compile', 'test', 'npm-package', 'rollup-bundle', 'build:scss', 'scss:demo', 'build:doc', 'clean:tmp', cb);
 });
 
 // Watch changes on (*.sass) Re-build _theming file in demo folder

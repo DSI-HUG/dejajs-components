@@ -1,3 +1,13 @@
+<a name="3.0.0-beta.11"></a>
+# [3.0.0-beta.11](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.11) (2018-03-16)
+
+
+### Bug Fixes
+
+* **Demo:** Copy theming for demo in deployment ([5ec1d44](https://github.com/DSI-HUG/dejajs-components/commit/5ec1d44))
+
+
+
 <a name="3.0.0-beta.10"></a>
 # [3.0.0-beta.10](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.10) (2018-03-16)
 
