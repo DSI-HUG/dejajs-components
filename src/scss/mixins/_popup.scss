@@ -1,6 +1,6 @@
 @mixin deja-popup() {
-	div[class^='deja-popup-pane-'],
-	div[class*=' deja-popup-pane-'] {
+	[class^='deja-popup-pane-'],
+	[class*=' deja-popup-pane-'] {
 		.mat-dialog-container {
 			padding: 0;
 			height: 100%;
