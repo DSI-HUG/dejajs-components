@@ -1,4 +1,4 @@
-css-loader@0.28.10
+css-loader@0.28.11
 MIT
 Copyright JS Foundation and other contributors
 
