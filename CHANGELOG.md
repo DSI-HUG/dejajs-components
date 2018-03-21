@@ -1,3 +1,15 @@
+<a name="3.0.0-beta.12"></a>
+# [3.0.0-beta.12](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.12) (2018-03-21)
+
+
+### Bug Fixes
+
+* **Gulp:** Fix locked sass file in node_modules for clean task & optimization of gulp scripts ([d60485f](https://github.com/DSI-HUG/dejajs-components/commit/d60485f))
+* **ChangeLog:** Fix cz-conventional-changelog usage ([f02f978](https://github.com/DSI-HUG/dejajs-components/commit/f02f978))
+* **DejaPopup:** Load popup mixin with theme ([2176ebf](https://github.com/DSI-HUG/dejajs-components/commit/2176ebf))
+
+
+
 <a name="3.0.0-beta.11"></a>
 # [3.0.0-beta.11](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.11) (2018-03-16)
 
