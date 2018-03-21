@@ -29,16 +29,46 @@ Begin by cloning the repository.
 After cloning, you should be able to run the following command to install development tools.
 You will only need to run this command when dependencies change in [package.json](package.json).
 
-`yarn install`
+`yarn` or `npm i` 
 
 Take a look at the `src` folder. All components and demo application are placed here. 
 
 
 ## Running demo app 
 
-`yarn start`
+`yarn start` or `npm start`
 
 and navigate to `http://localhost:5100`.
+
+
+## Cleaning
+
+To clean the directory before making a new fresh install
+
+`npm run clean`
+ 
+
+## Linking
+
+To link the library to your project, just make the following commands from the root directory of your project
+
+`yarn link @deja-js/component` or `npm link @deja-js/component`
+
+and start your project with the --preserve-symlinks flag. For example
+
+`ng serve --preserve-symlinks --port 4100 --base-href /"`
+
+
+## Build
+
+To build the library you can use the command `npm run build` and to build the demo `npm run build:demo`
+
+A folder dist will be created on the root directory for the library and the demo directory for the demo containing the bundles.
+You can serve directly the dist folder in the demo directory.
+
+For example with http-server
+ `npm i -g http-server`
+ `http-server demo/dist`
 
 
 ## Feature status and browsers compatibility:
@@ -46,25 +76,27 @@ and navigate to `http://localhost:5100`.
 | Feature            | Working OnPush | Required / Disabled | Chrome 56 | Edge | IE11 | FF51 | Opera Neon | Readme and Demo | Note           |
 |--------------------|----------------|---------------------|-----------|------|------|------|------------|-----------------|----------------|
 | Accordion          |             yes|                  N/A|        yes|   yes|   yes|   yes|         yes|        available|                |
+| Chips              |             yes|                  N/A|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>| |
 | Circular Picker    |             yes|                  yes|yes|yes|yes|yes|yes|available| |
-| Color Selector     |             yes|                  yes|yes|yes|yes|yes|yes|available| |
 | Color Picker       |             yes|                  yes|yes|yes|yes|yes|yes|available| |
+| Color Selector     |             yes|                  yes|yes|yes|yes|yes|yes|available| |
 | Content Editable   |             yes|                  yes|yes|yes|yes|yes|yes|available|New line issue on IE11. IE11 add p instead br |
-| Combo List         |             yes|                  yes|yes|yes|yes|yes|yes|available| |
-| Date Selector      |             yes|                  yes|yes|yes|yes|yes|yes|available| |
 | Date Picker        |             yes|                  yes|yes|yes|yes|yes|yes|available| |
+| Date Selector      |             yes|                  yes|yes|yes|yes|yes|yes|available| |
 | Dialog             |             yes|                  N/A|yes|yes|yes|yes|yes|Message Box| |
-| Events             |             yes|                  N/A|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>| |
 | Grid               |             yes|                  N/A|yes|yes|yes|yes|yes|available| |
 | Dropdown Control   |             yes|                  N/A|yes|yes|yes|yes|yes|Color Picker| |
-| Menu               |             yes|                  N/A|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>| |
 | Message Box        |             yes|                  N/A|yes|yes|yes|yes|yes|available| |
 | Monaco Editor      |             yes|                  N/A|yes|yes|yes|yes|yes|available| |
+| Numeric Stepper    |             yes|                  N/A|yes|yes|yes|yes|yes|available| |
+| Overlay            |             yes|                  N/A|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>| |
 | Popup              |             yes|                  yes|yes|yes|yes|yes|yes|available| |
 | Range              |             yes|                  yes|yes|yes|yes|yes|yes|available| |
 | Select             |             yes|                  yes|yes|yes|yes|yes|yes|available|Place Holder placement in FF, Edge and IE11 |
+| Sidenav            |             yes|                  N/A|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>| |
 | Snackbar           |             yes|                  N/A|yes|yes|yes|yes|yes|available| |
 | Splitter           |             yes|                  N/A|yes|yes|yes|yes|yes|available| |
+| Tag                |             yes|                  N/A|yes|yes|yes|yes|yes|available| |
 | Tiles              |             yes|                  N/A|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>| |
 | Tooltip            |             yes|                  N/A|yes|yes|yes|yes|yes|Message Box| |
 | Treelist           |             yes|                  yes|yes|yes|yes|yes|yes|available| |

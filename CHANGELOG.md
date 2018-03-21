@@ -1,3 +1,15 @@
+<a name="3.0.0-beta.12"></a>
+# [3.0.0-beta.12](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.12) (2018-03-21)
+
+
+### Bug Fixes
+
+* **Gulp:** Fix locked sass file in node_modules for clean task & optimization of gulp scripts ([d60485f](https://github.com/DSI-HUG/dejajs-components/commit/d60485f))
+* **ChangeLog:** Fix cz-conventional-changelog usage ([f02f978](https://github.com/DSI-HUG/dejajs-components/commit/f02f978))
+* **DejaPopup:** Load popup mixin with theme ([2176ebf](https://github.com/DSI-HUG/dejajs-components/commit/2176ebf))
+
+
+
 <a name="3.0.0-beta.11"></a>
 # [3.0.0-beta.11](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.11) (2018-03-16)
 
@@ -139,12 +151,6 @@
 * **Global:** By default dejaTreeList and dejaGrid has border. To avoid borders add a noborders attribute. Removed useless _flex util files, use angular-flex-layout or display: flex instead.
 
 
-
-<a name="3.0.0-beta.1"></a>
-## [3.0.0-beta.1](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.2) (2018-03-02)
-
-
-
 <a name="3.0.0-beta.0"></a>
 # [3.0.0-beta.0](https://github.com/DSI-HUG/dejajs-components/compare/2.18.1...3.0.0) (2018-02-28)
 
@@ -264,133 +270,6 @@
 * **ISortInfos:** name is mandatory and only a string and type is removed (Automatic detection of sorting type)
 * **DejaTreeList:** Padding of the parent element can change. There is no more background gradient for
 parent items
-
-DEJS-221
-
-
-
-<a name="3.0.0"></a>
-# [3.0.0](https://github.com/DSI-HUG/dejajs-components/compare/2.18.1...3.0.0) (2018-02-28)
-
-
-### Bug Fixes
-
-* **ColorEvent:** The ColorEvent class become a IColorEvent interface to fix the CustomEvent implementation ([7f5179a](https://github.com/DSI-HUG/dejajs-components/commit/7f5179a))
-* **ColorPicker:** Disabled style ([3217117](https://github.com/DSI-HUG/dejajs-components/commit/3217117))
-* **ComboList:** Removed ComboList until unit test and standardization are done ([f6897e7](https://github.com/DSI-HUG/dejajs-components/commit/f6897e7))
-* **DatePicker:** conflicts with 2.18.6 ([361de34](https://github.com/DSI-HUG/dejajs-components/commit/361de34))
-* **DatePicker:** consecutives blank lines ([a7f4190](https://github.com/DSI-HUG/dejajs-components/commit/a7f4190))
-* **DatePicker:** fixed circular dependencies ([1901ec1](https://github.com/DSI-HUG/dejajs-components/commit/1901ec1))
-* **DejaCancelableEvent:** The DejaCancelableEvent class become a IDejaCancelableEvent interface to fix the CustomEvent implementation ([0ac4f47](https://github.com/DSI-HUG/dejajs-components/commit/0ac4f47))
-* **DejaChips:** The DejaChipsCloseEvent class become a IDejaChipsCloseEvent interface to fix the CustomEvent implementation ([c06ddb7](https://github.com/DSI-HUG/dejajs-components/commit/c06ddb7))
-* **DejadatePickerComponent:** Raise change events on keyboard navigation ([d9c43cf](https://github.com/DSI-HUG/dejajs-components/commit/d9c43cf))
-* **DejaDatePickerComponent:** [#94](https://github.com/DSI-HUG/dejajs-components/issues/94) check mask on blur and make control invalid if mask isn't ok ([7c25cf7](https://github.com/DSI-HUG/dejajs-components/commit/7c25cf7))
-* **DejaDatePickerComponent:** Use different way to call date and time change events. ([12295d0](https://github.com/DSI-HUG/dejajs-components/commit/12295d0))
-* **DejaDateSelectorComponent:** Hour cursor was displayed on 12 when click on 0 ([bfa740d](https://github.com/DSI-HUG/dejajs-components/commit/bfa740d))
-* **DejaGrid:** Fix Object-Object displayed in the cell content when the value field is undefined ([72f0b9a](https://github.com/DSI-HUG/dejajs-components/commit/72f0b9a))
-* **DejaGrid:** Header bottom line style ([23fbe33](https://github.com/DSI-HUG/dejajs-components/commit/23fbe33))
-* **DejaGridComponent:** Fix missing returned type for some function ([4cabf65](https://github.com/DSI-HUG/dejajs-components/commit/4cabf65)), closes [#286](https://github.com/DSI-HUG/dejajs-components/issues/286)
-* **DejaGridGroupAreaComponent:** Fix grouping refresh when to chips are inverted in the group area ([5b08c11](https://github.com/DSI-HUG/dejajs-components/commit/5b08c11))
-* **DejaIntervalSelectorBoundaryComponent:** protected access in template... ([7de6ede](https://github.com/DSI-HUG/dejajs-components/commit/7de6ede))
-* **DejaIntervalSelectorComponent:** Access private member inside template ([8583d67](https://github.com/DSI-HUG/dejajs-components/commit/8583d67))
-* **DejaItemBase:** viewPortRowHeight and viewPortRowMode don't use coercion ([fc173f0](https://github.com/DSI-HUG/dejajs-components/commit/fc173f0))
-* **DejaNumericStepperComponent:** add possibility to remove value and fix onChangeCallback out of range. ([20376c3](https://github.com/DSI-HUG/dejajs-components/commit/20376c3))
-* **DejaNumericStepperModule:** Export numericStepper component ([3af6735](https://github.com/DSI-HUG/dejajs-components/commit/3af6735))
-* **DejaPopup:** fix tabindex bug in demo app ([7a0b766](https://github.com/DSI-HUG/dejajs-components/commit/7a0b766))
-* **DejaPopup:** lint fix ([6c7d488](https://github.com/DSI-HUG/dejajs-components/commit/6c7d488))
-* **DejaPopupConfig:** config.data ([3870b52](https://github.com/DSI-HUG/dejajs-components/commit/3870b52))
-* **DejaPopupConfig:** Remove config.data=this ([7ab0f6c](https://github.com/DSI-HUG/dejajs-components/commit/7ab0f6c))
-* **DejaSelect:** Autocomplete clear model when text is changed DEJS-246 ([14efbbd](https://github.com/DSI-HUG/dejajs-components/commit/14efbbd))
-* **DejaSelect:** Ensure SearchCriteria in auto-complete when min search length is set and a value already selected ([e11e666](https://github.com/DSI-HUG/dejajs-components/commit/e11e666))
-* **DejaSelect:** Hide when an element is clicked ([6236f10](https://github.com/DSI-HUG/dejajs-components/commit/6236f10))
-* **DejaSelect:** rxjs imports ([c0ca4ba](https://github.com/DSI-HUG/dejajs-components/commit/c0ca4ba))
-* **DejaSelect:** Width regression from material rc0 migration ([6188733](https://github.com/DSI-HUG/dejajs-components/commit/6188733))
-* **DejaSelectComponent:** Issues fixing find by unit test ([279f594](https://github.com/DSI-HUG/dejajs-components/commit/279f594))
-* **DejaSelectComponent:** Selection for empty or null key object in reactiveForm ([baa02de](https://github.com/DSI-HUG/dejajs-components/commit/baa02de))
-* **DejaSidenav:** Removed Angular FlexLayout ([5a5e0dc](https://github.com/DSI-HUG/dejajs-components/commit/5a5e0dc))
-* **DejaTextMetricsService:** adjust text width with linux lower font ratio. ([3aa8f48](https://github.com/DSI-HUG/dejajs-components/commit/3aa8f48))
-* **DejaTextMetricsService:** improve text height calculation by taking in account white space separator ([41d360a](https://github.com/DSI-HUG/dejajs-components/commit/41d360a))
-* **DejaTile:** Removed useless this in html ([ef9657c](https://github.com/DSI-HUG/dejajs-components/commit/ef9657c))
-* **DejaTile:** Spinner position (Regression due to mateial spinner changes) ([5b77394](https://github.com/DSI-HUG/dejajs-components/commit/5b77394))
-* **DejaTiles:** Improved event and garbage collection to avoid null pointers onDestroy ([902f9cd](https://github.com/DSI-HUG/dejajs-components/commit/902f9cd))
-* **DejaTiles:** Remove selection when tiles are empties ([55da608](https://github.com/DSI-HUG/dejajs-components/commit/55da608))
-* **DejaTilesComponent:** Fix a synchronization issue between tiles model and associated dictionary ([9712b18](https://github.com/DSI-HUG/dejajs-components/commit/9712b18))
-* **DejaTilesComponent:** Fix crash if model is not defined ([41e2696](https://github.com/DSI-HUG/dejajs-components/commit/41e2696))
-* **DejaTooltip:** Improve alignment because overlay material can't fit into body (DEJS-302 Régression UserCard) ([2283414](https://github.com/DSI-HUG/dejajs-components/commit/2283414))
-* **DejaTooltip:** Rxjs imports ([b44bef3](https://github.com/DSI-HUG/dejajs-components/commit/b44bef3))
-* **DejaTreeList:** Fix limited depth ([7f19da3](https://github.com/DSI-HUG/dejajs-components/commit/7f19da3))
-* **DemoTiles:** Drag cursor is missing ([cfccdeb](https://github.com/DSI-HUG/dejajs-components/commit/cfccdeb))
-* **Depencencies:** Fix dependencies management ([1b30f6d](https://github.com/DSI-HUG/dejajs-components/commit/1b30f6d))
-* **Dependencies:** Fix dependencies management ([61cc9a5](https://github.com/DSI-HUG/dejajs-components/commit/61cc9a5))
-* **Global:** Correct noImplicitAny compile errors ([9351b03](https://github.com/DSI-HUG/dejajs-components/commit/9351b03))
-* **Global:** fix missing implementation for setDisabledState. ([335f3d6](https://github.com/DSI-HUG/dejajs-components/commit/335f3d6))
-* **Global:** rxjs imports ([409c780](https://github.com/DSI-HUG/dejajs-components/commit/409c780))
-* **Global:** RxJs Imports ([dd44574](https://github.com/DSI-HUG/dejajs-components/commit/dd44574))
-* **Global:** RxJs Imports ([751fbeb](https://github.com/DSI-HUG/dejajs-components/commit/751fbeb))
-* **Global:** RxJs Imports ([4047f5d](https://github.com/DSI-HUG/dejajs-components/commit/4047f5d))
-* **Global:** Rxjs imports and indexation ([ca911d6](https://github.com/DSI-HUG/dejajs-components/commit/ca911d6))
-* **GlobalEventService:** Fix test fail due to a missing sendaction.js script ([3fabaa5](https://github.com/DSI-HUG/dejajs-components/commit/3fabaa5))
-* **ItemListService:** Ensure pre-selection from items object DEJS-256 ([7017720](https://github.com/DSI-HUG/dejajs-components/commit/7017720))
-* **MonacoEditor:** Added typings for css-element-queries ([f98362e](https://github.com/DSI-HUG/dejajs-components/commit/f98362e))
-* **MonacoEditor:** Removed css-media-queries dependency and use our ResizeListener instead ([e9b1b9a](https://github.com/DSI-HUG/dejajs-components/commit/e9b1b9a))
-* **MonacoEditorComponent:** Removed css-element-queries to fix the .d.ts compile error in prod ([0073d8e](https://github.com/DSI-HUG/dejajs-components/commit/0073d8e))
-* **SortingService:** Re-add test to check as a date when type date is specified inside SortInfo. ([8a945be](https://github.com/DSI-HUG/dejajs-components/commit/8a945be))
-* **ViewPortService:** ViewportService sometimes blocked when the last item is displayed and the scoll button up is pressed ([b5ba552](https://github.com/DSI-HUG/dejajs-components/commit/b5ba552))
-
-
-### Code Refactoring
-
-* **DejaCodeViewerComponent:** Removed DejaCodeViewerComponent to avoid prism.js dependency ([7b2dea8](https://github.com/DSI-HUG/dejajs-components/commit/7b2dea8))
-* **DejaMarkdownComponent:** Removed DejaMarkdownComponent to avoid prism.js dependency ([a708a02](https://github.com/DSI-HUG/dejajs-components/commit/a708a02))
-* **SendAction:** Removed SendAction from the lib ([62ec4b8](https://github.com/DSI-HUG/dejajs-components/commit/62ec4b8))
-
-
-### Features
-
-* **DatePicker:** layout as a string ([235e0f3](https://github.com/DSI-HUG/dejajs-components/commit/235e0f3))
-* **DatePicker:** time picker and time selector ([142b977](https://github.com/DSI-HUG/dejajs-components/commit/142b977))
-* **DejaBoldQueryComponent:** added new properties firstOccurenceOnly, firstOccurencePerWordOnly, atTheBeginningOfWordOnly, highlightClassName. ([3ccf5ca](https://github.com/DSI-HUG/dejajs-components/commit/3ccf5ca))
-* **dejaComboList:** demo app ([6722ad2](https://github.com/DSI-HUG/dejajs-components/commit/6722ad2))
-* **DejaComboList:** component ([adf60a5](https://github.com/DSI-HUG/dejajs-components/commit/adf60a5))
-* **DejaComboList:** delete test ([85dbf34](https://github.com/DSI-HUG/dejajs-components/commit/85dbf34))
-* **DejaComboList:** fix codebeat ([0d1ebc1](https://github.com/DSI-HUG/dejajs-components/commit/0d1ebc1))
-* **DejaComboList:** fix license ([50643d9](https://github.com/DSI-HUG/dejajs-components/commit/50643d9))
-* **DejaComboList:** setup ([3e820cb](https://github.com/DSI-HUG/dejajs-components/commit/3e820cb))
-* **DejaComboList:** small fixes ([dec9f5b](https://github.com/DSI-HUG/dejajs-components/commit/dec9f5b))
-* **DejaDatePickerComponent:** Add event onDateChange and onTimeChange ([f3fa96f](https://github.com/DSI-HUG/dejajs-components/commit/f3fa96f))
-* **DejaGrid:** Add events when grouping or sorting are raised form the component ([d0d1e70](https://github.com/DSI-HUG/dejajs-components/commit/d0d1e70))
-* **DejaIntervalSelectorComponent:** component used to display lower and upper boundary for lower and upper value selection ([80e549e](https://github.com/DSI-HUG/dejajs-components/commit/80e549e))
-* **DejaItem:** Add selected input to deja item DEJS-250 ([c23d040](https://github.com/DSI-HUG/dejajs-components/commit/c23d040))
-* **DejaMessageBoxComponent:** add showCloseIcon property in order to display a close icon at the top and on the right of the title bar. ([7867617](https://github.com/DSI-HUG/dejajs-components/commit/7867617))
-* **DejaMonacoEditor:** autosize when parent is resizing + dynamicaly change language ([4e32ab0](https://github.com/DSI-HUG/dejajs-components/commit/4e32ab0))
-* **DejaPopup:** Draggable popup ([18b0d96](https://github.com/DSI-HUG/dejajs-components/commit/18b0d96))
-* **DejaPopup:** enable custom TemplateRef ([64e8aa3](https://github.com/DSI-HUG/dejajs-components/commit/64e8aa3))
-* **DejaPopup:** enable insert of templateRef in advanced popup ([25970c1](https://github.com/DSI-HUG/dejajs-components/commit/25970c1))
-* **DejaTiles:** Added event when refresh and binding is done ([6a90d78](https://github.com/DSI-HUG/dejajs-components/commit/6a90d78))
-* **Global:** Cloning service is deprecated, replaced by lodash._cloneDeep ([9adbe45](https://github.com/DSI-HUG/dejajs-components/commit/9adbe45))
-* **ISortInfos:** Modified to match lodash sorting ([0727177](https://github.com/DSI-HUG/dejajs-components/commit/0727177))
-* **MonacoEditor:** Monaco editor service refactored for the new architecture ([c53cac4](https://github.com/DSI-HUG/dejajs-components/commit/c53cac4))
-* **Popup:** Component injection ([bfdf0f1](https://github.com/DSI-HUG/dejajs-components/commit/bfdf0f1))
-* **Popup:** DejaPopup ([b68e1ee](https://github.com/DSI-HUG/dejajs-components/commit/b68e1ee))
-* **SortingService:** Usage of lodash for the sorting algorithm ([0fc1d97](https://github.com/DSI-HUG/dejajs-components/commit/0fc1d97))
-
-
-### BREAKING CHANGES
-
-* **MonacoEditor:** Copy Assets in package.json must be replaced by the following line in the .angular-cli.json/apps/assets section { "glob": "**/*", "input": "../node_modules/monaco-editor/min", "output": "./assets/monaco/" }
-* **SendAction:** SendAction is removed from the lib
-* **DejaMarkdownComponent:** DejaMarkdownComponent is removed from the lib and is moved to the demo
-* **DejaCodeViewerComponent:** DejaCodeViewerComponent is removed from the lib and is moved to the demo
-* **DejaChips:** DejaChipsCloseEvent is now IDejaChipsCloseEvent in chips.component.ts. DejaChipsComponent raise event of type IDejaChipsCloseEvent
-* **ColorEvent:** ColorEvent in color-event.ts is now IColorEvent in color-selector.component.ts. ColorSelector raise event of type IColorEvent
-* **DejaCancelableEvent:** DejaCancelableEvent in cancelable-event.ts is now IDejaCancelableEvent in cancelable-event.interface.ts
-* **SortingService:** deprecated sort (returned a promise) is now a synchronous function. Compare is removed, use lodash instead.
-* **ISortInfos:** name is mandatory and only a string and type is removed (Automatic detection of sorting type)
-* **DejaTreeList:** Padding of the parent element can change. There is no more background gradient for
-parent items
-
-DEJS-221
-
 
 
 #### 2.24.3 (2018-02-15)
