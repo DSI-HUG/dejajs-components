@@ -14,6 +14,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
 import { DejaClipboardModule, DejaMaterialColorsModule, DejaSidenavModule, DejaSlimScrollModule } from '@deja-js/component';
+import { DejaMatIconModule } from '@deja-js/component';
 import { AppComponent } from './app.component';
 import { routing } from './app.routes';
 import { CountriesListService } from './services/countries-list.service';
@@ -37,6 +38,7 @@ import { PeopleService } from './services/people.service';
         MatListModule,
         MatMenuModule,
         DejaMaterialColorsModule,
+        DejaMatIconModule,
         DejaSidenavModule,
         DejaSlimScrollModule,
         DejaClipboardModule.forRoot(),
