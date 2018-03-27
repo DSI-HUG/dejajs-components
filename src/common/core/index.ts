@@ -22,7 +22,7 @@ export * from './style/index';
 export * from './UUID';
 export * from './validation/index';
 export * from './overlay/index';
-export * from './mat-icon/index';
+export * from './icon-service/index';
 export * from './media/index';
 export * from './text-metrics/index';
 export * from './resize-listener/index';

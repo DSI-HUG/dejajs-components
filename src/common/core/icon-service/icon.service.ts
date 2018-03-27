@@ -11,7 +11,7 @@ import { MatIconRegistry } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Injectable()
-export class MatIconService {
+export class IconService {
 
     constructor(private iconRegistry: MatIconRegistry, private sanitizer: DomSanitizer) {
     }
