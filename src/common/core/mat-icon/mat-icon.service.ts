@@ -21,8 +21,8 @@ export class MatIconService {
      *
      * &lt;mat-icon svgIcon='my-svg-icon' &gt;&lt;/mat-icon&gt;
      *
-     * @param {string} iconName
-     * @param {string} iconUrl
+     * @param iconName
+     * @param iconUrl
      */
     public addSvgIcon(iconName: string, iconUrl: string) {
         this.iconRegistry.addSvgIcon(iconName,
