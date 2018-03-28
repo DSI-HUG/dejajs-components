@@ -1,6 +1,6 @@
 {
     "name": "@deja-js/component",
-    "version": "3.0.0-beta.12",
+    "version": "3.0.0-beta.13",
     "description": "Angular2 Components Library",
     "homepage": "https://github.com/DSI-HUG/dejajs-components",
     "bugs": "https://github.com/DSI-HUG/dejajs-components/issues",
@@ -25,6 +25,7 @@
         "link": "gulp link",
         "unlink": "gulp unlink",
         "licensecheck": "gulp license",
+        "changelog": "gulp changelog",
         "test": "gulp test",
         "install:demo": "gulp install:demo",
         "test:watch": "gulp test:watch",
