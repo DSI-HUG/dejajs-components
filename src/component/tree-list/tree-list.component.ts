@@ -79,8 +79,6 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     @Input() public searchSuffixTemplateExternal: any;
     /** Largeur des éléments par defaut si différent de 100% */
     @Input() public itemsWidth: number = null;
-    /** Définit une valeur indiquant si en reactive form le model renvoyé doit être un obeject oue une valeur */
-    @Input() public modelIsValue: boolean;
     /** Exécuté lorsque le déplacement d'une ligne est terminée. */
     @Output() public itemDragEnd = new EventEmitter<IDejaDragEvent>();
     /** Exécuté lorsque le déplacement d'une ligne commence. */
@@ -119,6 +117,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     private _itemsDraggable = false;
     private hasCustomService = false;
     private hasLoadingEvent = false;
+    private _modelIsValue = false;
     @HostBinding('attr.disabled') private _disabled: boolean = null;
 
     private keyboardNavigation$ = new Subject();
@@ -235,6 +234,16 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
 
     public get searchArea() {
         return this._searchArea || this.minSearchlength > 0;
+    }
+
+    /** Définit une valeur indiquant si en reactive form le model renvoyé doit être un obeject oue une valeur */
+    @Input()
+    public set modelIsValue(value: boolean | string) {
+        this._modelIsValue = coerceBooleanProperty(value);
+    }
+
+    public get modelIsValue() {
+        return this._modelIsValue;
     }
 
     /** Retourne ou définit une valeur indiquant si les lignes de la liste peuvent être déplacées manuelement par l'utilisateur */

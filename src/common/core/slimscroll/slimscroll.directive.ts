@@ -531,6 +531,7 @@ export class DejaSlimScrollDirective implements OnInit, OnDestroy {
         this._me.parentElement.appendChild(this._rail);
 
         this._bar.addEventListener('mousedown', e => {
+            e.stopPropagation();
             this._isDragg = true;
 
             // disable text selection

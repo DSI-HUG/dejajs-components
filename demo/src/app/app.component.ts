@@ -7,6 +7,7 @@
  */
 
 import { ChangeDetectionStrategy, Component, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { IconService } from '@deja-js/component';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/operator/takeWhile';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -25,7 +26,7 @@ export class AppComponent implements OnDestroy {
     private theme$: BehaviorSubject<string>;
     private isAlive = true;
 
-    constructor() {
+    constructor(private iconService: IconService) {
         try {
             this._theme = localStorage.getItem('dejajs-demo-color');
         } catch (_e) {
@@ -39,6 +40,8 @@ export class AppComponent implements OnDestroy {
         Observable.from(this.theme$)
             .takeWhile(() => this.isAlive)
             .subscribe((theme) => document.body.setAttribute('theme', theme));
+
+        iconService.addSvgIcon('angular', '../assets/img/logo/angular.svg');
     }
 
     public get theme() {
