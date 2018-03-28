@@ -9,12 +9,12 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { MatIconService } from './mat-icon.service';
+import { IconService } from './icon.service';
 
 @NgModule({
     imports: [CommonModule, HttpClientModule],
-    providers: [MatIconService],
+    providers: [IconService],
 })
 export class DejaMatIconModule { }
 
-export * from './mat-icon.service';
+export * from './icon.service';
