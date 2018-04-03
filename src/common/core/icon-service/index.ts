@@ -15,6 +15,6 @@ import { IconService } from './icon.service';
     imports: [CommonModule, HttpClientModule],
     providers: [IconService],
 })
-export class DejaMatIconModule { }
+export class IconModule { }
 
 export * from './icon.service';
