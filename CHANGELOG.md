@@ -1,3 +1,13 @@
+<a name="3.0.0-beta.15"></a>
+# [3.0.0-beta.15](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.15) (2018-04-04)
+
+
+### Features
+
+* **DejaTiles:** SelectedTiles input can accept an array of tiles ([ef55e48](https://github.com/DSI-HUG/dejajs-components/commit/ef55e48))
+
+
+
 <a name="3.0.0-beta.14"></a>
 # [3.0.0-beta.14](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.14) (2018-04-03)
 
