@@ -5,9 +5,8 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ConnectedOverlayDirective, OverlayContainer, OverlayOrigin } from '@angular/cdk/overlay';
+import { CdkConnectedOverlay, CdkOverlayOrigin, OverlayContainer } from '@angular/cdk/overlay';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/first';
@@ -72,7 +71,7 @@ export class DejaOverlayComponent implements OnDestroy {
     @Output() public closed = new EventEmitter<boolean>();
 
     /** Internal use */
-    public overlayOrigin: OverlayOrigin;
+    public overlayOrigin: CdkOverlayOrigin;
     @Input() public overlayOffsetX = 0;
     @Input() public overlayOffsetY = 0;
 
@@ -83,7 +82,7 @@ export class DejaOverlayComponent implements OnDestroy {
     private isAlive = true;
 
     /** Overlay pane containing the options. */
-    @ViewChild(ConnectedOverlayDirective) private overlay: ConnectedOverlayDirective;
+    @ViewChild(CdkConnectedOverlay) private overlay: CdkConnectedOverlay;
 
     constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef, private overlayContainer: OverlayContainer, mediaService: MediaService) {
         const containerElement = this.overlayContainer.getContainerElement() as HTMLElement;
@@ -182,7 +181,7 @@ export class DejaOverlayComponent implements OnDestroy {
         this.overlayOffsetY = offsetY || 0;
         const e = eventOrOffsetX as MouseEvent;
         const target = e && e.target;
-        this.overlayOrigin = new OverlayOrigin(new ElementRef((this.isMobile && document.body) || target || this.ownerElement || this.elementRef.nativeElement));
+        this.overlayOrigin = new CdkOverlayOrigin(new ElementRef((this.isMobile && document.body) || target || this.ownerElement || this.elementRef.nativeElement));
         this.isVisible = true;
         this.changeDetectorRef.markForCheck();
         Observable.timer(1)
@@ -200,6 +199,6 @@ export class DejaOverlayComponent implements OnDestroy {
     }
 
     private updateOriginOverlay() {
-        this.overlayOrigin = new OverlayOrigin(new ElementRef((this.isMobile && document.body) || this._ownerElement || this.elementRef.nativeElement));
+        this.overlayOrigin = new CdkOverlayOrigin(new ElementRef((this.isMobile && document.body) || this._ownerElement || this.elementRef.nativeElement));
     }
 }

@@ -366,9 +366,10 @@ describe('DejaSelectComponent', () => {
             .subscribe((vp) => {
                 // Bind view port
                 fixture.detectChanges();
-                const collapsed = fixture.debugElement.queryAll(By.css('.deja-overlay-container > .cdk-overlay-pane > .deja-listcontainer > .listitem.parent.collapsed'));
+                const collapsed = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem.parent.collapsed'));
                 const collapsedItems = vp.items.filter((item: IItemTree) => item.collapsed);
                 const parentItems = vp.items.filter((item: IItemTree) => item.depth === 0);
+
                 switch (++pass) {
                     case 1:
                         expect(collapsed.length).toBe(0);
@@ -440,11 +441,13 @@ describe('DejaSelectComponent', () => {
             .subscribe(() => fixture.detectChanges());
 
         Observable.from(viewPortService.viewPortResult$)
-            .debounceTime(100)
-            .subscribe((_vp) => {
+            .debounceTime(10)
+            .subscribe((vp) => {
                 // Bind view port
                 fixture.detectChanges();
-                const listItems = fixture.debugElement.queryAll(By.css('.deja-overlay-container > .cdk-overlay-pane > .deja-listcontainer > .listitem'));
+                const listItems = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem'));
+                const items = vp.items;
+
                 switch (++pass) {
                     case 1:
                         expect(listItems.length).toBe(0);
@@ -464,6 +467,7 @@ describe('DejaSelectComponent', () => {
 
                     default:
                         expect(listItems.length).toBeGreaterThan(0);
+                        expect(items.length).toBeGreaterThan(0);
                         selectContainerInstance.testDone();
                 }
             });
@@ -475,9 +479,11 @@ describe('DejaSelectComponent', () => {
         const spy = spyOn(selectContainerInstance, 'testDone');
 
         fixture.detectChanges();
-        fixture.whenStable().then(() => {
-            expect(spy).toHaveBeenCalled();
-        });
+        Observable.fromPromise(fixture.whenStable())
+            .delay(50)
+            .subscribe(() => {
+                expect(spy).toHaveBeenCalled();
+            });
     }));
 });
 
@@ -659,7 +665,7 @@ describe('DejaSelectByOptionsContainerComponent', () => {
             .subscribe(() => {
                 fixture.detectChanges();
 
-                const items = fixture.debugElement.queryAll(By.css('.deja-overlay-container > .cdk-overlay-pane > .deja-listcontainer > .listitem'));
+                const items = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem'));
                 expect(items.length).toBe(13);
                 selectContainerInstance.testDone();
             });
@@ -702,8 +708,8 @@ describe('DejaSelectByOptionsContainerComponent', () => {
             .subscribe((vp) => {
                 fixture.detectChanges();
                 const selectedChips = fixture.debugElement.queryAll(By.css('deja-select > deja-chips > span'));
-                const selectedElements = fixture.debugElement.queryAll(By.css('.deja-overlay-container > .cdk-overlay-pane > .deja-listcontainer > .listitem.selected'));
-                const currentElement = fixture.debugElement.query(By.css('.deja-overlay-container > .cdk-overlay-pane > .deja-listcontainer > .listitem[current="true"]'));
+                const selectedElements = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem.selected'));
+                const currentElement = fixture.debugElement.query(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem[current="true"]'));
                 const selectedItems = vp.items.filter((item: IItemBase) => item.selected);
 
                 switch (++pass) {
@@ -796,7 +802,7 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                         break;
 
                     case 9:
-                        expect(selectedElements.length).toBe(1);
+                        expect(selectedElements.length).toBeGreaterThan(0);
                         expect(selectedItems.length).toBe(1);
                         expect(currentElement && currentElement.attributes.flat).toBe('5');
                         expect(selectedChips.length).toBe(1);
@@ -807,7 +813,7 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                         break;
 
                     default:
-                        expect(selectedElements.length).toBe(1);
+                        expect(selectedElements.length).toBeGreaterThan(0);
                         expect(selectedItems.length).toBe(1);
                         expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('6');
                         expect(selectedChips.length).toBe(0);
@@ -834,7 +840,7 @@ describe('DejaSelectByOptionsContainerComponent', () => {
 
         const sendMouseClick = (element: DebugElement, shiftKey?: boolean, ctrlKey?: boolean, upElement?: DebugElement) => {
             // Simulate a mouse click
-            const listElement = fixture.debugElement.query(By.css('.deja-overlay-container > .cdk-overlay-pane > .deja-listcontainer'));
+            const listElement = fixture.debugElement.query(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer'));
             const eventInit = () => ({
                 bubbles: true,
                 cancelable: true,
@@ -869,8 +875,8 @@ describe('DejaSelectByOptionsContainerComponent', () => {
             .first()
             .subscribe((vp) => {
                 fixture.detectChanges();
-                const displayedElements = fixture.debugElement.queryAll(By.css('.deja-overlay-container > .cdk-overlay-pane > .deja-listcontainer > .listitem'));
-                const selectedElements = fixture.debugElement.queryAll(By.css('.deja-overlay-container > .cdk-overlay-pane > .deja-listcontainer > .listitem.selected'));
+                const displayedElements = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem'));
+                const selectedElements = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem.selected'));
                 const selectedItems = vp.items.filter((item: IItemBase) => item.selected);
 
                 // Check selected and current
