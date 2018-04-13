@@ -9,19 +9,12 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { DejaMarkdownComponent } from './markdown.component';
+import { IconService } from './icon.service';
 
 @NgModule({
-    declarations: [DejaMarkdownComponent],
-    exports: [DejaMarkdownComponent],
-    imports: [
-        CommonModule,
-        HttpClientModule,
-    ],
-    providers: []
+    imports: [CommonModule, HttpClientModule],
+    providers: [IconService],
 })
-export class DejaMarkdownModule {
+export class IconModule { }
 
-}
-
-export * from './markdown.component';
+export * from './icon.service';

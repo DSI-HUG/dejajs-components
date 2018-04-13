@@ -780,7 +780,7 @@ export abstract class ItemListBase implements OnDestroy {
 
             } else {
                 (<any>itemBase)[displayField] = this.getTextValue(model);
-                (<any>itemBase)[valueField] = model[this._valueField];
+                (<any>itemBase)[valueField] = model[valueField];
 
                 if (this._searchField) {
                     (<any>itemBase)[this._searchField] = model[this._searchField];

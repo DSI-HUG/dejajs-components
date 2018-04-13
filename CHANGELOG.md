@@ -1,3 +1,48 @@
+<a name="3.0.0-beta.15"></a>
+# [3.0.0-beta.15](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.15) (2018-04-04)
+
+
+### Features
+
+* **DejaTiles:** SelectedTiles input can accept an array of tiles ([ef55e48](https://github.com/DSI-HUG/dejajs-components/commit/ef55e48))
+
+
+
+<a name="3.0.0-beta.14"></a>
+# [3.0.0-beta.14](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.14) (2018-04-03)
+
+
+### Bug Fixes
+
+* **DejaDateSelectorComponent:** Hours was set to 0 when same date was selected ([86c22be](https://github.com/DSI-HUG/dejajs-components/commit/86c22be))
+* **DejaToolTip:** Remove backdrop for deja-tooltip ([59e2d62](https://github.com/DSI-HUG/dejajs-components/commit/59e2d62))
+* 
+
+### Features
+
+* **DejaDatePickerComponent:** Close datePicker on click and datetimepicker on doubleclick ([282e0af](https://github.com/DSI-HUG/dejajs-components/commit/282e0af))
+
+
+
+<a name="3.0.0-beta.13"></a>
+# [3.0.0-beta.13](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.13) (2018-03-28)
+
+
+### Bug Fixes
+
+* **DatePickerDemo:** Replaced deprecated fxLayoutWrap ([6b3e45d](https://github.com/DSI-HUG/dejajs-components/commit/6b3e45d))
+* **SlimScroll:** Fix event mouse propagation to avoid drag on scroll ([059989c](https://github.com/DSI-HUG/dejajs-components/commit/059989c))
+* **Dependencies:** Remove unused dependencies ([fff83d4](https://github.com/DSI-HUG/dejajs-components/commit/fff83d4))
+* **DejaTreeList:** fix missing coercion for modelIsValue ([f3e0778](https://github.com/DSI-HUG/dejajs-components/commit/f3e0778))
+* **DejaTreeList:** Fix selection with simple string as model ([895769b](https://github.com/DSI-HUG/dejajs-components/commit/895769b))
+
+
+### Features
+
+* **IconService:** service to register SVG icons to MatIconRegistry so that custom SVG icons can be used with MatIcon component, i.e <mat-icon svgIcon='deja-icon' /> ([17d1938](https://github.com/DSI-HUG/dejajs-components/commit/17d1938))
+
+
+
 <a name="3.0.0-beta.12"></a>
 # [3.0.0-beta.12](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.12) (2018-03-21)
 

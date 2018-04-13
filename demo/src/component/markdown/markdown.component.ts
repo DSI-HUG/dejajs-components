@@ -6,8 +6,9 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AfterViewChecked, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { Http, ResponseContentType } from '@angular/http';
+import { ResponseContentType } from '@angular/http';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import * as Prism from 'prismjs';
 import * as Showdown from 'showdown';
@@ -36,9 +37,14 @@ export class DejaMarkdownComponent implements OnInit, AfterViewChecked {
 
     @Input()
     set url(url: string) {
-        this._http.get(url, { responseType: ResponseContentType.Text }).subscribe((response) => {
-            this.value = response.text();
-        }, (error) => this.value = `${error}`);
+        const headers = new HttpHeaders({
+            'Content-Type': 'text/plain;charset=utf-8'
+        });
+        this._http.get(url, { observe: 'body', headers: headers, responseType: 'text' }).subscribe((object) => {
+            this.value = object.toString();
+        }, (error) => {
+            this.value = `${error.message}`;
+        });
     }
 
     private _initialised = false;
@@ -49,7 +55,7 @@ export class DejaMarkdownComponent implements OnInit, AfterViewChecked {
         return this._html;
     }
 
-    constructor(private changeDetectorRef: ChangeDetectorRef, protected _http: Http, private sanitized: DomSanitizer) {
+    constructor(private changeDetectorRef: ChangeDetectorRef, protected _http: HttpClient, private sanitized: DomSanitizer) {
         this._converter = new Showdown.Converter();
         this._converter.setOption('tables', true);
     }
