@@ -26,7 +26,7 @@
     </mat-hint>
     <mat-error *ngIf="matError"><ng-template [ngTemplateOutlet]="matError"></ng-template></mat-error>
 </mat-form-field>
-<deja-overlay #dejaOverlay [ownerElement]="overlayOwnerElement" [isVisible]="showDropDown" (closed)="close()" [positions]="positions" [overlayOffsetY]="overlayOffsetY" [overlayOffsetX]="overlayOffsetX">
+<deja-overlay #dejaOverlay overlayContainerClass="deja-datepicker-overlay-container" [ownerElement]="overlayOwnerElement" [isVisible]="showDropDown" (closed)="close()" [positions]="positions" [overlayOffsetY]="overlayOffsetY" [overlayOffsetX]="overlayOffsetX">
     <deja-date-time-selector [layout]="layout" [disableDates]="disableDates" [ngModel]="date" (ngModelChange)="updateModel($event)"
         class="inside-dropdown" [dateMax]="dateMax" [dateMin]="dateMin" [layout]="layout"></deja-date-time-selector>
     <div class="actions">
