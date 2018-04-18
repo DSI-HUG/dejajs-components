@@ -7,7 +7,7 @@
         "ng": "ng",
         "start": "ng lint && ng serve --preserve-symlinks --port 5100 --base-href /",
         "build": "del-cli .tmp && ng build --preserve-symlinks --prod --aot --build-optimizer --env=prod --base-href /",
-        "test": "ng test --preserve-symlink",
+        "test": "ng test",
         "lint": "ng lint",
         "e2e": "ng e2e --preserve-symlinks",
         "e2e:watch": "watch \"yarn run e2e\" src e2e --wait=1",
