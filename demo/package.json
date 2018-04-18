@@ -12,7 +12,8 @@
         "e2e": "ng e2e",
         "e2e:watch": "watch \"yarn run e2e\" src e2e --wait=1",
         "unlink": "yarn unlink @deja-js/component",
-        "link": "yarn link @deja-js/component"
+        "link": "yarn link @deja-js/component",
+        "postinstall": "yarn link @deja-js/component"
     },
     "dependencies": {
         "@angular/animations": "^6.0.0-rc.5",

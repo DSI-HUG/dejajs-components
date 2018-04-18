@@ -17,6 +17,7 @@
     },
     "scripts": {
         "start": "gulp start",
+        "start:demo": "gulp serve:demo",
         "clean": "gulp clean:all",
         "build": "gulp build",
         "build:demo": "gulp build:demo",
