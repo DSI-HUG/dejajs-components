@@ -15,7 +15,6 @@
     ],
     "include": [
         "**/*.spec.ts",
-        "**/*.d.ts",
-        "../node_modules/@deja-js/component/index.ts"
+        "**/*.d.ts"
     ]
 }
