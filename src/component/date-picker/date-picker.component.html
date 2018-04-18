@@ -13,10 +13,10 @@
         (change)="updateModel($event.target.value)">
     <div matSuffix>
         <div id="action-icon-container">
-            <button mat-icon-button *ngIf="inputModel && !disabled" (click)="reset()" id="clear-button">
+            <button mat-icon-button *ngIf="inputModel && !disabled" (click)="reset()" id="clear-button" tabindex="-1">
                 <mat-icon>clear</mat-icon>
             </button>
-            <button mat-icon-button *ngIf="!disabled" (click)="toggleDateSelector($event)" id="calendar-button">
+            <button mat-icon-button *ngIf="!disabled" (click)="toggleDateSelector($event)" id="calendar-button" tabindex="-1">
                 <mat-icon>date_range</mat-icon>
             </button>
         </div>
