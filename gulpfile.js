@@ -99,7 +99,7 @@ const isOK = condition => {
 };
 
 const execCmd = (name, args, opts, ...subFolders) => {
-	const cmd = helpers.root(subFolders, helpers.binPath(`${name}`));
+    const cmd = helpers.root(subFolders, helpers.binPath(`${name}`));
 	return helpers.execp(`${cmd} ${args}`, opts)
 		.catch(e => {
 			gulpUtil.log(gulpUtil.colors.red(`${name} command failed. See below for errors.\n`));

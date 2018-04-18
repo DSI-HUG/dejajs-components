@@ -9,7 +9,7 @@ const _root = path.resolve(__dirname, '..');
  * @param {string} path
  */
 platformPath = (path) => {
-    return /^win/.test(os.platform()) ? `${path}.cmd` : path;
+	return /^win/.test(os.platform()) ? `${path}.cmd` : path;
 };
 
 /**
@@ -17,7 +17,7 @@ platformPath = (path) => {
  * @param {string[]} args
  */
 rootDir = (...args) => {
-    return path.join.apply(path, [_root].concat(...args));
+	return path.join.apply(path, [_root].concat(...args));
 };
 
 /**
@@ -25,7 +25,7 @@ rootDir = (...args) => {
  * @param {string} cmd
  */
 binPath = (cmd) => {
-    return platformPath(`/node_modules/.bin/${cmd}`);
+	return platformPath(`/node_modules/.bin/${cmd}`);
 };
 
 /**
@@ -36,26 +36,27 @@ binPath = (cmd) => {
  * @returns {Promise<number>}
  */
 execp = (cmd, opts) => {
-    opts = Object.assign(opts || {}, {
-        stdout: process.stdout,
-        stderr: process.stderr
+	opts = Object.assign(opts || {}, {
+		stdout: process.stdout,
+        stderr: process.stderr,
+        maxBuffer: 10485760
     });
-    return new Promise((resolve, reject) => {
-        const child = exec(cmd, opts,
-            (err, stdout, stderr) => err ? reject(err.code) : resolve(0));
+	return new Promise((resolve, reject) => {
+		const child = exec(cmd, opts,
+			(err, stdout, stderr) => err ? reject(err.code) : resolve(0));
 
-        if (opts.stdout) {
-            child.stdout.pipe(opts.stdout);
-        }
-        if (opts.stderr) {
-            child.stderr.pipe(opts.stderr);
-        }
-    });
+		if (opts.stdout) {
+			child.stdout.pipe(opts.stdout);
+		}
+		if (opts.stderr) {
+			child.stderr.pipe(opts.stderr);
+		}
+	});
 };
 
 var exports = module.exports = {
-    root: rootDir,
-    execp: execp,
-    binPath: binPath,
-    platformPath: platformPath
+	root: rootDir,
+	execp: execp,
+	binPath: binPath,
+	platformPath: platformPath
 };
