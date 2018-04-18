@@ -8,10 +8,11 @@
     },
     "exclude": [
         "test.ts",
-        "**/*.spec.ts"
+        "**/*.spec.ts",
+        "../node_modules/@deja-js/component/**/*.spec.ts"
     ],
     "include": [
-        "../node_modules/@deja-js/component/index.ts",
-        "./**/*"
+        "./**/*",
+        "../node_modules/@deja-js/component/**/*"
     ]
 }

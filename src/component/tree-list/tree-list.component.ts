@@ -711,7 +711,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
 
         let keyDown$ = Observable.fromEvent(this.listElement, 'keydown');
         if (this.input) {
-            const inputKeyDown$ = Observable.fromEvent(this.input.nativeElement, 'keydown');
+            const inputKeyDown$ = Observable.fromEvent(this.input.nativeElement, 'keydown') as Observable<KeyboardEvent>;
             keyDown$ = keyDown$.merge(inputKeyDown$);
         }
 
@@ -859,10 +859,10 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                 }
             });
 
-        let keyUp$ = Observable.fromEvent(this.listElement, 'keyup');
+        let keyUp$ = Observable.fromEvent(this.listElement, 'keyup') as Observable<Event>;
         if (this.input) {
-            const inputKeyup$ = Observable.fromEvent(this.input.nativeElement, 'keyup');
-            const inputDrop$ = Observable.fromEvent(this.input.nativeElement, 'drop');
+            const inputKeyup$ = Observable.fromEvent(this.input.nativeElement, 'keyup') as Observable<Event>;
+            const inputDrop$ = Observable.fromEvent(this.input.nativeElement, 'drop') as Observable<Event>;
             keyUp$ = keyUp$.merge(inputKeyup$, inputDrop$);
         }
 
