@@ -10,9 +10,7 @@
 
 import 'zone.js/dist/long-stack-trace-zone';
 import 'zone.js/dist/proxy.js';
-import 'zone.js/dist/sync-test.js';
-// tslint:disable-next-line:ordered-imports
-import 'zone.js/dist/jasmine-patch.js';
+import 'zone.js/dist/sync-test';
 // tslint:disable-next-line:ordered-imports
 import 'zone.js/dist/jasmine-patch';
 // tslint:disable-next-line:ordered-imports
