@@ -116,10 +116,6 @@ class DejaTilesContainerComponent {
                 return tile;
             });
     }
-
-    public testDone() {
-        return true;
-    }
 }
 
 describe('DejaTilesComponent', () => {
@@ -171,7 +167,7 @@ describe('DejaTilesComponent', () => {
         expect(tilesInstance).toBeTruthy();
     }));
 
-    it('should insert a new tile without bounds at the end', async(() => {
+    it('should insert a new tile without bounds at the end', (done) => {
         const fixture = TestBed.createComponent(DejaTilesContainerComponent);
         const tilesContainerInstance = fixture.componentInstance as DejaTilesContainerComponent;
         const tilesDebugElement = fixture.debugElement.query(By.directive(DejaTilesComponent));
@@ -186,10 +182,8 @@ describe('DejaTilesComponent', () => {
                 const beerTile = tileElements.find((t) => t.nativeElement.id === 'Beer');
                 expect(beerTile).toBeDefined();
                 expect(beerTile.nativeElement.offsetTop).toBe(480);
-                tilesContainerInstance.testDone();
+                done();
             });
-
-        const spy = spyOn(tilesContainerInstance, 'testDone');
 
         tilesContainerInstance.tiles.unshift({
             id: 'Beer',
@@ -205,14 +199,12 @@ describe('DejaTilesComponent', () => {
 
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(spy).toHaveBeenCalled();
         });
-    }));
+    });
 
-    it('should select the specified tiles', async(() => {
+    it('should select the specified tiles', (done) => {
         let pass = 0;
         const fixture = TestBed.createComponent(DejaTilesContainerComponent);
-        const tilesContainerInstance = fixture.componentInstance as DejaTilesContainerComponent;
         const tilesDebugElement = fixture.debugElement.query(By.directive(DejaTilesComponent));
         const tilesInstance = tilesDebugElement.componentInstance as DejaTilesComponent;
 
@@ -228,24 +220,20 @@ describe('DejaTilesComponent', () => {
                         break;
 
                     default:
-                        tilesContainerInstance.testDone();
+                        done();
                         expect(tileElements.length).toBe(2);
                 }
             });
 
-        const spy = spyOn(tilesContainerInstance, 'testDone');
-
         fixture.detectChanges();
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(spy).toHaveBeenCalled();
         });
-    }));
+    });
 
-    it('should delete the selected tiles', async(() => {
+    it('should delete the selected tiles', (done) => {
         let pass = 0;
         const fixture = TestBed.createComponent(DejaTilesContainerComponent);
-        const tilesContainerInstance = fixture.componentInstance as DejaTilesContainerComponent;
         const tilesDebugElement = fixture.debugElement.query(By.directive(DejaTilesComponent));
         const tilesInstance = tilesDebugElement.componentInstance as DejaTilesComponent;
 
@@ -260,25 +248,21 @@ describe('DejaTilesComponent', () => {
                         break;
 
                     default:
-                        tilesContainerInstance.testDone();
+                        done();
                         expect(tileElements.length).toBe(10);
                 }
             });
-
-        const spy = spyOn(tilesContainerInstance, 'testDone');
 
         fixture.detectChanges();
         tilesInstance.selectedTiles = ['Guava', 'Mango'];
 
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(spy).toHaveBeenCalled();
         });
-    }));
+    });
 
-    it('should change the cursor when mouse is over a tile', async(() => {
+    it('should change the cursor when mouse is over a tile', (done) => {
         const fixture = TestBed.createComponent(DejaTilesContainerComponent);
-        const tilesContainerInstance = fixture.componentInstance as DejaTilesContainerComponent;
         const tilesDebugElement = fixture.debugElement.query(By.directive(DejaTilesComponent));
         const tilesInstance = tilesDebugElement.componentInstance as DejaTilesComponent;
         const tilesContainer = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles'));
@@ -355,23 +339,19 @@ describe('DejaTilesComponent', () => {
             .delay(20)
             .subscribe(() => {
                 expect(tilesContainerElement.style.cursor).toBe('');
-                tilesContainerInstance.testDone();
+                done();
             });
-
-        const spy = spyOn(tilesContainerInstance, 'testDone');
 
         fixture.detectChanges();
         tilesInstance.selectedTiles = ['Cherries'];
 
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(spy).toHaveBeenCalled();
         });
-    }));
+    });
 
-    it('should add and remove tiles', async(() => {
+    it('should add and remove tiles', (done) => {
         const fixture = TestBed.createComponent(DejaTilesContainerComponent);
-        const tilesContainerInstance = fixture.componentInstance as DejaTilesContainerComponent;
         const tilesDebugElement = fixture.debugElement.query(By.directive(DejaTilesComponent));
         const tilesInstance = tilesDebugElement.componentInstance as DejaTilesComponent;
 
@@ -410,21 +390,19 @@ describe('DejaTilesComponent', () => {
                 expect(rect.left).toBe(60);
                 expect(rect.top).toBe(0);
             })
-            .subscribe(() => tilesContainerInstance.testDone());
-
-        const spy = spyOn(tilesContainerInstance, 'testDone');
+            .subscribe(() => {
+                done();
+            });
 
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(spy).toHaveBeenCalled();
         });
-    }));
+    });
 
-    it('should add a group', async(() => {
+    it('should add a group', (done) => {
         const fixture = TestBed.createComponent(DejaTilesContainerComponent);
-        const tilesContainerInstance = fixture.componentInstance as DejaTilesContainerComponent;
         const tilesDebugElement = fixture.debugElement.query(By.directive(DejaTilesComponent));
         const tilesInstance = tilesDebugElement.componentInstance as DejaTilesComponent;
 
@@ -438,19 +416,18 @@ describe('DejaTilesComponent', () => {
                 const addedGroup = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles > deja-tile > deja-tile-group'));
                 expect(addedGroup).not.toBeNull();
             })
-            .subscribe(() => tilesContainerInstance.testDone());
-
-        const spy = spyOn(tilesContainerInstance, 'testDone');
+            .subscribe(() => {
+                done();
+            });
 
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(spy).toHaveBeenCalled();
         });
-    }));
+    });
 
-    it('should be able to expand a tile on mouse over when the content is too big', async(() => {
+    it('should be able to expand a tile on mouse over when the content is too big', (done) => {
         const fixture = TestBed.createComponent(DejaTilesContainerComponent);
         const tilesContainerInstance = fixture.componentInstance as DejaTilesContainerComponent;
         const tilesDebugElement = fixture.debugElement.query(By.directive(DejaTilesComponent));
@@ -511,22 +488,18 @@ describe('DejaTilesComponent', () => {
                 expect(testBounds.top).toBe(tilesContainerBounds.top + 360);
             })
             .subscribe(() => {
-                tilesContainerInstance.testDone();
+                done();
             });
-
-        const spy = spyOn(tilesContainerInstance, 'testDone');
 
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(spy).toHaveBeenCalled();
         });
-    }));
+    });
 
-    it('should cut, copy and paste the selected tiles', async(() => {
+    it('should cut, copy and paste the selected tiles', (done) => {
         const fixture = TestBed.createComponent(DejaTilesContainerComponent);
-        const tilesContainerInstance = fixture.componentInstance as DejaTilesContainerComponent;
         const tiles1DebugElement = fixture.debugElement.query(By.css('deja-tiles#tiles1'));
         const tiles1Instance = tiles1DebugElement.componentInstance as DejaTilesComponent;
         const tiles2DebugElement = fixture.debugElement.query(By.css('deja-tiles#tiles2'));
@@ -598,10 +571,8 @@ describe('DejaTilesComponent', () => {
                 expect(elements1.length).toBe(12);
                 const elements2 = fixture.debugElement.queryAll(By.css('deja-tiles#tiles2 > #tiles > deja-tile'));
                 expect(elements2.length).toBe(2);
-                tilesContainerInstance.testDone();
+                done();
             });
-
-        const spy = spyOn(tilesContainerInstance, 'testDone');
 
         fixture.detectChanges();
         tiles1Instance.selectedTiles = ['Guava', 'Mango'];
@@ -609,13 +580,11 @@ describe('DejaTilesComponent', () => {
         fixture.whenStable().then(() => {
             tiles1Instance.refresh();
             tiles1Instance.onBlur();
-            expect(spy).toHaveBeenCalled();
         });
-    }));
+    });
 
-    it('should invert two tiles when a tile is drag and dropped into another', async(() => {
+    it('should invert two tiles when a tile is drag and dropped into another', (done) => {
         const fixture = TestBed.createComponent(DejaTilesContainerComponent);
-        const tilesContainerInstance = fixture.componentInstance as DejaTilesContainerComponent;
         const tilesDebugElement = fixture.debugElement.query(By.directive(DejaTilesComponent));
         const tilesInstance = tilesDebugElement.componentInstance as DejaTilesComponent;
         const tilesContainer = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles'));
@@ -679,22 +648,18 @@ describe('DejaTilesComponent', () => {
             })
             .delay(20)
             .subscribe(() => {
-                tilesContainerInstance.testDone();
+                done();
             });
-
-        const spy = spyOn(tilesContainerInstance, 'testDone');
 
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(spy).toHaveBeenCalled();
         });
-    }));
+    });
 
-    it('should be able to size a tile with the mouse from the right border', async(() => {
+    it('should be able to size a tile with the mouse from the right border', (done) => {
         const fixture = TestBed.createComponent(DejaTilesContainerComponent);
-        const tilesContainerInstance = fixture.componentInstance as DejaTilesContainerComponent;
         const tilesDebugElement = fixture.debugElement.query(By.directive(DejaTilesComponent));
         const tilesInstance = tilesDebugElement.componentInstance as DejaTilesComponent;
         const tilesContainer = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles'));
@@ -761,22 +726,18 @@ describe('DejaTilesComponent', () => {
             })
             .delay(20)
             .subscribe(() => {
-                tilesContainerInstance.testDone();
+                done();
             });
-
-        const spy = spyOn(tilesContainerInstance, 'testDone');
 
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(spy).toHaveBeenCalled();
         });
-    }));
+    });
 
-    it('should be able to size a tile with the mouse from the left border', async(() => {
+    it('should be able to size a tile with the mouse from the left border', (done) => {
         const fixture = TestBed.createComponent(DejaTilesContainerComponent);
-        const tilesContainerInstance = fixture.componentInstance as DejaTilesContainerComponent;
         const tilesDebugElement = fixture.debugElement.query(By.directive(DejaTilesComponent));
         const tilesInstance = tilesDebugElement.componentInstance as DejaTilesComponent;
         const tilesContainer = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles'));
@@ -843,22 +804,18 @@ describe('DejaTilesComponent', () => {
             })
             .delay(20)
             .subscribe(() => {
-                tilesContainerInstance.testDone();
+                done();
             });
-
-        const spy = spyOn(tilesContainerInstance, 'testDone');
 
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(spy).toHaveBeenCalled();
         });
-    }));
+    });
 
-    it('should be able to size a tile with the mouse from the bottom border', async(() => {
+    it('should be able to size a tile with the mouse from the bottom border', (done) => {
         const fixture = TestBed.createComponent(DejaTilesContainerComponent);
-        const tilesContainerInstance = fixture.componentInstance as DejaTilesContainerComponent;
         const tilesDebugElement = fixture.debugElement.query(By.directive(DejaTilesComponent));
         const tilesInstance = tilesDebugElement.componentInstance as DejaTilesComponent;
         const tilesContainer = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles'));
@@ -925,22 +882,18 @@ describe('DejaTilesComponent', () => {
             })
             .delay(20)
             .subscribe(() => {
-                tilesContainerInstance.testDone();
+                done();
             });
-
-        const spy = spyOn(tilesContainerInstance, 'testDone');
 
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(spy).toHaveBeenCalled();
         });
-    }));
+    });
 
-    it('should be able to size a tile with the mouse from the top border', async(() => {
+    it('should be able to size a tile with the mouse from the top border', (done) => {
         const fixture = TestBed.createComponent(DejaTilesContainerComponent);
-        const tilesContainerInstance = fixture.componentInstance as DejaTilesContainerComponent;
         const tilesDebugElement = fixture.debugElement.query(By.directive(DejaTilesComponent));
         const tilesInstance = tilesDebugElement.componentInstance as DejaTilesComponent;
         const tilesContainer = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles'));
@@ -1007,22 +960,18 @@ describe('DejaTilesComponent', () => {
             })
             .delay(20)
             .subscribe(() => {
-                tilesContainerInstance.testDone();
+                done();
             });
-
-        const spy = spyOn(tilesContainerInstance, 'testDone');
 
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(spy).toHaveBeenCalled();
         });
-    }));
+    });
 
-    it('should be able to size a tile with the mouse from the bottom right corner', async(() => {
+    it('should be able to size a tile with the mouse from the bottom right corner', (done) => {
         const fixture = TestBed.createComponent(DejaTilesContainerComponent);
-        const tilesContainerInstance = fixture.componentInstance as DejaTilesContainerComponent;
         const tilesDebugElement = fixture.debugElement.query(By.directive(DejaTilesComponent));
         const tilesInstance = tilesDebugElement.componentInstance as DejaTilesComponent;
         const tilesContainer = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles'));
@@ -1089,22 +1038,18 @@ describe('DejaTilesComponent', () => {
             })
             .delay(20)
             .subscribe(() => {
-                tilesContainerInstance.testDone();
+                done();
             });
-
-        const spy = spyOn(tilesContainerInstance, 'testDone');
 
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(spy).toHaveBeenCalled();
         });
-    }));
+    });
 
-    it('should be able to size a tile with the mouse from the top right corner', async(() => {
+    it('should be able to size a tile with the mouse from the top right corner', (done) => {
         const fixture = TestBed.createComponent(DejaTilesContainerComponent);
-        const tilesContainerInstance = fixture.componentInstance as DejaTilesContainerComponent;
         const tilesDebugElement = fixture.debugElement.query(By.directive(DejaTilesComponent));
         const tilesInstance = tilesDebugElement.componentInstance as DejaTilesComponent;
         const tilesContainer = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles'));
@@ -1171,23 +1116,19 @@ describe('DejaTilesComponent', () => {
             })
             .delay(20)
             .subscribe(() => {
-                tilesContainerInstance.testDone();
+                done();
             });
-
-        const spy = spyOn(tilesContainerInstance, 'testDone');
 
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(spy).toHaveBeenCalled();
         });
-    }));
+    });
 
-    it('should be able to size a tile with the mouse from the top left corner', async(() => {
+    it('should be able to size a tile with the mouse from the top left corner', (done) => {
         const fixture = TestBed.createComponent(DejaTilesContainerComponent);
-        const tilesContainerInstance = fixture.componentInstance as DejaTilesContainerComponent;
-        const tilesDebugElement = fixture.debugElement.query(By.directive(DejaTilesComponent));
+         const tilesDebugElement = fixture.debugElement.query(By.directive(DejaTilesComponent));
         const tilesInstance = tilesDebugElement.componentInstance as DejaTilesComponent;
         const tilesContainer = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles'));
         const tilesContainerElement = tilesContainer.nativeElement as HTMLElement;
@@ -1253,22 +1194,18 @@ describe('DejaTilesComponent', () => {
             })
             .delay(20)
             .subscribe(() => {
-                tilesContainerInstance.testDone();
+                done();
             });
-
-        const spy = spyOn(tilesContainerInstance, 'testDone');
 
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(spy).toHaveBeenCalled();
         });
-    }));
+    });
 
-    it('should be able to size a tile with the mouse from the bottom left corner', async(() => {
+    it('should be able to size a tile with the mouse from the bottom left corner', (done) => {
         const fixture = TestBed.createComponent(DejaTilesContainerComponent);
-        const tilesContainerInstance = fixture.componentInstance as DejaTilesContainerComponent;
         const tilesDebugElement = fixture.debugElement.query(By.directive(DejaTilesComponent));
         const tilesInstance = tilesDebugElement.componentInstance as DejaTilesComponent;
         const tilesContainer = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles'));
@@ -1335,22 +1272,18 @@ describe('DejaTilesComponent', () => {
             })
             .delay(20)
             .subscribe(() => {
-                tilesContainerInstance.testDone();
+                done();
             });
-
-        const spy = spyOn(tilesContainerInstance, 'testDone');
 
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(spy).toHaveBeenCalled();
         });
-    }));
+    });
 
-    it('should select by drag and drop with the mouse', async(() => {
+    it('should select by drag and drop with the mouse', (done) => {
         const fixture = TestBed.createComponent(DejaTilesContainerComponent);
-        const tilesContainerInstance = fixture.componentInstance as DejaTilesContainerComponent;
         const tilesDebugElement = fixture.debugElement.query(By.directive(DejaTilesComponent));
         const tilesInstance = tilesDebugElement.componentInstance as DejaTilesComponent;
         const tilesContainer = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles'));
@@ -1395,16 +1328,13 @@ describe('DejaTilesComponent', () => {
             .subscribe(() => {
                 const selectedTiles = fixture.debugElement.queryAll(By.css('deja-tiles#tiles1 > #tiles > deja-tile[selected="true"]'));
                 expect(selectedTiles.length).toBe(6);
-                tilesContainerInstance.testDone();
+                done();
             });
-
-        const spy = spyOn(tilesContainerInstance, 'testDone');
 
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
             tilesInstance.refresh();
-            expect(spy).toHaveBeenCalled();
         });
-    }));
+    });
 });
