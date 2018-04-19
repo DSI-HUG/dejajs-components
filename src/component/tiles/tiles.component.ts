@@ -266,8 +266,8 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     }
 
     @Input()
-    public set selectedTiles(selectedIds: string[]) {
-        this.layoutProvider.selectedTiles = selectedIds;
+    public set selectedTiles(selectedtiles: Array<IDejaTile | string>) {
+        this.layoutProvider.selectedTiles = selectedtiles.map((tile) => typeof tile === 'string' ? tile : (<IDejaTile>tile).id);
     }
 
     // ************* ControlValueAccessor Implementation **************
