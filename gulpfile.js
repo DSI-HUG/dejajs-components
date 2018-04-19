@@ -581,13 +581,13 @@ gulp.task('test:demo', () => {
 });
 
 gulp.task('serve:demo', () => {
-	return execDemoCmd('serve --port 5100', {
+	return execDemoCmd('serve', {
 		cwd: `${config.demoDir}`
 	});
 });
 
 gulp.task('build:demo', () => {
-	return execDemoCmd(`build --env=prod --base-href https://dsi-hug.github.io/dejajs-components/`, {
+	return execDemoCmd(`build --prod`, {
 		cwd: `${config.demoDir}`
 	});
 });

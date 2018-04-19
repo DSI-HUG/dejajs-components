@@ -28,6 +28,7 @@ const getConfig = (hasCoverage, isTddMode) => {
 
     return {
         devtool: 'inline-source-map',
+        mode: 'production',
         resolve: {
             extensions: ['.ts', '.js'],
             modules: [helpers.root('src'), 'node_modules']
