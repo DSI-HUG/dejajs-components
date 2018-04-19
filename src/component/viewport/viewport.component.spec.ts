@@ -68,8 +68,6 @@ describe('DejaViewPortComponent', () => {
         }).compileComponents();
     }));
 
-    const noop = () => { };
-
     const observeViewPort$ = (fixture: ComponentFixture<DejaViewportContainerComponent>, elementCount: number, expectedBeforeSize: number, expectedAfterSize: number, expectedViewPortSize: number, expectedViewPortStartIndex: number, expectedViewPortEndIndex: number) => {
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
         const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
@@ -97,7 +95,7 @@ describe('DejaViewPortComponent', () => {
         expect(viewPortInstance).toBeTruthy();
     }));
 
-    it('should render horizontally', async(() => {
+    it('should render horizontally', (done) => {
         const fixture = TestBed.createComponent(DejaViewportContainerComponent);
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
         const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
@@ -105,106 +103,136 @@ describe('DejaViewPortComponent', () => {
         observeViewPort$(fixture, 51, 0, 980, 1020, 0, 50).subscribe(() => {
             // tslint:disable-next-line:no-string-literal
             expect(viewPortInstance['clientSize']).toEqual(1000);
+            done();
         });
 
         viewPortInstance.viewportMode = 'fixed';
         viewPortInstance.itemSize = 20;
         viewPortInstance.direction = 'horizontal';
         fixture.detectChanges();
-    }));
+    });
 
-    it('should render all items width viewport disabled', async(() => {
+    it('should render all items width viewport disabled', (done) => {
         const fixture = TestBed.createComponent(DejaViewportContainerComponent);
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
         const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
 
-        observeViewPort$(fixture, 100, 0, 0, 1800, 0, 6).subscribe(noop);
+        observeViewPort$(fixture, 100, 0, 0, 1800, 0, 6).subscribe(() => {
+            done();
+        });
 
         viewPortInstance.viewportMode = 'disabled';
         expect(ViewportMode.disabled === viewPortInstance.viewportMode as any);
 
         viewPortInstance.itemSize = 20;
         fixture.detectChanges();
-    }));
+    });
 
-    it('should render with viewport fixed with an item size of 20', async(() => {
+    it('should render with viewport fixed with an item size of 20', (done) => {
         const fixture = TestBed.createComponent(DejaViewportContainerComponent);
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
         const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
 
-        observeViewPort$(fixture, 7, 0, 1860, 140, 0, 6).subscribe(() => noop);
+        observeViewPort$(fixture, 7, 0, 1860, 140, 0, 6).subscribe(() => {
+            done();
+        });
 
         viewPortInstance.viewportMode = 'fixed';
         expect(ViewportMode.fixed === viewPortInstance.viewportMode as any);
 
         viewPortInstance.itemSize = 20;
         fixture.detectChanges();
-    }));
+    });
 
-    it('should render with viewport fixed with an item size of 35', async(() => {
+    it('should render with viewport fixed with an item size of 35', (done) => {
         const fixture = TestBed.createComponent(DejaViewportContainerComponent);
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
         const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
 
-        observeViewPort$(fixture, 5, 0, 3325, 175, 0, 4).subscribe(() => noop);
+        observeViewPort$(fixture, 5, 0, 3325, 175, 0, 4).subscribe(() => {
+            done();
+        });
 
         viewPortInstance.viewportMode = 'fixed';
         viewPortInstance.itemSize = 35;
         fixture.detectChanges();
-    }));
+    });
 
-    it('should render with viewport variable at position 0', async(() => {
+    it('should render with viewport variable at position 0', (done) => {
         const fixture = TestBed.createComponent(DejaViewportContainerComponent);
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
         const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
 
-        observeViewPort$(fixture, 9, 0, 1824, 126, 0, 8).subscribe(() => noop);
+        observeViewPort$(fixture, 9, 0, 1824, 126, 0, 8).subscribe(() => {
+            done();
+        });
 
         viewPortInstance.viewportMode = 'variable';
         expect(ViewportMode.variable === viewPortInstance.viewportMode as any);
 
         fixture.detectChanges();
-    }));
+    });
 
-    it('should render with viewport variable at position 90', async(() => {
+    it('should render with viewport variable at position 90', (done) => {
         const fixture = TestBed.createComponent(DejaViewportContainerComponent);
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
         const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
         const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
 
-        observeViewPort$(fixture, 8, 75, 1719, 156, 6, 13).subscribe(noop);
+        observeViewPort$(fixture, 8, 75, 1719, 156, 6, 13).subscribe(() => {
+            done();
+        });
 
         viewPortService.scrollPosition$.next(90);
         viewPortInstance.viewportMode = 'variable';
         fixture.detectChanges();
-    }));
+    });
 
-    it('should render with viewport variable at position 1200', async(() => {
+    it('should render with viewport variable at position 1200', (done) => {
         const fixture = TestBed.createComponent(DejaViewportContainerComponent);
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
         const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
         const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
 
-        observeViewPort$(fixture, 9, 1191, 615, 144, 62, 70).subscribe(noop);
+        observeViewPort$(fixture, 9, 1191, 615, 144, 62, 70).subscribe(() => {
+            done();
+        });
 
         viewPortService.scrollPosition$.next(1200);
         viewPortInstance.viewportMode = 'variable';
         fixture.detectChanges();
-    }));
+    });
 
-    it('should render with buttons instead scrollbar at position 0', async(() => {
+    it('should render with buttons instead scrollbar at position 0', (done) => {
         const fixture = TestBed.createComponent(DejaViewportContainerComponent);
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
         const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
         viewPortInstance.scrollingStyle = 'buttons';
         fixture.detectChanges();
 
-        observeViewPort$(fixture, 5, 0, 1900, 100, 0, 4).subscribe(() => noop);
+        observeViewPort$(fixture, 5, 0, 1900, 100, 0, 4).subscribe(() => {
+            done();
+        });
 
         viewPortInstance.viewportMode = 'fixed';
         viewPortInstance.itemSize = 20;
         fixture.detectChanges();
-    }));
+    });
+
+    it('should able to refresh the viewport and return the same values', (done) => {
+        const fixture = TestBed.createComponent(DejaViewportContainerComponent);
+        const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
+        const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
+
+        observeViewPort$(fixture, 4, 3840, 0, 160, 96, 99).subscribe(() => {
+            done();
+        });
+
+        (<any>viewPortInstance).scrollPos = 10000;
+        viewPortInstance.refresh();
+        viewPortInstance.refreshViewPort();
+        fixture.detectChanges();
+    });
 });
 
 describe('DejaViewPortComponent', () => {
@@ -222,8 +250,6 @@ describe('DejaViewPortComponent', () => {
         }).compileComponents();
     }));
 
-    const noop = () => { };
-
     const observeViewPort$ = (fixture: ComponentFixture<DejaViewportAutoContainerComponent>, elementCount: number, expectedBeforeSize: number, expectedAfterSize: number, expectedViewPortSize: number, expectedViewPortStartIndex: number, expectedViewPortEndIndex: number) => {
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
         const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
@@ -231,7 +257,7 @@ describe('DejaViewPortComponent', () => {
         return Observable.from(viewPortService.viewPortResult$)
             .debounceTime(10)
             .do(() => fixture.detectChanges())
-            .filter((result) => result.visibleItems && result.visibleItems.length && result.visibleItems[0].size > 0) // items must be sized
+            .filter((result) => result.visibleItems && result.visibleItems.length && result.listSize > 0) // items must be sized
             .do((result) => {
                 const listitems = fixture.debugElement.queryAll(By.css('deja-viewport > #viewport-wrapper > .listitem'));
                 expect(listitems.length).toEqual(elementCount);
@@ -252,69 +278,44 @@ describe('DejaViewPortComponent', () => {
         expect(ViewportMode.auto === viewPortInstance.viewportMode as ViewportMode);
     }));
 
-    it('should render with viewport auto at position 0', async(() => {
+    it('should render with viewport auto at position 0', (done) => {
         const fixture = TestBed.createComponent(DejaViewportAutoContainerComponent);
-        observeViewPort$(fixture, 29, 0, 38840, 820, 0, 28).subscribe(noop);
+        observeViewPort$(fixture, 21, 0, 39160, 840, 0, 20).subscribe(() => {
+            done();
+        });
         fixture.detectChanges();
-    }));
+    });
 
-    it('should render with viewport auto at position 10000', async(() => {
+    it('should render with viewport auto at position 10000', (done) => {
         const fixture = TestBed.createComponent(DejaViewportAutoContainerComponent);
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
         const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
 
-        observeViewPort$(fixture, 29, 9986, 28840, 820, 250, 278).subscribe(noop);
+        observeViewPort$(fixture, 22, 9960, 29160, 880, 249, 270).subscribe(() => {
+            done();
+        });
 
         viewPortService.scrollPosition$.next(10000);
         fixture.detectChanges();
-    }));
+    });
 
-    it('should render with viewport auto at position 16500', async(() => {
+    it('should render with viewport auto at position 16500', (done) => {
         const fixture = TestBed.createComponent(DejaViewportAutoContainerComponent);
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
         const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
         const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
 
-        observeViewPort$(fixture, 29, 16480, 22360, 828, 412, 440).subscribe(() => {
+        observeViewPort$(fixture, 21, 16480, 22680, 840, 412, 432).subscribe(() => {
             // tslint:disable-next-line:no-string-literal
             expect(viewPortInstance['clientSize']).toEqual(800);
+            done();
         });
 
         viewPortService.scrollPosition$.next(16500);
         fixture.detectChanges();
-    }));
+    });
 
-    it('should able to refresh the viewport and return the same values', async(() => {
-        const fixture = TestBed.createComponent(DejaViewportAutoContainerComponent);
-        const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
-        const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
-        let pass = 0;
-
-        observeViewPort$(fixture, 29, 9986, 28840, 820, 250, 278).subscribe(() => {
-            switch (++pass) {
-                case 1:
-                    // tslint:disable-next-line:no-string-literal
-                    viewPortInstance.refreshViewPort(viewPortInstance['_items'][249], true);
-                    break;
-                case 2:
-                    // tslint:disable-next-line:no-string-literal
-                    viewPortInstance.refreshViewPort(viewPortInstance['_items'][250], true);
-                    break;
-                case 3:
-                    // tslint:disable-next-line:no-string-literal
-                    viewPortInstance.refreshViewPort(viewPortInstance['_items'][0], true);
-                    break;
-                default:
-            }
-        });
-
-        (<any>viewPortInstance).scrollPos = 10000;
-        viewPortInstance.refresh();
-        viewPortInstance.refreshViewPort();
-        fixture.detectChanges();
-    }));
-
-    it('should able to refresh the viewport when the window is resized or scroll', async(() => {
+    it('should able to refresh the viewport when the window is resized or scroll', (done) => {
         const fixture = TestBed.createComponent(DejaViewportAutoContainerComponent);
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
         const viewPortElement = viewPortDebugElement.nativeElement;
@@ -323,17 +324,17 @@ describe('DejaViewPortComponent', () => {
         const wrapperDebugElement = fixture.debugElement.query(By.css('deja-viewport > #viewport-wrapper'));
         const wrapperElement = wrapperDebugElement.nativeElement as HTMLElement;
         let pass = 0;
-        let elementCount = 29;
-        let expectedBeforeSize = 9986;
-        let expectedAfterSize = 28840;
-        let expectedViewPortSize = 820;
-        let expectedViewPortStartIndex = 250;
-        let expectedViewPortEndIndex = 278;
+        let elementCount = 22;
+        let expectedBeforeSize = 9960;
+        let expectedAfterSize = 29160;
+        let expectedViewPortSize = 880;
+        let expectedViewPortStartIndex = 249;
+        let expectedViewPortEndIndex = 270;
 
         Observable.from(viewPortService.viewPortResult$)
             .debounceTime(10)
             .do(() => fixture.detectChanges())
-            .filter((result) => result.visibleItems && result.visibleItems.length && result.visibleItems[0].size > 0) // items must be sized
+            .filter((result) => result.visibleItems && result.visibleItems.length && result.listSize > 0) // items must be sized
             .subscribe((result) => {
                 const listitems = fixture.debugElement.queryAll(By.css('deja-viewport > #viewport-wrapper > .listitem'));
                 expect(listitems.length).toEqual(elementCount);
@@ -342,35 +343,41 @@ describe('DejaViewPortComponent', () => {
                 expect(result.viewPortSize).toEqual(expectedViewPortSize);
                 expect(result.startIndex).toEqual(expectedViewPortStartIndex);
                 expect(result.endIndex).toEqual(expectedViewPortEndIndex);
-                if (++pass === 1) {
-                    elementCount = 29;
-                    expectedBeforeSize = 9986;
-                    expectedAfterSize = 28840;
-                    expectedViewPortSize = 820;
-                    expectedViewPortStartIndex = 250;
-                    expectedViewPortEndIndex = 278;
-                    viewPortElement.style.width = '1500px';
-                    const event = new CustomEvent('resize', {});
-                    window.dispatchEvent(event);
-                    viewPortInstance.refresh();
-                } else if (pass === 2) {
-                    elementCount = 29;
-                    expectedBeforeSize = 986;
-                    expectedAfterSize = 37486;
-                    expectedViewPortSize = 820;
-                    expectedViewPortStartIndex = 25;
-                    expectedViewPortEndIndex = 53;
-                    wrapperElement.scrollTop = 1000;
-                    const event = new CustomEvent('scroll', {});
-                    wrapperElement.dispatchEvent(event);
+                switch (++pass) {
+                    case 1:
+                        elementCount = 29;
+                        expectedBeforeSize = 9986;
+                        expectedAfterSize = 28840;
+                        expectedViewPortSize = 820;
+                        expectedViewPortStartIndex = 250;
+                        expectedViewPortEndIndex = 278;
+                        viewPortElement.style.width = '1500px';
+                        const resizeEvent = new CustomEvent('resize', {});
+                        window.dispatchEvent(resizeEvent);
+                        viewPortInstance.refresh();
+                        break;
+
+                    case 2:
+                        elementCount = 22;
+                        expectedBeforeSize = 960;
+                        expectedAfterSize = 37806;
+                        expectedViewPortSize = 880;
+                        expectedViewPortStartIndex = 24;
+                        expectedViewPortEndIndex = 45;
+                        wrapperElement.scrollTop = 1000;
+                        const scrollEvent = new CustomEvent('scroll', {});
+                        wrapperElement.dispatchEvent(scrollEvent);
+                        break;
+                    default:
+                        done();
                 }
             });
 
         viewPortService.scrollPosition$.next(10000);
         fixture.detectChanges();
-    }));
+    });
 
-    it('should refresh view port if windows is resized', async(() => {
+    it('should refresh view port if windows is resized', (done) => {
         const fixture = TestBed.createComponent(DejaViewportAutoContainerComponent);
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
         const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
@@ -395,11 +402,12 @@ describe('DejaViewPortComponent', () => {
                         break;
 
                     default:
+                        done();
                         break;
 
                 }
             });
 
         fixture.detectChanges();
-    }));
+    });
 });
