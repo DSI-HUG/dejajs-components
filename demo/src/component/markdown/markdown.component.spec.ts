@@ -6,6 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { HttpClientModule } from '@angular/common/http';
 import { ChangeDetectorRef } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { BaseRequestOptions, ConnectionBackend, Http, Response, ResponseOptions } from '@angular/http';
@@ -19,7 +20,12 @@ describe('DejaMarkdownComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations : [DejaMarkdownComponent],
+            declarations: [
+                DejaMarkdownComponent
+            ],
+            imports: [
+                HttpClientModule,
+            ],
             providers: [
                 ChangeDetectorRef,
                 MockBackend,
