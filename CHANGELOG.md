@@ -1,3 +1,19 @@
+<a name="3.0.0-beta.16"></a>
+# [3.0.0-beta.16](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.16) (2018-04-19)
+
+
+### Bug Fixes
+
+* **DatePicker:** Add tabIndex="-1" on buttons to avoid focus on tab ([debe4a7](https://github.com/DSI-HUG/dejajs-components/commit/debe4a7))
+* **DatePicker:** Specify an overlayContainerClass to not override style of other components (DEJS-410) ([bb95080](https://github.com/DSI-HUG/dejajs-components/commit/bb95080))
+
+
+### Features
+
+* **DejaOverlay:** Add an input to specifiy an 'overlayContainerClass' (DEJS-409) ([78dbbcf](https://github.com/DSI-HUG/dejajs-components/commit/78dbbcf))
+
+
+
 <a name="3.0.0-beta.15"></a>
 # [3.0.0-beta.15](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.15) (2018-04-04)
 
