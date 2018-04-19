@@ -34,7 +34,7 @@ describe('DejaMarkdownComponent', () => {
                     provide: Http,
                     useFactory: (b: ConnectionBackend, options: BaseRequestOptions) => new Http(b, options),
                     deps: [MockBackend, BaseRequestOptions]
-                  }
+                }
             ]
         }).compileComponents();
 
@@ -77,6 +77,7 @@ describe('DejaMarkdownComponent', () => {
 
         component.url = 'aGoodUrl';
         fixture.detectChanges();
+
         expect(fixture.nativeElement.querySelector('h1').innerText).toEqual('qwertzqwertz');
     });
 
@@ -90,5 +91,4 @@ describe('DejaMarkdownComponent', () => {
 
         expect(fixture.nativeElement.innerText).toEqual('Error: some error');
     });
-
 });
