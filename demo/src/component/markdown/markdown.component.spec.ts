@@ -6,17 +6,15 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ChangeDetectorRef } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { BaseRequestOptions, ConnectionBackend, Http, Response, ResponseOptions } from '@angular/http';
-import { MockBackend } from '@angular/http/testing';
 import { DejaMarkdownComponent } from './markdown.component';
 
 describe('DejaMarkdownComponent', () => {
     let component: DejaMarkdownComponent;
+    let httpMock: HttpTestingController;
     let fixture: ComponentFixture<DejaMarkdownComponent>;
-    let backend: MockBackend;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -24,27 +22,25 @@ describe('DejaMarkdownComponent', () => {
                 DejaMarkdownComponent
             ],
             imports: [
-                HttpClientModule,
+                HttpClientTestingModule,
             ],
             providers: [
-                ChangeDetectorRef,
-                MockBackend,
-                BaseRequestOptions,
-                {
-                    provide: Http,
-                    useFactory: (b: ConnectionBackend, options: BaseRequestOptions) => new Http(b, options),
-                    deps: [MockBackend, BaseRequestOptions]
-                }
+                ChangeDetectorRef
             ]
         }).compileComponents();
 
         fixture = TestBed.createComponent(DejaMarkdownComponent);
         component = fixture.componentInstance;
-        backend = TestBed.get(MockBackend);
+        httpMock = TestBed.get(HttpTestingController);
     }));
+
+    afterEach(() => {
+        httpMock.verify();
+    });
 
     it('should init component', () => {
         expect(component).toBeTruthy();
+        expect(httpMock).toBeTruthy();
     });
 
     it('should do nothing if value is null', () => {
@@ -69,26 +65,20 @@ describe('DejaMarkdownComponent', () => {
     });
 
     it('should get html from url', () => {
-        backend.connections.subscribe((connection: any) => {
-            connection.mockRespond(new Response(<ResponseOptions>{
-                body: '<h1>qwertzqwertz</h1>'
-            }));
-        });
-
         component.url = 'aGoodUrl';
-        fixture.detectChanges();
+        httpMock.expectOne('aGoodUrl').flush('<h1>qwertzqwertz</h1>');
 
+        // Must do detectChanges after httpMock.flush()
+        fixture.detectChanges();
         expect(fixture.nativeElement.querySelector('h1').innerText).toEqual('qwertzqwertz');
     });
 
     it('should process http error', () => {
-        backend.connections.subscribe((connection: any) => {
-            connection.mockError(new Error('some error'));
-        });
-
         component.url = 'aWrongUrl';
-        fixture.detectChanges();
+        httpMock.expectOne('aWrongUrl').error(new ErrorEvent('Error: some error'));
 
-        expect(fixture.nativeElement.innerText).toEqual('Error: some error');
+        fixture.detectChanges();
+        console.log(fixture.nativeElement.innerText);
+        expect(fixture.nativeElement.innerText).toEqual('Http failure response for aWrongUrl: 0');
     });
 });
