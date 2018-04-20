@@ -43,6 +43,8 @@ export class DejaMarkdownComponent implements OnInit, AfterViewChecked {
         this._http.get(url, { observe: 'body', headers: headers, responseType: 'text' }).subscribe((object) => {
             this.value = object.toString();
         }, (error) => {
+            console.log('Error');
+            console.log(error);
             this.value = `${error.message}`;
         });
     }
