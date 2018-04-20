@@ -13,12 +13,12 @@ import { Observable } from 'rxjs/Observable';
 @Injectable()
 export class MonacoEditorDemoService {
 
-    constructor(protected _http: HttpClient) {
+    constructor(protected httpClient: HttpClient) {
 
     }
 
     public getFile$(filename: string): Observable<string> {
-        return this._http.get(`assets/datas/monaco/${filename}`, { observe: 'body', responseType: 'text' })
+        return this.httpClient.get(`assets/datas/monaco/${filename}`, { observe: 'body', responseType: 'text' })
             .map((response) => response);
     }
 }

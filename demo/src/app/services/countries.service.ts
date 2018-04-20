@@ -29,7 +29,7 @@ export class CountriesService {
     private countriesDic = {} as { [code: string]: Country };
     private materialColors: Color[];
 
-    constructor(private http: HttpClient, materialColors: MaterialColors) {
+    constructor(private httpClient: HttpClient, materialColors: MaterialColors) {
         this.materialColors = materialColors.getPalet('700');
     }
 
@@ -44,7 +44,7 @@ export class CountriesService {
 
     public getCountries$(query?: string, number?: number): Observable<Country[]> {
         let recordCount = number || 0;
-        return this.http.get('assets/datas/countries.json', { })
+        return this.httpClient.get('assets/datas/countries.json', { })
             .switchMap((datas: any) => datas.data as any[])
             .map((json) => ObjectMapper.deserialize(Country, json))
             .reduce((acc, country) => {
