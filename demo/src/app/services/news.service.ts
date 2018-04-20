@@ -18,10 +18,10 @@ import { News, NewsArticles, NewsSource, NewsSources } from '../common/news.mode
 
 @Injectable()
 export class NewsService {
-    constructor(private http: HttpClient) { }
+    constructor(private httpClient: HttpClient) { }
 
     public getNews$(recordCount?: number): Observable<News[]> {
-        return this.http.get('https://newsapi.org/v1/sources?language=en')
+        return this.httpClient.get('https://newsapi.org/v1/sources?language=en')
             .map((response: any) => ObjectMapper.deserialize(NewsSources, response))
             .map((resp: NewsSources) => {
                 if (resp.status !== 'ok') {
@@ -32,7 +32,7 @@ export class NewsService {
             .map((sources: NewsSource[]) => sources.filter((source) => source.category === 'technology' || source.category === 'gaming'))
             .switchMap((sources: NewsSource[]) => {
                 const source = sources[Math.round(Math.random() * (sources.length - 1))];
-                return this.http.get(`https://newsapi.org/v1/articles?source=${source.id}&apiKey=228bc9410a2a4f608d2ad2e5626896f3`);
+                return this.httpClient.get(`https://newsapi.org/v1/articles?source=${source.id}&apiKey=228bc9410a2a4f608d2ad2e5626896f3`);
             })
             .map((response: any) => ObjectMapper.deserialize(NewsArticles, response))
             .map((resp: NewsArticles) => {

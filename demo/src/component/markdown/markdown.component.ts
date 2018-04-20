@@ -40,7 +40,7 @@ export class DejaMarkdownComponent implements OnInit, AfterViewChecked {
         const headers = new HttpHeaders({
             'Content-Type': 'text/plain;charset=utf-8'
         });
-        this._http.get(url, { observe: 'body', headers: headers, responseType: 'text' }).subscribe((object) => {
+        this.httpClient.get(url, { observe: 'body', headers: headers, responseType: 'text' }).subscribe((object) => {
             this.value = object.toString();
         }, (error) => {
             this.value = `${error.message}`;
@@ -55,7 +55,7 @@ export class DejaMarkdownComponent implements OnInit, AfterViewChecked {
         return this._html;
     }
 
-    constructor(private changeDetectorRef: ChangeDetectorRef, protected _http: HttpClient, private sanitized: DomSanitizer) {
+    constructor(private changeDetectorRef: ChangeDetectorRef, protected httpClient: HttpClient, private sanitized: DomSanitizer) {
         this._converter = new Showdown.Converter();
         this._converter.setOption('tables', true);
     }

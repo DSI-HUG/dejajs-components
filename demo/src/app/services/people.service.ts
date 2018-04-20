@@ -55,13 +55,13 @@ export class PeopleService {
     private peopleDic = {} as { [code: string]: Person };
     private materialColors: Color[];
 
-    constructor(private http: HttpClient, materialColors: MaterialColors) {
+    constructor(private httpClient: HttpClient, materialColors: MaterialColors) {
         this.materialColors = materialColors.getPalet('700');
     }
 
     public getPeople$(query?: string, number?: number): Observable<Person[]> {
         let recordCount = number || 0;
-        return this.http.get('assets/datas/people.json', { })
+        return this.httpClient.get('assets/datas/people.json', { })
             .map((json) => ObjectMapper.deserialize(Person, json))
             .reduce((acc, person) => {
                 acc.push(person);
