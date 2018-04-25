@@ -6,7 +6,9 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { Pipe, PipeTransform } from '@angular/core';
-import * as moment from 'moment';
+
+import * as moment_ from 'moment';
+const moment: (value?: any, format?: string) => moment_.Moment = (<any>moment_).default || moment_;
 
 @Pipe({
     name: 'dejaDate'
