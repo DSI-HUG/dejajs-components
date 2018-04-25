@@ -20,6 +20,7 @@
 @import '../../component/viewport/viewport-theme';
 @import '../../component/numeric-stepper/numeric-stepper-theme';
 @import './menu-theme';
+@import './popup';
 @import '../components/loader';
 // Create a theme.
 @mixin deja-theme($custom-theme) {
@@ -42,4 +43,5 @@
     @include tooltip-theme($custom-theme);
     @include tree-list-theme($custom-theme);
     @include viewport-theme($custom-theme);
+    @include deja-popup();    
 }

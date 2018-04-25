@@ -1,6 +1,6 @@
 {
     "name": "@deja-js/component",
-    "version": "3.0.0-beta.11",
+    "version": "3.0.0-beta.16",
     "description": "Angular2 Components Library",
     "homepage": "https://github.com/DSI-HUG/dejajs-components",
     "bugs": "https://github.com/DSI-HUG/dejajs-components/issues",
@@ -25,6 +25,7 @@
         "link": "gulp link",
         "unlink": "gulp unlink",
         "licensecheck": "gulp license",
+        "changelog": "gulp changelog",
         "test": "gulp test",
         "install:demo": "gulp install:demo",
         "test:watch": "gulp test:watch",
@@ -36,7 +37,6 @@
         "postinstall": "gulp link && gulp install:demo"
     },
     "dependencies": {
-        "@angular-devkit/core": "0.4.3",
         "@angular/cdk": "5.2.4",
         "@angular/material": "5.2.4",
         "angular2-text-mask": "8.0.4",
@@ -79,7 +79,7 @@
         "autoprefixer": "8.0.0",
         "awesome-typescript-loader": "3.4.1",
         "codelyzer": "4.1.0",
-        "commitplease": "3.2.0",
+        "cz-conventional-changelog": "2.1.0",
         "conventional-github-releaser": "2.0.0",
         "core-js": "2.5.3",
         "css-loader": "0.28.9",
@@ -142,20 +142,7 @@
     "engines": {
         "node": ">=8.9.0"
     },
-    "commitplease": {
-        "style": "angular",
-        "types": [
-            "feat",
-            "fix",
-            "docs",
-            "style",
-            "refactor",
-            "perf",
-            "test",
-            "chore",
-            "revert",
-            "demo"
-        ],
-        "scope": "\\S+.*"
+    "commitizen": {
+        "path": "./node_modules/cz-conventional-changelog"
     }
 }
