@@ -48,6 +48,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
     @Input() public disableDates: Array<(DaysOfWeek | Date)>; // | ((d: Date) => boolean);
     @Input() public dateMax: Date;
     @Input() public dateMin: Date;
+    @Input() public format: string;
 
     @Output() public dateChange = new EventEmitter();
     @Output() public timeChange = new EventEmitter();

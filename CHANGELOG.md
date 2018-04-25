@@ -1,3 +1,16 @@
+<a name="3.0.0-beta.17"></a>
+# [3.0.0-beta.17](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.17) (2018-04-25)
+
+
+### Bug Fixes
+
+* **DejaDateFormatPipe:** Fix moment import ([c768d59](https://github.com/DSI-HUG/dejajs-components/commit/c768d59))
+* **DejaTileGroup:** Add the possibility to have a multiline label in a group ([b326b17](https://github.com/DSI-HUG/dejajs-components/commit/b326b17))
+* **MonacoEditor:** Fit to content ([a9b9a85](https://github.com/DSI-HUG/dejajs-components/commit/a9b9a85))
+* **DejaSelect** List item alignment was not preserved if the item content was too long ([b3ffd06](https://github.com/DSI-HUG/dejajs-components/commit/b3ffd06))
+* **DejaDatePicker** Set tab index to -1 for button to prevent unexpected behavior on form ([7722ce5](https://github.com/DSI-HUG/dejajs-components/commit/7722ce5))
+
+
 <a name="3.0.0-beta.16"></a>
 # [3.0.0-beta.16](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.16) (2018-04-19)
 

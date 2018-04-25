@@ -11,7 +11,7 @@
                 </button>
             </div>
             <div current>
-                {{displayedDate && displayedDate.toLocaleDateString()}}
+                {{displayedDate && (format ? (displayedDate | dejaDate : format) : displayedDate.toLocaleDateString())}}
             </div>
         </div>
         <div id="sub-header">
