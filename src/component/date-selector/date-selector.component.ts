@@ -190,7 +190,11 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
                 if (target.hasAttribute('dateindex')) {
                     const dateSelectorItem = this._currentDays[+target.getAttribute('dateindex')];
                     if (!dateSelectorItem.disabled) {
-                        this.value = dateSelectorItem.date;
+                        const val = new Date(dateSelectorItem.date);
+                        if (this._displayedDate) {
+                            val.setHours(this._displayedDate.getHours(), this._displayedDate.getMinutes(), this._displayedDate.getSeconds(), this._displayedDate.getMilliseconds());
+                        }
+                        this.value = val;
                         this.dateChange.emit(this.value);
                     }
                 }

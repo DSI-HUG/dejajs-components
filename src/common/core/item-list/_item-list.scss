@@ -21,12 +21,12 @@
 			max-height: 0 !important;
 			transition-timing-function: ease-out;
 		}
-		
+
 		#expandbtn {
-			width: 24px;
+			min-width: 24px;
 			cursor: pointer;
 		}
-		
+
 		&.parent {
 			&.collapsed {
 				#expandbtn {

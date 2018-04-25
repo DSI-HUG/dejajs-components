@@ -23,7 +23,6 @@
 
     @include deja-theme($theme);
     @include deja-menu();
-    @include deja-popup();
     @include deja-tree-list-borders();
 
 	@include markdown-theme($theme);

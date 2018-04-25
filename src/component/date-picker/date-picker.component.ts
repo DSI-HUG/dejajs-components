@@ -469,6 +469,11 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
 
         if (typeof date !== 'string') {
 
+            if (this.value && this.value.getTime() === date.getTime()) {
+                this.close();
+                return;
+            }
+
             let event: EventEmitter<any>;
 
             // now we check if it's date or time who is updated to raise correct event
@@ -483,7 +488,12 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
             this.value = date;
             this.onTouchedCallback();
             event.emit(date);
-            this.changeDetectorRef.markForCheck();
+
+            if (!this._layout || this._layout === DateComponentLayout.dateonly) {
+                this.close();
+            } else {
+                this.changeDetectorRef.markForCheck();
+            }
         }
     }
 
