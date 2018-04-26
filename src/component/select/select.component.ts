@@ -1188,6 +1188,14 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             });
     }
 
+    public getItemClass(item: IItemTree) {
+        const classNames = ['listitem'] as string[];
+        if (item.className) {
+            classNames.push(item.className);
+        }
+        return classNames.join(' ');
+    }
+
     protected onCloseClicked(event?: IDejaChipsComponentCloseEvent) {
         if (this._control) {
             this._control.control.markAsTouched();
