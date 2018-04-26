@@ -6,8 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Http, ResponseContentType } from '@angular/http';
 import { Color } from '@deja-js/component';
 import { MaterialColors } from '@deja-js/component';
 import { UUID } from '@deja-js/component';
@@ -55,14 +55,13 @@ export class PeopleService {
     private peopleDic = {} as { [code: string]: Person };
     private materialColors: Color[];
 
-    constructor(private http: Http, materialColors: MaterialColors) {
+    constructor(private httpClient: HttpClient, materialColors: MaterialColors) {
         this.materialColors = materialColors.getPalet('700');
     }
 
     public getPeople$(query?: string, number?: number): Observable<Person[]> {
         let recordCount = number || 0;
-        return this.http.get('assets/datas/people.json', { responseType: ResponseContentType.Json })
-            .switchMap((response) => response.json())
+        return this.httpClient.get('assets/datas/people.json', { })
             .map((json) => ObjectMapper.deserialize(Person, json))
             .reduce((acc, person) => {
                 acc.push(person);

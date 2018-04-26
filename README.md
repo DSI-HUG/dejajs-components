@@ -54,9 +54,9 @@ To link the library to your project, just make the following commands from the r
 
 `yarn link @deja-js/component` or `npm link @deja-js/component`
 
-and start your project with the --preserve-symlinks flag. For example
+and start your project. For example
 
-`ng serve --preserve-symlinks --port 4100 --base-href /"`
+`ng serve`
 
 
 ## Build

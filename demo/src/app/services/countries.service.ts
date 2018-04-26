@@ -6,8 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Http, ResponseContentType } from '@angular/http';
 import { Color, MaterialColors } from '@deja-js/component';
 import { ObjectMapper } from 'json-object-mapper';
 import 'rxjs/add/operator/map';
@@ -29,7 +29,7 @@ export class CountriesService {
     private countriesDic = {} as { [code: string]: Country };
     private materialColors: Color[];
 
-    constructor(private http: Http, materialColors: MaterialColors) {
+    constructor(private httpClient: HttpClient, materialColors: MaterialColors) {
         this.materialColors = materialColors.getPalet('700');
     }
 
@@ -44,9 +44,8 @@ export class CountriesService {
 
     public getCountries$(query?: string, number?: number): Observable<Country[]> {
         let recordCount = number || 0;
-        return this.http.get('assets/datas/countries.json', { responseType: ResponseContentType.Json })
-            .map((response) => response.json())
-            .switchMap((datas) => datas.data as any[])
+        return this.httpClient.get('assets/datas/countries.json', { })
+            .switchMap((datas: any) => datas.data as any[])
             .map((json) => ObjectMapper.deserialize(Country, json))
             .reduce((acc, country) => {
                 acc.push(country);
