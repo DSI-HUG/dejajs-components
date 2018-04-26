@@ -56,7 +56,8 @@
         "@angular/platform-browser-dynamic": "^5.1.0",
         "@angular/router": "^5.1.0",
         "core-js": "^2.5.3",
-        "rxjs": "^5.5.6",
+        "rxjs": "^6.0.0",
+        "rxjs-compat": "^6.0.0",
         "zone.js": "^0.8.20"
     },
     "devDependencies": {
@@ -125,7 +126,8 @@
         "rollup-plugin-sourcemaps": "0.4.2",
         "rollup-plugin-uglify": "3.0.0",
         "run-sequence": "2.2.1",
-        "rxjs": "5.5.6",
+        "rxjs": "6.0.0",
+        "rxjs-compat": "6.0.0",
         "sass-loader": "6.0.6",
         "sonarqube-scanner": "^2.0.2",
         "source-map-loader": "0.2.3",

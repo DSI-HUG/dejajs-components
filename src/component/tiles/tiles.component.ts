@@ -139,7 +139,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
             .takeWhile(() => this.isAlive)
             .subscribe((event) => this.layoutCompleted.emit(event));
 
-        this.keyup$ = Observable.fromEvent(element.ownerDocument, 'keyup');
+        this.keyup$ = Observable.fromEvent(element.ownerDocument, 'keyup') as Observable<KeyboardEvent>;
 
         Observable.fromEvent(window, 'resize')
             .takeWhile(() => this.isAlive)
