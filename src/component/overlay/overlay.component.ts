@@ -41,6 +41,11 @@ export class DejaOverlayComponent implements OnDestroy {
 
     @Input() public overlayBackdropClass = 'cdk-overlay-transparent-backdrop';
 
+    @Input() public set overlayContainerClass(value: string) {
+        const containerElement = this.overlayContainer.getContainerElement() as HTMLElement;
+        containerElement.classList.add(value);
+    }
+
     private _hasBackdrop = true;
     private _width: string = null;
     private _widthForMobile = '100%';

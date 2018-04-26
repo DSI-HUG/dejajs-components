@@ -59,6 +59,9 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
         this._format = format;
         this.formatChanged$.next(format);
     }
+    public get format(): string {
+        return this._format;
+    }
     /** Placeholder for input */
     @Input() public placeholder = 'Date';
     /** Disabled dates. It's an array of DaysOfWeek (number between 0 and 6) or a date. */
@@ -483,6 +486,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
             }
 
             this.value = date;
+            this.onTouchedCallback();
             event.emit(date);
 
             if (!this._layout || this._layout === DateComponentLayout.dateonly) {
@@ -499,5 +503,9 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
         delete this._inputModel;
         this.onChangeCallback(this.value);
         this.close();
+    }
+
+    public onBlur() {
+        this.onTouchedCallback();
     }
 }

@@ -1,3 +1,42 @@
+<a name="3.0.0-beta.18"></a>
+# [3.0.0-beta.18](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.18) (2018-04-26)
+
+
+### Bug Fixes
+
+* **DejaSelect:** Add Item.className to the dom ([7820e9e](https://github.com/DSI-HUG/dejajs-components/commit/7820e9e))
+* **Dependencies:** Added RxJs compat and uptaed to RxJs 6 ([2e85073](https://github.com/DSI-HUG/dejajs-components/commit/2e85073))
+
+
+<a name="3.0.0-beta.17"></a>
+# [3.0.0-beta.17](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.17) (2018-04-25)
+
+
+### Bug Fixes
+
+* **DejaDateFormatPipe:** Fix moment import ([c768d59](https://github.com/DSI-HUG/dejajs-components/commit/c768d59))
+* **DejaTileGroup:** Add the possibility to have a multiline label in a group ([b326b17](https://github.com/DSI-HUG/dejajs-components/commit/b326b17))
+* **MonacoEditor:** Fit to content ([a9b9a85](https://github.com/DSI-HUG/dejajs-components/commit/a9b9a85))
+* **DejaSelect** List item alignment was not preserved if the item content was too long ([b3ffd06](https://github.com/DSI-HUG/dejajs-components/commit/b3ffd06))
+* **DejaDatePicker** Set tab index to -1 for button to prevent unexpected behavior on form ([7722ce5](https://github.com/DSI-HUG/dejajs-components/commit/7722ce5))
+
+
+<a name="3.0.0-beta.16"></a>
+# [3.0.0-beta.16](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.16) (2018-04-19)
+
+
+### Bug Fixes
+
+* **DatePicker:** Add tabIndex="-1" on buttons to avoid focus on tab ([debe4a7](https://github.com/DSI-HUG/dejajs-components/commit/debe4a7))
+* **DatePicker:** Specify an overlayContainerClass to not override style of other components (DEJS-410) ([bb95080](https://github.com/DSI-HUG/dejajs-components/commit/bb95080))
+
+
+### Features
+
+* **DejaOverlay:** Add an input to specifiy an 'overlayContainerClass' (DEJS-409) ([78dbbcf](https://github.com/DSI-HUG/dejajs-components/commit/78dbbcf))
+
+
+
 <a name="3.0.0-beta.15"></a>
 # [3.0.0-beta.15](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.15) (2018-04-04)
 
