@@ -28,7 +28,7 @@ const getConfig = (hasCoverage, isTddMode) => {
 
     return {
         devtool: 'inline-source-map',
-        mode: 'production',
+        // mode: 'development', // For webpack V4 
         resolve: {
             extensions: ['.ts', '.js'],
             modules: [helpers.root('src'), 'node_modules']
