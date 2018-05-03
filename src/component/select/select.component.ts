@@ -708,8 +708,11 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     /** Definit le service de liste utilisé par ce composant. Ce service permet de controller dynamiquement la liste, ou de faire du lazyloading. */
     @Input()
-    public set itemListService(value: ItemListService) {
-        this.setItemListService(value);
+    public set itemListService(itemListService: ItemListService) {
+        this.setItemListService(itemListService);
+        if (itemListService && itemListService.lastQuery) {
+            this.query = itemListService.lastQuery.toString();
+        }
     }
 
     /** Retourne le service de liste utilisé par ce composant. Ce service permet de controller dynamiquement la liste, ou de faire du lazyloading. */

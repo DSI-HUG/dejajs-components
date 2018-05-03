@@ -451,10 +451,13 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
 
     /** Definit le service de liste utilisé par ce composant. Ce srevice permet de controller dynamiquement la liste, ou de faire du lazyloading. */
     @Input()
-    public set itemListService(value: ItemListService) {
-        if (value !== undefined) {
+    public set itemListService(itemListService: ItemListService) {
+        if (itemListService !== undefined) {
             this.hasCustomService = true;
-            this.setItemListService(value);
+            this.setItemListService(itemListService);
+            if (itemListService.lastQuery) {
+                this.query = itemListService.lastQuery.toString();
+            }
         }
     }
 
