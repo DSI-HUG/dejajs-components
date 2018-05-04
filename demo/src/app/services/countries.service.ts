@@ -44,13 +44,8 @@ export class CountriesService {
 
     public getCountries$(query?: string, number?: number): Observable<Country[]> {
         let recordCount = number || 0;
-        return this.httpClient.get('assets/datas/countries.json', { })
-            .switchMap((datas: any) => datas.data as any[])
-            .map((json) => ObjectMapper.deserialize(Country, json))
-            .reduce((acc, country) => {
-                acc.push(country);
-                return acc;
-            }, [])
+        return this.httpClient.get('assets/datas/countries.json', {})
+            .map((json: any) => ObjectMapper.deserializeArray(Country, json.data))
             .map((countries) => {
                 let colorIndex = 0;
                 countries.forEach((country) => {

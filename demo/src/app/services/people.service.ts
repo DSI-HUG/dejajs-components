@@ -61,12 +61,8 @@ export class PeopleService {
 
     public getPeople$(query?: string, number?: number): Observable<Person[]> {
         let recordCount = number || 0;
-        return this.httpClient.get('assets/datas/people.json', { })
-            .map((json) => ObjectMapper.deserialize(Person, json))
-            .reduce((acc, person) => {
-                acc.push(person);
-                return acc;
-            }, [])
+        return this.httpClient.get('assets/datas/people.json', {})
+            .map((json) => ObjectMapper.deserializeArray(Person, json))
             .map((people) => {
                 let colorIndex = 0;
                 people.forEach((person) => {
