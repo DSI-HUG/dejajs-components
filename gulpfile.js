@@ -348,8 +348,8 @@ gulp.task('scss:demo', (cb) => {
 });
 
 // Watch changes on (*.sass) Re-build _theming file in demo folder
-gulp.task('build:watch-scss', gulp.series('scss', 'scss:demo'), (cb) => {
-	gulp.watch(config.allSass, gulp.series('scss', 'scss:demo')).on('error', cb);
+gulp.task('scss:watch', (cb) => {
+	gulp.watch(config.allSass, gulp.series('scss', 'scss:demo'));
 });
 
 /////////////////////////////////////////////////////////////////////////////
@@ -679,12 +679,12 @@ gulp.task('create-new-tag', (cb) => {
 });
 
 gulp.task('release', gulp.series('bump-version', 'changelog', 'commit-changes', 'push-changes', (error) => {
-    if (error) {
-        gulpUtil.log(gulpUtil.colors.red(error.message));
-    } else {
-        gulpUtil.log(gulpUtil.colors.green('RELEASE FINISHED SUCCESSFULLY'));
-    }
-    // cb(error);
+	if (error) {
+		gulpUtil.log(gulpUtil.colors.red(error.message));
+	} else {
+		gulpUtil.log(gulpUtil.colors.green('RELEASE FINISHED SUCCESSFULLY'));
+	}
+	// cb(error);
 }));
 
 /////////////////////////////////////////////////////////////////////////////
@@ -733,6 +733,7 @@ gulp.task('compile', gulp.series('lint', 'pre-compile', 'inline-templates', 'ng-
 gulp.task('build', gulp.series('clean', 'license', 'compile', 'test', 'npm-package', 'rollup-bundle', 'build:scss', 'scss:demo', 'build:doc', 'clean:tmp'));
 
 gulp.task('default', gulp.series('build'));
+gulp.task('build:watch-scss', gulp.series('build:scss', 'scss:demo', 'scss:watch'));
 gulp.task('start', gulp.parallel('build:watch-scss', 'serve:demo'));
 gulp.task('test:ci', gulp.series('clean', 'compile', 'test'));
 gulp.task('clean:all', gulp.series('clean', 'clean:lock', 'clean:src-node-modules', 'clean:demo-node-modules', 'clean:node-modules'));

@@ -30,6 +30,7 @@ grid-demo {
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            background-color: red !important;
             deja-grid {
                 flex: 1 1 auto;
                 margin: 1rem 0;
