@@ -86,7 +86,7 @@
       "demo/src/tsconfig.server.json",
       "demo/src/tsconfig.spec.json",
       "demo/src/typings.d.ts",
-      "demo/.angular-cli.json",
+      "demo/.angular.json",
       "demo/package.json",
       "demo/README.md",
       "demo/.editorconfig",

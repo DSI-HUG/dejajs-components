@@ -349,7 +349,7 @@ gulp.task('scss:demo', (cb) => {
 
 // Watch changes on (*.sass) Re-build _theming file in demo folder
 gulp.task('scss:watch', (cb) => {
-	gulp.watch(config.allSass, gulp.series('scss', 'scss:demo'));
+	gulp.watch(config.allSass, gulp.series('scss', 'scss:demo')).on('error', cb);
 });
 
 /////////////////////////////////////////////////////////////////////////////
