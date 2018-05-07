@@ -1,3 +1,18 @@
+<a name="3.0.0-beta.19"></a>
+# [3.0.0-beta.19](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.19) (2018-05-07)
+
+
+### Bug Fixes
+
+* **Global:** Updated dependencies for ng6, RxJs 6 and Gulp 4 ([4668352](https://github.com/DSI-HUG/dejajs-components/commit/4668352))
+
+
+### BREAKING CHANGES
+
+* **Global:** angular6, angular-material6 and angular-cli 6 breaking changes
+
+
+
 <a name="3.0.0-beta.18"></a>
 # [3.0.0-beta.18](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.18) (2018-04-26)
 
