@@ -1,4 +1,4 @@
-<mat-tab-group [selectedIndex]="tabIndex" (selectChange)="tabIndex = $event.index">
+<mat-tab-group [selectedIndex]="tabIndex" (selectedTabChange)="tabIndex = $event.index">
     <!--<mat-tab label="OVERVIEW">-->
     <!--<mat-card class="demo-card demo-basic">-->
     <!--TODO-->
@@ -15,7 +15,7 @@
 <mat-card class="demo-card demo-basic" *ngIf="tabIndex === 1">
     <mat-toolbar color="primary">Content Editable Demo</mat-toolbar>
     <mat-card-content>
-        <mat-checkbox color="primary" [(ngModel)]="designMode">Design Mode</mat-checkbox>
+        <mat-checkbox color="primary" [(ngModel)]="designMode">Design Mode&nbsp;</mat-checkbox>
         <mat-checkbox color="primary" [(ngModel)]="disabled">Disabled</mat-checkbox>
     </mat-card-content>
     <mat-card-content id="contentEditableContainer">

@@ -13,9 +13,6 @@ const path = require('path');
 /** To properly handle pipes on error */
 const pump = require('pump');
 
-/** To order tasks */
-const runSequence = require('run-sequence');
-
 //Bumping, Releasing tools
 const gulpGit = require('gulp-git');
 
@@ -167,10 +164,37 @@ gulp.task('clean:node-modules', () => {
 	return del(`node_modules`);
 });
 
-gulp.task('clean', ['clean:dist', 'clean:coverage', 'clean:doc', 'clean:tmp', 'clean:build', 'clean:demo']);
+/////////////////////////////////////////////////////////////////////////////
+// Check if all TS files start by the HUG Licence
+/////////////////////////////////////////////////////////////////////////////
+gulp.task('license', function() {
+	const license = require('gulp-license-check');
 
-gulp.task('clean:all', (cb) => {
-	runSequence('clean', 'clean:lock', 'clean:src-node-modules', 'clean:demo-node-modules', 'clean:node-modules', cb);
+	return gulp.src(['**/*.ts', '!**/*.d.ts', '!**/node_modules/**'])
+		.pipe(license({
+			path: `${rootFolder}/header-license.txt`,
+			blocking: true,
+			logInfo: false,
+			logError: true
+		}));
+});
+
+/////////////////////////////////////////////////////////////////////////////
+// Test Tasks
+/////////////////////////////////////////////////////////////////////////////
+gulp.task('test', (cb) => {
+	const ENV = process.env.NODE_ENV = process.env.ENV = 'test';
+	startKarmaServer(false, true, cb);
+});
+
+gulp.task('test:watch', (cb) => {
+	const ENV = process.env.NODE_ENV = process.env.ENV = 'test';
+	startKarmaServer(true, true, cb);
+});
+
+gulp.task('test:watch-no-cc', (cb) => { //no coverage (useful for debugging failing tests in browser)
+	const ENV = process.env.NODE_ENV = process.env.ENV = 'test';
+	startKarmaServer(true, false, cb);
 });
 
 /////////////////////////////////////////////////////////////////////////////
@@ -240,7 +264,7 @@ gulp.task('inline-templates', (cb) => {
 		}
 	};
 
-    	const options = {
+	const options = {
 		base: `${config.buildDir}`,
 		styleProcessor: styleProcessor,
 		useRelativePaths: true
@@ -314,19 +338,18 @@ gulp.task('ng-compile', () => {
 		});
 });
 
-// Lint, Prepare Build, , Sass to css, Inline templates & Styles and Ng-Compile
-gulp.task('compile', (cb) => {
-	runSequence('lint', 'pre-compile', 'inline-templates', 'ng-compile', cb);
-});
-
-// Build the 'dist' folder (without publishing it to NPM)
-gulp.task('build', ['clean'], (cb) => {
-	runSequence('license', 'compile', 'test', 'npm-package', 'rollup-bundle', 'build:scss', 'scss:demo', 'build:doc', 'clean:tmp', cb);
+gulp.task('scss:demo', (cb) => {
+	return Promise.resolve()
+		.then(() => buildCss(`${config.demoDir}src`))
+		.catch(e => {
+			gulpUtil.log(gulpUtil.colors.red('sass compilation failed. See below for errors.\n'));
+			gulpUtil.log(gulpUtil.colors.red(e));
+		});
 });
 
 // Watch changes on (*.sass) Re-build _theming file in demo folder
-gulp.task('build:watch-scss', ['scss', 'scss:demo'], (cb) => {
-	gulp.watch([config.allSass], ['scss', 'scss:demo']).on('error', cb);
+gulp.task('scss:watch', (cb) => {
+	gulp.watch(config.allSass, gulp.series('scss', 'scss:demo')).on('error', cb);
 });
 
 /////////////////////////////////////////////////////////////////////////////
@@ -505,7 +528,7 @@ gulp.task('rollup-bundle', (cb) => {
 /////////////////////////////////////////////////////////////////////////////
 // Documentation Tasks
 /////////////////////////////////////////////////////////////////////////////
-gulp.task('build:doc', ['clean:doc'], (cb) => {
+gulp.task('build:doc', gulp.series('clean:doc', (cb) => {
 	const gulpCompodoc = require('@compodoc/gulp-compodoc');
 
 	pump([
@@ -517,9 +540,9 @@ gulp.task('build:doc', ['clean:doc'], (cb) => {
 			output: `${config.docDir}/`
 		})
 	], cb);
-});
+}));
 
-gulp.task('serve:doc', ['clean:doc'], (cb) => {
+gulp.task('serve:doc', gulp.series('clean:doc', (cb) => {
 	const gulpCompodoc = require('@compodoc/gulp-compodoc');
 
 	pump([
@@ -530,7 +553,7 @@ gulp.task('serve:doc', ['clean:doc'], (cb) => {
 			output: `${config.docDir}/`
 		})
 	], cb);
-});
+}));
 
 /////////////////////////////////////////////////////////////////////////////
 // Demo Tasks
@@ -552,57 +575,27 @@ gulp.task('install:demo', () => {
 });
 
 gulp.task('test:demo', () => {
-	return execDemoCmd('test --preserve-symlinks', {
+	return execDemoCmd('test', {
 		cwd: `${config.demoDir}`
 	});
 });
 
 gulp.task('serve:demo', () => {
-	return execDemoCmd('serve --preserve-symlinks --port 5100 --base-href /', {
+	return execDemoCmd('serve', {
 		cwd: `${config.demoDir}`
 	});
 });
 
 gulp.task('build:demo', () => {
-	return execDemoCmd(`build --preserve-symlinks --prod --aot --build-optimizer --env=prod --base-href https://dsi-hug.github.io/dejajs-components/`, {
+	return execDemoCmd(`build --prod`, {
 		cwd: `${config.demoDir}`
 	});
 });
 
-gulp.task('scss:demo', (cb) => {
-	return Promise.resolve()
-		.then(() => buildCss(`${config.demoDir}src`))
-		.catch(e => {
-			gulpUtil.log(gulpUtil.colors.red('sass compilation failed. See below for errors.\n'));
-			gulpUtil.log(gulpUtil.colors.red(e));
-		});
-});
 gulp.task('unlink:demo', (cb) => {
 	return execExternalCmdNoErrors('yarn', 'unlink @deja-js/component', {
 		cwd: `${config.demoDir}`
 	});
-});
-
-/////////////////////////////////////////////////////////////////////////////
-// Test Tasks
-/////////////////////////////////////////////////////////////////////////////
-gulp.task('test', (cb) => {
-	const ENV = process.env.NODE_ENV = process.env.ENV = 'test';
-	startKarmaServer(false, true, cb);
-});
-
-gulp.task('test:ci', ['clean'], (cb) => {
-	runSequence('compile', 'test');
-});
-
-gulp.task('test:watch', (cb) => {
-	const ENV = process.env.NODE_ENV = process.env.ENV = 'test';
-	startKarmaServer(true, true, cb);
-});
-
-gulp.task('test:watch-no-cc', (cb) => { //no coverage (useful for debugging failing tests in browser)
-	const ENV = process.env.NODE_ENV = process.env.ENV = 'test';
-	startKarmaServer(true, false, cb);
 });
 
 /////////////////////////////////////////////////////////////////////////////
@@ -685,41 +678,14 @@ gulp.task('create-new-tag', (cb) => {
 
 });
 
-// Build and then Publish 'dist' folder to NPM
-gulp.task('npm-publish', ['build'], () => {
-	return execExternalCmd('npm', `publish ${config.outputDir}`)
-});
-
-gulp.task('release', (cb) => {
-	runSequence(
-		'bump-version',
-		'changelog',
-		'commit-changes',
-		'push-changes',
-		(error) => {
-			if (error) {
-				gulpUtil.log(gulpUtil.colors.red(error.message));
-			} else {
-				gulpUtil.log(gulpUtil.colors.green('RELEASE FINISHED SUCCESSFULLY'));
-			}
-			cb(error);
-		});
-});
-
-/////////////////////////////////////////////////////////////////////////////
-// Check if all TS files start by the HUG Licence
-/////////////////////////////////////////////////////////////////////////////
-gulp.task('license', function() {
-	const license = require('gulp-license-check');
-
-	return gulp.src(['**/*.ts', '!**/*.d.ts', '!**/node_modules/**'])
-		.pipe(license({
-			path: `${rootFolder}/header-license.txt`,
-			blocking: true,
-			logInfo: false,
-			logError: true
-		}));
-});
+gulp.task('release', gulp.series('bump-version', 'changelog', 'commit-changes', 'push-changes', (error) => {
+	if (error) {
+		gulpUtil.log(gulpUtil.colors.red(error.message));
+	} else {
+		gulpUtil.log(gulpUtil.colors.green('RELEASE FINISHED SUCCESSFULLY'));
+	}
+	// cb(error);
+}));
 
 /////////////////////////////////////////////////////////////////////////////
 // Utility Tasks
@@ -752,14 +718,27 @@ gulp.task('coveralls', (cb) => {
 		], cb);
 });
 
-gulp.task('default', ['build']);
-
 // Load additional tasks
 gulpHub(['./config/gulp-tasks/*.js']);
 
 /////////////////////////////////////////////////////////////////////////////
-// Start Tasks
+// Sequenced tasks
 /////////////////////////////////////////////////////////////////////////////
-gulp.task('start', () => {
-	gulp.start('build:watch-scss', 'serve:demo');
-});
+gulp.task('clean', gulp.series('clean:dist', 'clean:coverage', 'clean:doc', 'clean:tmp', 'clean:build', 'clean:demo'));
+
+// Lint, Prepare Build, , Sass to css, Inline templates & Styles and Ng-Compile
+gulp.task('compile', gulp.series('lint', 'pre-compile', 'inline-templates', 'ng-compile'));
+
+// Build the 'dist' folder (without publishing it to NPM)
+gulp.task('build', gulp.series('clean', 'license', 'compile', 'test', 'npm-package', 'rollup-bundle', 'build:scss', 'scss:demo', 'build:doc', 'clean:tmp'));
+
+gulp.task('default', gulp.series('build'));
+gulp.task('build:watch-scss', gulp.series('build:scss', 'scss:demo', 'scss:watch'));
+gulp.task('start', gulp.parallel('build:watch-scss', 'serve:demo'));
+gulp.task('test:ci', gulp.series('clean', 'compile', 'test'));
+gulp.task('clean:all', gulp.series('clean', 'clean:lock', 'clean:src-node-modules', 'clean:demo-node-modules', 'clean:node-modules'));
+
+// Build and then Publish 'dist' folder to NPM
+gulp.task('npm-publish', gulp.series('build', () => {
+	return execExternalCmd('npm', `publish ${config.outputDir}`)
+}));

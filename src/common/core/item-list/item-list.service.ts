@@ -56,7 +56,7 @@ export class ItemListService {
     private _hideSelected: boolean;
 
     // Cache for last query. Flat list will be regenerated only if the query change
-    private lastQuery: RegExp;
+    private _lastQuery: RegExp | string;
     private internalQuery: RegExp;
 
     // Sorting
@@ -132,6 +132,10 @@ export class ItemListService {
             }
         }
         return '';
+    }
+
+    public get lastQuery() {
+        return this._lastQuery;
     }
 
     /**
@@ -888,6 +892,10 @@ export class ItemListService {
     public getViewList$(searchField: string, query?: RegExp | string, ignoreCache?: boolean, ddStartIndex?: number, ddTargetIndex?: number, multiSelect?: boolean): Observable<IViewListResult> {
         const result = {} as IViewListResult;
 
+        const queryChanged = (query && query.toString()) !== (this._lastQuery && this._lastQuery.toString());
+        ignoreCache = ignoreCache || queryChanged || !this.items || !this.items.length;
+        this._lastQuery = query;
+
         // Check regexp validity
         // regExp.test(this.getTextValue(item));
         let regExp: RegExp;
@@ -906,10 +914,6 @@ export class ItemListService {
                 }
             }
         }
-
-        const queryChanged = (regExp && regExp.toString()) !== (this.lastQuery && this.lastQuery.toString());
-        ignoreCache = ignoreCache || queryChanged || !this.items || !this.items.length;
-        this.lastQuery = regExp;
 
         const loadViewList = () => {
             let viewList: IItemBase[];
