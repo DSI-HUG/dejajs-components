@@ -11,9 +11,8 @@
             "check-space"
         ],
         "curly": true,
-        "deprecation": false,
-        "deprecation_disabled": {
-            "severity": "warn"
+        "deprecation": {
+            "severity": "warning"
         },
         "eofline": true,
         "forin": true,

@@ -9,15 +9,5 @@
         #placeholder {
             color: rgba(0, 0, 0, 0.38);
         }
-        
-        .group-wrapper {
-            background-color: mat-color($primary, A400);
-            >&:hover {
-                background-color: rgba(255, 255, 255, 0.3);
-            }
-            #close-button {
-                color: #777777;
-            }
-        }
     }
 }

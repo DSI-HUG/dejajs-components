@@ -862,7 +862,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                 }
             });
 
-        let keyUp$ = Observable.fromEvent(this.listElement, 'keyup');
+        let keyUp$ = Observable.fromEvent(this.listElement, 'keyup') as Observable<Event>;
         if (this.input) {
             const inputKeyup$ = Observable.fromEvent(this.input.nativeElement, 'keyup') as Observable<KeyboardEvent>;
             const inputDrop$ = Observable.fromEvent(this.input.nativeElement, 'drop') as Observable<KeyboardEvent>;
