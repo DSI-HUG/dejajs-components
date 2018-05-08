@@ -1,5 +1,5 @@
 {
-    "$schema": "../node_modules/@angular-devkit/core/src/workspace/workspace-schema.json",
+    "$schema": "./node_modules/@angular-devkit/core/src/workspace/workspace-schema.json",
     "version": 1,
     "newProjectRoot": "projects",
     "projects": {
@@ -18,23 +18,23 @@
                         "assets": [
                             {
                                 "glob": "favicon.ico",
-                                "input": "./src",
-                                "output": "./"
+                                "input": "src",
+                                "output": "/"
                             },
                             {
                                 "glob": "404.html",
-                                "input": "./src",
-                                "output": "./"
+                                "input": "src",
+                                "output": "/"
                             },
                             {
                                 "glob": "**/*",
-                                "input": "../node_modules/monaco-editor/min",
-                                "output": "./assets/monaco/"
+                                "input": "node_modules/monaco-editor/min",
+                                "output": "assets/monaco/"
                             },
                             {
                                 "glob": "**/*",
-                                "input": "./src/assets/",
-                                "output": "./assets/"
+                                "input": "src/assets/",
+                                "output": "assets/"
                             }
                         ],
                         "styles": [
@@ -107,13 +107,13 @@
                             },
                             {
                                 "glob": "**/*",
-                                "input": "../node_modules/monaco-editor/min",
-                                "output": "./assets/monaco/"
+                                "input": "node_modules/monaco-editor/min",
+                                "output": "assets/monaco/"
                             },
                             {
                                 "glob": "**/*",
-                                "input": "./src/assets/",
-                                "output": "./assets/"
+                                "input": "src/assets/",
+                                "output": "assets/"
                             }
                         ]
                     }
