@@ -1,3 +1,13 @@
+<a name="3.0.0-beta.21"></a>
+# [3.0.0-beta.21](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.21) (2018-05-08)
+
+
+### Bug Fixes
+
+* **Demo:** Correct some relative paths ([aae933d](https://github.com/DSI-HUG/dejajs-components/commit/aae933d))
+* **Gulp:** build theming.scss for dev ([67291ed](https://github.com/DSI-HUG/dejajs-components/commit/67291ed))
+
+
 <a name="3.0.0-beta.20"></a>
 # [3.0.0-beta.20](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.20) (2018-05-08)
 
