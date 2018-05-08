@@ -349,7 +349,7 @@ gulp.task('scss:demo', (cb) => {
 
 // Watch changes on (*.sass) Re-build _theming file in demo folder
 gulp.task('scss:watch', (cb) => {
-	gulp.watch(config.allSass, gulp.series('scss', 'scss:demo')).on('error', cb);
+	gulp.watch([config.allSass, "!src/_theming.scss"], gulp.series('scss', 'scss:demo')).on('error', cb);
 });
 
 /////////////////////////////////////////////////////////////////////////////
@@ -730,11 +730,11 @@ gulp.task('clean', gulp.series('clean:dist', 'clean:coverage', 'clean:doc', 'cle
 gulp.task('compile', gulp.series('lint', 'pre-compile', 'inline-templates', 'ng-compile'));
 
 // Build the 'dist' folder (without publishing it to NPM)
-gulp.task('build', gulp.series('clean', 'license', 'compile', 'test', 'npm-package', 'rollup-bundle', 'build:scss', 'scss:demo', 'build:doc', 'clean:tmp'));
+gulp.task('build', gulp.series('clean', 'license', 'compile', 'test', 'npm-package', 'rollup-bundle', 'build:scss', 'scss', 'scss:demo', 'build:doc', 'clean:tmp'));
 
 gulp.task('default', gulp.series('build'));
-gulp.task('build:watch-scss', gulp.series('build:scss', 'scss:demo', 'scss:watch'));
-gulp.task('start', gulp.parallel('build:watch-scss', 'serve:demo'));
+gulp.task('build:watch-scss', gulp.series('scss:watch'));
+gulp.task('start', gulp.parallel('build:scss', 'scss', 'scss:demo', 'build:watch-scss', 'serve:demo'));
 gulp.task('test:ci', gulp.series('clean', 'compile', 'test'));
 gulp.task('clean:all', gulp.series('clean', 'clean:lock', 'clean:src-node-modules', 'clean:demo-node-modules', 'clean:node-modules'));
 
