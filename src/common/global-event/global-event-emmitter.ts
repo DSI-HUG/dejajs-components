@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-/// <reference path="typings/global-event-emmitter.d.ts" />
+import { IGlobalEventEmmitter } from './global-event-emmiter.interface';
 
 export class GlobalEventEmmitter implements IGlobalEventEmmitter {
     private static _instance: GlobalEventEmmitter;

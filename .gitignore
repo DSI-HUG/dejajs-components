@@ -49,7 +49,6 @@ src/**/*.js
 src/**/*.js.map
 src/**/*.d.ts
 src/_theming.scss
-!src/common/global-event/typings/global-event-emmitter.d.ts
 
 # Ignore in demo
 demo/**/*.js
