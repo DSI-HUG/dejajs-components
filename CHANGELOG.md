@@ -1,3 +1,12 @@
+<a name="3.0.0-beta.20"></a>
+# [3.0.0-beta.20](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.20) (2018-05-08)
+
+
+### Bug Fixes
+
+* **GlobalEvent:** Declare interface angular style to avoid path issue on build (try) ([2dfd6c5](https://github.com/DSI-HUG/dejajs-components/commit/2dfd6c5))
+
+
 <a name="3.0.0-beta.19"></a>
 # [3.0.0-beta.19](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.19) (2018-05-07)
 
