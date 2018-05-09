@@ -41,7 +41,7 @@ export class AppComponent implements OnDestroy {
             .takeWhile(() => this.isAlive)
             .subscribe((theme) => document.body.setAttribute('theme', theme));
 
-        iconService.addSvgIcon('angular', '../assets/img/logo/angular.svg');
+        iconService.addSvgIcon('angular', 'assets/img/logo/angular.svg');
     }
 
     public get theme() {
