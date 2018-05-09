@@ -144,7 +144,7 @@
         "zone.js": "0.8.26"
     },
     "engines": {
-        "node": ">=8.9.0"
+        "node": ">=6.11.5"
     },
     "commitizen": {
         "path": "./node_modules/cz-conventional-changelog"
