@@ -1,3 +1,13 @@
+<a name="3.0.0-beta.22"></a>
+# [3.0.0-beta.22](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.22) (2018-05-11)
+
+
+### Bug Fixes
+
+* **Demo:** Fix angular icon for github demo ([82529f1](https://github.com/DSI-HUG/dejajs-components/commit/82529f1))
+* **Dependencies:** Remove [@angular](https://github.com/angular)/platform-server package and downgrade minimum node version ([1c10557](https://github.com/DSI-HUG/dejajs-components/commit/1c10557))
+
+
 <a name="3.0.0-beta.21"></a>
 # [3.0.0-beta.21](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.21) (2018-05-08)
 
