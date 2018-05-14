@@ -63,8 +63,18 @@ export class DejaPopupService extends MatDialog {
     }
 
     public openCustom(
-        customComponent: ComponentType<DejaPopupBase> | TemplateRef<any>,
-        config: DejaPopupConfig = new DejaPopupConfig(),
+        customComponent: ComponentType<DejaPopupBase>,
+        config: DejaPopupConfig,
+    ): Observable<DejaPopupReponse>;
+
+    public openCustom(
+        customComponent: TemplateRef<any>,
+        config: DejaPopupConfig,
+    ): Observable<DejaPopupReponse>;
+
+    public openCustom(
+        customComponent,        
+        config = new DejaPopupConfig()
     ): Observable<DejaPopupReponse> {
 
         const dialogRef: MatDialogRef<DejaPopupBase> = this.open(customComponent, config);
@@ -139,9 +149,16 @@ export class DejaPopupService extends MatDialog {
       * @returns Reference to the newly-opened dialog.
       */
     public open<T>(
-        componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
+        componentOrTemplateRef: ComponentType<T>,
         config?: DejaPopupConfig
-    ): MatDialogRef<T> {
+    ): MatDialogRef<T>;
+
+    public open<T>(
+        componentOrTemplateRef: TemplateRef<T>,
+        config?: DejaPopupConfig
+    ): MatDialogRef<T>;
+
+    public open<T>(componentOrTemplateRef, config?): MatDialogRef<T> {
 
         if (config.shareActions && !config.dejaPopupCom$) {
             config.dejaPopupCom$ = this.dejaPopupCom$;
