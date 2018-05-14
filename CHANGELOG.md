@@ -1,3 +1,17 @@
+<a name="3.0.0-beta.23"></a>
+# [3.0.0-beta.23](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.23) (2018-05-14)
+
+
+### Bug Fixes
+
+* **TsLint:** Remove rxjs from blacklisted imports ([24f6b7a](https://github.com/DSI-HUG/dejajs-components/commit/24f6b7a))
+* **DejaTreeList:** Fix null pointer for null ItemListService ([772a6e6](https://github.com/DSI-HUG/dejajs-components/commit/772a6e6))
+* **DejaDialogComponent:** Move event.preventDefault ([c7f71a5](https://github.com/DSI-HUG/dejajs-components/commit/c7f71a5))
+* **DejaDatePickerComponent:** Remove close when updating model ([3edb4f4](https://github.com/DSI-HUG/dejajs-components/commit/3edb4f4))
+* **DejaTooltip:** Fix deprecated positions for material overlay ([6b62695](https://github.com/DSI-HUG/dejajs-components/commit/6b62695))
+
+
+
 <a name="3.0.0-beta.22"></a>
 # [3.0.0-beta.22](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.22) (2018-05-11)
 
