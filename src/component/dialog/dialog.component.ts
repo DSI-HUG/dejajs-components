@@ -62,7 +62,6 @@ export class DejaDialogComponent implements OnDestroy {
      */
     @HostListener('click', ['$event'])
     public close(event: MouseEvent) {
-        event.preventDefault();
 
         let close = true;
 
@@ -78,6 +77,7 @@ export class DejaDialogComponent implements OnDestroy {
 
         if (close) {
             this.closed.emit();
+            event.preventDefault();
         }
     }
 }
