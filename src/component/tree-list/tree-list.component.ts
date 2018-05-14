@@ -455,7 +455,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
         if (itemListService !== undefined) {
             this.hasCustomService = true;
             this.setItemListService(itemListService);
-            if (itemListService.lastQuery) {
+            if (itemListService && itemListService.lastQuery) {
                 this.query = itemListService.lastQuery.toString();
             }
         }
