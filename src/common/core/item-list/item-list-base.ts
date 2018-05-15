@@ -134,6 +134,10 @@ export abstract class ItemListBase implements OnDestroy {
         return this._itemList;
     }
 
+    public get treeItemList() {
+        return this._itemList as IItemTree[];
+    }
+
     public get ddStartIndex() {
         return this._ddStartIndex;
     }
