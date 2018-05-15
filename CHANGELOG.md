@@ -1,3 +1,12 @@
+<a name="3.0.0-beta.24"></a>
+# [3.0.0-beta.24](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.24) (2018-05-15)
+
+
+### Bug Fixes
+
+* **Global:** Fix wrong material class names after V6 update ([5279442](https://github.com/DSI-HUG/dejajs-components/commit/5279442))
+
+
 <a name="3.0.0-beta.23"></a>
 # [3.0.0-beta.23](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.23) (2018-05-14)
 
