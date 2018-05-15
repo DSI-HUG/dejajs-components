@@ -7,20 +7,20 @@
     deja-select {
         &.ng-invalid {
             #input {
-                .mat-input-wrapper {
-                    .mat-input-underline {
-                        .mat-input-ripple {
+                .mat-form-field-wrapper {
+                    .mat-form-field-underline {
+                        .mat-form-field-ripple {
                             background-color: mat-color($warn);
                         }
                     }
-                    .mat-input-placeholder.mat-focused {
+                    .mat-form-field-label.mat-focused {
                         color: mat-color($warn) !important;
                     }
                 }
             }
         }
         #input {
-            .mat-input-suffix {
+            .mat-form-field-suffix {
                 #clear-button {
                     &:hover {
                         color: mat-color($primary);
@@ -28,15 +28,15 @@
                 }
             }
             &[wait="true"] {
-                .mat-input-wrapper {
-                    .mat-input-underline {
+                .mat-form-field-wrapper {
+                    .mat-form-field-underline {
                         &:before {
                             background-color: mat-color($primary);
                         }
                         &:after {
                             background-color: mat-color($primary);
                         }
-                        .mat-input-ripple {
+                        .mat-form-field-ripple {
                             background-color: transparent;
                         }
                     }

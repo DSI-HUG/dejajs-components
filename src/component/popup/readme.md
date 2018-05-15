@@ -50,7 +50,7 @@ Exemple
                 <p> This is a custom defined by the component <i>popup-custom.component</i></p>
     <mat-icon>accessibility</mat-icon>
     <mat-form-field>
-            <textarea mat-autosize mat-input 
+            <textarea mat-autosize mat-form-field 
             [(ngModel)]="inputText" 
                     placeholder="Ceci est un test de saisie" >
             </textarea>

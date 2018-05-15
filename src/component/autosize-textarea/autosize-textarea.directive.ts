@@ -19,7 +19,7 @@ import { Subject } from 'rxjs/Subject';
 
 /**
  * Directive pour rendre un textarea material redimensioné automatiquement au contenu.
- * Implémentation (créer un champ mat-input-container>textarea et lui ajouter la directive deja-autosize
+ * Implémentation (créer un champ mat-form-field-container>textarea et lui ajouter la directive deja-autosize
  * Attention, comme la directive utilise un validateur pour détecter les modifications de contenu du textarea, le textarea doit impérativement utiliser ngModel.
  */
 @Directive({
