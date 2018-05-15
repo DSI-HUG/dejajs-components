@@ -17,7 +17,7 @@
     <div id="error-hint" *ngIf="hintLabel">{{ hintLabel }}</div>
     <div *ngIf="vpBeforeHeight && !waiter" [style.height.px]="vpBeforeHeight"></div>
     <ng-container *ngIf="!waiter">
-        <div *ngFor="let item of itemList; let index = index" #listitem [attr.class]="getItemClass(item)" [attr.current]="(vpStartRow+index === currentItemIndex) || null" [attr.depth]="depthMax ? item.depth : null" [attr.id]="item.id || null" [attr.flat]="vpStartRow + index" [deja-draggable]="getDragContext(vpStartRow + index)" [style.width.px]="itemsWidth" [style.height.px]="getItemHeight(item)">
+        <div *ngFor="let item of treeItemList; let index = index" #listitem [attr.class]="getItemClass(item)" [attr.current]="(vpStartRow+index === currentItemIndex) || null" [attr.depth]="depthMax ? item.depth : null" [attr.id]="item.id || null" [attr.flat]="vpStartRow + index" [deja-draggable]="getDragContext(vpStartRow + index)" [style.width.px]="itemsWidth" [style.height.px]="getItemHeight(item)">
             <span id="expandbtn">
                 <i *ngIf="item.$items?.length" class="material-icons">arrow_drop_down</i>
             </span>

@@ -128,7 +128,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     private writeValue$ = new Subject<any>();
     private selectItems$ = new Subject<any>();
     private contentInitialized$ = new Subject();
-    private setQuery$ = new Subject<string>();
+    public setQuery$ = new Subject<string>();
 
     constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, public elementRef: ElementRef, @Self() @Optional() public _control: NgControl, @Optional() private clipboardService: DejaClipboardService) {
         super(changeDetectorRef, viewPort);
