@@ -36,7 +36,7 @@ export class DejaNumericStepperComponent implements OnInit, ControlValueAccessor
      */
     @Input() public placeholder: string;
 
-    /** Template for MatError inside mat-input-container */
+    /** Template for MatError inside mat-form-field-container */
     @ContentChild('errorTemplate') public matError: any;
 
     /** Allow to disabled the component */

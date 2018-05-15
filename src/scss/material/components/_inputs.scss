@@ -5,14 +5,14 @@
     $warn: map-get($theme, warn);
 
     // Fix allow to add an ICO into the placeholder
-	mat-input-container {
-	    .mat-input-placeholder-wrapper {
+	mat-form-field-container {
+	    .mat-form-field-label-wrapper {
             overflow: visible !important;
         }
 
-	    .mat-input-wrapper {
-            .mat-input-flex {
-                .mat-input-placeholder {
+	    .mat-form-field-wrapper {
+            .mat-form-field-flex {
+                .mat-form-field-label {
                     &.mat-float:not(.mat-empty),
                     &.mat-float.mat-focused {
                         transform: translateY(-65%) scale(.75) !important;
@@ -21,7 +21,7 @@
             }
 	    }
 	
-        ~.mat-input-message {
+        ~.mat-form-field-message {
             font-size: 0.8rem;
             text-align: left;
         }

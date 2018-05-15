@@ -79,7 +79,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @Input() public placeHolderTemplateExternal: any;
     /** Permet de définir un template pour l'élément de conseil ou d'affichage d'erreur. */
     @Input() public hintTemplateExternal: any;
-    /** Permet de définir un template pour le MatError à l'intérieur du mat-input-container. */
+    /** Permet de définir un template pour le MatError à l'intérieur du mat-form-field-container. */
     @Input() public errorTemplateExternal: any;
     /** Définit une valeur indiquant si en reactive form le model renvoyé doit être un obeject oue une valeur */
     @Input() public modelIsValue: boolean;
@@ -96,7 +96,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @ContentChild('parentItemTemplate') public parentItemTemplateInternal: any;
     @ContentChild('selectedTemplate') public selectedTemplate: any;
     @ContentChild('suffixTemplate') public _matSuffix: any;
-    /** Template for MatError inside mat-input-container */
+    /** Template for MatError inside mat-form-field-container */
     @ContentChild('errorTemplate') public errorTemplateInternal: any;
 
     /** Internal use */
