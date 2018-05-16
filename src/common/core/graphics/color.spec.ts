@@ -71,7 +71,7 @@ describe('Color', () => {
         const t3 = c7.bestTextColor;
         expect(t1.toHex()).toEqual('#FFFFFF');
         expect(t2.toHex()).toBeUndefined();
-        expect(t3.toHex()).toEqual('#000000AA');
+        expect(t3.toHex()).toEqual('#000000');
     });
 
 });

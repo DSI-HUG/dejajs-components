@@ -302,7 +302,7 @@ export class Color {
         }
         const m = 1 - (0.299 * this.r + 0.587 * this.g + 0.114 * this.b) / 255;
         const d = m < 0.5 ? 0 : 255;
-        return new Color(d, d, d, 1);
+        return new Color(d, d, d);
     }
 
     public get grayScale() {
