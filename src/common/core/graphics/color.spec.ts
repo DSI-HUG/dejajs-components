@@ -20,7 +20,7 @@ describe('Color', () => {
     const c7 = Color.parse('rgba(119, 136, 153, 170)');
     const c8 = Color.parse('rgba(119, 136, 153, 0.666)');
 
-    fit('should create the class', () => {
+    it('should create the class', () => {
         expect(c1 instanceof Color).toBeTruthy();
         expect(Color.equals(c1, c2)).toBeTruthy();
         expect(empty1.isEmpty()).toBeTruthy();
