@@ -79,6 +79,12 @@ Composant pour séléctionner une date sur un calendrier et l'affficher dans un 
     <td>dateonly</td>
     <td>Layout: dateonly, datetime, timeonly</td>
 </tr>
+<tr>
+    <td>showCurrentDateButton</td>
+    <td>boolean</td>
+    <td>false</td>
+    <td>Afficher un bouton raccourcis permettant de sélectionner la date courante</td>
+</tr>
 </tbody>
 </table>
 
