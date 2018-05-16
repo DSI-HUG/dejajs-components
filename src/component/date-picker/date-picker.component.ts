@@ -298,7 +298,6 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
                 this.format = 'YYYY-MM-DD';
             }
         }
-        console.log(this.showCurrentDateButton);
     }
 
     public get showDropDown() {
