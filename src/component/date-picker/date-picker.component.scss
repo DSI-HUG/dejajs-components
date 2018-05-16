@@ -6,7 +6,8 @@ deja-date-picker {
 				right: 0;
 				top: 50%;
 				transform: translateY(-68%);
-			}
+            }
+            #current-date-button mat-icon,
 			#calendar-button mat-icon,
 			#clear-button mat-icon {
 				font-size: 100%;

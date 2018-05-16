@@ -76,6 +76,8 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     @Input() public overlayOffsetX = 0;
     /** Offset de position verticale de la zone de dropdown */
     @Input() public overlayOffsetY = 6;
+    /** Afficher un bouton raccourcis permettant de sélectionner la date courante */
+    @Input() public showCurrentDateButton = false;
 
     @Output() public dateChange = new EventEmitter();
     @Output() public timeChange = new EventEmitter();
@@ -296,6 +298,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
                 this.format = 'YYYY-MM-DD';
             }
         }
+        console.log(this.showCurrentDateButton);
     }
 
     public get showDropDown() {
@@ -507,5 +510,9 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
 
     public onBlur() {
         this.onTouchedCallback();
+    }
+
+    public setToCurrentDate(): void {
+        this.value = new Date();
     }
 }
