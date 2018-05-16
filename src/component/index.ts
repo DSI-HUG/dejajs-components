@@ -19,7 +19,6 @@ export * from './date-selector/index';
 export * from './dialog/index';
 export * from './dragdrop/index';
 export * from './iframe/index';
-export * from './interval-selector/index';
 export * from './loaders/index';
 export * from './message-box/index';
 export * from './monaco-editor/index';
