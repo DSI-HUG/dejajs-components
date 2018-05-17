@@ -18,6 +18,7 @@ const routes: Routes = [
     { path: 'colorselector', loadChildren: './color-selector/color-selector-demo.module#DejaColorSelectorDemoModule', data: { title: 'Color Selector' } },
     { path: 'contenteditableselector', loadChildren: './content-editable/content-editable-demo.module#DejaContentEditableDemoModule', data: { title: 'Content Editable' } },
     { path: 'date-picker', loadChildren: './date-picker/date-picker-demo.module#DejaDatePickerDemoModule', data: { title: 'Date Picker' } },
+    { path: 'editor', loadChildren: './editor/editor-demo.module#DejaEditorDemoModule', data: { title: 'Editor' } },
     { path: 'events', loadChildren: './global-events/global-events-demo.module#DejaGlobalEventsDemoModule', data: { title: 'Events' } },
     { path: 'grid', loadChildren: './grid/grid-demo.module#DejaGridDemoModule', data: { title: 'Grid' } },
     { path: 'intervalSelector', loadChildren: './interval-selector/interval-selector-demo.module#DejaIntervalSelectorDemoModule', data: { title: 'Interval Selector' } },

@@ -18,6 +18,8 @@ export * from './date-picker/index';
 export * from './date-selector/index';
 export * from './dialog/index';
 export * from './dragdrop/index';
+export * from './editor/index';
+export * from './editor/material-field-wrapper/index';
 export * from './iframe/index';
 export * from './interval-selector/index';
 export * from './loaders/index';
