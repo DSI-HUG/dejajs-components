@@ -260,9 +260,15 @@ export class Color {
                 return new Color(+rgb[1], +rgb[2], +rgb[3]);
             }
 
-            const rgba = /rgba\((\d{1,3}), (\d{1,3}), (\d{1,3}), (\d{1,3})\)/.exec(color);
+            const rgba = /rgba\((\d{1,3}), (\d{1,3}), (\d{1,3}), ([0-9.]*)\)/.exec(color);
             if (rgba !== null) {
-                return new Color(+rgba[1], +rgba[2], +rgba[3], +rgba[4]);
+                let a = +rgba[4];
+                if (isNaN(a)) {
+                    a = 1;
+                } else if (a <= 1) {
+                    a = Math.round(a * 255);
+                }
+                return new Color(+rgba[1], +rgba[2], +rgba[3], a);
             }
         }
     }
@@ -294,9 +300,9 @@ export class Color {
         if (this.isEmpty()) {
             return new Color();
         }
-        const a = 1 - (0.299 * this.r + 0.587 * this.g + 0.114 * this.b) / 255;
-        const d = a < 0.5 ? 0 : 255;
-        return new Color(d, d, d, this.a);
+        const m = 1 - (0.299 * this.r + 0.587 * this.g + 0.114 * this.b) / 255;
+        const d = m < 0.5 ? 0 : 255;
+        return new Color(d, d, d);
     }
 
     public get grayScale() {

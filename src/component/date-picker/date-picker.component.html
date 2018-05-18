@@ -4,7 +4,10 @@
 		<div id="action-icon-container">
 			<button type="button" mat-icon-button *ngIf="inputModel && !disabled" (click)="reset()" id="clear-button" tabindex="-1">
 				<mat-icon>clear</mat-icon>
-			</button>
+            </button>
+            <button type="button" mat-icon-button *ngIf="showCurrentDateButton" (click)="setToCurrentDate()" id="current-date-button" tabindex="-1" [disabled]="disabled">
+                <mat-icon>today</mat-icon>
+            </button>
 			<button type="button" mat-icon-button *ngIf="!disabled" (click)="toggleDateSelector($event)" id="calendar-button" tabindex="-1">
 				<mat-icon>date_range</mat-icon>
 			</button>
