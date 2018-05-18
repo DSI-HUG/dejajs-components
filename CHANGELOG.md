@@ -1,3 +1,25 @@
+<a name="3.0.0-beta.25"></a>
+# [3.0.0-beta.25](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.25) (2018-05-18)
+
+
+### Bug Fixes
+
+* **Color:** Add parsing for alpha <= 1 ([766271e](https://github.com/DSI-HUG/dejajs-components/commit/766271e))
+* **Gulp:** Fix build fail due to gulp-compodoc ([461225a](https://github.com/DSI-HUG/dejajs-components/commit/461225a))
+
+
+### Features
+
+* **DejaIntervalSelectorComponent:** remove interval selector component ([894cf43](https://github.com/DSI-HUG/dejajs-components/commit/894cf43))
+* **DejaDatePickerComponent:** Add current date selector button ([2dba49d](https://github.com/DSI-HUG/dejajs-components/commit/2dba49d))
+* **DejaEditorComponent:** Introduce a rich text editor component which wraps CKEditor ([85f22e8](https://github.com/DSI-HUG/dejajs-components/commit/85f22e8))
+
+
+### BREAKING CHANGES
+
+* **DejaIntervalSelectorComponent:** removed
+
+
 <a name="3.0.0-beta.24"></a>
 # [3.0.0-beta.24](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.24) (2018-05-15)
 
