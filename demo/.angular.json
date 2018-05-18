@@ -32,6 +32,11 @@
                                 "output": "assets/monaco/"
                             },
                             {
+                              "glob": "**/*",
+                              "input": "node_modules/ckeditor/",
+                              "output": "assets/ckeditor/"
+                            },
+                            {
                                 "glob": "**/*",
                                 "input": "src/assets/",
                                 "output": "assets/"
@@ -46,7 +51,7 @@
                         "preserveSymlinks": true,
                         "baseHref": "/"
                     },
-                    "configurations": {                        
+                    "configurations": {
                         "production": {
                             "fileReplacements": [
                                 {
