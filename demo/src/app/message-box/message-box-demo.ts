@@ -16,9 +16,11 @@ import { Component } from '@angular/core';
 export class DejaMessageBoxDemoComponent {
     public tabIndex = 1;
 
-    protected toolTipModel = {
+    public toolTipModel = {
         text: 'Je suis un deja-tooltip'
     };
+
+    public tooltipVisible = false;
 
     protected actions = [
         {
