@@ -15,7 +15,7 @@ import { DejaColorSelectorModule } from '../index';
 import { DejaOverlayModule } from '../overlay/index';
 import { DejaColorPickerComponent } from './color-picker.component';
 
-fdescribe('DejaColorPicker', () => {
+describe('DejaColorPicker', () => {
 
     let component: DejaColorPickerComponent;
     let fixture: ComponentFixture<DejaColorPickerComponent>;
