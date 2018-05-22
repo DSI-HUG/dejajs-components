@@ -67,7 +67,7 @@ module.exports = function(config) {
 		logLevel: config.LOG_INFO,
 		failOnEmptyTestSuite: false,
 		autoWatch: true,
-        browsers: ['ChromeHeadless'],
+        browsers: ['Chrome'],
         browserDisconnectTimeout: 60000,
 		singleRun: true
 	};
