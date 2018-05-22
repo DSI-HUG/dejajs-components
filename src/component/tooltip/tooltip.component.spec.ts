@@ -14,6 +14,8 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import 'rxjs/add/observable/timer';
 import { Observable } from 'rxjs/Observable';
+import { MediaService } from '../../common/core/media/media.service';
+import { MockMediaService } from '../overlay/test/MockMediaService';
 import { DejaTooltipModule } from './index';
 import { DejaTooltipDirective } from './tooltip.directive';
 
@@ -26,7 +28,6 @@ import { DejaTooltipDirective } from './tooltip.directive';
                         </div>
                     </ng-template>
                 </deja-tooltip>`,
-    providers: [],
 })
 class DejaTooltipContainerComponent {
     public static toolTipText = 'Je suis un deja-tooltip';
@@ -82,6 +83,12 @@ describe('DejaTooltipComponent', () => {
                 FormsModule,
                 DejaTooltipModule,
             ],
+            providers: [
+                {
+                    provide: MediaService, useClass:
+                        MockMediaService
+                }
+            ]
         }).compileComponents();
     }));
 
@@ -105,8 +112,7 @@ describe('DejaTooltipComponent', () => {
             Observable.timer(1000).subscribe(() => {
                 fixture.detectChanges();
                 fixture.whenStable().then(() => {
-                    const tooltipDirectiveElement = tooltipDirectiveDebugElement.nativeElement as HTMLElement;
-                    const tooltip = tooltipDirectiveElement.ownerDocument.getElementById('tooltip');
+                    const tooltip = document.querySelector('#tooltip') as HTMLElement;
                     expect(tooltip && tooltip.innerText).toEqual(DejaTooltipContainerComponent.toolTipText);
 
                     sendMouseEvent(tooltipDirectiveDebugElement.nativeElement, 'mousemove', 0, 200);
@@ -114,7 +120,7 @@ describe('DejaTooltipComponent', () => {
                     Observable.timer(500).subscribe(() => {
                         fixture.detectChanges();
                         fixture.whenStable().then(() => {
-                            const tooltip2 = tooltipDirectiveElement.ownerDocument.getElementById('tooltip');
+                            const tooltip2 = document.querySelector('#tooltip') as HTMLElement;
                             expect(tooltip2).toBeNull();
                             done();
                         });
@@ -141,8 +147,7 @@ describe('DejaTooltipComponent', () => {
                 fixture.detectChanges();
                 fixture.whenStable().then(() => {
                     fixture.detectChanges();
-                    const tooltipDirectiveElement = tooltipDirectiveDebugElement.nativeElement as HTMLElement;
-                    const tooltip = tooltipDirectiveElement.ownerDocument.getElementById('tooltip');
+                    const tooltip = document.querySelector('#tooltip') as HTMLElement;
                     expect(tooltip && tooltip.innerText).toEqual(`${DejaTooltipContainerComponent.toolTipText}_$`);
                     done();
                 });
@@ -167,8 +172,7 @@ describe('DejaTooltipComponent', () => {
                 fixture.detectChanges();
                 fixture.whenStable().then(() => {
                     fixture.detectChanges();
-                    const tooltipDirectiveElement = tooltipDirectiveDebugElement.nativeElement as HTMLElement;
-                    const tooltip = tooltipDirectiveElement.ownerDocument.getElementById('tooltip');
+                    const tooltip = document.querySelector('#tooltip') as HTMLElement;
                     expect(tooltip && tooltip.innerText).toEqual(`${DejaTooltipContainerComponent.toolTipText}_$`);
                     done();
                 });
