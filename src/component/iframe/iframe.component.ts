@@ -29,4 +29,9 @@ export class DejaIFrameComponent {
             iframeElement.removeAttribute('src');
         }
     }
+
+    public get sourceUrl() {
+        const iframeElement = this.iframe.nativeElement as HTMLElement;
+        return iframeElement.hasAttribute('src') ? iframeElement.getAttribute('src') : undefined;
+    }
 }
