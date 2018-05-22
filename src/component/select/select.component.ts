@@ -163,7 +163,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     private delaySearchTrigger$ = new BehaviorSubject<number>(250);
 
-    private _selectedItemsPosition = DejaSelectSelectionPosition.above;
+    private _selectedItemsPosition = DejaSelectSelectionPosition.below;
 
     private _positions = DejaConnectionPositionPair.default;
 
