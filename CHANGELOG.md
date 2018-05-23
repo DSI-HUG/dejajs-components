@@ -1,3 +1,24 @@
+<a name="3.0.0-beta.26"></a>
+# [3.0.0-beta.26](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.26) (2018-05-23)
+
+
+### Bug Fixes
+
+* **ColorFab:** Fix truncated circle in small size ([d990f7c](https://github.com/DSI-HUG/dejajs-components/commit/d990f7c))
+* **DejaTreeList:** Fix wrong left margin for items due to a previous fix for the select ([8a14e87](https://github.com/DSI-HUG/dejajs-components/commit/8a14e87))
+
+
+### Features
+
+* **DejaSelect:** Default position for multiselect chips is now bellow, add selectedItemsPosition="above" in your html to place the chips between the placeholder and the input ([6e0c223](https://github.com/DSI-HUG/dejajs-components/commit/6e0c223))
+
+
+### BREAKING CHANGES
+
+* **DejaSelect:** Default position for multiselect chips is now bellow
+
+
+
 <a name="3.0.0-beta.25"></a>
 # [3.0.0-beta.25](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.25) (2018-05-18)
 
