@@ -7,7 +7,6 @@
  */
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
 import { DejaComboListActionbarComponent } from './component/combo-list-actionbar/combo-list-actionbar.component';
 import { DejaComboListChildComponent } from './component/combo-list-child/combo-list-child.component';
@@ -26,7 +25,6 @@ import {
         MatIconModule,
         MatListModule,
         MatButtonModule,
-        FlexLayoutModule,
         FormsModule,
     ],
     declarations: [
@@ -38,10 +36,13 @@ import {
         DejaComboListComponent,
         DejaComboListChildComponent,
     ],
-    providers: [DejaComboListService]
+    providers: [
+        DejaComboListService,
+    ]
 })
 export class DejaComboListModule { }
 
 export * from './component/combo-list-actionbar/combo-list-actionbar.component';
 export * from './component/combo-list-child/combo-list-child.component';
 export * from './container/combo-list.component';
+export * from './model/combo-list-action.interface';

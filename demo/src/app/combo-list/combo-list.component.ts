@@ -7,7 +7,7 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { IDejaComboListAction } from '../../../src/component/combo-list/model/combo-list-action.interface';
+import { IDejaComboListAction } from '@deja-js/component';
 import { comboListData } from './combo-test.data';
 
 @Component({
@@ -15,7 +15,7 @@ import { comboListData } from './combo-test.data';
     templateUrl: './combo-list.component.html',
     styleUrls: ['./combo-list.component.scss'],
 })
-export class ComboListDemoComponent implements OnInit {
+export class DejaComboListDemoComponent implements OnInit {
     public items: ComboListTestModel[] = [];
     public itemToSelect: ComboListTestModel[];
     public itemSelected: ComboListTestModel[];
@@ -31,7 +31,7 @@ export class ComboListDemoComponent implements OnInit {
     public disabled: boolean;
     public disableFastActions: boolean;
 
-    constructor() {}
+    constructor() { }
 
     public ngOnInit() {
         this.items = comboListData;
