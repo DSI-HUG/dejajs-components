@@ -5,15 +5,15 @@
 
 	deja-date-picker {
 		&.ng-invalid {
-			.mat-input-wrapper {
-				.mat-input-underline {
-					.mat-input-ripple {
+			.mat-form-field-wrapper {
+				.mat-form-field-underline {
+					.mat-form-field-ripple {
 						background-color: mat-color($warn);
 					}
 				}
-				.mat-input-flex {
-					.mat-input-infix {
-						.mat-input-placeholder {
+				.mat-form-field-flex {
+					.mat-form-field-infix {
+						.mat-form-field-label {
 							color: mat-color($warn);
 						}
 					}

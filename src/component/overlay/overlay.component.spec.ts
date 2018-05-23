@@ -6,20 +6,17 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-
-import {OverlayModule} from '@angular/cdk/overlay';
-import {ObservableMedia} from '@angular/flex-layout';
-import {MediaModule} from '../../common/core/media/index';
-import {MediaService} from '../../common/core/media/media.service';
-import {DejaConnectionPositionPair} from '../../common/core/overlay/connection-position-pair';
-import {DejaOverlayComponent} from './overlay.component';
-import {MockMediaService} from './test/MockMediaService';
-import {MockObservableMedia} from './test/MockObservableMedia';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MediaModule } from '../../common/core/media/index';
+import { MediaService } from '../../common/core/media/media.service';
+import { DejaConnectionPositionPair } from '../../common/core/overlay/connection-position-pair';
+import { DejaOverlayComponent } from './overlay.component';
+import { MockMediaService } from './test/MockMediaService';
 
 describe('DejaOverlayComponent', () => {
 
-    let comp:    DejaOverlayComponent;
+    let comp: DejaOverlayComponent;
     let fixture: ComponentFixture<DejaOverlayComponent>;
     let cdkOverlayContainerEl: HTMLElement;
 
@@ -33,10 +30,15 @@ describe('DejaOverlayComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ DejaOverlayComponent ], // declare the test component
+            declarations: [DejaOverlayComponent], // declare the test component
             imports: [MediaModule, OverlayModule],
-            providers: [{ provide: ObservableMedia, useClass: MockObservableMedia }, { provide: MediaService, useClass:
-                MockMediaService }]}).compileComponents();
+            providers: [
+                {
+                    provide: MediaService, useClass:
+                        MockMediaService
+                }
+            ]
+        }).compileComponents();
     }));
 
     beforeAll(() => {
@@ -49,7 +51,7 @@ describe('DejaOverlayComponent', () => {
         cdkOverlayContainerEl = document.querySelector('.cdk-overlay-container') as HTMLElement;
     });
 
-    afterEach( () => {
+    afterEach(() => {
         fixture.destroy();
         removeStaledOverlayContainersFunction();
     });
@@ -103,9 +105,9 @@ describe('DejaOverlayComponent', () => {
         expect(comp.isVisible).toBeTruthy();
     });
 
-    it('should have isVisible=false and emit closed event when invoking close() method', (done) => {
+    it('should have isVisible=false and emit closed event when invoking close() method', (done: Function) => {
         fixture.detectChanges();
-        comp.closed.subscribe(g => {
+        comp.closed.subscribe((g: boolean) => {
             expect(g).toBe(true);
             done();
         });
@@ -116,9 +118,9 @@ describe('DejaOverlayComponent', () => {
         expect(comp.isVisible).toBeFalsy();
     });
 
-    it('should have isVisible=false and emit closed event when clicking on backdrop div', (done) => {
+    it('should have isVisible=false and emit closed event when clicking on backdrop div', (done: Function) => {
         fixture.detectChanges();
-        comp.closed.subscribe(g => {
+        comp.closed.subscribe((g: boolean) => {
             expect(g).toEqual(true);
             done();
         });
@@ -143,12 +145,12 @@ describe('DejaOverlayComponent', () => {
         comp.positionsForMobile = positionsForMobile;
         fixture.detectChanges();
         returnedPositions = comp.positions;
-        expect(returnedPositions).toBe( normalPosition );
+        expect(returnedPositions).toBe(normalPosition);
 
         comp.isMobile = true;
         fixture.detectChanges();
         returnedPositions = comp.positions;
-        expect(returnedPositions).toBe( positionsForMobile );
+        expect(returnedPositions).toBe(positionsForMobile);
     });
 
     it('should use widthForMobile if isMobile=true', () => {
@@ -166,9 +168,9 @@ describe('DejaOverlayComponent', () => {
         expect(returnedWidth).toEqual('50%');
     });
 
-    it('should emit visibleChange event when isVisible change', (done) => {
+    it('should emit visibleChange event when isVisible change', (done: Function) => {
         fixture.detectChanges();
-        comp.visibleChange.subscribe(g => {
+        comp.visibleChange.subscribe((g: boolean) => {
             expect(g).toEqual(true);
             done();
         });
@@ -176,9 +178,9 @@ describe('DejaOverlayComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should emit closed event when invoking close()', (done) => {
+    it('should emit closed event when invoking close()', (done: Function) => {
         fixture.detectChanges();
-        comp.closed.subscribe(g => {
+        comp.closed.subscribe((g: boolean) => {
             expect(g).toEqual(true);
             done();
         });

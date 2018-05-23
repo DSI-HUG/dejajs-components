@@ -6,14 +6,14 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { DejaCancelableEvent } from '../../common/core/events/cancelable-event';
+import { IDejaCancelableEvent } from '../../common/core/events/cancelable-event.interface';
 import { IDejaTile } from './tile.interface';
 
 export interface IDejaTilesEvent extends CustomEvent {
     tiles: IDejaTile[];
 }
 
-export interface IDejaTilesCancelableEvent extends DejaCancelableEvent {
+export interface IDejaTilesCancelableEvent extends IDejaCancelableEvent {
     tiles: IDejaTile[];
 }
 

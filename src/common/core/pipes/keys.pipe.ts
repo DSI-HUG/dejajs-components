@@ -19,7 +19,7 @@ export class KeysPipe implements PipeTransform {
      *
      * @param value Object to itterate
      */
-    public transform(value): any {
+    public transform(value: any): any {
         return Object.keys(value).map((key) => value[key]);
     }
 }

@@ -3,28 +3,21 @@
 @mixin menu-theme($theme) {
 	$primary: map-get($theme, primary);
 
-	@mixin ulcontent() {
-		li {
-			background-color: #FFF;
-			color: mat-color($primary);
-			&:hover {
-				background-color: mat-color($primary);
-				color: #FFF;
-			}
-		}
-	}
-
 	.deja-overlay-container {
-		ul[deja-menu-content] {
-            @include ulcontent();
-        }
-        
-        [deja-menu-content] {
+        .deja-menu-content {
 			background-color: #FFF;
-            border-color: rgba(0, 0, 0, 0.3);
-			>ul {
-                @include ulcontent();
-            }
+			border-color: rgba(0, 0, 0, 0.3);            
+            >ul,
+            &ul {
+				li {
+					background-color: #FFF;
+					color: mat-color($primary);
+					&:hover {
+						background-color: mat-color($primary);
+						color: #FFF;
+					}
+				}
+			}
 			>button,
 			>a {
 				background-color: #FFF;

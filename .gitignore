@@ -2,16 +2,11 @@
 
 # compiled output
 /dist
-/dist-demo
-/build
-/.tmp
-/out-tsc
-/docs
+/tmp
+/doc
 
 # dependencies
 /node_modules
-/node_modules.disabled
-/src/node_modules
 
 # IDEs and editors
 /.idea
@@ -41,12 +36,9 @@
 /coverage
 /libpeerconnection.log
 npm-debug.log
+yarn-error.log
 testem.log
-/typings
-
-# e2e
-/e2e/*.js
-/e2e/*.map
+.prettierignore
 
 # System Files
 .DS_Store
@@ -56,12 +48,27 @@ Thumbs.db
 src/**/*.js
 src/**/*.js.map
 src/**/*.d.ts
-!src/common/global-event/typings/global-event-emmitter.d.ts
-!src/send-action.js
+src/_theming.scss
 
 # Ignore in demo
 demo/**/*.js
 demo/**/*.js.map
 demo/**/*.d.ts
 demo/vs
-/src/package-lock.json
+demo/.prettierignore
+!demo/karma.conf.js
+
+# Ignore backup of demo folder
+demo.*
+
+# demo compiled output
+demodist
+demo/tmp
+demo/src/_theming.scss
+
+# demo dependencies
+demo/node_modules
+
+# demo e2e
+demo/e2e/*.js
+demo/e2e/*.map

@@ -1,0 +1,30 @@
+<mat-tab-group [selectedIndex]="tabIndex" (selectedTabChange)="tabIndex = $event.index">
+    <!--<mat-tab label="OVERVIEW">-->
+    <!--<mat-card class="demo-card demo-basic">-->
+    <!--TODO-->
+    <!--</mat-card>-->
+    <!--</mat-tab>-->
+    <mat-tab label="API REFERENCE"></mat-tab>
+    <mat-tab label="EXAMPLES"></mat-tab>
+</mat-tab-group>
+
+<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
+    <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/content-editable/readme.md'"></deja-markdown>
+</mat-card>
+
+<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 1">
+    <mat-toolbar color="primary">Content Editable Demo</mat-toolbar>
+    <mat-card-content>
+        <mat-checkbox color="primary" [(ngModel)]="designMode">Design Mode&nbsp;</mat-checkbox>
+        <mat-checkbox color="primary" [(ngModel)]="disabled">Disabled</mat-checkbox>
+    </mat-card-content>
+    <mat-card-content id="contentEditableContainer">
+        <div [deja-editable]="designMode" [disabled]="disabled" multiline>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            <br /> Mauris auctor sit amet odio et aliquet. Curabitur auctor eleifend mattis.
+            <br /> Nullam sit amet quam tellus. Ut mattis tellus sed erat ultricies ornare.
+            <br /> Nulla dictum nisi eu tortor lacinia porttitor. Donec eu arcu et enim cursus viverra.
+            <br /> Praesent pulvinar dui nisi, a tincidunt arcu finibus sed.
+        </div>
+    </mat-card-content>
+</mat-card>

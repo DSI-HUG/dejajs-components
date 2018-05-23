@@ -66,21 +66,19 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     /** Correspond au ngModel du champ de filtrage ou recherche */
     @Input() public query = '';
     /** Permet de définir un template de ligne par binding */
-    @Input() public itemTemplateExternal;
+    @Input() public itemTemplateExternal: any;
     /** Permet de définir un template de ligne parente par binding. */
-    @Input() public parentItemTemplateExternal;
+    @Input() public parentItemTemplateExternal: any;
     /** Permet de définir un template pour le loader par binding. */
-    @Input() public loaderTemplateExternal;
+    @Input() public loaderTemplateExternal: any;
     /** Permet de définir un template d'entête de colonne par binding. */
-    @Input() public headerTemplateExternal;
+    @Input() public headerTemplateExternal: any;
     /** Permet de définir un template comme prefixe de la zone de recherche par binding. */
-    @Input() public searchPrefixTemplateExternal;
+    @Input() public searchPrefixTemplateExternal: any;
     /** Permet de définir un template comme suffixe de la zone de recherche par binding. */
-    @Input() public searchSuffixTemplateExternal;
+    @Input() public searchSuffixTemplateExternal: any;
     /** Largeur des éléments par defaut si différent de 100% */
-    @Input() public itemsWidth = null;
-    /** Définit une valeur indiquant si en reactive form le model renvoyé doit être un obeject oue une valeur */
-    @Input() public modelIsValue: boolean;
+    @Input() public itemsWidth: number = null;
     /** Exécuté lorsque le déplacement d'une ligne est terminée. */
     @Output() public itemDragEnd = new EventEmitter<IDejaDragEvent>();
     /** Exécuté lorsque le déplacement d'une ligne commence. */
@@ -102,12 +100,12 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     private _keyboardNavigation = false;
 
     // Templates
-    @ContentChild('itemTemplate') private itemTemplateInternal;
-    @ContentChild('parentItemTemplate') private parentItemTemplateInternal;
-    @ContentChild('loaderTemplate') private loaderTemplateInternal;
-    @ContentChild('headerTemplate') private headerTemplateInternal;
-    @ContentChild('searchPrefixTemplate') private searchPrefixTemplateInternal;
-    @ContentChild('searchSuffixTemplate') private searchSuffixTemplateInternal;
+    @ContentChild('itemTemplate') private itemTemplateInternal: any;
+    @ContentChild('parentItemTemplate') private parentItemTemplateInternal: any;
+    @ContentChild('loaderTemplate') private loaderTemplateInternal: any;
+    @ContentChild('headerTemplate') private headerTemplateInternal: any;
+    @ContentChild('searchPrefixTemplate') private searchPrefixTemplateInternal: any;
+    @ContentChild('searchSuffixTemplate') private searchSuffixTemplateInternal: any;
     @ContentChildren(DejaItemComponent) public options: DejaItemComponent[];
 
     // protected _items: IItemBase[]; In the base class, correspond to the model
@@ -119,7 +117,8 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     private _itemsDraggable = false;
     private hasCustomService = false;
     private hasLoadingEvent = false;
-    @HostBinding('attr.disabled') private _disabled = null;
+    private _modelIsValue = false;
+    @HostBinding('attr.disabled') private _disabled: boolean = null;
 
     private keyboardNavigation$ = new Subject();
 
@@ -129,7 +128,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     private writeValue$ = new Subject<any>();
     private selectItems$ = new Subject<any>();
     private contentInitialized$ = new Subject();
-    private setQuery$ = new Subject<string>();
+    public setQuery$ = new Subject<string>();
 
     constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, public elementRef: ElementRef, @Self() @Optional() public _control: NgControl, @Optional() private clipboardService: DejaClipboardService) {
         super(changeDetectorRef, viewPort);
@@ -235,6 +234,16 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
 
     public get searchArea() {
         return this._searchArea || this.minSearchlength > 0;
+    }
+
+    /** Définit une valeur indiquant si en reactive form le model renvoyé doit être un obeject oue une valeur */
+    @Input()
+    public set modelIsValue(value: boolean | string) {
+        this._modelIsValue = coerceBooleanProperty(value);
+    }
+
+    public get modelIsValue() {
+        return this._modelIsValue;
     }
 
     /** Retourne ou définit une valeur indiquant si les lignes de la liste peuvent être déplacées manuelement par l'utilisateur */
@@ -442,10 +451,13 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
 
     /** Definit le service de liste utilisé par ce composant. Ce srevice permet de controller dynamiquement la liste, ou de faire du lazyloading. */
     @Input()
-    public set itemListService(value: ItemListService) {
-        if (value !== undefined) {
+    public set itemListService(itemListService: ItemListService) {
+        if (itemListService !== undefined) {
             this.hasCustomService = true;
-            this.setItemListService(value);
+            this.setItemListService(itemListService);
+            if (itemListService && itemListService.lastQuery) {
+                this.query = itemListService.lastQuery.toString();
+            }
         }
     }
 
@@ -539,6 +551,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     public set disabled(value: boolean | string) {
         const disabled = coerceBooleanProperty(value);
         this._disabled = disabled || null;
+        this.changeDetectorRef.markForCheck();
     }
 
     public get disabled() {
@@ -563,20 +576,20 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
         }
     }
 
-    private set currentItemIndex(value: number) {
+    public set currentItemIndex(value: number) {
         super.setCurrentItemIndex(value);
         this.changeDetectorRef.markForCheck();
     }
 
-    private get currentItemIndex() {
+    public get currentItemIndex() {
         return this.getCurrentItemIndex();
     }
 
-    private get itemTemplate() {
+    public get itemTemplate() {
         return this.itemTemplateExternal || this.itemTemplateInternal;
     }
 
-    private get parentItemTemplate() {
+    public get parentItemTemplate() {
         return this.parentItemTemplateExternal || this.parentItemTemplateInternal;
     }
 
@@ -588,11 +601,11 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
         return this.headerTemplateExternal || this.headerTemplateInternal;
     }
 
-    private get searchPrefixTemplate() {
+    public get searchPrefixTemplate() {
         return this.searchPrefixTemplateExternal || this.searchPrefixTemplateInternal;
     }
 
-    private get searchSuffixTemplate() {
+    public get searchSuffixTemplate() {
         return this.searchSuffixTemplateExternal || this.searchSuffixTemplateInternal;
     }
 
@@ -619,7 +632,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
         this.onTouchedCallback = fn;
     }
 
-    public setDisabledState?(isDisabled: boolean) {
+    public setDisabledState(isDisabled: boolean) {
         this.disabled = isDisabled;
     }
     // ************* End of ControlValueAccessor Implementation **************
@@ -647,7 +660,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
 
     public ngAfterContentInit() {
         if (!this.items && this.options && this.options.length) {
-            const selectedModels = [];
+            const selectedModels = [] as any[];
             this.valueField = 'value';
             this.textField = 'text';
             const models = this.options.map((option) => {
@@ -701,14 +714,14 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
 
         let keyDown$ = Observable.fromEvent(this.listElement, 'keydown');
         if (this.input) {
-            const inputKeyDown$ = Observable.fromEvent(this.input.nativeElement, 'keydown');
+            const inputKeyDown$ = Observable.fromEvent(this.input.nativeElement, 'keydown') as Observable<KeyboardEvent>;
             keyDown$ = keyDown$.merge(inputKeyDown$);
         }
 
         keyDown$.takeWhile(() => this._isAlive)
             .filter(() => !this.disabled)
             .filter((event: KeyboardEvent) => {
-                const keyCode = event.keyCode || KeyCodes[event.code];
+                const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
                 return keyCode === KeyCodes.Home ||
                     keyCode === KeyCodes.End ||
                     keyCode === KeyCodes.PageUp ||
@@ -729,7 +742,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
 
                 const currentIndex = this.rangeStartIndex >= 0 ? this.rangeStartIndex : this.rangeStartIndex = this.currentItemIndex;
 
-                const keyCode = event.keyCode || KeyCodes[event.code];
+                const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
                 switch (keyCode) {
                     case KeyCodes.Home:
                         if (event.shiftKey) {
@@ -849,10 +862,10 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                 }
             });
 
-        let keyUp$ = Observable.fromEvent(this.listElement, 'keyup');
+        let keyUp$ = Observable.fromEvent(this.listElement, 'keyup') as Observable<Event>;
         if (this.input) {
-            const inputKeyup$ = Observable.fromEvent(this.input.nativeElement, 'keyup');
-            const inputDrop$ = Observable.fromEvent(this.input.nativeElement, 'drop');
+            const inputKeyup$ = Observable.fromEvent(this.input.nativeElement, 'keyup') as Observable<KeyboardEvent>;
+            const inputDrop$ = Observable.fromEvent(this.input.nativeElement, 'drop') as Observable<KeyboardEvent>;
             keyUp$ = keyUp$.merge(inputKeyup$, inputDrop$);
         }
 
@@ -867,7 +880,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                 }
             })
             .filter((event: KeyboardEvent) => {
-                const keyCode = event.keyCode || KeyCodes[event.code];
+                const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
                 return keyCode >= KeyCodes.Key0 ||
                     keyCode === KeyCodes.Backspace ||
                     keyCode === KeyCodes.Space ||

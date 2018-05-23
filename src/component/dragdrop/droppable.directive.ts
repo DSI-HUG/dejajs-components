@@ -31,7 +31,7 @@ export class DejaDroppableDirective implements OnDestroy {
         this._allEvents = coerceBooleanProperty(value);
     }
 
-    @HostBinding('attr.droppable') public droppable = null;
+    @HostBinding('attr.droppable') public droppable: boolean = null;
     private draginfokey = 'draginfos';
     private objectKey = 'object';
     private droppedKey = 'dropped';
@@ -76,9 +76,9 @@ export class DejaDroppableDirective implements OnDestroy {
                         const dragInfos = this.clipboardService.get(this.draginfokey) as { [key: string]: any };
                         const e = dragEvent as IDejaDropEvent;
                         e.dragInfo = dragInfos;
-                        e.dragObject = dragEvent[this.objectKey];
+                        e.dragObject = (<any>dragEvent)[this.objectKey];
                         e.dragElement = element;
-                        e.itsMe = dragEvent[this.elementKey] === element;
+                        e.itsMe = (<any>dragEvent)[this.elementKey] === element;
                         this.context.dragentercallback(e);
                         if (e.defaultPrevented) {
                             dragEvent.preventDefault();

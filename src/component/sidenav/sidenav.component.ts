@@ -6,17 +6,16 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { AfterViewInit, ChangeDetectorRef, Component, Input, NgZone, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { MatSidenav } from '@angular/material';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
-import 'rxjs/add/observable/timer';
+import 'rxjs/add/observable/from';
 import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/takeUntil';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+import { MediaService } from '../../common/core/media/media.service';
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -24,38 +23,40 @@ import { Subject } from 'rxjs/Subject';
     templateUrl: './sidenav.component.html',
     styleUrls: ['./sidenav.component.scss']
 })
-export class DejaSidenavComponent implements AfterViewInit, OnInit, OnDestroy {
-    @ViewChild('sidenav') public sidenav: MatSidenav;
-
+export class DejaSidenavComponent implements OnInit, OnDestroy {
     @Input()
     public headerText = 'TITLE';
 
     @Input()
+    /** Will be ignored if headerSvgIcon is set */
     public headerIcon = 'face';
+
+    @Input()
+    /** If not null, will be used in place of headerIcon. */
+    public headerSvgIcon: string;
 
     public hidden = false;
     public title: string;
-
-    private largeMql: MediaQueryList;
-    private mediumMql: MediaQueryList;
-    private smallMql: MediaQueryList;
+    public opened = false;
+    public mode = 'side';
 
     private ngUnsubscribe: Subject<void> = new Subject<void>();
 
     constructor(
-        private zone: NgZone,
+        mediaService: MediaService,
         private router: Router,
         private activatedRoute: ActivatedRoute,
         private changeDetectorRef: ChangeDetectorRef,
     ) {
-        this.largeMql = window.matchMedia('(min-width:1200px)');
-        this.largeMql.addListener(this.onLargeMediaMatchChange.bind(this));
 
-        this.mediumMql = window.matchMedia('(min-width:500px) and (max-width:1200px)');
-        this.mediumMql.addListener(this.onMediumMediaMatchChange.bind(this));
-
-        this.smallMql = window.matchMedia('(max-width:500px)');
-        this.smallMql.addListener(this.onSmallMediaMatchChange.bind(this));
+        Observable.from(mediaService.mediaChanged$)
+            .takeUntil(this.ngUnsubscribe)
+            .subscribe((alias) => {
+                this.hidden = alias === 'xs';
+                this.opened = alias === 'lg';
+                this.mode = alias === 'xs' ? 'over' : 'side';
+                this.changeDetectorRef.markForCheck();
+            });
     }
 
     public ngOnInit() {
@@ -78,21 +79,7 @@ export class DejaSidenavComponent implements AfterViewInit, OnInit, OnDestroy {
             .subscribe((event) => this.title = event[`title`]);
     }
 
-    public ngAfterViewInit() {
-        Observable.timer(1)
-            .first()
-            .subscribe(() => {
-                this.onLargeMediaMatchChange(this.largeMql);
-                this.onMediumMediaMatchChange(this.mediumMql);
-                this.onSmallMediaMatchChange(this.smallMql);
-            });
-    }
-
     public ngOnDestroy() {
-        this.largeMql.removeListener(this.onLargeMediaMatchChange);
-        this.mediumMql.removeListener(this.onLargeMediaMatchChange);
-        this.smallMql.removeListener(this.onLargeMediaMatchChange);
-        this.largeMql = this.mediumMql = this.smallMql = null;
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
     }
@@ -103,38 +90,5 @@ export class DejaSidenavComponent implements AfterViewInit, OnInit, OnDestroy {
             route = route.firstChild;
         }
         return route;
-    }
-
-    private onLargeMediaMatchChange(e) {
-        if (e.matches && this.sidenav.open) {
-            this.zone.run(() => {
-                this.hidden = false;
-                this.sidenav.open();
-                this.sidenav.mode = 'side';
-                this.changeDetectorRef.markForCheck();
-            });
-        }
-    }
-
-    private onMediumMediaMatchChange(e) {
-        if (e.matches && this.sidenav.close) {
-            this.zone.run(() => {
-                this.hidden = false;
-                this.sidenav.close();
-                this.sidenav.mode = 'side';
-                this.changeDetectorRef.markForCheck();
-            });
-        }
-    }
-
-    private onSmallMediaMatchChange(e) {
-        if (e.matches && this.sidenav.close) {
-            this.zone.run(() => {
-                this.hidden = true;
-                this.sidenav.close();
-                this.sidenav.mode = 'over';
-                this.changeDetectorRef.markForCheck();
-            });
-        }
     }
 }

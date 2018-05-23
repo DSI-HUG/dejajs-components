@@ -12,15 +12,9 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 
 const noop = () => { };
 
-export class DejaChipsCloseEvent extends CustomEvent {
-    public item: any;
-    public index: number;
-
-    constructor(item: any, index: number) {
-        super('DejaChipsCloseEvent');
-        this.item = item;
-        this.index = index;
-    }
+export interface IDejaChipsComponentCloseEvent extends CustomEvent {
+    item: any;
+    index: number;
 }
 
 @Component({
@@ -38,19 +32,19 @@ export class DejaChipsComponent implements ControlValueAccessor {
     @Input() public textField: string;
 
     /** Template d'élément si définit extérieurement au composant */
-    @Input() public itemTemplateExternal;
+    @Input() public itemTemplateExternal: any;
 
     /** Lecture seule */
     @Input() public readonly = false;
 
-    @Output() public close = new EventEmitter<DejaChipsCloseEvent>();
+    @Output() public close = new EventEmitter<IDejaChipsComponentCloseEvent>();
 
     protected onTouchedCallback: () => void = noop;
     protected onChangeCallback: (_: any) => void = noop;
 
-    @HostBinding('attr.disabled') private _disabled = null;
+    @HostBinding('attr.disabled') private _disabled: boolean = null;
 
-    @ContentChild('itemTemplate') private itemTemplateInternal;
+    @ContentChild('itemTemplate') private itemTemplateInternal: any;
 
     constructor( @Self() @Optional() public _control: NgControl) {
         if (this._control) {
@@ -103,6 +97,10 @@ export class DejaChipsComponent implements ControlValueAccessor {
     public registerOnTouched(fn: any) {
         this.onTouchedCallback = fn;
     }
+
+    public setDisabledState(isDisabled: boolean) {
+        this.disabled = isDisabled;
+    }
     // ************* End of ControlValueAccessor Implementation **************
 
     public get itemTemplate() {
@@ -126,7 +124,9 @@ export class DejaChipsComponent implements ControlValueAccessor {
     }
 
     public onClose(item: any, index: number) {
-        const event = new DejaChipsCloseEvent(item, index);
+        const event = new CustomEvent('DejaChipsCloseEvent', {}) as IDejaChipsComponentCloseEvent;
+        event.item = item;
+        event.index = index;
         this.items.splice(index, 1);
         this.onChangeCallback(this.items);
         this.close.emit(event);

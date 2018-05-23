@@ -48,6 +48,8 @@ const noop = () => { };
 export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, AfterContentInit, OnDestroy {
     private static formattingTokens = /(\[[^\[]*\])|(\\)?([Hh]mm(ss)?|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Qo?|YYYYYY|YYYYY|YYYY|YY|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|kk?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g;
 
+    public _layout: number | string;
+
     /** Maximum date avaliable inside date-picker */
     @Input() public dateMax: Date;
     /** Minimum date avaliable inside date-picker */
@@ -57,20 +59,25 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
         this._format = format;
         this.formatChanged$.next(format);
     }
+    public get format(): string {
+        return this._format;
+    }
     /** Placeholder for input */
     @Input() public placeholder = 'Date';
     /** Disabled dates. It's an array of DaysOfWeek (number between 0 and 6) or a date. */
     @Input() public disableDates: Array<DaysOfWeek | Date>; // | ((d: Date) => boolean);
     /** Reference to DejaDateSelectorComponent inside thic control */
     @ViewChild(DejaDateSelectorComponent) public dateSelectorComponent: DejaDateSelectorComponent;
-    /** Template for MatHint inside mat-input-container */
-    @ContentChild('hintTemplate') public matHint;
-    /** Template for MatError inside mat-input-container */
-    @ContentChild('errorTemplate') public matError;
+    /** Template for MatHint inside mat-form-field-container */
+    @ContentChild('hintTemplate') public matHint: any;
+    /** Template for MatError inside mat-form-field-container */
+    @ContentChild('errorTemplate') public matError: any;
     /** Offset de position horizontal de la zone de dropdown */
     @Input() public overlayOffsetX = 0;
     /** Offset de position verticale de la zone de dropdown */
     @Input() public overlayOffsetY = 6;
+    /** Afficher un bouton raccourcis permettant de sélectionner la date courante */
+    @Input() public showCurrentDateButton = false;
 
     @Output() public dateChange = new EventEmitter();
     @Output() public timeChange = new EventEmitter();
@@ -102,13 +109,13 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     private _showDropDown = false;
     private _positions = DejaConnectionPositionPair.default;
 
-    private _inputModel;
+    private _inputModel: string;
     private cursorPosition: number;
     private formatChanged$ = new Subject<string>();
     private dateChanged$ = new Subject<Date>();
 
     @ViewChild('inputelement')
-    private set inputElementRef(element: ElementRef) {
+    public set inputElementRef(element: ElementRef) {
         if (element) {
             this.inputElement = element.nativeElement;
             if (this.inputElement) {
@@ -226,7 +233,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
 
         const valueUpdated$ = Observable.combineLatest(this.formatChanged$, this.dateChanged$)
             .do(([format]) => {
-                let mask = [];
+                let mask = [] as string[];
                 const array = format.match(DejaDatePickerComponent.formattingTokens);
                 array.forEach((val: string) => {
                     if (formatToMask[val]) {
@@ -331,7 +338,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
         }
         this.changeDetectorRef.markForCheck();
     }
-    public _layout: number | string;
+
     public get layout() {
         return this._layout;
     }
@@ -397,6 +404,10 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     public registerOnTouched(fn: any) {
         this.onTouchedCallback = fn;
     }
+
+    public setDisabledState(isDisabled: boolean) {
+        this.disabled = isDisabled;
+    }
     // ************* End of ControlValueAccessor Implementation **************
 
     /** For reactive form. */
@@ -413,7 +424,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
 
     /**
      * Called when user click on the input of this component.
-     * If click is located on mat-icon 'calendar' who is in the matPrefix of mat-input-container, the picker show off.
+     * If click is located on mat-icon 'calendar' who is in the matPrefix of mat-form-field-container, the picker show off.
      *
      * @param event
      */
@@ -460,6 +471,11 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
 
         if (typeof date !== 'string') {
 
+            if (this.value && this.value.getTime() === date.getTime()) {
+                this.close();
+                return;
+            }
+
             let event: EventEmitter<any>;
 
             // now we check if it's date or time who is updated to raise correct event
@@ -472,8 +488,14 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
             }
 
             this.value = date;
+            this.onTouchedCallback();
             event.emit(date);
-            this.changeDetectorRef.markForCheck();
+
+            if (!this._layout || this._layout === DateComponentLayout.dateonly) {
+                this.close();
+            } else {
+                this.changeDetectorRef.markForCheck();
+            }
         }
     }
 
@@ -483,5 +505,13 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
         delete this._inputModel;
         this.onChangeCallback(this.value);
         this.close();
+    }
+
+    public onBlur() {
+        this.onTouchedCallback();
+    }
+
+    public setToCurrentDate(): void {
+        this.value = new Date();
     }
 }

@@ -38,7 +38,7 @@ export class DejaEditableDirective implements ControlValueAccessor, OnDestroy {
     private element: HTMLElement;
     private isAlive = true;
 
-    @HostBinding('attr.disabled') private _disabled = null;
+    @HostBinding('attr.disabled') private _disabled: boolean = null;
 
     constructor(elementRef: ElementRef, @Self() @Optional() public _control: NgControl) {
         if (this._control) {
@@ -215,6 +215,10 @@ export class DejaEditableDirective implements ControlValueAccessor, OnDestroy {
     // From ControlValueAccessor interface
     public registerOnTouched(fn: any) {
         this.onTouchedCallback = fn;
+    }
+
+    public setDisabledState(isDisabled: boolean) {
+        this.disabled = isDisabled;
     }
     // ************* End of ControlValueAccessor Implementation **************
 

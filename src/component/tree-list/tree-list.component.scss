@@ -1,4 +1,3 @@
-@import "../../scss/variables/colors";
 deja-tree-list {
     display: flex;
     position: relative;
@@ -7,9 +6,9 @@ deja-tree-list {
     overflow: hidden;
     &.ng-invalid {
         #input {
-            .mat-input-wrapper {
-                .mat-input-underline {
-                    .mat-input-ripple {
+            .mat-form-field-wrapper {
+                .mat-form-field-underline {
+                    .mat-form-field-ripple {
                         opacity: 1;
                         -webkit-transform: scaleY(1);
                         transform: scaleY(1);

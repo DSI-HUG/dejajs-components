@@ -30,7 +30,7 @@ import { IViewPort, ViewportMode } from '../../common/core/item-list/viewport.se
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { ISortInfos } from '../../common/core/sorting/sort-infos.model';
 import { SortingService } from '../../common/core/sorting/sorting.service';
-import { DejaChipsCloseEvent } from '../chips/chips.component';
+import { IDejaChipsComponentCloseEvent } from '../chips/chips.component';
 import { IDejaDragEvent } from '../dragdrop/draggable.directive';
 import { DejaTreeListScrollEvent } from '../tree-list/tree-list-scroll-event';
 import { DejaTreeListComponent } from '../tree-list/tree-list.component';
@@ -110,17 +110,17 @@ export class DejaGridComponent implements OnDestroy {
     /** Définit la largeur minimum que peut prendre une colonne en cas de redimensionement. */
     @Input() public columnsMinWidth = 15;
     /** Permet de définir un template de ligne par binding */
-    @Input() public rowTemplateExternal;
+    @Input() public rowTemplateExternal: any;
     /** Permet de définir un template de ligne parente par binding. */
-    @Input() public parentRowTemplateExternal;
+    @Input() public parentRowTemplateExternal: any;
     /** Permet de définir un template d'entête par binding. */
-    @Input() public headerTemplateExternal;
+    @Input() public headerTemplateExternal: any;
     /** Permet de définir un template d'entête de colonnes par binding. */
-    @Input() public columnHeaderTemplateExternal;
+    @Input() public columnHeaderTemplateExternal: any;
     /** Permet de définir un template comme prefixe de la zone de recherche par binding. */
-    @Input() public searchPrefixTemplateExternal;
+    @Input() public searchPrefixTemplateExternal: any;
     /** Permet de définir un template comme suffixe de la zone de recherche par binding. */
-    @Input() public searchSuffixTemplateExternal;
+    @Input() public searchSuffixTemplateExternal: any;
     /** Set a observable called before the rows will be displayed */
     @Input() public loadingRows: (query: string | RegExp, selectedRows: IDejaGridRow[]) => Observable<IDejaGridRow[]>;
     /** Set a promise called before a row selection */
@@ -148,16 +148,16 @@ export class DejaGridComponent implements OnDestroy {
     /** Exécuté lorsque le grouping à changé. */
     @Output() public groupChanged = new EventEmitter<IGroupInfo[]>();
     /** retourne la largeur calculée des lignes */
-    public rowsWidth = null;
+    public rowsWidth: number = null;
 
-    @ContentChild('rowTemplate') private rowTemplateInternal;
-    @ContentChild('parentRowTemplate') private parentRowTemplateInternal;
-    @ContentChild('cellTemplate') private _cellTemplate;
-    @ContentChild('parentTitleTemplate') private _parentTitleTemplate;
-    @ContentChild('columnHeaderTemplate') private _columnHeaderTemplate;
-    @ContentChild('headerTemplate') private headerTemplateInternal;
-    @ContentChild('searchPrefixTemplate') private searchPrefixTemplateInternal;
-    @ContentChild('searchSuffixTemplate') private searchSuffixTemplateInternal;
+    @ContentChild('rowTemplate') private rowTemplateInternal: any;
+    @ContentChild('parentRowTemplate') private parentRowTemplateInternal: any;
+    @ContentChild('cellTemplate') private _cellTemplate: any;
+    @ContentChild('parentTitleTemplate') private _parentTitleTemplate: any;
+    @ContentChild('columnHeaderTemplate') private _columnHeaderTemplate: any;
+    @ContentChild('headerTemplate') private headerTemplateInternal: any;
+    @ContentChild('searchPrefixTemplate') private searchPrefixTemplateInternal: any;
+    @ContentChild('searchSuffixTemplate') private searchSuffixTemplateInternal: any;
 
     @ViewChild(DejaGridHeaderComponent) private header: DejaGridHeaderComponent;
     @ViewChild(DejaTreeListComponent) private treeListComponent: DejaTreeListComponent;
@@ -397,11 +397,11 @@ export class DejaGridComponent implements OnDestroy {
         return this.parentRowTemplateExternal || this.parentRowTemplateInternal;
     }
 
-    private get cellTemplate() {
+    public get cellTemplate() {
         return this._cellTemplate;
     }
 
-    private get parentTitleTemplate() {
+    public get parentTitleTemplate() {
         return this._parentTitleTemplate;
     }
 
@@ -409,7 +409,7 @@ export class DejaGridComponent implements OnDestroy {
         return this.headerTemplateExternal || this.headerTemplateInternal;
     }
 
-    private get columnHeaderTemplate() {
+    public get columnHeaderTemplate() {
         return this.columnHeaderTemplateExternal || this._columnHeaderTemplate;
     }
 
@@ -508,7 +508,7 @@ export class DejaGridComponent implements OnDestroy {
                     return this.currentColumn;
                 };
 
-                const keyCode = event.keyCode || KeyCodes[event.code];
+                const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
                 switch (keyCode) {
                     case KeyCodes.LeftArrow:
                         this.currentColumn = this.columns && findPrev(this.columns.findIndex((c) => c.isCurrent));
@@ -740,7 +740,7 @@ export class DejaGridComponent implements OnDestroy {
         this.columnSizeChanged.emit(e);
     }
 
-    protected onGroupRemoved(event: DejaChipsCloseEvent) {
+    protected onGroupRemoved(event: IDejaChipsComponentCloseEvent) {
         const column = event.item;
 
         const groupInfo = {
@@ -762,17 +762,17 @@ export class DejaGridComponent implements OnDestroy {
 
         if (!this._columns || !this._columns.length) {
             if (rows && rows.length) {
-                const searchFirstLastLevelRow = (items: IItemBase[]) => {
-                    return items.find((row: IItemTree) => {
+                const searchFirstLastLevelRow = (items: IItemTree[]) => {
+                    return items.find((row) => {
                         if (row.$items) {
                             // IItemTree
-                            const srow = searchFirstLastLevelRow(row.$items);
+                            const srow: IItemTree = searchFirstLastLevelRow(row.$items);
                             if (srow) {
-                                return srow;
+                                return !!srow;
                             }
                         } else {
                             // IItemBase
-                            return row;
+                            return !!row;
                         }
                     });
                 };

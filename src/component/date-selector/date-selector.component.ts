@@ -48,6 +48,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
     @Input() public disableDates: Array<(DaysOfWeek | Date)>; // | ((d: Date) => boolean);
     @Input() public dateMax: Date;
     @Input() public dateMin: Date;
+    @Input() public format: string;
 
     @Output() public dateChange = new EventEmitter();
     @Output() public timeChange = new EventEmitter();
@@ -101,7 +102,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
     private selectedDate: Date;
     private _displayedDate = new Date();
 
-    private _days = [];
+    private _days = [] as string[];
     private _emptyDays: any[];
     private _time: boolean;
     private _disabled: boolean;
@@ -113,7 +114,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
     public set layout(value: DateComponentLayout | string) {
         if (value) {
             if (typeof value === 'string') {
-                this.layoutId = DateComponentLayout[value];
+                this.layoutId = (<any>DateComponentLayout)[value];
                 if (!this.layoutId) {
                     throw new Error('Invalid type for DateComponentLayout');
                 }
@@ -189,7 +190,11 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
                 if (target.hasAttribute('dateindex')) {
                     const dateSelectorItem = this._currentDays[+target.getAttribute('dateindex')];
                     if (!dateSelectorItem.disabled) {
-                        this.value = dateSelectorItem.date;
+                        const val = new Date(dateSelectorItem.date);
+                        if (this._displayedDate) {
+                            val.setHours(this._displayedDate.getHours(), this._displayedDate.getMinutes(), this._displayedDate.getSeconds(), this._displayedDate.getMilliseconds());
+                        }
+                        this.value = val;
                         this.dateChange.emit(this.value);
                     }
                 }
@@ -260,6 +265,10 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
     public registerOnTouched(fn: any) {
         this.onTouchedCallback = fn;
     }
+
+    public setDisabledState(isDisabled: boolean) {
+        this.disabled = isDisabled;
+    }
     // ************* End of ControlValueAccessor Implementation **************
 
     /**
@@ -319,7 +328,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
         return days;
     }
 
-    public daysInMonth(month, year) {
+    public daysInMonth(month: number, year: number) {
         return new Date(year, month, 0).getDate();
     }
 

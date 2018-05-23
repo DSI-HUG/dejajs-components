@@ -28,7 +28,6 @@ import { DejaTooltipService, ITooltipParams } from './tooltip.service';
  */
 @Component({
     encapsulation: ViewEncapsulation.None,
-    providers: [MediaService],
     selector: 'deja-tooltip',
     templateUrl: 'tooltip.component.html',
     styleUrls: [
@@ -41,7 +40,8 @@ export class DejaTooltipComponent implements OnInit, OnDestroy {
     /** Event Emmited when hide action is called */
     @Output() public hide = new EventEmitter();
     /** Template for tooltip content */
-    @ContentChild('tooltipTemplate') public tooltipTemplate;
+    @ContentChild('tooltipTemplate')
+    public tooltipTemplate: any;
 
     /** Parameters of the tooltip */
     public params: ITooltipParams;
@@ -71,27 +71,27 @@ export class DejaTooltipComponent implements OnInit, OnDestroy {
             overlayY: 'bottom',
         },
         {
-            originX: 'left',
+            originX: 'start',
             originY: 'bottom',
-            overlayX: 'left',
+            overlayX: 'start',
             overlayY: 'top',
         },
         {
-            originX: 'left',
+            originX: 'start',
             originY: 'top',
-            overlayX: 'left',
+            overlayX: 'start',
             overlayY: 'bottom',
         },
         {
-            originX: 'right',
+            originX: 'end',
             originY: 'bottom',
-            overlayX: 'right',
+            overlayX: 'end',
             overlayY: 'top',
         },
         {
-            originX: 'right',
+            originX: 'end',
             originY: 'top',
-            overlayX: 'right',
+            overlayX: 'end',
             overlayY: 'bottom',
         },
     ] as DejaConnectionPositionPair[];
@@ -161,7 +161,6 @@ export class DejaTooltipComponent implements OnInit, OnDestroy {
             throw (new Error('Name is required'));
         }
         this.params = this.tooltipService.params[this.name];
-
         this.ownerElement = (this.params.ownerElement as ElementRef).nativeElement || this.params.ownerElement;
 
         const model$ = this.params.model as Observable<any>;

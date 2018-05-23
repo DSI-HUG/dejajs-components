@@ -56,7 +56,7 @@ export class ItemListService {
     private _hideSelected: boolean;
 
     // Cache for last query. Flat list will be regenerated only if the query change
-    private lastQuery: RegExp;
+    private _lastQuery: RegExp | string;
     private internalQuery: RegExp;
 
     // Sorting
@@ -90,7 +90,7 @@ export class ItemListService {
      */
     public static getItemValue(item: any, valueField?: string) {
         // tslint:disable-next-line:triple-equals
-        const isDefined = (value) => value != undefined;
+        const isDefined = (value: any) => value != undefined;
 
         if (valueField) {
             const fields = valueField.split('.');
@@ -112,9 +112,7 @@ export class ItemListService {
      * @return Texte à afficher pour le modèle spécifié.
      */
     public static getItemText(value: any, textField?: string) {
-        if (!value) {
-            return '';
-        } else {
+        if (value) {
             if (textField) {
                 const fields = textField.split('.');
                 let model = value.model && value.model[fields[0]] !== undefined ? value.model : value;
@@ -124,6 +122,7 @@ export class ItemListService {
                 if (model !== undefined) {
                     return typeof model === 'function' ? model() : model;
                 }
+                return '';
             }
 
             if (value.displayName) {
@@ -132,6 +131,11 @@ export class ItemListService {
                 return value.toString();
             }
         }
+        return '';
+    }
+
+    public get lastQuery() {
+        return this._lastQuery;
     }
 
     /**
@@ -792,7 +796,7 @@ export class ItemListService {
 
         const sortTree$ = this.getSortingService()
             .sortTree$(this._cache.groupedList, sortInfos, '$items')
-            .do((sortedList) => {
+            .do((sortedList: IItemTree[]) => {
                 this._cache.groupedList = sortedList;
                 this.invalidateViewCache();
             });
@@ -888,6 +892,10 @@ export class ItemListService {
     public getViewList$(searchField: string, query?: RegExp | string, ignoreCache?: boolean, ddStartIndex?: number, ddTargetIndex?: number, multiSelect?: boolean): Observable<IViewListResult> {
         const result = {} as IViewListResult;
 
+        const queryChanged = (query && query.toString()) !== (this._lastQuery && this._lastQuery.toString());
+        ignoreCache = ignoreCache || queryChanged || !this.items || !this.items.length;
+        this._lastQuery = query;
+
         // Check regexp validity
         // regExp.test(this.getTextValue(item));
         let regExp: RegExp;
@@ -906,10 +914,6 @@ export class ItemListService {
                 }
             }
         }
-
-        const queryChanged = (regExp && regExp.toString()) !== (this.lastQuery && this.lastQuery.toString());
-        ignoreCache = ignoreCache || queryChanged || !this.items || !this.items.length;
-        this.lastQuery = regExp;
 
         const loadViewList = () => {
             let viewList: IItemBase[];
@@ -1011,7 +1015,8 @@ export class ItemListService {
      * @return True si l'élément correspond aux critères de recherche.
      */
     protected itemMatch(item: IItemBase, searchField: string, regExp: RegExp) {
-        const value = typeof item[searchField] === 'function' ? item[searchField]() : (item[searchField] ? item[searchField] : this.getTextValue(item, searchField));
+        const field = (<any>item)[searchField];
+        const value = typeof field === 'function' ? field() : (field ? field : this.getTextValue(item, searchField));
         return value && regExp.test(Diacritics.remove(value));
     }
 
@@ -1038,7 +1043,7 @@ export class ItemListService {
         }
 
         let visibleList = [] as IItemTree[];
-        const selectedList = [];
+        const selectedList = [] as IItemBase[];
         let odd = false;
 
         if (regExp) {
@@ -1137,13 +1142,13 @@ export class ItemListService {
             return Observable.of([]);
         }
 
-        const visibleList = [];
-        const selectedList = [];
+        const visibleList = [] as IItemBase[];
+        const selectedList = [] as IItemBase[];
         let depthMax = 0;
         let isTree = false;
         let odd = false;
 
-        const flatList$ = (itms: IItemTree[], depth: number, hidden: boolean) => {
+        const flatList$: any = (itms: IItemTree[], depth: number, hidden: boolean) => {
             return Observable.from(itms || [])
                 .do((item) => {
                     if (depth > depthMax) {
@@ -1189,7 +1194,7 @@ export class ItemListService {
                 }
                 this._cache.depthMax = isTree ? depthMax : 0;
             })
-            .reduce((acc: any[], cur) => {
+            .reduce((acc: any[], cur: IItemBase) => {
                 acc.push(cur);
                 return acc;
             }, []);
@@ -1262,7 +1267,7 @@ export class ItemListService {
 
     private compareItems = (item1: IItemBase, item2: IItemBase) => {
         // tslint:disable-next-line:triple-equals
-        const isDefined = (value) => value != undefined;
+        const isDefined = (value: any) => value != undefined;
 
         if (!isDefined(item1) || !isDefined(item2)) {
             return false;
@@ -1356,8 +1361,9 @@ export class ItemListService {
         }
 
         items.forEach((item) => {
-            if (item[this.childrenField]) {
-                item.$items = item[this.childrenField];
+            const field = (<any>item)[this.childrenField];
+            if (field) {
+                item.$items = field;
                 this.ensureChildrenProperties(item.$items);
             }
         });

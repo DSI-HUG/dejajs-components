@@ -8,7 +8,6 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule, MatInputModule} from '@angular/material';
 import { DejaChipsModule } from '../chips/index';
@@ -19,11 +18,9 @@ import { DejaTagComponent } from './tag.component';
     exports: [DejaTagComponent],
     imports: [
         CommonModule,
-        FlexLayoutModule,
         FormsModule,
         MatIconModule,
         MatInputModule,
-        FlexLayoutModule,
         DejaChipsModule,
     ],
     providers: [],

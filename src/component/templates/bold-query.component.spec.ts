@@ -14,7 +14,7 @@ describe('DejaBoldQueryComponent', () => {
 
     let comp: DejaBoldQueryComponent;
     let fixture: ComponentFixture<DejaBoldQueryComponent>;
-    let highlightOpenTag;
+    let highlightOpenTag: string;
     const highlightEndTag = '</span>';
 
     beforeEach(async(() => {

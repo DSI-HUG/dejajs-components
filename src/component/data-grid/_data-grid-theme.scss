@@ -19,8 +19,8 @@
 				}
 			}
 		}
-	}
 
-	@include data-grid-grouparea-theme($theme);
-	@include data-grid-header-theme($theme);
+        @include data-grid-grouparea-theme($theme);
+		@include data-grid-header-theme($theme);
+	}
 }

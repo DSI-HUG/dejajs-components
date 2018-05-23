@@ -8,7 +8,7 @@
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { DejaDialogComponent } from '../../..';
+import { DejaDialogComponent } from './dialog.component';
 
 describe('DejaDialogComponent', () => {
 
@@ -31,13 +31,13 @@ describe('DejaDialogComponent', () => {
     });
 
     it('should not emit closed event if click inside the dialog', () => {
-        spyOn(component.closed, 'emit').and.callThrough();
+        const spy = spyOn(component.closed, 'emit').and.callThrough();
         fixture.debugElement.query(By.css('.dialog')).nativeElement.click();
-        expect(component.closed.emit).not.toHaveBeenCalled();
+        expect(spy).not.toHaveBeenCalled();
     });
 
     it('should emit closed event one time if click outside the dialog', () => {
-        spyOn(component.closed, 'emit').and.callThrough();
+        const spy = spyOn(component.closed, 'emit').and.callThrough();
 
         const event = {
             target: {},
@@ -45,7 +45,7 @@ describe('DejaDialogComponent', () => {
         };
 
         component.close(event as MouseEvent);
-        expect(component.closed.emit).toHaveBeenCalledTimes(1);
+        expect(spy).toHaveBeenCalledTimes(1);
     });
 
 });

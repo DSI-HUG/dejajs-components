@@ -8,7 +8,6 @@
 
 import { CommonModule } from '@angular/common';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule, MatInputModule } from '@angular/material';
 import { By } from '@angular/platform-browser';
@@ -34,11 +33,9 @@ describe('DejaTagComponent', () => {
             ],
             imports: [
                 CommonModule,
-                FlexLayoutModule,
                 FormsModule,
                 MatIconModule,
                 MatInputModule,
-                FlexLayoutModule,
                 DejaChipsModule,
                 BrowserAnimationsModule,
             ],

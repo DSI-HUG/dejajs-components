@@ -1,10 +1,7 @@
 @import '~@angular/material/theming';
-@import '../../common/core/item-list/item-list-theme';
-
 @mixin tree-list-theme($theme) {
 	$primary: map-get($theme, primary);
 	$warn: map-get($theme, warn);
-
 	deja-tree-list {
 		&[disabled="true"] {
 			.deja-listcontainer {
@@ -17,13 +14,13 @@
 		}
 		&.ng-invalid {
 			#input {
-				.mat-input-wrapper {
-					.mat-input-underline {
-						.mat-input-ripple {
+				.mat-form-field-wrapper {
+					.mat-form-field-underline {
+						.mat-form-field-ripple {
 							background-color: mat-color($warn);
 						}
 					}
-					.mat-input-placeholder {
+					.mat-form-field-label {
 						color: mat-color($warn) !important;
 					}
 				}
@@ -46,7 +43,6 @@
 				}
 			}
 		}
-
 		@include sub-item-list-theme($theme);
 	}
 }

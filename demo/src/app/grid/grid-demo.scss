@@ -1,0 +1,80 @@
+grid-demo {
+	.demo-card {
+		deja-grid {
+			min-height: 8rem;
+			max-height: 600px;
+			width: 97%;
+			.listitem {
+				.color {
+					border-radius: 50%;
+					width: 1.5rem;
+					height: 1.5rem;
+					margin: 0.35rem;
+				}
+				.loading {
+					margin: 0.35rem;
+				}
+			}
+			[matPrefix] {
+				cursor: default;
+				padding: 0 4px;
+			}
+			[matSuffix] {
+				padding: 0 4px;
+				display: flex;
+				justify-content: flex-end;
+				cursor: pointer;
+			}
+		}
+		.listContainer {
+			display: flex;
+			flex-direction: column;
+			overflow: hidden;
+			deja-grid {
+				flex: 1 1 auto;
+				margin: 1rem 0;
+				.listitem {
+					&.odd {
+						deja-grid-row {
+							background-color: rgba(#000, 0.07);
+						}
+					}
+				}
+			}
+		}
+		#news,
+		#variable {
+			.cell-wrapper {
+				&[colname="urlToImage"] {
+					.logo {
+						max-width: 100%;
+						max-height: 100%;
+						width: auto;
+						height: auto;
+						object-fit: contain;
+					}
+				}
+				&[colname="description"],
+				&[colname="address"],
+				&[colname="about"],
+				&[colname="p1.p2.person.address"],
+				&[colname="p1.p2.person.about"] {
+					.cell {
+						white-space: normal;
+					}
+				}
+			}
+		}
+		#dropArea {
+			overflow: hidden;
+		}
+		deja-splitter {
+			split-area {
+				deja-grid {
+					padding: 0 1rem;
+					height: 400px;
+				}
+			}
+		}
+	}
+}

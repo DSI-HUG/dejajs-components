@@ -1,24 +1,24 @@
 deja-date-picker {
 	#date-selector {
-		.mat-input-wrapper {
-			padding-right: 24px;
-		}
-		#action-icon-container {
-			position: absolute;
-			right: 0;
-			top: 50%;
-			transform: translateY(-68%);
-		}
-		#calendar-button mat-icon,
-		#clear-button mat-icon {
-			font-size: 100%;
-			opacity: 0.4;
+		.mat-form-field-wrapper {
+			#action-icon-container {
+				position: absolute;
+				right: 0;
+				top: 50%;
+				transform: translateY(-68%);
+            }
+            #current-date-button mat-icon,
+			#calendar-button mat-icon,
+			#clear-button mat-icon {
+				font-size: 100%;
+				opacity: 0.4;
+			}
 		}
 	}
 	&.ng-invalid {
-		.mat-input-wrapper {
-			.mat-input-underline {
-				.mat-input-ripple {
+		.mat-form-field-wrapper {
+			.mat-form-field-underline {
+				.mat-form-field-ripple {
 					opacity: 1;
 					transform: scaleY(1);
 				}
@@ -30,7 +30,7 @@ deja-date-picker {
 	}
 }
 
-.deja-overlay-container {
+.deja-datepicker-overlay-container {
 	overflow: visible;
 	box-shadow: rgba(0, 0, 0, 0.247059) 0px 14px 45px, rgba(0, 0, 0, 0.219608) 0px 10px 18px;
 	.actions {

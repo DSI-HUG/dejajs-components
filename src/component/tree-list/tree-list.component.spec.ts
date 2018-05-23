@@ -43,7 +43,7 @@ class DejaTreeListContainerComponent {
     public itemList = [] as IItemTree[];
 
     constructor(groupingService: GroupingService) {
-        const itemList = Array.apply(null, { length: 2000 }).map((_n, i) => {
+        const itemList = Array.apply(null, { length: 2000 }).map((_n: any, i: number) => {
             const rand = Math.floor(Math.random() * (70 - 33 + 1)) + 33; // random de 33 à 70
             return {
                 size: rand,
@@ -56,10 +56,6 @@ class DejaTreeListContainerComponent {
             .subscribe((groupedResult) => {
                 this.itemList = groupedResult;
             });
-    }
-
-    public testDone() {
-        return true;
     }
 }
 
@@ -80,7 +76,7 @@ class DejaTreeListByModelContainerComponent {
     public selectedModels: any[];
 
     constructor(sortingService: SortingService) {
-        const modelsList = Array.apply(null, { length: 2000 }).map((_n, i) => {
+        const modelsList = Array.apply(null, { length: 2000 }).map((_n: any, i: number) => {
             const rand = Math.floor(Math.random() * (70 - 33 + 1)) + 33; // random de 33 à 70;
             return {
                 id: i,
@@ -95,10 +91,6 @@ class DejaTreeListByModelContainerComponent {
 
     public backgroundColor(item: IItemBase) {
         return item.selected ? '#888' : null;
-    }
-
-    public testDone() {
-        return true;
     }
 }
 
@@ -120,10 +112,6 @@ class DejaTreeListByModelContainerComponent {
 })
 class DejaTreeListByOptionsContainerComponent {
     constructor() { }
-
-    public testDone() {
-        return true;
-    }
 }
 
 describe('DejaTreeListComponent', () => {
@@ -173,11 +161,11 @@ describe('DejaTreeListComponent', () => {
         treeListInstance.itemsDraggable = 'false';
         expect(treeListInstance.itemsDraggable).toBeFalsy();
 
-        expect(treeListInstance.pageSize).toBe(10);
+        expect(treeListInstance.pageSize).toBeGreaterThanOrEqual(10);
         treeListInstance.pageSize = '5';
         expect(tl.pageSize).toBe(5);
         treeListInstance.pageSize = 0;
-        expect(treeListInstance.pageSize).toBe(10);
+        expect(treeListInstance.pageSize).toBeGreaterThanOrEqual(10);
 
         expect(treeListInstance.hintLabel).toBeUndefined();
         treeListInstance.hintLabel = 'I am a hint label';
@@ -290,9 +278,8 @@ describe('DejaTreeListComponent', () => {
         expect(tl.getItemClass(item)).toEqual('listitem test collapsed selected unselectable odd');
     }));
 
-    it('should set and ensure the current item', async(() => {
+    it('should set and ensure the current item', (done) => {
         const fixture = TestBed.createComponent(DejaTreeListContainerComponent);
-        const treeListContainerInstance = fixture.componentInstance as DejaTreeListContainerComponent;
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const treeListInstance = treeListDebugElement.componentInstance as DejaTreeListComponent;
         const tl = treeListInstance as any;
@@ -331,22 +318,16 @@ describe('DejaTreeListComponent', () => {
                         expect(currentItems[0] && currentItems[0].attributes.flat).toBe('1');
                         expect(vp.startIndex).toBe(1);
                         expect(treeListInstance.currentItem).toBe(vp.items[1]);
-                        treeListContainerInstance.testDone();
+                        done();
                 }
             });
 
-        spyOn(treeListContainerInstance, 'testDone');
-
         fixture.detectChanges();
-        fixture.whenStable().then(() => {
-            expect(treeListContainerInstance.testDone).toHaveBeenCalled();
-        });
-    }));
+    });
 
-    it('should not load items if minSearchlength is defined', async(() => {
+    it('should not load items if minSearchlength is defined', (done) => {
         let pass = 0;
         const fixture = TestBed.createComponent(DejaTreeListContainerComponent);
-        const treeListContainerInstance = fixture.componentInstance as DejaTreeListContainerComponent;
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const treeListInstance = treeListDebugElement.componentInstance as DejaTreeListComponent;
         treeListInstance.minSearchlength = 2;
@@ -368,22 +349,16 @@ describe('DejaTreeListComponent', () => {
 
                     default:
                         expect(listItems.length).toBeGreaterThan(0);
-                        treeListContainerInstance.testDone();
+                        done();
                 }
             });
 
-        spyOn(treeListContainerInstance, 'testDone');
-
         fixture.detectChanges();
-        fixture.whenStable().then(() => {
-            expect(treeListContainerInstance.testDone).toHaveBeenCalled();
-        });
-    }));
+    });
 
-    it('should set the selected items', async(() => {
+    it('should set the selected items', (done) => {
         let pass = 0;
         const fixture = TestBed.createComponent(DejaTreeListContainerComponent);
-        const treeListContainerInstance = fixture.componentInstance as DejaTreeListContainerComponent;
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const treeListInstance = treeListDebugElement.componentInstance as DejaTreeListComponent;
 
@@ -444,22 +419,16 @@ describe('DejaTreeListComponent', () => {
                         // Check no selected
                         expect(selectedElements.length).toBe(0);
                         expect(selectedItems.length).toBe(0);
-                        treeListContainerInstance.testDone();
+                        done();
                 }
             });
 
-        spyOn(treeListContainerInstance, 'testDone');
-
         fixture.detectChanges();
-        fixture.whenStable().then(() => {
-            expect(treeListContainerInstance.testDone).toHaveBeenCalled();
-        });
-    }));
+    });
 
-    it('should toggle and collapse all the items', async(() => {
+    it('should toggle and collapse all the items', (done) => {
         let pass = 0;
         const fixture = TestBed.createComponent(DejaTreeListContainerComponent);
-        const treeListContainerInstance = fixture.componentInstance as DejaTreeListContainerComponent;
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const treeListInstance = treeListDebugElement.componentInstance as DejaTreeListComponent;
 
@@ -495,17 +464,12 @@ describe('DejaTreeListComponent', () => {
                         // Check no collapsed
                         expect(collapsed.length).toBe(0);
                         expect(collapsedItems.length).toBe(0);
-                        treeListContainerInstance.testDone();
+                        done();
                 }
             });
 
-        spyOn(treeListContainerInstance, 'testDone');
-
         fixture.detectChanges();
-        fixture.whenStable().then(() => {
-            expect(treeListContainerInstance.testDone).toHaveBeenCalled();
-        });
-    }));
+    });
 });
 
 describe('DejaTreeListByModelContainerComponent', () => {
@@ -539,10 +503,9 @@ describe('DejaTreeListByModelContainerComponent', () => {
         expect(treeListInstance).toBeTruthy();
     }));
 
-    it('should set the selected models', async(() => {
+    it('should set the selected models', (done) => {
         let pass = 0;
         const fixture = TestBed.createComponent(DejaTreeListByModelContainerComponent);
-        const treeListContainerInstance = fixture.componentInstance as DejaTreeListByModelContainerComponent;
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const treeListInstance = treeListDebugElement.componentInstance as DejaTreeListComponent;
 
@@ -626,21 +589,15 @@ describe('DejaTreeListByModelContainerComponent', () => {
                         // Check no selected
                         expect(selectedModels.length).toBe(0);
                         expect(selectedItems.length).toBe(0);
-                        treeListContainerInstance.testDone();
+                        done();
                 }
             });
 
-        spyOn(treeListContainerInstance, 'testDone');
-
         fixture.detectChanges();
-        fixture.whenStable().then(() => {
-            expect(treeListContainerInstance.testDone).toHaveBeenCalled();
-        });
-    }));
+    });
 
-    it('should flag pending keyboard navigation', async(() => {
+    it('should flag pending keyboard navigation', (done) => {
         const fixture = TestBed.createComponent(DejaTreeListByModelContainerComponent);
-        const treeListContainerInstance = fixture.componentInstance as DejaTreeListByModelContainerComponent;
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const treeListInstance = treeListDebugElement.componentInstance as DejaTreeListComponent;
         let listElement: HTMLElement;
@@ -651,7 +608,7 @@ describe('DejaTreeListByModelContainerComponent', () => {
             .delay(1000)
             .subscribe(() => {
                 expect(treeListInstance.keyboardNavigation()).toBeFalsy();
-                treeListContainerInstance.testDone();
+                done();
             });
 
         const sendKeyDown = (code: string, shiftKey?: boolean, ctrlKey?: boolean) => {
@@ -663,21 +620,15 @@ describe('DejaTreeListByModelContainerComponent', () => {
             listElement.dispatchEvent(event);
         };
 
-        spyOn(treeListContainerInstance, 'testDone');
-
         fixture.detectChanges();
-        fixture.whenStable().then(() => {
-            expect(treeListContainerInstance.testDone).toHaveBeenCalled();
-        });
 
         listElement = treeListInstance.listElement;
         sendKeyDown('DownArrow');
-    }));
+    });
 
-    it('should navigate with the keyboard', async(() => {
+    it('should navigate with the keyboard', (done) => {
         let pass = 0;
         const fixture = TestBed.createComponent(DejaTreeListByModelContainerComponent);
-        const treeListContainerInstance = fixture.componentInstance as DejaTreeListByModelContainerComponent;
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const treeListInstance = treeListDebugElement.componentInstance as DejaTreeListComponent;
         let listElement: HTMLElement;
@@ -923,24 +874,18 @@ describe('DejaTreeListByModelContainerComponent', () => {
                         expect(selectedItems.length).toBe(1);
                         expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('0');
                         expect(currentElement && currentElement.attributes.flat).toBe('0');
-                        treeListContainerInstance.testDone();
+                        done();
                 }
             });
 
-        spyOn(treeListContainerInstance, 'testDone');
-
         fixture.detectChanges();
-        fixture.whenStable().then(() => {
-            expect(treeListContainerInstance.testDone).toHaveBeenCalled();
-        });
 
         listElement = treeListInstance.listElement;
-    }));
+    });
 
-    it('should refresh view port if windows is resized', async(() => {
+    it('should refresh view port if windows is resized', (done) => {
         let pass = 0;
         const fixture = TestBed.createComponent(DejaTreeListByModelContainerComponent);
-        const treeListContainerInstance = fixture.componentInstance as DejaTreeListByModelContainerComponent;
 
         observeModelViewPort$(fixture)
             .debounceTime(100)
@@ -954,19 +899,14 @@ describe('DejaTreeListByModelContainerComponent', () => {
                         break;
 
                     default:
-                        expect(vp.visibleItems.length).toBe(12);
-                        treeListContainerInstance.testDone();
+                        expect(vp.visibleItems.length).toBeGreaterThan(10);
+                        done();
 
                 }
             });
 
-        spyOn(treeListContainerInstance, 'testDone');
-
         fixture.detectChanges();
-        fixture.whenStable().then(() => {
-            expect(treeListContainerInstance.testDone).toHaveBeenCalled();
-        });
-    }));
+    });
 });
 
 describe('DejaTreeListByOptionsContainerComponent', () => {
@@ -993,9 +933,8 @@ describe('DejaTreeListByOptionsContainerComponent', () => {
             .filter((result) => result.viewPortSize > 0);
     };
 
-    it('should create the component', async(() => {
+    it('should create the component', (done) => {
         const fixture = TestBed.createComponent(DejaTreeListByOptionsContainerComponent);
-        const treeListContainerInstance = fixture.componentInstance as DejaTreeListByOptionsContainerComponent;
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const treeListInstance = treeListDebugElement.componentInstance as DejaTreeListComponent;
 
@@ -1005,23 +944,17 @@ describe('DejaTreeListByOptionsContainerComponent', () => {
                 fixture.detectChanges();
                 const items = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem'));
                 expect(items.length).toBe(12);
-                treeListContainerInstance.testDone();
+                done();
             });
 
-        spyOn(treeListContainerInstance, 'testDone');
-
         fixture.detectChanges();
-        fixture.whenStable().then(() => {
-            expect(treeListContainerInstance.testDone).toHaveBeenCalled();
-        });
 
         expect(treeListInstance).toBeTruthy();
-    }));
+    });
 
-    it('should filter and select with the keyboard', async(() => {
+    it('should filter and select with the keyboard', (done) => {
         let pass = 0;
         const fixture = TestBed.createComponent(DejaTreeListByOptionsContainerComponent);
-        const treeListContainerInstance = fixture.componentInstance as DejaTreeListByOptionsContainerComponent;
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const treeListInstance = treeListDebugElement.componentInstance as DejaTreeListComponent;
         let listElement: HTMLElement;
@@ -1105,25 +1038,19 @@ describe('DejaTreeListByOptionsContainerComponent', () => {
 
                     default:
                         expect(vp.visibleItems.length).toBe(5);
-                        treeListContainerInstance.testDone();
+                        done();
 
                 }
             });
 
-        spyOn(treeListContainerInstance, 'testDone');
-
         fixture.detectChanges();
-        fixture.whenStable().then(() => {
-            expect(treeListContainerInstance.testDone).toHaveBeenCalled();
-        });
 
         listElement = treeListInstance.listElement;
-    }));
+    });
 
-    it('should select with the mouse', async(() => {
+    it('should select with the mouse', (done) => {
         let pass = 0;
         const fixture = TestBed.createComponent(DejaTreeListByOptionsContainerComponent);
-        const treeListContainerInstance = fixture.componentInstance as DejaTreeListByOptionsContainerComponent;
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const treeListInstance = treeListDebugElement.componentInstance as DejaTreeListComponent;
         let listElement: DebugElement;
@@ -1254,18 +1181,13 @@ describe('DejaTreeListByOptionsContainerComponent', () => {
                         expect(selectedElements.length).toBe(1);
                         expect(selectedItems.length).toBe(1);
                         expect(currentElement && currentElement.attributes.flat).toBe('6');
-                        treeListContainerInstance.testDone();
+                        done();
 
                 }
             });
 
-        spyOn(treeListContainerInstance, 'testDone');
-
         fixture.detectChanges();
-        fixture.whenStable().then(() => {
-            expect(treeListContainerInstance.testDone).toHaveBeenCalled();
-        });
 
         listElement = fixture.debugElement.query(By.css('deja-tree-list > .deja-listcontainer'));
-    }));
+    });
 });

@@ -11,10 +11,11 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule, MatIconModule } from '@angular/material';
 import { DejaCircularPickerModule } from '../circular-picker/index';
+import { DejaDateFormatPipe } from './date-format.pipe';
 import { DejaDateSelectorComponent } from './date-selector.component';
 
 @NgModule({
-    declarations: [DejaDateSelectorComponent],
+    declarations: [DejaDateFormatPipe, DejaDateSelectorComponent],
     exports: [DejaDateSelectorComponent],
     imports: [
         DejaCircularPickerModule,

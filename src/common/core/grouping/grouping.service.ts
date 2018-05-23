@@ -10,7 +10,6 @@ import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/reduce';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/toPromise';
@@ -46,9 +45,9 @@ export class GroupingService {
                 return this.groupChildren$(tree, groupInfo, 0, childrenField);
             }
 
-            const groupTree$ = (t: any[], curDepth: number) => {
+            const groupTree$: any = (t: any[], curDepth: number) => {
                 return Observable.from(t)
-                    .flatMap((treeItem) => {
+                    .switchMap((treeItem) => {
                         const children = treeItem[childrenField];
                         if (children[0] && children[0][childrenField]) {
                             return groupTree$(children, curDepth + 1).map(() => treeItem);
@@ -101,10 +100,10 @@ export class GroupingService {
                         toString: () => groupLabel,
                         $text: groupLabel,
                     } as IItemTree;
-                    parent[childrenField] = [];
+                    (<any>parent)[childrenField] = [];
                 }
 
-                parent[childrenField].push(item);
+                (<any>parent)[childrenField].push(item);
                 return groups;
             }, {})
             .map((grps: { [groupby: string]: any }) => Object.keys(grps).map((key) => grps[key]))

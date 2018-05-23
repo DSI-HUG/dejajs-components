@@ -1,35 +1,25 @@
 {
+    "extends": "../tsconfig.json",
     "compilerOptions": {
         "declaration": true,
+        "outDir": "../tmp/lib/",
         "module": "es2015",
-        "target": "es5",
-        "baseUrl": ".",
-        "stripInternal": true,
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
-        "noUnusedParameters": true,
-        "noUnusedLocals": true,
-        "moduleResolution": "node",
-        "outDir": "../build",
         "rootDir": ".",
-        "sourceMap": true,
-        "lib": [
-            "es2015",
-            "dom"
-        ],
-        "skipLibCheck": true,
+        "baseUrl": ".",
         "types": [
+            "node",
             "moment"
         ]
     },
-    "angularCompilerOptions": {
-        "annotateForClosureCompiler": true,
-        "strictMetadataEmit": false,
-        "skipTemplateCodegen": true,
-        "flatModuleOutFile": "dejajs-component.js",
-        "flatModuleId": "@deja-js/component"
-    },
     "files": [
         "./index.ts"
-    ]
+    ],
+    "angularCompilerOptions": {
+        "strictMetadataEmit": false,
+        "skipTemplateCodegen": true,
+        "genDir": "../tmp/lib-gen-dir/",
+        "flatModuleOutFile": "dejajs-component.js",
+        "flatModuleId": "@deja-js/component",
+        "annotateForClosureCompiler": true
+    }
 }

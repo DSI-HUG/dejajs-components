@@ -18,6 +18,7 @@ describe('Color', () => {
     const c5 = Color.parse('#445566');
     const c6 = Color.parse('#778899AA');
     const c7 = Color.parse('rgba(119, 136, 153, 170)');
+    const c8 = Color.parse('rgba(119, 136, 153, 0.666)');
 
     it('should create the class', () => {
         expect(c1 instanceof Color).toBeTruthy();
@@ -27,6 +28,7 @@ describe('Color', () => {
         expect(Color.equals(c3, c5)).toBeTruthy();
         expect(Color.equals(c4, c6)).toBeTruthy();
         expect(Color.equals(c7, c6)).toBeTruthy();
+        expect(Color.equals(c7, c8)).toBeTruthy();
         expect(Color.equals(c3, c7)).toBeFalsy();
     });
 
@@ -69,7 +71,7 @@ describe('Color', () => {
         const t3 = c7.bestTextColor;
         expect(t1.toHex()).toEqual('#FFFFFF');
         expect(t2.toHex()).toBeUndefined();
-        expect(t3.toHex()).toEqual('#000000AA');
+        expect(t3.toHex()).toEqual('#000000');
     });
 
 });

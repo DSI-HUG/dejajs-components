@@ -10,7 +10,6 @@
 @import '../../component/date-picker/date-picker-theme';
 @import '../../component/date-selector/date-selector-theme';
 @import '../../component/loaders/list-loader-theme';
-@import '../../component/markdown/markdown-theme';
 @import '../../component/message-box/message-box-theme';
 @import '../../component/popup/popup-theme';
 @import '../../component/combo-list/combo-list-theme';
@@ -22,26 +21,19 @@
 @import '../../component/viewport/viewport-theme';
 @import '../../component/numeric-stepper/numeric-stepper-theme';
 @import './menu-theme';
-
-@import '../utils/form-validation';
+@import './popup';
 @import '../components/loader';
-
 // Create a theme.
 @mixin deja-theme($custom-theme) {
     @include loader-theme($custom-theme);
-
-    @include form-validation-theme($custom-theme);
     @include deja-material-theme($custom-theme);
-
     @include accordion-theme($custom-theme);
     @include chips-theme($custom-theme);
     @include circular-picker-theme($custom-theme);
-    @include combo-list-theme($custom-theme);
     @include data-grid-theme($custom-theme);
     @include date-picker-theme($custom-theme);
     @include date-selector-theme($custom-theme);
     @include list-loader-theme($custom-theme);
-    @include markdown-theme($custom-theme);
     @include menu-theme($custom-theme);
     @include message-box-theme($custom-theme);
     @include numeric-stepper-theme($custom-theme);
@@ -52,4 +44,5 @@
     @include tooltip-theme($custom-theme);
     @include tree-list-theme($custom-theme);
     @include viewport-theme($custom-theme);
+    @include deja-popup();    
 }

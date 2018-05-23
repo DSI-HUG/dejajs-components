@@ -8,7 +8,6 @@
 import { PortalModule } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule, MatDialogModule, MatIconModule, MatToolbarModule } from '@angular/material';
 import { DejaIFrameModule } from '../iframe/index';
 import { DejaOverlayModule } from '../overlay/index';
@@ -33,11 +32,7 @@ import { DejaPopupService } from './service/popup.service';
         DejaPopupBoxComponent,
         DejaPopupActionsComponent,
     ],
-    entryComponents: [
-        DejaPopupComponent,
-        DejaPopupAdvancedComponent,
-        DejaPopupActionsComponent,
-    ],
+    entryComponents: [DejaPopupComponent, DejaPopupAdvancedComponent, DejaPopupActionsComponent],
     exports: [
         DejaPopupComponent,
         DejaPopupToolbarComponent,
@@ -56,14 +51,11 @@ import { DejaPopupService } from './service/popup.service';
         MatDialogModule,
         DejaIFrameModule,
         DejaOverlayModule,
-        FlexLayoutModule,
         PortalModule,
     ],
-    providers: [
-        DejaPopupService,
-    ],
+    providers: [DejaPopupService],
 })
-export class DejaPopupModule { }
+export class DejaPopupModule {}
 
 export * from './service/popup.service';
 export * from './model/popup-action.model';

@@ -15,13 +15,12 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import * as _ from 'lodash';
 import { Observable } from 'rxjs/Observable';
-import { IDejaGridColumnLayoutEvent } from '../../../index';
 import { DejaClipboardModule } from '../../common/core/clipboard/index';
 import { GroupingService } from '../../common/core/grouping/grouping.service';
 import { ItemListService } from '../../common/core/item-list/item-list.service';
 import { ViewPortService } from '../../common/core/item-list/viewport.service';
 import { SortingService } from '../../common/core/sorting/sorting.service';
-import { IDejaGridColumn } from './data-grid-column/data-grid-column';
+import { IDejaGridColumn, IDejaGridColumnLayoutEvent } from './data-grid-column/data-grid-column';
 import { DejaGridComponent } from './data-grid.component';
 import { DejaGridModule } from './index';
 
@@ -407,10 +406,6 @@ class DejaGridContainerComponent {
         this.columns = _.cloneDeep(this.fructsColumns);
     }
 
-    public testDone() {
-        return true;
-    }
-
     public eventCalled() {
         return true;
     }
@@ -553,7 +548,7 @@ describe('DejaGridComponent', () => {
         expect(gridInstance.depthMax).toBe(0);
     }));
 
-    it('should set and ensure the current cell', async(() => {
+    it('should set and ensure the current cell', (done) => {
         let pass = 0;
 
         observeViewPort$()
@@ -584,20 +579,15 @@ describe('DejaGridComponent', () => {
                         expect(listElement.scrollLeft).toBeGreaterThanOrEqual(250);
                         expect(currentCells.length).toBe(12);
                         expect(currentRow.length).toBe(1);
-                        gridContainerInstance.testDone();
+                        done();
                         break;
                 }
             });
 
-        spyOn(gridContainerInstance, 'testDone');
-
         fixture.detectChanges();
-        fixture.whenStable().then(() => {
-            expect(gridContainerInstance.testDone).toHaveBeenCalled();
-        });
-    }));
+    });
 
-    it('should group with the grouping area', async(() => {
+    it('should group with the grouping area', (done) => {
         let pass = 0;
 
         observeViewPort$()
@@ -629,7 +619,7 @@ describe('DejaGridComponent', () => {
                     default:
                         expect(groupChips.length).toBe(0);
                         expect(vp.items.length).toBe(12);
-                        gridContainerInstance.testDone();
+                        done();
                         break;
                 }
             });
@@ -641,17 +631,15 @@ describe('DejaGridComponent', () => {
             gridContainerInstance.eventCalled();
         });
 
-        spyOn(gridContainerInstance, 'testDone');
-        spyOn(gridContainerInstance, 'eventCalled');
+        const spy = spyOn(gridContainerInstance, 'eventCalled');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
-            expect(gridContainerInstance.testDone).toHaveBeenCalled();
-            expect(gridContainerInstance.eventCalled).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
-    }));
+    });
 
-    it('should sort when user click on the header', async(() => {
+    it('should sort when user click on the header', (done) => {
         let pass = 0;
 
         const sendMouseClick = (element: DebugElement) => {
@@ -705,7 +693,7 @@ describe('DejaGridComponent', () => {
                     default:
                         expect((<any>vp.items[0]).name).toEqual('Banana');
                         expect((<any>vp.items[8]).name).toEqual('Mango');
-                        gridContainerInstance.testDone();
+                        done();
                         break;
                 }
             });
@@ -715,17 +703,15 @@ describe('DejaGridComponent', () => {
             gridContainerInstance.eventCalled();
         });
 
-        spyOn(gridContainerInstance, 'testDone');
-        spyOn(gridContainerInstance, 'eventCalled');
+        const spy = spyOn(gridContainerInstance, 'eventCalled');
 
         fixture.detectChanges();
         fixture.whenStable().then(() => {
-            expect(gridContainerInstance.testDone).toHaveBeenCalled();
-            expect(gridContainerInstance.eventCalled).toHaveBeenCalled();
+            expect(spy).toHaveBeenCalled();
         });
-    }));
+    });
 
-    it('should size the column when user click on the header separator', async(() => {
+    it('should size the column when user click on the header separator', (done) => {
         let pass = 0;
 
         const sendMouseMove = (element: DebugElement) => {
@@ -796,20 +782,15 @@ describe('DejaGridComponent', () => {
 
                     default:
                         expect(cells[2].nativeElement.clientWidth).toBeGreaterThan(10);
-                        gridContainerInstance.testDone();
+                        done();
                         break;
                 }
             });
 
-        spyOn(gridContainerInstance, 'testDone');
-
         fixture.detectChanges();
-        fixture.whenStable().then(() => {
-            expect(gridContainerInstance.testDone).toHaveBeenCalled();
-        });
-    }));
+    });
 
-    it('should refresh view port if windows is resized', async(() => {
+    it('should refresh view port if windows is resized', (done) => {
         let pass = 0;
 
         observeViewPort$()
@@ -834,21 +815,16 @@ describe('DejaGridComponent', () => {
 
                     default:
                         expect(cells.length).toBeGreaterThan(0);
-                        gridContainerInstance.testDone();
+                        done();
                 }
             });
 
         gridContainerInstance.columns = gridContainerInstance.percentColumns;
 
-        spyOn(gridContainerInstance, 'testDone');
-
         fixture.detectChanges();
-        fixture.whenStable().then(() => {
-            expect(gridContainerInstance.testDone).toHaveBeenCalled();
-        });
-    }));
+    });
 
-    it('should navigate with the keyboard', async(() => {
+    it('should navigate with the keyboard', (done) => {
         let pass = 0;
 
         const sendKeyDown = (code: string) => {
@@ -890,19 +866,14 @@ describe('DejaGridComponent', () => {
                     default:
                         expect(currentCells.length).toBeGreaterThan(0);
                         expect(currentCells[0] && currentCells[0].attributes.colindex).toBe('0');
-                        gridContainerInstance.testDone();
+                        done();
                 }
             });
 
-        spyOn(gridContainerInstance, 'testDone');
-
         fixture.detectChanges();
-        fixture.whenStable().then(() => {
-            expect(gridContainerInstance.testDone).toHaveBeenCalled();
-        });
-    }));
+    });
 
-    it('should drag and drop a column from header to header', async(() => {
+    it('should drag and drop a column from header to header', (done) => {
         let gridHeader: DebugElement;
         let pass = 0;
 
@@ -1013,20 +984,15 @@ describe('DejaGridComponent', () => {
                             overEventInit.clientX = overTargetBounds.right - 2;
                             overTarget.dispatchEvent(new DragEvent('dragover', overEventInit as any));
                             fixture.detectChanges();
-                            gridContainerInstance.testDone();
+                            done();
                         });
                 }
             });
 
-        spyOn(gridContainerInstance, 'testDone');
-
         fixture.detectChanges();
-        fixture.whenStable().then(() => {
-            expect(gridContainerInstance.testDone).toHaveBeenCalled();
-        });
-    }));
+    });
 
-    it('should leave the drag and drop when we are outside the control', async(() => {
+    it('should leave the drag and drop when we are outside the control', (done) => {
         let gridHeader: DebugElement;
         let dragHeaderElement: HTMLElement;
 
@@ -1110,20 +1076,15 @@ describe('DejaGridComponent', () => {
                             overEventInit.clientX = overTargetBounds.right - 2;
                             overTarget.dispatchEvent(new DragEvent('dragover', overEventInit as any));
                             fixture.detectChanges();
-                            gridContainerInstance.testDone();
+                            done();
                         });
                 }
             });
 
-        spyOn(gridContainerInstance, 'testDone');
-
         fixture.detectChanges();
-        fixture.whenStable().then(() => {
-            expect(gridContainerInstance.testDone).toHaveBeenCalled();
-        });
-    }));
+    });
 
-    it('should drag and drop an header to the group area', async(() => {
+    it('should drag and drop an header to the group area', (done) => {
         let gridHeader: DebugElement;
         let gridGroupArea: DebugElement;
         let dragHeaderElement: HTMLElement;
@@ -1302,15 +1263,10 @@ describe('DejaGridComponent', () => {
                         expect(vp.items.length).toBe(24);
                         expect((<any>vp.items[0]).$text).toEqual('#FF6F00');
                         expect(chipsDraggable.length).toBe(1);
-                        gridContainerInstance.testDone();
+                        done();
                 }
             });
 
-        spyOn(gridContainerInstance, 'testDone');
-
         fixture.detectChanges();
-        fixture.whenStable().then(() => {
-            expect(gridContainerInstance.testDone).toHaveBeenCalled();
-        });
-    }));
+    });
 });

@@ -58,7 +58,7 @@ export class CloningService {
 
                     } else if (Array.isArray(val)) {
                         // just clone arrays (and recursive clone objects inside)
-                        const clone = [];
+                        const clone = [] as any[];
                         val.forEach((item, index) => {
                             clone[index] = cloneInternal(item);
                         });

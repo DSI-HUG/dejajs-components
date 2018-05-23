@@ -1,0 +1,22 @@
+<mat-tab-group [selectedIndex]="tabIndex" (selectedTabChange)="tabIndex = $event.index">
+	<!--<mat-tab label="OVERVIEW">-->
+	<!--<mat-card class="demo-card demo-basic">-->
+	<!--TODO-->
+	<!--</mat-card>-->
+	<!--</mat-tab>-->
+	<mat-tab label="API REFERENCE"></mat-tab>
+	<mat-tab label="EXAMPLES"></mat-tab>
+</mat-tab-group>
+
+<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
+	TODO
+</mat-card>
+
+<mat-card class="demo-card" *ngIf="tabIndex === 1">
+	<mat-toolbar color="primary">Global Events</mat-toolbar>
+	<mat-card-content>
+		This page is registered in to a global event with the GlobalEventService. Every seconds, it will receive a message raised from the index.html outside Angular.
+		<br>
+		<span>{{ model.date.toLocaleTimeString() }}</span>
+	</mat-card-content>
+</mat-card>

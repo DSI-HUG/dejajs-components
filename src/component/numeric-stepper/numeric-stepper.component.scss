@@ -10,22 +10,22 @@
             margin: 0 !important;
             -moz-appearance: textfield !important;
         }
-        .mat-input-wrapper {
-            .mat-input-flex {
+        .mat-form-field-wrapper {
+            .mat-form-field-flex {
                 padding-right: 0.5rem;
             }
         }
-        .mat-input-infix {
+        .mat-form-field-infix {
             flex: 0 0 auto;
             width: auto;
-            .mat-input-placeholder-wrapper {
+            .mat-form-field-label-wrapper {
                 overflow: visible;
                 label {
                     overflow: visible;
                 }
             }
         }
-        .mat-input-suffix {
+        .mat-form-field-suffix {
             color: rgba(0, 0, 0, 0.54);
             flex: 1 1 auto;
         }

@@ -35,8 +35,8 @@ export class DejaRangeComponent implements ControlValueAccessor {
     // error emitter, used to notify the outside when forbidden actions are performed
     @Output() public errorFeedback: EventEmitter<any> = new EventEmitter();
     // custom templates
-    @ContentChild('rangeTemplate') protected rangeTemplate;
-    @ContentChild('separatorTemplate') protected separatorTemplate;
+    @ContentChild('rangeTemplate') protected rangeTemplate: any;
+    @ContentChild('separatorTemplate') protected separatorTemplate: any;
     // minimum range percentage, used to avoid 2 separator being on the same visual space
     private minimumRangePercentage = 0.01;
 
@@ -65,6 +65,7 @@ export class DejaRangeComponent implements ControlValueAccessor {
     @Input()
     public set disabled(value: boolean | string) {
         this._disabled = coerceBooleanProperty(value);
+        this.changeDetectorRef.markForCheck();
     }
 
     public get disabled() {
@@ -90,7 +91,7 @@ export class DejaRangeComponent implements ControlValueAccessor {
     // ControlValueAccessor implementation
     public writeValue(ranges: IRange[]): void {
         if (!!ranges && !!ranges.length) {
-            const host = this.elementRef.nativeElement.firstChild as HTMLElement;
+            const host = this.elementRef.nativeElement.firstElementChild as HTMLElement;
             const hostWidth = host.getBoundingClientRect().width;
             const totalDifference = ranges[ranges.length - 1].max - ranges[0].min;
 
@@ -107,6 +108,11 @@ export class DejaRangeComponent implements ControlValueAccessor {
             this.changeDetectorRef.markForCheck();
         }
     }
+
+    public setDisabledState(isDisabled: boolean) {
+        this.disabled = isDisabled;
+    }
+    // End of ControlValueAccessor implementation
 
     @HostListener('window:resize', ['$event'])
     public onResize() {
@@ -227,7 +233,7 @@ export class DejaRangeComponent implements ControlValueAccessor {
             const kill$ = Observable.merge(up$, leave$)
                 .first()
                 .do(() => {
-                    const host = this.elementRef.nativeElement.firstChild as HTMLElement;
+                    const host = this.elementRef.nativeElement.firstElementChild as HTMLElement;
                     host.ownerDocument.body.classList.remove('noselect');
 
                     this._onChangeCallback(this._ranges);
@@ -246,7 +252,7 @@ export class DejaRangeComponent implements ControlValueAccessor {
                     const totalDifference = ranges[ranges.length - 1].max - ranges[0].min;
 
                     // calculate new width of the range, get host width
-                    const host = this.elementRef.nativeElement.firstChild as HTMLElement;
+                    const host = this.elementRef.nativeElement.firstElementChild as HTMLElement;
                     const hostWidth = host.getBoundingClientRect().width;
 
                     // avoid drag

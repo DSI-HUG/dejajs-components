@@ -1,0 +1,18 @@
+{
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "outDir": "../tmp/app",
+        "baseUrl": "./",
+        "module": "es2015",
+        "types": []
+    },
+    "exclude": [
+        "test.ts",
+        "**/*.spec.ts",
+        "../node_modules/@deja-js/component/**/*.spec.ts"
+    ],
+    "include": [
+        "./**/*",
+        "../node_modules/@deja-js/component/**/*"
+    ]
+}

@@ -79,7 +79,8 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
      */
     @Input() public tabIndex = 0;
 
-    @ContentChild('tileTemplate') protected tileTemplate;
+    @ContentChild('tileTemplate')
+    protected tileTemplate: any;
 
     // NgModel implementation
     protected onTouchedCallback: () => void = noop;
@@ -138,7 +139,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
             .takeWhile(() => this.isAlive)
             .subscribe((event) => this.layoutCompleted.emit(event));
 
-        this.keyup$ = Observable.fromEvent(element.ownerDocument, 'keyup');
+        this.keyup$ = Observable.fromEvent(element.ownerDocument, 'keyup') as Observable<KeyboardEvent>;
 
         Observable.fromEvent(window, 'resize')
             .takeWhile(() => this.isAlive)
@@ -199,7 +200,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
             this.delete$sub = this.keyup$
                 .filter(() => this.layoutProvider.designMode)
                 .filter((event: KeyboardEvent) => {
-                    const keyCode = event.keyCode || KeyCodes[event.code];
+                    const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
                     return keyCode === KeyCodes.Delete && this.hasFocus;
                 })
                 .subscribe(() => this.layoutProvider.deleteSelection());
@@ -215,7 +216,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
         if (coerceBooleanProperty(value) && !this.copy$sub) {
             this.copy$sub = this.keyup$
                 .filter((event: KeyboardEvent) => {
-                    const keyCode = event.keyCode || KeyCodes[event.code];
+                    const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
                     return keyCode === KeyCodes.KeyC && event.ctrlKey && this.hasFocus;
                 })
                 .subscribe(() => {
@@ -234,7 +235,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
             this.cut$sub = this.keyup$
                 .filter(() => this.layoutProvider.designMode)
                 .filter((event: KeyboardEvent) => {
-                    const keyCode = event.keyCode || KeyCodes[event.code];
+                    const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
                     return keyCode === KeyCodes.KeyX && event.ctrlKey && this.hasFocus;
                 })
                 .subscribe(() => {
@@ -253,7 +254,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
             this.paste$sub = this.keyup$
                 .filter(() => this.layoutProvider.designMode)
                 .filter((event: KeyboardEvent) => {
-                    const keyCode = event.keyCode || KeyCodes[event.code];
+                    const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
                     return keyCode === KeyCodes.KeyV && event.ctrlKey && this.hasFocus;
                 })
                 .subscribe(() => this.paste());
@@ -265,8 +266,8 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     }
 
     @Input()
-    public set selectedTiles(selectedIds: string[]) {
-        this.layoutProvider.selectedTiles = selectedIds;
+    public set selectedTiles(selectedtiles: Array<IDejaTile | string>) {
+        this.layoutProvider.selectedTiles = selectedtiles.map((tile) => typeof tile === 'string' ? tile : (<IDejaTile>tile).id);
     }
 
     // ************* ControlValueAccessor Implementation **************
@@ -399,7 +400,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
             dragOver: (_dragContext, dragCursor) => {
                 this.layoutProvider.dragover$.next(dragCursor);
             },
-            dragLeave: (_dragContext, _dragCursor) => {
+            dragLeave: (_dragContext) => {
                 this.layoutProvider.dragleave$.next();
             },
         } as IDejaMouseDroppableContext;

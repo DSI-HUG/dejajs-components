@@ -1,5 +1,5 @@
-dist: trusty
 sudo: required
+dist: trusty
 language: node_js
 addons:
   chrome: stable
@@ -29,7 +29,7 @@ before_script:
   --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 3000x1200x16"
 - sleep 3
 script:
-- bash ./tools/scripts/validation.sh
+- npm run build
 - bash ./tools/scripts/sonar.sh
 env:
   global:
@@ -50,7 +50,3 @@ after_deploy:
 - cd ..
 - bash ./tools/scripts/tag.sh
 - bash ./tools/scripts/deploy.sh
-after_failure:
-- bash ./tools/scripts/logs.sh
-after_success:
-- bash ./tools/scripts/logs.sh

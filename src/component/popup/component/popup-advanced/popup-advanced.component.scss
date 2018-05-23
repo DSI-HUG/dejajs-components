@@ -1,7 +1,11 @@
 deja-popup-advanced {
+    width: 100%;
+
     .deja-popup-container {
         height: 100%;
         position: relative;
+        display: flex;
+        flex-direction: column;
         .dialog-overlay {
             height: 100%;
             width: 100%;
@@ -12,6 +16,11 @@ deja-popup-advanced {
             cursor: grabbing;
         }
         .mat-dialog-content {
+            height: 100%;
+            // width: 100%;
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
             &.frame-padding {
                 padding: 24px;
                 margin: 0;
@@ -28,8 +37,12 @@ deja-popup-advanced {
                 height: 100%;
             }
         }
-        .mat-dialog-actions:last-child {
-            margin: 0 24px !important;
+        .mat-dialog-actions {
+            flex: 1 1 auto;
+            padding-bottom: 18px;
+            &.mat-dialog-actions:last-child {
+                margin: 0 24px !important;
+            }
         }
     }
 }

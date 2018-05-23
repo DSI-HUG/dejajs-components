@@ -25,8 +25,8 @@ export class DejaDialogComponent implements OnDestroy {
     /** Event emitted when dialog close action is called */
     @Output() public closed = new EventEmitter();
 
-    @ContentChild('okaction') private okButton;
-    @ContentChild('cancelaction') private cancelButton;
+    @ContentChild('okaction') private okButton: any;
+    @ContentChild('cancelaction') private cancelButton: any;
 
     private isAlive = true;
 
@@ -62,7 +62,6 @@ export class DejaDialogComponent implements OnDestroy {
      */
     @HostListener('click', ['$event'])
     public close(event: MouseEvent) {
-        event.preventDefault();
 
         let close = true;
 
@@ -78,6 +77,7 @@ export class DejaDialogComponent implements OnDestroy {
 
         if (close) {
             this.closed.emit();
+            event.preventDefault();
         }
     }
 }

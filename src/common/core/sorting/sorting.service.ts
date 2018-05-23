@@ -53,11 +53,11 @@ export class SortingService {
      * @param childrenField Champ à utiliser pour la recherche dans les enfants d'un parent.
      * @return Observable résolue par la fonction.
      */
-    public sortTree$(tree: any[], sortInfos: ISortInfos | ISortInfos[], childrenField?: string) {
+    public sortTree$(tree: any[], sortInfos: ISortInfos | ISortInfos[], childrenField?: string): Observable<any[]> {
         childrenField = childrenField || 'items';
         return this.sort$(tree, sortInfos)
             .switchMap((child) => child)
-            .flatMap((child) => {
+            .switchMap((child) => {
                 if (!child || !child[childrenField]) {
                     return Observable.of(child);
                 }

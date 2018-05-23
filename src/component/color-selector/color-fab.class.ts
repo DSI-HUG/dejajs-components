@@ -15,14 +15,14 @@ export class DejaColorFab {
     public active$: Subject<boolean>;
     public disabled$: Subject<boolean>;
 
-    constructor(private _color: Color, private _disabled: boolean, private _active: boolean) {
+    constructor(private _color: Color, private _disabled = false, private _active = false) {
         this.color$ = new BehaviorSubject<Color>(_color);
         this.disabled$ = new BehaviorSubject<boolean>(_disabled);
         this.active$ = new BehaviorSubject<boolean>(_active);
     }
 
     public set color(value: Color) {
-        this.color$.next(value);
+        this.color$.next(this._color = value);
     }
 
     public get color() {
@@ -30,7 +30,7 @@ export class DejaColorFab {
     }
 
     public set disabled(value: boolean) {
-        this.disabled$.next(value);
+        this.disabled$.next(this._disabled = value);
     }
 
     public get disabled() {
@@ -38,7 +38,7 @@ export class DejaColorFab {
     }
 
     public set active(value: boolean) {
-        this.active$.next(value);
+        this.active$.next(this._active = value);
     }
 
     public get active() {

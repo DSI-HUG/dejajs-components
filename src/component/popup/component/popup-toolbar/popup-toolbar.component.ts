@@ -47,35 +47,35 @@ export class DejaPopupToolbarComponent implements OnInit {
 
     public defaultActions: DejaPopupAction[];
 
-    private buttonClose: DejaPopupAction = {
+    private buttonClose = {
         name: 'toolbar-close',
         icon: 'close',
         label: 'Close',
-    };
+    } as DejaPopupAction;
 
-    private buttonFullscreen: DejaPopupAction = {
+    private buttonFullscreen = {
         name: 'toolbar-fullscreen',
         icon: 'fullscreen',
         label: 'Fullscreen',
-    };
+    } as DejaPopupAction;
 
-    private buttonFullscreenExit: DejaPopupAction = {
+    private buttonFullscreenExit = {
         name: 'toolbar-fullscreen-exit',
         icon: 'fullscreen_exit',
         label: 'Exit fullscreen',
-    };
+    } as DejaPopupAction;
 
-    private buttonMinimize: DejaPopupAction = {
+    private buttonMinimize = {
         name: 'toolbar-minify',
         icon: 'remove',
         label: 'Dock',
-    };
+    } as DejaPopupAction;
 
-    public buttonMove: DejaPopupAction = {
+    public buttonMove = {
         name: 'toolbar-move',
         icon: 'move',
         label: 'Move',
-    };
+    } as DejaPopupAction;
 
     constructor() {
         this.defaultActions = [this.buttonClose];
@@ -93,7 +93,7 @@ export class DejaPopupToolbarComponent implements OnInit {
 
     public toggleFullScreenButton() {
         this.isFullScreen = !this.isFullScreen;
-        let formerButton;
+        let formerButton: DejaPopupAction;
         let newButton;
         if (this.isFullScreen) {
             formerButton = this.buttonFullscreen;

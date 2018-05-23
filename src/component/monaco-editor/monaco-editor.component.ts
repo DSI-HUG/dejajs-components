@@ -7,7 +7,6 @@
  */
 
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ResizeSensor } from 'css-element-queries';
 import { MonacoEditorService } from './monaco-editor.service';
 import { EditorOptions } from './options/editor-options.model';
 import { EditorScrollbarOptions } from './options/editor-scrollbar-options.model';
@@ -25,7 +24,7 @@ declare const monaco: any;
     styleUrls: [
         './monaco-editor.component.scss',
     ],
-    template: `<div #editor class='monaco-editor'></div>`,
+    template: `<div #editor resize-listener (sizeChanged)="onResize()" class='monaco-editor'></div>`,
 })
 export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnChanges {
     /**
@@ -358,9 +357,9 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
      */
     @Input()
     public set language(val: 'bat' | 'c' | 'cpp' | 'csharp' | 'css' | 'dockerfile' | 'fsharp' | 'go' | 'handlebars' | 'html' | 'ini' | 'jade' | 'javascript' | 'json' | 'less' | 'lua' | 'markdown' | 'objective-c' | 'php' | 'csharp' | 'plaintext' | 'postiats' | 'powershell' | 'python' | 'r' | 'razor' | 'ruby' | 'scss' | 'sql' | 'swift' | 'typescript' | 'vb' | 'xml' | 'yaml') {
-        if(val) {
+        if (val) {
             this._language = val;
-            if(this._editor) {
+            if (this._editor) {
                 this.ngAfterViewInit();
             }
         }
@@ -371,7 +370,8 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
      * Value to compare with the Value input
      * Used only when `isDiffEditor` is set to `true`
      */
-    @Input() set valueToCompare(v: string) {
+    @Input()
+    public set valueToCompare(v: string) {
         if (v !== this._valueToCompare) {
             this._valueToCompare = v;
 
@@ -387,7 +387,8 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
     /**
      * Value to show in the editor
      */
-    @Input() set value(v: string) {
+    @Input()
+    public set value(v: string) {
         if (v !== this._value) {
             this._value = v;
 
@@ -405,19 +406,21 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
     /**
      * Event triggered when value change
      */
-    @Output() public valueChange = new EventEmitter();
+    @Output()
+    public valueChange = new EventEmitter();
     /**
      * Event triggered when valueToCompare change
      */
-    @Output() public valueToCompareChange = new EventEmitter();
+    @Output()
+    public valueToCompareChange = new EventEmitter();
 
-    @ViewChild('editor') private editorContent: ElementRef;
+    @ViewChild('editor')
+    private editorContent: ElementRef;
 
     private _editor: any;
     private _value = '';
     private _valueToCompare = '';
     private _language: 'bat' | 'c' | 'cpp' | 'csharp' | 'css' | 'dockerfile' | 'fsharp' | 'go' | 'handlebars' | 'html' | 'ini' | 'jade' | 'javascript' | 'json' | 'less' | 'lua' | 'markdown' | 'objective-c' | 'php' | 'csharp' | 'plaintext' | 'postiats' | 'powershell' | 'python' | 'r' | 'razor' | 'ruby' | 'scss' | 'sql' | 'swift' | 'typescript' | 'vb' | 'xml' | 'yaml';
-    private resizeSensor: ResizeSensor;
 
     /**
      * Constructor
@@ -456,10 +459,6 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
      */
     public dispose() {
         const myDiv: HTMLDivElement = this.editorContent.nativeElement;
-        if(this.resizeSensor) {
-            this.resizeSensor = null;
-        }
-
         if (this._editor) {
             // this._editor.dispose();
             while (myDiv.hasChildNodes()) {
@@ -478,7 +477,7 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
         // Manually set monaco size because MonacoEditor doesn't work with Flexbox css
         const myDiv: HTMLDivElement = this.editorContent.nativeElement;
         myDiv.setAttribute('style', `height: 100%; width: 100%;`);
-        if(this._editor) {
+        if (this._editor) {
             this._editor.layout();
         }
     }
@@ -498,8 +497,6 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
         }
 
         this.onResize();
-
-        this.resizeSensor = new ResizeSensor(myDiv, () => this.onResize());
 
         // Trigger on change event for simple editor
         this.getOriginalModel().onDidChangeContent(() => {
@@ -612,7 +609,7 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
         options.value = this._value;
         options.language = this._language;
 
-        Object.keys(options).forEach((key) => options[key] === undefined && delete options[key]); // Remove all undefined properties
+        Object.keys(options).forEach((key) => (<any>options)[key] === undefined && delete (<any>options)[key]); // Remove all undefined properties
         return options;
     }
 

@@ -1,0 +1,82 @@
+<mat-tab-group [selectedIndex]="tabIndex" (selectedTabChange)="tabIndex = $event.index">
+    <!--<mat-tab label="OVERVIEW">-->
+    <!--<mat-card class="demo-card demo-basic">-->
+    <!--TODO-->
+    <!--</mat-card>-->
+    <!--</mat-tab>-->
+    <mat-tab label="INTRODUCTION"> </mat-tab>
+    <mat-tab label="EXAMPLES"> </mat-tab>
+</mat-tab-group>
+
+<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
+    <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/demo-app/reactive-form/readme.md'"></deja-markdown>
+</mat-card>
+
+<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 1">
+    <mat-toolbar id="toolbar" color="primary">
+        <span>Reactive Form</span>
+    </mat-toolbar>
+    <mat-card-content id="reactiveFormContainer" fxLayout="row">
+        <form novalidate [formGroup]="form" fxFlex="0 0 55%" fxLayout="column" (submit)="onSubmit()">
+            <h3 fxFlex="0 0 auto">Material Input</h3>
+            <mat-form-field fxFlex="0 0 auto">
+                <input matInput pending-onfocus formControlName="name" placeholder="Name" autocomplete="off">
+                <mat-error *ngIf="!!getError('name')">{{ getError('name') }}</mat-error>
+            </mat-form-field>
+            <h3 fxFlex="0 0 auto">Deja Select</h3>
+            <deja-select fxFlex="0 0 auto" placeholder="Country" selectionClearable formControlName="country" textField="naqme" valueField="code" [models]="countries">
+                <ng-template #errorTemplate *ngIf="!!getError('country')">
+                    <span>{{ getError('country') }}</span>
+                </ng-template>
+            </deja-select>
+            <h3 fxFlex="0 0 auto">Deja Select (Multiselect)</h3>
+            <deja-select fxFlex="0 0 auto" type="multiselect" placeholder="Visited Countries" formControlName="visitedCountries" textField="naqme" valueField="code" [models]="countries">
+                <ng-template #errorTemplate *ngIf="!!getError('visitedCountries')">
+                    <span>{{ getError('visitedCountries') }}</span>
+                </ng-template>
+            </deja-select>
+            <h3 fxFlex="0 0 auto">Deja Date Picker</h3>
+            <div class="placeholder" fxFlex="0 0 auto">Birth Date</div>
+            <deja-date-picker formControlName="birthDate">
+                <ng-template #errorTemplate *ngIf="!!getError('birthDate')">
+                    <span>{{ getError('birthDate') }}</span>
+                </ng-template>
+            </deja-date-picker>
+            <h3 fxFlex="0 0 auto">Deja Select</h3>
+            <deja-select fxFlex="0 0 auto" placeholder="Prefered Juice" selectionClearable formControlName="preferedJuice" [models]="fructs">
+                <ng-template #errorTemplate *ngIf="!!getError('preferedJuice')">
+                    <span>{{ getError('preferedJuice') }}</span>
+                </ng-template>
+            </deja-select>
+            <h3 fxFlex="0 0 auto">Deja TreeList (String list and model)</h3>
+            <deja-tree-list fxFlex="0 0 auto" formControlName="preferedFruct" [models]="fructs"></deja-tree-list>
+            <h3 fxFlex="0 0 auto">Deja Circular Picker</h3>
+            <div class="placeholder" fxFlex="0 0 auto">Size (cm)</div>
+            <deja-circular-picker formControlName="size" [ranges]="[{ min: 110, max: 219, labelInterval: 5 }]"></deja-circular-picker>
+            <h3 fxFlex="0 0 auto">Deja Color Selector</h3>
+            <div class="placeholder" fxFlex="0 0 auto">Preffered Color</div>
+            <deja-color-selector fxFlex="0 0 auto" [colors]="materialColors.colors" formControlName="color"></deja-color-selector>
+            <h3 fxFlex="0 0 auto">Deja Color Picker</h3>
+            <div class="placeholder" fxFlex="0 0 auto">House Color</div>
+            <deja-color-picker fxFlex="0 0 auto" [colors]="materialColors.colors" formControlName="color2"></deja-color-picker>
+            <h3 fxFlex="0 0 auto">Deja Chips</h3>
+            <div [class.error]="!!getError('skillsErrors')" class="placeholder" fxFlex="0 0 auto">Skills</div>
+            <deja-chips fxFlex="0 0 auto" formControlName="skills"></deja-chips>
+            <mat-form-field fxFlex="0 0 auto" id="addskill">
+                <input formControlName="skillsErrors" #skill matInput (keydown)="onSkillKeyDown($event)" placeholder="Add Skill" autocomplete="off">
+                <div matSuffix><i (click)="onAddSkill(skill)" class="material-icons matSuffix">add</i></div>
+                <mat-error *ngIf="!!getError('skillsErrors')">{{ getError('skillsErrors') }}</mat-error>
+            </mat-form-field>
+            <h3 fxFlex="0 0 auto">Deja Editable</h3>
+            <div [class.error]="!!getError('remark')" class="placeholder" fxFlex="0 0 auto">Remark</div>
+            <span [deja-editable]="true" formControlName="remark" multiline></span>
+            <span class="error errorfld" *ngIf="!!getError('remark')">{{ getError('remark') }}</span>
+            <h3 fxFlex="0 0 auto">Deja Range</h3>
+            <deja-range [readOnly]="false" [step]="1" formControlName="ranges"></deja-range>
+        </form>
+        <span fxFlex="0 0 40%" fxFlexOffset="5%">
+			<h4>Model :</h4>
+			<pre>{{formMap | json}}</pre>
+		</span>
+    </mat-card-content>
+</mat-card>
