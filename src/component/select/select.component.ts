@@ -487,6 +487,10 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return this._selectedItemsPosition;
     }
 
+    public get isSelectedItemsPositionBelow() {
+        return this._selectedItemsPosition === DejaSelectSelectionPosition.below; 
+    }
+
     @Input()
     /** Définit une valeur indiquant si les éléments selectionés doivent être masqué de la liste déroulante. */
     public set hideSelected(value: any) {
