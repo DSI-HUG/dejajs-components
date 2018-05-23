@@ -1,5 +1,5 @@
-<deja-chips [items]="selectedItems" [readonly]="readonly" [disabled]="disabled" (close)="onCloseClicked($event)" [itemTemplateExternal]="selectedTemplate" *ngIf="isMultiSelect && selectedItems.length > 0 && selectedItemsPosition===0" [textField]="_textField"></deja-chips>
-<mat-form-field cdk-overlay-origin id="input" [attr.wait]="waiter" [attr.multiselection]="isMultiSelect && selectedItems.length > 0" [attr.selection]="selectedItemsPosition===0 ? 'above' : null">
+<deja-chips [items]="selectedItems" [readonly]="readonly" [disabled]="disabled" (close)="onCloseClicked($event)" [itemTemplateExternal]="selectedTemplate" *ngIf="isMultiSelect && selectedItems.length > 0 && !isSelectedItemsPositionBelow" [textField]="getTextField()"></deja-chips>
+<mat-form-field cdk-overlay-origin id="input" [attr.wait]="waiter" [attr.multiselection]="isMultiSelect && selectedItems.length > 0" [attr.selection]="isSelectedItemsPositionBelow ? null : 'above'">
 	<input #inputElement deja-child-validator type="text" matInput [readonly]="isModeSelect || readonly" (ngModelChange)="queryChanged($event)" [ngModel]="query" [disabled]="disabled" autocomplete="off">
 	<mat-placeholder>
 		<ng-template [ngTemplateOutlet]="placeHolderTemplate"></ng-template>
@@ -19,11 +19,11 @@
 		<ng-template [ngTemplateOutlet]="matSuffix"></ng-template>
 	</span>
 </mat-form-field>
-<deja-chips [items]="selectedItems" [readonly]="readonly" [disabled]="disabled" (close)="onCloseClicked($event)" [itemTemplateExternal]="selectedTemplate" *ngIf="isMultiSelect && selectedItems.length > 0 && selectedItemsPosition===1" [textField]="_textField"></deja-chips>
+<deja-chips [items]="selectedItems" [readonly]="readonly" [disabled]="disabled" (close)="onCloseClicked($event)" [itemTemplateExternal]="selectedTemplate" *ngIf="isMultiSelect && selectedItems.length > 0 && isSelectedItemsPositionBelow" [textField]="getTextField()"></deja-chips>
 <deja-overlay #dejaOverlay [ownerElement]="overlayOwnerElement" [isVisible]="dropdownVisible" (closed)="hideDropDown()" [positions]="positions" [overlayOffsetY]="overlayOffsetY" [overlayOffsetX]="overlayOffsetX" [width]="dropDownWidth" widthForMobile="100%" (closed)="hideDropDown()">
     <div [id]="listElementId" class="deja-listcontainer" [attr.itemscount]="itemList && itemList.length" [attr.depth-max]="depthMax || null" [attr.keynav]="keyboardNavigation" [attr.vprowheight]="getViewPortRowHeight()" (mousedown)="mousedown($event)" (scroll)="scroll($event)" [style.max-height.px]="dropDownMaxHeight">
         <div *ngIf="vpBeforeHeight" [style.height.px]="vpBeforeHeight"></div>
-        <div *ngFor="let item of treeItemList; let index = index" #listitem [attr.class]="getItemClass(item)" [class.hide]="item.collapsing || item.expanding" [class.parent]="item.depth < depthMax" [class.collapsed]="item.collapsed" [class.selected]="item.selected" [attr.current]="(isMultiSelect && vpStartRow+index === currentItemIndex) || null" [class.unselectable]="item.selectable === false" [attr.depth]="depthMax ? item.depth : null" [attr.id]="item.id || null" [attr.flat]="vpStartRow + index" [style.height.px]="getItemHeight(item)" [class.odd]="(item.depth === depthMax && item.odd) || null">
+        <div *ngFor="let item of treeItemList; let index = index" #listitem [attr.class]="getItemClass(item)" [class.hide]="item.collapsing || item.expanding" [class.parent]="item.depth < depthMax" [class.collapsed]="item.collapsed" [class.selected]="item.selected" [attr.current]="(isMultiSelect && vpStartRow+index === getCurrentItemIndex()) || null" [class.unselectable]="item.selectable === false" [attr.depth]="depthMax ? item.depth : null" [attr.id]="item.id || null" [attr.flat]="vpStartRow + index" [style.height.px]="getItemHeight(item)" [class.odd]="(item.depth === depthMax && item.odd) || null">
             <span id="expandbtn"><i *ngIf="item.$items && item.$items.length" class="material-icons">keyboard_arrow_down</i></span>
             <ng-container *ngIf="(!item.$items || !parentItemTemplate) && (item.$items || !itemTemplate)">{{ getTextValue(item) }}</ng-container>
             <ng-container *ngIf="item.$items && parentItemTemplate">

@@ -11,9 +11,9 @@ deja-select {
 
 	#input {
 		width: 100%;
-        .mat-form-field-infix {
-            width: 100%;
-        }
+		.mat-form-field-infix {
+			width: 100%;
+		}
 		.mat-form-field-suffix {
 			[matSuffix] {
 				display: table-cell;
@@ -119,11 +119,14 @@ deja-select {
 
 .deja-overlay-container {
 	.deja-listcontainer {
-        width: 100%;
-        text-align: left;
-        overflow-y: auto;
+		width: 100%;
+		text-align: left;
+		overflow-y: auto;
 		div.listitem {
 			white-space: nowrap;
+			#expandbtn {
+				min-width: 24px;
+			}
 		}
 		&[valign="bottom"] {
 			border-top: none;

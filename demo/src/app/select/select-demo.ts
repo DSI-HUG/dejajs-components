@@ -208,25 +208,22 @@ export class SelectDemoComponent implements OnDestroy {
             if (group.loaded) {
                 return Observable.of(item);
             } else {
-                return self.confirmDialog()(item)
-                    .switchMap((itm) => {
-                        if (!itm) {
-                            return Observable.of(null);
-                        }
+                if (confirm('Please confirm your operation!')) {
+                    Observable.of(group)
+                        .delay(2000)
+                        .first()
+                        .subscribe((grp) => {
+                            // Simulate asynchronous load
+                            const original = this.groupedCountries.find((c) => c.displayName === grp.displayName);
+                            grp.items = original.items;
+                            grp.loaded = true;
+                            this.onExpandSelect.refresh();
+                        });
 
-                        Observable.of(group)
-                            .delay(2000)
-                            .first()
-                            .subscribe((grp) => {
-                                // Simulate asynchronous load
-                                const original = this.groupedCountries.find((c) => c.displayName === grp.displayName);
-                                grp.items = original.items;
-                                grp.loaded = true;
-                                this.onExpandSelect.refresh();
-                            });
-
-                        return Observable.of(itm);
-                    });
+                    return Observable.of(item);
+                } else {
+                    return Observable.of(null);
+                }
             }
         };
     }

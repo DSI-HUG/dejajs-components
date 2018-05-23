@@ -234,9 +234,9 @@ describe('DejaSelectComponent', () => {
         selectInstance.delaySearchTrigger = 500;
         expect(sl.delaySearchTrigger$.getValue()).toBe(500);
 
-        expect(selectInstance.selectedItemsPosition).toEqual(DejaSelectSelectionPosition.above);
-        selectInstance.selectedItemsPosition = DejaSelectSelectionPosition.below;
         expect(selectInstance.selectedItemsPosition).toEqual(DejaSelectSelectionPosition.below);
+        selectInstance.selectedItemsPosition = DejaSelectSelectionPosition.above;
+        expect(selectInstance.selectedItemsPosition).toEqual(DejaSelectSelectionPosition.above);
 
         const myItemListService = new ItemListService();
         expect(selectInstance.itemListService).toBeDefined();

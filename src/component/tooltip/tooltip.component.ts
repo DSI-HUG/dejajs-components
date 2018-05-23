@@ -161,7 +161,6 @@ export class DejaTooltipComponent implements OnInit, OnDestroy {
             throw (new Error('Name is required'));
         }
         this.params = this.tooltipService.params[this.name];
-
         this.ownerElement = (this.params.ownerElement as ElementRef).nativeElement || this.params.ownerElement;
 
         const model$ = this.params.model as Observable<any>;
