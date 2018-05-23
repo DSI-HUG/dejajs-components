@@ -488,7 +488,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     public get isSelectedItemsPositionBelow() {
-        return this._selectedItemsPosition === DejaSelectSelectionPosition.below; 
+        return this._selectedItemsPosition === DejaSelectSelectionPosition.below;
     }
 
     @Input()
