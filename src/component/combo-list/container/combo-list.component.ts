@@ -6,7 +6,9 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { Component } from '@angular/core';
+import { forwardRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IDejaAction } from '../../../common/core/action.interface';
 import { valueAccessorFactory } from '../model/combo-list.accessor';
 import { DejaComboListBase } from '../model/combo-list.base';

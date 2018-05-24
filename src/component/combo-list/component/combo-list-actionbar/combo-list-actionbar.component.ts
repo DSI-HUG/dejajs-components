@@ -13,7 +13,7 @@ import { IDejaAction } from '../../../../common/core/action.interface';
     templateUrl: './combo-list-actionbar.component.html',
     styleUrls: ['./combo-list-actionbar.component.scss']
 })
-export class DejaComboListActionbarComponent<T> {
+export class DejaComboListActionbarComponent {
 
     @Input() public disabled: boolean;
     @Input() public disableFastActions: boolean;
