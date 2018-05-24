@@ -16,6 +16,16 @@
     overflow-y: auto;
     background-color: white;
 
+    deja-combo-list-child {
+        flex: 1 1 auto;
+    }
+
+    deja-combo-list-actionbar {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+    }
+
     mat-list-item {
         text-overflow: ellipsis;
         white-space: nowrap;

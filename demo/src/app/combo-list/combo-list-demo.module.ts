@@ -5,10 +5,10 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
@@ -26,10 +26,13 @@ import { DejaComboListDemoComponent } from './combo-list.component';
     DejaComboListDemoComponent,
   ],
   exports: [
-    DejaComboListDemoComponent
+    DejaComboListDemoComponent,
   ],
   imports: [
     CommonModule,
+    FlexLayoutModule,
+    FormsModule,
+    ReactiveFormsModule,
     MatCardModule,
     MatCheckboxModule,
     MatDividerModule,

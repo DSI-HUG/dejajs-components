@@ -35,9 +35,11 @@ export class DejaComboListDemoComponent implements OnInit {
 
     public ngOnInit() {
         this.items = comboListData;
+
         this.itemToSelect = this.items.filter(
             (i: ComboListTestModel) => i.id < 10
         );
+
         this.itemSelected = this.items.filter(
             (i: ComboListTestModel) => i.id >= 10
         );
