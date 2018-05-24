@@ -1,18 +1,18 @@
-
 @import '~@angular/material/theming';
 
-:host{
+:host {
     @include mat-elevation(1);
     overflow-y: auto;
     background-color: white;
-    mat-list-item{
+
+    mat-list-option {
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
-        &.list-disabled{
-            /deep/> div{
-                cursor: not-allowed;
-            }
-        } 
+
+        &.list-disabled > div {
+            cursor: not-allowed;
+        }
     }
+
 }

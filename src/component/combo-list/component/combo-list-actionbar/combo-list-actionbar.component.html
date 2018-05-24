@@ -1,20 +1,22 @@
-<span fxFlex fxLayout="row" fxLayoutAlign="start center">
-    <button mat-icon-button title="Select all" (click)="srv.raiseAll()" color="primary" [disabled]="disabled" *ngIf="!disableFastActions">
+<span>&nbsp;</span>
+<span>
+    <button mat-icon-button title="Select all" (click)="srv.raiseAll()" [disabled]="disabled" *ngIf="!disableFastActions">
         <mat-icon class="md-24" aria-label="Select all">fast_forward</mat-icon>
     </button>
 </span>
-<span fxFlex fxLayout="row" fxLayoutAlign="start center">
-    <button mat-icon-button title="Select" (click)="srv.raiseBuffer()" color="primary" [disabled]="disabled">
+<span>
+    <button mat-icon-button title="Select" (click)="srv.raiseBuffer()" [disabled]="disabled">
         <mat-icon class="md-24" aria-label="Select">chevron_right</mat-icon>
     </button>
 </span>
-<span fxFlex fxLayout="row" fxLayoutAlign="start center">
-    <button mat-icon-button title="Deselect" (click)="srv.dropBuffer()" color="primary" [disabled]="disabled">
+<span>
+    <button mat-icon-button title="Deselect" (click)="srv.dropBuffer()" [disabled]="disabled">
         <mat-icon class="md-24" aria-label="Deselect">chevron_left</mat-icon>
     </button>
 </span>
-<span fxFlex fxLayout="row" fxLayoutAlign="start center">
-    <button mat-icon-button title="Deselect All" (click)="srv.dropAll()" color="primary" [disabled]="disabled" *ngIf="!disableFastActions">
+<span>
+    <button mat-icon-button title="Deselect All" (click)="srv.dropAll()" [disabled]="disabled" *ngIf="!disableFastActions">
         <mat-icon class="md-24" aria-label="Deselect All">fast_rewind</mat-icon>
     </button>
 </span>
+<span>&nbsp;</span>
