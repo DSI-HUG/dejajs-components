@@ -1,43 +1,54 @@
 @import '~@angular/material/theming';
+
 :host {
     flex: 1 1 100%;
     padding: 1rem;
-    .combo-demo-container{
+
+    .combo-demo-container {
         height: 20vh;
-        &.medium{
-            > *{
+
+        &.medium {
+            > * {
                 width: 60vw;
             }
         }
-        &.small{
-            > *{
+
+        &.small {
+            > * {
                 width: 20vw;
             }
         }
     }
+
     .demo {
         .h1 {
             margin-top: 2rem;
         }
+
         &.demo-card {
             margin: 16px;
+
             mat-card-content {
                 padding: 16px;
                 display: flex;
                 flex-direction: column;
                 overflow-y: auto;
-                .combo-demo{
+
+                .combo-demo {
                     height: 400px;
                     overflow-y: auto;
                 }
             }
         }
+
         &.demo-basic {
             padding: 0;
         }
+
         &.demo-full-width {
             width: 100%;
         }
+
         &.demo-icons {
             font-size: 100%;
             height: inherit;
@@ -49,29 +60,33 @@
     .combo-radio-group {
         display: inline-flex;
         flex-direction: row;
-      }
-      
-      .combo-radio-button {
+    }
+
+    .combo-radio-button {
         margin: 5px;
-      }
-      
-      .combo-selected-value {
+    }
+
+    .combo-selected-value {
         margin: 15px 0;
-      }
+    }
 
     .example-h2 {
         margin: 10px;
-      }
-      
-      .example-section {
+    }
+
+    .example-section {
         display: flex;
         align-content: center;
         align-items: center;
         height: 60px;
-      }
-      
-      .example-margin {
+
+        span {
+            margin-right: 1rem;
+        }
+    }
+
+    .example-margin {
         margin: 10px;
-      }
+    }
 
 }

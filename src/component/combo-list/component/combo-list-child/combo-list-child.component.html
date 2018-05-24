@@ -1,4 +1,5 @@
 <mat-selection-list dense>
-    <mat-list-option *ngFor="let item of items" (click)="disabled ? $event.preventDefault() : onClick(item)" [ngClass]="getClass(item)">{{item[labelFieldName]}}
+    <!-- <mat-list-option *ngFor="let item of items" [disabled]="disabled" (click)="disabled ? $event.preventDefault() : onClick(item)" -->
+    <mat-list-option *ngFor="let item of items" [disabled]="disabled" (click)="onClick(item)" [ngClass]="getClass(item)">{{item[labelFieldName]}}
     </mat-list-option>
 </mat-selection-list>

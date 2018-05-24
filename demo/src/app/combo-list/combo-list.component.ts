@@ -16,43 +16,56 @@ import { comboListData } from './combo-test.data';
     styleUrls: ['./combo-list.component.scss'],
 })
 export class DejaComboListDemoComponent implements OnInit {
-    public items: ComboListTestModel[] = [];
     public itemToSelect: ComboListTestModel[];
+    public itemToSelect2: ComboListTestModel[];
+    public itemToSelect3: ComboListTestModel[];
+
     public itemSelected: ComboListTestModel[];
+    public itemSelected2: ComboListTestModel[];
+    public itemSelected3: ComboListTestModel[];
+
     public comboAction: IDejaComboListAction<ComboListTestModel>;
     public currentItem: ComboListTestModel;
     public selectedItems: ComboListTestModel[];
-    public selectedList: ComboListTestModel[] = [];
-    public fieldName = 'label';
+    public fieldName = 'surname';
     public fields: string[];
     public comboCtrl: FormControl;
     public tabIndex = 1;
-    public sort: boolean;
+    public sort = null;
     public disabled: boolean;
     public disableFastActions: boolean;
+    private items: ComboListTestModel[] = [];
 
     constructor() { }
 
     public ngOnInit() {
+        this.stateReset();
+    }
+
+    public showAction(event: IDejaComboListAction<ComboListTestModel>) {
+        this.comboAction = event;
+        this.currentItem = event.payload.currentItem;
+        this.selectedItems = event.payload.selectedItems;
+    }
+
+    public stateReset() {
+        console.log('ctrl', this.comboCtrl);
         this.items = comboListData;
 
         this.itemToSelect = this.items.filter(
             (i: ComboListTestModel) => i.id < 10
         );
+        this.itemToSelect2 = [...this.itemToSelect];
+        this.itemToSelect3 = [...this.itemToSelect];
 
         this.itemSelected = this.items.filter(
             (i: ComboListTestModel) => i.id >= 10
         );
+        this.itemSelected2 = [...this.itemSelected];
+        this.itemSelected3 = [...this.itemSelected];
 
-        this.comboCtrl = new FormControl(this.itemSelected);
+        this.comboCtrl = new FormControl(this.itemSelected2);
         this.fields = Object.keys(comboListData[0]);
-    }
-
-    public showAction(event: IDejaComboListAction<ComboListTestModel>) {
-        console.log('showAction', event);
-        this.comboAction = event;
-        this.currentItem = event.payload.currentItem;
-        this.selectedItems = event.payload.selectedItems;
     }
 
     public log() {
@@ -62,8 +75,8 @@ export class DejaComboListDemoComponent implements OnInit {
 
 export class ComboListTestModel {
     public id: number;
-    public label: string;
-    public libelle: string;
-    public name: string;
+    public secretName: string;
+    public surname: string;
+    public firstName: string;
     public gender: string;
 }

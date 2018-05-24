@@ -9,30 +9,40 @@ import { EventEmitter, Input, Output } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { IDejaComboListAction } from '../model/combo-list-action.interface';
 import { noop } from '../model/combo-list.accessor';
-import { DejaComboListService } from '../service/combo-list.service';
+import { DejaComboListState } from './combo-list-state.class';
 
 export abstract class DejaComboListBase<T> implements ControlValueAccessor {
 
-    @Input() public set items(aItem: T[]) {
-        this.srv.selected = aItem;
+    @Input() public set itemsSelected(aItem: T[]) {
+        if (!!aItem && Array.isArray(aItem)) {
+            this.state.selected = aItem;
+        }
     }
-    public get items(): T[] {
-        return this.srv.selected;
+    public get itemsSelected(): T[] {
+        return this.state.selected;
     }
+
+    @Input() public set itemsToSelect(aItem: T[]) {
+        if (!!aItem && Array.isArray(aItem)) {
+            this.state.selectable = aItem;
+        }
+    }
+
+    @Input() public disableFastActions = false;
 
     @Input() public set labelFieldName(fieldName: string) {
         if (fieldName) {
-            this.srv.labelFieldName = fieldName;
-            this.srv.sortAll();
+            this.state.labelFieldName = fieldName;
+            this.state.sortAll();
         }
     }
     public get labelFieldName(): string {
-        return this.srv.labelFieldName;
+        return this.state.labelFieldName;
     }
 
     @Input() public set sortDirection(direction: null | 'asc' | 'desc') {
-        this.srv.sortDirection = direction || null;
-        this.srv.sortAll();
+        this.state.sortDirection = direction || null;
+        this.state.sortAll();
     }
 
     @Input() public disabled = false;
@@ -41,27 +51,39 @@ export abstract class DejaComboListBase<T> implements ControlValueAccessor {
 
     public onTouchedCallback: () => void = noop;
 
-    public srv: DejaComboListService<T>;
+    private _state: DejaComboListState<T>;
+    public get state() {
+        if (!this._state) {
+            this._state = new DejaComboListState();
+        }
+        return this._state;
+    }
+
+    constructor() {
+        this.itemsSelected = [];
+        this.state.selectable = [];
+        this.state.action = this.action;
+    }
 
     // ************* ControlValueAccessor Implementation **************
 
     /** get accessor */
     public get value(): T[] {
-        return this.items;
+        return this.itemsSelected;
     }
 
     /** From ControlValueAccessor interface */
     public writeValue(value: T[]): void {
-        if (value !== this.items) {
-            this.items = value;
-            this.srv.onChangeCallback(this.value);
-            this.srv.sortAll();
+        if (value !== this.itemsSelected) {
+            this.itemsSelected = value;
+            this.state.onChangeCallback(this.value);
+            this.state.sortAll();
         }
     }
 
     /** From ControlValueAccessor interface */
     public registerOnChange(fn: any) {
-        this.srv.onChangeCallback = fn;
+        this.state.onChangeCallback = fn;
     }
 
     /** From ControlValueAccessor interface */

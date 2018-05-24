@@ -8,107 +8,107 @@
 export const comboListData = [
     {
         'id': 0,
-        'name': 'Willa Arnold',
-        'label': 'Black',
-        'libelle': 'Murphy',
+        'secretName': 'Willa Arnold',
+        'surname': 'Black',
+        'firstName': 'Murphy',
         'gender': 'male'
     },
     {
         'id': 1,
-        'name': 'Maryellen Moss',
-        'label': 'Meyer',
-        'libelle': 'Tamara',
+        'secretName': 'Maryellen Moss',
+        'surname': 'Meyer',
+        'firstName': 'Tamara',
         'gender': 'female'
     },
     {
         'id': 2,
-        'name': 'Ella Humphrey',
-        'label': 'Sanford',
-        'libelle': 'Travis',
+        'secretName': 'Ella Humphrey',
+        'surname': 'Sanford',
+        'firstName': 'Travis',
         'gender': 'male'
     },
     {
         'id': 3,
-        'name': 'Buck Bishop',
-        'label': 'Cox',
-        'libelle': 'Jayne',
+        'secretName': 'Buck Bishop',
+        'surname': 'Cox',
+        'firstName': 'Jayne',
         'gender': 'female'
     },
     {
         'id': 4,
-        'name': 'Tricia Burris',
-        'label': 'Gross',
-        'libelle': 'Polly',
+        'secretName': 'Tricia Burris',
+        'surname': 'Gross',
+        'firstName': 'Polly',
         'gender': 'female'
     },
     {
         'id': 5,
-        'name': 'Sosa Waller',
-        'label': 'Oneill',
-        'libelle': 'Amber',
+        'secretName': 'Sosa Waller',
+        'surname': 'Oneill',
+        'firstName': 'Amber',
         'gender': 'female'
     },
     {
         'id': 6,
-        'name': 'Rosalind Tyler',
-        'label': 'Dalton',
-        'libelle': 'Casandra',
+        'secretName': 'Rosalind Tyler',
+        'surname': 'Dalton',
+        'firstName': 'Casandra',
         'gender': 'female'
     },
     {
         'id': 7,
-        'name': 'Garrison Howard',
-        'label': 'Park',
-        'libelle': 'Aguirre',
+        'secretName': 'Garrison Howard',
+        'surname': 'Park',
+        'firstName': 'Aguirre',
         'gender': 'male'
     },
     {
         'id': 8,
-        'name': 'Lucy Hays',
-        'label': 'Garrison',
-        'libelle': 'Nadine',
+        'secretName': 'Lucy Hays',
+        'surname': 'Garrison',
+        'firstName': 'Nadine',
         'gender': 'female'
     },
     {
         'id': 9,
-        'name': 'Colette Bolton',
-        'label': 'Spears',
-        'libelle': 'Shepard',
+        'secretName': 'Colette Bolton',
+        'surname': 'Spears',
+        'firstName': 'Shepard',
         'gender': 'male'
     },
     {
         'id': 10,
-        'name': 'Pitts Guzman',
-        'label': 'Bradshaw',
-        'libelle': 'Susanna',
+        'secretName': 'Pitts Guzman',
+        'surname': 'Bradshaw',
+        'firstName': 'Susanna',
         'gender': 'female'
     },
     {
         'id': 11,
-        'name': 'Sharlene Henderson',
-        'label': 'Crane',
-        'libelle': 'Socorro',
+        'secretName': 'Sharlene Henderson',
+        'surname': 'Crane',
+        'firstName': 'Socorro',
         'gender': 'female'
     },
     {
         'id': 12,
-        'name': 'Hale Mcknight',
-        'label': 'Bauer',
-        'libelle': 'Webb',
+        'secretName': 'Hale Mcknight',
+        'surname': 'Bauer',
+        'firstName': 'Webb',
         'gender': 'male'
     },
     {
         'id': 13,
-        'name': 'Beatrice William',
-        'label': 'Castillo',
-        'libelle': 'Larson',
+        'secretName': 'Beatrice William',
+        'surname': 'Castillo',
+        'firstName': 'Larson',
         'gender': 'male'
     },
     {
         'id': 14,
-        'name': 'Ferguson Fisher',
-        'label': 'Figueroa',
-        'libelle': 'Hess',
+        'secretName': 'Ferguson Fisher',
+        'surname': 'Figueroa',
+        'firstName': 'Hess',
         'gender': 'male'
     }
 ];

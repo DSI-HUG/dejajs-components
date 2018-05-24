@@ -5,7 +5,8 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-import { forwardRef } from '@angular/core';
+import { forwardRef, InjectionToken, Type } from '@angular/core';
+import { ControlValueAccessor } from '@angular/forms';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 export const noop = () => { };

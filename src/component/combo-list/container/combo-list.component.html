@@ -1,7 +1,7 @@
-<deja-combo-list-child [items]="srv.selectable" [itemsBuffer]="srv.selectableBuffer" [labelFieldName]="labelFieldName" (action)="toSelectListAction($event)"
-    [disabled]="disabled"></deja-combo-list-child>
+<deja-combo-list-child [items]="state.selectable" [itemsBuffer]="state.selectableBuffer" [labelFieldName]="labelFieldName"
+    (action)="toSelectListAction($event)" [disabled]="disabled"></deja-combo-list-child>
 
-<deja-combo-list-actionbar [disabled]="disabled" [disableFastActions]="disableFastActions" class="combo-list-action"></deja-combo-list-actionbar>
+<deja-combo-list-actionbar [disabled]="disabled" [disableFastActions]="disableFastActions" class="combo-list-action" (action)="actionBarAction($event)"></deja-combo-list-actionbar>
 
-<deja-combo-list-child [items]="srv.selected" [itemsBuffer]="srv.selectedBuffer" [labelFieldName]="labelFieldName" (action)="selectedListAction($event)"
+<deja-combo-list-child [items]="state.selected" [itemsBuffer]="state.selectedBuffer" [labelFieldName]="labelFieldName" (action)="selectedListAction($event)"
     [disabled]="disabled"></deja-combo-list-child>
