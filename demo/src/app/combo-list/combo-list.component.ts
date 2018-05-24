@@ -25,7 +25,6 @@ export class DejaComboListDemoComponent implements OnInit {
     public itemSelected3: ComboListTestModel[];
 
     public comboAction: IDejaComboListAction<ComboListTestModel>;
-    public currentItem: ComboListTestModel;
     public selectedItems: ComboListTestModel[];
     public fieldName = 'surname';
     public fields: string[];
