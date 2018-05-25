@@ -7,6 +7,7 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { MatCheckboxChange } from '@angular/material';
 import { IDejaComboListAction } from '@deja-js/component';
 import { comboListData } from './combo-test.data';
 
@@ -43,7 +44,6 @@ export class DejaComboListDemoComponent implements OnInit {
 
     public showAction(event: IDejaComboListAction<ComboListTestModel>) {
         this.comboAction = event;
-        this.currentItem = event.payload.currentItem;
         this.selectedItems = event.payload.selectedItems;
     }
 
@@ -69,6 +69,14 @@ export class DejaComboListDemoComponent implements OnInit {
 
     public log() {
         console.log('ctrl', this.comboCtrl);
+    }
+
+    public toggleDisable(e: MatCheckboxChange) {
+        if (e.checked) {
+            this.comboCtrl.disable();
+        } else {
+            this.comboCtrl.enable();
+        }
     }
 }
 

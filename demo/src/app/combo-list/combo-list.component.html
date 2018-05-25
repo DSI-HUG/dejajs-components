@@ -20,7 +20,7 @@
 <ng-container *ngIf="tabIndex === 2">
   <div class="combo-demo-container medium" fxLayout="column" fxLayoutAlign="center center">
     <deja-combo-list [itemsToSelect]="itemToSelect2" [formControl]="comboCtrl" [labelFieldName]="fieldName" [sortDirection]="sort"
-      [disabled]="disabled" [disableFastActions]="disableFastActions"></deja-combo-list>
+      [disableFastActions]="disableFastActions"></deja-combo-list>
   </div>
 </ng-container>
 
@@ -32,7 +32,7 @@
 </ng-container>
 
 <!-- conf card -->
-<mat-card class="demo demo-card demo-basic">
+<mat-card class="demo demo-card demo-basic" *ngIf="tabIndex > 0">
   <mat-card-content fxLayout="row" fxLayoutAlign="start stretch">
     <div class="combo-demo" fxFlex>
       <h3>Configuration</h3>
@@ -56,7 +56,7 @@
 
       <section class="example-section">
         <mat-checkbox color="primary" class="example-margin" [(ngModel)]="disableFastActions">Disable Fast Actions</mat-checkbox>
-        <mat-checkbox color="primary" class="example-margin" [(ngModel)]="disabled">Disabled</mat-checkbox>
+        <mat-checkbox color="primary" class="example-margin" [(ngModel)]="disabled" (change)="toggleDisable($event)">Disabled</mat-checkbox>
       </section>
 
     </div>
