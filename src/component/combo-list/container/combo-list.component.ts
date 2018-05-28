@@ -18,8 +18,8 @@ import { DejaComboListBase } from '../model/combo-list.base';
     providers: [{
         provide: NG_VALUE_ACCESSOR,
         useExisting: DejaComboListComponent,
-        multi: true
-    }]
+        multi: true,
+    }],
 })
 export class DejaComboListComponent<T> extends DejaComboListBase<T> implements ControlValueAccessor {
 
