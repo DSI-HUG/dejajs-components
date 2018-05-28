@@ -17,6 +17,7 @@ import { comboListData } from './combo-test.data';
     styleUrls: ['./combo-list.component.scss'],
 })
 export class DejaComboListDemoComponent implements OnInit {
+
     public itemToSelect: ComboListTestModel[];
     public itemToSelect2: ComboListTestModel[];
     public itemToSelect3: ComboListTestModel[];

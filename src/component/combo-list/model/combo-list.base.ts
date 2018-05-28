@@ -7,8 +7,7 @@
  */
 import { EventEmitter, Input, Output } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
-import { IDejaComboListAction } from '../model/combo-list-action.interface';
-import { noop } from '../model/combo-list.accessor';
+import { IDejaComboListAction, noop } from '../model/combo-list-action.interface';
 import { DejaComboListState } from './combo-list-state.class';
 
 export abstract class DejaComboListBase<T> implements ControlValueAccessor {

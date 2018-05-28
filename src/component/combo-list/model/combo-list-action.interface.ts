@@ -12,3 +12,5 @@ export interface IDejaComboListAction<T> extends IDejaAction {
         selectedItems?: T[];
     };
 }
+
+export const noop = () => { };

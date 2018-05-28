@@ -6,8 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { EventEmitter } from '@angular/core';
-import { IDejaComboListAction } from '../model/combo-list-action.interface';
-import { noop } from '../model/combo-list.accessor';
+import { IDejaComboListAction, noop } from '../model/combo-list-action.interface';
 
 export class DejaComboListState<T> {
 

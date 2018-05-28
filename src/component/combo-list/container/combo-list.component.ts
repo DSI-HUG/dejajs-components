@@ -6,18 +6,20 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { Component } from '@angular/core';
-import { forwardRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IDejaAction } from '../../../common/core/action.interface';
-import { valueAccessorFactory } from '../model/combo-list.accessor';
 import { DejaComboListBase } from '../model/combo-list.base';
 
 @Component({
     selector: 'deja-combo-list',
     templateUrl: './combo-list.component.html',
     styleUrls: ['./combo-list.component.scss'],
-    providers: [valueAccessorFactory(DejaComboListComponent)],
+    providers: [{
+        provide: NG_VALUE_ACCESSOR,
+        useExisting: DejaComboListComponent,
+        multi: true
+    }]
 })
 export class DejaComboListComponent<T> extends DejaComboListBase<T> implements ControlValueAccessor {
 
