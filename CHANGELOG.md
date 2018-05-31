@@ -1,3 +1,12 @@
+<a name="3.0.0"></a>
+# [3.0.0](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0) (2018-05-31)
+
+
+### Bug Fixes
+
+* **SelectDemo:** Fix some issues on the demo for the deja-select ([bf4a284](https://github.com/DSI-HUG/dejajs-components/commit/bf4a284))
+
+
 <a name="3.0.0-beta.26"></a>
 # [3.0.0-beta.26](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0-beta.26) (2018-05-23)
 
