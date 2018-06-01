@@ -14,7 +14,7 @@ import { Observable } from 'rxjs/Observable';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 
 /**
- * Simple dialog for Angular2
+ * Simple dialog for Angular
  */
 @Component({
     selector: 'deja-dialog',

@@ -36,7 +36,7 @@ const moment: (value?: any, format?: string) => moment_.Moment = (<any>moment_).
 const noop = () => { };
 
 /**
- * Date-picker component for Angular2
+ * Date-picker component for Angular
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

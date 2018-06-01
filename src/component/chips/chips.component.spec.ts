@@ -30,13 +30,13 @@ describe('DejaChipsComponent', () => {
     });
 
     it('should init with string items', () => {
-        component.items = ['Angular 2', 'Java', 'Oracle'];
+        component.items = ['Angular', 'Java', 'Oracle'];
         fixture.detectChanges();
 
         // TODO: should find a better way to query (with a class for example)
         const spans = fixture.debugElement.queryAll(By.css('span > span'));
         expect(spans.length).toEqual(3);
-        expect(spans[0].nativeElement.innerHTML).toEqual('Angular 2');
+        expect(spans[0].nativeElement.innerHTML).toEqual('Angular');
         expect(spans[1].nativeElement.innerHTML).toEqual('Java');
         expect(spans[2].nativeElement.innerHTML).toEqual('Oracle');
     });
@@ -100,7 +100,7 @@ describe('DejaChipsComponent', () => {
     // We can test that a click event, call the onClose function
     // We can also test onClose function
     it('should call onClose when we click on closeButton', () => {
-        component.items = ['Angular 2', 'Java', 'Oracle'];
+        component.items = ['Angular', 'Java', 'Oracle'];
         fixture.detectChanges();
 
         const closeButtons = fixture.debugElement.queryAll(By.css('i'));
@@ -113,7 +113,7 @@ describe('DejaChipsComponent', () => {
     });
 
     it('onClose should remove item and emit an IDejaChipsComponentCloseEvent', () => {
-        component.items = ['Angular 2', 'Java', 'Oracle'];
+        component.items = ['Angular', 'Java', 'Oracle'];
         fixture.detectChanges();
 
         const spy = spyOn(component.close, 'emit');
@@ -124,7 +124,7 @@ describe('DejaChipsComponent', () => {
     });
 
     it('should not display closeButton if component is readOnly', () => {
-        component.items = ['Angular 2', 'Java', 'Oracle'];
+        component.items = ['Angular', 'Java', 'Oracle'];
         component.readonly = true;
         fixture.detectChanges();
 
@@ -133,7 +133,7 @@ describe('DejaChipsComponent', () => {
     });
 
     it('should not display closeButton if disabled equals boolean true', () => {
-        component.items = ['Angular 2', 'Java', 'Oracle'];
+        component.items = ['Angular', 'Java', 'Oracle'];
         component.disabled = true;
         fixture.detectChanges();
 
@@ -142,7 +142,7 @@ describe('DejaChipsComponent', () => {
     });
 
     it('should not display closeButton if disabled equals "true"', () => {
-        component.items = ['Angular 2', 'Java', 'Oracle'];
+        component.items = ['Angular', 'Java', 'Oracle'];
         component.disabled = 'true';
         fixture.detectChanges();
 

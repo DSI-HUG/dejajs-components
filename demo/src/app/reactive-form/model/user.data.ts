@@ -40,7 +40,7 @@ export const user = {
     name: 'Serge',
     preferedJuice: 'Lemon',
     preferedFruct: 'Durian',
-    skills: ['angular2', 'ngrx', 'typescript', 'html5', 'css3'],
+    skills: ['angular', 'ngrx', 'typescript', 'html5', 'css3'],
     remark: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 Mauris auctor sit amet odio et aliquet. Curabitur auctor eleifend mattis.
 Nullam sit amet quam tellus. Ut mattis tellus sed erat ultricies ornare.
