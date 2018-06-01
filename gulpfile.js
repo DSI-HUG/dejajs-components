@@ -676,7 +676,7 @@ gulp.task('create-new-tag', (cb) => {
 
 });
 
-gulp.task('release', gulp.series('bump-version', 'changelog', 'commit-changes', 'push-changes', (error) => {
+gulp.task('release', gulp.series('bump-version', 'changelog', 'commit-changes', 'create-new-tag', 'push-changes', (error) => {
     if (error) {
         gulpUtil.log(gulpUtil.colors.red(error.message));
     } else {
