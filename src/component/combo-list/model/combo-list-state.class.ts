@@ -16,7 +16,7 @@ export class DejaComboListState<T> {
     public selectedBuffer: T[] = [];
 
     public labelFieldName = 'label';
-    public sortDirection: string;
+    public sortDirection: 'asc' | 'desc' | null;
 
     public action = new EventEmitter<IDejaComboListAction<T>>();
 
@@ -26,10 +26,10 @@ export class DejaComboListState<T> {
         const index = this.selectableBuffer.indexOf(item, 0);
         if (index > -1) {
             this.selectableBuffer = this.selectableBuffer.filter((_, idx) => idx !== index);
-            this.emit('selectable_selected', item);
+            this.emit('selectable_deselected', item);
         } else if (add) {
             this.selectableBuffer = this.selectableBuffer.concat([item]);
-            this.emit('selectable_deselected', item);
+            this.emit('selectable_selected', item);
         }
     }
 
@@ -37,10 +37,10 @@ export class DejaComboListState<T> {
         const index = this.selectedBuffer.indexOf(item, 0);
         if (index > -1) {
             this.selectedBuffer = this.selectedBuffer.filter((_, idx) => idx !== index);
-            this.emit('selected_selected', item);
+            this.emit('selected_deselected', item);
         } else if (add) {
             this.selectedBuffer = this.selectedBuffer.concat([item]);
-            this.emit('selected_deselected', item);
+            this.emit('selected_selected', item);
         }
     }
 

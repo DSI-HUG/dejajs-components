@@ -10,7 +10,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { By } from '@angular/platform-browser';
-import { IDejaAction } from '../../../../../tmp/lib/common/core/action.interface';
+import { IDejaAction } from '../../../../common/core/action.interface';
 import { DejaComboListActionbarComponent } from './combo-list-actionbar.component';
 
 describe('DejaComboListActionbarComponent', () => {
@@ -21,7 +21,6 @@ describe('DejaComboListActionbarComponent', () => {
     beforeEach(
         async(
             () => {
-
                 TestBed.configureTestingModule({
                     declarations: [
                         DejaComboListActionbarComponent,
@@ -38,31 +37,31 @@ describe('DejaComboListActionbarComponent', () => {
         )
     );
 
-    fit('should create the component', () => {
+    it('should create the component', () => {
         expect(mycomp).toBeTruthy();
     });
 
-    fit('should init with four buttons', () => {
+    it('should init with four buttons', () => {
         fixture.detectChanges();
         const buts = fixture.debugElement.queryAll(By.css('button'));
         expect(buts.length).toEqual(4);
     });
 
-    fit('should init without fast action button', () => {
+    it('should init without fast action button', () => {
         mycomp.disableFastActions = true;
         fixture.detectChanges();
         const buts = fixture.debugElement.queryAll(By.css('button'));
         expect(buts.length).toEqual(2);
     });
 
-    fit('should disable buttons', () => {
+    it('should disable buttons', () => {
         mycomp.disabled = true;
         fixture.detectChanges();
         const buts = fixture.debugElement.queryAll(By.css('button'));
         expect(buts[0].nativeElement.disabled).toBeTruthy();
     });
 
-    fit('should fire actions', () => {
+    it('should fire actions', () => {
         let action: IDejaAction;
         fixture.detectChanges();
         mycomp.action.subscribe((act: IDejaAction) => action = act);

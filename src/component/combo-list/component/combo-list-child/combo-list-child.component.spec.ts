@@ -9,7 +9,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatListModule } from '@angular/material/list';
 import { By } from '@angular/platform-browser';
-import { IDejaAction } from '../../../../../tmp/common/core/action.interface';
+import { IDejaAction } from '../../../../common/core/action.interface';
 import { DejaComboListChildComponent } from './combo-list-child.component';
 
 describe('DejaComboListChildComponent', () => {
