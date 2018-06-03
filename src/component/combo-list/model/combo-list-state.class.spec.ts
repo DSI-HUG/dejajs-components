@@ -11,105 +11,105 @@ import { DejaComboListState } from './combo-list-state.class';
 
 describe('DejaComboListStateClass', () => {
 
-    let mycomp: DejaComboListState<{}>;
+    let state: DejaComboListState<{}>;
 
     beforeEach(
         () => {
-            mycomp = new DejaComboListState();
+            state = new DejaComboListState();
         }
     );
 
     it('should create an instance', () => {
-        expect(mycomp).toBeTruthy();
+        expect(state).toBeTruthy();
     });
 
     it('should add and remove an item from the selectable buffer', () => {
-        mycomp.toggleSelectable(1);
-        expect(mycomp.selectableBuffer[0]).toBe(1);
-        mycomp.toggleSelectable(1);
-        expect(mycomp.selectableBuffer.length).toBe(0);
+        state.toggleSelectable(1);
+        expect(state.selectableBuffer[0]).toBe(1);
+        state.toggleSelectable(1);
+        expect(state.selectableBuffer.length).toBe(0);
     });
 
     it('should add and remove an item from the selected buffer', () => {
         let actionType: string;
-        mycomp.action.subscribe((act: IDejaComboListAction<{}>) => actionType = act.type);
-        mycomp.toggleSelected(1);
-        expect(mycomp.selectedBuffer[0]).toBe(1);
+        state.action.subscribe((act: IDejaComboListAction<{}>) => actionType = act.type);
+        state.toggleSelected(1);
+        expect(state.selectedBuffer[0]).toBe(1);
         expect(actionType).toEqual('selected_selected');
-        mycomp.toggleSelected(1);
-        expect(mycomp.selectedBuffer.length).toBe(0);
+        state.toggleSelected(1);
+        expect(state.selectedBuffer.length).toBe(0);
         expect(actionType).toEqual('selected_deselected');
     });
 
     it('should raise items to the selected list', () => {
-        mycomp.selectable = [1, 2, 3];
-        mycomp.selectableBuffer = [1, 2];
-        mycomp.raiseBuffer();
-        expect(mycomp.selectableBuffer.length).toBe(0);
-        expect(mycomp.selectable.length).toBe(1);
-        expect(mycomp.selectable[0]).toBe(3);
-        expect(mycomp.selected.length).toBe(2);
-        expect(mycomp.selected).toContain(1);
-        expect(mycomp.selected).toContain(2);
+        state.selectable = [1, 2, 3];
+        state.selectableBuffer = [1, 2];
+        state.raiseBuffer();
+        expect(state.selectableBuffer.length).toBe(0);
+        expect(state.selectable.length).toBe(1);
+        expect(state.selectable[0]).toBe(3);
+        expect(state.selected.length).toBe(2);
+        expect(state.selected).toContain(1);
+        expect(state.selected).toContain(2);
     });
 
     it('should drop items to the selectable list', () => {
-        mycomp.selected = [1, 2, 3];
-        mycomp.selectedBuffer = [1, 2];
-        mycomp.dropBuffer();
-        expect(mycomp.selectedBuffer.length).toBe(0);
-        expect(mycomp.selected.length).toBe(1);
-        expect(mycomp.selected[0]).toBe(3);
-        expect(mycomp.selectable.length).toBe(2);
-        expect(mycomp.selectable).toContain(1);
-        expect(mycomp.selectable).toContain(2);
+        state.selected = [1, 2, 3];
+        state.selectedBuffer = [1, 2];
+        state.dropBuffer();
+        expect(state.selectedBuffer.length).toBe(0);
+        expect(state.selected.length).toBe(1);
+        expect(state.selected[0]).toBe(3);
+        expect(state.selectable.length).toBe(2);
+        expect(state.selectable).toContain(1);
+        expect(state.selectable).toContain(2);
     });
 
     it('should raise one item to the selected list', () => {
-        mycomp.selectable = [1, 2, 3];
-        mycomp.selectableBuffer = [1, 2];
-        mycomp.raiseOne(2);
-        expect(mycomp.selectableBuffer.length).toBe(1);
-        expect(mycomp.selectableBuffer).toContain(1);
-        expect(mycomp.selectable.length).toBe(2);
-        expect(mycomp.selected.length).toBe(1);
-        expect(mycomp.selected).toContain(2);
+        state.selectable = [1, 2, 3];
+        state.selectableBuffer = [1, 2];
+        state.raiseOne(2);
+        expect(state.selectableBuffer.length).toBe(1);
+        expect(state.selectableBuffer).toContain(1);
+        expect(state.selectable.length).toBe(2);
+        expect(state.selected.length).toBe(1);
+        expect(state.selected).toContain(2);
     });
 
     it('should drop one item to the selectable list', () => {
-        mycomp.selected = [1, 2, 3];
-        mycomp.selectedBuffer = [1, 2];
-        mycomp.dropOne(2);
-        expect(mycomp.selectedBuffer.length).toBe(1);
-        expect(mycomp.selected.length).toBe(2);
-        expect(mycomp.selectedBuffer).toContain(1);
-        expect(mycomp.selectable.length).toBe(1);
-        expect(mycomp.selectable).toContain(2);
+        state.selected = [1, 2, 3];
+        state.selectedBuffer = [1, 2];
+        state.dropOne(2);
+        expect(state.selectedBuffer.length).toBe(1);
+        expect(state.selected.length).toBe(2);
+        expect(state.selectedBuffer).toContain(1);
+        expect(state.selectable.length).toBe(1);
+        expect(state.selectable).toContain(2);
     });
 
     it('should raise all items to the selected list', () => {
-        mycomp.selectable = [1, 2, 3];
-        mycomp.selectableBuffer = [1, 2];
-        mycomp.raiseAll();
-        expect(mycomp.selectableBuffer.length).toBe(0);
-        expect(mycomp.selectable.length).toBe(0);
-        expect(mycomp.selected.length).toBe(3);
-        expect(mycomp.selected).toEqual([1, 2, 3]);
+        state.selectable = [1, 2, 3];
+        state.selectableBuffer = [1, 2];
+        state.raiseAll();
+        expect(state.selectableBuffer.length).toBe(0);
+        expect(state.selectable.length).toBe(0);
+        expect(state.selected.length).toBe(3);
+        expect(state.selected).toEqual([1, 2, 3]);
     });
 
     it('should drop all items to the selectable list', () => {
-        mycomp.selected = [1, 2, 3];
-        mycomp.selectedBuffer = [1, 2];
-        mycomp.dropAll();
-        expect(mycomp.selectedBuffer.length).toBe(0);
-        expect(mycomp.selected.length).toBe(0);
-        expect(mycomp.selectable.length).toBe(3);
-        expect(mycomp.selectable).toEqual([1, 2, 3]);
+        state.selected = [1, 2, 3];
+        state.selectedBuffer = [1, 2];
+        state.dropAll();
+        expect(state.selectedBuffer.length).toBe(0);
+        expect(state.selected.length).toBe(0);
+        expect(state.selectable.length).toBe(3);
+        expect(state.selectable).toEqual([1, 2, 3]);
     });
 
     it('should sort all lists in ascending order', () => {
-        mycomp.labelFieldName = 'label';
-        mycomp.sortDirection = 'asc';
+        state.labelFieldName = 'label';
+        state.sortDirection = 'asc';
         const o1 = {
             id: 0,
             label: 'Abba',
@@ -118,18 +118,18 @@ describe('DejaComboListStateClass', () => {
             id: 1,
             label: 'Beatles'
         };
-        mycomp.selected = [o2, o1];
-        mycomp.selectable = [o2, o1];
-        mycomp.sortAll();
-        expect(mycomp.selected[0]).toBe(o1);
-        expect(mycomp.selectable[0]).toBe(o1);
+        state.selected = [o2, o1];
+        state.selectable = [o2, o1];
+        state.sortAll();
+        expect(state.selected[0]).toBe(o1);
+        expect(state.selectable[0]).toBe(o1);
     });
 
     it('should sort all lists in descending order', () => {
         let called = false;
-        mycomp.onChangeCallback = () => called = true;
-        mycomp.labelFieldName = 'label';
-        mycomp.sortDirection = 'desc';
+        state.onChangeCallback = () => called = true;
+        state.labelFieldName = 'label';
+        state.sortDirection = 'desc';
         const o1 = {
             id: 0,
             label: 'Abba',
@@ -138,11 +138,11 @@ describe('DejaComboListStateClass', () => {
             id: 1,
             label: 'Beatles'
         };
-        mycomp.selected = [o1, o2];
-        mycomp.selectable = [o1, o2];
-        mycomp.sortAll();
-        expect(mycomp.selected[0]).toBe(o2);
-        expect(mycomp.selectable[0]).toBe(o2);
+        state.selected = [o1, o2];
+        state.selectable = [o1, o2];
+        state.sortAll();
+        expect(state.selected[0]).toBe(o2);
+        expect(state.selectable[0]).toBe(o2);
         expect(called).toBeTruthy();
     });
 
