@@ -11,6 +11,7 @@ import {
     Input,
     Output
 } from '@angular/core';
+import { MatSelectionListChange } from '@angular/material';
 import { IDejaAction } from '../../../../common/core/action.interface';
 
 @Component({
@@ -29,7 +30,8 @@ export class DejaComboListChildComponent<T> {
     private lastClick = Date.now();
     private lastItem: T;
 
-    public onClick(item: T) {
+    public stateChange(event: MatSelectionListChange) {
+        const item: T = event.option.value;
         const now = Date.now();
         if (this.disabled) {
             return;
