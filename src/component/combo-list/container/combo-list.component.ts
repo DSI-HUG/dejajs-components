@@ -25,20 +25,12 @@ export class DejaComboListComponent<T> extends DejaComboListBase<T> implements C
 
     // Select
     public toSelectListAction(listAction: IDejaAction): void {
-        if (listAction.type === 'single') {
-            this.state.toggleSelectable(listAction.payload);
-        } else if (listAction.type === 'double') {
-            this.state.raiseOne(listAction.payload);
-        }
+        this.doAction(listAction, 'toggleSelectable', 'raiseOne');
     }
 
     // Deselect
     public selectedListAction(listAction: IDejaAction): void {
-        if (listAction.type === 'single') {
-            this.state.toggleSelected(listAction.payload);
-        } else if (listAction.type === 'double') {
-            this.state.dropOne(listAction.payload);
-        }
+        this.doAction(listAction, 'toggleSelected', 'dropOne');
     }
 
     // ActionBar
@@ -48,4 +40,13 @@ export class DejaComboListComponent<T> extends DejaComboListBase<T> implements C
         }
     }
 
+    // action launcher
+    private doAction(listAction: IDejaAction, singleAction: string, doubleAction: string) {
+        if (listAction.type === 'single') {
+            this.state[singleAction](listAction.payload);
+        } else if (listAction.type === 'double') {
+            this.state[doubleAction](listAction.payload);
+        }
+
+    }
 }
