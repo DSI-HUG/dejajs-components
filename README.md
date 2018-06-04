@@ -5,13 +5,13 @@
 [![codebeat badge](https://codebeat.co/badges/84883b64-dd1f-4c76-9ed0-e12cda09f3fb)](https://codebeat.co/projects/github-com-dsi-hug-dejajs-components-dev)
 
 # @deja-js/component
-This is the home for the Hôpitaux Universitaires de Genève - DSI - Domaine Patient team's Angular2 components for Angular 2 and material. 
+This is the home for the Hôpitaux Universitaires de Genève - DSI - Domaine Patient team's Angular components for Angular and material. 
 
 Online demo : [https://dsi-hug.github.io/dejajs-components](https://dsi-hug.github.io/dejajs-components)
 
 ## Intro
 
-This repository is a Angular2 components library and the the common utility functions, with a demo application to testing it.
+This repository is a Angular components library and the the common utility functions, with a demo application to testing it.
 
 ### Requirement
 

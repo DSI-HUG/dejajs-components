@@ -50,7 +50,7 @@ describe('DejaTagComponent', () => {
     }));
 
     it('should init with items', () => {
-        comp.value = ['Angular 2', 'HTML5'];
+        comp.value = ['Angular', 'HTML5'];
         fixture.detectChanges();
         expect(getNbItems()).toEqual(2);
     });

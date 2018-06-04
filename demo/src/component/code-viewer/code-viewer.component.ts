@@ -11,7 +11,7 @@ import * as Prism from 'prismjs';
 
 /**
  * Experimental
- * Code viewer component for angular2 using PrismJs
+ * Code viewer component for angular using PrismJs
  */
 @Component({
     encapsulation: ViewEncapsulation.None,

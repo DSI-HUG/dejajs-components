@@ -524,7 +524,7 @@ export abstract class ItemListBase implements OnDestroy {
         this._currentItem = null;
     }
 
-    protected getCurrentItemIndex() {
+    public getCurrentItemIndex() {
         return this._currentItemIndex;
     }
 
