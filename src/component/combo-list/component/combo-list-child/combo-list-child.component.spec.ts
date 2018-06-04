@@ -78,7 +78,6 @@ describe('DejaComboListChildComponent', () => {
             }
             expect(action.payload).toBe(o1);
         });
-
         fixture.detectChanges();
         const options = fixture.debugElement.queryAll(By.css('mat-list-option'));
         const firstOption = options[0];

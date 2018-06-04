@@ -31,18 +31,17 @@ export class DejaComboListChildComponent<T> {
     private lastItem: T;
 
     public stateChange(event: MatSelectionListChange) {
-        const item: T = event.option.value;
-        const now = Date.now();
-        if (this.disabled) {
-            return;
+        if (!this.disabled) {
+            const item: T = event.option.value;
+            const now = Date.now();
+            if (now - this.lastClick < 300 && this.lastItem === item) {
+                this.emit('double', item);
+            } else {
+                this.emit('single', item);
+            }
+            this.lastClick = now;
+            this.lastItem = item;
         }
-        if (now - this.lastClick < 300 && this.lastItem === item) {
-            this.emit('double', item);
-        } else {
-            this.emit('single', item);
-        }
-        this.lastClick = now;
-        this.lastItem = item;
     }
 
     public getClass(item: T) {
