@@ -5,6 +5,7 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { EventEmitter, Input, Output } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { IDejaComboListAction, noop } from '../model/combo-list-action.interface';
@@ -44,7 +45,16 @@ export abstract class DejaComboListBase<T> implements ControlValueAccessor {
         this.state.sortAll();
     }
 
-    @Input() public disabled = false;
+    private _disabled = false;
+
+    @Input()
+    public set disabled(value: boolean) {
+        this._disabled = coerceBooleanProperty(value);
+    }
+
+    public get disabled() {
+        return this._disabled;
+    }
 
     @Output() public action = new EventEmitter<IDejaComboListAction<T>>();
 

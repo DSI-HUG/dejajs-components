@@ -5,6 +5,7 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     Component,
     EventEmitter,
@@ -24,8 +25,18 @@ export class DejaComboListChildComponent<T> {
     @Input() public items: Array<T>;
     @Input() public itemsBuffer: Array<T> = [];
     @Input() public labelFieldName: string;
-    @Input() public disabled: boolean;
     @Output() public action = new EventEmitter<IDejaAction>();
+
+    private _disabled: boolean;
+
+    @Input()
+    public set disabled(value: boolean) {
+        this._disabled = coerceBooleanProperty(value);
+    }
+
+    public get disabled() {
+        return this._disabled;
+    }
 
     private lastClick = Date.now();
     private lastItem: T;
