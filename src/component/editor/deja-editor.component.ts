@@ -24,6 +24,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { DejaEditorService } from './deja-editor.service';
 import { StringUtils } from './string.utils';
 
@@ -51,9 +52,7 @@ declare var CKEDITOR: any;
 export class DejaEditorComponent
     implements OnChanges, AfterViewInit, OnDestroy, ControlValueAccessor {
     @Input() public config: any;
-    @Input() public readonly: boolean;
     @Input() public debounce: string;
-    @Input() public inline = true;
 
     @Output() public change = new EventEmitter();
     @Output() public ready = new EventEmitter();
@@ -62,6 +61,27 @@ export class DejaEditorComponent
     @Output() public disabled = new EventEmitter<boolean>();
 
     @ViewChild('host') public host: ElementRef;
+
+    private _readonly: boolean;
+    private _inline = true;
+
+    @Input()
+    public set readonly(value: boolean) {
+        this._readonly = coerceBooleanProperty(value);
+    }
+
+    public get readonly() {
+        return this._readonly;
+    }
+
+    @Input()
+    public set inline(value: boolean) {
+        this._inline = coerceBooleanProperty(value);
+    }
+
+    public get inline() {
+        return this._inline;
+    }
 
     private _value = '';
     public instance: any;
