@@ -33,7 +33,7 @@ describe('DejaCodeViewerComponent', () => {
     it('should load prismjs', async(() => {
         fixture.detectChanges();
         fixture.whenStable().then(() => {
-            expect(window.hasOwnProperty('Prism')).toBeDefined();
+            expect(window.hasOwnProperty('Prism')).toBeTruthy();
         });
     }));
 });

@@ -34,8 +34,4 @@ describe('DejaSidenavComponent', () => {
         comp.ngOnInit();
         expect(comp).toBeTruthy();
     }));
-
-    it('should init with items', () => {
-        // let test: ActivatedRouteSnapshot  = comp.getAct
-    });
 });

@@ -155,6 +155,7 @@ describe('DejaMessageBoxComponent', () => {
         it('should emit close event when the close icon is clicked', (done: Function) => {
             component.showCloseIcon = true;
             component.close.subscribe(() => {
+                expect(true).toBeTruthy();
                 done();
             });
             fixture.detectChanges();
