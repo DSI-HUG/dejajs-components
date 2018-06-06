@@ -12,6 +12,7 @@ import { async, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import 'rxjs/add/operator/delay';
 import { Observable } from 'rxjs/Observable';
 import { DejaMouseDragDropModule } from './index';
 import { IDropCursorInfos } from './mouse-dragdrop.service';
@@ -106,7 +107,7 @@ describe('DejaMouseDragDrop', () => {
         expect(droppableInstance).toBeTruthy();
     }));
 
-    it('should be able to drag and drop from the first div to the second', async(() => {
+    it('should be able to drag and drop from the first div to the second', async (done) => {
         const fixture = TestBed.createComponent(DejaMouseDragDropComponent);
 
         fixture.detectChanges();
@@ -137,19 +138,29 @@ describe('DejaMouseDragDrop', () => {
             };
 
             sendMouseEvent(dragElement, 'mouseenter', 101, 101);
-            sendMouseEvent(dragElement, 'mousemove', 200, 200);
-            sendMouseEvent(dragElement, 'mousedown', 200, 200, 1);
-            sendMouseEvent(dragElement.ownerDocument, 'mousemove', 220, 220, 1);
-            sendMouseEvent(dragElement.ownerDocument, 'mousemove', 200, 400, 1);
-            sendMouseEvent(dragElement.ownerDocument, 'mousemove', 400, 400, 1);
-            sendMouseEvent(dragElement.ownerDocument, 'mousemove', 250, 400, 1);
-            sendMouseEvent(dragElement.ownerDocument, 'mousemove', 200, 400, 1);
-            sendMouseEvent(dragElement.ownerDocument, 'mouseup', 200, 400, 0);
-
-            fixture.detectChanges();
-            const dropElement = dropDebugElement.nativeElement as HTMLElement;
-
-            expect(dropElement.innerText).toEqual(dragElement.innerText);
+            Observable.timer(1)
+                .do(() => sendMouseEvent(dragElement, 'mousemove', 200, 200))
+                .delay(1)
+                .do(() => sendMouseEvent(dragElement, 'mousedown', 200, 200, 1))
+                .delay(1)
+                .do(() => sendMouseEvent(dragElement.ownerDocument, 'mousemove', 220, 220, 1))
+                .delay(1)
+                .do(() => sendMouseEvent(dragElement.ownerDocument, 'mousemove', 200, 400, 1))
+                .delay(1)
+                .do(() => sendMouseEvent(dragElement.ownerDocument, 'mousemove', 400, 400, 1))
+                .delay(1)
+                .do(() => sendMouseEvent(dragElement.ownerDocument, 'mousemove', 250, 400, 1))
+                .delay(1)
+                .do(() => sendMouseEvent(dragElement.ownerDocument, 'mousemove', 200, 400, 1))
+                .delay(1)
+                .do(() => sendMouseEvent(dragElement.ownerDocument, 'mouseup', 200, 400, 0))
+                .delay(1)
+                .subscribe(() => {
+                    fixture.detectChanges();
+                    const dropElement = dropDebugElement.nativeElement as HTMLElement;
+                    expect(dropElement.innerText).toEqual(dragElement.innerText);
+                    done();
+                })
         });
-    }));
+    });
 });
