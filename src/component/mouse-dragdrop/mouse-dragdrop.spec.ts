@@ -160,7 +160,7 @@ describe('DejaMouseDragDrop', () => {
                     const dropElement = dropDebugElement.nativeElement as HTMLElement;
                     expect(dropElement.innerText).toEqual(dragElement.innerText);
                     done();
-                })
+                });
         });
     });
 });
