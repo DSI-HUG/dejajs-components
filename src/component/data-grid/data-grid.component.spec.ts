@@ -1125,8 +1125,8 @@ describe('DejaGridComponent', () => {
                             const dragGroupElement = chipsDraggable[0].nativeElement;
                             const dragEventInit = eventInit(chipsDraggable[0]);
                             const dragTargetBounds = dragGroupElement.getBoundingClientRect();
-                            dragEventInit.clientY = dragTargetBounds.top + 1;
-                            dragEventInit.clientX = dragTargetBounds.left + 1;
+                            dragEventInit.clientY = dragTargetBounds.top + 5;
+                            dragEventInit.clientX = dragTargetBounds.left + 5;
                             dragGroupElement.dispatchEvent(new DragEvent('dragstart', eventInit(chipsDraggable[0]) as any));
                             fixture.detectChanges();
                         })
@@ -1135,8 +1135,8 @@ describe('DejaGridComponent', () => {
                             const enterEventInit = eventInit(gridGroupArea);
                             const enterTarget = gridGroupArea.nativeElement as HTMLElement;
                             const enterTargetBounds = enterTarget.getBoundingClientRect();
-                            enterEventInit.clientY = enterTargetBounds.top + 1;
-                            enterEventInit.clientX = enterTargetBounds.left + 1;
+                            enterEventInit.clientY = enterTargetBounds.top + 5;
+                            enterEventInit.clientX = enterTargetBounds.left + 5;
                             enterTarget.dispatchEvent(new DragEvent('dragenter', enterEventInit as any));
                             fixture.detectChanges();
                         })
