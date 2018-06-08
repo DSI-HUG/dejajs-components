@@ -18,7 +18,7 @@ class DatePickerTestingUtils {
     }
 }
 
-fdescribe('DejaDatePickerComponent', () => {
+describe('DejaDatePickerComponent', () => {
     let component: DejaDatePickerComponent;
     let fixture: ComponentFixture<DejaDatePickerComponent>;
     let datePickerTestingUtils: DatePickerTestingUtils;
