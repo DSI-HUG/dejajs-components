@@ -9,7 +9,6 @@
 import { OverlayModule } from '@angular/cdk/overlay';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { Observable } from 'rxjs/Observable';
 import { DejaDatePickerComponent } from './date-picker.component';
 
@@ -19,7 +18,7 @@ class DatePickerTestingUtils {
     }
 }
 
-describe('DejaDatePickerComponent', () => {
+fdescribe('DejaDatePickerComponent', () => {
     let component: DejaDatePickerComponent;
     let fixture: ComponentFixture<DejaDatePickerComponent>;
     let datePickerTestingUtils: DatePickerTestingUtils;
@@ -29,7 +28,7 @@ describe('DejaDatePickerComponent', () => {
             declarations: [
                 DejaDatePickerComponent
             ],
-            imports: [FlexLayoutModule, OverlayModule],
+            imports: [OverlayModule],
             schemas: [NO_ERRORS_SCHEMA]
         }).compileComponents();
     }));
