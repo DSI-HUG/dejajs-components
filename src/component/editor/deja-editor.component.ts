@@ -5,6 +5,7 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -20,12 +21,11 @@ import {
     Output,
     SimpleChanges,
     ViewChild,
-    ViewEncapsulation
+    ViewEncapsulation,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { DejaEditorService } from './deja-editor.service';
-import { StringUtils } from './string.utils';
 
 declare var CKEDITOR: any;
 
@@ -45,15 +45,13 @@ declare var CKEDITOR: any;
     ],
     templateUrl: './deja-editor.component.html',
     styleUrls: ['./deja-editor.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DejaEditorComponent
     implements OnChanges, AfterViewInit, OnDestroy, ControlValueAccessor {
     @Input() public config: any;
-    @Input() public readonly: boolean;
     @Input() public debounce: string;
-    @Input() public inline = true;
 
     @Output() public change = new EventEmitter();
     @Output() public ready = new EventEmitter();
@@ -62,6 +60,27 @@ export class DejaEditorComponent
     @Output() public disabled = new EventEmitter<boolean>();
 
     @ViewChild('host') public host: ElementRef;
+
+    private _readonly: boolean;
+    private _inline = true;
+
+    @Input()
+    public set readonly(value: boolean) {
+        this._readonly = coerceBooleanProperty(value);
+    }
+
+    public get readonly() {
+        return this._readonly;
+    }
+
+    @Input()
+    public set inline(value: boolean) {
+        this._inline = coerceBooleanProperty(value);
+    }
+
+    public get inline() {
+        return this._inline;
+    }
 
     private _value = '';
     public instance: any;
@@ -167,6 +186,23 @@ export class DejaEditorComponent
             if (this.readonly) {
                 config.readOnly = this.readonly;
             }
+
+            const keyEvents = config.on && config.on.key;
+            if (!config.on) {
+                config.on = {};
+            }
+            config.on.key = (event: any) => {
+                // Override CTRL+A event. Native one cause editor switch on first try
+                if (event.data.keyCode === 1114177) {
+                    // CTRL + A
+                    event.cancel();
+                    event.stop();
+                    this.instance.document.$.execCommand('SelectAll');
+                }
+                if (keyEvents) {
+                    keyEvents(event);
+                }
+            };
             // CKEditor replace textarea
             if (this.inline) {
                 this.instance = CKEDITOR.inline(
@@ -257,38 +293,17 @@ export class DejaEditorComponent
         }
     }
 
-    private _getPreviousWord(node: any, range: any): string {
-        // Range at the non-zero position of a text node.
-        const value = node.getText();
-        if (range.startOffset === range.endOffset) {
-            return StringUtils.getLastWord(value, range.startOffset);
-        }
-        return null;
-    }
-
-    public getPreviousWord(): string {
+    /**
+     * Return the word at cursor position.
+     *  - If the cursor is at the end of a word, it return that word.
+     *  - If the cursor is at the begining of a word, it return that word.
+     *  - If the cursor is in the middle of a word, it return that word.
+     *  - If there are no word nearly the cursor, return null
+     */
+    public getWordAtCursor(): string {
         const range = this.instance.getSelection().getRanges(true)[0];
-        const startNode: any = range.startContainer;
-        if (startNode instanceof CKEDITOR.dom.text) {
-            return this._getPreviousWord(startNode, range);
-        }
-        // Expand the range to the beginning of editable.
-        range.collapse(true);
-        range.setStartAt(
-            this.instance.editable(),
-            CKEDITOR.POSITION_AFTER_START
-        );
-
-        // Let's use the walker to find the closes (previous) text node.
-        const walker = new CKEDITOR.dom.walker(range);
-        let node;
-        while ((node = walker.previous())) {
-            // If found, return the last character of the text node.
-            if (node instanceof CKEDITOR.dom.text) {
-                return this._getPreviousWord(node, range);
-            }
-        }
-        return null;
+        const word = this._firstTextNode(range);
+        return (word && word.toReplace) || null;
     }
 
     public hasActiveSelection(): boolean {
@@ -300,88 +315,241 @@ export class DejaEditorComponent
         return selection.getSelectedText();
     }
 
-    private _replaceWord(range: any, node: any, replace: string) {
-        let newElement;
-        // Range at the non-zero position of a text node.
-        const newTextAndPosition = StringUtils.removeLastWord(
-            node.getText(),
-            range.startOffset - 1,
-            range.endOffset - 1
-        );
-        node.setText(newTextAndPosition.startValue);
-        newElement = CKEDITOR.dom.element.createFromHtml(replace);
-        newElement.insertAfter(node);
-        if (newTextAndPosition.endValue) {
-            const endNode = new CKEDITOR.dom.text(newTextAndPosition.endValue);
-            endNode.insertAfter(newElement);
-        } else if (node.getNext()) {
-            let next = node.getNext();
-            let x = StringUtils.removeLastWord(next.getText(), 0, 0);
-            while (x.endValue === next.getText) {
-                next.setText(x.endValue);
-                next = next.getNext();
-                x = StringUtils.removeLastWord(next.getText(), 0, 0);
-            }
-        }
-        this.instance.getSelection().selectElement(newElement);
-        const tmpRange = this.instance.getSelection().getRanges()[0];
-        tmpRange.setStartAfter(newElement);
-        tmpRange.select();
-    }
-
+    /**
+     * Replace the content of the editor.
+     *  - If there is an active selection, replace this selection
+     *  - If the editor is empty, simply insert the text
+     *  - If the cursor is near a word, replace this word with the text
+     *  - If there is no selection, no word near the cursor, simply insert the text at the cursor position
+     * @param replace the string to replace with
+     */
     public replace(replace: string): void {
         if (!replace) {
             return;
         }
         const selection = this.getSelectedText();
         if (selection) {
+            // Focus is used during the CKEDITOR insertText process and cause deselection of the selected text
+            // So we temporarily deactivate it
+            const focus = this.instance.focus;
+            this.instance.focus = () => {};
             this.instance.insertText(replace);
+            this.instance.focus = focus;
+            return;
+        }
+        const range = this.instance.getSelection().getRanges(true)[0];
+        if (!range) {
+            this.instance.insertText(replace);
+            return;
+        }
+        const text = this._firstTextNode(range);
+        if (text) {
+            this._replaceWord(text, replace);
         } else {
-            const range = this.instance.getSelection().getRanges(true)[0];
-            let startNode = range.startContainer;
-            if (
-                !(startNode instanceof CKEDITOR.dom.text) ||
-                !startNode.getText()
-            ) {
-                startNode = this._lastTextNode(range);
-            }
-            if (startNode) {
-                this._replaceWord(range, startNode, replace);
-            } else {
-                this.instance.insertText(replace);
-            }
+            this.instance.insertText(replace);
         }
         this.setFocus();
     }
 
-    private _lastTextNode(range: any): any {
-        range.collapse(true);
-        range.setStartAt(
-            this.instance.editable(),
-            CKEDITOR.POSITION_AFTER_START
-        );
-        // Let's use the walker to find the closes (previous) text node.
-        const walker = new CKEDITOR.dom.walker(range);
-        let node;
-        while ((node = walker.previous())) {
-            // If found, return the last character of the text node.
-            if (node instanceof CKEDITOR.dom.text && node.getText()) {
-                return node;
-            }
-        }
-        return null;
-    }
-
-    public insertText(text: string) {
-        this.instance.insertText(text);
-        this.setFocus();
-    }
-
-    public setFocus() {
+    public setFocus(): void {
         if (this.instance) {
             this.instance.focus();
         } else {
             this.host.nativeElement.focus();
         }
+    }
+
+    private _hasTextNodeAsChild(node: any, reverse = false): any {
+        const children: any[] = node.getChildren().toArray();
+        if (reverse) {
+            for (let i = children.length - 1; i >= 0; i--) {
+                const child = children[i];
+                if (child.type === CKEDITOR.NODE_TEXT) {
+                    return child;
+                } else {
+                    const inChild = this._hasTextNodeAsChild(child);
+                    if (inChild) {
+                        return inChild;
+                    }
+                }
+            }
+        } else {
+            for (const child of children) {
+                if (child.type === CKEDITOR.NODE_TEXT) {
+                    return child;
+                } else {
+                    const inChild = this._hasTextNodeAsChild(child);
+                    if (inChild) {
+                        return inChild;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private _mergeTextNodeAroundWithDirection(
+        textNode: any,
+        reverse = false
+    ): void {
+        const toRemove = [];
+        let newText = textNode.getText();
+        let x = textNode;
+        while ((x = reverse ? x.getPrevious() : x.getNext)) {
+            if (
+                x.type !== CKEDITOR.NODE_TEXT ||
+                x
+                    .getText()
+                    .charAt(reverse ? x.getText().length - 1 : 0)
+                    .match(/[\s,;.:!?]/)
+            ) {
+                break;
+            }
+            if (reverse) {
+                newText = x.getText() + newText;
+            } else {
+                newText += x.getText();
+            }
+            toRemove.push(x);
+        }
+        if (toRemove.length > 0) {
+            textNode.setText(newText);
+            toRemove.forEach(node => node.remove());
+        }
+    }
+
+    private _mergeTextNodeAround(textNode: any): any {
+        this._mergeTextNodeAroundWithDirection(textNode, true);
+        this._mergeTextNodeAroundWithDirection(textNode);
+        return textNode;
+    }
+
+    private _firstNonEmptyTextNode(node: any, reverse = false): any {
+        let x = node;
+        while ((x = reverse ? x.getPrevious() : x.getNext())) {
+            if (x.type === CKEDITOR.NODE_TEXT) {
+                if (x.getText() !== '') {
+                    return x;
+                }
+            } else {
+                return x;
+            }
+        }
+    }
+
+    private _trim(text: string): string {
+        if (text) {
+            text = text.replace(/[\u200b\u00A0]/g, '').trim();
+        }
+        return text;
+    }
+
+    private _extractFirstWord(text: string, reverse = false): string {
+        if (!text) {
+            return text;
+        }
+        if (text.indexOf(' ') !== -1) {
+            const spaceSplit = text.split(' ');
+            return this._trim(spaceSplit[reverse ? spaceSplit.length - 1 : 0]);
+        } else {
+            return this._trim(text);
+        }
+    }
+
+    private _firstTextNodeResult(
+        selectedNode: any,
+        reverse = false,
+        firstNodeIsText = false
+    ): {
+        textNode: any;
+        firstNodeIsText: boolean;
+        toReplace: string;
+    } {
+        if (this._trim(selectedNode.getText())) {
+            const node = this._mergeTextNodeAround(selectedNode);
+            return {
+                textNode: node,
+                firstNodeIsText: firstNodeIsText,
+                toReplace: this._extractFirstWord(node.getText(), reverse)
+            };
+        }
+        return null;
+    }
+
+    private _firstTextNodeWithDirection(
+        range: any,
+        reverse = false
+    ): {
+        textNode: any;
+        firstNodeIsText: boolean;
+        toReplace: string;
+    } {
+        const startContainer: any = range.startContainer;
+        if (reverse && startContainer.type === CKEDITOR.NODE_TEXT) {
+            return this._firstTextNodeResult(startContainer, reverse, true);
+        }
+        const startNode: any =
+            startContainer.type === CKEDITOR.NODE_TEXT
+                ? reverse
+                    ? this._firstNonEmptyTextNode(startContainer, true)
+                    : this._firstNonEmptyTextNode(startContainer)
+                : startContainer.getChildren().getItem(range.startOffset - 1);
+        if (startNode) {
+            if (startNode.type === CKEDITOR.NODE_TEXT) {
+                return this._firstTextNodeResult(startNode, reverse);
+            }
+            let x = this._hasTextNodeAsChild(startNode, reverse);
+            if (x) {
+                return this._firstTextNodeResult(x, reverse);
+            }
+            x = startNode;
+            while ((x = reverse ? x.getPrevious() : x.getNext())) {
+                if (x.type === CKEDITOR.NODE_TEXT) {
+                    return this._firstTextNodeResult(x, reverse);
+                }
+                const textNode = this._hasTextNodeAsChild(x, reverse);
+                if (textNode) {
+                    return this._firstTextNodeResult(textNode, reverse);
+                }
+            }
+        }
+        return null;
+    }
+
+    private _firstTextNode(
+        range: any
+    ): { textNode: any; firstNodeIsText: boolean; toReplace: string } {
+        let textNode: {
+            textNode: any;
+            firstNodeIsText: boolean;
+            toReplace: string;
+        } = this._firstTextNodeWithDirection(range, true);
+        if (!textNode) {
+            textNode = this._firstTextNodeWithDirection(range);
+        }
+        return textNode;
+    }
+
+    private _replaceWord(
+        node: { textNode: any; firstNodeIsText: boolean; toReplace: string },
+        replace: string
+    ): void {
+        const split = node.textNode.getText().split(node.toReplace);
+        node.textNode.setText(split[0]);
+        const newElement = CKEDITOR.dom.element.createFromHtml(
+            `<span>${CKEDITOR.tools.transformPlainTextToHtml(
+                replace,
+                CKEDITOR.ENTER_BR
+            )}</span>`
+        );
+        newElement.insertAfter(node.textNode);
+        if (split.length === 2 && split[1]) {
+            const end = new CKEDITOR.dom.text(split[1]);
+            end.insertAfter(newElement);
+        }
+        this.instance.getSelection().selectElement(node.textNode);
+        const tmpRange = this.instance.getSelection().getRanges()[0];
+        tmpRange.setStartAfter(node.textNode);
+        tmpRange.select();
     }
 }

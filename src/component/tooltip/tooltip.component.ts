@@ -24,7 +24,7 @@ import { DejaConnectionPositionPair } from '../../common/core/overlay/connection
 import { DejaTooltipService, ITooltipParams } from './tooltip.service';
 
 /**
- * Customizable tooltip component for Angular2
+ * Customizable tooltip component for Angular
  */
 @Component({
     encapsulation: ViewEncapsulation.None,

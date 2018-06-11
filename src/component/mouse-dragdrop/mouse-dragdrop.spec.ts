@@ -106,7 +106,7 @@ describe('DejaMouseDragDrop', () => {
         expect(droppableInstance).toBeTruthy();
     }));
 
-    it('should be able to drag and drop from the first div to the second', async(() => {
+    it('should be able to drag and drop from the first div to the second', async (done) => {
         const fixture = TestBed.createComponent(DejaMouseDragDropComponent);
 
         fixture.detectChanges();
@@ -134,9 +134,10 @@ describe('DejaMouseDragDrop', () => {
                 } as MouseEventInit);
                 const event = new MouseEvent(type, eventInit());
                 element.dispatchEvent(event);
+                fixture.detectChanges();
             };
 
-            sendMouseEvent(dragElement, 'mouseenter', 101, 101);
+            sendMouseEvent(dragElement, 'mouseenter', 110, 110);
             sendMouseEvent(dragElement, 'mousemove', 200, 200);
             sendMouseEvent(dragElement, 'mousedown', 200, 200, 1);
             sendMouseEvent(dragElement.ownerDocument, 'mousemove', 220, 220, 1);
@@ -145,11 +146,9 @@ describe('DejaMouseDragDrop', () => {
             sendMouseEvent(dragElement.ownerDocument, 'mousemove', 250, 400, 1);
             sendMouseEvent(dragElement.ownerDocument, 'mousemove', 200, 400, 1);
             sendMouseEvent(dragElement.ownerDocument, 'mouseup', 200, 400, 0);
-
-            fixture.detectChanges();
             const dropElement = dropDebugElement.nativeElement as HTMLElement;
-
             expect(dropElement.innerText).toEqual(dragElement.innerText);
+            done();
         });
-    }));
+    });
 });

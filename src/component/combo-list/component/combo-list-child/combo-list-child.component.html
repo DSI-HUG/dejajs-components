@@ -1,0 +1,3 @@
+<mat-selection-list dense (selectionChange)="stateChange($event)">
+    <mat-list-option *ngFor="let item of items" [disabled]="disabled" [ngClass]="getClass(item)" [value]="item">{{item[labelFieldName]}}</mat-list-option>
+</mat-selection-list>
