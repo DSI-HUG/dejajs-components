@@ -1,3 +1,26 @@
+<a name="3.0.1"></a>
+## [3.0.1](https://github.com/DSI-HUG/dejajs-components/compare/3.0.0...3.0.1) (2018-06-11)
+
+
+### Bug Fixes
+
+* **ckeditor:** Use coercion ([1a42439](https://github.com/DSI-HUG/dejajs-components/commit/1a42439))
+* **Combolist:** Use coercion ([3d8e226](https://github.com/DSI-HUG/dejajs-components/commit/3d8e226))
+* **DejaComboList:** aot - no lambda functions in decorators. ([412d92e](https://github.com/DSI-HUG/dejajs-components/commit/412d92e))
+* **DejaComboList:** fix license-check errors ([a74a2e4](https://github.com/DSI-HUG/dejajs-components/commit/a74a2e4))
+* **DejaComboList:** license ([2d86408](https://github.com/DSI-HUG/dejajs-components/commit/2d86408))
+* **DejaComboList:** rollup and include ([19df423](https://github.com/DSI-HUG/dejajs-components/commit/19df423))
+* **DejaEditor:** Lateral scrollbar was always displayed ([f7dbc35](https://github.com/DSI-HUG/dejajs-components/commit/f7dbc35))
+* **TextReplace:** Fix get and replace text at cursor position functionnality ([846dba8](https://github.com/DSI-HUG/dejajs-components/commit/846dba8))
+* Revert view encapsulation modification ([cf14713](https://github.com/DSI-HUG/dejajs-components/commit/cf14713))
+
+
+### Features
+
+* **combo-list:** enable keyboard navigation ([98ac8a9](https://github.com/DSI-HUG/dejajs-components/commit/98ac8a9))
+
+
+
 <a name="3.0.0"></a>
 # [3.0.0](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.0-beta.0...v3.0.0) (2018-05-31)
 
