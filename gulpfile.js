@@ -661,7 +661,7 @@ gulp.task('commit-changes', (cb) => {
 });
 
 gulp.task('push-changes', (cb) => {
-    gulpGit.push('origin', 'master', cb);
+    gulpGit.push('origin', 'dev', cb);
 });
 
 gulp.task('create-new-tag', (cb) => {
@@ -670,7 +670,7 @@ gulp.task('create-new-tag', (cb) => {
         if (error) {
             return cb(error);
         }
-        gulpGit.push('origin', 'master', {
+        gulpGit.push('origin', 'dev', {
             args: '--tags'
         }, cb);
     });
