@@ -5,6 +5,7 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -19,11 +20,11 @@ import {
     OnDestroy,
     Output,
     SimpleChanges,
-    ViewChild
+    ViewChild,
+    ViewEncapsulation,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { DejaEditorService } from './deja-editor.service';
 
 declare var CKEDITOR: any;
@@ -44,7 +45,8 @@ declare var CKEDITOR: any;
     ],
     templateUrl: './deja-editor.component.html',
     styleUrls: ['./deja-editor.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DejaEditorComponent
     implements OnChanges, AfterViewInit, OnDestroy, ControlValueAccessor {
