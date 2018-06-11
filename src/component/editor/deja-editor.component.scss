@@ -1,9 +1,13 @@
 .cke_textarea_inline {
     & > p {
-      margin: 0;
+        margin: 0;
     }
 
     &:focus {
-      outline: none;
+        outline: none;
     }
-  }
+}
+
+:host {
+    line-height: normal;
+}

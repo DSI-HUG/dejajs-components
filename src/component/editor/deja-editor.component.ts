@@ -19,8 +19,7 @@ import {
     OnDestroy,
     Output,
     SimpleChanges,
-    ViewChild,
-    ViewEncapsulation
+    ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -45,7 +44,6 @@ declare var CKEDITOR: any;
     ],
     templateUrl: './deja-editor.component.html',
     styleUrls: ['./deja-editor.component.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DejaEditorComponent
