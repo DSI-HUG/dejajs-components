@@ -91,18 +91,18 @@ describe('DejaComboListForm', () => {
         )
     );
 
-    fit('should create an instance', () => {
+    it('should create an instance', () => {
         expect(comp).toBeTruthy();
     });
 
-    fit('should create the component', () => {
+    it('should create the component', () => {
         fixture.detectChanges();
         const debugElement = fixture.debugElement.query(By.directive(DejaComboListComponent));
         const componentInstance = debugElement.componentInstance as DejaComboListComponent<{}>;
         expect(componentInstance).toBeTruthy();
     });
 
-    fit('should fires changes', () => {
+    it('should fires changes', () => {
         const debugElement = fixture.debugElement.query(By.directive(DejaComboListComponent));
         const componentInstance = debugElement.componentInstance as DejaComboListComponent<{}>;
         const form = comp.comboListForm;
@@ -127,7 +127,7 @@ describe('DejaComboListForm', () => {
 
     });
 
-    fit('should have form touched and dirty after raiseAll button click', () => {
+    it('should have form touched and dirty after raiseAll button click', () => {
         fixture.detectChanges();
         const form = comp.comboListForm;
         const raiseAllButton = fixture.debugElement.query(By.css('button[title="Select all"]'));
