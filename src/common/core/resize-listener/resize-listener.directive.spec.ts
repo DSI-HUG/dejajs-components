@@ -12,6 +12,7 @@ import { async, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Observable } from 'rxjs/Observable';
 import { ResizeListenerModule } from './index';
 import { DejaResizeListenerDirective } from './resize-listener.directive';
 
@@ -55,7 +56,7 @@ describe('DejaResizeListenerDirective', () => {
         expect(instance).toBeTruthy();
     }));
 
-    it('should receive an event when the div is resized', async(() => {
+    it('should receive an event when the div is resized', (done) => {
         const fixture = TestBed.createComponent(ResizeListenerContainerComponent);
         fixture.detectChanges();
         const instance = fixture.debugElement.componentInstance as ResizeListenerContainerComponent;
@@ -68,9 +69,10 @@ describe('DejaResizeListenerDirective', () => {
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
-            setTimeout(() => {
+            Observable.timer(100).subscribe(() => {
                 expect(spy).toHaveBeenCalledTimes(1);
-            }, 20);
+                done();
+            });
         });
-    }));
+    });
 });

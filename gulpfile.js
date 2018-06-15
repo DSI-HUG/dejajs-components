@@ -1,6 +1,7 @@
 const del = require('del');
 const gulp = require('gulp');
-const gulpUtil = require('gulp-util');
+const colors = require('ansi-colors');
+const log = require('fancy-log');
 const helpers = require('./config/helpers');
 
 /** External command runner */
@@ -92,17 +93,17 @@ const getPackageJsonVersion = () => {
 
 const isOK = condition => {
     if (condition === undefined) {
-        return gulpUtil.colors.yellow('[SKIPPED]');
+        return colors.yellow('[SKIPPED]');
     }
-    return condition ? gulpUtil.colors.green('[OK]') : gulpUtil.colors.red('[KO]');
+    return condition ? colors.green('[OK]') : colors.red('[KO]');
 };
 
 const execCmd = (name, args, opts, ...subFolders) => {
     const cmd = helpers.root(subFolders, helpers.binPath(`${name}`));
     return helpers.execp(`${cmd} ${args}`, opts)
         .catch(e => {
-            gulpUtil.log(gulpUtil.colors.red(`${name} command failed. See below for errors.\n`));
-            gulpUtil.log(gulpUtil.colors.red(e));
+            log(colors.red(`${name} command failed. See below for errors.\n`));
+            log(colors.red(e));
             process.exit(1);
         });
 };
@@ -110,8 +111,8 @@ const execCmd = (name, args, opts, ...subFolders) => {
 const execExternalCmd = (name, args, opts) => {
     return helpers.execp(`${name} ${args}`, opts)
         .catch(e => {
-            gulpUtil.log(gulpUtil.colors.red(`${name} command failed. See below for errors.\n`));
-            gulpUtil.log(gulpUtil.colors.red(e));
+            log(colors.red(`${name} command failed. See below for errors.\n`));
+            log(colors.red(e));
             process.exit(1);
         });
 };
@@ -119,7 +120,7 @@ const execExternalCmd = (name, args, opts) => {
 const execExternalCmdNoErrors = (name, args, opts) => {
     return helpers.execp(`${name} ${args}`, opts)
         .catch(e => {
-            gulpUtil.log(gulpUtil.colors.white(e));
+            log(colors.white(e));
         });
 };
 
@@ -299,8 +300,8 @@ gulp.task('build:scss', (cb) => {
     return Promise.resolve()
         .then(() => buildCss(config.outputDir))
         .catch(e => {
-            gulpUtil.log(gulpUtil.colors.red('sass compilation failed. See below for errors.\n'));
-            gulpUtil.log(gulpUtil.colors.red(e));
+            log(colors.red('sass compilation failed. See below for errors.\n'));
+            log(colors.red(e));
             process.exit(1);
         });
 });
@@ -309,8 +310,8 @@ gulp.task('scss', (cb) => {
     return Promise.resolve()
         .then(() => buildCss(config.sourceDir))
         .catch(e => {
-            gulpUtil.log(gulpUtil.colors.red('sass compilation failed. See below for errors.\n'));
-            gulpUtil.log(gulpUtil.colors.red(e));
+            log(colors.red('sass compilation failed. See below for errors.\n'));
+            log(colors.red(e));
         });
 });
 
@@ -331,11 +332,11 @@ gulp.task('ng-compile', () => {
     return Promise.resolve()
         .then(() => ngc(['--project', `${buildFolder}/tsconfig.es5.json`])
             .then(exitCode => exitCode === 0 ? Promise.resolve() : Promise.reject())
-            .then(() => gulpUtil.log('ES5 compilation succeeded.'))
+            .then(() => log('ES5 compilation succeeded.'))
         )
         .catch(e => {
-            gulpUtil.log(gulpUtil.colors.red('ng-compilation failed. See below for errors.\n'));
-            gulpUtil.log(gulpUtil.colors.red(e));
+            log(colors.red('ng-compilation failed. See below for errors.\n'));
+            log(colors.red(e));
             process.exit(1);
         });
 });
@@ -344,8 +345,8 @@ gulp.task('scss:demo', (cb) => {
     return Promise.resolve()
         .then(() => buildCss(`${config.demoDir}src`))
         .catch(e => {
-            gulpUtil.log(gulpUtil.colors.red('sass compilation failed. See below for errors.\n'));
-            gulpUtil.log(gulpUtil.colors.red(e));
+            log(colors.red('sass compilation failed. See below for errors.\n'));
+            log(colors.red(e));
         });
 });
 
@@ -518,11 +519,11 @@ gulp.task('rollup-bundle', (cb) => {
             ].map(cfg => rollup.rollup(cfg).then(bundle => bundle.write(cfg.output)));
 
             return Promise.all(allBundles)
-                .then(() => gulpUtil.log('All bundles generated successfully.'))
+                .then(() => log('All bundles generated successfully.'))
         })
         .catch(e => {
-            gulpUtil.log(gulpUtil.colors.red('rollup-bundling failed. See below for errors.\n'));
-            gulpUtil.log(gulpUtil.colors.red(e));
+            log(colors.red('rollup-bundling failed. See below for errors.\n'));
+            log(colors.red(e));
             process.exit(1);
         });
 });
@@ -560,8 +561,8 @@ const execDemoCmd = (args, opts) => {
     if (fs.existsSync(`${config.demoDir}/node_modules`)) {
         return execCmd('ng', args, opts, `/${config.demoDir}`);
     } else {
-        gulpUtil.log(gulpUtil.colors.red(`Demo dependencied not installed. Please execute yarn in demo folder.`));
-        gulpUtil.log(gulpUtil.colors.red(e));
+        log(colors.red(`Demo dependencied not installed. Please execute yarn in demo folder.`));
+        log(colors.red(e));
         process.exit(1);
     }
 };
@@ -618,7 +619,7 @@ gulp.task('github-release', (cb) => {
     const conventionalGithubReleaser = require('conventional-github-releaser');
 
     if (!argv.ghToken && !process.env.CONVENTIONAL_GITHUB_RELEASER_TOKEN) {
-        gulpUtil.log(gulpUtil.colors.red(`You must specify a Github Token via '--ghToken' or set environment variable 'CONVENTIONAL_GITHUB_RELEASER_TOKEN' to allow releasing on Github`));
+        log(colors.red(`You must specify a Github Token via '--ghToken' or set environment variable 'CONVENTIONAL_GITHUB_RELEASER_TOKEN' to allow releasing on Github`));
         throw new Error(`Missing '--ghToken' argument and environment variable 'CONVENTIONAL_GITHUB_RELEASER_TOKEN' not set`);
     }
 
@@ -635,7 +636,7 @@ gulp.task('bump-version', (cb) => {
     const gulpBump = require('gulp-bump');
 
     if (!argv.version) {
-        gulpUtil.log(gulpUtil.colors.red(`You must specify which version to bump to (Possible values: 'major', 'minor', and 'patch')`));
+        log(colors.red(`You must specify which version to bump to (Possible values: 'major', 'minor', and 'patch')`));
         throw new Error(`Missing '--version' argument`);
     }
 
@@ -660,7 +661,7 @@ gulp.task('commit-changes', (cb) => {
 });
 
 gulp.task('push-changes', (cb) => {
-    gulpGit.push('origin', 'master', cb);
+    gulpGit.push('origin', 'dev', cb);
 });
 
 gulp.task('create-new-tag', (cb) => {
@@ -669,7 +670,7 @@ gulp.task('create-new-tag', (cb) => {
         if (error) {
             return cb(error);
         }
-        gulpGit.push('origin', 'master', {
+        gulpGit.push('origin', 'dev', {
             args: '--tags'
         }, cb);
     });
@@ -678,9 +679,9 @@ gulp.task('create-new-tag', (cb) => {
 
 gulp.task('release', gulp.series('bump-version', 'changelog', 'commit-changes', 'create-new-tag', 'push-changes', (error) => {
     if (error) {
-        gulpUtil.log(gulpUtil.colors.red(error.message));
+        log(colors.red(error.message));
     } else {
-        gulpUtil.log(gulpUtil.colors.green('RELEASE FINISHED SUCCESSFULLY'));
+        log(colors.green('RELEASE FINISHED SUCCESSFULLY'));
     }
     // cb(error);
 }));

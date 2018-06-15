@@ -42,7 +42,8 @@ describe('dejajs-components-demo App', () => {
     });
 
     it('should be open on desktop', async () => {
-        browser.driver.manage().window().setSize(1250, 500).then(() => {
+        browser.driver.manage().window().setSize(1300, 600).then(() => {
+            browser.sleep(20000);
             sidenav.navigateTo().then(() => {
                 browser.waitForAngular().then(() => {
                     browser.sleep(500); // Wait for animation

@@ -405,10 +405,6 @@ class DejaGridContainerComponent {
     constructor() {
         this.columns = _.cloneDeep(this.fructsColumns);
     }
-
-    public eventCalled() {
-        return true;
-    }
 }
 
 describe('DejaGridComponent', () => {
@@ -589,6 +585,13 @@ describe('DejaGridComponent', () => {
 
     it('should group with the grouping area', (done) => {
         let pass = 0;
+        let doneCount = 0;
+
+        const testIfDone = () => {
+            if (++doneCount === 2) {
+                done();
+            }
+        };
 
         observeViewPort$()
             .debounceTime(10)
@@ -619,7 +622,7 @@ describe('DejaGridComponent', () => {
                     default:
                         expect(groupChips.length).toBe(0);
                         expect(vp.items.length).toBe(12);
-                        done();
+                        testIfDone();
                         break;
                 }
             });
@@ -628,19 +631,21 @@ describe('DejaGridComponent', () => {
             expect(groupInfos.length).toBe(1);
             expect(groupInfos[0].groupByField).toEqual('name');
             expect(groupInfos[0].groupTextField).toEqual('name');
-            gridContainerInstance.eventCalled();
+            testIfDone();
         });
-
-        const spy = spyOn(gridContainerInstance, 'eventCalled');
 
         fixture.detectChanges();
-        fixture.whenStable().then(() => {
-            expect(spy).toHaveBeenCalled();
-        });
     });
 
     it('should sort when user click on the header', (done) => {
         let pass = 0;
+        let doneCount = 0;
+
+        const testIfDone = () => {
+            if (++doneCount === 2) {
+                done();
+            }
+        };
 
         const sendMouseClick = (element: DebugElement) => {
             // Simulate a mouse click on the header
@@ -693,22 +698,17 @@ describe('DejaGridComponent', () => {
                     default:
                         expect((<any>vp.items[0]).name).toEqual('Banana');
                         expect((<any>vp.items[8]).name).toEqual('Mango');
-                        done();
+                        testIfDone();
                         break;
                 }
             });
 
         gridInstance.sortChanged.first().subscribe((sortInfos) => {
             expect(sortInfos.name).toEqual('name');
-            gridContainerInstance.eventCalled();
+            testIfDone();
         });
-
-        const spy = spyOn(gridContainerInstance, 'eventCalled');
 
         fixture.detectChanges();
-        fixture.whenStable().then(() => {
-            expect(spy).toHaveBeenCalled();
-        });
     });
 
     it('should size the column when user click on the header separator', (done) => {
@@ -1125,8 +1125,8 @@ describe('DejaGridComponent', () => {
                             const dragGroupElement = chipsDraggable[0].nativeElement;
                             const dragEventInit = eventInit(chipsDraggable[0]);
                             const dragTargetBounds = dragGroupElement.getBoundingClientRect();
-                            dragEventInit.clientY = dragTargetBounds.top + 1;
-                            dragEventInit.clientX = dragTargetBounds.left + 1;
+                            dragEventInit.clientY = dragTargetBounds.top + 5;
+                            dragEventInit.clientX = dragTargetBounds.left + 5;
                             dragGroupElement.dispatchEvent(new DragEvent('dragstart', eventInit(chipsDraggable[0]) as any));
                             fixture.detectChanges();
                         })
@@ -1135,8 +1135,8 @@ describe('DejaGridComponent', () => {
                             const enterEventInit = eventInit(gridGroupArea);
                             const enterTarget = gridGroupArea.nativeElement as HTMLElement;
                             const enterTargetBounds = enterTarget.getBoundingClientRect();
-                            enterEventInit.clientY = enterTargetBounds.top + 1;
-                            enterEventInit.clientX = enterTargetBounds.left + 1;
+                            enterEventInit.clientY = enterTargetBounds.top + 5;
+                            enterEventInit.clientX = enterTargetBounds.left + 5;
                             enterTarget.dispatchEvent(new DragEvent('dragenter', enterEventInit as any));
                             fixture.detectChanges();
                         })

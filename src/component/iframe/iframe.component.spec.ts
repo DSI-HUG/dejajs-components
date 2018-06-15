@@ -28,7 +28,7 @@ describe('DejaIFrameComponent', () => {
         expect(component).toBeTruthy();
     }));
 
-    it('should load a website', () => {
+    it('should load a website', (done) => {
         fixture.detectChanges();
         fixture.whenStable().then(() => {
             // set onload on element
@@ -42,6 +42,7 @@ describe('DejaIFrameComponent', () => {
             fixture.detectChanges();
 
             expect(iframe.sourceUrl).toBeUndefined();
+            done();
         });
     });
 });

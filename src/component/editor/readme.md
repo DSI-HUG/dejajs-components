@@ -1,7 +1,9 @@
 # Editor
+
 Composant pour editer du texte riche.
 
-### Utilisation 
+### Utilisation
+
 > Ne pas oublier d'importer le `DejaEditorModule` dans les `imports` de votre module concerné !
 
 ```html
@@ -13,7 +15,8 @@ Composant pour editer du texte riche.
 ```
 
 #### Note
- - Pour que l'éditeur soit correctement affiché, vous devez mettre à jour votre fichier `angular.json` comme suit pour que CKEditor soit disponible dans les assets:
+
+-   Pour que l'éditeur soit correctement affiché, vous devez mettre à jour votre fichier `angular.json` comme suit pour que CKEditor soit disponible dans les assets:
 
 ```json
 {
@@ -136,10 +139,10 @@ Composant pour editer du texte riche.
 </thead>
 <tbody>
 <tr>
-    <td>getPreviousWord</td>
+    <td>getWordAtCursor</td>
     <td></td>
     <td>string</td>
-    <td>Retourne le premier mot situé en amont du curseur</td>
+    <td>Retourne le mot situé à la position du curseur.</td>
 </tr>
 <tr>
     <td>hasActiveSelection</td>
@@ -157,13 +160,7 @@ Composant pour editer du texte riche.
     <td>replace</td>
     <td>replace: string</td>
     <td>void</td>
-    <td>Si une sélection est active, remplace la sélection avec `replace`. Si le curseur est situé au milieu d'un mot ou à la fin de celui-ci sans qu'il n'y ait d'espace entre celui-ci et le curseur, remplace le mot avec `replace`. Sinon `replace` est inséré à l'endroit du curseur. </td>
-</tr>
-<tr>
-    <td>insertText</td>
-    <td>text: string</td>
-    <td>void</td>
-    <td>Insère `text` à la position du curseur</td>
+    <td>Si une sélection est active, remplace la sélection avec `replace`. Si le curseur est situé au milieu d'un mot, au début ou à la fin de celui-ci sans qu'il n'y ait d'espace entre celui-ci et le curseur, remplace le mot avec `replace`. Sinon `replace` est inséré à l'endroit du curseur. </td>
 </tr>
 <tr>
     <td>setFocus</td>
