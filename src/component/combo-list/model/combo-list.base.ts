@@ -8,7 +8,7 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { EventEmitter, Input, Output } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
-import { IDejaComboListAction, noop } from '../model/combo-list-action.interface';
+import { IDejaComboListAction } from '../model/combo-list-action.interface';
 import { DejaComboListState } from './combo-list-state.class';
 
 export abstract class DejaComboListBase<T> implements ControlValueAccessor {
@@ -58,8 +58,6 @@ export abstract class DejaComboListBase<T> implements ControlValueAccessor {
 
     @Output() public action = new EventEmitter<IDejaComboListAction<T>>();
 
-    public onTouchedCallback: () => void = noop;
-
     private _state: DejaComboListState<T>;
     public get state() {
         if (!this._state) {
@@ -97,7 +95,7 @@ export abstract class DejaComboListBase<T> implements ControlValueAccessor {
 
     /** From ControlValueAccessor interface */
     public registerOnTouched(fn: any) {
-        this.onTouchedCallback = fn;
+        this.state.onTouchedCallback = fn;
     }
 
     // Allows Angular to disable the input.
