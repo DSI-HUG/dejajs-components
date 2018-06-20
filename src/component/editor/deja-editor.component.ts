@@ -21,7 +21,7 @@ import {
     Output,
     SimpleChanges,
     ViewChild,
-    ViewEncapsulation,
+    ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -123,14 +123,9 @@ export class DejaEditorComponent
         this.ready.complete();
         this.disabled.complete();
         if (this.instance) {
-            // Wait for angular component to be destroyed before destroying ckeditor instances
-            setTimeout(() => {
-                this.instance.focusManager.blur(true);
-                this.instance.removeAllListeners();
-                CKEDITOR.instances[this.instance.name].destroy();
-                this.instance.destroy();
-                this.instance = null;
-            });
+            this.instance.focusManager.blur(true);
+            this.instance.destroy();
+            this.instance = null;
         }
     }
 
