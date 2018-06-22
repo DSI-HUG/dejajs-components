@@ -896,6 +896,12 @@ export class ItemListService {
         ignoreCache = ignoreCache || queryChanged || !this.items || !this.items.length;
         this._lastQuery = query;
 
+        const escapeChars = (text: string) => {
+            const specialChars = ['\\', '/', '|', '&', ';', '$', '%', '@', '"', '<', '>', '(', ')', '+'];
+            specialChars.forEach((c) => text = text.replace(c, `\\${c}`));
+            return text;
+        };
+
         // Check regexp validity
         // regExp.test(this.getTextValue(item));
         let regExp: RegExp;
@@ -903,9 +909,10 @@ export class ItemListService {
             if (typeof query === 'string') {
                 try {
                     query = Diacritics.remove(query);
-                    regExp = new RegExp(query, 'i');
+                    const escapedQuery = escapeChars(query);
+                    regExp = new RegExp(escapedQuery, 'i');
                 } catch (exc) {
-                    throw new Error('Invalid search parameters');
+                    console.log('Invalid search parameters');
                 }
             } else {
                 regExp = query as RegExp;
