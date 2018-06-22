@@ -733,6 +733,10 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
             })
             .switchMap((event) => this.ensureListCaches$().map(() => event))
             .map((event: KeyboardEvent) => {
+                if (!this.rowsCount) {
+                    return true;
+                }
+
                 // Set current item from index for keyboard features only
                 const setCurrentIndex = (index: number) => {
                     this.currentItemIndex = index;
