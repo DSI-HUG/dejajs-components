@@ -1,3 +1,21 @@
+<a name="3.0.2"></a>
+## [3.0.2](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.1...v3.0.2) (2018-06-29)
+
+
+### Bug Fixes
+
+* **DejaEditor:** Properly destroy CKEditor ([97709ec](https://github.com/DSI-HUG/dejajs-components/commit/97709ec))
+* **DejaTreeList:** Escape special characters on treelist search and filter ([73edb56](https://github.com/DSI-HUG/dejajs-components/commit/73edb56))
+* **DejaTreeList:** Fix treelist crash when empty on keyboard navigation. ([bccea15](https://github.com/DSI-HUG/dejajs-components/commit/bccea15))
+* **DejaTreeListComponent:** fix ngModel not working properly with select single mode ([ed4f345](https://github.com/DSI-HUG/dejajs-components/commit/ed4f345))
+
+
+### Features
+
+* **combo-list:** fixed registerOnChange and registerOnTouched ([f67f44a](https://github.com/DSI-HUG/dejajs-components/commit/f67f44a))
+
+
+
 <a name="3.0.1"></a>
 ## [3.0.1](https://github.com/DSI-HUG/dejajs-components/compare/3.0.0...3.0.1) (2018-06-11)
 
