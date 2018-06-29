@@ -733,6 +733,10 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
             })
             .switchMap((event) => this.ensureListCaches$().map(() => event))
             .map((event: KeyboardEvent) => {
+                if (!this.rowsCount) {
+                    return true;
+                }
+
                 // Set current item from index for keyboard features only
                 const setCurrentIndex = (index: number) => {
                     this.currentItemIndex = index;
@@ -1136,7 +1140,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                 output = models;
             }
         } else {
-            const model = this.selectedItems[0] && this.selectedItems[0].model;
+            const model = this.selectedModel;
 
             outputEmitter = {
                 item: this.selectedItems[0],

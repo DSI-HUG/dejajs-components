@@ -21,6 +21,7 @@ export class DejaComboListState<T> {
     public action = new EventEmitter<IDejaComboListAction<T>>();
 
     public onChangeCallback: (_: any) => void = noop;
+    public onTouchedCallback: () => void = noop;
 
     public toggleSelectable(item: T, add = true) {
         const index = this.selectableBuffer.indexOf(item, 0);
@@ -49,7 +50,7 @@ export class DejaComboListState<T> {
         this.selected = this.selectableBuffer.concat(this.selected);
         this.selectableBuffer = [];
         this.sortAll();
-        this.emit('selectable_raised');
+        this.emitAndChange('selectable_raised');
     }
 
     public dropBuffer() {
@@ -57,7 +58,7 @@ export class DejaComboListState<T> {
         this.selectable = this.selectedBuffer.concat(this.selectable);
         this.selectedBuffer = [];
         this.sortAll();
-        this.emit('selected_dropped');
+        this.emitAndChange('selected_dropped');
     }
 
     public raiseOne(item: T) {
@@ -67,7 +68,7 @@ export class DejaComboListState<T> {
             this.selected = [item].concat(this.selected);
         }
         this.sortAll();
-        this.emit('raised_one', item);
+        this.emitAndChange('raised_one', item);
     }
 
     public dropOne(item: T) {
@@ -77,7 +78,7 @@ export class DejaComboListState<T> {
             this.selectable = [item].concat(this.selectable);
         }
         this.sortAll();
-        this.emit('dropped_one', item);
+        this.emitAndChange('dropped_one', item);
     }
 
     public raiseAll() {
@@ -85,7 +86,7 @@ export class DejaComboListState<T> {
         this.selectable = [];
         this.selectableBuffer = [];
         this.sortAll();
-        this.emit('raised_all');
+        this.emitAndChange('raised_all');
     }
 
     public dropAll() {
@@ -93,7 +94,7 @@ export class DejaComboListState<T> {
         this.selected = [];
         this.selectedBuffer = [];
         this.sortAll();
-        this.emit('dropped_all');
+        this.emitAndChange('dropped_all');
     }
 
     public sortAll() {
@@ -115,6 +116,11 @@ export class DejaComboListState<T> {
         });
     }
 
+    private emitAndChange(type: string, currentItem: T = null, selectedItems = this.selected) {
+        this.onChangeCallback(this.selected);
+        this.emit(type, currentItem, selectedItems);
+    }
+
     private emit(type: string, currentItem: T = null, selectedItems = this.selected) {
         const action: IDejaComboListAction<T> = {
             type,
@@ -124,6 +130,7 @@ export class DejaComboListState<T> {
             }
         };
         this.action.emit(action);
+        this.onTouchedCallback();
     }
 
 }
