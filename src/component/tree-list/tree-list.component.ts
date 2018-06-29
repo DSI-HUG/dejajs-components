@@ -1140,7 +1140,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                 output = models;
             }
         } else {
-            const model = this.selectedItems[0] && this.selectedItems[0].model;
+            const model = this.selectedModel;
 
             outputEmitter = {
                 item: this.selectedItems[0],
