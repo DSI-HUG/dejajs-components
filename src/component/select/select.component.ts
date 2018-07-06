@@ -69,6 +69,8 @@ export enum DejaSelectSelectionPosition {
 export class DejaSelectComponent extends ItemListBase implements ControlValueAccessor, AfterViewInit, AfterContentInit {
     /** Texte à afficher par default dans la zone de recherche */
     @Input() public placeholder: string;
+    /** Texte affiché si aucune donnée n'est présente dans le tableau */
+    @Input() public nodataholder: string;
     /** Offset de position horizontal de la zone de dropdown */
     @Input() public overlayOffsetX = 0;
     /** Permet de définir un template de ligne par binding */
