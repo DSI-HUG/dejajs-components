@@ -1,8 +1,8 @@
-<div class="colors-wrapper">
-	<deja-color-fab id="basecolor" small *ngFor="let clrfab of colorFabs$ | async; let index=index" [attr.index]="index" [color]="clrfab"></deja-color-fab>
+<div class="colors-wrapper" id="basecolors">
+	<deja-color-fab basecolor small *ngFor="let clrfab of colorFabs$ | async; let index=index" [attr.index]="index" [color]="clrfab"></deja-color-fab>
 </div>
 <div class="colors-wrapper" id="subcolors">
-	<deja-color-fab id="subcolor" *ngFor="let clrfab of subColorFabs$ | async; let index=index" [attr.index]="index" [style.transition-duration]="(100*index)+'ms'" [color]="clrfab"></deja-color-fab>
+	<deja-color-fab subcolor *ngFor="let clrfab of subColorFabs$ | async; let index=index" [attr.index]="index" [style.transition-duration]="(100*index)+'ms'" [color]="clrfab"></deja-color-fab>
 </div>
 <div id="reset" *ngIf="!!_resetcolor" (click)="resetDefaultColor()" [style.background-color]="_resetcolor.toHex()">
 	<mat-icon [style.color]="getBestTextColor(_resetcolor.toHex())">undo</mat-icon>
