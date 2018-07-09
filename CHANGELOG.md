@@ -1,5 +1,5 @@
 <a name="3.1.0"></a>
-# [3.1.0](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.2...v3.1.0) (2018-07-09)
+# [3.1.0](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.2...v3.1.0) (2018-07-09) - Castor Agile
 
 
 ### Bug Fixes
