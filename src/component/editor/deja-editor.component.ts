@@ -259,7 +259,6 @@ export class DejaEditorComponent
      * Implements ControlValueAccessor
      */
     public writeValue(value: any) {
-        console.log(value);
         this._value = value;
         if (this.instance) {
             this.instance.setData(value);
