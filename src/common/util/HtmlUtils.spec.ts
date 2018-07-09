@@ -14,7 +14,7 @@ describe('HtmlUtils', () => {
         expect(HtmlUtils.getEncodedURIComponent(null)).toEqual('');
     });
 
-    it('should return toto=toto', () => {
+    it('should return property and value toto=toto', () => {
         expect(HtmlUtils.getEncodedURIComponent({toto: 'toto'})).toEqual('toto=toto');
     });
 
