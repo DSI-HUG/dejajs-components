@@ -200,12 +200,12 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
             .takeWhile(() => this.isAlive)
             .filter((_event) => !this._disabled)
             .subscribe((event: Event) => {
-                const { id, attributes } = event.target as HTMLElement;
-                const targetIndex = (<any>attributes)[DejaColorSelectorComponent.indexAttribute];
-                if (id === 'basecolor') {
+                const target = event.target as HTMLElement;
+                const targetIndex = (<any>target.attributes)[DejaColorSelectorComponent.indexAttribute];
+                if (target.hasAttribute('basecolor')) {
                     this.hilightedBaseIndex$.next(+targetIndex.value);
                     this.hilightedSubIndex$.next(this.hilightedSubIndex);
-                } else if (id === 'subcolor') {
+                } else if (target.hasAttribute('subcolor')) {
                     this.hilightedBaseIndex$.next(this.hilightedBaseIndex);
                     this.hilightedSubIndex$.next(+targetIndex.value);
                 } else {
@@ -219,7 +219,7 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
             .filter((_event) => !this._disabled)
             .subscribe((event: Event) => {
                 const target = event.target as HTMLElement;
-                if (target.id === 'basecolor' || target.id === 'subcolor') {
+                if (target.hasAttribute('basecolor') || target.hasAttribute('subcolor')) {
                     this.value = Color.parse(target.style.backgroundColor);
                 }
             });

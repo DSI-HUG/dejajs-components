@@ -1,3 +1,18 @@
+<a name="3.1.0"></a>
+# [3.1.0](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.2...v3.1.0) (2018-07-09) - Castor Agile
+
+
+### Bug Fixes
+
+* **DejaColorSelector:** Move duplicate id's to attributes ([902f3c6](https://github.com/DSI-HUG/dejajs-components/commit/902f3c6))
+
+
+### Features
+
+* **DejaSelect:** Add no data holder ([37cde67](https://github.com/DSI-HUG/dejajs-components/commit/37cde67))
+
+
+
 <a name="3.0.2"></a>
 ## [3.0.2](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.1...v3.0.2) (2018-06-29)
 
