@@ -2,7 +2,7 @@
 Apache-2.0
 Apache-2.0
 
-@angular/material@6.3.1
+@angular/material@6.3.2
 MIT
 The MIT License
 
@@ -87,7 +87,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
-@angular/cdk@6.3.1
+@angular/cdk@6.3.2
 MIT
 The MIT License
 
@@ -517,7 +517,7 @@ MIT
 MIT
 MIT
 
-json-object-mapper@1.5.2
+json-object-mapper@1.6.0
 MIT
 MIT License
 
