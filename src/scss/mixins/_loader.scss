@@ -2,16 +2,16 @@
 @mixin loader-theme($theme) {
     $primary: map-get($theme, primary);
     .waiter {
-        border-bottom: 2vmin solid mat-color($primary, 500, 0.2);
-        border-left: 2vmin solid mat-color($primary);
-        border-right: 2vmin solid mat-color($primary, 500, 0.2);
-        border-top: 2vmin solid mat-color($primary, 500, 0.2);
+        border-bottom: 1.25vmin solid mat-color($primary, 500, 0.2);
+        border-left: 1.25vmin solid mat-color($primary);
+        border-right: 1.25vmin solid mat-color($primary, 500, 0.2);
+        border-top: 1.25vmin solid mat-color($primary, 500, 0.2);
         font-size: 0.7rem;
         position: absolute;
         left: 50%;
         top: 50%;
         margin-left: -5vmin;
-        margin-top: -15vmin;
+        margin-top: -5vmin;
         -webkit-animation: spin 1.1s infinite linear;
         animation: spin 1.1s infinite linear;
     }
