@@ -20,14 +20,7 @@ export class DejaEditorService {
     private _loader: Promise<any>;
 
     /**
-     * Constructor
-     */
-    constructor() {
-        // (<any>window).CKEDITOR_BASEPATH = '/assets/ckeditor/';
-    }
-
-    /**
-     * Load the Monaco Editor Library
+     * Load the CKEditor Editor Library
      *
      * @return Resolved promise when the library is loaded
      */
@@ -45,10 +38,11 @@ export class DejaEditorService {
 
             // Load AMD loader if necessary
             if (!(<any>window).ckeditor) {
+                const basePath = (<any>window).CKEDITOR_BASEPATH || '/assets/ckeditor/';
                 const loaderScript = document.createElement('script');
                 document.head.appendChild(loaderScript);
                 loaderScript.type = 'text/javascript';
-                loaderScript.src = 'assets/ckeditor/ckeditor.js';
+                loaderScript.src = `${basePath}ckeditor.js`;
                 loaderScript.addEventListener('load', resolve);
             }
         });

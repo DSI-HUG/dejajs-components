@@ -17,6 +17,9 @@ describe('DejaEditorComponent', () => {
     let fixture: ComponentFixture<DejaEditorComponent>;
 
     beforeEach(async(() => {
+        // Define a ckeditor base path just for tests, because webpack configuration or asset plugin not working
+        (<any>window).CKEDITOR_BASEPATH = 'https://dsi-hug.github.io/dejajs-components/assets/ckeditor/';
+
         TestBed.configureTestingModule({
             declarations: [
                 DejaEditorComponent,
@@ -38,7 +41,7 @@ describe('DejaEditorComponent', () => {
         fixture.detectChanges();
         fixture.whenStable().then(() => {
             Observable.timer(1000).subscribe(() => {
-                // expect(window.hasOwnProperty('CKEDITOR')).toBeTruthy();
+                expect(window.hasOwnProperty('CKEDITOR')).toBeTruthy();
                 expect(fixture.debugElement.query(By.css('iframe'))).toBeDefined();
                 done();
             });
