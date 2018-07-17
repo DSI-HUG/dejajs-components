@@ -1,3 +1,19 @@
+<a name="3.2.0"></a>
+# [3.2.0](https://github.com/DSI-HUG/dejajs-components/compare/v3.1.0...v3.2.0) (2018-07-17)
+
+
+### Bug Fixes
+
+* **DejaTiles:** Fix tiles placement when no bounds are provided ([a908507](https://github.com/DSI-HUG/dejajs-components/commit/a908507))
+* **Scss:** Update loader size ([f902404](https://github.com/DSI-HUG/dejajs-components/commit/f902404))
+
+
+### Features
+
+* **DejaEditor:** Support placeholder for editor in mat-form-field ([80dfa83](https://github.com/DSI-HUG/dejajs-components/commit/80dfa83))
+
+
+
 <a name="3.1.0"></a>
 # [3.1.0](https://github.com/DSI-HUG/dejajs-components/compare/v3.0.2...v3.1.0) (2018-07-09) - Castor Agile
 
