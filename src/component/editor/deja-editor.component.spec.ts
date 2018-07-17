@@ -15,10 +15,14 @@ import { DejaEditorService } from './deja-editor.service';
 describe('DejaEditorComponent', () => {
     let component: DejaEditorComponent;
     let fixture: ComponentFixture<DejaEditorComponent>;
+    let originalTimeout: number;
 
     beforeEach(async(() => {
         // Define a ckeditor base path just for tests, because webpack configuration or asset plugin not working
         (<any>window).CKEDITOR_BASEPATH = 'https://dsi-hug.github.io/dejajs-components/assets/ckeditor/';
+
+        originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
         TestBed.configureTestingModule({
             declarations: [
@@ -33,6 +37,10 @@ describe('DejaEditorComponent', () => {
         component = fixture.componentInstance;
     }));
 
+    afterEach(() => {
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
+    });
+
     it('should create the component', async(() => {
         expect(component).toBeTruthy();
     }));
@@ -40,7 +48,7 @@ describe('DejaEditorComponent', () => {
     it('should load ckeditor', (done) => {
         fixture.detectChanges();
         fixture.whenStable().then(() => {
-            Observable.timer(1000).subscribe(() => {
+            Observable.timer(5000).subscribe(() => {
                 expect(window.hasOwnProperty('CKEDITOR')).toBeTruthy();
                 expect(fixture.debugElement.query(By.css('iframe'))).toBeDefined();
                 done();
