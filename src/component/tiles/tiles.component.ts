@@ -13,7 +13,6 @@ import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/takeWhile';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
@@ -93,11 +92,10 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     private paste$sub: Subscription;
     private keyup$: Observable<KeyboardEvent>;
     private isAlive = true;
-    private _tiles$ = new BehaviorSubject<DejaTile[]>([]);
     private hasFocus = false;
 
-    public get tiles$(): BehaviorSubject<DejaTile[]> {
-        return this._tiles$;
+    public get tiles(): DejaTile[] {
+        return this.layoutProvider.tiles;
     }
 
     @ViewChild('tilesContainer') private tilesContainer: ElementRef;
@@ -145,39 +143,36 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
             .takeWhile(() => this.isAlive)
             .debounceTime(5)
             .subscribe(() => this.refresh({ resetWidth: true }));
-
-        Observable.from(this._tiles$)
-            .subscribe((tiles) => this.layoutProvider.tiles = tiles);
     }
 
-    // provide a public acccess
+    // provide a public access
     public get selectionRect$(): Subject<Rect> {
         return this.layoutProvider.selectionRect$;
     }
 
     @Input()
     public set tileminwidth(value: string) {
-        this.layoutProvider.tileminwidth = value;
+        this.layoutProvider.tileMinWidth = value;
     }
 
     @Input()
     public set tilemaxwidth(value: string) {
-        this.layoutProvider.tilemaxwidth = value;
+        this.layoutProvider.tileMaxWidth = value;
     }
 
     @Input()
     public set tileminheight(value: string) {
-        this.layoutProvider.tileminheight = value;
+        this.layoutProvider.tileMinHeight = value;
     }
 
     @Input()
     public set tilemaxheight(value: string) {
-        this.layoutProvider.tilemaxheight = value;
+        this.layoutProvider.tileMaxHeight = value;
     }
 
     @Input()
     public set maxwidth(value: string) {
-        this.layoutProvider.maxwidth = value;
+        this.layoutProvider.maxWidth = value;
     }
 
     @Input()
@@ -266,15 +261,15 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     }
 
     @Input()
-    public set selectedTiles(selectedtiles: Array<IDejaTile | string>) {
-        this.layoutProvider.selectedTiles = selectedtiles.map((tile) => typeof tile === 'string' ? tile : (<IDejaTile>tile).id);
+    public set selectedTiles(selectedTiles: Array<IDejaTile | string>) {
+        this.layoutProvider.selectedTiles = selectedTiles.map((tile) => typeof tile === 'string' ? tile : (<IDejaTile>tile).id);
     }
 
     // ************* ControlValueAccessor Implementation **************
     public writeValue(models: any) {
         this._models = models || [];
         const tiles = this._models.map((tile) => new DejaTile(tile));
-        this._tiles$.next(tiles);
+        this.layoutProvider.tiles = tiles;
         this.changeDetectorRef.markForCheck();
     }
 
@@ -335,8 +330,8 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
         this.layoutProvider.ensureVisible$.next(id);
     }
 
-    public expandTile(tile: IDejaTile, pixelheight: number) {
-        this.layoutProvider.expandTile(tile, pixelheight);
+    public expandTile(tile: IDejaTile, pixelHeight: number) {
+        this.layoutProvider.expandTile(tile, pixelHeight);
     }
 
     public cancelExpand() {
@@ -394,7 +389,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
         return {
             dragEnter: (dragContext, dragCursor) => {
                 return this.layoutProvider.dragEnter(dragContext, dragCursor) && {
-                    className: 'hidden', // Hide drag cusror
+                    className: 'hidden', // Hide drag cursor
                 } as IDropCursorInfos;
             },
             dragOver: (_dragContext, dragCursor) => {

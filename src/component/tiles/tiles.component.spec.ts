@@ -181,7 +181,7 @@ describe('DejaTilesComponent', () => {
                 expect(tileElements.length).toBe(13);
                 const beerTile = tileElements.find((t) => t.nativeElement.id === 'Beer');
                 expect(beerTile).toBeDefined();
-                expect(beerTile.nativeElement.offsetTop).toBe(480);
+                expect(beerTile.nativeElement.offsetTop).toBe(360);
                 done();
             });
 
@@ -519,6 +519,7 @@ describe('DejaTilesComponent', () => {
 
         observeDom$(fixture)
             .first()
+            .delay(1)
             .do(() => sendKeyUp(tilesContainerElement.ownerDocument, 'X', true))
             .delay(1)
             .do(() => {
@@ -549,7 +550,7 @@ describe('DejaTilesComponent', () => {
             .do(() => {
                 const elements = fixture.debugElement.queryAll(By.css('deja-tiles#tiles2 > #tiles > deja-tile'));
                 expect(elements.length).toBe(2);
-                tiles2Instance.selectedTiles = tiles2Instance.tiles$.getValue().map((tile) => tile.id);
+                tiles2Instance.selectedTiles = tiles2Instance.tiles.map((tile) => tile.id);
             })
             .delay(1)
             .do(() => sendKeyUp(tilesContainerElement.ownerDocument, 'C', true))
