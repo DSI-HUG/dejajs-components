@@ -12,9 +12,26 @@
     <mat-card class="demo-card">
         <mat-toolbar color="primary">Numeric Stepper</mat-toolbar>
         <mat-card-content>
-            <deja-numeric-stepper placeholder="With unit" [min]="1" [max]="10" unit="kms"></deja-numeric-stepper>
-            <deja-numeric-stepper placeholder="Without unit" [min]="1" [max]="10" [ngModel]="5"></deja-numeric-stepper>
-            <deja-numeric-stepper placeholder="Disabled" [min]="1" [max]="10" unit="kms" disabled></deja-numeric-stepper>
+            <mat-form-field appearance="standard">
+                <mat-label>With unit standard</mat-label>
+                <deja-numeric-stepper placeholder="With unit" [min]="1" [max]="10" unit="kms"></deja-numeric-stepper>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>With unit fill</mat-label>
+                <deja-numeric-stepper placeholder="With unit" [min]="1" [max]="10" unit="kms"></deja-numeric-stepper>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>With unit outline</mat-label>
+                <deja-numeric-stepper placeholder="With unit" [min]="1" [max]="10" unit="kms"></deja-numeric-stepper>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Without unit</mat-label>
+                <deja-numeric-stepper placeholder="Without unit" [min]="1" [max]="10" [ngModel]="5"></deja-numeric-stepper>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Disabled</mat-label>
+                <deja-numeric-stepper placeholder="Disabled" [min]="1" [max]="10" unit="kms" disabled></deja-numeric-stepper>
+            </mat-form-field>
         </mat-card-content>
     </mat-card>
 </div>

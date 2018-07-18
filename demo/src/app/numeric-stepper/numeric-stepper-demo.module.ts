@@ -9,7 +9,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatTabsModule } from '@angular/material';
+import { MatFormFieldModule, MatTabsModule } from '@angular/material';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { DejaNumericStepperModule } from '@deja-js/component';
@@ -26,6 +26,7 @@ import { routing } from './numeric-stepper-demo.routes';
         MatCardModule,
         MatTabsModule,
         MatToolbarModule,
+        MatFormFieldModule,
         DejaNumericStepperModule,
         DejaMarkdownModule,
         routing,
