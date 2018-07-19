@@ -141,6 +141,7 @@ export class DejaPopupDemoComponent {
     public showUrlPdfFullscreen() {
         const conf = new DejaPopupConfig();
         conf.fullscreen = true;
+        // conf.buttonFullscreenExit = false;
         this.showUrlPdf(conf);
     }
 

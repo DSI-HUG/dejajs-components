@@ -39,6 +39,7 @@ export class DejaPopupConfig extends MatDialogConfig {
     public toolbarIconName?: string;
     public toolbarType?: DialogToolbarType;
     public url?: string;
+    public buttonFullscreenExit?: boolean;
 
     constructor() {
         super();
