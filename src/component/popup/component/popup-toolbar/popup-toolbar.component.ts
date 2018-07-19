@@ -25,10 +25,10 @@ export class DejaPopupToolbarComponent implements OnInit {
         this.dialogId = conf.id;
         this.isFullScreen = conf.fullscreen;
 
-        if (conf.fullscreen) {
-            this.defaultActions.unshift(this.buttonFullscreenExit);
-        } else {
+        if (!conf.fullscreen) {
             this.defaultActions.unshift(this.buttonFullscreen);
+        } else if(conf.buttonFullscreenExit !== false) {
+            this.defaultActions.unshift(this.buttonFullscreenExit);
         }
 
         if (!conf.hasBackdrop) {
