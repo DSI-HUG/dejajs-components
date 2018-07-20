@@ -607,7 +607,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         const sourceTiles = this.clipboardService.get('tiles') as DejaTile[];
 
         // Unselect all tiles
-            this.tiles.forEach((tile) => tile.isSelected = false);
+        this.tiles.forEach((tile) => tile.isSelected = false);
 
         // Get max rectangle
         let bounds: Rect;
@@ -1316,11 +1316,10 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             directions |= Directions.bottom;
         }
 
-        const tilesToPush = {} as { [direction: number]: DejaTile[] };
-        tilesToPush[Directions.left] = [];
-        tilesToPush[Directions.right] = [];
-        tilesToPush[Directions.top] = [];
-        tilesToPush[Directions.bottom] = [];
+        const leftTilesToPush = [] as DejaTile[];
+        const rightTilesToPush = [] as DejaTile[];
+        const topTilesToPush = [] as DejaTile[];
+        const bottomTilesToPush = [] as DejaTile[];
 
         // tslint:disable-next-line:prefer-for-of
         for (const id in this.tilesDic) {
@@ -1341,19 +1340,33 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                             const hoe = Math.max(0, Math.min(tile.percentBounds.right, effectiveBounds.right) - Math.max(tile.percentBounds.left, effectiveBounds.left)) / Math.min(tile.percentBounds.width, effectiveBounds.width);
                             const voe = Math.max(0, Math.min(tile.percentBounds.bottom, effectiveBounds.bottom) - Math.max(tile.percentBounds.top, effectiveBounds.top)) / Math.min(tile.percentBounds.height, effectiveBounds.height);
 
-                            // Calc prefered direction
+                            // Calc preferred direction
                             let preferredDirection: Directions;
                             // tslint:disable-next-line:no-bitwise
                             if (voe >= hoe && directions & Directions.horizontal) {
                                 // horizontal
                                 // tslint:disable-next-line:no-bitwise
-                                preferredDirection = hor >= hol && directions & Directions.left ? Directions.left : Directions.right;
+                                preferredDirection = hor >= hol && (directions & Directions.left) ? Directions.left : Directions.right;
                             } else {
                                 // vertical
                                 // tslint:disable-next-line:no-bitwise
-                                preferredDirection = vob >= vot && directions & Directions.top ? Directions.top : Directions.bottom;
+                                preferredDirection = vob >= vot && (directions & Directions.top) ? Directions.top : Directions.bottom;
                             }
-                            tilesToPush[preferredDirection].push(tile);
+
+                            switch (preferredDirection) {
+                                case Directions.left:
+                                    leftTilesToPush.push(tile);
+                                    break;
+                                case Directions.top:
+                                    topTilesToPush.push(tile);
+                                    break;
+                                case Directions.right:
+                                    rightTilesToPush.push(tile);
+                                    break;
+                                default:
+                                    bottomTilesToPush.push(tile);
+                                    break;
+                            }
                         }
                     }
                 }
@@ -1362,8 +1375,8 @@ export class DejaTilesLayoutProvider implements OnDestroy {
 
         // try first horizontal move
         let remain = 0;
-        if (tilesToPush[Directions.left].length) {
-            remain = this.pushHorizontal(bounds, -1, tilesToPush[Directions.left]);
+        if (leftTilesToPush.length) {
+            remain = this.pushHorizontal(bounds, -1, leftTilesToPush);
             if (remain) {
                 bounds = this.ensureContainer(bounds.offset(remain, 0));
                 // tslint:disable-next-line:no-bitwise
@@ -1372,8 +1385,8 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         }
 
         // Now try right
-        if (tilesToPush[Directions.right].length) {
-            remain = this.pushHorizontal(bounds, 1, tilesToPush[Directions.right]);
+        if (rightTilesToPush.length) {
+            remain = this.pushHorizontal(bounds, 1, rightTilesToPush);
         }
 
         if (remain > 0) {
@@ -1383,8 +1396,8 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             return this.ensureTarget(originalBounds, effectiveBounds, directions & Directions.vertical);
         } else {
             // Try top
-            if (tilesToPush[Directions.top].length) {
-                remain = this.pushVertical(bounds, -1, tilesToPush[Directions.top]);
+            if (topTilesToPush.length) {
+                remain = this.pushVertical(bounds, -1, topTilesToPush);
                 if (remain) {
                     bounds = this.ensureContainer(bounds.offset(0, remain));
                     return this.ensureTarget(bounds, effectiveBounds, Directions.bottom);
@@ -1392,7 +1405,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             }
 
             // And finally bottom
-            remain = this.pushVertical(bounds, 1, tilesToPush[Directions.bottom]);
+            remain = this.pushVertical(bounds, 1, bottomTilesToPush);
             if (remain) {
                 // Destination is not available, keep tile at the original place
                 return null;
