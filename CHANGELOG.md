@@ -1,5 +1,5 @@
 <a name="3.3.0"></a>
-# [3.3.0](https://github.com/DSI-HUG/dejajs-components/compare/v3.2.0...v3.3.0) (2018-07-20)
+# [3.3.0](https://github.com/DSI-HUG/dejajs-components/compare/v3.2.0...v3.3.0) (2018-07-20) - Castor Chanceux
 
 
 ### Bug Fixes
