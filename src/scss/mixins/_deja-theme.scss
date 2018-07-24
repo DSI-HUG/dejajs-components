@@ -7,6 +7,7 @@
 @import '../../component/chips/chips-theme';
 @import '../../component/circular-picker/circular-picker-theme';
 @import '../../component/color-picker/color-picker-theme';
+@import '../../component/combo-list/container/combo-list-theme';
 @import '../../component/data-grid/data-grid-theme';
 @import '../../component/date-picker/date-picker-theme';
 @import '../../component/date-selector/date-selector-theme';
@@ -52,5 +53,6 @@
     @include tooltip-theme($custom-theme);
     @include tree-list-theme($custom-theme);
     @include viewport-theme($custom-theme);
-    @include deja-popup();    
+    @include deja-popup();
+    @include combo-list-theme($custom-theme);
 }

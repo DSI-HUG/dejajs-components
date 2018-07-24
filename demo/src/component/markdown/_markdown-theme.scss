@@ -2,21 +2,23 @@
 
 @mixin markdown-theme($theme) {
     $primary: map-get($theme, primary);
+	$background: map-get($theme, background);
+	$foreground: map-get($theme, foreground);
 
     .markdown-content {
         table {
             thead tr th{
                 background: mat-color($primary);
-                color: white;
+                color: mat-color($primary, default-contrast);
             }
             
             tr {
                 &:nth-of-type(odd) {
-                    background-color: #ececec;
+                    background-color: mat-color($background, focused-button);
                 }
 
                 th, td {
-                    border-color: #ddd;
+                    border-color: mat-color($foreground, divider);
                 }
             }
         }
