@@ -1,5 +1,6 @@
 <mat-form-field id="date-selector">
-	<input deja-child-validator #inputelement id="date-selector-input" matInput autocomplete="off" [disabled]="disabled" [required]="required" [ngModel]="inputModel" [placeholder]="placeholder" [textMask]="{mask: mask, showMask: true, keepCharPositions: true}" (change)="updateModel($event.target.value)">
+    <input *ngIf="!allowFreeEntry" deja-child-validator #inputelement id="date-selector-input" matInput autocomplete="off" [disabled]="disabled" [required]="required" [ngModel]="inputModel" [placeholder]="placeholder" [textMask]="{mask: mask, showMask: true, keepCharPositions: true}" (change)="updateModel($event.target.value)">
+    <input *ngIf="allowFreeEntry" class="free-txt" deja-child-validator #inputelement id="date-selector-input" matInput autocomplete="off" [disabled]="disabled" [required]="required" [ngModel]="inputModel" [placeholder]="placeholder" (change)="updateModel($event.target.value)">
 	<div matSuffix>
 		<div id="action-icon-container">
 			<button type="button" mat-icon-button *ngIf="inputModel && !disabled" (click)="reset()" id="clear-button" tabindex="-1">

@@ -9,6 +9,7 @@
 import { OverlayModule } from '@angular/cdk/overlay';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { Observable } from 'rxjs/Observable';
 import { DejaDatePickerComponent } from './date-picker.component';
 
@@ -205,5 +206,31 @@ describe('DejaDatePickerComponent', () => {
         };
 
         button.click();
+    });
+
+    describe('free entry', () => {
+        beforeEach(() => {
+            component.allowFreeEntry = true;
+            component.format = 'YYYY-DD-MM';
+            // Without dispatchEvent the incorrect input (the one which does not support free text) is set to the DOM
+            // Don't know why fixture.detectChanges does not do the job
+            fixture.debugElement
+                .query(By.css('input'))
+                .nativeElement.dispatchEvent(new Event('change'));
+            fixture.detectChanges();
+        });
+                it('should accept string or date as value', () => {
+            const input: HTMLInputElement = fixture.debugElement.query(
+                By.css('input')
+            ).nativeElement;
+            input.value = 'ABCD';
+            input.dispatchEvent(new Event('change'));
+            fixture.detectChanges();
+            expect(component.value).toBe('ABCD');
+            input.value = '2018-01-01';
+            input.dispatchEvent(new Event('change'));
+            fixture.detectChanges();
+            expect(component.value).toBe('2018-01-01');
+        });
     });
 });
