@@ -1,0 +1,10 @@
+@import '~@angular/material/theming';
+@mixin mouse-dragdrop-theme($theme) {
+
+    deja-mouse-dragdrop-cursor {
+        #block {
+            background-color: rgba(0, 0, 0, 0.75);
+            color: #fff;
+        }
+    }
+}
