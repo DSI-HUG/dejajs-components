@@ -1,16 +1,18 @@
 @import '~@angular/material/theming';
 @mixin chips-theme($theme) {
+    $background: map-get($theme, background);
+
     $primary: map-get($theme, primary);
     deja-chips {
+        &[disabled] {
+            >span {
+                background-color: mat-color($background, disabled-button);
+            }
+        }
         >span {
             background-color: mat-color($primary, A400);
             &:hover {
                 background-color: mat-color($primary, A700);
-            }
-            >span {
-                #close-button {
-                    color: #777777;
-                }
             }
         }
     }
