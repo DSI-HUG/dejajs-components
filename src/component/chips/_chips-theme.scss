@@ -11,6 +11,8 @@
         }
         >span {
             background-color: mat-color($primary, A400);
+            color: mat-color($primary, default-contrast);
+            
             &:hover {
                 background-color: mat-color($primary, A700);
             }
