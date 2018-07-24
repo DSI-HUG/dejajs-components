@@ -7,7 +7,7 @@
         #down {
             &:hover {
                 background-color: mat-color($primary);
-                color: #fff;
+                color: mat-color($primary, default-contrast);
             }
         }
     }
