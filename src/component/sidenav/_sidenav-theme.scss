@@ -13,7 +13,7 @@
 					.header {
 						background: mat-color($primary);
 						.header-menu-btn .mat-icon {
-							color: rgba(255, 255, 255, 0.87);
+							color: mat-color($primary, default-contrast);
 						}
 					}
 				}
