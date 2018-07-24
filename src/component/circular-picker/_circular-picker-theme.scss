@@ -29,13 +29,13 @@
 		.value {
 			&:hover {
 				background-color: mat-color($primary);
-				color: #FFF;
+				color: mat-color($primary, default-contrast);
 			}
 		}
 		.cursor-container {
 			.cursor {
 				background-color: mat-color($primary);
-				color: #FFF;
+				color: mat-color($primary, default-contrast);
 			}
 			.cursorHand {
 				background-color: mat-color($primary);
