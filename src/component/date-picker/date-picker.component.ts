@@ -32,7 +32,7 @@ import { KeyCodes } from '../../common/core/keycodes.enum';
 import { DejaConnectionPositionPair } from '../../common/core/overlay/connection-position-pair';
 import { DejaChildValidatorDirective } from '../../common/core/validation/child-validator.directive';
 
-const moment: (value?: any, format?: string) => moment_.Moment = (<any>moment_).default || moment_;
+const moment: (value?: any, format?: string, strict?: boolean) => moment_.Moment = (<any>moment_).default || moment_;
 
 const noop = () => { };
 
@@ -65,6 +65,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     }
     /** Placeholder for input */
     @Input() public placeholder = 'Date';
+    @Input() public label: string;
     /** Disabled dates. It's an array of DaysOfWeek (number between 0 and 6) or a date. */
     @Input() public disableDates: Array<DaysOfWeek | Date>; // | ((d: Date) => boolean);
     /** Reference to DejaDateSelectorComponent inside thic control */
@@ -79,6 +80,8 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     @Input() public overlayOffsetY = 6;
     /** Afficher un bouton raccourcis permettant de sélectionner la date courante */
     @Input() public showCurrentDateButton = false;
+    /** Permettre la saisie de texte libre */
+    @Input() public allowFreeEntry = false;
 
     @Output() public dateChange = new EventEmitter();
     @Output() public timeChange = new EventEmitter();
@@ -95,7 +98,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
 
     /** Internal use */
     public overlayOwnerElement: HTMLElement;
-    public date = new Date();
+    public date: Date | string = new Date();
 
     @ViewChild(DejaChildValidatorDirective) private inputValidatorDirective: DejaChildValidatorDirective;
 
@@ -104,8 +107,8 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     private _required: boolean;
     private _time: boolean;
     private _format: string;
-    private inputElement$ = new ReplaySubject<HTMLElement>(1);
-    private inputElement: HTMLElement;
+    private inputElement$ = new ReplaySubject<HTMLInputElement>(1);
+    private inputElement: HTMLInputElement;
     private focus$ = new Subject();
     private _showDropDown = false;
     private _positions = DejaConnectionPositionPair.default;
@@ -113,7 +116,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     private _inputModel: string;
     private cursorPosition: number;
     private formatChanged$ = new Subject<string>();
-    private dateChanged$ = new Subject<Date>();
+    private dateChanged$ = new Subject<Date | string>();
 
     @ViewChild('inputelement')
     public set inputElementRef(element: ElementRef) {
@@ -184,13 +187,17 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
         keydown$.takeWhile(() => this.isAlive)
             .filter((event: KeyboardEvent) => !this.showDropDown && (event.keyCode === KeyCodes.KeyD || event.keyCode === KeyCodes.UpArrow || event.keyCode === KeyCodes.DownArrow))
             .subscribe((event: KeyboardEvent) => {
-                event.preventDefault();
                 switch (event.keyCode) {
                     case (KeyCodes.KeyD):
-                        this.value = new Date();
+                        if (!this.inputElement.value || moment(this.inputElement.value, this.format, true).isValid()) {
+                            event.preventDefault();
+                            this.value = new Date();
+                            this.inputElement.value = moment(this.value).format(this.format);
+                        }
                         break;
 
                     case (KeyCodes.UpArrow):
+                        event.preventDefault();
                         if (event.altKey) {
                             this.open();
                         } else if (this.date) {
@@ -211,6 +218,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
                         }
                         break;
                     case (KeyCodes.DownArrow):
+                        event.preventDefault();
                         if (event.altKey) {
                             this.open();
                         } else if (this.date) {
@@ -250,10 +258,10 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
         valueUpdated$.takeWhile(() => this.isAlive)
             .subscribe(([format, value]) => {
                 this.date = value;
-                this._inputModel = (this.date) ? moment(this.date).format(format) : null;
+                this._inputModel = (this.date) ? (this.date instanceof Date ? moment(this.date).format(format) : this.date) : null;
 
                 // si la position du curseur était stockée, on la restaure apres avoir changé la valeur
-                if (this.cursorPosition) {
+                if (this.cursorPosition && !this.allowFreeEntry) {
                     this.inputElement$
                         .delay(1)
                         .first()
@@ -376,7 +384,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     }
 
     /** set accessor including call the onchange callback */
-    public set value(v: Date) {
+    public set value(v: Date | string) {
         if (v !== this.date) {
             this.writeValue(v);
             this.onChangeCallback(v);
@@ -385,12 +393,12 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
 
     // ************* ControlValueAccessor Implementation **************
     /** get accessor */
-    public get value(): Date {
+    public get value(): Date | string {
         return this.date;
     }
 
     /** From ControlValueAccessor interface */
-    public writeValue(value: Date) {
+    public writeValue(value: Date | string) {
         if (value !== this.date) {
             this.dateChanged$.next(value);
         }
@@ -450,7 +458,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
      * @param date new value of this model
      */
     public updateModel(date: string | Date) {
-        if (typeof date === 'string') { // && date.replace(/_/g, '').length === this._format.length) {
+        if (typeof date === 'string' && !this.allowFreeEntry) { // && date.replace(/_/g, '').length === this._format.length) {
             if (date.replace(/_/g, '').length === this._format.length) { // If mask is fully filled
                 let d = moment(date, this._format).toDate();
                 if (!moment(d).isValid()) {
@@ -470,9 +478,8 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
             }
         }
 
-        if (typeof date !== 'string') {
-
-            if (this.value && this.value.getTime() === date.getTime()) {
+        if (date instanceof Date) {
+            if (this.value instanceof Date && this.value && this.value.getTime() === date.getTime()) {
                 this.close();
                 return;
             }
@@ -480,9 +487,9 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
             let event: EventEmitter<any>;
 
             // now we check if it's date or time who is updated to raise correct event
-            if (this.value && (date.getFullYear() !== this.value.getFullYear() || date.getMonth() !== this.value.getMonth() || date.getDate() !== this.value.getDate())) {
+            if (this.value instanceof Date && this.value && (date.getFullYear() !== this.value.getFullYear() || date.getMonth() !== this.value.getMonth() || date.getDate() !== this.value.getDate())) {
                 event = this.dateChange;
-            } else if (this.value && (date.getHours() !== this.value.getHours() || date.getMinutes() !== this.value.getMinutes() || date.getSeconds() !== this.value.getSeconds() || date.getMilliseconds() !== this.value.getMilliseconds())) {
+            } else if (this.value instanceof Date && this.value && (date.getHours() !== this.value.getHours() || date.getMinutes() !== this.value.getMinutes() || date.getSeconds() !== this.value.getSeconds() || date.getMilliseconds() !== this.value.getMilliseconds())) {
                 event = this.timeChange;
             } else {
                 event = this.dateChange;
@@ -497,6 +504,11 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
             } else {
                 this.changeDetectorRef.markForCheck();
             }
+        } else if (this.allowFreeEntry) {
+            this.value = date;
+            this.onTouchedCallback();
+            this.dateChange.emit(date);
+            this.changeDetectorRef.markForCheck();
         }
     }
 
