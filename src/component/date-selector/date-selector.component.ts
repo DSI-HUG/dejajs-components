@@ -240,8 +240,8 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
     }
 
     // From ControlValueAccessor interface
-    public writeValue(value: Date) {
-        if (value !== this.selectedDate) {
+    public writeValue(value: Date | string) {
+        if (value instanceof Date && value !== this.selectedDate) {
             if (this.selectedDate) {
                 const h = (value) ? value.getHours() : 0;
                 const m = (value) ? value.getMinutes() : 0;
@@ -252,8 +252,10 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
             this.selectedDate = value;
             this._displayedDate = value || this._currentDate;
 
-            this.bind();
+        } else {
+            this._displayedDate = this._currentDate;
         }
+        this.bind();
     }
 
     // From ControlValueAccessor interface

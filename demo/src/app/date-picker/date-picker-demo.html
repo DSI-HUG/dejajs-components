@@ -87,6 +87,11 @@
                     <deja-date-picker [disableDates]="disabledDate" [(ngModel)]="theTimePicker" [layout]="'timeonly'"></deja-date-picker>
                     <p>Selected date : {{theTimePicker | date:'HH:mm:ss'}}</p>
                 </div>
+                <div fxFlex="1 1 auto">
+                    <h3>Free Entry Date Picker :</h3>
+                    <deja-date-picker [disableDates]="disabledDate" [(ngModel)]="theFreeEntryDatePicker" [allowFreeEntry]="true"></deja-date-picker>
+                    <p>Selected date : {{theFreeEntryDatePicker | date:'yyyy-MM-dd'}}</p>
+                  </div>
             </div>
             <hr>
             <div fxLayout>

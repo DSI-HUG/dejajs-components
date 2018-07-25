@@ -1,3 +1,18 @@
+<a name="3.4.0"></a>
+# [3.4.0](https://github.com/DSI-HUG/dejajs-components/compare/v3.3.0...v3.4.0) (2018-07-25) - Castor Déchaîné
+
+
+### Bug Fixes
+
+* **DejaTreeListComponent:** attr.keynav was set as a function and not with result of a call ([627e60e](https://github.com/DSI-HUG/dejajs-components/commit/627e60e))
+
+
+### Features
+
+* **DatePickerComponent:** Add a free entry mode to date picker ([65784ff](https://github.com/DSI-HUG/dejajs-components/commit/65784ff))
+
+
+
 <a name="3.3.0"></a>
 # [3.3.0](https://github.com/DSI-HUG/dejajs-components/compare/v3.2.0...v3.3.0) (2018-07-20) - Castor Chanceux
 

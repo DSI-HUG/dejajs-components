@@ -3,6 +3,8 @@
 
 @mixin sidenav-theme($theme) {
 	$primary: map-get($theme, primary);
+	$background: map-get($theme, background);
+	$foreground: map-get($theme, foreground);
 
 	deja-sidenav {
 		.mat-drawer-container {
@@ -11,7 +13,7 @@
 					.header {
 						background: mat-color($primary);
 						.header-menu-btn .mat-icon {
-							color: rgba(255, 255, 255, 0.87);
+							color: mat-color($primary, default-contrast);
 						}
 					}
 				}
@@ -20,12 +22,12 @@
 			.mat-sidenav {
 				.header {
 					border-right: 1px solid mat-color($primary);
-					border-bottom: 1px solid rgba(0, 0, 0, 0.14);
-					background: white;
+					border-bottom: 1px solid mat-color($foreground, divider);
+					background: mat-color($background, background);
 				}
 
 				deja-sidenav-menu {
-					border-right: 1px solid rgba(0, 0, 0, 0.14);
+					border-right: 1px solid mat-color($foreground, divider);
 
 					.mat-list-item {
 						&.active {
@@ -37,11 +39,11 @@
 
 						.mat-list-item-content {
 							.mat-list-icon {
-								color: rgba(0, 0, 0, 0.54);
+								color: mat-color($foreground, icons)
 							}
 
 							.mat-list-text {
-								color: rgba(0, 0, 0, 0.87);
+								color: mat-color($foreground, text)
 							}
 						}
 					}

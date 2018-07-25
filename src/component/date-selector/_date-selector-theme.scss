@@ -2,18 +2,22 @@
 
 @mixin date-selector-theme($theme) {
     $primary: map-get($theme, primary);
+    $background: map-get($theme, background);
+	$foreground: map-get($theme, foreground);
 
     #date-time-selector {
-        background-color: #FFF;
-        color: #000;
+        
+        background: mat-color($background, card);
+        color: mat-color($foreground, text);
+        box-shadow: rgba(0, 0, 0, 0.247059) 0px 14px 45px, rgba(0, 0, 0, 0.219608) 0px 10px 18px;
         #time-header,
         #date-header {
             background-color: mat-color($primary);
-            color: #FFF;
+            color: mat-color($primary, default-contrast);
             button[mat-mini-fab] {
                 background: mat-color($primary);
                 box-shadow: none;
-                color: #FFF;
+                color: mat-color($primary, default-contrast);
             }
         }
         #time-selector {
@@ -24,7 +28,7 @@
                         background-color: mat-color($primary);
                     }
                     &.disabled:before {
-                        background: #AAA;
+                        background: mat-color($foreground, disabled);
                     }
                 }
             }
@@ -33,13 +37,13 @@
             #sub-header {
                 .month {
                     button[mat-mini-fab] {
-                        background: #FFF;
+                        background: mat-color($background, card);
                         color: mat-color($primary);
                     }
                 }
                 .days {
                     span {
-                        color: rgba(0, 0, 0, 0.7);
+                        color: rgba(mat-color($foreground, text), 0.7);
                     }
                 }
             }
@@ -50,10 +54,10 @@
                             color: mat-color($primary);
                         }
                         &.background {
-                            color: rgba(0, 0, 0, 0.5);
+                            color: rgba(mat-color($foreground, text), 0.5);
                         }
                         &.disabled {
-                            color: rgba(0, 0, 0, 0.3);
+                            color: rgba(mat-color($foreground, text), 0.3);
                             &:hover {
                                 background: none;
                                 color: inherit;
@@ -62,7 +66,7 @@
                         &:hover,
                         &[selected] {
                             background: mat-color($primary);
-                            color: #FFF;
+                            color: mat-color($primary, default-contrast);
                         }
                     }
                 }

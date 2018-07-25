@@ -1,0 +1,10 @@
+@import '~@angular/material/theming';
+@mixin iframe-theme($theme) {
+
+    deja-iframe {
+        background-color: #222;
+        iframe {
+            background-color: #fff;
+        }
+    }
+}

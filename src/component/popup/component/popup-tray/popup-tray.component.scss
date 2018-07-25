@@ -2,7 +2,6 @@
 :host {
     display: flex;
     flex-direction: row;
-    background-color: slategrey;
     position: absolute;
     bottom: 0;
     left: 0;
@@ -18,9 +17,6 @@
             max-width: 25%;
             min-width: 36px;
         }
-    }
-    mat-icon {
-        color: whitesmoke;
     }
     button {
         width: 36px;
