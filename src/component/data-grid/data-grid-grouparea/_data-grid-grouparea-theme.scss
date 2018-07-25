@@ -2,12 +2,13 @@
 
 @mixin data-grid-grouparea-theme($theme) {
     $primary: map-get($theme, primary);
+	$foreground: map-get($theme, foreground);
 
     #deja-grid-grouparea {
-        border: 1px solid rgba(0, 0, 0, 0.38);
+        border: 1px solid mat-color($foreground, hint-text);
         
         #placeholder {
-            color: rgba(0, 0, 0, 0.38);
+            color: mat-color($foreground, hint-text);
         }
     }
 }

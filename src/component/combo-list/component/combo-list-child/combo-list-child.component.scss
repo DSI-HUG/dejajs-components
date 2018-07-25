@@ -3,7 +3,6 @@
 :host {
     @include mat-elevation(1);
     overflow-y: auto;
-    background-color: white;
 
     mat-list-option {
         text-overflow: ellipsis;

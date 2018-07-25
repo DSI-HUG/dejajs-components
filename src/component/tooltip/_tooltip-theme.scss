@@ -2,11 +2,15 @@
 
 @mixin tooltip-theme($theme) {
 	$primary: map-get($theme, primary);
+	$background: map-get($theme, background);
+	$foreground: map-get($theme, foreground);
 
 	.deja-overlay-container {
 		#tooltip {
-			background-color: mat-color($primary);
-			color: #fff;
+			@include mat-elevation(1);
+			background-color: mat-color($background, card);
+			border-radius: 2px;
+			color: mat-color($foreground, text);
 		}
 	}
 }

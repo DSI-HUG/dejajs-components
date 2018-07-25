@@ -2,13 +2,15 @@
 @mixin tree-list-theme($theme) {
 	$primary: map-get($theme, primary);
 	$warn: map-get($theme, warn);
+	$background: map-get($theme, background);
+	$foreground: map-get($theme, foreground);
+
 	deja-tree-list {
 		&[disabled="true"] {
 			.deja-listcontainer {
-				background-color: rgba(0, 0, 0, 0.05);
-				color: rgba(0, 0, 0, 0.8);
+				color: mat-color($foreground, disabled);
 				#error-hint {
-					color: rgba(0, 0, 0, 0.5);
+					color: mat-color($foreground, disabled);
 				}
 			}
 		}
@@ -31,11 +33,11 @@
 		}
 		&:not([disabled="true"]) {
 			.deja-listcontainer {
-				background-color: white;
+				background-color: mat-color($background, card);
 				&[keynav="false"]:not(.dragover) {
 					div.listitem:not(.unselectable):hover {
 						background-color: mat-color($primary);
-						color: #fff;
+						color: mat-color($primary, default-contrast);
 					}
 				}
 				#error-hint {

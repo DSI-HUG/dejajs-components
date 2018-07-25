@@ -17,7 +17,6 @@
 		.deja-listcontainer {
 			>div.listitem {
 				&[current="true"] {
-					box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.3);
 					background-color: rgba(0, 0, 0, 0.03);
 				}
 				&.selected {

@@ -3,12 +3,14 @@
 @mixin message-box-theme($theme) {
 	$primary: map-get($theme, primary);
 	$warn: map-get($theme, warn);
+    $background: map-get($theme, background);
+	$foreground: map-get($theme, foreground);
 
 	$warning: #FF9800;
 	$success: #4CAF50;
 
 	deja-message-box {
-		background-color: #FFF;
+		background-color: mat-color($background, card);
 
 		#msgbox {
 			&.info,
@@ -16,14 +18,14 @@
 				border-color: mat-color($primary);
 				.mat-card-title {
 					background-color: mat-color($primary);
-					color: #FFF;
+					color: mat-color($primary, default-contrast);
 				}
 			}
 			&.danger {
 				border-color: mat-color($warn);
 				.mat-card-title {
 					background-color: mat-color($warn);
-					color: #FFF;
+					color: mat-color($warn, default-contrast);
 				}
 			}
 			&.warn {
@@ -76,7 +78,7 @@
 					&.mat-danger[mat-mini-fab] {
 						&:not([disabled]) {
 							background-color: mat-color($warn) !important;
-							color: #FFF !important;
+							color: mat-color($warn, default-contrast) !important;
 						}
 					}
 
@@ -85,7 +87,7 @@
 					&.mat-blank[mat-mini-fab] {
 						&:not([disabled]) {
 							background-color: transparent !important;
-							color: rgba(0, 0, 0, 0.6) !important;
+							color: mat-color($foreground, secondary-text) !important;
 						}
 					}
 				}
