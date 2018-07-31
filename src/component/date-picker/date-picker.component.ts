@@ -189,7 +189,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
             .subscribe((event: KeyboardEvent) => {
                 switch (event.keyCode) {
                     case (KeyCodes.KeyD):
-                        if (!this.allowFreeEntry || !this.inputElement.value || moment(this.inputElement.value, this.format, true).isValid()) {
+                        if (!this.allowFreeEntry) {
                             event.preventDefault();
                             this.value = new Date();
                             this.inputElement.value = moment(this.value).format(this.format);
