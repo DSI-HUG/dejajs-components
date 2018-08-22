@@ -1,3 +1,19 @@
+<a name="3.4.1"></a>
+## [3.4.1](https://github.com/DSI-HUG/dejajs-components/compare/v3.4.0...v3.4.1) (2018-08-22)
+
+
+### Bug Fixes
+
+* **DatePicker:** Do not allow current date shortcut if free text is enabled ([6e4cb94](https://github.com/DSI-HUG/dejajs-components/commit/6e4cb94))
+* **DatePicker:** Repair D key for current date shortcut ([9120d37](https://github.com/DSI-HUG/dejajs-components/commit/9120d37))
+
+
+### Features
+
+* **MonacoEditor:** add OnInit output event ([ea4e747](https://github.com/DSI-HUG/dejajs-components/commit/ea4e747))
+
+
+
 <a name="3.4.0"></a>
 # [3.4.0](https://github.com/DSI-HUG/dejajs-components/compare/v3.3.0...v3.4.0) (2018-07-25) - Castor Déchaîné
 
