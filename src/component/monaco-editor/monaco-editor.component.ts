@@ -413,6 +413,11 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
      */
     @Output()
     public valueToCompareChange = new EventEmitter();
+    /**
+     * Event triggered when editor is initialized
+     */
+    @Output()
+    public onInit = new EventEmitter();
 
     @ViewChild('editor')
     private editorContent: ElementRef;
@@ -515,6 +520,8 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
                 }
             });
         }
+
+        this.onInit.next(this._editor);
     }
 
     /**
