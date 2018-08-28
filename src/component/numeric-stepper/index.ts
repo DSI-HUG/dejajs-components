@@ -30,7 +30,6 @@ import { DejaNumericStepperComponent } from './numeric-stepper.component';
     declarations: [
         DejaNumericStepperComponent,
     ],
-    providers: [],
 })
 export class DejaNumericStepperModule { }
 
