@@ -49,7 +49,6 @@ export class DejaComboListDemoComponent implements OnInit {
     }
 
     public stateReset() {
-        console.log('ctrl', this.comboCtrl);
         this.items = comboListData;
 
         this.itemToSelect = this.items.filter(
