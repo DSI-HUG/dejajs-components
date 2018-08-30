@@ -661,30 +661,22 @@ gulp.task('commit-changes', (cb) => {
 });
 
 gulp.task('push-changes', (cb) => {
-    gulpGit.push('origin', 'dev', cb);
+	gulpGit.push('origin', 'dev', {
+		args: '--tags'
+	}, (error) => {
+		if (error) {
+			return cb(error);
+		}
+		gulpGit.push('origin', 'dev', cb);
+	});
 });
 
 gulp.task('create-new-tag', (cb) => {
-    let version = `v${getPackageJsonVersion()}`;
-    gulpGit.tag(version, `chore(release): :sparkles: :tada: create tag for version v${version}`, (error) => {
-        if (error) {
-            return cb(error);
-        }
-        gulpGit.push('origin', 'dev', {
-            args: '--tags'
-        }, cb);
-    });
-
+	let version = `v${getPackageJsonVersion()}`;
+	gulpGit.tag(version, `chore(release): :sparkles: :tada: create tag for version v${version}`, cb);
 });
 
-gulp.task('release', gulp.series('bump-version', 'changelog', 'commit-changes', 'create-new-tag', 'push-changes', (error) => {
-    if (error) {
-        log(colors.red(error.message));
-    } else {
-        log(colors.green('RELEASE FINISHED SUCCESSFULLY'));
-    }
-    // cb(error);
-}));
+gulp.task('release', gulp.series('bump-version', 'changelog', 'commit-changes', 'create-new-tag', 'push-changes'));
 
 /////////////////////////////////////////////////////////////////////////////
 // Utility Tasks
