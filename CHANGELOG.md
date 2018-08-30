@@ -1,5 +1,5 @@
 <a name="3.5.0"></a>
-# [3.5.0](https://github.com/DSI-HUG/dejajs-components/compare/v3.4.1...v3.5.0) (2018-08-30)
+# [3.5.0](https://github.com/DSI-HUG/dejajs-components/compare/v3.4.1...v3.5.0) (2018-08-30) - Castor Eméché
 
 
 ### Bug Fixes
