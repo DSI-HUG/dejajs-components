@@ -12,11 +12,13 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule, MatFormFieldModule, MatIconModule, MatInputModule } from '@angular/material';
 
 import { DejaTextMetricsModule } from '../../common/core/text-metrics/index';
+import { DejaChildValidatorModule } from '../../common/core/validation/index';
 import { DejaNumericStepperComponent } from './numeric-stepper.component';
 
 @NgModule({
     imports: [
         CommonModule,
+        DejaChildValidatorModule,
         DejaTextMetricsModule,
         FormsModule,
         MatButtonModule,

@@ -1,3 +1,14 @@
+<a name="3.5.0"></a>
+# [3.5.0](https://github.com/DSI-HUG/dejajs-components/compare/v3.4.1...v3.5.0) (2018-08-30)
+
+
+### Bug Fixes
+
+* **DejaNumericStepper:** Add validation BREAKING CHANGE: NS dosn't ([cea35fc](https://github.com/DSI-HUG/dejajs-components/commit/cea35fc))
+* **Gulp:** Fix push on release script ([cf559b8](https://github.com/DSI-HUG/dejajs-components/commit/cf559b8))
+
+
+
 <a name="3.4.1"></a>
 ## [3.4.1](https://github.com/DSI-HUG/dejajs-components/compare/v3.4.0...v3.4.1) (2018-08-22)
 

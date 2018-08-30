@@ -7,10 +7,25 @@
  */
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, OnInit, Optional, Output, Self } from '@angular/core';
-import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, OnChanges, Optional, Output, Self, ViewChild } from '@angular/core';
+import { ControlValueAccessor, FormControl, NgControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 import { DejaTextMetricsService } from '../../common/core/text-metrics/text-metrics.service';
+import { DejaChildValidatorDirective } from '../../common/core/validation/child-validator.directive';
+
+export const createCounterRangeValidator = (maxValue: number, minValue: number) => {
+    return (c: FormControl) => {
+        const err = {
+            rangeError: {
+                given: c.value,
+                max: maxValue,
+                min: minValue
+            }
+        };
+
+        return ((maxValue && c.value > maxValue) || (minValue && c.value < minValue)) ? err : null;
+    };
+};
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,7 +33,7 @@ import { DejaTextMetricsService } from '../../common/core/text-metrics/text-metr
     styleUrls: ['numeric-stepper.component.scss'],
     templateUrl: 'numeric-stepper.component.html'
 })
-export class DejaNumericStepperComponent implements OnInit, ControlValueAccessor {
+export class DejaNumericStepperComponent implements ControlValueAccessor, OnChanges {
     public size = 0;
     private _value: number;
 
@@ -39,6 +54,13 @@ export class DejaNumericStepperComponent implements OnInit, ControlValueAccessor
     /** Template for MatError inside mat-form-field-container */
     @ContentChild('errorTemplate') public matError: any;
 
+    @ViewChild(DejaChildValidatorDirective)
+    public set inputValidatorDirective(value: DejaChildValidatorDirective) {
+        if (value) {
+            value.parentControl = this._control;
+        }
+    }
+
     /** Allow to disabled the component */
     @Input()
     public set disabled(value: boolean | string) {
@@ -50,6 +72,9 @@ export class DejaNumericStepperComponent implements OnInit, ControlValueAccessor
     /** Output to get the event when the value is modified (no validation)  */
     @Output()
     public textChange: EventEmitter<number> = new EventEmitter<number>();
+
+    /** Function for min / max validation */
+    public validateFn: ValidatorFn;
 
     /**
      * Get disable value
@@ -75,7 +100,18 @@ export class DejaNumericStepperComponent implements OnInit, ControlValueAccessor
         }
     }
 
-    public ngOnInit() { }
+    public ngOnChanges(changes: any) {
+        if (changes.min || changes.max) {
+            this.validateFn = createCounterRangeValidator(this.max, this.min);
+            if (this._control && this._control.control) {
+                this._control.control.setValidators(this.validateFn);
+            }
+        }
+    }
+
+    public validate(c: FormControl): ValidationErrors {
+        return this.validateFn(c);
+    }
 
     // ************* ControlValueAccessor Implementation **************
     public get value() {
@@ -84,22 +120,6 @@ export class DejaNumericStepperComponent implements OnInit, ControlValueAccessor
 
     public set value(val: number) {
         if (!this.disabled) {
-            this.writeValue(val);
-            this.onTouchedCallback();
-        }
-    }
-
-    public checkLimits(val: number) {
-        if (!this.disabled) {
-            if (val === undefined || val === null) {
-                val = null;
-            } else if (val > this.max) {
-                val = this.max;
-            } else if (val < this.min) {
-                val = this.min;
-            } else {
-                val = +val;
-            }
             this.writeValue(val);
             this.onChangeCallback(val);
             this.onTouchedCallback();

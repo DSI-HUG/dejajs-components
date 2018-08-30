@@ -1,5 +1,5 @@
-<mat-form-field >
-    <input matInput [placeholder]="placeholder" [class.off-limits]="value < min || value > max" [disabled]="disabled" #inputStepper type="number" [(ngModel)]="value" [min]="min" [max]="max" [step]="step" [style.width.px]="size" (change)="checkLimits(value)" /><!-- [pattern]="'\\d{0,'+max.toString().length+'}'" -->
+<mat-form-field>
+    <input matInput deja-child-validator [placeholder]="placeholder" [class.off-limits]="value < min || value > max" [disabled]="disabled" #inputStepper type="number" [(ngModel)]="value" [min]="min" [max]="max" [step]="step" [style.width.px]="size" />
     <div matSuffix *ngIf="value !== undefined && value !== null">
         <span class="unit">{{unit}}</span>
     </div>
