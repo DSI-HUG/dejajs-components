@@ -1,5 +1,15 @@
+<a name="3.5.1"></a>
+## [3.5.1](https://github.com/DSI-HUG/dejajs-components/compare/v3.5.0...v3.5.1) (2018-08-31)
+
+
+### Bug Fixes
+
+* **DejaNumericStepperComponent:** fix AOT ([7f2a984](https://github.com/DSI-HUG/dejajs-components/commit/7f2a984))
+
+
+
 <a name="3.5.0"></a>
-# [3.5.0](https://github.com/DSI-HUG/dejajs-components/compare/v3.4.1...v3.5.0) (2018-08-30)
+# [3.5.0](https://github.com/DSI-HUG/dejajs-components/compare/v3.4.1...v3.5.0) (2018-08-30) - Castor Eméché
 
 
 ### Bug Fixes
