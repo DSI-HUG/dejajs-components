@@ -79,7 +79,12 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     /** Offset de position verticale de la zone de dropdown */
     @Input() public overlayOffsetY = 6;
     /** Afficher un bouton raccourcis permettant de sélectionner la date courante */
-    @Input() public showCurrentDateButton = false;
+    @Input() public set showCurrentDateButton(value: boolean | string) {
+        this.showCurrentDateButton = coerceBooleanProperty(value);
+    }
+    public get showCurrentDateButton() {
+        return this._showCurrentDateButton;
+    }
     /** Permettre la saisie de texte libre */
     @Input() public allowFreeEntry = false;
 
@@ -102,6 +107,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
 
     @ViewChild(DejaChildValidatorDirective) private inputValidatorDirective: DejaChildValidatorDirective;
 
+    private _showCurrentDateButton: boolean;
     private isAlive = true;
     private _disabled: boolean;
     private _required: boolean;
@@ -191,8 +197,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
                     case (KeyCodes.KeyD):
                         if (!this.allowFreeEntry) {
                             event.preventDefault();
-                            this.value = new Date();
-                            this.inputElement.value = moment(this.value).format(this.format);
+                            this.setToCurrentDate();
                         }
                         break;
 
@@ -526,5 +531,18 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
 
     public setToCurrentDate(): void {
         this.value = new Date();
+
+        this.selectHours();
+    }
+
+    private selectHours() {
+        if (this.layout === DateComponentLayout.datetime) {
+            setTimeout(() => {
+                const hoursTemplate = moment(this.date).format('HH:mm');
+                const stringDate = this.inputElement.value;
+                const hoursPosition = stringDate.indexOf(hoursTemplate);
+                this.inputElement.setSelectionRange(hoursPosition, stringDate.length);
+            });
+        }
     }
 }

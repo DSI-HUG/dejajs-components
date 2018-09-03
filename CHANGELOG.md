@@ -1,3 +1,13 @@
+<a name="3.5.2"></a>
+## [3.5.2](https://github.com/DSI-HUG/dejajs-components/compare/v3.5.1...v3.5.2) (2018-09-03)
+
+
+### Features
+
+* **DejaDatePickerComponent:** select time when setToCurrentDate is called ([3b5ceec](https://github.com/DSI-HUG/dejajs-components/commit/3b5ceec))
+
+
+
 <a name="3.5.1"></a>
 ## [3.5.1](https://github.com/DSI-HUG/dejajs-components/compare/v3.5.0...v3.5.1) (2018-08-31)
 
