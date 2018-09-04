@@ -80,7 +80,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     @Input() public overlayOffsetY = 6;
     /** Afficher un bouton raccourcis permettant de sélectionner la date courante */
     @Input() public set showCurrentDateButton(value: boolean | string) {
-        this.showCurrentDateButton = coerceBooleanProperty(value);
+        this._showCurrentDateButton = coerceBooleanProperty(value);
     }
     public get showCurrentDateButton() {
         return this._showCurrentDateButton;
