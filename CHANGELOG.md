@@ -1,3 +1,12 @@
+<a name="3.5.3"></a>
+## [3.5.3](https://github.com/DSI-HUG/dejajs-components/compare/2.14.0...3.5.3) (2018-09-04)
+
+
+### Bug Fixes
+
+* **DatePicker:** fixed circular dependencies ([1901ec1](https://github.com/DSI-HUG/dejajs-components/commit/1901ec1))
+
+
 <a name="3.5.2"></a>
 ## [3.5.2](https://github.com/DSI-HUG/dejajs-components/compare/v3.5.1...v3.5.2) (2018-09-03)
 
