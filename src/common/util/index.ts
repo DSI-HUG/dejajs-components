@@ -7,4 +7,5 @@
  */
 
 export * from './HtmlUtils';
+export * from './RegExpUtils';
 export * from './DateUtils';

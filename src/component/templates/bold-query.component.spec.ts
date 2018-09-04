@@ -106,4 +106,14 @@ describe('DejaBoldQueryComponent', () => {
         });
 */
     });
+
+    it('should escape special chars', () => {
+        comp.value = 'test caractères spéciaux +?^${}()|[]\\. Fin test.';
+        comp.query = 'test';
+        comp.regexpOption = '';
+        fixture.detectChanges();
+        const result = `${highlightOpenTag}test${highlightEndTag} caractères spéciaux +?^\${}()|[]\\. Fin ${highlightOpenTag}test${highlightEndTag}.`;
+        expect(comp.content).toEqual(result);
+    });
+
 });

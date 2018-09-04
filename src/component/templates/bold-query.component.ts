@@ -8,6 +8,7 @@
 
 import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { Diacritics } from '../../common/core/diacritics/diacritics';
+import { RegExpUtils } from '../../common/util';
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -99,7 +100,7 @@ export class DejaBoldQueryComponent {
 
     private refresh() {
         if (this._value && this._query && this._query.length > 0) {
-            const regexpPattern = this._atTheBeginningOfWordOnly ? (`\\b${this._query}`) : this._query;
+            const regexpPattern = this._atTheBeginningOfWordOnly ? (`\\b${RegExpUtils.escapeRegExp(this._query)}`) : RegExpUtils.escapeRegExp(this._query);
             const sc = new RegExp(regexpPattern, this._regexpOptions);
             const value = this._value.toString() as string;
             const search = Diacritics.remove(value);
