@@ -6,7 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnDestroy, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { MonacoEditorService } from './monaco-editor.service';
 import { EditorOptions } from './options/editor-options.model';
 import { EditorScrollbarOptions } from './options/editor-scrollbar-options.model';
@@ -26,7 +27,7 @@ declare const monaco: any;
     ],
     template: `<div #editor resize-listener (sizeChanged)="onResize()" class='monaco-editor'></div>`,
 })
-export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnChanges {
+export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnChanges, ControlValueAccessor {
     /**
      * Enable experimental screen reader support.
      * Defaults to `true`.
@@ -401,6 +402,7 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
             }
 
             this.getOriginalModel().setValue(this._value);
+            this.onChangeCallback(this._value);
         }
     }
     /**
@@ -427,12 +429,19 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
     private _valueToCompare = '';
     private _language: 'bat' | 'c' | 'cpp' | 'csharp' | 'css' | 'dockerfile' | 'fsharp' | 'go' | 'handlebars' | 'html' | 'ini' | 'jade' | 'javascript' | 'json' | 'less' | 'lua' | 'markdown' | 'objective-c' | 'php' | 'csharp' | 'plaintext' | 'postiats' | 'powershell' | 'python' | 'r' | 'razor' | 'ruby' | 'scss' | 'sql' | 'swift' | 'typescript' | 'vb' | 'xml' | 'yaml';
 
+    public onTouchedCallback: () => void = () => {};
+    public onChangeCallback: (_: string) => void = (_: string) => {};
     /**
      * Constructor
      */
     constructor(
-        private monacoEditorService: MonacoEditorService
-    ) { }
+        private monacoEditorService: MonacoEditorService,
+        @Self() @Optional() public _control: NgControl,
+    ) {
+        if (this._control) {
+            this._control.valueAccessor = this;
+        }
+    }
 
     /**
      * Load Monaco Editor library
@@ -457,6 +466,21 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
         if (this._editor) {
             this._editor.updateOptions(this.getOptions());
         }
+    }
+
+    /** From ControlValueAccessor interface */
+    public writeValue(value: string) {
+        this.value = value;
+    }
+
+    /** From ControlValueAccessor interface */
+    public registerOnChange(fn: any) {
+        this.onChangeCallback = fn;
+    }
+
+    /** From ControlValueAccessor interface */
+    public registerOnTouched(fn: any) {
+        this.onTouchedCallback = fn;
     }
 
     /**
@@ -629,6 +653,7 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
         // this.value = value;
         this._value = value;
         this.valueChange.emit(value);
+        this.onChangeCallback(value);
     }
 
     /**
