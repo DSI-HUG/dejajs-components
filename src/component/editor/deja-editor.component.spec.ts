@@ -12,7 +12,7 @@ import { Observable } from 'rxjs/Observable';
 import { DejaEditorComponent } from './deja-editor.component';
 import { DejaEditorService } from './deja-editor.service';
 
-describe('DejaEditorComponent', () => {
+fdescribe('DejaEditorComponent', () => {
     let component: DejaEditorComponent;
     let fixture: ComponentFixture<DejaEditorComponent>;
 
@@ -41,8 +41,10 @@ describe('DejaEditorComponent', () => {
         fixture.detectChanges();
         fixture.whenStable().then(() => {
             Observable.timer(5000).subscribe(() => {
+                fixture.detectChanges();
                 expect(window.hasOwnProperty('CKEDITOR')).toBeTruthy();
-                expect(fixture.debugElement.query(By.css('iframe'))).toBeDefined();
+                const element = fixture.debugElement.query(By.css('textarea'));
+                expect(element).not.toBeNull();
                 done();
             });
         });
