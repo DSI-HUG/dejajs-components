@@ -8,7 +8,7 @@
 @mixin create-theme($color1, $color2, $dark: false) {
 	@include mat-core(); // Define color scheme
 
-    $primary: mat-palette($color1);
+	$primary: mat-palette($color1);
 	$accent: mat-palette($color2);
 	$warn: mat-palette($mat-red); // Create the theme object from colors
 	$theme: mat-light-theme($primary, $accent, $warn); // Include theme styles for core and each component used in the app.
@@ -16,21 +16,21 @@
 		$theme: mat-dark-theme($primary, $accent, $warn); // Include theme styles for core and each component used in the app.
 	}
 
-    @include angular-material-theme($theme);
+	@include angular-material-theme($theme);
 
-    /* ------ FAKE THEME ----- */
+	/* ------ FAKE THEME ----- */
 	/* WE NEED TO CREATE A FAKE THEME AND OVERRIDE THE COMPONENT MIXIN TO FIX THE MATERIAL COMPONENT COLOR ISSUE */
 	/* https://github.com/angular/material2/issues/947 */
 	// $fake-theme: mat-light-theme($primary, $primary, $warn);
 	// @include mat-radio-theme($fake-theme);
 
-    @include deja-theme($theme);
-    @include deja-menu();
-    @include deja-tree-list-borders();
+	@include deja-theme($theme);
+	@include deja-menu();
+	@include deja-tree-list-borders();
 
 	@include markdown-theme($theme);
 
-    @include home-demo-theme($theme);
+	@include home-demo-theme($theme);
 }
 
 body {
@@ -40,15 +40,19 @@ body {
 		display: flex;
 		flex-direction: column; // overflow: hidden;
 	}
+
 	&[theme="blue"] {
 		@include create-theme($mat-blue, $mat-teal);
 	}
+
 	&[theme="pink"] {
 		@include create-theme($mat-pink, $mat-indigo, true);
 	}
+
 	&[theme="teal"] {
 		@include create-theme($mat-teal, $mat-green);
 	}
+
 	&[theme="amber"] {
 		@include create-theme($mat-amber, $mat-orange, true);
 	}

@@ -73,6 +73,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @Input() public nodataholder: string;
     /** Offset de position horizontal de la zone de dropdown */
     @Input() public overlayOffsetX = 0;
+    /** Offset de position vertical de la zone de dropdown */
+    @Input() public overlayOffsetY = 0;
     /** Permet de définir un template de ligne par binding */
     @Input() public itemTemplateExternal: any;
     /** Permet de définir un template de ligne parente par binding. */
@@ -104,7 +106,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     /** Internal use */
     public overlayOwnerElement: HTMLElement;
     public dropDownMaxHeight: number = null;
-    public overlayOffsetY = 0;
 
     // NgModel implementation
     public onTouchedCallback: () => void = noop;
@@ -124,7 +125,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         if (element) {
             this._inputElement = element;
             if (this._inputElement) {
-                this.overlayOwnerElement = this._inputElement.nativeElement;
+                const _inputElement = this._inputElement.nativeElement as HTMLInputElement;
+                this.overlayOwnerElement = _inputElement.parentElement;
             } else {
                 this.overlayOwnerElement = this.elementRef.nativeElement;
             }
@@ -297,7 +299,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             .do(() => {
                 // Set overlay origin element
                 const originElement: HTMLElement = (this.isMobile && document.body) || this.htmlInputElement || this.elementRef.nativeElement;
-                this.overlayOffsetY = this.isMobile ? 0 : 6;
 
                 // Calc max height
                 if (this.isMobile) {
@@ -339,27 +340,13 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             })
             .delay(1)
             .filter(() => this.dropdownVisible)  // Show canceled by the hide$ observable if !dropdownVisible
-            .do(() => this.viewPort.element$.next(this.listElement))
-            .delay(1)
             .do(() => {
+                this.viewPort.element$.next(this.listElement);
+            })
+            .delay(1)
+            .subscribe(() => {
                 // View port calculated
                 this.overlay.updatePosition();
-            })
-            .subscribe(() => {
-                if (!this.isMobile) {
-                    const listRect = this.listElement.getBoundingClientRect();
-                    const originElement: HTMLElement = this.htmlInputElement || this.elementRef.nativeElement;
-                    const originRect = originElement.getBoundingClientRect();
-                    if (listRect.top < originRect.top) {
-                        this.overlayOffsetY = -20;
-                        this.changeDetectorRef.markForCheck();
-                        Observable.timer(1)
-                            .first()
-                            .subscribe(() => {
-                                this.overlay.updatePosition();
-                            });
-                    }
-                }
             });
 
         Observable.from(this.keyboardNavigation$)
@@ -1357,6 +1344,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             .first()
             .delay(1) // Ensure viewport binding
             .subscribe(() => {
+                // View port calculated
                 this.overlay.updatePosition();
 
                 // Ensure selection

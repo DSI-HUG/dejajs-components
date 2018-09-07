@@ -794,7 +794,7 @@ describe('DejaGridComponent', () => {
         let pass = 0;
 
         observeViewPort$()
-            .debounceTime(10)
+            .debounceTime(100)
             .subscribe((_vp) => {
                 // Bind view port
                 fixture.detectChanges();

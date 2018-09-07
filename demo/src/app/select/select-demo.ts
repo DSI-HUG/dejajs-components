@@ -56,7 +56,7 @@ export class SelectDemoComponent implements OnDestroy {
     public countriesForMultiselect: Country[];
     public groupedCountries: ICountryGroup[];
     public onDemandGroupedCountries: ICountryGroup[];
-    public multiselectModel: IItemTree[];
+    public multiselectModel: any[];
     private _dialogVisible = false;
     public onDemandPlaceHolder = 'Open to load';
     private subscriptions = [] as Subscription[];
