@@ -12,7 +12,7 @@ import { Observable } from 'rxjs/Observable';
 import { DejaEditorComponent } from './deja-editor.component';
 import { DejaEditorService } from './deja-editor.service';
 
-fdescribe('DejaEditorComponent', () => {
+describe('DejaEditorComponent', () => {
     let component: DejaEditorComponent;
     let fixture: ComponentFixture<DejaEditorComponent>;
 
