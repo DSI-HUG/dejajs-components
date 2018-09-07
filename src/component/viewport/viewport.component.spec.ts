@@ -384,8 +384,7 @@ describe('DejaViewPortComponent', () => {
         let pass = 0;
 
         Observable.from(viewPortService.viewPortResult$)
-            .debounceTime(10)
-            .do(() => fixture.detectChanges())
+            .debounceTime(100)
             .subscribe((vp) => {
                 // Bind view port
                 fixture.detectChanges();

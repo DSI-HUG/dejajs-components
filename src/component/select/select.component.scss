@@ -11,20 +11,25 @@ deja-select {
 
 	#input {
 		width: 100%;
+
 		.mat-form-field-infix {
 			width: 100%;
 		}
+
 		.mat-form-field-suffix {
 			[matSuffix] {
 				display: table-cell;
 			}
+
 			.actions-suffix {
 				text-align: right;
+
 				#clear-button,
 				.select-arrow-down {
 					font-size: 1rem;
 					opacity: 0.25;
 					vertical-align: bottom;
+
 					&:hover {
 						opacity: 1;
 						cursor: pointer;
@@ -48,6 +53,7 @@ deja-select {
 					right: 0;
 					height: 2px;
 					margin-top: 10px;
+
 					&:before {
 						content: '';
 						position: absolute;
@@ -57,6 +63,7 @@ deja-select {
 						will-change: left, right;
 						animation: load 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
 					}
+
 					&:after {
 						content: '';
 						position: absolute;
@@ -84,24 +91,29 @@ deja-select {
 			left: -35%;
 			right: 100%;
 		}
+
 		60% {
 			left: 100%;
 			right: -90%;
 		}
+
 		100% {
 			left: 100%;
 			right: -90%;
 		}
 	}
+
 	@keyframes load-short {
 		0% {
 			left: -200%;
 			right: 100%;
 		}
+
 		60% {
 			left: 107%;
 			right: -8%;
 		}
+
 		100% {
 			left: 107%;
 			right: -8%;
@@ -111,6 +123,7 @@ deja-select {
 	mat-placeholder {
 		display: flex;
 		align-items: center;
+
 		mat-icon {
 			margin-right: 0.5rem;
 		}
@@ -122,23 +135,42 @@ deja-select {
 		width: 100%;
 		text-align: left;
 		overflow-y: auto;
+
 		div.listitem {
 			white-space: nowrap;
+
 			#expandbtn {
 				min-width: 24px;
 			}
+
+			>deja-bold-query {
+				flex: 1 1 100%;
+                overflow: hidden;
+                
+                div {
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+					position: relative;
+					width: 100%;
+				}
+			}
 		}
+
 		&[valign="bottom"] {
 			border-top: none;
 		}
+
 		[current="true"] {
 			box-shadow: none;
 		}
+
 		&[keynav="false"] {
 			div.listitem:not(.unselectable):hover {
 				cursor: pointer;
 			}
 		}
+
 		#nodata-holder {
 			margin: 0.5rem;
 		}

@@ -25,6 +25,11 @@ import { DejaMouseDroppableDirective, IDejaMouseDroppableContext } from './mouse
                 <div #dropArea id="dropArea" [deja-mouse-droppable]="getDropContext(dropArea)"></div>
                 <deja-mouse-dragdrop-cursor></deja-mouse-dragdrop-cursor>`,
     styles: [`* { transition: unset !important; }
+    host: {
+        left: 0;
+        width: 0;
+        position: absolute;
+    }
     div#dragArea {
         left: 100px;
         top: 100px;
@@ -113,11 +118,9 @@ describe('DejaMouseDragDrop', () => {
         fixture.whenStable().then(() => {
             const dragDebugElement = fixture.debugElement.query(By.css('div#dragArea'));
             const dropDebugElement = fixture.debugElement.query(By.css('div#dropArea'));
-            const dragDropContainerElement = fixture.nativeElement as HTMLElement;
             const dragElement = dragDebugElement.nativeElement as HTMLElement;
 
             const sendMouseEvent = (element: EventTarget, type: string, x: number, y: number, buttons = 0) => {
-                const dragDropContainerBounds = dragDropContainerElement.getBoundingClientRect();
                 const eventInit = () => ({
                     bubbles: true,
                     cancelable: (type !== 'mousemove'),
@@ -128,8 +131,8 @@ describe('DejaMouseDragDrop', () => {
                     shiftKey: false,
                     button: 0,
                     buttons: buttons,
-                    clientX: dragDropContainerBounds.left + x,
-                    clientY: dragDropContainerBounds.top + y,
+                    clientX: x,
+                    clientY: y,
                     relatedTarget: element,
                 } as MouseEventInit);
                 const event = new MouseEvent(type, eventInit());
@@ -141,9 +144,6 @@ describe('DejaMouseDragDrop', () => {
             sendMouseEvent(dragElement, 'mousemove', 200, 200);
             sendMouseEvent(dragElement, 'mousedown', 200, 200, 1);
             sendMouseEvent(dragElement.ownerDocument, 'mousemove', 220, 220, 1);
-            sendMouseEvent(dragElement.ownerDocument, 'mousemove', 200, 400, 1);
-            sendMouseEvent(dragElement.ownerDocument, 'mousemove', 400, 400, 1);
-            sendMouseEvent(dragElement.ownerDocument, 'mousemove', 250, 400, 1);
             sendMouseEvent(dragElement.ownerDocument, 'mousemove', 200, 400, 1);
             sendMouseEvent(dragElement.ownerDocument, 'mouseup', 200, 400, 0);
             const dropElement = dropDebugElement.nativeElement as HTMLElement;
