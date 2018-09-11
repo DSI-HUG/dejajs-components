@@ -7,7 +7,7 @@
  */
 
 import { Directive, ElementRef, Input, OnDestroy } from '@angular/core';
-import { fromEvent as observableFromEvent, merge as observableMerge, Subject, Observable } from 'rxjs';
+import { fromEvent as observableFromEvent, merge as observableMerge, Observable, Subject } from 'rxjs';
 import { filter, first, takeUntil, takeWhile, tap } from 'rxjs/operators';
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
