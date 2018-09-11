@@ -1,14 +1,16 @@
+
 /*
- *  @license
- *  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
- *
- *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
- */
+*  @license
+*  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
+*
+*  Use of this source code is governed by an Apache-2.0 license that can be
+*  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
+*/
 import { ComponentPortal, Portal } from '@angular/cdk/portal';
 import { AfterViewInit, Component, ElementRef, Inject, Injector, OnInit, Renderer2, ViewEncapsulation } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { DejaPopupAction } from '../../model/popup-action.model';
 import { DejaPopupBase } from '../../model/popup-base.class';
 import { DejaPopupConfig } from '../../model/popup-config.model';
@@ -130,8 +132,8 @@ export class DejaPopupAdvancedComponent extends DejaPopupBase implements AfterVi
                 }
             });
 
-            this.subKeyEvent = this.dialogRef.keydownEvents()
-                .do(() => this.freeze())
+            this.subKeyEvent = this.dialogRef.keydownEvents().pipe(
+                tap(() => this.freeze()))
                 .subscribe();
 
         } else {

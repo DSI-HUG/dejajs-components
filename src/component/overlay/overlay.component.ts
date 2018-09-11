@@ -1,3 +1,4 @@
+
 /*
  *  @license
  *  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
@@ -8,10 +9,8 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { CdkConnectedOverlay, CdkOverlayOrigin, OverlayContainer } from '@angular/cdk/overlay';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
-import 'rxjs/add/observable/timer';
-import 'rxjs/add/operator/first';
-import 'rxjs/add/operator/takeWhile';
-import { Observable } from 'rxjs/Observable';
+import { timer as observableTimer } from 'rxjs';
+import { first, takeWhile } from 'rxjs/operators';
 import { MediaService } from '../../common/core/media/media.service';
 import { DejaConnectionPositionPair } from '../../common/core/overlay/connection-position-pair';
 
@@ -92,8 +91,8 @@ export class DejaOverlayComponent implements OnDestroy {
             return false;
         });
 
-        mediaService.isMobile$
-            .takeWhile(() => this.isAlive)
+        mediaService.isMobile$.pipe(
+            takeWhile(() => this.isAlive))
             .subscribe((value) => {
                 this.isMobile = value;
                 this.changeDetectorRef.markForCheck();
@@ -184,8 +183,8 @@ export class DejaOverlayComponent implements OnDestroy {
         this.overlayOrigin = new CdkOverlayOrigin(new ElementRef((this.isMobile && document.body) || target || this.ownerElement || this.elementRef.nativeElement));
         this.isVisible = true;
         this.changeDetectorRef.markForCheck();
-        Observable.timer(1)
-            .first()
+        observableTimer(1).pipe(
+            first())
             .subscribe(() => {
                 this.updatePosition();
             });

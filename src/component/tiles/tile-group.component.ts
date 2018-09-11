@@ -8,12 +8,8 @@
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, HostBinding, Input, OnDestroy, Output, ViewChild } from '@angular/core';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/takeWhile';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import { from as observableFrom, Subject } from 'rxjs';
+import { debounceTime, filter, takeWhile } from 'rxjs/operators';
 import { Color } from '../../common/core/graphics/color';
 import { DejaEditableDirective } from '../content-editable/content-editable.directive';
 import { IDejaTile } from './tile.interface';
@@ -41,10 +37,10 @@ export class DejaTileGroupComponent implements OnDestroy {
     @HostBinding('attr.designMode') private _designMode = false;
 
     constructor(private changeDetectorRef: ChangeDetectorRef) {
-        Observable.from(this.edit$)
-            .takeWhile(() => this.isAlive)
-            .filter(() => this._designMode)
-            .debounceTime(100)
+        observableFrom(this.edit$).pipe(
+            takeWhile(() => this.isAlive),
+            filter(() => this._designMode),
+            debounceTime(100))
             .subscribe(() => this.title.edit(true));
     }
 

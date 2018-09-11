@@ -9,13 +9,8 @@
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { AfterViewInit, Directive, ElementRef, forwardRef, Input, OnDestroy } from '@angular/core';
 import { NG_VALIDATORS, Validator } from '@angular/forms';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/first';
-import 'rxjs/add/operator/takeWhile';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import {from as observableFrom, of as observableOf ,  Subject } from 'rxjs';
+import {debounceTime, delay, first, takeWhile, tap} from 'rxjs/operators';
 
 /**
  * Directive pour rendre un textarea material redimensioné automatiquement au contenu.
@@ -35,13 +30,13 @@ export class DejaAutosizeTextAreaDirective implements AfterViewInit, Validator, 
     public set rows(value: number | string) {
         this._rows = coerceNumberProperty(value);
 
-        Observable.of(this._rows)
-            .first()
-            .do((rows) => {
+        observableOf(this._rows).pipe(
+            first(),
+            tap((rows) => {
                 this.textAreaElement.setAttribute('rows', (rows || 1).toString());
                 this.textAreaElement.style.overflowY = 'hidden';
-            })
-            .delay(1)
+            }),
+            delay(1), )
             .subscribe(() => {
                 this.minHeight = this.textAreaElement.scrollHeight;
                 this.textAreaElement.setAttribute('rows', '1');
@@ -61,10 +56,10 @@ export class DejaAutosizeTextAreaDirective implements AfterViewInit, Validator, 
     constructor(private elementRef: ElementRef) {
         this.textAreaElement = this.elementRef.nativeElement;
 
-        Observable.from(this.resize$)
-            .takeWhile(() => this.isAlive)
-            .debounceTime(5)
-            .do(() => this.textAreaElement.style.height = `${this.minHeight}px`)
+        observableFrom(this.resize$).pipe(
+            takeWhile(() => this.isAlive),
+            debounceTime(5),
+            tap(() => this.textAreaElement.style.height = `${this.minHeight}px`), )
             .subscribe(() => {
                 this.textAreaElement.style.height = `${this.textAreaElement.scrollHeight}px`;
             });

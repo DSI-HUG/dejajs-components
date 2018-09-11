@@ -5,13 +5,9 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-
 import { Directive, ElementRef, HostBinding, Input, OnDestroy, Optional } from '@angular/core';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/first';
-import 'rxjs/add/operator/takeWhile';
-import { Observable } from 'rxjs/Observable';
+import { fromEvent as observableFromEvent } from 'rxjs';
+import { filter, first, takeWhile } from 'rxjs/operators';
 import { DejaClipboardService } from '../../common/core/clipboard/clipboard.service';
 import { UUID } from '../../common/core/UUID';
 
@@ -41,9 +37,9 @@ export class DejaDraggableDirective implements OnDestroy {
     constructor(elementRef: ElementRef, @Optional() private clipboardService: DejaClipboardService) {
         const element = elementRef.nativeElement as HTMLElement;
 
-        Observable.fromEvent(element, 'dragstart')
-            .takeWhile(() => this.isAlive)
-            .filter(() => !!this.context)
+        observableFromEvent(element, 'dragstart').pipe(
+            takeWhile(() => this.isAlive),
+            filter(() => !!this.context))
             .subscribe((event: DragEvent) => {
                 if (!clipboardService) {
                     throw new Error('To use the DejaDraggableDirective, please import and provide the DejaClipboardService in your application.');
@@ -78,9 +74,9 @@ export class DejaDraggableDirective implements OnDestroy {
                     }
                 }
 
-                Observable.fromEvent(element, 'dragend')
-                    .takeWhile(() => this.isAlive)
-                    .first()
+                observableFromEvent(element, 'dragend').pipe(
+                    takeWhile(() => this.isAlive),
+                    first())
                     .subscribe((evt: DragEvent) => {
                         // console.log('dragend');
                         const dragEndInfos = this.clipboardService.get(this.draginfokey) as { [key: string]: any };

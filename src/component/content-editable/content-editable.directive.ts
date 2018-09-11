@@ -9,16 +9,8 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Directive, ElementRef, HostBinding, Input, OnDestroy, Optional, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/observable/timer';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/first';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/takeUntil';
-import 'rxjs/add/operator/takeWhile';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject, from as observableFrom, fromEvent as observableFromEvent, timer as observableTimer } from 'rxjs';
+import { filter, first, map, takeUntil, takeWhile, tap } from 'rxjs/operators';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 
 const noop = () => { };
@@ -47,8 +39,8 @@ export class DejaEditableDirective implements ControlValueAccessor, OnDestroy {
 
         this.element = elementRef.nativeElement as HTMLElement;
 
-        Observable.fromEvent(this.element, 'mousedown')
-            .takeWhile(() => this.isAlive)
+        observableFromEvent(this.element, 'mousedown').pipe(
+            takeWhile(() => this.isAlive))
             .subscribe((e: MouseEvent) => {
                 if (this.inEdition || this.disabled) {
                     e.cancelBubble = true;
@@ -60,36 +52,36 @@ export class DejaEditableDirective implements ControlValueAccessor, OnDestroy {
                 }
             });
 
-        const inEdition$ = Observable.from(this.edit$)
-            .map(([value, selectOnFocus]) => {
+        const inEdition$ = observableFrom(this.edit$).pipe(
+            map(([value, selectOnFocus]) => {
                 if (selectOnFocus !== false) {
-                    Observable.timer(10)
-                        .first()
+                    observableTimer(10).pipe(
+                        first())
                         .subscribe(() => {
                             this.selectAll();
                             this.focus();
                         });
                 }
                 return value;
-            })
-            .do((value) => {
+            }),
+            tap((value) => {
                 this._inEdition = value;
                 if (value) {
                     this.element.setAttribute('contenteditable', 'true');
                 } else {
                     this.element.removeAttribute('contenteditable');
                 }
-            });
+            }));
 
-        const kill$ = inEdition$
-            .filter((value) => !value);
+        const kill$ = inEdition$.pipe(
+            filter((value) => !value));
 
-        inEdition$
-            .filter((value) => value)
+        inEdition$.pipe(
+            filter((value) => value))
             .subscribe(() => {
-                Observable.fromEvent(this.element.ownerDocument, 'mousedown')
-                    .takeUntil(kill$)
-                    .filter((event: MouseEvent) => !this.isChildElement(event.target as HTMLElement))
+                observableFromEvent(this.element.ownerDocument, 'mousedown').pipe(
+                    takeUntil(kill$),
+                    filter((event: MouseEvent) => !this.isChildElement(event.target as HTMLElement)))
                     .subscribe(() => {
                         const text = this.element.innerText;
                         this.onTouchedCallback();
@@ -102,8 +94,8 @@ export class DejaEditableDirective implements ControlValueAccessor, OnDestroy {
                         this.inEdition = false;
                     });
 
-                Observable.fromEvent(this.element, 'keydown')
-                    .takeUntil(kill$)
+                observableFromEvent(this.element, 'keydown').pipe(
+                    takeUntil(kill$))
                     .subscribe((e: KeyboardEvent) => {
                         e.cancelBubble = true;
                         e.stopPropagation();

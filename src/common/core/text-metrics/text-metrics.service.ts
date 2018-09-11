@@ -7,14 +7,8 @@
  */
 
 import { Injectable } from '@angular/core';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/operator/delay';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/first';
-import 'rxjs/add/operator/map';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import {BehaviorSubject,  from as observableFrom ,  Observable ,  Subject } from 'rxjs';
+import {delay, filter, first, map} from 'rxjs/operators';
 
 /**
  * Service to measure the theorical size of a text inside a container
@@ -31,9 +25,9 @@ export class DejaTextMetricsService {
      * Add observable to wait for element to be set. And then take its properties to measure all ASCII char size.
      */
     constructor() {
-        Observable.from(this.element$)
-            .delay(1)
-            .first()
+        observableFrom(this.element$).pipe(
+            delay(1),
+            first())
             .subscribe((element) => {
                 const charSize = [];
                 for (let i = 0; i < 255; i++) {
@@ -99,15 +93,15 @@ export class DejaTextMetricsService {
      * @return Hauteur théorique du conteneur.
      */
     public getTextHeight(maxWidth: number, text: string): Observable<number> {
-        return this.getNumberOfLines(maxWidth, text)
-            .map((numberOfLines: number) => {
+        return this.getNumberOfLines(maxWidth, text).pipe(
+            map((numberOfLines: number) => {
                 const computedLineHeight = parseInt(this.computedStyles.lineHeight.replace('px', ''), 10);
                 const lineHeight = (!isNaN(computedLineHeight)) ?
                     computedLineHeight :
                     Math.floor(parseInt(this.computedStyles.fontSize.replace('px', ''), 10) * 1.5);
 
                 return lineHeight * +numberOfLines;
-            });
+            }));
     }
 
     /**
@@ -119,9 +113,9 @@ export class DejaTextMetricsService {
      * @return Nombre de lignes théoriques du conteneur.
      */
     private getNumberOfLines(maxWidth: number, text: string): Observable<number> {
-        return this.charSize$
-            .filter((charSize) => charSize !== null)
-            .map((charSize) => {
+        return this.charSize$.pipe(
+            filter((charSize) => charSize !== null),
+            map((charSize) => {
 
                 let tmpSize = 0;
                 let numberOfLines = 1;
@@ -152,6 +146,6 @@ export class DejaTextMetricsService {
                 }
 
                 return numberOfLines;
-            });
+            }));
     }
 }

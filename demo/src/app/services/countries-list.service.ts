@@ -9,7 +9,7 @@
 import { Injectable } from '@angular/core';
 import { IItemBase } from '@deja-js/component';
 import { ItemListService } from '@deja-js/component';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { CountriesService } from './countries.service';
 
 @Injectable()

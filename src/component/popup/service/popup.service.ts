@@ -1,3 +1,4 @@
+
 /*
  *  @license
  *  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
@@ -9,9 +10,8 @@ import { ComponentType } from '@angular/cdk/portal';
 import { Injectable } from '@angular/core';
 import { TemplateRef } from '@angular/core/src/linker/template_ref';
 import { MatDialog, MatDialogRef } from '@angular/material';
-import 'rxjs/add/operator/map';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { DejaPopupActionsComponent } from '../component/popup-actions/popup-actions.component';
 import { DejaPopupAdvancedComponent } from '../component/popup-advanced/popup-advanced.component';
 import { DejaPopupComponent } from '../component/popup/popup.component';
@@ -56,10 +56,10 @@ export class DejaPopupService extends MatDialog {
 
         const dialogRef: MatDialogRef<DejaPopupBase> = this.open(DejaPopupComponent, config);
 
-        return dialogRef.afterClosed()
-            .map((resp: any) => {
+        return dialogRef.afterClosed().pipe(
+            map((resp: any) => {
                 return new DejaPopupReponse(resp, dialogRef.componentInstance);
-            });
+            }));
     }
 
     public openCustom(
@@ -69,10 +69,10 @@ export class DejaPopupService extends MatDialog {
 
         const dialogRef: MatDialogRef<DejaPopupBase> = this.open(customComponent, config);
 
-        return dialogRef.afterClosed()
-            .map((resp: any) => {
+        return dialogRef.afterClosed().pipe(
+            map((resp: any) => {
                 return new DejaPopupReponse(resp, dialogRef.componentInstance);
-            });
+            }));
     }
 
     public openUrl(
@@ -85,10 +85,10 @@ export class DejaPopupService extends MatDialog {
 
         const dialogRef: MatDialogRef<DejaPopupAdvancedComponent> = this.open(DejaPopupAdvancedComponent, config);
 
-        return dialogRef.afterClosed()
-            .map((resp: any) => {
+        return dialogRef.afterClosed().pipe(
+            map((resp: any) => {
                 return new DejaPopupReponse(resp, dialogRef.componentInstance);
-            });
+            }));
     }
 
     public openAdvanced(
@@ -105,10 +105,10 @@ export class DejaPopupService extends MatDialog {
     ): Observable<DejaPopupReponse> {
 
         const dialogRef = this.openAdvanced(config);
-        return dialogRef.afterClosed()
-            .map((resp: any) => {
+        return dialogRef.afterClosed().pipe(
+            map((resp: any) => {
                 return new DejaPopupReponse(resp, dialogRef.componentInstance);
-            });
+            }));
 
     }
 

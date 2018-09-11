@@ -7,12 +7,8 @@
  */
 
 import * as _ from 'lodash';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/reduce';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/toPromise';
-import { Observable } from 'rxjs/Observable';
+import { Observable, of as observableOf } from 'rxjs';
+import { map, reduce, switchMap } from 'rxjs/operators';
 import { ISortInfos } from './sort-infos.model';
 import { SortOrder } from './sort-order.model';
 
@@ -24,7 +20,7 @@ export class SortingService {
      * @return Observable résolu par la fonction.
      */
     public sort$(list: any[], sortInfos: ISortInfos | ISortInfos[]) {
-        return Observable.of(this.sort(list, sortInfos));
+        return observableOf(this.sort(list, sortInfos));
     }
 
     /** Trie les éléments de la liste plate spécifiée en fonction du modèle de tri spécifié
@@ -55,21 +51,21 @@ export class SortingService {
      */
     public sortTree$(tree: any[], sortInfos: ISortInfos | ISortInfos[], childrenField?: string): Observable<any[]> {
         childrenField = childrenField || 'items';
-        return this.sort$(tree, sortInfos)
-            .switchMap((child) => child)
-            .switchMap((child) => {
+        return this.sort$(tree, sortInfos).pipe(
+            switchMap((child) => child),
+            switchMap((child) => {
                 if (!child || !child[childrenField]) {
-                    return Observable.of(child);
+                    return observableOf(child);
                 }
-                return this.sortTree$(child[childrenField], sortInfos, childrenField)
-                    .map((sortedList) => {
+                return this.sortTree$(child[childrenField], sortInfos, childrenField).pipe(
+                    map((sortedList) => {
                         child[childrenField] = sortedList;
                         return child;
-                    });
-            })
-            .reduce((acc: any[], cur) => {
+                    }));
+            }),
+            reduce((acc: any[], cur) => {
                 acc.push(cur);
                 return acc;
-            }, []);
+            }, []));
     }
 }

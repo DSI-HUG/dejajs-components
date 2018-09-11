@@ -6,24 +6,9 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-// TODO Key events
-
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, HostBinding, Input, OnDestroy, ViewChild } from '@angular/core';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/observable/interval';
-import 'rxjs/add/observable/interval';
-import 'rxjs/add/observable/merge';
-import 'rxjs/add/observable/timer';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/delay';
-import 'rxjs/add/operator/first';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/takeUntil';
-import 'rxjs/add/operator/takeWhile';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import { Subscription } from 'rxjs/Subscription';
+import { from as observableFrom, fromEvent as observableFromEvent, interval as observableInterval, merge as observableMerge, Subject, Subscription, timer as observableTimer } from 'rxjs';
+import { debounceTime, delay, first, map, takeUntil, takeWhile } from 'rxjs/operators';
 import { IViewPort, IViewPortItem, IViewPortRefreshParams, ViewportDirection, ViewportMode, ViewPortService } from '../../common/core/item-list/viewport.service';
 
 export enum DejaViewPortScrollStyle {
@@ -140,10 +125,10 @@ export class DejaViewPortComponent implements OnDestroy {
     public set wrapperElement(element: ElementRef) {
         this.element = element.nativeElement as HTMLElement;
         this.viewPort.element$.next(this.element);
-        Observable.fromEvent(this.element, 'scroll')
-            .takeWhile(() => this.isAlive)
-            .map((event: Event) => event.target as HTMLElement)
-            .map((target) => Math.round(this._isHorizontal ? target.scrollLeft : target.scrollTop))
+        observableFromEvent(this.element, 'scroll').pipe(
+            takeWhile(() => this.isAlive),
+            map((event: Event) => event.target as HTMLElement),
+            map((target) => Math.round(this._isHorizontal ? target.scrollLeft : target.scrollTop)))
             .subscribe((scrollPos) => {
                 this.viewPort.scrollPosition$.next(scrollPos);
             });
@@ -185,17 +170,17 @@ export class DejaViewPortComponent implements OnDestroy {
     }
 
     constructor(private changeDetectorRef: ChangeDetectorRef, private viewPort: ViewPortService) {
-        Observable.fromEvent(window, 'resize')
-            .takeWhile(() => this.isAlive)
-            .debounceTime(5)
+        observableFromEvent(window, 'resize').pipe(
+            takeWhile(() => this.isAlive),
+            debounceTime(5))
             .subscribe(() => {
                 this.viewPort.deleteSizeCache();
                 this.viewPort.refresh();
                 this.changeDetectorRef.markForCheck();
             });
 
-        viewPort.viewPort$
-            .takeWhile(() => this.isAlive)
+        viewPort.viewPort$.pipe(
+            takeWhile(() => this.isAlive))
             .subscribe((viewPortResult: IViewPort) => {
                 if (viewPort.mode !== ViewportMode.disabled) {
                     this.vpItems = viewPortResult.visibleItems as IDejaViewPortItem[];
@@ -249,8 +234,8 @@ export class DejaViewPortComponent implements OnDestroy {
                         scroll(viewPortResult);
                     } else {
                         this.changeDetectorRef.markForCheck();
-                        Observable.timer(1)
-                            .first()
+                        observableTimer(1).pipe(
+                            first())
                             .subscribe(() => scroll(viewPortResult));
                     }
                 } else {
@@ -258,13 +243,12 @@ export class DejaViewPortComponent implements OnDestroy {
                 }
             });
 
-        Observable.from(this.downButton$)
-            .takeWhile(() => this.isAlive)
+        observableFrom(this.downButton$).pipe(
+            takeWhile(() => this.isAlive))
             .subscribe((downButton) => {
                 if (downButton) {
                     if (!this.mouseWheel$Sub) {
-                        this.mouseWheel$Sub = Observable
-                            .fromEvent(this.element, 'mousewheel')
+                        this.mouseWheel$Sub = observableFromEvent(this.element, 'mousewheel')
                             .subscribe((event: MouseWheelEvent) => {
                                 this.scrollPos = this.scrollPos + event.deltaY;
                             });
@@ -276,28 +260,28 @@ export class DejaViewPortComponent implements OnDestroy {
                 }
             });
 
-        const downButton$ = Observable.from(this.downButton$)
-            .takeWhile(() => this.isAlive)
-            .map((downButton) => {
+        const downButton$ = observableFrom(this.downButton$).pipe(
+            takeWhile(() => this.isAlive),
+            map((downButton) => {
                 if (downButton) {
                     if (!this.downButton$Sub) {
-                        const mousedown$ = Observable.fromEvent(downButton, 'mousedown');
+                        const mousedown$ = observableFromEvent(downButton, 'mousedown');
 
-                        const mouseup$ = Observable.merge(
-                            Observable.fromEvent(downButton, 'mouseup'),
-                            Observable.fromEvent(downButton, 'mouseleave'));
+                        const mouseup$ = observableMerge(
+                            observableFromEvent(downButton, 'mouseup'),
+                            observableFromEvent(downButton, 'mouseleave'));
 
                         this.downButton$Sub = mousedown$.subscribe((event: MouseEvent) => {
-                            mouseup$.first()
+                            mouseup$.pipe(first())
                                 .subscribe((upEvent: MouseEvent) => {
                                     this.scrollPos += upEvent.ctrlKey ? this.clientSize : this.buttonsStep;
                                 });
 
-                            Observable.timer(750)
-                                .takeUntil(mouseup$)
+                            observableTimer(750).pipe(
+                                takeUntil(mouseup$))
                                 .subscribe(() => {
-                                    Observable.interval(50)
-                                        .takeUntil(mouseup$)
+                                    observableInterval(50).pipe(
+                                        takeUntil(mouseup$))
                                         .subscribe(() => {
                                             this.scrollPos += event.ctrlKey ? this.clientSize : this.buttonsStep * 2;
                                         });
@@ -313,31 +297,31 @@ export class DejaViewPortComponent implements OnDestroy {
                 }
 
                 return false;
-            });
+            }));
 
-        const upButton$ = Observable.from(this.upButton$)
-            .takeWhile(() => this.isAlive)
-            .map((upButton) => {
+        const upButton$ = observableFrom(this.upButton$).pipe(
+            takeWhile(() => this.isAlive),
+            map((upButton) => {
                 if (upButton) {
                     if (!this.upButton$Sub) {
-                        const mousedown$ = Observable.fromEvent(upButton, 'mousedown');
+                        const mousedown$ = observableFromEvent(upButton, 'mousedown');
 
-                        const mouseup$ = Observable.merge(
-                            Observable.fromEvent(upButton, 'mouseup'),
-                            Observable.fromEvent(upButton, 'mouseleave'));
+                        const mouseup$ = observableMerge(
+                            observableFromEvent(upButton, 'mouseup'),
+                            observableFromEvent(upButton, 'mouseleave'));
 
                         this.upButton$Sub = mousedown$.subscribe((event: MouseEvent) => {
-                            mouseup$
-                                .first()
+                            mouseup$.pipe(
+                                first())
                                 .subscribe((upEvent: MouseEvent) => {
                                     this.scrollPos -= upEvent.ctrlKey ? this.clientSize : this.buttonsStep;
                                 });
 
-                            Observable.timer(750)
-                                .takeUntil(mouseup$)
+                            observableTimer(750).pipe(
+                                takeUntil(mouseup$))
                                 .subscribe(() => {
-                                    Observable.interval(50)
-                                        .takeUntil(mouseup$)
+                                    observableInterval(50).pipe(
+                                        takeUntil(mouseup$))
                                         .subscribe(() => {
                                             this.scrollPos -= event.ctrlKey ? this.clientSize : this.buttonsStep * 2;
                                         });
@@ -353,10 +337,10 @@ export class DejaViewPortComponent implements OnDestroy {
                 }
 
                 return false;
-            });
+            }));
 
-        Observable.merge(downButton$, upButton$)
-            .delay(10)
+        observableMerge(downButton$, upButton$).pipe(
+            delay(10))
             .subscribe((needToRefresh) => {
                 if (needToRefresh) {
                     this.viewPort.refresh();

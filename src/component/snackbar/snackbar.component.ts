@@ -7,15 +7,8 @@
  */
 
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/observable/timer';
-import 'rxjs/add/operator/debounce';
-import 'rxjs/add/operator/delay';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/first';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import { Subscription } from 'rxjs/Subscription';
+import { from as observableFrom, Subject, Subscription, timer as observableTimer } from 'rxjs';
+import { debounce, delay, first, tap } from 'rxjs/operators';
 
 interface IAnimation {
     before: CSSStyleDeclaration;
@@ -159,17 +152,17 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
                 });
         };
 
-        this.animate$sub = Observable.from(this.animate$)
-            .do((animation) => applyParams(animation.before))
-            .delay(1)
-            .do((animation) => {
+        this.animate$sub = observableFrom(this.animate$).pipe(
+            tap((animation) => applyParams(animation.before)),
+            delay(1),
+            tap((animation) => {
                 this.host.style.transitionDuration = `${animation.duration}ms`;
                 this.host.style.transitionTimingFunction = animation.easing;
                 this.host.style.transitionProperty = Object.keys(animation.before).join(',');
-            })
-            .debounce((animation) => Observable.timer(animation.delay || 1))
-            .do((animation) => applyParams(animation.after))
-            .debounce((animation) => Observable.timer(animation.duration))
+            }),
+            debounce((animation) => observableTimer(animation.delay || 1)),
+            tap((animation) => applyParams(animation.after)),
+            debounce((animation) => observableTimer(animation.duration)))
             .subscribe(() => {
                 this.host.style.transitionDuration = '';
                 this.host.style.transitionTimingFunction = '';
@@ -231,14 +224,14 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
         this.launchEnterAnimation();
 
         // if a duration has been been specified, launch the 'leave' animation after snackbar's lifetime flow, then emit amination done
-        Observable.timer(this.duration + this.delay)
-            .first()
-            .do(() => {
+        observableTimer(this.duration + this.delay).pipe(
+            first(),
+            tap(() => {
                 if (!!this.duration) {
                     this.launchLeaveAnimation();
                 }
-            })
-            .delay(this.leaveAnimationDuration)
+            }),
+            delay(this.leaveAnimationDuration))
             .subscribe(() => this.onAnimationDone.emit());
     }
 
