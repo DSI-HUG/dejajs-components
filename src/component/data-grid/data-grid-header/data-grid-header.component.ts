@@ -8,14 +8,8 @@
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output } from '@angular/core';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/observable/merge';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/first';
-import 'rxjs/add/operator/takeWhile';
-import 'rxjs/add/operator/timeout';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import { fromEvent as observableFromEvent, merge as observableMerge, Subject } from 'rxjs';
+import { filter, first, takeUntil, takeWhile, timeout } from 'rxjs/operators';
 import { DejaClipboardService } from '../../../common/core/clipboard/clipboard.service';
 import { ISortInfos } from '../../../common/core/sorting/sort-infos.model';
 import { IDejaDragEvent } from '../../dragdrop/draggable.directive';
@@ -134,9 +128,9 @@ export class DejaGridHeaderComponent implements OnDestroy {
     constructor(elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, @Optional() private clipboardService: DejaClipboardService) {
         const element = elementRef.nativeElement as HTMLElement;
 
-        Observable.fromEvent(element, 'mousedown')
-            .takeWhile(() => this.isAlive)
-            .filter((event: MouseEvent) => event.buttons === 1)
+        observableFromEvent(element, 'mousedown').pipe(
+            takeWhile(() => this.isAlive),
+            filter((event: MouseEvent) => event.buttons === 1))
             .subscribe((downEvent: MouseEvent) => {
                 const target = downEvent.target as HTMLElement;
                 const column = this.getColumnFromHTMLElement(downEvent.target as HTMLElement);
@@ -148,9 +142,9 @@ export class DejaGridHeaderComponent implements OnDestroy {
                         const sizedOrigin = downEvent.screenX;
 
                         const kill$ = new Subject();
-                        const mouseUp$ = Observable.fromEvent(element.ownerDocument, 'mouseup');
+                        const mouseUp$ = observableFromEvent(element.ownerDocument, 'mouseup');
 
-                        mouseUp$.first().subscribe(() => {
+                        mouseUp$.pipe(first()).subscribe(() => {
                             const e = {
                                 column: null,
                             } as IDejaGridColumnSizeEvent;
@@ -159,8 +153,8 @@ export class DejaGridHeaderComponent implements OnDestroy {
                             this._sizedColumn = undefined;
                         });
 
-                        Observable.fromEvent(element.ownerDocument, 'mousemove')
-                            .takeUntil(Observable.merge(mouseUp$, kill$))
+                        observableFromEvent(element.ownerDocument, 'mousemove').pipe(
+                            takeUntil(observableMerge(mouseUp$, kill$)))
                             .subscribe((moveEvent: MouseEvent) => {
                                 if (moveEvent.buttons === 1) {
                                     const e = {
@@ -182,9 +176,9 @@ export class DejaGridHeaderComponent implements OnDestroy {
                 } else {
                     const clickedColumn = column;
 
-                    Observable.fromEvent(element, 'mouseup')
-                        .first()
-                        .timeout(1000)
+                    observableFromEvent(element, 'mouseup').pipe(
+                        first(),
+                        timeout(1000))
                         .subscribe((upEvent: MouseEvent) => {
                             const columnElement = this.getColumnElementFromHTMLElement(upEvent.target as HTMLElement);
                             if ((columnElement && columnElement.getAttribute('colname')) === clickedColumn.name) {

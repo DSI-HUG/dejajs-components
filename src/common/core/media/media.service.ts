@@ -72,12 +72,8 @@ export const DEFAULT_BREAKPOINTS = [
 */
 
 import { Injectable, NgZone, OnDestroy } from '@angular/core';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/takeWhile';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject, from as observableFrom, Observable } from 'rxjs';
+import { distinctUntilChanged, map, takeWhile } from 'rxjs/operators';
 
 @Injectable()
 export class MediaService implements OnDestroy {
@@ -100,10 +96,10 @@ export class MediaService implements OnDestroy {
             }
         });
 
-        this.isMobile$ = Observable.from(this.mediaChanged$)
-            .takeWhile(() => this.isAlive)
-            .map(() => this.mql.xs.matches || this.mql.sm.matches)
-            .distinctUntilChanged();
+        this.isMobile$ = observableFrom(this.mediaChanged$).pipe(
+            takeWhile(() => this.isAlive),
+            map(() => this.mql.xs.matches || this.mql.sm.matches),
+            distinctUntilChanged());
     }
 
     public ngOnDestroy() {

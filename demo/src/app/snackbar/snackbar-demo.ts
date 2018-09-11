@@ -8,12 +8,8 @@
 
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import { MaterialColors } from '@deja-js/component';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/operator/defaultIfEmpty';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/scan';
-import { Observable } from 'rxjs/Observable';
+import {from as observableFrom, interval as observableInterval,  Observable } from 'rxjs';
+import {defaultIfEmpty, filter, map, scan} from 'rxjs/operators';
 import { Message } from './message.class';
 
 @Component({
@@ -53,38 +49,33 @@ export class DejaSnackbarDemoComponent implements OnInit {
     this.info = this.colors['mat-blue']['500'];
     this.default = this.colors['mat-grey']['900'];
 
-    this.dangers = Observable
-        .from(this.push)
-        .filter((type: string) => type === 'danger')
-        .map(() => new Message('Danger snackbar'))
-        .scan((acc, curr) => [...acc, curr], [])
-        .defaultIfEmpty([]);
+    this.dangers = observableFrom(this.push).pipe(
+        filter((type: string) => type === 'danger'),
+        map(() => new Message('Danger snackbar')),
+        scan((acc, curr) => [...acc, curr], []),
+        defaultIfEmpty([]), );
 
-    this.warnings = Observable
-        .from(this.push)
-        .filter((type: string) => type === 'warning')
-        .map(() => new Message('Warning snackbar'))
-        .scan((acc, curr) => [...acc, curr], [])
-        .defaultIfEmpty([]);
+    this.warnings = observableFrom(this.push).pipe(
+        filter((type: string) => type === 'warning'),
+        map(() => new Message('Warning snackbar')),
+        scan((acc, curr) => [...acc, curr], []),
+        defaultIfEmpty([]), );
 
-    this.successes = Observable
-        .from(this.push)
-        .filter((type: string) => type === 'success')
-        .map(() => new Message('Success snackbar'))
-        .scan((acc, curr) => [...acc, curr], [])
-        .defaultIfEmpty([]);
+    this.successes = observableFrom(this.push).pipe(
+        filter((type: string) => type === 'success'),
+        map(() => new Message('Success snackbar')),
+        scan((acc, curr) => [...acc, curr], []),
+        defaultIfEmpty([]), );
 
-    this.infos = Observable
-        .from(this.push)
-        .filter((type: string) => type === 'info')
-        .map(() => new Message('Info snackbar'))
-        .scan((acc, curr) => [...acc, curr], [])
-        .defaultIfEmpty([]);
+    this.infos = observableFrom(this.push).pipe(
+        filter((type: string) => type === 'info'),
+        map(() => new Message('Info snackbar')),
+        scan((acc, curr) => [...acc, curr], []),
+        defaultIfEmpty([]), );
 
-    this.messages = Observable
-        .interval(2000)
-        .map(() => new Message('Server push snackbar'))
-        .scan((acc, curr) => [...acc, curr], [])
-        .defaultIfEmpty([]);
+    this.messages = observableInterval(2000).pipe(
+        map(() => new Message('Server push snackbar')),
+        scan((acc, curr) => [...acc, curr], []),
+        defaultIfEmpty([]), );
   }
 }

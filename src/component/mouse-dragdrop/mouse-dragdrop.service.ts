@@ -1,19 +1,18 @@
+
 /*
- *  @license
- *  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
- *
- *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
- */
+*  @license
+*  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
+*
+*  Use of this source code is governed by an Apache-2.0 license that can be
+*  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
+*/
 
 /**
  * Dragdrop service for mouse drag and drop
  */
 import { Injectable } from '@angular/core';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/filter';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject ,  Subject } from 'rxjs';
+import {filter, tap} from 'rxjs/operators';
 import { Position } from '../../common/core/graphics/position';
 
 @Injectable()
@@ -25,9 +24,9 @@ export class DejaMouseDragDropService {
     public dragging$ = new BehaviorSubject<boolean>(false);
 
     constructor() {
-        this.dragging$
-            .do((value) => this._isDragging = value)
-            .filter((value) => !value)
+        this.dragging$.pipe(
+            tap((value) => this._isDragging = value),
+            filter((value) => !value))
             .subscribe(() => this._context = {});
     }
 

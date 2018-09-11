@@ -9,13 +9,8 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output, Self, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/takeWhile';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import { Subscription } from 'rxjs/Subscription';
+import { from as observableFrom, fromEvent as observableFromEvent, Observable, Subject, Subscription } from 'rxjs';
+import { debounceTime, filter, takeWhile } from 'rxjs/operators';
 import { Rect } from '../../common/core/graphics/rect';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { IDropCursorInfos } from '../mouse-dragdrop/mouse-dragdrop.service';
@@ -107,41 +102,41 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
 
         const element = el.nativeElement as HTMLElement;
 
-        Observable.from(this.layoutProvider.selectionChanged)
-            .takeWhile(() => this.isAlive)
+        observableFrom(this.layoutProvider.selectionChanged).pipe(
+            takeWhile(() => this.isAlive))
             .subscribe((e) => this.selectionChanged.emit(e));
 
-        Observable.from(this.layoutProvider.contentAdding)
-            .takeWhile(() => this.isAlive)
+        observableFrom(this.layoutProvider.contentAdding).pipe(
+            takeWhile(() => this.isAlive))
             .subscribe((e) => this.contentAdding.emit(e));
 
-        Observable.from(this.layoutProvider.contentRemoving)
-            .takeWhile(() => this.isAlive)
+        observableFrom(this.layoutProvider.contentRemoving).pipe(
+            takeWhile(() => this.isAlive))
             .subscribe((e) => this.contentRemoving.emit(e));
 
-        Observable.from(this.layoutProvider.modelChanged)
-            .takeWhile(() => this.isAlive)
+        observableFrom(this.layoutProvider.modelChanged).pipe(
+            takeWhile(() => this.isAlive))
             .subscribe((event) => {
                 this.modelChanged.emit(event);
                 this.onChangeCallback(event.tiles);
             });
 
-        Observable.from(this.layoutProvider.layoutChanged)
-            .takeWhile(() => this.isAlive)
+        observableFrom(this.layoutProvider.layoutChanged).pipe(
+            takeWhile(() => this.isAlive))
             .subscribe((event) => {
                 this.layoutChanged.emit(event);
                 this.onChangeCallback(event.tiles);
             });
 
-        Observable.from(this.layoutProvider.layoutCompleted)
-            .takeWhile(() => this.isAlive)
+        observableFrom(this.layoutProvider.layoutCompleted).pipe(
+            takeWhile(() => this.isAlive))
             .subscribe((event) => this.layoutCompleted.emit(event));
 
-        this.keyup$ = Observable.fromEvent(element.ownerDocument, 'keyup') as Observable<KeyboardEvent>;
+        this.keyup$ = observableFromEvent(element.ownerDocument, 'keyup') as Observable<KeyboardEvent>;
 
-        Observable.fromEvent(window, 'resize')
-            .takeWhile(() => this.isAlive)
-            .debounceTime(5)
+        observableFromEvent(window, 'resize').pipe(
+            takeWhile(() => this.isAlive),
+            debounceTime(5))
             .subscribe(() => this.refresh({ resetWidth: true }));
     }
 
@@ -192,12 +187,12 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     @Input()
     public set canDelete(value: boolean) {
         if (coerceBooleanProperty(value) && !this.delete$sub) {
-            this.delete$sub = this.keyup$
-                .filter(() => this.layoutProvider.designMode)
-                .filter((event: KeyboardEvent) => {
+            this.delete$sub = this.keyup$.pipe(
+                filter(() => this.layoutProvider.designMode),
+                filter((event: KeyboardEvent) => {
                     const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
                     return keyCode === KeyCodes.Delete && this.hasFocus;
-                })
+                }))
                 .subscribe(() => this.layoutProvider.deleteSelection());
 
         } else if (this.delete$sub) {
@@ -209,11 +204,11 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     @Input()
     public set canCopy(value: boolean) {
         if (coerceBooleanProperty(value) && !this.copy$sub) {
-            this.copy$sub = this.keyup$
-                .filter((event: KeyboardEvent) => {
+            this.copy$sub = this.keyup$.pipe(
+                filter((event: KeyboardEvent) => {
                     const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
                     return keyCode === KeyCodes.KeyC && event.ctrlKey && this.hasFocus;
-                })
+                }))
                 .subscribe(() => {
                     this.copySelection();
                 });
@@ -227,12 +222,12 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     @Input()
     public set canCut(value: boolean) {
         if (coerceBooleanProperty(value) && !this.cut$sub) {
-            this.cut$sub = this.keyup$
-                .filter(() => this.layoutProvider.designMode)
-                .filter((event: KeyboardEvent) => {
+            this.cut$sub = this.keyup$.pipe(
+                filter(() => this.layoutProvider.designMode),
+                filter((event: KeyboardEvent) => {
                     const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
                     return keyCode === KeyCodes.KeyX && event.ctrlKey && this.hasFocus;
-                })
+                }))
                 .subscribe(() => {
                     this.cutSelection();
                 });
@@ -246,12 +241,12 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     @Input()
     public set canPaste(value: boolean) {
         if (coerceBooleanProperty(value) && !this.paste$sub) {
-            this.paste$sub = this.keyup$
-                .filter(() => this.layoutProvider.designMode)
-                .filter((event: KeyboardEvent) => {
+            this.paste$sub = this.keyup$.pipe(
+                filter(() => this.layoutProvider.designMode),
+                filter((event: KeyboardEvent) => {
                     const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
                     return keyCode === KeyCodes.KeyV && event.ctrlKey && this.hasFocus;
-                })
+                }))
                 .subscribe(() => this.paste());
 
         } else if (this.paste$sub) {

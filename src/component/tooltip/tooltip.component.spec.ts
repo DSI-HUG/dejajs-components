@@ -12,8 +12,8 @@ import { async, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import 'rxjs/add/observable/timer';
-import { Observable } from 'rxjs/Observable';
+import { of as observableOf, timer as observableTimer } from 'rxjs';
+import { delay } from 'rxjs/operators';
 import { MediaService } from '../../common/core/media/media.service';
 import { MockMediaService } from '../overlay/test/MockMediaService';
 import { DejaTooltipModule } from './index';
@@ -37,9 +37,9 @@ class DejaTooltipContainerComponent {
     };
 
     // Asynchronous model
-    public static toolTipModel2 = Observable.of({
+    public static toolTipModel2 = observableOf({
         text: `${DejaTooltipContainerComponent.toolTipText}_$`,
-    }).delay(50);
+    }).pipe(delay(50));
 
     // Promised model
     public static toolTipModel3 = DejaTooltipContainerComponent.toolTipModel2.toPromise();
@@ -109,7 +109,7 @@ describe('DejaTooltipComponent', () => {
             sendMouseEvent(tooltipDirectiveDebugElement.nativeElement, 'mouseenter', 0, 0);
             fixture.detectChanges();
 
-            Observable.timer(1000).subscribe(() => {
+            observableTimer(1000).subscribe(() => {
                 fixture.detectChanges();
                 fixture.whenStable().then(() => {
                     const tooltip = document.querySelector('#tooltip') as HTMLElement;
@@ -117,7 +117,7 @@ describe('DejaTooltipComponent', () => {
 
                     sendMouseEvent(tooltipDirectiveDebugElement.nativeElement, 'mousemove', 0, 200);
                     fixture.detectChanges();
-                    Observable.timer(500).subscribe(() => {
+                    observableTimer(500).subscribe(() => {
                         fixture.detectChanges();
                         fixture.whenStable().then(() => {
                             const tooltip2 = document.querySelector('#tooltip') as HTMLElement;
@@ -143,7 +143,7 @@ describe('DejaTooltipComponent', () => {
             sendMouseEvent(tooltipDirectiveDebugElement.nativeElement, 'mouseenter', 0, 0);
             fixture.detectChanges();
 
-            Observable.timer(1000).subscribe(() => {
+            observableTimer(1000).subscribe(() => {
                 fixture.detectChanges();
                 fixture.whenStable().then(() => {
                     fixture.detectChanges();
@@ -168,7 +168,7 @@ describe('DejaTooltipComponent', () => {
             sendMouseEvent(tooltipDirectiveDebugElement.nativeElement, 'mouseenter', 0, 0);
             fixture.detectChanges();
 
-            Observable.timer(1000).subscribe(() => {
+            observableTimer(1000).subscribe(() => {
                 fixture.detectChanges();
                 fixture.whenStable().then(() => {
                     fixture.detectChanges();

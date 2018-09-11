@@ -5,7 +5,7 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-
+import { first } from 'rxjs/operators';
 import { ISortInfos } from './sort-infos.model';
 import { SortOrder } from './sort-order.model';
 import { SortingService } from './sorting.service';
@@ -138,8 +138,8 @@ describe('SortingService', () => {
     });
 
     it('Should, sort an empty array', () => {
-        service.sort$([], null)
-            .first()
+        service.sort$([], null).pipe(
+            first())
             .subscribe((sorted) => expect(sorted).toEqual([]));
     });
 
@@ -149,8 +149,8 @@ describe('SortingService', () => {
             order: SortOrder.ascending,
         } as ISortInfos;
 
-        service.sort$(fructs, si)
-            .first()
+        service.sort$(fructs, si).pipe(
+            first())
             .subscribe((sorted) => {
                 expect(sorted.length).toBe(sortedValues.length);
                 sorted.forEach((value, i) => expect(value.name).toEqual(sortedValues[i]));
@@ -164,8 +164,8 @@ describe('SortingService', () => {
         } as ISortInfos;
 
         const reverseValues = [...sortedValues].reverse();
-        service.sort$(fructs, si)
-            .first()
+        service.sort$(fructs, si).pipe(
+            first())
             .subscribe((sorted) => {
                 expect(sorted.length).toBe(reverseValues.length);
                 sorted.forEach((value, i) => expect(value.name).toEqual(reverseValues[i]));
@@ -178,8 +178,8 @@ describe('SortingService', () => {
             order: SortOrder.ascending,
         } as ISortInfos;
 
-        service.sort$(fructs, si)
-            .first()
+        service.sort$(fructs, si).pipe(
+            first())
             .subscribe((sorted) => {
                 expect(sorted.length).toBe(fructs.length);
                 sorted.forEach((value, i) => expect(value.value).toEqual(i));
@@ -192,8 +192,8 @@ describe('SortingService', () => {
             order: SortOrder.ascending,
         } as ISortInfos;
 
-        service.sort$(fructs, si)
-            .first()
+        service.sort$(fructs, si).pipe(
+            first())
             .subscribe((sorted) => {
                 expect(sorted.length).toBe(fructs.length);
                 sorted.forEach((value, i) => expect(value.value).toEqual(i));
@@ -207,8 +207,8 @@ describe('SortingService', () => {
             type: 'date',
         } as ISortInfos;
 
-        service.sort$(fructs, si)
-            .first()
+        service.sort$(fructs, si).pipe(
+            first())
             .subscribe((sorted) => {
                 expect(sorted.length).toBe(fructs.length);
                 sorted.forEach((value, i) => expect(value.value).toEqual(i));
@@ -223,8 +223,8 @@ describe('SortingService', () => {
             order: SortOrder.descending,
         }] as ISortInfos[];
 
-        service.sortTree$(fructs, si, 'colors')
-            .first()
+        service.sortTree$(fructs, si, 'colors').pipe(
+            first())
             .subscribe((sorted) => {
                 expect(sorted.length).toBe(sortedValues.length);
                 sorted.forEach((value, i) => expect(value.name).toEqual(sortedValues[i]));

@@ -8,7 +8,7 @@
 import { ComponentType } from '@angular/cdk/portal';
 import { TemplateRef } from '@angular/core';
 import { MatDialogConfig } from '@angular/material';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 import { DejaPopupAction } from './popup-action.model';
 
 export class DejaPopupConfig extends MatDialogConfig {
