@@ -1,17 +1,16 @@
 /*
-*  @license
-*  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
-*
-*  Use of this source code is governed by an Apache-2.0 license that can be
-*  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
-*/
+ *  @license
+ *  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
+ *
+ *  Use of this source code is governed by an Apache-2.0 license that can be
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
+ */
+
 import { ComponentPortal, Portal } from '@angular/cdk/portal';
 import { ElementRef, Injector, OnInit, Renderer2 } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
-import { tap, first, filter } from 'rxjs/operators';
-
-
 import { Subscription } from 'rxjs';
+import { filter, first, tap } from 'rxjs/operators';
 import { DejaPopupAction } from './popup-action.model';
 import { DejaPopupConfig } from './popup-config.model';
 

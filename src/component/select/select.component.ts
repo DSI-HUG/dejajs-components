@@ -307,8 +307,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             switchMap(() => this.calcViewList$().pipe(first())),
             tap(() => {
                 const selectedItems = this.getSelectedItems();
-                const first = selectedItems && selectedItems[0];
-                const index = first ? this.getItemIndex(first) : -1;
+                const firstItem = selectedItems && selectedItems[0];
+                const index = firstItem ? this.getItemIndex(firstItem) : -1;
                 if (index >= 0) {
                     // Ensure selection
                     this.setSelectedItems(selectedItems);

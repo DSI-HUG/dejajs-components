@@ -805,7 +805,7 @@ export abstract class ItemListBase implements OnDestroy {
     }
 
     protected getVirtualSelectedEntities(value: any) {
-        const map = (v: any) => {
+        const dic = (v: any) => {
             if (typeof v === 'string') {
                 v = v.trim();
             }
@@ -820,11 +820,11 @@ export abstract class ItemListBase implements OnDestroy {
         if (value) {
             const modelType = typeof value;
             if (modelType === 'string' || modelType === 'number') {
-                value = this._multiSelect ? value.split(',').map(map) : map(value);
+                value = this._multiSelect ? value.split(',').map(dic) : dic(value);
             } else if (value instanceof Array && value.length) {
                 const type = typeof value[0];
                 if (type === 'string' || type === 'number') {
-                    value = this._multiSelect ? value.map(map) : map(value[0]);
+                    value = this._multiSelect ? value.map(dic) : dic(value[0]);
                 }
             } else if (value instanceof Array && !this._multiSelect) {
                 value = null;
