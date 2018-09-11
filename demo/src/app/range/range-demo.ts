@@ -5,12 +5,10 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-
 import {Component, EventEmitter, Output, ViewChild} from '@angular/core';
 import { IStepRangeEvent, Range } from '@deja-js/component';
-import 'rxjs/add/operator/defaultIfEmpty';
-import 'rxjs/add/operator/scan';
-import { Observable } from 'rxjs/Observable';
+import {from as observableFrom,  Observable } from 'rxjs';
+import {defaultIfEmpty, map, scan} from 'rxjs/operators';
 import { ranges, rangesWithInterval, readOnlyRanges, steps, weights } from './ranges.mock';
 import { IWeight, Weight } from './weight.interface';
 
@@ -45,14 +43,13 @@ export class DejaRangeDemoComponent {
         this.computeRangeFromWeight();
 
         // error management
-        this.errors = Observable
-            .from(this.errorFeed)
-            .map((error: Error) => ({
+        this.errors = observableFrom(this.errorFeed).pipe(
+            map((error: Error) => ({
                 gate: true,
                 message: error.message,
-            }))
-            .scan((acc, curr) => [...acc, curr], [])
-            .defaultIfEmpty([]);
+            })),
+            scan((acc, curr) => [...acc, curr], []),
+            defaultIfEmpty([]), );
     }
 
     /**

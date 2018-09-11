@@ -1,3 +1,4 @@
+
 /*
  *  @license
  *  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
@@ -12,6 +13,7 @@ import { DejaPopupAction, DejaPopupButton } from '@deja-js/component';
 import { DejaPopupConfig } from '@deja-js/component';
 import { DejaPopupReponse } from '@deja-js/component';
 import { DejaPopupService } from '@deja-js/component';
+import {filter, map} from 'rxjs/operators';
 import { DummyComponent } from './dummy/dummy.component';
 import { DejaPopupCustomDemoComponent } from './popup-custom.component';
 
@@ -37,9 +39,9 @@ export class DejaPopupDemoComponent {
         public dejaPopupService: DejaPopupService,
         protected changeDetectorRef: ChangeDetectorRef,
     ) {
-        this.dejaPopupService.dejaPopupCom$
-            .filter((action: DejaPopupAction) => !!action && action.target !== 'popup-tray' && !action.isFinalAction)
-            .map((action: DejaPopupAction) => {
+        this.dejaPopupService.dejaPopupCom$.pipe(
+            filter((action: DejaPopupAction) => !!action && action.target !== 'popup-tray' && !action.isFinalAction),
+            map((action: DejaPopupAction) => {
                 this.message.type = 'primary';
                 this.message.text = action.label || action.name;
                 this.openGate = true;
@@ -47,7 +49,7 @@ export class DejaPopupDemoComponent {
                     this.hoveredColor = action.data;
                 }
                 this.changeDetectorRef.markForCheck();
-            })
+            }), )
             .subscribe();
     }
 
@@ -199,8 +201,8 @@ export class DejaPopupDemoComponent {
 
         config.ensureDimension();
 
-        this.dejaPopupService.openPopUp(config)
-            .filter((resp: DejaPopupReponse) => !!resp)
+        this.dejaPopupService.openPopUp(config).pipe(
+            filter((resp: DejaPopupReponse) => !!resp))
             .subscribe((response: DejaPopupReponse) => {
                 this.showResponse(response);
             });

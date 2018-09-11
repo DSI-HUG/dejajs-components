@@ -12,7 +12,6 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule, MatIconModule, MatInputModule } from '@angular/material';
 import { TextMaskModule } from 'angular2-text-mask';
 import { DejaChildValidatorModule } from '../../common/core/validation/index';
-import { DejaCircularPickerModule } from '../circular-picker/index';
 import { DejaDateSelectorModule } from '../date-selector/index';
 import { DejaOverlayModule } from '../overlay/index';
 import { DejaDatePickerComponent } from './date-picker.component';
@@ -23,13 +22,12 @@ import { DejaDatePickerComponent } from './date-picker.component';
     imports: [
         CommonModule,
         FormsModule,
-        MatIconModule,
+        DejaOverlayModule,
         MatInputModule,
         MatButtonModule,
+        MatIconModule,
         DejaChildValidatorModule,
-        DejaCircularPickerModule,
         DejaDateSelectorModule,
-        DejaOverlayModule,
         TextMaskModule,
     ],
 })

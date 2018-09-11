@@ -12,7 +12,6 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule, MatButtonToggleModule, MatIconModule, MatListModule, MatMenuModule } from '@angular/material';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterModule, Routes } from '@angular/router';
 import { DejaClipboardModule, DejaMaterialColorsModule, DejaSidenavModule, DejaSlimScrollModule, IconModule } from '@deja-js/component';
 import { AppComponent } from './app.component';
 import { routing } from './app.routes';

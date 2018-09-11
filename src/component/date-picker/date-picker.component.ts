@@ -6,31 +6,17 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
-import { DateComponentLayout, DaysOfWeek, DejaDateSelectorComponent } from '../date-selector/date-selector.component';
-import { formatToMask, formatToUnitOfTime } from './format-to-mask';
-
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import * as moment_ from 'moment';
-import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/observable/merge';
-import 'rxjs/add/operator/combineLatest';
-import 'rxjs/add/operator/delay';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/first';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/takeWhile';
-import { Observable } from 'rxjs/Observable';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
-import { Subject } from 'rxjs/Subject';
+import { combineLatest as observableCombineLatest, from as observableFrom, fromEvent as observableFromEvent, merge as observableMerge, ReplaySubject, Subject } from 'rxjs';
+import { delay, filter, first, map, switchMap, takeWhile, tap } from 'rxjs/operators';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { DejaConnectionPositionPair } from '../../common/core/overlay/connection-position-pair';
 import { DejaChildValidatorDirective } from '../../common/core/validation/child-validator.directive';
+import { DateComponentLayout, DaysOfWeek, DejaDateSelectorComponent } from '../date-selector/date-selector.component';
+import { formatToMask, formatToUnitOfTime } from './format-to-mask';
 
 const moment: (value?: any, format?: string, strict?: boolean) => moment_.Moment = (<any>moment_).default || moment_;
 
@@ -174,24 +160,24 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
             });
         }
 
-        const keydown$ = Observable.from(this.inputElement$)
-            .switchMap((element) => Observable.fromEvent(element, 'keydown'));
+        const keydown$ = observableFrom(this.inputElement$).pipe(
+            switchMap((element) => observableFromEvent(element, 'keydown')));
 
-        const cursorChanged$ = Observable.from(this.inputElement$)
-            .switchMap((element: HTMLInputElement) => {
-                return Observable.merge(Observable.fromEvent(element, 'mouseup'), Observable.fromEvent(element, 'focus'), Observable.fromEvent(element, 'keyup'))
-                    .map(() => {
+        const cursorChanged$ = observableFrom(this.inputElement$).pipe(
+            switchMap((element: HTMLInputElement) => {
+                return observableMerge(observableFromEvent(element, 'mouseup'), observableFromEvent(element, 'focus'), observableFromEvent(element, 'keyup')).pipe(
+                    map(() => {
                         return element.selectionStart;
-                    });
-            });
+                    }));
+            }));
 
-        cursorChanged$.takeWhile(() => this.isAlive)
+        cursorChanged$.pipe(takeWhile(() => this.isAlive))
             .subscribe((position: number) => {
                 this.cursorPosition = position;
             });
 
-        keydown$.takeWhile(() => this.isAlive)
-            .filter((event: KeyboardEvent) => !this.showDropDown && (event.keyCode === KeyCodes.KeyD || event.keyCode === KeyCodes.UpArrow || event.keyCode === KeyCodes.DownArrow))
+        keydown$.pipe(takeWhile(() => this.isAlive),
+            filter((event: KeyboardEvent) => !this.showDropDown && (event.keyCode === KeyCodes.KeyD || event.keyCode === KeyCodes.UpArrow || event.keyCode === KeyCodes.DownArrow)))
             .subscribe((event: KeyboardEvent) => {
                 switch (event.keyCode) {
                     case (KeyCodes.KeyD):
@@ -245,8 +231,8 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
                 }
             });
 
-        const valueUpdated$ = Observable.combineLatest(this.formatChanged$, this.dateChanged$)
-            .do(([format]) => {
+        const valueUpdated$ = observableCombineLatest(this.formatChanged$, this.dateChanged$).pipe(
+            tap(([format]) => {
                 let mask = [] as string[];
                 const array = format.match(DejaDatePickerComponent.formattingTokens);
                 array.forEach((val: string) => {
@@ -258,25 +244,25 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
                 });
 
                 this._mask = mask;
-            });
+            }));
 
-        valueUpdated$.takeWhile(() => this.isAlive)
+        valueUpdated$.pipe(takeWhile(() => this.isAlive))
             .subscribe(([format, value]) => {
                 this.date = value;
                 this._inputModel = (this.date) ? (this.date instanceof Date ? moment(this.date).format(format) : this.date) : null;
 
                 // si la position du curseur était stockée, on la restaure apres avoir changé la valeur
                 if (this.cursorPosition && !this.allowFreeEntry) {
-                    this.inputElement$
-                        .delay(1)
-                        .first()
+                    this.inputElement$.pipe(
+                        delay(1),
+                        first())
                         .subscribe((elem: HTMLInputElement) => elem.setSelectionRange(this.cursorPosition, this.cursorPosition));
                 }
                 this.changeDetectorRef.markForCheck();
             });
 
-        keydown$.takeWhile(() => this.isAlive)
-            .filter(() => this.showDropDown)
+        keydown$.pipe(takeWhile(() => this.isAlive),
+            filter(() => this.showDropDown))
             .subscribe((event: KeyboardEvent) => {
                 switch (event.keyCode) {
                     case (KeyCodes.Escape):
@@ -289,8 +275,8 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
                 }
             });
 
-        Observable.combineLatest(this.inputElement$, this.focus$)
-            .takeWhile(() => this.isAlive)
+        observableCombineLatest(this.inputElement$, this.focus$).pipe(
+            takeWhile(() => this.isAlive))
             .subscribe(([element]) => element.focus());
     }
 

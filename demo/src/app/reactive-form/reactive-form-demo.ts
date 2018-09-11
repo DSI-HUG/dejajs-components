@@ -1,22 +1,19 @@
 /*
- *  @license
- *  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
- *
- *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
- */
+*  @license
+*  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
+*
+*  Use of this source code is governed by an Apache-2.0 license that can be
+*  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
+*/
 
 import { AfterContentInit, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { KeyCodes, MaterialColors } from '@deja-js/component';
+import { Store } from '@ngrx/store';
+import { Observable ,  Subscription } from 'rxjs';
+import {debounceTime, delay, distinctUntilChanged, filter} from 'rxjs/operators';
 import { CountriesService } from '../services/countries.service';
 import { Country } from '../services/countries.service';
-
-// ngrx
-import { KeyCodes } from '@deja-js/component';
-import { MaterialColors } from '@deja-js/component';
-import { Store } from '@ngrx/store';
 import { IappState } from './model/app-state.interface';
 import { IUser } from './model/user.interface';
 import { UserService } from './service/user.service';
@@ -121,13 +118,13 @@ export class DejaReactiveFormDemoComponent implements AfterContentInit, OnInit, 
     }
 
     public ngOnInit() {
-        this.valueChanges$sub = this.form.valueChanges
-            .filter(() => this.form.status !== 'PENDING')
-            .debounceTime(500)
-            .distinctUntilChanged((previousForm: { [key: string]: any }, currentForm: { [key: string]: any }) => {
+        this.valueChanges$sub = this.form.valueChanges.pipe(
+            filter(() => this.form.status !== 'PENDING'),
+            debounceTime(500),
+            distinctUntilChanged((previousForm: { [key: string]: any }, currentForm: { [key: string]: any }) => {
                 // true stops, false executes subscribe
                 return JSON.stringify(previousForm) === JSON.stringify(currentForm);
-            })
+            }), )
             .subscribe((formMap) => {
                 // this.form.valid
                 this.formMap = formMap;
@@ -137,9 +134,9 @@ export class DejaReactiveFormDemoComponent implements AfterContentInit, OnInit, 
 
     public ngAfterContentInit() {
 
-        this.user$sub = this.user$
-            .delay(1)
-            .filter((user: IUser) => !!user)
+        this.user$sub = this.user$.pipe(
+            delay(1),
+            filter((user: IUser) => !!user), )
             .subscribe((user: IUser) => {
                 this.form.setValue({
                     name: user.name || '',

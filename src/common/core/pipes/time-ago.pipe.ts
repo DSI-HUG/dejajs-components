@@ -7,15 +7,9 @@
  */
 
 import { ChangeDetectorRef, NgZone, OnDestroy, Pipe, PipeTransform } from '@angular/core';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/debounce';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/takeWhile';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-
 import * as moment_ from 'moment';
+import { from as observableFrom, Subject, timer as observableTimer } from 'rxjs';
+import { debounce, takeWhile } from 'rxjs/operators';
 const moment: (value?: any, format?: string) => moment_.Moment = (<any>moment_).default || moment_;
 
 @Pipe({ name: 'momentTimeAgo', pure: false })
@@ -28,13 +22,13 @@ export class TimeAgoPipe implements PipeTransform, OnDestroy {
     private isAlive = true;
 
     constructor(private cdRef: ChangeDetectorRef, private ngZone: NgZone) {
-        Observable.from(this.createTimer$)
-            .takeWhile(() => this.isAlive)
-            .debounce(() => {
+        observableFrom(this.createTimer$).pipe(
+            takeWhile(() => this.isAlive),
+            debounce(() => {
                 const momentInstance = moment(this.lastValue);
                 const timeToUpdate = this.getSecondsUntilUpdate(momentInstance) * 1000;
-                return Observable.timer(timeToUpdate);
-            })
+                return observableTimer(timeToUpdate);
+            }))
             .subscribe(() => {
                 if (this.ngZone && this.cdRef) {
                     this.ngZone.runOutsideAngular(() => {

@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 
 export interface IDejaCancelableEvent extends CustomEvent {
     cancel$: Subject<any>;
