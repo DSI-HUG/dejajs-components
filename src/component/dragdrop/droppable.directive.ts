@@ -8,13 +8,8 @@
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Directive, ElementRef, HostBinding, Input, OnDestroy, Optional } from '@angular/core';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/takeWhile';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import { from as observableFrom, fromEvent as observableFromEvent, Subject } from 'rxjs';
+import { filter, takeUntil, takeWhile, tap } from 'rxjs/operators';
 import { DejaClipboardService } from '../../common/core/clipboard/clipboard.service';
 import { IDejaDragEvent } from './draggable.directive';
 
@@ -58,12 +53,12 @@ export class DejaDroppableDirective implements OnDestroy {
         const dragDrop$ = new Subject<DragEvent>();
         const kill$ = new Subject();
 
-        const dragEnd$ = Observable.from(kill$)
-            .do(() => inDrag = false)
-            .filter((value) => !value);
+        const dragEnd$ = observableFrom(kill$).pipe(
+            tap(() => inDrag = false),
+            filter((value) => !value));
 
-        Observable.from(dragDrop$)
-            .takeWhile(() => this.isAlive)
+        observableFrom(dragDrop$).pipe(
+            takeWhile(() => this.isAlive))
             .subscribe((dragEvent) => {
                 if (dragEvent.type === 'dragenter') {
                     if (inDrag) {
@@ -87,8 +82,8 @@ export class DejaDroppableDirective implements OnDestroy {
                             dragEvent.dataTransfer.dropEffect = 'none';
                         }
 
-                        Observable.fromEvent(element, 'drop')
-                            .takeUntil(dragEnd$)
+                        observableFromEvent(element, 'drop').pipe(
+                            takeUntil(dragEnd$))
                             .subscribe((dropEvent: DragEvent) => {
                                 // console.log('DejaDrop');
                                 if (this.context.dropcallback) {
@@ -113,8 +108,8 @@ export class DejaDroppableDirective implements OnDestroy {
                                 return;
                             });
 
-                        Observable.fromEvent(element, 'dragover')
-                            .takeUntil(dragEnd$)
+                        observableFromEvent(element, 'dragover').pipe(
+                            takeUntil(dragEnd$))
                             .subscribe((overEvent: DragEvent) => {
                                 // console.log('DejaDragOver');
                                 if (!this._allEvents && this.lastTarget && this.lastTarget === overEvent.target) {
@@ -161,10 +156,10 @@ export class DejaDroppableDirective implements OnDestroy {
                 }
             });
 
-        Observable.fromEvent(element, 'dragenter')
-            .takeWhile(() => this.isAlive)
-            .filter(() => !!this.context)
-            .filter(() => !!this.clipboardService.get(this.draginfokey))
+        observableFromEvent(element, 'dragenter').pipe(
+            takeWhile(() => this.isAlive),
+            filter(() => !!this.context),
+            filter(() => !!this.clipboardService.get(this.draginfokey)))
             .subscribe((event: DragEvent) => {
                 if (!clipboardService) {
                     throw new Error('To use the DejaDroppableDirective, please import and provide the DejaClipboardService in your application.');
@@ -172,10 +167,10 @@ export class DejaDroppableDirective implements OnDestroy {
                 dragDrop$.next(event);
             });
 
-        Observable.fromEvent(element, 'dragleave')
-            .takeWhile(() => this.isAlive)
-            .filter(() => !!this.context)
-            .filter(() => !!this.clipboardService.get(this.draginfokey))
+        observableFromEvent(element, 'dragleave').pipe(
+            takeWhile(() => this.isAlive),
+            filter(() => !!this.context),
+            filter(() => !!this.clipboardService.get(this.draginfokey)))
             .subscribe((leaveEvent: DragEvent) => {
                 // console.log('dragleave ' + (leaveEvent.target as HTMLElement).tagName);
                 const bounds = element.getBoundingClientRect();

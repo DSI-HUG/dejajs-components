@@ -7,6 +7,7 @@
  */
 
 import * as _ from 'lodash';
+import {first} from 'rxjs/operators';
 import { ISortInfos } from '../sorting/sort-infos.model';
 import { SortOrder } from '../sorting/sort-order.model';
 import { IGroupInfo } from './group-infos';
@@ -124,8 +125,8 @@ describe('GroupingService', () => {
     });
 
     it('Should, group an empty array', () => {
-        service.group$([], null)
-            .first()
+        service.group$([], null).pipe(
+            first())
             .subscribe((grouped) => expect(grouped).toEqual([]));
     });
 
@@ -134,8 +135,8 @@ describe('GroupingService', () => {
             groupByField: 'title',
         } as IGroupInfo;
 
-        service.group$(datas, gi)
-            .first()
+        service.group$(datas, gi).pipe(
+            first())
             .subscribe((grouped) => {
                 expect(grouped.length).toBe(3);
                 expect(grouped[0].toString()).toEqual('Pizza Party');
@@ -152,8 +153,8 @@ describe('GroupingService', () => {
             groupByField: 'controlType',
         } as IGroupInfo;
 
-        service.group$(datas, gi, 'questions')
-            .first()
+        service.group$(datas, gi, 'questions').pipe(
+            first())
             .subscribe((grouped) => {
                 expect(grouped.length).toBe(3);
                 expect(grouped[0].questions.length).toBe(2);
@@ -173,8 +174,8 @@ describe('GroupingService', () => {
             groupByField: () => 'titlefn',
         } as IGroupInfo;
 
-        service.group$(datas, gi)
-            .first()
+        service.group$(datas, gi).pipe(
+            first())
             .subscribe((grouped) => {
                 expect(grouped.length).toBe(3);
                 expect(grouped[0].toString()).toEqual('Pizza Party');
@@ -189,8 +190,8 @@ describe('GroupingService', () => {
     it('Should, group by the displayName if the field is not specified', () => {
         datas.forEach((data) => data.displayName = data.title);
 
-        service.group$(datas, {} as IGroupInfo)
-            .first()
+        service.group$(datas, {} as IGroupInfo).pipe(
+            first())
             .subscribe((grouped) => {
                 expect(grouped.length).toBe(3);
                 expect(grouped[0].toString()).toEqual('Pizza Party');
@@ -205,8 +206,8 @@ describe('GroupingService', () => {
     it('Should, group by the toString() if the field is not specified', () => {
         datas.forEach((data) => data.toString = data.titlefn);
 
-        service.group$(datas, {} as IGroupInfo)
-            .first()
+        service.group$(datas, {} as IGroupInfo).pipe(
+            first())
             .subscribe((grouped) => {
                 expect(grouped.length).toBe(3);
                 expect(grouped[0].toString()).toEqual('Pizza Party');
@@ -227,8 +228,8 @@ describe('GroupingService', () => {
             } as ISortInfos,
         } as IGroupInfo;
 
-        service.group$(datas, gi)
-            .first()
+        service.group$(datas, gi).pipe(
+            first())
             .subscribe((grouped) => {
                 expect(grouped.length).toBe(3);
                 expect(grouped[0].toString()).toEqual('Pizza Party');

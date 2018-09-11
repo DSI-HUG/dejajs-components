@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Observable } from 'rxjs/Observable';
+import { timer as observableTimer } from 'rxjs';
 import { DejaTextMetricsService } from './text-metrics.service';
 
 describe('DejaTextMetricsService', () => {
@@ -29,13 +29,13 @@ describe('DejaTextMetricsService', () => {
 
         spanElement = document.getElementById('testSpan');
         service.metricsElem = spanElement;
-        Observable.timer(500).subscribe(() => {
+        observableTimer(500).subscribe(() => {
         });
     });
 
     // remove the html fixture from the DOM
     afterEach((done: Function) => {
-        Observable.timer(2000).subscribe(() => {
+        observableTimer(2000).subscribe(() => {
             document.body.removeChild(document.getElementById('testSpan'));
             done();
         });

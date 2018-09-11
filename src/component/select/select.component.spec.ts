@@ -5,7 +5,6 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DebugElement } from '@angular/core/src/debug/debug_node';
@@ -13,15 +12,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/observable/timer';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/delay';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/first';
-import { Observable } from 'rxjs/Observable';
+import { from as observableFrom, Observable, of as observableOf, timer as observableTimer } from 'rxjs';
+import { debounceTime, delay, filter, first, tap } from 'rxjs/operators';
 import { GroupingService } from '../../common/core/grouping/grouping.service';
 import { DejaItemModule } from '../../common/core/item-list/index';
 import { IItemBase } from '../../common/core/item-list/item-base';
@@ -60,8 +52,8 @@ class DejaSelectContainerComponent {
             } as IItemTree;
         });
 
-        groupingService.group$(itemList, [{ groupByField: 'size' }])
-            .first()
+        groupingService.group$(itemList, [{ groupByField: 'size' }]).pipe(
+            first())
             .subscribe((groupedResult) => {
                 this.itemList = groupedResult;
             });
@@ -159,11 +151,11 @@ describe('DejaSelectComponent', () => {
         const viewPortService = selectDebugElement.injector.get(ViewPortService) as ViewPortService;
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
 
-        Observable.from(selectInstance.dropDownVisibleChange)
+        observableFrom(selectInstance.dropDownVisibleChange)
             .subscribe(() => fixture.detectChanges());
 
-        return Observable.from(viewPortService.viewPortResult$)
-            .filter((result) => result.viewPortSize > 0);
+        return observableFrom(viewPortService.viewPortResult$).pipe(
+            filter((result) => result.viewPortSize > 0));
     };
 
     it('should create the component', () => {
@@ -254,19 +246,19 @@ describe('DejaSelectComponent', () => {
         expect(myItemListService.getGroupingService()).toBe(groupingService);
 
         const listService = myItemListService as any;
-        const loadingItems = () => Observable.of([]);
+        const loadingItems = () => observableOf([]);
         selectInstance.loadingItems = loadingItems;
         expect(listService.loadingItems$).toBe(loadingItems);
-        const selectingItem = () => Observable.of([]);
+        const selectingItem = () => observableOf([]);
         selectInstance.selectingItem = selectingItem;
         expect(listService.selectingItem$).toBe(selectingItem);
-        const unselectingItem = () => Observable.of([]);
+        const unselectingItem = () => observableOf([]);
         selectInstance.unselectingItem = unselectingItem;
         expect(listService.unselectingItem$).toBe(unselectingItem);
-        const expandingItem = () => Observable.of([]);
+        const expandingItem = () => observableOf([]);
         selectInstance.expandingItem = expandingItem;
         expect(listService.expandingItem$).toBe(expandingItem);
-        const collapsingItem = () => Observable.of([]);
+        const collapsingItem = () => observableOf([]);
         selectInstance.collapsingItem = collapsingItem;
         expect(listService.collapsingItem$).toBe(collapsingItem);
 
@@ -291,8 +283,8 @@ describe('DejaSelectComponent', () => {
         const viewPortService = selectDebugElement.injector.get(ViewPortService) as ViewPortService;
         const sl = selectInstance as any;
 
-        Observable.from(selectInstance.dropDownVisibleChange)
-            .do((state) => {
+        observableFrom(selectInstance.dropDownVisibleChange).pipe(
+            tap((state) => {
                 fixture.detectChanges();
                 switch (++pass) {
                     case 1:
@@ -307,8 +299,8 @@ describe('DejaSelectComponent', () => {
                     default:
                         expect(state).toBeFalsy();
                 }
-            })
-            .delay(100)
+            }),
+            delay(100))
             .subscribe(() => {
                 switch (pass) {
                     case 2:
@@ -318,9 +310,9 @@ describe('DejaSelectComponent', () => {
                 }
             });
 
-        Observable.from(viewPortService.viewPortResult$)
-            .debounceTime(100)
-            .first()
+        observableFrom(viewPortService.viewPortResult$).pipe(
+            debounceTime(100),
+            first())
             .subscribe((vp) => {
                 // Bind view port
                 fixture.detectChanges();
@@ -341,8 +333,8 @@ describe('DejaSelectComponent', () => {
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
         const sl = selectInstance as any;
 
-        observeViewPort$(fixture)
-            .debounceTime(20)
+        observeViewPort$(fixture).pipe(
+            debounceTime(20))
             .subscribe((vp) => {
                 // Bind view port
                 fixture.detectChanges();
@@ -411,11 +403,11 @@ describe('DejaSelectComponent', () => {
         const viewPortService = selectDebugElement.injector.get(ViewPortService) as ViewPortService;
         const sl = selectInstance as any;
 
-        Observable.from(selectInstance.dropDownVisibleChange)
+        observableFrom(selectInstance.dropDownVisibleChange)
             .subscribe(() => fixture.detectChanges());
 
-        Observable.from(viewPortService.viewPortResult$)
-            .debounceTime(10)
+        observableFrom(viewPortService.viewPortResult$).pipe(
+            debounceTime(10))
             .subscribe((vp) => {
                 // Bind view port
                 fixture.detectChanges();
@@ -578,13 +570,13 @@ describe('DejaSelectByOptionsContainerComponent', () => {
 
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
 
-        Observable.from(selectInstance.dropDownVisibleChange)
+        observableFrom(selectInstance.dropDownVisibleChange)
             .subscribe(() => fixture.detectChanges());
 
-        return Observable.from(viewPortService.viewPortResult$)
-            .filter((result) => {
+        return observableFrom(viewPortService.viewPortResult$).pipe(
+            filter((result) => {
                 return result.viewPortSize > 0;
-            });
+            }));
     };
 
     it('should open and close the dropdown programatically', (done) => {
@@ -595,12 +587,12 @@ describe('DejaSelectByOptionsContainerComponent', () => {
         const sl = selectInstance as any;
         fixture.detectChanges();
 
-        Observable.from(selectInstance.dropDownVisibleChange)
+        observableFrom(selectInstance.dropDownVisibleChange)
             .subscribe(() => fixture.detectChanges());
 
-        Observable.from(viewPortService.viewPortResult$)
-            .debounceTime(100)
-            .first()
+        observableFrom(viewPortService.viewPortResult$).pipe(
+            debounceTime(100),
+            first())
             .subscribe((vp) => {
                 // Bind view port
                 fixture.detectChanges();
@@ -621,9 +613,9 @@ describe('DejaSelectByOptionsContainerComponent', () => {
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
         const sl = selectInstance as any;
 
-        observeOptionsViewPort$(fixture)
-            .debounceTime(100)
-            .first()
+        observeOptionsViewPort$(fixture).pipe(
+            debounceTime(100),
+            first())
             .subscribe(() => {
                 fixture.detectChanges();
 
@@ -659,8 +651,8 @@ describe('DejaSelectByOptionsContainerComponent', () => {
             fixture.detectChanges();
         };
 
-        observeOptionsViewPort$(fixture)
-            .debounceTime(100)
+        observeOptionsViewPort$(fixture).pipe(
+            debounceTime(100))
             .subscribe((vp) => {
                 fixture.detectChanges();
                 const selectedChips = fixture.debugElement.queryAll(By.css('deja-select > deja-chips > span'));
@@ -748,9 +740,9 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                         // Select the lines with Enter
                         sendKeyDown('Enter');
 
-                        Observable.from(selectInstance.dropDownVisibleChange)
-                            .first()
-                            .delay(10)
+                        observableFrom(selectInstance.dropDownVisibleChange).pipe(
+                            first(),
+                            delay(10))
                             .subscribe(() => {
                                 sl.htmlInputElement.click();
                             });
@@ -810,8 +802,8 @@ describe('DejaSelectByOptionsContainerComponent', () => {
             const event = new MouseEvent('mousedown', eventInit());
             element.nativeElement.dispatchEvent(event);
             fixture.detectChanges();
-            Observable.timer(100)
-                .first()
+            observableTimer(100).pipe(
+                first())
                 .subscribe(() => {
                     const upEvent = new MouseEvent('mouseup', eventInit());
                     (upElement || element).nativeElement.dispatchEvent(upEvent);
@@ -820,9 +812,9 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                 });
         };
 
-        observeOptionsViewPort$(fixture)
-            .debounceTime(10)
-            .first()
+        observeOptionsViewPort$(fixture).pipe(
+            debounceTime(10),
+            first())
             .subscribe((vp) => {
                 fixture.detectChanges();
                 const displayedElements = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem'));
@@ -838,8 +830,8 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                 selectInstance.disabled = true;
                 fixture.detectChanges();
 
-                Observable.from(selectInstance.selectedChange)
-                    .first()
+                observableFrom(selectInstance.selectedChange).pipe(
+                    first())
                     .subscribe(() => {
                         expect(selectInstance.selectedItems && selectInstance.selectedItems.length).toBe(1);
                         done();

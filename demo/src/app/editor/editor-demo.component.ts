@@ -7,7 +7,7 @@
  */
 
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { DateComponentLayout, DejaEditorComponent, SafeHTMLPipe } from '@deja-js/component';
+import { DejaEditorComponent, SafeHTMLPipe } from '@deja-js/component';
 
 declare var CKEDITOR: any;
 

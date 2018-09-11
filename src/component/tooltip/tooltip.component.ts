@@ -5,18 +5,9 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-
 import { Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/delay';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/takeUntil';
-import 'rxjs/add/operator/takeWhile';
-import { Observable } from 'rxjs/Observable';
+import { from as observableFrom, fromEvent as observableFromEvent, Observable } from 'rxjs';
+import { debounceTime, delay, filter, map, takeUntil, takeWhile, tap } from 'rxjs/operators';
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
 import { MediaService } from '../../common/core/media/media.service';
@@ -116,20 +107,20 @@ export class DejaTooltipComponent implements OnInit, OnDestroy {
     constructor(elementRef: ElementRef, private tooltipService: DejaTooltipService, mediaService: MediaService) {
         const element = elementRef.nativeElement as HTMLElement;
 
-        const hide$ = Observable.from(this.hide)
-            .do(() => this._model = undefined);
+        const hide$ = observableFrom(this.hide).pipe(
+            tap(() => this._model = undefined));
 
-        mediaService.isMobile$
-            .takeWhile(() => this.isAlive)
+        mediaService.isMobile$.pipe(
+            takeWhile(() => this.isAlive))
             .subscribe((value) => {
                 this.isMobile = value;
             });
 
-        Observable.fromEvent(element.ownerDocument, 'mousemove')
-            .takeUntil(hide$)
-            .debounceTime(100)
-            .map((event: MouseEvent) => new Position(event.pageX, event.pageY))
-            .filter((position) => {
+        observableFromEvent(element.ownerDocument, 'mousemove').pipe(
+            takeUntil(hide$),
+            debounceTime(100),
+            map((event: MouseEvent) => new Position(event.pageX, event.pageY)),
+            filter((position) => {
                 const containerElement = document.elementFromPoint(position.left, position.top);
                 let parentElement = containerElement;
                 while (parentElement) {
@@ -139,13 +130,13 @@ export class DejaTooltipComponent implements OnInit, OnDestroy {
                     parentElement = parentElement.parentElement;
                 }
                 return true;
-            })
-            .filter((position) => {
+            }),
+            filter((position) => {
                 const ownerElement = (this.params.ownerElement as ElementRef).nativeElement || this.params.ownerElement;
                 const ownerRect = new Rect(ownerElement.getBoundingClientRect());
                 return !ownerRect.containsPoint(position);
-            })
-            .delay(300)
+            }),
+            delay(300))
             .subscribe(() => {
                 this.hide.emit();
                 this.overlayVisible = false;

@@ -11,7 +11,8 @@
 */
 
 import { Directive, ElementRef, HostListener, Input, OnDestroy, OnInit, Renderer2 } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { timer as observableTimer } from 'rxjs';
+import { filter, first } from 'rxjs/operators';
 
 interface SlimScrollOptions {
     // width in pixels of the visible scroll area
@@ -380,9 +381,9 @@ export class DejaSlimScrollDirective implements OnInit, OnDestroy {
         // only hide when options allow it
         if (!this._options.alwaysVisible) {
             this._queueHide = false;
-            Observable.timer(1000)
-                .first()
-                .filter(() => !this._queueHide)
+            observableTimer(1000).pipe(
+                first(),
+                filter(() => !this._queueHide))
                 .subscribe(() => {
                     if (!(this._options.disableFadeOut && this._isOverPanel) && !this._isOverBar && !this._isDragg) {
                         this._renderer.setStyle(this._bar, 'opacity', '0');

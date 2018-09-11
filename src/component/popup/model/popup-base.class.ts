@@ -1,16 +1,17 @@
 /*
- *  @license
- *  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
- *
- *  Use of this source code is governed by an Apache-2.0 license that can be
- *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
- */
+*  @license
+*  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
+*
+*  Use of this source code is governed by an Apache-2.0 license that can be
+*  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
+*/
 import { ComponentPortal, Portal } from '@angular/cdk/portal';
 import { ElementRef, Injector, OnInit, Renderer2 } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/first';
-import { Subscription } from 'rxjs/Subscription';
+import { tap, first, filter } from 'rxjs/operators';
+
+
+import { Subscription } from 'rxjs';
 import { DejaPopupAction } from './popup-action.model';
 import { DejaPopupConfig } from './popup-config.model';
 
@@ -34,9 +35,9 @@ export abstract class DejaPopupBase implements OnInit {
 
     public ngOnInit() {
         this.aSub = [];
-        this.dialogRef.beforeClose()
-            .first()
-            .do(() => {
+        this.dialogRef.beforeClose().pipe(
+            first(),
+            tap(() => {
                 if (this.unlisten) {
                     this.unlisten();
                 }
@@ -47,7 +48,7 @@ export abstract class DejaPopupBase implements OnInit {
                     const action = new DejaPopupAction('dialog-close', 'popup-tray');
                     this.config.dejaPopupCom$.next(action);
                 }
-            })
+            }))
             .subscribe();
 
         if (this.config.actionComponentRef) {
@@ -56,15 +57,15 @@ export abstract class DejaPopupBase implements OnInit {
 
         if (this.config.dejaPopupCom$) {
             this.aSub.push(
-                this.config.dejaPopupCom$
-                    .filter((a: DejaPopupAction) => !!a && !!a.target && a.target === this.config.id)
-                    .do((a: DejaPopupAction) => this.doAction(a))
-                    .do((action: DejaPopupAction) => {
+                this.config.dejaPopupCom$.pipe(
+                    filter((a: DejaPopupAction) => !!a && !!a.target && a.target === this.config.id),
+                    tap((a: DejaPopupAction) => this.doAction(a)),
+                    tap((action: DejaPopupAction) => {
                         this.actionSelected = action;
                         if (action.isFinalAction) {
                             this.dialogRef.close(action);
                         }
-                    })
+                    }))
                     .subscribe()
             );
         }

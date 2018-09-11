@@ -8,13 +8,8 @@
 
 import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/mergeMap';
-import 'rxjs/add/operator/takeUntil';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import { from as observableFrom, Subject } from 'rxjs';
+import { filter, map, mergeMap, takeUntil } from 'rxjs/operators';
 import { MediaService } from '../../common/core/media/media.service';
 
 @Component({
@@ -49,8 +44,8 @@ export class DejaSidenavComponent implements OnInit, OnDestroy {
         private changeDetectorRef: ChangeDetectorRef,
     ) {
 
-        Observable.from(mediaService.mediaChanged$)
-            .takeUntil(this.ngUnsubscribe)
+        observableFrom(mediaService.mediaChanged$).pipe(
+            takeUntil(this.ngUnsubscribe))
             .subscribe((alias) => {
                 this.hidden = alias === 'xs';
                 this.opened = alias === 'lg';
@@ -64,18 +59,18 @@ export class DejaSidenavComponent implements OnInit, OnDestroy {
         this.title = this.getActivatedRouteLastChild().data[`title`];
 
         // Listen for future route changes
-        this.router.events
-            .takeUntil(this.ngUnsubscribe)
-            .filter((event) => event instanceof NavigationEnd)
-            .map(() => this.activatedRoute)
-            .map((route) => {
+        this.router.events.pipe(
+            takeUntil(this.ngUnsubscribe),
+            filter((event) => event instanceof NavigationEnd),
+            map(() => this.activatedRoute),
+            map((route) => {
                 while (route.firstChild) {
                     route = route.firstChild;
                 }
                 return route;
-            })
-            .filter((route) => route.outlet === 'primary')
-            .mergeMap((route) => route.data)
+            }),
+            filter((route) => route.outlet === 'primary'),
+            mergeMap((route) => route.data))
             .subscribe((event) => this.title = event[`title`]);
     }
 

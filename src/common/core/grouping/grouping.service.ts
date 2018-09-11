@@ -6,14 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import 'rxjs/add/observable/from';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/reduce';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/toPromise';
-import { Observable } from 'rxjs/Observable';
+import { from as observableFrom ,  Observable ,  of as observableOf } from 'rxjs';
+import { map ,  reduce ,  switchMap ,  tap } from 'rxjs/operators';
 import { IItemTree } from '../item-list/item-tree';
 import { SortingService } from '../sorting/sorting.service';
 import { IGroupInfo } from './group-infos';
@@ -29,13 +23,13 @@ export class GroupingService {
      */
     public group$(tree: any[], groupInfos: IGroupInfo[] | IGroupInfo, childrenField = 'items'): Observable<any[]> {
         if (!tree || tree.length === 0 || !groupInfos) {
-            return Observable.of(tree);
+            return observableOf(tree);
         }
 
         if (groupInfos instanceof Array) {
             // Create a observable stream with a sequence for each groupinfos.
-            let result$ = Observable.of(tree);
-            groupInfos.forEach((groupInfo) => result$ = result$.switchMap((t) => this.group$(t, groupInfo, childrenField)));
+            let result$ = observableOf(tree);
+            groupInfos.forEach((groupInfo) => result$ = result$.pipe(switchMap((t) => this.group$(t, groupInfo, childrenField))));
             return result$;
         } else {
             // Group the tree with the current groupInfo
@@ -46,23 +40,23 @@ export class GroupingService {
             }
 
             const groupTree$: any = (t: any[], curDepth: number) => {
-                return Observable.from(t)
-                    .switchMap((treeItem) => {
+                return observableFrom(t).pipe(
+                    switchMap((treeItem) => {
                         const children = treeItem[childrenField];
                         if (children[0] && children[0][childrenField]) {
                             return groupTree$(children, curDepth + 1).map(() => treeItem);
                         } else {
-                            return this.groupChildren$(children, groupInfo, curDepth, childrenField).map((groupedChildren) => {
+                            return this.groupChildren$(children, groupInfo, curDepth, childrenField).pipe(map((groupedChildren) => {
                                 treeItem[childrenField] = groupedChildren;
                                 return treeItem;
-                            });
+                            }));
                         }
-                    })
-                    .reduce((acc: any[], cur) => {
+                    }),
+                    reduce((acc: any[], cur) => {
                         // Return the array
                         acc.push(cur);
                         return acc;
-                    }, []);
+                    }, []));
             };
 
             // If the tree has chidren, group only the last level items
@@ -78,9 +72,9 @@ export class GroupingService {
     }
 
     protected groupChildren$(list: any[], groupInfo: IGroupInfo, _depth: number, childrenField: string): Observable<any[]> {
-        return Observable.of(list)
-            .switchMap((l) => l)
-            .reduce((groups: { [groupby: string]: IItemTree }, item) => {
+        return observableOf(list).pipe(
+            switchMap((l) => l),
+            reduce((groups: { [groupby: string]: IItemTree }, item) => {
                 let groupedBy = typeof groupInfo.groupByField === 'function' ? groupInfo.groupByField(item) : item[groupInfo.groupByField];
 
                 if (typeof item[groupedBy] === 'function') {
@@ -105,17 +99,17 @@ export class GroupingService {
 
                 (<any>parent)[childrenField].push(item);
                 return groups;
-            }, {})
-            .map((grps: { [groupby: string]: any }) => Object.keys(grps).map((key) => grps[key]))
-            .do((groupedChildren) => groupedChildren.forEach((parent) => parent.sortField = (groupInfo.sortInfos && groupInfo.sortInfos.name) || 'toString'))
-            .switchMap((groupedChildren) => {
+            }, {}),
+            map((grps: { [groupby: string]: any }) => Object.keys(grps).map((key) => grps[key])),
+            tap((groupedChildren) => groupedChildren.forEach((parent) => parent.sortField = (groupInfo.sortInfos && groupInfo.sortInfos.name) || 'toString')),
+            switchMap((groupedChildren) => {
                 if (groupInfo.sortInfos) {
                     const sortingService = new SortingService();
                     return sortingService.sort$(groupedChildren, groupInfo.sortInfos);
                 } else {
-                    return Observable.of(groupedChildren);
+                    return observableOf(groupedChildren);
                 }
-            });
+            }));
     }
 
     private getTextValue(value: any) {
