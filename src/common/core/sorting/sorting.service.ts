@@ -63,9 +63,6 @@ export class SortingService {
                         return child;
                     }));
             }),
-            reduce((acc: any[], cur) => {
-                acc.push(cur);
-                return acc;
-            }, []));
+            reduce((acc: any[], cur: any) => [...acc, cur], []));
     }
 }

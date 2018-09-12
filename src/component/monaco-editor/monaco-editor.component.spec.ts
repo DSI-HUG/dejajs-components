@@ -9,7 +9,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { from as observableFrom } from 'rxjs';
-import { delay } from 'rxjs/operators/delay';
+import { delay } from 'rxjs/operators';
 import { DejaMonacoEditorComponent } from './monaco-editor.component';
 import { MonacoEditorService } from './monaco-editor.service';
 
