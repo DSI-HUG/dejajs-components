@@ -52,11 +52,7 @@ export class GroupingService {
                             }));
                         }
                     }),
-                    reduce((acc: any[], cur) => {
-                        // Return the array
-                        acc.push(cur);
-                        return acc;
-                    }, []));
+                    reduce((acc: any[], cur: any) => [...acc, cur], []));
             };
 
             // If the tree has chidren, group only the last level items

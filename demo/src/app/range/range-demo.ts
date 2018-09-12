@@ -48,7 +48,7 @@ export class DejaRangeDemoComponent {
                 gate: true,
                 message: error.message,
             })),
-            scan((acc, curr) => [...acc, curr], []),
+            scan((acc: any, cur: any) => [...acc, cur], []),
             defaultIfEmpty([]), );
     }
 

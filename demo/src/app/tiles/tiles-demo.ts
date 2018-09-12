@@ -34,7 +34,7 @@ export class DejaTilesDemoComponent implements OnInit {
 
     constructor(private countriesService: CountriesService) {
         this.messages$ = observableFrom(this.message$).pipe(
-            scan((acc, curr) => [...acc, curr], []),
+            scan((acc: any[], curr: any) => [...acc, curr], []),
             defaultIfEmpty([]), );
     }
 
@@ -64,10 +64,7 @@ export class DejaTilesDemoComponent implements OnInit {
 
                 return tile;
             }),
-            reduce((acc, curr) => {
-                acc.push(curr);
-                return acc;
-            }, []), );
+            reduce((acc: IDejaTile[], cur: IDejaTile) => [...acc, cur], []));
 
         this.tiles2$ = tiles$.pipe(
             map((country) => {
@@ -85,10 +82,7 @@ export class DejaTilesDemoComponent implements OnInit {
 
                 return tile;
             }),
-            reduce((acc, curr) => {
-                acc.push(curr);
-                return acc;
-            }, []), );
+            reduce((acc: IDejaTile[], cur: IDejaTile) => [...acc, cur], []));
     }
 
     protected getDragContext() {

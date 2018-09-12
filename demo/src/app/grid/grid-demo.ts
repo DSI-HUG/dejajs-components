@@ -666,10 +666,7 @@ export class DejaGridDemoComponent {
                     },
                 },
             })),
-            reduce((acc: any[], cur) => {
-                acc.push(cur);
-                return acc;
-            }, []));
+            reduce((acc: any[], cur: any) => [ ...acc, cur ], []));
 
         this.peopleService.getPeople$().subscribe((value: Person[]) => {
             const onDemandResult = [] as IPeopleGroup[];

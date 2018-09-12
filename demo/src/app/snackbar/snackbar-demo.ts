@@ -52,30 +52,30 @@ export class DejaSnackbarDemoComponent implements OnInit {
     this.dangers = observableFrom(this.push).pipe(
         filter((type: string) => type === 'danger'),
         map(() => new Message('Danger snackbar')),
-        scan((acc, curr) => [...acc, curr], []),
+        scan((acc: any[], curr: any) => [...acc, curr], []),
         defaultIfEmpty([]), );
 
     this.warnings = observableFrom(this.push).pipe(
         filter((type: string) => type === 'warning'),
         map(() => new Message('Warning snackbar')),
-        scan((acc, curr) => [...acc, curr], []),
+        scan((acc: any[], curr: any) => [...acc, curr], []),
         defaultIfEmpty([]), );
 
     this.successes = observableFrom(this.push).pipe(
         filter((type: string) => type === 'success'),
         map(() => new Message('Success snackbar')),
-        scan((acc, curr) => [...acc, curr], []),
+        scan((acc: any[], curr: any) => [...acc, curr], []),
         defaultIfEmpty([]), );
 
     this.infos = observableFrom(this.push).pipe(
         filter((type: string) => type === 'info'),
         map(() => new Message('Info snackbar')),
-        scan((acc, curr) => [...acc, curr], []),
+        scan((acc: any[], curr: any) => [...acc, curr], []),
         defaultIfEmpty([]), );
 
     this.messages = observableInterval(2000).pipe(
         map(() => new Message('Server push snackbar')),
-        scan((acc, curr) => [...acc, curr], []),
+        scan((acc: any[], curr: any) => [...acc, curr], []),
         defaultIfEmpty([]), );
   }
 }

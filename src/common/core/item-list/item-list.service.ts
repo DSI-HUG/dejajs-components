@@ -537,10 +537,7 @@ export class ItemListService {
     public expandItems$(items: IItemBase[]): Observable<IItemBase[]> {
         return observableFrom(items || []).pipe(
             switchMap((item) => this.expandItem$(item)),
-            reduce((acc: any[], cur) => {
-                acc.push(cur);
-                return acc;
-            }, []));
+            reduce((acc, cur) => [...acc, cur], []));
     }
 
     /** Reduits les éléments spécifiés.
@@ -550,10 +547,7 @@ export class ItemListService {
     public collapseItems$(items: IItemBase[]): Observable<IItemBase[]> {
         return observableFrom(items || []).pipe(
             switchMap((item) => this.collapseItem$(item)),
-            reduce((acc: any[], cur) => {
-                acc.push(cur);
-                return acc;
-            }, []));
+            reduce((acc, cur) => [...acc, cur], []));
     }
 
     /** Etends l'élément spécifié.
@@ -676,10 +670,7 @@ export class ItemListService {
     public selectItems$(items: IItemBase[]): Observable<IItemBase[]> {
         return observableFrom(items || []).pipe(
             switchMap((item) => this.selectItem$(item)),
-            reduce((acc: any[], cur) => {
-                acc.push(cur);
-                return acc;
-            }, []));
+            reduce((acc: IItemBase[], cur: IItemBase) => [...acc, cur], []));
     }
 
     /** Déselectionne les éléments spécifiés
@@ -690,10 +681,7 @@ export class ItemListService {
         return observableFrom(items || []).pipe(
             filter((item) => item.selected),
             switchMap((item) => this.unSelectItem$(item)),
-            reduce((acc: any[], cur) => {
-                acc.push(cur);
-                return acc;
-            }, []));
+            reduce((acc: IItemBase[], cur: IItemBase) => [...acc, cur], []));
     }
 
     /** Sélectionne l'élément spécifié

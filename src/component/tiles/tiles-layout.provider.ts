@@ -1064,10 +1064,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                     observableFrom(newTiles).pipe(
                         tap((tile) => tile.isHidden = true),
                         delay(1000),
-                        reduce((acc, curr) => {
-                            acc.push(curr);
-                            return acc;
-                        }, []),
+                        reduce((acc: DejaTile[], cur: DejaTile) => [...acc, cur], []),
                         first())
                         .subscribe((tiles: DejaTile[]) => this.deleteTiles(tiles));
 
