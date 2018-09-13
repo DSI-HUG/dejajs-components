@@ -327,8 +327,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             }),
             delay(1))
             .subscribe(() => {
-                // View port calculated
-                this.overlay.updatePosition();
+                this.viewPort.element$.next(this.listElement);
             });
 
         observableFrom(this.keyboardNavigation$).pipe(
