@@ -148,5 +148,5 @@ describe('DejaMouseDragDrop', () => {
             expect(dropElement.innerText).toEqual(dragElement.innerText);
             done();
         });
-    }, 100000);
+    }, 10000);
 });

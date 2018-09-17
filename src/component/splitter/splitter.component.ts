@@ -88,7 +88,6 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
         return this._areas.length - 1;
     }
 
-    private minPercent = 0.3;
     private _areas: IAreaData[] = [];
     private isDragging = false;
     private containerSize = 0;
@@ -295,19 +294,18 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
         const newSizePixelA = this.areaASize - offsetPixel;
         const newSizePixelB = this.areaBSize + offsetPixel;
 
-        if (newSizePixelA <= areaA.minPixel && newSizePixelB < areaB.minPixel) {
-            return;
-        }
+        const minPercentA = areaA.minPixel ? (areaA.minPixel + 5) / this.containerSize * 100 : 0;
+        const minPercentB = areaB.minPixel ? (areaB.minPixel + 5) / this.containerSize * 100 : 0;
 
         let newSizePercentA = newSizePixelA / this.containerSize * 100;
         let newSizePercentB = newSizePixelB / this.containerSize * 100;
 
-        if (newSizePercentA <= this.minPercent) {
-            newSizePercentA = this.minPercent;
-            newSizePercentB = areaA.size + areaB.size - this.minPercent;
-        } else if (newSizePercentB <= this.minPercent) {
-            newSizePercentB = this.minPercent;
-            newSizePercentA = areaA.size + areaB.size - this.minPercent;
+        if (newSizePercentA <= minPercentA) {
+            newSizePercentA = minPercentA;
+            newSizePercentB = areaA.size + areaB.size - minPercentA;
+        } else if (newSizePercentB <= minPercentB) {
+            newSizePercentB = minPercentB;
+            newSizePercentA = areaA.size + areaB.size - minPercentB;
         } else {
             newSizePercentA = Number(newSizePercentA.toFixed(3));
             newSizePercentB = Number((areaA.size + areaB.size - newSizePercentA).toFixed(3));
