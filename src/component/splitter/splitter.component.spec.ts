@@ -37,7 +37,7 @@ class DejaSplitterContainerComponent {
     }
 }
 
-fdescribe('DejaSplitterContainerComponent', () => {
+describe('DejaSplitterContainerComponent', () => {
     let component: DejaSplitterComponent;
     let fixture: ComponentFixture<DejaSplitterContainerComponent>;
 
