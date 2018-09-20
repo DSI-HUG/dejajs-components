@@ -8,12 +8,27 @@
 
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Optional, Output, Self } from '@angular/core';
-import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Optional, Output, Self, ViewChild } from '@angular/core';
+import { ControlValueAccessor, FormControl, NgControl, ValidationErrors, Validator, ValidatorFn } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material';
 import { Subject } from 'rxjs';
 
 import { DejaTextMetricsService } from '../../common/core/text-metrics/text-metrics.service';
+import { DejaChildValidatorDirective } from '../../common/core/validation/child-validator.directive';
+
+export const createCounterRangeValidator = (maxValue: number, minValue: number) => {
+    return (c: FormControl) => {
+        const err = {
+            rangeError: {
+                given: c.value,
+                max: maxValue,
+                min: minValue
+            }
+        };
+
+        return ((maxValue && c.value > maxValue) || (minValue && c.value < minValue)) ? err : null;
+    };
+};
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,7 +37,7 @@ import { DejaTextMetricsService } from '../../common/core/text-metrics/text-metr
     styleUrls: ['numeric-stepper.component.scss'],
     templateUrl: 'numeric-stepper.component.html'
 })
-export class DejaNumericStepperComponent implements OnInit, OnDestroy, ControlValueAccessor, MatFormFieldControl<number> {
+export class DejaNumericStepperComponent implements OnChanges, OnDestroy, ControlValueAccessor, MatFormFieldControl<number>, Validator {
     public static nextId = 0;
     @HostBinding() public id = `deja-numeric-stepper-${DejaNumericStepperComponent.nextId++}`;
     @HostBinding('class.floating') public get shouldLabelFloat() {
@@ -45,6 +60,13 @@ export class DejaNumericStepperComponent implements OnInit, OnDestroy, ControlVa
     /** Unit of stepper */
     @Input() public unit: string;
 
+    @ViewChild(DejaChildValidatorDirective)
+    public set inputValidatorDirective(value: DejaChildValidatorDirective) {
+        if (value) {
+            value.parentControl = this.ngControl;
+        }
+    }
+
     /**
      * Placeholder of the input
      */
@@ -62,6 +84,9 @@ export class DejaNumericStepperComponent implements OnInit, OnDestroy, ControlVa
     }
 
     private _value: number;
+
+    /** Function for min / max validation */
+    public validateFn: ValidatorFn;
 
     /** Output to get the event when the value is modified (no validation)  */
     @Output()
@@ -114,7 +139,19 @@ export class DejaNumericStepperComponent implements OnInit, OnDestroy, ControlVa
         });
     }
 
-    public ngOnInit() { }
+    public ngOnChanges(changes: any) {
+        if (changes.min || changes.max) {
+            this.validateFn = createCounterRangeValidator(this.max, this.min);
+            if (this.ngControl && this.ngControl.control) {
+                this.ngControl.control.setValidators(this.validateFn);
+            }
+        }
+    }
+
+    public validate(c: FormControl): ValidationErrors {
+        return this.validateFn(c);
+    }
+
     public ngOnDestroy() {
         this.stateChanges.complete();
         this.fm.stopMonitoring(this.elementRef.nativeElement);
@@ -136,28 +173,10 @@ export class DejaNumericStepperComponent implements OnInit, OnDestroy, ControlVa
     }
 
     public set value(val: number) {
-        if (!this.disabled) {
-            this.writeValue(val);
-            this.onTouchedCallback();
-            this.stateChanges.next();
-        }
-    }
-
-    public checkLimits(val: number) {
-        if (!this.disabled) {
-            if (val === undefined || val === null) {
-                val = null;
-            } else if (val > this.max) {
-                val = this.max;
-            } else if (val < this.min) {
-                val = this.min;
-            } else {
-                val = +val;
-            }
-            this.writeValue(val);
-            this.onChangeCallback(val);
-            this.onTouchedCallback();
-        }
+        this.writeValue(val);
+        this.onChangeCallback(val);
+        this.onTouchedCallback();
+        this.stateChanges.next();
     }
 
     public writeValue(value: number) {
