@@ -50,7 +50,7 @@ describe('DejaNumericStepperComponent', () => {
         expect(comp.value).toBe(10);
     }));
 
-    it('should not update the value if is disabled', async(() => {
+    it('should update the value even if it`s disabled', async(() => {
         comp.value = 10;
         comp.disabled = true;
 
@@ -58,6 +58,6 @@ describe('DejaNumericStepperComponent', () => {
         comp.value = 11;
 
         fixture.detectChanges();
-        expect(comp.value).toBe(10);
+        expect(comp.value).toBe(11);
     }));
 });
