@@ -134,11 +134,11 @@ describe('DejaDatePickerContainerComponent', () => {
     // }));
 
     it('Should be disabled even if disabled is set as a string', () => {
-        component.disabled = 'true';
+        (component as any).disabled = 'true';
         fixture.detectChanges();
         expect((component as any)._disabled).toBeTruthy();
 
-        component.disabled = '';
+        (component as any).disabled = '';
         fixture.detectChanges();
         expect((component as any)._disabled).toBeTruthy();
 
@@ -150,7 +150,7 @@ describe('DejaDatePickerContainerComponent', () => {
         fixture.detectChanges();
         expect((component as any)._disabled).toBeNull();
 
-        component.disabled = 'false';
+        (component as any).disabled = 'false';
         fixture.detectChanges();
         expect((component as any)._disabled).toBeNull();
 
@@ -160,11 +160,11 @@ describe('DejaDatePickerContainerComponent', () => {
     });
 
     it('Should be required even if required is set as a string', () => {
-        component.required = 'true';
+        (component as any).required = 'true';
         fixture.detectChanges();
         expect((component as any)._required).toBeTruthy();
 
-        component.required = '';
+        (component as any).required = '';
         fixture.detectChanges();
         expect((component as any)._required).toBeTruthy();
 
@@ -176,7 +176,7 @@ describe('DejaDatePickerContainerComponent', () => {
         fixture.detectChanges();
         expect((component as any)._required).toBeNull();
 
-        component.required = 'false';
+        (component as any).required = 'false';
         fixture.detectChanges();
         expect((component as any)._required).toBeNull();
 

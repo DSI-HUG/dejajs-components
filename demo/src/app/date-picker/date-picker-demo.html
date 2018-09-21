@@ -74,23 +74,35 @@
 			<div fxLayout>
 				<div fxFlex="1 1 auto">
 					<h3>Date Picker :</h3>
-					<deja-date-picker [disableDates]="disabledDate" [(ngModel)]="theDatePicker"></deja-date-picker>
-					<p>Selected date : {{theDatePicker | date:'yyyy-MM-dd'}}</p>
+					<mat-form-field appearance="outline">
+						<mat-label>Date</mat-label>
+						<deja-date-picker [disableDates]="disabledDate" [(ngModel)]="theDatePicker"></deja-date-picker>
+						<mat-hint>Selected date : {{theDatePicker | date:'yyyy-MM-dd'}}</mat-hint>
+					</mat-form-field>
 				</div>
 				<div fxFlex="1 1 auto">
 					<h3>DateTime Picker :</h3>
-					<deja-date-picker [disableDates]="disabledDate" [(ngModel)]="theDatetimePicker" time></deja-date-picker>
-					<p>Selected date : {{theDatetimePicker | date:'yyyy-MM-dd HH:mm:ss'}}</p>
+					<mat-form-field appearance="outline">
+						<mat-label>DateTime Picker</mat-label>
+						<deja-date-picker [disableDates]="disabledDate" [(ngModel)]="theDatetimePicker" time></deja-date-picker>
+						<mat-hint>Selected date : {{theDatetimePicker | date:'yyyy-MM-dd HH:mm:ss'}}</mat-hint>
+					</mat-form-field>
 				</div>
 				<div fxFlex="1 1 auto">
 					<h3>Time Picker :</h3>
-					<deja-date-picker [disableDates]="disabledDate" [(ngModel)]="theTimePicker" [layout]="'timeonly'"></deja-date-picker>
-					<p>Selected date : {{theTimePicker | date:'HH:mm:ss'}}</p>
+					<mat-form-field appearance="outline">
+						<mat-label>Time picker</mat-label>
+						<deja-date-picker [disableDates]="disabledDate" [(ngModel)]="theTimePicker" [layout]="'timeonly'"></deja-date-picker>
+						<mat-hint>Selected date : {{theTimePicker | date:'HH:mm:ss'}}</mat-hint>
+					</mat-form-field>
 				</div>
 				<div fxFlex="1 1 auto">
 					<h3>Free Entry Date Picker :</h3>
-					<deja-date-picker [disableDates]="disabledDate" [(ngModel)]="theFreeEntryDatePicker" [allowFreeEntry]="true"></deja-date-picker>
-					<p>Selected date : {{theFreeEntryDatePicker | date:'yyyy-MM-dd'}}</p>
+					<mat-form-field appearance="outline">
+						<mat-label>Free Entry Date Picker</mat-label>
+						<deja-date-picker [disableDates]="disabledDate" [(ngModel)]="theFreeEntryDatePicker" [allowFreeEntry]="true"></deja-date-picker>
+						<mat-hint>Selected date : {{theFreeEntryDatePicker}}</mat-hint>
+					</mat-form-field>
 				</div>
 			</div>
 			<hr>
@@ -129,14 +141,26 @@
 			<div fxLayout>
 				<div fxFlex="1 1 auto">
 					<h3>Date Range Picker :</h3>
-					<deja-date-picker format="DD.MM.YYYY" #dtfrom [disableDates]="disabledDate" [(ngModel)]="dateRangeFrom"></deja-date-picker>
-					<deja-date-picker format="DD.MM.YYYY" #dtto [disableDates]="disabledDate" [(ngModel)]="dateRangeTo"></deja-date-picker>
+					<mat-form-field appearance="fill">
+						<mat-label>Range min</mat-label>
+						<deja-date-picker format="DD.MM.YYYY" #dtfrom [disableDates]="disabledDate" [(ngModel)]="dateRangeFrom"></deja-date-picker>
+					</mat-form-field>
+					<mat-form-field appearance="fill">
+						<mat-label>Range max</mat-label>
+						<deja-date-picker format="DD.MM.YYYY" #dtto [disableDates]="disabledDate" [(ngModel)]="dateRangeTo"></deja-date-picker>
+					</mat-form-field>
 					<p>Selected date : from {{dateRangeFrom | date:'yyyy-MM-dd'}} to {{dateRangeTo | date:'yyyy-MM-dd'}}</p>
 				</div>
 				<div fxFlex="1 1 auto">
 					<h3>DateTime Range Picker :</h3>
-					<deja-date-picker format="DD.MM.YYYY HH:mm" #dtfrom [disableDates]="disabledDate" [(ngModel)]="datetimeRangeFrom" time></deja-date-picker>
-					<deja-date-picker format="DD.MM.YYYY HH:mm" #dtto [disableDates]="disabledDate" [(ngModel)]="datetimeRangeTo" time></deja-date-picker>
+					<mat-form-field>
+						<mat-label>Range min</mat-label>
+						<deja-date-picker format="DD.MM.YYYY HH:mm" #dtfrom [disableDates]="disabledDate" [(ngModel)]="datetimeRangeFrom" time></deja-date-picker>
+					</mat-form-field>
+					<mat-form-field>
+						<mat-label>Range max</mat-label>
+						<deja-date-picker format="DD.MM.YYYY HH:mm" #dtto [disableDates]="disabledDate" [(ngModel)]="datetimeRangeTo" time></deja-date-picker>
+					</mat-form-field>
 					<p>Selected date : from {{datetimeRangeFrom | date:'yyyy-MM-dd HH:mm:ss'}} to {{datetimeRangeTo | date:'yyyy-MM-dd HH:mm:ss'}}</p>
 				</div>
 			</div>
