@@ -140,7 +140,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
 
     /**
      * Constructor
-     * subscribe on fifferent events needed inside this component
+     * subscribe on different events needed inside this component
      */
     constructor(private elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, @Self() @Optional() public _control: NgControl, @Optional() private _parentForm: NgForm, @Optional() private _parentFormGroup: FormGroupDirective) {
         if (this._control) {

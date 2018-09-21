@@ -13,6 +13,7 @@ import { MatIconModule, MatInputModule } from '@angular/material';
 import { MediaModule } from '../../common/core/media/index';
 import { DejaChildValidatorModule } from '../../common/core/validation/index';
 import { DejaChipsModule } from '../chips/index';
+import { DejaListLoaderModule } from '../loaders/index';
 import { DejaOverlayModule } from '../overlay/index';
 import { DejaItemModule } from './../../common/core/item-list/index';
 import { DejaSelectComponent } from './select.component';
@@ -34,6 +35,7 @@ import { DejaSelectComponent } from './select.component';
         DejaChildValidatorModule,
         DejaChipsModule,
         DejaItemModule,
+        DejaListLoaderModule,
     ],
 })
 export class DejaSelectModule { }

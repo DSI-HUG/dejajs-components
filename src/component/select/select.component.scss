@@ -1,87 +1,42 @@
 deja-select {
 	// position: relative;
-	min-height: 3.5rem;
+	// min-height: 3.5rem;
+	width: 100%;
 	white-space: initial;
-	display: block;
+	display: flex;
+	align-items: center;
+	min-height: 1rem;
 
-	#select-placeholder {
-		display: flex;
-		align-items: center;
+	>input {
+		flex: 1 1 100%;
 	}
 
-	#input {
+	deja-chips {
 		width: 100%;
 
-		.mat-form-field-infix {
-			width: 100%;
+		.insert-item {
+			display: flex;
+			align-items: center;
+			height: 1.2rem;
 		}
+	}
 
-		.mat-form-field-suffix {
-			[matSuffix] {
-				display: table-cell;
-			}
+	.actions-suffix {
+		flex: 0 0 auto;
+		text-align: right;
+		overflow: visible;
+		display: flex;
+		align-items: center;
+		height: 0;
 
-			.actions-suffix {
-				text-align: right;
+		#clear-button,
+		.select-arrow-down {
+			font-size: 1.2rem;
+			opacity: 0.35;
 
-				#clear-button,
-				.select-arrow-down {
-					font-size: 1rem;
-					opacity: 0.25;
-					vertical-align: bottom;
-
-					&:hover {
-						opacity: 1;
-						cursor: pointer;
-					}
-				}
-			}
-		}
-
-		.mat-hint {
-			bottom: -0.5em;
-		}
-
-		&[wait="true"] {
-			.mat-form-field-wrapper {
-				.mat-form-field-underline {
-					z-index: 910;
-					border-top: 0;
-					overflow: hidden;
-					position: absolute;
-					left: 0;
-					right: 0;
-					height: 2px;
-					margin-top: 10px;
-
-					&:before {
-						content: '';
-						position: absolute;
-						top: 0;
-						left: 0;
-						bottom: 0;
-						will-change: left, right;
-						animation: load 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
-					}
-
-					&:after {
-						content: '';
-						position: absolute;
-						top: 0;
-						left: 0;
-						bottom: 0;
-						will-change: left, right;
-						animation: load-short 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
-						animation-delay: 1.15s;
-					}
-				}
-			}
-		}
-
-		[matSuffix] {
-			mat-progress-spinner {
-				width: 1.5rem;
-				height: 1.5rem;
+			&:hover {
+				opacity: 1;
+				cursor: pointer;
 			}
 		}
 	}
@@ -119,15 +74,6 @@ deja-select {
 			right: -8%;
 		}
 	}
-
-	mat-placeholder {
-		display: flex;
-		align-items: center;
-
-		mat-icon {
-			margin-right: 0.5rem;
-		}
-	}
 }
 
 .deja-overlay-container {
@@ -145,9 +91,9 @@ deja-select {
 
 			>deja-bold-query {
 				flex: 1 1 100%;
-                overflow: hidden;
-                
-                div {
+				overflow: hidden;
+
+				div {
 					overflow: hidden;
 					text-overflow: ellipsis;
 					white-space: nowrap;
@@ -173,6 +119,12 @@ deja-select {
 
 		#nodata-holder {
 			margin: 0.5rem;
+		}
+
+		#loader {
+			.spinner {
+				margin: 10px auto 10px;
+			}
 		}
 	}
 

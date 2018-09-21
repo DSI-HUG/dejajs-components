@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatCardModule, MatCheckboxModule, MatIconModule, MatInputModule } from '@angular/material';
+import { MatCardModule, MatCheckboxModule, MatFormFieldModule, MatIconModule, MatInputModule } from '@angular/material';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { DejaBoldQueryModule, DejaDialogModule, DejaItemModule, DejaMessageBoxModule, DejaSelectModule } from '@deja-js/component';
@@ -30,6 +30,7 @@ import { routing } from './select-demo.routes';
         FormsModule,
         FlexLayoutModule,
         ReactiveFormsModule,
+        MatFormFieldModule,
         MatIconModule,
         MatCardModule,
         MatCheckboxModule,

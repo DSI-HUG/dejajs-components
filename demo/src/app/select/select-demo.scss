@@ -4,8 +4,8 @@
 		mat-card-content {
 			padding: 16px;
 			display: flex;
-			flex-direction: column;
-			deja-select {
+            flex-direction: column;
+            mat-form-field {
 				flex-basis: auto;
 				flex-grow: 0;
 				flex-shrink: 0;

@@ -10,7 +10,7 @@
 * Licensed under MIT https://github.com/rd-dev-ukraine/angular-io-slimscroll/blob/master/LICENSE
 */
 
-import { Directive, ElementRef, HostListener, Input, OnDestroy, OnInit, Output, Renderer2, RendererFactory2 } from '@angular/core';
+import { Directive, ElementRef, HostListener, Input, OnDestroy, OnInit, Renderer2, RendererFactory2 } from '@angular/core';
 import { Subscription, timer as observableTimer } from 'rxjs';
 import { filter, first } from 'rxjs/operators';
 
@@ -539,7 +539,7 @@ export class DejaSlimScrollDirective implements OnInit, OnDestroy {
         document.removeEventListener('mouseup', this.barMouseUp, false);
     }
 
-    private barMouseDown(e) {
+    private barMouseDown(e: MouseEvent) {
         this._isDragg = true;
 
         // disable text selection

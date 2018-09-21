@@ -6,10 +6,12 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
-import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
-import { MatInput } from '@angular/material';
+import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, DoCheck, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ControlValueAccessor, FormControl, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
+import { MatFormFieldControl, MatInput } from '@angular/material';
+import { CanDisable, CanUpdateErrorState, ErrorStateMatcher } from '@angular/material/core';
 import { BehaviorSubject, combineLatest as observableCombineLatest, from as observableFrom, fromEvent as observableFromEvent, merge as observableMerge, Observable, Subject, Subscription, timer as observableTimer } from 'rxjs';
 import { combineLatest, debounce, debounceTime, delay, delayWhen, filter, first, map, switchMap, takeWhile, tap } from 'rxjs/operators';
 import { GroupingService } from '../../common/core/grouping/grouping.service';
@@ -32,25 +34,35 @@ import { IViewPort, ViewportMode, ViewPortService } from './../../common/core/it
 
 const noop = () => { };
 
-export enum DejaSelectSelectionPosition {
-    above = 0, // value in HTML
-    below = 1, // value in HTML
-}
-
 /** Combo box avec une liste basée sur la treelist */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    providers: [ViewPortService],
+    providers: [
+        ViewPortService,
+        { provide: MatFormFieldControl, useExisting: DejaSelectComponent }
+    ],
     selector: 'deja-select',
     styleUrls: [
         './select.component.scss',
     ],
     templateUrl: './select.component.html',
 })
-export class DejaSelectComponent extends ItemListBase implements ControlValueAccessor, AfterViewInit, AfterContentInit {
+export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorState, CanDisable, DoCheck, MatFormFieldControl<any>, ControlValueAccessor, OnDestroy, AfterViewInit, AfterContentInit {
+    public static nextId = 0;
+    @HostBinding() public id = `deja-select-${DejaSelectComponent.nextId++}`;
+    @HostBinding('class.floating') public get shouldLabelFloat() {
+        return this.focused || !this.empty;
+    }
+
+    @HostBinding('attr.aria-describedby') public describedBy = '';
+
+    public controlType = 'deja-select';
+    public errorState = false;
+    public errorStateMatcher: ErrorStateMatcher;
+    public stateChanges = new Subject<void>();
+
     /** Texte à afficher par default dans la zone de recherche */
-    @Input() public placeholder: string;
     /** Texte affiché si aucune donnée n'est présente dans le tableau */
     @Input() public nodataholder: string;
     /** Offset de position horizontal de la zone de dropdown */
@@ -61,12 +73,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @Input() public itemTemplateExternal: any;
     /** Permet de définir un template de ligne parente par binding. */
     @Input() public parentItemTemplateExternal: any;
-    /** Permet de définir un template pour la zone de texte d'information. */
-    @Input() public placeHolderTemplateExternal: any;
-    /** Permet de définir un template pour l'élément de conseil ou d'affichage d'erreur. */
-    @Input() public hintTemplateExternal: any;
-    /** Permet de définir un template pour le MatError à l'intérieur du mat-form-field-container. */
-    @Input() public errorTemplateExternal: any;
+    /** Permet de définir un template pour le loader par binding. */
+    @Input() public loaderTemplateExternal: any;
     /** Définit une valeur indiquant si en reactive form le model renvoyé doit être un obeject oue une valeur */
     @Input() public modelIsValue: boolean;
     /** Exécuté lorsque le calcul du viewPort est terminé. */
@@ -76,14 +84,10 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     /** For test only. */
     @Output() public dropDownVisibleChange = new EventEmitter<boolean>();
 
-    @ContentChild('hintTemplate') public hintTemplateInternal: any;
-    @ContentChild('placeHolderTemplate') public placeHolderTemplateInternal: any;
     @ContentChild('itemTemplate') public itemTemplateInternal: any;
     @ContentChild('parentItemTemplate') public parentItemTemplateInternal: any;
     @ContentChild('selectedTemplate') public selectedTemplate: any;
-    @ContentChild('suffixTemplate') public _matSuffix: any;
-    /** Template for MatError inside mat-form-field-container */
-    @ContentChild('errorTemplate') public errorTemplateInternal: any;
+    @ContentChild('loaderTemplate') private loaderTemplateInternal: any;
 
     /** Internal use */
     public overlayOwnerElement: HTMLElement;
@@ -95,28 +99,12 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     public onValidatorChangeCallback: () => void = noop;
 
     protected _keyboardNavigation = false;
-    protected _waiter = false;
+    @HostBinding('attr.wait') protected _waiter = false;
     protected isMobile = false;
 
     private mouseUp$sub: Subscription;
 
-    private _inputElement: ElementRef;
-
-    @ViewChild('inputElement')
-    public set inputElement(element: ElementRef) {
-        if (element) {
-            this._inputElement = element;
-            if (this._inputElement) {
-                const _inputElement = this._inputElement.nativeElement as HTMLInputElement;
-                this.overlayOwnerElement = _inputElement.parentElement;
-            } else {
-                this.overlayOwnerElement = this.elementRef.nativeElement;
-            }
-        } else {
-            this._inputElement = null;
-            this.overlayOwnerElement = this.elementRef.nativeElement;
-        }
-    }
+    @ViewChild('inputElement') public inputElement: ElementRef;
 
     @ViewChild(MatInput) protected input: MatInput;
 
@@ -130,6 +118,10 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     private _selectionClearable = false;
     private _dropDownWidth: string;
     private _query = '';
+    private _required = false;
+    private _placeholder: string;
+    private _focused = false;
+
     @HostBinding('attr.readonly') private _readonly: boolean = null;
 
     /** Overlay pane containing the options. */
@@ -148,8 +140,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     private keyboardNavigation$ = new Subject();
 
     private delaySearchTrigger$ = new BehaviorSubject<number>(250);
-
-    private _selectedItemsPosition = DejaSelectSelectionPosition.below;
 
     private _positions = DejaConnectionPositionPair.default;
 
@@ -172,12 +162,37 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return this._dropDownWidth || element.clientWidth;
     }
 
-    public get matSuffix() {
-        return this._matSuffix;
-    }
-
     public get keyboardNavigation() {
         return this._keyboardNavigation;
+    }
+
+    @Input() public get required() {
+        return this._required;
+    }
+
+    public set required(req) {
+        this._required = coerceBooleanProperty(req);
+        this.stateChanges.next();
+    }
+
+    /**
+     * Placeholder of the input
+     */
+    @Input() public get placeholder() {
+        return this._placeholder;
+    }
+
+    public set placeholder(plh) {
+        this._placeholder = plh;
+        this.stateChanges.next();
+    }
+
+    public get empty() {
+        return !this.value;
+    }
+
+    public get focused() {
+        return this._focused;
     }
 
     @ContentChildren(DejaItemComponent)
@@ -208,18 +223,32 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         }
     }
 
-    constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, private elementRef: ElementRef, @Self() @Optional() public _control: NgControl, @Optional() private _parentForm: NgForm, @Optional() private _parentFormGroup: FormGroupDirective, mediaService: MediaService) {
+    constructor(changeDetectorRef: ChangeDetectorRef,
+        public viewPort: ViewPortService,
+        private fm: FocusMonitor,
+        private elementRef: ElementRef,
+        @Self() @Optional() public ngControl: NgControl,
+        @Optional() private _parentForm: NgForm,
+        @Optional() private _parentFormGroup: FormGroupDirective,
+        mediaService: MediaService,
+        private _defaultErrorStateMatcher: ErrorStateMatcher) {
         super(changeDetectorRef, viewPort);
 
         this.overlayOwnerElement = this.elementRef.nativeElement;
 
-        if (this._control) {
-            this._control.valueAccessor = this;
+        if (this.ngControl) {
+            this.ngControl.valueAccessor = this;
         }
+
+        this.fm.monitor(elementRef.nativeElement, true).subscribe((origin) => {
+            this._focused = !!origin;
+            this.stateChanges.next();
+        });
 
         const setDropDownVisible = (state: boolean) => {
             if (state !== this._dropdownVisible) {
                 this._dropdownVisible = state;
+                this.changeDetectorRef.markForCheck();
                 this.dropDownVisibleChange.emit(state);
             }
         };
@@ -304,7 +333,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             }),
             delay(1),
             filter(() => this.dropdownVisible),  // Show canceled by the hide$ observable if !dropdownVisible
-            switchMap(() => this.calcViewList$().pipe(first())),
+            switchMap(() => this.calcViewList$()),
             tap(() => {
                 const selectedItems = this.getSelectedItems();
                 const firstItem = selectedItems && selectedItems[0];
@@ -325,10 +354,11 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             tap(() => {
                 this.viewPort.element$.next(this.listElement);
             }),
-            delay(1))
-            .subscribe(() => {
-                this.viewPort.element$.next(this.listElement);
-            });
+            delay(1),
+        ).subscribe(() => {
+            // View port calculated
+            this.overlay.updatePosition();
+        });
 
         observableFrom(this.keyboardNavigation$).pipe(
             takeWhile(() => this._isAlive),
@@ -428,14 +458,14 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     /** Permet de désactiver le select */
     @Input()
-    public set disabled(value: boolean | string) {
+    public set disabled(value: boolean) {
         const disabled = coerceBooleanProperty(value);
         this._disabled = disabled || null;
         this.changeDetectorRef.markForCheck();
     }
 
     public get disabled() {
-        return this._control ? this._control.disabled : this._disabled;
+        return this.ngControl ? this.ngControl.disabled : this._disabled;
     }
 
     /** Indique ou détermine si le bouton pour effacer la selection doit être affiché */
@@ -446,19 +476,6 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
 
     public get selectionClearable() {
         return this._selectionClearable;
-    }
-
-    @Input()
-    public set selectedItemsPosition(value: string | DejaSelectSelectionPosition) {
-        this._selectedItemsPosition = typeof value === 'string' ? (<any>DejaSelectSelectionPosition)[value] : value;
-    }
-
-    public get selectedItemsPosition() {
-        return this._selectedItemsPosition;
-    }
-
-    public get isSelectedItemsPositionBelow() {
-        return this._selectedItemsPosition === DejaSelectSelectionPosition.below;
     }
 
     @Input()
@@ -582,6 +599,10 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         this._type = type;
         this.setMultiSelect(this._type === 'multiselect');
         this.changeDetectorRef.markForCheck();
+    }
+
+    public get type() {
+        return this._type;
     }
 
     /**
@@ -771,7 +792,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     @ViewChild(DejaChildValidatorDirective)
     protected set inputValidatorDirective(value: DejaChildValidatorDirective) {
         if (value) {
-            value.parentControl = this._control;
+            value.parentControl = this.ngControl;
         }
     }
 
@@ -784,20 +805,8 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return this.getCurrentItemIndex();
     }
 
-    public get placeHolderTemplate() {
-        return this.placeHolderTemplateExternal || this.placeHolderTemplateInternal;
-    }
-
     public get itemTemplate() {
         return this.itemTemplateExternal || this.itemTemplateInternal;
-    }
-
-    public get hintTemplate() {
-        return this.hintTemplateExternal || this.hintTemplateInternal;
-    }
-
-    public get errorTemplate() {
-        return this.errorTemplateExternal || this.errorTemplateInternal;
     }
 
     public get parentItemTemplate() {
@@ -805,7 +814,11 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
 
     private get htmlInputElement() {
-        return this._inputElement && this._inputElement.nativeElement as HTMLInputElement;
+        return this.inputElement && this.inputElement.nativeElement as HTMLInputElement;
+    }
+
+    public get loaderTemplate() {
+        return this.loaderTemplateExternal || this.loaderTemplateInternal;
     }
 
     public get dropdownVisible() {
@@ -821,6 +834,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         this.writeValue(val);
         this.onChangeCallback(val);
         this.onTouchedCallback();
+        this.stateChanges.next();
     }
 
     public writeValue(value: any) {
@@ -840,18 +854,34 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
     }
     // ************* End of ControlValueAccessor Implementation **************
 
+    public ngDoCheck() {
+        if (this.ngControl) {
+            this.updateErrorState();
+        }
+    }
+
+    public ngOnDestroy() {
+        this.stateChanges.complete();
+        this.fm.stopMonitoring(this.elementRef.nativeElement);
+    }
+
     public ngAfterContentInit() {
         this.contentInitialized$.next(true);
 
-        if (this._control) {
-            this._control.valueChanges.pipe(
+        if (this.ngControl) {
+            this.ngControl.valueChanges.pipe(
                 filter(() => !!this.input))
                 .subscribe(() => {
-                    if (this._control.touched) {
+                    if (this.ngControl.touched) {
                         this.input.ngControl.control.markAsTouched();
                     }
                     this.input.ngControl.control.updateValueAndValidity();
                 });
+        }
+
+        this.overlayOwnerElement = this.elementRef.nativeElement as HTMLElement;
+        if (this.overlayOwnerElement.parentElement.className.indexOf('mat-form-field-infix') >= 0) {
+            this.overlayOwnerElement = this.overlayOwnerElement.parentElement;
         }
     }
 
@@ -1075,6 +1105,16 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
             });
     }
 
+    public setDescribedByIds(ids: string[]) {
+        this.describedBy = ids.join(' ');
+    }
+
+    public onContainerClick(event: MouseEvent) {
+        if ((event.target as Element).tagName.toLowerCase() !== 'input') {
+            this.elementRef.nativeElement.querySelector('input').focus();
+        }
+    }
+
     /** Change l'état d'expansion de toute les lignes parentes */
     public toggleAll$(collapsed?: boolean): Observable<IItemTree[]> {
         return super.toggleAll$(collapsed).pipe(
@@ -1172,9 +1212,22 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         return classNames.join(' ');
     }
 
+    public updateErrorState() {
+        const oldState = this.errorState;
+        const parent = this._parentFormGroup || this._parentForm;
+        const matcher = this.errorStateMatcher || this._defaultErrorStateMatcher;
+        const control = this.ngControl ? this.ngControl.control as FormControl : null;
+        const newState = matcher.isErrorState(control, parent);
+
+        if (newState !== oldState) {
+            this.errorState = newState;
+            this.stateChanges.next();
+        }
+    }
+
     protected onCloseClicked(event?: IDejaChipsComponentCloseEvent) {
-        if (this._control) {
-            this._control.control.markAsTouched();
+        if (this.ngControl) {
+            this.ngControl.control.markAsTouched();
         }
         this.removeSelection(event && event.item);
     }
@@ -1293,7 +1346,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         }
     }
 
-    private toggleDropDown() {
+    public toggleDropDown() {
         if (this.dropdownVisible) {
             this.hideDropDown();
         } else {
@@ -1301,7 +1354,7 @@ export class DejaSelectComponent extends ItemListBase implements ControlValueAcc
         }
     }
 
-    private showDropDown() {
+    public showDropDown() {
         this.showDropDown$.next();
     }
 

@@ -22,5 +22,6 @@ export interface IUser {
     color2: Color;                      // DejaColorPicker
     skills: string[];                   // DejaChips
     remark: string;                     // DejaContentEditable
+    bio: string;                        // DejaEditor
     ranges: IRange[];                   // DejaRange
 }
