@@ -1231,6 +1231,20 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
         }
         this.removeSelection(event && event.item);
     }
+
+    protected onOpenClicked() {
+        if (this.dropdownVisible || this.disabled) {
+            return;
+        }
+
+        if (this.isModeSelect) {
+            this.showDropDown();
+        } else {
+            this.htmlInputElement.select();
+            this.filter$.next(event);
+        }
+    }
+
     protected removeSelection(item?: IItemBase) {
         if (!this._multiSelect) {
             this.query = '';
