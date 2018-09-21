@@ -197,6 +197,10 @@ export class DejaGridComponent implements OnDestroy {
         return this._sortable;
     }
 
+    public get columnGroups() {
+        return this._columnGroups;
+    }
+
     public get noHorizontalScroll() {
         return this._noHorizontalScroll;
     }
@@ -403,7 +407,7 @@ export class DejaGridComponent implements OnDestroy {
         return this.columnHeaderTemplateExternal || this._columnHeaderTemplate;
     }
 
-    private get columnLayout() {
+    public get columnLayout() {
         return this._columnLayout;
     }
 

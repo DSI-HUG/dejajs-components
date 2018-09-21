@@ -33,6 +33,7 @@ export class DejaOverlayComponent implements OnDestroy {
         const isVisible = coerceBooleanProperty(value);
         if (this._isVisible !== isVisible) {
             this._isVisible = isVisible;
+            this.changeDetectorRef.markForCheck();
             this.visibleChange.emit(this.isVisible);
         }
     }

@@ -137,7 +137,7 @@ export class SelectDemoComponent implements OnDestroy {
                             collapsible: true,
                             groupName: groupName,
                             items: map[groupName],
-                            displayName: groupName,
+                            naqme: groupName,
                             selectable: true,
                         } as ICountryGroup);
 
@@ -149,7 +149,7 @@ export class SelectDemoComponent implements OnDestroy {
                                 displayName: 'loading...',
                                 selectable: false,
                             }],
-                            displayName: groupName,
+                            naqme: groupName,
                             selectable: false,
                             loaded: false,
                         } as ICountryGroup);

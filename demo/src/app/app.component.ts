@@ -8,8 +8,8 @@
 
 import { ChangeDetectionStrategy, Component, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { IconService } from '@deja-js/component';
-import {BehaviorSubject,  from as observableFrom ,  Observable } from 'rxjs';
-import {takeWhile} from 'rxjs/operators';
+import { BehaviorSubject, from as observableFrom, Observable } from 'rxjs';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,73 +1,49 @@
 @import '~@angular/material/theming';
+
 @mixin select-theme($theme) {
-    $primary: map-get($theme, primary);
-    $warn: map-get($theme, warn);
+	$primary: map-get($theme, primary);
+	$warn: map-get($theme, warn);
 	$background: map-get($theme, background);
 	$foreground: map-get($theme, foreground);
-    deja-select {
-        &.ng-invalid {
-            #input {
-                .mat-form-field-wrapper {
-                    .mat-form-field-underline {
-                        .mat-form-field-ripple {
-                            background-color: mat-color($warn);
-                        }
-                    }
-                    .mat-form-field-label.mat-focused {
-                        color: mat-color($warn) !important;
-                    }
-                }
-            }
-        }
-        #input {
-            .mat-form-field-suffix {
-                #clear-button {
-                    &:hover {
-                        color: mat-color($primary);
-                    }
-                }
-            }
-            &[wait="true"] {
-                .mat-form-field-wrapper {
-                    .mat-form-field-underline {
-                        &:before {
-                            background-color: mat-color($primary);
-                        }
-                        &:after {
-                            background-color: mat-color($primary);
-                        }
-                        .mat-form-field-ripple {
-                            background-color: transparent;
-                        }
-                    }
-                }
-            }
-            [matSuffix] {
-                mat-progress-spinner {
-                    svg path {
-                        stroke: mat-color($primary);
-                    }
-                }
-            }
-        }
-        #select-backdrop {
-            &:not([mobile]) {
-                background-color: transparent !important;
-            }
-        }
-    }
-    .deja-overlay-container {
-        .deja-listcontainer {
-            box-shadow: 0 5px 5px -3px rgba(0, 0, 0, .2), 0 8px 10px 1px rgba(0, 0, 0, .14), 0 3px 14px 2px rgba(0, 0, 0, .12);
-            background-color: mat-color($background, card) !important;
-            color: mat-color($foreground, text) !important;
-            &[keynav="false"] {
-                div.listitem:not(.unselectable):hover {
-                    background-color: mat-color($background, hover);
-                    color: mat-color($foreground, text);
-                }
-            }
-        }
-        @include sub-item-list-theme($theme);
-    }
+
+	deja-select {
+		[matSuffix] {
+			mat-progress-spinner {
+				svg path {
+					stroke: mat-color($primary);
+				}
+			}
+		}
+
+		.actions-suffix {
+			.material-icons {
+				&:hover {
+					color: mat-color($primary);
+				}
+			}
+		}
+
+		#select-backdrop {
+			&:not([mobile]) {
+				background-color: transparent !important;
+			}
+		}
+	}
+
+	.deja-overlay-container {
+		.deja-listcontainer {
+			box-shadow: 0 5px 5px -3px rgba(0, 0, 0, .2), 0 8px 10px 1px rgba(0, 0, 0, .14), 0 3px 14px 2px rgba(0, 0, 0, .12);
+			background-color: mat-color($background, card) !important;
+			color: mat-color($foreground, text) !important;
+
+			&[keynav="false"] {
+				div.listitem:not(.unselectable):hover {
+					background-color: mat-color($background, hover);
+					color: mat-color($foreground, text);
+				}
+			}
+		}
+
+		@include sub-item-list-theme($theme);
+	}
 }

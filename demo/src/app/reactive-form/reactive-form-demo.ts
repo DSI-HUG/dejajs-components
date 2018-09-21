@@ -99,6 +99,7 @@ export class DejaReactiveFormDemoComponent implements AfterContentInit, OnInit, 
             skills: [{ value: null, disabled: this.readonly }, Validators.required],
             skillsErrors: [null],
             remark: [{ value: null, disabled: this.readonly }, Validators.compose([Validators.required, Validators.maxLength(500)])],
+            bio: [{ value: null, disabled: this.readonly }, Validators.required],
             ranges: [{ value: [], disabled: this.readonly }],
         },
             { validator: formValidator });
@@ -152,6 +153,7 @@ export class DejaReactiveFormDemoComponent implements AfterContentInit, OnInit, 
                     skills: user.skills || [],
                     skillsErrors: null,
                     remark: user.remark || null,
+                    bio: user.bio || null,
                     ranges: user.ranges || [],
                 });
             });

@@ -10,10 +10,8 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatInputModule, MatTabsModule } from '@angular/material';
-import { MatCardModule } from '@angular/material/card';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { DejaChipsModule, DejaCircularPickerModule, DejaColorPickerModule, DejaColorSelectorModule, DejaDatePickerModule, DejaEditableModule, DejaMonacoEditorModule, DejaRangeModule, DejaSelectModule, DejaTagModule, DejaTreeListModule } from '@deja-js/component';
+import { MatButtonModule, MatCardModule, MatInputModule, MatTabsModule , MatToolbarModule} from '@angular/material';
+import { DejaChipsModule, DejaCircularPickerModule, DejaColorPickerModule, DejaColorSelectorModule, DejaDatePickerModule, DejaEditableModule, DejaEditorModule, DejaMonacoEditorModule, DejaRangeModule, DejaSelectModule, DejaTagModule, DejaTreeListModule } from '@deja-js/component';
 import { StoreModule } from '@ngrx/store';
 import { DejaMarkdownModule } from '../../component/markdown/index';
 import { userReducer } from './model/user.reducer';
@@ -33,6 +31,7 @@ import { UserService } from './service/user.service';
         MatCardModule,
         MatTabsModule,
         MatToolbarModule,
+        MatButtonModule,
         DejaMarkdownModule,
         DejaSelectModule,
         DejaDatePickerModule,
@@ -44,6 +43,7 @@ import { UserService } from './service/user.service';
         DejaChipsModule,
         DejaTagModule,
         DejaEditableModule,
+        DejaEditorModule,
         DejaMonacoEditorModule,
         routing,
         StoreModule.forRoot({}),
