@@ -7,7 +7,7 @@
  */
 
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { MatButtonModule, MatIconModule, MatSidenavModule, MatToolbarModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MediaModule } from '../../common/core/media/index';
@@ -17,6 +17,7 @@ import { DejaSidenavHeaderDirective } from './sidenav-header.directive';
 import { DejaSidenavMenuDirective } from './sidenav-menu.directive';
 import { DejaSidenavMenuSeparatorDirective } from './sidenav-separator.directive';
 import { DejaSidenavComponent } from './sidenav.component';
+import { DejaSidenavService } from './sidenav.service';
 
 @NgModule({
     declarations: [
@@ -34,7 +35,6 @@ import { DejaSidenavComponent } from './sidenav.component';
         DejaSidenavHeaderDirective,
     ],
     imports: [
-        BrowserAnimationsModule,
         CommonModule,
         MatSidenavModule,
         MatToolbarModule,
@@ -43,10 +43,14 @@ import { DejaSidenavComponent } from './sidenav.component';
         MediaModule,
         DejaSlimScrollModule,
     ],
-    providers: [],
 })
 export class DejaSidenavModule {
-
+    public static forRoot(): ModuleWithProviders {
+        return {
+            ngModule: DejaSidenavModule,
+            providers: [DejaSidenavService]
+        };
+    }
 }
 
 export * from './sidenav.component';
@@ -54,3 +58,4 @@ export * from './sidenav-menu.directive';
 export * from './sidenav-content.directive';
 export * from './sidenav-separator.directive';
 export * from './sidenav-header.directive';
+export * from './sidenav.service';

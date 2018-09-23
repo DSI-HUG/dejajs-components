@@ -29,6 +29,7 @@ const routes: Routes = [
     { path: 'range', loadChildren: './range/range-demo.module#DejaRangeDemoModule', data: { title: 'Range' } },
     { path: 'reactive-form', loadChildren: './reactive-form/reactive-form-demo.module#DejaReactiveFormDemoModule', data: { title: 'Reactive Form' } },
     { path: 'select', loadChildren: './select/select-demo.module#SelectDemoModule', data: { title: 'Select' } },
+    { path: 'sidenav', loadChildren: './sidenav/sidenav-demo.module#DejaSidenavDemoModule', data: { title: 'Sidenav' } },
     { path: 'snackbar', loadChildren: './snackbar/snackbar-demo.module#DejaSnackbarDemoModule', data: { title: 'Snackbar' } },
     { path: 'splitter', loadChildren: './splitter/splitter-demo.module#DejaSplitterDemoModule', data: { title: 'Splitter' } },
     { path: 'tag', loadChildren: './tag/tag-demo.module#DejaTagDemoModule', data: { title: 'Tag' } },

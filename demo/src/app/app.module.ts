@@ -36,7 +36,7 @@ import { PeopleService } from './services/people.service';
         MatListModule,
         MatMenuModule,
         DejaMaterialColorsModule,
-        DejaSidenavModule,
+        DejaSidenavModule.forRoot(),
         DejaSlimScrollModule,
         DejaClipboardModule.forRoot(),
         IconModule,
