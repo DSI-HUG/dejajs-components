@@ -647,7 +647,7 @@ describe('DejaSelectByOptionsContainerComponent', () => {
         });
     });
 
-    fit('should navigate with the keyboard', (done) => {
+    it('should navigate with the keyboard', (done) => {
         let pass = 0;
         const fixture = TestBed.createComponent(DejaSelectByOptionsContainerComponent);
         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
