@@ -30,8 +30,6 @@
 * **DejaDatePickerComponent:** date-picker must be used inside a mat form field container.
 * **DejaSelect:** you need to wrap deja-select inside mat-form-field tag.
 * **DejaNumericStepperComponent:** you need to wrap deja-numeric-stepper inside mat-form-field tag
-* **DejaNumericStepperComponent:** you need to wrap deja-numeric-stepper inside mat-form-field tag
-* **DejaNumericStepperComponent:** you need to wrap deja-numeric-stepper inside mat-form-field tag
 
 
 
