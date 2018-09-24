@@ -1,3 +1,40 @@
+<a name="4.0.0-beta.0"></a>
+# [4.0.0-beta.0](https://github.com/DSI-HUG/dejajs-components/compare/v3.6.0...v4.0.0-beta.0) (2018-09-24)
+
+
+### Bug Fixes
+
+* **DejaSelect:** Fix dropdown position when in some condition can override the input ([55a7440](https://github.com/DSI-HUG/dejajs-components/commit/55a7440))
+* **DejaSidenav:** Add BrowserAnimationsModule for test ([017fb9e](https://github.com/DSI-HUG/dejajs-components/commit/017fb9e))
+* **DejaSidenav:** Add forRoot for test module injection ([fe830a3](https://github.com/DSI-HUG/dejajs-components/commit/fe830a3))
+* **Gulp:** Fix push on release script ([9d2121e](https://github.com/DSI-HUG/dejajs-components/commit/9d2121e))
+* **SlimScroll:** Fix permanent rebind from DejaSlimScrollDirective ([87f763f](https://github.com/DSI-HUG/dejajs-components/commit/87f763f))
+
+
+### Code Refactoring
+
+* **DejaDatePickerComponent:** cdk form-field compatibility ([91262a5](https://github.com/DSI-HUG/dejajs-components/commit/91262a5))
+* **DejaNumericStepperComponent:** cdk form-field compatibility ([d5e8738](https://github.com/DSI-HUG/dejajs-components/commit/d5e8738))
+* **DejaNumericStepperComponent:** cdk form-field compatibility ([d2cb607](https://github.com/DSI-HUG/dejajs-components/commit/d2cb607))
+* **DejaNumericStepperComponent:** cdk form-field compatibility ([a15bb2b](https://github.com/DSI-HUG/dejajs-components/commit/a15bb2b))
+* **DejaSelect:** cdk form-field compatibility ([2d0014e](https://github.com/DSI-HUG/dejajs-components/commit/2d0014e))
+
+
+### Features
+
+* **DejaSidenav:** Possibility to control sidenav from outside component ([0ec86c1](https://github.com/DSI-HUG/dejajs-components/commit/0ec86c1))
+
+
+### BREAKING CHANGES
+
+* **DejaDatePickerComponent:** date-picker must be used inside a mat form field container.
+* **DejaSelect:** you need to wrap deja-select inside mat-form-field tag.
+* **DejaNumericStepperComponent:** you need to wrap deja-numeric-stepper inside mat-form-field tag
+* **DejaNumericStepperComponent:** you need to wrap deja-numeric-stepper inside mat-form-field tag
+* **DejaNumericStepperComponent:** you need to wrap deja-numeric-stepper inside mat-form-field tag
+
+
+
 <a name="3.6.0"></a>
 # [3.6.0](https://github.com/DSI-HUG/dejajs-components/compare/v3.5.3...v3.6.0) (2018-09-24)
 
