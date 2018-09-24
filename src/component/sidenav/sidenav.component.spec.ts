@@ -21,7 +21,7 @@ describe('DejaSidenavComponent', () => {
         TestBed.configureTestingModule({
             imports: [
                 RouterTestingModule,
-                DejaSidenavModule
+                DejaSidenavModule.forRoot(),
             ],
             schemas: [NO_ERRORS_SCHEMA],
         }).compileComponents();
