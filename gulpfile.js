@@ -678,6 +678,8 @@ gulp.task('create-new-tag', (cb) => {
 
 gulp.task('release', gulp.series('bump-version', 'changelog', 'commit-changes', 'create-new-tag', 'push-changes'));
 
+gulp.task('beta', gulp.series('changelog', 'commit-changes', 'create-new-tag'));
+
 /////////////////////////////////////////////////////////////////////////////
 // Utility Tasks
 /////////////////////////////////////////////////////////////////////////////

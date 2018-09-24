@@ -35,6 +35,7 @@
         "release:major": "gulp release --version=major",
         "release:minor": "gulp release --version=minor",
         "release:patch": "gulp release --version=patch",
+        "release:beta": "gulp beta",
         "postinstall": "gulp link && gulp install:demo"
     },
     "dependencies": {
