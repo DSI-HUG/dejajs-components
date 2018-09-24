@@ -1,31 +1,27 @@
 deja-date-picker {
-	#date-selector {
-		.mat-form-field-wrapper {
-			#action-icon-container {
-				position: absolute;
-				right: 0;
-				top: 50%;
-				transform: translateY(-68%);
-            }
-            #current-date-button mat-icon,
-			#calendar-button mat-icon,
-			#clear-button mat-icon {
-				font-size: 100%;
-				opacity: 0.4;
-			}
+	position: relative;
+	.datepicker-actions {
+		position: absolute;
+		right: 0;
+		top: 50%;
+		transform: translateY(-50%);
+		z-index: 2;
+		button {
+			background: none;
+			border: none;
+			margin-left: 0.2rem;
+			padding: 0;
+			outline: none;
 		}
-	}
-	&.ng-invalid {
-		.mat-form-field-wrapper {
-			.mat-form-field-underline {
-				.mat-form-field-ripple {
-					opacity: 1;
-					transform: scaleY(1);
-				}
+		mat-icon {
+			cursor: pointer;
+			font-size: 100%;
+			height: auto;
+			opacity: 0.4;
+			width: auto;
+			&:hover {
+				opacity: 0.8;
 			}
-		}
-		mat-hint {
-			bottom: -0.8em;
 		}
 	}
 }

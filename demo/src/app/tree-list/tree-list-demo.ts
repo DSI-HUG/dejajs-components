@@ -7,22 +7,17 @@
  */
 
 import { ChangeDetectorRef, Component, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
+import { IDejaDragEvent } from '@deja-js/component';
 import { IViewPortItem } from '@deja-js/component';
 import { DejaTreeListComponent } from '@deja-js/component';
 import { IDejaMouseDroppableContext } from '@deja-js/component';
 import { IDejaMouseDraggableContext } from '@deja-js/component';
 import { IDropCursorInfos } from '@deja-js/component';
-import { IDejaDragEvent } from '@deja-js/component';
+import { IItemBase } from '@deja-js/component';
 import { IItemTree } from '@deja-js/component';
 import { GroupingService } from '@deja-js/component';
-import { IItemBase } from '@deja-js/component';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/first';
-import 'rxjs/add/operator/map';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import { Subscription } from 'rxjs/Subscription';
+import { from as observableFrom, Observable, of as observableOf, Subject, Subscription } from 'rxjs';
+import { delay, first, map, reduce, switchMap, tap } from 'rxjs/operators';
 import { News } from '../common/news.model';
 import { CountriesListService } from '../services/countries-list.service';
 import { CountriesService, Country } from '../services/countries.service';
@@ -119,20 +114,17 @@ export class DejaTreeListDemoComponent implements OnDestroy {
 
         this.folders = this.folderService.getFolders();
 
-        this.deepCountries = this.countriesService.getCountries$()
-            .switchMap((countries) => countries)
-            .map((country) => ({
+        this.deepCountries = this.countriesService.getCountries$().pipe(
+            switchMap((countries) => countries),
+            map((country) => ({
                 l1: {
                     l2: {
                         name: country.naqme,
                         value: country.code,
                     }
                 }
-            }))
-            .reduce((acc: any[], cur) => {
-                acc.push(cur);
-                return acc;
-            }, []);
+            })),
+            reduce((acc: any[], cur: any) => [...acc, cur], []));
 
         this.fructs = [
             'Apricots',
@@ -160,9 +152,9 @@ export class DejaTreeListDemoComponent implements OnDestroy {
             selected: index === 1,
         } as IItemBase));
 
-        this.subscriptions.push(this.countries
-            .do((value) => this.countriesForMultiselect = value)
-            .delay(1)
+        this.subscriptions.push(this.countries.pipe(
+            tap((value) => this.countriesForMultiselect = value),
+            delay(1))
             .subscribe(() => {
                 this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","displayName":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","displayName":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","displayName":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","displayName":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","displayName":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","displayName":"Dominica","depth":0,"odd":false,"selected":true}]');
             }));
@@ -170,7 +162,7 @@ export class DejaTreeListDemoComponent implements OnDestroy {
         this.subscriptions.push(this.countries.subscribe((value: Country[]) => {
             const result = [] as ICountryGroup[];
             const onDemandResult = [] as ICountryGroup[];
-            const map = {} as { [groupName: string]: ISelectCountry[] };
+            const countryMap = {} as { [groupName: string]: ISelectCountry[] };
 
             result.push({
                 collapsible: true,
@@ -183,12 +175,12 @@ export class DejaTreeListDemoComponent implements OnDestroy {
 
             value.map((country) => {
                 const groupName = `Group ${country.naqme[0]}`;
-                if (!map[groupName]) {
-                    map[groupName] = [] as ICountryGroup[];
+                if (!countryMap[groupName]) {
+                    countryMap[groupName] = [] as ICountryGroup[];
                     result.push({
                         collapsible: true,
                         groupName: groupName,
-                        items: map[groupName],
+                        items: countryMap[groupName],
                         displayName: groupName,
                         selectable: false,
                     } as ICountryGroup);
@@ -207,7 +199,7 @@ export class DejaTreeListDemoComponent implements OnDestroy {
                     } as ICountryGroup);
                 }
 
-                map[groupName].push({ model: country });
+                countryMap[groupName].push({ model: country });
             });
 
             this.groupedCountries = result;
@@ -221,14 +213,14 @@ export class DejaTreeListDemoComponent implements OnDestroy {
 
     protected loadingItems() {
         const self = this;
-        return (_query: string | RegExp, _selectedItems: IItemBase[]) => self.countriesService.getCountries$().delay(3000);
+        return (_query: string | RegExp, _selectedItems: IItemBase[]) => self.countriesService.getCountries$().pipe(delay(3000));
     }
 
     protected collapsingItems() {
         const self = this;
         return (item: IItemBase) => {
             const country = item as ICountryGroup;
-            return country.loaded ? Observable.of(item) : self.confirmDialog()(item);
+            return country.loaded ? observableOf(item) : self.confirmDialog()(item);
         };
     }
 
@@ -237,17 +229,17 @@ export class DejaTreeListDemoComponent implements OnDestroy {
         return (item: IItemBase) => {
             const group = item as ICountryGroup;
             if (group.loaded) {
-                return Observable.of(item);
+                return observableOf(item);
             } else {
-                return self.confirmDialog()(item)
-                    .switchMap((itm) => {
+                return self.confirmDialog()(item).pipe(
+                    switchMap((itm) => {
                         if (!itm) {
-                            return Observable.of(null);
+                            return observableOf(null);
                         }
 
-                        Observable.of(group)
-                            .delay(2000)
-                            .first()
+                        observableOf(group).pipe(
+                            delay(2000),
+                            first())
                             .subscribe((grp) => {
                                 // Simulate asynchronous load
                                 const original = this.groupedCountries.find((c) => c.displayName === grp.displayName);
@@ -256,8 +248,8 @@ export class DejaTreeListDemoComponent implements OnDestroy {
                                 this.onExpandList.refresh();
                             });
 
-                        return Observable.of(itm);
-                    });
+                        return observableOf(itm);
+                    }));
             }
         };
     }
@@ -266,12 +258,12 @@ export class DejaTreeListDemoComponent implements OnDestroy {
         const self = this;
         return (item: IItemBase) => {
             self.dialogVisible = true;
-            return Observable.from(this.dialogResponse$)
-                .first()
-                .map((response) => {
+            return observableFrom(this.dialogResponse$).pipe(
+                first(),
+                map((response) => {
                     self.dialogVisible = false;
                     return response === 'ok' ? item : null;
-                });
+                }));
         };
     }
 

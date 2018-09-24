@@ -7,12 +7,8 @@
  */
 
 import { Directive, ElementRef, EventEmitter, Input, Output } from '@angular/core';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/delay';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/takeUntil';
-import { Observable } from 'rxjs/Observable';
+import { fromEvent as observableFromEvent, of as observableOf } from 'rxjs';
+import { delay, switchMap, takeUntil } from 'rxjs/operators';
 import { DejaConnectionPositionPair } from '../../common/core/overlay/connection-position-pair';
 import { DejaTooltipService } from './tooltip.service';
 
@@ -31,10 +27,10 @@ export class DejaTooltipDirective {
     constructor(elementRef: ElementRef, tooltipService: DejaTooltipService) {
         const element = elementRef.nativeElement as HTMLElement;
 
-        const leave$ = Observable.fromEvent(element, 'mouseleave');
+        const leave$ = observableFromEvent(element, 'mouseleave');
 
-        Observable.fromEvent(element, 'mouseenter')
-            .switchMap((e) => Observable.of(e).delay(this.delay).takeUntil(leave$))
+        observableFromEvent(element, 'mouseenter').pipe(
+            switchMap((e) => observableOf(e).pipe(delay(this.delay), takeUntil(leave$))))
             .subscribe(() => {
                 tooltipService.params[this.name] = {
                     model: this.model,

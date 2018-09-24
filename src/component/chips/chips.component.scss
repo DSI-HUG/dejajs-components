@@ -2,23 +2,33 @@
 	margin: 0;
 	padding: 0;
 	overflow: hidden;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+
 	&[disabled] {
-		>span {
+		>span.chips-item {
 			>span {
 				font-style: italic;
 			}
 		}
 	}
-	>span {
-		float: left;
+
+	>span.insert-item {
+		flex: 1 1 auto;
+	}
+
+	>span.chips-item {
 		margin: 0.1rem;
+        padding: 0.38rem;
+		flex: 0 0 auto;
 		border-radius: 0.88rem;
 		display: flex;
 		align-items: center;
 		text-decoration: none;
 		transition: 0.3s;
-		padding: 0.38rem;
 		cursor: default;
+
 		#close-button {
 			font-size: 1rem;
 			z-index: 3;

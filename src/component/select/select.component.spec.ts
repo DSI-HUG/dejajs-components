@@ -5,7 +5,6 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DebugElement } from '@angular/core/src/debug/debug_node';
@@ -13,15 +12,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/observable/timer';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/delay';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/first';
-import { Observable } from 'rxjs/Observable';
+import { from as observableFrom, Observable, of as observableOf, timer as observableTimer } from 'rxjs';
+import { debounceTime, delay, filter, first, tap } from 'rxjs/operators';
 import { GroupingService } from '../../common/core/grouping/grouping.service';
 import { DejaItemModule } from '../../common/core/item-list/index';
 import { IItemBase } from '../../common/core/item-list/item-base';
@@ -32,7 +24,6 @@ import { DejaConnectionPositionPair } from '../../common/core/overlay/connection
 import { ISortInfos } from '../../common/core/sorting/sort-infos.model';
 import { SortingService } from '../../common/core/sorting/sorting.service';
 import { DejaSelectModule } from './index';
-import { DejaSelectSelectionPosition } from './select.component';
 import { DejaSelectComponent } from './select.component';
 
 @Component({
@@ -60,8 +51,8 @@ class DejaSelectContainerComponent {
             } as IItemTree;
         });
 
-        groupingService.group$(itemList, [{ groupByField: 'size' }])
-            .first()
+        groupingService.group$(itemList, [{ groupByField: 'size' }]).pipe(
+            first())
             .subscribe((groupedResult) => {
                 this.itemList = groupedResult;
             });
@@ -159,11 +150,11 @@ describe('DejaSelectComponent', () => {
         const viewPortService = selectDebugElement.injector.get(ViewPortService) as ViewPortService;
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
 
-        Observable.from(selectInstance.dropDownVisibleChange)
+        observableFrom(selectInstance.dropDownVisibleChange)
             .subscribe(() => fixture.detectChanges());
 
-        return Observable.from(viewPortService.viewPortResult$)
-            .filter((result) => result.viewPortSize > 0);
+        return observableFrom(viewPortService.viewPortResult$).pipe(
+            filter((result) => result.viewPortSize > 0));
     };
 
     it('should create the component', () => {
@@ -234,10 +225,6 @@ describe('DejaSelectComponent', () => {
         selectInstance.delaySearchTrigger = 500;
         expect(sl.delaySearchTrigger$.getValue()).toBe(500);
 
-        expect(selectInstance.selectedItemsPosition).toEqual(DejaSelectSelectionPosition.below);
-        selectInstance.selectedItemsPosition = DejaSelectSelectionPosition.above;
-        expect(selectInstance.selectedItemsPosition).toEqual(DejaSelectSelectionPosition.above);
-
         const myItemListService = new ItemListService();
         expect(selectInstance.itemListService).toBeDefined();
         selectInstance.itemListService = myItemListService;
@@ -254,24 +241,24 @@ describe('DejaSelectComponent', () => {
         expect(myItemListService.getGroupingService()).toBe(groupingService);
 
         const listService = myItemListService as any;
-        const loadingItems = () => Observable.of([]);
+        const loadingItems = () => observableOf([]);
         selectInstance.loadingItems = loadingItems;
         expect(listService.loadingItems$).toBe(loadingItems);
-        const selectingItem = () => Observable.of([]);
+        const selectingItem = () => observableOf([]);
         selectInstance.selectingItem = selectingItem;
         expect(listService.selectingItem$).toBe(selectingItem);
-        const unselectingItem = () => Observable.of([]);
+        const unselectingItem = () => observableOf([]);
         selectInstance.unselectingItem = unselectingItem;
         expect(listService.unselectingItem$).toBe(unselectingItem);
-        const expandingItem = () => Observable.of([]);
+        const expandingItem = () => observableOf([]);
         selectInstance.expandingItem = expandingItem;
         expect(listService.expandingItem$).toBe(expandingItem);
-        const collapsingItem = () => Observable.of([]);
+        const collapsingItem = () => observableOf([]);
         selectInstance.collapsingItem = collapsingItem;
         expect(listService.collapsingItem$).toBe(collapsingItem);
 
         expect(selectInstance.disabled).toBeNull();
-        selectInstance.disabled = 'true';
+        selectInstance.disabled = true;
         expect(selectInstance.disabled).toBeTruthy();
         selectInstance.setDisabledState(false);
         expect(selectInstance.disabled).toBeFalsy();
@@ -289,49 +276,54 @@ describe('DejaSelectComponent', () => {
         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
         const viewPortService = selectDebugElement.injector.get(ViewPortService) as ViewPortService;
-        const sl = selectInstance as any;
-
-        Observable.from(selectInstance.dropDownVisibleChange)
-            .do((state) => {
-                fixture.detectChanges();
-                switch (++pass) {
-                    case 1:
-                        expect(state).toBeTruthy();
-                        break;
-                    case 2:
-                        expect(state).toBeFalsy();
-                        break;
-                    case 3:
-                        expect(state).toBeTruthy();
-                        break;
-                    default:
-                        expect(state).toBeFalsy();
-                }
-            })
-            .delay(100)
-            .subscribe(() => {
-                switch (pass) {
-                    case 2:
-                    case 3:
-                        sl.toggleDropDown();
-                        break;
-                }
-            });
-
-        Observable.from(viewPortService.viewPortResult$)
-            .debounceTime(100)
-            .first()
-            .subscribe((vp) => {
-                // Bind view port
-                fixture.detectChanges();
-                expect(vp.items.length).toBeGreaterThan(0);
-                expect(vp.visibleItems.length).toBeGreaterThan(0);
-                done();
-            });
-
-        sl.showDropDown();
+        const sl = selectInstance as DejaSelectComponent;
 
         fixture.detectChanges();
+
+        observableFrom(fixture.whenStable())
+            .subscribe(() => {
+                observableFrom(selectInstance.dropDownVisibleChange).pipe(
+                    tap((state) => {
+                        fixture.detectChanges();
+                        switch (++pass) {
+                            case 1:
+                                expect(state).toBeTruthy();
+                                break;
+                            case 2:
+                                expect(state).toBeFalsy();
+                                break;
+                            case 3:
+                                expect(state).toBeTruthy();
+                                break;
+                            default:
+                                expect(state).toBeFalsy();
+                        }
+                    }),
+                    delay(100))
+                    .subscribe(() => {
+                        switch (pass) {
+                            case 2:
+                            case 3:
+                                sl.toggleDropDown();
+                                break;
+                        }
+                    });
+
+                observableFrom(viewPortService.viewPortResult$).pipe(
+                    debounceTime(100),
+                    first())
+                    .subscribe((vp) => {
+                        // Bind view port
+                        fixture.detectChanges();
+                        expect(vp.items.length).toBeGreaterThan(0);
+                        expect(vp.visibleItems.length).toBeGreaterThan(0);
+                        done();
+                    });
+
+                sl.showDropDown();
+
+                fixture.detectChanges();
+            });
     });
 
     it('should toggle and collapse parent items', (done) => {
@@ -341,66 +333,71 @@ describe('DejaSelectComponent', () => {
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
         const sl = selectInstance as any;
 
-        observeViewPort$(fixture)
-            .debounceTime(20)
-            .subscribe((vp) => {
-                // Bind view port
-                fixture.detectChanges();
-                const collapsed = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem.parent.collapsed'));
-                const collapsedItems = vp.items.filter((item: IItemTree) => item.collapsed);
-                const parentItems = vp.items.filter((item: IItemTree) => item.depth === 0);
-
-                switch (++pass) {
-                    case 1:
-                        expect(collapsed.length).toBe(0);
-                        expect(collapsedItems.length).toBe(0);
-                        // Toggle all items
-                        selectInstance.toggleAll();
-                        selectInstance.refreshViewPort();
-                        fixture.detectChanges();
-                        break;
-
-                    case 2:
-                        // Check collapsed items
-                        expect(collapsed.length).toBeGreaterThan(0);
-                        expect(collapsedItems.length).toBe(parentItems.length);
-                        // Toggle all items
-                        selectInstance.toggleAll();
-                        selectInstance.refreshViewPort();
-                        fixture.detectChanges();
-                        break;
-
-                    case 3:
-                        // Check collapsed items
-                        expect(collapsed.length).toBe(0);
-                        expect(collapsedItems.length).toBe(0);
-                        // Toogle only first
-                        selectInstance.toggleCollapse(0, true);
-                        selectInstance.refreshViewPort();
-                        fixture.detectChanges();
-                        break;
-
-                    case 4:
-                        // Check collapsed items
-                        expect(collapsed.length).toBe(1);
-                        expect(collapsedItems.length).toBe(1);
-                        // Clear toogle
-                        selectInstance.toggleAll(false);
-                        selectInstance.refreshViewPort();
-                        fixture.detectChanges();
-                        break;
-
-                    default:
-                        // Check no collapsed
-                        expect(collapsed.length).toBe(0);
-                        expect(collapsedItems.length).toBe(0);
-                        done();
-                }
-            });
-
-        sl.showDropDown();
-
         fixture.detectChanges();
+
+        observableFrom(fixture.whenStable())
+            .subscribe(() => {
+                observeViewPort$(fixture).pipe(
+                    debounceTime(20))
+                    .subscribe((vp) => {
+                        // Bind view port
+                        fixture.detectChanges();
+                        const collapsed = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem.parent.collapsed'));
+                        const collapsedItems = vp.items.filter((item: IItemTree) => item.collapsed);
+                        const parentItems = vp.items.filter((item: IItemTree) => item.depth === 0);
+
+                        switch (++pass) {
+                            case 1:
+                                expect(collapsed.length).toBe(0);
+                                expect(collapsedItems.length).toBe(0);
+                                // Toggle all items
+                                selectInstance.toggleAll();
+                                selectInstance.refreshViewPort();
+                                fixture.detectChanges();
+                                break;
+
+                            case 2:
+                                // Check collapsed items
+                                expect(collapsed.length).toBeGreaterThan(0);
+                                expect(collapsedItems.length).toBe(parentItems.length);
+                                // Toggle all items
+                                selectInstance.toggleAll();
+                                selectInstance.refreshViewPort();
+                                fixture.detectChanges();
+                                break;
+
+                            case 3:
+                                // Check collapsed items
+                                expect(collapsed.length).toBe(0);
+                                expect(collapsedItems.length).toBe(0);
+                                // Toogle only first
+                                selectInstance.toggleCollapse(0, true);
+                                selectInstance.refreshViewPort();
+                                fixture.detectChanges();
+                                break;
+
+                            case 4:
+                                // Check collapsed items
+                                expect(collapsed.length).toBe(1);
+                                expect(collapsedItems.length).toBe(1);
+                                // Clear toogle
+                                selectInstance.toggleAll(false);
+                                selectInstance.refreshViewPort();
+                                fixture.detectChanges();
+                                break;
+
+                            default:
+                                // Check no collapsed
+                                expect(collapsed.length).toBe(0);
+                                expect(collapsedItems.length).toBe(0);
+                                done();
+                        }
+                    });
+
+                sl.showDropDown();
+
+                fixture.detectChanges();
+            });
     });
 
     it('should not load items if minSearchlength is defined', (done) => {
@@ -411,46 +408,51 @@ describe('DejaSelectComponent', () => {
         const viewPortService = selectDebugElement.injector.get(ViewPortService) as ViewPortService;
         const sl = selectInstance as any;
 
-        Observable.from(selectInstance.dropDownVisibleChange)
-            .subscribe(() => fixture.detectChanges());
-
-        Observable.from(viewPortService.viewPortResult$)
-            .debounceTime(10)
-            .subscribe((vp) => {
-                // Bind view port
-                fixture.detectChanges();
-                const listItems = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem'));
-                const items = vp.items;
-
-                switch (++pass) {
-                    case 1:
-                        expect(listItems.length).toBe(0);
-                        sl.queryChanged('33');
-                        sl.filterListComplete$.next();
-                        selectInstance.refreshViewPort();
-                        fixture.detectChanges();
-                        break;
-
-                    case 2:
-                        expect(listItems.length).toBeGreaterThan(0);
-                        sl.queryChanged('44');
-                        sl.filterListComplete$.next();
-                        selectInstance.refreshViewPort();
-                        fixture.detectChanges();
-                        break;
-
-                    default:
-                        expect(listItems.length).toBeGreaterThan(0);
-                        expect(items.length).toBeGreaterThan(0);
-                        done();
-                }
-            });
-
-        selectInstance.minSearchlength = 2;
-        selectInstance.type = 'autocomplete';
-        sl.showDropDown();
-
         fixture.detectChanges();
+
+        observableFrom(fixture.whenStable())
+            .subscribe(() => {
+                observableFrom(selectInstance.dropDownVisibleChange)
+                    .subscribe(() => fixture.detectChanges());
+
+                observableFrom(viewPortService.viewPortResult$).pipe(
+                    debounceTime(10))
+                    .subscribe((vp) => {
+                        // Bind view port
+                        fixture.detectChanges();
+                        const listItems = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem'));
+                        const items = vp.items;
+
+                        switch (++pass) {
+                            case 1:
+                                expect(listItems.length).toBe(0);
+                                sl.queryChanged('33');
+                                sl.filterListComplete$.next();
+                                selectInstance.refreshViewPort();
+                                fixture.detectChanges();
+                                break;
+
+                            case 2:
+                                expect(listItems.length).toBeGreaterThan(0);
+                                sl.queryChanged('44');
+                                sl.filterListComplete$.next();
+                                selectInstance.refreshViewPort();
+                                fixture.detectChanges();
+                                break;
+
+                            default:
+                                expect(listItems.length).toBeGreaterThan(0);
+                                expect(items.length).toBeGreaterThan(0);
+                                done();
+                        }
+                    });
+
+                selectInstance.minSearchlength = 2;
+                selectInstance.type = 'autocomplete';
+                sl.showDropDown();
+
+                fixture.detectChanges();
+            });
     });
 });
 
@@ -485,19 +487,19 @@ describe('DejaSelectByModelContainerComponent', () => {
         fixture.whenStable().then(() => {
             fixture.detectChanges();
 
-            let selectedChips = fixture.debugElement.queryAll(By.css('deja-select > deja-chips > span > #close-button'));
-            expect(selectedChips.length).toBe(3);
+            let selectedChips = fixture.debugElement.queryAll(By.css('deja-select > deja-chips > span.chips-item > #close-button'));
+            expect(selectedChips.length).toBe(3, '1');
 
             selectedChips.forEach((closeButton) => closeButton.nativeElement.click());
             fixture.detectChanges();
 
-            selectedChips = fixture.debugElement.queryAll(By.css('deja-select > deja-chips > span > #close-button'));
-            expect(selectedChips.length).toBe(0);
+            selectedChips = fixture.debugElement.queryAll(By.css('deja-select > deja-chips > span.chips-item > #close-button'));
+            expect(selectedChips.length).toBe(0, '2');
             done();
         });
     });
 
-    it('should unselect all the elements in multiselect', async(() => {
+    it('should unselect all the elements in multiselect', (done) => {
         const fixture = TestBed.createComponent(DejaSelectByModelContainerComponent);
         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
@@ -507,53 +509,52 @@ describe('DejaSelectByModelContainerComponent', () => {
 
         fixture.whenStable().then(() => {
             fixture.detectChanges();
+            expect(selectInstance.selectedItems.length).toBe(3, '1');
+            expect(selectInstance.selectedModels.length).toBe(3, '2');
 
-            let selectedChips = fixture.debugElement.queryAll(By.css('deja-select > deja-chips > span > #close-button'));
-            expect(selectedChips.length).toBe(3);
-            expect(selectInstance.selectedItems.length).toBe(3);
-            expect(selectInstance.selectedModels.length).toBe(3);
+            let selectedChips = fixture.debugElement.queryAll(By.css('deja-select > deja-chips > span.chips-item > #close-button'));
+            expect(selectedChips.length).toBe(3, '3');
 
             sl.removeSelection();
             fixture.detectChanges();
 
-            selectedChips = fixture.debugElement.queryAll(By.css('deja-select > deja-chips > span > #close-button'));
-            expect(selectedChips.length).toBe(0);
-            expect(selectInstance.selectedItems.length).toBe(0);
-            expect(selectInstance.selectedModels.length).toBe(0);
+            selectedChips = fixture.debugElement.queryAll(By.css('deja-select > deja-chips > span.chips-item > #close-button'));
+            expect(selectedChips.length).toBe(0, '4');
+            expect(selectInstance.selectedItems.length).toBe(0, '5');
+            expect(selectInstance.selectedModels.length).toBe(0, '6');
+            done();
         });
-    }));
+    });
 
-    it('should close the selection in single select', async(() => {
+    it('should close the selection in single select', (done) => {
         const fixture = TestBed.createComponent(DejaSelectByModelContainerComponent);
         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
 
-        fixture.detectChanges();
-
-        selectInstance.type = 'select';
-        fixture.detectChanges();
-
         fixture.whenStable().then(() => {
+            selectInstance.type = 'select';
             fixture.detectChanges();
 
-            expect(selectInstance.selectedItems.length).toBe(1);
-            expect(selectInstance.selectedModels.length).toBe(1);
-            expect(selectInstance.selectedModel && selectInstance.selectedModel.id).toBe(1);
+            expect(selectInstance.selectedItems.length).toBe(3, '1');
+            expect(selectInstance.selectedModels.length).toBe(3, '2');
 
-            const closeButton = fixture.debugElement.query(By.css('deja-select #clear-button'));
-            closeButton.nativeElement.click();
+            const clearButton = fixture.debugElement.query(By.css('deja-select #clear-button'));
+            clearButton.nativeElement.click();
             fixture.detectChanges();
 
-            expect(selectInstance.selectedItems.length).toBe(0);
-            expect(selectInstance.selectedModels.length).toBe(0);
+            expect(selectInstance.selectedItems.length).toBe(0, '3');
+            expect(selectInstance.selectedModels.length).toBe(0, '4');
 
             selectInstance.value = selectInstance.getItemListService().getItems()[2];
             fixture.detectChanges();
-            expect(selectInstance.selectedItems.length).toBe(1);
-            expect(selectInstance.selectedModels.length).toBe(1);
+            expect(selectInstance.selectedItems.length).toBe(1, '5');
+            expect(selectInstance.selectedModels.length).toBe(1, '6');
             expect(selectInstance.value).toBe(selectInstance.getItemListService().getItems()[2]);
+            done();
         });
-    }));
+
+        fixture.detectChanges();
+    });
 });
 
 describe('DejaSelectByOptionsContainerComponent', () => {
@@ -578,13 +579,13 @@ describe('DejaSelectByOptionsContainerComponent', () => {
 
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
 
-        Observable.from(selectInstance.dropDownVisibleChange)
+        observableFrom(selectInstance.dropDownVisibleChange)
             .subscribe(() => fixture.detectChanges());
 
-        return Observable.from(viewPortService.viewPortResult$)
-            .filter((result) => {
+        return observableFrom(viewPortService.viewPortResult$).pipe(
+            filter((result) => {
                 return result.viewPortSize > 0;
-            });
+            }));
     };
 
     it('should open and close the dropdown programatically', (done) => {
@@ -593,26 +594,29 @@ describe('DejaSelectByOptionsContainerComponent', () => {
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
         const viewPortService = selectDebugElement.injector.get(ViewPortService) as ViewPortService;
         const sl = selectInstance as any;
-        fixture.detectChanges();
-
-        Observable.from(selectInstance.dropDownVisibleChange)
-            .subscribe(() => fixture.detectChanges());
-
-        Observable.from(viewPortService.viewPortResult$)
-            .debounceTime(100)
-            .first()
-            .subscribe((vp) => {
-                // Bind view port
-                fixture.detectChanges();
-                expect(vp.items.length).toBeGreaterThan(0);
-                expect(vp.visibleItems.length).toBeGreaterThan(0);
-                done();
-            });
-
-        sl.isMobile = false;
-        sl.showDropDown();
 
         fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+            observableFrom(selectInstance.dropDownVisibleChange)
+                .subscribe(() => fixture.detectChanges());
+
+            observableFrom(viewPortService.viewPortResult$).pipe(
+                debounceTime(100),
+                first())
+                .subscribe((vp) => {
+                    // Bind view port
+                    fixture.detectChanges();
+                    expect(vp.items.length).toBeGreaterThan(0);
+                    expect(vp.visibleItems.length).toBeGreaterThan(0);
+                    done();
+                });
+
+            sl.isMobile = false;
+            sl.showDropDown();
+
+            fixture.detectChanges();
+        });
     });
 
     it('should create the component', (done) => {
@@ -620,24 +624,27 @@ describe('DejaSelectByOptionsContainerComponent', () => {
         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
         const sl = selectInstance as any;
-
-        observeOptionsViewPort$(fixture)
-            .debounceTime(100)
-            .first()
-            .subscribe(() => {
-                fixture.detectChanges();
-
-                const items = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem'));
-                expect(items.length).toBe(13);
-                done();
-            });
-
         fixture.detectChanges();
-        expect(selectInstance).toBeTruthy();
 
-        sl.showDropDown();
+        fixture.whenStable().then(() => {
+            observeOptionsViewPort$(fixture).pipe(
+                debounceTime(100),
+                first())
+                .subscribe(() => {
+                    fixture.detectChanges();
 
-        fixture.detectChanges();
+                    const items = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem'));
+                    expect(items.length).toBe(13);
+                    done();
+                });
+
+            fixture.detectChanges();
+            expect(selectInstance).toBeTruthy();
+
+            sl.showDropDown();
+
+            fixture.detectChanges();
+        });
     });
 
     it('should navigate with the keyboard', (done) => {
@@ -659,127 +666,130 @@ describe('DejaSelectByOptionsContainerComponent', () => {
             fixture.detectChanges();
         };
 
-        observeOptionsViewPort$(fixture)
-            .debounceTime(100)
-            .subscribe((vp) => {
-                fixture.detectChanges();
-                const selectedChips = fixture.debugElement.queryAll(By.css('deja-select > deja-chips > span'));
-                const selectedElements = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem.selected'));
-                const currentElement = fixture.debugElement.query(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem[current="true"]'));
-                const selectedItems = vp.items.filter((item: IItemBase) => item.selected);
-
-                switch (++pass) {
-                    case 1:
-                        // Check no selected
-                        expect(selectedElements.length).toBe(0);
-                        expect(selectedItems.length).toBe(0);
-                        expect(selectedChips.length).toBe(0);
-                        // Current on first line by keydown
-                        sendKeyDown('DownArrow');
-                        break;
-
-                    case 2:
-                        // Check selection
-                        expect(selectedElements.length).toBe(0);
-                        expect(selectedItems.length).toBe(0);
-                        expect(currentElement && currentElement.attributes.flat).toBe('0');
-                        expect(selectedChips.length).toBe(0);
-                        // Current on second line by keydown
-                        sendKeyDown('DownArrow');
-                        break;
-
-                    case 3:
-                        // Check selection
-                        expect(selectedElements.length).toBe(0);
-                        expect(selectedItems.length).toBe(0);
-                        expect(currentElement && currentElement.attributes.flat).toBe('1');
-                        expect(selectedChips.length).toBe(0);
-                        // Current on first line by keyup
-                        sendKeyDown('UpArrow');
-                        break;
-
-                    case 4:
-                        // Check selection
-                        expect(selectedElements.length).toBe(0);
-                        expect(selectedItems.length).toBe(0);
-                        expect(currentElement && currentElement.attributes.flat).toBe('0');
-                        expect(selectedChips.length).toBe(0);
-                        // Current on last line
-                        sendKeyDown('End');
-                        break;
-
-                    case 5:
-                        // Check selection
-                        expect(selectedElements.length).toBe(0);
-                        expect(selectedItems.length).toBe(0);
-                        expect(currentElement && currentElement.attributes.flat).toBe('12');
-                        expect(selectedChips.length).toBe(0);
-                        // Current on line 6 by pageUp
-                        sendKeyDown('PageUp');
-                        break;
-
-                    case 6:
-                        // Check selection
-                        expect(selectedElements.length).toBe(0);
-                        expect(selectedItems.length).toBe(0);
-                        expect(currentElement && currentElement.attributes.flat).toBe('7');
-                        expect(selectedChips.length).toBe(0);
-                        // Current on firstLine by Home
-                        sendKeyDown('Home');
-                        break;
-
-                    case 7:
-                        // Check selection
-                        expect(selectedElements.length).toBe(0);
-                        expect(selectedItems.length).toBe(0);
-                        expect(currentElement && currentElement.attributes.flat).toBe('0');
-                        expect(selectedChips.length).toBe(0);
-                        // Current on Line 5 by pageDown
-                        sendKeyDown('PageDown');
-                        break;
-
-                    case 8:
-                        // Check selection
-                        expect(selectedElements.length).toBe(0);
-                        expect(selectedItems.length).toBe(0);
-                        expect(currentElement && currentElement.attributes.flat).toBe('5');
-                        expect(selectedChips.length).toBe(0);
-
-                        // Select the lines with Enter
-                        sendKeyDown('Enter');
-
-                        Observable.from(selectInstance.dropDownVisibleChange)
-                            .first()
-                            .delay(10)
-                            .subscribe(() => {
-                                sl.htmlInputElement.click();
-                            });
-
-                        break;
-
-                    case 9:
-                        expect(selectedElements.length).toBeGreaterThan(0);
-                        expect(selectedItems.length).toBe(1);
-                        expect(currentElement && currentElement.attributes.flat).toBe('5');
-                        expect(selectedChips.length).toBe(1);
-
-                        // Select first line with enter in single select
-                        selectInstance.type = 'select';
-                        sendKeyDown('DownArrow');
-                        break;
-
-                    default:
-                        expect(selectedElements.length).toBeGreaterThan(0);
-                        expect(selectedItems.length).toBe(1);
-                        expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('6');
-                        expect(selectedChips.length).toBe(0);
-                        done();
-                }
-            });
-
-        sl.showDropDown();
-
         fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+            observeOptionsViewPort$(fixture).pipe(
+                debounceTime(100))
+                .subscribe((vp) => {
+                    fixture.detectChanges();
+                    const selectedChips = fixture.debugElement.queryAll(By.css('deja-select > deja-chips > span.chips-item'));
+                    const selectedElements = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem.selected'));
+                    const currentElement = fixture.debugElement.query(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem[current="true"]'));
+                    const selectedItems = vp.items.filter((item: IItemBase) => item.selected);
+
+                    switch (++pass) {
+                        case 1:
+                            // Check no selected
+                            expect(selectedElements.length).toBe(0, 'Check no selected 1-1');
+                            expect(selectedItems.length).toBe(0, 'Check no selected 1-2');
+                            expect(selectedChips.length).toBe(0, 'Check no selected 1-3');
+                            // Current on first line by keydown
+                            sendKeyDown('DownArrow');
+                            break;
+
+                        case 2:
+                            // Check selection
+                            expect(selectedElements.length).toBe(0, 'Check selection 2-1');
+                            expect(selectedItems.length).toBe(0, 'Check selection 2-2');
+                            expect(currentElement && currentElement.attributes.flat).toBe('0', 'Check selection 2-3');
+                            expect(selectedChips.length).toBe(0, 'Check selection 2-4');
+                            // Current on second line by keydown
+                            sendKeyDown('DownArrow');
+                            break;
+
+                        case 3:
+                            // Check selection
+                            expect(selectedElements.length).toBe(0, 'Check selection 3-1');
+                            expect(selectedItems.length).toBe(0, 'Check selection 3-2');
+                            expect(currentElement && currentElement.attributes.flat).toBe('1', 'Check selection 3-3');
+                            expect(selectedChips.length).toBe(0, 'Check selection 3-4');
+                            // Current on first line by keyup
+                            sendKeyDown('UpArrow');
+                            break;
+
+                        case 4:
+                            // Check selection
+                            expect(selectedElements.length).toBe(0, 'Check selection 4-1');
+                            expect(selectedItems.length).toBe(0, 'Check selection 4-2');
+                            expect(currentElement && currentElement.attributes.flat).toBe('0', 'Check selection 4-3');
+                            expect(selectedChips.length).toBe(0, 'Check selection 4-4');
+                            // Current on last line
+                            sendKeyDown('End');
+                            break;
+
+                        case 5:
+                            // Check selection
+                            expect(selectedElements.length).toBe(0, 'Check selection 5-1');
+                            expect(selectedItems.length).toBe(0, 'Check selection 5-2');
+                            expect(currentElement && currentElement.attributes.flat).toBe('12', 'Check selection 5-3');
+                            expect(selectedChips.length).toBe(0, 'Check selection 5-4');
+                            // Current on line 6 by pageUp
+                            sendKeyDown('PageUp');
+                            break;
+
+                        case 6:
+                            // Check selection
+                            expect(selectedElements.length).toBe(0, 'Check selection 6-1');
+                            expect(selectedItems.length).toBe(0, 'Check selection 6-2');
+                            expect(currentElement && currentElement.attributes.flat).toBe('7', 'Check selection 6-3');
+                            expect(selectedChips.length).toBe(0, 'Check selection 6-4');
+                            // Current on firstLine by Home
+                            sendKeyDown('Home');
+                            break;
+
+                        case 7:
+                            // Check selection
+                            expect(selectedElements.length).toBe(0, 'Check selection 7-1');
+                            expect(selectedItems.length).toBe(0, 'Check selection 7-2');
+                            expect(currentElement && currentElement.attributes.flat).toBe('0', 'Check selection 7-3');
+                            expect(selectedChips.length).toBe(0, 'Check selection 7-4');
+                            // Current on Line 5 by pageDown
+                            sendKeyDown('PageDown');
+                            break;
+
+                        case 8:
+                            // Check selection
+                            expect(selectedElements.length).toBe(0, 'Check selection 8-1');
+                            expect(selectedItems.length).toBe(0, 'Check selection 8-2');
+                            expect(currentElement && currentElement.attributes.flat).toBe('5', 'Check selection 8-3');
+                            expect(selectedChips.length).toBe(0, 'Check selection 8-4');
+
+                            // Select the lines with Enter
+                            sendKeyDown('Enter');
+
+                            observableFrom(selectInstance.dropDownVisibleChange).pipe(
+                                first(),
+                                delay(10))
+                                .subscribe(() => {
+                                    sl.htmlInputElement.click();
+                                });
+
+                            break;
+
+                        case 9:
+                            expect(selectedElements.length).toBeGreaterThan(0, 'Check selection 9-1');
+                            expect(selectedItems.length).toBe(1, 'Check selection 9-2');
+                            expect(currentElement && currentElement.attributes.flat).toBe('5', 'Check selection 9-3');
+                            expect(selectedChips.length).toBe(1, 'Check selection 9-4');
+
+                            // Select first line with enter in single select
+                            selectInstance.type = 'select';
+                            sendKeyDown('DownArrow');
+                            break;
+
+                        default:
+                            expect(selectedItems.length).toBe(1, 'Check selection 10-1');
+                            const selItem = selectedItems[0] as IItemBase;
+                            expect(selItem.model.value).toEqual('Cranberries', 'Check selection 10-2');
+                            done();
+                    }
+                });
+
+            sl.showDropDown();
+
+            fixture.detectChanges();
+        });
     });
 
     it('should select with the mouse', (done) => {
@@ -810,8 +820,8 @@ describe('DejaSelectByOptionsContainerComponent', () => {
             const event = new MouseEvent('mousedown', eventInit());
             element.nativeElement.dispatchEvent(event);
             fixture.detectChanges();
-            Observable.timer(100)
-                .first()
+            observableTimer(100).pipe(
+                first())
                 .subscribe(() => {
                     const upEvent = new MouseEvent('mouseup', eventInit());
                     (upElement || element).nativeElement.dispatchEvent(upEvent);
@@ -820,37 +830,41 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                 });
         };
 
-        observeOptionsViewPort$(fixture)
-            .debounceTime(10)
-            .first()
-            .subscribe((vp) => {
-                fixture.detectChanges();
-                const displayedElements = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem'));
-                const selectedElements = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem.selected'));
-                const selectedItems = vp.items.filter((item: IItemBase) => item.selected);
-
-                // Check selected and current
-                expect(selectedElements.length).toBe(0);
-                expect(selectedItems.length).toBe(0);
-                // Check flags
-                expect(selectInstance.isMultiSelect).toBe(true);
-                // Simulate click on first element on disabled
-                selectInstance.disabled = true;
-                fixture.detectChanges();
-
-                Observable.from(selectInstance.selectedChange)
-                    .first()
-                    .subscribe(() => {
-                        expect(selectInstance.selectedItems && selectInstance.selectedItems.length).toBe(1);
-                        done();
-                    });
-
-                sendMouseClick(displayedElements[1]);
-            });
-
-        sl.showDropDown();
-
         fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+            observeOptionsViewPort$(fixture).pipe(
+                debounceTime(10),
+                first())
+                .subscribe((vp) => {
+                    fixture.detectChanges();
+                    const displayedElements = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem'));
+                    const selectedElements = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem.selected'));
+                    const selectedItems = vp.items.filter((item: IItemBase) => item.selected);
+
+                    // Check selected and current
+                    expect(selectedElements.length).toBe(0);
+                    expect(selectedItems.length).toBe(0);
+                    // Check flags
+                    expect(selectInstance.isMultiSelect).toBe(true);
+                    // Simulate click on first element on disabled
+                    selectInstance.disabled = true;
+                    fixture.detectChanges();
+
+                    observableFrom(selectInstance.selectedChange).pipe(
+                        first())
+                        .subscribe(() => {
+                            expect(selectInstance.selectedItems && selectInstance.selectedItems.length).toBe(1);
+                            done();
+                        });
+
+                    sendMouseClick(displayedElements[1]);
+                });
+
+            sl.showDropDown();
+
+            fixture.detectChanges();
+        });
     });
 
     it('should select programatically', () => {

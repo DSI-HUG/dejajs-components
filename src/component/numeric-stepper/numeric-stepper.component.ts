@@ -6,9 +6,12 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, OnChanges, Optional, Output, Self, ViewChild } from '@angular/core';
-import { ControlValueAccessor, FormControl, NgControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Optional, Output, Self, ViewChild } from '@angular/core';
+import { ControlValueAccessor, FormControl, NgControl, ValidationErrors, Validator, ValidatorFn } from '@angular/forms';
+import { MatFormFieldControl } from '@angular/material';
+import { Subject } from 'rxjs';
 
 import { DejaTextMetricsService } from '../../common/core/text-metrics/text-metrics.service';
 import { DejaChildValidatorDirective } from '../../common/core/validation/child-validator.directive';
@@ -29,14 +32,25 @@ export const createCounterRangeValidator = (maxValue: number, minValue: number) 
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [{ provide: MatFormFieldControl, useExisting: DejaNumericStepperComponent }],
     selector: 'deja-numeric-stepper',
     styleUrls: ['numeric-stepper.component.scss'],
     templateUrl: 'numeric-stepper.component.html'
 })
-export class DejaNumericStepperComponent implements ControlValueAccessor, OnChanges {
-    public size = 0;
-    private _value: number;
+export class DejaNumericStepperComponent implements OnChanges, OnDestroy, ControlValueAccessor, MatFormFieldControl<number>, Validator {
+    public static nextId = 0;
+    @HostBinding() public id = `deja-numeric-stepper-${DejaNumericStepperComponent.nextId++}`;
+    @HostBinding('class.floating') public get shouldLabelFloat() {
+        return this.focused || !this.empty;
+    }
 
+    @HostBinding('attr.aria-describedby') public describedBy = '';
+
+    public controlType = 'deja-numeric-stepper';
+    public errorState = false;
+    public size = 0;
+    public stateChanges = new Subject<void>();
+    public focused = false;
     /** Max value of stepper */
     @Input() public max: number;
     /** Min value of stepper */
@@ -46,41 +60,60 @@ export class DejaNumericStepperComponent implements ControlValueAccessor, OnChan
     /** Unit of stepper */
     @Input() public unit: string;
 
-    /**
-     * Placeholder of the input
-     */
-    @Input() public placeholder: string;
-
-    /** Template for MatError inside mat-form-field-container */
-    @ContentChild('errorTemplate') public matError: any;
-
     @ViewChild(DejaChildValidatorDirective)
     public set inputValidatorDirective(value: DejaChildValidatorDirective) {
         if (value) {
-            value.parentControl = this._control;
+            value.parentControl = this.ngControl;
         }
     }
 
-    /** Allow to disabled the component */
-    @Input()
-    public set disabled(value: boolean | string) {
-        const disabled = coerceBooleanProperty(value);
-        this._disabled = disabled || null;
-        this.changeDetectorRef.markForCheck();
+    /**
+     * Placeholder of the input
+     */
+    @Input() public get placeholder() {
+        return this._placeholder;
     }
+    public set placeholder(plh) {
+        this._placeholder = plh;
+        this.stateChanges.next();
+    }
+    private _placeholder: string;
+
+    public get empty() {
+        return !this._value;
+    }
+
+    private _value: number;
+
+    /** Function for min / max validation */
+    public validateFn: ValidatorFn;
 
     /** Output to get the event when the value is modified (no validation)  */
     @Output()
     public textChange: EventEmitter<number> = new EventEmitter<number>();
 
-    /** Function for min / max validation */
-    public validateFn: ValidatorFn;
+    /** Allow to disabled the component */
+    @Input()
+    public set disabled(value) {
+        const disabled = coerceBooleanProperty(value);
+        this._disabled = disabled || null;
+        this.changeDetectorRef.markForCheck();
+    }
+
+    @Input() public get required() {
+        return this._required;
+    }
+    public set required(req) {
+        this._required = coerceBooleanProperty(req);
+        this.stateChanges.next();
+    }
+    private _required = false;
 
     /**
      * Get disable value
      */
     public get disabled() {
-        return this._control ? this._control.disabled : this._disabled;
+        return this.ngControl ? this.ngControl.disabled : this._disabled;
     }
     @HostBinding('attr.disabled') private _disabled: boolean = null;
 
@@ -93,24 +126,45 @@ export class DejaNumericStepperComponent implements ControlValueAccessor, OnChan
         public dejaTextMetricsService: DejaTextMetricsService,
         private elementRef: ElementRef,
         private changeDetectorRef: ChangeDetectorRef,
-        @Self() @Optional() public _control: NgControl,
+        @Self() @Optional() public ngControl: NgControl,
+        private fm: FocusMonitor,
     ) {
-        if (this._control) {
-            this._control.valueAccessor = this;
+        if (this.ngControl) {
+            this.ngControl.valueAccessor = this;
         }
+
+        this.fm.monitor(elementRef.nativeElement, true).subscribe((origin) => {
+            this.focused = !!origin;
+            this.stateChanges.next();
+        });
     }
 
     public ngOnChanges(changes: any) {
         if (changes.min || changes.max) {
             this.validateFn = createCounterRangeValidator(this.max, this.min);
-            if (this._control && this._control.control) {
-                this._control.control.setValidators(this.validateFn);
+            if (this.ngControl && this.ngControl.control) {
+                this.ngControl.control.setValidators(this.validateFn);
             }
         }
     }
 
     public validate(c: FormControl): ValidationErrors {
         return this.validateFn(c);
+    }
+
+    public ngOnDestroy() {
+        this.stateChanges.complete();
+        this.fm.stopMonitoring(this.elementRef.nativeElement);
+    }
+
+    public setDescribedByIds(ids: string[]) {
+        this.describedBy = ids.join(' ');
+    }
+
+    public onContainerClick(event: MouseEvent) {
+        if ((event.target as Element).tagName.toLowerCase() !== 'input') {
+            this.elementRef.nativeElement.querySelector('input').focus();
+        }
     }
 
     // ************* ControlValueAccessor Implementation **************
@@ -122,6 +176,7 @@ export class DejaNumericStepperComponent implements ControlValueAccessor, OnChan
         this.writeValue(val);
         this.onChangeCallback(val);
         this.onTouchedCallback();
+        this.stateChanges.next();
     }
 
     public writeValue(value: number) {

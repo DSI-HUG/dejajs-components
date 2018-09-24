@@ -5,11 +5,11 @@
     $primary: map-get($theme, primary);
     deja-chips {
         &[disabled] {
-            >span {
+            >span.chips-item {
                 background-color: mat-color($background, disabled-button);
             }
         }
-        >span {
+        >span.chips-item {
             background-color: mat-color($primary, A400);
             color: mat-color($primary, default-contrast);
             

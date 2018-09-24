@@ -9,17 +9,8 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, Input, OnDestroy, OnInit, Optional, Self, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/observable/merge';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/first';
-import 'rxjs/add/operator/sampleTime';
-import 'rxjs/add/operator/takeUntil';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import { Subscription } from 'rxjs/Subscription';
+import { fromEvent as observableFromEvent, merge as observableMerge, Subject, Subscription } from 'rxjs';
+import { debounceTime, filter, first, sampleTime, takeUntil, tap } from 'rxjs/operators';
 import { Circle } from '../../common/core/graphics/circle';
 import { Position } from '../../common/core/graphics/position';
 
@@ -132,10 +123,10 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
             this._control.valueAccessor = this;
         }
 
-        this.mousedown$sub = Observable.fromEvent(element, 'mousedown')
-            .filter(() => !this.disabled)
-            .filter((event: MouseEvent) => event.buttons === 1)
-            .debounceTime(100)
+        this.mousedown$sub = observableFromEvent(element, 'mousedown').pipe(
+            filter(() => !this.disabled),
+            filter((event: MouseEvent) => event.buttons === 1),
+            debounceTime(100))
             .subscribe((mouseEvent: MouseEvent) => {
                 this.clickedTime = Date.now();
                 const cursorElement = this.getHTMLElement(mouseEvent.target as HTMLElement, 'cursor');
@@ -153,22 +144,20 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
                         element.ownerDocument.body.className += 'noselect';
                     }
 
-                    const cancelMouse$ = Observable.merge(kill$, Observable
-                        .fromEvent(element.ownerDocument, 'mouseup'))
-                        .first()
-                        .do(() => {
+                    const cancelMouse$ = observableMerge(kill$, observableFromEvent(element.ownerDocument, 'mouseup')).pipe(
+                        first(),
+                        tap(() => {
                             delete this.cursorElement;
                             delete this.clickedTime;
                             element.ownerDocument.body.className = element.ownerDocument.body.className.replace(/\bnoselect\b/, '');
-                        });
+                        }));
 
                     const pickerElem = this.picker.nativeElement as HTMLElement;
                     const clientRect = pickerElem.getBoundingClientRect();
 
-                    Observable
-                        .fromEvent(element.ownerDocument, 'mousemove')
-                        .takeUntil(cancelMouse$)
-                        .sampleTime(10)
+                    observableFromEvent(element.ownerDocument, 'mousemove').pipe(
+                        takeUntil(cancelMouse$),
+                        sampleTime(10))
                         .subscribe((event: MouseEvent) => {
                             if (event.buttons !== 1) {
                                 kill$.next();

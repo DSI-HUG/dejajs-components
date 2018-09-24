@@ -5,13 +5,9 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-
 import { Component, ElementRef, Input, OnDestroy } from '@angular/core';
-import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/operator/map';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { combineLatest as observableCombineLatest, from as observableFrom, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { DejaColorFab } from './color-fab.class';
 
 @Component({
@@ -37,20 +33,18 @@ export class DejaColorFabComponent implements OnDestroy {
 
         if (colorFab) {
             const toogleAttribute = (attribute: string, value: string | boolean) => {
-                    if (value) {
+                if (value) {
                     this.element.setAttribute(attribute, value.toString());
-                    } else {
+                } else {
                     this.element.removeAttribute(attribute);
-                    }
+                }
             };
 
-            this.subscriptions.push(Observable
-                .from(colorFab.active$)
+            this.subscriptions.push(observableFrom(colorFab.active$)
                 .subscribe((value) => toogleAttribute('active', value)));
 
-            this.subscriptions.push(Observable
-                .combineLatest(colorFab.color$, colorFab.disabled$)
-                .map(([color, disabled]) => color && disabled ? color.grayScale : color)
+            this.subscriptions.push(observableCombineLatest(colorFab.color$, colorFab.disabled$).pipe(
+                map(([color, disabled]) => color && disabled ? color.grayScale : color))
                 .subscribe((color) => this.element.style.backgroundColor = color ? color.toHex() : ''));
 
         } else {

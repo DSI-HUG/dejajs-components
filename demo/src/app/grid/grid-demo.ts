@@ -9,15 +9,8 @@
 import { ChangeDetectorRef, Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { DejaGridComponent, GroupingService, IDejaDragContext, IDejaDropContext, IDejaDropEvent, IDejaGridColumn, IDejaGridColumnSizeEvent, IDejaGridRow, IGroupInfo, IItemTree, IViewPortItem } from '@deja-js/component';
 import * as _ from 'lodash';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/delay';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/switchMap';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import { Subscription } from 'rxjs/Subscription';
+import { from as observableFrom, Observable, of as observableOf, Subject, Subscription } from 'rxjs';
+import { debounceTime, delay, first, map, reduce, switchMap, tap } from 'rxjs/operators';
 import { News } from '../common/news.model';
 import { NewsService } from '../services/news.service';
 import { PeopleService, Person } from '../services/people.service';
@@ -598,8 +591,8 @@ export class DejaGridDemoComponent {
             delete this.viewPortInfos$;
         }
 
-        this.viewPortInfos$ = grid && grid.viewPort.viewPort$
-            .debounceTime(1)
+        this.viewPortInfos$ = grid && grid.viewPort.viewPort$.pipe(
+            debounceTime(1))
             .subscribe((viewPort) => {
                 this.viewPortInfos = [
                     { name: 'beforeSize', value: String(viewPort.beforeSize), },
@@ -619,23 +612,23 @@ export class DejaGridDemoComponent {
         this.people$ = peopleService.getPeople$();
         this.bigPeople$ = peopleService.getPeople$(undefined, 100000);
 
-        this.peopleForMultiselect$ = peopleService.getPeople$().map((people) => _.cloneDeep(people));
-        this.groupedByGenderPeople$ = peopleService.getPeople$()
-            .switchMap((people) => groupingService.group$(people, {
+        this.peopleForMultiselect$ = peopleService.getPeople$().pipe(map((people) => _.cloneDeep(people)));
+        this.groupedByGenderPeople$ = peopleService.getPeople$().pipe(
+            switchMap((people) => groupingService.group$(people, {
                 groupByField: 'gender',
-            } as IGroupInfo));
+            } as IGroupInfo)));
 
-        this.groupedByEyesColorPeople$ = peopleService.getPeople$()
-            .switchMap((people) => groupingService.group$(people, {
+        this.groupedByEyesColorPeople$ = peopleService.getPeople$().pipe(
+            switchMap((people) => groupingService.group$(people, {
                 groupByField: 'eyeColor',
-            } as IGroupInfo));
+            } as IGroupInfo)));
 
-        peopleService.getPeople$()
-            .do((items) => this.peopleRows = items)
-            .switchMap((people) => groupingService.group$(people, {
+        peopleService.getPeople$().pipe(
+            tap((items) => this.peopleRows = items),
+            switchMap((people) => groupingService.group$(people, {
                 groupByField: 'color',
-            } as IGroupInfo))
-            .first()
+            } as IGroupInfo)),
+            first())
             .subscribe((items) => this.groupedByColorPeople = items);
 
         this.peopleColumnsEx = [
@@ -663,20 +656,17 @@ export class DejaGridDemoComponent {
         aboutCol.sizeable = true;
         aboutCol.width = '400px';
 
-        this.variableHeightPeopleRows$ = peopleService.getPeople$()
-            .map((people) => _.cloneDeep(people))
-            .switchMap((people) => people)
-            .map((person) => ({
+        this.variableHeightPeopleRows$ = peopleService.getPeople$().pipe(
+            map((people) => _.cloneDeep(people)),
+            switchMap((people) => people),
+            map((person) => ({
                 p1: {
                     p2: {
                         person: person,
                     },
                 },
-            }))
-            .reduce((acc: any[], cur) => {
-                acc.push(cur);
-                return acc;
-            }, []);
+            })),
+            reduce((acc: any[], cur: any) => [ ...acc, cur ], []));
 
         this.peopleService.getPeople$().subscribe((value: Person[]) => {
             const onDemandResult = [] as IPeopleGroup[];
@@ -744,14 +734,14 @@ export class DejaGridDemoComponent {
 
     protected loadingRows() {
         const self = this;
-        return (_query: string | RegExp, _selectedItems: IDejaGridRow[]) => self.peopleService.getPeople$().delay(3000);
+        return (_query: string | RegExp, _selectedItems: IDejaGridRow[]) => self.peopleService.getPeople$().pipe(delay(3000));
     }
 
     protected collapsingRows() {
         const self = this;
         return (row: IDejaGridRow) => {
             const group = row as IPeopleGroup;
-            return group.loaded ? Observable.of(row) : self.confirmDialog()(row);
+            return group.loaded ? observableOf(row) : self.confirmDialog()(row);
         };
     }
 
@@ -760,17 +750,17 @@ export class DejaGridDemoComponent {
         return (row: IDejaGridRow) => {
             const group = row as IPeopleGroup;
             if (group.loaded) {
-                return Observable.of(row);
+                return observableOf(row);
             } else {
-                return self.confirmDialog()(row)
-                    .switchMap((itm) => {
+                return self.confirmDialog()(row).pipe(
+                    switchMap((itm) => {
                         if (!itm) {
-                            return Observable.of(null);
+                            return observableOf(null);
                         }
 
-                        Observable.of(group)
-                            .delay(2000)
-                            .first()
+                        observableOf(group).pipe(
+                            delay(2000),
+                            first())
                             .subscribe((grp) => {
                                 // Simulate asynchronous load
                                 const original = this.groupedByColorPeople.find((c) => c.toString() === grp.color);
@@ -780,8 +770,8 @@ export class DejaGridDemoComponent {
                                 this.onExpandGrid.refresh();
                             });
 
-                        return Observable.of(itm);
-                    });
+                        return observableOf(itm);
+                    }));
             }
         };
     }
@@ -790,12 +780,12 @@ export class DejaGridDemoComponent {
         const self = this;
         return (row: IDejaGridRow) => {
             self.dialogVisible = true;
-            return Observable.from(this.dialogResponse$)
-                .first()
-                .map((response) => {
+            return observableFrom(this.dialogResponse$).pipe(
+                first(),
+                map((response) => {
                     self.dialogVisible = false;
                     return response === 'ok' ? row : null;
-                });
+                }));
         };
     }
 

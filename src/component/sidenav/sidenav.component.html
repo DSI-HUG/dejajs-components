@@ -1,18 +1,18 @@
-<mat-sidenav-container [class.sidenav-hidden]="hidden" [class.sidenav-light]="!hidden && !sidenav.opened">
-    <mat-sidenav #sidenav mode="side" [opened]="opened || null" [mode]="mode">
+<mat-sidenav-container [class.sidenav-hidden]="sidenavService.hidden" [class.sidenav-light]="!sidenavService.hidden && !sidenavService.opened">
+    <mat-sidenav [opened]="sidenavService.opened || null" [mode]="sidenavService.mode">
         <mat-toolbar class="header">
             <mat-icon class="header-icon" *ngIf="headerSvgIcon" [svgIcon]="headerSvgIcon"></mat-icon>
             <mat-icon class="header-icon" *ngIf="!headerSvgIcon">{{headerIcon}}</mat-icon>
             <span class="header-text">{{headerText}}</span>
-            <button mat-icon-button class="header-menu-btn" (click)="sidenav.toggle()">
+            <button mat-icon-button class="header-menu-btn" (click)="sidenavService.toggle()">
                 <mat-icon></mat-icon>
             </button>
         </mat-toolbar>
         <ng-content select="deja-sidenav-menu"></ng-content>
     </mat-sidenav>
 
-    <mat-toolbar color="primary">
-        <button mat-icon-button class="menu-btn" *ngIf="!sidenav.opened" (click)="sidenav.open()">
+    <mat-toolbar color="primary" *ngIf="_showToolbar">
+        <button mat-icon-button class="menu-btn" *ngIf="!sidenavService.opened" (click)="sidenavService.open()">
             <mat-icon>menu</mat-icon>
         </button>
         <span class="menu-title">{{ title }}</span>

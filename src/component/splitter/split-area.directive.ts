@@ -9,6 +9,7 @@
 /**
  * Created by rtr on 22.12.2016.
  */
+import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { Directive, ElementRef, Input, OnDestroy, OnInit, Renderer } from '@angular/core';
 import { DejaSplitterComponent } from './splitter.component';
 
@@ -24,7 +25,8 @@ export class SplitAreaDirective implements OnInit, OnDestroy {
      * Order position of the current area
      */
     @Input()
-    public set order(v: number) {
+    public set order(value: number | string) {
+        const v = coerceNumberProperty(value);
         this._order = !isNaN(v) ? v : null;
         this.split.updateArea(this, this._order, this._size, this._minSizePixel);
     }
@@ -33,7 +35,8 @@ export class SplitAreaDirective implements OnInit, OnDestroy {
      * Size in percent of the current area
      */
     @Input()
-    public set size(v: number) {
+    public set size(value: number | string) {
+        const v = coerceNumberProperty(value);
         this._size = !isNaN(v) ? v : null;
         this.split.updateArea(this, this._order, this._size, this._minSizePixel);
     }
@@ -42,7 +45,8 @@ export class SplitAreaDirective implements OnInit, OnDestroy {
      * Min size in percent of the current area
      */
     @Input()
-    public set minSizePixel(v: number) {
+    public set minSizePixel(value: number | string) {
+        const v = coerceNumberProperty(value);
         this._minSizePixel = (!isNaN(v) && v > 0) ? v : 0;
         this.split.updateArea(this, this._order, this._size, this._minSizePixel);
     }

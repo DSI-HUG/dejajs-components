@@ -14,6 +14,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angul
 import { MatListModule } from '@angular/material/list';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { tap } from 'rxjs/operators';
 import { DejaComboListModule } from '../index';
 import { DejaComboListComponent } from './combo-list.component';
 
@@ -108,10 +109,10 @@ describe('DejaComboListForm', () => {
         const form = comp.comboListForm;
         let valueChanges = false;
         let registerOnChange = false;
-        form.valueChanges
-            .do(() => {
+        form.valueChanges.pipe(
+            tap(() => {
                 valueChanges = true;
-            })
+            }))
             .subscribe();
         componentInstance.registerOnChange(() => {
             registerOnChange = true;

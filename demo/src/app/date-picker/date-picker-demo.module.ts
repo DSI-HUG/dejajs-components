@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
-import { MatCheckboxModule, MatTabsModule } from '@angular/material';
+import { MatCheckboxModule, MatFormFieldModule, MatTabsModule } from '@angular/material';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { DejaDatePickerModule, DejaDateSelectorModule } from '@deja-js/component';
@@ -25,6 +25,7 @@ import { routing } from './date-picker-demo.routes';
         CommonModule,
         FormsModule,
         FlexLayoutModule,
+        MatFormFieldModule,
         MatCardModule,
         MatCheckboxModule,
         MatTabsModule,

@@ -6,14 +6,15 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { first } from 'rxjs/operators';
 import { GlobalEventEmmitter } from './global-event-emmitter';
 import { GlobalEventService } from './global-event.service';
 
 describe('GlobalEventService', () => {
     it('Should, receive a message from the HTML', () => {
         const service = new GlobalEventService();
-        service.register('sendaction')
-            .first()
+        service.register('sendaction').pipe(
+            first())
             .subscribe((params) => {
                 expect(params[0]).toBeTruthy();
                 expect(params[1]).toBeFalsy();

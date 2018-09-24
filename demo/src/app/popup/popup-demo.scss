@@ -19,13 +19,6 @@
                 padding: 16px;
                 display: flex;
                 flex-direction: column;
-                deja-select {
-                    flex-basis: 50%;
-                    flex-grow: 0;
-                    flex-shrink: 0;
-                    position: relative;
-                    margin-top: 2rem;
-                }
             }
         }
         &.demo-basic {

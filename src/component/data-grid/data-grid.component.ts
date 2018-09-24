@@ -8,18 +8,8 @@
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output, ViewChild, ViewEncapsulation } from '@angular/core';
-import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/observable/timer';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/first';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/takeWhile';
-import { Observable } from 'rxjs/Observable';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
-import { Subject } from 'rxjs/Subject';
+import { combineLatest as observableCombineLatest, from as observableFrom, fromEvent as observableFromEvent, Observable, ReplaySubject, Subject, timer as observableTimer } from 'rxjs';
+import { debounceTime, filter, first, map, switchMap, takeWhile, tap } from 'rxjs/operators';
 import { DejaClipboardService } from '../../common/core/clipboard/clipboard.service';
 import { IGroupInfo } from '../../common/core/grouping/group-infos';
 import { GroupingService } from '../../common/core/grouping/grouping.service';
@@ -207,6 +197,10 @@ export class DejaGridComponent implements OnDestroy {
         return this._sortable;
     }
 
+    public get columnGroups() {
+        return this._columnGroups;
+    }
+
     public get noHorizontalScroll() {
         return this._noHorizontalScroll;
     }
@@ -319,12 +313,12 @@ export class DejaGridComponent implements OnDestroy {
                 let observable = this._rows as Observable<IItemBase[]>;
                 if (!observable.subscribe) {
                     const promise = this._rows as Promise<IItemBase[]>;
-                    observable = Observable.fromPromise(promise);
+                    observable = observableFrom(promise);
                 }
 
-                this.viewPortChanged
-                    .filter((vp) => vp && vp.items && vp.items.length > 0)
-                    .first()
+                this.viewPortChanged.pipe(
+                    filter((vp) => vp && vp.items && vp.items.length > 0),
+                    first())
                     .subscribe((vp) => this.calcColumnsLayout(vp.items));
             }
         }
@@ -413,7 +407,7 @@ export class DejaGridComponent implements OnDestroy {
         return this.columnHeaderTemplateExternal || this._columnHeaderTemplate;
     }
 
-    private get columnLayout() {
+    public get columnLayout() {
         return this._columnLayout;
     }
 
@@ -422,17 +416,17 @@ export class DejaGridComponent implements OnDestroy {
 
         this.clearColumnLayout();
 
-        Observable.combineLatest(this.columns$, this.columnGroups$)
-            .takeWhile(() => this.isAlive)
-            .map(([columns, columnGroups]) => {
+        observableCombineLatest(this.columns$, this.columnGroups$).pipe(
+            takeWhile(() => this.isAlive),
+            map(([columns, columnGroups]) => {
                 if (typeof columnGroups === 'string') {
                     const groups = columnGroups.split(',').map((v) => v.trim());
                     return this._columnGroups = groups.map((group) => columns.find((column) => column.name === group));
                 } else {
                     return this._columnGroups = columnGroups;
                 }
-            })
-            .map((columnGroups) => {
+            }),
+            map((columnGroups) => {
                 const groupInfos = [] as IGroupInfo[];
                 const sortInfos = this.treeListComponent.sortInfos;
                 columnGroups.forEach((column) => {
@@ -445,22 +439,22 @@ export class DejaGridComponent implements OnDestroy {
                     groupInfos.push(groupInfo);
                 });
                 return groupInfos;
-            })
-            .switchMap((groupInfos) => this.treeListComponent.group$(groupInfos).map(() => groupInfos))
+            }),
+            switchMap((groupInfos) => this.treeListComponent.group$(groupInfos).pipe(map(() => groupInfos))))
             .subscribe((groupInfos) => {
                 this.groupChanged.emit(groupInfos);
                 this.changeDetectorRef.markForCheck();
             });
 
-        Observable.from(this.columns$)
-            .takeWhile(() => this.isAlive)
-            .do((columns) => this._columns = columns)
-            .debounceTime(1)
+        observableFrom(this.columns$).pipe(
+            takeWhile(() => this.isAlive),
+            tap((columns) => this._columns = columns),
+            debounceTime(1))
             .subscribe(() => this.calcColumnsLayout());
 
-        Observable.from(this.printColumnLayout$)
-            .takeWhile(() => this.isAlive)
-            .debounceTime(1000)
+        observableFrom(this.printColumnLayout$).pipe(
+            takeWhile(() => this.isAlive),
+            debounceTime(1000))
             .subscribe(() => {
                 console.log('');
                 console.log('Auto columns layout:');
@@ -468,22 +462,22 @@ export class DejaGridComponent implements OnDestroy {
                 console.log('');
             });
 
-        Observable.from(this.disableUserSelection$)
-            .takeWhile(() => this.isAlive)
-            .do(() => element.setAttribute('disableselection', ''))
-            .debounceTime(1000)
+        observableFrom(this.disableUserSelection$).pipe(
+            takeWhile(() => this.isAlive),
+            tap(() => element.setAttribute('disableselection', '')),
+            debounceTime(1000))
             .subscribe(() => element.removeAttribute('disableselection'));
 
-        Observable.fromEvent(window, 'resize')
-            .takeWhile(() => this.isAlive)
-            .filter(() => this.hasPercentageColumns)
-            .debounceTime(5)
+        observableFromEvent(window, 'resize').pipe(
+            takeWhile(() => this.isAlive),
+            filter(() => this.hasPercentageColumns),
+            debounceTime(5))
             .subscribe(() => {
                 this.calcColumnsLayout();
             });
 
-        Observable.fromEvent(element, 'keydown')
-            .takeWhile(() => this.isAlive)
+        observableFromEvent(element, 'keydown').pipe(
+            takeWhile(() => this.isAlive))
             .subscribe((event: KeyboardEvent) => {
                 const findPrev = (index: number) => {
                     if (index === -1) {
@@ -525,15 +519,15 @@ export class DejaGridComponent implements OnDestroy {
                 }
             });
 
-        Observable.fromEvent(element, 'mousedown')
-            .takeWhile(() => this.isAlive)
-            .filter((downEvent: MouseEvent) => downEvent.buttons === 1)
+        observableFromEvent(element, 'mousedown').pipe(
+            takeWhile(() => this.isAlive),
+            filter((downEvent: MouseEvent) => downEvent.buttons === 1))
             .subscribe((downEvent: MouseEvent) => {
                 const clickedColumn = this.getColumnFromHTMLElement(downEvent.target as HTMLElement);
 
-                Observable.fromEvent(element, 'mouseup')
-                    .first()
-                    .filter(() => !!clickedColumn)
+                observableFromEvent(element, 'mouseup').pipe(
+                    first(),
+                    filter(() => !!clickedColumn))
                     .subscribe((upEvent: MouseEvent) => {
                         const columnElement = this.getColumnElementFromHTMLElement(upEvent.target as HTMLElement);
                         if ((columnElement && columnElement.getAttribute('colname')) === clickedColumn.name) {
@@ -662,9 +656,9 @@ export class DejaGridComponent implements OnDestroy {
         event.column.sorting = true;
         this.changeDetectorRef.markForCheck();
 
-        Observable.timer(1)
-            .first()
-            .switchMap(() => this.sort$(event.column.name))
+        observableTimer(1).pipe(
+            first(),
+            switchMap(() => this.sort$(event.column.name)))
             .subscribe(() => {
                 hideSpinner();
                 this.sortChanged.emit(this.treeListComponent.sortInfos);
@@ -748,8 +742,8 @@ export class DejaGridComponent implements OnDestroy {
             groupTextField: column.groupTextField || column.name,
         } as IGroupInfo;
 
-        this.treeListComponent.ungroup$(groupInfo)
-            .first()
+        this.treeListComponent.ungroup$(groupInfo).pipe(
+            first())
             .subscribe(noop);
     }
 

@@ -7,20 +7,18 @@
  */
 
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { async, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Observable } from 'rxjs/Observable';
+import { of as observableOf } from 'rxjs';
 import { DejaMouseDragDropModule } from './index';
 import { IDropCursorInfos } from './mouse-dragdrop.service';
 import { DejaMouseDraggableDirective, IDejaMouseDraggableContext } from './mouse-draggable.directive';
 import { DejaMouseDroppableDirective, IDejaMouseDroppableContext } from './mouse-droppable.directive';
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
     template: `<div id="dragArea" [deja-mouse-draggable]="getDragContext()">DragAndDroppedContent</div>
                 <div #dropArea id="dropArea" [deja-mouse-droppable]="getDropContext(dropArea)"></div>
                 <deja-mouse-dragdrop-cursor></deja-mouse-dragdrop-cursor>`,
@@ -53,7 +51,7 @@ class DejaMouseDragDropComponent {
         return {
             className: 'drag-cursor',
             dragStart: (target: HTMLElement) => {
-                return Observable.of(target.innerText);
+                return observableOf(target.innerText);
             },
         } as IDejaMouseDraggableContext;
     }
@@ -150,5 +148,5 @@ describe('DejaMouseDragDrop', () => {
             expect(dropElement.innerText).toEqual(dragElement.innerText);
             done();
         });
-    });
+    }, 10000);
 });

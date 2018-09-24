@@ -265,7 +265,7 @@
             <h1>Search Prefix and Suffix Templates</h1>
             <div fxLayout="row">
                 <span fxFlex="0 0 45%" fxLayout="column">
-					<deja-tree-list searchArea class="placeholder-icon" textField="naqme" valueField="code" [items]="countries">
+					<deja-tree-list searchArea textField="naqme" valueField="code" [items]="countries">
 						<ng-template #searchPrefixTemplate>
 							<mat-icon (click)="onFilterTemplateClicked('Prefix')">public</mat-icon>
 						</ng-template>

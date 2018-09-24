@@ -6,31 +6,19 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
-import { DateComponentLayout, DaysOfWeek, DejaDateSelectorComponent } from '../date-selector/date-selector.component';
-import { formatToMask, formatToUnitOfTime } from './format-to-mask';
-
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
+import { MatFormFieldControl } from '@angular/material';
 import * as moment_ from 'moment';
-import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/observable/merge';
-import 'rxjs/add/operator/combineLatest';
-import 'rxjs/add/operator/delay';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/first';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/takeWhile';
-import { Observable } from 'rxjs/Observable';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
-import { Subject } from 'rxjs/Subject';
+import { combineLatest as observableCombineLatest, from as observableFrom, fromEvent as observableFromEvent, merge as observableMerge, ReplaySubject, Subject } from 'rxjs';
+import { delay, filter, first, map, switchMap, takeWhile, tap } from 'rxjs/operators';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { DejaConnectionPositionPair } from '../../common/core/overlay/connection-position-pair';
 import { DejaChildValidatorDirective } from '../../common/core/validation/child-validator.directive';
+import { DateComponentLayout, DaysOfWeek, DejaDateSelectorComponent } from '../date-selector/date-selector.component';
+import { formatToMask, formatToUnitOfTime } from './format-to-mask';
 
 const moment: (value?: any, format?: string, strict?: boolean) => moment_.Moment = (<any>moment_).default || moment_;
 
@@ -42,12 +30,21 @@ const noop = () => { };
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    providers: [{provide: MatFormFieldControl, useExisting: DejaDatePickerComponent}],
     selector: 'deja-date-picker',
     styleUrls: ['./date-picker.component.scss'],
     templateUrl: './date-picker.component.html',
 })
-export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, AfterContentInit, OnDestroy {
-    private static formattingTokens = /(\[[^\[]*\])|(\\)?([Hh]mm(ss)?|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Qo?|YYYYYY|YYYYY|YYYY|YY|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|kk?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g;
+export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, AfterContentInit, OnDestroy, MatFormFieldControl<Date | string> {
+    public static nextId = 0;
+    private static formattingTokens = new RegExp(`(\\[[^\\[]*\\])|(\\\\)?([Hh]mm(ss)?|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Qo?|YYYYYY|YYYYY|YYYY|YY|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|kk?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)`, 'g');
+
+    @HostBinding() public id = `my-tel-input-${DejaDatePickerComponent.nextId++}`;
+    @HostBinding('class.floating') public get shouldLabelFloat() {
+        return this.focused || !this.empty || !!this.mask;
+    }
+
+    @HostBinding('attr.aria-describedby') public describedBy = '';
 
     public _layout: number | string;
 
@@ -64,22 +61,25 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
         return this._format;
     }
     /** Placeholder for input */
-    @Input() public placeholder = 'Date';
+    @Input() get placeholder(): string {
+        return this._placeholder;
+    }
+    set placeholder(plh: string) {
+        this._placeholder = plh;
+        this.stateChanges.next();
+    }
+
     @Input() public label: string;
     /** Disabled dates. It's an array of DaysOfWeek (number between 0 and 6) or a date. */
     @Input() public disableDates: Array<DaysOfWeek | Date>; // | ((d: Date) => boolean);
     /** Reference to DejaDateSelectorComponent inside thic control */
     @ViewChild(DejaDateSelectorComponent) public dateSelectorComponent: DejaDateSelectorComponent;
-    /** Template for MatHint inside mat-form-field-container */
-    @ContentChild('hintTemplate') public matHint: any;
-    /** Template for MatError inside mat-form-field-container */
-    @ContentChild('errorTemplate') public matError: any;
     /** Offset de position horizontal de la zone de dropdown */
     @Input() public overlayOffsetX = 0;
     /** Offset de position verticale de la zone de dropdown */
     @Input() public overlayOffsetY = 6;
     /** Afficher un bouton raccourcis permettant de sélectionner la date courante */
-    @Input() public set showCurrentDateButton(value: boolean | string) {
+    @Input() public set showCurrentDateButton(value: boolean) {
         this._showCurrentDateButton = coerceBooleanProperty(value);
     }
     public get showCurrentDateButton() {
@@ -91,8 +91,11 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     @Output() public dateChange = new EventEmitter();
     @Output() public timeChange = new EventEmitter();
 
+    /** matFormField implementation */
+    public stateChanges = new Subject<void>();
+
     /** Mask for input */
-    protected _mask: any[];
+    public _mask: any[];
 
     public get mask() {
         return this._mask;
@@ -105,8 +108,24 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     public overlayOwnerElement: HTMLElement;
     public date: Date | string = new Date();
 
+    /** matFormField focus implementation */
+    public focused = false;
+
+    /** This property indicates whether the associated NgControl is in an error state. */
+    public errorState = false;
+
+    /** This property allows us to specify a unique string for the type of control in form field.
+     * The <mat-form-field> will add an additional class based on this type that can be used to
+     * easily apply special styles to a <mat-form-field> that contains a specific type of control.
+     * In this example we'll use deja-date-picker as our control type which will result in the form field
+     * adding the class mat-form-field-deja-date-picker.
+     */
+    public controlType = 'deja-date-picker';
+
     @ViewChild(DejaChildValidatorDirective) private inputValidatorDirective: DejaChildValidatorDirective;
 
+    /** Default placeholder for input */
+    private _placeholder: string;
     private _showCurrentDateButton: boolean;
     private isAlive = true;
     private _disabled: boolean;
@@ -152,13 +171,24 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
         return this._positions;
     }
 
+    public get empty() {
+        return !this.value;
+    }
+
     /**
      * Constructor
-     * subscribe on fifferent events needed inside this component
+     * subscribe on different events needed inside this component
      */
-    constructor(private elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, @Self() @Optional() public _control: NgControl, @Optional() private _parentForm: NgForm, @Optional() private _parentFormGroup: FormGroupDirective) {
-        if (this._control) {
-            this._control.valueAccessor = this;
+    constructor(
+        private elementRef: ElementRef,
+        private changeDetectorRef: ChangeDetectorRef,
+        @Self() @Optional() public ngControl: NgControl,
+        @Optional() private _parentForm: NgForm,
+        @Optional() private _parentFormGroup: FormGroupDirective,
+        private fm: FocusMonitor,
+    ) {
+        if (this.ngControl) {
+            this.ngControl.valueAccessor = this;
         }
         this.overlayOwnerElement = this.elementRef.nativeElement;
 
@@ -174,24 +204,30 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
             });
         }
 
-        const keydown$ = Observable.from(this.inputElement$)
-            .switchMap((element) => Observable.fromEvent(element, 'keydown'));
-
-        const cursorChanged$ = Observable.from(this.inputElement$)
-            .switchMap((element: HTMLInputElement) => {
-                return Observable.merge(Observable.fromEvent(element, 'mouseup'), Observable.fromEvent(element, 'focus'), Observable.fromEvent(element, 'keyup'))
-                    .map(() => {
-                        return element.selectionStart;
-                    });
+        fm.monitor(this.elementRef.nativeElement, true)
+            .subscribe(origin => {
+                this.focused = !!origin;
+                this.stateChanges.next();
             });
 
-        cursorChanged$.takeWhile(() => this.isAlive)
+        const keydown$ = observableFrom(this.inputElement$).pipe(
+            switchMap((element) => observableFromEvent(element, 'keydown')));
+
+        const cursorChanged$ = observableFrom(this.inputElement$).pipe(
+            switchMap((element: HTMLInputElement) => {
+                return observableMerge(observableFromEvent(element, 'mouseup'), observableFromEvent(element, 'focus'), observableFromEvent(element, 'keyup')).pipe(
+                    map(() => {
+                        return element.selectionStart;
+                    }));
+            }));
+
+        cursorChanged$.pipe(takeWhile(() => this.isAlive))
             .subscribe((position: number) => {
                 this.cursorPosition = position;
             });
 
-        keydown$.takeWhile(() => this.isAlive)
-            .filter((event: KeyboardEvent) => !this.showDropDown && (event.keyCode === KeyCodes.KeyD || event.keyCode === KeyCodes.UpArrow || event.keyCode === KeyCodes.DownArrow))
+        keydown$.pipe(takeWhile(() => this.isAlive),
+            filter((event: KeyboardEvent) => !this.showDropDown && (event.keyCode === KeyCodes.KeyD || event.keyCode === KeyCodes.UpArrow || event.keyCode === KeyCodes.DownArrow)))
             .subscribe((event: KeyboardEvent) => {
                 switch (event.keyCode) {
                     case (KeyCodes.KeyD):
@@ -245,8 +281,8 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
                 }
             });
 
-        const valueUpdated$ = Observable.combineLatest(this.formatChanged$, this.dateChanged$)
-            .do(([format]) => {
+        const valueUpdated$ = observableCombineLatest(this.formatChanged$, this.dateChanged$).pipe(
+            tap(([format]) => {
                 let mask = [] as string[];
                 const array = format.match(DejaDatePickerComponent.formattingTokens);
                 array.forEach((val: string) => {
@@ -258,25 +294,25 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
                 });
 
                 this._mask = mask;
-            });
+            }));
 
-        valueUpdated$.takeWhile(() => this.isAlive)
+        valueUpdated$.pipe(takeWhile(() => this.isAlive))
             .subscribe(([format, value]) => {
                 this.date = value;
                 this._inputModel = (this.date) ? (this.date instanceof Date ? moment(this.date).format(format) : this.date) : null;
 
                 // si la position du curseur était stockée, on la restaure apres avoir changé la valeur
                 if (this.cursorPosition && !this.allowFreeEntry) {
-                    this.inputElement$
-                        .delay(1)
-                        .first()
+                    this.inputElement$.pipe(
+                        delay(1),
+                        first())
                         .subscribe((elem: HTMLInputElement) => elem.setSelectionRange(this.cursorPosition, this.cursorPosition));
                 }
                 this.changeDetectorRef.markForCheck();
             });
 
-        keydown$.takeWhile(() => this.isAlive)
-            .filter(() => this.showDropDown)
+        keydown$.pipe(takeWhile(() => this.isAlive),
+            filter(() => this.showDropDown))
             .subscribe((event: KeyboardEvent) => {
                 switch (event.keyCode) {
                     case (KeyCodes.Escape):
@@ -289,14 +325,16 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
                 }
             });
 
-        Observable.combineLatest(this.inputElement$, this.focus$)
-            .takeWhile(() => this.isAlive)
+        observableCombineLatest(this.inputElement$, this.focus$).pipe(
+            takeWhile(() => this.isAlive))
             .subscribe(([element]) => element.focus());
     }
 
     /** unsubscribe to all Observable when component is destroyed */
     public ngOnDestroy() {
         this.isAlive = false;
+        this.stateChanges.complete();
+        this.fm.stopMonitoring(this.elementRef.nativeElement);
     }
 
     /** Init mask */
@@ -314,15 +352,33 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
         }
     }
 
+    /** This method is used by the <mat-form-field> to specify the IDs that should be used for the aria-describedby attribute of your component.
+     * The method has one parameter, the list of IDs, we just need to apply the given IDs to our host element.
+     */
+    public setDescribedByIds(ids: string[]) {
+        this.describedBy = ids.join(' ');
+    }
+
+    /** This method will be called when the form field is clicked on.
+     * It allows your component to hook in and handle that click however it wants.
+     * The method has one parameter, the MouseEvent for the click.
+     * In our case we'll just focus the first <input> if the user isn't about to click an <input> anyways.
+     */
+    public onContainerClick(event: MouseEvent) {
+        if ((event.target as Element).tagName.toLowerCase() !== 'input') {
+            this.elementRef.nativeElement.querySelector('input').focus();
+        }
+    }
+
     public get showDropDown() {
         return this._showDropDown;
     }
 
     /** disabled property setter. Can be string or empty so you can use it like : <deja-date-picker disabled></deja-date-picker> */
     @Input()
-    public set disabled(value: boolean | string) {
+    public set disabled(value: boolean) {
         this._disabled = coerceBooleanProperty(value) ? true : null;
-        this.changeDetectorRef.markForCheck();
+        this.stateChanges.next();
     }
 
     /** disabled property getter. */
@@ -332,9 +388,9 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
 
     /** required property setter. Can be string or empty so you can use it like : <deja-date-picker required></deja-date-picker> */
     @Input()
-    public set required(value: boolean | string) {
+    public set required(value: boolean) {
         this._required = coerceBooleanProperty(value) ? true : null;
-        this.changeDetectorRef.markForCheck();
+        this.stateChanges.next();
     }
 
     /** required property getter. */
@@ -393,6 +449,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
         if (v !== this.date) {
             this.writeValue(v);
             this.onChangeCallback(v);
+            this.stateChanges.next();
         }
     }
 
@@ -427,7 +484,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     /** For reactive form. */
     public ngAfterContentInit() {
         if (this.inputValidatorDirective) {
-            this.inputValidatorDirective.parentControl = this._control;
+            this.inputValidatorDirective.parentControl = this.ngControl;
         }
     }
 
@@ -442,7 +499,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
      *
      * @param event
      */
-    protected toggleDateSelector(event: Event) {
+    public toggleDateSelector(event: Event) {
         if (this.disabled) {
             return undefined;
         }
@@ -469,7 +526,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
                 if (!moment(d).isValid()) {
                     console.warn('[DatePicker]: Invalid Date');
                     d = null;
-                    this._control.control.setErrors({ invalidMask: true });
+                    this.ngControl.control.setErrors({ invalidMask: true });
                     this.changeDetectorRef.markForCheck();
                 }
                 date = d;
@@ -478,7 +535,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
             } else { // If mask is partially filled
                 date = null;
                 console.warn('[DatePicker]: Invalid Date');
-                this._control.control.setErrors({ invalidMask: true });
+                this.ngControl.control.setErrors({ invalidMask: true });
                 this.changeDetectorRef.markForCheck();
             }
         }
@@ -518,10 +575,11 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
     }
 
     /** Reset date-picker values. */
-    protected reset() {
-        this.value = undefined;
-        delete this._inputModel;
-        this.onChangeCallback(this.value);
+    public reset() {
+        setTimeout(() => { // To prevent "ExpressionChangedAfterItHasBeenCheckedError"
+            this.value = undefined;
+            delete this._inputModel;
+        });
         this.close();
     }
 

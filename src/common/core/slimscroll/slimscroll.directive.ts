@@ -10,8 +10,9 @@
 * Licensed under MIT https://github.com/rd-dev-ukraine/angular-io-slimscroll/blob/master/LICENSE
 */
 
-import { Directive, ElementRef, HostListener, Input, OnDestroy, OnInit, Renderer2 } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Directive, ElementRef, HostListener, Input, OnDestroy, OnInit, Renderer2, RendererFactory2 } from '@angular/core';
+import { Subscription, timer as observableTimer } from 'rxjs';
+import { filter, first } from 'rxjs/operators';
 
 interface SlimScrollOptions {
     // width in pixels of the visible scroll area
@@ -85,6 +86,9 @@ interface SlimScrollOptions {
 
     // auto scroll to bottom when content was added
     autoScrollToBottom: boolean;
+
+    // if content will have height more than the value - slimscroll will be enabled
+    maxHeightBeforeEnable?: number;
 }
 
 const defaults: SlimScrollOptions = {
@@ -111,7 +115,8 @@ const defaults: SlimScrollOptions = {
     borderRadius: '7px',
     railBorderRadius: '7px',
     scrollTo: 0,
-    autoScrollToBottom: false
+    autoScrollToBottom: false,
+    maxHeightBeforeEnable: undefined,
 };
 
 @Directive({
@@ -131,13 +136,28 @@ export class DejaSlimScrollDirective implements OnInit, OnDestroy {
     private _releaseScroll = false;
     private _options: SlimScrollOptions;
     private _previousHeight: number;
-    private _queueHide = false;
+    private _queueHide: Subscription;
     private _changesTracker: number;
+    private _barMouseDownPageY: number;
+    private _startBarTop: number;
 
-    public constructor(private _renderer: Renderer2,
-        elementRef: ElementRef) {
+    private _renderer: Renderer2;
+
+    public constructor(
+        rendererFactory: RendererFactory2,
+        elementRef: ElementRef
+    ) {
+        this._renderer = rendererFactory.createRenderer(null, null);
         this._me = elementRef.nativeElement;
         this._options = { ...defaults };
+
+        this.showBar = this.showBar.bind(this);
+        this.hideBar = this.hideBar.bind(this);
+        this.onWheel = this.onWheel.bind(this);
+        this.barMouseMove = this.barMouseMove.bind(this);
+        this.barMouseUp = this.barMouseUp.bind(this);
+        this.barMouseDown = this.barMouseDown.bind(this);
+        this.railMouseDown = this.railMouseDown.bind(this);
     }
 
     public ngOnInit(): void {
@@ -148,6 +168,16 @@ export class DejaSlimScrollDirective implements OnInit, OnDestroy {
         if (this._changesTracker) {
             clearInterval(this._changesTracker);
         }
+
+        if (window.removeEventListener) {
+            window.removeEventListener('DOMMouseScroll', this.onWheel);
+            window.removeEventListener('mousewheel', this.onWheel);
+        } else {
+            document.removeEventListener('mousewheel', this.onWheel);
+        }
+
+        document.removeEventListener('mousemove', this.barMouseMove, false);
+        document.removeEventListener('mouseup', this.barMouseUp, false);
     }
 
     @HostListener('window:resize', ['$event'])
@@ -275,6 +305,11 @@ export class DejaSlimScrollDirective implements OnInit, OnDestroy {
         this._options.autoScrollToBottom = value || defaults.autoScrollToBottom;
     }
 
+    @Input()
+    public set maxHeightBeforeEnable(value: number) {
+        this._options.maxHeightBeforeEnable = value || defaults.maxHeightBeforeEnable;
+    }
+
     private init(): void {
         // ensure we are not binding it again
         if (this._bar && this._rail) {
@@ -284,7 +319,7 @@ export class DejaSlimScrollDirective implements OnInit, OnDestroy {
         }
     }
 
-    private trackPanelHeightChanged(): void {
+    private trackPanelHeightChanged = (): void => {
         this._previousHeight = this._me.scrollHeight;
 
         this._changesTracker = window.setInterval(() => {
@@ -344,17 +379,20 @@ export class DejaSlimScrollDirective implements OnInit, OnDestroy {
 
     private attachWheel(target: Window): void {
         if (window.addEventListener) {
-            target.addEventListener('DOMMouseScroll', (e: WheelEvent) => this.onWheel(e), false);
-            target.addEventListener('mousewheel', (e: WheelEvent) => this.onWheel(e), false);
+            target.addEventListener('DOMMouseScroll', this.onWheel, false);
+            target.addEventListener('mousewheel', this.onWheel, false);
         } else {
-            document.addEventListener('mousewheel', (e: WheelEvent) => this.onWheel(e), false);
+            document.addEventListener('mousewheel', this.onWheel, false);
         }
     }
 
     private showBar(): void {
         // recalculate bar height
         this.getBarHeight();
-        this._queueHide = true;
+        if (this._queueHide) {
+            this._queueHide.unsubscribe();
+            this._queueHide = null;
+        }
 
         // when bar reached top or bottom
         // tslint:disable-next-line:no-bitwise
@@ -378,21 +416,23 @@ export class DejaSlimScrollDirective implements OnInit, OnDestroy {
 
     private hideBar(): void {
         // only hide when options allow it
-        if (!this._options.alwaysVisible) {
-            this._queueHide = false;
-            Observable.timer(1000)
-                .first()
-                .filter(() => !this._queueHide)
+        if (
+            !this._options.alwaysVisible
+            && !(this._options.disableFadeOut && this._isOverPanel)
+            && !this._isOverBar
+            && !this._isDragg
+        ) {
+            this._queueHide = observableTimer(1000).pipe(
+                first(),
+                filter(() => !this._queueHide))
                 .subscribe(() => {
-                    if (!(this._options.disableFadeOut && this._isOverPanel) && !this._isOverBar && !this._isDragg) {
-                        this._renderer.setStyle(this._bar, 'opacity', '0');
-                        this._renderer.setStyle(this._rail, 'opacity', '0');
-                    }
+                    this._renderer.setStyle(this._bar, 'opacity', '0');
+                    this._renderer.setStyle(this._rail, 'opacity', '0');
                 });
         }
     }
 
-    private scrollContent(y: number, isWheel: boolean, isJump = false): void {
+    public scrollContent(y: number, isWheel: boolean, isJump = false) {
         this._releaseScroll = false;
         let delta: number = y;
         const maxTop: number = this._me.offsetHeight - this._bar.offsetHeight;
@@ -401,11 +441,11 @@ export class DejaSlimScrollDirective implements OnInit, OnDestroy {
             // move bar with mouse wheel
             delta = parseInt(this._bar.style.top, 10) + y * this._options.wheelStep / 100 * this._bar.offsetHeight;
 
-            // move bar, make sure it doesn"t go out
+            // move bar, make sure it doesn't go out
             delta = Math.min(Math.max(delta, 0), maxTop);
 
             // if scrolling down, make sure a fractional change to the
-            // scroll position isn"t rounded away when the scrollbar"s CSS is set
+            // scroll position isn't rounded away when the scrollbar's CSS is set
             // this flooring of delta would happened automatically when
             // bar.css is set below, but we floor here for clarity
             delta = (y > 0) ? Math.ceil(delta) : Math.floor(delta);
@@ -463,7 +503,69 @@ export class DejaSlimScrollDirective implements OnInit, OnDestroy {
 
     }
 
+    private railMouseDown(event: MouseEvent) {
+        const clientRects = this._rail.getBoundingClientRect();
+        const elementOffsetTop = clientRects.top + window.scrollY;
+        const moveTo = event.pageY - elementOffsetTop - (this._barHeight / 2);
+        const scrollTo = this._me.scrollHeight * (moveTo / clientRects.height);
+        this._renderer.setStyle(this._bar, 'top', `${(moveTo >= 0 ? moveTo : 0)}px`);
+
+        this.scrollContent(scrollTo, false, true);
+    }
+
+    private barMouseMove(event: MouseEvent) {
+        const currTop = this._startBarTop + event.pageY - this._barMouseDownPageY;
+        this._renderer.setStyle(this._bar, 'top', `${(currTop >= 0 ? currTop : 0)}px`);
+        const position = this._bar.getClientRects()[0];
+
+        if (position) {
+            this.scrollContent(0, position.top > 0);
+        }
+    }
+
+    private barMouseUp() {
+        this._isDragg = false;
+
+        // return normal text selection
+        const body = document.body;
+        this._renderer.setStyle(body, '-webkit-user-select', 'initial');
+        this._renderer.setStyle(body, '-moz-user-select', 'initial');
+        this._renderer.setStyle(body, '-ms-user-select', 'initial');
+        this._renderer.setStyle(body, 'user-select', 'initial');
+
+        this.hideBar();
+
+        document.removeEventListener('mousemove', this.barMouseMove, false);
+        document.removeEventListener('mouseup', this.barMouseUp, false);
+    }
+
+    private barMouseDown(e: MouseEvent) {
+        this._isDragg = true;
+
+        // disable text selection
+        const body = document.body;
+        this._renderer.setStyle(body, '-webkit-user-select', 'none');
+        this._renderer.setStyle(body, '-moz-user-select', 'none');
+        this._renderer.setStyle(body, '-ms-user-select', 'none');
+        this._renderer.setStyle(body, 'user-select', 'none');
+
+        this._barMouseDownPageY = e.pageY;
+        this._startBarTop = parseFloat(this._bar.style.top);
+
+        document.addEventListener('mousemove', this.barMouseMove, false);
+        document.addEventListener('mouseup', this.barMouseUp, false);
+
+        return false;
+    }
+
     private setup(): void {
+        // check whether it changes in content
+        this.trackPanelHeightChanged();
+
+        if (this._options.maxHeightBeforeEnable && this._me.scrollHeight <= this._options.maxHeightBeforeEnable) {
+            return;
+        }
+
         // wrap content
         const wrapper = document.createElement('div');
         this._renderer.addClass(wrapper, this._options.wrapperClass);
@@ -521,61 +623,20 @@ export class DejaSlimScrollDirective implements OnInit, OnDestroy {
 
         if (this._options.scrollTo > 0) {
             // jump to a static point
-            const offset = this._options.scrollTo;
-            // scroll content by the given offset
-            this.scrollContent(offset, false, true);
+            this.scrollContent(this._options.scrollTo, false, true);
         }
 
         // append to parent div
         this._me.parentElement.appendChild(this._bar);
         this._me.parentElement.appendChild(this._rail);
 
-        this._bar.addEventListener('mousedown', e => {
-            e.stopPropagation();
-            this._isDragg = true;
-
-            // disable text selection
-            this._renderer.setStyle(document.querySelector('body'), '-webkit-user-select', 'none');
-            this._renderer.setStyle(document.querySelector('body'), '-moz-user-select', 'none');
-            this._renderer.setStyle(document.querySelector('body'), '-ms-user-select', 'none');
-            this._renderer.setStyle(document.querySelector('body'), 'user-select', 'none');
-
-            const t = parseFloat(this._bar.style.top);
-            const pageY = e.pageY;
-
-            const mousemoveEvent = (event: MouseEvent) => {
-                const currTop = t + event.pageY - pageY;
-                this._renderer.setStyle(this._bar, 'top', `${(currTop >= 0 ? currTop : 0)}px`);
-                const position = this._bar.getClientRects()[0];
-                if (position) {
-                    this.scrollContent(0, position.top > 0);
-                }
-            };
-
-            const mouseupEvent = () => {
-                this._isDragg = false;
-
-                // return normal text selection
-                this._renderer.setStyle(document.querySelector('body'), '-webkit-user-select', 'initial');
-                this._renderer.setStyle(document.querySelector('body'), '-moz-user-select', 'initial');
-                this._renderer.setStyle(document.querySelector('body'), '-ms-user-select', 'initial');
-                this._renderer.setStyle(document.querySelector('body'), 'user-select', 'initial');
-
-                this.hideBar();
-
-                document.removeEventListener('mousemove', mousemoveEvent, false);
-                document.removeEventListener('mouseup', mouseupEvent, false);
-            };
-
-            document.addEventListener('mousemove', mousemoveEvent, false);
-            document.addEventListener('mouseup', mouseupEvent, false);
-
-            return false;
-        }, false);
+        this._bar.addEventListener('mousedown', this.barMouseDown, false);
 
         // on rail over
-        this._rail.addEventListener('mouseenter', () => this.showBar(), false);
-        this._rail.addEventListener('mouseleave', () => this.hideBar(), false);
+        this._rail.addEventListener('mouseenter', this.showBar, false);
+        this._rail.addEventListener('mouseleave', this.hideBar, false);
+
+        this._rail.addEventListener('mousedown', this.railMouseDown, false);
 
         // on bar over
         this._bar.addEventListener('mouseenter', () => this._isOverBar = true, false);
@@ -628,8 +689,5 @@ export class DejaSlimScrollDirective implements OnInit, OnDestroy {
 
         // attach scroll events
         this.attachWheel(window);
-
-        // check whether it changes in content
-        this.trackPanelHeightChanged();
     }
 }

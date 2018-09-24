@@ -9,7 +9,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { Observable } from 'rxjs/Observable';
+import { timer as observableTimer } from 'rxjs';
 import { Color } from '../../common/core/graphics/color';
 import { MaterialColors } from '../../common/core/style/material-colors';
 import { DejaColorSelectorModule } from '../index';
@@ -129,7 +129,7 @@ describe('DejaColorSelector', () => {
             sendMouseEvent(elements[8].nativeElement, 'mousemove', 5, 5);
 
             fixture.detectChanges();
-            Observable.timer(200).subscribe(() => {
+            observableTimer(200).subscribe(() => {
                 const activeElements = fixture.debugElement.queryAll(By.css('deja-color-fab[active]'));
                 expect(activeElements.length).toBe(2);
                 const colorFab = activeElements[0].componentInstance._colorFab as DejaColorFab;

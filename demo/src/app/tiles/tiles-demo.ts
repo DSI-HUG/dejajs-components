@@ -13,15 +13,8 @@ import { IDejaMouseDroppableContext } from '@deja-js/component';
 import { IDejaTile } from '@deja-js/component';
 import { IDejaTilesAddEvent, IDejaTilesRemoveEvent } from '@deja-js/component';
 import { Rect } from '@deja-js/component';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/operator/defaultIfEmpty';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/reduce';
-import 'rxjs/add/operator/scan';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/take';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import {from as observableFrom,  Observable ,  Subject } from 'rxjs';
+import {defaultIfEmpty, map, reduce, scan, switchMap, take} from 'rxjs/operators';
 import { CountriesService, Country } from '../services/countries.service';
 
 @Component({
@@ -40,9 +33,9 @@ export class DejaTilesDemoComponent implements OnInit {
     private message$ = new Subject<IMessage>();
 
     constructor(private countriesService: CountriesService) {
-        this.messages$ = Observable.from(this.message$)
-            .scan((acc, curr) => [...acc, curr], [])
-            .defaultIfEmpty([]);
+        this.messages$ = observableFrom(this.message$).pipe(
+            scan((acc: any[], curr: any) => [...acc, curr], []),
+            defaultIfEmpty([]), );
     }
 
     public ngOnInit() {
@@ -51,12 +44,12 @@ export class DejaTilesDemoComponent implements OnInit {
         let x2 = 0;
         let y2 = 0;
 
-        const tiles$ = this.countriesService.getCountries$()
-            .switchMap((countries) => countries);
+        const tiles$ = this.countriesService.getCountries$().pipe(
+            switchMap((countries) => countries));
 
-        this.tiles1$ = tiles$
-            .take(12)
-            .map((country) => {
+        this.tiles1$ = tiles$.pipe(
+            take(12),
+            map((country) => {
                 const tile = {
                     bounds: new Rect(x1, y1, 15, 15),
                     id: country.code,
@@ -70,14 +63,11 @@ export class DejaTilesDemoComponent implements OnInit {
                 }
 
                 return tile;
-            })
-            .reduce((acc, curr) => {
-                acc.push(curr);
-                return acc;
-            }, []);
+            }),
+            reduce((acc: IDejaTile[], cur: IDejaTile) => [...acc, cur], []));
 
-        this.tiles2$ = tiles$
-            .map((country) => {
+        this.tiles2$ = tiles$.pipe(
+            map((country) => {
                 const tile = {
                     bounds: new Rect(x2, y2, 15, 15),
                     id: country.code,
@@ -91,11 +81,8 @@ export class DejaTilesDemoComponent implements OnInit {
                 }
 
                 return tile;
-            })
-            .reduce((acc, curr) => {
-                acc.push(curr);
-                return acc;
-            }, []);
+            }),
+            reduce((acc: IDejaTile[], cur: IDejaTile) => [...acc, cur], []));
     }
 
     protected getDragContext() {
@@ -103,8 +90,8 @@ export class DejaTilesDemoComponent implements OnInit {
             target: 'deja-tile',
             className: 'deja-tile-cursor',
             dragStart: (target) => {
-                return this.countriesService.getCountryByCode$(target.id)
-                    .map((country) => {
+                return this.countriesService.getCountryByCode$(target.id).pipe(
+                    map((country) => {
                         return {
                             country: country,
                             IDejaTile: {
@@ -114,7 +101,7 @@ export class DejaTilesDemoComponent implements OnInit {
                                 templateModel: country,
                             } as IDejaTile,
                         };
-                    });
+                    }));
             },
         } as IDejaMouseDraggableContext;
     }

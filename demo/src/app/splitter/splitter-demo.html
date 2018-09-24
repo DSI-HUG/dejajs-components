@@ -17,11 +17,11 @@
         <mat-toolbar color="primary">Horizontal splitter</mat-toolbar>
         <mat-card-content class="no-padding">
             <div class="container">
-                <deja-splitter [direction]="'horizontal'">
-                    <split-area [size]="25">
+                <deja-splitter [direction]="'horizontal'" order="1">
+                    <split-area [size]="25" minSizePixel="100">
                         <p>Lorem ipsum dolor sit amet...</p>
                     </split-area>
-                    <split-area [size]="75">
+                    <split-area [size]="75" minSizePixel="100">
                         <p>Sed ut perspiciatis unde omnis iste natus erro...</p>
                     </split-area>
                 </deja-splitter>

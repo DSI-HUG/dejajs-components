@@ -673,10 +673,12 @@ gulp.task('push-changes', (cb) => {
 
 gulp.task('create-new-tag', (cb) => {
 	let version = `v${getPackageJsonVersion()}`;
-	gulpGit.tag(version, `chore(release): :sparkles: :tada: create tag for version v${version}`, cb);
+	gulpGit.tag(version, `chore(release): :sparkles: :tada: create tag for version ${version}`, cb);
 });
 
 gulp.task('release', gulp.series('bump-version', 'changelog', 'commit-changes', 'create-new-tag', 'push-changes'));
+
+gulp.task('beta', gulp.series('changelog', 'commit-changes', 'create-new-tag'));
 
 /////////////////////////////////////////////////////////////////////////////
 // Utility Tasks
