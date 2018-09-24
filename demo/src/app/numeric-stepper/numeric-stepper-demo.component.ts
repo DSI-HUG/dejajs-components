@@ -10,6 +10,13 @@ import { Component } from '@angular/core';
 
 @Component({
     selector: 'deja-numeric-stepper-demo',
+    styles: [`
+    :host mat-card mat-card-content {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    `],
     templateUrl: './numeric-stepper-demo.component.html',
 })
 export class DejaNumericStepperDemoComponent {

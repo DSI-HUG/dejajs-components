@@ -7,8 +7,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import 'rxjs/add/observable/of';
-import { Observable } from 'rxjs/Observable';
+import {Observable,  of as observableOf } from 'rxjs';
 
 /**
  * @deprecated 09.01.2017 Use lodash cloneDeep instead
@@ -23,7 +22,7 @@ export class CloningService {
      * @return Observable resolving to the cloned object.
      */
     public clone$<T>(object: any, type?: { new(): T } | object): Observable<T> {
-        return Observable.of(this.cloneSync(object, type));
+        return observableOf(this.cloneSync(object, type));
     }
 
     /**
@@ -120,9 +119,9 @@ export class CloningService {
                 const cloned = this.cloneSync(o) as T;
                 target.push(cloned);
             });
-            return Observable.of(target);
+            return observableOf(target);
         } else {
-            return Observable.of(this.cloneArray(obj, target));
+            return observableOf(this.cloneArray(obj, target));
         }
     }
 }

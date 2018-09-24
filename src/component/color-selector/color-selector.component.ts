@@ -9,21 +9,8 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/observable/merge';
-import 'rxjs/add/observable/timer';
-import 'rxjs/add/operator/debounce';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/first';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/takeWhile';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import {BehaviorSubject, combineLatest as observableCombineLatest, from as observableFrom, fromEvent as observableFromEvent, merge as observableMerge,  Observable ,  Subject ,  timer as observableTimer } from 'rxjs';
+import {debounce, debounceTime, distinctUntilChanged, filter, first, map, takeWhile, tap} from 'rxjs/operators';
 import { Color } from '../../common/core/graphics/color';
 import { MaterialColor } from '../../common/core/style/material-color';
 import { DejaColorFab } from './color-fab.class';
@@ -105,12 +92,12 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
             this._control.valueAccessor = this;
         }
 
-        this._colorFabs$ = Observable.from(this._colors$)
-            .map((colors) => colors.map((color, index) => new DejaColorFab(color, this._disabled, index === this._selectedBaseIndex)))
-            .do((colorFabs) => this._colorFabs = colorFabs);
+        this._colorFabs$ = observableFrom(this._colors$).pipe(
+            map((colors) => colors.map((color, index) => new DejaColorFab(color, this._disabled, index === this._selectedBaseIndex))),
+            tap((colorFabs) => this._colorFabs = colorFabs));
 
-        Observable.combineLatest(this._colors$, this._resetcolor$)
-            .takeWhile(() => this.isAlive)
+        observableCombineLatest(this._colors$, this._resetcolor$).pipe(
+            takeWhile(() => this.isAlive))
             .subscribe(([colors, resetcolor]) => {
                 if (!colors || !colors.length || !resetcolor) {
                     this._resetcolor = undefined;
@@ -141,64 +128,64 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
                 this._resetcolor = bestColor;
             });
 
-        const hilightedBaseIndex$ = Observable.from(this.hilightedBaseIndex$)
-            .distinctUntilChanged()
-            .debounce((colorIndex) => Observable.timer(colorIndex !== undefined ? 100 : 1000))
-            .do((colorIndex) => {
+        const hilightedBaseIndex$ = observableFrom(this.hilightedBaseIndex$).pipe(
+            distinctUntilChanged(),
+            debounce((colorIndex) => observableTimer(colorIndex !== undefined ? 100 : 1000)),
+            tap((colorIndex) => {
                 this.hilightedBaseIndex = colorIndex;
                 const event = new CustomEvent('ColorEvent', {}) as IColorEvent;
                 event.color = colorIndex ? this._colorFabs && this._colorFabs[colorIndex] && this._colorFabs[colorIndex].color : this.value;
                 this.colorhover.emit(event);
-            })
-            .map((colorIndex) => colorIndex !== undefined ? colorIndex : this._selectedBaseIndex || 0);
+            }),
+            map((colorIndex) => colorIndex !== undefined ? colorIndex : this._selectedBaseIndex || 0));
 
-        const selectedBaseIndex$ = Observable.from(this.selectedBaseIndex$)
-            .do((colorIndex) => this._selectedBaseIndex = colorIndex);
+        const selectedBaseIndex$ = observableFrom(this.selectedBaseIndex$).pipe(
+            tap((colorIndex) => this._selectedBaseIndex = colorIndex));
 
-        this._subColorFabs$ = Observable.merge(hilightedBaseIndex$, selectedBaseIndex$)
-            .distinctUntilChanged()
-            .do((colorIndex) => {
+        this._subColorFabs$ = observableMerge(hilightedBaseIndex$, selectedBaseIndex$).pipe(
+            distinctUntilChanged(),
+            tap((colorIndex) => {
                 if (this._colorFabs) {
                     this._colorFabs.forEach((colorFab, index) => colorFab.active = index === colorIndex);
                 }
-            })
-            .debounceTime(100)
-            .do(() => element.setAttribute('sub-tr', ''))
-            .map((baseIndex) => this._colorFabs && this._colorFabs[baseIndex] && (this._colorFabs[baseIndex].color as MaterialColor).subColors)
-            .map((colors) => colors && colors.map((color, index) => new DejaColorFab(color, this._disabled, index === this._selectedSubIndex)))
-            .do((subColorFabs) => {
+            }),
+            debounceTime(100),
+            tap(() => element.setAttribute('sub-tr', '')),
+            map((baseIndex) => this._colorFabs && this._colorFabs[baseIndex] && (this._colorFabs[baseIndex].color as MaterialColor).subColors),
+            map((colors) => colors && colors.map((color, index) => new DejaColorFab(color, this._disabled, index === this._selectedSubIndex))),
+            tap((subColorFabs) => {
                 this._subColorFabs = subColorFabs;
-                Observable.timer(100).first().subscribe(() => {
+                observableTimer(100).pipe(first()).subscribe(() => {
                     element.removeAttribute('sub-tr');
                 });
-            });
+            }));
 
-        const hilightedSubIndex$ = Observable.from(this.hilightedSubIndex$)
-            .distinctUntilChanged()
-            .debounce((subColorIndex) => Observable.timer(subColorIndex !== undefined ? 200 : 1100))
-            .do((subColorIndex) => {
+        const hilightedSubIndex$ = observableFrom(this.hilightedSubIndex$).pipe(
+            distinctUntilChanged(),
+            debounce((subColorIndex) => observableTimer(subColorIndex !== undefined ? 200 : 1100)),
+            tap((subColorIndex) => {
                 this.hilightedSubIndex = subColorIndex;
                 const event = new CustomEvent('ColorEvent', {}) as IColorEvent;
                 event.color = subColorIndex !== undefined ? this._subColorFabs && this._subColorFabs[subColorIndex] && this._subColorFabs[subColorIndex].color : this.value;
                 this.colorhover.emit(event);
-            })
-            .map((subColorIndex) => subColorIndex !== undefined ? subColorIndex : this._selectedSubIndex || 0);
+            }),
+            map((subColorIndex) => subColorIndex !== undefined ? subColorIndex : this._selectedSubIndex || 0));
 
-        const selectedSubIndex$ = Observable.from(this.selectedSubIndex$)
-            .distinctUntilChanged()
-            .do((subColorIndex) => this._selectedSubIndex = subColorIndex);
+        const selectedSubIndex$ = observableFrom(this.selectedSubIndex$).pipe(
+            distinctUntilChanged(),
+            tap((subColorIndex) => this._selectedSubIndex = subColorIndex));
 
-        Observable.merge(hilightedSubIndex$, selectedSubIndex$)
-            .takeWhile(() => this.isAlive)
+        observableMerge(hilightedSubIndex$, selectedSubIndex$).pipe(
+            takeWhile(() => this.isAlive))
             .subscribe((subColorIndex) => {
                 if (this._subColorFabs) {
                     this._subColorFabs.forEach((colorFab, index) => colorFab.active = index === subColorIndex);
                 }
             });
 
-        Observable.fromEvent(element, 'mousemove')
-            .takeWhile(() => this.isAlive)
-            .filter((_event) => !this._disabled)
+        observableFromEvent(element, 'mousemove').pipe(
+            takeWhile(() => this.isAlive),
+            filter((_event) => !this._disabled), )
             .subscribe((event: Event) => {
                 const target = event.target as HTMLElement;
                 const targetIndex = (<any>target.attributes)[DejaColorSelectorComponent.indexAttribute];
@@ -214,9 +201,9 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
                 }
             });
 
-        Observable.fromEvent(element, 'click')
-            .takeWhile(() => this.isAlive)
-            .filter((_event) => !this._disabled)
+        observableFromEvent(element, 'click').pipe(
+            takeWhile(() => this.isAlive),
+            filter((_event) => !this._disabled), )
             .subscribe((event: Event) => {
                 const target = event.target as HTMLElement;
                 if (target.hasAttribute('basecolor') || target.hasAttribute('subcolor')) {
@@ -272,12 +259,12 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
                 const subIndex = baseColor.subColors && baseColor.subColors.findIndex((subColor) => Color.equals(subColor, color));
                 if (subIndex !== undefined && subIndex >= 0) {
                     this.selectedBaseIndex$.next(index);
-                    Observable.timer(1).first().subscribe(() => this.selectedSubIndex$.next(subIndex));
+                    observableTimer(1).pipe(first()).subscribe(() => this.selectedSubIndex$.next(subIndex));
                     // Break
                     return true;
                 } else if (Color.equals(baseColor, color)) {
                     this.selectedBaseIndex$.next(index);
-                    Observable.timer(1).first().subscribe(() => this.selectedSubIndex$.next(0));
+                    observableTimer(1).pipe(first()).subscribe(() => this.selectedSubIndex$.next(0));
                     // Break
                     return true;
                 }
@@ -286,7 +273,7 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
             });
             if (!find) {
                 this.selectedBaseIndex$.next(0);
-                Observable.timer(1).first().subscribe(() => this.selectedSubIndex$.next(0));
+                observableTimer(1).pipe(first()).subscribe(() => this.selectedSubIndex$.next(0));
             }
         }
     }

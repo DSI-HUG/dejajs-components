@@ -6,19 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import 'rxjs/add/observable/concat';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/observable/fromPromise';
-import 'rxjs/add/observable/if';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/reduce';
-import 'rxjs/add/operator/switchMap';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
-import { Subscriber } from 'rxjs/Subscriber';
+import { BehaviorSubject, concat as observableConcat, from as observableFrom, iif as observableIif, Observable, of as observableOf, Subscriber } from 'rxjs';
+import { filter, map, reduce, switchMap, tap } from 'rxjs/operators';
 import { Diacritics } from '../diacritics/diacritics';
 import { IGroupInfo } from '../grouping/group-infos';
 import { GroupingService } from '../grouping/grouping.service';
@@ -239,24 +228,24 @@ export class ItemListService {
     public setItems$(items: any[] | Promise<any[]> | Observable<any[]>) {
         if (!items) {
             this.items = undefined;
-            return Observable.of(null);
+            return observableOf(null);
         } else if (items instanceof Array) {
             this.ensureChildrenProperties(items);
             this.ensureSelectedItems(items);
             this.items = items;
             this._waiter$.next(false);
-            return Observable.of(items);
+            return observableOf(items);
         } else {
             this.items = undefined;
             this._waiter$.next(true);
             let observable = items as Observable<IItemBase[]>;
             if (observable.subscribe === undefined) {
                 const promise = items as Promise<IItemBase[]>;
-                observable = Observable.fromPromise(promise);
+                observable = observableFrom(promise);
             }
 
-            return observable
-                .map((its) => {
+            return observable.pipe(
+                map((its) => {
                     if (its) {
                         this.ensureChildrenProperties(its);
                         // TODO La déselection ne fonctionne pas pendant le chargement
@@ -269,7 +258,7 @@ export class ItemListService {
                         this._waiter$.next(false);
                         return [];
                     }
-                });
+                }));
         }
     }
 
@@ -515,10 +504,10 @@ export class ItemListService {
      * @return Observable résolu par la fonction.
      */
     public toggleAll$(collapsed: boolean): Observable<IItemTree[]> {
-        return Observable.of(this._cache.flatList)
-            .map((items: IItemTree[]) => items.filter((item) => item.$items && item.collapsible !== false))
-            .do(() => delete this._cache.visibleList) // Invalidate view cache
-            .switchMap((items) => collapsed ? this.collapseItems$(items) : this.expandItems$(items));
+        return observableOf(this._cache.flatList).pipe(
+            map((items: IItemTree[]) => items.filter((item) => item.$items && item.collapsible !== false)),
+            tap(() => delete this._cache.visibleList), // Invalidate view cache
+            switchMap((items) => collapsed ? this.collapseItems$(items) : this.expandItems$(items)));
     }
 
     /** Change l'état d'expansion de l'élément spécifié par son index sur la liste des éléments visibles.
@@ -534,7 +523,7 @@ export class ItemListService {
 
         const item = visibleList[index] as IItemTree;
         if (!item || item.collapsible === false) {
-            return Observable.of([]);
+            return observableOf([]);
         }
 
         const collapsed = collapse !== undefined ? collapse : item.collapsed ? false : true;
@@ -546,12 +535,9 @@ export class ItemListService {
      * @return Observable résolu par la fonction.
      */
     public expandItems$(items: IItemBase[]): Observable<IItemBase[]> {
-        return Observable.from(items || [])
-            .switchMap((item) => this.expandItem$(item))
-            .reduce((acc: any[], cur) => {
-                acc.push(cur);
-                return acc;
-            }, []);
+        return observableFrom(items || []).pipe(
+            switchMap((item) => this.expandItem$(item)),
+            reduce((acc, cur) => [...acc, cur], []));
     }
 
     /** Reduits les éléments spécifiés.
@@ -559,12 +545,9 @@ export class ItemListService {
      * @return Observable résolu par la fonction.
      */
     public collapseItems$(items: IItemBase[]): Observable<IItemBase[]> {
-        return Observable.from(items || [])
-            .switchMap((item) => this.collapseItem$(item))
-            .reduce((acc: any[], cur) => {
-                acc.push(cur);
-                return acc;
-            }, []);
+        return observableFrom(items || []).pipe(
+            switchMap((item) => this.collapseItem$(item)),
+            reduce((acc, cur) => [...acc, cur], []));
     }
 
     /** Etends l'élément spécifié.
@@ -572,15 +555,15 @@ export class ItemListService {
      * @return Observable résolu par la fonction.
      */
     public expandItem$(item: IItemTree) {
-        return Observable.of(item)
-            .filter((itm) => !!itm)
-            .switchMap((itm) => this.expandingItem$ ? this.expandingItem$(itm) : Observable.of(itm))
-            .filter((itm) => !!itm)
-            .do((itm) => {
+        return observableOf(item).pipe(
+            filter((itm) => !!itm),
+            switchMap((itm) => this.expandingItem$ ? this.expandingItem$(itm) : observableOf(itm)),
+            filter((itm) => !!itm),
+            tap((itm) => {
                 itm.collapsed = false;
                 // Invalidate view cache
                 delete this._cache.visibleList;
-            });
+            }));
     }
 
     /** Réduit l'élément spécifié.
@@ -588,15 +571,15 @@ export class ItemListService {
      * @return Observable résolu par la fonction.
      */
     public collapseItem$(item: IItemTree) {
-        return Observable.of(item)
-            .filter((itm) => !!itm)
-            .switchMap((itm) => this.collapsingItem$ ? this.collapsingItem$(itm) : Observable.of(itm))
-            .filter((itm) => !!itm)
-            .do((itm) => {
+        return observableOf(item).pipe(
+            filter((itm) => !!itm),
+            switchMap((itm) => this.collapsingItem$ ? this.collapsingItem$(itm) : observableOf(itm)),
+            filter((itm) => !!itm),
+            tap((itm) => {
                 itm.collapsed = true;
                 // Invalidate view cache
                 delete this._cache.visibleList;
-            });
+            }));
     }
 
     /** Retourne la liste des éléments sélectionés.
@@ -653,15 +636,15 @@ export class ItemListService {
             throw new Error('Empty cache on selection');
         }
 
-        return this.unselectAll$()
-            .map(() => visibleList.slice(Math.min(indexFrom, indexTo), 1 + Math.max(indexFrom, indexTo)))
-            .map((items) => items.filter((itm) => itm.selectable !== false))
-            .do(() => {
+        return this.unselectAll$().pipe(
+            map(() => visibleList.slice(Math.min(indexFrom, indexTo), 1 + Math.max(indexFrom, indexTo))),
+            map((items) => items.filter((itm) => itm.selectable !== false)),
+            tap(() => {
                 if (this.hideSelected) {
                     delete this._cache.visibleList;
                 }
-            })
-            .switchMap((items) => this.selectItems$(items).map((selected) => selected.length));
+            }),
+            switchMap((items) => this.selectItems$(items).pipe(map((selected) => selected.length))));
     }
 
     /** Change l'état de selection de l'élément spécifié.
@@ -671,13 +654,13 @@ export class ItemListService {
      */
     public toggleSelect$(items: IItemBase[], selected: boolean) {
         items = items || [];
-        return Observable.if(() => selected, this.selectItems$(items), this.unSelectItems$(items))
-            .map(() => {
+        return observableIif(() => selected, this.selectItems$(items), this.unSelectItems$(items)).pipe(
+            map(() => {
                 if (this.hideSelected) {
                     delete this._cache.visibleList;
                 }
                 return this.selectedList;
-            });
+            }));
     }
 
     /** Sélectionne les éléments spécifiés
@@ -685,12 +668,9 @@ export class ItemListService {
      * @return Observable résolu par la fonction.
      */
     public selectItems$(items: IItemBase[]): Observable<IItemBase[]> {
-        return Observable.from(items || [])
-            .switchMap((item) => this.selectItem$(item))
-            .reduce((acc: any[], cur) => {
-                acc.push(cur);
-                return acc;
-            }, []);
+        return observableFrom(items || []).pipe(
+            switchMap((item) => this.selectItem$(item)),
+            reduce((acc: IItemBase[], cur: IItemBase) => [...acc, cur], []));
     }
 
     /** Déselectionne les éléments spécifiés
@@ -698,13 +678,10 @@ export class ItemListService {
      * @return Observable résolu par la fonction.
      */
     public unSelectItems$(items: IItemBase[]): Observable<IItemBase[]> {
-        return Observable.from(items || [])
-            .filter((item) => item.selected)
-            .switchMap((item) => this.unSelectItem$(item))
-            .reduce((acc: any[], cur) => {
-                acc.push(cur);
-                return acc;
-            }, []);
+        return observableFrom(items || []).pipe(
+            filter((item) => item.selected),
+            switchMap((item) => this.unSelectItem$(item)),
+            reduce((acc: IItemBase[], cur: IItemBase) => [...acc, cur], []));
     }
 
     /** Sélectionne l'élément spécifié
@@ -712,18 +689,18 @@ export class ItemListService {
      * @return Observable résolu par la fonction.
      */
     public selectItem$(item: IItemBase) {
-        return Observable.of(item)
-            .filter((itm) => !!itm)
-            .switchMap((itm) => this.selectingItem$ ? this.selectingItem$(itm) : Observable.of(itm))
-            .filter((itm) => !!itm)
-            .do((itm) => {
+        return observableOf(item).pipe(
+            filter((itm) => !!itm),
+            switchMap((itm) => this.selectingItem$ ? this.selectingItem$(itm) : observableOf(itm)),
+            filter((itm) => !!itm),
+            tap((itm) => {
                 if (!this.selectedList) {
                     this.selectedList = [];
                 }
 
                 itm.selected = true;
                 this.selectedList.push(itm);
-            });
+            }));
     }
 
     /** Déselectionne l'élément spécifié
@@ -731,11 +708,11 @@ export class ItemListService {
      * @return Observable résolu par la fonction.
      */
     public unSelectItem$(item: IItemBase) {
-        return Observable.of(item)
-            .filter((itm) => !!itm)
-            .switchMap((itm) => this.unselectingItem$ ? this.unselectingItem$(itm) : Observable.of(itm))
-            .filter((itm) => !!itm)
-            .do((itm) => {
+        return observableOf(item).pipe(
+            filter((itm) => !!itm),
+            switchMap((itm) => this.unselectingItem$ ? this.unselectingItem$(itm) : observableOf(itm)),
+            filter((itm) => !!itm),
+            tap((itm) => {
                 itm.selected = false;
                 if (this.selectedList && this.selectedList.length) {
                     const index = this.selectedList.findIndex((i) => this.compareItems(i, itm));
@@ -743,7 +720,7 @@ export class ItemListService {
                         this.selectedList.splice(index, 1);
                     }
                 }
-            });
+            }));
     }
 
     /** Trouve l'élément suivant répondant à la fonction de comparaison spécifiée.
@@ -782,7 +759,7 @@ export class ItemListService {
                 }
             }
         }
-        return Observable.of(result);
+        return observableOf(result);
     }
 
     /** Trie les éléments en fonction du modèle de tri spécifié
@@ -795,16 +772,16 @@ export class ItemListService {
         }
 
         const sortTree$ = this.getSortingService()
-            .sortTree$(this._cache.groupedList, sortInfos, '$items')
-            .do((sortedList: IItemTree[]) => {
-                this._cache.groupedList = sortedList;
-                this.invalidateViewCache();
-            });
+            .sortTree$(this._cache.groupedList, sortInfos, '$items').pipe(
+                tap((sortedList: IItemTree[]) => {
+                    this._cache.groupedList = sortedList;
+                    this.invalidateViewCache();
+                }));
 
         if (!this._cache.groupedList || this._cache.groupedList.length === 0) {
-            return this.getGroupedList$(this.items)
-                .do((groupedList) => this._cache.groupedList = groupedList)
-                .switchMap(() => sortTree$);
+            return this.getGroupedList$(this.items).pipe(
+                tap((groupedList) => this._cache.groupedList = groupedList),
+                switchMap(() => sortTree$));
         } else {
             return sortTree$;
         }
@@ -818,7 +795,7 @@ export class ItemListService {
         this._groupInfos = groupInfos;
         this.invalidateCache();
         this.ensureChildrenProperties(this.items);
-        return Observable.of(groupInfos);
+        return observableOf(groupInfos);
     }
 
     /** Retire les groupe correspondants au modèle de groupe spécifié
@@ -833,7 +810,7 @@ export class ItemListService {
 
         this.invalidateCache();
         this.ensureChildrenProperties(this.items);
-        return Observable.of(groupInfo);
+        return observableOf(groupInfo);
     }
 
     /** Retrouve les informations du parent de l'élément spécifié
@@ -868,11 +845,11 @@ export class ItemListService {
                 }
             }
 
-            return Observable.of(result);
+            return observableOf(result);
         };
 
-        return this.ensureFlatListCache$(true, multiSelect)
-            .switchMap(search$);
+        return this.ensureFlatListCache$(true, multiSelect).pipe(
+            switchMap(search$));
     }
 
     /** Supprime tous les caches internes. Ils seront recréés à la première demande de la portion de la liste à afficher. */
@@ -976,8 +953,8 @@ export class ItemListService {
                 this.internalQuery = regExp;
             }
 
-            return this.getItemList$(query, this.selectedList)
-                .do((items) => {
+            return this.getItemList$(query, this.selectedList).pipe(
+                tap((items) => {
                     if (!this.items || !this.items.length) {
                         this.ensureSelectedItems(items);
                     }
@@ -992,12 +969,12 @@ export class ItemListService {
 
                     delete this._cache.visibleList;
                     this.waiter$.next(this.items === undefined);
-                })
-                .switchMap(() => this.ensureVisibleListCache$(searchField, this.internalQuery, queryChanged, multiSelect))
-                .map(loadViewList);
+                }),
+                switchMap(() => this.ensureVisibleListCache$(searchField, this.internalQuery, queryChanged, multiSelect)),
+                map(loadViewList));
         } else {
-            return this.ensureVisibleListCache$(searchField, this.internalQuery, queryChanged, multiSelect)
-                .map(loadViewList);
+            return this.ensureVisibleListCache$(searchField, this.internalQuery, queryChanged, multiSelect).pipe(
+                map(loadViewList));
         }
     }
 
@@ -1012,7 +989,7 @@ export class ItemListService {
      * @return Observable résolu par la fonction, qui retourne la liste à utiliser.
      */
     protected getItemList$(query?: RegExp | string, selectedItems?: IItemBase[]): Observable<IItemBase[]> {
-        return this.loadingItems$ ? this.loadingItems$(query, selectedItems) : Observable.of(this.items);
+        return this.loadingItems$ ? this.loadingItems$(query, selectedItems) : observableOf(this.items);
     }
 
     /** Retourne une valeur indiquant si l'élément spécifié correspond aux critères de recherche spécifiés
@@ -1033,7 +1010,7 @@ export class ItemListService {
      * @return Observable résolu par la fonction, qui retourne la liste groupés.
      */
     protected getGroupedList$(items: IItemBase[]): Observable<IItemTree[]> {
-        return items ? this.getGroupingService().group$(this.items, this.groupInfos, '$items') : Observable.of([]);
+        return items ? this.getGroupingService().group$(this.items, this.groupInfos, '$items') : observableOf([]);
     }
 
     /** Retourne la liste des éléments visibles. Si la liste des éléments est hièrarchique, cette fonction retourne une liste plate. Cette liste est utilisé pour calculer la portion de la liste à afficher.
@@ -1046,7 +1023,7 @@ export class ItemListService {
      */
     protected getVisibleList$(items: IItemBase[], searchField: string, regExp: RegExp, expandTree: boolean, multiSelect: boolean): Observable<IItemBase[]> {
         if (!items) {
-            return Observable.of([]);
+            return observableOf([]);
         }
 
         let visibleList = [] as IItemTree[];
@@ -1131,12 +1108,12 @@ export class ItemListService {
             getVisibleListInternal(items, 0, false);
         }
 
-        return Observable.of(visibleList)
-            .do(() => {
+        return observableOf(visibleList).pipe(
+            tap(() => {
                 if (!multiSelect) {
                     this.selectedList = selectedList;
                 }
-            });
+            }));
     }
 
     /** Retourne une liste plate depuis la liste originale sans hierarchie.
@@ -1146,7 +1123,7 @@ export class ItemListService {
      */
     protected getFlatList$(items: IItemBase[], isFiltered: boolean, multiSelect: boolean): Observable<IItemBase[]> {
         if (!items) {
-            return Observable.of([]);
+            return observableOf([]);
         }
 
         const visibleList = [] as IItemBase[];
@@ -1156,8 +1133,8 @@ export class ItemListService {
         let odd = false;
 
         const flatList$: any = (itms: IItemTree[], depth: number, hidden: boolean) => {
-            return Observable.from(itms || [])
-                .do((item) => {
+            return observableFrom(itms || []).pipe(
+                tap((item) => {
                     if (depth > depthMax) {
                         depthMax = depth;
                     }
@@ -1178,20 +1155,20 @@ export class ItemListService {
                     if (item.selected) {
                         selectedList.push(item);
                     }
-                })
-                .switchMap((item) => {
+                }),
+                switchMap((item) => {
                     if (item.$items) {
                         isTree = true;
                         odd = false;
-                        return Observable.concat(Observable.of(item), flatList$(item.$items, depth + 1, hidden || item.collapsed));
+                        return observableConcat(observableOf(item), flatList$(item.$items, depth + 1, hidden || item.collapsed));
                     } else {
-                        return Observable.of(item);
+                        return observableOf(item);
                     }
-                });
+                }));
         };
 
-        return flatList$(items, 0, false)
-            .do(() => {
+        return flatList$(items, 0, false).pipe(
+            tap(() => {
                 if (!multiSelect) {
                     this.selectedList = selectedList;
                 }
@@ -1200,11 +1177,11 @@ export class ItemListService {
                     this._cache.visibleList = visibleList;
                 }
                 this._cache.depthMax = isTree ? depthMax : 0;
-            })
-            .reduce((acc: any[], cur: IItemBase) => {
+            }),
+            reduce((acc: any[], cur: IItemBase) => {
                 acc.push(cur);
                 return acc;
-            }, []);
+            }, []));
     }
 
     /** Efface une partie des caches  */
@@ -1299,11 +1276,11 @@ export class ItemListService {
 
     private ensureVisibleListCache$(searchField: string, regExp: RegExp, expandTree: boolean, multiSelect: boolean) {
         if (this._cache.visibleList && this._cache.visibleList.length) {
-            return Observable.of(this._cache.visibleList);
+            return observableOf(this._cache.visibleList);
         } else {
-            return this.ensureFlatListCache$(!!regExp, multiSelect)
-                .switchMap(() => this.getVisibleList$(this._cache.groupedList, searchField, regExp, expandTree, multiSelect))
-                .do((visibleList) => {
+            return this.ensureFlatListCache$(!!regExp, multiSelect).pipe(
+                switchMap(() => this.getVisibleList$(this._cache.groupedList, searchField, regExp, expandTree, multiSelect)),
+                tap((visibleList) => {
                     /* if (this._cache.visibleList && this._cache.visibleList.length && this._cache.visibleList !== visibleList) {
                      // New visible list
                      // Nothing to do yet
@@ -1311,17 +1288,17 @@ export class ItemListService {
 
                     this._cache.visibleList = visibleList;
                     this._cache.rowsCount = visibleList.length;
-                });
+                }));
         }
     }
 
     private ensureFlatListCache$(isFiltered: boolean, multiSelect: boolean) {
         if (this._cache.flatList && this._cache.flatList.length) {
-            return Observable.of(this._cache.flatList);
+            return observableOf(this._cache.flatList);
         } else {
-            return this.ensureGroupedListCache$()
-                .switchMap(() => this.getFlatList$(this._cache.groupedList, isFiltered, multiSelect))
-                .do((flatList) => {
+            return this.ensureGroupedListCache$().pipe(
+                switchMap(() => this.getFlatList$(this._cache.groupedList, isFiltered, multiSelect)),
+                tap((flatList) => {
                     if (this._cache.flatList && this._cache.flatList.length && this._cache.flatList !== flatList) {
                         // New flat list
                         delete this._cache.visibleList;
@@ -1338,27 +1315,27 @@ export class ItemListService {
                         }
                     }
                     this._cache.flatList = flatList;
-                });
+                }));
         }
     }
 
     private ensureGroupedListCache$() {
         if (this._cache.groupedList && this._cache.groupedList.length) {
-            return Observable.of(this._cache.groupedList);
+            return observableOf(this._cache.groupedList);
         } else if (!this.groupInfos || this.groupInfos.length === 0) {
-            return Observable.of(this.items)
-                .do((items) => this._cache.groupedList = items);
+            return observableOf(this.items).pipe(
+                tap((items) => this._cache.groupedList = items));
         } else if (this.items) {
-            return this.getGroupedList$(this.items)
-                .do((groupedList) => {
+            return this.getGroupedList$(this.items).pipe(
+                tap((groupedList) => {
                     if (this._cache.groupedList && this._cache.groupedList.length && this._cache.groupedList !== groupedList) {
                         // New grouped list
                         this.invalidateViewCache();
                     }
                     this._cache.groupedList = groupedList;
-                });
+                }));
         } else {
-            return Observable.of([]);
+            return observableOf([]);
         }
     }
 

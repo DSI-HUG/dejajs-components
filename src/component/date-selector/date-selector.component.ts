@@ -9,12 +9,8 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Optional, Output, Self, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/operator/first';
-import 'rxjs/add/operator/takeWhile';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import { from as observableFrom, fromEvent as observableFromEvent, Subject } from 'rxjs';
+import { first, takeWhile } from 'rxjs/operators';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { IDateSelectorItem } from './date-selector-item.model';
 
@@ -183,8 +179,8 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
             this._control.valueAccessor = this;
         }
 
-        Observable.fromEvent(element, 'click')
-            .takeWhile(() => this.isAlive)
+        observableFromEvent(element, 'click').pipe(
+            takeWhile(() => this.isAlive))
             .subscribe((event: Event) => {
                 const target = event.target as HTMLElement;
                 if (target.hasAttribute('dateindex')) {
@@ -200,12 +196,12 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
                 }
             });
 
-        Observable.from(this._keyboardNavigation$)
-            .takeWhile(() => this.isAlive)
+        observableFrom(this._keyboardNavigation$).pipe(
+            takeWhile(() => this.isAlive))
             .subscribe(() => {
                 this._keyboardNavigation = true;
-                Observable.fromEvent(element, 'mouseenter')
-                    .first()
+                observableFromEvent(element, 'mouseenter').pipe(
+                    first())
                     .subscribe(() => {
                         this._keyboardNavigation = false;
                         this.changeDetectorRef.markForCheck();

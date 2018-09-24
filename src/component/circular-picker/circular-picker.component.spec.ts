@@ -8,7 +8,8 @@
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { Observable } from 'rxjs/Observable';
+import {timer as observableTimer } from 'rxjs';
+import {delay, first, tap} from 'rxjs/operators';
 import { DejaCircularPickerComponent, ICircularRange } from './circular-picker.component';
 
 describe('DejaCircularPickerComponent', () => {
@@ -100,27 +101,27 @@ describe('DejaCircularPickerComponent', () => {
             sendMouseEvent(cursorElement, 'mousedown', 0, 0, 1);
             sendMouseEvent(htmlElement.ownerDocument, 'mousemove', cursorBounds.left + 1, cursorBounds.top + 1, 1);
 
-            Observable.timer(150)
-                .first()
-                .do(() => {
+            observableTimer(150).pipe(
+                first(),
+                tap(() => {
                     sendMouseEvent(htmlElement.ownerDocument, 'mousemove', cursorBounds.left + 50, cursorBounds.top + 67, 1);
-                })
-                .delay(150)
-                .do(() => {
+                }),
+                delay(150),
+                tap(() => {
                     sendMouseEvent(htmlElement.ownerDocument, 'mouseup', cursorBounds.left + 50, cursorBounds.top + 67, 0);
                     expect(component.value).toEqual(5);
-                })
-                .delay(150)
-                .do(() => {
+                }),
+                delay(150),
+                tap(() => {
                     // Move and click on value element
                     sendMouseEvent(valueElement, 'mousemove', 0, 0, 0);
                     sendMouseEvent(valueElement, 'mousedown', 0, 0, 1);
-                })
-                .delay(150)
-                .do(() => {
+                }),
+                delay(150),
+                tap(() => {
                     sendMouseEvent(htmlElement.ownerDocument, 'mousemove', valueBounds.left +  1, valueBounds.top + 1, 0);
                     expect(component.value).toEqual(9);
-                })
+                }))
                 .subscribe(() => {
                     done();
                 });

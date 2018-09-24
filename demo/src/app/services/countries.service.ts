@@ -10,11 +10,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Color, MaterialColors } from '@deja-js/component';
 import { ObjectMapper } from 'json-object-mapper';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/publishLast';
-import 'rxjs/add/operator/reduce';
-import 'rxjs/add/operator/switchMap';
-import { Observable } from 'rxjs/Observable';
+import {Observable,  of as observableOf } from 'rxjs';
+import {map, publishLast, refCount} from 'rxjs/operators';
 
 export class Country {
     public displayName: string = void 0;
@@ -34,19 +31,19 @@ export class CountriesService {
     }
 
     public getCountryByIndex$(index: number) {
-        return this.getCountries$()
-            .map((countries) => countries[index % countries.length]);
+        return this.getCountries$().pipe(
+            map((countries) => countries[index % countries.length]));
     }
 
     public getCountryByCode$(code: string) {
-        return Observable.of(this.countriesDic[code]);
+        return observableOf(this.countriesDic[code]);
     }
 
     public getCountries$(query?: string, number?: number): Observable<Country[]> {
         let recordCount = number || 0;
-        return this.httpClient.get('assets/datas/countries.json', {})
-            .map((json: any) => ObjectMapper.deserializeArray(Country, json.data))
-            .map((countries) => {
+        return this.httpClient.get('assets/datas/countries.json', {}).pipe(
+            map((json: any) => ObjectMapper.deserializeArray(Country, json.data)),
+            map((countries) => {
                 let colorIndex = 0;
                 countries.forEach((country) => {
                     country.displayName = country.naqme;
@@ -58,10 +55,10 @@ export class CountriesService {
                     }
                 });
                 return countries;
-            })
-            .publishLast()
-            .refCount()
-            .map((countries) => {
+            }),
+            publishLast(),
+            refCount(),
+            map((countries) => {
                 if (query) {
                     const sr = new RegExp(`^${query}`, 'i');
                     const sc = new RegExp(`^(?!${query}).*(${query})`, 'i');
@@ -75,8 +72,8 @@ export class CountriesService {
                 } else {
                     return countries;
                 }
-            })
-            .map((countries) => {
+            }),
+            map((countries) => {
                 let returnCountries = countries;
                 if (recordCount) {
                     while (recordCount > 0) {
@@ -85,6 +82,6 @@ export class CountriesService {
                     }
                 }
                 return returnCountries;
-            });
+            }), );
     }
 }

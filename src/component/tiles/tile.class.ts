@@ -6,9 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
-import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
 import { Rect } from '../../common/core/graphics/rect';
 import { IDejaTile } from './tile.interface';
 

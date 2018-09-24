@@ -7,14 +7,8 @@
  */
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/delay';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/first';
-import 'rxjs/add/operator/takeWhile';
-import { Observable } from 'rxjs/Observable';
+import { from as observableFrom } from 'rxjs';
+import { debounceTime, delay, filter, first, takeWhile, tap } from 'rxjs/operators';
 import { DejaTile } from './tile.class';
 
 @Component({
@@ -60,24 +54,24 @@ export class DejaTileComponent implements OnDestroy {
                 this.changeDetectorRef.markForCheck();
             }
 
-            Observable.from(tile.pixelBounds$)
-                .filter((bounds) => !!bounds)
-                .first()
-                .takeWhile(() => this.isAlive && !!this._tile)
-                .filter(() => tile.fading)
-                .do(() => {
+            observableFrom(tile.pixelBounds$).pipe(
+                filter((bounds) => !!bounds),
+                first(),
+                takeWhile(() => this.isAlive && !!this._tile),
+                filter(() => tile.fading),
+                tap(() => {
                     this.element.setAttribute('fading', '1');
                     this.changeDetectorRef.markForCheck();
-                })
-                .delay(200)
+                }),
+                delay(200))
                 .subscribe(() => {
                     this.element.removeAttribute('fading');
                     this.changeDetectorRef.markForCheck();
                 });
 
-            Observable.from(tile.pixelBounds$)
-                .takeWhile(() => this.isAlive && !!this._tile)
-                .filter((bounds) => !!bounds)
+            observableFrom(tile.pixelBounds$).pipe(
+                takeWhile(() => this.isAlive && !!this._tile),
+                filter((bounds) => !!bounds))
                 .subscribe((bounds) => {
                     if (!tile.isHidden) {
                         this.element.removeAttribute('hidden');
@@ -90,64 +84,64 @@ export class DejaTileComponent implements OnDestroy {
                     this.changeDetectorRef.markForCheck();
                 });
 
-            Observable.from(tile.pressed$)
-                .takeWhile(() => this.isAlive && !!this._tile)
-                .do((value) => toogleAttribute('pressed', value))
+            observableFrom(tile.pressed$).pipe(
+                takeWhile(() => this.isAlive && !!this._tile),
+                tap((value) => toogleAttribute('pressed', value)))
                 .subscribe(() => this.changeDetectorRef.markForCheck());
 
-            Observable.from(tile.selected$)
-                .takeWhile(() => this.isAlive && !!this._tile)
-                .do((value) => toogleAttribute('selected', value))
+            observableFrom(tile.selected$).pipe(
+                takeWhile(() => this.isAlive && !!this._tile),
+                tap((value) => toogleAttribute('selected', value)))
                 .subscribe(() => this.changeDetectorRef.markForCheck());
 
-            Observable.from(tile.dragging$)
-                .takeWhile(() => this.isAlive && !!this._tile)
-                .do((value) => toogleAttribute('drag', value))
+            observableFrom(tile.dragging$).pipe(
+                takeWhile(() => this.isAlive && !!this._tile),
+                tap((value) => toogleAttribute('drag', value)))
                 .subscribe(() => this.changeDetectorRef.markForCheck());
 
-            Observable.from(tile.dropping$)
-                .takeWhile(() => this.isAlive && !!this._tile)
-                .do((value) => toogleAttribute('drop', value))
+            observableFrom(tile.dropping$).pipe(
+                takeWhile(() => this.isAlive && !!this._tile),
+                tap((value) => toogleAttribute('drop', value)))
                 .subscribe(() => this.changeDetectorRef.markForCheck());
 
-            Observable.from(tile.cutted$)
-                .takeWhile(() => this.isAlive && !!this._tile)
-                .do((value) => toogleAttribute('cutted', value))
+            observableFrom(tile.cutted$).pipe(
+                takeWhile(() => this.isAlive && !!this._tile),
+                tap((value) => toogleAttribute('cutted', value)))
                 .subscribe(() => this.changeDetectorRef.markForCheck());
 
-            Observable.from(tile.expanded$)
-                .takeWhile(() => this.isAlive && !!this._tile)
-                .do((value) => toogleAttribute('expanded', value))
+            observableFrom(tile.expanded$).pipe(
+                takeWhile(() => this.isAlive && !!this._tile),
+                tap((value) => toogleAttribute('expanded', value)))
                 .subscribe(() => this.changeDetectorRef.markForCheck());
 
-            Observable.from(tile.deleted$)
-                .takeWhile(() => this.isAlive && !!this._tile)
-                .do(() => this.element.remove())
+            observableFrom(tile.deleted$).pipe(
+                takeWhile(() => this.isAlive && !!this._tile),
+                tap(() => this.element.remove()))
                 .subscribe(() => this.changeDetectorRef.markForCheck());
 
-            const tooogleHide$ = Observable.from(tile.hidden$)
-                .do((value) => toogleAttribute('hidden', value ? '1' : '2'));
+            const tooogleHide$ = observableFrom(tile.hidden$).pipe(
+                tap((value) => toogleAttribute('hidden', value ? '1' : '2')));
 
             // Hide
-            tooogleHide$
-                .takeWhile(() => this.isAlive && !!this._tile)
-                .debounceTime(1000)
-                .filter((value) => value)
-                .do(() => this.element.setAttribute('hidden', '0'))
+            tooogleHide$.pipe(
+                takeWhile(() => this.isAlive && !!this._tile),
+                debounceTime(1000),
+                filter((value) => value),
+                tap(() => this.element.setAttribute('hidden', '0')))
                 .subscribe(() => this.changeDetectorRef.markForCheck());
 
             // Show
-            tooogleHide$
-                .takeWhile(() => this.isAlive && !!this._tile)
-                .debounceTime(1)
-                .filter((value) => !value)
-                .do(() => this.element.removeAttribute('hidden'))
+            tooogleHide$.pipe(
+                takeWhile(() => this.isAlive && !!this._tile),
+                debounceTime(1),
+                filter((value) => !value),
+                tap(() => this.element.removeAttribute('hidden')))
                 .subscribe(() => this.changeDetectorRef.markForCheck());
 
             // Refresh
-            Observable.from(tile.refresh$)
-                .takeWhile(() => this.isAlive && !!this._tile)
-                .debounceTime(1)
+            observableFrom(tile.refresh$).pipe(
+                takeWhile(() => this.isAlive && !!this._tile),
+                debounceTime(1))
                 .subscribe(() => this.changeDetectorRef.markForCheck());
         }
     }

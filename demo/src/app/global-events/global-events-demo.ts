@@ -8,7 +8,7 @@
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, NgZone, OnDestroy } from '@angular/core';
 import { GlobalEventService } from '@deja-js/component';
-import 'rxjs/add/operator/takeWhile';
+import {takeWhile} from 'rxjs/operators';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,8 +24,8 @@ export class DejaGlobalEventsDemoComponent implements OnDestroy {
     private isAlive = true;
 
     constructor(changeDetectorRef: ChangeDetectorRef, globalEvent: GlobalEventService, zone: NgZone) {
-        globalEvent.register('sendaction')
-            .takeWhile(() => this.isAlive)
+        globalEvent.register('sendaction').pipe(
+            takeWhile(() => this.isAlive))
             .subscribe((params: any[]) => {
                 zone.run(() => {
                     this.model.date = new Date(params[0]);

@@ -12,12 +12,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/observable/timer';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/delay';
-import 'rxjs/add/operator/filter';
-import { Observable } from 'rxjs/Observable';
+import { from as observableFrom, Observable, timer as observableTimer } from 'rxjs';
+import { debounceTime, delay, filter, first, tap } from 'rxjs/operators';
 import { GroupingService } from '../../common/core/grouping/grouping.service';
 import { DejaItemModule } from '../../common/core/item-list/index';
 import { IItemBase } from '../../common/core/item-list/item-base';
@@ -51,8 +47,8 @@ class DejaTreeListContainerComponent {
             } as IItemTree;
         });
 
-        groupingService.group$(itemList, [{ groupByField: 'size' }])
-            .first()
+        groupingService.group$(itemList, [{ groupByField: 'size' }]).pipe(
+            first())
             .subscribe((groupedResult) => {
                 this.itemList = groupedResult;
             });
@@ -133,8 +129,8 @@ describe('DejaTreeListComponent', () => {
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const viewPortService = treeListDebugElement.injector.get(ViewPortService) as ViewPortService;
 
-        return Observable.from(viewPortService.viewPortResult$)
-            .filter((result) => result.viewPortSize > 0);
+        return observableFrom(viewPortService.viewPortResult$).pipe(
+            filter((result) => result.viewPortSize > 0));
     };
 
     it('should create the component', async(() => {
@@ -285,8 +281,8 @@ describe('DejaTreeListComponent', () => {
         const tl = treeListInstance as any;
         let pass = 0;
 
-        observeViewPort$(fixture)
-            .debounceTime(100) // Debounce here, because ensureVisible move the scroll and more than one viewPort can be raised
+        observeViewPort$(fixture).pipe(
+            debounceTime(100)) // Debounce here, because ensureVisible move the scroll and more than one viewPort can be raised
             .subscribe((vp) => {
                 fixture.detectChanges();
                 const currentItems = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem[current="true"]'));
@@ -333,8 +329,8 @@ describe('DejaTreeListComponent', () => {
         treeListInstance.minSearchlength = 2;
         const viewPortService = treeListDebugElement.injector.get(ViewPortService) as ViewPortService;
 
-        Observable.from(viewPortService.viewPortResult$)
-            .debounceTime(100)
+        observableFrom(viewPortService.viewPortResult$).pipe(
+            debounceTime(100))
             .subscribe((_vp) => {
                 // Bind view port
                 fixture.detectChanges();
@@ -362,8 +358,8 @@ describe('DejaTreeListComponent', () => {
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const treeListInstance = treeListDebugElement.componentInstance as DejaTreeListComponent;
 
-        observeViewPort$(fixture)
-            .debounceTime(10)
+        observeViewPort$(fixture).pipe(
+            debounceTime(10))
             .subscribe((vp) => {
                 // Bind view port
                 fixture.detectChanges();
@@ -432,8 +428,8 @@ describe('DejaTreeListComponent', () => {
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const treeListInstance = treeListDebugElement.componentInstance as DejaTreeListComponent;
 
-        observeViewPort$(fixture)
-            .debounceTime(10)
+        observeViewPort$(fixture).pipe(
+            debounceTime(10))
             .subscribe((vp) => {
                 // Bind view port
                 fixture.detectChanges();
@@ -491,8 +487,8 @@ describe('DejaTreeListByModelContainerComponent', () => {
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const viewPortService = treeListDebugElement.injector.get(ViewPortService) as ViewPortService;
 
-        return Observable.from(viewPortService.viewPortResult$)
-            .filter((result) => result.viewPortSize > 0);
+        return observableFrom(viewPortService.viewPortResult$).pipe(
+            filter((result) => result.viewPortSize > 0));
     };
 
     it('should create the component', async(() => {
@@ -509,8 +505,8 @@ describe('DejaTreeListByModelContainerComponent', () => {
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const treeListInstance = treeListDebugElement.componentInstance as DejaTreeListComponent;
 
-        observeModelViewPort$(fixture)
-            .debounceTime(10)
+        observeModelViewPort$(fixture).pipe(
+            debounceTime(10))
             .subscribe((vp) => {
                 // Bind view port
                 fixture.detectChanges();
@@ -602,10 +598,10 @@ describe('DejaTreeListByModelContainerComponent', () => {
         const treeListInstance = treeListDebugElement.componentInstance as DejaTreeListComponent;
         let listElement: HTMLElement;
 
-        observeModelViewPort$(fixture)
-            .debounceTime(100)
-            .do(() => expect(treeListInstance.keyboardNavigation()).toBeTruthy())
-            .delay(1000)
+        observeModelViewPort$(fixture).pipe(
+            debounceTime(100),
+            tap(() => expect(treeListInstance.keyboardNavigation()).toBeTruthy()),
+            delay(1000))
             .subscribe(() => {
                 expect(treeListInstance.keyboardNavigation()).toBeFalsy();
                 done();
@@ -644,8 +640,8 @@ describe('DejaTreeListByModelContainerComponent', () => {
             fixture.detectChanges();
         };
 
-        observeModelViewPort$(fixture)
-            .debounceTime(100)
+        observeModelViewPort$(fixture).pipe(
+            debounceTime(100))
             .subscribe((vp) => {
                 fixture.detectChanges();
                 const selectedElements = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem.selected'));
@@ -887,8 +883,8 @@ describe('DejaTreeListByModelContainerComponent', () => {
         let pass = 0;
         const fixture = TestBed.createComponent(DejaTreeListByModelContainerComponent);
 
-        observeModelViewPort$(fixture)
-            .debounceTime(100)
+        observeModelViewPort$(fixture).pipe(
+            debounceTime(100))
             .subscribe((vp) => {
                 fixture.detectChanges();
 
@@ -929,8 +925,8 @@ describe('DejaTreeListByOptionsContainerComponent', () => {
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const viewPortService = treeListDebugElement.injector.get(ViewPortService) as ViewPortService;
 
-        return Observable.from(viewPortService.viewPortResult$)
-            .filter((result) => result.viewPortSize > 0);
+        return observableFrom(viewPortService.viewPortResult$).pipe(
+            filter((result) => result.viewPortSize > 0));
     };
 
     it('should create the component', (done) => {
@@ -938,8 +934,8 @@ describe('DejaTreeListByOptionsContainerComponent', () => {
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const treeListInstance = treeListDebugElement.componentInstance as DejaTreeListComponent;
 
-        observeOptionsViewPort$(fixture)
-            .debounceTime(100)
+        observeOptionsViewPort$(fixture).pipe(
+            debounceTime(100))
             .subscribe(() => {
                 fixture.detectChanges();
                 const items = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem'));
@@ -969,8 +965,8 @@ describe('DejaTreeListByOptionsContainerComponent', () => {
             fixture.detectChanges();
         };
 
-        observeOptionsViewPort$(fixture)
-            .debounceTime(450) // Wait for the clear filter flag
+        observeOptionsViewPort$(fixture).pipe(
+            debounceTime(450)) // Wait for the clear filter flag
             .subscribe((vp) => {
                 fixture.detectChanges();
                 const selectedElements = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem.selected'));
@@ -1076,8 +1072,8 @@ describe('DejaTreeListByOptionsContainerComponent', () => {
             const event = new MouseEvent('mousedown', eventInit());
             element.nativeElement.dispatchEvent(event);
             fixture.detectChanges();
-            Observable.timer(100)
-                .first()
+            observableTimer(100).pipe(
+                first())
                 .subscribe(() => {
                     const upEvent = new MouseEvent('mouseup', eventInit());
                     (upElement || element).nativeElement.dispatchEvent(upEvent);
@@ -1086,8 +1082,8 @@ describe('DejaTreeListByOptionsContainerComponent', () => {
                 });
         };
 
-        observeOptionsViewPort$(fixture)
-            .debounceTime(10)
+        observeOptionsViewPort$(fixture).pipe(
+            debounceTime(10))
             .subscribe((vp) => {
                 fixture.detectChanges();
                 const displayedElements = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem'));

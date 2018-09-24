@@ -8,10 +8,8 @@
 
 import { ChangeDetectionStrategy, Component, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { IconService } from '@deja-js/component';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/operator/takeWhile';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject, from as observableFrom, Observable } from 'rxjs';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,8 +35,8 @@ export class AppComponent implements OnDestroy {
             this._theme = 'blue';
         }
         this.theme$ = new BehaviorSubject<any>(this._theme);
-        Observable.from(this.theme$)
-            .takeWhile(() => this.isAlive)
+        observableFrom(this.theme$).pipe(
+            takeWhile(() => this.isAlive))
             .subscribe((theme) => document.body.setAttribute('theme', theme));
 
         iconService.addSvgIcon('angular', 'assets/img/logo/angular.svg');

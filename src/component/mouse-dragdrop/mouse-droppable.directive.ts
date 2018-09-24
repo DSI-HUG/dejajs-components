@@ -7,12 +7,8 @@
  */
 
 import { Directive, ElementRef, Input, OnDestroy } from '@angular/core';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/first';
-import 'rxjs/add/operator/takeUntil';
-import 'rxjs/add/operator/takeWhile';
-import { Observable } from 'rxjs/Observable';
+import { from as observableFrom, Observable } from 'rxjs';
+import { filter, first, takeUntil, takeWhile } from 'rxjs/operators';
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
 import { DejaMouseDragDropService, IDragCursorInfos, IDragDropContext, IDropCursorInfos } from './mouse-dragdrop.service';
@@ -37,17 +33,17 @@ export class DejaMouseDroppableDirective implements OnDestroy {
     constructor(elementRef: ElementRef, dragDropService: DejaMouseDragDropService) {
         const element = elementRef.nativeElement as HTMLElement;
 
-        const dragging$ = Observable.from(dragDropService.dragging$);
+        const dragging$ = observableFrom(dragDropService.dragging$);
 
-        const kill$ = dragging$
-            .filter((value) => !value);
+        const kill$ = dragging$.pipe(
+            filter((value) => !value));
 
-        dragging$
-            .takeWhile(() => this.isAlive)
-            .filter((value) => value)
+        dragging$.pipe(
+            takeWhile(() => this.isAlive),
+            filter((value) => value))
             .subscribe(() => {
-                kill$
-                    .first()
+                kill$.pipe(
+                    first())
                     .subscribe(() => {
                         if (this._dragContext) {
                             if (this.context && this.context.drop) {
@@ -58,8 +54,8 @@ export class DejaMouseDroppableDirective implements OnDestroy {
                         dragDropService.dropCursor$.next(undefined);
                     });
 
-                Observable.from(dragDropService.dragCursor$)
-                    .takeUntil(kill$)
+                observableFrom(dragDropService.dragCursor$).pipe(
+                    takeUntil(kill$))
                     .subscribe((dragCursor) => {
                         const bounds = new Rect(element.getBoundingClientRect());
                         if (this.context && dragCursor) {
@@ -73,8 +69,8 @@ export class DejaMouseDroppableDirective implements OnDestroy {
                                             const dropContextObs = dropContext as Observable<IDropCursorInfos>;
                                             if (dropContextObs.subscribe) {
                                                 // Observable
-                                                dropContextObs
-                                                    .first()
+                                                dropContextObs.pipe(
+                                                    first())
                                                     .subscribe((cursor) => {
                                                         dragDropService.dropCursor$.next(cursor);
                                                     });

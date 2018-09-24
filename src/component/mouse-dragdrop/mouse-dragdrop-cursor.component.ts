@@ -7,13 +7,8 @@
  */
 
 import { Component, ElementRef, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/operator/delay';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/takeWhile';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject, from as observableFrom } from 'rxjs';
+import { delay, filter, takeWhile, tap } from 'rxjs/operators';
 import { Position } from './../../common/core/graphics/position';
 import { DejaMouseDragDropService, IDragCursorInfos, IDropCursorInfos } from './mouse-dragdrop.service';
 
@@ -38,44 +33,44 @@ export class DejaMouseDragDropCursorComponent implements OnDestroy {
     constructor(elementRef: ElementRef, private dragDropService: DejaMouseDragDropService) {
         const element = elementRef.nativeElement as HTMLElement;
 
-        Observable.from(this.position$)
-            .takeWhile(() => this.isAlive)
+        observableFrom(this.position$).pipe(
+            takeWhile(() => this.isAlive))
             .subscribe((pos) => {
                 element.style.left = pos ? `${pos.left}px` : '-1000px';
                 element.style.top = pos ? `${pos.top}px` : '-1000px';
             });
 
-        const cursor$ = Observable.from(this.cursor$);
+        const cursor$ = observableFrom(this.cursor$);
 
         // Hide
-        cursor$
-            .takeWhile(() => this.isAlive)
-            .filter((dragCursor) => !dragCursor)
-            .do((dragCursor) => {
+        cursor$.pipe(
+            takeWhile(() => this.isAlive),
+            filter((dragCursor) => !dragCursor),
+            tap((dragCursor) => {
                 if (this._currentCursor) {
                     this.contentElement.style.opacity = '0';
                     this.iconElement.style.opacity = '0';
                 }
                 this._currentCursor = dragCursor;
-            })
-            .delay(300)
+            }),
+            delay(300))
             .subscribe(() => {
                 this.position$.next(null);
                 element.style.display = 'none';
             });
 
         // Show
-        cursor$
-            .takeWhile(() => this.isAlive)
-            .filter((dragCursor) => !!dragCursor)
-            .do((dragCursor) => {
+        cursor$.pipe(
+            takeWhile(() => this.isAlive),
+            filter((dragCursor) => !!dragCursor),
+            tap((dragCursor) => {
                 element.style.display = '';
                 this.contentElement.style.opacity = '0';
                 this.iconElement.style.opacity = '0';
                 this._currentCursor = dragCursor;
-            })
-            .filter((dragCursor) => !dragCursor.className || dragCursor.className !== 'hidden')
-            .do((dragCursor) => {
+            }),
+            filter((dragCursor) => !dragCursor.className || dragCursor.className !== 'hidden'),
+            tap((dragCursor) => {
                 if (!!dragCursor.html) {
                     this.contentElement.innerHTML = dragCursor.html;
                     element.className = dragCursor.className;
@@ -84,16 +79,16 @@ export class DejaMouseDragDropCursorComponent implements OnDestroy {
                 } else {
                     this.iconElement.style.opacity = '1';
                 }
-            })
-            .delay(1)
+            }),
+            delay(1))
             .subscribe((dragCursor) => {
                 if (!!dragCursor.html) {
                     this.contentElement.style.opacity = '1';
                 }
             });
 
-        Observable.from(this.dragDropService.dragCursor$)
-            .takeWhile(() => this.isAlive)
+        observableFrom(this.dragDropService.dragCursor$).pipe(
+            takeWhile(() => this.isAlive))
             .subscribe((dragCursor) => {
                 if (!!dragCursor !== !!this._dragCursor) {
                     this._dragCursor = dragCursor;
@@ -115,8 +110,8 @@ export class DejaMouseDragDropCursorComponent implements OnDestroy {
                 }
             });
 
-        Observable.from(this.dragDropService.dropCursor$)
-            .takeWhile(() => this.isAlive)
+        observableFrom(this.dragDropService.dropCursor$).pipe(
+            takeWhile(() => this.isAlive))
             .subscribe((dropCursor) => {
                 this._dropCursor = dropCursor;
             });

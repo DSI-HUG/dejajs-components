@@ -8,7 +8,8 @@
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { Observable } from 'rxjs/Observable';
+import { from as observableFrom } from 'rxjs';
+import { delay } from 'rxjs/operators';
 import { DejaMonacoEditorComponent } from './monaco-editor.component';
 import { MonacoEditorService } from './monaco-editor.service';
 
@@ -37,8 +38,8 @@ describe('DejaMonacoEditorComponent', () => {
 
     it('should load monaco editor', (done) => {
         fixture.detectChanges();
-        Observable.fromPromise(fixture.whenStable())
-            .delay(5000)
+        observableFrom(fixture.whenStable()).pipe(
+            delay(5000))
             .subscribe(() => {
                 fixture.detectChanges();
                 expect(window.hasOwnProperty('monaco')).toBeTruthy();

@@ -20,8 +20,12 @@ import { DejaTreeListDemoComponent } from './tree-list-demo';
 import { routing } from './tree-list-demo.routes';
 
 @NgModule({
-    declarations: [DejaTreeListDemoComponent],
-    exports: [DejaTreeListDemoComponent],
+    declarations: [
+        DejaTreeListDemoComponent
+    ],
+    exports: [
+        DejaTreeListDemoComponent
+    ],
     imports: [
         CommonModule,
         FormsModule,

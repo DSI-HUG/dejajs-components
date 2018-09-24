@@ -13,8 +13,8 @@ import { MaterialColors } from '@deja-js/component';
 import { UUID } from '@deja-js/component';
 import { JsonProperty, ObjectMapper } from 'json-object-mapper';
 import * as _ from 'lodash';
-import 'rxjs/add/operator/publishLast';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
+import {map, publishLast, refCount} from 'rxjs/operators';
 
 export class Friend {
     public id: number = void 0;
@@ -61,9 +61,9 @@ export class PeopleService {
 
     public getPeople$(query?: string, number?: number): Observable<Person[]> {
         let recordCount = number || 0;
-        return this.httpClient.get('assets/datas/people.json', {})
-            .map((json) => ObjectMapper.deserializeArray(Person, json))
-            .map((people) => {
+        return this.httpClient.get('assets/datas/people.json', {}).pipe(
+            map((json) => ObjectMapper.deserializeArray(Person, json)),
+            map((people) => {
                 let colorIndex = 0;
                 people.forEach((person) => {
                     person.color = this.materialColors[colorIndex].toHex();
@@ -74,10 +74,10 @@ export class PeopleService {
                     }
                 });
                 return people;
-            })
-            .publishLast()
-            .refCount()
-            .map((people) => {
+            }),
+            publishLast(),
+            refCount(),
+            map((people) => {
                 if (query) {
                     const sr = new RegExp(`^${query}`, 'i');
                     const sc = new RegExp(`^(?!${query}).*(${query})`, 'i');
@@ -91,8 +91,8 @@ export class PeopleService {
                 } else {
                     return people;
                 }
-            })
-            .map((people) => {
+            }),
+            map((people) => {
                 let returnPeople = people;
                 if (recordCount) {
                     while (recordCount > 0) {
@@ -105,6 +105,6 @@ export class PeopleService {
                     }
                 }
                 return returnPeople;
-            });
+            }), );
     }
 }

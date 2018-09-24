@@ -5,12 +5,9 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-
 import { Component, ContentChild, ElementRef, EventEmitter, HostListener, OnDestroy, Output } from '@angular/core';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/takeWhile';
-import { Observable } from 'rxjs/Observable';
+import { fromEvent as observableFromEvent } from 'rxjs';
+import { filter, takeWhile } from 'rxjs/operators';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 
 /**
@@ -36,9 +33,9 @@ export class DejaDialogComponent implements OnDestroy {
     constructor(elementRef: ElementRef) {
         const element = elementRef.nativeElement as HTMLElement;
 
-        Observable.fromEvent(element.ownerDocument, 'keyup')
-            .takeWhile(() => this.isAlive)
-            .filter((event: KeyboardEvent) => !!(event.keyCode === KeyCodes.Enter && this.okButton && this.okButton._elementRef) || !!(event.keyCode === KeyCodes.Escape && this.cancelButton && this.cancelButton._elementRef))
+        observableFromEvent(element.ownerDocument, 'keyup').pipe(
+            takeWhile(() => this.isAlive),
+            filter((event: KeyboardEvent) => !!(event.keyCode === KeyCodes.Enter && this.okButton && this.okButton._elementRef) || !!(event.keyCode === KeyCodes.Escape && this.cancelButton && this.cancelButton._elementRef)))
             .subscribe((event: KeyboardEvent) => {
                 if (event.keyCode === KeyCodes.Enter) {
                     this.okButton._elementRef.nativeElement.click();

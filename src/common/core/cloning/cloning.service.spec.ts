@@ -7,6 +7,7 @@
  */
 
 import * as _ from 'lodash';
+import {first} from 'rxjs/operators';
 import { CloningService } from './cloning.service';
 
 describe('CloningService', () => {
@@ -128,8 +129,8 @@ describe('CloningService', () => {
 
     it('Should, clone asynchronously', () => {
         const d = new MyTypedObject(datas);
-        service.clone$(d, MyTypedObject)
-            .first()
+        service.clone$(d, MyTypedObject).pipe(
+            first())
             .subscribe((cloned) => {
                 expect(JSON.stringify(cloned)).toEqual(JSON.stringify(d));
                 expect(cloned instanceof MyTypedObject).toBeTruthy();
@@ -138,8 +139,8 @@ describe('CloningService', () => {
     });
 
     it('Should, clone an array asynchronously', () => {
-        service.cloneArray$(datas)
-            .first()
+        service.cloneArray$(datas).pipe(
+            first())
             .subscribe((cloned) => {
                 expect(JSON.stringify(cloned)).toEqual(JSON.stringify(datas));
                 expect(cloned instanceof Array).toBeTruthy();
@@ -149,8 +150,8 @@ describe('CloningService', () => {
 
     it('Should, clone an array asynchronously to an existing array', () => {
         const cloned = [] as any[];
-        service.cloneArray$(datas, cloned)
-            .first()
+        service.cloneArray$(datas, cloned).pipe(
+            first())
             .subscribe(() => {
                 expect(JSON.stringify(cloned)).toEqual(JSON.stringify(datas));
                 expect(JSON.stringify(cloned)).toEqual(JSON.stringify(_cloned));

@@ -7,15 +7,8 @@
  */
 
 import { Directive, ElementRef, Input, OnDestroy } from '@angular/core';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/observable/merge';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/first';
-import 'rxjs/add/operator/takeUntil';
-import 'rxjs/add/operator/takeWhile';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import { fromEvent as observableFromEvent, merge as observableMerge, Observable, Subject } from 'rxjs';
+import { filter, first, takeUntil, takeWhile, tap } from 'rxjs/operators';
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
 import { DejaMouseDragDropService, IDragCursorInfos, IDragDropContext } from './mouse-dragdrop.service';
@@ -39,16 +32,16 @@ export class DejaMouseDraggableDirective implements OnDestroy {
     constructor(elementRef: ElementRef, dragDropService: DejaMouseDragDropService) {
         const element = elementRef.nativeElement as HTMLElement;
 
-        const leave$ = Observable.fromEvent(element, 'mouseleave');
+        const leave$ = observableFromEvent(element, 'mouseleave');
 
-        const mouseUp$ = Observable.fromEvent(element.ownerDocument, 'mouseup');
+        const mouseUp$ = observableFromEvent(element.ownerDocument, 'mouseup');
 
-        Observable.fromEvent(element, 'mouseenter')
-            .takeWhile(() => this.isAlive)
+        observableFromEvent(element, 'mouseenter').pipe(
+            takeWhile(() => this.isAlive))
             .subscribe(() => {
-                Observable.fromEvent(element, 'mousedown')
-                    .takeUntil(leave$)
-                    .filter((event: MouseEvent) => event.buttons === 1)
+                observableFromEvent(element, 'mousedown').pipe(
+                    takeUntil(leave$),
+                    filter((event: MouseEvent) => event.buttons === 1))
                     .subscribe((event: MouseEvent) => {
                         const moveUp$ = new Subject();
                         let target: HTMLElement;
@@ -58,15 +51,15 @@ export class DejaMouseDraggableDirective implements OnDestroy {
                         };
 
                         const startDrag = () => {
-                            const kill$ = Observable.merge(mouseUp$, moveUp$)
-                                .first()
-                                .do(() => {
+                            const kill$ = observableMerge(mouseUp$, moveUp$).pipe(
+                                first(),
+                                tap(() => {
                                     dragDropService.dragCursor$.next(undefined);
                                     dragDropService.dragging$.next(false);
-                                });
+                                }));
 
-                            Observable.fromEvent(element.ownerDocument, 'mousemove')
-                                .takeUntil(kill$)
+                            observableFromEvent(element.ownerDocument, 'mousemove').pipe(
+                                takeUntil(kill$))
                                 .subscribe((ev: MouseEvent) => {
                                     if (target && ev.buttons === 1) {
                                         const bounds = new Rect(element.getBoundingClientRect());
@@ -108,15 +101,16 @@ export class DejaMouseDraggableDirective implements OnDestroy {
                                 const dragContext = this.context.dragStart(target);
                                 if (dragContext) {
                                     if (dragContext.subscribe) {
+                                        const context = dragContext as Observable<any>;
                                         // Observable
-                                        dragContext
-                                            .first()
-                                            .subscribe((ddctx: IDragDropContext) => {
-                                                dragDropService.context = ddctx;
-                                                if (ddctx) {
-                                                    startDrag();
-                                                }
-                                            });
+                                        context.pipe(
+                                            first()
+                                        ).subscribe((ddctx: IDragDropContext) => {
+                                            dragDropService.context = ddctx;
+                                            if (ddctx) {
+                                                startDrag();
+                                            }
+                                        });
                                         return;
                                     } else {
                                         dragDropService.context = dragContext;

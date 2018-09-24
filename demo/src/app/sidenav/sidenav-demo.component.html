@@ -1,0 +1,18 @@
+<mat-tab-group [selectedIndex]="tabIndex" (selectedTabChange)="tabIndex = $event.index">
+    <mat-tab label="API REFERENCE"></mat-tab>
+    <mat-tab label="EXAMPLES"></mat-tab>
+</mat-tab-group>
+
+<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
+    TODO
+    <!-- <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/snackbar/readme.md'"></deja-markdown> -->
+</mat-card>
+
+<mat-card class="demo-card" *ngIf="tabIndex === 1">
+    <mat-toolbar color="primary">Manage app sidenav</mat-toolbar>
+    <mat-card-content class="listContainer">
+        <button mat-raised-button color="primary" (click)="toggle()">Toggle</button>
+        <button mat-raised-button color="accent" (click)="open()">Open</button>
+        <button mat-raised-button color="warn" (click)="close()">Close</button>
+    </mat-card-content>
+</mat-card>

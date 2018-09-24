@@ -34,6 +34,9 @@ export class DejaChipsComponent implements ControlValueAccessor {
     /** Template d'élément si définit extérieurement au composant */
     @Input() public itemTemplateExternal: any;
 
+    /** Template de control d'insertion si définit extérieurement au composant */
+    @Input() public insertTemplateExternal: any;
+
     /** Lecture seule */
     @Input() public readonly = false;
 
@@ -46,7 +49,9 @@ export class DejaChipsComponent implements ControlValueAccessor {
 
     @ContentChild('itemTemplate') private itemTemplateInternal: any;
 
-    constructor( @Self() @Optional() public _control: NgControl) {
+    @ContentChild('insertTemplate') private insertTemplateInternal: any;
+
+    constructor(@Self() @Optional() public _control: NgControl) {
         if (this._control) {
             this._control.valueAccessor = this;
         }
@@ -105,6 +110,10 @@ export class DejaChipsComponent implements ControlValueAccessor {
 
     public get itemTemplate() {
         return this.itemTemplateExternal || this.itemTemplateInternal;
+    }
+
+    public get insertTemplate() {
+        return this.insertTemplateExternal || this.insertTemplateInternal;
     }
 
     public getTextValue(value: any) {

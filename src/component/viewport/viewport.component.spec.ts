@@ -12,10 +12,10 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/filter';
-import { Observable } from 'rxjs/Observable';
+import { from as observableFrom } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { IViewPortItem, ViewportMode, ViewPortService } from '../../common/core/item-list/viewport.service';
 import { DejaViewPortModule } from './index';
 import { DejaViewPortComponent } from './viewport.component';
@@ -72,11 +72,11 @@ describe('DejaViewPortComponent', () => {
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
         const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
 
-        return Observable.from(viewPortService.viewPortResult$)
-            .debounceTime(10)
-            .do(() => fixture.detectChanges())
-            .filter((result) => result.viewPortSize > 0)
-            .do((result) => {
+        return observableFrom(viewPortService.viewPortResult$).pipe(
+            debounceTime(10),
+            tap(() => fixture.detectChanges()),
+            filter((result) => result.viewPortSize > 0),
+            tap((result) => {
                 const listitems = fixture.debugElement.queryAll(By.css('deja-viewport > #viewport-wrapper > .listitem'));
                 expect(listitems.length).toEqual(elementCount);
                 expect(result.beforeSize).toEqual(expectedBeforeSize);
@@ -84,7 +84,7 @@ describe('DejaViewPortComponent', () => {
                 expect(result.viewPortSize).toEqual(expectedViewPortSize);
                 expect(result.startIndex).toEqual(expectedViewPortStartIndex);
                 expect(result.endIndex).toEqual(expectedViewPortEndIndex);
-            });
+            }));
     };
 
     it('should create the component', async(() => {
@@ -254,11 +254,11 @@ describe('DejaViewPortComponent', () => {
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
         const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
 
-        return Observable.from(viewPortService.viewPortResult$)
-            .debounceTime(10)
-            .do(() => fixture.detectChanges())
-            .filter((result) => result.visibleItems && result.visibleItems.length && result.listSize > 0) // items must be sized
-            .do((result) => {
+        return observableFrom(viewPortService.viewPortResult$).pipe(
+            debounceTime(10),
+            tap(() => fixture.detectChanges()),
+            filter((result) => result.visibleItems && result.visibleItems.length && result.listSize > 0), // items must be sized
+            tap((result) => {
                 const listitems = fixture.debugElement.queryAll(By.css('deja-viewport > #viewport-wrapper > .listitem'));
                 expect(listitems.length).toEqual(elementCount);
                 expect(result.beforeSize).toEqual(expectedBeforeSize);
@@ -266,7 +266,7 @@ describe('DejaViewPortComponent', () => {
                 expect(result.viewPortSize).toEqual(expectedViewPortSize);
                 expect(result.startIndex).toEqual(expectedViewPortStartIndex);
                 expect(result.endIndex).toEqual(expectedViewPortEndIndex);
-            });
+            }));
     };
 
     it('should create the component', async(() => {
@@ -331,10 +331,10 @@ describe('DejaViewPortComponent', () => {
         let expectedViewPortStartIndex = 249;
         let expectedViewPortEndIndex = 270;
 
-        Observable.from(viewPortService.viewPortResult$)
-            .debounceTime(10)
-            .do(() => fixture.detectChanges())
-            .filter((result) => result.visibleItems && result.visibleItems.length && result.listSize > 0) // items must be sized
+        observableFrom(viewPortService.viewPortResult$).pipe(
+            debounceTime(10),
+            tap(() => fixture.detectChanges()),
+            filter((result) => result.visibleItems && result.visibleItems.length && result.listSize > 0)) // items must be sized
             .subscribe((result) => {
                 const listitems = fixture.debugElement.queryAll(By.css('deja-viewport > #viewport-wrapper > .listitem'));
                 expect(listitems.length).toEqual(elementCount);
@@ -383,8 +383,8 @@ describe('DejaViewPortComponent', () => {
         const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
         let pass = 0;
 
-        Observable.from(viewPortService.viewPortResult$)
-            .debounceTime(100)
+        observableFrom(viewPortService.viewPortResult$).pipe(
+            debounceTime(100))
             .subscribe((vp) => {
                 // Bind view port
                 fixture.detectChanges();
