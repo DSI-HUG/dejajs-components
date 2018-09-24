@@ -1,3 +1,21 @@
+<a name="3.6.0"></a>
+# [3.6.0](https://github.com/DSI-HUG/dejajs-components/compare/v3.5.3...v3.6.0) (2018-09-24)
+
+
+### Bug Fixes
+
+* **DejaBoldQueryComponent:** fix regexp parsing error with label containing regexp special chars. ([ea35f9b](https://github.com/DSI-HUG/dejajs-components/commit/ea35f9b))
+* **DejaEditorComponent:** Init ckeditor even if the component is not on DOM ([3658355](https://github.com/DSI-HUG/dejajs-components/commit/3658355))
+* **DejaNumericStepperComponent:** Value can be updated when control is disabled ([91d8ced](https://github.com/DSI-HUG/dejajs-components/commit/91d8ced))
+* **DejaSelect:** Fix dropdown position when in some condition can override the input ([4f435af](https://github.com/DSI-HUG/dejajs-components/commit/4f435af))
+
+
+### Features
+
+* **DejaMonacoEditorComponent:** Added reactive form compatibility ([f4ec0bc](https://github.com/DSI-HUG/dejajs-components/commit/f4ec0bc))
+
+
+
 <a name="3.5.3"></a>
 ## [3.5.3](https://github.com/DSI-HUG/dejajs-components/compare/2.14.0...3.5.3) (2018-09-04)
 
