@@ -920,9 +920,13 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
                 this.hideDropDown$.next(10);
             });
 
-        observableFromEvent(this.htmlInputElement, 'keydown').pipe(
+        observableMerge(observableFromEvent(this.htmlInputElement, 'keydown'), observableFromEvent(this.elementRef.nativeElement, 'keydown')).pipe(
             takeWhile(() => this._isAlive),
             filter((event: KeyboardEvent) => {
+                if (event.defaultPrevented) {
+                    return false;
+                }
+
                 const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
                 return keyCode === KeyCodes.Home ||
                     keyCode === KeyCodes.End ||
@@ -1223,6 +1227,10 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
             this.errorState = newState;
             this.stateChanges.next();
         }
+    }
+
+    public clearSelection() {
+        this.removeSelection();
     }
 
     protected onCloseClicked(event?: IDejaChipsComponentCloseEvent) {

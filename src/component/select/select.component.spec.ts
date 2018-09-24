@@ -647,7 +647,7 @@ describe('DejaSelectByOptionsContainerComponent', () => {
         });
     });
 
-    it('should navigate with the keyboard', (done) => {
+    fit('should navigate with the keyboard', (done) => {
         let pass = 0;
         const fixture = TestBed.createComponent(DejaSelectByOptionsContainerComponent);
         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
@@ -692,8 +692,8 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                             // Check selection
                             expect(selectedElements.length).toBe(0, 'Check selection 2-1');
                             expect(selectedItems.length).toBe(0, 'Check selection 2-2');
-                            expect(currentElement && currentElement.attributes.flat).toBe('0');
-                            expect(selectedChips.length).toBe(0, 'Check selection 2-3');
+                            expect(currentElement && currentElement.attributes.flat).toBe('0', 'Check selection 2-3');
+                            expect(selectedChips.length).toBe(0, 'Check selection 2-4');
                             // Current on second line by keydown
                             sendKeyDown('DownArrow');
                             break;
@@ -702,8 +702,8 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                             // Check selection
                             expect(selectedElements.length).toBe(0, 'Check selection 3-1');
                             expect(selectedItems.length).toBe(0, 'Check selection 3-2');
-                            expect(currentElement && currentElement.attributes.flat).toBe('1');
-                            expect(selectedChips.length).toBe(0, 'Check selection 3-3');
+                            expect(currentElement && currentElement.attributes.flat).toBe('1', 'Check selection 3-3');
+                            expect(selectedChips.length).toBe(0, 'Check selection 3-4');
                             // Current on first line by keyup
                             sendKeyDown('UpArrow');
                             break;
@@ -712,8 +712,8 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                             // Check selection
                             expect(selectedElements.length).toBe(0, 'Check selection 4-1');
                             expect(selectedItems.length).toBe(0, 'Check selection 4-2');
-                            expect(currentElement && currentElement.attributes.flat).toBe('0');
-                            expect(selectedChips.length).toBe(0, 'Check selection 4-3');
+                            expect(currentElement && currentElement.attributes.flat).toBe('0', 'Check selection 4-3');
+                            expect(selectedChips.length).toBe(0, 'Check selection 4-4');
                             // Current on last line
                             sendKeyDown('End');
                             break;
@@ -722,8 +722,8 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                             // Check selection
                             expect(selectedElements.length).toBe(0, 'Check selection 5-1');
                             expect(selectedItems.length).toBe(0, 'Check selection 5-2');
-                            expect(currentElement && currentElement.attributes.flat).toBe('12');
-                            expect(selectedChips.length).toBe(0, 'Check selection 5-3');
+                            expect(currentElement && currentElement.attributes.flat).toBe('12', 'Check selection 5-3');
+                            expect(selectedChips.length).toBe(0, 'Check selection 5-4');
                             // Current on line 6 by pageUp
                             sendKeyDown('PageUp');
                             break;
@@ -732,8 +732,8 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                             // Check selection
                             expect(selectedElements.length).toBe(0, 'Check selection 6-1');
                             expect(selectedItems.length).toBe(0, 'Check selection 6-2');
-                            expect(currentElement && currentElement.attributes.flat).toBe('7');
-                            expect(selectedChips.length).toBe(0, 'Check selection 6-3');
+                            expect(currentElement && currentElement.attributes.flat).toBe('7', 'Check selection 6-3');
+                            expect(selectedChips.length).toBe(0, 'Check selection 6-4');
                             // Current on firstLine by Home
                             sendKeyDown('Home');
                             break;
@@ -742,8 +742,8 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                             // Check selection
                             expect(selectedElements.length).toBe(0, 'Check selection 7-1');
                             expect(selectedItems.length).toBe(0, 'Check selection 7-2');
-                            expect(currentElement && currentElement.attributes.flat).toBe('0');
-                            expect(selectedChips.length).toBe(0, 'Check selection 7-3');
+                            expect(currentElement && currentElement.attributes.flat).toBe('0', 'Check selection 7-3');
+                            expect(selectedChips.length).toBe(0, 'Check selection 7-4');
                             // Current on Line 5 by pageDown
                             sendKeyDown('PageDown');
                             break;
@@ -752,8 +752,8 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                             // Check selection
                             expect(selectedElements.length).toBe(0, 'Check selection 8-1');
                             expect(selectedItems.length).toBe(0, 'Check selection 8-2');
-                            expect(currentElement && currentElement.attributes.flat).toBe('5');
-                            expect(selectedChips.length).toBe(0, 'Check selection 8-3');
+                            expect(currentElement && currentElement.attributes.flat).toBe('5', 'Check selection 8-3');
+                            expect(selectedChips.length).toBe(0, 'Check selection 8-4');
 
                             // Select the lines with Enter
                             sendKeyDown('Enter');
@@ -770,8 +770,8 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                         case 9:
                             expect(selectedElements.length).toBeGreaterThan(0, 'Check selection 9-1');
                             expect(selectedItems.length).toBe(1, 'Check selection 9-2');
-                            expect(currentElement && currentElement.attributes.flat).toBe('5');
-                            expect(selectedChips.length).toBe(1, 'Check selection 9-3');
+                            expect(currentElement && currentElement.attributes.flat).toBe('5', 'Check selection 9-3');
+                            expect(selectedChips.length).toBe(1, 'Check selection 9-4');
 
                             // Select first line with enter in single select
                             selectInstance.type = 'select';
@@ -779,10 +779,9 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                             break;
 
                         default:
-                            expect(selectedElements.length).toBeGreaterThan(0, 'Check selection 10-1');
-                            expect(selectedItems.length).toBe(1, 'Check selection 10-2');
-                            expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('6');
-                            expect(selectedChips.length).toBe(0, 'Check selection 10-3');
+                            expect(selectedItems.length).toBe(1, 'Check selection 10-1');
+                            const selItem = selectedItems[0] as IItemBase;
+                            expect(selItem.model.value).toEqual('Cranberries', 'Check selection 10-2');
                             done();
                     }
                 });
