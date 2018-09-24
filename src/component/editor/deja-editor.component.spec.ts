@@ -41,8 +41,10 @@ describe('DejaEditorComponent', () => {
         fixture.detectChanges();
         fixture.whenStable().then(() => {
             Observable.timer(5000).subscribe(() => {
+                fixture.detectChanges();
                 expect(window.hasOwnProperty('CKEDITOR')).toBeTruthy();
-                expect(fixture.debugElement.query(By.css('iframe'))).toBeDefined();
+                const element = fixture.debugElement.query(By.css('textarea'));
+                expect(element).not.toBeNull();
                 done();
             });
         });

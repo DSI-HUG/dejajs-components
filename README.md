@@ -11,9 +11,9 @@ Online demo : [https://dsi-hug.github.io/dejajs-components](https://dsi-hug.gith
 
 ## Intro
 
-This repository is a Angular components library and the the common utility functions, with a demo application to testing it.
+This repository is an Angular components library and the common utility functions, with a demo application for testing it.
 
-### Requirement
+### Requirements
 
 Before you can build this project, you must install and configure the following dependencies on your machine:
 
@@ -50,7 +50,7 @@ To clean the directory before making a new fresh install
 
 ## Linking
 
-To link the library to your project, just make the following commands from the root directory of your project
+To link the library to your project, just use the following commands from the root directory of your project
 
 `yarn link @deja-js/component` or `npm link @deja-js/component`
 
@@ -63,15 +63,15 @@ and start your project. For example
 
 To build the library you can use the command `npm run build` and to build the demo `npm run build:demo`
 
-A folder dist will be created on the root directory for the library and the demo directory for the demo containing the bundles.
-You can serve directly the dist folder in the demo directory.
+A `dist/` folder will be created in the root directory for the library and the demo directory for the demo containing the bundles.
+You can serve directly the `dist/` folder in the demo directory.
 
 For example with http-server
  `npm i -g http-server`
  `http-server demo/dist`
 
 
-## Feature status and browsers compatibility:
+## Feature status and browser compatibility:
 
 | Feature            | Working OnPush | Required / Disabled | Chrome 56 | Edge | IE11 | FF51 | Opera Neon | Readme and Demo | Note           |
 |--------------------|----------------|---------------------|-----------|------|------|------|------------|-----------------|----------------|

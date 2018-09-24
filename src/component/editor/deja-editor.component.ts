@@ -174,7 +174,7 @@ export class DejaEditorComponent
             console.warn('CKEditor 4.x is missing (http://ckeditor.com/)');
         } else {
             // Check textarea exists
-            if (this.instance || !document.contains(this.host.nativeElement)) {
+            if (this.instance) {
                 return;
             }
 

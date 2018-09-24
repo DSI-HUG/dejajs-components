@@ -23,6 +23,8 @@
                 <input matInput pending-onfocus formControlName="name" placeholder="Name" autocomplete="off">
                 <mat-error *ngIf="!!getError('name')">{{ getError('name') }}</mat-error>
             </mat-form-field>
+            <h3 fxFlex="0 0 auto">Monaco</h3>
+            <deja-monaco-editor formControlName="code" name="code" language="json"></deja-monaco-editor>
             <h3 fxFlex="0 0 auto">Deja Select</h3>
             <deja-select fxFlex="0 0 auto" placeholder="Country" selectionClearable formControlName="country" textField="naqme" valueField="code" [models]="countries">
                 <ng-template #errorTemplate *ngIf="!!getError('country')">

@@ -119,11 +119,9 @@ export class DejaNumericStepperComponent implements ControlValueAccessor, OnChan
     }
 
     public set value(val: number) {
-        if (!this.disabled) {
-            this.writeValue(val);
-            this.onChangeCallback(val);
-            this.onTouchedCallback();
-        }
+        this.writeValue(val);
+        this.onChangeCallback(val);
+        this.onTouchedCallback();
     }
 
     public writeValue(value: number) {

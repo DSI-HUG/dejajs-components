@@ -91,6 +91,7 @@ export class DejaReactiveFormDemoComponent implements AfterContentInit, OnInit, 
         this.form = fb.group({
             name: [{ value: '', disabled: this.readonly }, Validators.compose([Validators.required, Validators.maxLength(20)])],
             country: [{ value: null, disabled: this.readonly }, Validators.required],
+            code: [{ value: '', disabled: this.readonly }, Validators.required],
             visitedCountries: [{ value: [], disabled: this.readonly }, Validators.required],
             birthDate: [{ value: null, disabled: this.readonly }, Validators.required],
             preferedJuice: [{ value: null, disabled: this.readonly }, Validators.required],
@@ -142,6 +143,7 @@ export class DejaReactiveFormDemoComponent implements AfterContentInit, OnInit, 
             .subscribe((user: IUser) => {
                 this.form.setValue({
                     name: user.name || '',
+                    code: JSON.stringify({test: 'test 123'}, null, 4),
                     country: user.country || null,
                     visitedCountries: user.visitedCountries || [],
                     birthDate: user.birthDate || null,

@@ -8,6 +8,7 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ResizeListenerModule } from '../../common/core/resize-listener/index';
 import { DejaMonacoEditorComponent } from './monaco-editor.component';
 import { MonacoEditorService } from './monaco-editor.service';
@@ -17,6 +18,7 @@ import { MonacoEditorService } from './monaco-editor.service';
     exports: [DejaMonacoEditorComponent],
     imports: [
         CommonModule,
+        FormsModule,
         ResizeListenerModule
     ],
     providers: [MonacoEditorService],
