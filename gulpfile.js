@@ -399,7 +399,7 @@ gulp.task('npm-package', (cb) => {
 
 // Bundles the library as UMD/FESM bundles using RollupJS
 gulp.task('rollup-bundle', (cb) => {
-    const rollupUglify = require('rollup-plugin-uglify');
+    const uglify = require('rollup-plugin-uglify');
     const rollup = require('rollup');
     const rollupSourcemaps = require('rollup-plugin-sourcemaps');
     const rollupNodeResolve = require('rollup-plugin-node-resolve');
@@ -500,7 +500,7 @@ gulp.task('rollup-bundle', (cb) => {
                     format: 'umd',
                     file: path.join(distFolder, `bundles`, `${config.unscopedLibraryName}.umd.min.js`),
                 },
-                plugins: rollupBaseConfig.plugins.concat([rollupUglify({})])
+                plugins: rollupBaseConfig.plugins.concat([uglify.uglify()])
             });
 
             // flat module bundle.
