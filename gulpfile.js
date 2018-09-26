@@ -500,7 +500,7 @@ gulp.task('rollup-bundle', (cb) => {
                     format: 'umd',
                     file: path.join(distFolder, `bundles`, `${config.unscopedLibraryName}.umd.min.js`),
                 },
-                plugins: rollupBaseConfig.plugins.concat([uglify()])
+                plugins: rollupBaseConfig.plugins.concat([uglify.uglify()])
             });
 
             // flat module bundle.
