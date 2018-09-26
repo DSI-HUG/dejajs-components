@@ -1,3 +1,13 @@
+<a name="4.0.0-beta.1"></a>
+# [4.0.0-beta.1](https://github.com/DSI-HUG/dejajs-components/compare/v4.0.0-beta.0...v4.0.0-beta.1) (2018-09-26)
+
+
+### Bug Fixes
+
+* **DejaTag:** Fix broken inline layout ([de6b0ab](https://github.com/DSI-HUG/dejajs-components/commit/de6b0ab))
+
+
+
 <a name="4.0.0-beta.0"></a>
 # [4.0.0-beta.0](https://github.com/DSI-HUG/dejajs-components/compare/v3.6.0...v4.0.0-beta.0) (2018-09-24)
 
