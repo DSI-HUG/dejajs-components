@@ -39,7 +39,7 @@ export class DejaEditorService {
             // Load AMD loader if necessary
             if (!(<any>window).ckeditor) {
                 const baseElement = document.getElementsByTagName('base')[0] || {} as HTMLBaseElement;
-                const baseHref = baseElement.href;    
+                const baseHref = baseElement.href;
                 const basePath = (<any>window).CKEDITOR_BASEPATH || `${baseHref}assets/ckeditor/`;
                 const loaderScript = document.createElement('script');
                 document.head.appendChild(loaderScript);
