@@ -40,7 +40,9 @@ export class MonacoEditorService {
     private init() {
         this._loader = new Promise((resolve) => {
             this._loading = true;
-            const basePath = (<any>window).MONACOEDITOR_BASEPATH || '/assets/monaco/vs';
+            const baseElement = document.getElementsByTagName('base')[0] || {} as HTMLBaseElement;
+            const baseHref = baseElement.href;
+            const basePath = (<any>window).MONACOEDITOR_BASEPATH || `${baseHref}assets/monaco/vs`;
 
             const onGotAmdLoader = () => {
                 // Load monaco
