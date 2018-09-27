@@ -1,3 +1,13 @@
+<a name="4.0.0-beta.2"></a>
+# [4.0.0-beta.2](https://github.com/DSI-HUG/dejajs-components/compare/v4.0.0-beta.1...v4.0.0-beta.2) (2018-09-27)
+
+
+### Bug Fixes
+
+* **DemoApp:** Fix script loading for inline demo app ([53f7e8d](https://github.com/DSI-HUG/dejajs-components/commit/53f7e8d))
+
+
+
 <a name="4.0.0-beta.1"></a>
 # [4.0.0-beta.1](https://github.com/DSI-HUG/dejajs-components/compare/v4.0.0-beta.0...v4.0.0-beta.1) (2018-09-26)
 
