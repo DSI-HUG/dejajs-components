@@ -1,18 +1,23 @@
+@import '../../assets/mixins/sass-inline-svg';
+
 :host {
 	position: relative;
 	display: flex;
 	flex-direction: row;
 	overflow: hidden;
+
 	&[hasUpBtn="false"] {
 		#up {
 			visibility: hidden;
 		}
 	}
+
 	&[hasDownBtn="false"] {
 		#down {
 			visibility: hidden;
 		}
 	}
+
 	&[buttons="false"] {
 		&[horizontal="false"] {
 			#viewport-wrapper {
@@ -20,6 +25,7 @@
 				overflow-y: auto;
 			}
 		}
+
 		&[horizontal="true"] {
 			#viewport-wrapper {
 				height: 100%;
@@ -27,20 +33,24 @@
 			}
 		}
 	}
+
 	&[buttons="true"] {
 		&[horizontal="false"] {
 			flex-direction: column;
 		}
 	}
+
 	#viewport-wrapper {
 		position: relative;
 		flex-grow: 1;
 		overflow: hidden;
+
 		>div {
 			padding: 0;
 			margin: 0;
 		}
 	}
+
 	#up,
 	#down {
 		flex: 0 0 auto;
@@ -50,24 +60,32 @@
 		font-size: 120%;
 		cursor: pointer;
 		z-index: 1;
+
+		>i {
+			zoom: 100%;
+		}
 	}
+
 	&[horizontal="false"] {
 		#viewport-wrapper {
 			>div {
 				width: 100%;
 			}
 		}
+
 		#up,
 		#down {
 			padding: 0.15rem 0;
 		}
 	}
+
 	&[horizontal="true"] {
 		#viewport-wrapper {
 			display: flex;
 			justify-content: flex-start;
 			align-items: stretch;
 			flex-direction: row;
+
 			>div {
 				height: 100%;
 				overflow: hidden;
@@ -75,12 +93,26 @@
 				flex-shrink: 0;
 			}
 		}
+
 		#up,
 		#down {
 			padding: 0 0.15rem;
+
 			>i {
 				transform: rotate(270Deg);
 			}
+		}
+	}
+
+	#up {
+		>i {
+			content: inline-svg(baseline-keyboard_arrow_up-24px);
+		}
+	}
+
+	#down {
+		>i {
+			content: inline-svg(baseline-keyboard_arrow_down-24px);
 		}
 	}
 }

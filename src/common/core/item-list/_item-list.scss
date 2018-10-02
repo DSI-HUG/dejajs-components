@@ -1,12 +1,16 @@
+@import '../../../assets/mixins/sass-inline-svg';
+
 .deja-listcontainer {
 	padding: 0;
 	margin: 0;
 	position: relative;
+
 	&[vprowheight="0"] {
 		>div.listitem {
 			padding: 0.35rem 0.1rem;
 		}
 	}
+
 	>div.listitem {
 		opacity: 1;
 		// padding: 0 0.5rem 0 0.5rem;
@@ -16,6 +20,7 @@
 		transition-property: max-height, opacity;
 		display: flex;
 		align-items: center;
+
 		&.hide {
 			opacity: 0 !important;
 			max-height: 0 !important;
@@ -23,14 +28,21 @@
 		}
 
 		#expandbtn {
-            width: 24px;
-            cursor: pointer;
+			width: 24px;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+
+			>i {
+				content: inline-svg(baseline-arrow_drop_down-24px, null, null, null);
+			}
 		}
 
 		&.parent {
 			&.collapsed {
 				#expandbtn {
-					>.material-icons {
+					>.svg-icon {
 						-ms-transform: rotate(-90deg);
 						-webkit-transform: rotate(-90deg);
 						transform: rotate(-90deg);

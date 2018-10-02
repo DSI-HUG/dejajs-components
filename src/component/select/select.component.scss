@@ -1,3 +1,5 @@
+@import '../../assets/mixins/sass-inline-svg';
+
 deja-select {
 	// position: relative;
 	// min-height: 3.5rem;
@@ -38,6 +40,17 @@ deja-select {
 				opacity: 1;
 				cursor: pointer;
 			}
+		}
+
+		.select-arrow-down {
+			width: 24px;
+            height: 24px;
+            color: #fff;
+            content: inline-svg(baseline-keyboard_arrow_down-24px, currentColor, currentColor);
+		}
+
+		#clear-button {
+			content: inline-svg(baseline-clear-24px, currentColor, currentColor);
 		}
 	}
 
@@ -84,10 +97,6 @@ deja-select {
 
 		div.listitem {
 			white-space: nowrap;
-
-			#expandbtn {
-				min-width: 24px;
-			}
 
 			>deja-bold-query {
 				flex: 1 1 100%;
