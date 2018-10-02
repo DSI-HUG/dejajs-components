@@ -39,18 +39,6 @@ deja-select {
 				cursor: pointer;
 			}
 		}
-
-		.select-arrow-down {
-			&:after {
-				content: "\eA08";
-			}
-		}
-
-		#clear-button {
-			&:after {
-				content: "\eA05";
-			}
-		}
 	}
 
 	@keyframes load {

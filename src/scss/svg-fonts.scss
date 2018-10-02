@@ -9,8 +9,8 @@
 	font-style: normal;
 }
 
-.svg-icon:after,
-.svg-icon:before {
+[class^="svg-icon-"]:before, [class*=" svg-icon"]:before,
+[class^="svg-icon-"]:after, [class*=" svg-icon"]:after {   
     font-family: svg-fonts;
     font-size: 100%;
 	font-weight: normal;
@@ -23,4 +23,13 @@
     direction: ltr;
     -webkit-font-feature-settings: 'liga';
     -webkit-font-smoothing: antialiased;
-}
+}
+.svg-icon-add:before { content: "\EA01" }
+.svg-icon-arrow_drop_down:before { content: "\EA02" }
+.svg-icon-arrow_upward:before { content: "\EA03" }
+.svg-icon-cached:before { content: "\EA04" }
+.svg-icon-clear:before { content: "\EA05" }
+.svg-icon-close:before { content: "\EA06" }
+.svg-icon-edit:before { content: "\EA07" }
+.svg-icon-keyboard_arrow_down:before { content: "\EA08" }
+.svg-icon-keyboard_arrow_up:before { content: "\EA09" }

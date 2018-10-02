@@ -300,12 +300,13 @@ const buildCss = (destDir) => {
 		.pipe(gulp.dest(destDir))
 }
 
-gulp.task('build:fonts', function() {
+gulp.task('build:fonts', function(done) {
+	const async = require('async');
 	const iconfont = require('gulp-iconfont');
 	const runTimestamp = Math.round(Date.now() / 1000);
-	const consolidate = require('gulp-consolidate');
+	const footer = require('gulp-footer');
 
-	return gulp.src([`${config.svgDir}**/*.svg`])
+	var iconStream = gulp.src([`${config.svgDir}**/*.svg`])
 		.pipe(iconfont({
 			fontName: 'svg-fonts',
 			fontHeight: 1001,
@@ -313,24 +314,50 @@ gulp.task('build:fonts', function() {
 			prependUnicode: true,
 			formats: ['ttf', 'eot', 'woff', 'svg'],
 			timestamp: runTimestamp,
-		}))
-		.on('glyphs', function(glyphs, options) {
-			// CSS templating, e.g.
-			gulp.src(`${config.templatesDir}svg-fonts.scss`)
-				.pipe(consolidate('lodash', {
-					glyphs: glyphs,
-					fontName: 'svg-fonts',
-					fontPath: config.fonts,
-					className: 's'
-				}))
-				.pipe(gulp.dest(config.sassDir))
-                .on('finish', () => {});
+		}));
 
-			// glyphs.forEach((g) => {
-			// 	console.log(g);
-			// });
-		})
-		.pipe(gulp.dest(config.fontsDir));
+	/* Creates a uppercase hex number with at least length digits from a given number */
+	const fixedHex = (number, length) => {
+		let str = number.toString(16).toUpperCase();
+		while (str.length < length) {
+			str = `0${str}`;
+		}
+		return str;
+	};
+
+	/* Creates a unicode literal based on the string */
+	const unicodeLiteral = (str) => {
+		let result = '';
+		for (let i = 0; i < str.length; ++i) {
+			/* You should probably replace this by an isASCII test */
+			if (str.charCodeAt(i) > 126 || str.charCodeAt(i) < 32)
+				result += `\\${fixedHex(str.charCodeAt(i), 4)}`;
+			else
+				result += str[i];
+		}
+
+		return result;
+	};
+
+	async.parallel([
+		function handleGlyphs(cb) {
+			iconStream.on('glyphs', function(glyphs) {
+				const text = [];
+				glyphs.forEach((g) => {
+					text.push(`.svg-icon-${g.name}:before { content: "${unicodeLiteral(g.unicode[0])}" }`);
+				});
+				gulp.src(`${config.templatesDir}svg-fonts.scss`)
+					.pipe(footer(text.join('\n')))
+					.pipe(gulp.dest(config.sassDir))
+					.on('finish', cb);
+			});
+		},
+		function handleFonts(cb) {
+			iconStream
+				.pipe(gulp.dest(config.fontsDir))
+				.on('finish', cb);
+		}
+	], done);
 });
 
 gulp.task('build:scss', (cb) => {
