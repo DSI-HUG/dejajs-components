@@ -1,5 +1,3 @@
-@import '../../assets/mixins/sass-inline-svg';
-
 deja-select {
 	// position: relative;
 	// min-height: 3.5rem;
@@ -43,14 +41,15 @@ deja-select {
 		}
 
 		.select-arrow-down {
-			width: 24px;
-            height: 24px;
-            color: #fff;
-            content: inline-svg(baseline-keyboard_arrow_down-24px, currentColor, currentColor);
+			&:after {
+				content: "\eA08";
+			}
 		}
 
 		#clear-button {
-			content: inline-svg(baseline-clear-24px, currentColor, currentColor);
+			&:after {
+				content: "\eA05";
+			}
 		}
 	}
 

@@ -56,7 +56,9 @@ const config = {
 	coverageDir: 'coverage/',
 	docDir: 'doc/',
 	svgDir: 'src/assets/svg/',
-	svgMixins: 'src/assets/mixins/'
+	fontsDir: 'src/assets/fonts/',
+	templatesDir: 'src/assets/templates/',
+	sassDir: 'src/scss/'
 };
 
 const rootFolder = path.join(__dirname);
@@ -298,19 +300,37 @@ const buildCss = (destDir) => {
 		.pipe(gulp.dest(destDir))
 }
 
-gulp.task('scss:svg', function() {
-    const sassInlineSvg = require('gulp-sass-inline-svg');
-    const svgmin = require('gulp-svgmin');
-    const replace = require('gulp-replace');
+gulp.task('build:fonts', function() {
+	const iconfont = require('gulp-iconfont');
+	const runTimestamp = Math.round(Date.now() / 1000);
+	const consolidate = require('gulp-consolidate');
 
-    return gulp.src(`${config.svgDir}**/*.svg`)
-		.pipe(svgmin()) // Recommend using svg min to optimize svg files first
-		.pipe(sassInlineSvg({
-			destDir: config.svgMixins
+	return gulp.src([`${config.svgDir}**/*.svg`])
+		.pipe(iconfont({
+			fontName: 'svg-fonts',
+			fontHeight: 1001,
+			normalize: true,
+			prependUnicode: true,
+			formats: ['ttf', 'eot', 'woff', 'svg'],
+			timestamp: runTimestamp,
 		}))
-		.pipe(gulp.src(`${config.svgMixins}_sass-inline-svg.scss`))
-		.pipe(replace('call($functionname', 'call(get-function($functionname)'))
-		.pipe(gulp.dest(config.svgMixins));
+		.on('glyphs', function(glyphs, options) {
+			// CSS templating, e.g.
+			gulp.src(`${config.templatesDir}svg-fonts.scss`)
+				.pipe(consolidate('lodash', {
+					glyphs: glyphs,
+					fontName: 'svg-fonts',
+					fontPath: config.fonts,
+					className: 's'
+				}))
+				.pipe(gulp.dest(config.sassDir))
+                .on('finish', () => {});
+
+			// glyphs.forEach((g) => {
+			// 	console.log(g);
+			// });
+		})
+		.pipe(gulp.dest(config.fontsDir));
 });
 
 gulp.task('build:scss', (cb) => {
@@ -744,7 +764,7 @@ gulp.task('build', gulp.series('clean', 'license', 'compile', 'test', 'npm-packa
 
 gulp.task('default', gulp.series('build'));
 gulp.task('build:watch-scss', gulp.series('scss:watch'));
-gulp.task('start', gulp.parallel('scss:svg', 'build:scss', 'scss', 'scss:demo', 'build:watch-scss', 'serve:demo'));
+gulp.task('start', gulp.parallel('build:fonts', 'build:scss', 'scss', 'scss:demo', 'build:watch-scss', 'serve:demo'));
 gulp.task('test:ci', gulp.series('clean', 'compile', 'test'));
 gulp.task('clean:all', gulp.series('clean', 'clean:lock', 'clean:src-node-modules', 'clean:demo-node-modules', 'clean:node-modules'));
 
