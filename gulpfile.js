@@ -330,9 +330,9 @@ const buildFonts = (done) => {
 				const text = [];
 				glyphs.forEach((g) => {
 					text.push(`.svg-icon-${g.name}:before { content: "${unicodeLiteral(g.unicode[0])}" }`);
-                });
-                fs.writeFileSync(`${config.sassFontsDir}svg-glyphs.scss`, text.join('\n'));
-                cb();
+				});
+				fs.writeFileSync(`${config.sassFontsDir}svg-glyphs.scss`, text.join('\n'));
+				cb();
 			});
 		},
 		function handleFonts(cb) {
@@ -353,20 +353,9 @@ const embedFonts = () => {
 			stretch: 'normal',
 			weight: 400,
 			formats: ['woff', 'woff2', 'ttf', 'eot', 'svg']
-        }))
-        .pipe(gulp.dest(`${config.sassFontsDir}`));
+		}))
+		.pipe(gulp.dest(`${config.sassFontsDir}`));
 };
-
-gulp.task('build:fonts', function(cb) {
-	return Promise.resolve()
-		.then(buildFonts)
-		.then(() => embedFonts())
-		.catch(e => {
-			log(colors.red('fonts compilation failed. See below for errors.\n'));
-			log(colors.red(e));
-			process.exit(1);
-		});
-});
 
 const buildCss = (destDir) => {
 	const concat = require('gulp-concat');
@@ -384,6 +373,8 @@ const buildCss = (destDir) => {
 
 gulp.task('build:scss', (cb) => {
 	return Promise.resolve()
+		.then(buildFonts)
+		.then(() => embedFonts())
 		.then(() => buildCss(config.outputDir))
 		.catch(e => {
 			log(colors.red('sass compilation failed. See below for errors.\n'));
@@ -813,7 +804,7 @@ gulp.task('build', gulp.series('clean', 'license', 'compile', 'test', 'npm-packa
 
 gulp.task('default', gulp.series('build'));
 gulp.task('build:watch-scss', gulp.series('scss:watch'));
-gulp.task('start', gulp.parallel('build:fonts', 'build:scss', 'scss', 'scss:demo', 'build:watch-scss', 'serve:demo'));
+gulp.task('start', gulp.parallel('build:scss', 'scss', 'scss:demo', 'build:watch-scss', 'serve:demo'));
 gulp.task('test:ci', gulp.series('clean', 'compile', 'test'));
 gulp.task('clean:all', gulp.series('clean', 'clean:lock', 'clean:src-node-modules', 'clean:demo-node-modules', 'clean:node-modules'));
 

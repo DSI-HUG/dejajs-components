@@ -23,7 +23,6 @@
         "build:demo": "gulp build:demo",
         "build:doc": "gulp build:doc",
         "sass:watch": "gulp build:watch-scss",
-        "build:fonts": "gulp build:fonts",
         "link": "gulp link",
         "unlink": "gulp unlink",
         "licensecheck": "gulp license",
