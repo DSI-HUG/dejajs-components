@@ -1,4 +1,4 @@
-<div #up id="up" *ngIf="hasButtons"><i class="svg-icon"></i></div>
+<div #up id="up" *ngIf="hasButtons"><i svg-icon="keyboard_arrow_up"></i></div>
 <div #wrapper id="viewport-wrapper">
 	<ng-container *ngIf="!isHorizontal">
 		<div *ngIf="beforeSize" [style.height.px]="beforeSize"></div>
@@ -15,4 +15,4 @@
 		<div *ngIf="afterSize" [style.flex-basis.px]="afterSize"></div>
 	</ng-container>
 </div>
-<div #down id="down" *ngIf="hasButtons"><i class="svg-icon"></i></div>
+<div #down id="down" *ngIf="hasButtons"><i svg-icon="keyboard_arrow_down"></i></div>

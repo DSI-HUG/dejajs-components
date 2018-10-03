@@ -58,10 +58,6 @@
 		font-size: 120%;
 		cursor: pointer;
 		z-index: 1;
-
-		>i {
-			zoom: 100%;
-		}
 	}
 
 	&[horizontal="false"] {
@@ -99,18 +95,6 @@
 			>i {
 				transform: rotate(270Deg);
 			}
-		}
-	}
-
-	#up {
-		>i {
-			content: inline-svg(baseline-keyboard_arrow_up-24px);
-		}
-	}
-
-	#down {
-		>i {
-			content: inline-svg(baseline-keyboard_arrow_down-24px);
 		}
 	}
 }

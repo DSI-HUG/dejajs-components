@@ -3,11 +3,11 @@
         <div id="date-header">
             <div class="year">
                 <button mat-mini-fab type="button" (click)="changeYear(-1)" [disabled]="disabled">
-                    <mat-icon>navigate_before</mat-icon>
+                    <i svg-icon="keyboard_arrow_left"></i>
                 </button>
                 <div>{{displayedDate.getFullYear()}}</div>
                 <button mat-mini-fab type="button" (click)="changeYear(1)" [disabled]="disabled">
-                    <mat-icon>navigate_next</mat-icon>
+                    <i svg-icon="keyboard_arrow_right"></i>
                 </button>
             </div>
             <div current>
@@ -18,13 +18,13 @@
             <div class="month">
                 <div class="previous">
                     <button mat-mini-fab type="button" (click)="changeMonth(-1)" [disabled]="disabled">
-                        <mat-icon>navigate_before</mat-icon>
+                        <i svg-icon="keyboard_arrow_left"></i>
                     </button>
                 </div>
                 <span>{{displayedDate.toLocaleString(local, { month: 'long' })}} {{displayedDate.getFullYear()}}</span>
                 <div class="next">
                     <button mat-mini-fab type="button" (click)="changeMonth(1)" [disabled]="disabled">
-                        <mat-icon>navigate_next</mat-icon>
+                        <i svg-icon="keyboard_arrow_right"></i>
                     </button>
                 </div>
             </div>

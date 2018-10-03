@@ -31,16 +31,12 @@
 			display: flex;
 			align-items: center;
 			justify-content: center;
-
-			>i {
-				content: inline-svg(baseline-arrow_drop_down-24px, null, null, null);
-			}
 		}
 
 		&.parent {
 			&.collapsed {
 				#expandbtn {
-					>.svg-icon {
+					>i {
 						-ms-transform: rotate(-90deg);
 						-webkit-transform: rotate(-90deg);
 						transform: rotate(-90deg);

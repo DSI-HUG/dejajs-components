@@ -4,7 +4,7 @@
 	width: 1rem;
 
 	[sortorder] {
-		>.svg-icon {
+		>i {
 			position: absolute;
 			right: 0;
 			top: 50%;
@@ -15,12 +15,11 @@
 			transform: translateY(-50%);
 			transition: all 500ms linear;
 			padding: 0.3rem;
-			content: inline-svg(baseline-arrow_upward-24px);
 		}
 	}
 
 	[sortorder="1"] {
-		>.svg-icon {
+		>i {
 			-ms-transform: translateY(-50%) rotate(180deg);
 			/* IE 9 */
 			-webkit-transform: translateY(-50%) rotate(180deg);

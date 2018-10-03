@@ -16,7 +16,8 @@
 		}
 
 		.actions-suffix {
-			.svg-icon {
+            #clear-button,
+            #drop-down-button {
 				&:hover {
 					color: mat-color($primary);
 				}

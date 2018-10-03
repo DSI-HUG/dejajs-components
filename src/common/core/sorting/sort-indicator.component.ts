@@ -12,7 +12,7 @@ import { ISortInfos } from './sort-infos.model';
 @Component({
     selector: 'deja-sort-indicator',
     styleUrls: [ './sort-indicator.component.scss' ],
-    template: `<span [attr.sortorder]="sortInfos ? sortInfos.order : null"><i class="svg-icon"></i></span>`,
+    template: `<span [attr.sortorder]="sortInfos ? sortInfos.order : null"><i svg-icon="arrow_upward"></i></span>`,
 })
 export class DejaSortIndicatorComponent {
     @Input('sort-infos') public sortInfos: ISortInfos;

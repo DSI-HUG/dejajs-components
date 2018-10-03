@@ -295,8 +295,9 @@ const buildFonts = (done) => {
 		.pipe(iconfont({
 			fontName: 'svg-fonts',
 			fontHeight: 1001,
+			fixedWidth: true,
 			normalize: true,
-			prependUnicode: true,
+            prependUnicode: true,
 			formats: ['ttf', 'eot', 'woff', 'svg'],
 			timestamp: runTimestamp,
 		}));
@@ -329,9 +330,9 @@ const buildFonts = (done) => {
 			iconStream.on('glyphs', function(glyphs) {
 				const text = [];
 				glyphs.forEach((g) => {
-					text.push(`.svg-icon-${g.name}:before { content: "${unicodeLiteral(g.unicode[0])}" }`);
+					text.push(`[svg-icon="${g.name}"]:before { content: "${unicodeLiteral(g.unicode[0])}" }`);
 				});
-				fs.writeFileSync(`${config.sassFontsDir}svg-glyphs.scss`, text.join('\n'));
+				fs.writeFileSync(`${config.sassFontsDir}_svg-glyphs.scss`, text.join('\n'));
 				cb();
 			});
 		},
@@ -345,6 +346,7 @@ const buildFonts = (done) => {
 
 const embedFonts = () => {
 	const inlineFonts = require('gulp-inline-fonts');
+	const rename = require("gulp-rename");
 
 	return gulp.src([`${config.fontsDir}*`])
 		.pipe(inlineFonts({
@@ -354,6 +356,7 @@ const embedFonts = () => {
 			weight: 400,
 			formats: ['woff', 'woff2', 'ttf', 'eot', 'svg']
 		}))
+		.pipe(rename(`_svg-fonts.scss`))
 		.pipe(gulp.dest(`${config.sassFontsDir}`));
 };
 

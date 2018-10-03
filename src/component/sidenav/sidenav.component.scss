@@ -20,11 +20,6 @@ deja-sidenav {
                 .header-text {
                     display: none;
                 }
-                .header-menu-btn .mat-icon {
-                    &:after {
-                        content: 'menu';
-                    }
-                }
             }
             deja-sidenav-menu {
                 .mat-list-item {
@@ -84,9 +79,6 @@ deja-sidenav {
                 .header-text {
                     margin-left: 32px;
                     flex: 1 1 auto;
-                }
-                .header-menu-btn .mat-icon:after {
-                    content: 'keyboard_arrow_left';
                 }
             }
             deja-sidenav-menu {

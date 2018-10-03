@@ -22,7 +22,7 @@
 		}
 	}
 
-	.svg-icon {
+    [svg-icon] {
 		font-size: 1rem;
 		z-index: 3;
 		cursor: pointer;
@@ -32,24 +32,15 @@
         path {
             fill: #777777 !important;
         }
+        &:hover{
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #222;
+        }
 	}
 
 	#edit-button,
 	#close-button {
 		margin: 0.3rem;
 		flex: 0 0 auto;
-	}
-
-	#edit-button {
-        content: inline-svg(baseline-edit-24px, null, null, null);
-    }
-
-	#close-button {
-        content: inline-svg(baseline-close-24px, null, null, null);
-    }
-
-	.svg-icon:hover {
-		background-color: rgba(255, 255, 255, 0.2);
-		color: #222;
 	}
 }
