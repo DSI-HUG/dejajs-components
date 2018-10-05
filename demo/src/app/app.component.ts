@@ -24,7 +24,7 @@ export class AppComponent implements OnDestroy {
     private theme$: BehaviorSubject<string>;
     private isAlive = true;
 
-    constructor(private iconService: IconService) {
+    constructor(iconService: IconService) {
         try {
             this._theme = localStorage.getItem('dejajs-demo-color');
         } catch (_e) {
@@ -40,6 +40,7 @@ export class AppComponent implements OnDestroy {
             .subscribe((theme) => document.body.setAttribute('theme', theme));
 
         iconService.addSvgIcon('angular', 'assets/img/logo/angular.svg');
+        iconService.useMaterialIcons(false);
     }
 
     public get theme() {

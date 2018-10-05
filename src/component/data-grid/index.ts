@@ -18,6 +18,7 @@ import { DejaGridHeaderComponent } from './data-grid-header/data-grid-header.com
 import { DejaGridParentRowComponent } from './data-grid-parent-row/data-grid-parent-row.component';
 import { DejaGridRowComponent } from './data-grid-row/data-grid-row.component';
 import { DejaGridComponent } from './data-grid.component';
+import { MatIconModule } from '@angular/material';
 
 @NgModule({
     declarations: [
@@ -37,6 +38,7 @@ import { DejaGridComponent } from './data-grid.component';
     imports: [
         CommonModule,
         FormsModule,
+        MatIconModule,
         DejaTreeListModule,
         DejaDragDropModule,
         DejaSortingModule,

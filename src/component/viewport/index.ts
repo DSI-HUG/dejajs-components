@@ -8,6 +8,7 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
 import { DejaViewPortComponent } from './viewport.component';
 
 @NgModule({
@@ -19,6 +20,7 @@ import { DejaViewPortComponent } from './viewport.component';
     ],
     imports: [
         CommonModule,
+        MatIconModule,
     ],
 })
 export class DejaViewPortModule { }

@@ -1,22 +1,22 @@
 <span>&nbsp;</span>
 <span>
     <button id="raise-all" mat-icon-button title="Select all" (click)="emit('raiseAll')" [disabled]="disabled" *ngIf="!disableFastActions">
-        <i class="md-24" aria-label="Select all" svg-icon="fast_forward"></i>
+        <mat-icon aria-label="Select all" fontSet="deja-icons" fontIcon="fast_forward"></mat-icon>
     </button>
 </span>
 <span>
     <button mat-icon-button title="Select" (click)="emit('raiseBuffer')" [disabled]="disabled">
-        <i class="md-24" aria-label="Select" svg-icon="keyboard_arrow_right"></i>
+        <mat-icon aria-label="Select" fontSet="deja-icons" fontIcon="keyboard_arrow_right"></mat-icon>
     </button>
 </span>
 <span>
     <button mat-icon-button title="Deselect" (click)="emit('dropBuffer')" [disabled]="disabled">
-        <i class="md-24" aria-label="Deselect" svg-icon="keyboard_arrow_left"></i>
+        <mat-icon aria-label="Deselect" fontSet="deja-icons" fontIcon="keyboard_arrow_left"></mat-icon>
     </button>
 </span>
 <span>
     <button mat-icon-button title="Deselect All" (click)="emit('dropAll')" [disabled]="disabled" *ngIf="!disableFastActions">
-        <i class="md-24" aria-label="Deselect All" svg-icon="fast_rewind"></i>
+        <mat-icon aria-label="Deselect All" fontSet="deja-icons" fontIcon="fast_rewind"></mat-icon>
     </button>
 </span>
 <span>&nbsp;</span>

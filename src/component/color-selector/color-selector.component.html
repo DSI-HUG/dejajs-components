@@ -5,5 +5,5 @@
 	<deja-color-fab subcolor *ngFor="let clrfab of subColorFabs$ | async; let index=index" [attr.index]="index" [style.transition-duration]="(100*index)+'ms'" [color]="clrfab"></deja-color-fab>
 </div>
 <div id="reset" *ngIf="!!_resetcolor" (click)="resetDefaultColor()" [style.background-color]="_resetcolor.toHex()">
-	<i [style.color]="getBestTextColor(_resetcolor.toHex())" svg-icon="undo"></i>
+	<mat-icon [style.color]="getBestTextColor(_resetcolor.toHex())" fontSet="deja-icons" fontIcon="undo"></mat-icon>
 </div>

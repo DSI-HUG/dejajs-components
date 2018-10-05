@@ -293,11 +293,12 @@ const buildFonts = (done) => {
 
 	const iconStream = gulp.src([`${config.svgDir}**/*.svg`])
 		.pipe(iconfont({
-			fontName: 'svg-fonts',
+			fontName: 'deja-fonts',
 			fontHeight: 1001,
 			fixedWidth: true,
 			normalize: true,
-            prependUnicode: true,
+			prependUnicode: true,
+			descent: 100,
 			formats: ['ttf', 'eot', 'woff', 'svg'],
 			timestamp: runTimestamp,
 		}));
@@ -328,11 +329,22 @@ const buildFonts = (done) => {
 	async.parallel([
 		function handleGlyphs(cb) {
 			iconStream.on('glyphs', function(glyphs) {
-				const text = [];
+				const matGlyphs = [];
+				const dejaGlyphs = [];
 				glyphs.forEach((g) => {
-					text.push(`[svg-icon="${g.name}"]:before { content: "${unicodeLiteral(g.unicode[0])}" }`);
+					dejaGlyphs.push(`\t&.${g.name}:before { content: "${unicodeLiteral(g.unicode[0])}" }`);
+					matGlyphs.push(`\t&.${g.name}:before { content: "${unicodeLiteral(g.name)}" }`);
 				});
-				fs.writeFileSync(`${config.sassFontsDir}_svg-glyphs.scss`, text.join('\n'));
+				const css = [
+                    '// Auto-generated file, do not modify',
+					'.mat-icon.deja-icons {',
+					...dejaGlyphs,
+					'}',
+					'.mat-icon.material-icons {',
+					...matGlyphs,
+					'}'
+				]
+				fs.writeFileSync(`${config.sassFontsDir}_deja-glyphs.scss`, css.join('\n'));
 				cb();
 			});
 		},
@@ -350,13 +362,13 @@ const embedFonts = () => {
 
 	return gulp.src([`${config.fontsDir}*`])
 		.pipe(inlineFonts({
-			name: 'svg-fonts',
+			name: 'deja-fonts',
 			style: 'normal',
 			stretch: 'normal',
 			weight: 400,
 			formats: ['woff', 'woff2', 'ttf', 'eot', 'svg']
 		}))
-		.pipe(rename(`_svg-fonts.scss`))
+		.pipe(rename(`_deja-fonts.scss`))
 		.pipe(gulp.dest(`${config.sassFontsDir}`));
 };
 

@@ -6,7 +6,7 @@
 		<deja-sort-indicator *ngIf="sortInfos && sortInfos.name === column.name" [sort-infos]="sortInfos"></deja-sort-indicator>
 		<div separator></div>
 		<div class="sort-waiter" *ngIf="column.sorting">
-			<i svg-icon="cached"></i>
+			<mat-icon fontSet="deja-icons" fontIcon="cached"></mat-icon>
 		</div>
 	</div>
 	<div *ngIf="columnLayout.vpAfterWidth" [style.flex-basis.px]="columnLayout.vpAfterWidth"></div>

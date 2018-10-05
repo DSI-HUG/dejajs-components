@@ -210,7 +210,7 @@ describe('DejaViewPortComponent', () => {
         viewPortInstance.scrollingStyle = 'buttons';
         fixture.detectChanges();
 
-        observeViewPort$(fixture, 5, 0, 1900, 100, 0, 4).subscribe(() => {
+        observeViewPort$(fixture, 7, 0, 1860, 140, 0, 6).subscribe(() => {
             done();
         });
 

@@ -4,7 +4,7 @@
         <span id="title" *ngIf="!horizontal">{{title}}</span>
         <div class="header-actions">
             <button *ngIf="showCloseIcon" mat-mini-fab type="button" class="close" (click)="onClose()">
-                <i svg-icon="close"></i>
+                <mat-icon fontSet="deja-icons" fontIcon="close"></mat-icon>
             </button>
         </div>
     </mat-card-title>
@@ -21,7 +21,7 @@
                 {{action.text}}
             </button>
             <button mat-mini-fab type="button" *ngIf="action.icon && !action.text" [color]="action.type || 'blank'" [class.action-button]="!action.type" (click)="action.action()">
-                <mat-icon *ngIf="action.icon">{{action.icon}}</mat-icon>
+                <mat-icon *ngIf="action.icon" fontSet="deja-icons" [fontIcon]="action.icon"></mat-icon>
             </button>
         </span>
     </mat-card-actions>

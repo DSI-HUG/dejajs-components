@@ -9,7 +9,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
+import { MatIconModule } from '@angular/material';
 import { DejaChipsComponent } from './chips.component';
 
 @NgModule({
@@ -18,6 +18,7 @@ import { DejaChipsComponent } from './chips.component';
     imports: [
         CommonModule,
         FormsModule,
+        MatIconModule,
     ],
 })
 export class DejaChipsModule { }
