@@ -5,12 +5,11 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-import { Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { Component, ContentChild, ElementRef, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { from as observableFrom, fromEvent as observableFromEvent, Observable } from 'rxjs';
-import { debounceTime, delay, filter, map, takeUntil, takeWhile, tap } from 'rxjs/operators';
+import { debounceTime, delay, filter, map, takeUntil, tap } from 'rxjs/operators';
 import { Position } from '../../common/core/graphics/position';
 import { Rect } from '../../common/core/graphics/rect';
-import { MediaService } from '../../common/core/media/media.service';
 import { DejaConnectionPositionPair } from '../../common/core/overlay/connection-position-pair';
 import { DejaTooltipService, ITooltipParams } from './tooltip.service';
 
@@ -25,7 +24,7 @@ import { DejaTooltipService, ITooltipParams } from './tooltip.service';
         './tooltip.component.scss',
     ],
 })
-export class DejaTooltipComponent implements OnInit, OnDestroy {
+export class DejaTooltipComponent implements OnInit {
     /** Tooltip name. Mandatory, and need to be unic */
     @Input() public name: string;
     /** Event Emmited when hide action is called */
@@ -38,9 +37,7 @@ export class DejaTooltipComponent implements OnInit, OnDestroy {
     public params: ITooltipParams;
     public overlayVisible = false;
     public ownerElement: HTMLElement;
-    public isMobile = false;
     private _model: any;
-    private isAlive = true;
 
     /**
      * This position config ensures that the top "start" corner of the overlay
@@ -104,17 +101,11 @@ export class DejaTooltipComponent implements OnInit, OnDestroy {
      * Constructor
      * Subscribe to mouseover to know when tooltip must disappear.
      */
-    constructor(elementRef: ElementRef, private tooltipService: DejaTooltipService, mediaService: MediaService) {
+    constructor(elementRef: ElementRef, private tooltipService: DejaTooltipService) {
         const element = elementRef.nativeElement as HTMLElement;
 
         const hide$ = observableFrom(this.hide).pipe(
             tap(() => this._model = undefined));
-
-        mediaService.isMobile$.pipe(
-            takeWhile(() => this.isAlive))
-            .subscribe((value) => {
-                this.isMobile = value;
-            });
 
         observableFromEvent(element.ownerDocument, 'mousemove').pipe(
             takeUntil(hide$),
@@ -183,9 +174,5 @@ export class DejaTooltipComponent implements OnInit, OnDestroy {
                 this.overlayVisible = true;
             }
         }
-    }
-
-    public ngOnDestroy() {
-        this.isAlive = false;
     }
 }
