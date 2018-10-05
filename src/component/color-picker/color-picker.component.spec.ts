@@ -37,6 +37,7 @@ describe('DejaColorPicker', () => {
     }));
 
     it('should create the component', async(() => {
+        fixture.detectChanges();
         expect(component).toBeTruthy();
     }));
 
