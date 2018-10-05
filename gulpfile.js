@@ -327,7 +327,7 @@ const buildFonts = (done) => {
 	};
 
 	async.parallel([
-		function handleGlyphs(cb) {
+		(cb) => {
 			iconStream.on('glyphs', function(glyphs) {
 				const matGlyphs = [];
 				const dejaGlyphs = [];
@@ -336,7 +336,7 @@ const buildFonts = (done) => {
 					matGlyphs.push(`\t&.${g.name}:before { content: "${unicodeLiteral(g.name)}" }`);
 				});
 				const css = [
-                    '// Auto-generated file, do not modify',
+					'// Auto-generated file, do not modify',
 					'.mat-icon.deja-icons {',
 					...dejaGlyphs,
 					'}',
@@ -344,11 +344,11 @@ const buildFonts = (done) => {
 					...matGlyphs,
 					'}'
 				]
-				fs.writeFileSync(`${config.sassFontsDir}_deja-glyphs.scss`, css.join('\n'));
-				cb();
+                fs.writeFileSync(`${config.sassFontsDir}_deja-glyphs.scss`, css.join('\n'));
+                cb();
 			});
 		},
-		function handleFonts(cb) {
+		(cb) => {
 			iconStream
 				.pipe(gulp.dest(config.fontsDir))
 				.on('finish', cb);
@@ -386,17 +386,15 @@ const buildCss = (destDir) => {
 		.pipe(gulp.dest(destDir))
 }
 
-gulp.task('build:scss', (cb) => {
+gulp.task('build:scss', gulp.series(buildFonts, embedFonts, (cb) => {
 	return Promise.resolve()
-		.then(buildFonts)
-		.then(() => embedFonts())
 		.then(() => buildCss(config.outputDir))
 		.catch(e => {
 			log(colors.red('sass compilation failed. See below for errors.\n'));
 			log(colors.red(e));
 			process.exit(1);
 		});
-});
+}));
 
 gulp.task('scss', (cb) => {
 	return Promise.resolve()
