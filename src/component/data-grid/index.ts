@@ -9,6 +9,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule  } from '@angular/forms';
+import { MatIconModule } from '@angular/material';
 import { DejaSortingModule } from '../../common/core/sorting/index';
 import { DejaChipsModule } from '../chips/index';
 import { DejaDragDropModule } from '../dragdrop/index';
@@ -18,7 +19,6 @@ import { DejaGridHeaderComponent } from './data-grid-header/data-grid-header.com
 import { DejaGridParentRowComponent } from './data-grid-parent-row/data-grid-parent-row.component';
 import { DejaGridRowComponent } from './data-grid-row/data-grid-row.component';
 import { DejaGridComponent } from './data-grid.component';
-import { MatIconModule } from '@angular/material';
 
 @NgModule({
     declarations: [

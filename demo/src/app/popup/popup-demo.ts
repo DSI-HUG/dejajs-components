@@ -101,7 +101,7 @@ export class DejaPopupDemoComponent {
         config.title = 'Dialog custom';
 
         config.actions = [
-            new DejaPopupButton('confirm', 'Confirm', 'check'),
+            new DejaPopupButton('confirm', 'Confirm', 'done'),
             new DejaPopupButton('undo', 'Undo', 'undo'),
             new DejaPopupButton('cancel', 'Cancel', 'cancel'),
         ];

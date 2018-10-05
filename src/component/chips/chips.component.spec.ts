@@ -7,6 +7,7 @@
  */
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatIconModule } from '@angular/material';
 import { By } from '@angular/platform-browser';
 import { DejaChipsComponent } from './chips.component';
 
@@ -18,6 +19,9 @@ describe('DejaChipsComponent', () => {
         TestBed.configureTestingModule({
             declarations: [
                 DejaChipsComponent
+            ],
+            imports: [
+                MatIconModule,
             ]
         }).compileComponents();
 
@@ -103,7 +107,7 @@ describe('DejaChipsComponent', () => {
         component.items = ['Angular', 'Java', 'Oracle'];
         fixture.detectChanges();
 
-        const closeButtons = fixture.debugElement.queryAll(By.css('i'));
+        const closeButtons = fixture.debugElement.queryAll(By.css('#close-button'));
         expect(closeButtons.length).toEqual(3);
 
         const spy = spyOn(component, 'onClose');
