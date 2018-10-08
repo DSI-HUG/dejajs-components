@@ -1,3 +1,13 @@
+<a name="4.0.0-beta.4"></a>
+# [4.0.0-beta.4](https://github.com/DSI-HUG/dejajs-components/compare/v4.0.0-beta.3...v4.0.0-beta.4) (2018-10-08)
+
+
+### Bug Fixes
+
+* **Theming:** Not working import with sass ([d070488](https://github.com/DSI-HUG/dejajs-components/commit/d070488))
+
+
+
 <a name="4.0.0-beta.3"></a>
 # [4.0.0-beta.3](https://github.com/DSI-HUG/dejajs-components/compare/v4.0.0-beta.2...v4.0.0-beta.3) (2018-10-08)
 
