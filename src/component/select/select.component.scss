@@ -30,7 +30,7 @@ deja-select {
 		height: 0;
 
 		#clear-button,
-		.select-arrow-down {
+		#drop-down-button {
 			font-size: 1.2rem;
 			opacity: 0.35;
 
@@ -84,10 +84,6 @@ deja-select {
 
 		div.listitem {
 			white-space: nowrap;
-
-			#expandbtn {
-				min-width: 24px;
-			}
 
 			>deja-bold-query {
 				flex: 1 1 100%;

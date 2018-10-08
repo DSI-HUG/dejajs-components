@@ -12,7 +12,7 @@
 				.mat-sidenav {
 					.header {
 						background: mat-color($primary);
-						.header-menu-btn .mat-icon {
+						.header-menu-btn [fontIcon] {
 							color: mat-color($primary, default-contrast);
 						}
 					}

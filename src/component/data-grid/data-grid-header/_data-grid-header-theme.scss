@@ -10,15 +10,6 @@
 		#deja-grid-header {
 			.column-header-wrapper {
 				position: relative; // For spinner absolute position
-				.sort-waiter {
-					background-color: mat-color($foreground, secondary-text);
-					&:after,
-					&:before {
-						content: "loop";
-						color: transparent;
-						width: 100%;
-					}
-				}
 				[separator] {
 					border-right: solid 1px mat-color($primary, A400);
 				}

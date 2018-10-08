@@ -1,4 +1,4 @@
-<deja-overlay *ngIf="!isMobile" [overlayOffsetX]="0" [overlayOffsetY]="10" [ownerElement]="ownerElement" [isVisible]="overlayVisible" [positions]="positions" hasBackdrop="false">
+<deja-overlay [overlayOffsetX]="0" [overlayOffsetY]="10" [ownerElement]="ownerElement" [isVisible]="overlayVisible" [positions]="positions" hasBackdrop="false">
     <ng-template *ngIf="!!tooltipTemplate" [ngTemplateOutlet]="tooltipTemplate" [ngTemplateOutletContext]="{ $implicit: model }"></ng-template>
     <ng-container *ngIf="!tooltipTemplate"><ng-content></ng-content></ng-container>
 </deja-overlay>

@@ -2,11 +2,11 @@
 <ng-container *ngFor="let but of buttons">
 
     <button *ngIf="!but.label" mat-icon-button (click)="emit(but)">
-        <mat-icon *ngIf="but.icon" class="mat-icon material-icons" color="primary" role="img" aria-hidden="true">{{but.icon}}</mat-icon>
+        <mat-icon *ngIf="but.icon" class="mat-icon material-icons" color="primary" role="img" aria-hidden="true" fontSet="deja-icons" [fontIcon]="but.icon"></mat-icon>
     </button>
 
     <button *ngIf="but.label" mat-raised-button color="primary" [name]="but.name" (click)="emit(but)">
-        <mat-icon *ngIf="but.icon" class="mat-icon material-icons" role="img" aria-hidden="true">{{but.icon}}</mat-icon>&nbsp;{{but.label}}
+        <mat-icon *ngIf="but.icon" class="mat-icon material-icons" role="img" aria-hidden="true" fontSet="deja-icons" [fontIcon]="but.icon"></mat-icon>&nbsp;{{but.label}}
     </button>
 
 </ng-container>

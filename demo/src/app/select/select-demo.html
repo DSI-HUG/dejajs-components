@@ -249,8 +249,7 @@
 				<deja-select hideSelected type="multiselect" textField="naqme" valueField="code" placeholder="Select one or more countries" [(ngModel)]="multiselectModel" [items]="countriesForMultiselect">
 					<ng-template #selectedTemplate let-item>
 						<span id="flight">
-							<i *ngIf="item.code !== 'CH' && item.code !== 'FR'" class="material-icons">flight_land</i>
-							<i *ngIf="item.code === 'FR'" class="material-icons">flight_landflight_takeoff</i>
+							<i *ngIf="item.code !== 'CH'" class="material-icons">flight_land</i>
 							<i *ngIf="item.code === 'CH'" class="material-icons">flight_takeoff</i>
 							<span>{{ item.naqme + ' - ' + item.code }}</span>
 						</span>

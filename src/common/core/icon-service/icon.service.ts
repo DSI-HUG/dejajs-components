@@ -28,4 +28,8 @@ export class IconService {
         this.iconRegistry.addSvgIcon(iconName,
             this.sanitizer.bypassSecurityTrustResourceUrl(iconUrl));
     }
+
+    public useMaterialIcons(value = true) {
+        this.iconRegistry.registerFontClassAlias('deja-icons', value ? 'material-icons' : null);
+    }
 }
