@@ -2,6 +2,11 @@
 # [4.0.0-beta.3](https://github.com/DSI-HUG/dejajs-components/compare/v4.0.0-beta.2...v4.0.0-beta.3) (2018-10-08)
 
 
+### Code Refactoring
+
+* **Global:** Create web font from embeded SVG in the lib instead use material-icons
+
+
 ### Bug Fixes
 
 * **ColorPicker:** Possible null exception ([0353989](https://github.com/DSI-HUG/dejajs-components/commit/0353989))
