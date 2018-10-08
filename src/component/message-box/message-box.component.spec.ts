@@ -47,18 +47,18 @@ describe('DejaMessageBoxComponent', () => {
             expect(component.icon).toEqual('info_outline');
         });
 
-        it('should set a check icon if type is success', () => {
+        it('should set a done icon if type is success', () => {
             component.icon = null;
             component.type = 'success';
             fixture.detectChanges();
-            expect(component.icon).toEqual('check');
+            expect(component.icon).toEqual('done');
         });
 
         it('should set a warning icon if type is warn', () => {
             component.icon = null;
             component.type = 'warn';
             fixture.detectChanges();
-            expect(component.icon).toEqual('warning');
+            expect(component.icon).toEqual('warning_outline');
         });
 
         it('should set an error_outline icon if type is danger', () => {

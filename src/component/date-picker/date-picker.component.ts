@@ -495,7 +495,7 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
 
     /**
      * Called when user click on the input of this component.
-     * If click is located on mat-icon 'calendar' who is in the matPrefix of mat-form-field-container, the picker show off.
+     * If click is located on icon 'calendar' who is in the matPrefix of mat-form-field-container, the picker show off.
      *
      * @param event
      */

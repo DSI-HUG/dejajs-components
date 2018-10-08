@@ -248,7 +248,7 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
      */
     @Input()
     public set colors(colors: Color[]) {
-        this._colors$.next(colors);
+        this._colors$.next(colors || []);
         this.selectedBaseIndex$.next(0);
     }
 

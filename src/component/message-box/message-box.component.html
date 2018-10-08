@@ -1,10 +1,10 @@
 <mat-card id="msgbox" class="{{type}}">
     <mat-card-title *ngIf="icon || showCloseIcon">
-        <mat-icon *ngIf="icon">{{icon}}</mat-icon>
+        <mat-icon id="icon" *ngIf="icon">{{icon}}</mat-icon>
         <span id="title" *ngIf="!horizontal">{{title}}</span>
         <div class="header-actions">
             <button *ngIf="showCloseIcon" mat-mini-fab type="button" class="close" (click)="onClose()">
-                <mat-icon>close</mat-icon>
+                <mat-icon fontSet="deja-icons" fontIcon="close"></mat-icon>
             </button>
         </div>
     </mat-card-title>
@@ -21,7 +21,7 @@
                 {{action.text}}
             </button>
             <button mat-mini-fab type="button" *ngIf="action.icon && !action.text" [color]="action.type || 'blank'" [class.action-button]="!action.type" (click)="action.action()">
-                <mat-icon>{{action.icon}}</mat-icon>
+                <mat-icon *ngIf="action.icon" fontSet="deja-icons" [fontIcon]="action.icon"></mat-icon>
             </button>
         </span>
     </mat-card-actions>

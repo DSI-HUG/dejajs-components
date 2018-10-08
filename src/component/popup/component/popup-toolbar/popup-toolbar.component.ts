@@ -73,7 +73,6 @@ export class DejaPopupToolbarComponent implements OnInit {
 
     public buttonMove = {
         name: 'toolbar-move',
-        icon: 'move',
         label: 'Move',
     } as DejaPopupAction;
 

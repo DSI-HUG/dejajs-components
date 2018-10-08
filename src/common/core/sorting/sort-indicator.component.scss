@@ -2,23 +2,25 @@
 	display: block;
 	position: relative;
 	width: 1rem;
+
 	[sortorder] {
-		>.material-icons {
+		.mat-icon {
 			position: absolute;
 			right: 0;
 			top: 50%;
-			font-size: 100%;
 			-ms-transform: translateY(-50%);
 			/* IE 9 */
 			-webkit-transform: translateY(-50%);
 			/* Chrome, Safari, Opera */
 			transform: translateY(-50%);
 			transition: all 500ms linear;
-			padding: 0.3rem;
+            padding: 0.3rem;
+            zoom: 72%;
 		}
 	}
+
 	[sortorder="1"] {
-		>.material-icons {
+		.mat-icon {
 			-ms-transform: translateY(-50%) rotate(180deg);
 			/* IE 9 */
 			-webkit-transform: translateY(-50%) rotate(180deg);

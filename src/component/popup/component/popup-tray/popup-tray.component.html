@@ -6,20 +6,20 @@
 </span>
 
 <button mat-icon-button (click)="posYMenu.show($event)">
-    <mat-icon>more_vert</mat-icon>
+    <mat-icon fontSet="deja-icons" fontIcon="more_vert"></mat-icon>
 </button>
 
 <deja-overlay #posYMenu>
     <div class="deja-menu-content">
         <ul>
             <li class="menu-item" (click)="closeAll();posYMenu.close()">
-                <mat-icon>close</mat-icon> Close all
+                <mat-icon fontSet="deja-icons" fontIcon="close"></mat-icon> Close all
             </li>
             <li class="menu-item" (click)="showAll();posYMenu.close()">
-                <mat-icon>fullscreen</mat-icon> Show all
+                <mat-icon fontSet="deja-icons" fontIcon="fullscreen"></mat-icon> Show all
             </li>
             <li class="menu-item" (click)="minimizeAll();posYMenu.close()">
-                <mat-icon>remove</mat-icon> Dock all
+                <mat-icon fontSet="deja-icons" fontIcon="remove"></mat-icon> Dock all
             </li>
         </ul>
     </div>

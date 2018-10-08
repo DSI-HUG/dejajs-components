@@ -1,13 +1,13 @@
 <input [placeholder]="placeholder" *ngIf="!isMultiSelect" matInput [disabled]="disabled" [ngModel]="query" #inputElement deja-child-validator type="text" [readonly]="isModeSelect || readonly" (ngModelChange)="queryChanged($event)" autocomplete="off">
 <div *ngIf="!disabled && !isMultiSelect" class="actions-suffix">
-	<i (click)="onCloseClicked()" id="clear-button" class="material-icons" *ngIf="selectionClearable && selectedItems.length > 0">clear</i>
-	<i (click)="onOpenClicked()" class="material-icons select-arrow-down">keyboard_arrow_down</i>
+	<mat-icon (click)="onCloseClicked()" id="clear-button" *ngIf="selectionClearable && selectedItems.length > 0" fontSet="deja-icons" fontIcon="clear"></mat-icon>
+	<mat-icon (click)="onOpenClicked()" id="drop-down-button" fontSet="deja-icons" fontIcon="arrow_drop_down"></mat-icon>
 </div>
 <deja-chips *ngIf="isMultiSelect" [items]="selectedItems" [readonly]="readonly" [disabled]="disabled" (close)="onCloseClicked($event)" [itemTemplateExternal]="selectedTemplate" [textField]="getTextField()">
 	<ng-template #insertTemplate>
 		<input [placeholder]="placeholder" matInput [disabled]="disabled" [ngModel]="query" #inputElement deja-child-validator type="text" [readonly]="isModeSelect || readonly" (ngModelChange)="queryChanged($event)" autocomplete="off">
 		<div *ngIf="!disabled" class="actions-suffix">
-			<i (click)="onOpenClicked()" class="material-icons select-arrow-down">keyboard_arrow_down</i>
+			<mat-icon id="drop-down-button" (click)="onOpenClicked()" fontSet="deja-icons" fontIcon="arrow_drop_down"></mat-icon>
 		</div>
 	</ng-template>
 </deja-chips>
@@ -16,7 +16,9 @@
 		<div id="nodata-holder" *ngIf="(!treeItemList || treeItemList.length === 0) && !waiter">{{ nodataholder }}</div>
 		<div *ngIf="vpBeforeHeight" [style.height.px]="vpBeforeHeight"></div>
 		<div *ngFor="let item of treeItemList; let index = index" #listitem [attr.class]="getItemClass(item)" [class.hide]="item.collapsing || item.expanding" [class.parent]="item.depth < depthMax" [class.collapsed]="item.collapsed" [class.selected]="item.selected" [attr.current]="(isMultiSelect && vpStartRow+index === getCurrentItemIndex()) || null" [class.unselectable]="item.selectable === false" [attr.depth]="depthMax ? item.depth : null" [attr.id]="item.id || null" [attr.flat]="vpStartRow + index" [style.height.px]="getItemHeight(item)" [class.odd]="(item.depth === depthMax && item.odd) || null">
-			<span id="expandbtn"><i *ngIf="item.$items && item.$items.length" class="material-icons">keyboard_arrow_down</i></span>
+			<span id="expandbtn">
+				<mat-icon *ngIf="item.$items && item.$items.length" fontSet="deja-icons" fontIcon="arrow_drop_down"></mat-icon>
+			</span>
 			<ng-container *ngIf="(!item.$items || !parentItemTemplate) && (item.$items || !itemTemplate)">{{ getTextValue(item) }}</ng-container>
 			<ng-container *ngIf="item.$items && parentItemTemplate">
 				<ng-template [ngTemplateOutlet]="parentItemTemplate" [ngTemplateOutletContext]="{ $implicit: item, query: query, flatindex: vpStartRow+index }"></ng-template>

@@ -1,3 +1,3 @@
 <span [deja-editable] id="title" multiline="true" [(ngModel)]="model.templateModel.title" (ngModelChange)="titleChanged.emit($event)" [mandatory]="true"></span>
-<i *ngIf="designMode" id="edit-button" (click)="edit$.next()" class="material-icons">edit</i>
-<i *ngIf="designMode" id="close-button" (click)="close.emit($event)" class="material-icons">close</i>
+<mat-icon *ngIf="designMode" id="edit-button" (click)="edit$.next()" fontSet="deja-icons" fontIcon="edit"></mat-icon>
+<mat-icon *ngIf="designMode" id="close-button" (click)="close.emit($event)" fontSet="deja-icons" fontIcon="close"></mat-icon>

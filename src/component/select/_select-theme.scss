@@ -16,7 +16,8 @@
 		}
 
 		.actions-suffix {
-			.material-icons {
+            #clear-button,
+            #drop-down-button {
 				&:hover {
 					color: mat-color($primary);
 				}

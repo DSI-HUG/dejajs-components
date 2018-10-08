@@ -9,6 +9,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule  } from '@angular/forms';
+import { MatIconModule } from '@angular/material';
 import { DejaSortingModule } from '../../common/core/sorting/index';
 import { DejaChipsModule } from '../chips/index';
 import { DejaDragDropModule } from '../dragdrop/index';
@@ -37,6 +38,7 @@ import { DejaGridComponent } from './data-grid.component';
     imports: [
         CommonModule,
         FormsModule,
+        MatIconModule,
         DejaTreeListModule,
         DejaDragDropModule,
         DejaSortingModule,
