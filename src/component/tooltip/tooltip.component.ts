@@ -5,6 +5,7 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Component, ContentChild, ElementRef, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { from as observableFrom, fromEvent as observableFromEvent, Observable } from 'rxjs';
 import { debounceTime, delay, filter, map, takeUntil, tap } from 'rxjs/operators';
@@ -25,20 +26,6 @@ import { DejaTooltipService, ITooltipParams } from './tooltip.service';
     ],
 })
 export class DejaTooltipComponent implements OnInit {
-    /** Tooltip name. Mandatory, and need to be unic */
-    @Input() public name: string;
-    /** Event Emmited when hide action is called */
-    @Output() public hide = new EventEmitter();
-    /** Template for tooltip content */
-    @ContentChild('tooltipTemplate')
-    public tooltipTemplate: any;
-
-    /** Parameters of the tooltip */
-    public params: ITooltipParams;
-    public overlayVisible = false;
-    public ownerElement: HTMLElement;
-    private _model: any;
-
     /**
      * This position config ensures that the top "start" corner of the overlay
      * is aligned with with the top "start" of the origin by default (overlapping
@@ -84,6 +71,30 @@ export class DejaTooltipComponent implements OnInit {
         },
     ] as DejaConnectionPositionPair[];
 
+    /** Tooltip name. Mandatory, and need to be unic */
+    @Input() public name: string;
+    /** Event Emmited when hide action is called */
+    @Output() public hide = new EventEmitter();
+    /** Template for tooltip content */
+    @ContentChild('tooltipTemplate')
+    public tooltipTemplate: any;
+
+    /** Parameters of the tooltip */
+    public params: ITooltipParams;
+    public overlayVisible = false;
+    public ownerElement: HTMLElement;
+    private _model: any;
+    private _closeOnMoveOver = false;
+
+    @Input()
+    public set closeOnMoveOver(value: boolean) {
+        this._closeOnMoveOver = coerceBooleanProperty(value);
+    }
+
+    public get closeOnMoveOver() {
+        return this._closeOnMoveOver;
+    }
+
     @Input()
     public set positions(value: DejaConnectionPositionPair[] | string) {
         this._positions = typeof value === 'string' ? DejaConnectionPositionPair.parse(value) : value;
@@ -112,6 +123,9 @@ export class DejaTooltipComponent implements OnInit {
             debounceTime(100),
             map((event: MouseEvent) => new Position(event.pageX, event.pageY)),
             filter((position) => {
+                if (this._closeOnMoveOver) {
+                    return true;
+                }
                 const containerElement = document.elementFromPoint(position.left, position.top);
                 let parentElement = containerElement;
                 while (parentElement) {
@@ -123,6 +137,9 @@ export class DejaTooltipComponent implements OnInit {
                 return true;
             }),
             filter((position) => {
+                if (this._closeOnMoveOver) {
+                    return true;
+                }
                 const ownerElement = (this.params.ownerElement as ElementRef).nativeElement || this.params.ownerElement;
                 const ownerRect = new Rect(ownerElement.getBoundingClientRect());
                 return !ownerRect.containsPoint(position);
