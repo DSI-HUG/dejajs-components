@@ -1,3 +1,23 @@
+<a name="4.0.0-beta.5"></a>
+# [4.0.0-beta.5](https://github.com/DSI-HUG/dejajs-components/compare/v4.0.0-beta.4...v4.0.0-beta.5) (2018-10-09)
+
+
+### Code Refactoring
+
+* **DejaSideNav:** Removed useless headerSvgIcon input ([39a411f](https://github.com/DSI-HUG/dejajs-components/commit/39a411f))
+
+
+### Features
+
+* **DejaToolTip:** Allow DejaToolTip to close ever the mouse is over if the attribute closeOnMoveOver is set ([00d5281](https://github.com/DSI-HUG/dejajs-components/commit/00d5281))
+
+
+### BREAKING CHANGES
+
+* **DejaSideNav:** headerSvgIcon is removed from DejaSideNav. Use css override instead. Look at the demo app.component.scss for example.
+
+
+
 <a name="4.0.0-beta.4"></a>
 # [4.0.0-beta.4](https://github.com/DSI-HUG/dejajs-components/compare/v4.0.0-beta.3...v4.0.0-beta.4) (2018-10-08)
 
