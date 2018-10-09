@@ -30,12 +30,7 @@ export class DejaSidenavComponent implements OnInit, OnDestroy {
     public headerText = 'TITLE';
 
     @Input()
-    /** Will be ignored if headerSvgIcon is set */
     public headerIcon = 'face';
-
-    @Input()
-    /** If not null, will be used in place of headerIcon. */
-    public headerSvgIcon: string;
 
     public title: string;
     public mode = 'side';
