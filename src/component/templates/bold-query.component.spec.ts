@@ -96,24 +96,27 @@ describe('DejaBoldQueryComponent', () => {
         fixture.detectChanges();
         const divEl = fixture.debugElement.nativeElement.querySelector('div');
         expect(divEl.innerHTML).toContain('<span class="customClass">');
-/*
-        fixture.whenStable().then(()=> {
-            fixture.detectChanges();
-            const el = fixture.debugElement.query(By.css('.customClass'));
-            expect(el).toBeTruthy();
-            expect(el.name).toEqual('span');
-            done();
-        });
-*/
+        /*
+                fixture.whenStable().then(()=> {
+                    fixture.detectChanges();
+                    const el = fixture.debugElement.query(By.css('.customClass'));
+                    expect(el).toBeTruthy();
+                    expect(el.name).toEqual('span');
+                    done();
+                });
+        */
     });
 
-    it('should escape special chars', () => {
+    it('should escape special chars', (done) => {
         comp.value = 'test caractères spéciaux +?^${}()|[]\\. Fin test.';
         comp.query = 'test';
         comp.regexpOption = '';
         fixture.detectChanges();
-        const result = `${highlightOpenTag}test${highlightEndTag} caractères spéciaux +?^\${}()|[]\\. Fin ${highlightOpenTag}test${highlightEndTag}.`;
-        expect(comp.content).toEqual(result);
+        fixture.whenStable().then(() => {
+            const result = `${highlightOpenTag}test${highlightEndTag} caractères spéciaux +?^\${}()|[]\\. Fin ${highlightOpenTag}test${highlightEndTag}.`;
+            expect(comp.content).toEqual(result);
+            done();
+        });
     });
 
 });

@@ -47,7 +47,7 @@ export class DejaMouseDragDropCursorComponent implements OnDestroy {
             takeWhile(() => this.isAlive),
             filter((dragCursor) => !dragCursor),
             tap((dragCursor) => {
-                if (this._currentCursor) {
+                if (this._currentCursor && this.contentElement && this.iconElement) {
                     this.contentElement.style.opacity = '0';
                     this.iconElement.style.opacity = '0';
                 }
@@ -65,24 +65,30 @@ export class DejaMouseDragDropCursorComponent implements OnDestroy {
             filter((dragCursor) => !!dragCursor),
             tap((dragCursor) => {
                 element.style.display = '';
-                this.contentElement.style.opacity = '0';
-                this.iconElement.style.opacity = '0';
+                if (this.contentElement && this.iconElement) {
+                    this.contentElement.style.opacity = '0';
+                    this.iconElement.style.opacity = '0';
+                }
                 this._currentCursor = dragCursor;
             }),
             filter((dragCursor) => !dragCursor.className || dragCursor.className !== 'hidden'),
             tap((dragCursor) => {
                 if (!!dragCursor.html) {
-                    this.contentElement.innerHTML = dragCursor.html;
                     element.className = dragCursor.className;
-                    this.contentElement.style.width = `${dragCursor.width || 48}px`;
-                    this.contentElement.style.height = `${dragCursor.height || 48}px`;
+                    if (this.contentElement && this.iconElement) {
+                        this.contentElement.innerHTML = dragCursor.html;
+                        this.contentElement.style.width = `${dragCursor.width || 48}px`;
+                        this.contentElement.style.height = `${dragCursor.height || 48}px`;
+                    }
                 } else {
-                    this.iconElement.style.opacity = '1';
+                    if (this.iconElement) {
+                        this.iconElement.style.opacity = '1';
+                    }
                 }
             }),
             delay(1))
             .subscribe((dragCursor) => {
-                if (!!dragCursor.html) {
+                if (!!dragCursor.html && this.contentElement) {
                     this.contentElement.style.opacity = '1';
                 }
             });
