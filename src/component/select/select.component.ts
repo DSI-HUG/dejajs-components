@@ -217,7 +217,6 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
             }
             if (models.length > 100) {
                 // tslint:disable-next-line:no-debugger
-                debugger;
                 console.error('Select options with more than 100 items can have performance options. Please bind directly the items in code behind with items or models input.');
             }
         }

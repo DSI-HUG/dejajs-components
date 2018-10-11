@@ -1,3 +1,17 @@
+<a name="4.0.0-beta.6"></a>
+# [4.0.0-beta.6](https://github.com/DSI-HUG/dejajs-components/compare/v4.0.0-beta.5...v4.0.0-beta.6) (2018-10-11)
+
+
+### Bug Fixes
+
+* **DejaSelect:** Fix regression due to a CustomEvent polyfills modification. ([5eec052](https://github.com/DSI-HUG/dejajs-components/commit/5eec052))
+* **DejaSelect:** Fix regression due to the embeded SVG implementation ([9f94ea5](https://github.com/DSI-HUG/dejajs-components/commit/9f94ea5))
+* **DejaTile:** Fix icon centering for group ([dd8c5ed](https://github.com/DSI-HUG/dejajs-components/commit/dd8c5ed))
+* **DejaTilesComponent:** Fix regression due to a CustomEvent polyfills modifictaion. ([2b810cc](https://github.com/DSI-HUG/dejajs-components/commit/2b810cc))
+* **DroppableDirective:** Fix regression due to a CustomEvent polyfills modification. ([b32fff2](https://github.com/DSI-HUG/dejajs-components/commit/b32fff2))
+
+
+
 <a name="4.0.0-beta.5"></a>
 # [4.0.0-beta.5](https://github.com/DSI-HUG/dejajs-components/compare/v4.0.0-beta.4...v4.0.0-beta.5) (2018-10-09)
 

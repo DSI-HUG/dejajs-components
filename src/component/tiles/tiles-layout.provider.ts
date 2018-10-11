@@ -687,17 +687,14 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                 }
             });
 
-        // Remove immediately
-        observableTimer(10).pipe(
-            first(),
-            filter(() => !event.defaultPrevented))
-            .subscribe(() => {
-                cancelSubscription.unsubscribe();
-                this.deleteTiles(tilesToRemove);
-            });
-
         // Forward event
         this.contentRemoving.next(event);
+
+        // Remove immediately
+        if (!event.defaultPrevented) {
+            cancelSubscription.unsubscribe();
+            this.deleteTiles(tilesToRemove);
+        }
     }
 
     public createTiles(tiles: IDejaTile[]) {
@@ -1015,7 +1012,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             }
         });
 
-        const event = new CustomEvent('DejaTilesAddEvent', { cancelable: false }) as IDejaTilesAddEvent;
+        const event = new CustomEvent('DejaTilesAddEvent', { cancelable: true }) as IDejaTilesAddEvent;
         event.tiles = this.tiles.map((tile) => tile.toTileModel());
         event.added = newTiles.map((tile) => tile.toTileModel());
         event.cancel$ = new Subject();
@@ -1080,15 +1077,6 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                 }
             });
 
-        // Add immediately
-        observableTimer(10).pipe(
-            first(),
-            filter(() => !event.defaultPrevented))
-            .subscribe(() => {
-                cancelSubscription.unsubscribe();
-                validateNewTiles(newTiles);
-            });
-
         // Get total rectangle
         let bounds: Rect;
         newTiles.forEach((tile) => {
@@ -1098,6 +1086,12 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         this.refreshTiles$.next({ ensureBounds: bounds });
 
         this.contentAdding.next(event);
+
+        if (!event.defaultPrevented) {
+            // Add immediately
+            cancelSubscription.unsubscribe();
+            validateNewTiles(newTiles);
+        }
     }
 
     private size(tile: DejaTile, pixelPos: Position, directions: Directions) {
