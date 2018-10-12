@@ -1,3 +1,13 @@
+<a name="4.0.0"></a>
+# [4.0.0](https://github.com/DSI-HUG/dejajs-components/compare/v4.0.0-beta.6...v4.0.0) (2018-10-12)
+
+
+### Bug Fixes
+
+* **MouseDragDrop:** Fix test fail sometimes on Travis ([e3b1601](https://github.com/DSI-HUG/dejajs-components/commit/e3b1601))
+
+
+
 <a name="4.0.0-beta.6"></a>
 # [4.0.0-beta.6](https://github.com/DSI-HUG/dejajs-components/compare/v4.0.0-beta.5...v4.0.0-beta.6) (2018-10-11)
 
