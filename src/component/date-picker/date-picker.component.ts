@@ -8,9 +8,9 @@
 
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostBinding, HostListener, Input, OnDestroy, OnInit, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
-import { MatFormFieldControl } from '@angular/material';
+import { _MatInputMixinBase, CanUpdateErrorState, ErrorStateMatcher, MatFormFieldControl } from '@angular/material';
 import * as moment_ from 'moment';
 import { combineLatest as observableCombineLatest, from as observableFrom, fromEvent as observableFromEvent, merge as observableMerge, ReplaySubject, Subject } from 'rxjs';
 import { delay, filter, first, map, switchMap, takeWhile, tap } from 'rxjs/operators';
@@ -35,7 +35,7 @@ const noop = () => { };
     styleUrls: ['./date-picker.component.scss'],
     templateUrl: './date-picker.component.html',
 })
-export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, AfterContentInit, OnDestroy, MatFormFieldControl<Date | string> {
+export class DejaDatePickerComponent extends _MatInputMixinBase implements OnInit, ControlValueAccessor, AfterContentInit, DoCheck, OnDestroy, MatFormFieldControl<Date | string>, CanUpdateErrorState {
     public static nextId = 0;
     private static formattingTokens = new RegExp(`(\\[[^\\[]*\\])|(\\\\)?([Hh]mm(ss)?|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Qo?|YYYYYY|YYYYY|YYYY|YY|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|kk?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)`, 'g');
 
@@ -183,10 +183,12 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
         private elementRef: ElementRef,
         private changeDetectorRef: ChangeDetectorRef,
         @Self() @Optional() public ngControl: NgControl,
-        @Optional() private _parentForm: NgForm,
-        @Optional() private _parentFormGroup: FormGroupDirective,
+        @Optional() _parentForm: NgForm,
+        @Optional() _parentFormGroup: FormGroupDirective,
+        _defaultErrorStateMatcher: ErrorStateMatcher,
         private fm: FocusMonitor,
     ) {
+        super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
         if (this.ngControl) {
             this.ngControl.valueAccessor = this;
         }
@@ -207,6 +209,9 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
         fm.monitor(this.elementRef.nativeElement, true)
             .subscribe(origin => {
                 this.focused = !!origin;
+                if (!this.focused) {
+                    this.onTouchedCallback();
+                }
                 this.stateChanges.next();
             });
 
@@ -349,6 +354,15 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
             } else {
                 this.format = 'YYYY-MM-DD';
             }
+        }
+    }
+
+    public ngDoCheck() {
+        if (this.ngControl) {
+            // We need to re-evaluate this on every change detection cycle, because there are some
+            // error triggers that we can't subscribe to (e.g. parent form submissions). This means
+            // that whatever logic is in here has to be super lean or we risk destroying the performance.
+            this.updateErrorState();
         }
     }
 
@@ -581,10 +595,6 @@ export class DejaDatePickerComponent implements OnInit, ControlValueAccessor, Af
             delete this._inputModel;
         });
         this.close();
-    }
-
-    public onBlur() {
-        this.onTouchedCallback();
     }
 
     public setToCurrentDate(): void {

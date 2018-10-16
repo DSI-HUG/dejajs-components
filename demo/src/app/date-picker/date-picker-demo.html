@@ -100,7 +100,7 @@
 					<h3>Free Entry Date Picker :</h3>
 					<mat-form-field appearance="outline">
 						<mat-label>Free Entry Date Picker</mat-label>
-						<deja-date-picker [disableDates]="disabledDate" [(ngModel)]="theFreeEntryDatePicker" [allowFreeEntry]="true"></deja-date-picker>
+						<deja-date-picker [disableDates]="disabledDate" [(ngModel)]="theFreeEntryDatePicker" required [allowFreeEntry]="true"></deja-date-picker>
 						<mat-hint>Selected date : {{theFreeEntryDatePicker}}</mat-hint>
 					</mat-form-field>
 				</div>
