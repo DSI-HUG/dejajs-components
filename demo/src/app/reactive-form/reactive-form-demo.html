@@ -36,12 +36,17 @@
 				<mat-error *ngIf="!!getError('visitedCountries')">{{ getError('visitedCountries') }}</mat-error>
 			</mat-form-field>
 			<h3 fxFlex="0 0 auto">Deja Date Picker</h3>
-			<div class="placeholder" fxFlex="0 0 auto">Birth Date</div>
-			<deja-date-picker formControlName="birthDate">
-				<ng-template #errorTemplate *ngIf="!!getError('birthDate')">
-					<span>{{ getError('birthDate') }}</span>
-				</ng-template>
-			</deja-date-picker>
+			<mat-form-field fxFlex="0 0 auto">
+				<mat-label>Birth Date</mat-label>
+				<deja-date-picker formControlName="birthDate" required> </deja-date-picker>
+				<mat-error *ngIf="!!getError('birthDate')">{{ getError('birthDate') }}</mat-error>
+			</mat-form-field>
+			<h3 fxFlex="0 0 auto">Deja Numeric Stepper</h3>
+			<mat-form-field fxFlex="0 0 auto">
+				<mat-label>Age</mat-label>
+				<deja-numeric-stepper formControlName="age" required></deja-numeric-stepper>
+				<mat-error *ngIf="!!getError('age')">{{ getError('age') }}</mat-error>
+			</mat-form-field>
 			<h3 fxFlex="0 0 auto">Deja Select</h3>
 			<mat-form-field fxFlex="0 0 auto">
 				<deja-select placeholder="Prefered Juice" selectionClearable formControlName="preferedJuice" [models]="fructs"> </deja-select>
@@ -75,7 +80,7 @@
 			<span class="error errorfld" *ngIf="!!getError('remark')">{{ getError('remark') }}</span>
 			<h3 fxFlex="0 0 auto">Deja Range</h3>
 			<deja-range [readOnly]="false" [step]="1" formControlName="ranges"></deja-range>
-            <button id="submit" mat-raised-button dpiButton color="primary" type="submit">Submit</button>
+			<button id="submit" mat-raised-button dpiButton color="primary" type="submit">Submit</button>
 		</form>
 		<span fxFlex="0 0 40%" fxFlexOffset="5%">
 			<h4>Model :</h4>

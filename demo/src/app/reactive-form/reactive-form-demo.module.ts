@@ -11,7 +11,7 @@ import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule, MatCardModule, MatInputModule, MatTabsModule , MatToolbarModule} from '@angular/material';
-import { DejaChipsModule, DejaCircularPickerModule, DejaColorPickerModule, DejaColorSelectorModule, DejaDatePickerModule, DejaEditableModule, DejaEditorModule, DejaMonacoEditorModule, DejaRangeModule, DejaSelectModule, DejaTagModule, DejaTreeListModule } from '@deja-js/component';
+import { DejaChipsModule, DejaCircularPickerModule, DejaColorPickerModule, DejaColorSelectorModule, DejaDatePickerModule, DejaEditableModule, DejaEditorModule, DejaMonacoEditorModule, DejaRangeModule, DejaSelectModule, DejaTagModule, DejaTreeListModule, DejaNumericStepperModule } from '@deja-js/component';
 import { StoreModule } from '@ngrx/store';
 import { DejaMarkdownModule } from '../../component/markdown/index';
 import { userReducer } from './model/user.reducer';
@@ -45,6 +45,7 @@ import { UserService } from './service/user.service';
         DejaEditableModule,
         DejaEditorModule,
         DejaMonacoEditorModule,
+        DejaNumericStepperModule,
         routing,
         StoreModule.forRoot({}),
         StoreModule.forFeature('userDemo', {
