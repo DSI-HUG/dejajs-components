@@ -1,3 +1,43 @@
+<a name="4.0.1"></a>
+## [4.0.1](https://github.com/DSI-HUG/dejajs-components/compare/v4.0.0-beta.0...v4.0.1) (2018-10-17)
+
+
+### Bug Fixes
+
+* **ColorPicker:** Possible null exception ([0353989](https://github.com/DSI-HUG/dejajs-components/commit/0353989))
+* **DatePickerComponent:** Date picker validation with mat-form-field ([4be1382](https://github.com/DSI-HUG/dejajs-components/commit/4be1382))
+* **DatePickerComponent:** DatePicker actions vertical alignment with the input field ([bd5d2f2](https://github.com/DSI-HUG/dejajs-components/commit/bd5d2f2))
+* **DatePickerComponent:** Unused import cause build failure ([c79176a](https://github.com/DSI-HUG/dejajs-components/commit/c79176a))
+* **DejaSelect:** Fix regression due to a CustomEvent polyfills modification. ([5eec052](https://github.com/DSI-HUG/dejajs-components/commit/5eec052))
+* **DejaSelect:** Fix regression due to the embeded SVG implementation ([9f94ea5](https://github.com/DSI-HUG/dejajs-components/commit/9f94ea5))
+* **DejaSidenav:** Fix missing button to close menu on mobile ([2f34596](https://github.com/DSI-HUG/dejajs-components/commit/2f34596))
+* **DejaTag:** Fix broken inline layout ([de6b0ab](https://github.com/DSI-HUG/dejajs-components/commit/de6b0ab))
+* **DejaTile:** Fix icon centering for group ([dd8c5ed](https://github.com/DSI-HUG/dejajs-components/commit/dd8c5ed))
+* **DejaTilesComponent:** Fix regression due to a CustomEvent polyfills modifictaion. ([2b810cc](https://github.com/DSI-HUG/dejajs-components/commit/2b810cc))
+* **DejaTooltip:** Allow tooltip on mobile, because raise only with mouse ([472297c](https://github.com/DSI-HUG/dejajs-components/commit/472297c))
+* **DemoApp:** Fix script loading for inline demo app ([53f7e8d](https://github.com/DSI-HUG/dejajs-components/commit/53f7e8d))
+* **Dependencies:** Fix CustomEvent polyfill dependencies ([8280d18](https://github.com/DSI-HUG/dejajs-components/commit/8280d18))
+* **DroppableDirective:** Fix regression due to a CustomEvent polyfills modification. ([b32fff2](https://github.com/DSI-HUG/dejajs-components/commit/b32fff2))
+* **MouseDragDrop:** Fix test fail sometimes on Travis ([e3b1601](https://github.com/DSI-HUG/dejajs-components/commit/e3b1601))
+* **Theming:** Not working import with sass ([d070488](https://github.com/DSI-HUG/dejajs-components/commit/d070488))
+
+
+### Code Refactoring
+
+* **DejaSideNav:** Removed useless headerSvgIcon input ([39a411f](https://github.com/DSI-HUG/dejajs-components/commit/39a411f))
+
+
+### Features
+
+* **DejaToolTip:** Allow DejaToolTip to close ever the mouse is over if the attribute closeOnMoveOver is set ([00d5281](https://github.com/DSI-HUG/dejajs-components/commit/00d5281))
+
+
+### BREAKING CHANGES
+
+* **DejaSideNav:** headerSvgIcon is removed from DejaSideNav. Use css override instead. Look at the demo app.component.scss for example.
+
+
+
 <a name="4.0.0"></a>
 # [4.0.0](https://github.com/DSI-HUG/dejajs-components/compare/v4.0.0-beta.6...v4.0.0) (2018-10-12)
 
