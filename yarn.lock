@@ -2594,6 +2594,11 @@ currently-unhandled@^0.4.1:
   dependencies:
     array-find-index "^1.0.1"
 
+custom-event-polyfill@1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/custom-event-polyfill/-/custom-event-polyfill-1.0.6.tgz#6b026e81cd9f7bc896bd6b016a427407bb068db1"
+  integrity sha512-3FxpFlzGcHrDykwWu+xWVXZ8PfykM/9/bI3zXb953sh+AjInZWcQmrnmvPoZgiqNjmbtTm10PWvYqvRW527x6g==
+
 custom-event@~1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/custom-event/-/custom-event-1.0.1.tgz#5d02a46850adf1b4a317946a3928fccb5bfd0425"
@@ -4527,7 +4532,7 @@ gulp-hub@4.2.0:
     lodash.isstring "^4.0.0"
     undertaker-forward-reference "^1.0.0"
 
-gulp-iconfont@^10.0.1:
+gulp-iconfont@10.0.1:
   version "10.0.1"
   resolved "https://registry.yarnpkg.com/gulp-iconfont/-/gulp-iconfont-10.0.1.tgz#33ed0570926de6f7199008321e20933721158389"
   integrity sha512-Z4HZUVFMMm7geu5XnXlIrCWFcJ4gLD54bTcTreiOUZbqUEwJO6SAE1V3kvKqgQJo5CZzm25XhtLDyyoSdSbs3Q==
@@ -4583,7 +4588,7 @@ gulp-license-check@1.2.1:
     through2 "^2.0.1"
     vinyl-file "^2.0.0"
 
-gulp-rename@^1.4.0:
+gulp-rename@1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/gulp-rename/-/gulp-rename-1.4.0.tgz#de1c718e7c4095ae861f7296ef4f3248648240bd"
   integrity sha512-swzbIGb/arEoFK89tPY58vg3Ok1bw+d35PfUNwWqdo7KM4jkmuGA78JiDNqR+JeZFaeeHnRg9N7aihX3YPmsyg==
@@ -4727,11 +4732,6 @@ gulplog@^1.0.0:
   integrity sha1-4oxNRdBey77YGDY86PnFkmIp/+U=
   dependencies:
     glogg "^1.0.0"
-
-hammerjs@2.0.8:
-  version "2.0.8"
-  resolved "https://registry.yarnpkg.com/hammerjs/-/hammerjs-2.0.8.tgz#04ef77862cff2bb79d30f7692095930222bf60f1"
-  integrity sha1-BO93hiz/K7edMPdpIJWTAiK/YPE=
 
 handle-thing@^1.2.5:
   version "1.2.5"

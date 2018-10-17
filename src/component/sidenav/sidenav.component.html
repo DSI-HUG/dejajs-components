@@ -1,5 +1,5 @@
 <mat-sidenav-container [class.sidenav-hidden]="sidenavService.hidden" [class.sidenav-light]="!sidenavService.hidden && !sidenavService.opened">
-    <mat-sidenav [opened]="sidenavService.opened || null" [mode]="sidenavService.mode">
+    <mat-sidenav [(opened)]="sidenavService.opened" [mode]="sidenavService.mode">
         <mat-toolbar class="header">
             <mat-icon class="header-icon" fontSet="deja-icons" [fontIcon]="headerIcon"></mat-icon>
             <span class="header-text">{{headerText}}</span>
