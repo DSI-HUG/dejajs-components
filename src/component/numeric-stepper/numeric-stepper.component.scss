@@ -5,10 +5,11 @@
     input {
         border: none;
         background: none;
-        flex: 1 1 auto;
-        padding: 0;
-        outline: none;
         font: inherit;
+        min-width: 2px;
+        outline: none;
+        padding: 0;
+        padding-right: 2px;
         text-align: center;
     }
 
