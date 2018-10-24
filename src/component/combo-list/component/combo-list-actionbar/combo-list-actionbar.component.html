@@ -1,21 +1,21 @@
 <span>&nbsp;</span>
 <span>
-    <button id="raise-all" mat-icon-button title="Select all" (click)="emit('raiseAll')" [disabled]="disabled" *ngIf="!disableFastActions">
+    <button type="button" id="raise-all" mat-icon-button title="Select all" (click)="emit('raiseAll')" [disabled]="disabled" *ngIf="!disableFastActions">
         <mat-icon aria-label="Select all" fontSet="deja-icons" fontIcon="fast_forward"></mat-icon>
     </button>
 </span>
 <span>
-    <button mat-icon-button title="Select" (click)="emit('raiseBuffer')" [disabled]="disabled">
+    <button type="button" mat-icon-button title="Select" (click)="emit('raiseBuffer')" [disabled]="disabled">
         <mat-icon aria-label="Select" fontSet="deja-icons" fontIcon="keyboard_arrow_right"></mat-icon>
     </button>
 </span>
 <span>
-    <button mat-icon-button title="Deselect" (click)="emit('dropBuffer')" [disabled]="disabled">
+    <button type="button" mat-icon-button title="Deselect" (click)="emit('dropBuffer')" [disabled]="disabled">
         <mat-icon aria-label="Deselect" fontSet="deja-icons" fontIcon="keyboard_arrow_left"></mat-icon>
     </button>
 </span>
 <span>
-    <button mat-icon-button title="Deselect All" (click)="emit('dropAll')" [disabled]="disabled" *ngIf="!disableFastActions">
+    <button type="button" mat-icon-button title="Deselect All" (click)="emit('dropAll')" [disabled]="disabled" *ngIf="!disableFastActions">
         <mat-icon aria-label="Deselect All" fontSet="deja-icons" fontIcon="fast_rewind"></mat-icon>
     </button>
 </span>
