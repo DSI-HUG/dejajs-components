@@ -1,4 +1,4 @@
-<input deja-child-validator [placeholder]="placeholder" matInput [class.off-limits]="value < min || value > max" [disabled]="disabled" #inputStepper type="number" [(ngModel)]="value" [min]="min" [max]="max" [step]="step" [style.width.px]="size" />
+<input deja-child-validator matInput [class.off-limits]="value < min || value > max" [disabled]="disabled" #inputStepper type="number" [(ngModel)]="value" [min]="min" [max]="max" [step]="step" [style.width.px]="size" />
 <span class="unit" *ngIf="value !== undefined && value !== null && unit">{{ unit }}</span>
 
 <span class="steppers">
