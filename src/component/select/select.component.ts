@@ -75,7 +75,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
     @Input() public parentItemTemplateExternal: any;
     /** Permet de définir un template pour le loader par binding. */
     @Input() public loaderTemplateExternal: any;
-    /** Définit une valeur indiquant si en reactive form le model renvoyé doit être un obeject oue une valeur */
+    /** Définit une valeur indiquant si en reactive form le model renvoyé doit être un object ou une valeur */
     @Input() public modelIsValue: boolean;
     /** Exécuté lorsque le calcul du viewPort est terminé. */
     @Output() public viewPortChanged = new EventEmitter<IViewPort>();

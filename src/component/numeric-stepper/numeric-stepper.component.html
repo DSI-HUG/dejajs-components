@@ -1,5 +1,5 @@
-<input deja-child-validator [placeholder]="placeholder" matInput [class.off-limits]="value < min || value > max" [disabled]="disabled" #inputStepper type="number" [(ngModel)]="value" [min]="min" [max]="max" [step]="step" [style.width.px]="size" />
-<span class="unit" *ngIf="value !== undefined && value !== null && unit">{{ unit }}</span>
+<input deja-child-validator matInput [class.off-limits]="value < min || value > max" [disabled]="disabled" #inputStepper type="number" [(ngModel)]="value" [min]="min" [max]="max" [step]="step" [style.width.px]="size" />
+<span class="unit" *ngIf="unit && shouldLabelFloat">{{ unit }}</span>
 
 <span class="steppers">
     <button [disabled]="disabled || value === min" (click)="value = (value || 0) - step" type="button" tabindex="-1">remove_circle_outline</button>

@@ -41,7 +41,7 @@ export class DejaNumericStepperComponent implements OnChanges, OnDestroy, Contro
     public static nextId = 0;
     @HostBinding() public id = `deja-numeric-stepper-${DejaNumericStepperComponent.nextId++}`;
     @HostBinding('class.floating') public get shouldLabelFloat() {
-        return this.focused || !this.empty;
+        return this.focused || !this.empty || this.alwaysDisplayUnit;
     }
 
     @HostBinding('attr.aria-describedby') public describedBy = '';
@@ -78,6 +78,15 @@ export class DejaNumericStepperComponent implements OnChanges, OnDestroy, Contro
         this.stateChanges.next();
     }
     private _placeholder: string;
+
+    /** unit always visible */
+    @Input() public get alwaysDisplayUnit() {
+        return this._alwaysDisplayUnit;
+    }
+    public set alwaysDisplayUnit(value) {
+        this._alwaysDisplayUnit = coerceBooleanProperty(value);
+    }
+    private _alwaysDisplayUnit: boolean;
 
     public get empty() {
         return !this._value;
