@@ -1,3 +1,18 @@
+<a name="4.0.2"></a>
+## [4.0.2](https://github.com/DSI-HUG/dejajs-components/compare/v4.0.1...v4.0.2) (2018-10-25)
+
+
+### Bug Fixes
+
+* **DejaDatePickerComponent:** showCurrentDateButton not visible anymore when control is disabled ([4667044](https://github.com/DSI-HUG/dejajs-components/commit/4667044))
+* **DejaMouseDragDrop:** Fix icon elemnt null pointer ([c86e405](https://github.com/DSI-HUG/dejajs-components/commit/c86e405))
+* **DejanumericStepperComponent:** Display unit when label should float + add boolean to force value ([9db5ab2](https://github.com/DSI-HUG/dejajs-components/commit/9db5ab2))
+* **DejaNumericStepperComponent:** Fix input size ([05e207d](https://github.com/DSI-HUG/dejajs-components/commit/05e207d))
+* **Global:** Ensure type for buttons ([595f81e](https://github.com/DSI-HUG/dejajs-components/commit/595f81e))
+* **Popup:** Fix missing icons ([bae9b34](https://github.com/DSI-HUG/dejajs-components/commit/bae9b34))
+
+
+
 <a name="4.0.1"></a>
 ## [4.0.1](https://github.com/DSI-HUG/dejajs-components/compare/v4.0.0-beta.0...v4.0.1) (2018-10-17)
 
