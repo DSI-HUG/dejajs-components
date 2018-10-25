@@ -13,7 +13,9 @@ import { Component, ElementRef, Input, ViewChild } from '@angular/core';
     styleUrls: [
         './iframe.component.scss',
     ],
-    template: '<iframe id="djframe" #iframe><ng-content></ng-content></iframe>'
+    template: `<iframe id="djframe" #iframe>
+        <ng-content></ng-content>
+    </iframe>`
 })
 export class DejaIFrameComponent {
     @ViewChild('iframe')

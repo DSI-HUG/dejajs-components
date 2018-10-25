@@ -3,7 +3,7 @@
         <mat-toolbar class="header">
             <mat-icon class="header-icon" fontSet="deja-icons" [fontIcon]="headerIcon"></mat-icon>
             <span class="header-text">{{headerText}}</span>
-            <button mat-icon-button class="header-menu-btn" (click)="sidenavService.toggle()">
+            <button type="button" mat-icon-button class="header-menu-btn" (click)="sidenavService.toggle()">
                 <mat-icon fontSet="deja-icons" [fontIcon]="!sidenavService.hidden && !sidenavService.opened ? 'menu' : 'keyboard_arrow_left'"></mat-icon>
             </button>
         </mat-toolbar>
@@ -11,7 +11,7 @@
     </mat-sidenav>
 
     <mat-toolbar color="primary" *ngIf="_showToolbar">
-        <button mat-icon-button class="menu-btn" *ngIf="!sidenavService.opened" (click)="sidenavService.open()">
+        <button type="button" mat-icon-button class="menu-btn" *ngIf="!sidenavService.opened" (click)="sidenavService.open()">
             <mat-icon fontSet="deja-icons" fontIcon="menu"></mat-icon>
         </button>
         <span class="menu-title">{{ title }}</span>

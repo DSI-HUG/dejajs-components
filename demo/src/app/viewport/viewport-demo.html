@@ -24,7 +24,7 @@
 				<mat-form-field fxFlex="0 0 3rem">
 					<input matInput type="number" [(ngModel)]="ensureIndex" autocomplete="off">
 				</mat-form-field>
-				<button mat-button (click)="viewport.ensureVisible(ensureIndex)">Go</button>
+				<button type="button" mat-button (click)="viewport.ensureVisible(ensureIndex)">Go</button>
 			</span>
 		</div>
 		<deja-viewport #viewport [models]="news$ | async" viewportMode="auto" [direction]="isHorizontal ? 'horizontal': 'vertical'" [scrollingStyle]="hasButtons ? 'buttons' : 'scrollbar'">
