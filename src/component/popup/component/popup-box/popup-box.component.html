@@ -2,13 +2,13 @@
 
 <span *ngIf="showActions" class="deja-popup-box-actions">
     <span class="deja-popup-box-content">
-        <button *ngIf="!dialog.componentInstance.isMinified" mat-icon-button (click)="doEmit(buttonMinimize)" tabindex="0">
+        <button type="button" *ngIf="!dialog.componentInstance.isMinified" mat-icon-button (click)="doEmit(buttonMinimize)" tabindex="0">
             <mat-icon aria-label="buttonMinimize.label" fontSet="deja-icons" [fontIcon]="buttonMinimize.icon"></mat-icon>
         </button>
-        <button *ngIf="dialog.componentInstance.isMinified" mat-icon-button (click)="doEmit(buttonFullscreen)" tabindex="0">
+        <button type="button" *ngIf="dialog.componentInstance.isMinified" mat-icon-button (click)="doEmit(buttonFullscreen)" tabindex="0">
             <mat-icon aria-label="buttonFullscreen.label" fontSet="deja-icons" [fontIcon]="buttonFullscreen.icon"></mat-icon>
         </button>
-        <button mat-icon-button (click)="doClose()" tabindex="0">
+        <button type="button" mat-icon-button (click)="doClose()" tabindex="0">
             <mat-icon aria-label="buttonClose.label" fontSet="deja-icons" [fontIcon]="buttonClose.icon"></mat-icon>
         </button>
     </span>
