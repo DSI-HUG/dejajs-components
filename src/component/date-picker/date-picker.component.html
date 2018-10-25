@@ -4,7 +4,7 @@
 	<button type="button" *ngIf="inputModel && !disabled" (click)="reset()" id="clear-button" tabindex="-1">
 		<mat-icon fontSet="deja-icons" fontIcon="clear"></mat-icon>
 	</button>
-	<button type="button" *ngIf="showCurrentDateButton" (click)="setToCurrentDate()" id="current-date-button" tabindex="-1" [disabled]="disabled">
+	<button type="button" *ngIf="showCurrentDateButton && !disabled" (click)="setToCurrentDate()" id="current-date-button" tabindex="-1" [disabled]="disabled">
 		<mat-icon fontSet="deja-icons" fontIcon="today"></mat-icon>
 	</button>
 	<button type="button" *ngIf="!disabled" (click)="toggleDateSelector($event)" id="calendar-button" tabindex="-1">
