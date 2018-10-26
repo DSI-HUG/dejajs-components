@@ -28,7 +28,7 @@ describe('DejaColorPicker', () => {
             imports: [
                 DejaColorSelectorModule,
                 FormsModule,
-                
+
                 DejaOverlayModule
             ]
         }).compileComponents();

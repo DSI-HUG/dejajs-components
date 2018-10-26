@@ -999,6 +999,10 @@ export class ItemListService {
      * @return True si l'élément correspond aux critères de recherche.
      */
     protected itemMatch(item: IItemBase, searchField: string, regExp: RegExp) {
+        const itmTree = (item as IItemTree);
+        if (itmTree.$items) {
+            return true;
+        }
         const field = (<any>item)[searchField];
         const value = typeof field === 'function' ? field() : (field ? field : this.getTextValue(item, searchField));
         return value && regExp.test(Diacritics.remove(value));
@@ -1038,15 +1042,17 @@ export class ItemListService {
                     treeList.forEach((itm) => {
                         const itmTree = (itm as IItemTree);
                         if (itmTree.$items) {
-                            odd = false;
-                            const filteredChildren = getFilteredList(itmTree.$items, depth + 1, hidden || itm.visible === false);
-                            if (filteredChildren) {
-                                if (itmTree.collapsed && expandTree) {
-                                    itmTree.collapsed = false;
-                                }
-                                filteredItems = !filteredItems ? (itmTree.collapsed ? [itmTree] : [itmTree, ...filteredChildren]) : (itmTree.collapsed ? [...filteredItems, itmTree] : [...filteredItems, itmTree, ...filteredChildren]);
-                                if (itmTree.selected) {
-                                    selectedList.push(itmTree);
+                            if (itmTree.visible !== false && this.itemMatch(itmTree, searchField, regExp)) {
+                                odd = false;
+                                const filteredChildren = getFilteredList(itmTree.$items, depth + 1, hidden);
+                                if (filteredChildren) {
+                                    if (itmTree.collapsed && expandTree) {
+                                        itmTree.collapsed = false;
+                                    }
+                                    filteredItems = !filteredItems ? (itmTree.collapsed ? [itmTree] : [itmTree, ...filteredChildren]) : (itmTree.collapsed ? [...filteredItems, itmTree] : [...filteredItems, itmTree, ...filteredChildren]);
+                                    if (itmTree.selected) {
+                                        selectedList.push(itmTree);
+                                    }
                                 }
                             }
 
