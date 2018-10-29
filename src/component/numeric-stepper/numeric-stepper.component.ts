@@ -8,9 +8,9 @@
 
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Optional, Output, Self, ViewChild } from '@angular/core';
-import { ControlValueAccessor, FormControl, NgControl, ValidationErrors, Validator, ValidatorFn } from '@angular/forms';
-import { MatFormFieldControl } from '@angular/material';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Optional, Output, Self, ViewChild } from '@angular/core';
+import { ControlValueAccessor, FormControl, FormGroupDirective, NgControl, NgForm, ValidationErrors, Validator, ValidatorFn } from '@angular/forms';
+import { _MatInputMixinBase, CanUpdateErrorState, ErrorStateMatcher, MatFormFieldControl } from '@angular/material';
 import { Subject } from 'rxjs';
 
 import { DejaTextMetricsService } from '../../common/core/text-metrics/text-metrics.service';
@@ -37,7 +37,7 @@ export const createCounterRangeValidator = (maxValue: number, minValue: number) 
     styleUrls: ['numeric-stepper.component.scss'],
     templateUrl: 'numeric-stepper.component.html'
 })
-export class DejaNumericStepperComponent implements OnChanges, OnDestroy, ControlValueAccessor, MatFormFieldControl<number>, Validator {
+export class DejaNumericStepperComponent extends _MatInputMixinBase implements CanUpdateErrorState, DoCheck, OnChanges, OnDestroy, ControlValueAccessor, MatFormFieldControl<number>, Validator {
     public static nextId = 0;
     @HostBinding() public id = `deja-numeric-stepper-${DejaNumericStepperComponent.nextId++}`;
     @HostBinding('class.floating') public get shouldLabelFloat() {
@@ -137,13 +137,20 @@ export class DejaNumericStepperComponent implements OnChanges, OnDestroy, Contro
         private changeDetectorRef: ChangeDetectorRef,
         @Self() @Optional() public ngControl: NgControl,
         private fm: FocusMonitor,
+        @Optional() _parentForm: NgForm,
+        @Optional() _parentFormGroup: FormGroupDirective,
+        _defaultErrorStateMatcher: ErrorStateMatcher,
     ) {
+        super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
         if (this.ngControl) {
             this.ngControl.valueAccessor = this;
         }
 
         this.fm.monitor(elementRef.nativeElement, true).subscribe((origin) => {
             this.focused = !!origin;
+            if (!this.focused) {
+                this.onTouchedCallback();
+            }
             this.stateChanges.next();
         });
     }
@@ -154,6 +161,15 @@ export class DejaNumericStepperComponent implements OnChanges, OnDestroy, Contro
             if (this.ngControl && this.ngControl.control) {
                 this.ngControl.control.setValidators(this.validateFn);
             }
+        }
+    }
+
+    public ngDoCheck() {
+        if (this.ngControl) {
+            // We need to re-evaluate this on every change detection cycle, because there are some
+            // error triggers that we can't subscribe to (e.g. parent form submissions). This means
+            // that whatever logic is in here has to be super lean or we risk destroying the performance.
+            this.updateErrorState();
         }
     }
 
