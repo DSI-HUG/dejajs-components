@@ -1,4 +1,4 @@
-:host {
+deja-tile-group {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -16,6 +16,10 @@
 		flex-grow: 1;
 		flex-basis: auto;
 		outline: none;
+
+        a {
+            color: inherit !important;
+        }
 
 		&[contenteditable="true"] {
 			cursor: text;
