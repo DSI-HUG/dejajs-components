@@ -1,3 +1,14 @@
+<a name="4.0.4"></a>
+## [4.0.4](https://github.com/DSI-HUG/dejajs-components/compare/v4.0.3...v4.0.4) (2018-10-31)
+
+
+### Bug Fixes
+
+* **DejaContentEditable:** Allow HTML in content editable ([0650257](https://github.com/DSI-HUG/dejajs-components/commit/0650257))
+* **DejaNumericStepperComponent:** validation with mat-form-field ([733afed](https://github.com/DSI-HUG/dejajs-components/commit/733afed))
+
+
+
 <a name="4.0.3"></a>
 ## [4.0.3](https://github.com/DSI-HUG/dejajs-components/compare/v4.0.2...v4.0.3) (2018-10-26)
 
