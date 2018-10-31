@@ -1,3 +1,14 @@
+<a name="4.0.3"></a>
+## [4.0.3](https://github.com/DSI-HUG/dejajs-components/compare/v4.0.2...v4.0.3) (2018-10-26)
+
+
+### Bug Fixes
+
+* **DejaGrid:** Call ItemMatch for parent rows also ([be1209e](https://github.com/DSI-HUG/dejajs-components/commit/be1209e))
+* **ItemListService:** getVisibleList only display parent items when visible != false ([ff12cc6](https://github.com/DSI-HUG/dejajs-components/commit/ff12cc6))
+
+
+
 <a name="4.0.2"></a>
 ## [4.0.2](https://github.com/DSI-HUG/dejajs-components/compare/v4.0.1...v4.0.2) (2018-10-25)
 

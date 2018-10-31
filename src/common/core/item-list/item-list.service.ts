@@ -1042,9 +1042,9 @@ export class ItemListService {
                     treeList.forEach((itm) => {
                         const itmTree = (itm as IItemTree);
                         if (itmTree.$items) {
-                            if (this.itemMatch(itmTree, searchField, regExp)) {
+                            if (itmTree.visible !== false && this.itemMatch(itmTree, searchField, regExp)) {
                                 odd = false;
-                                const filteredChildren = getFilteredList(itmTree.$items, depth + 1, hidden || itm.visible === false);
+                                const filteredChildren = getFilteredList(itmTree.$items, depth + 1, hidden);
                                 if (filteredChildren) {
                                     if (itmTree.collapsed && expandTree) {
                                         itmTree.collapsed = false;
