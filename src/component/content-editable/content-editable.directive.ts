@@ -7,7 +7,7 @@
  */
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Directive, ElementRef, HostBinding, Input, OnDestroy, Optional, Self } from '@angular/core';
+import { Directive, ElementRef, HostBinding, Input, OnDestroy, OnInit, Optional, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { BehaviorSubject, from as observableFrom, fromEvent as observableFromEvent, timer as observableTimer } from 'rxjs';
 import { filter, first, map, takeUntil, takeWhile, tap } from 'rxjs/operators';
@@ -18,7 +18,7 @@ const noop = () => { };
 @Directive({
     selector: '[deja-editable]',
 })
-export class DejaEditableDirective implements ControlValueAccessor, OnDestroy {
+export class DejaEditableDirective implements ControlValueAccessor, OnDestroy, OnInit {
     public onTouchedCallback: () => void = noop;
     public onChangeCallback: (_: any) => void = noop;
     private model: string;
@@ -53,6 +53,7 @@ export class DejaEditableDirective implements ControlValueAccessor, OnDestroy {
             });
 
         const inEdition$ = observableFrom(this.edit$).pipe(
+            filter(([value]) => value !== this._inEdition),
             map(([value, selectOnFocus]) => {
                 if (selectOnFocus !== false) {
                     observableTimer(10).pipe(
@@ -71,6 +72,7 @@ export class DejaEditableDirective implements ControlValueAccessor, OnDestroy {
                 } else {
                     this.element.removeAttribute('contenteditable');
                 }
+                this.refreshView();
             }));
 
         const kill$ = inEdition$.pipe(
@@ -80,21 +82,21 @@ export class DejaEditableDirective implements ControlValueAccessor, OnDestroy {
             filter((value) => value))
             .subscribe(() => {
                 observableFromEvent(this.element.ownerDocument, 'mousedown').pipe(
+                    first(),
                     takeUntil(kill$),
                     filter((event: MouseEvent) => !this.isChildElement(event.target as HTMLElement)))
                     .subscribe(() => {
-                        const text = this.element.innerText;
+                        const text = this.element.innerText.replace(/\n/g, '<br />');
                         this.onTouchedCallback();
                         if (text || !this.mandatory) {
                             this.value = text;
-                        } else {
-                            this.refreshView();
                         }
 
                         this.inEdition = false;
                     });
 
                 observableFromEvent(this.element, 'keydown').pipe(
+                    first(),
                     takeUntil(kill$))
                     .subscribe((e: KeyboardEvent) => {
                         e.cancelBubble = true;
@@ -103,13 +105,11 @@ export class DejaEditableDirective implements ControlValueAccessor, OnDestroy {
                             const text = this.element.innerText;
                             if (text || !this.mandatory) {
                                 this.value = text;
-                            } else {
-                                this.refreshView();
                             }
                             this.inEdition = false;
                             return false;
+
                         } else if (e.keyCode === KeyCodes.Escape) {
-                            this.refreshView();
                             this.inEdition = false;
                             return false;
                         }
@@ -214,6 +214,10 @@ export class DejaEditableDirective implements ControlValueAccessor, OnDestroy {
     }
     // ************* End of ControlValueAccessor Implementation **************
 
+    public ngOnInit() {
+        this.model = this.element.innerHTML;
+    }
+
     public ngOnDestroy() {
         this.isAlive = false;
     }
@@ -251,6 +255,11 @@ export class DejaEditableDirective implements ControlValueAccessor, OnDestroy {
         if (!this.model) {
             return;
         }
-        this.element.innerText = this.model;
+
+        if (this.inEdition) {
+            this.element.innerText = this.model.replace(/<br\s*[\/]?>/gi, '\n');
+        } else {
+            this.element.innerHTML = this.model;
+        }
     }
 }

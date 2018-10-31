@@ -7,7 +7,7 @@
  */
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, HostBinding, Input, OnDestroy, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, HostBinding, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { from as observableFrom, Subject } from 'rxjs';
 import { debounceTime, filter, takeWhile } from 'rxjs/operators';
 import { Color } from '../../common/core/graphics/color';
@@ -16,6 +16,7 @@ import { IDejaTile } from './tile.interface';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     selector: 'deja-tile-group',
     styleUrls: [
         './tile-group.component.scss',
