@@ -86,7 +86,7 @@ export class DejaEditableDirective implements ControlValueAccessor, OnDestroy, O
                     takeUntil(kill$),
                     filter((event: MouseEvent) => !this.isChildElement(event.target as HTMLElement)))
                     .subscribe(() => {
-                        const text = this.element.innerText.replace(/\n/g, '<br />');
+                        const text = this.element.innerText.replace(/\n/g, '<br />').replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
                         this.onTouchedCallback();
                         if (text || !this.mandatory) {
                             this.value = text;
