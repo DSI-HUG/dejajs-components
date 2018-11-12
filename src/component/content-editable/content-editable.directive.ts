@@ -259,7 +259,7 @@ export class DejaEditableDirective implements ControlValueAccessor, OnDestroy, O
         if (this.inEdition) {
             this.element.innerText = this.model.replace(/<br\s*[\/]?>/gi, '\n');
         } else {
-            this.element.innerHTML = this.model;
+            this.element.innerHTML = this.model.replace(/\n/g, '<br />');
         }
     }
 }
