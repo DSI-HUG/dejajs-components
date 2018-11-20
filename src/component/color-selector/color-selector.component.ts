@@ -9,8 +9,8 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import {BehaviorSubject, combineLatest as observableCombineLatest, from as observableFrom, fromEvent as observableFromEvent, merge as observableMerge,  Observable ,  Subject ,  timer as observableTimer } from 'rxjs';
-import {debounce, debounceTime, distinctUntilChanged, filter, first, map, takeWhile, tap} from 'rxjs/operators';
+import { BehaviorSubject, combineLatest as observableCombineLatest, from as observableFrom, fromEvent as observableFromEvent, merge as observableMerge, Observable, Subject, timer as observableTimer } from 'rxjs';
+import { debounce, debounceTime, distinctUntilChanged, filter, first, map, takeWhile, tap } from 'rxjs/operators';
 import { Color } from '../../common/core/graphics/color';
 import { MaterialColor } from '../../common/core/style/material-color';
 import { DejaColorFab } from './color-fab.class';
@@ -117,13 +117,13 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
                 let bestColor: Color;
                 allColors.reduce((bestDiff, color) => {
                     // The best formula we found for our eye
-                    const diff = 0.3 * Math.abs(color.r - resetcolor.r) +  0.4 * Math.abs(color.g - resetcolor.g) +  0.25 * Math.abs(color.b - resetcolor.b);
+                    const diff = 0.3 * Math.abs(color.r - resetcolor.r) + 0.4 * Math.abs(color.g - resetcolor.g) + 0.25 * Math.abs(color.b - resetcolor.b);
                     if (diff < bestDiff) {
                         bestColor = color;
                         return bestDiff = diff;
                     }
                     return bestDiff;
-                } , 3 * 255);
+                }, 3 * 255);
 
                 this._resetcolor = bestColor;
             });
@@ -185,7 +185,7 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
 
         observableFromEvent(element, 'mousemove').pipe(
             takeWhile(() => this.isAlive),
-            filter((_event) => !this._disabled), )
+            filter((_event) => !this._disabled))
             .subscribe((event: Event) => {
                 const target = event.target as HTMLElement;
                 const targetIndex = (<any>target.attributes)[DejaColorSelectorComponent.indexAttribute];
@@ -203,7 +203,7 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
 
         observableFromEvent(element, 'click').pipe(
             takeWhile(() => this.isAlive),
-            filter((_event) => !this._disabled), )
+            filter((_event) => !this._disabled))
             .subscribe((event: Event) => {
                 const target = event.target as HTMLElement;
                 if (target.hasAttribute('basecolor') || target.hasAttribute('subcolor')) {
@@ -282,7 +282,6 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
     // set accessor including call the onchange callback
     public set value(value: Color) {
         if (!Color.equals(value, this._value)) {
-            this._value = value;
             this.writeValue(value);
             this.onChangeCallback(value);
         }
@@ -295,6 +294,7 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
 
     // From ControlValueAccessor interface
     public writeValue(value: Color) {
+        this._value = value;
         this.selectedColor = value;
     }
 
