@@ -1,3 +1,14 @@
+<a name="4.0.5"></a>
+## [4.0.5](https://github.com/DSI-HUG/dejajs-components/compare/v4.0.4...v4.0.5) (2018-11-20)
+
+
+### Bug Fixes
+
+* **ColorSelector:** Synchronize model when selected color is set ([cfe5988](https://github.com/DSI-HUG/dejajs-components/commit/cfe5988))
+* **ContentEditable:** Fix carriage return missng at initialisation ([5fda8b2](https://github.com/DSI-HUG/dejajs-components/commit/5fda8b2))
+
+
+
 <a name="4.0.4"></a>
 ## [4.0.4](https://github.com/DSI-HUG/dejajs-components/compare/v4.0.3...v4.0.4) (2018-10-31)
 
