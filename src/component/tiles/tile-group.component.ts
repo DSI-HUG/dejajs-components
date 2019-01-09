@@ -26,6 +26,7 @@ import { IDejaTile } from './tile.interface';
 export class DejaTileGroupComponent implements OnDestroy {
     public static defaultColor = 'rgb(38, 50, 56)';
     @Input() public model: IDejaTile;
+    @Input() public inlineEdition = true;
     @Output() public close = new EventEmitter<void>();
     @Output() public titleChanged = new EventEmitter<string>();
 
@@ -40,7 +41,13 @@ export class DejaTileGroupComponent implements OnDestroy {
     constructor(private changeDetectorRef: ChangeDetectorRef) {
         observableFrom(this.edit$).pipe(
             takeWhile(() => this.isAlive),
-            filter(() => this._designMode),
+            filter(() => this.inlineEdition && this._designMode),
+            debounceTime(100))
+            .subscribe(() => this.title.edit(true));
+
+        observableFrom(this.edit$).pipe(
+            takeWhile(() => this.isAlive),
+            filter(() => !this.inlineEdition && this._designMode),
             debounceTime(100))
             .subscribe(() => this.title.edit(true));
     }
