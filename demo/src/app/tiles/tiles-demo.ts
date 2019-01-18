@@ -13,7 +13,7 @@ import { IDejaMouseDroppableContext } from '@deja-js/component';
 import { IDejaTile } from '@deja-js/component';
 import { IDejaTilesAddEvent, IDejaTilesRemoveEvent } from '@deja-js/component';
 import { Rect } from '@deja-js/component';
-import {from as observableFrom,  Observable ,  Subject } from 'rxjs';
+import { from as observableFrom, Observable, of, Subject } from 'rxjs';
 import {defaultIfEmpty, map, reduce, scan, switchMap, take} from 'rxjs/operators';
 import { CountriesService, Country } from '../services/countries.service';
 
@@ -28,6 +28,7 @@ export class DejaTilesDemoComponent implements OnInit {
     public messages$: Observable<IMessage[]>;
     public tiles1$: Observable<IDejaTile[]>;
     public tiles2$: Observable<IDejaTile[]>;
+    public tiles3$: Observable<IDejaTile[]>;
     public designMode = false;
 
     private message$ = new Subject<IMessage>();
@@ -83,6 +84,13 @@ export class DejaTilesDemoComponent implements OnInit {
                 return tile;
             }),
             reduce((acc: IDejaTile[], cur: IDejaTile) => [...acc, cur], []));
+
+        this.tiles3$ = of([{
+          bounds: new Rect(x2, y2, 60, 30),
+          id: 'groupTile',
+          type: 'group',
+          templateModel: { title: `<div>Tuile <b>éditable</b> de type groupe</div><div><div><p>Utilise le composant deja-editor</p></div></div></div></span></div>`},
+        }]);
     }
 
     protected getDragContext() {

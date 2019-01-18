@@ -1,3 +1,8 @@
-<span [deja-editable] id="title" multiline="true" [(ngModel)]="model.templateModel.title" (ngModelChange)="titleChanged.emit($event)" [mandatory]="true"></span>
-<mat-icon *ngIf="designMode" id="edit-button" (click)="edit$.next()" fontSet="deja-icons" fontIcon="edit"></mat-icon>
+<div class="tile-group-content">
+    <deja-editor *ngIf="designMode" [class.hidden]="!editing" [(ngModel)]="model.templateModel.title" [config]="editorConfig" (blur)="onEditorBlur()"></deja-editor>
+    <div *ngIf="!designMode || !editing" class="not-editing-container">
+        <span class="not-editing" [innerHtml]="model.templateModel.title | safeHTML"></span>
+    </div>
+</div>
+<mat-icon *ngIf="designMode" id="edit-button" (click)="edit()" fontSet="deja-icons" fontIcon="edit"></mat-icon>
 <mat-icon *ngIf="designMode" id="close-button" (click)="close.emit($event)" fontSet="deja-icons" fontIcon="close"></mat-icon>

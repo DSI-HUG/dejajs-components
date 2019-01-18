@@ -10,9 +10,10 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule, MatProgressSpinnerModule } from '@angular/material';
-import { DejaEditableModule } from '../content-editable/index';
-import { DejaMouseDragDropModule } from './../mouse-dragdrop/index';
-import { DejaMouseDragDropService } from './../mouse-dragdrop/mouse-dragdrop.service';
+import { DejaPipeModule } from '../../common/core/pipes';
+import { DejaEditorModule } from '../editor';
+import { DejaMouseDragDropModule } from '../mouse-dragdrop';
+import { DejaMouseDragDropService } from '../mouse-dragdrop';
 import { DejaTileGroupComponent } from './tile-group.component';
 import { DejaTilePositionDirective } from './tile-position.directive';
 import { DejaTileComponent } from './tile.component';
@@ -27,7 +28,8 @@ import { DejaTilesComponent } from './tiles.component';
         MatProgressSpinnerModule,
         MatIconModule,
         DejaMouseDragDropModule,
-        DejaEditableModule,
+        DejaEditorModule,
+        DejaPipeModule
     ],
     providers: [
         DejaMouseDragDropService,
