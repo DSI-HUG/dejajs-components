@@ -1,0 +1,6 @@
+<h3>Ajuster l'épaisseur :</h3>
+<mat-form-field appearance="outline">
+    <deja-numeric-stepper [min]="min" [max]="max" [ngModel]="borderWidth" (ngModelChange)="onBorderWidthRmChange($event)"></deja-numeric-stepper>
+</mat-form-field>
+<h3>Sélectionner la couleur :</h3>
+<deja-color-selector [colors]="materialColors.colors" [ngModel]="colorPickerSelectedColor" (ngModelChange)="onColorPickerChange($event)"></deja-color-selector>

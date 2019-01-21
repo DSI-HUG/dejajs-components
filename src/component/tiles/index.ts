@@ -9,31 +9,43 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatIconModule, MatProgressSpinnerModule } from '@angular/material';
+import { MatButtonModule, MatFormFieldModule, MatIconModule, MatProgressSpinnerModule } from '@angular/material';
 import { DejaPipeModule } from '../../common/core/pipes';
+import { DejaColorSelectorModule } from '../color-selector';
 import { DejaEditorModule } from '../editor';
 import { DejaMouseDragDropModule } from '../mouse-dragdrop';
 import { DejaMouseDragDropService } from '../mouse-dragdrop';
+import { DejaNumericStepperModule } from '../numeric-stepper';
+import { DejaOverlayModule } from '../overlay';
+import { DejaPopupModule } from '../popup';
+import { TileGroupStyleEditorComponent } from './tile-group-style-editor.component';
 import { DejaTileGroupComponent } from './tile-group.component';
 import { DejaTilePositionDirective } from './tile-position.directive';
 import { DejaTileComponent } from './tile.component';
 import { DejaTilesComponent } from './tiles.component';
 
 @NgModule({
-    declarations: [DejaTileComponent, DejaTilesComponent, DejaTileGroupComponent, DejaTilePositionDirective],
+    declarations: [DejaTileComponent, DejaTilesComponent, DejaTileGroupComponent, DejaTilePositionDirective, TileGroupStyleEditorComponent],
     exports: [DejaTileComponent, DejaTilesComponent, DejaTileGroupComponent],
     imports: [
         CommonModule,
         FormsModule,
         MatProgressSpinnerModule,
+        MatButtonModule,
+        MatFormFieldModule,
         MatIconModule,
+        DejaColorSelectorModule,
         DejaMouseDragDropModule,
+        DejaNumericStepperModule,
         DejaEditorModule,
-        DejaPipeModule
+        DejaOverlayModule,
+        DejaPipeModule,
+        DejaPopupModule
     ],
     providers: [
         DejaMouseDragDropService,
-    ]
+    ],
+    entryComponents: [TileGroupStyleEditorComponent]
 })
 export class DejaTilesModule { }
 

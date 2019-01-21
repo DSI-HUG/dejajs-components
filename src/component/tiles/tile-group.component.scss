@@ -3,13 +3,14 @@ deja-tile-group {
 	justify-content: space-between;
 	align-items: center;
 	box-sizing: border-box;
-	padding: .5rem;
+	padding: 0;
+    background-color: black;
     .tile-group-content {
         flex-grow: 1;
         display: flex;
         height: 100%;
         deja-editor, .not-editing-container {
-            padding: .3rem;
+            padding: .8rem;
             width: 100%;
             p {
                 margin: 0;
@@ -31,8 +32,14 @@ deja-tile-group {
             display: flex;
             align-items: center;
             .not-editing {
+                display: flex;
+                flex-direction: column;
                 width: 100%;
             }
+        }
+        .button-container {
+            display: flex;
+            align-items: center;
         }
     }
 
