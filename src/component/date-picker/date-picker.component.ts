@@ -393,6 +393,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
     public set disabled(value: boolean) {
         this._disabled = coerceBooleanProperty(value) ? true : null;
         this.stateChanges.next();
+        this.changeDetectorRef.markForCheck();
     }
 
     /** disabled property getter. */
