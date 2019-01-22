@@ -124,7 +124,12 @@ export class DejaEditorComponent
         this.disabled.complete();
         if (this.instance) {
             this.instance.focusManager.blur(true);
-            this.instance.destroy();
+            try {
+                // Workaround for a ckEditor bug
+                this.instance.destroy();
+            } catch (e) {
+                console.warn('Error occurred when destroying ckEditor instance');
+            }
             this.instance = null;
         }
     }

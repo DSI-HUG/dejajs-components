@@ -1,3 +1,3 @@
-<deja-tile-group class="noselect" *ngIf="tile.type==='group'" [model]="tile" [designMode]="designMode" (modelChanged)="onModelChanged($event)" [color]="tile.color" [borderColor]="tile.borderColor" [borderWidth]="tile.borderWidth" (close)="close.emit($event)"></deja-tile-group>
+<deja-tile-group class="noselect" *ngIf="tile.type==='group'" [model]="tile" [designMode]="designMode" (modelChanged)="onModelChanged($event)" [color]="tile.color" (close)="close.emit($event)"></deja-tile-group>
 <ng-template *ngIf="tile.type!=='group'" [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: tile, designMode: designMode }"></ng-template>
 <mat-progress-spinner *ngIf="tile && tile.pending$ | async" mode="indeterminate" [diameter]="progressDiameter" class="accent"></mat-progress-spinner>

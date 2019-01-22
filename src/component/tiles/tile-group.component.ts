@@ -20,7 +20,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { from as observableFrom, Subject } from 'rxjs';
-import { debounceTime, filter, takeWhile } from 'rxjs/operators';
+import { debounceTime, filter, takeWhile} from 'rxjs/operators';
 import { Color } from '../../common/core/graphics';
 import { DejaEditorComponent } from '../editor';
 import { DejaPopupButton, DejaPopupConfig, DejaPopupService } from '../popup';
@@ -43,10 +43,11 @@ export class DejaTileGroupComponent implements OnDestroy {
     public edit$ = new Subject<void>();
     public editorConfig = DejaTileGroupComponent.buildEditorConfig();
     @ViewChild(DejaEditorComponent) public editor: DejaEditorComponent;
-    protected backgroundColor = DejaTileGroupComponent.defaultColor;
+    protected backgroundColor: string;
     @HostBinding('style.color') protected foregroundColor: string = null;
     protected editing = false;
     private isAlive = true;
+    private widthStep = 3;
 
     constructor(private changeDetectorRef: ChangeDetectorRef,
                 private dejaPopupService: DejaPopupService) {
@@ -67,7 +68,7 @@ export class DejaTileGroupComponent implements OnDestroy {
     set model(value: IDejaTile) {
         this._model = value;
         if (this._model) {
-            this._borderColor = this._model.templateModel.borderColor;
+            this._borderColor = this._model.templateModel.borderColor || this.backgroundColor;
             this._borderWidth = this._model.templateModel.borderWidth;
         }
     }
@@ -78,10 +79,9 @@ export class DejaTileGroupComponent implements OnDestroy {
         return this._borderWidth;
     }
 
-    @Input()
     public set borderWidth(value: string) {
         this._borderWidth = value;
-        this._model.templateModel.borderWidth = this.borderWidth;
+        this._model.templateModel.borderWidth = value;
         this.changeDetectorRef.markForCheck();
     }
 
@@ -91,10 +91,9 @@ export class DejaTileGroupComponent implements OnDestroy {
         return this._borderColor;
     }
 
-    @Input()
     public set borderColor(value: string) {
-        this._borderColor = value;
-        this._model.templateModel.borderColor = this.borderColor;
+        this._borderColor = value || this.backgroundColor;
+        this._model.templateModel.borderColor = value;
         this.changeDetectorRef.markForCheck();
     }
 
@@ -115,13 +114,9 @@ export class DejaTileGroupComponent implements OnDestroy {
     public set color(color: string) {
         this.backgroundColor = color || DejaTileGroupComponent.defaultColor;
         this.foregroundColor = Color.parse(this.backgroundColor).bestTextColor.toHex();
-        this.changeDetectorRef.markForCheck();
-    }
-
-    @Input()
-    public set contentColor(color: string) {
-        this.backgroundColor = color;
-        this.foregroundColor = Color.parse(this.backgroundColor).bestTextColor.toHex();
+        if (!this.borderColor) {
+            this.borderColor = this.backgroundColor;
+        }
         this.changeDetectorRef.markForCheck();
     }
 
@@ -171,12 +166,10 @@ export class DejaTileGroupComponent implements OnDestroy {
         const config = new DejaPopupConfig();
         config.toolbarType = 'window';
         config.title = 'Modifier l\'apparence du groupe';
-        // config.width = '50vw';
-        // config.height = '50%';
         config.data = this;
         config.actions = [
-            new DejaPopupButton('confirm', 'Confirm', 'done'),
-            new DejaPopupButton('cancel', 'Cancel', 'cancel'),
+            new DejaPopupButton('confirm', 'Confirmer', 'done'),
+            new DejaPopupButton('cancel', 'Annuler', 'cancel'),
         ];
         config.fullscreen = false;
         config.hasBackdrop = true;
@@ -196,6 +189,13 @@ export class DejaTileGroupComponent implements OnDestroy {
         });
     }
 
+    public deleteBorder() {
+        this.borderWidth = null;
+        this.borderColor = null;
+        this.modelChanged.emit();
+        this.changeDetectorRef.markForCheck();
+    }
+
     public updateBorderColor(color: string) {
         this.borderColor = color;
         this.modelChanged.emit();
@@ -203,12 +203,13 @@ export class DejaTileGroupComponent implements OnDestroy {
     }
 
     public updateBorderWidth(width: number) {
-        this.borderWidth = `${width}rem`;
+        this.borderWidth = `${width * this.widthStep}px`;
         this.modelChanged.emit();
         this.changeDetectorRef.markForCheck();
     }
 
     public getBorderWidthValue(): number {
-        return this.borderWidth ? +this.borderWidth.replace('rem', '') : 0;
+        const value = this.borderWidth && (!isNaN(+this.borderWidth.replace('px', ''))) ? +this.borderWidth.replace('px', '') : 0;
+        return value / this.widthStep;
     }
 }

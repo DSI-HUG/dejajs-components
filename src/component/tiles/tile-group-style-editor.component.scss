@@ -1,4 +1,12 @@
 deja-tile-group-style-editor {
-    padding-left: 24px;
-    padding-right: 24px;
+    padding: 24px 24px 0;
+    mat-checkbox label {
+        margin-bottom: 1.5rem;
+    }
+    h4 {
+        margin: .5rem 0;
+    }
+    mat-form-field > div.mat-form-field-wrapper {
+        padding-bottom: .5rem !important;
+    }
 }

@@ -89,6 +89,7 @@ export class DejaTilesDemoComponent implements OnInit {
           bounds: new Rect(x2, y2, 60, 30),
           id: 'groupTile',
           type: 'group',
+          color: '#aba280',
           templateModel: { title: `<div>Tuile <b>éditable</b> de type groupe</div><div><div><p>Utilise le composant deja-editor</p></div></div></div></span></div>`},
         }]);
     }

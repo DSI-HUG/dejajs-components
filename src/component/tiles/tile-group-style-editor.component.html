@@ -1,6 +1,7 @@
-<h3>Ajuster l'épaisseur :</h3>
+<mat-checkbox color="primary" [(ngModel)]="borderDisplayed">Afficher une bordure</mat-checkbox>
+<h4>Ajuster l'épaisseur :</h4>
 <mat-form-field appearance="outline">
-    <deja-numeric-stepper [min]="min" [max]="max" [ngModel]="borderWidth" (ngModelChange)="onBorderWidthRmChange($event)"></deja-numeric-stepper>
+    <deja-numeric-stepper [disabled]="!borderDisplayed" [min]="min" [max]="max" [(ngModel)]="borderWidth"></deja-numeric-stepper>
 </mat-form-field>
-<h3>Sélectionner la couleur :</h3>
-<deja-color-selector [colors]="materialColors.colors" [ngModel]="colorPickerSelectedColor" (ngModelChange)="onColorPickerChange($event)"></deja-color-selector>
+<h4>Sélectionner la couleur :</h4>
+<deja-color-selector [disabled]="!borderDisplayed" [colors]="materialColors.colors" [(ngModel)]="borderColor"></deja-color-selector>
