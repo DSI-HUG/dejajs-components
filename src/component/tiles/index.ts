@@ -16,14 +16,14 @@ import {
     MatIconModule,
     MatProgressSpinnerModule
 } from '@angular/material';
-import { DejaPipeModule } from '../../common/core/pipes';
-import { DejaColorSelectorModule } from '../color-selector';
-import { DejaEditorModule } from '../editor';
-import { DejaMouseDragDropModule } from '../mouse-dragdrop';
-import { DejaMouseDragDropService } from '../mouse-dragdrop';
-import { DejaNumericStepperModule } from '../numeric-stepper';
-import { DejaOverlayModule } from '../overlay';
-import { DejaPopupModule } from '../popup';
+import { DejaPipeModule } from '../../common/core/pipes/index';
+import { DejaColorSelectorModule } from '../color-selector/index';
+import { DejaEditorModule } from '../editor/index';
+import { DejaMouseDragDropModule } from '../mouse-dragdrop/index';
+import { DejaMouseDragDropService } from '../mouse-dragdrop/mouse-dragdrop.service';
+import { DejaNumericStepperModule } from '../numeric-stepper/index';
+import { DejaOverlayModule } from '../overlay/index';
+import { DejaPopupModule } from '../popup/index';
 import { TileGroupStyleEditorComponent } from './tile-group-style-editor.component';
 import { DejaTileGroupComponent } from './tile-group.component';
 import { DejaTilePositionDirective } from './tile-position.directive';
