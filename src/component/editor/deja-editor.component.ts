@@ -232,7 +232,7 @@ export class DejaEditorComponent
                     this.debounceTimeout = setTimeout(() => {
                         this.updateValue(value);
                         this.debounceTimeout = null;
-                    }, parseInt(this.debounce, null));
+                    }, parseInt(this.debounce, 10));
 
                     // Live update
                 } else {

@@ -88,8 +88,8 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     }
     private _alwaysDisplayUnit: boolean;
 
-    public get empty() {
-        return !this._value;
+    public get empty(): boolean {
+        return !this._value && this._value !== 0;
     }
 
     private _value: number;
@@ -205,7 +205,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     }
 
     public writeValue(value: number) {
-        this._value = value;
+        this._value = isNaN(value) ? null : +value;
         this.checkSize(value);
         this.changeDetectorRef.markForCheck();
         this.textChange.emit(value);
