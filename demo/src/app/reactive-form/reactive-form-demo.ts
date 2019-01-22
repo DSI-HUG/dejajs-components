@@ -195,4 +195,12 @@ export class DejaReactiveFormDemoComponent implements AfterContentInit, OnInit, 
     protected onSubmit() {
         console.log('Form submitted.');
     }
+
+    public toggleDisable(): void {
+      if (this.form.disabled) {
+        this.form.enable();
+      } else {
+        this.form.disable();
+      }
+    }
 }
