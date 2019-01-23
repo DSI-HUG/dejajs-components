@@ -1,3 +1,31 @@
+<a name="4.1.0"></a>
+# [4.1.0](https://github.com/DSI-HUG/dejajs-components/compare/v4.0.5...v4.1.0) (2019-01-23)
+
+
+### Bug Fixes
+
+* package.json to reduce vulnerabilities ([4b7a492](https://github.com/DSI-HUG/dejajs-components/commit/4b7a492))
+* package.json to reduce vulnerabilities ([611671b](https://github.com/DSI-HUG/dejajs-components/commit/611671b))
+* **DatePickerComponent:** Component change detection is OnPush, so we must force the view to refresh when the disable state changes ([a0fb9d1](https://github.com/DSI-HUG/dejajs-components/commit/a0fb9d1))
+* **NumericStepperComponent:** Label should float is value is 0. Convert value to number if it's a number, set to null otherwise ([bb2f264](https://github.com/DSI-HUG/dejajs-components/commit/bb2f264))
+* **TileGroup:** fix imports ([ee405d6](https://github.com/DSI-HUG/dejajs-components/commit/ee405d6))
+* **TileGroup:** Selected border and flex issues ([c349c61](https://github.com/DSI-HUG/dejajs-components/commit/c349c61))
+* **yarn:** EventStream version issue ([776064b](https://github.com/DSI-HUG/dejajs-components/commit/776064b))
+* **Yarn:** Regenerate yarn lock ([2d24776](https://github.com/DSI-HUG/dejajs-components/commit/2d24776))
+* **Yarn:** Update yarn lock ([88d9e9b](https://github.com/DSI-HUG/dejajs-components/commit/88d9e9b))
+
+
+### Features
+
+* **TileGroup:** add border customization ([8d37930](https://github.com/DSI-HUG/dejajs-components/commit/8d37930))
+* **TileGroup:** add border positions selection ([11543b6](https://github.com/DSI-HUG/dejajs-components/commit/11543b6))
+* **TileGroup:** border customization + fix ckeditor bug ([0e74b40](https://github.com/DSI-HUG/dejajs-components/commit/0e74b40))
+* **TileGroup:** html edition ([5761268](https://github.com/DSI-HUG/dejajs-components/commit/5761268))
+* **TileGroup:** small refactoring tileGroupComponent ([17ea9b7](https://github.com/DSI-HUG/dejajs-components/commit/17ea9b7))
+* **TileGroup:** use inline deja-editor for html edition ([eb1b421](https://github.com/DSI-HUG/dejajs-components/commit/eb1b421))
+
+
+
 <a name="4.0.5"></a>
 ## [4.0.5](https://github.com/DSI-HUG/dejajs-components/compare/v4.0.4...v4.0.5) (2018-11-20)
 

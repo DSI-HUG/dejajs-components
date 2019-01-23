@@ -45,7 +45,7 @@
             <ng-template #tileTemplate let-tile let-pressed="pressed" let-selected="selected">
                 <span class="tile-content noselect" [style.background-color]="tile.templateModel.color">{{ tile.templateModel.naqme }} ({{ tile.id }})
                     <span id="selected">Selected</span>
-                <span id="pressed">Pressed</span>
+                    <span id="pressed">Pressed</span>
                 </span>
             </ng-template>
         </deja-tiles>
@@ -55,7 +55,17 @@
             <ng-template #tileTemplate let-tile let-pressed="pressed" let-selected="selected">
                 <span class="tile-content noselect" [style.background-color]="tile.templateModel.color">{{ tile.templateModel.naqme }} ({{ tile.id }})
                     <span id="selected">Selected</span>
-                <span id="pressed">Pressed</span>
+                    <span id="pressed">Pressed</span>
+                </span>
+            </ng-template>
+        </deja-tiles>
+    </mat-card-content>
+    <mat-card-content>
+        <deja-tiles #tiles3 id="tiles3" [models]="tiles3$ | async" (contentAdding)="onContentAdding($event)" (contentRemoving)="onContentRemoving($event)" canDelete canCopy canCut canPaste [designMode]="designMode" maxwidth="100%" tileminwidth="5%" tileminheight="5%" tilemaxheight="50%" tilemaxwidth="50%">
+            <ng-template #tileTemplate let-tile let-pressed="pressed" let-selected="selected">
+                <span class="tile-content noselect" [style.background-color]="tile.templateModel.color">{{ tile.templateModel.naqme }} ({{ tile.id }})
+                    <span id="selected">Selected</span>
+                    <span id="pressed">Pressed</span>
                 </span>
             </ng-template>
         </deja-tiles>

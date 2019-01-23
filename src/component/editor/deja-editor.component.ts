@@ -124,7 +124,12 @@ export class DejaEditorComponent
         this.disabled.complete();
         if (this.instance) {
             this.instance.focusManager.blur(true);
-            this.instance.destroy();
+            try {
+                // Workaround for a ckEditor bug
+                this.instance.destroy();
+            } catch (e) {
+                console.warn('Error occurred when destroying ckEditor instance');
+            }
             this.instance = null;
         }
     }
@@ -232,7 +237,7 @@ export class DejaEditorComponent
                     this.debounceTimeout = setTimeout(() => {
                         this.updateValue(value);
                         this.debounceTimeout = null;
-                    }, parseInt(this.debounce, null));
+                    }, parseInt(this.debounce, 10));
 
                     // Live update
                 } else {

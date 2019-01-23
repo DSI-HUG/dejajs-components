@@ -1,6 +1,6 @@
 {
     "name": "@deja-js/component",
-    "version": "4.0.5",
+    "version": "4.1.0",
     "description": "Angular Components Library",
     "homepage": "https://github.com/DSI-HUG/dejajs-components",
     "bugs": "https://github.com/DSI-HUG/dejajs-components/issues",
@@ -43,7 +43,7 @@
         "@angular/cdk": "6.4.7",
         "@angular/material": "6.4.7",
         "angular2-text-mask": "8.0.5",
-        "ckeditor": "4.10.1",
+        "ckeditor": "4.11.0",
         "custom-event-polyfill": "1.0.6",
         "lodash": "4.17.11",
         "moment": "2.22.2",

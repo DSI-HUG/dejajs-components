@@ -1,0 +1,19 @@
+deja-tile-group-style-editor {
+    padding: 24px 24px 0;
+    mat-checkbox label {
+        margin-bottom: 1.5rem;
+    }
+    h4 {
+        margin: .5rem 0;
+    }
+    .border-dimensions {
+        display: flex;
+        flex: 1 1 auto;
+        .border-width, .border-positions {
+            flex: 1 1 auto;
+        }
+    }
+    mat-form-field > div.mat-form-field-wrapper {
+        padding-bottom: .5rem !important;
+    }
+}

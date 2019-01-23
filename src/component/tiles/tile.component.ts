@@ -154,7 +154,7 @@ export class DejaTileComponent implements OnDestroy {
         this.isAlive = false;
     }
 
-    protected onTitleChanged() {
+    protected onModelChanged() {
         this.modelChanged.emit();
     }
 }

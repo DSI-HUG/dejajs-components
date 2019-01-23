@@ -18,6 +18,7 @@
 	</mat-toolbar>
 	<mat-card-content id="reactiveFormContainer" fxLayout="row">
 		<form novalidate [formGroup]="form" fxFlex="0 0 55%" fxLayout="column" (submit)="onSubmit()">
+      <div><button mat-raised-button color="primary" (click)="toggleDisable()" type="button">{{form.disabled ? 'Activer' : 'Désactiver'}} le formulaire</button></div>
 			<h3 fxFlex="0 0 auto">Material Input</h3>
 			<mat-form-field fxFlex="0 0 auto">
 				<input matInput pending-onfocus formControlName="name" placeholder="Name" autocomplete="off">
