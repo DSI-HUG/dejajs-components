@@ -388,6 +388,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
 
                     const mouseDown$ = observableFromEvent(container, 'mousedown').pipe(
                         filter((event: MouseEvent) => event.buttons === 1),
+                        filter((event: MouseEvent) => !this.isElementInsideDejaEditor(event.target as HTMLElement)),
                         map((event: MouseEvent) => ({ event: event, target: event.target as HTMLElement, clickedTile: this.getTileComponentFromHTMLElement(event.target as HTMLElement) })));
 
                     // Pressed and selected tile observers
@@ -625,6 +626,19 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         }
 
         return tileElement;
+    }
+
+    public isElementInsideDejaEditor(element: HTMLElement) {
+        let tileElement = element;
+
+        while (tileElement && tileElement !== this.container) {
+            if (tileElement.tagName === 'DEJA-EDITOR') {
+                return true;
+            }
+            tileElement = tileElement.parentElement;
+        }
+
+        return false;
     }
 
     public getTileComponentFromHTMLElement(element: HTMLElement): DejaTile {

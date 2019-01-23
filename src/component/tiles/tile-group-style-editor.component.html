@@ -1,0 +1,25 @@
+<mat-checkbox color="primary" [(ngModel)]="borderDisplayed">Afficher une bordure</mat-checkbox>
+<div class="border-dimensions">
+    <div class="border-width">
+        <h4>Ajuster l'épaisseur :</h4>
+        <mat-form-field appearance="outline">
+            <deja-numeric-stepper [disabled]="!borderDisplayed" [min]="min" [max]="max"
+                                  [(ngModel)]="borderWidth"></deja-numeric-stepper>
+        </mat-form-field>
+    </div>
+    <div class="border-positions">
+        <h4>Sélectionner les positions :</h4>
+        <mat-button-toggle-group [disabled]="!borderDisplayed" filters-toggle-group vertical="false" name="state"
+                                 multiple [(ngModel)]="selectedBorderPositions"
+                                 (change)="updateBorderDimensions()">
+            <mat-button-toggle *ngFor="let pos of borderPositions"
+                               [value]="pos.value">{{pos.label}}
+            </mat-button-toggle>
+        </mat-button-toggle-group>
+    </div>
+</div>
+<div class="border-color">
+    <h4>Sélectionner la couleur :</h4>
+    <deja-color-selector [disabled]="!borderDisplayed" [colors]="materialColors.colors"
+                         [(ngModel)]="borderColor"></deja-color-selector>
+</div>
