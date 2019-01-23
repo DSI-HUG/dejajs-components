@@ -20,7 +20,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { from as observableFrom, Subject } from 'rxjs';
-import { debounceTime, filter, takeWhile} from 'rxjs/operators';
+import { debounceTime, filter, takeWhile } from 'rxjs/operators';
 import { Color } from '../../common/core/graphics';
 import { DejaEditorComponent } from '../editor';
 import { DejaPopupButton, DejaPopupConfig, DejaPopupService } from '../popup';
@@ -46,8 +46,9 @@ export class DejaTileGroupComponent implements OnDestroy {
     protected backgroundColor: string;
     @HostBinding('style.color') protected foregroundColor: string = null;
     protected editing = false;
+    public borderWidth: string;
+    public borderColor: string;
     private isAlive = true;
-    private widthStep = 3;
 
     constructor(private changeDetectorRef: ChangeDetectorRef,
                 private dejaPopupService: DejaPopupService) {
@@ -68,33 +69,9 @@ export class DejaTileGroupComponent implements OnDestroy {
     set model(value: IDejaTile) {
         this._model = value;
         if (this._model) {
-            this._borderColor = this._model.templateModel.borderColor || this.backgroundColor;
-            this._borderWidth = this._model.templateModel.borderWidth;
+            this.borderColor = this._model.templateModel.borderColor || this.backgroundColor;
+            this.borderWidth = this._model.templateModel.borderWidth;
         }
-    }
-
-    @HostBinding('style.padding') protected _borderWidth: string;
-
-    public get borderWidth(): string {
-        return this._borderWidth;
-    }
-
-    public set borderWidth(value: string) {
-        this._borderWidth = value;
-        this._model.templateModel.borderWidth = value;
-        this.changeDetectorRef.markForCheck();
-    }
-
-    @HostBinding('style.background-color') protected _borderColor: string;
-
-    public get borderColor(): string {
-        return this._borderColor;
-    }
-
-    public set borderColor(value: string) {
-        this._borderColor = value || this.backgroundColor;
-        this._model.templateModel.borderColor = value;
-        this.changeDetectorRef.markForCheck();
     }
 
     @HostBinding('attr.designMode') private _designMode = false;
@@ -114,9 +91,6 @@ export class DejaTileGroupComponent implements OnDestroy {
     public set color(color: string) {
         this.backgroundColor = color || DejaTileGroupComponent.defaultColor;
         this.foregroundColor = Color.parse(this.backgroundColor).bestTextColor.toHex();
-        if (!this.borderColor) {
-            this.borderColor = this.backgroundColor;
-        }
         this.changeDetectorRef.markForCheck();
     }
 
@@ -142,6 +116,16 @@ export class DejaTileGroupComponent implements OnDestroy {
                 {name: 'paragraph', groups: ['list']},
             ]
         };
+    }
+
+    @HostBinding('style.padding')
+    public get borderWidthStyle(): string {
+        return this._model.templateModel.borderWidth;
+    }
+
+    @HostBinding('style.background-color')
+    public get borderColorStyle(): string {
+        return this._model.templateModel.borderColor || this.backgroundColor;
     }
 
     public ngOnDestroy() {
@@ -183,33 +167,29 @@ export class DejaTileGroupComponent implements OnDestroy {
         this.dejaPopupService.openAdvanced$(config).pipe(
             filter(res => !res.accepted)
         ).subscribe(() => {
-            this.borderColor = backup.borderColor;
-            this.borderWidth = backup.borderWidth;
-            this.modelChanged.emit();
+            this.updateBorderColor(backup.borderColor);
+            this.updateBorderWidth(backup.borderWidth);
         });
     }
 
     public deleteBorder() {
-        this.borderWidth = null;
-        this.borderColor = null;
+        this.updateBorderWidth(null);
+        this.updateBorderColor(null);
         this.modelChanged.emit();
         this.changeDetectorRef.markForCheck();
     }
 
     public updateBorderColor(color: string) {
         this.borderColor = color;
+        this._model.templateModel.borderColor = color;
         this.modelChanged.emit();
         this.changeDetectorRef.markForCheck();
     }
 
-    public updateBorderWidth(width: number) {
-        this.borderWidth = `${width * this.widthStep}px`;
+    public updateBorderWidth(width: string) {
+        this.borderWidth = width;
+        this._model.templateModel.borderWidth = width;
         this.modelChanged.emit();
         this.changeDetectorRef.markForCheck();
-    }
-
-    public getBorderWidthValue(): number {
-        const value = this.borderWidth && (!isNaN(+this.borderWidth.replace('px', ''))) ? +this.borderWidth.replace('px', '') : 0;
-        return value / this.widthStep;
     }
 }
