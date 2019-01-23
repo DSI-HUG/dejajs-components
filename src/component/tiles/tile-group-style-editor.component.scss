@@ -6,6 +6,13 @@ deja-tile-group-style-editor {
     h4 {
         margin: .5rem 0;
     }
+    .border-dimensions {
+        display: flex;
+        flex: 1 1 auto;
+        .border-width, .border-positions {
+            flex: 1 1 auto;
+        }
+    }
     mat-form-field > div.mat-form-field-wrapper {
         padding-bottom: .5rem !important;
     }

@@ -24,6 +24,11 @@ export class TileGroupStyleEditorComponent extends DejaPopupComponent implements
     protected materialColors: MaterialColors;
     protected min = 1;
     protected max = 5;
+    protected borderPositions = [{value: 'top', label: 'Haut'}, {value: 'right', label: 'Droite'}, {
+        value: 'bottom',
+        label: 'Bas'
+    }, {value: 'left', label: 'Gauche'}];
+    protected selectedBorderPositions = ['top', 'right', 'bottom', 'left'];
     private tileGroup: DejaTileGroupComponent;
     private changeDetectorRef: ChangeDetectorRef;
     private widthStep = 3;
@@ -64,7 +69,7 @@ export class TileGroupStyleEditorComponent extends DejaPopupComponent implements
     set borderWidth(value: number) {
         this._borderWidth = value;
         if (value >= this.min && value <= this.max) {
-            this.tileGroup.updateBorderWidth(`${+value * this.widthStep}px`);
+            this.updateBorderDimensions();
         }
     }
 
@@ -72,17 +77,58 @@ export class TileGroupStyleEditorComponent extends DejaPopupComponent implements
         this.materialColors = this.injector.get(MaterialColors);
         this.changeDetectorRef = this.injector.get(ChangeDetectorRef);
         this.tileGroup = this.config.data;
-        this._borderWidth = this.getBorderWidthValue();
+        const borderDimensions = this.computeBorderDimensions();
+        this._borderWidth = borderDimensions.borderWidth;
+        this.selectedBorderPositions = borderDimensions.borderPositions;
         this._borderColor = this.tileGroup.borderColor ? Color.parse(this.tileGroup.borderColor) : Color.parse('black');
         this._borderDisplayed = !!this._borderWidth;
     }
 
-    private getBorderWidthValue(): number {
-        const width = this.tileGroup.borderWidth && this.tileGroup.borderWidth.replace('px', '');
-        return isNaN(+width) ? 0 : (+width / this.widthStep);
+    private computeBorderDimensions(): { borderWidth: number; borderPositions: string[] } {
+        let paddingParts = this.tileGroup.borderWidth && this.tileGroup.borderWidth
+            .split(' ')
+            .map(value => +value.replace('px', ''))
+            .filter(value => !isNaN(value));
+
+        if (!paddingParts || paddingParts.filter(value => !!value).length === 0) {
+            return {borderWidth: 0, borderPositions: this.borderPositions.map(pos => pos.value)};
+        } else if (paddingParts.length === 1) {
+            return {
+                borderWidth: (paddingParts[0] / this.widthStep),
+                borderPositions: this.borderPositions.map(pos => pos.value)
+            };
+        } else {
+            if (paddingParts.length === 2) {
+                paddingParts = [...paddingParts, ...paddingParts];
+            }
+            const indexPositions: number[] = [];
+            paddingParts.forEach((value, index) => {
+                if (value) {
+                    indexPositions.push(index);
+                }
+            });
+            // @ts-ignore
+            const positions = this.borderPositions.filter((pos, index) => indexPositions.indexOf(index) > -1).map(pos => pos.value);
+            const width = paddingParts.filter(value => !!value)[0];
+            return {borderWidth: (width / this.widthStep), borderPositions: positions};
+        }
     }
 
     private updateBorderColorOnTileGroup() {
         this.tileGroup.updateBorderColor(this._borderColor && this._borderColor.toHex());
+    }
+
+    private updateBorderDimensions() {
+        let padding = `${this.borderWidth * this.widthStep}px`;
+        if (this.selectedBorderPositions.length !== 0 && this.selectedBorderPositions.length !== 4) {
+            padding = this.borderPositions.map(pos => {
+                if (this.selectedBorderPositions.indexOf(pos.value) > -1) {
+                    return padding;
+                } else {
+                    return '0';
+                }
+            }).join(' ');
+        }
+        this.tileGroup.updateBorderWidth(padding);
     }
 }
