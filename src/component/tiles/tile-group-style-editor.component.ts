@@ -7,9 +7,9 @@
  */
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { Color } from '../../common/core/graphics';
-import { MaterialColors } from '../../common/core/style';
-import { DejaPopupComponent } from '../popup';
+import { Color } from '../../common/core/graphics/color';
+import { MaterialColors } from '../../common/core/style/material-colors';
+import { DejaPopupComponent } from '../popup/component/popup/popup.component';
 import { DejaTileGroupComponent } from './tile-group.component';
 
 @Component({

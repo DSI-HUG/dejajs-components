@@ -7,23 +7,14 @@
  */
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    EventEmitter,
-    HostBinding,
-    Input,
-    OnDestroy,
-    Output,
-    ViewChild,
-    ViewEncapsulation
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, HostBinding, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { from as observableFrom, Subject } from 'rxjs';
 import { debounceTime, filter, takeWhile } from 'rxjs/operators';
-import { Color } from '../../common/core/graphics';
-import { DejaEditorComponent } from '../editor';
-import { DejaPopupButton, DejaPopupConfig, DejaPopupService } from '../popup';
+import { Color } from '../../common/core/graphics/color';
+import { DejaEditorComponent } from '../editor/deja-editor.component';
+import { DejaPopupButton } from '../popup/model/popup-action.model';
+import { DejaPopupConfig } from '../popup/model/popup-config.model';
+import { DejaPopupService } from '../popup/service/popup.service';
 import { TileGroupStyleEditorComponent } from './tile-group-style-editor.component';
 import { IDejaTile } from './tile.interface';
 
@@ -50,8 +41,7 @@ export class DejaTileGroupComponent implements OnDestroy {
     public borderColor: string;
     private isAlive = true;
 
-    constructor(private changeDetectorRef: ChangeDetectorRef,
-                private dejaPopupService: DejaPopupService) {
+    constructor(private changeDetectorRef: ChangeDetectorRef, private dejaPopupService: DejaPopupService) {
         observableFrom(this.edit$).pipe(
             takeWhile(() => this.isAlive),
             filter(() => this._designMode),
@@ -96,8 +86,8 @@ export class DejaTileGroupComponent implements OnDestroy {
 
     private static buildEditorConfig() {
         return {
-            coreStyles_bold: {element: 'b', overrides: 'strong'},
-            coreStyles_italic: {element: 'i', overrides: 'em'},
+            coreStyles_bold: { element: 'b', overrides: 'strong' },
+            coreStyles_italic: { element: 'i', overrides: 'em' },
             enterMode: 3, // CKEDITOR.ENTER_DIV,
             extraPlugins: 'colorbutton,justify,autogrow',
             language: 'fr',
@@ -105,15 +95,15 @@ export class DejaTileGroupComponent implements OnDestroy {
             removeButtons: 'Styles,Subscript,Superscript,Strike',
             removePlugins: 'magicline',
             toolbarGroups: [
-                {name: 'undo'},
-                {name: 'align'},
-                {name: 'colors'},
-                {name: 'font'},
+                { name: 'undo' },
+                { name: 'align' },
+                { name: 'colors' },
+                { name: 'font' },
                 '/',
-                {name: 'others'},
-                {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
-                {name: 'styles', groups: ['format', 'formats']},
-                {name: 'paragraph', groups: ['list']},
+                { name: 'others' },
+                { name: 'basicstyles', groups: ['basicstyles', 'cleanup'] },
+                { name: 'styles', groups: ['format', 'formats'] },
+                { name: 'paragraph', groups: ['list'] },
             ]
         };
     }
