@@ -95,12 +95,12 @@ export class DejaEditorComponent
         private _initializer: DejaEditorService
     ) {}
 
-    get value(): any {
+    public get value(): any {
         return this._value;
     }
 
     @Input()
-    set value(v) {
+    public set value(v) {
         if (v !== this._value) {
             this._value = v;
             this.onChange(v);

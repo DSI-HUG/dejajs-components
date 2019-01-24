@@ -54,31 +54,31 @@ export class DejaEditorSelectorDirective extends _MatInputMixinBase
     public value: any;
     public stateChanges: Subject<void> = new Subject<void>();
     @Input()
-    get id(): string {
+    public get id(): string {
         return this._id;
     }
-    set id(value: string) {
+    public set id(value: string) {
         this._id = value || this._uid;
     }
     protected _id: string;
     @Input() public placeholder: string;
     public focused: boolean;
     @Input()
-    get required(): boolean {
+    public get required(): boolean {
         return this._required;
     }
-    set required(value: boolean) {
+    public set required(value: boolean) {
         this._required = coerceBooleanProperty(value);
     }
     protected _required = false;
     @Input()
-    get disabled(): boolean {
+    public get disabled(): boolean {
         if (this.ngControl && this.ngControl.disabled !== null) {
             return this.ngControl.disabled;
         }
         return this._disabled;
     }
-    set disabled(value: boolean) {
+    public set disabled(value: boolean) {
         this._disabled = coerceBooleanProperty(value);
 
         // Browsers may not fire the blur event if the input is disabled too quickly.
@@ -147,7 +147,7 @@ export class DejaEditorSelectorDirective extends _MatInputMixinBase
         return !this._editor.value;
     }
 
-    get shouldLabelFloat(): boolean {
+    public get shouldLabelFloat(): boolean {
         if (this.focused || !this.empty) {
             if (this.empty) {
                 this._attachPlaceholder();

@@ -23,7 +23,7 @@
         ],
         "interface-over-type-literal": true,
         "label-position": true,
-        "member-access": true,
+        "member-access": [true, "check-accessor"],
         "ordered-imports": true,
         "member-ordering": [
             true,

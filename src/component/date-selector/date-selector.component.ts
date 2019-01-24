@@ -223,7 +223,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
 
     // ************* ControlValueAccessor Implementation **************
     // set accessor including call the onchange callback
-    set value(v: Date) {
+    public set value(v: Date) {
         if (v !== this.selectedDate) {
             this.writeValue(v);
             this.onChangeCallback(v);
@@ -231,7 +231,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
     }
 
     // get accessor
-    get value(): Date {
+    public get value(): Date {
         return this.selectedDate;
     }
 

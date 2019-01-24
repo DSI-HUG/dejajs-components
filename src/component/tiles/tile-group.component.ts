@@ -34,9 +34,9 @@ export class DejaTileGroupComponent implements OnDestroy {
     public edit$ = new Subject<void>();
     public editorConfig = DejaTileGroupComponent.buildEditorConfig();
     @ViewChild(DejaEditorComponent) public editor: DejaEditorComponent;
-    protected backgroundColor: string;
-    @HostBinding('style.color') protected foregroundColor: string = null;
-    protected editing = false;
+    public backgroundColor: string;
+    @HostBinding('style.color') public foregroundColor: string = null;
+    public editing = false;
     public borderWidth: string;
     public borderColor: string;
     private isAlive = true;
@@ -51,12 +51,12 @@ export class DejaTileGroupComponent implements OnDestroy {
 
     private _model: IDejaTile;
 
-    get model(): IDejaTile {
+    public get model(): IDejaTile {
         return this._model;
     }
 
     @Input()
-    set model(value: IDejaTile) {
+    public set model(value: IDejaTile) {
         this._model = value;
         if (this._model) {
             this.borderColor = this._model.templateModel.borderColor || this.backgroundColor;
