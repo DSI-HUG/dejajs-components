@@ -1,3 +1,8 @@
+<a name="4.1.2"></a>
+## [4.1.2](https://github.com/DSI-HUG/dejajs-components/compare/v4.1.1...v4.1.2) (2019-01-24)
+
+
+
 <a name="4.1.1"></a>
 ## [4.1.1](https://github.com/DSI-HUG/dejajs-components/compare/v4.1.0...v4.1.1) (2019-01-24)
 
