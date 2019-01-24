@@ -1,3 +1,13 @@
+<a name="4.1.1"></a>
+## [4.1.1](https://github.com/DSI-HUG/dejajs-components/compare/v4.1.0...v4.1.1) (2019-01-24)
+
+
+### Bug Fixes
+
+* **DejaTileGroup:** fix wrong imports ([97b2b2d](https://github.com/DSI-HUG/dejajs-components/commit/97b2b2d))
+
+
+
 <a name="4.1.0"></a>
 # [4.1.0](https://github.com/DSI-HUG/dejajs-components/compare/v4.0.5...v4.1.0) (2019-01-23)
 
