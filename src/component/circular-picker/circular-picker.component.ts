@@ -234,7 +234,7 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
 
     // ************* ControlValueAccessor Implementation **************
     /** set accessor including call the onchange callback */
-    set value(v: number) {
+    public set value(v: number) {
         if (v !== this._value) {
             this.writeValue(v);
             this.onChangeCallback(v);
@@ -242,7 +242,7 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
     }
 
     /** get accessor */
-    get value(): number {
+    public get value(): number {
         return this._value;
     }
 
