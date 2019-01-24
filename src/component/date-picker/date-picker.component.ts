@@ -61,10 +61,10 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
         return this._format;
     }
     /** Placeholder for input */
-    @Input() get placeholder(): string {
+    @Input() public get placeholder(): string {
         return this._placeholder;
     }
-    set placeholder(plh: string) {
+    public set placeholder(plh: string) {
         this._placeholder = plh;
         this.stateChanges.next();
     }

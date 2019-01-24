@@ -21,25 +21,22 @@ import { DejaTileGroupComponent } from './tile-group.component';
     templateUrl: './tile-group-style-editor.component.html',
 })
 export class TileGroupStyleEditorComponent extends DejaPopupComponent implements OnInit {
-    protected materialColors: MaterialColors;
-    protected min = 1;
-    protected max = 5;
-    protected borderPositions = [{value: 'top', label: 'Haut'}, {value: 'right', label: 'Droite'}, {
-        value: 'bottom',
-        label: 'Bas'
-    }, {value: 'left', label: 'Gauche'}];
-    protected selectedBorderPositions = ['top', 'right', 'bottom', 'left'];
+    public materialColors: MaterialColors;
+    public min = 1;
+    public max = 5;
+    public borderPositions = [{value: 'top', label: 'Haut'}, {value: 'right', label: 'Droite'}, {value: 'bottom', label: 'Bas'}, {value: 'left', label: 'Gauche'}];
+    public selectedBorderPositions = ['top', 'right', 'bottom', 'left'];
     private tileGroup: DejaTileGroupComponent;
     private changeDetectorRef: ChangeDetectorRef;
     private widthStep = 3;
 
     private _borderDisplayed: boolean;
 
-    get borderDisplayed(): boolean {
+    public get borderDisplayed(): boolean {
         return this._borderDisplayed;
     }
 
-    set borderDisplayed(value: boolean) {
+    public set borderDisplayed(value: boolean) {
         this._borderDisplayed = value;
         this.borderWidth = value ? 1 : 0;
         this.borderColor = this.borderColor; // restore old value
@@ -51,22 +48,22 @@ export class TileGroupStyleEditorComponent extends DejaPopupComponent implements
 
     private _borderColor: Color;
 
-    get borderColor(): Color {
+    public get borderColor(): Color {
         return this._borderColor;
     }
 
-    set borderColor(value: Color) {
+    public set borderColor(value: Color) {
         this._borderColor = value;
         this.updateBorderColorOnTileGroup();
     }
 
     private _borderWidth: number;
 
-    get borderWidth(): number {
+    public get borderWidth(): number {
         return this._borderWidth;
     }
 
-    set borderWidth(value: number) {
+    public set borderWidth(value: number) {
         this._borderWidth = value;
         if (value >= this.min && value <= this.max) {
             this.updateBorderDimensions();
@@ -118,7 +115,7 @@ export class TileGroupStyleEditorComponent extends DejaPopupComponent implements
         this.tileGroup.updateBorderColor(this._borderColor && this._borderColor.toHex());
     }
 
-    private updateBorderDimensions() {
+    public updateBorderDimensions() {
         let padding = `${this.borderWidth * this.widthStep}px`;
         if (this.selectedBorderPositions.length !== 0 && this.selectedBorderPositions.length !== 4) {
             padding = this.borderPositions.map(pos => {

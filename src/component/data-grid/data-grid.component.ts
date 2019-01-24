@@ -542,12 +542,12 @@ export class DejaGridComponent implements OnDestroy {
     }
 
     // get accessor
-    get value(): any {
+    public get value(): any {
         return this.rows;
     }
 
     // set accessor including call the onchange callback
-    set value(value: any) {
+    public set value(value: any) {
         this.rows = value;
     }
 

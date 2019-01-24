@@ -66,21 +66,21 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
     /**
      * Host Binding
      */
-    @HostBinding('style.flex-direction') get styleFlexDirection() {
+    @HostBinding('style.flex-direction') public get styleFlexDirection() {
         return this.direction === 'horizontal' ? 'row' : 'column';
     }
 
     /**
      * Host Binding
      */
-    @HostBinding('style.width') get styleWidth() {
+    @HostBinding('style.width') public get styleWidth() {
         return (this.width && !isNaN(this.width) && this.width > 0) ? `${this.width}px` : '100%';
     }
 
     /**
      * Host Binding
      */
-    @HostBinding('style.height') get styleHeight() {
+    @HostBinding('style.height') public get styleHeight() {
         return (this.height && !isNaN(this.height) && this.height > 0) ? `${this.height}px` : '100%';
     }
 
