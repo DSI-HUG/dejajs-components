@@ -16,7 +16,7 @@ import { DejaPopupButton } from '../popup/model/popup-action.model';
 import { DejaPopupConfig } from '../popup/model/popup-config.model';
 import { DejaPopupService } from '../popup/service/popup.service';
 import { TileGroupStyleEditorComponent } from './tile-group-style-editor.component';
-import { IDejaTile } from './tile.interface';
+import { DejaTileGroup, DejaTileBorderDirection } from './tile-group.class';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,18 +28,22 @@ import { IDejaTile } from './tile.interface';
     templateUrl: './tile-group.component.html',
 })
 export class DejaTileGroupComponent implements OnDestroy {
-    public static defaultColor = 'rgb(38, 50, 56)';
-    @Output() public close = new EventEmitter<void>();
-    @Output() public modelChanged = new EventEmitter<string>();
     public edit$ = new Subject<void>();
     public editorConfig = DejaTileGroupComponent.buildEditorConfig();
     @ViewChild(DejaEditorComponent) public editor: DejaEditorComponent;
-    public backgroundColor: string;
     @HostBinding('style.color') public foregroundColor: string = null;
+    @HostBinding('style.background-color') public backgroundColor: string = null;
+    @HostBinding('style.border-top') public borderTop: string = null;
+    @HostBinding('style.border-right') public borderRight: string = null;
+    @HostBinding('style.border-bottom') public borderBottom: string = null;
+    @HostBinding('style.border-left') public borderLeft: string = null;
+
+    @Output() public close = new EventEmitter<void>();
+    @Output() public modelChanged = new EventEmitter<string>();
+
     public editing = false;
-    public borderWidth: string;
-    public borderColor: string;
     private isAlive = true;
+    private _model: DejaTileGroup;
 
     constructor(private changeDetectorRef: ChangeDetectorRef, private dejaPopupService: DejaPopupService) {
         observableFrom(this.edit$).pipe(
@@ -49,19 +53,14 @@ export class DejaTileGroupComponent implements OnDestroy {
         ).subscribe(() => this.editor.setFocus());
     }
 
-    private _model: IDejaTile;
-
-    public get model(): IDejaTile {
-        return this._model;
+    @Input()
+    public set model(value: DejaTileGroup) {
+        this._model = value;
+        this.updateModel();
     }
 
-    @Input()
-    public set model(value: IDejaTile) {
-        this._model = value;
-        if (this._model) {
-            this.borderColor = this._model.templateModel.borderColor || this.backgroundColor;
-            this.borderWidth = this._model.templateModel.borderWidth;
-        }
+    public get model() {
+        return this._model;
     }
 
     @HostBinding('attr.designMode') private _designMode = false;
@@ -74,13 +73,6 @@ export class DejaTileGroupComponent implements OnDestroy {
     public set designMode(value: boolean | string) {
         this._designMode = coerceBooleanProperty(value);
         this.editing = false;
-        this.changeDetectorRef.markForCheck();
-    }
-
-    @Input()
-    public set color(color: string) {
-        this.backgroundColor = color || DejaTileGroupComponent.defaultColor;
-        this.foregroundColor = Color.parse(this.backgroundColor).bestTextColor.toHex();
         this.changeDetectorRef.markForCheck();
     }
 
@@ -106,16 +98,6 @@ export class DejaTileGroupComponent implements OnDestroy {
                 { name: 'paragraph', groups: ['list'] },
             ]
         };
-    }
-
-    @HostBinding('style.padding')
-    public get borderWidthStyle(): string {
-        return this._model.templateModel.borderWidth;
-    }
-
-    @HostBinding('style.background-color')
-    public get borderColorStyle(): string {
-        return this._model.templateModel.borderColor || this.backgroundColor;
     }
 
     public ngOnDestroy() {
@@ -150,8 +132,8 @@ export class DejaTileGroupComponent implements OnDestroy {
         config.contentComponentRef = TileGroupStyleEditorComponent;
 
         const backup = {
-            borderColor: this.borderColor,
-            borderWidth: this.borderWidth
+            borderColor: this.model.borderColor,
+            borderWidth: this.model.borderWidth
         };
 
         this.dejaPopupService.openAdvanced$(config).pipe(
@@ -169,16 +151,58 @@ export class DejaTileGroupComponent implements OnDestroy {
         this.changeDetectorRef.markForCheck();
     }
 
+    public updateModel() {
+        if (!this._model) {
+            this.foregroundColor = null;
+            this.backgroundColor = null;
+            this.borderTop = null;
+            this.borderRight = null;
+            this.borderBottom = null;
+            this.borderLeft = null;
+        }
+
+        this.foregroundColor = Color.parse(this._model.color).bestTextColor.toHex();
+        this.backgroundColor = this._model.color;
+
+        // tslint:disable-next-line:no-bitwise
+        if ((this._model.borderDirection & DejaTileBorderDirection.top) !== 0) {
+            this.borderTop = `solid ${this._model.borderColor || 'transparent'} ${this._model.borderWidth || 0}`;
+        } else {
+            this.borderTop = null;
+        }
+
+        // tslint:disable-next-line:no-bitwise
+        if ((this._model.borderDirection & DejaTileBorderDirection.right) !== 0) {
+            this.borderRight = `solid ${this._model.borderColor || 'transparent'} ${this._model.borderWidth || 0}`;
+        } else {
+            this.borderRight = null;
+        }
+
+        // tslint:disable-next-line:no-bitwise
+        if ((this._model.borderDirection & DejaTileBorderDirection.bottom) !== 0) {
+            this.borderBottom = `solid ${this._model.borderColor || 'transparent'} ${this._model.borderWidth || 0}`;
+        } else {
+            this.borderBottom = null;
+        }
+
+        // tslint:disable-next-line:no-bitwise
+        if ((this._model.borderDirection & DejaTileBorderDirection.left) !== 0) {
+            this.borderLeft = `solid ${this._model.borderColor || 'transparent'} ${this._model.borderWidth || 0}`;
+        } else {
+            this.borderLeft = null;
+        }
+    }
+
     public updateBorderColor(color: string) {
-        this.borderColor = color;
-        this._model.templateModel.borderColor = color;
+        this.model.borderColor = color;
+        this.updateModel();
         this.modelChanged.emit();
         this.changeDetectorRef.markForCheck();
     }
 
     public updateBorderWidth(width: string) {
-        this.borderWidth = width;
-        this._model.templateModel.borderWidth = width;
+        this.model.borderWidth = width;
+        this.updateModel();
         this.modelChanged.emit();
         this.changeDetectorRef.markForCheck();
     }

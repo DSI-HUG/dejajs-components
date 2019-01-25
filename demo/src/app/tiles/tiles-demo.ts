@@ -7,14 +7,16 @@
  */
 
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { IDropCursorInfos } from '@deja-js/component';
+import { Rect } from '@deja-js/component';
 import { IDejaMouseDraggableContext } from '@deja-js/component';
 import { IDejaMouseDroppableContext } from '@deja-js/component';
-import { IDejaTile } from '@deja-js/component';
+import { IDropCursorInfos } from '@deja-js/component';
 import { IDejaTilesAddEvent, IDejaTilesRemoveEvent } from '@deja-js/component';
-import { Rect } from '@deja-js/component';
 import { from as observableFrom, Observable, of, Subject } from 'rxjs';
-import {defaultIfEmpty, map, reduce, scan, switchMap, take} from 'rxjs/operators';
+import { defaultIfEmpty, map, reduce, scan, switchMap, take } from 'rxjs/operators';
+import { DejaTileGroup } from '../../../../src/component/tiles/tile-group.class';
+import { DejaTile } from '../../../../src/component/tiles/tile.class';
+import { DejaTilesComponent } from '../../../../src/component/tiles/tiles.component';
 import { CountriesService, Country } from '../services/countries.service';
 
 @Component({
@@ -26,9 +28,9 @@ import { CountriesService, Country } from '../services/countries.service';
 export class DejaTilesDemoComponent implements OnInit {
     public tabIndex = 1;
     public messages$: Observable<IMessage[]>;
-    public tiles1$: Observable<IDejaTile[]>;
-    public tiles2$: Observable<IDejaTile[]>;
-    public tiles3$: Observable<IDejaTile[]>;
+    public tiles1$: Observable<DejaTile[]>;
+    public tiles2$: Observable<DejaTile[]>;
+    public tiles3$: Observable<DejaTile[]>;
     public designMode = false;
 
     private message$ = new Subject<IMessage>();
@@ -36,7 +38,7 @@ export class DejaTilesDemoComponent implements OnInit {
     constructor(private countriesService: CountriesService) {
         this.messages$ = observableFrom(this.message$).pipe(
             scan((acc: any[], curr: any) => [...acc, curr], []),
-            defaultIfEmpty([]), );
+            defaultIfEmpty([]));
     }
 
     public ngOnInit() {
@@ -51,11 +53,11 @@ export class DejaTilesDemoComponent implements OnInit {
         this.tiles1$ = tiles$.pipe(
             take(12),
             map((country) => {
-                const tile = {
-                    bounds: new Rect(x1, y1, 15, 15),
-                    id: country.code,
-                    templateModel: country,
-                } as IDejaTile;
+                const tile = new DejaTile();
+                tile.percentBounds = new Rect(x1, y1, 15, 15);
+                tile.id = country.code;
+                tile.color = country.color;
+                tile.templateModel = country;
 
                 x1 += 15;
                 if (x1 + 15 > 100) {
@@ -65,15 +67,15 @@ export class DejaTilesDemoComponent implements OnInit {
 
                 return tile;
             }),
-            reduce((acc: IDejaTile[], cur: IDejaTile) => [...acc, cur], []));
+            reduce((acc: DejaTile[], cur: DejaTile) => [...acc, cur], []));
 
         this.tiles2$ = tiles$.pipe(
             map((country) => {
-                const tile = {
-                    bounds: new Rect(x2, y2, 15, 15),
-                    id: country.code,
-                    templateModel: country,
-                } as IDejaTile;
+                const tile = new DejaTile();
+                tile.percentBounds = new Rect(x2, y2, 15, 15);
+                tile.id = country.code;
+                tile.color = country.color;
+                tile.templateModel = country;
 
                 x2 += 15;
                 if (x2 + 15 > 100) {
@@ -83,15 +85,21 @@ export class DejaTilesDemoComponent implements OnInit {
 
                 return tile;
             }),
-            reduce((acc: IDejaTile[], cur: IDejaTile) => [...acc, cur], []));
+            reduce((acc: DejaTile[], cur: DejaTile) => [...acc, cur], []));
 
-        this.tiles3$ = of([{
-          bounds: new Rect(x2, y2, 60, 30),
-          id: 'groupTile',
-          type: 'group',
-          color: '#aba280',
-          templateModel: { title: `<div>Tuile <b>éditable</b> de type groupe</div><div><div><p>Utilise le composant deja-editor</p></div></div></div></span></div>`},
-        }]);
+        const tileGroup = new DejaTileGroup();
+        tileGroup.percentBounds = new Rect(x2, y2, 60, 30);
+        tileGroup.id = 'groupTile';
+        tileGroup.color = '#aba280';
+        tileGroup.html = `<div>Tuile <b>éditable</b> de type groupe</div><div><div><p>Utilise le composant deja-editor</p></div></div></div></span></div>`;
+
+        this.tiles3$ = of([tileGroup]);
+    }
+
+    public addGroup(tilesComponent: DejaTilesComponent) {
+        const tileGroup = new DejaTileGroup();
+        tileGroup.html = 'New Group';
+        tilesComponent.addTiles([tileGroup]);
     }
 
     protected getDragContext() {
@@ -101,14 +109,15 @@ export class DejaTilesDemoComponent implements OnInit {
             dragStart: (target) => {
                 return this.countriesService.getCountryByCode$(target.id).pipe(
                     map((country) => {
+                        const tile = new DejaTile();
+                        tile.id = country.code;
+                        tile.percentBounds = new Rect(0, 0, 15, 15);
+                        tile.color = country.color;
+                        tile.templateModel = country;
+
                         return {
                             country: country,
-                            IDejaTile: {
-                                id: country.code,
-                                type: country.displayName,
-                                bounds: new Rect(0, 0, 15, 15),
-                                templateModel: country,
-                            } as IDejaTile,
+                            IDejaTile: tile,
                         };
                     }));
             },

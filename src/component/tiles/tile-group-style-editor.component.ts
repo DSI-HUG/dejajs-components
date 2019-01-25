@@ -26,7 +26,7 @@ export class TileGroupStyleEditorComponent extends DejaPopupComponent implements
     public max = 5;
     public borderPositions = [{value: 'top', label: 'Haut'}, {value: 'right', label: 'Droite'}, {value: 'bottom', label: 'Bas'}, {value: 'left', label: 'Gauche'}];
     public selectedBorderPositions = ['top', 'right', 'bottom', 'left'];
-    private tileGroup: DejaTileGroupComponent;
+    private tileGroup: DejaTileGroupComponent; // TODO change to model
     private changeDetectorRef: ChangeDetectorRef;
     private widthStep = 3;
 
@@ -77,12 +77,12 @@ export class TileGroupStyleEditorComponent extends DejaPopupComponent implements
         const borderDimensions = this.computeBorderDimensions();
         this._borderWidth = borderDimensions.borderWidth;
         this.selectedBorderPositions = borderDimensions.borderPositions;
-        this._borderColor = this.tileGroup.borderColor ? Color.parse(this.tileGroup.borderColor) : Color.parse('black');
+        this._borderColor = this.tileGroup.model.borderColor ? Color.parse(this.tileGroup.model.borderColor) : Color.parse('black');
         this._borderDisplayed = !!this._borderWidth;
     }
 
     private computeBorderDimensions(): { borderWidth: number; borderPositions: string[] } {
-        let paddingParts = this.tileGroup.borderWidth && this.tileGroup.borderWidth
+        let paddingParts = this.tileGroup.model.borderWidth && this.tileGroup.model.borderWidth
             .split(' ')
             .map(value => +value.replace('px', ''))
             .filter(value => !isNaN(value));

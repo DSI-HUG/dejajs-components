@@ -21,7 +21,8 @@ import { tap } from 'rxjs/operators';
 import { DejaClipboardModule } from '../../common/core/clipboard/index';
 import { Rect } from '../../common/core/graphics/rect';
 import { DejaTilesModule } from './index';
-import { IDejaTile } from './tile.interface';
+import { DejaTileGroup } from './tile-group.class';
+import { DejaTile } from './tile.class';
 import { DejaTilesLayoutProvider } from './tiles-layout.provider';
 import { DejaTilesComponent } from './tiles.component';
 
@@ -29,12 +30,12 @@ import { DejaTilesComponent } from './tiles.component';
     encapsulation: ViewEncapsulation.None,
     template: `<deja-tiles id="tiles1" style="height: 500px;width: 400px;display: block;" [(models)]="tiles" canDelete canPaste canCut [designMode]="designMode" maxwidth="100%" tileminwidth="5%" tileminheight="5%" tilemaxheight="50%" tilemaxwidth="50%">
                     <ng-template #tileTemplate let-tile let-pressed="pressed" let-selected="selected">
-                        <span style="width: 100%;height: 100%;display: block;" class="tile-content noselect" [style.background-color]="tile.templateModel.color" [attr.selected]="selected" [attr.pressed]="pressed">{{ tile.templateModel.name }}</span>
+                        <span style="width: 100%;height: 100%;display: block;" class="tile-content noselect" [style.background-color]="tile.color" [attr.selected]="selected" [attr.pressed]="pressed">{{ tile.templateModel.name }}</span>
                     </ng-template>
                 </deja-tiles>
                 <deja-tiles id="tiles2" style="height: 500px;width: 400px;display: block;" canPaste canCopy [designMode]="designMode" maxwidth="100%" tileminwidth="5%" tileminheight="5%" tilemaxheight="50%" tilemaxwidth="50%">
                     <ng-template #tileTemplate let-tile let-pressed="pressed" let-selected="selected">
-                        <span style="width: 100%;height: 100%;display: block;" class="tile-content noselect" [style.background-color]="tile.templateModel.color" [attr.selected]="selected" [attr.pressed]="pressed">{{ tile.templateModel.name }}</span>
+                        <span style="width: 100%;height: 100%;display: block;" class="tile-content noselect" [style.background-color]="tile.color" [attr.selected]="selected" [attr.pressed]="pressed">{{ tile.templateModel.name }}</span>
                     </ng-template>
                 </deja-tiles>`,
     styles: [`* { transition: unset !important; }
@@ -95,7 +96,7 @@ class DejaTilesContainerComponent {
         },
     ] as any[];
 
-    public tiles: IDejaTile[];
+    public tiles: DejaTile[];
 
     public designMode = true;
 
@@ -105,12 +106,11 @@ class DejaTilesContainerComponent {
 
         this.tiles = this.fructs
             .map((fruct) => {
-                const tile = {
-                    bounds: new Rect(x, y, 30, 30),
-                    id: fruct.name,
-                    color: fruct.color,
-                    templateModel: fruct,
-                } as IDejaTile;
+                const tile = new DejaTile();
+                tile.percentBounds = new Rect(x, y, 30, 30);
+                tile.id = fruct.name;
+                tile.color = fruct.color;
+                tile.templateModel = fruct;
 
                 x += 30;
                 if (x + 30 > 100) {
@@ -190,15 +190,15 @@ describe('DejaTilesComponent', () => {
                 done();
             });
 
-        tilesContainerInstance.tiles.unshift({
-            id: 'Beer',
+        const tile = new DejaTile();
+        tile.id = 'Beer';
+        tile.color = '#FBC02D';
+        tile.templateModel = {
+            name: 'Beer',
             color: '#FBC02D',
-            templateModel: {
-                name: 'Beer',
-                color: '#FBC02D',
-            },
-        } as IDejaTile);
+        };
 
+        tilesContainerInstance.tiles.unshift(tile);
         tilesContainerInstance.tiles = [...tilesContainerInstance.tiles];
         fixture.detectChanges();
 
@@ -364,15 +364,16 @@ describe('DejaTilesComponent', () => {
             debounceTime(10),
             first(),
             tap(() => {
-                tilesInstance.addTiles([{
-                    bounds: new Rect(0, 0, 30, 30),
-                    id: 'Litchi',
+                const tile = new DejaTile();
+                tile.id = 'Litchi';
+                tile.percentBounds = new Rect(0, 0, 30, 30);
+                tile.color = '#C2185B';
+                tile.templateModel = {
+                    name: 'Litchi',
                     color: '#C2185B',
-                    templateModel: {
-                        name: 'Litchi',
-                        color: '#C2185B',
-                    },
-                } as IDejaTile]);
+                };
+
+                tilesInstance.addTiles([tile]);
             }),
             delay(20),
             tap(() => {
@@ -414,7 +415,12 @@ describe('DejaTilesComponent', () => {
         observeDom$(fixture).pipe(
             debounceTime(10),
             first(),
-            tap(() => tilesInstance.addGroup('Group1', new Rect(0, 0, 30, 10))),
+            tap(() => {
+                const tile = new DejaTileGroup();
+                tile.html = 'Group1';
+                tile.pixelBounds = new Rect(0, 0, 30, 10);
+                tilesInstance.addTiles([tile]);
+            }),
             delay(20),
             tap(() => {
                 fixture.detectChanges();
@@ -455,7 +461,7 @@ describe('DejaTilesComponent', () => {
                 return expandTileModel;
             }),
             delay(20),
-            tap((expandTileModel: HTMLElement) => {
+            tap((expandTileModel) => {
                 tilesInstance.expandTile(expandTileModel, 200);
             }),
             delay(600),
