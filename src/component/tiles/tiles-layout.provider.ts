@@ -777,7 +777,6 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         const y = pageY - containerBounds.top;
 
         // Create a temporary tile for drag and drop
-        tile.id = '#temp';
         const tempTile = tile.clone();
         tempTile.isTemporary = true;
 
@@ -888,11 +887,10 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                         tile.percentBounds = new Rect(left, top, tile.percentBounds.width, tile.percentBounds.height);
                         tile.isDragging = false;
                         tile.isDropping = true;
-                        if (tile.id === '#temp') {
+                        if (tile.isTemporary) {
+                            delete this.tilesDic[tile.id];
                             tile.makeId();
                             this.tilesDic[tile.id] = tile;
-                            delete this.tilesDic['#temp'];
-
                             this.addTiles([tile]);
                         }
                     }),
@@ -1711,10 +1709,10 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         let index = this.tiles.length;
         while (--index >= 0) {
             const tile = this.tiles[index];
-            if (tile.id === '#temp') {
+            if (tile.isTemporary) {
+                delete this.tilesDic[tile.id];
                 this.tiles.splice(index, 1);
             }
         }
-        delete this.tilesDic['#temp'];
     }
 }

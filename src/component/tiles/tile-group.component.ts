@@ -15,8 +15,8 @@ import { DejaEditorComponent } from '../editor/deja-editor.component';
 import { DejaPopupButton } from '../popup/model/popup-action.model';
 import { DejaPopupConfig } from '../popup/model/popup-config.model';
 import { DejaPopupService } from '../popup/service/popup.service';
-import { TileGroupStyleEditorComponent } from './tile-group-style-editor.component';
-import { DejaTileGroup, DejaTileBorderDirection } from './tile-group.class';
+import { ITileGroupStyleEditorData, TileGroupStyleEditorComponent } from './tile-group-style-editor.component';
+import { DejaTileBorderDirection, DejaTileGroup } from './tile-group.class';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -121,11 +121,16 @@ export class DejaTileGroupComponent implements OnDestroy {
     public editStyle() {
         const config = new DejaPopupConfig();
         config.toolbarType = 'window';
-        config.title = 'Modifier l\'apparence du groupe';
-        config.data = this;
+        config.title = 'Modifier l\'apparence du groupe'; // TODO Lang
+        config.data = {
+            tileGroup: this.model,
+            update: () => {
+                this.updateModel();
+            }
+        } as ITileGroupStyleEditorData;
         config.actions = [
-            new DejaPopupButton('confirm', 'Confirmer', 'done'),
-            new DejaPopupButton('cancel', 'Annuler', 'cancel'),
+            new DejaPopupButton('confirm', 'Ok', 'done'), // TODO Lang
+            new DejaPopupButton('cancel', 'Cancel', 'cancel'), // TODO Lang
         ];
         config.fullscreen = false;
         config.hasBackdrop = true;
@@ -133,22 +138,18 @@ export class DejaTileGroupComponent implements OnDestroy {
 
         const backup = {
             borderColor: this.model.borderColor,
-            borderWidth: this.model.borderWidth
+            borderWidth: this.model.borderWidth,
+            borderDirection: this.model.borderDirection
         };
 
         this.dejaPopupService.openAdvanced$(config).pipe(
             filter(res => !res.accepted)
         ).subscribe(() => {
-            this.updateBorderColor(backup.borderColor);
-            this.updateBorderWidth(backup.borderWidth);
+            this.model.borderColor = backup.borderColor;
+            this.model.borderDirection = backup.borderDirection;
+            this.model.borderWidth = backup.borderWidth;
+            this.updateModel();
         });
-    }
-
-    public deleteBorder() {
-        this.updateBorderWidth(null);
-        this.updateBorderColor(null);
-        this.modelChanged.emit();
-        this.changeDetectorRef.markForCheck();
     }
 
     public updateModel() {
@@ -166,44 +167,32 @@ export class DejaTileGroupComponent implements OnDestroy {
 
         // tslint:disable-next-line:no-bitwise
         if ((this._model.borderDirection & DejaTileBorderDirection.top) !== 0) {
-            this.borderTop = `solid ${this._model.borderColor || 'transparent'} ${this._model.borderWidth || 0}`;
+            this.borderTop = `solid ${this._model.borderColor || 'transparent'} ${this._model.borderWidth || 0}px`;
         } else {
             this.borderTop = null;
         }
 
         // tslint:disable-next-line:no-bitwise
         if ((this._model.borderDirection & DejaTileBorderDirection.right) !== 0) {
-            this.borderRight = `solid ${this._model.borderColor || 'transparent'} ${this._model.borderWidth || 0}`;
+            this.borderRight = `solid ${this._model.borderColor || 'transparent'} ${this._model.borderWidth || 0}px`;
         } else {
             this.borderRight = null;
         }
 
         // tslint:disable-next-line:no-bitwise
         if ((this._model.borderDirection & DejaTileBorderDirection.bottom) !== 0) {
-            this.borderBottom = `solid ${this._model.borderColor || 'transparent'} ${this._model.borderWidth || 0}`;
+            this.borderBottom = `solid ${this._model.borderColor || 'transparent'} ${this._model.borderWidth || 0}px`;
         } else {
             this.borderBottom = null;
         }
 
         // tslint:disable-next-line:no-bitwise
         if ((this._model.borderDirection & DejaTileBorderDirection.left) !== 0) {
-            this.borderLeft = `solid ${this._model.borderColor || 'transparent'} ${this._model.borderWidth || 0}`;
+            this.borderLeft = `solid ${this._model.borderColor || 'transparent'} ${this._model.borderWidth || 0}px`;
         } else {
             this.borderLeft = null;
         }
-    }
 
-    public updateBorderColor(color: string) {
-        this.model.borderColor = color;
-        this.updateModel();
-        this.modelChanged.emit();
-        this.changeDetectorRef.markForCheck();
-    }
-
-    public updateBorderWidth(width: string) {
-        this.model.borderWidth = width;
-        this.updateModel();
-        this.modelChanged.emit();
         this.changeDetectorRef.markForCheck();
     }
 }

@@ -14,13 +14,13 @@
     <div class="deja-menu-content">
         <ul>
             <li class="menu-item" (click)="actions.close();close.emit($event)">
-                <mat-icon>close</mat-icon> Supprimer
+                <mat-icon>close</mat-icon> Delete
             </li>
             <li class="menu-item" (click)="actions.close();edit()">
-                <mat-icon>edit</mat-icon> Éditer
+                <mat-icon>edit</mat-icon> Edit
             </li>
             <li class="menu-item" (click)="actions.close();editStyle()">
-                <mat-icon>border_style</mat-icon> {{ !!borderWidth ? 'Modifier la bordure' : 'Ajouter une bordure' }}
+                <mat-icon>border_style</mat-icon> {{ !!borderWidth ? 'Edit Border' : 'Add Border' }}
             </li>
         </ul>
     </div>

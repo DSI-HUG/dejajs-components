@@ -20,13 +20,13 @@ export class DejaTile {
     public expanded$ = new BehaviorSubject<boolean>(false);
     public hidden$ = new ReplaySubject<boolean>(1);
     public pending$ = new BehaviorSubject<boolean>(false);
+    private _percentBounds: Rect;
     public deleted$ = new Subject();
     public pixelBounds$ = new BehaviorSubject<Rect>(null);
     public isTemporary = false;
     public refresh$ = new Subject();
 
     private _id: string;
-    private _percentBounds: Rect;
     private _color: string;
     private _templateModel: any;
     private _isDragging = false;
@@ -72,10 +72,6 @@ export class DejaTile {
 
     public get templateModel() {
         return this._templateModel;
-    }
-
-    public set id(value: string) {
-        this._id = value;
     }
 
     public get id() {
@@ -202,6 +198,7 @@ export class DejaTile {
             tile = new DejaTile();
         }
 
+        tile._id = this.id;
         tile._percentBounds = this.percentBounds;
         tile._color = this.color;
         tile._templateModel = this.templateModel;
@@ -209,7 +206,6 @@ export class DejaTile {
         tile._selected = this._selected;
         tile._pending = this._pending;
         tile._fading = this._fading;
-
         return tile;
     }
 

@@ -17,7 +17,7 @@ export enum DejaTileBorderDirection {
 
 export class DejaTileGroup extends DejaTile {
     public html: string;
-    public borderWidth: string;
+    public borderWidth: number;
     public borderColor: string;
     public borderDirection: DejaTileBorderDirection;
 
@@ -25,6 +25,8 @@ export class DejaTileGroup extends DejaTile {
         super();
         this.color = 'rgb(38, 50, 56)';
         this.borderDirection = DejaTileBorderDirection.top + DejaTileBorderDirection.right + DejaTileBorderDirection.bottom + DejaTileBorderDirection.left;
+        this.borderWidth = 0;
+        this.borderColor = '#000';
     }
 
     public clone(tile?: DejaTileGroup) {

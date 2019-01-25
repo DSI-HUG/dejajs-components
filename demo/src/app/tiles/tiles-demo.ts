@@ -35,6 +35,8 @@ export class DejaTilesDemoComponent implements OnInit {
 
     private message$ = new Subject<IMessage>();
 
+    private countriesMap: Map<string, Country>;
+
     constructor(private countriesService: CountriesService) {
         this.messages$ = observableFrom(this.message$).pipe(
             scan((acc: any[], curr: any) => [...acc, curr], []),
@@ -47,6 +49,8 @@ export class DejaTilesDemoComponent implements OnInit {
         let x2 = 0;
         let y2 = 0;
 
+        this.countriesMap = new Map();
+
         const tiles$ = this.countriesService.getCountries$().pipe(
             switchMap((countries) => countries));
 
@@ -55,7 +59,6 @@ export class DejaTilesDemoComponent implements OnInit {
             map((country) => {
                 const tile = new DejaTile();
                 tile.percentBounds = new Rect(x1, y1, 15, 15);
-                tile.id = country.code;
                 tile.color = country.color;
                 tile.templateModel = country;
 
@@ -65,6 +68,9 @@ export class DejaTilesDemoComponent implements OnInit {
                     y1 += 15;
                 }
 
+                // Map for drag and drop
+                this.countriesMap.set(tile.id, country);
+
                 return tile;
             }),
             reduce((acc: DejaTile[], cur: DejaTile) => [...acc, cur], []));
@@ -73,7 +79,6 @@ export class DejaTilesDemoComponent implements OnInit {
             map((country) => {
                 const tile = new DejaTile();
                 tile.percentBounds = new Rect(x2, y2, 15, 15);
-                tile.id = country.code;
                 tile.color = country.color;
                 tile.templateModel = country;
 
@@ -89,7 +94,6 @@ export class DejaTilesDemoComponent implements OnInit {
 
         const tileGroup = new DejaTileGroup();
         tileGroup.percentBounds = new Rect(x2, y2, 60, 30);
-        tileGroup.id = 'groupTile';
         tileGroup.color = '#aba280';
         tileGroup.html = `<div>Tuile <b>éditable</b> de type groupe</div><div><div><p>Utilise le composant deja-editor</p></div></div></div></span></div>`;
 
@@ -107,19 +111,16 @@ export class DejaTilesDemoComponent implements OnInit {
             target: 'deja-tile',
             className: 'deja-tile-cursor',
             dragStart: (target) => {
-                return this.countriesService.getCountryByCode$(target.id).pipe(
-                    map((country) => {
-                        const tile = new DejaTile();
-                        tile.id = country.code;
-                        tile.percentBounds = new Rect(0, 0, 15, 15);
-                        tile.color = country.color;
-                        tile.templateModel = country;
+                const country = this.countriesMap.get(target.id);
+                const tile = new DejaTile();
+                tile.percentBounds = new Rect(0, 0, 15, 15);
+                tile.color = country.color;
+                tile.templateModel = country;
 
-                        return {
-                            country: country,
-                            IDejaTile: tile,
-                        };
-                    }));
+                return {
+                    country: country,
+                    DejaTile: tile,
+                };
             },
         } as IDejaMouseDraggableContext;
     }
