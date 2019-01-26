@@ -72,11 +72,11 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     @Input() public tabIndex = 0;
 
     @ContentChild('tileTemplate')
-    protected tileTemplate: any;
+    public tileTemplate: any;
 
     // NgModel implementation
-    protected onTouchedCallback: () => void = noop;
-    protected onChangeCallback: (_: any) => void = noop;
+    public onTouchedCallback: () => void = noop;
+    public onChangeCallback: (_: any) => void = noop;
 
     private _models = [] as DejaTile[];
     private delete$sub: Subscription;

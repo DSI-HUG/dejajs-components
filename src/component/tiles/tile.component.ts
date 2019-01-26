@@ -25,9 +25,9 @@ export class DejaTileComponent implements OnDestroy {
     @Output() public modelChanged = new EventEmitter();
     @Output() public close = new EventEmitter<Event>();
 
-    public element: HTMLElement;
     public progressDiameter = 100;
 
+    private element: HTMLElement;
     private _tile: DejaTile;
     private isAlive = true;
 
@@ -154,7 +154,7 @@ export class DejaTileComponent implements OnDestroy {
         this.isAlive = false;
     }
 
-    protected onModelChanged() {
+    public onModelChanged() {
         this.modelChanged.emit();
     }
 

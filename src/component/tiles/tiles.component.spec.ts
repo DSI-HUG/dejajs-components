@@ -26,6 +26,8 @@ import { DejaTile } from './tile.class';
 import { DejaTilesLayoutProvider } from './tiles-layout.provider';
 import { DejaTilesComponent } from './tiles.component';
 
+const padding = 2;
+
 @Component({
     encapsulation: ViewEncapsulation.None,
     template: `<deja-tiles id="tiles1" style="height: 500px;width: 400px;display: block;" [(models)]="tiles" canDelete canPaste canCut [designMode]="designMode" maxwidth="100%" tileminwidth="5%" tileminheight="5%" tilemaxheight="50%" tilemaxwidth="50%">
@@ -106,9 +108,8 @@ class DejaTilesContainerComponent {
 
         this.tiles = this.fructs
             .map((fruct) => {
-                const tile = new DejaTile();
+                const tile = new DejaTile(fruct.name);
                 tile.percentBounds = new Rect(x, y, 30, 30);
-                tile.id = fruct.name;
                 tile.color = fruct.color;
                 tile.templateModel = fruct;
 
@@ -179,19 +180,21 @@ describe('DejaTilesComponent', () => {
         const tilesInstance = tilesDebugElement.componentInstance as DejaTilesComponent;
 
         observeDom$(fixture).pipe(
-            first())
-            .subscribe(() => {
+            first(),
+            tap(() => {
                 fixture.detectChanges();
                 const tileElements = fixture.debugElement.queryAll(By.css('deja-tiles#tiles1 > #tiles > deja-tile'));
                 expect(tileElements.length).toBe(13);
                 const beerTile = tileElements.find((t) => t.nativeElement.id === 'Beer');
                 expect(beerTile).toBeDefined();
-                expect(beerTile.nativeElement.offsetTop).toBe(360);
+                expect(beerTile.nativeElement.offsetTop).toBe(360 + padding);
+            }),
+            delay(10))
+            .subscribe(() => {
                 done();
             });
 
-        const tile = new DejaTile();
-        tile.id = 'Beer';
+        const tile = new DejaTile('Beer');
         tile.color = '#FBC02D';
         tile.templateModel = {
             name: 'Beer',
@@ -364,8 +367,7 @@ describe('DejaTilesComponent', () => {
             debounceTime(10),
             first(),
             tap(() => {
-                const tile = new DejaTile();
-                tile.id = 'Litchi';
+                const tile = new DejaTile('Litchi');
                 tile.percentBounds = new Rect(0, 0, 30, 30);
                 tile.color = '#C2185B';
                 tile.templateModel = {
@@ -472,12 +474,12 @@ describe('DejaTilesComponent', () => {
                 const testBounds = testElement.nativeElement.getBoundingClientRect();
                 const tilesContainerBounds = tilesContainerElement.getBoundingClientRect();
 
-                expect(bounds.left).toBe(tilesContainerBounds.left + 120);
-                expect(bounds.top).toBe(tilesContainerBounds.top);
-                expect(bounds.width).toBe(120);
-                expect(bounds.height).toBe(200);
-                expect(testBounds.left).toBe(tilesContainerBounds.left + 120);
-                expect(testBounds.top).toBe(tilesContainerBounds.top + 440);
+                expect(bounds.left).toBe(tilesContainerBounds.left + 120 + padding);
+                expect(bounds.top).toBe(tilesContainerBounds.top + padding);
+                expect(bounds.width).toBe(120 - 2 * padding);
+                expect(bounds.height).toBe(200 - 2 * padding);
+                expect(testBounds.left).toBe(tilesContainerBounds.left + 120 + padding);
+                expect(testBounds.top).toBe(tilesContainerBounds.top + 440 + padding);
             }),
             delay(20),
             tap(() => {
@@ -491,12 +493,12 @@ describe('DejaTilesComponent', () => {
                 const testBounds = testElement.nativeElement.getBoundingClientRect();
                 const tilesContainerBounds = tilesContainerElement.getBoundingClientRect();
 
-                expect(bounds.left).toBe(tilesContainerBounds.left + 120);
-                expect(bounds.top).toBe(tilesContainerBounds.top);
-                expect(bounds.width).toBe(120);
-                expect(bounds.height).toBe(120);
-                expect(testBounds.left).toBe(tilesContainerBounds.left + 120);
-                expect(testBounds.top).toBe(tilesContainerBounds.top + 360);
+                expect(bounds.left).toBe(tilesContainerBounds.left + 120 + padding);
+                expect(bounds.top).toBe(tilesContainerBounds.top + padding);
+                expect(bounds.width).toBe(120 - 2 * padding);
+                expect(bounds.height).toBe(120 - 2 * padding);
+                expect(testBounds.left).toBe(tilesContainerBounds.left + 120 + padding);
+                expect(testBounds.top).toBe(tilesContainerBounds.top + 360 + padding);
             }))
             .subscribe(() => {
                 done();
@@ -653,10 +655,10 @@ describe('DejaTilesComponent', () => {
                 const invertedBounds = invertedElement.nativeElement.getBoundingClientRect();
                 const tilesContainerBounds = tilesContainerElement.getBoundingClientRect();
 
-                expect(bounds.left).toBe(tilesContainerBounds.left + 120);
-                expect(bounds.top).toBe(tilesContainerBounds.top + 120);
-                expect(invertedBounds.left).toBe(tilesContainerBounds.left);
-                expect(invertedBounds.top).toBe(tilesContainerBounds.top);
+                expect(bounds.left).toBe(tilesContainerBounds.left + 120 + padding);
+                expect(bounds.top).toBe(tilesContainerBounds.top + 120 + padding);
+                expect(invertedBounds.left).toBe(tilesContainerBounds.left + padding);
+                expect(invertedBounds.top).toBe(tilesContainerBounds.top + padding);
             }),
             delay(20))
             .subscribe(() => {
@@ -729,12 +731,12 @@ describe('DejaTilesComponent', () => {
                 const testElement = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles > deja-tile#Pineapple'));
                 const testBounds = testElement.nativeElement.getBoundingClientRect();
                 const tilesContainerBounds = tilesContainerElement.getBoundingClientRect();
-                expect(bounds.left).toBe(tilesContainerBounds.left);
-                expect(bounds.top).toBe(tilesContainerBounds.top);
-                expect(bounds.width).toBe(200);
-                expect(bounds.height).toBe(120);
-                expect(testBounds.left).toBe(tilesContainerBounds.left + 120);
-                expect(testBounds.top).toBe(tilesContainerBounds.top + 480);
+                expect(bounds.left).toBe(tilesContainerBounds.left + padding);
+                expect(bounds.top).toBe(tilesContainerBounds.top + padding);
+                expect(bounds.width).toBe(200 - 2 * padding);
+                expect(bounds.height).toBe(120 - 2 * padding);
+                expect(testBounds.left).toBe(tilesContainerBounds.left + 120 + padding);
+                expect(testBounds.top).toBe(tilesContainerBounds.top + 480 + padding);
             }),
             delay(20))
             .subscribe(() => {
@@ -807,12 +809,12 @@ describe('DejaTilesComponent', () => {
                 const testElement = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles > deja-tile#Pineapple'));
                 const testBounds = testElement.nativeElement.getBoundingClientRect();
                 const tilesContainerBounds = tilesContainerElement.getBoundingClientRect();
-                expect(bounds.left).toBe(tilesContainerBounds.left + 160);
-                expect(bounds.top).toBe(tilesContainerBounds.top);
-                expect(bounds.width).toBe(200);
-                expect(bounds.height).toBe(120);
-                expect(testBounds.left).toBe(tilesContainerBounds.left + 120);
-                expect(testBounds.top).toBe(tilesContainerBounds.top + 480);
+                expect(bounds.left).toBe(tilesContainerBounds.left + 160 + padding);
+                expect(bounds.top).toBe(tilesContainerBounds.top + padding);
+                expect(bounds.width).toBe(200 - 2 * padding);
+                expect(bounds.height).toBe(120 - 2 * padding);
+                expect(testBounds.left).toBe(tilesContainerBounds.left + 120 + padding);
+                expect(testBounds.top).toBe(tilesContainerBounds.top + 480 + padding);
             }),
             delay(20))
             .subscribe(() => {
@@ -885,12 +887,12 @@ describe('DejaTilesComponent', () => {
                 const testElement = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles > deja-tile#Pineapple'));
                 const testBounds = testElement.nativeElement.getBoundingClientRect();
                 const tilesContainerBounds = tilesContainerElement.getBoundingClientRect();
-                expect(bounds.left).toBe(tilesContainerBounds.left + 120);
-                expect(bounds.top).toBe(tilesContainerBounds.top);
-                expect(bounds.width).toBe(120);
-                expect(bounds.height).toBe(141);
-                expect(testBounds.left).toBe(tilesContainerBounds.left + 120);
-                expect(testBounds.top).toBe(tilesContainerBounds.top + 380);
+                expect(bounds.left).toBe(tilesContainerBounds.left + 120 + padding);
+                expect(bounds.top).toBe(tilesContainerBounds.top + padding);
+                expect(bounds.width).toBe(120 - 2 * padding);
+                expect(bounds.height).toBe(141 - 2 * padding);
+                expect(testBounds.left).toBe(tilesContainerBounds.left + 120 + padding);
+                expect(testBounds.top).toBe(tilesContainerBounds.top + 380 + padding);
             }),
             delay(20))
             .subscribe(() => {
@@ -963,12 +965,12 @@ describe('DejaTilesComponent', () => {
                 const testElement = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles > deja-tile#Pineapple'));
                 const testBounds = testElement.nativeElement.getBoundingClientRect();
                 const tilesContainerBounds = tilesContainerElement.getBoundingClientRect();
-                expect(bounds.left).toBe(tilesContainerBounds.left + 120);
-                expect(bounds.top).toBe(tilesContainerBounds.top + 209);
-                expect(bounds.width).toBe(120);
-                expect(bounds.height).toBe(151);
-                expect(testBounds.left).toBe(tilesContainerBounds.left + 120);
-                expect(testBounds.top).toBe(tilesContainerBounds.top + 400);
+                expect(bounds.left).toBe(tilesContainerBounds.left + 120 + padding);
+                expect(bounds.top).toBe(tilesContainerBounds.top + 209 + padding);
+                expect(bounds.width).toBe(120 - 2 * padding);
+                expect(bounds.height).toBe(151 - 2 * padding);
+                expect(testBounds.left).toBe(tilesContainerBounds.left + 120 + padding);
+                expect(testBounds.top).toBe(tilesContainerBounds.top + 400 + padding);
             }),
             delay(20))
             .subscribe(() => {
@@ -1041,12 +1043,12 @@ describe('DejaTilesComponent', () => {
                 const testElement = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles > deja-tile#Pineapple'));
                 const testBounds = testElement.nativeElement.getBoundingClientRect();
                 const tilesContainerBounds = tilesContainerElement.getBoundingClientRect();
-                expect(bounds.left).toBe(tilesContainerBounds.left);
-                expect(bounds.top).toBe(tilesContainerBounds.top);
-                expect(bounds.width).toBe(200);
-                expect(bounds.height).toBe(200);
-                expect(testBounds.left).toBe(tilesContainerBounds.left + 120);
-                expect(testBounds.top).toBe(tilesContainerBounds.top + 560);
+                expect(bounds.left).toBe(tilesContainerBounds.left + padding);
+                expect(bounds.top).toBe(tilesContainerBounds.top + padding);
+                expect(bounds.width).toBe(200 - 2 * padding);
+                expect(bounds.height).toBe(200 - 2 * padding);
+                expect(testBounds.left).toBe(tilesContainerBounds.left + 120 + padding);
+                expect(testBounds.top).toBe(tilesContainerBounds.top + 560 + padding);
             }),
             delay(20))
             .subscribe(() => {
@@ -1119,12 +1121,12 @@ describe('DejaTilesComponent', () => {
                 const testElement = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles > deja-tile#Pineapple'));
                 const testBounds = testElement.nativeElement.getBoundingClientRect();
                 const tilesContainerBounds = tilesContainerElement.getBoundingClientRect();
-                expect(bounds.left).toBe(tilesContainerBounds.left + 120);
-                expect(bounds.top).toBe(tilesContainerBounds.top + 209);
-                expect(bounds.width).toBe(171);
-                expect(bounds.height).toBe(151);
-                expect(testBounds.left).toBe(tilesContainerBounds.left + 120);
-                expect(testBounds.top).toBe(tilesContainerBounds.top + 520);
+                expect(bounds.left).toBe(tilesContainerBounds.left + 120 + padding);
+                expect(bounds.top).toBe(tilesContainerBounds.top + 209 + padding);
+                expect(bounds.width).toBe(171 - 2 * padding);
+                expect(bounds.height).toBe(151 - 2 * padding);
+                expect(testBounds.left).toBe(tilesContainerBounds.left + 120 + padding);
+                expect(testBounds.top).toBe(tilesContainerBounds.top + 520 + padding);
             }),
             delay(20))
             .subscribe(() => {
@@ -1197,12 +1199,12 @@ describe('DejaTilesComponent', () => {
                 const testElement = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles > deja-tile#Watermelon'));
                 const testBounds = testElement.nativeElement.getBoundingClientRect();
                 const tilesContainerBounds = tilesContainerElement.getBoundingClientRect();
-                expect(bounds.left).toBe(tilesContainerBounds.left + 209);
-                expect(bounds.top).toBe(tilesContainerBounds.top + 209);
-                expect(bounds.width).toBe(151);
-                expect(bounds.height).toBe(151);
-                expect(testBounds.left).toBe(tilesContainerBounds.left + 240);
-                expect(testBounds.top).toBe(tilesContainerBounds.top + 400);
+                expect(bounds.left).toBe(tilesContainerBounds.left + 209 + padding);
+                expect(bounds.top).toBe(tilesContainerBounds.top + 209 + padding);
+                expect(bounds.width).toBe(151 - 2 * padding);
+                expect(bounds.height).toBe(151 - 2 * padding);
+                expect(testBounds.left).toBe(tilesContainerBounds.left + 240 + padding);
+                expect(testBounds.top).toBe(tilesContainerBounds.top + 400 + padding);
             }),
             delay(20))
             .subscribe(() => {
@@ -1275,12 +1277,12 @@ describe('DejaTilesComponent', () => {
                 const testElement = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles > deja-tile#Watermelon'));
                 const testBounds = testElement.nativeElement.getBoundingClientRect();
                 const tilesContainerBounds = tilesContainerElement.getBoundingClientRect();
-                expect(bounds.left).toBe(tilesContainerBounds.left + 209);
-                expect(bounds.top).toBe(tilesContainerBounds.top + 240);
-                expect(bounds.width).toBe(151);
-                expect(bounds.height).toBe(151);
-                expect(testBounds.left).toBe(tilesContainerBounds.left + 240);
-                expect(testBounds.top).toBe(tilesContainerBounds.top + 400);
+                expect(bounds.left).toBe(tilesContainerBounds.left + 209 + padding);
+                expect(bounds.top).toBe(tilesContainerBounds.top + 240 + padding);
+                expect(bounds.width).toBe(151 - 2 * padding);
+                expect(bounds.height).toBe(151 - 2 * padding);
+                expect(testBounds.left).toBe(tilesContainerBounds.left + 240 + padding);
+                expect(testBounds.top).toBe(tilesContainerBounds.top + 400 + padding);
             }),
             delay(20))
             .subscribe(() => {

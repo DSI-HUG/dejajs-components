@@ -1007,6 +1007,10 @@ export class DejaTilesLayoutProvider implements OnDestroy {
 
         newTiles.forEach((newTile) => {
             if (!this.tiles.find((t) => t.id === newTile.id)) {
+                if (!newTile.percentBounds) {
+                    newTile.percentBounds = newTile.idealBounds;
+                }
+
                 newTile.percentBounds = this.getFreePlace(newTile.percentBounds);
                 this.tiles.push(newTile);
                 this.tilesDic[newTile.id] = newTile;

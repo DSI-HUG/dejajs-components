@@ -20,7 +20,7 @@
                 <mat-icon>edit</mat-icon> Edit
             </li>
             <li class="menu-item" (click)="actions.close();editStyle()">
-                <mat-icon>border_style</mat-icon> {{ !!borderWidth ? 'Edit Border' : 'Add Border' }}
+                <mat-icon>border_style</mat-icon> {{ !!model.borderWidth ? ' Edit Border' : ' Add Border' }}
             </li>
         </ul>
     </div>

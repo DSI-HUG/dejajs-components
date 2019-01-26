@@ -6,6 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { Rect } from '../../common';
 import { DejaTile } from './tile.class';
 
 export enum DejaTileBorderDirection {
@@ -24,6 +25,14 @@ export class DejaTileGroup extends DejaTile {
     constructor() {
         super();
         this.color = 'rgb(38, 50, 56)';
+        this.clearBorder();
+    }
+
+    public get idealBounds() {
+        return new Rect(0, 0, 15, 5);
+    }
+
+    public clearBorder() {
         this.borderDirection = DejaTileBorderDirection.top + DejaTileBorderDirection.right + DejaTileBorderDirection.bottom + DejaTileBorderDirection.left;
         this.borderWidth = 0;
         this.borderColor = '#000';

@@ -134,6 +134,7 @@ export class DejaTileGroupComponent implements OnDestroy {
         ];
         config.fullscreen = false;
         config.hasBackdrop = true;
+        config.disableClose = true;
         config.contentComponentRef = TileGroupStyleEditorComponent;
 
         const backup = {
@@ -142,17 +143,19 @@ export class DejaTileGroupComponent implements OnDestroy {
             borderDirection: this.model.borderDirection
         };
 
-        this.dejaPopupService.openAdvanced$(config).pipe(
-            filter(res => !res.accepted)
-        ).subscribe(() => {
-            this.model.borderColor = backup.borderColor;
-            this.model.borderDirection = backup.borderDirection;
-            this.model.borderWidth = backup.borderWidth;
+        this.dejaPopupService.openAdvanced$(config).subscribe((res) => {
+            if (!res.accepted) {
+                this.model.borderColor = backup.borderColor;
+                this.model.borderDirection = backup.borderDirection;
+                this.model.borderWidth = backup.borderWidth;
+            } else if (this.model.borderDirection === 0 || this.model.borderWidth === 0) {
+                this.model.clearBorder();
+            }
             this.updateModel();
         });
     }
 
-    public updateModel() {
+    private updateModel() {
         if (!this._model) {
             this.foregroundColor = null;
             this.backgroundColor = null;

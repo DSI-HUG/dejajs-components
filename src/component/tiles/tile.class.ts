@@ -20,11 +20,10 @@ export class DejaTile {
     public expanded$ = new BehaviorSubject<boolean>(false);
     public hidden$ = new ReplaySubject<boolean>(1);
     public pending$ = new BehaviorSubject<boolean>(false);
-    private _percentBounds: Rect;
-    public deleted$ = new Subject();
     public pixelBounds$ = new BehaviorSubject<Rect>(null);
-    public isTemporary = false;
+    public deleted$ = new Subject();
     public refresh$ = new Subject();
+    public isTemporary = false;
 
     private _id: string;
     private _color: string;
@@ -39,9 +38,14 @@ export class DejaTile {
     private _cutted: boolean;
     private _pending: boolean;
     private _fading: boolean;
+    private _percentBounds: Rect;
 
-    constructor() {
-        this._id = `#${DejaTile.currentId++}`;
+    constructor(id?: string) {
+        this._id = id || `#${DejaTile.currentId++}`;
+    }
+
+    public get idealBounds() {
+        return new Rect(0, 0, 15, 15);
     }
 
     public set pixelBounds(value: Rect) {
@@ -60,9 +64,6 @@ export class DejaTile {
     }
 
     public get percentBounds() {
-        if (!this._percentBounds) {
-            this._percentBounds = new Rect(0, 0, 15, 15);
-        }
         return this._percentBounds;
     }
 
@@ -195,10 +196,9 @@ export class DejaTile {
     }
     public clone(tile?: DejaTile) {
         if (!tile) {
-            tile = new DejaTile();
+            tile = new DejaTile(this.id);
         }
 
-        tile._id = this.id;
         tile._percentBounds = this.percentBounds;
         tile._color = this.color;
         tile._templateModel = this.templateModel;

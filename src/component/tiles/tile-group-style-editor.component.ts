@@ -28,15 +28,13 @@ export interface ITileGroupStyleEditorData {
 export class TileGroupStyleEditorComponent extends DejaPopupComponent implements OnInit {
     public materialColors: MaterialColors;
     public min = 0;
-    public max = 10;
-    // private changeDetectorRef: ChangeDetectorRef;
+    public max = 20;
     private widthStep = 2;
     private tileGroup: DejaTileGroup;
     private update: () => void;
 
     public ngOnInit() {
         this.materialColors = this.injector.get(MaterialColors);
-        // this.changeDetectorRef = this.injector.get(ChangeDetectorRef);
         const data = this.config.data as ITileGroupStyleEditorData;
         this.tileGroup = data.tileGroup;
         this.update = data.update;
