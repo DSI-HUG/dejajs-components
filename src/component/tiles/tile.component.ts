@@ -76,10 +76,10 @@ export class DejaTileComponent implements OnDestroy {
                     if (!tile.isHidden) {
                         this.element.removeAttribute('hidden');
                     }
-                    this.element.style.left = `${bounds.left + 2}px`;
-                    this.element.style.top = `${bounds.top + 2}px`;
-                    this.element.style.width = `${bounds.width - 4}px`;
-                    this.element.style.height = `${bounds.height - 4}px`;
+                    this.element.style.left = `${bounds.left + 4}px`;
+                    this.element.style.top = `${bounds.top + 4}px`;
+                    this.element.style.width = `${bounds.width - 8}px`;
+                    this.element.style.height = `${bounds.height - 8}px`;
                     this.progressDiameter = Math.min(100, Math.round(Math.max(bounds.width * 0.4, bounds.height * 0.4)));
                     this.changeDetectorRef.markForCheck();
                 });

@@ -26,7 +26,7 @@ import { DejaTile } from './tile.class';
 import { DejaTilesLayoutProvider } from './tiles-layout.provider';
 import { DejaTilesComponent } from './tiles.component';
 
-const padding = 2;
+const padding = 4;
 
 @Component({
     encapsulation: ViewEncapsulation.None,
