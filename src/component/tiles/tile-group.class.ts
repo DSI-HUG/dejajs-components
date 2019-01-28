@@ -22,8 +22,8 @@ export class DejaTileGroup extends DejaTile {
     public borderColor: string;
     public borderDirection: DejaTileBorderDirection;
 
-    constructor() {
-        super();
+    constructor(id?: string) {
+        super(id);
         this.color = 'rgb(38, 50, 56)';
         this.clearBorder();
     }
