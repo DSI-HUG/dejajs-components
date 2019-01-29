@@ -19,7 +19,6 @@ export class DejaTile {
     public selected$ = new BehaviorSubject<boolean>(false);
     public expanded$ = new BehaviorSubject<boolean>(false);
     public hidden$ = new ReplaySubject<boolean>(1);
-    public pending$ = new BehaviorSubject<boolean>(false);
     public pixelBounds$ = new BehaviorSubject<Rect>(null);
     public deleted$ = new Subject();
     public refresh$ = new Subject();
@@ -165,10 +164,7 @@ export class DejaTile {
     }
 
     public set isPending(value: boolean) {
-        if (this._pending !== value) {
-            this._pending = value;
-            this.pending$.next(value);
-        }
+        this._pending = value;
     }
 
     public get fading() {

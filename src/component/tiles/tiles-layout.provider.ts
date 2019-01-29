@@ -599,10 +599,8 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         const targetBounds = this.getFreePlace(new Rect(0, 0, bounds.width, bounds.height));
 
         const newTiles = sourceTiles.map((tile) => {
-            const newTile = new DejaTile();
+            const newTile = tile.clone();
             newTile.percentBounds = new Rect(targetBounds.left + tile.percentBounds.left - bounds.left, targetBounds.top + tile.percentBounds.top - bounds.top, tile.percentBounds.width, tile.percentBounds.height);
-            newTile.templateModel = tile.templateModel;
-            newTile.color = tile.color;
             newTile.isSelected = true;
             return newTile;
         });
@@ -1041,14 +1039,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             }
         };
 
-        newTiles.forEach((tile) => {
-            tile.isPending = true;
-        });
-
         const validateNewTiles = (tiles: DejaTile[]) => {
-            tiles.forEach((tile) => {
-                tile.isPending = false;
-            });
             // Remove original tiles if cut operation
             deleteSourceTiles();
 
