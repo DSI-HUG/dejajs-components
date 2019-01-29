@@ -8,7 +8,7 @@
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, HostBinding, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
-import { from as observableFrom, Subject } from 'rxjs';
+import { from as observableFrom, Subject, Subscription } from 'rxjs';
 import { debounceTime, filter, takeWhile } from 'rxjs/operators';
 import { Color } from '../../common/core/graphics/color';
 import { DejaEditorComponent } from '../editor/deja-editor.component';
@@ -43,6 +43,7 @@ export class DejaTileGroupComponent implements OnDestroy {
 
     public editing = false;
     private isAlive = true;
+    private subscriptions = [] as Subscription[];
     private _model: DejaTileGroup;
 
     constructor(private changeDetectorRef: ChangeDetectorRef, private dejaPopupService: DejaPopupService) {
@@ -57,6 +58,17 @@ export class DejaTileGroupComponent implements OnDestroy {
     public set model(value: DejaTileGroup) {
         this._model = value;
         this.updateModel();
+
+        this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+        this.subscriptions = [];
+
+        if (value) {
+            // Refresh
+            this.subscriptions.push(observableFrom(this._model.refresh$).pipe(
+                takeWhile(() => this.isAlive && !!this._model),
+                debounceTime(1))
+                .subscribe(() => this.updateModel()));
+        }
     }
 
     public get model() {
@@ -102,6 +114,8 @@ export class DejaTileGroupComponent implements OnDestroy {
 
     public ngOnDestroy() {
         this.isAlive = false;
+
+        this.subscriptions.forEach((subscription) => subscription.unsubscribe());
     }
 
     public edit(): void {
