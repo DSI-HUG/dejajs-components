@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Rect } from '../../common';
+import { Rect } from '../../common/core/graphics/rect';
 import { DejaTile } from './tile.class';
 
 export enum DejaTileBorderDirection {
