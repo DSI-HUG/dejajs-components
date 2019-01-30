@@ -12,11 +12,10 @@ import { from as observableFrom, Subject, Subscription } from 'rxjs';
 import { debounceTime, filter, takeWhile } from 'rxjs/operators';
 import { Color } from '../../common/core/graphics/color';
 import { DejaEditorComponent } from '../editor/deja-editor.component';
-import { DejaPopupButton } from '../popup/model/popup-action.model';
 import { DejaPopupService } from '../popup/service/popup.service';
-import { ITileGroupStyleEditorData, TileGroupStyleEditorComponent } from './tile-group-style-editor.component';
-import { DejaTileBorderDirection, DejaTileGroup } from './tile-group.class';
 import { TileGroupStyleEditorConfig } from './tile-group-style-editor-config';
+import { ITileGroupStyleEditorData } from './tile-group-style-editor.component';
+import { DejaTileBorderDirection, DejaTileGroup } from './tile-group.class';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
