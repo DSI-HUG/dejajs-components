@@ -14,6 +14,7 @@ export enum DejaTileBorderDirection {
     right = 0x2,
     bottom = 0x4,
     left = 0x8,
+    all = 0xF,
 }
 
 export class DejaTileGroup extends DejaTile {
@@ -33,7 +34,7 @@ export class DejaTileGroup extends DejaTile {
     }
 
     public clearBorder() {
-        this.borderDirection = DejaTileBorderDirection.top + DejaTileBorderDirection.right + DejaTileBorderDirection.bottom + DejaTileBorderDirection.left;
+        this.borderDirection = DejaTileBorderDirection.all;
         this.borderWidth = 0;
         this.borderColor = '#000';
     }

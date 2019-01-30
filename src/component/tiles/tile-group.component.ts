@@ -13,10 +13,10 @@ import { debounceTime, filter, takeWhile } from 'rxjs/operators';
 import { Color } from '../../common/core/graphics/color';
 import { DejaEditorComponent } from '../editor/deja-editor.component';
 import { DejaPopupButton } from '../popup/model/popup-action.model';
-import { DejaPopupConfig } from '../popup/model/popup-config.model';
 import { DejaPopupService } from '../popup/service/popup.service';
 import { ITileGroupStyleEditorData, TileGroupStyleEditorComponent } from './tile-group-style-editor.component';
 import { DejaTileBorderDirection, DejaTileGroup } from './tile-group.class';
+import { TileGroupStyleEditorConfig } from './tile-group-style-editor-config';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -133,23 +133,18 @@ export class DejaTileGroupComponent implements OnDestroy {
     }
 
     public editStyle() {
-        const config = new DejaPopupConfig();
-        config.toolbarType = 'window';
-        config.title = 'Modifier l\'apparence du groupe'; // TODO Lang
+        const config = new TileGroupStyleEditorConfig();
         config.data = {
-            tileGroup: this.model,
-            update: () => {
+            borderWidth: this.model.borderWidth,
+            borderColor: this.model.borderColor,
+            borderDirection: this.model.borderDirection,
+            update: (borderWidth: number, borderColor: string, borderDirection: DejaTileBorderDirection) => {
+                this.model.borderWidth = borderWidth;
+                this.model.borderColor = borderColor;
+                this.model.borderDirection = borderDirection;
                 this.updateModel();
             }
         } as ITileGroupStyleEditorData;
-        config.actions = [
-            new DejaPopupButton('confirm', 'Ok', 'done'), // TODO Lang
-            new DejaPopupButton('cancel', 'Cancel', 'cancel'), // TODO Lang
-        ];
-        config.fullscreen = false;
-        config.hasBackdrop = true;
-        config.disableClose = true;
-        config.contentComponentRef = TileGroupStyleEditorComponent;
 
         const backup = {
             borderColor: this.model.borderColor,
