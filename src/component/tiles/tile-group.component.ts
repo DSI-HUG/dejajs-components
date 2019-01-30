@@ -171,37 +171,37 @@ export class DejaTileGroupComponent implements OnDestroy {
             this.borderRight = null;
             this.borderBottom = null;
             this.borderLeft = null;
-        }
-
-        this.foregroundColor = Color.parse(this._model.color).bestTextColor.toHex();
-        this.backgroundColor = this._model.color;
-
-        // tslint:disable-next-line:no-bitwise
-        if ((this._model.borderDirection & DejaTileBorderDirection.top) !== 0) {
-            this.borderTop = `solid ${this._model.borderColor || 'transparent'} ${this._model.borderWidth || 0}px`;
         } else {
-            this.borderTop = null;
-        }
+            this.foregroundColor = Color.parse(this._model.color).bestTextColor.toHex();
+            this.backgroundColor = this._model.color;
 
-        // tslint:disable-next-line:no-bitwise
-        if ((this._model.borderDirection & DejaTileBorderDirection.right) !== 0) {
-            this.borderRight = `solid ${this._model.borderColor || 'transparent'} ${this._model.borderWidth || 0}px`;
-        } else {
-            this.borderRight = null;
-        }
+            // tslint:disable-next-line:no-bitwise
+            if ((this._model.borderDirection & DejaTileBorderDirection.top) !== 0) {
+                this.borderTop = `solid ${this._model.borderColor || 'transparent'} ${this._model.borderWidth || 0}px`;
+            } else {
+                this.borderTop = null;
+            }
 
-        // tslint:disable-next-line:no-bitwise
-        if ((this._model.borderDirection & DejaTileBorderDirection.bottom) !== 0) {
-            this.borderBottom = `solid ${this._model.borderColor || 'transparent'} ${this._model.borderWidth || 0}px`;
-        } else {
-            this.borderBottom = null;
-        }
+            // tslint:disable-next-line:no-bitwise
+            if ((this._model.borderDirection & DejaTileBorderDirection.right) !== 0) {
+                this.borderRight = `solid ${this._model.borderColor || 'transparent'} ${this._model.borderWidth || 0}px`;
+            } else {
+                this.borderRight = null;
+            }
 
-        // tslint:disable-next-line:no-bitwise
-        if ((this._model.borderDirection & DejaTileBorderDirection.left) !== 0) {
-            this.borderLeft = `solid ${this._model.borderColor || 'transparent'} ${this._model.borderWidth || 0}px`;
-        } else {
-            this.borderLeft = null;
+            // tslint:disable-next-line:no-bitwise
+            if ((this._model.borderDirection & DejaTileBorderDirection.bottom) !== 0) {
+                this.borderBottom = `solid ${this._model.borderColor || 'transparent'} ${this._model.borderWidth || 0}px`;
+            } else {
+                this.borderBottom = null;
+            }
+
+            // tslint:disable-next-line:no-bitwise
+            if ((this._model.borderDirection & DejaTileBorderDirection.left) !== 0) {
+                this.borderLeft = `solid ${this._model.borderColor || 'transparent'} ${this._model.borderWidth || 0}px`;
+            } else {
+                this.borderLeft = null;
+            }
         }
 
         this.changeDetectorRef.markForCheck();

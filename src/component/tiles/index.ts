@@ -17,6 +17,7 @@ import {
     MatProgressSpinnerModule
 } from '@angular/material';
 import { DejaPipeModule } from '../../common/core/pipes/index';
+import { DejaMaterialColorsModule } from '../../common/core/style/index';
 import { DejaColorSelectorModule } from '../color-selector/index';
 import { DejaEditorModule } from '../editor/index';
 import { DejaMouseDragDropModule } from '../mouse-dragdrop/index';
@@ -45,6 +46,7 @@ import { DejaTilesComponent } from './tiles.component';
         DejaColorSelectorModule,
         DejaMouseDragDropModule,
         DejaNumericStepperModule,
+        DejaMaterialColorsModule,
         DejaEditorModule,
         DejaOverlayModule,
         DejaPipeModule,
