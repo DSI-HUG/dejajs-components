@@ -1,3 +1,24 @@
+<a name="4.2.0"></a>
+# [4.2.0](https://github.com/DSI-HUG/dejajs-components/compare/v4.1.2...v4.2.0) (2019-02-05)
+
+
+### Bug Fixes
+
+* **DejaTiles:** Adjust tiles padding ([62b5693](https://github.com/DSI-HUG/dejajs-components/commit/62b5693))
+* **TileGroup:** Fix import ([82e77df](https://github.com/DSI-HUG/dejajs-components/commit/82e77df))
+* **TileGroup:** Fix imports ([bf21b23](https://github.com/DSI-HUG/dejajs-components/commit/bf21b23))
+* **TileGroupStyleEditorComponent:** Refactor to use editor popup externally ([47e91b8](https://github.com/DSI-HUG/dejajs-components/commit/47e91b8))
+* **Tiles:** Pending feature ([afc0f62](https://github.com/DSI-HUG/dejajs-components/commit/afc0f62))
+
+
+### Features
+
+* **TileGroup:** add tests ([0def85b](https://github.com/DSI-HUG/dejajs-components/commit/0def85b))
+* **TilesComponent:** Refactor model from interface to class ([b2ce19a](https://github.com/DSI-HUG/dejajs-components/commit/b2ce19a))
+* **TilesComponent:** Refactor model from interface to class ([109da67](https://github.com/DSI-HUG/dejajs-components/commit/109da67))
+
+
+
 <a name="4.1.2"></a>
 ## [4.1.2](https://github.com/DSI-HUG/dejajs-components/compare/v4.1.1...v4.1.2) (2019-01-24)
 
