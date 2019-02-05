@@ -1,3 +1,11 @@
+/*
+ *  @license
+ *  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
+ *
+ *  Use of this source code is governed by an Apache-2.0 license that can be
+ *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
+ */
+
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
