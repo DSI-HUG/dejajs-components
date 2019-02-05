@@ -1,105 +1,105 @@
-deja-tile {
-	deja-tile-group {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		box-sizing: border-box;
+deja-tile-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
 
-		.tile-group-content {
-			flex-grow: 1;
-			display: flex;
-			height: 100%;
-			overflow: hidden;
+    height: 100%;
+    width: 100%;
 
-			deja-editor,
-			.not-editing-container {
-				padding: .8rem;
-				width: 100%;
+    .mat-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-				p {
-					margin: 0;
-				}
-			}
+    .tile-group-content {
+        flex-grow: 1;
+        display: flex;
+        overflow: hidden;
 
-			deja-editor {
-				&.hidden {
-					display: none;
-				}
+        deja-editor,
+        .not-editing-container {
+            padding: .8rem;
+            width: 100%;
 
-				div.cke_editable {
-					height: 100%;
-					width: 100%;
-					display: flex;
-					flex-direction: column;
-					justify-content: center;
-				}
-			}
+            p {
+                margin: 0;
+            }
+        }
 
-			.not-editing-container {
-				display: flex;
-				align-items: center;
-				flex: 1 1 auto;
-				overflow: hidden;
+        deja-editor {
+            &.hidden {
+                display: none;
+            }
 
-				.not-editing {
-					display: flex;
-					flex-direction: column;
-					width: 100%;
-				}
-			}
+            div.cke_editable {
+                height: 100%;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+        }
 
-			.button-container {
-				display: flex;
-				align-items: center;
-				flex: 0 0 auto;
-			}
-		}
+        .not-editing-container {
+            display: flex;
+            align-items: center;
+            flex: 1 1 auto;
+            overflow: hidden;
 
-		#title {
-			text-overflow: ellipsis;
-			white-space: nowrap;
-			overflow: hidden;
-			flex-grow: 1;
-			flex-basis: auto;
-			outline: none;
+            .not-editing {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+            }
+        }
 
-			a {
-				color: inherit !important;
-			}
+        .button-container {
+            display: flex;
+            align-items: center;
+            flex: 0 0 auto;
+        }
+    }
 
-			&[contenteditable="true"] {
-				cursor: text;
-			}
-		}
+    #title {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        flex-grow: 1;
+        flex-basis: auto;
+        outline: none;
 
-		[fontIcon] {
-			font-size: 1rem;
-			z-index: 3;
-			cursor: pointer;
-			flex-basis: 1rem;
-			flex-grow: 0;
-			flex-shrink: 0;
+        a {
+            color: inherit !important;
+        }
 
-			path {
-				fill: #777777 !important;
-			}
+        &[contenteditable="true"] {
+            cursor: text;
+        }
+    }
 
-			&:hover {
-				background-color: rgba(255, 255, 255, 0.2);
-				color: #222;
-			}
-		}
+    [fontIcon] {
+        font-size: 1rem;
+        z-index: 3;
+        cursor: pointer;
+        flex-basis: 1rem;
+        flex-grow: 0;
+        flex-shrink: 0;
 
-		#edit-button,
-		#close-button {
-			margin: 0.3rem;
-			flex: 0 0 auto;
-		}
-	}
+        path {
+            fill: #777777 !important;
+        }
 
-	&[selected="true"] {
-		deja-tile-group {
-			box-shadow: 0px 0px 1px 3px rgba(0, 0, 0, 0.6);
-		}
-	}
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #222;
+        }
+    }
+
+    #edit-button,
+    #close-button {
+        margin: 0.3rem;
+        flex: 0 0 auto;
+    }
 }
