@@ -59,9 +59,11 @@ import { DejaTilesComponent } from './tiles.component';
 })
 export class DejaTilesModule { }
 
+export * from './tile-group-style-editor-config';
+export * from './tile-group-style-editor.component';
+export * from './tile-group.class';
 export * from './tile-group.component';
 export * from './tile.class';
-export * from './tile-group.class';
 export * from './tile.component';
 export * from './tile-position.directive';
 export * from './tiles.event';
