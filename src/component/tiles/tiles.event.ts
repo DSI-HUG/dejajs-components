@@ -7,25 +7,25 @@
  */
 
 import { IDejaCancelableEvent } from '../../common/core/events/cancelable-event.interface';
-import { IDejaTile } from './tile.interface';
+import { DejaTile } from './tile.class';
 
 export interface IDejaTilesEvent extends CustomEvent {
-    tiles: IDejaTile[];
+    tiles: DejaTile[];
 }
 
 export interface IDejaTilesCancelableEvent extends IDejaCancelableEvent {
-    tiles: IDejaTile[];
+    tiles: DejaTile[];
 }
 
 export interface IDejaTilesRemoveEvent extends IDejaTilesCancelableEvent {
-    removed: IDejaTile[];
+    removed: DejaTile[];
 }
 
 export interface IDejaTilesAddEvent extends IDejaTilesCancelableEvent {
-    added: IDejaTile[];
+    added: DejaTile[];
 }
 
 export interface IDejaTilesModelEvent extends IDejaTilesEvent {
-    removed?: IDejaTile[];
-    added?: IDejaTile[];
+    removed?: DejaTile[];
+    added?: DejaTile[];
 }

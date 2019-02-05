@@ -6,11 +6,18 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Color } from '../../common/core/graphics/color';
 import { MaterialColors } from '../../common/core/style/material-colors';
 import { DejaPopupComponent } from '../popup/component/popup/popup.component';
-import { DejaTileGroupComponent } from './tile-group.component';
+import { DejaTileBorderDirection } from './tile-group.class';
+
+export interface ITileGroupStyleEditorData {
+    borderWidth: number;
+    borderColor: string;
+    borderDirection: DejaTileBorderDirection;
+    update(borderWidth: number, borderColor: string, borderDirection: DejaTileBorderDirection): void;
+}
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,110 +29,113 @@ import { DejaTileGroupComponent } from './tile-group.component';
 })
 export class TileGroupStyleEditorComponent extends DejaPopupComponent implements OnInit {
     public materialColors: MaterialColors;
-    public min = 1;
-    public max = 5;
-    public borderPositions = [{value: 'top', label: 'Haut'}, {value: 'right', label: 'Droite'}, {value: 'bottom', label: 'Bas'}, {value: 'left', label: 'Gauche'}];
-    public selectedBorderPositions = ['top', 'right', 'bottom', 'left'];
-    private tileGroup: DejaTileGroupComponent;
-    private changeDetectorRef: ChangeDetectorRef;
-    private widthStep = 3;
-
-    private _borderDisplayed: boolean;
-
-    public get borderDisplayed(): boolean {
-        return this._borderDisplayed;
-    }
-
-    public set borderDisplayed(value: boolean) {
-        this._borderDisplayed = value;
-        this.borderWidth = value ? 1 : 0;
-        this.borderColor = this.borderColor; // restore old value
-        if (!value) {
-            this.tileGroup.deleteBorder();
-        }
-        this.changeDetectorRef.markForCheck();
-    }
-
-    private _borderColor: Color;
-
-    public get borderColor(): Color {
-        return this._borderColor;
-    }
-
-    public set borderColor(value: Color) {
-        this._borderColor = value;
-        this.updateBorderColorOnTileGroup();
-    }
-
-    private _borderWidth: number;
-
-    public get borderWidth(): number {
-        return this._borderWidth;
-    }
-
-    public set borderWidth(value: number) {
-        this._borderWidth = value;
-        if (value >= this.min && value <= this.max) {
-            this.updateBorderDimensions();
-        }
-    }
+    public min = 0;
+    public max = 20;
+    private widthStep = 2;
+    private model: ITileGroupStyleEditorData;
 
     public ngOnInit() {
         this.materialColors = this.injector.get(MaterialColors);
-        this.changeDetectorRef = this.injector.get(ChangeDetectorRef);
-        this.tileGroup = this.config.data;
-        const borderDimensions = this.computeBorderDimensions();
-        this._borderWidth = borderDimensions.borderWidth;
-        this.selectedBorderPositions = borderDimensions.borderPositions;
-        this._borderColor = this.tileGroup.borderColor ? Color.parse(this.tileGroup.borderColor) : Color.parse('black');
-        this._borderDisplayed = !!this._borderWidth;
+        this.model = this.config.data as ITileGroupStyleEditorData;
     }
 
-    private computeBorderDimensions(): { borderWidth: number; borderPositions: string[] } {
-        let paddingParts = this.tileGroup.borderWidth && this.tileGroup.borderWidth
-            .split(' ')
-            .map(value => +value.replace('px', ''))
-            .filter(value => !isNaN(value));
+    public get borderColor() {
+        return this.model && this.model.borderColor ? Color.fromHex(this.model.borderColor) : null;
+    }
 
-        if (!paddingParts || paddingParts.filter(value => !!value).length === 0) {
-            return {borderWidth: 0, borderPositions: this.borderPositions.map(pos => pos.value)};
-        } else if (paddingParts.length === 1) {
-            return {
-                borderWidth: (paddingParts[0] / this.widthStep),
-                borderPositions: this.borderPositions.map(pos => pos.value)
-            };
+    public set borderColor(value: Color) {
+        this.model.borderColor = value.toHex();
+        this.model.update(this.model.borderWidth, this.model.borderColor, this.model.borderDirection);
+    }
+
+    public get borderWidth() {
+        return (this.model && this.model.borderWidth / 2) || null;
+    }
+
+    public set borderWidth(value: number) {
+        if (value >= this.min && value <= this.max) {
+            this.model.borderWidth = value * this.widthStep;
+            this.model.update(this.model.borderWidth, this.model.borderColor, this.model.borderDirection);
+        }
+    }
+
+    public get topBorder() {
+        // tslint:disable-next-line:no-bitwise
+        return !!this.model && (this.model.borderDirection & DejaTileBorderDirection.top) !== 0;
+    }
+
+    public set topBorder(value: boolean) {
+        if (!this.model) {
+            return;
+        }
+
+        if (value) {
+            // tslint:disable-next-line:no-bitwise
+            this.model.borderDirection |= DejaTileBorderDirection.top;
         } else {
-            if (paddingParts.length === 2) {
-                paddingParts = [...paddingParts, ...paddingParts];
-            }
-            const indexPositions: number[] = [];
-            paddingParts.forEach((value, index) => {
-                if (value) {
-                    indexPositions.push(index);
-                }
-            });
-            // @ts-ignore
-            const positions = this.borderPositions.filter((pos, index) => indexPositions.indexOf(index) > -1).map(pos => pos.value);
-            const width = paddingParts.filter(value => !!value)[0];
-            return {borderWidth: (width / this.widthStep), borderPositions: positions};
+            // tslint:disable-next-line:no-bitwise
+            this.model.borderDirection &= ~DejaTileBorderDirection.top;
         }
+        this.model.update(this.model.borderWidth, this.model.borderColor, this.model.borderDirection);
     }
 
-    private updateBorderColorOnTileGroup() {
-        this.tileGroup.updateBorderColor(this._borderColor && this._borderColor.toHex());
+    public get rightBorder() {
+        // tslint:disable-next-line:no-bitwise
+        return !!this.model && (this.model.borderDirection & DejaTileBorderDirection.right) !== 0;
     }
 
-    public updateBorderDimensions() {
-        let padding = `${this.borderWidth * this.widthStep}px`;
-        if (this.selectedBorderPositions.length !== 0 && this.selectedBorderPositions.length !== 4) {
-            padding = this.borderPositions.map(pos => {
-                if (this.selectedBorderPositions.indexOf(pos.value) > -1) {
-                    return padding;
-                } else {
-                    return '0';
-                }
-            }).join(' ');
+    public set rightBorder(value: boolean) {
+        if (!this.model) {
+            return;
         }
-        this.tileGroup.updateBorderWidth(padding);
+
+        if (value) {
+            // tslint:disable-next-line:no-bitwise
+            this.model.borderDirection |= DejaTileBorderDirection.right;
+        } else {
+            // tslint:disable-next-line:no-bitwise
+            this.model.borderDirection &= ~DejaTileBorderDirection.right;
+        }
+        this.model.update(this.model.borderWidth, this.model.borderColor, this.model.borderDirection);
+    }
+
+    public get bottomBorder() {
+        // tslint:disable-next-line:no-bitwise
+        return !!this.model && (this.model.borderDirection & DejaTileBorderDirection.bottom) !== 0;
+    }
+
+    public set bottomBorder(value: boolean) {
+        if (!this.model) {
+            return;
+        }
+
+        if (value) {
+            // tslint:disable-next-line:no-bitwise
+            this.model.borderDirection |= DejaTileBorderDirection.bottom;
+        } else {
+            // tslint:disable-next-line:no-bitwise
+            this.model.borderDirection &= ~DejaTileBorderDirection.bottom;
+        }
+        this.model.update(this.model.borderWidth, this.model.borderColor, this.model.borderDirection);
+    }
+
+    public get leftBorder() {
+        // tslint:disable-next-line:no-bitwise
+        return !!this.model && (this.model.borderDirection & DejaTileBorderDirection.left) !== 0;
+    }
+
+    public set leftBorder(value: boolean) {
+        if (!this.model) {
+            return;
+        }
+
+        if (value) {
+            // tslint:disable-next-line:no-bitwise
+            this.model.borderDirection |= DejaTileBorderDirection.left;
+        } else {
+            // tslint:disable-next-line:no-bitwise
+            this.model.borderDirection &= ~DejaTileBorderDirection.left;
+        }
+        this.model.update(this.model.borderWidth, this.model.borderColor, this.model.borderDirection);
     }
 }

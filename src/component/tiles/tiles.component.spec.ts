@@ -6,35 +6,35 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { Component, ViewEncapsulation } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { from as observableFrom } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
-import { delay } from 'rxjs/operators';
-import { first } from 'rxjs/operators';
-import { map } from 'rxjs/operators';
-import { tap } from 'rxjs/operators';
+import { BehaviorSubject, from as observableFrom } from 'rxjs';
+import { debounceTime, delay, filter, first, map, tap } from 'rxjs/operators';
 import { DejaClipboardModule } from '../../common/core/clipboard/index';
 import { Rect } from '../../common/core/graphics/rect';
-import { DejaTilesModule } from './index';
-import { IDejaTile } from './tile.interface';
+import { DejaTileBorderDirection, DejaTileGroupComponent, DejaTilesModule } from './index';
+import { DejaTileGroup } from './tile-group.class';
+import { DejaTile } from './tile.class';
 import { DejaTilesLayoutProvider } from './tiles-layout.provider';
 import { DejaTilesComponent } from './tiles.component';
+
+const padding = 4;
 
 @Component({
     encapsulation: ViewEncapsulation.None,
     template: `<deja-tiles id="tiles1" style="height: 500px;width: 400px;display: block;" [(models)]="tiles" canDelete canPaste canCut [designMode]="designMode" maxwidth="100%" tileminwidth="5%" tileminheight="5%" tilemaxheight="50%" tilemaxwidth="50%">
                     <ng-template #tileTemplate let-tile let-pressed="pressed" let-selected="selected">
-                        <span style="width: 100%;height: 100%;display: block;" class="tile-content noselect" [style.background-color]="tile.templateModel.color" [attr.selected]="selected" [attr.pressed]="pressed">{{ tile.templateModel.name }}</span>
+                        <span style="width: 100%;height: 100%;display: block;" class="tile-content noselect" [style.background-color]="tile.color" [attr.selected]="selected" [attr.pressed]="pressed">{{ tile.templateModel.name }}</span>
                     </ng-template>
                 </deja-tiles>
                 <deja-tiles id="tiles2" style="height: 500px;width: 400px;display: block;" canPaste canCopy [designMode]="designMode" maxwidth="100%" tileminwidth="5%" tileminheight="5%" tilemaxheight="50%" tilemaxwidth="50%">
                     <ng-template #tileTemplate let-tile let-pressed="pressed" let-selected="selected">
-                        <span style="width: 100%;height: 100%;display: block;" class="tile-content noselect" [style.background-color]="tile.templateModel.color" [attr.selected]="selected" [attr.pressed]="pressed">{{ tile.templateModel.name }}</span>
+                        <span style="width: 100%;height: 100%;display: block;" class="tile-content noselect" [style.background-color]="tile.color" [attr.selected]="selected" [attr.pressed]="pressed">{{ tile.templateModel.name }}</span>
                     </ng-template>
                 </deja-tiles>`,
     styles: [`* { transition: unset !important; }
@@ -95,7 +95,7 @@ class DejaTilesContainerComponent {
         },
     ] as any[];
 
-    public tiles: IDejaTile[];
+    public tiles: DejaTile[];
 
     public designMode = true;
 
@@ -105,12 +105,10 @@ class DejaTilesContainerComponent {
 
         this.tiles = this.fructs
             .map((fruct) => {
-                const tile = {
-                    bounds: new Rect(x, y, 30, 30),
-                    id: fruct.name,
-                    color: fruct.color,
-                    templateModel: fruct,
-                } as IDejaTile;
+                const tile = new DejaTile(fruct.name);
+                tile.percentBounds = new Rect(x, y, 30, 30);
+                tile.color = fruct.color;
+                tile.templateModel = fruct;
 
                 x += 30;
                 if (x + 30 > 100) {
@@ -123,11 +121,54 @@ class DejaTilesContainerComponent {
     }
 }
 
+@Component({
+    encapsulation: ViewEncapsulation.None,
+    template: `<deja-tiles style="height: 500px;width: 400px;display: block;" [(models)]="tiles" canDelete canPaste canCut [designMode]="designMode" maxwidth="100%" tileminwidth="5%" tileminheight="5%" tilemaxheight="50%" tilemaxwidth="50%">
+                    <ng-template #tileTemplate let-tile let-pressed="pressed" let-selected="selected">
+                        <span style="width: 100%;height: 100%;display: block;" class="tile-content noselect" [style.background-color]="tile.color" [attr.selected]="selected" [attr.pressed]="pressed">{{ tile.templateModel.name }}</span>
+                    </ng-template>
+                </deja-tiles>`,
+    styles: [`* { transition: unset !important; }
+    deja-tiles {
+        left: 100px;
+        top: 100px;
+    }`]
+})
+class DejaTileGroupContainerComponent {
+    public orange = {
+        name: 'Orange',
+        color: '#e96c00',
+    };
+
+    public tiles: DejaTile[];
+
+    public designMode = false;
+
+    constructor() {
+        const group = new DejaTileGroup(this.orange.name);
+        group.borderColor = this.orange.color;
+        group.borderDirection = DejaTileBorderDirection.bottom;
+        group.borderWidth = 4;
+        group.html = `<span id="${this.orange.name}">${this.orange.color}</span>`;
+        group.percentBounds = new Rect(0, 0, 30, 30);
+        group.color = this.orange.color;
+        group.templateModel = this.orange;
+
+        this.tiles = [group];
+    }
+}
+
 describe('DejaTilesComponent', () => {
+    let overlayContainerElement: HTMLElement;
+
     beforeEach(async(() => {
+        // Define a ckeditor base path just for tests, because webpack configuration or asset plugin not working
+        (<any>window).CKEDITOR_BASEPATH = 'https://dsi-hug.github.io/dejajs-components/assets/ckeditor/';
+
         TestBed.configureTestingModule({
             declarations: [
                 DejaTilesContainerComponent,
+                DejaTileGroupContainerComponent
             ],
             imports: [
                 BrowserAnimationsModule,
@@ -135,6 +176,12 @@ describe('DejaTilesComponent', () => {
                 FormsModule,
                 DejaTilesModule,
                 DejaClipboardModule.forRoot(),
+            ],
+            providers: [
+                { provide: OverlayContainer, useFactory: () => {
+                        overlayContainerElement = document.createElement('div');
+                        return { getContainerElement: () => overlayContainerElement };
+                    }}
             ]
         }).compileComponents();
     }));
@@ -179,26 +226,28 @@ describe('DejaTilesComponent', () => {
         const tilesInstance = tilesDebugElement.componentInstance as DejaTilesComponent;
 
         observeDom$(fixture).pipe(
-            first())
-            .subscribe(() => {
+            first(),
+            tap(() => {
                 fixture.detectChanges();
                 const tileElements = fixture.debugElement.queryAll(By.css('deja-tiles#tiles1 > #tiles > deja-tile'));
                 expect(tileElements.length).toBe(13);
                 const beerTile = tileElements.find((t) => t.nativeElement.id === 'Beer');
                 expect(beerTile).toBeDefined();
-                expect(beerTile.nativeElement.offsetTop).toBe(360);
+                expect(beerTile.nativeElement.offsetTop).toBe(360 + padding);
+            }),
+            delay(10))
+            .subscribe(() => {
                 done();
             });
 
-        tilesContainerInstance.tiles.unshift({
-            id: 'Beer',
+        const tile = new DejaTile('Beer');
+        tile.color = '#FBC02D';
+        tile.templateModel = {
+            name: 'Beer',
             color: '#FBC02D',
-            templateModel: {
-                name: 'Beer',
-                color: '#FBC02D',
-            },
-        } as IDejaTile);
+        };
 
+        tilesContainerInstance.tiles.unshift(tile);
         tilesContainerInstance.tiles = [...tilesContainerInstance.tiles];
         fixture.detectChanges();
 
@@ -364,15 +413,15 @@ describe('DejaTilesComponent', () => {
             debounceTime(10),
             first(),
             tap(() => {
-                tilesInstance.addTiles([{
-                    bounds: new Rect(0, 0, 30, 30),
-                    id: 'Litchi',
+                const tile = new DejaTile('Litchi');
+                tile.percentBounds = new Rect(0, 0, 30, 30);
+                tile.color = '#C2185B';
+                tile.templateModel = {
+                    name: 'Litchi',
                     color: '#C2185B',
-                    templateModel: {
-                        name: 'Litchi',
-                        color: '#C2185B',
-                    },
-                } as IDejaTile]);
+                };
+
+                tilesInstance.addTiles([tile]);
             }),
             delay(20),
             tap(() => {
@@ -414,7 +463,12 @@ describe('DejaTilesComponent', () => {
         observeDom$(fixture).pipe(
             debounceTime(10),
             first(),
-            tap(() => tilesInstance.addGroup('Group1', new Rect(0, 0, 30, 10))),
+            tap(() => {
+                const tile = new DejaTileGroup();
+                tile.html = 'Group1';
+                tile.pixelBounds = new Rect(0, 0, 30, 10);
+                tilesInstance.addTiles([tile]);
+            }),
             delay(20),
             tap(() => {
                 fixture.detectChanges();
@@ -455,7 +509,7 @@ describe('DejaTilesComponent', () => {
                 return expandTileModel;
             }),
             delay(20),
-            tap((expandTileModel: HTMLElement) => {
+            tap((expandTileModel) => {
                 tilesInstance.expandTile(expandTileModel, 200);
             }),
             delay(600),
@@ -466,12 +520,12 @@ describe('DejaTilesComponent', () => {
                 const testBounds = testElement.nativeElement.getBoundingClientRect();
                 const tilesContainerBounds = tilesContainerElement.getBoundingClientRect();
 
-                expect(bounds.left).toBe(tilesContainerBounds.left + 120);
-                expect(bounds.top).toBe(tilesContainerBounds.top);
-                expect(bounds.width).toBe(120);
-                expect(bounds.height).toBe(200);
-                expect(testBounds.left).toBe(tilesContainerBounds.left + 120);
-                expect(testBounds.top).toBe(tilesContainerBounds.top + 440);
+                expect(bounds.left).toBe(tilesContainerBounds.left + 120 + padding);
+                expect(bounds.top).toBe(tilesContainerBounds.top + padding);
+                expect(bounds.width).toBe(120 - 2 * padding);
+                expect(bounds.height).toBe(200 - 2 * padding);
+                expect(testBounds.left).toBe(tilesContainerBounds.left + 120 + padding);
+                expect(testBounds.top).toBe(tilesContainerBounds.top + 440 + padding);
             }),
             delay(20),
             tap(() => {
@@ -485,12 +539,12 @@ describe('DejaTilesComponent', () => {
                 const testBounds = testElement.nativeElement.getBoundingClientRect();
                 const tilesContainerBounds = tilesContainerElement.getBoundingClientRect();
 
-                expect(bounds.left).toBe(tilesContainerBounds.left + 120);
-                expect(bounds.top).toBe(tilesContainerBounds.top);
-                expect(bounds.width).toBe(120);
-                expect(bounds.height).toBe(120);
-                expect(testBounds.left).toBe(tilesContainerBounds.left + 120);
-                expect(testBounds.top).toBe(tilesContainerBounds.top + 360);
+                expect(bounds.left).toBe(tilesContainerBounds.left + 120 + padding);
+                expect(bounds.top).toBe(tilesContainerBounds.top + padding);
+                expect(bounds.width).toBe(120 - 2 * padding);
+                expect(bounds.height).toBe(120 - 2 * padding);
+                expect(testBounds.left).toBe(tilesContainerBounds.left + 120 + padding);
+                expect(testBounds.top).toBe(tilesContainerBounds.top + 360 + padding);
             }))
             .subscribe(() => {
                 done();
@@ -647,10 +701,10 @@ describe('DejaTilesComponent', () => {
                 const invertedBounds = invertedElement.nativeElement.getBoundingClientRect();
                 const tilesContainerBounds = tilesContainerElement.getBoundingClientRect();
 
-                expect(bounds.left).toBe(tilesContainerBounds.left + 120);
-                expect(bounds.top).toBe(tilesContainerBounds.top + 120);
-                expect(invertedBounds.left).toBe(tilesContainerBounds.left);
-                expect(invertedBounds.top).toBe(tilesContainerBounds.top);
+                expect(bounds.left).toBe(tilesContainerBounds.left + 120 + padding);
+                expect(bounds.top).toBe(tilesContainerBounds.top + 120 + padding);
+                expect(invertedBounds.left).toBe(tilesContainerBounds.left + padding);
+                expect(invertedBounds.top).toBe(tilesContainerBounds.top + padding);
             }),
             delay(20))
             .subscribe(() => {
@@ -723,12 +777,12 @@ describe('DejaTilesComponent', () => {
                 const testElement = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles > deja-tile#Pineapple'));
                 const testBounds = testElement.nativeElement.getBoundingClientRect();
                 const tilesContainerBounds = tilesContainerElement.getBoundingClientRect();
-                expect(bounds.left).toBe(tilesContainerBounds.left);
-                expect(bounds.top).toBe(tilesContainerBounds.top);
-                expect(bounds.width).toBe(200);
-                expect(bounds.height).toBe(120);
-                expect(testBounds.left).toBe(tilesContainerBounds.left + 120);
-                expect(testBounds.top).toBe(tilesContainerBounds.top + 480);
+                expect(bounds.left).toBe(tilesContainerBounds.left + padding);
+                expect(bounds.top).toBe(tilesContainerBounds.top + padding);
+                expect(bounds.width).toBe(200 - 2 * padding);
+                expect(bounds.height).toBe(120 - 2 * padding);
+                expect(testBounds.left).toBe(tilesContainerBounds.left + 120 + padding);
+                expect(testBounds.top).toBe(tilesContainerBounds.top + 480 + padding);
             }),
             delay(20))
             .subscribe(() => {
@@ -801,12 +855,12 @@ describe('DejaTilesComponent', () => {
                 const testElement = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles > deja-tile#Pineapple'));
                 const testBounds = testElement.nativeElement.getBoundingClientRect();
                 const tilesContainerBounds = tilesContainerElement.getBoundingClientRect();
-                expect(bounds.left).toBe(tilesContainerBounds.left + 160);
-                expect(bounds.top).toBe(tilesContainerBounds.top);
-                expect(bounds.width).toBe(200);
-                expect(bounds.height).toBe(120);
-                expect(testBounds.left).toBe(tilesContainerBounds.left + 120);
-                expect(testBounds.top).toBe(tilesContainerBounds.top + 480);
+                expect(bounds.left).toBe(tilesContainerBounds.left + 160 + padding);
+                expect(bounds.top).toBe(tilesContainerBounds.top + padding);
+                expect(bounds.width).toBe(200 - 2 * padding);
+                expect(bounds.height).toBe(120 - 2 * padding);
+                expect(testBounds.left).toBe(tilesContainerBounds.left + 120 + padding);
+                expect(testBounds.top).toBe(tilesContainerBounds.top + 480 + padding);
             }),
             delay(20))
             .subscribe(() => {
@@ -879,12 +933,12 @@ describe('DejaTilesComponent', () => {
                 const testElement = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles > deja-tile#Pineapple'));
                 const testBounds = testElement.nativeElement.getBoundingClientRect();
                 const tilesContainerBounds = tilesContainerElement.getBoundingClientRect();
-                expect(bounds.left).toBe(tilesContainerBounds.left + 120);
-                expect(bounds.top).toBe(tilesContainerBounds.top);
-                expect(bounds.width).toBe(120);
-                expect(bounds.height).toBe(141);
-                expect(testBounds.left).toBe(tilesContainerBounds.left + 120);
-                expect(testBounds.top).toBe(tilesContainerBounds.top + 380);
+                expect(bounds.left).toBe(tilesContainerBounds.left + 120 + padding);
+                expect(bounds.top).toBe(tilesContainerBounds.top + padding);
+                expect(bounds.width).toBe(120 - 2 * padding);
+                expect(bounds.height).toBe(141 - 2 * padding);
+                expect(testBounds.left).toBe(tilesContainerBounds.left + 120 + padding);
+                expect(testBounds.top).toBe(tilesContainerBounds.top + 380 + padding);
             }),
             delay(20))
             .subscribe(() => {
@@ -957,12 +1011,12 @@ describe('DejaTilesComponent', () => {
                 const testElement = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles > deja-tile#Pineapple'));
                 const testBounds = testElement.nativeElement.getBoundingClientRect();
                 const tilesContainerBounds = tilesContainerElement.getBoundingClientRect();
-                expect(bounds.left).toBe(tilesContainerBounds.left + 120);
-                expect(bounds.top).toBe(tilesContainerBounds.top + 209);
-                expect(bounds.width).toBe(120);
-                expect(bounds.height).toBe(151);
-                expect(testBounds.left).toBe(tilesContainerBounds.left + 120);
-                expect(testBounds.top).toBe(tilesContainerBounds.top + 400);
+                expect(bounds.left).toBe(tilesContainerBounds.left + 120 + padding);
+                expect(bounds.top).toBe(tilesContainerBounds.top + 209 + padding);
+                expect(bounds.width).toBe(120 - 2 * padding);
+                expect(bounds.height).toBe(151 - 2 * padding);
+                expect(testBounds.left).toBe(tilesContainerBounds.left + 120 + padding);
+                expect(testBounds.top).toBe(tilesContainerBounds.top + 400 + padding);
             }),
             delay(20))
             .subscribe(() => {
@@ -1035,12 +1089,12 @@ describe('DejaTilesComponent', () => {
                 const testElement = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles > deja-tile#Pineapple'));
                 const testBounds = testElement.nativeElement.getBoundingClientRect();
                 const tilesContainerBounds = tilesContainerElement.getBoundingClientRect();
-                expect(bounds.left).toBe(tilesContainerBounds.left);
-                expect(bounds.top).toBe(tilesContainerBounds.top);
-                expect(bounds.width).toBe(200);
-                expect(bounds.height).toBe(200);
-                expect(testBounds.left).toBe(tilesContainerBounds.left + 120);
-                expect(testBounds.top).toBe(tilesContainerBounds.top + 560);
+                expect(bounds.left).toBe(tilesContainerBounds.left + padding);
+                expect(bounds.top).toBe(tilesContainerBounds.top + padding);
+                expect(bounds.width).toBe(200 - 2 * padding);
+                expect(bounds.height).toBe(200 - 2 * padding);
+                expect(testBounds.left).toBe(tilesContainerBounds.left + 120 + padding);
+                expect(testBounds.top).toBe(tilesContainerBounds.top + 560 + padding);
             }),
             delay(20))
             .subscribe(() => {
@@ -1113,12 +1167,12 @@ describe('DejaTilesComponent', () => {
                 const testElement = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles > deja-tile#Pineapple'));
                 const testBounds = testElement.nativeElement.getBoundingClientRect();
                 const tilesContainerBounds = tilesContainerElement.getBoundingClientRect();
-                expect(bounds.left).toBe(tilesContainerBounds.left + 120);
-                expect(bounds.top).toBe(tilesContainerBounds.top + 209);
-                expect(bounds.width).toBe(171);
-                expect(bounds.height).toBe(151);
-                expect(testBounds.left).toBe(tilesContainerBounds.left + 120);
-                expect(testBounds.top).toBe(tilesContainerBounds.top + 520);
+                expect(bounds.left).toBe(tilesContainerBounds.left + 120 + padding);
+                expect(bounds.top).toBe(tilesContainerBounds.top + 209 + padding);
+                expect(bounds.width).toBe(171 - 2 * padding);
+                expect(bounds.height).toBe(151 - 2 * padding);
+                expect(testBounds.left).toBe(tilesContainerBounds.left + 120 + padding);
+                expect(testBounds.top).toBe(tilesContainerBounds.top + 520 + padding);
             }),
             delay(20))
             .subscribe(() => {
@@ -1191,12 +1245,12 @@ describe('DejaTilesComponent', () => {
                 const testElement = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles > deja-tile#Watermelon'));
                 const testBounds = testElement.nativeElement.getBoundingClientRect();
                 const tilesContainerBounds = tilesContainerElement.getBoundingClientRect();
-                expect(bounds.left).toBe(tilesContainerBounds.left + 209);
-                expect(bounds.top).toBe(tilesContainerBounds.top + 209);
-                expect(bounds.width).toBe(151);
-                expect(bounds.height).toBe(151);
-                expect(testBounds.left).toBe(tilesContainerBounds.left + 240);
-                expect(testBounds.top).toBe(tilesContainerBounds.top + 400);
+                expect(bounds.left).toBe(tilesContainerBounds.left + 209 + padding);
+                expect(bounds.top).toBe(tilesContainerBounds.top + 209 + padding);
+                expect(bounds.width).toBe(151 - 2 * padding);
+                expect(bounds.height).toBe(151 - 2 * padding);
+                expect(testBounds.left).toBe(tilesContainerBounds.left + 240 + padding);
+                expect(testBounds.top).toBe(tilesContainerBounds.top + 400 + padding);
             }),
             delay(20))
             .subscribe(() => {
@@ -1269,12 +1323,12 @@ describe('DejaTilesComponent', () => {
                 const testElement = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles > deja-tile#Watermelon'));
                 const testBounds = testElement.nativeElement.getBoundingClientRect();
                 const tilesContainerBounds = tilesContainerElement.getBoundingClientRect();
-                expect(bounds.left).toBe(tilesContainerBounds.left + 209);
-                expect(bounds.top).toBe(tilesContainerBounds.top + 240);
-                expect(bounds.width).toBe(151);
-                expect(bounds.height).toBe(151);
-                expect(testBounds.left).toBe(tilesContainerBounds.left + 240);
-                expect(testBounds.top).toBe(tilesContainerBounds.top + 400);
+                expect(bounds.left).toBe(tilesContainerBounds.left + 209 + padding);
+                expect(bounds.top).toBe(tilesContainerBounds.top + 240 + padding);
+                expect(bounds.width).toBe(151 - 2 * padding);
+                expect(bounds.height).toBe(151 - 2 * padding);
+                expect(testBounds.left).toBe(tilesContainerBounds.left + 240 + padding);
+                expect(testBounds.top).toBe(tilesContainerBounds.top + 400 + padding);
             }),
             delay(20))
             .subscribe(() => {
@@ -1343,4 +1397,128 @@ describe('DejaTilesComponent', () => {
             tilesInstance.refresh();
         });
     });
+
+    it('should a group tile switch from edition or not', async(() => {
+        const fixture = TestBed.createComponent(DejaTileGroupContainerComponent);
+        const groupContainerCmp = fixture.componentRef.instance;
+        fixture.detectChanges();
+
+        const tileGroupDebugElement = fixture.debugElement.query(By.css('deja-tiles deja-tile-group'));
+        expect(tileGroupDebugElement).toBeDefined();
+
+        const tileGroupCmp: DejaTileGroupComponent = tileGroupDebugElement.componentInstance;
+        expect(tileGroupDebugElement.query(By.css('deja-editor'))).toBeFalsy('Editor should not be defined');
+
+        groupContainerCmp.designMode = true;
+        fixture.detectChanges();
+        expect(tileGroupDebugElement.query(By.css('deja-editor.hidden'))).toBeDefined('Editor should be defined but hidden');
+
+        tileGroupCmp.edit();
+        fixture.detectChanges();
+        expect(tileGroupDebugElement.query(By.css('deja-editor:not(.hidden)'))).toBeDefined('Editor should be defined and not hidden when editing');
+
+        tileGroupCmp.onEditorBlur();
+        fixture.detectChanges();
+        expect(tileGroupDebugElement.query(By.css('deja-editor.hidden'))).toBeDefined('Editor should be defined but hidden when editing is finished');
+    }));
+
+    it('should update group tile model', async(() => {
+        const fixture = TestBed.createComponent(DejaTileGroupContainerComponent);
+        fixture.detectChanges();
+
+        const tileGroupDebugElement = fixture.debugElement.query(By.css('deja-tiles deja-tile-group'));
+        expect(tileGroupDebugElement).toBeDefined();
+
+        const tileGroupCmp: any = tileGroupDebugElement.componentInstance;
+        // tslint:disable-next-line:no-bitwise
+        tileGroupCmp._model.borderDirection = DejaTileBorderDirection.top | DejaTileBorderDirection.left | DejaTileBorderDirection.right;
+        tileGroupCmp._model.borderWidth = 10;
+        tileGroupCmp._model.borderColor = '#fff';
+
+        tileGroupCmp.updateModel();
+        expect(tileGroupCmp.borderTop).toBe('solid #fff 10px', 'borderTop shoud be solid #fff 10px');
+        expect(tileGroupCmp.borderRight).toBe('solid #fff 10px', 'borderRight shoud be solid #fff 10px');
+        expect(tileGroupCmp.borderLeft).toBe('solid #fff 10px', 'borderLeft shoud be solid #fff 10px');
+        expect(tileGroupCmp.borderBottom).toBeNull();
+
+        tileGroupCmp._model = null;
+        tileGroupCmp.updateModel();
+        expect(tileGroupCmp.borderTop).toBeNull();
+        expect(tileGroupCmp.borderRight).toBeNull();
+        expect(tileGroupCmp.borderLeft).toBeNull();
+        expect(tileGroupCmp.borderBottom).toBeNull();
+    }));
+
+    it('should open  TileGroupStyleEditorComponent on edit', async(() => {
+        const fixture = TestBed.createComponent(DejaTileGroupContainerComponent);
+        fixture.detectChanges();
+
+        const tileGroupCmp: DejaTileGroupComponent = fixture.debugElement.query(By.css('deja-tiles deja-tile-group')).componentInstance;
+        tileGroupCmp.editStyle();
+        fixture.detectChanges();
+
+        expect(overlayContainerElement).toBeTruthy('overlayContainerElement');
+        fixture.whenStable().then(() => expect(overlayContainerElement.querySelector('deja-tile-group-style-editor')).toBeTruthy('Popup TileGroupStyleEditorComponent should be displayed'));
+    }));
+
+    it('should restore previous border values on popup response not accepted', async(() => {
+        const fixture = TestBed.createComponent(DejaTileGroupContainerComponent);
+        const dejaTileGroupContainerComponent = fixture.componentInstance;
+        fixture.detectChanges();
+
+        const tileGroupCmp: DejaTileGroupComponent = fixture.debugElement.query(By.css('deja-tiles deja-tile-group')).componentInstance;
+        tileGroupCmp.editStyle();
+        fixture.detectChanges();
+
+        const responseSubject = new BehaviorSubject(null);
+        spyOn((tileGroupCmp as any).dejaPopupService, 'openAdvanced$').and.returnValue(responseSubject.pipe(filter(res => !!res)));
+        tileGroupCmp.editStyle();
+        tileGroupCmp.model.borderColor = '#fff';
+        tileGroupCmp.model.borderDirection = DejaTileBorderDirection.left;
+        tileGroupCmp.model.borderWidth = 10;
+        responseSubject.next({accepted: false});
+        expect(tileGroupCmp.model.borderColor).toBe(dejaTileGroupContainerComponent.orange.color);
+        expect(tileGroupCmp.model.borderDirection).toBe(DejaTileBorderDirection.bottom);
+        expect(tileGroupCmp.model.borderWidth).toBe(4);
+    }));
+
+    it('should clear border if no borderDirection or no borderwidth are selected', async(() => {
+        const fixture = TestBed.createComponent(DejaTileGroupContainerComponent);
+        fixture.detectChanges();
+
+        const tileGroupCmp: DejaTileGroupComponent = fixture.debugElement.query(By.css('deja-tiles deja-tile-group')).componentInstance;
+        tileGroupCmp.editStyle();
+        fixture.detectChanges();
+
+        const responseSubject = new BehaviorSubject(null);
+        spyOn((tileGroupCmp as any).dejaPopupService, 'openAdvanced$').and.returnValue(responseSubject.pipe(filter(res => !!res)));
+        tileGroupCmp.editStyle();
+        tileGroupCmp.model.borderColor = '#fff';
+        tileGroupCmp.model.borderDirection = DejaTileBorderDirection.left;
+        tileGroupCmp.model.borderWidth = 0;
+        responseSubject.next({accepted: true});
+        expect(tileGroupCmp.model.borderDirection).toBe(DejaTileBorderDirection.top + DejaTileBorderDirection.right + DejaTileBorderDirection.bottom + DejaTileBorderDirection.left);
+        expect(tileGroupCmp.model.borderWidth).toBe(0);
+        expect(tileGroupCmp.model.borderColor).toBe('#000');
+    }));
+
+    it('should keep new border values on popup response accepted', async(() => {
+        const fixture = TestBed.createComponent(DejaTileGroupContainerComponent);
+        fixture.detectChanges();
+
+        const tileGroupCmp: DejaTileGroupComponent = fixture.debugElement.query(By.css('deja-tiles deja-tile-group')).componentInstance;
+        tileGroupCmp.editStyle();
+        fixture.detectChanges();
+
+        const responseSubject = new BehaviorSubject(null);
+        spyOn((tileGroupCmp as any).dejaPopupService, 'openAdvanced$').and.returnValue(responseSubject.pipe(filter(res => !!res)));
+        tileGroupCmp.editStyle();
+        tileGroupCmp.model.borderColor = '#fff';
+        tileGroupCmp.model.borderDirection = DejaTileBorderDirection.left;
+        tileGroupCmp.model.borderWidth = 10;
+        responseSubject.next({accepted: true});
+        expect(tileGroupCmp.model.borderColor).toBe('#fff');
+        expect(tileGroupCmp.model.borderDirection).toBe(DejaTileBorderDirection.left);
+        expect(tileGroupCmp.model.borderWidth).toBe(10);
+    }));
 });

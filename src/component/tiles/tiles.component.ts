@@ -15,9 +15,7 @@ import { Rect } from '../../common/core/graphics/rect';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { IDropCursorInfos } from '../mouse-dragdrop/mouse-dragdrop.service';
 import { IDejaMouseDroppableContext } from '../mouse-dragdrop/mouse-droppable.directive';
-import { DejaTileGroupComponent } from './tile-group.component';
 import { DejaTile } from './tile.class';
-import { IDejaTile } from './tile.interface';
 import { DejaTilesLayoutProvider, IDejaTilesRefreshParams } from './tiles-layout.provider';
 import { IDejaTilesAddEvent, IDejaTilesEvent, IDejaTilesModelEvent, IDejaTilesRemoveEvent } from './tiles.event';
 
@@ -74,13 +72,13 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     @Input() public tabIndex = 0;
 
     @ContentChild('tileTemplate')
-    protected tileTemplate: any;
+    public tileTemplate: any;
 
     // NgModel implementation
-    protected onTouchedCallback: () => void = noop;
-    protected onChangeCallback: (_: any) => void = noop;
+    public onTouchedCallback: () => void = noop;
+    public onChangeCallback: (_: any) => void = noop;
 
-    private _models = [] as IDejaTile[];
+    private _models = [] as DejaTile[];
     private delete$sub: Subscription;
     private copy$sub: Subscription;
     private cut$sub: Subscription;
@@ -180,7 +178,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     }
 
     @Input()
-    public set models(models: IDejaTile[]) {
+    public set models(models: DejaTile[]) {
         this.writeValue(models);
     }
 
@@ -256,14 +254,14 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     }
 
     @Input()
-    public set selectedTiles(selectedTiles: Array<IDejaTile | string>) {
-        this.layoutProvider.selectedTiles = selectedTiles.map((tile) => typeof tile === 'string' ? tile : (<IDejaTile>tile).id);
+    public set selectedTiles(selectedTiles: Array<DejaTile | string>) {
+        this.layoutProvider.selectedTiles = selectedTiles.map((tile) => typeof tile === 'string' ? tile : (<DejaTile>tile).id);
     }
 
     // ************* ControlValueAccessor Implementation **************
     public writeValue(models: any) {
         this._models = models || [];
-        const tiles = this._models.map((tile) => new DejaTile(tile));
+        const tiles = this._models.map((tile) => tile.clone());
         this.layoutProvider.tiles = tiles;
         this.changeDetectorRef.markForCheck();
     }
@@ -295,7 +293,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
         const tiles = this.layoutProvider.copySelection();
         if (tiles && tiles.length) {
             const event = new CustomEvent('DejaTilesCopied', { cancelable: true }) as IDejaTilesEvent;
-            event.tiles = tiles.map((tile) => tile.toTileModel());
+            event.tiles = tiles;
             this.contentCopied.emit(event);
         }
     }
@@ -304,7 +302,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
         const tiles = this.layoutProvider.cutSelection();
         if (tiles && tiles.length) {
             const event = new CustomEvent('DejaTilesCutted', { cancelable: true }) as IDejaTilesEvent;
-            event.tiles = tiles.map((tile) => tile.toTileModel());
+            event.tiles = tiles;
             this.contentCopied.emit(event);
         }
     }
@@ -325,7 +323,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
         this.layoutProvider.ensureVisible$.next(id);
     }
 
-    public expandTile(tile: IDejaTile, pixelHeight: number) {
+    public expandTile(tile: DejaTile, pixelHeight: number) {
         this.layoutProvider.expandTile(tile, pixelHeight);
     }
 
@@ -337,27 +335,12 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
         this.layoutProvider.refreshTiles$.next(params);
     }
 
-    public addTiles(tiles: IDejaTile[]) {
-        this.layoutProvider.addTiles(tiles.map((tile) => new DejaTile(tile)));
+    public addTiles(tiles: DejaTile[]) {
+        this.layoutProvider.addTiles(tiles);
     }
 
     public removeTiles(tileIds: string[]) {
         this.layoutProvider.removeTiles(tileIds);
-    }
-
-    public addGroup(title?: string, bounds?: Rect) {
-        const tile = {
-            type: 'group',
-            bounds: bounds || this.getFreePlace(0, 0, 15, 5),
-            color: DejaTileGroupComponent.defaultColor,
-            templateModel: {
-                title: title || 'New Group',
-            },
-        } as IDejaTile;
-
-        this.layoutProvider.createTiles([tile]);
-
-        return tile;
     }
 
     public getFreePlace(pageX?: number, pageY?: number, width?: number, height?: number) {
@@ -402,7 +385,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
 
     public onTileModelChanged() {
         const event = new CustomEvent('DejaTilesModelEvent', { cancelable: false }) as IDejaTilesModelEvent;
-        event.tiles = this.layoutProvider.tiles.map((t) => t.toTileModel());
+        event.tiles = this.layoutProvider.tiles;
         this.modelChanged.emit(event);
     }
 

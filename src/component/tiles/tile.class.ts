@@ -8,10 +8,9 @@
 
 import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
 import { Rect } from '../../common/core/graphics/rect';
-import { IDejaTile } from './tile.interface';
 
-export class DejaTile implements IDejaTile {
-    private static currentId = 0;
+export class DejaTile {
+    protected static currentId = 0;
 
     public cutted$ = new BehaviorSubject<boolean>(false);
     public dragging$ = new BehaviorSubject<boolean>(false);
@@ -20,54 +19,32 @@ export class DejaTile implements IDejaTile {
     public selected$ = new BehaviorSubject<boolean>(false);
     public expanded$ = new BehaviorSubject<boolean>(false);
     public hidden$ = new ReplaySubject<boolean>(1);
-    public pending$ = new BehaviorSubject<boolean>(false);
-    public deleted$ = new Subject();
     public pixelBounds$ = new BehaviorSubject<Rect>(null);
-    public isTemporary = false;
-    public fading = false;
+    public deleted$ = new Subject();
     public refresh$ = new Subject();
+    public isTemporary = false;
 
     private _id: string;
-    private _isCutted = false;
+    private _color: string;
+    private _templateModel: any;
     private _isDragging = false;
     private _isDropping = false;
     private _isPressed = false;
-    private _isSelected = false;
     private _isExpanded = false;
     private _isHidden = false;
-    private _isPending = false;
     private _pixelBounds: Rect;
+    private _selected: boolean;
+    private _cutted: boolean;
+    private _pending: boolean;
+    private _fading: boolean;
     private _percentBounds: Rect;
-    private _model: IDejaTile;
-    private _color: string;
 
-    constructor(private tile: IDejaTile) {
-        this._model = tile;
-        this._id = tile.id;
-        this._percentBounds = tile.bounds;
-        this._color = tile.color;
-        if (tile.effects) {
-            this.isCutted = tile.effects.cutted;
-            this.isSelected = tile.effects.selected;
-            this._isPending = tile.effects.pending;
-            this.fading = tile.effects.fading;
-        }
-        if (!this._id) {
-            this._id = `#${DejaTile.currentId++}`;
-        }
-        // console.log(`Creating tile ${this._id}`);
+    constructor(id?: string) {
+        this._id = id || `#${DejaTile.currentId++}`;
     }
 
-    public get model() {
-        return this._model;
-    }
-
-    public set color(value: string) {
-        this._color = value;
-    }
-
-    public get color() {
-        return this._color;
+    public get idealBounds() {
+        return new Rect(0, 0, 15, 15);
     }
 
     public set pixelBounds(value: Rect) {
@@ -81,15 +58,43 @@ export class DejaTile implements IDejaTile {
         return this._pixelBounds;
     }
 
+    public set percentBounds(value: Rect) {
+        this._percentBounds = value;
+    }
+
+    public get percentBounds() {
+        return this._percentBounds;
+    }
+
+    public set templateModel(value: any) {
+        this._templateModel = value;
+    }
+
+    public get templateModel() {
+        return this._templateModel;
+    }
+
+    public get id() {
+        return this._id;
+    }
+
     public set isCutted(value: boolean) {
-        if (this._isCutted !== value) {
-            this._isCutted = value;
+        if (this._cutted !== value) {
+            this._cutted = value;
             this.cutted$.next(value);
         }
     }
 
     public get isCutted() {
-        return this._isCutted;
+        return this._cutted;
+    }
+
+    public set color(value: string) {
+        this._color = value;
+    }
+
+    public get color() {
+        return this._color;
     }
 
     public set isDragging(value: boolean) {
@@ -126,14 +131,14 @@ export class DejaTile implements IDejaTile {
     }
 
     public set isSelected(value: boolean) {
-        if (this._isSelected !== value) {
-            this._isSelected = value;
+        if (this._selected !== value) {
+            this._selected = value;
             this.selected$.next(value);
         }
     }
 
     public get isSelected() {
-        return this._isSelected;
+        return this._selected;
     }
 
     public set isExpanded(value: boolean) {
@@ -159,73 +164,49 @@ export class DejaTile implements IDejaTile {
     }
 
     public set isPending(value: boolean) {
-        if (this._isPending !== value) {
-            this._isPending = value;
-            this.pending$.next(value);
-        }
+        this._pending = value;
+    }
+
+    public get fading() {
+        return this._fading;
+    }
+
+    public set fading(value: boolean) {
+        this._fading = value;
     }
 
     public get isPending() {
-        return this._isPending;
-    }
-
-    public get id() {
-        return this._id;
-    }
-
-    public get type() {
-        return this.tile.type;
-    }
-
-    public set percentBounds(bounds: Rect) {
-        this._percentBounds = bounds;
-    }
-
-    public get percentBounds() {
-        return this._percentBounds;
-    }
-
-    public get templateModel() {
-        return this.tile.templateModel;
+        return this._pending;
     }
 
     public makeId() {
         this._id = `#${DejaTile.currentId++}`;
     }
 
-    public refreshBounds() {
-        this.percentBounds = this.model.bounds;
-    }
-
-    public equalsTo(tile: IDejaTile) {
-        if (this.model.id) {
-            return this.model.id === tile.id;
+    public equalsTo(tile: DejaTile) {
+        if (this._templateModel) {
+            return this._templateModel === tile._templateModel;
         } else {
-            return this.model === tile;
+            return this._id === tile._id;
         }
     }
+    public clone(tile?: DejaTile) {
+        if (!tile) {
+            tile = new DejaTile(this.id);
+        }
 
-    public clone() {
-        return new DejaTile(this.toTileModel());
+        tile._percentBounds = this.percentBounds;
+        tile._color = this.color;
+        tile._templateModel = this.templateModel;
+        tile._cutted = this._cutted;
+        tile._selected = this._selected;
+        tile._pending = this._pending;
+        tile._fading = this._fading;
+        return tile;
     }
 
     public delete() {
         this.deleted$.next();
-    }
-
-    public toTileModel() {
-        return {
-            id: this.id,
-            type: this.type,
-            bounds: this.percentBounds,
-            color: this._color,
-            templateModel: this.templateModel,
-            effects: {
-                pending: this.isPending || undefined,
-                cutted: this.isCutted || undefined,
-                selected: this.isSelected || undefined,
-            }
-        } as IDejaTile;
     }
 
     public refresh() {
