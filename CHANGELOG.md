@@ -1,3 +1,13 @@
+<a name="4.2.1"></a>
+## [4.2.1](https://github.com/DSI-HUG/dejajs-components/compare/v4.2.0...v4.2.1) (2019-02-05)
+
+
+### Bug Fixes
+
+* **DejaTiles:** Missing exports ([0e4239b](https://github.com/DSI-HUG/dejajs-components/commit/0e4239b))
+
+
+
 <a name="4.2.0"></a>
 # [4.2.0](https://github.com/DSI-HUG/dejajs-components/compare/v4.1.2...v4.2.0) (2019-02-05)
 
