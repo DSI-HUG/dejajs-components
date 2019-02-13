@@ -1,3 +1,13 @@
+<a name="4.2.2"></a>
+## [4.2.2](https://github.com/DSI-HUG/dejajs-components/compare/v4.2.1...v4.2.2) (2019-02-13)
+
+
+### Bug Fixes
+
+* **DejaNumericStepperComponent:** value "null" is now settable ([e166c4f](https://github.com/DSI-HUG/dejajs-components/commit/e166c4f))
+
+
+
 <a name="4.2.1"></a>
 ## [4.2.1](https://github.com/DSI-HUG/dejajs-components/compare/v4.2.0...v4.2.1) (2019-02-05)
 
