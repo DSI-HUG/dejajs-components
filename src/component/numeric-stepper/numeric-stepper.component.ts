@@ -26,6 +26,9 @@ export const createCounterRangeValidator = (maxValue: number, minValue: number) 
             }
         };
 
+        if (c.value === null || c.value === undefined) {
+            return null;
+        }
         return ((maxValue && c.value > maxValue) || (minValue && c.value < minValue)) ? err : null;
     };
 };
@@ -205,7 +208,11 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     }
 
     public writeValue(value: number) {
-        this._value = isNaN(value) ? null : +value;
+        if (value === null || value === undefined) {
+            this._value = value;
+        } else {
+            this._value = isNaN(value) ? null : +value;
+        }
         this.checkSize(value);
         this.changeDetectorRef.markForCheck();
         this.textChange.emit(value);
