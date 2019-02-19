@@ -1,0 +1,9 @@
+@mixin deja-popup() {
+	[class^='deja-popup-pane-'],
+	[class*=' deja-popup-pane-'] {
+		.mat-dialog-container {
+			padding: 0;
+			height: 100%;
+		}
+	}
+}

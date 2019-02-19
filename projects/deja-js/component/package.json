@@ -1,0 +1,11 @@
+{
+  "name": "@deja-js/component",
+  "version": "7.0.0-beta.0",
+  "peerDependencies": {
+    "@angular/common": "^7.1.0",
+    "@angular/core": "^7.1.0",
+    "@angular/material": "^7.1.1",
+    "@deja-js/core": "^7.0.0",
+    "material-icons-font": "1.4.2"
+  }
+}

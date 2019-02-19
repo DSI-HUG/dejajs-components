@@ -1,12 +1,19 @@
 {
     "extends": "../tsconfig.json",
     "compilerOptions": {
-        "baseUrl": "",
-        "outDir": "../tmp/spec",
-        "module": "commonjs",
-        "declaration": false
+      "outDir": "../out-tsc/spec",
+      "types": [
+        "jasmine",
+        "node"
+      ]
     },
-    "awesomeTypescriptLoaderOptions": {
-        "useWebpackText": true
-    }
-}
+    "files": [
+      "test.ts",
+      "polyfills.ts"
+    ],
+    "include": [
+      "**/*.spec.ts",
+      "**/*.d.ts"
+    ]
+  }
+  

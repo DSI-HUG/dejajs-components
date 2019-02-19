@@ -31,4 +31,5 @@ Desktop.ini
 
 # Library files
 src/*
-build/*
+projects/*
+scripts/*

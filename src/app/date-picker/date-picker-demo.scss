@@ -1,0 +1,23 @@
+:host {
+    .flex-layout {
+        display: flex;
+        flex-direction: row;
+        > div {
+            flex: 1 1 auto;
+        }
+    }
+
+    .flex-layout-center {
+        align-items: center;
+        justify-items: center;
+    }
+
+    .flex-layout-column {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .flex-layout-wrap {
+        flex-wrap: wrap;
+    }
+}

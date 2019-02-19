@@ -1,28 +1,36 @@
 {
-    "compilerOptions": {
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,        
-        "moduleResolution": "node",
-        "sourceMap": true,
-        "inlineSources": true,
-        "declaration": true,
-        "noImplicitAny": true,
-        "suppressImplicitAnyIndexErrors": true,
-        "skipLibCheck": true,
-        "stripInternal": true,
-        "noUnusedParameters": true,
-        "noUnusedLocals": true,
-        "target": "es5",
-        "lib": [
-            "es2017",
-            "dom"
-        ],
-        "typeRoots": [
-            "node_modules/@types"
-        ]
-    },
-    "exclude": [
-        "node_modules",
-        "demo"  
-    ]
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "module": "es2015",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es5",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2018",
+      "dom"
+    ],
+    "paths": {
+      "@deja-js/component": [
+        "dist/deja-js/component"
+      ],
+      "@deja-js/component/*": [
+        "dist/deja-js/component/*"
+      ],
+      "@deja-js/core": [
+        "dist/deja-js/core"
+      ],
+      "@deja-js/core/*": [
+        "dist/deja-js/core/*"
+      ]
+    }
+  }
 }
