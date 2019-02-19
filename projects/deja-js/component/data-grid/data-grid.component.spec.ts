@@ -13,7 +13,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DejaClipboardModule, GroupingService, ItemListService, SortingService, ViewPortService } from '@deja-js/core';
+import { DejaClipboardModule, GroupingService, ItemListService, IViewPort, SortingService, ViewPortService } from '@deja-js/core';
 import * as _ from 'lodash';
 import { from as observableFrom, timer as observableTimer } from 'rxjs';
 import { debounceTime, delay, filter, first, tap } from 'rxjs/operators';
@@ -435,7 +435,7 @@ describe('DejaGridComponent', () => {
 
     const observeViewPort$ = () => {
         return observableFrom(gridInstance.viewPort.viewPortResult$).pipe(
-            filter((result) => result.viewPortSize > 0));
+            filter((result: IViewPort) => result.viewPortSize > 0));
     };
 
     it('should create the component', async(() => {
