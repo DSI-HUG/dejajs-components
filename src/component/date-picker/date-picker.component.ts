@@ -106,7 +106,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
 
     /** Internal use */
     public overlayOwnerElement: HTMLElement;
-    public date: Date | string = new Date();
+    public date: Date | string;
 
     /** matFormField focus implementation */
     public focused = false;
