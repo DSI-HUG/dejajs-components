@@ -1,0 +1,50 @@
+@import '~@angular/material/theming';
+@mixin tree-list-theme($theme) {
+	$primary: map-get($theme, primary);
+	$warn: map-get($theme, warn);
+	$background: map-get($theme, background);
+	$foreground: map-get($theme, foreground);
+
+	deja-tree-list {
+		&[disabled="true"] {
+			.deja-listcontainer {
+				color: mat-color($foreground, disabled);
+				#error-hint {
+					color: mat-color($foreground, disabled);
+				}
+			}
+		}
+		&.ng-invalid {
+			#input {
+				.mat-form-field-wrapper {
+					.mat-form-field-underline {
+						.mat-form-field-ripple {
+							background-color: mat-color($warn);
+						}
+					}
+					.mat-form-field-label {
+						color: mat-color($warn) !important;
+					}
+				}
+			}
+		}
+		#listheader {
+			border-bottom: solid 1px rgba(mat-color($primary), 0.8);
+		}
+		&:not([disabled="true"]) {
+			.deja-listcontainer {
+				background-color: mat-color($background, card);
+				&[keynav="false"]:not(.dragover) {
+					div.listitem:not(.unselectable):hover {
+						background-color: mat-color($primary);
+						color: mat-color($primary, default-contrast);
+					}
+				}
+				#error-hint {
+					color: mat-color($warn);
+				}
+			}
+		}
+		@include sub-item-list-theme($theme);
+	}
+}

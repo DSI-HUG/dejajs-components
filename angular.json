@@ -24,7 +24,17 @@
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "node_modules/monaco-editor/min",
+                "output": "assets/monaco/"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/ckeditor/",
+                "output": "assets/ckeditor/"
+              }
             ],
             "styles": [
               "src/styles.scss"
@@ -83,6 +93,7 @@
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
             "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
               "src/styles.scss"
             ],
             "scripts": [],
@@ -127,6 +138,76 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "e2e/tsconfig.e2e.json",
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "@deja-js/component": {
+      "root": "projects/deja-js/component",
+      "sourceRoot": "projects/deja-js/component",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/deja-js/component/tsconfig.lib.json",
+            "project": "projects/deja-js/component/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/deja-js/component/test.ts",
+            "tsConfig": "projects/deja-js/component/tsconfig.spec.json",
+            "karmaConfig": "projects/deja-js/component/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/deja-js/component/tsconfig.lib.json",
+              "projects/deja-js/component/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "@deja-js/core": {
+      "root": "projects/deja-js/core",
+      "sourceRoot": "projects/deja-js/core",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/deja-js/core/tsconfig.lib.json",
+            "project": "projects/deja-js/core/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/deja-js/core/test.ts",
+            "tsConfig": "projects/deja-js/core/tsconfig.spec.json",
+            "karmaConfig": "projects/deja-js/core/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/deja-js/core/tsconfig.lib.json",
+              "projects/deja-js/core/tsconfig.spec.json"
+            ],
             "exclude": [
               "**/node_modules/**"
             ]

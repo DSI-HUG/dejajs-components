@@ -1,0 +1,14 @@
+@import '~@angular/material/theming';
+@mixin home-demo-theme($theme) {
+    $primary: map-get($theme, primary);
+
+    home {
+        header {
+            background-color: mat-color($primary) !important;
+        }
+
+        footer {
+            background: mat-color($primary);
+        }
+    }
+}

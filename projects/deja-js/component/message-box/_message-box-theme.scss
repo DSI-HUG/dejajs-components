@@ -1,0 +1,97 @@
+@import '~@angular/material/theming';
+
+@mixin message-box-theme($theme) {
+	$primary: map-get($theme, primary);
+	$warn: map-get($theme, warn);
+    $background: map-get($theme, background);
+	$foreground: map-get($theme, foreground);
+
+	$warning: #FF9800;
+	$success: #4CAF50;
+
+	deja-message-box {
+		background-color: mat-color($background, card);
+
+		#msgbox {
+			&.info,
+			&.primary {
+				border-color: mat-color($primary);
+				.mat-card-title {
+					background-color: mat-color($primary);
+					color: mat-color($primary, default-contrast);
+				}
+			}
+			&.danger {
+				border-color: mat-color($warn);
+				.mat-card-title {
+					background-color: mat-color($warn);
+					color: mat-color($warn, default-contrast);
+				}
+			}
+			&.warn {
+				border-color: $warning;
+				.mat-card-title {
+					background-color: $warning;
+					color: #FFF;
+				}
+			}
+			&.success {
+				border-color: $success;
+				.mat-card-title {
+					background-color: $success;
+					color: #FFF;
+				}
+			}
+
+			.mat-card-actions {
+				button {
+					&.mat-success[mat-icon-button]:not([disabled]) {
+						color: $success !important;
+					}
+
+					&.mat-warn[mat-icon-button]:not([disabled]) {
+						color: $warning !important;
+					}
+
+					&.mat-danger[mat-icon-button]:not([disabled]) {
+						color: mat-color($warn) !important;
+					}
+
+					&.mat-success[mat-raised-button],
+					&.mat-success[mat-fab],
+					&.mat-success[mat-mini-fab] {
+						&:not([disabled]) {
+							background-color: $success !important;
+							color: #FFF !important;
+						}
+					}
+
+					&.mat-warn[mat-raised-button],
+					&.mat-warn[mat-fab],
+					&.mat-warn[mat-mini-fab] {
+						background-color: $warning !important;
+						color: #FFF !important;
+					}
+
+					&.mat-danger[mat-raised-button],
+					&.mat-danger[mat-fab],
+					&.mat-danger[mat-mini-fab] {
+						&:not([disabled]) {
+							background-color: mat-color($warn) !important;
+							color: mat-color($warn, default-contrast) !important;
+						}
+					}
+
+					&.mat-blank[mat-raised-button],
+					&.mat-blank[mat-fab],
+					&.mat-blank[mat-mini-fab] {
+						&:not([disabled]) {
+							background-color: transparent !important;
+							color: mat-color($foreground, secondary-text) !important;
+						}
+					}
+				}
+			}
+		}
+	}
+}

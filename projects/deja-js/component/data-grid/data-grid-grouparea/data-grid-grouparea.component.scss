@@ -1,0 +1,11 @@
+:host {
+    #deja-grid-grouparea {
+        padding: 0.5rem;
+        margin-bottom: 1rem;
+        display: flex;
+        flex-wrap: wrap;
+        .label {
+            padding: 0.35rem;
+        }
+    }
+}

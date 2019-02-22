@@ -1,0 +1,107 @@
+@import '~@angular/material/theming';
+
+:host {
+	/* the size of the separator has to be specified*/
+	$separator-width: 7px;
+	/* these styles mustn't be overriden */
+	display: block; //   height: 100%;
+	//   width: 100%;
+	#container {
+		height: 100%;
+		width: 100%;
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+		* {
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+		}
+		.block {
+			display: -webkit-inline-box;
+			display: -ms-inline-flexbox;
+			display: inline-flex;
+		}
+		.range {
+			display: -webkit-inline-box;
+			display: -ms-inline-flexbox;
+			display: inline-flex;
+			-webkit-box-flex: 100;
+			-ms-flex-positive: 100;
+			flex-grow: 100;
+			-webkit-box-pack: center;
+			-ms-flex-pack: center;
+			justify-content: center;
+		}
+		.separator {
+			display: -webkit-inline-box;
+			display: -ms-inline-flexbox;
+			display: inline-flex;
+			-ms-flex-preferred-size: auto;
+			flex-basis: auto;
+			-webkit-box-pack: center;
+			-ms-flex-pack: center;
+			justify-content: center;
+			z-index: 5;
+		}
+		/* these styles could be overriden */
+		&:hover {
+			@include mat-elevation(2);
+		}
+		@include mat-elevation(1);
+		$height: 32px;
+		height: $height;
+		.range {
+			width: $separator-width;
+			cursor: pointer;
+			.default-range {
+				-ms-flex-item-align: center;
+				-ms-grid-row-align: center;
+				align-self: center;
+				font-size: 10pt;
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+			}
+		}
+		.separator {
+			cursor: ew-resize;
+			.default-separator {
+				width: 7px;
+				height: $height / 10 * 8;
+				margin-top: $height / 10;
+				display: -webkit-box;
+				display: -ms-flexbox;
+				display: flex;
+				-webkit-box-pack: center;
+				-ms-flex-pack: center;
+				justify-content: center;
+				.default-separator-item {
+					height: 100%;
+					width: 1px;
+				}
+			}
+		}
+		.range.selected {
+			-webkit-animation-name: selected;
+			animation-name: selected;
+			-webkit-animation-duration: 175ms;
+			animation-duration: 175ms;
+			-webkit-animation-fill-mode: both;
+			animation-fill-mode: both;
+			-webkit-animation-timing-function: ease-in-out;
+			animation-timing-function: ease-in-out;
+		}
+		.range:not(.selected) {
+			-webkit-animation-name: not-selected;
+			animation-name: not-selected;
+			-webkit-animation-duration: 175ms;
+			animation-duration: 175ms;
+			-webkit-animation-fill-mode: both;
+			animation-fill-mode: both;
+			-webkit-animation-timing-function: ease-in-out;
+			animation-timing-function: ease-in-out;
+		}
+	}
+}

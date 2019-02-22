@@ -1,0 +1,32 @@
+.deja-popup-toolbar-mini {
+    display: flex;
+    font-size: 12px;
+    
+    .deja-popup-toolbar-content {
+        line-height: 18px;
+        height: 18px;
+        padding: 3px .5rem 3px 1rem;
+    }
+    .deja-popup-toolbar-spacer {
+        flex: 1;
+        cursor: grab;
+    }
+    .deja-popup-toolbar-actions {
+        padding-left: 1rem;
+        button {
+            width: 18px;
+            height: 18px;
+            line-height: 18px;
+            .mat-icon {
+                line-height: 18px;
+                font-size: 18px;
+                height: 18px;
+                width: 18px;
+            margin-right: 2px;
+            }
+        }
+    }
+    .actions-hide {
+        display: none;
+    }
+}

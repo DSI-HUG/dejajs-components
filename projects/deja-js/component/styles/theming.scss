@@ -1,0 +1,64 @@
+/** global mixins */
+@import './mixins/backdrop';
+@import './mixins/loader';
+@import './mixins/menu';
+@import './mixins/popup';
+@import './mixins/tree-list-borders';
+
+/** Font icons */
+@import '~material-icons-font/sass/variables'; // mandatory and at first place
+@import '~material-icons-font/sass/mixins'; // mandatory and after variables
+// there you can change default variables if they are not good enough for you
+$MaterialIcons_FontPath: "~material-icons-font/fonts"; // for CLI project we change font path to point into package fonts folder
+@import '~material-icons-font/sass/main'; // mandatory main material font definition
+@import '~material-icons-font/sass/Regular'; // mandatory @font-face definition
+
+/** Components Themes */
+@import '../chips/chips-theme';
+@import '../circular-picker/circular-picker-theme';
+@import '../color-picker/color-picker-theme';
+@import '../data-grid/data-grid-theme';
+@import '../date-picker/date-picker-theme';
+@import '../date-selector/date-selector-theme';
+@import '../loaders/list-loader-theme';
+@import '../message-box/message-box-theme';
+@import '../mouse-dragdrop/mouse-dragdrop-theme';
+@import '../numeric-stepper/numeric-stepper-theme';
+@import '../popup/popup-theme';
+@import '../range/range-theme';
+@import '../select/select-theme';
+@import '../sidenav/sidenav-theme';
+@import '../splitter/splitter-theme';
+@import '../tooltip/tooltip-theme';
+@import '../tree-list/tree-list-theme';
+@import '../viewport/viewport-theme';
+/* specials themes */
+@import './mixins/menu-theme';
+@import './mixins/popup';
+@import './mixins/item-list-theme';
+@import './mixins/tree-list-borders';
+
+@mixin deja-theme($custom-theme) {
+    @include chips-theme($custom-theme);
+    @include circular-picker-theme($custom-theme);
+    @include color-picker-theme($custom-theme);
+    @include data-grid-theme($custom-theme);
+    @include date-picker-theme($custom-theme);
+    @include date-selector-theme($custom-theme);
+    @include deja-menu();
+    @include deja-popup();
+    @include deja-tree-list-borders();
+    @include list-loader-theme($custom-theme);
+    @include menu-theme($custom-theme);
+    @include message-box-theme($custom-theme);
+    @include mouse-dragdrop-theme($custom-theme);
+    @include numeric-stepper-theme($custom-theme);
+    @include popup-theme($custom-theme);
+    @include range-theme($custom-theme);
+    @include select-theme($custom-theme);
+    @include sidenav-theme($custom-theme);
+    @include splitter-theme($custom-theme);
+    @include tooltip-theme($custom-theme);
+    @include tree-list-theme($custom-theme);
+    @include viewport-theme($custom-theme);
+}

@@ -1,0 +1,49 @@
+:host {
+	-webkit-touch-callout: none;
+	/* iOS Safari */
+	-webkit-user-select: none;
+	/* Chrome/Safari/Opera */
+	-khtml-user-select: none;
+	/* Konqueror */
+	-moz-user-select: none;
+	/* Firefox */
+	-ms-user-select: none;
+	/* Internet Explorer/Edge */
+	user-select: none;
+	/* Non-prefixed version, currently
+       not supported by any browser */
+    position: relative;
+    .circular-picker {
+        border-radius: 50%;
+        position: relative;
+        .value {
+            border-radius: 50%;
+            cursor: pointer;
+            height: 43px;
+            line-height: 43px;
+            position: absolute;
+            text-align: center;
+            width: 43px;
+        }
+        .cursor-container {
+            .cursor {
+                border-radius: 50%;
+                cursor: pointer;
+                height: 43px;
+                line-height: 43px;
+                position: absolute;
+                text-align: center;
+                width: 43px;
+                z-index: 5;
+            }
+            .cursorHand {
+                border-radius: 2px;
+                height: 4px;
+                left: 50%;
+                position: absolute;
+                top: 50%;
+                transform-origin: left center;
+            }
+        }
+    }
+}

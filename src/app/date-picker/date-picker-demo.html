@@ -1,0 +1,170 @@
+<mat-tab-group [selectedIndex]="tabIndex" (selectedTabChange)="tabIndex = $event.index">
+	<!--<mat-tab label="OVERVIEW">-->
+	<!--<mat-card class="demo-card demo-basic">-->
+	<!--TODO-->
+	<!--</mat-card>-->
+	<!--</mat-tab>-->
+	<mat-tab label="API REFERENCE"></mat-tab>
+	<mat-tab label="EXAMPLES"></mat-tab>
+</mat-tab-group>
+
+<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
+	<deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/date-picker/readme.md'"></deja-markdown>
+</mat-card>
+
+<div *ngIf="tabIndex === 1">
+	<mat-card class="demo-card">
+		<mat-toolbar color="primary">Date Selector</mat-toolbar>
+		<mat-card-content>
+			<div class="flex-layout">
+				<div>
+					<h3>Only weeks are disabled :</h3>
+					<deja-date-time-selector [disableDates]="disabledDate" [(ngModel)]="theDate1"></deja-date-time-selector>
+					<p>Selected date : {{theDate1 | date:'yyyy-MM-dd'}}</p>
+				</div>
+				<div>
+					<h3>With initial date setted :</h3>
+					<deja-date-time-selector [(ngModel)]="theDateSelected"></deja-date-time-selector>
+					<p>Selected date : {{theDateSelected | date:'yyyy-MM-dd'}}</p>
+				</div>
+			</div>
+			<hr>
+			<div class="flex-layout">
+				<div>
+					<h3>With min / max dates :</h3>
+					<deja-date-time-selector [(ngModel)]="theDate2" [dateMin]="dateMin" [dateMax]="dateMax"></deja-date-time-selector>
+					<p>Selected date : {{theDate2 | date:'yyyy-MM-dd'}}</p>
+					<p>min => max date : {{dateMin | date:'yyyy-MM-dd'}} => {{dateMax | date:'yyyy-MM-dd'}}</p>
+				</div>
+				<div>
+					<h3>With min / max dates and weeks are disabled :</h3>
+					<deja-date-time-selector [disableDates]="disabledDate" [(ngModel)]="theDate3" [dateMin]="dateMin" [dateMax]="dateMax"></deja-date-time-selector>
+					<p>Selected date : {{theDate3 | date:'yyyy-MM-dd'}}</p>
+					<p>min => max date : {{dateMin | date:'yyyy-MM-dd'}} => {{dateMax | date:'yyyy-MM-dd'}}</p>
+				</div>
+			</div>
+
+		</mat-card-content>
+	</mat-card>
+	<mat-card class="demo-card">
+		<mat-toolbar color="primary">Date Time Selector</mat-toolbar>
+		<mat-card-content>
+			<div class="flex-layout flex-layout-column flex-layout-wrap">
+				<div class="flex-layout-column flex-layout-center">
+					<deja-date-time-selector [disableDates]="disabledDate" [(ngModel)]="theDateTime" time (dateChange)="dateChange($event)" (timeChange)="timeChange($event)"></deja-date-time-selector>
+					<p>Selected date : {{theDateTime | date:'yyyy-MM-dd HH:mm:ss'}}</p>
+				</div>
+				<div class="flex-layout-column flex-layout-center">
+					<deja-date-time-selector [disabled]="disableDateTime" time></deja-date-time-selector>
+					<p>
+						<mat-checkbox [(ngModel)]="disableDateTime">Disable date-time-picker</mat-checkbox>
+					</p>
+				</div>
+				<div class="flex-layout-column flex-layout-center">
+					<deja-date-time-selector [(ngModel)]="theDateTimeLayout" [layout]="myLayout"></deja-date-time-selector>
+					<p>Selected time : {{theDateTimeLayout | date:'HH:mm'}}</p>
+				</div>
+			</div>
+		</mat-card-content>
+	</mat-card>
+
+	<mat-card class="demo-card">
+		<mat-toolbar color="primary">Date Picker & DateTime Picker</mat-toolbar>
+		<mat-card-content>
+			<div class="flex-layout">
+				<div>
+					<h3>Date Picker :</h3>
+					<mat-form-field appearance="outline">
+						<mat-label>Date</mat-label>
+						<deja-date-picker [disableDates]="disabledDate" [(ngModel)]="theDatePicker"></deja-date-picker>
+						<mat-hint>Selected date : {{theDatePicker | date:'yyyy-MM-dd'}}</mat-hint>
+					</mat-form-field>
+				</div>
+				<div>
+					<h3>DateTime Picker :</h3>
+					<mat-form-field appearance="outline">
+						<mat-label>DateTime Picker</mat-label>
+						<deja-date-picker [disableDates]="disabledDate" [(ngModel)]="theDatetimePicker" time></deja-date-picker>
+						<mat-hint>Selected date : {{theDatetimePicker | date:'yyyy-MM-dd HH:mm:ss'}}</mat-hint>
+					</mat-form-field>
+				</div>
+				<div>
+					<h3>Time Picker :</h3>
+					<mat-form-field appearance="outline">
+						<mat-label>Time picker</mat-label>
+						<deja-date-picker [disableDates]="disabledDate" [(ngModel)]="theTimePicker" [layout]="'timeonly'"></deja-date-picker>
+						<mat-hint>Selected date : {{theTimePicker | date:'HH:mm:ss'}}</mat-hint>
+					</mat-form-field>
+				</div>
+				<div>
+					<h3>Free Entry Date Picker :</h3>
+					<mat-form-field appearance="outline">
+						<mat-label>Free Entry Date Picker</mat-label>
+						<deja-date-picker [disableDates]="disabledDate" [(ngModel)]="theFreeEntryDatePicker" required [allowFreeEntry]="true"></deja-date-picker>
+						<mat-hint>Selected date : {{theFreeEntryDatePicker}}</mat-hint>
+					</mat-form-field>
+				</div>
+			</div>
+			<hr>
+			<div class="flex-layout">
+				<h3>Shortcut navigation :</h3>
+				<div class="flex-layout flex-layout-center" id="shortcut-list">
+					<ul>
+						<li> Inside input :
+							<ul>
+								<li>Press<span class="keyboard-key">D</span> to select the current date.</li>
+								<li>Press<span class="keyboard-key">↑</span> to increase the selected number of 1 day.</li>
+								<li>Press<span class="keyboard-key">↓</span> to decrease the selected number of 1 day.</li>
+							</ul>
+						</li>
+					</ul>
+					<ul>
+						<li> Inside date selector :
+							<ul>
+								<li>Press<span class="keyboard-key">↑</span> to decrease the selected date of 7 day.</li>
+								<li>Press<span class="keyboard-key">↓</span> to increase the selected date of 7 day.</li>
+								<li>Press<span class="keyboard-key">←</span> to decrease the selected date of 1 day.</li>
+								<li>Press<span class="keyboard-key">→</span> to increase the selected date of 1 day.</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+
+		</mat-card-content>
+	</mat-card>
+
+	<mat-card class="demo-card">
+		<mat-toolbar color="primary">Date Range Picker & DateTime Range Picker</mat-toolbar>
+		<mat-card-content>
+			<div class="flex-layout">
+				<div>
+					<h3>Date Range Picker :</h3>
+					<mat-form-field appearance="fill">
+						<mat-label>Range min</mat-label>
+						<deja-date-picker format="DD.MM.YYYY" #dtfrom [disableDates]="disabledDate" [(ngModel)]="dateRangeFrom"></deja-date-picker>
+					</mat-form-field>
+					<mat-form-field appearance="fill">
+						<mat-label>Range max</mat-label>
+						<deja-date-picker format="DD.MM.YYYY" #dtto [disableDates]="disabledDate" [(ngModel)]="dateRangeTo"></deja-date-picker>
+					</mat-form-field>
+					<p>Selected date : from {{dateRangeFrom | date:'yyyy-MM-dd'}} to {{dateRangeTo | date:'yyyy-MM-dd'}}</p>
+				</div>
+				<div>
+					<h3>DateTime Range Picker :</h3>
+					<mat-form-field>
+						<mat-label>Range min</mat-label>
+						<deja-date-picker format="DD.MM.YYYY HH:mm" #dtfrom [disableDates]="disabledDate" [(ngModel)]="datetimeRangeFrom" time></deja-date-picker>
+					</mat-form-field>
+					<mat-form-field>
+						<mat-label>Range max</mat-label>
+						<deja-date-picker format="DD.MM.YYYY HH:mm" #dtto [disableDates]="disabledDate" [(ngModel)]="datetimeRangeTo" time></deja-date-picker>
+					</mat-form-field>
+					<p>Selected date : from {{datetimeRangeFrom | date:'yyyy-MM-dd HH:mm:ss'}} to {{datetimeRangeTo | date:'yyyy-MM-dd HH:mm:ss'}}</p>
+				</div>
+			</div>
+		</mat-card-content>
+	</mat-card>
+
+</div>

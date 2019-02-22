@@ -1,0 +1,16 @@
+<section id="container">
+	<ng-template ngFor let-range let-index="index" [ngForOf]="ranges">
+		<section class="block" [style.width.px]="range.$width">
+			<span class="range" (mousedown)="onSelect($event, index)" [class.selected]="selected === index">
+				<span class="default-range" *ngIf="!rangeTemplate">{{range.min}} - {{range.max}}</span>
+				<ng-template [ngTemplateOutlet]="rangeTemplate" [ngTemplateOutletContext]="{ $implicit : range, index: index, ranges: ranges }"></ng-template>
+			</span>
+			<span class="separator" *ngIf="ranges.length > index + 1" (mousedown)="onMouseDown($event, index)">
+				<span class="default-separator" *ngIf="!separatorTemplate">
+					<span class="default-separator-item"></span>
+				</span>
+				<ng-template [ngTemplateOutlet]="separatorTemplate" [ngTemplateOutletContext]="{ $implicit : range, index: index, ranges: ranges }"></ng-template>
+			</span>
+		</section>
+	</ng-template>
+</section>

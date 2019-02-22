@@ -1,0 +1,14 @@
+<span *ngIf="item" class="news">
+	<span  class="logo">
+		<img *ngIf="item.urlToImage" [attr.src]="item.urlToImage" (load)="imageLoaded.emit()">
+	</span>
+	<span class="text">
+		<span class="title">{{ item.title }}</span>
+		<span class="description">{{ item.description }}</span>
+		<span class="footer">
+			<a class="url" [attr.href]="item.url">{{ item.url }}</a>
+			<span class="author">{{ item.author }}</span>
+			<span class="publishedAt">{{ item.publishedAt }}</span>
+		</span>
+	</span>
+</span>

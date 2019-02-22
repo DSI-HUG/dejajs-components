@@ -1,0 +1,100 @@
+<mat-tab-group [selectedIndex]="tabIndex" (selectedTabChange)="tabIndex = $event.index">
+    <!--<mat-tab label="OVERVIEW">-->
+        <!--<mat-card class="demo-card demo-basic">-->
+            <!--TODO-->
+        <!--</mat-card>-->
+    <!--</mat-tab>-->
+    <mat-tab label="API REFERENCE"></mat-tab>
+    <mat-tab label="EXAMPLES"></mat-tab>
+</mat-tab-group>
+
+<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
+    <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/range/readme.md'"></deja-markdown>
+</mat-card>
+
+<div *ngIf="tabIndex === 1">
+    <mat-card class="demo-card">
+        <mat-toolbar color="primary">Default template : Read Only</mat-toolbar>
+        <mat-card-content>
+            <deja-range [(ngModel)]="readOnlyRanges"></deja-range>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="demo-card">
+        <mat-toolbar color="primary">Default template : Movable separator, with an array of accepted intervals</mat-toolbar>
+        <mat-card-content>
+            <deja-range [(ngModel)]="rangesWithInterval"
+                        [readOnly]="false"
+                        [selected]="1"
+                        [step]="steps">
+            </deja-range>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="demo-card">
+        <mat-toolbar color="primary">Default template : Movable separator, with a numeric step</mat-toolbar>
+        <mat-card-content>
+            <deja-range [(ngModel)]="ranges"
+                        [readOnly]="false"
+                        [step]="2.5"
+                        #dejaRange
+                        (errorFeedback)="errorFeed.emit($event)">
+            </deja-range>
+        </mat-card-content>
+
+        <mat-card-content fxLayoutAlign="center center">
+            <button mat-raised-button>Simple</button>
+            <button mat-raised-button (click)="dejaRange.add(dejaRange.selected)">Split selected range</button>
+            <button mat-raised-button (click)="dejaRange.remove(dejaRange.selected)">Remove selected range</button>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="demo-card">
+        <mat-toolbar color="primary">Custom template : Movable separator, with a function based step, logarithmic interpolation bewtween the model (weight) and the inner model</mat-toolbar>
+        <mat-card-content>
+            <deja-range id="custom-range"
+                        [(ngModel)]="weights"
+                        (ngModelChange)="computeRangeFromWeight()"
+                        [readOnly]="false"
+                        [selected]="0"
+                        [step]="stepFn"
+                        (errorFeedback)="errorFeed.emit($event)"
+                        #dejaWeight>
+
+                <ng-template #rangeTemplate let-range let-index="index" let-ranges="ranges">
+                    <span class="custom-range">{{range.minWeight | number: '1.0-2'}} - {{range.maxWeight | number: '1.0-2'}} kg</span>
+                </ng-template>
+
+                <ng-template #separatorTemplate let-range let-index="index" let-ranges="ranges">
+                    <span class="custom-separator">
+                        <svg class="triangle">
+                            <polygon points="0,0 10,0 5,5"></polygon>
+                        </svg>
+
+                        <svg class="line">
+                            <rect x="4.5" y="0"></rect>
+                        </svg>
+
+                        <svg class="triangle">
+                            <polygon points="0,5 5,0 10,5 "></polygon>
+                        </svg>
+                    </span>
+                </ng-template>
+            </deja-range>
+        </mat-card-content>
+
+        <mat-card-content fxLayoutAlign="center center">
+            <button mat-raised-button (click)="add(dejaWeight.selected)">Split selected range</button>
+            <button mat-raised-button (click)="remove(dejaWeight.selected)">Remove selected range</button>
+            <button id="decrease" mat-raised-button (click)="decrease()" [disabled]="weights[0]?.minWeight === 0">Decrease minimum</button>
+            <button id="increase" mat-raised-button (click)="increase()">Increase maximum</button>
+        </mat-card-content>
+    </mat-card>
+
+    <!-- error feedback implementation example with snackbar-->
+    <ng-template ngFor let-error [ngForOf]="errors | async">
+        <deja-snackbar *ngIf="error?.gate" alignment="bottom right" [duration]="5000" (onAnimationDone)="error.gate = false">
+            <deja-message-box type="warn" horizontal>{{error.message}}</deja-message-box>
+        </deja-snackbar>
+    </ng-template>
+</div>

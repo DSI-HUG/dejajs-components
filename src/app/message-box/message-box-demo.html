@@ -1,0 +1,70 @@
+<mat-tab-group [selectedIndex]="tabIndex" (selectedTabChange)="tabIndex = $event.index">
+	<!--<mat-tab label="OVERVIEW">-->
+	<!--<mat-card class="demo-card demo-basic">-->
+	<!--TODO-->
+	<!--</mat-card>-->
+	<!--</mat-tab>-->
+	<mat-tab label="API REFERENCE"></mat-tab>
+	<mat-tab label="EXAMPLES"> </mat-tab>
+</mat-tab-group>
+
+<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
+	<deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/src/component/message-box/readme.md'"></deja-markdown>
+</mat-card>
+
+<div *ngIf="tabIndex === 1" class="example">
+	<deja-dialog *ngIf="dialogTitle" (closed)="dialogTitle = null">
+		<deja-message-box type="primary" title="Title" showCloseIcon="true" (close)="dialogTitle = null">
+			<span [innerHtml]="dialogTitle"></span>
+			<ng-template #actionsTemplate>
+				<button mat-raised-button (click)="dialogTitle = null">
+					Cancel
+				</button>
+				<button mat-raised-button color="primary" (click)="dialogTitle = null">
+					Ok
+				</button>
+			</ng-template>
+		</deja-message-box>
+	</deja-dialog>
+
+	<deja-message-box type="primary" title="Title">
+		Du texte dans la <b>message box</b>
+	</deja-message-box>
+
+	<div style="margin:1rem;"></div>
+
+	<deja-tooltip name="test-tt" *ngIf="tooltipVisible" (hide)="tooltipVisible = false">
+		<ng-template #tooltipTemplate let-model>
+			<div id="tooltip">
+				{{model.text}}
+			</div>
+		</ng-template>
+	</deja-tooltip>
+
+	<deja-message-box type="success" title="Title" [actions]="actions">
+		<span deja-tooltip="test-tt" [tooltip-model]="toolTipModel" (tooltip-show)="tooltipVisible = true">Un message "success"</span>
+	</deja-message-box>
+
+	<div style="margin:1rem;"></div>
+
+	<deja-message-box type="warn" horizontal title="Title" [actions]="closeAction">
+		Un message "warn" <b>horizontal</b>
+	</deja-message-box>
+
+	<div style="margin:1rem;"></div>
+
+	<deja-message-box type="danger" horizontal title="Title">
+		Un message "danger" <b>horizontal</b> avec une action au format template
+		<ng-template #actionsTemplate>
+			<button mat-mini-fab [color]="'blank'" class="action-button">
+				<mat-icon>clear</mat-icon>
+			</button>
+		</ng-template>
+	</deja-message-box>
+
+	<div style="margin:1rem;"></div>
+
+	<deja-message-box horizontal>
+		Un message horizontal sans type ni titre
+	</deja-message-box>
+</div>

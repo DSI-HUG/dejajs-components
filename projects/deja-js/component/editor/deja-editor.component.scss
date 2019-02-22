@@ -1,0 +1,12 @@
+deja-editor {
+    line-height: normal;
+    .cke_textarea_inline {
+        & > p {
+            margin: 0;
+        }
+
+        &:focus {
+            outline: none;
+        }
+    }
+}

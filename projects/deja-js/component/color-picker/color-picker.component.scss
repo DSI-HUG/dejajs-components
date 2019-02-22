@@ -1,0 +1,17 @@
+deja-color-picker {
+	#colorbtn {
+		&[disabled] {
+			-webkit-filter: grayscale(100%);
+			/* Chrome, Safari, Opera */
+			filter: grayscale(100%);
+		}
+	}
+}
+
+.deja-overlay-container {
+	deja-color-selector {
+		overflow: hidden;
+		max-width: 24rem;
+		min-height: 15rem;
+	}
+}

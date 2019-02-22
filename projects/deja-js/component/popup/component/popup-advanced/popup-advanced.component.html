@@ -1,0 +1,30 @@
+<div class="deja-popup-container">
+
+    <div *ngIf="dragstart" class="dialog-overlay" (mouseup)="onMouseUp($event)" (click)="freeze($event)">&nbsp;</div>
+
+    <deja-popup-toolbar *ngIf="config && config.toolbarType" [config]="config" (actionSelected)="dispatchAction($event)"></deja-popup-toolbar>
+
+    <div mat-dialog-content [ngClass]="{'frame-full': !config.padding, 'frame-padding': !!config.padding}">
+
+        <deja-popup-content *ngIf="config?.hasContent()" [config]="config">
+        </deja-popup-content>
+
+        <div *ngIf="config?.url" class="iframe-wrapper">
+            <iframe [src]="config.url"></iframe>
+        </div>
+
+        <ng-container *ngIf="config?.contentComponentRef">
+            <div [cdkPortalOutlet]="componentPortal"></div>
+        </ng-container>
+
+        <ng-container *ngIf="config?.contentTemplate">
+            <ng-template [ngTemplateOutlet]="config?.contentTemplate.templateRef" [ngTemplateOutletContext]="config?.contentTemplate.templateContext"></ng-template>
+        </ng-container>
+
+    </div>
+
+    <div mat-dialog-actions *ngIf="config.hasActions()">
+        <div [cdkPortalOutlet]="actionsPortal"></div>
+    </div>
+
+</div>

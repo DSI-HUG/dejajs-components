@@ -1,0 +1,8 @@
+<div *ngIf="columnLayoutOfColumn0" [style.width.px]="columnLayoutOfColumn0" id="parent-title" class="cell-wrapper">
+	<div *ngIf="!parentTitleTemplate" class="cell">{{ row.toString() }}</div>
+	<ng-template [ngTemplateOutlet]="parentTitleTemplate" *ngIf="parentTitleTemplate"  [ngTemplateOutletContext]="{ $implicit: row }"></ng-template>
+</div>
+<span *ngFor="let colinfo of columnLayoutOfColumns; let index=index" class="cell-wrapper" [attr.colindex]="index" [attr.colname]="colinfo.column.name" [class.dragged]="colinfo.column.dragged" [style.left.px]="colinfo.left" [style.width.px]="colinfo.column.w">
+	<div *ngIf="!cellTemplate || !colinfo.column.useCellTemplate" class="cell">{{ getCellText(row, colinfo.column.name) }}</div>
+	<ng-template [ngTemplateOutlet]="cellTemplate" *ngIf="cellTemplate && colinfo.column.useCellTemplate" [ngTemplateOutletContext]="{ $implicit: row, flatIndex: flatIndex, column: colinfo.column }"></ng-template>
+</span>

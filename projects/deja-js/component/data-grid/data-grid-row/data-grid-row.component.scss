@@ -1,0 +1,35 @@
+:host {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	overflow: hidden;
+	flex-grow: 0;
+	flex-shrink: 0;
+	>div {
+		padding: 0 !important;
+		margin: 0 !important;
+		flex-grow: 0;
+		flex-shrink: 0;
+		height: 100%;
+		&.cell-wrapper {
+			display: flex;
+			align-items: center;
+			overflow: hidden;
+			height: 100%;
+			&:hover {
+				background-color: rgba(0, 0, 0, 0.08);
+			}
+			&.dragged {
+				background-color: rgba(0, 0, 0, 0.08);
+			}
+			.cell {
+				flex: 1 1 auto;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow: hidden;
+				margin: 0.25rem;
+				display: block;
+			}
+		}
+	}
+}

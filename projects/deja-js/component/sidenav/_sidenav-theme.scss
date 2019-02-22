@@ -1,0 +1,54 @@
+@import '~@angular/material/theming';
+
+
+@mixin sidenav-theme($theme) {
+	$primary: map-get($theme, primary);
+	$background: map-get($theme, background);
+	$foreground: map-get($theme, foreground);
+
+	deja-sidenav {
+		.mat-drawer-container {
+			&.sidenav-light {
+				.mat-sidenav {
+					.header {
+						background: mat-color($primary);
+						.header-menu-btn [fontIcon] {
+							color: mat-color($primary, default-contrast);
+						}
+					}
+				}
+			}
+
+			.mat-sidenav {
+				.header {
+					// border-right: 1px solid mat-color($primary);
+					border-bottom: 1px solid mat-color($foreground, divider);
+					background: mat-color($background, background);
+				}
+
+				deja-sidenav-menu {
+					border-right: 1px solid mat-color($foreground, divider);
+
+					.mat-list-item {
+						&.active {
+							.mat-list-icon,
+							.mat-list-text {
+								color: mat-color($primary) !important;
+							}
+						}
+
+						.mat-list-item-content {
+							.mat-list-icon {
+								color: mat-color($foreground, icons)
+							}
+
+							.mat-list-text {
+								color: mat-color($foreground, text)
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

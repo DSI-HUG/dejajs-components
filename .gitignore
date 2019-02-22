@@ -3,14 +3,10 @@
 # compiled output
 /dist
 /tmp
-/out-tsc
+/doc
 
 # dependencies
 /node_modules
-
-# profiling files
-chrome-profiler-events.json
-speed-measure-plugin.json
 
 # IDEs and editors
 /.idea
@@ -28,6 +24,12 @@ speed-measure-plugin.json
 !.vscode/launch.json
 !.vscode/extensions.json
 
+# IDE - IntelliJ
+*.iml
+*.iws
+*.ipr
+.idea/
+
 # misc
 /.sass-cache
 /connect.lock
@@ -36,7 +38,7 @@ speed-measure-plugin.json
 npm-debug.log
 yarn-error.log
 testem.log
-/typings
+.prettierignore
 
 # System Files
 .DS_Store

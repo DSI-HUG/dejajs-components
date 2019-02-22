@@ -1,0 +1,31 @@
+@import '~@angular/material/theming';
+
+@mixin markdown-theme($theme) {
+    $primary: map-get($theme, primary);
+	$background: map-get($theme, background);
+	$foreground: map-get($theme, foreground);
+
+    .markdown-content {
+        table {
+            thead tr th{
+                background: mat-color($primary);
+                color: mat-color($primary, default-contrast);
+            }
+            
+            tr {
+                &:nth-of-type(odd) {
+                    background-color: mat-color($background, focused-button);
+                }
+
+                th, td {
+                    border-color: mat-color($foreground, divider);
+                }
+            }
+        }
+
+        pre[class*="language-"]>code {
+            box-shadow: -1px 0px 0px 0px mat-color($primary), 0px 0px 0px 1px #dfdfdf;
+            border-left: 10px solid mat-color($primary);
+        }
+    }
+}

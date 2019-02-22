@@ -1,0 +1,16 @@
+:host {
+	align-items: center;
+	background-color: rgba(0, 0, 0, 0.6);
+	display: flex;
+	height: 100%;
+	justify-content: center;
+	left: 0;
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index: 999;
+
+	.dialog {
+		z-index: 1000;
+	}
+}

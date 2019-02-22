@@ -1,0 +1,31 @@
+:host {
+	position: relative;
+	overflow: auto;
+	margin: 0 !important;
+	#tiles {
+		display: block;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		padding: 0 !important;
+		margin: 0 !important;
+		#tile:hover {
+			z-index: 200;
+		}
+	}
+	[deja-tile-position] {
+		position: absolute;
+		z-index: 11;
+		background-color: rgba(0, 0, 0, 0.25);
+	}
+	&[drag] {
+		background-color: rgba(0, 0, 0, 0.15);
+		[deja-tile-position] {
+			transition-property: left, top, width, height;
+			transition-duration: .35s;
+			transition-timing-function: ease;
+		}
+	}
+}

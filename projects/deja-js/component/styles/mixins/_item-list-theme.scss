@@ -1,0 +1,29 @@
+@import '~@angular/material/theming';
+
+@mixin sub-item-list-theme($theme) {
+	$primary: map-get($theme, primary);
+
+    &[disabled="true"]{
+		.deja-listcontainer {
+			>div.listitem {
+				&.selected {
+					background-color: rgba(0, 0, 0, 0.8);
+					color: #fff;
+				}
+			}
+		}        
+    }
+	&:not([disabled="true"]) {
+		.deja-listcontainer {
+			>div.listitem {
+				&[current="true"] {
+					background-color: rgba(0, 0, 0, 0.03);
+				}
+				&.selected {
+					background-color: rgba(mat-color($primary), 0.75);
+					color: #fff;
+				}
+			}
+		}
+	}
+}

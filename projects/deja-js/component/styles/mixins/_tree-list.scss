@@ -1,0 +1,11 @@
+@mixin depth-padding($depth) {
+	padding-left: 0rem + $depth;
+}
+
+.deja-listcontainer {
+	@for $i from 0 through 50 {
+		[depth="#{$i}"] {
+			@include depth-padding($i);
+		}
+	}
+}

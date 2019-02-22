@@ -1,0 +1,63 @@
+:host {
+    display: flex;
+    padding-right: 3rem;
+    position: relative;
+    input {
+        border: none;
+        background: none;
+        font: inherit;
+        min-width: 2px;
+        outline: none;
+        padding: 0;
+        padding-right: 2px;
+        text-align: center;
+    }
+
+    .unit {
+        color: rgba(0, 0, 0, 0.55);
+    }
+
+    input::-webkit-inner-spin-button, 
+    input::-webkit-outer-spin-button {
+        -webkit-appearance: none !important;
+        margin: 0 !important;
+        -moz-appearance: textfield !important;
+    }
+
+    .steppers {
+        flex: 0 0 auto;
+        display: flex;
+        flex-direction: row;
+        position: absolute;
+        align-items: center;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        > span {
+            font-family: 'Material Icons';
+            font-size: 1.2rem;
+        }
+        button {
+            background: none;
+            border: none;
+            box-shadow: none;
+            cursor: pointer;
+            font-family: 'Material Icons';
+            font-size: 1.5rem;
+            justify-content: center;
+            line-height: initial;
+            min-width: initial;
+            outline: none;
+            padding: 0;
+            transition: color 200ms ease;
+        }
+    }
+
+    &[disabled] {
+        .steppers {
+            button {
+                cursor: not-allowed;
+            }
+        }
+    }
+}

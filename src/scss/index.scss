@@ -1,0 +1,27 @@
+@import 'material/material';
+@import 'mixins/deja-theme';
+@import 'mixins/tree-list-borders';
+@import 'mixins/backdrop';
+@import 'mixins/loader';
+@import 'mixins/menu';
+@import 'mixins/popup';
+
+/* See : http://stackoverflow.com/questions/826782/how-to-disable-text-selection-highlighting-using-css */
+.noselect {
+    -webkit-touch-callout: none;
+    /* iOS Safari */
+    -webkit-user-select: none;
+    /* Chrome/Safari/Opera */
+    -khtml-user-select: none;
+    /* Konqueror */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
+    /* Internet Explorer/Edge */
+    user-select: none;
+    /* Non-prefixed version, currently
+       not supported by any browser */
+}
+
+/* Added for status managment */
+// #dpi {}

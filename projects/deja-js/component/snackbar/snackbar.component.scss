@@ -1,0 +1,13 @@
+:host {
+  /* mandatory styles */
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: block;
+  box-sizing: border-box;
+  z-index: 25;
+  /* class added if a container if specified for the snackbar*/
+  &.absolute {
+    position: absolute !important;
+  }
+}

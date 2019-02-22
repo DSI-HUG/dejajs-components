@@ -1,0 +1,32 @@
+:host {
+    padding: 0;
+    header {
+        background: url('/assets/img/logo/header-background.svg') repeat 50%;
+        padding: 160px 0 120px;
+        text-align: center;
+        color: white;
+        line-height: 40px;
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 200;
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            font-weight: 200;
+        }
+    }
+
+    .content {
+        max-width: 1200px;
+        min-height: 500px;
+        margin: 0 auto;
+    }
+
+    footer {
+        padding: 20px;
+        text-align: center;
+        color: white;
+    }   
+}

@@ -1,0 +1,117 @@
+deja-message-box {
+    display: block;
+	#msgbox {
+		border-style: solid;
+		border-width: 1px;
+		margin: 0;
+		padding: 0;
+		display: block;
+
+		.mat-card-title {
+			align-items: center;
+			box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.2);
+			display: flex;
+			margin: 0;
+			padding: 0.8rem;
+			#icon {
+				margin-right: 0.5rem;
+			}
+            .header-actions {
+                margin-left: auto;
+                button.mat-mini-fab {
+                    background: none;
+                    border: none;
+                    box-shadow: none;
+                }
+            }
+		}
+		.mat-card-content {
+			margin: 0;
+			padding: 0.75rem;
+			overflow: hidden;
+			h2 {
+				font-size: 1.3rem;
+				margin: 0;
+				font-weight: 300;
+				line-height: 2rem;
+				text-overflow: ellipsis;
+				overflow: hidden;
+				white-space: nowrap;
+			}
+		}
+		.mat-card-actions {
+			align-items: center;
+			display: flex;
+			justify-content: flex-end;
+			margin: 0;
+			padding: 0.2rem;
+
+			button {
+				margin-left: 0.2rem;
+
+				&.mat-blank[mat-raised-button],
+				&.mat-blank[mat-fab],
+				&.mat-blank[mat-mini-fab] {
+					&:not([disabled]) {
+						box-shadow: none;
+					}
+					&.action-button {
+						align-items: stretch;
+						display: flex;
+						height: 1rem;
+						margin: 0;
+						padding: 0;
+						right: 0;
+						width: 1rem;
+						.mat-button-wrapper {
+							height: 1rem;
+							width: 1rem;
+							.mat-icon {
+								font-size: 1rem;
+								height: 1rem;
+								line-height: 1rem;
+								padding: 0;
+								position: absolute;
+								right: 0;
+								top: 0;
+								width: 1rem;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	&[horizontal] {
+		#msgbox {
+			align-items: stretch;
+			display: flex;
+			flex-direction: row;
+			padding: 0;
+            position: relative;
+			.mat-card-title {
+				align-items: center;
+				display: flex;
+				flex: 0 0 auto;
+				justify-content: center;
+				margin: 0;
+				text-align: center;
+				#icon {
+					margin: 0;
+				}
+			}
+			.mat-card-content {
+				align-self: center;
+				flex: 1 1 auto;
+				padding: 0.75rem;
+			}
+			.mat-card-actions {
+				margin: 0;
+				padding: 0;
+				position: absolute;
+				right: 0.2rem;
+    			top: 0.3rem;
+			}
+		}
+	}
+}

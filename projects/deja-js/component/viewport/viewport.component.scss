@@ -1,0 +1,100 @@
+:host {
+	position: relative;
+	display: flex;
+	flex-direction: row;
+	overflow: hidden;
+
+	&[hasUpBtn="false"] {
+		#up {
+			visibility: hidden;
+		}
+	}
+
+	&[hasDownBtn="false"] {
+		#down {
+			visibility: hidden;
+		}
+	}
+
+	&[buttons="false"] {
+		&[horizontal="false"] {
+			#viewport-wrapper {
+				width: 100%;
+				overflow-y: auto;
+			}
+		}
+
+		&[horizontal="true"] {
+			#viewport-wrapper {
+				height: 100%;
+				overflow-x: auto;
+			}
+		}
+	}
+
+	&[buttons="true"] {
+		&[horizontal="false"] {
+			flex-direction: column;
+		}
+	}
+
+	#viewport-wrapper {
+		position: relative;
+		flex-grow: 1;
+		overflow: hidden;
+
+		>div {
+			padding: 0;
+			margin: 0;
+		}
+	}
+
+	#up,
+	#down {
+		flex: 0 0 auto;
+		display: flex;
+		justify-content: space-around;
+		align-items: center;
+		font-size: 120%;
+		cursor: pointer;
+		z-index: 1;
+	}
+
+	&[horizontal="false"] {
+		#viewport-wrapper {
+			>div {
+				width: 100%;
+			}
+		}
+
+		#up,
+		#down {
+			padding: 0.15rem 0;
+		}
+	}
+
+	&[horizontal="true"] {
+		#viewport-wrapper {
+			display: flex;
+			justify-content: flex-start;
+			align-items: stretch;
+			flex-direction: row;
+
+			>div {
+				height: 100%;
+				overflow: hidden;
+				flex-grow: 0;
+				flex-shrink: 0;
+			}
+		}
+
+		#up,
+		#down {
+			padding: 0 0.15rem;
+
+			.mat-icon {
+				transform: rotate(270Deg);
+			}
+		}
+	}
+}

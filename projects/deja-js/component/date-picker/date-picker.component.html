@@ -1,0 +1,22 @@
+<input *ngIf="!allowFreeEntry" deja-child-validator #inputelement id="date-selector-input" matInput autocomplete="off" [disabled]="disabled" [required]="required" [ngModel]="inputModel" [placeholder]="placeholder" [textMask]="{mask: mask, showMask: true, keepCharPositions: true}" (change)="updateModel($event.target.value)">
+<input *ngIf="allowFreeEntry" class="free-txt" deja-child-validator #inputelement id="date-selector-input" matInput autocomplete="off" [disabled]="disabled" [required]="required" [ngModel]="inputModel" [placeholder]="placeholder" (change)="updateModel($event.target.value)">
+<div class="datepicker-actions">
+	<button type="button" *ngIf="inputModel && !disabled" (click)="reset()" id="clear-button" tabindex="-1">
+		<mat-icon>clear</mat-icon>
+	</button>
+	<button type="button" *ngIf="showCurrentDateButton && !disabled" (click)="setToCurrentDate()" id="current-date-button" tabindex="-1" [disabled]="disabled">
+		<mat-icon>today</mat-icon>
+	</button>
+	<button type="button" *ngIf="!disabled" (click)="toggleDateSelector($event)" id="calendar-button" tabindex="-1">
+		<mat-icon>date_range</mat-icon>
+	</button>
+</div>
+
+<deja-overlay #dejaOverlay overlayContainerClass="deja-datepicker-overlay-container" [ownerElement]="overlayOwnerElement" [isVisible]="showDropDown" (closed)="close()" [positions]="positions" [overlayOffsetY]="overlayOffsetY" [overlayOffsetX]="overlayOffsetX">
+	<deja-date-time-selector [layout]="layout" [disableDates]="disableDates" [ngModel]="date" (ngModelChange)="updateModel($event);" class="inside-dropdown" [dateMax]="dateMax" [dateMin]="dateMin" [layout]="layout" [format]="format"></deja-date-time-selector>
+	<div class="actions">
+		<button mat-mini-fab type="button" (click)="close()">
+			<mat-icon>close</mat-icon>
+		</button>
+	</div>
+</deja-overlay>

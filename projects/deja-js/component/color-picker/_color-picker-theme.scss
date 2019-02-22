@@ -1,0 +1,10 @@
+@import '~@angular/material/theming';
+
+@mixin color-picker-theme($theme) {
+
+    .deja-overlay-container {
+        deja-color-selector {
+            background-color: #222;
+        }
+    }
+}

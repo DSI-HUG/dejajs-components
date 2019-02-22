@@ -1,0 +1,11 @@
+{
+  "ngPackage": {
+    "lib": {
+      "entryFile": "./index.ts"
+    }
+  },
+  "peerDependencies": {
+    "angular2-text-mask": "8.0.5",
+    "moment": "2.22.2"
+  }
+}
