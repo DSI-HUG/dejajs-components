@@ -1,5 +1,6 @@
 sudo: required
 dist: trusty
+os: windows
 language: node_js
 addons:
   chrome: stable
