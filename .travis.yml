@@ -40,6 +40,7 @@ env:
   - ENCRYPTION_LABEL: d9215e5535f8
   - COMMIT_AUTHOR_EMAIL: travis@hcuge.ch
 before_deploy:
+- ls
 - cd dist/deja-js
 deploy:
 - provider: npm
@@ -61,6 +62,6 @@ deploy:
     repo: DSI-HUG/dejajs-components
     branch: master
 after_deploy:
-- cd ..
+- cd ../..
 - bash ./scripts/tag.sh
 - bash ./scripts/deploy.sh
