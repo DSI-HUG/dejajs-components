@@ -1,4 +1,4 @@
-VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g')
+VERSION=$(cat dist/deja-js/component/package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g')
 
 git tag $VERSION
 
