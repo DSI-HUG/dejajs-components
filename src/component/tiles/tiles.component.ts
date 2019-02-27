@@ -261,7 +261,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     // ************* ControlValueAccessor Implementation **************
     public writeValue(models: any) {
         this._models = models || [];
-        const tiles = this._models.map((tile) => tile.clone());
+        const tiles = this._models;
         this.layoutProvider.tiles = tiles;
         this.changeDetectorRef.markForCheck();
     }
