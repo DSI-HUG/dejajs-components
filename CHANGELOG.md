@@ -1,3 +1,13 @@
+<a name="4.2.4"></a>
+## [4.2.4](https://github.com/DSI-HUG/dejajs-components/compare/v4.2.3...v4.2.4) (2019-02-27)
+
+
+### Bug Fixes
+
+* **DejaTiles:** Remove copy of model ([f3dbad2](https://github.com/DSI-HUG/dejajs-components/commit/f3dbad2))
+
+
+
 <a name="4.2.3"></a>
 ## [4.2.3](https://github.com/DSI-HUG/dejajs-components/compare/v4.2.2...v4.2.3) (2019-02-21)
 
