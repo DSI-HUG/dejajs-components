@@ -38,10 +38,10 @@ jobs:
   include:
     - stage: Core npm release
       before_deploy:
-      - cd dist/deja-js/core
       - npm run build:core
       - npm run test:core
       - bash ./scripts/sonar.sh
+      - cd dist/deja-js/core
       deploy:
         provider: npm
         email: gmer@hcuge.ch
@@ -57,8 +57,8 @@ jobs:
       before_deploy:
         - npm run build:lib
         - npm run test:lib
-        - cd dist/deja-js/component
         - bash ./scripts/sonar.sh
+        - cd dist/deja-js/component
       deploy:
         provider: npm
         email: gmer@hcuge.ch
