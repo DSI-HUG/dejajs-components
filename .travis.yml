@@ -30,11 +30,6 @@ before_script:
 - sleep 3
 script:
 - npm run license-check
-- npm run build:core
-- npm run test:core
-- npm run build:lib
-- npm run test:lib
-- bash ./scripts/sonar.sh
 env:
   global:
   - ENCRYPTION_LABEL: d9215e5535f8
@@ -44,6 +39,9 @@ jobs:
     - stage: Core npm release
       before_deploy:
       - cd dist/deja-js/core
+      - npm run build:core
+      - npm run test:core
+      - bash ./scripts/sonar.sh
       deploy:
         provider: npm
         email: gmer@hcuge.ch
@@ -57,7 +55,10 @@ jobs:
       - cd ../../..
     - stage: Components npm release
       before_deploy:
-      - cd dist/deja-js/component
+        - npm run build:lib
+        - npm run test:lib
+        - cd dist/deja-js/component
+        - bash ./scripts/sonar.sh
       deploy:
         provider: npm
         email: gmer@hcuge.ch
