@@ -4,7 +4,7 @@
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg?style=flat-square)](http://commitizen.github.io/cz-cli/)
 [![codebeat badge](https://codebeat.co/badges/84883b64-dd1f-4c76-9ed0-e12cda09f3fb)](https://codebeat.co/projects/github-com-dsi-hug-dejajs-components-dev)
 
-# @deja-js/component
+# @deja-js/component - @deja-js/core
 This is the home for the Hôpitaux Universitaires de Genève - DSI - Domaine Patient team's Angular components for Angular and material. 
 
 Online demo : [https://dsi-hug.github.io/dejajs-components](https://dsi-hug.github.io/dejajs-components)
@@ -19,7 +19,7 @@ Before you can build this project, you must install and configure the following 
 
 1. [Node.js][]: We use Node to run a development web server and build the project.
    Depending on your system, you can install Node either from source or as a pre-packaged bundle.
-2. [Yarn][]: We use Yarn to manage Node dependencies.
+2. [Yarn][]: (Optional) We use Yarn to manage Node dependencies.
    Depending on your system, you can install Yarn either from source or as a pre-packaged bundle.
 
 ### Getting started 
@@ -31,7 +31,8 @@ You will only need to run this command when dependencies change in [package.json
 
 `yarn` or `npm i` 
 
-Take a look at the `src` folder. All components and demo application are placed here. 
+Take a look at the `project` folder. All components are placed here. 
+The demo application is under `src` folder.
 
 
 ## Running demo app 
@@ -40,64 +41,19 @@ Take a look at the `src` folder. All components and demo application are placed 
 
 and navigate to `http://localhost:5100`.
 
-
-## Cleaning
-
-To clean the directory before making a new fresh install
-
-`npm run clean`
- 
-
-## Linking
-
-To link the library to your project, just use the following commands from the root directory of your project
-
-`yarn link @deja-js/component` or `npm link @deja-js/component`
-
-and start your project. For example
-
-`ng serve`
-
-
 ## Build
 
-To build the library you can use the command `npm run build` and to build the demo `npm run build:demo`
+To build the library you can use the command `npm run build:core` and `npm run build:lib`
 
-A `dist/` folder will be created in the root directory for the library and the demo directory for the demo containing the bundles.
-You can serve directly the `dist/` folder in the demo directory.
+A `dist/` folder will be created in the root directory for the library.
 
-For example with http-server
- `npm i -g http-server`
- `http-server demo/dist`
+## Test
 
+Just run `npm run test:core` && `npm run test:core` to launch tests.
 
-## Feature status and browser compatibility:
+## Contributing
 
-| Feature            | Working OnPush | Required / Disabled | Chrome 56 | Edge | IE11 | FF51 | Opera Neon | Readme and Demo | Note           |
-|--------------------|----------------|---------------------|-----------|------|------|------|------------|-----------------|----------------|
-| Accordion          |             yes|                  N/A|        yes|   yes|   yes|   yes|         yes|        available|                |
-| Chips              |             yes|                  N/A|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>| |
-| Circular Picker    |             yes|                  yes|yes|yes|yes|yes|yes|available| |
-| Color Picker       |             yes|                  yes|yes|yes|yes|yes|yes|available| |
-| Color Selector     |             yes|                  yes|yes|yes|yes|yes|yes|available| |
-| Content Editable   |             yes|                  yes|yes|yes|yes|yes|yes|available|New line issue on IE11. IE11 add p instead br |
-| Date Picker        |             yes|                  yes|yes|yes|yes|yes|yes|available| |
-| Date Selector      |             yes|                  yes|yes|yes|yes|yes|yes|available| |
-| Dialog             |             yes|                  N/A|yes|yes|yes|yes|yes|Message Box| |
-| Grid               |             yes|                  N/A|yes|yes|yes|yes|yes|available| |
-| Dropdown Control   |             yes|                  N/A|yes|yes|yes|yes|yes|Color Picker| |
-| Message Box        |             yes|                  N/A|yes|yes|yes|yes|yes|available| |
-| Monaco Editor      |             yes|                  N/A|yes|yes|yes|yes|yes|available| |
-| Numeric Stepper    |             yes|                  N/A|yes|yes|yes|yes|yes|available| |
-| Overlay            |             yes|                  N/A|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>| |
-| Popup              |             yes|                  yes|yes|yes|yes|yes|yes|available| |
-| Range              |             yes|                  yes|yes|yes|yes|yes|yes|available| |
-| Select             |             yes|                  yes|yes|yes|yes|yes|yes|available|Place Holder placement in FF, Edge and IE11 |
-| Sidenav            |             yes|                  N/A|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>| |
-| Snackbar           |             yes|                  N/A|yes|yes|yes|yes|yes|available| |
-| Splitter           |             yes|                  N/A|yes|yes|yes|yes|yes|available| |
-| Tag                |             yes|                  N/A|yes|yes|yes|yes|yes|available| |
-| Tiles              |             yes|                  N/A|yes|yes|yes|yes|yes|<span style="color:red">@todo</span>| |
-| Tooltip            |             yes|                  N/A|yes|yes|yes|yes|yes|Message Box| |
-| Treelist           |             yes|                  yes|yes|yes|yes|yes|yes|available| |
-| Viewport           |             yes|                  N/A|yes|yes|yes|yes|yes|yes| |
+Contributions are welcome! To ensure speedy merges, please:
+
+- base any pull requests on the dev branch.
+- ensure that the code passes TSLint validation with the included ruleset.

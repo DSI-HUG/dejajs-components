@@ -1,8 +1,20 @@
 {
   "name": "@deja-js/core",
-  "version": "7.0.0-beta.0",
+  "version": "7.0.0-beta.1",  
+  "description": "Core library for @angular/component",
+  "homepage": "https://github.com/DSI-HUG/dejajs-components",
+  "bugs": "https://github.com/DSI-HUG/dejajs-components/issues",
+  "author": "Team DSI-HUG - Hôpital Univesitaire de Genève - DSI - Domaine Patient",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DSI-HUG/dejajs-components.git"
+  },
   "peerDependencies": {
     "@angular/common": "^7.1.0",
     "@angular/core": "^7.1.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
