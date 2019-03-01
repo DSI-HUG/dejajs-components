@@ -26,6 +26,11 @@
               "src/favicon.ico",
               "src/assets",
               {
+                  "glob": "404.html",
+                  "input": "src",
+                  "output": "/"
+              },
+              {
                 "glob": "**/*",
                 "input": "node_modules/monaco-editor/min",
                 "output": "assets/monaco/"
@@ -58,6 +63,7 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
+              "baseHref": "https://dsi-hug.github.io/dejajs-components/",
               "budgets": [
                 {
                   "type": "initial",
@@ -71,7 +77,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "dejajs-component:build"
+            "browserTarget": "dejajs-component:build",
+            "port": 5100
           },
           "configurations": {
             "production": {
