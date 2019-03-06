@@ -131,10 +131,10 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                     if (tile.percentBounds && !tile.percentBounds.isEmpty()) {
                         const bounds = this.getPixelBounds(tile.percentBounds);
                         if (bounds.bottom > maxWidth) {
-                            maxWidth = bounds.bottom;
+                            maxWidth = bounds.right;
                         }
                         if (bounds.right > maxHeight) {
-                            maxHeight = bounds.right;
+                            maxHeight = bounds.bottom;
                         }
                         if (!tile.isDragging) {
                             tile.pixelBounds = bounds;
