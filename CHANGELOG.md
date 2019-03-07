@@ -1,3 +1,15 @@
+<a name="4.2.5"></a>
+## [4.2.5](https://github.com/DSI-HUG/dejajs-components/compare/4.2.4...4.2.5) (2019-03-07)
+
+
+### Bug Fixes
+
+* **DejaTiles:** check if tile is a tileGroup instance ([caaa55c](https://github.com/DSI-HUG/dejajs-components/commit/caaa55c))
+* **DejaTiles:** fix dimensions computation ([27a6bac](https://github.com/DSI-HUG/dejajs-components/commit/27a6bac))
+* **DejaTiles:** split generic IDejaTilesModelEvent to three more specific events ([3da15ba](https://github.com/DSI-HUG/dejajs-components/commit/3da15ba))
+
+
+
 <a name="4.2.4"></a>
 ## [4.2.4](https://github.com/DSI-HUG/dejajs-components/compare/v4.2.3...v4.2.4) (2019-02-27)
 
