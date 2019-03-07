@@ -1,0 +1,19 @@
+<div class="border-dimensions">
+    <div class="border-width">
+        <h4>Border Width:</h4>
+        <mat-form-field appearance="outline">
+            <deja-numeric-stepper [min]="min" [max]="max" [(ngModel)]="borderWidth"></deja-numeric-stepper>
+        </mat-form-field>
+    </div>
+    <div class="border-positions">
+        <h4>Border Position:</h4>
+        <mat-checkbox color="primary" [(ngModel)]="topBorder">Top</mat-checkbox>
+        <mat-checkbox color="primary" [(ngModel)]="rightBorder">Right</mat-checkbox>
+        <mat-checkbox color="primary" [(ngModel)]="bottomBorder">Bottom</mat-checkbox>
+        <mat-checkbox color="primary" [(ngModel)]="leftBorder">Left</mat-checkbox>
+    </div>
+</div>
+<div class="border-color">
+    <h4>Color Selection:</h4>
+    <deja-color-selector [colors]="materialColors.colors" [(ngModel)]="borderColor"></deja-color-selector>
+</div>

@@ -7,12 +7,16 @@
  */
 
 import { Injectable, OnDestroy, Optional } from '@angular/core';
-import { IDragCursorInfos, IDragDropContext } from '@deja-js/component/mouse-dragdrop';
-import { DejaClipboardService, Directions, KeyCodes, Position, Rect, Size } from '@deja-js/core';
 import { BehaviorSubject, from as observableFrom, fromEvent as observableFromEvent, merge as observableMerge, Subject, Subscription, timer as observableTimer } from 'rxjs';
 import { debounceTime, delay, filter, first, map, reduce, take, takeUntil, takeWhile, tap } from 'rxjs/operators';
+import { DejaClipboardService } from '../../core/clipboard/clipboard.service';
+import { Directions } from '../../core/graphics/directions';
+import { Position } from '../../core/graphics/position';
+import { Rect } from '../../core/graphics/rect';
+import { Size } from '../../core/graphics/size';
+import { KeyCodes } from '../../core/keycodes.enum';
+import { IDragCursorInfos, IDragDropContext } from '../mouse-dragdrop/mouse-dragdrop.service';
 import { DejaTile } from './tile.class';
-import { IDejaTile } from './tile.interface';
 import { IDejaTilesAddEvent, IDejaTilesEvent, IDejaTilesModelEvent, IDejaTilesRemoveEvent } from './tiles.event';
 
 interface ILayoutInfo {
@@ -196,11 +200,11 @@ export class DejaTilesLayoutProvider implements OnDestroy {
 
                 const event = new CustomEvent('DejaTilesEvent', { cancelable: false }) as IDejaTilesEvent;
                 if (placeAtTheEnd.length > 0) {
-                    event.tiles = placeAtTheEnd.map((tile) => tile.toTileModel());
+                    event.tiles = placeAtTheEnd;
                     this.layoutChanged.next(event);
                 }
 
-                event.tiles = tiles.map((tile) => tile.toTileModel());
+                event.tiles = tiles;
                 this.layoutCompleted.next(event);
             });
 
@@ -383,6 +387,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
 
                     const mouseDown$ = observableFromEvent(container, 'mousedown').pipe(
                         filter((event: MouseEvent) => event.buttons === 1),
+                        filter((event: MouseEvent) => !this.isElementInsideDejaEditor(event.target as HTMLElement)),
                         map((event: MouseEvent) => ({ event: event, target: event.target as HTMLElement, clickedTile: this.getTileComponentFromHTMLElement(event.target as HTMLElement) })));
 
                     // Pressed and selected tile observers
@@ -594,12 +599,8 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         const targetBounds = this.getFreePlace(new Rect(0, 0, bounds.width, bounds.height));
 
         const newTiles = sourceTiles.map((tile) => {
-            const newTile = new DejaTile({
-                type: tile.type,
-                bounds: new Rect(targetBounds.left + tile.percentBounds.left - bounds.left, targetBounds.top + tile.percentBounds.top - bounds.top, tile.percentBounds.width, tile.percentBounds.height),
-                templateModel: tile.templateModel,
-                color: tile.color,
-            } as IDejaTile);
+            const newTile = tile.clone();
+            newTile.percentBounds = new Rect(targetBounds.left + tile.percentBounds.left - bounds.left, targetBounds.top + tile.percentBounds.top - bounds.top, tile.percentBounds.width, tile.percentBounds.height);
             newTile.isSelected = true;
             return newTile;
         });
@@ -622,6 +623,19 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         return tileElement;
     }
 
+    public isElementInsideDejaEditor(element: HTMLElement) {
+        let tileElement = element;
+
+        while (tileElement && tileElement !== this.container) {
+            if (tileElement.tagName === 'DEJA-EDITOR') {
+                return true;
+            }
+            tileElement = tileElement.parentElement;
+        }
+
+        return false;
+    }
+
     public getTileComponentFromHTMLElement(element: HTMLElement): DejaTile {
         const tileElement = this.getTileElementFromHTMLElement(element);
         return tileElement && this.tilesDic[tileElement.id];
@@ -634,7 +648,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
 
         // For event after removed finished
         const event = new CustomEvent('DejaTilesModelEvent', { cancelable: false }) as IDejaTilesModelEvent;
-        event.removed = tilesToDelete.map((tile) => tile.toTileModel());
+        event.removed = tilesToDelete;
 
         tilesToDelete.forEach((tile) => {
             delete this.tilesDic[tile.id];
@@ -651,7 +665,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
 
         this.refreshTiles$.next({ resetWidth: true });
 
-        event.tiles = this.tiles.map((tile) => tile.toTileModel());
+        event.tiles = this.tiles;
         this.modelChanged.next(event);
     }
 
@@ -668,8 +682,8 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         });
 
         const event = new CustomEvent('DejaTilesRemoveEvent', { cancelable: true }) as IDejaTilesRemoveEvent;
-        event.tiles = this.tiles.map((tile) => tile.toTileModel());
-        event.removed = tilesToRemove.map((tile) => tile.toTileModel());
+        event.tiles = this.tiles;
+        event.removed = tilesToRemove;
         event.cancel$ = new Subject();
 
         const cancelSubscription = event.cancel$.pipe(
@@ -690,14 +704,6 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             cancelSubscription.unsubscribe();
             this.deleteTiles(tilesToRemove);
         }
-    }
-
-    public createTiles(tiles: IDejaTile[]) {
-        if (!tiles || tiles.length === 0) {
-            return;
-        }
-
-        this.addTiles(tiles.map((tile) => new DejaTile(tile)));
     }
 
     public getFreePlace(idealBounds: Rect) {
@@ -757,7 +763,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             return false;
         }
 
-        const tile = dragContext.IDejaTile as IDejaTile;
+        const tile = dragContext.DejaTile as DejaTile;
         if (!tile) {
             return false;
         }
@@ -769,8 +775,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         const y = pageY - containerBounds.top;
 
         // Create a temporary tile for drag and drop
-        tile.id = '#temp';
-        const tempTile = new DejaTile(tile);
+        const tempTile = tile.clone();
         tempTile.isTemporary = true;
 
         this.dragDropInfos$.next({
@@ -807,7 +812,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         this.validLayout = undefined;
     }
 
-    public expandTile(tile: IDejaTile, pixelHeight: number) {
+    public expandTile(tile: DejaTile, pixelHeight: number) {
         // Save layout
         const t = tile.id ? this.tilesDic[tile.id] : this.tiles.find((tt) => tt.equalsTo(tile));
 
@@ -880,11 +885,10 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                         tile.percentBounds = new Rect(left, top, tile.percentBounds.width, tile.percentBounds.height);
                         tile.isDragging = false;
                         tile.isDropping = true;
-                        if (tile.id === '#temp') {
+                        if (tile.isTemporary) {
+                            delete this.tilesDic[tile.id];
                             tile.makeId();
                             this.tilesDic[tile.id] = tile;
-                            delete this.tilesDic['#temp'];
-
                             this.addTiles([tile]);
                         }
                     }),
@@ -901,7 +905,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
 
         if (changed) {
             const event = new CustomEvent('DejaTilesEvent', { cancelable: true }) as IDejaTilesEvent;
-            event.tiles = this.tiles.map((tile) => tile.toTileModel());
+            event.tiles = this.tiles;
             this.layoutChanged.next(event);
         }
 
@@ -1001,6 +1005,10 @@ export class DejaTilesLayoutProvider implements OnDestroy {
 
         newTiles.forEach((newTile) => {
             if (!this.tiles.find((t) => t.id === newTile.id)) {
+                if (!newTile.percentBounds) {
+                    newTile.percentBounds = newTile.idealBounds;
+                }
+
                 newTile.percentBounds = this.getFreePlace(newTile.percentBounds);
                 this.tiles.push(newTile);
                 this.tilesDic[newTile.id] = newTile;
@@ -1008,8 +1016,8 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         });
 
         const event = new CustomEvent('DejaTilesAddEvent', { cancelable: true }) as IDejaTilesAddEvent;
-        event.tiles = this.tiles.map((tile) => tile.toTileModel());
-        event.added = newTiles.map((tile) => tile.toTileModel());
+        event.tiles = this.tiles;
+        event.added = newTiles;
         event.cancel$ = new Subject();
 
         // Delete provider if cut operation
@@ -1031,20 +1039,13 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             }
         };
 
-        newTiles.forEach((tile) => {
-            tile.isPending = true;
-        });
-
         const validateNewTiles = (tiles: DejaTile[]) => {
-            tiles.forEach((tile) => {
-                tile.isPending = false;
-            });
             // Remove original tiles if cut operation
             deleteSourceTiles();
 
             const e = new CustomEvent('DejaTilesModelEvent', { cancelable: false }) as IDejaTilesModelEvent;
-            e.tiles = this.tiles.map((tile) => tile.toTileModel());
-            e.added = tiles.map((tile) => tile.toTileModel());
+            e.tiles = this.tiles;
+            e.added = tiles;
             this.modelChanged.next(e);
         };
 
@@ -1703,10 +1704,10 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         let index = this.tiles.length;
         while (--index >= 0) {
             const tile = this.tiles[index];
-            if (tile.id === '#temp') {
+            if (tile.isTemporary) {
+                delete this.tilesDic[tile.id];
                 this.tiles.splice(index, 1);
             }
         }
-        delete this.tilesDic['#temp'];
     }
 }

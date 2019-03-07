@@ -9,33 +9,58 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatIconModule, MatProgressSpinnerModule } from '@angular/material';
-import { DejaEditableModule } from '@deja-js/component/content-editable';
-import { DejaMouseDragDropModule, DejaMouseDragDropService } from '@deja-js/component/mouse-dragdrop';
+import {
+    MatButtonModule, MatButtonToggleModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatProgressSpinnerModule
+} from '@angular/material';
+import { DejaMaterialColorsModule } from '../../core/colors/index';
+import { DejaColorSelectorModule } from '../color-selector/index';
+import { DejaEditorModule } from '../editor/index';
+import { DejaMouseDragDropModule } from '../mouse-dragdrop/index';
+import { DejaMouseDragDropService } from '../mouse-dragdrop/mouse-dragdrop.service';
+import { DejaNumericStepperModule } from '../numeric-stepper/index';
+import { DejaOverlayModule } from '../overlay/index';
+import { DejaPopupModule } from '../popup/index';
+import { TileGroupStyleEditorComponent } from './tile-group-style-editor.component';
 import { DejaTileGroupComponent } from './tile-group.component';
 import { DejaTilePositionDirective } from './tile-position.directive';
 import { DejaTileComponent } from './tile.component';
 import { DejaTilesComponent } from './tiles.component';
 
 @NgModule({
-    declarations: [DejaTileComponent, DejaTilesComponent, DejaTileGroupComponent, DejaTilePositionDirective],
+    declarations: [DejaTileComponent, DejaTilesComponent, DejaTileGroupComponent, DejaTilePositionDirective, TileGroupStyleEditorComponent],
     exports: [DejaTileComponent, DejaTilesComponent, DejaTileGroupComponent],
     imports: [
         CommonModule,
         FormsModule,
         MatProgressSpinnerModule,
+        MatButtonModule,
+        MatFormFieldModule,
         MatIconModule,
+        MatCheckboxModule,
+        MatButtonToggleModule,
+        DejaColorSelectorModule,
         DejaMouseDragDropModule,
-        DejaEditableModule,
+        DejaNumericStepperModule,
+        DejaMaterialColorsModule,
+        DejaEditorModule,
+        DejaOverlayModule,
+        DejaPopupModule
     ],
     providers: [
         DejaMouseDragDropService,
-    ]
+    ],
+    entryComponents: [TileGroupStyleEditorComponent]
 })
 export class DejaTilesModule { }
 
+export * from './tile-group-style-editor-config';
+export * from './tile-group-style-editor.component';
+export * from './tile-group.class';
 export * from './tile-group.component';
-export * from './tile.interface';
 export * from './tile.class';
 export * from './tile.component';
 export * from './tile-position.directive';

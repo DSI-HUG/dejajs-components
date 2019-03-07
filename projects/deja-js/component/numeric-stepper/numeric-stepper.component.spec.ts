@@ -13,7 +13,7 @@ import { FormsModule } from '@angular/forms';
 // import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DejaTextMetricsModule } from '@deja-js/core';
-// import { KeyCodes } from '../../common/core/keycodes.enum';
+// import { KeyCodes } from '../../core/keycodes.enum';
 import { DejaNumericStepperComponent } from './numeric-stepper.component';
 
 describe('DejaNumericStepperComponent', () => {
