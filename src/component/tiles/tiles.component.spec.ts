@@ -1435,14 +1435,14 @@ describe('DejaTilesComponent', () => {
         tileGroupCmp._model.borderWidth = 10;
         tileGroupCmp._model.borderColor = '#fff';
 
-        tileGroupCmp.updateModel();
+        tileGroupCmp.updateBorderFromModel();
         expect(tileGroupCmp.borderTop).toBe('solid #fff 10px', 'borderTop shoud be solid #fff 10px');
         expect(tileGroupCmp.borderRight).toBe('solid #fff 10px', 'borderRight shoud be solid #fff 10px');
         expect(tileGroupCmp.borderLeft).toBe('solid #fff 10px', 'borderLeft shoud be solid #fff 10px');
         expect(tileGroupCmp.borderBottom).toBeNull();
 
         tileGroupCmp._model = null;
-        tileGroupCmp.updateModel();
+        tileGroupCmp.updateBorderFromModel();
         expect(tileGroupCmp.borderTop).toBeNull();
         expect(tileGroupCmp.borderRight).toBeNull();
         expect(tileGroupCmp.borderLeft).toBeNull();

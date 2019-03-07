@@ -38,7 +38,7 @@ export class DejaTileGroupComponent implements OnDestroy {
     @HostBinding('style.border-left') public borderLeft: string = null;
 
     @Output() public close = new EventEmitter<void>();
-    @Output() public modelChanged = new EventEmitter<string>();
+    @Output() public modelChanged = new EventEmitter<DejaTileGroup>();
 
     public editing = false;
     private isAlive = true;
@@ -56,7 +56,8 @@ export class DejaTileGroupComponent implements OnDestroy {
     @Input()
     public set model(value: DejaTileGroup) {
         this._model = value;
-        this.updateModel();
+        this.updateColorsFromModel();
+        this.updateBorderFromModel();
 
         this.subscriptions.forEach((subscription) => subscription.unsubscribe());
         this.subscriptions = [];
@@ -66,7 +67,11 @@ export class DejaTileGroupComponent implements OnDestroy {
             this.subscriptions.push(observableFrom(this._model.refresh$).pipe(
                 takeWhile(() => this.isAlive && !!this._model),
                 debounceTime(1))
-                .subscribe(() => this.updateModel()));
+                .subscribe(() => {
+                    this.updateColorsFromModel();
+                    this.updateBorderFromModel();
+                    this.modelChanged.emit(this.model);
+                }));
         }
     }
 
@@ -141,7 +146,7 @@ export class DejaTileGroupComponent implements OnDestroy {
                 this.model.borderWidth = borderWidth;
                 this.model.borderColor = borderColor;
                 this.model.borderDirection = borderDirection;
-                this.updateModel();
+                this.updateBorderFromModel();
             }
         } as ITileGroupStyleEditorData;
 
@@ -156,25 +161,30 @@ export class DejaTileGroupComponent implements OnDestroy {
                 this.model.borderColor = backup.borderColor;
                 this.model.borderDirection = backup.borderDirection;
                 this.model.borderWidth = backup.borderWidth;
+                this.updateBorderFromModel();
             } else if (this.model.borderDirection === 0 || this.model.borderWidth === 0) {
                 this.model.clearBorder();
+                this.updateBorderFromModel();
             }
-            this.updateModel();
+            if (res.accepted) {
+                this.modelChanged.emit(this.model);
+            }
         });
     }
 
-    private updateModel() {
+    private updateColorsFromModel() {
+        this.foregroundColor = this._model ? Color.parse(this._model.color).bestTextColor.toHex() : null;
+        this.backgroundColor = this._model ? this._model.color : null;
+        this.changeDetectorRef.markForCheck();
+    }
+
+    private updateBorderFromModel() {
         if (!this._model) {
-            this.foregroundColor = null;
-            this.backgroundColor = null;
             this.borderTop = null;
             this.borderRight = null;
             this.borderBottom = null;
             this.borderLeft = null;
         } else {
-            this.foregroundColor = Color.parse(this._model.color).bestTextColor.toHex();
-            this.backgroundColor = this._model.color;
-
             // tslint:disable-next-line:no-bitwise
             if ((this._model.borderDirection & DejaTileBorderDirection.top) !== 0) {
                 this.borderTop = `solid ${this._model.borderColor || 'transparent'} ${this._model.borderWidth || 0}px`;
@@ -203,7 +213,6 @@ export class DejaTileGroupComponent implements OnDestroy {
                 this.borderLeft = null;
             }
         }
-
         this.changeDetectorRef.markForCheck();
     }
 }

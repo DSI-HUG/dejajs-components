@@ -7,6 +7,7 @@
  */
 
 import { IDejaCancelableEvent } from '../../common/core/events/cancelable-event.interface';
+import { DejaTileGroup } from './tile-group.class';
 import { DejaTile } from './tile.class';
 
 export interface IDejaTilesEvent extends CustomEvent {
@@ -25,7 +26,14 @@ export interface IDejaTilesAddEvent extends IDejaTilesCancelableEvent {
     added: DejaTile[];
 }
 
-export interface IDejaTilesModelEvent extends IDejaTilesEvent {
-    removed?: DejaTile[];
+export interface IDejaTileGroupModelEvent extends IDejaTilesEvent {
+    tileGroup?: DejaTileGroup;
+}
+
+export interface IDejaTilesAddedEvent extends IDejaTilesEvent {
     added?: DejaTile[];
+}
+
+export interface IDejaTilesDeletedEvent extends IDejaTilesEvent {
+    deleted?: DejaTile[];
 }

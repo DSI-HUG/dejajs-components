@@ -15,9 +15,10 @@ import { Rect } from '../../common/core/graphics/rect';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 import { IDropCursorInfos } from '../mouse-dragdrop/mouse-dragdrop.service';
 import { IDejaMouseDroppableContext } from '../mouse-dragdrop/mouse-droppable.directive';
+import { DejaTileGroup } from './tile-group.class';
 import { DejaTile } from './tile.class';
 import { DejaTilesLayoutProvider, IDejaTilesRefreshParams } from './tiles-layout.provider';
-import { IDejaTilesAddEvent, IDejaTilesEvent, IDejaTilesModelEvent, IDejaTilesRemoveEvent } from './tiles.event';
+import { IDejaTileGroupModelEvent, IDejaTilesAddedEvent, IDejaTilesAddEvent, IDejaTilesDeletedEvent, IDejaTilesEvent, IDejaTilesRemoveEvent } from './tiles.event';
 
 const noop = () => { };
 
@@ -57,9 +58,19 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     @Output() public contentRemoving = new EventEmitter<IDejaTilesRemoveEvent>();
 
     /**
-     * Raised when some tiles model has changed
+     * Raised when a tile group model has changed
      */
-    @Output() public modelChanged = new EventEmitter<IDejaTilesModelEvent>();
+    @Output() public tileGroupChanged = new EventEmitter<IDejaTileGroupModelEvent>();
+
+    /**
+     * Raised when tiles are added
+     */
+    @Output() public tilesAdded = new EventEmitter<IDejaTilesAddedEvent>();
+
+    /**
+     * Raised when tiles are deleted
+     */
+    @Output() public tilesDeleted = new EventEmitter<IDejaTilesDeletedEvent>();
 
     /**
      * Raised when some tiles are copied in the clipboard service. Can result from a copy or paste operation on the tiles.
@@ -112,10 +123,17 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
             takeWhile(() => this.isAlive))
             .subscribe((e) => this.contentRemoving.emit(e));
 
-        observableFrom(this.layoutProvider.modelChanged).pipe(
+        observableFrom(this.layoutProvider.tilesAdded).pipe(
             takeWhile(() => this.isAlive))
             .subscribe((event) => {
-                this.modelChanged.emit(event);
+                this.tilesAdded.emit(event);
+                this.onChangeCallback(event.tiles);
+            });
+
+        observableFrom(this.layoutProvider.tilesDeleted).pipe(
+            takeWhile(() => this.isAlive))
+            .subscribe((event) => {
+                this.tilesDeleted.emit(event);
                 this.onChangeCallback(event.tiles);
             });
 
@@ -383,10 +401,10 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
         this.layoutProvider.removeTiles([tile.id]);
     }
 
-    public onTileModelChanged() {
-        const event = new CustomEvent('DejaTilesModelEvent', { cancelable: false }) as IDejaTilesModelEvent;
-        event.tiles = this.layoutProvider.tiles;
-        this.modelChanged.emit(event);
+    public onTileGroupModelChanged(tileGroup: DejaTileGroup) {
+        const event = new CustomEvent('DejaTileGroupModelEvent', { cancelable: false }) as IDejaTileGroupModelEvent;
+        event.tileGroup = tileGroup;
+        this.tileGroupChanged.emit(event);
     }
 
     public onFocus() {
