@@ -150,7 +150,6 @@ export class DejaTileComponent implements OnDestroy {
     }
 
     public get isGroup() {
-        const isGroup = this._tile && this._tile.constructor.name === 'DejaTileGroup';
-        return isGroup;
+        return this._tile && this._tile instanceof DejaTileGroup;
     }
 }
