@@ -29,6 +29,9 @@ before_script:
   --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 3000x1200x16"
 - sleep 3
 script:
+- npm run build:core
+- npm run test:core
+- bash ./scripts/sonar.sh
 - npm run license-check
 env:
   global:
@@ -38,9 +41,6 @@ jobs:
   include:
     - stage: Core npm release
       before_deploy:
-      - npm run build:core
-      - npm run test:core
-      - bash ./scripts/sonar.sh
       - cd dist/deja-js/core
       deploy:
         provider: npm
@@ -70,3 +70,5 @@ jobs:
           branch: master
       after_deploy:
       - cd ../../..
+      - bash ./scripts/tag.sh
+      - bash ./scripts/deploy.sh
