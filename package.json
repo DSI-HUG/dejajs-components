@@ -18,7 +18,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --prod",
     "test": "ng test",
     "test:core": "ng test @deja-js/core --watch=false",
     "test:lib": "ng test @deja-js/component --watch=false",
