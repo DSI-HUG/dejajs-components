@@ -70,3 +70,5 @@ jobs:
           branch: master
       after_deploy:
       - cd ../../..
+      - bash ./scripts/tag.sh
+      - bash ./scripts/deploy.sh
