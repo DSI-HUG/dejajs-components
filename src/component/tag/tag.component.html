@@ -1,4 +1,4 @@
-<deja-chips [items]="items" [disabled]="disabled"></deja-chips>
+<deja-chips [items]="items" [disabled]="disabled" (close)="onRemoveItem()"></deja-chips>
 <mat-form-field>
     <input matInput [(ngModel)]="text" matInput (keydown)="onKeyDown($event)" [placeholder]="placeholder" [disabled]="disabled" autocomplete="off">
     <div (click)="onAddItem(text)" matSuffix><mat-icon fontSet="deja-icons" fontIcon="add" class="matSuffix"></mat-icon></div>
