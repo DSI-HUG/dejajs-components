@@ -1,3 +1,13 @@
+<a name="4.2.6"></a>
+## [4.2.6](https://github.com/DSI-HUG/dejajs-components/compare/4.2.5...4.2.6) (2019-03-12)
+
+
+### Bug Fixes
+
+* **DejaTag:** fix deja-tag not notifying parent on chip close ([8b4d046](https://github.com/DSI-HUG/dejajs-components/commit/8b4d046))
+
+
+
 <a name="4.2.5"></a>
 ## [4.2.5](https://github.com/DSI-HUG/dejajs-components/compare/4.2.4...4.2.5) (2019-03-07)
 
