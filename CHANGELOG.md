@@ -1,3 +1,13 @@
+<a name="4.2.7"></a>
+## [4.2.7](https://github.com/DSI-HUG/dejajs-components/compare/4.2.6...4.2.7) (2019-03-18)
+
+
+### Bug Fixes
+
+* **TileLayoutProvider:** Keep bounds on paste ([3fdefba](https://github.com/DSI-HUG/dejajs-components/commit/3fdefba))
+
+
+
 <a name="4.2.6"></a>
 ## [4.2.6](https://github.com/DSI-HUG/dejajs-components/compare/4.2.5...4.2.6) (2019-03-12)
 

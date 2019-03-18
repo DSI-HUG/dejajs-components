@@ -9,7 +9,7 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Directive, ElementRef, HostBinding, Input, OnDestroy, OnInit, Optional, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { BehaviorSubject, from as observableFrom, fromEvent as observableFromEvent, timer as observableTimer } from 'rxjs';
+import { BehaviorSubject, from, fromEvent, timer as observableTimer, merge } from 'rxjs';
 import { filter, first, map, takeUntil, takeWhile, tap } from 'rxjs/operators';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 
@@ -39,7 +39,7 @@ export class DejaEditableDirective implements ControlValueAccessor, OnDestroy, O
 
         this.element = elementRef.nativeElement as HTMLElement;
 
-        observableFromEvent(this.element, 'mousedown').pipe(
+        fromEvent(this.element, 'mousedown').pipe(
             takeWhile(() => this.isAlive))
             .subscribe((e: MouseEvent) => {
                 if (this.inEdition || this.disabled) {
@@ -52,7 +52,7 @@ export class DejaEditableDirective implements ControlValueAccessor, OnDestroy, O
                 }
             });
 
-        const inEdition$ = observableFrom(this.edit$).pipe(
+        const inEdition$ = from(this.edit$).pipe(
             filter(([value]) => value !== this._inEdition),
             map(([value, selectOnFocus]) => {
                 if (selectOnFocus !== false) {
@@ -81,7 +81,7 @@ export class DejaEditableDirective implements ControlValueAccessor, OnDestroy, O
         inEdition$.pipe(
             filter((value) => value))
             .subscribe(() => {
-                observableFromEvent(this.element.ownerDocument, 'mousedown').pipe(
+                fromEvent(this.element.ownerDocument, 'mousedown').pipe(
                     first(),
                     takeUntil(kill$),
                     filter((event: MouseEvent) => !this.isChildElement(event.target as HTMLElement)))
@@ -95,24 +95,32 @@ export class DejaEditableDirective implements ControlValueAccessor, OnDestroy, O
                         this.inEdition = false;
                     });
 
-                observableFromEvent(this.element, 'keydown').pipe(
+                merge(fromEvent(this.element, 'keyup'), fromEvent(this.element.ownerDocument, 'keypress')).pipe(
                     first(),
                     takeUntil(kill$))
                     .subscribe((e: KeyboardEvent) => {
                         e.cancelBubble = true;
                         e.stopPropagation();
+                        e.preventDefault();
+                        return false;
+                    });
+
+                fromEvent(this.element, 'keydown').pipe(
+                    first(),
+                    takeUntil(kill$))
+                    .subscribe((e: KeyboardEvent) => {
                         if (e.keyCode === KeyCodes.Enter && !this.multiline) {
                             const text = this.element.innerText;
                             if (text || !this.mandatory) {
                                 this.value = text;
                             }
                             this.inEdition = false;
-                            return false;
-
                         } else if (e.keyCode === KeyCodes.Escape) {
                             this.inEdition = false;
-                            return false;
                         }
+                        e.cancelBubble = true;
+                        e.stopPropagation();
+                        e.preventDefault();
                         return false;
                     });
             });
