@@ -3,25 +3,9 @@
     <div *ngIf="!designMode || !editing" class="not-editing-container" (dblclick)="edit()">
         <span class="not-editing" [innerHtml]="model.html | safeHTML"></span>
     </div>
-    <div class="button-container">
-        <button *ngIf="designMode" mat-icon-button (click)="actions.show($event)">
-            <mat-icon>more_vert</mat-icon>
-        </button>
+    <div class="button-container" *ngIf="designMode" >
+        <em id="close-button" (click)="close.emit($event)" [matTooltip]="!!model.borderWidth ? ' Edit Border' : ' Add Border'" class="material-icons">border_style</em>
+        <em id="edit-button" (click)="edit()" [matTooltip]="'Edit'" class="material-icons">edit</em>
+        <em id="edit-border-button" (click)="editStyle()" [matTooltip]="'Delete'" class="material-icons">close</em>
     </div>
 </div>
-
-<deja-overlay #actions>
-    <div class="deja-menu-content">
-        <ul>
-            <li class="menu-item" (click)="actions.close();close.emit($event)">
-                <mat-icon>close</mat-icon> Delete
-            </li>
-            <li class="menu-item" (click)="actions.close();edit()">
-                <mat-icon>edit</mat-icon> Edit
-            </li>
-            <li class="menu-item" (click)="actions.close();editStyle()">
-                <mat-icon>border_style</mat-icon> {{ !!model.borderWidth ? ' Edit Border' : ' Add Border' }}
-            </li>
-        </ul>
-    </div>
-</deja-overlay>

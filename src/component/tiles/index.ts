@@ -9,13 +9,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import {
-    MatButtonModule, MatButtonToggleModule,
-    MatCheckboxModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatProgressSpinnerModule
-} from '@angular/material';
+import { MatButtonModule, MatButtonToggleModule, MatCheckboxModule, MatFormFieldModule, MatIconModule, MatProgressSpinnerModule, MatTooltipModule } from '@angular/material';
+
 import { DejaPipeModule } from '../../common/core/pipes/index';
 import { DejaMaterialColorsModule } from '../../common/core/style/index';
 import { DejaColorSelectorModule } from '../color-selector/index';
@@ -43,6 +38,7 @@ import { DejaTilesComponent } from './tiles.component';
         MatIconModule,
         MatCheckboxModule,
         MatButtonToggleModule,
+        MatTooltipModule,
         DejaColorSelectorModule,
         DejaMouseDragDropModule,
         DejaNumericStepperModule,
