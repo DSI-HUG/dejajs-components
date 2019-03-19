@@ -2,8 +2,8 @@
 
 @import '~@angular/material/theming';
 
-// use `~@deja-js/component/theming` inside your app 
-@import '../dist/deja-js/component/theming';
+// use `~@deja-js/component/theming` inside your app
+@import '../projects/deja-js/component/styles/theming';
 
 @import './component/markdown/markdown-theme';
 @import './app/home/home-theme';
