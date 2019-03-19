@@ -127,7 +127,7 @@ export class DejaTileGroupComponent implements OnDestroy {
             this.editing = true;
             this.changeDetectorRef.markForCheck();
             // Put this action on the browser queue to execute it after the editor became visible
-            setTimeout(() => this.editor.setFocus(), 0);
+            setTimeout(() => this.editor.setFocus(), 100);
         }
     }
 
