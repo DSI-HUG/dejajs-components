@@ -9,7 +9,7 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Directive, ElementRef, HostBinding, Input, OnDestroy, OnInit, Optional, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { BehaviorSubject, from, fromEvent, timer, merge } from 'rxjs';
+import { BehaviorSubject, from, fromEvent, merge, timer } from 'rxjs';
 import { filter, first, map, takeUntil, takeWhile, tap } from 'rxjs/operators';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 
