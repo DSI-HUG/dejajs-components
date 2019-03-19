@@ -1,3 +1,13 @@
+<a name="4.2.10"></a>
+## [4.2.10](https://github.com/DSI-HUG/dejajs-components/compare/4.2.9...4.2.10) (2019-03-19)
+
+
+### Bug Fixes
+
+* **TileGroup:** Prevent multiple instance of editor ([3b63a77](https://github.com/DSI-HUG/dejajs-components/commit/3b63a77))
+
+
+
 <a name="4.2.9"></a>
 ## [4.2.9](https://github.com/DSI-HUG/dejajs-components/compare/4.2.8...4.2.9) (2019-03-19)
 
