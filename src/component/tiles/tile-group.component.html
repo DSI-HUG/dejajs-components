@@ -4,8 +4,8 @@
         <span class="not-editing" [innerHtml]="model.html | safeHTML"></span>
     </div>
     <div class="button-container" *ngIf="designMode" >
-        <em id="close-button" (click)="close.emit($event)" [matTooltip]="!!model.borderWidth ? ' Edit Border' : ' Add Border'" class="material-icons">border_style</em>
+        <em id="edit-border-button" (click)="editStyle()" [matTooltip]="!!model.borderWidth ? ' Edit Border' : ' Add Border'" class="material-icons">border_style</em>
         <em id="edit-button" (click)="edit()" [matTooltip]="'Edit'" class="material-icons">edit</em>
-        <em id="edit-border-button" (click)="editStyle()" [matTooltip]="'Delete'" class="material-icons">close</em>
+        <em id="close-button" (click)="close.emit($event)" [matTooltip]="'Delete'" class="material-icons">close</em>
     </div>
 </div>
