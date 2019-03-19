@@ -9,7 +9,7 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Directive, ElementRef, HostBinding, Input, OnDestroy, OnInit, Optional, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { BehaviorSubject, from, fromEvent, timer as observableTimer, merge } from 'rxjs';
+import { BehaviorSubject, from, fromEvent, timer, merge } from 'rxjs';
 import { filter, first, map, takeUntil, takeWhile, tap } from 'rxjs/operators';
 import { KeyCodes } from '../../common/core/keycodes.enum';
 
@@ -56,7 +56,7 @@ export class DejaEditableDirective implements ControlValueAccessor, OnDestroy, O
             filter(([value]) => value !== this._inEdition),
             map(([value, selectOnFocus]) => {
                 if (selectOnFocus !== false) {
-                    observableTimer(10).pipe(
+                    timer(10).pipe(
                         first())
                         .subscribe(() => {
                             this.selectAll();
