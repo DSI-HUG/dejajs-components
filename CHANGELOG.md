@@ -1,3 +1,13 @@
+<a name="4.2.9"></a>
+## [4.2.9](https://github.com/DSI-HUG/dejajs-components/compare/4.2.8...4.2.9) (2019-03-19)
+
+
+### Bug Fixes
+
+* **TileGroup:** Fix inverted buttons ([fb36baf](https://github.com/DSI-HUG/dejajs-components/commit/fb36baf))
+
+
+
 <a name="4.2.8"></a>
 ## [4.2.8](https://github.com/DSI-HUG/dejajs-components/compare/v4.2.7...v4.2.8) (2019-03-19)
 
