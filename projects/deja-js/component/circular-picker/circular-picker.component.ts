@@ -140,7 +140,7 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
                     const kill$ = new Subject();
 
                     if (!element.ownerDocument.body.className.match(/noselect/)) {
-                        element.ownerDocument.body.className += 'noselect';
+                        element.ownerDocument.body.classList.add('noselect');
                     }
 
                     const cancelMouse$ = observableMerge(kill$, observableFromEvent(element.ownerDocument, 'mouseup')).pipe(
