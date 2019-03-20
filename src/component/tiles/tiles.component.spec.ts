@@ -1415,7 +1415,7 @@ describe('DejaTilesComponent', () => {
 
         tileGroupCmp.edit();
         fixture.detectChanges();
-        expect(tileGroupDebugElement.query(By.css('deja-editor'))).toBeDefined('Editor should be defined and not hidden when editing');
+        expect(tileGroupDebugElement.query(By.css('deja-editor'))).toBeDefined('Editor should be defined when editing');
 
         tileGroupCmp.onEditorBlur();
         fixture.detectChanges();
