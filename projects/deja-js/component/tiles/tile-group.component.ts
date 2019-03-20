@@ -8,7 +8,7 @@
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, HostBinding, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
-import { from as observableFrom, Subject, Subscription } from 'rxjs';
+import { from as observableFrom, Subject, Subscription, timer } from 'rxjs';
 import { debounceTime, filter, takeWhile } from 'rxjs/operators';
 import { Color } from '../../core/graphics/color';
 import { DejaEditorComponent } from '../editor/deja-editor.component';
@@ -50,7 +50,11 @@ export class DejaTileGroupComponent implements OnDestroy {
             takeWhile(() => this.isAlive),
             filter(() => this._designMode),
             debounceTime(100)
-        ).subscribe(() => this.editor.setFocus());
+        ).subscribe(() => {
+            if (this.editor) {
+                this.editor.setFocus();
+            }
+        });
     }
 
     @Input()
@@ -122,7 +126,11 @@ export class DejaTileGroupComponent implements OnDestroy {
             this.editing = true;
             this.changeDetectorRef.markForCheck();
             // Put this action on the browser queue to execute it after the editor became visible
-            setTimeout(() => this.editor.setFocus(), 100);
+            timer(100).subscribe(() => {
+                if (this.editor) {
+                    this.editor.setFocus();
+                }
+            });
         }
     }
 

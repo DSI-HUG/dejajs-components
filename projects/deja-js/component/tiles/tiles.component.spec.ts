@@ -1411,15 +1411,15 @@ describe('DejaTilesComponent', () => {
 
         groupContainerCmp.designMode = true;
         fixture.detectChanges();
-        expect(tileGroupDebugElement.query(By.css('deja-editor.hidden'))).toBeDefined('Editor should be defined but hidden');
+        expect(tileGroupDebugElement.query(By.css('deja-editor'))).toBeFalsy('Editor should not be defined');
 
         tileGroupCmp.edit();
         fixture.detectChanges();
-        expect(tileGroupDebugElement.query(By.css('deja-editor:not(.hidden)'))).toBeDefined('Editor should be defined and not hidden when editing');
+        expect(tileGroupDebugElement.query(By.css('deja-editor'))).toBeDefined('Editor should be defined when editing');
 
         tileGroupCmp.onEditorBlur();
         fixture.detectChanges();
-        expect(tileGroupDebugElement.query(By.css('deja-editor.hidden'))).toBeDefined('Editor should be defined but hidden when editing is finished');
+        expect(tileGroupDebugElement.query(By.css('deja-editor'))).toBeFalsy('Editor should not be defined');
     }));
 
     it('should update group tile model', async(() => {
