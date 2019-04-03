@@ -95,7 +95,7 @@ export class DejaOverlayComponent implements OnDestroy {
         mediaService.isMobile$.pipe(
             takeWhile(() => this.isAlive && !this.disableMediaService))
             .subscribe((value) => {
-                this._isMobile = coerceBooleanProperty(value);
+                this._isMobile = value;
                 this.updateOriginOverlay();
                 this.changeDetectorRef.markForCheck();
             });
