@@ -1,3 +1,13 @@
+<a name="4.2.11"></a>
+## [4.2.11](https://github.com/DSI-HUG/dejajs-components/compare/4.2.10...4.2.11) (2019-04-03)
+
+
+### Bug Fixes
+
+* **OverlayComponent:** Manage the input on the isMobile to disable mediaService updating (DEJS-632) ([905d855](https://github.com/DSI-HUG/dejajs-components/commit/905d855))
+
+
+
 <a name="4.2.10"></a>
 ## [4.2.10](https://github.com/DSI-HUG/dejajs-components/compare/4.2.9...4.2.10) (2019-03-19)
 
