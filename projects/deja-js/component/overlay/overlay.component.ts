@@ -79,6 +79,7 @@ export class DejaOverlayComponent implements OnDestroy {
 
     private _isMobile = false;
     private isAlive = true;
+    private disableMediaService = false;
 
     /** Overlay pane containing the options. */
     @ViewChild(CdkConnectedOverlay) private overlay: CdkConnectedOverlay;
@@ -92,9 +93,10 @@ export class DejaOverlayComponent implements OnDestroy {
         });
 
         mediaService.isMobile$.pipe(
-            takeWhile(() => this.isAlive))
+            takeWhile(() => this.isAlive && !this.disableMediaService))
             .subscribe((value) => {
-                this.isMobile = value;
+                this._isMobile = value;
+                this.updateOriginOverlay();
                 this.changeDetectorRef.markForCheck();
             });
     }
@@ -130,6 +132,7 @@ export class DejaOverlayComponent implements OnDestroy {
     public set isMobile(value: boolean) {
         this._isMobile = coerceBooleanProperty(value);
         this.updateOriginOverlay();
+        this.disableMediaService = true;
     }
 
     public get width() {
