@@ -1,3 +1,14 @@
+<a name="4.2.12"></a>
+## [4.2.12](https://github.com/DSI-HUG/dejajs-components/compare/4.2.11...4.2.12) (2019-04-08)
+
+
+### Bug Fixes
+
+* **DejaEditor:** Add null check ([e3e4f8f](https://github.com/DSI-HUG/dejajs-components/commit/e3e4f8f))
+* **TilesLayoutProvider:** Fix possible null pointer after timer elapsed ([b525979](https://github.com/DSI-HUG/dejajs-components/commit/b525979))
+
+
+
 <a name="4.2.11"></a>
 ## [4.2.11](https://github.com/DSI-HUG/dejajs-components/compare/4.2.10...4.2.11) (2019-04-03)
 
