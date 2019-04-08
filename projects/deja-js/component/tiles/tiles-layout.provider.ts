@@ -376,7 +376,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                         observableFromEvent(container, 'mousemove').pipe(
                             debounceTime(10),
                             takeUntil(leave$),
-                            filter((event: MouseEvent) => event.buttons === 0))
+                            filter((event: MouseEvent) => !!this.container && event.buttons === 0))
                             .subscribe((event: MouseEvent) => {
                                 this._cursor = this.getCursorFromHTMLElement(event.pageX, event.pageY, event.target as HTMLElement);
                                 this.container.style.cursor = this._cursor;
