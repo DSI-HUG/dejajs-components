@@ -285,6 +285,9 @@ export class DejaEditorComponent
      */
     public getWordAtCursor(): string {
         const range = this.instance.getSelection().getRanges(true)[0];
+        if (!range) {
+            return null;
+        }
         const word = this._firstTextNode(range);
         return (word && word.toReplace) || null;
     }
