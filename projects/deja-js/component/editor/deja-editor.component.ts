@@ -6,23 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    EventEmitter,
-    forwardRef,
-    Input,
-    NgZone,
-    OnChanges,
-    OnDestroy,
-    Output,
-    SimpleChanges,
-    ViewChild,
-    ViewEncapsulation
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, forwardRef, Input, NgZone, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { DejaEditorService } from './deja-editor.service';
@@ -93,7 +77,7 @@ export class DejaEditorComponent
         private zone: NgZone,
         private _changeDetectorRef: ChangeDetectorRef,
         private _initializer: DejaEditorService
-    ) {}
+    ) { }
 
     public get value(): any {
         return this._value;
@@ -267,9 +251,9 @@ export class DejaEditorComponent
         }
     }
 
-    public onChange(_: any) {}
+    public onChange(_: any) { }
 
-    public onTouched() {}
+    public onTouched() { }
 
     public registerOnChange(fn: any) {
         this.onChange = fn;
@@ -326,7 +310,7 @@ export class DejaEditorComponent
             // Focus is used during the CKEDITOR insertText process and cause deselection of the selected text
             // So we temporarily deactivate it
             const focus = this.instance.focus;
-            this.instance.focus = () => {};
+            this.instance.focus = () => { };
             this.instance.insertText(replace);
             this.instance.focus = focus;
             return;

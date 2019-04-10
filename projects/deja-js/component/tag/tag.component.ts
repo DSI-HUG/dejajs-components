@@ -115,4 +115,8 @@ export class DejaTagComponent implements ControlValueAccessor {
             this.text = '';
         }
     }
+
+    public onRemoveItem() {
+        this.onChangeCallback(this.value);
+    }
 }
