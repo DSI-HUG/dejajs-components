@@ -1,6 +1,6 @@
 {
   "name": "ckeditor",
-  "version": "4.10.1",
+  "version": "4.11.0",
   "description": "JavaScript WYSIWYG web text editor.",
   "main": "ckeditor.js",
   "repository": {
@@ -23,4 +23,8 @@
     "url": "http://dev.ckeditor.com"
   },
   "homepage": "http://ckeditor.com"
+
+,"_resolved": "https://registry.npmjs.org/ckeditor/-/ckeditor-4.11.0.tgz"
+,"_integrity": "sha512-ueuXXK5Tm11WavvY8Qw49/voAz11h4jCFcaVHQw/dvLkfCacujlQNofBA6BDQpKLxEvvzKQxLdyl6dmLH4yZYw=="
+,"_from": "ckeditor@4.11.0"
 }
