@@ -1477,7 +1477,7 @@ describe('DejaTilesComponent', () => {
         tileGroupCmp.model.borderWidth = 10;
         responseSubject.next({accepted: false});
         expect(tileGroupCmp.model.borderColor).toBe(dejaTileGroupContainerComponent.orange.color);
-        expect(tileGroupCmp.model.borderDirection).toBe(DejaTileBorderDirection.bottom);
+        expect(tileGroupCmp.model.borderDirection).toBe(4); // Should be DejaTileBorderDirection.bottom, but karma doesn't understand
         expect(tileGroupCmp.model.borderWidth).toBe(4);
     }));
 
