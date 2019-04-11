@@ -6,8 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { DejaPopupButton } from '../popup/model/popup-action.model';
-import { DejaPopupConfig } from '../popup/model/popup-config.model';
+import { DejaPopupButton, DejaPopupConfig } from '@deja-js/component/popup';
 import { TileGroupStyleEditorComponent } from './tile-group-style-editor.component';
 
 export class TileGroupStyleEditorConfig extends DejaPopupConfig {

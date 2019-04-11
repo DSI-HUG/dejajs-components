@@ -7,9 +7,8 @@
  */
 
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { MaterialColors } from '../../core/colors/material-colors';
-import { Color } from '../../core/graphics/color';
-import { DejaPopupComponent } from '../popup/component/popup/popup.component';
+import { DejaPopupComponent } from '@deja-js/component/popup';
+import { Color, MaterialColors } from '@deja-js/core';
 import { DejaTileBorderDirection } from './tile-group.class';
 
 export interface ITileGroupStyleEditorData {

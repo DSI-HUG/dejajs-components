@@ -9,12 +9,10 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output, Self, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { IDejaMouseDroppableContext, IDropCursorInfos } from '@deja-js/component/mouse-dragdrop';
+import { KeyCodes, Rect } from '@deja-js/core';
 import { from as observableFrom, fromEvent as observableFromEvent, Observable, Subject, Subscription } from 'rxjs';
 import { debounceTime, filter, takeWhile } from 'rxjs/operators';
-import { Rect } from '../../core/graphics/rect';
-import { KeyCodes } from '../../core/keycodes.enum';
-import { IDropCursorInfos } from '../mouse-dragdrop/mouse-dragdrop.service';
-import { IDejaMouseDroppableContext } from '../mouse-dragdrop/mouse-droppable.directive';
 import { DejaTile } from './tile.class';
 import { DejaTilesLayoutProvider, IDejaTilesRefreshParams } from './tiles-layout.provider';
 import { IDejaTilesAddEvent, IDejaTilesEvent, IDejaTilesModelEvent, IDejaTilesRemoveEvent } from './tiles.event';

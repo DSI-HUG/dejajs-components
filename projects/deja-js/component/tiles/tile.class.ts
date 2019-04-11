@@ -6,8 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { Rect } from '@deja-js/core';
 import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
-import { Rect } from '../../core/graphics/rect';
 
 export class DejaTile {
     protected static currentId = 0;
