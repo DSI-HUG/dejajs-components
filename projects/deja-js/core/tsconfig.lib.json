@@ -15,7 +15,15 @@
     "lib": [
       "dom",
       "es2018"
-    ]
+    ],
+    "paths": {
+      "@deja-js/core": [
+        "dist/deja-js/core"
+      ],
+      "@deja-js/core/*": [
+        "dist/deja-js/core/*"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "annotateForClosureCompiler": true,

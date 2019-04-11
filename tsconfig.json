@@ -17,20 +17,6 @@
     "lib": [
       "es2018",
       "dom"
-    ],
-    "paths": {
-      "@deja-js/component": [
-        "projects/deja-js/component"
-      ],
-      "@deja-js/component/*": [
-        "projects/deja-js/component/*"
-      ],
-      "@deja-js/core": [
-        "projects/deja-js/core"
-      ],
-      "@deja-js/core/*": [
-        "projects/deja-js/core/*"
-      ]
-    }
+    ]
   }
 }
