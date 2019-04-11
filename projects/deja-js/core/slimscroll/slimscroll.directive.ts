@@ -348,16 +348,16 @@ export class DejaSlimScrollDirective implements OnInit, OnDestroy {
         return this.hasParentClass(e.parentElement, className);
     }
 
-    private onWheel(e: MouseWheelEvent): void {
+    private onWheel(e: WheelEvent): void {
         // use mouse wheel only when mouse is over
         if (!this._isOverPanel) {
             return;
         }
 
         let delta = 0;
-        if (e.wheelDelta) {
-            delta = -e.wheelDelta / 120;
-        }
+        // if (e.wheelDelta) {
+        //     delta = -e.wheelDelta / 120;
+        // }
         if (e.detail) {
             delta = e.detail / 3;
         }

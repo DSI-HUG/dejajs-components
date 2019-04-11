@@ -7,15 +7,10 @@
  */
 
 import { Injectable, OnDestroy, Optional } from '@angular/core';
+import { IDragCursorInfos, IDragDropContext } from '@deja-js/component/mouse-dragdrop';
+import { DejaClipboardService, Directions, KeyCodes, Position, Rect, Size } from '@deja-js/core';
 import { BehaviorSubject, from as observableFrom, fromEvent as observableFromEvent, merge as observableMerge, Subject, Subscription, timer as observableTimer } from 'rxjs';
 import { debounceTime, delay, filter, first, map, reduce, take, takeUntil, takeWhile, tap } from 'rxjs/operators';
-import { DejaClipboardService } from '../../core/clipboard/clipboard.service';
-import { Directions } from '../../core/graphics/directions';
-import { Position } from '../../core/graphics/position';
-import { Rect } from '../../core/graphics/rect';
-import { Size } from '../../core/graphics/size';
-import { KeyCodes } from '../../core/keycodes.enum';
-import { IDragCursorInfos, IDragDropContext } from '../mouse-dragdrop/mouse-dragdrop.service';
 import { DejaTile } from './tile.class';
 import { IDejaTilesAddEvent, IDejaTilesEvent, IDejaTilesModelEvent, IDejaTilesRemoveEvent } from './tiles.event';
 

@@ -7,7 +7,7 @@
  */
 
 import { SafeHtml } from '@angular/platform-browser';
-import { Rect } from '../../core/graphics/rect';
+import { Rect } from '@deja-js/core';
 import { DejaTile } from './tile.class';
 
 export enum DejaTileBorderDirection {

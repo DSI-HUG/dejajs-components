@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { IDejaCancelableEvent } from '../../core/events/cancelable-event.interface';
+import { IDejaCancelableEvent } from '@deja-js/core';
 import { DejaTile } from './tile.class';
 
 export interface IDejaTilesEvent extends CustomEvent {

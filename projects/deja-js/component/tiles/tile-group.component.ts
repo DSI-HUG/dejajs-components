@@ -8,11 +8,11 @@
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, HostBinding, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { DejaEditorComponent } from '@deja-js/component/editor';
+import { DejaPopupService } from '@deja-js/component/popup';
+import { Color } from '@deja-js/core';
 import { from as observableFrom, Subject, Subscription, timer } from 'rxjs';
 import { debounceTime, filter, takeWhile } from 'rxjs/operators';
-import { Color } from '../../core/graphics/color';
-import { DejaEditorComponent } from '../editor/deja-editor.component';
-import { DejaPopupService } from '../popup/service/popup.service';
 import { TileGroupStyleEditorConfig } from './tile-group-style-editor-config';
 import { ITileGroupStyleEditorData } from './tile-group-style-editor.component';
 import { DejaTileBorderDirection, DejaTileGroup } from './tile-group.class';
@@ -78,7 +78,7 @@ export class DejaTileGroupComponent implements OnDestroy {
         return this._model;
     }
 
-    @HostBinding('attr.designMode') private _designMode = false;
+    @HostBinding('attr.designMode') public _designMode = false;
 
     public get designMode() {
         return this._designMode;
