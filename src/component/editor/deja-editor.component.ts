@@ -211,7 +211,6 @@ export class DejaEditorComponent
 
             // CKEditor change event
             this.instance.on('change', () => {
-                const value = this.instance.getData();
 
                 // Debounce update
                 if (this.debounce) {
@@ -219,13 +218,13 @@ export class DejaEditorComponent
                         clearTimeout(this.debounceTimeout);
                     }
                     this.debounceTimeout = setTimeout(() => {
-                        this.updateValue(value);
+                        this.updateValue(this.instance.getData());
                         this.debounceTimeout = null;
                     }, parseInt(this.debounce, 10));
 
                     // Live update
                 } else {
-                    this.updateValue(value);
+                    this.updateValue(this.instance.getData());
                 }
             });
 
@@ -451,7 +450,8 @@ export class DejaEditorComponent
         firstNodeIsText: boolean;
         toReplace: string;
     } {
-        if (this._trim(selectedNode.getText())) {
+        const text: string = selectedNode.getText();
+        if (this._trim(text) && this._trim(text.substring(text.length - 1))) {
             const node = this._mergeTextNodeAround(selectedNode);
             return {
                 textNode: node,
