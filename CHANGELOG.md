@@ -1,3 +1,13 @@
+<a name="4.2.14"></a>
+## [4.2.14](https://github.com/DSI-HUG/dejajs-components/compare/v4.2.13...v4.2.14) (2019-04-30)
+
+
+### Bug Fixes
+
+* **DejaEditor:** firstTextNode search does return null if the last char of the text node is a white space ([170e45e](https://github.com/DSI-HUG/dejajs-components/commit/170e45e))
+
+
+
 <a name="4.2.13"></a>
 ## [4.2.13](https://github.com/DSI-HUG/dejajs-components/compare/4.2.12...4.2.13) (2019-04-30)
 
