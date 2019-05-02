@@ -1,3 +1,15 @@
+<a name="4.2.15"></a>
+## [4.2.15](https://github.com/DSI-HUG/dejajs-components/compare/4.2.14...4.2.15) (2019-05-02)
+
+
+### Bug Fixes
+
+* **CircularPicker:** Use classList.add instead of string concatenation ([ce59a68](https://github.com/DSI-HUG/dejajs-components/commit/ce59a68))
+* **DejaEditor:** Replace function must refresh the formControl and must replace the last matching character. ([4bcb639](https://github.com/DSI-HUG/dejajs-components/commit/4bcb639))
+* **NumericStepperComponent:** Fix numeric stepper button add/minus display ([68fc5e3](https://github.com/DSI-HUG/dejajs-components/commit/68fc5e3))
+
+
+
 <a name="4.2.14"></a>
 ## [4.2.14](https://github.com/DSI-HUG/dejajs-components/compare/v4.2.13...v4.2.14) (2019-04-30)
 
