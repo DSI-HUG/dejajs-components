@@ -59,7 +59,7 @@
     "json-object-mapper": "^1.6.0",
     "material-icons-font": "1.4.2",
     "moment": "2.22.2",
-    "monaco-editor": "0.14.3",
+    "monaco-editor": "0.16.2",
     "prismjs": "^1.15.0",
     "rxjs": "~6.3.3",
     "showdown": "^1.9.0",
