@@ -1,3 +1,15 @@
+<a name="4.2.16"></a>
+## [4.2.16](https://github.com/DSI-HUG/dejajs-components/compare/4.2.15...4.2.16) (2019-05-15)
+
+
+### Bug Fixes
+
+* **ItemListBase:** Fix possible null pointer on listElement ([e4a5f38](https://github.com/DSI-HUG/dejajs-components/commit/e4a5f38))
+* **SnackBar:** Possible null pointer exception on alignments ([24d0689](https://github.com/DSI-HUG/dejajs-components/commit/24d0689))
+* **SnackBar:** Possible null pointer exception on alignments ([e8558c1](https://github.com/DSI-HUG/dejajs-components/commit/e8558c1))
+
+
+
 <a name="4.2.15"></a>
 ## [4.2.15](https://github.com/DSI-HUG/dejajs-components/compare/4.2.14...4.2.15) (2019-05-02)
 
