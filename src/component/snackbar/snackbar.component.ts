@@ -99,7 +99,7 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * object representation of the alignment, used to filter incompatible alignments and build the string representation
      */
-    private alignents: {
+    private _alignments = {} as {
         [prop: string]: boolean;
         top: boolean;
         right: boolean;
@@ -111,26 +111,24 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
     private animate$sub: Subscription;
 
     /**
-     * alignents setter
+     * _alignments setter
      */
     @Input() public set alignment(value: string) {
-        this.alignents = {
+        this._alignments = {
             bottom: false,
             left: false,
             right: false,
             top: false,
         };
 
-        // set alignents
+        // set _alignments
         if (value) {
-            value
-                .split(/\s+/g)
-                .map((align: string) => this.alignents[align] = true);
+            value.split(/\s+/g).forEach((align: string) => this._alignments[align] = true);
         }
 
         // filter incompatible alignments
-        this.alignents.bottom = this.alignents.top && this.alignents.bottom ? false : this.alignents.bottom;
-        this.alignents.left = this.alignents.right && this.alignents.left ? false : this.alignents.left;
+        this._alignments.bottom = this._alignments.top && this._alignments.bottom ? false : this._alignments.bottom;
+        this._alignments.left = this._alignments.right && this._alignments.left ? false : this._alignments.left;
     }
 
     /**
@@ -186,8 +184,8 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
         // Choose animation depending on alignment
         const anchors = [] as string[];
 
-        Object.keys(this.alignents).forEach((key) => {
-            if (this.alignents[key]) {
+        Object.keys(this._alignments).forEach((key) => {
+            if (this._alignments[key]) {
                 anchors.push(key);
             }
         });
@@ -390,7 +388,7 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
     private launchAdaptAnimation(height: number) {
 
         let direction = 1;
-        if (this.alignents.top) {
+        if (this._alignments.top) {
             direction = -1;
         }
 
@@ -417,7 +415,7 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     private launchEnterAnimation() {
         let direction = -1;
-        if (this.alignents.top) {
+        if (this._alignments.top) {
             direction = 1;
         }
 
