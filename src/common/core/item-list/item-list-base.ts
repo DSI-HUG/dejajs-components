@@ -99,10 +99,11 @@ export abstract class ItemListBase implements OnDestroy {
                             this.listElement.scrollTop = viewPortResult.scrollPos;
                         } else {
                             observableTimer(1).pipe(
-                                first())
-                                .subscribe(() => {
-                                    this.listElement.scrollTop = viewPortResult.scrollPos;
-                                });
+                                first(),
+                                filter(() => !!this.listElement)
+                            ).subscribe(() => {
+                                this.listElement.scrollTop = viewPortResult.scrollPos;
+                            });
                         }
                     }
                 }
