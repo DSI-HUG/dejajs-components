@@ -211,6 +211,10 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
                 this.focused = !!origin;
                 if (!this.focused) {
                     this.onTouchedCallback();
+                } else {
+                    if (!this.value) {
+                        setTimeout(() => this.inputElement.setSelectionRange(0, 0));
+                    }
                 }
                 this.stateChanges.next();
             });
