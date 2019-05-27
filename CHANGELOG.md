@@ -1,3 +1,13 @@
+<a name="4.2.17"></a>
+## [4.2.17](https://github.com/DSI-HUG/dejajs-components/compare/4.2.16...4.2.17) (2019-05-27)
+
+
+### Bug Fixes
+
+* **DejaDatePicker:** Place the cursor at the beginning of the input if empty. ([73f309f](https://github.com/DSI-HUG/dejajs-components/commit/73f309f))
+
+
+
 <a name="4.2.16"></a>
 ## [4.2.16](https://github.com/DSI-HUG/dejajs-components/compare/4.2.15...4.2.16) (2019-05-15)
 
