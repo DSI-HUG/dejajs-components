@@ -1,3 +1,13 @@
+<a name="4.2.18"></a>
+## [4.2.18](https://github.com/DSI-HUG/dejajs-components/compare/4.2.17...4.2.18) (2019-06-07)
+
+
+### Bug Fixes
+
+* **TilesComponent:** Fix container auto height ([6d33fc8](https://github.com/DSI-HUG/dejajs-components/commit/6d33fc8))
+
+
+
 <a name="4.2.17"></a>
 ## [4.2.17](https://github.com/DSI-HUG/dejajs-components/compare/4.2.16...4.2.17) (2019-05-27)
 
