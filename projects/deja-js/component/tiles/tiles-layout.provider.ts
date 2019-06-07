@@ -140,7 +140,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                     if (tile.isSelected && !tile.isHidden) {
                         selectedTileIds.push(tile.id);
                     }
-                    if (tile.pixelBounds.bottom > height) {
+                    if (tile.pixelBounds && tile.pixelBounds.bottom > height) {
                         height = tile.pixelBounds.bottom;
                     }
                 });
