@@ -14,4 +14,4 @@ sed -i 's/"^/"/g' package.json
 sed -i 's/"~/"/g' package.json
 
 # Update package in the latest version
-npm-check-updates -u --dep prod,peer
+ncu -u --semverLevel minor
