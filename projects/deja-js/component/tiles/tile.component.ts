@@ -9,6 +9,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { from as observableFrom, Subscription } from 'rxjs';
 import { debounceTime, delay, filter, first, tap } from 'rxjs/operators';
+import { DejaTileGroup } from './tile-group.class';
 import { DejaTile } from './tile.class';
 
 @Component({
@@ -22,7 +23,7 @@ import { DejaTile } from './tile.class';
 export class DejaTileComponent implements OnDestroy {
     @Input() public template: any;
     @Input() public designMode: boolean;
-    @Output() public modelChanged = new EventEmitter();
+    @Output() public groupChanged = new EventEmitter<DejaTileGroup>();
     @Output() public close = new EventEmitter<Event>();
 
     public progressDiameter = 100;
@@ -145,12 +146,11 @@ export class DejaTileComponent implements OnDestroy {
         this.subscriptions.forEach((subscription) => subscription.unsubscribe());
     }
 
-    public onModelChanged() {
-        this.modelChanged.emit();
+    public onGroupChanged(tileGroup: DejaTileGroup) {
+        this.groupChanged.emit(tileGroup);
     }
 
     public get isGroup() {
-        const isGroup = this._tile && this._tile.constructor.name === 'DejaTileGroup';
-        return isGroup;
+        return this._tile && this._tile instanceof DejaTileGroup;
     }
 }

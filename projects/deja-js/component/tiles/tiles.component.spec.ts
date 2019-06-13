@@ -1434,14 +1434,14 @@ describe('DejaTilesComponent', () => {
         tileGroupCmp._model.borderWidth = 10;
         tileGroupCmp._model.borderColor = '#fff';
 
-        tileGroupCmp.updateModel();
+        tileGroupCmp.updateBorderFromModel();
         expect(tileGroupCmp.borderTop).toBe('solid #fff 10px', 'borderTop shoud be solid #fff 10px');
         expect(tileGroupCmp.borderRight).toBe('solid #fff 10px', 'borderRight shoud be solid #fff 10px');
         expect(tileGroupCmp.borderLeft).toBe('solid #fff 10px', 'borderLeft shoud be solid #fff 10px');
         expect(tileGroupCmp.borderBottom).toBeNull();
 
         tileGroupCmp._model = null;
-        tileGroupCmp.updateModel();
+        tileGroupCmp.updateBorderFromModel();
         expect(tileGroupCmp.borderTop).toBeNull();
         expect(tileGroupCmp.borderRight).toBeNull();
         expect(tileGroupCmp.borderLeft).toBeNull();
@@ -1477,7 +1477,7 @@ describe('DejaTilesComponent', () => {
         tileGroupCmp.model.borderWidth = 10;
         responseSubject.next({accepted: false});
         expect(tileGroupCmp.model.borderColor).toBe(dejaTileGroupContainerComponent.orange.color);
-        expect(tileGroupCmp.model.borderDirection).toBe(4); // Should be DejaTileBorderDirection.bottom, but karma doesn't understand
+        expect(tileGroupCmp.model.borderDirection).toBe(DejaTileBorderDirection.bottom);
         expect(tileGroupCmp.model.borderWidth).toBe(4);
     }));
 
