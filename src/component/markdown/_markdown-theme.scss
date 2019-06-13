@@ -1,4 +1,6 @@
 @import '~@angular/material/theming';
+@import '~prismjs/themes/prism.css';
+@import '~prismjs/themes/prism-coy.css';
 
 @mixin markdown-theme($theme) {
     $primary: map-get($theme, primary);
@@ -11,7 +13,7 @@
                 background: mat-color($primary);
                 color: mat-color($primary, default-contrast);
             }
-            
+
             tr {
                 &:nth-of-type(odd) {
                     background-color: mat-color($background, focused-button);
