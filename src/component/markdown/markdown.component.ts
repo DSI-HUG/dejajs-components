@@ -25,7 +25,7 @@ import * as Showdown from 'showdown';
 export class DejaMarkdownComponent implements OnInit, AfterViewChecked {
 
     @Input()
-    set value(value: string) {
+    public set value(value: string) {
         if (value) {
             const tmp = this._converter.makeHtml(value);
             this._html = this.sanitized.bypassSecurityTrustHtml(tmp);
@@ -36,7 +36,7 @@ export class DejaMarkdownComponent implements OnInit, AfterViewChecked {
     }
 
     @Input()
-    set url(url: string) {
+    public set url(url: string) {
         const headers = new HttpHeaders({
             'Content-Type': 'text/plain;charset=utf-8'
         });

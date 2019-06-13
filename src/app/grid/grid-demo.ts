@@ -672,11 +672,11 @@ export class DejaGridDemoComponent {
 
         this.peopleService.getPeople$().subscribe((value: Person[]) => {
             const onDemandResult = [] as IPeopleGroup[];
-            const map = {} as { [groupName: string]: IDejaGridRow[] };
-            value.map((person) => {
+            const dic = {} as { [groupName: string]: IDejaGridRow[] };
+            value.forEach((person) => {
                 const groupName = `Group${person.color}`;
-                if (!map[groupName]) {
-                    map[groupName] = [];
+                if (!dic[groupName]) {
+                    dic[groupName] = [];
                     onDemandResult.push({
                         color: person.color,
                         collapsible: true,
@@ -692,7 +692,7 @@ export class DejaGridDemoComponent {
                     } as IPeopleGroup);
                 }
 
-                map[groupName].push({
+                dic[groupName].push({
                     model: person,
                 } as IDejaGridRow);
             });

@@ -8,17 +8,17 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { FormsModule } from '@angular/forms';
 import { MatButtonModule, MatCheckboxModule, MatIconModule, MatInputModule, MatTabsModule } from '@angular/material';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { DejaDialogModule } from '@deja-js/component/dialog';
 import { DejaDragDropModule } from '@deja-js/component/dragdrop';
-import { DejaItemModule, DejaSortingModule, GroupingService } from '@deja-js/core';
 import { DejaMessageBoxModule } from '@deja-js/component/message-box';
 import { DejaMouseDragDropModule } from '@deja-js/component/mouse-dragdrop';
 import { DejaTreeListModule } from '@deja-js/component/tree-list';
+import { DejaItemModule, DejaSortingModule, GroupingService } from '@deja-js/core';
 import { DejaMarkdownModule } from '../../component/markdown/index';
 import { NewsCardModule } from '../common/news-card.module';
 import { DejaTreeListDemoComponent } from './tree-list-demo';

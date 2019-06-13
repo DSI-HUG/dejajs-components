@@ -8,8 +8,8 @@
 
 import { ChangeDetectorRef, Component, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { IItemTree, IViewPortItem, IItemBase } from '@deja-js/core';
 import { DejaSelectComponent } from '@deja-js/component/select';
+import { IItemBase, IItemTree, IViewPortItem } from '@deja-js/core';
 import { from as observableFrom, Observable, of as observableOf, Subject, Subscription } from 'rxjs';
 import { delay, first, map, tap } from 'rxjs/operators';
 import { News } from '../common/news.model';
@@ -116,7 +116,7 @@ export class SelectDemoComponent implements OnDestroy {
             .subscribe((value: Country[]) => {
                 const result = [] as ICountryGroup[];
                 const onDemandResult = [] as ICountryGroup[];
-                const map = {} as { [groupName: string]: ISelectCountry[] };
+                const dic = {} as { [groupName: string]: ISelectCountry[] };
 
                 result.push({
                     collapsible: true,
@@ -127,14 +127,14 @@ export class SelectDemoComponent implements OnDestroy {
                     selectable: false,
                 } as ICountryGroup);
 
-                value.map((country) => {
+                value.forEach(country => {
                     const groupName = `Group${country.naqme[0]}`;
-                    if (!map[groupName]) {
-                        map[groupName] = [] as ICountryGroup[];
+                    if (!dic[groupName]) {
+                        dic[groupName] = [] as ICountryGroup[];
                         result.push({
                             collapsible: true,
                             groupName: groupName,
-                            items: map[groupName],
+                            items: dic[groupName],
                             naqme: groupName,
                             selectable: true,
                         } as ICountryGroup);
@@ -153,7 +153,7 @@ export class SelectDemoComponent implements OnDestroy {
                         } as ICountryGroup);
                     }
 
-                    map[groupName].push({ model: country });
+                    dic[groupName].push({ model: country });
                 });
 
                 this.groupedCountries = result;
@@ -195,7 +195,6 @@ export class SelectDemoComponent implements OnDestroy {
     }
 
     protected expandingItems() {
-        const self = this;
         return (item: IItemBase) => {
             const group = item as ICountryGroup;
             if (group.loaded) {

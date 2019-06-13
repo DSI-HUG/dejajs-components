@@ -7,9 +7,9 @@
  */
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material';
-import { Color, MaterialColors } from '@deja-js/core';
-import { DejaPopupAction, DejaPopupConfig } from '@deja-js/component/popup';
 import { IColorEvent } from '@deja-js/component';
+import { DejaPopupAction, DejaPopupConfig } from '@deja-js/component/popup';
+import { Color, MaterialColors } from '@deja-js/core';
 
 @Component({
     selector: 'deja-dummy',

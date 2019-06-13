@@ -8,20 +8,20 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule, MatTabsModule } from '@angular/material';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { DejaGridModule } from '@deja-js/component/data-grid';
 import { DejaDialogModule } from '@deja-js/component/dialog';
 import { DejaDragDropModule } from '@deja-js/component/dragdrop';
-import { DejaGridModule } from '@deja-js/component/data-grid';
 import { DejaMessageBoxModule } from '@deja-js/component/message-box';
 import { DejaSplitterModule } from '@deja-js/component/splitter';
 import { GroupingService } from '@deja-js/core';
 import { DejaMarkdownModule } from '../../component/markdown/index';
 import { DejaGridDemoComponent } from './grid-demo';
 import { routing } from './grid-demo.routes';
-import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
     declarations: [DejaGridDemoComponent],
