@@ -83,7 +83,8 @@ export class DejaTileGroupComponent implements OnDestroy {
         return this._model;
     }
 
-    @HostBinding('attr.designMode') private _designMode = false;
+    @HostBinding('attr.designMode')
+    public _designMode = false;
 
     public get designMode() {
         return this._designMode;
