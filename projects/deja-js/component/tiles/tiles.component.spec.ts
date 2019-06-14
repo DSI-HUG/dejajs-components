@@ -177,17 +177,19 @@ describe('DejaTilesComponent', () => {
                 DejaClipboardModule.forRoot(),
             ],
             providers: [
-                { provide: OverlayContainer, useFactory: () => {
+                {
+                    provide: OverlayContainer, useFactory: () => {
                         overlayContainerElement = document.createElement('div');
                         return { getContainerElement: () => overlayContainerElement };
-                    }}
+                    }
+                }
             ]
         }).compileComponents();
     }));
 
     const observeDom$ = (fixture: ComponentFixture<DejaTilesContainerComponent>) => {
         const tilesDebugElement = fixture.debugElement.query(By.directive(DejaTilesComponent));
-        const layoutProvider = tilesDebugElement.injector.get(DejaTilesLayoutProvider) as DejaTilesLayoutProvider;
+        const layoutProvider = tilesDebugElement.injector.get(DejaTilesLayoutProvider);
         return observableFrom(layoutProvider.layoutCompleted);
     };
 
@@ -220,7 +222,7 @@ describe('DejaTilesComponent', () => {
 
     it('should insert a new tile without bounds at the end', (done) => {
         const fixture = TestBed.createComponent(DejaTilesContainerComponent);
-        const tilesContainerInstance = fixture.componentInstance as DejaTilesContainerComponent;
+        const tilesContainerInstance = fixture.componentInstance;
         const tilesDebugElement = fixture.debugElement.query(By.directive(DejaTilesComponent));
         const tilesInstance = tilesDebugElement.componentInstance as DejaTilesComponent;
 
@@ -1473,11 +1475,11 @@ describe('DejaTilesComponent', () => {
         spyOn((tileGroupCmp as any).dejaPopupService, 'openAdvanced$').and.returnValue(responseSubject.pipe(filter(res => !!res)));
         tileGroupCmp.editStyle();
         tileGroupCmp.model.borderColor = '#fff';
-        tileGroupCmp.model.borderDirection = DejaTileBorderDirection.left;
+        tileGroupCmp.model.borderDirection = 0;
         tileGroupCmp.model.borderWidth = 10;
-        responseSubject.next({accepted: false});
+        responseSubject.next({ accepted: false });
         expect(tileGroupCmp.model.borderColor).toBe(dejaTileGroupContainerComponent.orange.color);
-        expect(tileGroupCmp.model.borderDirection).toBe(DejaTileBorderDirection.bottom);
+        expect(tileGroupCmp.model.borderDirection).toBe(4);
         expect(tileGroupCmp.model.borderWidth).toBe(4);
     }));
 
@@ -1495,7 +1497,7 @@ describe('DejaTilesComponent', () => {
         tileGroupCmp.model.borderColor = '#fff';
         tileGroupCmp.model.borderDirection = DejaTileBorderDirection.left;
         tileGroupCmp.model.borderWidth = 0;
-        responseSubject.next({accepted: true});
+        responseSubject.next({ accepted: true });
         expect(tileGroupCmp.model.borderDirection).toBe(DejaTileBorderDirection.top + DejaTileBorderDirection.right + DejaTileBorderDirection.bottom + DejaTileBorderDirection.left);
         expect(tileGroupCmp.model.borderWidth).toBe(0);
         expect(tileGroupCmp.model.borderColor).toBe('#000');
@@ -1515,7 +1517,7 @@ describe('DejaTilesComponent', () => {
         tileGroupCmp.model.borderColor = '#fff';
         tileGroupCmp.model.borderDirection = DejaTileBorderDirection.left;
         tileGroupCmp.model.borderWidth = 10;
-        responseSubject.next({accepted: true});
+        responseSubject.next({ accepted: true });
         expect(tileGroupCmp.model.borderColor).toBe('#fff');
         expect(tileGroupCmp.model.borderDirection).toBe(DejaTileBorderDirection.left);
         expect(tileGroupCmp.model.borderWidth).toBe(10);
