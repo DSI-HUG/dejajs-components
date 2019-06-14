@@ -127,8 +127,9 @@ export class DejaEditorComponent
     /**
      * Value update process
      */
-    public updateValue(value: any) {
+    public updateValue() {
         this.zone.run(() => {
+            let value = this.instance.getData();
             if (!value) {
                 value = null;
             }
@@ -206,7 +207,6 @@ export class DejaEditorComponent
 
             // CKEditor change event
             this.instance.on('change', () => {
-                const value = this.instance.getData();
 
                 // Debounce update
                 if (this.debounce) {
@@ -214,13 +214,13 @@ export class DejaEditorComponent
                         clearTimeout(this.debounceTimeout);
                     }
                     this.debounceTimeout = setTimeout(() => {
-                        this.updateValue(value);
+                        this.updateValue();
                         this.debounceTimeout = null;
-                    }, parseInt(this.debounce, null));
+                    }, parseInt(this.debounce, 10));
 
                     // Live update
                 } else {
-                    this.updateValue(value);
+                    this.updateValue();
                 }
             });
 
@@ -280,6 +280,9 @@ export class DejaEditorComponent
      */
     public getWordAtCursor(): string {
         const range = this.instance.getSelection().getRanges(true)[0];
+        if (!range) {
+            return null;
+        }
         const word = this._firstTextNode(range);
         return (word && word.toReplace) || null;
     }
@@ -326,6 +329,7 @@ export class DejaEditorComponent
         } else {
             this.instance.insertText(replace);
         }
+        this.updateValue();
         this.setFocus();
     }
 
@@ -443,7 +447,8 @@ export class DejaEditorComponent
         firstNodeIsText: boolean;
         toReplace: string;
     } {
-        if (this._trim(selectedNode.getText())) {
+        const text: string = selectedNode.getText();
+        if (this._trim(text) && this._trim(text.substring(text.length - 1))) {
             const node = this._mergeTextNodeAround(selectedNode);
             return {
                 textNode: node,
@@ -512,22 +517,26 @@ export class DejaEditorComponent
         node: { textNode: any; firstNodeIsText: boolean; toReplace: string },
         replace: string
     ): void {
-        const split = node.textNode.getText().split(node.toReplace);
-        node.textNode.setText(split[0]);
-        const newElement = CKEDITOR.dom.element.createFromHtml(
-            `<span>${CKEDITOR.tools.transformPlainTextToHtml(
-                replace,
-                CKEDITOR.ENTER_BR
-            )}</span>`
-        );
-        newElement.insertAfter(node.textNode);
-        if (split.length === 2 && split[1]) {
-            const end = new CKEDITOR.dom.text(split[1]);
-            end.insertAfter(newElement);
+        const index = node.textNode.getText().lastIndexOf(node.toReplace);
+        if (index !== -1) {
+            const beforeText = node.textNode.getText().substring(0, index);
+            const afterText = node.textNode.getText().substring(index + node.toReplace.length);
+            node.textNode.setText(beforeText);
+            const newElement = CKEDITOR.dom.element.createFromHtml(
+                `<span>${CKEDITOR.tools.transformPlainTextToHtml(
+                    replace,
+                    CKEDITOR.ENTER_BR
+                )}</span>`
+            );
+            newElement.insertAfter(node.textNode);
+            if (node.textNode.getText().substring(index + node.toReplace.length)) {
+                const end = new CKEDITOR.dom.text(afterText);
+                end.insertAfter(newElement);
+            }
+            this.instance.getSelection().selectElement(node.textNode);
+            const tmpRange = this.instance.getSelection().getRanges()[0];
+            tmpRange.setStartAfter(node.textNode);
+            tmpRange.select();
         }
-        this.instance.getSelection().selectElement(node.textNode);
-        const tmpRange = this.instance.getSelection().getRanges()[0];
-        tmpRange.setStartAfter(node.textNode);
-        tmpRange.select();
     }
 }

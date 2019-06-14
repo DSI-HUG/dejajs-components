@@ -6,7 +6,7 @@
 	$foreground: map-get($theme, foreground);
 
 	.circular-picker {
-		border: 1px solidmat-color($background, status-bar);
+		border: 1px solid mat-color($background, status-bar);
 		background-color: mat-color($background, status-bar);
 
 		&.disabled {

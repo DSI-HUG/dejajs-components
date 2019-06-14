@@ -49,7 +49,7 @@ A `dist/` folder will be created in the root directory for the library.
 
 ## Test
 
-Just run `npm run test:core` && `npm run test:core` to launch tests.
+Just run `npm run test:core` && `npm run test:lib` to launch tests.
 
 ## Contributing
 

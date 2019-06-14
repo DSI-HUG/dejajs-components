@@ -33,8 +33,10 @@ $MaterialIcons_FontPath: "~material-icons-font/fonts"; // for CLI project we cha
 @import '../tree-list/tree-list-theme';
 @import '../viewport/viewport-theme';
 /* specials themes */
+@import './material/material';
 @import './mixins/menu-theme';
 @import './mixins/popup';
+@import './mixins/loader';
 @import './mixins/item-list-theme';
 @import './mixins/tree-list-borders';
 
@@ -49,6 +51,8 @@ $MaterialIcons_FontPath: "~material-icons-font/fonts"; // for CLI project we cha
     @include deja-popup();
     @include deja-tree-list-borders();
     @include list-loader-theme($custom-theme);
+    @include loader-theme($custom-theme);
+    @include deja-material-theme($custom-theme);
     @include menu-theme($custom-theme);
     @include message-box-theme($custom-theme);
     @include mouse-dragdrop-theme($custom-theme);

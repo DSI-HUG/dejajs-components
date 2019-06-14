@@ -8,11 +8,11 @@
 
 import { ChangeDetectorRef, Component, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
 import { IDejaDragEvent } from '@deja-js/component';
-import { IViewPortItem } from '@deja-js/core';
-import { DejaTreeListComponent } from '@deja-js/component/tree-list';
-import { IDejaMouseDroppableContext, IDejaMouseDraggableContext } from '@deja-js/component/mouse-dragdrop';
+import { IDejaMouseDraggableContext, IDejaMouseDroppableContext } from '@deja-js/component/mouse-dragdrop';
 import { IDropCursorInfos } from '@deja-js/component/mouse-dragdrop';
-import { IItemBase, IItemTree, GroupingService } from '@deja-js/core';
+import { DejaTreeListComponent } from '@deja-js/component/tree-list';
+import { IViewPortItem } from '@deja-js/core';
+import { GroupingService, IItemBase, IItemTree } from '@deja-js/core';
 import { from as observableFrom, Observable, of as observableOf, Subject, Subscription } from 'rxjs';
 import { delay, first, map, reduce, switchMap, tap } from 'rxjs/operators';
 import { News } from '../common/news.model';

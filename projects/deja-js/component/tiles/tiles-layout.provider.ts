@@ -12,7 +12,7 @@ import { DejaClipboardService, Directions, KeyCodes, Position, Rect, Size } from
 import { BehaviorSubject, from as observableFrom, fromEvent as observableFromEvent, merge as observableMerge, Subject, Subscription, timer as observableTimer } from 'rxjs';
 import { debounceTime, delay, filter, first, map, reduce, take, takeUntil, takeWhile, tap } from 'rxjs/operators';
 import { DejaTile } from './tile.class';
-import { IDejaTilesAddEvent, IDejaTilesEvent, IDejaTilesModelEvent, IDejaTilesRemoveEvent } from './tiles.event';
+import { IDejaTilesAddedEvent, IDejaTilesAddEvent, IDejaTilesDeletedEvent, IDejaTilesEvent, IDejaTilesRemoveEvent } from './tiles.event';
 
 interface ILayoutInfo {
     id: string;
@@ -60,7 +60,8 @@ export class DejaTilesLayoutProvider implements OnDestroy {
 
     public layoutCompleted = new Subject<IDejaTilesEvent>();
     public layoutChanged = new Subject<IDejaTilesEvent>();
-    public modelChanged = new Subject<IDejaTilesModelEvent>();
+    public tilesAdded = new Subject<IDejaTilesAddedEvent>();
+    public tilesDeleted = new Subject<IDejaTilesDeletedEvent>();
     public selectionChanged = new Subject<IDejaTilesEvent>();
     public contentAdding = new Subject<IDejaTilesAddEvent>();
     public contentRemoving = new Subject<IDejaTilesRemoveEvent>();
@@ -126,10 +127,10 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                     if (tile.percentBounds && !tile.percentBounds.isEmpty()) {
                         const bounds = this.getPixelBounds(tile.percentBounds);
                         if (bounds.bottom > maxWidth) {
-                            maxWidth = bounds.bottom;
+                            maxWidth = bounds.right;
                         }
                         if (bounds.right > maxHeight) {
-                            maxHeight = bounds.right;
+                            maxHeight = bounds.bottom;
                         }
                         if (!tile.isDragging) {
                             tile.pixelBounds = bounds;
@@ -139,6 +140,9 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                     }
                     if (tile.isSelected && !tile.isHidden) {
                         selectedTileIds.push(tile.id);
+                    }
+                    if (tile.pixelBounds && tile.pixelBounds.bottom > height) {
+                        height = tile.pixelBounds.bottom;
                     }
                 });
 
@@ -542,7 +546,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                 width: this.getPixelSize(targetBounds.width || 0),
             }));
         } else {
-            this.selectionRect$.next(undefined);
+            this.selectionRect$.next();
         }
     }
 
@@ -642,8 +646,8 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         }
 
         // For event after removed finished
-        const event = new CustomEvent('DejaTilesModelEvent', { cancelable: false }) as IDejaTilesModelEvent;
-        event.removed = tilesToDelete;
+        const event = new CustomEvent('DejaTilesDeletedEvent', { cancelable: false }) as IDejaTilesDeletedEvent;
+        event.tiles = tilesToDelete;
 
         tilesToDelete.forEach((tile) => {
             delete this.tilesDic[tile.id];
@@ -661,7 +665,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         this.refreshTiles$.next({ resetWidth: true });
 
         event.tiles = this.tiles;
-        this.modelChanged.next(event);
+        this.tilesDeleted.next(event);
     }
 
     public removeTiles(tileIdsToRemove: string[]) {
@@ -1041,10 +1045,10 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             // Remove original tiles if cut operation
             deleteSourceTiles();
 
-            const e = new CustomEvent('DejaTilesModelEvent', { cancelable: false }) as IDejaTilesModelEvent;
+            const e = new CustomEvent('DejaTileAddedEvent', { cancelable: false }) as IDejaTilesAddedEvent;
             e.tiles = this.tiles;
             e.added = tiles;
-            this.modelChanged.next(e);
+            this.tilesAdded.next(e);
         };
 
         const cancelSubscription = event.cancel$.pipe(
@@ -1666,7 +1670,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                 this.moveVertical(direction, tiles, offset, targetBounds);
 
                 //  bounds array to tiles
-                this.tiles.forEach((t) => {
+                this.tiles.forEach(t => {
                     if (targetBounds[t.id]) {
                         t.percentBounds = targetBounds[t.id];
                     }

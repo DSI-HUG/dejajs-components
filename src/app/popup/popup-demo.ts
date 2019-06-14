@@ -8,8 +8,8 @@
 
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { DialogPosition } from '@angular/material';
-import { Color } from '@deja-js/core';
 import { DejaPopupAction, DejaPopupButton, DejaPopupConfig, DejaPopupReponse, DejaPopupService } from '@deja-js/component/popup';
+import { Color } from '@deja-js/core';
 import { filter, map } from 'rxjs/operators';
 import { DummyComponent } from './dummy/dummy.component';
 import { DejaPopupCustomDemoComponent } from './popup-custom.component';

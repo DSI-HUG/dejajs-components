@@ -1,0 +1,44 @@
+@import '~@angular/material/theming';
+
+@mixin tabs-theme($theme) {
+	$primary: map-get($theme, primary);
+
+	mat-tab-group {
+		&[multi-lines] {
+			.mat-tab-labels {
+				flex-wrap: wrap;
+			}
+		}
+		.mat-tab-header {
+			.mat-tab-label {
+				font-size: 80%;
+				height: auto;
+				line-height: normal;
+				min-width: unset;
+				padding: 12px 10px;
+				position: relative;
+				white-space: nowrap;
+				&:after {
+					background-color: mat-color($primary);
+					bottom: 0;
+					content: '';
+					height: 2px;
+					left: 50%;
+					position: absolute;
+					transition: all 500ms ease;
+					width: 0;
+				}
+				&.mat-tab-label-active { 
+					&:after {
+						left: 0;
+						width: 100%;
+					}
+				}
+			}
+			mat-ink-bar {
+				background-color: mat-color($primary) !important;
+				display: none;
+			}
+		}
+	}
+}

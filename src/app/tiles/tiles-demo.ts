@@ -10,7 +10,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { IDropCursorInfos } from '@deja-js/component';
 import { IDejaMouseDraggableContext } from '@deja-js/component';
 import { IDejaMouseDroppableContext } from '@deja-js/component';
-import { DejaTile, IDejaTilesAddEvent, IDejaTilesRemoveEvent, DejaTileGroup, DejaTilesComponent } from '@deja-js/component/tiles';
+import { DejaTile, DejaTileGroup, DejaTilesComponent, IDejaTilesAddEvent, IDejaTilesRemoveEvent } from '@deja-js/component/tiles';
 import { Rect } from '@deja-js/core';
 import { from as observableFrom,  Observable, of, Subject } from 'rxjs';
 import { defaultIfEmpty, map, reduce, scan, switchMap, take } from 'rxjs/operators';
