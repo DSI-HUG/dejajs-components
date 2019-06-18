@@ -751,13 +751,13 @@ gulp.task('commit-changes', (cb) => {
 });
 
 gulp.task('push-changes', (cb) => {
-	gulpGit.push('origin', 'dev', {
+	gulpGit.push('origin', 'release/4.x.x', {
 		args: '--tags'
 	}, (error) => {
 		if (error) {
 			return cb(error);
 		}
-		gulpGit.push('origin', 'dev', cb);
+		gulpGit.push('origin', 'release/4.x.x', cb);
 	});
 });
 
