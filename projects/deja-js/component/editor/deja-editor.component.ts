@@ -8,6 +8,8 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, forwardRef, Input, NgZone, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import * as _ from 'lodash';
+import { first } from 'rxjs/operators';
 
 import { DejaEditorService } from './deja-editor.service';
 
@@ -47,6 +49,7 @@ export class DejaEditorComponent
 
     private _readonly: boolean;
     private _inline = true;
+    private _ready: boolean;
 
     @Input()
     public set readonly(value: boolean) {
@@ -118,7 +121,7 @@ export class DejaEditorComponent
      */
     public ngAfterViewInit() {
         this._initializer.initDejaEditorLib().then(() => {
-            this.ckeditorInit(this.config || {});
+            this.ckeditorInit(_.cloneDeep(this.config) || {});
             // Effectively display the editor even if parents component ChangeDetectionStrategy is OnPush
             setTimeout(() => this._changeDetectorRef.markForCheck());
         });
@@ -201,6 +204,7 @@ export class DejaEditorComponent
 
             // listen for instanceReady event
             this.instance.on('instanceReady', (evt: any) => {
+                this._ready = true;
                 // send the evt to the EventEmitter
                 this.ready.emit(evt);
             });
@@ -251,7 +255,7 @@ export class DejaEditorComponent
         }
     }
 
-    public onChange(_: any) { }
+    public onChange(x: any) { }
 
     public onTouched() { }
 
@@ -266,8 +270,14 @@ export class DejaEditorComponent
     public setDisabledState(isDisabled: boolean) {
         this.readonly = isDisabled;
         this.disabled.next(isDisabled);
-        if (this.instance) {
-            this.instance.setReadOnly(isDisabled);
+        if (this._ready) {
+            if (this.instance) {
+                this.instance.setReadOnly(isDisabled);
+            }
+        } else {
+            this.ready.pipe(first()).subscribe(() => {
+                this.instance.setReadOnly(this.readonly);
+            });
         }
     }
 
