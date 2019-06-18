@@ -1,3 +1,13 @@
+<a name="4.2.21"></a>
+## [4.2.21](https://github.com/DSI-HUG/dejajs-components/compare/4.2.20...4.2.21) (2019-06-18)
+
+
+### Bug Fixes
+
+* **DejaEditor:** Ensure CkEditor is ready to disable it ([3c7efcf](https://github.com/DSI-HUG/dejajs-components/commit/3c7efcf))
+
+
+
 <a name="4.2.20"></a>
 ## [4.2.20](https://github.com/DSI-HUG/dejajs-components/compare/v4.2.19...v4.2.20) (2019-06-07)
 
