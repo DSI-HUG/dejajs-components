@@ -25,6 +25,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
+import { first } from 'rxjs/operators';
 import { DejaEditorService } from './deja-editor.service';
 
 declare var CKEDITOR: any;
@@ -63,6 +64,7 @@ export class DejaEditorComponent
 
     private _readonly: boolean;
     private _inline = true;
+    private _ready: boolean;
 
     @Input()
     public set readonly(value: boolean) {
@@ -223,6 +225,7 @@ export class DejaEditorComponent
 
             // listen for instanceReady event
             this.instance.on('instanceReady', (evt: any) => {
+                this._ready = true;
                 // send the evt to the EventEmitter
                 this.ready.emit(evt);
             });
@@ -290,8 +293,14 @@ export class DejaEditorComponent
     public setDisabledState(isDisabled: boolean) {
         this.readonly = isDisabled;
         this.disabled.next(isDisabled);
-        if (this.instance) {
-            this.instance.setReadOnly(isDisabled);
+        if (this._ready) {
+            if (this.instance) {
+                this.instance.setReadOnly(isDisabled);
+            }
+        } else {
+            this.ready.pipe(first()).subscribe(() => {
+                this.instance.setReadOnly(this.readonly);
+            });
         }
     }
 
@@ -499,8 +508,8 @@ export class DejaEditorComponent
         const startNode: any =
             startContainer.type === CKEDITOR.NODE_TEXT
                 ? reverse
-                ? this._firstNonEmptyTextNode(startContainer, true)
-                : this._firstNonEmptyTextNode(startContainer)
+                    ? this._firstNonEmptyTextNode(startContainer, true)
+                    : this._firstNonEmptyTextNode(startContainer)
                 : startContainer.getChildren().getItem(range.startOffset - 1);
         if (startNode) {
             if (startNode.type === CKEDITOR.NODE_TEXT) {
