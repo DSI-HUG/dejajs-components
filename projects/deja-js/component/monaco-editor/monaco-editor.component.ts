@@ -421,7 +421,7 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
     @Output()
     public onInit = new EventEmitter();
 
-    @ViewChild('editor')
+    @ViewChild('editor', { static: true })
     private editorContent: ElementRef;
 
     private _editor: any;

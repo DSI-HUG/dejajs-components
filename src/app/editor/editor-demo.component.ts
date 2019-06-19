@@ -20,7 +20,7 @@ export class DejaEditorDemoComponent implements OnInit {
   public tabIndex = 1;
   public replaceWith: string;
 
-  @ViewChild('replaceEditor')
+  @ViewChild('replaceEditor', { static: false })
   private replaceEditor: DejaEditorComponent;
 
   constructor() {}

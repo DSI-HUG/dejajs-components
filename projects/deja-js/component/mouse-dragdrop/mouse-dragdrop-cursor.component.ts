@@ -21,8 +21,8 @@ import { DejaMouseDragDropService, IDragCursorInfos, IDropCursorInfos } from './
     templateUrl: './mouse-dragdrop-cursor.component.html',
 })
 export class DejaMouseDragDropCursorComponent implements OnDestroy {
-    @ViewChild('block') private icon: ElementRef;
-    @ViewChild('content') private content: ElementRef;
+    @ViewChild('block', { static: true }) private icon: ElementRef;
+    @ViewChild('content', { static: true }) private content: ElementRef;
     private position$ = new BehaviorSubject<Position>(undefined);
     private cursor$ = new BehaviorSubject<IDragCursorInfos>(undefined);
     private _dragCursor: IDragCursorInfos;

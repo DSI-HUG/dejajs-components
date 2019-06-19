@@ -62,7 +62,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     /** Unit of stepper */
     @Input() public unit: string;
 
-    @ViewChild(DejaChildValidatorDirective)
+    @ViewChild(DejaChildValidatorDirective, { static: true })
     public set inputValidatorDirective(value: DejaChildValidatorDirective) {
         if (value) {
             value.parentControl = this.ngControl;
