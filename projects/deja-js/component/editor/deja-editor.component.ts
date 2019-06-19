@@ -6,11 +6,27 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, forwardRef, Input, NgZone, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    EventEmitter,
+    forwardRef,
+    Input,
+    NgZone,
+    OnChanges,
+    OnDestroy,
+    Output,
+    SimpleChanges,
+    ViewChild,
+    ViewEncapsulation
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import * as _ from 'lodash';
-import { first } from 'rxjs/operators';
 
+import { first, take } from 'rxjs/operators';
 import { DejaEditorService } from './deja-editor.service';
 
 declare var CKEDITOR: any;
@@ -107,12 +123,30 @@ export class DejaEditorComponent
         this.focus.complete();
         this.blur.complete();
         this.change.complete();
-        this.ready.complete();
         this.disabled.complete();
         if (this.instance) {
             this.instance.focusManager.blur(true);
-            this.instance.destroy();
-            this.instance = null;
+            if (this._ready) {
+                try {
+                    // Workaround for a ckEditor bug
+                    this.instance.destroy();
+                } catch (e) {
+                    console.warn(e, 'Error occurred when destroying ckEditor instance');
+                }
+                this.ready.complete();
+                this.instance = null;
+            } else {
+                this.ready.pipe(first()).subscribe(() => {
+                    try {
+                        // Workaround for a ckEditor bug
+                        this.instance.destroy();
+                    } catch (e) {
+                        console.warn(e, 'Error occurred when destroying ckEditor instance');
+                    }
+                    this.instance = null;
+                    this.ready.complete();
+                });
+            }
         }
     }
 
@@ -275,7 +309,7 @@ export class DejaEditorComponent
                 this.instance.setReadOnly(isDisabled);
             }
         } else {
-            this.ready.pipe(first()).subscribe(() => {
+            this.ready.pipe(take(1)).subscribe(() => {
                 this.instance.setReadOnly(this.readonly);
             });
         }
