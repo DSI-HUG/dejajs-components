@@ -289,7 +289,7 @@ export class DejaEditorComponent
         }
     }
 
-    public onChange(x: any) { }
+    public onChange(_x: any) { }
 
     public onTouched() { }
 
