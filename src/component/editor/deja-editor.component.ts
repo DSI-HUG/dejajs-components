@@ -24,8 +24,9 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import * as _ from 'lodash';
 
-import { first } from 'rxjs/operators';
+import { first, take } from 'rxjs/operators';
 import { DejaEditorService } from './deja-editor.service';
 
 declare var CKEDITOR: any;
@@ -123,17 +124,30 @@ export class DejaEditorComponent
         this.focus.complete();
         this.blur.complete();
         this.change.complete();
-        this.ready.complete();
         this.disabled.complete();
         if (this.instance) {
             this.instance.focusManager.blur(true);
-            try {
-                // Workaround for a ckEditor bug
-                this.instance.destroy();
-            } catch (e) {
-                console.warn('Error occurred when destroying ckEditor instance');
+            if (this._ready) {
+                try {
+                    // Workaround for a ckEditor bug
+                    this.instance.destroy();
+                } catch (e) {
+                    console.warn(e, 'Error occurred when destroying ckEditor instance');
+                }
+                this.ready.complete();
+                this.instance = null;
+            } else {
+                this.ready.pipe(first()).subscribe(() => {
+                    try {
+                        // Workaround for a ckEditor bug
+                        this.instance.destroy();
+                    } catch (e) {
+                        console.warn(e, 'Error occurred when destroying ckEditor instance');
+                    }
+                    this.instance = null;
+                    this.ready.complete();
+                });
             }
-            this.instance = null;
         }
     }
 
@@ -142,7 +156,7 @@ export class DejaEditorComponent
      */
     public ngAfterViewInit() {
         this._initializer.initDejaEditorLib().then(() => {
-            this.ckeditorInit(this.config || {});
+            this.ckeditorInit(_.cloneDeep(this.config) || {});
             // Effectively display the editor even if parents component ChangeDetectionStrategy is OnPush
             setTimeout(() => this._changeDetectorRef.markForCheck());
         });
@@ -276,7 +290,7 @@ export class DejaEditorComponent
         }
     }
 
-    public onChange(_: any) {
+    public onChange(_x: any) {
     }
 
     public onTouched() {
@@ -298,7 +312,7 @@ export class DejaEditorComponent
                 this.instance.setReadOnly(isDisabled);
             }
         } else {
-            this.ready.pipe(first()).subscribe(() => {
+            this.ready.pipe(take(1)).subscribe(() => {
                 this.instance.setReadOnly(this.readonly);
             });
         }
