@@ -1,3 +1,14 @@
+<a name="4.2.22"></a>
+## [4.2.22](https://github.com/DSI-HUG/dejajs-components/compare/4.2.21...4.2.22) (2019-06-21)
+
+
+### Bug Fixes
+
+* **DejaEditor:** Clone config to avoid error due to its reuse ([a78ff3c](https://github.com/DSI-HUG/dejajs-components/commit/a78ff3c))
+* **DejaEditor:** Fix the bug that occurs when we try to destroy a ckEditor that is not already fully initialized by waiting the ready state when destroying ([e67ac0c](https://github.com/DSI-HUG/dejajs-components/commit/e67ac0c))
+
+
+
 <a name="4.2.21"></a>
 ## [4.2.21](https://github.com/DSI-HUG/dejajs-components/compare/4.2.20...4.2.21) (2019-06-18)
 
