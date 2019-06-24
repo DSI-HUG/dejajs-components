@@ -22,6 +22,7 @@ const routes: Routes = [
     { path: 'editor', loadChildren: './editor/editor-demo.module#DejaEditorDemoModule', data: { title: 'Editor' } },
     // { path: 'events', loadChildren: './global-events/global-events-demo.module#DejaGlobalEventsDemoModule', data: { title: 'Events' } },
     { path: 'grid', loadChildren: './grid/grid-demo.module#DejaGridDemoModule', data: { title: 'Grid' } },
+    { path: 'iframe', loadChildren: './iframe/iframe-demo.module#DejaIframeDemoModule', data: { title: 'Iframe' } },
     { path: 'message-box', loadChildren: './message-box/message-box-demo.module#DejaMessageBoxDemoModule', data: { title: 'Message Box' } },
     { path: 'monaco-editor', loadChildren: './monaco-editor/monaco-editor-demo.module#MonacoEditorDemoModule', data: { title: 'Monaco Editor' } },
     { path: 'numeric-stepper', loadChildren: './numeric-stepper/numeric-stepper-demo.module#DejaNumericStepperDemoModule', data: { title: 'Numeric Stepper' } },
