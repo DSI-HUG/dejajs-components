@@ -8,7 +8,10 @@
 import { PortalModule } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { MatButtonModule, MatDialogModule, MatIconModule, MatToolbarModule } from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { DejaOverlayModule } from '@deja-js/component/overlay';
 
 import { DejaPopupActionsComponent } from './component/popup-actions/popup-actions.component';

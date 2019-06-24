@@ -80,7 +80,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
      */
     @Input() public tabIndex = 0;
 
-    @ContentChild('tileTemplate')
+    @ContentChild('tileTemplate', { static: false })
     public tileTemplate: any;
 
     // NgModel implementation
@@ -100,7 +100,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
         return this.layoutProvider.tiles;
     }
 
-    @ViewChild('tilesContainer') private tilesContainer: ElementRef;
+    @ViewChild('tilesContainer', { static: true }) private tilesContainer: ElementRef;
 
     constructor(el: ElementRef, private changeDetectorRef: ChangeDetectorRef, private layoutProvider: DejaTilesLayoutProvider, @Self() @Optional() public _control: NgControl) {
         if (this._control) {

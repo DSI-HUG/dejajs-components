@@ -21,11 +21,11 @@ import {
 } from '@angular/core';
 import { FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import {
-    _MatInputMixinBase,
     CanUpdateErrorState,
     ErrorStateMatcher,
     MatFormFieldControl
 } from '@angular/material';
+import { _MatInputMixinBase } from '@deja-js/core/util';
 import { Subject } from 'rxjs';
 import { DejaEditorComponent } from '../deja-editor.component';
 

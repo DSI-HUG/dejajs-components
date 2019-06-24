@@ -10,9 +10,11 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
-import { _MatInputMixinBase, CanUpdateErrorState, ErrorStateMatcher, MatFormFieldControl } from '@angular/material';
+import { MatFormFieldControl } from '@angular/material/form-field';
+import { CanUpdateErrorState, ErrorStateMatcher } from '@angular/material';
 import { DateComponentLayout, DaysOfWeek, DejaDateSelectorComponent } from '@deja-js/component/date-selector';
 import { DejaChildValidatorDirective, DejaConnectionPositionPair, KeyCodes } from '@deja-js/core';
+import { _MatInputMixinBase } from '@deja-js/core/util';
 import * as moment_ from 'moment';
 import { combineLatest as observableCombineLatest, from as observableFrom, fromEvent as observableFromEvent, merge as observableMerge, ReplaySubject, Subject } from 'rxjs';
 import { delay, filter, first, map, switchMap, takeWhile, tap } from 'rxjs/operators';
@@ -71,7 +73,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
     /** Disabled dates. It's an array of DaysOfWeek (number between 0 and 6) or a date. */
     @Input() public disableDates: Array<DaysOfWeek | Date>; // | ((d: Date) => boolean);
     /** Reference to DejaDateSelectorComponent inside thic control */
-    @ViewChild(DejaDateSelectorComponent) public dateSelectorComponent: DejaDateSelectorComponent;
+    @ViewChild(DejaDateSelectorComponent, { static: true }) public dateSelectorComponent: DejaDateSelectorComponent;
     /** Offset de position horizontal de la zone de dropdown */
     @Input() public overlayOffsetX = 0;
     /** Offset de position verticale de la zone de dropdown */
@@ -120,7 +122,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
      */
     public controlType = 'deja-date-picker';
 
-    @ViewChild(DejaChildValidatorDirective) private inputValidatorDirective: DejaChildValidatorDirective;
+    @ViewChild(DejaChildValidatorDirective, { static: false }) private inputValidatorDirective: DejaChildValidatorDirective;
 
     /** Default placeholder for input */
     private _placeholder: string;
@@ -141,7 +143,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
     private formatChanged$ = new Subject<string>();
     private dateChanged$ = new Subject<Date | string>();
 
-    @ViewChild('inputelement')
+    @ViewChild('inputelement', { static: false })
     public set inputElementRef(element: ElementRef) {
         if (element) {
             this.inputElement = element.nativeElement;

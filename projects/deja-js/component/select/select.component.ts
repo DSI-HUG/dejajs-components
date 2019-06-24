@@ -10,7 +10,8 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
 import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, DoCheck, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
-import { MatFormFieldControl, MatInput } from '@angular/material';
+import { MatFormFieldControl } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 import { CanDisable, CanUpdateErrorState, ErrorStateMatcher } from '@angular/material/core';
 import { IDejaChipsComponentCloseEvent } from '@deja-js/component/chips';
 import { DejaOverlayComponent } from '@deja-js/component/overlay';
@@ -70,10 +71,10 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
     /** For test only. */
     @Output() public dropDownVisibleChange = new EventEmitter<boolean>();
 
-    @ContentChild('itemTemplate') public itemTemplateInternal: any;
-    @ContentChild('parentItemTemplate') public parentItemTemplateInternal: any;
-    @ContentChild('selectedTemplate') public selectedTemplate: any;
-    @ContentChild('loaderTemplate') private loaderTemplateInternal: any;
+    @ContentChild('itemTemplate', { static: false }) public itemTemplateInternal: any;
+    @ContentChild('parentItemTemplate', { static: false }) public parentItemTemplateInternal: any;
+    @ContentChild('selectedTemplate', { static: false }) public selectedTemplate: any;
+    @ContentChild('loaderTemplate', { static: false }) private loaderTemplateInternal: any;
 
     /** Internal use */
     public overlayOwnerElement: HTMLElement;
@@ -90,9 +91,9 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
 
     private mouseUp$sub: Subscription;
 
-    @ViewChild('inputElement') public inputElement: ElementRef;
+    @ViewChild('inputElement', { static: false }) public inputElement: ElementRef;
 
-    @ViewChild(MatInput) protected input: MatInput;
+    @ViewChild(MatInput, { static: false }) protected input: MatInput;
 
     @HostBinding('attr.disabled') public _disabled: boolean = null;
     private _type = 'select';
@@ -111,7 +112,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
     @HostBinding('attr.readonly') public _readonly: boolean = null;
 
     /** Overlay pane containing the options. */
-    @ViewChild(DejaOverlayComponent) private overlay: DejaOverlayComponent;
+    @ViewChild(DejaOverlayComponent, { static: true }) private overlay: DejaOverlayComponent;
 
     private clearFilterExpression$ = new BehaviorSubject<void>(null);
     private filterListComplete$ = new Subject();
@@ -774,7 +775,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
         return this._readonly;
     }
 
-    @ViewChild(DejaChildValidatorDirective)
+    @ViewChild(DejaChildValidatorDirective, { static: false })
     protected set inputValidatorDirective(value: DejaChildValidatorDirective) {
         if (value) {
             value.parentControl = this.ngControl;

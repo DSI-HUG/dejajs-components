@@ -25,7 +25,7 @@ export class DejaViewPortDemoComponent {
     public hasButtons = false;
     public ensureIndex: number;
 
-    @ViewChild('viewport') private viewport: DejaViewPortComponent;
+    @ViewChild('viewport', { static: false }) private viewport: DejaViewPortComponent;
 
     protected exampleValue = `
     <deja-viewport [models]="news$ | async" itemSize="120">

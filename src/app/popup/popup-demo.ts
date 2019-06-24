@@ -7,7 +7,7 @@
  */
 
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { DialogPosition } from '@angular/material';
+import { DialogPosition } from '@angular/material/dialog';
 import { DejaPopupAction, DejaPopupButton, DejaPopupConfig, DejaPopupReponse, DejaPopupService } from '@deja-js/component/popup';
 import { Color } from '@deja-js/core';
 import { filter, map } from 'rxjs/operators';

@@ -57,14 +57,14 @@ export class DejaViewPortComponent implements OnDestroy {
     /** Permet de définir un template d'élément par binding */
     @Input() public itemTemplateExternal: any;
 
-    @ContentChild('itemTemplate') private itemTemplateInternal: any;
+    @ContentChild('itemTemplate', { static: false }) private itemTemplateInternal: any;
 
-    @ViewChild('down')
+    @ViewChild('down', { static: false })
     public set downButton(element: ElementRef) {
         this.downButton$.next((element && element.nativeElement) || null);
     }
 
-    @ViewChild('up')
+    @ViewChild('up', { static: false })
     public set upButton(element: ElementRef) {
         this.upButton$.next((element && element.nativeElement) || null);
     }
@@ -121,7 +121,7 @@ export class DejaViewPortComponent implements OnDestroy {
         return this.viewPort.itemsSize;
     }
 
-    @ViewChild('wrapper')
+    @ViewChild('wrapper', { static: true })
     public set wrapperElement(element: ElementRef) {
         this.element = element.nativeElement as HTMLElement;
         this.viewPort.element$.next(this.element);
