@@ -1,4 +1,4 @@
-## 1.0.0 (2019-06-24)
+## 8.0.0 (2019-06-24)
 
 ##### Chores
 
@@ -205,6 +205,15 @@
 ##### Tests
 
 * **DejaTileComponent:**  Fix test ([c55ae13c](https://github.com/DSI-HUG/dejajs-components/commit/c55ae13cfbbebe899d029604b0446a618d34aef7))
+
+<a name="4.2.3"></a>
+## [4.2.3](https://github.com/DSI-HUG/dejajs-components/compare/v4.2.2...v4.2.3) (2019-02-21)
+
+
+### Bug Fixes
+
+* **DejaDatePickerComponent:** default date is now set to null ([f9c42fa](https://github.com/DSI-HUG/dejajs-components/commit/f9c42fa))
+
 
 <a name="4.2.2"></a>
 ## [4.2.2](https://github.com/DSI-HUG/dejajs-components/compare/v4.2.1...v4.2.2) (2019-02-13)
