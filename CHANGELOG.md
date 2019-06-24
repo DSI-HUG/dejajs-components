@@ -102,6 +102,110 @@
 
 * **DejaTileComponent:**  Fix test ([c55ae13c](https://github.com/DSI-HUG/dejajs-components/commit/c55ae13cfbbebe899d029604b0446a618d34aef7))
 
+## 1.0.0 (2019-06-24)
+
+##### Chores
+
+* **release:**  bump version number to 4.2.2 ([9e43e6d1](https://github.com/DSI-HUG/dejajs-components/commit/9e43e6d1ee542daa80dd75f18f64c571327c60e9))
+
+##### Continuous Integration
+
+* **Dependencies:**  Update peerDependencies ([a580a89f](https://github.com/DSI-HUG/dejajs-components/commit/a580a89f180b725926a6fe6515df4af0b7e4fb9a))
+* **Libraries:**  Update CLI + split demo and projects tsConfig for build ([61197104](https://github.com/DSI-HUG/dejajs-components/commit/611971043080857ca480ae7a3c7afeee8a2e9226))
+* **Global:**
+  *  add package-lock ([b4231057](https://github.com/DSI-HUG/dejajs-components/commit/b4231057279ce855248c6cf309cfd0b202f6c999))
+  *  fix config ([330112b4](https://github.com/DSI-HUG/dejajs-components/commit/330112b401d762d3dee70c9147e0f8f06b2dbc34))
+* **Demo:**  Build --prod ([cfe1626f](https://github.com/DSI-HUG/dejajs-components/commit/cfe1626f6e429887c1afa35d3b4426d27ec4ce9f))
+* **Travis:**
+  *  Demo deployment ([059180ae](https://github.com/DSI-HUG/dejajs-components/commit/059180aebb0cd67233eb5810c94f7e5386f4bfb3))
+  *  Next test ([f54c255a](https://github.com/DSI-HUG/dejajs-components/commit/f54c255afe10f9ff0afc956e31a939a1392f0e83))
+  *  Fix config ([7757a8a3](https://github.com/DSI-HUG/dejajs-components/commit/7757a8a33388e9da604b2e22509d0ae2879c1185))
+  *  Move builds ([bcd726ab](https://github.com/DSI-HUG/dejajs-components/commit/bcd726abe8a168550a732cf05704df0499b35242))
+  *  Add jobs on travis.yml ([7d5c0939](https://github.com/DSI-HUG/dejajs-components/commit/7d5c0939d3b2021ad665f505b40ee49d5781fd92))
+  *  next try... ([f9103070](https://github.com/DSI-HUG/dejajs-components/commit/f9103070307a58f8e63c817cbb4b78a201bc603c))
+  *  Add config ([c7aa0b60](https://github.com/DSI-HUG/dejajs-components/commit/c7aa0b60dd9981edb1633ee16bc1172f855f2989))
+  *  add ls for debug ([1fdd4006](https://github.com/DSI-HUG/dejajs-components/commit/1fdd4006fd05e70942d538c546df9e72376538d2))
+  *  revert windows configuration ([84235018](https://github.com/DSI-HUG/dejajs-components/commit/84235018e7a4ba3d3cd92b92c14baa4594fe1179))
+  *  increase memory limit ([15abf4e6](https://github.com/DSI-HUG/dejajs-components/commit/15abf4e634e3007aa1712af91545973981b0099f))
+  *  Try to use windows ([e0010e07](https://github.com/DSI-HUG/dejajs-components/commit/e0010e07164bacb68649fe8dbb92910a6f3ada21))
+  *  node_js 10 ([7734b233](https://github.com/DSI-HUG/dejajs-components/commit/7734b2331091b22568fa912d39e414555a13af14))
+  *  Remove nodeJs 8 forcing ([0489d430](https://github.com/DSI-HUG/dejajs-components/commit/0489d4301271e528099e7b0ee3f1ad333354d280))
+* **Scripts:**
+  *  fix npm-check-updates properties (v3) ([78a83c57](https://github.com/DSI-HUG/dejajs-components/commit/78a83c578e2f3d05a0226341208321d0694e1d20))
+  *  Update tag.sh ([eff6a0dc](https://github.com/DSI-HUG/dejajs-components/commit/eff6a0dcb6de670c38442182c11358cc38c09301))
+* **npmignore:**  ignore .scannerwork files ([b550bf73](https://github.com/DSI-HUG/dejajs-components/commit/b550bf73a7e6d6e2c3408a1fd41369826b022863))
+* **Build:**  increase max-old-space-size un build:lib ([5b56de3f](https://github.com/DSI-HUG/dejajs-components/commit/5b56de3f801ca2fa9bc5af7b48de54744471d6a6))
+* **Test:**  single run ([f9f0d248](https://github.com/DSI-HUG/dejajs-components/commit/f9f0d24840618e3597e1abc29e34c8ce3e53096d))
+* **Core:**  fix test config ([ef9ffd8d](https://github.com/DSI-HUG/dejajs-components/commit/ef9ffd8d591157344c77f87c3095ef6cf165a5b1))
+
+##### Documentation Changes
+
+* **Global:**  documentation improvement ([ecb1b93f](https://github.com/DSI-HUG/dejajs-components/commit/ecb1b93ff4435084942c6cd1489b5b331d04c28d))
+
+##### New Features
+
+* **Material8:**  Update to Material 8 ([27ef07e0](https://github.com/DSI-HUG/dejajs-components/commit/27ef07e064c73c52965b0213c99d2f72f8d76e8a))
+* **Angular8:**  Update to Angular 8 ([5c778ee0](https://github.com/DSI-HUG/dejajs-components/commit/5c778ee0ce33c2db9aa2f5187e3d833cc4ff9576))
+* **Style:**  add mixins for custom material theme ([8c6d1675](https://github.com/DSI-HUG/dejajs-components/commit/8c6d1675d6e3535467dfc5a8cf22cb7eebdd60ff))
+* **Tiles:**  Merge 4.x.x modifications for tiles component ([93f94dd1](https://github.com/DSI-HUG/dejajs-components/commit/93f94dd1c4e3011b01b35be597efe2155a9779cf))
+* **TilesComponent:**  Change interfaces to classes ([0e711c04](https://github.com/DSI-HUG/dejajs-components/commit/0e711c040ddc3f69fec611c2ce2f7ff17b9d9d19))
+
+##### Bug Fixes
+
+* **input-mixin:**  Add license ([9bd72981](https://github.com/DSI-HUG/dejajs-components/commit/9bd72981f31c3bb4e370cb8ea7300e4c8226e0aa))
+* **TilesComponent:**
+  *  Fix tests ([1dc4c06b](https://github.com/DSI-HUG/dejajs-components/commit/1dc4c06b61b5ff6391ecefe40ceeb31e66650af9))
+  *  Fix container auto height ([b8ecf4b7](https://github.com/DSI-HUG/dejajs-components/commit/b8ecf4b7af39505460b74510790b7450b7311ccf))
+  *  Fix container auto height ([3908c5a6](https://github.com/DSI-HUG/dejajs-components/commit/3908c5a67e4224f5ea6287b5769aa002375870a3))
+* **TilesGroupComponent:**  Fix _designMode must be public with @HostBinding ([09862aab](https://github.com/DSI-HUG/dejajs-components/commit/09862aab511f7063a927e1561f283e5a43f53670))
+* **TsLint:**  Lint errors ([ae750b21](https://github.com/DSI-HUG/dejajs-components/commit/ae750b21aed4d722a8e0492c93b25c6642c06ed6))
+* **Cron:**  Fix version for npm-check-updates at 2.15.0 ([99e644fe](https://github.com/DSI-HUG/dejajs-components/commit/99e644fe1fac40534b8de7c8e8f385d401c47f5a))
+* **cron:**  Fix build fail for cron ([31f1e5a8](https://github.com/DSI-HUG/dejajs-components/commit/31f1e5a8552c2078ef06c15cb99ade9c6b388f1a))
+* **Package.json:**  Version for cron script ([91e61208](https://github.com/DSI-HUG/dejajs-components/commit/91e61208ddc2c7d8bcfab3e98ef54849f6ea63d8))
+* **MarkDown:**  Fix 404 for prism.css ([1929f492](https://github.com/DSI-HUG/dejajs-components/commit/1929f4928ea7d975480a154064cc7e7b6f68ef00))
+* **DejaDatePicker:**  Place the cursor at the beginning of the input if empty. ([098174c4](https://github.com/DSI-HUG/dejajs-components/commit/098174c4bed882d0a2c728dfd201b8bea31c8e57))
+* **ItemListBase:**  Fix possible null pointer on listElement ([8a982706](https://github.com/DSI-HUG/dejajs-components/commit/8a98270603d55072e301674dd2793adcde36a33e))
+* **SnackBar:**  Possible null pointer exception on alignments ([80773cdd](https://github.com/DSI-HUG/dejajs-components/commit/80773cdd8b59b459b06f73536ecb77f0b7f2ad4f))
+* **DejaEditor:**  Replace function must refresh the formControl and must replace the last matching character. ([035c6c62](https://github.com/DSI-HUG/dejajs-components/commit/035c6c626c79d93ed5ce53cc681e70f626ad66bf))
+* **Demo:**
+  *  Update polyfills + beta.6 ([a58f6b0e](https://github.com/DSI-HUG/dejajs-components/commit/a58f6b0e1b42bf7efca52fa7564da67339defeec))
+  *  fix tiles demo.... ([810d78f1](https://github.com/DSI-HUG/dejajs-components/commit/810d78f1ef082253a41ea8f58bb87dc157684ca4))
+* **Testing:**  Fix tiles test + test config ([b5504fba](https://github.com/DSI-HUG/dejajs-components/commit/b5504fba4f55acec4838026b129a604dc06b7395))
+* **DejaTilesModule:**  Remove changes on imports and private access on template ([5d715ee8](https://github.com/DSI-HUG/dejajs-components/commit/5d715ee8a3a7ecff1803d09afe45b9b06d73e098))
+* **TilesLayoutProvider:**  Fix possible null pointer after timer elapsed ([12ce61ce](https://github.com/DSI-HUG/dejajs-components/commit/12ce61cebb5002d464a4edf439bacf3036617786))
+* **TileGroup:**
+  *  Prevent multiple instance of editor ([4f4f0251](https://github.com/DSI-HUG/dejajs-components/commit/4f4f0251388ad542623570984f081c784553604a))
+  *  Fix inverted buttons ([269c4a2b](https://github.com/DSI-HUG/dejajs-components/commit/269c4a2bb536cc64e5bc56f89dc5d78d7fbfd930))
+  *  Avoid action position in the text area ([9b7eb9eb](https://github.com/DSI-HUG/dejajs-components/commit/9b7eb9eb9df3f7b2738b0c6d028d1a76f1c7d51c))
+* **TileLayoutProvider:**  Keep bounds on paste ([db8bada8](https://github.com/DSI-HUG/dejajs-components/commit/db8bada8295a4a2d16cdb2e92ea6cb2687cfe502))
+* **OverlayComponent:**  Manage the input on the isMobile to disable mediaService updating (DEJS-632) ([d4b0e9d1](https://github.com/DSI-HUG/dejajs-components/commit/d4b0e9d1aad2b70d2e51705b584f39cb060388da))
+* **NumericStepperComponent:**  Fix numeric stepper button add/minus display. ([6c56eecb](https://github.com/DSI-HUG/dejajs-components/commit/6c56eecbf018405bd170dc6a692b96b9ee10faff))
+* **CiruclarPickerComponent:**  Use classList.add instead of className concatenation on body element to avoid concatenation error (missing white space) ([ae6a21a2](https://github.com/DSI-HUG/dejajs-components/commit/ae6a21a2c789a1fa58241c67e2836f3e55a19aaf))
+* **config:**  link demo app with sources instead of dist ([90e522e6](https://github.com/DSI-HUG/dejajs-components/commit/90e522e69b706094ae32c165b1470262722f0dbb))
+* **DejaTag:**  fix deja-tag not notifying parent on chip close ([cf2c0155](https://github.com/DSI-HUG/dejajs-components/commit/cf2c0155290bd57544ec1c55d8b1f1f9400c6b47))
+* **DejaGridComponentTest:**  fix typing ([c75bb7fb](https://github.com/DSI-HUG/dejajs-components/commit/c75bb7fb4ab82c2ade268abcf4a2107fb86bb1bc))
+* **core/util:**  rename public_api ([0d5de141](https://github.com/DSI-HUG/dejajs-components/commit/0d5de141f2578632ce71f5b003972583c708bf77))
+*  package.json to reduce vulnerabilities ([2c9846b1](https://github.com/DSI-HUG/dejajs-components/commit/2c9846b11bfccb197fbea93badf6c9030cf13160))
+*  package.json to reduce vulnerabilities ([50a6e9f6](https://github.com/DSI-HUG/dejajs-components/commit/50a6e9f66bb6b4d0381c1c3c6942dcea0233cd8d))
+
+##### Other Changes
+
+* **Global:**
+  *  Update Dependencies ([fc91d8b7](https://github.com/DSI-HUG/dejajs-components/commit/fc91d8b79c2b1077ebe40f8499ced09298a503c5))
+  *  yarn.lock ([e76da697](https://github.com/DSI-HUG/dejajs-components/commit/e76da6974f97fcbab07a60007d714ad3f6d9f5f1))
+* **package-lock.json:**
+  *  Removed from github ([9cd02fa7](https://github.com/DSI-HUG/dejajs-components/commit/9cd02fa7da605c14bc17ae8a276327719188079b))
+  *  Removed from github ([b9390e07](https://github.com/DSI-HUG/dejajs-components/commit/b9390e071964f304060da008777011c03a637786))
+* **OverlayComponent:**  Remove useless use of coerceBooleanProperty (DEJS-632) ([9bb66321](https://github.com/DSI-HUG/dejajs-components/commit/9bb66321e824e9e88f3362cc2aa9f7aca1aa1b7e))
+
+##### Refactors
+
+* **Global:**  Using @angular/cli@7.x.x to generate library ([100312c6](https://github.com/DSI-HUG/dejajs-components/commit/100312c6e344c143988ff59f038038a976306cc9))
+
+##### Tests
+
+* **DejaTileComponent:**  Fix test ([c55ae13c](https://github.com/DSI-HUG/dejajs-components/commit/c55ae13cfbbebe899d029604b0446a618d34aef7))
+
 <a name="4.2.2"></a>
 ## [4.2.2](https://github.com/DSI-HUG/dejajs-components/compare/v4.2.1...v4.2.2) (2019-02-13)
 
