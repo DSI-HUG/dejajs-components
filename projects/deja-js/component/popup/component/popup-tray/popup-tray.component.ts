@@ -7,7 +7,7 @@
  */
 
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
 import { from as observableFrom, Observable } from 'rxjs';
 import { debounceTime, filter, map, merge } from 'rxjs/operators';
 import { DejaPopupAction } from '../../model/popup-action.model';

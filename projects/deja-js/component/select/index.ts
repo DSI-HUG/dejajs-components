@@ -9,7 +9,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatIconModule, MatInputModule } from '@angular/material';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { DejaChipsModule } from '@deja-js/component/chips';
 import { DejaListLoaderModule } from '@deja-js/component/loaders';
 import { DejaOverlayModule } from '@deja-js/component/overlay';

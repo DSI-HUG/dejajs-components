@@ -10,7 +10,9 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Optional, Output, Self, ViewChild } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroupDirective, NgControl, NgForm, ValidationErrors, Validator, ValidatorFn } from '@angular/forms';
-import { _MatInputMixinBase, CanUpdateErrorState, ErrorStateMatcher, MatFormFieldControl } from '@angular/material';
+import { MatFormFieldControl } from '@angular/material/form-field';
+import { _MatInputMixinBase } from '@deja-js/core/util';
+import { CanUpdateErrorState, ErrorStateMatcher } from '@angular/material';
 import { Subject } from 'rxjs';
 
 import { DejaChildValidatorDirective, DejaTextMetricsService } from '@deja-js/core';

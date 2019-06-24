@@ -7,9 +7,8 @@
  */
 
 import { ComponentType } from '@angular/cdk/portal';
-import { Injectable } from '@angular/core';
-import { TemplateRef } from '@angular/core/src/linker/template_ref';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { Injectable, TemplateRef } from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DejaPopupActionsComponent } from '../component/popup-actions/popup-actions.component';
