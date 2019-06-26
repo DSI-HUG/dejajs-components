@@ -7,7 +7,7 @@
  */
 import { ComponentType } from '@angular/cdk/portal';
 import { TemplateRef } from '@angular/core';
-import { MatDialogConfig } from '@angular/material';
+import { MatDialogConfig } from '@angular/material/dialog';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { BehaviorSubject } from 'rxjs';
 import { DejaPopupAction } from './popup-action.model';

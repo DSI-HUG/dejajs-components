@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { IColorEvent } from '@deja-js/component';
 import { DejaPopupAction, DejaPopupConfig } from '@deja-js/component/popup';
 import { Color, MaterialColors } from '@deja-js/core';

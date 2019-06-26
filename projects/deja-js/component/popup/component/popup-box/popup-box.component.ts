@@ -7,7 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { HostListener } from '@angular/core';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
 import { DejaPopupAction } from '../../model/popup-action.model';
 import { DejaPopupBase } from '../../model/popup-base.class';
 

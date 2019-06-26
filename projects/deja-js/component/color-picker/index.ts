@@ -9,7 +9,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule  } from '@angular/forms';
-import { MatButtonModule } from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
 import { DejaColorSelectorModule  } from '@deja-js/component/color-selector';
 import { DejaOverlayModule } from '@deja-js/component/overlay';
 import { DejaColorPickerComponent  } from './color-picker.component';

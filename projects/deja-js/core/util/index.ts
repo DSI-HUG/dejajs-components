@@ -9,3 +9,4 @@
 export * from './HtmlUtils';
 export * from './RegExpUtils';
 export * from './DateUtils';
+export * from './input-mixin';

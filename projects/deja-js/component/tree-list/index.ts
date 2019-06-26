@@ -9,7 +9,10 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatButtonModule, MatCheckboxModule, MatIconModule, MatInputModule } from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { DejaDragDropModule } from '@deja-js/component/dragdrop';
 import { DejaListLoaderModule } from '@deja-js/component/loaders';
 import { DejaChildValidatorModule, DejaItemModule, DejaTextMetricsModule } from '@deja-js/core';

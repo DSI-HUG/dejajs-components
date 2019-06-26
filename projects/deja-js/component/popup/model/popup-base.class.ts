@@ -8,7 +8,7 @@
 
 import { ComponentPortal, Portal } from '@angular/cdk/portal';
 import { ElementRef, Injector, OnInit, Renderer2 } from '@angular/core';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { filter, first, tap } from 'rxjs/operators';
 import { DejaPopupAction } from './popup-action.model';

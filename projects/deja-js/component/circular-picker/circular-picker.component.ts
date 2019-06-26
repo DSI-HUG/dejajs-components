@@ -52,9 +52,9 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
     @Input() public ranges: ICircularRange[];
 
     /** Template for labels inside picker. Use it to customize labels */
-    @ContentChild('labelTemplate') public labelTemplate: any;
+    @ContentChild('labelTemplate', { static: false }) public labelTemplate: any;
     /** template for cursor inside picker. Use it to customize labels */
-    @ContentChild('cursorTemplate') public cursorTemplate: any;
+    @ContentChild('cursorTemplate', { static: false }) public cursorTemplate: any;
 
     /** disabled property setter. Can be string or empty so you can use it like : <circular-picker disabled></circular-picker> */
     @Input()
@@ -93,7 +93,7 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
 
     private mousedown$sub: Subscription;
 
-    @ViewChild('picker') private picker: ElementRef;
+    @ViewChild('picker', { static: true }) private picker: ElementRef;
 
     public get cursorHand() {
         return this._cursorHand;

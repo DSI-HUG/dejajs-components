@@ -49,7 +49,7 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
     @HostBinding('attr.disabled') public _disabled: boolean = null;
 
     /** Overlay pane containing the options. */
-    @ViewChild(DejaOverlayComponent) private dejaOverlayCmp: DejaOverlayComponent;
+    @ViewChild(DejaOverlayComponent, { static: true }) private dejaOverlayCmp: DejaOverlayComponent;
 
     private _positions = DejaConnectionPositionPair.default;
 

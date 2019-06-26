@@ -82,7 +82,7 @@ export class DejaOverlayComponent implements OnDestroy {
     private disableMediaService = false;
 
     /** Overlay pane containing the options. */
-    @ViewChild(CdkConnectedOverlay) private overlay: CdkConnectedOverlay;
+    @ViewChild(CdkConnectedOverlay, { static: true }) private overlay: CdkConnectedOverlay;
 
     constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef, private overlayContainer: OverlayContainer, mediaService: MediaService) {
         const containerElement = this.overlayContainer.getContainerElement() as HTMLElement;

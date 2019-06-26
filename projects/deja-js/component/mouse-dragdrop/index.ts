@@ -7,7 +7,7 @@
  */
 
 import { ModuleWithProviders, NgModule } from '@angular/core';
-import { MatIconModule } from '@angular/material';
+import { MatIconModule } from '@angular/material/icon';
 import { DejaMouseDragDropCursorComponent } from './mouse-dragdrop-cursor.component';
 import { DejaMouseDragDropService } from './mouse-dragdrop.service';
 import { DejaMouseDraggableDirective } from './mouse-draggable.directive';

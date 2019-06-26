@@ -43,7 +43,7 @@ export class DejaEditorComponent
     @Output() public focus = new EventEmitter();
     @Output() public disabled = new EventEmitter<boolean>();
 
-    @ViewChild('host') public host: ElementRef;
+    @ViewChild('host', { static: true }) public host: ElementRef;
 
     private _readonly: boolean;
     private _inline = true;
