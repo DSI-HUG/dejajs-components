@@ -82,12 +82,16 @@ export class DejaPopupToolbarComponent implements OnInit {
 
     public ngOnInit() { }
 
-    public doEmit(action: DejaPopupAction) {
+    public doEmit(action: DejaPopupAction, event?: Event) {
         if (action.name === this.buttonFullscreen.name || action.name === this.buttonFullscreenExit.name) {
             this.toggleFullScreenButton();
         }
         action.target = this.dialogId;
         this.actionSelected.emit(action);
+        if (event) {
+            event.stopPropagation();
+            event.preventDefault();
+        }
     }
 
     public toggleFullScreenButton() {
