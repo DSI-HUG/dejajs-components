@@ -6,9 +6,27 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, forwardRef, Input, NgZone, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    EventEmitter,
+    forwardRef,
+    Input,
+    NgZone,
+    OnChanges,
+    OnDestroy,
+    Output,
+    SimpleChanges,
+    ViewChild,
+    ViewEncapsulation
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import * as _ from 'lodash';
 
+import { first, take } from 'rxjs/operators';
 import { DejaEditorService } from './deja-editor.service';
 
 declare var CKEDITOR: any;
@@ -47,6 +65,7 @@ export class DejaEditorComponent
 
     private _readonly: boolean;
     private _inline = true;
+    private _ready: boolean;
 
     @Input()
     public set readonly(value: boolean) {
@@ -104,12 +123,30 @@ export class DejaEditorComponent
         this.focus.complete();
         this.blur.complete();
         this.change.complete();
-        this.ready.complete();
         this.disabled.complete();
         if (this.instance) {
             this.instance.focusManager.blur(true);
-            this.instance.destroy();
-            this.instance = null;
+            if (this._ready) {
+                try {
+                    // Workaround for a ckEditor bug
+                    this.instance.destroy();
+                } catch (e) {
+                    console.warn(e, 'Error occurred when destroying ckEditor instance');
+                }
+                this.ready.complete();
+                this.instance = null;
+            } else {
+                this.ready.pipe(first()).subscribe(() => {
+                    try {
+                        // Workaround for a ckEditor bug
+                        this.instance.destroy();
+                    } catch (e) {
+                        console.warn(e, 'Error occurred when destroying ckEditor instance');
+                    }
+                    this.instance = null;
+                    this.ready.complete();
+                });
+            }
         }
     }
 
@@ -118,7 +155,7 @@ export class DejaEditorComponent
      */
     public ngAfterViewInit() {
         this._initializer.initDejaEditorLib().then(() => {
-            this.ckeditorInit(this.config || {});
+            this.ckeditorInit(_.cloneDeep(this.config) || {});
             // Effectively display the editor even if parents component ChangeDetectionStrategy is OnPush
             setTimeout(() => this._changeDetectorRef.markForCheck());
         });
@@ -201,6 +238,7 @@ export class DejaEditorComponent
 
             // listen for instanceReady event
             this.instance.on('instanceReady', (evt: any) => {
+                this._ready = true;
                 // send the evt to the EventEmitter
                 this.ready.emit(evt);
             });
@@ -251,7 +289,7 @@ export class DejaEditorComponent
         }
     }
 
-    public onChange(_: any) { }
+    public onChange(_x: any) { }
 
     public onTouched() { }
 
@@ -266,8 +304,14 @@ export class DejaEditorComponent
     public setDisabledState(isDisabled: boolean) {
         this.readonly = isDisabled;
         this.disabled.next(isDisabled);
-        if (this.instance) {
-            this.instance.setReadOnly(isDisabled);
+        if (this._ready) {
+            if (this.instance) {
+                this.instance.setReadOnly(isDisabled);
+            }
+        } else {
+            this.ready.pipe(take(1)).subscribe(() => {
+                this.instance.setReadOnly(this.readonly);
+            });
         }
     }
 
