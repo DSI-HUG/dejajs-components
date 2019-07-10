@@ -25,6 +25,33 @@
 
 * **DejaEditorComponent:**  Add the underscore to fix the ts-lint error with function param not used ([87cedb5f](https://github.com/DSI-HUG/dejajs-components/commit/87cedb5fafdbe6b10fbe4cc71a3e724aa64bc9d2))
 
+#### 0.0.1 (2019-07-10)
+
+##### Continuous Integration
+
+* **Dependencies:**  Update peerDependencies ([a580a89f](https://github.com/DSI-HUG/dejajs-components/commit/a580a89f180b725926a6fe6515df4af0b7e4fb9a))
+
+##### New Features
+
+* **Material8:**  Update to Material 8 ([27ef07e0](https://github.com/DSI-HUG/dejajs-components/commit/27ef07e064c73c52965b0213c99d2f72f8d76e8a))
+* **Angular8:**  Update to Angular 8 ([5c778ee0](https://github.com/DSI-HUG/dejajs-components/commit/5c778ee0ce33c2db9aa2f5187e3d833cc4ff9576))
+
+##### Bug Fixes
+
+* **AppRoute:**  Fix routing for iframe that causing an error at the build ([d7c99421](https://github.com/DSI-HUG/dejajs-components/commit/d7c994211cbb728996eb5c68eea2c21c5de21717))
+* **Test:**  Fix imports ([04601b54](https://github.com/DSI-HUG/dejajs-components/commit/04601b545343a75772e4ec39d9def6421340d140))
+* **input-mixin:**  Add license ([9bd72981](https://github.com/DSI-HUG/dejajs-components/commit/9bd72981f31c3bb4e370cb8ea7300e4c8226e0aa))
+* **PopupComponent:**
+  *  Remove iframe from navigation menu ([c3834add](https://github.com/DSI-HUG/dejajs-components/commit/c3834add4c84f7f800fa90044ab7392caeaf87e9))
+  *  Fix the pop-up moving event especially when included in iframe ([0dfc648e](https://github.com/DSI-HUG/dejajs-components/commit/0dfc648e222dc4da2a547af230eda6e9172da54d))
+* **DejaEditor:**
+  *  Fix the bug that occurs when we try to destroy a ckEditor that is not already fully initialized by waiting the ready state when destroying ([d9cf33c6](https://github.com/DSI-HUG/dejajs-components/commit/d9cf33c6abe5c0811930994ee016dc280a3fd9fb))
+  *  Clone config to avoid error due to its reuse ([d07c95a3](https://github.com/DSI-HUG/dejajs-components/commit/d07c95a3173ed05975c6ef6380cbd734261fe17a))
+
+##### Other Changes
+
+* **DejaEditorComponent:**  Add the underscore to fix the ts-lint error with function param not used ([87cedb5f](https://github.com/DSI-HUG/dejajs-components/commit/87cedb5fafdbe6b10fbe4cc71a3e724aa64bc9d2))
+
 ## 8.0.0 (2019-06-24)
 
 ##### Chores
