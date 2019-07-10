@@ -22,7 +22,7 @@ const routes: Routes = [
     { path: 'editor', loadChildren: () => import('./editor/editor-demo.module').then(m => m.DejaEditorDemoModule), data: { title: 'Editor' } },
     // { path: 'events', loadChildren: './global-events/global-events-demo.module#DejaGlobalEventsDemoModule', data: { title: 'Events' } },
     { path: 'grid', loadChildren: () => import('./grid/grid-demo.module').then(m => m.DejaGridDemoModule), data: { title: 'Grid' } },
-    { path: 'iframe', loadChildren: import('./iframe/iframe-demo.module').then(m => m.DejaIframeDemoModule), data: { title: 'Iframe' } },  
+    { path: 'iframe', loadChildren: () => import('./iframe/iframe-demo.module').then(m => m.DejaIframeDemoModule), data: { title: 'Iframe' } },
     { path: 'message-box', loadChildren: () => import('./message-box/message-box-demo.module').then(m => m.DejaMessageBoxDemoModule), data: { title: 'Message Box' } },
     { path: 'monaco-editor', loadChildren: () => import('./monaco-editor/monaco-editor-demo.module').then(m => m.MonacoEditorDemoModule), data: { title: 'Monaco Editor' } },
     { path: 'numeric-stepper', loadChildren: () => import('./numeric-stepper/numeric-stepper-demo.module').then(m => m.DejaNumericStepperDemoModule), data: { title: 'Numeric Stepper' } },
