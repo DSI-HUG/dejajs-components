@@ -8,14 +8,14 @@
 
 <div *ngIf="type && type==='window'" class="deja-popup-toolbar-mini">
 
-    <span class="deja-popup-toolbar-spacer deja-popup-toolbar-content" (mousedown)="doEmit(buttonMove)">
+    <span class="deja-popup-toolbar-spacer deja-popup-toolbar-content" (mousedown)="doEmit(buttonMove, $event)">
         <mat-icon *ngIf="iconName">{{iconName}}</mat-icon>
         <span> {{title}} </span>
     </span>
 
     <span class="deja-popup-toolbar-actions deja-popup-toolbar-content">
         <ng-container *ngFor="let action of actions">
-            <button type="button" mat-icon-button (click)="doEmit(action)">
+            <button type="button" mat-icon-button (click)="doEmit(action, $event)">
                 <mat-icon aria-label="action.name">{{action.icon}}</mat-icon>
             </button>
         </ng-container>
@@ -23,7 +23,7 @@
 
     <span class="deja-popup-toolbar-actions deja-popup-toolbar-content">
         <ng-container *ngFor="let action of defaultActions">
-            <button type="button" mat-icon-button (click)="doEmit(action)">
+            <button type="button" mat-icon-button (click)="doEmit(action, $event)">
                 <mat-icon aria-label="action.name">{{action.icon}}</mat-icon>
             </button>
         </ng-container>
