@@ -2,13 +2,13 @@
 <input *ngIf="allowFreeEntry" class="free-txt" deja-child-validator #inputelement id="date-selector-input" matInput autocomplete="off" [disabled]="disabled" [required]="required" [ngModel]="inputModel" [placeholder]="placeholder" (change)="updateModel($event.target.value)">
 <div class="datepicker-actions">
 	<button type="button" *ngIf="inputModel && !disabled" (click)="reset()" id="clear-button" tabindex="-1">
-		<mat-icon>clear</mat-icon>
+		<mat-icon inline>clear</mat-icon>
 	</button>
 	<button type="button" *ngIf="showCurrentDateButton && !disabled" (click)="setToCurrentDate()" id="current-date-button" tabindex="-1" [disabled]="disabled">
-		<mat-icon>today</mat-icon>
+		<mat-icon inline>today</mat-icon>
 	</button>
 	<button type="button" *ngIf="!disabled" (click)="toggleDateSelector($event)" id="calendar-button" tabindex="-1">
-		<mat-icon>date_range</mat-icon>
+		<mat-icon inline>date_range</mat-icon>
 	</button>
 </div>
 
