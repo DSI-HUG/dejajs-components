@@ -1,7 +1,7 @@
 <mat-sidenav-container [class.sidenav-hidden]="sidenavService.hidden" [class.sidenav-light]="!sidenavService.hidden && !sidenavService.opened">
     <mat-sidenav [(opened)]="sidenavService.opened" [mode]="sidenavService.mode">
         <mat-toolbar class="header">
-            <mat-icon class="header-icon">headerIcon</mat-icon>
+            <mat-icon class="header-icon">{{headerIcon}}</mat-icon>
             <span class="header-text">{{headerText}}</span>
             <button type="button" mat-icon-button class="header-menu-btn" (click)="sidenavService.toggle()">
                 <mat-icon>{{!sidenavService.hidden && !sidenavService.opened ? 'menu' : 'keyboard_arrow_left'}}</mat-icon>
