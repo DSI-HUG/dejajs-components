@@ -9,11 +9,11 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { DejaEditableModule } from '@deja-js/component';
+import { DejaEditableModule } from '@deja-js/component/content-editable';
 import { DejaMarkdownModule } from '../../component/markdown/index';
 import { DejaContentEditableDemoComponent } from './content-editable-demo';
 import { routing } from './content-editable-demo.routes';

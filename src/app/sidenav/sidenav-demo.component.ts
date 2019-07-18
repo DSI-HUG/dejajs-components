@@ -7,14 +7,13 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { DejaSidenavService } from '@deja-js/component';
+import { DejaSidenavService } from '@deja-js/component/sidenav';
 
 @Component({
     selector: 'sidenav-demo',
     templateUrl: 'sidenav-demo.component.html',
     styleUrls: ['sidenav-demo.component.scss']
 })
-
 export class SidenavDemoComponent implements OnInit {
 
     public tabIndex = 1;

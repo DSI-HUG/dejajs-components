@@ -1,23 +1,19 @@
 {
-  "compileOnSave": false,
-  "compilerOptions": {
-    "baseUrl": "./",
-    "downlevelIteration": true,
-    "outDir": "./dist/out-tsc",
-    "sourceMap": true,
-    "declaration": false,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "importHelpers": true,
-    "target": "es2015",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "lib": [
-      "es2018",
-      "dom"
-    ]
-  }
+    "extends": "./tsconfig.base.json",
+    "compilerOptions": {
+        "paths": {
+            "@deja-js/component": [
+                "dist/deja-js/component"
+            ],
+            "@deja-js/component/*": [
+                "dist/deja-js/component/*"
+            ],
+            "@deja-js/core": [
+                "dist/deja-js/core"
+            ],
+            "@deja-js/core/*": [
+                "dist/deja-js/core/*"
+            ]
+        }
+    }
 }

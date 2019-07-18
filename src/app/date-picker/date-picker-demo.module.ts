@@ -9,12 +9,13 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { DejaDatePickerModule, DejaDateSelectorModule } from '@deja-js/component';
+import { DejaDatePickerModule } from '@deja-js/component/date-picker';
+import { DejaDateSelectorModule } from '@deja-js/component/date-selector';
 import { DejaMarkdownModule } from '../../component/markdown/index';
 import { DejaDatePickerDemoComponent } from './date-picker-demo';
 import { routing } from './date-picker-demo.routes';

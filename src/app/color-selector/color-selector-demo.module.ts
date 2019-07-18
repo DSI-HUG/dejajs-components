@@ -9,10 +9,11 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatTabsModule } from '@angular/material/tabs';
 import { MatCardModule } from '@angular/material/card';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { DejaColorPickerModule, DejaColorSelectorModule } from '@deja-js/component';
+import { DejaColorPickerModule } from '@deja-js/component/color-picker';
+import { DejaColorSelectorModule } from '@deja-js/component/color-selector';
 import { DejaMarkdownModule } from '../../component/markdown/index';
 import { DejaColorSelectorDemoComponent } from './color-selector-demo';
 import { routing } from './color-selector-demo.routes';
