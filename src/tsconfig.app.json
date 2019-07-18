@@ -1,25 +1,22 @@
 {
-  "extends": "../tsconfig.json",
-  "compilerOptions": {
-    "outDir": "../out-tsc/app",
-    "types": [],
-    "paths": {
-      "@deja-js/component": [
-        "projects/deja-js/component"
-      ],
-      "@deja-js/component/*": [
-        "projects/deja-js/component/*"
-      ],
-      "@deja-js/core": [
-        "projects/deja-js/core"
-      ],
-      "@deja-js/core/*": [
-        "projects/deja-js/core/*"
-      ]
-    }
-  },
-  "exclude": [
-    "test.ts",
-    "**/*.spec.ts"
-  ]
+    "extends": "../tsconfig.base.json",
+    "compilerOptions": {
+        "outDir": "../out-tsc/app",
+        "types": [],
+        "paths": {
+            "@deja-js/component/*": [
+                "projects/deja-js/component/*"
+            ],
+            "@deja-js/core": [
+                "projects/deja-js/core"
+            ],
+            "@deja-js/core/*": [
+                "projects/deja-js/core/*"
+            ]
+        }
+    },
+    "exclude": [
+        "test.ts",
+        "**/*.spec.ts"
+    ]
 }
