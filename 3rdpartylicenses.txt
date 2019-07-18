@@ -109,13 +109,13 @@ THE SOFTWARE.
 
 @angular/material/progress-spinner
 
-@angular/material/sidenav
+@angular/material/tabs
 
 undefined
 
 @angular/material/select
 
-@angular/material/tabs
+@angular/material/sidenav
 
 @angular/material/toolbar
 
@@ -126,9 +126,6 @@ MIT
 
 @angular/router
 MIT
-
-@deja-js/component
-Apache-2.0
 
 @deja-js/core
 Apache-2.0
