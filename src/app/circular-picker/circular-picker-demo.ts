@@ -7,7 +7,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { ICircularRange } from '@deja-js/component';
+import { ICircularRange } from '@deja-js/component/circular-picker';
 
 @Component({
     selector: 'deja-circular-picker-demo',

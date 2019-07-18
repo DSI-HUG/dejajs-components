@@ -7,7 +7,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { DateComponentLayout } from '@deja-js/component';
+import { DateComponentLayout } from '@deja-js/component/date-selector';
 
 @Component({
     selector: 'dejadate-picker-demo',
