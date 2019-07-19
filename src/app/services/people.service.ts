@@ -75,7 +75,7 @@ export class PeopleService {
             }),
             publishLast(),
             refCount(),
-            map((people) => {
+            map((people: Person[]) => {
                 if (query) {
                     const sr = new RegExp(`^${query}`, 'i');
                     const sc = new RegExp(`^(?!${query}).*(${query})`, 'i');

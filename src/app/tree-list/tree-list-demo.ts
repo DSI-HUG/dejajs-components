@@ -56,7 +56,7 @@ export class DejaTreeListDemoComponent implements OnDestroy {
 
     private countries: Observable<Country[]>;
     public deepCountries: Observable<any>;
-    private countriesForMultiselect: Country[];
+    public countriesForMultiselect: Country[];
     private groupedCountries: ICountryGroup[];
     public onDemandGroupedCountries: ICountryGroup[];
     public multiselectModel: IItemTree[];
