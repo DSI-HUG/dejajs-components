@@ -1,31 +1,31 @@
 {
-  "extends": "../../../tsconfig.base.json",
-  "compilerOptions": {
-    "outDir": "../../../out-tsc/spec",
-    "types": [
-      "jasmine",
-      "node"
+    "extends": "../../../tsconfig.base.json",
+    "compilerOptions": {
+        "outDir": "../../../out-tsc/spec",
+        "types": [
+            "jasmine",
+            "node"
+        ],
+        "paths": {
+            "@deja-js/component": [
+                "dist/deja-js/component"
+            ],
+            "@deja-js/component/*": [
+                "dist/deja-js/component/*"
+            ],
+            "@deja-js/core": [
+                "dist/deja-js/core"
+            ],
+            "@deja-js/core/*": [
+                "dist/deja-js/core/*"
+            ]
+        }
+    },
+    "files": [
+        "./test.ts"
     ],
-    "paths": {
-      "@deja-js/component": [
-        "dist/deja-js/component"
-      ],
-      "@deja-js/component/*": [
-        "dist/deja-js/component/*"
-      ],
-      "@deja-js/core": [
-        "dist/deja-js/core"
-      ],
-      "@deja-js/core/*": [
-        "dist/deja-js/core/*"
-      ]
-    }
-  },
-  "files": [
-    "./test.ts"
-  ],
-  "include": [
-    "**/*.spec.ts",
-    "**/*.d.ts"
-  ]
+    "include": [
+        "**/*.spec.ts",
+        "**/*.d.ts"
+    ]
 }
