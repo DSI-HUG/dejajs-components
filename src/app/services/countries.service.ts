@@ -58,7 +58,7 @@ export class CountriesService {
             }),
             publishLast(),
             refCount(),
-            map((countries) => {
+            map((countries: Country[]) => {
                 if (query) {
                     const sr = new RegExp(`^${query}`, 'i');
                     const sc = new RegExp(`^(?!${query}).*(${query})`, 'i');
