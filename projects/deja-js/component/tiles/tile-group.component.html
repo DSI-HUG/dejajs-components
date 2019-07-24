@@ -1,7 +1,7 @@
 <div class="tile-group-content" *ngIf="model">
-	<deja-editor *ngIf="editing" [(ngModel)]="model.html" (ngModelChange)="modelChanged.emit($event)" [config]="editorConfig" (blur)="onEditorBlur()"></deja-editor>
+	<deja-editor *ngIf="editing" [ngModel]="model.html" (ngModelChange)="onModelChanged($event)" [config]="editorConfig" (blur)="onEditorBlur()"></deja-editor>
 	<div *ngIf="!designMode || !editing" class="not-editing-container" (dblclick)="edit()">
-        <span class="not-editing" [innerHtml]="model.html"></span>
+        <div class="not-editing" [innerHtml]="innerHtml"></div>
 	</div>
     <div class="button-container" *ngIf="designMode" >
         <em id="edit-border-button" (click)="editStyle()" [matTooltip]="!!model.borderWidth ? ' Edit Border' : ' Add Border'" class="material-icons">border_style</em>

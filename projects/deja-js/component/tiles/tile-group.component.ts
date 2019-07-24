@@ -8,6 +8,7 @@
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, HostBinding, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { DejaEditorComponent } from '@deja-js/component/editor';
 import { DejaPopupService } from '@deja-js/component/popup';
 import { Color } from '@deja-js/core';
@@ -45,7 +46,7 @@ export class DejaTileGroupComponent implements OnDestroy {
     private subscriptions = [] as Subscription[];
     private _model: DejaTileGroup;
 
-    constructor(private changeDetectorRef: ChangeDetectorRef, private dejaPopupService: DejaPopupService) {
+    constructor(private changeDetectorRef: ChangeDetectorRef, private dejaPopupService: DejaPopupService, private sanitizer: DomSanitizer) {
         observableFrom(this.edit$).pipe(
             takeWhile(() => this.isAlive),
             filter(() => this._designMode),
@@ -88,6 +89,10 @@ export class DejaTileGroupComponent implements OnDestroy {
 
     public get designMode() {
         return this._designMode;
+    }
+
+    public get innerHtml() {
+        return this.sanitizer.bypassSecurityTrustHtml(this.model.html);
     }
 
     @Input()
@@ -143,6 +148,11 @@ export class DejaTileGroupComponent implements OnDestroy {
     public onEditorBlur() {
         this.editing = false;
         this.changeDetectorRef.markForCheck();
+    }
+
+    public onModelChanged(model: string) {
+        this.model.html = model;
+        this.modelChanged.emit(this.model);
     }
 
     public editStyle() {
