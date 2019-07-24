@@ -48,7 +48,7 @@ import { DejaTilesComponent } from './tiles.component';
         DejaMaterialColorsModule,
         DejaEditorModule,
         DejaOverlayModule,
-        DejaPopupModule
+        DejaPopupModule,
     ],
     providers: [
         DejaMouseDragDropService,

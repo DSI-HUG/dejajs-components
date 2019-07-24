@@ -6,7 +6,6 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { SafeHtml } from '@angular/platform-browser';
 import { Rect } from '@deja-js/core';
 import { DejaTile } from './tile.class';
 
@@ -19,7 +18,7 @@ export enum DejaTileBorderDirection {
 }
 
 export class DejaTileGroup extends DejaTile {
-    public html: SafeHtml;
+    public html: string;
     public borderWidth: number;
     public borderColor: string;
     public borderDirection: DejaTileBorderDirection;
