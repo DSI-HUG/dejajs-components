@@ -24,6 +24,7 @@ export class DejaPopupConfig extends MatDialogConfig {
     public contentComponentRef: ComponentType<any>;
     public contentTemplate: DejaPopupContentTemplate<any>;
     public actions: DejaPopupAction[];
+    public nonClosingActions: DejaPopupAction[];
     public autoFocus = false;
     public autoposition?: boolean;
     public content?: string | string[];
@@ -124,6 +125,10 @@ export class DejaPopupConfig extends MatDialogConfig {
 
     public hasActions(): boolean {
         return !!this.actions && !!this.actionComponentRef;
+    }
+
+    public hasNonClosingActions(): boolean {
+        return !!this.nonClosingActions && !!this.actionComponentRef;
     }
 
     public ensurePosition() {

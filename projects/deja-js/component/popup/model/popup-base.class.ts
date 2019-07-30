@@ -17,6 +17,7 @@ import { DejaPopupConfig } from './popup-config.model';
 export abstract class DejaPopupBase implements OnInit {
 
     public actions: DejaPopupAction[];
+    public nonClosingActions: DejaPopupAction[];
     public actionSelected: DejaPopupAction;
     public isMinified = false;
     public isFullscreen = false;

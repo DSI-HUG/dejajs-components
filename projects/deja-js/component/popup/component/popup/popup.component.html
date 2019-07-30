@@ -6,6 +6,6 @@
     </deja-popup-content>
 </div>
 
-<div mat-dialog-actions *ngIf="config.hasActions()">
+<div mat-dialog-actions *ngIf="config.hasActions() || config.hasNonClosingActions()">
     <div [cdkPortalOutlet]="actionsPortal"></div>
 </div>

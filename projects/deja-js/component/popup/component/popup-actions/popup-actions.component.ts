@@ -18,12 +18,20 @@ import { DejaPopupConfig } from '../../model/popup-config.model';
 })
 export class DejaPopupActionsComponent implements OnInit {
 
+    public nonClosingButtons: DejaPopupAction[];
+
     public buttons: DejaPopupAction[];
-    constructor( @Inject(MAT_DIALOG_DATA) public config: DejaPopupConfig) { }
+
+    constructor(@Inject(MAT_DIALOG_DATA) public config: DejaPopupConfig) { }
 
     public ngOnInit() {
-        if (this.config.actions.length) {
+        console.log('DejaPopupActionsComponent config=', this.config);
+        if (this.config.actions && this.config.actions.length) {
             this.buttons = this.config.actions;
+        }
+
+        if (this.config.nonClosingActions && this.config.nonClosingActions.length) {
+            this.nonClosingButtons = this.config.nonClosingActions;
         }
     }
 

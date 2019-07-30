@@ -81,6 +81,9 @@ export class DejaPopupDemoComponent {
         const butCancel = new DejaPopupButton('cancel', 'Cancel', 'cancel');
 
         const actions = [butYes, butNo, butCancel];
+        config.nonClosingActions = [
+            new DejaPopupButton('settings', 'Settings', 'settings', false)
+        ];
 
         this.dejaPopupService
             .openInline(title, body, actions, config)
@@ -96,11 +99,14 @@ export class DejaPopupDemoComponent {
         config.toolbarIconName = 'accessibility';
         config.toolbarColor = 'accent';
         config.title = 'Dialog custom';
-
+        config.width = '80vw';
         config.actions = [
             new DejaPopupButton('confirm', 'Confirm', 'done'),
             new DejaPopupButton('undo', 'Undo', 'undo'),
-            new DejaPopupButton('cancel', 'Cancel', 'cancel'),
+            new DejaPopupButton('cancel', 'Cancel', 'cancel')
+        ];
+        config.nonClosingActions = [
+            new DejaPopupButton('settings', 'Settings', 'settings', false)
         ];
 
         this.dejaPopupService.openCustom(
@@ -128,6 +134,10 @@ export class DejaPopupDemoComponent {
         }
         conf.actions = [
             new DejaPopupButton('close', 'Close', 'close'),
+            new DejaPopupButton('save', 'Save', 'save')
+        ];
+        conf.nonClosingActions = [
+            new DejaPopupButton('settings', 'Settings', 'settings', false)
         ];
         conf.toolbarType = 'window';
 
@@ -149,8 +159,12 @@ export class DejaPopupDemoComponent {
         conf.actions = [
             new DejaPopupButton('close', 'Close', 'close'),
         ];
+        conf.nonClosingActions = [
+            new DejaPopupButton('settings', 'Settings', 'settings', false)
+        ];
         conf.toolbarType = 'window';
         conf.padding = true;
+        conf.width = '80vw';
         conf.content = [
             'One Line of Content',
             'Two Lines of Content',

@@ -26,7 +26,7 @@ import { DejaPopupAction, DejaPopupComponent } from '@deja-js/component/popup';
 
     </div>
 
-    <div mat-dialog-actions *ngIf="!!config.hasActions()" class="deja-popup-custom-actions">
+    <div mat-dialog-actions *ngIf="!!config.hasActions() || !!config.hasNonClosingActions()" class="deja-popup-custom-actions">
         <deja-popup-actions></deja-popup-actions>
     </div>
     `,
@@ -71,15 +71,15 @@ export class DejaPopupCustomDemoComponent extends DejaPopupComponent implements 
         this.actionSelected = action;
 
         switch (action.name) {
-
             case 'undo':
                 this.inputText = '';
                 break;
-
             default:
-                this.dialogRef.close(action);
                 break;
+        }
 
+        if (action.isFinalAction) {
+            this.dialogRef.close(action);
         }
     }
 }
