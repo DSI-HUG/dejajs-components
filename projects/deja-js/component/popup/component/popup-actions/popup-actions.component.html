@@ -1,19 +1,11 @@
-<ng-container *ngFor="let but of nonClosingButtons">
-    <button type="button" *ngIf="!but.label" mat-icon-button (click)="emit(but)">
-        <mat-icon *ngIf="but.icon" color="primary" role="img" aria-hidden="true">{{but.icon}}</mat-icon>
-    </button>
-    <button type="button" *ngIf="but.label" mat-raised-button color="primary" [name]="but.name" (click)="emit(but)">
-        <mat-icon *ngIf="but.icon" role="img" aria-hidden="true">{{but.icon}}</mat-icon>{{but.label}}
-    </button>
-</ng-container>
+<button *ngFor="let but of nonClosingButtons" type="button" mat-button color="primary"
+    [name]="but.name" (click)="emit(but)" [ngClass]="{'mat-raised-button': but.label, 'mat-icon-button': !but.label}">
+    <mat-icon *ngIf="but.icon" role="img" aria-hidden="true">{{but.icon}}</mat-icon>{{but.label}}
+</button>
 
 <div class="deja-popup-spacer">&nbsp;</div>
 
-<ng-container *ngFor="let but of buttons">
-    <button type="button" *ngIf="!but.label" mat-icon-button (click)="emit(but)">
-        <mat-icon *ngIf="but.icon" color="primary" role="img" aria-hidden="true">{{but.icon}}</mat-icon>
-    </button>
-    <button type="button" *ngIf="but.label" mat-raised-button color="primary" [name]="but.name" (click)="emit(but)">
-        <mat-icon *ngIf="but.icon" role="img" aria-hidden="true">{{but.icon}}</mat-icon>{{but.label}}
-    </button>
-</ng-container>
+<button *ngFor="let but of buttons" type="button" mat-button color="primary"
+    [name]="but.name" (click)="emit(but)" [ngClass]="{'mat-raised-button': but.label, 'mat-icon-button': !but.label}">
+    <mat-icon *ngIf="but.icon" role="img" aria-hidden="true">{{but.icon}}</mat-icon>{{but.label}}
+</button>

@@ -67,7 +67,7 @@ export class DejaPopupDemoComponent {
 
         const config = new DejaPopupConfig();
 
-        config.width = '530px';
+        config.width = '50vw';
         const pos: DialogPosition = { bottom: '50px', right: '50px' };
         config.position = pos;
         config.disableClose = true;
@@ -82,7 +82,8 @@ export class DejaPopupDemoComponent {
 
         const actions = [butYes, butNo, butCancel];
         config.nonClosingActions = [
-            new DejaPopupButton('settings', 'Settings', 'settings', false)
+            new DejaPopupButton('settings', 'Settings', 'settings', false),
+            new DejaPopupButton('edit', null, 'edit', false)
         ];
 
         this.dejaPopupService
