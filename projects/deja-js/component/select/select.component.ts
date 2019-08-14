@@ -329,7 +329,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
                     this.setSelectedItems(selectedItems);
                     this.currentItemIndex = index;
                     this.ensureItemVisible(index);
-                } else {
+                } else if (this.listElement) {
                     // Restore scroll Position
                     this.ensureItemVisible(null);
                     this.listElement.scrollTop = this.lastScrollPosition;

@@ -82,7 +82,6 @@ export class DejaEditableDirective implements ControlValueAccessor, OnDestroy, O
             filter((value) => value))
             .subscribe(() => {
                 observableFromEvent(this.element.ownerDocument, 'mousedown').pipe(
-                    first(),
                     takeUntil(kill$),
                     filter((event: MouseEvent) => !this.isChildElement(event.target as HTMLElement)))
                     .subscribe(() => {
@@ -96,7 +95,6 @@ export class DejaEditableDirective implements ControlValueAccessor, OnDestroy, O
                     });
 
                 observableFromEvent(this.element, 'keydown').pipe(
-                    first(),
                     takeUntil(kill$))
                     .subscribe((e: KeyboardEvent) => {
                         e.cancelBubble = true;
