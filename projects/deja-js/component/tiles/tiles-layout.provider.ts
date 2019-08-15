@@ -1518,7 +1518,9 @@ export class DejaTilesLayoutProvider implements OnDestroy {
     private restoreLayout(layout: ILayoutInfos) {
         this.tiles.forEach((tile) => {
             const config = layout[tile.id] as ILayoutInfo;
-            tile.percentBounds = config.bounds.clone();
+            if (config) {
+                tile.percentBounds = config.bounds.clone();
+            }
         });
     }
 
