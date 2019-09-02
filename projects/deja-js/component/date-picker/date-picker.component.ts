@@ -85,14 +85,24 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
     public get showCurrentDateButton() {
         return this._showCurrentDateButton;
     }
-    /** Permettre la saisie de texte libre */
-    @Input() public allowFreeEntry = false;
 
     @Output() public dateChange = new EventEmitter();
     @Output() public timeChange = new EventEmitter();
 
     /** matFormField implementation */
     public stateChanges = new Subject<void>();
+
+    private _allowFreeEntry = false;
+
+    /** Permettre la saisie de texte libre */
+    @Input()
+    public set allowFreeEntry(value: boolean | string) {
+        this._allowFreeEntry = coerceBooleanProperty(value) || null;
+    }
+
+    public get allowFreeEntry() {
+        return this._allowFreeEntry;
+    }
 
     /** Mask for input */
     public _mask: any[];

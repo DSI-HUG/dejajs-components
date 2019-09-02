@@ -41,13 +41,7 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
     @Input() public fullDiameter = 310;
     /** Diameter of labels on circular picker */
     @Input() public labelsDiameter = 43;
-    /**
-     * Allows user to choose labels position. If outerLabels is true, labels will come outside the circular picker
-     *
-     * With outerLabels = true, and ranges.length > 1, labels will go outwards.
-     * With outerLabels = false, and ranges.length > 1, labels will go inwards.
-     */
-    @Input() public outerLabels = false;
+
     /** Ranges of circular picker */
     @Input() public ranges: ICircularRange[];
 
@@ -55,6 +49,23 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
     @ContentChild('labelTemplate', { static: false }) public labelTemplate: any;
     /** template for cursor inside picker. Use it to customize labels */
     @ContentChild('cursorTemplate', { static: false }) public cursorTemplate: any;
+
+    private _outerLabels = false;
+
+    /**
+     * Allows user to choose labels position. If outerLabels is true, labels will come outside the circular picker
+     *
+     * With outerLabels = true, and ranges.length > 1, labels will go outwards.
+     * With outerLabels = false, and ranges.length > 1, labels will go inwards.
+     */
+    @Input()
+    public set outerLabels(value: boolean | string) {
+        this._outerLabels = coerceBooleanProperty(value) || null;
+    }
+
+    public get outerLabels() {
+        return this._outerLabels;
+    }
 
     /** disabled property setter. Can be string or empty so you can use it like : <circular-picker disabled></circular-picker> */
     @Input()

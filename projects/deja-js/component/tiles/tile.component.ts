@@ -6,6 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { from as observableFrom, Subscription } from 'rxjs';
 import { debounceTime, delay, filter, first, tap } from 'rxjs/operators';
@@ -22,7 +23,6 @@ import { DejaTile } from './tile.class';
 })
 export class DejaTileComponent implements OnDestroy {
     @Input() public template: any;
-    @Input() public designMode: boolean;
     @Output() public groupChanged = new EventEmitter<DejaTileGroup>();
     @Output() public close = new EventEmitter<Event>();
 
@@ -31,6 +31,16 @@ export class DejaTileComponent implements OnDestroy {
     private element: HTMLElement;
     private _tile: DejaTile;
     private subscriptions = [] as Subscription[];
+    private _designMode: boolean;
+
+    @Input()
+    public set designMode(value: boolean | string) {
+        this._designMode = coerceBooleanProperty(value);
+    }
+
+    public get designMode() {
+        return this._designMode;
+    }
 
     constructor(el: ElementRef, private changeDetectorRef: ChangeDetectorRef) {
         this.element = el.nativeElement as HTMLElement;

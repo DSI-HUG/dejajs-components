@@ -65,8 +65,6 @@ export class DejaGridComponent implements OnDestroy {
     @Input() public childrenField: string;
     /** Définit le champ à utiliser comme valeur d'affichage. */
     @Input() public textField: string;
-    /** Définit si le waiter doit être affiché dans la grille. */
-    @Input() public waiter: boolean;
     /** Définit le champ à utiliser comme valeur de comparaison. */
     @Input() public valueField: string;
     /** Définit le champ à utiliser comme champ de recherche.
@@ -176,6 +174,17 @@ export class DejaGridComponent implements OnDestroy {
     private columnGroups$ = new Subject<IDejaGridColumn[] | string>();
     private columns$ = new ReplaySubject<IDejaGridColumn[]>(1);
     private _columnGroups = [] as IDejaGridColumn[];
+    private _waiter: boolean;
+
+    /** Définit si le waiter doit être affiché dans la grille. */
+    @Input()
+    public set waiter(value: boolean | string) {
+        this._waiter = coerceBooleanProperty(value);
+    }
+
+    public get waiter() {
+        return this._waiter;
+    }
 
     /** Permet de trier le tableau au clic sur l'entête de la colonne */
     @Input()

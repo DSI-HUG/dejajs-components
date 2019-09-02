@@ -37,9 +37,6 @@ export class DejaChipsComponent implements ControlValueAccessor {
     /** Template de control d'insertion si définit extérieurement au composant */
     @Input() public insertTemplateExternal: any;
 
-    /** Lecture seule */
-    @Input() public readonly = false;
-
     @Output() public close = new EventEmitter<IDejaChipsComponentCloseEvent>();
 
     protected onTouchedCallback: () => void = noop;
@@ -55,6 +52,18 @@ export class DejaChipsComponent implements ControlValueAccessor {
         if (this._control) {
             this._control.valueAccessor = this;
         }
+    }
+
+    private _readonly = false;
+
+    /** Lecture seule */
+    @Input()
+    public set readonly(value: boolean | string) {
+        this._readonly = coerceBooleanProperty(value) || null;
+    }
+
+    public get readonly() {
+        return this._readonly;
     }
 
     /** Retourne ou definit si le selecteur est desactivé. */
