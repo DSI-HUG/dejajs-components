@@ -1,22 +1,20 @@
 <div tabindex="0"></div>
+
 <mat-toolbar *ngIf="!type || type==='base'" [color]="color" class="deja-popup-toolbar">
-    <mat-icon *ngIf="iconName">{{iconName}}</mat-icon>
-    <span>
-        {{title}}
-    </span>
+    <mat-icon *ngIf="iconName">{{ iconName }}</mat-icon>
+    <span>{{ title }}</span>
 </mat-toolbar>
 
-<div *ngIf="type && type==='window'" class="deja-popup-toolbar-mini">
-
+<mat-toolbar *ngIf="type && type==='window'" [color]="color" class="deja-popup-toolbar-mini">
     <span class="deja-popup-toolbar-spacer deja-popup-toolbar-content" (mousedown)="doEmit(buttonMove, $event)">
-        <mat-icon *ngIf="iconName">{{iconName}}</mat-icon>
-        <span> {{title}} </span>
+        <mat-icon *ngIf="iconName">{{ iconName }}</mat-icon>
+        <span>{{ title }}</span>
     </span>
 
     <span class="deja-popup-toolbar-actions deja-popup-toolbar-content">
         <ng-container *ngFor="let action of actions">
             <button type="button" mat-icon-button (click)="doEmit(action, $event)">
-                <mat-icon aria-label="action.name">{{action.icon}}</mat-icon>
+                <mat-icon aria-label="action.name">{{ action.icon }}</mat-icon>
             </button>
         </ng-container>
     </span>
@@ -24,9 +22,8 @@
     <span class="deja-popup-toolbar-actions deja-popup-toolbar-content">
         <ng-container *ngFor="let action of defaultActions">
             <button type="button" mat-icon-button (click)="doEmit(action, $event)">
-                <mat-icon aria-label="action.name">{{action.icon}}</mat-icon>
+                <mat-icon aria-label="action.name">{{ action.icon }}</mat-icon>
             </button>
         </ng-container>
     </span>
-
-</div>
+</mat-toolbar>
