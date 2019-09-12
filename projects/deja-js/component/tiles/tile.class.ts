@@ -17,7 +17,6 @@ export class DejaTile {
     public dropping$ = new BehaviorSubject<boolean>(false);
     public pressed$ = new BehaviorSubject<boolean>(false);
     public selected$ = new BehaviorSubject<boolean>(false);
-    public expanded$ = new BehaviorSubject<boolean>(false);
     public hidden$ = new ReplaySubject<boolean>(1);
     public pixelBounds$ = new BehaviorSubject<Rect>(null);
     public deleted$ = new Subject();
@@ -30,7 +29,6 @@ export class DejaTile {
     private _isDragging = false;
     private _isDropping = false;
     private _isPressed = false;
-    private _isExpanded = false;
     private _isHidden = false;
     private _pixelBounds: Rect;
     private _selected: boolean;
@@ -139,17 +137,6 @@ export class DejaTile {
 
     public get isSelected() {
         return this._selected;
-    }
-
-    public set isExpanded(value: boolean) {
-        if (this._isExpanded !== value) {
-            this._isExpanded = value;
-            this.expanded$.next(value);
-        }
-    }
-
-    public get isExpanded() {
-        return this._isExpanded;
     }
 
     public set isHidden(value: boolean) {

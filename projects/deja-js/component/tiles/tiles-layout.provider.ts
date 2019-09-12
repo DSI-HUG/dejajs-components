@@ -9,7 +9,7 @@
 import { Injectable, OnDestroy, Optional } from '@angular/core';
 import { IDragCursorInfos, IDragDropContext } from '@deja-js/component/mouse-dragdrop';
 import { DejaClipboardService, Directions, KeyCodes, Position, Rect, Size } from '@deja-js/core';
-import { BehaviorSubject, from as observableFrom, fromEvent as observableFromEvent, merge as observableMerge, Subject, Subscription, timer as observableTimer } from 'rxjs';
+import { BehaviorSubject, from, fromEvent, merge, Subject, Subscription, timer } from 'rxjs';
 import { debounceTime, delay, filter, first, map, reduce, take, takeUntil, takeWhile, tap } from 'rxjs/operators';
 import { DejaTile } from './tile.class';
 import { IDejaTilesAddedEvent, IDejaTilesAddEvent, IDejaTilesDeletedEvent, IDejaTilesEvent, IDejaTilesRemoveEvent } from './tiles.event';
@@ -35,7 +35,8 @@ export interface IDragDropInfos {
     enabled: boolean;
     startX: number;
     startY: number;
-    tiles: DejaTile[];
+    currentTile: DejaTile;
+    tiles?: Array<DejaTile>;
 }
 
 export interface IDejaTilesRefreshParams {
@@ -55,7 +56,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
     public selectionRect$ = new Subject<Rect>();
     public dragover$ = new Subject<IDragCursorInfos>();
     public dragleave$ = new Subject();
-    public deleteTiles$ = new Subject<DejaTile[]>();
+    public deleteTiles$ = new Subject<Array<DejaTile>>();
     public designMode = false;
 
     public layoutCompleted = new Subject<IDejaTilesEvent>();
@@ -77,30 +78,28 @@ export class DejaTilesLayoutProvider implements OnDestroy {
     protected _maxWidth = 100;
     protected _maxWidthUnit = '%';
 
-    private tilesDic = {} as { [id: string]: DejaTile };
-    private _tiles: DejaTile[];
+    private tilesDic = new Map<string, DejaTile>();
+    private _tiles: Array<DejaTile>;
     private _cursor: string;
-    private _targetBounds = {} as Rect;
-    private destination = {} as Rect;
+    private _targetBounds = new Rect();
+    private destination = new Rect();
     private lastTargetBounds: Rect;
     private moveTimOut: Subscription;
     private originalLayout: ILayoutInfos;
     private validLayout: ILayoutInfos;
-    private beforeSizeLayout: ILayoutInfos;
-    private dragPageOffset = {} as Position;
-    private dragOriginalPosition = {} as Position;
-    private dragRelativePosition: { [id: string]: Position };
-    private expandedTile: DejaTile;
+    private dragPageOffset = new Position();
+    private dragOriginalPosition = new Position();
+    private dragRelativePosition: Map<string, Position>;
     private _container: HTMLElement;
     private currentTile: DejaTile;
     private hundredPercentWith: number;
     private dragTarget: Rect;
     private isAlive = true;
 
-    private selectedIds = [] as string[];
+    private selectedIds = new Array<string>();
 
     constructor(@Optional() private clipboardService: DejaClipboardService) {
-        observableFrom(this.refreshTiles$).pipe(
+        from(this.refreshTiles$).pipe(
             debounceTime(30),
             takeWhile(() => this.isAlive),
             tap(() => {
@@ -110,7 +109,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             delay(10),
             takeWhile(() => this.isAlive))
             .subscribe((params) => {
-                const placeAtTheEnd = [] as DejaTile[];
+                const placeAtTheEnd = new Array<DejaTile>();
 
                 const containerBounds = this.container.getBoundingClientRect();
                 if ((params && params.resetWidth) || !this.hundredPercentWith) {
@@ -120,9 +119,9 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                 let width = containerBounds.width - 20;
                 let maxWidth = 0;
                 let maxHeight = 0;
-                const tiles = this.tiles || [];
+                const tiles = this.tiles || new Array<DejaTile>();
 
-                const selectedTileIds = [] as string[];
+                const selectedTileIds = new Array<string>();
                 tiles.forEach((tile: DejaTile) => {
                     if (tile.percentBounds && !tile.percentBounds.isEmpty()) {
                         const bounds = this.getPixelBounds(tile.percentBounds);
@@ -207,13 +206,13 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                 this.layoutCompleted.next(event);
             });
 
-        const ensureTile$ = observableFrom(this.ensureVisible$).pipe(
+        const ensureTile$ = from(this.ensureVisible$).pipe(
             delay(1),
-            map((id) => this.tilesDic[id]),
+            map((id) => this.tilesDic.get(id)),
             filter((tile) => !!tile),
             map((tile) => tile.percentBounds));
 
-        observableMerge(this.ensureBounds$, ensureTile$).pipe(
+        merge(this.ensureBounds$, ensureTile$).pipe(
             takeWhile(() => this.isAlive))
             .subscribe((percentBounds) => {
                 const { left, right, top, bottom } = this.getPixelBounds(percentBounds);
@@ -247,13 +246,13 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                 }
             });
 
-        observableFrom(this.dragSelection$).pipe(
+        from(this.dragSelection$).pipe(
             takeWhile(() => this.isAlive))
             .subscribe((dragSelection) => {
-                const mouseUp$ = observableFromEvent(this._container.ownerDocument, 'mouseup').pipe(
+                const mouseUp$ = fromEvent(this._container.ownerDocument, 'mouseup').pipe(
                     tap(() => this.selectionRect$.next(null)));
 
-                observableFromEvent(this._container, 'mousemove').pipe(
+                fromEvent(this._container, 'mousemove').pipe(
                     takeUntil(mouseUp$),
                     filter((event: MouseEvent) => event.buttons === 1))
                     .subscribe((event: MouseEvent) => {
@@ -268,22 +267,24 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                     });
             });
 
-        const leave$ = observableFrom(this.dragleave$);
+        const leave$ = from(this.dragleave$);
 
-        observableFrom(this.dragDropInfos$).pipe(
+        from(this.dragDropInfos$).pipe(
             takeWhile(() => this.isAlive))
             .subscribe((dragDropInfos) => {
-                if (!dragDropInfos || !dragDropInfos.tiles || !dragDropInfos.tiles.length) {
+                const tiles = dragDropInfos && ((dragDropInfos.tiles && dragDropInfos.tiles.length && dragDropInfos.tiles) || (dragDropInfos.currentTile && [dragDropInfos.currentTile]));
+                if (!tiles) {
                     return;
                 }
 
-                const mousemove$ = observableFromEvent(this._container, 'mousemove');
-                const mouseUp$ = observableFromEvent(this._container.ownerDocument, 'mouseup');
-                const keyUp$ = observableFromEvent(this._container.ownerDocument, 'keyup');
+                const externalDrop = !dragDropInfos.tiles;
+                const mousemove$ = fromEvent(this._container, 'mousemove');
+                const mouseUp$ = fromEvent(this._container.ownerDocument, 'mouseup');
+                const keyUp$ = fromEvent(this._container.ownerDocument, 'keyup');
                 const escape$ = keyUp$.pipe(filter((event: KeyboardEvent) => event.keyCode === KeyCodes.Escape));
-                const cancel$ = observableMerge(leave$, mousemove$.pipe(filter((event: MouseEvent) => event.buttons !== 1)), escape$);
+                const cancel$ = merge(leave$, mousemove$.pipe(filter((event: MouseEvent) => event.buttons !== 1)), escape$);
 
-                const kill$ = observableMerge(mouseUp$, cancel$);
+                const kill$ = merge(mouseUp$, cancel$);
 
                 let mouseUp$sub: Subscription;
 
@@ -292,28 +293,28 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                     tap(() => mouseUp$sub.unsubscribe()))
                     .subscribe(() => {
                         this.removeTemporaryTile();
-                        this.cancelDrag(dragDropInfos.tiles);
+                        this.cancelDrag(tiles);
                     });
 
                 mouseUp$sub = mouseUp$.pipe(
                     take(1),
                     tap(() => cancel$sub.unsubscribe()))
-                    .subscribe(() => this.drop(dragDropInfos.tiles));
+                    .subscribe(() => this.drop(tiles));
 
-                const dragover$ = observableFrom(this.dragover$).pipe(
+                const dragover$ = from(this.dragover$).pipe(
                     map((cursor) => cursor.originalEvent));
 
-                observableMerge(mousemove$, dragover$).pipe(
+                merge(mousemove$, dragover$).pipe(
                     takeUntil(kill$))
                     .subscribe((event: MouseEvent) => {
                         const containerBounds = this._container.getBoundingClientRect();
                         const x = event.pageX - containerBounds.left;
                         const y = event.pageY - containerBounds.top;
                         if (!dragDropInfos.enabled) {
-                            if (Math.abs(dragDropInfos.startX - x) >= 10 || Math.abs(dragDropInfos.startY - y) >= 10) {
-                                // Allow drag and drop of new tiles from outside the component
-                                if (dragDropInfos.tiles.length === 1 && !this.tiles.find((t) => t === dragDropInfos.tiles[0])) {
-                                    const tempTile = dragDropInfos.tiles[0];
+                            if (Math.abs(dragDropInfos.startX - x) >= 15 || Math.abs(dragDropInfos.startY - y) >= 15) {
+                                if (externalDrop) {
+                                    // Allow drag and drop of new tiles from outside the component
+                                    const tempTile = dragDropInfos.currentTile;
 
                                     // Clear current selection
                                     this.selectedTiles = [tempTile.id];
@@ -333,29 +334,29 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                                     this._cursor = 'move';
 
                                     this.tiles.push(tempTile);
-                                    this.tilesDic[tempTile.id] = tempTile;
+                                    this.tilesDic.set(tempTile.id, tempTile);
 
                                     // Start tile drag and drop
                                     this.dragging$.next(true);
                                     dragDropInfos.enabled = true;
-                                    this.startDrag(dragDropInfos.tiles, this.getPixelSize(idealBounds.left + idealBounds.width / 2), this.getPixelSize(idealBounds.top + idealBounds.height / 2));
+                                    this.startDrag(tiles, this.getPixelSize(idealBounds.left + idealBounds.width / 2), this.getPixelSize(idealBounds.top + idealBounds.height / 2));
 
                                 } else {
                                     // Start tile drag and drop
                                     this.dragging$.next(true);
                                     dragDropInfos.enabled = true;
-                                    this.startDrag(dragDropInfos.tiles, x, y);
+                                    this.startDrag(tiles, dragDropInfos.startX, dragDropInfos.startY);
                                 }
 
                             }
                         } else {
-                            this.drag(dragDropInfos.tiles, x, y);
+                            this.drag(tiles, x, y);
                         }
                     });
             });
 
         // Delete stream for clipboard
-        observableFrom(this.deleteTiles$).pipe(
+        from(this.deleteTiles$).pipe(
             takeWhile(() => this.isAlive))
             .subscribe((tilesToDelete) => this.deleteTiles(tilesToDelete));
     }
@@ -364,16 +365,15 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         this._container = container;
 
         if (this._container) {
-            const leave$ = observableFromEvent(container, 'mouseleave');
-            const mouseUp$ = observableFromEvent(container.ownerDocument, 'mouseup');
+            const leave$ = fromEvent(container, 'mouseleave');
+            const mouseUp$ = fromEvent(container.ownerDocument, 'mouseup');
 
-            observableFromEvent(container, 'mouseenter').pipe(
+            fromEvent(container, 'mouseenter').pipe(
                 takeWhile(() => this.isAlive))
                 .subscribe(() => {
                     // Cursor provider
                     if (this.designMode) {
-                        observableFromEvent(container, 'mousemove').pipe(
-                            debounceTime(10),
+                        fromEvent(container, 'mousemove').pipe(
                             takeUntil(leave$),
                             filter((event: MouseEvent) => !!this.container && event.buttons === 0))
                             .subscribe((event: MouseEvent) => {
@@ -384,7 +384,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                         this.container.style.cursor = '';
                     }
 
-                    const mouseDown$ = observableFromEvent(container, 'mousedown').pipe(
+                    const mouseDown$ = fromEvent(container, 'mousedown').pipe(
                         filter((event: MouseEvent) => event.buttons === 1),
                         filter((event: MouseEvent) => !this.isElementInsideDejaEditor(event.target as HTMLElement)),
                         map((event: MouseEvent) => ({ event: event, target: event.target as HTMLElement, clickedTile: this.getTileComponentFromHTMLElement(event.target as HTMLElement) })));
@@ -415,12 +415,13 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                                             enabled: false,
                                             startX: x,
                                             startY: y,
+                                            currentTile: this.currentTile,
                                             tiles: this.tiles.filter((tile) => tile.isSelected),
                                         } as IDragDropInfos);
                                     }
                                 }
 
-                                observableMerge(mouseUp$, leave$).pipe(
+                                merge(mouseUp$, leave$).pipe(
                                     first(),
                                     filter(() => !!this.currentTile))
                                     .subscribe((e: MouseEvent) => {
@@ -436,6 +437,8 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                                             }
                                         }
 
+                                        this._cursor = this.getCursorFromHTMLElement(e.pageX, e.pageY, e.target as HTMLElement);
+                                        this.container.style.cursor = this._cursor;
                                         this.currentTile = undefined;
                                     });
                             } else {
@@ -462,39 +465,30 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         return this._container;
     }
 
-    public set tiles(tiles: DejaTile[]) {
+    public set tiles(tiles: Array<DejaTile>) {
         this._tiles = tiles;
-        this.tilesDic = this.tiles.reduce((dic, t) => {
-            dic[t.id] = t;
-            return dic;
-        }, {} as { [id: string]: DejaTile });
+        this.tilesDic = this.tiles.reduce((dic, t) => dic.set(t.id, t), new Map<string, DejaTile>());
         this.refreshTiles$.next({ resetWidth: true });
     }
 
     public get tiles() {
-        return this._tiles || (this._tiles = []);
+        return this._tiles || (this._tiles = new Array<DejaTile>());
     }
 
-    public set selectedTiles(selectedIds: string[]) {
-        const selectedTiles = [] as DejaTile[];
+    public set selectedTiles(selectedIds: Array<string>) {
+        const selectedTiles = new Array<DejaTile>();
         let raiseEvent = false;
 
-        const idsDic = selectedIds.reduce((dic, id) => {
-            dic[id] = true;
-            return dic;
-        }, {} as { [id: string]: boolean });
+        const idsDic = selectedIds.reduce((set, id) => set.add(id), new Set<string>());
 
-        const previousIdsDic = this.selectedIds.reduce((dic, id) => {
-            dic[id] = true;
-            return dic;
-        }, {} as { [id: string]: boolean });
+        const previousIdsDic = this.selectedIds.reduce((set, id) => set.add(id), new Set<string>());
 
         if (this.tiles && this.tiles.length) {
             this.tiles.forEach((tile: DejaTile) => {
-                if (idsDic[tile.id] !== previousIdsDic[tile.id]) {
+                if (idsDic.has(tile.id) !== previousIdsDic.has(tile.id)) {
                     raiseEvent = true;
                 }
-                tile.isSelected = idsDic[tile.id];
+                tile.isSelected = idsDic.has(tile.id);
                 if (tile.isSelected) {
                     selectedTiles.push(tile);
                 }
@@ -581,10 +575,10 @@ export class DejaTilesLayoutProvider implements OnDestroy {
 
     public paste() {
         if (!this.clipboardService || !this.clipboardService.isAvailable('tiles')) {
-            return [];
+            return new Array<DejaTile>();
         }
 
-        const sourceTiles = this.clipboardService.get('tiles') as DejaTile[];
+        const sourceTiles = this.clipboardService.get('tiles') as Array<DejaTile>;
 
         // Unselect all tiles
         this.tiles.forEach((tile) => tile.isSelected = false);
@@ -637,10 +631,10 @@ export class DejaTilesLayoutProvider implements OnDestroy {
 
     public getTileComponentFromHTMLElement(element: HTMLElement): DejaTile {
         const tileElement = this.getTileElementFromHTMLElement(element);
-        return tileElement && this.tilesDic[tileElement.id];
+        return tileElement && this.tilesDic.get(tileElement.id);
     }
 
-    public deleteTiles(tilesToDelete: DejaTile[]) {
+    public deleteTiles(tilesToDelete: Array<DejaTile>) {
         if (!tilesToDelete || tilesToDelete.length === 0) {
             return;
         }
@@ -650,14 +644,14 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         event.tiles = tilesToDelete;
 
         tilesToDelete.forEach((tile) => {
-            delete this.tilesDic[tile.id];
+            this.tilesDic.delete(tile.id);
             tile.delete();
         });
 
         let index = this.tiles.length;
         while (--index >= 0) {
             const tile = this.tiles[index];
-            if (!this.tilesDic[tile.id]) {
+            if (!this.tilesDic.has(tile.id)) {
                 this.tiles.splice(index, 1);
             }
         }
@@ -668,12 +662,12 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         this.tilesDeleted.next(event);
     }
 
-    public removeTiles(tileIdsToRemove: string[]) {
+    public removeTiles(tileIdsToRemove: Array<string>) {
         if (!tileIdsToRemove || tileIdsToRemove.length === 0) {
             return;
         }
 
-        const tilesToRemove = tileIdsToRemove.map((id) => this.tilesDic[id]);
+        const tilesToRemove = tileIdsToRemove.map((id) => this.tilesDic.get(id));
 
         // Delete selected tiles components
         tilesToRemove.forEach((tile) => {
@@ -706,10 +700,12 @@ export class DejaTilesLayoutProvider implements OnDestroy {
     }
 
     public getFreePlace(idealBounds: Rect) {
-        const freePlaces = [] as Rect[];
+        const freePlaces = new Array<Rect>();
+
+        const tiles = this.tiles.filter(t => !t.isDragging);
 
         let maxHeight = 0;
-        this.tiles.forEach((t) => {
+        tiles.forEach((t) => {
             if (t.percentBounds.bottom > maxHeight) {
                 maxHeight = t.percentBounds.bottom;
             }
@@ -719,7 +715,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             for (let y = 0; y <= maxHeight - idealBounds.height; y += this._tileMinHeight) {
                 const currentBounds = new Rect(x, y, idealBounds.width, idealBounds.height);
 
-                if (this.tiles.filter((t) => t.percentBounds.intersectWith(currentBounds)).length === 0) {
+                if (!tiles.find((t) => t.percentBounds.intersectWith(currentBounds))) {
                     freePlaces.push(currentBounds);
                 }
             }
@@ -781,13 +777,13 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             enabled: false,
             startX: x,
             startY: y,
-            tiles: [tempTile],
+            currentTile: tempTile,
         } as IDragDropInfos);
 
         return true;
     }
 
-    public startDrag(tiles: DejaTile[], pageX: number, pageY: number) {
+    public startDrag(tiles: Array<DejaTile>, pageX: number, pageY: number) {
         // Save layout
         const savedLayout = this.saveLayout();
 
@@ -799,8 +795,8 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             tile.isDragging = true;
         });
 
-        this.dragRelativePosition = {};
-        tiles.forEach((tile) => { this.dragRelativePosition[tile.id] = new Position(tile.percentBounds.left - targetBounds.left, tile.percentBounds.top - targetBounds.top); });
+        this.dragRelativePosition = new Map<string, Position>();
+        tiles.forEach((tile) => this.dragRelativePosition.set(tile.id, new Position(tile.percentBounds.left - targetBounds.left, tile.percentBounds.top - targetBounds.top)));
 
         this.dragPageOffset = new Position(pageX, pageY);
 
@@ -811,38 +807,10 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         this.validLayout = undefined;
     }
 
-    public expandTile(tile: DejaTile, pixelHeight: number) {
-        // Save layout
-        const t = tile.id ? this.tilesDic[tile.id] : this.tiles.find((tt) => tt.equalsTo(tile));
+    public cancelDrag(tiles: Array<DejaTile>) {
+        this.clearMoveTimer();
 
-        if (this.beforeSizeLayout) {
-            this.restoreLayout(this.beforeSizeLayout);
-        } else {
-            this.beforeSizeLayout = this.saveLayout();
-        }
-        this.expandedTile = t;
-        t.isExpanded = true;
-        const percentHeight = Math.ceil(pixelHeight * 100 / this.hundredPercentWith);
-        const bottom = t.percentBounds.top + percentHeight;
-        this.size(t, new Position(0, this.getPixelSize(bottom)), Directions.bottom);
-    }
-
-    public cancelExpand() {
-        if (this.beforeSizeLayout) {
-            this.expandedTile.isExpanded = false;
-            this.restoreLayout(this.beforeSizeLayout);
-            this.refreshTiles$.next();
-            this.beforeSizeLayout = undefined;
-        }
-    }
-
-    public cancelDrag(tiles: DejaTile[]) {
-        if (this.moveTimOut) {
-            this.moveTimOut.unsubscribe();
-            this.moveTimOut = undefined;
-        }
-
-        observableFrom(tiles).pipe(
+        from(tiles).pipe(
             filter((tile) => !!tile),
             tap((tile) => {
                 tile.isDragging = false;
@@ -859,13 +827,9 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         this.endDrag();
     }
 
-    public drop(tiles: DejaTile[]) {
-        let changed: DejaTile[];
-
-        if (this.moveTimOut) {
-            this.moveTimOut.unsubscribe();
-            this.moveTimOut = undefined;
-        }
+    public drop(tiles: Array<DejaTile>) {
+        let changed: Array<DejaTile>;
+        this.clearMoveTimer();
 
         if (this.validLayout) {
             this.restoreLayout(this.validLayout);
@@ -876,18 +840,18 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                 tile.percentBounds = new Rect(this.validLayout.validBounds);
                 tile.isDragging = false;
             } else {
-                observableFrom(tiles).pipe(
+                from(tiles).pipe(
                     filter((tile) => !!tile),
                     tap((tile) => {
-                        const left = this.validLayout.validBounds.left + this.dragRelativePosition[tile.id].left;
-                        const top = this.validLayout.validBounds.top + this.dragRelativePosition[tile.id].top;
+                        const left = this.validLayout.validBounds.left + this.dragRelativePosition.get(tile.id).left;
+                        const top = this.validLayout.validBounds.top + this.dragRelativePosition.get(tile.id).top;
                         tile.percentBounds = new Rect(left, top, tile.percentBounds.width, tile.percentBounds.height);
                         tile.isDragging = false;
                         tile.isDropping = true;
                         if (tile.isTemporary) {
-                            delete this.tilesDic[tile.id];
+                            this.tilesDic.delete(tile.id);
                             tile.makeId();
-                            this.tilesDic[tile.id] = tile;
+                            this.tilesDic.set(tile.id, tile);
                             this.addTiles([tile]);
                         }
                     }),
@@ -922,7 +886,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         this.refreshTiles$.next();
     }
 
-    public drag(tiles: DejaTile[], pageX: number, pageY: number) {
+    public drag(tiles: Array<DejaTile>, pageX: number, pageY: number) {
         // Search related coords
         const offset = new Position(pageX - this.dragPageOffset.left, pageY - this.dragPageOffset.top);
         const offsetLeft = offset.left + this.getPixelSize(this.dragOriginalPosition.left);
@@ -983,12 +947,12 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                     this.size(tile, new Position(0, offsetBottom), Directions.bottom);
                     break;
                 default:
-                    throw new Error('Invalid direction');
+                // throw new Error('Invalid direction');
             }
             tile.pixelBounds = bounds;
 
         } else {
-            tiles.forEach((tile) => { tile.pixelBounds = new Rect(offsetLeft + this.getPixelSize(this.dragRelativePosition[tile.id].left), offsetTop + this.getPixelSize(this.dragRelativePosition[tile.id].top), this.getPixelSize(tile.percentBounds.width), this.getPixelSize(tile.percentBounds.height)); });
+            tiles.forEach((tile) => { tile.pixelBounds = new Rect(offsetLeft + this.getPixelSize(this.dragRelativePosition.get(tile.id).left), offsetTop + this.getPixelSize(this.dragRelativePosition.get(tile.id).top), this.getPixelSize(tile.percentBounds.width), this.getPixelSize(tile.percentBounds.height)); });
 
             // Assign new drag and drop rectangle
             this.dragTarget = new Rect(this.getPercentSize(offsetLeft), this.getPercentSize(offsetTop), this.targetBounds.width, this.targetBounds.height);
@@ -997,7 +961,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         }
     }
 
-    public addTiles(newTiles: DejaTile[]) {
+    public addTiles(newTiles: Array<DejaTile>) {
         if (!newTiles || newTiles.length === 0) {
             return;
         }
@@ -1013,7 +977,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                 }
 
                 this.tiles.push(newTile);
-                this.tilesDic[newTile.id] = newTile;
+                this.tilesDic.set(newTile.id, newTile);
             }
         });
 
@@ -1023,12 +987,12 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         event.cancel$ = new Subject();
 
         // Delete provider if cut operation
-        const deleteSourceProvider$ = this.clipboardService && this.clipboardService.get('tiles-provider') as Subject<DejaTile[]>;
+        const deleteSourceProvider$ = this.clipboardService && this.clipboardService.get('tiles-provider') as Subject<Array<DejaTile>>;
 
         // Hide originals if cut
-        let sourceTiles: DejaTile[];
+        let sourceTiles: Array<DejaTile>;
         if (deleteSourceProvider$) {
-            sourceTiles = this.clipboardService.get('tiles') as DejaTile[];
+            sourceTiles = this.clipboardService.get('tiles') as Array<DejaTile>;
             sourceTiles.forEach((tile) => {
                 tile.isHidden = true;
             });
@@ -1041,7 +1005,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             }
         };
 
-        const validateNewTiles = (tiles: DejaTile[]) => {
+        const validateNewTiles = (tiles: Array<DejaTile>) => {
             // Remove original tiles if cut operation
             deleteSourceTiles();
 
@@ -1056,12 +1020,12 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             .subscribe((value) => {
                 if (value) {
                     // Canceled, hide and remove added after effect
-                    observableFrom(newTiles).pipe(
+                    from(newTiles).pipe(
                         tap((tile) => tile.isHidden = true),
                         delay(1000),
-                        reduce((acc: DejaTile[], cur: DejaTile) => [...acc, cur], []),
+                        reduce((acc: Array<DejaTile>, cur: DejaTile) => [...acc, cur], new Array<DejaTile>()),
                         first())
-                        .subscribe((tiles: DejaTile[]) => this.deleteTiles(tiles));
+                        .subscribe(tiles => this.deleteTiles(tiles));
 
                     // Reshow original tiles if cut operation
                     if (sourceTiles) {
@@ -1150,41 +1114,41 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             return;
         }
 
-        // Restore a previous layout if exists for this position
-        if (tile.isExpanded) {
-            const ensureBounds = this.ensureTarget(newTargetBounds, dragBounds, directions);
-            tile.percentBounds = ensureBounds;
+        // Restore the original layout before moving something
+        this.restoreLayout(this.originalLayout);
+
+        this.destination = newTargetBounds.clone();
+
+        // Check if location is free without pushing tiles
+        const result = this.tiles.find((t) => !t.isDragging && t.percentBounds.intersectWith(newTargetBounds));
+
+        if (!result) {
+            this.targetBounds = newTargetBounds;
+
+            // Save layout
+            this.validLayout = this.saveLayout();
+            this.validLayout.targetBounds = this.validLayout.validBounds = newTargetBounds;
             this.refreshTiles$.next();
         } else {
-            // Restore the original layout before moving something
-            this.restoreLayout(this.originalLayout);
-
-            this.destination = newTargetBounds.clone();
-
-            // Check if location is free without pushing tiles
-            const result = this.tiles.find((t) => !t.isDragging && t.percentBounds.intersectWith(newTargetBounds));
-
-            if (!result) {
-                this.targetBounds = newTargetBounds;
-
-                // Save layout
-                this.validLayout = this.saveLayout();
-                this.validLayout.targetBounds = this.validLayout.validBounds = newTargetBounds;
-                this.refreshTiles$.next();
-            } else {
-                // Location must be freed
-                if (newTargetBounds) {
-                    // Ensure new destination
-                    const ensureBounds = this.ensureTarget(newTargetBounds, dragBounds, directions);
-                    if (ensureBounds) {
-                        this.targetBounds = ensureBounds;
-                        this.validLayout = this.saveLayout();
-                        this.validLayout.targetBounds = newTargetBounds;
-                        this.validLayout.validBounds = ensureBounds;
-                        this.refreshTiles$.next();
-                    }
+            // Location must be freed
+            if (newTargetBounds) {
+                // Ensure new destination
+                const ensureBounds = this.ensureTarget(newTargetBounds, dragBounds, directions);
+                if (ensureBounds) {
+                    this.targetBounds = ensureBounds;
+                    this.validLayout = this.saveLayout();
+                    this.validLayout.targetBounds = newTargetBounds;
+                    this.validLayout.validBounds = ensureBounds;
+                    this.refreshTiles$.next();
                 }
             }
+        }
+    }
+
+    private clearMoveTimer() {
+        if (this.moveTimOut) {
+            this.moveTimOut.unsubscribe();
+            this.moveTimOut = undefined;
         }
     }
 
@@ -1193,7 +1157,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         const minHeight = this.getTileMinPercentHeight();
 
         // Search a new target
-        const newTargetBounds = this.ensureContainer(new Rect(minWidth * Math.round(this.dragTarget.left / minWidth), minHeight * Math.round(this.dragTarget.top / minHeight), this.dragTarget.width, this.dragTarget.height));
+        let newTargetBounds = this.ensureContainer(new Rect(minWidth * Math.round(this.dragTarget.left / minWidth), minHeight * Math.round(this.dragTarget.top / minHeight), this.dragTarget.width, this.dragTarget.height));
 
         if (this.lastTargetBounds && Math.abs(newTargetBounds.left - this.lastTargetBounds.left) < minWidth && Math.abs(newTargetBounds.top - this.lastTargetBounds.top) < minHeight) {
             // Nothing change, wait for timers
@@ -1201,18 +1165,25 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         }
         this.lastTargetBounds = newTargetBounds;
 
-        if (this.moveTimOut) {
-            this.moveTimOut.unsubscribe();
-            this.moveTimOut = undefined;
+        // Check if location is free without pushing tiles
+        const maxOverlaps = this.tiles
+            .filter(tile => !tile.isDragging)
+            .reduce((overlaps, tile) => {
+                const overlapsInfos = Rect.overlapInfos(tile.percentBounds, newTargetBounds);
+                return Math.max(Math.min(overlapsInfos.height, overlapsInfos.width), overlaps);
+            }, 0);
+
+        // Restore the original layout before moving something if the user move back in an empty original position
+        if (!this.tiles.find(t => {
+            const config = this.originalLayout[t.id] as ILayoutInfo;
+            return config && config.bounds.intersectWith(newTargetBounds);
+        })) {
+            this.restoreLayout(this.originalLayout);
         }
 
-        // Restore the original layout before moving something
-        this.restoreLayout(this.originalLayout);
+        if (maxOverlaps === 0) {
+            this.clearMoveTimer();
 
-        // Check if location is free without pushing tiles
-        const result = this.tiles.find((tile: DejaTile) => !tile.isDragging && tile.percentBounds.intersectWith(newTargetBounds));
-
-        if (!result) {
             this.targetBounds = newTargetBounds.clone();
             this.destination = newTargetBounds.clone();
 
@@ -1220,27 +1191,66 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             this.validLayout = this.saveLayout();
             this.validLayout.targetBounds = this.validLayout.validBounds = newTargetBounds;
             this.refreshTiles$.next();
-        } else {
-            // Location must be freed, timer
-            this.moveTimOut = observableTimer(500).pipe(
-                first())
-                .subscribe(() => {
-                    // console.log('moveTimer timer');
-                    this.moveTimOut = undefined;
 
-                    this.destination = newTargetBounds.clone();
-                    if (newTargetBounds) {
+        } else {
+            if (!Rect.equals(this.targetBounds, newTargetBounds)) {
+                this.clearMoveTimer();
+            }
+
+            if (maxOverlaps > 3) {
+                const timerBounds = newTargetBounds.clone();
+                this.moveTimOut = timer(500).pipe(
+                    first())
+                    .subscribe(() => {
+                        // Restore the original layout before moving something
+                        this.restoreLayout(this.originalLayout);
+
+                        this.destination = timerBounds;
+
                         // Ensure new destination
-                        const ensureBounds = this.ensureTarget(newTargetBounds, this.dragTarget, Directions.all);
+                        const ensureBounds = this.ensureTarget(timerBounds, this.dragTarget, Directions.all);
+
                         if (ensureBounds) {
                             this.targetBounds = ensureBounds;
                             this.validLayout = this.saveLayout();
-                            this.validLayout.targetBounds = newTargetBounds;
+                            this.validLayout.targetBounds = timerBounds;
                             this.validLayout.validBounds = ensureBounds;
                             this.refreshTiles$.next();
                         }
+                    });
+            }
+
+            // Find best location between last valid bounds and current bounds
+            const freePlaces = new Array<Rect>();
+            const tiles = this.tiles.filter(t => !t.isDragging);
+
+            for (let x = Math.min(this.targetBounds.left, newTargetBounds.left); x <= Math.max(this.targetBounds.left, newTargetBounds.left); x++) {
+                for (let y = Math.min(this.targetBounds.top, newTargetBounds.top); y <= Math.max(this.targetBounds.top, newTargetBounds.top); y++) {
+                    const currentBounds = new Rect(x, y, newTargetBounds.width, newTargetBounds.height);
+
+                    if (!tiles.find((t) => t.percentBounds.intersectWith(currentBounds))) {
+                        freePlaces.push(currentBounds);
                     }
+                }
+            }
+
+            if (freePlaces.length > 0) {
+                // add at the nearest free place
+                freePlaces.sort((bounds1, bounds2) => {
+                    const calcDistance = (bounds: Rect) => Math.min(Math.abs(bounds.left - newTargetBounds.left), Math.abs(bounds.right - newTargetBounds.right)) + 200 * Math.min(Math.abs(bounds.top - newTargetBounds.top), Math.abs(bounds.bottom - newTargetBounds.bottom));
+                    return calcDistance(bounds1) - calcDistance(bounds2);
                 });
+
+                newTargetBounds = freePlaces[0];
+
+                this.targetBounds = newTargetBounds.clone();
+                this.destination = newTargetBounds.clone();
+
+                // Save layout
+                this.validLayout = this.saveLayout();
+                this.validLayout.targetBounds = this.validLayout.validBounds = newTargetBounds;
+                this.refreshTiles$.next();
+            }
         }
     }
 
@@ -1268,7 +1278,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
     }
 
     // Ensure that a tile can be dropped at the specified bounds. Return the corrected rectangle.
-    private ensureTarget(bounds: Rect, effectiveBounds?: Rect, directions?: Directions, originalBounds?: Rect): Rect {
+    private ensureTarget(bounds: Rect, effectiveBounds?: Rect, directions?: Directions, originalBounds?: Rect, retry = true): Rect {
         if (!effectiveBounds) {
             effectiveBounds = bounds;
         }
@@ -1280,67 +1290,67 @@ export class DejaTilesLayoutProvider implements OnDestroy {
 
         if (!directions) {
             directions = Directions.all;
-        } else {
-            // We always can escape to the bottom in case of
-            // tslint:disable-next-line:no-bitwise
-            directions |= Directions.bottom;
         }
 
-        const leftTilesToPush = [] as DejaTile[];
-        const rightTilesToPush = [] as DejaTile[];
-        const topTilesToPush = [] as DejaTile[];
-        const bottomTilesToPush = [] as DejaTile[];
+        const leftTilesToPush = new Array<DejaTile>();
+        const rightTilesToPush = new Array<DejaTile>();
+        const topTilesToPush = new Array<DejaTile>();
+        const bottomTilesToPush = new Array<DejaTile>();
 
         // tslint:disable-next-line:prefer-for-of
-        for (const id in this.tilesDic) {
-            if (this.tilesDic[id]) {
-                const tile = this.tilesDic[id];
-                if (!tile.isDragging && !tile.isExpanded) {
-                    if (tile.percentBounds.intersectWith(bounds)) {
-                        const swapTargetRect = new Rect(this.dragOriginalPosition.left, this.dragOriginalPosition.top, bounds.width, bounds.height);
-                        if (tile.percentBounds.left === effectiveBounds.left && tile.percentBounds.top === effectiveBounds.top && tile.percentBounds.width === effectiveBounds.width && tile.percentBounds.height === effectiveBounds.height && effectiveBounds.adjacent(swapTargetRect)) {
-                            // swap
-                            tile.percentBounds = swapTargetRect;
-                            return bounds;
-                        } else {
-                            const hol = tile.percentBounds.left - effectiveBounds.left;      // Ce qui depasse a gauche
-                            const hor = effectiveBounds.right - tile.percentBounds.right;    // Ce qui depasse a droite
-                            const vot = tile.percentBounds.top - effectiveBounds.top;        // Ce qui depasse en haut
-                            const vob = effectiveBounds.bottom - tile.percentBounds.bottom;  // Ce qui depasse en bas
-                            const hoe = Math.max(0, Math.min(tile.percentBounds.right, effectiveBounds.right) - Math.max(tile.percentBounds.left, effectiveBounds.left)) / Math.min(tile.percentBounds.width, effectiveBounds.width);
-                            const voe = Math.max(0, Math.min(tile.percentBounds.bottom, effectiveBounds.bottom) - Math.max(tile.percentBounds.top, effectiveBounds.top)) / Math.min(tile.percentBounds.height, effectiveBounds.height);
+        const swap = this.tiles
+            .filter(tile => !tile.isDragging && tile.percentBounds.intersectWith(bounds))
+            .find(tile => {
+                const swapTargetRect = new Rect(this.dragOriginalPosition.left, this.dragOriginalPosition.top, bounds.width, bounds.height);
+                if (Math.abs(tile.percentBounds.left - effectiveBounds.left) < 1 &&
+                    Math.abs(tile.percentBounds.top - effectiveBounds.top) < 1 &&
+                    Math.abs(tile.percentBounds.width - effectiveBounds.width) < 1 &&
+                    Math.abs(tile.percentBounds.height - effectiveBounds.height) < 1 &&
+                    (Math.abs(effectiveBounds.left - swapTargetRect.right) <= 4 || Math.abs(effectiveBounds.right - swapTargetRect.left) <= 4 || Math.abs(effectiveBounds.top - swapTargetRect.bottom) <= 4 || Math.abs(effectiveBounds.bottom - swapTargetRect.top) <= 4)) {
+                    // swap
+                    tile.percentBounds = swapTargetRect;
+                    return true;
+                } else {
+                    const hol = tile.percentBounds.left - effectiveBounds.left;      // Ce qui depasse a gauche
+                    const hor = effectiveBounds.right - tile.percentBounds.right;    // Ce qui depasse a droite
+                    const vot = tile.percentBounds.top - effectiveBounds.top;        // Ce qui depasse en haut
+                    const vob = effectiveBounds.bottom - tile.percentBounds.bottom;  // Ce qui depasse en bas
+                    const hoe = Math.max(0, Math.min(tile.percentBounds.right, effectiveBounds.right) - Math.max(tile.percentBounds.left, effectiveBounds.left)) / Math.min(tile.percentBounds.width, effectiveBounds.width);
+                    const voe = Math.max(0, Math.min(tile.percentBounds.bottom, effectiveBounds.bottom) - Math.max(tile.percentBounds.top, effectiveBounds.top)) / Math.min(tile.percentBounds.height, effectiveBounds.height);
 
-                            // Calc preferred direction
-                            let preferredDirection: Directions;
-                            // tslint:disable-next-line:no-bitwise
-                            if (voe >= hoe && directions & Directions.horizontal) {
-                                // horizontal
-                                // tslint:disable-next-line:no-bitwise
-                                preferredDirection = hor >= hol && (directions & Directions.left) ? Directions.left : Directions.right;
-                            } else {
-                                // vertical
-                                // tslint:disable-next-line:no-bitwise
-                                preferredDirection = vob >= vot && (directions & Directions.top) ? Directions.top : Directions.bottom;
-                            }
+                    // Calc preferred direction
+                    let preferredDirection: Directions;
+                    // tslint:disable-next-line:no-bitwise
+                    if (voe >= hoe && directions & Directions.horizontal) {
+                        // horizontal
+                        // tslint:disable-next-line:no-bitwise
+                        preferredDirection = hor >= hol && (directions & Directions.left) ? Directions.left : Directions.right;
+                        // tslint:disable-next-line:no-bitwise
+                    } else if (directions & Directions.vertical) {
+                        // vertical
+                        // tslint:disable-next-line:no-bitwise
+                        preferredDirection = vob >= vot && (directions & Directions.top) ? Directions.top : Directions.bottom;
+                    }
 
-                            switch (preferredDirection) {
-                                case Directions.left:
-                                    leftTilesToPush.push(tile);
-                                    break;
-                                case Directions.top:
-                                    topTilesToPush.push(tile);
-                                    break;
-                                case Directions.right:
-                                    rightTilesToPush.push(tile);
-                                    break;
-                                default:
-                                    bottomTilesToPush.push(tile);
-                                    break;
-                            }
-                        }
+                    switch (preferredDirection) {
+                        case Directions.left:
+                            leftTilesToPush.push(tile);
+                            break;
+                        case Directions.top:
+                            topTilesToPush.push(tile);
+                            break;
+                        case Directions.right:
+                            rightTilesToPush.push(tile);
+                            break;
+                        default:
+                            bottomTilesToPush.push(tile);
+                            break;
                     }
                 }
-            }
+            });
+
+        if (swap) {
+            return bounds;
         }
 
         // try first horizontal move
@@ -1350,7 +1360,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             if (remain) {
                 bounds = this.ensureContainer(bounds.offset(remain, 0));
                 // tslint:disable-next-line:no-bitwise
-                return this.ensureTarget(bounds, effectiveBounds, directions & ~Directions.left, originalBounds);
+                return retry ? this.ensureTarget(bounds, effectiveBounds, directions & ~Directions.left, originalBounds, false) : null;
             }
         }
 
@@ -1363,14 +1373,14 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             // No horizontal place, restore original position
             this.restoreLayout(this.originalLayout);
             // tslint:disable-next-line:no-bitwise
-            return this.ensureTarget(originalBounds, effectiveBounds, directions & Directions.vertical);
+            return retry ? this.ensureTarget(originalBounds, effectiveBounds, directions & Directions.vertical, undefined, false) : null;
         } else {
             // Try top
             if (topTilesToPush.length) {
                 remain = this.pushVertical(bounds, -1, topTilesToPush);
                 if (remain) {
                     bounds = this.ensureContainer(bounds.offset(0, remain));
-                    return this.ensureTarget(bounds, effectiveBounds, Directions.bottom);
+                    return retry ? this.ensureTarget(bounds, effectiveBounds, Directions.bottom, undefined, false) : null;
                 }
             }
 
@@ -1473,26 +1483,26 @@ export class DejaTilesLayoutProvider implements OnDestroy {
 
         const bounds = tileElement.getBoundingClientRect();
 
-        if (x < bounds.left + 10) {
-            if (y < bounds.top + 10) {
+        if (x < bounds.left + 15) {
+            if (y < bounds.top + 15) {
                 return 'nw-resize';
-            } else if (y > bounds.bottom - 10) {
+            } else if (y > bounds.bottom - 15) {
                 return 'sw-resize';
             } else {
                 return 'w-resize';
             }
-        } else if (x > bounds.right - 10) {
-            if (y < bounds.top + 10) {
+        } else if (x > bounds.right - 15) {
+            if (y < bounds.top + 15) {
                 return 'ne-resize';
-            } else if (y > bounds.bottom - 10) {
+            } else if (y > bounds.bottom - 15) {
                 return 'se-resize';
             } else {
                 return 'e-resize';
             }
         } else {
-            if (y < bounds.top + 10) {
+            if (y < bounds.top + 15) {
                 return 'n-resize';
-            } else if (y > bounds.bottom - 10) {
+            } else if (y > bounds.bottom - 15) {
                 return 's-resize';
             } else {
                 return 'move';
@@ -1524,13 +1534,13 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         });
     }
 
-    private calcHorizontalOverflow(direction: number, tiles: DejaTile[], offset: number, blackList?: { [id: string]: string }): number {
+    private calcHorizontalOverflow(direction: number, tiles: Array<DejaTile>, offset: number, blackList?: Set<string>): number {
         let overflow = 0;
-        blackList = blackList || {};
+        blackList = blackList || new Set<string>();
 
         tiles.forEach((t) => {
-            if (!blackList[t.id]) {
-                blackList[t.id] = t.id;
+            if (!blackList.has(t.id)) {
+                blackList.add(t.id);
 
                 const tryBounds = t.percentBounds.offset(direction * offset, 0);
                 let rightOffset = 0;
@@ -1556,11 +1566,12 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         return overflow;
     }
 
-    private moveHorizontal(direction: number, tiles: DejaTile[], offset: number, targetBounds: { [id: string]: Rect }) {
+    private moveHorizontal(direction: number, tiles: Array<DejaTile>, offset: number, targetBounds: Map<string, Rect>) {
         tiles.forEach((t) => {
-            if (!targetBounds[t.id]) {
+            if (!targetBounds.has(t.id)) {
                 // Offset tile
-                const newBounds = targetBounds[t.id] = t.percentBounds.offset(direction * offset, 0);
+                const newBounds = t.percentBounds.offset(direction * offset, 0);
+                targetBounds.set(t.id, newBounds);
                 const adjacentTiles = this.tiles.filter((tile: DejaTile) => !tile.isDragging && !tile.equalsTo(t) && tile.percentBounds.intersectWith(newBounds));
 
                 if (adjacentTiles.length) {
@@ -1570,9 +1581,9 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         });
     }
 
-    private pushHorizontal(bounds: Rect, direction: number, tiles?: DejaTile[], offset?: number): number {
+    private pushHorizontal(bounds: Rect, direction: number, tiles?: Array<DejaTile>, offset?: number): number {
         let overflow = 0;
-        const targetBounds = {} as { [id: string]: Rect };
+        const targetBounds = new Map<string, Rect>();
 
         if (!offset) {
             offset = 0;
@@ -1593,8 +1604,8 @@ export class DejaTilesLayoutProvider implements OnDestroy {
 
                 //  bounds array to tiles
                 this.tiles.forEach((t) => {
-                    if (targetBounds[t.id]) {
-                        t.percentBounds = targetBounds[t.id];
+                    if (targetBounds.has(t.id)) {
+                        t.percentBounds = targetBounds.get(t.id);
                     }
                 });
             }
@@ -1603,13 +1614,13 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         return overflow;
     }
 
-    private calcVerticalOverflow(direction: number, tiles: DejaTile[], offset: number, blackList?: { [id: string]: string }): number {
+    private calcVerticalOverflow(direction: number, tiles: Array<DejaTile>, offset: number, blackList?: Set<string>): number {
         let overflow = 0;
-        blackList = blackList || {};
+        blackList = blackList || new Set<string>();
 
         tiles.forEach((t) => {
-            if (!blackList[t.id]) {
-                blackList[t.id] = t.id;
+            if (!blackList.has(t.id)) {
+                blackList.add(t.id);
 
                 // Offset tile
                 const tryBounds = t.percentBounds.offset(0, direction * offset);
@@ -1636,11 +1647,12 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         return overflow;
     }
 
-    private moveVertical(direction: number, tiles: DejaTile[], offset: number, targetBounds: { [id: string]: Rect }) {
+    private moveVertical(direction: number, tiles: Array<DejaTile>, offset: number, targetBounds: Map<string, Rect>) {
         tiles.forEach((t) => {
-            if (!targetBounds[t.id]) {
+            if (!targetBounds.has(t.id)) {
                 // Offset tile
-                const newBounds = targetBounds[t.id] = t.percentBounds.offset(0, direction * offset);
+                const newBounds = t.percentBounds.offset(0, direction * offset);
+                targetBounds.set(t.id, newBounds);
                 const adjacentTiles = this.tiles.filter((tile: DejaTile) => !tile.isDragging && !tile.equalsTo(t) && tile.percentBounds.intersectWith(newBounds));
 
                 if (adjacentTiles.length) {
@@ -1650,9 +1662,9 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         });
     }
 
-    private pushVertical(bounds: Rect, direction: number, tiles: DejaTile[], offset?: number): number {
+    private pushVertical(bounds: Rect, direction: number, tiles: Array<DejaTile>, offset?: number): number {
         let overflow = 0;
-        const targetBounds = {} as { [id: string]: Rect };
+        const targetBounds = new Map<string, Rect>();
 
         if (!offset) {
             offset = 0;
@@ -1672,18 +1684,14 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                 this.moveVertical(direction, tiles, offset, targetBounds);
 
                 //  bounds array to tiles
-                this.tiles.forEach(t => {
-                    if (targetBounds[t.id]) {
-                        t.percentBounds = targetBounds[t.id];
-                    }
-                });
+                this.tiles.forEach(t => targetBounds.has(t.id) && (t.percentBounds = targetBounds.get(t.id)));
             }
         }
 
         return overflow;
     }
 
-    private copyTiles(tiles: DejaTile[], isCut?: boolean) {
+    private copyTiles(tiles: Array<DejaTile>, isCut?: boolean) {
         if (!this.clipboardService) {
             if (!tiles) {
                 return;
@@ -1691,7 +1699,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             throw new Error('DejaClipboardService must be imported by your application to use the copyTiles methode of DejaTilesComponent.');
         }
 
-        const tt = this.clipboardService.get('tiles') as DejaTile[];
+        const tt = this.clipboardService.get('tiles') as Array<DejaTile>;
         if (tt) {
             tt.forEach((tile) => tile.isCutted = false);
         }
@@ -1709,7 +1717,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         while (--index >= 0) {
             const tile = this.tiles[index];
             if (tile.isTemporary) {
-                delete this.tilesDic[tile.id];
+                this.tilesDic.delete(tile.id);
                 this.tiles.splice(index, 1);
             }
         }

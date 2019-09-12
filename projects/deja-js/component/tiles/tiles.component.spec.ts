@@ -22,7 +22,7 @@ import { DejaTile } from './tile.class';
 import { DejaTilesLayoutProvider } from './tiles-layout.provider';
 import { DejaTilesComponent } from './tiles.component';
 
-const padding = 4;
+const padding = 0;
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -487,77 +487,6 @@ describe('DejaTilesComponent', () => {
         });
     });
 
-    it('should be able to expand a tile on mouse over when the content is too big', (done) => {
-        const fixture = TestBed.createComponent(DejaTilesContainerComponent);
-        const tilesContainerInstance = fixture.componentInstance as DejaTilesContainerComponent;
-        const tilesDebugElement = fixture.debugElement.query(By.directive(DejaTilesComponent));
-        const tilesInstance = tilesDebugElement.componentInstance as DejaTilesComponent;
-        const tilesContainer = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles'));
-        const tilesContainerElement = tilesContainer.nativeElement as HTMLElement;
-
-        observeDom$(fixture).pipe(
-            debounceTime(10),
-            first(),
-            map(() => {
-                fixture.detectChanges();
-
-                const expandTileModel = tilesContainerInstance.tiles.find((tile) => tile.id === 'Banana');
-                expandTileModel.templateModel.name = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br /> Mauris auctor sit amet odio et aliquet. Curabitur auctor eleifend mattis. <br /> Nullam sit amet quam tellus. Ut mattis tellus sed erat ultricies ornare. <br /> Nulla dictum nisi eu tortor lacinia porttitor. Donec eu arcu et enim cursus viverra. <br /> Praesent pulvinar dui nisi, a tincidunt arcu finibus sed.';
-
-                tilesContainerInstance.designMode = false;
-                fixture.detectChanges();
-
-                return expandTileModel;
-            }),
-            delay(20),
-            tap((expandTileModel) => {
-                tilesInstance.expandTile(expandTileModel, 200);
-            }),
-            delay(600),
-            tap(() => {
-                const sizeElement = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles > deja-tile#Banana'));
-                const bounds = sizeElement.nativeElement.getBoundingClientRect();
-                const testElement = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles > deja-tile#Pineapple'));
-                const testBounds = testElement.nativeElement.getBoundingClientRect();
-                const tilesContainerBounds = tilesContainerElement.getBoundingClientRect();
-
-                expect(bounds.left).toBe(tilesContainerBounds.left + 120 + padding);
-                expect(bounds.top).toBe(tilesContainerBounds.top + padding);
-                expect(bounds.width).toBe(120 - 2 * padding);
-                expect(bounds.height).toBe(200 - 2 * padding);
-                expect(testBounds.left).toBe(tilesContainerBounds.left + 120 + padding);
-                expect(testBounds.top).toBe(tilesContainerBounds.top + 440 + padding);
-            }),
-            delay(20),
-            tap(() => {
-                tilesInstance.cancelExpand();
-            }),
-            delay(600),
-            tap(() => {
-                const sizeElement = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles > deja-tile#Banana'));
-                const bounds = sizeElement.nativeElement.getBoundingClientRect();
-                const testElement = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles > deja-tile#Pineapple'));
-                const testBounds = testElement.nativeElement.getBoundingClientRect();
-                const tilesContainerBounds = tilesContainerElement.getBoundingClientRect();
-
-                expect(bounds.left).toBe(tilesContainerBounds.left + 120 + padding);
-                expect(bounds.top).toBe(tilesContainerBounds.top + padding);
-                expect(bounds.width).toBe(120 - 2 * padding);
-                expect(bounds.height).toBe(120 - 2 * padding);
-                expect(testBounds.left).toBe(tilesContainerBounds.left + 120 + padding);
-                expect(testBounds.top).toBe(tilesContainerBounds.top + 360 + padding);
-            }))
-            .subscribe(() => {
-                done();
-            });
-
-        fixture.detectChanges();
-
-        fixture.whenStable().then(() => {
-            tilesInstance.refresh();
-        });
-    });
-
     it('should cut, copy and paste the selected tiles', (done) => {
         const fixture = TestBed.createComponent(DejaTilesContainerComponent);
         const tiles1DebugElement = fixture.debugElement.query(By.css('deja-tiles#tiles1'));
@@ -683,17 +612,17 @@ describe('DejaTilesComponent', () => {
             delay(20),
             tap((dragElement: HTMLElement) => {
                 // Start drag
-                sendMouseEventRelative(dragElement, 'mousemove', 70, 70, 1);
+                sendMouseEventRelative(dragElement, 'mousemove', 75, 75, 1);
             }),
             delay(20),
             tap((dragElement: HTMLElement) => {
                 // Drag on another tile
-                sendMouseEventRelative(dragElement, 'mousemove', 190, 190, 1);
+                sendMouseEventRelative(dragElement, 'mousemove', 180, 180, 1);
             }),
             delay(600),
             tap((dragElement: HTMLElement) => {
                 // Drop
-                sendMouseEventRelative(dragElement.ownerDocument, 'mouseup', 190, 190, 0);
+                sendMouseEventRelative(dragElement.ownerDocument, 'mouseup', 180, 180, 0);
             }),
             delay(10),
             tap((dragElement: HTMLElement) => {
@@ -761,7 +690,7 @@ describe('DejaTilesComponent', () => {
             delay(20),
             tap((dragElement: HTMLElement) => {
                 // Start drag
-                sendMouseEventRelative(dragElement, 'mousemove', 129, 60, 1);
+                sendMouseEventRelative(dragElement, 'mousemove', 135, 60, 1);
             }),
             delay(20),
             tap((sizeElement: HTMLElement) => {
@@ -783,7 +712,7 @@ describe('DejaTilesComponent', () => {
                 expect(bounds.width).toBe(200 - 2 * padding);
                 expect(bounds.height).toBe(120 - 2 * padding);
                 expect(testBounds.left).toBe(tilesContainerBounds.left + 120 + padding);
-                expect(testBounds.top).toBe(tilesContainerBounds.top + 480 + padding);
+                expect(testBounds.top).toBe(tilesContainerBounds.top + 360 + padding);
             }),
             delay(20))
             .subscribe(() => {
@@ -839,7 +768,7 @@ describe('DejaTilesComponent', () => {
             delay(20),
             tap((dragElement: HTMLElement) => {
                 // Start drag
-                sendMouseEventRelative(dragElement, 'mousemove', 231, 60, 1);
+                sendMouseEventRelative(dragElement, 'mousemove', 225, 60, 1);
             }),
             delay(20),
             tap((sizeElement: HTMLElement) => {
@@ -861,7 +790,7 @@ describe('DejaTilesComponent', () => {
                 expect(bounds.width).toBe(200 - 2 * padding);
                 expect(bounds.height).toBe(120 - 2 * padding);
                 expect(testBounds.left).toBe(tilesContainerBounds.left + 120 + padding);
-                expect(testBounds.top).toBe(tilesContainerBounds.top + 480 + padding);
+                expect(testBounds.top).toBe(tilesContainerBounds.top + 360 + padding);
             }),
             delay(20))
             .subscribe(() => {
@@ -917,7 +846,7 @@ describe('DejaTilesComponent', () => {
             delay(20),
             tap((dragElement: HTMLElement) => {
                 // Start drag
-                sendMouseEventRelative(dragElement, 'mousemove', 180, 129, 1);
+                sendMouseEventRelative(dragElement, 'mousemove', 180, 135, 1);
             }),
             delay(20),
             tap((sizeElement: HTMLElement) => {
@@ -937,9 +866,9 @@ describe('DejaTilesComponent', () => {
                 expect(bounds.left).toBe(tilesContainerBounds.left + 120 + padding);
                 expect(bounds.top).toBe(tilesContainerBounds.top + padding);
                 expect(bounds.width).toBe(120 - 2 * padding);
-                expect(bounds.height).toBe(141 - 2 * padding);
+                expect(bounds.height).toBe(151 - 2 * padding);
                 expect(testBounds.left).toBe(tilesContainerBounds.left + 120 + padding);
-                expect(testBounds.top).toBe(tilesContainerBounds.top + 380 + padding);
+                expect(testBounds.top).toBe(tilesContainerBounds.top + 400 + padding);
             }),
             delay(20))
             .subscribe(() => {
@@ -995,7 +924,7 @@ describe('DejaTilesComponent', () => {
             delay(20),
             tap((dragElement: HTMLElement) => {
                 // Start drag
-                sendMouseEventRelative(dragElement, 'mousemove', 180, 231, 1);
+                sendMouseEventRelative(dragElement, 'mousemove', 180, 225, 1);
             }),
             delay(20),
             tap((sizeElement: HTMLElement) => {
@@ -1013,9 +942,9 @@ describe('DejaTilesComponent', () => {
                 const testBounds = testElement.nativeElement.getBoundingClientRect();
                 const tilesContainerBounds = tilesContainerElement.getBoundingClientRect();
                 expect(bounds.left).toBe(tilesContainerBounds.left + 120 + padding);
-                expect(bounds.top).toBe(tilesContainerBounds.top + 209 + padding);
+                expect(bounds.top).toBe(tilesContainerBounds.top + 199 + padding);
                 expect(bounds.width).toBe(120 - 2 * padding);
-                expect(bounds.height).toBe(151 - 2 * padding);
+                expect(bounds.height).toBe(161 - 2 * padding);
                 expect(testBounds.left).toBe(tilesContainerBounds.left + 120 + padding);
                 expect(testBounds.top).toBe(tilesContainerBounds.top + 400 + padding);
             }),
@@ -1073,7 +1002,7 @@ describe('DejaTilesComponent', () => {
             delay(20),
             tap((dragElement: HTMLElement) => {
                 // Start drag
-                sendMouseEventRelative(dragElement, 'mousemove', 129, 129, 1);
+                sendMouseEventRelative(dragElement, 'mousemove', 129, 135, 1);
             }),
             delay(20),
             tap((sizeElement: HTMLElement) => {
@@ -1151,7 +1080,7 @@ describe('DejaTilesComponent', () => {
             delay(20),
             tap((dragElement: HTMLElement) => {
                 // Start drag
-                sendMouseEventRelative(dragElement, 'mousemove', 249, 231, 1);
+                sendMouseEventRelative(dragElement, 'mousemove', 255, 231, 1);
             }),
             delay(20),
             tap((sizeElement: HTMLElement) => {
@@ -1169,11 +1098,11 @@ describe('DejaTilesComponent', () => {
                 const testBounds = testElement.nativeElement.getBoundingClientRect();
                 const tilesContainerBounds = tilesContainerElement.getBoundingClientRect();
                 expect(bounds.left).toBe(tilesContainerBounds.left + 120 + padding);
-                expect(bounds.top).toBe(tilesContainerBounds.top + 209 + padding);
-                expect(bounds.width).toBe(171 - 2 * padding);
-                expect(bounds.height).toBe(151 - 2 * padding);
+                expect(bounds.top).toBe(tilesContainerBounds.top + 199 + padding);
+                expect(bounds.width).toBe(181 - 2 * padding);
+                expect(bounds.height).toBe(161 - 2 * padding);
                 expect(testBounds.left).toBe(tilesContainerBounds.left + 120 + padding);
-                expect(testBounds.top).toBe(tilesContainerBounds.top + 520 + padding);
+                expect(testBounds.top).toBe(tilesContainerBounds.top + 360 + padding);
             }),
             delay(20))
             .subscribe(() => {
@@ -1229,7 +1158,7 @@ describe('DejaTilesComponent', () => {
             delay(20),
             tap((dragElement: HTMLElement) => {
                 // Start drag
-                sendMouseEventRelative(dragElement, 'mousemove', 231, 231, 1);
+                sendMouseEventRelative(dragElement, 'mousemove', 225, 225, 1);
             }),
             delay(20),
             tap((sizeElement: HTMLElement) => {
@@ -1246,12 +1175,12 @@ describe('DejaTilesComponent', () => {
                 const testElement = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles > deja-tile#Watermelon'));
                 const testBounds = testElement.nativeElement.getBoundingClientRect();
                 const tilesContainerBounds = tilesContainerElement.getBoundingClientRect();
-                expect(bounds.left).toBe(tilesContainerBounds.left + 209 + padding);
-                expect(bounds.top).toBe(tilesContainerBounds.top + 209 + padding);
-                expect(bounds.width).toBe(151 - 2 * padding);
-                expect(bounds.height).toBe(151 - 2 * padding);
+                expect(bounds.left).toBe(tilesContainerBounds.left + 199 + padding);
+                expect(bounds.top).toBe(tilesContainerBounds.top + 199 + padding);
+                expect(bounds.width).toBe(161 - 2 * padding);
+                expect(bounds.height).toBe(161 - 2 * padding);
                 expect(testBounds.left).toBe(tilesContainerBounds.left + 240 + padding);
-                expect(testBounds.top).toBe(tilesContainerBounds.top + 400 + padding);
+                expect(testBounds.top).toBe(tilesContainerBounds.top + 360 + padding);
             }),
             delay(20))
             .subscribe(() => {
@@ -1307,7 +1236,7 @@ describe('DejaTilesComponent', () => {
             delay(20),
             tap((dragElement: HTMLElement) => {
                 // Start drag
-                sendMouseEventRelative(dragElement, 'mousemove', 231, 369, 1);
+                sendMouseEventRelative(dragElement, 'mousemove', 231, 375, 1);
             }),
             delay(20),
             tap((sizeElement: HTMLElement) => {
@@ -1324,10 +1253,10 @@ describe('DejaTilesComponent', () => {
                 const testElement = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles > deja-tile#Watermelon'));
                 const testBounds = testElement.nativeElement.getBoundingClientRect();
                 const tilesContainerBounds = tilesContainerElement.getBoundingClientRect();
-                expect(bounds.left).toBe(tilesContainerBounds.left + 209 + padding);
+                expect(bounds.left).toBe(tilesContainerBounds.left + 199 + padding);
                 expect(bounds.top).toBe(tilesContainerBounds.top + 240 + padding);
-                expect(bounds.width).toBe(151 - 2 * padding);
-                expect(bounds.height).toBe(151 - 2 * padding);
+                expect(bounds.width).toBe(161 - 2 * padding);
+                expect(bounds.height).toBe(161 - 2 * padding);
                 expect(testBounds.left).toBe(tilesContainerBounds.left + 240 + padding);
                 expect(testBounds.top).toBe(tilesContainerBounds.top + 400 + padding);
             }),
