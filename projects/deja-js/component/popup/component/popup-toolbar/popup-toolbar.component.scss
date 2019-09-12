@@ -1,31 +1,51 @@
+.deja-popup-toolbar {
+    >.mat-icon {
+        margin-right: 4px;
+    }
+}
+
 .deja-popup-toolbar-mini {
     display: flex;
-    font-size: 12px;
-    
+    height: auto;
+
     .deja-popup-toolbar-content {
-        line-height: 18px;
-        height: 18px;
-        padding: 3px .5rem 3px 1rem;
-    }
-    .deja-popup-toolbar-spacer {
-        flex: 1;
-        cursor: grab;
-    }
-    .deja-popup-toolbar-actions {
-        padding-left: 1rem;
-        button {
+        font-size: 12px;
+
+        button,
+        .mat-icon {
             width: 18px;
             height: 18px;
             line-height: 18px;
-            .mat-icon {
-                line-height: 18px;
-                font-size: 18px;
-                height: 18px;
-                width: 18px;
-            margin-right: 2px;
-            }
+        }
+
+        button {
+            margin-left: 4px;
+        }
+
+        .mat-icon {
+            font-size: 18px;
         }
     }
+
+    .deja-popup-toolbar-spacer {
+        flex: 1;
+        cursor: grab;
+
+        .mat-icon {
+            vertical-align: sub;
+            margin-right: 4px;
+        }
+    }
+
+    .deja-popup-toolbar-actions {
+        padding-left: 1rem;
+    }
+
+    // Remove left padding for all toolbar actions except the first one
+    .deja-popup-toolbar-actions~.deja-popup-toolbar-actions {
+        padding-left: 0;
+    }
+
     .actions-hide {
         display: none;
     }

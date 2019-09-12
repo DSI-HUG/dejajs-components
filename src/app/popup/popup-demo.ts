@@ -71,6 +71,7 @@ export class DejaPopupDemoComponent {
         const pos: DialogPosition = { bottom: '50px', right: '50px' };
         config.position = pos;
         config.disableClose = true;
+        config.toolbarColor = 'warn';
 
         const title = 'System failure!';
 
@@ -190,6 +191,8 @@ export class DejaPopupDemoComponent {
         config.title = `Pdf ${DejaPopupConfig.dialogCount}`;
         config.url = this.dummyPdfUrl;
         config.padding = false;
+        config.toolbarIconName = 'photo_camera';
+        config.toolbarColor = 'accent';
 
         config.toolbarActions = [
             new DejaPopupButton('account', 'User', 'account_circle', false),
