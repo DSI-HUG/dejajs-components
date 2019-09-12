@@ -339,14 +339,6 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
         this.layoutProvider.ensureVisible$.next(id);
     }
 
-    public expandTile(tile: DejaTile, pixelHeight: number) {
-        this.layoutProvider.expandTile(tile, pixelHeight);
-    }
-
-    public cancelExpand() {
-        this.layoutProvider.cancelExpand();
-    }
-
     public refresh(params?: IDejaTilesRefreshParams) {
         this.layoutProvider.refreshTiles$.next(params);
     }

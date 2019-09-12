@@ -2,6 +2,7 @@
 	position: relative;
 	overflow: auto;
 	margin: 0 !important;
+
 	#tiles {
 		display: block;
 		left: 0;
@@ -11,17 +12,27 @@
 		position: absolute;
 		padding: 0 !important;
 		margin: 0 !important;
+
+        &.design {
+            deja-tile {
+                background-color: rgba(0, 0, 0, 0.1);
+            }
+        }
+
 		#tile:hover {
 			z-index: 200;
 		}
 	}
+
 	[deja-tile-position] {
 		position: absolute;
-		z-index: 11;
-		background-color: rgba(0, 0, 0, 0.25);
+		z-index: 101;
+		background-color: rgba(0, 0, 0, 0.5);
 	}
+
 	&[drag] {
-		background-color: rgba(0, 0, 0, 0.15);
+		background-color: rgba(0, 0, 0, 0.5);
+
 		[deja-tile-position] {
 			transition-property: left, top, width, height;
 			transition-duration: .35s;

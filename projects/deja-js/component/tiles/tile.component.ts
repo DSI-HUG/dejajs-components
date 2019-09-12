@@ -88,10 +88,10 @@ export class DejaTileComponent implements OnDestroy {
                     if (!tile.isHidden) {
                         this.element.removeAttribute('hidden');
                     }
-                    this.element.style.left = `${bounds.left + 4}px`;
-                    this.element.style.top = `${bounds.top + 4}px`;
-                    this.element.style.width = `${bounds.width - 8}px`;
-                    this.element.style.height = `${bounds.height - 8}px`;
+                    this.element.style.left = `${bounds.left}px`;
+                    this.element.style.top = `${bounds.top}px`;
+                    this.element.style.width = `${bounds.width}px`;
+                    this.element.style.height = `${bounds.height}px`;
                     this.progressDiameter = Math.min(100, Math.round(Math.max(bounds.width * 0.4, bounds.height * 0.4)));
                     this.changeDetectorRef.markForCheck();
                 }));
@@ -114,10 +114,6 @@ export class DejaTileComponent implements OnDestroy {
 
             this.subscriptions.push(observableFrom(tile.cutted$).pipe(
                 tap((value) => toogleAttribute('cutted', value)))
-                .subscribe(() => this.changeDetectorRef.markForCheck()));
-
-            this.subscriptions.push(observableFrom(tile.expanded$).pipe(
-                tap((value) => toogleAttribute('expanded', value)))
                 .subscribe(() => this.changeDetectorRef.markForCheck()));
 
             this.subscriptions.push(observableFrom(tile.deleted$).pipe(
