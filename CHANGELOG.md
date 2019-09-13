@@ -1,3 +1,51 @@
+### 0.1.0 (2019-09-13)
+
+##### Continuous Integration
+
+* **Dependencies:**  Update peerDependencies ([a580a89f](https://github.com/DSI-HUG/dejajs-components/commit/a580a89f180b725926a6fe6515df4af0b7e4fb9a))
+
+##### New Features
+
+* **PopupToolbar:**  Fix [#513](https://github.com/DSI-HUG/dejajs-components/pull/513) - Always apply the configured color in pop-up toolbar (DEJS-711) ([2f5d42cd](https://github.com/DSI-HUG/dejajs-components/commit/2f5d42cd97d0849cd4ea4e7a799cc57812243e59))
+* **Material8:**  Update to Material 8 ([27ef07e0](https://github.com/DSI-HUG/dejajs-components/commit/27ef07e064c73c52965b0213c99d2f72f8d76e8a))
+* **Angular8:**  Update to Angular 8 ([5c778ee0](https://github.com/DSI-HUG/dejajs-components/commit/5c778ee0ce33c2db9aa2f5187e3d833cc4ff9576))
+
+##### Bug Fixes
+
+* **TilesComponent:**  Inprove drag and drop usability ([8acf2175](https://github.com/DSI-HUG/dejajs-components/commit/8acf21751a15ec035bca6e1b197ec666a44620c4))
+* **Global:**
+  *  Ensure CoerceBooleanProperty for boolean Input() values ([9acf2bf8](https://github.com/DSI-HUG/dejajs-components/commit/9acf2bf83c18046ad607a9833ad4bb7786c98dc3))
+  *  No Implicit as any + lint ([1118243b](https://github.com/DSI-HUG/dejajs-components/commit/1118243b23244103b242b7e12578e35a79a4c30b))
+  *  Fix import path for @deja-js/component ([626ec0f9](https://github.com/DSI-HUG/dejajs-components/commit/626ec0f906f2b580b1f4fc75fba63d0df7644dc4))
+  *  Fix dependencies ([a13d8bb6](https://github.com/DSI-HUG/dejajs-components/commit/a13d8bb697b9453f9ed483bd1f47d9e18b7064a5))
+* **DejaTiles:**
+  *  Avoid null pointer on move ([0b9dee72](https://github.com/DSI-HUG/dejajs-components/commit/0b9dee7238a7348a9bb93431c6bb0044a8eac12e))
+  *  Fix text aligment in TileGroup ([34340aa9](https://github.com/DSI-HUG/dejajs-components/commit/34340aa91223e5988f41830f6c274ecebf58a6e4))
+* **ContentEditable:**  Removed useless first on observables ([1ea66213](https://github.com/DSI-HUG/dejajs-components/commit/1ea6621381ad52d00e6f3e64ee471343c0bab376))
+* **DejaSelect:**  Fix possible null pointer on the select dropdown ([6bb44193](https://github.com/DSI-HUG/dejajs-components/commit/6bb44193dc45b7a65e7dc3198adbbb33ae46af19))
+* **DatePicker:**  add markForCheck in date-picker disabled ([35431123](https://github.com/DSI-HUG/dejajs-components/commit/35431123aaae33eb797174e567862a91c8c7f6fb))
+* **tsconfig:**  Fix path resolution for demo ([70aba42f](https://github.com/DSI-HUG/dejajs-components/commit/70aba42f6e11b5d88e091c4c9b26641d852bb026))
+* **SideNav:**  Fix icon binding ([8e673b34](https://github.com/DSI-HUG/dejajs-components/commit/8e673b34a3f08aca1ed2e68a3deadcf51fbd03fa))
+* **package.json:**
+  *  Fix dependencies ([1ba589a2](https://github.com/DSI-HUG/dejajs-components/commit/1ba589a2db86e7af34694cd8e3595ba127481a94))
+  *  Removed useless flex layout peer dependency ([90e1e094](https://github.com/DSI-HUG/dejajs-components/commit/90e1e094db76b283fbe428851e2e45dba92f7bdb))
+* **SlimScrollOptions:**  Fix wheelDelta in modern browsers (replaced by deltaY) ([86a1cffb](https://github.com/DSI-HUG/dejajs-components/commit/86a1cffb28d11699a3c4da1e6071260c7aed67d7))
+* **DatePickerComponent:**  Add inline property to icons to make them smaller ([71a65df2](https://github.com/DSI-HUG/dejajs-components/commit/71a65df2d7f934b6dc044c59099b4149d5a69fcf))
+* **AppRoute:**  Fix routing for iframe that causing an error at the build ([d7c99421](https://github.com/DSI-HUG/dejajs-components/commit/d7c994211cbb728996eb5c68eea2c21c5de21717))
+* **Test:**  Fix imports ([04601b54](https://github.com/DSI-HUG/dejajs-components/commit/04601b545343a75772e4ec39d9def6421340d140))
+* **input-mixin:**  Add license ([9bd72981](https://github.com/DSI-HUG/dejajs-components/commit/9bd72981f31c3bb4e370cb8ea7300e4c8226e0aa))
+* **PopupComponent:**
+  *  Remove iframe from navigation menu ([c3834add](https://github.com/DSI-HUG/dejajs-components/commit/c3834add4c84f7f800fa90044ab7392caeaf87e9))
+  *  Fix the pop-up moving event especially when included in iframe ([0dfc648e](https://github.com/DSI-HUG/dejajs-components/commit/0dfc648e222dc4da2a547af230eda6e9172da54d))
+* **DejaEditor:**
+  *  Fix the bug that occurs when we try to destroy a ckEditor that is not already fully initialized by waiting the ready state when destroying ([d9cf33c6](https://github.com/DSI-HUG/dejajs-components/commit/d9cf33c6abe5c0811930994ee016dc280a3fd9fb))
+  *  Clone config to avoid error due to its reuse ([d07c95a3](https://github.com/DSI-HUG/dejajs-components/commit/d07c95a3173ed05975c6ef6380cbd734261fe17a))
+
+##### Other Changes
+
+* **Global:**  No unused for libs ([b562fc98](https://github.com/DSI-HUG/dejajs-components/commit/b562fc988e77a461177c2d758741b816d8bc1763))
+* **DejaEditorComponent:**  Add the underscore to fix the ts-lint error with function param not used ([87cedb5f](https://github.com/DSI-HUG/dejajs-components/commit/87cedb5fafdbe6b10fbe4cc71a3e724aa64bc9d2))
+
 #### 0.0.1 (2019-08-14)
 
 ##### Continuous Integration
