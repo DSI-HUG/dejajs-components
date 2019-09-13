@@ -109,13 +109,11 @@ THE SOFTWARE.
 
 @angular/material/progress-spinner
 
-@angular/material/tabs
-
-undefined
-
 @angular/material/select
 
 @angular/material/sidenav
+
+@angular/material/tabs
 
 @angular/material/toolbar
 
@@ -126,6 +124,63 @@ MIT
 
 @angular/router
 MIT
+
+@deja-js/component
+Apache-2.0
+
+@deja-js/component/chips
+
+@deja-js/component/circular-picker
+
+@deja-js/component/color-picker
+
+@deja-js/component/color-selector
+
+@deja-js/component/data-grid
+
+@deja-js/component/date-picker
+
+@deja-js/component/date-selector
+
+@deja-js/component/dialog
+
+@deja-js/component/editor
+
+@deja-js/component/loaders
+
+@deja-js/component/message-box
+
+@deja-js/component/monaco-editor
+
+@deja-js/component/mouse-dragdrop
+
+@deja-js/component/numeric-stepper
+
+@deja-js/component/overlay
+
+@deja-js/component/popup
+
+@deja-js/component/range
+
+@deja-js/component/select
+
+@deja-js/component/sidenav
+
+@deja-js/component/snackbar
+
+@deja-js/component/splitter
+
+@deja-js/component/tag
+
+@deja-js/component/templates
+
+@deja-js/component/tiles
+
+@deja-js/component/tooltip
+
+@deja-js/component/tree-list
+
+@deja-js/component/viewport
 
 @deja-js/core
 Apache-2.0
