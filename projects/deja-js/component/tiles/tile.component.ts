@@ -6,6 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { from as observableFrom, Subscription } from 'rxjs';
 import { debounceTime, delay, filter, first, tap } from 'rxjs/operators';
@@ -22,7 +23,6 @@ import { DejaTile } from './tile.class';
 })
 export class DejaTileComponent implements OnDestroy {
     @Input() public template: any;
-    @Input() public designMode: boolean;
     @Output() public groupChanged = new EventEmitter<DejaTileGroup>();
     @Output() public close = new EventEmitter<Event>();
 
@@ -31,6 +31,16 @@ export class DejaTileComponent implements OnDestroy {
     private element: HTMLElement;
     private _tile: DejaTile;
     private subscriptions = [] as Subscription[];
+    private _designMode: boolean;
+
+    @Input()
+    public set designMode(value: boolean | string) {
+        this._designMode = coerceBooleanProperty(value);
+    }
+
+    public get designMode() {
+        return this._designMode;
+    }
 
     constructor(el: ElementRef, private changeDetectorRef: ChangeDetectorRef) {
         this.element = el.nativeElement as HTMLElement;
@@ -78,10 +88,10 @@ export class DejaTileComponent implements OnDestroy {
                     if (!tile.isHidden) {
                         this.element.removeAttribute('hidden');
                     }
-                    this.element.style.left = `${bounds.left + 4}px`;
-                    this.element.style.top = `${bounds.top + 4}px`;
-                    this.element.style.width = `${bounds.width - 8}px`;
-                    this.element.style.height = `${bounds.height - 8}px`;
+                    this.element.style.left = `${bounds.left}px`;
+                    this.element.style.top = `${bounds.top}px`;
+                    this.element.style.width = `${bounds.width}px`;
+                    this.element.style.height = `${bounds.height}px`;
                     this.progressDiameter = Math.min(100, Math.round(Math.max(bounds.width * 0.4, bounds.height * 0.4)));
                     this.changeDetectorRef.markForCheck();
                 }));
@@ -104,10 +114,6 @@ export class DejaTileComponent implements OnDestroy {
 
             this.subscriptions.push(observableFrom(tile.cutted$).pipe(
                 tap((value) => toogleAttribute('cutted', value)))
-                .subscribe(() => this.changeDetectorRef.markForCheck()));
-
-            this.subscriptions.push(observableFrom(tile.expanded$).pipe(
-                tap((value) => toogleAttribute('expanded', value)))
                 .subscribe(() => this.changeDetectorRef.markForCheck()));
 
             this.subscriptions.push(observableFrom(tile.deleted$).pipe(

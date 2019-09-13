@@ -30,9 +30,6 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
     /** Retourne ou definit les couleurs selectionables affichées. */
     @Input() public colors: Color[];
 
-    /** Retourne ou definit si la partie déroulante est visible. */
-    @Input() public isOpen = false;
-
     @Input() public resetcolor: string = null;
 
     /** Déclenché lorsqu'une couleur est survolée par la souris. */
@@ -50,6 +47,18 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
 
     /** Overlay pane containing the options. */
     @ViewChild(DejaOverlayComponent, { static: true }) private dejaOverlayCmp: DejaOverlayComponent;
+
+    private _isOpen = false;
+
+    /** Retourne ou definit si la partie déroulante est visible. */
+    @Input()
+    public set isOpen(value: boolean | string) {
+        this._isOpen = coerceBooleanProperty(value) || null;
+    }
+
+    public get isOpen() {
+        return this._isOpen;
+    }
 
     private _positions = DejaConnectionPositionPair.default;
 

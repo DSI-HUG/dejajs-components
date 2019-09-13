@@ -62,8 +62,6 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
     @Input() public parentItemTemplateExternal: any;
     /** Permet de définir un template pour le loader par binding. */
     @Input() public loaderTemplateExternal: any;
-    /** Définit une valeur indiquant si en reactive form le model renvoyé doit être un object ou une valeur */
-    @Input() public modelIsValue: boolean;
     /** Exécuté lorsque le calcul du viewPort est terminé. */
     @Output() public viewPortChanged = new EventEmitter<IViewPort>();
     /** Exécuté lorsque l'utilisateur sélectionne ou désélectionne une ligne. */
@@ -127,6 +125,18 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
     private keyboardNavigation$ = new Subject();
 
     private delaySearchTrigger$ = new BehaviorSubject<number>(250);
+
+    private _modelIsValue: boolean;
+
+    /** Définit une valeur indiquant si en reactive form le model renvoyé doit être un object ou une valeur */
+    @Input()
+    public set modelIsValue(value: boolean | string) {
+        this._modelIsValue = coerceBooleanProperty(value);
+    }
+
+    public get modelIsValue() {
+        return this._modelIsValue;
+    }
 
     private _positions = DejaConnectionPositionPair.default;
 

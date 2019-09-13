@@ -6,6 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Output, Renderer, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { IAreaData } from './area-data.model';
 import { Point } from './point.model';
@@ -46,10 +47,6 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
      * Separator width
      */
     @Input() public gutterSize = 10;
-    /**
-     * Disable the component
-     */
-    @Input() public disabled = false;
     /**
      * Event triggered when the user start to drag the cursor
      */
@@ -94,6 +91,17 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
     private areaASize = 0;
     private areaBSize = 0;
     private eventsDragFct: Function[] = [];
+    private _disabled = false;
+
+    /** Retourne ou definit si le selecteur est desactivé. */
+    @Input()
+    public set disabled(value: boolean | string) {
+        this._disabled = coerceBooleanProperty(value) || null;
+    }
+
+    public get disabled() {
+        return this._disabled;
+    }
 
     public get areas() {
         return this._areas;
