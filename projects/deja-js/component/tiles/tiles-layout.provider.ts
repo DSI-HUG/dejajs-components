@@ -438,8 +438,11 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                                 }
                             }
 
-                            this._cursor = this.getCursorFromHTMLElement(e.pageX, e.pageY, e.target as HTMLElement);
-                            this.container.style.cursor = this._cursor;
+                            if (this.designMode) {
+                                this._cursor = this.getCursorFromHTMLElement(e.pageX, e.pageY, e.target as HTMLElement);
+                                this.container.style.cursor = this._cursor;
+                            }
+
                             this.currentTile = undefined;
                         });
                     } else {
