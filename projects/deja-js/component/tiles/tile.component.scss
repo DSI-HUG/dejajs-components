@@ -16,11 +16,11 @@
 
 	&[drag],
 	&[drop] {
-		opacity: 0.5;
 		z-index: 100;
 	}
 
 	&[drag] {
+		opacity: 0.5;
 		user-select: none;
 		transition: none;
 	}
