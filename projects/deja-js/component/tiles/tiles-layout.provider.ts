@@ -107,104 +107,104 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                 this.container.style.height = '';
             }),
             delay(10),
-            takeWhile(() => this.isAlive))
-            .subscribe((params) => {
-                const placeAtTheEnd = new Array<DejaTile>();
+            takeWhile(() => this.isAlive)
+        ).subscribe((params) => {
+            const placeAtTheEnd = new Array<DejaTile>();
 
-                const containerBounds = this.container.getBoundingClientRect();
-                if ((params && params.resetWidth) || !this.hundredPercentWith) {
-                    this.hundredPercentWith = containerBounds.width;
+            const containerBounds = this.container.getBoundingClientRect();
+            if ((params && params.resetWidth) || !this.hundredPercentWith) {
+                this.hundredPercentWith = containerBounds.width;
+            }
+            let height = containerBounds.height - 20;
+            let width = containerBounds.width - 20;
+            let maxWidth = 0;
+            let maxHeight = 0;
+            const tiles = this.tiles || new Array<DejaTile>();
+
+            const selectedTileIds = new Array<string>();
+            tiles.forEach((tile: DejaTile) => {
+                if (tile.percentBounds && !tile.percentBounds.isEmpty()) {
+                    const bounds = this.getPixelBounds(tile.percentBounds);
+                    if (bounds.bottom > maxWidth) {
+                        maxWidth = bounds.right;
+                    }
+                    if (bounds.right > maxHeight) {
+                        maxHeight = bounds.bottom;
+                    }
+                    if (!tile.isDragging) {
+                        tile.pixelBounds = bounds;
+                    }
+                } else {
+                    placeAtTheEnd.push(tile);
                 }
-                let height = containerBounds.height - 20;
-                let width = containerBounds.width - 20;
-                let maxWidth = 0;
-                let maxHeight = 0;
-                const tiles = this.tiles || new Array<DejaTile>();
-
-                const selectedTileIds = new Array<string>();
-                tiles.forEach((tile: DejaTile) => {
-                    if (tile.percentBounds && !tile.percentBounds.isEmpty()) {
-                        const bounds = this.getPixelBounds(tile.percentBounds);
-                        if (bounds.bottom > maxWidth) {
-                            maxWidth = bounds.right;
-                        }
-                        if (bounds.right > maxHeight) {
-                            maxHeight = bounds.bottom;
-                        }
-                        if (!tile.isDragging) {
-                            tile.pixelBounds = bounds;
-                        }
-                    } else {
-                        placeAtTheEnd.push(tile);
-                    }
-                    if (tile.isSelected && !tile.isHidden) {
-                        selectedTileIds.push(tile.id);
-                    }
-                    if (tile.pixelBounds && tile.pixelBounds.bottom > height) {
-                        height = tile.pixelBounds.bottom;
-                    }
-                });
-
-                let top = maxHeight;
-                let left = 0;
-                placeAtTheEnd.forEach((tile) => {
-                    tile.percentBounds = tile.percentBounds || new Rect(this.getPercentSize(left), this.getPercentSize(top), 3 * this.getTileMinPercentWidth(), 3 * this.getTileMinPercentHeight());
-                    let pixelBounds = this.getPixelBounds(tile.percentBounds);
-
-                    if (pixelBounds.right > width) {
-                        top = maxHeight;
-                        left = 0;
-                        tile.percentBounds.left = 0;
-                        tile.percentBounds.top = this.getPercentSize(top);
-                        pixelBounds = this.getPixelBounds(tile.percentBounds);
-                    }
-
-                    if (pixelBounds.bottom > maxHeight) {
-                        maxHeight = pixelBounds.bottom;
-                    }
-
-                    tile.pixelBounds = this.getPixelBounds(tile.percentBounds);
-                    left += pixelBounds.width;
-                });
-
-                if (this.dragTarget) {
-                    const dragBounds = this.getPixelBounds(this.dragTarget);
-                    if (height <= dragBounds.bottom) {
-                        height = dragBounds.bottom + dragBounds.height;
-                    }
-                    if (width <= dragBounds.right) {
-                        width = dragBounds.right + dragBounds.width;
-                    }
+                if (tile.isSelected && !tile.isHidden) {
+                    selectedTileIds.push(tile.id);
                 }
-
-                const minHeight = this.getPixelSize(2 * this._tileMinHeight, this._tileMinHeightUnit);
-                if (height < minHeight) {
-                    height = minHeight;
+                if (tile.pixelBounds && tile.pixelBounds.bottom > height) {
+                    height = tile.pixelBounds.bottom;
                 }
-
-                this.container.style.width = `${width}px`;
-                this.container.style.height = `${height}px`;
-
-                if (params) {
-                    if (params.ensureVisible) {
-                        this.ensureVisible$.next(params.ensureVisible);
-                    }
-                    if (params.ensureBounds) {
-                        this.ensureBounds$.next(params.ensureBounds);
-                    }
-                }
-
-                this.selectedTiles = selectedTileIds;
-
-                const event = new CustomEvent('DejaTilesEvent', { cancelable: false }) as IDejaTilesEvent;
-                if (placeAtTheEnd.length > 0) {
-                    event.tiles = placeAtTheEnd;
-                    this.layoutChanged.next(event);
-                }
-
-                event.tiles = tiles;
-                this.layoutCompleted.next(event);
             });
+
+            let top = maxHeight;
+            let left = 0;
+            placeAtTheEnd.forEach((tile) => {
+                tile.percentBounds = tile.percentBounds || new Rect(this.getPercentSize(left), this.getPercentSize(top), 3 * this.getTileMinPercentWidth(), 3 * this.getTileMinPercentHeight());
+                let pixelBounds = this.getPixelBounds(tile.percentBounds);
+
+                if (pixelBounds.right > width) {
+                    top = maxHeight;
+                    left = 0;
+                    tile.percentBounds.left = 0;
+                    tile.percentBounds.top = this.getPercentSize(top);
+                    pixelBounds = this.getPixelBounds(tile.percentBounds);
+                }
+
+                if (pixelBounds.bottom > maxHeight) {
+                    maxHeight = pixelBounds.bottom;
+                }
+
+                tile.pixelBounds = this.getPixelBounds(tile.percentBounds);
+                left += pixelBounds.width;
+            });
+
+            if (this.dragTarget) {
+                const dragBounds = this.getPixelBounds(this.dragTarget);
+                if (height <= dragBounds.bottom) {
+                    height = dragBounds.bottom + dragBounds.height;
+                }
+                if (width <= dragBounds.right) {
+                    width = dragBounds.right + dragBounds.width;
+                }
+            }
+
+            const minHeight = this.getPixelSize(2 * this._tileMinHeight, this._tileMinHeightUnit);
+            if (height < minHeight) {
+                height = minHeight;
+            }
+
+            this.container.style.width = `${width}px`;
+            this.container.style.height = `${height}px`;
+
+            if (params) {
+                if (params.ensureVisible) {
+                    this.ensureVisible$.next(params.ensureVisible);
+                }
+                if (params.ensureBounds) {
+                    this.ensureBounds$.next(params.ensureBounds);
+                }
+            }
+
+            this.selectedTiles = selectedTileIds;
+
+            const event = new CustomEvent('DejaTilesEvent', { cancelable: false }) as IDejaTilesEvent;
+            if (placeAtTheEnd.length > 0) {
+                event.tiles = placeAtTheEnd;
+                this.layoutChanged.next(event);
+            }
+
+            event.tiles = tiles;
+            this.layoutCompleted.next(event);
+        });
 
         const ensureTile$ = from(this.ensureVisible$).pipe(
             delay(1),
@@ -213,152 +213,152 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             map((tile) => tile.percentBounds));
 
         merge(this.ensureBounds$, ensureTile$).pipe(
-            takeWhile(() => this.isAlive))
-            .subscribe((percentBounds) => {
-                const { left, right, top, bottom } = this.getPixelBounds(percentBounds);
+            takeWhile(() => this.isAlive)
+        ).subscribe((percentBounds) => {
+            const { left, right, top, bottom } = this.getPixelBounds(percentBounds);
 
-                const findScrollContainer = (container: HTMLElement) => {
-                    while (container && container.tagName !== 'DEJA-TILES') {
-                        container = container.parentElement;
-                    }
-
-                    return container;
-                };
-
-                const scrollContainer = findScrollContainer(this.container);
-                if (!scrollContainer) {
-                    return;
+            const findScrollContainer = (container: HTMLElement) => {
+                while (container && container.tagName !== 'DEJA-TILES') {
+                    container = container.parentElement;
                 }
 
-                const containerBounds = this.container.getBoundingClientRect();
-                const scrollBounds = scrollContainer.getBoundingClientRect();
+                return container;
+            };
 
-                if (left + containerBounds.left < scrollBounds.bottom) {
-                    scrollContainer.scrollLeft += left + containerBounds.left - scrollBounds.bottom;
-                } else if (right + containerBounds.left > scrollBounds.right) {
-                    scrollContainer.scrollLeft += right + containerBounds.left - scrollBounds.right;
-                }
+            const scrollContainer = findScrollContainer(this.container);
+            if (!scrollContainer) {
+                return;
+            }
 
-                if (top + containerBounds.top < scrollBounds.top) {
-                    scrollContainer.scrollTop += top + containerBounds.top - scrollBounds.top;
-                } else if (bottom + containerBounds.top > scrollBounds.bottom) {
-                    scrollContainer.scrollTop += bottom + containerBounds.top - scrollBounds.bottom;
-                }
-            });
+            const containerBounds = this.container.getBoundingClientRect();
+            const scrollBounds = scrollContainer.getBoundingClientRect();
+
+            if (left + containerBounds.left < scrollBounds.bottom) {
+                scrollContainer.scrollLeft += left + containerBounds.left - scrollBounds.bottom;
+            } else if (right + containerBounds.left > scrollBounds.right) {
+                scrollContainer.scrollLeft += right + containerBounds.left - scrollBounds.right;
+            }
+
+            if (top + containerBounds.top < scrollBounds.top) {
+                scrollContainer.scrollTop += top + containerBounds.top - scrollBounds.top;
+            } else if (bottom + containerBounds.top > scrollBounds.bottom) {
+                scrollContainer.scrollTop += bottom + containerBounds.top - scrollBounds.bottom;
+            }
+        });
 
         from(this.dragSelection$).pipe(
-            takeWhile(() => this.isAlive))
-            .subscribe((dragSelection) => {
-                const mouseUp$ = fromEvent(this._container.ownerDocument, 'mouseup').pipe(
-                    tap(() => this.selectionRect$.next(null)));
+            takeWhile(() => this.isAlive)
+        ).subscribe((dragSelection) => {
+            const mouseUp$ = fromEvent(this._container.ownerDocument, 'mouseup').pipe(
+                tap(() => this.selectionRect$.next(null)));
 
-                fromEvent(this._container, 'mousemove').pipe(
-                    takeUntil(mouseUp$),
-                    filter((event: MouseEvent) => event.buttons === 1))
-                    .subscribe((event: MouseEvent) => {
-                        const containerBounds = this._container.getBoundingClientRect();
+            fromEvent(this._container, 'mousemove').pipe(
+                takeUntil(mouseUp$),
+                filter((event: MouseEvent) => event.buttons === 1)
+            ).subscribe((event: MouseEvent) => {
+                const containerBounds = this._container.getBoundingClientRect();
 
-                        // Select all tiles between start position and current position
-                        dragSelection.selectedRect = Rect.fromPoints(dragSelection.startPosition, new Position(event.pageX - containerBounds.left, event.pageY - containerBounds.top));
-                        this.selectionRect$.next(dragSelection.selectedRect);
+                // Select all tiles between start position and current position
+                dragSelection.selectedRect = Rect.fromPoints(dragSelection.startPosition, new Position(event.pageX - containerBounds.left, event.pageY - containerBounds.top));
+                this.selectionRect$.next(dragSelection.selectedRect);
 
-                        const selection = this.HitTest(dragSelection.selectedRect);
-                        this.selectedTiles = selection.map((tile) => tile.id);
-                    });
+                const selection = this.HitTest(dragSelection.selectedRect);
+                this.selectedTiles = selection.map((tile) => tile.id);
             });
+        });
 
         const leave$ = from(this.dragleave$);
 
         from(this.dragDropInfos$).pipe(
-            takeWhile(() => this.isAlive))
-            .subscribe((dragDropInfos) => {
-                const tiles = dragDropInfos && ((dragDropInfos.tiles && dragDropInfos.tiles.length && dragDropInfos.tiles) || (dragDropInfos.currentTile && [dragDropInfos.currentTile]));
-                if (!tiles) {
-                    return;
-                }
+            takeWhile(() => this.isAlive)
+        ).subscribe((dragDropInfos) => {
+            const tiles = dragDropInfos && ((dragDropInfos.tiles && dragDropInfos.tiles.length && dragDropInfos.tiles) || (dragDropInfos.currentTile && [dragDropInfos.currentTile]));
+            if (!tiles) {
+                return;
+            }
 
-                const externalDrop = !dragDropInfos.tiles;
-                const mousemove$ = fromEvent(this._container, 'mousemove');
-                const mouseUp$ = fromEvent(this._container.ownerDocument, 'mouseup');
-                const keyUp$ = fromEvent(this._container.ownerDocument, 'keyup');
-                const escape$ = keyUp$.pipe(filter((event: KeyboardEvent) => event.keyCode === KeyCodes.Escape));
-                const cancel$ = merge(leave$, mousemove$.pipe(filter((event: MouseEvent) => event.buttons !== 1)), escape$);
+            const externalDrop = !dragDropInfos.tiles;
+            const mousemove$ = fromEvent(this._container, 'mousemove');
+            const mouseUp$ = fromEvent(this._container.ownerDocument, 'mouseup');
+            const keyUp$ = fromEvent(this._container.ownerDocument, 'keyup');
+            const escape$ = keyUp$.pipe(filter((event: KeyboardEvent) => event.keyCode === KeyCodes.Escape));
+            const cancel$ = merge(leave$, mousemove$.pipe(filter((event: MouseEvent) => event.buttons !== 1)), escape$);
 
-                const kill$ = merge(mouseUp$, cancel$);
+            const kill$ = merge(mouseUp$, cancel$);
 
-                let mouseUp$sub: Subscription;
+            let mouseUp$sub: Subscription;
 
-                const cancel$sub = cancel$.pipe(
-                    take(1),
-                    tap(() => mouseUp$sub.unsubscribe()))
-                    .subscribe(() => {
-                        this.removeTemporaryTile();
-                        this.cancelDrag(tiles);
-                    });
-
-                mouseUp$sub = mouseUp$.pipe(
-                    take(1),
-                    tap(() => cancel$sub.unsubscribe()))
-                    .subscribe(() => this.drop(tiles));
-
-                const dragover$ = from(this.dragover$).pipe(
-                    map((cursor) => cursor.originalEvent));
-
-                merge(mousemove$, dragover$).pipe(
-                    takeUntil(kill$))
-                    .subscribe((event: MouseEvent) => {
-                        const containerBounds = this._container.getBoundingClientRect();
-                        const x = event.pageX - containerBounds.left;
-                        const y = event.pageY - containerBounds.top;
-                        if (!dragDropInfos.enabled) {
-                            if (Math.abs(dragDropInfos.startX - x) >= 15 || Math.abs(dragDropInfos.startY - y) >= 15) {
-                                if (externalDrop) {
-                                    // Allow drag and drop of new tiles from outside the component
-                                    const tempTile = dragDropInfos.currentTile;
-
-                                    // Clear current selection
-                                    this.selectedTiles = [tempTile.id];
-
-                                    let bounds = tempTile.percentBounds;
-                                    if (!bounds || bounds.isEmpty()) {
-                                        bounds = new Rect(0, 0, 15, 15);
-                                    }
-
-                                    const idealBounds = this.getFreePlace(new Rect(this.getPercentSize(x) - bounds.width / 2, this.getPercentSize(y) - bounds.height / 2, bounds.width, bounds.height));
-                                    dragDropInfos.startX = idealBounds.left - bounds.width / 2;
-                                    dragDropInfos.startY = idealBounds.top - bounds.height / 2;
-
-                                    tempTile.percentBounds = idealBounds;
-                                    tempTile.dragging$.next(true);
-
-                                    this._cursor = 'move';
-
-                                    this.tiles.push(tempTile);
-                                    this.tilesDic.set(tempTile.id, tempTile);
-
-                                    // Start tile drag and drop
-                                    this.dragging$.next(true);
-                                    dragDropInfos.enabled = true;
-                                    this.startDrag(tiles, this.getPixelSize(idealBounds.left + idealBounds.width / 2), this.getPixelSize(idealBounds.top + idealBounds.height / 2));
-
-                                } else {
-                                    // Start tile drag and drop
-                                    this.dragging$.next(true);
-                                    dragDropInfos.enabled = true;
-                                    this.startDrag(tiles, dragDropInfos.startX, dragDropInfos.startY);
-                                }
-
-                            }
-                        } else {
-                            this.drag(tiles, x, y);
-                        }
-                    });
+            const cancel$sub = cancel$.pipe(
+                take(1),
+                tap(() => mouseUp$sub.unsubscribe())
+            ).subscribe(() => {
+                this.removeTemporaryTile();
+                this.cancelDrag(tiles);
             });
+
+            mouseUp$sub = mouseUp$.pipe(
+                take(1),
+                tap(() => cancel$sub.unsubscribe())
+            ).subscribe(() => this.drop(tiles));
+
+            const dragover$ = from(this.dragover$).pipe(
+                map((cursor) => cursor.originalEvent));
+
+            merge(mousemove$, dragover$).pipe(
+                takeUntil(kill$)
+            ).subscribe((event: MouseEvent) => {
+                const containerBounds = this._container.getBoundingClientRect();
+                const x = event.pageX - containerBounds.left;
+                const y = event.pageY - containerBounds.top;
+                if (!dragDropInfos.enabled) {
+                    if (Math.abs(dragDropInfos.startX - x) >= 15 || Math.abs(dragDropInfos.startY - y) >= 15) {
+                        if (externalDrop) {
+                            // Allow drag and drop of new tiles from outside the component
+                            const tempTile = dragDropInfos.currentTile;
+
+                            // Clear current selection
+                            this.selectedTiles = [tempTile.id];
+
+                            let bounds = tempTile.percentBounds;
+                            if (!bounds || bounds.isEmpty()) {
+                                bounds = new Rect(0, 0, 15, 15);
+                            }
+
+                            const idealBounds = this.getFreePlace(new Rect(this.getPercentSize(x) - bounds.width / 2, this.getPercentSize(y) - bounds.height / 2, bounds.width, bounds.height));
+                            dragDropInfos.startX = idealBounds.left - bounds.width / 2;
+                            dragDropInfos.startY = idealBounds.top - bounds.height / 2;
+
+                            tempTile.percentBounds = idealBounds;
+                            tempTile.dragging$.next(true);
+
+                            this._cursor = 'move';
+
+                            this.tiles.push(tempTile);
+                            this.tilesDic.set(tempTile.id, tempTile);
+
+                            // Start tile drag and drop
+                            this.dragging$.next(true);
+                            dragDropInfos.enabled = true;
+                            this.startDrag(tiles, this.getPixelSize(idealBounds.left + idealBounds.width / 2), this.getPixelSize(idealBounds.top + idealBounds.height / 2));
+
+                        } else {
+                            // Start tile drag and drop
+                            this.dragging$.next(true);
+                            dragDropInfos.enabled = true;
+                            this.startDrag(tiles, dragDropInfos.startX, dragDropInfos.startY);
+                        }
+
+                    }
+                } else {
+                    this.drag(tiles, x, y);
+                }
+            });
+        });
 
         // Delete stream for clipboard
         from(this.deleteTiles$).pipe(
-            takeWhile(() => this.isAlive))
-            .subscribe((tilesToDelete) => this.deleteTiles(tilesToDelete));
+            takeWhile(() => this.isAlive)
+        ).subscribe((tilesToDelete) => this.deleteTiles(tilesToDelete));
     }
 
     public set container(container: HTMLElement) {
@@ -369,95 +369,96 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             const mouseUp$ = fromEvent(container.ownerDocument, 'mouseup');
 
             fromEvent(container, 'mouseenter').pipe(
-                takeWhile(() => this.isAlive))
-                .subscribe(() => {
-                    // Cursor provider
-                    if (this.designMode) {
-                        fromEvent(container, 'mousemove').pipe(
-                            takeUntil(leave$),
-                            filter((event: MouseEvent) => !!this.container && event.buttons === 0))
-                            .subscribe((event: MouseEvent) => {
-                                this._cursor = this.getCursorFromHTMLElement(event.pageX, event.pageY, event.target as HTMLElement);
-                                this.container.style.cursor = this._cursor;
-                            });
-                    } else {
-                        this.container.style.cursor = '';
+                takeWhile(() => this.isAlive)
+            ).subscribe(() => {
+                // Cursor provider
+                if (this.designMode) {
+                    fromEvent(container, 'mousemove').pipe(
+                        takeUntil(leave$),
+                        filter((event: MouseEvent) => !!this.container && event.buttons === 0)
+                    ).subscribe((event: MouseEvent) => {
+                        this._cursor = this.getCursorFromHTMLElement(event.pageX, event.pageY, event.target as HTMLElement);
+                        this.container.style.cursor = this._cursor;
+                    });
+                } else {
+                    this.container.style.cursor = '';
+                }
+
+                const mouseDown$ = fromEvent(container, 'mousedown').pipe(
+                    filter((event: MouseEvent) => event.buttons === 1),
+                    filter((event: MouseEvent) => !this.isElementInsideDejaEditor(event.target as HTMLElement)),
+                    map((event: MouseEvent) => ({ event: event, target: event.target as HTMLElement, clickedTile: this.getTileComponentFromHTMLElement(event.target as HTMLElement) })));
+
+                // Pressed and selected tile observers
+                mouseDown$.pipe(
+                    takeUntil(leave$)
+                ).subscribe(({ event, target, clickedTile }) => {
+                    if (this.currentTile) {
+                        this.currentTile.isPressed = false;
                     }
+                    this.currentTile = clickedTile;
+                    if (this.currentTile) {
+                        this.currentTile.isPressed = true;
 
-                    const mouseDown$ = fromEvent(container, 'mousedown').pipe(
-                        filter((event: MouseEvent) => event.buttons === 1),
-                        filter((event: MouseEvent) => !this.isElementInsideDejaEditor(event.target as HTMLElement)),
-                        map((event: MouseEvent) => ({ event: event, target: event.target as HTMLElement, clickedTile: this.getTileComponentFromHTMLElement(event.target as HTMLElement) })));
+                        if (event.ctrlKey) {
+                            // Multi-selection is available in design mode, selection on the mouse up
+                        } else {
+                            if (!this.currentTile.isSelected || this._cursor !== 'move') {
+                                this.selectedTiles = [this.currentTile.id];
+                            }
 
-                    // Pressed and selected tile observers
-                    mouseDown$.pipe(takeUntil(leave$))
-                        .subscribe(({ event, target, clickedTile }) => {
+                            if (this.designMode) {
+                                const containerBounds = this._container.getBoundingClientRect();
+                                const x = event.pageX - containerBounds.left;
+                                const y = event.pageY - containerBounds.top;
+
+                                this.dragDropInfos$.next({
+                                    enabled: false,
+                                    startX: x,
+                                    startY: y,
+                                    currentTile: this.currentTile,
+                                    tiles: this.tiles.filter((tile) => tile.isSelected),
+                                } as IDragDropInfos);
+                            }
+                        }
+
+                        merge(mouseUp$, leave$).pipe(
+                            first(),
+                            filter(() => !!this.currentTile)
+                        ).subscribe((e: MouseEvent) => {
+                            if (this.currentTile.isPressed) {
+                                this.currentTile.isPressed = false;
+                                // Multi-selection
+                                if (e.ctrlKey) {
+                                    this.currentTile.isSelected = !this.currentTile.isSelected;
+
+                                    this.selectedTiles = this.tiles
+                                        .filter((tile) => tile.isSelected)
+                                        .map((tile) => tile.id);
+                                }
+                            }
+
+                            this._cursor = this.getCursorFromHTMLElement(e.pageX, e.pageY, e.target as HTMLElement);
+                            this.container.style.cursor = this._cursor;
+                            this.currentTile = undefined;
+                        });
+                    } else {
+                        if (target === this.container || target.parentElement === this.container) {
+                            if (event.buttons === 1) {
+                                // Start drag selection
+                                const containerBounds = this._container.getBoundingClientRect();
+                                this.dragSelection$.next({ startPosition: new Position(event.pageX - containerBounds.left, event.pageY - containerBounds.top), selectedRect: new Rect(), } as IDragSelection);
+                            }
+
+                            // Unselect all tiles
                             if (this.currentTile) {
                                 this.currentTile.isPressed = false;
                             }
-                            this.currentTile = clickedTile;
-                            if (this.currentTile) {
-                                this.currentTile.isPressed = true;
-
-                                if (event.ctrlKey) {
-                                    // Multi-selection is available in design mode, selection on the mouse up
-                                } else {
-                                    if (!this.currentTile.isSelected || this._cursor !== 'move') {
-                                        this.selectedTiles = [this.currentTile.id];
-                                    }
-
-                                    if (this.designMode) {
-                                        const containerBounds = this._container.getBoundingClientRect();
-                                        const x = event.pageX - containerBounds.left;
-                                        const y = event.pageY - containerBounds.top;
-
-                                        this.dragDropInfos$.next({
-                                            enabled: false,
-                                            startX: x,
-                                            startY: y,
-                                            currentTile: this.currentTile,
-                                            tiles: this.tiles.filter((tile) => tile.isSelected),
-                                        } as IDragDropInfos);
-                                    }
-                                }
-
-                                merge(mouseUp$, leave$).pipe(
-                                    first(),
-                                    filter(() => !!this.currentTile))
-                                    .subscribe((e: MouseEvent) => {
-                                        if (this.currentTile.isPressed) {
-                                            this.currentTile.isPressed = false;
-                                            // Multi-selection
-                                            if (e.ctrlKey) {
-                                                this.currentTile.isSelected = !this.currentTile.isSelected;
-
-                                                this.selectedTiles = this.tiles
-                                                    .filter((tile) => tile.isSelected)
-                                                    .map((tile) => tile.id);
-                                            }
-                                        }
-
-                                        this._cursor = this.getCursorFromHTMLElement(e.pageX, e.pageY, e.target as HTMLElement);
-                                        this.container.style.cursor = this._cursor;
-                                        this.currentTile = undefined;
-                                    });
-                            } else {
-                                if (target === this.container || target.parentElement === this.container) {
-                                    if (event.buttons === 1) {
-                                        // Start drag selection
-                                        const containerBounds = this._container.getBoundingClientRect();
-                                        this.dragSelection$.next({ startPosition: new Position(event.pageX - containerBounds.left, event.pageY - containerBounds.top), selectedRect: new Rect(), } as IDragSelection);
-                                    }
-
-                                    // Unselect all tiles
-                                    if (this.currentTile) {
-                                        this.currentTile.isPressed = false;
-                                    }
-                                    this.selectedTiles = [];
-                                }
-                            }
-                        });
+                            this.selectedTiles = [];
+                        }
+                    }
                 });
+            });
         }
     }
 
@@ -680,14 +681,14 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         event.cancel$ = new Subject();
 
         const cancelSubscription = event.cancel$.pipe(
-            first())
-            .subscribe((value) => {
-                if (value) {
-                    tilesToRemove.forEach((tile) => tile.isHidden = false);
-                } else {
-                    this.deleteTiles(tilesToRemove);
-                }
-            });
+            first()
+        ).subscribe((value) => {
+            if (value) {
+                tilesToRemove.forEach((tile) => tile.isHidden = false);
+            } else {
+                this.deleteTiles(tilesToRemove);
+            }
+        });
 
         // Forward event
         this.contentRemoving.next(event);
@@ -811,13 +812,11 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         this.clearMoveTimer();
 
         from(tiles).pipe(
-            filter((tile) => !!tile),
-            tap((tile) => {
-                tile.isDragging = false;
-                tile.isDropping = true;
-            }),
-            delay(1000))
-            .subscribe((tile) => { tile.isDropping = false; });
+            filter((tile) => !!tile)
+        ).subscribe((tile) => {
+            tile.isDragging = false;
+            tile.isDropping = true;
+        });
 
         // Restore original layout
         if (this.originalLayout) {
@@ -855,8 +854,8 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                             this.addTiles([tile]);
                         }
                     }),
-                    delay(1000))
-                    .subscribe((tile) => { tile.isDropping = false; });
+                    delay(1000)
+                ).subscribe((tile) => { tile.isDropping = false; });
             }
 
             changed = this.tiles.filter((t) => !Rect.equals(t.percentBounds, this.originalLayout[t.id] && this.originalLayout[t.id].bounds));
@@ -1016,28 +1015,28 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         };
 
         const cancelSubscription = event.cancel$.pipe(
-            first())
-            .subscribe((value) => {
-                if (value) {
-                    // Canceled, hide and remove added after effect
-                    from(newTiles).pipe(
-                        tap((tile) => tile.isHidden = true),
-                        delay(1000),
-                        reduce((acc: Array<DejaTile>, cur: DejaTile) => [...acc, cur], new Array<DejaTile>()),
-                        first())
-                        .subscribe(tiles => this.deleteTiles(tiles));
+            first()
+        ).subscribe((value) => {
+            if (value) {
+                // Canceled, hide and remove added after effect
+                from(newTiles).pipe(
+                    tap((tile) => tile.isHidden = true),
+                    delay(1000),
+                    reduce((acc: Array<DejaTile>, cur: DejaTile) => [...acc, cur], new Array<DejaTile>()),
+                    first()
+                ).subscribe(tiles => this.deleteTiles(tiles));
 
-                    // Reshow original tiles if cut operation
-                    if (sourceTiles) {
-                        sourceTiles.forEach((tile) => {
-                            tile.isHidden = false;
-                            tile.isCutted = true;
-                        });
-                    }
-                } else {
-                    validateNewTiles(newTiles);
+                // Reshow original tiles if cut operation
+                if (sourceTiles) {
+                    sourceTiles.forEach((tile) => {
+                        tile.isHidden = false;
+                        tile.isCutted = true;
+                    });
                 }
-            });
+            } else {
+                validateNewTiles(newTiles);
+            }
+        });
 
         // Get total rectangle
         let bounds: Rect;
@@ -1200,24 +1199,24 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             if (maxOverlaps > 3) {
                 const timerBounds = newTargetBounds.clone();
                 this.moveTimOut = timer(500).pipe(
-                    first())
-                    .subscribe(() => {
-                        // Restore the original layout before moving something
-                        this.restoreLayout(this.originalLayout);
+                    first()
+                ).subscribe(() => {
+                    // Restore the original layout before moving something
+                    this.restoreLayout(this.originalLayout);
 
-                        this.destination = timerBounds;
+                    this.destination = timerBounds;
 
-                        // Ensure new destination
-                        const ensureBounds = this.ensureTarget(timerBounds, this.dragTarget, Directions.all);
+                    // Ensure new destination
+                    const ensureBounds = this.ensureTarget(timerBounds, this.dragTarget, Directions.all);
 
-                        if (ensureBounds) {
-                            this.targetBounds = ensureBounds;
-                            this.validLayout = this.saveLayout();
-                            this.validLayout.targetBounds = timerBounds;
-                            this.validLayout.validBounds = ensureBounds;
-                            this.refreshTiles$.next();
-                        }
-                    });
+                    if (ensureBounds) {
+                        this.targetBounds = ensureBounds;
+                        this.validLayout = this.saveLayout();
+                        this.validLayout.targetBounds = timerBounds;
+                        this.validLayout.validBounds = ensureBounds;
+                        this.refreshTiles$.next();
+                    }
+                });
             }
 
             // Find best location between last valid bounds and current bounds
