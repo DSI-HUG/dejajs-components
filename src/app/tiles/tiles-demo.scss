@@ -40,6 +40,8 @@ deja-tiles-demo {
 		display: block;
 	}
 	deja-tile {
+        user-select: none;
+
 		#selected {
 			display: none;
 		}

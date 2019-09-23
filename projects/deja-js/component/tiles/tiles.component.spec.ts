@@ -712,7 +712,7 @@ describe('DejaTilesComponent', () => {
                 expect(bounds.width).toBe(200 - 2 * padding);
                 expect(bounds.height).toBe(120 - 2 * padding);
                 expect(testBounds.left).toBe(tilesContainerBounds.left + 120 + padding);
-                expect(testBounds.top).toBe(tilesContainerBounds.top + 360 + padding);
+                expect(testBounds.top).toBe(tilesContainerBounds.top + 360 + padding + 120); // 120 la tuile passe dessous
             }),
             delay(20))
             .subscribe(() => {
@@ -790,7 +790,7 @@ describe('DejaTilesComponent', () => {
                 expect(bounds.width).toBe(200 - 2 * padding);
                 expect(bounds.height).toBe(120 - 2 * padding);
                 expect(testBounds.left).toBe(tilesContainerBounds.left + 120 + padding);
-                expect(testBounds.top).toBe(tilesContainerBounds.top + 360 + padding);
+                expect(testBounds.top).toBe(tilesContainerBounds.top + 360 + padding + 120); // 120 la tuile passe dessous
             }),
             delay(20))
             .subscribe(() => {
@@ -1102,7 +1102,7 @@ describe('DejaTilesComponent', () => {
                 expect(bounds.width).toBe(181 - 2 * padding);
                 expect(bounds.height).toBe(161 - 2 * padding);
                 expect(testBounds.left).toBe(tilesContainerBounds.left + 120 + padding);
-                expect(testBounds.top).toBe(tilesContainerBounds.top + 360 + padding);
+                expect(testBounds.top).toBe(tilesContainerBounds.top + 360 + padding + 160); // 160 la tuile passe dessous
             }),
             delay(20))
             .subscribe(() => {
@@ -1180,7 +1180,7 @@ describe('DejaTilesComponent', () => {
                 expect(bounds.width).toBe(161 - 2 * padding);
                 expect(bounds.height).toBe(161 - 2 * padding);
                 expect(testBounds.left).toBe(tilesContainerBounds.left + 240 + padding);
-                expect(testBounds.top).toBe(tilesContainerBounds.top + 360 + padding);
+                expect(testBounds.top).toBe(tilesContainerBounds.top + 360 + padding + 40); // 40 la tuile passe dessous
             }),
             delay(20))
             .subscribe(() => {
