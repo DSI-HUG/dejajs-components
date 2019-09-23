@@ -369,7 +369,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             const mouseUp$ = fromEvent(container.ownerDocument, 'mouseup');
 
             fromEvent(container, 'mouseenter').pipe(
-                takeWhile(() => this.isAlive)
+                takeWhile(() => this.isAlive),
             ).subscribe(() => {
                 // Cursor provider
                 if (this.designMode) {
@@ -422,7 +422,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                             }
                         }
 
-                        merge(mouseUp$, leave$).pipe(
+                        merge(mouseUp$).pipe(
                             first(),
                             filter(() => !!this.currentTile)
                         ).subscribe((e: MouseEvent) => {
@@ -1280,7 +1280,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
     }
 
     // Ensure that a tile can be dropped at the specified bounds. Return the corrected rectangle.
-    private ensureTarget(bounds: Rect, effectiveBounds?: Rect, directions?: Directions, originalBounds?: Rect, retry = true): Rect {
+    private ensureTarget(bounds: Rect, effectiveBounds?: Rect, directions?: Directions, originalBounds?: Rect, tryCount = 0): Rect {
         if (!effectiveBounds) {
             effectiveBounds = bounds;
         }
@@ -1362,7 +1362,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             if (remain) {
                 bounds = this.ensureContainer(bounds.offset(remain, 0));
                 // tslint:disable-next-line:no-bitwise
-                return retry ? this.ensureTarget(bounds, effectiveBounds, directions & ~Directions.left, originalBounds, false) : null;
+                return tryCount <= 4 ? this.ensureTarget(bounds, effectiveBounds, directions & ~Directions.left, originalBounds, tryCount + 1) : null;
             }
         }
 
@@ -1375,14 +1375,14 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             // No horizontal place, restore original position
             this.restoreLayout(this.originalLayout);
             // tslint:disable-next-line:no-bitwise
-            return retry ? this.ensureTarget(originalBounds, effectiveBounds, directions & Directions.vertical, undefined, false) : null;
+            return tryCount <= 4 ? this.ensureTarget(originalBounds, effectiveBounds, directions & Directions.vertical, undefined, tryCount + 1) : null;
         } else {
             // Try top
             if (topTilesToPush.length) {
                 remain = this.pushVertical(bounds, -1, topTilesToPush);
                 if (remain) {
                     bounds = this.ensureContainer(bounds.offset(0, remain));
-                    return retry ? this.ensureTarget(bounds, effectiveBounds, Directions.bottom, undefined, false) : null;
+                    return tryCount <= 4 ? this.ensureTarget(bounds, effectiveBounds, Directions.bottom, undefined, tryCount + 1) : null;
                 }
             }
 
