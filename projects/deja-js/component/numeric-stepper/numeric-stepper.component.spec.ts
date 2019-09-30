@@ -7,12 +7,13 @@
  */
 
 import { CommonModule } from '@angular/common';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA, DebugElement } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DejaTextMetricsModule } from '@deja-js/core';
 import { DejaNumericStepperComponent } from './numeric-stepper.component';
+import { By } from '@angular/platform-browser';
 
 describe('DejaNumericStepperComponent', () => {
 
@@ -58,4 +59,27 @@ describe('DejaNumericStepperComponent', () => {
         fixture.detectChanges();
         expect(comp.value).toBe(11);
     }));
+
+    describe('when step clicked', () => {
+
+        let steppers: DebugElement;
+
+        beforeEach(() => {
+            comp.value = 1.2;
+            fixture.detectChanges();
+            steppers = fixture.debugElement.query(By.css('.steppers'));
+        });
+
+        it('should substract 1 on click substract', async(() => {
+            steppers.children[0].nativeElement.click();
+            expect(comp.value).toEqual(0.2);
+            expect(comp.value).not.toEqual(0.19999999999999996);
+        }));
+
+        it('should add 1 on click add', async(() => {
+            steppers.children[1].nativeElement.click();
+            expect(comp.value).toEqual(2.2);
+        }));
+
+    });
 });
