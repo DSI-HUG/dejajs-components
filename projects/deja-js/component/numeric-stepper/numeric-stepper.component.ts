@@ -64,6 +64,17 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     /** Unit of stepper */
     @Input() public unit: string;
 
+    /** hide the steppers */
+    private _hideSteppers = false;
+    public get hideSteppers() {
+        return this._hideSteppers;
+    }
+    @Input()
+    public set hideSteppers(value) {
+        this._hideSteppers = coerceBooleanProperty(value);
+        this.changeDetectorRef.markForCheck();
+    }
+
     @ViewChild(DejaChildValidatorDirective, { static: true })
     public set inputValidatorDirective(value: DejaChildValidatorDirective) {
         if (value) {
