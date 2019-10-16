@@ -126,27 +126,29 @@ export class DejaEditorComponent
         this.disabled.complete();
         if (this.instance) {
             this.instance.focusManager.blur(true);
-            if (this._ready) {
-                try {
-                    // Workaround for a ckEditor bug
-                    this.instance.destroy();
-                } catch (e) {
-                    console.warn(e, 'Error occurred when destroying ckEditor instance');
-                }
-                this.ready.complete();
-                this.instance = null;
-            } else {
-                this.ready.pipe(first()).subscribe(() => {
+            setTimeout(() => {
+                if (this._ready) {
                     try {
                         // Workaround for a ckEditor bug
                         this.instance.destroy();
                     } catch (e) {
                         console.warn(e, 'Error occurred when destroying ckEditor instance');
                     }
-                    this.instance = null;
                     this.ready.complete();
-                });
-            }
+                    this.instance = null;
+                } else {
+                    this.ready.pipe(first()).subscribe(() => {
+                        try {
+                            // Workaround for a ckEditor bug
+                            this.instance.destroy();
+                        } catch (e) {
+                            console.warn(e, 'Error occurred when destroying ckEditor instance');
+                        }
+                        this.instance = null;
+                        this.ready.complete();
+                    });
+                }
+            }, 0);
         }
     }
 
@@ -282,13 +284,11 @@ export class DejaEditorComponent
      */
     public writeValue(value: any) {
         this._value = value;
-        setTimeout(() => { // http://jira.hcuge.ch/browse/DEJS-728
-            if (this.instance) {
-                this.instance.setData(value);
-            } else {
-                this.host.nativeElement.value = value;
-            }
-        }, 0);
+        if (this.instance) {
+            this.instance.setData(value);
+        } else {
+            this.host.nativeElement.value = value;
+        }
     }
 
     public onChange(_x: any) { }
