@@ -1,7 +1,7 @@
 <input deja-child-validator matInput [class.off-limits]="value < min || value > max" [disabled]="disabled" #inputStepper type="number" [(ngModel)]="value" [min]="min" [max]="max" [step]="step" [style.width.px]="size" />
 <span class="unit" *ngIf="unit && shouldLabelFloat">{{ unit }}</span>
 
-<span class="steppers">
+<span class="steppers" *ngIf="!hideSteppers">
     <button [disabled]="disabled || value === min" (click)="value = ((value || 0) * 10000 - step * 10000) / 10000" type="button" tabindex="-1">remove_circle_outline</button>
     <button [disabled]="disabled || value === max" (click)="value = ((value || 0) * 10000 + step * 10000) / 10000" type="button" tabindex="-1">add_circle_outline</button>
 </span>

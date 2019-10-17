@@ -282,11 +282,13 @@ export class DejaEditorComponent
      */
     public writeValue(value: any) {
         this._value = value;
-        if (this.instance) {
-            this.instance.setData(value);
-        } else {
-            this.host.nativeElement.value = value;
-        }
+        setTimeout(() => {
+            if (this.instance) {
+                this.instance.setData(value);
+            } else {
+                this.host.nativeElement.value = value;
+            }
+        }, 0);
     }
 
     public onChange(_x: any) { }
