@@ -167,6 +167,18 @@
 			</mat-form-field>
 		</mat-card-content>
 	</mat-card>
+	<mat-card class="deja-select-demo demo-card demo-basic">
+		<mat-toolbar color="primary">Items mulltiline select</mat-toolbar>
+		<mat-card-content>
+			<mat-form-field class="demo-half-width" appearance="standard">
+				<deja-select placeholder="Mulltiline select" selectionClearable textField="naqme" valueField="code" [itemsMultiline]="true" [dropDownWidth]="200" [models]="fructsLongName">
+                    <ng-template #itemTemplate let-item>
+						<span class="select-item-multiline">{{ item .model }}</span>
+                    </ng-template>
+                </deja-select>
+			</mat-form-field>
+		</mat-card-content>
+	</mat-card>
 </div>
 
 <div *ngIf="tabIndex === 2">

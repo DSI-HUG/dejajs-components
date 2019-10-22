@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectorRef, Component, OnDestroy, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DejaSelectComponent } from '@deja-js/component/select';
 import { IItemBase, IItemTree, IViewPortItem } from '@deja-js/core';
@@ -22,10 +22,12 @@ import { cheeseValidator } from './validators';
     selector: 'deja-select-demo',
     styleUrls: ['./select-demo.scss'],
     templateUrl: './select-demo.html',
+    encapsulation: ViewEncapsulation.None
 })
 export class SelectDemoComponent implements OnDestroy {
     public fruct = '';
     public fructs = [] as string[];
+    public fructsLongName = [] as string[];
 
     public disabled: boolean;
     public country: Country;
@@ -101,6 +103,20 @@ export class SelectDemoComponent implements OnDestroy {
             'Mango',
             'Pineapple',
             'Watermelon',
+        ];
+        this.fructsLongName = [
+            'Apricots with very very very very very very very very very very long name',
+            'Banana',
+            'Cantaloupe',
+            'Cherries',
+            'Coconut with very very very very very very very very very very long name',
+            'Cranberries with very very very very very very very very very very long name',
+            'Durian with very very very very very very very very very very long name',
+            'Grapes',
+            'Lemon',
+            'Mango',
+            'Pineapple with very very very very very very very very very very long name',
+            'Watermelon with very very very very very very very very very very long name',
         ];
 
         this.fruits$ = observableOf(this.fructs);

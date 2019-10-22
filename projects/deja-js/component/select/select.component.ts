@@ -138,6 +138,20 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
         return this._modelIsValue;
     }
 
+    private _itemsMultiline: any;
+
+    @Input()
+    public set itemsMultiline(value: boolean | string) {
+        this._itemsMultiline = coerceBooleanProperty(value);
+        if (this._itemsMultiline) {
+            this.viewportMode = 'auto';
+        }
+    }
+
+    public get itemsMultiline() {
+        return this._itemsMultiline;
+    }
+
     private _positions = DejaConnectionPositionPair.default;
 
     @Input()
@@ -1206,6 +1220,9 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
 
     public getItemClass(item: IItemTree) {
         const classNames = ['listitem'] as string[];
+        if (this.itemsMultiline) {
+            classNames.push('multilines');
+        }
         if (item.className) {
             classNames.push(item.className);
         }

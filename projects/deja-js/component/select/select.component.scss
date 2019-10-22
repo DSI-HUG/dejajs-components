@@ -83,7 +83,10 @@ deja-select {
 		overflow-y: auto;
 
 		div.listitem {
-			white-space: nowrap;
+            &:not(.multilines) {
+                white-space: nowrap;
+                width: 100%;
+            }
 
 			>deja-bold-query {
 				flex: 1 1 100%;

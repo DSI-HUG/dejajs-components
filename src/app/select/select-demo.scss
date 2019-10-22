@@ -1,4 +1,4 @@
-:host {
+deja-select-demo {
 	.demo-card {
 		margin: 16px;
 		mat-card-content {
@@ -49,4 +49,8 @@
 	.react-form-elem{
 		min-height: 5rem;
 	}
+}
+.select-item-multiline {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
 }
