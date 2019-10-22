@@ -56,6 +56,10 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
     @Input() public overlayOffsetX = 0;
     /** Offset de position vertical de la zone de dropdown */
     @Input() public overlayOffsetY = 0;
+    /** Nom de classe du backdrop */
+    @Input() public overlayBackdropClass: string;
+    /** Nom de classe du container de la liste */
+    @Input() public overlayContainerClass: string;
     /** Permet de définir un template de ligne par binding */
     @Input() public itemTemplateExternal: any;
     /** Permet de définir un template de ligne parente par binding. */
