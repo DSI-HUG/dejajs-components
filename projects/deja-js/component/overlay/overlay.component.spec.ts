@@ -67,15 +67,10 @@ describe('DejaOverlayComponent', () => {
         expect(el).toBe(ownerElement);
     });
 
-    it('should have deja-overlay-container class', () => {
-        fixture.detectChanges();
-        expect(cdkOverlayContainerEl.classList.contains('deja-overlay-container')).toBeTruthy();
-    });
-
     it('should not have cdk-overlay-backdrop element if isVisible is false', () => {
         fixture.detectChanges();
         expect(comp.isVisible).toBeFalsy();
-        const cdkBackdropContainerEl = document.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+        const cdkBackdropContainerEl = document.querySelector('.cdk-overlay-backdrop');
         expect(cdkBackdropContainerEl).toBeNull();
     });
 
@@ -83,16 +78,17 @@ describe('DejaOverlayComponent', () => {
         comp.isVisible = true;
         fixture.detectChanges();
         expect(comp.isVisible).toBeTruthy();
-        const cdkBackdropContainerEl = document.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+        const cdkBackdropContainerEl = document.querySelector('.cdk-overlay-backdrop');
         expect(cdkBackdropContainerEl).toBeTruthy();
         expect(cdkBackdropContainerEl.classList.contains('cdk-overlay-transparent-backdrop')).toBeTruthy();
     });
 
-    it('cdkBackdropContainerEl should have cdk-overlay-opaque-backdrop class', () => {
+    it('should have backdrop and container class names', () => {
         comp.overlayBackdropClass = 'cdk-overlay-opaque-backdrop';
         comp.isVisible = true;
         fixture.detectChanges();
-        const cdkBackdropContainerEl = document.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+        const cdkBackdropContainerEl = document.querySelector('.cdk-overlay-backdrop');
+        expect(cdkOverlayContainerEl.classList.contains('deja-overlay-container')).toBeTruthy();
         expect(cdkBackdropContainerEl.classList.contains('cdk-overlay-opaque-backdrop')).toBeTruthy();
     });
 
