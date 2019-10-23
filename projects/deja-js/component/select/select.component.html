@@ -11,7 +11,7 @@
 		</div>
 	</ng-template>
 </deja-chips>
-<deja-overlay #dejaOverlay [overlayBackdropClass]="overlayBackdropClass || 'deja-select-backdrop'" [overlayContainerClass]="overlayContainerClass || 'deja-select-container'" [ownerElement]="overlayOwnerElement" [isVisible]="dropdownVisible" (closed)="hideDropDown()" [positions]="positions" [overlayOffsetY]="overlayOffsetY" [overlayOffsetX]="overlayOffsetX" [width]="dropDownWidth" widthForMobile="100%" (closed)="hideDropDown()">
+<deja-overlay #dejaOverlay [overlayBackdropClass]="overlayBackdropClass || 'deja-select-backdrop'" [overlayContainerClass]="overlayContainerClass" [ownerElement]="overlayOwnerElement" [isVisible]="dropdownVisible" (closed)="hideDropDown()" [positions]="positions" [overlayOffsetY]="overlayOffsetY" [overlayOffsetX]="overlayOffsetX" [width]="dropDownWidth" widthForMobile="100%" (closed)="hideDropDown()">
 	<div [id]="listElementId" class="deja-listcontainer" [attr.itemscount]="itemList && itemList.length" [attr.depth-max]="depthMax || null" [attr.keynav]="keyboardNavigation" [attr.vprowheight]="getViewPortRowHeight()" (mousedown)="mousedown($event)" (scroll)="scroll($event)" [style.max-height.px]="dropDownMaxHeight">
 		<div id="nodata-holder" *ngIf="(!treeItemList || treeItemList.length === 0) && !waiter">{{ nodataholder }}</div>
 		<div *ngIf="vpBeforeHeight" [style.height.px]="vpBeforeHeight"></div>
