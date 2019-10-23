@@ -32,6 +32,24 @@ export class DejaOverlayComponent implements OnDestroy {
         const isVisible = coerceBooleanProperty(value);
         if (this._isVisible !== isVisible) {
             this._isVisible = isVisible;
+
+            const containerElement = this.overlayContainer.getContainerElement();
+            const tokenToRemove = new Array<string>();
+            containerElement.classList.forEach(token => {
+                if (!token.startsWith('cdk')) {
+                    tokenToRemove.push(token);
+                }
+            });
+
+            if (tokenToRemove.length) {
+                containerElement.classList.remove(...tokenToRemove);
+            }
+
+            containerElement.classList.add('deja-overlay-container');
+            if (this.overlayContainerClass) {
+                containerElement.classList.add(this.overlayContainerClass);
+            }
+
             this.changeDetectorRef.markForCheck();
             this.visibleChange.emit(this.isVisible);
         }
@@ -39,10 +57,7 @@ export class DejaOverlayComponent implements OnDestroy {
 
     @Input() public overlayBackdropClass = 'cdk-overlay-transparent-backdrop';
 
-    @Input() public set overlayContainerClass(value: string) {
-        const containerElement = this.overlayContainer.getContainerElement() as HTMLElement;
-        containerElement.classList.add(value);
-    }
+    @Input() public overlayContainerClass: string;
 
     private _hasBackdrop = true;
     private _width: string = null;
@@ -85,8 +100,7 @@ export class DejaOverlayComponent implements OnDestroy {
     @ViewChild(CdkConnectedOverlay, { static: true }) private overlay: CdkConnectedOverlay;
 
     constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef, private overlayContainer: OverlayContainer, mediaService: MediaService) {
-        const containerElement = this.overlayContainer.getContainerElement() as HTMLElement;
-        containerElement.classList.add('deja-overlay-container');
+        const containerElement = this.overlayContainer.getContainerElement();
         containerElement.addEventListener('contextmenu', (event: Event) => {
             event.preventDefault();
             return false;

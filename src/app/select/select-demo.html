@@ -36,11 +36,11 @@
 				<span fxFlex="0 0 45%" fxLayout="column">
 					<mat-form-field fxFlex="0 0 auto" appearance="standard">
 						<mat-label>Select Mode</mat-label>
-						<deja-select #select [(ngModel)]="businessCountry" textField="naqme" valueField="code" [models]="countries"></deja-select>
+						<deja-select #select [(ngModel)]="businessCountry" overlayContainerClass="businessCountryContainer" textField="naqme" valueField="code" [models]="countries"></deja-select>
 					</mat-form-field>
 					<mat-form-field fxFlex="0 0 auto" appearance="fill">
 						<mat-label>Autocomplete</mat-label>
-						<deja-select placeholder="" type="autocomplete" [(ngModel)]="businessCountry" textField="naqme" valueField="code" [models]="countries"></deja-select>
+						<deja-select placeholder="" type="autocomplete" [(ngModel)]="businessCountry" overlayContainerClass="businessCountryContainer2" textField="naqme" valueField="code" [models]="countries"></deja-select>
 					</mat-form-field>
 				</span>
 				<span fxFlex="0 0 45%" fxFlexOffset="5%">
