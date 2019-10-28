@@ -3,15 +3,16 @@
 @mixin popup-theme($theme) {
     $primary: map-get($theme, primary);
     $background: map-get($theme, background);
+    $warn: map-get($theme, warn);
 
-    deja-popup-box{
+    deja-popup-box {
         background-color: mat-color($primary);
         color: mat-color($primary, default-contrast);
 
         .deja-popup-box-actions {
             background-color: mat-color($background, hover);
         }
-        
+
         .deja-popup-box-content {
             button {
                 &:hover {
@@ -21,11 +22,23 @@
         }
     }
 
-    deja-popup-toolbar{
+    deja-popup-toolbar {
         background-color: mat-color($primary);
 
         .deja-popup-toolbar-mini {
             color: mat-color($primary, default-contrast);
+        }
+
+        .mat-toolbar {
+
+            &.mat-warn {
+                background-color: mat-color($mat-orange, 500);
+                color: mat-color($mat-orange, default-contrast);
+            }
+
+            &.mat-danger {
+                @include _mat-toolbar-color($warn);
+            }
         }
     }
 

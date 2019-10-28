@@ -71,7 +71,7 @@ export class DejaPopupDemoComponent {
         const pos: DialogPosition = { bottom: '50px', right: '50px' };
         config.position = pos;
         config.disableClose = true;
-        config.toolbarColor = 'warn';
+        config.toolbarColor = 'danger';
 
         const title = 'System failure!';
 
@@ -131,6 +131,7 @@ export class DejaPopupDemoComponent {
             new DejaPopupButton('close', 'Close', 'close'),
         ];
         conf.toolbarType = 'window';
+        conf.toolbarColor = 'warn';
 
         this.dejaPopupService.openUrl(this.dummyPdfUrl, conf)
             .subscribe((response: DejaPopupReponse) => {
@@ -178,6 +179,7 @@ export class DejaPopupDemoComponent {
         ];
         config.width = '500px';
         config.height = '400px';
+        config.toolbarColor = 'warn';
 
         this.dejaPopupService.openPopUp(config)
             // .filter((resp: DejaPopupReponse) => !!resp)
