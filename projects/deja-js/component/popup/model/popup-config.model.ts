@@ -144,7 +144,10 @@ export class DejaPopupConfig extends MatDialogConfig {
     }
 
     private createIds() {
-        this.id = `deja-popup-${++DejaPopupConfig.dialogCount}`;
+        // Generate an ID if null or empty
+        if (!this.id) {
+            this.id = `deja-popup-${++DejaPopupConfig.dialogCount}`;
+        }
         const className = `deja-popup-pane-${DejaPopupConfig.dialogCount}`;
         this.addPanelClass(className);
         this.dialogPanelId = `.${className}`;
@@ -153,7 +156,7 @@ export class DejaPopupConfig extends MatDialogConfig {
 }
 
 export type DialogToolbarType = 'base' | 'window';
-export type DialogToolbarColor = null | 'primary' | 'accent' | 'warn';
+export type DialogToolbarColor = null | 'primary' | 'accent' | 'warn' | 'danger';
 export interface DejaPopupContentTemplate<T> {
     templateRef: TemplateRef<T>;
     templateContext?: any;
