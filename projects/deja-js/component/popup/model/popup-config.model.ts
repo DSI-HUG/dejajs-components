@@ -156,7 +156,7 @@ export class DejaPopupConfig extends MatDialogConfig {
 }
 
 export type DialogToolbarType = 'base' | 'window';
-export type DialogToolbarColor = null | 'primary' | 'accent' | 'warn';
+export type DialogToolbarColor = null | 'primary' | 'accent' | 'warn' | 'danger';
 export interface DejaPopupContentTemplate<T> {
     templateRef: TemplateRef<T>;
     templateContext?: any;
