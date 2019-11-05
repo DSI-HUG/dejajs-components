@@ -6,6 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, HostBinding, Input, OnDestroy, ViewChild } from '@angular/core';
 import { IViewPort, IViewPortItem, IViewPortRefreshParams, ViewportDirection, ViewportMode, ViewPortService } from '@deja-js/core';
 import { from as observableFrom, fromEvent as observableFromEvent, interval as observableInterval, merge as observableMerge, Subject, Subscription, timer as observableTimer } from 'rxjs';
@@ -48,11 +49,20 @@ export class DejaViewPortComponent implements OnDestroy {
     private isAlive = true;
     private downButton$ = new Subject<HTMLElement>();
     private upButton$ = new Subject<HTMLElement>();
-    private buttonsStep = 20;
     private downButton$Sub: Subscription;
     private upButton$Sub: Subscription;
     private mouseWheel$Sub: Subscription;
     private scrollPosition = 0;
+    private _buttonsStep: number;
+
+    @Input()
+    public set buttonsStep(value: number) {
+        this._buttonsStep = value;
+    }
+
+    public get buttonsStep() {
+        return this._buttonsStep || 20;
+    }
 
     /** Permet de définir un template d'élément par binding */
     @Input() public itemTemplateExternal: any;
@@ -113,7 +123,11 @@ export class DejaViewPortComponent implements OnDestroy {
     @Input()
     public set itemSize(value: number | string) {
         if (value) {
+            const size = coerceNumberProperty(value);
             this.viewPort.itemsSize$.next(+value);
+            if (!this._buttonsStep) {
+                this._buttonsStep = size;
+            }
         }
     }
 
@@ -144,7 +158,7 @@ export class DejaViewPortComponent implements OnDestroy {
     }
 
     private set scrollPos(value: number) {
-        const scrollPos = Math.max(value, 0);
+        const scrollPos = Math.max(coerceNumberProperty(value), 0);
         this.scrollPosition = scrollPos;
         this.viewPort.scrollPosition$.next(scrollPos);
     }
@@ -251,6 +265,9 @@ export class DejaViewPortComponent implements OnDestroy {
                         this.mouseWheel$Sub = observableFromEvent(this.element, 'mousewheel')
                             .subscribe((event: MouseWheelEvent) => {
                                 this.scrollPos = this.scrollPos + event.deltaY;
+                                event.stopPropagation();
+                                event.preventDefault();
+                                return false;
                             });
                     }
                 } else if (this.mouseWheel$Sub) {
