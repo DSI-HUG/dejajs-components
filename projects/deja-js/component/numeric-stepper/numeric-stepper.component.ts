@@ -30,7 +30,8 @@ export const createCounterRangeValidator = (maxValue: number, minValue: number) 
         if (c.value === null || c.value === undefined) {
             return null;
         }
-        return ((maxValue && c.value > maxValue) || (minValue && c.value < minValue)) ? err : null;
+        return ((maxValue !== null && maxValue !== undefined && c.value > maxValue) ||
+            (minValue !== null && minValue !== undefined && c.value < minValue)) ? err : null;
     };
 };
 
