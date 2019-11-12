@@ -7,7 +7,7 @@
  */
 
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Optional, Output, Self, ViewChild } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroupDirective, NgControl, NgForm, ValidationErrors, Validator, ValidatorFn } from '@angular/forms';
 import { CanUpdateErrorState, ErrorStateMatcher } from '@angular/material';
@@ -30,7 +30,7 @@ export const createCounterRangeValidator = (maxValue: number, minValue: number) 
         if (c.value === null || c.value === undefined) {
             return null;
         }
-        return ((maxValue && c.value > maxValue) || (minValue && c.value < minValue)) ? err : null;
+        return ((maxValue !== null && c.value > maxValue) || (minValue !== null && c.value < minValue)) ? err : null;
     };
 };
 
@@ -55,12 +55,40 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     public size = 0;
     public stateChanges = new Subject<void>();
     public focused = false;
+
     /** Max value of stepper */
-    @Input() public max: number;
+    private _max: number = null;
+    public get max() {
+        return this._max;
+    }
+    @Input()
+    public set max(value) {
+        this._max = coerceNumberProperty(value, null);
+        this.changeDetectorRef.markForCheck();
+    }
+
     /** Min value of stepper */
-    @Input() public min: number;
+    private _min: number = null;
+    public get min() {
+        return this._min;
+    }
+    @Input()
+    public set min(value) {
+        this._min = coerceNumberProperty(value, null);
+        this.changeDetectorRef.markForCheck();
+    }
+
     /** Step for stepper : default 1 */
-    @Input() public step = 1;
+    private _step = 1;
+    public get step() {
+        return this._step;
+    }
+    @Input()
+    public set step(value) {
+        this._step = coerceNumberProperty(value, 1);
+        this.changeDetectorRef.markForCheck();
+    }
+
     /** Unit of stepper */
     @Input() public unit: string;
 
