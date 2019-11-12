@@ -35,6 +35,15 @@
 				<mat-label>Disabled</mat-label>
 				<deja-numeric-stepper placeholder="Disabled" [min]="1" [max]="10" unit="kms" disabled></deja-numeric-stepper>
 			</mat-form-field>
+
+			<mat-form-field appearance="outline">
+				<mat-label>min : 0, max : 10, value : -5</mat-label>
+				<deja-numeric-stepper placeholder="Without unit" min="0" max="10" [ngModel]="-5" #numericStepper="ngModel"></deja-numeric-stepper>
+				<mat-error *ngIf="numericStepper.errors?.rangeError">
+					Min : {{numericStepper.errors?.rangeError?.min}}, Max : {{numericStepper.errors?.rangeError?.max}}
+				</mat-error>
+			</mat-form-field>
+
 			<deja-numeric-stepper placeholder="With unit" [min]="1" [max]="10" unit="kms"></deja-numeric-stepper>
 		</mat-card-content>
 	</mat-card>
