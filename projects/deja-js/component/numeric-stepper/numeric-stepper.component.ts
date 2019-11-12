@@ -17,20 +17,20 @@ import { Subject } from 'rxjs';
 
 import { DejaChildValidatorDirective, DejaTextMetricsService } from '@deja-js/core';
 
-export const createCounterRangeValidator = (maxValue: number, minValue: number) => {
+export const createCounterRangeValidator = (comp: DejaNumericStepperComponent) => {
     return (c: FormControl) => {
         const err = {
             rangeError: {
                 given: c.value,
-                max: maxValue,
-                min: minValue
+                max: comp.max,
+                min: comp.min
             }
         };
 
         if (c.value === null || c.value === undefined) {
             return null;
         }
-        return ((maxValue !== null && c.value > maxValue) || (minValue !== null && c.value < minValue)) ? err : null;
+        return comp.isOffLimits ? err : null;
     };
 };
 
@@ -76,6 +76,10 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     public set min(value) {
         this._min = coerceNumberProperty(value, null);
         this.changeDetectorRef.markForCheck();
+    }
+
+    public get isOffLimits() {
+        return (this.min !== null && this.value < this.min) || (this.max !== null && this.value > this.max);
     }
 
     /** Step for stepper : default 1 */
@@ -201,7 +205,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
 
     public ngOnChanges(changes: any) {
         if (changes.min || changes.max) {
-            this.validateFn = createCounterRangeValidator(this.max, this.min);
+            this.validateFn = createCounterRangeValidator(this);
             if (this.ngControl && this.ngControl.control) {
                 this.ngControl.control.setValidators(this.validateFn);
             }

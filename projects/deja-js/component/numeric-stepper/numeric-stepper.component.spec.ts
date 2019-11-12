@@ -60,7 +60,7 @@ describe('DejaNumericStepperComponent', () => {
         expect(comp.value).toBe(11);
     }));
 
-    describe('when step clicked', () => {
+    fdescribe('when step clicked', () => {
 
         let steppers: DebugElement;
 
@@ -81,5 +81,13 @@ describe('DejaNumericStepperComponent', () => {
             expect(comp.value).toEqual(2.2);
         }));
 
+        it('TEST 2', async(() => {
+            comp.value = -5;
+            comp.min = 0;
+            comp.max = 20;
+            fixture.detectChanges();
+            const offLimits = fixture.debugElement.query(By.css('.off-limits'));
+            console.log(offLimits);
+        }));
     });
 });
