@@ -22,6 +22,7 @@
         "test": "ng test",
         "test:core": "ng test @deja-js/core --watch=false",
         "test:lib": "ng test @deja-js/component --watch=false",
+        "test:lib:watch": "ng test @deja-js/component --watch=true",
         "lint": "ng lint",
         "e2e": "ng e2e",
         "license-check": "node scripts/licenses.js",
