@@ -60,6 +60,40 @@ describe('DejaNumericStepperComponent', () => {
         expect(comp.value).toBe(11);
     }));
 
+    it('value < min', async(() => {
+        comp.value = -5;
+        comp.min = 0;
+        comp.max = 20;
+        fixture.detectChanges();
+        const offLimits = fixture.debugElement.query(By.css('.off-limits'));
+        expect(offLimits).not.toBeNull();
+    }));
+
+    it('value > max', async(() => {
+        comp.value = 50;
+        comp.min = 0;
+        comp.max = 20;
+        fixture.detectChanges();
+        const offLimits = fixture.debugElement.query(By.css('.off-limits'));
+        expect(offLimits).not.toBeNull();
+    }));
+
+    it('min < value < max', async(() => {
+        comp.value = 10;
+        comp.min = 0;
+        comp.max = 20;
+        fixture.detectChanges();
+        const offLimits = fixture.debugElement.query(By.css('.off-limits'));
+        expect(offLimits).toBeNull();
+    }));
+
+    it('without min max', async(() => {
+        comp.value = 50;
+        fixture.detectChanges();
+        const offLimits = fixture.debugElement.query(By.css('.off-limits'));
+        expect(offLimits).toBeNull();
+    }));
+
     describe('when step clicked', () => {
 
         let steppers: DebugElement;
@@ -80,6 +114,5 @@ describe('DejaNumericStepperComponent', () => {
             steppers.children[1].nativeElement.click();
             expect(comp.value).toEqual(2.2);
         }));
-
     });
 });

@@ -396,7 +396,7 @@ describe('DejaSelectComponent', () => {
         const fixture = TestBed.createComponent(DejaSelectContainerComponent);
         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
-        const viewPortService = selectDebugElement.injector.get(ViewPortService) as ViewPortService;
+        const viewPortService = selectDebugElement.injector.get(ViewPortService);
         const sl = selectInstance as any;
 
         fixture.detectChanges();
