@@ -56,6 +56,15 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     public stateChanges = new Subject<void>();
     public focused = false;
 
+    /** InputElement of stepper */
+    private inputElement: HTMLInputElement;
+    @ViewChild('inputStepper', { static: false })
+    public set inputElementRef(element: ElementRef) {
+        if (element) {
+            this.inputElement = element.nativeElement;
+        }
+    }
+
     /** Max value of stepper */
     private _max: number = null;
     public get max() {
@@ -237,6 +246,13 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     public onContainerClick(event: MouseEvent) {
         if ((event.target as Element).tagName.toLowerCase() !== 'input') {
             this.elementRef.nativeElement.querySelector('input').focus();
+        }
+    }
+
+    /** Give focus to this component */
+    public setFocus() {
+        if (this.inputElement) {
+            this.inputElement.focus();
         }
     }
 

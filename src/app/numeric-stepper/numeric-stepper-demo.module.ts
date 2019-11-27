@@ -9,6 +9,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -31,6 +32,7 @@ import { routing } from './numeric-stepper-demo.routes';
         DejaNumericStepperModule,
         DejaMarkdownModule,
         routing,
+        MatButtonModule
     ],
     providers: [
     ],
