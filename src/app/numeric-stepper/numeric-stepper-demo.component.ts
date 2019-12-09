@@ -7,22 +7,21 @@
  */
 
 import { Component } from '@angular/core';
+import { DejaNumericStepperComponent } from '@deja-js/component';
 
 @Component({
     selector: 'deja-numeric-stepper-demo',
-    styles: [`
-    :host mat-card mat-card-content {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    `],
-    templateUrl: './numeric-stepper-demo.component.html',
+    styleUrls: ['./numeric-stepper-demo.component.scss'],
+    templateUrl: './numeric-stepper-demo.component.html'
 })
 export class DejaNumericStepperDemoComponent {
     public tabIndex = 1;
 
     constructor() {
+    }
+
+    public focus(numStepper: DejaNumericStepperComponent) {
+        numStepper.setFocus();
     }
 
 }

@@ -18,15 +18,20 @@
 			<mat-form-field appearance="fill">
 				<mat-label>With unit fill</mat-label>
 				<deja-numeric-stepper placeholder="With unit always displayed" [min]="1" [max]="10" unit="kms" alwaysDisplayUnit></deja-numeric-stepper>
-			</mat-form-field>
-			<mat-form-field appearance="outline">
-				<mat-label>With unit outline</mat-label>
-				<deja-numeric-stepper placeholder="With unit" [min]="1" [max]="10" unit="kms"></deja-numeric-stepper>
-			</mat-form-field>
-			<mat-form-field appearance="outline">
-				<mat-label>Without unit</mat-label>
-				<deja-numeric-stepper placeholder="Without unit" [min]="1" [max]="10" [ngModel]="5"></deja-numeric-stepper>
-			</mat-form-field>
+            </mat-form-field>
+
+            <div class="focus">
+                <mat-form-field appearance="outline">
+                    <mat-label>With unit outline</mat-label>
+                    <deja-numeric-stepper #numStepper placeholder="With unit" [min]="1" [max]="10" unit="kms"></deja-numeric-stepper>
+                </mat-form-field>
+                <button mat-raised-button (click)="focus(numStepper)">Focus</button>
+            </div>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Without unit</mat-label>
+                <deja-numeric-stepper placeholder="Without unit" [min]="1" [max]="10" [ngModel]="5"></deja-numeric-stepper>
+            </mat-form-field>
 			<mat-form-field appearance="outline">
 				<mat-label>Without steppers</mat-label>
 				<deja-numeric-stepper placeholder="Without steppers" [min]="1" [max]="10" unit="kms" hideSteppers="true"></deja-numeric-stepper>
