@@ -1238,6 +1238,10 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
             this.ngControl.control.markAsTouched();
         }
         this.removeSelection(event && event.item);
+        if (event) {
+            event.stopPropagation();
+        }
+        return false;
     }
 
     public onOpenClicked() {
@@ -1272,11 +1276,6 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
             this.unselectAll$().pipe(
                 first())
                 .subscribe(() => this.onModelChange());
-        }
-
-        if (event) {
-            event.stopPropagation();
-            return false;
         }
     }
 
