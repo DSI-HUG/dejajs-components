@@ -216,7 +216,11 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
         if (changes.min || changes.max) {
             this.validateFn = createCounterRangeValidator(this);
             if (this.ngControl && this.ngControl.control) {
-                this.ngControl.control.setValidators(this.validateFn);
+                const validators: ValidatorFn[] = [this.validateFn];
+                if (this.ngControl.control.validator) {
+                    validators.push(this.ngControl.control.validator);
+                }
+                this.ngControl.control.setValidators(validators);
             }
         }
     }
@@ -231,7 +235,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     }
 
     public validate(c: FormControl): ValidationErrors {
-        return this.validateFn(c);
+        return this.validateFn(c) || (c.validator && c.validator(c));
     }
 
     public ngOnDestroy() {
