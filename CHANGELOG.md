@@ -1,3 +1,13 @@
+#### 8.3.0 (2019-12-13)
+
+##### New Features
+
+* **NumericStepper:**  add method focus to inputElement ([188738d0](https://github.com/DSI-HUG/dejajs-components/commit/188738d0214f0047512a8912d6484f3e819a3882))
+
+##### Bug Fixes
+
+* **NumericStepper:**  The Validator min or max with value 0 didnt work ([cf07dc9f](https://github.com/DSI-HUG/dejajs-components/commit/cf07dc9fb4be7933d9d93f6a63bc09dd54cf614b))
+
 #### 0.0.1 (2019-11-13)
 
 ##### Continuous Integration
