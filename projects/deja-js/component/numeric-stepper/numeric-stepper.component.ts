@@ -56,6 +56,15 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     public stateChanges = new Subject<void>();
     public focused = false;
 
+    /** InputElement of stepper */
+    private inputElement: HTMLInputElement;
+    @ViewChild('inputStepper', { static: false })
+    public set inputElementRef(element: ElementRef) {
+        if (element) {
+            this.inputElement = element.nativeElement;
+        }
+    }
+
     /** Max value of stepper */
     private _max: number = null;
     public get max() {
@@ -207,7 +216,11 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
         if (changes.min || changes.max) {
             this.validateFn = createCounterRangeValidator(this);
             if (this.ngControl && this.ngControl.control) {
-                this.ngControl.control.setValidators(this.validateFn);
+                const validators: ValidatorFn[] = [this.validateFn];
+                if (this.ngControl.control.validator) {
+                    validators.push(this.ngControl.control.validator);
+                }
+                this.ngControl.control.setValidators(validators);
             }
         }
     }
@@ -222,7 +235,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     }
 
     public validate(c: FormControl): ValidationErrors {
-        return this.validateFn(c);
+        return this.validateFn(c) || (c.validator && c.validator(c));
     }
 
     public ngOnDestroy() {
@@ -237,6 +250,13 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     public onContainerClick(event: MouseEvent) {
         if ((event.target as Element).tagName.toLowerCase() !== 'input') {
             this.elementRef.nativeElement.querySelector('input').focus();
+        }
+    }
+
+    /** Give focus to this component */
+    public setFocus() {
+        if (this.inputElement) {
+            this.inputElement.focus();
         }
     }
 
