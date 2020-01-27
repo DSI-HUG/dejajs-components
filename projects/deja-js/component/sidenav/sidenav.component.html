@@ -1,4 +1,4 @@
-<mat-sidenav-container [class.sidenav-hidden]="sidenavService.hidden" [class.sidenav-light]="!sidenavService.hidden && !sidenavService.opened">
+<mat-sidenav-container autosize [class.sidenav-hidden]="sidenavService.hidden" [class.sidenav-light]="!sidenavService.hidden && !sidenavService.opened">
     <mat-sidenav [(opened)]="sidenavService.opened" [mode]="sidenavService.mode">
         <mat-toolbar class="header">
             <mat-icon class="header-icon">{{headerIcon}}</mat-icon>
