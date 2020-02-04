@@ -11,8 +11,8 @@
         "url": "https://github.com/DSI-HUG/dejajs-components.git"
     },
     "peerDependencies": {
-        "@angular/common": "~8.0.1",
-        "@angular/core": "~8.0.1"
+        "@angular/common": "~9.0.0-rc.14",
+        "@angular/core": "~9.0.0-rc.14"
     },
     "publishConfig": {
         "access": "public"
