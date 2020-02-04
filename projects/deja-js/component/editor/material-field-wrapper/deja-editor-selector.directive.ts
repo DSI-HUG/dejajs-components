@@ -7,24 +7,10 @@
  */
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import {
-    Directive,
-    DoCheck,
-    ElementRef,
-    Host,
-    HostBinding,
-    Input,
-    OnDestroy,
-    OnInit,
-    Optional,
-    Self
-} from '@angular/core';
+import { Directive, DoCheck, ElementRef, Host, HostBinding, Input, OnDestroy, OnInit, Optional, Self } from '@angular/core';
 import { FormGroupDirective, NgControl, NgForm } from '@angular/forms';
-import {
-    CanUpdateErrorState,
-    ErrorStateMatcher,
-    MatFormFieldControl
-} from '@angular/material';
+import { CanUpdateErrorState, ErrorStateMatcher } from '@angular/material/core';
+import { MatFormFieldControl } from '@angular/material/form-field';
 import { _MatInputMixinBase } from '@deja-js/core/util';
 import { Subject } from 'rxjs';
 import { DejaEditorComponent } from '../deja-editor.component';
@@ -42,11 +28,11 @@ let nextUniqueId = 0;
 })
 export class DejaEditorSelectorDirective extends _MatInputMixinBase
     implements
-        MatFormFieldControl<any>,
-        DoCheck,
-        OnInit,
-        OnDestroy,
-        CanUpdateErrorState {
+    MatFormFieldControl<any>,
+    DoCheck,
+    OnInit,
+    OnDestroy,
+    CanUpdateErrorState {
     public errorState: boolean;
     public autofilled?: boolean;
     protected _uid = `mat-input-${nextUniqueId++}`;

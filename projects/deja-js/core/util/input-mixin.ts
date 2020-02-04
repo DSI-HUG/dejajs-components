@@ -12,7 +12,7 @@
  */
 
 import { FormGroupDirective, NgControl, NgForm } from '@angular/forms';
-import { CanUpdateErrorStateCtor, ErrorStateMatcher, mixinErrorState } from '@angular/material';
+import { CanUpdateErrorStateCtor, ErrorStateMatcher, mixinErrorState } from '@angular/material/core';
 
 export class MatInputBase {
     constructor(
@@ -20,7 +20,7 @@ export class MatInputBase {
         public _parentForm: NgForm,
         public _parentFormGroup: FormGroupDirective,
         public ngControl: NgControl
-    ) {}
-  }
+    ) { }
+}
 
 export const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase = mixinErrorState(MatInputBase);

@@ -10,7 +10,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
-import { CanUpdateErrorState, ErrorStateMatcher } from '@angular/material';
+import { CanUpdateErrorState, ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { DateComponentLayout, DaysOfWeek, DejaDateSelectorComponent } from '@deja-js/component/date-selector';
 import { DejaChildValidatorDirective, DejaConnectionPositionPair, KeyCodes } from '@deja-js/core';
@@ -30,7 +30,7 @@ const noop = () => { };
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    providers: [{provide: MatFormFieldControl, useExisting: DejaDatePickerComponent}],
+    providers: [{ provide: MatFormFieldControl, useExisting: DejaDatePickerComponent }],
     selector: 'deja-date-picker',
     styleUrls: ['./date-picker.component.scss'],
     templateUrl: './date-picker.component.html',
