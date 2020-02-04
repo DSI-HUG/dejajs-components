@@ -3,7 +3,6 @@ dist: trusty
 language: node_js
 addons:
   chrome: stable
-  yarn: 1.19.0
 cache:
   directories:
   - node_modules
@@ -23,6 +22,7 @@ branches:
   - dev
   - next/9.x.x
 before_install:
+- npm install -g yarn
 - rm -rf node_modules
 - bash ./scripts/test-latest-versions.sh
 before_script:
