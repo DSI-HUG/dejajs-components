@@ -34,7 +34,7 @@ export abstract class DejaPopupBase implements OnInit {
 
     public ngOnInit() {
         this.aSub = [];
-        this.dialogRef.beforeClose().pipe(
+        this.dialogRef.beforeClosed().pipe(
             first(),
             tap(() => {
                 if (this.unlisten) {

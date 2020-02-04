@@ -30,7 +30,7 @@ export class DejaPopupTrayComponent implements OnInit {
 
     public ngOnInit() {
 
-        this.dialogs$ = observableFrom(this.dialogSrv.afterOpen).pipe(
+        this.dialogs$ = observableFrom(this.dialogSrv.afterOpened).pipe(
             merge(this.dialogSrv.dejaPopupCom$.pipe(
                 filter((action: DejaPopupAction) => !!action && action.target === 'popup-tray'),
                 map((action: DejaPopupAction) => {
