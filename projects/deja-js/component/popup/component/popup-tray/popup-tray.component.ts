@@ -8,7 +8,7 @@
 
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { from as observableFrom, Observable } from 'rxjs';
+import { from, Observable } from 'rxjs';
 import { debounceTime, filter, map, merge } from 'rxjs/operators';
 import { DejaPopupAction } from '../../model/popup-action.model';
 import { DejaPopupBase } from '../../model/popup-base.class';
@@ -30,7 +30,7 @@ export class DejaPopupTrayComponent implements OnInit {
 
     public ngOnInit() {
 
-        this.dialogs$ = observableFrom(this.dialogSrv.afterOpened).pipe(
+        this.dialogs$ = from(this.dialogSrv.afterOpened).pipe(
             merge(this.dialogSrv.dejaPopupCom$.pipe(
                 filter((action: DejaPopupAction) => !!action && action.target === 'popup-tray'),
                 map((action: DejaPopupAction) => {

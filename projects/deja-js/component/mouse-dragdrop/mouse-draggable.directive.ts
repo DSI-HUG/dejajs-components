@@ -8,7 +8,7 @@
 
 import { Directive, ElementRef, Input, OnDestroy } from '@angular/core';
 import { Position, Rect } from '@deja-js/core';
-import { fromEvent as observableFromEvent, merge as observableMerge, Observable, Subject } from 'rxjs';
+import { fromEvent, merge, Observable, Subject } from 'rxjs';
 import { filter, first, takeUntil, takeWhile, tap } from 'rxjs/operators';
 import { DejaMouseDragDropService, IDragCursorInfos, IDragDropContext } from './mouse-dragdrop.service';
 
@@ -31,14 +31,14 @@ export class DejaMouseDraggableDirective implements OnDestroy {
     constructor(elementRef: ElementRef, dragDropService: DejaMouseDragDropService) {
         const element = elementRef.nativeElement as HTMLElement;
 
-        const leave$ = observableFromEvent(element, 'mouseleave');
+        const leave$ = fromEvent(element, 'mouseleave');
 
-        const mouseUp$ = observableFromEvent(element.ownerDocument, 'mouseup');
+        const mouseUp$ = fromEvent(element.ownerDocument, 'mouseup');
 
-        observableFromEvent(element, 'mouseenter').pipe(
+        fromEvent(element, 'mouseenter').pipe(
             takeWhile(() => this.isAlive))
             .subscribe(() => {
-                observableFromEvent(element, 'mousedown').pipe(
+                fromEvent(element, 'mousedown').pipe(
                     takeUntil(leave$),
                     filter((event: MouseEvent) => event.buttons === 1))
                     .subscribe((event: MouseEvent) => {
@@ -50,14 +50,14 @@ export class DejaMouseDraggableDirective implements OnDestroy {
                         };
 
                         const startDrag = () => {
-                            const kill$ = observableMerge(mouseUp$, moveUp$).pipe(
+                            const kill$ = merge(mouseUp$, moveUp$).pipe(
                                 first(),
                                 tap(() => {
                                     dragDropService.dragCursor$.next(undefined);
                                     dragDropService.dragging$.next(false);
                                 }));
 
-                            observableFromEvent(element.ownerDocument, 'mousemove').pipe(
+                            fromEvent(element.ownerDocument, 'mousemove').pipe(
                                 takeUntil(kill$))
                                 .subscribe((ev: MouseEvent) => {
                                     if (target && ev.buttons === 1) {

@@ -11,7 +11,7 @@ import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetecto
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { IDejaDragEvent } from '@deja-js/component/dragdrop';
 import { DejaChildValidatorDirective, DejaClipboardService, DejaItemComponent, DejaItemEvent, DejaItemsEvent, GroupingService, IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, IViewPort, KeyCodes, Position, Rect, SortingService, ViewportMode, ViewPortService } from '@deja-js/core';
-import { BehaviorSubject, combineLatest as observableCombineLatest, from as observableFrom, fromEvent as observableFromEvent, merge as observableMerge, Observable, of as observableOf, Subject, Subscription, timer as observableTimer } from 'rxjs';
+import { BehaviorSubject, combineLatest, from, fromEvent, merge, Observable, of, Subject, Subscription, timer } from 'rxjs';
 import { debounceTime, filter, first, map, merge, switchMap, takeWhile, tap } from 'rxjs/operators';
 import { DejaTreeListScrollEvent } from './tree-list-scroll-event';
 
@@ -107,12 +107,12 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
             this._control.valueAccessor = this;
         }
 
-        observableFrom(this.clearFilterExpression$).pipe(
+        from(this.clearFilterExpression$).pipe(
             takeWhile(() => this._isAlive),
             debounceTime(400))
             .subscribe(() => this.filterExpression = '');
 
-        observableFrom(this.keyboardNavigation$).pipe(
+        from(this.keyboardNavigation$).pipe(
             takeWhile(() => this._isAlive),
             tap(() => this._keyboardNavigation = true),
             debounceTime(1000))
@@ -121,7 +121,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                 this.changeDetectorRef.markForCheck();
             });
 
-        observableFromEvent(window, 'resize').pipe(
+        fromEvent(window, 'resize').pipe(
             takeWhile(() => this._isAlive),
             debounceTime(5))
             .subscribe(() => {
@@ -130,7 +130,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                 this.changeDetectorRef.markForCheck();
             });
 
-        observableFrom(this.setQuery$).pipe(
+        from(this.setQuery$).pipe(
             takeWhile(() => this._isAlive),
             debounceTime(250),
             tap((query) => {
@@ -140,13 +140,13 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
             switchMap(() => this.calcViewList$()))
             .subscribe(noop);
 
-        const selectItems$ = observableCombineLatest(this.selectItems$, this.contentInitialized$).pipe(
+        const selectItems$ = combineLatest(this.selectItems$, this.contentInitialized$).pipe(
             map(([value]) => value),
             map((value) => this.getVirtualSelectedEntities(value)),
             map((value) => (value instanceof Array && value) || (value && [value]) || []),
             tap((values) => super.setSelectedItems(values)));
 
-        const selectModels$ = observableCombineLatest(this.writeValue$, this.contentInitialized$).pipe(
+        const selectModels$ = combineLatest(this.writeValue$, this.contentInitialized$).pipe(
             map(([value]) => {
                 if (this.modelIsValue === undefined) {
                     if (value instanceof Array) {
@@ -166,7 +166,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
             map((value) => this.getVirtualSelectedEntities(value)),
             tap((value) => super.setSelectedModels(!value || this._multiSelect || value instanceof Array ? value : [value])));
 
-        observableMerge(selectModels$, selectItems$).pipe(
+        merge(selectModels$, selectItems$).pipe(
             takeWhile(() => this._isAlive))
             .subscribe(() => {
                 super.getItemListService().ensureSelection();
@@ -458,7 +458,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                     // Waiting for query
                     this._itemList = [];
                     this.changeDetectorRef.markForCheck();
-                    return observableOf(itms);
+                    return of(itms);
                 } else {
                     return this.calcViewList$().pipe(map(() => itms));
                 }
@@ -661,13 +661,13 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
         // FIXME Issue angular/issues/6005
         // see http://stackoverflow.com/questions/34364880/expression-has-changed-after-it-was-checked
         if (this._itemList.length === 0 && (this.hasCustomService || this.hasLoadingEvent)) {
-            observableTimer(1).pipe(
+            timer(1).pipe(
                 first(),
                 switchMap(() => this.calcViewList$()))
                 .subscribe(noop);
         }
 
-        observableFromEvent(this.listElement, 'scroll').pipe(
+        fromEvent(this.listElement, 'scroll').pipe(
             takeWhile(() => this._isAlive),
             map((event: any) => [event, event.target.scrollTop, event.target.scrollLeft]),
             map(([event, scrollTop, scrollLeft]: [Event, number, number]) => {
@@ -682,9 +682,9 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
             }))
             .subscribe((scrollPos) => this.viewPort.scrollPosition$.next(scrollPos));
 
-        let keyDown$ = observableFromEvent(this.listElement, 'keydown');
+        let keyDown$ = fromEvent(this.listElement, 'keydown');
         if (this.input) {
-            const inputKeyDown$ = observableFromEvent(this.input.nativeElement, 'keydown') as Observable<KeyboardEvent>;
+            const inputKeyDown$ = fromEvent(this.input.nativeElement, 'keydown') as Observable<KeyboardEvent>;
             keyDown$ = keyDown$.pipe(merge(inputKeyDown$));
         }
 
@@ -836,10 +836,10 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                 }
             });
 
-        let keyUp$ = observableFromEvent(this.listElement, 'keyup') as Observable<Event>;
+        let keyUp$ = fromEvent(this.listElement, 'keyup') as Observable<Event>;
         if (this.input) {
-            const inputKeyup$ = observableFromEvent(this.input.nativeElement, 'keyup') as Observable<KeyboardEvent>;
-            const inputDrop$ = observableFromEvent(this.input.nativeElement, 'drop') as Observable<KeyboardEvent>;
+            const inputKeyup$ = fromEvent(this.input.nativeElement, 'keyup') as Observable<KeyboardEvent>;
+            const inputDrop$ = fromEvent(this.input.nativeElement, 'drop') as Observable<KeyboardEvent>;
             keyUp$ = keyUp$.pipe(merge(inputKeyup$, inputDrop$));
         }
 
@@ -945,7 +945,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
             }
         }
 
-        this.mouseUp$sub = observableFromEvent(this.listElement, 'mouseup').pipe(
+        this.mouseUp$sub = fromEvent(this.listElement, 'mouseup').pipe(
             first(),
             filter(() => !this.disabled))
             .subscribe((upevt: MouseEvent) => {
@@ -1051,7 +1051,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                             first(),
                             map(() => finalTarget));
                     } else {
-                        return observableOf(finalTarget);
+                        return of(finalTarget);
                     }
                 }))
                 .subscribe(noop);
@@ -1141,7 +1141,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
 
     public toggleSelect$(items: IItemBase[], state: boolean): Observable<IItemBase[]> {
         if (!this._multiSelect && !items[0].selected === !state) {
-            return observableOf(items);
+            return of(items);
         } else {
             return super.toggleSelect$(items, state).pipe(
                 tap(() => {

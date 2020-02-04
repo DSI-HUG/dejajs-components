@@ -10,7 +10,7 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Optional, Output, Self, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { KeyCodes } from '@deja-js/core';
-import { from as observableFrom, fromEvent as observableFromEvent, Subject } from 'rxjs';
+import { from, fromEvent, Subject } from 'rxjs';
 import { first, takeWhile } from 'rxjs/operators';
 import { IDateSelectorItem } from './date-selector-item.model';
 
@@ -179,7 +179,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
             this._control.valueAccessor = this;
         }
 
-        observableFromEvent(element, 'click').pipe(
+        fromEvent(element, 'click').pipe(
             takeWhile(() => this.isAlive))
             .subscribe((event: Event) => {
                 const target = event.target as HTMLElement;
@@ -196,11 +196,11 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
                 }
             });
 
-        observableFrom(this._keyboardNavigation$).pipe(
+        from(this._keyboardNavigation$).pipe(
             takeWhile(() => this.isAlive))
             .subscribe(() => {
                 this._keyboardNavigation = true;
-                observableFromEvent(element, 'mouseenter').pipe(
+                fromEvent(element, 'mouseenter').pipe(
                     first())
                     .subscribe(() => {
                         this._keyboardNavigation = false;

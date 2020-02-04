@@ -6,8 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Observable, of as observableOf } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 export class MockMediaService {
-    public isMobile$: Observable<boolean> = observableOf(false);
+    public isMobile$: Observable<boolean> = of(false);
 }

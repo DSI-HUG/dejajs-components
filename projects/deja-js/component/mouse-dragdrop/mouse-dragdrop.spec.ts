@@ -12,7 +12,7 @@ import { async, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { of as observableOf } from 'rxjs';
+import { of } from 'rxjs';
 import { DejaMouseDragDropModule } from './index';
 import { IDropCursorInfos } from './mouse-dragdrop.service';
 import { DejaMouseDraggableDirective, IDejaMouseDraggableContext } from './mouse-draggable.directive';
@@ -51,7 +51,7 @@ class DejaMouseDragDropComponent {
         return {
             className: 'drag-cursor',
             dragStart: (target: HTMLElement) => {
-                return observableOf(target.innerText);
+                return of(target.innerText);
             },
         } as IDejaMouseDraggableContext;
     }

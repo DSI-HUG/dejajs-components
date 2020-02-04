@@ -16,7 +16,7 @@ import { DateComponentLayout, DaysOfWeek, DejaDateSelectorComponent } from '@dej
 import { DejaChildValidatorDirective, DejaConnectionPositionPair, KeyCodes } from '@deja-js/core';
 import { _MatInputMixinBase } from '@deja-js/core/util';
 import * as moment_ from 'moment';
-import { combineLatest as observableCombineLatest, from as observableFrom, fromEvent as observableFromEvent, merge as observableMerge, ReplaySubject, Subject } from 'rxjs';
+import { combineLatest, from, fromEvent, merge, ReplaySubject, Subject } from 'rxjs';
 import { delay, filter, first, map, switchMap, takeWhile, tap } from 'rxjs/operators';
 import { formatToMask, formatToUnitOfTime } from './format-to-mask';
 
@@ -229,12 +229,12 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
                 this.stateChanges.next();
             });
 
-        const keydown$ = observableFrom(this.inputElement$).pipe(
-            switchMap((element) => observableFromEvent(element, 'keydown')));
+        const keydown$ = from(this.inputElement$).pipe(
+            switchMap((element) => fromEvent(element, 'keydown')));
 
-        const cursorChanged$ = observableFrom(this.inputElement$).pipe(
+        const cursorChanged$ = from(this.inputElement$).pipe(
             switchMap((element: HTMLInputElement) => {
-                return observableMerge(observableFromEvent(element, 'mouseup'), observableFromEvent(element, 'focus'), observableFromEvent(element, 'keyup')).pipe(
+                return merge(fromEvent(element, 'mouseup'), fromEvent(element, 'focus'), fromEvent(element, 'keyup')).pipe(
                     map(() => {
                         return element.selectionStart;
                     }));
@@ -300,7 +300,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
                 }
             });
 
-        const valueUpdated$ = observableCombineLatest(this.formatChanged$, this.dateChanged$).pipe(
+        const valueUpdated$ = combineLatest(this.formatChanged$, this.dateChanged$).pipe(
             tap(([format]) => {
                 let mask = [] as string[];
                 const array = format.match(DejaDatePickerComponent.formattingTokens);
@@ -344,7 +344,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
                 }
             });
 
-        observableCombineLatest(this.inputElement$, this.focus$).pipe(
+        combineLatest(this.inputElement$, this.focus$).pipe(
             takeWhile(() => this.isAlive))
             .subscribe(([element]) => element.focus());
     }

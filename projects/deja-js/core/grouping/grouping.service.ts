@@ -6,8 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { from as observableFrom ,  Observable ,  of as observableOf } from 'rxjs';
-import { map ,  reduce ,  switchMap ,  tap } from 'rxjs/operators';
+import { from, Observable, of } from 'rxjs';
+import { map, reduce, switchMap, tap } from 'rxjs/operators';
 import { IItemTree } from '../item-list/item-tree';
 import { SortingService } from '../sorting/sorting.service';
 import { IGroupInfo } from './group-infos';
@@ -25,12 +25,12 @@ export class GroupingService {
      */
     public group$(tree: any[], groupInfos: IGroupInfo[] | IGroupInfo, childrenField = 'items'): Observable<any[]> {
         if (!tree || tree.length === 0 || !groupInfos) {
-            return observableOf(tree);
+            return of(tree);
         }
 
         if (groupInfos instanceof Array) {
             // Create a observable stream with a sequence for each groupinfos.
-            let result$ = observableOf(tree);
+            let result$ = of(tree);
             groupInfos.forEach((groupInfo) => result$ = result$.pipe(switchMap((t) => this.group$(t, groupInfo, childrenField))));
             return result$;
         } else {
@@ -42,7 +42,7 @@ export class GroupingService {
             }
 
             const groupTree$: any = (t: any[], curDepth: number) => {
-                return observableFrom(t).pipe(
+                return from(t).pipe(
                     switchMap((treeItem) => {
                         const children = treeItem[childrenField];
                         if (children[0] && children[0][childrenField]) {
@@ -70,7 +70,7 @@ export class GroupingService {
     }
 
     protected groupChildren$(list: any[], groupInfo: IGroupInfo, _depth: number, childrenField: string): Observable<any[]> {
-        return observableOf(list).pipe(
+        return of(list).pipe(
             switchMap((l) => l),
             reduce((groups: { [groupby: string]: IItemTree }, item) => {
                 let groupedBy = typeof groupInfo.groupByField === 'function' ? groupInfo.groupByField(item) : item[groupInfo.groupByField];
@@ -105,7 +105,7 @@ export class GroupingService {
                     const sortingService = new SortingService();
                     return sortingService.sort$(groupedChildren, groupInfo.sortInfos);
                 } else {
-                    return observableOf(groupedChildren);
+                    return of(groupedChildren);
                 }
             }));
     }

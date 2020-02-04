@@ -14,7 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DejaClipboardModule, Rect } from '@deja-js/core';
-import { BehaviorSubject, from as observableFrom } from 'rxjs';
+import { BehaviorSubject, from } from 'rxjs';
 import { debounceTime, delay, filter, first, map, tap } from 'rxjs/operators';
 import { DejaTileBorderDirection, DejaTileGroupComponent, DejaTilesModule } from './index';
 import { DejaTileGroup } from './tile-group.class';
@@ -190,7 +190,7 @@ describe('DejaTilesComponent', () => {
     const observeDom$ = (fixture: ComponentFixture<DejaTilesContainerComponent>) => {
         const tilesDebugElement = fixture.debugElement.query(By.directive(DejaTilesComponent));
         const layoutProvider = tilesDebugElement.injector.get(DejaTilesLayoutProvider);
-        return observableFrom(layoutProvider.layoutCompleted);
+        return from(layoutProvider.layoutCompleted);
     };
 
     const sendMouseEvent = (element: EventTarget, type: string, pageX: number, pageY: number, buttons = 0) => {

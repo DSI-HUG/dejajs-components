@@ -8,7 +8,7 @@
 
 import { Component, ElementRef, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Position } from '@deja-js/core';
-import { BehaviorSubject, from as observableFrom } from 'rxjs';
+import { BehaviorSubject, from } from 'rxjs';
 import { delay, filter, takeWhile, tap } from 'rxjs/operators';
 import { DejaMouseDragDropService, IDragCursorInfos, IDropCursorInfos } from './mouse-dragdrop.service';
 
@@ -33,14 +33,14 @@ export class DejaMouseDragDropCursorComponent implements OnDestroy {
     constructor(elementRef: ElementRef, private dragDropService: DejaMouseDragDropService) {
         const element = elementRef.nativeElement as HTMLElement;
 
-        observableFrom(this.position$).pipe(
+        from(this.position$).pipe(
             takeWhile(() => this.isAlive))
             .subscribe((pos) => {
                 element.style.left = pos ? `${pos.left}px` : '-1000px';
                 element.style.top = pos ? `${pos.top}px` : '-1000px';
             });
 
-        const cursor$ = observableFrom(this.cursor$);
+        const cursor$ = from(this.cursor$);
 
         // Hide
         cursor$.pipe(
@@ -93,7 +93,7 @@ export class DejaMouseDragDropCursorComponent implements OnDestroy {
                 }
             });
 
-        observableFrom(this.dragDropService.dragCursor$).pipe(
+        from(this.dragDropService.dragCursor$).pipe(
             takeWhile(() => this.isAlive))
             .subscribe((dragCursor) => {
                 if (!!dragCursor !== !!this._dragCursor) {
@@ -116,7 +116,7 @@ export class DejaMouseDragDropCursorComponent implements OnDestroy {
                 }
             });
 
-        observableFrom(this.dragDropService.dropCursor$).pipe(
+        from(this.dragDropService.dropCursor$).pipe(
             takeWhile(() => this.isAlive))
             .subscribe((dropCursor) => {
                 this._dropCursor = dropCursor;

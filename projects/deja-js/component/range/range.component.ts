@@ -9,7 +9,7 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostListener, Input, Optional, Output, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { fromEvent as observableFromEvent, merge as observableMerge } from 'rxjs';
+import { fromEvent, merge } from 'rxjs';
 import { first, takeUntil, tap } from 'rxjs/operators';
 import { IRange, IRangeEvent, IStepRangeEvent, Range } from './range.interface';
 
@@ -220,11 +220,11 @@ export class DejaRangeComponent implements ControlValueAccessor {
                 parentElement = parentElement.parentElement;
             }
 
-            const up$ = observableFromEvent(document, 'mouseup');
+            const up$ = fromEvent(document, 'mouseup');
 
-            const leave$ = observableFromEvent(document.body, 'mouseleave');
+            const leave$ = fromEvent(document.body, 'mouseleave');
 
-            const kill$ = observableMerge(up$, leave$).pipe(
+            const kill$ = merge(up$, leave$).pipe(
                 first(),
                 tap(() => {
                     const host = this.elementRef.nativeElement.firstElementChild as HTMLElement;
@@ -233,7 +233,7 @@ export class DejaRangeComponent implements ControlValueAccessor {
                     this._onChangeCallback(this._ranges);
                 }));
 
-            observableFromEvent(document, 'mousemove').pipe(
+            fromEvent(document, 'mousemove').pipe(
                 takeUntil(kill$))
                 .subscribe((event: MouseEvent) => {
                     const x = event.pageX;

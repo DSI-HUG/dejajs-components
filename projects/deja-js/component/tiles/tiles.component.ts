@@ -11,7 +11,7 @@ import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, C
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { IDejaMouseDroppableContext, IDropCursorInfos } from '@deja-js/component/mouse-dragdrop';
 import { KeyCodes, Position, Rect } from '@deja-js/core';
-import { from as observableFrom, fromEvent as observableFromEvent, Observable, Subject, Subscription } from 'rxjs';
+import { from, fromEvent, Observable, Subject, Subscription } from 'rxjs';
 import { debounceTime, filter, takeWhile } from 'rxjs/operators';
 import { DejaTileGroup } from './tile-group.class';
 import { DejaTile } from './tile.class';
@@ -109,46 +109,46 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
 
         const element = el.nativeElement as HTMLElement;
 
-        observableFrom(this.layoutProvider.selectionChanged).pipe(
+        from(this.layoutProvider.selectionChanged).pipe(
             takeWhile(() => this.isAlive))
             .subscribe((e) => this.selectionChanged.emit(e));
 
-        observableFrom(this.layoutProvider.contentAdding).pipe(
+        from(this.layoutProvider.contentAdding).pipe(
             takeWhile(() => this.isAlive))
             .subscribe((e) => this.contentAdding.emit(e));
 
-        observableFrom(this.layoutProvider.contentRemoving).pipe(
+        from(this.layoutProvider.contentRemoving).pipe(
             takeWhile(() => this.isAlive))
             .subscribe((e) => this.contentRemoving.emit(e));
 
-        observableFrom(this.layoutProvider.tilesAdded).pipe(
+        from(this.layoutProvider.tilesAdded).pipe(
             takeWhile(() => this.isAlive))
             .subscribe((event) => {
                 this.tilesAdded.emit(event);
                 this.onChangeCallback(event.tiles);
             });
 
-        observableFrom(this.layoutProvider.tilesDeleted).pipe(
+        from(this.layoutProvider.tilesDeleted).pipe(
             takeWhile(() => this.isAlive))
             .subscribe((event) => {
                 this.tilesDeleted.emit(event);
                 this.onChangeCallback(event.tiles);
             });
 
-        observableFrom(this.layoutProvider.layoutChanged).pipe(
+        from(this.layoutProvider.layoutChanged).pipe(
             takeWhile(() => this.isAlive))
             .subscribe((event) => {
                 this.layoutChanged.emit(event);
                 this.onChangeCallback(event.tiles);
             });
 
-        observableFrom(this.layoutProvider.layoutCompleted).pipe(
+        from(this.layoutProvider.layoutCompleted).pipe(
             takeWhile(() => this.isAlive))
             .subscribe((event) => this.layoutCompleted.emit(event));
 
-        this.keyup$ = observableFromEvent(element.ownerDocument, 'keyup') as Observable<KeyboardEvent>;
+        this.keyup$ = fromEvent(element.ownerDocument, 'keyup') as Observable<KeyboardEvent>;
 
-        observableFromEvent(window, 'resize').pipe(
+        fromEvent(window, 'resize').pipe(
             takeWhile(() => this.isAlive),
             debounceTime(5))
             .subscribe(() => this.refresh({ resetWidth: true }));

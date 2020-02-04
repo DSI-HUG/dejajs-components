@@ -11,7 +11,7 @@
 */
 
 import { Directive, ElementRef, HostListener, Input, OnDestroy, OnInit, Renderer2, RendererFactory2 } from '@angular/core';
-import { Subscription, timer as observableTimer } from 'rxjs';
+import { Subscription, timer } from 'rxjs';
 import { filter, first } from 'rxjs/operators';
 
 interface SlimScrollOptions {
@@ -422,7 +422,7 @@ export class DejaSlimScrollDirective implements OnInit, OnDestroy {
             && !this._isOverBar
             && !this._isDragg
         ) {
-            this._queueHide = observableTimer(1000).pipe(
+            this._queueHide = timer(1000).pipe(
                 first(),
                 filter(() => !this._queueHide))
                 .subscribe(() => {

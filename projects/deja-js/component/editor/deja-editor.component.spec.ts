@@ -8,7 +8,7 @@
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { timer as observableTimer } from 'rxjs';
+import { timer } from 'rxjs';
 import { DejaEditorComponent } from './deja-editor.component';
 import { DejaEditorService } from './deja-editor.service';
 
@@ -40,7 +40,7 @@ describe('DejaEditorComponent', () => {
     it('should load ckeditor', (done) => {
         fixture.detectChanges();
         fixture.whenStable().then(() => {
-            observableTimer(5000).subscribe(() => {
+            timer(5000).subscribe(() => {
                 fixture.detectChanges();
                 expect(window.hasOwnProperty('CKEDITOR')).toBeTruthy();
                 const element = fixture.debugElement.query(By.css('textarea'));

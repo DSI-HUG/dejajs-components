@@ -11,7 +11,7 @@ import { DejaGridComponent, IDejaGridColumn, IDejaGridColumnSizeEvent, IDejaGrid
 import { IDejaDragContext, IDejaDropContext, IDejaDropEvent } from '@deja-js/component/dragdrop';
 import { GroupingService, IGroupInfo, IItemTree, IViewPortItem } from '@deja-js/core';
 import * as _ from 'lodash';
-import { from as observableFrom, Observable, of as observableOf, Subject, Subscription } from 'rxjs';
+import { from, Observable, of, Subject, Subscription } from 'rxjs';
 import { debounceTime, delay, first, map, reduce, switchMap, tap } from 'rxjs/operators';
 import { News } from '../common/news.model';
 import { NewsService } from '../services/news.service';
@@ -668,7 +668,7 @@ export class DejaGridDemoComponent {
                     },
                 },
             })),
-            reduce((acc: any[], cur: any) => [ ...acc, cur ], []));
+            reduce((acc: any[], cur: any) => [...acc, cur], []));
 
         this.peopleService.getPeople$().subscribe((value: Person[]) => {
             const onDemandResult = [] as IPeopleGroup[];
@@ -743,7 +743,7 @@ export class DejaGridDemoComponent {
         const self = this;
         return (row: IDejaGridRow) => {
             const group = row as IPeopleGroup;
-            return group.loaded ? observableOf(row) : self.confirmDialog()(row);
+            return group.loaded ? of(row) : self.confirmDialog()(row);
         };
     }
 
@@ -752,15 +752,15 @@ export class DejaGridDemoComponent {
         return (row: IDejaGridRow) => {
             const group = row as IPeopleGroup;
             if (group.loaded) {
-                return observableOf(row);
+                return of(row);
             } else {
                 return self.confirmDialog()(row).pipe(
                     switchMap((itm) => {
                         if (!itm) {
-                            return observableOf(null);
+                            return of(null);
                         }
 
-                        observableOf(group).pipe(
+                        of(group).pipe(
                             delay(2000),
                             first())
                             .subscribe((grp) => {
@@ -772,7 +772,7 @@ export class DejaGridDemoComponent {
                                 this.onExpandGrid.refresh();
                             });
 
-                        return observableOf(itm);
+                        return of(itm);
                     }));
             }
         };
@@ -782,7 +782,7 @@ export class DejaGridDemoComponent {
         const self = this;
         return (row: IDejaGridRow) => {
             self.dialogVisible = true;
-            return observableFrom(this.dialogResponse$).pipe(
+            return from(this.dialogResponse$).pipe(
                 first(),
                 map((response) => {
                     self.dialogVisible = false;

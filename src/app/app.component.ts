@@ -8,7 +8,7 @@
 
 import { ChangeDetectionStrategy, Component, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { IconService } from '@deja-js/core';
-import { BehaviorSubject, from as observableFrom } from 'rxjs';
+import { BehaviorSubject, from } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 
 @Component({
@@ -35,7 +35,7 @@ export class AppComponent implements OnDestroy {
             this._theme = 'blue';
         }
         this.theme$ = new BehaviorSubject<any>(this._theme);
-        observableFrom(this.theme$).pipe(
+        from(this.theme$).pipe(
             takeWhile(() => this.isAlive))
             .subscribe((theme) => document.body.setAttribute('theme', theme));
 

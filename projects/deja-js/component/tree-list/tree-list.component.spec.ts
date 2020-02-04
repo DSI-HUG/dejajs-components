@@ -13,7 +13,7 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DejaItemModule, GroupingService, IItemBase, IItemTree, ISortInfos, ItemListService, SortingService, ViewPortService } from '@deja-js/core';
-import { from as observableFrom, Observable, timer as observableTimer } from 'rxjs';
+import { from, Observable, timer } from 'rxjs';
 import { debounceTime, delay, filter, first, tap } from 'rxjs/operators';
 import { DejaTreeListModule } from './index';
 import { DejaTreeListComponent } from './tree-list.component';
@@ -122,7 +122,7 @@ describe('DejaTreeListComponent', () => {
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const viewPortService = treeListDebugElement.injector.get(ViewPortService) as ViewPortService;
 
-        return observableFrom(viewPortService.viewPortResult$).pipe(
+        return from(viewPortService.viewPortResult$).pipe(
             filter((result) => result.viewPortSize > 0));
     };
 
@@ -322,7 +322,7 @@ describe('DejaTreeListComponent', () => {
         treeListInstance.minSearchlength = 2;
         const viewPortService = treeListDebugElement.injector.get(ViewPortService) as ViewPortService;
 
-        observableFrom(viewPortService.viewPortResult$).pipe(
+        from(viewPortService.viewPortResult$).pipe(
             debounceTime(100))
             .subscribe((_vp) => {
                 // Bind view port
@@ -480,7 +480,7 @@ describe('DejaTreeListByModelContainerComponent', () => {
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const viewPortService = treeListDebugElement.injector.get(ViewPortService) as ViewPortService;
 
-        return observableFrom(viewPortService.viewPortResult$).pipe(
+        return from(viewPortService.viewPortResult$).pipe(
             filter((result) => result.viewPortSize > 0));
     };
 
@@ -918,7 +918,7 @@ describe('DejaTreeListByOptionsContainerComponent', () => {
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const viewPortService = treeListDebugElement.injector.get(ViewPortService) as ViewPortService;
 
-        return observableFrom(viewPortService.viewPortResult$).pipe(
+        return from(viewPortService.viewPortResult$).pipe(
             filter((result) => result.viewPortSize > 0));
     };
 
@@ -1065,7 +1065,7 @@ describe('DejaTreeListByOptionsContainerComponent', () => {
             const event = new MouseEvent('mousedown', eventInit());
             element.nativeElement.dispatchEvent(event);
             fixture.detectChanges();
-            observableTimer(100).pipe(
+            timer(100).pipe(
                 first())
                 .subscribe(() => {
                     const upEvent = new MouseEvent('mouseup', eventInit());

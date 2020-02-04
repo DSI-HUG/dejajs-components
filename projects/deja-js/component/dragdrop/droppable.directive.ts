@@ -9,7 +9,7 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Directive, ElementRef, HostBinding, Input, OnDestroy, Optional } from '@angular/core';
 import { DejaClipboardService } from '@deja-js/core';
-import { from as observableFrom, fromEvent as observableFromEvent, Subject } from 'rxjs';
+import { from, fromEvent, Subject } from 'rxjs';
 import { filter, takeUntil, takeWhile, tap } from 'rxjs/operators';
 import { IDejaDragEvent } from './draggable.directive';
 
@@ -53,11 +53,11 @@ export class DejaDroppableDirective implements OnDestroy {
         const dragDrop$ = new Subject<DragEvent>();
         const kill$ = new Subject();
 
-        const dragEnd$ = observableFrom(kill$).pipe(
+        const dragEnd$ = from(kill$).pipe(
             tap(() => inDrag = false),
             filter((value) => !value));
 
-        observableFrom(dragDrop$).pipe(
+        from(dragDrop$).pipe(
             takeWhile(() => this.isAlive))
             .subscribe((dragEvent) => {
                 if (dragEvent.type === 'dragenter') {
@@ -82,7 +82,7 @@ export class DejaDroppableDirective implements OnDestroy {
                             dragEvent.dataTransfer.dropEffect = 'none';
                         }
 
-                        observableFromEvent(element, 'drop').pipe(
+                        fromEvent(element, 'drop').pipe(
                             takeUntil(dragEnd$))
                             .subscribe((dropEvent: DragEvent) => {
                                 // console.log('DejaDrop');
@@ -108,7 +108,7 @@ export class DejaDroppableDirective implements OnDestroy {
                                 return;
                             });
 
-                        observableFromEvent(element, 'dragover').pipe(
+                        fromEvent(element, 'dragover').pipe(
                             takeUntil(dragEnd$))
                             .subscribe((overEvent: DragEvent) => {
                                 // console.log('DejaDragOver');
@@ -156,7 +156,7 @@ export class DejaDroppableDirective implements OnDestroy {
                 }
             });
 
-        observableFromEvent(element, 'dragenter').pipe(
+        fromEvent(element, 'dragenter').pipe(
             takeWhile(() => this.isAlive),
             filter(() => !!this.context),
             filter(() => !!this.clipboardService.get(this.draginfokey)))
@@ -167,7 +167,7 @@ export class DejaDroppableDirective implements OnDestroy {
                 dragDrop$.next(event);
             });
 
-        observableFromEvent(element, 'dragleave').pipe(
+        fromEvent(element, 'dragleave').pipe(
             takeWhile(() => this.isAlive),
             filter(() => !!this.context),
             filter(() => !!this.clipboardService.get(this.draginfokey)))

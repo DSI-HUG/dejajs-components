@@ -7,7 +7,7 @@
  */
 import { Component, ContentChild, ElementRef, EventEmitter, HostListener, OnDestroy, Output } from '@angular/core';
 import { KeyCodes } from '@deja-js/core';
-import { fromEvent as observableFromEvent } from 'rxjs';
+import { fromEvent } from 'rxjs';
 import { filter, takeWhile } from 'rxjs/operators';
 
 /**
@@ -33,7 +33,7 @@ export class DejaDialogComponent implements OnDestroy {
     constructor(elementRef: ElementRef) {
         const element = elementRef.nativeElement as HTMLElement;
 
-        observableFromEvent(element.ownerDocument, 'keyup').pipe(
+        fromEvent(element.ownerDocument, 'keyup').pipe(
             takeWhile(() => this.isAlive),
             filter((event: KeyboardEvent) => !!(event.keyCode === KeyCodes.Enter && this.okButton && this.okButton._elementRef) || !!(event.keyCode === KeyCodes.Escape && this.cancelButton && this.cancelButton._elementRef)))
             .subscribe((event: KeyboardEvent) => {

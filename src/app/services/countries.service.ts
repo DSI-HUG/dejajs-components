@@ -10,8 +10,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Color, MaterialColors } from '@deja-js/core';
 import { ObjectMapper } from 'json-object-mapper';
-import {Observable,  of as observableOf } from 'rxjs';
-import {map, publishLast, refCount} from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, publishLast, refCount } from 'rxjs/operators';
 
 export class Country {
     public displayName: string = void 0;
@@ -36,7 +36,7 @@ export class CountriesService {
     }
 
     public getCountryByCode$(code: string) {
-        return observableOf(this.countriesDic[code]);
+        return of(this.countriesDic[code]);
     }
 
     public getCountries$(query?: string, number?: number): Observable<Country[]> {
@@ -82,6 +82,6 @@ export class CountriesService {
                     }
                 }
                 return returnCountries;
-            }), );
+            }));
     }
 }

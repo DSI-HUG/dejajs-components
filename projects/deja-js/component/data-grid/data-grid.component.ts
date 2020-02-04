@@ -12,7 +12,7 @@ import { IDejaChipsComponentCloseEvent } from '@deja-js/component/chips';
 import { IDejaDragEvent } from '@deja-js/component/dragdrop';
 import { DejaTreeListComponent, DejaTreeListScrollEvent } from '@deja-js/component/tree-list';
 import { DejaClipboardService, GroupingService, IGroupInfo, IItemBase, IItemTree, ISortInfos, ItemListService, IViewListResult, IViewPort, KeyCodes, SortingService, ViewportMode, ViewPortService } from '@deja-js/core';
-import { combineLatest as observableCombineLatest, from as observableFrom, fromEvent as observableFromEvent, Observable, ReplaySubject, Subject, timer as observableTimer } from 'rxjs';
+import { combineLatest, from, fromEvent, Observable, ReplaySubject, Subject, timer } from 'rxjs';
 import { debounceTime, filter, first, map, switchMap, takeWhile, tap } from 'rxjs/operators';
 import { IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent } from './data-grid-column/data-grid-column';
 import { IDejaGridColumnLayout } from './data-grid-column/data-grid-column-layout';
@@ -312,7 +312,7 @@ export class DejaGridComponent implements OnDestroy {
                 let observable = this._rows as Observable<IItemBase[]>;
                 if (!observable.subscribe) {
                     const promise = this._rows as Promise<IItemBase[]>;
-                    observable = observableFrom(promise);
+                    observable = from(promise);
                 }
 
                 this.viewPortChanged.pipe(
@@ -415,7 +415,7 @@ export class DejaGridComponent implements OnDestroy {
 
         this.clearColumnLayout();
 
-        observableCombineLatest(this.columns$, this.columnGroups$).pipe(
+        combineLatest(this.columns$, this.columnGroups$).pipe(
             takeWhile(() => this.isAlive),
             map(([columns, columnGroups]) => {
                 if (typeof columnGroups === 'string') {
@@ -445,13 +445,13 @@ export class DejaGridComponent implements OnDestroy {
                 this.changeDetectorRef.markForCheck();
             });
 
-        observableFrom(this.columns$).pipe(
+        from(this.columns$).pipe(
             takeWhile(() => this.isAlive),
             tap((columns) => this._columns = columns),
             debounceTime(1))
             .subscribe(() => this.calcColumnsLayout());
 
-        observableFrom(this.printColumnLayout$).pipe(
+        from(this.printColumnLayout$).pipe(
             takeWhile(() => this.isAlive),
             debounceTime(1000))
             .subscribe(() => {
@@ -461,13 +461,13 @@ export class DejaGridComponent implements OnDestroy {
                 console.log('');
             });
 
-        observableFrom(this.disableUserSelection$).pipe(
+        from(this.disableUserSelection$).pipe(
             takeWhile(() => this.isAlive),
             tap(() => element.setAttribute('disableselection', '')),
             debounceTime(1000))
             .subscribe(() => element.removeAttribute('disableselection'));
 
-        observableFromEvent(window, 'resize').pipe(
+        fromEvent(window, 'resize').pipe(
             takeWhile(() => this.isAlive),
             filter(() => this.hasPercentageColumns),
             debounceTime(5))
@@ -475,7 +475,7 @@ export class DejaGridComponent implements OnDestroy {
                 this.calcColumnsLayout();
             });
 
-        observableFromEvent(element, 'keydown').pipe(
+        fromEvent(element, 'keydown').pipe(
             takeWhile(() => this.isAlive))
             .subscribe((event: KeyboardEvent) => {
                 const findPrev = (index: number) => {
@@ -518,13 +518,13 @@ export class DejaGridComponent implements OnDestroy {
                 }
             });
 
-        observableFromEvent(element, 'mousedown').pipe(
+        fromEvent(element, 'mousedown').pipe(
             takeWhile(() => this.isAlive),
             filter((downEvent: MouseEvent) => downEvent.buttons === 1))
             .subscribe((downEvent: MouseEvent) => {
                 const clickedColumn = this.getColumnFromHTMLElement(downEvent.target as HTMLElement);
 
-                observableFromEvent(element, 'mouseup').pipe(
+                fromEvent(element, 'mouseup').pipe(
                     first(),
                     filter(() => !!clickedColumn))
                     .subscribe((upEvent: MouseEvent) => {
@@ -655,7 +655,7 @@ export class DejaGridComponent implements OnDestroy {
         event.column.sorting = true;
         this.changeDetectorRef.markForCheck();
 
-        observableTimer(1).pipe(
+        timer(1).pipe(
             first(),
             switchMap(() => this.sort$(event.column.name)))
             .subscribe(() => {

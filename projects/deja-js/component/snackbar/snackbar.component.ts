@@ -7,7 +7,7 @@
  */
 
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { from as observableFrom, Subject, Subscription, timer as observableTimer } from 'rxjs';
+import { from, Subject, Subscription, timer } from 'rxjs';
 import { debounce, delay, first, tap } from 'rxjs/operators';
 
 interface IAnimation {
@@ -150,7 +150,7 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
                 });
         };
 
-        this.animate$sub = observableFrom(this.animate$).pipe(
+        this.animate$sub = from(this.animate$).pipe(
             tap((animation) => applyParams(animation.before)),
             delay(1),
             tap((animation) => {
@@ -158,9 +158,9 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.host.style.transitionTimingFunction = animation.easing;
                 this.host.style.transitionProperty = Object.keys(animation.before).join(',');
             }),
-            debounce((animation) => observableTimer(animation.delay || 1)),
+            debounce((animation) => timer(animation.delay || 1)),
             tap((animation) => applyParams(animation.after)),
-            debounce((animation) => observableTimer(animation.duration)))
+            debounce((animation) => timer(animation.duration)))
             .subscribe(() => {
                 this.host.style.transitionDuration = '';
                 this.host.style.transitionTimingFunction = '';
@@ -222,7 +222,7 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
         this.launchEnterAnimation();
 
         // if a duration has been been specified, launch the 'leave' animation after snackbar's lifetime flow, then emit amination done
-        observableTimer(this.duration + this.delay).pipe(
+        timer(this.duration + this.delay).pipe(
             first(),
             tap(() => {
                 if (!!this.duration) {

@@ -8,7 +8,7 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Component, ContentChild, ElementRef, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { DejaConnectionPositionPair, Position, Rect, } from '@deja-js/core';
-import { from as observableFrom, fromEvent as observableFromEvent, Observable } from 'rxjs';
+import { from, fromEvent, Observable } from 'rxjs';
 import { debounceTime, delay, filter, map, takeUntil, tap } from 'rxjs/operators';
 import { DejaTooltipService, ITooltipParams } from './tooltip.service';
 
@@ -113,10 +113,10 @@ export class DejaTooltipComponent implements OnInit {
     constructor(elementRef: ElementRef, private tooltipService: DejaTooltipService) {
         const element = elementRef.nativeElement as HTMLElement;
 
-        const hide$ = observableFrom(this.hide).pipe(
+        const hide$ = from(this.hide).pipe(
             tap(() => this._model = undefined));
 
-        observableFromEvent(element.ownerDocument, 'mousemove').pipe(
+        fromEvent(element.ownerDocument, 'mousemove').pipe(
             takeUntil(hide$),
             debounceTime(100),
             map((event: MouseEvent) => new Position(event.pageX, event.pageY)),

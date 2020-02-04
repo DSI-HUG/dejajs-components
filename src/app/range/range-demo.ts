@@ -7,7 +7,7 @@
  */
 import {Component, EventEmitter, Output, ViewChild} from '@angular/core';
 import { IStepRangeEvent, Range } from '@deja-js/component/range';
-import { from as observableFrom,  Observable } from 'rxjs';
+import { from,  Observable } from 'rxjs';
 import { defaultIfEmpty, map, scan } from 'rxjs/operators';
 import { ranges, rangesWithInterval, readOnlyRanges, steps, weights } from './ranges.mock';
 import { IWeight, Weight } from './weight.interface';
@@ -43,7 +43,7 @@ export class DejaRangeDemoComponent {
         this.computeRangeFromWeight();
 
         // error management
-        this.errors = observableFrom(this.errorFeed).pipe(
+        this.errors = from(this.errorFeed).pipe(
             map((error: Error) => ({
                 gate: true,
                 message: error.message,

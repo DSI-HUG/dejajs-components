@@ -8,7 +8,7 @@
 
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { ChangeDetectorRef, EventEmitter, OnDestroy } from '@angular/core';
-import { from as observableFrom, Observable, of as observableOf, Subscription, timer as observableTimer } from 'rxjs';
+import { from, Observable, of, Subscription, timer } from 'rxjs';
 import { filter, first, map, reduce, switchMap, takeWhile, tap } from 'rxjs/operators';
 import { IGroupInfo } from '../grouping/group-infos';
 import { GroupingService } from '../grouping/grouping.service';
@@ -98,7 +98,7 @@ export abstract class ItemListBase implements OnDestroy {
                         if (!rebind) {
                             this.listElement.scrollTop = viewPortResult.scrollPos;
                         } else {
-                            observableTimer(1).pipe(
+                            timer(1).pipe(
                                 first(),
                                 filter(() => !!this.listElement)
                             ).subscribe(() => {
@@ -337,7 +337,7 @@ export abstract class ItemListBase implements OnDestroy {
     public toggleAll$(collapsed?: boolean): Observable<IItemTree[]> {
         this.allCollapsed = (collapsed !== undefined) ? collapsed : !this.allCollapsed;
         if (this.viewPort.mode === ViewportMode.disabled) {
-            return observableFrom(this._itemList).pipe(
+            return from(this._itemList).pipe(
                 filter((item: IItemTree) => item.$items && item.depth === 0 && item.collapsible !== false),
                 switchMap((_item: IItemTree, index: number) => this.toggleCollapse$(index + this.vpStartRow, this.allCollapsed)),
                 reduce((acc, item) => {
@@ -467,7 +467,7 @@ export abstract class ItemListBase implements OnDestroy {
             this._itemListService.hideSelected = this._hideSelected;
             this._itemListService.childrenField = this._childrenField;
             this._itemListService.valueField = this._valueField;
-            this.waiter$sub = observableFrom(this._itemListService.waiter$).pipe(
+            this.waiter$sub = from(this._itemListService.waiter$).pipe(
                 takeWhile(() => this._isAlive))
                 .subscribe((status: boolean) => {
                     this._waiter = status;
@@ -569,7 +569,7 @@ export abstract class ItemListBase implements OnDestroy {
         let models$: Observable<any[]>;
 
         if (models instanceof Array) {
-            models$ = observableOf(models);
+            models$ = of(models);
         } else {
             models$ = models as Observable<any[]>;
         }
@@ -600,7 +600,7 @@ export abstract class ItemListBase implements OnDestroy {
             if (!this.getItems()) {
                 return this.setItems$([]).pipe(map(() => emptyListResult));
             } else {
-                return observableOf(emptyListResult);
+                return of(emptyListResult);
             }
         }
 
@@ -747,7 +747,7 @@ export abstract class ItemListBase implements OnDestroy {
     }
 
     protected ensureListCaches$(): Observable<IViewListResult> {
-        return this._itemListService.hasCache ? observableOf(null) : this.getViewList$();
+        return this._itemListService.hasCache ? of(null) : this.getViewList$();
     }
 
     /** Calcul la position de la scrollbar pour que l'élément spécifié soit dans la zone visible. */

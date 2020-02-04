@@ -72,7 +72,7 @@ export const DEFAULT_BREAKPOINTS = [
 */
 
 import { Injectable, NgZone, OnDestroy } from '@angular/core';
-import { BehaviorSubject, from as observableFrom, Observable } from 'rxjs';
+import { BehaviorSubject, from, Observable } from 'rxjs';
 import { distinctUntilChanged, map, takeWhile } from 'rxjs/operators';
 
 @Injectable()
@@ -96,7 +96,7 @@ export class MediaService implements OnDestroy {
             }
         });
 
-        this.isMobile$ = observableFrom(this.mediaChanged$).pipe(
+        this.isMobile$ = from(this.mediaChanged$).pipe(
             takeWhile(() => this.isAlive),
             map(() => this.mql.xs.matches || this.mql.sm.matches),
             distinctUntilChanged());

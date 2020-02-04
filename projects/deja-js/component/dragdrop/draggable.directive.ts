@@ -7,7 +7,7 @@
  */
 import { Directive, ElementRef, HostBinding, Input, OnDestroy, Optional } from '@angular/core';
 import { DejaClipboardService, UUID } from '@deja-js/core';
-import { fromEvent as observableFromEvent } from 'rxjs';
+import { fromEvent } from 'rxjs';
 import { filter, first, takeWhile } from 'rxjs/operators';
 
 @Directive({
@@ -36,7 +36,7 @@ export class DejaDraggableDirective implements OnDestroy {
     constructor(elementRef: ElementRef, @Optional() private clipboardService: DejaClipboardService) {
         const element = elementRef.nativeElement as HTMLElement;
 
-        observableFromEvent(element, 'dragstart').pipe(
+        fromEvent(element, 'dragstart').pipe(
             takeWhile(() => this.isAlive),
             filter(() => !!this.context))
             .subscribe((event: DragEvent) => {
@@ -73,7 +73,7 @@ export class DejaDraggableDirective implements OnDestroy {
                     }
                 }
 
-                observableFromEvent(element, 'dragend').pipe(
+                fromEvent(element, 'dragend').pipe(
                     takeWhile(() => this.isAlive),
                     first())
                     .subscribe((evt: DragEvent) => {

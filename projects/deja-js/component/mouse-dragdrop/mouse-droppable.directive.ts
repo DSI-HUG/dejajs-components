@@ -8,7 +8,7 @@
 
 import { Directive, ElementRef, Input, OnDestroy } from '@angular/core';
 import { Position, Rect } from '@deja-js/core';
-import { from as observableFrom, Observable } from 'rxjs';
+import { from, Observable } from 'rxjs';
 import { filter, first, takeUntil, takeWhile } from 'rxjs/operators';
 import { DejaMouseDragDropService, IDragCursorInfos, IDragDropContext, IDropCursorInfos } from './mouse-dragdrop.service';
 
@@ -32,7 +32,7 @@ export class DejaMouseDroppableDirective implements OnDestroy {
     constructor(elementRef: ElementRef, dragDropService: DejaMouseDragDropService) {
         const element = elementRef.nativeElement as HTMLElement;
 
-        const dragging$ = observableFrom(dragDropService.dragging$);
+        const dragging$ = from(dragDropService.dragging$);
 
         const kill$ = dragging$.pipe(
             filter((value) => !value));
@@ -53,7 +53,7 @@ export class DejaMouseDroppableDirective implements OnDestroy {
                         dragDropService.dropCursor$.next(undefined);
                     });
 
-                observableFrom(dragDropService.dragCursor$).pipe(
+                from(dragDropService.dragCursor$).pipe(
                     takeUntil(kill$))
                     .subscribe((dragCursor) => {
                         const bounds = new Rect(element.getBoundingClientRect());

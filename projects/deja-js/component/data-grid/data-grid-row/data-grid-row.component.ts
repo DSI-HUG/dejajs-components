@@ -8,7 +8,7 @@
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, Input, OnDestroy } from '@angular/core';
 import { ItemListService } from '@deja-js/core';
-import { from as observableFrom, Subscription } from 'rxjs';
+import { from, Subscription } from 'rxjs';
 import { IDejaGridColumnLayout } from '../data-grid-column/data-grid-column-layout';
 import { IDejaGridRow } from './data-grid-row';
 
@@ -51,7 +51,7 @@ export class DejaGridRowComponent implements OnDestroy {
         };
 
         if (this._columnLayout.refresh$) {
-            this.refresh$sub = observableFrom(this._columnLayout.refresh$)
+            this.refresh$sub = from(this._columnLayout.refresh$)
                 .subscribe(() => this.changeDetectorRef.markForCheck());
         }
     }

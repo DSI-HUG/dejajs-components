@@ -7,7 +7,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import {BehaviorSubject,  from as observableFrom ,  Observable ,  Subject } from 'rxjs';
+import {BehaviorSubject,  from ,  Observable ,  Subject } from 'rxjs';
 import {delay, filter, first, map} from 'rxjs/operators';
 
 /**
@@ -25,7 +25,7 @@ export class DejaTextMetricsService {
      * Add observable to wait for element to be set. And then take its properties to measure all ASCII char size.
      */
     constructor() {
-        observableFrom(this.element$).pipe(
+        from(this.element$).pipe(
             delay(1),
             first())
             .subscribe((element) => {

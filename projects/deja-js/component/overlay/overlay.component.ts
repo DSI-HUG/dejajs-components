@@ -10,7 +10,7 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { CdkConnectedOverlay, CdkOverlayOrigin, OverlayContainer } from '@angular/cdk/overlay';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { DejaConnectionPositionPair, MediaService } from '@deja-js/core';
-import { timer as observableTimer } from 'rxjs';
+import { timer } from 'rxjs';
 import { first, takeWhile } from 'rxjs/operators';
 
 // providers: [ MediaService ],
@@ -200,7 +200,7 @@ export class DejaOverlayComponent implements OnDestroy {
         this.overlayOrigin = new CdkOverlayOrigin(new ElementRef((this.isMobile && document.body) || target || this.ownerElement || this.elementRef.nativeElement));
         this.isVisible = true;
         this.changeDetectorRef.markForCheck();
-        observableTimer(1).pipe(
+        timer(1).pipe(
             first())
             .subscribe(() => {
                 this.updatePosition();

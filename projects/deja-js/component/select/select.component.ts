@@ -16,7 +16,7 @@ import { MatInput } from '@angular/material/input';
 import { IDejaChipsComponentCloseEvent } from '@deja-js/component/chips';
 import { DejaOverlayComponent } from '@deja-js/component/overlay';
 import { DejaChildValidatorDirective, DejaConnectionPositionPair, DejaItemComponent, DejaItemEvent, DejaItemsEvent, GroupingService, IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, IViewPort, KeyCodes, MediaService, SortingService, ViewportMode, ViewPortService } from '@deja-js/core';
-import { BehaviorSubject, combineLatest as observableCombineLatest, from as observableFrom, fromEvent as observableFromEvent, merge as observableMerge, Observable, Subject, Subscription, timer as observableTimer } from 'rxjs';
+import { BehaviorSubject, combineLatest, from, fromEvent, merge, Observable, Subject, Subscription, timer } from 'rxjs';
 import { combineLatest, debounce, debounceTime, delay, delayWhen, filter, first, map, switchMap, takeWhile, tap } from 'rxjs/operators';
 
 const noop = () => { };
@@ -272,30 +272,30 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
             });
         }
 
-        observableFrom(this.clearFilterExpression$).pipe(
+        from(this.clearFilterExpression$).pipe(
             takeWhile(() => this._isAlive),
             debounceTime(750))
             .subscribe(() => this.filterExpression = '');
 
-        observableCombineLatest(this.delaySearchTrigger$, this.filterListComplete$).pipe(
+        combineLatest(this.delaySearchTrigger$, this.filterListComplete$).pipe(
             takeWhile(() => this._isAlive),
-            debounce(([delaySearchTrigger]) => observableTimer(delaySearchTrigger)))
+            debounce(([delaySearchTrigger]) => timer(delaySearchTrigger)))
             .subscribe(() => {
                 this._itemList = [];
                 this.reshowDropDown();
             });
 
-        observableFrom(this.storeScrollPosition$).pipe(
+        from(this.storeScrollPosition$).pipe(
             takeWhile(() => this._isAlive))
             .subscribe((scrollPos) => {
                 this.viewPort.scrollPosition$.next(scrollPos);
                 this.lastScrollPosition = scrollPos;
             });
 
-        observableFrom(this.hideDropDown$).pipe(
+        from(this.hideDropDown$).pipe(
             takeWhile(() => this._isAlive),
             filter(() => this.dropdownVisible),
-            delayWhen((time) => observableTimer(time || 0)))
+            delayWhen((time) => timer(time || 0)))
             .subscribe(() => {
                 delete this.selectingItemIndex;
                 setDropDownVisible(false);
@@ -303,7 +303,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
                 this.changeDetectorRef.markForCheck();
             });
 
-        observableFrom(this.showDropDown$).pipe(
+        from(this.showDropDown$).pipe(
             takeWhile(() => this._isAlive),
             debounceTime(50),
             filter(() => (this.query || '').length >= this.minSearchlength && !this._readonly),
@@ -360,7 +360,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
             this.overlay.updatePosition();
         });
 
-        observableFrom(this.keyboardNavigation$).pipe(
+        from(this.keyboardNavigation$).pipe(
             takeWhile(() => this._isAlive),
             tap(() => this._keyboardNavigation = true),
             debounceTime(1000))
@@ -369,7 +369,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
                 this.changeDetectorRef.markForCheck();
             });
 
-        observableFrom(this.query$).pipe(
+        from(this.query$).pipe(
             takeWhile(() => this._isAlive),
             tap((query) => this._query = query),
             filter(() => !!this.input),
@@ -379,7 +379,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
                 this.changeDetectorRef.markForCheck();
             });
 
-        observableCombineLatest(this.writeValue$, this.contentInitialized$).pipe(
+        combineLatest(this.writeValue$, this.contentInitialized$).pipe(
             takeWhile(() => this._isAlive),
             map(([value]) => value),
             tap((value) => {
@@ -886,7 +886,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
     }
 
     public ngAfterViewInit() {
-        observableFromEvent(this.htmlInputElement, 'click').pipe(
+        fromEvent(this.htmlInputElement, 'click').pipe(
             takeWhile(() => this._isAlive),
             filter(() => !this.dropdownVisible && !this.disabled))
             .subscribe((event: Event) => {
@@ -898,7 +898,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
                 }
             });
 
-        observableFromEvent(this.htmlInputElement, 'focus').pipe(
+        fromEvent(this.htmlInputElement, 'focus').pipe(
             takeWhile(() => this._isAlive),
             filter(() => !this.dropdownVisible && !this.disabled),
             delay(10),
@@ -912,7 +912,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
                 }
             });
 
-        observableFromEvent(this.htmlInputElement, 'blur').pipe(
+        fromEvent(this.htmlInputElement, 'blur').pipe(
             takeWhile(() => this._isAlive),
             filter(() => this.selectingItemIndex === undefined))
             .subscribe(() => {
@@ -920,7 +920,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
                 this.hideDropDown$.next(10);
             });
 
-        observableMerge(observableFromEvent(this.htmlInputElement, 'keydown'), observableFromEvent(this.elementRef.nativeElement, 'keydown')).pipe(
+        merge(fromEvent(this.htmlInputElement, 'keydown'), fromEvent(this.elementRef.nativeElement, 'keydown')).pipe(
             takeWhile(() => this._isAlive),
             filter((event: KeyboardEvent) => {
                 if (event.defaultPrevented) {
@@ -1043,7 +1043,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
                 }
             });
 
-        const keyUp$ = observableFromEvent(this.htmlInputElement, 'keyup').pipe(
+        const keyUp$ = fromEvent(this.htmlInputElement, 'keyup').pipe(
             filter((event: KeyboardEvent) => {
                 const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
                 return keyCode >= KeyCodes.Key0 ||
@@ -1052,7 +1052,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
                     keyCode === KeyCodes.Delete;
             }));
 
-        observableMerge(keyUp$, this.filter$).pipe(
+        merge(keyUp$, this.filter$).pipe(
             takeWhile(() => this._isAlive),
             tap(() => {
                 if ((this.query || '').length < this.minSearchlength) {
@@ -1181,7 +1181,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
 
         this.selectingItemIndex = this.getItemIndexFromHTMLElement(e.target as HTMLElement);
 
-        this.mouseUp$sub = observableFromEvent(this.listElement, 'mouseup')
+        this.mouseUp$sub = fromEvent(this.listElement, 'mouseup')
             .subscribe((upEvent: MouseEvent) => {
                 const itemIndex = this.getItemIndexFromHTMLElement(upEvent.target as HTMLElement);
                 if (itemIndex === undefined || this.selectingItemIndex === undefined || itemIndex !== this.selectingItemIndex) {

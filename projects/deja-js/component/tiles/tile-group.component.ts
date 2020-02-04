@@ -12,7 +12,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { DejaEditorComponent } from '@deja-js/component/editor';
 import { DejaPopupService } from '@deja-js/component/popup';
 import { Color } from '@deja-js/core';
-import { from as observableFrom, Subject, Subscription, timer } from 'rxjs';
+import { from, Subject, Subscription, timer } from 'rxjs';
 import { debounceTime, filter, takeWhile } from 'rxjs/operators';
 import { TileGroupStyleEditorConfig } from './tile-group-style-editor-config';
 import { ITileGroupStyleEditorData } from './tile-group-style-editor.component';
@@ -47,7 +47,7 @@ export class DejaTileGroupComponent implements OnDestroy {
     private _model: DejaTileGroup;
 
     constructor(private changeDetectorRef: ChangeDetectorRef, private dejaPopupService: DejaPopupService, private sanitizer: DomSanitizer) {
-        observableFrom(this.edit$).pipe(
+        from(this.edit$).pipe(
             takeWhile(() => this.isAlive),
             filter(() => this._designMode),
             debounceTime(100)
@@ -69,7 +69,7 @@ export class DejaTileGroupComponent implements OnDestroy {
 
         if (value) {
             // Refresh
-            this.subscriptions.push(observableFrom(this._model.refresh$).pipe(
+            this.subscriptions.push(from(this._model.refresh$).pipe(
                 takeWhile(() => this.isAlive && !!this._model),
                 debounceTime(1))
                 .subscribe(() => {

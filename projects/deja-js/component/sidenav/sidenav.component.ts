@@ -10,7 +10,7 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
 import { MediaService } from '@deja-js/core';
-import { from as observableFrom, Subject } from 'rxjs';
+import { from, Subject } from 'rxjs';
 import { filter, map, mergeMap, takeUntil } from 'rxjs/operators';
 import { DejaSidenavService } from './sidenav.service';
 
@@ -46,7 +46,7 @@ export class DejaSidenavComponent implements OnInit, OnDestroy {
         private changeDetectorRef: ChangeDetectorRef,
     ) {
 
-        observableFrom(this.mediaService.mediaChanged$).pipe(
+        from(this.mediaService.mediaChanged$).pipe(
             takeUntil(this.ngUnsubscribe))
             .subscribe((alias) => {
                 this.sidenavService.hidden = alias === 'xs';

@@ -10,7 +10,7 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, Input, OnDestroy, OnInit, Optional, Self, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Circle, Position } from '@deja-js/core';
-import { fromEvent as observableFromEvent, merge as observableMerge, Subject, Subscription } from 'rxjs';
+import { fromEvent, merge, Subject, Subscription } from 'rxjs';
 import { debounceTime, filter, first, sampleTime, takeUntil, tap } from 'rxjs/operators';
 
 const noop = () => { };
@@ -133,7 +133,7 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
             this._control.valueAccessor = this;
         }
 
-        this.mousedown$sub = observableFromEvent(element, 'mousedown').pipe(
+        this.mousedown$sub = fromEvent(element, 'mousedown').pipe(
             filter(() => !this.disabled),
             filter((event: MouseEvent) => event.buttons === 1),
             debounceTime(100))
@@ -154,7 +154,7 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
                         element.ownerDocument.body.classList.add('noselect');
                     }
 
-                    const cancelMouse$ = observableMerge(kill$, observableFromEvent(element.ownerDocument, 'mouseup')).pipe(
+                    const cancelMouse$ = merge(kill$, fromEvent(element.ownerDocument, 'mouseup')).pipe(
                         first(),
                         tap(() => {
                             delete this.cursorElement;
@@ -165,7 +165,7 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
                     const pickerElem = this.picker.nativeElement as HTMLElement;
                     const clientRect = pickerElem.getBoundingClientRect();
 
-                    observableFromEvent(element.ownerDocument, 'mousemove').pipe(
+                    fromEvent(element.ownerDocument, 'mousemove').pipe(
                         takeUntil(cancelMouse$),
                         sampleTime(10))
                         .subscribe((event: MouseEvent) => {

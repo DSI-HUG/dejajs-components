@@ -7,7 +7,7 @@
  */
 
 import * as _ from 'lodash';
-import { Observable, of as observableOf } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, reduce, switchMap } from 'rxjs/operators';
 import { ISortInfos } from './sort-infos.model';
 import { SortOrder } from './sort-order.model';
@@ -22,7 +22,7 @@ export class SortingService {
      * @return Observable résolu par la fonction.
      */
     public sort$(list: any[], sortInfos: ISortInfos | ISortInfos[]) {
-        return observableOf(this.sort(list, sortInfos));
+        return of(this.sort(list, sortInfos));
     }
 
     /** Trie les éléments de la liste plate spécifiée en fonction du modèle de tri spécifié
@@ -57,7 +57,7 @@ export class SortingService {
             switchMap((child) => child),
             switchMap((child) => {
                 if (!child || !child[childrenField]) {
-                    return observableOf(child);
+                    return of(child);
                 }
                 return this.sortTree$(child[childrenField], sortInfos, childrenField).pipe(
                     map((sortedList) => {
