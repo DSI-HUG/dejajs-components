@@ -73,10 +73,10 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
     /** For test only. */
     @Output() public dropDownVisibleChange = new EventEmitter<boolean>();
 
-    @ContentChild('itemTemplate', { static: false }) public itemTemplateInternal: any;
-    @ContentChild('parentItemTemplate', { static: false }) public parentItemTemplateInternal: any;
-    @ContentChild('selectedTemplate', { static: false }) public selectedTemplate: any;
-    @ContentChild('loaderTemplate', { static: false }) private loaderTemplateInternal: any;
+    @ContentChild('itemTemplate') public itemTemplateInternal: any;
+    @ContentChild('parentItemTemplate') public parentItemTemplateInternal: any;
+    @ContentChild('selectedTemplate') public selectedTemplate: any;
+    @ContentChild('loaderTemplate') private loaderTemplateInternal: any;
 
     /** Internal use */
     public overlayOwnerElement: HTMLElement;
@@ -93,9 +93,9 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
 
     private mouseUp$sub: Subscription;
 
-    @ViewChild('inputElement', { static: false }) public inputElement: ElementRef;
+    @ViewChild('inputElement') public inputElement: ElementRef;
 
-    @ViewChild(MatInput, { static: false }) protected input: MatInput;
+    @ViewChild(MatInput) protected input: MatInput;
 
     @HostBinding('attr.disabled') public _disabled: boolean = null;
     private _type = 'select';
@@ -789,7 +789,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
         return this._readonly;
     }
 
-    @ViewChild(DejaChildValidatorDirective, { static: false })
+    @ViewChild(DejaChildValidatorDirective)
     protected set inputValidatorDirective(value: DejaChildValidatorDirective) {
         if (value) {
             value.parentControl = this.ngControl;

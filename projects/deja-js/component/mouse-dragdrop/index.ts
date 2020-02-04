@@ -30,7 +30,7 @@ import { DejaMouseDroppableDirective } from './mouse-droppable.directive';
     providers: [],
 })
 export class DejaMouseDragDropModule {
-    public static forRoot(): ModuleWithProviders {
+    public static forRoot(): ModuleWithProviders<DejaMouseDragDropModule> {
         return {
             ngModule: DejaMouseDragDropModule,
             providers: [DejaMouseDragDropService],

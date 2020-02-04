@@ -128,16 +128,16 @@ export class DejaGridComponent implements OnDestroy {
     /** retourne la largeur calculée des lignes */
     public rowsWidth: number = null;
 
-    @ContentChild('rowTemplate', { static: false }) private rowTemplateInternal: any;
-    @ContentChild('parentRowTemplate', { static: false }) private parentRowTemplateInternal: any;
-    @ContentChild('cellTemplate', { static: false }) private _cellTemplate: any;
-    @ContentChild('parentTitleTemplate', { static: false }) private _parentTitleTemplate: any;
-    @ContentChild('columnHeaderTemplate', { static: false }) private _columnHeaderTemplate: any;
-    @ContentChild('headerTemplate', { static: false }) private headerTemplateInternal: any;
-    @ContentChild('searchPrefixTemplate', { static: false }) private searchPrefixTemplateInternal: any;
-    @ContentChild('searchSuffixTemplate', { static: false }) private searchSuffixTemplateInternal: any;
+    @ContentChild('rowTemplate') private rowTemplateInternal: any;
+    @ContentChild('parentRowTemplate') private parentRowTemplateInternal: any;
+    @ContentChild('cellTemplate') private _cellTemplate: any;
+    @ContentChild('parentTitleTemplate') private _parentTitleTemplate: any;
+    @ContentChild('columnHeaderTemplate') private _columnHeaderTemplate: any;
+    @ContentChild('headerTemplate') private headerTemplateInternal: any;
+    @ContentChild('searchPrefixTemplate') private searchPrefixTemplateInternal: any;
+    @ContentChild('searchSuffixTemplate') private searchSuffixTemplateInternal: any;
 
-    @ViewChild(DejaGridHeaderComponent, { static: false }) private header: DejaGridHeaderComponent;
+    @ViewChild(DejaGridHeaderComponent) private header: DejaGridHeaderComponent;
     @ViewChild(DejaTreeListComponent, { static: true }) private treeListComponent: DejaTreeListComponent;
 
     private _rows: IItemBase[] | Promise<IItemBase[]> | Observable<IItemBase[]>;

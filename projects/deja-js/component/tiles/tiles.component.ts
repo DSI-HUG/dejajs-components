@@ -80,7 +80,7 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
      */
     @Input() public tabIndex = 0;
 
-    @ContentChild('tileTemplate', { static: false })
+    @ContentChild('tileTemplate')
     public tileTemplate: any;
 
     // NgModel implementation

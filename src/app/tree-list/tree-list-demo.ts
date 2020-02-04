@@ -63,8 +63,8 @@ export class DejaTreeListDemoComponent implements OnDestroy {
     private _dialogVisible = false;
     private subscriptions = [] as Subscription[];
 
-    @ViewChild('news', { static: false }) private newsList: DejaTreeListComponent;
-    @ViewChild('onexpand', { static: false }) private onExpandList: DejaTreeListComponent;
+    @ViewChild('news') private newsList: DejaTreeListComponent;
+    @ViewChild('onexpand') private onExpandList: DejaTreeListComponent;
 
     public set dialogVisible(value: boolean) {
         this._dialogVisible = value;
@@ -262,7 +262,7 @@ export class DejaTreeListDemoComponent implements OnDestroy {
         };
     }
 
-    @ViewChild('bigCountries', { static: false })
+    @ViewChild('bigCountries')
     protected set bigCountriesList(treelist: DejaTreeListComponent) {
         if (this.viewPortInfos$) {
             this.viewPortInfos$.unsubscribe();

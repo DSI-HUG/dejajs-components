@@ -46,9 +46,9 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
     @Input() public ranges: ICircularRange[];
 
     /** Template for labels inside picker. Use it to customize labels */
-    @ContentChild('labelTemplate', { static: false }) public labelTemplate: any;
+    @ContentChild('labelTemplate') public labelTemplate: any;
     /** template for cursor inside picker. Use it to customize labels */
-    @ContentChild('cursorTemplate', { static: false }) public cursorTemplate: any;
+    @ContentChild('cursorTemplate') public cursorTemplate: any;
 
     private _outerLabels = false;
 

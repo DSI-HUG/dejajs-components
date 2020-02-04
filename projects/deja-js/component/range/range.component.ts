@@ -31,8 +31,8 @@ export class DejaRangeComponent implements ControlValueAccessor {
     // error emitter, used to notify the outside when forbidden actions are performed
     @Output() public errorFeedback: EventEmitter<any> = new EventEmitter();
     // custom templates
-    @ContentChild('rangeTemplate', { static: false }) public rangeTemplate: any;
-    @ContentChild('separatorTemplate', { static: false }) public separatorTemplate: any;
+    @ContentChild('rangeTemplate') public rangeTemplate: any;
+    @ContentChild('separatorTemplate') public separatorTemplate: any;
     // minimum range percentage, used to avoid 2 separator being on the same visual space
     private minimumRangePercentage = 0.01;
 

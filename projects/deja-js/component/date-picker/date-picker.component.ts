@@ -132,7 +132,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
      */
     public controlType = 'deja-date-picker';
 
-    @ViewChild(DejaChildValidatorDirective, { static: false }) private inputValidatorDirective: DejaChildValidatorDirective;
+    @ViewChild(DejaChildValidatorDirective) private inputValidatorDirective: DejaChildValidatorDirective;
 
     /** Default placeholder for input */
     private _placeholder: string;
@@ -153,7 +153,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
     private formatChanged$ = new Subject<string>();
     private dateChanged$ = new Subject<Date | string>();
 
-    @ViewChild('inputelement', { static: false })
+    @ViewChild('inputelement')
     public set inputElementRef(element: ElementRef) {
         if (element) {
             this.inputElement = element.nativeElement;

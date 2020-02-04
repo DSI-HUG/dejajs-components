@@ -30,7 +30,7 @@ import { DejaTileBorderDirection, DejaTileGroup } from './tile-group.class';
 export class DejaTileGroupComponent implements OnDestroy {
     public edit$ = new Subject<void>();
     public editorConfig = DejaTileGroupComponent.buildEditorConfig();
-    @ViewChild(DejaEditorComponent, { static: false }) public editor: DejaEditorComponent;
+    @ViewChild(DejaEditorComponent) public editor: DejaEditorComponent;
     @HostBinding('style.color') public foregroundColor: string = null;
     @HostBinding('style.background-color') public backgroundColor: string = null;
     @HostBinding('style.border-top') public borderTop: string = null;

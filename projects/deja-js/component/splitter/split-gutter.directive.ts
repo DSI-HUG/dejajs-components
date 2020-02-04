@@ -7,7 +7,7 @@
  */
 
 import { coerceNumberProperty } from '@angular/cdk/coercion';
-import { Directive, ElementRef, Input, Renderer } from '@angular/core';
+import { Directive, ElementRef, Input, Renderer2 } from '@angular/core';
 
 /**
  * Separator for the spltter component
@@ -65,7 +65,7 @@ export class SplitGutterDirective {
      * Constructor
      */
     constructor(private elementRef: ElementRef,
-        private renderer: Renderer) {
+        private renderer: Renderer2) {
     }
 
     private refreshStyle() {
@@ -81,7 +81,7 @@ export class SplitGutterDirective {
     }
 
     private setStyle(key: string, value: any) {
-        this.renderer.setElementStyle(this.elementRef.nativeElement, key, value);
+        value == null ? this.renderer.removeStyle(this.elementRef.nativeElement, key) : this.renderer.setStyle(this.elementRef.nativeElement, key, value);
     }
 
     private getCursor(state: string) {

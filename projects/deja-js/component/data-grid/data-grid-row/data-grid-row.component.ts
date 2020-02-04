@@ -30,7 +30,7 @@ export class DejaGridRowComponent implements OnDestroy {
     @Input() public flatIndex: number;
 
     /** Template de cellule par defaut  définit dans le HTML de la grille */
-    @ContentChild('cellTemplate', { static: false }) public cellTemplateInternal: any;
+    @ContentChild('cellTemplate') public cellTemplateInternal: any;
 
     private _columnLayout = {} as IDejaGridColumnLayout;
     private refresh$sub: Subscription;

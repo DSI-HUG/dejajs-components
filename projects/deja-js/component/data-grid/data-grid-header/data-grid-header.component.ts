@@ -41,7 +41,7 @@ export class DejaGridHeaderComponent implements OnDestroy {
     @Output() public columnDragEnd = new EventEmitter();
 
     /** Template d'entête de colonne par defaut définit dans le HTML de la grille */
-    @ContentChild('columnHeaderTemplate', { static: false }) public columnHeaderTemplateInternal: any;
+    @ContentChild('columnHeaderTemplate') public columnHeaderTemplateInternal: any;
 
     public _sizedColumn: IDejaGridColumn;
     private _columnsDraggable = false;

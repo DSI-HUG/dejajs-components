@@ -18,7 +18,7 @@ export class DejaEditorDemoComponent implements OnInit {
     public tabIndex = 1;
     public replaceWith: string;
 
-    @ViewChild('replaceEditor', { static: false })
+    @ViewChild('replaceEditor')
     private replaceEditor: DejaEditorComponent;
 
     constructor() { }

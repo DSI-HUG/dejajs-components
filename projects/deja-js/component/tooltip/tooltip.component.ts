@@ -74,7 +74,7 @@ export class DejaTooltipComponent implements OnInit {
     /** Event Emmited when hide action is called */
     @Output() public hide = new EventEmitter();
     /** Template for tooltip content */
-    @ContentChild('tooltipTemplate', { static: false })
+    @ContentChild('tooltipTemplate')
     public tooltipTemplate: any;
 
     /** Parameters of the tooltip */

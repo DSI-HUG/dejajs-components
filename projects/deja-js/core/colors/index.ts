@@ -13,7 +13,7 @@ import { MaterialColors } from './material-colors';
     providers: [MaterialColors],
 })
 export class DejaMaterialColorsModule {
-    public static forRoot(): ModuleWithProviders {
+    public static forRoot(): ModuleWithProviders<MaterialColors> {
         return {
             ngModule: MaterialColors,
             providers: [ MaterialColors ],

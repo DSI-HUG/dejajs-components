@@ -22,8 +22,8 @@ export class DejaDialogComponent implements OnDestroy {
     /** Event emitted when dialog close action is called */
     @Output() public closed = new EventEmitter();
 
-    @ContentChild('okaction', { static: false }) private okButton: any;
-    @ContentChild('cancelaction', { static: false }) private cancelButton: any;
+    @ContentChild('okaction') private okButton: any;
+    @ContentChild('cancelaction') private cancelButton: any;
 
     private isAlive = true;
 

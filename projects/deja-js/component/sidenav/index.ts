@@ -46,7 +46,7 @@ import { DejaSidenavService } from './sidenav.service';
     ],
 })
 export class DejaSidenavModule {
-    public static forRoot(): ModuleWithProviders {
+    public static forRoot(): ModuleWithProviders<DejaSidenavModule> {
         return {
             ngModule: DejaSidenavModule,
             providers: [DejaSidenavService]

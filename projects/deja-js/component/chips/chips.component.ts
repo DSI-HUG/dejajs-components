@@ -44,9 +44,9 @@ export class DejaChipsComponent implements ControlValueAccessor {
 
     @HostBinding('attr.disabled') public _disabled: boolean = null;
 
-    @ContentChild('itemTemplate', { static: false }) private itemTemplateInternal: any;
+    @ContentChild('itemTemplate') private itemTemplateInternal: any;
 
-    @ContentChild('insertTemplate', { static: false }) private insertTemplateInternal: any;
+    @ContentChild('insertTemplate') private insertTemplateInternal: any;
 
     constructor(@Self() @Optional() public _control: NgControl) {
         if (this._control) {

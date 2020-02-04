@@ -7,7 +7,7 @@
  */
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Output, Renderer, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewEncapsulation, Renderer2 } from '@angular/core';
 import { IAreaData } from './area-data.model';
 import { Point } from './point.model';
 import { SplitAreaDirective } from './split-area.directive';
@@ -112,7 +112,7 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
      */
     constructor(private cdRef: ChangeDetectorRef,
         private elementRef: ElementRef,
-        private renderer: Renderer) {
+        private renderer: Renderer2) {
     }
 
     /**
@@ -214,11 +214,11 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
             y: startEvent.screenY,
         };
 
-        this.eventsDragFct.push(this.renderer.listenGlobal('document', 'mousemove', (e: MouseEvent) => this.dragEvent(e, start, areaA, areaB)));
-        this.eventsDragFct.push(this.renderer.listenGlobal('document', 'touchmove', (e: MouseEvent) => this.dragEvent(e, start, areaA, areaB)));
-        this.eventsDragFct.push(this.renderer.listenGlobal('document', 'mouseup', () => this.stopDragging()));
-        this.eventsDragFct.push(this.renderer.listenGlobal('document', 'touchend', () => this.stopDragging()));
-        this.eventsDragFct.push(this.renderer.listenGlobal('document', 'touchcancel', () => this.stopDragging()));
+        this.eventsDragFct.push(this.renderer.listen('document', 'mousemove', (e: MouseEvent) => this.dragEvent(e, start, areaA, areaB)));
+        this.eventsDragFct.push(this.renderer.listen('document', 'touchmove', (e: MouseEvent) => this.dragEvent(e, start, areaA, areaB)));
+        this.eventsDragFct.push(this.renderer.listen('document', 'mouseup', () => this.stopDragging()));
+        this.eventsDragFct.push(this.renderer.listen('document', 'touchend', () => this.stopDragging()));
+        this.eventsDragFct.push(this.renderer.listen('document', 'touchcancel', () => this.stopDragging()));
 
         areaA.component.lockEvents();
         areaB.component.lockEvents();

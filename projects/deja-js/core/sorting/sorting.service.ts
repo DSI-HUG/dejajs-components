@@ -11,8 +11,10 @@ import { Observable, of as observableOf } from 'rxjs';
 import { map, reduce, switchMap } from 'rxjs/operators';
 import { ISortInfos } from './sort-infos.model';
 import { SortOrder } from './sort-order.model';
+import { Injectable } from "@angular/core";
 
 /** Classe de tri d'une liste plate ou hierarchique */
+@Injectable()
 export class SortingService {
     /** Trie les éléments de la liste plate spécifiée en fonction du modèle de tri spécifié. Peut être surchargé pour implémenter un tri asynchrone
      * @param list Liste à trier.

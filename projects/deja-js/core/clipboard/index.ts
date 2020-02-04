@@ -13,7 +13,7 @@ import { DejaClipboardService } from './clipboard.service';
     providers: [DejaClipboardService],
 })
 export class DejaClipboardModule {
-    public static forRoot(): ModuleWithProviders {
+    public static forRoot(): ModuleWithProviders<DejaClipboardModule> {
         return {
             ngModule: DejaClipboardModule,
             providers: [ DejaClipboardService ],

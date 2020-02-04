@@ -61,7 +61,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     @Output() public viewPortChanged = new EventEmitter<IViewPort>();
 
     /** Internal use */
-    @ViewChild('inputelement', { static: false }) public input: ElementRef;
+    @ViewChild('inputelement') public input: ElementRef;
 
     // NgModel implementation
     public onTouchedCallback: () => void = noop;
@@ -70,12 +70,12 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     private _keyboardNavigation = false;
 
     // Templates
-    @ContentChild('itemTemplate', { static: false }) private itemTemplateInternal: any;
-    @ContentChild('parentItemTemplate', { static: false }) private parentItemTemplateInternal: any;
-    @ContentChild('loaderTemplate', { static: false }) private loaderTemplateInternal: any;
-    @ContentChild('headerTemplate', { static: false }) private headerTemplateInternal: any;
-    @ContentChild('searchPrefixTemplate', { static: false }) private searchPrefixTemplateInternal: any;
-    @ContentChild('searchSuffixTemplate', { static: false }) private searchSuffixTemplateInternal: any;
+    @ContentChild('itemTemplate') private itemTemplateInternal: any;
+    @ContentChild('parentItemTemplate') private parentItemTemplateInternal: any;
+    @ContentChild('loaderTemplate') private loaderTemplateInternal: any;
+    @ContentChild('headerTemplate') private headerTemplateInternal: any;
+    @ContentChild('searchPrefixTemplate') private searchPrefixTemplateInternal: any;
+    @ContentChild('searchSuffixTemplate') private searchSuffixTemplateInternal: any;
     @ContentChildren(DejaItemComponent) public options: DejaItemComponent[];
 
     // protected _items: IItemBase[]; In the base class, correspond to the model
@@ -539,7 +539,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     /** Retourne si le waiter doit être affiché dans la liste. */
     public get waiter() { return this._waiter; }
 
-    @ViewChild(DejaChildValidatorDirective, { static: false })
+    @ViewChild(DejaChildValidatorDirective)
     public set inputValidatorDirective(value: DejaChildValidatorDirective) {
         if (value) {
             value.parentControl = this._control;

@@ -58,7 +58,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
 
     /** InputElement of stepper */
     private inputElement: HTMLInputElement;
-    @ViewChild('inputStepper', { static: false })
+    @ViewChild('inputStepper')
     public set inputElementRef(element: ElementRef) {
         if (element) {
             this.inputElement = element.nativeElement;

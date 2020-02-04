@@ -11,8 +11,10 @@ import { map ,  reduce ,  switchMap ,  tap } from 'rxjs/operators';
 import { IItemTree } from '../item-list/item-tree';
 import { SortingService } from '../sorting/sorting.service';
 import { IGroupInfo } from './group-infos';
+import { Injectable } from "@angular/core";
 
 /** Service de regroupement d'un tableau de modèles */
+@Injectable()
 export class GroupingService {
     /** Groupe les éléments de la liste hierarchique spécifiée à partir du niveau spécifié, et en fonction du modèle de groupe spécifié
      * @param tree Liste à trier.

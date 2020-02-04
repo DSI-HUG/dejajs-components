@@ -54,7 +54,7 @@ export class DejaGridDemoComponent {
 
     private _dialogVisible = false;
 
-    @ViewChild('onexpand', { static: false }) private onExpandGrid: DejaGridComponent;
+    @ViewChild('onexpand') private onExpandGrid: DejaGridComponent;
 
     public fructs = [
         {
@@ -585,7 +585,7 @@ export class DejaGridDemoComponent {
         return this._dialogVisible;
     }
 
-    @ViewChild('bigPeople', { static: false })
+    @ViewChild('bigPeople')
     public set bigCountriesList(grid: DejaGridComponent) {
         if (this.viewPortInfos$) {
             this.viewPortInfos$.unsubscribe();

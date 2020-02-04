@@ -59,9 +59,9 @@ export class SelectDemoComponent implements OnDestroy {
     public firstOccurencePerWordOnly = false;
     public atTheBeginningOfWordOnly = false;
 
-    @ViewChild('news', { static: false }) private newsSelect: DejaSelectComponent;
-    @ViewChild('ondemand', { static: false }) private onDemandSelect: DejaSelectComponent;
-    @ViewChild('onexpand', { static: false }) private onExpandSelect: DejaSelectComponent;
+    @ViewChild('news') private newsSelect: DejaSelectComponent;
+    @ViewChild('ondemand') private onDemandSelect: DejaSelectComponent;
+    @ViewChild('onexpand') private onExpandSelect: DejaSelectComponent;
 
     public businessCountry: Country;
 
@@ -240,7 +240,7 @@ export class SelectDemoComponent implements OnDestroy {
         };
     }
 
-    @ViewChild('bigCountries', { static: false })
+    @ViewChild('bigCountries')
     protected set bigCountriesSelect(select: DejaSelectComponent) {
         if (this.viewPortInfos$) {
             this.viewPortInfos$.unsubscribe();
