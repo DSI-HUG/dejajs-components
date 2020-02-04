@@ -9,7 +9,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, combineLatest as observableCombineLatest, from as observableFrom, Observable, of as observableOf, ReplaySubject, Subscription, timer as observableTimer } from 'rxjs';
 import { combineLatest, debounceTime, distinctUntilChanged, filter, map, switchMap, tap } from 'rxjs/operators';
-import { IViewPort, IViewPortItem } from './viewport.service';
 
 export enum ViewportMode {
     disabled,

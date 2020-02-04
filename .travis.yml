@@ -20,6 +20,7 @@ branches:
   only:
   - master
   - dev
+  - next/9.x.x
 before_install:
 - rm -rf node_modules
 - bash ./scripts/test-latest-versions.sh
