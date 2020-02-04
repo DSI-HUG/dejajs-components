@@ -86,7 +86,7 @@ describe('DejaTagComponent', () => {
 
     it('should add item on keypress Enter', () => {
         expect(getNbItems()).toEqual(0);
-        const tmp = { keyCode: KeyCodes.Enter, target: { value: 'HTML5' } } as any;
+        const tmp = { code: KeyCodes.Enter, target: { value: 'HTML5' } } as any;
 
         comp.onKeyDown(tmp);
         fixture.detectChanges();
@@ -95,7 +95,7 @@ describe('DejaTagComponent', () => {
 
     it('should not add item on keypress Ctrl', () => {
         expect(getNbItems()).toEqual(0);
-        const tmp = { keyCode: KeyCodes.Ctrl, target: { value: 'HTML5' } } as any;
+        const tmp = { code: KeyCodes.Ctrl, target: { value: 'HTML5' } } as any;
 
         comp.onKeyDown(tmp);
         fixture.detectChanges();

@@ -6,12 +6,12 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { Injectable } from '@angular/core';
 import * as _ from 'lodash';
 import { Observable, of } from 'rxjs';
 import { map, reduce, switchMap } from 'rxjs/operators';
 import { ISortInfos } from './sort-infos.model';
 import { SortOrder } from './sort-order.model';
-import { Injectable } from "@angular/core";
 
 /** Classe de tri d'une liste plate ou hierarchique */
 @Injectable()

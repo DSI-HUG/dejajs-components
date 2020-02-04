@@ -12,7 +12,7 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { IDejaDragEvent } from '@deja-js/component/dragdrop';
 import { DejaChildValidatorDirective, DejaClipboardService, DejaItemComponent, DejaItemEvent, DejaItemsEvent, GroupingService, IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, IViewPort, KeyCodes, Position, Rect, SortingService, ViewportMode, ViewPortService } from '@deja-js/core';
 import { BehaviorSubject, combineLatest, from, fromEvent, merge, Observable, of, Subject, Subscription, timer } from 'rxjs';
-import { debounceTime, filter, first, map, merge, switchMap, takeWhile, tap } from 'rxjs/operators';
+import { debounceTime, filter, first, map, switchMap, takeWhile, tap } from 'rxjs/operators';
 import { DejaTreeListScrollEvent } from './tree-list-scroll-event';
 
 const noop = () => { };
@@ -685,13 +685,13 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
         let keyDown$ = fromEvent(this.listElement, 'keydown');
         if (this.input) {
             const inputKeyDown$ = fromEvent(this.input.nativeElement, 'keydown') as Observable<KeyboardEvent>;
-            keyDown$ = keyDown$.pipe(merge(inputKeyDown$));
+            keyDown$ = merge(keyDown$, inputKeyDown$);
         }
 
         keyDown$.pipe(takeWhile(() => this._isAlive),
             filter(() => !this.disabled),
             filter((event: KeyboardEvent) => {
-                const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
+                const keyCode = event.code;
                 return keyCode === KeyCodes.Home ||
                     keyCode === KeyCodes.End ||
                     keyCode === KeyCodes.PageUp ||
@@ -716,8 +716,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
 
                 const currentIndex = this.rangeStartIndex >= 0 ? this.rangeStartIndex : this.rangeStartIndex = this.currentItemIndex;
 
-                const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
-                switch (keyCode) {
+                switch (event.code) {
                     case KeyCodes.Home:
                         if (event.shiftKey) {
                             this.selectRange$(currentIndex, 0).pipe(first()).subscribe(noop);
@@ -840,7 +839,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
         if (this.input) {
             const inputKeyup$ = fromEvent(this.input.nativeElement, 'keyup') as Observable<KeyboardEvent>;
             const inputDrop$ = fromEvent(this.input.nativeElement, 'drop') as Observable<KeyboardEvent>;
-            keyUp$ = keyUp$.pipe(merge(inputKeyup$, inputDrop$));
+            keyUp$ = merge(keyUp$, inputKeyup$, inputDrop$);
         }
 
         // Ensure list cache
@@ -854,7 +853,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                 }
             }),
             filter((event: KeyboardEvent) => {
-                const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
+                const keyCode = event.code;
                 return keyCode >= KeyCodes.Key0 ||
                     keyCode === KeyCodes.Backspace ||
                     keyCode === KeyCodes.Space ||

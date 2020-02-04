@@ -501,8 +501,7 @@ export class DejaGridComponent implements OnDestroy {
                     return this.currentColumn;
                 };
 
-                const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
-                switch (keyCode) {
+                switch (event.code) {
                     case KeyCodes.LeftArrow:
                         this.currentColumn = this.columns && findPrev(this.columns.findIndex((c) => c.isCurrent));
                         event.preventDefault();

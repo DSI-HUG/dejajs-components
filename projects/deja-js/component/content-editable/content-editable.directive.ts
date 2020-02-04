@@ -99,7 +99,7 @@ export class DejaEditableDirective implements ControlValueAccessor, OnDestroy, O
                     .subscribe((e: KeyboardEvent) => {
                         e.cancelBubble = true;
                         e.stopPropagation();
-                        if (e.keyCode === KeyCodes.Enter && !this.multiline) {
+                        if (e.code === KeyCodes.Enter && !this.multiline) {
                             const text = this.element.innerText;
                             if (text || !this.mandatory) {
                                 this.value = text;
@@ -107,7 +107,7 @@ export class DejaEditableDirective implements ControlValueAccessor, OnDestroy, O
                             this.inEdition = false;
                             return false;
 
-                        } else if (e.keyCode === KeyCodes.Escape) {
+                        } else if (e.code === KeyCodes.Escape) {
                             this.inEdition = false;
                             return false;
                         }

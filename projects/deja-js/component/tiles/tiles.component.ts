@@ -203,11 +203,8 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
         if (coerceBooleanProperty(value) && !this.delete$sub) {
             this.delete$sub = this.keyup$.pipe(
                 filter(() => this.layoutProvider.designMode),
-                filter((event: KeyboardEvent) => {
-                    const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
-                    return keyCode === KeyCodes.Delete && this.hasFocus;
-                }))
-                .subscribe(() => this.layoutProvider.deleteSelection());
+                filter((event: KeyboardEvent) => event.code === KeyCodes.Delete && this.hasFocus)
+            ).subscribe(() => this.layoutProvider.deleteSelection());
 
         } else if (this.delete$sub) {
             this.delete$sub.unsubscribe();
@@ -219,13 +216,10 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     public set canCopy(value: boolean) {
         if (coerceBooleanProperty(value) && !this.copy$sub) {
             this.copy$sub = this.keyup$.pipe(
-                filter((event: KeyboardEvent) => {
-                    const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
-                    return keyCode === KeyCodes.KeyC && event.ctrlKey && this.hasFocus;
-                }))
-                .subscribe(() => {
-                    this.copySelection();
-                });
+                filter((event: KeyboardEvent) => event.code === KeyCodes.KeyC && event.ctrlKey && this.hasFocus)
+            ).subscribe(() => {
+                this.copySelection();
+            });
 
         } else if (this.copy$sub) {
             this.copy$sub.unsubscribe();
@@ -238,13 +232,10 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
         if (coerceBooleanProperty(value) && !this.cut$sub) {
             this.cut$sub = this.keyup$.pipe(
                 filter(() => this.layoutProvider.designMode),
-                filter((event: KeyboardEvent) => {
-                    const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
-                    return keyCode === KeyCodes.KeyX && event.ctrlKey && this.hasFocus;
-                }))
-                .subscribe(() => {
-                    this.cutSelection();
-                });
+                filter((event: KeyboardEvent) => event.code === KeyCodes.KeyX && event.ctrlKey && this.hasFocus)
+            ).subscribe(() => {
+                this.cutSelection();
+            });
 
         } else if (this.cut$sub) {
             this.cut$sub.unsubscribe();
@@ -257,11 +248,8 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
         if (coerceBooleanProperty(value) && !this.paste$sub) {
             this.paste$sub = this.keyup$.pipe(
                 filter(() => this.layoutProvider.designMode),
-                filter((event: KeyboardEvent) => {
-                    const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
-                    return keyCode === KeyCodes.KeyV && event.ctrlKey && this.hasFocus;
-                }))
-                .subscribe(() => this.paste());
+                filter((event: KeyboardEvent) => event.code === KeyCodes.KeyV && event.ctrlKey && this.hasFocus)
+            ).subscribe(() => this.paste());
 
         } else if (this.paste$sub) {
             this.paste$sub.unsubscribe();

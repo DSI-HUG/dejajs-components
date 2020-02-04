@@ -246,9 +246,9 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
             });
 
         keydown$.pipe(takeWhile(() => this.isAlive),
-            filter((event: KeyboardEvent) => !this.showDropDown && (event.keyCode === KeyCodes.KeyD || event.keyCode === KeyCodes.UpArrow || event.keyCode === KeyCodes.DownArrow)))
+            filter((event: KeyboardEvent) => !this.showDropDown && (event.code === KeyCodes.KeyD || event.code === KeyCodes.UpArrow || event.code === KeyCodes.DownArrow)))
             .subscribe((event: KeyboardEvent) => {
-                switch (event.keyCode) {
+                switch (event.code) {
                     case (KeyCodes.KeyD):
                         if (!this.allowFreeEntry) {
                             event.preventDefault();
@@ -333,7 +333,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
         keydown$.pipe(takeWhile(() => this.isAlive),
             filter(() => this.showDropDown))
             .subscribe((event: KeyboardEvent) => {
-                switch (event.keyCode) {
+                switch (event.code) {
                     case (KeyCodes.Escape):
                         this.close();
                         break;

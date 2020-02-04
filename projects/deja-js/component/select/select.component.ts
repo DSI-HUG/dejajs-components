@@ -17,7 +17,7 @@ import { IDejaChipsComponentCloseEvent } from '@deja-js/component/chips';
 import { DejaOverlayComponent } from '@deja-js/component/overlay';
 import { DejaChildValidatorDirective, DejaConnectionPositionPair, DejaItemComponent, DejaItemEvent, DejaItemsEvent, GroupingService, IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, IViewPort, KeyCodes, MediaService, SortingService, ViewportMode, ViewPortService } from '@deja-js/core';
 import { BehaviorSubject, combineLatest, from, fromEvent, merge, Observable, Subject, Subscription, timer } from 'rxjs';
-import { combineLatest, debounce, debounceTime, delay, delayWhen, filter, first, map, switchMap, takeWhile, tap } from 'rxjs/operators';
+import { debounce, debounceTime, delay, delayWhen, filter, first, map, switchMap, takeWhile, tap, withLatestFrom } from 'rxjs/operators';
 
 const noop = () => { };
 
@@ -927,7 +927,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
                     return false;
                 }
 
-                const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
+                const keyCode = event.code;
                 return keyCode === KeyCodes.Home ||
                     keyCode === KeyCodes.End ||
                     keyCode === KeyCodes.PageUp ||
@@ -953,8 +953,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
                     }
                 };
 
-                const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
-                switch (keyCode) {
+                switch (event.code) {
                     case KeyCodes.Home:
                         if (event.altKey || this._multiSelect && !this.dropdownVisible) {
                             this.toggleDropDown();
@@ -1045,7 +1044,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
 
         const keyUp$ = fromEvent(this.htmlInputElement, 'keyup').pipe(
             filter((event: KeyboardEvent) => {
-                const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
+                const keyCode = event.code;
                 return keyCode >= KeyCodes.Key0 ||
                     keyCode === KeyCodes.Backspace ||
                     keyCode === KeyCodes.Space ||
@@ -1075,7 +1074,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
                     }
                 };
 
-                // console.log('select.component, keycode:' + event.keyCode);
+                // console.log('select.component, keycode:' + event.code);
                 this.keyboardNavigation$.next();
                 if (this.isModeSelect) {
                     // Select, search on the list
@@ -1394,7 +1393,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
 
         this.calcViewList$().pipe(
             tap(() => this.refreshViewPort()),
-            combineLatest(this.viewPortChanged), // Wait for viewport calculation
+            withLatestFrom(this.viewPortChanged), // Wait for viewport calculation
             first(),
             delay(1)) // Ensure viewport binding
             .subscribe(() => {

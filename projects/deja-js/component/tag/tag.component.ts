@@ -60,7 +60,7 @@ export class DejaTagComponent implements ControlValueAccessor {
     protected onChangeCallback: (_: any) => void = noop;
     protected onValidatorChangeCallback: () => void = noop;
 
-    constructor( @Self() @Optional() public _control: NgControl) {
+    constructor(@Self() @Optional() public _control: NgControl) {
         if (this._control) {
             this._control.valueAccessor = this;
         }
@@ -98,7 +98,7 @@ export class DejaTagComponent implements ControlValueAccessor {
      * Trigerred when user press key into the component
      */
     public onKeyDown(e: KeyboardEvent) {
-        if (e.keyCode === KeyCodes.Enter) {
+        if (e.code === KeyCodes.Enter) {
             const target = e.target as HTMLInputElement;
             this.onAddItem(target.value);
         }

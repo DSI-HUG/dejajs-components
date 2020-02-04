@@ -210,7 +210,7 @@ export class DejaEditorComponent
             }
             config.on.key = (event: any) => {
                 // Override CTRL+A event. Native one cause editor switch on first try
-                if (event.data.keyCode === 1114177) {
+                if (event.data.code === 1114177) {
                     // CTRL + A
                     event.cancel();
                     event.stop();

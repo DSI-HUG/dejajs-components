@@ -340,7 +340,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
         }
 
         this._keyboardNavigation$.next();
-        switch (event.keyCode) {
+        switch (event.code) {
             case KeyCodes.PageUp:
             case KeyCodes.PageDown:
             case KeyCodes.UpArrow:
@@ -349,7 +349,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
             case KeyCodes.RightArrow:
                 event.preventDefault();
                 const d = new Date(this.selectedDate);
-                switch (event.keyCode) {
+                switch (event.code) {
                     case KeyCodes.PageUp:
                         // d.setMonth(d.getMonth() - 1);
                         this.setMonthIfPossible(d, -1);

@@ -35,12 +35,12 @@ export class DejaDialogComponent implements OnDestroy {
 
         fromEvent(element.ownerDocument, 'keyup').pipe(
             takeWhile(() => this.isAlive),
-            filter((event: KeyboardEvent) => !!(event.keyCode === KeyCodes.Enter && this.okButton && this.okButton._elementRef) || !!(event.keyCode === KeyCodes.Escape && this.cancelButton && this.cancelButton._elementRef)))
+            filter((event: KeyboardEvent) => !!(event.code === KeyCodes.Enter && this.okButton && this.okButton._elementRef) || !!(event.code === KeyCodes.Escape && this.cancelButton && this.cancelButton._elementRef)))
             .subscribe((event: KeyboardEvent) => {
-                if (event.keyCode === KeyCodes.Enter) {
+                if (event.code === KeyCodes.Enter) {
                     this.okButton._elementRef.nativeElement.click();
                 }
-                if (event.keyCode === KeyCodes.Escape) {
+                if (event.code === KeyCodes.Escape) {
                     this.cancelButton._elementRef.nativeElement.click();
                 }
             });

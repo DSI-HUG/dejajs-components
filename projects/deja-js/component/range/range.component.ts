@@ -57,7 +57,6 @@ export class DejaRangeComponent implements ControlValueAccessor {
         }
     }
 
-    // read / write mode
     @Input()
     public set disabled(value: boolean | string) {
         this._disabled = coerceBooleanProperty(value);
@@ -68,7 +67,6 @@ export class DejaRangeComponent implements ControlValueAccessor {
         return this._disabled;
     }
 
-    // read / write mode
     @Input()
     public set readOnly(value: boolean | string) {
         this._readOnly = coerceBooleanProperty(value);

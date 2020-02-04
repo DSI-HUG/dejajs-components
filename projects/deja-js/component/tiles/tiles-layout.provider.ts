@@ -281,7 +281,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             const mousemove$ = fromEvent(this._container, 'mousemove');
             const mouseUp$ = fromEvent(this._container.ownerDocument, 'mouseup');
             const keyUp$ = fromEvent(this._container.ownerDocument, 'keyup');
-            const escape$ = keyUp$.pipe(filter((event: KeyboardEvent) => event.keyCode === KeyCodes.Escape));
+            const escape$ = keyUp$.pipe(filter((event: KeyboardEvent) => event.code === KeyCodes.Escape));
             const cancel$ = merge(leave$, mousemove$.pipe(filter((event: MouseEvent) => event.buttons !== 1)), escape$);
 
             const kill$ = merge(mouseUp$, cancel$);
