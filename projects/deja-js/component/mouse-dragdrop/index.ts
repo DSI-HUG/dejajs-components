@@ -25,7 +25,7 @@ import { DejaMouseDroppableDirective } from './mouse-droppable.directive';
     exports: [
         DejaMouseDraggableDirective,
         DejaMouseDroppableDirective,
-        DejaMouseDragDropCursorComponent
+        DejaMouseDragDropCursorComponent,
     ],
     providers: [],
 })

@@ -11,8 +11,24 @@
  */
 import { Injectable } from '@angular/core';
 import { Position } from '@deja-js/core';
-import { BehaviorSubject ,  Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
+
+export interface IDragDropContext {
+    [key: string]: any;
+}
+
+export interface IDropCursorInfos {
+    html?: string;
+    width?: number;
+    height?: number;
+    className?: string;
+}
+
+export interface IDragCursorInfos extends IDropCursorInfos {
+    position: Position;
+    originalEvent: MouseEvent;
+}
 
 @Injectable()
 export class DejaMouseDragDropService {
@@ -40,20 +56,4 @@ export class DejaMouseDragDropService {
     public get context() {
         return this._context;
     }
-}
-
-export interface IDragDropContext {
-    [key: string]: any;
-}
-
-export interface IDropCursorInfos {
-    html?: string;
-    width?: number;
-    height?: number;
-    className?: string;
-}
-
-export interface IDragCursorInfos extends IDropCursorInfos {
-    position: Position;
-    originalEvent: MouseEvent;
 }

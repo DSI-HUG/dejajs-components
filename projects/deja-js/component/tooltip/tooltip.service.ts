@@ -10,15 +10,6 @@ import { ElementRef, Injectable } from '@angular/core';
 import { DejaConnectionPositionPair } from '@deja-js/core';
 
 /**
- * Service to pass some params through tooltip module
- */
-@Injectable()
-export class DejaTooltipService {
-    /** Tooltip params */
-    public params = {} as { [name: string]: ITooltipParams };
-}
-
-/**
  * Format of tooltip params
  */
 export interface ITooltipParams {
@@ -26,4 +17,13 @@ export interface ITooltipParams {
     ownerElement: ElementRef | HTMLElement;
     positions: DejaConnectionPositionPair | string;
     model: any;
+}
+
+/**
+ * Service to pass some params through tooltip module
+ */
+@Injectable()
+export class DejaTooltipService {
+    /** Tooltip params */
+    public params = {} as { [name: string]: ITooltipParams };
 }
