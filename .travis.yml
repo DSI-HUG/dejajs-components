@@ -48,6 +48,7 @@ jobs:
         provider: npm
         email: gmer@hcuge.ch
         skip_cleanup: true
+        edge: true
         api_key:
           secure: KxfUri8WCgsgKlRgGPI3r3mTduFc6pg8MRqLZoyZfJUpDnu252dJrrgh9xoyOY7tjRMReIXpvDT/tkM4fYeu1G9gRzF4PPfd/QycyfMt/4yWzqx6Imi5gcqy8589V6Ur3hEfpT7WVPDUsFRCp9mQHWbbQsVZK3KVv8mv32cDHuRui3pdCAxvytIT9MQ+0OmRVc8scLNQDLkPMH8xP3KHAf9Rtp1xUW8u1aivhsDcUkgwmus4AV6seNnIZCQ7EPelr3z6ER02EZfrCUxfMBZFLwr7zyStUeG/Golj8k+xbIYlEHCaHHB6VH2EgaUQhh1SrsFc2evn4LjbaB38wDctPzLJMEqQ1oPww9hPl3iRnifjeVp+hKG8hKn8ZL7afiCytzSW1YsyIyhWH0auUiYIxFAZts8WuXlmAZrM7rxL2pDZ9a7uDyDzAK2Ts7Ztnjv2ANc2SRzlTU3KAGgU0BKXucYufRO8cwwbNFBYj0xeKOKBRmH45iz4MfMAaGf1mb51uJHV6DegAoUUU2XuVYgXMXNOrg/y5P+nzidCcU/VqfYysRfmD6Kg0n4Ve+YdBYk2LqPcjqiOzSFu0InXXbCnrZZC6aHOY9Bba1Tad+PJWwOEzznKx4PQrBG/yXGNObDxi7LQ2G9LocoTDvpzhYiQnaNXQuEhpMIxbknIZquDESs=
         on:
@@ -65,6 +66,7 @@ jobs:
         provider: npm
         email: gmer@hcuge.ch
         skip_cleanup: true
+        edge: true
         api_key:
           secure: KxfUri8WCgsgKlRgGPI3r3mTduFc6pg8MRqLZoyZfJUpDnu252dJrrgh9xoyOY7tjRMReIXpvDT/tkM4fYeu1G9gRzF4PPfd/QycyfMt/4yWzqx6Imi5gcqy8589V6Ur3hEfpT7WVPDUsFRCp9mQHWbbQsVZK3KVv8mv32cDHuRui3pdCAxvytIT9MQ+0OmRVc8scLNQDLkPMH8xP3KHAf9Rtp1xUW8u1aivhsDcUkgwmus4AV6seNnIZCQ7EPelr3z6ER02EZfrCUxfMBZFLwr7zyStUeG/Golj8k+xbIYlEHCaHHB6VH2EgaUQhh1SrsFc2evn4LjbaB38wDctPzLJMEqQ1oPww9hPl3iRnifjeVp+hKG8hKn8ZL7afiCytzSW1YsyIyhWH0auUiYIxFAZts8WuXlmAZrM7rxL2pDZ9a7uDyDzAK2Ts7Ztnjv2ANc2SRzlTU3KAGgU0BKXucYufRO8cwwbNFBYj0xeKOKBRmH45iz4MfMAaGf1mb51uJHV6DegAoUUU2XuVYgXMXNOrg/y5P+nzidCcU/VqfYysRfmD6Kg0n4Ve+YdBYk2LqPcjqiOzSFu0InXXbCnrZZC6aHOY9Bba1Tad+PJWwOEzznKx4PQrBG/yXGNObDxi7LQ2G9LocoTDvpzhYiQnaNXQuEhpMIxbknIZquDESs=
         on:
