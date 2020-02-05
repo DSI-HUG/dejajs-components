@@ -12,6 +12,7 @@ import { DejaClipboardService, Directions, KeyCodes, Position, Rect, Size } from
 import { BehaviorSubject, from, fromEvent, merge, Subject, Subscription, timer } from 'rxjs';
 import { debounceTime, delay, filter, first, map, reduce, take, takeUntil, takeWhile, tap } from 'rxjs/operators';
 import { DejaTile } from './tile.class';
+import { IDejaTilesRefreshParams } from './tiles-refresh-params.interface';
 import { IDejaTilesAddedEvent, IDejaTilesAddEvent, IDejaTilesDeletedEvent, IDejaTilesEvent, IDejaTilesRemoveEvent } from './tiles.event';
 
 interface ILayoutInfo {
@@ -37,12 +38,6 @@ export interface IDragDropInfos {
     startY: number;
     currentTile: DejaTile;
     tiles?: Array<DejaTile>;
-}
-
-export interface IDejaTilesRefreshParams {
-    resetWidth?: boolean;
-    ensureVisible?: string; // Tile id
-    ensureBounds?: Rect;
 }
 
 @Injectable()

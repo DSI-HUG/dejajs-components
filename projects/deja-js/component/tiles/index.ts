@@ -57,6 +57,7 @@ import { DejaTilesComponent } from './tiles.component';
 })
 export class DejaTilesModule { }
 
+export * from './tiles-refresh-params.interface';
 export * from './tile-group-style-editor-config';
 export * from './tile-group-style-editor.component';
 export * from './tile-group.class';

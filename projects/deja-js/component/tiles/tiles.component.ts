@@ -15,7 +15,8 @@ import { from, fromEvent, Observable, Subject, Subscription } from 'rxjs';
 import { debounceTime, filter, takeWhile } from 'rxjs/operators';
 import { DejaTileGroup } from './tile-group.class';
 import { DejaTile } from './tile.class';
-import { DejaTilesLayoutProvider, IDejaTilesRefreshParams } from './tiles-layout.provider';
+import { DejaTilesLayoutProvider } from './tiles-layout.provider';
+import { IDejaTilesRefreshParams } from './tiles-refresh-params.interface';
 import { IDejaTileGroupModelEvent, IDejaTilesAddedEvent, IDejaTilesAddEvent, IDejaTilesDeletedEvent, IDejaTilesEvent, IDejaTilesRemoveEvent } from './tiles.event';
 
 const noop = () => { };
