@@ -38,7 +38,10 @@ export class DejaMouseDragDropModule {
     }
 }
 
-export * from './mouse-dragdrop.service';
 export * from './mouse-draggable.directive';
 export * from './mouse-droppable.directive';
 export * from './mouse-dragdrop-cursor.component';
+export * from './mouse-drop-cursor-infos.interface';
+export * from './mouse-drag-cursor-infos.interface';
+export * from './mouse-dragdrop-context.interface';
+export * from './mouse-dragdrop.service';

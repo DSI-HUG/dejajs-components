@@ -10,7 +10,9 @@ import { Component, ElementRef, OnDestroy, ViewChild, ViewEncapsulation } from '
 import { Position } from '@deja-js/core';
 import { BehaviorSubject, from } from 'rxjs';
 import { delay, filter, takeWhile, tap } from 'rxjs/operators';
-import { DejaMouseDragDropService, IDragCursorInfos, IDropCursorInfos } from './mouse-dragdrop.service';
+import { IDragCursorInfos } from './mouse-drag-cursor-infos.interface';
+import { DejaMouseDragDropService } from './mouse-dragdrop.service';
+import { IDropCursorInfos } from './mouse-drop-cursor-infos.interface';
 
 @Component({
     encapsulation: ViewEncapsulation.None,

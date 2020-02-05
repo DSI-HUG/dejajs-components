@@ -10,7 +10,9 @@ import { Directive, ElementRef, Input, OnDestroy } from '@angular/core';
 import { Position, Rect } from '@deja-js/core';
 import { fromEvent, merge, Observable, Subject } from 'rxjs';
 import { filter, first, takeUntil, takeWhile, tap } from 'rxjs/operators';
-import { DejaMouseDragDropService, IDragCursorInfos, IDragDropContext } from './mouse-dragdrop.service';
+import { IDragCursorInfos } from './mouse-drag-cursor-infos.interface';
+import { IDragDropContext } from './mouse-dragdrop-context.interface';
+import { DejaMouseDragDropService } from './mouse-dragdrop.service';
 
 @Directive({
     selector: '[deja-mouse-draggable]',
