@@ -22,6 +22,7 @@ branches:
   - dev
   - next/9.x.x
 before_install:
+- npm install -g yarn
 - rm -rf node_modules
 - bash ./scripts/test-latest-versions.sh
 before_script:
