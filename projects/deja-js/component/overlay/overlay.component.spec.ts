@@ -162,7 +162,7 @@ describe('DejaOverlayComponent', () => {
         expect(returnedWidth).toEqual('50%');
     });
 
-    it('should emit visibleChange event when isVisible change', (done: Function) => {
+    it('should emit visibleChange event when isVisible change', (done) => {
         fixture.detectChanges();
         comp.visibleChange.subscribe((g: boolean) => {
             expect(g).toEqual(true);
@@ -172,7 +172,7 @@ describe('DejaOverlayComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should emit closed event when invoking close()', (done: Function) => {
+    it('should emit closed event when invoking close()', (done) => {
         fixture.detectChanges();
         comp.closed.subscribe((g: boolean) => {
             expect(g).toEqual(true);

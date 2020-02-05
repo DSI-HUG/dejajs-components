@@ -17,7 +17,7 @@ import { IDejaChipsComponentCloseEvent } from '@deja-js/component/chips';
 import { DejaOverlayComponent } from '@deja-js/component/overlay';
 import { DejaChildValidatorDirective, DejaConnectionPositionPair, DejaItemComponent, DejaItemEvent, DejaItemsEvent, GroupingService, IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, IViewPort, KeyCodes, MediaService, SortingService, ViewportMode, ViewPortService } from '@deja-js/core';
 import { BehaviorSubject, combineLatest, from, fromEvent, merge, Observable, Subject, Subscription, timer } from 'rxjs';
-import { debounce, debounceTime, delay, delayWhen, filter, first, map, switchMap, takeWhile, tap, withLatestFrom } from 'rxjs/operators';
+import { combineLatest as combineLatestOp, debounce, debounceTime, delay, delayWhen, filter, first, map, switchMap, takeWhile, tap } from 'rxjs/operators';
 
 const noop = () => { };
 
@@ -1393,7 +1393,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
 
         this.calcViewList$().pipe(
             tap(() => this.refreshViewPort()),
-            withLatestFrom(this.viewPortChanged), // Wait for viewport calculation
+            combineLatestOp(this.viewPortChanged), // Wait for viewport calculation
             first(),
             delay(1)) // Ensure viewport binding
             .subscribe(() => {

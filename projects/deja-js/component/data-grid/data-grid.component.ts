@@ -169,7 +169,7 @@ export class DejaGridComponent implements OnDestroy {
     private _columnsSortable = false;
     private _columnsSizable = false;
     private _multiSelect = false;
-    private noColumnsSpecified = false;
+    // private noColumnsSpecified = false;
 
     private columnGroups$ = new Subject<IDejaGridColumn[] | string>();
     private columns$ = new ReplaySubject<IDejaGridColumn[]>(1);
@@ -750,7 +750,7 @@ export class DejaGridComponent implements OnDestroy {
     }
 
     public calcColumnsLayout(rows?: IItemBase[]) {
-        this.noColumnsSpecified = false;
+        // this.noColumnsSpecified = false;
 
         if (!this._columns || !this._columns.length) {
             if (rows && rows.length) {
@@ -771,7 +771,7 @@ export class DejaGridComponent implements OnDestroy {
 
                 const treeRow = searchFirstLastLevelRow(rows);
                 if (treeRow) {
-                    this.noColumnsSpecified = true;
+                    // this.noColumnsSpecified = true;
                     this._columns = Object.keys(treeRow).map((key) => {
                         return {
                             label: key,
@@ -783,9 +783,9 @@ export class DejaGridComponent implements OnDestroy {
             }
         }
 
-        if (this.noColumnsSpecified) {
-            this.printColumnLayout$.next();
-        }
+        // if (this.noColumnsSpecified) {
+        //     this.printColumnLayout$.next();
+        // }
 
         this.clearColumnLayout();
 

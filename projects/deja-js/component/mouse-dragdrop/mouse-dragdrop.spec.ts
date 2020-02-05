@@ -14,8 +14,8 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
 import { DejaMouseDragDropModule } from './index';
-import { IDropCursorInfos } from './mouse-dragdrop.service';
 import { DejaMouseDraggableDirective, IDejaMouseDraggableContext } from './mouse-draggable.directive';
+import { IDropCursorInfos } from './mouse-drop-cursor-infos.interface';
 import { DejaMouseDroppableDirective, IDejaMouseDroppableContext } from './mouse-droppable.directive';
 
 @Component({

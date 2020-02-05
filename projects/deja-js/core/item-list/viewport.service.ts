@@ -8,7 +8,7 @@
 
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, combineLatest, from, Observable, of, ReplaySubject, Subscription, timer } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { combineLatest as combineLatestOp, debounceTime, distinctUntilChanged, filter, map, switchMap, tap } from 'rxjs/operators';
 
 export enum ViewportMode {
     disabled,
@@ -544,9 +544,9 @@ export class ViewPortService implements OnDestroy {
 
         // Calc view port observable
         this.subscriptions.push(combineLatest([element$, items$, refresh$, this.ensureParams$]).pipe(
-            withLatestFrom(direction$, mode$, itemsSize$, maxSize$),
+            combineLatestOp(direction$, mode$, itemsSize$, maxSize$),
             debounceTime(1),
-            withLatestFrom(scrollPos$),
+            combineLatestOp(scrollPos$),
             filter(([[[element]]]) => !!element),
             // .do(([[[_element, _items, _refresh, ensureParams], _direction, _mode, _itemDefaultSize, _maxSize], _scrollPos]) => consoleLog(`combineLatest ${JSON.stringify(ensureParams)}`))
             switchMap(([[[element, items, _refresh, ensureParams], _direction, _mode, itemDefaultSize, maxSize], _scrollPos]) => {
