@@ -10,8 +10,8 @@ import { Component, ContentChild, ElementRef, EventEmitter, Input, OnInit, Outpu
 import { DejaConnectionPositionPair, Position, Rect, } from '@deja-js/core';
 import { from, fromEvent, Observable } from 'rxjs';
 import { debounceTime, delay, filter, map, takeUntil, tap } from 'rxjs/operators';
-import { DejaTooltipService } from './tooltip.service';
 import { ITooltipParams } from './tooltip-params.interface';
+import { DejaTooltipService } from './tooltip.service';
 
 /**
  * Customizable tooltip component for Angular

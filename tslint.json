@@ -67,7 +67,6 @@
               "ignore-pattern": "^_"
           }
       ],
-      "no-use-before-declare": true,
       "no-var-keyword": true,
       "object-literal-sort-keys": false,
       "one-line": [
