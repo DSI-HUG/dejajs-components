@@ -1,9 +1,4 @@
 <mat-tab-group [selectedIndex]="tabIndex" (selectedTabChange)="tabIndex = $event.index">
-	<!--<mat-tab label="OVERVIEW">-->
-	<!--<mat-card class="demo-card demo-basic">-->
-	<!--TODO-->
-	<!--</mat-card>-->
-	<!--</mat-tab>-->
 	<mat-tab label="API REFERENCE"></mat-tab>
 	<mat-tab label="SIMPLE EXAMPLES"></mat-tab>
 	<mat-tab label="ADVANCED EXAMPLES"></mat-tab>
@@ -32,18 +27,18 @@
 		<mat-toolbar color="primary">Simple Usage</mat-toolbar>
 		<mat-card-content>
 			<div>Just passing an array of objects</div>
-			<div fxLayout="row">
-				<span fxFlex="0 0 45%" fxLayout="column">
-					<mat-form-field fxFlex="0 0 auto" appearance="standard">
+			<div class="flexLayout">
+				<span class="flex45p flexLayout flexColumn">
+					<mat-form-field class="flexFixedAuto" appearance="standard">
 						<mat-label>Select Mode</mat-label>
 						<deja-select #select [(ngModel)]="businessCountry" overlayContainerClass="businessCountryContainer" textField="naqme" valueField="code" [models]="countries"></deja-select>
 					</mat-form-field>
-					<mat-form-field fxFlex="0 0 auto" appearance="fill">
+					<mat-form-field class="flexFixedAuto" appearance="fill">
 						<mat-label>Autocomplete</mat-label>
 						<deja-select placeholder="" type="autocomplete" [(ngModel)]="businessCountry" overlayContainerClass="businessCountryContainer2" textField="naqme" valueField="code" [models]="countries"></deja-select>
 					</mat-form-field>
 				</span>
-				<span fxFlex="0 0 45%" fxFlexOffset="5%">
+				<span class="flex45p flexOffset5p">
 					<button (click)="select.showDropDown()">showDropDown</button>
 					<h4>Selected country model :</h4>
 					<pre>{{businessCountry | json}}</pre>
@@ -55,14 +50,14 @@
 		<mat-toolbar color="primary">Keyboard Navigation</mat-toolbar>
 		<mat-card-content>
 			<div>deja-select has some keyboard navigation feature</div>
-			<div fxLayout="row">
-				<span fxFlex="0 0 45%" fxLayout="column">
-					<mat-form-field fxFlex="0 0 auto" appearance="outline">
+			<div class="flexLayout">
+				<span class="flex45p flexLayout flexColumn">
+					<mat-form-field class="flexFixedAuto" appearance="outline">
 						<mat-label>Test Keyboard Navigation</mat-label>
 						<deja-select placeholder="Select a country" [(ngModel)]="businessCountry" textField="naqme" valueField="code" [models]="countries"></deja-select>
 					</mat-form-field>
 				</span>
-				<ul fxFlex="0 0 50%" fxFlexOffset="5%" id="shortcut-list">
+				<ul class="flex50p flexOffset5p block" id="shortcut-list">
 					<li>Press
 						<span class="keyboard-key">↑</span> to select the previous item</li>
 					<li>Press
@@ -98,8 +93,8 @@
 		<mat-toolbar color="primary">Select with options</mat-toolbar>
 		<mat-card-content>
 			<div>These selects has a list coming from html options</div>
-			<span fxLayout="row" fxLayoutAlign="start end">
-				<mat-form-field fxFlex="0 0 45%" class="demo-half-width" appearance="standard">
+			<span class="flexLayout flexJustifyStart flexAlignEnd">
+				<mat-form-field class="flex45p demo-half-width" appearance="standard">
 					<deja-select placeholder="Options content" [(ngModel)]="fruct" modelIsValue="true">
 						<deja-item value="Apricots" text="My preferred fruct is Apricots"></deja-item>
 						<deja-item value="Banana" text="My preferred fruct is Banana"></deja-item>
@@ -115,7 +110,7 @@
 						<deja-item value="Watermelon" text="My preferred fruct is Watermelon"></deja-item>
 					</deja-select>
 				</mat-form-field>
-				<mat-form-field fxFlex="0 0 45%" fxFlexOffset="5%" class="demo-half-width" appearance="standard">
+				<mat-form-field class="flex45p demo-half-width flexOffset5p" appearance="standard">
 					<deja-select viewportMode="variable" placeholder="Options content" type="multiselect" selectedModels="Mango, Apricots, Coconut">
 						<deja-item value="Apricots" text="Apricots"></deja-item>
 						<deja-item value="Banana" text="Banana"></deja-item>
@@ -137,13 +132,13 @@
 	<mat-card class="deja-select-demo demo-card demo-basic">
 		<mat-toolbar color="primary">String Array Model</mat-toolbar>
 		<mat-card-content>
-			<span fxLayout="row" fxLayoutAlign="start center">
+			<span class="flexLayout flexJustifyStart flexAlignCenter">
 				<mat-form-field class="demo-half-width" appearance="standard">
 					<deja-select placeholder="String Array Model" selectionClearable [(ngModel)]="fruct" modelIsValue="true">
 						<deja-item [value]="f" [text]="f" *ngFor="let f of fructs"></deja-item>
 					</deja-select>
 				</mat-form-field>
-				<span fxFlex="0 0 50%" fxFlexOffset="5%">Selected fruct model is: {{ fruct }}</span>
+				<span class="flex50p flexLayout flexAlignCenter flexOffset5p">Selected fruct model is: {{ fruct }}</span>
 			</span>
 		</mat-card-content>
 	</mat-card>
@@ -174,15 +169,15 @@
 		<mat-toolbar color="primary">Multiselect</mat-toolbar>
 		<mat-card-content>
 			<div>Multiselect example</div>
-			<div fxLayout="column">
-				<div fxLayout="row">
-					<span fxFlex="0 0 45%" fxLayout="column">
-						<mat-form-field fxFlex="0 0 auto" appearance="outline">
+			<div class="flexLayout flexColumn">
+				<div class="flexLayout">
+					<span class="flex45p flexLayout flexColumn">
+						<mat-form-field class="flexFixedAuto" appearance="outline">
 							<mat-label>Selection hidden</mat-label>
 							<deja-select hideSelected type="multiselect" textField="naqme" valueField="code" [(ngModel)]="multiselectModel" [items]="countriesForMultiselect"> </deja-select>
 						</mat-form-field>
 					</span>
-					<span fxFlex="0 0 45%" fxFlexOffset="5%">
+					<span class="flex45p flexOffset5p">
 						<h4>Selected country model :</h4>
 						<ul>
 							<li *ngFor="let item of multiselectModel">
@@ -191,20 +186,20 @@
 						</ul>
 					</span>
 				</div>
-				<div fxLayout="row">
-					<span fxFlex="0 0 45%" fxLayout="column">
-						<mat-form-field fxFlex="0 0 auto" appearance="outline">
+				<div class="flexLayout">
+					<span class="flex45p flexLayout flexColumn">
+						<mat-form-field class="flexFixedAuto" appearance="outline">
 							<mat-label>Selection visible and below</mat-label>
 							<deja-select [readonly]="readonlyMultiSelect" [disabled]="disableMultiSelect" type="multiselect" textField="naqme" valueField="code" [(ngModel)]="multiselectModel" [items]="countriesForMultiselect"> </deja-select>
 						</mat-form-field>
 					</span>
-					<span fxFlex="0 0 45%" fxFlexOffset="5%">
-						<section fxFlex="1 0 auto" fxLayout="row">
-							<section fxLayout="column">
+					<span class="flex45p flexOffset5p">
+						<section class="flexLayout flexExtendAuto">
+							<section class="flexLayout flexColumn">
 								<span>Read only : </span>
 								<span class="disable-check">Disable : </span>
 							</section>
-							<section fxLayout="column" fxFlexOffset="5%">
+							<section class="flexLayout flexColumn flexOffset5p">
 								<mat-checkbox [(ngModel)]="readonlyMultiSelect" [color]="'primary'"></mat-checkbox>
 								<mat-checkbox class="disable-check" [(ngModel)]="disableMultiSelect" [color]="'primary'"></mat-checkbox>
 							</section>
@@ -258,8 +253,8 @@
 			</mat-form-field>
 			<h1>Place Holder and Group Template</h1>
 			<div>Select with a place holder template containing an icon</div>
-			<span fxLayout="row">
-				<mat-form-field fxFlex="0 0 45%" appearance="standard">
+			<span class="flexLayout">
+				<mat-form-field class="flex45p" appearance="standard">
 					<deja-select type="autocomplete" textField="naqme" valueField="code" [items]="countries">
 						<ng-template #placeHolderTemplate>
 							<mat-icon id="placeholder-icon">public</mat-icon>
@@ -267,7 +262,7 @@
 						</ng-template>
 					</deja-select>
 				</mat-form-field>
-				<mat-form-field fxFlex="0 0 45%" fxFlexOffset="5%" appearance="standard">
+				<mat-form-field class="flex45p flexOffset5p" appearance="standard">
 					<deja-select type="autocomplete" placeholder="Group Template" textField="naqme" [items]="groupedCountries">
 						<ng-template #parentItemTemplate let-item>
 							<mat-icon id="placeholder-icon">public</mat-icon>&nbsp;
@@ -277,8 +272,8 @@
 				</mat-form-field>
 			</span>
 			<h1>Hint and Suffix Templates</h1>
-			<span fxLayout="row">
-				<mat-form-field fxFlex="0 0 45%" appearance="standard">
+			<span class="flexLayout">
+				<mat-form-field class="flex45p" appearance="standard">
 					<deja-select placeholder="Hint template select" textField="naqme" valueField="code" [items]="countries">
 						<ng-template #hintTemplate>
 							<span class="validation-error">
@@ -287,7 +282,7 @@
 						</ng-template>
 					</deja-select>
 				</mat-form-field>
-				<mat-form-field fxFlex="0 0 45%" fxFlexOffset="5%" appearance="standard">
+				<mat-form-field class="flex45p flexOffset5p" appearance="standard">
 					<deja-select placeholder="Suffix template selelct" textField="naqme" valueField="code" [items]="countries">
 						<ng-template #suffixTemplate>
 							<mat-icon id="placeholder-icon">public</mat-icon>
@@ -299,14 +294,14 @@
 			<span>
 				<label>Highlight options:</label>
 			</span>
-			<div fxLayout="column">
+			<div class="flexLayout flexColumn">
 				<mat-checkbox [(ngModel)]="firstOccurenceOnly" color="primary">First occurence only ( [firstOccurenceOnly]='{{firstOccurenceOnly}}' )</mat-checkbox>
 				<mat-checkbox [(ngModel)]="firstOccurencePerWordOnly" color="primary">First occurence per word only ( [firstOccurencePerWordOnly]='{{firstOccurencePerWordOnly}}' )</mat-checkbox>
 				<mat-checkbox [(ngModel)]="atTheBeginningOfWordOnly" color="primary">At the beginning of word only ( [atTheBeginningOfWordOnly]='{{atTheBeginningOfWordOnly}}' )</mat-checkbox>
 				<mat-checkbox [(ngModel)]="yellowBackgroundColorHighlight" color="primary">Highlight class name ( [highlightClassName]={{yellowBackgroundColorHighlight?'yellowBackgroundColorHighlight':'highlight'}})</mat-checkbox>
 			</div>
-			<div fxLayout="row">
-				<mat-form-field fxFlex="0 0 45%" appearance="standard">
+			<div class="flexLayout">
+				<mat-form-field class="flex45p" appearance="standard">
 					<deja-select placeholder="Bold query template select" type="autocomplete" textField="naqme" valueField="code" [items]="countries">
 						<ng-template #itemTemplate let-query="query" let-item>
 							<deja-bold-query [query]="query" [value]="item.naqme+item.naqme+item.naqme+item.naqme+item.naqme" [firstOccurenceOnly]="firstOccurenceOnly" [firstOccurencePerWordOnly]="firstOccurencePerWordOnly" [atTheBeginningOfWordOnly]="atTheBeginningOfWordOnly" [highlightClassName]="yellowBackgroundColorHighlight?'yellowBackgroundColorHighlight':'highlight'"></deja-bold-query>
@@ -360,11 +355,11 @@
 			</mat-form-field>
 			<h1>Fixed size rows 100K items</h1>
 			<div>An exemple with 100000 fixed size items</div>
-			<span fxLayout="row">
-				<mat-form-field fxFlex="0 0 45%" appearance="standard">
+			<span class="flexLayout">
+				<mat-form-field class="flex45p" appearance="standard">
 					<deja-select #bigCountries type="autocomplete" placeholder="100000 items select" [items]="bigCountries$" textField="naqme" valueField="code"></deja-select>
 				</mat-form-field>
-				<span fxFlex="0 0 45%" fxFlexOffset="5%">
+				<span class="flex45p flexOffset5p">
 					<h4 id="vptitle">Viewport Infos:</h4>
 					<div *ngFor="let info of viewPortInfos">
 						<span class="vpinfoname">{{info.name}}</span>

@@ -7,7 +7,6 @@
  */
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -27,7 +26,6 @@ import { routing } from './editor-demo.routes';
     imports: [
         CommonModule,
         FormsModule,
-        FlexLayoutModule,
         MatButtonModule,
         MatCardModule,
         MatFormFieldModule,

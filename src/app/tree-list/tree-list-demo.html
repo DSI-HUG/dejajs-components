@@ -1,9 +1,4 @@
 <mat-tab-group [selectedIndex]="tabIndex" (selectedTabChange)="tabIndex = $event.index">
-	<!--<mat-tab label="OVERVIEW">-->
-	<!--<mat-card class="demo-card demo-basic">-->
-	<!--TODO-->
-	<!--</mat-card>-->
-	<!--</mat-tab>-->
 	<mat-tab label="API REFERENCE"></mat-tab>
 	<mat-tab label="SIMPLE EXAMPLES"></mat-tab>
 	<mat-tab label="ADVANCED EXAMPLES"></mat-tab>
@@ -32,11 +27,11 @@
 		<mat-toolbar color="primary">Simple Usage</mat-toolbar>
 		<mat-card-content>
 			<div>Just passing an array of objects</div>
-			<div fxLayout="row">
-				<span fxFlex="0 0 45%" fxLayout="column">
-					<deja-tree-list fxFlex="0 0 400px" [(ngModel)]="country" textField="naqme" valueField="code" [models]="countries"></deja-tree-list>
+			<div class="flexLayout">
+				<span class="flex45p flexLayout flexColumn">
+					<deja-tree-list [(ngModel)]="country" textField="naqme" valueField="code" [models]="countries"></deja-tree-list>
 				</span>
-				<span fxFlex="0 0 45%" fxFlexOffset="5%">
+				<span class="flex45p flexOffset5p">
 					<h4>Selected country model :</h4>
 					<pre>{{country | json}}</pre>
 				</span>
@@ -47,11 +42,11 @@
 		<mat-toolbar color="primary">Keyboard Navigation</mat-toolbar>
 		<mat-card-content>
 			<div>deja-tree-list has some keyboard navigation feature</div>
-			<div fxLayout="row">
-				<span fxFlex="0 0 45%" fxLayout="column">
-					<deja-tree-list fxFlex="0 0 400px" [(ngModel)]="country" textField="naqme" valueField="code" [models]="countries"></deja-tree-list>
+			<div class="flexLayout">
+				<span class="flex45p flexLayout flexColumn">
+					<deja-tree-list class="flex50p" [(ngModel)]="country" textField="naqme" valueField="code" [models]="countries"></deja-tree-list>
 				</span>
-				<ul fxFlex="0 0 50%" fxFlexOffset="5%" id="shortcut-list">
+				<ul class="flexOffset5p" id="shortcut-list">
 					<li>Press
 						<span class="keyboard-key">↑</span> to select the previous item</li>
 					<li>Press
@@ -91,8 +86,8 @@
 		<mat-toolbar color="primary">Treelist with options</mat-toolbar>
 		<mat-card-content>
 			<div>These treelists has a list coming from html options</div>
-			<span fxLayout="row">
-				<deja-tree-list fxFlex="0 0 45%" class="demo-half-width optionstl" [(ngModel)]="fruct">
+			<span class="flexLayout">
+				<deja-tree-list class="flex45p demo-half-width optionstl" [(ngModel)]="fruct">
 					<deja-item value="Apricots" text="My preferred fruct is Apricots"></deja-item>
 					<deja-item value="Banana" text="My preferred fruct is Banana"></deja-item>
 					<deja-item value="Cantaloupe" text="My preferred fruct is Cantaloupe"></deja-item>
@@ -106,7 +101,7 @@
 					<deja-item value="Pineapple" text="My preferred fruct is Pineapple"></deja-item>
 					<deja-item value="Watermelon" text="My preferred fruct is Watermelon"></deja-item>
 				</deja-tree-list>
-				<deja-tree-list fxFlex="0 0 45%" fxFlexOffset="5%" class="demo-half-width optionstl" multiSelect="true" selectedModels="mango, apricots, coconut">
+				<deja-tree-list class="flex45p flexOffset5p demo-half-width optionstl" multiSelect="true" selectedModels="mango, apricots, coconut">
 					<deja-item value="apricots" text="Apricots"></deja-item>
 					<deja-item value="banana" text="Banana"></deja-item>
 					<deja-item value="cantaloupe" text="Cantaloupe"></deja-item>
@@ -126,9 +121,9 @@
 	<mat-card class="deja-treelist-demo demo-card demo-basic">
 		<mat-toolbar color="primary">String Array Model</mat-toolbar>
 		<mat-card-content>
-			<span fxLayout="row" fxLayoutAlign="start center">
+			<span class="flexLayout flexAlignCenter flexJustifyStart">
 				<deja-tree-list class="demo-half-width" [(ngModel)]="fruct" [models]="fructs"></deja-tree-list>
-				<span fxFlex="0 0 50%" fxFlexOffset="5%">Selected fruct model is: {{ fruct }}</span>
+				<span class="flex50p flexOffset5p">Selected fruct model is: {{ fruct }}</span>
 			</span>
 		</mat-card-content>
 	</mat-card>
@@ -138,11 +133,11 @@
 			<div>
 				<mat-checkbox [(ngModel)]="disabled" color="primary">Check me to disable tree-list below</mat-checkbox>
 			</div>
-			<div fxLayout="row">
-				<span fxFlex="0 0 45%" fxLayout="column">
+			<div class="flexLayout">
+				<span class="flex45p flexLayout flexColumn">
 					<deja-tree-list searchArea nodataholder="No record to display" maxHeight="auto" [disabled]="disabled" selectionClearable [(ngModel)]="deepCountry" textField="l1.l2.name" valueField="l1.l2.value" [models]="deepCountries"></deja-tree-list>
 				</span>
-				<span fxFlex="0 0 45%" fxFlexOffset="5%">
+				<span class="flex45p flexOffset5p">
 					<h4>Selected deep country model :</h4>
 					<pre>{{deepCountry | json}}</pre>
 				</span>
@@ -152,8 +147,8 @@
 	<mat-card class="deja-treelist-demo demo-card demo-basic">
 		<mat-toolbar color="primary">Multi level</mat-toolbar>
 		<mat-card-content>
-			<div fxLayout="row">
-				<span fxFlex="0 0 45%" fxLayout="column">
+			<div class="flexLayout">
+				<span class="flex45p flexLayout flexColumn">
 					<deja-tree-list nodataholder="No record to display" maxHeight="auto" [models]="folders" textField="label" childrenField="children"></deja-tree-list>
 				</span>
 			</div>
@@ -166,12 +161,12 @@
 		<mat-toolbar color="primary">Multi selection</mat-toolbar>
 		<mat-card-content>
 			<div>Multi selection example</div>
-			<div fxLayout="row">
-				<span fxFlex="0 0 45%" fxLayout="column">
+			<div class="flexLayout">
+				<span class="flex45p flexLayout flexColumn">
 					<deja-tree-list sortable multiSelect textField="naqme" valueField="code" [selectedItems]="multiselectModel" (itemDragStart)="onItemDragStart($event)" (selectedChange)="multiselectModelChange($event.items)" [items]="countriesForMultiselect">
 					</deja-tree-list>
 				</span>
-				<span fxFlex="0 0 45%" fxFlexOffset="5%" fxLayout="column">
+				<span class="flexLayout flexColumn flex45p flexOffset5p">
 					<h4>Multi selection shortcuts :</h4>
 					<ul id="shortcut-list">
 						<li>Press
@@ -196,8 +191,8 @@
 		<mat-toolbar color="primary">Grouping and Drag Drop</mat-toolbar>
 		<mat-card-content>
 			<div>Grouping example</div>
-			<div fxLayout="row">
-				<span fxFlex="0 0 45%" fxLayout="column">
+			<div class="flexLayout">
+				<span class="flex45p flexLayout flexColumn">
 					<deja-tree-list textField="naqme" valueField="code" [items]="groupedCountries" [deja-mouse-draggable]="getDragContext()">
 						<ng-template #itemTemplate let-item let-flatindex="flatindex">
 							<span [attr.ddid]="item.model.code">{{ item.model.naqme }}</span>
@@ -208,7 +203,7 @@
 						</ng-template>
 					</deja-tree-list>
 				</span>
-				<span fxFlex="0 0 45%" fxFlexOffset="5%">
+				<span class="flex45p flexOffset5p">
 					<div>You can drag and drop items the the area bellow (That will display a JSON representation of the dropped model) :</div>
 					<div #dropArea [deja-mouse-droppable]="getDropContext(dropArea)" [deja-droppable]="{dragovercallback: onDivDragOver, dragentercallback:onDivDragOver, dropcallback:onDivDropEvent}" style="border:1px solid red;min-height:150px;"></div>
 				</span>
@@ -222,8 +217,8 @@
 		<mat-toolbar color="primary">Variable Row Size</mat-toolbar>
 		<mat-card-content>
 			<div>Variable Row height example</div>
-			<div fxLayout="row">
-				<span fxFlex="0 0 45%" fxLayout="column">
+			<div class="flexLayout">
+				<span class="flex45p flexLayout flexColumn">
 					<deja-tree-list [items]="loremList" multiSelect viewportMode="variable" searchArea sortable></deja-tree-list>
 				</span>
 			</div>
@@ -244,8 +239,8 @@
 			</deja-tree-list>
 			<h1>Header Template and Group Template</h1>
 			<div>Treelist with an header template</div>
-			<div fxLayout="row">
-				<span fxFlex="0 0 45%" fxLayout="column">
+			<div class="flexLayout">
+				<span class="flex45p flexLayout flexColumn">
 					<deja-tree-list #headertreelist textField="naqme" valueField="code" [models]="countries">
 						<ng-template #headerTemplate>
 							<span id="headerTemplateContent" (click)="headertreelist.sort()">
@@ -257,7 +252,7 @@
 						</ng-template>
 					</deja-tree-list>
 				</span>
-				<span fxFlex="0 0 45%" fxFlexOffset="5%" fxLayout="column">
+				<span class="flex45p flexLayout flexColumn flexOffset5p">
 					<deja-tree-list textField="naqme" [items]="groupedCountries">
 						<ng-template #parentItemTemplate let-item>
 							<mat-icon id="placeholder-icon">public</mat-icon>&nbsp;
@@ -267,8 +262,8 @@
 				</span>
 			</div>
 			<h1>Search Prefix and Suffix Templates</h1>
-			<div fxLayout="row">
-				<span fxFlex="0 0 45%" fxLayout="column">
+			<div class="flexLayout">
+				<span class="flex45p flexLayout flexColumn">
 					<deja-tree-list searchArea textField="naqme" valueField="code" [items]="countries">
 						<ng-template #searchPrefixTemplate>
 							<mat-icon (click)="onFilterTemplateClicked('Prefix')">public</mat-icon>
@@ -287,22 +282,22 @@
 	<mat-card class="deja-treelist-demo demo-card demo-basic">
 		<mat-toolbar color="primary">Pre-Selections from html inputs</mat-toolbar>
 		<mat-card-content>
-			<div fxLayout="row">
-				<div fxFlex="40" fxLayout="column">
+			<div class="flexLayout">
+				<div class="flexFixed140px flexLayout flexColumn">
 					<div>Preselection with the input selectedModel</div>
 					<deja-tree-list class="fixed-height" selectedModel="Mango" [models]="fructs"></deja-tree-list>
 				</div>
-				<div fxFlex="40" fxFlexOffset="15" fxLayout="column">
+				<div class="flexFixed140px flexLayout flexColumn flexOffset15px">
 					<div>Preselections with the input selectedModels</div>
 					<deja-tree-list class="fixed-height" multiSelect="true" selectedModels="Mango, Apricots, Coconut" [models]="fructs"></deja-tree-list>
 				</div>
 			</div>
-			<div fxLayout="row">
-				<div fxFlex="40" fxLayout="column">
+			<div class="flexLayout">
+				<div class="flexFixed140px flexLayout flexColumn">
 					<div>Preselection with the input selectedItem</div>
 					<deja-tree-list class="fixed-height" selectedItem="mango" [items]="fructItems"></deja-tree-list>
 				</div>
-				<div fxFlex="40" fxFlexOffset="15">
+				<div class="flexFixed140px flexOffset15px">
 				</div>
 			</div>
 		</mat-card-content>
@@ -338,12 +333,12 @@
 		<mat-toolbar color="primary">Performance Examples</mat-toolbar>
 		<mat-card-content>
 			<h1>10K items with Item Template </h1>
-			<div class="flexContainer" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1rem">
-				<span fxFlex="1 1 auto">An exemple with 10000 auto sized templatized items</span>
-				<mat-form-field fxFlex="0 0 5rem">
+			<div class="flexContainer flexLayout flexAlignCenter flexJustifyStart">
+				<span class="flexExtendCollapseAuto">An exemple with 10000 auto sized templatized items</span>
+				<mat-form-field class="flexFixedAuto">
 					<input matInput type="number" [(ngModel)]="ensureIndex" autocomplete="off">
 				</mat-form-field>
-				<button fxFlex="0 0 auto" mat-button (click)="news.ensureItemVisible(ensureIndex)">Ensure index</button>
+				<button class="flexFixedAuto" mat-button (click)="news.ensureItemVisible(ensureIndex)">Ensure index</button>
 			</div>
 			<deja-tree-list #news class="news" viewportMode="auto" textField="title" searchField="description" [models]="bigNews$">
 				<ng-template #itemTemplate let-item let-flatindex="flatindex">
@@ -353,9 +348,9 @@
 
 			<h1>Fixed size rows 100K items</h1>
 			<div>An exemple with 100000 fixed size items</div>
-			<span fxLayout="row">
-				<deja-tree-list #bigCountries id="bigCountries" fxFlex="0 0 45%" [items]="bigCountries$" textField="naqme" valueField="code"></deja-tree-list>
-				<span fxFlex="0 0 45%" fxFlexOffset="5%" fxFlexOffset="5%">
+			<span class="flexLayout">
+				<deja-tree-list #bigCountries id="bigCountries" class="flex45p" [items]="bigCountries$" textField="naqme" valueField="code"></deja-tree-list>
+				<span class="flex45p flexOffset5p">
 					<h4 id="vptitle">Viewport Infos:</h4>
 					<div *ngFor="let info of viewPortInfos">
 						<span class="vpinfoname">{{info.name}}</span>

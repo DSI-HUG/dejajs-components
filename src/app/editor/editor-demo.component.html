@@ -11,14 +11,14 @@
   <mat-card class="demo-card">
       <mat-toolbar color="primary">Inline CKEditor with material skin</mat-toolbar>
       <mat-card-content>
-          <div fxLayout>
-              <div fxFlex="1 1 0">
+          <div class="flexLayout">
+              <div class="flexAuto">
                   <h3>Editor :</h3>
                   <mat-form-field>
                     <deja-editor [(ngModel)]="matText" [config]="editorConfig"></deja-editor>
                   </mat-form-field>
               </div>
-              <div fxFlex="1 1 0">
+              <div class="flexAuto">
                   <h3>Result :</h3>
                   <div [innerHTML]="matText"></div>
               </div>
@@ -29,12 +29,12 @@
   <mat-card class="demo-card">
     <mat-toolbar color="primary">Default CKEditor</mat-toolbar>
     <mat-card-content>
-      <div fxLayout>
-        <div fxFlex="1 1 0">
+      <div class="flexLayout">
+        <div class="flexAuto">
           <h3>Editor :</h3>
           <deja-editor class="inline" [(ngModel)]="matText" [config]="editorConfig" [inline]="false"></deja-editor>
         </div>
-        <div fxFlex="1 1 0">
+        <div class="flexAuto">
           <h3>Result :</h3>
           <div [innerHTML]="matText"></div>
         </div>
@@ -45,12 +45,12 @@
   <mat-card class="demo-card">
       <mat-toolbar color="primary">Replace</mat-toolbar>
       <mat-card-content>
-        <div fxLayout>
-          <div fxFlex="1 1 0">
+        <div class="flexLayout">
+          <div class="flexAuto">
             <h3>Editor :</h3>
             <deja-editor class="inline" [config]="editorConfig" [inline]="false" #replaceEditor></deja-editor>
           </div>
-          <div fxFlex="1 1 0">
+          <div class="flexAuto">
             <h3>Actions :</h3>
             <div>
               <mat-form-field>

@@ -1,52 +1,112 @@
 :host {
-	.demo-card {
-		margin: 16px;
-		mat-card-content {
-			padding: 16px;
-			display: flex;
+    .demo-card {
+        margin: 16px;
+
+        mat-card-content {
+            padding: 16px;
+            display: flex;
             flex-direction: column;
+
             mat-form-field {
-				flex-basis: auto;
-				flex-grow: 0;
-				flex-shrink: 0;
-				position: relative;
-				margin-top: 0.7rem;
-			}
-		}
-	}
-	.demo-basic {
-		padding: 0;
-	}
-	.demo-full-width {
-		width: 100%;
-	}
-	.demo-half-width {
-		width: 45%;
-	}
-	.demo-icons {
-		font-size: 100%;
-		height: inherit;
-		vertical-align: top;
-		width: inherit;
-	}
-	#flight {
-		display: flex;
-		align-items: center;
-	}
+                flex-basis: auto;
+                flex-grow: 0;
+                flex-shrink: 0;
+                position: relative;
+                margin-top: 0.7rem;
+            }
+        }
+    }
+
+    .demo-basic {
+        padding: 0;
+    }
+
+    .demo-full-width {
+        width: 100%;
+    }
+
+    .demo-half-width {
+        width: 45%;
+    }
+
+    .demo-icons {
+        font-size: 100%;
+        height: inherit;
+        vertical-align: top;
+        width: inherit;
+    }
+
+    #flight {
+        display: flex;
+        align-items: center;
+    }
+
     news-card {
         width: 100%;
+
         .text {
             overflow-x: hidden;
         }
     }
+
     .vpinfoname {
         display: inline-block;
-        width: 7rem;    
+        width: 7rem;
     }
+
     .disable-check {
         margin-top: .5rem;
-	}
-	.react-form-elem{
-		min-height: 5rem;
-	}
+    }
+
+    .react-form-elem {
+        min-height: 5rem;
+    }
+
+    .block {
+        display: block;
+    }
+
+    .flexLayout {
+        display: flex;
+
+        &.flexColumn {
+            flex-direction: column;
+        }
+
+        &.flexJustifyStart {
+            justify-content: start;
+        }
+
+        &.flexAlignEnd {
+            align-items: flex-end;
+        }
+
+        &.flexAlignCenter {
+            align-items: center;
+        }
+
+        .flex45p {
+            flex: 0 0 45%;
+            overflow: hidden;
+        }
+
+        .flex50p {
+            flex: 0 0 50%;
+            overflow: hidden;
+        }
+
+        .flexFixedAuto {
+            flex: 0 0 auto;
+            overflow: hidden;
+        }
+
+        .flexExtendAuto {
+            flex: 1 0 auto;
+            overflow: hidden;
+        }
+    }
+
+    .flexOffset5p {
+        margin-left: 5%;
+    }
 }

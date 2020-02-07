@@ -8,7 +8,6 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -30,7 +29,6 @@ import { routing } from './grid-demo.routes';
     imports: [
         CommonModule,
         FormsModule,
-        FlexLayoutModule,
         MatCardModule,
         MatIconModule,
         MatTabsModule,

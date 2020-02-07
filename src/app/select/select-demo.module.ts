@@ -8,7 +8,6 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -35,7 +34,6 @@ import { routing } from './select-demo.routes';
     imports: [
         CommonModule,
         FormsModule,
-        FlexLayoutModule,
         ReactiveFormsModule,
         MatFormFieldModule,
         MatIconModule,
