@@ -12,6 +12,20 @@
 
 * **Demo:**  Remove @angular/flex-layout from the demo ([d540b97e](https://github.com/DSI-HUG/dejajs-components/commit/d540b97ecdc97982f565b3fccb7bdb870664d326))
 
+#### 0.0.1 (2020-02-07)
+
+##### New Features
+
+* **MediaService:**  Add the possibility to provide some other definitions ([422bb126](https://github.com/DSI-HUG/dejajs-components/commit/422bb126b9a956be0b1c400377c23226543c532f))
+
+##### Other Changes
+
+* **TsLint:**  Fix TsLint ([b5606f89](https://github.com/DSI-HUG/dejajs-components/commit/b5606f895f43061d978a94cefcad7f17fcf5fa21))
+
+##### Refactors
+
+* **Demo:**  Remove @angular/flex-layout from the demo ([d540b97e](https://github.com/DSI-HUG/dejajs-components/commit/d540b97ecdc97982f565b3fccb7bdb870664d326))
+
 #### 0.0.1 (2020-01-28)
 
 ##### Build System / Dependencies
