@@ -9,7 +9,7 @@
 import { Directive, ElementRef, Input } from '@angular/core';
 import { Destroy, Position, Rect } from '@deja-js/core';
 import { from, Observable } from 'rxjs';
-import { filter, first, takeUntil, takeWhile } from 'rxjs/operators';
+import { filter, first, takeUntil } from 'rxjs/operators';
 import { IDragCursorInfos } from './mouse-drag-cursor-infos.interface';
 import { IDragDropContext } from './mouse-dragdrop-context.interface';
 import { DejaMouseDragDropService } from './mouse-dragdrop.service';

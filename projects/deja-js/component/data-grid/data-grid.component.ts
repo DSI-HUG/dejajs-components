@@ -14,7 +14,7 @@ import { DejaTreeListComponent, DejaTreeListScrollEvent } from '@deja-js/compone
 import { Destroy } from '@deja-js/core';
 import { DejaClipboardService, GroupingService, IGroupInfo, IItemBase, IItemTree, ISortInfos, ItemListService, IViewListResult, IViewPort, KeyCodes, SortingService, ViewportMode, ViewPortService } from '@deja-js/core';
 import { combineLatest, from, fromEvent, Observable, ReplaySubject, Subject, timer } from 'rxjs';
-import { debounceTime, filter, first, map, switchMap, takeUntil, takeWhile, tap } from 'rxjs/operators';
+import { debounceTime, filter, first, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent } from './data-grid-column/data-grid-column';
 import { IDejaGridColumnLayout } from './data-grid-column/data-grid-column-layout';
 import { DejaGridColumnsLayoutInfos } from './data-grid-column/data-grid-column-layout-infos';

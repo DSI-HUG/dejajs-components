@@ -10,7 +10,7 @@ import { Injectable, Optional } from '@angular/core';
 import { IDragCursorInfos, IDragDropContext } from '@deja-js/component/mouse-dragdrop';
 import { DejaClipboardService, Destroy, Directions, KeyCodes, Position, Rect, Size } from '@deja-js/core';
 import { BehaviorSubject, from, fromEvent, merge, Subject, Subscription, timer } from 'rxjs';
-import { debounceTime, delay, filter, first, map, reduce, take, takeUntil, takeWhile, tap } from 'rxjs/operators';
+import { debounceTime, delay, filter, first, map, reduce, take, takeUntil, tap } from 'rxjs/operators';
 import { DejaTile } from './tile.class';
 import { IDejaTilesRefreshParams } from './tiles-refresh-params.interface';
 import { IDejaTilesAddedEvent, IDejaTilesAddEvent, IDejaTilesDeletedEvent, IDejaTilesEvent, IDejaTilesRemoveEvent } from './tiles.event';
