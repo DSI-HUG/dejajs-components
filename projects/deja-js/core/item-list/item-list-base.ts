@@ -8,9 +8,9 @@
 
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { ChangeDetectorRef, EventEmitter } from '@angular/core';
-import { Destroy } from '@deja-js/core';
 import { from, Observable, of, Subscription, timer } from 'rxjs';
 import { filter, first, map, reduce, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { Destroy } from '../destroy/destroy';
 import { IGroupInfo } from '../grouping/group-infos';
 import { GroupingService } from '../grouping/grouping.service';
 import { ISortInfos } from '../sorting/sort-infos.model';
