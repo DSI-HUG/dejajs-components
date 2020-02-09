@@ -6,9 +6,10 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, combineLatest, from, Observable, of, ReplaySubject, Subscription, timer } from 'rxjs';
-import { combineLatest as combineLatestOp, debounceTime, distinctUntilChanged, filter, map, switchMap, tap } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, combineLatest, from, Observable, of, ReplaySubject, timer } from 'rxjs';
+import { combineLatest as combineLatestOp, debounceTime, distinctUntilChanged, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { Destroy } from '../destroy/destroy';
 
 export enum ViewportMode {
     disabled,
@@ -26,7 +27,7 @@ export enum ViewportDirection {
  * Ce service permet la gestion du viewport verticalement ou horizontalement.
  */
 @Injectable()
-export class ViewPortService implements OnDestroy {
+export class ViewPortService extends Destroy {
     public static itemDefaultSize = 40;
 
     public viewPort$: Observable<IViewPort>;
@@ -40,8 +41,6 @@ export class ViewPortService implements OnDestroy {
     public itemsSize$ = new BehaviorSubject<number>(0);
     public direction$ = new BehaviorSubject<ViewportDirection | string>(ViewportDirection.vertical);
     public ensureParams$: Observable<IEnsureParams>;
-
-    private subscriptions = [] as Subscription[];
 
     private refresh$ = new BehaviorSubject<IViewPortRefreshParams>(null);
     private deleteSizeCache$ = new BehaviorSubject<boolean>(true);
@@ -93,6 +92,8 @@ export class ViewPortService implements OnDestroy {
     }
 
     constructor() {
+        super();
+
         this.viewPort$ = from(this.viewPortResult$);
 
         // const consoleLog = (_message: string) => {
@@ -535,15 +536,16 @@ export class ViewPortService implements OnDestroy {
         // .do(() => consoleLog(`element`));
 
         // Reset items size when direction change in auto mode
-        this.subscriptions.push(combineLatest(direction$, items$, mode$, this.deleteSizeCache$).pipe(
+        combineLatest(direction$, items$, mode$, this.deleteSizeCache$).pipe(
             filter(([_direction, items, mode]) => items && items.length && mode === ViewportMode.auto),
-            switchMap(([_direction, items]) => items))
-            .subscribe((item) => {
-                item.size = undefined;
-            }));
+            switchMap(([_direction, items]) => items),
+            takeUntil(this.destroyed$)
+        ).subscribe((item) => {
+            item.size = undefined;
+        });
 
         // Calc view port observable
-        this.subscriptions.push(combineLatest([element$, items$, refresh$, this.ensureParams$]).pipe(
+        combineLatest([element$, items$, refresh$, this.ensureParams$]).pipe(
             combineLatestOp(direction$, mode$, itemsSize$, maxSize$),
             debounceTime(1),
             combineLatestOp(scrollPos$),
@@ -593,20 +595,19 @@ export class ViewPortService implements OnDestroy {
             switchMap(({ element, scrollPos, items, maxSizeValue, itemDefaultSize, ensureParams }) => {
                 // consoleLog(`calcViewPort ${ensureParams && ensureParams.index}`);
                 return calcViewPort$(items, maxSizeValue, scrollPos, element, itemDefaultSize, ensureParams);
-            }))
-            .subscribe((viewPort: IViewPort) => {
-                // consoleLog(`viewPortResult final ${JSON.stringify(viewPort)}`);
-                this.viewPortResult$.next(viewPort);
-            }, ((error) => {
-                console.error(error);
-            })));
+            }),
+            takeUntil(this.destroyed$)
+        ).subscribe((viewPort: IViewPort) => {
+            // consoleLog(`viewPortResult final ${JSON.stringify(viewPort)}`);
+            this.viewPortResult$.next(viewPort);
+        }, ((error) => {
+            console.error(error);
+        }));
 
         // Cache last calculated viewport
-        this.subscriptions.push(from(this.viewPortResult$).subscribe((viewPort: IViewPort) => this.viewPort = viewPort));
-    }
-
-    public ngOnDestroy() {
-        this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
+        from(this.viewPortResult$).pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe((viewPort: IViewPort) => this.viewPort = viewPort);
     }
 
     public deleteSizeCache() {

@@ -7,9 +7,10 @@
  */
 
 import { coerceNumberProperty } from '@angular/cdk/coercion';
-import { ChangeDetectorRef, EventEmitter, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, EventEmitter } from '@angular/core';
+import { Destroy } from '@deja-js/core';
 import { from, Observable, of, Subscription, timer } from 'rxjs';
-import { filter, first, map, reduce, switchMap, takeWhile, tap } from 'rxjs/operators';
+import { filter, first, map, reduce, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { IGroupInfo } from '../grouping/group-infos';
 import { GroupingService } from '../grouping/grouping.service';
 import { ISortInfos } from '../sorting/sort-infos.model';
@@ -23,7 +24,7 @@ import { IViewPort, IViewPortRefreshParams, ViewportMode, ViewPortService } from
 const noop = () => { };
 
 /** Classe de base pour tous les composants à listes (deja-treelist, deja-select, deja-grid) */
-export abstract class ItemListBase implements OnDestroy {
+export abstract class ItemListBase extends Destroy {
     protected _waiter = true;
 
     protected _itemList: IItemBase[] = []; // Viewport list
@@ -38,7 +39,6 @@ export abstract class ItemListBase implements OnDestroy {
     protected _childrenField: string;
     protected _minSearchLength = 0;
     protected _listElementId: string;
-    protected _isAlive = true;
 
     // Viewport
     protected _vpBeforeHeight = 0;
@@ -70,51 +70,52 @@ export abstract class ItemListBase implements OnDestroy {
     private _listElement: HTMLElement;
 
     constructor(protected changeDetectorRef: ChangeDetectorRef, protected viewPort: ViewPortService) {
+        super();
 
         this._listElementId = `listcontainer_${(1000000000 * Math.random()).toString().substr(10)}`;
 
         viewPort.viewPort$.pipe(
-            takeWhile(() => this._isAlive))
-            .subscribe((viewPortResult: IViewPort) => {
-                delete this._hintLabel;
-                if (viewPort.mode === ViewportMode.disabled) {
-                    this._itemList = viewPortResult.items;
-                    this._vpStartRow = 0;
-                    this._vpEndRow = 0;
-                    this._vpBeforeHeight = 0;
-                    this._vpAfterHeight = 0;
-                } else {
-                    this._itemList = viewPortResult.visibleItems;
-                    this._vpStartRow = viewPortResult.startIndex;
-                    this._vpEndRow = viewPortResult.endIndex;
-                    this._vpBeforeHeight = viewPortResult.beforeSize;
-                    this._vpAfterHeight = viewPortResult.afterSize;
-                }
+            takeUntil(this.destroyed$)
+        ).subscribe((viewPortResult: IViewPort) => {
+            delete this._hintLabel;
+            if (viewPort.mode === ViewportMode.disabled) {
+                this._itemList = viewPortResult.items;
+                this._vpStartRow = 0;
+                this._vpEndRow = 0;
+                this._vpBeforeHeight = 0;
+                this._vpAfterHeight = 0;
+            } else {
+                this._itemList = viewPortResult.visibleItems;
+                this._vpStartRow = viewPortResult.startIndex;
+                this._vpEndRow = viewPortResult.endIndex;
+                this._vpBeforeHeight = viewPortResult.beforeSize;
+                this._vpAfterHeight = viewPortResult.afterSize;
+            }
 
-                if (viewPortResult.scrollPos !== undefined) {
-                    if (this.listElement) {
-                        const listItems = this.listElement.getElementsByClassName('listitem');
-                        const rebind = listItems.length !== viewPortResult.visibleItems.length;
-                        if (!rebind) {
+            if (viewPortResult.scrollPos !== undefined) {
+                if (this.listElement) {
+                    const listItems = this.listElement.getElementsByClassName('listitem');
+                    const rebind = listItems.length !== viewPortResult.visibleItems.length;
+                    if (!rebind) {
+                        this.listElement.scrollTop = viewPortResult.scrollPos;
+                    } else {
+                        timer(1).pipe(
+                            first(),
+                            filter(() => !!this.listElement)
+                        ).subscribe(() => {
                             this.listElement.scrollTop = viewPortResult.scrollPos;
-                        } else {
-                            timer(1).pipe(
-                                first(),
-                                filter(() => !!this.listElement)
-                            ).subscribe(() => {
-                                this.listElement.scrollTop = viewPortResult.scrollPos;
-                            });
-                        }
+                        });
                     }
                 }
+            }
 
-                this.changeDetectorRef.markForCheck();
-                // console.log(viewPortResult);
+            this.changeDetectorRef.markForCheck();
+            // console.log(viewPortResult);
 
-                if (this._viewPortChanged) {
-                    this._viewPortChanged.next(viewPortResult);
-                }
-            });
+            if (this._viewPortChanged) {
+                this._viewPortChanged.next(viewPortResult);
+            }
+        });
     }
 
     public get isMultiSelect() {
@@ -161,10 +162,6 @@ export abstract class ItemListBase implements OnDestroy {
      */
     public get groupInfos() {
         return this._itemListService.groupInfos;
-    }
-
-    public ngOnDestroy() {
-        this._isAlive = false;
     }
 
     /** Définit une valeur indiquant si les éléments selectionés doivent être masqué. Ce flag est principalement utilisé dans le cas d'un multi-select
@@ -468,11 +465,11 @@ export abstract class ItemListBase implements OnDestroy {
             this._itemListService.childrenField = this._childrenField;
             this._itemListService.valueField = this._valueField;
             this.waiter$sub = from(this._itemListService.waiter$).pipe(
-                takeWhile(() => this._isAlive))
-                .subscribe((status: boolean) => {
-                    this._waiter = status;
-                    this.changeDetectorRef.markForCheck();
-                });
+                takeUntil(this.destroyed$)
+            ).subscribe((status: boolean) => {
+                this._waiter = status;
+                this.changeDetectorRef.markForCheck();
+            });
         }
     }
 

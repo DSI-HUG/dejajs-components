@@ -6,10 +6,11 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectionStrategy, Component, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { IconService } from '@deja-js/core';
 import { BehaviorSubject, from } from 'rxjs';
-import { takeWhile } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
+import { Destroy } from '../../projects/deja-js/core/destroy/destroy';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,13 +19,14 @@ import { takeWhile } from 'rxjs/operators';
     styleUrls: ['./app.component.scss'],
     templateUrl: './app.component.html',
 })
-export class AppComponent implements OnDestroy {
+export class AppComponent extends Destroy {
     public version: string;
     private _theme: string;
     private theme$: BehaviorSubject<string>;
-    private isAlive = true;
 
     constructor(iconService: IconService) {
+        super();
+
         try {
             this._theme = localStorage.getItem('dejajs-demo-color');
         } catch (_e) {
@@ -36,8 +38,8 @@ export class AppComponent implements OnDestroy {
         }
         this.theme$ = new BehaviorSubject<any>(this._theme);
         from(this.theme$).pipe(
-            takeWhile(() => this.isAlive))
-            .subscribe((theme) => document.body.setAttribute('theme', theme));
+            takeUntil(this.destroyed$)
+        ).subscribe((theme) => document.body.setAttribute('theme', theme));
 
         iconService.addSvgIcon('angular', 'assets/img/logo/angular.svg');
         // iconService.useMaterialIcons(false);
@@ -56,9 +58,5 @@ export class AppComponent implements OnDestroy {
         }
 
         this.theme$.next(theme);
-    }
-
-    public ngOnDestroy() {
-        this.isAlive = false;
     }
 }

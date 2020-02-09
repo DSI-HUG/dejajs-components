@@ -7,11 +7,11 @@
  */
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, Optional, Output } from '@angular/core';
 import { IDejaDragEvent, IDejaDropEvent } from '@deja-js/component/dragdrop';
-import { DejaClipboardService, ISortInfos } from '@deja-js/core';
+import { DejaClipboardService, Destroy, ISortInfos } from '@deja-js/core';
 import { fromEvent, merge, Subject } from 'rxjs';
-import { filter, first, takeUntil, takeWhile, timeout } from 'rxjs/operators';
+import { filter, first, takeUntil, timeout } from 'rxjs/operators';
 import { IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent } from '../data-grid-column/data-grid-column';
 import { IDejaGridColumnLayout } from '../data-grid-column/data-grid-column-layout';
 
@@ -21,7 +21,7 @@ import { IDejaGridColumnLayout } from '../data-grid-column/data-grid-column-layo
     styleUrls: ['./data-grid-header.component.scss'],
     templateUrl: './data-grid-header.component.html',
 })
-export class DejaGridHeaderComponent implements OnDestroy {
+export class DejaGridHeaderComponent extends Destroy {
     /** Template d'entête de colonne si définit extérieurement à la grille */
     @Input() public columnHeaderTemplateExternal: any;
 
@@ -50,7 +50,6 @@ export class DejaGridHeaderComponent implements OnDestroy {
     private _columnLayout = {} as IDejaGridColumnLayout;
     private backupColumnOrder = [] as IDejaGridColumn[];
     private columnGroupKey = 'deja-grid-column';
-    private isAlive = true;
 
     /** Définit si toutes les colonnes peuvent être draggable vers un autre composant.
      * Si une valeur spécifique à une colonne est spécifiée dans le modèle de la colonne, cette dernière sera prioritaire.
@@ -124,78 +123,76 @@ export class DejaGridHeaderComponent implements OnDestroy {
     }
 
     constructor(elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, @Optional() private clipboardService: DejaClipboardService) {
+        super();
+
         const element = elementRef.nativeElement as HTMLElement;
 
         fromEvent(element, 'mousedown').pipe(
-            takeWhile(() => this.isAlive),
-            filter((event: MouseEvent) => event.buttons === 1))
-            .subscribe((downEvent: MouseEvent) => {
-                const target = downEvent.target as HTMLElement;
-                const column = this.getColumnFromHTMLElement(downEvent.target as HTMLElement);
+            filter((event: MouseEvent) => event.buttons === 1),
+            takeUntil(this.destroyed$)
+        ).subscribe((downEvent: MouseEvent) => {
+            const target = downEvent.target as HTMLElement;
+            const column = this.getColumnFromHTMLElement(downEvent.target as HTMLElement);
 
-                if (target.hasAttribute('separator')) {
-                    if (this.columnsSizable && column.sizeable !== false) {
-                        // Size clicked column
-                        this._sizedColumn = column;
-                        const sizedOrigin = downEvent.screenX;
+            if (target.hasAttribute('separator')) {
+                if (this.columnsSizable && column.sizeable !== false) {
+                    // Size clicked column
+                    this._sizedColumn = column;
+                    const sizedOrigin = downEvent.screenX;
 
-                        const kill$ = new Subject();
-                        const mouseUp$ = fromEvent(element.ownerDocument, 'mouseup');
+                    const kill$ = new Subject();
+                    const mouseUp$ = fromEvent(element.ownerDocument, 'mouseup');
 
-                        mouseUp$.pipe(first()).subscribe(() => {
-                            const e = {
-                                column: null,
-                            } as IDejaGridColumnSizeEvent;
-                            this.columnSizeChanged.emit(e);
-                            this.changeDetectorRef.markForCheck();
-                            this._sizedColumn = undefined;
+                    mouseUp$.pipe(first()).subscribe(() => {
+                        const e = {
+                            column: null,
+                        } as IDejaGridColumnSizeEvent;
+                        this.columnSizeChanged.emit(e);
+                        this.changeDetectorRef.markForCheck();
+                        this._sizedColumn = undefined;
+                    });
+
+                    fromEvent(element.ownerDocument, 'mousemove').pipe(
+                        takeUntil(merge(mouseUp$, kill$)))
+                        .subscribe((moveEvent: MouseEvent) => {
+                            if (moveEvent.buttons === 1) {
+                                const e = {
+                                    column: this._sizedColumn,
+                                    offsetWidth: moveEvent.screenX - sizedOrigin,
+                                    originalEvent: moveEvent,
+                                } as IDejaGridColumnSizeEvent;
+                                this.columnSizeChanged.emit(e);
+                                this.changeDetectorRef.markForCheck();
+                            } else {
+                                // Mouse up
+                                kill$.next();
+                            }
                         });
 
-                        fromEvent(element.ownerDocument, 'mousemove').pipe(
-                            takeUntil(merge(mouseUp$, kill$)))
-                            .subscribe((moveEvent: MouseEvent) => {
-                                if (moveEvent.buttons === 1) {
-                                    const e = {
-                                        column: this._sizedColumn,
-                                        offsetWidth: moveEvent.screenX - sizedOrigin,
-                                        originalEvent: moveEvent,
-                                    } as IDejaGridColumnSizeEvent;
-                                    this.columnSizeChanged.emit(e);
-                                    this.changeDetectorRef.markForCheck();
-                                } else {
-                                    // Mouse up
-                                    kill$.next();
-                                }
-                            });
-
-                        downEvent.stopPropagation();
-                        return false;
-                    }
-                } else {
-                    const clickedColumn = column;
-
-                    fromEvent(element, 'mouseup').pipe(
-                        first(),
-                        timeout(1000))
-                        .subscribe((upEvent: MouseEvent) => {
-                            const columnElement = this.getColumnElementFromHTMLElement(upEvent.target as HTMLElement);
-                            if ((columnElement && columnElement.getAttribute('colname')) === clickedColumn.name) {
-                                const index = +columnElement.getAttribute('index');
-                                const e = {
-                                    column: clickedColumn,
-                                    originalEvent: upEvent,
-                                    index: index,
-                                } as IDejaGridColumnEvent;
-                                this.columnHeaderClicked.emit(e);
-                                this.changeDetectorRef.markForCheck();
-                            }
-                        }, (_error) => { });
+                    downEvent.stopPropagation();
+                    return false;
                 }
-            });
-    }
+            } else {
+                const clickedColumn = column;
 
-    public ngOnDestroy() {
-        this.isAlive = false;
+                fromEvent(element, 'mouseup').pipe(
+                    first(),
+                    timeout(1000))
+                    .subscribe((upEvent: MouseEvent) => {
+                        const columnElement = this.getColumnElementFromHTMLElement(upEvent.target as HTMLElement);
+                        if ((columnElement && columnElement.getAttribute('colname')) === clickedColumn.name) {
+                            const index = +columnElement.getAttribute('index');
+                            const e = {
+                                column: clickedColumn,
+                                originalEvent: upEvent,
+                                index: index,
+                            } as IDejaGridColumnEvent;
+                            this.columnHeaderClicked.emit(e);
+                            this.changeDetectorRef.markForCheck();
+                        }
+                    }, (_error) => { });
+            }
+        });
     }
 
     public refresh() {

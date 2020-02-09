@@ -6,9 +6,9 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Injectable, OnDestroy, Optional } from '@angular/core';
+import { Injectable, Optional } from '@angular/core';
 import { IDragCursorInfos, IDragDropContext } from '@deja-js/component/mouse-dragdrop';
-import { DejaClipboardService, Directions, KeyCodes, Position, Rect, Size } from '@deja-js/core';
+import { DejaClipboardService, Destroy, Directions, KeyCodes, Position, Rect, Size } from '@deja-js/core';
 import { BehaviorSubject, from, fromEvent, merge, Subject, Subscription, timer } from 'rxjs';
 import { debounceTime, delay, filter, first, map, reduce, take, takeUntil, takeWhile, tap } from 'rxjs/operators';
 import { DejaTile } from './tile.class';
@@ -41,7 +41,7 @@ export interface IDragDropInfos {
 }
 
 @Injectable()
-export class DejaTilesLayoutProvider implements OnDestroy {
+export class DejaTilesLayoutProvider extends Destroy {
     public refreshTiles$ = new Subject<IDejaTilesRefreshParams>();
     public ensureVisible$ = new Subject<string>();
     public ensureBounds$ = new Subject<Rect>();
@@ -89,20 +89,20 @@ export class DejaTilesLayoutProvider implements OnDestroy {
     private currentTile: DejaTile;
     private hundredPercentWith: number;
     private dragTarget: Rect;
-    private isAlive = true;
 
     private selectedIds = new Array<string>();
 
     constructor(@Optional() private clipboardService: DejaClipboardService) {
+        super();
+
         from(this.refreshTiles$).pipe(
             debounceTime(30),
-            takeWhile(() => this.isAlive),
             tap(() => {
                 this.container.style.width = '';
                 this.container.style.height = '';
             }),
             delay(10),
-            takeWhile(() => this.isAlive)
+            takeUntil(this.destroyed$)
         ).subscribe((params) => {
             const placeAtTheEnd = new Array<DejaTile>();
 
@@ -208,7 +208,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             map((tile) => tile.percentBounds));
 
         merge(this.ensureBounds$, ensureTile$).pipe(
-            takeWhile(() => this.isAlive)
+            takeUntil(this.destroyed$)
         ).subscribe((percentBounds) => {
             const { left, right, top, bottom } = this.getPixelBounds(percentBounds);
 
@@ -242,7 +242,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         });
 
         from(this.dragSelection$).pipe(
-            takeWhile(() => this.isAlive)
+            takeUntil(this.destroyed$)
         ).subscribe((dragSelection) => {
             const mouseUp$ = fromEvent(this._container.ownerDocument, 'mouseup').pipe(
                 tap(() => this.selectionRect$.next(null)));
@@ -265,7 +265,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         const leave$ = from(this.dragleave$);
 
         from(this.dragDropInfos$).pipe(
-            takeWhile(() => this.isAlive)
+            takeUntil(this.destroyed$)
         ).subscribe((dragDropInfos) => {
             const tiles = dragDropInfos && ((dragDropInfos.tiles && dragDropInfos.tiles.length && dragDropInfos.tiles) || (dragDropInfos.currentTile && [dragDropInfos.currentTile]));
             if (!tiles) {
@@ -352,7 +352,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
 
         // Delete stream for clipboard
         from(this.deleteTiles$).pipe(
-            takeWhile(() => this.isAlive)
+            takeUntil(this.destroyed$)
         ).subscribe((tilesToDelete) => this.deleteTiles(tilesToDelete));
     }
 
@@ -364,7 +364,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             const mouseUp$ = fromEvent(container.ownerDocument, 'mouseup');
 
             fromEvent(container, 'mouseenter').pipe(
-                takeWhile(() => this.isAlive)
+                takeUntil(this.destroyed$)
             ).subscribe(() => {
                 // Cursor provider
                 if (this.designMode) {
@@ -541,11 +541,6 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         } else {
             this.selectionRect$.next();
         }
-    }
-
-    public ngOnDestroy() {
-        this.isAlive = false;
-        this._container = undefined;
     }
 
     public copySelection() {

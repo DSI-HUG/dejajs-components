@@ -8,7 +8,7 @@
 
 import { Inject, Injectable, InjectionToken, NgZone, OnDestroy, Optional } from '@angular/core';
 import { BehaviorSubject, from, Observable } from 'rxjs';
-import { distinctUntilChanged, map, takeWhile } from 'rxjs/operators';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 
 export interface MediaQueryDefinition {
     alias: string;
@@ -99,13 +99,11 @@ export const SIMPLIFIED_MEDIA_QUERY_DEFINITIONS = [
 
 @Injectable()
 export class MediaService implements OnDestroy {
-    private isAlive = true;
     public isMobile$: Observable<boolean>;
     public mediaChanged$: BehaviorSubject<string>;
     public mql = {} as { [alias: string]: MediaQueryList };
 
     constructor(private zone: NgZone, @Optional() @Inject(MEDIA_QUERY_DEFINITIONS) mediaDefinitions?: MediaQueryDefinition[]) {
-
         if (!mediaDefinitions) {
             mediaDefinitions = SIMPLIFIED_MEDIA_QUERY_DEFINITIONS;
         }
@@ -120,9 +118,9 @@ export class MediaService implements OnDestroy {
         });
 
         this.isMobile$ = from(this.mediaChanged$).pipe(
-            takeWhile(() => this.isAlive),
             map(() => this.mql.xs.matches || this.mql.sm.matches),
-            distinctUntilChanged());
+            distinctUntilChanged()
+        );
     }
 
     public ngOnDestroy() {
@@ -130,7 +128,6 @@ export class MediaService implements OnDestroy {
             this.mql[alias].removeListener(this.onMQLEvent as any);
             delete this.mql[alias];
         });
-        this.isAlive = false;
     }
 
     private onMQLEvent(alias: string) {

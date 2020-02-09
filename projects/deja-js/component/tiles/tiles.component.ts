@@ -10,9 +10,9 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output, Self, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { IDejaMouseDroppableContext, IDropCursorInfos } from '@deja-js/component/mouse-dragdrop';
-import { KeyCodes, Position, Rect } from '@deja-js/core';
+import { Destroy, KeyCodes, Position, Rect } from '@deja-js/core';
 import { from, fromEvent, Observable, Subject, Subscription } from 'rxjs';
-import { debounceTime, filter, takeWhile } from 'rxjs/operators';
+import { debounceTime, filter, takeUntil } from 'rxjs/operators';
 import { DejaTileGroup } from './tile-group.class';
 import { DejaTile } from './tile.class';
 import { DejaTilesLayoutProvider } from './tiles-layout.provider';
@@ -30,7 +30,7 @@ const noop = () => { };
     ],
     templateUrl: './tiles.component.html',
 })
-export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, OnDestroy {
+export class DejaTilesComponent extends Destroy implements AfterViewInit, ControlValueAccessor, OnDestroy {
     /**
      * Raised when the selected items has changed
      */
@@ -94,7 +94,6 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     private cut$sub: Subscription;
     private paste$sub: Subscription;
     private keyup$: Observable<KeyboardEvent>;
-    private isAlive = true;
     private hasFocus = false;
 
     public get tiles(): DejaTile[] {
@@ -104,6 +103,8 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     @ViewChild('tilesContainer', { static: true }) private tilesContainer: ElementRef;
 
     constructor(el: ElementRef, private changeDetectorRef: ChangeDetectorRef, private layoutProvider: DejaTilesLayoutProvider, @Self() @Optional() public _control: NgControl) {
+        super();
+
         if (this._control) {
             this._control.valueAccessor = this;
         }
@@ -111,48 +112,48 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
         const element = el.nativeElement as HTMLElement;
 
         from(this.layoutProvider.selectionChanged).pipe(
-            takeWhile(() => this.isAlive))
-            .subscribe((e) => this.selectionChanged.emit(e));
+            takeUntil(this.destroyed$)
+        ).subscribe((e) => this.selectionChanged.emit(e));
 
         from(this.layoutProvider.contentAdding).pipe(
-            takeWhile(() => this.isAlive))
-            .subscribe((e) => this.contentAdding.emit(e));
+            takeUntil(this.destroyed$)
+        ).subscribe((e) => this.contentAdding.emit(e));
 
         from(this.layoutProvider.contentRemoving).pipe(
-            takeWhile(() => this.isAlive))
-            .subscribe((e) => this.contentRemoving.emit(e));
+            takeUntil(this.destroyed$)
+        ).subscribe((e) => this.contentRemoving.emit(e));
 
         from(this.layoutProvider.tilesAdded).pipe(
-            takeWhile(() => this.isAlive))
-            .subscribe((event) => {
-                this.tilesAdded.emit(event);
-                this.onChangeCallback(event.tiles);
-            });
+            takeUntil(this.destroyed$)
+        ).subscribe((event) => {
+            this.tilesAdded.emit(event);
+            this.onChangeCallback(event.tiles);
+        });
 
         from(this.layoutProvider.tilesDeleted).pipe(
-            takeWhile(() => this.isAlive))
-            .subscribe((event) => {
-                this.tilesDeleted.emit(event);
-                this.onChangeCallback(event.tiles);
-            });
+            takeUntil(this.destroyed$)
+        ).subscribe((event) => {
+            this.tilesDeleted.emit(event);
+            this.onChangeCallback(event.tiles);
+        });
 
         from(this.layoutProvider.layoutChanged).pipe(
-            takeWhile(() => this.isAlive))
-            .subscribe((event) => {
-                this.layoutChanged.emit(event);
-                this.onChangeCallback(event.tiles);
-            });
+            takeUntil(this.destroyed$)
+        ).subscribe((event) => {
+            this.layoutChanged.emit(event);
+            this.onChangeCallback(event.tiles);
+        });
 
         from(this.layoutProvider.layoutCompleted).pipe(
-            takeWhile(() => this.isAlive))
-            .subscribe((event) => this.layoutCompleted.emit(event));
+            takeUntil(this.destroyed$)
+        ).subscribe((event) => this.layoutCompleted.emit(event));
 
         this.keyup$ = fromEvent(element.ownerDocument, 'keyup') as Observable<KeyboardEvent>;
 
         fromEvent(window, 'resize').pipe(
-            takeWhile(() => this.isAlive),
-            debounceTime(5))
-            .subscribe(() => this.refresh({ resetWidth: true }));
+            debounceTime(5),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => this.refresh({ resetWidth: true }));
     }
 
     // provide a public access
@@ -286,12 +287,12 @@ export class DejaTilesComponent implements AfterViewInit, ControlValueAccessor, 
     }
 
     public ngOnDestroy() {
+        super.ngOnDestroy();
         this.layoutProvider.ngOnDestroy();
         this.canCopy = false;
         this.canCut = false;
         this.canDelete = false;
         this.canPaste = false;
-        this.isAlive = false;
     }
 
     public copySelection() {

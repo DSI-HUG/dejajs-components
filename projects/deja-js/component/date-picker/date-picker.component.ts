@@ -17,7 +17,7 @@ import { DejaChildValidatorDirective, DejaConnectionPositionPair, KeyCodes } fro
 import { _MatInputMixinBase } from '@deja-js/core/util';
 import * as moment_ from 'moment';
 import { combineLatest, from, fromEvent, merge, ReplaySubject, Subject } from 'rxjs';
-import { delay, filter, first, map, switchMap, takeWhile, tap } from 'rxjs/operators';
+import { delay, filter, first, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { formatToMask, formatToUnitOfTime } from './format-to-mask';
 
 const moment: (value?: any, format?: string, strict?: boolean) => moment_.Moment = (<any>moment_).default || moment_;
@@ -137,7 +137,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
     /** Default placeholder for input */
     private _placeholder: string;
     private _showCurrentDateButton: boolean;
-    private isAlive = true;
+    protected destroyed$ = new Subject();
     private _disabled: boolean;
     private _required: boolean;
     private _time: boolean;
@@ -240,65 +240,67 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
                     }));
             }));
 
-        cursorChanged$.pipe(takeWhile(() => this.isAlive))
-            .subscribe((position: number) => {
-                this.cursorPosition = position;
-            });
+        cursorChanged$.pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe((position: number) => {
+            this.cursorPosition = position;
+        });
 
-        keydown$.pipe(takeWhile(() => this.isAlive),
-            filter((event: KeyboardEvent) => !this.showDropDown && (event.code === KeyCodes.KeyD || event.code === KeyCodes.UpArrow || event.code === KeyCodes.DownArrow)))
-            .subscribe((event: KeyboardEvent) => {
-                switch (event.code) {
-                    case (KeyCodes.KeyD):
-                        if (!this.allowFreeEntry) {
-                            event.preventDefault();
-                            this.setToCurrentDate();
-                        }
-                        break;
-
-                    case (KeyCodes.UpArrow):
+        keydown$.pipe(
+            filter((event: KeyboardEvent) => !this.showDropDown && (event.code === KeyCodes.KeyD || event.code === KeyCodes.UpArrow || event.code === KeyCodes.DownArrow)),
+            takeUntil(this.destroyed$)
+        ).subscribe((event: KeyboardEvent) => {
+            switch (event.code) {
+                case (KeyCodes.KeyD):
+                    if (!this.allowFreeEntry) {
                         event.preventDefault();
-                        if (event.altKey) {
-                            this.open();
-                        } else if (this.date) {
-                            // If cursor is on number, we can update it
-                            if (!isNaN(+this._inputModel[this.cursorPosition - 1])) {
-                                // We get an array of all sections of the date format
-                                const format = this._format.match(DejaDatePickerComponent.formattingTokens);
-                                // We check the letter of the format at cursor position
-                                const f = this._format[this.cursorPosition - 1];
-                                // With this letter we determinate the format by checking on format array
-                                let unitOfTime = format.find((str) => str.indexOf(f) !== -1);
-                                // If this format has a corresponding value inside formatToUnitOfTime object we can increment its value with moment.add() method
-                                unitOfTime = (unitOfTime && formatToUnitOfTime[unitOfTime]) ? formatToUnitOfTime[unitOfTime] : undefined;
-                                if (unitOfTime) {
-                                    this.updateModel(moment(this.value).add(1, unitOfTime as moment_.unitOfTime.DurationConstructor).toDate());
-                                }
+                        this.setToCurrentDate();
+                    }
+                    break;
+
+                case (KeyCodes.UpArrow):
+                    event.preventDefault();
+                    if (event.altKey) {
+                        this.open();
+                    } else if (this.date) {
+                        // If cursor is on number, we can update it
+                        if (!isNaN(+this._inputModel[this.cursorPosition - 1])) {
+                            // We get an array of all sections of the date format
+                            const format = this._format.match(DejaDatePickerComponent.formattingTokens);
+                            // We check the letter of the format at cursor position
+                            const f = this._format[this.cursorPosition - 1];
+                            // With this letter we determinate the format by checking on format array
+                            let unitOfTime = format.find((str) => str.indexOf(f) !== -1);
+                            // If this format has a corresponding value inside formatToUnitOfTime object we can increment its value with moment.add() method
+                            unitOfTime = (unitOfTime && formatToUnitOfTime[unitOfTime]) ? formatToUnitOfTime[unitOfTime] : undefined;
+                            if (unitOfTime) {
+                                this.updateModel(moment(this.value).add(1, unitOfTime as moment_.unitOfTime.DurationConstructor).toDate());
                             }
                         }
-                        break;
-                    case (KeyCodes.DownArrow):
-                        event.preventDefault();
-                        if (event.altKey) {
-                            this.open();
-                        } else if (this.date) {
-                            // Same as arrowUp
-                            if (!isNaN(+this._inputModel[this.cursorPosition - 1])) {
-                                const format = this._format.match(DejaDatePickerComponent.formattingTokens);
-                                const f = this._format[this.cursorPosition - 1];
+                    }
+                    break;
+                case (KeyCodes.DownArrow):
+                    event.preventDefault();
+                    if (event.altKey) {
+                        this.open();
+                    } else if (this.date) {
+                        // Same as arrowUp
+                        if (!isNaN(+this._inputModel[this.cursorPosition - 1])) {
+                            const format = this._format.match(DejaDatePickerComponent.formattingTokens);
+                            const f = this._format[this.cursorPosition - 1];
 
-                                let unitOfTime = format.find((str) => str.indexOf(f) !== -1);
-                                unitOfTime = (unitOfTime && formatToUnitOfTime[unitOfTime]) ? formatToUnitOfTime[unitOfTime] : undefined;
-                                if (unitOfTime) {
-                                    this.updateModel(moment(this.value).subtract(1, unitOfTime as moment_.unitOfTime.DurationConstructor).toDate());
-                                }
+                            let unitOfTime = format.find((str) => str.indexOf(f) !== -1);
+                            unitOfTime = (unitOfTime && formatToUnitOfTime[unitOfTime]) ? formatToUnitOfTime[unitOfTime] : undefined;
+                            if (unitOfTime) {
+                                this.updateModel(moment(this.value).subtract(1, unitOfTime as moment_.unitOfTime.DurationConstructor).toDate());
                             }
                         }
-                        break;
-                    default:
-                        break;
-                }
-            });
+                    }
+                    break;
+                default:
+                    break;
+            }
+        });
 
         const valueUpdated$ = combineLatest(this.formatChanged$, this.dateChanged$).pipe(
             tap(([format]) => {
@@ -315,43 +317,46 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
                 this._mask = mask;
             }));
 
-        valueUpdated$.pipe(takeWhile(() => this.isAlive))
-            .subscribe(([format, value]) => {
-                this.date = value;
-                this._inputModel = (this.date) ? (this.date instanceof Date ? moment(this.date).format(format) : this.date) : null;
+        valueUpdated$.pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe(([format, value]) => {
+            this.date = value;
+            this._inputModel = (this.date) ? (this.date instanceof Date ? moment(this.date).format(format) : this.date) : null;
 
-                // si la position du curseur était stockée, on la restaure apres avoir changé la valeur
-                if (this.cursorPosition && !this.allowFreeEntry) {
-                    this.inputElement$.pipe(
-                        delay(1),
-                        first())
-                        .subscribe((elem: HTMLInputElement) => elem.setSelectionRange(this.cursorPosition, this.cursorPosition));
-                }
-                this.changeDetectorRef.markForCheck();
-            });
+            // si la position du curseur était stockée, on la restaure apres avoir changé la valeur
+            if (this.cursorPosition && !this.allowFreeEntry) {
+                this.inputElement$.pipe(
+                    delay(1),
+                    first())
+                    .subscribe((elem: HTMLInputElement) => elem.setSelectionRange(this.cursorPosition, this.cursorPosition));
+            }
+            this.changeDetectorRef.markForCheck();
+        });
 
-        keydown$.pipe(takeWhile(() => this.isAlive),
-            filter(() => this.showDropDown))
-            .subscribe((event: KeyboardEvent) => {
-                switch (event.code) {
-                    case (KeyCodes.Escape):
-                        this.close();
-                        break;
+        keydown$.pipe(
+            filter(() => this.showDropDown),
+            takeUntil(this.destroyed$)
+        ).subscribe((event: KeyboardEvent) => {
+            switch (event.code) {
+                case (KeyCodes.Escape):
+                    this.close();
+                    break;
 
-                    default:
-                        this.dateSelectorComponent.keyDown(event);
+                default:
+                    this.dateSelectorComponent.keyDown(event);
 
-                }
-            });
+            }
+        });
 
         combineLatest(this.inputElement$, this.focus$).pipe(
-            takeWhile(() => this.isAlive))
-            .subscribe(([element]) => element.focus());
+            takeUntil(this.destroyed$)
+        ).subscribe(([element]) => element.focus());
     }
 
     /** unsubscribe to all Observable when component is destroyed */
     public ngOnDestroy() {
-        this.isAlive = false;
+        this.destroyed$.next();
+        this.destroyed$.unsubscribe();
         this.stateChanges.complete();
         this.fm.stopMonitoring(this.elementRef.nativeElement);
     }

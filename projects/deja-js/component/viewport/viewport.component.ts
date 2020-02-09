@@ -8,9 +8,9 @@
 
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, HostBinding, Input, OnDestroy, ViewChild } from '@angular/core';
-import { IViewPort, IViewPortItem, IViewPortRefreshParams, ViewportDirection, ViewportMode, ViewPortService } from '@deja-js/core';
+import { Destroy, IViewPort, IViewPortItem, IViewPortRefreshParams, ViewportDirection, ViewportMode, ViewPortService } from '@deja-js/core';
 import { from, fromEvent, interval, merge, Subject, Subscription, timer } from 'rxjs';
-import { debounceTime, delay, first, map, takeUntil, takeWhile } from 'rxjs/operators';
+import { debounceTime, delay, first, map, takeUntil } from 'rxjs/operators';
 
 export enum DejaViewPortScrollStyle {
     scrollbar,
@@ -24,7 +24,7 @@ export enum DejaViewPortScrollStyle {
     styleUrls: ['./viewport.component.scss'],
     templateUrl: './viewport.component.html',
 })
-export class DejaViewPortComponent implements OnDestroy {
+export class DejaViewPortComponent extends Destroy implements OnDestroy {
     public beforeSize: number;
     public afterSize: number;
     public vpItems: IDejaViewPortItem[];
@@ -46,7 +46,6 @@ export class DejaViewPortComponent implements OnDestroy {
 
     private _items: IDejaViewPortItem[];
     private element: HTMLElement;
-    private isAlive = true;
     private downButton$ = new Subject<HTMLElement>();
     private upButton$ = new Subject<HTMLElement>();
     private downButton$Sub: Subscription;
@@ -140,12 +139,12 @@ export class DejaViewPortComponent implements OnDestroy {
         this.element = element.nativeElement as HTMLElement;
         this.viewPort.element$.next(this.element);
         fromEvent(this.element, 'scroll').pipe(
-            takeWhile(() => this.isAlive),
             map((event: Event) => event.target as HTMLElement),
-            map((target) => Math.round(this._isHorizontal ? target.scrollLeft : target.scrollTop)))
-            .subscribe((scrollPos) => {
-                this.viewPort.scrollPosition$.next(scrollPos);
-            });
+            map((target) => Math.round(this._isHorizontal ? target.scrollLeft : target.scrollTop)),
+            takeUntil(this.destroyed$)
+        ).subscribe((scrollPos) => {
+            this.viewPort.scrollPosition$.next(scrollPos);
+        });
     }
 
     public get itemTemplate() { return this.itemTemplateExternal || this.itemTemplateInternal; }
@@ -184,101 +183,102 @@ export class DejaViewPortComponent implements OnDestroy {
     }
 
     constructor(private changeDetectorRef: ChangeDetectorRef, private viewPort: ViewPortService) {
+        super();
+
         fromEvent(window, 'resize').pipe(
-            takeWhile(() => this.isAlive),
-            debounceTime(5))
-            .subscribe(() => {
-                this.viewPort.deleteSizeCache();
-                this.viewPort.refresh();
-                this.changeDetectorRef.markForCheck();
-            });
+            debounceTime(5),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => {
+            this.viewPort.deleteSizeCache();
+            this.viewPort.refresh();
+            this.changeDetectorRef.markForCheck();
+        });
 
         viewPort.viewPort$.pipe(
-            takeWhile(() => this.isAlive))
-            .subscribe((viewPortResult: IViewPort) => {
-                if (viewPort.mode !== ViewportMode.disabled) {
-                    this.vpItems = viewPortResult.visibleItems as IDejaViewPortItem[];
-                    this.vpStartIndex = viewPortResult.startIndex;
-                    this.vpEndIndex = viewPortResult.endIndex;
-                } else {
-                    this.vpStartIndex = 0;
-                    this.vpEndIndex = 0;
-                }
+            takeUntil(this.destroyed$)
+        ).subscribe((viewPortResult: IViewPort) => {
+            if (viewPort.mode !== ViewportMode.disabled) {
+                this.vpItems = viewPortResult.visibleItems as IDejaViewPortItem[];
+                this.vpStartIndex = viewPortResult.startIndex;
+                this.vpEndIndex = viewPortResult.endIndex;
+            } else {
+                this.vpStartIndex = 0;
+                this.vpEndIndex = 0;
+            }
 
-                if (this.hasButtons) {
-                    this.startOffset = this.scrollPos - viewPortResult.beforeSize;
-                    this.beforeSize = null;
-                    this.afterSize = null;
-                    this.hasUpButton = this.scrollPos > 0;
-                    this.hasDownButton = this.scrollPos + viewPortResult.listSize < viewPortResult.beforeSize + viewPortResult.viewPortSize + viewPortResult.afterSize;
+            if (this.hasButtons) {
+                this.startOffset = this.scrollPos - viewPortResult.beforeSize;
+                this.beforeSize = null;
+                this.afterSize = null;
+                this.hasUpButton = this.scrollPos > 0;
+                this.hasDownButton = this.scrollPos + viewPortResult.listSize < viewPortResult.beforeSize + viewPortResult.viewPortSize + viewPortResult.afterSize;
 
-                } else {
-                    this.startOffset = 0;
-                    this.beforeSize = viewPortResult.beforeSize || null;
-                    this.afterSize = viewPortResult.afterSize || null;
-                    this.hasUpButton = false;
-                    this.hasDownButton = false;
-                }
+            } else {
+                this.startOffset = 0;
+                this.beforeSize = viewPortResult.beforeSize || null;
+                this.afterSize = viewPortResult.afterSize || null;
+                this.hasUpButton = false;
+                this.hasDownButton = false;
+            }
 
-                const scroll = (vp: IViewPort) => {
-                    if (!this.hasButtons) {
-                        if (this.element) {
-                            if (this._isHorizontal) {
-                                this.element.scrollLeft = vp.scrollPos;
-                            } else {
-                                this.element.scrollTop = vp.scrollPos;
-                            }
-                            this.scrollPosition = vp.scrollPos;
-                        }
-                    } else {
-                        this.scrollPos = vp.scrollPos;
-                        this.startOffset = this.scrollPos - vp.beforeSize;
-                    }
-                    this.changeDetectorRef.markForCheck();
-                };
-
-                if (viewPortResult.scrollPos !== undefined) {
-                    let length = 0;
+            const scroll = (vp: IViewPort) => {
+                if (!this.hasButtons) {
                     if (this.element) {
-                        const listItems = this.element.getElementsByClassName('listitem');
-                        length = listItems.length;
-                    }
-                    const rebind = length !== viewPortResult.visibleItems.length;
-                    if (!rebind) {
-                        scroll(viewPortResult);
-                    } else {
-                        this.changeDetectorRef.markForCheck();
-                        timer(1).pipe(
-                            first())
-                            .subscribe(() => scroll(viewPortResult));
+                        if (this._isHorizontal) {
+                            this.element.scrollLeft = vp.scrollPos;
+                        } else {
+                            this.element.scrollTop = vp.scrollPos;
+                        }
+                        this.scrollPosition = vp.scrollPos;
                     }
                 } else {
-                    this.changeDetectorRef.markForCheck();
+                    this.scrollPos = vp.scrollPos;
+                    this.startOffset = this.scrollPos - vp.beforeSize;
                 }
-            });
+                this.changeDetectorRef.markForCheck();
+            };
+
+            if (viewPortResult.scrollPos !== undefined) {
+                let length = 0;
+                if (this.element) {
+                    const listItems = this.element.getElementsByClassName('listitem');
+                    length = listItems.length;
+                }
+                const rebind = length !== viewPortResult.visibleItems.length;
+                if (!rebind) {
+                    scroll(viewPortResult);
+                } else {
+                    this.changeDetectorRef.markForCheck();
+                    timer(1).pipe(
+                        first())
+                        .subscribe(() => scroll(viewPortResult));
+                }
+            } else {
+                this.changeDetectorRef.markForCheck();
+            }
+        });
 
         from(this.downButton$).pipe(
-            takeWhile(() => this.isAlive))
-            .subscribe((downButton) => {
-                if (downButton) {
-                    if (!this.mouseWheel$Sub) {
-                        this.mouseWheel$Sub = fromEvent(this.element, 'mousewheel')
-                            .subscribe((event: MouseWheelEvent) => {
-                                this.scrollPos = this.scrollPos + event.deltaY;
-                                event.stopPropagation();
-                                event.preventDefault();
-                                return false;
-                            });
-                    }
-                } else if (this.mouseWheel$Sub) {
-                    this.mouseWheel$Sub.unsubscribe();
-                    delete this.mouseWheel$Sub;
-                    this.scrollPos = 0;
+            takeUntil(this.destroyed$)
+        ).subscribe((downButton) => {
+            if (downButton) {
+                if (!this.mouseWheel$Sub) {
+                    this.mouseWheel$Sub = fromEvent(this.element, 'mousewheel')
+                        .subscribe((event: MouseWheelEvent) => {
+                            this.scrollPos = this.scrollPos + event.deltaY;
+                            event.stopPropagation();
+                            event.preventDefault();
+                            return false;
+                        });
                 }
-            });
+            } else if (this.mouseWheel$Sub) {
+                this.mouseWheel$Sub.unsubscribe();
+                delete this.mouseWheel$Sub;
+                this.scrollPos = 0;
+            }
+        });
 
         const downButton$ = from(this.downButton$).pipe(
-            takeWhile(() => this.isAlive),
             map((downButton) => {
                 if (downButton) {
                     if (!this.downButton$Sub) {
@@ -317,7 +317,6 @@ export class DejaViewPortComponent implements OnDestroy {
             }));
 
         const upButton$ = from(this.upButton$).pipe(
-            takeWhile(() => this.isAlive),
             map((upButton) => {
                 if (upButton) {
                     if (!this.upButton$Sub) {
@@ -357,16 +356,16 @@ export class DejaViewPortComponent implements OnDestroy {
             }));
 
         merge(downButton$, upButton$).pipe(
-            delay(10))
-            .subscribe((needToRefresh) => {
-                if (needToRefresh) {
-                    this.viewPort.refresh();
-                }
-            });
+            delay(10),
+            takeUntil(this.destroyed$)
+        ).subscribe((needToRefresh) => {
+            if (needToRefresh) {
+                this.viewPort.refresh();
+            }
+        });
     }
 
     public ngOnDestroy() {
-        this.isAlive = false;
         if (this.downButton$Sub) {
             this.downButton$Sub.unsubscribe();
         }

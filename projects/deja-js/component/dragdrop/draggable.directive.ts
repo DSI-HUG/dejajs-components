@@ -5,15 +5,15 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-import { Directive, ElementRef, HostBinding, Input, OnDestroy, Optional } from '@angular/core';
-import { DejaClipboardService, UUID } from '@deja-js/core';
+import { Directive, ElementRef, HostBinding, Input, Optional } from '@angular/core';
+import { DejaClipboardService, Destroy, UUID } from '@deja-js/core';
 import { fromEvent } from 'rxjs';
-import { filter, first, takeWhile } from 'rxjs/operators';
+import { filter, first, takeUntil } from 'rxjs/operators';
 
 @Directive({
     selector: '[deja-draggable]',
 })
-export class DejaDraggableDirective implements OnDestroy {
+export class DejaDraggableDirective extends Destroy {
     @HostBinding('attr.draggable') public draggable: boolean = null;
     @HostBinding('attr.dragdropid') public dragdropid: string;
     private draginfokey = 'draginfos';
@@ -21,7 +21,6 @@ export class DejaDraggableDirective implements OnDestroy {
     private elementKey = 'element';
     private uuidKey = 'uuid';
     private _context: IDejaDragContext;
-    private isAlive = true;
 
     @Input('deja-draggable')
     public set context(value: IDejaDragContext) {
@@ -34,76 +33,74 @@ export class DejaDraggableDirective implements OnDestroy {
     }
 
     constructor(elementRef: ElementRef, @Optional() private clipboardService: DejaClipboardService) {
+        super();
+
         const element = elementRef.nativeElement as HTMLElement;
 
         fromEvent(element, 'dragstart').pipe(
-            takeWhile(() => this.isAlive),
-            filter(() => !!this.context))
-            .subscribe((event: DragEvent) => {
-                if (!clipboardService) {
-                    throw new Error('To use the DejaDraggableDirective, please import and provide the DejaClipboardService in your application.');
+            filter(() => !!this.context),
+            takeUntil(this.destroyed$)
+        ).subscribe((event: DragEvent) => {
+            if (!clipboardService) {
+                throw new Error('To use the DejaDraggableDirective, please import and provide the DejaClipboardService in your application.');
+            }
+
+            // console.log('dragstart');
+            const dragInfos = {} as { [key: string]: any };
+            this.dragdropid = new UUID().toString();
+            dragInfos[this.uuidKey] = this.dragdropid;
+
+            const object = (this.context && this.context.object) || element;
+            dragInfos[this.objectKey] = object;
+            dragInfos[this.elementKey] = element;
+
+            this.clipboardService.set(this.draginfokey, dragInfos);
+
+            let data = 'notavailable';
+            if (object) {
+                object.dragged = true;
+                data = JSON.stringify(data);
+            }
+
+            if (this.context && this.context.dragstartcallback) {
+                const e = event as IDejaDragEvent;
+                e.dragInfo = dragInfos;
+                e.dragObject = this.context.object;
+                e.dragElement = element;
+                this.context.dragstartcallback(e);
+                event.dataTransfer.setData('text/plain', data);
+                if (e.defaultPrevented) {
+                    event.preventDefault();
+                }
+            }
+
+            fromEvent(element, 'dragend').pipe(
+                first(),
+                takeUntil(this.destroyed$)
+            ).subscribe((evt: DragEvent) => {
+                // console.log('dragend');
+                const dragEndInfos = this.clipboardService.get(this.draginfokey) as { [key: string]: any };
+                const obj = dragEndInfos && dragEndInfos[this.objectKey];
+                if (obj) {
+                    delete obj.dragged;
                 }
 
-                // console.log('dragstart');
-                const dragInfos = {} as { [key: string]: any };
-                this.dragdropid = new UUID().toString();
-                dragInfos[this.uuidKey] = this.dragdropid;
+                if (this.context && this.context.dragendcallback && dragEndInfos) {
+                    const e = evt as IDejaDragEvent;
+                    e.dragInfo = dragEndInfos;
+                    e.dragObject = obj;
+                    e.dragElement = dragEndInfos[this.elementKey];
+                    this.context.dragendcallback(e);
 
-                const object = (this.context && this.context.object) || element;
-                dragInfos[this.objectKey] = object;
-                dragInfos[this.elementKey] = element;
-
-                this.clipboardService.set(this.draginfokey, dragInfos);
-
-                let data = 'notavailable';
-                if (object) {
-                    object.dragged = true;
-                    data = JSON.stringify(data);
-                }
-
-                if (this.context && this.context.dragstartcallback) {
-                    const e = event as IDejaDragEvent;
-                    e.dragInfo = dragInfos;
-                    e.dragObject = this.context.object;
-                    e.dragElement = element;
-                    this.context.dragstartcallback(e);
-                    event.dataTransfer.setData('text/plain', data);
                     if (e.defaultPrevented) {
-                        event.preventDefault();
+                        evt.stopPropagation();
                     }
                 }
 
-                fromEvent(element, 'dragend').pipe(
-                    takeWhile(() => this.isAlive),
-                    first())
-                    .subscribe((evt: DragEvent) => {
-                        // console.log('dragend');
-                        const dragEndInfos = this.clipboardService.get(this.draginfokey) as { [key: string]: any };
-                        const obj = dragEndInfos && dragEndInfos[this.objectKey];
-                        if (obj) {
-                            delete obj.dragged;
-                        }
-
-                        if (this.context && this.context.dragendcallback && dragEndInfos) {
-                            const e = evt as IDejaDragEvent;
-                            e.dragInfo = dragEndInfos;
-                            e.dragObject = obj;
-                            e.dragElement = dragEndInfos[this.elementKey];
-                            this.context.dragendcallback(e);
-
-                            if (e.defaultPrevented) {
-                                evt.stopPropagation();
-                            }
-                        }
-
-                        this.clipboardService.clear();
-                        this.dragdropid = undefined;
-                    });
+                this.clipboardService.clear();
+                this.dragdropid = undefined;
             });
-    }
-
-    public ngOnDestroy() {
-        this.isAlive = false;
+        });
     }
 }
 

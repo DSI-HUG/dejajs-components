@@ -7,13 +7,14 @@
  */
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, Optional, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { IDejaChipsComponentCloseEvent } from '@deja-js/component/chips';
 import { IDejaDragEvent } from '@deja-js/component/dragdrop';
 import { DejaTreeListComponent, DejaTreeListScrollEvent } from '@deja-js/component/tree-list';
+import { Destroy } from '@deja-js/core';
 import { DejaClipboardService, GroupingService, IGroupInfo, IItemBase, IItemTree, ISortInfos, ItemListService, IViewListResult, IViewPort, KeyCodes, SortingService, ViewportMode, ViewPortService } from '@deja-js/core';
 import { combineLatest, from, fromEvent, Observable, ReplaySubject, Subject, timer } from 'rxjs';
-import { debounceTime, filter, first, map, switchMap, takeWhile, tap } from 'rxjs/operators';
+import { debounceTime, filter, first, map, switchMap, takeUntil, takeWhile, tap } from 'rxjs/operators';
 import { IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent } from './data-grid-column/data-grid-column';
 import { IDejaGridColumnLayout } from './data-grid-column/data-grid-column-layout';
 import { DejaGridColumnsLayoutInfos } from './data-grid-column/data-grid-column-layout-infos';
@@ -35,7 +36,7 @@ const noop = () => { };
     ],
     templateUrl: './data-grid.component.html',
 })
-export class DejaGridComponent implements OnDestroy {
+export class DejaGridComponent extends Destroy {
     @Input() public placeholder: string;
     /** Texte à afficher par default dans la zone de recherche */
     /** Texte affiché si aucune donnée n'est présente dans le tableau */
@@ -158,7 +159,6 @@ export class DejaGridComponent implements OnDestroy {
     private _itemListService: ItemListService;
     private sizingLayoutInfos: DejaGridColumnsLayoutInfos;
     private columnsLayoutInfos: DejaGridColumnsLayoutInfos;
-    private isAlive = true;
     private hasPercentageColumns = false;
     private _sortable = false;
     private _searchArea = false;
@@ -411,12 +411,13 @@ export class DejaGridComponent implements OnDestroy {
     }
 
     constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef, @Optional() private clipboardService: DejaClipboardService) {
+        super();
+
         const element = this.elementRef.nativeElement as HTMLElement;
 
         this.clearColumnLayout();
 
         combineLatest(this.columns$, this.columnGroups$).pipe(
-            takeWhile(() => this.isAlive),
             map(([columns, columnGroups]) => {
                 if (typeof columnGroups === 'string') {
                     const groups = columnGroups.split(',').map((v) => v.trim());
@@ -439,104 +440,101 @@ export class DejaGridComponent implements OnDestroy {
                 });
                 return groupInfos;
             }),
-            switchMap((groupInfos) => this.treeListComponent.group$(groupInfos).pipe(map(() => groupInfos))))
-            .subscribe((groupInfos) => {
-                this.groupChanged.emit(groupInfos);
-                this.changeDetectorRef.markForCheck();
-            });
+            switchMap((groupInfos) => this.treeListComponent.group$(groupInfos).pipe(map(() => groupInfos))),
+            takeUntil(this.destroyed$)
+        ).subscribe((groupInfos) => {
+            this.groupChanged.emit(groupInfos);
+            this.changeDetectorRef.markForCheck();
+        });
 
         from(this.columns$).pipe(
-            takeWhile(() => this.isAlive),
             tap((columns) => this._columns = columns),
-            debounceTime(1))
-            .subscribe(() => this.calcColumnsLayout());
+            debounceTime(1),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => this.calcColumnsLayout());
 
         from(this.printColumnLayout$).pipe(
-            takeWhile(() => this.isAlive),
-            debounceTime(1000))
-            .subscribe(() => {
-                console.log('');
-                console.log('Auto columns layout:');
-                console.log(JSON.stringify(this._columns, null, 4));
-                console.log('');
-            });
+            debounceTime(1000),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => {
+            console.log('');
+            console.log('Auto columns layout:');
+            console.log(JSON.stringify(this._columns, null, 4));
+            console.log('');
+        });
 
         from(this.disableUserSelection$).pipe(
-            takeWhile(() => this.isAlive),
             tap(() => element.setAttribute('disableselection', '')),
-            debounceTime(1000))
-            .subscribe(() => element.removeAttribute('disableselection'));
+            debounceTime(1000),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => element.removeAttribute('disableselection'));
 
         fromEvent(window, 'resize').pipe(
-            takeWhile(() => this.isAlive),
             filter(() => this.hasPercentageColumns),
-            debounceTime(5))
-            .subscribe(() => {
-                this.calcColumnsLayout();
-            });
+            debounceTime(5),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => {
+            this.calcColumnsLayout();
+        });
 
         fromEvent(element, 'keydown').pipe(
-            takeWhile(() => this.isAlive))
-            .subscribe((event: KeyboardEvent) => {
-                const findPrev = (index: number) => {
-                    if (index === -1) {
-                        index = this.columns.length;
-                    }
-                    while (--index >= 0) {
-                        const column = this.columns[index];
-                        if (column.w > 0) {
-                            return column;
-                        }
-                    }
-                    return this.currentColumn;
-                };
-
-                const findNext = (index: number) => {
-                    while (++index < this.columns.length) {
-                        const column = this.columns[index];
-                        if (column.w > 0) {
-                            return column;
-                        }
-                    }
-                    return this.currentColumn;
-                };
-
-                switch (event.code) {
-                    case KeyCodes.LeftArrow:
-                        this.currentColumn = this.columns && findPrev(this.columns.findIndex((c) => c.isCurrent));
-                        event.preventDefault();
-                        return false;
-
-                    case KeyCodes.RightArrow:
-                        this.currentColumn = this.columns && findNext(this.columns.findIndex((c) => c.isCurrent));
-                        event.preventDefault();
-                        return false;
-
-                    default:
-                        return true;
+            takeUntil(this.destroyed$)
+        ).subscribe((event: KeyboardEvent) => {
+            const findPrev = (index: number) => {
+                if (index === -1) {
+                    index = this.columns.length;
                 }
-            });
+                while (--index >= 0) {
+                    const column = this.columns[index];
+                    if (column.w > 0) {
+                        return column;
+                    }
+                }
+                return this.currentColumn;
+            };
+
+            const findNext = (index: number) => {
+                while (++index < this.columns.length) {
+                    const column = this.columns[index];
+                    if (column.w > 0) {
+                        return column;
+                    }
+                }
+                return this.currentColumn;
+            };
+
+            switch (event.code) {
+                case KeyCodes.LeftArrow:
+                    this.currentColumn = this.columns && findPrev(this.columns.findIndex((c) => c.isCurrent));
+                    event.preventDefault();
+                    return false;
+
+                case KeyCodes.RightArrow:
+                    this.currentColumn = this.columns && findNext(this.columns.findIndex((c) => c.isCurrent));
+                    event.preventDefault();
+                    return false;
+
+                default:
+                    return true;
+            }
+        });
 
         fromEvent(element, 'mousedown').pipe(
-            takeWhile(() => this.isAlive),
-            filter((downEvent: MouseEvent) => downEvent.buttons === 1))
-            .subscribe((downEvent: MouseEvent) => {
-                const clickedColumn = this.getColumnFromHTMLElement(downEvent.target as HTMLElement);
+            filter((downEvent: MouseEvent) => downEvent.buttons === 1),
+            takeUntil(this.destroyed$)
+        ).subscribe((downEvent: MouseEvent) => {
+            const clickedColumn = this.getColumnFromHTMLElement(downEvent.target as HTMLElement);
 
-                fromEvent(element, 'mouseup').pipe(
-                    first(),
-                    filter(() => !!clickedColumn))
-                    .subscribe((upEvent: MouseEvent) => {
-                        const columnElement = this.getColumnElementFromHTMLElement(upEvent.target as HTMLElement);
-                        if ((columnElement && columnElement.getAttribute('colname')) === clickedColumn.name) {
-                            this.currentColumn = clickedColumn;
-                        }
-                    });
-            });
-    }
-
-    public ngOnDestroy() {
-        this.isAlive = false;
+            fromEvent(element, 'mouseup').pipe(
+                first(),
+                filter(() => !!clickedColumn))
+                .subscribe((upEvent: MouseEvent) => {
+                    const columnElement = this.getColumnElementFromHTMLElement(upEvent.target as HTMLElement);
+                    if ((columnElement && columnElement.getAttribute('colname')) === clickedColumn.name) {
+                        this.currentColumn = clickedColumn;
+                    }
+                });
+        });
     }
 
     // get accessor

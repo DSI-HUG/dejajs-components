@@ -160,11 +160,11 @@ export class DejaSlimScrollDirective implements OnInit, OnDestroy {
         this.railMouseDown = this.railMouseDown.bind(this);
     }
 
-    public ngOnInit(): void {
+    public ngOnInit() {
         this.init();
     }
 
-    public ngOnDestroy(): void {
+    public ngOnDestroy() {
         if (this._changesTracker) {
             clearInterval(this._changesTracker);
         }
@@ -181,7 +181,7 @@ export class DejaSlimScrollDirective implements OnInit, OnDestroy {
     }
 
     @HostListener('window:resize', ['$event'])
-    public onResize(): void {
+    public onResize() {
         this.init();
     }
 
@@ -310,7 +310,7 @@ export class DejaSlimScrollDirective implements OnInit, OnDestroy {
         this._options.maxHeightBeforeEnable = value || defaults.maxHeightBeforeEnable;
     }
 
-    private init(): void {
+    private init() {
         // ensure we are not binding it again
         if (this._bar && this._rail) {
             this.refresh();
@@ -319,7 +319,7 @@ export class DejaSlimScrollDirective implements OnInit, OnDestroy {
         }
     }
 
-    private trackPanelHeightChanged = (): void => {
+    private trackPanelHeightChanged = () => {
         this._previousHeight = this._me.scrollHeight;
 
         this._changesTracker = window.setInterval(() => {
@@ -348,7 +348,7 @@ export class DejaSlimScrollDirective implements OnInit, OnDestroy {
         return this.hasParentClass(e.parentElement, className);
     }
 
-    private onWheel(e: WheelEvent): void {
+    private onWheel(e: WheelEvent) {
         // use mouse wheel only when mouse is over
         if (!this._isOverPanel) {
             return;
@@ -377,7 +377,7 @@ export class DejaSlimScrollDirective implements OnInit, OnDestroy {
         }
     }
 
-    private attachWheel(target: Window): void {
+    private attachWheel(target: Window) {
         if (window.addEventListener) {
             target.addEventListener('DOMMouseScroll', this.onWheel, false);
             target.addEventListener('mousewheel', this.onWheel, false);
@@ -386,7 +386,7 @@ export class DejaSlimScrollDirective implements OnInit, OnDestroy {
         }
     }
 
-    private showBar(): void {
+    private showBar() {
         // recalculate bar height
         this.getBarHeight();
         if (this._queueHide) {
@@ -414,7 +414,7 @@ export class DejaSlimScrollDirective implements OnInit, OnDestroy {
         this._renderer.setStyle(this._rail, 'opacity', this._options.railOpacity.toString());
     }
 
-    private hideBar(): void {
+    private hideBar() {
         // only hide when options allow it
         if (
             !this._options.alwaysVisible
@@ -475,7 +475,7 @@ export class DejaSlimScrollDirective implements OnInit, OnDestroy {
         this.hideBar();
     }
 
-    private getBarHeight(): void {
+    private getBarHeight() {
         // calculate scrollbar height and make sure it is not too small
         this._barHeight = Math.max(this._me.offsetHeight / (this._me.scrollHeight === 0 ? 1 : this._me.scrollHeight) * this._me.offsetHeight, this._minBarHeight);
         this._renderer.setStyle(this._bar, 'height', `${this._barHeight}px`);
@@ -485,7 +485,7 @@ export class DejaSlimScrollDirective implements OnInit, OnDestroy {
         this._renderer.setStyle(this._bar, 'display', display);
     }
 
-    private refresh(): void {
+    private refresh() {
         this.getBarHeight();
 
         // Pass height: auto to an existing slimscroll object to force a resize after contents have changed
@@ -558,7 +558,7 @@ export class DejaSlimScrollDirective implements OnInit, OnDestroy {
         return false;
     }
 
-    private setup(): void {
+    private setup() {
         // check whether it changes in content
         this.trackPanelHeightChanged();
 
