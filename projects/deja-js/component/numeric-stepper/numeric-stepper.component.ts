@@ -184,9 +184,9 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     @HostBinding('attr.disabled') public _disabled: boolean = null;
 
     // NgModel implementation
-    protected onTouchedCallback: () => void = () => { };
-    protected onChangeCallback: (_: any) => void = () => { };
-    protected onValidatorChangeCallback: () => void = () => { };
+    protected onTouchedCallback = () => { };
+    protected onChangeCallback = (_?: any) => { };
+    protected onValidatorChangeCallback = () => { };
 
     constructor(
         public dejaTextMetricsService: DejaTextMetricsService,

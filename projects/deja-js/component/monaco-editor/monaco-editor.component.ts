@@ -429,8 +429,8 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
     private _valueToCompare = '';
     private _language: 'bat' | 'c' | 'cpp' | 'csharp' | 'css' | 'dockerfile' | 'fsharp' | 'go' | 'handlebars' | 'html' | 'ini' | 'jade' | 'javascript' | 'json' | 'less' | 'lua' | 'markdown' | 'objective-c' | 'php' | 'csharp' | 'plaintext' | 'postiats' | 'powershell' | 'python' | 'r' | 'razor' | 'ruby' | 'scss' | 'sql' | 'swift' | 'typescript' | 'vb' | 'xml' | 'yaml';
 
-    public onTouchedCallback: () => void = () => {};
-    public onChangeCallback: (_: string) => void = (_: string) => {};
+    public onTouchedCallback = () => {};
+    public onChangeCallback = (_: string) => {};
     /**
      * Constructor
      */

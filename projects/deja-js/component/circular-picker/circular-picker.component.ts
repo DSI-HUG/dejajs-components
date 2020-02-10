@@ -77,9 +77,6 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
         return this._disabled;
     }
 
-    public onTouchedCallback: (_a: any) => { };
-    public onChangeCallback: (_a: any) => { };
-
     private _disabled = false;
 
     private _value: number;
@@ -119,6 +116,9 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
     public get circularValues() {
         return this._circularValues;
     }
+
+    public onTouchedCallback = (_a: any) => { };
+    public onChangeCallback = (_a: any) => { };
 
     /**
      * Constructor.
