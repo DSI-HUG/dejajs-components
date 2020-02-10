@@ -92,8 +92,7 @@ describe('DejaMouseDragDrop', () => {
                 BrowserAnimationsModule,
                 CommonModule,
                 FormsModule,
-                DejaMouseDragDropModule,
-                DejaMouseDragDropModule.forRoot(),
+                DejaMouseDragDropModule
             ]
         }).compileComponents();
     }));

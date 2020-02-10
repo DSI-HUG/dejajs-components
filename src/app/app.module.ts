@@ -16,9 +16,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DejaSidenavModule } from '@deja-js/component/sidenav';
-import { DejaClipboardModule } from '@deja-js/core';
 import { DejaMaterialColorsModule, DejaSlimScrollModule, IconModule } from '@deja-js/core';
+import { DejaSidenavModule } from '../../projects/deja-js/component/sidenav/index';
 import { AppComponent } from './app.component';
 import { routing } from './app.routes';
 import { CountriesListService } from './services/countries-list.service';
@@ -42,9 +41,8 @@ import { PeopleService } from './services/people.service';
         MatListModule,
         MatMenuModule,
         DejaMaterialColorsModule,
-        DejaSidenavModule.forRoot(),
         DejaSlimScrollModule,
-        DejaClipboardModule.forRoot(),
+        DejaSidenavModule,
         IconModule,
         routing,
     ],

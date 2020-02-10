@@ -16,7 +16,9 @@ import { IDragCursorInfos } from './mouse-drag-cursor-infos.interface';
 import { IDragDropContext } from './mouse-dragdrop-context.interface';
 import { IDropCursorInfos } from './mouse-drop-cursor-infos.interface';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class DejaMouseDragDropService {
     private _context = {} as IDragDropContext;
     private _isDragging = false;

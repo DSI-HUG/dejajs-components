@@ -12,7 +12,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DejaClipboardModule, GroupingService, ItemListService, IViewPort, SortingService, ViewPortService } from '@deja-js/core';
+import { GroupingService, ItemListService, IViewPort, SortingService, ViewPortService } from '@deja-js/core';
 import * as _ from 'lodash';
 import { from, timer } from 'rxjs';
 import { debounceTime, delay, filter, first, tap } from 'rxjs/operators';
@@ -418,8 +418,7 @@ describe('DejaGridComponent', () => {
                 BrowserAnimationsModule,
                 CommonModule,
                 FormsModule,
-                DejaGridModule,
-                DejaClipboardModule.forRoot(),
+                DejaGridModule
             ],
         }).compileComponents();
 

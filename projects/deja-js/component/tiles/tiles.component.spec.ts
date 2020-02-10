@@ -13,7 +13,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DejaClipboardModule, Rect } from '@deja-js/core';
+import { Rect } from '@deja-js/core';
 import { BehaviorSubject, from } from 'rxjs';
 import { debounceTime, delay, filter, first, map, tap } from 'rxjs/operators';
 import { DejaTileBorderDirection, DejaTileGroupComponent, DejaTilesModule } from './index';
@@ -173,8 +173,7 @@ describe('DejaTilesComponent', () => {
                 BrowserAnimationsModule,
                 CommonModule,
                 FormsModule,
-                DejaTilesModule,
-                DejaClipboardModule.forRoot(),
+                DejaTilesModule
             ],
             providers: [
                 {
