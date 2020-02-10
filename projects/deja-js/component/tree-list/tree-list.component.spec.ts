@@ -15,6 +15,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DejaItemModule, GroupingService, IItemBase, IItemTree, ISortInfos, ItemListService, SortingService, ViewPortService } from '@deja-js/core';
 import { from, Observable, timer } from 'rxjs';
 import { debounceTime, delay, filter, first, tap } from 'rxjs/operators';
+import { KeyCodes } from '../../core/keycodes.enum';
 import { DejaTreeListModule } from './index';
 import { DejaTreeListComponent } from './tree-list.component';
 
@@ -612,7 +613,7 @@ describe('DejaTreeListByModelContainerComponent', () => {
         fixture.detectChanges();
 
         listElement = treeListInstance.listElement;
-        sendKeyDown('DownArrow');
+        sendKeyDown(KeyCodes.DownArrow);
     });
 
     it('should navigate with the keyboard', (done) => {
@@ -656,7 +657,7 @@ describe('DejaTreeListByModelContainerComponent', () => {
                         expect(selectedElements.length).toBe(0);
                         expect(selectedItems.length).toBe(0);
                         // Select first line by keydown
-                        sendKeyDown('DownArrow');
+                        sendKeyDown(KeyCodes.DownArrow);
                         break;
 
                     case 3:
@@ -665,7 +666,7 @@ describe('DejaTreeListByModelContainerComponent', () => {
                         expect(selectedItems.length).toBe(1);
                         expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('0');
                         // Select second line by keydown
-                        sendKeyDown('DownArrow');
+                        sendKeyDown(KeyCodes.DownArrow);
                         break;
 
                     case 4:
@@ -674,7 +675,7 @@ describe('DejaTreeListByModelContainerComponent', () => {
                         expect(selectedItems.length).toBe(1);
                         expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('1');
                         // Select first line by keyup
-                        sendKeyDown('UpArrow');
+                        sendKeyDown(KeyCodes.UpArrow);
                         break;
 
                     case 5:
@@ -683,7 +684,7 @@ describe('DejaTreeListByModelContainerComponent', () => {
                         expect(selectedItems.length).toBe(1);
                         expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('0');
                         // Select first and second lines by shift+keydown
-                        sendKeyDown('DownArrow', true);
+                        sendKeyDown(KeyCodes.DownArrow, true);
                         break;
 
                     case 6:
@@ -693,7 +694,7 @@ describe('DejaTreeListByModelContainerComponent', () => {
                         expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('0');
                         expect(selectedElements[1] && selectedElements[1].attributes.flat).toBe('1');
                         // Keep selection, but pass current line to the third line
-                        sendKeyDown('DownArrow', false, true);
+                        sendKeyDown(KeyCodes.DownArrow, false, true);
                         break;
 
                     case 7:
@@ -732,7 +733,7 @@ describe('DejaTreeListByModelContainerComponent', () => {
                         expect(selectedItems.length).toBe(1);
                         expect(selectedElements[0] && selectedElements[0].attributes.flat).toBe('1999');
                         // Select the two last lines with Shift+PageUp
-                        sendKeyDown('UpArrow', true);
+                        sendKeyDown(KeyCodes.UpArrow, true);
                         break;
 
                     case 11:
@@ -793,7 +794,7 @@ describe('DejaTreeListByModelContainerComponent', () => {
                         // Check current item
                         expect(currentElement && currentElement.attributes.flat).toBe('10');
                         // Select next line only
-                        sendKeyDown('DownArrow');
+                        sendKeyDown(KeyCodes.DownArrow);
                         break;
 
                     case 17:

@@ -16,6 +16,7 @@ import { GroupingService, ItemListService, IViewPort, SortingService, ViewPortSe
 import * as _ from 'lodash';
 import { from, timer } from 'rxjs';
 import { debounceTime, delay, filter, first, tap } from 'rxjs/operators';
+import { KeyCodes } from '../../core/keycodes.enum';
 import { IDejaGridColumn, IDejaGridColumnLayoutEvent } from './data-grid-column/data-grid-column';
 import { DejaGridComponent } from './data-grid.component';
 import { DejaGridModule } from './index';
@@ -843,19 +844,19 @@ describe('DejaGridComponent', () => {
                 switch (++pass) {
                     case 1:
                         expect(currentCells.length).toBe(0);
-                        sendKeyDown('RightArrow');
+                        sendKeyDown(KeyCodes.RightArrow);
                         break;
 
                     case 2:
                         expect(currentCells.length).toBeGreaterThan(0);
                         expect(currentCells[0] && currentCells[0].attributes.colindex).toBe('0');
-                        sendKeyDown('RightArrow');
+                        sendKeyDown(KeyCodes.RightArrow);
                         break;
 
                     case 3:
                         expect(currentCells.length).toBeGreaterThan(0);
                         expect(currentCells[0] && currentCells[0].attributes.colindex).toBe('1');
-                        sendKeyDown('LeftArrow');
+                        sendKeyDown(KeyCodes.LeftArrow);
                         break;
 
                     default:

@@ -155,4 +155,9 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
         this.isOpen = false;
         this.value = color;
     }
+
+    public getStyle() {
+        const backgroundColor = this.value && this.value.toHex();
+        return backgroundColor ? { 'background-color': backgroundColor } : null;
+    }
 }

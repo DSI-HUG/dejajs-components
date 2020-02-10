@@ -1212,6 +1212,24 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
         if (item.className) {
             classNames.push(item.className);
         }
+        if (item.collapsing || item.expanding) {
+            classNames.push('hide');
+        }
+        if (item.depth < this.depthMax) {
+            classNames.push('parent');
+        }
+        if (item.collapsed) {
+            classNames.push('collapsed');
+        }
+        if (item.selected) {
+            classNames.push('selected');
+        }
+        if (item.selectable === false) {
+            classNames.push('unselectable');
+        }
+        if (item.depth === this._depthMax && item.odd) {
+            classNames.push('odd');
+        }
         return classNames.join(' ');
     }
 

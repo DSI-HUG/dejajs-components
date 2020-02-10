@@ -8,9 +8,9 @@
 
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { IconService } from '@deja-js/core';
+import { Destroy } from '@deja-js/core';
 import { BehaviorSubject, from } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { Destroy } from '../../projects/deja-js/core/destroy/destroy';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
