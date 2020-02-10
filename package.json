@@ -38,7 +38,8 @@
         "release:lib:patch": "npm run changelog:patch && cd projects/deja-js/component && npm version patch && git push origin",
         "release:core:major": "npm run changelog:major && cd projects/deja-js/core && npm version major && git push origin",
         "release:core:minor": "npm run changelog:minor && cd projects/deja-js/core && npm version minor && git push origin",
-        "release:core:patch": "npm run changelog:patch && cd projects/deja-js/core && npm version patch && git push origin"
+        "release:core:patch": "npm run changelog:patch && cd projects/deja-js/core && npm version patch && git push origin",
+        "postinstall": "ngcc"
     },
     "dependencies": {
         "@angular/animations": "~9.0.0",
