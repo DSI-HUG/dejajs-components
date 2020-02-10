@@ -14,8 +14,6 @@ import { BehaviorSubject, combineLatest, from, fromEvent, merge, Observable, Sub
 import { debounce, debounceTime, distinctUntilChanged, filter, first, map, takeUntil, tap } from 'rxjs/operators';
 import { DejaColorFab } from './color-fab.class';
 
-const noop = () => { };
-
 export interface IColorEvent extends CustomEvent {
     color: Color;
 }
@@ -35,10 +33,6 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
     @Output() public colorhover = new EventEmitter<IColorEvent>();
 
     public _resetcolor: Color;
-
-    // ngModel
-    public onTouchedCallback: () => void = noop;
-    public onChangeCallback: (_: any) => void = noop;
 
     private _value: Color;
 
@@ -84,6 +78,10 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
         this._resetcolor$.next(color || null);
     }
 
+    // ngModel
+    public onTouchedCallback = (_a: any) => { };
+    public onChangeCallback = (_a: any) => { };
+
     constructor(elementRef: ElementRef, @Self() @Optional() public _control: NgControl) {
         const element = elementRef.nativeElement as HTMLElement;
 
@@ -119,7 +117,7 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
                 const diff = 0.3 * Math.abs(color.r - resetcolor.r) + 0.4 * Math.abs(color.g - resetcolor.g) + 0.25 * Math.abs(color.b - resetcolor.b);
                 if (diff < bestDiff) {
                     bestColor = color;
-                    return bestDiff = diff;
+                    return diff;
                 }
                 return bestDiff;
             }, 3 * 255);

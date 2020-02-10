@@ -21,8 +21,6 @@ import { IFindItemResult, IParentListInfoResult, ItemListService, IViewListResul
 import { IItemTree } from './item-tree';
 import { IViewPort, IViewPortRefreshParams, ViewportMode, ViewPortService } from './viewport.service';
 
-const noop = () => { };
-
 /** Classe de base pour tous les composants à listes (deja-treelist, deja-select, deja-grid) */
 export abstract class ItemListBase extends Destroy {
     protected _waiter = true;
@@ -287,7 +285,7 @@ export abstract class ItemListBase extends Destroy {
 
     /** Trie la liste par le champs spécifié. */
     public sort(name?: string) {
-        this.sort$(name).pipe(first()).subscribe(noop);
+        this.sort$(name).pipe(first()).subscribe(() => { });
     }
 
     /** Trie la liste par le champs spécifié. */
@@ -369,7 +367,7 @@ export abstract class ItemListBase extends Destroy {
         this.getItemListService().invalidateCache();
         this.calcViewList$().pipe(
             first())
-            .subscribe(noop);
+            .subscribe(() => { });
     }
 
     /** Recalcule le viewport. */

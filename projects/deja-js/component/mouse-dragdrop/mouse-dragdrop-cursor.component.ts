@@ -25,8 +25,8 @@ import { IDropCursorInfos } from './mouse-drop-cursor-infos.interface';
 export class DejaMouseDragDropCursorComponent extends Destroy {
     @ViewChild('block', { static: true }) private icon: ElementRef;
     @ViewChild('content', { static: true }) private content: ElementRef;
-    private position$ = new BehaviorSubject<Position>(undefined);
-    private cursor$ = new BehaviorSubject<IDragCursorInfos>(undefined);
+    private position$ = new BehaviorSubject<Position>(null);
+    private cursor$ = new BehaviorSubject<IDragCursorInfos>(null);
     private _dragCursor: IDragCursorInfos;
     private _currentCursor: IDragCursorInfos;
     private _dropCursor: IDropCursorInfos;

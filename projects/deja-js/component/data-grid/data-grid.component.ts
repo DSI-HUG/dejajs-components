@@ -24,8 +24,6 @@ import { IDejaGridRow } from './data-grid-row/data-grid-row';
 import { DejaGridRowEvent } from './data-grid-row/data-grid-row-event';
 import { DejaGridRowsEvent } from './data-grid-row/data-grid-rows-event';
 
-const noop = () => { };
-
 /** @deprecated use ag-grid instead */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -740,7 +738,7 @@ export class DejaGridComponent extends Destroy {
 
         this.treeListComponent.ungroup$(groupInfo).pipe(
             first())
-            .subscribe(noop);
+            .subscribe(() => {});
     }
 
     public onGroupsChanged(e: IDejaGridGroupsEvent) {
@@ -926,7 +924,6 @@ export class DejaGridComponent extends Destroy {
         let parentElement = element;
 
         while (parentElement && !parentElement.hasAttribute('colname')) {
-            element = parentElement;
             parentElement = parentElement.parentElement;
         }
 

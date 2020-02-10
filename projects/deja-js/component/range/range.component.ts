@@ -13,8 +13,6 @@ import { fromEvent, merge } from 'rxjs';
 import { first, takeUntil, tap } from 'rxjs/operators';
 import { IRange, IRangeEvent, IStepRangeEvent, Range } from './range.interface';
 
-const noop = () => { };
-
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'deja-range',
@@ -40,8 +38,6 @@ export class DejaRangeComponent implements ControlValueAccessor {
     private _disabled = false;
     private _ranges: IRange[];
 
-    public _onChangeCallback: (_: any) => void = noop;
-    public _onTouchCallback: () => void = noop;
     public registerOnChange(fn: any): void { this._onChangeCallback = fn; }
     public registerOnTouched(fn: any): void { this._onTouchCallback = fn; }
 
@@ -75,6 +71,9 @@ export class DejaRangeComponent implements ControlValueAccessor {
     public get readOnly() {
         return this._readOnly || this.disabled;
     }
+
+    public _onChangeCallback = (_a?: any) => { };
+    public _onTouchCallback = (_a?: any) => { };
 
     constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef, @Self() @Optional() public _control: NgControl) {
         if (this._control) {

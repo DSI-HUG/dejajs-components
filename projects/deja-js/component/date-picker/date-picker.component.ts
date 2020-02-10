@@ -22,8 +22,6 @@ import { formatToMask, formatToUnitOfTime } from './format-to-mask';
 
 const moment: (value?: any, format?: string, strict?: boolean) => moment_.Moment = (<any>moment_).default || moment_;
 
-const noop = () => { };
-
 /**
  * Date-picker component for Angular
  */
@@ -111,9 +109,6 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
         return this._mask;
     }
 
-    public onTouchedCallback: () => void = noop;
-    public onChangeCallback: (_: any) => void = noop;
-
     /** Internal use */
     public overlayOwnerElement: HTMLElement;
     public date: Date | string;
@@ -184,6 +179,9 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
     public get empty() {
         return !this.value;
     }
+
+    public onTouchedCallback = (_a?: any) => { };
+    public onChangeCallback = (_a?: any) => { };
 
     /**
      * Constructor

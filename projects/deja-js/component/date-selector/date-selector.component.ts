@@ -30,8 +30,6 @@ export enum DateComponentLayout {
     timeonly,
 }
 
-const noop = () => { };
-
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -86,9 +84,6 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
     public get local() {
         return this._local;
     }
-
-    public onTouchedCallback: () => void = noop;
-    public onChangeCallback: (_: any) => void = noop;
 
     private _currentDays: IDateSelectorItem[];
     private _currentDate: Date = new Date();
@@ -169,6 +164,9 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
     public get disabled() {
         return this._disabled;
     }
+
+    public onTouchedCallback = (_a?: any) => { };
+    public onChangeCallback = (_a?: any) => { };
 
     constructor(elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, @Self() @Optional() public _control: NgControl) {
         super();

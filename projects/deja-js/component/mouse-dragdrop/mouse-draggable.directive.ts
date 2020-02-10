@@ -56,7 +56,7 @@ export class DejaMouseDraggableDirective extends Destroy {
                         const kill$ = merge(mouseUp$, moveUp$).pipe(
                             first(),
                             tap(() => {
-                                dragDropService.dragCursor$.next(undefined);
+                                dragDropService.dragCursor$.next(null);
                                 dragDropService.dragging$.next(false);
                             }));
 

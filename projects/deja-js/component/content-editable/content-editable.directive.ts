@@ -13,14 +13,10 @@ import { Destroy, KeyCodes } from '@deja-js/core';
 import { BehaviorSubject, from, fromEvent, timer } from 'rxjs';
 import { filter, first, map, takeUntil, tap } from 'rxjs/operators';
 
-const noop = () => { };
-
 @Directive({
     selector: '[deja-editable]',
 })
 export class DejaEditableDirective extends Destroy implements ControlValueAccessor, OnInit {
-    public onTouchedCallback: () => void = noop;
-    public onChangeCallback: (_: any) => void = noop;
     private model: string;
     private _inEdition = false;
     private _editMode = false;
@@ -30,6 +26,9 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
     private element: HTMLElement;
 
     @HostBinding('attr.disabled') public _disabled: boolean = null;
+
+    public onTouchedCallback = (_a?: any) => { };
+    public onChangeCallback = (_a?: any) => { };
 
     constructor(elementRef: ElementRef, @Self() @Optional() public _control: NgControl) {
         super();
@@ -106,11 +105,8 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
                                 this.value = text;
                             }
                             this.inEdition = false;
-                            return false;
-
                         } else if (e.code === KeyCodes.Escape) {
                             this.inEdition = false;
-                            return false;
                         }
                         return false;
                     });

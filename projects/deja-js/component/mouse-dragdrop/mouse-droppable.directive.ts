@@ -54,7 +54,7 @@ export class DejaMouseDroppableDirective extends Destroy {
                         }
                         this._dragContext = undefined;
                     }
-                    dragDropService.dropCursor$.next(undefined);
+                    dragDropService.dropCursor$.next(null);
                 });
 
             from(dragDropService.dragCursor$).pipe(
@@ -94,7 +94,7 @@ export class DejaMouseDroppableDirective extends Destroy {
                                 this.context.dragLeave(this._dragContext);
                             }
                             this._dragContext = undefined;
-                            dragDropService.dropCursor$.next(undefined);
+                            dragDropService.dropCursor$.next(null);
                         }
                     }
                 });

@@ -13,8 +13,6 @@ import { Circle, Position } from '@deja-js/core';
 import { fromEvent, merge, Subject, Subscription } from 'rxjs';
 import { debounceTime, filter, first, sampleTime, takeUntil, tap } from 'rxjs/operators';
 
-const noop = () => { };
-
 export enum ClockwiseFactorEnum {
     clockwise = -1,
     counterClockwise = 1,
@@ -79,8 +77,8 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
         return this._disabled;
     }
 
-    public onTouchedCallback: () => void = noop;
-    public onChangeCallback: (_: any) => void = noop;
+    public onTouchedCallback: (_a: any) => { };
+    public onChangeCallback: (_a: any) => { };
 
     private _disabled = false;
 

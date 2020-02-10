@@ -19,8 +19,6 @@ import { DejaChildValidatorDirective, DejaConnectionPositionPair, DejaItemCompon
 import { BehaviorSubject, combineLatest, from, fromEvent, merge, Observable, Subject, Subscription, timer } from 'rxjs';
 import { combineLatest as combineLatestOp, debounce, debounceTime, delay, delayWhen, filter, first, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 
-const noop = () => { };
-
 /** Combo box avec une liste basée sur la treelist */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -81,11 +79,6 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
     /** Internal use */
     public overlayOwnerElement: HTMLElement;
     public dropDownMaxHeight: number = null;
-
-    // NgModel implementation
-    public onTouchedCallback: () => void = noop;
-    public onChangeCallback: (_: any) => void = noop;
-    public onValidatorChangeCallback: () => void = noop;
 
     protected _keyboardNavigation = false;
     @HostBinding('attr.wait') public _waiter = false;
@@ -222,6 +215,11 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
             }
         }
     }
+
+    // NgModel implementation
+    public onTouchedCallback = (_a?: any) => { };
+    public onChangeCallback = (_a?: any) => { };
+    public onValidatorChangeCallback = (_a?: any) => { };
 
     constructor(changeDetectorRef: ChangeDetectorRef,
         public viewPort: ViewPortService,
@@ -743,7 +741,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
             first(),
             tap(() => this.ensureSelection()),
             switchMap(() => this.calcViewList$()))
-            .subscribe(noop);
+            .subscribe(() => {});
     }
 
     /** Définit la liste des éléments (tout type d'objet métier) */
@@ -753,7 +751,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
             first(),
             tap(() => this.ensureSelection()),
             switchMap(() => this.calcViewList$()))
-            .subscribe(noop);
+            .subscribe(() => {});
     }
 
     /** Retourne le nombre de niveau pour une liste hierarchique */
@@ -1010,7 +1008,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
                             const item = this._itemList[this.currentItemIndex - this.vpStartRow] as IItemTree;
                             if (this.isCollapsible(item)) {
                                 this.keyboardNavigation$.next();
-                                this.toggleCollapse$(this.currentItemIndex, !item.collapsed).pipe(first()).subscribe(noop);
+                                this.toggleCollapse$(this.currentItemIndex, !item.collapsed).pipe(first()).subscribe(() => {});
                                 return false;
                             }
                         }
@@ -1126,7 +1124,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
 
     /** Change l'état d'expansion de toute les lignes parentes */
     public toggleAll(collapsed?: boolean) {
-        this.toggleAll$(collapsed).pipe(first()).subscribe(noop);
+        this.toggleAll$(collapsed).pipe(first()).subscribe(() => {});
     }
 
     /** Change l'état d'expansion de la ligne spécifiée
@@ -1148,7 +1146,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
      * @param collapse  Etat de l'élément. True pour réduire l'élément.
      */
     public toggleCollapse(index: number, collapsed: boolean) {
-        this.toggleCollapse$(index, collapsed).pipe(first()).subscribe(noop);
+        this.toggleCollapse$(index, collapsed).pipe(first()).subscribe(() => {});
     }
 
     public queryChanged(value: string) {
@@ -1199,7 +1197,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
 
                 if (this.isCollapsible(item) && (isExpandButton(e.target as HTMLElement) || !this.isSelectable(item))) {
                     if (upEvent.button === 0) {
-                        this.toggleCollapse$(itemIndex, !item.collapsed).pipe(first()).subscribe(noop);
+                        this.toggleCollapse$(itemIndex, !item.collapsed).pipe(first()).subscribe(() => {});
                     }
                 } else if (!item.selected) {
                     this.select(item);
@@ -1278,7 +1276,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
         if (!this._multiSelect) {
             this.query = '';
             this.dropDownQuery = '';
-            this.setSelectedItems(undefined);
+            this.setSelectedItems(null);
             this.onModelChange();
             delete this.selectingItemIndex;
         } else if (item) {
@@ -1357,7 +1355,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
         if (!item) {
             // this.query = '';
             // this.dropDownQuery = '';
-            // this.setSelectedItems(undefined);
+            // this.setSelectedItems(null);
             // this.onModelChange();
             return;
         }

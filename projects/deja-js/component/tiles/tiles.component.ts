@@ -19,8 +19,6 @@ import { DejaTilesLayoutProvider } from './tiles-layout.provider';
 import { IDejaTilesRefreshParams } from './tiles-refresh-params.interface';
 import { IDejaTileGroupModelEvent, IDejaTilesAddedEvent, IDejaTilesAddEvent, IDejaTilesDeletedEvent, IDejaTilesEvent, IDejaTilesRemoveEvent } from './tiles.event';
 
-const noop = () => { };
-
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [DejaTilesLayoutProvider],
@@ -84,10 +82,6 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
     @ContentChild('tileTemplate')
     public tileTemplate: any;
 
-    // NgModel implementation
-    public onTouchedCallback: () => void = noop;
-    public onChangeCallback: (_: any) => void = noop;
-
     private _models = [] as DejaTile[];
     private delete$sub: Subscription;
     private copy$sub: Subscription;
@@ -101,6 +95,10 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
     }
 
     @ViewChild('tilesContainer', { static: true }) private tilesContainer: ElementRef;
+
+    // NgModel implementation
+    public onTouchedCallback = (_a?: any) => { };
+    public onChangeCallback = (_a?: any) => { };
 
     constructor(el: ElementRef, private changeDetectorRef: ChangeDetectorRef, private layoutProvider: DejaTilesLayoutProvider, @Self() @Optional() public _control: NgControl) {
         super();
