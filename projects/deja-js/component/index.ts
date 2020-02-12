@@ -10,7 +10,3 @@ import { NgModule } from '@angular/core';
 
 @NgModule({})
 export class DejaJsComponentModule { }
-
-if (!document.doctype) {
-    console.warn('[DejaJS] Current document does not have a doctype. This may cause some components not to behave as expected.');
-}
