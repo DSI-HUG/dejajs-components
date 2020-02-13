@@ -290,7 +290,6 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
 
     public ngOnDestroy() {
         super.ngOnDestroy();
-        this.layoutProvider.ngOnDestroy();
         this.canCopy = false;
         this.canCut = false;
         this.canDelete = false;
