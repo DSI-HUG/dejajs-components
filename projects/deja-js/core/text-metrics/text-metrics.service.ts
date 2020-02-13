@@ -7,14 +7,15 @@
  */
 
 import { Injectable } from '@angular/core';
-import {BehaviorSubject,  from ,  Observable ,  Subject } from 'rxjs';
-import {delay, filter, first, map} from 'rxjs/operators';
+import { BehaviorSubject, from, Observable, Subject } from 'rxjs';
+import { delay, filter, first, map, takeUntil } from 'rxjs/operators';
+import { Destroy } from '../destroy/destroy';
 
 /**
  * Service to measure the theorical size of a text inside a container
  */
 @Injectable()
-export class DejaTextMetricsService {
+export class DejaTextMetricsService extends Destroy {
     private canvas: HTMLCanvasElement;
     private element$: Subject<HTMLElement> = new Subject();
     private computedStyles: CSSStyleDeclaration;
@@ -25,17 +26,20 @@ export class DejaTextMetricsService {
      * Add observable to wait for element to be set. And then take its properties to measure all ASCII char size.
      */
     constructor() {
+        super();
+
         from(this.element$).pipe(
             delay(1),
-            first())
-            .subscribe((element) => {
-                const charSize = [];
-                for (let i = 0; i < 255; i++) {
-                    const c = String.fromCharCode(i);
-                    charSize[i] = this.getTextWidth(c, element);
-                }
-                this.charSize$.next(charSize);
-            });
+            first(),
+            takeUntil(this.destroyed$)
+        ).subscribe((element) => {
+            const charSize = [];
+            for (let i = 0; i < 255; i++) {
+                const c = String.fromCharCode(i);
+                charSize[i] = this.getTextWidth(c, element);
+            }
+            this.charSize$.next(charSize);
+        });
     }
 
     /** Setter for base element */

@@ -250,8 +250,9 @@ export class DejaViewPortComponent extends Destroy implements OnDestroy {
                 } else {
                     this.changeDetectorRef.markForCheck();
                     timer(1).pipe(
-                        first())
-                        .subscribe(() => scroll(viewPortResult));
+                        first(),
+                        takeUntil(this.destroyed$)
+                    ).subscribe(() => scroll(viewPortResult));
                 }
             } else {
                 this.changeDetectorRef.markForCheck();
@@ -263,13 +264,14 @@ export class DejaViewPortComponent extends Destroy implements OnDestroy {
         ).subscribe((downButton) => {
             if (downButton) {
                 if (!this.mouseWheel$Sub) {
-                    this.mouseWheel$Sub = fromEvent(this.element, 'mousewheel')
-                        .subscribe((event: MouseWheelEvent) => {
-                            this.scrollPos = this.scrollPos + event.deltaY;
-                            event.stopPropagation();
-                            event.preventDefault();
-                            return false;
-                        });
+                    this.mouseWheel$Sub = fromEvent(this.element, 'mousewheel').pipe(
+                        takeUntil(this.destroyed$)
+                    ).subscribe((event: MouseWheelEvent) => {
+                        this.scrollPos = this.scrollPos + event.deltaY;
+                        event.stopPropagation();
+                        event.preventDefault();
+                        return false;
+                    });
                 }
             } else if (this.mouseWheel$Sub) {
                 this.mouseWheel$Sub.unsubscribe();
@@ -288,21 +290,25 @@ export class DejaViewPortComponent extends Destroy implements OnDestroy {
                             fromEvent(downButton, 'mouseup'),
                             fromEvent(downButton, 'mouseleave'));
 
-                        this.downButton$Sub = mousedown$.subscribe((event: MouseEvent) => {
+                        this.downButton$Sub = mousedown$.pipe(
+                            takeUntil(this.destroyed$)
+                        ).subscribe((event: MouseEvent) => {
                             mouseup$.pipe(first())
                                 .subscribe((upEvent: MouseEvent) => {
                                     this.scrollPos += upEvent.ctrlKey ? this.clientSize : this.buttonsStep;
                                 });
 
                             timer(750).pipe(
-                                takeUntil(mouseup$))
-                                .subscribe(() => {
-                                    interval(50).pipe(
-                                        takeUntil(mouseup$))
-                                        .subscribe(() => {
-                                            this.scrollPos += event.ctrlKey ? this.clientSize : this.buttonsStep * 2;
-                                        });
+                                takeUntil(mouseup$),
+                                takeUntil(this.destroyed$)
+                            ).subscribe(() => {
+                                interval(50).pipe(
+                                    takeUntil(mouseup$),
+                                    takeUntil(this.destroyed$)
+                                ).subscribe(() => {
+                                    this.scrollPos += event.ctrlKey ? this.clientSize : this.buttonsStep * 2;
                                 });
+                            });
                         });
 
                         return true;
@@ -326,7 +332,9 @@ export class DejaViewPortComponent extends Destroy implements OnDestroy {
                             fromEvent(upButton, 'mouseup'),
                             fromEvent(upButton, 'mouseleave'));
 
-                        this.upButton$Sub = mousedown$.subscribe((event: MouseEvent) => {
+                        this.upButton$Sub = mousedown$.pipe(
+                            takeUntil(this.destroyed$)
+                        ).subscribe((event: MouseEvent) => {
                             mouseup$.pipe(
                                 first())
                                 .subscribe((upEvent: MouseEvent) => {
@@ -334,14 +342,16 @@ export class DejaViewPortComponent extends Destroy implements OnDestroy {
                                 });
 
                             timer(750).pipe(
-                                takeUntil(mouseup$))
-                                .subscribe(() => {
-                                    interval(50).pipe(
-                                        takeUntil(mouseup$))
-                                        .subscribe(() => {
-                                            this.scrollPos -= event.ctrlKey ? this.clientSize : this.buttonsStep * 2;
-                                        });
+                                takeUntil(mouseup$),
+                                takeUntil(this.destroyed$)
+                            ).subscribe(() => {
+                                interval(50).pipe(
+                                    takeUntil(mouseup$),
+                                    takeUntil(this.destroyed$)
+                                ).subscribe(() => {
+                                    this.scrollPos -= event.ctrlKey ? this.clientSize : this.buttonsStep * 2;
                                 });
+                            });
                         });
 
                         return true;
@@ -366,6 +376,7 @@ export class DejaViewPortComponent extends Destroy implements OnDestroy {
     }
 
     public ngOnDestroy() {
+        super.ngOnDestroy();
         if (this.downButton$Sub) {
             this.downButton$Sub.unsubscribe();
         }
