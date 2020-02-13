@@ -9,8 +9,8 @@
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, HostBinding, Input, ViewChild } from '@angular/core';
 import { Destroy, IViewPort, IViewPortItem, IViewPortRefreshParams, ViewportDirection, ViewportMode, ViewPortService } from '@deja-js/core';
-import { from, fromEvent, interval, merge, Subject, timer, of } from 'rxjs';
-import { debounceTime, map, switchMap, takeUntil, distinctUntilChanged, filter, tap } from 'rxjs/operators';
+import { BehaviorSubject, from, fromEvent, interval, merge, of, Subject, timer } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 export enum DejaViewPortScrollStyle {
     scrollbar,
@@ -46,7 +46,7 @@ export class DejaViewPortComponent extends Destroy {
 
     private _items: IDejaViewPortItem[];
     private element: HTMLElement;
-    private downButton$ = new Subject<HTMLElement>();
+    private downButton$ = new BehaviorSubject<HTMLElement>(null);
     private upButton$ = new Subject<HTMLElement>();
     private scrollPosition = 0;
     private _buttonsStep: number;
@@ -134,7 +134,7 @@ export class DejaViewPortComponent extends Destroy {
     @ViewChild('wrapper', { static: true })
     public set wrapperElement(element: ElementRef) {
         this.element = element.nativeElement as HTMLElement;
-        this.viewPort.element$.next(this.element);        
+        this.viewPort.element$.next(this.element);
         fromEvent(this.element, 'scroll').pipe(
             map(event => event.target as HTMLElement),
             map(target => Math.round(this._isHorizontal ? target.scrollLeft : target.scrollTop)),
@@ -250,7 +250,6 @@ export class DejaViewPortComponent extends Destroy {
                         );
                     }
                 } else {
-                    this.changeDetectorRef.markForCheck();
                     return of(null);
                 }
             }),
