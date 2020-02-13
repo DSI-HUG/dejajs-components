@@ -21,7 +21,7 @@ export * from './slimscroll/index';
 export * from './sorting/index';
 export * from './text-metrics/index';
 export * from './validation/index';
-export * from './destroy/destroy';
+export * from './destroy/index';
 export * from './keycodes.enum';
 export * from './UUID';
 
