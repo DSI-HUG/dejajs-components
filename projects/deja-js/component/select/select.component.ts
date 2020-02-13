@@ -238,7 +238,9 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
             this.ngControl.valueAccessor = this;
         }
 
-        this.fm.monitor(elementRef.nativeElement, true).subscribe((origin) => {
+        this.fm.monitor(elementRef.nativeElement, true).pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe((origin) => {
             this._focused = !!origin;
             this.stateChanges.next();
         });
@@ -418,8 +420,9 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
                     switchMap(() => item ? this.toggleSelect$([item], true) : []),
                     map(() => super.getItemListService().ensureSelection()),
                     tap(() => this.ensureSelection()),
-                    first())
-                    .subscribe(() => this.changeDetectorRef.markForCheck());
+                    first(),
+                    takeUntil(this.destroyed$)
+                ).subscribe(() => this.changeDetectorRef.markForCheck());
             }
         });
 
@@ -740,8 +743,9 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
         super.setItems$(items).pipe(
             first(),
             tap(() => this.ensureSelection()),
-            switchMap(() => this.calcViewList$()))
-            .subscribe(() => {});
+            switchMap(() => this.calcViewList$()),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => { });
     }
 
     /** Définit la liste des éléments (tout type d'objet métier) */
@@ -750,8 +754,9 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
         super.setModels$(items).pipe(
             first(),
             tap(() => this.ensureSelection()),
-            switchMap(() => this.calcViewList$()))
-            .subscribe(() => {});
+            switchMap(() => this.calcViewList$()),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => { });
     }
 
     /** Retourne le nombre de niveau pour une liste hierarchique */
@@ -868,13 +873,14 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
 
         if (this.ngControl) {
             this.ngControl.valueChanges.pipe(
-                filter(() => !!this.input))
-                .subscribe(() => {
-                    if (this.ngControl.touched) {
-                        this.input.ngControl.control.markAsTouched();
-                    }
-                    this.input.ngControl.control.updateValueAndValidity();
-                });
+                filter(() => !!this.input),
+                takeUntil(this.destroyed$)
+            ).subscribe(() => {
+                if (this.ngControl.touched) {
+                    this.input.ngControl.control.markAsTouched();
+                }
+                this.input.ngControl.control.updateValueAndValidity();
+            });
         }
 
         this.overlayOwnerElement = this.elementRef.nativeElement as HTMLElement;
@@ -1008,7 +1014,10 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
                             const item = this._itemList[this.currentItemIndex - this.vpStartRow] as IItemTree;
                             if (this.isCollapsible(item)) {
                                 this.keyboardNavigation$.next();
-                                this.toggleCollapse$(this.currentItemIndex, !item.collapsed).pipe(first()).subscribe(() => {});
+                                this.toggleCollapse$(this.currentItemIndex, !item.collapsed).pipe(
+                                    first(),
+                                    takeUntil(this.destroyed$)
+                                ).subscribe(() => { });
                                 return false;
                             }
                         }
@@ -1092,12 +1101,13 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
                         }
                         return false;
                     }, this.currentItemIndex).pipe(
-                        first())
-                        .subscribe((result) => {
-                            if (result.index >= 0) {
-                                setCurrentIndex(result.index, result.item);
-                            }
-                        });
+                        first(),
+                        takeUntil(this.destroyed$)
+                    ).subscribe((result) => {
+                        if (result.index >= 0) {
+                            setCurrentIndex(result.index, result.item);
+                        }
+                    });
                 }
             } else {
                 // Autocomplete, filter the list
@@ -1124,7 +1134,10 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
 
     /** Change l'état d'expansion de toute les lignes parentes */
     public toggleAll(collapsed?: boolean) {
-        this.toggleAll$(collapsed).pipe(first()).subscribe(() => {});
+        this.toggleAll$(collapsed).pipe(
+            first(),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => { });
     }
 
     /** Change l'état d'expansion de la ligne spécifiée
@@ -1146,7 +1159,10 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
      * @param collapse  Etat de l'élément. True pour réduire l'élément.
      */
     public toggleCollapse(index: number, collapsed: boolean) {
-        this.toggleCollapse$(index, collapsed).pipe(first()).subscribe(() => {});
+        this.toggleCollapse$(index, collapsed).pipe(
+            first(),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => { });
     }
 
     public queryChanged(value: string) {
@@ -1156,8 +1172,9 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
             this.dropDownQuery = this.query;
             if (this.isModeAutocomplete) {
                 this.unselectAll$().pipe(
-                    first())
-                    .subscribe(() => this.onModelChange());
+                    first(),
+                    takeUntil(this.destroyed$)
+                ).subscribe(() => this.onModelChange());
             }
         }
     }
@@ -1178,31 +1195,35 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
 
         this.selectingItemIndex = this.getItemIndexFromHTMLElement(e.target as HTMLElement);
 
-        this.mouseUp$sub = fromEvent(this.listElement, 'mouseup')
-            .subscribe((upEvent: MouseEvent) => {
-                const itemIndex = this.getItemIndexFromHTMLElement(upEvent.target as HTMLElement);
-                if (itemIndex === undefined || this.selectingItemIndex === undefined || itemIndex !== this.selectingItemIndex) {
-                    return;
-                }
+        this.mouseUp$sub = fromEvent(this.listElement, 'mouseup').pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe((upEvent: MouseEvent) => {
+            const itemIndex = this.getItemIndexFromHTMLElement(upEvent.target as HTMLElement);
+            if (itemIndex === undefined || this.selectingItemIndex === undefined || itemIndex !== this.selectingItemIndex) {
+                return;
+            }
 
-                const item = this._itemList[itemIndex - this.vpStartRow] as IItemTree;
-                if (!item || upEvent.button !== 0) {
-                    // Right click menu
-                    return;
-                }
+            const item = this._itemList[itemIndex - this.vpStartRow] as IItemTree;
+            if (!item || upEvent.button !== 0) {
+                // Right click menu
+                return;
+            }
 
-                const isExpandButton = (target: HTMLElement) => {
-                    return target.id === 'expandbtn' || target.parentElement.id === 'expandbtn';
-                };
+            const isExpandButton = (target: HTMLElement) => {
+                return target.id === 'expandbtn' || target.parentElement.id === 'expandbtn';
+            };
 
-                if (this.isCollapsible(item) && (isExpandButton(e.target as HTMLElement) || !this.isSelectable(item))) {
-                    if (upEvent.button === 0) {
-                        this.toggleCollapse$(itemIndex, !item.collapsed).pipe(first()).subscribe(() => {});
-                    }
-                } else if (!item.selected) {
-                    this.select(item);
+            if (this.isCollapsible(item) && (isExpandButton(e.target as HTMLElement) || !this.isSelectable(item))) {
+                if (upEvent.button === 0) {
+                    this.toggleCollapse$(itemIndex, !item.collapsed).pipe(
+                        first(),
+                        takeUntil(this.destroyed$)
+                    ).subscribe(() => { });
                 }
-            });
+            } else if (!item.selected) {
+                this.select(item);
+            }
+        });
     }
 
     public getItemClass(item: IItemTree) {
@@ -1281,16 +1302,18 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
             delete this.selectingItemIndex;
         } else if (item) {
             this.toggleSelect$([item], false).pipe(
-                first())
-                .subscribe((selectedItems) => {
-                    const selected = [...selectedItems];
-                    this.setSelectedItems(selected);
-                    this.onModelChange(selected);
-                });
+                first(),
+                takeUntil(this.destroyed$)
+            ).subscribe((selectedItems) => {
+                const selected = [...selectedItems];
+                this.setSelectedItems(selected);
+                this.onModelChange(selected);
+            });
         } else {
             this.unselectAll$().pipe(
-                first())
-                .subscribe(() => this.onModelChange());
+                first(),
+                takeUntil(this.destroyed$)
+            ).subscribe(() => this.onModelChange());
         }
     }
 
@@ -1362,14 +1385,15 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
 
         if (this._multiSelect) {
             this.toggleSelect$([item], true).pipe(
-                first())
-                .subscribe((selectedItems) => {
-                    const selected = selectedItems ? [...selectedItems] : [];
-                    this.setSelectedItems(selected);
-                    this.onModelChange(selected);
-                    this.query = '';
-                    this.dropDownQuery = '';
-                });
+                first(),
+                takeUntil(this.destroyed$)
+            ).subscribe((selectedItems) => {
+                const selected = selectedItems ? [...selectedItems] : [];
+                this.setSelectedItems(selected);
+                this.onModelChange(selected);
+                this.query = '';
+                this.dropDownQuery = '';
+            });
         } else {
             this.query = this.getTextValue(item);
             this.setSelectedItems([item]);
@@ -1411,19 +1435,20 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
             tap(() => this.refreshViewPort()),
             combineLatestOp(this.viewPortChanged), // Wait for viewport calculation
             first(),
-            delay(1)) // Ensure viewport binding
-            .subscribe(() => {
-                // View port calculated
-                this.overlay.updatePosition();
+            delay(1),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => {
+            // View port calculated
+            this.overlay.updatePosition();
 
-                // Ensure selection
-                const item = this.getSelectedItems()[0];
-                const index = item && this.getItemIndex(item);
-                if (index >= 0) {
-                    this.currentItemIndex = index;
-                    this.ensureItemVisible(index);
-                }
-            });
+            // Ensure selection
+            const item = this.getSelectedItems()[0];
+            const index = item && this.getItemIndex(item);
+            if (index >= 0) {
+                this.currentItemIndex = index;
+                this.ensureItemVisible(index);
+            }
+        });
     }
 
     private ensureSelection() {

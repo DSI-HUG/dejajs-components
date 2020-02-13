@@ -9,6 +9,7 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostListener, Input, Optional, Output, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { Destroy } from '@deja-js/core';
 import { fromEvent, merge } from 'rxjs';
 import { first, takeUntil, tap } from 'rxjs/operators';
 import { IRange, IRangeEvent, IStepRangeEvent, Range } from './range.interface';
@@ -19,7 +20,7 @@ import { IRange, IRangeEvent, IStepRangeEvent, Range } from './range.interface';
     styleUrls: ['./range.component.scss'],
     templateUrl: './range.component.html',
 })
-export class DejaRangeComponent implements ControlValueAccessor {
+export class DejaRangeComponent extends Destroy implements ControlValueAccessor {
     // step can be either a numeric value, an array of accepted intervals or a function returning the next accepted interval
     @Input() public step: number | number[] | ((event: IStepRangeEvent) => number) = 1;
     // index of the selected range
@@ -76,6 +77,7 @@ export class DejaRangeComponent implements ControlValueAccessor {
     public _onTouchCallback = (_a?: any) => { };
 
     constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef, @Self() @Optional() public _control: NgControl) {
+        super();
         if (this._control) {
             this._control.valueAccessor = this;
         }
@@ -231,41 +233,42 @@ export class DejaRangeComponent implements ControlValueAccessor {
                 }));
 
             fromEvent(document, 'mousemove').pipe(
-                takeUntil(kill$))
-                .subscribe((event: MouseEvent) => {
-                    const x = event.pageX;
-                    const xDifference = -(xStart - x);
+                takeUntil(kill$),
+                takeUntil(this.destroyed$)
+            ).subscribe((event: MouseEvent) => {
+                const x = event.pageX;
+                const xDifference = -(xStart - x);
 
-                    const nextRange = this.ranges[index + 1];
+                const nextRange = this.ranges[index + 1];
 
-                    // compute total difference
-                    const totalDifference = ranges[ranges.length - 1].max - ranges[0].min;
+                // compute total difference
+                const totalDifference = ranges[ranges.length - 1].max - ranges[0].min;
 
-                    // calculate new width of the range, get host width
-                    const host = this.elementRef.nativeElement.firstElementChild as HTMLElement;
-                    const hostWidth = host.getBoundingClientRect().width;
+                // calculate new width of the range, get host width
+                const host = this.elementRef.nativeElement.firstElementChild as HTMLElement;
+                const hostWidth = host.getBoundingClientRect().width;
 
-                    // avoid drag
-                    host.ownerDocument.body.classList.add('noselect');
+                // avoid drag
+                host.ownerDocument.body.classList.add('noselect');
 
-                    // compute new model value
-                    const modelDifference = xDifference * totalDifference / hostWidth;
-                    let newMax = rangeStart + modelDifference;
+                // compute new model value
+                const modelDifference = xDifference * totalDifference / hostWidth;
+                let newMax = rangeStart + modelDifference;
 
-                    const minDifference = this.minimumRangePercentage * totalDifference;
-                    const min = range.min + minDifference;
-                    const max = nextRange.max - minDifference;
+                const minDifference = this.minimumRangePercentage * totalDifference;
+                const min = range.min + minDifference;
+                const max = nextRange.max - minDifference;
 
-                    newMax = Math.min(newMax, max);
-                    newMax = Math.max(newMax, min);
-                    const newStepped = this.toStep(ranges, index, newMax);
+                newMax = Math.min(newMax, max);
+                newMax = Math.max(newMax, min);
+                const newStepped = this.toStep(ranges, index, newMax);
 
-                    nextRange.min = range.max = newStepped;
+                nextRange.min = range.max = newStepped;
 
-                    ranges[index] = range;
-                    ranges[index + 1] = nextRange;
-                    this.writeValue(ranges);
-                });
+                ranges[index] = range;
+                ranges[index + 1] = nextRange;
+                this.writeValue(ranges);
+            });
         }
     }
 

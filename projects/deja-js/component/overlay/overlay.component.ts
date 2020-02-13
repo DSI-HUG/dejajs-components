@@ -199,10 +199,11 @@ export class DejaOverlayComponent extends Destroy {
         this.isVisible = true;
         this.changeDetectorRef.markForCheck();
         timer(1).pipe(
-            first())
-            .subscribe(() => {
-                this.updatePosition();
-            });
+            first(),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => {
+            this.updatePosition();
+        });
     }
 
     /** Ferme le dialog. */

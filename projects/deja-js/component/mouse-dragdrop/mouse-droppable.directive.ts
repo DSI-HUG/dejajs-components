@@ -46,58 +46,61 @@ export class DejaMouseDroppableDirective extends Destroy {
             takeUntil(this.destroyed$)
         ).subscribe(() => {
             kill$.pipe(
-                first())
-                .subscribe(() => {
-                    if (this._dragContext) {
-                        if (this.context && this.context.drop) {
-                            this.context.drop(this._dragContext);
-                        }
-                        this._dragContext = undefined;
+                first(),
+                takeUntil(this.destroyed$)
+            ).subscribe(() => {
+                if (this._dragContext) {
+                    if (this.context && this.context.drop) {
+                        this.context.drop(this._dragContext);
                     }
-                    dragDropService.dropCursor$.next(null);
-                });
+                    this._dragContext = undefined;
+                }
+                dragDropService.dropCursor$.next(null);
+            });
 
             from(dragDropService.dragCursor$).pipe(
-                takeUntil(kill$))
-                .subscribe((dragCursor) => {
-                    const bounds = new Rect(element.getBoundingClientRect());
-                    if (this.context && dragCursor) {
-                        const { pageX, pageY } = dragCursor.originalEvent;
-                        if (bounds.containsPoint(new Position(pageX, pageY))) {
-                            if (!this._dragContext) {
-                                this._dragContext = dragDropService.context;
-                                if (this.context.dragEnter) {
-                                    const dropContext = this.context.dragEnter(this._dragContext, dragCursor);
-                                    if (dropContext) {
-                                        const dropContextObs = dropContext as Observable<IDropCursorInfos>;
-                                        if (dropContextObs.subscribe) {
-                                            // Observable
-                                            dropContextObs.pipe(
-                                                first())
-                                                .subscribe((cursor) => {
-                                                    dragDropService.dropCursor$.next(cursor);
-                                                });
-                                            return;
-                                        } else {
-                                            dragDropService.dropCursor$.next(dropContext as IDropCursorInfos);
-                                        }
+                takeUntil(kill$),
+                takeUntil(this.destroyed$)
+            ).subscribe((dragCursor) => {
+                const bounds = new Rect(element.getBoundingClientRect());
+                if (this.context && dragCursor) {
+                    const { pageX, pageY } = dragCursor.originalEvent;
+                    if (bounds.containsPoint(new Position(pageX, pageY))) {
+                        if (!this._dragContext) {
+                            this._dragContext = dragDropService.context;
+                            if (this.context.dragEnter) {
+                                const dropContext = this.context.dragEnter(this._dragContext, dragCursor);
+                                if (dropContext) {
+                                    const dropContextObs = dropContext as Observable<IDropCursorInfos>;
+                                    if (dropContextObs.subscribe) {
+                                        // Observable
+                                        dropContextObs.pipe(
+                                            first(),
+                                            takeUntil(this.destroyed$)
+                                        ).subscribe((cursor) => {
+                                            dragDropService.dropCursor$.next(cursor);
+                                        });
+                                        return;
+                                    } else {
+                                        dragDropService.dropCursor$.next(dropContext as IDropCursorInfos);
                                     }
                                 }
-                            } else if (this.context.dragOver) {
-                                const overContext = this.context.dragOver(this._dragContext, dragCursor);
-                                if (overContext) {
-                                    dragDropService.dropCursor$.next(overContext);
-                                }
                             }
-                        } else if (this._dragContext) {
-                            if (this.context && this.context.dragLeave) {
-                                this.context.dragLeave(this._dragContext);
+                        } else if (this.context.dragOver) {
+                            const overContext = this.context.dragOver(this._dragContext, dragCursor);
+                            if (overContext) {
+                                dragDropService.dropCursor$.next(overContext);
                             }
-                            this._dragContext = undefined;
-                            dragDropService.dropCursor$.next(null);
                         }
+                    } else if (this._dragContext) {
+                        if (this.context && this.context.dragLeave) {
+                            this.context.dragLeave(this._dragContext);
+                        }
+                        this._dragContext = undefined;
+                        dragDropService.dropCursor$.next(null);
                     }
-                });
+                }
+            });
         });
     }
 }

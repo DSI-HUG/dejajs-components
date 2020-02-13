@@ -84,65 +84,67 @@ export class DejaDroppableDirective extends Destroy {
                     }
 
                     fromEvent(element, 'drop').pipe(
-                        takeUntil(dragEnd$))
-                        .subscribe((dropEvent: DragEvent) => {
-                            // console.log('DejaDrop');
-                            if (this.context.dropcallback) {
-                                if (dragInfos) {
-                                    const evt = dropEvent as IDejaDropEvent;
-                                    evt.dragInfo = dragInfos;
-                                    evt.dragObject = dragInfos[this.objectKey];
-                                    evt.dragElement = element;
-                                    evt.itsMe = dragInfos[this.elementKey] === element;
+                        takeUntil(dragEnd$),
+                        takeUntil(this.destroyed$)
+                    ).subscribe((dropEvent: DragEvent) => {
+                        // console.log('DejaDrop');
+                        if (this.context.dropcallback) {
+                            if (dragInfos) {
+                                const evt = dropEvent as IDejaDropEvent;
+                                evt.dragInfo = dragInfos;
+                                evt.dragObject = dragInfos[this.objectKey];
+                                evt.dragElement = element;
+                                evt.itsMe = dragInfos[this.elementKey] === element;
 
-                                    this.context.dropcallback(evt);
-                                    if (evt.defaultPrevented) {
-                                        evt.dragInfo[this.droppedKey] = true;
-                                        dropEvent.preventDefault();
-                                        dragEvent.dataTransfer.dropEffect = 'copy';
-                                    } else {
-                                        dragEvent.dataTransfer.dropEffect = 'none';
-                                    }
+                                this.context.dropcallback(evt);
+                                if (evt.defaultPrevented) {
+                                    evt.dragInfo[this.droppedKey] = true;
+                                    dropEvent.preventDefault();
+                                    dragEvent.dataTransfer.dropEffect = 'copy';
+                                } else {
+                                    dragEvent.dataTransfer.dropEffect = 'none';
                                 }
                             }
-                            kill$.next();
-                            return;
-                        });
+                        }
+                        kill$.next();
+                        return;
+                    });
 
                     fromEvent(element, 'dragover').pipe(
-                        takeUntil(dragEnd$))
-                        .subscribe((overEvent: DragEvent) => {
-                            // console.log('DejaDragOver');
-                            if (!this._allEvents && this.lastTarget && this.lastTarget === overEvent.target) {
-                                if (this.lastAccept) {
+                        takeUntil(dragEnd$),
+                        takeUntil(this.destroyed$)
+                    ).subscribe((overEvent: DragEvent) => {
+                        // console.log('DejaDragOver');
+                        if (!this._allEvents && this.lastTarget && this.lastTarget === overEvent.target) {
+                            if (this.lastAccept) {
+                                overEvent.preventDefault();
+                                dragEvent.dataTransfer.dropEffect = 'copy';
+                            } else {
+                                dragEvent.dataTransfer.dropEffect = 'none';
+                            }
+                            return;
+                        }
+
+                        if (this.context.dragovercallback) {
+                            if (dragInfos) {
+                                const evt = overEvent as IDejaDropEvent;
+                                evt.dragInfo = dragInfos;
+                                evt.dragObject = dragInfos[this.objectKey];
+                                evt.dragElement = element;
+                                evt.itsMe = dragInfos[this.elementKey] === element;
+
+                                this.context.dragovercallback(evt);
+                                this.lastTarget = overEvent.target;
+                                this.lastAccept = evt.defaultPrevented;
+                                if (evt.defaultPrevented) {
                                     overEvent.preventDefault();
                                     dragEvent.dataTransfer.dropEffect = 'copy';
                                 } else {
                                     dragEvent.dataTransfer.dropEffect = 'none';
                                 }
-                                return;
                             }
-
-                            if (this.context.dragovercallback) {
-                                if (dragInfos) {
-                                    const evt = overEvent as IDejaDropEvent;
-                                    evt.dragInfo = dragInfos;
-                                    evt.dragObject = dragInfos[this.objectKey];
-                                    evt.dragElement = element;
-                                    evt.itsMe = dragInfos[this.elementKey] === element;
-
-                                    this.context.dragovercallback(evt);
-                                    this.lastTarget = overEvent.target;
-                                    this.lastAccept = evt.defaultPrevented;
-                                    if (evt.defaultPrevented) {
-                                        overEvent.preventDefault();
-                                        dragEvent.dataTransfer.dropEffect = 'copy';
-                                    } else {
-                                        dragEvent.dataTransfer.dropEffect = 'none';
-                                    }
-                                }
-                            }
-                        });
+                        }
+                    });
                 }
             } else {
                 // console.log('DejaDragLeave');

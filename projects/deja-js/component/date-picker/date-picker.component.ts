@@ -325,8 +325,9 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
             if (this.cursorPosition && !this.allowFreeEntry) {
                 this.inputElement$.pipe(
                     delay(1),
-                    first())
-                    .subscribe((elem: HTMLInputElement) => elem.setSelectionRange(this.cursorPosition, this.cursorPosition));
+                    first(),
+                    takeUntil(this.destroyed$)
+                ).subscribe((elem: HTMLInputElement) => elem.setSelectionRange(this.cursorPosition, this.cursorPosition));
             }
             this.changeDetectorRef.markForCheck();
         });

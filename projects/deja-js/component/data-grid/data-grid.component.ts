@@ -307,16 +307,11 @@ export class DejaGridComponent extends Destroy {
             if (this._rows instanceof Array) {
                 this.calcColumnsLayout(this._rows);
             } else {
-                let observable = this._rows as Observable<IItemBase[]>;
-                if (!observable.subscribe) {
-                    const promise = this._rows as Promise<IItemBase[]>;
-                    observable = from(promise);
-                }
-
                 this.viewPortChanged.pipe(
                     filter((vp) => vp && vp.items && vp.items.length > 0),
-                    first())
-                    .subscribe((vp) => this.calcColumnsLayout(vp.items));
+                    first(),
+                    takeUntil(this.destroyed$)
+                ).subscribe((vp) => this.calcColumnsLayout(vp.items));
             }
         }
         this.changeDetectorRef.markForCheck();
@@ -525,13 +520,14 @@ export class DejaGridComponent extends Destroy {
 
             fromEvent(element, 'mouseup').pipe(
                 first(),
-                filter(() => !!clickedColumn))
-                .subscribe((upEvent: MouseEvent) => {
-                    const columnElement = this.getColumnElementFromHTMLElement(upEvent.target as HTMLElement);
-                    if ((columnElement && columnElement.getAttribute('colname')) === clickedColumn.name) {
-                        this.currentColumn = clickedColumn;
-                    }
-                });
+                filter(() => !!clickedColumn),
+                takeUntil(this.destroyed$)
+            ).subscribe((upEvent: MouseEvent) => {
+                const columnElement = this.getColumnElementFromHTMLElement(upEvent.target as HTMLElement);
+                if ((columnElement && columnElement.getAttribute('colname')) === clickedColumn.name) {
+                    this.currentColumn = clickedColumn;
+                }
+            });
         });
     }
 
@@ -652,14 +648,15 @@ export class DejaGridComponent extends Destroy {
 
         timer(1).pipe(
             first(),
-            switchMap(() => this.sort$(event.column.name)))
-            .subscribe(() => {
-                hideSpinner();
-                this.sortChanged.emit(this.treeListComponent.sortInfos);
-            }, (error) => {
-                hideSpinner();
-                throw error.toString();
-            });
+            switchMap(() => this.sort$(event.column.name)),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => {
+            hideSpinner();
+            this.sortChanged.emit(this.treeListComponent.sortInfos);
+        }, (error) => {
+            hideSpinner();
+            throw error.toString();
+        });
     }
 
     public onColumnDragEnd() {
@@ -737,8 +734,9 @@ export class DejaGridComponent extends Destroy {
         } as IGroupInfo;
 
         this.treeListComponent.ungroup$(groupInfo).pipe(
-            first())
-            .subscribe(() => {});
+            first(),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => { });
     }
 
     public onGroupsChanged(e: IDejaGridGroupsEvent) {

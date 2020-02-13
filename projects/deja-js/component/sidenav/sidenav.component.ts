@@ -7,10 +7,10 @@
  */
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
-import { MediaService } from '@deja-js/core';
-import { from, Subject } from 'rxjs';
+import { Destroy, MediaService } from '@deja-js/core';
+import { from } from 'rxjs';
 import { filter, map, mergeMap, takeUntil } from 'rxjs/operators';
 import { DejaSidenavService } from './sidenav.service';
 
@@ -20,7 +20,7 @@ import { DejaSidenavService } from './sidenav.service';
     templateUrl: './sidenav.component.html',
     styleUrls: ['./sidenav.component.scss']
 })
-export class DejaSidenavComponent implements OnInit, OnDestroy {
+export class DejaSidenavComponent extends Destroy implements OnInit {
     @Input()
     public set showToolbar(value: boolean | string) {
         this._showToolbar = coerceBooleanProperty(value);
@@ -36,8 +36,6 @@ export class DejaSidenavComponent implements OnInit, OnDestroy {
     public mode = 'side';
     public _showToolbar = false;
 
-    private ngUnsubscribe: Subject<void> = new Subject<void>();
-
     constructor(
         public sidenavService: DejaSidenavService,
         private mediaService: MediaService,
@@ -45,15 +43,16 @@ export class DejaSidenavComponent implements OnInit, OnDestroy {
         private activatedRoute: ActivatedRoute,
         private changeDetectorRef: ChangeDetectorRef,
     ) {
+        super();
 
         from(this.mediaService.mediaChanged$).pipe(
-            takeUntil(this.ngUnsubscribe))
-            .subscribe((alias) => {
-                this.sidenavService.hidden = alias === 'xs';
-                this.sidenavService.opened = alias === 'lg';
-                this.sidenavService.mode = alias === 'xs' ? 'over' : 'side';
-                this.changeDetectorRef.markForCheck();
-            });
+            takeUntil(this.destroyed$)
+        ).subscribe((alias) => {
+            this.sidenavService.hidden = alias === 'xs';
+            this.sidenavService.opened = alias === 'lg';
+            this.sidenavService.mode = alias === 'xs' ? 'over' : 'side';
+            this.changeDetectorRef.markForCheck();
+        });
     }
 
     public ngOnInit() {
@@ -62,7 +61,6 @@ export class DejaSidenavComponent implements OnInit, OnDestroy {
 
         // Listen for future route changes
         this.router.events.pipe(
-            takeUntil(this.ngUnsubscribe),
             filter((event) => event instanceof NavigationEnd),
             map(() => this.activatedRoute),
             map((route) => {
@@ -72,13 +70,9 @@ export class DejaSidenavComponent implements OnInit, OnDestroy {
                 return route;
             }),
             filter((route) => route.outlet === 'primary'),
-            mergeMap((route) => route.data))
-            .subscribe((event) => this.title = event[`title`]);
-    }
-
-    public ngOnDestroy() {
-        this.ngUnsubscribe.next();
-        this.ngUnsubscribe.complete();
+            mergeMap((route) => route.data),
+            takeUntil(this.destroyed$)
+        ).subscribe((event) => this.title = event[`title`]);
     }
 
     private getActivatedRouteLastChild(): ActivatedRouteSnapshot {

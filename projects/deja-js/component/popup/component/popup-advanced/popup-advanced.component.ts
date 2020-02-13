@@ -11,7 +11,7 @@ import { AfterViewInit, Component, ElementRef, Inject, Injector, OnInit, Rendere
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { takeUntil, tap } from 'rxjs/operators';
 import { DejaPopupAction } from '../../model/popup-action.model';
 import { DejaPopupBase } from '../../model/popup-base.class';
 import { DejaPopupConfig } from '../../model/popup-config.model';
@@ -138,8 +138,9 @@ export class DejaPopupAdvancedComponent extends DejaPopupBase implements AfterVi
             });
 
             this.subKeyEvent = this.dialogRef.keydownEvents().pipe(
-                tap(() => this.freeze()))
-                .subscribe();
+                tap(() => this.freeze()),
+                takeUntil(this.destroyed$)
+            ).subscribe();
 
         } else {
             this.freeze();

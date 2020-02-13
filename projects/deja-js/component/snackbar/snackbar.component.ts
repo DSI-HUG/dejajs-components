@@ -7,8 +7,9 @@
  */
 
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Destroy } from '@deja-js/core';
 import { from, Subject, Subscription, timer } from 'rxjs';
-import { debounce, delay, first, tap } from 'rxjs/operators';
+import { debounce, delay, first, takeUntil, tap } from 'rxjs/operators';
 
 interface IAnimation {
     before: CSSStyleDeclaration;
@@ -24,7 +25,7 @@ interface IAnimation {
     template: `<ng-content></ng-content>`,
 
 })
-export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
+export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * all snackbar instances
@@ -138,9 +139,12 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param renderer
      */
     constructor(private elementRef: ElementRef) {
+        super();
+
         if (!DejaSnackbarComponent.instances) {
             DejaSnackbarComponent.instances = [];
         }
+
         DejaSnackbarComponent.instances.push(this);
 
         const applyParams = (styles: CSSStyleDeclaration) => {
@@ -160,12 +164,13 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
             }),
             debounce((animation) => timer(animation.delay || 1)),
             tap((animation) => applyParams(animation.after)),
-            debounce((animation) => timer(animation.duration)))
-            .subscribe(() => {
-                this.host.style.transitionDuration = '';
-                this.host.style.transitionTimingFunction = '';
-                this.host.style.transitionProperty = '';
-            });
+            debounce((animation) => timer(animation.duration)),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => {
+            this.host.style.transitionDuration = '';
+            this.host.style.transitionTimingFunction = '';
+            this.host.style.transitionProperty = '';
+        });
     }
 
     /**
@@ -229,8 +234,9 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.launchLeaveAnimation();
                 }
             }),
-            delay(this.leaveAnimationDuration))
-            .subscribe(() => this.onAnimationDone.emit());
+            delay(this.leaveAnimationDuration),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => this.onAnimationDone.emit());
     }
 
     /**

@@ -143,7 +143,10 @@ export class DejaGridHeaderComponent extends Destroy {
                     const kill$ = new Subject();
                     const mouseUp$ = fromEvent(element.ownerDocument, 'mouseup');
 
-                    mouseUp$.pipe(first()).subscribe(() => {
+                    mouseUp$.pipe(
+                        first(),
+                        takeUntil(this.destroyed$)
+                    ).subscribe(() => {
                         const e = {
                             column: null,
                         } as IDejaGridColumnSizeEvent;
@@ -153,21 +156,24 @@ export class DejaGridHeaderComponent extends Destroy {
                     });
 
                     fromEvent(element.ownerDocument, 'mousemove').pipe(
-                        takeUntil(merge(mouseUp$, kill$)))
-                        .subscribe((moveEvent: MouseEvent) => {
-                            if (moveEvent.buttons === 1) {
-                                const e = {
-                                    column: this._sizedColumn,
-                                    offsetWidth: moveEvent.screenX - sizedOrigin,
-                                    originalEvent: moveEvent,
-                                } as IDejaGridColumnSizeEvent;
-                                this.columnSizeChanged.emit(e);
-                                this.changeDetectorRef.markForCheck();
-                            } else {
-                                // Mouse up
-                                kill$.next();
-                            }
-                        });
+                        takeUntil(
+                            merge(mouseUp$, kill$)
+                        ),
+                        takeUntil(this.destroyed$)
+                    ).subscribe((moveEvent: MouseEvent) => {
+                        if (moveEvent.buttons === 1) {
+                            const e = {
+                                column: this._sizedColumn,
+                                offsetWidth: moveEvent.screenX - sizedOrigin,
+                                originalEvent: moveEvent,
+                            } as IDejaGridColumnSizeEvent;
+                            this.columnSizeChanged.emit(e);
+                            this.changeDetectorRef.markForCheck();
+                        } else {
+                            // Mouse up
+                            kill$.next();
+                        }
+                    });
 
                     downEvent.stopPropagation();
                     return false;
@@ -177,20 +183,21 @@ export class DejaGridHeaderComponent extends Destroy {
 
                 fromEvent(element, 'mouseup').pipe(
                     first(),
-                    timeout(1000))
-                    .subscribe((upEvent: MouseEvent) => {
-                        const columnElement = this.getColumnElementFromHTMLElement(upEvent.target as HTMLElement);
-                        if ((columnElement && columnElement.getAttribute('colname')) === clickedColumn.name) {
-                            const index = +columnElement.getAttribute('index');
-                            const e = {
-                                column: clickedColumn,
-                                originalEvent: upEvent,
-                                index: index,
-                            } as IDejaGridColumnEvent;
-                            this.columnHeaderClicked.emit(e);
-                            this.changeDetectorRef.markForCheck();
-                        }
-                    }, (_error) => { });
+                    timeout(1000),
+                    takeUntil(this.destroyed$)
+                ).subscribe((upEvent: MouseEvent) => {
+                    const columnElement = this.getColumnElementFromHTMLElement(upEvent.target as HTMLElement);
+                    if ((columnElement && columnElement.getAttribute('colname')) === clickedColumn.name) {
+                        const index = +columnElement.getAttribute('index');
+                        const e = {
+                            column: clickedColumn,
+                            originalEvent: upEvent,
+                            index: index,
+                        } as IDejaGridColumnEvent;
+                        this.columnHeaderClicked.emit(e);
+                        this.changeDetectorRef.markForCheck();
+                    }
+                }, (_error) => { });
             }
         });
     }

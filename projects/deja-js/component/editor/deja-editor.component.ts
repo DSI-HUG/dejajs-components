@@ -6,27 +6,11 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    EventEmitter,
-    forwardRef,
-    Input,
-    NgZone,
-    OnChanges,
-    OnDestroy,
-    Output,
-    SimpleChanges,
-    ViewChild,
-    ViewEncapsulation
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, forwardRef, Input, NgZone, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Destroy } from '@deja-js/core';
 import * as _ from 'lodash';
-
-import { first, take } from 'rxjs/operators';
+import { first, take, takeUntil } from 'rxjs/operators';
 import { DejaEditorService } from './deja-editor.service';
 
 declare var CKEDITOR: any;
@@ -50,8 +34,7 @@ declare var CKEDITOR: any;
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class DejaEditorComponent
-    implements OnChanges, AfterViewInit, OnDestroy, ControlValueAccessor {
+export class DejaEditorComponent extends Destroy implements OnChanges, AfterViewInit, OnDestroy, ControlValueAccessor {
     @Input() public config: any;
     @Input() public debounce: string;
 
@@ -96,7 +79,9 @@ export class DejaEditorComponent
         private zone: NgZone,
         private _changeDetectorRef: ChangeDetectorRef,
         private _initializer: DejaEditorService
-    ) { }
+    ) {
+        super();
+    }
 
     public get value(): any {
         return this._value;
@@ -136,7 +121,9 @@ export class DejaEditorComponent
                 this.ready.complete();
                 this.instance = null;
             } else {
-                this.ready.pipe(first()).subscribe(() => {
+                this.ready.pipe(
+                    first(),
+                ).subscribe(() => {
                     try {
                         // Workaround for a ckEditor bug
                         this.instance.destroy();
@@ -311,7 +298,10 @@ export class DejaEditorComponent
                 this.instance.setReadOnly(isDisabled);
             }
         } else {
-            this.ready.pipe(take(1)).subscribe(() => {
+            this.ready.pipe(
+                take(1),
+                takeUntil(this.destroyed$)
+            ).subscribe(() => {
                 this.instance.setReadOnly(this.readonly);
             });
         }

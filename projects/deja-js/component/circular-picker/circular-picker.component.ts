@@ -9,7 +9,7 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, Input, OnDestroy, OnInit, Optional, Self, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { Circle, Position } from '@deja-js/core';
+import { Circle, Destroy, Position } from '@deja-js/core';
 import { fromEvent, merge, Subject, Subscription } from 'rxjs';
 import { debounceTime, filter, first, sampleTime, takeUntil, tap } from 'rxjs/operators';
 
@@ -32,7 +32,7 @@ export interface ICircularValue {
     styleUrls: ['./circular-picker.component.scss'],
     templateUrl: './circular-picker.component.html',
 })
-export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor, OnDestroy {
+export class DejaCircularPickerComponent extends Destroy implements OnInit, ControlValueAccessor, OnDestroy {
     /** ClockwiseFactor allows user to choose rotation direction of picker */
     @Input() public clockwiseFactor: ClockwiseFactorEnum = ClockwiseFactorEnum.clockwise;
     /** Diameter of circular picker in pixels. Default 310px */
@@ -125,6 +125,8 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
      * Create MouseDown & mouseMove Observables needed inside this control.
      */
     constructor(elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, @Self() @Optional() public _control: NgControl) {
+        super();
+
         const element = elementRef.nativeElement as HTMLElement;
 
         if (this._control) {
@@ -134,79 +136,81 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
         this.mousedown$sub = fromEvent(element, 'mousedown').pipe(
             filter(() => !this.disabled),
             filter((event: MouseEvent) => event.buttons === 1),
-            debounceTime(100))
-            .subscribe((mouseEvent: MouseEvent) => {
-                this.clickedTime = Date.now();
-                const cursorElement = this.getHTMLElement(mouseEvent.target as HTMLElement, 'cursor');
-                const valueElement = this.getHTMLElement(mouseEvent.target as HTMLElement, 'value');
-                if (cursorElement) {
-                    this.cursorElement = cursorElement;
-                } else if (valueElement) {
-                    this.value = +valueElement.getAttribute('value');
+            debounceTime(100),
+            takeUntil(this.destroyed$)
+        ).subscribe((mouseEvent: MouseEvent) => {
+            this.clickedTime = Date.now();
+            const cursorElement = this.getHTMLElement(mouseEvent.target as HTMLElement, 'cursor');
+            const valueElement = this.getHTMLElement(mouseEvent.target as HTMLElement, 'value');
+            if (cursorElement) {
+                this.cursorElement = cursorElement;
+            } else if (valueElement) {
+                this.value = +valueElement.getAttribute('value');
+            }
+
+            if (cursorElement || valueElement) {
+                const kill$ = new Subject();
+
+                if (!element.ownerDocument.body.className.match(/noselect/)) {
+                    element.ownerDocument.body.classList.add('noselect');
                 }
 
-                if (cursorElement || valueElement) {
-                    const kill$ = new Subject();
+                const cancelMouse$ = merge(kill$, fromEvent(element.ownerDocument, 'mouseup')).pipe(
+                    first(),
+                    tap(() => {
+                        delete this.cursorElement;
+                        delete this.clickedTime;
+                        element.ownerDocument.body.className = element.ownerDocument.body.className.replace(/\bnoselect\b/, '');
+                    }));
 
-                    if (!element.ownerDocument.body.className.match(/noselect/)) {
-                        element.ownerDocument.body.classList.add('noselect');
+                const pickerElem = this.picker.nativeElement as HTMLElement;
+                const clientRect = pickerElem.getBoundingClientRect();
+
+                fromEvent(element.ownerDocument, 'mousemove').pipe(
+                    takeUntil(cancelMouse$),
+                    sampleTime(10),
+                    takeUntil(this.destroyed$)
+                ).subscribe((event: MouseEvent) => {
+                    if (event.buttons !== 1) {
+                        kill$.next();
+                        return;
                     }
 
-                    const cancelMouse$ = merge(kill$, fromEvent(element.ownerDocument, 'mouseup')).pipe(
-                        first(),
-                        tap(() => {
-                            delete this.cursorElement;
-                            delete this.clickedTime;
-                            element.ownerDocument.body.className = element.ownerDocument.body.className.replace(/\bnoselect\b/, '');
-                        }));
+                    let circle = Circle.fromOuterRect(clientRect);
+                    let contains = false;
+                    if (this.outerLabels) {
+                        circle = circle.inflate(this.labelsDiameter);
 
-                    const pickerElem = this.picker.nativeElement as HTMLElement;
-                    const clientRect = pickerElem.getBoundingClientRect();
-
-                    fromEvent(element.ownerDocument, 'mousemove').pipe(
-                        takeUntil(cancelMouse$),
-                        sampleTime(10))
-                        .subscribe((event: MouseEvent) => {
-                            if (event.buttons !== 1) {
-                                kill$.next();
-                                return;
-                            }
-
-                            let circle = Circle.fromOuterRect(clientRect);
-                            let contains = false;
-                            if (this.outerLabels) {
-                                circle = circle.inflate(this.labelsDiameter);
-
-                                for (const conf of this.configs) {
-                                    contains = circle.containsPoint(new Position(event.pageX, event.pageY));
-                                    if (contains) {
-                                        this.selectedConfig = conf;
-                                        break;
-                                    } else {
-                                        circle = circle.inflate(this.labelsDiameter);
-                                    }
-                                }
+                        for (const conf of this.configs) {
+                            contains = circle.containsPoint(new Position(event.pageX, event.pageY));
+                            if (contains) {
+                                this.selectedConfig = conf;
+                                break;
                             } else {
-                                const x = this.labelsDiameter * (this.configs.length - 1);
-                                circle = circle.inflate(-x);
-                                for (let i = this.configs.length; i > 0; i--) {
-                                    contains = circle.containsPoint(new Position(event.pageX, event.pageY));
-                                    if (contains) {
-                                        this.selectedConfig = this.configs[i - 1];
-                                        break;
-                                    } else {
-                                        circle = circle.inflate(this.labelsDiameter);
-                                    }
-                                }
+                                circle = circle.inflate(this.labelsDiameter);
                             }
+                        }
+                    } else {
+                        const x = this.labelsDiameter * (this.configs.length - 1);
+                        circle = circle.inflate(-x);
+                        for (let i = this.configs.length; i > 0; i--) {
+                            contains = circle.containsPoint(new Position(event.pageX, event.pageY));
+                            if (contains) {
+                                this.selectedConfig = this.configs[i - 1];
+                                break;
+                            } else {
+                                circle = circle.inflate(this.labelsDiameter);
+                            }
+                        }
+                    }
 
-                            const newValue = this.pointToValue(event.pageX - clientRect.left, event.pageY - clientRect.top, this.selectedConfig);
-                            if (newValue !== this.value) {
-                                this.value = newValue;
-                            }
-                        });
-                }
-            });
+                    const newValue = this.pointToValue(event.pageX - clientRect.left, event.pageY - clientRect.top, this.selectedConfig);
+                    if (newValue !== this.value) {
+                        this.value = newValue;
+                    }
+                });
+            }
+        });
 
     }
 
@@ -384,7 +388,6 @@ export class DejaCircularPickerComponent implements OnInit, ControlValueAccessor
         let parentElement = element;
 
         while (parentElement && !parentElement.hasAttribute(attr)) {
-            element = parentElement;
             parentElement = parentElement.parentElement;
         }
 

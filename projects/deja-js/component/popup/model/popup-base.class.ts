@@ -9,12 +9,13 @@
 import { ComponentPortal, Portal } from '@angular/cdk/portal';
 import { ElementRef, Injector, OnInit, Renderer2 } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+import { Destroy } from '@deja-js/core';
 import { Subscription } from 'rxjs';
-import { filter, first, tap } from 'rxjs/operators';
+import { filter, first, takeUntil, tap } from 'rxjs/operators';
 import { DejaPopupAction } from './popup-action.model';
 import { DejaPopupConfig } from './popup-config.model';
 
-export abstract class DejaPopupBase implements OnInit {
+export abstract class DejaPopupBase extends Destroy implements OnInit {
 
     public actions: DejaPopupAction[];
     public actionSelected: DejaPopupAction;
@@ -47,8 +48,9 @@ export abstract class DejaPopupBase implements OnInit {
                     const action = new DejaPopupAction('dialog-close', 'popup-tray');
                     this.config.dejaPopupCom$.next(action);
                 }
-            }))
-            .subscribe();
+            }),
+            takeUntil(this.destroyed$)
+        ).subscribe();
 
         if (this.config.actionComponentRef) {
             this.actionsPortal = new ComponentPortal(this.config.actionComponentRef, undefined, this.injector);
@@ -64,8 +66,9 @@ export abstract class DejaPopupBase implements OnInit {
                         if (action.isFinalAction) {
                             this.dialogRef.close(action);
                         }
-                    }))
-                    .subscribe()
+                    }),
+                    takeUntil(this.destroyed$)
+                ).subscribe()
             );
         }
     }

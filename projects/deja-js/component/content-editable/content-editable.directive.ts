@@ -57,11 +57,12 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
             map(([value, selectOnFocus]) => {
                 if (selectOnFocus !== false) {
                     timer(10).pipe(
-                        first())
-                        .subscribe(() => {
-                            this.selectAll();
-                            this.focus();
-                        });
+                        first(),
+                        takeUntil(this.destroyed$)
+                    ).subscribe(() => {
+                        this.selectAll();
+                        this.focus();
+                    });
                 }
                 return value;
             }),
@@ -79,38 +80,41 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
             filter((value) => !value));
 
         inEdition$.pipe(
-            filter((value) => value))
-            .subscribe(() => {
-                fromEvent(this.element.ownerDocument, 'mousedown').pipe(
-                    takeUntil(kill$),
-                    filter((event: MouseEvent) => !this.isChildElement(event.target as HTMLElement)))
-                    .subscribe(() => {
-                        const text = this.element.innerText.replace(/\n/g, '<br />').replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
-                        this.onTouchedCallback();
-                        if (text || !this.mandatory) {
-                            this.value = text;
-                        }
+            filter((value) => value),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => {
+            fromEvent(this.element.ownerDocument, 'mousedown').pipe(
+                filter((event: MouseEvent) => !this.isChildElement(event.target as HTMLElement)),
+                takeUntil(kill$),
+                takeUntil(this.destroyed$)
+            ).subscribe(() => {
+                const text = this.element.innerText.replace(/\n/g, '<br />').replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+                this.onTouchedCallback();
+                if (text || !this.mandatory) {
+                    this.value = text;
+                }
 
-                        this.inEdition = false;
-                    });
-
-                fromEvent(this.element, 'keydown').pipe(
-                    takeUntil(kill$))
-                    .subscribe((e: KeyboardEvent) => {
-                        e.cancelBubble = true;
-                        e.stopPropagation();
-                        if (e.code === KeyCodes.Enter && !this.multiline) {
-                            const text = this.element.innerText;
-                            if (text || !this.mandatory) {
-                                this.value = text;
-                            }
-                            this.inEdition = false;
-                        } else if (e.code === KeyCodes.Escape) {
-                            this.inEdition = false;
-                        }
-                        return false;
-                    });
+                this.inEdition = false;
             });
+
+            fromEvent(this.element, 'keydown').pipe(
+                takeUntil(kill$),
+                takeUntil(this.destroyed$)
+            ).subscribe((e: KeyboardEvent) => {
+                e.cancelBubble = true;
+                e.stopPropagation();
+                if (e.code === KeyCodes.Enter && !this.multiline) {
+                    const text = this.element.innerText;
+                    if (text || !this.mandatory) {
+                        this.value = text;
+                    }
+                    this.inEdition = false;
+                } else if (e.code === KeyCodes.Escape) {
+                    this.inEdition = false;
+                }
+                return false;
+            });
+        });
     }
 
     /** Définit une valeur indiquant si le contenu édité est obligatoire. Si la valeur est 'true' la sortie du mode édition ne sera pas possible tant qu'un contenu n'est pas ajouté. */

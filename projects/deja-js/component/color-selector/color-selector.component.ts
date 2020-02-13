@@ -152,7 +152,10 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
             map((colors) => colors && colors.map((color, index) => new DejaColorFab(color, this._disabled, index === this._selectedSubIndex))),
             tap((subColorFabs) => {
                 this._subColorFabs = subColorFabs;
-                timer(100).pipe(first()).subscribe(() => {
+                timer(100).pipe(
+                    first(),
+                    takeUntil(this.destroyed$)
+                ).subscribe(() => {
                     element.removeAttribute('sub-tr');
                 });
             }));
@@ -256,12 +259,18 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
                 const subIndex = baseColor.subColors && baseColor.subColors.findIndex((subColor) => Color.equals(subColor, color));
                 if (subIndex !== undefined && subIndex >= 0) {
                     this.selectedBaseIndex$.next(index);
-                    timer(1).pipe(first()).subscribe(() => this.selectedSubIndex$.next(subIndex));
+                    timer(1).pipe(
+                        first(),
+                        takeUntil(this.destroyed$)
+                    ).subscribe(() => this.selectedSubIndex$.next(subIndex));
                     // Break
                     return true;
                 } else if (Color.equals(baseColor, color)) {
                     this.selectedBaseIndex$.next(index);
-                    timer(1).pipe(first()).subscribe(() => this.selectedSubIndex$.next(0));
+                    timer(1).pipe(
+                        first(),
+                        takeUntil(this.destroyed$)
+                    ).subscribe(() => this.selectedSubIndex$.next(0));
                     // Break
                     return true;
                 }
@@ -270,7 +279,10 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
             });
             if (!find) {
                 this.selectedBaseIndex$.next(0);
-                timer(1).pipe(first()).subscribe(() => this.selectedSubIndex$.next(0));
+                timer(1).pipe(
+                    first(),
+                    takeUntil(this.destroyed$)
+                ).subscribe(() => this.selectedSubIndex$.next(0));
             }
         }
     }

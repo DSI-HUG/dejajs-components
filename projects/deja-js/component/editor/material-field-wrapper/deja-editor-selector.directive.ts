@@ -26,13 +26,7 @@ let nextUniqueId = 0;
         }
     ]
 })
-export class DejaEditorSelectorDirective extends _MatInputMixinBase
-    implements
-    MatFormFieldControl<any>,
-    DoCheck,
-    OnInit,
-    OnDestroy,
-    CanUpdateErrorState {
+export class DejaEditorSelectorDirective extends _MatInputMixinBase implements MatFormFieldControl<any>, DoCheck, OnInit, OnDestroy, CanUpdateErrorState {
     public errorState: boolean;
     public autofilled?: boolean;
     protected _uid = `mat-input-${nextUniqueId++}`;
