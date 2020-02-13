@@ -99,7 +99,8 @@ export abstract class ItemListBase extends Destroy {
                     } else {
                         timer(1).pipe(
                             first(),
-                            filter(() => !!this.listElement)
+                            filter(() => !!this.listElement),
+                            takeUntil(this.destroyed$)
                         ).subscribe(() => {
                             this.listElement.scrollTop = viewPortResult.scrollPos;
                         });
@@ -285,7 +286,10 @@ export abstract class ItemListBase extends Destroy {
 
     /** Trie la liste par le champs spécifié. */
     public sort(name?: string) {
-        this.sort$(name).pipe(first()).subscribe(() => { });
+        this.sort$(name).pipe(
+            first(),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => { });
     }
 
     /** Trie la liste par le champs spécifié. */
@@ -366,8 +370,9 @@ export abstract class ItemListBase extends Destroy {
     public refresh() {
         this.getItemListService().invalidateCache();
         this.calcViewList$().pipe(
-            first())
-            .subscribe(() => { });
+            first(),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => { });
     }
 
     /** Recalcule le viewport. */

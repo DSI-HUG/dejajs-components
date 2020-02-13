@@ -12,7 +12,8 @@
 
 import { Directive, ElementRef, HostListener, Input, OnDestroy, OnInit, Renderer2, RendererFactory2 } from '@angular/core';
 import { Subscription, timer } from 'rxjs';
-import { filter, first } from 'rxjs/operators';
+import { filter, first, takeUntil } from 'rxjs/operators';
+import { Destroy } from '../destroy/destroy';
 
 interface SlimScrollOptions {
     // width in pixels of the visible scroll area
@@ -122,7 +123,7 @@ const defaults: SlimScrollOptions = {
 @Directive({
     selector: '[slimScroll]'
 })
-export class DejaSlimScrollDirective implements OnInit, OnDestroy {
+export class DejaSlimScrollDirective extends Destroy implements OnInit, OnDestroy {
     private _me: HTMLElement;
     private _bar: HTMLDivElement;
     private _rail: HTMLDivElement;
@@ -147,6 +148,8 @@ export class DejaSlimScrollDirective implements OnInit, OnDestroy {
         rendererFactory: RendererFactory2,
         elementRef: ElementRef
     ) {
+        super();
+
         this._renderer = rendererFactory.createRenderer(null, null);
         this._me = elementRef.nativeElement;
         this._options = { ...defaults };
@@ -165,6 +168,7 @@ export class DejaSlimScrollDirective implements OnInit, OnDestroy {
     }
 
     public ngOnDestroy() {
+        super.ngOnDestroy();
         if (this._changesTracker) {
             clearInterval(this._changesTracker);
         }
@@ -424,11 +428,12 @@ export class DejaSlimScrollDirective implements OnInit, OnDestroy {
         ) {
             this._queueHide = timer(1000).pipe(
                 first(),
-                filter(() => !this._queueHide))
-                .subscribe(() => {
-                    this._renderer.setStyle(this._bar, 'opacity', '0');
-                    this._renderer.setStyle(this._rail, 'opacity', '0');
-                });
+                filter(() => !this._queueHide),
+                takeUntil(this.destroyed$)
+            ).subscribe(() => {
+                this._renderer.setStyle(this._bar, 'opacity', '0');
+                this._renderer.setStyle(this._rail, 'opacity', '0');
+            });
         }
     }
 
