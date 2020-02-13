@@ -4,7 +4,7 @@
         "outDir": "../out-tsc/app"
     },
     "angularCompilerOptions": {
-        "enableIvy": false
+        "enableIvy": true
     },
     "files": [
         "main.ts",
