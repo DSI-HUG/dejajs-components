@@ -460,8 +460,9 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                 } else {
                     return this.calcViewList$().pipe(map(() => itms));
                 }
-            }))
-            .subscribe(() => { });
+            }),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => { });
     }
 
     /**
@@ -510,8 +511,9 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     public set models(items: any[] | Observable<any[]>) {
         super.setModels$(items).pipe(
             first(),
-            switchMap(() => this.calcViewList$()))
-            .subscribe(() => { });
+            switchMap(() => this.calcViewList$()),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => { });
     }
 
     /** Permet de désactiver la liste */
@@ -613,7 +615,10 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
 
     /** Change l'état d'expansion de toute les lignes parentes */
     public toggleAll(collapsed?: boolean) {
-        this.toggleAll$(collapsed).pipe(first()).subscribe(() => { });
+        this.toggleAll$(collapsed).pipe(
+            first(),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => { });
     }
 
     /** Positionne a scrollbar pour assurer que l'élément spécifié soit visible */
@@ -661,8 +666,9 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
         if (this._itemList.length === 0 && (this.hasCustomService || this.hasLoadingEvent)) {
             timer(1).pipe(
                 first(),
-                switchMap(() => this.calcViewList$()))
-                .subscribe(() => { });
+                switchMap(() => this.calcViewList$()),
+                takeUntil(this.destroyed$)
+            ).subscribe(() => { });
         }
 
         fromEvent(this.listElement, 'scroll').pipe(
@@ -717,20 +723,32 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                 switch (event.code) {
                     case KeyCodes.Home:
                         if (event.shiftKey) {
-                            this.selectRange$(currentIndex, 0).pipe(first()).subscribe(() => { });
+                            this.selectRange$(currentIndex, 0).pipe(
+                                first(),
+                                takeUntil(this.destroyed$)
+                            ).subscribe(() => { });
                         } else if (!event.ctrlKey) {
                             this.rangeStartIndex = 0;
-                            this.selectRange$(this.rangeStartIndex).pipe(first()).subscribe(() => { });
+                            this.selectRange$(this.rangeStartIndex).pipe(
+                                first(),
+                                takeUntil(this.destroyed$)
+                            ).subscribe(() => { });
                         }
                         setCurrentIndex(0);
                         return false;
 
                     case KeyCodes.End:
                         if (event.shiftKey) {
-                            this.selectRange$(currentIndex, this.rowsCount - 1).pipe(first()).subscribe(() => { });
+                            this.selectRange$(currentIndex, this.rowsCount - 1).pipe(
+                                first(),
+                                takeUntil(this.destroyed$)
+                            ).subscribe(() => { });
                         } else if (!event.ctrlKey) {
                             this.rangeStartIndex = this.rowsCount - 1;
-                            this.selectRange$(this.rangeStartIndex).pipe(first()).subscribe(() => { });
+                            this.selectRange$(this.rangeStartIndex).pipe(
+                                first(),
+                                takeUntil(this.destroyed$)
+                            ).subscribe(() => { });
                         }
                         setCurrentIndex(this.rowsCount - 1);
                         return false;
@@ -738,10 +756,16 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                     case KeyCodes.PageUp:
                         const upindex = Math.max(0, this.currentItemIndex - this._pageSize);
                         if (event.shiftKey) {
-                            this.selectRange$(currentIndex, upindex).pipe(first()).subscribe(() => { });
+                            this.selectRange$(currentIndex, upindex).pipe(
+                                first(),
+                                takeUntil(this.destroyed$)
+                            ).subscribe(() => { });
                         } else if (!event.ctrlKey) {
                             this.rangeStartIndex = upindex;
-                            this.selectRange$(this.rangeStartIndex).pipe(first()).subscribe(() => { });
+                            this.selectRange$(this.rangeStartIndex).pipe(
+                                first(),
+                                takeUntil(this.destroyed$)
+                            ).subscribe(() => { });
                         }
                         setCurrentIndex(upindex);
                         return false;
@@ -749,10 +773,16 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                     case KeyCodes.PageDown:
                         const dindex = Math.min(this.rowsCount - 1, this.currentItemIndex + this._pageSize);
                         if (event.shiftKey) {
-                            this.selectRange$(currentIndex, dindex).pipe(first()).subscribe(() => { });
+                            this.selectRange$(currentIndex, dindex).pipe(
+                                first(),
+                                takeUntil(this.destroyed$)
+                            ).subscribe(() => { });
                         } else if (!event.ctrlKey) {
                             this.rangeStartIndex = dindex;
-                            this.selectRange$(this.rangeStartIndex).pipe(first()).subscribe(() => { });
+                            this.selectRange$(this.rangeStartIndex).pipe(
+                                first(),
+                                takeUntil(this.destroyed$)
+                            ).subscribe(() => { });
                         }
                         setCurrentIndex(dindex);
                         return false;
@@ -761,10 +791,16 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                         const uaindex = Math.max(0, this.currentItemIndex - 1);
                         if (uaindex !== -1) {
                             if (event.shiftKey) {
-                                this.selectRange$(currentIndex, uaindex).pipe(first()).subscribe(() => { });
+                                this.selectRange$(currentIndex, uaindex).pipe(
+                                    first(),
+                                    takeUntil(this.destroyed$)
+                                ).subscribe(() => { });
                             } else if (!event.ctrlKey) {
                                 this.rangeStartIndex = uaindex;
-                                this.selectRange$(this.rangeStartIndex).pipe(first()).subscribe(() => { });
+                                this.selectRange$(this.rangeStartIndex).pipe(
+                                    first(),
+                                    takeUntil(this.destroyed$)
+                                ).subscribe(() => { });
                             }
                             setCurrentIndex(uaindex);
                         }
@@ -774,10 +810,16 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                         const daindex = Math.min(this.rowsCount - 1, this.currentItemIndex + 1);
                         if (daindex !== -1) {
                             if (event.shiftKey) {
-                                this.selectRange$(currentIndex, daindex).pipe(first()).subscribe(() => { });
+                                this.selectRange$(currentIndex, daindex).pipe(
+                                    first(),
+                                    takeUntil(this.destroyed$)
+                                ).subscribe(() => { });
                             } else if (!event.ctrlKey) {
                                 this.rangeStartIndex = daindex;
-                                this.selectRange$(this.rangeStartIndex).pipe(first()).subscribe(() => { });
+                                this.selectRange$(this.rangeStartIndex).pipe(
+                                    first(),
+                                    takeUntil(this.destroyed$)
+                                ).subscribe(() => { });
                             }
                             setCurrentIndex(daindex);
                         }
@@ -792,16 +834,26 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                         const sitem = this.currentItem as IItemTree;
                         if (sitem) {
                             if (this.isCollapsible(sitem)) {
-                                this.toggleCollapse$(currentIndex, !sitem.collapsed).pipe(first()).subscribe(() => { });
+                                this.toggleCollapse$(currentIndex, !sitem.collapsed).pipe(
+                                    first(),
+                                    takeUntil(this.destroyed$)
+                                ).subscribe(() => { });
                             } else if (sitem.selected) {
-                                this.toggleSelect$([sitem], false).pipe(first()).subscribe(() => { });
+                                this.toggleSelect$([sitem], false).pipe(
+                                    first(),
+                                    takeUntil(this.destroyed$)
+                                ).subscribe(() => { });
                             } else if (this.multiSelect && event.ctrlKey) {
-                                this.toggleSelect$([sitem], !sitem.selected).pipe(first()).subscribe(() => { });
+                                this.toggleSelect$([sitem], !sitem.selected).pipe(
+                                    first(),
+                                    takeUntil(this.destroyed$)
+                                ).subscribe(() => { });
                             } else {
                                 this.unselectAll$().pipe(
                                     switchMap(() => this.toggleSelect$([sitem], true)),
-                                    first())
-                                    .subscribe(() => { });
+                                    first(),
+                                    takeUntil(this.destroyed$)
+                                ).subscribe(() => { });
                             }
                         }
                         return false;
@@ -810,12 +862,16 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                         const eitem = this.currentItem as IItemTree;
                         if (eitem) {
                             if (this.isCollapsible(eitem)) {
-                                this.toggleCollapse$(currentIndex, !eitem.collapsed).pipe(first()).subscribe(() => { });
+                                this.toggleCollapse$(currentIndex, !eitem.collapsed).pipe(
+                                    first(),
+                                    takeUntil(this.destroyed$)
+                                ).subscribe(() => { });
                             } else if (this.isSelectable(eitem)) {
                                 this.unselectAll$().pipe(
                                     switchMap(() => this.toggleSelect$([eitem], true)),
-                                    first())
-                                    .subscribe(() => { });
+                                    first(),
+                                    takeUntil(this.destroyed$)
+                                ).subscribe(() => { });
                             }
                         }
                         return false;
@@ -834,10 +890,10 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
             }
         });
 
-        let keyUp$ = fromEvent(this.listElement, 'keyup') as Observable<Event>;
+        let keyUp$: Observable<Event> = fromEvent(this.listElement, 'keyup');
         if (this.input) {
-            const inputKeyup$ = fromEvent(this.input.nativeElement, 'keyup') as Observable<KeyboardEvent>;
-            const inputDrop$ = fromEvent(this.input.nativeElement, 'drop') as Observable<KeyboardEvent>;
+            const inputKeyup$: Observable<Event> = fromEvent(this.input.nativeElement, 'keyup');
+            const inputDrop$: Observable<Event> = fromEvent(this.input.nativeElement, 'drop');
             keyUp$ = merge(keyUp$, inputKeyup$, inputDrop$);
         }
 
@@ -883,12 +939,13 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                         event.preventDefault();
                         return false;
                     }, this.currentItemIndex).pipe(
-                        first())
-                        .subscribe((result) => {
-                            if (result.index >= 0) {
-                                setCurrentIndex(result.index);
-                            }
-                        });
+                        first(),
+                        takeUntil(this.destroyed$)
+                    ).subscribe((result) => {
+                        if (result.index >= 0) {
+                            setCurrentIndex(result.index);
+                        }
+                    });
                 }
             } else {
                 // Autocomplete, filter the list
@@ -926,8 +983,9 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
             if (e.shiftKey && this.multiSelect) {
                 // Select all from current to clicked
                 this.selectRange$(itemIndex, this.currentItemIndex).pipe(
-                    first())
-                    .subscribe(() => this.changeDetectorRef.markForCheck());
+                    first(),
+                    takeUntil(this.destroyed$)
+                ).subscribe(() => this.changeDetectorRef.markForCheck());
                 return false;
             } else if (!e.ctrlKey) {
                 if (!this.multiSelect && item.selected) {
@@ -937,65 +995,73 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                 this.unselectAll$().pipe(first()).subscribe(() => {
                     this.currentItemIndex = itemIndex;
                     this.toggleSelect$([item], true).pipe(
-                        first())
-                        .subscribe(() => this.changeDetectorRef.markForCheck());
+                        first(),
+                        takeUntil(this.destroyed$)
+                    ).subscribe(() => this.changeDetectorRef.markForCheck());
                 });
             }
         }
 
         this.mouseUp$sub = fromEvent(this.listElement, 'mouseup').pipe(
             first(),
-            filter(() => !this.disabled))
-            .subscribe((upevt: MouseEvent) => {
-                // Because .first()
-                this.mouseUp$sub = undefined;
+            filter(() => !this.disabled),
+            takeUntil(this.destroyed$)
+        ).subscribe((upevt: MouseEvent) => {
+            // Because .first()
+            this.mouseUp$sub = undefined;
 
-                const upTarget = upevt.target as HTMLElement;
-                const upIndex = this.getItemIndexFromHTMLElement(upTarget);
-                if (upIndex === undefined) {
-                    return;
-                }
+            const upTarget = upevt.target as HTMLElement;
+            const upIndex = this.getItemIndexFromHTMLElement(upTarget);
+            if (upIndex === undefined) {
+                return;
+            }
 
-                const upItem = this._itemList[upIndex - this.vpStartRow];
-                if (this.clickedItem && upItem !== this.clickedItem) {
-                    return;
-                }
+            const upItem = this._itemList[upIndex - this.vpStartRow];
+            if (this.clickedItem && upItem !== this.clickedItem) {
+                return;
+            }
 
-                if (upevt.shiftKey) {
-                    return;
-                }
+            if (upevt.shiftKey) {
+                return;
+            }
 
-                if (upevt.button !== 0) {
-                    // Right click menu
-                    return;
-                }
+            if (upevt.button !== 0) {
+                // Right click menu
+                return;
+            }
 
-                if (this.isCollapsible(upItem) && (isExpandButton(upTarget) || !this.isSelectable(upItem))) {
-                    const treeItem = upItem as IItemTree;
-                    this.toggleCollapse$(upIndex, !treeItem.collapsed).pipe(first()).subscribe(() => {
+            if (this.isCollapsible(upItem) && (isExpandButton(upTarget) || !this.isSelectable(upItem))) {
+                const treeItem = upItem as IItemTree;
+                this.toggleCollapse$(upIndex, !treeItem.collapsed).pipe(
+                    first(),
+                    takeUntil(this.destroyed$)
+                ).subscribe(() => {
+                    this.currentItemIndex = upIndex;
+                });
+
+            } else if (upevt.ctrlKey) {
+                if (this.multiSelect) {
+                    this.toggleSelect$([upItem], !upItem.selected).pipe(
+                        first(),
+                        takeUntil(this.destroyed$)
+                    ).subscribe(() => {
                         this.currentItemIndex = upIndex;
+                        this.changeDetectorRef.markForCheck();
                     });
-
-                } else if (upevt.ctrlKey) {
-                    if (this.multiSelect) {
-                        this.toggleSelect$([upItem], !upItem.selected).pipe(
-                            first())
-                            .subscribe(() => {
-                                this.currentItemIndex = upIndex;
-                                this.changeDetectorRef.markForCheck();
-                            });
-                    } else {
-                        const o = this.selectedItem && this.selectedItem !== upItem ? this.toggleSelect$([this.selectedItem], false).pipe(switchMap(() => this.toggleSelect$([upItem], true))) : this.toggleSelect$([upItem], !upItem.selected);
-                        o.pipe(first())
-                            .subscribe(() => {
-                                this.currentItemIndex = upIndex;
-                                this.changeDetectorRef.markForCheck();
-                            });
-                    }
+                } else {
+                    const o = this.selectedItem && this.selectedItem !== upItem ? this.toggleSelect$([this.selectedItem], false).pipe(switchMap(() => this.toggleSelect$([upItem], true))) : this.toggleSelect$([upItem], !upItem.selected);
+                    o.pipe(
+                        first(),
+                        takeUntil(this.destroyed$)
+                    ).subscribe(() => {
+                        this.currentItemIndex = upIndex;
+                        this.changeDetectorRef.markForCheck();
+                    });
                 }
+            }
 
-                this.rangeStartIndex = -1;
-            });
+            this.rangeStartIndex = -1;
+        });
     }
 
     public getDragContext(index: number) {
@@ -1008,7 +1074,10 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                 this.itemDragEnd.emit(event);
                 delete this._ddStartIndex;
                 delete this._ddTargetIndex;
-                this.calcViewList$().pipe(first()).subscribe(() => { }); // Comment this line to debug dragdrop
+                this.calcViewList$().pipe(
+                    first(),
+                    takeUntil(this.destroyed$)
+                ).subscribe(() => { }); // Comment this line to debug dragdrop
             },
             dragstartcallback: (event: IDejaDragEvent) => {
                 const targetIndex = this.getItemIndexFromHTMLElement(event.target as HTMLElement);
@@ -1051,8 +1120,9 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                     } else {
                         return of(finalTarget);
                     }
-                }))
-                .subscribe(() => { });
+                }),
+                takeUntil(this.destroyed$)
+            ).subscribe(() => { });
 
             event.preventDefault();
             return;
@@ -1065,8 +1135,9 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                 delete this._ddStartIndex;
                 delete this._ddTargetIndex;
                 this.drop$().pipe(
-                    switchMap(() => this.calcViewList$().pipe(first())))
-                    .subscribe(() => { });
+                    switchMap(() => this.calcViewList$().pipe(first())),
+                    takeUntil(this.destroyed$)
+                ).subscribe(() => { });
                 event.preventDefault();
             },
         };
@@ -1082,7 +1153,10 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
 
         if (!listBounds.containsPoint(new Position(event.pageX, event.pageY))) {
             this._ddTargetIndex = this._ddStartIndex;
-            this.calcViewList$().pipe(first()).subscribe(() => { });
+            this.calcViewList$().pipe(
+                first(),
+                takeUntil(this.destroyed$)
+            ).subscribe(() => { });
         }
     }
 

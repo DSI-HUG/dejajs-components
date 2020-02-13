@@ -7,7 +7,7 @@
  */
 
 import { Directive, ElementRef, EventEmitter, Input, Output } from '@angular/core';
-import { DejaConnectionPositionPair } from '@deja-js/core';
+import { DejaConnectionPositionPair, Destroy } from '@deja-js/core';
 import { fromEvent, of } from 'rxjs';
 import { delay, switchMap, takeUntil } from 'rxjs/operators';
 import { DejaTooltipService } from './tooltip.service';
@@ -15,7 +15,7 @@ import { DejaTooltipService } from './tooltip.service';
 @Directive({
     selector: '[deja-tooltip]',
 })
-export class DejaTooltipDirective {
+export class DejaTooltipDirective extends Destroy {
     @Input('tooltip-delay') public delay = 600;
     @Input('tooltip-model') public model: any;
     @Input('deja-tooltip') public name: string;
@@ -25,20 +25,23 @@ export class DejaTooltipDirective {
     @Output('tooltip-show') public show = new EventEmitter();
 
     constructor(elementRef: ElementRef, tooltipService: DejaTooltipService) {
+        super();
+
         const element = elementRef.nativeElement as HTMLElement;
 
         const leave$ = fromEvent(element, 'mouseleave');
 
         fromEvent(element, 'mouseenter').pipe(
-            switchMap((e) => of(e).pipe(delay(this.delay), takeUntil(leave$))))
-            .subscribe(() => {
-                tooltipService.params[this.name] = {
-                    model: this.model,
-                    ownerElement: elementRef,
-                    positions: this.positions,
-                };
+            switchMap((e) => of(e).pipe(delay(this.delay), takeUntil(leave$))),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => {
+            tooltipService.params[this.name] = {
+                model: this.model,
+                ownerElement: elementRef,
+                positions: this.positions,
+            };
 
-                this.show.emit();
-            });
+            this.show.emit();
+        });
     }
 }

@@ -203,7 +203,8 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
         if (coerceBooleanProperty(value) && !this.delete$sub) {
             this.delete$sub = this.keyup$.pipe(
                 filter(() => this.layoutProvider.designMode),
-                filter((event: KeyboardEvent) => event.code === KeyCodes.Delete && this.hasFocus)
+                filter((event: KeyboardEvent) => event.code === KeyCodes.Delete && this.hasFocus),
+                takeUntil(this.destroyed$)
             ).subscribe(() => this.layoutProvider.deleteSelection());
 
         } else if (this.delete$sub) {
@@ -216,7 +217,8 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
     public set canCopy(value: boolean) {
         if (coerceBooleanProperty(value) && !this.copy$sub) {
             this.copy$sub = this.keyup$.pipe(
-                filter((event: KeyboardEvent) => event.code === KeyCodes.KeyC && event.ctrlKey && this.hasFocus)
+                filter((event: KeyboardEvent) => event.code === KeyCodes.KeyC && event.ctrlKey && this.hasFocus),
+                takeUntil(this.destroyed$)
             ).subscribe(() => {
                 this.copySelection();
             });
@@ -232,7 +234,8 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
         if (coerceBooleanProperty(value) && !this.cut$sub) {
             this.cut$sub = this.keyup$.pipe(
                 filter(() => this.layoutProvider.designMode),
-                filter((event: KeyboardEvent) => event.code === KeyCodes.KeyX && event.ctrlKey && this.hasFocus)
+                filter((event: KeyboardEvent) => event.code === KeyCodes.KeyX && event.ctrlKey && this.hasFocus),
+                takeUntil(this.destroyed$)
             ).subscribe(() => {
                 this.cutSelection();
             });
@@ -248,7 +251,8 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
         if (coerceBooleanProperty(value) && !this.paste$sub) {
             this.paste$sub = this.keyup$.pipe(
                 filter(() => this.layoutProvider.designMode),
-                filter((event: KeyboardEvent) => event.code === KeyCodes.KeyV && event.ctrlKey && this.hasFocus)
+                filter((event: KeyboardEvent) => event.code === KeyCodes.KeyV && event.ctrlKey && this.hasFocus),
+                takeUntil(this.destroyed$)
             ).subscribe(() => this.paste());
 
         } else if (this.paste$sub) {

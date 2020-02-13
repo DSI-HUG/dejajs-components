@@ -243,6 +243,8 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
      * onDestroy hook
      */
     public ngOnDestroy(): void {
+        super.ngOnDestroy();
+
         // check if snackbars have to move (if they were created after the one deleted)
         if (!!DejaSnackbarComponent.instances.length) {
             DejaSnackbarComponent.instances

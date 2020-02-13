@@ -105,6 +105,8 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
      * On component destroy
      */
     public ngOnDestroy() {
+        super.ngOnDestroy();
+
         this.focus.complete();
         this.blur.complete();
         this.change.complete();

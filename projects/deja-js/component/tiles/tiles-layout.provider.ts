@@ -249,7 +249,8 @@ export class DejaTilesLayoutProvider extends Destroy {
 
             fromEvent(this._container, 'mousemove').pipe(
                 takeUntil(mouseUp$),
-                filter((event: MouseEvent) => event.buttons === 1)
+                filter((event: MouseEvent) => event.buttons === 1),
+                takeUntil(this.destroyed$)
             ).subscribe((event: MouseEvent) => {
                 const containerBounds = this._container.getBoundingClientRect();
 
@@ -285,7 +286,8 @@ export class DejaTilesLayoutProvider extends Destroy {
 
             const cancel$sub = cancel$.pipe(
                 take(1),
-                tap(() => mouseUp$sub.unsubscribe())
+                tap(() => mouseUp$sub.unsubscribe()),
+                takeUntil(this.destroyed$)
             ).subscribe(() => {
                 this.removeTemporaryTile();
                 this.cancelDrag(tiles);
@@ -293,14 +295,16 @@ export class DejaTilesLayoutProvider extends Destroy {
 
             mouseUp$sub = mouseUp$.pipe(
                 take(1),
-                tap(() => cancel$sub.unsubscribe())
+                tap(() => cancel$sub.unsubscribe()),
+                takeUntil(this.destroyed$)
             ).subscribe(() => this.drop(tiles));
 
             const dragover$ = from(this.dragover$).pipe(
                 map((cursor) => cursor.originalEvent));
 
             merge(mousemove$, dragover$).pipe(
-                takeUntil(kill$)
+                takeUntil(kill$),
+                takeUntil(this.destroyed$)
             ).subscribe((event: MouseEvent) => {
                 const containerBounds = this._container.getBoundingClientRect();
                 const x = event.pageX - containerBounds.left;
@@ -370,7 +374,8 @@ export class DejaTilesLayoutProvider extends Destroy {
                 if (this.designMode) {
                     fromEvent(container, 'mousemove').pipe(
                         takeUntil(leave$),
-                        filter((event: MouseEvent) => !!this.container && event.buttons === 0)
+                        filter((event: MouseEvent) => !!this.container && event.buttons === 0),
+                        takeUntil(this.destroyed$)
                     ).subscribe((event: MouseEvent) => {
                         this._cursor = this.getCursorFromHTMLElement(event.pageX, event.pageY, event.target as HTMLElement);
                         this.container.style.cursor = this._cursor;
@@ -386,7 +391,8 @@ export class DejaTilesLayoutProvider extends Destroy {
 
                 // Pressed and selected tile observers
                 mouseDown$.pipe(
-                    takeUntil(leave$)
+                    takeUntil(leave$),
+                    takeUntil(this.destroyed$)
                 ).subscribe(({ event, target, clickedTile }) => {
                     if (this.currentTile) {
                         this.currentTile.isPressed = false;
@@ -419,7 +425,8 @@ export class DejaTilesLayoutProvider extends Destroy {
 
                         merge(mouseUp$).pipe(
                             first(),
-                            filter(() => !!this.currentTile)
+                            filter(() => !!this.currentTile),
+                            takeUntil(this.destroyed$)
                         ).subscribe((e: MouseEvent) => {
                             if (this.currentTile.isPressed) {
                                 this.currentTile.isPressed = false;
@@ -674,7 +681,8 @@ export class DejaTilesLayoutProvider extends Destroy {
         event.cancel$ = new Subject();
 
         const cancelSubscription = event.cancel$.pipe(
-            first()
+            first(),
+            takeUntil(this.destroyed$)
         ).subscribe((value) => {
             if (value) {
                 tilesToRemove.forEach((tile) => tile.isHidden = false);
@@ -805,7 +813,8 @@ export class DejaTilesLayoutProvider extends Destroy {
         this.clearMoveTimer();
 
         from(tiles).pipe(
-            filter((tile) => !!tile)
+            filter((tile) => !!tile),
+            takeUntil(this.destroyed$)
         ).subscribe((tile) => {
             tile.isDragging = false;
             tile.isDropping = true;
@@ -847,7 +856,8 @@ export class DejaTilesLayoutProvider extends Destroy {
                             this.addTiles([tile]);
                         }
                     }),
-                    delay(1000)
+                    delay(1000),
+                    takeUntil(this.destroyed$)
                 ).subscribe((tile) => { tile.isDropping = false; });
             }
 
@@ -1008,7 +1018,8 @@ export class DejaTilesLayoutProvider extends Destroy {
         };
 
         const cancelSubscription = event.cancel$.pipe(
-            first()
+            first(),
+            takeUntil(this.destroyed$)
         ).subscribe((value) => {
             if (value) {
                 // Canceled, hide and remove added after effect
@@ -1016,7 +1027,8 @@ export class DejaTilesLayoutProvider extends Destroy {
                     tap((tile) => tile.isHidden = true),
                     delay(1000),
                     reduce((acc: Array<DejaTile>, cur: DejaTile) => [...acc, cur], new Array<DejaTile>()),
-                    first()
+                    first(),
+                    takeUntil(this.destroyed$)
                 ).subscribe(tiles => this.deleteTiles(tiles));
 
                 // Reshow original tiles if cut operation
@@ -1192,7 +1204,8 @@ export class DejaTilesLayoutProvider extends Destroy {
             if (maxOverlaps > 3) {
                 const timerBounds = newTargetBounds.clone();
                 this.moveTimOut = timer(500).pipe(
-                    first()
+                    first(),
+                    takeUntil(this.destroyed$)
                 ).subscribe(() => {
                     // Restore the original layout before moving something
                     this.restoreLayout(this.originalLayout);

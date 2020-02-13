@@ -216,6 +216,7 @@ export class DejaCircularPickerComponent extends Destroy implements OnInit, Cont
 
     /** Unsubscribe to Observables when component is destroyed */
     public ngOnDestroy() {
+        super.ngOnDestroy();
         this.mousedown$sub.unsubscribe();
     }
 

@@ -7,7 +7,7 @@
  */
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Component, ContentChild, ElementRef, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
-import { DejaConnectionPositionPair, Position, Rect, } from '@deja-js/core';
+import { DejaConnectionPositionPair, Destroy, Position, Rect, } from '@deja-js/core';
 import { from, fromEvent, Observable } from 'rxjs';
 import { debounceTime, delay, filter, map, takeUntil, tap } from 'rxjs/operators';
 import { ITooltipParams } from './tooltip-params.interface';
@@ -24,7 +24,7 @@ import { DejaTooltipService } from './tooltip.service';
         './tooltip.component.scss',
     ],
 })
-export class DejaTooltipComponent implements OnInit {
+export class DejaTooltipComponent extends Destroy implements OnInit {
     /**
      * This position config ensures that the top "start" corner of the overlay
      * is aligned with with the top "start" of the origin by default (overlapping
@@ -112,6 +112,8 @@ export class DejaTooltipComponent implements OnInit {
      * Subscribe to mouseover to know when tooltip must disappear.
      */
     constructor(elementRef: ElementRef, private tooltipService: DejaTooltipService) {
+        super();
+
         const element = elementRef.nativeElement as HTMLElement;
 
         const hide$ = from(this.hide).pipe(
@@ -143,11 +145,12 @@ export class DejaTooltipComponent implements OnInit {
                 const ownerRect = new Rect(ownerElement.getBoundingClientRect());
                 return !ownerRect.containsPoint(position);
             }),
-            delay(300))
-            .subscribe(() => {
-                this.hide.emit();
-                this.overlayVisible = false;
-            });
+            delay(300),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => {
+            this.hide.emit();
+            this.overlayVisible = false;
+        });
     }
 
     /**
@@ -166,7 +169,9 @@ export class DejaTooltipComponent implements OnInit {
             this._model = undefined;
             this.overlayVisible = true;
         } else if (model$.subscribe) {
-            model$.subscribe((model) => {
+            model$.pipe(
+                takeUntil(this.destroyed$)
+            ).subscribe((model) => {
                 this._model = model;
                 this.overlayVisible = true;
             }, () => {
