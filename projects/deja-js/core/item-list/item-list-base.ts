@@ -9,7 +9,7 @@
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { ChangeDetectorRef, EventEmitter } from '@angular/core';
 import { from, Observable, of, Subscription, timer } from 'rxjs';
-import { filter, first, map, reduce, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { filter, map, reduce, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { Destroy } from '../destroy/destroy';
 import { IGroupInfo } from '../grouping/group-infos';
 import { GroupingService } from '../grouping/grouping.service';
@@ -73,48 +73,50 @@ export abstract class ItemListBase extends Destroy {
         this._listElementId = `listcontainer_${(1000000000 * Math.random()).toString().substr(10)}`;
 
         viewPort.viewPort$.pipe(
-            takeUntil(this.destroyed$)
-        ).subscribe((viewPortResult: IViewPort) => {
-            delete this._hintLabel;
-            if (viewPort.mode === ViewportMode.disabled) {
-                this._itemList = viewPortResult.items;
-                this._vpStartRow = 0;
-                this._vpEndRow = 0;
-                this._vpBeforeHeight = 0;
-                this._vpAfterHeight = 0;
-            } else {
-                this._itemList = viewPortResult.visibleItems;
-                this._vpStartRow = viewPortResult.startIndex;
-                this._vpEndRow = viewPortResult.endIndex;
-                this._vpBeforeHeight = viewPortResult.beforeSize;
-                this._vpAfterHeight = viewPortResult.afterSize;
-            }
+            switchMap((viewPortResult: IViewPort) => {
+                let next: Observable<number> = of(null);
 
-            if (viewPortResult.scrollPos !== undefined) {
-                if (this.listElement) {
-                    const listItems = this.listElement.getElementsByClassName('listitem');
-                    const rebind = listItems.length !== viewPortResult.visibleItems.length;
-                    if (!rebind) {
-                        this.listElement.scrollTop = viewPortResult.scrollPos;
-                    } else {
-                        timer(1).pipe(
-                            first(),
-                            filter(() => !!this.listElement),
-                            takeUntil(this.destroyed$)
-                        ).subscribe(() => {
+                delete this._hintLabel;
+                if (viewPort.mode === ViewportMode.disabled) {
+                    this._itemList = viewPortResult.items;
+                    this._vpStartRow = 0;
+                    this._vpEndRow = 0;
+                    this._vpBeforeHeight = 0;
+                    this._vpAfterHeight = 0;
+                } else {
+                    this._itemList = viewPortResult.visibleItems;
+                    this._vpStartRow = viewPortResult.startIndex;
+                    this._vpEndRow = viewPortResult.endIndex;
+                    this._vpBeforeHeight = viewPortResult.beforeSize;
+                    this._vpAfterHeight = viewPortResult.afterSize;
+                }
+
+                if (viewPortResult.scrollPos !== undefined) {
+                    if (this.listElement) {
+                        const listItems = this.listElement.getElementsByClassName('listitem');
+                        const rebind = listItems.length !== viewPortResult.visibleItems.length;
+                        if (!rebind) {
                             this.listElement.scrollTop = viewPortResult.scrollPos;
-                        });
+                        } else {
+                            next = timer(1).pipe(
+                                filter(() => !!this.listElement),
+                                tap(() => this.listElement.scrollTop = viewPortResult.scrollPos)
+                            );
+                        }
                     }
                 }
-            }
 
-            this.changeDetectorRef.markForCheck();
-            // console.log(viewPortResult);
+                this.changeDetectorRef.markForCheck();
+                // console.log(viewPortResult);
 
-            if (this._viewPortChanged) {
-                this._viewPortChanged.next(viewPortResult);
-            }
-        });
+                if (this._viewPortChanged) {
+                    this._viewPortChanged.next(viewPortResult);
+                }
+
+                return next;
+            }),
+            takeUntil(this.destroyed$),
+        ).subscribe();
     }
 
     public get isMultiSelect() {
@@ -287,7 +289,7 @@ export abstract class ItemListBase extends Destroy {
     /** Trie la liste par le champs spécifié. */
     public sort(name?: string) {
         this.sort$(name).pipe(
-            first(),
+            take(1),
             takeUntil(this.destroyed$)
         ).subscribe(() => { });
     }
@@ -308,8 +310,9 @@ export abstract class ItemListBase extends Destroy {
             this._sortInfos.order = SortOrder.ascending;
         }
         return this.getItemListService().sort$(this._sortInfos).pipe(
-            first(),
-            switchMap((si: any) => this.calcViewList$().pipe(first(), map(() => si))));
+            take(1),
+            switchMap((si: any) => this.calcViewList$().pipe(take(1), map(() => si)))
+        );
     }
 
     /** Groupe les éléments en fonction du modèle de groupe spécifié
@@ -318,7 +321,8 @@ export abstract class ItemListBase extends Destroy {
      */
     public group$(groups: IGroupInfo[]): Observable<IViewListResult> {
         return this.getItemListService().group$(groups).pipe(
-            switchMap(() => this.calcViewList$().pipe(first())));
+            switchMap(() => this.calcViewList$().pipe(take(1)))
+        );
     }
 
     /** Retire les groupe correspondants au modèle de groupe spécifié
@@ -327,7 +331,10 @@ export abstract class ItemListBase extends Destroy {
      */
     public ungroup$(groupInfo: IGroupInfo): Observable<IViewListResult> {
         return this.getItemListService().ungroup$(groupInfo).pipe(
-            switchMap(() => this.calcViewList$().pipe(first())));
+            switchMap(() => this.calcViewList$().pipe(
+                take(1)
+            )),
+        );
     }
 
     /** Change l'état d'expansion de tous les éléments.
@@ -355,7 +362,10 @@ export abstract class ItemListBase extends Destroy {
      */
     public toggleCollapse$(index: number, collapsed: boolean): Observable<IItemTree> {
         return this.getItemListService().toggleCollapse$(index, collapsed).pipe(
-            switchMap((toogleResult) => this.calcViewList$().pipe(first(), map(() => toogleResult))));
+            switchMap((toogleResult) => this.calcViewList$().pipe(
+                take(1), map(() => toogleResult))
+            )
+        );
     }
 
     /** Déselectionne tous les éléments sélectionés.
@@ -370,7 +380,7 @@ export abstract class ItemListBase extends Destroy {
     public refresh() {
         this.getItemListService().invalidateCache();
         this.calcViewList$().pipe(
-            first(),
+            take(1),
             takeUntil(this.destroyed$)
         ).subscribe(() => { });
     }

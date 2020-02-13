@@ -171,7 +171,7 @@ export class DejaTooltipComponent extends Destroy implements OnInit {
         } else if (model$.subscribe) {
             model$.pipe(
                 takeUntil(this.destroyed$)
-            ).subscribe((model) => {
+            ).subscribe(model => {
                 this._model = model;
                 this.overlayVisible = true;
             }, () => {
