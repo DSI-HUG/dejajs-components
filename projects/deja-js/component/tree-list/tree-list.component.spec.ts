@@ -151,7 +151,7 @@ describe('DejaTreeListComponent', () => {
         expect(treeListInstance.itemsDraggable).toBeFalsy();
 
         expect(treeListInstance.pageSize).toBeGreaterThanOrEqual(10);
-        treeListInstance.pageSize = '5';
+        (<any>treeListInstance.pageSize) = '5';
         expect(tl.pageSize).toBe(5);
         treeListInstance.pageSize = 0;
         expect(treeListInstance.pageSize).toBeGreaterThanOrEqual(10);
