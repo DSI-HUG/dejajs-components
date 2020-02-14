@@ -14,9 +14,11 @@
  * Licensed under WTFPL v2 http://sam.zoy.org/wtfpl/COPYING
  */
 
-import { OnDestroy } from '@angular/core';
+import { Directive, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 
+@Directive()
+// tslint:disable-next-line: directive-class-suffix
 export class Destroy implements OnDestroy {
 
     protected destroyed$ = new Subject();
