@@ -32,7 +32,7 @@ export class DejaTextMetricsService extends Destroy {
             delay(1),
             first(),
             takeUntil(this.destroyed$)
-        ).subscribe((element) => {
+        ).subscribe(element => {
             const charSize = [];
             for (let i = 0; i < 255; i++) {
                 const c = String.fromCharCode(i);

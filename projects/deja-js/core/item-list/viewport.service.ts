@@ -371,9 +371,9 @@ export class ViewPortService extends Destroy {
             return of(viewPort);
         };
 
-        const calcViewPort$: any = (items: IViewPortItem[], maxSize: number, scrollPos: number, element: HTMLElement, itemDefaultSize: number, ensureParams: IEnsureParams, fromMeasure?: boolean) => {
+        const calcViewPort$ = (items: IViewPortItem[], maxSize: number, scrollPos: number, element: HTMLElement, itemDefaultSize: number, ensureParams: IEnsureParams, fromMeasure?: boolean): Observable<IViewPort> => {
             // consoleLog(`calcViewPort`);
-            if (!items || !items.length) {
+            if (!items?.length) {
                 return of(this.emptyViewPort);
             }
 
@@ -382,28 +382,32 @@ export class ViewPortService extends Destroy {
                 listSize = innerSize();
             }
 
-            return of(this.mode).pipe(
-                switchMap((mode) => {
-                    if (ensureParams.index !== undefined) {
-                        this.ignoreScrollCount++;
-                    } else {
-                        this.ignoreScrollCount = 0;
-                    }
+            if (ensureParams.index !== undefined) {
+                this.ignoreScrollCount++;
+            } else {
+                this.ignoreScrollCount = 0;
+            }
 
-                    switch (mode) {
-                        case ViewportMode.disabled:
-                            return calcDisabledViewPort$(items, listSize, scrollPos, element, ensureParams, true);
-                        case ViewportMode.variable:
-                            return calcVariableSizeViewPort$(items, listSize, scrollPos, itemDefaultSize, ensureParams);
-                        case ViewportMode.auto:
-                            return calcAutoSizeViewPort$(items, listSize, scrollPos, element, itemDefaultSize, ensureParams);
-                        case ViewportMode.fixed:
-                            return calcFixedSizeViewPort$(items, listSize, scrollPos, itemDefaultSize, ensureParams);
-                        default:
-                            throw new Error('ViewPortService, invalide mode. The value can be disabled, variable, auto and fixed.');
-                    }
-                }),
-                switchMap((viewPort: IViewPort) => {
+            let viewPort$: Observable<IViewPort>;
+            switch (this.mode) {
+                case ViewportMode.disabled:
+                    viewPort$ = calcDisabledViewPort$(items, listSize, scrollPos, element, ensureParams, true);
+                    break;
+                case ViewportMode.variable:
+                    viewPort$ = calcVariableSizeViewPort$(items, listSize, scrollPos, itemDefaultSize, ensureParams);
+                    break;
+                case ViewportMode.auto:
+                    viewPort$ = calcAutoSizeViewPort$(items, listSize, scrollPos, element, itemDefaultSize, ensureParams);
+                    break;
+                case ViewportMode.fixed:
+                    viewPort$ = calcFixedSizeViewPort$(items, listSize, scrollPos, itemDefaultSize, ensureParams);
+                    break;
+                default:
+                    throw new Error('ViewPortService, invalide mode. The value can be disabled, variable, auto and fixed.');
+            }
+
+            return viewPort$.pipe(
+                switchMap(viewPort => {
                     if (!fromMeasure) {
                         const endScrollPos = viewPort.beforeSize + viewPort.viewPortSize + viewPort.afterSize - viewPort.listSize;
                         if (this.mode !== ViewportMode.disabled && listSize < 2 * ViewPortService.itemDefaultSize) {
@@ -430,9 +434,10 @@ export class ViewPortService extends Destroy {
                     return of(viewPort);
                 }),
                 tap(() => {
-                    // consoleLog(`clear ensureParams ${ensureParams && ensureParams.index}`);
+                    // consoleLog(`clear ensureParams ${ensureParams?.index}`);
                     ensureParams.index = undefined;
-                }));
+                })
+            );
         };
 
         const items$ = from(this.items$);
@@ -443,7 +448,7 @@ export class ViewPortService extends Destroy {
             map(([ensureItem, items]) => {
                 this.ignoreScrollCount = 0;
                 const ensureParams = {} as IEnsureParams;
-                if (ensureItem !== undefined && ensureItem !== null && items && items.length) {
+                if (ensureItem !== undefined && ensureItem !== null && items?.length) {
                     let ensureIndex = ensureItem as number;
                     if (isNaN(ensureIndex)) {
                         ensureIndex = items.findIndex((itm) => ensureItem === itm);
@@ -465,7 +470,8 @@ export class ViewPortService extends Destroy {
         // .do((ensureParams) => consoleLog(`ensureParams index:${ensureParams && ensureParams.index} atEnd:${ensureParams && ensureParams.atEnd}`));
 
         const maxSize$ = from(this.maxSize$).pipe(
-            distinctUntilChanged());
+            distinctUntilChanged()
+        );
         // .do((value) => consoleLog(`maxSize ${value}`));
 
         const refresh$ = from(this.refresh$).pipe(
@@ -537,12 +543,10 @@ export class ViewPortService extends Destroy {
 
         // Reset items size when direction change in auto mode
         combineLatest(direction$, items$, mode$, this.deleteSizeCache$).pipe(
-            filter(([_direction, items, mode]) => items && items.length && mode === ViewportMode.auto),
+            filter(([_direction, items, mode]) => items?.length && mode === ViewportMode.auto),
             switchMap(([_direction, items]) => items),
             takeUntil(this.destroyed$)
-        ).subscribe((item) => {
-            item.size = undefined;
-        });
+        ).subscribe(item => item.size = undefined);
 
         // Calc view port observable
         combineLatest([element$, items$, refresh$, this.ensureParams$]).pipe(
@@ -559,7 +563,7 @@ export class ViewPortService extends Destroy {
                 const listSize = this.lastCalculatedSize || maxSize || clientSize(element);
                 const scrollPos = this._scrollPosition;
                 let maxSizeValue = maxSize === 'auto' ? 0 : +maxSize;
-                if (items && items.length && (listSize === 'auto' || listSize < 2 * ViewPortService.itemDefaultSize)) {
+                if (items?.length && (listSize === 'auto' || listSize < 2 * ViewPortService.itemDefaultSize)) {
                     // Set the viewlist to the maximum height to measure the real max-height defined in the css
                     // Use a blank div to do that
                     // consoleLog(`viewPortResult for measure ${JSON.stringify(this.measureViewPort)}`);
@@ -597,7 +601,7 @@ export class ViewPortService extends Destroy {
                 return calcViewPort$(items, maxSizeValue, scrollPos, element, itemDefaultSize, ensureParams);
             }),
             takeUntil(this.destroyed$)
-        ).subscribe((viewPort: IViewPort) => {
+        ).subscribe(viewPort => {
             // consoleLog(`viewPortResult final ${JSON.stringify(viewPort)}`);
             this.viewPortResult$.next(viewPort);
         }, ((error) => {
@@ -607,7 +611,7 @@ export class ViewPortService extends Destroy {
         // Cache last calculated viewport
         from(this.viewPortResult$).pipe(
             takeUntil(this.destroyed$)
-        ).subscribe((viewPort: IViewPort) => this.viewPort = viewPort);
+        ).subscribe(viewPort => this.viewPort = viewPort);
     }
 
     public deleteSizeCache() {
