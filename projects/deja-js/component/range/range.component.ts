@@ -220,9 +220,7 @@ export class DejaRangeComponent extends Destroy implements ControlValueAccessor 
             }
 
             const up$ = fromEvent(document, 'mouseup');
-
             const leave$ = fromEvent(document.body, 'mouseleave');
-
             const kill$ = merge(up$, leave$).pipe(
                 first(),
                 tap(() => {

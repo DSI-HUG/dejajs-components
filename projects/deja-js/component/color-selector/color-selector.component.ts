@@ -11,7 +11,7 @@ import { Component, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Color, MaterialColor } from '@deja-js/core';
 import { BehaviorSubject, combineLatest, from, fromEvent, merge, Observable, Subject, timer } from 'rxjs';
-import { debounce, debounceTime, distinctUntilChanged, filter, first, map, takeUntil, tap } from 'rxjs/operators';
+import { debounce, debounceTime, delay, distinctUntilChanged, filter, first, map, takeUntil, tap } from 'rxjs/operators';
 import { DejaColorFab } from './color-fab.class';
 
 export interface IColorEvent extends CustomEvent {
@@ -149,16 +149,13 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
             debounceTime(100),
             tap(() => element.setAttribute('sub-tr', '')),
             map((baseIndex) => this._colorFabs && this._colorFabs[baseIndex] && (this._colorFabs[baseIndex].color as MaterialColor).subColors),
-            map((colors) => colors && colors.map((color, index) => new DejaColorFab(color, this._disabled, index === this._selectedSubIndex))),
-            tap((subColorFabs) => {
-                this._subColorFabs = subColorFabs;
-                timer(100).pipe(
-                    first(),
-                    takeUntil(this.destroyed$)
-                ).subscribe(() => {
-                    element.removeAttribute('sub-tr');
-                });
-            }));
+            map((colors) => colors?.map((color, index) => new DejaColorFab(color, this._disabled, index === this._selectedSubIndex))),
+            tap((subColorFabs) => this._subColorFabs = subColorFabs));
+
+        this._subColorFabs$.pipe(
+            delay(100),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => element.removeAttribute('sub-tr'));
 
         const hilightedSubIndex$ = from(this.hilightedSubIndex$).pipe(
             distinctUntilChanged(),
@@ -256,7 +253,7 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
         if (this._colorFabs) {
             const find = this._colorFabs.find((colorFab, index) => {
                 const baseColor = colorFab.color as MaterialColor;
-                const subIndex = baseColor.subColors && baseColor.subColors.findIndex((subColor) => Color.equals(subColor, color));
+                const subIndex = baseColor.subColors?.findIndex((subColor) => Color.equals(subColor, color));
                 if (subIndex !== undefined && subIndex >= 0) {
                     this.selectedBaseIndex$.next(index);
                     timer(1).pipe(
