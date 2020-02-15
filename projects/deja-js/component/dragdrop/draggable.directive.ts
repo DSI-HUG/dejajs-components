@@ -50,7 +50,7 @@ export class DejaDraggableDirective extends Destroy {
             this.dragdropid = new UUID().toString();
             dragInfos[this.uuidKey] = this.dragdropid;
 
-            const object = (this.context && this.context.object) || element;
+            const object = this.context?.object || element;
             dragInfos[this.objectKey] = object;
             dragInfos[this.elementKey] = element;
 
@@ -62,7 +62,7 @@ export class DejaDraggableDirective extends Destroy {
                 data = JSON.stringify(data);
             }
 
-            if (this.context && this.context.dragstartcallback) {
+            if (this.context?.dragstartcallback) {
                 const e = event as IDejaDragEvent;
                 e.dragInfo = dragInfos;
                 e.dragObject = this.context.object;

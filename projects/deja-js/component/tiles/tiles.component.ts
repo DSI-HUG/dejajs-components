@@ -298,7 +298,7 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
 
     public copySelection() {
         const tiles = this.layoutProvider.copySelection();
-        if (tiles && tiles.length) {
+        if (tiles?.length) {
             const event = new CustomEvent('DejaTilesCopied', { cancelable: true }) as IDejaTilesEvent;
             event.tiles = tiles;
             this.contentCopied.emit(event);
@@ -307,7 +307,7 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
 
     public cutSelection() {
         const tiles = this.layoutProvider.cutSelection();
-        if (tiles && tiles.length) {
+        if (tiles?.length) {
             const event = new CustomEvent('DejaTilesCutted', { cancelable: true }) as IDejaTilesEvent;
             event.tiles = tiles;
             this.contentCopied.emit(event);
@@ -349,7 +349,7 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
         const x = pageX - containerBounds.left;
         const y = pageY - containerBounds.top;
 
-        return this.tiles.find(t => t.pixelBounds && t.pixelBounds.containsPoint(new Position(x, y)));
+        return this.tiles.find(t => t.pixelBounds?.containsPoint(new Position(x, y)));
     }
 
     public getFreePlace(pageX?: number, pageY?: number, width?: number, height?: number) {

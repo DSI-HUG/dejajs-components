@@ -83,8 +83,8 @@ export class DejaTileComponent implements OnDestroy {
             }));
 
             this.subscriptions.push(from(tile.pixelBounds$).pipe(
-                filter((bounds) => !!bounds)
-            ).subscribe((bounds) => {
+                filter(bounds => !!bounds)
+            ).subscribe(bounds => {
                 if (!tile.isHidden) {
                     this.element.removeAttribute('hidden');
                 }
@@ -97,7 +97,7 @@ export class DejaTileComponent implements OnDestroy {
             }));
 
             this.subscriptions.push(from(tile.pressed$).pipe(
-                tap((value) => toogleAttribute('pressed', value))
+                tap(value => toogleAttribute('pressed', value))
             ).subscribe(() => this.changeDetectorRef.markForCheck()));
 
             this.subscriptions.push(from(tile.selected$).pipe(
