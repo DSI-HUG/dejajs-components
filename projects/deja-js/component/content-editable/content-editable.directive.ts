@@ -157,7 +157,7 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
     }
 
     public get disabled() {
-        return (this._control && this._control.disabled) || this._disabled;
+        return this._control?.disabled || this._disabled;
     }
 
     /** Définit une valeur indiquant si l'édition est activée. */
