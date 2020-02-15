@@ -32,7 +32,7 @@
                 <span *ngFor="let day of days">{{day}}</span>
             </div>
         </div>
-        <div id="date-body" (keydown)="keyDown($event)" tabindex="0" [attr.keyboardNavigation]="keyboardNavigation">
+        <div id="date-body" (keydown)="keyDown($event)" tabindex="0" [attr.keynav]="keyboardNavigation">
             <div class="date" *ngFor="let dateSelectorItem of currentDays; let index=index">
                 <div class="day" [attr.dateindex]="index" [class.background]="dateSelectorItem.background" [class.disabled]="dateSelectorItem.disabled"
                     [attr.current]="dateSelectorItem.currentDate || null" [attr.selected]="dateSelectorItem.selected || null">
