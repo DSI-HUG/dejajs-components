@@ -10,8 +10,8 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, Optional, Output } from '@angular/core';
 import { IDejaDragEvent, IDejaDropEvent } from '@deja-js/component/dragdrop';
 import { DejaClipboardService, Destroy, ISortInfos } from '@deja-js/core';
-import { fromEvent, merge, Subject } from 'rxjs';
-import { filter, first, takeUntil, timeout } from 'rxjs/operators';
+import { fromEvent, merge, Observable, of, Subject } from 'rxjs';
+import { catchError, filter, first, switchMap, takeUntil, tap, timeout } from 'rxjs/operators';
 import { IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent } from '../data-grid-column/data-grid-column';
 import { IDejaGridColumnLayout } from '../data-grid-column/data-grid-column-layout';
 
@@ -127,79 +127,85 @@ export class DejaGridHeaderComponent extends Destroy {
 
         const element = elementRef.nativeElement as HTMLElement;
 
-        fromEvent(element, 'mousedown').pipe(
-            filter((event: MouseEvent) => event.buttons === 1),
-            takeUntil(this.destroyed$)
-        ).subscribe((downEvent: MouseEvent) => {
-            const target = downEvent.target as HTMLElement;
-            const column = this.getColumnFromHTMLElement(downEvent.target as HTMLElement);
+        const mouseDownEvent$ = fromEvent(element, 'mousedown') as Observable<MouseEvent>;
+        mouseDownEvent$.pipe(
+            filter(downEvent => downEvent.buttons === 1),
+            switchMap(downEvent => {
+                const target = downEvent.target as HTMLElement;
+                const column = this.getColumnFromHTMLElement(downEvent.target as HTMLElement);
+                const mouseUpEvent$ = fromEvent(element.ownerDocument, 'mouseup') as Observable<MouseEvent>;
 
-            if (target.hasAttribute('separator')) {
-                if (this.columnsSizable && column.sizeable !== false) {
-                    // Size clicked column
-                    this._sizedColumn = column;
-                    const sizedOrigin = downEvent.screenX;
+                if (target.hasAttribute('separator')) {
+                    if (this.columnsSizable && column.sizeable !== false) {
+                        // Size clicked column
+                        this._sizedColumn = column;
+                        const sizedOrigin = downEvent.screenX;
 
-                    const kill$ = new Subject();
-                    const mouseUp$ = fromEvent(element.ownerDocument, 'mouseup');
+                        const kill$ = new Subject();
 
-                    mouseUp$.pipe(
-                        first(),
-                        takeUntil(this.destroyed$)
-                    ).subscribe(() => {
-                        const e = {
-                            column: null,
-                        } as IDejaGridColumnSizeEvent;
-                        this.columnSizeChanged.emit(e);
-                        this.changeDetectorRef.markForCheck();
-                        this._sizedColumn = undefined;
-                    });
+                        const mouseUp$ = mouseUpEvent$.pipe(
+                            first(),
+                            tap(() => {
+                                const e = {
+                                    column: null,
+                                } as IDejaGridColumnSizeEvent;
+                                this.columnSizeChanged.emit(e);
+                                this.changeDetectorRef.markForCheck();
+                                this._sizedColumn = undefined;
+                            })
+                        );
 
-                    fromEvent(element.ownerDocument, 'mousemove').pipe(
-                        takeUntil(
-                            merge(mouseUp$, kill$)
-                        ),
-                        takeUntil(this.destroyed$)
-                    ).subscribe((moveEvent: MouseEvent) => {
-                        if (moveEvent.buttons === 1) {
-                            const e = {
-                                column: this._sizedColumn,
-                                offsetWidth: moveEvent.screenX - sizedOrigin,
-                                originalEvent: moveEvent,
-                            } as IDejaGridColumnSizeEvent;
-                            this.columnSizeChanged.emit(e);
-                            this.changeDetectorRef.markForCheck();
-                        } else {
-                            // Mouse up
-                            kill$.next();
-                        }
-                    });
+                        const mouseMoveEvent$ = fromEvent(element.ownerDocument, 'mousemove') as Observable<MouseEvent>;
+                        const mouseMove$ = mouseMoveEvent$.pipe(
+                            takeUntil(mouseUpEvent$),
+                            takeUntil(kill$),
+                            takeUntil(this.destroyed$),
+                            tap(moveEvent => {
+                                if (moveEvent.buttons === 1) {
+                                    const e = {
+                                        column: this._sizedColumn,
+                                        offsetWidth: moveEvent.screenX - sizedOrigin,
+                                        originalEvent: moveEvent,
+                                    } as IDejaGridColumnSizeEvent;
+                                    this.columnSizeChanged.emit(e);
+                                    this.changeDetectorRef.markForCheck();
+                                } else {
+                                    // Mouse up
+                                    kill$.next();
+                                }
+                            })
+                        );
 
-                    downEvent.stopPropagation();
-                    return false;
-                }
-            } else {
-                const clickedColumn = column;
-
-                fromEvent(element, 'mouseup').pipe(
-                    first(),
-                    timeout(1000),
-                    takeUntil(this.destroyed$)
-                ).subscribe((upEvent: MouseEvent) => {
-                    const columnElement = this.getColumnElementFromHTMLElement(upEvent.target as HTMLElement);
-                    if ((columnElement && columnElement.getAttribute('colname')) === clickedColumn.name) {
-                        const index = +columnElement.getAttribute('index');
-                        const e = {
-                            column: clickedColumn,
-                            originalEvent: upEvent,
-                            index: index,
-                        } as IDejaGridColumnEvent;
-                        this.columnHeaderClicked.emit(e);
-                        this.changeDetectorRef.markForCheck();
+                        downEvent.stopPropagation();
+                        return merge(mouseUp$, mouseMove$);
                     }
-                }, (_error) => { });
-            }
-        });
+                } else {
+                    const clickedColumn = column;
+
+                    return mouseUpEvent$.pipe(
+                        first(),
+                        timeout(1000),
+                        tap(upEvent => {
+                            const columnElement = this.getColumnElementFromHTMLElement(upEvent.target as HTMLElement);
+                            if ((columnElement && columnElement.getAttribute('colname')) === clickedColumn.name) {
+                                const index = +columnElement.getAttribute('index');
+                                const e = {
+                                    column: clickedColumn,
+                                    originalEvent: upEvent,
+                                    index: index,
+                                } as IDejaGridColumnEvent;
+                                this.columnHeaderClicked.emit(e);
+                                this.changeDetectorRef.markForCheck();
+                            }
+                        }),
+                        catchError((_error) => of(null as MouseEvent)),
+                    );
+                }
+
+                return of(null as MouseEvent);
+            }),
+            takeUntil(this.destroyed$)
+        ).subscribe();
     }
 
     public refresh() {
@@ -247,7 +253,7 @@ export class DejaGridHeaderComponent extends Destroy {
             }
 
             const targetElement = this.getColumnElementFromHTMLElement(event.target as HTMLElement);
-            const targetBounds = targetElement && targetElement.getBoundingClientRect();
+            const targetBounds = targetElement?.getBoundingClientRect();
             const targetIndex = targetElement && +targetElement.getAttribute('index');
             if (targetIndex === undefined) {
                 return;
@@ -314,7 +320,7 @@ export class DejaGridHeaderComponent extends Destroy {
 
     private getColumnFromHTMLElement(element: HTMLElement): IDejaGridColumn {
         const columnElement = this.getColumnElementFromHTMLElement(element);
-        const colName = columnElement && columnElement.getAttribute('colname');
+        const colName = columnElement?.getAttribute('colname');
         return colName && this._columnLayout.columns.find((column) => column.name === colName);
     }
 }

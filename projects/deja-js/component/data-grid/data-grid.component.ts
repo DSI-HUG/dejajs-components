@@ -512,23 +512,25 @@ export class DejaGridComponent extends Destroy {
             }
         });
 
-        fromEvent(element, 'mousedown').pipe(
-            filter((downEvent: MouseEvent) => downEvent.buttons === 1),
-            takeUntil(this.destroyed$)
-        ).subscribe((downEvent: MouseEvent) => {
-            const clickedColumn = this.getColumnFromHTMLElement(downEvent.target as HTMLElement);
-
-            fromEvent(element, 'mouseup').pipe(
-                first(),
-                filter(() => !!clickedColumn),
-                takeUntil(this.destroyed$)
-            ).subscribe((upEvent: MouseEvent) => {
-                const columnElement = this.getColumnElementFromHTMLElement(upEvent.target as HTMLElement);
-                if ((columnElement && columnElement.getAttribute('colname')) === clickedColumn.name) {
-                    this.currentColumn = clickedColumn;
-                }
-            });
-        });
+        const mouseDownEvent$ = fromEvent(element, 'mousedown') as Observable<MouseEvent>;
+        mouseDownEvent$.pipe(
+            filter(downEvent => downEvent.buttons === 1),
+            switchMap(downEvent => {
+                const clickedColumn = this.getColumnFromHTMLElement(downEvent.target as HTMLElement);
+                const mouseUpEvent$ = fromEvent(element, 'mouseup') as Observable<MouseEvent>;
+                return mouseUpEvent$.pipe(
+                    first(),
+                    filter(() => !!clickedColumn),
+                    tap(upEvent => {
+                        const columnElement = this.getColumnElementFromHTMLElement(upEvent.target as HTMLElement);
+                        if ((columnElement && columnElement.getAttribute('colname')) === clickedColumn.name) {
+                            this.currentColumn = clickedColumn;
+                        }
+                    })
+                );
+            }),
+            takeUntil(this.destroyed$),
+        ).subscribe();
     }
 
     // get accessor
