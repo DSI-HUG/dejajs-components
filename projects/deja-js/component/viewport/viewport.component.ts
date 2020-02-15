@@ -257,8 +257,9 @@ export class DejaViewPortComponent extends Destroy {
         ).subscribe(scroll);
 
         const mouseWheel$ = () => {
-            return fromEvent(this.element, 'mousewheel').pipe(
-                map((event: MouseWheelEvent) => {
+            const mouseWheelEvent$ = fromEvent(this.element, 'mousewheel') as Observable<MouseWheelEvent>;
+            return mouseWheelEvent$.pipe(
+                map(event => {
                     event.stopPropagation();
                     event.preventDefault();
                     return this.scrollPos + event.deltaY;
@@ -286,47 +287,34 @@ export class DejaViewPortComponent extends Destroy {
             );
         };
 
+        const initButton$ = (button: HTMLElement) => {
+            const sign = button.id === 'down' ? 1 : -1;
+            const mouseUpEvent$ = fromEvent(button, 'mouseup') as Observable<MouseEvent>;
+            const mouseLeaveEvent$ = fromEvent(button, 'mouseleave') as Observable<MouseEvent>;
+            const mouseup$ = merge(mouseUpEvent$, mouseLeaveEvent$).pipe(
+                tap(upEvent => this.scrollPos += sign * (upEvent.ctrlKey ? this.clientSize : this.buttonsStep))
+            );
+
+            const mouseDownEvent$ = fromEvent(button, 'mousedown') as Observable<MouseEvent>;
+            return mouseDownEvent$.pipe(
+                tap(event => this.scrollPos += sign * (event.ctrlKey ? this.clientSize : this.buttonsStep * 2)),
+                switchMap(event => {
+                    return autoScroll$(event, sign).pipe(
+                        takeUntil(mouseup$)
+                    );
+                }),
+            );
+        };
+
         downButton$.pipe(
             filter(downButton => !!downButton),
-            switchMap(downButton => {
-                const mouseUpEvent$ = fromEvent(downButton, 'mouseup') as Observable<MouseEvent>;
-                const mouseLeaveEvent$ = fromEvent(downButton, 'mouseleave') as Observable<MouseEvent>;
-                const mouseup$ = merge(mouseUpEvent$, mouseLeaveEvent$).pipe(
-                    tap(upEvent => this.scrollPos += upEvent.ctrlKey ? this.clientSize : this.buttonsStep)
-                );
-
-                const mouseDownEvent$ = fromEvent(downButton, 'mousedown') as Observable<MouseEvent>;
-                return mouseDownEvent$.pipe(
-                    tap(event => this.scrollPos += event.ctrlKey ? this.clientSize : this.buttonsStep * 2),
-                    switchMap(event => {
-                        return autoScroll$(event, 1).pipe(
-                            takeUntil(mouseup$)
-                        );
-                    }),
-                );
-            }),
+            switchMap(initButton$),
             takeUntil(this.destroyed$)
         ).subscribe();
 
         upButton$.pipe(
             filter(upButton => !!upButton),
-            switchMap(upButton => {
-                const mouseUpEvent$ = fromEvent(upButton, 'mouseup') as Observable<MouseEvent>;
-                const mouseLeaveEvent$ = fromEvent(upButton, 'mouseleave') as Observable<MouseEvent>;
-                const mouseup$ = merge(mouseUpEvent$, mouseLeaveEvent$).pipe(
-                    tap(upEvent => this.scrollPos -= upEvent.ctrlKey ? this.clientSize : this.buttonsStep)
-                );
-
-                const mouseDownEvent$ = fromEvent(upButton, 'mousedown') as Observable<MouseEvent>;
-                return mouseDownEvent$.pipe(
-                    tap(event => this.scrollPos -= event.ctrlKey ? this.clientSize : this.buttonsStep * 2),
-                    switchMap(event => {
-                        return autoScroll$(event, -1).pipe(
-                            takeUntil(mouseup$)
-                        );
-                    }),
-                );
-            }),
+            switchMap(initButton$),
             takeUntil(this.destroyed$)
         ).subscribe();
 
