@@ -16,7 +16,7 @@ import { DateComponentLayout, DaysOfWeek, DejaDateSelectorComponent } from '@dej
 import { DejaChildValidatorDirective, DejaConnectionPositionPair, KeyCodes } from '@deja-js/core';
 import { _MatInputMixinBase } from '@deja-js/core/util';
 import * as moment_ from 'moment';
-import { combineLatest, from, fromEvent, merge, ReplaySubject, Subject } from 'rxjs';
+import { combineLatest, from, fromEvent, merge, ReplaySubject, Subject, timer } from 'rxjs';
 import { delay, filter, first, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { formatToMask, formatToUnitOfTime } from './format-to-mask';
 
@@ -152,11 +152,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
     public set inputElementRef(element: ElementRef) {
         if (element) {
             this.inputElement = element.nativeElement;
-            if (this.inputElement) {
-                this.overlayOwnerElement = this.inputElement;
-            } else {
-                this.overlayOwnerElement = this.elementRef.nativeElement;
-            }
+            this.overlayOwnerElement = this.inputElement || this.elementRef.nativeElement;
             this.inputElement$.next(this.inputElement);
         } else {
             this.overlayOwnerElement = this.elementRef.nativeElement;
@@ -203,40 +199,46 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
         this.overlayOwnerElement = this.elementRef.nativeElement;
 
         if (this._parentForm) {
-            this._parentForm.ngSubmit.subscribe(() => {
+            this._parentForm.ngSubmit.pipe(
+                takeUntil(this.destroyed$)
+            ).subscribe(() => {
                 this.changeDetectorRef.markForCheck();
             });
         }
 
         if (this._parentFormGroup) {
-            this._parentFormGroup.ngSubmit.subscribe(() => {
+            this._parentFormGroup.ngSubmit.pipe(
+                takeUntil(this.destroyed$)
+            ).subscribe(() => {
                 this.changeDetectorRef.markForCheck();
             });
         }
 
-        fm.monitor(this.elementRef.nativeElement, true)
-            .subscribe(origin => {
+        fm.monitor(this.elementRef.nativeElement, true).pipe(
+            map(origin => {
                 this.focused = !!origin;
                 if (!this.focused) {
                     this.onTouchedCallback();
                 } else {
-                    if (!this.value) {
-                        setTimeout(() => this.inputElement.setSelectionRange(0, 0));
-                    }
+                    return !this.value;
                 }
-                this.stateChanges.next();
-            });
+            }),
+            filter(select => select),
+            delay(1),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => this.inputElement.setSelectionRange(0, 0));
 
         const keydown$ = from(this.inputElement$).pipe(
-            switchMap((element) => fromEvent(element, 'keydown')));
+            switchMap((element) => fromEvent(element, 'keydown'))
+        );
 
         const cursorChanged$ = from(this.inputElement$).pipe(
             switchMap((element: HTMLInputElement) => {
                 return merge(fromEvent(element, 'mouseup'), fromEvent(element, 'focus'), fromEvent(element, 'keyup')).pipe(
-                    map(() => {
-                        return element.selectionStart;
-                    }));
-            }));
+                    map(() => element.selectionStart)
+                );
+            })
+        );
 
         cursorChanged$.pipe(
             takeUntil(this.destroyed$)
@@ -354,10 +356,10 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
 
     /** unsubscribe to all Observable when component is destroyed */
     public ngOnDestroy() {
+        this.fm.stopMonitoring(this.elementRef.nativeElement);
         this.destroyed$.next();
         this.destroyed$.unsubscribe();
         this.stateChanges.complete();
-        this.fm.stopMonitoring(this.elementRef.nativeElement);
     }
 
     /** Init mask */
@@ -609,7 +611,9 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
 
     /** Reset date-picker values. */
     public reset() {
-        setTimeout(() => { // To prevent "ExpressionChangedAfterItHasBeenCheckedError"
+        timer(0).pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe(() => { // To prevent "ExpressionChangedAfterItHasBeenCheckedError"
             this.value = undefined;
             delete this._inputModel;
         });
@@ -624,7 +628,9 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
 
     private selectHours() {
         if (this.layout === DateComponentLayout.datetime) {
-            setTimeout(() => {
+            timer(0).pipe(
+                takeUntil(this.destroyed$)
+            ).subscribe(() => {
                 const hoursTemplate = moment(this.date).format('HH:mm');
                 const stringDate = this.inputElement.value;
                 const hoursPosition = stringDate.indexOf(hoursTemplate);

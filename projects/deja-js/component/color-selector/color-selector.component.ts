@@ -250,36 +250,35 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
     }
 
     public set selectedColor(color: Color) {
+        const selectSubIndex = (index: number) => {
+            timer(1).pipe(
+                first(),
+                takeUntil(this.destroyed$)
+            ).subscribe(() => this.selectedSubIndex$.next(index));
+        };
+
         if (this._colorFabs) {
             const find = this._colorFabs.find((colorFab, index) => {
                 const baseColor = colorFab.color as MaterialColor;
                 const subIndex = baseColor.subColors?.findIndex((subColor) => Color.equals(subColor, color));
                 if (subIndex !== undefined && subIndex >= 0) {
                     this.selectedBaseIndex$.next(index);
-                    timer(1).pipe(
-                        first(),
-                        takeUntil(this.destroyed$)
-                    ).subscribe(() => this.selectedSubIndex$.next(subIndex));
+                    selectSubIndex(subIndex);
                     // Break
                     return true;
                 } else if (Color.equals(baseColor, color)) {
                     this.selectedBaseIndex$.next(index);
-                    timer(1).pipe(
-                        first(),
-                        takeUntil(this.destroyed$)
-                    ).subscribe(() => this.selectedSubIndex$.next(0));
+                    selectSubIndex(0);
                     // Break
                     return true;
                 }
                 // Continue
                 return false;
             });
+
             if (!find) {
                 this.selectedBaseIndex$.next(0);
-                timer(1).pipe(
-                    first(),
-                    takeUntil(this.destroyed$)
-                ).subscribe(() => this.selectedSubIndex$.next(0));
+                selectSubIndex(0);
             }
         }
     }
