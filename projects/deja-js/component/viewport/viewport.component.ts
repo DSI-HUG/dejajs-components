@@ -9,7 +9,7 @@
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, HostBinding, Input, ViewChild } from '@angular/core';
 import { Destroy, IViewPort, IViewPortItem, IViewPortRefreshParams, ViewportDirection, ViewportMode, ViewPortService } from '@deja-js/core';
-import { BehaviorSubject, from, fromEvent, interval, merge, of, Subject, timer } from 'rxjs';
+import { BehaviorSubject, from, fromEvent, interval, merge, Observable, of, Subject, timer } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 export enum DejaViewPortScrollStyle {
@@ -289,13 +289,16 @@ export class DejaViewPortComponent extends Destroy {
         downButton$.pipe(
             filter(downButton => !!downButton),
             switchMap(downButton => {
-                const mouseup$ = merge(fromEvent(downButton, 'mouseup'), fromEvent(downButton, 'mouseleave')).pipe(
-                    tap((upEvent: MouseEvent) => this.scrollPos += upEvent.ctrlKey ? this.clientSize : this.buttonsStep)
+                const mouseUpEvent$ = fromEvent(downButton, 'mouseup') as Observable<MouseEvent>;
+                const mouseLeaveEvent$ = fromEvent(downButton, 'mouseleave') as Observable<MouseEvent>;
+                const mouseup$ = merge(mouseUpEvent$, mouseLeaveEvent$).pipe(
+                    tap(upEvent => this.scrollPos += upEvent.ctrlKey ? this.clientSize : this.buttonsStep)
                 );
 
-                return fromEvent(downButton, 'mousedown').pipe(
-                    tap((event: MouseEvent) => this.scrollPos += event.ctrlKey ? this.clientSize : this.buttonsStep * 2),
-                    switchMap((event: MouseEvent) => {
+                const mouseDownEvent$ = fromEvent(downButton, 'mousedown') as Observable<MouseEvent>;
+                return mouseDownEvent$.pipe(
+                    tap(event => this.scrollPos += event.ctrlKey ? this.clientSize : this.buttonsStep * 2),
+                    switchMap(event => {
                         return autoScroll$(event, 1).pipe(
                             takeUntil(mouseup$)
                         );
@@ -308,13 +311,16 @@ export class DejaViewPortComponent extends Destroy {
         upButton$.pipe(
             filter(upButton => !!upButton),
             switchMap(upButton => {
-                const mouseup$ = merge(fromEvent(upButton, 'mouseup'), fromEvent(upButton, 'mouseleave')).pipe(
-                    tap((upEvent: MouseEvent) => this.scrollPos -= upEvent.ctrlKey ? this.clientSize : this.buttonsStep)
+                const mouseUpEvent$ = fromEvent(upButton, 'mouseup') as Observable<MouseEvent>;
+                const mouseLeaveEvent$ = fromEvent(upButton, 'mouseleave') as Observable<MouseEvent>;
+                const mouseup$ = merge(mouseUpEvent$, mouseLeaveEvent$).pipe(
+                    tap(upEvent => this.scrollPos -= upEvent.ctrlKey ? this.clientSize : this.buttonsStep)
                 );
 
-                return fromEvent(upButton, 'mousedown').pipe(
-                    tap((event: MouseEvent) => this.scrollPos -= event.ctrlKey ? this.clientSize : this.buttonsStep * 2),
-                    switchMap((event: MouseEvent) => {
+                const mouseDownEvent$ = fromEvent(upButton, 'mousedown') as Observable<MouseEvent>;
+                return mouseDownEvent$.pipe(
+                    tap(event => this.scrollPos -= event.ctrlKey ? this.clientSize : this.buttonsStep * 2),
+                    switchMap(event => {
                         return autoScroll$(event, -1).pipe(
                             takeUntil(mouseup$)
                         );
