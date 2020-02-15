@@ -31,8 +31,8 @@ export class DejaMouseDragDropService extends Destroy {
         super();
 
         this.dragging$.pipe(
-            tap((value) => this._isDragging = value),
-            filter((value) => !value),
+            tap(value => this._isDragging = value),
+            filter(value => !value),
             takeUntil(this.destroyed$)
         ).subscribe(() => this._context = {});
     }
