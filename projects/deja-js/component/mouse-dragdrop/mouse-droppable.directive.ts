@@ -9,7 +9,7 @@
 import { Directive, ElementRef, Input } from '@angular/core';
 import { Destroy, Position, Rect } from '@deja-js/core';
 import { from, Observable, of } from 'rxjs';
-import { filter, switchMap, take, takeUntil } from 'rxjs/operators';
+import { filter, switchMap, takeUntil, take } from 'rxjs/operators';
 import { IDragCursorInfos } from './mouse-drag-cursor-infos.interface';
 import { IDragDropContext } from './mouse-dragdrop-context.interface';
 import { DejaMouseDragDropService } from './mouse-dragdrop.service';
@@ -36,32 +36,31 @@ export class DejaMouseDroppableDirective extends Destroy {
 
         const element = elementRef.nativeElement as HTMLElement;
 
-        const dragging$ = from(dragDropService.dragging$).pipe(
-            filter((value) => value),
-        );
+        const dragging$ = from(dragDropService.dragging$);
 
         const kill$ = dragging$.pipe(
-            filter((value) => !value));
+            filter((value) => !value)
+        );
 
         const dragCursor$ = from(dragDropService.dragCursor$).pipe(
             takeUntil(kill$),
         );
 
         dragging$.pipe(
-            switchMap(() => kill$),
-            take(1),
-            takeUntil(this.destroyed$)
-        ).subscribe(() => {
-            if (this._dragContext && this.context?.drop) {
-                this.context.drop(this._dragContext);
-            }
-            this._dragContext = undefined;
-            dragDropService.dropCursor$.next(null);
-        });
-
-        dragging$.pipe(
+            filter((value) => value),
             switchMap(() => dragCursor$),
             switchMap(dragCursor => {
+                kill$.pipe(
+                    take(1),
+                    takeUntil(this.destroyed$)
+                ).subscribe(() => {
+                    if (this._dragContext && this.context?.drop) {
+                        this.context.drop(this._dragContext);
+                    }
+                    this._dragContext = undefined;
+                    dragDropService.dropCursor$.next(null);
+                });
+
                 const bounds = new Rect(element.getBoundingClientRect());
                 if (this.context && dragCursor) {
                     const { pageX, pageY } = dragCursor.originalEvent;
