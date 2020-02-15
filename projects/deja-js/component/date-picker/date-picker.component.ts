@@ -17,7 +17,7 @@ import { DejaChildValidatorDirective, DejaConnectionPositionPair, KeyCodes } fro
 import { _MatInputMixinBase } from '@deja-js/core/util';
 import * as moment_ from 'moment';
 import { combineLatest, from, fromEvent, merge, ReplaySubject, Subject, timer } from 'rxjs';
-import { delay, filter, first, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { delay, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { formatToMask, formatToUnitOfTime } from './format-to-mask';
 
 const moment: (value?: any, format?: string, strict?: boolean) => moment_.Moment = (<any>moment_).default || moment_;
@@ -272,7 +272,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
                             // With this letter we determinate the format by checking on format array
                             let unitOfTime = format.find((str) => str.indexOf(f) !== -1);
                             // If this format has a corresponding value inside formatToUnitOfTime object we can increment its value with moment.add() method
-                            unitOfTime = (unitOfTime && formatToUnitOfTime[unitOfTime]) ? formatToUnitOfTime[unitOfTime] : undefined;
+                            unitOfTime = (unitOfTime && formatToUnitOfTime[unitOfTime]) || undefined;
                             if (unitOfTime) {
                                 this.updateModel(moment(this.value).add(1, unitOfTime as moment_.unitOfTime.DurationConstructor).toDate());
                             }
@@ -290,7 +290,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
                             const f = this._format[this.cursorPosition - 1];
 
                             let unitOfTime = format.find((str) => str.indexOf(f) !== -1);
-                            unitOfTime = (unitOfTime && formatToUnitOfTime[unitOfTime]) ? formatToUnitOfTime[unitOfTime] : undefined;
+                            unitOfTime = (unitOfTime && formatToUnitOfTime[unitOfTime]) || undefined;
                             if (unitOfTime) {
                                 this.updateModel(moment(this.value).subtract(1, unitOfTime as moment_.unitOfTime.DurationConstructor).toDate());
                             }
@@ -317,22 +317,21 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
                 this._mask = mask;
             }));
 
-        valueUpdated$.pipe(
-            takeUntil(this.destroyed$)
-        ).subscribe(([format, value]) => {
-            this.date = value;
-            this._inputModel = (this.date) ? (this.date instanceof Date ? moment(this.date).format(format) : this.date) : null;
+        const inputElement$ = this.inputElement$.pipe(
+            delay(1),
+            take(1),
+        );
 
-            // si la position du curseur était stockée, on la restaure apres avoir changé la valeur
-            if (this.cursorPosition && !this.allowFreeEntry) {
-                this.inputElement$.pipe(
-                    delay(1),
-                    first(),
-                    takeUntil(this.destroyed$)
-                ).subscribe((elem: HTMLInputElement) => elem.setSelectionRange(this.cursorPosition, this.cursorPosition));
-            }
-            this.changeDetectorRef.markForCheck();
-        });
+        valueUpdated$.pipe(
+            tap(([format, value]) => {
+                this.date = value;
+                this._inputModel = (this.date) ? (this.date instanceof Date ? moment(this.date).format(format) : this.date) : null;
+                this.changeDetectorRef.markForCheck();
+            }),
+            filter(() => this.cursorPosition && !this.allowFreeEntry),
+            switchMap(() => inputElement$),
+            takeUntil(this.destroyed$),
+        ).subscribe((elem: HTMLInputElement) => elem.setSelectionRange(this.cursorPosition, this.cursorPosition)); // si la position du curseur était stockée, on la restaure apres avoir changé la valeur
 
         keydown$.pipe(
             filter(() => this.showDropDown),

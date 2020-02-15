@@ -11,7 +11,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Even
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Destroy, KeyCodes } from '@deja-js/core';
 import { from, fromEvent, merge, Subject } from 'rxjs';
-import { filter, takeUntil, debounceTime, tap } from 'rxjs/operators';
+import { debounceTime, filter, takeUntil, tap } from 'rxjs/operators';
 import { IDateSelectorItem } from './date-selector-item.model';
 
 export enum DaysOfWeek {
