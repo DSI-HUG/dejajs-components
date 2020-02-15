@@ -10,7 +10,7 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostListener, Input, Optional, Output, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Destroy } from '@deja-js/core';
-import { fromEvent, merge } from 'rxjs';
+import { fromEvent, merge, Observable } from 'rxjs';
 import { first, takeUntil, tap } from 'rxjs/operators';
 import { IRange, IRangeEvent, IStepRangeEvent, Range } from './range.interface';
 
@@ -230,10 +230,11 @@ export class DejaRangeComponent extends Destroy implements ControlValueAccessor 
                     this._onChangeCallback(this._ranges);
                 }));
 
-            fromEvent(document, 'mousemove').pipe(
+            const move$ = fromEvent(document, 'mousemove') as Observable<MouseEvent>;
+            move$.pipe(
                 takeUntil(kill$),
                 takeUntil(this.destroyed$)
-            ).subscribe((event: MouseEvent) => {
+            ).subscribe(event => {
                 const x = event.pageX;
                 const xDifference = -(xStart - x);
 
