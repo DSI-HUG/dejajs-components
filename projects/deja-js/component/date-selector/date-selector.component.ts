@@ -10,8 +10,8 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Optional, Output, Self, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Destroy, KeyCodes } from '@deja-js/core';
-import { from, fromEvent, Subject } from 'rxjs';
-import { first, takeUntil } from 'rxjs/operators';
+import { from, fromEvent, merge, Subject } from 'rxjs';
+import { debounceTime, filter, takeUntil, tap } from 'rxjs/operators';
 import { IDateSelectorItem } from './date-selector-item.model';
 
 export enum DaysOfWeek {
@@ -66,15 +66,11 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
     };
     // /Time
 
-    public _keyboardNavigation = false;
-    private _keyboardNavigation$ = new Subject();
+    private _keyboardNavigation = false;
+    private _keyboardNavigation$ = new Subject<boolean>();
 
     public get keyboardNavigation() {
         return this._keyboardNavigation;
-    }
-
-    public get keyboardNavigation$() {
-        return this._keyboardNavigation$;
     }
 
     public get displayedDate() {
@@ -179,7 +175,7 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
 
         fromEvent(element, 'click').pipe(
             takeUntil(this.destroyed$)
-        ).subscribe((event: Event) => {
+        ).subscribe(event => {
             const target = event.target as HTMLElement;
             if (target.hasAttribute('dateindex')) {
                 const dateSelectorItem = this._currentDays[+target.getAttribute('dateindex')];
@@ -194,17 +190,21 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
             }
         });
 
-        from(this._keyboardNavigation$).pipe(
+        merge(this._keyboardNavigation$, fromEvent(element, 'mouseleave'), fromEvent(element, 'click')).pipe(
+            filter(() => this._keyboardNavigation),
             takeUntil(this.destroyed$)
         ).subscribe(() => {
-            this._keyboardNavigation = true;
-            fromEvent(element, 'mouseenter').pipe(
-                first())
-                .subscribe(() => {
-                    this._keyboardNavigation = false;
-                    this.changeDetectorRef.markForCheck();
-                });
+            this._keyboardNavigation = false;
+            this.changeDetectorRef.markForCheck();
         });
+
+        from(this._keyboardNavigation$).pipe(
+            filter(value => value),
+            tap(value => this._keyboardNavigation = value),
+            debounceTime(2000),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => this._keyboardNavigation$.next(false));
+
         this.layout = DateComponentLayout.dateonly;
     }
 
@@ -333,7 +333,7 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
             this.selectedDate = new Date(this._currentDate);
         }
 
-        this._keyboardNavigation$.next();
+        this._keyboardNavigation$.next(true);
         switch (event.code) {
             case KeyCodes.PageUp:
             case KeyCodes.PageDown:

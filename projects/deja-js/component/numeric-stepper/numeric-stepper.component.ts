@@ -203,7 +203,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
             this.ngControl.valueAccessor = this;
         }
 
-        this.fm.monitor(elementRef.nativeElement, true).subscribe((origin) => {
+        this.fm.monitor(elementRef.nativeElement, true).subscribe(origin => {
             this.focused = !!origin;
             if (!this.focused) {
                 this.onTouchedCallback();

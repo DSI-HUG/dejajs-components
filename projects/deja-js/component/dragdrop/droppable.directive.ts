@@ -9,8 +9,8 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Directive, ElementRef, HostBinding, Input, Optional } from '@angular/core';
 import { DejaClipboardService, Destroy } from '@deja-js/core';
-import { from, fromEvent, Subject } from 'rxjs';
-import { filter, takeUntil, tap } from 'rxjs/operators';
+import { fromEvent, merge, Observable } from 'rxjs';
+import { filter, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { IDejaDragEvent } from './draggable.directive';
 
 @Directive({
@@ -51,70 +51,97 @@ export class DejaDroppableDirective extends Destroy {
 
         let inDrag = false;
         const element = elementRef.nativeElement as HTMLElement;
-        const dragDrop$ = new Subject<DragEvent>();
-        const kill$ = new Subject();
 
-        const dragEnd$ = from(kill$).pipe(
-            tap(() => inDrag = false),
-            filter((value) => !value));
-
-        from(dragDrop$).pipe(
-            takeUntil(this.destroyed$)
-        ).subscribe((dragEvent) => {
-            if (dragEvent.type === 'dragenter') {
-                if (inDrag) {
-                    return;
+        // DragEnter event
+        const dragEnterEvent$ = fromEvent(element, 'dragenter').pipe(
+            tap(() => {
+                if (!clipboardService) {
+                    throw new Error('To use the DejaDroppableDirective, please import and provide the DejaClipboardService in your application.');
                 }
-                inDrag = true;
+            }),
+            filter(() => !inDrag && !!this.context && !!this.context.dragentercallback && !!this.clipboardService.get(this.draginfokey)),
+            tap(() => inDrag = true),
+        ) as Observable<DragEvent>;
 
-                // console.log('DejaDragEnter');
-                if (this.context.dragentercallback) {
-                    const dragInfos = this.clipboardService.get(this.draginfokey) as { [key: string]: any };
-                    const e = dragEvent as IDejaDropEvent;
-                    e.dragInfo = dragInfos;
-                    e.dragObject = (<any>dragEvent)[this.objectKey];
-                    e.dragElement = element;
-                    e.itsMe = (<any>dragEvent)[this.elementKey] === element;
-                    this.context.dragentercallback(e);
-                    if (e.defaultPrevented) {
-                        dragEvent.preventDefault();
-                        dragEvent.dataTransfer.dropEffect = 'copy';
-                    } else {
-                        dragEvent.dataTransfer.dropEffect = 'none';
-                    }
+        // DragLeave event
+        const dragLeaveEvent$ = fromEvent(element, 'dragleave').pipe(
+            filter(() => inDrag && !!this.context && !!this.clipboardService.get(this.draginfokey)),
+            filter((leaveEvent: DragEvent) => {
+                const bounds = element.getBoundingClientRect();
+                const inside = leaveEvent.x >= bounds.left && leaveEvent.x <= bounds.right && leaveEvent.y >= bounds.top && leaveEvent.y <= bounds.bottom;
+                return !inside;
+            })
+        ) as Observable<DragEvent>;
 
-                    fromEvent(element, 'drop').pipe(
-                        takeUntil(dragEnd$),
-                        takeUntil(this.destroyed$)
-                    ).subscribe((dropEvent: DragEvent) => {
-                        // console.log('DejaDrop');
-                        if (this.context.dropcallback) {
-                            if (dragInfos) {
-                                const evt = dropEvent as IDejaDropEvent;
-                                evt.dragInfo = dragInfos;
-                                evt.dragObject = dragInfos[this.objectKey];
-                                evt.dragElement = element;
-                                evt.itsMe = dragInfos[this.elementKey] === element;
+        // Drop event
+        const dropEvent$ = fromEvent(element, 'drop').pipe(
+            filter(() => inDrag && !!this.context && !!this.clipboardService.get(this.draginfokey)),
+        ) as Observable<DragEvent>;
 
-                                this.context.dropcallback(evt);
-                                if (evt.defaultPrevented) {
-                                    evt.dragInfo[this.droppedKey] = true;
-                                    dropEvent.preventDefault();
-                                    dragEvent.dataTransfer.dropEffect = 'copy';
-                                } else {
-                                    dragEvent.dataTransfer.dropEffect = 'none';
-                                }
+        // DragOver event
+        const dragOverEvent$ = fromEvent(element, 'dragover').pipe(
+            filter(() => inDrag)
+        ) as Observable<DragEvent>;
+
+        const dragEndEvent$ = merge(dragEnterEvent$, dragLeaveEvent$, dropEvent$).pipe(
+            tap(() => inDrag = false),
+        );
+
+        // DragEnter
+        dragEnterEvent$.pipe(
+            switchMap(dragEvent => {
+                const dragInfos = this.clipboardService.get(this.draginfokey) as { [key: string]: any };
+                const e = dragEvent as IDejaDropEvent;
+                e.dragInfo = dragInfos;
+                e.dragObject = (<any>dragEvent)[this.objectKey];
+                e.dragElement = element;
+                e.itsMe = (<any>dragEvent)[this.elementKey] === element;
+                this.context.dragentercallback(e);
+                if (e.defaultPrevented) {
+                    dragEvent.preventDefault();
+                    dragEvent.dataTransfer.dropEffect = 'copy';
+                } else {
+                    dragEvent.dataTransfer.dropEffect = 'none';
+                }
+
+                const leave$ = dragLeaveEvent$.pipe(
+                    take(1),
+                    filter(() => !!this.context.dragleavecallback),
+                    tap(leaveEvent => {
+                        const le = new CustomEvent('DejaDragLeave', { cancelable: true });
+                        this.context.dragleavecallback(le);
+                        if (le.defaultPrevented) {
+                            leaveEvent.preventDefault();
+                        }
+                    })
+                );
+
+                const drop$ = dropEvent$.pipe(
+                    take(1),
+                    filter(() => !!this.context.dropcallback),
+                    tap(dropEvent => {
+                        if (dragInfos) {
+                            const evt = dropEvent as IDejaDropEvent;
+                            evt.dragInfo = dragInfos;
+                            evt.dragObject = dragInfos[this.objectKey];
+                            evt.dragElement = element;
+                            evt.itsMe = dragInfos[this.elementKey] === element;
+
+                            this.context.dropcallback(evt);
+                            if (evt.defaultPrevented) {
+                                evt.dragInfo[this.droppedKey] = true;
+                                dropEvent.preventDefault();
+                                dragEvent.dataTransfer.dropEffect = 'copy';
+                            } else {
+                                dragEvent.dataTransfer.dropEffect = 'none';
                             }
                         }
-                        kill$.next();
-                        return;
-                    });
+                    })
+                );
 
-                    fromEvent(element, 'dragover').pipe(
-                        takeUntil(dragEnd$),
-                        takeUntil(this.destroyed$)
-                    ).subscribe((overEvent: DragEvent) => {
-                        // console.log('DejaDragOver');
+                const over$ = dragOverEvent$.pipe(
+                    takeUntil(dragEndEvent$),
+                    tap(overEvent => {
                         if (!this._allEvents && this.lastTarget && this.lastTarget === overEvent.target) {
                             if (this.lastAccept) {
                                 overEvent.preventDefault();
@@ -122,65 +149,31 @@ export class DejaDroppableDirective extends Destroy {
                             } else {
                                 dragEvent.dataTransfer.dropEffect = 'none';
                             }
-                            return;
-                        }
+                        } else if (this.context.dragovercallback && dragInfos) {
+                            const evt = overEvent as IDejaDropEvent;
+                            evt.dragInfo = dragInfos;
+                            evt.dragObject = dragInfos[this.objectKey];
+                            evt.dragElement = element;
+                            evt.itsMe = dragInfos[this.elementKey] === element;
 
-                        if (this.context.dragovercallback) {
-                            if (dragInfos) {
-                                const evt = overEvent as IDejaDropEvent;
-                                evt.dragInfo = dragInfos;
-                                evt.dragObject = dragInfos[this.objectKey];
-                                evt.dragElement = element;
-                                evt.itsMe = dragInfos[this.elementKey] === element;
-
-                                this.context.dragovercallback(evt);
-                                this.lastTarget = overEvent.target;
-                                this.lastAccept = evt.defaultPrevented;
-                                if (evt.defaultPrevented) {
-                                    overEvent.preventDefault();
-                                    dragEvent.dataTransfer.dropEffect = 'copy';
-                                } else {
-                                    dragEvent.dataTransfer.dropEffect = 'none';
-                                }
+                            this.context.dragovercallback(evt);
+                            this.lastTarget = overEvent.target;
+                            this.lastAccept = evt.defaultPrevented;
+                            if (evt.defaultPrevented) {
+                                overEvent.preventDefault();
+                                dragEvent.dataTransfer.dropEffect = 'copy';
+                            } else {
+                                dragEvent.dataTransfer.dropEffect = 'none';
                             }
                         }
-                    });
-                }
-            } else {
-                // console.log('DejaDragLeave');
-                if (this.context.dragleavecallback) {
-                    const e = new CustomEvent('DejaDragLeave', { cancelable: true });
-                    this.context.dragleavecallback(e);
-                    if (e.defaultPrevented) {
-                        dragEvent.preventDefault();
-                    }
-                }
-                kill$.next();
-            }
-        });
+                    })
+                );
 
-        fromEvent(element, 'dragenter').pipe(
-            filter(() => !!this.context),
-            filter(() => !!this.clipboardService.get(this.draginfokey)),
+                return merge(drop$, over$, leave$);
+            }),
             takeUntil(this.destroyed$)
-        ).subscribe((event: DragEvent) => {
-            if (!clipboardService) {
-                throw new Error('To use the DejaDroppableDirective, please import and provide the DejaClipboardService in your application.');
-            }
-            dragDrop$.next(event);
-        });
-
-        fromEvent(element, 'dragleave').pipe(
-            filter(() => !!this.context),
-            filter(() => !!this.clipboardService.get(this.draginfokey)),
-            takeUntil(this.destroyed$)
-        ).subscribe((leaveEvent: DragEvent) => {
-            // console.log('dragleave ' + (leaveEvent.target as HTMLElement).tagName);
-            const bounds = element.getBoundingClientRect();
-            const inside = leaveEvent.x >= bounds.left && leaveEvent.x <= bounds.right && leaveEvent.y >= bounds.top && leaveEvent.y <= bounds.bottom;
-            if (!inside) {
-                dragDrop$.next(leaveEvent);
-            }
+        ).subscribe(_event => {
+            // console.log(_event.type);
         });
     }
 }

@@ -1,6 +1,6 @@
 	<div class="circular-picker" #picker [style.width.px]="radius*2" [style.height.px]="radius*2" [class.disabled]="disabled">
-		<!--FOR TEST ONLY-->
-		<!-- div *ngIf="circle" class="test"
+	    <!--FOR TEST ONLY-->
+	    <!-- div *ngIf="circle" class="test"
 				[style.position]="'fixed'"
 				[style.background]="'red'"
 				[style.opacity]="0.6"
@@ -9,15 +9,17 @@
 				[style.width.px]="circle.radius * 2"
 				[style.height.px]="circle.radius * 2"
         ></div-->
-		<div class="cursor-container">
-			<div class="cursor" cursor *ngIf="cursor.value !== undefined" [style.top.px]="cursor.position.top" [style.left.px]="cursor.position.left">
-				<ng-template *ngIf="cursorTemplate" [ngTemplateOutlet]="cursorTemplate" [ngTemplateOutletContext]="{ $implicit: cursor.value }"></ng-template>
-				<span *ngIf="!cursorTemplate">{{cursor.value}}</span>
-			</div>
-			<div class="cursorHand" [ngStyle]="{'transform':'translateY(-50%) rotate('+(-cursorHand.angle)+'rad)'}" [style.width.px]="cursorHand.width+2"></div>
-		</div>
-		<div class="value" [attr.value]="val.value" *ngFor="let val of circularValues; let index=index" [style.top.px]="val.position.top" [style.left.px]="val.position.left">
-			<ng-template *ngIf="labelTemplate" [ngTemplateOutlet]="labelTemplate" [ngTemplateOutletContext]="{ $implicit: val.value, index: index }"></ng-template>
-			<span *ngIf="!labelTemplate">{{val.value}}</span>
-		</div>
+	    <div class="cursor-container">
+	        <div class="cursor" cursor *ngIf="cursor.value !== undefined" [style.top.px]="cursor.position.top" [style.left.px]="cursor.position.left">
+	            <ng-template *ngIf="cursorTemplate else valueTemplate" [ngTemplateOutlet]="cursorTemplate" [ngTemplateOutletContext]="{ $implicit: cursor.value }"></ng-template>
+	            <ng-template #valueTemplate>
+	                <span>{{cursor.value}}</span>
+	            </ng-template>
+	        </div>
+	        <div class="cursorHand" [ngStyle]="{'transform':'translateY(-50%) rotate('+(-cursorHand.angle)+'rad)'}" [style.width.px]="cursorHand.width+2"></div>
+	    </div>
+	    <div class="value" [attr.value]="val.value" *ngFor="let val of circularValues; let index=index" [style.top.px]="val.position.top" [style.left.px]="val.position.left">
+	        <ng-template *ngIf="labelTemplate" [ngTemplateOutlet]="labelTemplate" [ngTemplateOutletContext]="{ $implicit: val.value, index: index }"></ng-template>
+	        <span *ngIf="!labelTemplate">{{val.value}}</span>
+	    </div>
 	</div>

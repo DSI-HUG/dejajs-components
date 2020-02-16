@@ -11,7 +11,7 @@
 */
 
 import { Directive, ElementRef, HostListener, Input, OnDestroy, OnInit, Renderer2, RendererFactory2 } from '@angular/core';
-import { Subscription, timer } from 'rxjs';
+import { interval, Subscription, timer } from 'rxjs';
 import { filter, first, takeUntil } from 'rxjs/operators';
 import { Destroy } from '../destroy/destroy';
 
@@ -138,7 +138,6 @@ export class DejaSlimScrollDirective extends Destroy implements OnInit, OnDestro
     private _options: SlimScrollOptions;
     private _previousHeight: number;
     private _queueHide: Subscription;
-    private _changesTracker: number;
     private _barMouseDownPageY: number;
     private _startBarTop: number;
 
@@ -169,9 +168,6 @@ export class DejaSlimScrollDirective extends Destroy implements OnInit, OnDestro
 
     public ngOnDestroy() {
         super.ngOnDestroy();
-        if (this._changesTracker) {
-            clearInterval(this._changesTracker);
-        }
 
         if (window.removeEventListener) {
             window.removeEventListener('DOMMouseScroll', this.onWheel);
@@ -326,7 +322,9 @@ export class DejaSlimScrollDirective extends Destroy implements OnInit, OnDestro
     private trackPanelHeightChanged = () => {
         this._previousHeight = this._me.scrollHeight;
 
-        this._changesTracker = window.setInterval(() => {
+        interval(1000).pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe(() => {
             if (this._previousHeight !== this._me.scrollHeight) {
                 this._previousHeight = this._me.scrollHeight;
 
@@ -337,7 +335,7 @@ export class DejaSlimScrollDirective extends Destroy implements OnInit, OnDestro
                     this.scrollContent(0, true);
                 }
             }
-        }, 1000);
+        });
     }
 
     private hasParentClass(e: HTMLElement, className: string): boolean {

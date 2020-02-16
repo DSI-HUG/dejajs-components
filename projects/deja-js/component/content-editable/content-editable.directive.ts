@@ -10,8 +10,8 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Directive, ElementRef, HostBinding, Input, OnInit, Optional, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Destroy, KeyCodes } from '@deja-js/core';
-import { BehaviorSubject, from, fromEvent, timer } from 'rxjs';
-import { filter, first, map, takeUntil, tap } from 'rxjs/operators';
+import { BehaviorSubject, from, fromEvent, Observable, timer } from 'rxjs';
+import { distinctUntilChanged, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 
 @Directive({
     selector: '[deja-editable]',
@@ -39,9 +39,10 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
 
         this.element = elementRef.nativeElement as HTMLElement;
 
-        fromEvent(this.element, 'mousedown').pipe(
+        const mouseDownEvent$ = fromEvent(this.element, 'mousedown') as Observable<MouseEvent>;
+        mouseDownEvent$.pipe(
             takeUntil(this.destroyed$)
-        ).subscribe((e: MouseEvent) => {
+        ).subscribe(e => {
             if (this.inEdition || this.disabled) {
                 e.cancelBubble = true;
                 return false;
@@ -53,11 +54,11 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
         });
 
         const inEdition$ = from(this.edit$).pipe(
-            filter(([value]) => value !== this._inEdition),
+            distinctUntilChanged(),
             map(([value, selectOnFocus]) => {
                 if (selectOnFocus !== false) {
                     timer(10).pipe(
-                        first(),
+                        take(1),
                         takeUntil(this.destroyed$)
                     ).subscribe(() => {
                         this.selectAll();
@@ -74,46 +75,52 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
                     this.element.removeAttribute('contenteditable');
                 }
                 this.refreshView();
-            }));
+            })
+        );
 
         const kill$ = inEdition$.pipe(
-            filter((value) => !value));
+            filter((value) => !value)
+        );
+
+        const mouseDown$ = fromEvent(this.element.ownerDocument, 'mousedown').pipe(
+            filter(event => !this.isChildElement(event.target as HTMLElement)),
+            takeUntil(kill$)
+        ) as Observable<MouseEvent>;
 
         inEdition$.pipe(
-            filter((value) => value),
+            filter(value => value),
+            switchMap(() => mouseDown$),
             takeUntil(this.destroyed$)
         ).subscribe(() => {
-            fromEvent(this.element.ownerDocument, 'mousedown').pipe(
-                filter((event: MouseEvent) => !this.isChildElement(event.target as HTMLElement)),
-                takeUntil(kill$),
-                takeUntil(this.destroyed$)
-            ).subscribe(() => {
-                const text = this.element.innerText.replace(/\n/g, '<br />').replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
-                this.onTouchedCallback();
+            const text = this.element.innerText.replace(/\n/g, '<br />').replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+            this.onTouchedCallback();
+            if (text || !this.mandatory) {
+                this.value = text;
+            }
+            this.inEdition = false;
+        });
+
+        const keyDown$ = fromEvent(this.element, 'keydown').pipe(
+            takeUntil(kill$),
+        ) as Observable<KeyboardEvent>;
+
+        inEdition$.pipe(
+            filter(value => value),
+            switchMap(() => keyDown$),
+            takeUntil(this.destroyed$)
+        ).subscribe(e => {
+            e.cancelBubble = true;
+            e.stopPropagation();
+            if (e.code === KeyCodes.Enter && !this.multiline) {
+                const text = this.element.innerText;
                 if (text || !this.mandatory) {
                     this.value = text;
                 }
-
                 this.inEdition = false;
-            });
-
-            fromEvent(this.element, 'keydown').pipe(
-                takeUntil(kill$),
-                takeUntil(this.destroyed$)
-            ).subscribe((e: KeyboardEvent) => {
-                e.cancelBubble = true;
-                e.stopPropagation();
-                if (e.code === KeyCodes.Enter && !this.multiline) {
-                    const text = this.element.innerText;
-                    if (text || !this.mandatory) {
-                        this.value = text;
-                    }
-                    this.inEdition = false;
-                } else if (e.code === KeyCodes.Escape) {
-                    this.inEdition = false;
-                }
-                return false;
-            });
+            } else if (e.code === KeyCodes.Escape) {
+                this.inEdition = false;
+            }
+            return false;
         });
     }
 
@@ -150,7 +157,7 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
     }
 
     public get disabled() {
-        return (this._control && this._control.disabled) || this._disabled;
+        return this._control?.disabled || this._disabled;
     }
 
     /** Définit une valeur indiquant si l'édition est activée. */

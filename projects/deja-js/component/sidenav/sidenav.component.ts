@@ -47,7 +47,7 @@ export class DejaSidenavComponent extends Destroy implements OnInit {
 
         from(this.mediaService.mediaChanged$).pipe(
             takeUntil(this.destroyed$)
-        ).subscribe((alias) => {
+        ).subscribe(alias => {
             this.sidenavService.hidden = alias === 'xs';
             this.sidenavService.opened = alias === 'lg';
             this.sidenavService.mode = alias === 'xs' ? 'over' : 'side';
@@ -61,18 +61,18 @@ export class DejaSidenavComponent extends Destroy implements OnInit {
 
         // Listen for future route changes
         this.router.events.pipe(
-            filter((event) => event instanceof NavigationEnd),
+            filter(event => event instanceof NavigationEnd),
             map(() => this.activatedRoute),
-            map((route) => {
+            map(route => {
                 while (route.firstChild) {
                     route = route.firstChild;
                 }
                 return route;
             }),
-            filter((route) => route.outlet === 'primary'),
-            mergeMap((route) => route.data),
+            filter(route => route.outlet === 'primary'),
+            mergeMap(route => route.data),
             takeUntil(this.destroyed$)
-        ).subscribe((event) => this.title = event[`title`]);
+        ).subscribe(event => this.title = event[`title`]);
     }
 
     private getActivatedRouteLastChild(): ActivatedRouteSnapshot {

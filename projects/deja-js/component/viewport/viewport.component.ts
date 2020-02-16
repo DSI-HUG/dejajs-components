@@ -9,7 +9,7 @@
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, HostBinding, Input, ViewChild } from '@angular/core';
 import { Destroy, IViewPort, IViewPortItem, IViewPortRefreshParams, ViewportDirection, ViewportMode, ViewPortService } from '@deja-js/core';
-import { BehaviorSubject, from, fromEvent, interval, merge, of, Subject, timer } from 'rxjs';
+import { BehaviorSubject, from, fromEvent, interval, merge, Observable, of, Subject, timer } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 export enum DejaViewPortScrollStyle {
@@ -257,8 +257,9 @@ export class DejaViewPortComponent extends Destroy {
         ).subscribe(scroll);
 
         const mouseWheel$ = () => {
-            return fromEvent(this.element, 'mousewheel').pipe(
-                map((event: MouseWheelEvent) => {
+            const mouseWheelEvent$ = fromEvent(this.element, 'mousewheel') as Observable<MouseWheelEvent>;
+            return mouseWheelEvent$.pipe(
+                map(event => {
                     event.stopPropagation();
                     event.preventDefault();
                     return this.scrollPos + event.deltaY;
@@ -286,41 +287,34 @@ export class DejaViewPortComponent extends Destroy {
             );
         };
 
+        const initButton$ = (button: HTMLElement) => {
+            const sign = button.id === 'down' ? 1 : -1;
+            const mouseUpEvent$ = fromEvent(button, 'mouseup') as Observable<MouseEvent>;
+            const mouseLeaveEvent$ = fromEvent(button, 'mouseleave') as Observable<MouseEvent>;
+            const mouseup$ = merge(mouseUpEvent$, mouseLeaveEvent$).pipe(
+                tap(upEvent => this.scrollPos += sign * (upEvent.ctrlKey ? this.clientSize : this.buttonsStep))
+            );
+
+            const mouseDownEvent$ = fromEvent(button, 'mousedown') as Observable<MouseEvent>;
+            return mouseDownEvent$.pipe(
+                tap(event => this.scrollPos += sign * (event.ctrlKey ? this.clientSize : this.buttonsStep * 2)),
+                switchMap(event => {
+                    return autoScroll$(event, sign).pipe(
+                        takeUntil(mouseup$)
+                    );
+                }),
+            );
+        };
+
         downButton$.pipe(
             filter(downButton => !!downButton),
-            switchMap(downButton => {
-                const mouseup$ = merge(fromEvent(downButton, 'mouseup'), fromEvent(downButton, 'mouseleave')).pipe(
-                    tap((upEvent: MouseEvent) => this.scrollPos += upEvent.ctrlKey ? this.clientSize : this.buttonsStep)
-                );
-
-                return fromEvent(downButton, 'mousedown').pipe(
-                    tap((event: MouseEvent) => this.scrollPos += event.ctrlKey ? this.clientSize : this.buttonsStep * 2),
-                    switchMap((event: MouseEvent) => {
-                        return autoScroll$(event, 1).pipe(
-                            takeUntil(mouseup$)
-                        );
-                    }),
-                );
-            }),
+            switchMap(initButton$),
             takeUntil(this.destroyed$)
         ).subscribe();
 
         upButton$.pipe(
             filter(upButton => !!upButton),
-            switchMap(upButton => {
-                const mouseup$ = merge(fromEvent(upButton, 'mouseup'), fromEvent(upButton, 'mouseleave')).pipe(
-                    tap((upEvent: MouseEvent) => this.scrollPos -= upEvent.ctrlKey ? this.clientSize : this.buttonsStep)
-                );
-
-                return fromEvent(upButton, 'mousedown').pipe(
-                    tap((event: MouseEvent) => this.scrollPos -= event.ctrlKey ? this.clientSize : this.buttonsStep * 2),
-                    switchMap((event: MouseEvent) => {
-                        return autoScroll$(event, -1).pipe(
-                            takeUntil(mouseup$)
-                        );
-                    }),
-                );
-            }),
+            switchMap(initButton$),
             takeUntil(this.destroyed$)
         ).subscribe();
 

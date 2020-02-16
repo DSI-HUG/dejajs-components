@@ -8,8 +8,8 @@
 
 import { Directive, ElementRef, Input } from '@angular/core';
 import { Destroy, Position, Rect } from '@deja-js/core';
-import { fromEvent, merge, Observable, Subject } from 'rxjs';
-import { filter, first, takeUntil, tap } from 'rxjs/operators';
+import { fromEvent, merge, Observable, of, Subject } from 'rxjs';
+import { filter, first, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { IDragCursorInfos } from './mouse-drag-cursor-infos.interface';
 import { IDragDropContext } from './mouse-dragdrop-context.interface';
 import { DejaMouseDragDropService } from './mouse-dragdrop.service';
@@ -34,98 +34,99 @@ export class DejaMouseDraggableDirective extends Destroy {
 
         const element = elementRef.nativeElement as HTMLElement;
 
-        const leave$ = fromEvent(element, 'mouseleave');
-
-        const mouseUp$ = fromEvent(element.ownerDocument, 'mouseup');
+        const mouseLeaveEvent$ = fromEvent(element, 'mouseleave') as Observable<MouseEvent>;
+        const mouseUpEvent$ = fromEvent(element.ownerDocument, 'mouseup') as Observable<MouseEvent>;
+        const mouseDownEvent$ = fromEvent(element, 'mousedown') as Observable<MouseEvent>;
+        const mouseMoveEvent$ = fromEvent(element.ownerDocument, 'mousemove') as Observable<MouseEvent>;
 
         fromEvent(element, 'mouseenter').pipe(
-            takeUntil(this.destroyed$)
-        ).subscribe(() => {
-            fromEvent(element, 'mousedown').pipe(
-                takeUntil(leave$),
-                filter((event: MouseEvent) => event.buttons === 1),
-                takeUntil(this.destroyed$)
-            ).subscribe((event: MouseEvent) => {
-                const moveUp$ = new Subject();
-                let target: HTMLElement;
+            switchMap(() => {
+                return mouseDownEvent$.pipe(
+                    filter(event => event.buttons === 1),
+                    takeUntil(mouseLeaveEvent$),
+                    switchMap(() => {
+                        let target: HTMLElement;
 
-                const match = (el: HTMLElement) => {
-                    return el.tagName === this.context.target.toUpperCase() || el.id === this.context.target.substr(1) || el.hasAttribute(this.context.target.substring(1, this.context.target.length - 1));
-                };
+                        const match = (el: HTMLElement) => {
+                            return el.tagName === this.context.target.toUpperCase() || el.id === this.context.target.substr(1) || el.hasAttribute(this.context.target.substring(1, this.context.target.length - 1));
+                        };
 
-                const startDrag = () => {
-                    const kill$ = merge(mouseUp$, moveUp$).pipe(
-                        first(),
-                        tap(() => {
-                            dragDropService.dragCursor$.next(null);
-                            dragDropService.dragging$.next(false);
-                        }));
-
-                    fromEvent(element.ownerDocument, 'mousemove').pipe(
-                        takeUntil(kill$),
-                        takeUntil(this.destroyed$)
-                    ).subscribe((ev: MouseEvent) => {
-                        if (target && ev.buttons === 1) {
-                            const bounds = new Rect(element.getBoundingClientRect());
-                            const position = new Position(ev.pageX, ev.pageY);
-                            const html = bounds.containsPoint(position) ? target.innerHTML : undefined;
-
-                            // Post cursor infos to service
-                            dragDropService.dragCursor$.next({
-                                position: position,
-                                html: html,
-                                width: target.offsetWidth,
-                                height: target.offsetHeight,
-                                className: this.context.className,
-                                originalEvent: ev,
-                            } as IDragCursorInfos);
-
-                        } else {
-                            moveUp$.next();
-                        }
-
-                        ev.preventDefault();
-                        return false;
-                    });
-
-                    dragDropService.dragging$.next(true);
-                };
-
-                if (this.context) {
-                    if (this.context.target) {
-                        target = event.target as HTMLElement;
-                        while (target && !match(target)) {
-                            target = target.parentElement;
-                        }
-                    } else {
-                        target = element;
-                    }
-
-                    if (target && this.context.dragStart) {
-                        const dragContext = this.context.dragStart(target);
-                        if (dragContext) {
-                            if (dragContext.subscribe) {
-                                const context = dragContext as Observable<any>;
-                                // Observable
-                                context.pipe(
-                                    first(),
-                                    takeUntil(this.destroyed$)
-                                ).subscribe((ddctx: IDragDropContext) => {
-                                    dragDropService.context = ddctx;
-                                    if (ddctx) {
-                                        startDrag();
-                                    }
-                                });
-                                return;
+                        if (this.context) {
+                            if (this.context.target) {
+                                target = event.target as HTMLElement;
+                                while (target && !match(target)) {
+                                    target = target.parentElement;
+                                }
                             } else {
-                                dragDropService.context = dragContext;
-                                startDrag();
+                                target = element;
+                            }
+
+                            if (target && this.context.dragStart) {
+                                const dragContext = this.context.dragStart(target);
+                                if (dragContext) {
+                                    if (dragContext.subscribe) {
+                                        const context = dragContext as Observable<any>;
+                                        // Observable
+                                        return context.pipe(
+                                            first(),
+                                            map((ddctx: IDragDropContext) => {
+                                                dragDropService.context = ddctx;
+                                                return ddctx && target; // Map to target if ddctx is defined
+                                            }),
+                                            takeUntil(this.destroyed$)
+                                        );
+                                    } else {
+                                        dragDropService.context = dragContext;
+                                        return of(target);
+                                    }
+                                }
                             }
                         }
-                    }
-                }
-            });
-        });
+                        return of(null);
+                    }),
+                    filter(target => !!target), // Start Drag if target is defined
+                    switchMap(target => {
+                        dragDropService.dragging$.next(true);
+
+                        const moveUp$ = new Subject();
+                        const kill$ = merge(mouseUpEvent$, moveUp$).pipe(
+                            first(),
+                            tap(() => {
+                                dragDropService.dragCursor$.next(null);
+                                dragDropService.dragging$.next(false);
+                            }));
+
+                        return mouseMoveEvent$.pipe(
+                            takeUntil(kill$),
+                            tap(ev => {
+                                if (target && ev.buttons === 1) {
+                                    const bounds = new Rect(element.getBoundingClientRect());
+                                    const position = new Position(ev.pageX, ev.pageY);
+                                    const html = bounds.containsPoint(position) ? target.innerHTML : undefined;
+
+                                    // Post cursor infos to service
+                                    dragDropService.dragCursor$.next({
+                                        position: position,
+                                        html: html,
+                                        width: target.offsetWidth,
+                                        height: target.offsetHeight,
+                                        className: this.context.className,
+                                        originalEvent: ev,
+                                    } as IDragCursorInfos);
+
+                                } else {
+                                    moveUp$.next();
+                                }
+
+                                ev.preventDefault();
+                                return false;
+                            }),
+                        );
+                    }),
+                );
+            }),
+            takeUntil(this.destroyed$)
+        ).subscribe();
     }
 }
 

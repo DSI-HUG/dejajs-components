@@ -11,8 +11,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, El
 import { IDejaChipsComponentCloseEvent } from '@deja-js/component/chips';
 import { IDejaDragEvent } from '@deja-js/component/dragdrop';
 import { DejaTreeListComponent, DejaTreeListScrollEvent } from '@deja-js/component/tree-list';
-import { Destroy } from '@deja-js/core';
-import { DejaClipboardService, GroupingService, IGroupInfo, IItemBase, IItemTree, ISortInfos, ItemListService, IViewListResult, IViewPort, KeyCodes, SortingService, ViewportMode, ViewPortService } from '@deja-js/core';
+import { DejaClipboardService, Destroy, GroupingService, IGroupInfo, IItemBase, IItemTree, ISortInfos, ItemListService, IViewListResult, IViewPort, KeyCodes, SortingService, ViewportMode, ViewPortService } from '@deja-js/core';
 import { combineLatest, from, fromEvent, Observable, ReplaySubject, Subject, timer } from 'rxjs';
 import { debounceTime, filter, first, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent } from './data-grid-column/data-grid-column';
@@ -308,10 +307,10 @@ export class DejaGridComponent extends Destroy {
                 this.calcColumnsLayout(this._rows);
             } else {
                 this.viewPortChanged.pipe(
-                    filter((vp) => vp && vp.items && vp.items.length > 0),
+                    filter(vp => vp?.items?.length > 0),
                     first(),
                     takeUntil(this.destroyed$)
-                ).subscribe((vp) => this.calcColumnsLayout(vp.items));
+                ).subscribe(vp => this.calcColumnsLayout(vp.items));
             }
         }
         this.changeDetectorRef.markForCheck();
@@ -419,7 +418,7 @@ export class DejaGridComponent extends Destroy {
                     return this._columnGroups = columnGroups;
                 }
             }),
-            map((columnGroups) => {
+            map(columnGroups => {
                 const groupInfos = [] as IGroupInfo[];
                 const sortInfos = this.treeListComponent.sortInfos;
                 columnGroups.forEach((column) => {
@@ -433,15 +432,15 @@ export class DejaGridComponent extends Destroy {
                 });
                 return groupInfos;
             }),
-            switchMap((groupInfos) => this.treeListComponent.group$(groupInfos).pipe(map(() => groupInfos))),
+            switchMap(groupInfos => this.treeListComponent.group$(groupInfos).pipe(map(() => groupInfos))),
             takeUntil(this.destroyed$)
-        ).subscribe((groupInfos) => {
+        ).subscribe(groupInfos => {
             this.groupChanged.emit(groupInfos);
             this.changeDetectorRef.markForCheck();
         });
 
         from(this.columns$).pipe(
-            tap((columns) => this._columns = columns),
+            tap(columns => this._columns = columns),
             debounceTime(1),
             takeUntil(this.destroyed$)
         ).subscribe(() => this.calcColumnsLayout());
@@ -512,23 +511,25 @@ export class DejaGridComponent extends Destroy {
             }
         });
 
-        fromEvent(element, 'mousedown').pipe(
-            filter((downEvent: MouseEvent) => downEvent.buttons === 1),
-            takeUntil(this.destroyed$)
-        ).subscribe((downEvent: MouseEvent) => {
-            const clickedColumn = this.getColumnFromHTMLElement(downEvent.target as HTMLElement);
-
-            fromEvent(element, 'mouseup').pipe(
-                first(),
-                filter(() => !!clickedColumn),
-                takeUntil(this.destroyed$)
-            ).subscribe((upEvent: MouseEvent) => {
-                const columnElement = this.getColumnElementFromHTMLElement(upEvent.target as HTMLElement);
-                if ((columnElement && columnElement.getAttribute('colname')) === clickedColumn.name) {
-                    this.currentColumn = clickedColumn;
-                }
-            });
-        });
+        const mouseDownEvent$ = fromEvent(element, 'mousedown') as Observable<MouseEvent>;
+        mouseDownEvent$.pipe(
+            filter(downEvent => downEvent.buttons === 1),
+            switchMap(downEvent => {
+                const clickedColumn = this.getColumnFromHTMLElement(downEvent.target as HTMLElement);
+                const mouseUpEvent$ = fromEvent(element, 'mouseup') as Observable<MouseEvent>;
+                return mouseUpEvent$.pipe(
+                    first(),
+                    filter(() => !!clickedColumn),
+                    tap(upEvent => {
+                        const columnElement = this.getColumnElementFromHTMLElement(upEvent.target as HTMLElement);
+                        if ((columnElement && columnElement.getAttribute('colname')) === clickedColumn.name) {
+                            this.currentColumn = clickedColumn;
+                        }
+                    })
+                );
+            }),
+            takeUntil(this.destroyed$),
+        ).subscribe();
     }
 
     // get accessor

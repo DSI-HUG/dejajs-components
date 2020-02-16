@@ -291,7 +291,7 @@ export abstract class ItemListBase extends Destroy {
         this.sort$(name).pipe(
             take(1),
             takeUntil(this.destroyed$)
-        ).subscribe(() => { });
+        ).subscribe();
     }
 
     /** Trie la liste par le champs spécifié. */
@@ -382,7 +382,7 @@ export abstract class ItemListBase extends Destroy {
         this.calcViewList$().pipe(
             take(1),
             takeUntil(this.destroyed$)
-        ).subscribe(() => { });
+        ).subscribe();
     }
 
     /** Recalcule le viewport. */
