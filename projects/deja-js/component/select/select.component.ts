@@ -240,7 +240,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
 
         this.fm.monitor(elementRef.nativeElement, true).pipe(
             takeUntil(this.destroyed$)
-        ).subscribe((origin) => {
+        ).subscribe(origin => {
             this._focused = !!origin;
             this.stateChanges.next();
         });
@@ -255,7 +255,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
 
         mediaService.isMobile$.pipe(
             takeUntil(this.destroyed$)
-        ).subscribe((value) => {
+        ).subscribe(value => {
             this.isMobile = value;
             this.changeDetectorRef.markForCheck();
         });
@@ -291,14 +291,14 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
 
         from(this.storeScrollPosition$).pipe(
             takeUntil(this.destroyed$)
-        ).subscribe((scrollPos) => {
+        ).subscribe(scrollPos => {
             this.viewPort.scrollPosition$.next(scrollPos);
             this.lastScrollPosition = scrollPos;
         });
 
         from(this.hideDropDown$).pipe(
             filter(() => this.dropdownVisible),
-            delayWhen((time) => timer(time || 0)),
+            delayWhen(time => timer(time || 0)),
             takeUntil(this.destroyed$)
         ).subscribe(() => {
             delete this.selectingItemIndex;
@@ -894,7 +894,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
         fromEvent(this.htmlInputElement, 'click').pipe(
             filter(() => !this.dropdownVisible && !this.disabled),
             takeUntil(this.destroyed$)
-        ).subscribe((event: Event) => {
+        ).subscribe(event => {
             if (this.isModeSelect) {
                 this.showDropDown();
             } else {
@@ -908,7 +908,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
             delay(10),
             filter(() => this.htmlInputElement === document.activeElement),
             takeUntil(this.destroyed$)
-        ).subscribe((event: Event) => {
+        ).subscribe(event => {
             if (this.isModeSelect) {
                 this.showDropDown();
             } else {
@@ -1296,7 +1296,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
             this.toggleSelect$([item], false).pipe(
                 first(),
                 takeUntil(this.destroyed$)
-            ).subscribe((selectedItems) => {
+            ).subscribe(selectedItems => {
                 const selected = [...selectedItems];
                 this.setSelectedItems(selected);
                 this.onModelChange(selected);
@@ -1379,7 +1379,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
             this.toggleSelect$([item], true).pipe(
                 first(),
                 takeUntil(this.destroyed$)
-            ).subscribe((selectedItems) => {
+            ).subscribe(selectedItems => {
                 const selected = selectedItems ? [...selectedItems] : [];
                 this.setSelectedItems(selected);
                 this.onModelChange(selected);

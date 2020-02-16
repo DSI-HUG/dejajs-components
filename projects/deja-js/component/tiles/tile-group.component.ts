@@ -51,12 +51,9 @@ export class DejaTileGroupComponent extends Destroy {
         from(this.edit$).pipe(
             filter(() => this._designMode),
             debounceTime(100),
+            filter(() => !!this.editor),
             takeUntil(this.destroyed$)
-        ).subscribe(() => {
-            if (this.editor) {
-                this.editor.setFocus();
-            }
-        });
+        ).subscribe(() => this.editor.setFocus());
     }
 
     @Input()
@@ -134,12 +131,9 @@ export class DejaTileGroupComponent extends Destroy {
             this.changeDetectorRef.markForCheck();
             // Put this action on the browser queue to execute it after the editor became visible
             timer(100).pipe(
+                filter(() => !!this.editor),
                 takeUntil(this.destroyed$)
-            ).subscribe(() => {
-                if (this.editor) {
-                    this.editor.setFocus();
-                }
-            });
+            ).subscribe(() => this.editor.setFocus());
         }
     }
 
@@ -175,7 +169,7 @@ export class DejaTileGroupComponent extends Destroy {
 
         this.dejaPopupService.openAdvanced$(config).pipe(
             takeUntil(this.destroyed$)
-        ).subscribe((res) => {
+        ).subscribe(res => {
             if (!res.accepted) {
                 this.model.borderColor = backup.borderColor;
                 this.model.borderDirection = backup.borderDirection;

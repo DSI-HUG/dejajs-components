@@ -307,10 +307,10 @@ export class DejaGridComponent extends Destroy {
                 this.calcColumnsLayout(this._rows);
             } else {
                 this.viewPortChanged.pipe(
-                    filter((vp) => vp && vp.items && vp.items.length > 0),
+                    filter(vp => vp?.items?.length > 0),
                     first(),
                     takeUntil(this.destroyed$)
-                ).subscribe((vp) => this.calcColumnsLayout(vp.items));
+                ).subscribe(vp => this.calcColumnsLayout(vp.items));
             }
         }
         this.changeDetectorRef.markForCheck();
@@ -418,7 +418,7 @@ export class DejaGridComponent extends Destroy {
                     return this._columnGroups = columnGroups;
                 }
             }),
-            map((columnGroups) => {
+            map(columnGroups => {
                 const groupInfos = [] as IGroupInfo[];
                 const sortInfos = this.treeListComponent.sortInfos;
                 columnGroups.forEach((column) => {
@@ -432,15 +432,15 @@ export class DejaGridComponent extends Destroy {
                 });
                 return groupInfos;
             }),
-            switchMap((groupInfos) => this.treeListComponent.group$(groupInfos).pipe(map(() => groupInfos))),
+            switchMap(groupInfos => this.treeListComponent.group$(groupInfos).pipe(map(() => groupInfos))),
             takeUntil(this.destroyed$)
-        ).subscribe((groupInfos) => {
+        ).subscribe(groupInfos => {
             this.groupChanged.emit(groupInfos);
             this.changeDetectorRef.markForCheck();
         });
 
         from(this.columns$).pipe(
-            tap((columns) => this._columns = columns),
+            tap(columns => this._columns = columns),
             debounceTime(1),
             takeUntil(this.destroyed$)
         ).subscribe(() => this.calcColumnsLayout());

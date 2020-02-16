@@ -38,7 +38,7 @@ export class DejaMouseDragDropCursorComponent extends Destroy {
 
         from(this.position$).pipe(
             takeUntil(this.destroyed$)
-        ).subscribe((pos) => {
+        ).subscribe(pos => {
             element.style.left = pos ? `${pos.left}px` : '-1000px';
             element.style.top = pos ? `${pos.top}px` : '-1000px';
         });
@@ -90,7 +90,7 @@ export class DejaMouseDragDropCursorComponent extends Destroy {
             }),
             delay(1),
             takeUntil(this.destroyed$)
-        ).subscribe((dragCursor) => {
+        ).subscribe(dragCursor => {
             if (!!dragCursor.html && this.contentElement) {
                 this.contentElement.style.opacity = '1';
             }
@@ -98,7 +98,7 @@ export class DejaMouseDragDropCursorComponent extends Destroy {
 
         from(this.dragDropService.dragCursor$).pipe(
             takeUntil(this.destroyed$)
-        ).subscribe((dragCursor) => {
+        ).subscribe(dragCursor => {
             if (!!dragCursor !== !!this._dragCursor) {
                 this._dragCursor = dragCursor;
             }
@@ -121,9 +121,7 @@ export class DejaMouseDragDropCursorComponent extends Destroy {
 
         from(this.dragDropService.dropCursor$).pipe(
             takeUntil(this.destroyed$)
-        ).subscribe((dropCursor) => {
-            this._dropCursor = dropCursor;
-        });
+        ).subscribe(dropCursor => this._dropCursor = dropCursor);
     }
 
     private get iconElement() {

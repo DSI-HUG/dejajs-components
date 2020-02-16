@@ -173,17 +173,14 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
             tap((subColorIndex) => this._selectedSubIndex = subColorIndex));
 
         merge(hilightedSubIndex$, selectedSubIndex$).pipe(
+            filter(() => !!this._subColorFabs),
             takeUntil(this.destroyed$)
-        ).subscribe((subColorIndex) => {
-            if (this._subColorFabs) {
-                this._subColorFabs.forEach((colorFab, index) => colorFab.active = index === subColorIndex);
-            }
-        });
+        ).subscribe((subColorIndex) => this._subColorFabs.forEach((colorFab, index) => colorFab.active = index === subColorIndex));
 
         fromEvent(element, 'mousemove').pipe(
-            filter((_event) => !this._disabled),
+            filter(() => !this._disabled),
             takeUntil(this.destroyed$)
-        ).subscribe((event: Event) => {
+        ).subscribe(event => {
             const target = event.target as HTMLElement;
             const targetIndex = (<any>target.attributes)[DejaColorSelectorComponent.indexAttribute];
             if (target.hasAttribute('basecolor')) {
@@ -199,9 +196,9 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
         });
 
         fromEvent(element, 'click').pipe(
-            filter((_event) => !this._disabled),
+            filter(() => !this._disabled),
             takeUntil(this.destroyed$)
-        ).subscribe((event: Event) => {
+        ).subscribe(event => {
             const target = event.target as HTMLElement;
             if (target.hasAttribute('basecolor') || target.hasAttribute('subcolor')) {
                 this.value = Color.parse(target.style.backgroundColor);

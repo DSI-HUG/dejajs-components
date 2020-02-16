@@ -101,19 +101,19 @@ export class DejaTileComponent implements OnDestroy {
             ).subscribe(() => this.changeDetectorRef.markForCheck()));
 
             this.subscriptions.push(from(tile.selected$).pipe(
-                tap((value) => toogleAttribute('selected', value))
+                tap(value => toogleAttribute('selected', value))
             ).subscribe(() => this.changeDetectorRef.markForCheck()));
 
             this.subscriptions.push(from(tile.dragging$).pipe(
-                tap((value) => toogleAttribute('drag', value))
+                tap(value => toogleAttribute('drag', value))
             ).subscribe(() => this.changeDetectorRef.markForCheck()));
 
             this.subscriptions.push(from(tile.dropping$).pipe(
-                tap((value) => toogleAttribute('drop', value))
+                tap(value => toogleAttribute('drop', value))
             ).subscribe(() => this.changeDetectorRef.markForCheck()));
 
             this.subscriptions.push(from(tile.cutted$).pipe(
-                tap((value) => toogleAttribute('cutted', value))
+                tap(value => toogleAttribute('cutted', value))
             ).subscribe(() => this.changeDetectorRef.markForCheck()));
 
             this.subscriptions.push(from(tile.deleted$).pipe(
@@ -121,19 +121,19 @@ export class DejaTileComponent implements OnDestroy {
             ).subscribe(() => this.changeDetectorRef.markForCheck()));
 
             const tooogleHide$ = from(tile.hidden$).pipe(
-                tap((value) => toogleAttribute('hidden', value ? '1' : '2')));
+                tap(value => toogleAttribute('hidden', value ? '1' : '2')));
 
             // Hide
             this.subscriptions.push(tooogleHide$.pipe(
                 debounceTime(1000),
-                filter((value) => value),
+                filter(value => value),
                 tap(() => this.element.setAttribute('hidden', '0'))
             ).subscribe(() => this.changeDetectorRef.markForCheck()));
 
             // Show
             this.subscriptions.push(tooogleHide$.pipe(
                 debounceTime(1),
-                filter((value) => !value),
+                filter(value => !value),
                 tap(() => this.element.removeAttribute('hidden'))
             ).subscribe(() => this.changeDetectorRef.markForCheck()));
 

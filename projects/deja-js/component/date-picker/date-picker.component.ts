@@ -16,7 +16,7 @@ import { DateComponentLayout, DaysOfWeek, DejaDateSelectorComponent } from '@dej
 import { DejaChildValidatorDirective, DejaConnectionPositionPair, KeyCodes } from '@deja-js/core';
 import { _MatInputMixinBase } from '@deja-js/core/util';
 import * as moment_ from 'moment';
-import { combineLatest, from, fromEvent, merge, ReplaySubject, Subject, timer } from 'rxjs';
+import { combineLatest, from, fromEvent, merge, Observable, ReplaySubject, Subject, timer } from 'rxjs';
 import { delay, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { formatToMask, formatToUnitOfTime } from './format-to-mask';
 
@@ -230,10 +230,10 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
 
         const keydown$ = from(this.inputElement$).pipe(
             switchMap((element) => fromEvent(element, 'keydown'))
-        );
+        ) as Observable<KeyboardEvent>;
 
         const cursorChanged$ = from(this.inputElement$).pipe(
-            switchMap((element: HTMLInputElement) => {
+            switchMap(element => {
                 return merge(fromEvent(element, 'mouseup'), fromEvent(element, 'focus'), fromEvent(element, 'keyup')).pipe(
                     map(() => element.selectionStart)
                 );
@@ -242,14 +242,12 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
 
         cursorChanged$.pipe(
             takeUntil(this.destroyed$)
-        ).subscribe((position: number) => {
-            this.cursorPosition = position;
-        });
+        ).subscribe(position => this.cursorPosition = position);
 
         keydown$.pipe(
-            filter((event: KeyboardEvent) => !this.showDropDown && (event.code === KeyCodes.KeyD || event.code === KeyCodes.UpArrow || event.code === KeyCodes.DownArrow)),
+            filter(event => !this.showDropDown && (event.code === KeyCodes.KeyD || event.code === KeyCodes.UpArrow || event.code === KeyCodes.DownArrow)),
             takeUntil(this.destroyed$)
-        ).subscribe((event: KeyboardEvent) => {
+        ).subscribe(event => {
             switch (event.code) {
                 case (KeyCodes.KeyD):
                     if (!this.allowFreeEntry) {
@@ -315,7 +313,8 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
                 });
 
                 this._mask = mask;
-            }));
+            })
+        );
 
         const inputElement$ = this.inputElement$.pipe(
             delay(1),
@@ -331,12 +330,12 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
             filter(() => this.cursorPosition && !this.allowFreeEntry),
             switchMap(() => inputElement$),
             takeUntil(this.destroyed$),
-        ).subscribe((elem: HTMLInputElement) => elem.setSelectionRange(this.cursorPosition, this.cursorPosition)); // si la position du curseur était stockée, on la restaure apres avoir changé la valeur
+        ).subscribe(elem => elem.setSelectionRange(this.cursorPosition, this.cursorPosition)); // si la position du curseur était stockée, on la restaure apres avoir changé la valeur
 
         keydown$.pipe(
             filter(() => this.showDropDown),
             takeUntil(this.destroyed$)
-        ).subscribe((event: KeyboardEvent) => {
+        ).subscribe(event => {
             switch (event.code) {
                 case (KeyCodes.Escape):
                     this.close();

@@ -130,11 +130,11 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
 
         from(this.setQuery$).pipe(
             debounceTime(250),
-            tap((query) => {
+            switchMap(query => {
                 this.query = query;
                 this.setCurrentItem(undefined);
+                return this.calcViewList$();
             }),
-            switchMap(() => this.calcViewList$()),
             takeUntil(this.destroyed$)
         ).subscribe(() => { });
 

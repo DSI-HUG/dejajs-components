@@ -110,7 +110,7 @@ export class DejaOverlayComponent extends Destroy {
         mediaService.isMobile$.pipe(
             takeWhile(() => !this.disableMediaService),
             takeUntil(this.destroyed$)
-        ).subscribe((value) => {
+        ).subscribe(value => {
             this._isMobile = value;
             this.updateOriginOverlay();
             this.changeDetectorRef.markForCheck();

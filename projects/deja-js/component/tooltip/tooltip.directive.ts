@@ -32,7 +32,12 @@ export class DejaTooltipDirective extends Destroy {
         const leave$ = fromEvent(element, 'mouseleave');
 
         fromEvent(element, 'mouseenter').pipe(
-            switchMap((e) => of(e).pipe(delay(this.delay), takeUntil(leave$))),
+            switchMap(e => {
+                return of(e).pipe(
+                    delay(this.delay),
+                    takeUntil(leave$)
+                );
+            }),
             takeUntil(this.destroyed$)
         ).subscribe(() => {
             tooltipService.params[this.name] = {

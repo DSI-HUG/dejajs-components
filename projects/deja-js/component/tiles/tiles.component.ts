@@ -111,40 +111,40 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
 
         from(this.layoutProvider.selectionChanged).pipe(
             takeUntil(this.destroyed$)
-        ).subscribe((e) => this.selectionChanged.emit(e));
+        ).subscribe(event => this.selectionChanged.emit(event));
 
         from(this.layoutProvider.contentAdding).pipe(
             takeUntil(this.destroyed$)
-        ).subscribe((e) => this.contentAdding.emit(e));
+        ).subscribe(event => this.contentAdding.emit(event));
 
         from(this.layoutProvider.contentRemoving).pipe(
             takeUntil(this.destroyed$)
-        ).subscribe((e) => this.contentRemoving.emit(e));
+        ).subscribe(event => this.contentRemoving.emit(event));
 
         from(this.layoutProvider.tilesAdded).pipe(
             takeUntil(this.destroyed$)
-        ).subscribe((event) => {
+        ).subscribe(event => {
             this.tilesAdded.emit(event);
             this.onChangeCallback(event.tiles);
         });
 
         from(this.layoutProvider.tilesDeleted).pipe(
             takeUntil(this.destroyed$)
-        ).subscribe((event) => {
+        ).subscribe(event => {
             this.tilesDeleted.emit(event);
             this.onChangeCallback(event.tiles);
         });
 
         from(this.layoutProvider.layoutChanged).pipe(
             takeUntil(this.destroyed$)
-        ).subscribe((event) => {
+        ).subscribe(event => {
             this.layoutChanged.emit(event);
             this.onChangeCallback(event.tiles);
         });
 
         from(this.layoutProvider.layoutCompleted).pipe(
             takeUntil(this.destroyed$)
-        ).subscribe((event) => this.layoutCompleted.emit(event));
+        ).subscribe(event => this.layoutCompleted.emit(event));
 
         this.keyup$ = fromEvent(element.ownerDocument, 'keyup') as Observable<KeyboardEvent>;
 
@@ -202,8 +202,7 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
     public set canDelete(value: boolean) {
         if (coerceBooleanProperty(value) && !this.delete$sub) {
             this.delete$sub = this.keyup$.pipe(
-                filter(() => this.layoutProvider.designMode),
-                filter((event: KeyboardEvent) => event.code === KeyCodes.Delete && this.hasFocus),
+                filter(event => this.layoutProvider.designMode && event.code === KeyCodes.Delete && this.hasFocus),
                 takeUntil(this.destroyed$)
             ).subscribe(() => this.layoutProvider.deleteSelection());
 
@@ -217,11 +216,9 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
     public set canCopy(value: boolean) {
         if (coerceBooleanProperty(value) && !this.copy$sub) {
             this.copy$sub = this.keyup$.pipe(
-                filter((event: KeyboardEvent) => event.code === KeyCodes.KeyC && event.ctrlKey && this.hasFocus),
+                filter(event => event.code === KeyCodes.KeyC && event.ctrlKey && this.hasFocus),
                 takeUntil(this.destroyed$)
-            ).subscribe(() => {
-                this.copySelection();
-            });
+            ).subscribe(() => this.copySelection());
 
         } else if (this.copy$sub) {
             this.copy$sub.unsubscribe();
@@ -233,12 +230,9 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
     public set canCut(value: boolean) {
         if (coerceBooleanProperty(value) && !this.cut$sub) {
             this.cut$sub = this.keyup$.pipe(
-                filter(() => this.layoutProvider.designMode),
-                filter((event: KeyboardEvent) => event.code === KeyCodes.KeyX && event.ctrlKey && this.hasFocus),
+                filter(event => this.layoutProvider.designMode && event.code === KeyCodes.KeyX && event.ctrlKey && this.hasFocus),
                 takeUntil(this.destroyed$)
-            ).subscribe(() => {
-                this.cutSelection();
-            });
+            ).subscribe(() => this.cutSelection());
 
         } else if (this.cut$sub) {
             this.cut$sub.unsubscribe();
@@ -250,8 +244,7 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
     public set canPaste(value: boolean) {
         if (coerceBooleanProperty(value) && !this.paste$sub) {
             this.paste$sub = this.keyup$.pipe(
-                filter(() => this.layoutProvider.designMode),
-                filter((event: KeyboardEvent) => event.code === KeyCodes.KeyV && event.ctrlKey && this.hasFocus),
+                filter(event => this.layoutProvider.designMode && event.code === KeyCodes.KeyV && event.ctrlKey && this.hasFocus),
                 takeUntil(this.destroyed$)
             ).subscribe(() => this.paste());
 
