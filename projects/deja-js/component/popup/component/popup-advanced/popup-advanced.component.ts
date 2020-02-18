@@ -10,7 +10,7 @@ import { ComponentPortal, Portal } from '@angular/cdk/portal';
 import { AfterViewInit, Component, ElementRef, Inject, Injector, OnInit, Renderer2, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Subscription } from 'rxjs';
+import { Subscription, timer } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 import { DejaPopupAction } from '../../model/popup-action.model';
 import { DejaPopupBase } from '../../model/popup-base.class';
@@ -23,7 +23,6 @@ import { DejaPopupConfig } from '../../model/popup-config.model';
     templateUrl: 'popup-advanced.component.html',
 })
 export class DejaPopupAdvancedComponent extends DejaPopupBase implements AfterViewInit, OnInit {
-
     private left: number;
     private top: number;
     public dragstart = false;
@@ -59,9 +58,9 @@ export class DejaPopupAdvancedComponent extends DejaPopupBase implements AfterVi
         this.top = this.elRef.nativeElement.offsetTop;
 
         if (this.config.fullscreen) {
-            setTimeout(() => {
-                this.goFullScreen();
-            }, 0);
+            timer(0).pipe(
+                takeUntil(this.destroyed$)
+            ).subscribe(() => this.goFullScreen());
         }
     }
 
@@ -179,5 +178,4 @@ export class DejaPopupAdvancedComponent extends DejaPopupBase implements AfterVi
             left: `${this.left}px`,
         };
     }
-
 }

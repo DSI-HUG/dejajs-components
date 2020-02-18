@@ -746,7 +746,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
             tap(() => this.ensureSelection()),
             switchMap(() => this.calcViewList$()),
             takeUntil(this.destroyed$)
-        ).subscribe(() => { });
+        ).subscribe();
     }
 
     /** Définit la liste des éléments (tout type d'objet métier) */
@@ -757,7 +757,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
             tap(() => this.ensureSelection()),
             switchMap(() => this.calcViewList$()),
             takeUntil(this.destroyed$)
-        ).subscribe(() => { });
+        ).subscribe();
     }
 
     /** Retourne le nombre de niveau pour une liste hierarchique */
@@ -1129,7 +1129,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
         this.toggleAll$(collapsed).pipe(
             first(),
             takeUntil(this.destroyed$)
-        ).subscribe(() => { });
+        ).subscribe();
     }
 
     /** Change l'état d'expansion de la ligne spécifiée
@@ -1154,7 +1154,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
         this.toggleCollapse$(index, collapsed).pipe(
             first(),
             takeUntil(this.destroyed$)
-        ).subscribe(() => { });
+        ).subscribe();
     }
 
     public queryChanged(value: string) {

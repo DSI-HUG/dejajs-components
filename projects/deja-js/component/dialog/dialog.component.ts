@@ -34,13 +34,12 @@ export class DejaDialogComponent extends Destroy {
         const element = elementRef.nativeElement as HTMLElement;
 
         fromEvent(element.ownerDocument, 'keyup').pipe(
-            filter((event: KeyboardEvent) => !!(event.code === KeyCodes.Enter && this.okButton && this.okButton._elementRef) || !!(event.code === KeyCodes.Escape && this.cancelButton && this.cancelButton._elementRef)),
+            filter((event: KeyboardEvent) => !!(event.code === KeyCodes.Enter && this.okButton?._elementRef) || !!(event.code === KeyCodes.Escape && this.cancelButton?._elementRef)),
             takeUntil(this.destroyed$)
         ).subscribe((event: KeyboardEvent) => {
             if (event.code === KeyCodes.Enter) {
                 this.okButton._elementRef.nativeElement.click();
-            }
-            if (event.code === KeyCodes.Escape) {
+            } else if (event.code === KeyCodes.Escape) {
                 this.cancelButton._elementRef.nativeElement.click();
             }
         });

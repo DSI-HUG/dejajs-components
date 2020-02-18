@@ -10,6 +10,7 @@ import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, E
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Destroy } from '@deja-js/core';
 import * as _ from 'lodash';
+import { Subscription, timer } from 'rxjs';
 import { first, take, takeUntil } from 'rxjs/operators';
 import { DejaEditorService } from './deja-editor.service';
 
@@ -70,7 +71,7 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
 
     private _value = '';
     public instance: any;
-    public debounceTimeout: any;
+    public debounceTimeout$sub: Subscription;
 
     /**
      * Constructor
@@ -145,8 +146,12 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
     public ngAfterViewInit() {
         this._initializer.initDejaEditorLib().then(() => {
             this.ckeditorInit(_.cloneDeep(this.config) || {});
-            // Effectively display the editor even if parents component ChangeDetectionStrategy is OnPush
-            setTimeout(() => this._changeDetectorRef.markForCheck());
+            if (!this.destroyed$.closed) {
+                // Effectively display the editor even if parents component ChangeDetectionStrategy is OnPush
+                timer(0).pipe(
+                    takeUntil(this.destroyed$)
+                ).subscribe(() => this._changeDetectorRef.markForCheck());
+            }
         });
     }
 
@@ -193,7 +198,7 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
                 config.readOnly = this.readonly;
             }
 
-            const keyEvents = config.on && config.on.key;
+            const keyEvents = config.on?.key;
             if (!config.on) {
                 config.on = {};
             }
@@ -234,16 +239,16 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
 
             // CKEditor change event
             this.instance.on('change', () => {
-
                 // Debounce update
                 if (this.debounce) {
-                    if (this.debounceTimeout) {
-                        clearTimeout(this.debounceTimeout);
-                    }
-                    this.debounceTimeout = setTimeout(() => {
+                    const debounce = parseInt(this.debounce, 10);
+                    this.debounceTimeout$sub?.unsubscribe();
+                    this.debounceTimeout$sub = timer(debounce).pipe(
+                        takeUntil(this.destroyed$)
+                    ).subscribe(() => {
                         this.updateValue();
-                        this.debounceTimeout = null;
-                    }, parseInt(this.debounce, 10));
+                        this.debounceTimeout$sub = null;
+                    });
 
                     // Live update
                 } else {
@@ -271,13 +276,17 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
      */
     public writeValue(value: any) {
         this._value = value;
-        setTimeout(() => {
-            if (this.instance) {
-                this.instance.setData(value);
-            } else {
-                this.host.nativeElement.value = value;
-            }
-        }, 0);
+        if (!this.destroyed$.closed) {
+            timer(0).pipe(
+                takeUntil(this.destroyed$)
+            ).subscribe(() => {
+                if (this.instance) {
+                    this.instance.setData(value);
+                } else {
+                    this.host.nativeElement.value = value;
+                }
+            });
+        }
     }
 
     public onChange(_x: any) { }

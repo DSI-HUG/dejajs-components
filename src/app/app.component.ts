@@ -6,11 +6,12 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, ViewEncapsulation } from '@angular/core';
 import { IconService } from '@deja-js/core';
 import { Destroy } from '@deja-js/core';
 import { BehaviorSubject, from } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { DejaTextMetricsService } from '../../projects/deja-js/core/text-metrics/text-metrics.service';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,8 +25,10 @@ export class AppComponent extends Destroy {
     private _theme: string;
     private theme$: BehaviorSubject<string>;
 
-    constructor(iconService: IconService) {
+    constructor(iconService: IconService, elementRef: ElementRef, textMetrics: DejaTextMetricsService) {
         super();
+
+        textMetrics.metricsElem = elementRef.nativeElement;
 
         try {
             this._theme = localStorage.getItem('dejajs-demo-color');

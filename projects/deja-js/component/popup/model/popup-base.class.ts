@@ -59,9 +59,9 @@ export abstract class DejaPopupBase extends Destroy implements OnInit {
         if (this.config.dejaPopupCom$) {
             this.aSub.push(
                 this.config.dejaPopupCom$.pipe(
-                    filter((a: DejaPopupAction) => !!a && !!a.target && a.target === this.config.id),
-                    tap((a: DejaPopupAction) => this.doAction(a)),
-                    tap((action: DejaPopupAction) => {
+                    filter(a => !!a?.target && a.target === this.config.id),
+                    tap(a => this.doAction(a)),
+                    tap(action => {
                         this.actionSelected = action;
                         if (action.isFinalAction) {
                             this.dialogRef.close(action);
@@ -79,14 +79,11 @@ export abstract class DejaPopupBase extends Destroy implements OnInit {
             return false;
         }
 
-        if (this.config.dejaPopupCom$) {
-            this.config.dejaPopupCom$.next(action);
-        }
-
+        this.config?.dejaPopupCom$?.next(action);
     }
 
     protected destroy() {
-        this.aSub.forEach((s: Subscription) => s.unsubscribe());
+        this.aSub.forEach(s => s.unsubscribe());
     }
 
 }

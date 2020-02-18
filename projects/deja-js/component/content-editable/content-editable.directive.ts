@@ -11,7 +11,7 @@ import { Directive, ElementRef, HostBinding, Input, OnInit, Optional, Self } fro
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Destroy, KeyCodes } from '@deja-js/core';
 import { BehaviorSubject, from, fromEvent, Observable, timer } from 'rxjs';
-import { distinctUntilChanged, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, switchMap, take, takeUntil } from 'rxjs/operators';
 
 @Directive({
     selector: '[deja-editable]',
@@ -65,9 +65,7 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
                         this.focus();
                     });
                 }
-                return value;
-            }),
-            tap((value) => {
+
                 this._inEdition = value;
                 if (value) {
                     this.element.setAttribute('contenteditable', 'true');
@@ -75,6 +73,7 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
                     this.element.removeAttribute('contenteditable');
                 }
                 this.refreshView();
+                return value;
             })
         );
 

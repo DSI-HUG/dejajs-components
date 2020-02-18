@@ -134,10 +134,12 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
                 event.color = colorIndex ? this._colorFabs && this._colorFabs[colorIndex] && this._colorFabs[colorIndex].color : this.value;
                 this.colorhover.emit(event);
             }),
-            map((colorIndex) => colorIndex !== undefined ? colorIndex : this._selectedBaseIndex || 0));
+            map((colorIndex) => colorIndex !== undefined ? colorIndex : this._selectedBaseIndex || 0)
+        );
 
         const selectedBaseIndex$ = from(this.selectedBaseIndex$).pipe(
-            tap((colorIndex) => this._selectedBaseIndex = colorIndex));
+            tap((colorIndex) => this._selectedBaseIndex = colorIndex)
+        );
 
         this._subColorFabs$ = merge(hilightedBaseIndex$, selectedBaseIndex$).pipe(
             distinctUntilChanged(),
@@ -150,7 +152,8 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
             tap(() => element.setAttribute('sub-tr', '')),
             map((baseIndex) => this._colorFabs && this._colorFabs[baseIndex] && (this._colorFabs[baseIndex].color as MaterialColor).subColors),
             map((colors) => colors?.map((color, index) => new DejaColorFab(color, this._disabled, index === this._selectedSubIndex))),
-            tap((subColorFabs) => this._subColorFabs = subColorFabs));
+            tap((subColorFabs) => this._subColorFabs = subColorFabs)
+        );
 
         this._subColorFabs$.pipe(
             delay(100),
@@ -166,11 +169,13 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
                 event.color = subColorIndex !== undefined ? this._subColorFabs && this._subColorFabs[subColorIndex] && this._subColorFabs[subColorIndex].color : this.value;
                 this.colorhover.emit(event);
             }),
-            map((subColorIndex) => subColorIndex !== undefined ? subColorIndex : this._selectedSubIndex || 0));
+            map((subColorIndex) => subColorIndex !== undefined ? subColorIndex : this._selectedSubIndex || 0)
+        );
 
         const selectedSubIndex$ = from(this.selectedSubIndex$).pipe(
             distinctUntilChanged(),
-            tap((subColorIndex) => this._selectedSubIndex = subColorIndex));
+            tap((subColorIndex) => this._selectedSubIndex = subColorIndex)
+        );
 
         merge(hilightedSubIndex$, selectedSubIndex$).pipe(
             filter(() => !!this._subColorFabs),

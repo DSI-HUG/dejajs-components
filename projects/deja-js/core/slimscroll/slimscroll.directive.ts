@@ -418,12 +418,7 @@ export class DejaSlimScrollDirective extends Destroy implements OnInit, OnDestro
 
     private hideBar() {
         // only hide when options allow it
-        if (
-            !this._options.alwaysVisible
-            && !(this._options.disableFadeOut && this._isOverPanel)
-            && !this._isOverBar
-            && !this._isDragg
-        ) {
+        if (!this._options.alwaysVisible && !(this._options.disableFadeOut && this._isOverPanel) && !this._isOverBar && !this._isDragg) {
             this._queueHide = timer(1000).pipe(
                 first(),
                 filter(() => !this._queueHide),

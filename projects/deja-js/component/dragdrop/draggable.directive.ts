@@ -25,7 +25,7 @@ export class DejaDraggableDirective extends Destroy {
     @Input('deja-draggable')
     public set context(value: IDejaDragContext) {
         this._context = value;
-        this.draggable = !!value ? true : null;
+        this.draggable = !!value || null;
     }
 
     public get context() {
@@ -86,7 +86,7 @@ export class DejaDraggableDirective extends Destroy {
                 delete obj.dragged;
             }
 
-            if (this.context && this.context.dragendcallback && dragEndInfos) {
+            if (this.context?.dragendcallback && dragEndInfos) {
                 const e = evt as IDejaDragEvent;
                 e.dragInfo = dragEndInfos;
                 e.dragObject = obj;

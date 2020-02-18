@@ -604,9 +604,7 @@ export class ViewPortService extends Destroy {
         ).subscribe(viewPort => {
             // consoleLog(`viewPortResult final ${JSON.stringify(viewPort)}`);
             this.viewPortResult$.next(viewPort);
-        }, ((error) => {
-            console.error(error);
-        }));
+        }, (error => console.error(error)));
 
         // Cache last calculated viewport
         from(this.viewPortResult$).pipe(

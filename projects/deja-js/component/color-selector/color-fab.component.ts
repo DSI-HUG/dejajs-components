@@ -44,8 +44,8 @@ export class DejaColorFabComponent implements OnDestroy {
                 .subscribe(value => toogleAttribute('active', value)));
 
             this.subscriptions.push(combineLatest(colorFab.color$, colorFab.disabled$).pipe(
-                map(([color, disabled]) => color && disabled ? color.grayScale : color))
-                .subscribe(color => this.element.style.backgroundColor = color ? color.toHex() : ''));
+                map(([color, disabled]) => color && disabled ? color.grayScale : color)
+            ).subscribe(color => this.element.style.backgroundColor = color ? color.toHex() : ''));
 
         } else {
             this.subscriptions.forEach((subscription) => subscription.unsubscribe());

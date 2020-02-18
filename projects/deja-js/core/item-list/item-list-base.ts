@@ -109,9 +109,7 @@ export abstract class ItemListBase extends Destroy {
                 this.changeDetectorRef.markForCheck();
                 // console.log(viewPortResult);
 
-                if (this._viewPortChanged) {
-                    this._viewPortChanged.next(viewPortResult);
-                }
+                this._viewPortChanged?.next(viewPortResult);
 
                 return next;
             }),
@@ -479,7 +477,7 @@ export abstract class ItemListBase extends Destroy {
             this._itemListService.valueField = this._valueField;
             this.waiter$sub = from(this._itemListService.waiter$).pipe(
                 takeUntil(this.destroyed$)
-            ).subscribe((status: boolean) => {
+            ).subscribe(status => {
                 this._waiter = status;
                 this.changeDetectorRef.markForCheck();
             });

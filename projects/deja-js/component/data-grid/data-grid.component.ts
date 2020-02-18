@@ -309,8 +309,9 @@ export class DejaGridComponent extends Destroy {
                 this.viewPortChanged.pipe(
                     filter(vp => vp?.items?.length > 0),
                     first(),
+                    map(vp => vp.items),
                     takeUntil(this.destroyed$)
-                ).subscribe(vp => this.calcColumnsLayout(vp.items));
+                ).subscribe(items => this.calcColumnsLayout(items));
             }
         }
         this.changeDetectorRef.markForCheck();
@@ -409,6 +410,12 @@ export class DejaGridComponent extends Destroy {
 
         this.clearColumnLayout();
 
+        const group$ = (groupInfos: IGroupInfo[]) => {
+            return this.treeListComponent.group$(groupInfos).pipe(
+                map(() => groupInfos)
+            );
+        };
+
         combineLatest(this.columns$, this.columnGroups$).pipe(
             map(([columns, columnGroups]) => {
                 if (typeof columnGroups === 'string') {
@@ -432,7 +439,7 @@ export class DejaGridComponent extends Destroy {
                 });
                 return groupInfos;
             }),
-            switchMap(groupInfos => this.treeListComponent.group$(groupInfos).pipe(map(() => groupInfos))),
+            switchMap(group$),
             takeUntil(this.destroyed$)
         ).subscribe(groupInfos => {
             this.groupChanged.emit(groupInfos);
@@ -465,31 +472,29 @@ export class DejaGridComponent extends Destroy {
             filter(() => this.hasPercentageColumns),
             debounceTime(5),
             takeUntil(this.destroyed$)
-        ).subscribe(() => {
-            this.calcColumnsLayout();
-        });
+        ).subscribe(() => this.calcColumnsLayout());
 
-        fromEvent(element, 'keydown').pipe(
+        const keyDown$ = fromEvent(element, 'keydown') as Observable<KeyboardEvent>;
+        keyDown$.pipe(
             takeUntil(this.destroyed$)
-        ).subscribe((event: KeyboardEvent) => {
-            const findPrev = (index: number) => {
-                if (index === -1) {
-                    index = this.columns.length;
-                }
-                while (--index >= 0) {
-                    const column = this.columns[index];
-                    if (column.w > 0) {
-                        return column;
+        ).subscribe(event => {
+            const find = (index: number, backward: boolean) => {
+                if (backward) {
+                    if (index === -1) {
+                        index = this.columns.length;
                     }
-                }
-                return this.currentColumn;
-            };
-
-            const findNext = (index: number) => {
-                while (++index < this.columns.length) {
-                    const column = this.columns[index];
-                    if (column.w > 0) {
-                        return column;
+                    while (--index >= 0) {
+                        const column = this.columns[index];
+                        if (column.w > 0) {
+                            return column;
+                        }
+                    }
+                } else {
+                    while (++index < this.columns.length) {
+                        const column = this.columns[index];
+                        if (column.w > 0) {
+                            return column;
+                        }
                     }
                 }
                 return this.currentColumn;
@@ -497,12 +502,8 @@ export class DejaGridComponent extends Destroy {
 
             switch (event.code) {
                 case KeyCodes.LeftArrow:
-                    this.currentColumn = this.columns && findPrev(this.columns.findIndex((c) => c.isCurrent));
-                    event.preventDefault();
-                    return false;
-
                 case KeyCodes.RightArrow:
-                    this.currentColumn = this.columns && findNext(this.columns.findIndex((c) => c.isCurrent));
+                    this.currentColumn = this.columns && find(this.columns.findIndex(c => c.isCurrent), event.code === KeyCodes.LeftArrow);
                     event.preventDefault();
                     return false;
 
@@ -737,7 +738,7 @@ export class DejaGridComponent extends Destroy {
         this.treeListComponent.ungroup$(groupInfo).pipe(
             first(),
             takeUntil(this.destroyed$)
-        ).subscribe(() => { });
+        ).subscribe();
     }
 
     public onGroupsChanged(e: IDejaGridGroupsEvent) {

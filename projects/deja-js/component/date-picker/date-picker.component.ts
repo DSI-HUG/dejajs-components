@@ -336,14 +336,10 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
             filter(() => this.showDropDown),
             takeUntil(this.destroyed$)
         ).subscribe(event => {
-            switch (event.code) {
-                case (KeyCodes.Escape):
-                    this.close();
-                    break;
-
-                default:
-                    this.dateSelectorComponent.keyDown(event);
-
+            if (event.code === KeyCodes.Escape) {
+                this.close();
+            } else {
+                this.dateSelectorComponent.keyDown(event);
             }
         });
 
@@ -609,9 +605,10 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
 
     /** Reset date-picker values. */
     public reset() {
+        // To prevent "ExpressionChangedAfterItHasBeenCheckedError"
         timer(0).pipe(
             takeUntil(this.destroyed$)
-        ).subscribe(() => { // To prevent "ExpressionChangedAfterItHasBeenCheckedError"
+        ).subscribe(() => {
             this.value = undefined;
             delete this._inputModel;
         });

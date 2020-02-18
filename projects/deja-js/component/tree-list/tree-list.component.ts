@@ -136,7 +136,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                 return this.calcViewList$();
             }),
             takeUntil(this.destroyed$)
-        ).subscribe(() => { });
+        ).subscribe();
 
         const selectItems$ = combineLatest(this.selectItems$, this.contentInitialized$).pipe(
             map(([value]) => value),
@@ -462,7 +462,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                 }
             }),
             takeUntil(this.destroyed$)
-        ).subscribe(() => { });
+        ).subscribe();
     }
 
     /**
@@ -513,7 +513,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
             first(),
             switchMap(() => this.calcViewList$()),
             takeUntil(this.destroyed$)
-        ).subscribe(() => { });
+        ).subscribe();
     }
 
     /** Permet de désactiver la liste */
@@ -618,7 +618,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
         this.toggleAll$(collapsed).pipe(
             first(),
             takeUntil(this.destroyed$)
-        ).subscribe(() => { });
+        ).subscribe();
     }
 
     /** Positionne a scrollbar pour assurer que l'élément spécifié soit visible */
@@ -668,7 +668,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                 first(),
                 switchMap(() => this.calcViewList$()),
                 takeUntil(this.destroyed$)
-            ).subscribe(() => { });
+            ).subscribe();
         }
 
         fromEvent(this.listElement, 'scroll').pipe(
@@ -684,9 +684,9 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                 return scrollTop;
             }),
             takeUntil(this.destroyed$)
-        ).subscribe((scrollPos) => this.viewPort.scrollPosition$.next(scrollPos));
+        ).subscribe(scrollPos => this.viewPort.scrollPosition$.next(scrollPos));
 
-        let keyDown$ = fromEvent(this.listElement, 'keydown');
+        let keyDown$ = fromEvent(this.listElement, 'keydown') as Observable<KeyboardEvent>;
         if (this.input) {
             const inputKeyDown$ = fromEvent(this.input.nativeElement, 'keydown') as Observable<KeyboardEvent>;
             keyDown$ = merge(keyDown$, inputKeyDown$);
@@ -694,7 +694,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
 
         keyDown$.pipe(
             filter(() => !this.disabled),
-            filter((event: KeyboardEvent) => {
+            filter(event => {
                 const keyCode = event.code;
                 return keyCode === KeyCodes.Home ||
                     keyCode === KeyCodes.End ||
@@ -705,8 +705,8 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                     keyCode === KeyCodes.Space ||
                     keyCode === KeyCodes.Enter;
             }),
-            switchMap((event) => this.ensureListCaches$().pipe(map(() => event))),
-            switchMap((event: KeyboardEvent) => {
+            switchMap(event => this.ensureListCaches$().pipe(map(() => event))),
+            switchMap(event => {
                 if (!this.rowsCount) {
                     return of(null);
                 }
@@ -841,10 +841,10 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
             }
         });
 
-        let keyUp$: Observable<Event> = fromEvent(this.listElement, 'keyup');
+        let keyUp$ = fromEvent(this.listElement, 'keyup') as Observable<KeyboardEvent>;
         if (this.input) {
-            const inputKeyup$: Observable<Event> = fromEvent(this.input.nativeElement, 'keyup');
-            const inputDrop$: Observable<Event> = fromEvent(this.input.nativeElement, 'drop');
+            const inputKeyup$ = fromEvent(this.input.nativeElement, 'keyup') as Observable<KeyboardEvent>;
+            const inputDrop$ = fromEvent(this.input.nativeElement, 'drop') as Observable<KeyboardEvent>;
             keyUp$ = merge(keyUp$, inputKeyup$, inputDrop$);
         }
 
@@ -857,14 +857,14 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                     return;
                 }
             }),
-            filter((event: KeyboardEvent) => {
+            filter(event => {
                 const keyCode = event.code;
                 return keyCode >= KeyCodes.Key0 ||
                     keyCode === KeyCodes.Backspace ||
                     keyCode === KeyCodes.Space ||
                     keyCode === KeyCodes.Delete;
             }),
-            switchMap((event: KeyboardEvent) => {
+            switchMap(event => {
                 if (!this.searchArea) {
                     if ((/[a-zA-Z0-9]/).test(event.key)) {
                         // Valid char
@@ -1020,7 +1020,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                 this.calcViewList$().pipe(
                     first(),
                     takeUntil(this.destroyed$)
-                ).subscribe(() => { }); // Comment this line to debug dragdrop
+                ).subscribe(); // Comment this line to debug dragdrop
             },
             dragstartcallback: (event: IDejaDragEvent) => {
                 const targetIndex = this.getItemIndexFromHTMLElement(event.target as HTMLElement);
@@ -1065,7 +1065,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                     }
                 }),
                 takeUntil(this.destroyed$)
-            ).subscribe(() => { });
+            ).subscribe();
 
             event.preventDefault();
             return;
@@ -1080,7 +1080,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                 this.drop$().pipe(
                     switchMap(() => this.calcViewList$().pipe(first())),
                     takeUntil(this.destroyed$)
-                ).subscribe(() => { });
+                ).subscribe();
                 event.preventDefault();
             },
         };
@@ -1099,7 +1099,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
             this.calcViewList$().pipe(
                 first(),
                 takeUntil(this.destroyed$)
-            ).subscribe(() => { });
+            ).subscribe();
         }
     }
 

@@ -16,7 +16,7 @@ export class Destroy implements OnDestroy {
     protected destroyed$ = new Subject();
 
     public ngOnDestroy() {
-        if (!this.destroyed$) {
+        if (this.destroyed$.closed) {
             // Observable already unsubscribed
             // tslint:disable-next-line: no-debugger
             debugger;
@@ -25,6 +25,5 @@ export class Destroy implements OnDestroy {
 
         this.destroyed$.next();
         this.destroyed$.unsubscribe();
-        this.destroyed$ = null;
     }
 }

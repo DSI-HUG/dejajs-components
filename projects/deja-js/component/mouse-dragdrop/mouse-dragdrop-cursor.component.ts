@@ -47,8 +47,8 @@ export class DejaMouseDragDropCursorComponent extends Destroy {
 
         // Hide
         cursor$.pipe(
-            filter((dragCursor) => !dragCursor),
-            tap((dragCursor) => {
+            filter(dragCursor => !dragCursor),
+            tap(dragCursor => {
                 if (this._currentCursor && this.contentElement && this.iconElement) {
                     this.contentElement.style.opacity = '0';
                     this.iconElement.style.opacity = '0';
@@ -64,8 +64,8 @@ export class DejaMouseDragDropCursorComponent extends Destroy {
 
         // Show
         cursor$.pipe(
-            filter((dragCursor) => !!dragCursor),
-            tap((dragCursor) => {
+            filter(dragCursor => !!dragCursor),
+            tap(dragCursor => {
                 element.style.display = '';
                 if (this.contentElement && this.iconElement) {
                     this.contentElement.style.opacity = '0';
@@ -73,8 +73,8 @@ export class DejaMouseDragDropCursorComponent extends Destroy {
                 }
                 this._currentCursor = dragCursor;
             }),
-            filter((dragCursor) => !dragCursor.className || dragCursor.className !== 'hidden'),
-            tap((dragCursor) => {
+            filter(dragCursor => !dragCursor.className || dragCursor.className !== 'hidden'),
+            tap(dragCursor => {
                 if (!!dragCursor.html) {
                     element.className = dragCursor.className;
                     if (this.contentElement && this.iconElement) {

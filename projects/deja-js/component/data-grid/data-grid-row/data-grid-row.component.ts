@@ -51,8 +51,7 @@ export class DejaGridRowComponent implements OnDestroy {
         };
 
         if (this._columnLayout.refresh$) {
-            this.refresh$sub = from(this._columnLayout.refresh$)
-                .subscribe(() => this.changeDetectorRef.markForCheck());
+            this.refresh$sub = from(this._columnLayout.refresh$).subscribe(() => this.changeDetectorRef.markForCheck());
         }
     }
 

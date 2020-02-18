@@ -155,16 +155,16 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
         };
 
         this.animate$sub = from(this.animate$).pipe(
-            tap((animation) => applyParams(animation.before)),
+            tap(animation => applyParams(animation.before)),
             delay(1),
-            tap((animation) => {
+            tap(animation => {
                 this.host.style.transitionDuration = `${animation.duration}ms`;
                 this.host.style.transitionTimingFunction = animation.easing;
                 this.host.style.transitionProperty = Object.keys(animation.before).join(',');
             }),
-            debounce((animation) => timer(animation.delay || 1)),
-            tap((animation) => applyParams(animation.after)),
-            debounce((animation) => timer(animation.duration)),
+            debounce(animation => timer(animation.delay || 1)),
+            tap(animation => applyParams(animation.after)),
+            debounce(animation => timer(animation.duration)),
             takeUntil(this.destroyed$)
         ).subscribe(() => {
             this.host.style.transitionDuration = '';
@@ -248,9 +248,9 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
         // check if snackbars have to move (if they were created after the one deleted)
         if (!!DejaSnackbarComponent.instances.length) {
             DejaSnackbarComponent.instances
-                .filter((instance: DejaSnackbarComponent) => this.outerContainerElement === instance.outerContainerElement)
-                .filter((instance: DejaSnackbarComponent) => this.anchor === instance.anchor)
-                .forEach((instance) => {
+                .filter(instance => this.outerContainerElement === instance.outerContainerElement)
+                .filter(instance => this.anchor === instance.anchor)
+                .forEach(instance => {
                     if (instance.timestamp > this.timestamp) {
                         instance.launchAdaptAnimation(this.height);
                     }
@@ -258,7 +258,7 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
         }
         // remove the soon to be destroyed snackbar from the instances array
         DejaSnackbarComponent.instances = DejaSnackbarComponent.instances
-            .filter((instance: DejaSnackbarComponent) => this !== instance);
+            .filter(instance => this !== instance);
 
         this.animate$sub.unsubscribe();
     }

@@ -180,13 +180,11 @@ export class DejaTilesLayoutProvider extends Destroy {
             this.container.style.width = `${width}px`;
             this.container.style.height = `${height}px`;
 
-            if (params) {
-                if (params.ensureVisible) {
-                    this.ensureVisible$.next(params.ensureVisible);
-                }
-                if (params.ensureBounds) {
-                    this.ensureBounds$.next(params.ensureBounds);
-                }
+            if (params?.ensureVisible) {
+                this.ensureVisible$.next(params.ensureVisible);
+            }
+            if (params?.ensureBounds) {
+                this.ensureBounds$.next(params.ensureBounds);
             }
 
             this.selectedTiles = selectedTileIds;
@@ -869,7 +867,7 @@ export class DejaTilesLayoutProvider extends Destroy {
                     }),
                     delay(1000),
                     takeUntil(this.destroyed$)
-                ).subscribe(tile => { tile.isDropping = false; });
+                ).subscribe(tile => tile.isDropping = false);
             }
 
             changed = this.tiles.filter((t) => !Rect.equals(t.percentBounds, this.originalLayout[t.id]?.bounds));

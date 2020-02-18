@@ -184,9 +184,7 @@ export class DejaOverlayComponent extends Destroy {
     }
 
     public updatePosition() {
-        if (this.overlay && this.overlay.overlayRef) {
-            this.overlay.overlayRef.updatePosition();
-        }
+        this.overlay?.overlayRef?.updatePosition();
     }
 
     /** Affiche le dialog. */
@@ -201,9 +199,7 @@ export class DejaOverlayComponent extends Destroy {
         timer(1).pipe(
             first(),
             takeUntil(this.destroyed$)
-        ).subscribe(() => {
-            this.updatePosition();
-        });
+        ).subscribe(() => this.updatePosition());
     }
 
     /** Ferme le dialog. */

@@ -7,8 +7,8 @@
  */
 
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, from, Observable, Subject } from 'rxjs';
-import { delay, filter, first, map, takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, from, Observable, range, Subject } from 'rxjs';
+import { delay, filter, first, map, switchMap, takeUntil, toArray } from 'rxjs/operators';
 import { Destroy } from '../destroy/destroy';
 
 /**
@@ -31,15 +31,14 @@ export class DejaTextMetricsService extends Destroy {
         from(this.element$).pipe(
             delay(1),
             first(),
+            switchMap(element => {
+                return range(0, 255).pipe(
+                    map(i => this.getTextWidth(String.fromCharCode(i), element)),
+                    toArray()
+                );
+            }),
             takeUntil(this.destroyed$)
-        ).subscribe(element => {
-            const charSize = [];
-            for (let i = 0; i < 255; i++) {
-                const c = String.fromCharCode(i);
-                charSize[i] = this.getTextWidth(c, element);
-            }
-            this.charSize$.next(charSize);
-        });
+        ).subscribe(charSize => this.charSize$.next(charSize));
     }
 
     /** Setter for base element */
@@ -78,7 +77,7 @@ export class DejaTextMetricsService extends Destroy {
     public getTextMaxWidth(texts: string[], elem: HTMLElement): number {
         let maxWidth = 0;
 
-        texts.forEach((text: string) => {
+        texts.forEach(text => {
             const width = this.getTextWidth(text, elem);
             if (width > maxWidth) {
                 maxWidth = width;
@@ -98,7 +97,7 @@ export class DejaTextMetricsService extends Destroy {
      */
     public getTextHeight(maxWidth: number, text: string): Observable<number> {
         return this.getNumberOfLines(maxWidth, text).pipe(
-            map((numberOfLines: number) => {
+            map(numberOfLines => {
                 const computedLineHeight = parseInt(this.computedStyles.lineHeight.replace('px', ''), 10);
                 const lineHeight = (!isNaN(computedLineHeight)) ?
                     computedLineHeight :
@@ -118,9 +117,8 @@ export class DejaTextMetricsService extends Destroy {
      */
     private getNumberOfLines(maxWidth: number, text: string): Observable<number> {
         return this.charSize$.pipe(
-            filter((charSize) => charSize !== null),
-            map((charSize) => {
-
+            filter(charSize => charSize !== null),
+            map(charSize => {
                 let tmpSize = 0;
                 let numberOfLines = 1;
                 let averageCharSize = 0;
