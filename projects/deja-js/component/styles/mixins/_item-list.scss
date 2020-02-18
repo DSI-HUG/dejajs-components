@@ -30,7 +30,7 @@
 			cursor: pointer;
 		}
 
-		&[parent="true"] {
+		&.parent {
 			&.collapsed {
 				#expandbtn {
 					>.mat-icon {
