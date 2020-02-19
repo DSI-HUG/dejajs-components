@@ -360,20 +360,20 @@ export class DejaEditorComponent
             // So we temporarily deactivate it
             const focus = this.instance.focus;
             this.instance.focus = () => { };
-            this.instance.insertText(replace);
+            this.instance.insertHtml(replace);
             this.instance.focus = focus;
             return;
         }
         const range = this.instance.getSelection().getRanges(true)[0];
         if (!range) {
-            this.instance.insertText(replace);
+            this.instance.insertHtml(replace);
             return;
         }
         const text = this._firstTextNode(range);
         if (text) {
             this._replaceWord(text, replace);
         } else {
-            this.instance.insertText(replace);
+            this.instance.insertHtml(replace);
         }
         this.updateValue();
         this.setFocus();
@@ -569,10 +569,10 @@ export class DejaEditorComponent
             const afterText = node.textNode.getText().substring(index + node.toReplace.length);
             node.textNode.setText(beforeText);
             const newElement = CKEDITOR.dom.element.createFromHtml(
-                `<span>${CKEDITOR.tools.transformPlainTextToHtml(
+                CKEDITOR.tools.htmlDecode(CKEDITOR.tools.transformPlainTextToHtml(
                     replace,
                     CKEDITOR.ENTER_BR
-                )}</span>`
+                ))
             );
             newElement.insertAfter(node.textNode);
             if (node.textNode.getText().substring(index + node.toReplace.length)) {
