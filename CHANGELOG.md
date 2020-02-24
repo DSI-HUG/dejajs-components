@@ -6,6 +6,14 @@
   *  Preserve html formatting on text insertion (DEJS-786) ([d457ba8e](https://github.com/DSI-HUG/dejajs-components/commit/d457ba8e43a2747d8067a15c8b4d0b5f75aaba30))
   *  Preserve html formatting on text insertion (DEJS-786) ([23cfcdb9](https://github.com/DSI-HUG/dejajs-components/commit/23cfcdb9dcfed410ed7165fa92978651f908f6a1))
 
+## 1.0.0 (2020-02-24)
+
+##### Bug Fixes
+
+* **DejaEditor:**
+  *  Preserve html formatting on text insertion (DEJS-786) ([d457ba8e](https://github.com/DSI-HUG/dejajs-components/commit/d457ba8e43a2747d8067a15c8b4d0b5f75aaba30))
+  *  Preserve html formatting on text insertion (DEJS-786) ([23cfcdb9](https://github.com/DSI-HUG/dejajs-components/commit/23cfcdb9dcfed410ed7165fa92978651f908f6a1))
+
 #### 0.0.1 (2020-02-07)
 
 ##### New Features
