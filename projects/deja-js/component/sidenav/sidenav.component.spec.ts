@@ -23,7 +23,7 @@ describe('DejaSidenavComponent', () => {
             imports: [
                 RouterTestingModule,
                 BrowserAnimationsModule,
-                DejaSidenavModule.forRoot(),
+                DejaSidenavModule,
             ],
             schemas: [NO_ERRORS_SCHEMA],
         }).compileComponents();

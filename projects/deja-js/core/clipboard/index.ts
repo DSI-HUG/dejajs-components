@@ -6,19 +6,9 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ModuleWithProviders, NgModule } from '@angular/core';
-import { DejaClipboardService } from './clipboard.service';
+import { NgModule } from '@angular/core';
 
-@NgModule({
-    providers: [DejaClipboardService],
-})
-export class DejaClipboardModule {
-    public static forRoot(): ModuleWithProviders {
-        return {
-            ngModule: DejaClipboardModule,
-            providers: [ DejaClipboardService ],
-        };
-    }
-}
+@NgModule()
+export class DejaClipboardModule { }
 
 export * from './clipboard.service';

@@ -21,6 +21,10 @@ export * from './slimscroll/index';
 export * from './sorting/index';
 export * from './text-metrics/index';
 export * from './validation/index';
-
+export * from './destroy/index';
 export * from './keycodes.enum';
 export * from './UUID';
+
+if (!document.doctype) {
+    console.warn('[DejaJS] Current document does not have a doctype. This may cause some components not to behave as expected.');
+}

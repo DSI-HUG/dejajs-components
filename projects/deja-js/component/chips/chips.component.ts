@@ -9,13 +9,7 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Component, ContentChild, EventEmitter, HostBinding, Input, Optional, Output, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-
-const noop = () => { };
-
-export interface IDejaChipsComponentCloseEvent extends CustomEvent {
-    item: any;
-    index: number;
-}
+import { IDejaChipsComponentCloseEvent } from './chips-close.event';
 
 @Component({
     selector: 'deja-chips',
@@ -39,22 +33,22 @@ export class DejaChipsComponent implements ControlValueAccessor {
 
     @Output() public close = new EventEmitter<IDejaChipsComponentCloseEvent>();
 
-    protected onTouchedCallback: () => void = noop;
-    protected onChangeCallback: (_: any) => void = noop;
-
     @HostBinding('attr.disabled') public _disabled: boolean = null;
 
-    @ContentChild('itemTemplate', { static: false }) private itemTemplateInternal: any;
+    @ContentChild('itemTemplate') private itemTemplateInternal: any;
 
-    @ContentChild('insertTemplate', { static: false }) private insertTemplateInternal: any;
+    @ContentChild('insertTemplate') private insertTemplateInternal: any;
+
+    private _readonly = false;
+
+    protected onTouchedCallback = (_a: any) => { };
+    protected onChangeCallback = (_a: any) => { };
 
     constructor(@Self() @Optional() public _control: NgControl) {
         if (this._control) {
             this._control.valueAccessor = this;
         }
     }
-
-    private _readonly = false;
 
     /** Lecture seule */
     @Input()

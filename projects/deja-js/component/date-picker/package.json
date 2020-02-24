@@ -1,11 +1,17 @@
 {
-  "ngPackage": {
-    "lib": {
-      "entryFile": "./index.ts"
+    "ngPackage": {
+        "lib": {
+            "entryFile": "./index.ts",
+            "umdModuleIds": {
+                "@deja-js/core": "@deja-js/core",
+                "@deja-js/core/util": "@deja-js/core/util",
+                "angular2-text-mask": "angular2-text-mask",
+                "moment": "moment"
+            }
+        }
+    },
+    "peerDependencies": {
+        "angular2-text-mask": "8.0.5",
+        "moment": "2.22.2"
     }
-  },
-  "peerDependencies": {
-    "angular2-text-mask": "8.0.5",
-    "moment": "2.22.2"
-  }
 }

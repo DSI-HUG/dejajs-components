@@ -130,11 +130,10 @@ describe('DejaMessageBoxComponent', () => {
 
         it('should display a button without class if action has no icon and a text', () => {
             component.actions = [
-                {text: 'Yes', 'type': 'info', action: () => {}, icon: null}
+                {text: 'Yes', action: () => {}, icon: null}
             ];
             component.ngOnInit = () => {}; // Prevent ngOnInit to set an icon from type
             fixture.detectChanges();
-
             const el = fixture.debugElement.query(By.css('mat-card-actions > span > button')).nativeElement;
             expect(el.className).toBeFalsy();
         });

@@ -7,10 +7,11 @@
  */
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Component, ContentChild, ElementRef, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
-import { DejaConnectionPositionPair, Position, Rect, } from '@deja-js/core';
-import { from as observableFrom, fromEvent as observableFromEvent, Observable } from 'rxjs';
+import { DejaConnectionPositionPair, Destroy, Position, Rect, } from '@deja-js/core';
+import { from, fromEvent, Observable } from 'rxjs';
 import { debounceTime, delay, filter, map, takeUntil, tap } from 'rxjs/operators';
-import { DejaTooltipService, ITooltipParams } from './tooltip.service';
+import { ITooltipParams } from './tooltip-params.interface';
+import { DejaTooltipService } from './tooltip.service';
 
 /**
  * Customizable tooltip component for Angular
@@ -23,7 +24,7 @@ import { DejaTooltipService, ITooltipParams } from './tooltip.service';
         './tooltip.component.scss',
     ],
 })
-export class DejaTooltipComponent implements OnInit {
+export class DejaTooltipComponent extends Destroy implements OnInit {
     /**
      * This position config ensures that the top "start" corner of the overlay
      * is aligned with with the top "start" of the origin by default (overlapping
@@ -74,7 +75,7 @@ export class DejaTooltipComponent implements OnInit {
     /** Event Emmited when hide action is called */
     @Output() public hide = new EventEmitter();
     /** Template for tooltip content */
-    @ContentChild('tooltipTemplate', { static: false })
+    @ContentChild('tooltipTemplate')
     public tooltipTemplate: any;
 
     /** Parameters of the tooltip */
@@ -111,12 +112,14 @@ export class DejaTooltipComponent implements OnInit {
      * Subscribe to mouseover to know when tooltip must disappear.
      */
     constructor(elementRef: ElementRef, private tooltipService: DejaTooltipService) {
+        super();
+
         const element = elementRef.nativeElement as HTMLElement;
 
-        const hide$ = observableFrom(this.hide).pipe(
+        const hide$ = from(this.hide).pipe(
             tap(() => this._model = undefined));
 
-        observableFromEvent(element.ownerDocument, 'mousemove').pipe(
+        fromEvent(element.ownerDocument, 'mousemove').pipe(
             takeUntil(hide$),
             debounceTime(100),
             map((event: MouseEvent) => new Position(event.pageX, event.pageY)),
@@ -142,11 +145,12 @@ export class DejaTooltipComponent implements OnInit {
                 const ownerRect = new Rect(ownerElement.getBoundingClientRect());
                 return !ownerRect.containsPoint(position);
             }),
-            delay(300))
-            .subscribe(() => {
-                this.hide.emit();
-                this.overlayVisible = false;
-            });
+            delay(300),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => {
+            this.hide.emit();
+            this.overlayVisible = false;
+        });
     }
 
     /**
@@ -165,7 +169,9 @@ export class DejaTooltipComponent implements OnInit {
             this._model = undefined;
             this.overlayVisible = true;
         } else if (model$.subscribe) {
-            model$.subscribe((model) => {
+            model$.pipe(
+                takeUntil(this.destroyed$)
+            ).subscribe(model => {
                 this._model = model;
                 this.overlayVisible = true;
             }, () => {

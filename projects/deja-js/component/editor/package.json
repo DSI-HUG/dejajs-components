@@ -1,10 +1,14 @@
 {
-  "ngPackage": {
-    "lib": {
-      "entryFile": "./index.ts"
+    "ngPackage": {
+        "lib": {
+            "entryFile": "./index.ts",
+            "umdModuleIds": {
+                "lodash": "lodash",
+                "@deja-js/core/util": "@deja-js/core/util"
+            }
+        }
+    },
+    "peerDependencies": {
+        "ckeditor": "4.10.1"
     }
-  },
-  "peerDependencies": {
-    "ckeditor": "4.10.1"
-  }
 }

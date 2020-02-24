@@ -12,9 +12,9 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DejaClipboardModule, GroupingService, ItemListService, IViewPort, SortingService, ViewPortService } from '@deja-js/core';
+import { GroupingService, ItemListService, IViewPort, KeyCodes, SortingService, ViewPortService } from '@deja-js/core';
 import * as _ from 'lodash';
-import { from as observableFrom, timer as observableTimer } from 'rxjs';
+import { from, timer } from 'rxjs';
 import { debounceTime, delay, filter, first, tap } from 'rxjs/operators';
 import { IDejaGridColumn, IDejaGridColumnLayoutEvent } from './data-grid-column/data-grid-column';
 import { DejaGridComponent } from './data-grid.component';
@@ -418,8 +418,7 @@ describe('DejaGridComponent', () => {
                 BrowserAnimationsModule,
                 CommonModule,
                 FormsModule,
-                DejaGridModule,
-                DejaClipboardModule.forRoot(),
+                DejaGridModule
             ],
         }).compileComponents();
 
@@ -433,7 +432,7 @@ describe('DejaGridComponent', () => {
     }));
 
     const observeViewPort$ = () => {
-        return observableFrom(gridInstance.viewPort.viewPortResult$).pipe(
+        return from(gridInstance.viewPort.viewPortResult$).pipe(
             filter((result: IViewPort) => result.viewPortSize > 0));
     };
 
@@ -665,7 +664,7 @@ describe('DejaGridComponent', () => {
             const event = new MouseEvent('mousedown', eventInit());
             element.nativeElement.dispatchEvent(event);
             fixture.detectChanges();
-            observableTimer(100).pipe(
+            timer(100).pipe(
                 first())
                 .subscribe(() => {
                     const upEvent = new MouseEvent('mouseup', eventInit());
@@ -732,7 +731,7 @@ describe('DejaGridComponent', () => {
             const event = new MouseEvent('mousedown', eventInit());
             element.nativeElement.dispatchEvent(event);
             fixture.detectChanges();
-            observableTimer(100).pipe(
+            timer(100).pipe(
                 first(),
                 tap(() => {
                     const ei = eventInit();
@@ -844,19 +843,19 @@ describe('DejaGridComponent', () => {
                 switch (++pass) {
                     case 1:
                         expect(currentCells.length).toBe(0);
-                        sendKeyDown('RightArrow');
+                        sendKeyDown(KeyCodes.RightArrow);
                         break;
 
                     case 2:
                         expect(currentCells.length).toBeGreaterThan(0);
                         expect(currentCells[0] && currentCells[0].attributes.colindex).toBe('0');
-                        sendKeyDown('RightArrow');
+                        sendKeyDown(KeyCodes.RightArrow);
                         break;
 
                     case 3:
                         expect(currentCells.length).toBeGreaterThan(0);
                         expect(currentCells[0] && currentCells[0].attributes.colindex).toBe('1');
-                        sendKeyDown('LeftArrow');
+                        sendKeyDown(KeyCodes.LeftArrow);
                         break;
 
                     default:
@@ -891,7 +890,7 @@ describe('DejaGridComponent', () => {
             dataTransfer: new DataTransfer(),
         } as MouseEventInit);
 
-        observableFrom(gridInstance.columnLayoutChanged)
+        from(gridInstance.columnLayoutChanged)
             .subscribe((layout: IDejaGridColumnLayoutEvent) => {
                 // Bind view port
                 const columnHeaders = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header .column-header-wrapper'));
@@ -902,7 +901,7 @@ describe('DejaGridComponent', () => {
                         expect(layout.column.name).toEqual('name');
                         expect(layout.target.name).toEqual('VitaminA');
 
-                        observableTimer(10).pipe(
+                        timer(10).pipe(
                             first(),
                             tap(() => {
                                 const enterEventInit = eventInit();
@@ -954,7 +953,7 @@ describe('DejaGridComponent', () => {
                 expect(vp.items.length).toBe(12);
                 expect(columnHeaders.length).toBeGreaterThan(0);
                 if (columnHeaders.length) {
-                    observableTimer(10).pipe(
+                    timer(10).pipe(
                         first(),
                         tap(() => {
                             const event = new DragEvent('dragstart', eventInit() as any);
@@ -1010,14 +1009,14 @@ describe('DejaGridComponent', () => {
             dataTransfer: new DataTransfer(),
         } as MouseEventInit);
 
-        observableFrom(gridInstance.columnLayoutChanged)
+        from(gridInstance.columnLayoutChanged)
             .subscribe((layout: IDejaGridColumnLayoutEvent) => {
                 fixture.detectChanges();
                 const columnHeaders = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header .column-header-wrapper'));
 
                 expect(layout.column.name).toEqual('name');
                 expect(layout.target.name).toEqual('VitaminA');
-                observableTimer(10).pipe(
+                timer(10).pipe(
                     first(),
                     tap(() => {
                         const leaveEventInit = eventInit();
@@ -1046,7 +1045,7 @@ describe('DejaGridComponent', () => {
                 expect(vp.items.length).toBe(12);
                 expect(columnHeaders.length).toBeGreaterThan(0);
                 if (columnHeaders.length) {
-                    observableTimer(10).pipe(
+                    timer(10).pipe(
                         first(),
                         tap(() => {
                             dragHeaderElement = columnHeaders[1].nativeElement;
@@ -1115,7 +1114,7 @@ describe('DejaGridComponent', () => {
                 const chipsDraggable = fixture.debugElement.queryAll(By.css('deja-grid > deja-grid-grouparea > #deja-grid-grouparea > deja-chips span[draggable]'));
 
                 const invertGroups = () => {
-                    observableTimer(10).pipe(
+                    timer(10).pipe(
                         first(),
                         tap(() => {
                             const dragGroupElement = chipsDraggable[0].nativeElement;
@@ -1158,7 +1157,7 @@ describe('DejaGridComponent', () => {
                         expect(vp.items.length).toBe(12);
                         expect(columnHeaders.length).toBeGreaterThan(0);
                         if (columnHeaders.length) {
-                            observableTimer(10).pipe(
+                            timer(10).pipe(
                                 first(),
                                 tap(() => {
                                     dragHeaderElement = columnHeaders[1].nativeElement;
@@ -1194,7 +1193,7 @@ describe('DejaGridComponent', () => {
                         expect(chipsDraggable.length).toBe(1);
                         expect(chipsDraggable[0].nativeElement.innerText).toEqual('Name');
                         // Drag a second column to the group area
-                        observableTimer(10).pipe(
+                        timer(10).pipe(
                             first(),
                             tap(() => {
                                 dragHeaderElement = columnHeaders[0].nativeElement;

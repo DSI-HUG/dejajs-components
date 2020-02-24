@@ -6,10 +6,9 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ModuleWithProviders, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { DejaMouseDragDropCursorComponent } from './mouse-dragdrop-cursor.component';
-import { DejaMouseDragDropService } from './mouse-dragdrop.service';
 import { DejaMouseDraggableDirective } from './mouse-draggable.directive';
 import { DejaMouseDroppableDirective } from './mouse-droppable.directive';
 
@@ -25,20 +24,16 @@ import { DejaMouseDroppableDirective } from './mouse-droppable.directive';
     exports: [
         DejaMouseDraggableDirective,
         DejaMouseDroppableDirective,
-        DejaMouseDragDropCursorComponent
+        DejaMouseDragDropCursorComponent,
     ],
     providers: [],
 })
-export class DejaMouseDragDropModule {
-    public static forRoot(): ModuleWithProviders {
-        return {
-            ngModule: DejaMouseDragDropModule,
-            providers: [DejaMouseDragDropService],
-        };
-    }
-}
+export class DejaMouseDragDropModule { }
 
-export * from './mouse-dragdrop.service';
 export * from './mouse-draggable.directive';
 export * from './mouse-droppable.directive';
 export * from './mouse-dragdrop-cursor.component';
+export * from './mouse-drop-cursor-infos.interface';
+export * from './mouse-drag-cursor-infos.interface';
+export * from './mouse-dragdrop-context.interface';
+export * from './mouse-dragdrop.service';

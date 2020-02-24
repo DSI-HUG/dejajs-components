@@ -7,14 +7,15 @@
  */
 
 import { Injectable } from '@angular/core';
-import {BehaviorSubject,  from as observableFrom ,  Observable ,  Subject } from 'rxjs';
-import {delay, filter, first, map} from 'rxjs/operators';
+import { BehaviorSubject, from, Observable, range, Subject } from 'rxjs';
+import { delay, filter, first, map, switchMap, takeUntil, toArray } from 'rxjs/operators';
+import { Destroy } from '../destroy/destroy';
 
 /**
  * Service to measure the theorical size of a text inside a container
  */
 @Injectable()
-export class DejaTextMetricsService {
+export class DejaTextMetricsService extends Destroy {
     private canvas: HTMLCanvasElement;
     private element$: Subject<HTMLElement> = new Subject();
     private computedStyles: CSSStyleDeclaration;
@@ -25,17 +26,19 @@ export class DejaTextMetricsService {
      * Add observable to wait for element to be set. And then take its properties to measure all ASCII char size.
      */
     constructor() {
-        observableFrom(this.element$).pipe(
+        super();
+
+        from(this.element$).pipe(
             delay(1),
-            first())
-            .subscribe((element) => {
-                const charSize = [];
-                for (let i = 0; i < 255; i++) {
-                    const c = String.fromCharCode(i);
-                    charSize[i] = this.getTextWidth(c, element);
-                }
-                this.charSize$.next(charSize);
-            });
+            first(),
+            switchMap(element => {
+                return range(0, 255).pipe(
+                    map(i => this.getTextWidth(String.fromCharCode(i), element)),
+                    toArray()
+                );
+            }),
+            takeUntil(this.destroyed$)
+        ).subscribe(charSize => this.charSize$.next(charSize));
     }
 
     /** Setter for base element */
@@ -74,7 +77,7 @@ export class DejaTextMetricsService {
     public getTextMaxWidth(texts: string[], elem: HTMLElement): number {
         let maxWidth = 0;
 
-        texts.forEach((text: string) => {
+        texts.forEach(text => {
             const width = this.getTextWidth(text, elem);
             if (width > maxWidth) {
                 maxWidth = width;
@@ -94,7 +97,7 @@ export class DejaTextMetricsService {
      */
     public getTextHeight(maxWidth: number, text: string): Observable<number> {
         return this.getNumberOfLines(maxWidth, text).pipe(
-            map((numberOfLines: number) => {
+            map(numberOfLines => {
                 const computedLineHeight = parseInt(this.computedStyles.lineHeight.replace('px', ''), 10);
                 const lineHeight = (!isNaN(computedLineHeight)) ?
                     computedLineHeight :
@@ -114,9 +117,8 @@ export class DejaTextMetricsService {
      */
     private getNumberOfLines(maxWidth: number, text: string): Observable<number> {
         return this.charSize$.pipe(
-            filter((charSize) => charSize !== null),
-            map((charSize) => {
-
+            filter(charSize => charSize !== null),
+            map(charSize => {
                 let tmpSize = 0;
                 let numberOfLines = 1;
                 let averageCharSize = 0;

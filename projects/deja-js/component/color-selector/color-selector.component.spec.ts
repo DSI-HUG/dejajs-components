@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { DejaOverlayModule } from '@deja-js/component/overlay';
 import { Color, MaterialColors } from '@deja-js/core';
-import { timer as observableTimer } from 'rxjs';
+import { timer } from 'rxjs';
 import { DejaColorFab } from './color-fab.class';
 import { DejaColorSelectorComponent } from './color-selector.component';
 import { DejaColorSelectorModule } from './index';
@@ -128,7 +128,7 @@ describe('DejaColorSelector', () => {
             sendMouseEvent(elements[8].nativeElement, 'mousemove', 5, 5);
 
             fixture.detectChanges();
-            observableTimer(200).subscribe(() => {
+            timer(200).subscribe(() => {
                 const activeElements = fixture.debugElement.queryAll(By.css('deja-color-fab[active]'));
                 expect(activeElements.length).toBe(2);
                 const colorFab = activeElements[0].componentInstance._colorFab as DejaColorFab;

@@ -11,8 +11,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DejaConnectionPositionPair, DejaItemModule, GroupingService, IItemBase, IItemTree, ISortInfos, ItemListService, SortingService, ViewPortService } from '@deja-js/core';
-import { from as observableFrom, Observable, of as observableOf, timer as observableTimer } from 'rxjs';
+import { DejaConnectionPositionPair, DejaItemModule, GroupingService, IItemBase, IItemTree, ISortInfos, ItemListService, KeyCodes, SortingService, ViewPortService } from '@deja-js/core';
+import { from, Observable, of, timer } from 'rxjs';
 import { debounceTime, delay, filter, first, tap } from 'rxjs/operators';
 import { DejaSelectModule } from './index';
 import { DejaSelectComponent } from './select.component';
@@ -138,13 +138,13 @@ describe('DejaSelectComponent', () => {
 
     const observeViewPort$ = (fixture: ComponentFixture<DejaSelectContainerComponent>) => {
         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
-        const viewPortService = selectDebugElement.injector.get(ViewPortService) as ViewPortService;
+        const viewPortService = selectDebugElement.injector.get(ViewPortService);
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
 
-        observableFrom(selectInstance.dropDownVisibleChange)
+        from(selectInstance.dropDownVisibleChange)
             .subscribe(() => fixture.detectChanges());
 
-        return observableFrom(viewPortService.viewPortResult$).pipe(
+        return from(viewPortService.viewPortResult$).pipe(
             filter((result) => result.viewPortSize > 0));
     };
 
@@ -232,19 +232,19 @@ describe('DejaSelectComponent', () => {
         expect(myItemListService.getGroupingService()).toBe(groupingService);
 
         const listService = myItemListService as any;
-        const loadingItems = () => observableOf([]);
+        const loadingItems = () => of([]);
         selectInstance.loadingItems = loadingItems;
         expect(listService.loadingItems$).toBe(loadingItems);
-        const selectingItem = () => observableOf([]);
+        const selectingItem = () => of([]);
         selectInstance.selectingItem = selectingItem;
         expect(listService.selectingItem$).toBe(selectingItem);
-        const unselectingItem = () => observableOf([]);
+        const unselectingItem = () => of([]);
         selectInstance.unselectingItem = unselectingItem;
         expect(listService.unselectingItem$).toBe(unselectingItem);
-        const expandingItem = () => observableOf([]);
+        const expandingItem = () => of([]);
         selectInstance.expandingItem = expandingItem;
         expect(listService.expandingItem$).toBe(expandingItem);
-        const collapsingItem = () => observableOf([]);
+        const collapsingItem = () => of([]);
         selectInstance.collapsingItem = collapsingItem;
         expect(listService.collapsingItem$).toBe(collapsingItem);
 
@@ -266,14 +266,14 @@ describe('DejaSelectComponent', () => {
         const fixture = TestBed.createComponent(DejaSelectContainerComponent);
         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
-        const viewPortService = selectDebugElement.injector.get(ViewPortService) as ViewPortService;
-        const sl = selectInstance as DejaSelectComponent;
+        const viewPortService = selectDebugElement.injector.get(ViewPortService);
+        const sl = selectInstance;
 
         fixture.detectChanges();
 
-        observableFrom(fixture.whenStable())
+        from(fixture.whenStable())
             .subscribe(() => {
-                observableFrom(selectInstance.dropDownVisibleChange).pipe(
+                from(selectInstance.dropDownVisibleChange).pipe(
                     tap((state) => {
                         fixture.detectChanges();
                         switch (++pass) {
@@ -300,7 +300,7 @@ describe('DejaSelectComponent', () => {
                         }
                     });
 
-                observableFrom(viewPortService.viewPortResult$).pipe(
+                from(viewPortService.viewPortResult$).pipe(
                     debounceTime(100),
                     first())
                     .subscribe((vp) => {
@@ -326,64 +326,63 @@ describe('DejaSelectComponent', () => {
 
         fixture.detectChanges();
 
-        observableFrom(fixture.whenStable())
+        from(fixture.whenStable())
             .subscribe(() => {
                 observeViewPort$(fixture).pipe(
-                    debounceTime(20))
-                    .subscribe((vp) => {
-                        // Bind view port
-                        fixture.detectChanges();
-                        const collapsed = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem.parent.collapsed'));
-                        const collapsedItems = vp.items.filter((item: IItemTree) => item.collapsed);
-                        const parentItems = vp.items.filter((item: IItemTree) => item.depth === 0);
+                    debounceTime(20)
+                ).subscribe((vp) => {
+                    fixture.detectChanges(); // Bind view port
+                    const collapsed = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem.parent.collapsed'));
+                    const collapsedItems = vp.items.filter((item: IItemTree) => item.collapsed);
+                    const parentItems = vp.items.filter((item: IItemTree) => item.depth === 0);
 
-                        switch (++pass) {
-                            case 1:
-                                expect(collapsed.length).toBe(0);
-                                expect(collapsedItems.length).toBe(0);
-                                // Toggle all items
-                                selectInstance.toggleAll();
-                                selectInstance.refreshViewPort();
-                                fixture.detectChanges();
-                                break;
+                    switch (++pass) {
+                        case 1:
+                            expect(collapsed.length).toBe(0);
+                            expect(collapsedItems.length).toBe(0);
+                            // Toggle all items
+                            selectInstance.toggleAll();
+                            selectInstance.refreshViewPort();
+                            fixture.detectChanges();
+                            break;
 
-                            case 2:
-                                // Check collapsed items
-                                expect(collapsed.length).toBeGreaterThan(0);
-                                expect(collapsedItems.length).toBe(parentItems.length);
-                                // Toggle all items
-                                selectInstance.toggleAll();
-                                selectInstance.refreshViewPort();
-                                fixture.detectChanges();
-                                break;
+                        case 2:
+                            // Check collapsed items
+                            expect(collapsedItems.length).toBe(parentItems.length);
+                            expect(collapsed.length).toBeGreaterThan(0);
+                            // Toggle all items
+                            selectInstance.toggleAll();
+                            selectInstance.refreshViewPort();
+                            fixture.detectChanges();
+                            break;
 
-                            case 3:
-                                // Check collapsed items
-                                expect(collapsed.length).toBe(0);
-                                expect(collapsedItems.length).toBe(0);
-                                // Toogle only first
-                                selectInstance.toggleCollapse(0, true);
-                                selectInstance.refreshViewPort();
-                                fixture.detectChanges();
-                                break;
+                        case 3:
+                            // Check collapsed items
+                            expect(collapsedItems.length).toBe(0);
+                            expect(collapsed.length).toBe(0);
+                            // Toogle only first
+                            selectInstance.toggleCollapse(0, true);
+                            selectInstance.refreshViewPort();
+                            fixture.detectChanges();
+                            break;
 
-                            case 4:
-                                // Check collapsed items
-                                expect(collapsed.length).toBe(1);
-                                expect(collapsedItems.length).toBe(1);
-                                // Clear toogle
-                                selectInstance.toggleAll(false);
-                                selectInstance.refreshViewPort();
-                                fixture.detectChanges();
-                                break;
+                        case 4:
+                            // Check collapsed items
+                            expect(collapsed.length).toBe(1);
+                            expect(collapsedItems.length).toBe(1);
+                            // Clear toogle
+                            selectInstance.toggleAll(false);
+                            selectInstance.refreshViewPort();
+                            fixture.detectChanges();
+                            break;
 
-                            default:
-                                // Check no collapsed
-                                expect(collapsed.length).toBe(0);
-                                expect(collapsedItems.length).toBe(0);
-                                done();
-                        }
-                    });
+                        default:
+                            // Check no collapsed
+                            expect(collapsed.length).toBe(0);
+                            expect(collapsedItems.length).toBe(0);
+                            done();
+                    }
+                });
 
                 sl.showDropDown();
 
@@ -401,12 +400,12 @@ describe('DejaSelectComponent', () => {
 
         fixture.detectChanges();
 
-        observableFrom(fixture.whenStable())
+        from(fixture.whenStable())
             .subscribe(() => {
-                observableFrom(selectInstance.dropDownVisibleChange)
+                from(selectInstance.dropDownVisibleChange)
                     .subscribe(() => fixture.detectChanges());
 
-                observableFrom(viewPortService.viewPortResult$).pipe(
+                from(viewPortService.viewPortResult$).pipe(
                     debounceTime(10))
                     .subscribe((vp) => {
                         // Bind view port
@@ -570,10 +569,10 @@ describe('DejaSelectByOptionsContainerComponent', () => {
 
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
 
-        observableFrom(selectInstance.dropDownVisibleChange)
+        from(selectInstance.dropDownVisibleChange)
             .subscribe(() => fixture.detectChanges());
 
-        return observableFrom(viewPortService.viewPortResult$).pipe(
+        return from(viewPortService.viewPortResult$).pipe(
             filter((result) => {
                 return result.viewPortSize > 0;
             }));
@@ -589,10 +588,10 @@ describe('DejaSelectByOptionsContainerComponent', () => {
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
-            observableFrom(selectInstance.dropDownVisibleChange)
+            from(selectInstance.dropDownVisibleChange)
                 .subscribe(() => fixture.detectChanges());
 
-            observableFrom(viewPortService.viewPortResult$).pipe(
+            from(viewPortService.viewPortResult$).pipe(
                 debounceTime(100),
                 first())
                 .subscribe((vp) => {
@@ -676,7 +675,7 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                             expect(selectedItems.length).toBe(0, 'Check no selected 1-2');
                             expect(selectedChips.length).toBe(0, 'Check no selected 1-3');
                             // Current on first line by keydown
-                            sendKeyDown('DownArrow');
+                            sendKeyDown(KeyCodes.DownArrow);
                             break;
 
                         case 2:
@@ -686,7 +685,7 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                             expect(currentElement && currentElement.attributes.flat).toBe('0', 'Check selection 2-3');
                             expect(selectedChips.length).toBe(0, 'Check selection 2-4');
                             // Current on second line by keydown
-                            sendKeyDown('DownArrow');
+                            sendKeyDown(KeyCodes.DownArrow);
                             break;
 
                         case 3:
@@ -696,7 +695,7 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                             expect(currentElement && currentElement.attributes.flat).toBe('1', 'Check selection 3-3');
                             expect(selectedChips.length).toBe(0, 'Check selection 3-4');
                             // Current on first line by keyup
-                            sendKeyDown('UpArrow');
+                            sendKeyDown(KeyCodes.UpArrow);
                             break;
 
                         case 4:
@@ -749,9 +748,9 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                             // Select the lines with Enter
                             sendKeyDown('Enter');
 
-                            observableFrom(selectInstance.dropDownVisibleChange).pipe(
+                            from(selectInstance.dropDownVisibleChange).pipe(
                                 first(),
-                                delay(10))
+                                delay(1000))
                                 .subscribe(() => {
                                     sl.htmlInputElement.click();
                                 });
@@ -766,7 +765,7 @@ describe('DejaSelectByOptionsContainerComponent', () => {
 
                             // Select first line with enter in single select
                             selectInstance.type = 'select';
-                            sendKeyDown('DownArrow');
+                            sendKeyDown(KeyCodes.DownArrow);
                             break;
 
                         default:
@@ -811,7 +810,7 @@ describe('DejaSelectByOptionsContainerComponent', () => {
             const event = new MouseEvent('mousedown', eventInit());
             element.nativeElement.dispatchEvent(event);
             fixture.detectChanges();
-            observableTimer(100).pipe(
+            timer(100).pipe(
                 first())
                 .subscribe(() => {
                     const upEvent = new MouseEvent('mouseup', eventInit());
@@ -842,7 +841,7 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                     selectInstance.disabled = true;
                     fixture.detectChanges();
 
-                    observableFrom(selectInstance.selectedChange).pipe(
+                    from(selectInstance.selectedChange).pipe(
                         first())
                         .subscribe(() => {
                             expect(selectInstance.selectedItems && selectInstance.selectedItems.length).toBe(1);

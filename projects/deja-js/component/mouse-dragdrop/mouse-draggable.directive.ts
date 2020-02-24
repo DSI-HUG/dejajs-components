@@ -6,18 +6,19 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Directive, ElementRef, Input, OnDestroy } from '@angular/core';
-import { Position, Rect } from '@deja-js/core';
-import { fromEvent as observableFromEvent, merge as observableMerge, Observable, Subject } from 'rxjs';
-import { filter, first, takeUntil, takeWhile, tap } from 'rxjs/operators';
-import { DejaMouseDragDropService, IDragCursorInfos, IDragDropContext } from './mouse-dragdrop.service';
+import { Directive, ElementRef, Input } from '@angular/core';
+import { Destroy, Position, Rect } from '@deja-js/core';
+import { fromEvent, merge, Observable, of, Subject } from 'rxjs';
+import { filter, first, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { IDragCursorInfos } from './mouse-drag-cursor-infos.interface';
+import { IDragDropContext } from './mouse-dragdrop-context.interface';
+import { DejaMouseDragDropService } from './mouse-dragdrop.service';
 
 @Directive({
     selector: '[deja-mouse-draggable]',
 })
-export class DejaMouseDraggableDirective implements OnDestroy {
+export class DejaMouseDraggableDirective extends Destroy {
     private _context: IDejaMouseDraggableContext;
-    private isAlive = true;
 
     @Input('deja-mouse-draggable')
     public set context(value: IDejaMouseDraggableContext) {
@@ -29,61 +30,25 @@ export class DejaMouseDraggableDirective implements OnDestroy {
     }
 
     constructor(elementRef: ElementRef, dragDropService: DejaMouseDragDropService) {
+        super();
+
         const element = elementRef.nativeElement as HTMLElement;
 
-        const leave$ = observableFromEvent(element, 'mouseleave');
+        const mouseLeaveEvent$ = fromEvent(element, 'mouseleave') as Observable<MouseEvent>;
+        const mouseUpEvent$ = fromEvent(element.ownerDocument, 'mouseup') as Observable<MouseEvent>;
+        const mouseDownEvent$ = fromEvent(element, 'mousedown') as Observable<MouseEvent>;
+        const mouseMoveEvent$ = fromEvent(element.ownerDocument, 'mousemove') as Observable<MouseEvent>;
 
-        const mouseUp$ = observableFromEvent(element.ownerDocument, 'mouseup');
-
-        observableFromEvent(element, 'mouseenter').pipe(
-            takeWhile(() => this.isAlive))
-            .subscribe(() => {
-                observableFromEvent(element, 'mousedown').pipe(
-                    takeUntil(leave$),
-                    filter((event: MouseEvent) => event.buttons === 1))
-                    .subscribe((event: MouseEvent) => {
-                        const moveUp$ = new Subject();
+        fromEvent(element, 'mouseenter').pipe(
+            switchMap(() => {
+                return mouseDownEvent$.pipe(
+                    filter(event => event.buttons === 1),
+                    takeUntil(mouseLeaveEvent$),
+                    switchMap(() => {
                         let target: HTMLElement;
 
                         const match = (el: HTMLElement) => {
                             return el.tagName === this.context.target.toUpperCase() || el.id === this.context.target.substr(1) || el.hasAttribute(this.context.target.substring(1, this.context.target.length - 1));
-                        };
-
-                        const startDrag = () => {
-                            const kill$ = observableMerge(mouseUp$, moveUp$).pipe(
-                                first(),
-                                tap(() => {
-                                    dragDropService.dragCursor$.next(undefined);
-                                    dragDropService.dragging$.next(false);
-                                }));
-
-                            observableFromEvent(element.ownerDocument, 'mousemove').pipe(
-                                takeUntil(kill$))
-                                .subscribe((ev: MouseEvent) => {
-                                    if (target && ev.buttons === 1) {
-                                        const bounds = new Rect(element.getBoundingClientRect());
-                                        const position = new Position(ev.pageX, ev.pageY);
-                                        const html = bounds.containsPoint(position) ? target.innerHTML : undefined;
-
-                                        // Post cursor infos to service
-                                        dragDropService.dragCursor$.next({
-                                            position: position,
-                                            html: html,
-                                            width: target.offsetWidth,
-                                            height: target.offsetHeight,
-                                            className: this.context.className,
-                                            originalEvent: ev,
-                                        } as IDragCursorInfos);
-
-                                    } else {
-                                        moveUp$.next();
-                                    }
-
-                                    ev.preventDefault();
-                                    return false;
-                                });
-
-                            dragDropService.dragging$.next(true);
                         };
 
                         if (this.context) {
@@ -102,28 +67,66 @@ export class DejaMouseDraggableDirective implements OnDestroy {
                                     if (dragContext.subscribe) {
                                         const context = dragContext as Observable<any>;
                                         // Observable
-                                        context.pipe(
-                                            first()
-                                        ).subscribe((ddctx: IDragDropContext) => {
-                                            dragDropService.context = ddctx;
-                                            if (ddctx) {
-                                                startDrag();
-                                            }
-                                        });
-                                        return;
+                                        return context.pipe(
+                                            first(),
+                                            map((ddctx: IDragDropContext) => {
+                                                dragDropService.context = ddctx;
+                                                return ddctx && target; // Map to target if ddctx is defined
+                                            }),
+                                            takeUntil(this.destroyed$)
+                                        );
                                     } else {
                                         dragDropService.context = dragContext;
-                                        startDrag();
+                                        return of(target);
                                     }
                                 }
                             }
                         }
-                    });
-            });
-    }
+                        return of(null);
+                    }),
+                    filter(target => !!target), // Start Drag if target is defined
+                    switchMap(target => {
+                        dragDropService.dragging$.next(true);
 
-    public ngOnDestroy() {
-        this.isAlive = false;
+                        const moveUp$ = new Subject();
+                        const kill$ = merge(mouseUpEvent$, moveUp$).pipe(
+                            first(),
+                            tap(() => {
+                                dragDropService.dragCursor$.next(null);
+                                dragDropService.dragging$.next(false);
+                            }));
+
+                        return mouseMoveEvent$.pipe(
+                            takeUntil(kill$),
+                            tap(ev => {
+                                if (target && ev.buttons === 1) {
+                                    const bounds = new Rect(element.getBoundingClientRect());
+                                    const position = new Position(ev.pageX, ev.pageY);
+                                    const html = bounds.containsPoint(position) ? target.innerHTML : undefined;
+
+                                    // Post cursor infos to service
+                                    dragDropService.dragCursor$.next({
+                                        position: position,
+                                        html: html,
+                                        width: target.offsetWidth,
+                                        height: target.offsetHeight,
+                                        className: this.context.className,
+                                        originalEvent: ev,
+                                    } as IDragCursorInfos);
+
+                                } else {
+                                    moveUp$.next();
+                                }
+
+                                ev.preventDefault();
+                                return false;
+                            }),
+                        );
+                    }),
+                );
+            }),
+            takeUntil(this.destroyed$)
+        ).subscribe();
     }
 }
 

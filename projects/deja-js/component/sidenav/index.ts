@@ -7,7 +7,7 @@
  */
 
 import { CommonModule } from '@angular/common';
-import { ModuleWithProviders, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -18,7 +18,6 @@ import { DejaSidenavHeaderDirective } from './sidenav-header.directive';
 import { DejaSidenavMenuDirective } from './sidenav-menu.directive';
 import { DejaSidenavMenuSeparatorDirective } from './sidenav-separator.directive';
 import { DejaSidenavComponent } from './sidenav.component';
-import { DejaSidenavService } from './sidenav.service';
 
 @NgModule({
     declarations: [
@@ -45,14 +44,7 @@ import { DejaSidenavService } from './sidenav.service';
         DejaSlimScrollModule,
     ],
 })
-export class DejaSidenavModule {
-    public static forRoot(): ModuleWithProviders {
-        return {
-            ngModule: DejaSidenavModule,
-            providers: [DejaSidenavService]
-        };
-    }
-}
+export class DejaSidenavModule { }
 
 export * from './sidenav.component';
 export * from './sidenav-menu.directive';

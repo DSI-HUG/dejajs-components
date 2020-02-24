@@ -7,15 +7,10 @@
  */
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, Optional, Output, Self, ViewChild,
-    ViewEncapsulation
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { DejaOverlayComponent } from '@deja-js/component/overlay';
 import { Color, DejaConnectionPositionPair } from '@deja-js/core';
-
-const noop = () => { };
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,9 +32,6 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
 
     /** Internal use */
     public ownerElement: HTMLElement;
-
-    protected onTouchedCallback: () => void = noop;
-    protected onChangeCallback: (_: any) => void = noop;
 
     private _small = false;
     private _value: Color;
@@ -70,6 +62,9 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
     public get positions() {
         return this._positions;
     }
+
+    protected onTouchedCallback = (_a: any) => { };
+    protected onChangeCallback = (_a: any) => { };
 
     constructor(elementRef: ElementRef, @Self() @Optional() public _control: NgControl, private changeDetectorRef: ChangeDetectorRef) {
         if (this._control) {
@@ -154,5 +149,10 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
     public onColorChange(color: Color) {
         this.isOpen = false;
         this.value = color;
+    }
+
+    public getStyle() {
+        const backgroundColor = this.value && this.value.toHex();
+        return backgroundColor ? { 'background-color': backgroundColor } : null;
     }
 }

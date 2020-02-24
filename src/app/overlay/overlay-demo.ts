@@ -26,7 +26,7 @@ export class DejaOverlayDemoComponent {
 
     public tabIndex = 1;
 
-    @ViewChild('contextMenu', { static: false })
+    @ViewChild('contextMenu')
     private contextMenu: DejaOverlayComponent;
 
     public select(text: string) { this.selected = text; }

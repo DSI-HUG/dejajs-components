@@ -9,11 +9,10 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostListener, Input, Optional, Output, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { fromEvent as observableFromEvent, merge as observableMerge } from 'rxjs';
+import { Destroy } from '@deja-js/core';
+import { fromEvent, merge, Observable } from 'rxjs';
 import { first, takeUntil, tap } from 'rxjs/operators';
 import { IRange, IRangeEvent, IStepRangeEvent, Range } from './range.interface';
-
-const noop = () => { };
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,7 +20,7 @@ const noop = () => { };
     styleUrls: ['./range.component.scss'],
     templateUrl: './range.component.html',
 })
-export class DejaRangeComponent implements ControlValueAccessor {
+export class DejaRangeComponent extends Destroy implements ControlValueAccessor {
     // step can be either a numeric value, an array of accepted intervals or a function returning the next accepted interval
     @Input() public step: number | number[] | ((event: IStepRangeEvent) => number) = 1;
     // index of the selected range
@@ -31,8 +30,8 @@ export class DejaRangeComponent implements ControlValueAccessor {
     // error emitter, used to notify the outside when forbidden actions are performed
     @Output() public errorFeedback: EventEmitter<any> = new EventEmitter();
     // custom templates
-    @ContentChild('rangeTemplate', { static: false }) public rangeTemplate: any;
-    @ContentChild('separatorTemplate', { static: false }) public separatorTemplate: any;
+    @ContentChild('rangeTemplate') public rangeTemplate: any;
+    @ContentChild('separatorTemplate') public separatorTemplate: any;
     // minimum range percentage, used to avoid 2 separator being on the same visual space
     private minimumRangePercentage = 0.01;
 
@@ -40,8 +39,6 @@ export class DejaRangeComponent implements ControlValueAccessor {
     private _disabled = false;
     private _ranges: IRange[];
 
-    public _onChangeCallback: (_: any) => void = noop;
-    public _onTouchCallback: () => void = noop;
     public registerOnChange(fn: any): void { this._onChangeCallback = fn; }
     public registerOnTouched(fn: any): void { this._onTouchCallback = fn; }
 
@@ -57,7 +54,6 @@ export class DejaRangeComponent implements ControlValueAccessor {
         }
     }
 
-    // read / write mode
     @Input()
     public set disabled(value: boolean | string) {
         this._disabled = coerceBooleanProperty(value);
@@ -68,7 +64,6 @@ export class DejaRangeComponent implements ControlValueAccessor {
         return this._disabled;
     }
 
-    // read / write mode
     @Input()
     public set readOnly(value: boolean | string) {
         this._readOnly = coerceBooleanProperty(value);
@@ -78,7 +73,11 @@ export class DejaRangeComponent implements ControlValueAccessor {
         return this._readOnly || this.disabled;
     }
 
+    public _onChangeCallback = (_a?: any) => { };
+    public _onTouchCallback = (_a?: any) => { };
+
     constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef, @Self() @Optional() public _control: NgControl) {
+        super();
         if (this._control) {
             this._control.valueAccessor = this;
         }
@@ -220,11 +219,9 @@ export class DejaRangeComponent implements ControlValueAccessor {
                 parentElement = parentElement.parentElement;
             }
 
-            const up$ = observableFromEvent(document, 'mouseup');
-
-            const leave$ = observableFromEvent(document.body, 'mouseleave');
-
-            const kill$ = observableMerge(up$, leave$).pipe(
+            const up$ = fromEvent(document, 'mouseup');
+            const leave$ = fromEvent(document.body, 'mouseleave');
+            const kill$ = merge(up$, leave$).pipe(
                 first(),
                 tap(() => {
                     const host = this.elementRef.nativeElement.firstElementChild as HTMLElement;
@@ -233,42 +230,44 @@ export class DejaRangeComponent implements ControlValueAccessor {
                     this._onChangeCallback(this._ranges);
                 }));
 
-            observableFromEvent(document, 'mousemove').pipe(
-                takeUntil(kill$))
-                .subscribe((event: MouseEvent) => {
-                    const x = event.pageX;
-                    const xDifference = -(xStart - x);
+            const move$ = fromEvent(document, 'mousemove') as Observable<MouseEvent>;
+            move$.pipe(
+                takeUntil(kill$),
+                takeUntil(this.destroyed$)
+            ).subscribe(event => {
+                const x = event.pageX;
+                const xDifference = -(xStart - x);
 
-                    const nextRange = this.ranges[index + 1];
+                const nextRange = this.ranges[index + 1];
 
-                    // compute total difference
-                    const totalDifference = ranges[ranges.length - 1].max - ranges[0].min;
+                // compute total difference
+                const totalDifference = ranges[ranges.length - 1].max - ranges[0].min;
 
-                    // calculate new width of the range, get host width
-                    const host = this.elementRef.nativeElement.firstElementChild as HTMLElement;
-                    const hostWidth = host.getBoundingClientRect().width;
+                // calculate new width of the range, get host width
+                const host = this.elementRef.nativeElement.firstElementChild as HTMLElement;
+                const hostWidth = host.getBoundingClientRect().width;
 
-                    // avoid drag
-                    host.ownerDocument.body.classList.add('noselect');
+                // avoid drag
+                host.ownerDocument.body.classList.add('noselect');
 
-                    // compute new model value
-                    const modelDifference = xDifference * totalDifference / hostWidth;
-                    let newMax = rangeStart + modelDifference;
+                // compute new model value
+                const modelDifference = xDifference * totalDifference / hostWidth;
+                let newMax = rangeStart + modelDifference;
 
-                    const minDifference = this.minimumRangePercentage * totalDifference;
-                    const min = range.min + minDifference;
-                    const max = nextRange.max - minDifference;
+                const minDifference = this.minimumRangePercentage * totalDifference;
+                const min = range.min + minDifference;
+                const max = nextRange.max - minDifference;
 
-                    newMax = Math.min(newMax, max);
-                    newMax = Math.max(newMax, min);
-                    const newStepped = this.toStep(ranges, index, newMax);
+                newMax = Math.min(newMax, max);
+                newMax = Math.max(newMax, min);
+                const newStepped = this.toStep(ranges, index, newMax);
 
-                    nextRange.min = range.max = newStepped;
+                nextRange.min = range.max = newStepped;
 
-                    ranges[index] = range;
-                    ranges[index + 1] = nextRange;
-                    this.writeValue(ranges);
-                });
+                ranges[index] = range;
+                ranges[index + 1] = nextRange;
+                this.writeValue(ranges);
+            });
         }
     }
 

@@ -6,10 +6,12 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectionStrategy, Component, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, ViewEncapsulation } from '@angular/core';
 import { IconService } from '@deja-js/core';
-import { BehaviorSubject, from as observableFrom } from 'rxjs';
-import { takeWhile } from 'rxjs/operators';
+import { Destroy } from '@deja-js/core';
+import { BehaviorSubject, from } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { DejaTextMetricsService } from '../../projects/deja-js/core/text-metrics/text-metrics.service';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,13 +20,16 @@ import { takeWhile } from 'rxjs/operators';
     styleUrls: ['./app.component.scss'],
     templateUrl: './app.component.html',
 })
-export class AppComponent implements OnDestroy {
+export class AppComponent extends Destroy {
     public version: string;
     private _theme: string;
     private theme$: BehaviorSubject<string>;
-    private isAlive = true;
 
-    constructor(iconService: IconService) {
+    constructor(iconService: IconService, elementRef: ElementRef, textMetrics: DejaTextMetricsService) {
+        super();
+
+        textMetrics.metricsElem = elementRef.nativeElement;
+
         try {
             this._theme = localStorage.getItem('dejajs-demo-color');
         } catch (_e) {
@@ -35,9 +40,9 @@ export class AppComponent implements OnDestroy {
             this._theme = 'blue';
         }
         this.theme$ = new BehaviorSubject<any>(this._theme);
-        observableFrom(this.theme$).pipe(
-            takeWhile(() => this.isAlive))
-            .subscribe((theme) => document.body.setAttribute('theme', theme));
+        from(this.theme$).pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe((theme) => document.body.setAttribute('theme', theme));
 
         iconService.addSvgIcon('angular', 'assets/img/logo/angular.svg');
         // iconService.useMaterialIcons(false);
@@ -56,9 +61,5 @@ export class AppComponent implements OnDestroy {
         }
 
         this.theme$.next(theme);
-    }
-
-    public ngOnDestroy() {
-        this.isAlive = false;
     }
 }

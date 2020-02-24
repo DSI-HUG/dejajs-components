@@ -10,7 +10,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDropCursorInfos } from '@deja-js/component/mouse-dragdrop';
 import { DejaTile, DejaTileGroup, DejaTilesComponent, IDejaTilesAddEvent, IDejaTilesRemoveEvent } from '@deja-js/component/tiles';
 import { Rect } from '@deja-js/core';
-import { from as observableFrom,  Observable, of, Subject } from 'rxjs';
+import { from,  Observable, of, Subject } from 'rxjs';
 import { defaultIfEmpty, map, reduce, scan, switchMap, take } from 'rxjs/operators';
 import { CountriesService, Country } from '../services/countries.service';
 
@@ -33,7 +33,7 @@ export class DejaTilesDemoComponent implements OnInit {
     private countriesMap: Map<string, Country>;
 
     constructor(private countriesService: CountriesService) {
-        this.messages$ = observableFrom(this.message$).pipe(
+        this.messages$ = from(this.message$).pipe(
             scan((acc: any[], curr: any) => [...acc, curr], []),
             defaultIfEmpty([]));
     }

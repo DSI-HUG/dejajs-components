@@ -30,3 +30,7 @@ import { DejaSplitterComponent } from './splitter.component';
 export class DejaSplitterModule {
 
 }
+
+export * from './split-area.directive';
+export * from './split-gutter.directive';
+export * from './splitter.component';

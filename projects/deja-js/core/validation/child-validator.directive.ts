@@ -7,7 +7,7 @@
  */
 
 import { Directive, forwardRef, } from '@angular/core';
-import { NG_VALIDATORS, NgControl, ValidationErrors, Validator } from '@angular/forms';
+import { NgControl, NG_VALIDATORS, ValidationErrors, Validator } from '@angular/forms';
 
 @Directive({
     providers: [

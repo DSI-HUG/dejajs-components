@@ -22,7 +22,7 @@ export class DejaMessageBoxComponent implements OnInit {
     @Input() public actions: Array<{text?: string; type?: 'info' | 'primary' | 'success' | 'warn' | 'danger'; icon?: string; action(): any}>;
     /** Event Emmited when the close action is called */
     @Output() public close = new EventEmitter();
-    @ContentChild('actionsTemplate', { static: false }) public actionsTemplate: any;
+    @ContentChild('actionsTemplate') public actionsTemplate: any;
 
     private _horizontal: boolean;
 

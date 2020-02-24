@@ -23,4 +23,5 @@ import { DejaChipsComponent } from './chips.component';
 })
 export class DejaChipsModule { }
 
+export * from './chips-close.event';
 export * from './chips.component';

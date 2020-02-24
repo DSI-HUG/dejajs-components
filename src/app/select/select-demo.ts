@@ -10,7 +10,7 @@ import { ChangeDetectorRef, Component, OnDestroy, ViewChild } from '@angular/cor
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DejaSelectComponent } from '@deja-js/component/select';
 import { IItemBase, IItemTree, IViewPortItem } from '@deja-js/core';
-import { from as observableFrom, Observable, of as observableOf, Subject, Subscription } from 'rxjs';
+import { from, Observable, of, Subject, Subscription } from 'rxjs';
 import { delay, first, map, tap } from 'rxjs/operators';
 import { News } from '../common/news.model';
 import { CountriesListService } from '../services/countries-list.service';
@@ -59,9 +59,9 @@ export class SelectDemoComponent implements OnDestroy {
     public firstOccurencePerWordOnly = false;
     public atTheBeginningOfWordOnly = false;
 
-    @ViewChild('news', { static: false }) private newsSelect: DejaSelectComponent;
-    @ViewChild('ondemand', { static: false }) private onDemandSelect: DejaSelectComponent;
-    @ViewChild('onexpand', { static: false }) private onExpandSelect: DejaSelectComponent;
+    @ViewChild('news') private newsSelect: DejaSelectComponent;
+    @ViewChild('ondemand') private onDemandSelect: DejaSelectComponent;
+    @ViewChild('onexpand') private onExpandSelect: DejaSelectComponent;
 
     public businessCountry: Country;
 
@@ -103,11 +103,11 @@ export class SelectDemoComponent implements OnDestroy {
             'Watermelon',
         ];
 
-        this.fruits$ = observableOf(this.fructs);
+        this.fruits$ = of(this.fructs);
 
         this.subscriptions.push(this.countries.pipe(
             tap((value) => this.countriesForMultiselect = value),
-            delay(1), )
+            delay(1))
             .subscribe(() => {
                 this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","displayName":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","displayName":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","displayName":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","displayName":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","displayName":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","displayName":"Dominica","depth":0,"odd":false,"selected":true}]');
             }));
@@ -182,7 +182,7 @@ export class SelectDemoComponent implements OnDestroy {
                 tap(() => {
                     self.onDemandSelect.waiter = false;
                     self.onDemandPlaceHolder = 'Selected a country';
-                }), );
+                }));
         };
     }
 
@@ -190,7 +190,7 @@ export class SelectDemoComponent implements OnDestroy {
         const self = this;
         return (item: IItemBase) => {
             const country = item as ICountryGroup;
-            return country.loaded ? observableOf(item) : self.confirmDialog()(item);
+            return country.loaded ? of(item) : self.confirmDialog()(item);
         };
     }
 
@@ -198,12 +198,12 @@ export class SelectDemoComponent implements OnDestroy {
         return (item: IItemBase) => {
             const group = item as ICountryGroup;
             if (group.loaded) {
-                return observableOf(item);
+                return of(item);
             } else {
                 if (confirm('Please confirm your operation!')) {
-                    observableOf(group).pipe(
+                    of(group).pipe(
                         delay(2000),
-                        first(), )
+                        first())
                         .subscribe((grp) => {
                             // Simulate asynchronous load
                             const original = this.groupedCountries.find((c) => c.displayName === grp.displayName);
@@ -212,9 +212,9 @@ export class SelectDemoComponent implements OnDestroy {
                             this.onExpandSelect.refresh();
                         });
 
-                    return observableOf(item);
+                    return of(item);
                 } else {
-                    return observableOf(null);
+                    return of(null);
                 }
             }
         };
@@ -231,16 +231,16 @@ export class SelectDemoComponent implements OnDestroy {
         const self = this;
         return (item: IItemBase) => {
             self.dialogVisible = true;
-            return observableFrom(this.dialogResponse$).pipe(
+            return from(this.dialogResponse$).pipe(
                 first(),
                 map((response) => {
                     self.dialogVisible = false;
                     return response === 'ok' ? item : null;
-                }), );
+                }));
         };
     }
 
-    @ViewChild('bigCountries', { static: false })
+    @ViewChild('bigCountries')
     protected set bigCountriesSelect(select: DejaSelectComponent) {
         if (this.viewPortInfos$) {
             this.viewPortInfos$.unsubscribe();

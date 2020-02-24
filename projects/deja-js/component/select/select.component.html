@@ -15,7 +15,7 @@
 	<div [id]="listElementId" class="deja-listcontainer" [attr.itemscount]="itemList && itemList.length" [attr.depth-max]="depthMax || null" [attr.keynav]="keyboardNavigation" [attr.vprowheight]="getViewPortRowHeight()" (mousedown)="mousedown($event)" (scroll)="scroll($event)" [style.max-height.px]="dropDownMaxHeight">
 		<div id="nodata-holder" *ngIf="(!treeItemList || treeItemList.length === 0) && !waiter">{{ nodataholder }}</div>
 		<div *ngIf="vpBeforeHeight" [style.height.px]="vpBeforeHeight"></div>
-		<div *ngFor="let item of treeItemList; let index = index" #listitem [attr.class]="getItemClass(item)" [class.hide]="item.collapsing || item.expanding" [class.parent]="item.depth < depthMax" [class.collapsed]="item.collapsed" [class.selected]="item.selected" [attr.current]="(isMultiSelect && vpStartRow+index === getCurrentItemIndex()) || null" [class.unselectable]="item.selectable === false" [attr.depth]="depthMax ? item.depth : null" [attr.id]="item.id || null" [attr.flat]="vpStartRow + index" [style.height.px]="getItemHeight(item)" [class.odd]="(item.depth === depthMax && item.odd) || null">
+		<div *ngFor="let item of treeItemList; let index = index" #listitem [attr.class]="getItemClass(item)" [attr.current]="(isMultiSelect && vpStartRow+index === getCurrentItemIndex()) || null" [attr.depth]="depthMax ? item.depth : null" [attr.id]="item.id || null" [attr.flat]="vpStartRow + index" [style.height.px]="getItemHeight(item)">
 			<span id="expandbtn">
 				<mat-icon *ngIf="item.$items && item.$items.length">arrow_drop_down</mat-icon>
 			</span>

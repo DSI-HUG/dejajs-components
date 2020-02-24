@@ -6,19 +6,21 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Directive, ElementRef, Input, OnDestroy } from '@angular/core';
-import { Position, Rect } from '@deja-js/core';
-import { from as observableFrom, Observable } from 'rxjs';
-import { filter, first, takeUntil, takeWhile } from 'rxjs/operators';
-import { DejaMouseDragDropService, IDragCursorInfos, IDragDropContext, IDropCursorInfos } from './mouse-dragdrop.service';
+import { Directive, ElementRef, Input } from '@angular/core';
+import { Destroy, Position, Rect } from '@deja-js/core';
+import { from, Observable, of } from 'rxjs';
+import { distinctUntilChanged, filter, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { IDragCursorInfos } from './mouse-drag-cursor-infos.interface';
+import { IDragDropContext } from './mouse-dragdrop-context.interface';
+import { DejaMouseDragDropService } from './mouse-dragdrop.service';
+import { IDropCursorInfos } from './mouse-drop-cursor-infos.interface';
 
 @Directive({
     selector: '[deja-mouse-droppable]',
 })
-export class DejaMouseDroppableDirective implements OnDestroy {
+export class DejaMouseDroppableDirective extends Destroy {
     private _context: IDejaMouseDroppableContext;
     private _dragContext: IDragDropContext;
-    private isAlive = true;
 
     @Input('deja-mouse-droppable')
     public set context(value: IDejaMouseDroppableContext) {
@@ -30,32 +32,34 @@ export class DejaMouseDroppableDirective implements OnDestroy {
     }
 
     constructor(elementRef: ElementRef, dragDropService: DejaMouseDragDropService) {
+        super();
+
         const element = elementRef.nativeElement as HTMLElement;
 
-        const dragging$ = observableFrom(dragDropService.dragging$);
+        const dragging$ = from(dragDropService.dragging$).pipe(
+            distinctUntilChanged()
+        );
 
-        const kill$ = dragging$.pipe(
-            filter((value) => !value));
+        const drop$ = dragging$.pipe(
+            filter(value => !value),
+            take(1),
+            tap(() => {
+                // console.log(`Drop ${!!this._dragContext}`)
+                if (this._dragContext && this.context?.drop) {
+                    this.context.drop(this._dragContext);
+                }
+                this._dragContext = undefined;
+                dragDropService.dropCursor$.next(null);
+            })
+        );
 
         dragging$.pipe(
-            takeWhile(() => this.isAlive),
-            filter((value) => value))
-            .subscribe(() => {
-                kill$.pipe(
-                    first())
-                    .subscribe(() => {
-                        if (this._dragContext) {
-                            if (this.context && this.context.drop) {
-                                this.context.drop(this._dragContext);
-                            }
-                            this._dragContext = undefined;
-                        }
-                        dragDropService.dropCursor$.next(undefined);
-                    });
-
-                observableFrom(dragDropService.dragCursor$).pipe(
-                    takeUntil(kill$))
-                    .subscribe((dragCursor) => {
+            filter(value => value),
+            switchMap(() => {
+                // console.log(`Drag ${!!this._dragContext}`)
+                return from(dragDropService.dragCursor$).pipe(
+                    takeUntil(drop$),
+                    switchMap(dragCursor => {
                         const bounds = new Rect(element.getBoundingClientRect());
                         if (this.context && dragCursor) {
                             const { pageX, pageY } = dragCursor.originalEvent;
@@ -68,37 +72,34 @@ export class DejaMouseDroppableDirective implements OnDestroy {
                                             const dropContextObs = dropContext as Observable<IDropCursorInfos>;
                                             if (dropContextObs.subscribe) {
                                                 // Observable
-                                                dropContextObs.pipe(
-                                                    first())
-                                                    .subscribe((cursor) => {
-                                                        dragDropService.dropCursor$.next(cursor);
-                                                    });
-                                                return;
+                                                return dropContextObs;
                                             } else {
-                                                dragDropService.dropCursor$.next(dropContext as IDropCursorInfos);
+                                                return of(dropContext as IDropCursorInfos);
                                             }
                                         }
                                     }
                                 } else if (this.context.dragOver) {
                                     const overContext = this.context.dragOver(this._dragContext, dragCursor);
                                     if (overContext) {
-                                        dragDropService.dropCursor$.next(overContext);
+                                        return of(overContext);
                                     }
                                 }
                             } else if (this._dragContext) {
-                                if (this.context && this.context.dragLeave) {
+                                if (this.context?.dragLeave) {
                                     this.context.dragLeave(this._dragContext);
                                 }
                                 this._dragContext = undefined;
-                                dragDropService.dropCursor$.next(undefined);
+                                dragDropService.dropCursor$.next(null);
                             }
                         }
-                    });
-            });
-    }
 
-    public ngOnDestroy() {
-        this.isAlive = false;
+                        return of(null);
+                    }),
+                );
+            }),
+            filter(dropCursor => !!dropCursor),
+            takeUntil(this.destroyed$)
+        ).subscribe(dropCursor => dragDropService.dropCursor$.next(dropCursor));
     }
 }
 

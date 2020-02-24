@@ -10,12 +10,10 @@ import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coerci
 import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { IDejaDragEvent } from '@deja-js/component/dragdrop';
-import { DejaChildValidatorDirective, DejaClipboardService, DejaItemComponent, DejaItemEvent, DejaItemsEvent, GroupingService, IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, IViewPort, KeyCodes, Position, Rect, SortingService, ViewportMode, ViewPortService } from '@deja-js/core';
-import { BehaviorSubject, combineLatest as observableCombineLatest, from as observableFrom, fromEvent as observableFromEvent, merge as observableMerge, Observable, of as observableOf, Subject, Subscription, timer as observableTimer } from 'rxjs';
-import { debounceTime, filter, first, map, merge, switchMap, takeWhile, tap } from 'rxjs/operators';
+import { DejaChildValidatorDirective, DejaClipboardService, DejaItemComponent, DejaItemEvent, DejaItemsEvent, GroupingService, IFindItemResult, IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, IViewPort, KeyCodes, Position, Rect, SortingService, ViewportMode, ViewPortService } from '@deja-js/core';
+import { BehaviorSubject, combineLatest, from, fromEvent, merge, Observable, of, Subject, Subscription, timer } from 'rxjs';
+import { debounceTime, filter, first, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { DejaTreeListScrollEvent } from './tree-list-scroll-event';
-
-const noop = () => { };
 
 /** Composant de liste évoluée avec gestion de viewport et templating */
 @Component({
@@ -61,21 +59,17 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     @Output() public viewPortChanged = new EventEmitter<IViewPort>();
 
     /** Internal use */
-    @ViewChild('inputelement', { static: false }) public input: ElementRef;
-
-    // NgModel implementation
-    public onTouchedCallback: () => void = noop;
-    public onChangeCallback: (_: any) => void = noop;
+    @ViewChild('inputelement') public input: ElementRef;
 
     private _keyboardNavigation = false;
 
     // Templates
-    @ContentChild('itemTemplate', { static: false }) private itemTemplateInternal: any;
-    @ContentChild('parentItemTemplate', { static: false }) private parentItemTemplateInternal: any;
-    @ContentChild('loaderTemplate', { static: false }) private loaderTemplateInternal: any;
-    @ContentChild('headerTemplate', { static: false }) private headerTemplateInternal: any;
-    @ContentChild('searchPrefixTemplate', { static: false }) private searchPrefixTemplateInternal: any;
-    @ContentChild('searchSuffixTemplate', { static: false }) private searchSuffixTemplateInternal: any;
+    @ContentChild('itemTemplate') private itemTemplateInternal: any;
+    @ContentChild('parentItemTemplate') private parentItemTemplateInternal: any;
+    @ContentChild('loaderTemplate') private loaderTemplateInternal: any;
+    @ContentChild('headerTemplate') private headerTemplateInternal: any;
+    @ContentChild('searchPrefixTemplate') private searchPrefixTemplateInternal: any;
+    @ContentChild('searchSuffixTemplate') private searchSuffixTemplateInternal: any;
     @ContentChildren(DejaItemComponent) public options: DejaItemComponent[];
 
     // protected _items: IItemBase[]; In the base class, correspond to the model
@@ -100,6 +94,10 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     private contentInitialized$ = new Subject();
     public setQuery$ = new Subject<string>();
 
+    // NgModel implementation
+    public onTouchedCallback = (_a?: any) => { };
+    public onChangeCallback = (_a?: any) => { };
+
     constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, public elementRef: ElementRef, @Self() @Optional() public _control: NgControl, @Optional() private clipboardService: DejaClipboardService) {
         super(changeDetectorRef, viewPort);
 
@@ -107,52 +105,52 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
             this._control.valueAccessor = this;
         }
 
-        observableFrom(this.clearFilterExpression$).pipe(
-            takeWhile(() => this._isAlive),
-            debounceTime(400))
-            .subscribe(() => this.filterExpression = '');
+        from(this.clearFilterExpression$).pipe(
+            debounceTime(400),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => this.filterExpression = '');
 
-        observableFrom(this.keyboardNavigation$).pipe(
-            takeWhile(() => this._isAlive),
+        from(this.keyboardNavigation$).pipe(
             tap(() => this._keyboardNavigation = true),
-            debounceTime(1000))
-            .subscribe(() => {
-                this._keyboardNavigation = false;
-                this.changeDetectorRef.markForCheck();
-            });
+            debounceTime(1000),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => {
+            this._keyboardNavigation = false;
+            this.changeDetectorRef.markForCheck();
+        });
 
-        observableFromEvent(window, 'resize').pipe(
-            takeWhile(() => this._isAlive),
-            debounceTime(5))
-            .subscribe(() => {
-                this.viewPort.deleteSizeCache();
-                this.viewPort.refresh();
-                this.changeDetectorRef.markForCheck();
-            });
+        fromEvent(window, 'resize').pipe(
+            debounceTime(5),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => {
+            this.viewPort.deleteSizeCache();
+            this.viewPort.refresh();
+            this.changeDetectorRef.markForCheck();
+        });
 
-        observableFrom(this.setQuery$).pipe(
-            takeWhile(() => this._isAlive),
+        from(this.setQuery$).pipe(
             debounceTime(250),
-            tap((query) => {
+            switchMap(query => {
                 this.query = query;
                 this.setCurrentItem(undefined);
+                return this.calcViewList$();
             }),
-            switchMap(() => this.calcViewList$()))
-            .subscribe(noop);
+            takeUntil(this.destroyed$)
+        ).subscribe();
 
-        const selectItems$ = observableCombineLatest(this.selectItems$, this.contentInitialized$).pipe(
+        const selectItems$ = combineLatest(this.selectItems$, this.contentInitialized$).pipe(
             map(([value]) => value),
             map((value) => this.getVirtualSelectedEntities(value)),
             map((value) => (value instanceof Array && value) || (value && [value]) || []),
             tap((values) => super.setSelectedItems(values)));
 
-        const selectModels$ = observableCombineLatest(this.writeValue$, this.contentInitialized$).pipe(
+        const selectModels$ = combineLatest(this.writeValue$, this.contentInitialized$).pipe(
             map(([value]) => {
                 if (this.modelIsValue === undefined) {
                     if (value instanceof Array) {
                         const av = value || [];
                         const modelType = av.length && typeof av[0];
-                        this.modelIsValue = modelType && modelType === 'string' || modelType === 'number';
+                        this.modelIsValue = modelType === 'string' || modelType === 'number';
                     } else {
                         const modelType = typeof value;
                         this.modelIsValue = value === '' || modelType === 'string' || modelType === 'number';
@@ -166,12 +164,12 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
             map((value) => this.getVirtualSelectedEntities(value)),
             tap((value) => super.setSelectedModels(!value || this._multiSelect || value instanceof Array ? value : [value])));
 
-        observableMerge(selectModels$, selectItems$).pipe(
-            takeWhile(() => this._isAlive))
-            .subscribe(() => {
-                super.getItemListService().ensureSelection();
-                this.changeDetectorRef.markForCheck();
-            });
+        merge(selectModels$, selectItems$).pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe(() => {
+            super.getItemListService().ensureSelection();
+            this.changeDetectorRef.markForCheck();
+        });
 
         this._viewPortChanged = this.viewPortChanged;
 
@@ -238,7 +236,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
 
     @Input()
     /** Définit le nombre de lignes à sauter en cas de pression sur les touches PageUp ou PageDown */
-    public set pageSize(value: number | string) {
+    public set pageSize(value: number) {
         this._pageSize = coerceNumberProperty(value);
     }
 
@@ -458,12 +456,13 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                     // Waiting for query
                     this._itemList = [];
                     this.changeDetectorRef.markForCheck();
-                    return observableOf(itms);
+                    return of(itms);
                 } else {
                     return this.calcViewList$().pipe(map(() => itms));
                 }
-            }))
-            .subscribe(noop);
+            }),
+            takeUntil(this.destroyed$)
+        ).subscribe();
     }
 
     /**
@@ -512,8 +511,9 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     public set models(items: any[] | Observable<any[]>) {
         super.setModels$(items).pipe(
             first(),
-            switchMap(() => this.calcViewList$()))
-            .subscribe(noop);
+            switchMap(() => this.calcViewList$()),
+            takeUntil(this.destroyed$)
+        ).subscribe();
     }
 
     /** Permet de désactiver la liste */
@@ -539,7 +539,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     /** Retourne si le waiter doit être affiché dans la liste. */
     public get waiter() { return this._waiter; }
 
-    @ViewChild(DejaChildValidatorDirective, { static: false })
+    @ViewChild(DejaChildValidatorDirective)
     public set inputValidatorDirective(value: DejaChildValidatorDirective) {
         if (value) {
             value.parentControl = this._control;
@@ -615,7 +615,10 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
 
     /** Change l'état d'expansion de toute les lignes parentes */
     public toggleAll(collapsed?: boolean) {
-        this.toggleAll$(collapsed).pipe(first()).subscribe(noop);
+        this.toggleAll$(collapsed).pipe(
+            first(),
+            takeUntil(this.destroyed$)
+        ).subscribe();
     }
 
     /** Positionne a scrollbar pour assurer que l'élément spécifié soit visible */
@@ -629,7 +632,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     }
 
     public ngAfterContentInit() {
-        if (!this.items && this.options && this.options.length) {
+        if (!this.items && this.options?.length) {
             const selectedModels = [] as any[];
             this.valueField = 'value';
             this.textField = 'text';
@@ -661,14 +664,14 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
         // FIXME Issue angular/issues/6005
         // see http://stackoverflow.com/questions/34364880/expression-has-changed-after-it-was-checked
         if (this._itemList.length === 0 && (this.hasCustomService || this.hasLoadingEvent)) {
-            observableTimer(1).pipe(
+            timer(1).pipe(
                 first(),
-                switchMap(() => this.calcViewList$()))
-                .subscribe(noop);
+                switchMap(() => this.calcViewList$()),
+                takeUntil(this.destroyed$)
+            ).subscribe();
         }
 
-        observableFromEvent(this.listElement, 'scroll').pipe(
-            takeWhile(() => this._isAlive),
+        fromEvent(this.listElement, 'scroll').pipe(
             map((event: any) => [event, event.target.scrollTop, event.target.scrollLeft]),
             map(([event, scrollTop, scrollLeft]: [Event, number, number]) => {
                 const e = {
@@ -679,19 +682,20 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
 
                 this.scroll.emit(e);
                 return scrollTop;
-            }))
-            .subscribe((scrollPos) => this.viewPort.scrollPosition$.next(scrollPos));
+            }),
+            takeUntil(this.destroyed$)
+        ).subscribe(scrollPos => this.viewPort.scrollPosition$.next(scrollPos));
 
-        let keyDown$ = observableFromEvent(this.listElement, 'keydown');
+        let keyDown$ = fromEvent(this.listElement, 'keydown') as Observable<KeyboardEvent>;
         if (this.input) {
-            const inputKeyDown$ = observableFromEvent(this.input.nativeElement, 'keydown') as Observable<KeyboardEvent>;
-            keyDown$ = keyDown$.pipe(merge(inputKeyDown$));
+            const inputKeyDown$ = fromEvent(this.input.nativeElement, 'keydown') as Observable<KeyboardEvent>;
+            keyDown$ = merge(keyDown$, inputKeyDown$);
         }
 
-        keyDown$.pipe(takeWhile(() => this._isAlive),
+        keyDown$.pipe(
             filter(() => !this.disabled),
-            filter((event: KeyboardEvent) => {
-                const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
+            filter(event => {
+                const keyCode = event.code;
                 return keyCode === KeyCodes.Home ||
                     keyCode === KeyCodes.End ||
                     keyCode === KeyCodes.PageUp ||
@@ -701,10 +705,10 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                     keyCode === KeyCodes.Space ||
                     keyCode === KeyCodes.Enter;
             }),
-            switchMap((event) => this.ensureListCaches$().pipe(map(() => event))),
-            map((event: KeyboardEvent) => {
+            switchMap(event => this.ensureListCaches$().pipe(map(() => event))),
+            switchMap(event => {
                 if (!this.rowsCount) {
-                    return true;
+                    return of(null);
                 }
 
                 // Set current item from index for keyboard features only
@@ -715,137 +719,137 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                 };
 
                 const currentIndex = this.rangeStartIndex >= 0 ? this.rangeStartIndex : this.rangeStartIndex = this.currentItemIndex;
-
-                const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
-                switch (keyCode) {
+                switch (event.code) {
                     case KeyCodes.Home:
+                        setCurrentIndex(0);
                         if (event.shiftKey) {
-                            this.selectRange$(currentIndex, 0).pipe(first()).subscribe(noop);
+                            return this.selectRange$(currentIndex, 0);
                         } else if (!event.ctrlKey) {
                             this.rangeStartIndex = 0;
-                            this.selectRange$(this.rangeStartIndex).pipe(first()).subscribe(noop);
+                            return this.selectRange$(this.rangeStartIndex);
+                        } else {
+                            return of(-1);
                         }
-                        setCurrentIndex(0);
-                        return false;
 
                     case KeyCodes.End:
+                        setCurrentIndex(this.rowsCount - 1);
                         if (event.shiftKey) {
-                            this.selectRange$(currentIndex, this.rowsCount - 1).pipe(first()).subscribe(noop);
+                            return this.selectRange$(currentIndex, this.rowsCount - 1);
                         } else if (!event.ctrlKey) {
                             this.rangeStartIndex = this.rowsCount - 1;
-                            this.selectRange$(this.rangeStartIndex).pipe(first()).subscribe(noop);
+                            return this.selectRange$(this.rangeStartIndex);
+                        } else {
+                            return of(-1);
                         }
-                        setCurrentIndex(this.rowsCount - 1);
-                        return false;
 
                     case KeyCodes.PageUp:
-                        const upindex = Math.max(0, this.currentItemIndex - this._pageSize);
+                        const upindex = Math.max(0, this.currentItemIndex - this.pageSize);
+                        setCurrentIndex(upindex);
                         if (event.shiftKey) {
-                            this.selectRange$(currentIndex, upindex).pipe(first()).subscribe(noop);
+                            return this.selectRange$(currentIndex, upindex);
                         } else if (!event.ctrlKey) {
                             this.rangeStartIndex = upindex;
-                            this.selectRange$(this.rangeStartIndex).pipe(first()).subscribe(noop);
+                            return this.selectRange$(this.rangeStartIndex);
+                        } else {
+                            return of(-1);
                         }
-                        setCurrentIndex(upindex);
-                        return false;
 
                     case KeyCodes.PageDown:
-                        const dindex = Math.min(this.rowsCount - 1, this.currentItemIndex + this._pageSize);
+                        const dindex = Math.min(this.rowsCount - 1, this.currentItemIndex + this.pageSize);
+                        setCurrentIndex(dindex);
                         if (event.shiftKey) {
-                            this.selectRange$(currentIndex, dindex).pipe(first()).subscribe(noop);
+                            return this.selectRange$(currentIndex, dindex);
                         } else if (!event.ctrlKey) {
                             this.rangeStartIndex = dindex;
-                            this.selectRange$(this.rangeStartIndex).pipe(first()).subscribe(noop);
+                            return this.selectRange$(this.rangeStartIndex);
+                        } else {
+                            return of(-1);
                         }
-                        setCurrentIndex(dindex);
-                        return false;
 
                     case KeyCodes.UpArrow:
                         const uaindex = Math.max(0, this.currentItemIndex - 1);
                         if (uaindex !== -1) {
+                            setCurrentIndex(uaindex);
                             if (event.shiftKey) {
-                                this.selectRange$(currentIndex, uaindex).pipe(first()).subscribe(noop);
+                                return this.selectRange$(currentIndex, uaindex);
                             } else if (!event.ctrlKey) {
                                 this.rangeStartIndex = uaindex;
-                                this.selectRange$(this.rangeStartIndex).pipe(first()).subscribe(noop);
+                                return this.selectRange$(this.rangeStartIndex);
                             }
-                            setCurrentIndex(uaindex);
                         }
-                        return false;
+                        return of(-1);
 
                     case KeyCodes.DownArrow:
                         const daindex = Math.min(this.rowsCount - 1, this.currentItemIndex + 1);
                         if (daindex !== -1) {
+                            setCurrentIndex(daindex);
                             if (event.shiftKey) {
-                                this.selectRange$(currentIndex, daindex).pipe(first()).subscribe(noop);
+                                return this.selectRange$(currentIndex, daindex);
                             } else if (!event.ctrlKey) {
                                 this.rangeStartIndex = daindex;
-                                this.selectRange$(this.rangeStartIndex).pipe(first()).subscribe(noop);
+                                return this.selectRange$(this.rangeStartIndex);
                             }
-                            setCurrentIndex(daindex);
                         }
-                        return false;
+                        return of(-1);
 
                     case KeyCodes.Space:
                         const target = event.target as HTMLElement;
                         if (target.tagName === 'INPUT' && !event.ctrlKey && !event.shiftKey) {
-                            return true;
+                            return of(null);
                         }
 
                         const sitem = this.currentItem as IItemTree;
                         if (sitem) {
                             if (this.isCollapsible(sitem)) {
-                                this.toggleCollapse$(currentIndex, !sitem.collapsed).pipe(first()).subscribe(noop);
+                                return this.toggleCollapse$(currentIndex, !sitem.collapsed);
                             } else if (sitem.selected) {
-                                this.toggleSelect$([sitem], false).pipe(first()).subscribe(noop);
+                                return this.toggleSelect$([sitem], false);
                             } else if (this.multiSelect && event.ctrlKey) {
-                                this.toggleSelect$([sitem], !sitem.selected).pipe(first()).subscribe(noop);
+                                return this.toggleSelect$([sitem], !sitem.selected);
                             } else {
-                                this.unselectAll$().pipe(
-                                    switchMap(() => this.toggleSelect$([sitem], true)),
-                                    first())
-                                    .subscribe(noop);
+                                return this.unselectAll$().pipe(
+                                    switchMap(() => this.toggleSelect$([sitem], true))
+                                );
                             }
                         }
-                        return false;
+                        return of(-1);
 
                     case KeyCodes.Enter:
                         const eitem = this.currentItem as IItemTree;
                         if (eitem) {
                             if (this.isCollapsible(eitem)) {
-                                this.toggleCollapse$(currentIndex, !eitem.collapsed).pipe(first()).subscribe(noop);
+                                return this.toggleCollapse$(currentIndex, !eitem.collapsed);
                             } else if (this.isSelectable(eitem)) {
-                                this.unselectAll$().pipe(
+                                return this.unselectAll$().pipe(
                                     switchMap(() => this.toggleSelect$([eitem], true)),
-                                    first())
-                                    .subscribe(noop);
+                                );
                             }
                         }
-                        return false;
+                        return of(-1);
 
                     default:
-                        return true;
+                        return of(null);
                 }
-            }))
-            .subscribe((continuePropagation) => {
-                if (!continuePropagation) {
-                    this.keyboardNavigation$.next();
-                    this.changeDetectorRef.markForCheck();
-                    event.preventDefault();
-                    return false;
-                }
-            });
+            }),
+            takeUntil(this.destroyed$)
+        ).subscribe(continuePropagation => {
+            if (continuePropagation !== null) {
+                this.keyboardNavigation$.next();
+                this.changeDetectorRef.markForCheck();
+                event.preventDefault();
+                return false;
+            }
+        });
 
-        let keyUp$ = observableFromEvent(this.listElement, 'keyup') as Observable<Event>;
+        let keyUp$ = fromEvent(this.listElement, 'keyup') as Observable<KeyboardEvent>;
         if (this.input) {
-            const inputKeyup$ = observableFromEvent(this.input.nativeElement, 'keyup') as Observable<KeyboardEvent>;
-            const inputDrop$ = observableFromEvent(this.input.nativeElement, 'drop') as Observable<KeyboardEvent>;
-            keyUp$ = keyUp$.pipe(merge(inputKeyup$, inputDrop$));
+            const inputKeyup$ = fromEvent(this.input.nativeElement, 'keyup') as Observable<KeyboardEvent>;
+            const inputDrop$ = fromEvent(this.input.nativeElement, 'drop') as Observable<KeyboardEvent>;
+            keyUp$ = merge(keyUp$, inputKeyup$, inputDrop$);
         }
 
         // Ensure list cache
         keyUp$.pipe(
-            takeWhile(() => this._isAlive),
             filter(() => !this.disabled),
             tap(() => {
                 if ((this.query || '').length < this.minSearchlength) {
@@ -853,20 +857,14 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                     return;
                 }
             }),
-            filter((event: KeyboardEvent) => {
-                const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
+            filter(event => {
+                const keyCode = event.code;
                 return keyCode >= KeyCodes.Key0 ||
                     keyCode === KeyCodes.Backspace ||
                     keyCode === KeyCodes.Space ||
                     keyCode === KeyCodes.Delete;
-            }))
-            .subscribe((event: KeyboardEvent) => {
-                // Set current item from index for keyboard features only
-                const setCurrentIndex = (index: number) => {
-                    this.currentItemIndex = index;
-                    this.ensureItemVisible(this.currentItemIndex);
-                };
-
+            }),
+            switchMap(event => {
                 if (!this.searchArea) {
                     if ((/[a-zA-Z0-9]/).test(event.key)) {
                         // Valid char
@@ -875,7 +873,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                         // Search next
                         this.filterExpression += event.key;
                         const rg = new RegExp(`^${this.filterExpression}`, 'i');
-                        this.findNextMatch$((item) => {
+                        return this.findNextMatch$((item) => {
                             if (item && this.isSelectable(item)) {
                                 const label = this.getTextValue(item);
                                 if (rg.test(label)) {
@@ -884,19 +882,22 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                             }
                             event.preventDefault();
                             return false;
-                        }, this.currentItemIndex).pipe(
-                            first())
-                            .subscribe((result) => {
-                                if (result.index >= 0) {
-                                    setCurrentIndex(result.index);
-                                }
-                            });
+                        }, this.currentItemIndex);
                     }
                 } else {
                     // Autocomplete, filter the list
                     this.keyboardNavigation$.next();
                 }
-            });
+
+                return of(null as IFindItemResult);
+            }),
+            filter(result => result?.index >= 0),
+            takeUntil(this.destroyed$)
+        ).subscribe(result => {
+            // Set current item from index for keyboard features only
+            this.currentItemIndex = result.index;
+            this.ensureItemVisible(this.currentItemIndex);
+        });
 
         this.viewPort.element$.next(this.listElement);
     }
@@ -928,76 +929,82 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
             if (e.shiftKey && this.multiSelect) {
                 // Select all from current to clicked
                 this.selectRange$(itemIndex, this.currentItemIndex).pipe(
-                    first())
-                    .subscribe(() => this.changeDetectorRef.markForCheck());
+                    first(),
+                    takeUntil(this.destroyed$)
+                ).subscribe(() => this.changeDetectorRef.markForCheck());
                 return false;
             } else if (!e.ctrlKey) {
                 if (!this.multiSelect && item.selected) {
                     return undefined;
                 }
 
-                this.unselectAll$().pipe(first()).subscribe(() => {
-                    this.currentItemIndex = itemIndex;
-                    this.toggleSelect$([item], true).pipe(
-                        first())
-                        .subscribe(() => this.changeDetectorRef.markForCheck());
-                });
+                this.unselectAll$().pipe(
+                    take(1),
+                    switchMap(() => {
+                        this.currentItemIndex = itemIndex;
+                        return this.toggleSelect$([item], true);
+                    }),
+                    take(1),
+                    takeUntil(this.destroyed$)
+                ).subscribe(() => this.changeDetectorRef.markForCheck());
             }
         }
 
-        this.mouseUp$sub = observableFromEvent(this.listElement, 'mouseup').pipe(
+        this.mouseUp$sub = fromEvent(this.listElement, 'mouseup').pipe(
             first(),
-            filter(() => !this.disabled))
-            .subscribe((upevt: MouseEvent) => {
+            filter(() => !this.disabled),
+            switchMap((upevt: MouseEvent) => {
                 // Because .first()
                 this.mouseUp$sub = undefined;
 
                 const upTarget = upevt.target as HTMLElement;
                 const upIndex = this.getItemIndexFromHTMLElement(upTarget);
                 if (upIndex === undefined) {
-                    return;
+                    return of(null);
                 }
 
                 const upItem = this._itemList[upIndex - this.vpStartRow];
                 if (this.clickedItem && upItem !== this.clickedItem) {
-                    return;
+                    return of(null);
                 }
 
                 if (upevt.shiftKey) {
-                    return;
+                    return of(null);
                 }
 
                 if (upevt.button !== 0) {
                     // Right click menu
-                    return;
+                    return of(null);
                 }
 
                 if (this.isCollapsible(upItem) && (isExpandButton(upTarget) || !this.isSelectable(upItem))) {
                     const treeItem = upItem as IItemTree;
-                    this.toggleCollapse$(upIndex, !treeItem.collapsed).pipe(first()).subscribe(() => {
-                        this.currentItemIndex = upIndex;
-                    });
+                    return this.toggleCollapse$(upIndex, !treeItem.collapsed).pipe(
+                        map(() => upIndex)
+                    );
 
                 } else if (upevt.ctrlKey) {
                     if (this.multiSelect) {
-                        this.toggleSelect$([upItem], !upItem.selected).pipe(
-                            first())
-                            .subscribe(() => {
-                                this.currentItemIndex = upIndex;
-                                this.changeDetectorRef.markForCheck();
-                            });
+                        return this.toggleSelect$([upItem], !upItem.selected).pipe(
+                            map(() => upIndex)
+                        );
                     } else {
                         const o = this.selectedItem && this.selectedItem !== upItem ? this.toggleSelect$([this.selectedItem], false).pipe(switchMap(() => this.toggleSelect$([upItem], true))) : this.toggleSelect$([upItem], !upItem.selected);
-                        o.pipe(first())
-                            .subscribe(() => {
-                                this.currentItemIndex = upIndex;
-                                this.changeDetectorRef.markForCheck();
-                            });
+                        return o.pipe(
+                            map(() => upIndex)
+                        );
                     }
                 }
 
                 this.rangeStartIndex = -1;
-            });
+                return of(null);
+            }),
+            filter(currentIndex => currentIndex !== null),
+            takeUntil(this.destroyed$),
+        ).subscribe(currentIndex => {
+            this.currentItemIndex = currentIndex;
+            this.changeDetectorRef.markForCheck();
+        });
     }
 
     public getDragContext(index: number) {
@@ -1010,7 +1017,10 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                 this.itemDragEnd.emit(event);
                 delete this._ddStartIndex;
                 delete this._ddTargetIndex;
-                this.calcViewList$().pipe(first()).subscribe(noop); // Comment this line to debug dragdrop
+                this.calcViewList$().pipe(
+                    first(),
+                    takeUntil(this.destroyed$)
+                ).subscribe(); // Comment this line to debug dragdrop
             },
             dragstartcallback: (event: IDejaDragEvent) => {
                 const targetIndex = this.getItemIndexFromHTMLElement(event.target as HTMLElement);
@@ -1051,10 +1061,11 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                             first(),
                             map(() => finalTarget));
                     } else {
-                        return observableOf(finalTarget);
+                        return of(finalTarget);
                     }
-                }))
-                .subscribe(noop);
+                }),
+                takeUntil(this.destroyed$)
+            ).subscribe();
 
             event.preventDefault();
             return;
@@ -1067,8 +1078,9 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                 delete this._ddStartIndex;
                 delete this._ddTargetIndex;
                 this.drop$().pipe(
-                    switchMap(() => this.calcViewList$().pipe(first())))
-                    .subscribe(noop);
+                    switchMap(() => this.calcViewList$().pipe(first())),
+                    takeUntil(this.destroyed$)
+                ).subscribe();
                 event.preventDefault();
             },
         };
@@ -1084,7 +1096,10 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
 
         if (!listBounds.containsPoint(new Position(event.pageX, event.pageY))) {
             this._ddTargetIndex = this._ddStartIndex;
-            this.calcViewList$().pipe(first()).subscribe(noop);
+            this.calcViewList$().pipe(
+                first(),
+                takeUntil(this.destroyed$)
+            ).subscribe();
         }
     }
 
@@ -1141,7 +1156,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
 
     public toggleSelect$(items: IItemBase[], state: boolean): Observable<IItemBase[]> {
         if (!this._multiSelect && !items[0].selected === !state) {
-            return observableOf(items);
+            return of(items);
         } else {
             return super.toggleSelect$(items, state).pipe(
                 tap(() => {

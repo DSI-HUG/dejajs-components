@@ -10,7 +10,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Optional, Output, Self, ViewChild } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroupDirective, NgControl, NgForm, ValidationErrors, Validator, ValidatorFn } from '@angular/forms';
-import { CanUpdateErrorState, ErrorStateMatcher } from '@angular/material';
+import { CanUpdateErrorState, ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { _MatInputMixinBase } from '@deja-js/core/util';
 import { Subject } from 'rxjs';
@@ -58,7 +58,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
 
     /** InputElement of stepper */
     private inputElement: HTMLInputElement;
-    @ViewChild('inputStepper', { static: false })
+    @ViewChild('inputStepper')
     public set inputElementRef(element: ElementRef) {
         if (element) {
             this.inputElement = element.nativeElement;
@@ -184,9 +184,9 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     @HostBinding('attr.disabled') public _disabled: boolean = null;
 
     // NgModel implementation
-    protected onTouchedCallback: () => void = () => { };
-    protected onChangeCallback: (_: any) => void = () => { };
-    protected onValidatorChangeCallback: () => void = () => { };
+    protected onTouchedCallback = () => { };
+    protected onChangeCallback = (_?: any) => { };
+    protected onValidatorChangeCallback = () => { };
 
     constructor(
         public dejaTextMetricsService: DejaTextMetricsService,
@@ -203,7 +203,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
             this.ngControl.valueAccessor = this;
         }
 
-        this.fm.monitor(elementRef.nativeElement, true).subscribe((origin) => {
+        this.fm.monitor(elementRef.nativeElement, true).subscribe(origin => {
             this.focused = !!origin;
             if (!this.focused) {
                 this.onTouchedCallback();

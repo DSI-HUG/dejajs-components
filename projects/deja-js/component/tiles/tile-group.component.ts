@@ -7,13 +7,13 @@
  */
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, HostBinding, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, HostBinding, Input, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { DejaEditorComponent } from '@deja-js/component/editor';
 import { DejaPopupService } from '@deja-js/component/popup';
-import { Color } from '@deja-js/core';
-import { from as observableFrom, Subject, Subscription, timer } from 'rxjs';
-import { debounceTime, filter, takeWhile } from 'rxjs/operators';
+import { Color, Destroy } from '@deja-js/core';
+import { from, Subject, Subscription, timer } from 'rxjs';
+import { debounceTime, filter, takeUntil, takeWhile } from 'rxjs/operators';
 import { TileGroupStyleEditorConfig } from './tile-group-style-editor-config';
 import { ITileGroupStyleEditorData } from './tile-group-style-editor.component';
 import { DejaTileBorderDirection, DejaTileGroup } from './tile-group.class';
@@ -27,10 +27,10 @@ import { DejaTileBorderDirection, DejaTileGroup } from './tile-group.class';
     ],
     templateUrl: './tile-group.component.html',
 })
-export class DejaTileGroupComponent implements OnDestroy {
+export class DejaTileGroupComponent extends Destroy {
     public edit$ = new Subject<void>();
     public editorConfig = DejaTileGroupComponent.buildEditorConfig();
-    @ViewChild(DejaEditorComponent, { static: false }) public editor: DejaEditorComponent;
+    @ViewChild(DejaEditorComponent) public editor: DejaEditorComponent;
     @HostBinding('style.color') public foregroundColor: string = null;
     @HostBinding('style.background-color') public backgroundColor: string = null;
     @HostBinding('style.border-top') public borderTop: string = null;
@@ -42,20 +42,18 @@ export class DejaTileGroupComponent implements OnDestroy {
     @Output() public modelChanged = new EventEmitter<DejaTileGroup>();
 
     public editing = false;
-    private isAlive = true;
     private subscriptions = [] as Subscription[];
     private _model: DejaTileGroup;
 
     constructor(private changeDetectorRef: ChangeDetectorRef, private dejaPopupService: DejaPopupService, private sanitizer: DomSanitizer) {
-        observableFrom(this.edit$).pipe(
-            takeWhile(() => this.isAlive),
+        super();
+
+        from(this.edit$).pipe(
             filter(() => this._designMode),
-            debounceTime(100)
-        ).subscribe(() => {
-            if (this.editor) {
-                this.editor.setFocus();
-            }
-        });
+            debounceTime(100),
+            filter(() => !!this.editor),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => this.editor.setFocus());
     }
 
     @Input()
@@ -69,14 +67,15 @@ export class DejaTileGroupComponent implements OnDestroy {
 
         if (value) {
             // Refresh
-            this.subscriptions.push(observableFrom(this._model.refresh$).pipe(
-                takeWhile(() => this.isAlive && !!this._model),
-                debounceTime(1))
-                .subscribe(() => {
-                    this.updateColorsFromModel();
-                    this.updateBorderFromModel();
-                    this.modelChanged.emit(this.model);
-                }));
+            this.subscriptions.push(from(this._model.refresh$).pipe(
+                takeWhile(() => !!this._model),
+                debounceTime(1),
+                takeUntil(this.destroyed$)
+            ).subscribe(() => {
+                this.updateColorsFromModel();
+                this.updateBorderFromModel();
+                this.modelChanged.emit(this.model);
+            }));
         }
     }
 
@@ -126,22 +125,15 @@ export class DejaTileGroupComponent implements OnDestroy {
         };
     }
 
-    public ngOnDestroy() {
-        this.isAlive = false;
-
-        this.subscriptions.forEach((subscription) => subscription.unsubscribe());
-    }
-
     public edit(): void {
         if (this.designMode) {
             this.editing = true;
             this.changeDetectorRef.markForCheck();
             // Put this action on the browser queue to execute it after the editor became visible
-            timer(100).subscribe(() => {
-                if (this.editor) {
-                    this.editor.setFocus();
-                }
-            });
+            timer(100).pipe(
+                filter(() => !!this.editor),
+                takeUntil(this.destroyed$)
+            ).subscribe(() => this.editor.setFocus());
         }
     }
 
@@ -175,7 +167,9 @@ export class DejaTileGroupComponent implements OnDestroy {
             borderDirection: this.model.borderDirection
         };
 
-        this.dejaPopupService.openAdvanced$(config).subscribe((res) => {
+        this.dejaPopupService.openAdvanced$(config).pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe(res => {
             if (!res.accepted) {
                 this.model.borderColor = backup.borderColor;
                 this.model.borderDirection = backup.borderDirection;

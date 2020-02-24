@@ -8,7 +8,7 @@
 
 import { Component } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { DejaNumericStepperComponent } from '@deja-js/component';
+import { DejaNumericStepperComponent } from '@deja-js/component/numeric-stepper';
 
 @Component({
     selector: 'deja-numeric-stepper-demo',

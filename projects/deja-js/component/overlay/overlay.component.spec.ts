@@ -6,36 +6,45 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { OverlayModule } from '@angular/cdk/overlay';
+import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { DejaConnectionPositionPair, MediaModule, MediaService } from '@deja-js/core';
+import { By } from '@angular/platform-browser';
+import { DejaConnectionPositionPair, MediaService } from '@deja-js/core';
+import { DejaOverlayModule } from './index';
 import { DejaOverlayComponent } from './overlay.component';
 import { MockMediaService } from './test/MockMediaService';
+
+@Component({
+    template: `<deja-overlay>Overlay content</deja-overlay>`,
+})
+class DejaOverlayContainerComponent {
+    constructor() { }
+}
 
 describe('DejaOverlayComponent', () => {
 
     let comp: DejaOverlayComponent;
-    let fixture: ComponentFixture<DejaOverlayComponent>;
-    let cdkOverlayContainerEl: HTMLElement;
+    let fixture: ComponentFixture<DejaOverlayContainerComponent>;
 
     const removeStaledOverlayContainersFunction = () => {
         // Remove any stale overlay containers from previous tests that didn't clean up correctly.
         const staleContainers = document.querySelectorAll('.cdk-overlay-container');
         for (let i = staleContainers.length - 1; i >= 0; i--) {
-            staleContainers[i].parentNode!.removeChild(staleContainers[i]);
+            staleContainers[i].parentNode.removeChild(staleContainers[i]);
         }
     };
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [DejaOverlayComponent], // declare the test component
-            imports: [MediaModule, OverlayModule],
+            declarations: [DejaOverlayContainerComponent], // declare the test component
+            imports: [DejaOverlayModule],
             providers: [
                 {
                     provide: MediaService, useClass:
                         MockMediaService
                 }
-            ]
+            ],
+            schemas: [NO_ERRORS_SCHEMA]
         }).compileComponents();
     }));
 
@@ -44,9 +53,9 @@ describe('DejaOverlayComponent', () => {
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(DejaOverlayComponent);
-        comp = fixture.componentInstance; // BannerComponent test instance
-        cdkOverlayContainerEl = document.querySelector('.cdk-overlay-container') as HTMLElement;
+        fixture = TestBed.createComponent(DejaOverlayContainerComponent);
+        const overlayDebugElement = fixture.debugElement.query(By.directive(DejaOverlayComponent));
+        comp = overlayDebugElement.componentInstance;
     });
 
     afterEach(() => {
@@ -88,6 +97,7 @@ describe('DejaOverlayComponent', () => {
         comp.isVisible = true;
         fixture.detectChanges();
         const cdkBackdropContainerEl = document.querySelector('.cdk-overlay-backdrop');
+        const cdkOverlayContainerEl = document.querySelector('.cdk-overlay-container');
         expect(cdkOverlayContainerEl.classList.contains('deja-overlay-container')).toBeTruthy();
         expect(cdkBackdropContainerEl.classList.contains('cdk-overlay-opaque-backdrop')).toBeTruthy();
     });
@@ -162,24 +172,24 @@ describe('DejaOverlayComponent', () => {
         expect(returnedWidth).toEqual('50%');
     });
 
-    it('should emit visibleChange event when isVisible change', (done: Function) => {
+    it('should emit visibleChange event when isVisible change', (done) => {
         fixture.detectChanges();
         comp.visibleChange.subscribe((g: boolean) => {
             expect(g).toEqual(true);
             done();
         });
         comp.isVisible = true;
-        fixture.detectChanges();
+        fixture.detectChanges(false);
     });
 
-    it('should emit closed event when invoking close()', (done: Function) => {
+    it('should emit closed event when invoking close()', (done) => {
         fixture.detectChanges();
         comp.closed.subscribe((g: boolean) => {
             expect(g).toEqual(true);
             done();
         });
         comp.isVisible = true;
-        fixture.detectChanges();
+        fixture.detectChanges(true);
         comp.close();
     });
 });

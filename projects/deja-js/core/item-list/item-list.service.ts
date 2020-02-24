@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { BehaviorSubject, concat as observableConcat, from as observableFrom, iif as observableIif, Observable, of as observableOf, Subscriber } from 'rxjs';
+import { BehaviorSubject, concat, from, iif, Observable, of, Subscriber } from 'rxjs';
 import { filter, map, reduce, switchMap, tap } from 'rxjs/operators';
 import { Diacritics } from '../diacritics/diacritics';
 import { IGroupInfo } from '../grouping/group-infos';
@@ -228,20 +228,20 @@ export class ItemListService {
     public setItems$(items: any[] | Promise<any[]> | Observable<any[]>) {
         if (!items) {
             this.items = undefined;
-            return observableOf(null);
+            return of(null);
         } else if (items instanceof Array) {
             this.ensureChildrenProperties(items);
             this.ensureSelectedItems(items);
             this.items = items;
             this._waiter$.next(false);
-            return observableOf(items);
+            return of(items);
         } else {
             this.items = undefined;
             this._waiter$.next(true);
             let observable = items as Observable<IItemBase[]>;
             if (observable.subscribe === undefined) {
                 const promise = items as Promise<IItemBase[]>;
-                observable = observableFrom(promise);
+                observable = from(promise);
             }
 
             return observable.pipe(
@@ -504,7 +504,7 @@ export class ItemListService {
      * @return Observable résolu par la fonction.
      */
     public toggleAll$(collapsed: boolean): Observable<IItemTree[]> {
-        return observableOf(this._cache.flatList).pipe(
+        return of(this._cache.flatList).pipe(
             map((items: IItemTree[]) => items.filter((item) => item.$items && item.collapsible !== false)),
             tap(() => delete this._cache.visibleList), // Invalidate view cache
             switchMap((items) => collapsed ? this.collapseItems$(items) : this.expandItems$(items)));
@@ -523,7 +523,7 @@ export class ItemListService {
 
         const item = visibleList[index] as IItemTree;
         if (!item || item.collapsible === false) {
-            return observableOf([]);
+            return of([]);
         }
 
         const collapsed = collapse !== undefined ? collapse : item.collapsed ? false : true;
@@ -535,7 +535,7 @@ export class ItemListService {
      * @return Observable résolu par la fonction.
      */
     public expandItems$(items: IItemBase[]): Observable<IItemBase[]> {
-        return observableFrom(items || []).pipe(
+        return from(items || []).pipe(
             switchMap((item) => this.expandItem$(item)),
             reduce((acc, cur) => [...acc, cur], []));
     }
@@ -545,7 +545,7 @@ export class ItemListService {
      * @return Observable résolu par la fonction.
      */
     public collapseItems$(items: IItemBase[]): Observable<IItemBase[]> {
-        return observableFrom(items || []).pipe(
+        return from(items || []).pipe(
             switchMap((item) => this.collapseItem$(item)),
             reduce((acc, cur) => [...acc, cur], []));
     }
@@ -555,9 +555,9 @@ export class ItemListService {
      * @return Observable résolu par la fonction.
      */
     public expandItem$(item: IItemTree) {
-        return observableOf(item).pipe(
+        return of(item).pipe(
             filter((itm) => !!itm),
-            switchMap((itm) => this.expandingItem$ ? this.expandingItem$(itm) : observableOf(itm)),
+            switchMap((itm) => this.expandingItem$ ? this.expandingItem$(itm) : of(itm)),
             filter((itm) => !!itm),
             tap((itm) => {
                 itm.collapsed = false;
@@ -571,9 +571,9 @@ export class ItemListService {
      * @return Observable résolu par la fonction.
      */
     public collapseItem$(item: IItemTree) {
-        return observableOf(item).pipe(
+        return of(item).pipe(
             filter((itm) => !!itm),
-            switchMap((itm) => this.collapsingItem$ ? this.collapsingItem$(itm) : observableOf(itm)),
+            switchMap((itm) => this.collapsingItem$ ? this.collapsingItem$(itm) : of(itm)),
             filter((itm) => !!itm),
             tap((itm) => {
                 itm.collapsed = true;
@@ -654,7 +654,7 @@ export class ItemListService {
      */
     public toggleSelect$(items: IItemBase[], selected: boolean) {
         items = items || [];
-        return observableIif(() => selected, this.selectItems$(items), this.unSelectItems$(items)).pipe(
+        return iif(() => selected, this.selectItems$(items), this.unSelectItems$(items)).pipe(
             map(() => {
                 if (this.hideSelected) {
                     delete this._cache.visibleList;
@@ -668,7 +668,7 @@ export class ItemListService {
      * @return Observable résolu par la fonction.
      */
     public selectItems$(items: IItemBase[]): Observable<IItemBase[]> {
-        return observableFrom(items || []).pipe(
+        return from(items || []).pipe(
             switchMap((item) => this.selectItem$(item)),
             reduce((acc: IItemBase[], cur: IItemBase) => [...acc, cur], []));
     }
@@ -678,7 +678,7 @@ export class ItemListService {
      * @return Observable résolu par la fonction.
      */
     public unSelectItems$(items: IItemBase[]): Observable<IItemBase[]> {
-        return observableFrom(items || []).pipe(
+        return from(items || []).pipe(
             filter((item) => item.selected),
             switchMap((item) => this.unSelectItem$(item)),
             reduce((acc: IItemBase[], cur: IItemBase) => [...acc, cur], []));
@@ -689,9 +689,9 @@ export class ItemListService {
      * @return Observable résolu par la fonction.
      */
     public selectItem$(item: IItemBase) {
-        return observableOf(item).pipe(
+        return of(item).pipe(
             filter((itm) => !!itm),
-            switchMap((itm) => this.selectingItem$ ? this.selectingItem$(itm) : observableOf(itm)),
+            switchMap((itm) => this.selectingItem$ ? this.selectingItem$(itm) : of(itm)),
             filter((itm) => !!itm),
             tap((itm) => {
                 if (!this.selectedList) {
@@ -708,9 +708,9 @@ export class ItemListService {
      * @return Observable résolu par la fonction.
      */
     public unSelectItem$(item: IItemBase) {
-        return observableOf(item).pipe(
+        return of(item).pipe(
             filter((itm) => !!itm),
-            switchMap((itm) => this.unselectingItem$ ? this.unselectingItem$(itm) : observableOf(itm)),
+            switchMap((itm) => this.unselectingItem$ ? this.unselectingItem$(itm) : of(itm)),
             filter((itm) => !!itm),
             tap((itm) => {
                 itm.selected = false;
@@ -759,7 +759,7 @@ export class ItemListService {
                 }
             }
         }
-        return observableOf(result);
+        return of(result);
     }
 
     /** Trie les éléments en fonction du modèle de tri spécifié
@@ -795,7 +795,7 @@ export class ItemListService {
         this._groupInfos = groupInfos;
         this.invalidateCache();
         this.ensureChildrenProperties(this.items);
-        return observableOf(groupInfos);
+        return of(groupInfos);
     }
 
     /** Retire les groupe correspondants au modèle de groupe spécifié
@@ -810,7 +810,7 @@ export class ItemListService {
 
         this.invalidateCache();
         this.ensureChildrenProperties(this.items);
-        return observableOf(groupInfo);
+        return of(groupInfo);
     }
 
     /** Retrouve les informations du parent de l'élément spécifié
@@ -845,7 +845,7 @@ export class ItemListService {
                 }
             }
 
-            return observableOf(result);
+            return of(result);
         };
 
         return this.ensureFlatListCache$(true, multiSelect).pipe(
@@ -989,7 +989,7 @@ export class ItemListService {
      * @return Observable résolu par la fonction, qui retourne la liste à utiliser.
      */
     protected getItemList$(query?: RegExp | string, selectedItems?: IItemBase[]): Observable<IItemBase[]> {
-        return this.loadingItems$ ? this.loadingItems$(query, selectedItems) : observableOf(this.items);
+        return this.loadingItems$ ? this.loadingItems$(query, selectedItems) : of(this.items);
     }
 
     /** Retourne une valeur indiquant si l'élément spécifié correspond aux critères de recherche spécifiés
@@ -1014,7 +1014,7 @@ export class ItemListService {
      * @return Observable résolu par la fonction, qui retourne la liste groupés.
      */
     protected getGroupedList$(items: IItemBase[]): Observable<IItemTree[]> {
-        return items ? this.getGroupingService().group$(this.items, this.groupInfos, '$items') : observableOf([]);
+        return items ? this.getGroupingService().group$(this.items, this.groupInfos, '$items') : of([]);
     }
 
     /** Retourne la liste des éléments visibles. Si la liste des éléments est hièrarchique, cette fonction retourne une liste plate. Cette liste est utilisé pour calculer la portion de la liste à afficher.
@@ -1027,7 +1027,7 @@ export class ItemListService {
      */
     protected getVisibleList$(items: IItemBase[], searchField: string, regExp: RegExp, expandTree: boolean, multiSelect: boolean): Observable<IItemBase[]> {
         if (!items) {
-            return observableOf([]);
+            return of([]);
         }
 
         let visibleList = [] as IItemTree[];
@@ -1114,7 +1114,7 @@ export class ItemListService {
             getVisibleListInternal(items, 0, false);
         }
 
-        return observableOf(visibleList).pipe(
+        return of(visibleList).pipe(
             tap(() => {
                 if (!multiSelect) {
                     this.selectedList = selectedList;
@@ -1129,7 +1129,7 @@ export class ItemListService {
      */
     protected getFlatList$(items: IItemBase[], isFiltered: boolean, multiSelect: boolean): Observable<IItemBase[]> {
         if (!items) {
-            return observableOf([]);
+            return of([]);
         }
 
         const visibleList = [] as IItemBase[];
@@ -1139,7 +1139,7 @@ export class ItemListService {
         let odd = false;
 
         const flatList$: any = (itms: IItemTree[], depth: number, hidden: boolean) => {
-            return observableFrom(itms || []).pipe(
+            return from(itms || []).pipe(
                 tap((item) => {
                     if (depth > depthMax) {
                         depthMax = depth;
@@ -1166,9 +1166,9 @@ export class ItemListService {
                     if (item.$items) {
                         isTree = true;
                         odd = false;
-                        return observableConcat(observableOf(item), flatList$(item.$items, depth + 1, hidden || item.collapsed));
+                        return concat(of(item), flatList$(item.$items, depth + 1, hidden || item.collapsed));
                     } else {
-                        return observableOf(item);
+                        return of(item);
                     }
                 }));
         };
@@ -1282,7 +1282,7 @@ export class ItemListService {
 
     private ensureVisibleListCache$(searchField: string, regExp: RegExp, expandTree: boolean, multiSelect: boolean) {
         if (this._cache.visibleList && this._cache.visibleList.length) {
-            return observableOf(this._cache.visibleList);
+            return of(this._cache.visibleList);
         } else {
             return this.ensureFlatListCache$(!!regExp, multiSelect).pipe(
                 switchMap(() => this.getVisibleList$(this._cache.groupedList, searchField, regExp, expandTree, multiSelect)),
@@ -1300,7 +1300,7 @@ export class ItemListService {
 
     private ensureFlatListCache$(isFiltered: boolean, multiSelect: boolean) {
         if (this._cache.flatList && this._cache.flatList.length) {
-            return observableOf(this._cache.flatList);
+            return of(this._cache.flatList);
         } else {
             return this.ensureGroupedListCache$().pipe(
                 switchMap(() => this.getFlatList$(this._cache.groupedList, isFiltered, multiSelect)),
@@ -1327,9 +1327,9 @@ export class ItemListService {
 
     private ensureGroupedListCache$() {
         if (this._cache.groupedList && this._cache.groupedList.length) {
-            return observableOf(this._cache.groupedList);
+            return of(this._cache.groupedList);
         } else if (!this.groupInfos || this.groupInfos.length === 0) {
-            return observableOf(this.items).pipe(
+            return of(this.items).pipe(
                 tap((items) => this._cache.groupedList = items));
         } else if (this.items) {
             return this.getGroupedList$(this.items).pipe(
@@ -1341,7 +1341,7 @@ export class ItemListService {
                     this._cache.groupedList = groupedList;
                 }));
         } else {
-            return observableOf([]);
+            return of([]);
         }
     }
 

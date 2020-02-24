@@ -33,10 +33,10 @@ export class DejaGridParentRowComponent {
     @Input() public flatIndex: number;
 
     /** Template de titre par defaut définit dans le HTML de la grille */
-    @ContentChild('parentTitleTemplate', { static: false }) public parentTitleTemplateInternal: any;
+    @ContentChild('parentTitleTemplate') public parentTitleTemplateInternal: any;
 
     /** Template de cellule par defaut  définit dans le HTML de la grille */
-    @ContentChild('cellTemplate', { static: false }) public cellTemplateInternal: any;
+    @ContentChild('cellTemplate') public cellTemplateInternal: any;
 
     private _columnLayout = {} as IDejaGridParentRowColumnLayout;
 

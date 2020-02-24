@@ -7,11 +7,11 @@
  */
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Optional, Output, Self, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Optional, Output, Self, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { KeyCodes } from '@deja-js/core';
-import { from as observableFrom, fromEvent as observableFromEvent, Subject } from 'rxjs';
-import { first, takeWhile } from 'rxjs/operators';
+import { Destroy, KeyCodes } from '@deja-js/core';
+import { from, fromEvent, merge, Subject } from 'rxjs';
+import { debounceTime, filter, takeUntil, tap } from 'rxjs/operators';
 import { IDateSelectorItem } from './date-selector-item.model';
 
 export enum DaysOfWeek {
@@ -30,8 +30,6 @@ export enum DateComponentLayout {
     timeonly,
 }
 
-const noop = () => { };
-
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -39,7 +37,7 @@ const noop = () => { };
     styleUrls: ['./date-selector.scss'],
     templateUrl: './date-selector.component.html',
 })
-export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, OnDestroy {
+export class DejaDateSelectorComponent extends Destroy implements OnInit, ControlValueAccessor {
     @Input() public startDay: DaysOfWeek = DaysOfWeek.Monday;
     @Input() public disableDates: Array<(DaysOfWeek | Date)>; // | ((d: Date) => boolean);
     @Input() public dateMax: Date;
@@ -68,15 +66,11 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
     };
     // /Time
 
-    public _keyboardNavigation = false;
-    private _keyboardNavigation$ = new Subject();
+    private _keyboardNavigation = false;
+    private _keyboardNavigation$ = new Subject<boolean>();
 
     public get keyboardNavigation() {
         return this._keyboardNavigation;
-    }
-
-    public get keyboardNavigation$() {
-        return this._keyboardNavigation$;
     }
 
     public get displayedDate() {
@@ -86,11 +80,6 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
     public get local() {
         return this._local;
     }
-
-    public onTouchedCallback: () => void = noop;
-    public onChangeCallback: (_: any) => void = noop;
-
-    private isAlive = true;
 
     private _currentDays: IDateSelectorItem[];
     private _currentDate: Date = new Date();
@@ -172,41 +161,50 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
         return this._disabled;
     }
 
+    public onTouchedCallback = (_a?: any) => { };
+    public onChangeCallback = (_a?: any) => { };
+
     constructor(elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, @Self() @Optional() public _control: NgControl) {
+        super();
+
         const element = elementRef.nativeElement as HTMLElement;
 
         if (this._control) {
             this._control.valueAccessor = this;
         }
 
-        observableFromEvent(element, 'click').pipe(
-            takeWhile(() => this.isAlive))
-            .subscribe((event: Event) => {
-                const target = event.target as HTMLElement;
-                if (target.hasAttribute('dateindex')) {
-                    const dateSelectorItem = this._currentDays[+target.getAttribute('dateindex')];
-                    if (!dateSelectorItem.disabled) {
-                        const val = new Date(dateSelectorItem.date);
-                        if (this._displayedDate) {
-                            val.setHours(this._displayedDate.getHours(), this._displayedDate.getMinutes(), this._displayedDate.getSeconds(), this._displayedDate.getMilliseconds());
-                        }
-                        this.value = val;
-                        this.dateChange.emit(this.value);
+        fromEvent(element, 'click').pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe(event => {
+            const target = event.target as HTMLElement;
+            if (target.hasAttribute('dateindex')) {
+                const dateSelectorItem = this._currentDays[+target.getAttribute('dateindex')];
+                if (!dateSelectorItem.disabled) {
+                    const val = new Date(dateSelectorItem.date);
+                    if (this._displayedDate) {
+                        val.setHours(this._displayedDate.getHours(), this._displayedDate.getMinutes(), this._displayedDate.getSeconds(), this._displayedDate.getMilliseconds());
                     }
+                    this.value = val;
+                    this.dateChange.emit(this.value);
                 }
-            });
+            }
+        });
 
-        observableFrom(this._keyboardNavigation$).pipe(
-            takeWhile(() => this.isAlive))
-            .subscribe(() => {
-                this._keyboardNavigation = true;
-                observableFromEvent(element, 'mouseenter').pipe(
-                    first())
-                    .subscribe(() => {
-                        this._keyboardNavigation = false;
-                        this.changeDetectorRef.markForCheck();
-                    });
-            });
+        merge(this._keyboardNavigation$, fromEvent(element, 'mouseleave'), fromEvent(element, 'click')).pipe(
+            filter(() => this._keyboardNavigation),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => {
+            this._keyboardNavigation = false;
+            this.changeDetectorRef.markForCheck();
+        });
+
+        from(this._keyboardNavigation$).pipe(
+            filter(value => value),
+            tap(value => this._keyboardNavigation = value),
+            debounceTime(2000),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => this._keyboardNavigation$.next(false));
+
         this.layout = DateComponentLayout.dateonly;
     }
 
@@ -215,10 +213,6 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
             this._displayedDate = this._currentDate;
             this.bind();
         }
-    }
-
-    public ngOnDestroy() {
-        this.isAlive = false;
     }
 
     // ************* ControlValueAccessor Implementation **************
@@ -339,8 +333,8 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
             this.selectedDate = new Date(this._currentDate);
         }
 
-        this._keyboardNavigation$.next();
-        switch (event.keyCode) {
+        this._keyboardNavigation$.next(true);
+        switch (event.code) {
             case KeyCodes.PageUp:
             case KeyCodes.PageDown:
             case KeyCodes.UpArrow:
@@ -349,7 +343,7 @@ export class DejaDateSelectorComponent implements OnInit, ControlValueAccessor, 
             case KeyCodes.RightArrow:
                 event.preventDefault();
                 const d = new Date(this.selectedDate);
-                switch (event.keyCode) {
+                switch (event.code) {
                     case KeyCodes.PageUp:
                         // d.setMonth(d.getMonth() - 1);
                         this.setMonthIfPossible(d, -1);

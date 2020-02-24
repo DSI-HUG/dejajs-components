@@ -78,7 +78,7 @@ describe('DejaMarkdownComponent', () => {
         httpMock.expectOne('aWrongUrl').error(new ErrorEvent('Error: some error'));
 
         fixture.detectChanges();
-        console.log(fixture.nativeElement.innerText);
+        // console.log(fixture.nativeElement.innerText);
         expect(fixture.nativeElement.innerText).toEqual('Http failure response for aWrongUrl: 0');
     });
 });

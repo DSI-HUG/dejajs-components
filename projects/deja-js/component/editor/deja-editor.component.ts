@@ -6,27 +6,12 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    EventEmitter,
-    forwardRef,
-    Input,
-    NgZone,
-    OnChanges,
-    OnDestroy,
-    Output,
-    SimpleChanges,
-    ViewChild,
-    ViewEncapsulation
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, forwardRef, Input, NgZone, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Destroy } from '@deja-js/core';
 import * as _ from 'lodash';
-
-import { first, take } from 'rxjs/operators';
+import { Subscription, timer } from 'rxjs';
+import { first, take, takeUntil } from 'rxjs/operators';
 import { DejaEditorService } from './deja-editor.service';
 
 declare var CKEDITOR: any;
@@ -50,8 +35,7 @@ declare var CKEDITOR: any;
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class DejaEditorComponent
-    implements OnChanges, AfterViewInit, OnDestroy, ControlValueAccessor {
+export class DejaEditorComponent extends Destroy implements OnChanges, AfterViewInit, OnDestroy, ControlValueAccessor {
     @Input() public config: any;
     @Input() public debounce: string;
 
@@ -87,7 +71,7 @@ export class DejaEditorComponent
 
     private _value = '';
     public instance: any;
-    public debounceTimeout: any;
+    public debounceTimeout$sub: Subscription;
 
     /**
      * Constructor
@@ -96,7 +80,9 @@ export class DejaEditorComponent
         private zone: NgZone,
         private _changeDetectorRef: ChangeDetectorRef,
         private _initializer: DejaEditorService
-    ) { }
+    ) {
+        super();
+    }
 
     public get value(): any {
         return this._value;
@@ -120,6 +106,8 @@ export class DejaEditorComponent
      * On component destroy
      */
     public ngOnDestroy() {
+        super.ngOnDestroy();
+
         this.focus.complete();
         this.blur.complete();
         this.change.complete();
@@ -136,7 +124,9 @@ export class DejaEditorComponent
                 this.ready.complete();
                 this.instance = null;
             } else {
-                this.ready.pipe(first()).subscribe(() => {
+                this.ready.pipe(
+                    first(),
+                ).subscribe(() => {
                     try {
                         // Workaround for a ckEditor bug
                         this.instance.destroy();
@@ -156,8 +146,12 @@ export class DejaEditorComponent
     public ngAfterViewInit() {
         this._initializer.initDejaEditorLib().then(() => {
             this.ckeditorInit(_.cloneDeep(this.config) || {});
-            // Effectively display the editor even if parents component ChangeDetectionStrategy is OnPush
-            setTimeout(() => this._changeDetectorRef.markForCheck());
+            if (!this.destroyed$.closed) {
+                // Effectively display the editor even if parents component ChangeDetectionStrategy is OnPush
+                timer(0).pipe(
+                    takeUntil(this.destroyed$)
+                ).subscribe(() => this._changeDetectorRef.markForCheck());
+            }
         });
     }
 
@@ -204,13 +198,13 @@ export class DejaEditorComponent
                 config.readOnly = this.readonly;
             }
 
-            const keyEvents = config.on && config.on.key;
+            const keyEvents = config.on?.key;
             if (!config.on) {
                 config.on = {};
             }
             config.on.key = (event: any) => {
                 // Override CTRL+A event. Native one cause editor switch on first try
-                if (event.data.keyCode === 1114177) {
+                if (event.data.code === 1114177) {
                     // CTRL + A
                     event.cancel();
                     event.stop();
@@ -245,16 +239,16 @@ export class DejaEditorComponent
 
             // CKEditor change event
             this.instance.on('change', () => {
-
                 // Debounce update
                 if (this.debounce) {
-                    if (this.debounceTimeout) {
-                        clearTimeout(this.debounceTimeout);
-                    }
-                    this.debounceTimeout = setTimeout(() => {
+                    const debounce = parseInt(this.debounce, 10);
+                    this.debounceTimeout$sub?.unsubscribe();
+                    this.debounceTimeout$sub = timer(debounce).pipe(
+                        takeUntil(this.destroyed$)
+                    ).subscribe(() => {
                         this.updateValue();
-                        this.debounceTimeout = null;
-                    }, parseInt(this.debounce, 10));
+                        this.debounceTimeout$sub = null;
+                    });
 
                     // Live update
                 } else {
@@ -282,13 +276,17 @@ export class DejaEditorComponent
      */
     public writeValue(value: any) {
         this._value = value;
-        setTimeout(() => {
-            if (this.instance) {
-                this.instance.setData(value);
-            } else {
-                this.host.nativeElement.value = value;
-            }
-        }, 0);
+        if (!this.destroyed$.closed) {
+            timer(0).pipe(
+                takeUntil(this.destroyed$)
+            ).subscribe(() => {
+                if (this.instance) {
+                    this.instance.setData(value);
+                } else {
+                    this.host.nativeElement.value = value;
+                }
+            });
+        }
     }
 
     public onChange(_x: any) { }
@@ -311,7 +309,10 @@ export class DejaEditorComponent
                 this.instance.setReadOnly(isDisabled);
             }
         } else {
-            this.ready.pipe(take(1)).subscribe(() => {
+            this.ready.pipe(
+                take(1),
+                takeUntil(this.destroyed$)
+            ).subscribe(() => {
                 this.instance.setReadOnly(this.readonly);
             });
         }
@@ -360,20 +361,20 @@ export class DejaEditorComponent
             // So we temporarily deactivate it
             const focus = this.instance.focus;
             this.instance.focus = () => { };
-            this.instance.insertText(replace);
+            this.instance.insertHtml(replace);
             this.instance.focus = focus;
             return;
         }
         const range = this.instance.getSelection().getRanges(true)[0];
         if (!range) {
-            this.instance.insertText(replace);
+            this.instance.insertHtml(replace);
             return;
         }
         const text = this._firstTextNode(range);
         if (text) {
             this._replaceWord(text, replace);
         } else {
-            this.instance.insertText(replace);
+            this.instance.insertHtml(replace);
         }
         this.updateValue();
         this.setFocus();
@@ -569,10 +570,10 @@ export class DejaEditorComponent
             const afterText = node.textNode.getText().substring(index + node.toReplace.length);
             node.textNode.setText(beforeText);
             const newElement = CKEDITOR.dom.element.createFromHtml(
-                `<span>${CKEDITOR.tools.transformPlainTextToHtml(
+                CKEDITOR.tools.htmlDecode(CKEDITOR.tools.transformPlainTextToHtml(
                     replace,
                     CKEDITOR.ENTER_BR
-                )}</span>`
+                ))
             );
             newElement.insertAfter(node.textNode);
             if (node.textNode.getText().substring(index + node.toReplace.length)) {

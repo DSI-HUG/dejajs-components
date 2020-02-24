@@ -7,7 +7,7 @@
  */
 
 import * as _ from 'lodash';
-import {first} from 'rxjs/operators';
+import { first } from 'rxjs/operators';
 import { ISortInfos } from '../sorting/sort-infos.model';
 import { SortOrder } from '../sorting/sort-order.model';
 import { IGroupInfo } from './group-infos';

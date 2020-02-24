@@ -1,8 +1,18 @@
-mat-form-field {
-  width: 90%;
-}
+:host {
+    mat-form-field {
+        width: 90%;
+    }
 
-deja-editor.inline {
-  width: 90%;
-  display: block;
+    deja-editor.inline {
+        width: 90%;
+        display: block;
+    }
+
+    .flexLayout {
+        display: flex;
+
+        .flexAuto {
+            flex: 1 1 0;
+        }
+    }
 }

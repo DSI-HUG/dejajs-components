@@ -18,7 +18,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DejaColorSelectorModule } from '@deja-js/component/color-selector';
 import { DejaEditorModule } from '@deja-js/component/editor';
-import { DejaMouseDragDropModule, DejaMouseDragDropService } from '@deja-js/component/mouse-dragdrop';
+import { DejaMouseDragDropModule } from '@deja-js/component/mouse-dragdrop';
 import { DejaNumericStepperModule } from '@deja-js/component/numeric-stepper';
 import { DejaOverlayModule } from '@deja-js/component/overlay';
 import { DejaPopupModule } from '@deja-js/component/popup';
@@ -50,13 +50,11 @@ import { DejaTilesComponent } from './tiles.component';
         DejaOverlayModule,
         DejaPopupModule,
     ],
-    providers: [
-        DejaMouseDragDropService,
-    ],
     entryComponents: [TileGroupStyleEditorComponent]
 })
 export class DejaTilesModule { }
 
+export * from './tiles-refresh-params.interface';
 export * from './tile-group-style-editor-config';
 export * from './tile-group-style-editor.component';
 export * from './tile-group.class';

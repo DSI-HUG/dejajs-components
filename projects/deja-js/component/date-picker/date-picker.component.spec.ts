@@ -9,7 +9,7 @@ import { Component } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { from as observableFrom } from 'rxjs';
+import { from } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { DejaDatePickerComponent } from './date-picker.component';
 import { DejaDatePickerModule } from './index';
@@ -82,7 +82,7 @@ describe('DejaDatePickerContainerComponent', () => {
     it('should display date and time', async(() => {
         component.format = null;
         component.layout = 'datetime';
-        observableFrom((component as any).formatChanged$).pipe(
+        from((component as any).formatChanged$).pipe(
             first())
             .subscribe((format) => {
                 expect(format).toEqual('YYYY-MM-DD HH:mm');
@@ -100,7 +100,7 @@ describe('DejaDatePickerContainerComponent', () => {
     it('should display time', async(() => {
         component.format = null;
         component.layout = 'timeonly';
-        observableFrom((component as any).formatChanged$).pipe(
+        from((component as any).formatChanged$).pipe(
             first())
             .subscribe((format) => {
                 expect(format).toEqual('HH:mm');

@@ -11,7 +11,7 @@ import { IDejaDragEvent } from '@deja-js/component/dragdrop';
 import { IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDropCursorInfos } from '@deja-js/component/mouse-dragdrop';
 import { DejaTreeListComponent } from '@deja-js/component/tree-list';
 import { GroupingService, IItemBase, IItemTree, IViewPortItem } from '@deja-js/core';
-import { from as observableFrom, Observable, of as observableOf, Subject, Subscription } from 'rxjs';
+import { from, Observable, of, Subject, Subscription } from 'rxjs';
 import { delay, first, map, reduce, switchMap, tap } from 'rxjs/operators';
 import { News } from '../common/news.model';
 import { CountriesListService } from '../services/countries-list.service';
@@ -63,8 +63,8 @@ export class DejaTreeListDemoComponent implements OnDestroy {
     private _dialogVisible = false;
     private subscriptions = [] as Subscription[];
 
-    @ViewChild('news', { static: false }) private newsList: DejaTreeListComponent;
-    @ViewChild('onexpand', { static: false }) private onExpandList: DejaTreeListComponent;
+    @ViewChild('news') private newsList: DejaTreeListComponent;
+    @ViewChild('onexpand') private onExpandList: DejaTreeListComponent;
 
     public set dialogVisible(value: boolean) {
         this._dialogVisible = value;
@@ -215,7 +215,7 @@ export class DejaTreeListDemoComponent implements OnDestroy {
         const self = this;
         return (item: IItemBase) => {
             const country = item as ICountryGroup;
-            return country.loaded ? observableOf(item) : self.confirmDialog()(item);
+            return country.loaded ? of(item) : self.confirmDialog()(item);
         };
     }
 
@@ -224,15 +224,15 @@ export class DejaTreeListDemoComponent implements OnDestroy {
         return (item: IItemBase) => {
             const group = item as ICountryGroup;
             if (group.loaded) {
-                return observableOf(item);
+                return of(item);
             } else {
                 return self.confirmDialog()(item).pipe(
                     switchMap((itm) => {
                         if (!itm) {
-                            return observableOf(null);
+                            return of(null);
                         }
 
-                        observableOf(group).pipe(
+                        of(group).pipe(
                             delay(2000),
                             first())
                             .subscribe((grp) => {
@@ -243,7 +243,7 @@ export class DejaTreeListDemoComponent implements OnDestroy {
                                 this.onExpandList.refresh();
                             });
 
-                        return observableOf(itm);
+                        return of(itm);
                     }));
             }
         };
@@ -253,7 +253,7 @@ export class DejaTreeListDemoComponent implements OnDestroy {
         const self = this;
         return (item: IItemBase) => {
             self.dialogVisible = true;
-            return observableFrom(this.dialogResponse$).pipe(
+            return from(this.dialogResponse$).pipe(
                 first(),
                 map((response) => {
                     self.dialogVisible = false;
@@ -262,7 +262,7 @@ export class DejaTreeListDemoComponent implements OnDestroy {
         };
     }
 
-    @ViewChild('bigCountries', { static: false })
+    @ViewChild('bigCountries')
     protected set bigCountriesList(treelist: DejaTreeListComponent) {
         if (this.viewPortInfos$) {
             this.viewPortInfos$.unsubscribe();
