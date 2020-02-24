@@ -10,7 +10,7 @@
  * Created by rtr on 22.12.2016.
  */
 import { coerceNumberProperty } from '@angular/cdk/coercion';
-import { Directive, ElementRef, Input, OnDestroy, OnInit, Renderer } from '@angular/core';
+import { Directive, ElementRef, Input, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { DejaSplitterComponent } from './splitter.component';
 
 /**
@@ -60,7 +60,7 @@ export class SplitAreaDirective implements OnInit, OnDestroy {
      * Constructor
      */
     constructor(private elementRef: ElementRef,
-                private renderer: Renderer,
+                private renderer: Renderer2,
                 private split: DejaSplitterComponent) {
     }
 
@@ -97,7 +97,7 @@ export class SplitAreaDirective implements OnInit, OnDestroy {
      * @param value style value
      */
     public setStyle(key: string, value: any) {
-        this.renderer.setElementStyle(this.elementRef.nativeElement, key, value);
+        value == null ? this.renderer.removeStyle(this.elementRef.nativeElement, key) : this.renderer.setStyle(this.elementRef.nativeElement, key, value);
     }
 
     /**

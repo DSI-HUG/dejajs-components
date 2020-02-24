@@ -10,7 +10,9 @@ import { Injectable } from '@angular/core';
 import { Color } from '../graphics/color';
 import { MaterialColor } from './material-color';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class MaterialColors {
     private _colors: MaterialColor[];
     private palettes: {

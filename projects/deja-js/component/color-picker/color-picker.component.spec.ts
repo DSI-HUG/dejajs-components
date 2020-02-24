@@ -46,7 +46,8 @@ describe('DejaColorPicker', () => {
         fixture.detectChanges();
 
         const el = fixture.debugElement.query(By.css('button'));
-        expect(el.styles['background-color']).toBeNull();
+        const backgroundColor = el.styles['background-color'];
+        expect(backgroundColor).toEqual('');
     });
 
     it('should have background-color if value specified', () => {
@@ -55,7 +56,7 @@ describe('DejaColorPicker', () => {
         fixture.detectChanges();
 
         const el = fixture.debugElement.query(By.css('button'));
-        expect(el.styles['background-color']).toEqual('#FFA012');
+        expect(el.styles['background-color']).toEqual('rgb(255, 160, 18)');
     });
 
     it('should set isOpen to true on show', () => {

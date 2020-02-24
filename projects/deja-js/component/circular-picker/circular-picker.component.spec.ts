@@ -8,8 +8,8 @@
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import {timer as observableTimer } from 'rxjs';
-import {delay, first, tap} from 'rxjs/operators';
+import { timer } from 'rxjs';
+import { delay, first, tap } from 'rxjs/operators';
 import { DejaCircularPickerComponent, ICircularRange } from './circular-picker.component';
 
 describe('DejaCircularPickerComponent', () => {
@@ -101,7 +101,7 @@ describe('DejaCircularPickerComponent', () => {
             sendMouseEvent(cursorElement, 'mousedown', 0, 0, 1);
             sendMouseEvent(htmlElement.ownerDocument, 'mousemove', cursorBounds.left + 1, cursorBounds.top + 1, 1);
 
-            observableTimer(150).pipe(
+            timer(150).pipe(
                 first(),
                 tap(() => {
                     sendMouseEvent(htmlElement.ownerDocument, 'mousemove', cursorBounds.left + 50, cursorBounds.top + 67, 1);
@@ -119,7 +119,7 @@ describe('DejaCircularPickerComponent', () => {
                 }),
                 delay(150),
                 tap(() => {
-                    sendMouseEvent(htmlElement.ownerDocument, 'mousemove', valueBounds.left +  1, valueBounds.top + 1, 0);
+                    sendMouseEvent(htmlElement.ownerDocument, 'mousemove', valueBounds.left + 1, valueBounds.top + 1, 0);
                     expect(component.value).toEqual(9);
                 }))
                 .subscribe(() => {

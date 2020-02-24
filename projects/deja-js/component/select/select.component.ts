@@ -16,10 +16,8 @@ import { MatInput } from '@angular/material/input';
 import { IDejaChipsComponentCloseEvent } from '@deja-js/component/chips';
 import { DejaOverlayComponent } from '@deja-js/component/overlay';
 import { DejaChildValidatorDirective, DejaConnectionPositionPair, DejaItemComponent, DejaItemEvent, DejaItemsEvent, GroupingService, IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, IViewPort, KeyCodes, MediaService, SortingService, ViewportMode, ViewPortService } from '@deja-js/core';
-import { BehaviorSubject, combineLatest as observableCombineLatest, from as observableFrom, fromEvent as observableFromEvent, merge as observableMerge, Observable, Subject, Subscription, timer as observableTimer } from 'rxjs';
-import { combineLatest, debounce, debounceTime, delay, delayWhen, filter, first, map, switchMap, takeWhile, tap } from 'rxjs/operators';
-
-const noop = () => { };
+import { BehaviorSubject, combineLatest, from, fromEvent, merge, Observable, of, Subject, Subscription, timer } from 'rxjs';
+import { combineLatest as combineLatestOp, debounce, debounceTime, delay, delayWhen, filter, first, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 
 /** Combo box avec une liste basée sur la treelist */
 @Component({
@@ -73,19 +71,14 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
     /** For test only. */
     @Output() public dropDownVisibleChange = new EventEmitter<boolean>();
 
-    @ContentChild('itemTemplate', { static: false }) public itemTemplateInternal: any;
-    @ContentChild('parentItemTemplate', { static: false }) public parentItemTemplateInternal: any;
-    @ContentChild('selectedTemplate', { static: false }) public selectedTemplate: any;
-    @ContentChild('loaderTemplate', { static: false }) private loaderTemplateInternal: any;
+    @ContentChild('itemTemplate') public itemTemplateInternal: any;
+    @ContentChild('parentItemTemplate') public parentItemTemplateInternal: any;
+    @ContentChild('selectedTemplate') public selectedTemplate: any;
+    @ContentChild('loaderTemplate') private loaderTemplateInternal: any;
 
     /** Internal use */
     public overlayOwnerElement: HTMLElement;
     public dropDownMaxHeight: number = null;
-
-    // NgModel implementation
-    public onTouchedCallback: () => void = noop;
-    public onChangeCallback: (_: any) => void = noop;
-    public onValidatorChangeCallback: () => void = noop;
 
     protected _keyboardNavigation = false;
     @HostBinding('attr.wait') public _waiter = false;
@@ -93,9 +86,9 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
 
     private mouseUp$sub: Subscription;
 
-    @ViewChild('inputElement', { static: false }) public inputElement: ElementRef;
+    @ViewChild('inputElement') public inputElement: ElementRef;
 
-    @ViewChild(MatInput, { static: false }) protected input: MatInput;
+    @ViewChild(MatInput) protected input: MatInput;
 
     @HostBinding('attr.disabled') public _disabled: boolean = null;
     private _type = 'select';
@@ -159,7 +152,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
     }
 
     public get dropDownWidth() {
-        const element = this.elementRef && this.elementRef.nativeElement as HTMLElement;
+        const element = this.elementRef?.nativeElement as HTMLElement;
         return this._dropDownWidth || element.clientWidth;
     }
 
@@ -198,7 +191,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
 
     @ContentChildren(DejaItemComponent)
     public set options(options: DejaItemComponent[]) {
-        if (!this.items && options && options.length) {
+        if (!this.items && options?.length) {
             const selectedModels = [] as any[];
             this.valueField = 'value';
             this.textField = 'text';
@@ -223,6 +216,11 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
         }
     }
 
+    // NgModel implementation
+    public onTouchedCallback = (_a?: any) => { };
+    public onChangeCallback = (_a?: any) => { };
+    public onValidatorChangeCallback = (_a?: any) => { };
+
     constructor(changeDetectorRef: ChangeDetectorRef,
         public viewPort: ViewPortService,
         private fm: FocusMonitor,
@@ -240,7 +238,9 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
             this.ngControl.valueAccessor = this;
         }
 
-        this.fm.monitor(elementRef.nativeElement, true).subscribe((origin) => {
+        this.fm.monitor(elementRef.nativeElement, true).pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe(origin => {
             this._focused = !!origin;
             this.stateChanges.next();
         });
@@ -254,57 +254,60 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
         };
 
         mediaService.isMobile$.pipe(
-            takeWhile(() => this._isAlive))
-            .subscribe((value) => {
-                this.isMobile = value;
-                this.changeDetectorRef.markForCheck();
-            });
+            takeUntil(this.destroyed$)
+        ).subscribe(value => {
+            this.isMobile = value;
+            this.changeDetectorRef.markForCheck();
+        });
 
         if (this._parentForm) {
-            this._parentForm.ngSubmit.subscribe(() => {
+            this._parentForm.ngSubmit.pipe(
+                takeUntil(this.destroyed$)
+            ).subscribe(() => {
                 this.changeDetectorRef.markForCheck();
             });
         }
 
         if (this._parentFormGroup) {
-            this._parentFormGroup.ngSubmit.subscribe(() => {
+            this._parentFormGroup.ngSubmit.pipe(
+                takeUntil(this.destroyed$)
+            ).subscribe(() => {
                 this.changeDetectorRef.markForCheck();
             });
         }
 
-        observableFrom(this.clearFilterExpression$).pipe(
-            takeWhile(() => this._isAlive),
-            debounceTime(750))
-            .subscribe(() => this.filterExpression = '');
+        from(this.clearFilterExpression$).pipe(
+            debounceTime(750),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => this.filterExpression = '');
 
-        observableCombineLatest(this.delaySearchTrigger$, this.filterListComplete$).pipe(
-            takeWhile(() => this._isAlive),
-            debounce(([delaySearchTrigger]) => observableTimer(delaySearchTrigger)))
-            .subscribe(() => {
-                this._itemList = [];
-                this.reshowDropDown();
-            });
+        combineLatest(this.delaySearchTrigger$, this.filterListComplete$).pipe(
+            debounce(([delaySearchTrigger]) => timer(delaySearchTrigger)),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => {
+            this._itemList = [];
+            this.reshowDropDown();
+        });
 
-        observableFrom(this.storeScrollPosition$).pipe(
-            takeWhile(() => this._isAlive))
-            .subscribe((scrollPos) => {
-                this.viewPort.scrollPosition$.next(scrollPos);
-                this.lastScrollPosition = scrollPos;
-            });
+        from(this.storeScrollPosition$).pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe(scrollPos => {
+            this.viewPort.scrollPosition$.next(scrollPos);
+            this.lastScrollPosition = scrollPos;
+        });
 
-        observableFrom(this.hideDropDown$).pipe(
-            takeWhile(() => this._isAlive),
+        from(this.hideDropDown$).pipe(
             filter(() => this.dropdownVisible),
-            delayWhen((time) => observableTimer(time || 0)))
-            .subscribe(() => {
-                delete this.selectingItemIndex;
-                setDropDownVisible(false);
-                this.viewPort.element$.next(null);
-                this.changeDetectorRef.markForCheck();
-            });
+            delayWhen(time => timer(time || 0)),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => {
+            delete this.selectingItemIndex;
+            setDropDownVisible(false);
+            this.viewPort.element$.next(null);
+            this.changeDetectorRef.markForCheck();
+        });
 
-        observableFrom(this.showDropDown$).pipe(
-            takeWhile(() => this._isAlive),
+        from(this.showDropDown$).pipe(
             debounceTime(50),
             filter(() => (this.query || '').length >= this.minSearchlength && !this._readonly),
             tap(() => {
@@ -355,39 +358,39 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
                 this.viewPort.element$.next(this.listElement);
             }),
             delay(1),
+            takeUntil(this.destroyed$)
         ).subscribe(() => {
             // View port calculated
             this.overlay.updatePosition();
         });
 
-        observableFrom(this.keyboardNavigation$).pipe(
-            takeWhile(() => this._isAlive),
+        from(this.keyboardNavigation$).pipe(
             tap(() => this._keyboardNavigation = true),
-            debounceTime(1000))
-            .subscribe(() => {
-                this._keyboardNavigation = false;
-                this.changeDetectorRef.markForCheck();
-            });
+            debounceTime(1000),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => {
+            this._keyboardNavigation = false;
+            this.changeDetectorRef.markForCheck();
+        });
 
-        observableFrom(this.query$).pipe(
-            takeWhile(() => this._isAlive),
+        from(this.query$).pipe(
             tap((query) => this._query = query),
             filter(() => !!this.input),
-            delay(1))
-            .subscribe(() => {
-                // **** Force place holder to refresh to escape input angular material issue ****
-                this.changeDetectorRef.markForCheck();
-            });
+            delay(1),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => {
+            // **** Force place holder to refresh to escape input angular material issue ****
+            this.changeDetectorRef.markForCheck();
+        });
 
-        observableCombineLatest(this.writeValue$, this.contentInitialized$).pipe(
-            takeWhile(() => this._isAlive),
+        combineLatest(this.writeValue$, this.contentInitialized$).pipe(
             map(([value]) => value),
             tap((value) => {
                 if (this.modelIsValue === undefined) {
                     if (value instanceof Array) {
                         const av = value || [];
                         const modelType = av.length && typeof av[0];
-                        this.modelIsValue = modelType && modelType === 'string' || modelType === 'number';
+                        this.modelIsValue = modelType === 'string' || modelType === 'number';
                     } else {
                         const modelType = typeof value;
                         this.modelIsValue = value === '' || modelType === 'string' || modelType === 'number';
@@ -398,32 +401,31 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
                 }
                 return value;
             }),
-            map((value) => this.getVirtualSelectedEntities(value)))
-            .subscribe((value) => {
+            map((value) => this.getVirtualSelectedEntities(value)),
+            switchMap(value => {
                 if (!value) {
-                    if (this.selectedItems && this.selectedItems.length) {
+                    if (this.selectedItems?.length) {
                         this.removeSelection();
                     }
-                    return;
-                }
-
-                if (this._multiSelect) {
+                } else if (this._multiSelect) {
                     this.query = '';
                     super.setSelectedModels(value);
                     super.getItemListService().ensureSelection();
-                    this.changeDetectorRef.markForCheck();
-
                 } else {
                     const v = value instanceof Array ? [value[0]] : [value];
                     const item = super.mapToIItemBase(v)[0];
-                    this.unselectAll$().pipe(
+                    return this.unselectAll$().pipe(
                         switchMap(() => item ? this.toggleSelect$([item], true) : []),
                         map(() => super.getItemListService().ensureSelection()),
                         tap(() => this.ensureSelection()),
-                        first())
-                        .subscribe(() => this.changeDetectorRef.markForCheck());
+                        take(1),
+                    );
                 }
-            });
+
+                return of(null);
+            }),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => this.changeDetectorRef.markForCheck());
 
         this._viewPortChanged = this.viewPortChanged;
 
@@ -509,7 +511,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
         if (this._pageSize === 0) {
             const vpRowHeight = this.getViewPortRowHeight();
             const containerElement = this.listElement;
-            const containerHeight = containerElement && containerElement.clientHeight || this.dropDownMaxHeight;
+            const containerHeight = containerElement?.clientHeight || this.dropDownMaxHeight;
             return Math.floor(containerHeight / vpRowHeight);
         }
 
@@ -705,7 +707,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
     @Input()
     public set itemListService(itemListService: ItemListService) {
         this.setItemListService(itemListService);
-        if (itemListService && itemListService.lastQuery) {
+        if (itemListService?.lastQuery) {
             this.query = itemListService.lastQuery.toString();
         }
     }
@@ -742,8 +744,9 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
         super.setItems$(items).pipe(
             first(),
             tap(() => this.ensureSelection()),
-            switchMap(() => this.calcViewList$()))
-            .subscribe(noop);
+            switchMap(() => this.calcViewList$()),
+            takeUntil(this.destroyed$)
+        ).subscribe();
     }
 
     /** Définit la liste des éléments (tout type d'objet métier) */
@@ -752,8 +755,9 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
         super.setModels$(items).pipe(
             first(),
             tap(() => this.ensureSelection()),
-            switchMap(() => this.calcViewList$()))
-            .subscribe(noop);
+            switchMap(() => this.calcViewList$()),
+            takeUntil(this.destroyed$)
+        ).subscribe();
     }
 
     /** Retourne le nombre de niveau pour une liste hierarchique */
@@ -789,7 +793,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
         return this._readonly;
     }
 
-    @ViewChild(DejaChildValidatorDirective, { static: false })
+    @ViewChild(DejaChildValidatorDirective)
     protected set inputValidatorDirective(value: DejaChildValidatorDirective) {
         if (value) {
             value.parentControl = this.ngControl;
@@ -814,7 +818,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
     }
 
     private get htmlInputElement() {
-        return this.inputElement && this.inputElement.nativeElement as HTMLInputElement;
+        return this.inputElement?.nativeElement as HTMLInputElement;
     }
 
     public get loaderTemplate() {
@@ -870,13 +874,14 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
 
         if (this.ngControl) {
             this.ngControl.valueChanges.pipe(
-                filter(() => !!this.input))
-                .subscribe(() => {
-                    if (this.ngControl.touched) {
-                        this.input.ngControl.control.markAsTouched();
-                    }
-                    this.input.ngControl.control.updateValueAndValidity();
-                });
+                filter(() => !!this.input),
+                takeUntil(this.destroyed$)
+            ).subscribe(() => {
+                if (this.ngControl.touched) {
+                    this.input.ngControl.control.markAsTouched();
+                }
+                this.input.ngControl.control.updateValueAndValidity();
+            });
         }
 
         this.overlayOwnerElement = this.elementRef.nativeElement as HTMLElement;
@@ -886,48 +891,47 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
     }
 
     public ngAfterViewInit() {
-        observableFromEvent(this.htmlInputElement, 'click').pipe(
-            takeWhile(() => this._isAlive),
-            filter(() => !this.dropdownVisible && !this.disabled))
-            .subscribe((event: Event) => {
-                if (this.isModeSelect) {
-                    this.showDropDown();
-                } else {
-                    this.htmlInputElement.select();
-                    this.filter$.next(event);
-                }
-            });
+        fromEvent(this.htmlInputElement, 'click').pipe(
+            filter(() => !this.dropdownVisible && !this.disabled),
+            takeUntil(this.destroyed$)
+        ).subscribe(event => {
+            if (this.isModeSelect) {
+                this.showDropDown();
+            } else {
+                this.htmlInputElement.select();
+                this.filter$.next(event);
+            }
+        });
 
-        observableFromEvent(this.htmlInputElement, 'focus').pipe(
-            takeWhile(() => this._isAlive),
+        fromEvent(this.htmlInputElement, 'focus').pipe(
             filter(() => !this.dropdownVisible && !this.disabled),
             delay(10),
-            filter(() => this.htmlInputElement === document.activeElement))
-            .subscribe((event: Event) => {
-                if (this.isModeSelect) {
-                    this.showDropDown();
-                } else {
-                    // Autocomplete
-                    this.filter$.next(event);
-                }
-            });
+            filter(() => this.htmlInputElement === document.activeElement),
+            takeUntil(this.destroyed$)
+        ).subscribe(event => {
+            if (this.isModeSelect) {
+                this.showDropDown();
+            } else {
+                // Autocomplete
+                this.filter$.next(event);
+            }
+        });
 
-        observableFromEvent(this.htmlInputElement, 'blur').pipe(
-            takeWhile(() => this._isAlive),
-            filter(() => this.selectingItemIndex === undefined))
-            .subscribe(() => {
-                this.onTouchedCallback();
-                this.hideDropDown$.next(10);
-            });
+        fromEvent(this.htmlInputElement, 'blur').pipe(
+            filter(() => this.selectingItemIndex === undefined),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => {
+            this.onTouchedCallback();
+            this.hideDropDown$.next(10);
+        });
 
-        observableMerge(observableFromEvent(this.htmlInputElement, 'keydown'), observableFromEvent(this.elementRef.nativeElement, 'keydown')).pipe(
-            takeWhile(() => this._isAlive),
+        merge(fromEvent(this.htmlInputElement, 'keydown'), fromEvent(this.elementRef.nativeElement, 'keydown')).pipe(
             filter((event: KeyboardEvent) => {
                 if (event.defaultPrevented) {
                     return false;
                 }
 
-                const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
+                const keyCode = event.code;
                 return keyCode === KeyCodes.Home ||
                     keyCode === KeyCodes.End ||
                     keyCode === KeyCodes.PageUp ||
@@ -938,7 +942,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
                     keyCode === KeyCodes.Enter;
             }),
             switchMap((event) => this.ensureListCaches$().pipe(map(() => event))),
-            map((event: KeyboardEvent) => {
+            switchMap((event: KeyboardEvent) => {
                 // Set and get current index for keyboard features only
                 const setCurrentIndex = (index: number, item?: IItemBase) => {
                     this.currentItemIndex = index;
@@ -953,15 +957,14 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
                     }
                 };
 
-                const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
-                switch (keyCode) {
+                switch (event.code) {
                     case KeyCodes.Home:
                         if (event.altKey || this._multiSelect && !this.dropdownVisible) {
                             this.toggleDropDown();
                         } else {
                             setCurrentIndex(0);
                         }
-                        return false;
+                        return of(false);
 
                     case KeyCodes.End:
                         if (event.altKey || this._multiSelect && !this.dropdownVisible) {
@@ -969,7 +972,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
                         } else {
                             setCurrentIndex(Math.max(0, this.rowsCount - 1));
                         }
-                        return false;
+                        return of(false);
 
                     case KeyCodes.PageUp:
                         if (event.altKey || this._multiSelect && !this.dropdownVisible) {
@@ -978,7 +981,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
                             const index = Math.max(0, this.currentItemIndex - this._pageSize);
                             setCurrentIndex(index);
                         }
-                        return false;
+                        return of(false);
 
                     case KeyCodes.PageDown:
                         if (event.altKey || this._multiSelect && !this.dropdownVisible) {
@@ -987,7 +990,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
                             const index = Math.min(this.rowsCount - 1, this.currentItemIndex + this._pageSize);
                             setCurrentIndex(index);
                         }
-                        return false;
+                        return of(false);
 
                     case KeyCodes.UpArrow:
                         if (event.altKey || this._multiSelect && !this.dropdownVisible) {
@@ -996,7 +999,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
                             const index = Math.max(0, this.currentItemIndex - 1);
                             setCurrentIndex(index);
                         }
-                        return false;
+                        return of(false);
 
                     case KeyCodes.DownArrow:
                         if (event.altKey || this._multiSelect && !this.dropdownVisible) {
@@ -1005,21 +1008,19 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
                             const index = Math.min(this.rowsCount - 1, this.currentItemIndex + 1);
                             setCurrentIndex(index);
                         }
-                        return false;
+                        return of(false);
 
                     case KeyCodes.Space:
                         if (this.dropdownVisible) {
                             const item = this._itemList[this.currentItemIndex - this.vpStartRow] as IItemTree;
                             if (this.isCollapsible(item)) {
                                 this.keyboardNavigation$.next();
-                                this.toggleCollapse$(this.currentItemIndex, !item.collapsed).pipe(first()).subscribe(noop);
-                                return false;
+                                return this.toggleCollapse$(this.currentItemIndex, !item.collapsed).pipe(
+                                    map(() => false)
+                                );
                             }
                         }
-
-                        if (!this.isModeSelect) {
-                            return true;
-                        }
+                        return of(!this.isModeSelect);
 
                     // Do not break or return here
                     // tslint:disable-next-line:no-switch-case-fall-through
@@ -1028,54 +1029,40 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
                             const item = this._itemList[this.currentItemIndex - this.vpStartRow];
                             this.select(item);
                         }
-                        return false;
+                        return of(false);
 
                     default:
-                        return true;
+                        return of(true);
                 }
-            }))
-            .subscribe((continuePropagation) => {
-                if (!continuePropagation) {
-                    this.keyboardNavigation$.next();
-                    this.changeDetectorRef.markForCheck();
-                    event.preventDefault();
-                    return false;
-                }
-            });
+            }),
+            filter(continuePropagation => !continuePropagation),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => {
+            this.keyboardNavigation$.next();
+            this.changeDetectorRef.markForCheck();
+            event.preventDefault();
+            return false;
+        });
 
-        const keyUp$ = observableFromEvent(this.htmlInputElement, 'keyup').pipe(
+        const keyUp$ = fromEvent(this.htmlInputElement, 'keyup').pipe(
             filter((event: KeyboardEvent) => {
-                const keyCode = event.keyCode || (<any>KeyCodes)[event.code];
+                const keyCode = event.code;
                 return keyCode >= KeyCodes.Key0 ||
                     keyCode === KeyCodes.Backspace ||
                     keyCode === KeyCodes.Space ||
                     keyCode === KeyCodes.Delete;
             }));
 
-        observableMerge(keyUp$, this.filter$).pipe(
-            takeWhile(() => this._isAlive),
+        merge(keyUp$, this.filter$).pipe(
             tap(() => {
                 if ((this.query || '').length < this.minSearchlength) {
                     this._itemList = [];
                     this.hideDropDown();
                     return;
                 }
-            }))
-            .subscribe((event: KeyboardEvent) => {
-                // Set and get current index for keyboard features only
-                const setCurrentIndex = (index: number, item?: IItemBase) => {
-                    this.currentItemIndex = index;
-                    if (this.dropdownVisible) {
-                        this.ensureItemVisible(this.currentItemIndex);
-                    }
-
-                    if (!this._multiSelect) {
-                        item = item || super.getCurrentItem();
-                        this.select(item, false);
-                    }
-                };
-
-                // console.log('select.component, keycode:' + event.keyCode);
+            }),
+            switchMap((event: KeyboardEvent) => {
+                // console.log('select.component, keycode:' + event.code);
                 this.keyboardNavigation$.next();
                 if (this.isModeSelect) {
                     // Select, search on the list
@@ -1086,7 +1073,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
                         // Search next
                         this.filterExpression += event.key;
                         const rg = new RegExp(`^${this.filterExpression}`, 'i');
-                        this.findNextMatch$((item) => {
+                        return this.findNextMatch$((item) => {
                             if (item && this.isSelectable(item)) {
                                 const label = this.getTextValue(item);
                                 if (rg.test(label)) {
@@ -1095,18 +1082,30 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
                             }
                             return false;
                         }, this.currentItemIndex).pipe(
-                            first())
-                            .subscribe((result) => {
-                                if (result.index >= 0) {
-                                    setCurrentIndex(result.index, result.item);
-                                }
-                            });
+                            first(),
+                        );
                     }
                 } else {
                     // Autocomplete, filter the list
                     this.filterListComplete$.next();
                 }
-            });
+
+                return of(null);
+            }),
+            filter(result => result?.index >= 0),
+            takeUntil(this.destroyed$)
+        ).subscribe(result => {
+            // Set and get current index for keyboard features only
+            this.currentItemIndex = result.index;
+            if (this.dropdownVisible) {
+                this.ensureItemVisible(this.currentItemIndex);
+            }
+
+            if (!this._multiSelect) {
+                const item = result.item || super.getCurrentItem();
+                this.select(item, false);
+            }
+        });
     }
 
     public setDescribedByIds(ids: string[]) {
@@ -1127,7 +1126,10 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
 
     /** Change l'état d'expansion de toute les lignes parentes */
     public toggleAll(collapsed?: boolean) {
-        this.toggleAll$(collapsed).pipe(first()).subscribe(noop);
+        this.toggleAll$(collapsed).pipe(
+            first(),
+            takeUntil(this.destroyed$)
+        ).subscribe();
     }
 
     /** Change l'état d'expansion de la ligne spécifiée
@@ -1149,7 +1151,10 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
      * @param collapse  Etat de l'élément. True pour réduire l'élément.
      */
     public toggleCollapse(index: number, collapsed: boolean) {
-        this.toggleCollapse$(index, collapsed).pipe(first()).subscribe(noop);
+        this.toggleCollapse$(index, collapsed).pipe(
+            first(),
+            takeUntil(this.destroyed$)
+        ).subscribe();
     }
 
     public queryChanged(value: string) {
@@ -1159,8 +1164,9 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
             this.dropDownQuery = this.query;
             if (this.isModeAutocomplete) {
                 this.unselectAll$().pipe(
-                    first())
-                    .subscribe(() => this.onModelChange());
+                    first(),
+                    takeUntil(this.destroyed$)
+                ).subscribe(() => this.onModelChange());
             }
         }
     }
@@ -1181,17 +1187,17 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
 
         this.selectingItemIndex = this.getItemIndexFromHTMLElement(e.target as HTMLElement);
 
-        this.mouseUp$sub = observableFromEvent(this.listElement, 'mouseup')
-            .subscribe((upEvent: MouseEvent) => {
+        this.mouseUp$sub = fromEvent(this.listElement, 'mouseup').pipe(
+            switchMap((upEvent: MouseEvent) => {
                 const itemIndex = this.getItemIndexFromHTMLElement(upEvent.target as HTMLElement);
                 if (itemIndex === undefined || this.selectingItemIndex === undefined || itemIndex !== this.selectingItemIndex) {
-                    return;
+                    return of(null);
                 }
 
                 const item = this._itemList[itemIndex - this.vpStartRow] as IItemTree;
                 if (!item || upEvent.button !== 0) {
                     // Right click menu
-                    return;
+                    return of(null);
                 }
 
                 const isExpandButton = (target: HTMLElement) => {
@@ -1200,18 +1206,40 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
 
                 if (this.isCollapsible(item) && (isExpandButton(e.target as HTMLElement) || !this.isSelectable(item))) {
                     if (upEvent.button === 0) {
-                        this.toggleCollapse$(itemIndex, !item.collapsed).pipe(first()).subscribe(noop);
+                        return this.toggleCollapse$(itemIndex, !item.collapsed);
                     }
                 } else if (!item.selected) {
                     this.select(item);
                 }
-            });
+
+                return of(null);
+            }),
+            takeUntil(this.destroyed$)
+        ).subscribe();
     }
 
     public getItemClass(item: IItemTree) {
         const classNames = ['listitem'] as string[];
         if (item.className) {
             classNames.push(item.className);
+        }
+        if (item.collapsing || item.expanding) {
+            classNames.push('hide');
+        }
+        if (item.depth < this.depthMax) {
+            classNames.push('parent');
+        }
+        if (item.collapsed) {
+            classNames.push('collapsed');
+        }
+        if (item.selected) {
+            classNames.push('selected');
+        }
+        if (item.selectable === false) {
+            classNames.push('unselectable');
+        }
+        if (item.depth === this._depthMax && item.odd) {
+            classNames.push('odd');
         }
         return classNames.join(' ');
     }
@@ -1237,7 +1265,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
         if (this.ngControl) {
             this.ngControl.control.markAsTouched();
         }
-        this.removeSelection(event && event.item);
+        this.removeSelection(event?.item);
         if (event) {
             event.stopPropagation();
         }
@@ -1261,21 +1289,23 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
         if (!this._multiSelect) {
             this.query = '';
             this.dropDownQuery = '';
-            this.setSelectedItems(undefined);
+            this.setSelectedItems(null);
             this.onModelChange();
             delete this.selectingItemIndex;
         } else if (item) {
             this.toggleSelect$([item], false).pipe(
-                first())
-                .subscribe((selectedItems) => {
-                    const selected = [...selectedItems];
-                    this.setSelectedItems(selected);
-                    this.onModelChange(selected);
-                });
+                first(),
+                takeUntil(this.destroyed$)
+            ).subscribe(selectedItems => {
+                const selected = [...selectedItems];
+                this.setSelectedItems(selected);
+                this.onModelChange(selected);
+            });
         } else {
             this.unselectAll$().pipe(
-                first())
-                .subscribe(() => this.onModelChange());
+                first(),
+                takeUntil(this.destroyed$)
+            ).subscribe(() => this.onModelChange());
         }
     }
 
@@ -1340,21 +1370,22 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
         if (!item) {
             // this.query = '';
             // this.dropDownQuery = '';
-            // this.setSelectedItems(undefined);
+            // this.setSelectedItems(null);
             // this.onModelChange();
             return;
         }
 
         if (this._multiSelect) {
             this.toggleSelect$([item], true).pipe(
-                first())
-                .subscribe((selectedItems) => {
-                    const selected = selectedItems ? [...selectedItems] : [];
-                    this.setSelectedItems(selected);
-                    this.onModelChange(selected);
-                    this.query = '';
-                    this.dropDownQuery = '';
-                });
+                first(),
+                takeUntil(this.destroyed$)
+            ).subscribe(selectedItems => {
+                const selected = selectedItems ? [...selectedItems] : [];
+                this.setSelectedItems(selected);
+                this.onModelChange(selected);
+                this.query = '';
+                this.dropDownQuery = '';
+            });
         } else {
             this.query = this.getTextValue(item);
             this.setSelectedItems([item]);
@@ -1394,21 +1425,22 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
 
         this.calcViewList$().pipe(
             tap(() => this.refreshViewPort()),
-            combineLatest(this.viewPortChanged), // Wait for viewport calculation
+            combineLatestOp(this.viewPortChanged), // Wait for viewport calculation
             first(),
-            delay(1)) // Ensure viewport binding
-            .subscribe(() => {
-                // View port calculated
-                this.overlay.updatePosition();
+            delay(1),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => {
+            // View port calculated
+            this.overlay.updatePosition();
 
-                // Ensure selection
-                const item = this.getSelectedItems()[0];
-                const index = item && this.getItemIndex(item);
-                if (index >= 0) {
-                    this.currentItemIndex = index;
-                    this.ensureItemVisible(index);
-                }
-            });
+            // Ensure selection
+            const item = this.getSelectedItems()[0];
+            const index = item && this.getItemIndex(item);
+            if (index >= 0) {
+                this.currentItemIndex = index;
+                this.ensureItemVisible(index);
+            }
+        });
     }
 
     private ensureSelection() {

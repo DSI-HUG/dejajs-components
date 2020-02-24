@@ -9,12 +9,13 @@
 import { ComponentPortal, Portal } from '@angular/cdk/portal';
 import { ElementRef, Injector, OnInit, Renderer2 } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+import { Destroy } from '@deja-js/core';
 import { Subscription } from 'rxjs';
-import { filter, first, tap } from 'rxjs/operators';
+import { filter, first, takeUntil, tap } from 'rxjs/operators';
 import { DejaPopupAction } from './popup-action.model';
 import { DejaPopupConfig } from './popup-config.model';
 
-export abstract class DejaPopupBase implements OnInit {
+export abstract class DejaPopupBase extends Destroy implements OnInit {
 
     public actions: DejaPopupAction[];
     public actionSelected: DejaPopupAction;
@@ -34,7 +35,7 @@ export abstract class DejaPopupBase implements OnInit {
 
     public ngOnInit() {
         this.aSub = [];
-        this.dialogRef.beforeClose().pipe(
+        this.dialogRef.beforeClosed().pipe(
             first(),
             tap(() => {
                 if (this.unlisten) {
@@ -47,8 +48,9 @@ export abstract class DejaPopupBase implements OnInit {
                     const action = new DejaPopupAction('dialog-close', 'popup-tray');
                     this.config.dejaPopupCom$.next(action);
                 }
-            }))
-            .subscribe();
+            }),
+            takeUntil(this.destroyed$)
+        ).subscribe();
 
         if (this.config.actionComponentRef) {
             this.actionsPortal = new ComponentPortal(this.config.actionComponentRef, undefined, this.injector);
@@ -57,15 +59,16 @@ export abstract class DejaPopupBase implements OnInit {
         if (this.config.dejaPopupCom$) {
             this.aSub.push(
                 this.config.dejaPopupCom$.pipe(
-                    filter((a: DejaPopupAction) => !!a && !!a.target && a.target === this.config.id),
-                    tap((a: DejaPopupAction) => this.doAction(a)),
-                    tap((action: DejaPopupAction) => {
+                    filter(a => !!a?.target && a.target === this.config.id),
+                    tap(a => this.doAction(a)),
+                    tap(action => {
                         this.actionSelected = action;
                         if (action.isFinalAction) {
                             this.dialogRef.close(action);
                         }
-                    }))
-                    .subscribe()
+                    }),
+                    takeUntil(this.destroyed$)
+                ).subscribe()
             );
         }
     }
@@ -76,14 +79,11 @@ export abstract class DejaPopupBase implements OnInit {
             return false;
         }
 
-        if (this.config.dejaPopupCom$) {
-            this.config.dejaPopupCom$.next(action);
-        }
-
+        this.config?.dejaPopupCom$?.next(action);
     }
 
     protected destroy() {
-        this.aSub.forEach((s: Subscription) => s.unsubscribe());
+        this.aSub.forEach(s => s.unsubscribe());
     }
 
 }

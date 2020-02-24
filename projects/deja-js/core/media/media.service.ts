@@ -6,8 +6,19 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-/* From Angular for infos
-export const DEFAULT_BREAKPOINTS = [
+import { Inject, Injectable, InjectionToken, NgZone, OnDestroy, Optional } from '@angular/core';
+import { BehaviorSubject, from, Observable } from 'rxjs';
+import { distinctUntilChanged, map } from 'rxjs/operators';
+
+export interface MediaQueryDefinition {
+    alias: string;
+    mediaQuery: string;
+    overlapping?: boolean;
+}
+
+export const MEDIA_QUERY_DEFINITIONS = new InjectionToken<MediaQueryDefinition[]>('MEDIA_QUERY_DEFINITIONS');
+
+export const DEFAULT_MEDIA_QUERY_DEFINITIONS = [
     {
         alias: 'xs',
         mediaQuery: '(min-width: 0px) and (max-width: 599px)'
@@ -68,38 +79,48 @@ export const DEFAULT_BREAKPOINTS = [
         alias: 'xl',
         mediaQuery: '(min-width: 1920px) and (max-width: 5000px)'
     }
-];
-*/
+] as MediaQueryDefinition[];
 
-import { Injectable, NgZone, OnDestroy } from '@angular/core';
-import { BehaviorSubject, from as observableFrom, Observable } from 'rxjs';
-import { distinctUntilChanged, map, takeWhile } from 'rxjs/operators';
+export const SIMPLIFIED_MEDIA_QUERY_DEFINITIONS = [
+    {
+        alias: 'xs',
+        mediaQuery: '(max-width: 599px)',
+    }, {
+        alias: 'sm',
+        mediaQuery: '(min-width: 600px) and (max-width:959px)',
+    }, {
+        alias: 'md',
+        mediaQuery: '(min-width: 860px) and (max-width:1279px)',
+    }, {
+        alias: 'lg',
+        mediaQuery: '(min-width: 1280px)',
+    }
+] as MediaQueryDefinition[];
 
 @Injectable()
 export class MediaService implements OnDestroy {
-    private isAlive = true;
     public isMobile$: Observable<boolean>;
     public mediaChanged$: BehaviorSubject<string>;
     public mql = {} as { [alias: string]: MediaQueryList };
 
-    constructor(private zone: NgZone) {
+    constructor(private zone: NgZone, @Optional() @Inject(MEDIA_QUERY_DEFINITIONS) mediaDefinitions?: MediaQueryDefinition[]) {
+        if (!mediaDefinitions) {
+            mediaDefinitions = SIMPLIFIED_MEDIA_QUERY_DEFINITIONS;
+        }
 
-        this.mql.xs = window.matchMedia('(max-width: 599px)');
-        this.mql.sm = window.matchMedia('(min-width: 600px) and (max-width:959px)');
-        this.mql.md = window.matchMedia('(min-width: 860px) and (max-width:1279px)');
-        this.mql.lg = window.matchMedia('(min-width: 1280px)');
-
-        Object.keys(this.mql).forEach((alias) => {
+        mediaDefinitions.forEach(mediaDefinition => {
+            const { alias, mediaQuery } = mediaDefinition;
+            this.mql[alias] = window.matchMedia(mediaQuery);
             this.mql[alias].addListener(this.onMQLEvent.bind(this, alias));
             if (this.mql[alias].matches) {
                 this.mediaChanged$ = new BehaviorSubject(alias);
             }
         });
 
-        this.isMobile$ = observableFrom(this.mediaChanged$).pipe(
-            takeWhile(() => this.isAlive),
+        this.isMobile$ = from(this.mediaChanged$).pipe(
             map(() => this.mql.xs.matches || this.mql.sm.matches),
-            distinctUntilChanged());
+            distinctUntilChanged()
+        );
     }
 
     public ngOnDestroy() {
@@ -107,7 +128,6 @@ export class MediaService implements OnDestroy {
             this.mql[alias].removeListener(this.onMQLEvent as any);
             delete this.mql[alias];
         });
-        this.isAlive = false;
     }
 
     private onMQLEvent(alias: string) {

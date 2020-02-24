@@ -7,11 +7,11 @@
  */
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, Optional, Output } from '@angular/core';
 import { IDejaDragEvent, IDejaDropEvent } from '@deja-js/component/dragdrop';
-import { DejaClipboardService, ISortInfos } from '@deja-js/core';
-import { fromEvent as observableFromEvent, merge as observableMerge, Subject } from 'rxjs';
-import { filter, first, takeUntil, takeWhile, timeout } from 'rxjs/operators';
+import { DejaClipboardService, Destroy, ISortInfos } from '@deja-js/core';
+import { fromEvent, merge, Observable, of, Subject } from 'rxjs';
+import { catchError, filter, first, switchMap, takeUntil, tap, timeout } from 'rxjs/operators';
 import { IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent } from '../data-grid-column/data-grid-column';
 import { IDejaGridColumnLayout } from '../data-grid-column/data-grid-column-layout';
 
@@ -21,7 +21,7 @@ import { IDejaGridColumnLayout } from '../data-grid-column/data-grid-column-layo
     styleUrls: ['./data-grid-header.component.scss'],
     templateUrl: './data-grid-header.component.html',
 })
-export class DejaGridHeaderComponent implements OnDestroy {
+export class DejaGridHeaderComponent extends Destroy {
     /** Template d'entête de colonne si définit extérieurement à la grille */
     @Input() public columnHeaderTemplateExternal: any;
 
@@ -41,7 +41,7 @@ export class DejaGridHeaderComponent implements OnDestroy {
     @Output() public columnDragEnd = new EventEmitter();
 
     /** Template d'entête de colonne par defaut définit dans le HTML de la grille */
-    @ContentChild('columnHeaderTemplate', { static: false }) public columnHeaderTemplateInternal: any;
+    @ContentChild('columnHeaderTemplate') public columnHeaderTemplateInternal: any;
 
     public _sizedColumn: IDejaGridColumn;
     private _columnsDraggable = false;
@@ -50,7 +50,6 @@ export class DejaGridHeaderComponent implements OnDestroy {
     private _columnLayout = {} as IDejaGridColumnLayout;
     private backupColumnOrder = [] as IDejaGridColumn[];
     private columnGroupKey = 'deja-grid-column';
-    private isAlive = true;
 
     /** Définit si toutes les colonnes peuvent être draggable vers un autre composant.
      * Si une valeur spécifique à une colonne est spécifiée dans le modèle de la colonne, cette dernière sera prioritaire.
@@ -124,14 +123,17 @@ export class DejaGridHeaderComponent implements OnDestroy {
     }
 
     constructor(elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, @Optional() private clipboardService: DejaClipboardService) {
+        super();
+
         const element = elementRef.nativeElement as HTMLElement;
 
-        observableFromEvent(element, 'mousedown').pipe(
-            takeWhile(() => this.isAlive),
-            filter((event: MouseEvent) => event.buttons === 1))
-            .subscribe((downEvent: MouseEvent) => {
+        const mouseDownEvent$ = fromEvent(element, 'mousedown') as Observable<MouseEvent>;
+        mouseDownEvent$.pipe(
+            filter(downEvent => downEvent.buttons === 1),
+            switchMap(downEvent => {
                 const target = downEvent.target as HTMLElement;
                 const column = this.getColumnFromHTMLElement(downEvent.target as HTMLElement);
+                const mouseUpEvent$ = fromEvent(element.ownerDocument, 'mouseup') as Observable<MouseEvent>;
 
                 if (target.hasAttribute('separator')) {
                     if (this.columnsSizable && column.sizeable !== false) {
@@ -140,20 +142,25 @@ export class DejaGridHeaderComponent implements OnDestroy {
                         const sizedOrigin = downEvent.screenX;
 
                         const kill$ = new Subject();
-                        const mouseUp$ = observableFromEvent(element.ownerDocument, 'mouseup');
 
-                        mouseUp$.pipe(first()).subscribe(() => {
-                            const e = {
-                                column: null,
-                            } as IDejaGridColumnSizeEvent;
-                            this.columnSizeChanged.emit(e);
-                            this.changeDetectorRef.markForCheck();
-                            this._sizedColumn = undefined;
-                        });
+                        const mouseUp$ = mouseUpEvent$.pipe(
+                            first(),
+                            tap(() => {
+                                const e = {
+                                    column: null,
+                                } as IDejaGridColumnSizeEvent;
+                                this.columnSizeChanged.emit(e);
+                                this.changeDetectorRef.markForCheck();
+                                this._sizedColumn = undefined;
+                            })
+                        );
 
-                        observableFromEvent(element.ownerDocument, 'mousemove').pipe(
-                            takeUntil(observableMerge(mouseUp$, kill$)))
-                            .subscribe((moveEvent: MouseEvent) => {
+                        const mouseMoveEvent$ = fromEvent(element.ownerDocument, 'mousemove') as Observable<MouseEvent>;
+                        const mouseMove$ = mouseMoveEvent$.pipe(
+                            takeUntil(mouseUpEvent$),
+                            takeUntil(kill$),
+                            takeUntil(this.destroyed$),
+                            tap(moveEvent => {
                                 if (moveEvent.buttons === 1) {
                                     const e = {
                                         column: this._sizedColumn,
@@ -166,18 +173,19 @@ export class DejaGridHeaderComponent implements OnDestroy {
                                     // Mouse up
                                     kill$.next();
                                 }
-                            });
+                            })
+                        );
 
                         downEvent.stopPropagation();
-                        return false;
+                        return merge(mouseUp$, mouseMove$);
                     }
                 } else {
                     const clickedColumn = column;
 
-                    observableFromEvent(element, 'mouseup').pipe(
+                    return mouseUpEvent$.pipe(
                         first(),
-                        timeout(1000))
-                        .subscribe((upEvent: MouseEvent) => {
+                        timeout(1000),
+                        tap(upEvent => {
                             const columnElement = this.getColumnElementFromHTMLElement(upEvent.target as HTMLElement);
                             if ((columnElement && columnElement.getAttribute('colname')) === clickedColumn.name) {
                                 const index = +columnElement.getAttribute('index');
@@ -189,13 +197,15 @@ export class DejaGridHeaderComponent implements OnDestroy {
                                 this.columnHeaderClicked.emit(e);
                                 this.changeDetectorRef.markForCheck();
                             }
-                        }, (_error) => { });
+                        }),
+                        catchError((_error) => of(null as MouseEvent)),
+                    );
                 }
-            });
-    }
 
-    public ngOnDestroy() {
-        this.isAlive = false;
+                return of(null as MouseEvent);
+            }),
+            takeUntil(this.destroyed$)
+        ).subscribe();
     }
 
     public refresh() {
@@ -243,7 +253,7 @@ export class DejaGridHeaderComponent implements OnDestroy {
             }
 
             const targetElement = this.getColumnElementFromHTMLElement(event.target as HTMLElement);
-            const targetBounds = targetElement && targetElement.getBoundingClientRect();
+            const targetBounds = targetElement?.getBoundingClientRect();
             const targetIndex = targetElement && +targetElement.getAttribute('index');
             if (targetIndex === undefined) {
                 return;
@@ -310,7 +320,7 @@ export class DejaGridHeaderComponent implements OnDestroy {
 
     private getColumnFromHTMLElement(element: HTMLElement): IDejaGridColumn {
         const columnElement = this.getColumnElementFromHTMLElement(element);
-        const colName = columnElement && columnElement.getAttribute('colname');
+        const colName = columnElement?.getAttribute('colname');
         return colName && this._columnLayout.columns.find((column) => column.name === colName);
     }
 }

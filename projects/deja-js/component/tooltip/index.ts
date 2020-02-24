@@ -34,6 +34,7 @@ import { DejaTooltipService } from './tooltip.service';
 })
 export class DejaTooltipModule { }
 
+export * from './tooltip-params.interface';
 export * from './tooltip.service';
 export * from './tooltip.directive';
 export * from './tooltip.component';

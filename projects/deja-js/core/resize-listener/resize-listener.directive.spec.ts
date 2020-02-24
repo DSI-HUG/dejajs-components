@@ -12,7 +12,7 @@ import { async, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { timer as observableTimer } from 'rxjs';
+import { timer } from 'rxjs';
 import { ResizeListenerModule } from './index';
 import { DejaResizeListenerDirective } from './resize-listener.directive';
 
@@ -69,7 +69,7 @@ describe('DejaResizeListenerDirective', () => {
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
-            observableTimer(100).subscribe(() => {
+            timer(100).subscribe(() => {
                 expect(spy).toHaveBeenCalledTimes(1);
                 done();
             });

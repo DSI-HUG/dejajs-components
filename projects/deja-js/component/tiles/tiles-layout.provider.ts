@@ -6,12 +6,13 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Injectable, OnDestroy, Optional } from '@angular/core';
+import { Injectable, Optional } from '@angular/core';
 import { IDragCursorInfos, IDragDropContext } from '@deja-js/component/mouse-dragdrop';
-import { DejaClipboardService, Directions, KeyCodes, Position, Rect, Size } from '@deja-js/core';
-import { BehaviorSubject, from, fromEvent, merge, Subject, Subscription, timer } from 'rxjs';
-import { debounceTime, delay, filter, first, map, reduce, take, takeUntil, takeWhile, tap } from 'rxjs/operators';
+import { DejaClipboardService, Destroy, Directions, KeyCodes, Position, Rect, Size } from '@deja-js/core';
+import { BehaviorSubject, from, fromEvent, merge, Observable, of, Subject, Subscription, timer } from 'rxjs';
+import { debounceTime, delay, filter, first, map, reduce, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { DejaTile } from './tile.class';
+import { IDejaTilesRefreshParams } from './tiles-refresh-params.interface';
 import { IDejaTilesAddedEvent, IDejaTilesAddEvent, IDejaTilesDeletedEvent, IDejaTilesEvent, IDejaTilesRemoveEvent } from './tiles.event';
 
 interface ILayoutInfo {
@@ -39,14 +40,8 @@ export interface IDragDropInfos {
     tiles?: Array<DejaTile>;
 }
 
-export interface IDejaTilesRefreshParams {
-    resetWidth?: boolean;
-    ensureVisible?: string; // Tile id
-    ensureBounds?: Rect;
-}
-
 @Injectable()
-export class DejaTilesLayoutProvider implements OnDestroy {
+export class DejaTilesLayoutProvider extends Destroy {
     public refreshTiles$ = new Subject<IDejaTilesRefreshParams>();
     public ensureVisible$ = new Subject<string>();
     public ensureBounds$ = new Subject<Rect>();
@@ -94,25 +89,25 @@ export class DejaTilesLayoutProvider implements OnDestroy {
     private currentTile: DejaTile;
     private hundredPercentWith: number;
     private dragTarget: Rect;
-    private isAlive = true;
 
     private selectedIds = new Array<string>();
 
     constructor(@Optional() private clipboardService: DejaClipboardService) {
+        super();
+
         from(this.refreshTiles$).pipe(
             debounceTime(30),
-            takeWhile(() => this.isAlive),
             tap(() => {
                 this.container.style.width = '';
                 this.container.style.height = '';
             }),
             delay(10),
-            takeWhile(() => this.isAlive)
-        ).subscribe((params) => {
+            takeUntil(this.destroyed$)
+        ).subscribe(params => {
             const placeAtTheEnd = new Array<DejaTile>();
 
             const containerBounds = this.container.getBoundingClientRect();
-            if ((params && params.resetWidth) || !this.hundredPercentWith) {
+            if (params?.resetWidth || !this.hundredPercentWith) {
                 this.hundredPercentWith = containerBounds.width;
             }
             let height = containerBounds.height - 20;
@@ -147,7 +142,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
 
             let top = maxHeight;
             let left = 0;
-            placeAtTheEnd.forEach((tile) => {
+            placeAtTheEnd.forEach(tile => {
                 tile.percentBounds = tile.percentBounds || new Rect(this.getPercentSize(left), this.getPercentSize(top), 3 * this.getTileMinPercentWidth(), 3 * this.getTileMinPercentHeight());
                 let pixelBounds = this.getPixelBounds(tile.percentBounds);
 
@@ -185,13 +180,11 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             this.container.style.width = `${width}px`;
             this.container.style.height = `${height}px`;
 
-            if (params) {
-                if (params.ensureVisible) {
-                    this.ensureVisible$.next(params.ensureVisible);
-                }
-                if (params.ensureBounds) {
-                    this.ensureBounds$.next(params.ensureBounds);
-                }
+            if (params?.ensureVisible) {
+                this.ensureVisible$.next(params.ensureVisible);
+            }
+            if (params?.ensureBounds) {
+                this.ensureBounds$.next(params.ensureBounds);
             }
 
             this.selectedTiles = selectedTileIds;
@@ -209,12 +202,12 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         const ensureTile$ = from(this.ensureVisible$).pipe(
             delay(1),
             map((id) => this.tilesDic.get(id)),
-            filter((tile) => !!tile),
-            map((tile) => tile.percentBounds));
+            filter(tile => !!tile),
+            map(tile => tile.percentBounds));
 
         merge(this.ensureBounds$, ensureTile$).pipe(
-            takeWhile(() => this.isAlive)
-        ).subscribe((percentBounds) => {
+            takeUntil(this.destroyed$)
+        ).subscribe(percentBounds => {
             const { left, right, top, bottom } = this.getPixelBounds(percentBounds);
 
             const findScrollContainer = (container: HTMLElement) => {
@@ -247,118 +240,123 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         });
 
         from(this.dragSelection$).pipe(
-            takeWhile(() => this.isAlive)
-        ).subscribe((dragSelection) => {
-            const mouseUp$ = fromEvent(this._container.ownerDocument, 'mouseup').pipe(
-                tap(() => this.selectionRect$.next(null)));
+            switchMap(dragSelection => {
+                const mouseUp$ = fromEvent(this._container.ownerDocument, 'mouseup').pipe(
+                    tap(() => this.selectionRect$.next(null))
+                );
 
-            fromEvent(this._container, 'mousemove').pipe(
-                takeUntil(mouseUp$),
-                filter((event: MouseEvent) => event.buttons === 1)
-            ).subscribe((event: MouseEvent) => {
-                const containerBounds = this._container.getBoundingClientRect();
+                const mouseMove$ = fromEvent(this._container, 'mousemove') as Observable<MouseEvent>;
+                return mouseMove$.pipe(
+                    takeUntil(mouseUp$),
+                    filter(event => event.buttons === 1),
+                    tap(event => {
+                        const containerBounds = this._container.getBoundingClientRect();
 
-                // Select all tiles between start position and current position
-                dragSelection.selectedRect = Rect.fromPoints(dragSelection.startPosition, new Position(event.pageX - containerBounds.left, event.pageY - containerBounds.top));
-                this.selectionRect$.next(dragSelection.selectedRect);
+                        // Select all tiles between start position and current position
+                        dragSelection.selectedRect = Rect.fromPoints(dragSelection.startPosition, new Position(event.pageX - containerBounds.left, event.pageY - containerBounds.top));
+                        this.selectionRect$.next(dragSelection.selectedRect);
 
-                const selection = this.HitTest(dragSelection.selectedRect);
-                this.selectedTiles = selection.map((tile) => tile.id);
-            });
-        });
+                        const selection = this.HitTest(dragSelection.selectedRect);
+                        this.selectedTiles = selection.map(tile => tile.id);
+                    })
+                );
+            }),
+            takeUntil(this.destroyed$)
+        ).subscribe();
 
         const leave$ = from(this.dragleave$);
 
         from(this.dragDropInfos$).pipe(
-            takeWhile(() => this.isAlive)
-        ).subscribe((dragDropInfos) => {
-            const tiles = dragDropInfos && ((dragDropInfos.tiles && dragDropInfos.tiles.length && dragDropInfos.tiles) || (dragDropInfos.currentTile && [dragDropInfos.currentTile]));
-            if (!tiles) {
-                return;
-            }
-
-            const externalDrop = !dragDropInfos.tiles;
-            const mousemove$ = fromEvent(this._container, 'mousemove');
-            const mouseUp$ = fromEvent(this._container.ownerDocument, 'mouseup');
-            const keyUp$ = fromEvent(this._container.ownerDocument, 'keyup');
-            const escape$ = keyUp$.pipe(filter((event: KeyboardEvent) => event.keyCode === KeyCodes.Escape));
-            const cancel$ = merge(leave$, mousemove$.pipe(filter((event: MouseEvent) => event.buttons !== 1)), escape$);
-
-            const kill$ = merge(mouseUp$, cancel$);
-
-            let mouseUp$sub: Subscription;
-
-            const cancel$sub = cancel$.pipe(
-                take(1),
-                tap(() => mouseUp$sub.unsubscribe())
-            ).subscribe(() => {
-                this.removeTemporaryTile();
-                this.cancelDrag(tiles);
-            });
-
-            mouseUp$sub = mouseUp$.pipe(
-                take(1),
-                tap(() => cancel$sub.unsubscribe())
-            ).subscribe(() => this.drop(tiles));
-
-            const dragover$ = from(this.dragover$).pipe(
-                map((cursor) => cursor.originalEvent));
-
-            merge(mousemove$, dragover$).pipe(
-                takeUntil(kill$)
-            ).subscribe((event: MouseEvent) => {
-                const containerBounds = this._container.getBoundingClientRect();
-                const x = event.pageX - containerBounds.left;
-                const y = event.pageY - containerBounds.top;
-                if (!dragDropInfos.enabled) {
-                    if (Math.abs(dragDropInfos.startX - x) >= 15 || Math.abs(dragDropInfos.startY - y) >= 15) {
-                        if (externalDrop) {
-                            // Allow drag and drop of new tiles from outside the component
-                            const tempTile = dragDropInfos.currentTile;
-
-                            // Clear current selection
-                            this.selectedTiles = [tempTile.id];
-
-                            let bounds = tempTile.percentBounds;
-                            if (!bounds || bounds.isEmpty()) {
-                                bounds = new Rect(0, 0, 15, 15);
-                            }
-
-                            const idealBounds = this.getFreePlace(new Rect(this.getPercentSize(x) - bounds.width / 2, this.getPercentSize(y) - bounds.height / 2, bounds.width, bounds.height));
-                            dragDropInfos.startX = idealBounds.left - bounds.width / 2;
-                            dragDropInfos.startY = idealBounds.top - bounds.height / 2;
-
-                            tempTile.percentBounds = idealBounds;
-                            tempTile.dragging$.next(true);
-
-                            this._cursor = 'move';
-
-                            this.tiles.push(tempTile);
-                            this.tilesDic.set(tempTile.id, tempTile);
-
-                            // Start tile drag and drop
-                            this.dragging$.next(true);
-                            dragDropInfos.enabled = true;
-                            this.startDrag(tiles, this.getPixelSize(idealBounds.left + idealBounds.width / 2), this.getPixelSize(idealBounds.top + idealBounds.height / 2));
-
-                        } else {
-                            // Start tile drag and drop
-                            this.dragging$.next(true);
-                            dragDropInfos.enabled = true;
-                            this.startDrag(tiles, dragDropInfos.startX, dragDropInfos.startY);
-                        }
-
-                    }
-                } else {
-                    this.drag(tiles, x, y);
+            switchMap(dragDropInfos => {
+                const tiles = dragDropInfos && ((dragDropInfos.tiles && dragDropInfos.tiles.length && dragDropInfos.tiles) || (dragDropInfos.currentTile && [dragDropInfos.currentTile]));
+                if (!tiles) {
+                    return of(null as MouseEvent);
                 }
-            });
-        });
+
+                const externalDrop = !dragDropInfos.tiles;
+                const mouseMove$ = fromEvent(this._container, 'mousemove') as Observable<MouseEvent>;
+                const keyUp$ = fromEvent(this._container.ownerDocument, 'keyup');
+                const escape$ = keyUp$.pipe(filter((event: KeyboardEvent) => event.code === KeyCodes.Escape));
+
+                const mouseButtonReleased$ = mouseMove$.pipe(
+                    filter(event => event.buttons !== 1)
+                );
+
+                const cancel$ = merge(leave$, mouseButtonReleased$, escape$).pipe(
+                    tap(() => {
+                        this.removeTemporaryTile();
+                        this.cancelDrag(tiles);
+                    })
+                );
+
+                const mouseUp$ = fromEvent(this._container.ownerDocument, 'mouseup').pipe(
+                    tap(() => this.drop(tiles))
+                ) as Observable<MouseEvent>;
+
+                const kill$ = merge(mouseUp$, cancel$);
+
+                const dragover$ = from(this.dragover$).pipe(
+                    map(cursor => cursor.originalEvent)
+                );
+
+                return merge(mouseMove$, dragover$).pipe(
+                    takeUntil(kill$),
+                    tap(event => {
+                        const containerBounds = this._container.getBoundingClientRect();
+                        const x = event.pageX - containerBounds.left;
+                        const y = event.pageY - containerBounds.top;
+                        if (!dragDropInfos.enabled) {
+                            if (Math.abs(dragDropInfos.startX - x) >= 15 || Math.abs(dragDropInfos.startY - y) >= 15) {
+                                if (externalDrop) {
+                                    // Allow drag and drop of new tiles from outside the component
+                                    const tempTile = dragDropInfos.currentTile;
+
+                                    // Clear current selection
+                                    this.selectedTiles = [tempTile.id];
+
+                                    let bounds = tempTile.percentBounds;
+                                    if (!bounds || bounds.isEmpty()) {
+                                        bounds = new Rect(0, 0, 15, 15);
+                                    }
+
+                                    const idealBounds = this.getFreePlace(new Rect(this.getPercentSize(x) - bounds.width / 2, this.getPercentSize(y) - bounds.height / 2, bounds.width, bounds.height));
+                                    dragDropInfos.startX = idealBounds.left - bounds.width / 2;
+                                    dragDropInfos.startY = idealBounds.top - bounds.height / 2;
+
+                                    tempTile.percentBounds = idealBounds;
+                                    tempTile.dragging$.next(true);
+
+                                    this._cursor = 'move';
+
+                                    this.tiles.push(tempTile);
+                                    this.tilesDic.set(tempTile.id, tempTile);
+
+                                    // Start tile drag and drop
+                                    this.dragging$.next(true);
+                                    dragDropInfos.enabled = true;
+                                    this.startDrag(tiles, this.getPixelSize(idealBounds.left + idealBounds.width / 2), this.getPixelSize(idealBounds.top + idealBounds.height / 2));
+
+                                } else {
+                                    // Start tile drag and drop
+                                    this.dragging$.next(true);
+                                    dragDropInfos.enabled = true;
+                                    this.startDrag(tiles, dragDropInfos.startX, dragDropInfos.startY);
+                                }
+
+                            }
+                        } else {
+                            this.drag(tiles, x, y);
+                        }
+                    })
+                );
+            }),
+            takeUntil(this.destroyed$)
+        ).subscribe();
 
         // Delete stream for clipboard
         from(this.deleteTiles$).pipe(
-            takeWhile(() => this.isAlive)
-        ).subscribe((tilesToDelete) => this.deleteTiles(tilesToDelete));
+            takeUntil(this.destroyed$)
+        ).subscribe(tilesToDelete => this.deleteTiles(tilesToDelete));
     }
 
     public set container(container: HTMLElement) {
@@ -366,101 +364,114 @@ export class DejaTilesLayoutProvider implements OnDestroy {
 
         if (this._container) {
             const leave$ = fromEvent(container, 'mouseleave');
-            const mouseUp$ = fromEvent(container.ownerDocument, 'mouseup');
+            const mouseUp$ = fromEvent(container.ownerDocument, 'mouseup') as Observable<MouseEvent>;
+            const mouseEnter$ = fromEvent(container, 'mouseenter');
 
-            fromEvent(container, 'mouseenter').pipe(
-                takeWhile(() => this.isAlive)
-            ).subscribe(() => {
-                // Cursor provider
-                if (this.designMode) {
-                    fromEvent(container, 'mousemove').pipe(
-                        takeUntil(leave$),
-                        filter((event: MouseEvent) => !!this.container && event.buttons === 0)
-                    ).subscribe((event: MouseEvent) => {
-                        this._cursor = this.getCursorFromHTMLElement(event.pageX, event.pageY, event.target as HTMLElement);
-                        this.container.style.cursor = this._cursor;
-                    });
-                } else {
-                    this.container.style.cursor = '';
-                }
+            // Cursor provider
+            mouseEnter$.pipe(
+                switchMap(() => {
+                    if (this.designMode) {
+                        const leaveCursor$ = leave$.pipe(
+                            tap(() => this.container.style.cursor = '')
+                        );
 
-                const mouseDown$ = fromEvent(container, 'mousedown').pipe(
-                    filter((event: MouseEvent) => event.buttons === 1),
-                    filter((event: MouseEvent) => !this.isElementInsideDejaEditor(event.target as HTMLElement)),
-                    map((event: MouseEvent) => ({ event: event, target: event.target as HTMLElement, clickedTile: this.getTileComponentFromHTMLElement(event.target as HTMLElement) })));
-
-                // Pressed and selected tile observers
-                mouseDown$.pipe(
-                    takeUntil(leave$)
-                ).subscribe(({ event, target, clickedTile }) => {
-                    if (this.currentTile) {
-                        this.currentTile.isPressed = false;
-                    }
-                    this.currentTile = clickedTile;
-                    if (this.currentTile) {
-                        this.currentTile.isPressed = true;
-
-                        if (event.ctrlKey) {
-                            // Multi-selection is available in design mode, selection on the mouse up
-                        } else {
-                            if (!this.currentTile.isSelected || this._cursor !== 'move') {
-                                this.selectedTiles = [this.currentTile.id];
-                            }
-
-                            if (this.designMode) {
-                                const containerBounds = this._container.getBoundingClientRect();
-                                const x = event.pageX - containerBounds.left;
-                                const y = event.pageY - containerBounds.top;
-
-                                this.dragDropInfos$.next({
-                                    enabled: false,
-                                    startX: x,
-                                    startY: y,
-                                    currentTile: this.currentTile,
-                                    tiles: this.tiles.filter((tile) => tile.isSelected),
-                                } as IDragDropInfos);
-                            }
-                        }
-
-                        merge(mouseUp$).pipe(
-                            first(),
-                            filter(() => !!this.currentTile)
-                        ).subscribe((e: MouseEvent) => {
-                            if (this.currentTile.isPressed) {
-                                this.currentTile.isPressed = false;
-                                // Multi-selection
-                                if (e.ctrlKey) {
-                                    this.currentTile.isSelected = !this.currentTile.isSelected;
-
-                                    this.selectedTiles = this.tiles
-                                        .filter((tile) => tile.isSelected)
-                                        .map((tile) => tile.id);
-                                }
-                            }
-
-                            if (this.designMode) {
-                                this._cursor = this.getCursorFromHTMLElement(e.pageX, e.pageY, e.target as HTMLElement);
-                                this.container.style.cursor = this._cursor;
-                            }
-
-                            this.currentTile = undefined;
-                        });
+                        const mouseMove$ = fromEvent(container, 'mousemove') as Observable<MouseEvent>;
+                        return mouseMove$.pipe(
+                            takeUntil(leaveCursor$),
+                            filter(event => !!this.container && event.buttons === 0),
+                            map(event => this._cursor = this.getCursorFromHTMLElement(event.pageX, event.pageY, event.target as HTMLElement))
+                        );
                     } else {
-                        if (target === this.container || target.parentElement === this.container) {
-                            if (event.buttons === 1) {
-                                // Start drag selection
-                                const containerBounds = this._container.getBoundingClientRect();
-                                this.dragSelection$.next({ startPosition: new Position(event.pageX - containerBounds.left, event.pageY - containerBounds.top), selectedRect: new Rect(), } as IDragSelection);
-                            }
+                        return of('');
+                    }
+                }),
+                takeUntil(this.destroyed$),
+            ).subscribe(cursor => this.container.style.cursor = cursor);
 
-                            // Unselect all tiles
+            mouseEnter$.pipe(
+                switchMap(() => {
+                    const mouseDownEvent$ = fromEvent(container, 'mousedown') as Observable<MouseEvent>;
+                    const mouseDown$ = mouseDownEvent$.pipe(
+                        filter(event => event.buttons === 1),
+                        filter(event => !this.isElementInsideDejaEditor(event.target as HTMLElement)),
+                        map(event => ({ event: event, clickedTile: this.getTileComponentFromHTMLElement(event.target as HTMLElement) })));
+
+                    // Pressed and selected tile observers
+                    return mouseDown$.pipe(
+                        takeUntil(leave$),
+                        switchMap(({ event, clickedTile }) => {
+                            const target = event.target as HTMLElement;
                             if (this.currentTile) {
                                 this.currentTile.isPressed = false;
                             }
-                            this.selectedTiles = [];
-                        }
+                            this.currentTile = clickedTile;
+                            if (this.currentTile) {
+                                this.currentTile.isPressed = true;
+
+                                if (event.ctrlKey) {
+                                    // Multi-selection is available in design mode, selection on the mouse up
+                                } else {
+                                    if (!this.currentTile.isSelected || this._cursor !== 'move') {
+                                        this.selectedTiles = [this.currentTile.id];
+                                    }
+
+                                    if (this.designMode) {
+                                        const containerBounds = this._container.getBoundingClientRect();
+                                        const x = event.pageX - containerBounds.left;
+                                        const y = event.pageY - containerBounds.top;
+
+                                        this.dragDropInfos$.next({
+                                            enabled: false,
+                                            startX: x,
+                                            startY: y,
+                                            currentTile: this.currentTile,
+                                            tiles: this.tiles.filter(tile => tile.isSelected),
+                                        } as IDragDropInfos);
+                                    }
+                                }
+
+                                return mouseUp$.pipe(
+                                    take(1),
+                                    filter(() => !!this.currentTile),
+                                );
+                            } else if (target === this.container || target.parentElement === this.container) {
+                                if (event.buttons === 1) {
+                                    // Start drag selection
+                                    const containerBounds = this._container.getBoundingClientRect();
+                                    this.dragSelection$.next({ startPosition: new Position(event.pageX - containerBounds.left, event.pageY - containerBounds.top), selectedRect: new Rect(), } as IDragSelection);
+                                }
+
+                                // Unselect all tiles
+                                if (this.currentTile) {
+                                    this.currentTile.isPressed = false;
+                                }
+                                this.selectedTiles = [];
+                            }
+
+                            return of(null as MouseEvent);
+                        })
+                    );
+                }),
+                filter(mouseUpEvent => !!mouseUpEvent),
+                takeUntil(this.destroyed$)
+            ).subscribe(mouseUpEvent => {
+                if (this.currentTile.isPressed) {
+                    this.currentTile.isPressed = false;
+                    // Multi-selection
+                    if (mouseUpEvent.ctrlKey) {
+                        this.currentTile.isSelected = !this.currentTile.isSelected;
+                        this.selectedTiles = this.tiles
+                            .filter(tile => tile.isSelected)
+                            .map(tile => tile.id);
                     }
-                });
+                }
+
+                if (this.designMode) {
+                    this._cursor = this.getCursorFromHTMLElement(mouseUpEvent.pageX, mouseUpEvent.pageY, mouseUpEvent.target as HTMLElement);
+                    this.container.style.cursor = this._cursor;
+                }
+
+                this.currentTile = undefined;
             });
         }
     }
@@ -487,7 +498,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
 
         const previousIdsDic = this.selectedIds.reduce((set, id) => set.add(id), new Set<string>());
 
-        if (this.tiles && this.tiles.length) {
+        if (this.tiles?.length) {
             this.tiles.forEach((tile: DejaTile) => {
                 if (idsDic.has(tile.id) !== previousIdsDic.has(tile.id)) {
                     raiseEvent = true;
@@ -548,13 +559,8 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         }
     }
 
-    public ngOnDestroy() {
-        this.isAlive = false;
-        this._container = undefined;
-    }
-
     public copySelection() {
-        const selectedTiles = this.tiles.filter((tile) => tile.isSelected);
+        const selectedTiles = this.tiles.filter(tile => tile.isSelected);
         if (selectedTiles.length) {
             this.copyTiles(selectedTiles, false);
         }
@@ -562,7 +568,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
     }
 
     public cutSelection() {
-        const selectedTiles = this.tiles.filter((tile) => tile.isSelected);
+        const selectedTiles = this.tiles.filter(tile => tile.isSelected);
         if (selectedTiles.length) {
             this.copyTiles(selectedTiles, true);
         }
@@ -570,9 +576,9 @@ export class DejaTilesLayoutProvider implements OnDestroy {
     }
 
     public deleteSelection() {
-        const selectedTiles = this.tiles.filter((tile) => tile.isSelected);
+        const selectedTiles = this.tiles.filter(tile => tile.isSelected);
         if (selectedTiles.length) {
-            this.removeTiles(selectedTiles.map((tile) => tile.id));
+            this.removeTiles(selectedTiles.map(tile => tile.id));
         }
         return selectedTiles;
     }
@@ -585,17 +591,17 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         const sourceTiles = this.clipboardService.get('tiles') as Array<DejaTile>;
 
         // Unselect all tiles
-        this.tiles.forEach((tile) => tile.isSelected = false);
+        this.tiles.forEach(tile => tile.isSelected = false);
 
         // Get max rectangle
         let bounds: Rect;
-        sourceTiles.forEach((tile) => {
+        sourceTiles.forEach(tile => {
             bounds = bounds ? Rect.union(bounds, tile.percentBounds) : new Rect(tile.percentBounds);
         });
 
         const targetBounds = this.getFreePlace(new Rect(0, 0, bounds.width, bounds.height));
 
-        const newTiles = sourceTiles.map((tile) => {
+        const newTiles = sourceTiles.map(tile => {
             const newTile = tile.clone();
             newTile.percentBounds = new Rect(targetBounds.left + tile.percentBounds.left - bounds.left, targetBounds.top + tile.percentBounds.top - bounds.top, tile.percentBounds.width, tile.percentBounds.height);
             newTile.isSelected = true;
@@ -647,7 +653,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         const event = new CustomEvent('DejaTilesDeletedEvent', { cancelable: false }) as IDejaTilesDeletedEvent;
         event.tiles = tilesToDelete;
 
-        tilesToDelete.forEach((tile) => {
+        tilesToDelete.forEach(tile => {
             this.tilesDic.delete(tile.id);
             tile.delete();
         });
@@ -674,7 +680,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         const tilesToRemove = tileIdsToRemove.map((id) => this.tilesDic.get(id));
 
         // Delete selected tiles components
-        tilesToRemove.forEach((tile) => {
+        tilesToRemove.forEach(tile => {
             tile.isHidden = true;
         });
 
@@ -684,10 +690,11 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         event.cancel$ = new Subject();
 
         const cancelSubscription = event.cancel$.pipe(
-            first()
-        ).subscribe((value) => {
+            first(),
+            takeUntil(this.destroyed$)
+        ).subscribe(value => {
             if (value) {
-                tilesToRemove.forEach((tile) => tile.isHidden = false);
+                tilesToRemove.forEach(tile => tile.isHidden = false);
             } else {
                 this.deleteTiles(tilesToRemove);
             }
@@ -793,14 +800,14 @@ export class DejaTilesLayoutProvider implements OnDestroy {
 
         // Bring all tiles together
         let targetBounds: Rect;
-        tiles.forEach((tile) => {
+        tiles.forEach(tile => {
             targetBounds = targetBounds ? Rect.union
                 (targetBounds, tile.percentBounds) : tile.percentBounds;
             tile.isDragging = true;
         });
 
         this.dragRelativePosition = new Map<string, Position>();
-        tiles.forEach((tile) => this.dragRelativePosition.set(tile.id, new Position(tile.percentBounds.left - targetBounds.left, tile.percentBounds.top - targetBounds.top)));
+        tiles.forEach(tile => this.dragRelativePosition.set(tile.id, new Position(tile.percentBounds.left - targetBounds.left, tile.percentBounds.top - targetBounds.top)));
 
         this.dragPageOffset = new Position(pageX, pageY);
 
@@ -815,8 +822,9 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         this.clearMoveTimer();
 
         from(tiles).pipe(
-            filter((tile) => !!tile)
-        ).subscribe((tile) => {
+            filter(tile => !!tile),
+            takeUntil(this.destroyed$)
+        ).subscribe(tile => {
             tile.isDragging = false;
             tile.isDropping = true;
         });
@@ -843,8 +851,8 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                 tile.isDragging = false;
             } else {
                 from(tiles).pipe(
-                    filter((tile) => !!tile),
-                    tap((tile) => {
+                    filter(tile => !!tile),
+                    tap(tile => {
                         const left = this.validLayout.validBounds.left + this.dragRelativePosition.get(tile.id).left;
                         const top = this.validLayout.validBounds.top + this.dragRelativePosition.get(tile.id).top;
                         tile.percentBounds = new Rect(left, top, tile.percentBounds.width, tile.percentBounds.height);
@@ -857,11 +865,12 @@ export class DejaTilesLayoutProvider implements OnDestroy {
                             this.addTiles([tile]);
                         }
                     }),
-                    delay(1000)
-                ).subscribe((tile) => { tile.isDropping = false; });
+                    delay(1000),
+                    takeUntil(this.destroyed$)
+                ).subscribe(tile => tile.isDropping = false);
             }
 
-            changed = this.tiles.filter((t) => !Rect.equals(t.percentBounds, this.originalLayout[t.id] && this.originalLayout[t.id].bounds));
+            changed = this.tiles.filter((t) => !Rect.equals(t.percentBounds, this.originalLayout[t.id]?.bounds));
             this.endDrag();
         } else {
             this.removeTemporaryTile();
@@ -954,7 +963,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             tile.pixelBounds = bounds;
 
         } else {
-            tiles.forEach((tile) => { tile.pixelBounds = new Rect(offsetLeft + this.getPixelSize(this.dragRelativePosition.get(tile.id).left), offsetTop + this.getPixelSize(this.dragRelativePosition.get(tile.id).top), this.getPixelSize(tile.percentBounds.width), this.getPixelSize(tile.percentBounds.height)); });
+            tiles.forEach(tile => { tile.pixelBounds = new Rect(offsetLeft + this.getPixelSize(this.dragRelativePosition.get(tile.id).left), offsetTop + this.getPixelSize(this.dragRelativePosition.get(tile.id).top), this.getPixelSize(tile.percentBounds.width), this.getPixelSize(tile.percentBounds.height)); });
 
             // Assign new drag and drop rectangle
             this.dragTarget = new Rect(this.getPercentSize(offsetLeft), this.getPercentSize(offsetTop), this.targetBounds.width, this.targetBounds.height);
@@ -970,7 +979,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
 
         newTiles.forEach((newTile) => {
             if (!this.tiles.find((t) => t.id === newTile.id)) {
-                if (this.tiles.find((t) => t.percentBounds && newTile.percentBounds && t.percentBounds.intersectWith(newTile.percentBounds))) {
+                if (this.tiles.find((t) => newTile.percentBounds && t.percentBounds?.intersectWith(newTile.percentBounds))) {
                     newTile.percentBounds = undefined;
                 }
 
@@ -989,13 +998,13 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         event.cancel$ = new Subject();
 
         // Delete provider if cut operation
-        const deleteSourceProvider$ = this.clipboardService && this.clipboardService.get('tiles-provider') as Subject<Array<DejaTile>>;
+        const deleteSourceProvider$ = this.clipboardService?.get('tiles-provider') as Subject<Array<DejaTile>>;
 
         // Hide originals if cut
         let sourceTiles: Array<DejaTile>;
         if (deleteSourceProvider$) {
             sourceTiles = this.clipboardService.get('tiles') as Array<DejaTile>;
-            sourceTiles.forEach((tile) => {
+            sourceTiles.forEach(tile => {
                 tile.isHidden = true;
             });
         }
@@ -1017,33 +1026,9 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             this.tilesAdded.next(e);
         };
 
-        const cancelSubscription = event.cancel$.pipe(
-            first()
-        ).subscribe((value) => {
-            if (value) {
-                // Canceled, hide and remove added after effect
-                from(newTiles).pipe(
-                    tap((tile) => tile.isHidden = true),
-                    delay(1000),
-                    reduce((acc: Array<DejaTile>, cur: DejaTile) => [...acc, cur], new Array<DejaTile>()),
-                    first()
-                ).subscribe(tiles => this.deleteTiles(tiles));
-
-                // Reshow original tiles if cut operation
-                if (sourceTiles) {
-                    sourceTiles.forEach((tile) => {
-                        tile.isHidden = false;
-                        tile.isCutted = true;
-                    });
-                }
-            } else {
-                validateNewTiles(newTiles);
-            }
-        });
-
         // Get total rectangle
         let bounds: Rect;
-        newTiles.forEach((tile) => {
+        newTiles.forEach(tile => {
             bounds = bounds ? Rect.union(bounds, tile.percentBounds) : new Rect(tile.percentBounds);
         });
 
@@ -1053,8 +1038,35 @@ export class DejaTilesLayoutProvider implements OnDestroy {
 
         if (!event.defaultPrevented) {
             // Add immediately
-            cancelSubscription.unsubscribe();
             validateNewTiles(newTiles);
+        } else {
+            event.cancel$.pipe(
+                take(1),
+                filter(value => !value),
+                takeUntil(this.destroyed$)
+            ).subscribe(validateNewTiles);
+
+            event.cancel$.pipe(
+                take(1),
+                filter(value => !!value),
+                switchMap(() => {
+                    // Reshow original tiles if cut operation
+                    if (sourceTiles) {
+                        sourceTiles.forEach(tile => {
+                            tile.isHidden = false;
+                            tile.isCutted = true;
+                        });
+                    }
+
+                    // Canceled, hide and remove added after effect
+                    return from(newTiles);
+                }),
+                tap(tile => tile.isHidden = true),
+                delay(1000),
+                reduce((acc, cur) => [...acc, cur], new Array<DejaTile>()),
+                take(1),
+                takeUntil(this.destroyed$)
+            ).subscribe(tiles => this.deleteTiles(tiles));
         }
     }
 
@@ -1178,7 +1190,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         // Restore the original layout before moving something if the user move back in an empty original position
         if (!this.tiles.find(t => {
             const config = this.originalLayout[t.id] as ILayoutInfo;
-            return config && config.bounds.intersectWith(newTargetBounds);
+            return config?.bounds.intersectWith(newTargetBounds);
         })) {
             this.restoreLayout(this.originalLayout);
         }
@@ -1202,7 +1214,8 @@ export class DejaTilesLayoutProvider implements OnDestroy {
             if (maxOverlaps > 3) {
                 const timerBounds = newTargetBounds.clone();
                 this.moveTimOut = timer(500).pipe(
-                    first()
+                    take(1),
+                    takeUntil(this.destroyed$)
                 ).subscribe(() => {
                     // Restore the original layout before moving something
                     this.restoreLayout(this.originalLayout);
@@ -1400,7 +1413,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
     private saveLayout(): ILayoutInfos {
         const layout = {} as ILayoutInfos;
         layout.height = this.getTileMinPercentHeight();
-        this.tiles.forEach((tile) => {
+        this.tiles.forEach(tile => {
             const y = this.getPixelSize(tile.percentBounds.top || 0);
             const h = this.getPixelSize(tile.percentBounds.height || this._tileMinHeight);
             if (y + h > layout.height) {
@@ -1516,7 +1529,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
         const regexp = /(\d+)(.*)/i;
         const matches = regexp.exec(value);
 
-        if (matches && matches.length >= 1) {
+        if (matches?.length >= 1) {
             const self = this as { [prop: string]: any };
             self[prop] = parseInt(matches[1], 10);
             if (matches.length >= 2) {
@@ -1528,7 +1541,7 @@ export class DejaTilesLayoutProvider implements OnDestroy {
     }
 
     private restoreLayout(layout: ILayoutInfos) {
-        this.tiles.forEach((tile) => {
+        this.tiles.forEach(tile => {
             const config = layout[tile.id] as ILayoutInfo;
             if (config) {
                 tile.percentBounds = config.bounds.clone();
@@ -1703,11 +1716,11 @@ export class DejaTilesLayoutProvider implements OnDestroy {
 
         const tt = this.clipboardService.get('tiles') as Array<DejaTile>;
         if (tt) {
-            tt.forEach((tile) => tile.isCutted = false);
+            tt.forEach(tile => tile.isCutted = false);
         }
         this.clipboardService.set('tiles', tiles);
         if (isCut) {
-            tiles.forEach((tile) => tile.isCutted = true);
+            tiles.forEach(tile => tile.isCutted = true);
             this.clipboardService.set('tiles-provider', this.deleteTiles$);
         } else {
             this.clipboardService.set('tiles-provider', undefined);

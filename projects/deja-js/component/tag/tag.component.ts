@@ -10,8 +10,6 @@ import { Component, HostBinding, Input, Optional, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { KeyCodes } from '@deja-js/core';
 
-const noop = () => { };
-
 /**
  * Deja Tag Component for Angular
  *
@@ -56,11 +54,11 @@ export class DejaTagComponent implements ControlValueAccessor {
     @HostBinding('attr.disabled') public _disabled: boolean = null;
 
     // NgModel implementation
-    protected onTouchedCallback: () => void = noop;
-    protected onChangeCallback: (_: any) => void = noop;
-    protected onValidatorChangeCallback: () => void = noop;
+    protected onTouchedCallback = (_a?: any) => { };
+    protected onChangeCallback = (_a?: any) => { };
+    protected onValidatorChangeCallback = (_a?: any) => { };
 
-    constructor( @Self() @Optional() public _control: NgControl) {
+    constructor(@Self() @Optional() public _control: NgControl) {
         if (this._control) {
             this._control.valueAccessor = this;
         }
@@ -98,7 +96,7 @@ export class DejaTagComponent implements ControlValueAccessor {
      * Trigerred when user press key into the component
      */
     public onKeyDown(e: KeyboardEvent) {
-        if (e.keyCode === KeyCodes.Enter) {
+        if (e.code === KeyCodes.Enter) {
             const target = e.target as HTMLInputElement;
             this.onAddItem(target.value);
         }

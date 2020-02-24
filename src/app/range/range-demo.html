@@ -42,7 +42,7 @@
             </deja-range>
         </mat-card-content>
 
-        <mat-card-content fxLayoutAlign="center center">
+        <mat-card-content>
             <button mat-raised-button>Simple</button>
             <button mat-raised-button (click)="dejaRange.add(dejaRange.selected)">Split selected range</button>
             <button mat-raised-button (click)="dejaRange.remove(dejaRange.selected)">Remove selected range</button>
@@ -83,7 +83,7 @@
             </deja-range>
         </mat-card-content>
 
-        <mat-card-content fxLayoutAlign="center center">
+        <mat-card-content>
             <button mat-raised-button (click)="add(dejaWeight.selected)">Split selected range</button>
             <button mat-raised-button (click)="remove(dejaWeight.selected)">Remove selected range</button>
             <button id="decrease" mat-raised-button (click)="decrease()" [disabled]="weights[0]?.minWeight === 0">Decrease minimum</button>

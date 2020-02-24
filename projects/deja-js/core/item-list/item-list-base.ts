@@ -7,9 +7,10 @@
  */
 
 import { coerceNumberProperty } from '@angular/cdk/coercion';
-import { ChangeDetectorRef, EventEmitter, OnDestroy } from '@angular/core';
-import { from as observableFrom, Observable, of as observableOf, Subscription, timer as observableTimer } from 'rxjs';
-import { filter, first, map, reduce, switchMap, takeWhile, tap } from 'rxjs/operators';
+import { ChangeDetectorRef, EventEmitter } from '@angular/core';
+import { from, Observable, of, Subscription, timer } from 'rxjs';
+import { filter, map, reduce, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { Destroy } from '../destroy/destroy';
 import { IGroupInfo } from '../grouping/group-infos';
 import { GroupingService } from '../grouping/grouping.service';
 import { ISortInfos } from '../sorting/sort-infos.model';
@@ -20,10 +21,8 @@ import { IFindItemResult, IParentListInfoResult, ItemListService, IViewListResul
 import { IItemTree } from './item-tree';
 import { IViewPort, IViewPortRefreshParams, ViewportMode, ViewPortService } from './viewport.service';
 
-const noop = () => { };
-
 /** Classe de base pour tous les composants à listes (deja-treelist, deja-select, deja-grid) */
-export abstract class ItemListBase implements OnDestroy {
+export abstract class ItemListBase extends Destroy {
     protected _waiter = true;
 
     protected _itemList: IItemBase[] = []; // Viewport list
@@ -38,7 +37,6 @@ export abstract class ItemListBase implements OnDestroy {
     protected _childrenField: string;
     protected _minSearchLength = 0;
     protected _listElementId: string;
-    protected _isAlive = true;
 
     // Viewport
     protected _vpBeforeHeight = 0;
@@ -70,12 +68,14 @@ export abstract class ItemListBase implements OnDestroy {
     private _listElement: HTMLElement;
 
     constructor(protected changeDetectorRef: ChangeDetectorRef, protected viewPort: ViewPortService) {
+        super();
 
         this._listElementId = `listcontainer_${(1000000000 * Math.random()).toString().substr(10)}`;
 
         viewPort.viewPort$.pipe(
-            takeWhile(() => this._isAlive))
-            .subscribe((viewPortResult: IViewPort) => {
+            switchMap((viewPortResult: IViewPort) => {
+                let next: Observable<number> = of(null);
+
                 delete this._hintLabel;
                 if (viewPort.mode === ViewportMode.disabled) {
                     this._itemList = viewPortResult.items;
@@ -98,12 +98,10 @@ export abstract class ItemListBase implements OnDestroy {
                         if (!rebind) {
                             this.listElement.scrollTop = viewPortResult.scrollPos;
                         } else {
-                            observableTimer(1).pipe(
-                                first(),
-                                filter(() => !!this.listElement)
-                            ).subscribe(() => {
-                                this.listElement.scrollTop = viewPortResult.scrollPos;
-                            });
+                            next = timer(1).pipe(
+                                filter(() => !!this.listElement),
+                                tap(() => this.listElement.scrollTop = viewPortResult.scrollPos)
+                            );
                         }
                     }
                 }
@@ -111,10 +109,12 @@ export abstract class ItemListBase implements OnDestroy {
                 this.changeDetectorRef.markForCheck();
                 // console.log(viewPortResult);
 
-                if (this._viewPortChanged) {
-                    this._viewPortChanged.next(viewPortResult);
-                }
-            });
+                this._viewPortChanged?.next(viewPortResult);
+
+                return next;
+            }),
+            takeUntil(this.destroyed$),
+        ).subscribe();
     }
 
     public get isMultiSelect() {
@@ -161,10 +161,6 @@ export abstract class ItemListBase implements OnDestroy {
      */
     public get groupInfos() {
         return this._itemListService.groupInfos;
-    }
-
-    public ngOnDestroy() {
-        this._isAlive = false;
     }
 
     /** Définit une valeur indiquant si les éléments selectionés doivent être masqué. Ce flag est principalement utilisé dans le cas d'un multi-select
@@ -290,7 +286,10 @@ export abstract class ItemListBase implements OnDestroy {
 
     /** Trie la liste par le champs spécifié. */
     public sort(name?: string) {
-        this.sort$(name).pipe(first()).subscribe(noop);
+        this.sort$(name).pipe(
+            take(1),
+            takeUntil(this.destroyed$)
+        ).subscribe();
     }
 
     /** Trie la liste par le champs spécifié. */
@@ -309,8 +308,9 @@ export abstract class ItemListBase implements OnDestroy {
             this._sortInfos.order = SortOrder.ascending;
         }
         return this.getItemListService().sort$(this._sortInfos).pipe(
-            first(),
-            switchMap((si: any) => this.calcViewList$().pipe(first(), map(() => si))));
+            take(1),
+            switchMap((si: any) => this.calcViewList$().pipe(take(1), map(() => si)))
+        );
     }
 
     /** Groupe les éléments en fonction du modèle de groupe spécifié
@@ -319,7 +319,8 @@ export abstract class ItemListBase implements OnDestroy {
      */
     public group$(groups: IGroupInfo[]): Observable<IViewListResult> {
         return this.getItemListService().group$(groups).pipe(
-            switchMap(() => this.calcViewList$().pipe(first())));
+            switchMap(() => this.calcViewList$().pipe(take(1)))
+        );
     }
 
     /** Retire les groupe correspondants au modèle de groupe spécifié
@@ -328,7 +329,10 @@ export abstract class ItemListBase implements OnDestroy {
      */
     public ungroup$(groupInfo: IGroupInfo): Observable<IViewListResult> {
         return this.getItemListService().ungroup$(groupInfo).pipe(
-            switchMap(() => this.calcViewList$().pipe(first())));
+            switchMap(() => this.calcViewList$().pipe(
+                take(1)
+            )),
+        );
     }
 
     /** Change l'état d'expansion de tous les éléments.
@@ -337,7 +341,7 @@ export abstract class ItemListBase implements OnDestroy {
     public toggleAll$(collapsed?: boolean): Observable<IItemTree[]> {
         this.allCollapsed = (collapsed !== undefined) ? collapsed : !this.allCollapsed;
         if (this.viewPort.mode === ViewportMode.disabled) {
-            return observableFrom(this._itemList).pipe(
+            return from(this._itemList).pipe(
                 filter((item: IItemTree) => item.$items && item.depth === 0 && item.collapsible !== false),
                 switchMap((_item: IItemTree, index: number) => this.toggleCollapse$(index + this.vpStartRow, this.allCollapsed)),
                 reduce((acc, item) => {
@@ -356,7 +360,10 @@ export abstract class ItemListBase implements OnDestroy {
      */
     public toggleCollapse$(index: number, collapsed: boolean): Observable<IItemTree> {
         return this.getItemListService().toggleCollapse$(index, collapsed).pipe(
-            switchMap((toogleResult) => this.calcViewList$().pipe(first(), map(() => toogleResult))));
+            switchMap((toogleResult) => this.calcViewList$().pipe(
+                take(1), map(() => toogleResult))
+            )
+        );
     }
 
     /** Déselectionne tous les éléments sélectionés.
@@ -371,8 +378,9 @@ export abstract class ItemListBase implements OnDestroy {
     public refresh() {
         this.getItemListService().invalidateCache();
         this.calcViewList$().pipe(
-            first())
-            .subscribe(noop);
+            take(1),
+            takeUntil(this.destroyed$)
+        ).subscribe();
     }
 
     /** Recalcule le viewport. */
@@ -467,12 +475,12 @@ export abstract class ItemListBase implements OnDestroy {
             this._itemListService.hideSelected = this._hideSelected;
             this._itemListService.childrenField = this._childrenField;
             this._itemListService.valueField = this._valueField;
-            this.waiter$sub = observableFrom(this._itemListService.waiter$).pipe(
-                takeWhile(() => this._isAlive))
-                .subscribe((status: boolean) => {
-                    this._waiter = status;
-                    this.changeDetectorRef.markForCheck();
-                });
+            this.waiter$sub = from(this._itemListService.waiter$).pipe(
+                takeUntil(this.destroyed$)
+            ).subscribe(status => {
+                this._waiter = status;
+                this.changeDetectorRef.markForCheck();
+            });
         }
     }
 
@@ -569,7 +577,7 @@ export abstract class ItemListBase implements OnDestroy {
         let models$: Observable<any[]>;
 
         if (models instanceof Array) {
-            models$ = observableOf(models);
+            models$ = of(models);
         } else {
             models$ = models as Observable<any[]>;
         }
@@ -600,7 +608,7 @@ export abstract class ItemListBase implements OnDestroy {
             if (!this.getItems()) {
                 return this.setItems$([]).pipe(map(() => emptyListResult));
             } else {
-                return observableOf(emptyListResult);
+                return of(emptyListResult);
             }
         }
 
@@ -747,7 +755,7 @@ export abstract class ItemListBase implements OnDestroy {
     }
 
     protected ensureListCaches$(): Observable<IViewListResult> {
-        return this._itemListService.hasCache ? observableOf(null) : this.getViewList$();
+        return this._itemListService.hasCache ? of(null) : this.getViewList$();
     }
 
     /** Calcul la position de la scrollbar pour que l'élément spécifié soit dans la zone visible. */

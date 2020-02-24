@@ -7,8 +7,9 @@
  */
 
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { from as observableFrom, Subject, Subscription, timer as observableTimer } from 'rxjs';
-import { debounce, delay, first, tap } from 'rxjs/operators';
+import { Destroy } from '@deja-js/core';
+import { from, Subject, Subscription, timer } from 'rxjs';
+import { debounce, delay, first, takeUntil, tap } from 'rxjs/operators';
 
 interface IAnimation {
     before: CSSStyleDeclaration;
@@ -24,7 +25,7 @@ interface IAnimation {
     template: `<ng-content></ng-content>`,
 
 })
-export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
+export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * all snackbar instances
@@ -138,9 +139,12 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param renderer
      */
     constructor(private elementRef: ElementRef) {
+        super();
+
         if (!DejaSnackbarComponent.instances) {
             DejaSnackbarComponent.instances = [];
         }
+
         DejaSnackbarComponent.instances.push(this);
 
         const applyParams = (styles: CSSStyleDeclaration) => {
@@ -150,22 +154,23 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
                 });
         };
 
-        this.animate$sub = observableFrom(this.animate$).pipe(
-            tap((animation) => applyParams(animation.before)),
+        this.animate$sub = from(this.animate$).pipe(
+            tap(animation => applyParams(animation.before)),
             delay(1),
-            tap((animation) => {
+            tap(animation => {
                 this.host.style.transitionDuration = `${animation.duration}ms`;
                 this.host.style.transitionTimingFunction = animation.easing;
                 this.host.style.transitionProperty = Object.keys(animation.before).join(',');
             }),
-            debounce((animation) => observableTimer(animation.delay || 1)),
-            tap((animation) => applyParams(animation.after)),
-            debounce((animation) => observableTimer(animation.duration)))
-            .subscribe(() => {
-                this.host.style.transitionDuration = '';
-                this.host.style.transitionTimingFunction = '';
-                this.host.style.transitionProperty = '';
-            });
+            debounce(animation => timer(animation.delay || 1)),
+            tap(animation => applyParams(animation.after)),
+            debounce(animation => timer(animation.duration)),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => {
+            this.host.style.transitionDuration = '';
+            this.host.style.transitionTimingFunction = '';
+            this.host.style.transitionProperty = '';
+        });
     }
 
     /**
@@ -222,27 +227,30 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
         this.launchEnterAnimation();
 
         // if a duration has been been specified, launch the 'leave' animation after snackbar's lifetime flow, then emit amination done
-        observableTimer(this.duration + this.delay).pipe(
+        timer(this.duration + this.delay).pipe(
             first(),
             tap(() => {
                 if (!!this.duration) {
                     this.launchLeaveAnimation();
                 }
             }),
-            delay(this.leaveAnimationDuration))
-            .subscribe(() => this.onAnimationDone.emit());
+            delay(this.leaveAnimationDuration),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => this.onAnimationDone.emit());
     }
 
     /**
      * onDestroy hook
      */
     public ngOnDestroy(): void {
+        super.ngOnDestroy();
+
         // check if snackbars have to move (if they were created after the one deleted)
         if (!!DejaSnackbarComponent.instances.length) {
             DejaSnackbarComponent.instances
-                .filter((instance: DejaSnackbarComponent) => this.outerContainerElement === instance.outerContainerElement)
-                .filter((instance: DejaSnackbarComponent) => this.anchor === instance.anchor)
-                .forEach((instance) => {
+                .filter(instance => this.outerContainerElement === instance.outerContainerElement)
+                .filter(instance => this.anchor === instance.anchor)
+                .forEach(instance => {
                     if (instance.timestamp > this.timestamp) {
                         instance.launchAdaptAnimation(this.height);
                     }
@@ -250,7 +258,7 @@ export class DejaSnackbarComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         // remove the soon to be destroyed snackbar from the instances array
         DejaSnackbarComponent.instances = DejaSnackbarComponent.instances
-            .filter((instance: DejaSnackbarComponent) => this !== instance);
+            .filter(instance => this !== instance);
 
         this.animate$sub.unsubscribe();
     }

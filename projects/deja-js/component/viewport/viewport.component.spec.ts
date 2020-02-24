@@ -13,7 +13,7 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IViewPortItem, ViewportMode, ViewPortService } from '@deja-js/core';
-import { from as observableFrom } from 'rxjs';
+import { from } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { tap } from 'rxjs/operators';
 import { debounceTime } from 'rxjs/operators';
@@ -72,7 +72,7 @@ describe('DejaViewPortComponent', () => {
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
         const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
 
-        return observableFrom(viewPortService.viewPortResult$).pipe(
+        return from(viewPortService.viewPortResult$).pipe(
             debounceTime(10),
             tap(() => fixture.detectChanges()),
             filter((result) => result.viewPortSize > 0),
@@ -254,7 +254,7 @@ describe('DejaViewPortComponent', () => {
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
         const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
 
-        return observableFrom(viewPortService.viewPortResult$).pipe(
+        return from(viewPortService.viewPortResult$).pipe(
             debounceTime(10),
             tap(() => fixture.detectChanges()),
             filter((result) => result.visibleItems && result.visibleItems.length && result.listSize > 0), // items must be sized
@@ -331,7 +331,7 @@ describe('DejaViewPortComponent', () => {
         let expectedViewPortStartIndex = 249;
         let expectedViewPortEndIndex = 270;
 
-        observableFrom(viewPortService.viewPortResult$).pipe(
+        from(viewPortService.viewPortResult$).pipe(
             debounceTime(10),
             tap(() => fixture.detectChanges()),
             filter((result) => result.visibleItems && result.visibleItems.length && result.listSize > 0)) // items must be sized
@@ -383,7 +383,7 @@ describe('DejaViewPortComponent', () => {
         const viewPortService = viewPortDebugElement.injector.get(ViewPortService) as ViewPortService;
         let pass = 0;
 
-        observableFrom(viewPortService.viewPortResult$).pipe(
+        from(viewPortService.viewPortResult$).pipe(
             debounceTime(100))
             .subscribe((vp) => {
                 // Bind view port

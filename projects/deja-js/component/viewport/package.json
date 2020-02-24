@@ -1,7 +1,10 @@
 {
-  "ngPackage": {
-    "lib": {
-      "entryFile": "./index.ts"
+    "ngPackage": {
+        "lib": {
+            "entryFile": "./index.ts",
+            "umdModuleIds": {
+                "@deja-js/core": "@deja-js/core"
+            }
+        }
     }
-  }
 }
