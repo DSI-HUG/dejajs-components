@@ -87,10 +87,10 @@ export const SIMPLIFIED_MEDIA_QUERY_DEFINITIONS = [
         mediaQuery: '(max-width: 599px)',
     }, {
         alias: 'sm',
-        mediaQuery: '(min-width: 600px) and (max-width:959px)',
+        mediaQuery: '(min-width: 600px) and (max-width: 959px)',
     }, {
         alias: 'md',
-        mediaQuery: '(min-width: 860px) and (max-width:1279px)',
+        mediaQuery: '(min-width: 860px) and (max-width: 1279px)',
     }, {
         alias: 'lg',
         mediaQuery: '(min-width: 1280px)',
@@ -111,28 +111,30 @@ export class MediaService implements OnDestroy {
         mediaDefinitions.forEach(mediaDefinition => {
             const { alias, mediaQuery } = mediaDefinition;
             this.mql[alias] = window.matchMedia(mediaQuery);
-            this.mql[alias].addListener(this.onMQLEvent.bind(this, alias));
+            this.mql[alias].addEventListener('change', this.onMQLEvent.bind(this, alias));
             if (this.mql[alias].matches) {
                 this.mediaChanged$ = new BehaviorSubject(alias);
             }
         });
 
         this.isMobile$ = from(this.mediaChanged$).pipe(
-            map(() => this.mql.xs.matches || this.mql.sm.matches),
+            map(alias => alias === 'xs' || alias === 'sm'),
             distinctUntilChanged()
         );
     }
 
     public ngOnDestroy() {
         Object.keys(this.mql).forEach((alias) => {
-            this.mql[alias].removeListener(this.onMQLEvent as any);
+            this.mql[alias].removeEventListener('change', this.onMQLEvent as any);
             delete this.mql[alias];
         });
     }
 
-    private onMQLEvent(alias: string) {
+    private onMQLEvent(alias: string, event: MediaQueryListEvent) {
         this.zone.run(() => {
-            this.mediaChanged$.next(alias);
+            if (event.matches) {
+                this.mediaChanged$.next(alias);
+            }
         });
     }
 }
