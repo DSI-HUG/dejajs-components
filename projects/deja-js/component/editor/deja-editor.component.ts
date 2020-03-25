@@ -308,7 +308,7 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
             if (this.instance) {
                 this.instance.setReadOnly(isDisabled);
             }
-        } else {
+        } else if (!this.destroyed$.closed) {
             this.ready.pipe(
                 take(1),
                 takeUntil(this.destroyed$)
