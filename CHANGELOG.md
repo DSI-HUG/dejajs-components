@@ -1,3 +1,17 @@
+#### 0.0.1 (2020-03-25)
+
+##### Chores
+
+* **deps:**  bump acorn from 6.4.0 to 6.4.1 ([cc1a6331](https://github.com/DSI-HUG/dejajs-components/commit/cc1a63314fa5c89698f45a0622073a91420dfe6c))
+
+##### Bug Fixes
+
+* **DejaEditor:**
+  *  Do not listen to ready if destroyed ([a9808182](https://github.com/DSI-HUG/dejajs-components/commit/a98081820692bc22478a7dba980e4cffd60536af))
+  *  Preserve html formatting on text insertion (DEJS-786) ([d457ba8e](https://github.com/DSI-HUG/dejajs-components/commit/d457ba8e43a2747d8067a15c8b4d0b5f75aaba30))
+  *  Preserve html formatting on text insertion (DEJS-786) ([23cfcdb9](https://github.com/DSI-HUG/dejajs-components/commit/23cfcdb9dcfed410ed7165fa92978651f908f6a1))
+* **Travis:**  Restore travis.yml for dev ([83108153](https://github.com/DSI-HUG/dejajs-components/commit/831081538efc04adbcfc92637e84e78bd5f50253))
+
 ## 1.0.0 (2020-02-24)
 
 ##### Bug Fixes
