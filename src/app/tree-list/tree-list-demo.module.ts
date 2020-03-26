@@ -8,7 +8,7 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -26,6 +26,7 @@ import { DejaMarkdownModule } from '../../component/markdown/index';
 import { NewsCardModule } from '../common/news-card.module';
 import { DejaTreeListDemoComponent } from './tree-list-demo';
 import { routing } from './tree-list-demo.routes';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
     declarations: [
@@ -37,6 +38,8 @@ import { routing } from './tree-list-demo.routes';
     imports: [
         CommonModule,
         FormsModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
         MatCheckboxModule,
         MatInputModule,
         MatButtonModule,
