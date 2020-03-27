@@ -65,6 +65,7 @@ export class DejaTreeListDemoComponent implements OnDestroy {
     private _dialogVisible = false;
     private subscriptions = [] as Subscription[];
     public fruitForm: FormGroup;
+    public fruitFormModels: FormGroup;
     public fruits$: Observable<string[]>;
 
     @ViewChild('news') private newsList: DejaTreeListComponent;
@@ -210,6 +211,10 @@ export class DejaTreeListDemoComponent implements OnDestroy {
 
         this.fruitForm = this._fb.group({
             fruitName: ['', [cheeseValidator]],
+        });
+
+        this.fruitFormModels = this._fb.group({
+            fruitName: [''],
         });
     }
 

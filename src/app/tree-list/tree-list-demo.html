@@ -365,13 +365,34 @@
 
 <div *ngIf="tabIndex === 7">
     <mat-card class="deja-treelist-demo demo-card demo-basic">
-        <mat-toolbar color="primary">Minimal case</mat-toolbar>
+        <mat-toolbar color="primary">Single selection</mat-toolbar>
         <mat-card-content>
             <form novalidate [formGroup]="fruitForm">
-                <div class="demo-half-width react-form-elem">
-                    <mat-form-field appearance="standard">
-                        <deja-tree-list placeholder="" selectionClearable [models]="fruits$" formControlName="fruitName"></deja-tree-list>
-                    </mat-form-field>
+                <div class="flexLayout">
+                    <span class="flex45p flexLayout flexColumn">
+					    <deja-tree-list [models]="fruits$" formControlName="fruitName"></deja-tree-list>
+				    </span>
+                    <span class="flex45p flexOffset5p">
+                        <h4>Your selection :</h4>
+                        <span>{{fruitForm.get('fruitName').value}}</span>
+                    </span>
+                </div>
+            </form>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="deja-treelist-demo demo-card demo-basic">
+        <mat-toolbar color="primary">Multi selection</mat-toolbar>
+        <mat-card-content>
+            <form novalidate [formGroup]="fruitFormModels">
+                <div class="flexLayout">
+                    <span class="flex45p flexLayout flexColumn">
+					    <deja-tree-list multiSelect [models]="fruits$" formControlName="fruitName"></deja-tree-list>
+				    </span>
+                    <span class="flex45p flexOffset5p">
+                        <h4>Your selection :</h4>
+                        <span>{{fruitFormModels.get('fruitName').value}}</span>
+                    </span>
                 </div>
             </form>
         </mat-card-content>

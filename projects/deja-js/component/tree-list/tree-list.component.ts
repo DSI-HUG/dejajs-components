@@ -41,7 +41,7 @@ export class DejaTreeListComponent extends ItemListBase implements CanUpdateErro
 
     @HostBinding('attr.aria-describedby') public describedBy = '';
 
-    public controlType = 'deja-list-tree';
+    public controlType = 'deja-tree-list';
     public errorState = false;
     public errorStateMatcher: ErrorStateMatcher;
     public stateChanges = new Subject<void>();
@@ -459,9 +459,7 @@ export class DejaTreeListComponent extends ItemListBase implements CanUpdateErro
     /** Définit l'élément selectioné en mode single select */
     @Input()
     public set selectedItem(value: IItemBase | string) {
-        if (value !== undefined) {
-            this.selectItems$.next(value);
-        }
+        this.setSelectedItems(value !== undefined && value !== null ? [value] : []);
     }
 
     /** Retourne l'éléments selectioné en mode single select */
@@ -473,9 +471,7 @@ export class DejaTreeListComponent extends ItemListBase implements CanUpdateErro
     /** Définit le model selectioné en mode single select */
     @Input()
     public set selectedModel(value: any) {
-        if (value !== undefined) {
-            this.writeValue(value);
-        }
+        this.writeValue(value);
     }
 
     /** Retourne le model selectioné en mode single select */
