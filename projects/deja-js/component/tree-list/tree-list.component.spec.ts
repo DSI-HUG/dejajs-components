@@ -207,7 +207,7 @@ describe('DejaTreeListComponent', () => {
         expect(tl.minSearchlength).toBe(3);
 
         expect(treeListInstance.disabled).toBeNull();
-        treeListInstance.disabled = 'true';
+        treeListInstance.disabled = true;
         expect(treeListInstance.disabled).toBeTruthy();
         treeListInstance.setDisabledState(false);
         expect(treeListInstance.disabled).toBeFalsy();

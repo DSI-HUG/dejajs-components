@@ -7,6 +7,7 @@
  */
 
 import { ChangeDetectorRef, Component, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { IDejaDragEvent } from '@deja-js/component/dragdrop';
 import { IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDropCursorInfos } from '@deja-js/component/mouse-dragdrop';
 import { DejaTreeListComponent } from '@deja-js/component/tree-list';
@@ -14,6 +15,7 @@ import { GroupingService, IItemBase, IItemTree, IViewPortItem } from '@deja-js/c
 import { from, Observable, of, Subject, Subscription } from 'rxjs';
 import { delay, first, map, reduce, switchMap, tap } from 'rxjs/operators';
 import { News } from '../common/news.model';
+import { cheeseValidator } from '../select/validators';
 import { CountriesListService } from '../services/countries-list.service';
 import { CountriesService, Country } from '../services/countries.service';
 import { Folder, FoldersService } from '../services/folders.service';
@@ -62,6 +64,9 @@ export class DejaTreeListDemoComponent implements OnDestroy {
     public multiselectModel: IItemTree[];
     private _dialogVisible = false;
     private subscriptions = [] as Subscription[];
+    public fruitForm: FormGroup;
+    public fruitFormModels: FormGroup;
+    public fruits$: Observable<string[]>;
 
     @ViewChild('news') private newsList: DejaTreeListComponent;
     @ViewChild('onexpand') private onExpandList: DejaTreeListComponent;
@@ -81,7 +86,8 @@ export class DejaTreeListDemoComponent implements OnDestroy {
         private folderService: FoldersService,
         protected countriesListService: CountriesListService,
         public newsService: NewsService,
-        public groupingService: GroupingService
+        public groupingService: GroupingService,
+        private _fb: FormBuilder,
     ) {
         this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","displayName":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","displayName":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","displayName":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","displayName":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","displayName":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","displayName":"Dominica","depth":0,"odd":false,"selected":true}]');
         this.news$ = newsService.getNews$(50);
@@ -135,6 +141,8 @@ export class DejaTreeListDemoComponent implements OnDestroy {
             'Pineapple',
             'Watermelon',
         ];
+
+        this.fruits$ = of(this.fructs);
 
         this.fructItems = this.fructs.map((fruct) => ({
             displayName: fruct,
@@ -200,6 +208,14 @@ export class DejaTreeListDemoComponent implements OnDestroy {
             this.groupedCountries = result;
             this.onDemandGroupedCountries = onDemandResult;
         }));
+
+        this.fruitForm = this._fb.group({
+            fruitName: ['', [cheeseValidator]],
+        });
+
+        this.fruitFormModels = this._fb.group({
+            fruitName: [''],
+        });
     }
 
     public ngOnDestroy() {
