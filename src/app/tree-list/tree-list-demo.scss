@@ -20,6 +20,14 @@ deja-tree-list-demo {
                     max-height: 600px;
                 }
             }
+
+            mat-form-field {
+                flex-basis: auto;
+                flex-grow: 0;
+                flex-shrink: 0;
+                position: relative;
+                margin-top: 0.7rem;
+            }
         }
     }
 
