@@ -459,7 +459,9 @@ export class DejaTreeListComponent extends ItemListBase implements CanUpdateErro
     /** Définit l'élément selectioné en mode single select */
     @Input()
     public set selectedItem(value: IItemBase | string) {
-        this.setSelectedItems(value !== undefined && value !== null ? [value] : []);
+        if (value !== undefined) {
+            this.selectItems$.next(value);
+        }
     }
 
     /** Retourne l'éléments selectioné en mode single select */
@@ -471,7 +473,9 @@ export class DejaTreeListComponent extends ItemListBase implements CanUpdateErro
     /** Définit le model selectioné en mode single select */
     @Input()
     public set selectedModel(value: any) {
-        this.writeValue(value);
+        if (value !== undefined) {
+            this.writeValue(value);
+        }
     }
 
     /** Retourne le model selectioné en mode single select */
