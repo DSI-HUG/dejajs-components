@@ -569,12 +569,14 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
             const beforeText = node.textNode.getText().substring(0, index);
             const afterText = node.textNode.getText().substring(index + node.toReplace.length);
             node.textNode.setText(beforeText);
-            const newElement = CKEDITOR.dom.element.createFromHtml(
+            // Wrap into a span otherwise methode createFromHtml will only take the html element :
+            // For instance if replace is 'abc<br/>def', createFromHtml will create an html text element with abc only
+            const newElement = CKEDITOR.dom.element.createFromHtml(`<span>${
                 CKEDITOR.tools.htmlDecode(CKEDITOR.tools.transformPlainTextToHtml(
                     replace,
                     CKEDITOR.ENTER_BR
                 ))
-            );
+            }</span>`);
             newElement.insertAfter(node.textNode);
             if (node.textNode.getText().substring(index + node.toReplace.length)) {
                 const end = new CKEDITOR.dom.text(afterText);
