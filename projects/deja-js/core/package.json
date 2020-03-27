@@ -1,6 +1,6 @@
 {
     "name": "@deja-js/core",
-    "version": "9.0.1",
+    "version": "9.0.2",
     "description": "Core library for @angular/component",
     "homepage": "https://github.com/DSI-HUG/dejajs-components",
     "bugs": "https://github.com/DSI-HUG/dejajs-components/issues",
