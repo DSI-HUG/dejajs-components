@@ -49,7 +49,7 @@ export class DejaSidenavComponent extends Destroy implements OnInit {
             takeUntil(this.destroyed$)
         ).subscribe(alias => {
             this.sidenavService.hidden = alias === 'xs';
-            this.sidenavService.opened = alias === 'lg';
+            this.sidenavService.opened = alias === 'lg' || alias === 'xl';
             this.sidenavService.mode = alias === 'xs' ? 'over' : 'side';
             this.changeDetectorRef.markForCheck();
         });
