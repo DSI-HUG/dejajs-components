@@ -6,12 +6,9 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
-import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, DoCheck, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ControlValueAccessor, FormControl, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
-import { CanUpdateErrorState, ErrorStateMatcher } from '@angular/material/core';
-import { MatFormFieldControl } from '@angular/material/form-field';
+import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { IDejaDragEvent } from '@deja-js/component/dragdrop';
 import { DejaChildValidatorDirective, DejaClipboardService, DejaItemComponent, DejaItemEvent, DejaItemsEvent, GroupingService, IFindItemResult, IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, IViewPort, KeyCodes, Position, Rect, SortingService, ViewportMode, ViewPortService } from '@deja-js/core';
 import { BehaviorSubject, combineLatest, from, fromEvent, merge, Observable, of, Subject, Subscription, timer } from 'rxjs';
@@ -22,30 +19,16 @@ import { DejaTreeListScrollEvent } from './tree-list-scroll-event';
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    providers: [
-        ViewPortService,
-        { provide: MatFormFieldControl, useExisting: DejaTreeListComponent }
-    ],
+    providers: [ViewPortService],
     selector: 'deja-tree-list',
     styleUrls: [
         './tree-list.component.scss',
     ],
     templateUrl: './tree-list.component.html',
 })
-export class DejaTreeListComponent extends ItemListBase implements CanUpdateErrorState, AfterViewInit, AfterContentInit, ControlValueAccessor, DoCheck, OnDestroy, MatFormFieldControl<any> {
-    public static nextId = 0;
-    @HostBinding() public id = `deja-tree-list-${DejaTreeListComponent.nextId++}`;
-    @HostBinding('class.floating') public get shouldLabelFloat() {
-        return this.focused || !this.empty;
-    }
-
-    @HostBinding('attr.aria-describedby') public describedBy = '';
-
-    public controlType = 'deja-tree-list';
-    public errorState = false;
-    public errorStateMatcher: ErrorStateMatcher;
-    public stateChanges = new Subject<void>();
-
+export class DejaTreeListComponent extends ItemListBase implements AfterViewInit, AfterContentInit, ControlValueAccessor {
+    /** Texte à afficher par default dans la zone de recherche */
+    @Input() public placeholder: string;
     /** Texte affiché si aucune donnée n'est présente dans le tableau */
     @Input() public nodataholder: string;
     /** Correspond au ngModel du champ de filtrage ou recherche */
@@ -99,9 +82,6 @@ export class DejaTreeListComponent extends ItemListBase implements CanUpdateErro
     private hasCustomService = false;
     private hasLoadingEvent = false;
     private _modelIsValue = false;
-    private _required = false;
-    private _placeholder: string;
-    private _focused = false;
     @HostBinding('attr.disabled') public _disabled: boolean = null;
 
     private keyboardNavigation$ = new Subject();
@@ -118,42 +98,11 @@ export class DejaTreeListComponent extends ItemListBase implements CanUpdateErro
     public onTouchedCallback = (_a?: any) => { };
     public onChangeCallback = (_a?: any) => { };
 
-    constructor(changeDetectorRef: ChangeDetectorRef,
-        public viewPort: ViewPortService,
-        private fm: FocusMonitor,
-        public elementRef: ElementRef,
-        @Self() @Optional() public ngControl: NgControl,
-        @Optional() private _parentForm: NgForm,
-        @Optional() private _parentFormGroup: FormGroupDirective,
-        @Optional() private clipboardService: DejaClipboardService,
-        private _defaultErrorStateMatcher: ErrorStateMatcher) {
+    constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, public elementRef: ElementRef, @Self() @Optional() public _control: NgControl, @Optional() private clipboardService: DejaClipboardService) {
         super(changeDetectorRef, viewPort);
 
-        if (this.ngControl) {
-            this.ngControl.valueAccessor = this;
-        }
-
-        this.fm.monitor(elementRef.nativeElement, true).pipe(
-            takeUntil(this.destroyed$)
-        ).subscribe(origin => {
-            this._focused = !!origin;
-            this.stateChanges.next();
-        });
-
-        if (this._parentForm) {
-            this._parentForm.ngSubmit.pipe(
-                takeUntil(this.destroyed$)
-            ).subscribe(() => {
-                this.changeDetectorRef.markForCheck();
-            });
-        }
-
-        if (this._parentFormGroup) {
-            this._parentFormGroup.ngSubmit.pipe(
-                takeUntil(this.destroyed$)
-            ).subscribe(() => {
-                this.changeDetectorRef.markForCheck();
-            });
+        if (this._control) {
+            this._control.valueAccessor = this;
         }
 
         from(this.clearFilterExpression$).pipe(
@@ -273,35 +222,6 @@ export class DejaTreeListComponent extends ItemListBase implements CanUpdateErro
 
     public get sortable() {
         return this._sortable;
-    }
-
-    @Input() public get required() {
-        return this._required;
-    }
-
-    public set required(req) {
-        this._required = coerceBooleanProperty(req);
-        this.stateChanges.next();
-    }
-
-    /**
-     * Placeholder of the input
-     */
-    @Input() public get placeholder() {
-        return this._placeholder;
-    }
-
-    public set placeholder(plh) {
-        this._placeholder = plh;
-        this.stateChanges.next();
-    }
-
-    public get empty() {
-        return !this.value;
-    }
-
-    public get focused() {
-        return this._focused;
     }
 
     /** Retourne ou définit une valeur indiquant si les lignes peuvent être déplacées vers un autre composant */
@@ -596,9 +516,9 @@ export class DejaTreeListComponent extends ItemListBase implements CanUpdateErro
         ).subscribe();
     }
 
-    /** Permet de désactiver le select */
+    /** Permet de désactiver la liste */
     @Input()
-    public set disabled(value: boolean) {
+    public set disabled(value: boolean | string) {
         const disabled = coerceBooleanProperty(value);
         this._disabled = disabled || null;
         this.changeDetectorRef.markForCheck();
@@ -622,7 +542,7 @@ export class DejaTreeListComponent extends ItemListBase implements CanUpdateErro
     @ViewChild(DejaChildValidatorDirective)
     public set inputValidatorDirective(value: DejaChildValidatorDirective) {
         if (value) {
-            value.parentControl = this.ngControl;
+            value.parentControl = this._control;
         }
     }
 
@@ -668,7 +588,6 @@ export class DejaTreeListComponent extends ItemListBase implements CanUpdateErro
         this.writeValue(val);
         this.onChangeCallback(val);
         this.onTouchedCallback();
-        this.stateChanges.next();
     }
 
     public writeValue(value: any) {
@@ -687,17 +606,6 @@ export class DejaTreeListComponent extends ItemListBase implements CanUpdateErro
         this.disabled = isDisabled;
     }
     // ************* End of ControlValueAccessor Implementation **************
-
-    public ngDoCheck() {
-        if (this.ngControl) {
-            this.updateErrorState();
-        }
-    }
-
-    public ngOnDestroy() {
-        this.stateChanges.complete();
-        this.fm.stopMonitoring(this.elementRef.nativeElement);
-    }
 
     /** Change l'état d'expansion de toute les lignes parentes */
     public toggleAll$(collapsed?: boolean): Observable<IItemTree[]> {
@@ -994,16 +902,6 @@ export class DejaTreeListComponent extends ItemListBase implements CanUpdateErro
         this.viewPort.element$.next(this.listElement);
     }
 
-    public setDescribedByIds(ids: string[]) {
-        this.describedBy = ids.join(' ');
-    }
-
-    public onContainerClick(event: MouseEvent) {
-        if ((event.target as Element).tagName.toLowerCase() !== 'input') {
-            this.elementRef.nativeElement.querySelector('input').focus();
-        }
-    }
-
     public mousedown(e: MouseEvent) {
         if (this.mouseUp$sub) {
             this.mouseUp$sub.unsubscribe();
@@ -1297,18 +1195,5 @@ export class DejaTreeListComponent extends ItemListBase implements CanUpdateErro
             classNames.push('odd');
         }
         return classNames.join(' ');
-    }
-
-    public updateErrorState() {
-        const oldState = this.errorState;
-        const parent = this._parentFormGroup || this._parentForm;
-        const matcher = this.errorStateMatcher || this._defaultErrorStateMatcher;
-        const control = this.ngControl ? this.ngControl.control as FormControl : null;
-        const newState = matcher.isErrorState(control, parent);
-
-        if (newState !== oldState) {
-            this.errorState = newState;
-            this.stateChanges.next();
-        }
     }
 }
