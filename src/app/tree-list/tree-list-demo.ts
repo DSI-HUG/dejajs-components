@@ -33,6 +33,7 @@ export class DejaTreeListDemoComponent implements OnDestroy {
     public fructItems = [] as IItemBase[];
     public fructItemsWithPreSelection = [] as IItemBase[];
     public folders: Folder[];
+    public ensureIndex: number;
 
     protected disabled: boolean;
     protected country: Country;
