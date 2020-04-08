@@ -35,11 +35,13 @@ export class DejaMouseDraggableDirective extends Destroy {
         const element = elementRef.nativeElement as HTMLElement;
 
         const mouseLeaveEvent$ = fromEvent(element, 'mouseleave') as Observable<MouseEvent>;
+        const mouseEnterEvent$ = fromEvent(element, 'mouseenter') as Observable<MouseEvent>;
         const mouseUpEvent$ = fromEvent(element.ownerDocument, 'mouseup') as Observable<MouseEvent>;
         const mouseDownEvent$ = fromEvent(element, 'mousedown') as Observable<MouseEvent>;
         const mouseMoveEvent$ = fromEvent(element.ownerDocument, 'mousemove') as Observable<MouseEvent>;
 
-        fromEvent(element, 'mouseenter').pipe(
+        mouseEnterEvent$.pipe(
+            filter(() => !dragDropService.isDragging),
             switchMap(() => {
                 return mouseDownEvent$.pipe(
                     filter(event => event.buttons === 1),
@@ -72,8 +74,7 @@ export class DejaMouseDraggableDirective extends Destroy {
                                             map((ddctx: IDragDropContext) => {
                                                 dragDropService.context = ddctx;
                                                 return ddctx && target; // Map to target if ddctx is defined
-                                            }),
-                                            takeUntil(this.destroyed$)
+                                            })
                                         );
                                     } else {
                                         dragDropService.context = dragContext;
@@ -89,7 +90,12 @@ export class DejaMouseDraggableDirective extends Destroy {
                         dragDropService.dragging$.next(true);
 
                         const moveUp$ = new Subject();
-                        const kill$ = merge(mouseUpEvent$, moveUp$).pipe(
+
+                        const enterWhileNotDragDropEvent$ = mouseEnterEvent$.pipe(
+                            filter(event => event.buttons !== 1 && dragDropService.isDragging)
+                        );
+
+                        const kill$ = merge(mouseUpEvent$, enterWhileNotDragDropEvent$, moveUp$).pipe(
                             first(),
                             tap(() => {
                                 dragDropService.dragCursor$.next(null);
