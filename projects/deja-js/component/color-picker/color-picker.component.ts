@@ -8,7 +8,8 @@
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { ControlValueAccessor } from '@angular/forms';
+import { NgControl } from '@angular/forms';
 import { DejaOverlayComponent } from '@deja-js/component/overlay';
 import { Color, DejaConnectionPositionPair } from '@deja-js/core';
 

@@ -7,7 +7,8 @@
  */
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Component, HostBinding, Input, Optional, Self } from '@angular/core';
-import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { ControlValueAccessor } from '@angular/forms';
+import { NgControl } from '@angular/forms';
 import { KeyCodes } from '@deja-js/core';
 
 /**

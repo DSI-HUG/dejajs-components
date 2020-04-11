@@ -7,11 +7,34 @@
  */
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, Optional, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
+import { Component } from '@angular/core';
+import { ContentChild } from '@angular/core';
+import { ElementRef } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { Input } from '@angular/core';
+import { Optional } from '@angular/core';
+import { Output } from '@angular/core';
+import { ViewChild } from '@angular/core';
+import { ViewEncapsulation } from '@angular/core';
 import { IDejaChipsComponentCloseEvent } from '@deja-js/component/chips';
 import { IDejaDragEvent } from '@deja-js/component/dragdrop';
 import { DejaTreeListComponent, DejaTreeListScrollEvent } from '@deja-js/component/tree-list';
-import { DejaClipboardService, Destroy, GroupingService, IGroupInfo, IItemBase, IItemTree, ISortInfos, ItemListService, IViewListResult, IViewPort, KeyCodes, SortingService, ViewportMode, ViewPortService } from '@deja-js/core';
+import { DejaClipboardService } from '@deja-js/core';
+import { Destroy } from '@deja-js/core';
+import { GroupingService } from '@deja-js/core';
+import { IGroupInfo } from '@deja-js/core';
+import { IItemBase } from '@deja-js/core';
+import { IItemTree } from '@deja-js/core';
+import { ISortInfos } from '@deja-js/core';
+import { ItemListService } from '@deja-js/core';
+import { IViewListResult } from '@deja-js/core';
+import { IViewPort } from '@deja-js/core';
+import { KeyCodes } from '@deja-js/core';
+import { SortingService } from '@deja-js/core';
+import { ViewportMode } from '@deja-js/core';
+import { ViewPortService } from '@deja-js/core';
 import { combineLatest, from, fromEvent, Observable, ReplaySubject, Subject, timer } from 'rxjs';
 import { debounceTime, filter, first, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent } from './data-grid-column/data-grid-column';

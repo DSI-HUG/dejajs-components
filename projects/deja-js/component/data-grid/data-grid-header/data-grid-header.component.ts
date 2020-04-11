@@ -9,7 +9,9 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, Optional, Output } from '@angular/core';
 import { IDejaDragEvent, IDejaDropEvent } from '@deja-js/component/dragdrop';
-import { DejaClipboardService, Destroy, ISortInfos } from '@deja-js/core';
+import { DejaClipboardService } from '@deja-js/core';
+import { Destroy } from '@deja-js/core';
+import { ISortInfos } from '@deja-js/core';
 import { fromEvent, merge, Observable, of, Subject } from 'rxjs';
 import { catchError, filter, first, switchMap, takeUntil, tap, timeout } from 'rxjs/operators';
 import { IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent } from '../data-grid-column/data-grid-column';

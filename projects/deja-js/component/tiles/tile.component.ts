@@ -7,7 +7,14 @@
  */
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
+import { Component } from '@angular/core';
+import { ElementRef } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { Input } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { Output } from '@angular/core';
 import { from, Subscription } from 'rxjs';
 import { debounceTime, delay, filter, first, tap } from 'rxjs/operators';
 import { DejaTileGroup } from './tile-group.class';

@@ -11,6 +11,7 @@ import { IDragCursorInfos, IDragDropContext } from '@deja-js/component/mouse-dra
 import { DejaClipboardService, Destroy, Directions, KeyCodes, Position, Rect, Size } from '@deja-js/core';
 import { BehaviorSubject, from, fromEvent, merge, Observable, of, Subject, Subscription, timer } from 'rxjs';
 import { debounceTime, delay, filter, first, map, reduce, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { __spread } from 'tslib';
 import { DejaTile } from './tile.class';
 import { IDejaTilesRefreshParams } from './tiles-refresh-params.interface';
 import { IDejaTilesAddedEvent, IDejaTilesAddEvent, IDejaTilesDeletedEvent, IDejaTilesEvent, IDejaTilesRemoveEvent } from './tiles.event';
@@ -1063,7 +1064,7 @@ export class DejaTilesLayoutProvider extends Destroy {
                 }),
                 tap(tile => tile.isHidden = true),
                 delay(1000),
-                reduce((acc, cur) => [...acc, cur], new Array<DejaTile>()),
+                reduce((acc, cur) => __spread(acc, [cur]), new Array<DejaTile>()),
                 take(1),
                 takeUntil(this.destroyed$)
             ).subscribe(tiles => this.deleteTiles(tiles));

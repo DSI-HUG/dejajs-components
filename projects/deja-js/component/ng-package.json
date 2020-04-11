@@ -5,13 +5,6 @@
         "entryFile": "./index.ts",
         "styleIncludePaths": [
             "./styles"
-        ],
-        "umdModuleIds": {
-            "@deja-js/core": "@deja-js/core",
-            "@deja-js/core/util": "@deja-js/core/util",
-            "angular2-text-mask": "angular2-text-mask",
-            "moment": "moment",
-            "lodash": "lodash"
-        }
+        ]
     }
 }
