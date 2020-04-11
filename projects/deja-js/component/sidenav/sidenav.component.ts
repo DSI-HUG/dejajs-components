@@ -7,8 +7,15 @@
  */
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectorRef, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
+import { ChangeDetectorRef } from '@angular/core';
+import { Component } from '@angular/core';
+import { Input } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { ActivatedRouteSnapshot } from '@angular/router';
+import { NavigationEnd } from '@angular/router';
+import { Router } from '@angular/router';
 import { Destroy, MediaService } from '@deja-js/core';
 import { from } from 'rxjs';
 import { filter, map, mergeMap, takeUntil } from 'rxjs/operators';

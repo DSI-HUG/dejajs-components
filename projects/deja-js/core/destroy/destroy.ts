@@ -6,7 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Directive, OnDestroy } from '@angular/core';
+import { Directive } from '@angular/core';
+import { OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Directive()
