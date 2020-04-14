@@ -7,8 +7,21 @@
  */
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output, Self, ViewChild } from '@angular/core';
-import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { AfterViewInit } from '@angular/core';
+import { ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
+import { Component } from '@angular/core';
+import { ContentChild } from '@angular/core';
+import { ElementRef } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { Input } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { Optional } from '@angular/core';
+import { Output } from '@angular/core';
+import { Self } from '@angular/core';
+import { ViewChild } from '@angular/core';
+import { ControlValueAccessor } from '@angular/forms';
+import { NgControl } from '@angular/forms';
 import { IDejaMouseDroppableContext, IDropCursorInfos } from '@deja-js/component/mouse-dragdrop';
 import { Destroy, KeyCodes, Position, Rect } from '@deja-js/core';
 import { from, fromEvent, Observable, Subject, Subscription } from 'rxjs';
@@ -20,9 +33,9 @@ import { IDejaTilesRefreshParams } from './tiles-refresh-params.interface';
 import { IDejaTileGroupModelEvent, IDejaTilesAddedEvent, IDejaTilesAddEvent, IDejaTilesDeletedEvent, IDejaTilesEvent, IDejaTilesRemoveEvent } from './tiles.event';
 
 @Component({
+    selector: 'deja-tiles',
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [DejaTilesLayoutProvider],
-    selector: 'deja-tiles',
     styleUrls: [
         './tiles.component.scss',
     ],

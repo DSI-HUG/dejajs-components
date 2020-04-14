@@ -10,7 +10,12 @@
  * Created by rtr on 22.12.2016.
  */
 import { coerceNumberProperty } from '@angular/cdk/coercion';
-import { Directive, ElementRef, Input, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { Directive } from '@angular/core';
+import { ElementRef } from '@angular/core';
+import { Input } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { Renderer2 } from '@angular/core';
 import { DejaSplitterComponent } from './splitter.component';
 
 /**

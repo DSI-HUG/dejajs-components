@@ -10,7 +10,14 @@
 * Licensed under MIT https://github.com/rd-dev-ukraine/angular-io-slimscroll/blob/master/LICENSE
 */
 
-import { Directive, ElementRef, HostListener, Input, OnDestroy, OnInit, Renderer2, RendererFactory2 } from '@angular/core';
+import { Directive } from '@angular/core';
+import { ElementRef } from '@angular/core';
+import { HostListener } from '@angular/core';
+import { Input } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { Renderer2 } from '@angular/core';
+import { RendererFactory2 } from '@angular/core';
 import { interval, Subscription, timer } from 'rxjs';
 import { filter, first, takeUntil } from 'rxjs/operators';
 import { Destroy } from '../destroy/destroy';

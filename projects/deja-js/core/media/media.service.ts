@@ -6,7 +6,12 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Inject, Injectable, InjectionToken, NgZone, OnDestroy, Optional } from '@angular/core';
+import { Inject } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { InjectionToken } from '@angular/core';
+import { NgZone } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { Optional } from '@angular/core';
 import { BehaviorSubject, from, Observable } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 

@@ -8,7 +8,8 @@
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Component, ContentChild, EventEmitter, HostBinding, Input, Optional, Output, Self } from '@angular/core';
-import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { ControlValueAccessor } from '@angular/forms';
+import { NgControl } from '@angular/forms';
 import { IDejaChipsComponentCloseEvent } from './chips-close.event';
 
 @Component({
