@@ -1,3 +1,81 @@
+### 0.1.0 (2020-04-14)
+
+##### Chores
+
+* **deps:**  bump acorn from 6.4.0 to 6.4.1 ([cc1a6331](https://github.com/DSI-HUG/dejajs-components/commit/cc1a63314fa5c89698f45a0622073a91420dfe6c))
+
+##### New Features
+
+* **VersionService:**  Add a version service for each lib ([97362877](https://github.com/DSI-HUG/dejajs-components/commit/97362877640d8bc36e331e2337c0685553276280))
+
+##### Bug Fixes
+
+* **Global:**
+  *  Fix build warnings ([328a1591](https://github.com/DSI-HUG/dejajs-components/commit/328a1591e21a5e8122118aea77c79ec50be714e6))
+  *  Fix build warnings ([132ae5eb](https://github.com/DSI-HUG/dejajs-components/commit/132ae5eb7c2f5d9485ba18347584d32da7fa1613))
+* **MouseDragDrop:**  Fix drag and drop freeze in case of mouseleave during drag and drop. ([1f00fca1](https://github.com/DSI-HUG/dejajs-components/commit/1f00fca1b369942c41c7ebcd629d449645d4a952))
+* **DejaTreeList:**  Remove useless formfield implementation ([63841337](https://github.com/DSI-HUG/dejajs-components/commit/638413370d9317ed8b99b694f05e99815fde8b7d))
+* **SidenavComponent:**  sidenav should be opened if media query is xl ([74186c1c](https://github.com/DSI-HUG/dejajs-components/commit/74186c1c64e8dc422211ad2a2f7cb9d1342090fd))
+* **TreeList:**  Fix selection issue due to the reactive form correction ([76c3d860](https://github.com/DSI-HUG/dejajs-components/commit/76c3d86068fb0a817dfb16569216a38806fa0d5a))
+* **DejaEditor:**
+  *  Wrap replace text with span to prevent truncation (DEJS-806) ([059e1b41](https://github.com/DSI-HUG/dejajs-components/commit/059e1b417fc4bad45d1903a8401c8d4f0052561c))
+  *  Do not listen to ready if destroyed ([a9808182](https://github.com/DSI-HUG/dejajs-components/commit/a98081820692bc22478a7dba980e4cffd60536af))
+  *  Preserve html formatting on text insertion (DEJS-786) ([d457ba8e](https://github.com/DSI-HUG/dejajs-components/commit/d457ba8e43a2747d8067a15c8b4d0b5f75aaba30))
+  *  Preserve html formatting on text insertion (DEJS-786) ([23cfcdb9](https://github.com/DSI-HUG/dejajs-components/commit/23cfcdb9dcfed410ed7165fa92978651f908f6a1))
+* **DejaTreelist:**  Fix reactive form compatibility ([5da4e1a1](https://github.com/DSI-HUG/dejajs-components/commit/5da4e1a1b071bd0d7e8860771c5a3ed972e38705))
+* **MediaService:**  Fix double event on media changed and filter only on matches events. ([6ee8ab61](https://github.com/DSI-HUG/dejajs-components/commit/6ee8ab618c6a3d38c217318eadf367904b654217))
+* **Travis:**  Restore travis.yml for dev ([83108153](https://github.com/DSI-HUG/dejajs-components/commit/831081538efc04adbcfc92637e84e78bd5f50253))
+
+##### Other Changes
+
+* **Version:**  Add missing licenses ([8faa22b5](https://github.com/DSI-HUG/dejajs-components/commit/8faa22b5b5aa6b827d32c66cf44b2e174e1e8f91))
+* //github.com/DSI-HUG/dejajs-components into dev ([76c15295](https://github.com/DSI-HUG/dejajs-components/commit/76c1529597f6f66be025e65178a3202a5c7f3111))
+* //github.com/DSI-HUG/dejajs-components into DEJS-801 ([6d0179f4](https://github.com/DSI-HUG/dejajs-components/commit/6d0179f4234e307d24c09b6d5c6b263637265a2c))
+* **TsConfig:**  Restore good config ([c2b7a3e3](https://github.com/DSI-HUG/dejajs-components/commit/c2b7a3e362f5f883d3a7f254f5ad685a600c08aa))
+* **TreeListDemo:**
+  *  Improvements followed by reviewer comments. ([a51d4d3b](https://github.com/DSI-HUG/dejajs-components/commit/a51d4d3bb1a1cde1e17c57c8fec889233d6fc903))
+  *  Fix lint et test ([73172ed3](https://github.com/DSI-HUG/dejajs-components/commit/73172ed34a3ff23351b3ee0a6b6105e31274241f))
+  *  Fix lint ([62f9b14d](https://github.com/DSI-HUG/dejajs-components/commit/62f9b14d8e8a9af70338a23e59fbdd5d1f0cc243))
+
+### 0.1.0 (2020-04-14)
+
+##### Chores
+
+* **deps:**  bump acorn from 6.4.0 to 6.4.1 ([cc1a6331](https://github.com/DSI-HUG/dejajs-components/commit/cc1a63314fa5c89698f45a0622073a91420dfe6c))
+
+##### New Features
+
+* **VersionService:**  Add a version service for each lib ([97362877](https://github.com/DSI-HUG/dejajs-components/commit/97362877640d8bc36e331e2337c0685553276280))
+
+##### Bug Fixes
+
+* **Global:**
+  *  Fix build warnings ([328a1591](https://github.com/DSI-HUG/dejajs-components/commit/328a1591e21a5e8122118aea77c79ec50be714e6))
+  *  Fix build warnings ([132ae5eb](https://github.com/DSI-HUG/dejajs-components/commit/132ae5eb7c2f5d9485ba18347584d32da7fa1613))
+* **MouseDragDrop:**  Fix drag and drop freeze in case of mouseleave during drag and drop. ([1f00fca1](https://github.com/DSI-HUG/dejajs-components/commit/1f00fca1b369942c41c7ebcd629d449645d4a952))
+* **DejaTreeList:**  Remove useless formfield implementation ([63841337](https://github.com/DSI-HUG/dejajs-components/commit/638413370d9317ed8b99b694f05e99815fde8b7d))
+* **SidenavComponent:**  sidenav should be opened if media query is xl ([74186c1c](https://github.com/DSI-HUG/dejajs-components/commit/74186c1c64e8dc422211ad2a2f7cb9d1342090fd))
+* **TreeList:**  Fix selection issue due to the reactive form correction ([76c3d860](https://github.com/DSI-HUG/dejajs-components/commit/76c3d86068fb0a817dfb16569216a38806fa0d5a))
+* **DejaEditor:**
+  *  Wrap replace text with span to prevent truncation (DEJS-806) ([059e1b41](https://github.com/DSI-HUG/dejajs-components/commit/059e1b417fc4bad45d1903a8401c8d4f0052561c))
+  *  Do not listen to ready if destroyed ([a9808182](https://github.com/DSI-HUG/dejajs-components/commit/a98081820692bc22478a7dba980e4cffd60536af))
+  *  Preserve html formatting on text insertion (DEJS-786) ([d457ba8e](https://github.com/DSI-HUG/dejajs-components/commit/d457ba8e43a2747d8067a15c8b4d0b5f75aaba30))
+  *  Preserve html formatting on text insertion (DEJS-786) ([23cfcdb9](https://github.com/DSI-HUG/dejajs-components/commit/23cfcdb9dcfed410ed7165fa92978651f908f6a1))
+* **DejaTreelist:**  Fix reactive form compatibility ([5da4e1a1](https://github.com/DSI-HUG/dejajs-components/commit/5da4e1a1b071bd0d7e8860771c5a3ed972e38705))
+* **MediaService:**  Fix double event on media changed and filter only on matches events. ([6ee8ab61](https://github.com/DSI-HUG/dejajs-components/commit/6ee8ab618c6a3d38c217318eadf367904b654217))
+* **Travis:**  Restore travis.yml for dev ([83108153](https://github.com/DSI-HUG/dejajs-components/commit/831081538efc04adbcfc92637e84e78bd5f50253))
+
+##### Other Changes
+
+* **Version:**  Add missing licenses ([8faa22b5](https://github.com/DSI-HUG/dejajs-components/commit/8faa22b5b5aa6b827d32c66cf44b2e174e1e8f91))
+* //github.com/DSI-HUG/dejajs-components into dev ([76c15295](https://github.com/DSI-HUG/dejajs-components/commit/76c1529597f6f66be025e65178a3202a5c7f3111))
+* //github.com/DSI-HUG/dejajs-components into DEJS-801 ([6d0179f4](https://github.com/DSI-HUG/dejajs-components/commit/6d0179f4234e307d24c09b6d5c6b263637265a2c))
+* **TsConfig:**  Restore good config ([c2b7a3e3](https://github.com/DSI-HUG/dejajs-components/commit/c2b7a3e362f5f883d3a7f254f5ad685a600c08aa))
+* **TreeListDemo:**
+  *  Improvements followed by reviewer comments. ([a51d4d3b](https://github.com/DSI-HUG/dejajs-components/commit/a51d4d3bb1a1cde1e17c57c8fec889233d6fc903))
+  *  Fix lint et test ([73172ed3](https://github.com/DSI-HUG/dejajs-components/commit/73172ed34a3ff23351b3ee0a6b6105e31274241f))
+  *  Fix lint ([62f9b14d](https://github.com/DSI-HUG/dejajs-components/commit/62f9b14d8e8a9af70338a23e59fbdd5d1f0cc243))
+
 #### 0.0.1 (2020-04-08)
 
 ##### Chores

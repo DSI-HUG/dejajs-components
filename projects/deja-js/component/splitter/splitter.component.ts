@@ -7,7 +7,19 @@
  */
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Output, Renderer2, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
+import { Component } from '@angular/core';
+import { ElementRef } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { HostBinding } from '@angular/core';
+import { Input } from '@angular/core';
+import { OnChanges } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { Output } from '@angular/core';
+import { Renderer2 } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
+import { ViewEncapsulation } from '@angular/core';
 import { IAreaData } from './area-data.model';
 import { Point } from './point.model';
 import { SplitAreaDirective } from './split-area.directive';

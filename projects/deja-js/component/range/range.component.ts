@@ -7,16 +7,32 @@
  */
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostListener, Input, Optional, Output, Self } from '@angular/core';
-import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
+import { Component } from '@angular/core';
+import { ContentChild } from '@angular/core';
+import { ElementRef } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { HostListener } from '@angular/core';
+import { Input } from '@angular/core';
+import { Optional } from '@angular/core';
+import { Output } from '@angular/core';
+import { Self } from '@angular/core';
+import { ControlValueAccessor } from '@angular/forms';
+import { NgControl } from '@angular/forms';
 import { Destroy } from '@deja-js/core';
-import { fromEvent, merge, Observable } from 'rxjs';
-import { first, takeUntil, tap } from 'rxjs/operators';
+import { fromEvent } from 'rxjs';
+import { merge } from 'rxjs';
+import { Observable } from 'rxjs';
+import { first } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
+import { __spread } from 'tslib';
 import { IRange, IRangeEvent, IStepRangeEvent, Range } from './range.interface';
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'deja-range',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     styleUrls: ['./range.component.scss'],
     templateUrl: './range.component.html',
 })
@@ -144,7 +160,7 @@ export class DejaRangeComponent extends Destroy implements ControlValueAccessor 
                     const rightSide = ranges.length - 1 > index ? ranges.slice(index + 1) : [];
 
                     // build new array with new range
-                    let newRanges = [...leftSide, newRange, selected, ...rightSide];
+                    let newRanges = __spread(leftSide, [newRange, selected], rightSide);
 
                     // step
                     const newRangeIndex = newRanges.indexOf(newRange);

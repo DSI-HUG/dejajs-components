@@ -16,6 +16,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Rect } from '@deja-js/core';
 import { BehaviorSubject, from } from 'rxjs';
 import { debounceTime, delay, filter, first, map, tap } from 'rxjs/operators';
+import { __spread } from 'tslib';
 import { DejaTileBorderDirection, DejaTileGroupComponent, DejaTilesModule } from './index';
 import { DejaTileGroup } from './tile-group.class';
 import { DejaTile } from './tile.class';
@@ -248,7 +249,7 @@ describe('DejaTilesComponent', () => {
         };
 
         tilesContainerInstance.tiles.unshift(tile);
-        tilesContainerInstance.tiles = [...tilesContainerInstance.tiles];
+        tilesContainerInstance.tiles = __spread(tilesContainerInstance.tiles);
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {

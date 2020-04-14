@@ -6,7 +6,12 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, Input, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
+import { Component } from '@angular/core';
+import { ContentChild } from '@angular/core';
+import { Input } from '@angular/core';
+import { OnDestroy } from '@angular/core';
 import { ItemListService } from '@deja-js/core';
 import { from, Subscription } from 'rxjs';
 import { IDejaGridColumnLayout } from '../data-grid-column/data-grid-column-layout';

@@ -5,7 +5,10 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-import { Component, ElementRef, Input, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
+import { ElementRef } from '@angular/core';
+import { Input } from '@angular/core';
+import { OnDestroy } from '@angular/core';
 import { combineLatest, from, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DejaColorFab } from './color-fab.class';

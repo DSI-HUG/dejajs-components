@@ -6,9 +6,4 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { NgModule } from '@angular/core';
-
-@NgModule({})
-export class DejaJsComponentModule { }
-
-export * from './version/index';
+export * from './version.service';
