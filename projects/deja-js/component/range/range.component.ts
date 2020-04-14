@@ -31,8 +31,8 @@ import { __spread } from 'tslib';
 import { IRange, IRangeEvent, IStepRangeEvent, Range } from './range.interface';
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'deja-range',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     styleUrls: ['./range.component.scss'],
     templateUrl: './range.component.html',
 })

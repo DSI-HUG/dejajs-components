@@ -48,9 +48,9 @@ import { DejaGridRowsEvent } from './data-grid-row/data-grid-rows-event';
 
 /** @deprecated use ag-grid instead */
 @Component({
+    selector: 'deja-grid',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    selector: 'deja-grid',
     styleUrls: [
         './data-grid.component.scss',
     ],

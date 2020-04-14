@@ -33,9 +33,9 @@ import { IDejaTilesRefreshParams } from './tiles-refresh-params.interface';
 import { IDejaTileGroupModelEvent, IDejaTilesAddedEvent, IDejaTilesAddEvent, IDejaTilesDeletedEvent, IDejaTilesEvent, IDejaTilesRemoveEvent } from './tiles.event';
 
 @Component({
+    selector: 'deja-tiles',
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [DejaTilesLayoutProvider],
-    selector: 'deja-tiles',
     styleUrls: [
         './tiles.component.scss',
     ],

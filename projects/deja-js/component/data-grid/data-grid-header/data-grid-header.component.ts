@@ -18,8 +18,8 @@ import { IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayoutEvent, IDej
 import { IDejaGridColumnLayout } from '../data-grid-column/data-grid-column-layout';
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'deja-grid-header',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     styleUrls: ['./data-grid-header.component.scss'],
     templateUrl: './data-grid-header.component.html',
 })
