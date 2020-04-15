@@ -5,7 +5,7 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DejaPopupAction } from '../../model/popup-action.model';
 import { DejaPopupConfig, DialogToolbarColor, DialogToolbarType } from '../../model/popup-config.model';
 
@@ -14,9 +14,10 @@ import { DejaPopupConfig, DialogToolbarColor, DialogToolbarType } from '../../mo
     templateUrl: './popup-toolbar.component.html',
     styleUrls: ['./popup-toolbar.component.scss']
 })
-export class DejaPopupToolbarComponent implements OnInit {
+export class DejaPopupToolbarComponent {
 
-    @Input() public set config(conf: DejaPopupConfig) {
+    @Input()
+    public set config(conf: DejaPopupConfig) {
         this.color = conf.toolbarColor;
         this.title = conf.title;
         this.iconName = conf.toolbarIconName;
@@ -35,6 +36,7 @@ export class DejaPopupToolbarComponent implements OnInit {
             this.defaultActions.unshift(this.buttonMinimize);
         }
     }
+
     public color: DialogToolbarColor;
     public title: string;
     public iconName: string;
@@ -71,16 +73,9 @@ export class DejaPopupToolbarComponent implements OnInit {
         label: 'Dock',
     } as DejaPopupAction;
 
-    public buttonMove = {
-        name: 'toolbar-move',
-        label: 'Move',
-    } as DejaPopupAction;
-
     constructor() {
         this.defaultActions = [this.buttonClose];
     }
-
-    public ngOnInit() { }
 
     public doEmit(action: DejaPopupAction, event?: Event) {
         if (action.name === this.buttonFullscreen.name || action.name === this.buttonFullscreenExit.name) {
@@ -111,5 +106,4 @@ export class DejaPopupToolbarComponent implements OnInit {
         }
         this.defaultActions.splice(idx, 1, newButton);
     }
-
 }
