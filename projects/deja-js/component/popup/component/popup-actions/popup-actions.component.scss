@@ -1,21 +1,21 @@
 :host {
-	display: flex;
-	width: 100%;
-	height: 100%;
+    display: flex;
+    width: 100%;
+    height: 100%;
 
-	.deja-popup-spacer {
-		flex: 1 1 auto;
-	}
+    .deja-popup-spacer {
+        flex: 1 1 auto;
+    }
 
-	button {
-		margin-left: 8px;
+    button {
+        margin-left: 8px;
 
-		.mat-icon {
-			line-height: 18px;
-			font-size: 18px;
-			height: 18px;
+        .mat-icon {
+            line-height: 18px;
+            font-size: 18px;
+            height: 18px;
             width: 18px;
             margin-right: 3px;
-		}
-	}
+        }
+    }
 }

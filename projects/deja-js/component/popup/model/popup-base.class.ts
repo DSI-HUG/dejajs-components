@@ -74,16 +74,13 @@ export abstract class DejaPopupBase extends Destroy implements OnInit {
     }
 
     public dispatchAction(action: DejaPopupAction) {
-
         if (!action) {
             return false;
         }
-
         this.config?.dejaPopupCom$?.next(action);
     }
 
     protected destroy() {
         this.aSub.forEach(s => s.unsubscribe());
     }
-
 }

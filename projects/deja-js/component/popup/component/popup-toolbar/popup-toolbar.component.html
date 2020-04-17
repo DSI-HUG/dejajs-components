@@ -6,7 +6,7 @@
 </mat-toolbar>
 
 <mat-toolbar *ngIf="type && type==='window'" [color]="color" class="deja-popup-toolbar-mini">
-    <span class="deja-popup-toolbar-spacer deja-popup-toolbar-content" (mousedown)="doEmit(buttonMove, $event)">
+    <span class="deja-popup-toolbar-spacer deja-popup-toolbar-content">
         <mat-icon *ngIf="iconName">{{ iconName }}</mat-icon>
         <span>{{ title }}</span>
     </span>

@@ -1,8 +1,7 @@
-<div class="deja-popup-container">
+<div class="deja-popup-container" cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragBoundary=".cdk-overlay-container" (cdkDragStarted)="dragstart = true" (cdkDragEnded)="dragstart = false">
+    <div *ngIf="dragstart" class="dialog-overlay">&nbsp;</div>
 
-    <div *ngIf="dragstart" class="dialog-overlay" (mouseup)="onMouseUp($event)" (click)="freeze($event)">&nbsp;</div>
-
-    <deja-popup-toolbar *ngIf="config && config.toolbarType" [config]="config" (actionSelected)="dispatchAction($event)"></deja-popup-toolbar>
+    <deja-popup-toolbar cdkDragHandle *ngIf="config && config.toolbarType" [config]="config" (actionSelected)="dispatchAction($event)"></deja-popup-toolbar>
 
     <div mat-dialog-content [ngClass]="{'frame-full': !config.padding, 'frame-padding': !!config.padding}">
 
@@ -20,11 +19,9 @@
         <ng-container *ngIf="config?.contentTemplate">
             <ng-template [ngTemplateOutlet]="config?.contentTemplate.templateRef" [ngTemplateOutletContext]="config?.contentTemplate.templateContext"></ng-template>
         </ng-container>
-
     </div>
 
     <div mat-dialog-actions *ngIf="config.hasActions()">
         <div [cdkPortalOutlet]="actionsPortal"></div>
     </div>
-
 </div>

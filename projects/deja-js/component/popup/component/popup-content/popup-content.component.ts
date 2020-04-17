@@ -5,7 +5,7 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { DejaPopupConfig } from '../../model/popup-config.model';
 
 @Component({
@@ -13,7 +13,7 @@ import { DejaPopupConfig } from '../../model/popup-config.model';
     templateUrl: './popup-content.component.html',
     styleUrls: ['./popup-content.component.scss']
 })
-export class DejaPopupContentComponent implements OnInit {
+export class DejaPopupContentComponent {
 
     public content: string[];
 
@@ -27,10 +27,4 @@ export class DejaPopupContentComponent implements OnInit {
             this.content = value.content;
         }
     }
-
-    constructor() { }
-
-    public ngOnInit() {
-    }
-
 }

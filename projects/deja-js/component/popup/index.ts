@@ -5,6 +5,7 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { PortalModule } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
@@ -53,10 +54,11 @@ import { DejaPopupService } from './service/popup.service';
         MatDialogModule,
         DejaOverlayModule,
         PortalModule,
+        DragDropModule,
     ],
     providers: [DejaPopupService],
 })
-export class DejaPopupModule {}
+export class DejaPopupModule { }
 
 export * from './service/popup.service';
 export * from './model/popup-action.model';
