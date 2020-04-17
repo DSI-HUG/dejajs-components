@@ -19,7 +19,7 @@ import { DejaPopupConfig } from '../../model/popup-config.model';
 export class DejaPopupActionsComponent implements OnInit {
 
     public buttons: DejaPopupAction[];
-    constructor( @Inject(MAT_DIALOG_DATA) public config: DejaPopupConfig) { }
+    constructor(@Inject(MAT_DIALOG_DATA) public config: DejaPopupConfig) { }
 
     public ngOnInit() {
         if (this.config.actions.length) {

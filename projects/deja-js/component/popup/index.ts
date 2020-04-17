@@ -58,7 +58,7 @@ import { DejaPopupService } from './service/popup.service';
     ],
     providers: [DejaPopupService],
 })
-export class DejaPopupModule {}
+export class DejaPopupModule { }
 
 export * from './service/popup.service';
 export * from './model/popup-action.model';
