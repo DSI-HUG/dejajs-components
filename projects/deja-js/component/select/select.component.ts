@@ -951,7 +951,6 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
             if (this.isModeSelect) {
                 this.showDropDown();
             } else {
-                // Autocomplete
                 this.filter$.next(event);
             }
         });
@@ -1173,7 +1172,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
 
     /** Change l'état d'expansion de la ligne spécifiée
      * @param index  Index sur la liste des éléments visibles de l'élément à changer.
-     * @param collapse  Etat de l'élément. True pour réduire l'élément.
+     * @param collapsed  Etat de l'élément. True pour réduire l'élément.
      * @return Observable résolu par la fonction.
      */
     public toggleCollapse$(index: number, collapsed: boolean): Observable<IItemTree> {
@@ -1187,7 +1186,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
 
     /** Change l'état d'expansion de la ligne spécifiée
      * @param index  Index sur la liste des éléments visibles de l'élément à changer.
-     * @param collapse  Etat de l'élément. True pour réduire l'élément.
+     * @param collapsed  Etat de l'élément. True pour réduire l'élément.
      */
     public toggleCollapse(index: number, collapsed: boolean) {
         this.toggleCollapse$(index, collapsed).pipe(
@@ -1300,15 +1299,17 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
         this.removeSelection();
     }
 
-    public onCloseClicked(event?: IDejaChipsComponentCloseEvent) {
+    public onClearQuery(clickEvent: Event): boolean {
+        this.onRemoveSelection();
+        clickEvent.stopPropagation();
+        return false;
+    }
+
+    public onRemoveSelection(closeEvent?: IDejaChipsComponentCloseEvent) {
         if (this.ngControl) {
             this.ngControl.control.markAsTouched();
         }
-        this.removeSelection(event?.item);
-        if (event) {
-            event.stopPropagation();
-        }
-        return false;
+        this.removeSelection(closeEvent?.item);
     }
 
     public onOpenClicked() {
