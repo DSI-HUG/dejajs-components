@@ -4,8 +4,8 @@
     </span>
     <ng-template #caption>
         <span>{{ getTextValue(item) }}</span>
-    </ng-template> 
-    <mat-icon id="close-button" *ngIf="!readonly && !disabled" (click)="onClose(item, index)">close</mat-icon>
+    </ng-template>
+    <mat-icon id="close-button" *ngIf="!readonly && !disabled" (click)="onClose($event, item, index)">close</mat-icon>
 </span>
 <span class="insert-item" *ngIf="insertTemplate">
     <ng-template [ngTemplateOutlet]="insertTemplate" [ngTemplateOutletContext]="{ }"></ng-template>
