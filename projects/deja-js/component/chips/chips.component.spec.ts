@@ -112,8 +112,10 @@ describe('DejaChipsComponent', () => {
 
         const spy = spyOn(component, 'onClose');
 
-        closeButtons[1].nativeElement.click();
-        expect(spy).toHaveBeenCalledWith('Java', 1);
+        const clickEvent = new MouseEvent('click');
+        closeButtons[1].nativeElement.dispatchEvent(clickEvent);
+
+        expect(spy).toHaveBeenCalledWith(clickEvent, 'Java', 1);
     });
 
     it('onClose should remove item and emit an IDejaChipsComponentCloseEvent', () => {
@@ -121,7 +123,11 @@ describe('DejaChipsComponent', () => {
         fixture.detectChanges();
 
         const spy = spyOn(component.close, 'emit');
-        component.onClose('Oracle', 2);
+
+        const indexToRemove = 2;
+        const itemToRemove = component.items[indexToRemove];
+        const clickEvent = new MouseEvent('click');
+        component.onClose(clickEvent, itemToRemove, indexToRemove);
 
         expect(component.items.length).toBe(2);
         expect(spy).toHaveBeenCalled();
