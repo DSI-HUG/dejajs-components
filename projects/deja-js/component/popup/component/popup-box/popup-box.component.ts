@@ -61,5 +61,4 @@ export class DejaPopupBoxComponent {
         const a = new DejaPopupAction('tray-refresh', 'popup-tray');
         this.action.emit(a);
     }
-
 }

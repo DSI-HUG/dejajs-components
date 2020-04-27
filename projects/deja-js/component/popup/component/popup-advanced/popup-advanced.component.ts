@@ -17,8 +17,8 @@ import { Renderer2 } from '@angular/core';
 import { ViewEncapsulation } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Subscription, timer } from 'rxjs';
-import { takeUntil, tap } from 'rxjs/operators';
+import { timer } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { DejaPopupAction } from '../../model/popup-action.model';
 import { DejaPopupBase } from '../../model/popup-base.class';
 import { DejaPopupConfig } from '../../model/popup-config.model';
@@ -30,14 +30,11 @@ import { DejaPopupConfig } from '../../model/popup-config.model';
     templateUrl: 'popup-advanced.component.html',
 })
 export class DejaPopupAdvancedComponent extends DejaPopupBase implements AfterViewInit, OnInit {
+
     private left: number;
     private top: number;
     public dragstart = false;
-    public lastEvent: MouseEvent = null;
     public componentPortal: Portal<any>;
-    private subKeyEvent: Subscription;
-    private timer: number;
-    private readonly clickTreshold = 600;
 
     constructor(
         public dialogRef: MatDialogRef<DejaPopupBase>,
@@ -71,20 +68,10 @@ export class DejaPopupAdvancedComponent extends DejaPopupBase implements AfterVi
         }
     }
 
-    public onMouseUp(e: any) {
-        console.log('onMouseUp', e);
-        const now = Date.now();
-        if (now - this.timer > this.clickTreshold) {
-            this.freeze();
-        }
-    }
-
     public doAction(action: DejaPopupAction) {
-
         this.actionSelected = action;
 
-        switch (action.name ? action.name : action) {
-
+        switch (action.name || action) {
             case 'toolbar-close':
             case 'close':
                 action.isFinalAction = true;
@@ -98,13 +85,6 @@ export class DejaPopupAdvancedComponent extends DejaPopupBase implements AfterVi
                 this.exitFullScreen();
                 break;
 
-            case 'toolbar-move':
-                this.timer = Date.now();
-                this.dragstart = !this.dragstart;
-                this.lastEvent = null;
-                this.listen();
-                break;
-
             case 'toolbar-minify':
                 this.isMinified = true;
                 if (this.config.dejaPopupCom$) {
@@ -113,9 +93,7 @@ export class DejaPopupAdvancedComponent extends DejaPopupBase implements AfterVi
                     this.config.dejaPopupCom$.next(actionOut);
                 }
                 break;
-
         }
-
     }
 
     public goFullScreen() {
@@ -132,57 +110,5 @@ export class DejaPopupAdvancedComponent extends DejaPopupBase implements AfterVi
 
         this.dialogRef.updatePosition({ top: `${this.top}px`, left: `${this.left}px` });
         this.dialogRef.updateSize(updatedWidth, updatedHeight);
-    }
-
-    public listen() {
-
-        if (this.dragstart) {
-            this.unlisten = this.renderer.listen('window', 'mousemove', (event) => {
-                if (this.dragstart) {
-                    this.dialogRef.updatePosition(this.move(event));
-                }
-            });
-
-            this.subKeyEvent = this.dialogRef.keydownEvents().pipe(
-                tap(() => this.freeze()),
-                takeUntil(this.destroyed$)
-            ).subscribe();
-
-        } else {
-            this.freeze();
-        }
-
-    }
-
-    public freeze(me?: MouseEvent) {
-
-        if (me) {
-            me.preventDefault();
-        }
-
-        if (this.unlisten) {
-            this.dragstart = false;
-            this.unlisten();
-            this.lastEvent = null;
-            this.unlisten = null;
-        }
-        if (this.subKeyEvent) {
-            this.subKeyEvent.unsubscribe();
-        }
-
-    }
-
-    private move(me: MouseEvent) {
-
-        if (this.lastEvent) {
-            this.top += me.y - this.lastEvent.y;
-            this.left += me.x - this.lastEvent.x;
-        }
-        this.lastEvent = me;
-
-        return {
-            top: `${this.top}px`,
-            left: `${this.left}px`,
-        };
     }
 }

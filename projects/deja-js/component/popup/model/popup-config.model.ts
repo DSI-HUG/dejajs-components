@@ -72,7 +72,6 @@ export class DejaPopupConfig extends MatDialogConfig {
     }
 
     public getMatDialogConfig(): MatDialogConfig {
-
         this.createIds();
 
         if (this.autoposition) {
@@ -103,7 +102,6 @@ export class DejaPopupConfig extends MatDialogConfig {
 
         config.data = this;
         return config;
-
     }
 
     public addPanelClass(panelClass: string) {
@@ -127,7 +125,6 @@ export class DejaPopupConfig extends MatDialogConfig {
     }
 
     public ensurePosition() {
-
         if (!this.position) {
             this.position = this.getDefaultPosition();
             return true;
@@ -140,7 +137,6 @@ export class DejaPopupConfig extends MatDialogConfig {
         if (!this.position.left && !this.position.right) {
             this.position.left = `${(this.positionStart.left)}px`;
         }
-
     }
 
     private createIds() {
@@ -152,7 +148,6 @@ export class DejaPopupConfig extends MatDialogConfig {
         this.addPanelClass(className);
         this.dialogPanelId = `.${className}`;
     }
-
 }
 
 export type DialogToolbarType = 'base' | 'window';

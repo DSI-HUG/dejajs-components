@@ -136,12 +136,14 @@ export class DejaChipsComponent implements ControlValueAccessor {
         }
     }
 
-    public onClose(item: any, index: number) {
-        const event = new CustomEvent('DejaChipsCloseEvent', {}) as IDejaChipsComponentCloseEvent;
-        event.item = item;
-        event.index = index;
+    public onClose(closeEvent: Event, item: any, index: number): boolean {
+        const newEvent = new CustomEvent('DejaChipsCloseEvent', {}) as IDejaChipsComponentCloseEvent;
+        newEvent.item = item;
+        newEvent.index = index;
         this.items.splice(index, 1);
         this.onChangeCallback(this.items);
-        this.close.emit(event);
+        this.close.emit(newEvent);
+        closeEvent.stopPropagation();
+        return false;
     }
 }

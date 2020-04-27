@@ -47,16 +47,19 @@ describe('DejaColorPicker', () => {
 
         const el = fixture.debugElement.query(By.css('button'));
         const backgroundColor = el.styles['background-color'];
-        expect(backgroundColor).toEqual('');
+        expect(backgroundColor).toBeFalsy();
     });
 
     it('should have background-color if value specified', () => {
         component.colors = new MaterialColors().colors;
-        component.value = Color.fromHex('#FFA012');
+        const expectedColorHex = '#FFA012';
+        const expectedColorRgb = 'rgb(255, 160, 18)';
+        component.value = Color.fromHex(expectedColorHex);
         fixture.detectChanges();
 
         const el = fixture.debugElement.query(By.css('button'));
-        expect(el.styles['background-color']).toEqual('rgb(255, 160, 18)');
+        const backgroundColor = el.styles['background-color'];
+        expect([expectedColorHex, expectedColorRgb].includes(backgroundColor)).toBeTrue();
     });
 
     it('should set isOpen to true on show', () => {

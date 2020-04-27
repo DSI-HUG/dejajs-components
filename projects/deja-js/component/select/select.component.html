@@ -1,9 +1,9 @@
 <input [placeholder]="placeholder" *ngIf="!isMultiSelect" matInput [disabled]="disabled" [ngModel]="query" #inputElement deja-child-validator type="text" [readonly]="isModeSelect || readonly" (ngModelChange)="queryChanged($event)" autocomplete="off">
 <div *ngIf="!disabled && !isMultiSelect" class="actions-suffix">
-	<mat-icon (click)="onCloseClicked()" id="clear-button" *ngIf="selectionClearable && selectedItems.length > 0">clear</mat-icon>
+	<mat-icon (click)="onClearQuery($event)" id="clear-button" *ngIf="selectionClearable && selectedItems?.length">clear</mat-icon>
 	<mat-icon (click)="onOpenClicked()" id="drop-down-button">arrow_drop_down</mat-icon>
 </div>
-<deja-chips *ngIf="isMultiSelect" [items]="selectedItems" [readonly]="readonly" [disabled]="disabled" (close)="onCloseClicked($event)" [itemTemplateExternal]="selectedTemplate" [textField]="textField">
+<deja-chips *ngIf="isMultiSelect" [items]="selectedItems" [readonly]="readonly" [disabled]="disabled" (close)="onRemoveSelection($event)" [itemTemplateExternal]="selectedTemplate" [textField]="textField">
 	<ng-template #insertTemplate>
 		<input [placeholder]="placeholder" matInput [disabled]="disabled" [ngModel]="query" #inputElement deja-child-validator type="text" [readonly]="isModeSelect || readonly" (ngModelChange)="queryChanged($event)" autocomplete="off">
 		<div *ngIf="!disabled" class="actions-suffix">
@@ -11,13 +11,13 @@
 		</div>
 	</ng-template>
 </deja-chips>
-<deja-overlay #dejaOverlay [overlayBackdropClass]="overlayBackdropClass || 'deja-select-backdrop'" [overlayContainerClass]="overlayContainerClass" [ownerElement]="overlayOwnerElement" [isVisible]="dropdownVisible" (closed)="hideDropDown()" [positions]="positions" [overlayOffsetY]="overlayOffsetY" [overlayOffsetX]="overlayOffsetX" [width]="dropDownWidth" widthForMobile="100%" (closed)="hideDropDown()">
-	<div [id]="listElementId" class="deja-listcontainer" [attr.itemscount]="itemList && itemList.length" [attr.depth-max]="depthMax || null" [attr.keynav]="keyboardNavigation" [attr.vprowheight]="getViewPortRowHeight()" (mousedown)="mousedown($event)" (scroll)="scroll($event)" [style.max-height.px]="dropDownMaxHeight">
-		<div id="nodata-holder" *ngIf="(!treeItemList || treeItemList.length === 0) && !waiter">{{ nodataholder }}</div>
+<deja-overlay #dejaOverlay [overlayBackdropClass]="overlayBackdropClass || 'deja-select-backdrop'" [overlayContainerClass]="overlayContainerClass" [ownerElement]="overlayOwnerElement" [isVisible]="dropdownVisible" (closed)="hideDropDown()" [positions]="positions" [overlayOffsetY]="overlayOffsetY" [overlayOffsetX]="overlayOffsetX" [width]="dropDownWidth" widthForMobile="100%">
+	<div [id]="listElementId" class="deja-listcontainer" [attr.itemscount]="itemList?.length" [attr.depth-max]="depthMax || null" [attr.keynav]="keyboardNavigation" [attr.vprowheight]="getViewPortRowHeight()" (mousedown)="mousedown($event)" (scroll)="scroll($event)" [style.max-height.px]="dropDownMaxHeight">
+		<div id="nodata-holder" *ngIf="!treeItemList?.length && !waiter">{{ nodataholder }}</div>
 		<div *ngIf="vpBeforeHeight" [style.height.px]="vpBeforeHeight"></div>
 		<div *ngFor="let item of treeItemList; let index = index" #listitem [attr.class]="getItemClass(item)" [attr.current]="(isMultiSelect && vpStartRow+index === getCurrentItemIndex()) || null" [attr.depth]="depthMax ? item.depth : null" [attr.id]="item.id || null" [attr.flat]="vpStartRow + index" [style.height.px]="getItemHeight(item)">
 			<span id="expandbtn">
-				<mat-icon *ngIf="item.$items && item.$items.length">arrow_drop_down</mat-icon>
+				<mat-icon *ngIf="item.$items?.length">arrow_drop_down</mat-icon>
 			</span>
 			<ng-container *ngIf="(!item.$items || !parentItemTemplate) && (item.$items || !itemTemplate)">{{ getTextValue(item) }}</ng-container>
 			<ng-container *ngIf="item.$items && parentItemTemplate">
@@ -34,4 +34,4 @@
 		</ng-container>
 	</div>
 </deja-overlay>
-<div *ngIf="hintLabel != ''" class="mat-hint">{{hintLabel}}</div>
+<div *ngIf="hintLabel" class="mat-hint">{{hintLabel}}</div>
