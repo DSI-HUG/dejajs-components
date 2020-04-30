@@ -6,6 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { Point } from '@angular/cdk/drag-drop/drag-ref';
 import { ComponentPortal, Portal } from '@angular/cdk/portal';
 import { AfterViewInit } from '@angular/core';
 import { Component } from '@angular/core';
@@ -34,6 +35,7 @@ export class DejaPopupAdvancedComponent extends DejaPopupBase implements AfterVi
     private left: number;
     private top: number;
     public dragstart = false;
+    public dragPosition: Point = { x: 0, y: 0 };
     public componentPortal: Portal<any>;
 
     constructor(
