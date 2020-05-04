@@ -28,18 +28,16 @@ import { ControlValueAccessor } from '@angular/forms';
 import { FormGroupDirective } from '@angular/forms';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { CanUpdateErrorState } from '@angular/material/core';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { DateComponentLayout, DaysOfWeek, DejaDateSelectorComponent } from '@deja-js/component/date-selector';
 import { DejaChildValidatorDirective, DejaConnectionPositionPair, KeyCodes } from '@deja-js/core';
 import { _MatInputMixinBase } from '@deja-js/core/util';
-import * as moment_ from 'moment';
 import { combineLatest, from, fromEvent, merge, Observable, ReplaySubject, Subject, timer } from 'rxjs';
 import { delay, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { formatToMask, formatToUnitOfTime } from './format-to-mask';
-
-const moment: (value?: any, format?: string, strict?: boolean) => moment_.Moment = (<any>moment_).default || moment_;
 
 /**
  * Date-picker component for Angular
@@ -210,6 +208,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
         @Optional() _parentFormGroup: FormGroupDirective,
         _defaultErrorStateMatcher: ErrorStateMatcher,
         private fm: FocusMonitor,
+        private momentDateAdapter: MomentDateAdapter,
     ) {
         super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
         if (this.ngControl) {
@@ -291,7 +290,8 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
                             // If this format has a corresponding value inside formatToUnitOfTime object we can increment its value with moment.add() method
                             unitOfTime = (unitOfTime && formatToUnitOfTime[unitOfTime]) || undefined;
                             if (unitOfTime) {
-                                this.updateModel(moment(this.value).add(1, unitOfTime as moment_.unitOfTime.DurationConstructor).toDate());
+                                const m = this.momentDateAdapter.deserialize(this.value).add(1, unitOfTime as any);
+                                this.updateModel(m.toDate());
                             }
                         }
                     }
@@ -309,7 +309,8 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
                             let unitOfTime = format.find((str) => str.indexOf(f) !== -1);
                             unitOfTime = (unitOfTime && formatToUnitOfTime[unitOfTime]) || undefined;
                             if (unitOfTime) {
-                                this.updateModel(moment(this.value).subtract(1, unitOfTime as moment_.unitOfTime.DurationConstructor).toDate());
+                                const m = this.momentDateAdapter.deserialize(this.value).subtract(1, unitOfTime as any);
+                                this.updateModel(m.toDate());
                             }
                         }
                     }
@@ -343,7 +344,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
         valueUpdated$.pipe(
             tap(([format, value]) => {
                 this.date = value;
-                this._inputModel = (this.date) ? (this.date instanceof Date ? moment(this.date).format(format) : this.date) : null;
+                this._inputModel = (this.date) ? (this.date instanceof Date ? this.momentDateAdapter.deserialize(this.date).format(format) : this.date) : null;
                 this.changeDetectorRef.markForCheck();
             }),
             filter(() => this.cursorPosition && !this.allowFreeEntry),
@@ -570,10 +571,9 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
     public updateModel(date: string | Date) {
         if (typeof date === 'string' && !this.allowFreeEntry) { // && date.replace(/_/g, '').length === this._format.length) {
             if (date.replace(/_/g, '').length === this._format.length) { // If mask is fully filled
-                let d = moment(date, this._format).toDate();
-                if (!moment(d).isValid()) {
+                const d = this.momentDateAdapter.parse(date, this._format)?.toDate() || null;
+                if (!d) {
                     console.warn('[DatePicker]: Invalid Date');
-                    d = null;
                     this.ngControl.control.setErrors({ invalidMask: true });
                     this.changeDetectorRef.markForCheck();
                 }
@@ -645,7 +645,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
             timer(0).pipe(
                 takeUntil(this.destroyed$)
             ).subscribe(() => {
-                const hoursTemplate = moment(this.date).format('HH:mm');
+                const hoursTemplate = this.momentDateAdapter.deserialize(this.date).format('HH:mm');
                 const stringDate = this.inputElement.value;
                 const hoursPosition = stringDate.indexOf(hoursTemplate);
                 this.inputElement.setSelectionRange(hoursPosition, stringDate.length);
