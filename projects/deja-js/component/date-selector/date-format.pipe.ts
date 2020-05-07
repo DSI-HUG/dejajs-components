@@ -6,15 +6,16 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { Pipe, PipeTransform } from '@angular/core';
-
-import * as moment_ from 'moment';
-const moment: (value?: any, format?: string) => moment_.Moment = (<any>moment_).default || moment_;
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
 
 @Pipe({
     name: 'dejaDate'
 })
 export class DejaDateFormatPipe implements PipeTransform {
+
+    constructor(private momentDateAdapter: MomentDateAdapter) { }
+
     public transform(date: Date, format: string) {
-        return moment(date).format(format);
+        return this.momentDateAdapter.deserialize(date)?.format(format) || date;
     }
 }
