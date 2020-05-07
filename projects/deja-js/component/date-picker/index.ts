@@ -9,6 +9,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -32,6 +33,9 @@ import { DejaDatePickerComponent } from './date-picker.component';
         DejaDateSelectorModule,
         TextMaskModule,
     ],
+    providers: [
+        MomentDateAdapter
+    ]
 })
 export class DejaDatePickerModule { }
 
