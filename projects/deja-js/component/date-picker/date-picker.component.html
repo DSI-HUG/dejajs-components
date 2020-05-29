@@ -1,5 +1,5 @@
-<input *ngIf="!allowFreeEntry" deja-child-validator #inputelement date-selector-input matInput autocomplete="off" [disabled]="disabled" [required]="required" [ngModel]="inputModel" [placeholder]="placeholder" [textMask]="{mask: mask, showMask: true, keepCharPositions: true}" (ngModelChange)="updateModel($event)">
-<input *ngIf="allowFreeEntry" class="free-txt" deja-child-validator #inputelement date-selector-input matInput autocomplete="off" [disabled]="disabled" [required]="required" [ngModel]="inputModel" [placeholder]="placeholder" (ngModelChange)="updateModel($event)">
+<input *ngIf="!allowFreeEntry" deja-child-validator #inputelement date-selector-input matInput autocomplete="off" [disabled]="disabled" [required]="required" [ngModel]="inputModel" [placeholder]="placeholder" [textMask]="{mask: mask, showMask: true, keepCharPositions: true}" (ngModelChange)="updateModel($event)" [ngModelOptions]="ngModelOptions">
+<input *ngIf="allowFreeEntry" class="free-txt" deja-child-validator #inputelement date-selector-input matInput autocomplete="off" [disabled]="disabled" [required]="required" [ngModel]="inputModel" [placeholder]="placeholder" (ngModelChange)="updateModel($event)" [ngModelOptions]="ngModelOptions">
 <div class="datepicker-actions">
     <button type="button" *ngIf="inputModel && !disabled" (click)="reset()" id="clear-button" tabindex="-1">
 		<mat-icon inline>clear</mat-icon>
