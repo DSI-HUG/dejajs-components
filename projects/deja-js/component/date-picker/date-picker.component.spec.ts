@@ -21,8 +21,9 @@ class DatePickerTestingUtils {
 }
 
 @Component({
-    template: `<deja-date-picker style="width: 1000px;">
-                </deja-date-picker>`,
+    template: `
+        <deja-date-picker style="width: 1000px;">
+        </deja-date-picker>`
 })
 class DejaDatePickerContainerComponent {
     constructor() {
@@ -44,7 +45,7 @@ describe('DejaDatePickerContainerComponent', () => {
             imports: [
                 BrowserAnimationsModule,
                 DejaDatePickerModule
-            ],
+            ]
         }).compileComponents();
     }));
 
@@ -72,7 +73,7 @@ describe('DejaDatePickerContainerComponent', () => {
             /\d/,
             '-',
             /[0-3]/,
-            /\d/,
+            /\d/
         ];
 
         expect(component.mask.length).toEqual(10);
@@ -231,7 +232,7 @@ describe('DejaDatePickerContainerComponent', () => {
             // Don't know why fixture.detectChanges does not do the job
             fixture.debugElement
                 .query(By.css('input'))
-                .nativeElement.dispatchEvent(new Event('change'));
+                .nativeElement.dispatchEvent(new Event('input'));
             fixture.detectChanges();
         });
         it('should accept string or date as value', () => {
@@ -241,10 +242,12 @@ describe('DejaDatePickerContainerComponent', () => {
             input.value = 'ABCD';
             input.dispatchEvent(new Event('change'));
             fixture.detectChanges();
+            component.updateModel(input.value); // Use this because don't know how to trigger ngModelChange event
             expect(component.value).toBe('ABCD');
             input.value = '2018-01-01';
             input.dispatchEvent(new Event('change'));
             fixture.detectChanges();
+            component.updateModel(input.value); // Use this because don't know how to trigger ngModelChange event
             expect(component.value).toBe('2018-01-01');
         });
     });
