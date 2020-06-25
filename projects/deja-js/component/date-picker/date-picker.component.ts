@@ -100,6 +100,13 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
     public get showCurrentDateButton() {
         return this._showCurrentDateButton;
     }
+    @Input() public updateInputOn: string;
+
+    public get ngModelOptions() {
+        return {
+            updateOn: this.updateInputOn || 'blur'
+        };
+    }
 
     @Output() public dateChange = new EventEmitter();
     @Output() public timeChange = new EventEmitter();

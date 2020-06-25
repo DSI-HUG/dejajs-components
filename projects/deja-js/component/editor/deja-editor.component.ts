@@ -64,6 +64,7 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
     private _readonly: boolean;
     private _inline = true;
     private _ready: boolean;
+    private onDataChangeListener: any;
 
     @Input()
     public set readonly(value: boolean) {
@@ -106,7 +107,6 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
     public set value(v) {
         if (v !== this._value) {
             this._value = v;
-            this.onChange(v);
         }
     }
 
@@ -251,25 +251,6 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
                 this.ready.emit(evt);
             });
 
-            // CKEditor change event
-            this.instance.on('change', () => {
-                // Debounce update
-                if (this.debounce) {
-                    const debounce = parseInt(this.debounce, 10);
-                    this.debounceTimeout$sub?.unsubscribe();
-                    this.debounceTimeout$sub = timer(debounce).pipe(
-                        takeUntil(this.destroyed$)
-                    ).subscribe(() => {
-                        this.updateValue();
-                        this.debounceTimeout$sub = null;
-                    });
-
-                    // Live update
-                } else {
-                    this.updateValue();
-                }
-            });
-
             // CKEditor blur event
             this.instance.on('blur', (evt: any) => {
                 this.blur.emit(evt);
@@ -285,17 +266,42 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
         }
     }
 
+    private registerChangeListener() {
+        // CKEditor change event
+        this.onDataChangeListener = this.instance.on('change', () => {
+            // Debounce update
+            if (this.debounce) {
+                const debounce = parseInt(this.debounce, 10);
+                this.debounceTimeout$sub?.unsubscribe();
+                this.debounceTimeout$sub = timer(debounce).pipe(
+                    takeUntil(this.destroyed$)
+                ).subscribe(() => {
+                    this.updateValue();
+                    this.debounceTimeout$sub = null;
+                });
+
+                // Live update
+            } else {
+                this.updateValue();
+            }
+        });
+    }
     /**
      * Implements ControlValueAccessor
      */
     public writeValue(value: any) {
         this._value = value;
         if (!this.destroyed$.closed) {
-            timer(0).pipe(
+            timer(0).pipe( // See DEJS-728 that explain usage of async method
                 takeUntil(this.destroyed$)
             ).subscribe(() => {
                 if (this.instance) {
-                    this.instance.setData(value);
+                    this.onDataChangeListener?.removeListener(); // The data change listener must be removed before setting the data,
+                    // valueAccessor.onChange is called by the data change listener and must not be subsequently called on writeValue call which fire
+                    // the data change event by calling instance.setData.
+                    this.instance.setData(value, () => {
+                        this.registerChangeListener();
+                    });
                 } else {
                     this.host.nativeElement.value = value;
                 }
