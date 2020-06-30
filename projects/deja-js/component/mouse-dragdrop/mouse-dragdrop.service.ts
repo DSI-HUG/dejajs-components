@@ -11,7 +11,7 @@
  */
 import { Injectable } from '@angular/core';
 import { Destroy } from '@deja-js/core';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { filter, takeUntil, tap } from 'rxjs/operators';
 import { IDragCursorInfos } from './mouse-drag-cursor-infos.interface';
 import { IDragDropContext } from './mouse-dragdrop-context.interface';
@@ -24,7 +24,7 @@ export class DejaMouseDragDropService extends Destroy {
     private _context = {} as IDragDropContext;
     private _isDragging = false;
     public dragCursor$ = new BehaviorSubject<IDragCursorInfos>(null);
-    public dropCursor$ = new Subject<IDropCursorInfos>();
+    public dropCursor$ = new BehaviorSubject<IDropCursorInfos>(null);
     public dragging$ = new BehaviorSubject<boolean>(false);
 
     constructor() {
