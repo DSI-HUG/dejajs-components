@@ -8,11 +8,10 @@
 
 import { Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Destroy, Position } from '@deja-js/core';
-import { BehaviorSubject, from } from 'rxjs';
+import { BehaviorSubject, combineLatest, from } from 'rxjs';
 import { delay, filter, takeUntil, tap } from 'rxjs/operators';
 import { IDragCursorInfos } from './mouse-drag-cursor-infos.interface';
 import { DejaMouseDragDropService } from './mouse-dragdrop.service';
-import { IDropCursorInfos } from './mouse-drop-cursor-infos.interface';
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -23,13 +22,11 @@ import { IDropCursorInfos } from './mouse-drop-cursor-infos.interface';
     templateUrl: './mouse-dragdrop-cursor.component.html',
 })
 export class DejaMouseDragDropCursorComponent extends Destroy {
-    @ViewChild('block', { static: true }) private icon: ElementRef;
-    @ViewChild('content', { static: true }) private content: ElementRef;
+    @ViewChild('block', { static: true }) private icon: ElementRef<HTMLElement>;
+    @ViewChild('content', { static: true }) private content: ElementRef<HTMLElement>;
     private position$ = new BehaviorSubject<Position>(null);
     private cursor$ = new BehaviorSubject<IDragCursorInfos>(null);
-    private _dragCursor: IDragCursorInfos;
-    private _currentCursor: IDragCursorInfos;
-    private _dropCursor: IDropCursorInfos;
+    private currentCursor: IDragCursorInfos;
 
     constructor(elementRef: ElementRef, private dragDropService: DejaMouseDragDropService) {
         super();
@@ -47,13 +44,13 @@ export class DejaMouseDragDropCursorComponent extends Destroy {
 
         // Hide
         cursor$.pipe(
-            filter(dragCursor => !dragCursor),
-            tap(dragCursor => {
-                if (this._currentCursor && this.contentElement && this.iconElement) {
+            filter(cursor => !cursor),
+            tap(cursor => {
+                if (this.currentCursor && this.contentElement && this.iconElement) {
                     this.contentElement.style.opacity = '0';
                     this.iconElement.style.opacity = '0';
                 }
-                this._currentCursor = dragCursor;
+                this.currentCursor = cursor;
             }),
             delay(300),
             takeUntil(this.destroyed$)
@@ -64,23 +61,23 @@ export class DejaMouseDragDropCursorComponent extends Destroy {
 
         // Show
         cursor$.pipe(
-            filter(dragCursor => !!dragCursor),
-            tap(dragCursor => {
+            filter(cursor => !!cursor),
+            tap(cursor => {
                 element.style.display = '';
                 if (this.contentElement && this.iconElement) {
                     this.contentElement.style.opacity = '0';
                     this.iconElement.style.opacity = '0';
                 }
-                this._currentCursor = dragCursor;
+                this.currentCursor = cursor;
             }),
-            filter(dragCursor => !dragCursor.className || dragCursor.className !== 'hidden'),
-            tap(dragCursor => {
-                if (!!dragCursor.html) {
-                    element.className = dragCursor.className;
+            filter(cursor => !cursor.className || cursor.className !== 'hidden'),
+            tap(cursor => {
+                if (!!cursor.html) {
+                    element.className = cursor.className;
                     if (this.contentElement && this.iconElement) {
-                        this.contentElement.innerHTML = dragCursor.html;
-                        this.contentElement.style.width = `${dragCursor.width || 48}px`;
-                        this.contentElement.style.height = `${dragCursor.height || 48}px`;
+                        this.contentElement.innerHTML = cursor.html;
+                        this.contentElement.style.width = `${cursor.width || 48}px`;
+                        this.contentElement.style.height = `${cursor.height || 48}px`;
                     }
                 } else {
                     if (this.iconElement) {
@@ -90,45 +87,39 @@ export class DejaMouseDragDropCursorComponent extends Destroy {
             }),
             delay(1),
             takeUntil(this.destroyed$)
-        ).subscribe(dragCursor => {
-            if (!!dragCursor.html && this.contentElement) {
+        ).subscribe(cursor => {
+            if (!!cursor.html && this.contentElement) {
                 this.contentElement.style.opacity = '1';
             }
         });
 
-        from(this.dragDropService.dragCursor$).pipe(
+        combineLatest([this.dragDropService.dragCursor$, this.dragDropService.dropCursor$]).pipe(
             takeUntil(this.destroyed$)
-        ).subscribe(dragCursor => {
-            if (!!dragCursor !== !!this._dragCursor) {
-                this._dragCursor = dragCursor;
-            }
+        ).subscribe(([dragCursor, dropCursor]) => {
+            const cursor = (dragCursor || dropCursor) && {
+                className: dropCursor?.className || dragCursor?.className,
+                html:  dropCursor?.html || dragCursor?.html || (dropCursor && dragCursor?.originalHtml) ,
+                width: dropCursor?.width || dragCursor?.width,
+                height: dropCursor?.height || dragCursor?.height,
+                position: dragCursor?.position,
+                originalEvent: dragCursor?.originalEvent
+            } as IDragCursorInfos;
 
-            if (this._dropCursor && this._dragCursor) {
-                dragCursor.className = this._dropCursor.className || this._dragCursor.className;
-                dragCursor.html = this._dropCursor.html || this._dragCursor.html;
-                dragCursor.width = this._dropCursor.width || this._dragCursor.width;
-                dragCursor.height = this._dropCursor.height || this._dragCursor.height;
-            }
-
-            if (!!dragCursor !== !!this._currentCursor || (dragCursor && !!dragCursor.html !== !!this._currentCursor.html)) {
+            if (cursor?.html !== this.currentCursor?.html || cursor?.className !== this.currentCursor?.className || cursor?.width !== this.currentCursor?.width || cursor?.height !== this.currentCursor?.height) {
                 // Update Content
-                this.cursor$.next(dragCursor);
-            } else if (dragCursor) {
+                this.cursor$.next(cursor);
+            } else {
                 // Update only Position
-                this.position$.next(dragCursor.position);
+                this.position$.next(cursor?.position);
             }
         });
-
-        from(this.dragDropService.dropCursor$).pipe(
-            takeUntil(this.destroyed$)
-        ).subscribe(dropCursor => this._dropCursor = dropCursor);
     }
 
     private get iconElement() {
-        return this.icon.nativeElement as HTMLElement;
+        return this.icon.nativeElement;
     }
 
     private get contentElement() {
-        return this.content.nativeElement as HTMLElement;
+        return this.content.nativeElement;
     }
 }

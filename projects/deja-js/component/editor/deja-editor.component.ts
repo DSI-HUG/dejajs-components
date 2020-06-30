@@ -263,6 +263,7 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
                     this.focus.emit(evt);
                 }
             });
+            this.registerChangeListener();
         }
     }
 
