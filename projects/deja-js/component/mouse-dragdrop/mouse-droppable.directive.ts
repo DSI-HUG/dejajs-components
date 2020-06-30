@@ -40,16 +40,21 @@ export class DejaMouseDroppableDirective extends Destroy {
             distinctUntilChanged()
         );
 
-        const drop$ = dragging$.pipe(
-            filter(value => !value),
-            take(1),
-            tap(() => {
-                // console.log(`Drop ${!!this._dragContext}`)
-                if (this._dragContext && this.context?.drop) {
-                    this.context.drop(this._dragContext);
-                }
-                this._dragContext = undefined;
-                dragDropService.dropCursor$.next(null);
+        const drop$ = from(dragDropService.dragCursor$).pipe(
+            filter(value => !!value),
+            switchMap(dragCursor => {
+                return dragging$.pipe(
+                    filter(value => !value),
+                    take(1),
+                    tap(() => {
+                        // console.log(`Drop ${!!this._dragContext}`)
+                        if (this._dragContext && this.context?.drop) {
+                            this.context.drop(this._dragContext, dragCursor);
+                        }
+                        this._dragContext = undefined;
+                        dragDropService.dropCursor$.next(null);
+                    })
+                );
             })
         );
 
@@ -107,5 +112,5 @@ export interface IDejaMouseDroppableContext {
     dragEnter?(dragContext: IDragDropContext, dragCursor: IDragCursorInfos): IDropCursorInfos | Observable<IDropCursorInfos>; // Return object or observable<object>
     dragOver?(dragContext: IDragDropContext, dragCursor: IDragCursorInfos): IDropCursorInfos;
     dragLeave?(dragContext: IDragDropContext): void;
-    drop?(dragContext: IDragDropContext): void;
+    drop?(dragContext: IDragDropContext, dragCursor: IDragCursorInfos): void;
 }
