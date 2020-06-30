@@ -114,6 +114,7 @@ export class DejaMouseDraggableDirective extends Destroy {
                                     dragDropService.dragCursor$.next({
                                         position: position,
                                         html: html,
+                                        originalHtml: target.innerHTML,
                                         width: target.offsetWidth,
                                         height: target.offsetHeight,
                                         className: this.context.className,
