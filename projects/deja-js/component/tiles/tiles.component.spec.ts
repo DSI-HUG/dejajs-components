@@ -14,11 +14,10 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Rect } from '@deja-js/core';
-import { BehaviorSubject, from } from 'rxjs';
-import { debounceTime, delay, filter, first, map, tap } from 'rxjs/operators';
+import { from } from 'rxjs';
+import { debounceTime, delay, first, map, tap } from 'rxjs/operators';
 import { __spread } from 'tslib';
-import { DejaTileBorderDirection, DejaTileGroupComponent, DejaTilesModule } from './index';
-import { DejaTileGroup } from './tile-group.class';
+import { DejaTilesModule } from './index';
 import { DejaTile } from './tile.class';
 import { DejaTilesLayoutProvider } from './tiles-layout.provider';
 import { DejaTilesComponent } from './tiles.component';
@@ -121,43 +120,6 @@ class DejaTilesContainerComponent {
     }
 }
 
-@Component({
-    encapsulation: ViewEncapsulation.None,
-    template: `<deja-tiles style="height: 500px;width: 400px;display: block;" [(models)]="tiles" canDelete canPaste canCut [designMode]="designMode" maxwidth="100%" tileminwidth="5%" tileminheight="5%" tilemaxheight="50%" tilemaxwidth="50%">
-                    <ng-template #tileTemplate let-tile let-pressed="pressed" let-selected="selected">
-                        <span style="width: 100%;height: 100%;display: block;" class="tile-content noselect" [style.background-color]="tile.color" [attr.selected]="selected" [attr.pressed]="pressed">{{ tile.templateModel.name }}</span>
-                    </ng-template>
-                </deja-tiles>`,
-    styles: [`* { transition: unset !important; }
-    deja-tiles {
-        left: 100px;
-        top: 100px;
-    }`]
-})
-class DejaTileGroupContainerComponent {
-    public orange = {
-        name: 'Orange',
-        color: '#e96c00',
-    };
-
-    public tiles: DejaTile[];
-
-    public designMode = false;
-
-    constructor() {
-        const group = new DejaTileGroup(this.orange.name);
-        group.borderColor = this.orange.color;
-        group.borderDirection = DejaTileBorderDirection.bottom;
-        group.borderWidth = 4;
-        group.html = `<span id="${this.orange.name}">${this.orange.color}</span>`;
-        group.percentBounds = new Rect(0, 0, 30, 30);
-        group.color = this.orange.color;
-        group.templateModel = this.orange;
-
-        this.tiles = [group];
-    }
-}
-
 describe('DejaTilesComponent', () => {
     let overlayContainerElement: HTMLElement;
 
@@ -167,9 +129,8 @@ describe('DejaTilesComponent', () => {
 
         TestBed.configureTestingModule({
             declarations: [
-                DejaTilesContainerComponent,
-                DejaTileGroupContainerComponent
-            ],
+                DejaTilesContainerComponent
+                        ],
             imports: [
                 BrowserAnimationsModule,
                 CommonModule,
@@ -444,37 +405,6 @@ describe('DejaTilesComponent', () => {
                 const rect = tilesInstance.getFreePlace(0, 0, 30, 30);
                 expect(rect.left).toBe(60);
                 expect(rect.top).toBe(0);
-            }))
-            .subscribe(() => {
-                done();
-            });
-
-        fixture.detectChanges();
-
-        fixture.whenStable().then(() => {
-            tilesInstance.refresh();
-        });
-    });
-
-    it('should add a group', (done) => {
-        const fixture = TestBed.createComponent(DejaTilesContainerComponent);
-        const tilesDebugElement = fixture.debugElement.query(By.directive(DejaTilesComponent));
-        const tilesInstance = tilesDebugElement.componentInstance as DejaTilesComponent;
-
-        observeDom$(fixture).pipe(
-            debounceTime(10),
-            first(),
-            tap(() => {
-                const tile = new DejaTileGroup();
-                tile.html = 'Group1';
-                tile.pixelBounds = new Rect(0, 0, 30, 10);
-                tilesInstance.addTiles([tile]);
-            }),
-            delay(20),
-            tap(() => {
-                fixture.detectChanges();
-                const addedGroup = fixture.debugElement.query(By.css('deja-tiles#tiles1 > #tiles > deja-tile > deja-tile-group'));
-                expect(addedGroup).not.toBeNull();
             }))
             .subscribe(() => {
                 done();
@@ -1327,128 +1257,4 @@ describe('DejaTilesComponent', () => {
             tilesInstance.refresh();
         });
     });
-
-    it('should a group tile switch from edition or not', async(() => {
-        const fixture = TestBed.createComponent(DejaTileGroupContainerComponent);
-        const groupContainerCmp = fixture.componentRef.instance;
-        fixture.detectChanges();
-
-        const tileGroupDebugElement = fixture.debugElement.query(By.css('deja-tiles deja-tile-group'));
-        expect(tileGroupDebugElement).toBeDefined();
-
-        const tileGroupCmp: DejaTileGroupComponent = tileGroupDebugElement.componentInstance;
-        expect(tileGroupDebugElement.query(By.css('deja-editor'))).toBeFalsy('Editor should not be defined');
-
-        groupContainerCmp.designMode = true;
-        fixture.detectChanges();
-        expect(tileGroupDebugElement.query(By.css('deja-editor'))).toBeFalsy('Editor should not be defined');
-
-        tileGroupCmp.edit();
-        fixture.detectChanges();
-        expect(tileGroupDebugElement.query(By.css('deja-editor'))).toBeDefined('Editor should be defined when editing');
-
-        tileGroupCmp.onEditorBlur();
-        fixture.detectChanges();
-        expect(tileGroupDebugElement.query(By.css('deja-editor'))).toBeFalsy('Editor should not be defined');
-    }));
-
-    it('should update group tile model', async(() => {
-        const fixture = TestBed.createComponent(DejaTileGroupContainerComponent);
-        fixture.detectChanges();
-
-        const tileGroupDebugElement = fixture.debugElement.query(By.css('deja-tiles deja-tile-group'));
-        expect(tileGroupDebugElement).toBeDefined();
-
-        const tileGroupCmp: any = tileGroupDebugElement.componentInstance;
-        // tslint:disable-next-line:no-bitwise
-        tileGroupCmp._model.borderDirection = DejaTileBorderDirection.top | DejaTileBorderDirection.left | DejaTileBorderDirection.right;
-        tileGroupCmp._model.borderWidth = 10;
-        tileGroupCmp._model.borderColor = '#fff';
-
-        tileGroupCmp.updateBorderFromModel();
-        expect(tileGroupCmp.borderTop).toBe('solid #fff 10px', 'borderTop shoud be solid #fff 10px');
-        expect(tileGroupCmp.borderRight).toBe('solid #fff 10px', 'borderRight shoud be solid #fff 10px');
-        expect(tileGroupCmp.borderLeft).toBe('solid #fff 10px', 'borderLeft shoud be solid #fff 10px');
-        expect(tileGroupCmp.borderBottom).toBeNull();
-
-        tileGroupCmp._model = null;
-        tileGroupCmp.updateBorderFromModel();
-        expect(tileGroupCmp.borderTop).toBeNull();
-        expect(tileGroupCmp.borderRight).toBeNull();
-        expect(tileGroupCmp.borderLeft).toBeNull();
-        expect(tileGroupCmp.borderBottom).toBeNull();
-    }));
-
-    it('should open  TileGroupStyleEditorComponent on edit', async(() => {
-        const fixture = TestBed.createComponent(DejaTileGroupContainerComponent);
-        fixture.detectChanges();
-
-        const tileGroupCmp: DejaTileGroupComponent = fixture.debugElement.query(By.css('deja-tiles deja-tile-group')).componentInstance;
-        tileGroupCmp.editStyle();
-        fixture.detectChanges();
-
-        expect(overlayContainerElement).toBeTruthy('overlayContainerElement');
-        fixture.whenStable().then(() => expect(overlayContainerElement.querySelector('deja-tile-group-style-editor')).toBeTruthy('Popup TileGroupStyleEditorComponent should be displayed'));
-    }));
-
-    it('should restore previous border values on popup response not accepted', async(() => {
-        const fixture = TestBed.createComponent(DejaTileGroupContainerComponent);
-        const dejaTileGroupContainerComponent = fixture.componentInstance;
-        fixture.detectChanges();
-
-        const tileGroupCmp: DejaTileGroupComponent = fixture.debugElement.query(By.css('deja-tiles deja-tile-group')).componentInstance;
-        tileGroupCmp.editStyle();
-        fixture.detectChanges();
-
-        const responseSubject = new BehaviorSubject(null);
-        spyOn((tileGroupCmp as any).dejaPopupService, 'openAdvanced$').and.returnValue(responseSubject.pipe(filter(res => !!res)));
-        tileGroupCmp.editStyle();
-        tileGroupCmp.model.borderColor = '#fff';
-        tileGroupCmp.model.borderDirection = 0;
-        tileGroupCmp.model.borderWidth = 10;
-        responseSubject.next({ accepted: false });
-        expect(tileGroupCmp.model.borderColor).toBe(dejaTileGroupContainerComponent.orange.color);
-        expect(tileGroupCmp.model.borderDirection).toBe(4);
-        expect(tileGroupCmp.model.borderWidth).toBe(4);
-    }));
-
-    it('should clear border if no borderDirection or no borderwidth are selected', async(() => {
-        const fixture = TestBed.createComponent(DejaTileGroupContainerComponent);
-        fixture.detectChanges();
-
-        const tileGroupCmp: DejaTileGroupComponent = fixture.debugElement.query(By.css('deja-tiles deja-tile-group')).componentInstance;
-        tileGroupCmp.editStyle();
-        fixture.detectChanges();
-
-        const responseSubject = new BehaviorSubject(null);
-        spyOn((tileGroupCmp as any).dejaPopupService, 'openAdvanced$').and.returnValue(responseSubject.pipe(filter(res => !!res)));
-        tileGroupCmp.editStyle();
-        tileGroupCmp.model.borderColor = '#fff';
-        tileGroupCmp.model.borderDirection = DejaTileBorderDirection.left;
-        tileGroupCmp.model.borderWidth = 0;
-        responseSubject.next({ accepted: true });
-        expect(tileGroupCmp.model.borderDirection).toBe(DejaTileBorderDirection.top + DejaTileBorderDirection.right + DejaTileBorderDirection.bottom + DejaTileBorderDirection.left);
-        expect(tileGroupCmp.model.borderWidth).toBe(0);
-        expect(tileGroupCmp.model.borderColor).toBe('#000');
-    }));
-
-    it('should keep new border values on popup response accepted', async(() => {
-        const fixture = TestBed.createComponent(DejaTileGroupContainerComponent);
-        fixture.detectChanges();
-
-        const tileGroupCmp: DejaTileGroupComponent = fixture.debugElement.query(By.css('deja-tiles deja-tile-group')).componentInstance;
-        tileGroupCmp.editStyle();
-        fixture.detectChanges();
-
-        const responseSubject = new BehaviorSubject(null);
-        spyOn((tileGroupCmp as any).dejaPopupService, 'openAdvanced$').and.returnValue(responseSubject.pipe(filter(res => !!res)));
-        tileGroupCmp.editStyle();
-        tileGroupCmp.model.borderColor = '#fff';
-        tileGroupCmp.model.borderDirection = DejaTileBorderDirection.left;
-        tileGroupCmp.model.borderWidth = 10;
-        responseSubject.next({ accepted: true });
-        expect(tileGroupCmp.model.borderColor).toBe('#fff');
-        expect(tileGroupCmp.model.borderDirection).toBe(DejaTileBorderDirection.left);
-        expect(tileGroupCmp.model.borderWidth).toBe(10);
-    }));
 });

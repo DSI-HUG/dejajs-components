@@ -17,7 +17,6 @@ import { OnDestroy } from '@angular/core';
 import { Output } from '@angular/core';
 import { from, Subscription } from 'rxjs';
 import { debounceTime, delay, filter, first, tap } from 'rxjs/operators';
-import { DejaTileGroup } from './tile-group.class';
 import { DejaTile } from './tile.class';
 
 @Component({
@@ -30,7 +29,6 @@ import { DejaTile } from './tile.class';
 })
 export class DejaTileComponent implements OnDestroy {
     @Input() public template: any;
-    @Output() public groupChanged = new EventEmitter<DejaTileGroup>();
     @Output() public close = new EventEmitter<Event>();
 
     public progressDiameter = 100;
@@ -157,13 +155,5 @@ export class DejaTileComponent implements OnDestroy {
 
     public ngOnDestroy() {
         this.subscriptions.forEach((subscription) => subscription.unsubscribe());
-    }
-
-    public onGroupChanged(tileGroup: DejaTileGroup) {
-        this.groupChanged.emit(tileGroup);
-    }
-
-    public get isGroup() {
-        return this._tile && this._tile instanceof DejaTileGroup;
     }
 }

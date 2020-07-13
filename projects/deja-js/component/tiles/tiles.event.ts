@@ -7,7 +7,6 @@
  */
 
 import { IDejaCancelableEvent } from '@deja-js/core';
-import { DejaTileGroup } from './tile-group.class';
 import { DejaTile } from './tile.class';
 
 export interface IDejaTilesEvent extends CustomEvent {
@@ -24,10 +23,6 @@ export interface IDejaTilesRemoveEvent extends IDejaTilesCancelableEvent {
 
 export interface IDejaTilesAddEvent extends IDejaTilesCancelableEvent {
     added: DejaTile[];
-}
-
-export interface IDejaTileGroupModelEvent extends IDejaTilesEvent {
-    tileGroup?: DejaTileGroup;
 }
 
 export interface IDejaTilesAddedEvent extends IDejaTilesEvent {

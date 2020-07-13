@@ -26,11 +26,10 @@ import { IDejaMouseDroppableContext, IDropCursorInfos } from '@deja-js/component
 import { Destroy, KeyCodes, Position, Rect } from '@deja-js/core';
 import { from, fromEvent, Observable, Subject, Subscription } from 'rxjs';
 import { debounceTime, filter, takeUntil } from 'rxjs/operators';
-import { DejaTileGroup } from './tile-group.class';
 import { DejaTile } from './tile.class';
 import { DejaTilesLayoutProvider } from './tiles-layout.provider';
 import { IDejaTilesRefreshParams } from './tiles-refresh-params.interface';
-import { IDejaTileGroupModelEvent, IDejaTilesAddedEvent, IDejaTilesAddEvent, IDejaTilesDeletedEvent, IDejaTilesEvent, IDejaTilesRemoveEvent } from './tiles.event';
+import { IDejaTilesAddedEvent, IDejaTilesAddEvent, IDejaTilesDeletedEvent, IDejaTilesEvent, IDejaTilesRemoveEvent } from './tiles.event';
 
 @Component({
     selector: 'deja-tiles',
@@ -66,11 +65,6 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
      * Raised before some tiles will be removed from the data model with a delete
      */
     @Output() public contentRemoving = new EventEmitter<IDejaTilesRemoveEvent>();
-
-    /**
-     * Raised when a tile group model has changed
-     */
-    @Output() public tileGroupChanged = new EventEmitter<IDejaTileGroupModelEvent>();
 
     /**
      * Raised when tiles are added
@@ -396,12 +390,6 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
 
     public onTileClosed(tile: DejaTile) {
         this.layoutProvider.removeTiles([tile.id]);
-    }
-
-    public onTileGroupModelChanged(tileGroup: DejaTileGroup) {
-        const event = new CustomEvent('DejaTileGroupModelEvent', { cancelable: false }) as IDejaTileGroupModelEvent;
-        event.tileGroup = tileGroup;
-        this.tileGroupChanged.emit(event);
     }
 
     public onFocus() {

@@ -31,9 +31,6 @@
     <mat-toolbar color="primary">Tiles Demo</mat-toolbar>
     <mat-card-content id="actions">
         <mat-checkbox [(ngModel)]="designMode">Design Mode</mat-checkbox>
-        <button mat-raised-button (click)="addGroup(tiles2)" color="primary">
-            Add Group
-        </button>
     </mat-card-content>
     <mat-card-content>
         <span #dropArea id="droparea" [deja-mouse-droppable]="getDropContext(dropArea)">
@@ -45,7 +42,7 @@
             <ng-template #tileTemplate let-tile let-pressed="pressed" let-selected="selected">
                 <span class="tile-content noselect" [style.background-color]="tile.color">{{ tile.templateModel.naqme }} ({{ tile.templateModel.code }})
                     <span id="selected">Selected</span>
-                    <span id="pressed">Pressed</span>
+                <span id="pressed">Pressed</span>
                 </span>
             </ng-template>
         </deja-tiles>
@@ -55,7 +52,7 @@
             <ng-template #tileTemplate let-tile let-pressed="pressed" let-selected="selected">
                 <span class="tile-content noselect" [style.background-color]="tile.color">{{ tile.templateModel.naqme }} ({{ tile.templateModel.code }})
                     <span id="selected">Selected</span>
-                    <span id="pressed">Pressed</span>
+                <span id="pressed">Pressed</span>
                 </span>
             </ng-template>
         </deja-tiles>
@@ -65,7 +62,7 @@
             <ng-template #tileTemplate let-tile let-pressed="pressed" let-selected="selected">
                 <span class="tile-content noselect" [style.background-color]="tile.color">{{ tile.templateModel.naqme }} ({{ tile.templateModel.code }})
                     <span id="selected">Selected</span>
-                    <span id="pressed">Pressed</span>
+                <span id="pressed">Pressed</span>
                 </span>
             </ng-template>
         </deja-tiles>
