@@ -1,9 +1,4 @@
 <mat-tab-group [selectedIndex]="tabIndex" (selectedTabChange)="tabIndex = $event.index">
-    <!--<mat-tab label="OVERVIEW">-->
-    <!--<mat-card class="demo-card demo-basic">-->
-    <!--TODO-->
-    <!--</mat-card>-->
-    <!--</mat-tab>-->
     <mat-tab label="API REFERENCE"></mat-tab>
     <mat-tab label="EXAMPLES"></mat-tab>
 </mat-tab-group>
@@ -31,9 +26,6 @@
     <mat-toolbar color="primary">Tiles Demo</mat-toolbar>
     <mat-card-content id="actions">
         <mat-checkbox [(ngModel)]="designMode">Design Mode</mat-checkbox>
-        <button mat-raised-button (click)="addGroup(tiles2)" color="primary">
-            Add Group
-        </button>
     </mat-card-content>
     <mat-card-content>
         <span #dropArea id="droparea" [deja-mouse-droppable]="getDropContext(dropArea)">
@@ -43,30 +35,20 @@
     <mat-card-content>
         <deja-tiles #tiles1 id="tiles1" [models]="tiles1$ | async" [deja-mouse-draggable]="getDragContext()" (contentAdding)="onContentAdding($event)" (contentRemoving)="onContentRemoving($event)" maxwidth="100%" tileminwidth="5%" tileminheight="5%" tilemaxheight="50%" tilemaxwidth="50%">
             <ng-template #tileTemplate let-tile let-pressed="pressed" let-selected="selected">
-                <span class="tile-content noselect" [style.background-color]="tile.color">{{ tile.templateModel.naqme }} ({{ tile.templateModel.code }})
+                <div class="tile-content noselect" [style.background-color]="tile.color">{{ tile.templateModel.naqme }} ({{ tile.templateModel.code }})
                     <span id="selected">Selected</span>
                     <span id="pressed">Pressed</span>
-                </span>
+                </div>
             </ng-template>
         </deja-tiles>
     </mat-card-content>
     <mat-card-content>
         <deja-tiles #tiles2 id="tiles2" [models]="tiles2$ | async" (contentAdding)="onContentAdding($event)" (contentRemoving)="onContentRemoving($event)" canDelete canCopy canCut canPaste [designMode]="designMode" maxwidth="100%" tileminwidth="5%" tileminheight="5%" tilemaxheight="50%" tilemaxwidth="50%">
             <ng-template #tileTemplate let-tile let-pressed="pressed" let-selected="selected">
-                <span class="tile-content noselect" [style.background-color]="tile.color">{{ tile.templateModel.naqme }} ({{ tile.templateModel.code }})
+                <div class="tile-content noselect" [style.background-color]="tile.color">{{ tile.templateModel.naqme }} ({{ tile.templateModel.code }})
                     <span id="selected">Selected</span>
                     <span id="pressed">Pressed</span>
-                </span>
-            </ng-template>
-        </deja-tiles>
-    </mat-card-content>
-    <mat-card-content>
-        <deja-tiles #tiles3 id="tiles3" [models]="tiles3$ | async" (contentAdding)="onContentAdding($event)" (contentRemoving)="onContentRemoving($event)" canDelete canCopy canCut canPaste [designMode]="designMode" maxwidth="100%" tileminwidth="5%" tileminheight="5%" tilemaxheight="50%" tilemaxwidth="50%">
-            <ng-template #tileTemplate let-tile let-pressed="pressed" let-selected="selected">
-                <span class="tile-content noselect" [style.background-color]="tile.color">{{ tile.templateModel.naqme }} ({{ tile.templateModel.code }})
-                    <span id="selected">Selected</span>
-                    <span id="pressed">Pressed</span>
-                </span>
+                </div>
             </ng-template>
         </deja-tiles>
     </mat-card-content>

@@ -8,9 +8,9 @@
 
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDropCursorInfos } from '@deja-js/component/mouse-dragdrop';
-import { DejaTile, DejaTileGroup, DejaTilesComponent, IDejaTilesAddEvent, IDejaTilesRemoveEvent } from '@deja-js/component/tiles';
+import { DejaTile, IDejaTilesAddEvent, IDejaTilesRemoveEvent } from '@deja-js/component/tiles';
 import { Rect } from '@deja-js/core';
-import { from,  Observable, of, Subject } from 'rxjs';
+import { from,  Observable, Subject } from 'rxjs';
 import { defaultIfEmpty, map, reduce, scan, switchMap, take } from 'rxjs/operators';
 import { CountriesService, Country } from '../services/countries.service';
 
@@ -25,7 +25,6 @@ export class DejaTilesDemoComponent implements OnInit {
     public messages$: Observable<IMessage[]>;
     public tiles1$: Observable<DejaTile[]>;
     public tiles2$: Observable<DejaTile[]>;
-    public tiles3$: Observable<DejaTile[]>;
     public designMode = false;
 
     private message$ = new Subject<IMessage>();
@@ -86,19 +85,6 @@ export class DejaTilesDemoComponent implements OnInit {
                 return tile;
             }),
             reduce((acc: DejaTile[], cur: DejaTile) => [...acc, cur], []));
-
-        const tileGroup = new DejaTileGroup();
-        tileGroup.percentBounds = new Rect(x2, y2, 60, 30);
-        tileGroup.color = '#aba280';
-        tileGroup.html = `<div>Tuile <b>éditable</b> de type groupe</div><div><div><p>Utilise le composant deja-editor</p></div></div></div></span></div>`;
-
-        this.tiles3$ = of([tileGroup]);
-    }
-
-    public addGroup(tilesComponent: DejaTilesComponent) {
-        const tileGroup = new DejaTileGroup();
-        tileGroup.html = 'New Group';
-        tilesComponent.addTiles([tileGroup]);
     }
 
     protected getDragContext() {
