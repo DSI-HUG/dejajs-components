@@ -130,7 +130,7 @@ describe('DejaTilesComponent', () => {
         TestBed.configureTestingModule({
             declarations: [
                 DejaTilesContainerComponent
-                        ],
+            ],
             imports: [
                 BrowserAnimationsModule,
                 CommonModule,
