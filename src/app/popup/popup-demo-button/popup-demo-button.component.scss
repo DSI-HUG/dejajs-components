@@ -1,0 +1,16 @@
+:host {
+    button,
+    .mat-icon {
+        width: 18px;
+        height: 18px;
+        line-height: 18px;
+    }
+
+    button {
+        margin-left: 4px;
+    }
+
+    .mat-icon {
+        font-size: 18px;
+    }
+}
