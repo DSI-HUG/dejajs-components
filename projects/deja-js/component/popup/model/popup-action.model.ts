@@ -5,6 +5,8 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
+import { Portal } from '@angular/cdk/portal/portal';
+
 export class DejaPopupAction {
     public refreshDrawer = true;
     public isFinalAction = false;
@@ -12,6 +14,7 @@ export class DejaPopupAction {
     public data?: any;
     public icon?: string;
     public label?: string;
+    public portal?: Portal<unknown>;
 
     constructor(
         public name: string,
@@ -24,7 +27,6 @@ export class DejaPopupAction {
             this.label = name;
         }
     }
-
 }
 
 export class DejaPopupButton extends DejaPopupAction {
@@ -33,6 +35,14 @@ export class DejaPopupButton extends DejaPopupAction {
         public label?: string,
         public icon?: string,
         public isFinalAction = true,
+    ) {
+        super(name);
+    }
+}
+
+export class DejaPopupCustomAction extends DejaPopupAction {
+    constructor(
+        public portal?: Portal<unknown>,
     ) {
         super(name);
     }

@@ -15,7 +15,7 @@ import { Component, Input } from '@angular/core';
 })
 export class DejaItemComponent {
     @Input() public value: string;
-    @Input() public text: String;
+    @Input() public text: string;
 
     @Input()
     public set selected(value: boolean | string) {

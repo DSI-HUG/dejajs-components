@@ -46,9 +46,13 @@ export class DejaMouseDragDropCursorComponent extends Destroy {
         cursor$.pipe(
             filter(cursor => !cursor),
             tap(cursor => {
-                if (this.currentCursor && this.contentElement && this.iconElement) {
-                    this.contentElement.style.opacity = '0';
-                    this.iconElement.style.opacity = '0';
+                if (this.currentCursor) {
+                    if (this.contentElement) {
+                        this.contentElement.style.opacity = '0';
+                    }
+                    if (this.iconElement) {
+                        this.iconElement.style.opacity = '0';
+                    }
                 }
                 this.currentCursor = cursor;
             }),
@@ -64,8 +68,10 @@ export class DejaMouseDragDropCursorComponent extends Destroy {
             filter(cursor => !!cursor),
             tap(cursor => {
                 element.style.display = '';
-                if (this.contentElement && this.iconElement) {
+                if (this.contentElement) {
                     this.contentElement.style.opacity = '0';
+                }
+                if (this.iconElement) {
                     this.iconElement.style.opacity = '0';
                 }
                 this.currentCursor = cursor;
@@ -74,7 +80,7 @@ export class DejaMouseDragDropCursorComponent extends Destroy {
             tap(cursor => {
                 if (!!cursor.html) {
                     element.className = cursor.className;
-                    if (this.contentElement && this.iconElement) {
+                    if (this.contentElement) {
                         this.contentElement.innerHTML = cursor.html;
                         this.contentElement.style.width = `${cursor.width || 48}px`;
                         this.contentElement.style.height = `${cursor.height || 48}px`;
@@ -98,7 +104,7 @@ export class DejaMouseDragDropCursorComponent extends Destroy {
         ).subscribe(([dragCursor, dropCursor]) => {
             const cursor = (dragCursor || dropCursor) && {
                 className: dropCursor?.className || dragCursor?.className,
-                html:  dropCursor?.html || dragCursor?.html || (dropCursor && dragCursor?.originalHtml) ,
+                html: dropCursor?.html || dragCursor?.html || (dropCursor && dragCursor?.originalHtml),
                 width: dropCursor?.width || dragCursor?.width,
                 height: dropCursor?.height || dragCursor?.height,
                 position: dragCursor?.position,
@@ -116,10 +122,10 @@ export class DejaMouseDragDropCursorComponent extends Destroy {
     }
 
     private get iconElement() {
-        return this.icon.nativeElement;
+        return this.icon?.nativeElement;
     }
 
     private get contentElement() {
-        return this.content.nativeElement;
+        return this.content?.nativeElement;
     }
 }

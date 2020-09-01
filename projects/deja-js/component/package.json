@@ -1,6 +1,6 @@
 {
     "name": "@deja-js/component",
-    "version": "9.2.2",
+    "version": "9.3.0",
     "description": "Angular Components Library",
     "homepage": "https://github.com/DSI-HUG/dejajs-components",
     "bugs": "https://github.com/DSI-HUG/dejajs-components/issues",
@@ -35,7 +35,7 @@
         "json-object-mapper": "^1.6.0",
         "material-icons-font": "^2.0.0",
         "monaco-editor": "^0.17.0",
-        "prismjs": "^1.15.0",
+        "prismjs": "~1.21.0",
         "rxjs": "^6.5.4",
         "showdown": "^1.9.1",
         "tslib": "^1.10.0",

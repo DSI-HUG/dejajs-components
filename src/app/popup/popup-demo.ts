@@ -6,13 +6,16 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ComponentPortal, PortalInjector, TemplatePortal } from '@angular/cdk/portal';
+import { ChangeDetectorRef, Component, Injector, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { DialogPosition } from '@angular/material/dialog';
-import { DejaPopupAction, DejaPopupButton, DejaPopupConfig, DejaPopupReponse, DejaPopupService } from '@deja-js/component/popup';
+import { DejaPopupAction, DejaPopupButton, DejaPopupConfig, DejaPopupCustomAction, DejaPopupReponse, DejaPopupService } from '@deja-js/component/popup';
 import { Color } from '@deja-js/core';
 import { filter, map } from 'rxjs/operators';
 import { DummyComponent } from './dummy/dummy.component';
 import { DejaPopupCustomDemoComponent } from './popup-custom.component';
+import { PopupDemoButtonComponent, PopupDemoButtonComponentData } from './popup-demo-button/popup-demo-button.component';
+import { CONTAINER_DATA } from './popup-demo.service';
 
 @Component({
     selector: 'popup-demo',
@@ -23,6 +26,9 @@ export class DejaPopupDemoComponent {
 
     private dummyPdfUrl = 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
     private dummyImgUrl = 'http://lorempixel.com/800/600/abstract/';
+
+    @ViewChild('templateButton')
+    private _templateButton: TemplateRef<unknown>;
 
     public hoveredColor: Color;
 
@@ -35,6 +41,8 @@ export class DejaPopupDemoComponent {
     constructor(
         public dejaPopupService: DejaPopupService,
         protected changeDetectorRef: ChangeDetectorRef,
+        private _viewContainerRef: ViewContainerRef,
+        private _injector: Injector
     ) {
         this.dejaPopupService.dejaPopupCom$.pipe(
             filter((action: DejaPopupAction) => !!action && action.target !== 'popup-tray' && !action.isFinalAction),
@@ -46,8 +54,8 @@ export class DejaPopupDemoComponent {
                     this.hoveredColor = action.data;
                 }
                 this.changeDetectorRef.markForCheck();
-            }), )
-            .subscribe();
+            }),
+        ).subscribe();
     }
 
     public askConfirmation1() {
@@ -55,9 +63,9 @@ export class DejaPopupDemoComponent {
         const butCancel = new DejaPopupButton('cancel', 'Cancel', 'cancel');
         this.dejaPopupService
             .openInline(
-            'Inscription à la formation',
-            'Etes-vous sure de vouloir faire cela ?',
-            [butSave, butCancel])
+                'Inscription à la formation',
+                'Etes-vous sure de vouloir faire cela ?',
+                [butSave, butCancel])
             .subscribe((response: DejaPopupReponse) => {
                 this.showResponse(response);
             });
@@ -196,7 +204,20 @@ export class DejaPopupDemoComponent {
         config.toolbarIconName = 'photo_camera';
         config.toolbarColor = 'accent';
 
+        const dummyButtonPortalData: PopupDemoButtonComponentData = {
+            iconName: 'star_outline',
+            iconTooltip: 'Component portal',
+            onClickEvent: (_event, instance) => {
+                this.showMessage('Click on Component portal button!', 'success');
+                const starred = instance.data.iconName === 'star';
+                instance.data.iconName = starred ? 'star_outline' : 'star';
+                instance.data.buttonColor = starred ? null : 'warn';
+            }
+        };
+        const demoButtonPortal = new ComponentPortal(PopupDemoButtonComponent, null, this.createInjector(dummyButtonPortalData));
         config.toolbarActions = [
+            new DejaPopupCustomAction(demoButtonPortal),
+            new DejaPopupCustomAction(new TemplatePortal(this._templateButton, this._viewContainerRef)),
             new DejaPopupButton('account', 'User', 'account_circle', false),
             new DejaPopupButton('view', 'Show', 'visibility', false),
         ];
@@ -211,7 +232,6 @@ export class DejaPopupDemoComponent {
     }
 
     public showComponentInjection() {
-
         const config = new DejaPopupConfig();
         config.title = 'Pick a color';
         config.height = 'auto';
@@ -221,18 +241,26 @@ export class DejaPopupDemoComponent {
             .subscribe((response: DejaPopupReponse) => {
                 this.showResponse(response);
             });
-
     }
 
-    private showResponse(resp: DejaPopupReponse) {
-        if (resp.accepted) {
-            this.message.type = 'success';
-        } else {
-            this.message.type = 'warn';
-        }
-        this.message.text = resp.lastAction.label.length ? resp.lastAction.label : resp.lastAction.name;
+    private showResponse(resp: DejaPopupReponse): void {
+        this.showMessage(resp.lastAction.label.length ? resp.lastAction.label : resp.lastAction.name, resp.accepted ? 'success' : 'warn');
+    }
+
+    private showMessage(text: string, type: string): void {
+        this.message.text = text;
+        this.message.type = type;
         this.openGate = true;
         this.changeDetectorRef.markForCheck();
     }
 
+    public onClickTemplateButton(): void {
+        this.showMessage('Click on Template portal button!', 'success');
+    }
+
+    private createInjector<T>(data: T): PortalInjector {
+        const injectorTokens = new WeakMap();
+        injectorTokens.set(CONTAINER_DATA, data);
+        return new PortalInjector(this._injector, injectorTokens);
+    }
 }
