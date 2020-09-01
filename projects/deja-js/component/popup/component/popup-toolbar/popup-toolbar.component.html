@@ -13,9 +13,12 @@
 
     <span class="deja-popup-toolbar-actions deja-popup-toolbar-content">
         <ng-container *ngFor="let action of actions">
-            <button type="button" mat-icon-button (click)="doEmit(action, $event)">
-                <mat-icon aria-label="action.name">{{ action.icon }}</mat-icon>
+            <button *ngIf="!action.portal; else portalTpl" type="button" mat-icon-button (click)="doEmit(action, $event)">
+                <mat-icon aria-label="action.name" [matTooltip]="action.label">{{ action.icon }}</mat-icon>
             </button>
+            <ng-template #portalTpl>
+                <ng-template [cdkPortalOutlet]="action.portal"></ng-template>
+            </ng-template>
         </ng-container>
     </span>
 

@@ -13,6 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { DejaOverlayModule } from '@deja-js/component/overlay';
 
 import { DejaPopupActionsComponent } from './component/popup-actions/popup-actions.component';
@@ -52,6 +53,7 @@ import { DejaPopupService } from './service/popup.service';
         MatButtonModule,
         MatToolbarModule,
         MatDialogModule,
+        MatTooltipModule,
         DejaOverlayModule,
         PortalModule,
         DragDropModule,

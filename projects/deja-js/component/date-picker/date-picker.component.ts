@@ -127,7 +127,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
     }
 
     /** Mask for input */
-    public _mask: any[];
+    public _mask = [] as (string | RegExp)[];
 
     public get mask() {
         return this._mask;
@@ -329,17 +329,15 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
 
         const valueUpdated$ = combineLatest(this.formatChanged$, this.dateChanged$).pipe(
             tap(([format]) => {
-                let mask = [] as string[];
                 const array = format.match(DejaDatePickerComponent.formattingTokens);
-                array.forEach((val: string) => {
+                this._mask = array.reduce((result, val) => {
                     if (formatToMask[val]) {
-                        mask = [...mask, ...formatToMask[val]];
+                        result = [...result, ...formatToMask[val]];
                     } else {
-                        mask.push(val);
+                        result.push(val);
                     }
-                });
-
-                this._mask = mask;
+                    return result;
+                }, [] as string[]);
             })
         );
 
