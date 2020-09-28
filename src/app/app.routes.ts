@@ -7,7 +7,7 @@
  */
 
 import { ModuleWithProviders } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Route, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -46,4 +46,4 @@ export const appRoutingProviders: any[] = [
 
 ];
 
-export const routing: ModuleWithProviders = RouterModule.forRoot(routes);
+export const routing: ModuleWithProviders<Route> = RouterModule.forRoot(routes);

@@ -31,7 +31,7 @@ describe('DejaMarkdownComponent', () => {
 
         fixture = TestBed.createComponent(DejaMarkdownComponent);
         component = fixture.componentInstance;
-        httpMock = TestBed.get(HttpTestingController);
+        httpMock = TestBed.inject(HttpTestingController);
     }));
 
     afterEach(() => {
