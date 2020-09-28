@@ -11,7 +11,7 @@ import { CdkConnectedOverlay, CdkOverlayOrigin, OverlayContainer } from '@angula
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { DejaConnectionPositionPair, Destroy, MediaService } from '@deja-js/core';
 import { timer } from 'rxjs';
-import { first, takeUntil, takeWhile } from 'rxjs/operators';
+import { take, takeUntil, takeWhile } from 'rxjs/operators';
 
 // providers: [ MediaService ],
 @Component({
@@ -19,15 +19,35 @@ import { first, takeUntil, takeWhile } from 'rxjs/operators';
     encapsulation: ViewEncapsulation.None,
     selector: 'deja-overlay',
     styleUrls: ['./overlay.component.scss'],
-    templateUrl: './overlay.component.html',
+    templateUrl: './overlay.component.html'
 })
 export class DejaOverlayComponent extends Destroy {
+    @Input() public overlayBackdropClass = 'cdk-overlay-transparent-backdrop';
+
+    @Input() public overlayContainerClass: string;
+
+    /** Déclenché lorsque la visibilité du dialog change. */
+    @Output() public readonly visibleChange = new EventEmitter<boolean>();
+
+    /** Déclenché lorsque l'overlay est fermé. */
+    @Output() public readonly closed = new EventEmitter<boolean>();
+
+    /** Internal use */
+    @Input() public overlayOffsetX = 0;
+    @Input() public overlayOffsetY = 0;
+
+    /** Overlay pane containing the options. */
+    @ViewChild(CdkConnectedOverlay, { static: true }) private overlay: CdkConnectedOverlay;
+
+    public overlayOrigin: CdkOverlayOrigin;
+
     /** Renvoie une valeur qui indique si le dialog est affiché. */
     private _isVisible = false;
 
     public get isVisible() {
         return this._isVisible;
     }
+
     @Input() public set isVisible(value: boolean) {
         const isVisible = coerceBooleanProperty(value);
         if (this._isVisible !== isVisible) {
@@ -50,10 +70,6 @@ export class DejaOverlayComponent extends Destroy {
         }
     }
 
-    @Input() public overlayBackdropClass = 'cdk-overlay-transparent-backdrop';
-
-    @Input() public overlayContainerClass: string;
-
     private _hasBackdrop = true;
     private _width: string = null;
     private _widthForMobile = '100%';
@@ -73,27 +89,13 @@ export class DejaOverlayComponent extends Destroy {
         this.updateOriginOverlay();
     }
 
-    /** Déclenché lorsque la visibilité du dialog change. */
-    @Output() public visibleChange = new EventEmitter<boolean>();
-
-    /** Déclenché lorsque l'overlay est fermé. */
-    @Output() public closed = new EventEmitter<boolean>();
-
-    /** Internal use */
-    public overlayOrigin: CdkOverlayOrigin;
-    @Input() public overlayOffsetX = 0;
-    @Input() public overlayOffsetY = 0;
-
     private _positions = DejaConnectionPositionPair.default;
     private _positionsForMobile: DejaConnectionPositionPair[];
 
     private _isMobile = false;
     private disableMediaService = false;
 
-    /** Overlay pane containing the options. */
-    @ViewChild(CdkConnectedOverlay, { static: true }) private overlay: CdkConnectedOverlay;
-
-    constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef, private overlayContainer: OverlayContainer, mediaService: MediaService) {
+    public constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef, private overlayContainer: OverlayContainer, mediaService: MediaService) {
         super();
 
         const containerElement = this.overlayContainer.getContainerElement();
@@ -187,12 +189,12 @@ export class DejaOverlayComponent extends Destroy {
         this.overlayOffsetX = offsetY !== undefined ? +eventOrOffsetX : 0;
         this.overlayOffsetY = offsetY || 0;
         const e = eventOrOffsetX as MouseEvent;
-        const target = e && e.target;
+        const target = e?.target;
         this.overlayOrigin = new CdkOverlayOrigin(new ElementRef((this.isMobile && document.body) || target || this.ownerElement || this.elementRef.nativeElement));
         this.isVisible = true;
         this.changeDetectorRef.markForCheck();
         timer(1).pipe(
-            first(),
+            take(1),
             takeUntil(this.destroyed$)
         ).subscribe(() => this.updatePosition());
     }

@@ -10,18 +10,18 @@
 export class UUID {
     private uuid: string;
 
-    constructor() {
+    public constructor() {
         let d = new Date().getTime();
         if (window.performance !== undefined) {
             if (typeof window.performance.now === 'function') {
                 d += performance.now();
             }
         }
-        this.uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-            // tslint:disable-next-line:no-bitwise
+        this.uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+            // eslint-disable-next-line no-bitwise
             const r = (d + Math.random() * 16) % 16 | 0;
             d = Math.floor(d / 16);
-            // tslint:disable-next-line:no-bitwise
+            // eslint-disable-next-line no-bitwise
             return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
         });
     }

@@ -7,10 +7,11 @@
  */
 
 import { NgModule } from '@angular/core';
+
 import { MaterialColors } from './material-colors';
 
 @NgModule({
-    providers: [MaterialColors],
+    providers: [MaterialColors]
 })
 export class DejaMaterialColorsModule { }
 

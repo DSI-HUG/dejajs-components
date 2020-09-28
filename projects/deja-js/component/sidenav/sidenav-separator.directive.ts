@@ -12,7 +12,7 @@ import { Directive, ElementRef } from '@angular/core';
     selector: 'deja-sidenav-menu-separator, [deja-sidenav-menu-separator]'
 })
 export class DejaSidenavMenuSeparatorDirective {
-    constructor(el: ElementRef) {
+    public constructor(el: ElementRef) {
         Object.assign(el.nativeElement.style, {
             display: 'block',
             background: 'rgba(0, 0, 0, 0.14)',

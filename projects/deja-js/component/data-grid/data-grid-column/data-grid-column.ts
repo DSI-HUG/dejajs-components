@@ -39,9 +39,9 @@ export interface IDejaGridColumn {
     /** Indique si la colonne est groupable */
     groupable?: boolean;
     /** Indique le champ utilisé pour le regroupement de la colonne */
-    groupByField?: ((model: any) => string) | string;
+    groupByField?: ((model: unknown) => string) | string;
     /** Indique le champ utilisé pour le titre des groupes ajoutés lors du regroupement */
-    groupTextField?: ((model: any) => string) | string;
+    groupTextField?: ((model: unknown) => string) | string;
     /** Indique si la colonne est la colonne courante */
     isCurrent?: boolean;
 }

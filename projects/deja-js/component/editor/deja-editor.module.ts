@@ -16,10 +16,10 @@ import { DejaEditorService } from './deja-editor.service';
  * CKEditorModule
  */
 @NgModule({
-  imports: [CommonModule],
-  declarations: [DejaEditorComponent],
-  exports: [DejaEditorComponent],
-  providers: [DejaEditorService]
+    imports: [CommonModule],
+    declarations: [DejaEditorComponent],
+    exports: [DejaEditorComponent],
+    providers: [DejaEditorService]
 })
 export class DejaEditorModule {}
 

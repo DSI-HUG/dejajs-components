@@ -18,6 +18,7 @@ import { DejaMessageBoxModule } from '@deja-js/component/message-box';
 import { DejaMouseDragDropModule } from '@deja-js/component/mouse-dragdrop';
 import { DejaSnackbarModule } from '@deja-js/component/snackbar';
 import { DejaTilesModule } from '@deja-js/component/tiles';
+
 import { DejaMarkdownModule } from '../../component/markdown/index';
 import { DejaTilesDemoComponent } from './tiles-demo';
 import { routing } from './tiles-demo.routes';
@@ -38,9 +39,9 @@ import { routing } from './tiles-demo.routes';
         DejaSnackbarModule,
         DejaMouseDragDropModule,
         DejaMessageBoxModule,
-        routing,
+        routing
     ],
     providers: [
-    ],
+    ]
 })
 export class DejaTilesDemoModule { }

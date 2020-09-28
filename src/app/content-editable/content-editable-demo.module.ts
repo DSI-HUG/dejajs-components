@@ -14,6 +14,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { DejaEditableModule } from '@deja-js/component/content-editable';
+
 import { DejaMarkdownModule } from '../../component/markdown/index';
 import { DejaContentEditableDemoComponent } from './content-editable-demo';
 import { routing } from './content-editable-demo.routes';
@@ -30,9 +31,9 @@ import { routing } from './content-editable-demo.routes';
         MatToolbarModule,
         DejaEditableModule,
         DejaMarkdownModule,
-        routing,
+        routing
     ],
     providers: [
-    ],
+    ]
 })
 export class DejaContentEditableDemoModule { }

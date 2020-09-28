@@ -9,17 +9,18 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+
 import { DejaBoldQueryComponent } from './bold-query.component';
 
 @NgModule({
     declarations: [
-        DejaBoldQueryComponent,
+        DejaBoldQueryComponent
     ],
     exports: [DejaBoldQueryComponent],
     imports: [
         CommonModule,
-        FormsModule,
-    ],
+        FormsModule
+    ]
 })
 export class DejaBoldQueryModule { }
 

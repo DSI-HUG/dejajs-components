@@ -6,12 +6,13 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectorRef, Component, OnDestroy, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DejaSelectComponent } from '@deja-js/component/select';
-import { IItemBase, IItemTree, IViewPortItem } from '@deja-js/core';
+import { Destroy, IItemBase, IItemTree, IViewPortItem } from '@deja-js/core';
 import { from, Observable, of, Subject, Subscription } from 'rxjs';
-import { delay, first, map, tap } from 'rxjs/operators';
+import { delay, map, take, takeUntil, tap } from 'rxjs/operators';
+
 import { News } from '../common/news.model';
 import { CountriesListService } from '../services/countries-list.service';
 import { CountriesService, Country } from '../services/countries.service';
@@ -21,9 +22,13 @@ import { cheeseValidator } from './validators';
 @Component({
     selector: 'deja-select-demo',
     styleUrls: ['./select-demo.scss'],
-    templateUrl: './select-demo.html',
+    templateUrl: './select-demo.html'
 })
-export class SelectDemoComponent implements OnDestroy {
+export class SelectDemoComponent extends Destroy {
+    @ViewChild('news') private newsSelect: DejaSelectComponent;
+    @ViewChild('ondemand') private onDemandSelect: DejaSelectComponent;
+    @ViewChild('onexpand') private onExpandSelect: DejaSelectComponent;
+
     public fruct = '';
     public fructs = [] as string[];
 
@@ -37,6 +42,7 @@ export class SelectDemoComponent implements OnDestroy {
         name: string;
         value: string;
     }[];
+
     public viewPortInfos$: Subscription;
     public dialogResponse$: Subject<string> = new Subject<string>();
     public readonlyMultiSelect = false;
@@ -45,25 +51,22 @@ export class SelectDemoComponent implements OnDestroy {
     public fruitFormModels: FormGroup;
     public fruits$: Observable<string[]>;
 
+    // eslint-disable-next-line rxjs/finnish
     public countries: Observable<Country[]>;
     public countriesForMultiselect: Country[];
     public groupedCountries: ICountryGroup[];
     public onDemandGroupedCountries: ICountryGroup[];
-    public multiselectModel: any[];
-    private _dialogVisible = false;
+    public multiselectModel: unknown[];
     public onDemandPlaceHolder = 'Open to load';
-    private subscriptions = [] as Subscription[];
     public yellowBackgroundColorHighlight = true;
 
     public firstOccurenceOnly = false;
     public firstOccurencePerWordOnly = false;
     public atTheBeginningOfWordOnly = false;
 
-    @ViewChild('news') private newsSelect: DejaSelectComponent;
-    @ViewChild('ondemand') private onDemandSelect: DejaSelectComponent;
-    @ViewChild('onexpand') private onExpandSelect: DejaSelectComponent;
-
     public businessCountry: Country;
+
+    private _dialogVisible = false;
 
     public set dialogVisible(value: boolean) {
         this._dialogVisible = value;
@@ -74,7 +77,9 @@ export class SelectDemoComponent implements OnDestroy {
         return this._dialogVisible;
     }
 
-    constructor(private changeDetectorRef: ChangeDetectorRef, private countriesService: CountriesService, protected countriesListService: CountriesListService, newsService: NewsService, private _fb: FormBuilder) {
+    public constructor(private changeDetectorRef: ChangeDetectorRef, private countriesService: CountriesService, protected countriesListService: CountriesListService, newsService: NewsService, private fb: FormBuilder) {
+        super();
+
         this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","displayName":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","displayName":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","displayName":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","displayName":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","displayName":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","displayName":"Dominica","depth":0,"odd":false,"selected":true}]');
         this.news$ = newsService.getNews$(50);
         this.bigNews$ = newsService.getNews$(10000);
@@ -100,97 +105,93 @@ export class SelectDemoComponent implements OnDestroy {
             'Lemon',
             'Mango',
             'Pineapple',
-            'Watermelon',
+            'Watermelon'
         ];
 
         this.fruits$ = of(this.fructs);
 
-        this.subscriptions.push(this.countries.pipe(
-            tap((value) => this.countriesForMultiselect = value),
-            delay(1))
-            .subscribe(() => {
-                this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","displayName":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","displayName":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","displayName":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","displayName":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","displayName":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","displayName":"Dominica","depth":0,"odd":false,"selected":true}]');
-            }));
-
-        this.subscriptions.push(this.countries
-            .subscribe((value: Country[]) => {
-                const result = [] as ICountryGroup[];
-                const onDemandResult = [] as ICountryGroup[];
-                const dic = {} as { [groupName: string]: ISelectCountry[] };
-
-                result.push({
-                    collapsible: true,
-                    collapsed: true,
-                    groupName: 'EmptyGroup',
-                    items: [],
-                    displayName: 'Empty Group',
-                    selectable: false,
-                } as ICountryGroup);
-
-                value.forEach(country => {
-                    const groupName = `Group${country.naqme[0]}`;
-                    if (!dic[groupName]) {
-                        dic[groupName] = [] as ICountryGroup[];
-                        result.push({
-                            collapsible: true,
-                            groupName: groupName,
-                            items: dic[groupName],
-                            naqme: groupName,
-                            selectable: true,
-                        } as ICountryGroup);
-
-                        onDemandResult.push({
-                            collapsible: true,
-                            collapsed: true,
-                            groupName: groupName,
-                            items: [{
-                                displayName: 'loading...',
-                                selectable: false,
-                            }],
-                            naqme: groupName,
-                            selectable: false,
-                            loaded: false,
-                        } as ICountryGroup);
-                    }
-
-                    dic[groupName].push({ model: country });
-                });
-
-                this.groupedCountries = result;
-                this.onDemandGroupedCountries = onDemandResult;
-            }));
-
-        this.fruitForm = this._fb.group({
-            fruitName: ['', [cheeseValidator]],
+        this.countries.pipe(
+            tap(value => this.countriesForMultiselect = value),
+            delay(1),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => {
+            this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","displayName":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","displayName":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","displayName":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","displayName":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","displayName":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","displayName":"Dominica","depth":0,"odd":false,"selected":true}]');
         });
-        this.fruitFormModels = this._fb.group({
-            fruitName: [''],
-        });
-    }
 
-    public ngOnDestroy() {
-        this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
+        this.countries.pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe((value: Country[]) => {
+            const result = [] as ICountryGroup[];
+            const onDemandResult = [] as ICountryGroup[];
+            const dic = {} as { [groupName: string]: ISelectCountry[] };
+
+            result.push({
+                collapsible: true,
+                collapsed: true,
+                groupName: 'EmptyGroup',
+                items: [],
+                displayName: 'Empty Group',
+                selectable: false
+            } as ICountryGroup);
+
+            value.forEach(country => {
+                const groupName = `Group${country.naqme[0]}`;
+                if (!dic[groupName]) {
+                    dic[groupName] = [] as ICountryGroup[];
+                    result.push({
+                        collapsible: true,
+                        groupName: groupName,
+                        items: dic[groupName],
+                        naqme: groupName,
+                        selectable: true
+                    } as ICountryGroup);
+
+                    onDemandResult.push({
+                        collapsible: true,
+                        collapsed: true,
+                        groupName: groupName,
+                        items: [{
+                            displayName: 'loading...',
+                            selectable: false
+                        }],
+                        naqme: groupName,
+                        selectable: false,
+                        loaded: false
+                    } as ICountryGroup);
+                }
+
+                dic[groupName].push({ model: country });
+            });
+
+            this.groupedCountries = result;
+            this.onDemandGroupedCountries = onDemandResult;
+        });
+
+        this.fruitForm = this.fb.group({
+            fruitName: ['', [cheeseValidator]]
+        });
+        this.fruitFormModels = this.fb.group({
+            fruitName: ['']
+        });
     }
 
     protected loadingItems() {
-        const self = this;
         return (_query: string | RegExp, _selectedItems: IItemBase[]) => {
-            self.onDemandSelect.waiter = true;
-            self.onDemandPlaceHolder = 'loading...';
-            return self.countriesService.getCountries$().pipe(
+            this.onDemandSelect.waiter = true;
+            this.onDemandPlaceHolder = 'loading...';
+            return this.countriesService.getCountries$().pipe(
                 delay(3000),
                 tap(() => {
-                    self.onDemandSelect.waiter = false;
-                    self.onDemandPlaceHolder = 'Selected a country';
+                    this.onDemandSelect.waiter = false;
+                    this.onDemandPlaceHolder = 'Selected a country';
                 }));
         };
     }
 
     protected collapsingItems() {
-        const self = this;
         return (item: IItemBase) => {
             const country = item as ICountryGroup;
-            return country.loaded ? of(item) : self.confirmDialog()(item);
+            return country.loaded ? of(item) : this.confirmDialog()(item);
         };
     }
 
@@ -199,42 +200,38 @@ export class SelectDemoComponent implements OnDestroy {
             const group = item as ICountryGroup;
             if (group.loaded) {
                 return of(item);
-            } else {
-                if (confirm('Please confirm your operation!')) {
-                    of(group).pipe(
-                        delay(2000),
-                        first())
-                        .subscribe((grp) => {
-                            // Simulate asynchronous load
-                            const original = this.groupedCountries.find((c) => c.displayName === grp.displayName);
-                            grp.items = original.items;
-                            grp.loaded = true;
-                            this.onExpandSelect.refresh();
-                        });
+            } else if (confirm('Please confirm your operation!')) {
+                of(group).pipe(
+                    delay(2000),
+                    take(1),
+                    takeUntil(this.destroyed$)
+                ).subscribe(grp => {
+                    // Simulate asynchronous load
+                    const original = this.groupedCountries.find(c => c.displayName === grp.displayName);
+                    grp.items = original.items;
+                    grp.loaded = true;
+                    this.onExpandSelect.refresh();
+                });
 
-                    return of(item);
-                } else {
-                    return of(null);
-                }
+                return of(item);
+            } else {
+                return of(null);
             }
         };
     }
 
     protected confirmDialogWithPromise() {
-        const self = this;
-        return (item: IItemBase) => {
-            return self.confirmDialog()(item).toPromise();
-        };
+        // eslint-disable-next-line rxjs/no-topromise
+        return (item: IItemBase) => this.confirmDialog()(item).toPromise();
     }
 
     protected confirmDialog() {
-        const self = this;
         return (item: IItemBase) => {
-            self.dialogVisible = true;
+            this.dialogVisible = true;
             return from(this.dialogResponse$).pipe(
-                first(),
-                map((response) => {
-                    self.dialogVisible = false;
+                take(1),
+                map(response => {
+                    this.dialogVisible = false;
                     return response === 'ok' ? item : null;
                 }));
         };
@@ -248,15 +245,17 @@ export class SelectDemoComponent implements OnDestroy {
             delete this.viewPortInfos$;
         }
 
-        this.viewPortInfos$ = select && select.viewPort.viewPort$.subscribe((viewPort) => {
+        this.viewPortInfos$ = select?.viewPort.viewPort$.pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe(viewPort => {
             this.viewPortInfos = [
-                { name: 'beforeSize', value: String(viewPort.beforeSize), },
-                { name: 'startIndex', value: String(viewPort.startIndex), },
-                { name: 'viewPortSize', value: String(viewPort.viewPortSize), },
-                { name: 'visibleCount', value: String(viewPort.visibleItems && viewPort.visibleItems.length), },
-                { name: 'endIndex', value: String(viewPort.endIndex), },
-                { name: 'afterSize', value: String(viewPort.afterSize), },
-                { name: 'itemsCount', value: String(viewPort.items && viewPort.items.length), }
+                { name: 'beforeSize', value: String(viewPort.beforeSize) },
+                { name: 'startIndex', value: String(viewPort.startIndex) },
+                { name: 'viewPortSize', value: String(viewPort.viewPortSize) },
+                { name: 'visibleCount', value: String(viewPort.visibleItems?.length) },
+                { name: 'endIndex', value: String(viewPort.endIndex) },
+                { name: 'afterSize', value: String(viewPort.afterSize) },
+                { name: 'itemsCount', value: String(viewPort.items?.length) }
             ];
         });
     }

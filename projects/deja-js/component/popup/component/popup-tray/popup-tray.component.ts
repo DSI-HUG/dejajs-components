@@ -9,6 +9,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { from, Observable } from 'rxjs';
 import { debounceTime, filter, map, merge } from 'rxjs/operators';
+
 import { DejaPopupAction } from '../../model/popup-action.model';
 import { DejaPopupBase } from '../../model/popup-base.class';
 import { DejaPopupService } from '../../service/popup.service';
@@ -23,8 +24,8 @@ export class DejaPopupTrayComponent implements OnInit {
 
     public dialogs$: Observable<MatDialogRef<DejaPopupBase>[]>;
 
-    constructor(
-        public dialogSrv: DejaPopupService,
+    public constructor(
+        public dialogSrv: DejaPopupService
     ) { }
 
     public ngOnInit() {
@@ -50,21 +51,23 @@ export class DejaPopupTrayComponent implements OnInit {
     }
 
     public minify(action: DejaPopupAction) {
-        const el = document.querySelector(action.panelClass) as HTMLElement;
+        const el = document.querySelector<HTMLElement>(action.panelClass);
         if (!el) {
             return false;
         }
         el.style.display = 'none';
         this.refresh();
+        return undefined;
     }
 
     public maxify(action: DejaPopupAction) {
-        const el = document.querySelector(action.panelClass) as HTMLElement;
+        const el = document.querySelector<HTMLElement>(action.panelClass);
         if (!el) {
             return false;
         }
         el.style.display = 'initial';
         this.refresh();
+        return undefined;
     }
 
     public doAction(action: DejaPopupAction) {

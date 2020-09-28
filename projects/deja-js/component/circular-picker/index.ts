@@ -17,8 +17,8 @@ import { DejaCircularPickerComponent } from './circular-picker.component';
     exports: [DejaCircularPickerComponent],
     imports: [
         CommonModule,
-        FormsModule,
-    ],
+        FormsModule
+    ]
 })
 export class DejaCircularPickerModule { }
 

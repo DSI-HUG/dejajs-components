@@ -8,7 +8,8 @@
 
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ChangeDetectorRef } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+
 import { DejaMarkdownComponent } from './markdown.component';
 
 describe('DejaMarkdownComponent', () => {
@@ -16,13 +17,13 @@ describe('DejaMarkdownComponent', () => {
     let httpMock: HttpTestingController;
     let fixture: ComponentFixture<DejaMarkdownComponent>;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        void TestBed.configureTestingModule({
             declarations: [
                 DejaMarkdownComponent
             ],
             imports: [
-                HttpClientTestingModule,
+                HttpClientTestingModule
             ],
             providers: [
                 ChangeDetectorRef
@@ -39,29 +40,29 @@ describe('DejaMarkdownComponent', () => {
     });
 
     it('should init component', () => {
-        expect(component).toBeTruthy();
-        expect(httpMock).toBeTruthy();
+        void expect(component).toBeTruthy();
+        void expect(httpMock).toBeTruthy();
     });
 
     it('should do nothing if value is null', () => {
         component.value = null;
         fixture.detectChanges();
-        expect(fixture.nativeElement.innerText).toEqual('');
+        void expect(fixture.nativeElement.innerText).toEqual('');
     });
 
     it('should convert string value to html', () => {
         component.value = '<p class="pTest"><a href="www.google.ch">site google</a></p>';
         fixture.detectChanges();
-        expect(fixture.nativeElement.querySelector('.pTest > a').innerText).toEqual('site google');
+        void expect(fixture.nativeElement.querySelector('.pTest > a').innerText).toEqual('site google');
     });
 
     it('should call markForCheck when set value', () => {
-        const spy = spyOn((component as any).changeDetectorRef, 'markForCheck');
+        const spy = spyOn(component.changeDetectorRef, 'markForCheck');
 
         component.value = '<p class="pTest"><a href="www.google.ch">site google</a></p>';
         fixture.detectChanges();
 
-        expect(spy).toHaveBeenCalledTimes(1);
+        void expect(spy).toHaveBeenCalledTimes(1);
     });
 
     it('should get html from url', () => {
@@ -70,7 +71,7 @@ describe('DejaMarkdownComponent', () => {
 
         // Must do detectChanges after httpMock.flush()
         fixture.detectChanges();
-        expect(fixture.nativeElement.querySelector('h1').innerText).toEqual('qwertzqwertz');
+        void expect(fixture.nativeElement.querySelector('h1').innerText).toEqual('qwertzqwertz');
     });
 
     it('should process http error', () => {
@@ -79,6 +80,6 @@ describe('DejaMarkdownComponent', () => {
 
         fixture.detectChanges();
         // console.log(fixture.nativeElement.innerText);
-        expect(fixture.nativeElement.innerText).toEqual('Http failure response for aWrongUrl: 0');
+        void expect(fixture.nativeElement.innerText).toEqual('Http failure response for aWrongUrl: 0');
     });
 });

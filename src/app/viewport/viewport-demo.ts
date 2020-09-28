@@ -10,21 +10,22 @@ import { Component, ViewChild } from '@angular/core';
 import { DejaViewPortComponent } from '@deja-js/component/viewport';
 import { IViewPortItem } from '@deja-js/core';
 import { Observable } from 'rxjs';
+
 import { News } from '../common/news.model';
 import { NewsService } from '../services/news.service';
 
 @Component({
     selector: 'deja-viewport-demo',
     styleUrls: ['./viewport-demo.scss'],
-    templateUrl: './viewport-demo.html',
+    templateUrl: './viewport-demo.html'
 })
 export class DejaViewPortDemoComponent {
+    @ViewChild('viewport') private viewport: DejaViewPortComponent;
+
     public tabIndex = 1;
     public isHorizontal = false;
     public hasButtons = false;
     public ensureIndex: number;
-
-    @ViewChild('viewport') private viewport: DejaViewPortComponent;
 
     protected exampleValue = `
     <deja-viewport [models]="news$ | async" itemSize="120">
@@ -44,9 +45,10 @@ export class DejaViewPortDemoComponent {
             </div>
         </ng-template>
     </deja-viewport>`;
+
     protected news$: Observable<News[]>;
 
-    constructor(newsService: NewsService) {
+    public constructor(newsService: NewsService) {
         this.news$ = newsService.getNews$(50);
     }
 

@@ -10,15 +10,16 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDropCursorInfos } from '@deja-js/component/mouse-dragdrop';
 import { DejaTile, IDejaTilesAddEvent, IDejaTilesRemoveEvent } from '@deja-js/component/tiles';
 import { Rect } from '@deja-js/core';
-import { from,  Observable, Subject } from 'rxjs';
+import { from, Observable, Subject } from 'rxjs';
 import { defaultIfEmpty, map, reduce, scan, switchMap, take } from 'rxjs/operators';
+
 import { CountriesService, Country } from '../services/countries.service';
 
 @Component({
     encapsulation: ViewEncapsulation.None,
     selector: 'deja-tiles-demo',
     styleUrls: ['./tiles-demo.scss'],
-    templateUrl: './tiles-demo.html',
+    templateUrl: './tiles-demo.html'
 })
 export class DejaTilesDemoComponent implements OnInit {
     public tabIndex = 1;
@@ -31,9 +32,9 @@ export class DejaTilesDemoComponent implements OnInit {
 
     private countriesMap: Map<string, Country>;
 
-    constructor(private countriesService: CountriesService) {
+    public constructor(private countriesService: CountriesService) {
         this.messages$ = from(this.message$).pipe(
-            scan((acc: any[], curr: any) => [...acc, curr], []),
+            scan((acc, curr) => [...acc, curr], [] as IMessage[]),
             defaultIfEmpty([]));
     }
 
@@ -46,11 +47,11 @@ export class DejaTilesDemoComponent implements OnInit {
         this.countriesMap = new Map();
 
         const tiles$ = this.countriesService.getCountries$().pipe(
-            switchMap((countries) => countries));
+            switchMap(countries => countries));
 
         this.tiles1$ = tiles$.pipe(
             take(12),
-            map((country) => {
+            map(country => {
                 const tile = new DejaTile();
                 tile.percentBounds = new Rect(x1, y1, 15, 15);
                 tile.color = country.color;
@@ -70,7 +71,7 @@ export class DejaTilesDemoComponent implements OnInit {
             reduce((acc: DejaTile[], cur: DejaTile) => [...acc, cur], []));
 
         this.tiles2$ = tiles$.pipe(
-            map((country) => {
+            map(country => {
                 const tile = new DejaTile();
                 tile.percentBounds = new Rect(x2, y2, 15, 15);
                 tile.color = country.color;
@@ -91,7 +92,7 @@ export class DejaTilesDemoComponent implements OnInit {
         return {
             target: 'deja-tile',
             className: 'deja-tile-cursor',
-            dragStart: (target) => {
+            dragStart: target => {
                 const country = this.countriesMap.get(target.id);
                 const tile = new DejaTile();
                 tile.percentBounds = new Rect(0, 0, 15, 15);
@@ -100,25 +101,24 @@ export class DejaTilesDemoComponent implements OnInit {
 
                 return {
                     country: country,
-                    DejaTile: tile,
+                    // eslint-disable-next-line @typescript-eslint/naming-convention
+                    DejaTile: tile
                 };
-            },
+            }
         } as IDejaMouseDraggableContext;
     }
 
     protected getDropContext(dropArea: HTMLElement) {
         return {
-            dragEnter: (_dragContext) => {
-                return {
-                    width: 200,
-                    height: 60,
-                    className: 'country-target-cursor',
-                } as IDropCursorInfos;
-            },
-            drop: (dragContext) => {
+            dragEnter: _dragContext => ({
+                width: 200,
+                height: 60,
+                className: 'country-target-cursor'
+            } as IDropCursorInfos),
+            drop: dragContext => {
                 const country = dragContext.country as Country;
                 dropArea.innerText = `The dropped country is ${country.naqme} - the code is: ${country.code}`;
-            },
+            }
         } as IDejaMouseDroppableContext;
     }
 
@@ -128,10 +128,10 @@ export class DejaTilesDemoComponent implements OnInit {
             content: `${event.added.length} tiles added.`,
             type: 'warn',
             gate: true,
-            cancel: function (value: boolean) {
+            cancel: function(value: boolean) {
                 this.gate = false;
                 event.cancel$.next(value);
-            },
+            }
         } as IMessage);
 
         // Wait for message box validating the added tiles
@@ -144,10 +144,10 @@ export class DejaTilesDemoComponent implements OnInit {
             content: `${event.removed.length} tiles deleted.`,
             type: 'warn',
             gate: true,
-            cancel: function (value: boolean) {
+            cancel: function(value: boolean) {
                 this.gate = false;
                 event.cancel$.next(value);
-            },
+            }
         } as IMessage);
 
         // Wait for message box answer before destruction of the tiles
@@ -160,5 +160,5 @@ interface IMessage {
     title: string;
     type: string;
     gate: boolean;
-    cancel(): {};
+    cancel(): void;
 }

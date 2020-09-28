@@ -7,25 +7,24 @@
  */
 
 import { ChangeDetectionStrategy, Component, ElementRef, ViewEncapsulation } from '@angular/core';
-import { IconService } from '@deja-js/core';
+import { DejaTextMetricsService, IconService } from '@deja-js/core';
 import { Destroy } from '@deja-js/core';
 import { BehaviorSubject, from } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { DejaTextMetricsService } from '../../projects/deja-js/core/text-metrics/text-metrics.service';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     selector: 'app-root',
     styleUrls: ['./app.component.scss'],
-    templateUrl: './app.component.html',
+    templateUrl: './app.component.html'
 })
 export class AppComponent extends Destroy {
     public version: string;
     private _theme: string;
     private theme$: BehaviorSubject<string>;
 
-    constructor(iconService: IconService, elementRef: ElementRef, textMetrics: DejaTextMetricsService) {
+    public constructor(iconService: IconService, elementRef: ElementRef, textMetrics: DejaTextMetricsService) {
         super();
 
         textMetrics.metricsElem = elementRef.nativeElement;
@@ -39,10 +38,10 @@ export class AppComponent extends Destroy {
         if (!this._theme) {
             this._theme = 'blue';
         }
-        this.theme$ = new BehaviorSubject<any>(this._theme);
+        this.theme$ = new BehaviorSubject<string>(this._theme);
         from(this.theme$).pipe(
             takeUntil(this.destroyed$)
-        ).subscribe((theme) => document.body.setAttribute('theme', theme));
+        ).subscribe(theme => document.body.setAttribute('theme', theme));
 
         iconService.addSvgIcon('angular', 'assets/img/logo/angular.svg');
         // iconService.useMaterialIcons(false);

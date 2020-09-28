@@ -7,6 +7,7 @@
  */
 
 import { Injectable } from '@angular/core';
+
 import { Color } from '../graphics/color';
 import { MaterialColor } from './material-color';
 
@@ -30,7 +31,7 @@ export class MaterialColors {
             600: '#e53935',
             700: '#d32f2f',
             800: '#c62828',
-            900: '#b71c1c',
+            900: '#b71c1c'
         },
         'mat-pink': {
             50: '#fce4ec',
@@ -42,7 +43,7 @@ export class MaterialColors {
             600: '#d81b60',
             700: '#c2185b',
             800: '#ad1457',
-            900: '#880e4f',
+            900: '#880e4f'
         },
         'mat-purple': {
             50: '#f3e5f5',
@@ -54,7 +55,7 @@ export class MaterialColors {
             600: '#8e24aa',
             700: '#7b1fa2',
             800: '#6a1b9a',
-            900: '#4a148c',
+            900: '#4a148c'
         },
         'mat-deep-purple': {
             50: '#ede7f6',
@@ -66,7 +67,7 @@ export class MaterialColors {
             600: '#5e35b1',
             700: '#512da8',
             800: '#4527a0',
-            900: '#311b92',
+            900: '#311b92'
         },
         'mat-indigo': {
             50: '#e8eaf6',
@@ -78,7 +79,7 @@ export class MaterialColors {
             600: '#3949ab',
             700: '#303f9f',
             800: '#283593',
-            900: '#1a237e',
+            900: '#1a237e'
         },
         'mat-blue': {
             50: '#e3f2fd',
@@ -90,7 +91,7 @@ export class MaterialColors {
             600: '#1e88e5',
             700: '#1976d2',
             800: '#1565c0',
-            900: '#0d47a1',
+            900: '#0d47a1'
         },
         'mat-light-blue': {
             50: '#e1f5fe',
@@ -102,7 +103,7 @@ export class MaterialColors {
             600: '#039be5',
             700: '#0288d1',
             800: '#0277bd',
-            900: '#01579b',
+            900: '#01579b'
         },
         'mat-cyan': {
             50: '#e0f7fa',
@@ -114,7 +115,7 @@ export class MaterialColors {
             600: '#00acc1',
             700: '#0097a7',
             800: '#00838f',
-            900: '#006064',
+            900: '#006064'
         },
         'mat-teal': {
             50: '#e0f2f1',
@@ -126,7 +127,7 @@ export class MaterialColors {
             600: '#00897b',
             700: '#00796b',
             800: '#00695c',
-            900: '#004d40',
+            900: '#004d40'
         },
         'mat-green': {
             50: '#e8f5e9',
@@ -138,7 +139,7 @@ export class MaterialColors {
             600: '#43a047',
             700: '#388e3c',
             800: '#2e7d32',
-            900: '#1b5e20',
+            900: '#1b5e20'
         },
         'mat-light-green': {
             50: '#f1f8e9',
@@ -150,7 +151,7 @@ export class MaterialColors {
             600: '#7cb342',
             700: '#689f38',
             800: '#558b2f',
-            900: '#33691e',
+            900: '#33691e'
         },
         'mat-lime': {
             50: '#f9fbe7',
@@ -162,7 +163,7 @@ export class MaterialColors {
             600: '#c0ca33',
             700: '#afb42b',
             800: '#9e9d24',
-            900: '#827717',
+            900: '#827717'
         },
         'mat-yellow': {
             50: '#fffde7',
@@ -174,7 +175,7 @@ export class MaterialColors {
             600: '#fdd835',
             700: '#fbc02d',
             800: '#f9a825',
-            900: '#f57f17',
+            900: '#f57f17'
         },
         'mat-amber': {
             50: '#fff8e1',
@@ -186,7 +187,7 @@ export class MaterialColors {
             600: '#ffb300',
             700: '#ffa000',
             800: '#ff8f00',
-            900: '#ff6f00',
+            900: '#ff6f00'
         },
         'mat-orange': {
             50: '#fff3e0',
@@ -198,7 +199,7 @@ export class MaterialColors {
             600: '#fb8c00',
             700: '#f57c00',
             800: '#ef6c00',
-            900: '#e65100',
+            900: '#e65100'
         },
         'mat-deep-orange': {
             50: '#fbe9e7',
@@ -210,7 +211,7 @@ export class MaterialColors {
             600: '#f4511e',
             700: '#e64a19',
             800: '#d84315',
-            900: '#bf360c',
+            900: '#bf360c'
         },
         'mat-brown': {
             50: '#efebe9',
@@ -222,7 +223,7 @@ export class MaterialColors {
             600: '#6d4c41',
             700: '#5d4037',
             800: '#4e342e',
-            900: '#3e2723',
+            900: '#3e2723'
         },
         'mat-grey': {
             0: '#ffffff',
@@ -236,7 +237,7 @@ export class MaterialColors {
             700: '#616161',
             800: '#424242',
             900: '#212121',
-            1000: '#000000',
+            1000: '#000000'
         },
         'mat-blue-grey': {
             50: '#eceff1',
@@ -248,19 +249,19 @@ export class MaterialColors {
             600: '#546e7a',
             700: '#455a64',
             800: '#37474f',
-            900: '#263238',
-        },
-    } as { [color: string]:  { [nuance: string]: string }};
+            900: '#263238'
+        }
+    } as { [color: string]: { [nuance: string]: string }};
 
     public get colors() {
         if (!this._colors) {
             this._colors = [] as MaterialColor[];
-            Object.keys(this.palet).forEach((baseColorName) => {
+            Object.keys(this.palet).forEach(baseColorName => {
                 const baseColor = MaterialColor.fromHex(this.palet[baseColorName]['500']) as MaterialColor;
                 baseColor.subColors = [];
                 baseColor.name = baseColorName;
                 this._colors.push(baseColor);
-                Object.keys(this.palet[baseColorName]).forEach((subColorName) => {
+                Object.keys(this.palet[baseColorName]).forEach(subColorName => {
                     const subColor = MaterialColor.fromHex(this.palet[baseColorName][subColorName]) as MaterialColor;
                     subColor.name = subColorName;
                     baseColor.subColors.unshift(subColor);
@@ -270,12 +271,16 @@ export class MaterialColors {
         return this._colors;
     }
 
+    public getColor(name: string) {
+        return this.palet[name];
+    }
+
     public getPalet(subColor: string) {
         if (!this.palettes) {
             this.palettes = {};
-            Object.keys(this.palet).forEach((baseColorName) => {
+            Object.keys(this.palet).forEach(baseColorName => {
                 const baseColorObj = this.palet[baseColorName];
-                Object.keys(baseColorObj).forEach((subColorName) => {
+                Object.keys(baseColorObj).forEach(subColorName => {
                     if (!this.palettes[subColorName]) {
                         this.palettes[subColorName] = [] as MaterialColor[];
                     }
@@ -288,6 +293,7 @@ export class MaterialColors {
 
     public getColorFromText(text: string) {
         let sum = 0;
+        // eslint-disable-next-line no-loops/no-loops
         for (let i = 0; i < text.length; i++) {
             sum += text.charCodeAt(i);
         }

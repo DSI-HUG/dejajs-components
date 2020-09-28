@@ -6,13 +6,12 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { CommonModule } from '@angular/common';
 import { DebugElement, NO_ERRORS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DejaTextMetricsModule } from '@deja-js/core';
+
+import { DejaNumericStepperModule } from '.';
 import { DejaNumericStepperComponent } from './numeric-stepper.component';
 
 describe('DejaNumericStepperComponent', () => {
@@ -20,36 +19,31 @@ describe('DejaNumericStepperComponent', () => {
     let comp: DejaNumericStepperComponent;
     let fixture: ComponentFixture<DejaNumericStepperComponent>;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
-            declarations: [
-                DejaNumericStepperComponent
-            ],
+    beforeEach(waitForAsync(() => {
+        void TestBed.configureTestingModule({
             imports: [
-                CommonModule,
-                DejaTextMetricsModule,
-                FormsModule,
                 BrowserAnimationsModule,
+                DejaNumericStepperModule
             ],
-            schemas: [NO_ERRORS_SCHEMA],
+            schemas: [NO_ERRORS_SCHEMA]
         }).compileComponents();
 
         fixture = TestBed.createComponent(DejaNumericStepperComponent);
         comp = fixture.componentInstance; // Component test instance
     }));
 
-    it('should create the component', async(() => {
-        expect(comp).toBeTruthy();
+    it('should create the component', waitForAsync(() => {
+        void expect(comp).toBeTruthy();
     }));
 
-    it('should update the value', async(() => {
+    it('should update the value', waitForAsync(() => {
         comp.value = 10;
 
         fixture.detectChanges();
-        expect(comp.value).toBe(10);
+        void expect(comp.value).toBe(10);
     }));
 
-    it('should update the value even if it`s disabled', async(() => {
+    it('should update the value even if it`s disabled', waitForAsync(() => {
         comp.value = 10;
         comp.disabled = true;
 
@@ -57,41 +51,41 @@ describe('DejaNumericStepperComponent', () => {
         comp.value = 11;
 
         fixture.detectChanges();
-        expect(comp.value).toBe(11);
+        void expect(comp.value).toBe(11);
     }));
 
-    it('value < min', async(() => {
+    it('value < min', waitForAsync(() => {
         comp.value = -5;
         comp.min = 0;
         comp.max = 20;
         fixture.detectChanges();
         const offLimits = fixture.debugElement.query(By.css('.off-limits'));
-        expect(offLimits).not.toBeNull();
+        void expect(offLimits).not.toBeNull();
     }));
 
-    it('value > max', async(() => {
+    it('value > max', waitForAsync(() => {
         comp.value = 50;
         comp.min = 0;
         comp.max = 20;
         fixture.detectChanges();
         const offLimits = fixture.debugElement.query(By.css('.off-limits'));
-        expect(offLimits).not.toBeNull();
+        void expect(offLimits).not.toBeNull();
     }));
 
-    it('min < value < max', async(() => {
+    it('min < value < max', waitForAsync(() => {
         comp.value = 10;
         comp.min = 0;
         comp.max = 20;
         fixture.detectChanges();
         const offLimits = fixture.debugElement.query(By.css('.off-limits'));
-        expect(offLimits).toBeNull();
+        void expect(offLimits).toBeNull();
     }));
 
-    it('without min max', async(() => {
+    it('without min max', waitForAsync(() => {
         comp.value = 50;
         fixture.detectChanges();
         const offLimits = fixture.debugElement.query(By.css('.off-limits'));
-        expect(offLimits).toBeNull();
+        void expect(offLimits).toBeNull();
     }));
 
     describe('when step clicked', () => {
@@ -104,15 +98,15 @@ describe('DejaNumericStepperComponent', () => {
             steppers = fixture.debugElement.query(By.css('.steppers'));
         });
 
-        it('should substract 1 on click substract', async(() => {
+        it('should substract 1 on click substract', waitForAsync(() => {
             steppers.children[0].nativeElement.click();
-            expect(comp.value).toEqual(0.2);
-            expect(comp.value).not.toEqual(0.19999999999999996);
+            void expect(comp.value).toEqual(0.2);
+            void expect(comp.value).not.toEqual(0.19999999999999996);
         }));
 
-        it('should add 1 on click add', async(() => {
+        it('should add 1 on click add', waitForAsync(() => {
             steppers.children[1].nativeElement.click();
-            expect(comp.value).toEqual(2.2);
+            void expect(comp.value).toEqual(2.2);
         }));
     });
 });

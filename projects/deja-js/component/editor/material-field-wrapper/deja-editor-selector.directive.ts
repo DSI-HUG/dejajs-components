@@ -23,6 +23,7 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { _MatInputMixinBase } from '@deja-js/core/util';
 import { Subject } from 'rxjs';
+
 import { DejaEditorComponent } from '../deja-editor.component';
 
 let nextUniqueId = 0;
@@ -36,38 +37,50 @@ let nextUniqueId = 0;
         }
     ]
 })
-export class DejaEditorSelectorDirective extends _MatInputMixinBase implements MatFormFieldControl<any>, DoCheck, OnInit, OnDestroy, CanUpdateErrorState {
+export class DejaEditorSelectorDirective extends _MatInputMixinBase implements MatFormFieldControl<string>, DoCheck, OnInit, OnDestroy, CanUpdateErrorState {
+    @Input() public placeholder: string;
+    @HostBinding('attr.aria-describedby') public describedBy = '';
+
     public errorState: boolean;
     public autofilled?: boolean;
-    protected _uid = `mat-input-${nextUniqueId++}`;
-    private _placeholder: HTMLDivElement;
-    public value: any;
+    public value: string;
+    // eslint-disable-next-line rxjs/finnish
     public stateChanges: Subject<void> = new Subject<void>();
+    public focused: boolean;
+    public controlType = 'app-editor';
+
+    protected _disabled = false;
+    protected _uid = `mat-input-${nextUniqueId++}`;
+    protected _id: string;
+    protected _required = false;
+    private _placeholder: HTMLDivElement;
+
     @Input()
     public get id(): string {
         return this._id;
     }
+
     public set id(value: string) {
         this._id = value || this._uid;
     }
-    protected _id: string;
-    @Input() public placeholder: string;
-    public focused: boolean;
+
     @Input()
     public get required(): boolean {
         return this._required;
     }
+
     public set required(value: boolean) {
         this._required = coerceBooleanProperty(value);
     }
-    protected _required = false;
+
     @Input()
     public get disabled(): boolean {
-        if (this.ngControl && this.ngControl.disabled !== null) {
+        if (this.ngControl?.disabled !== null) {
             return this.ngControl.disabled;
         }
         return this._disabled;
     }
+
     public set disabled(value: boolean) {
         this._disabled = coerceBooleanProperty(value);
 
@@ -78,29 +91,27 @@ export class DejaEditorSelectorDirective extends _MatInputMixinBase implements M
             this.stateChanges.next();
         }
     }
-    protected _disabled = false;
-    @HostBinding('attr.aria-describedby') public describedBy = '';
-    public controlType = 'app-editor';
-    public onContainerClick(): void {
-        this._editor.setFocus();
-    }
 
-    constructor(
-        @Self() private _editor: DejaEditorComponent,
+    public constructor(
+        @Self() private editor: DejaEditorComponent,
         @Optional()
         @Self()
         public ngControl: NgControl,
-        @Optional() _parentForm: NgForm,
-        @Optional() _parentFormGroup: FormGroupDirective,
-        _defaultErrorStateMatcher: ErrorStateMatcher,
-        @Host() private _hostElement: ElementRef
+        @Optional() parentForm: NgForm,
+        @Optional() parentFormGroup: FormGroupDirective,
+        defaultErrorStateMatcher: ErrorStateMatcher,
+        @Host() private hostElement: ElementRef
     ) {
         super(
-            _defaultErrorStateMatcher,
-            _parentForm,
-            _parentFormGroup,
+            defaultErrorStateMatcher,
+            parentForm,
+            parentFormGroup,
             ngControl
         );
+    }
+
+    public onContainerClick(): void {
+        this.editor.setFocus();
     }
 
     public setDescribedByIds(ids: string[]): void {
@@ -108,19 +119,19 @@ export class DejaEditorSelectorDirective extends _MatInputMixinBase implements M
     }
 
     public ngOnInit() {
-        this._editor.focus.subscribe(() => {
+        this.editor.focus.subscribe(() => {
             this.focused = true;
             this.stateChanges.next();
         });
 
-        this._editor.blur.subscribe(() => {
+        this.editor.blur.subscribe(() => {
             this.focused = false;
             this.stateChanges.next();
         });
-        this._editor.change.subscribe(() => {
+        this.editor.change.subscribe(() => {
             this.stateChanges.next();
         });
-        this._generatePlaceholder();
+        this.generatePlaceholder();
     }
 
     public ngDoCheck() {
@@ -134,36 +145,36 @@ export class DejaEditorSelectorDirective extends _MatInputMixinBase implements M
     }
 
     public get empty(): boolean {
-        return !this._editor.value;
+        return !this.editor.value;
     }
 
     public get shouldLabelFloat(): boolean {
         if (this.focused || !this.empty) {
             if (this.empty) {
-                this._attachPlaceholder();
+                this.attachPlaceholder();
             } else {
-                this._detachPlaceholder();
+                this.detachPlaceholder();
             }
             return true;
         } else {
-            this._detachPlaceholder();
+            this.detachPlaceholder();
             return false;
         }
     }
 
-    private _attachPlaceholder() {
+    private attachPlaceholder() {
         if (this._placeholder && !this._placeholder.parentElement) {
-            this._hostElement.nativeElement.appendChild(this._placeholder);
+            this.hostElement.nativeElement.appendChild(this._placeholder);
         }
     }
 
-    private _detachPlaceholder() {
-        if (this._placeholder && this._placeholder.parentElement) {
+    private detachPlaceholder() {
+        if (this._placeholder?.parentElement) {
             this._placeholder.remove();
         }
     }
 
-    private _generatePlaceholder() {
+    private generatePlaceholder() {
         if (this.placeholder) {
             this._placeholder = document.createElement('div');
             this._placeholder.style.position = 'absolute';

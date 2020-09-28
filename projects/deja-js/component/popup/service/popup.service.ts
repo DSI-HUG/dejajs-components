@@ -11,6 +11,7 @@ import { Injectable, TemplateRef } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+
 import { DejaPopupActionsComponent } from '../component/popup-actions/popup-actions.component';
 import { DejaPopupAdvancedComponent } from '../component/popup-advanced/popup-advanced.component';
 import { DejaPopupComponent } from '../component/popup/popup.component';
@@ -21,17 +22,19 @@ import { DejaPopupReponse } from '../model/popup-response.model';
 
 @Injectable()
 export class DejaPopupService extends MatDialog {
+    public defaultActionComponent: ComponentType<unknown> = DejaPopupActionsComponent;
+
+    public get openDialogs(): MatDialogRef<DejaPopupBase>[] {
+        return super.openDialogs;
+    }
 
     private _dialogCom$: BehaviorSubject<DejaPopupAction>;
-    public readonly openDialogs: MatDialogRef<DejaPopupBase>[];
     public get dejaPopupCom$(): BehaviorSubject<DejaPopupAction> {
         if (!this._dialogCom$) {
             this._dialogCom$ = new BehaviorSubject(null);
         }
         return this._dialogCom$;
     }
-
-    public defaultActionComponent: ComponentType<any> = DejaPopupActionsComponent;
 
     /**
      * Displays a modal dialog, with the given buttons.
@@ -42,12 +45,8 @@ export class DejaPopupService extends MatDialog {
      * @param data Données que l'on peux passer au Dialog
      * @return La réponse du dialog sous forme d'un Observable
      */
-    public openInline(
-        title: string,
-        content: string,
-        buttons: DejaPopupAction[],
-        config: DejaPopupConfig = new DejaPopupConfig(),
-    ): Observable<DejaPopupReponse> {
+    // eslint-disable-next-line rxjs/finnish
+    public openInline(title: string, content: string, buttons: DejaPopupAction[], config: DejaPopupConfig<unknown> = new DejaPopupConfig()): Observable<DejaPopupReponse> {
 
         config.title = title;
         config.content = content;
@@ -56,28 +55,21 @@ export class DejaPopupService extends MatDialog {
         const dialogRef: MatDialogRef<DejaPopupBase> = this.open(DejaPopupComponent, config);
 
         return dialogRef.afterClosed().pipe(
-            map((resp: any) => {
-                return new DejaPopupReponse(resp, dialogRef.componentInstance);
-            }));
+            map(resp => new DejaPopupReponse(resp, dialogRef.componentInstance)));
     }
 
-    public openCustom(
-        customComponent: ComponentType<DejaPopupBase> | TemplateRef<any>,
-        config: DejaPopupConfig = new DejaPopupConfig(),
-    ): Observable<DejaPopupReponse> {
+    // eslint-disable-next-line rxjs/finnish
+    public openCustom(customComponent: ComponentType<DejaPopupBase> | TemplateRef<DejaPopupBase>, config: DejaPopupConfig<unknown> = new DejaPopupConfig()): Observable<DejaPopupReponse> {
 
-        const dialogRef: MatDialogRef<DejaPopupBase> = this.open(customComponent, config);
+        const dialogRef = this.open(customComponent, config);
 
         return dialogRef.afterClosed().pipe(
-            map((resp: any) => {
-                return new DejaPopupReponse(resp, dialogRef.componentInstance);
-            }));
+            map(resp => new DejaPopupReponse(resp, dialogRef.componentInstance))
+        );
     }
 
-    public openUrl(
-        url: string,
-        config: DejaPopupConfig = new DejaPopupConfig(),
-    ): Observable<DejaPopupReponse> {
+    // eslint-disable-next-line rxjs/finnish
+    public openUrl(url: string, config: DejaPopupConfig<unknown> = new DejaPopupConfig()): Observable<DejaPopupReponse> {
 
         config.url = url;
         config.ensureDimension();
@@ -85,35 +77,28 @@ export class DejaPopupService extends MatDialog {
         const dialogRef: MatDialogRef<DejaPopupAdvancedComponent> = this.open(DejaPopupAdvancedComponent, config);
 
         return dialogRef.afterClosed().pipe(
-            map((resp: any) => {
-                return new DejaPopupReponse(resp, dialogRef.componentInstance);
-            }));
+            map(resp => new DejaPopupReponse(resp, dialogRef.componentInstance))
+        );
     }
 
-    public openAdvanced(
-        config: DejaPopupConfig = new DejaPopupConfig(),
-    ): MatDialogRef<DejaPopupAdvancedComponent> {
+    public openAdvanced(config: DejaPopupConfig<unknown> = new DejaPopupConfig()): MatDialogRef<DejaPopupAdvancedComponent> {
 
         const dialogRef: MatDialogRef<DejaPopupAdvancedComponent> = this.open(DejaPopupAdvancedComponent, config);
 
         return dialogRef;
 
     }
-    public openAdvanced$(
-        config: DejaPopupConfig = new DejaPopupConfig(),
-    ): Observable<DejaPopupReponse> {
+
+    public openAdvanced$(config: DejaPopupConfig<unknown> = new DejaPopupConfig()): Observable<DejaPopupReponse> {
 
         const dialogRef = this.openAdvanced(config);
         return dialogRef.afterClosed().pipe(
-            map((resp: any) => {
-                return new DejaPopupReponse(resp, dialogRef.componentInstance);
-            }));
+            map(resp => new DejaPopupReponse(resp, dialogRef.componentInstance)));
 
     }
 
-    public openPopUp(
-        config: DejaPopupConfig = new DejaPopupConfig(),
-    ): Observable<DejaPopupReponse> {
+    // eslint-disable-next-line rxjs/finnish
+    public openPopUp(config: DejaPopupConfig<unknown> = new DejaPopupConfig()): Observable<DejaPopupReponse> {
 
         config.hasBackdrop = false;
         // config.isModal = false;
@@ -137,10 +122,7 @@ export class DejaPopupService extends MatDialog {
       * @param config Extra configuration options.
       * @returns Reference to the newly-opened dialog.
       */
-    public open<T>(
-        componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
-        config?: DejaPopupConfig
-    ): MatDialogRef<T> {
+    public open<T, DataType = unknown, ResultType = unknown>(componentOrTemplateRef: ComponentType<T> | TemplateRef<T>, config: DejaPopupConfig<DataType>): MatDialogRef<T, ResultType> {
 
         if (config.shareActions && !config.dejaPopupCom$) {
             config.dejaPopupCom$ = this.dejaPopupCom$;
@@ -151,7 +133,5 @@ export class DejaPopupService extends MatDialog {
         }
 
         return super.open(componentOrTemplateRef, config.getMatDialogConfig());
-
     }
-
 }

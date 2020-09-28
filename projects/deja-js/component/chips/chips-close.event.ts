@@ -7,6 +7,6 @@
  */
 
 export interface IDejaChipsComponentCloseEvent extends CustomEvent {
-    item: any;
+    item: unknown;
     index: number;
 }

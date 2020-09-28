@@ -7,6 +7,7 @@
  */
 
 import { UnitValue } from '@deja-js/core';
+
 import { IDejaGridColumn } from './data-grid-column';
 
 export class DejaGridColumnsLayoutInfos {
@@ -19,7 +20,7 @@ export class DejaGridColumnsLayoutInfos {
         [name: string]: UnitValue;
     };
 
-    constructor(columns: IDejaGridColumn[]) {
+    public constructor(columns: IDejaGridColumn[]) {
         this.columnsWidth = {};
         this.percentColumns = [];
         this.fixedColumns = [];
@@ -27,7 +28,7 @@ export class DejaGridColumnsLayoutInfos {
         this.totalFixedWidth = 0;
         this.totalPercentWidth = 0;
 
-        columns.forEach((column) => {
+        columns.forEach(column => {
             let width = new UnitValue(column.width);
             if (width.value === undefined) {
                 width = new UnitValue(10, '%');

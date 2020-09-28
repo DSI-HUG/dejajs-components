@@ -12,5 +12,4 @@ import { Directive } from '@angular/core';
     selector: 'deja-sidenav-content, [deja-sidenav-content]'
 })
 export class DejaSidenavContentDirective {
-    constructor() { }
 }

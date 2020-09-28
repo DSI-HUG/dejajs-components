@@ -24,30 +24,33 @@ import { Destroy } from '@deja-js/core';
 import { fromEvent } from 'rxjs';
 import { merge } from 'rxjs';
 import { Observable } from 'rxjs';
-import { first } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import { takeUntil } from 'rxjs/operators';
 import { tap } from 'rxjs/operators';
 import { __spread } from 'tslib';
+
 import { IRange, IRangeEvent, IStepRangeEvent, Range } from './range.interface';
 
 @Component({
     selector: 'deja-range',
     changeDetection: ChangeDetectionStrategy.OnPush,
     styleUrls: ['./range.component.scss'],
-    templateUrl: './range.component.html',
+    templateUrl: './range.component.html'
 })
 export class DejaRangeComponent extends Destroy implements ControlValueAccessor {
+    // emit the selected range
+    // eslint-disable-next-line @angular-eslint/no-output-native
+    @Output() public readonly select = new EventEmitter();
+    // error emitter, used to notify the outside when forbidden actions are performed
+    @Output() public readonly errorFeedback = new EventEmitter();
     // step can be either a numeric value, an array of accepted intervals or a function returning the next accepted interval
     @Input() public step: number | number[] | ((event: IStepRangeEvent) => number) = 1;
     // index of the selected range
     @Input() public selected = 0;
-    // emit the selected range
-    @Output() public select: EventEmitter<any> = new EventEmitter();
-    // error emitter, used to notify the outside when forbidden actions are performed
-    @Output() public errorFeedback: EventEmitter<any> = new EventEmitter();
     // custom templates
-    @ContentChild('rangeTemplate') public rangeTemplate: any;
-    @ContentChild('separatorTemplate') public separatorTemplate: any;
+    @ContentChild('rangeTemplate') public rangeTemplate: unknown;
+    @ContentChild('separatorTemplate') public separatorTemplate: unknown;
+
     // minimum range percentage, used to avoid 2 separator being on the same visual space
     private minimumRangePercentage = 0.01;
 
@@ -55,8 +58,25 @@ export class DejaRangeComponent extends Destroy implements ControlValueAccessor 
     private _disabled = false;
     private _ranges: IRange[];
 
-    public registerOnChange(fn: any): void { this._onChangeCallback = fn; }
-    public registerOnTouched(fn: any): void { this._onTouchCallback = fn; }
+    public constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef, @Self() @Optional() public control: NgControl) {
+        super();
+        if (this.control) {
+            this.control.valueAccessor = this;
+        }
+    }
+
+    @HostListener('window:resize', [])
+    public onResize() {
+        this.ranges = this.ranges.concat();
+    }
+
+    public registerOnChange(fn: () => void): void {
+        this._onChangeCallback = fn;
+    }
+
+    public registerOnTouched(fn: () => void): void {
+        this._onTouchCallback = fn;
+    }
 
     // inner model
     public get ranges(): IRange[] {
@@ -64,7 +84,7 @@ export class DejaRangeComponent extends Destroy implements ControlValueAccessor 
     }
 
     public set ranges(ranges: IRange[]) {
-        if (!!ranges) {
+        if (ranges) {
             this.writeValue(ranges);
             this._onChangeCallback(ranges);
         }
@@ -87,16 +107,6 @@ export class DejaRangeComponent extends Destroy implements ControlValueAccessor 
 
     public get readOnly() {
         return this._readOnly || this.disabled;
-    }
-
-    public _onChangeCallback = (_a?: any) => { };
-    public _onTouchCallback = (_a?: any) => { };
-
-    constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef, @Self() @Optional() public _control: NgControl) {
-        super();
-        if (this._control) {
-            this._control.valueAccessor = this;
-        }
     }
 
     // ControlValueAccessor implementation
@@ -124,11 +134,6 @@ export class DejaRangeComponent extends Destroy implements ControlValueAccessor 
         this.disabled = isDisabled;
     }
     // End of ControlValueAccessor implementation
-
-    @HostListener('window:resize', [])
-    public onResize() {
-        this.ranges = this.ranges.concat();
-    }
 
     // add a new range, by splitting the selected one into 2 new ranges
     public add(): void {
@@ -231,6 +236,7 @@ export class DejaRangeComponent extends Destroy implements ControlValueAccessor 
 
             // get the block HTMLElement (contains range HTMLElement & separator HTMLElement)
             let parentElement = target.parentElement;
+            // eslint-disable-next-line no-loops/no-loops
             while (!parentElement.classList.contains('block')) {
                 parentElement = parentElement.parentElement;
             }
@@ -238,7 +244,7 @@ export class DejaRangeComponent extends Destroy implements ControlValueAccessor 
             const up$ = fromEvent(document, 'mouseup');
             const leave$ = fromEvent(document.body, 'mouseleave');
             const kill$ = merge(up$, leave$).pipe(
-                first(),
+                take(1),
                 tap(() => {
                     const host = this.elementRef.nativeElement.firstElementChild as HTMLElement;
                     host.ownerDocument.body.classList.remove('noselect');
@@ -248,8 +254,7 @@ export class DejaRangeComponent extends Destroy implements ControlValueAccessor 
 
             const move$ = fromEvent(document, 'mousemove') as Observable<MouseEvent>;
             move$.pipe(
-                takeUntil(kill$),
-                takeUntil(this.destroyed$)
+                takeUntil(merge(this.destroyed$, kill$))
             ).subscribe(event => {
                 const x = event.pageX;
                 const xDifference = -(xStart - x);
@@ -287,6 +292,11 @@ export class DejaRangeComponent extends Destroy implements ControlValueAccessor 
         }
     }
 
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    public _onChangeCallback = (_a?: unknown) => undefined as void;
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    public _onTouchCallback = () => undefined as void;
+
     private toStep(ranges: IRange[], index: number, newMax: number): number {
 
         const range = ranges[index];
@@ -302,7 +312,7 @@ export class DejaRangeComponent extends Destroy implements ControlValueAccessor 
 
         if (typeof this.step === 'number') {
 
-            const numericStep = this.step as number;
+            const numericStep = this.step;
             const precision = 100 / (numericStep * 100);
             const steppedValue = (Math.round(newMax * precision) / precision);
 
@@ -337,8 +347,8 @@ export class DejaRangeComponent extends Destroy implements ControlValueAccessor 
             let idealValue = newMax;
             let bestDiff: number;
             this.step
-                .filter((value) => value <= viewMax && value >= viewMin)
-                .forEach((value) => {
+                .filter(value => value <= viewMax && value >= viewMin)
+                .forEach(value => {
                     const diff = Math.abs(value - newMax);
                     if (bestDiff === undefined || bestDiff > diff) {
                         idealValue = value;
@@ -348,6 +358,8 @@ export class DejaRangeComponent extends Destroy implements ControlValueAccessor 
 
             return idealValue;
 
-        } else { throw new Error('Invalid step type.'); }
+        } else {
+            throw new Error('Invalid step type.');
+        }
     }
 }

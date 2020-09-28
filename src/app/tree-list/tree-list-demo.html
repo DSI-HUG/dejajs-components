@@ -30,7 +30,7 @@
             <div>Just passing an array of objects</div>
             <div class="flexLayout">
                 <span class="flex45p flexLayout flexColumn">
-					<deja-tree-list [(ngModel)]="country" textField="naqme" valueField="code" [models]="countries"></deja-tree-list>
+					<deja-tree-list [(ngModel)]="country" textField="naqme" valueField="code" [models]="countries$ | async"></deja-tree-list>
 				</span>
                 <span class="flex45p flexOffset5p">
 					<h4>Selected country model :</h4>
@@ -45,7 +45,7 @@
             <div>deja-tree-list has some keyboard navigation feature</div>
             <div class="flexLayout">
                 <span class="flex45p flexLayout flexColumn">
-					<deja-tree-list class="flex50p" [(ngModel)]="country" textField="naqme" valueField="code" [models]="countries"></deja-tree-list>
+					<deja-tree-list class="flex50p" [(ngModel)]="country" textField="naqme" valueField="code" [models]="countries$ | async"></deja-tree-list>
 				</span>
                 <ul class="flexOffset5p" id="shortcut-list">
                     <li>Press
@@ -136,7 +136,7 @@
             </div>
             <div class="flexLayout">
                 <span class="flex45p flexLayout flexColumn">
-					<deja-tree-list searchArea nodataholder="No record to display" maxHeight="auto" [disabled]="disabled" selectionClearable [(ngModel)]="deepCountry" textField="l1.l2.name" valueField="l1.l2.value" [models]="deepCountries"></deja-tree-list>
+					<deja-tree-list searchArea nodataholder="No record to display" maxHeight="auto" [disabled]="disabled" selectionClearable [(ngModel)]="deepCountry" textField="l1.l2.name" valueField="l1.l2.value" [models]="deepCountries$ | async"></deja-tree-list>
 				</span>
                 <span class="flex45p flexOffset5p">
 					<h4>Selected deep country model :</h4>
@@ -164,7 +164,7 @@
             <div>Multi selection example</div>
             <div class="flexLayout">
                 <span class="flex45p flexLayout flexColumn">
-					<deja-tree-list sortable multiSelect textField="naqme" valueField="code" [selectedItems]="multiselectModel" (itemDragStart)="onItemDragStart($event)" (selectedChange)="multiselectModelChange($event.items)" [items]="countriesForMultiselect">
+					<deja-tree-list sortable multiSelect textField="naqme" valueField="code" [selectedItems]="multiselectModel" (itemDragStart)="onItemDragStart($event)" (selectedChange)="multiselectModelChange($any($event).items)" [items]="countriesForMultiselect">
 					</deja-tree-list>
 				</span>
                 <span class="flexLayout flexColumn flex45p flexOffset5p">
@@ -183,7 +183,7 @@
                 <h4>Selected country model :</h4>
                 <ul>
                     <li *ngFor="let item of multiselectModel">
-                        <span>{{ item.naqme }}</span>
+                        <span>{{ $any(item).naqme }}</span>
                     </li>
                 </ul>
                 </span>
@@ -242,7 +242,7 @@
             <div>Treelist with an header template</div>
             <div class="flexLayout">
                 <span class="flex45p flexLayout flexColumn">
-					<deja-tree-list #headertreelist textField="naqme" valueField="code" [models]="countries">
+					<deja-tree-list #headertreelist textField="naqme" valueField="code" [models]="countries$ | async">
 						<ng-template #headerTemplate>
 							<span id="headerTemplateContent" (click)="headertreelist.sort()">
 								<span id="title">
@@ -265,7 +265,7 @@
             <h1>Search Prefix and Suffix Templates</h1>
             <div class="flexLayout">
                 <span class="flex45p flexLayout flexColumn">
-					<deja-tree-list searchArea textField="naqme" valueField="code" [items]="countries">
+					<deja-tree-list searchArea textField="naqme" valueField="code" [items]="countries$ | async">
 						<ng-template #searchPrefixTemplate>
 							<mat-icon (click)="onFilterTemplateClicked('Prefix')">public</mat-icon>
 						</ng-template>
@@ -321,7 +321,7 @@
             <deja-tree-list #ondemand class="demo-half-width fixed-height" textField="naqme" valueField="code" [loadingItems]="loadingItems()"></deja-tree-list>
             <h1>Confirm Selection</h1>
             <div>A dialog will confirm the selection of an item</div>
-            <deja-tree-list class="demo-half-width fixed-height" multiSelect textField="naqme" valueField="code" [selectingItem]="confirmDialog()" [items]="countries"> </deja-tree-list>
+            <deja-tree-list class="demo-half-width fixed-height" multiSelect textField="naqme" valueField="code" [selectingItem]="confirmDialog()" [items]="countries$ | async"> </deja-tree-list>
             <h1>Confirm Expand and Collapse </h1>
             <div>A dialog will confirm the expand and collapse or an item if the children are not loaded. The children will be loaded asynchronously after the item expansion.</div>
             <deja-tree-list #onexpand class="demo-half-width fixed-height" textField="naqme" valueField="code" [items]="onDemandGroupedCountries" [expandingItem]="expandingItems()" [collapsingItem]="collapsingItems()"></deja-tree-list>

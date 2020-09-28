@@ -7,15 +7,16 @@
  */
 
 import { NgModule } from '@angular/core';
+
 import { DejaSlimScrollDirective } from './slimscroll.directive';
 
 @NgModule({
     declarations: [
-        DejaSlimScrollDirective,
+        DejaSlimScrollDirective
     ],
     exports: [
-        DejaSlimScrollDirective,
-    ],
+        DejaSlimScrollDirective
+    ]
 })
 export class DejaSlimScrollModule { }
 

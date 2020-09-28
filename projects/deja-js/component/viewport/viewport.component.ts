@@ -25,29 +25,32 @@ import { ViewPortService } from '@deja-js/core';
 import { BehaviorSubject, from, fromEvent, interval, merge, Observable, of, Subject, timer } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 
-export enum DejaViewPortScrollStyle {
-    scrollbar,
-    buttons,
-}
+export type DejaViewPortScrollStyleType = 'scrollbar' | 'buttons';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [ViewPortService],
     selector: 'deja-viewport',
     styleUrls: ['./viewport.component.scss'],
-    templateUrl: './viewport.component.html',
+    templateUrl: './viewport.component.html'
 })
 export class DejaViewPortComponent extends Destroy {
+    @HostBinding('attr.hasUpBtn') public hasUpButton = false;
+    @HostBinding('attr.hasDownBtn') public hasDownButton = false;
+    @HostBinding('attr.horizontal') public _isHorizontal = false;
+    @HostBinding('attr.buttons') public _hasButtons = false;
+
+    /** Permet de définir un template d'élément par binding */
+    @Input() public itemTemplateExternal: unknown;
+
+    @ContentChild('itemTemplate') private itemTemplateInternal: unknown;
+
     public beforeSize: number;
     public afterSize: number;
     public vpItems: IDejaViewPortItem[];
     public vpStartIndex: number;
     public vpEndIndex: number;
-    public startOffset: number;  // Buttons mode only
-    @HostBinding('attr.hasUpBtn') public hasUpButton = false;
-    @HostBinding('attr.hasDownBtn') public hasDownButton = false;
-    @HostBinding('attr.horizontal') public _isHorizontal = false;
-    @HostBinding('attr.buttons') public _hasButtons = false;
+    public startOffset: number; // Buttons mode only
 
     public get hasButtons() {
         return this._hasButtons;
@@ -73,11 +76,6 @@ export class DejaViewPortComponent extends Destroy {
         return this._buttonsStep || 20;
     }
 
-    /** Permet de définir un template d'élément par binding */
-    @Input() public itemTemplateExternal: any;
-
-    @ContentChild('itemTemplate') private itemTemplateInternal: any;
-
     @ViewChild('down')
     public set downButton(element: ElementRef) {
         this.downButton$.next(element?.nativeElement || null);
@@ -90,17 +88,17 @@ export class DejaViewPortComponent extends Destroy {
 
     /** Set the list of models to render inside the viewport control */
     @Input()
-    public set models(models: any[]) {
-        this.items = models ? models.map((model) => ({
-            model: model,
+    public set models(models: IDejaViewPortItem[]) {
+        this.items = models ? models.map(model => ({
+            model: model
         } as IDejaViewPortItem)) : [];
     }
 
     /** Set the list of items to render inside the viewport control */
     @Input()
-    public set items(items: any[]) {
-        this._items = items || [];
-        if (this.viewPort.mode === ViewportMode.disabled) {
+    public set items(items: IDejaViewPortItem[]) {
+        this._items = items || [] as IDejaViewPortItem[];
+        if (this.viewPort.mode === 'disabled') {
             this.vpItems = this._items;
         }
         this.viewPort.items$.next(this._items);
@@ -111,9 +109,8 @@ export class DejaViewPortComponent extends Destroy {
       * buttons: A button before is placed at the top or at the left of the list, and a button after is placed at the right or the bottom of the list.
       */
     @Input()
-    public set scrollingStyle(value: DejaViewPortScrollStyle | string) {
-        const scrollingStyle = typeof value === 'string' ? DejaViewPortScrollStyle[value as any] : value;
-        this._hasButtons = scrollingStyle === DejaViewPortScrollStyle.buttons;
+    public set scrollingStyle(value: DejaViewPortScrollStyleType) {
+        this._hasButtons = value === 'buttons';
     }
 
     /** Set the direction of the items rendering
@@ -121,10 +118,9 @@ export class DejaViewPortComponent extends Destroy {
      * horizontal: The item are displayed horizontally
      */
     @Input()
-    public set direction(value: ViewportDirection | string) {
-        const direction = typeof value === 'string' ? ViewportDirection[value as any] : value;
-        this.viewPort.direction$.next(direction);
-        this._isHorizontal = direction === ViewportDirection.horizontal;
+    public set direction(value: ViewportDirection) {
+        this.viewPort.direction$.next(value);
+        this._isHorizontal = value === 'horizontal';
         this.changeDetectorRef.markForCheck();
     }
 
@@ -155,22 +151,24 @@ export class DejaViewPortComponent extends Destroy {
         ).subscribe(scrollPos => this.viewPort.scrollPosition$.next(scrollPos));
     }
 
-    public get itemTemplate() { return this.itemTemplateExternal || this.itemTemplateInternal; }
+    public get itemTemplate() {
+        return this.itemTemplateExternal || this.itemTemplateInternal;
+    }
 
-    private get clientSize() {
+    public get clientSize() {
         if (!this.element) {
             return 0;
         }
         return this._isHorizontal ? this.element.clientWidth : this.element.clientHeight;
     }
 
-    private set scrollPos(value: number) {
+    public set scrollPos(value: number) {
         const scrollPos = Math.max(coerceNumberProperty(value), 0);
         this.scrollPosition = scrollPos;
         this.viewPort.scrollPosition$.next(scrollPos);
     }
 
-    private get scrollPos() {
+    public get scrollPos() {
         return this.scrollPosition;
     }
 
@@ -182,7 +180,7 @@ export class DejaViewPortComponent extends Destroy {
      * auto: Seul les éléments visibles sont rendus. La taille des éléments est calculée automatiquement (performances --)
      */
     @Input()
-    public set viewportMode(mode: ViewportMode | string) {
+    public set viewportMode(mode: ViewportMode) {
         this.viewPort.mode$.next(mode);
     }
 
@@ -190,7 +188,7 @@ export class DejaViewPortComponent extends Destroy {
         return this.viewPort.mode;
     }
 
-    constructor(private changeDetectorRef: ChangeDetectorRef, private viewPort: ViewPortService) {
+    public constructor(private changeDetectorRef: ChangeDetectorRef, private viewPort: ViewPortService) {
         super();
 
         fromEvent(window, 'resize').pipe(
@@ -223,7 +221,7 @@ export class DejaViewPortComponent extends Destroy {
 
         viewPort.viewPort$.pipe(
             switchMap(viewPortResult => {
-                if (viewPort.mode !== ViewportMode.disabled) {
+                if (viewPort.mode !== 'disabled') {
                     this.vpItems = viewPortResult.visibleItems as IDejaViewPortItem[];
                     this.vpStartIndex = viewPortResult.startIndex;
                     this.vpEndIndex = viewPortResult.endIndex;
@@ -266,7 +264,7 @@ export class DejaViewPortComponent extends Destroy {
                     return of(null);
                 }
             }),
-            takeUntil(this.destroyed$),
+            takeUntil(this.destroyed$)
         ).subscribe(scroll);
 
         const mouseWheel$ = () => {
@@ -293,12 +291,10 @@ export class DejaViewPortComponent extends Destroy {
             takeUntil(this.destroyed$)
         ).subscribe(scrollPos => this.scrollPos = scrollPos);
 
-        const autoScroll$ = (event: MouseEvent, sign: number) => {
-            return timer(750).pipe(
-                switchMap(() => interval(50)),
-                tap(() => this.scrollPos += sign * (event.ctrlKey ? this.clientSize : this.buttonsStep * 2)),
-            );
-        };
+        const autoScroll$ = (event: MouseEvent, sign: number) => timer(750).pipe(
+            switchMap(() => interval(50)),
+            tap(() => this.scrollPos += sign * (event.ctrlKey ? this.clientSize : this.buttonsStep * 2))
+        );
 
         const initButton$ = (button: HTMLElement) => {
             const sign = button.id === 'down' ? 1 : -1;
@@ -311,11 +307,9 @@ export class DejaViewPortComponent extends Destroy {
             const mouseDownEvent$ = fromEvent(button, 'mousedown') as Observable<MouseEvent>;
             return mouseDownEvent$.pipe(
                 tap(event => this.scrollPos += sign * (event.ctrlKey ? this.clientSize : this.buttonsStep * 2)),
-                switchMap(event => {
-                    return autoScroll$(event, sign).pipe(
-                        takeUntil(mouseup$)
-                    );
-                }),
+                switchMap(event => autoScroll$(event, sign).pipe(
+                    takeUntil(mouseup$)
+                ))
             );
         };
 
@@ -355,7 +349,7 @@ export class DejaViewPortComponent extends Destroy {
         this.changeDetectorRef.markForCheck();
     }
 
-    public ensureVisible(item: any) {
+    public ensureVisible(item: unknown) {
         this.viewPort.ensureItem$.next(item);
     }
 
@@ -365,11 +359,11 @@ export class DejaViewPortComponent extends Destroy {
     }
 
     public getItemSize(item: IViewPortItem) {
-        if (this.viewPort.mode === ViewportMode.disabled) {
+        if (this.viewPort.mode === 'disabled') {
             return null;
-        } else if (this.viewPort.mode === ViewportMode.fixed) {
+        } else if (this.viewPort.mode === 'fixed') {
             return this.itemSize;
-        } else if (this.viewPort.mode === ViewportMode.auto) {
+        } else if (this.viewPort.mode === 'auto') {
             return item.size || null;
         } else {
             return (item.size && item.size > ViewPortService.itemDefaultSize) ? item.size : this.itemSize;
@@ -378,5 +372,5 @@ export class DejaViewPortComponent extends Destroy {
 }
 
 export interface IDejaViewPortItem extends IViewPortItem {
-    model: any;
+    model: unknown;
 }

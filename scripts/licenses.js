@@ -5,7 +5,9 @@ const BadLicenseError = require('./bad-license-error');
 const flatten = arr => arr.reduce((acc, val) =>
     acc.concat(Array.isArray(val) ? flatten(val) : val), []);
 
-Array.prototype.flatten = function () { return flatten(this) };
+Array.prototype.flatten = function() {
+ return flatten(this);
+};
 
 const walkSync = dir => fs.readdirSync(dir)
     .map(file => fs.statSync(path.join(dir, file)).isDirectory()
@@ -16,11 +18,11 @@ const filePaths = walkSync('./projects/deja-js');
 if (filePaths && filePaths.length > 0) {
     const header = fs.readFileSync('./scripts/header-license.txt', 'utf-8');
     const badLicences = [];
-    filePaths.forEach(path => {
-        if (path.endsWith('.ts')) {
-            const content = fs.readFileSync(path, 'utf-8');
+    filePaths.forEach(p => {
+        if (p.endsWith('.ts')) {
+            const content = fs.readFileSync(p, 'utf-8');
             if (!content.startsWith(header)) {
-                badLicences.push(path);
+                badLicences.push(p);
             }
         }
     });

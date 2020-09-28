@@ -16,6 +16,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { DejaViewPortModule } from '@deja-js/component/viewport';
+
 import { DejaMarkdownModule } from '../../component/markdown/index';
 import { NewsCardModule } from '../common/news-card.module';
 import { DejaViewPortDemoComponent } from './viewport-demo';
@@ -36,9 +37,9 @@ import { routing } from './viewport-demo.routes';
         DejaViewPortModule,
         DejaMarkdownModule,
         NewsCardModule,
-        routing,
+        routing
     ],
     providers: [
-    ],
+    ]
 })
 export class DejaViewPortDemoModule { }

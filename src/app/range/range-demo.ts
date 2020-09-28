@@ -5,19 +5,31 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-import {Component, EventEmitter, Output, ViewChild} from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { IStepRangeEvent, Range } from '@deja-js/component/range';
-import { from,  Observable } from 'rxjs';
+import { DejaRangeComponent } from 'dist/deja-js/component/range';
+import { from, Observable } from 'rxjs';
 import { defaultIfEmpty, map, scan } from 'rxjs/operators';
+
 import { ranges, rangesWithInterval, readOnlyRanges, steps, weights } from './ranges.mock';
 import { IWeight, Weight } from './weight.interface';
+
+interface Error {
+    gate: boolean;
+    message: string;
+}
 
 @Component({
     selector: 'deja-range-demo',
     styleUrls: ['./range-demo.scss'],
-    templateUrl: './range-demo.html',
+    templateUrl: './range-demo.html'
 })
 export class DejaRangeDemoComponent {
+    @Output() protected readonly errorFeed = new EventEmitter();
+
+    @ViewChild('dejaRange') protected rangeRef: DejaRangeComponent;
+    @ViewChild('dejaWeight') protected weightRef: DejaRangeComponent;
+
     public tabIndex = 1;
     public readOnlyRanges: Range[];
     public rangesWithInterval: Range[];
@@ -26,13 +38,9 @@ export class DejaRangeDemoComponent {
     public numericStep = 1;
     public weights: Weight[];
 
-    public errors: Observable<any[]>;
-    @Output() protected errorFeed: EventEmitter<any> = new EventEmitter();
+    public errors$: Observable<Error[]>;
 
-    @ViewChild('dejaRange') protected rangeRef: any;
-    @ViewChild('dejaWeight') protected weightRef: any;
-
-    constructor() {
+    public constructor() {
         this.readOnlyRanges = readOnlyRanges;
         this.rangesWithInterval = rangesWithInterval;
         this.ranges = ranges;
@@ -43,13 +51,38 @@ export class DejaRangeDemoComponent {
         this.computeRangeFromWeight();
 
         // error management
-        this.errors = from(this.errorFeed).pipe(
+        this.errors$ = from(this.errorFeed).pipe(
             map((error: Error) => ({
                 gate: true,
-                message: error.message,
+                message: error.message
             })),
-            scan((acc: any, cur: any) => [...acc, cur], []),
-            defaultIfEmpty([]), );
+            scan((acc, cur) => [...acc, cur], [] as Error[]),
+            defaultIfEmpty([])
+        );
+    }
+
+    /**
+     * compute range min and max from weight value
+     *
+     * @private
+     *
+     * @memberOf DejaRangeDemoComponent
+     */
+    public computeRangeFromWeight() {
+        let min = 0;
+
+        this.weights = this.weights
+            .map((weight: Weight) => {
+                const weightDifference = weight.maxWeight - weight.minWeight;
+                const rangeDifference = Math.log(4 * weightDifference);
+
+                weight.min = min;
+                weight.max = min + rangeDifference;
+
+                min += rangeDifference;
+
+                return weight;
+            });
     }
 
     /**
@@ -149,29 +182,5 @@ export class DejaRangeDemoComponent {
             this.weights[0].minWeight--;
             this.computeRangeFromWeight();
         }
-    }
-
-    /**
-     * compute range min and max from weight value
-     *
-     * @private
-     *
-     * @memberOf DejaRangeDemoComponent
-     */
-    private computeRangeFromWeight() {
-        let min = 0;
-
-        this.weights = this.weights
-            .map((weight: Weight) => {
-                const weightDifference = weight.maxWeight - weight.minWeight;
-                const rangeDifference = Math.log(4 * weightDifference);
-
-                weight.min = min;
-                weight.max = min + rangeDifference;
-
-                min += rangeDifference;
-
-                return weight;
-            });
     }
 }

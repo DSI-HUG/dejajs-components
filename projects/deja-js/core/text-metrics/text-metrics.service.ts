@@ -8,7 +8,8 @@
 
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, from, Observable, range, Subject } from 'rxjs';
-import { delay, filter, first, map, switchMap, takeUntil, toArray } from 'rxjs/operators';
+import { delay, filter, map, switchMap, take, takeUntil, toArray } from 'rxjs/operators';
+
 import { Destroy } from '../destroy/destroy';
 
 /**
@@ -25,18 +26,16 @@ export class DejaTextMetricsService extends Destroy {
      * Constructor
      * Add observable to wait for element to be set. And then take its properties to measure all ASCII char size.
      */
-    constructor() {
+    public constructor() {
         super();
 
         from(this.element$).pipe(
             delay(1),
-            first(),
-            switchMap(element => {
-                return range(0, 255).pipe(
-                    map(i => this.getTextWidth(String.fromCharCode(i), element)),
-                    toArray()
-                );
-            }),
+            take(1),
+            switchMap(element => range(0, 255).pipe(
+                map(i => this.getTextWidth(String.fromCharCode(i), element)),
+                toArray()
+            )),
             takeUntil(this.destroyed$)
         ).subscribe(charSize => this.charSize$.next(charSize));
     }
@@ -95,6 +94,7 @@ export class DejaTextMetricsService extends Destroy {
      *
      * @return Hauteur théorique du conteneur.
      */
+    // eslint-disable-next-line rxjs/finnish
     public getTextHeight(maxWidth: number, text: string): Observable<number> {
         return this.getNumberOfLines(maxWidth, text).pipe(
             map(numberOfLines => {
@@ -115,6 +115,7 @@ export class DejaTextMetricsService extends Destroy {
      *
      * @return Nombre de lignes théoriques du conteneur.
      */
+    // eslint-disable-next-line rxjs/finnish
     private getNumberOfLines(maxWidth: number, text: string): Observable<number> {
         return this.charSize$.pipe(
             filter(charSize => charSize !== null),
@@ -125,10 +126,11 @@ export class DejaTextMetricsService extends Destroy {
                 if (text.length > 0) {
                     const arr = text.split(' ');
                     let spaceWidth = 0;
-                    const printableCharSizeArray = charSize.filter((size) => size > 0);
+                    const printableCharSizeArray = charSize.filter(size => size > 0);
                     averageCharSize = printableCharSizeArray.reduce((a, b) => a + b, 0) / printableCharSizeArray.length;
                     arr.forEach((txt: string) => {
                         let w = 0;
+                        // eslint-disable-next-line no-loops/no-loops
                         for (let j = 0; j < txt.length; j++) {
                             const charCode = txt.charCodeAt(j);
                             // Si le caractère fait partie de la table ascii qu'on a calculé dans this.getAllCharsize() on incrémente la taille du mot de sa taille.

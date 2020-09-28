@@ -19,6 +19,7 @@ import { Router } from '@angular/router';
 import { Destroy, MediaService } from '@deja-js/core';
 import { from } from 'rxjs';
 import { filter, map, mergeMap, takeUntil } from 'rxjs/operators';
+
 import { DejaSidenavService } from './sidenav.service';
 
 @Component({
@@ -43,12 +44,12 @@ export class DejaSidenavComponent extends Destroy implements OnInit {
     public mode = 'side';
     public _showToolbar = false;
 
-    constructor(
+    public constructor(
         public sidenavService: DejaSidenavService,
         private mediaService: MediaService,
         private router: Router,
         private activatedRoute: ActivatedRoute,
-        private changeDetectorRef: ChangeDetectorRef,
+        private changeDetectorRef: ChangeDetectorRef
     ) {
         super();
 
@@ -64,13 +65,14 @@ export class DejaSidenavComponent extends Destroy implements OnInit {
 
     public ngOnInit() {
         // Initialize
-        this.title = this.getActivatedRouteLastChild().data[`title`];
+        this.title = this.getActivatedRouteLastChild().data.title;
 
         // Listen for future route changes
         this.router.events.pipe(
             filter(event => event instanceof NavigationEnd),
             map(() => this.activatedRoute),
             map(route => {
+                // eslint-disable-next-line no-loops/no-loops
                 while (route.firstChild) {
                     route = route.firstChild;
                 }
@@ -79,11 +81,14 @@ export class DejaSidenavComponent extends Destroy implements OnInit {
             filter(route => route.outlet === 'primary'),
             mergeMap(route => route.data),
             takeUntil(this.destroyed$)
-        ).subscribe(event => this.title = event[`title`]);
+        ).subscribe(event => {
+            this.title = event.title;
+        });
     }
 
     private getActivatedRouteLastChild(): ActivatedRouteSnapshot {
         let route: ActivatedRouteSnapshot = this.activatedRoute.snapshot.root;
+        // eslint-disable-next-line no-loops/no-loops
         while (route.firstChild) {
             route = route.firstChild;
         }

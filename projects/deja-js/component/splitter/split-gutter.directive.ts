@@ -13,7 +13,7 @@ import { Directive, ElementRef, Input, Renderer2 } from '@angular/core';
  * Separator for the spltter component
  */
 @Directive({
-    selector: 'split-gutter',
+    selector: 'split-gutter'
 })
 export class SplitGutterDirective {
 
@@ -64,7 +64,7 @@ export class SplitGutterDirective {
     /**
      * Constructor
      */
-    constructor(private elementRef: ElementRef,
+    public constructor(private elementRef: ElementRef,
         private renderer: Renderer2) {
     }
 
@@ -76,12 +76,12 @@ export class SplitGutterDirective {
 
         // Add a content in css, to allow the gutter to take the full wize
         if (state === 'horizontal') {
-            this.setStyle('content', ` `);
+            this.setStyle('content', ' ');
         }
     }
 
-    private setStyle(key: string, value: any) {
-        value == null ? this.renderer.removeStyle(this.elementRef.nativeElement, key) : this.renderer.setStyle(this.elementRef.nativeElement, key, value);
+    private setStyle(key: string, value: unknown) {
+        void (value === null || value === undefined ? this.renderer.removeStyle(this.elementRef.nativeElement, key) : this.renderer.setStyle(this.elementRef.nativeElement, key, value));
     }
 
     private getCursor(state: string) {

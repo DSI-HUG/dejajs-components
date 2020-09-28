@@ -12,7 +12,7 @@ export class Folder {
     public label: string;
     public children: Folder[];
 
-    constructor(level: number, item: number) {
+    public constructor(level: number, item: number) {
         this.label = `Level ${level} - Item ${item}`;
         this.children = [];
     }
@@ -21,17 +21,17 @@ export class Folder {
 @Injectable()
 export class FoldersService {
 
-    private folders = [] as any[];
+    private folders = [] as Folder[];
 
-    constructor() {
+    public constructor() {
         this.addLevel(1, this.folders);
     }
 
-    public getFolders(): any[] {
+    public getFolders() {
         return this.folders;
     }
 
-    private addLevel(level: number, children: any[]) {
+    private addLevel(level: number, children: Folder[]) {
         if (level > 15) {
             return;
         }

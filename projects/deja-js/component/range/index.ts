@@ -8,14 +8,15 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+
 import { DejaRangeComponent } from './range.component';
 
 @NgModule({
     declarations: [DejaRangeComponent],
     exports: [DejaRangeComponent],
     imports: [
-        CommonModule,
-    ],
+        CommonModule
+    ]
 })
 export class DejaRangeModule { }
 

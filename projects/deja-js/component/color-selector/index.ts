@@ -8,9 +8,10 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule  } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+
 import { DejaColorFabComponent } from './color-fab.component';
 import { DejaColorSelectorComponent } from './color-selector.component';
 
@@ -22,7 +23,7 @@ import { DejaColorSelectorComponent } from './color-selector.component';
         FormsModule,
         MatIconModule,
         MatButtonModule
-    ],
+    ]
 })
 export class DejaColorSelectorModule { }
 

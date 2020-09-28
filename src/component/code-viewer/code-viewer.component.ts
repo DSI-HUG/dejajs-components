@@ -14,10 +14,10 @@ import * as Prism from 'prismjs';
  * Code viewer component for angular using PrismJs
  */
 @Component({
-    encapsulation: ViewEncapsulation.None,
     selector: 'deja-code-viewer',
-    styleUrls: ['./code-viewer.component.scss'],
+    encapsulation: ViewEncapsulation.None,
     templateUrl: './code-viewer.component.html',
+    styleUrls: ['./code-viewer.component.scss']
 })
 export class DejaCodeViewerComponent implements AfterViewChecked {
     /** Language inside viewer @see http://prismjs.com/#languages-list - PrismJs documentation to know possibles values */

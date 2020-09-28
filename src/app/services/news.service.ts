@@ -9,30 +9,31 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ObjectMapper } from 'json-object-mapper';
-import * as _ from 'lodash';
+import { cloneDeep } from 'lodash';
 import { Observable } from 'rxjs';
 import { map, publishLast, refCount, switchMap } from 'rxjs/operators';
+
 import { News, NewsArticles, NewsSource, NewsSources } from '../common/news.model';
 
 @Injectable()
 export class NewsService {
-    constructor(private httpClient: HttpClient) { }
+    public constructor(private httpClient: HttpClient) { }
 
     public getNews$(recordCount?: number): Observable<News[]> {
-        return this.httpClient.get('https://newsapi.org/v1/sources?language=en').pipe(
-            map((response: any) => ObjectMapper.deserialize(NewsSources, response)),
+        return this.httpClient.get<Record<string, unknown>>('https://newsapi.org/v1/sources?language=en').pipe(
+            map(response => ObjectMapper.deserialize(NewsSources, response)),
             map((resp: NewsSources) => {
                 if (resp.status !== 'ok') {
                     throw new Error('Fail to get news');
                 }
                 return resp.sources;
             }),
-            map((sources: NewsSource[]) => sources.filter((source) => source.category === 'technology' || source.category === 'gaming')),
+            map((sources: NewsSource[]) => sources.filter(source => source.category === 'technology' || source.category === 'gaming')),
             switchMap((sources: NewsSource[]) => {
                 const source = sources[Math.round(Math.random() * (sources.length - 1))];
-                return this.httpClient.get(`https://newsapi.org/v1/articles?source=${source.id}&apiKey=228bc9410a2a4f608d2ad2e5626896f3`);
+                return this.httpClient.get<Record<string, unknown>>(`https://newsapi.org/v1/articles?source=${source.id}&apiKey=228bc9410a2a4f608d2ad2e5626896f3`);
             }),
-            map((response: any) => ObjectMapper.deserialize(NewsArticles, response)),
+            map(response => ObjectMapper.deserialize(NewsArticles, response)),
             map((resp: NewsArticles) => {
                 if (resp.status !== 'ok') {
                     throw new Error('Fail to get news');
@@ -44,12 +45,13 @@ export class NewsService {
             map((news: News[]) => {
                 let returnNews = news;
                 if (recordCount) {
+                    // eslint-disable-next-line no-loops/no-loops
                     while (recordCount > 0) {
-                        returnNews = returnNews.concat(_.cloneDeep(news));
+                        returnNews = returnNews.concat(cloneDeep(news));
                         recordCount -= news.length;
                     }
                 }
                 return returnNews;
-            }), );
+            }));
     }
 }

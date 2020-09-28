@@ -7,5 +7,5 @@
  */
 
 export class Message {
-  constructor(public content = `Some snackbar`, public gate = true) { }
+    public constructor(public content = 'Some snackbar', public gate = true) { }
 }

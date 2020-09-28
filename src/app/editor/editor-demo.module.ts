@@ -34,8 +34,8 @@ import { routing } from './editor-demo.routes';
         MatToolbarModule,
         DejaMatEditorModule,
         DejaMarkdownModule,
-        routing,
+        routing
     ],
-    providers: [],
+    providers: []
 })
 export class DejaEditorDemoModule { }

@@ -6,11 +6,12 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { Component } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { from } from 'rxjs';
-import { first } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
+
 import { DejaDatePickerComponent } from './date-picker.component';
 import { DejaDatePickerModule } from './index';
 
@@ -21,12 +22,13 @@ class DatePickerTestingUtils {
 }
 
 @Component({
+    selector: 'DejaDatePickerContainerComponent',
     template: `
         <deja-date-picker style="width: 1000px;">
         </deja-date-picker>`
 })
 class DejaDatePickerContainerComponent {
-    constructor() {
+    public constructor() {
         document.body.style.width = '1280px';
         document.body.style.height = '1024px';
     }
@@ -37,8 +39,8 @@ describe('DejaDatePickerContainerComponent', () => {
     let fixture: ComponentFixture<DejaDatePickerContainerComponent>;
     let datePickerTestingUtils: DatePickerTestingUtils;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        void TestBed.configureTestingModule({
             declarations: [
                 DejaDatePickerContainerComponent
             ],
@@ -58,7 +60,7 @@ describe('DejaDatePickerContainerComponent', () => {
     });
 
     it('should create the component', () => {
-        expect(component).toBeTruthy();
+        void expect(component).toBeTruthy();
     });
 
     it('should init the mask', () => {
@@ -76,149 +78,139 @@ describe('DejaDatePickerContainerComponent', () => {
             /\d/
         ];
 
-        expect(component.mask.length).toEqual(10);
-        expect(component.mask).toEqual(mask);
+        void expect(component.mask.length).toEqual(10);
+        void expect(component.mask).toEqual(mask);
     });
 
-    it('should display date and time', async(() => {
+    it('should display date and time', waitForAsync(() => {
         component.format = null;
         component.layout = 'datetime';
-        from((component as any).formatChanged$).pipe(
-            first())
-            .subscribe((format) => {
-                expect(format).toEqual('YYYY-MM-DD HH:mm');
-                datePickerTestingUtils.testDone();
-            });
+        from(component.formatChanged$).pipe(
+            take(1)
+        ).subscribe(format => {
+            void expect(format).toEqual('YYYY-MM-DD HH:mm');
+            datePickerTestingUtils.testDone();
+        });
 
         spyOn(datePickerTestingUtils, 'testDone');
         fixture.detectChanges();
         component.ngOnInit();
-        fixture.whenStable().then(() => {
-            expect(datePickerTestingUtils.testDone).toHaveBeenCalled();
+        return fixture.whenStable().then(() => {
+            // eslint-disable-next-line @typescript-eslint/unbound-method
+            void expect(datePickerTestingUtils.testDone).toHaveBeenCalled();
         });
     }));
 
-    it('should display time', async(() => {
+    it('should display time', waitForAsync(() => {
         component.format = null;
         component.layout = 'timeonly';
-        from((component as any).formatChanged$).pipe(
-            first())
-            .subscribe((format) => {
-                expect(format).toEqual('HH:mm');
+        from(component.formatChanged$).pipe(
+            take(1))
+            .subscribe(format => {
+                void expect(format).toEqual('HH:mm');
                 datePickerTestingUtils.testDone();
             });
 
         spyOn(datePickerTestingUtils, 'testDone');
         fixture.detectChanges();
         component.ngOnInit();
-        fixture.whenStable().then(() => {
-            expect(datePickerTestingUtils.testDone).toHaveBeenCalled();
+        return fixture.whenStable().then(() => {
+            // eslint-disable-next-line @typescript-eslint/unbound-method
+            void expect(datePickerTestingUtils.testDone).toHaveBeenCalled();
         });
     }));
 
-    // it('should display default format when layout is wrong', async(() => {
-    //     component.format = null;
-    //     component.layout = 'wrongLayout';
-    //     Observable.from((component as any).formatChanged$)
-    //     .first()
-    //     .subscribe((format) => {
-    //         expect(format).toEqual('YYYY-MM-DD');
-    //         datePickerTestingUtils.testDone();
-    //     });
-
-    //     spyOn(datePickerTestingUtils, 'testDone');
-    //     fixture.detectChanges();
-    //     component.ngOnInit();
-    //     fixture.whenStable().then(() => {
-    //         expect(datePickerTestingUtils.testDone).toHaveBeenCalled();
-    //     });
-    // }));
-
     it('Should be disabled even if disabled is set as a string', () => {
-        (component as any).disabled = 'true';
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (<any>component).disabled = 'true';
         fixture.detectChanges();
-        expect((component as any)._disabled).toBeTruthy();
+        void expect(component.disabled).toBeTruthy();
 
-        (component as any).disabled = '';
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (<any>component).disabled = '';
         fixture.detectChanges();
-        expect((component as any)._disabled).toBeTruthy();
+        void expect(component.disabled).toBeTruthy();
 
         component.disabled = true;
         fixture.detectChanges();
-        expect((component as any)._disabled).toBeTruthy();
+        void expect(component.disabled).toBeTruthy();
 
         component.disabled = null;
         fixture.detectChanges();
-        expect((component as any)._disabled).toBeNull();
+        void expect(component.disabled).toBeNull();
 
-        (component as any).disabled = 'false';
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (<any>component).disabled = 'false';
         fixture.detectChanges();
-        expect((component as any)._disabled).toBeNull();
+        void expect(component.disabled).toBeNull();
 
         component.disabled = false;
         fixture.detectChanges();
-        expect((component as any)._disabled).toBeNull();
+        void expect(component.disabled).toBeNull();
     });
 
     it('Should be required even if required is set as a string', () => {
-        (component as any).required = 'true';
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (<any>component).required = 'true';
         fixture.detectChanges();
-        expect((component as any)._required).toBeTruthy();
+        void expect(component.required).toBeTruthy();
 
-        (component as any).required = '';
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (<any>component).required = '';
         fixture.detectChanges();
-        expect((component as any)._required).toBeTruthy();
+        void expect(component.required).toBeTruthy();
 
         component.required = true;
         fixture.detectChanges();
-        expect((component as any)._required).toBeTruthy();
+        void expect(component.required).toBeTruthy();
 
         component.required = null;
         fixture.detectChanges();
-        expect((component as any)._required).toBeNull();
+        void expect(component.required).toBeNull();
 
-        (component as any).required = 'false';
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (<any>component).required = 'false';
         fixture.detectChanges();
-        expect((component as any)._required).toBeNull();
+        void expect(component.required).toBeNull();
 
         component.required = false;
         fixture.detectChanges();
-        expect((component as any)._required).toBeNull();
+        void expect(component.required).toBeNull();
     });
 
     it('Should set time even if time property is set as a string', () => {
         component.time = 'true';
         fixture.detectChanges();
-        expect(component.time).toBeTruthy();
+        void expect(component.time).toBeTruthy();
 
         component.time = '';
         fixture.detectChanges();
-        expect(component.time).toBeTruthy();
+        void expect(component.time).toBeTruthy();
 
         component.time = true;
         fixture.detectChanges();
-        expect(component.time).toBeTruthy();
+        void expect(component.time).toBeTruthy();
 
         component.time = null;
         fixture.detectChanges();
-        expect(component.time).toBeNull();
+        void expect(component.time).toBeNull();
 
         component.time = 'false';
         fixture.detectChanges();
-        expect(component.time).toBeNull();
+        void expect(component.time).toBeNull();
 
         component.time = false;
         fixture.detectChanges();
-        expect(component.time).toBeNull();
+        void expect(component.time).toBeNull();
     });
 
     it('should open modal when calendar-button is clicked', () => {
         const button = document.createElement('button');
         button.setAttribute('id', 'calendar-button');
 
-        button.onclick = (e) => {
-            (component as any).toggleDateSelector(e);
-            expect((component as any)._showDropDown).toBeTruthy();
+        button.onclick = e => {
+            component.toggleDateSelector(e);
+            void expect(component.showDropDown).toBeTruthy();
         };
 
         button.click();
@@ -243,12 +235,12 @@ describe('DejaDatePickerContainerComponent', () => {
             input.dispatchEvent(new Event('change'));
             fixture.detectChanges();
             component.updateModel(input.value); // Use this because don't know how to trigger ngModelChange event
-            expect(component.value).toBe('ABCD');
+            void expect(component.value).toBe('ABCD');
             input.value = '2018-01-01';
             input.dispatchEvent(new Event('change'));
             fixture.detectChanges();
             component.updateModel(input.value); // Use this because don't know how to trigger ngModelChange event
-            expect(component.value).toBe('2018-01-01');
+            void expect(component.value).toBe('2018-01-01');
         });
     });
 });

@@ -24,7 +24,7 @@ export class FruitComponent{
             '...'
         ];
 
-    constructor( private _fb: FormBuilder) {
+    public constructor( private _fb: FormBuilder) {
         this.fruits$ = Observable.of(this._fruits);
         this.fruitForm = this._fb.group({
             fruitName: ['', [cheeseValidator]],

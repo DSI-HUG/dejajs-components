@@ -8,11 +8,12 @@
 
 import { ModuleWithProviders } from '@angular/core';
 import { Route, RouterModule, Routes } from '@angular/router';
+
 import { DejaNumericStepperDemoComponent } from './numeric-stepper-demo.component';
 
 const routes: Routes = [
     { path: '', component: DejaNumericStepperDemoComponent },
-    { path: '**', redirectTo: '', pathMatch: 'full' },
+    { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
 
 export const routing: ModuleWithProviders<Route> = RouterModule.forChild(routes);

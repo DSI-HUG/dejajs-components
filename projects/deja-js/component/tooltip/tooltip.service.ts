@@ -7,6 +7,7 @@
  */
 
 import { Injectable } from '@angular/core';
+
 import { ITooltipParams } from './tooltip-params.interface';
 
 /**

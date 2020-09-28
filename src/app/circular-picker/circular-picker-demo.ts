@@ -6,49 +6,49 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ICircularRange } from '@deja-js/component/circular-picker';
 
 @Component({
     selector: 'deja-circular-picker-demo',
     styleUrls: ['./circular-picker-demo.scss'],
-    templateUrl: './circular-picker-demo.html',
+    templateUrl: './circular-picker-demo.html'
 })
-export class DejaCircularPickerDemoComponent implements OnInit {
+export class DejaCircularPickerDemoComponent {
     public tabIndex = 1;
 
     public sm = 3;
     public sms = 10;
     protected ranges1 = [
-        { min: 1, max: 20, labelInterval: 2 },
+        { min: 1, max: 20, labelInterval: 2 }
     ] as ICircularRange[];
 
     protected ranges2 = [
-        { min: 1, max: 20 },
+        { min: 1, max: 20 }
     ] as ICircularRange[];
 
     protected ranges3 = [
         { min: 1, max: 12, beginOffset: Math.PI / 3 },
-        { min: 13, max: 24, beginOffset: Math.PI / 3 },
+        { min: 13, max: 24, beginOffset: Math.PI / 3 }
     ] as ICircularRange[];
 
     protected ranges41 = [
         {
             labelInterval: 5,
             max: 59,
-            min: 0,
-        },
+            min: 0
+        }
     ] as ICircularRange[];
 
     protected ranges42 = [
         {
             max: 11,
-            min: 0,
+            min: 0
         },
         {
             max: 111,
-            min: 100,
-        },
+            min: 100
+        }
     ] as ICircularRange[];
 
     private myModel = [
@@ -75,23 +75,15 @@ export class DejaCircularPickerDemoComponent implements OnInit {
         { value: 108, label: 'T-9', realValue: -9 },
         { value: 109, label: 'T-10', realValue: -10 },
         { value: 110, label: 'T-11', realValue: -11 },
-        { value: 111, label: 'T-12', realValue: -12 },
+        { value: 111, label: 'T-12', realValue: -12 }
     ] as ITemplateModel[];
-
-    constructor() {
-
-    }
-
-    public ngOnInit() {
-
-    }
 
     protected range42Changed(selection: number) {
         console.log(`Selected model ${this.getLabelForValue(selection)}`);
     }
 
     protected getLabelForValue(value: number) {
-        const val = this.myModel.find((m) => m.value === value);
+        const val = this.myModel.find(m => m.value === value);
         return (val) ? val.label : value;
     }
 }

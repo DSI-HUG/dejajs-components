@@ -23,6 +23,7 @@ import { DejaMessageBoxModule } from '@deja-js/component/message-box';
 import { DejaMouseDragDropModule } from '@deja-js/component/mouse-dragdrop';
 import { DejaTreeListModule } from '@deja-js/component/tree-list';
 import { DejaItemModule, DejaSortingModule, GroupingService } from '@deja-js/core';
+
 import { DejaMarkdownModule } from '../../component/markdown/index';
 import { NewsCardModule } from '../common/news-card.module';
 import { DejaTreeListDemoComponent } from './tree-list-demo';
@@ -56,10 +57,10 @@ import { routing } from './tree-list-demo.routes';
         DejaDragDropModule,
         DejaSortingModule,
         NewsCardModule,
-        routing,
+        routing
     ],
     providers: [
-        GroupingService,
-    ],
+        GroupingService
+    ]
 })
 export class DejaTreeListDemoModule { }

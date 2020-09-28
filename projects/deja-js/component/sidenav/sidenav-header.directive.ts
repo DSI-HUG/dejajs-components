@@ -12,5 +12,4 @@ import { Directive } from '@angular/core';
     selector: 'deja-sidenav-header, [deja-sidenav-header]'
 })
 export class DejaSidenavHeaderDirective {
-    constructor() { }
 }

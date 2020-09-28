@@ -13,7 +13,6 @@
         "importHelpers": true,
         "noUnusedParameters": true,
         "noUnusedLocals": true,
-        "types": [],
         "lib": [
             "dom",
             "es2018"

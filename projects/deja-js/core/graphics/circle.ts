@@ -9,7 +9,19 @@
 import { Position } from './position';
 import { Rect } from './rect';
 
+interface IRect {
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+}
+
 export class Circle {
+    /** Create e new circle instance from the center position and the radius */
+    public constructor(public center: Position, public radius: number) {
+
+    }
+
     /**
      * Return a circle from his outer rectangle.
      *
@@ -19,9 +31,9 @@ export class Circle {
      * @param height    The height of the outer rectangle
      * @return A circle contained end centered inside the passed ractangle
      */
-    public static fromOuterRect(left?: number | Object, top?: number, width?: number, height?: number) {
+    public static fromOuterRect(left?: number | unknown, top?: number, width?: number, height?: number) {
         if (typeof left === 'object') {
-            const bounds = left as any;
+            const bounds = left as IRect;
             left = bounds.left;
             top = bounds.top;
             width = bounds.width;
@@ -36,11 +48,6 @@ export class Circle {
     /** Return a boolean indicating if the two circle are equals */
     public static equals(c1: Circle, c2: Circle) {
         return !c1 === !c2 && Position.equals(c1.center, c2.center) && c1.radius === c2.radius;
-    }
-
-    /** Create e new circle instance from the center position and the radius */
-    constructor(public center: Position, public radius: number) {
-
     }
 
     /** Return the outer rectangle of the circle */

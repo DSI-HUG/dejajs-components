@@ -8,18 +8,19 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+
 import { DejaDialogComponent } from './dialog.component';
 
 @NgModule({
     declarations: [
-        DejaDialogComponent,
+        DejaDialogComponent
     ],
     exports: [
-        DejaDialogComponent,
+        DejaDialogComponent
     ],
     imports: [
-        CommonModule,
-    ],
+        CommonModule
+    ]
 })
 export class DejaDialogModule { }
 

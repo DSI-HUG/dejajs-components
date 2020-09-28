@@ -17,6 +17,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { DejaDialogModule } from '@deja-js/component/dialog';
 import { DejaMessageBoxModule } from '@deja-js/component/message-box';
 import { DejaTooltipModule } from '@deja-js/component/tooltip';
+
 import { DejaMarkdownModule } from '../../component/markdown/index';
 import { DejaMessageBoxDemoComponent } from './message-box-demo';
 import { routing } from './message-box-demo.routes';
@@ -36,9 +37,9 @@ import { routing } from './message-box-demo.routes';
         DejaMessageBoxModule,
         DejaMarkdownModule,
         DejaTooltipModule,
-        routing,
+        routing
     ],
     providers: [
-    ],
+    ]
 })
 export class DejaMessageBoxDemoModule { }

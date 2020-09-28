@@ -8,6 +8,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { HostListener } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+
 import { DejaPopupAction } from '../../model/popup-action.model';
 import { DejaPopupBase } from '../../model/popup-base.class';
 
@@ -18,6 +19,8 @@ import { DejaPopupBase } from '../../model/popup-base.class';
     styleUrls: ['./popup-box.component.scss']
 })
 export class DejaPopupBoxComponent {
+    @Input() public dialog: MatDialogRef<DejaPopupBase>;
+    @Output() public readonly action = new EventEmitter();
 
     public showActions = false;
     public aActions: DejaPopupAction[];
@@ -25,26 +28,25 @@ export class DejaPopupBoxComponent {
     public buttonClose = {
         name: 'toolbar-close',
         icon: 'close',
-        label: 'Close',
+        label: 'Close'
     } as DejaPopupAction;
 
     public buttonFullscreen = {
         name: 'toolbar-fullscreen',
         icon: 'fullscreen',
-        label: 'Fullscreen',
+        label: 'Fullscreen'
     } as DejaPopupAction;
 
     public buttonMinimize = {
         name: 'toolbar-minify',
         icon: 'remove',
-        label: 'Minify',
+        label: 'Minify'
     } as DejaPopupAction;
 
-    @Input() public dialog: MatDialogRef<DejaPopupBase>;
-    @Output() public action = new EventEmitter();
     @HostListener('mouseenter') public onMouseEnter() {
         this.showActions = true;
     }
+
     @HostListener('mouseleave') public onMouseLeave() {
         this.showActions = false;
     }

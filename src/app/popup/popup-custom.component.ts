@@ -10,6 +10,7 @@ import { DejaPopupAction, DejaPopupComponent } from '@deja-js/component/popup';
 
 @Component({
     selector: 'custom-dialog',
+    // eslint-disable-next-line @angular-eslint/component-max-inline-declarations
     template: `
     <deja-popup-toolbar [config]="config" (actionSelected)="doAction($event)"></deja-popup-toolbar>
 
@@ -30,6 +31,7 @@ import { DejaPopupAction, DejaPopupComponent } from '@deja-js/component/popup';
         <deja-popup-actions></deja-popup-actions>
     </div>
     `,
+    // eslint-disable-next-line @angular-eslint/component-max-inline-declarations
     styles: [
         `
         :host{
@@ -56,7 +58,9 @@ export class DejaPopupCustomDemoComponent extends DejaPopupComponent implements 
     public ngOnInit(): void {
         super.ngOnInit();
         this.content = 'Some content here.';
-        this.inputparam = this.config.data.test;
+        const data = this.config.data as { test: string };
+        this.inputparam = data.test;
+        // eslint-disable-next-line no-loops/no-loops
         for (let i = 0; i < 50; i++) {
             this.items.push(i);
         }
@@ -71,7 +75,6 @@ export class DejaPopupCustomDemoComponent extends DejaPopupComponent implements 
         this.actionSelected = action;
 
         switch (action.name) {
-
             case 'undo':
                 this.inputText = '';
                 break;
@@ -81,5 +84,7 @@ export class DejaPopupCustomDemoComponent extends DejaPopupComponent implements 
                 break;
 
         }
+
+        return undefined;
     }
 }

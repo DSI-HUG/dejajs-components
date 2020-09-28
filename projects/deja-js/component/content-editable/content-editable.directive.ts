@@ -21,9 +21,11 @@ import { BehaviorSubject, from, fromEvent, Observable, timer } from 'rxjs';
 import { distinctUntilChanged, filter, map, switchMap, take, takeUntil } from 'rxjs/operators';
 
 @Directive({
-    selector: '[deja-editable]',
+    selector: '[deja-editable]'
 })
 export class DejaEditableDirective extends Destroy implements ControlValueAccessor, OnInit {
+    @HostBinding('attr.disabled') public _disabled: boolean = null;
+
     private model: string;
     private _inEdition = false;
     private _editMode = false;
@@ -32,16 +34,11 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
     private edit$ = new BehaviorSubject<[boolean, boolean]>([false, false]);
     private element: HTMLElement;
 
-    @HostBinding('attr.disabled') public _disabled: boolean = null;
-
-    public onTouchedCallback = (_a?: any) => { };
-    public onChangeCallback = (_a?: any) => { };
-
-    constructor(elementRef: ElementRef, @Self() @Optional() public _control: NgControl) {
+    public constructor(elementRef: ElementRef, @Self() @Optional() public control: NgControl) {
         super();
 
-        if (this._control) {
-            this._control.valueAccessor = this;
+        if (this.control) {
+            this.control.valueAccessor = this;
         }
 
         this.element = elementRef.nativeElement as HTMLElement;
@@ -58,6 +55,7 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
                 e.cancelBubble = true;
                 return false;
             }
+            return undefined;
         });
 
         const inEdition$ = from(this.edit$).pipe(
@@ -85,7 +83,7 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
         );
 
         const kill$ = inEdition$.pipe(
-            filter((value) => !value)
+            filter(value => !value)
         );
 
         const mouseDown$ = fromEvent(this.element.ownerDocument, 'mousedown').pipe(
@@ -107,7 +105,7 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
         });
 
         const keyDown$ = fromEvent(this.element, 'keydown').pipe(
-            takeUntil(kill$),
+            takeUntil(kill$)
         ) as Observable<KeyboardEvent>;
 
         inEdition$.pipe(
@@ -163,7 +161,7 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
     }
 
     public get disabled() {
-        return this._control?.disabled || this._disabled;
+        return this.control?.disabled || this._disabled;
     }
 
     /** Définit une valeur indiquant si l'édition est activée. */
@@ -193,7 +191,7 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
 
     // ************* ControlValueAccessor Implementation **************
     // set accessor including call the onchange callback
-    public set value(model: any) {
+    public set value(model: string) {
         if (model !== this.model) {
             this.writeValue(model);
             this.onChangeCallback(model);
@@ -201,23 +199,23 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
     }
 
     // get accessor
-    public get value(): any {
+    public get value(): string {
         return this.model;
     }
 
     // From ControlValueAccessor interface
-    public writeValue(value: any) {
+    public writeValue(value: string) {
         this.model = value;
         this.refreshView();
     }
 
     // From ControlValueAccessor interface
-    public registerOnChange(fn: any) {
+    public registerOnChange(fn: (_a: unknown) => void) {
         this.onChangeCallback = fn;
     }
 
     // From ControlValueAccessor interface
-    public registerOnTouched(fn: any) {
+    public registerOnTouched(fn: () => void) {
         this.onTouchedCallback = fn;
     }
 
@@ -249,9 +247,13 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
         this.edit$.next([!this.disabled, selectOnFocus]);
     }
 
+    public onTouchedCallback = () => undefined as void;
+    public onChangeCallback = (_a?: unknown) => undefined as void;
+
     private isChildElement(element: HTMLElement) {
         let parentElement = element;
 
+        // eslint-disable-next-line no-loops/no-loops
         while (parentElement && parentElement !== this.element) {
             parentElement = parentElement.parentElement;
         }
@@ -265,7 +267,7 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
         }
 
         if (this.inEdition) {
-            this.element.innerText = this.model.replace(/<br\s*[\/]?>/gi, '\n');
+            this.element.innerText = this.model.replace(/<br\s*[/]?>/gi, '\n');
         } else {
             this.element.innerHTML = this.model.replace(/\n/g, '<br />');
         }

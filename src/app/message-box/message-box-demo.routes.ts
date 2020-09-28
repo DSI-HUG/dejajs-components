@@ -8,11 +8,12 @@
 
 import { ModuleWithProviders } from '@angular/core';
 import { Route, RouterModule, Routes } from '@angular/router';
+
 import { DejaMessageBoxDemoComponent } from './message-box-demo';
 
 const routes: Routes = [
     { path: '', component: DejaMessageBoxDemoComponent },
-    { path: '**', redirectTo: '', pathMatch: 'full' },
+    { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
 
 export const routing: ModuleWithProviders<Route> = RouterModule.forChild(routes);

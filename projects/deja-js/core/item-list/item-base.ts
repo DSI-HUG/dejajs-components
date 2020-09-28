@@ -9,7 +9,7 @@
 import { IViewPortItem } from './viewport.service';
 
 export interface IItemBase extends IViewPortItem {
-    id?: any;
+    id?: string;
     selectable?: boolean;
     selected?: boolean;
     dragged?: boolean;
@@ -18,7 +18,7 @@ export interface IItemBase extends IViewPortItem {
     odd?: boolean; // For style only
     className?: string;
     /** Immutable model */
-    model?: any;
+    model?: unknown;
     toString?(): string;
     equals?(item: IItemBase): boolean;
 }

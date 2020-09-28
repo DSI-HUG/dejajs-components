@@ -15,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { DejaOverlayModule } from '@deja-js/component/overlay';
+
 import { DejaMarkdownModule } from '../../component/markdown/index';
 import { DejaOverlayDemoComponent } from './overlay-demo';
 import { routing } from './overlay-demo.routes';
@@ -32,9 +33,9 @@ import { routing } from './overlay-demo.routes';
         MatToolbarModule,
         DejaOverlayModule,
         DejaMarkdownModule,
-        routing,
+        routing
     ],
     providers: [
-    ],
+    ]
 })
 export class DejaOverlayDemoModule { }

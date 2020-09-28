@@ -10,6 +10,7 @@ import { Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/co
 import { Destroy, Position } from '@deja-js/core';
 import { BehaviorSubject, combineLatest, from } from 'rxjs';
 import { delay, filter, takeUntil, tap } from 'rxjs/operators';
+
 import { IDragCursorInfos } from './mouse-drag-cursor-infos.interface';
 import { DejaMouseDragDropService } from './mouse-dragdrop.service';
 
@@ -17,9 +18,9 @@ import { DejaMouseDragDropService } from './mouse-dragdrop.service';
     encapsulation: ViewEncapsulation.None,
     selector: 'deja-mouse-dragdrop-cursor',
     styleUrls: [
-        './mouse-dragdrop-cursor.component.scss',
+        './mouse-dragdrop-cursor.component.scss'
     ],
-    templateUrl: './mouse-dragdrop-cursor.component.html',
+    templateUrl: './mouse-dragdrop-cursor.component.html'
 })
 export class DejaMouseDragDropCursorComponent extends Destroy {
     @ViewChild('block', { static: true }) private icon: ElementRef<HTMLElement>;
@@ -28,7 +29,7 @@ export class DejaMouseDragDropCursorComponent extends Destroy {
     private cursor$ = new BehaviorSubject<IDragCursorInfos>(null);
     private currentCursor: IDragCursorInfos;
 
-    constructor(elementRef: ElementRef, private dragDropService: DejaMouseDragDropService) {
+    public constructor(elementRef: ElementRef, private dragDropService: DejaMouseDragDropService) {
         super();
 
         const element = elementRef.nativeElement as HTMLElement;
@@ -78,17 +79,15 @@ export class DejaMouseDragDropCursorComponent extends Destroy {
             }),
             filter(cursor => !cursor.className || cursor.className !== 'hidden'),
             tap(cursor => {
-                if (!!cursor.html) {
+                if (cursor.html) {
                     element.className = cursor.className;
                     if (this.contentElement) {
                         this.contentElement.innerHTML = cursor.html;
                         this.contentElement.style.width = `${cursor.width || 48}px`;
                         this.contentElement.style.height = `${cursor.height || 48}px`;
                     }
-                } else {
-                    if (this.iconElement) {
-                        this.iconElement.style.opacity = '1';
-                    }
+                } else if (this.iconElement) {
+                    this.iconElement.style.opacity = '1';
                 }
             }),
             delay(1),

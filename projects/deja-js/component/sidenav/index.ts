@@ -13,6 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { DejaSlimScrollModule, MediaModule } from '@deja-js/core';
+
 import { DejaSidenavContentDirective } from './sidenav-content.directive';
 import { DejaSidenavHeaderDirective } from './sidenav-header.directive';
 import { DejaSidenavMenuDirective } from './sidenav-menu.directive';
@@ -25,14 +26,14 @@ import { DejaSidenavComponent } from './sidenav.component';
         DejaSidenavMenuDirective,
         DejaSidenavContentDirective,
         DejaSidenavMenuSeparatorDirective,
-        DejaSidenavHeaderDirective,
+        DejaSidenavHeaderDirective
     ],
     exports: [
         DejaSidenavComponent,
         DejaSidenavMenuDirective,
         DejaSidenavContentDirective,
         DejaSidenavMenuSeparatorDirective,
-        DejaSidenavHeaderDirective,
+        DejaSidenavHeaderDirective
     ],
     imports: [
         CommonModule,
@@ -41,8 +42,8 @@ import { DejaSidenavComponent } from './sidenav.component';
         MatButtonModule,
         MatIconModule,
         MediaModule,
-        DejaSlimScrollModule,
-    ],
+        DejaSlimScrollModule
+    ]
 })
 export class DejaSidenavModule { }
 

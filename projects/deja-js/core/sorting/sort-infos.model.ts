@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { SortOrder } from './sort-order.model';
+import { SortOrder } from './sorting.service';
 
 /** Model de tri pour le SortingService */
 export interface ISortInfos {

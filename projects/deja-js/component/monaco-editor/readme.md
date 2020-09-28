@@ -23,7 +23,7 @@ plugins: [
 export class DejaMonacoEditorDemoComponent implements OnInit {
     protected code: string;
 
-    constructor() {
+    public constructor() {
     }
 
     public ngOnInit() {

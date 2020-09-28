@@ -39,10 +39,10 @@ const routes: Routes = [
     { path: 'tiles', loadChildren: () => import('./tiles/tiles-demo.module').then(m => m.DejaTilesDemoModule), data: { title: 'Tiles' } },
     { path: 'tree-list', loadChildren: () => import('./tree-list/tree-list-demo.module').then(m => m.DejaTreeListDemoModule), data: { title: 'Tree List' } },
     { path: 'viewport', loadChildren: () => import('./viewport/viewport-demo.module').then(m => m.DejaViewPortDemoModule), data: { title: 'Viewport' } },
-    { path: '**', redirectTo: 'home', pathMatch: 'prefix' },
+    { path: '**', redirectTo: 'home', pathMatch: 'prefix' }
 ];
 
-export const appRoutingProviders: any[] = [
+export const appRoutingProviders: Route[] = [
 
 ];
 

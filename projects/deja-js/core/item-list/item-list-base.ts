@@ -6,15 +6,17 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { ChangeDetectorRef, EventEmitter } from '@angular/core';
 import { from, Observable, of, Subscription, timer } from 'rxjs';
 import { filter, map, reduce, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+
 import { Destroy } from '../destroy/destroy';
 import { IGroupInfo } from '../grouping/group-infos';
 import { GroupingService } from '../grouping/grouping.service';
 import { ISortInfos } from '../sorting/sort-infos.model';
-import { SortOrder } from '../sorting/sort-order.model';
 import { SortingService } from '../sorting/sorting.service';
 import { IItemBase } from './item-base';
 import { IFindItemResult, IParentListInfoResult, ItemListService, IViewListResult } from './item-list.service';
@@ -67,17 +69,17 @@ export abstract class ItemListBase extends Destroy {
 
     private _listElement: HTMLElement;
 
-    constructor(protected changeDetectorRef: ChangeDetectorRef, protected viewPort: ViewPortService) {
+    public constructor(protected changeDetectorRef: ChangeDetectorRef, protected viewPort: ViewPortService) {
         super();
 
         this._listElementId = `listcontainer_${(1000000000 * Math.random()).toString().substr(10)}`;
 
         viewPort.viewPort$.pipe(
             switchMap((viewPortResult: IViewPort) => {
-                let next: Observable<number> = of(null);
+                let next$: Observable<number> = of(null);
 
                 delete this._hintLabel;
-                if (viewPort.mode === ViewportMode.disabled) {
+                if (viewPort.mode === 'disabled') {
                     this._itemList = viewPortResult.items;
                     this._vpStartRow = 0;
                     this._vpEndRow = 0;
@@ -98,7 +100,7 @@ export abstract class ItemListBase extends Destroy {
                         if (!rebind) {
                             this.listElement.scrollTop = viewPortResult.scrollPos;
                         } else {
-                            next = timer(1).pipe(
+                            next$ = timer(1).pipe(
                                 filter(() => !!this.listElement),
                                 tap(() => this.listElement.scrollTop = viewPortResult.scrollPos)
                             );
@@ -111,9 +113,9 @@ export abstract class ItemListBase extends Destroy {
 
                 this._viewPortChanged?.next(viewPortResult);
 
-                return next;
+                return next$;
             }),
-            takeUntil(this.destroyed$),
+            takeUntil(this.destroyed$)
         ).subscribe();
     }
 
@@ -186,8 +188,10 @@ export abstract class ItemListBase extends Destroy {
     /** Renvoie l'index de l'élément sur la liste plate corespondant à l'élément HTML spécifié
      * @return Index sur la liste plate corespondant à l'élément HTML
      */
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     public getItemIndexFromHTMLElement(element: HTMLElement): number {
-        while (element && element.parentElement && element.hasAttribute && !element.hasAttribute('flat') && element.parentElement.id !== this.listElementId) {
+        // eslint-disable-next-line no-loops/no-loops
+        while (element?.parentElement && element.hasAttribute && !element.hasAttribute('flat') && element.parentElement.id !== this.listElementId) {
             element = element.parentElement;
         }
 
@@ -198,6 +202,7 @@ export abstract class ItemListBase extends Destroy {
         return +element.getAttribute('flat');
     }
 
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     public getItemFromHTMLElement(element: HTMLElement): IItemBase {
         const itemIndex = this.getItemIndexFromHTMLElement(element);
         if (itemIndex === undefined) {
@@ -271,7 +276,7 @@ export abstract class ItemListBase extends Destroy {
      * @param value  Model à évaluer.
      * @return Texte à afficher pour le modèle spécifié.
      */
-    public getTextValue(value: any) {
+    public getTextValue(value: unknown) {
         return this.getItemListService().getTextValue(value, this._textField);
     }
 
@@ -280,7 +285,7 @@ export abstract class ItemListBase extends Destroy {
      *
      * @param mode Mode du viewport (sans viewport, avec un viewport tailles des rows fixes ou dynamiques)
      */
-    public setViewportMode(mode: ViewportMode | string) {
+    public setViewportMode(mode: ViewportMode) {
         this.viewPort.mode$.next(mode);
     }
 
@@ -299,17 +304,17 @@ export abstract class ItemListBase extends Destroy {
         if (!this._sortInfos) {
             this._sortInfos = {
                 name: sortField,
-                order: SortOrder.ascending,
+                order: 'ascending'
             };
         } else if (sortField === this._sortInfos.name) {
-            this._sortInfos.order = this._sortInfos.order === SortOrder.ascending ? SortOrder.descending : SortOrder.ascending;
+            this._sortInfos.order = this._sortInfos.order === 'ascending' ? 'descending' : 'ascending';
         } else {
             this._sortInfos.name = sortField;
-            this._sortInfos.order = SortOrder.ascending;
+            this._sortInfos.order = 'ascending';
         }
         return this.getItemListService().sort$(this._sortInfos).pipe(
             take(1),
-            switchMap((si: any) => this.calcViewList$().pipe(take(1), map(() => si)))
+            switchMap((si: never) => this.calcViewList$().pipe(take(1), map(() => si)))
         );
     }
 
@@ -331,7 +336,7 @@ export abstract class ItemListBase extends Destroy {
         return this.getItemListService().ungroup$(groupInfo).pipe(
             switchMap(() => this.calcViewList$().pipe(
                 take(1)
-            )),
+            ))
         );
     }
 
@@ -340,7 +345,7 @@ export abstract class ItemListBase extends Destroy {
      */
     public toggleAll$(collapsed?: boolean): Observable<IItemTree[]> {
         this.allCollapsed = (collapsed !== undefined) ? collapsed : !this.allCollapsed;
-        if (this.viewPort.mode === ViewportMode.disabled) {
+        if (this.viewPort.mode === 'disabled') {
             return from(this._itemList).pipe(
                 filter((item: IItemTree) => item.$items && item.depth === 0 && item.collapsible !== false),
                 switchMap((_item: IItemTree, index: number) => this.toggleCollapse$(index + this.vpStartRow, this.allCollapsed)),
@@ -360,7 +365,7 @@ export abstract class ItemListBase extends Destroy {
      */
     public toggleCollapse$(index: number, collapsed: boolean): Observable<IItemTree> {
         return this.getItemListService().toggleCollapse$(index, collapsed).pipe(
-            switchMap((toogleResult) => this.calcViewList$().pipe(
+            switchMap(toogleResult => this.calcViewList$().pipe(
                 take(1), map(() => toogleResult))
             )
         );
@@ -427,11 +432,41 @@ export abstract class ItemListBase extends Destroy {
         this._listElement = elem;
     }
 
-    protected getSelectedModels() {
-        return this.getItemListService().getSelectedItems().map((itm) => itm.model !== undefined ? itm.model : itm);
+    public getViewPortRowHeight() {
+        return this._viewPortRowHeight || ViewPortService.itemDefaultSize;
     }
 
-    protected setSelectedModels(values: any[]) {
+    public getCurrentItemIndex() {
+        return this._currentItemIndex;
+    }
+
+    /** Retourne l'élément courant (actif).
+     * @return Elément courant.
+     */
+    public getCurrentItem() {
+        if (!this._currentItem && this._currentItemIndex >= 0) {
+            this._currentItem = this.getItemListService().getItemFromIndex(this._currentItemIndex);
+        }
+        return this._currentItem;
+    }
+
+    public getItemHeight(item: IItemBase) {
+        if (this.viewPort.mode === 'disabled') {
+            return null;
+        } else if (this.viewPort.mode === 'fixed') {
+            return this.getViewPortRowHeight();
+        } else if (this.viewPort.mode === 'auto') {
+            return item.size || null;
+        } else {
+            return (item.size && item.size > ViewPortService.itemDefaultSize) ? item.size : this.getViewPortRowHeight();
+        }
+    }
+
+    protected getSelectedModels() {
+        return this.getItemListService().getSelectedItems().map(itm => itm.model !== undefined ? itm.model : itm);
+    }
+
+    protected setSelectedModels(values: unknown[]) {
         return this.setSelectedItems(values && this.mapToIItemBase(values, true));
     }
 
@@ -456,10 +491,6 @@ export abstract class ItemListBase extends Destroy {
         if (value) {
             this.viewPort.itemsSize$.next(this._viewPortRowHeight);
         }
-    }
-
-    public getViewPortRowHeight() {
-        return this._viewPortRowHeight || ViewPortService.itemDefaultSize;
     }
 
     /** Definit le service de liste utilisé par ce composant.
@@ -523,20 +554,6 @@ export abstract class ItemListBase extends Destroy {
         this._currentItem = null;
     }
 
-    public getCurrentItemIndex() {
-        return this._currentItemIndex;
-    }
-
-    /** Retourne l'élément courant (actif).
-     * @return Elément courant.
-     */
-    public getCurrentItem() {
-        if (!this._currentItem && this._currentItemIndex >= 0) {
-            this._currentItem = this.getItemListService().getItemFromIndex(this._currentItemIndex);
-        }
-        return this._currentItem;
-    }
-
     /** Définit l'élément courant (actif).
      * @param item Elément courant.
      */
@@ -563,6 +580,7 @@ export abstract class ItemListBase extends Destroy {
     /** Définit le modèle utilisé par la liste. Il est uniquement de type IItemBase. Ce model peut ètre hierarchique sans limitation de la profondeur ou une chargé en asynchrone par une promise ou un observable.
      * @param items Provider de la liste des éléments de la liste.
      */
+    // eslint-disable-next-line rxjs/finnish
     protected setItems$(items: IItemBase[] | Promise<IItemBase[]> | Observable<IItemBase[]>) {
         if (!(items instanceof Array)) {
             this.clearViewPort();
@@ -573,16 +591,17 @@ export abstract class ItemListBase extends Destroy {
     /** Définit le modèle utilisé par la liste. Il peut être de tout type d'objet. Ce model peut ètre hierarchique sans limitation de la profondeur ou une chargé en asynchrone par une promise ou un observable.
      * @param items Provider de la liste des éléments de la liste.
      */
-    protected setModels$(models: any[] | Observable<any[]>) {
-        let models$: Observable<any[]>;
+    // eslint-disable-next-line rxjs/finnish
+    protected setModels$(models: unknown[] | Observable<unknown[]>) {
+        let models$: Observable<unknown[]>;
 
         if (models instanceof Array) {
             models$ = of(models);
         } else {
-            models$ = models as Observable<any[]>;
+            models$ = models;
         }
 
-        const items$ = models$ && models$.pipe(map((model) => this.mapToIItemBase(model)));
+        const items$ = models$?.pipe(map(model => this.mapToIItemBase(model)));
         return this.setItems$(items$);
     }
 
@@ -602,7 +621,7 @@ export abstract class ItemListBase extends Destroy {
         if (typeof query === 'string' && (query || '').length < this._minSearchLength) {
             const emptyListResult = {
                 depthMax: 0,
-                visibleList: [],
+                visibleList: []
             } as IViewListResult;
 
             if (!this.getItems()) {
@@ -642,7 +661,7 @@ export abstract class ItemListBase extends Destroy {
      * @return True si l'élément peut être réduit.
      */
     protected isCollapsible(item: IItemTree) {
-        return item && item.$items && item.collapsible !== false;
+        return item?.$items && item.collapsible !== false;
     }
 
     /** Définit si l'élément spécifié est selectionable.
@@ -713,7 +732,7 @@ export abstract class ItemListBase extends Destroy {
 
     /** Internal usage */
     protected getItemTreeInfo(items: IItemBase[], item: IItemBase): IItemTreeInfo {
-        const parentIndex = items.findIndex((itm) => itm === item);
+        const parentIndex = items.findIndex(itm => itm === item);
         if (parentIndex < 0) {
             return null;
         }
@@ -724,6 +743,7 @@ export abstract class ItemListBase extends Destroy {
         const children = [] as IItemBase[];
 
         if (parentDepth !== undefined) {
+            // eslint-disable-next-line no-loops/no-loops
             for (let i = parentIndex + 1; i < items.length; i++) {
                 const curItem = items[i] as IItemTree;
                 if (curItem.depth <= parentDepth) {
@@ -738,7 +758,7 @@ export abstract class ItemListBase extends Destroy {
             children: children,
             item: item,
             lastIndex: lastIndex,
-            startIndex: parentIndex,
+            startIndex: parentIndex
         } as IItemTreeInfo;
     }
 
@@ -763,9 +783,10 @@ export abstract class ItemListBase extends Destroy {
         this.viewPort.ensureItem$.next(item);
     }
 
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     protected mapToIItemBase(modls: any[], selected?: boolean): IItemBase[] {
         const m = modls || [];
-        return m.map((model) => {
+        return m.map(model => {
             const itemBase: IItemBase = {};
 
             itemBase.model = model;
@@ -799,18 +820,6 @@ export abstract class ItemListBase extends Destroy {
 
             return itemBase;
         });
-    }
-
-    public getItemHeight(item: IItemBase) {
-        if (this.viewPort.mode === ViewportMode.disabled) {
-            return null;
-        } else if (this.viewPort.mode === ViewportMode.fixed) {
-            return this.getViewPortRowHeight();
-        } else if (this.viewPort.mode === ViewportMode.auto) {
-            return item.size || null;
-        } else {
-            return (item.size && item.size > ViewPortService.itemDefaultSize) ? item.size : this.getViewPortRowHeight();
-        }
     }
 
     protected getVirtualSelectedEntities(value: any) {

@@ -7,23 +7,26 @@
  */
 
 import { ComponentPortal, Portal } from '@angular/cdk/portal';
-import { ElementRef, Injector, OnInit, Renderer2 } from '@angular/core';
+import { Directive, ElementRef, Injector, OnInit, Renderer2 } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Destroy } from '@deja-js/core';
 import { Subscription } from 'rxjs';
-import { filter, first, takeUntil, tap } from 'rxjs/operators';
+import { filter, take, takeUntil, tap } from 'rxjs/operators';
+
 import { DejaPopupAction } from './popup-action.model';
 import { DejaPopupConfig } from './popup-config.model';
 
+@Directive()
+// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export abstract class DejaPopupBase extends Destroy implements OnInit {
 
     public actions: DejaPopupAction[];
-    public actionSelected: DejaPopupAction;
+    public actionSelected: DejaPopupAction | string;
     public isMinified = false;
     public isFullscreen = false;
     public dialogRef: MatDialogRef<DejaPopupBase>;
-    public config: DejaPopupConfig;
-    public actionsPortal: Portal<any>;
+    public config: DejaPopupConfig<unknown>;
+    public actionsPortal: Portal<unknown>;
     protected injector: Injector;
     protected renderer?: Renderer2;
     protected elRef?: ElementRef;
@@ -31,12 +34,10 @@ export abstract class DejaPopupBase extends Destroy implements OnInit {
 
     private aSub: Subscription[];
 
-    public abstract doAction(action: DejaPopupAction): any;
-
     public ngOnInit() {
         this.aSub = [];
         this.dialogRef.beforeClosed().pipe(
-            first(),
+            take(1),
             tap(() => {
                 if (this.unlisten) {
                     this.unlisten();
@@ -78,9 +79,12 @@ export abstract class DejaPopupBase extends Destroy implements OnInit {
             return false;
         }
         this.config?.dejaPopupCom$?.next(action);
+        return undefined;
     }
 
     protected destroy() {
         this.aSub.forEach(s => s.unsubscribe());
     }
+
+    public abstract doAction(action: DejaPopupAction): void;
 }

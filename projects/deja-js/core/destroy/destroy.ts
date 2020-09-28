@@ -11,7 +11,7 @@ import { OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Directive()
-// tslint:disable-next-line: directive-class-suffix
+// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class Destroy implements OnDestroy {
 
     protected destroyed$ = new Subject();
@@ -19,7 +19,7 @@ export class Destroy implements OnDestroy {
     public ngOnDestroy() {
         if (this.destroyed$.closed) {
             // Observable already unsubscribed
-            // tslint:disable-next-line: no-debugger
+            // eslint-disable-next-line no-debugger
             debugger;
             return;
         }

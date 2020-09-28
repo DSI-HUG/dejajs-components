@@ -10,6 +10,6 @@
         }
     },
     "peerDependencies": {
-        "ckeditor": "4.10.1"
+        "ckeditor": "~4.11.0"
     }
 }

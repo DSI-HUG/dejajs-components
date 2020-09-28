@@ -48,18 +48,17 @@
                         "allowedCommonJsDependencies": [
                             "lodash",
                             "showdown",
+                            "ckeditor",
                             "angular2-text-mask"
                         ],
                         "scripts": []
                     },
                     "configurations": {
                         "production": {
-                            "fileReplacements": [
-                                {
-                                    "replace": "src/environments/environment.ts",
-                                    "with": "src/environments/environment.prod.ts"
-                                }
-                            ],
+                            "fileReplacements": [{
+                                "replace": "src/environments/environment.ts",
+                                "with": "src/environments/environment.prod.ts"
+                            }],
                             "optimization": true,
                             "outputHashing": "all",
                             "sourceMap": false,
@@ -70,8 +69,7 @@
                             "vendorChunk": false,
                             "buildOptimizer": true,
                             "baseHref": "https://dsi-hug.github.io/dejajs-components/",
-                            "budgets": [
-                                {
+                            "budgets": [{
                                     "type": "initial",
                                     "maximumWarning": "2mb",
                                     "maximumError": "5mb"

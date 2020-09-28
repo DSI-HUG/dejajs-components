@@ -6,29 +6,21 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { DejaColorSelectorModule } from '@deja-js/component/color-selector';
-import { DejaOverlayModule, } from '@deja-js/component/overlay';
 import { Color, MaterialColors } from '@deja-js/core';
-import { DejaColorPickerComponent } from './index';
+
+import { DejaColorPickerComponent, DejaColorPickerModule } from './index';
 
 describe('DejaColorPicker', () => {
 
     let component: DejaColorPickerComponent;
     let fixture: ComponentFixture<DejaColorPickerComponent>;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
-            declarations: [
-                DejaColorPickerComponent
-            ],
+    beforeEach(waitForAsync(() => {
+        void TestBed.configureTestingModule({
             imports: [
-                DejaColorSelectorModule,
-                FormsModule,
-
-                DejaOverlayModule
+                DejaColorPickerModule
             ]
         }).compileComponents();
 
@@ -36,9 +28,9 @@ describe('DejaColorPicker', () => {
         component = fixture.componentInstance;
     }));
 
-    it('should create the component', async(() => {
+    it('should create the component', waitForAsync(() => {
         fixture.detectChanges();
-        expect(component).toBeTruthy();
+        void expect(component).toBeTruthy();
     }));
 
     it('should have background-color null if no value specified', () => {
@@ -47,7 +39,7 @@ describe('DejaColorPicker', () => {
 
         const el = fixture.debugElement.query(By.css('button'));
         const backgroundColor = el.styles['background-color'];
-        expect(backgroundColor).toBeFalsy();
+        void expect(backgroundColor).toBeFalsy();
     });
 
     it('should have background-color if value specified', () => {
@@ -59,14 +51,14 @@ describe('DejaColorPicker', () => {
 
         const el = fixture.debugElement.query(By.css('button'));
         const backgroundColor = el.styles['background-color'];
-        expect([expectedColorHex, expectedColorRgb].includes(backgroundColor)).toBeTrue();
+        void expect([expectedColorHex, expectedColorRgb].includes(backgroundColor)).toBeTrue();
     });
 
     it('should set isOpen to true on show', () => {
         component.isOpen = false;
         component.show(null);
 
-        expect(component.isOpen).toBeTruthy();
+        void expect(component.isOpen).toBeTruthy();
     });
 
     it('should not set isOpen to true on show if component disabled', () => {
@@ -74,14 +66,14 @@ describe('DejaColorPicker', () => {
         component.disabled = true;
         component.show(null);
 
-        expect(component.isOpen).toBeFalsy();
+        void expect(component.isOpen).toBeFalsy();
     });
 
     it('shoud set isOpen to true on close', () => {
         component.isOpen = true;
         component.close();
 
-        expect(component.isOpen).toBeFalsy();
+        void expect(component.isOpen).toBeFalsy();
     });
 
     it('should set isOpen to false and set value on onColorChange', () => {
@@ -91,7 +83,7 @@ describe('DejaColorPicker', () => {
 
         const expectedColor: Color = new Color(0, 255, 255, undefined);
 
-        expect(component.isOpen).toBeFalsy();
-        expect(component.value).toEqual(expectedColor);
+        void expect(component.isOpen).toBeFalsy();
+        void expect(component.value).toEqual(expectedColor);
     });
 });

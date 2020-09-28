@@ -26,13 +26,13 @@ export class CountriesService {
     private countriesDic = {} as { [code: string]: Country };
     private materialColors: Color[];
 
-    constructor(private httpClient: HttpClient, materialColors: MaterialColors) {
+    public constructor(private httpClient: HttpClient, materialColors: MaterialColors) {
         this.materialColors = materialColors.getPalet('700');
     }
 
     public getCountryByIndex$(index: number) {
         return this.getCountries$().pipe(
-            map((countries) => countries[index % countries.length]));
+            map(countries => countries[index % countries.length]));
     }
 
     public getCountryByCode$(code: string) {
@@ -41,11 +41,11 @@ export class CountriesService {
 
     public getCountries$(query?: string, number?: number): Observable<Country[]> {
         let recordCount = number || 0;
-        return this.httpClient.get('assets/datas/countries.json', {}).pipe(
-            map((json: any) => ObjectMapper.deserializeArray(Country, json.data)),
-            map((countries) => {
+        return this.httpClient.get<Record<string, unknown>>('assets/datas/countries.json', {}).pipe(
+            map(json => ObjectMapper.deserializeArray(Country, json.data)),
+            map(countries => {
                 let colorIndex = 0;
-                countries.forEach((country) => {
+                countries.forEach(country => {
                     country.displayName = country.naqme;
                     country.color = this.materialColors[colorIndex].toHex();
                     this.countriesDic[country.code] = country;
@@ -62,8 +62,8 @@ export class CountriesService {
                 if (query) {
                     const sr = new RegExp(`^${query}`, 'i');
                     const sc = new RegExp(`^(?!${query}).*(${query})`, 'i');
-                    const result = countries.filter((z) => sr.test(z.naqme));
-                    countries.forEach((z) => {
+                    const result = countries.filter(z => sr.test(z.naqme));
+                    countries.forEach(z => {
                         if (sc.test(z.naqme)) {
                             result.push(z);
                         }
@@ -73,9 +73,10 @@ export class CountriesService {
                     return countries;
                 }
             }),
-            map((countries) => {
+            map(countries => {
                 let returnCountries = countries;
                 if (recordCount) {
+                    // eslint-disable-next-line no-loops/no-loops
                     while (recordCount > 0) {
                         returnCountries = returnCountries.concat(countries);
                         recordCount -= countries.length;

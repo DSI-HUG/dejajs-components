@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+
 import { routing } from './iframe-demo.routes';
 import { DejaIframeDemoComponent } from './iframe-demo/iframe-demo.component';
 
@@ -12,7 +13,7 @@ import { DejaIframeDemoComponent } from './iframe-demo/iframe-demo.component';
     ],
     imports: [
         CommonModule,
-        routing,
+        routing
     ],
     entryComponents: [
     ]

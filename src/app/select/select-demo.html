@@ -181,7 +181,7 @@
 						<h4>Selected country model :</h4>
 						<ul>
 							<li *ngFor="let item of multiselectModel">
-								<span>{{ item.naqme }}</span>
+								<span>{{ $any(item).naqme }}</span>
                     </li>
                     </ul>
                     </span>

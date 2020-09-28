@@ -8,10 +8,16 @@
 
 import { Position } from './position';
 
-export enum RectOverlapDirection {
-    horizontal,
-    vertical,
+interface IRect {
+    left: number;
+    top: number;
+    right: number;
+    bottom: number;
+    width: number;
+    height: number;
 }
+
+export type RectOverlapDirection = 'horizontal' | 'vertical';
 
 export interface IRectOverlapInfos {
     area: number;
@@ -25,6 +31,21 @@ export class Rect {
     public top: number;
     public width: number;
     public height: number;
+
+    public constructor(left?: number | unknown, top?: number, width?: number, height?: number) {
+        if (typeof left === 'number') {
+            this.left = left || 0;
+            this.top = top || 0;
+            this.width = width || 0;
+            this.height = height || 0;
+        } else {
+            const bounds = (left || {}) as IRect;
+            this.left = bounds.left || 0;
+            this.top = bounds.top || 0;
+            this.width = bounds.right !== undefined ? bounds.right - this.left : bounds.width || 0;
+            this.height = bounds.bottom !== undefined ? bounds.bottom - this.top : bounds.height || 0;
+        }
+    }
 
     public static equals(r1: Rect, r2: Rect) {
         return r1 && r2 && r1.left === r2.left && r1.top === r2.top && r1.width === r2.width && r1.height === r2.height;
@@ -41,31 +62,17 @@ export class Rect {
             area: x * y,
             width: x,
             height: y,
-            direction: x > y ? RectOverlapDirection.horizontal : RectOverlapDirection.vertical,
+            direction: x > y ? 'horizontal' : 'vertical'
         };
     }
 
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     public static fromLTRB(left: number, top: number, right: number, bottom: number): Rect {
         return new Rect(left, top, right - left, bottom - top);
     }
 
     public static fromPoints(p1: Position, p2: Position) {
         return Rect.fromLTRB(Math.min(p1.left, p2.left), Math.min(p1.top, p2.top), Math.max(p1.left, p2.left), Math.max(p1.top, p2.top));
-    }
-
-    constructor(left?: number | Object, top?: number, width?: number, height?: number) {
-        if (typeof left === 'object') {
-            const bounds = left as any || {};
-            this.left = bounds.left || 0;
-            this.top = bounds.top || 0;
-            this.width = bounds.right !== undefined ? bounds.right - this.left : bounds.width || 0;
-            this.height = bounds.bottom !== undefined ? bounds.bottom - this.top : bounds.height || 0;
-        } else {
-            this.left = left || 0;
-            this.top = top || 0;
-            this.width = width || 0;
-            this.height = height || 0;
-        }
     }
 
     public set right(value: number) {
@@ -93,7 +100,7 @@ export class Rect {
             this.left + x,
             this.top + y,
             this.width,
-            this.height,
+            this.height
         );
     }
 
@@ -134,7 +141,7 @@ export class Rect {
             bottom: this.bottom,
             right: this.right,
             width: this.width,
-            height: this.height,
+            height: this.height
         } as ClientRect;
     }
 

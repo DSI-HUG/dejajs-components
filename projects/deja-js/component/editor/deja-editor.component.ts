@@ -5,6 +5,9 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { AfterViewInit } from '@angular/core';
 import { ChangeDetectionStrategy } from '@angular/core';
@@ -23,12 +26,14 @@ import { ViewChild } from '@angular/core';
 import { ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Destroy } from '@deja-js/core';
-import * as _ from 'lodash';
+import { cloneDeep } from 'lodash';
 import { Subscription, timer } from 'rxjs';
 import { first, take, takeUntil } from 'rxjs/operators';
+
 import { DejaEditorService } from './deja-editor.service';
 
-declare var CKEDITOR: any;
+/// <reference path="@types/ckeditor/index.d.ts" />
+// declare let CKEDITOR: unknown;
 
 /**
  * CKEditor component
@@ -53,13 +58,19 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
     @Input() public config: any;
     @Input() public debounce: string;
 
-    @Output() public change = new EventEmitter();
-    @Output() public ready = new EventEmitter();
-    @Output() public blur = new EventEmitter();
-    @Output() public focus = new EventEmitter();
-    @Output() public disabled = new EventEmitter<boolean>();
+    // eslint-disable-next-line @angular-eslint/no-output-native
+    @Output() public readonly change = new EventEmitter();
+    @Output() public readonly ready = new EventEmitter();
+    // eslint-disable-next-line @angular-eslint/no-output-native
+    @Output() public readonly blur = new EventEmitter();
+    // eslint-disable-next-line @angular-eslint/no-output-native
+    @Output() public readonly focus = new EventEmitter();
+    @Output() public readonly disabled = new EventEmitter<boolean>();
 
     @ViewChild('host', { static: true }) public host: ElementRef;
+
+    public instance: any;
+    public debounceTimeout$sub: Subscription;
 
     private _readonly: boolean;
     private _inline = true;
@@ -85,21 +96,19 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
     }
 
     private _value = '';
-    public instance: any;
-    public debounceTimeout$sub: Subscription;
 
     /**
      * Constructor
      */
-    constructor(
+    public constructor(
         private zone: NgZone,
-        private _changeDetectorRef: ChangeDetectorRef,
-        private _initializer: DejaEditorService
+        private changeDetectorRef: ChangeDetectorRef,
+        private initializer: DejaEditorService
     ) {
         super();
     }
 
-    public get value(): any {
+    public get value() {
         return this._value;
     }
 
@@ -140,6 +149,7 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
             } else {
                 this.ready.pipe(
                     first(),
+                    takeUntil(this.destroyed$)
                 ).subscribe(() => {
                     try {
                         // Workaround for a ckEditor bug
@@ -158,13 +168,13 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
      * On component view init
      */
     public ngAfterViewInit() {
-        this._initializer.initDejaEditorLib().then(() => {
-            this.ckeditorInit(_.cloneDeep(this.config) || {});
+        void this.initializer.initDejaEditorLib().then(() => {
+            this.ckeditorInit(cloneDeep(this.config) || {});
             if (!this.destroyed$.closed) {
                 // Effectively display the editor even if parents component ChangeDetectionStrategy is OnPush
                 timer(0).pipe(
                     takeUntil(this.destroyed$)
-                ).subscribe(() => this._changeDetectorRef.markForCheck());
+                ).subscribe(() => this.changeDetectorRef.markForCheck());
             }
         });
     }
@@ -245,20 +255,20 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
             this.instance.setData(this.value);
 
             // listen for instanceReady event
-            this.instance.on('instanceReady', (evt: any) => {
+            this.instance.on('instanceReady', (evt: Event) => {
                 this._ready = true;
                 // send the evt to the EventEmitter
                 this.ready.emit(evt);
             });
 
             // CKEditor blur event
-            this.instance.on('blur', (evt: any) => {
+            this.instance.on('blur', (evt: Event) => {
                 this.blur.emit(evt);
                 this.onTouched();
             });
 
             // CKEditor focus event
-            this.instance.on('focus', (evt: any) => {
+            this.instance.on('focus', (evt: Event) => {
                 if (!this.readonly) {
                     this.focus.emit(evt);
                 }
@@ -267,26 +277,6 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
         }
     }
 
-    private registerChangeListener() {
-        // CKEditor change event
-        this.onDataChangeListener = this.instance.on('change', () => {
-            // Debounce update
-            if (this.debounce) {
-                const debounce = parseInt(this.debounce, 10);
-                this.debounceTimeout$sub?.unsubscribe();
-                this.debounceTimeout$sub = timer(debounce).pipe(
-                    takeUntil(this.destroyed$)
-                ).subscribe(() => {
-                    this.updateValue();
-                    this.debounceTimeout$sub = null;
-                });
-
-                // Live update
-            } else {
-                this.updateValue();
-            }
-        });
-    }
     /**
      * Implements ControlValueAccessor
      */
@@ -310,15 +300,17 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
         }
     }
 
-    public onChange(_x: any) { }
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    public onChange(_x: unknown) { }
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     public onTouched() { }
 
-    public registerOnChange(fn: any) {
+    public registerOnChange(fn: (_a: unknown) => void) {
         this.onChange = fn;
     }
 
-    public registerOnTouched(fn: any) {
+    public registerOnTouched(fn: () => void) {
         this.onTouched = fn;
     }
 
@@ -351,8 +343,8 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
         if (!range) {
             return null;
         }
-        const word = this._firstTextNode(range);
-        return (word && word.toReplace) || null;
+        const word = this.firstTextNode(range);
+        return (word?.toReplace) || null;
     }
 
     public hasActiveSelection(): boolean {
@@ -381,7 +373,7 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
             // Focus is used during the CKEDITOR insertText process and cause deselection of the selected text
             // So we temporarily deactivate it
             const focus = this.instance.focus;
-            this.instance.focus = () => { };
+            this.instance.focus = () => undefined as void;
             this.instance.insertHtml(replace);
             this.instance.focus = focus;
             return;
@@ -391,9 +383,9 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
             this.instance.insertHtml(replace);
             return;
         }
-        const text = this._firstTextNode(range);
+        const text = this.firstTextNode(range);
         if (text) {
-            this._replaceWord(text, replace);
+            this.replaceWord(text, replace);
         } else {
             this.instance.insertHtml(replace);
         }
@@ -409,26 +401,49 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
         }
     }
 
-    private _hasTextNodeAsChild(node: any, reverse = false): any {
+    private registerChangeListener() {
+        // CKEditor change event
+        this.onDataChangeListener = this.instance.on('change', () => {
+            // Debounce update
+            if (this.debounce) {
+                const debounce = parseInt(this.debounce, 10);
+                this.debounceTimeout$sub?.unsubscribe();
+                this.debounceTimeout$sub = timer(debounce).pipe(
+                    takeUntil(this.destroyed$)
+                ).subscribe(() => {
+                    this.updateValue();
+                    this.debounceTimeout$sub = null;
+                });
+
+                // Live update
+            } else {
+                this.updateValue();
+            }
+        });
+    }
+
+    private hasTextNodeAsChild(node: any, reverse = false): any {
         const children: any[] = node.getChildren().toArray();
         if (reverse) {
+            // eslint-disable-next-line no-loops/no-loops
             for (let i = children.length - 1; i >= 0; i--) {
                 const child = children[i];
                 if (child.type === CKEDITOR.NODE_TEXT) {
                     return child;
                 } else {
-                    const inChild = this._hasTextNodeAsChild(child);
+                    const inChild = this.hasTextNodeAsChild(child);
                     if (inChild) {
                         return inChild;
                     }
                 }
             }
         } else {
+            // eslint-disable-next-line no-loops/no-loops
             for (const child of children) {
                 if (child.type === CKEDITOR.NODE_TEXT) {
                     return child;
                 } else {
-                    const inChild = this._hasTextNodeAsChild(child);
+                    const inChild = this.hasTextNodeAsChild(child);
                     if (inChild) {
                         return inChild;
                     }
@@ -438,13 +453,14 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
         return null;
     }
 
-    private _mergeTextNodeAroundWithDirection(
+    private mergeTextNodeAroundWithDirection(
         textNode: any,
         reverse = false
     ): void {
         const toRemove = [];
         let newText = textNode.getText();
         let x = textNode;
+        // eslint-disable-next-line no-loops/no-loops
         while ((x = reverse ? x.getPrevious() : x.getNext)) {
             if (
                 x.type !== CKEDITOR.NODE_TEXT ||
@@ -456,6 +472,7 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
                 break;
             }
             if (reverse) {
+                // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
                 newText = x.getText() + newText;
             } else {
                 newText += x.getText();
@@ -468,14 +485,15 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
         }
     }
 
-    private _mergeTextNodeAround(textNode: any): any {
-        this._mergeTextNodeAroundWithDirection(textNode, true);
-        this._mergeTextNodeAroundWithDirection(textNode);
+    private mergeTextNodeAround(textNode: any): any {
+        this.mergeTextNodeAroundWithDirection(textNode, true);
+        this.mergeTextNodeAroundWithDirection(textNode);
         return textNode;
     }
 
-    private _firstNonEmptyTextNode(node: any, reverse = false): any {
+    private firstNonEmptyTextNode(node: any, reverse = false) {
         let x = node;
+        // eslint-disable-next-line no-loops/no-loops
         while ((x = reverse ? x.getPrevious() : x.getNext())) {
             if (x.type === CKEDITOR.NODE_TEXT) {
                 if (x.getText() !== '') {
@@ -485,120 +503,111 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
                 return x;
             }
         }
+
+        return undefined;
     }
 
-    private _trim(text: string): string {
+    private trim(text: string): string {
         if (text) {
             text = text.replace(/[\u200b\u00A0]/g, '').trim();
         }
         return text;
     }
 
-    private _extractFirstWord(text: string, reverse = false): string {
+    private extractFirstWord(text: string, reverse = false): string {
         if (!text) {
             return text;
         }
-        if (text.indexOf(' ') !== -1) {
+        if (text.includes(' ')) {
             const spaceSplit = text.split(' ');
-            return this._trim(spaceSplit[reverse ? spaceSplit.length - 1 : 0]);
+            return this.trim(spaceSplit[reverse ? spaceSplit.length - 1 : 0]);
         } else {
-            return this._trim(text);
+            return this.trim(text);
         }
     }
 
-    private _firstTextNodeResult(
-        selectedNode: any,
-        reverse = false,
-        firstNodeIsText = false
-    ): {
+    private firstTextNodeResult(selectedNode: any, reverse = false, firstNodeIsText = false): {
         textNode: any;
         firstNodeIsText: boolean;
         toReplace: string;
     } {
         const text: string = selectedNode.getText();
-        if (this._trim(text) && this._trim(text.substring(text.length - 1))) {
-            const node = this._mergeTextNodeAround(selectedNode);
+        if (this.trim(text) && this.trim(text.substring(text.length - 1))) {
+            const node = this.mergeTextNodeAround(selectedNode);
             return {
                 textNode: node,
                 firstNodeIsText: firstNodeIsText,
-                toReplace: this._extractFirstWord(node.getText(), reverse)
+                toReplace: this.extractFirstWord(node.getText(), reverse)
             };
         }
         return null;
     }
 
-    private _firstTextNodeWithDirection(
-        range: any,
-        reverse = false
-    ): {
+    private firstTextNodeWithDirection(range: any, reverse = false): {
         textNode: any;
         firstNodeIsText: boolean;
         toReplace: string;
     } {
-        const startContainer: any = range.startContainer;
+        const startContainer = range.startContainer;
         if (reverse && startContainer.type === CKEDITOR.NODE_TEXT) {
-            return this._firstTextNodeResult(startContainer, reverse, true);
+            return this.firstTextNodeResult(startContainer, reverse, true);
         }
-        const startNode: any =
-            startContainer.type === CKEDITOR.NODE_TEXT
-                ? reverse
-                    ? this._firstNonEmptyTextNode(startContainer, true)
-                    : this._firstNonEmptyTextNode(startContainer)
-                : startContainer.getChildren().getItem(range.startOffset - 1);
+        const startNode: any = startContainer.type === CKEDITOR.NODE_TEXT ? ((reverse && this.firstNonEmptyTextNode(startContainer, true)) || this.firstNonEmptyTextNode(startContainer)) : startContainer.getChildren().getItem(range.startOffset - 1);
         if (startNode) {
             if (startNode.type === CKEDITOR.NODE_TEXT) {
-                return this._firstTextNodeResult(startNode, reverse);
+                return this.firstTextNodeResult(startNode, reverse);
             }
-            let x = this._hasTextNodeAsChild(startNode, reverse);
+            let x = this.hasTextNodeAsChild(startNode, reverse);
             if (x) {
-                return this._firstTextNodeResult(x, reverse);
+                return this.firstTextNodeResult(x, reverse);
             }
             x = startNode;
+            // eslint-disable-next-line no-loops/no-loops
             while ((x = reverse ? x.getPrevious() : x.getNext())) {
                 if (x.type === CKEDITOR.NODE_TEXT) {
-                    return this._firstTextNodeResult(x, reverse);
+                    return this.firstTextNodeResult(x, reverse);
                 }
-                const textNode = this._hasTextNodeAsChild(x, reverse);
+                const textNode = this.hasTextNodeAsChild(x, reverse);
                 if (textNode) {
-                    return this._firstTextNodeResult(textNode, reverse);
+                    return this.firstTextNodeResult(textNode, reverse);
                 }
             }
         }
         return null;
     }
 
-    private _firstTextNode(
+    private firstTextNode(
         range: any
     ): { textNode: any; firstNodeIsText: boolean; toReplace: string } {
         let textNode: {
             textNode: any;
             firstNodeIsText: boolean;
             toReplace: string;
-        } = this._firstTextNodeWithDirection(range, true);
+        } = this.firstTextNodeWithDirection(range, true);
         if (!textNode) {
-            textNode = this._firstTextNodeWithDirection(range);
+            textNode = this.firstTextNodeWithDirection(range);
         }
         return textNode;
     }
 
-    private _replaceWord(
+    private replaceWord(
         node: { textNode: any; firstNodeIsText: boolean; toReplace: string },
         replace: string
     ): void {
         const index = node.textNode.getText().lastIndexOf(node.toReplace);
         if (index !== -1) {
             const beforeText = node.textNode.getText().substring(0, index);
+            // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
             const afterText = node.textNode.getText().substring(index + node.toReplace.length);
             node.textNode.setText(beforeText);
             // Wrap into a span otherwise methode createFromHtml will only take the html element :
             // For instance if replace is 'abc<br/>def', createFromHtml will create an html text element with abc only
-            const newElement = CKEDITOR.dom.element.createFromHtml(`<span>${
-                CKEDITOR.tools.htmlDecode(CKEDITOR.tools.transformPlainTextToHtml(
-                    replace,
-                    CKEDITOR.ENTER_BR
-                ))
-            }</span>`);
+            const newElement = CKEDITOR.dom.element.createFromHtml(`<span>${CKEDITOR.tools.htmlDecode(CKEDITOR.tools.transformPlainTextToHtml(
+                replace,
+                CKEDITOR.ENTER_BR
+            ))}</span>`);
             newElement.insertAfter(node.textNode);
+            // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
             if (node.textNode.getText().substring(index + node.toReplace.length)) {
                 const end = new CKEDITOR.dom.text(afterText);
                 end.insertAfter(newElement);

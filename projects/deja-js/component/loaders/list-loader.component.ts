@@ -11,9 +11,9 @@ import { Component } from '@angular/core';
 @Component({
     selector: 'deja-list-loader',
     styleUrls: [
-        './list-loader.component.scss',
+        './list-loader.component.scss'
     ],
-    templateUrl: './list-loader.component.html',
+    templateUrl: './list-loader.component.html'
 })
 export class DejaListLoaderComponent {
 }

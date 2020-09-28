@@ -8,6 +8,7 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+
 import { DejaMarkdownModule } from '../../component/markdown/index';
 import { HomeComponent } from './home.component';
 import { routing } from './home.routes';
@@ -18,9 +19,9 @@ import { routing } from './home.routes';
     imports: [
         CommonModule,
         DejaMarkdownModule,
-        routing,
+        routing
     ],
     providers: [
-    ],
+    ]
 })
 export class HomeModule { }

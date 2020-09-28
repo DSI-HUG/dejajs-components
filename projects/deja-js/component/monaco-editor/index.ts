@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ResizeListenerModule } from '@deja-js/core';
+
 import { DejaMonacoEditorComponent } from './monaco-editor.component';
 import { MonacoEditorService } from './monaco-editor.service';
 
@@ -21,7 +22,7 @@ import { MonacoEditorService } from './monaco-editor.service';
         FormsModule,
         ResizeListenerModule
     ],
-    providers: [MonacoEditorService],
+    providers: [MonacoEditorService]
 })
 export class DejaMonacoEditorModule {}
 

@@ -13,10 +13,12 @@
         "importHelpers": true,
         "noUnusedParameters": true,
         "noUnusedLocals": true,
-        "types": [],
         "lib": [
             "dom",
             "es2018"
+        ],
+        "types": [
+            "../../../node_modules/@types/ckeditor"
         ]
     },
     "angularCompilerOptions": {

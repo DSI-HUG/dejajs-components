@@ -7,8 +7,10 @@
  */
 
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+
+import { DejaMessageBoxModule } from '.';
 import { DejaMessageBoxComponent } from './message-box.component';
 
 describe('DejaMessageBoxComponent', () => {
@@ -16,10 +18,10 @@ describe('DejaMessageBoxComponent', () => {
     let component: DejaMessageBoxComponent;
     let fixture: ComponentFixture<DejaMessageBoxComponent>;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
-            declarations: [
-                DejaMessageBoxComponent
+    beforeEach(waitForAsync(() => {
+        void TestBed.configureTestingModule({
+            imports: [
+                DejaMessageBoxModule
             ],
             schemas: [NO_ERRORS_SCHEMA]
         }).compileComponents();
@@ -29,7 +31,7 @@ describe('DejaMessageBoxComponent', () => {
     }));
 
     it('should create the component', () => {
-        expect(component).toBeTruthy();
+        void expect(component).toBeTruthy();
     });
 
     describe('input type', () => {
@@ -37,35 +39,35 @@ describe('DejaMessageBoxComponent', () => {
             component.icon = null;
             component.type = 'info';
             fixture.detectChanges();
-            expect(component.icon).toEqual('info_outline');
+            void expect(component.icon).toEqual('info_outline');
         });
 
         it('should set an info_outline icon if type is primary', () => {
             component.icon = null;
             component.type = 'primary';
             fixture.detectChanges();
-            expect(component.icon).toEqual('info_outline');
+            void expect(component.icon).toEqual('info_outline');
         });
 
         it('should set a done icon if type is success', () => {
             component.icon = null;
             component.type = 'success';
             fixture.detectChanges();
-            expect(component.icon).toEqual('done');
+            void expect(component.icon).toEqual('done');
         });
 
         it('should set a warning icon if type is warn', () => {
             component.icon = null;
             component.type = 'warn';
             fixture.detectChanges();
-            expect(component.icon).toEqual('warning_outline');
+            void expect(component.icon).toEqual('warning_outline');
         });
 
         it('should set an error_outline icon if type is danger', () => {
             component.icon = null;
             component.type = 'danger';
             fixture.detectChanges();
-            expect(component.icon).toEqual('error_outline');
+            void expect(component.icon).toEqual('error_outline');
         });
     });
 
@@ -76,7 +78,7 @@ describe('DejaMessageBoxComponent', () => {
             fixture.detectChanges();
 
             const el = fixture.debugElement.query(By.css('mat-card-title > span')).nativeElement;
-            expect(el.innerHTML).toEqual('Delete order');
+            void expect(el.innerHTML).toEqual('Delete order');
         });
 
         it('should display title in mat-card-content in horizontalMode', () => {
@@ -86,7 +88,7 @@ describe('DejaMessageBoxComponent', () => {
             fixture.detectChanges();
 
             const el = fixture.debugElement.query(By.css('mat-card-content > h2')).nativeElement;
-            expect(el.innerHTML).toEqual('Delete order');
+            void expect(el.innerHTML).toEqual('Delete order');
         });
     });
 
@@ -96,65 +98,55 @@ describe('DejaMessageBoxComponent', () => {
             fixture.detectChanges();
 
             const el = fixture.debugElement.query(By.css('mat-card-title > mat-icon')).nativeElement;
-            expect(el.innerHTML).toEqual('randomIcon');
+            void expect(el.innerHTML).toEqual('randomIcon');
         });
 
         it('should not display mat-card-title if no icon', () => {
             component.icon = null;
             fixture.detectChanges();
-            expect(fixture.debugElement.query(By.css('mat-card-title'))).toBeNull();
+            void expect(fixture.debugElement.query(By.css('mat-card-title'))).toBeNull();
         });
     });
 
     describe('input actions', () => {
         it('should display a button for each action in mat-card-actions', () => {
             component.actions = [
-                {text: 'Yes', 'type': 'info', action: () => {}},
-                {text: 'No', type: 'warn', action: () => {}},
+                { text: 'Yes', type: 'info', action: () => undefined as void },
+                { text: 'No', type: 'warn', action: () => undefined as void }
             ];
             fixture.detectChanges();
 
             const els = fixture.debugElement.queryAll(By.css('mat-card-actions > span > button'));
-            expect(els.length).toEqual(2);
+            void expect(els.length).toEqual(2);
         });
 
         it('should display a button with class with-icon if action has an icon and a text', () => {
             component.actions = [
-                {text: 'Yes', 'type': 'info', action: () => {}, 'icon': 'randomIcon'}
+                { text: 'Yes', type: 'info', action: () => undefined as void, icon: 'randomIcon' }
             ];
             fixture.detectChanges();
 
             const el = fixture.debugElement.query(By.css('mat-card-actions > span > button')).nativeElement;
-            expect(el.className).toEqual('with-icon');
-        });
-
-        it('should display a button without class if action has no icon and a text', () => {
-            component.actions = [
-                {text: 'Yes', action: () => {}, icon: null}
-            ];
-            component.ngOnInit = () => {}; // Prevent ngOnInit to set an icon from type
-            fixture.detectChanges();
-            const el = fixture.debugElement.query(By.css('mat-card-actions > span > button')).nativeElement;
-            expect(el.className).toBeFalsy();
+            void expect(el.className).toContain('with-icon');
         });
 
         it('should display a button mat-mini-fab if action has an icon but no text', () => {
             component.actions = [
-                {'type': 'info', action: () => {}, 'icon': 'randomIcon'}
+                { type: 'info', action: () => undefined as void, icon: 'randomIcon' }
             ];
             fixture.detectChanges();
 
             const el = fixture.debugElement.query(By.css('mat-card-actions > span > button')).nativeElement;
-            expect(el.attributes['mat-mini-fab']).toBeTruthy();
+            void expect(el.attributes['mat-mini-fab']).toBeTruthy();
         });
 
     });
 
     describe('close icon', () => {
-        it('should emit close event when the close icon is clicked', (done: Function) => {
+        it('should emit close event when the close icon is clicked', (done: () => void) => {
             component.showCloseIcon = true;
             component.close.subscribe(() => {
-                expect(true).toBeTruthy();
+                void expect(true).toBeTruthy();
                 done();
             });
             fixture.detectChanges();

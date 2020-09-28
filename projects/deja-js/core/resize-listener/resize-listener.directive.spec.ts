@@ -8,17 +8,20 @@
 
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output, ViewEncapsulation } from '@angular/core';
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { timer } from 'rxjs';
+
 import { ResizeListenerModule } from './index';
 import { DejaResizeListenerDirective } from './resize-listener.directive';
 
 @Component({
+    selector: 'ResizeListenerContainerComponent',
     encapsulation: ViewEncapsulation.None,
-    template: `<div id="fill" resize-listener (sizeChanged)="sizeChanged.emit()"></div>`,
+    template: '<div id="fill" resize-listener (sizeChanged)="sizeChanged.emit()"></div>',
+    // eslint-disable-next-line @angular-eslint/component-max-inline-declarations
     styles: [`
     #fill {
         left: 0;
@@ -30,33 +33,33 @@ import { DejaResizeListenerDirective } from './resize-listener.directive';
     }`]
 })
 class ResizeListenerContainerComponent {
-    @Output() public sizeChanged = new EventEmitter<Event>();
+    @Output() public readonly sizeChanged = new EventEmitter<Event>();
 }
 
 describe('DejaResizeListenerDirective', () => {
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        void TestBed.configureTestingModule({
             declarations: [
-                ResizeListenerContainerComponent,
+                ResizeListenerContainerComponent
             ],
             imports: [
                 BrowserAnimationsModule,
                 CommonModule,
                 FormsModule,
-                ResizeListenerModule,
+                ResizeListenerModule
             ]
         }).compileComponents();
     }));
 
-    it('should create the component', async(() => {
+    it('should create the component', waitForAsync(() => {
         const fixture = TestBed.createComponent(ResizeListenerContainerComponent);
         fixture.detectChanges();
         const debugElement = fixture.debugElement.query(By.directive(DejaResizeListenerDirective));
         const instance = debugElement.componentInstance;
-        expect(instance).toBeTruthy();
+        void expect(instance).toBeTruthy();
     }));
 
-    it('should receive an event when the div is resized', (done) => {
+    it('should receive an event when the div is resized', done => {
         const fixture = TestBed.createComponent(ResizeListenerContainerComponent);
         fixture.detectChanges();
         const instance = fixture.debugElement.componentInstance as ResizeListenerContainerComponent;
@@ -68,9 +71,9 @@ describe('DejaResizeListenerDirective', () => {
         divElement.style.height = '200px';
         fixture.detectChanges();
 
-        fixture.whenStable().then(() => {
+        return fixture.whenStable().then(() => {
             timer(100).subscribe(() => {
-                expect(spy).toHaveBeenCalledTimes(1);
+                void expect(spy).toHaveBeenCalledTimes(1);
                 done();
             });
         });

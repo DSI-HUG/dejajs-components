@@ -9,6 +9,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
+
 import { DejaMarkdownComponent } from './markdown.component';
 
 @NgModule({
@@ -16,7 +17,7 @@ import { DejaMarkdownComponent } from './markdown.component';
     exports: [DejaMarkdownComponent],
     imports: [
         CommonModule,
-        HttpClientModule,
+        HttpClientModule
     ],
     providers: []
 })

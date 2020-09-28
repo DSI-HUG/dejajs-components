@@ -11,20 +11,20 @@ import { HtmlUtils } from './HtmlUtils';
 describe('HtmlUtils', () => {
 
     it('should return empty', () => {
-        expect(HtmlUtils.getEncodedURIComponent(null)).toEqual('');
+        void expect(HtmlUtils.getEncodedURIComponent(null)).toEqual('');
     });
 
     it('should return property and value toto=toto', () => {
-        expect(HtmlUtils.getEncodedURIComponent({toto: 'toto'})).toEqual('toto=toto');
+        void expect(HtmlUtils.getEncodedURIComponent({ toto: 'toto' })).toEqual('toto=toto');
     });
 
     it('should encode special characters', () => {
-        expect(HtmlUtils.getEncodedURIComponent({textWithSpecialCharacters: ',/@11h&=+$#'}))
+        void expect(HtmlUtils.getEncodedURIComponent({ textWithSpecialCharacters: ',/@11h&=+$#' }))
             .toEqual('textWithSpecialCharacters=%2C%2F%4011h%26%3D%2B%24%23');
     });
 
     it('should encode and concatenate properties', () => {
-        expect(HtmlUtils.getEncodedURIComponent({prop1: ',/@11h&=+$#', prop2: 'the second éà'}))
+        void expect(HtmlUtils.getEncodedURIComponent({ prop1: ',/@11h&=+$#', prop2: 'the second éà' }))
             .toEqual('prop1=%2C%2F%4011h%26%3D%2B%24%23&prop2=the%20second%20%C3%A9%C3%A0');
     });
 });

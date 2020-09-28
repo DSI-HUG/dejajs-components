@@ -6,8 +6,11 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { BehaviorSubject, concat, from, iif, Observable, of, Subscriber } from 'rxjs';
 import { filter, map, reduce, switchMap, tap } from 'rxjs/operators';
+
 import { Diacritics } from '../diacritics/diacritics';
 import { IGroupInfo } from '../grouping/group-infos';
 import { GroupingService } from '../grouping/grouping.service';
@@ -21,8 +24,11 @@ import { IItemTree } from './item-tree';
  * Il peut-être surchargé pour faire du lazy loading ou du paging.
  */
 export class ItemListService {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     public static defaultChildrenField = 'items';
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     public static defaultTextField = 'displayName';
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     public static defaultValueField = 'value';
 
     // Waiter
@@ -78,21 +84,21 @@ export class ItemListService {
      * @return Valeur à comparer pour le modèle spécifié.
      */
     public static getItemValue(item: any, valueField?: string) {
-        // tslint:disable-next-line:triple-equals
+        // eslint-disable-next-line eqeqeq
         const isDefined = (value: any) => value != undefined;
 
         if (valueField) {
             const fields = valueField.split('.');
-            let model = item.model && item.model[fields[0]] !== undefined ? item.model : item;
-            fields.forEach((fieldName) => {
-                model = model && model[fieldName];
+            let model = item.model?.[fields[0]] !== undefined ? item.model : item;
+            fields.forEach(fieldName => {
+                model = model?.[fieldName];
             });
             if (isDefined(model)) {
                 return typeof model === 'function' ? model() : model;
             }
         }
 
-        return isDefined(item.value) ? item.value : (isDefined(item.model) ? item.model : item);
+        return isDefined(item.value) ? item.value : (isDefined(item.model) && item.model) || item;
     }
 
     /** Evalue le texte à afficher pour l'élément spécifié.
@@ -104,9 +110,9 @@ export class ItemListService {
         if (value) {
             if (textField) {
                 const fields = textField.split('.');
-                let model = value.model && value.model[fields[0]] !== undefined ? value.model : value;
-                fields.forEach((fieldName) => {
-                    model = model && model[fieldName];
+                let model = value.model?.[fields[0]] !== undefined ? value.model : value;
+                fields.forEach(fieldName => {
+                    model = model?.[fieldName];
                 });
                 if (model !== undefined) {
                     return typeof model === 'function' ? model() : model;
@@ -225,6 +231,7 @@ export class ItemListService {
     /** Définit le modèle utilisé par la liste. Ce model peut ètre hierarchique sans limitation de la profondeur ou une chargé en asynchrone par une promise ou un observable.
      * @param items Provider de la liste des éléments de la liste.
      */
+    // eslint-disable-next-line rxjs/finnish
     public setItems$(items: any[] | Promise<any[]> | Observable<any[]>) {
         if (!items) {
             this.items = undefined;
@@ -238,14 +245,14 @@ export class ItemListService {
         } else {
             this.items = undefined;
             this._waiter$.next(true);
-            let observable = items as Observable<IItemBase[]>;
-            if (observable.subscribe === undefined) {
+            let observable$ = items as Observable<IItemBase[]>;
+            if (observable$.subscribe === undefined) {
                 const promise = items as Promise<IItemBase[]>;
-                observable = from(promise);
+                observable$ = from(promise);
             }
 
-            return observable.pipe(
-                map((its) => {
+            return observable$.pipe(
+                map(its => {
                     if (its) {
                         this.ensureChildrenProperties(its);
                         // TODO La déselection ne fonctionne pas pendant le chargement
@@ -258,10 +265,12 @@ export class ItemListService {
                         this._waiter$.next(false);
                         return [];
                     }
-                }));
+                })
+            );
         }
     }
 
+    // eslint-disable-next-line rxjs/finnish
     public setModels$(items: any[] | Promise<any[]> | Observable<any[]>) {
         return this.setItems$(items);
     }
@@ -291,7 +300,7 @@ export class ItemListService {
      * @return Index correspondant à l'élément recherché.
      */
     public getItemIndex(item: IItemBase) {
-        return this._cache.visibleList ? this._cache.visibleList.findIndex((itm) => this.compareItems(item, itm)) : -1;
+        return this._cache.visibleList ? this._cache.visibleList.findIndex(itm => this.compareItems(item, itm)) : -1;
     }
 
     /** Renvoie le service utilisé pour le tri de la liste
@@ -365,8 +374,9 @@ export class ItemListService {
             let targetParent: IItemTree;
 
             // Find target in the flat list to calculate the correct index
-            let flatListIndex = this._cache.flatList.findIndex((itm) => itm === targetItem);
+            let flatListIndex = this._cache.flatList.findIndex(itm => itm === targetItem);
             let targetIndex = 0;
+            // eslint-disable-next-line no-loops/no-loops
             while (flatListIndex >= 0) {
                 const parentItem = this._cache.flatList[flatListIndex] as IItemTree;
                 if (parentItem.depth === undefined) {
@@ -383,12 +393,13 @@ export class ItemListService {
             }
 
             const findItem = (itemToFind: IItemTree, treeList: IItemTree[]): IFindItemsResult => {
+                // eslint-disable-next-line no-loops/no-loops
                 for (let i = 0; i < treeList.length; i++) {
                     const itm = treeList[i];
                     if (itm === itemToFind) {
                         return {
                             index: i,
-                            list: treeList,
+                            list: treeList
                         };
                     } else if (itm.$items !== undefined) {
                         const result = findItem(itemToFind, itm.$items);
@@ -397,6 +408,8 @@ export class ItemListService {
                         }
                     }
                 }
+
+                return undefined;
             };
 
             const originResult = findItem(item, this.items);
@@ -416,6 +429,7 @@ export class ItemListService {
             // Invalidate view cache
             this.invalidateCache();
             subscriber.next(true);
+            return undefined;
         });
     }
 
@@ -431,7 +445,7 @@ export class ItemListService {
             const startIndex = this._ddCurrentIndex !== undefined ? this._ddCurrentIndex : index;
             if (startIndex >= currentList.length) {
                 subscriber.next(currentList.length - 1);
-                return undefined;
+                return;
             }
 
             const item = currentList[startIndex] as IItemTree;
@@ -441,6 +455,7 @@ export class ItemListService {
                 if (targetIndex < startIndex) {
                     // Remonte jusqu'au premier élément avec une profondeur plus grande
                     let beforeIndex = 0;
+                    // eslint-disable-next-line no-loops/no-loops
                     for (let b = startIndex - 1; b >= 0; b--) {
                         const targetItem = currentList[b] as IItemTree;
                         if (targetItem.depth <= item.depth) {
@@ -450,14 +465,15 @@ export class ItemListService {
                     }
                     if (targetIndex <= beforeIndex) {
                         // Descend jusqu'au premier élément avec la même profondeur
+                        // eslint-disable-next-line no-loops/no-loops
                         for (let a = targetIndex; a <= beforeIndex; a++) {
                             const targetItem = currentList[a] as IItemTree;
                             if (targetItem.depth === item.depth) {
                                 subscriber.next(a);
-                                return undefined;
+                                return;
                             } else if (targetItem.depth === item.depth - 1) {
                                 subscriber.next(a + 1);
-                                return undefined;
+                                return;
                             }
                         }
                     }
@@ -466,6 +482,7 @@ export class ItemListService {
                 if (targetIndex > startIndex) {
                     // Descend jusqu'au premier élément avec une profondeur plus grande ou égale
                     let afterIndex = currentList.length - 1;
+                    // eslint-disable-next-line no-loops/no-loops
                     for (let a = startIndex + 1; a < currentList.length; a++) {
                         const targetItem = currentList[a] as IItemTree;
                         if (targetItem.depth <= item.depth) {
@@ -475,21 +492,22 @@ export class ItemListService {
                     }
                     if (targetIndex >= afterIndex) {
                         // Descend jusqu'au premier élément avec la même profondeur
+                        // eslint-disable-next-line no-loops/no-loops
                         for (let a = targetIndex + 1; a < currentList.length; a++) {
                             const itm = currentList[a] as IItemTree;
                             if (itm.depth === item.depth) {
                                 subscriber.next(a);
-                                return undefined;
+                                return;
                             } else if (itm.depth === item.depth - 1) {
                                 subscriber.next(a - 1);
-                                return undefined;
+                                return;
                             }
                         }
                         // Not found
                         const targetItem = currentList[afterIndex] as IItemTree;
                         if (targetItem.depth === item.depth) {
                             subscriber.next(afterIndex);
-                            return undefined;
+                            return;
                         }
                     }
                 }
@@ -505,9 +523,9 @@ export class ItemListService {
      */
     public toggleAll$(collapsed: boolean): Observable<IItemTree[]> {
         return of(this._cache.flatList).pipe(
-            map((items: IItemTree[]) => items.filter((item) => item.$items && item.collapsible !== false)),
+            map((items: IItemTree[]) => items.filter(item => item.$items && item.collapsible !== false)),
             tap(() => delete this._cache.visibleList), // Invalidate view cache
-            switchMap((items) => collapsed ? this.collapseItems$(items) : this.expandItems$(items)));
+            switchMap(items => collapsed ? this.collapseItems$(items) : this.expandItems$(items)));
     }
 
     /** Change l'état d'expansion de l'élément spécifié par son index sur la liste des éléments visibles.
@@ -526,7 +544,7 @@ export class ItemListService {
             return of([]);
         }
 
-        const collapsed = collapse !== undefined ? collapse : item.collapsed ? false : true;
+        const collapsed = collapse !== undefined ? collapse : !item.collapsed;
         return collapsed ? this.collapseItem$(item) : this.expandItem$(item);
     }
 
@@ -536,7 +554,7 @@ export class ItemListService {
      */
     public expandItems$(items: IItemBase[]): Observable<IItemBase[]> {
         return from(items || []).pipe(
-            switchMap((item) => this.expandItem$(item)),
+            switchMap(item => this.expandItem$(item)),
             reduce((acc, cur) => [...acc, cur], []));
     }
 
@@ -546,7 +564,7 @@ export class ItemListService {
      */
     public collapseItems$(items: IItemBase[]): Observable<IItemBase[]> {
         return from(items || []).pipe(
-            switchMap((item) => this.collapseItem$(item)),
+            switchMap(item => this.collapseItem$(item)),
             reduce((acc, cur) => [...acc, cur], []));
     }
 
@@ -556,10 +574,10 @@ export class ItemListService {
      */
     public expandItem$(item: IItemTree) {
         return of(item).pipe(
-            filter((itm) => !!itm),
-            switchMap((itm) => this.expandingItem$ ? this.expandingItem$(itm) : of(itm)),
-            filter((itm) => !!itm),
-            tap((itm) => {
+            filter(itm => !!itm),
+            switchMap(itm => this.expandingItem$ ? this.expandingItem$(itm) : of(itm)),
+            filter(itm => !!itm),
+            tap(itm => {
                 itm.collapsed = false;
                 // Invalidate view cache
                 delete this._cache.visibleList;
@@ -572,10 +590,10 @@ export class ItemListService {
      */
     public collapseItem$(item: IItemTree) {
         return of(item).pipe(
-            filter((itm) => !!itm),
-            switchMap((itm) => this.collapsingItem$ ? this.collapsingItem$(itm) : of(itm)),
-            filter((itm) => !!itm),
-            tap((itm) => {
+            filter(itm => !!itm),
+            switchMap(itm => this.collapsingItem$ ? this.collapsingItem$(itm) : of(itm)),
+            filter(itm => !!itm),
+            tap(itm => {
                 itm.collapsed = true;
                 // Invalidate view cache
                 delete this._cache.visibleList;
@@ -594,7 +612,7 @@ export class ItemListService {
      */
     public setSelectedItems(items: IItemBase[]) {
         if (this.selectedList) {
-            this.selectedList.forEach((item) => {
+            this.selectedList.forEach(item => {
                 item.selected = false;
             });
         }
@@ -638,13 +656,13 @@ export class ItemListService {
 
         return this.unselectAll$().pipe(
             map(() => visibleList.slice(Math.min(indexFrom, indexTo), 1 + Math.max(indexFrom, indexTo))),
-            map((items) => items.filter((itm) => itm.selectable !== false)),
+            map(items => items.filter(itm => itm.selectable !== false)),
             tap(() => {
                 if (this.hideSelected) {
                     delete this._cache.visibleList;
                 }
             }),
-            switchMap((items) => this.selectItems$(items).pipe(map((selected) => selected.length))));
+            switchMap(items => this.selectItems$(items).pipe(map(selected => selected.length))));
     }
 
     /** Change l'état de selection de l'élément spécifié.
@@ -669,7 +687,7 @@ export class ItemListService {
      */
     public selectItems$(items: IItemBase[]): Observable<IItemBase[]> {
         return from(items || []).pipe(
-            switchMap((item) => this.selectItem$(item)),
+            switchMap(item => this.selectItem$(item)),
             reduce((acc: IItemBase[], cur: IItemBase) => [...acc, cur], []));
     }
 
@@ -679,8 +697,8 @@ export class ItemListService {
      */
     public unSelectItems$(items: IItemBase[]): Observable<IItemBase[]> {
         return from(items || []).pipe(
-            filter((item) => item.selected),
-            switchMap((item) => this.unSelectItem$(item)),
+            filter(item => item.selected),
+            switchMap(item => this.unSelectItem$(item)),
             reduce((acc: IItemBase[], cur: IItemBase) => [...acc, cur], []));
     }
 
@@ -690,10 +708,10 @@ export class ItemListService {
      */
     public selectItem$(item: IItemBase) {
         return of(item).pipe(
-            filter((itm) => !!itm),
-            switchMap((itm) => this.selectingItem$ ? this.selectingItem$(itm) : of(itm)),
-            filter((itm) => !!itm),
-            tap((itm) => {
+            filter(itm => !!itm),
+            switchMap(itm => this.selectingItem$ ? this.selectingItem$(itm) : of(itm)),
+            filter(itm => !!itm),
+            tap(itm => {
                 if (!this.selectedList) {
                     this.selectedList = [];
                 }
@@ -709,13 +727,13 @@ export class ItemListService {
      */
     public unSelectItem$(item: IItemBase) {
         return of(item).pipe(
-            filter((itm) => !!itm),
-            switchMap((itm) => this.unselectingItem$ ? this.unselectingItem$(itm) : of(itm)),
-            filter((itm) => !!itm),
-            tap((itm) => {
+            filter(itm => !!itm),
+            switchMap(itm => this.unselectingItem$ ? this.unselectingItem$(itm) : of(itm)),
+            filter(itm => !!itm),
+            tap(itm => {
                 itm.selected = false;
-                if (this.selectedList && this.selectedList.length) {
-                    const index = this.selectedList.findIndex((i) => this.compareItems(i, itm));
+                if (this.selectedList?.length) {
+                    const index = this.selectedList.findIndex(i => this.compareItems(i, itm));
                     if (index >= 0) {
                         this.selectedList.splice(index, 1);
                     }
@@ -741,12 +759,13 @@ export class ItemListService {
                 startIndex = -1;
             }
             let idx = startIndex + 1;
+            // eslint-disable-next-line no-loops/no-loops
             while (idx !== startIndex) {
                 const itm = list[idx];
                 if (compare(itm, idx)) {
                     result = {
                         index: idx,
-                        item: itm,
+                        item: itm
                     } as IFindItemResult;
                     break;
                 }
@@ -780,7 +799,7 @@ export class ItemListService {
 
         if (!this._cache.groupedList || this._cache.groupedList.length === 0) {
             return this.getGroupedList$(this.items).pipe(
-                tap((groupedList) => this._cache.groupedList = groupedList),
+                tap(groupedList => this._cache.groupedList = groupedList),
                 switchMap(() => sortTree$));
         } else {
             return sortTree$;
@@ -803,7 +822,7 @@ export class ItemListService {
      * @return Observable résolu par la fonction.
      */
     public ungroup$(groupInfo: IGroupInfo) {
-        const groupIndex = this._groupInfos ? this._groupInfos.findIndex((gi) => gi.groupByField === groupInfo.groupByField) : -1;
+        const groupIndex = this._groupInfos ? this._groupInfos.findIndex(gi => gi.groupByField === groupInfo.groupByField) : -1;
         if (groupIndex >= 0) {
             this._groupInfos.splice(groupIndex, 1);
         }
@@ -819,26 +838,27 @@ export class ItemListService {
      */
     public getParentListInfos$(item: IItemTree, multiSelect: boolean): Observable<IParentListInfoResult> {
         const search$ = (flatList: IItemBase[]) => {
-            let flatIndex = flatList.findIndex((itm) => itm === item);
+            let flatIndex = flatList.findIndex(itm => itm === item);
             if (flatIndex < 0) {
                 throw new Error('Item not found.');
             }
 
             let result: IParentListInfoResult;
             if (!item.depth) {
-                const rootIndex = this.items.findIndex((itm) => itm === item);
+                const rootIndex = this.items.findIndex(itm => itm === item);
                 result = {
-                    index: rootIndex,
+                    index: rootIndex
                 } as IParentListInfoResult;
             } else {
                 // Search parent and treeindex
                 let idx = 0;
+                // eslint-disable-next-line no-loops/no-loops
                 while (--flatIndex >= 0) {
                     const parentItem = flatList[flatIndex] as IItemTree;
                     if (parentItem.depth < item.depth) {
                         result = {
                             index: idx,
-                            parent: parentItem,
+                            parent: parentItem
                         } as IParentListInfoResult;
                     }
                     idx++;
@@ -861,7 +881,7 @@ export class ItemListService {
     /** Efface la hauteur calculée des lignes en mode automatique */
     public invalidateRowsHeightCache() {
         if (this._items) {
-            this._items.forEach((item) => item.size = undefined);
+            this._items.forEach(item => item.size = undefined);
         }
     }
 
@@ -869,13 +889,13 @@ export class ItemListService {
     public getViewList$(searchField: string, query?: RegExp | string, ignoreCache?: boolean, ddStartIndex?: number, ddTargetIndex?: number, multiSelect?: boolean): Observable<IViewListResult> {
         const result = {} as IViewListResult;
 
-        const queryChanged = (query && query.toString()) !== (this._lastQuery && this._lastQuery.toString());
+        const queryChanged = (query?.toString()) !== (this._lastQuery?.toString());
         ignoreCache = ignoreCache || queryChanged || !this.items || !this.items.length;
         this._lastQuery = query;
 
         const escapeChars = (text: string) => {
             const specialChars = ['\\', '/', '|', '&', ';', '$', '%', '@', '"', '<', '>', '(', ')', '+'];
-            specialChars.forEach((c) => text = text.replace(c, `\\${c}`));
+            specialChars.forEach(c => text = text.replace(c, `\\${c}`));
             return text;
         };
 
@@ -892,7 +912,7 @@ export class ItemListService {
                     console.log('Invalid search parameters');
                 }
             } else {
-                regExp = query as RegExp;
+                regExp = query;
                 if (regExp.test === undefined) {
                     regExp = undefined;
                 }
@@ -911,6 +931,7 @@ export class ItemListService {
                     const parentDepth = draggedItem.depth;
                     let lastIndex = ddStartIndex;
                     if (parentDepth !== undefined) {
+                        // eslint-disable-next-line no-loops/no-loops
                         for (let i = ddStartIndex + 1; i < this._ddList.length; i++) {
                             const curItem = this._ddList[i] as IItemTree;
                             if (curItem.depth <= parentDepth) {
@@ -929,7 +950,7 @@ export class ItemListService {
                     ++ddTargetIndex;
                 }
                 this._ddCurrentIndex = ddTargetIndex;
-                removed.forEach((itm) => this._ddList.splice(ddTargetIndex++, 0, itm));
+                removed.forEach(itm => this._ddList.splice(ddTargetIndex++, 0, itm));
                 viewList = this._ddList;
 
             } else {
@@ -954,7 +975,7 @@ export class ItemListService {
             }
 
             return this.getItemList$(query, this.selectedList).pipe(
-                tap((items) => {
+                tap(items => {
                     if (!this.items || !this.items.length) {
                         this.ensureSelectedItems(items);
                     }
@@ -1004,7 +1025,7 @@ export class ItemListService {
             return true;
         }
         const field = (<any>item)[searchField];
-        const value = typeof field === 'function' ? field() : (field ? field : this.getTextValue(item, searchField));
+        const value = typeof field === 'function' ? field() : field || this.getTextValue(item, searchField);
         return value && regExp.test(Diacritics.remove(value));
     }
 
@@ -1039,17 +1060,17 @@ export class ItemListService {
             const getFilteredList = (treeList: IItemBase[], depth: number, hidden: boolean) => {
                 let filteredItems: IItemBase[];
                 if (treeList) {
-                    treeList.forEach((itm) => {
+                    treeList.forEach(itm => {
                         const itmTree = (itm as IItemTree);
                         if (itmTree.$items) {
-                            if (itmTree.visible !== false && this.itemMatch(itmTree, searchField, regExp)) {
+                            if (this.isVisible(itmTree) && this.itemMatch(itmTree, searchField, regExp)) {
                                 odd = false;
                                 const filteredChildren = getFilteredList(itmTree.$items, depth + 1, hidden);
                                 if (filteredChildren) {
                                     if (itmTree.collapsed && expandTree) {
                                         itmTree.collapsed = false;
                                     }
-                                    filteredItems = !filteredItems ? (itmTree.collapsed ? [itmTree] : [itmTree, ...filteredChildren]) : (itmTree.collapsed ? [...filteredItems, itmTree] : [...filteredItems, itmTree, ...filteredChildren]);
+                                    filteredItems = !filteredItems ? ((itmTree.collapsed && [itmTree]) || [itmTree, ...filteredChildren]) : ((itmTree.collapsed && [...filteredItems, itmTree]) || [...filteredItems, itmTree, ...filteredChildren]);
                                     if (itmTree.selected) {
                                         selectedList.push(itmTree);
                                     }
@@ -1062,7 +1083,7 @@ export class ItemListService {
                             if (!filteredItems) {
                                 filteredItems = [];
                             }
-                            if (!hidden && !(itm.visible === false) && !(itm.selected && this.hideSelected)) {
+                            if (!hidden && this.isVisible(itm) && !(itm.selected && this.hideSelected)) {
                                 // For style
                                 itmTree.odd = odd;
                                 odd = !odd;
@@ -1087,8 +1108,8 @@ export class ItemListService {
             // Get visible items list without filter
             const getVisibleListInternal = (treeList: IItemTree[], depth: number, hidden: boolean) => {
                 if (treeList) {
-                    treeList.forEach((item) => {
-                        if (!hidden && !(item.visible === false) && !(item.selected && this.hideSelected)) {
+                    treeList.forEach(item => {
+                        if (!hidden && this.isVisible(item) && !(item.selected && this.hideSelected)) {
                             // For style
                             item.odd = odd;
                             odd = !odd;
@@ -1105,7 +1126,7 @@ export class ItemListService {
                         // Recursive call
                         if (item.$items) {
                             odd = false;
-                            getVisibleListInternal(item.$items, depth + 1, hidden || item.collapsed || item.visible === false);
+                            getVisibleListInternal(item.$items, depth + 1, hidden || item.collapsed || !this.isVisible(item));
                         }
                     });
                 }
@@ -1138,40 +1159,38 @@ export class ItemListService {
         let isTree = false;
         let odd = false;
 
-        const flatList$: any = (itms: IItemTree[], depth: number, hidden: boolean) => {
-            return from(itms || []).pipe(
-                tap((item) => {
-                    if (depth > depthMax) {
-                        depthMax = depth;
-                    }
+        const flatList$: any = (itms: IItemTree[], depth: number, hidden: boolean) => from(itms || []).pipe(
+            tap(item => {
+                if (depth > depthMax) {
+                    depthMax = depth;
+                }
 
-                    // Fill system properties
-                    item.depth = depth;
+                // Fill system properties
+                item.depth = depth;
 
-                    if (!hidden && !(item.visible === false) && !(item.selected && this.hideSelected)) {
-                        // For style
-                        item.odd = odd;
-                        odd = !odd;
+                if (!hidden && this.isVisible(item) && !(item.selected && this.hideSelected)) {
+                    // For style
+                    item.odd = odd;
+                    odd = !odd;
 
-                        // Add to visible list only the visible items (uncollapsed)
-                        visibleList.push(item);
-                    }
+                    // Add to visible list only the visible items (uncollapsed)
+                    visibleList.push(item);
+                }
 
-                    // Add to selected list only the visible items (uncollapsed) and selected
-                    if (item.selected) {
-                        selectedList.push(item);
-                    }
-                }),
-                switchMap((item) => {
-                    if (item.$items) {
-                        isTree = true;
-                        odd = false;
-                        return concat(of(item), flatList$(item.$items, depth + 1, hidden || item.collapsed));
-                    } else {
-                        return of(item);
-                    }
-                }));
-        };
+                // Add to selected list only the visible items (uncollapsed) and selected
+                if (item.selected) {
+                    selectedList.push(item);
+                }
+            }),
+            switchMap(item => {
+                if (item.$items) {
+                    isTree = true;
+                    odd = false;
+                    return concat(of(item), flatList$(item.$items, depth + 1, hidden || item.collapsed));
+                } else {
+                    return of(item);
+                }
+            }));
 
         return flatList$(items, 0, false).pipe(
             tap(() => {
@@ -1201,7 +1220,7 @@ export class ItemListService {
     private ensureSelectedItems(items: IItemBase[]) {
         if (this.selectedList && this.selectedList.length > 0) {
             // Ensure selected flag
-            this.selectedList.forEach((item) => item.selected = true);
+            this.selectedList.forEach(item => item.selected = true);
 
             if (!items) {
                 return this.selectedList;
@@ -1209,8 +1228,8 @@ export class ItemListService {
 
             const newSelectedList = [] as IItemBase[];
             const ensureSelectedChildren = (children: IItemTree[]) => {
-                children.forEach((item) => {
-                    const selectedItem = this.selectedList.find((selected) => this.compareItems(selected, item));
+                children.forEach(item => {
+                    const selectedItem = this.selectedList.find(selected => this.compareItems(selected, item));
                     if (selectedItem) {
                         selectedItem.selected = false;
                         newSelectedList.push(item);
@@ -1224,12 +1243,12 @@ export class ItemListService {
             ensureSelectedChildren(items);
 
             // Add not found selected items
-            this.selectedList.filter((item) => item.selected).forEach((item) => newSelectedList.push(item));
+            this.selectedList.filter(item => item.selected).forEach(item => newSelectedList.push(item));
 
             this.selectedList = newSelectedList;
 
             // Ensure selected flag for the new items
-            this.selectedList.forEach((item) => item.selected = true);
+            this.selectedList.forEach(item => item.selected = true);
 
         } else {
             this.selectedList = [];
@@ -1239,7 +1258,7 @@ export class ItemListService {
             }
 
             const ensureSelectedChildren = (children: IItemTree[]) => {
-                children.forEach((item) => {
+                children.forEach(item => {
                     if (item.selected) {
                         this.selectedList.push(item);
                     }
@@ -1256,37 +1275,35 @@ export class ItemListService {
     }
 
     private compareItems = (item1: IItemBase, item2: IItemBase) => {
-        // tslint:disable-next-line:triple-equals
+        // eslint-disable-next-line eqeqeq
         const isDefined = (value: any) => value != undefined;
 
         if (!isDefined(item1) || !isDefined(item2)) {
             return false;
-        } else if (isDefined(item1) && !isDefined(item2)) {
-            return false;
-        } else if (!isDefined(item1) && isDefined(item2)) {
-            return false;
+        } else if (item1.equals) {
+            return item1.equals(item2);
+        } else if (item2.equals) {
+            return item2.equals(item1);
         } else {
-            if (item1.equals) {
-                return item1.equals(item2);
-            } else if (item2.equals) {
-                return item2.equals(item1);
-            } else if (item1.model && item1.model.equals) {
-                return item1.model.equals(item2.model);
-            } else if (item2.model && item2.model.equals) {
-                return item2.model.equals(item1.model);
+            const model1 = item1.model as { equals(model: unknown): number };
+            const model2 = item1.model as { equals(model: unknown): number };
+            if (model1?.equals) {
+                return model1.equals(item2.model);
+            } else if (model2?.equals) {
+                return model2.equals(item1.model);
             } else {
                 return this.getValue(item1, this._valueField) === this.getValue(item2, this._valueField);
             }
         }
-    }
+    };
 
     private ensureVisibleListCache$(searchField: string, regExp: RegExp, expandTree: boolean, multiSelect: boolean) {
-        if (this._cache.visibleList && this._cache.visibleList.length) {
+        if (this._cache.visibleList?.length) {
             return of(this._cache.visibleList);
         } else {
             return this.ensureFlatListCache$(!!regExp, multiSelect).pipe(
                 switchMap(() => this.getVisibleList$(this._cache.groupedList, searchField, regExp, expandTree, multiSelect)),
-                tap((visibleList) => {
+                tap(visibleList => {
                     /* if (this._cache.visibleList && this._cache.visibleList.length && this._cache.visibleList !== visibleList) {
                      // New visible list
                      // Nothing to do yet
@@ -1299,13 +1316,13 @@ export class ItemListService {
     }
 
     private ensureFlatListCache$(isFiltered: boolean, multiSelect: boolean) {
-        if (this._cache.flatList && this._cache.flatList.length) {
+        if (this._cache.flatList?.length) {
             return of(this._cache.flatList);
         } else {
             return this.ensureGroupedListCache$().pipe(
                 switchMap(() => this.getFlatList$(this._cache.groupedList, isFiltered, multiSelect)),
-                tap((flatList) => {
-                    if (this._cache.flatList && this._cache.flatList.length && this._cache.flatList !== flatList) {
+                tap(flatList => {
+                    if (this._cache.flatList?.length && this._cache.flatList !== flatList) {
                         // New flat list
                         delete this._cache.visibleList;
                         this._cache.rowsCount = 0;
@@ -1326,15 +1343,15 @@ export class ItemListService {
     }
 
     private ensureGroupedListCache$() {
-        if (this._cache.groupedList && this._cache.groupedList.length) {
+        if (this._cache.groupedList?.length) {
             return of(this._cache.groupedList);
         } else if (!this.groupInfos || this.groupInfos.length === 0) {
             return of(this.items).pipe(
-                tap((items) => this._cache.groupedList = items));
+                tap(items => this._cache.groupedList = items));
         } else if (this.items) {
             return this.getGroupedList$(this.items).pipe(
-                tap((groupedList) => {
-                    if (this._cache.groupedList && this._cache.groupedList.length && this._cache.groupedList !== groupedList) {
+                tap(groupedList => {
+                    if (this._cache.groupedList?.length && this._cache.groupedList !== groupedList) {
                         // New grouped list
                         this.invalidateViewCache();
                     }
@@ -1350,13 +1367,17 @@ export class ItemListService {
             return;
         }
 
-        items.forEach((item) => {
+        items.forEach(item => {
             const field = (<any>item)[this.childrenField];
             if (field) {
                 item.$items = field;
                 this.ensureChildrenProperties(item.$items);
             }
         });
+    }
+
+    private isVisible(item: IItemBase) {
+        return item.visible !== false;
     }
 }
 

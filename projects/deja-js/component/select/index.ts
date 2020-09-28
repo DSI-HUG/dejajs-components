@@ -15,14 +15,15 @@ import { DejaChipsModule } from '@deja-js/component/chips';
 import { DejaListLoaderModule } from '@deja-js/component/loaders';
 import { DejaOverlayModule } from '@deja-js/component/overlay';
 import { DejaChildValidatorModule, DejaItemModule, MediaModule } from '@deja-js/core';
+
 import { DejaSelectComponent } from './select.component';
 
 @NgModule({
     declarations: [
-        DejaSelectComponent,
+        DejaSelectComponent
     ],
     exports: [
-        DejaSelectComponent,
+        DejaSelectComponent
     ],
     imports: [
         CommonModule,
@@ -34,8 +35,8 @@ import { DejaSelectComponent } from './select.component';
         DejaChildValidatorModule,
         DejaChipsModule,
         DejaItemModule,
-        DejaListLoaderModule,
-    ],
+        DejaListLoaderModule
+    ]
 })
 export class DejaSelectModule { }
 

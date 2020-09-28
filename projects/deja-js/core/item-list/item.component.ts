@@ -11,7 +11,7 @@ import { Component, Input } from '@angular/core';
 
 @Component({
     selector: 'deja-item',
-    template: '',
+    template: ''
 })
 export class DejaItemComponent {
     @Input() public value: string;
@@ -25,5 +25,6 @@ export class DejaItemComponent {
     public get selected() {
         return this._selected;
     }
+
     private _selected: boolean;
 }

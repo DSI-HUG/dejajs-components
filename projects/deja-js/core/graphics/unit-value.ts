@@ -10,19 +10,20 @@ export class UnitValue {
     public value: number;
     public unit: string;
 
-    public static equals(s1: UnitValue, s2: UnitValue) {
-        return s1.value === s2.value && s1.unit === s2.unit;
-    }
-
-    constructor(value?: number | string, unit?: string) {
+    public constructor(value?: number | string, unit?: string) {
         if (typeof value === 'string') {
-            const match = value.match(/([0-9\.]+)(.*)/);
+            // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
+            const match = value.match(/([0-9.]+)(.*)/);
             this.value = match && match.length >= 2 && parseInt(match[1], 10);
-            this.unit = match && match.length >= 3 &&  match[2];
+            this.unit = match && match.length >= 3 && match[2];
         } else {
             this.value = value;
             this.unit = unit;
         }
+    }
+
+    public static equals(s1: UnitValue, s2: UnitValue) {
+        return s1.value === s2.value && s1.unit === s2.unit;
     }
 
     public clone() {

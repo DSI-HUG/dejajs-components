@@ -12,7 +12,7 @@ import { DateComponentLayout } from '@deja-js/component/date-selector';
 @Component({
     selector: 'dejadate-picker-demo',
     styleUrls: ['./date-picker-demo.scss'],
-    templateUrl: './date-picker-demo.html',
+    templateUrl: './date-picker-demo.html'
 })
 export class DejaDatePickerDemoComponent implements OnInit {
     public tabIndex = 1;
@@ -28,9 +28,6 @@ export class DejaDatePickerDemoComponent implements OnInit {
     public dateMax: Date;
 
     public myLayout = DateComponentLayout.timeonly;
-
-    constructor() {
-    }
 
     public ngOnInit() {
         const now: Date = new Date();

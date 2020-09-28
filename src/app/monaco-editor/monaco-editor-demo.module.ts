@@ -17,12 +17,13 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule, Routes } from '@angular/router';
 import { DejaMonacoEditorModule } from '@deja-js/component/monaco-editor';
 import { DejaSplitterModule } from '@deja-js/component/splitter';
+
 import { DejaMarkdownModule } from '../../component/markdown/index';
 import { DejaMonacoEditorDemoComponent } from './monaco-editor-demo.component';
 import { MonacoEditorDemoService } from './monaco-editor-demo.service';
 
 const routes: Routes = [
-    { path: '', component: DejaMonacoEditorDemoComponent },
+    { path: '', component: DejaMonacoEditorDemoComponent }
 ];
 
 @NgModule({
@@ -37,11 +38,11 @@ const routes: Routes = [
         MatToolbarModule,
         DejaSplitterModule,
         DejaMarkdownModule,
-        RouterModule.forChild(routes),
+        RouterModule.forChild(routes)
     ],
     declarations: [DejaMonacoEditorDemoComponent],
     providers: [
         MonacoEditorDemoService
-    ],
+    ]
 })
 export class MonacoEditorDemoModule { }

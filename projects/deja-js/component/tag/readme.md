@@ -10,6 +10,6 @@
 export class DejaMonacoEditorDemoComponent {
     public values = ['HTML5', 'ANGULAR'];
 
-    constructor() { }
+    public constructor() { }
 }
 ```

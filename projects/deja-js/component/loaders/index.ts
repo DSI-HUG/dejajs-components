@@ -8,17 +8,16 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import {DejaListLoaderComponent} from './list-loader.component';
+
+import { DejaListLoaderComponent } from './list-loader.component';
 
 @NgModule({
     declarations: [DejaListLoaderComponent],
     exports: [DejaListLoaderComponent],
     imports: [
-        CommonModule,
-    ],
+        CommonModule
+    ]
 })
-export class DejaListLoaderModule {
-
-}
+export class DejaListLoaderModule { }
 
 export * from './list-loader.component';

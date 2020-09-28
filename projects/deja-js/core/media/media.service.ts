@@ -21,8 +21,10 @@ export interface MediaQueryDefinition {
     overlapping?: boolean;
 }
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const MEDIA_QUERY_DEFINITIONS = new InjectionToken<MediaQueryDefinition[]>('MEDIA_QUERY_DEFINITIONS');
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const DEFAULT_MEDIA_QUERY_DEFINITIONS = [
     {
         alias: 'xs',
@@ -86,19 +88,20 @@ export const DEFAULT_MEDIA_QUERY_DEFINITIONS = [
     }
 ] as MediaQueryDefinition[];
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const SIMPLIFIED_MEDIA_QUERY_DEFINITIONS = [
     {
         alias: 'xs',
-        mediaQuery: '(max-width: 599px)',
+        mediaQuery: '(max-width: 599px)'
     }, {
         alias: 'sm',
-        mediaQuery: '(min-width: 600px) and (max-width: 959px)',
+        mediaQuery: '(min-width: 600px) and (max-width: 959px)'
     }, {
         alias: 'md',
-        mediaQuery: '(min-width: 860px) and (max-width: 1279px)',
+        mediaQuery: '(min-width: 860px) and (max-width: 1279px)'
     }, {
         alias: 'lg',
-        mediaQuery: '(min-width: 1280px)',
+        mediaQuery: '(min-width: 1280px)'
     }
 ] as MediaQueryDefinition[];
 
@@ -108,7 +111,7 @@ export class MediaService implements OnDestroy {
     public mediaChanged$: BehaviorSubject<string>;
     public mql = {} as { [alias: string]: MediaQueryList };
 
-    constructor(private zone: NgZone, @Optional() @Inject(MEDIA_QUERY_DEFINITIONS) mediaDefinitions?: MediaQueryDefinition[]) {
+    public constructor(private zone: NgZone, @Optional() @Inject(MEDIA_QUERY_DEFINITIONS) mediaDefinitions?: MediaQueryDefinition[]) {
         if (!mediaDefinitions) {
             mediaDefinitions = SIMPLIFIED_MEDIA_QUERY_DEFINITIONS;
         }
@@ -116,7 +119,7 @@ export class MediaService implements OnDestroy {
         mediaDefinitions.forEach(mediaDefinition => {
             const { alias, mediaQuery } = mediaDefinition;
             this.mql[alias] = window.matchMedia(mediaQuery);
-            this.mql[alias].addEventListener('change', this.onMQLEvent.bind(this, alias));
+            this.mql[alias].addEventListener('change', this.onMqlEvent.bind(this, alias));
             if (this.mql[alias].matches) {
                 this.mediaChanged$ = new BehaviorSubject(alias);
             }
@@ -129,13 +132,14 @@ export class MediaService implements OnDestroy {
     }
 
     public ngOnDestroy() {
-        Object.keys(this.mql).forEach((alias) => {
-            this.mql[alias].removeEventListener('change', this.onMQLEvent as any);
+        Object.keys(this.mql).forEach(alias => {
+            // eslint-disable-next-line @typescript-eslint/unbound-method
+            this.mql[alias].removeEventListener('change', this.onMqlEvent as never);
             delete this.mql[alias];
         });
     }
 
-    private onMQLEvent(alias: string, event: MediaQueryListEvent) {
+    private onMqlEvent(alias: string, event: MediaQueryListEvent) {
         this.zone.run(() => {
             if (event.matches) {
                 this.mediaChanged$.next(alias);

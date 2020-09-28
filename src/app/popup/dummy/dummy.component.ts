@@ -20,9 +20,9 @@ export class DummyComponent {
 
     public selectedColor = new Color(233, 30, 99);
 
-    constructor(
-        @Inject(MAT_DIALOG_DATA) public config: DejaPopupConfig,
-        public materialColors: MaterialColors,
+    public constructor(
+        @Inject(MAT_DIALOG_DATA) public config: DejaPopupConfig<unknown>,
+        public materialColors: MaterialColors
     ) { }
 
     public onColorPickerChange(event: IColorEvent) {

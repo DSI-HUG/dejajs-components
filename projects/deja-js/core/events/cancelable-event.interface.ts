@@ -9,5 +9,5 @@
 import { Subject } from 'rxjs';
 
 export interface IDejaCancelableEvent extends CustomEvent {
-    cancel$: Subject<any>;
+    cancel$: Subject<unknown>;
 }

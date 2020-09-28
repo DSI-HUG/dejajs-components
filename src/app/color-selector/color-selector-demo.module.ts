@@ -14,6 +14,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { DejaColorPickerModule } from '@deja-js/component/color-picker';
 import { DejaColorSelectorModule } from '@deja-js/component/color-selector';
+
 import { DejaMarkdownModule } from '../../component/markdown/index';
 import { DejaColorSelectorDemoComponent } from './color-selector-demo';
 import { routing } from './color-selector-demo.routes';
@@ -30,9 +31,9 @@ import { routing } from './color-selector-demo.routes';
         DejaColorSelectorModule,
         DejaColorPickerModule,
         DejaMarkdownModule,
-        routing,
+        routing
     ],
     providers: [
-    ],
+    ]
 })
 export class DejaColorSelectorDemoModule { }

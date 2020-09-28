@@ -17,6 +17,7 @@ import { DejaDateSelectorModule } from '@deja-js/component/date-selector';
 import { DejaOverlayModule } from '@deja-js/component/overlay';
 import { DejaChildValidatorModule } from '@deja-js/core';
 import { TextMaskModule } from 'angular2-text-mask';
+
 import { DejaDatePickerComponent } from './date-picker.component';
 
 @NgModule({
@@ -31,7 +32,7 @@ import { DejaDatePickerComponent } from './date-picker.component';
         MatIconModule,
         DejaChildValidatorModule,
         DejaDateSelectorModule,
-        TextMaskModule,
+        TextMaskModule
     ],
     providers: [
         MomentDateAdapter

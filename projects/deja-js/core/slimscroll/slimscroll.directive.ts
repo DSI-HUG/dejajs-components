@@ -10,6 +10,7 @@
 * Licensed under MIT https://github.com/rd-dev-ukraine/angular-io-slimscroll/blob/master/LICENSE
 */
 
+/* eslint-disable @typescript-eslint/unbound-method */
 import { Directive } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { HostListener } from '@angular/core';
@@ -19,7 +20,8 @@ import { OnInit } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import { RendererFactory2 } from '@angular/core';
 import { interval, Subscription, timer } from 'rxjs';
-import { filter, first, takeUntil } from 'rxjs/operators';
+import { filter, take, takeUntil } from 'rxjs/operators';
+
 import { Destroy } from '../destroy/destroy';
 
 interface SlimScrollOptions {
@@ -124,7 +126,7 @@ const defaults: SlimScrollOptions = {
     railBorderRadius: '7px',
     scrollTo: 0,
     autoScrollToBottom: false,
-    maxHeightBeforeEnable: undefined,
+    maxHeightBeforeEnable: undefined
 };
 
 @Directive({
@@ -169,6 +171,11 @@ export class DejaSlimScrollDirective extends Destroy implements OnInit, OnDestro
         this.railMouseDown = this.railMouseDown.bind(this);
     }
 
+    @HostListener('window:resize', ['$event'])
+    public onResize() {
+        this.init();
+    }
+
     public ngOnInit() {
         this.init();
     }
@@ -185,11 +192,6 @@ export class DejaSlimScrollDirective extends Destroy implements OnInit, OnDestro
 
         document.removeEventListener('mousemove', this.barMouseMove, false);
         document.removeEventListener('mouseup', this.barMouseUp, false);
-    }
-
-    @HostListener('window:resize', ['$event'])
-    public onResize() {
-        this.init();
     }
 
     @Input()
@@ -317,6 +319,49 @@ export class DejaSlimScrollDirective extends Destroy implements OnInit, OnDestro
         this._options.maxHeightBeforeEnable = value || defaults.maxHeightBeforeEnable;
     }
 
+    public scrollContent(y: number, isWheel: boolean, isJump = false) {
+        this._releaseScroll = false;
+        let delta: number = y;
+        const maxTop: number = this._me.offsetHeight - this._bar.offsetHeight;
+
+        if (isWheel) {
+            // move bar with mouse wheel
+            delta = parseInt(this._bar.style.top, 10) + y * this._options.wheelStep / 100 * this._bar.offsetHeight;
+
+            // move bar, make sure it doesn't go out
+            delta = Math.min(Math.max(delta, 0), maxTop);
+
+            // if scrolling down, make sure a fractional change to the
+            // scroll position isn't rounded away when the scrollbar's CSS is set
+            // this flooring of delta would happened automatically when
+            // bar.css is set below, but we floor here for clarity
+            delta = (y > 0) ? Math.ceil(delta) : Math.floor(delta);
+
+            // scroll the scrollbar
+            this._renderer.setStyle(this._bar, 'top', `${delta}px`);
+        }
+
+        // calculate actual scroll amount
+        this._percentScroll = parseInt(this._bar.style.top, 10) / (this._me.offsetHeight - this._bar.offsetHeight);
+        delta = this._percentScroll * (this._me.scrollHeight - this._me.offsetHeight);
+
+        if (isJump) {
+            delta = y;
+            let offsetTop = delta / this._me.scrollHeight * this._me.offsetHeight;
+            offsetTop = Math.min(Math.max(offsetTop, 0), maxTop);
+            this._renderer.setStyle(this._bar, 'top', `${offsetTop}px`);
+        }
+
+        // scroll content
+        this._me.scrollTop = delta;
+
+        // ensure bar is visible
+        this.showBar();
+
+        // trigger hide when scroll is stopped
+        this.hideBar();
+    }
+
     private init() {
         // ensure we are not binding it again
         if (this._bar && this._rail) {
@@ -343,7 +388,7 @@ export class DejaSlimScrollDirective extends Destroy implements OnInit, OnDestro
                 }
             }
         });
-    }
+    };
 
     private hasParentClass(e: HTMLElement, className: string): boolean {
         if (!e) {
@@ -404,7 +449,7 @@ export class DejaSlimScrollDirective extends Destroy implements OnInit, OnDestro
         }
 
         // when bar reached top or bottom
-        // tslint:disable-next-line:no-bitwise
+        // eslint-disable-next-line no-bitwise
         if (this._percentScroll === ~~this._percentScroll) {
             // release wheel
             this._releaseScroll = this._options.allowPageScroll;
@@ -427,7 +472,7 @@ export class DejaSlimScrollDirective extends Destroy implements OnInit, OnDestro
         // only hide when options allow it
         if (!this._options.alwaysVisible && !(this._options.disableFadeOut && this._isOverPanel) && !this._isOverBar && !this._isDragg) {
             this._queueHide = timer(1000).pipe(
-                first(),
+                take(1),
                 filter(() => !this._queueHide),
                 takeUntil(this.destroyed$)
             ).subscribe(() => {
@@ -435,49 +480,6 @@ export class DejaSlimScrollDirective extends Destroy implements OnInit, OnDestro
                 this._renderer.setStyle(this._rail, 'opacity', '0');
             });
         }
-    }
-
-    public scrollContent(y: number, isWheel: boolean, isJump = false) {
-        this._releaseScroll = false;
-        let delta: number = y;
-        const maxTop: number = this._me.offsetHeight - this._bar.offsetHeight;
-
-        if (isWheel) {
-            // move bar with mouse wheel
-            delta = parseInt(this._bar.style.top, 10) + y * this._options.wheelStep / 100 * this._bar.offsetHeight;
-
-            // move bar, make sure it doesn't go out
-            delta = Math.min(Math.max(delta, 0), maxTop);
-
-            // if scrolling down, make sure a fractional change to the
-            // scroll position isn't rounded away when the scrollbar's CSS is set
-            // this flooring of delta would happened automatically when
-            // bar.css is set below, but we floor here for clarity
-            delta = (y > 0) ? Math.ceil(delta) : Math.floor(delta);
-
-            // scroll the scrollbar
-            this._renderer.setStyle(this._bar, 'top', `${delta}px`);
-        }
-
-        // calculate actual scroll amount
-        this._percentScroll = parseInt(this._bar.style.top, 10) / (this._me.offsetHeight - this._bar.offsetHeight);
-        delta = this._percentScroll * (this._me.scrollHeight - this._me.offsetHeight);
-
-        if (isJump) {
-            delta = y;
-            let offsetTop = delta / this._me.scrollHeight * this._me.offsetHeight;
-            offsetTop = Math.min(Math.max(offsetTop, 0), maxTop);
-            this._renderer.setStyle(this._bar, 'top', `${offsetTop}px`);
-        }
-
-        // scroll content
-        this._me.scrollTop = delta;
-
-        // ensure bar is visible
-        this.showBar();
-
-        // trigger hide when scroll is stopped
-        this.hideBar();
     }
 
     private getBarHeight() {

@@ -6,34 +6,36 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+
 import { DejaCodeViewerComponent } from './code-viewer.component';
 
 describe('DejaCodeViewerComponent', () => {
     let component: DejaCodeViewerComponent;
     let fixture: ComponentFixture<DejaCodeViewerComponent>;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        void TestBed.configureTestingModule({
             declarations: [
-                DejaCodeViewerComponent,
+                DejaCodeViewerComponent
             ],
             imports: [
-            ],
+            ]
         }).compileComponents();
 
         fixture = TestBed.createComponent(DejaCodeViewerComponent);
         component = fixture.componentInstance;
     }));
 
-    it('should create the component', async(() => {
-        expect(component).toBeTruthy();
+    it('should create the component', waitForAsync(() => {
+        void expect(component).toBeTruthy();
     }));
 
-    it('should load prismjs', async(() => {
+    it('should load prismjs', waitForAsync(() => {
         fixture.detectChanges();
-        fixture.whenStable().then(() => {
-            expect(window.hasOwnProperty('Prism')).toBeTruthy();
+        return fixture.whenStable().then(() => {
+            // eslint-disable-next-line no-prototype-builtins
+            void expect(window.hasOwnProperty('Prism')).toBeTruthy();
         });
     }));
 });

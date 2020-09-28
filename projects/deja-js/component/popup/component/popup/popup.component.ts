@@ -6,7 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { Component, Inject, Injector, ViewEncapsulation } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+
 import { DejaPopupAction } from '../../model/popup-action.model';
 import { DejaPopupBase } from '../../model/popup-base.class';
 import { DejaPopupConfig } from '../../model/popup-config.model';
@@ -15,21 +16,22 @@ import { DejaPopupConfig } from '../../model/popup-config.model';
     encapsulation: ViewEncapsulation.None,
     selector: 'deja-popup',
     styleUrls: ['popup.component.scss'],
-    templateUrl: 'popup.component.html',
+    templateUrl: 'popup.component.html'
 })
 export class DejaPopupComponent extends DejaPopupBase {
 
     public isMinified = false;
     public isFullscreen = false;
 
-    constructor(
+    public constructor(
         public dialogRef: MatDialogRef<DejaPopupBase>,
-        @Inject(MAT_DIALOG_DATA) public config: DejaPopupConfig,
-        protected injector: Injector,
+        @Inject(MAT_DIALOG_DATA) public config: DejaPopupConfig<unknown>,
+        protected injector: Injector
     ) {
         super();
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     public doAction(_action: DejaPopupAction) { }
 
 }

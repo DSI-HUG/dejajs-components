@@ -9,6 +9,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -21,6 +22,7 @@ import { DejaMessageBoxModule } from '@deja-js/component/message-box';
 import { DejaSelectModule } from '@deja-js/component/select';
 import { DejaBoldQueryModule } from '@deja-js/component/templates';
 import { DejaItemModule } from '@deja-js/core';
+
 import { DejaMarkdownModule } from '../../component/markdown/index';
 import { NewsCardModule } from '../common/news-card.module';
 import { SelectDemoComponent } from './select-demo';
@@ -28,7 +30,7 @@ import { routing } from './select-demo.routes';
 
 @NgModule({
     declarations: [
-        SelectDemoComponent,
+        SelectDemoComponent
     ],
     exports: [SelectDemoComponent],
     imports: [
@@ -42,6 +44,7 @@ import { routing } from './select-demo.routes';
         MatTabsModule,
         MatToolbarModule,
         MatInputModule,
+        MatButtonModule,
         DejaSelectModule,
         DejaMarkdownModule,
         DejaMessageBoxModule,
@@ -49,9 +52,9 @@ import { routing } from './select-demo.routes';
         DejaItemModule,
         DejaBoldQueryModule,
         NewsCardModule,
-        routing,
+        routing
     ],
     providers: [
-    ],
+    ]
 })
 export class SelectDemoModule { }

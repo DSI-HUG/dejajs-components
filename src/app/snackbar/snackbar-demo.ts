@@ -10,12 +10,13 @@ import { Component, EventEmitter, OnInit } from '@angular/core';
 import { MaterialColors } from '@deja-js/core';
 import { from, interval, Observable } from 'rxjs';
 import { defaultIfEmpty, filter, map, scan } from 'rxjs/operators';
+
 import { Message } from './message.class';
 
 @Component({
     selector: 'deja-snackbar-demo',
     styleUrls: ['./snackbar-demo.scss'],
-    templateUrl: './snackbar-demo.html',
+    templateUrl: './snackbar-demo.html'
 })
 export class DejaSnackbarDemoComponent implements OnInit {
     public tabIndex = 1;
@@ -24,18 +25,17 @@ export class DejaSnackbarDemoComponent implements OnInit {
      The example below demonstrate how you can dynamically add snackbars using *ngFor structural directive.
      Here the Observable simulate items being push from the server
      */
-    public messages: Observable<any[]>;
+    public messages$: Observable<Message[]>;
 
-    public dangers: Observable<any[]>;
-    public warnings: Observable<any[]>;
-    public successes: Observable<any[]>;
-    public infos: Observable<any[]>;
+    public dangers$: Observable<Message[]>;
+    public warnings$: Observable<Message[]>;
+    public successes$: Observable<Message[]>;
+    public infos$: Observable<Message[]>;
 
-    public push = new EventEmitter();
+    public push = new EventEmitter<string>();
 
     public simpleGate = false;
 
-    private colors: any;
     public danger: string;
     public warning: string;
     public success: string;
@@ -43,41 +43,40 @@ export class DejaSnackbarDemoComponent implements OnInit {
     public default: string;
 
     public ngOnInit() {
-        // tslint:disable-next-line:no-string-literal
-        this.colors = new MaterialColors()['palet'];
-        this.danger = this.colors['mat-red']['500'];
-        this.warning = this.colors['mat-orange']['500'];
-        this.success = this.colors['mat-green']['500'];
-        this.info = this.colors['mat-blue']['500'];
-        this.default = this.colors['mat-grey']['900'];
+        const colors = new MaterialColors();
+        this.danger = colors.getColor('mat-red')[500];
+        this.warning = colors.getColor('mat-orange')[500];
+        this.success = colors.getColor('mat-green')[500];
+        this.info = colors.getColor('mat-blue')[500];
+        this.default = colors.getColor('mat-grey')[900];
 
-        this.dangers = from(this.push).pipe(
-            filter((type: string) => type === 'danger'),
+        this.dangers$ = from(this.push).pipe(
+            filter(type => type === 'danger'),
             map(() => new Message('Danger snackbar')),
-            scan((acc: any[], curr: any) => [...acc, curr], []),
+            scan((acc, curr) => [...acc, curr], [] as Message[]),
             defaultIfEmpty([]));
 
-        this.warnings = from(this.push).pipe(
-            filter((type: string) => type === 'warning'),
+        this.warnings$ = from(this.push).pipe(
+            filter(type => type === 'warning'),
             map(() => new Message('Warning snackbar')),
-            scan((acc: any[], curr: any) => [...acc, curr], []),
+            scan((acc, curr) => [...acc, curr], [] as Message[]),
             defaultIfEmpty([]));
 
-        this.successes = from(this.push).pipe(
-            filter((type: string) => type === 'success'),
+        this.successes$ = from(this.push).pipe(
+            filter(type => type === 'success'),
             map(() => new Message('Success snackbar')),
-            scan((acc: any[], curr: any) => [...acc, curr], []),
+            scan((acc, curr) => [...acc, curr], [] as Message[]),
             defaultIfEmpty([]));
 
-        this.infos = from(this.push).pipe(
-            filter((type: string) => type === 'info'),
+        this.infos$ = from(this.push).pipe(
+            filter(type => type === 'info'),
             map(() => new Message('Info snackbar')),
-            scan((acc: any[], curr: any) => [...acc, curr], []),
+            scan((acc, curr) => [...acc, curr], [] as Message[]),
             defaultIfEmpty([]));
 
-        this.messages = interval(2000).pipe(
+        this.messages$ = interval(2000).pipe(
             map(() => new Message('Server push snackbar')),
-            scan((acc: any[], curr: any) => [...acc, curr], []),
+            scan((acc, curr) => [...acc, curr], [] as Message[]),
             defaultIfEmpty([]));
     }
 }

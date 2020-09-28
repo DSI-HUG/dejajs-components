@@ -9,11 +9,12 @@
 import { Injectable } from '@angular/core';
 import { IItemBase, ItemListService } from '@deja-js/core';
 import { Observable } from 'rxjs';
+
 import { CountriesService } from './countries.service';
 
 @Injectable()
 export class CountriesListService extends ItemListService {
-    constructor(private countriesService: CountriesService) {
+    public constructor(private countriesService: CountriesService) {
         super();
     }
 

@@ -13,6 +13,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { DejaTagModule } from '@deja-js/component/tag';
+
 import { DejaMarkdownModule } from '../../component/markdown/index';
 import { DejaTagDemoComponent } from './tag-demo.component';
 import { routing } from './tag-demo.routes';
@@ -28,9 +29,9 @@ import { routing } from './tag-demo.routes';
         MatToolbarModule,
         DejaTagModule,
         DejaMarkdownModule,
-        routing,
+        routing
     ],
     providers: [
-    ],
+    ]
 })
 export class DejaTagDemoModule { }

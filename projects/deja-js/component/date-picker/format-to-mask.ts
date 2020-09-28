@@ -11,6 +11,7 @@
  *
  * Not fully implemented yet
  */
+/* eslint-disable @typescript-eslint/naming-convention */
 export const formatToMask = {
     M: null,
     Mo: null,
@@ -65,8 +66,8 @@ export const formatToMask = {
     Z: null,
     ZZ: null,
     X: null,
-    x: null,
-} as {[f: string]: any[]};
+    x: null
+} as {[f: string]: RegExp[]};
 
 export const formatToUnitOfTime = {
     M: null,
@@ -122,5 +123,5 @@ export const formatToUnitOfTime = {
     Z: null,
     ZZ: null,
     X: null,
-    x: null,
+    x: null
 } as {[f: string]: string};

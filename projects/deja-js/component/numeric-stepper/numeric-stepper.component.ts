@@ -23,36 +23,33 @@ import { Output } from '@angular/core';
 import { Self } from '@angular/core';
 import { ViewChild } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
-import {FormControl } from '@angular/forms';
-import {FormGroupDirective } from '@angular/forms';
-import {NgControl } from '@angular/forms';
-import {NgForm } from '@angular/forms';
-import {ValidationErrors } from '@angular/forms';
-import {Validator } from '@angular/forms';
-import {ValidatorFn } from '@angular/forms';
+import { FormControl } from '@angular/forms';
+import { FormGroupDirective } from '@angular/forms';
+import { NgControl } from '@angular/forms';
+import { NgForm } from '@angular/forms';
+import { ValidationErrors } from '@angular/forms';
+import { Validator } from '@angular/forms';
+import { ValidatorFn } from '@angular/forms';
 import { CanUpdateErrorState } from '@angular/material/core';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
+import { DejaChildValidatorDirective, DejaTextMetricsService } from '@deja-js/core';
 import { _MatInputMixinBase } from '@deja-js/core/util';
 import { Subject } from 'rxjs';
 
-import { DejaChildValidatorDirective, DejaTextMetricsService } from '@deja-js/core';
-
-export const createCounterRangeValidator = (comp: DejaNumericStepperComponent) => {
-    return (c: FormControl) => {
-        const err = {
-            rangeError: {
-                given: c.value,
-                max: comp.max,
-                min: comp.min
-            }
-        };
-
-        if (c.value === null || c.value === undefined) {
-            return null;
+export const createCounterRangeValidator = (comp: DejaNumericStepperComponent) => (c: FormControl) => {
+    const err = {
+        rangeError: {
+            given: c.value,
+            max: comp.max,
+            min: comp.min
         }
-        return comp.isOffLimits ? err : null;
     };
+
+    if (c.value === null || c.value === undefined) {
+        return null;
+    }
+    return comp.isOffLimits ? err : null;
 };
 
 @Component({
@@ -62,23 +59,42 @@ export const createCounterRangeValidator = (comp: DejaNumericStepperComponent) =
     styleUrls: ['numeric-stepper.component.scss'],
     templateUrl: 'numeric-stepper.component.html'
 })
+// eslint-disable-next-line @angular-eslint/no-conflicting-lifecycle
 export class DejaNumericStepperComponent extends _MatInputMixinBase implements CanUpdateErrorState, DoCheck, OnChanges, OnDestroy, ControlValueAccessor, MatFormFieldControl<number>, Validator {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     public static nextId = 0;
+
+    /** Output to get the event when the value is modified (no validation)  */
+    @Output() public readonly textChange = new EventEmitter<number>();
+
     @HostBinding() public id = `deja-numeric-stepper-${DejaNumericStepperComponent.nextId++}`;
     @HostBinding('class.floating') public get shouldLabelFloat() {
         return this.focused || !this.empty || this.alwaysDisplayUnit;
     }
 
     @HostBinding('attr.aria-describedby') public describedBy = '';
+    @HostBinding('attr.disabled') public _disabled: boolean = null;
+
+    /** Unit of stepper */
+    @Input() public unit: string;
 
     public controlType = 'deja-numeric-stepper';
     public errorState = false;
     public size = 0;
+    // eslint-disable-next-line rxjs/finnish
     public stateChanges = new Subject<void>();
     public focused = false;
 
-    /** InputElement of stepper */
+    /** Function for min / max validation */
+    public validateFn: ValidatorFn;
+
+    private _hideSteppers = false;
     private inputElement: HTMLInputElement;
+    private _max: number = null;
+    private _min: number = null;
+    private _step = 1;
+
+    /** InputElement of stepper */
     @ViewChild('inputStepper')
     public set inputElementRef(element: ElementRef) {
         if (element) {
@@ -87,10 +103,10 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     }
 
     /** Max value of stepper */
-    private _max: number = null;
     public get max() {
         return this._max;
     }
+
     @Input()
     public set max(value) {
         this._max = coerceNumberProperty(value, null);
@@ -98,10 +114,10 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     }
 
     /** Min value of stepper */
-    private _min: number = null;
     public get min() {
         return this._min;
     }
+
     @Input()
     public set min(value) {
         this._min = coerceNumberProperty(value, null);
@@ -113,24 +129,21 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     }
 
     /** Step for stepper : default 1 */
-    private _step = 1;
     public get step() {
         return this._step;
     }
+
     @Input()
     public set step(value) {
         this._step = coerceNumberProperty(value, 1);
         this.changeDetectorRef.markForCheck();
     }
 
-    /** Unit of stepper */
-    @Input() public unit: string;
-
     /** hide the steppers */
-    private _hideSteppers = false;
     public get hideSteppers() {
         return this._hideSteppers;
     }
+
     @Input()
     public set hideSteppers(value) {
         this._hideSteppers = coerceBooleanProperty(value);
@@ -150,19 +163,23 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     @Input() public get placeholder() {
         return this._placeholder;
     }
+
     public set placeholder(plh) {
         this._placeholder = plh;
         this.stateChanges.next();
     }
+
     private _placeholder: string;
 
     /** unit always visible */
     @Input() public get alwaysDisplayUnit() {
         return this._alwaysDisplayUnit;
     }
+
     public set alwaysDisplayUnit(value) {
         this._alwaysDisplayUnit = coerceBooleanProperty(value);
     }
+
     private _alwaysDisplayUnit: boolean;
 
     public get empty() {
@@ -171,12 +188,12 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
 
     private _value: number;
 
-    /** Function for min / max validation */
-    public validateFn: ValidatorFn;
-
-    /** Output to get the event when the value is modified (no validation)  */
-    @Output()
-    public textChange: EventEmitter<number> = new EventEmitter<number>();
+    /**
+ * Get disable value
+ */
+    public get disabled() {
+        return this.ngControl ? this.ngControl.disabled : this._disabled;
+    }
 
     /** Allow to disabled the component */
     @Input()
@@ -189,27 +206,15 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     @Input() public get required() {
         return this._required;
     }
+
     public set required(req) {
         this._required = coerceBooleanProperty(req);
         this.stateChanges.next();
     }
+
     private _required = false;
 
-    /**
-     * Get disable value
-     */
-    public get disabled() {
-        return this.ngControl ? this.ngControl.disabled : this._disabled;
-    }
-
-    @HostBinding('attr.disabled') public _disabled: boolean = null;
-
-    // NgModel implementation
-    protected onTouchedCallback = () => { };
-    protected onChangeCallback = (_?: any) => { };
-    protected onValidatorChangeCallback = () => { };
-
-    constructor(
+    public constructor(
         public dejaTextMetricsService: DejaTextMetricsService,
         private elementRef: ElementRef,
         private changeDetectorRef: ChangeDetectorRef,
@@ -217,13 +222,14 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
         private fm: FocusMonitor,
         @Optional() _parentForm: NgForm,
         @Optional() _parentFormGroup: FormGroupDirective,
-        _defaultErrorStateMatcher: ErrorStateMatcher,
+        _defaultErrorStateMatcher: ErrorStateMatcher
     ) {
         super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
         if (this.ngControl) {
             this.ngControl.valueAccessor = this;
         }
 
+        // eslint-disable-next-line rxjs-angular/prefer-takeuntil
         this.fm.monitor(elementRef.nativeElement, true).subscribe(origin => {
             this.focused = !!origin;
             if (!this.focused) {
@@ -233,10 +239,11 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
         });
     }
 
+    // eslint-disable-next-line @angular-eslint/no-conflicting-lifecycle, @typescript-eslint/no-explicit-any
     public ngOnChanges(changes: any) {
         if (changes.min || changes.max) {
             this.validateFn = createCounterRangeValidator(this);
-            if (this.ngControl && this.ngControl.control) {
+            if (this.ngControl?.control) {
                 const validators: ValidatorFn[] = [this.validateFn];
                 if (this.ngControl.control.validator) {
                     validators.push(this.ngControl.control.validator);
@@ -246,6 +253,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
         }
     }
 
+    // eslint-disable-next-line @angular-eslint/no-conflicting-lifecycle
     public ngDoCheck() {
         if (this.ngControl) {
             // We need to re-evaluate this on every change detection cycle, because there are some
@@ -255,13 +263,14 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
         }
     }
 
-    public validate(c: FormControl): ValidationErrors {
-        return this.validateFn(c) || (c.validator && c.validator(c));
-    }
-
+    // eslint-disable-next-line @angular-eslint/no-conflicting-lifecycle
     public ngOnDestroy() {
         this.stateChanges.complete();
         this.fm.stopMonitoring(this.elementRef.nativeElement);
+    }
+
+    public validate(c: FormControl): ValidationErrors {
+        return this.validateFn(c) || c.validator?.(c);
     }
 
     public setDescribedByIds(ids: string[]) {
@@ -304,11 +313,11 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
         this.textChange.emit(value);
     }
 
-    public registerOnChange(fn: any) {
+    public registerOnChange(fn: (_a: unknown) => void) {
         this.onChangeCallback = fn;
     }
 
-    public registerOnTouched(fn: any) {
+    public registerOnTouched(fn: () => void) {
         this.onTouchedCallback = fn;
     }
 
@@ -320,4 +329,9 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     public checkSize(value?: number) {
         this.size = this.dejaTextMetricsService.getTextWidth((value || this.value || 0).toString(), this.elementRef.nativeElement);
     }
+
+    // NgModel implementation
+    protected onTouchedCallback = () => undefined as void;
+    protected onChangeCallback = (_?: unknown) => undefined as void;
+    protected onValidatorChangeCallback = () => undefined as void;
 }

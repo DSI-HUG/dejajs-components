@@ -8,18 +8,21 @@
 
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MediaService } from '@deja-js/core';
 import { of, timer } from 'rxjs';
 import { delay } from 'rxjs/operators';
+
 import { MockMediaService } from '../overlay/test/MockMediaService';
 import { DejaTooltipModule } from './index';
 import { DejaTooltipDirective } from './tooltip.directive';
 
 @Component({
+    selector: 'DejaTooltipContainerComponent',
+    // eslint-disable-next-line @angular-eslint/component-max-inline-declarations
     template: `<span deja-tooltip="test-tt" [tooltip-model]="toolTipModel" (tooltip-show)="tooltipVisible = true">Un message "success"</span>
                 <deja-tooltip name="test-tt" *ngIf="tooltipVisible" (hide)="tooltipVisible = false">
                     <ng-template #tooltipTemplate let-model>
@@ -27,28 +30,29 @@ import { DejaTooltipDirective } from './tooltip.directive';
                             {{model.text}}
                         </div>
                     </ng-template>
-                </deja-tooltip>`,
+                </deja-tooltip>`
 })
 class DejaTooltipContainerComponent {
-    public static toolTipText = 'Je suis un deja-tooltip';
+    public static TOOLTIPTEXT = 'Je suis un deja-tooltip';
 
-    public static toolTipModel1 = {
-        text: DejaTooltipContainerComponent.toolTipText,
+    public static TOOLTIPMODEL1 = {
+        text: DejaTooltipContainerComponent.TOOLTIPTEXT
     };
 
     // Asynchronous model
-    public static toolTipModel2 = of({
-        text: `${DejaTooltipContainerComponent.toolTipText}_$`,
+    public static TOOLTIPMODEL2$ = of({
+        text: `${DejaTooltipContainerComponent.TOOLTIPTEXT}_$`
     }).pipe(delay(50));
 
     // Promised model
-    public static toolTipModel3 = DejaTooltipContainerComponent.toolTipModel2.toPromise();
+    // eslint-disable-next-line rxjs/no-topromise
+    public static TOOLTIPMODEL3 = DejaTooltipContainerComponent.TOOLTIPMODEL2$.toPromise();
 
-    public toolTipModel: any;
+    public toolTipModel: unknown;
     public tooltipVisible = false;
 
-    constructor() {
-        this.toolTipModel = DejaTooltipContainerComponent.toolTipModel1;
+    public constructor() {
+        this.toolTipModel = DejaTooltipContainerComponent.TOOLTIPMODEL1;
     }
 }
 
@@ -65,27 +69,28 @@ const sendMouseEvent = (element: EventTarget, type: string, pageX: number, pageY
         buttons: buttons,
         clientX: pageX,
         clientY: pageY,
-        relatedTarget: element,
+        relatedTarget: element
     } as MouseEventInit);
     const event = new MouseEvent(type, eventInit());
     element.dispatchEvent(event);
 };
 
 describe('DejaTooltipComponent', () => {
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        void TestBed.configureTestingModule({
             declarations: [
-                DejaTooltipContainerComponent,
+                DejaTooltipContainerComponent
             ],
             imports: [
                 BrowserAnimationsModule,
                 CommonModule,
                 FormsModule,
-                DejaTooltipModule,
+                DejaTooltipModule
             ],
             providers: [
                 {
-                    provide: MediaService, useClass:
+                    provide: MediaService,
+                    useClass:
                         MockMediaService
                 }
             ]
@@ -97,31 +102,32 @@ describe('DejaTooltipComponent', () => {
         fixture.detectChanges();
         const tooltipDebugElement = fixture.debugElement.query(By.directive(DejaTooltipDirective));
         const tooltipInstance = tooltipDebugElement.componentInstance as DejaTooltipDirective;
-        expect(tooltipInstance).toBeTruthy();
+        void expect(tooltipInstance).toBeTruthy();
     });
 
-    it('should open the tooltip when the mouse still over and close after leave', async (done) => {
+    it('should open the tooltip when the mouse still over and close after leave', done => {
         const fixture = TestBed.createComponent(DejaTooltipContainerComponent);
         fixture.detectChanges();
 
-        fixture.whenRenderingDone().then(() => {
+        void fixture.whenRenderingDone().then(() => {
             const tooltipDirectiveDebugElement = fixture.debugElement.query(By.directive(DejaTooltipDirective));
             sendMouseEvent(tooltipDirectiveDebugElement.nativeElement, 'mouseenter', 0, 0);
             fixture.detectChanges();
 
             timer(1000).subscribe(() => {
                 fixture.detectChanges();
-                fixture.whenStable().then(() => {
-                    const tooltip = document.querySelector('#tooltip') as HTMLElement;
-                    expect(tooltip && tooltip.innerText).toEqual(DejaTooltipContainerComponent.toolTipText);
+                void fixture.whenStable().then(() => {
+                    const tooltip = document.querySelector<HTMLElement>('#tooltip');
+                    void expect(tooltip?.innerText).toEqual(DejaTooltipContainerComponent.TOOLTIPTEXT);
 
                     sendMouseEvent(tooltipDirectiveDebugElement.nativeElement, 'mousemove', 0, 200);
                     fixture.detectChanges();
+                    // eslint-disable-next-line rxjs/no-nested-subscribe
                     timer(500).subscribe(() => {
                         fixture.detectChanges();
-                        fixture.whenStable().then(() => {
-                            const tooltip2 = document.querySelector('#tooltip') as HTMLElement;
-                            expect(tooltip2).toBeNull();
+                        void fixture.whenStable().then(() => {
+                            const tooltip2 = document.querySelector('#tooltip');
+                            void expect(tooltip2).toBeNull();
                             done();
                         });
                     });
@@ -130,13 +136,13 @@ describe('DejaTooltipComponent', () => {
         });
     });
 
-    it('should open the tooltip when the mouse still over with an asynchronous model', async (done) => {
+    it('should open the tooltip when the mouse still over with an asynchronous model', done => {
         const fixture = TestBed.createComponent(DejaTooltipContainerComponent);
         fixture.detectChanges();
 
-        fixture.whenRenderingDone().then(() => {
+        return fixture.whenRenderingDone().then(() => {
             const containerComponent = fixture.componentInstance;
-            containerComponent.toolTipModel = DejaTooltipContainerComponent.toolTipModel2;
+            containerComponent.toolTipModel = DejaTooltipContainerComponent.TOOLTIPMODEL2$;
             fixture.detectChanges();
 
             const tooltipDirectiveDebugElement = fixture.debugElement.query(By.directive(DejaTooltipDirective));
@@ -145,23 +151,23 @@ describe('DejaTooltipComponent', () => {
 
             timer(1000).subscribe(() => {
                 fixture.detectChanges();
-                fixture.whenStable().then(() => {
+                void fixture.whenStable().then(() => {
                     fixture.detectChanges();
-                    const tooltip = document.querySelector('#tooltip') as HTMLElement;
-                    expect(tooltip && tooltip.innerText).toEqual(`${DejaTooltipContainerComponent.toolTipText}_$`);
+                    const tooltip = document.querySelector<HTMLElement>('#tooltip');
+                    void expect(tooltip?.innerText).toEqual(`${DejaTooltipContainerComponent.TOOLTIPTEXT}_$`);
                     done();
                 });
             });
         });
     });
 
-    it('should open the tooltip when the mouse still over with a promised model', async (done) => {
+    it('should open the tooltip when the mouse still over with a promised model', done => {
         const fixture = TestBed.createComponent(DejaTooltipContainerComponent);
         fixture.detectChanges();
 
-        fixture.whenRenderingDone().then(() => {
+        void fixture.whenRenderingDone().then(() => {
             const containerComponent = fixture.componentInstance;
-            containerComponent.toolTipModel = DejaTooltipContainerComponent.toolTipModel3;
+            containerComponent.toolTipModel = DejaTooltipContainerComponent.TOOLTIPMODEL3;
             fixture.detectChanges();
 
             const tooltipDirectiveDebugElement = fixture.debugElement.query(By.directive(DejaTooltipDirective));
@@ -170,10 +176,10 @@ describe('DejaTooltipComponent', () => {
 
             timer(1000).subscribe(() => {
                 fixture.detectChanges();
-                fixture.whenStable().then(() => {
+                void fixture.whenStable().then(() => {
                     fixture.detectChanges();
-                    const tooltip = document.querySelector('#tooltip') as HTMLElement;
-                    expect(tooltip && tooltip.innerText).toEqual(`${DejaTooltipContainerComponent.toolTipText}_$`);
+                    const tooltip = document.querySelector<HTMLElement>('#tooltip');
+                    void expect(tooltip?.innerText).toEqual(`${DejaTooltipContainerComponent.TOOLTIPTEXT}_$`);
                     done();
                 });
             });

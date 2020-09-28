@@ -8,18 +8,19 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+
 import { DejaItemComponent } from './item.component';
 
 @NgModule({
     declarations: [
-        DejaItemComponent,
+        DejaItemComponent
     ],
     exports: [
-        DejaItemComponent,
+        DejaItemComponent
     ],
     imports: [
-        CommonModule,
-    ],
+        CommonModule
+    ]
 })
 export class DejaItemModule { }
 

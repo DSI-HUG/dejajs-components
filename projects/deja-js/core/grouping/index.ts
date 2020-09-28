@@ -7,14 +7,15 @@
  */
 
 import { NgModule } from '@angular/core';
+
 import { SortingService } from '../sorting/sorting.service';
 import { GroupingService } from './grouping.service';
 
 @NgModule({
     providers: [
         SortingService,
-        GroupingService,
-    ],
+        GroupingService
+    ]
 })
 export class GroupingModule { }
 

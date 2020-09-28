@@ -8,25 +8,26 @@
 import { Component } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { Input } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { combineLatest, from, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Destroy } from '@deja-js/core';
+import { combineLatest, from } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
+
 import { DejaColorFab } from './color-fab.class';
 
 @Component({
     selector: 'deja-color-fab',
     styleUrls: [
-        './color-fab.component.scss',
+        './color-fab.component.scss'
     ],
-    template: '<ng-content></ng-content>',
+    template: '<ng-content></ng-content>'
 })
-export class DejaColorFabComponent implements OnDestroy {
+export class DejaColorFabComponent extends Destroy {
     public element: HTMLElement;
 
     private _colorFab: DejaColorFab;
-    private subscriptions = [] as Subscription[];
 
-    constructor(el: ElementRef) {
+    public constructor(el: ElementRef) {
+        super();
         this.element = el.nativeElement as HTMLElement;
     }
 
@@ -43,24 +44,18 @@ export class DejaColorFabComponent implements OnDestroy {
                 }
             };
 
-            this.subscriptions.push(from(colorFab.active$)
-                .subscribe(value => toogleAttribute('active', value)));
+            from(colorFab.active$).pipe(
+                takeUntil(this.destroyed$)
+            ).subscribe(value => toogleAttribute('active', value));
 
-            this.subscriptions.push(combineLatest(colorFab.color$, colorFab.disabled$).pipe(
-                map(([color, disabled]) => color && disabled ? color.grayScale : color)
-            ).subscribe(color => this.element.style.backgroundColor = color ? color.toHex() : ''));
-
-        } else {
-            this.subscriptions.forEach((subscription) => subscription.unsubscribe());
-            this.subscriptions = [];
+            combineLatest([colorFab.color$, colorFab.disabled$]).pipe(
+                map(([color, disabled]) => color && disabled ? color.grayScale : color),
+                takeUntil(this.destroyed$)
+            ).subscribe(color => this.element.style.backgroundColor = color ? color.toHex() : '');
         }
     }
 
     public get tile() {
         return this._colorFab;
-    }
-
-    public ngOnDestroy() {
-        this.subscriptions.forEach((subscription) => subscription.unsubscribe());
     }
 }

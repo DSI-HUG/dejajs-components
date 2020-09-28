@@ -7,6 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+
 import { DejaPopupAction } from '../../model/popup-action.model';
 import { DejaPopupConfig } from '../../model/popup-config.model';
 
@@ -19,7 +20,7 @@ import { DejaPopupConfig } from '../../model/popup-config.model';
 export class DejaPopupActionsComponent implements OnInit {
 
     public buttons: DejaPopupAction[];
-    constructor(@Inject(MAT_DIALOG_DATA) public config: DejaPopupConfig) { }
+    public constructor(@Inject(MAT_DIALOG_DATA) public config: DejaPopupConfig<unknown>) { }
 
     public ngOnInit() {
         if (this.config.actions.length) {

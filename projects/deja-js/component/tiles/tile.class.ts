@@ -10,7 +10,7 @@ import { Rect } from '@deja-js/core';
 import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
 
 export class DejaTile {
-    protected static currentId = 0;
+    protected static CURRENT_ID = 0;
 
     public cutted$ = new BehaviorSubject<boolean>(false);
     public dragging$ = new BehaviorSubject<boolean>(false);
@@ -25,7 +25,7 @@ export class DejaTile {
 
     private _id: string;
     private _color: string;
-    private _templateModel: any;
+    private _templateModel: unknown;
     private _isDragging = false;
     private _isDropping = false;
     private _isPressed = false;
@@ -37,8 +37,8 @@ export class DejaTile {
     private _fading: boolean;
     private _percentBounds: Rect;
 
-    constructor(id?: string) {
-        this._id = id || `#${DejaTile.currentId++}`;
+    public constructor(id?: string) {
+        this._id = id || `#${DejaTile.CURRENT_ID++}`;
     }
 
     public get idealBounds() {
@@ -64,7 +64,7 @@ export class DejaTile {
         return this._percentBounds;
     }
 
-    public set templateModel(value: any) {
+    public set templateModel(value: unknown) {
         this._templateModel = value;
     }
 
@@ -154,6 +154,10 @@ export class DejaTile {
         this._pending = value;
     }
 
+    public get isPending() {
+        return this._pending;
+    }
+
     public get fading() {
         return this._fading;
     }
@@ -162,12 +166,8 @@ export class DejaTile {
         this._fading = value;
     }
 
-    public get isPending() {
-        return this._pending;
-    }
-
     public makeId() {
-        this._id = `#${DejaTile.currentId++}`;
+        this._id = `#${DejaTile.CURRENT_ID++}`;
     }
 
     public equalsTo(tile: DejaTile) {
@@ -177,6 +177,7 @@ export class DejaTile {
             return this._id === tile._id;
         }
     }
+
     public clone(tile?: DejaTile) {
         if (!tile) {
             tile = new DejaTile(this.id);

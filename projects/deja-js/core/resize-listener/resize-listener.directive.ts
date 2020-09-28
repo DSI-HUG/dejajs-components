@@ -13,14 +13,14 @@ import { OnDestroy } from '@angular/core';
 import { Output } from '@angular/core';
 
 @Directive({
-    selector: '[resize-listener]',
+    selector: '[resize-listener]'
 })
 export class DejaResizeListenerDirective implements OnDestroy {
+    @Output() public readonly sizeChanged = new EventEmitter<Event>();
     private element: HTMLElement;
     private resizeSensor: HTMLDivElement;
-    @Output() public sizeChanged = new EventEmitter<Event>();
 
-    constructor(public elementRef: ElementRef) {
+    public constructor(public elementRef: ElementRef) {
         this.element = elementRef.nativeElement as HTMLElement;
         this.resizeSensor = document.createElement('div');
         this.resizeSensor.dir = 'ltr';

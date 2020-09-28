@@ -7,25 +7,26 @@
  */
 
 import { Range } from '@deja-js/component/range';
+
 import { Weight } from './weight.interface';
 
 export const readOnlyRanges = [
     new Range(4, 16),
     new Range(16, 20),
     new Range(20, 24),
-    new Range(24, 36),
+    new Range(24, 36)
 ];
 
 export const ranges = [
     new Range(0, 12.5),
     new Range(12.5, 25),
-    new Range(25, 30),
+    new Range(25, 30)
 ];
 
 export const rangesWithInterval = [
     new Range(0, 12),
     new Range(12, 20),
-    new Range(20, 24),
+    new Range(20, 24)
 ];
 
 export const weights = [
@@ -38,9 +39,9 @@ export const weights = [
     new Weight(20, 25),
     new Weight(25, 32),
     new Weight(32, 40),
-    new Weight(40, 200),
+    new Weight(40, 200)
 ];
 
 export const steps = [
-    1, 2, 4, 8, 16, 20, 22, 24,
+    1, 2, 4, 8, 16, 20, 22, 24
 ];

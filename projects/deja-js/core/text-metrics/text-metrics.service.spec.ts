@@ -7,6 +7,7 @@
  */
 
 import { timer } from 'rxjs';
+
 import { DejaTextMetricsService } from './text-metrics.service';
 
 describe('DejaTextMetricsService', () => {
@@ -29,41 +30,39 @@ describe('DejaTextMetricsService', () => {
 
         spanElement = document.getElementById('testSpan');
         service.metricsElem = spanElement;
-        timer(500).subscribe(() => {
-        });
     });
 
     // remove the html fixture from the DOM
-    afterEach((done: Function) => {
+    afterEach(done => {
         timer(2000).subscribe(() => {
             document.body.removeChild(document.getElementById('testSpan'));
             done();
         });
     });
 
-    it('getTextHeight() should return more than 80 for maxWidth=100', async (done: Function) => {
+    it('getTextHeight() should return more than 80 for maxWidth=100', (done: DoneFn) => {
         service.getTextHeight(100, testText).subscribe((textHeight: number) => {
             // console.log(`text height: ${textHeight}`);
             // valeurs aprox = line height * font size = (6 lignes * 1.5) * 10 px = 90
-            expect(textHeight).toBeGreaterThan(80);
+            void expect(textHeight).toBeGreaterThan(80);
             done();
         });
     });
 
-    it('getTextHeight() should return 15 for maxWidth=2000', async (done: Function) => {
+    it('getTextHeight() should return 15 for maxWidth=2000', (done: DoneFn) => {
         service.getTextHeight(2000, testText).subscribe((textHeight: number) => {
             // console.log(`text height: ${textHeight}`);
-            expect(textHeight).toEqual(15); // 10px * 1.5 * 1 line
+            void expect(textHeight).toEqual(15); // 10px * 1.5 * 1 line
             done();
         });
     });
 
-    it('getTextMaxWidth() should return a value greater than 0', async () => {
+    it('getTextMaxWidth() should return a value greater than 0', () => {
         const values: string[] = 'test content'.split(' ');
         const maxWidth = service.getTextMaxWidth(values, spanElement);
-        expect(maxWidth).toBeGreaterThan(0);
-        expect(maxWidth).toBeLessThan(10 * 7); // 10px * 5 chars ('content')
-        expect(maxWidth).toBeGreaterThan(0.5 * 10 * 7); // (Arial width/height ratio) * 10px * 7 chars
+        void expect(maxWidth).toBeGreaterThan(0);
+        void expect(maxWidth).toBeLessThan(10 * 7); // 10px * 5 chars ('content')
+        void expect(maxWidth).toBeGreaterThan(0.5 * 10 * 7); // (Arial width/height ratio) * 10px * 7 chars
     });
 
 });

@@ -14,19 +14,19 @@ describe('UnitValue', () => {
     const value3 = new UnitValue();
 
     it('should create the class', () => {
-        expect(value1 instanceof UnitValue).toBeTruthy();
-        expect(value2 instanceof UnitValue).toBeTruthy();
-        expect(UnitValue.equals(value1, value2)).toBeTruthy();
-        expect(value3 instanceof UnitValue).toBeTruthy();
-        expect(value1.isInvalid()).toBeFalsy();
-        expect(value2.isInvalid()).toBeFalsy();
-        expect(value3.isInvalid()).toBeTruthy();
-        expect(value1.toString()).toEqual('12px');
+        void expect(value1 instanceof UnitValue).toBeTruthy();
+        void expect(value2 instanceof UnitValue).toBeTruthy();
+        void expect(UnitValue.equals(value1, value2)).toBeTruthy();
+        void expect(value3 instanceof UnitValue).toBeTruthy();
+        void expect(value1.isInvalid()).toBeFalsy();
+        void expect(value2.isInvalid()).toBeFalsy();
+        void expect(value3.isInvalid()).toBeTruthy();
+        void expect(value1.toString()).toEqual('12px');
     });
 
     it('should clone the class', () => {
         const cloned = value1.clone();
-        expect(value1 === cloned).toBeFalsy();
-        expect(UnitValue.equals(value1, cloned)).toBeTruthy();
+        void expect(value1 === cloned).toBeFalsy();
+        void expect(UnitValue.equals(value1, cloned)).toBeTruthy();
     });
 });
