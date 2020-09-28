@@ -45,6 +45,11 @@
                         "styles": [
                             "src/styles.scss"
                         ],
+                        "allowedCommonJsDependencies": [
+                            "lodash",
+                            "showdown",
+                            "angular2-text-mask"
+                        ],
                         "scripts": []
                     },
                     "configurations": {
