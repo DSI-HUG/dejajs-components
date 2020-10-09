@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 /*
  *  @license
  *  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
@@ -7,6 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { AfterViewInit } from '@angular/core';
 import { Component } from '@angular/core';
 import { ElementRef } from '@angular/core';
