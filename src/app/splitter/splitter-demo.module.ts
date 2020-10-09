@@ -13,6 +13,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { DejaSplitterModule } from '@deja-js/component/splitter';
+
 import { DejaMarkdownModule } from '../../component/markdown/index';
 import { DejaSplitterDemoComponent } from './splitter-demo';
 import { routing } from './splitter-demo.routes';
@@ -28,9 +29,9 @@ import { routing } from './splitter-demo.routes';
         MatToolbarModule,
         DejaSplitterModule,
         DejaMarkdownModule,
-        routing,
+        routing
     ],
     providers: [
-    ],
+    ]
 })
 export class DejaSplitterDemoModule { }

@@ -10,13 +10,14 @@ import { Directive, ElementRef, Input } from '@angular/core';
 import { Destroy, Position, Rect } from '@deja-js/core';
 import { from, Observable, of } from 'rxjs';
 import { distinctUntilChanged, filter, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+
 import { IDragCursorInfos } from './mouse-drag-cursor-infos.interface';
 import { IDragDropContext } from './mouse-dragdrop-context.interface';
 import { DejaMouseDragDropService } from './mouse-dragdrop.service';
 import { IDropCursorInfos } from './mouse-drop-cursor-infos.interface';
 
 @Directive({
-    selector: '[deja-mouse-droppable]',
+    selector: '[deja-mouse-droppable]'
 })
 export class DejaMouseDroppableDirective extends Destroy {
     private _context: IDejaMouseDroppableContext;
@@ -31,7 +32,7 @@ export class DejaMouseDroppableDirective extends Destroy {
         return this._context;
     }
 
-    constructor(elementRef: ElementRef, dragDropService: DejaMouseDragDropService) {
+    public constructor(elementRef: ElementRef, dragDropService: DejaMouseDragDropService) {
         super();
 
         const element = elementRef.nativeElement as HTMLElement;
@@ -42,27 +43,26 @@ export class DejaMouseDroppableDirective extends Destroy {
 
         const drop$ = from(dragDropService.dragCursor$).pipe(
             filter(value => !!value),
-            switchMap(dragCursor => {
-                return dragging$.pipe(
-                    filter(value => !value),
-                    take(1),
-                    tap(() => {
-                        // console.log(`Drop ${!!this._dragContext}`)
-                        if (this._dragContext && this.context?.drop) {
-                            this.context.drop(this._dragContext, dragCursor);
-                        }
-                        this._dragContext = undefined;
-                        dragDropService.dropCursor$.next(null);
-                    })
-                );
-            })
+            switchMap(dragCursor => dragging$.pipe(
+                filter(value => !value),
+                take(1),
+                tap(() => {
+                    // console.log(`Drop ${!!this._dragContext}`)
+                    if (this._dragContext && this.context?.drop) {
+                        this.context.drop(this._dragContext, dragCursor);
+                    }
+                    this._dragContext = undefined;
+                    dragDropService.dropCursor$.next(null);
+                })
+            ))
         );
 
         dragging$.pipe(
             filter(value => value),
-            switchMap(() => {
+            switchMap(() =>
                 // console.log(`Drag ${!!this._dragContext}`)
-                return from(dragDropService.dragCursor$).pipe(
+                from(dragDropService.dragCursor$).pipe(
+                    // eslint-disable-next-line rxjs/no-unsafe-takeuntil
                     takeUntil(drop$),
                     switchMap(dragCursor => {
                         const bounds = new Rect(element.getBoundingClientRect());
@@ -72,14 +72,14 @@ export class DejaMouseDroppableDirective extends Destroy {
                                 if (!this._dragContext) {
                                     this._dragContext = dragDropService.context;
                                     if (this.context.dragEnter) {
-                                        const dropContext = this.context.dragEnter(this._dragContext, dragCursor);
-                                        if (dropContext) {
-                                            const dropContextObs = dropContext as Observable<IDropCursorInfos>;
-                                            if (dropContextObs.subscribe) {
+                                        const dropContext$ = this.context.dragEnter(this._dragContext, dragCursor);
+                                        if (dropContext$) {
+                                            const dropContextObs$ = dropContext$ as Observable<IDropCursorInfos>;
+                                            if (dropContextObs$.subscribe) {
                                                 // Observable
-                                                return dropContextObs;
+                                                return dropContextObs$;
                                             } else {
-                                                return of(dropContext as IDropCursorInfos);
+                                                return of(dropContext$ as IDropCursorInfos);
                                             }
                                         }
                                     }
@@ -99,9 +99,9 @@ export class DejaMouseDroppableDirective extends Destroy {
                         }
 
                         return of(null);
-                    }),
-                );
-            }),
+                    })
+                )
+            ),
             filter(dropCursor => !!dropCursor),
             takeUntil(this.destroyed$)
         ).subscribe(dropCursor => dragDropService.dropCursor$.next(dropCursor));
@@ -109,6 +109,7 @@ export class DejaMouseDroppableDirective extends Destroy {
 }
 
 export interface IDejaMouseDroppableContext {
+    // eslint-disable-next-line rxjs/finnish
     dragEnter?(dragContext: IDragDropContext, dragCursor: IDragCursorInfos): IDropCursorInfos | Observable<IDropCursorInfos>; // Return object or observable<object>
     dragOver?(dragContext: IDragDropContext, dragCursor: IDragCursorInfos): IDropCursorInfos;
     dragLeave?(dragContext: IDragDropContext): void;

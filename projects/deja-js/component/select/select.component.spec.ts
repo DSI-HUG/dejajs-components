@@ -5,77 +5,88 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
+
+/* eslint-disable @angular-eslint/component-max-inline-declarations */
 import { CommonModule } from '@angular/common';
 import { Component, DebugElement } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DejaConnectionPositionPair, DejaItemModule, GroupingService, IItemBase, IItemTree, ISortInfos, ItemListService, KeyCodes, SortingService, ViewPortService } from '@deja-js/core';
+import { DejaConnectionPositionPair } from '@deja-js/core';
+import { DejaItemModule } from '@deja-js/core';
+import { GroupingService } from '@deja-js/core';
+import { IItemBase } from '@deja-js/core';
+import { IItemTree } from '@deja-js/core';
+import { ISortInfos } from '@deja-js/core';
+import { ItemListService } from '@deja-js/core';
+import { KeyCodes } from '@deja-js/core';
+import { SortingService } from '@deja-js/core';
+import { ViewPortService } from '@deja-js/core';
 import { from, Observable, of, timer } from 'rxjs';
-import { debounceTime, delay, filter, first, tap } from 'rxjs/operators';
+import { debounceTime, delay, filter, take, tap } from 'rxjs/operators';
+
 import { DejaSelectModule } from './index';
 import { DejaSelectComponent } from './select.component';
 
 @Component({
+    selector: 'DejaSelectContainerComponent',
     template: `<deja-select style="width: 1000px;" [items]="itemList" viewportMode="variable" searchArea sortable itemsDraggable pageSize="10">
-                    <ng-template #itemTemplate let-item>
-                        Item {{ item.displayName }}
-                    </ng-template>
+                    <ng-template #itemTemplate let-item>Item {{ item.displayName }}</ng-template>
                 </deja-select>`,
     providers: [
         GroupingService
-    ],
+    ]
 })
 class DejaSelectContainerComponent {
     public itemList = [] as IItemTree[];
 
-    constructor(groupingService: GroupingService) {
+    public constructor(groupingService: GroupingService) {
         document.body.style.width = '1280px';
         document.body.style.height = '1024px';
 
-        const itemList = Array.apply(null, { length: 2000 }).map((_n: any, i: number) => {
+        // eslint-disable-next-line prefer-spread
+        const itemList = Array.apply(null, { length: 2000 }).map((_n: unknown, i: number) => {
             const rand = Math.floor(Math.random() * (70 - 33 + 1)) + 33; // random de 33 à 70
             return {
                 size: rand,
-                displayName: `${i} - Une ligne de test avec une taille de : ${rand}`,
+                displayName: `${i} - Une ligne de test avec une taille de : ${rand}`
             } as IItemTree;
         });
 
         groupingService.group$(itemList, [{ groupByField: 'size' }]).pipe(
-            first())
-            .subscribe((groupedResult) => {
-                this.itemList = groupedResult;
-            });
+            take(1)
+        // eslint-disable-next-line rxjs-angular/prefer-takeuntil
+        ).subscribe(groupedResult => {
+            this.itemList = groupedResult;
+        });
     }
 }
 
 @Component({
+    selector: 'DejaSelectByModelContainerComponent',
     template: `<deja-select style="width: 1000px;" [(ngModel)]="selectedModels" [models]="modelsList$ | async" type="multiselect" viewportMode="fixed" valueField="id" selectionClearable>
-                    <ng-template #itemTemplate let-item>
-                        <span [style.background-color]="backgroundColor(item)">
-                            Item {{ item.model.displayName }}
-                        </span>
-                    </ng-template>
+                    <ng-template #itemTemplate let-item><span [style.background-color]="backgroundColor(item)">Item {{ item.model.displayName }}</span></ng-template>
                 </deja-select>`,
     providers: [
-        SortingService,
-    ],
+        SortingService
+    ]
 })
 class DejaSelectByModelContainerComponent {
-    public modelsList$: Observable<any[]>;
-    public selectedModels: any[];
+    public modelsList$: Observable<unknown[]>;
+    public selectedModels: unknown[];
 
-    constructor(sortingService: SortingService) {
+    public constructor(sortingService: SortingService) {
         document.body.style.width = '1280px';
         document.body.style.height = '1024px';
 
-        const modelsList = Array.apply(null, { length: 2000 }).map((_n: any, i: number) => {
+        // eslint-disable-next-line prefer-spread
+        const modelsList = Array.apply(null, { length: 2000 }).map((_n: unknown, i: number) => {
             const rand = Math.floor(Math.random() * (70 - 33 + 1)) + 33; // random de 33 à 70;
             return {
                 id: i,
                 value: rand,
-                displayName: `${i} - Une ligne de test avec une valeur de : ${rand}`,
+                displayName: `${i} - Une ligne de test avec une valeur de : ${rand}`
             };
         });
 
@@ -89,6 +100,7 @@ class DejaSelectByModelContainerComponent {
 }
 
 @Component({
+    selector: 'DejaSelectByOptionsContainerComponent',
     template: `<deja-select style="width: 1000px;" viewportMode="fixed" type="multiselect" sortable itemsDraggable pageSize="5" modelIsValue="true">
                     <deja-item value="" text=""></deja-item>
                     <deja-item value="Apricots" text="Apricots"></deja-item>
@@ -108,10 +120,10 @@ class DejaSelectByModelContainerComponent {
                             {{ item.text }}
                         </span>
                     </ng-template>
-                </deja-select>`,
+                </deja-select>`
 })
 class DejaSelectByOptionsContainerComponent {
-    constructor() {
+    public constructor() {
         document.body.style.width = '1280px';
         document.body.style.height = '1024px';
     }
@@ -122,17 +134,17 @@ class DejaSelectByOptionsContainerComponent {
 }
 
 describe('DejaSelectComponent', () => {
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        void TestBed.configureTestingModule({
             declarations: [
-                DejaSelectContainerComponent,
+                DejaSelectContainerComponent
             ],
             imports: [
                 BrowserAnimationsModule,
                 CommonModule,
                 FormsModule,
-                DejaSelectModule,
-            ],
+                DejaSelectModule
+            ]
         }).compileComponents();
     }));
 
@@ -145,7 +157,7 @@ describe('DejaSelectComponent', () => {
             .subscribe(() => fixture.detectChanges());
 
         return from(viewPortService.viewPortResult$).pipe(
-            filter((result) => result.viewPortSize > 0));
+            filter(result => result.viewPortSize > 0));
     };
 
     it('should create the component', () => {
@@ -153,115 +165,117 @@ describe('DejaSelectComponent', () => {
         fixture.detectChanges();
         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
-        expect(selectInstance).toBeTruthy();
+        void expect(selectInstance).toBeTruthy();
     });
 
     it('should return the write property', () => {
         const fixture = TestBed.createComponent(DejaSelectContainerComponent);
         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const sl = selectInstance as any;
         const itemListService = selectInstance.getItemListService();
 
         fixture.detectChanges();
 
-        expect(selectInstance.positions).toEqual(DejaConnectionPositionPair.default);
+        void expect(selectInstance.positions).toEqual(DejaConnectionPositionPair.default);
         selectInstance.positions = 'start top start bottom';
-        expect(sl.positions).toEqual(DejaConnectionPositionPair.parse('start top start bottom'));
+        void expect(sl.positions).toEqual(DejaConnectionPositionPair.parse('start top start bottom'));
 
         selectInstance.dropDownWidth = 100;
-        expect(sl.dropDownWidth).toEqual('100px');
+        void expect(sl.dropDownWidth).toEqual('100px');
 
-        expect(selectInstance.readonly).toBeNull();
+        void expect(selectInstance.readonly).toBeNull();
         sl.readonly = 'true';
-        expect(selectInstance.readonly).toBeTruthy();
+        void expect(selectInstance.readonly).toBeTruthy();
 
-        expect(selectInstance.hideSelected).toBeUndefined();
+        void expect(selectInstance.hideSelected).toBeUndefined();
         sl.hideSelected = 'true';
-        expect(selectInstance.hideSelected).toBeTruthy();
+        void expect(selectInstance.hideSelected).toBeTruthy();
 
-        expect(selectInstance.pageSize).toBe(10);
+        void expect(selectInstance.pageSize).toBe(10);
         selectInstance.pageSize = 5;
-        expect(selectInstance.pageSize).toBe(5);
+        void expect(selectInstance.pageSize).toBe(5);
         selectInstance.pageSize = 0;
-        expect(selectInstance.pageSize).toBe(0);
+        void expect(selectInstance.pageSize).toBe(0);
 
-        expect(selectInstance.hintLabel).toBeUndefined();
+        void expect(selectInstance.hintLabel).toBeUndefined();
         selectInstance.hintLabel = 'I am a hint label';
-        expect(selectInstance.hintLabel).toEqual(`I am a hint label`);
+        void expect(selectInstance.hintLabel).toEqual('I am a hint label');
 
-        expect(sl._viewPortRowHeight).toBe(ViewPortService.itemDefaultSize);
+        void expect(sl._viewPortRowHeight).toBe(ViewPortService.itemDefaultSize);
         selectInstance.viewPortRowHeight = 100;
-        expect(sl._viewPortRowHeight).toBe(100);
+        void expect(sl._viewPortRowHeight).toBe(100);
 
-        expect(selectInstance.childrenField).toBeUndefined();
-        expect(itemListService.childrenField).toEqual(ItemListService.defaultChildrenField);
+        void expect(selectInstance.childrenField).toBeUndefined();
+        void expect(itemListService.childrenField).toEqual(ItemListService.defaultChildrenField);
         selectInstance.childrenField = 'children';
-        expect(selectInstance.childrenField).toEqual('children');
-        expect(itemListService.childrenField).toEqual('children');
+        void expect(selectInstance.childrenField).toEqual('children');
+        void expect(itemListService.childrenField).toEqual('children');
 
-        expect(selectInstance.textField).toEqual(ItemListService.defaultTextField);
+        void expect(selectInstance.textField).toEqual(ItemListService.defaultTextField);
         selectInstance.textField = 'text';
-        expect(selectInstance.textField).toEqual('text');
+        void expect(selectInstance.textField).toEqual('text');
 
-        expect(selectInstance.valueField).toEqual(ItemListService.defaultValueField);
+        void expect(selectInstance.valueField).toEqual(ItemListService.defaultValueField);
         selectInstance.valueField = 'my value field';
-        expect(selectInstance.valueField).toEqual('my value field');
+        void expect(selectInstance.valueField).toEqual('my value field');
 
-        expect(selectInstance.searchField).toBeUndefined();
+        void expect(selectInstance.searchField).toBeUndefined();
         selectInstance.searchField = 'my search field';
-        expect(selectInstance.searchField).toEqual('my search field');
+        void expect(selectInstance.searchField).toEqual('my search field');
 
-        expect(sl.delaySearchTrigger$.getValue()).toBe(250);
+        void expect(sl.delaySearchTrigger$.getValue()).toBe(250);
         selectInstance.delaySearchTrigger = 500;
-        expect(sl.delaySearchTrigger$.getValue()).toBe(500);
+        void expect(sl.delaySearchTrigger$.getValue()).toBe(500);
 
         const myItemListService = new ItemListService();
-        expect(selectInstance.itemListService).toBeDefined();
+        void expect(selectInstance.itemListService).toBeDefined();
         selectInstance.itemListService = myItemListService;
-        expect(selectInstance.itemListService).toBe(myItemListService);
+        void expect(selectInstance.itemListService).toBe(myItemListService);
 
         const sortingService = new SortingService();
-        expect(myItemListService.getSortingService()).toBeDefined();
+        void expect(myItemListService.getSortingService()).toBeDefined();
         selectInstance.sortingService = sortingService;
-        expect(myItemListService.getSortingService()).toBe(sortingService);
+        void expect(myItemListService.getSortingService()).toBe(sortingService);
 
         const groupingService = new GroupingService();
-        expect(myItemListService.getGroupingService()).toBeDefined();
+        void expect(myItemListService.getGroupingService()).toBeDefined();
         selectInstance.groupingService = groupingService;
-        expect(myItemListService.getGroupingService()).toBe(groupingService);
+        void expect(myItemListService.getGroupingService()).toBe(groupingService);
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const listService = myItemListService as any;
         const loadingItems = () => of([]);
         selectInstance.loadingItems = loadingItems;
-        expect(listService.loadingItems$).toBe(loadingItems);
+        void expect(listService.loadingItems$).toBe(loadingItems);
         const selectingItem = () => of([]);
         selectInstance.selectingItem = selectingItem;
-        expect(listService.selectingItem$).toBe(selectingItem);
+        void expect(listService.selectingItem$).toBe(selectingItem);
         const unselectingItem = () => of([]);
         selectInstance.unselectingItem = unselectingItem;
-        expect(listService.unselectingItem$).toBe(unselectingItem);
+        void expect(listService.unselectingItem$).toBe(unselectingItem);
         const expandingItem = () => of([]);
         selectInstance.expandingItem = expandingItem;
-        expect(listService.expandingItem$).toBe(expandingItem);
+        void expect(listService.expandingItem$).toBe(expandingItem);
         const collapsingItem = () => of([]);
         selectInstance.collapsingItem = collapsingItem;
-        expect(listService.collapsingItem$).toBe(collapsingItem);
+        void expect(listService.collapsingItem$).toBe(collapsingItem);
 
-        expect(selectInstance.disabled).toBeNull();
+        void expect(selectInstance.disabled).toBeNull();
         selectInstance.disabled = true;
-        expect(selectInstance.disabled).toBeTruthy();
+        void expect(selectInstance.disabled).toBeTruthy();
         selectInstance.setDisabledState(false);
-        expect(selectInstance.disabled).toBeFalsy();
+        void expect(selectInstance.disabled).toBeFalsy();
 
-        expect(selectInstance.waiter).toBeFalsy();
+        void expect(selectInstance.waiter).toBeFalsy();
         selectInstance.waiter = true;
-        expect(selectInstance.waiter).toBeTruthy();
+        void expect(selectInstance.waiter).toBeTruthy();
 
-        expect(selectInstance.depthMax).toBe(1);
+        void expect(selectInstance.depthMax).toBe(1);
     });
 
-    it('should open and close the dropdown programatically', (done) => {
+    it('should open and close the dropdown programatically', done => {
         let pass = 0;
         const fixture = TestBed.createComponent(DejaSelectContainerComponent);
         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
@@ -274,42 +288,45 @@ describe('DejaSelectComponent', () => {
         from(fixture.whenStable())
             .subscribe(() => {
                 from(selectInstance.dropDownVisibleChange).pipe(
-                    tap((state) => {
+                    tap(state => {
                         fixture.detectChanges();
                         switch (++pass) {
                             case 1:
-                                expect(state).toBeTruthy();
+                                void expect(state).toBeTruthy();
                                 break;
                             case 2:
-                                expect(state).toBeFalsy();
+                                void expect(state).toBeFalsy();
                                 break;
                             case 3:
-                                expect(state).toBeTruthy();
+                                void expect(state).toBeTruthy();
                                 break;
                             default:
-                                expect(state).toBeFalsy();
+                                void expect(state).toBeFalsy();
                         }
                     }),
-                    delay(100))
-                    .subscribe(() => {
-                        switch (pass) {
-                            case 2:
-                            case 3:
-                                sl.toggleDropDown();
-                                break;
-                        }
-                    });
+                    delay(100)
+                    // eslint-disable-next-line rxjs/no-nested-subscribe
+                ).subscribe(() => {
+                    switch (pass) {
+                        case 2:
+                        case 3:
+                            sl.toggleDropDown();
+                            break;
+                        default:
+                    }
+                });
 
                 from(viewPortService.viewPortResult$).pipe(
                     debounceTime(100),
-                    first())
-                    .subscribe((vp) => {
-                        // Bind view port
-                        fixture.detectChanges();
-                        expect(vp.items.length).toBeGreaterThan(0);
-                        expect(vp.visibleItems.length).toBeGreaterThan(0);
-                        done();
-                    });
+                    take(1)
+                    // eslint-disable-next-line rxjs/no-nested-subscribe
+                ).subscribe(vp => {
+                    // Bind view port
+                    fixture.detectChanges();
+                    void expect(vp.items.length).toBeGreaterThan(0);
+                    void expect(vp.visibleItems.length).toBeGreaterThan(0);
+                    done();
+                });
 
                 sl.showDropDown();
 
@@ -317,11 +334,12 @@ describe('DejaSelectComponent', () => {
             });
     });
 
-    it('should toggle and collapse parent items', (done) => {
+    it('should toggle and collapse parent items', done => {
         let pass = 0;
         const fixture = TestBed.createComponent(DejaSelectContainerComponent);
         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const sl = selectInstance as any;
 
         fixture.detectChanges();
@@ -330,7 +348,8 @@ describe('DejaSelectComponent', () => {
             .subscribe(() => {
                 observeViewPort$(fixture).pipe(
                     debounceTime(20)
-                ).subscribe((vp) => {
+                    // eslint-disable-next-line rxjs/no-nested-subscribe
+                ).subscribe(vp => {
                     fixture.detectChanges(); // Bind view port
                     const collapsed = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem.parent.collapsed'));
                     const collapsedItems = vp.items.filter((item: IItemTree) => item.collapsed);
@@ -338,8 +357,8 @@ describe('DejaSelectComponent', () => {
 
                     switch (++pass) {
                         case 1:
-                            expect(collapsed.length).toBe(0);
-                            expect(collapsedItems.length).toBe(0);
+                            void expect(collapsed.length).toBe(0);
+                            void expect(collapsedItems.length).toBe(0);
                             // Toggle all items
                             selectInstance.toggleAll();
                             selectInstance.refreshViewPort();
@@ -348,8 +367,8 @@ describe('DejaSelectComponent', () => {
 
                         case 2:
                             // Check collapsed items
-                            expect(collapsedItems.length).toBe(parentItems.length);
-                            expect(collapsed.length).toBeGreaterThan(0);
+                            void expect(collapsedItems.length).toBe(parentItems.length);
+                            void expect(collapsed.length).toBeGreaterThan(0);
                             // Toggle all items
                             selectInstance.toggleAll();
                             selectInstance.refreshViewPort();
@@ -358,8 +377,8 @@ describe('DejaSelectComponent', () => {
 
                         case 3:
                             // Check collapsed items
-                            expect(collapsedItems.length).toBe(0);
-                            expect(collapsed.length).toBe(0);
+                            void expect(collapsedItems.length).toBe(0);
+                            void expect(collapsed.length).toBe(0);
                             // Toogle only first
                             selectInstance.toggleCollapse(0, true);
                             selectInstance.refreshViewPort();
@@ -368,8 +387,8 @@ describe('DejaSelectComponent', () => {
 
                         case 4:
                             // Check collapsed items
-                            expect(collapsed.length).toBe(1);
-                            expect(collapsedItems.length).toBe(1);
+                            void expect(collapsedItems.length).toBe(1);
+                            void expect(collapsed.length).toBe(1);
                             // Clear toogle
                             selectInstance.toggleAll(false);
                             selectInstance.refreshViewPort();
@@ -378,8 +397,8 @@ describe('DejaSelectComponent', () => {
 
                         default:
                             // Check no collapsed
-                            expect(collapsed.length).toBe(0);
-                            expect(collapsedItems.length).toBe(0);
+                            void expect(collapsedItems.length).toBe(0);
+                            void expect(collapsed.length).toBe(0);
                             done();
                     }
                 });
@@ -390,12 +409,13 @@ describe('DejaSelectComponent', () => {
             });
     });
 
-    it('should not load items if minSearchlength is defined', (done) => {
+    it('should not load items if minSearchlength is defined', done => {
         let pass = 0;
         const fixture = TestBed.createComponent(DejaSelectContainerComponent);
         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
         const viewPortService = selectDebugElement.injector.get(ViewPortService);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const sl = selectInstance as any;
 
         fixture.detectChanges();
@@ -403,39 +423,41 @@ describe('DejaSelectComponent', () => {
         from(fixture.whenStable())
             .subscribe(() => {
                 from(selectInstance.dropDownVisibleChange)
+                    // eslint-disable-next-line rxjs/no-nested-subscribe
                     .subscribe(() => fixture.detectChanges());
 
                 from(viewPortService.viewPortResult$).pipe(
-                    debounceTime(10))
-                    .subscribe((vp) => {
-                        // Bind view port
-                        fixture.detectChanges();
-                        const listItems = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem'));
-                        const items = vp.items;
+                    debounceTime(10)
+                    // eslint-disable-next-line rxjs/no-nested-subscribe
+                ).subscribe(vp => {
+                    // Bind view port
+                    fixture.detectChanges();
+                    const listItems = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem'));
+                    const items = vp.items;
 
-                        switch (++pass) {
-                            case 1:
-                                expect(listItems.length).toBe(0);
-                                sl.queryChanged('33');
-                                sl.filterListComplete$.next();
-                                selectInstance.refreshViewPort();
-                                fixture.detectChanges();
-                                break;
+                    switch (++pass) {
+                        case 1:
+                            void expect(listItems.length).toBe(0);
+                            sl.queryChanged('33');
+                            sl.filterListComplete$.next();
+                            selectInstance.refreshViewPort();
+                            fixture.detectChanges();
+                            break;
 
-                            case 2:
-                                expect(listItems.length).toBeGreaterThan(0);
-                                sl.queryChanged('44');
-                                sl.filterListComplete$.next();
-                                selectInstance.refreshViewPort();
-                                fixture.detectChanges();
-                                break;
+                        case 2:
+                            void expect(listItems.length).toBeGreaterThan(0);
+                            sl.queryChanged('44');
+                            sl.filterListComplete$.next();
+                            selectInstance.refreshViewPort();
+                            fixture.detectChanges();
+                            break;
 
-                            default:
-                                expect(listItems.length).toBeGreaterThan(0);
-                                expect(items.length).toBeGreaterThan(0);
-                                done();
-                        }
-                    });
+                        default:
+                            void expect(listItems.length).toBeGreaterThan(0);
+                            void expect(items.length).toBeGreaterThan(0);
+                            done();
+                    }
+                });
 
                 selectInstance.minSearchlength = 2;
                 selectInstance.type = 'autocomplete';
@@ -447,49 +469,52 @@ describe('DejaSelectComponent', () => {
 });
 
 describe('DejaSelectByModelContainerComponent', () => {
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        void TestBed.configureTestingModule({
             declarations: [
-                DejaSelectByModelContainerComponent,
+                DejaSelectByModelContainerComponent
             ],
             imports: [
                 BrowserAnimationsModule,
                 CommonModule,
                 FormsModule,
-                DejaSelectModule,
-            ],
+                DejaSelectModule
+            ]
         }).compileComponents();
     }));
 
-    it('should create the component', (done) => {
+    it('should create the component', done => {
         const fixture = TestBed.createComponent(DejaSelectByModelContainerComponent);
         fixture.detectChanges();
         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
-        expect(selectInstance).toBeTruthy();
+        void expect(selectInstance).toBeTruthy();
         done();
     });
 
-    it('should close the selection in multiselect', (done) => {
+    it('should close the selection in multiselect', done => {
         const fixture = TestBed.createComponent(DejaSelectByModelContainerComponent);
         fixture.detectChanges();
 
-        fixture.whenStable().then(() => {
+        return fixture.whenStable().then(() => {
             fixture.detectChanges();
 
             let selectedChips = fixture.debugElement.queryAll(By.css('deja-select > deja-chips > span.chips-item > #close-button'));
-            expect(selectedChips.length).toBe(3, '1');
+            void expect(selectedChips.length).toBe(3, '1');
 
-            selectedChips.forEach((closeButton) => closeButton.nativeElement.click());
+            selectedChips.forEach(closeButton => {
+                const button = closeButton.nativeElement as HTMLButtonElement;
+                button.click();
+            });
             fixture.detectChanges();
 
             selectedChips = fixture.debugElement.queryAll(By.css('deja-select > deja-chips > span.chips-item > #close-button'));
-            expect(selectedChips.length).toBe(0, '2');
+            void expect(selectedChips.length).toBe(0, '2');
             done();
         });
     });
 
-    it('should unselect all the elements in multiselect', (done) => {
+    it('should unselect all the elements in multiselect', done => {
         const fixture = TestBed.createComponent(DejaSelectByModelContainerComponent);
         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
@@ -497,75 +522,75 @@ describe('DejaSelectByModelContainerComponent', () => {
 
         fixture.detectChanges();
 
-        fixture.whenStable().then(() => {
+        return fixture.whenStable().then(() => {
             fixture.detectChanges();
-            expect(selectInstance.selectedItems.length).toBe(3, '1');
-            expect(selectInstance.selectedModels.length).toBe(3, '2');
+            void expect(selectInstance.selectedItems.length).toBe(3, '1');
+            void expect(selectInstance.selectedModels.length).toBe(3, '2');
 
             let selectedChips = fixture.debugElement.queryAll(By.css('deja-select > deja-chips > span.chips-item > #close-button'));
-            expect(selectedChips.length).toBe(3, '3');
+            void expect(selectedChips.length).toBe(3, '3');
 
             sl.removeSelection();
             fixture.detectChanges();
 
             selectedChips = fixture.debugElement.queryAll(By.css('deja-select > deja-chips > span.chips-item > #close-button'));
-            expect(selectedChips.length).toBe(0, '4');
-            expect(selectInstance.selectedItems.length).toBe(0, '5');
-            expect(selectInstance.selectedModels.length).toBe(0, '6');
+            void expect(selectedChips.length).toBe(0, '4');
+            void expect(selectInstance.selectedItems.length).toBe(0, '5');
+            void expect(selectInstance.selectedModels.length).toBe(0, '6');
             done();
         });
     });
 
-    it('should close the selection in single select', (done) => {
+    it('should close the selection in single select', done => {
         const fixture = TestBed.createComponent(DejaSelectByModelContainerComponent);
         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
 
-        fixture.whenStable().then(() => {
+        fixture.detectChanges();
+
+        return fixture.whenStable().then(() => {
             selectInstance.type = 'select';
             fixture.detectChanges();
 
-            expect(selectInstance.selectedItems.length).toBe(3, '1');
-            expect(selectInstance.selectedModels.length).toBe(3, '2');
+            void expect(selectInstance.selectedItems.length).toBe(3, '1');
+            void expect(selectInstance.selectedModels.length).toBe(3, '2');
 
             const clearButton = fixture.debugElement.query(By.css('deja-select #clear-button'));
             clearButton.nativeElement.click();
             fixture.detectChanges();
 
-            expect(selectInstance.selectedItems.length).toBe(0, '3');
-            expect(selectInstance.selectedModels.length).toBe(0, '4');
+            void expect(selectInstance.selectedItems.length).toBe(0, '3');
+            void expect(selectInstance.selectedModels.length).toBe(0, '4');
 
             selectInstance.value = selectInstance.getItemListService().getItems()[2];
             fixture.detectChanges();
-            expect(selectInstance.selectedItems.length).toBe(1, '5');
-            expect(selectInstance.selectedModels.length).toBe(1, '6');
-            expect(selectInstance.value).toBe(selectInstance.getItemListService().getItems()[2]);
+            void expect(selectInstance.selectedItems.length).toBe(1, '5');
+            void expect(selectInstance.selectedModels.length).toBe(1, '6');
+            void expect(selectInstance.value).toBe(selectInstance.getItemListService().getItems()[2]);
             done();
         });
-
-        fixture.detectChanges();
     });
 });
 
 describe('DejaSelectByOptionsContainerComponent', () => {
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        void TestBed.configureTestingModule({
             declarations: [
-                DejaSelectByOptionsContainerComponent,
+                DejaSelectByOptionsContainerComponent
             ],
             imports: [
                 BrowserAnimationsModule,
                 CommonModule,
                 FormsModule,
                 DejaSelectModule,
-                DejaItemModule,
-            ],
+                DejaItemModule
+            ]
         }).compileComponents();
     }));
 
     const observeOptionsViewPort$ = (fixture: ComponentFixture<DejaSelectByOptionsContainerComponent>) => {
         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
-        const viewPortService = selectDebugElement.injector.get(ViewPortService) as ViewPortService;
+        const viewPortService = selectDebugElement.injector.get(ViewPortService);
 
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
 
@@ -573,32 +598,31 @@ describe('DejaSelectByOptionsContainerComponent', () => {
             .subscribe(() => fixture.detectChanges());
 
         return from(viewPortService.viewPortResult$).pipe(
-            filter((result) => {
-                return result.viewPortSize > 0;
-            }));
+            filter(result => result.viewPortSize > 0));
     };
 
-    it('should open and close the dropdown programatically', (done) => {
+    it('should open and close the dropdown programatically', done => {
         const fixture = TestBed.createComponent(DejaSelectByOptionsContainerComponent);
         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
-        const viewPortService = selectDebugElement.injector.get(ViewPortService) as ViewPortService;
+        const viewPortService = selectDebugElement.injector.get(ViewPortService);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const sl = selectInstance as any;
 
         fixture.detectChanges();
 
-        fixture.whenStable().then(() => {
+        return fixture.whenStable().then(() => {
             from(selectInstance.dropDownVisibleChange)
                 .subscribe(() => fixture.detectChanges());
 
             from(viewPortService.viewPortResult$).pipe(
                 debounceTime(100),
-                first())
-                .subscribe((vp) => {
+                take(1))
+                .subscribe(vp => {
                     // Bind view port
                     fixture.detectChanges();
-                    expect(vp.items.length).toBeGreaterThan(0);
-                    expect(vp.visibleItems.length).toBeGreaterThan(0);
+                    void expect(vp.items.length).toBeGreaterThan(0);
+                    void expect(vp.visibleItems.length).toBeGreaterThan(0);
                     done();
                 });
 
@@ -609,27 +633,28 @@ describe('DejaSelectByOptionsContainerComponent', () => {
         });
     });
 
-    it('should create the component', (done) => {
+    it('should create the component', done => {
         const fixture = TestBed.createComponent(DejaSelectByOptionsContainerComponent);
         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const sl = selectInstance as any;
         fixture.detectChanges();
 
-        fixture.whenStable().then(() => {
+        return fixture.whenStable().then(() => {
             observeOptionsViewPort$(fixture).pipe(
                 debounceTime(100),
-                first())
+                take(1))
                 .subscribe(() => {
                     fixture.detectChanges();
 
                     const items = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem'));
-                    expect(items.length).toBe(13);
+                    void expect(items.length).toBe(13);
                     done();
                 });
 
             fixture.detectChanges();
-            expect(selectInstance).toBeTruthy();
+            void expect(selectInstance).toBeTruthy();
 
             sl.showDropDown();
 
@@ -637,11 +662,12 @@ describe('DejaSelectByOptionsContainerComponent', () => {
         });
     });
 
-    it('should navigate with the keyboard', (done) => {
+    it('should navigate with the keyboard', done => {
         let pass = 0;
         const fixture = TestBed.createComponent(DejaSelectByOptionsContainerComponent);
         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const sl = selectInstance as any;
 
         const sendKeyDown = (code: string, shiftKey?: boolean, altKey?: boolean, ctrlKey?: boolean) => {
@@ -649,7 +675,7 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                 code: code,
                 shiftKey: shiftKey,
                 altKey: altKey,
-                ctrlKey: ctrlKey,
+                ctrlKey: ctrlKey
             } as KeyboardEventInit);
             sl.htmlInputElement.dispatchEvent(event);
             selectInstance.refreshViewPort();
@@ -658,110 +684,113 @@ describe('DejaSelectByOptionsContainerComponent', () => {
 
         fixture.detectChanges();
 
-        fixture.whenStable().then(() => {
+        return fixture.whenStable().then(() => {
             observeOptionsViewPort$(fixture).pipe(
                 debounceTime(100))
-                .subscribe((vp) => {
+                .subscribe(vp => {
                     fixture.detectChanges();
                     const selectedChips = fixture.debugElement.queryAll(By.css('deja-select > deja-chips > span.chips-item'));
                     const selectedElements = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem.selected'));
                     const currentElement = fixture.debugElement.query(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem[current="true"]'));
                     const selectedItems = vp.items.filter((item: IItemBase) => item.selected);
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    const selItem = selectedItems[0] as any;
 
                     switch (++pass) {
                         case 1:
                             // Check no selected
-                            expect(selectedElements.length).toBe(0, 'Check no selected 1-1');
-                            expect(selectedItems.length).toBe(0, 'Check no selected 1-2');
-                            expect(selectedChips.length).toBe(0, 'Check no selected 1-3');
+                            void expect(selectedElements.length).toBe(0, 'Check no selected 1-1');
+                            void expect(selectedItems.length).toBe(0, 'Check no selected 1-2');
+                            void expect(selectedChips.length).toBe(0, 'Check no selected 1-3');
                             // Current on first line by keydown
                             sendKeyDown(KeyCodes.DownArrow);
                             break;
 
                         case 2:
                             // Check selection
-                            expect(selectedElements.length).toBe(0, 'Check selection 2-1');
-                            expect(selectedItems.length).toBe(0, 'Check selection 2-2');
-                            expect(currentElement && currentElement.attributes.flat).toBe('0', 'Check selection 2-3');
-                            expect(selectedChips.length).toBe(0, 'Check selection 2-4');
+                            void expect(selectedElements.length).toBe(0, 'Check selection 2-1');
+                            void expect(selectedItems.length).toBe(0, 'Check selection 2-2');
+                            void expect(currentElement?.attributes.flat).toBe('0', 'Check selection 2-3');
+                            void expect(selectedChips.length).toBe(0, 'Check selection 2-4');
                             // Current on second line by keydown
                             sendKeyDown(KeyCodes.DownArrow);
                             break;
 
                         case 3:
                             // Check selection
-                            expect(selectedElements.length).toBe(0, 'Check selection 3-1');
-                            expect(selectedItems.length).toBe(0, 'Check selection 3-2');
-                            expect(currentElement && currentElement.attributes.flat).toBe('1', 'Check selection 3-3');
-                            expect(selectedChips.length).toBe(0, 'Check selection 3-4');
+                            void expect(selectedElements.length).toBe(0, 'Check selection 3-1');
+                            void expect(selectedItems.length).toBe(0, 'Check selection 3-2');
+                            void expect(currentElement?.attributes.flat).toBe('1', 'Check selection 3-3');
+                            void expect(selectedChips.length).toBe(0, 'Check selection 3-4');
                             // Current on first line by keyup
                             sendKeyDown(KeyCodes.UpArrow);
                             break;
 
                         case 4:
                             // Check selection
-                            expect(selectedElements.length).toBe(0, 'Check selection 4-1');
-                            expect(selectedItems.length).toBe(0, 'Check selection 4-2');
-                            expect(currentElement && currentElement.attributes.flat).toBe('0', 'Check selection 4-3');
-                            expect(selectedChips.length).toBe(0, 'Check selection 4-4');
+                            void expect(selectedElements.length).toBe(0, 'Check selection 4-1');
+                            void expect(selectedItems.length).toBe(0, 'Check selection 4-2');
+                            void expect(currentElement?.attributes.flat).toBe('0', 'Check selection 4-3');
+                            void expect(selectedChips.length).toBe(0, 'Check selection 4-4');
                             // Current on last line
                             sendKeyDown('End');
                             break;
 
                         case 5:
                             // Check selection
-                            expect(selectedElements.length).toBe(0, 'Check selection 5-1');
-                            expect(selectedItems.length).toBe(0, 'Check selection 5-2');
-                            expect(currentElement && currentElement.attributes.flat).toBe('12', 'Check selection 5-3');
-                            expect(selectedChips.length).toBe(0, 'Check selection 5-4');
+                            void expect(selectedElements.length).toBe(0, 'Check selection 5-1');
+                            void expect(selectedItems.length).toBe(0, 'Check selection 5-2');
+                            void expect(currentElement?.attributes.flat).toBe('12', 'Check selection 5-3');
+                            void expect(selectedChips.length).toBe(0, 'Check selection 5-4');
                             // Current on line 6 by pageUp
                             sendKeyDown('PageUp');
                             break;
 
                         case 6:
                             // Check selection
-                            expect(selectedElements.length).toBe(0, 'Check selection 6-1');
-                            expect(selectedItems.length).toBe(0, 'Check selection 6-2');
-                            expect(currentElement && currentElement.attributes.flat).toBe('7', 'Check selection 6-3');
-                            expect(selectedChips.length).toBe(0, 'Check selection 6-4');
+                            void expect(selectedElements.length).toBe(0, 'Check selection 6-1');
+                            void expect(selectedItems.length).toBe(0, 'Check selection 6-2');
+                            void expect(currentElement?.attributes.flat).toBe('7', 'Check selection 6-3');
+                            void expect(selectedChips.length).toBe(0, 'Check selection 6-4');
                             // Current on firstLine by Home
                             sendKeyDown('Home');
                             break;
 
                         case 7:
                             // Check selection
-                            expect(selectedElements.length).toBe(0, 'Check selection 7-1');
-                            expect(selectedItems.length).toBe(0, 'Check selection 7-2');
-                            expect(currentElement && currentElement.attributes.flat).toBe('0', 'Check selection 7-3');
-                            expect(selectedChips.length).toBe(0, 'Check selection 7-4');
+                            void expect(selectedElements.length).toBe(0, 'Check selection 7-1');
+                            void expect(selectedItems.length).toBe(0, 'Check selection 7-2');
+                            void expect(currentElement?.attributes.flat).toBe('0', 'Check selection 7-3');
+                            void expect(selectedChips.length).toBe(0, 'Check selection 7-4');
                             // Current on Line 5 by pageDown
                             sendKeyDown('PageDown');
                             break;
 
                         case 8:
                             // Check selection
-                            expect(selectedElements.length).toBe(0, 'Check selection 8-1');
-                            expect(selectedItems.length).toBe(0, 'Check selection 8-2');
-                            expect(currentElement && currentElement.attributes.flat).toBe('5', 'Check selection 8-3');
-                            expect(selectedChips.length).toBe(0, 'Check selection 8-4');
+                            void expect(selectedElements.length).toBe(0, 'Check selection 8-1');
+                            void expect(selectedItems.length).toBe(0, 'Check selection 8-2');
+                            void expect(currentElement?.attributes.flat).toBe('5', 'Check selection 8-3');
+                            void expect(selectedChips.length).toBe(0, 'Check selection 8-4');
 
                             // Select the lines with Enter
                             sendKeyDown('Enter');
 
                             from(selectInstance.dropDownVisibleChange).pipe(
-                                first(),
-                                delay(1000))
-                                .subscribe(() => {
-                                    sl.htmlInputElement.click();
-                                });
+                                take(1),
+                                delay(1000)
+                                // eslint-disable-next-line rxjs/no-nested-subscribe
+                            ).subscribe(() => {
+                                sl.htmlInputElement.click();
+                            });
 
                             break;
 
                         case 9:
-                            expect(selectedElements.length).toBeGreaterThan(0, 'Check selection 9-1');
-                            expect(selectedItems.length).toBe(1, 'Check selection 9-2');
-                            expect(currentElement && currentElement.attributes.flat).toBe('5', 'Check selection 9-3');
-                            expect(selectedChips.length).toBe(1, 'Check selection 9-4');
+                            void expect(selectedElements.length).toBeGreaterThan(0, 'Check selection 9-1');
+                            void expect(selectedItems.length).toBe(1, 'Check selection 9-2');
+                            void expect(currentElement?.attributes.flat).toBe('5', 'Check selection 9-3');
+                            void expect(selectedChips.length).toBe(1, 'Check selection 9-4');
 
                             // Select first line with enter in single select
                             selectInstance.type = 'select';
@@ -769,9 +798,8 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                             break;
 
                         default:
-                            expect(selectedItems.length).toBe(1, 'Check selection 10-1');
-                            const selItem = selectedItems[0] as IItemBase;
-                            expect(selItem.model.value).toEqual('Cranberries', 'Check selection 10-2');
+                            void expect(selectedItems.length).toBe(1, 'Check selection 10-1');
+                            void expect(selItem.model.value).toEqual('Cranberries', 'Check selection 10-2');
                             done();
                     }
                 });
@@ -782,11 +810,11 @@ describe('DejaSelectByOptionsContainerComponent', () => {
         });
     });
 
-    it('should select with the mouse', (done) => {
+    it('should select with the mouse', done => {
         const fixture = TestBed.createComponent(DejaSelectByOptionsContainerComponent);
         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
-        const sl = selectInstance as any;
+        const sl = selectInstance;
 
         const sendMouseClick = (element: DebugElement, shiftKey?: boolean, ctrlKey?: boolean, upElement?: DebugElement) => {
             // Simulate a mouse click
@@ -805,13 +833,13 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                 clientY: 0,
                 relatedTarget: listElement.nativeElement,
                 screenX: 0,
-                screenY: 0,
+                screenY: 0
             } as MouseEventInit);
             const event = new MouseEvent('mousedown', eventInit());
             element.nativeElement.dispatchEvent(event);
             fixture.detectChanges();
             timer(100).pipe(
-                first())
+                take(1))
                 .subscribe(() => {
                     const upEvent = new MouseEvent('mouseup', eventInit());
                     (upElement || element).nativeElement.dispatchEvent(upEvent);
@@ -822,31 +850,32 @@ describe('DejaSelectByOptionsContainerComponent', () => {
 
         fixture.detectChanges();
 
-        fixture.whenStable().then(() => {
+        return fixture.whenStable().then(() => {
             observeOptionsViewPort$(fixture).pipe(
                 debounceTime(10),
-                first())
-                .subscribe((vp) => {
+                take(1))
+                .subscribe(vp => {
                     fixture.detectChanges();
                     const displayedElements = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem'));
                     const selectedElements = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem.selected'));
                     const selectedItems = vp.items.filter((item: IItemBase) => item.selected);
 
                     // Check selected and current
-                    expect(selectedElements.length).toBe(0);
-                    expect(selectedItems.length).toBe(0);
+                    void expect(selectedElements.length).toBe(0);
+                    void expect(selectedItems.length).toBe(0);
                     // Check flags
-                    expect(selectInstance.isMultiSelect).toBe(true);
+                    void expect(selectInstance.isMultiSelect).toBe(true);
                     // Simulate click on first element on disabled
                     selectInstance.disabled = true;
                     fixture.detectChanges();
 
                     from(selectInstance.selectedChange).pipe(
-                        first())
-                        .subscribe(() => {
-                            expect(selectInstance.selectedItems && selectInstance.selectedItems.length).toBe(1);
-                            done();
-                        });
+                        take(1)
+                        // eslint-disable-next-line rxjs/no-nested-subscribe
+                    ).subscribe(() => {
+                        void expect(selectInstance.selectedItems?.length).toBe(1);
+                        done();
+                    });
 
                     sendMouseClick(displayedElements[1]);
                 });
@@ -867,35 +896,40 @@ describe('DejaSelectByOptionsContainerComponent', () => {
         selectInstance.selectedModel = 'Apricots';
         fixture.detectChanges();
 
-        expect(selectInstance.selectedItems && selectInstance.selectedItems.length).toBe(1);
-        const apricots = selectInstance.selectedItems && selectInstance.selectedItems.length && selectInstance.selectedItems[0];
-        expect(apricots.model.value).toEqual('Apricots');
+        void expect(selectInstance.selectedItems?.length).toBe(1);
+        const apricots = selectInstance.selectedItems?.length && selectInstance.selectedItems[0];
+        const apricotsModel = apricots.model as { value: string };
+        void expect(apricotsModel.value).toEqual('Apricots');
 
         selectInstance.selectedModels = ['', 'Banana', 'Lemon', 'Cantaloupe'];
         fixture.detectChanges();
 
-        expect(selectInstance.selectedItems && selectInstance.selectedItems.length).toBe(4);
-        const empty = selectInstance.selectedItems && selectInstance.selectedItems.length && selectInstance.selectedItems[0];
-        expect(empty.model.value).toEqual('');
-        const banana = selectInstance.selectedItems && selectInstance.selectedItems.length && selectInstance.selectedItems[1];
-        expect(banana.model.value).toEqual('Banana');
-        const cantaloupe = selectInstance.selectedItems && selectInstance.selectedItems.length && selectInstance.selectedItems[2];
-        expect(cantaloupe.model.value).toEqual('Cantaloupe');
-        const lemon = selectInstance.selectedItems && selectInstance.selectedItems.length && selectInstance.selectedItems[3];
-        expect(lemon.model.value).toEqual('Lemon');
+        void expect(selectInstance.selectedItems?.length).toBe(4);
+        const empty = selectInstance.selectedItems?.length && selectInstance.selectedItems[0];
+        const emptyModel = empty.model as { value: string };
+        void expect(emptyModel.value).toEqual('');
+        const banana = selectInstance.selectedItems?.length && selectInstance.selectedItems[1];
+        const bananaModel = banana.model as { value: string };
+        void expect(bananaModel.value).toEqual('Banana');
+        const cantaloupe = selectInstance.selectedItems?.length && selectInstance.selectedItems[2];
+        const cantaloupeModel = cantaloupe.model as { value: string };
+        void expect(cantaloupeModel.value).toEqual('Cantaloupe');
+        const lemon = selectInstance.selectedItems?.length && selectInstance.selectedItems[3];
+        const lemonModel = lemon.model as { value: string };
+        void expect(lemonModel.value).toEqual('Lemon');
 
         selectInstance.selectedItem = apricots;
         fixture.detectChanges();
 
-        expect(selectInstance.selectedItems && selectInstance.selectedItems.length).toBe(1);
-        expect(selectInstance.selectedItem).toBe(apricots);
+        void expect(selectInstance.selectedItems?.length).toBe(1);
+        void expect(selectInstance.selectedItem).toBe(apricots);
 
         selectInstance.selectedItems = [apricots, cantaloupe, lemon];
         fixture.detectChanges();
 
-        expect(selectInstance.selectedItems && selectInstance.selectedItems.length).toBe(3);
-        expect(selectInstance.selectedItems[0]).toBe(apricots);
-        expect(selectInstance.selectedItems[1]).toBe(cantaloupe);
-        expect(selectInstance.selectedItems[2]).toBe(lemon);
+        void expect(selectInstance.selectedItems?.length).toBe(3);
+        void expect(selectInstance.selectedItems[0]).toBe(apricots);
+        void expect(selectInstance.selectedItems[1]).toBe(cantaloupe);
+        void expect(selectInstance.selectedItems[2]).toBe(lemon);
     });
 });

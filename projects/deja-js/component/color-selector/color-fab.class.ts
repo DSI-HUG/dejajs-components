@@ -7,14 +7,15 @@
  */
 
 import { Color } from '@deja-js/core';
-import { BehaviorSubject ,  Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 export class DejaColorFab {
     public color$: Subject<Color>;
     public active$: Subject<boolean>;
     public disabled$: Subject<boolean>;
 
-    constructor(private _color: Color, private _disabled = false, private _active = false) {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    public constructor(private _color: Color, private _disabled = false, private _active = false) {
         this.color$ = new BehaviorSubject<Color>(_color);
         this.disabled$ = new BehaviorSubject<boolean>(_disabled);
         this.active$ = new BehaviorSubject<boolean>(_active);

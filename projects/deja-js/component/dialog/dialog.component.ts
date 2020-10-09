@@ -16,19 +16,19 @@ import { filter, takeUntil } from 'rxjs/operators';
 @Component({
     selector: 'deja-dialog',
     styleUrls: ['./dialog.component.scss'],
-    templateUrl: './dialog.component.html',
+    templateUrl: './dialog.component.html'
 })
 export class DejaDialogComponent extends Destroy {
     /** Event emitted when dialog close action is called */
-    @Output() public closed = new EventEmitter();
+    @Output() public readonly closed = new EventEmitter();
 
-    @ContentChild('okaction') private okButton: any;
-    @ContentChild('cancelaction') private cancelButton: any;
+    @ContentChild('okaction') private okButton: { _elementRef: ElementRef<HTMLElement> };
+    @ContentChild('cancelaction') private cancelButton: { _elementRef: ElementRef<HTMLElement> };
 
     /**
      * Constructor
      */
-    constructor(elementRef: ElementRef) {
+    public constructor(elementRef: ElementRef) {
         super();
 
         const element = elementRef.nativeElement as HTMLElement;
@@ -59,6 +59,7 @@ export class DejaDialogComponent extends Destroy {
         let target = event.target as HTMLElement;
         const element = event.currentTarget as HTMLElement;
 
+        // eslint-disable-next-line no-loops/no-loops
         while (target.parentElement && target !== element) {
             if (target.className === 'dialog') {
                 close = false;

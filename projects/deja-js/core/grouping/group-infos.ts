@@ -10,6 +10,6 @@ import { ISortInfos } from '../sorting/sort-infos.model';
 
 export interface IGroupInfo {
     sortInfos?: ISortInfos;
-    groupByField: ((model: any) => string) | string;
-    groupTextField?: ((model: any) => string) | string;
+    groupByField: ((model: unknown) => string) | string;
+    groupTextField?: ((model: unknown) => string) | string;
 }

@@ -5,9 +5,9 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-import { first } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
+
 import { ISortInfos } from './sort-infos.model';
-import { SortOrder } from './sort-order.model';
 import { SortingService } from './sorting.service';
 
 describe('SortingService', () => {
@@ -21,8 +21,8 @@ describe('SortingService', () => {
             colors: [
                 'orange',
                 'yellow',
-                'green',
-            ],
+                'green'
+            ]
         },
         {
             name: 'Banana',
@@ -31,8 +31,8 @@ describe('SortingService', () => {
             colors: [
                 'green',
                 'yellow',
-                'black',
-            ],
+                'black'
+            ]
         },
         {
             name: 'Cantaloupe',
@@ -41,8 +41,8 @@ describe('SortingService', () => {
             colors: [
                 'orange',
                 'cantaloupe',
-                'green',
-            ],
+                'green'
+            ]
         },
         {
             name: 'Cherries',
@@ -50,8 +50,8 @@ describe('SortingService', () => {
             date: new Date(2017, 12, 6),
             colors: [
                 'mallow',
-                'red',
-            ],
+                'red'
+            ]
         },
         {
             name: 'Coconut',
@@ -60,8 +60,8 @@ describe('SortingService', () => {
             colors: [
                 'white',
                 'braun',
-                'green',
-            ],
+                'green'
+            ]
         },
         {
             name: 'Cranberries',
@@ -70,8 +70,8 @@ describe('SortingService', () => {
             colors: [
                 'mallow',
                 'black',
-                'red',
-            ],
+                'red'
+            ]
         },
         {
             name: 'Durian',
@@ -79,8 +79,8 @@ describe('SortingService', () => {
             date: new Date(2017, 12, 1),
             colors: [
                 'green',
-                'yellow',
-            ],
+                'yellow'
+            ]
         },
         {
             name: 'Grapes',
@@ -89,8 +89,8 @@ describe('SortingService', () => {
             colors: [
                 'green',
                 'red',
-                'black',
-            ],
+                'black'
+            ]
         },
         {
             name: 'Lemon',
@@ -98,8 +98,8 @@ describe('SortingService', () => {
             date: new Date(2017, 12, 0),
             colors: [
                 'yellow',
-                'green',
-            ],
+                'green'
+            ]
         },
         {
             name: 'Mango',
@@ -109,16 +109,16 @@ describe('SortingService', () => {
                 'yellow',
                 'green',
                 'red',
-                'orange',
-            ],
+                'orange'
+            ]
         },
         {
             name: 'Pineapple',
             value: 11,
             date: new Date(2017, 12, 11),
             colors: [
-                'yellow',
-            ],
+                'yellow'
+            ]
         },
         {
             name: 'Watermelon',
@@ -126,9 +126,9 @@ describe('SortingService', () => {
             date: new Date(2017, 12, 10),
             colors: [
                 'green',
-                'red',
-            ],
-        },
+                'red'
+            ]
+        }
     ];
 
     const sortedValues = ['Apricots', 'Banana', 'Cantaloupe', 'Cherries', 'Coconut', 'Cranberries', 'Durian', 'Grapes', 'Lemon', 'Mango', 'Pineapple', 'Watermelon'];
@@ -139,101 +139,101 @@ describe('SortingService', () => {
 
     it('Should, sort an empty array', () => {
         service.sort$([], null).pipe(
-            first())
-            .subscribe((sorted) => expect(sorted).toEqual([]));
+            take(1))
+            .subscribe(sorted => void expect(sorted).toEqual([]));
     });
 
     it('Should, sort an array by first level ascending', () => {
         const si = {
             name: 'name',
-            order: SortOrder.ascending,
+            order: 'ascending'
         } as ISortInfos;
 
         service.sort$(fructs, si).pipe(
-            first())
-            .subscribe((sorted) => {
-                expect(sorted.length).toBe(sortedValues.length);
-                sorted.forEach((value, i) => expect(value.name).toEqual(sortedValues[i]));
+            take(1))
+            .subscribe(sorted => {
+                void expect(sorted.length).toBe(sortedValues.length);
+                sorted.forEach((value, i) => void expect(value.name).toEqual(sortedValues[i]));
             });
     });
 
     it('Should, sort an array by first level descending', () => {
         const si = {
             name: 'name',
-            order: SortOrder.descending,
+            order: 'descending'
         } as ISortInfos;
 
         const reverseValues = [...sortedValues].reverse();
         service.sort$(fructs, si).pipe(
-            first())
-            .subscribe((sorted) => {
-                expect(sorted.length).toBe(reverseValues.length);
-                sorted.forEach((value, i) => expect(value.name).toEqual(reverseValues[i]));
+            take(1))
+            .subscribe(sorted => {
+                void expect(sorted.length).toBe(reverseValues.length);
+                sorted.forEach((value, i) => void expect(value.name).toEqual(reverseValues[i]));
             });
     });
 
     it('Should, sort by number', () => {
         const si = {
             name: 'value',
-            order: SortOrder.ascending,
+            order: 'ascending'
         } as ISortInfos;
 
         service.sort$(fructs, si).pipe(
-            first())
-            .subscribe((sorted) => {
-                expect(sorted.length).toBe(fructs.length);
-                sorted.forEach((value, i) => expect(value.value).toEqual(i));
+            take(1))
+            .subscribe(sorted => {
+                void expect(sorted.length).toBe(fructs.length);
+                sorted.forEach((value, i) => void expect(value.value).toEqual(i));
             });
     });
 
     it('Should, sort by date', () => {
         const si = {
             name: 'date',
-            order: SortOrder.ascending,
+            order: 'ascending'
         } as ISortInfos;
 
         service.sort$(fructs, si).pipe(
-            first())
-            .subscribe((sorted) => {
-                expect(sorted.length).toBe(fructs.length);
-                sorted.forEach((value, i) => expect(value.value).toEqual(i));
+            take(1))
+            .subscribe(sorted => {
+                void expect(sorted.length).toBe(fructs.length);
+                sorted.forEach((value, i) => void expect(value.value).toEqual(i));
             });
     });
 
     it('Should, sort by date when type date is specified', () => {
         const si = {
             name: 'date',
-            order: SortOrder.ascending,
-            type: 'date',
+            order: 'ascending',
+            type: 'date'
         } as ISortInfos;
 
         service.sort$(fructs, si).pipe(
-            first())
-            .subscribe((sorted) => {
-                expect(sorted.length).toBe(fructs.length);
-                sorted.forEach((value, i) => expect(value.value).toEqual(i));
+            take(1))
+            .subscribe(sorted => {
+                void expect(sorted.length).toBe(fructs.length);
+                sorted.forEach((value, i) => void expect(value.value).toEqual(i));
             });
     });
 
     it('Should, sort a tree', () => {
         const si = [{
             name: 'name',
-            order: SortOrder.ascending,
+            order: 'ascending'
         }, {
-            order: SortOrder.descending,
+            order: 'descending'
         }] as ISortInfos[];
 
         service.sortTree$(fructs, si, 'colors').pipe(
-            first())
-            .subscribe((sorted) => {
-                expect(sorted.length).toBe(sortedValues.length);
-                sorted.forEach((value, i) => expect(value.name).toEqual(sortedValues[i]));
-                expect(sorted[4].colors[0]).toEqual('white');
-                expect(sorted[4].colors[1]).toEqual('green');
-                expect(sorted[4].colors[2]).toEqual('braun');
-                expect(sorted[7].colors[0]).toEqual('red');
-                expect(sorted[7].colors[1]).toEqual('green');
-                expect(sorted[7].colors[2]).toEqual('black');
+            take(1))
+            .subscribe(sorted => {
+                void expect(sorted.length).toBe(sortedValues.length);
+                sorted.forEach((value, i) => void expect(value.name).toEqual(sortedValues[i]));
+                void expect(sorted[4].colors[0]).toEqual('white');
+                void expect(sorted[4].colors[1]).toEqual('green');
+                void expect(sorted[4].colors[2]).toEqual('braun');
+                void expect(sorted[7].colors[0]).toEqual('red');
+                void expect(sorted[7].colors[1]).toEqual('green');
+                void expect(sorted[7].colors[2]).toEqual('black');
             });
     });
 });

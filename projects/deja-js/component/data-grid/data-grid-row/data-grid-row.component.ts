@@ -11,9 +11,10 @@ import { ChangeDetectorRef } from '@angular/core';
 import { Component } from '@angular/core';
 import { ContentChild } from '@angular/core';
 import { Input } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { ItemListService } from '@deja-js/core';
+import { Destroy, ItemListService } from '@deja-js/core';
 import { from, Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { IDejaGridColumnLayout } from '../data-grid-column/data-grid-column-layout';
 import { IDejaGridRow } from './data-grid-row';
 
@@ -22,20 +23,20 @@ import { IDejaGridRow } from './data-grid-row';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'deja-grid-row',
     styleUrls: ['./data-grid-row.component.scss'],
-    templateUrl: './data-grid-row.component.html',
+    templateUrl: './data-grid-row.component.html'
 })
-export class DejaGridRowComponent implements OnDestroy {
+export class DejaGridRowComponent extends Destroy {
     /** Définit la structure de la ligne associée à ce composant */
     @Input() public row: IDejaGridRow;
 
     /** Template de cellule si définit extérieurement à la grille */
-    @Input() public cellTemplateExternal: any;
+    @Input() public cellTemplateExternal: unknown;
 
     /** Index de la ligne sur la liste plate de ItemListService */
     @Input() public flatIndex: number;
 
     /** Template de cellule par defaut  définit dans le HTML de la grille */
-    @ContentChild('cellTemplate') public cellTemplateInternal: any;
+    @ContentChild('cellTemplate') public cellTemplateInternal: unknown;
 
     private _columnLayout = {} as IDejaGridColumnLayout;
     private refresh$sub: Subscription;
@@ -52,11 +53,13 @@ export class DejaGridRowComponent implements OnDestroy {
             scrollLeft: 0,
             vpAfterWidth: 0,
             vpBeforeWidth: 0,
-            refresh$: undefined,
+            refresh$: undefined
         };
 
         if (this._columnLayout.refresh$) {
-            this.refresh$sub = from(this._columnLayout.refresh$).subscribe(() => this.changeDetectorRef.markForCheck());
+            this.refresh$sub = from(this._columnLayout.refresh$).pipe(
+                takeUntil(this.destroyed$)
+            ).subscribe(() => this.changeDetectorRef.markForCheck());
         }
     }
 
@@ -68,15 +71,11 @@ export class DejaGridRowComponent implements OnDestroy {
         return this.cellTemplateExternal || this.cellTemplateInternal;
     }
 
-    constructor(private changeDetectorRef: ChangeDetectorRef) { }
-
-    public ngOnDestroy() {
-        if (this.refresh$sub) {
-            this.refresh$sub.unsubscribe();
-        }
+    public constructor(private changeDetectorRef: ChangeDetectorRef) {
+        super();
     }
 
     public getCellText(row: IDejaGridRow, textField: string) {
-        return ItemListService.getItemText(row, textField);
+        return ItemListService.getItemText(row, textField) as string;
     }
 }

@@ -8,16 +8,17 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule  } from '@angular/forms';
-import { DejaEditableDirective  } from './content-editable.directive';
+import { FormsModule } from '@angular/forms';
+
+import { DejaEditableDirective } from './content-editable.directive';
 
 @NgModule({
     declarations: [DejaEditableDirective],
     exports: [DejaEditableDirective],
     imports: [
         CommonModule,
-        FormsModule,
-    ],
+        FormsModule
+    ]
 })
 export class DejaEditableModule { }
 

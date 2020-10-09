@@ -16,13 +16,14 @@ import { Input } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Renderer2 } from '@angular/core';
+
 import { DejaSplitterComponent } from './splitter.component';
 
 /**
  * Directive representing a panel in a Splitter Component
  */
 @Directive({
-    selector: 'split-area',
+    selector: 'split-area'
 })
 export class SplitAreaDirective implements OnInit, OnDestroy {
 
@@ -59,14 +60,14 @@ export class SplitAreaDirective implements OnInit, OnDestroy {
     private _order: number | null = null;
     private _size: number | null = null;
     private _minSizePixel = 0;
-    private eventsLockFct: Function[] = [];
+    private eventsLockFct = [] as (() => void)[];
 
     /**
      * Constructor
      */
-    constructor(private elementRef: ElementRef,
-                private renderer: Renderer2,
-                private split: DejaSplitterComponent) {
+    public constructor(private elementRef: ElementRef,
+        private renderer: Renderer2,
+        private split: DejaSplitterComponent) {
     }
 
     /**
@@ -88,6 +89,7 @@ export class SplitAreaDirective implements OnInit, OnDestroy {
      * Unlock the events
      */
     public unlockEvents() {
+        // eslint-disable-next-line no-loops/no-loops
         while (this.eventsLockFct.length > 0) {
             const fct = this.eventsLockFct.pop();
             if (fct) {
@@ -101,8 +103,8 @@ export class SplitAreaDirective implements OnInit, OnDestroy {
      * @param key style key
      * @param value style value
      */
-    public setStyle(key: string, value: any) {
-        value == null ? this.renderer.removeStyle(this.elementRef.nativeElement, key) : this.renderer.setStyle(this.elementRef.nativeElement, key, value);
+    public setStyle(key: string, value: unknown) {
+        void (value === null || value === undefined ? this.renderer.removeStyle(this.elementRef.nativeElement, key) : this.renderer.setStyle(this.elementRef.nativeElement, key, value));
     }
 
     /**

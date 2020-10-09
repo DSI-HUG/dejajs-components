@@ -8,15 +8,16 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+
 import { NewsCardComponent } from './news-card.component';
 
 @NgModule({
     declarations: [NewsCardComponent],
     exports: [NewsCardComponent],
     imports: [
-        CommonModule,
+        CommonModule
     ],
     providers: [
-    ],
+    ]
 })
 export class NewsCardModule { }

@@ -10,44 +10,43 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Component, ContentChild, EventEmitter, HostBinding, Input, Optional, Output, Self } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { NgControl } from '@angular/forms';
+
 import { IDejaChipsComponentCloseEvent } from './chips-close.event';
 
 @Component({
     selector: 'deja-chips',
     styleUrls: [
-        './chips.component.scss',
+        './chips.component.scss'
     ],
-    templateUrl: './chips.component.html',
+    templateUrl: './chips.component.html'
 })
 export class DejaChipsComponent implements ControlValueAccessor {
+    // eslint-disable-next-line @angular-eslint/no-output-native
+    @Output() public readonly close = new EventEmitter<IDejaChipsComponentCloseEvent>();
+
     /** Retourne ou definit la liste des éléments. */
-    @Input() public _items: any[];
+    @Input() public _items: unknown[];
 
     /** Retourne ou definit le champ à utiliser comme texte. */
     @Input() public textField: string;
 
     /** Template d'élément si définit extérieurement au composant */
-    @Input() public itemTemplateExternal: any;
+    @Input() public itemTemplateExternal: unknown;
 
     /** Template de control d'insertion si définit extérieurement au composant */
-    @Input() public insertTemplateExternal: any;
-
-    @Output() public close = new EventEmitter<IDejaChipsComponentCloseEvent>();
+    @Input() public insertTemplateExternal: unknown;
 
     @HostBinding('attr.disabled') public _disabled: boolean = null;
 
-    @ContentChild('itemTemplate') private itemTemplateInternal: any;
+    @ContentChild('itemTemplate') private itemTemplateInternal: unknown;
 
-    @ContentChild('insertTemplate') private insertTemplateInternal: any;
+    @ContentChild('insertTemplate') private insertTemplateInternal: unknown;
 
     private _readonly = false;
 
-    protected onTouchedCallback = (_a: any) => { };
-    protected onChangeCallback = (_a: any) => { };
-
-    constructor(@Self() @Optional() public _control: NgControl) {
-        if (this._control) {
-            this._control.valueAccessor = this;
+    public constructor(@Self() @Optional() public control: NgControl) {
+        if (this.control) {
+            this.control.valueAccessor = this;
         }
     }
 
@@ -72,45 +71,13 @@ export class DejaChipsComponent implements ControlValueAccessor {
     }
 
     @Input()
-    public set items(value: any[]) {
+    public set items(value: unknown[]) {
         this.writeValue(value);
     }
 
-    public get items(): any[] {
+    public get items(): unknown[] {
         return this._items;
     }
-
-    // ************* ControlValueAccessor Implementation **************
-    // set accessor including call the onchange callback
-    public set value(value: any[]) {
-        this.writeValue(value);
-        this.onChangeCallback(value);
-    }
-
-    // get accessor
-    public get value(): any[] {
-        return this._items;
-    }
-
-    // From ControlValueAccessor interface
-    public writeValue(value: any[]) {
-        this._items = value;
-    }
-
-    // From ControlValueAccessor interface
-    public registerOnChange(fn: any) {
-        this.onChangeCallback = fn;
-    }
-
-    // From ControlValueAccessor interface
-    public registerOnTouched(fn: any) {
-        this.onTouchedCallback = fn;
-    }
-
-    public setDisabledState(isDisabled: boolean) {
-        this.disabled = isDisabled;
-    }
-    // ************* End of ControlValueAccessor Implementation **************
 
     public get itemTemplate() {
         return this.itemTemplateExternal || this.itemTemplateInternal;
@@ -120,23 +87,60 @@ export class DejaChipsComponent implements ControlValueAccessor {
         return this.insertTemplateExternal || this.insertTemplateInternal;
     }
 
+    // ************* ControlValueAccessor Implementation **************
+    // set accessor including call the onchange callback
+    public set value(value: unknown[]) {
+        this.writeValue(value);
+        this.onChangeCallback(value);
+    }
+
+    // get accessor
+    public get value(): unknown[] {
+        return this._items;
+    }
+
+    // From ControlValueAccessor interface
+    public writeValue(value: unknown[]) {
+        this._items = value;
+    }
+
+    // From ControlValueAccessor interface
+    public registerOnChange(fn: (_a: unknown) => void) {
+        this.onChangeCallback = fn;
+    }
+
+    // From ControlValueAccessor interface
+    public registerOnTouched(fn: () => void) {
+        this.onTouchedCallback = fn;
+    }
+
+    public setDisabledState(isDisabled: boolean) {
+        this.disabled = isDisabled;
+    }
+    // ************* End of ControlValueAccessor Implementation **************
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public getTextValue(value: any) {
         if (!value) {
             return '';
+        } else if (this.textField && value.model && value.model[this.textField] !== undefined) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+            return value.model[this.textField];
+        } else if (this.textField && value[this.textField] !== undefined) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+            return value[this.textField];
+        } else if (value.displayName) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+            return typeof value.displayName === 'string' ? value.displayName : value.displayName();
+        } else if (typeof value.toString === 'function') {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+            return value.toString();
         } else {
-            if (this.textField && value.model && value.model[this.textField] !== undefined) {
-                return value.model[this.textField];
-            } else if (this.textField && value[this.textField] !== undefined) {
-                return value[this.textField];
-            } else if (value.displayName) {
-                return typeof value.displayName === 'string' ? value.displayName : value.displayName();
-            } else if (typeof value.toString === 'function') {
-                return value.toString();
-            }
+            return '';
         }
     }
 
-    public onClose(closeEvent: Event, item: any, index: number): boolean {
+    public onClose(closeEvent: Event, item: unknown, index: number): boolean {
         const newEvent = new CustomEvent('DejaChipsCloseEvent', {}) as IDejaChipsComponentCloseEvent;
         newEvent.item = item;
         newEvent.index = index;
@@ -146,4 +150,7 @@ export class DejaChipsComponent implements ControlValueAccessor {
         closeEvent.stopPropagation();
         return false;
     }
+
+    protected onChangeCallback = (_a: unknown) => undefined as void;
+    protected onTouchedCallback = () => undefined as void;
 }

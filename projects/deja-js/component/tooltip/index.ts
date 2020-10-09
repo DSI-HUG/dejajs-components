@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { DejaOverlayModule } from '@deja-js/component/overlay';
 import { MediaModule } from '@deja-js/core';
+
 import { DejaTooltipComponent } from './tooltip.component';
 import { DejaTooltipDirective } from './tooltip.directive';
 import { DejaTooltipService } from './tooltip.service';
@@ -17,20 +18,20 @@ import { DejaTooltipService } from './tooltip.service';
 @NgModule({
     declarations: [
         DejaTooltipComponent,
-        DejaTooltipDirective,
+        DejaTooltipDirective
     ],
     exports: [
         DejaTooltipComponent,
-        DejaTooltipDirective,
+        DejaTooltipDirective
     ],
     imports: [
         CommonModule,
         DejaOverlayModule,
-        MediaModule,
+        MediaModule
     ],
     providers: [
-        DejaTooltipService,
-    ],
+        DejaTooltipService
+    ]
 })
 export class DejaTooltipModule { }
 

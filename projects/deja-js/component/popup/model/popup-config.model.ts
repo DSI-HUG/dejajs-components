@@ -10,24 +10,26 @@ import { TemplateRef } from '@angular/core';
 import { MatDialogConfig } from '@angular/material/dialog';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { BehaviorSubject } from 'rxjs';
+
 import { DejaPopupAction } from './popup-action.model';
 
-export class DejaPopupConfig extends MatDialogConfig {
-
+export class DejaPopupConfig<D> extends MatDialogConfig<D> {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     public static dialogCount = 0;
+
     public readonly positionStart = { top: 100, left: 100 };
     public readonly dimensionDefault = { width: '60vw', height: '65vh' };
 
     public dejaPopupCom$?: BehaviorSubject<DejaPopupAction>;
 
-    public actionComponentRef: ComponentType<any>;
-    public contentComponentRef: ComponentType<any>;
-    public contentTemplate: DejaPopupContentTemplate<any>;
+    public actionComponentRef: ComponentType<unknown>;
+    public contentComponentRef: ComponentType<unknown>;
+    public contentTemplate: DejaPopupContentTemplate<unknown>;
     public actions: DejaPopupAction[];
     public autoFocus = false;
     public autoposition?: boolean;
     public content?: string | string[];
-    public data?: any;
+    public data?: D;
     public dialogPanelId: string;
     public fullscreen = false;
     public maxWidth = '100vw';
@@ -42,7 +44,7 @@ export class DejaPopupConfig extends MatDialogConfig {
     public url?: string | SafeResourceUrl;
     public buttonFullscreenExit?: boolean;
 
-    constructor() {
+    public constructor() {
         super();
     }
 
@@ -67,7 +69,7 @@ export class DejaPopupConfig extends MatDialogConfig {
         const shift = (10 * DejaPopupConfig.dialogCount) - (100 * Math.ceil(DejaPopupConfig.dialogCount / 10));
         return {
             top: `${(this.positionStart.top + shift)}px`,
-            left: `${(this.positionStart.left + shift)}px`,
+            left: `${(this.positionStart.left + shift)}px`
         };
     }
 
@@ -81,7 +83,7 @@ export class DejaPopupConfig extends MatDialogConfig {
             this.title = `Popup ${DejaPopupConfig.dialogCount}`;
         }
 
-        const config: MatDialogConfig<DejaPopupConfig> = new MatDialogConfig();
+        const config: MatDialogConfig<DejaPopupConfig<D>> = new MatDialogConfig();
 
         config.ariaDescribedBy = this.ariaDescribedBy;
         config.backdropClass = this.backdropClass;
@@ -107,12 +109,10 @@ export class DejaPopupConfig extends MatDialogConfig {
     public addPanelClass(panelClass: string) {
         if (!this.panelClass) {
             this.panelClass = [panelClass];
+        } else if (Array.isArray(this.panelClass)) {
+            this.panelClass.push(panelClass);
         } else {
-            if (Array.isArray(this.panelClass)) {
-                this.panelClass.push(panelClass);
-            } else {
-                this.panelClass = [panelClass, this.panelClass];
-            }
+            this.panelClass = [panelClass, this.panelClass];
         }
     }
 
@@ -137,6 +137,8 @@ export class DejaPopupConfig extends MatDialogConfig {
         if (!this.position.left && !this.position.right) {
             this.position.left = `${(this.positionStart.left)}px`;
         }
+
+        return undefined;
     }
 
     private createIds() {
@@ -154,5 +156,5 @@ export type DialogToolbarType = 'base' | 'window';
 export type DialogToolbarColor = null | 'primary' | 'accent' | 'warn' | 'danger';
 export interface DejaPopupContentTemplate<T> {
     templateRef: TemplateRef<T>;
-    templateContext?: any;
+    templateContext?: unknown;
 }

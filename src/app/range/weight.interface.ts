@@ -30,5 +30,5 @@ export class Weight implements IWeight {
     public min: number;
     public max: number;
     public $width: number;
-    constructor(public minWeight: number, public maxWeight: number) { }
+    public constructor(public minWeight: number, public maxWeight: number) { }
 }

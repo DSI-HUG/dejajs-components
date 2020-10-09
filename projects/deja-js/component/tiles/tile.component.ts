@@ -13,29 +13,30 @@ import { Component } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { Input } from '@angular/core';
-import { OnDestroy } from '@angular/core';
 import { Output } from '@angular/core';
-import { from, Subscription } from 'rxjs';
-import { debounceTime, delay, filter, first, tap } from 'rxjs/operators';
+import { Destroy } from '@deja-js/core';
+import { from } from 'rxjs';
+import { debounceTime, delay, filter, take, takeUntil, tap } from 'rxjs/operators';
+
 import { DejaTile } from './tile.class';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'deja-tile',
     styleUrls: [
-        './tile.component.scss',
+        './tile.component.scss'
     ],
-    templateUrl: './tile.component.html',
+    templateUrl: './tile.component.html'
 })
-export class DejaTileComponent implements OnDestroy {
-    @Input() public template: any;
-    @Output() public close = new EventEmitter<Event>();
+export class DejaTileComponent extends Destroy {
+    @Input() public template: unknown;
+    // eslint-disable-next-line @angular-eslint/no-output-native
+    @Output() public readonly close = new EventEmitter<Event>();
 
     public progressDiameter = 100;
 
     private element: HTMLElement;
     private _tile: DejaTile;
-    private subscriptions = [] as Subscription[];
     private _designMode: boolean;
 
     @Input()
@@ -47,7 +48,8 @@ export class DejaTileComponent implements OnDestroy {
         return this._designMode;
     }
 
-    constructor(el: ElementRef, private changeDetectorRef: ChangeDetectorRef) {
+    public constructor(el: ElementRef, private changeDetectorRef: ChangeDetectorRef) {
+        super();
         this.element = el.nativeElement as HTMLElement;
         this.element.setAttribute('hidden', '0');
     }
@@ -55,9 +57,6 @@ export class DejaTileComponent implements OnDestroy {
     @Input()
     public set tile(tile: DejaTile) {
         this._tile = tile;
-
-        this.subscriptions.forEach((subscription) => subscription.unsubscribe());
-        this.subscriptions = [];
 
         if (tile) {
             const toogleAttribute = (attribute: string, value: string | boolean) => {
@@ -73,22 +72,24 @@ export class DejaTileComponent implements OnDestroy {
                 this.changeDetectorRef.markForCheck();
             }
 
-            this.subscriptions.push(from(tile.pixelBounds$).pipe(
-                filter((bounds) => !!bounds),
-                first(),
+            from(tile.pixelBounds$).pipe(
+                filter(bounds => !!bounds),
+                take(1),
                 filter(() => tile.fading),
                 tap(() => {
                     this.element.setAttribute('fading', '1');
                     this.changeDetectorRef.markForCheck();
                 }),
-                delay(200)
+                delay(200),
+                takeUntil(this.destroyed$)
             ).subscribe(() => {
                 this.element.removeAttribute('fading');
                 this.changeDetectorRef.markForCheck();
-            }));
+            });
 
-            this.subscriptions.push(from(tile.pixelBounds$).pipe(
-                filter(bounds => !!bounds)
+            from(tile.pixelBounds$).pipe(
+                filter(bounds => !!bounds),
+                takeUntil(this.destroyed$)
             ).subscribe(bounds => {
                 if (!tile.isHidden) {
                     this.element.removeAttribute('hidden');
@@ -99,61 +100,66 @@ export class DejaTileComponent implements OnDestroy {
                 this.element.style.height = `${bounds.height}px`;
                 this.progressDiameter = Math.min(100, Math.round(Math.max(bounds.width * 0.4, bounds.height * 0.4)));
                 this.changeDetectorRef.markForCheck();
-            }));
+            });
 
-            this.subscriptions.push(from(tile.pressed$).pipe(
-                tap(value => toogleAttribute('pressed', value))
-            ).subscribe(() => this.changeDetectorRef.markForCheck()));
+            from(tile.pressed$).pipe(
+                tap(value => toogleAttribute('pressed', value)),
+                takeUntil(this.destroyed$)
+            ).subscribe(() => this.changeDetectorRef.markForCheck());
 
-            this.subscriptions.push(from(tile.selected$).pipe(
-                tap(value => toogleAttribute('selected', value))
-            ).subscribe(() => this.changeDetectorRef.markForCheck()));
+            from(tile.selected$).pipe(
+                tap(value => toogleAttribute('selected', value)),
+                takeUntil(this.destroyed$)
+            ).subscribe(() => this.changeDetectorRef.markForCheck());
 
-            this.subscriptions.push(from(tile.dragging$).pipe(
-                tap(value => toogleAttribute('drag', value))
-            ).subscribe(() => this.changeDetectorRef.markForCheck()));
+            from(tile.dragging$).pipe(
+                tap(value => toogleAttribute('drag', value)),
+                takeUntil(this.destroyed$)
+            ).subscribe(() => this.changeDetectorRef.markForCheck());
 
-            this.subscriptions.push(from(tile.dropping$).pipe(
-                tap(value => toogleAttribute('drop', value))
-            ).subscribe(() => this.changeDetectorRef.markForCheck()));
+            from(tile.dropping$).pipe(
+                tap(value => toogleAttribute('drop', value)),
+                takeUntil(this.destroyed$)
+            ).subscribe(() => this.changeDetectorRef.markForCheck());
 
-            this.subscriptions.push(from(tile.cutted$).pipe(
-                tap(value => toogleAttribute('cutted', value))
-            ).subscribe(() => this.changeDetectorRef.markForCheck()));
+            from(tile.cutted$).pipe(
+                tap(value => toogleAttribute('cutted', value)),
+                takeUntil(this.destroyed$)
+            ).subscribe(() => this.changeDetectorRef.markForCheck());
 
-            this.subscriptions.push(from(tile.deleted$).pipe(
-                tap(() => this.element.remove())
-            ).subscribe(() => this.changeDetectorRef.markForCheck()));
+            from(tile.deleted$).pipe(
+                tap(() => this.element.remove()),
+                takeUntil(this.destroyed$)
+            ).subscribe(() => this.changeDetectorRef.markForCheck());
 
             const tooogleHide$ = from(tile.hidden$).pipe(
                 tap(value => toogleAttribute('hidden', value ? '1' : '2')));
 
             // Hide
-            this.subscriptions.push(tooogleHide$.pipe(
+            tooogleHide$.pipe(
                 debounceTime(1000),
                 filter(value => value),
-                tap(() => this.element.setAttribute('hidden', '0'))
-            ).subscribe(() => this.changeDetectorRef.markForCheck()));
+                tap(() => this.element.setAttribute('hidden', '0')),
+                takeUntil(this.destroyed$)
+            ).subscribe(() => this.changeDetectorRef.markForCheck());
 
             // Show
-            this.subscriptions.push(tooogleHide$.pipe(
+            tooogleHide$.pipe(
                 debounceTime(1),
                 filter(value => !value),
-                tap(() => this.element.removeAttribute('hidden'))
-            ).subscribe(() => this.changeDetectorRef.markForCheck()));
+                tap(() => this.element.removeAttribute('hidden')),
+                takeUntil(this.destroyed$)
+            ).subscribe(() => this.changeDetectorRef.markForCheck());
 
             // Refresh
-            this.subscriptions.push(from(tile.refresh$).pipe(
-                debounceTime(1)
-            ).subscribe(() => this.changeDetectorRef.markForCheck()));
+            from(tile.refresh$).pipe(
+                debounceTime(1),
+                takeUntil(this.destroyed$)
+            ).subscribe(() => this.changeDetectorRef.markForCheck());
         }
     }
 
     public get tile() {
         return this._tile;
-    }
-
-    public ngOnDestroy() {
-        this.subscriptions.forEach((subscription) => subscription.unsubscribe());
     }
 }

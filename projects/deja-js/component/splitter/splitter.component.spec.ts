@@ -6,13 +6,16 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { Component } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 import { DejaSplitterModule } from './index';
 import { DejaSplitterComponent } from './splitter.component';
 
 @Component({
+    selector: 'DejaSplitterContainerComponent',
+    // eslint-disable-next-line @angular-eslint/component-max-inline-declarations
     template: `<deja-splitter [direction]="'horizontal'">
                 <split-area [size]="25" order="1" minSizePixel="100" (lockEvents)="lockEvents" (unlockEvents)="unlockEvents">
                     <p>Lorem ipsum dolor sit amet...</p>
@@ -20,36 +23,34 @@ import { DejaSplitterComponent } from './splitter.component';
                 <split-area [size]="75" minSizePixel="100">
                     <p>Sed ut perspiciatis unde omnis iste natus erro...</p>
                 </split-area>
-            </deja-splitter>`,
+            </deja-splitter>`
 })
 class DejaSplitterContainerComponent {
-    constructor() {
+    public constructor() {
         document.body.style.width = '1280px';
         document.body.style.height = '1024px';
     }
 
-    public lockEvents() {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    public lockEvents() { }
 
-    }
-
-    public unlockEvents() {
-
-    }
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    public unlockEvents() { }
 }
 
 describe('DejaSplitterContainerComponent', () => {
     let component: DejaSplitterComponent;
     let fixture: ComponentFixture<DejaSplitterContainerComponent>;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        void TestBed.configureTestingModule({
             declarations: [
                 DejaSplitterContainerComponent
             ],
             imports: [
                 BrowserAnimationsModule,
                 DejaSplitterModule
-            ],
+            ]
         }).compileComponents();
     }));
 
@@ -61,12 +62,12 @@ describe('DejaSplitterContainerComponent', () => {
     });
 
     it('should create the component', () => {
-        expect(component).toBeTruthy();
+        void expect(component).toBeTruthy();
     });
 
-    it('should be able to drag and drop the splitter gutter and change the size', async (done) => {
+    it('should be able to drag and drop the splitter gutter and change the size', done => {
         fixture.detectChanges();
-        fixture.whenStable().then(() => {
+        return fixture.whenStable().then(() => {
             const gutterDebugElement = fixture.debugElement.query(By.css('split-gutter'));
             const gutterElement = gutterDebugElement.nativeElement as HTMLElement;
             const areaDebugElements = fixture.debugElement.queryAll(By.css('split-area'));
@@ -86,7 +87,7 @@ describe('DejaSplitterContainerComponent', () => {
                     buttons: buttons,
                     screenX: x,
                     screenY: y,
-                    relatedTarget: element,
+                    relatedTarget: element
                 } as MouseEventInit);
                 const event = new MouseEvent(type, eventInit());
                 element.dispatchEvent(event);
@@ -98,15 +99,15 @@ describe('DejaSplitterContainerComponent', () => {
             sendMouseEvent(gutterElement, 'mousedown', 328, 78, 1);
             sendMouseEvent(gutterElement.ownerDocument, 'mousemove', 428, 78, 1);
             sendMouseEvent(gutterElement.ownerDocument, 'mouseup', 428, 78, 0);
-            expect(leftAreaElement.clientWidth).toBe(415);
-            expect(rightAreaElement.clientWidth).toBe(855);
+            void expect(leftAreaElement.clientWidth).toBe(415);
+            void expect(rightAreaElement.clientWidth).toBe(855);
             done();
         });
     }, 10000);
 
-    it('should be able to drag and drop the splitter until the min size', async (done) => {
+    it('should be able to drag and drop the splitter until the min size', done => {
         fixture.detectChanges();
-        fixture.whenStable().then(() => {
+        return fixture.whenStable().then(() => {
             const gutterDebugElement = fixture.debugElement.query(By.css('split-gutter'));
             const gutterElement = gutterDebugElement.nativeElement as HTMLElement;
             const areaDebugElements = fixture.debugElement.queryAll(By.css('split-area'));
@@ -126,7 +127,7 @@ describe('DejaSplitterContainerComponent', () => {
                     buttons: buttons,
                     screenX: x,
                     screenY: y,
-                    relatedTarget: element,
+                    relatedTarget: element
                 } as MouseEventInit);
                 const event = new MouseEvent(type, eventInit());
                 element.dispatchEvent(event);
@@ -138,13 +139,13 @@ describe('DejaSplitterContainerComponent', () => {
             sendMouseEvent(gutterElement, 'mousedown', 328, 78, 1);
             sendMouseEvent(gutterElement.ownerDocument, 'mousemove', 0, 78, 1);
             sendMouseEvent(gutterElement.ownerDocument, 'mouseup', 0, 78, 0);
-            expect(leftAreaElement.clientWidth).toBe(100);
-            expect(rightAreaElement.clientWidth).toBe(1170);
+            void expect(leftAreaElement.clientWidth).toBe(100);
+            void expect(rightAreaElement.clientWidth).toBe(1170);
             sendMouseEvent(gutterElement, 'mousedown', 105, 78, 1);
             sendMouseEvent(gutterElement.ownerDocument, 'mousemove', 1300, 78, 1);
             sendMouseEvent(gutterElement.ownerDocument, 'mouseup', 1300, 78, 0);
-            expect(leftAreaElement.clientWidth).toBe(1170);
-            expect(rightAreaElement.clientWidth).toBe(100);
+            void expect(leftAreaElement.clientWidth).toBe(1170);
+            void expect(rightAreaElement.clientWidth).toBe(100);
             done();
         });
     }, 10000);

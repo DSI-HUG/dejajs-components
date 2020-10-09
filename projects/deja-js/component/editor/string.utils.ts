@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
- export class StringUtils {
+export class StringUtils {
     public static getLastWord(from: string, cursorPosition: number) {
         if (!from) {
             return null;
@@ -19,6 +19,7 @@
         if (!from) {
             return null;
         }
+        // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
         if (from.match(/[\s,.!?;:]$/)) {
             return null;
         }
@@ -68,9 +69,11 @@
     ): { newStartPosition: number; newEndPosition: number; value: string } {
         if (cursorStartPosition === cursorEndPosition) {
             let position = cursorStartPosition;
+            // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
             if (from.charAt(position).match(/[\s,;.:]/)) {
                 position--;
             }
+            // eslint-disable-next-line no-loops/no-loops, @typescript-eslint/prefer-regexp-exec
             while (!from.charAt(position).match(/[\s,;.:]/) && position > 0) {
                 position--;
             }
@@ -87,7 +90,7 @@
                 result.value +
                 from.substring(
                     (position === 0 ? 0 : position + 1) +
-                        (lastValue ? lastValue.length : 0)
+                    (lastValue ? lastValue.length : 0)
                 );
 
             return result;
@@ -112,14 +115,13 @@
     ): { startValue: string; endValue: string } {
         if (cursorStartPosition === cursorEndPosition) {
             let position = cursorStartPosition;
+            // eslint-disable-next-line no-loops/no-loops, @typescript-eslint/prefer-regexp-exec
             while (!from.charAt(position).match(/[\s,;.:]/) && position > 0) {
                 position--;
             }
             let endPosition = cursorEndPosition + 1;
-            while (
-                !from.charAt(endPosition).match(/[\s,;.:]/) &&
-                endPosition < from.length
-            ) {
+            // eslint-disable-next-line no-loops/no-loops, @typescript-eslint/prefer-regexp-exec
+            while (!from.charAt(endPosition).match(/[\s,;.:]/) && endPosition < from.length) {
                 endPosition++;
             }
             const result = {

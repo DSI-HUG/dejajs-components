@@ -11,16 +11,18 @@ import { Directive, ElementRef, HostBinding, Input, Optional } from '@angular/co
 import { DejaClipboardService, Destroy } from '@deja-js/core';
 import { fromEvent, merge, Observable } from 'rxjs';
 import { filter, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+
 import { IDejaDragEvent } from './draggable.directive';
 
 @Directive({
-    selector: '[deja-droppable]',
+    selector: '[deja-droppable]'
 })
 export class DejaDroppableDirective extends Destroy {
 
     /**
      * @deprecated
      */
+    // eslint-disable-next-line @angular-eslint/no-input-rename
     @Input('continous-dragover')
     public set allEvents(value: boolean | string) {
         this._allEvents = coerceBooleanProperty(value);
@@ -46,7 +48,7 @@ export class DejaDroppableDirective extends Destroy {
         return this._context;
     }
 
-    constructor(elementRef: ElementRef, @Optional() private clipboardService: DejaClipboardService) {
+    public constructor(elementRef: ElementRef, @Optional() private clipboardService: DejaClipboardService) {
         super();
 
         let inDrag = false;
@@ -60,7 +62,7 @@ export class DejaDroppableDirective extends Destroy {
                 }
             }),
             filter(() => !inDrag && !!this.context && !!this.context.dragentercallback && !!this.clipboardService.get(this.draginfokey)),
-            tap(() => inDrag = true),
+            tap(() => inDrag = true)
         ) as Observable<DragEvent>;
 
         // DragLeave event
@@ -71,11 +73,11 @@ export class DejaDroppableDirective extends Destroy {
                 const inside = leaveEvent.x >= bounds.left && leaveEvent.x <= bounds.right && leaveEvent.y >= bounds.top && leaveEvent.y <= bounds.bottom;
                 return !inside;
             })
-        ) as Observable<DragEvent>;
+        );
 
         // Drop event
         const dropEvent$ = fromEvent(element, 'drop').pipe(
-            filter(() => inDrag && !!this.context && !!this.clipboardService.get(this.draginfokey)),
+            filter(() => inDrag && !!this.context && !!this.clipboardService.get(this.draginfokey))
         ) as Observable<DragEvent>;
 
         // DragOver event
@@ -84,17 +86,19 @@ export class DejaDroppableDirective extends Destroy {
         ) as Observable<DragEvent>;
 
         const dragEndEvent$ = merge(dragEnterEvent$, dragLeaveEvent$, dropEvent$).pipe(
-            tap(() => inDrag = false),
+            tap(() => inDrag = false)
         );
 
         // DragEnter
         dragEnterEvent$.pipe(
             switchMap(dragEvent => {
-                const dragInfos = this.clipboardService.get(this.draginfokey) as { [key: string]: any };
+                const dragInfos = this.clipboardService.get(this.draginfokey) as Record<string, unknown>;
                 const e = dragEvent as IDejaDropEvent;
                 e.dragInfo = dragInfos;
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 e.dragObject = (<any>dragEvent)[this.objectKey];
                 e.dragElement = element;
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 e.itsMe = (<any>dragEvent)[this.elementKey] === element;
                 this.context.dragentercallback(e);
                 if (e.defaultPrevented) {
@@ -140,6 +144,7 @@ export class DejaDroppableDirective extends Destroy {
                 );
 
                 const over$ = dragOverEvent$.pipe(
+                    // eslint-disable-next-line rxjs/no-unsafe-takeuntil
                     takeUntil(dragEndEvent$),
                     tap(overEvent => {
                         if (!this._allEvents && this.lastTarget && this.lastTarget === overEvent.target) {

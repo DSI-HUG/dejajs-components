@@ -20,11 +20,12 @@ import { DejaColorSelectorModule } from '@deja-js/component/color-selector';
 import { DejaMessageBoxModule } from '@deja-js/component/message-box';
 import { DejaPopupModule } from '@deja-js/component/popup';
 import { DejaSnackbarModule } from '@deja-js/component/snackbar';
+
 import { DejaMarkdownModule } from '../../component/markdown/index';
-import { PopupDemoButtonComponent } from './popup-demo-button/popup-demo-button.component';
 import { DummyComponent } from './dummy/dummy.component';
 import { DejaPopupCustomDemoComponent } from './popup-custom.component';
 import { DejaPopupDemoComponent } from './popup-demo';
+import { PopupDemoButtonComponent } from './popup-demo-button/popup-demo-button.component';
 import { routing } from './popup-demo.routes';
 
 @NgModule({
@@ -45,11 +46,11 @@ import { routing } from './popup-demo.routes';
         DejaMarkdownModule,
         DejaSnackbarModule,
         DejaMessageBoxModule,
-        routing,
+        routing
     ],
     entryComponents: [
         DejaPopupCustomDemoComponent,
-        DummyComponent,
+        DummyComponent
     ]
 })
 export class DejaPopupDemoModule { }

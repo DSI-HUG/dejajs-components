@@ -17,19 +17,14 @@ import { Injectable } from '@angular/core';
 export class MonacoEditorService {
 
     private _loading: boolean;
-    private _loader: Promise<any>;
-
-    /**
-     * Constructor
-     */
-    constructor() { }
+    private _loader: Promise<unknown>;
 
     /**
      * Load the Monaco Editor Library
      *
      * @return Resolved promise when the library is loaded
      */
-    public initMonacoLib(): Promise<any> {
+    public initMonacoLib(): Promise<unknown> {
         if (!this._loading) {
             this.init();
         }
@@ -38,22 +33,24 @@ export class MonacoEditorService {
     }
 
     private init() {
-        this._loader = new Promise((resolve) => {
+        this._loader = new Promise(resolve => {
             this._loading = true;
             const baseElement = document.getElementsByTagName('base')[0] || {} as HTMLBaseElement;
             const baseHref = baseElement.href;
-            const basePath = (<any>window).MONACOEDITOR_BASEPATH || `${baseHref}assets/monaco/vs`;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const wnd = <any>window;
+            const basePath = wnd.MONACOEDITOR_BASEPATH || `${baseHref}assets/monaco/vs`;
 
             const onGotAmdLoader = () => {
                 // Load monaco
-                (<any>window).require.config({ paths: { 'vs': basePath } });
-                (<any>window).require(['vs/editor/editor.main'], () => {
+                wnd.require.config({ paths: { vs: basePath } });
+                wnd.require(['vs/editor/editor.main'], () => {
                     resolve();
                 });
             };
 
             // Load AMD loader if necessary
-            if (!(<any>window).require && !(<any>window).monaco) {
+            if (!wnd.require && !wnd.monaco) {
                 const loaderScript = document.createElement('script');
                 loaderScript.type = 'text/javascript';
                 loaderScript.src = `${basePath}/loader.js`;

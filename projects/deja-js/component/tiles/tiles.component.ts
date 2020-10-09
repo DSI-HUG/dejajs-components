@@ -26,6 +26,7 @@ import { IDejaMouseDroppableContext, IDropCursorInfos } from '@deja-js/component
 import { Destroy, KeyCodes, Position, Rect } from '@deja-js/core';
 import { from, fromEvent, Observable, Subject, Subscription } from 'rxjs';
 import { debounceTime, filter, takeUntil } from 'rxjs/operators';
+
 import { DejaTile } from './tile.class';
 import { DejaTilesLayoutProvider } from './tiles-layout.provider';
 import { IDejaTilesRefreshParams } from './tiles-refresh-params.interface';
@@ -36,58 +37,59 @@ import { IDejaTilesAddedEvent, IDejaTilesAddEvent, IDejaTilesDeletedEvent, IDeja
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [DejaTilesLayoutProvider],
     styleUrls: [
-        './tiles.component.scss',
+        './tiles.component.scss'
     ],
-    templateUrl: './tiles.component.html',
+    templateUrl: './tiles.component.html'
 })
 export class DejaTilesComponent extends Destroy implements AfterViewInit, ControlValueAccessor, OnDestroy {
     /**
      * Raised when the selected items has changed
      */
-    @Output() public selectionChanged = new EventEmitter<IDejaTilesEvent>();
+    @Output() public readonly selectionChanged = new EventEmitter<IDejaTilesEvent>();
 
     /**
      * Raised when the layout has changed with a drag and drop
      */
-    @Output() public layoutChanged = new EventEmitter<IDejaTilesEvent>();
+    @Output() public readonly layoutChanged = new EventEmitter<IDejaTilesEvent>();
 
     /**
      * Raised when the layout is completed and all tiles are binded
      */
-    @Output() public layoutCompleted = new EventEmitter<IDejaTilesEvent>();
+    @Output() public readonly layoutCompleted = new EventEmitter<IDejaTilesEvent>();
 
     /**
      * Raised before some tiles will be added to the data model with a paste
      */
-    @Output() public contentAdding = new EventEmitter<IDejaTilesAddEvent>();
+    @Output() public readonly contentAdding = new EventEmitter<IDejaTilesAddEvent>();
 
     /**
      * Raised before some tiles will be removed from the data model with a delete
      */
-    @Output() public contentRemoving = new EventEmitter<IDejaTilesRemoveEvent>();
+    @Output() public readonly contentRemoving = new EventEmitter<IDejaTilesRemoveEvent>();
 
     /**
      * Raised when tiles are added
      */
-    @Output() public tilesAdded = new EventEmitter<IDejaTilesAddedEvent>();
+    @Output() public readonly tilesAdded = new EventEmitter<IDejaTilesAddedEvent>();
 
     /**
      * Raised when tiles are deleted
      */
-    @Output() public tilesDeleted = new EventEmitter<IDejaTilesDeletedEvent>();
+    @Output() public readonly tilesDeleted = new EventEmitter<IDejaTilesDeletedEvent>();
 
     /**
      * Raised when some tiles are copied in the clipboard service. Can result from a copy or paste operation on the tiles.
      */
-    @Output() public contentCopied = new EventEmitter<IDejaTilesEvent>();
+    @Output() public readonly contentCopied = new EventEmitter<IDejaTilesEvent>();
 
     /**
      * Tab index of the focusable element
      */
     @Input() public tabIndex = 0;
 
-    @ContentChild('tileTemplate')
-    public tileTemplate: any;
+    @ContentChild('tileTemplate')public tileTemplate: unknown;
+
+    @ViewChild('tilesContainer', { static: true }) private tilesContainer: ElementRef;
 
     private _models = [] as DejaTile[];
     private delete$sub: Subscription;
@@ -101,17 +103,11 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
         return this.layoutProvider.tiles;
     }
 
-    @ViewChild('tilesContainer', { static: true }) private tilesContainer: ElementRef;
-
-    // NgModel implementation
-    public onTouchedCallback = (_a?: any) => { };
-    public onChangeCallback = (_a?: any) => { };
-
-    constructor(el: ElementRef, private changeDetectorRef: ChangeDetectorRef, private layoutProvider: DejaTilesLayoutProvider, @Self() @Optional() public _control: NgControl) {
+    public constructor(el: ElementRef, private changeDetectorRef: ChangeDetectorRef, private layoutProvider: DejaTilesLayoutProvider, @Self() @Optional() public control: NgControl) {
         super();
 
-        if (this._control) {
-            this._control.valueAccessor = this;
+        if (this.control) {
+            this.control.valueAccessor = this;
         }
 
         const element = el.nativeElement as HTMLElement;
@@ -263,22 +259,22 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
 
     @Input()
     public set selectedTiles(selectedTiles: Array<DejaTile | string>) {
-        this.layoutProvider.selectedTiles = selectedTiles.map((tile) => typeof tile === 'string' ? tile : (<DejaTile>tile).id);
+        this.layoutProvider.selectedTiles = selectedTiles.map(tile => typeof tile === 'string' ? tile : (tile).id);
     }
 
     // ************* ControlValueAccessor Implementation **************
-    public writeValue(models: any) {
+    public writeValue(models: DejaTile[]) {
         this._models = models || [];
         const tiles = this._models;
         this.layoutProvider.tiles = tiles;
         this.changeDetectorRef.markForCheck();
     }
 
-    public registerOnChange(fn: any) {
+    public registerOnChange(fn: (_a: unknown) => void) {
         this.onChangeCallback = fn;
     }
 
-    public registerOnTouched(fn: any) {
+    public registerOnTouched(fn: () => void) {
         this.onTouchedCallback = fn;
     }
     // ************* End of ControlValueAccessor Implementation **************
@@ -342,7 +338,7 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
         this.layoutProvider.removeTiles(tileIds);
     }
 
-    public HitTest(pageX: number, pageY: number) {
+    public hitTest(pageX: number, pageY: number) {
         const containerElement = this.tilesContainer.nativeElement as HTMLElement;
         const containerBounds = containerElement.getBoundingClientRect();
 
@@ -374,17 +370,15 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
 
     public getDropContext() {
         return {
-            dragEnter: (dragContext, dragCursor) => {
-                return this.layoutProvider.dragEnter(dragContext, dragCursor) && {
-                    className: 'hidden', // Hide drag cursor
-                } as IDropCursorInfos;
-            },
+            dragEnter: (dragContext, dragCursor) => this.layoutProvider.dragEnter(dragContext, dragCursor) && {
+                className: 'hidden' // Hide drag cursor
+            } as IDropCursorInfos,
             dragOver: (_dragContext, dragCursor) => {
                 this.layoutProvider.dragover$.next(dragCursor);
             },
-            dragLeave: (_dragContext) => {
+            dragLeave: _dragContext => {
                 this.layoutProvider.dragleave$.next();
-            },
+            }
         } as IDejaMouseDroppableContext;
     }
 
@@ -399,4 +393,8 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
     public onBlur() {
         this.hasFocus = false;
     }
+
+    // NgModel implementation
+    public onTouchedCallback = () => undefined as void;
+    public onChangeCallback = (_a?: unknown) => undefined as void;
 }

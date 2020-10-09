@@ -7,19 +7,19 @@
  */
 
 import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DejaConnectionPositionPair, MediaService } from '@deja-js/core';
+
 import { DejaOverlayModule } from './index';
 import { DejaOverlayComponent } from './overlay.component';
 import { MockMediaService } from './test/MockMediaService';
 
 @Component({
-    template: `<deja-overlay>Overlay content</deja-overlay>`,
+    selector: 'DejaOverlayContainerComponent',
+    template: '<deja-overlay>Overlay content</deja-overlay>'
 })
-class DejaOverlayContainerComponent {
-    constructor() { }
-}
+class DejaOverlayContainerComponent {}
 
 describe('DejaOverlayComponent', () => {
 
@@ -29,18 +29,20 @@ describe('DejaOverlayComponent', () => {
     const removeStaledOverlayContainersFunction = () => {
         // Remove any stale overlay containers from previous tests that didn't clean up correctly.
         const staleContainers = document.querySelectorAll('.cdk-overlay-container');
+        // eslint-disable-next-line no-loops/no-loops
         for (let i = staleContainers.length - 1; i >= 0; i--) {
             staleContainers[i].parentNode.removeChild(staleContainers[i]);
         }
     };
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        void TestBed.configureTestingModule({
             declarations: [DejaOverlayContainerComponent], // declare the test component
             imports: [DejaOverlayModule],
             providers: [
                 {
-                    provide: MediaService, useClass:
+                    provide: MediaService,
+                    useClass:
                         MockMediaService
                 }
             ],
@@ -66,30 +68,30 @@ describe('DejaOverlayComponent', () => {
     it('should use ownerElement if set', () => {
         fixture.detectChanges();
         comp.show(null);
-        expect(comp.ownerElement).toBeFalsy();
+        void expect(comp.ownerElement).toBeFalsy();
         const ownerElement: HTMLElement = document.createElement('div');
         ownerElement.setAttribute('id', 'overlayOwnerElement');
         document.body.appendChild(ownerElement);
         comp.ownerElement = ownerElement;
         fixture.detectChanges();
         const el: HTMLElement = comp.overlayOrigin.elementRef.nativeElement;
-        expect(el).toBe(ownerElement);
+        void expect(el).toBe(ownerElement);
     });
 
     it('should not have cdk-overlay-backdrop element if isVisible is false', () => {
         fixture.detectChanges();
-        expect(comp.isVisible).toBeFalsy();
+        void expect(comp.isVisible).toBeFalsy();
         const cdkBackdropContainerEl = document.querySelector('.cdk-overlay-backdrop');
-        expect(cdkBackdropContainerEl).toBeNull();
+        void expect(cdkBackdropContainerEl).toBeNull();
     });
 
     it('should have cdk-overlay-backdrop element initialized property if isVisible is true', () => {
         comp.isVisible = true;
         fixture.detectChanges();
-        expect(comp.isVisible).toBeTruthy();
+        void expect(comp.isVisible).toBeTruthy();
         const cdkBackdropContainerEl = document.querySelector('.cdk-overlay-backdrop');
-        expect(cdkBackdropContainerEl).toBeTruthy();
-        expect(cdkBackdropContainerEl.classList.contains('cdk-overlay-transparent-backdrop')).toBeTruthy();
+        void expect(cdkBackdropContainerEl).toBeTruthy();
+        void expect(cdkBackdropContainerEl.classList.contains('cdk-overlay-transparent-backdrop')).toBeTruthy();
     });
 
     it('should have backdrop and container class names', () => {
@@ -98,50 +100,50 @@ describe('DejaOverlayComponent', () => {
         fixture.detectChanges();
         const cdkBackdropContainerEl = document.querySelector('.cdk-overlay-backdrop');
         const cdkOverlayContainerEl = document.querySelector('.cdk-overlay-container');
-        expect(cdkOverlayContainerEl.classList.contains('deja-overlay-container')).toBeTruthy();
-        expect(cdkBackdropContainerEl.classList.contains('cdk-overlay-opaque-backdrop')).toBeTruthy();
+        void expect(cdkOverlayContainerEl.classList.contains('deja-overlay-container')).toBeTruthy();
+        void expect(cdkBackdropContainerEl.classList.contains('cdk-overlay-opaque-backdrop')).toBeTruthy();
     });
 
     it('should have isVisible=true when invoking show() method', () => {
         fixture.detectChanges();
-        expect(comp.isVisible).toBeFalsy();
+        void expect(comp.isVisible).toBeFalsy();
         comp.show(null);
-        expect(comp.isVisible).toBeTruthy();
+        void expect(comp.isVisible).toBeTruthy();
     });
 
-    it('should have isVisible=false and emit closed event when invoking close() method', (done: Function) => {
+    it('should have isVisible=false and emit closed event when invoking close() method', done => {
         fixture.detectChanges();
         comp.closed.subscribe((g: boolean) => {
-            expect(g).toBe(true);
+            void expect(g).toBe(true);
             done();
         });
-        expect(!comp.isVisible).toBeTruthy();
+        void expect(!comp.isVisible).toBeTruthy();
         comp.show(null);
-        expect(comp.isVisible).toBeTruthy();
+        void expect(comp.isVisible).toBeTruthy();
         comp.close();
-        expect(comp.isVisible).toBeFalsy();
+        void expect(comp.isVisible).toBeFalsy();
     });
 
-    it('should have isVisible=false and emit closed event when clicking on backdrop div', (done: Function) => {
+    it('should have isVisible=false and emit closed event when clicking on backdrop div', done => {
         fixture.detectChanges();
         comp.closed.subscribe((g: boolean) => {
-            expect(g).toEqual(true);
+            void expect(g).toEqual(true);
             done();
         });
-        expect(comp.isVisible).toBeFalsy();
+        void expect(comp.isVisible).toBeFalsy();
         comp.show(null);
-        expect(comp.isVisible).toBeTruthy();
+        void expect(comp.isVisible).toBeTruthy();
         fixture.detectChanges();
-        const cdkBackdropContainerEl = document.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+        const cdkBackdropContainerEl = document.querySelector<HTMLDivElement>('.cdk-overlay-backdrop');
         cdkBackdropContainerEl.click();
-        expect(comp.isVisible).toBeFalsy();
+        void expect(comp.isVisible).toBeFalsy();
     });
 
     it('should use positionForMobile if isMobile=true', () => {
         fixture.detectChanges();
-        expect(comp.isMobile).toBeFalsy();
+        void expect(comp.isMobile).toBeFalsy();
         let returnedPositions = comp.positionsForMobile;
-        expect(returnedPositions).toBeFalsy();
+        void expect(returnedPositions).toBeFalsy();
 
         const normalPosition = DejaConnectionPositionPair.parse('start top start bottom');
         const positionsForMobile = DejaConnectionPositionPair.parse('center center center center');
@@ -149,43 +151,43 @@ describe('DejaOverlayComponent', () => {
         comp.positionsForMobile = positionsForMobile;
         fixture.detectChanges();
         returnedPositions = comp.positions;
-        expect(returnedPositions).toBe(normalPosition);
+        void expect(returnedPositions).toBe(normalPosition);
 
         comp.isMobile = true;
         fixture.detectChanges();
         returnedPositions = comp.positions;
-        expect(returnedPositions).toBe(positionsForMobile);
+        void expect(returnedPositions).toBe(positionsForMobile);
     });
 
     it('should use widthForMobile if isMobile=true', () => {
         fixture.detectChanges();
-        expect(comp.isMobile).toBeFalsy();
+        void expect(comp.isMobile).toBeFalsy();
         let returnedWidth = comp.overlayWidth;
-        expect(returnedWidth).toBeNull();
+        void expect(returnedWidth).toBeNull();
         returnedWidth = comp.widthForMobile;
-        expect(returnedWidth).toEqual('100%');
+        void expect(returnedWidth).toEqual('100%');
 
         comp.isMobile = true;
         comp.widthForMobile = '50%';
         fixture.detectChanges();
         returnedWidth = comp.overlayWidth;
-        expect(returnedWidth).toEqual('50%');
+        void expect(returnedWidth).toEqual('50%');
     });
 
-    it('should emit visibleChange event when isVisible change', (done) => {
+    it('should emit visibleChange event when isVisible change', done => {
         fixture.detectChanges();
         comp.visibleChange.subscribe((g: boolean) => {
-            expect(g).toEqual(true);
+            void expect(g).toEqual(true);
             done();
         });
         comp.isVisible = true;
         fixture.detectChanges(false);
     });
 
-    it('should emit closed event when invoking close()', (done) => {
+    it('should emit closed event when invoking close()', done => {
         fixture.detectChanges();
         comp.closed.subscribe((g: boolean) => {
-            expect(g).toEqual(true);
+            void expect(g).toEqual(true);
             done();
         });
         comp.isVisible = true;

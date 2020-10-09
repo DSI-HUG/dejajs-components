@@ -9,6 +9,7 @@
 import { ConnectionPositionPair, OriginConnectionPosition, OverlayConnectionPosition } from '@angular/cdk/overlay';
 
 export class DejaConnectionPositionPair extends ConnectionPositionPair {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     public static default = DejaConnectionPositionPair.parse('start bottom start top,start top start bottom,end bottom end top,end top end bottom');
 
     public static parse(value: string): ConnectionPositionPair[] {
@@ -17,17 +18,17 @@ export class DejaConnectionPositionPair extends ConnectionPositionPair {
         values.forEach(pos => {
             const poss = pos.trim().split(' ');
             if (poss.length !== 4) {
-                throw new Error(`Invalid positions property for DejaMenuComponent. String entry must be of type 'positions="start top end bottom"'`);
+                throw new Error('Invalid positions property for DejaMenuComponent. String entry must be of type \'positions="start top end bottom"\'');
             }
 
             const originPosition = {
                 originX: poss[0],
-                originY: poss[1],
+                originY: poss[1]
             } as OriginConnectionPosition;
 
             const overlayPosition = {
                 overlayX: poss[2],
-                overlayY: poss[3],
+                overlayY: poss[3]
             } as OverlayConnectionPosition;
 
             positions.push(new DejaConnectionPositionPair(originPosition, overlayPosition));

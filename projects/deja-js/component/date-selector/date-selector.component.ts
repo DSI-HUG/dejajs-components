@@ -6,6 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+/* eslint-disable @typescript-eslint/naming-convention */
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
@@ -23,8 +24,10 @@ import { NgControl } from '@angular/forms';
 import { Destroy, KeyCodes } from '@deja-js/core';
 import { from, fromEvent, merge, Subject } from 'rxjs';
 import { debounceTime, filter, takeUntil, tap } from 'rxjs/operators';
+
 import { IDateSelectorItem } from './date-selector-item.model';
 
+// eslint-disable-next-line no-shadow
 export enum DaysOfWeek {
     Sunday = 0,
     Monday = 1,
@@ -35,6 +38,7 @@ export enum DaysOfWeek {
     Saturday = 6,
 }
 
+// eslint-disable-next-line no-shadow
 export enum DateComponentLayout {
     dateonly = 1,
     datetime,
@@ -46,7 +50,7 @@ export enum DateComponentLayout {
     encapsulation: ViewEncapsulation.None,
     selector: 'deja-date-time-selector',
     styleUrls: ['./date-selector.scss'],
-    templateUrl: './date-selector.component.html',
+    templateUrl: './date-selector.component.html'
 })
 export class DejaDateSelectorComponent extends Destroy implements OnInit, ControlValueAccessor {
     @Input() public startDay: DaysOfWeek = DaysOfWeek.Monday;
@@ -55,10 +59,12 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
     @Input() public dateMin: Date;
     @Input() public format: string;
 
-    @Output() public dateChange = new EventEmitter();
-    @Output() public timeChange = new EventEmitter();
+    @Output() public readonly dateChange = new EventEmitter();
+    @Output() public readonly timeChange = new EventEmitter();
 
     public _local = 'fr';
+    public layoutClass: string;
+    public layoutId: number;
 
     // Time
     public beginOffset = Math.PI / 3;
@@ -66,14 +72,14 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
         hours: {
             ranges: [
                 { min: 1, max: 12, beginOffset: Math.PI / 3 },
-                { min: 13, max: 24, beginOffset: Math.PI / 3 },
-            ],
+                { min: 13, max: 24, beginOffset: Math.PI / 3 }
+            ]
         },
         minutes: {
             ranges: [
-                { min: 0, max: 59, labelInterval: 5 },
-            ],
-        },
+                { min: 0, max: 59, labelInterval: 5 }
+            ]
+        }
     };
     // /Time
 
@@ -99,7 +105,7 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
     private _displayedDate = new Date();
 
     private _days = [] as string[];
-    private _emptyDays: any[];
+    private _emptyDays: number[];
     private _time: boolean;
     private _disabled: boolean;
 
@@ -110,6 +116,7 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
     public set layout(value: DateComponentLayout | string) {
         if (value) {
             if (typeof value === 'string') {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 this.layoutId = (<any>DateComponentLayout)[value];
                 if (!this.layoutId) {
                     throw new Error('Invalid type for DateComponentLayout');
@@ -122,8 +129,6 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
         }
         this.changeDetectorRef.markForCheck();
     }
-    public layoutClass: string;
-    public layoutId: number;
 
     /**
      * Time property setter. Can be string or empty so you can use it like : <deja-date-selector time></deja-date-selector>
@@ -172,10 +177,7 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
         return this._disabled;
     }
 
-    public onTouchedCallback = (_a?: any) => { };
-    public onChangeCallback = (_a?: any) => { };
-
-    constructor(elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, @Self() @Optional() public _control: NgControl) {
+    public constructor(elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, @Self() @Optional() public _control: NgControl) {
         super();
 
         const element = elementRef.nativeElement as HTMLElement;
@@ -260,12 +262,12 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
     }
 
     // From ControlValueAccessor interface
-    public registerOnChange(fn: any) {
+    public registerOnChange(fn: (_a: unknown) => void) {
         this.onChangeCallback = fn;
     }
 
     // From ControlValueAccessor interface
-    public registerOnTouched(fn: any) {
+    public registerOnTouched(fn: () => void) {
         this.onTouchedCallback = fn;
     }
 
@@ -285,26 +287,29 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
         let day = 1;
         let date = new Date(year, month, day);
 
+        // eslint-disable-next-line no-loops/no-loops
         while (date.getDay() !== this.startDay) {
             date = new Date(year, month, --day);
             const dateSelectorItem: IDateSelectorItem = {
                 background: true,
-                date: date,
+                date: date
             };
             days.splice(0, 0, dateSelectorItem);
         }
 
         let d = 0;
+        // eslint-disable-next-line no-loops/no-loops
         for (d = 1; d <= this.daysInMonth(month + 1, year); d++) {
             date = new Date(year, month, d);
 
             const dateSelectorItem = {
                 currentDate: (this._currentDate.setHours(0, 0, 0, 0) === date.setHours(0, 0, 0, 0)) ? true : null,
-                date: date,
+                date: date
             };
             days.push(dateSelectorItem);
         }
 
+        // eslint-disable-next-line no-loops/no-loops, no-constant-condition
         while (true) {
             date = new Date(year, month, d);
             if (date.getDay() === this.startDay) {
@@ -312,7 +317,7 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
             } else {
                 const dateSelectorItem = {
                     background: true,
-                    date: date,
+                    date: date
                 };
                 days.push(dateSelectorItem);
                 d++;
@@ -345,6 +350,7 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
         }
 
         this._keyboardNavigation$.next(true);
+        let d: Date;
         switch (event.code) {
             case KeyCodes.PageUp:
             case KeyCodes.PageDown:
@@ -353,7 +359,7 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
             case KeyCodes.LeftArrow:
             case KeyCodes.RightArrow:
                 event.preventDefault();
-                const d = new Date(this.selectedDate);
+                d = new Date(this.selectedDate);
                 switch (event.code) {
                     case KeyCodes.PageUp:
                         // d.setMonth(d.getMonth() - 1);
@@ -395,6 +401,7 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
             default:
                 return true;
         }
+        return undefined;
     }
 
     public changeMonth(x: number) {
@@ -441,6 +448,9 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
         this.timeChange.emit(this.value);
     }
 
+    public onTouchedCallback = () => undefined as void;
+    public onChangeCallback = (_a?: unknown) => undefined as void;
+
     private bind() {
         const month = this._displayedDate.getMonth();
         const year = this._displayedDate.getFullYear();
@@ -449,6 +459,7 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
 
         this._currentDays.forEach((day: IDateSelectorItem) => day.disabled = this.isDisabledDate(day.date));
 
+        // eslint-disable-next-line no-loops/no-loops
         for (let i = 0; i < 7; i++) {
             this._days[i] = this._currentDays[i].date.toLocaleString('fr', { weekday: 'narrow' });
         }

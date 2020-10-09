@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
- export interface IDropCursorInfos {
+export interface IDropCursorInfos {
     html?: string;
     width?: number;
     height?: number;

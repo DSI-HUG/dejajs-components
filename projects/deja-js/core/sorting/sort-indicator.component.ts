@@ -7,13 +7,15 @@
  */
 
 import { Component, Input } from '@angular/core';
+
 import { ISortInfos } from './sort-infos.model';
 
 @Component({
     selector: 'deja-sort-indicator',
-    styleUrls: [ './sort-indicator.component.scss' ],
-    template: `<span [attr.sortorder]="sortInfos ? sortInfos.order : null"><mat-icon>arrow_upward</mat-icon></span>`,
+    styleUrls: ['./sort-indicator.component.scss'],
+    template: '<span [attr.sortorder]="sortInfos ? sortInfos.order : null"><mat-icon>arrow_upward</mat-icon></span>'
 })
 export class DejaSortIndicatorComponent {
+    // eslint-disable-next-line @angular-eslint/no-input-rename
     @Input('sort-infos') public sortInfos: ISortInfos;
 }

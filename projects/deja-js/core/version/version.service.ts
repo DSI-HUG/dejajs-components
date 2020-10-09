@@ -7,6 +7,7 @@
  */
 
 import { Injectable } from '@angular/core';
+
 import * as dejaJsCorePkg from '../package.json';
 
 @Injectable({

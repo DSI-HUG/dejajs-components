@@ -13,7 +13,7 @@ describe('RegExpUtils', () => {
     it('should escape special chars', () => {
         const value = 'regexp special chars +?^${}()|[]\\ escaping.\n';
         const escapedValue = RegExpUtils.escapeRegExp(value);
-        expect('regexp special chars \\+\\?\\^\\$\\{\\}\\(\\)\\|\\[\\]\\\\ escaping\\.\n').toEqual(escapedValue);
+        void expect('regexp special chars \\+\\?\\^\\$\\{\\}\\(\\)\\|\\[\\]\\\\ escaping\\.\n').toEqual(escapedValue);
     });
 
 });

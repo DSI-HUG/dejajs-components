@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { DejaSidenavService } from '@deja-js/component/sidenav';
 
 @Component({
@@ -14,15 +14,13 @@ import { DejaSidenavService } from '@deja-js/component/sidenav';
     templateUrl: 'sidenav-demo.component.html',
     styleUrls: ['sidenav-demo.component.scss']
 })
-export class SidenavDemoComponent implements OnInit {
+export class SidenavDemoComponent {
 
     public tabIndex = 1;
 
-    constructor(
-        private sidenavService: DejaSidenavService,
+    public constructor(
+        private sidenavService: DejaSidenavService
     ) { }
-
-    public ngOnInit() { }
 
     public toggle() {
         this.sidenavService.toggle();

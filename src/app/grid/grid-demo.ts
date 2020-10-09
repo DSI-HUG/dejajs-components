@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/member-ordering */
 /*
  *  @license
  *  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
@@ -9,34 +11,69 @@
 import { ChangeDetectorRef, Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { DejaGridComponent, IDejaGridColumn, IDejaGridColumnSizeEvent, IDejaGridRow } from '@deja-js/component/data-grid';
 import { IDejaDragContext, IDejaDropContext, IDejaDropEvent } from '@deja-js/component/dragdrop';
-import { GroupingService, IGroupInfo, IItemTree, IViewPortItem } from '@deja-js/core';
-import * as _ from 'lodash';
+import { Destroy, GroupingService, IGroupInfo, IItemTree, IViewPortItem } from '@deja-js/core';
+import { cloneDeep } from 'lodash';
 import { from, Observable, of, Subject, Subscription } from 'rxjs';
-import { debounceTime, delay, first, map, reduce, switchMap, tap } from 'rxjs/operators';
+import { debounceTime, delay, map, reduce, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+
 import { News } from '../common/news.model';
 import { NewsService } from '../services/news.service';
 import { PeopleService, Person } from '../services/people.service';
 import { IExtendedViewPortItem } from '../tree-list/tree-list-demo';
 
+interface PersonRow extends IDejaGridRow {
+    p1: {
+        p2: {
+            person: Person;
+        };
+    };
+}
+
+interface Fruct extends IDejaGridRow {
+    name: string;
+    value: string;
+    color: string;
+    Potassium: string;
+    Phosphorus: string;
+    Magnesium: string;
+    Calcium: string;
+    Iron: string;
+    Selenium: string;
+    Manganese: string;
+    Copper: string;
+    Zinc: string;
+    VitaminA: string;
+    VitaminB1: string;
+    VitaminB2: string;
+    Niacin: string;
+    Folate: string;
+    PantothenicAcid: string;
+    VitaminB6: string;
+    VitaminC: string;
+    VitaminE: string;
+    VitaminK: string;
+}
+
 @Component({
     encapsulation: ViewEncapsulation.None,
     selector: 'grid-demo',
     styleUrls: ['./grid-demo.scss'],
-    templateUrl: './grid-demo.html',
+    templateUrl: './grid-demo.html'
 })
-export class DejaGridDemoComponent {
+export class DejaGridDemoComponent extends Destroy {
     public tabIndex = 1;
     public fructsForMultiSelection: IDejaGridRow[];
     public fructsWithPreSelection: IDejaGridRow[];
     public people$: Observable<Person[]>;
     public peopleForMultiselect$: Observable<Person[]>;
-    public groupedByGenderPeople$: Observable<Person[]>;
-    public variableHeightPeopleRows$: Observable<IDejaGridRow[]>;
+    public groupedByGenderPerson$: Observable<Person[]>;
+    public variableHeightPersonRows$: Observable<PersonRow[]>;
     public groupedByEyesColorPeople$: Observable<Person[]>;
     public groupedByColorPeople: {
         items: Person[];
         toString(): string;
     }[];
+
     public onDemandGroupedPeople: IPeopleGroup[];
     public news$: Observable<News[]>;
     public dialogResponse$: Subject<string> = new Subject<string>();
@@ -50,6 +87,7 @@ export class DejaGridDemoComponent {
         name: string;
         value: string;
     }[];
+
     public viewPortInfos$: Subscription;
 
     private _dialogVisible = false;
@@ -79,7 +117,7 @@ export class DejaGridDemoComponent {
             VitaminB6: '0.037 mg',
             VitaminC: '9.9 mg',
             VitaminE: '1.09 mg',
-            VitaminK: '3.9 mcg',
+            VitaminK: '3.9 mcg'
         },
         {
             name: 'Banana',
@@ -104,7 +142,7 @@ export class DejaGridDemoComponent {
             VitaminB6: '0.433 mg',
             VitaminC: '10.3 mg',
             VitaminE: '0.12 mg',
-            VitaminK: '0.6 mcg',
+            VitaminK: '0.6 mcg'
         },
         {
             name: 'Cantaloupe',
@@ -129,7 +167,7 @@ export class DejaGridDemoComponent {
             VitaminB6: '0.05 mg',
             VitaminC: '25.3 mg',
             VitaminE: '0.03 mg',
-            VitaminK: '1.7 mcg    ',
+            VitaminK: '1.7 mcg    '
         },
         {
             name: 'Cherries',
@@ -152,7 +190,7 @@ export class DejaGridDemoComponent {
             VitaminB6: '0.068 mg',
             VitaminC: '9.7 mg',
             VitaminE: '0.1 mg',
-            VitaminK: '2.9 mcg',
+            VitaminK: '2.9 mcg'
         },
         {
             name: 'Chinese Pears',
@@ -175,7 +213,7 @@ export class DejaGridDemoComponent {
             VitaminB6: '0.06 mg',
             VitaminC: '10.4 mg',
             VitaminE: '0.33 mg',
-            VitaminK: '12.4 mcg',
+            VitaminK: '12.4 mcg'
         },
         {
             name: 'Cranberries',
@@ -200,7 +238,7 @@ export class DejaGridDemoComponent {
             VitaminB6: '0.057 mg',
             VitaminC: '13.3 mg',
             VitaminE: '1.2 mg',
-            VitaminK: '5.1 mcg',
+            VitaminK: '5.1 mcg'
         },
         {
             name: 'Guava',
@@ -225,7 +263,7 @@ export class DejaGridDemoComponent {
             VitaminB6: '0.181 mg',
             VitaminC: '376.7 mg',
             VitaminE: '1.2 mg',
-            VitaminK: '4.3 mcg',
+            VitaminK: '4.3 mcg'
         },
         {
             name: 'Grapes',
@@ -250,7 +288,7 @@ export class DejaGridDemoComponent {
             VitaminB6: '0.13 mg',
             VitaminC: '16.3 mg',
             VitaminE: '0.29 mg',
-            VitaminK: '22 mcg',
+            VitaminK: '22 mcg'
         },
         {
             name: 'Lemon',
@@ -274,7 +312,7 @@ export class DejaGridDemoComponent {
             PantothenicAcid: '0.16 mg',
             VitaminB6: '0.067 mg',
             VitaminC: '44.5 mg',
-            VitaminE: '0.13 mg',
+            VitaminE: '0.13 mg'
         },
         {
             name: 'Mango',
@@ -299,7 +337,7 @@ export class DejaGridDemoComponent {
             VitaminB6: '0.227 mg',
             VitaminC: '57.3 mg',
             VitaminE: '2.32 mg',
-            VitaminK: '8.7 mcg',
+            VitaminK: '8.7 mcg'
         },
         {
             name: 'Pineapple',
@@ -324,7 +362,7 @@ export class DejaGridDemoComponent {
             VitaminB6: '0.185 mg',
             VitaminC: '78.9 mg',
             VitaminE: '0.03 mg',
-            VitaminK: '1.2 mcg',
+            VitaminK: '1.2 mcg'
         },
         {
             name: 'Watermelon',
@@ -349,81 +387,81 @@ export class DejaGridDemoComponent {
             VitaminB6: '0.129 mg',
             VitaminC: '23.2 mg',
             VitaminE: '0.14 mg',
-            VitaminK: '0.3 mcg',
-        },
-    ] as any[];
+            VitaminK: '0.3 mcg'
+        }
+    ] as Fruct[];
 
     public fructsColumns = [
         {
             label: 'Color',
             name: 'color',
             width: '64px',
-            useCellTemplate: true,
+            useCellTemplate: true
         },
         {
             label: 'Name',
             name: 'name',
-            width: '130px',
+            width: '130px'
         },
         {
             label: 'Vitamin A',
-            name: 'VitaminA',
+            name: 'VitaminA'
         },
         {
             label: 'Vitamin B1',
-            name: 'VitaminB1',
+            name: 'VitaminB1'
         },
         {
             label: 'Vitamin B2',
-            name: 'VitaminB2',
+            name: 'VitaminB2'
         },
         {
             label: 'Vitamin C',
-            name: 'VitaminC',
-        },
+            name: 'VitaminC'
+        }
     ] as IDejaGridColumn[];
 
     public peopleColumns = [
         {
             label: 'Name',
             name: 'name',
-            width: '130px',
+            width: '130px'
         },
         {
             label: 'Gender',
             name: 'gender',
-            width: '70px',
+            width: '70px'
         },
         {
             label: 'Company',
             name: 'company',
-            width: '85px',
+            width: '85px'
         },
         {
             label: 'Email',
             name: 'email',
-            width: '210px',
+            width: '210px'
         },
         {
             label: 'Phone',
             name: 'phone',
-            width: '130px',
+            width: '130px'
         },
         {
             label: 'Eyes Color',
             name: 'eyeColor',
-            width: '85px',
+            width: '85px'
         },
         {
             label: 'Address',
             name: 'address',
-            width: '360px',
+            width: '360px'
         },
         {
             label: 'About',
             name: 'about',
-            width: '1000px',
-        },
+            width: '1000px'
+        }
     ] as IDejaGridColumn[];
 
     public peopleColumnsEx: IDejaGridColumn[];
@@ -436,42 +474,42 @@ export class DejaGridDemoComponent {
             minWidth: 64,
             sizeable: true,
             useCellTemplate: true,
-            width: '150px',
+            width: '150px'
         },
         {
             label: 'title',
             name: 'title',
             sizeable: true,
             useCellTemplate: false,
-            width: '180px',
+            width: '180px'
         },
         {
             label: 'description',
             name: 'description',
             minWidth: 64,
             sizeable: true,
-            width: '450px',
+            width: '450px'
         },
         {
             label: 'url',
             name: 'url',
-            width: '200px',
+            width: '200px'
         },
         {
             label: 'category',
             name: 'category',
-            width: '100px',
+            width: '100px'
         },
         {
             label: 'language',
             name: 'language',
-            width: '64px',
+            width: '64px'
         },
         {
             label: 'country',
             name: 'country',
-            width: '64px',
-        },
+            width: '64px'
+        }
     ] as IDejaGridColumn[];
 
     public percentPeopleColumns = [
@@ -479,44 +517,44 @@ export class DejaGridDemoComponent {
             label: 'Name',
             name: 'name',
             width: '130px',
-            sizeable: false,
+            sizeable: false
         },
         {
             label: 'Gender',
             name: 'gender',
             width: '70px',
-            sizeable: true,
+            sizeable: true
         },
         {
             label: 'Company',
             name: 'company',
-            width: '4.5%',
+            width: '4.5%'
         },
         {
             label: 'Email',
             name: 'email',
-            width: '6%',
+            width: '6%'
         },
         {
             label: 'Phone',
             name: 'phone',
-            width: '7%',
+            width: '7%'
         },
         {
             label: 'Eyes Color',
             name: 'eyeColor',
-            width: '4.5%',
+            width: '4.5%'
         },
         {
             label: 'Address',
             name: 'address',
-            width: '19%',
+            width: '19%'
         },
         {
             label: 'About',
             name: 'about',
-            width: '54%',
-        },
+            width: '54%'
+        }
     ] as IDejaGridColumn[];
 
     public responsivePeopleColumns = [
@@ -525,55 +563,55 @@ export class DejaGridDemoComponent {
             name: 'name',
             width: '130px',
             sizeable: false,
-            minWidth: 64,
+            minWidth: 64
         },
         {
             label: 'Gender',
             name: 'gender',
             width: '70px',
             sizeable: true,
-            responsive: 1,
+            responsive: 1
         },
         {
             label: 'Company',
             name: 'company',
             width: '4.5%',
             minWidth: 64,
-            responsive: 3,
+            responsive: 3
         },
         {
             label: 'Email',
             name: 'email',
             width: '6%',
-            minWidth: 64,
+            minWidth: 64
         },
         {
             label: 'Phone',
             name: 'phone',
             width: '7%',
-            minWidth: 64,
+            minWidth: 64
         },
         {
             label: 'Eyes Color',
             name: 'eyeColor',
             width: '4.5%',
             minWidth: 64,
-            responsive: 3,
+            responsive: 3
         },
         {
             label: 'Address',
             name: 'address',
             width: '19%',
             minWidth: 64,
-            responsive: 2,
+            responsive: 2
         },
         {
             label: 'About',
             name: 'about',
             width: '54%',
             minWidth: 64,
-            responsive: 4,
-        },
+            responsive: 4
+        }
     ] as IDejaGridColumn[];
 
     public set dialogVisible(value: boolean) {
@@ -593,87 +631,95 @@ export class DejaGridDemoComponent {
             delete this.viewPortInfos$;
         }
 
-        this.viewPortInfos$ = grid && grid.viewPort.viewPort$.pipe(
-            debounceTime(1))
-            .subscribe((viewPort) => {
-                this.viewPortInfos = [
-                    { name: 'beforeSize', value: String(viewPort.beforeSize), },
-                    { name: 'startIndex', value: String(viewPort.startIndex), },
-                    { name: 'viewPortSize', value: String(viewPort.viewPortSize), },
-                    { name: 'visibleCount', value: String(viewPort.visibleItems && viewPort.visibleItems.length), },
-                    { name: 'endIndex', value: String(viewPort.endIndex), },
-                    { name: 'afterSize', value: String(viewPort.afterSize), },
-                    { name: 'itemsCount', value: String(viewPort.items && viewPort.items.length), }
-                ];
-            });
+        this.viewPortInfos$ = grid?.viewPort.viewPort$.pipe(
+            debounceTime(1),
+            takeUntil(this.destroyed$)
+        ).subscribe(viewPort => {
+            this.viewPortInfos = [
+                { name: 'beforeSize', value: String(viewPort.beforeSize) },
+                { name: 'startIndex', value: String(viewPort.startIndex) },
+                { name: 'viewPortSize', value: String(viewPort.viewPortSize) },
+                { name: 'visibleCount', value: String(viewPort.visibleItems?.length) },
+                { name: 'endIndex', value: String(viewPort.endIndex) },
+                { name: 'afterSize', value: String(viewPort.afterSize) },
+                { name: 'itemsCount', value: String(viewPort.items?.length) }
+            ];
+        });
     }
 
-    constructor(private changeDetectorRef: ChangeDetectorRef, private peopleService: PeopleService, newsService: NewsService, groupingService: GroupingService) {
+    public constructor(private changeDetectorRef: ChangeDetectorRef, private peopleService: PeopleService, newsService: NewsService, groupingService: GroupingService) {
+        super();
         this.news$ = newsService.getNews$(50);
         this.bigNews$ = newsService.getNews$(10000);
         this.people$ = peopleService.getPeople$();
         this.bigPeople$ = peopleService.getPeople$(undefined, 100000);
 
-        this.peopleForMultiselect$ = peopleService.getPeople$().pipe(map((people) => _.cloneDeep(people)));
-        this.groupedByGenderPeople$ = peopleService.getPeople$().pipe(
-            switchMap((people) => groupingService.group$(people, {
-                groupByField: 'gender',
+        this.peopleForMultiselect$ = peopleService.getPeople$().pipe(map(people => cloneDeep(people)));
+        this.groupedByGenderPerson$ = peopleService.getPeople$().pipe(
+            switchMap(people => groupingService.group$(people, {
+                groupByField: 'gender'
             } as IGroupInfo)));
 
         this.groupedByEyesColorPeople$ = peopleService.getPeople$().pipe(
-            switchMap((people) => groupingService.group$(people, {
-                groupByField: 'eyeColor',
+            switchMap(people => groupingService.group$(people, {
+                groupByField: 'eyeColor'
             } as IGroupInfo)));
 
         peopleService.getPeople$().pipe(
-            tap((items) => this.peopleRows = items),
-            switchMap((people) => groupingService.group$(people, {
-                groupByField: 'color',
+            tap(items => this.peopleRows = items),
+            switchMap(people => groupingService.group$(people, {
+                groupByField: 'color'
             } as IGroupInfo)),
-            first())
-            .subscribe((items) => this.groupedByColorPeople = items);
+            take(1),
+            takeUntil(this.destroyed$)
+        ).subscribe(items => {
+            this.groupedByColorPeople = items;
+        });
 
         this.peopleColumnsEx = [
             ...[{
                 label: 'Color',
                 name: 'color',
                 width: '64px',
-                useCellTemplate: true,
+                useCellTemplate: true
             } as IDejaGridColumn],
-            ...this.peopleColumns,
+            ...this.peopleColumns
         ];
 
-        this.variableHeightPeopleColumns = this.peopleColumns.map((column) => ({
+        this.variableHeightPeopleColumns = this.peopleColumns.map(column => ({
             label: column.label,
             width: column.width,
             name: `p1.p2.person.${column.name}`,
-            sizeable: column.name === 'address' || column.name === 'about',
+            sizeable: column.name === 'address' || column.name === 'about'
         } as IDejaGridColumn));
 
-        const addressCol = this.variableHeightPeopleColumns.find((column) => column.name === 'p1.p2.person.address');
+        const addressCol = this.variableHeightPeopleColumns.find(column => column.name === 'p1.p2.person.address');
         addressCol.sizeable = true;
         addressCol.width = '250px';
 
-        const aboutCol = this.variableHeightPeopleColumns.find((column) => column.name === 'p1.p2.person.about');
+        const aboutCol = this.variableHeightPeopleColumns.find(column => column.name === 'p1.p2.person.about');
         aboutCol.sizeable = true;
         aboutCol.width = '400px';
 
-        this.variableHeightPeopleRows$ = peopleService.getPeople$().pipe(
-            map((people) => _.cloneDeep(people)),
-            switchMap((people) => people),
-            map((person) => ({
+        this.variableHeightPersonRows$ = peopleService.getPeople$().pipe(
+            map(person => cloneDeep(person)),
+            switchMap(person => person),
+            map(person => ({
                 p1: {
                     p2: {
-                        person: person,
-                    },
-                },
-            })),
-            reduce((acc: any[], cur: any) => [...acc, cur], []));
+                        person: person
+                    }
+                }
+            } as PersonRow)),
+            reduce((acc, cur) => [...acc, cur], [] as PersonRow[])
+        );
 
-        this.peopleService.getPeople$().subscribe((value: Person[]) => {
+        this.peopleService.getPeople$().pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe((value: Person[]) => {
             const onDemandResult = [] as IPeopleGroup[];
             const dic = {} as { [groupName: string]: IDejaGridRow[] };
-            value.forEach((person) => {
+            value.forEach(person => {
                 const groupName = `Group${person.color}`;
                 if (!dic[groupName]) {
                     dic[groupName] = [];
@@ -684,16 +730,16 @@ export class DejaGridDemoComponent {
                         groupName: groupName,
                         rows: [{
                             displayName: 'loading...',
-                            selectable: false,
+                            selectable: false
                         } as IDejaGridRow],
                         displayName: groupName,
                         selectable: false,
-                        loaded: false,
+                        loaded: false
                     } as IPeopleGroup);
                 }
 
                 dic[groupName].push({
-                    model: person,
+                    model: person
                 } as IDejaGridRow);
             });
 
@@ -701,11 +747,11 @@ export class DejaGridDemoComponent {
         });
 
         this.fructsForMultiSelection = this.fructs
-            .map((fruct) => _.cloneDeep(fruct));
+            .map(fruct => cloneDeep(fruct));
 
         this.fructsWithPreSelection = this.fructs
-            .map((fruct) => {
-                const f = _.cloneDeep(fruct);
+            .map(fruct => {
+                const f = cloneDeep(fruct);
                 f.selected = fruct.value === 'banana';
                 return f;
             });
@@ -735,42 +781,40 @@ export class DejaGridDemoComponent {
     }
 
     public loadingRows() {
-        const self = this;
-        return (_query: string | RegExp, _selectedItems: IDejaGridRow[]) => self.peopleService.getPeople$().pipe(delay(3000));
+        return (_query: string | RegExp, _selectedItems: IDejaGridRow[]) => this.peopleService.getPeople$().pipe(delay(3000));
     }
 
     public collapsingRows() {
-        const self = this;
         return (row: IDejaGridRow) => {
             const group = row as IPeopleGroup;
-            return group.loaded ? of(row) : self.confirmDialog()(row);
+            return group.loaded ? of(row) : this.confirmDialog()(row);
         };
     }
 
     public expandingRows() {
-        const self = this;
         return (row: IDejaGridRow) => {
             const group = row as IPeopleGroup;
             if (group.loaded) {
                 return of(row);
             } else {
-                return self.confirmDialog()(row).pipe(
-                    switchMap((itm) => {
+                return this.confirmDialog()(row).pipe(
+                    switchMap(itm => {
                         if (!itm) {
                             return of(null);
                         }
 
                         of(group).pipe(
                             delay(2000),
-                            first())
-                            .subscribe((grp) => {
-                                // Simulate asynchronous load
-                                const original = this.groupedByColorPeople.find((c) => c.toString() === grp.color);
-                                grp.rows = original.items.map((person) => ({ model: person }));
-                                grp.loaded = true;
-                                grp.className = 'loaded';
-                                this.onExpandGrid.refresh();
-                            });
+                            take(1),
+                            takeUntil(this.destroyed$)
+                        ).subscribe(grp => {
+                            // Simulate asynchronous load
+                            const original = this.groupedByColorPeople.find(c => c.toString() === grp.color);
+                            grp.rows = original.items.map(person => ({ model: person }));
+                            grp.loaded = true;
+                            grp.className = 'loaded';
+                            this.onExpandGrid.refresh();
+                        });
 
                         return of(itm);
                     }));
@@ -779,13 +823,12 @@ export class DejaGridDemoComponent {
     }
 
     public confirmDialog() {
-        const self = this;
         return (row: IDejaGridRow) => {
-            self.dialogVisible = true;
+            this.dialogVisible = true;
             return from(this.dialogResponse$).pipe(
-                first(),
-                map((response) => {
-                    self.dialogVisible = false;
+                take(1),
+                map(response => {
+                    this.dialogVisible = false;
                     return response === 'ok' ? row : null;
                 }));
         };
@@ -801,13 +844,14 @@ export class DejaGridDemoComponent {
 
     public getDragContext(row: IDejaGridRow) {
         return {
-            object: row,
+            object: row
         } as IDejaDragContext;
     }
 
     public getDropContext() {
         const drag = (event: IDejaDropEvent) => {
-            if (event.dragInfo && event.dragInfo.element && event.dragInfo.element.tagName === 'DEJA-GRID-ROW') {
+            const element = event?.dragInfo?.element as HTMLElement;
+            if (element.tagName === 'DEJA-GRID-ROW') {
                 event.preventDefault();
             }
         };
@@ -816,9 +860,9 @@ export class DejaGridDemoComponent {
             dragentercallback: drag,
             dragovercallback: drag,
             dropcallback: (event: IDejaDropEvent) => {
-                this.draggedPerson = event.dragInfo.object;
+                this.draggedPerson = event.dragInfo.object as Person;
                 this.changeDetectorRef.markForCheck();
-            },
+            }
         } as IDejaDropContext;
     }
 }

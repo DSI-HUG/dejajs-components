@@ -9,6 +9,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -19,6 +20,7 @@ import { DejaDragDropModule } from '@deja-js/component/dragdrop';
 import { DejaMessageBoxModule } from '@deja-js/component/message-box';
 import { DejaSplitterModule } from '@deja-js/component/splitter';
 import { GroupingService } from '@deja-js/core';
+
 import { DejaMarkdownModule } from '../../component/markdown/index';
 import { DejaGridDemoComponent } from './grid-demo';
 import { routing } from './grid-demo.routes';
@@ -33,16 +35,17 @@ import { routing } from './grid-demo.routes';
         MatIconModule,
         MatTabsModule,
         MatToolbarModule,
+        MatButtonModule,
         DejaDialogModule,
         DejaDragDropModule,
         DejaGridModule,
         DejaMarkdownModule,
         DejaMessageBoxModule,
         DejaSplitterModule,
-        routing,
+        routing
     ],
     providers: [
         GroupingService
-    ],
+    ]
 })
 export class DejaGridDemoModule { }

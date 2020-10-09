@@ -7,9 +7,10 @@
  */
 
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
+
 import { DejaSidenavModule } from './index';
 import { DejaSidenavComponent } from './sidenav.component';
 
@@ -18,22 +19,22 @@ describe('DejaSidenavComponent', () => {
     let comp: DejaSidenavComponent;
     let fixture: ComponentFixture<DejaSidenavComponent>;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        void TestBed.configureTestingModule({
             imports: [
                 RouterTestingModule,
                 BrowserAnimationsModule,
-                DejaSidenavModule,
+                DejaSidenavModule
             ],
-            schemas: [NO_ERRORS_SCHEMA],
+            schemas: [NO_ERRORS_SCHEMA]
         }).compileComponents();
 
         fixture = TestBed.createComponent(DejaSidenavComponent);
         comp = fixture.componentInstance; // Component test instance
     }));
 
-    it('should create the component', async(() => {
+    it('should create the component', waitForAsync(() => {
         comp.ngOnInit();
-        expect(comp).toBeTruthy();
+        void expect(comp).toBeTruthy();
     }));
 });

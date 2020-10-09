@@ -10,12 +10,12 @@ import { Directive, ElementRef, Input } from '@angular/core';
 import { Rect } from '@deja-js/core';
 
 @Directive({
-    selector: '[deja-tile-position]',
+    selector: '[deja-tile-position]'
 })
 export class DejaTilePositionDirective {
     private element: HTMLElement;
 
-    constructor(el: ElementRef) {
+    public constructor(el: ElementRef) {
         this.element = el.nativeElement as HTMLElement;
         this.element.style.display = 'none';
     }
@@ -23,7 +23,7 @@ export class DejaTilePositionDirective {
     @Input()
     public set bounds(rect: Rect) {
         if (rect) {
-            const {left, top, width, height } = rect;
+            const { left, top, width, height } = rect;
             this.element.style.left = `${left}px`;
             this.element.style.top = `${top}px`;
             this.element.style.width = `${width}px`;

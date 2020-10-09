@@ -6,6 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+/* eslint-disable @typescript-eslint/naming-convention */
+// eslint-disable-next-line no-shadow
 export enum KeyCodes {
     Backspace = 'Backspace',
     Tab = 'Tab',

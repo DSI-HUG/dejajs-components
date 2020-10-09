@@ -12,5 +12,4 @@ import { Directive } from '@angular/core';
     selector: 'deja-sidenav-menu, [deja-sidenav-menu]'
 })
 export class DejaSidenavMenuDirective {
-    constructor() { }
 }

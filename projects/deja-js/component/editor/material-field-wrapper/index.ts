@@ -14,9 +14,9 @@ import { DejaEditorModule } from '../deja-editor.module';
 import { DejaEditorSelectorDirective } from './deja-editor-selector.directive';
 
 @NgModule({
-  imports: [DejaEditorModule, MatFormFieldModule],
-  declarations: [DejaEditorSelectorDirective],
-  exports: [DejaEditorSelectorDirective, DejaEditorComponent]
+    imports: [DejaEditorModule, MatFormFieldModule],
+    declarations: [DejaEditorSelectorDirective],
+    exports: [DejaEditorSelectorDirective, DejaEditorComponent]
 })
 export class DejaMatEditorModule {}
 

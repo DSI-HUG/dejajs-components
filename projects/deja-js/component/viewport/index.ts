@@ -9,19 +9,20 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
+
 import { DejaViewPortComponent } from './viewport.component';
 
 @NgModule({
     declarations: [
-        DejaViewPortComponent,
+        DejaViewPortComponent
     ],
     exports: [
-        DejaViewPortComponent,
+        DejaViewPortComponent
     ],
     imports: [
         CommonModule,
-        MatIconModule,
-    ],
+        MatIconModule
+    ]
 })
 export class DejaViewPortModule { }
 

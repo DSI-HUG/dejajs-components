@@ -8,10 +8,10 @@
 import { Directive, ElementRef, HostBinding, Input, Optional } from '@angular/core';
 import { DejaClipboardService, Destroy, UUID } from '@deja-js/core';
 import { fromEvent } from 'rxjs';
-import { filter, first, switchMap, takeUntil } from 'rxjs/operators';
+import { filter, switchMap, take, takeUntil } from 'rxjs/operators';
 
 @Directive({
-    selector: '[deja-draggable]',
+    selector: '[deja-draggable]'
 })
 export class DejaDraggableDirective extends Destroy {
     @HostBinding('attr.draggable') public draggable: boolean = null;
@@ -32,7 +32,7 @@ export class DejaDraggableDirective extends Destroy {
         return this._context;
     }
 
-    constructor(elementRef: ElementRef, @Optional() private clipboardService: DejaClipboardService) {
+    public constructor(elementRef: ElementRef, @Optional() private clipboardService: DejaClipboardService) {
         super();
 
         const element = elementRef.nativeElement as HTMLElement;
@@ -45,7 +45,7 @@ export class DejaDraggableDirective extends Destroy {
                 }
 
                 // console.log('dragstart');
-                const dragInfos = {} as { [key: string]: any };
+                const dragInfos = {} as Record<string, unknown>;
                 this.dragdropid = new UUID().toString();
                 dragInfos[this.uuidKey] = this.dragdropid;
 
@@ -57,7 +57,8 @@ export class DejaDraggableDirective extends Destroy {
 
                 let data = 'notavailable';
                 if (object) {
-                    object.dragged = true;
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    (<any>object).dragged = true;
                     data = JSON.stringify(data);
                 }
 
@@ -74,23 +75,24 @@ export class DejaDraggableDirective extends Destroy {
                 }
 
                 return fromEvent(element, 'dragend').pipe(
-                    first()
+                    take(1)
                 );
             }),
-            takeUntil(this.destroyed$),
+            takeUntil(this.destroyed$)
         ).subscribe((evt: DragEvent) => {
             // console.log('dragend');
-            const dragEndInfos = this.clipboardService.get(this.draginfokey) as { [key: string]: any };
-            const obj = dragEndInfos && dragEndInfos[this.objectKey];
+            const dragEndInfos = this.clipboardService.get(this.draginfokey) as Record<string, unknown>;
+            const obj = dragEndInfos?.[this.objectKey];
             if (obj) {
-                delete obj.dragged;
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                delete (<any>obj).dragged;
             }
 
             if (this.context?.dragendcallback && dragEndInfos) {
                 const e = evt as IDejaDragEvent;
                 e.dragInfo = dragEndInfos;
                 e.dragObject = obj;
-                e.dragElement = dragEndInfos[this.elementKey];
+                e.dragElement = dragEndInfos[this.elementKey] as HTMLElement;
                 this.context.dragendcallback(e);
 
                 if (e.defaultPrevented) {
@@ -105,13 +107,13 @@ export class DejaDraggableDirective extends Destroy {
 }
 
 export interface IDejaDragEvent extends DragEvent {
-    dragInfo: { [key: string]: any };
-    dragObject: any;
+    dragInfo: Record<string, unknown>;
+    dragObject: unknown;
     dragElement: HTMLElement;
 }
 
 export interface IDejaDragContext {
-    object?: any;
+    object?: unknown;
     dragstartcallback?(event: IDejaDragEvent): void;
     dragendcallback?(event: IDejaDragEvent): void;
 }

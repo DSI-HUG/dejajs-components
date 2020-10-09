@@ -9,6 +9,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+
 import { DejaChildValidatorDirective } from './child-validator.directive';
 
 @NgModule({
@@ -20,8 +21,8 @@ import { DejaChildValidatorDirective } from './child-validator.directive';
     ],
     imports: [
         CommonModule,
-        FormsModule,
-    ],
+        FormsModule
+    ]
 })
 export class DejaChildValidatorModule { }
 

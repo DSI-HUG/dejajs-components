@@ -19,7 +19,7 @@ node_js:
 branches:
   only:
   - master
-  - dev
+  - develop
 before_install:
 - npm install -g yarn
 - rm -rf node_modules

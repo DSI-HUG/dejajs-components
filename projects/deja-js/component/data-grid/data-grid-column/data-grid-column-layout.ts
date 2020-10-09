@@ -7,6 +7,7 @@
  */
 
 import { Subject } from 'rxjs';
+
 import { IDejaGridColumn } from './data-grid-column';
 
 export class IDejaGridColumnLayout {

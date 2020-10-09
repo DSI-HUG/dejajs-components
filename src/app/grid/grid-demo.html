@@ -1,195 +1,195 @@
 <mat-tab-group [selectedIndex]="tabIndex" (selectedTabChange)="tabIndex = $event.index">
-	<mat-tab label="API REFERENCE"></mat-tab>
-	<mat-tab label="SIMPLE EXAMPLES"></mat-tab>
-	<mat-tab label="ADVANCED EXAMPLES"></mat-tab>
-	<mat-tab label="COLUMNS MODES"></mat-tab>
-	<mat-tab label="TEMPLATING"></mat-tab>
-	<mat-tab label="PRE-SELECTIONS"></mat-tab>
-	<mat-tab label="PRE-EVENTS AND ON_DEMAND"></mat-tab>
-	<mat-tab label="PERFORMANCES"></mat-tab>
+    <mat-tab label="API REFERENCE"></mat-tab>
+    <mat-tab label="SIMPLE EXAMPLES"></mat-tab>
+    <mat-tab label="ADVANCED EXAMPLES"></mat-tab>
+    <mat-tab label="COLUMNS MODES"></mat-tab>
+    <mat-tab label="TEMPLATING"></mat-tab>
+    <mat-tab label="PRE-SELECTIONS"></mat-tab>
+    <mat-tab label="PRE-EVENTS AND ON_DEMAND"></mat-tab>
+    <mat-tab label="PERFORMANCES"></mat-tab>
 </mat-tab-group>
 
 <deja-dialog *ngIf="dialogVisible">
-	<deja-message-box type="primary" title="Confirm Box">
-		Please confirm your operation!
-		<ng-template #actionsTemplate>
-			<button id="cancelbtn" mat-raised-button (click)="dialogResponse$.next('cancel')">Cancel</button>
-			<button id="okbtn" mat-raised-button color="primary" (click)="dialogResponse$.next('ok')">Ok</button>
-		</ng-template>
-	</deja-message-box>
+    <deja-message-box type="primary" title="Confirm Box">
+        Please confirm your operation!
+        <ng-template #actionsTemplate>
+            <button id="cancelbtn" mat-raised-button (click)="dialogResponse$.next('cancel')">Cancel</button>
+            <button id="okbtn" mat-raised-button color="primary" (click)="dialogResponse$.next('ok')">Ok</button>
+        </ng-template>
+    </deja-message-box>
 </deja-dialog>
 
 <mat-card class="demo-card" *ngIf="tabIndex === 0">
-	<deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/projects/deja-js/component/data-grid/readme.md'"></deja-markdown>
+    <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/develop/projects/deja-js/component/data-grid/readme.md'"></deja-markdown>
 </mat-card>
 
 <div *ngIf="tabIndex === 1">
-	<mat-card class="demo-card demo-basic">
-		<mat-toolbar color="primary">Simple Usage</mat-toolbar>
-		<mat-card-content class="flexLayout flexColumn">
-			<deja-grid searchArea columnsSortable columnsSizable sortable maxHeight="auto" [rows]="peopleRows" [columns]="peopleColumns" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid"></deja-grid>
-		</mat-card-content>
-	</mat-card>
-	<mat-card class="demo-card demo-basic">
-		<mat-toolbar color="primary">Keyboard Navigation and Multi Selection</mat-toolbar>
-		<mat-card-content class="listContainer">
-			<div>deja-grid has some keyboard navigation feature</div>
-			<div class="flexLayout">
-				<span class="flexLayout flex45p">
+    <mat-card class="demo-card demo-basic">
+        <mat-toolbar color="primary">Simple Usage</mat-toolbar>
+        <mat-card-content class="flexLayout flexColumn">
+            <deja-grid searchArea columnsSortable columnsSizable sortable maxHeight="auto" [rows]="peopleRows" [columns]="peopleColumns" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid"></deja-grid>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="demo-card demo-basic">
+        <mat-toolbar color="primary">Keyboard Navigation and Multi Selection</mat-toolbar>
+        <mat-card-content class="listContainer">
+            <div>deja-grid has some keyboard navigation feature</div>
+            <div class="flexLayout">
+                <span class="flexLayout flex45p">
 					<deja-grid class="flex500" columnsSortable multiSelect columnsSizable sortable [rows]="peopleForMultiselect$" [columns]="peopleColumns" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid"></deja-grid>
 				</span>
-				<ul class="flex45p flexOffset2rl" id="shortcut-list">
-					<li>Press
-						<span class="keyboard-key">↑</span> to select the previous row</li>
-					<li>Press
-						<span class="keyboard-key">↓</span> to select the next row</li>
-					<li>Press
-						<span class="keyboard-key">←</span> to select the previous cell</li>
-					<li>Press
-						<span class="keyboard-key">→</span> to select the next cell</li>
-					<li>Press
-						<span class="keyboard-key">Ctrl</span>
-						<span class="keyboard-key">↑</span> to change the current row to the previous</li>
-					<li>Press
-						<span class="keyboard-key">Ctrl</span>
-						<span class="keyboard-key">↓</span> to change the current row to the next</li>
-					<li>Press
-						<span class="keyboard-key">Shift</span>
-						<span class="keyboard-key">↑</span> to change the current row to the previous</li>
-					<li>Press
-						<span class="keyboard-key">Shift</span>
-						<span class="keyboard-key">↓</span> to change the current row to the next</li>
-					<li>Press
-						<span class="keyboard-key">Ctrl</span>
-						<span class="keyboard-key">Space</span> to add/remove the current row to the selection</li>
-					<li>Press
-						<span class="keyboard-key">Shift</span>
-						<span class="keyboard-key">↑</span> to select a range orf rows</li>
-					<li>Press
-						<span class="keyboard-key">Shift</span>
-						<span class="keyboard-key">↓</span> to select a range orf rows</li>
-					<li>Press
-						<span class="keyboard-key">PageUp</span> to select the next page row</li>
-					<li>Press
-						<span class="keyboard-key">PageDown</span> to select the previous page row</li>
-					<li>Press
-						<span class="keyboard-key">Home</span> to select the first row</li>
-					<li>Press
-						<span class="keyboard-key">End</span> to select the last row</li>
-					<li>Press
-						<span class="keyboard-key">Space</span> to collapse/expand a group header or to select/unselect the current row</li>
-					<li>Press
-						<span class="keyboard-key">A</span>..
-						<span class="keyboard-key">Z</span>
-						<span class="keyboard-key">0</span>..
-						<span class="keyboard-key">9</span> to select the next row started with the pressed key</li>
-				</ul>
-			</div>
-		</mat-card-content>
-	</mat-card>
+                <ul class="flex45p flexOffset2rl" id="shortcut-list">
+                    <li>Press
+                        <span class="keyboard-key">↑</span> to select the previous row</li>
+                    <li>Press
+                        <span class="keyboard-key">↓</span> to select the next row</li>
+                    <li>Press
+                        <span class="keyboard-key">←</span> to select the previous cell</li>
+                    <li>Press
+                        <span class="keyboard-key">→</span> to select the next cell</li>
+                    <li>Press
+                        <span class="keyboard-key">Ctrl</span>
+                        <span class="keyboard-key">↑</span> to change the current row to the previous</li>
+                    <li>Press
+                        <span class="keyboard-key">Ctrl</span>
+                        <span class="keyboard-key">↓</span> to change the current row to the next</li>
+                    <li>Press
+                        <span class="keyboard-key">Shift</span>
+                        <span class="keyboard-key">↑</span> to change the current row to the previous</li>
+                    <li>Press
+                        <span class="keyboard-key">Shift</span>
+                        <span class="keyboard-key">↓</span> to change the current row to the next</li>
+                    <li>Press
+                        <span class="keyboard-key">Ctrl</span>
+                        <span class="keyboard-key">Space</span> to add/remove the current row to the selection</li>
+                    <li>Press
+                        <span class="keyboard-key">Shift</span>
+                        <span class="keyboard-key">↑</span> to select a range orf rows</li>
+                    <li>Press
+                        <span class="keyboard-key">Shift</span>
+                        <span class="keyboard-key">↓</span> to select a range orf rows</li>
+                    <li>Press
+                        <span class="keyboard-key">PageUp</span> to select the next page row</li>
+                    <li>Press
+                        <span class="keyboard-key">PageDown</span> to select the previous page row</li>
+                    <li>Press
+                        <span class="keyboard-key">Home</span> to select the first row</li>
+                    <li>Press
+                        <span class="keyboard-key">End</span> to select the last row</li>
+                    <li>Press
+                        <span class="keyboard-key">Space</span> to collapse/expand a group header or to select/unselect the current row</li>
+                    <li>Press
+                        <span class="keyboard-key">A</span>..
+                        <span class="keyboard-key">Z</span>
+                        <span class="keyboard-key">0</span>..
+                        <span class="keyboard-key">9</span> to select the next row started with the pressed key</li>
+                </ul>
+            </div>
+        </mat-card-content>
+    </mat-card>
 </div>
 
 <div *ngIf="tabIndex === 2">
-	<mat-card class="deja-grid-demo demo-card demo-basic">
-		<mat-toolbar color="primary">Grouping Client Side</mat-toolbar>
-		<mat-card-content class="flexLayout flexColumn listContainer">
-			<div>To allow the user grouping just add the groupArea directive</div>
-			<deja-grid class="flex600" groupArea columnsSortable multiSelect columnsSizable sortable columnGroups="eyeColor" [rows]="people$" [columns]="peopleColumnsEx" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid">
-				<ng-template #cellTemplate let-row let-column="column">
-					<span *ngIf="column.name==='color'" class="color" [style.background-color]="row[column.name]"></span>
-				</ng-template>
-			</deja-grid>
-		</mat-card-content>
-		<mat-toolbar color="primary">Grouping Server Side and Drag Drop</mat-toolbar>
-		<mat-card-content>
-			<div>Grouping example</div>
-			<div class="flexLayout">
-				<span class="flex45p flexLayout flexColumn">
-					<deja-grid #gg class="flex600" columnsSortable multiSelect columnsSizable sortable [rows]="groupedByGenderPeople$" [columns]="peopleColumns" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid">
+    <mat-card class="deja-grid-demo demo-card demo-basic">
+        <mat-toolbar color="primary">Grouping Client Side</mat-toolbar>
+        <mat-card-content class="flexLayout flexColumn listContainer">
+            <div>To allow the user grouping just add the groupArea directive</div>
+            <deja-grid class="flex600" groupArea columnsSortable multiSelect columnsSizable sortable columnGroups="eyeColor" [rows]="people$" [columns]="peopleColumnsEx" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid">
+                <ng-template #cellTemplate let-row let-column="column">
+                    <span *ngIf="column.name==='color'" class="color" [style.background-color]="row[column.name]"></span>
+                </ng-template>
+            </deja-grid>
+        </mat-card-content>
+        <mat-toolbar color="primary">Grouping Server Side and Drag Drop</mat-toolbar>
+        <mat-card-content>
+            <div>Grouping example</div>
+            <div class="flexLayout">
+                <span class="flex45p flexLayout flexColumn">
+					<deja-grid #gg class="flex600" columnsSortable multiSelect columnsSizable sortable [rows]="groupedByGenderPerson$" [columns]="peopleColumns" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid">
 						<ng-template #rowTemplate let-row>
 							<deja-grid-row [row]="row" [columnLayout]="gg.columnLayout" [style.width.px]="gg.rowsWidth" [deja-draggable]="getDragContext(row)"></deja-grid-row>
 						</ng-template>
 					</deja-grid>
 				</span>
-				<span class="flex45p flexOffset2rl" id="dropArea">
+                <span class="flex45p flexOffset2rl" id="dropArea">
 					<div>You can drag and drop items the the area bellow (That will display a JSON representation of the dropped model) :</div>
 					<div #dropArea [deja-droppable]="getDropContext(dropArea)" style="border:1px solid red;min-height:150px;">
 						<pre>{{draggedPerson | json}}</pre>
 					</div>
 				</span>
-			</div>
-		</mat-card-content>
-		<mat-toolbar color="primary">Variable Rows Height and Deep Model</mat-toolbar>
-		<mat-card-content class="flexLayout flexColumn listContainer">
-			<deja-grid id="variable" #variable maxHeight="auto" searchArea columnsSortable multiSelect columnsSizable sortable [rows]="variableHeightPeopleRows$" [columns]="variableHeightPeopleColumns" viewportMode="auto" viewPortRowHeight="25" nodataholder="No datas" searchField="p1.p2.person.name" valueField="p1.p2.person.guid" (columnSizeChanged)="onColumnSizeChanged($event, variable)"></deja-grid>
-		</mat-card-content>
-	</mat-card>
+            </div>
+        </mat-card-content>
+        <mat-toolbar color="primary">Variable Rows Height and Deep Model</mat-toolbar>
+        <mat-card-content class="flexLayout flexColumn listContainer">
+            <deja-grid id="variable" #variable maxHeight="auto" searchArea columnsSortable multiSelect columnsSizable sortable [rows]="variableHeightPersonRows$" [columns]="variableHeightPeopleColumns" viewportMode="auto" viewPortRowHeight="25" nodataholder="No datas" searchField="p1.p2.person.name" valueField="p1.p2.person.guid" (columnSizeChanged)="onColumnSizeChanged($event, variable)"></deja-grid>
+        </mat-card-content>
+    </mat-card>
 </div>
 
 <div *ngIf="tabIndex === 3">
-	<mat-card class="deja-grid-demo demo-card demo-basic">
-		<mat-toolbar color="primary">Sizeable Columns</mat-toolbar>
-		<mat-card-content class="listContainer">
-			<div>The horizontal scrollbar will be adjusted to match the total with of the columns</div>
-			<deja-splitter direction="horizontal">
-				<split-area [size]="60">
-					<deja-grid columnsSizable [rows]="people$" [columns]="peopleColumns" nodataholder="No datas" valueField="guid"> </deja-grid>
-				</split-area>
-				<split-area [size]="40">
-				</split-area>
-			</deja-splitter>
-		</mat-card-content>
-		<mat-toolbar color="primary">Percent Columns</mat-toolbar>
-		<mat-card-content class="flexLayout flexColumn listContainer">
-			<div>The columns having a width defined as a percentage will resize to fill the remaining space. If their size reaches their minimum width a horizontal scrollbar will appear.</div>
-			<deja-splitter direction="horizontal" (dragProgress)="grdclm2.calcColumnsLayout()">
-				<split-area [size]="60">
-					<deja-grid #grdclm2 columnsSizable [rows]="people$" [columns]="percentPeopleColumns" nodataholder="No datas" valueField="guid"> </deja-grid>
-				</split-area>
-				<split-area [size]="40">
-				</split-area>
-			</deja-splitter>
-		</mat-card-content>
-		<mat-toolbar color="primary">Responsives Columns</mat-toolbar>
-		<mat-card-content class="flexLayout flexColumn listContainer">
-			<div>The columns having a width defined as a percentage will resize to fill the remaining space. If their size reaches their minimum width, then the columns having a responsive property will be hidden, starting with the lowest responsive value.</div>
-			<deja-splitter direction="horizontal" (dragProgress)="grdclm3.calcColumnsLayout()">
-				<split-area [size]="60">
-					<deja-grid #grdclm3 columnsSizable [rows]="people$" [columns]="responsivePeopleColumns" nodataholder="No datas" valueField="guid"> </deja-grid>
-				</split-area>
-				<split-area [size]="40">
-				</split-area>
-			</deja-splitter>
-		</mat-card-content>
-		<mat-toolbar color="primary">Columns not Specified</mat-toolbar>
-		<mat-card-content class="flexLayout flexColumn listContainer">
-			<div>The columns are not specified. The grid will create columns based on the line model given. At that moment, the dynamic column model will be displayed in the browser console so that it can be copied and included in the code.</div>
-			<deja-grid columnsSizable maxHeight="auto" [rows]="people$" nodataholder="No datas" valueField="guid"> </deja-grid>
-		</mat-card-content>
-	</mat-card>
+    <mat-card class="deja-grid-demo demo-card demo-basic">
+        <mat-toolbar color="primary">Sizeable Columns</mat-toolbar>
+        <mat-card-content class="listContainer">
+            <div>The horizontal scrollbar will be adjusted to match the total with of the columns</div>
+            <deja-splitter direction="horizontal">
+                <split-area [size]="60">
+                    <deja-grid columnsSizable [rows]="people$" [columns]="peopleColumns" nodataholder="No datas" valueField="guid"> </deja-grid>
+                </split-area>
+                <split-area [size]="40">
+                </split-area>
+            </deja-splitter>
+        </mat-card-content>
+        <mat-toolbar color="primary">Percent Columns</mat-toolbar>
+        <mat-card-content class="flexLayout flexColumn listContainer">
+            <div>The columns having a width defined as a percentage will resize to fill the remaining space. If their size reaches their minimum width a horizontal scrollbar will appear.</div>
+            <deja-splitter direction="horizontal" (dragProgress)="grdclm2.calcColumnsLayout()">
+                <split-area [size]="60">
+                    <deja-grid #grdclm2 columnsSizable [rows]="people$" [columns]="percentPeopleColumns" nodataholder="No datas" valueField="guid"> </deja-grid>
+                </split-area>
+                <split-area [size]="40">
+                </split-area>
+            </deja-splitter>
+        </mat-card-content>
+        <mat-toolbar color="primary">Responsives Columns</mat-toolbar>
+        <mat-card-content class="flexLayout flexColumn listContainer">
+            <div>The columns having a width defined as a percentage will resize to fill the remaining space. If their size reaches their minimum width, then the columns having a responsive property will be hidden, starting with the lowest responsive value.</div>
+            <deja-splitter direction="horizontal" (dragProgress)="grdclm3.calcColumnsLayout()">
+                <split-area [size]="60">
+                    <deja-grid #grdclm3 columnsSizable [rows]="people$" [columns]="responsivePeopleColumns" nodataholder="No datas" valueField="guid"> </deja-grid>
+                </split-area>
+                <split-area [size]="40">
+                </split-area>
+            </deja-splitter>
+        </mat-card-content>
+        <mat-toolbar color="primary">Columns not Specified</mat-toolbar>
+        <mat-card-content class="flexLayout flexColumn listContainer">
+            <div>The columns are not specified. The grid will create columns based on the line model given. At that moment, the dynamic column model will be displayed in the browser console so that it can be copied and included in the code.</div>
+            <deja-grid columnsSizable maxHeight="auto" [rows]="people$" nodataholder="No datas" valueField="guid"> </deja-grid>
+        </mat-card-content>
+    </mat-card>
 </div>
 
 <div *ngIf="tabIndex === 4">
-	<mat-card class="deja-grid-demo demo-card demo-basic">
-		<mat-toolbar color="primary">Templating Examples</mat-toolbar>
-		<mat-card-content class="listContainer">
-			<h1>Cells Template</h1>
-			<deja-grid id="news" #news sortable columnsSizable multiSelect maxHeight="auto" [rows]="news$ | async" [columns]="newsColumns" viewportMode="auto" nodataholder="Pas de données" (columnSizeChanged)="onColumnSizeChanged($event, news)">
-				<ng-template #cellTemplate let-row let-column="column">
-					<img *ngIf="column.name==='urlToImage'" [attr.src]="row[column.name]" class="logo" (load)="imageLoaded(row, news)">
+    <mat-card class="deja-grid-demo demo-card demo-basic">
+        <mat-toolbar color="primary">Templating Examples</mat-toolbar>
+        <mat-card-content class="listContainer">
+            <h1>Cells Template</h1>
+            <deja-grid id="news" #news sortable columnsSizable multiSelect maxHeight="auto" [rows]="news$ | async" [columns]="newsColumns" viewportMode="auto" nodataholder="Pas de données" (columnSizeChanged)="onColumnSizeChanged($event, news)">
+                <ng-template #cellTemplate let-row let-column="column">
+                    <img *ngIf="column.name==='urlToImage'" [attr.src]="row[column.name]" class="logo" (load)="imageLoaded(row, news)">
 				</ng-template>
-			</deja-grid>
-			<div class="flexLayout">
-				<span class="flex45p flexLayout flexColumn">
+            </deja-grid>
+            <div class="flexLayout">
+                <span class="flex45p flexLayout flexColumn">
 					<h1>Parent Row Templating</h1>
 					<deja-grid searchArea columnsSortable columnsSizable sortable maxHeight="auto" [rows]="groupedByEyesColorPeople$" [columns]="peopleColumns" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid">
 						<ng-template #parentRowTemplate let-row>
 							<mat-icon id="placeholder-icon">visibility</mat-icon>&nbsp;
 							<span>{{ getParentRowDecr(row) }}</span>
-						</ng-template>
-					</deja-grid>
-				</span>
-				<span class="flex45p flexLayout flexColumn flexOffset2rl">
+                </ng-template>
+                </deja-grid>
+                </span>
+                <span class="flex45p flexLayout flexColumn flexOffset2rl">
 					<h1>Search Prefix and Suffix Templates</h1>
 					<deja-grid searchArea columnsSortable columnsSizable sortable maxHeight="auto" [rows]="people$" [columns]="peopleColumns" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid">
 						<ng-template #searchPrefixTemplate>
@@ -200,78 +200,78 @@
 						</ng-template>
 					</deja-grid>
 				</span>
-			</div>
-		</mat-card-content>
-	</mat-card>
+            </div>
+        </mat-card-content>
+    </mat-card>
 </div>
 
 <div *ngIf="tabIndex === 5">
-	<mat-card class="deja-grid-demo demo-card demo-basic">
-		<mat-toolbar color="primary">Pre-Selections from html inputs</mat-toolbar>
-		<mat-card-content class="listContainer">
-			<span class="flexLayout">
+    <mat-card class="deja-grid-demo demo-card demo-basic">
+        <mat-toolbar color="primary">Pre-Selections from html inputs</mat-toolbar>
+        <mat-card-content class="listContainer">
+            <span class="flexLayout">
 				<div class="flex45p">Preselection with the inputs</div>
 				<div class="flex45p flexOffset2rl">Preselections with the input selectedModels</div>
 			</span>
-			<span class="flexLayout">
+            <span class="flexLayout">
 				<deja-grid class="flex45p" selectedItem="mango" maxHeight="auto" [rows]="fructs" [columns]="fructsColumns" valueField="value">
 					<ng-template #cellTemplate let-row let-column="column">
 						<span *ngIf="column.name==='color'" class="color" [style.background-color]="row[column.name]"></span>
-					</ng-template>
-				</deja-grid>
-				<deja-grid class="flex45p flexOffset2rl" multiSelect="true" selectedItems="mango, peach, cranberries" maxHeight="auto" [rows]="fructsForMultiSelection" [columns]="fructsColumns" valueField="value">
-					<ng-template #cellTemplate let-row let-column="column">
-						<span *ngIf="column.name==='color'" class="color" [style.background-color]="row[column.name]"></span>
-					</ng-template>
-				</deja-grid>
-			</span>
-		</mat-card-content>
-		<mat-toolbar color="primary">Pre-Selections from javascript</mat-toolbar>
-		<mat-card-content class="listContainer">
-			<div>The collection fructItemsWithPreSelection has a pre-selected item</div>
-			<span class="flexLayout">
+            </ng-template>
+            </deja-grid>
+            <deja-grid class="flex45p flexOffset2rl" multiSelect="true" selectedItems="mango, peach, cranberries" maxHeight="auto" [rows]="fructsForMultiSelection" [columns]="fructsColumns" valueField="value">
+                <ng-template #cellTemplate let-row let-column="column">
+                    <span *ngIf="column.name==='color'" class="color" [style.background-color]="row[column.name]"></span>
+                </ng-template>
+            </deja-grid>
+            </span>
+        </mat-card-content>
+        <mat-toolbar color="primary">Pre-Selections from javascript</mat-toolbar>
+        <mat-card-content class="listContainer">
+            <div>The collection fructItemsWithPreSelection has a pre-selected item</div>
+            <span class="flexLayout">
 				<deja-grid class="flex45p" maxHeight="auto" [rows]="fructsWithPreSelection" [columns]="fructsColumns">
 					<ng-template #cellTemplate let-row let-column="column">
 						<span *ngIf="column.name==='color'" class="color" [style.background-color]="row[column.name]"></span>
-					</ng-template>
-				</deja-grid>
-			</span>
-		</mat-card-content>
-	</mat-card>
+            </ng-template>
+            </deja-grid>
+            </span>
+        </mat-card-content>
+    </mat-card>
 </div>
 
 <div *ngIf="tabIndex === 6">
-	<mat-card class="deja-grid-demo demo-card demo-basic">
-		<mat-toolbar color="primary">Pre-events and on-demand</mat-toolbar>
-		<mat-card-content class="listContainer">
-			<h1>On Demand Loading </h1>
-			<div>The rows are loaded from the loading event</div>
-			<deja-grid #ondemand maxHeight="auto" textField="name" valueField="guid" [loadingRows]="loadingRows()" [columns]="peopleColumns"></deja-grid>
-			<h1>Confirm Selection</h1>
-			<div>A dialog will confirm the selection of an row</div>
-			<deja-grid multiSelect maxHeight="auto" textField="name" valueField="guid" [selectingRow]="confirmDialog()" [rows]="people$" [columns]="peopleColumns"> </deja-grid>
-			<h1>Confirm Expand and Collapse </h1>
-			<div>A dialog will confirm the expand and collapse or an row if the children are not loaded. The children will be loaded asynchronously after the row expansion.</div>
-			<deja-grid #onexpand maxHeight="auto" textField="name" valueField="guid" childrenField="rows" [rows]="onDemandGroupedPeople" [expandingRow]="expandingRows()" [collapsingRow]="collapsingRows()" [columns]="peopleColumns">
-				<ng-template #rowTemplate let-item let-query="query" let-flatindex="flatindex">
-					<deja-grid-row *ngIf="!item.displayName" [row]="item.model" [flatIndex]="flatindex" [columnLayout]="onexpand.columnLayout" [style.width.px]="rowsWidth"></deja-grid-row>
-					<span class="loading" *ngIf="item.displayName" [style.width.px]="rowsWidth">{{item.displayName}}</span>
-				</ng-template>
-				<ng-template #parentRowTemplate let-item let-query="query" let-flatindex="flatindex">
-					<span class="color" [style.background-color]="item.color"></span> {{item.color}}
-				</ng-template>
-			</deja-grid>
-		</mat-card-content>
-	</mat-card>
+    <mat-card class="deja-grid-demo demo-card demo-basic">
+        <mat-toolbar color="primary">Pre-events and on-demand</mat-toolbar>
+        <mat-card-content class="listContainer">
+            <h1>On Demand Loading </h1>
+            <div>The rows are loaded from the loading event</div>
+            <deja-grid #ondemand maxHeight="auto" textField="name" valueField="guid" [loadingRows]="loadingRows()" [columns]="peopleColumns"></deja-grid>
+            <h1>Confirm Selection</h1>
+            <div>A dialog will confirm the selection of an row</div>
+            <deja-grid multiSelect maxHeight="auto" textField="name" valueField="guid" [selectingRow]="confirmDialog()" [rows]="people$" [columns]="peopleColumns"> </deja-grid>
+            <h1>Confirm Expand and Collapse </h1>
+            <div>A dialog will confirm the expand and collapse or an row if the children are not loaded. The children will be loaded asynchronously after the row expansion.</div>
+            <deja-grid #onexpand maxHeight="auto" textField="name" valueField="guid" childrenField="rows" [rows]="onDemandGroupedPeople" [expandingRow]="expandingRows()" [collapsingRow]="collapsingRows()" [columns]="peopleColumns">
+                <ng-template #rowTemplate let-item let-query="query" let-flatindex="flatindex">
+                    <deja-grid-row *ngIf="!item.displayName" [row]="item.model" [flatIndex]="flatindex" [columnLayout]="onexpand.columnLayout"></deja-grid-row>
+                    <span class="loading" *ngIf="item.displayName">{{item.displayName}}</span>
+                </ng-template>
+                <ng-template #parentRowTemplate let-item let-query="query" let-flatindex="flatindex">
+                    <span class="color" [style.background-color]="item.color"></span> {{item.color}}
+                </ng-template>
+            </deja-grid>
+        </mat-card-content>
+    </mat-card>
 </div>
 
 <div *ngIf="tabIndex === 7">
-	<mat-card class="deja-grid-demo demo-card demo-basic">
-		<mat-toolbar color="primary">Performance Examples</mat-toolbar>
-		<mat-card-content class="listContainer">
-			<h1>10K rows with Item Template </h1>
-			<div>An exemple with 100000 fixed size rows</div>
-			<span class="flexLayout flexColumns">
+    <mat-card class="deja-grid-demo demo-card demo-basic">
+        <mat-toolbar color="primary">Performance Examples</mat-toolbar>
+        <mat-card-content class="listContainer">
+            <h1>10K rows with Item Template </h1>
+            <div>An exemple with 100000 fixed size rows</div>
+            <span class="flexLayout flexColumns">
 				<deja-grid id="news" #bigNews sortable columnsSizable multiSelect [rows]="bigNews$" [columns]="newsColumns" viewportMode="auto" nodataholder="Pas de données" (columnSizeChanged)="onColumnSizeChanged($event, bigNews)">
 					<ng-template #cellTemplate let-row let-column="column">
 						<img *ngIf="column.name==='urlToImage'" [attr.src]="row[column.name]" class="logo" (load)="imageLoaded(row, bigNews)">
@@ -279,22 +279,22 @@
 				</deja-grid>
 			</span>
 
-			<h1>Fixed size rows 100K items</h1>
-			<div>An exemple with 100000 fixed size rows</div>
-			<span class="flexLayout">
+            <h1>Fixed size rows 100K items</h1>
+            <div>An exemple with 100000 fixed size rows</div>
+            <span class="flexLayout">
 				<deja-grid #bigPeople class="flex65p" columnsSortable multiSelect columnsSizable sortable maxHeight="auto" [rows]="bigPeople$" [columns]="peopleColumnsEx" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid">
 					<ng-template #cellTemplate let-row let-column="column">
 						<span *ngIf="column.name==='color'" class="color" [style.background-color]="row[column.name]"></span>
-					</ng-template>
-				</deja-grid>
-				<span class="flex30p flexOffset2rl">
+            </ng-template>
+            </deja-grid>
+            <span class="flex30p flexOffset2rl">
 					<h4 id="vptitle">Viewport Infos:</h4>
 					<div *ngFor="let info of viewPortInfos">
 						<span class="vpinfoname">{{info.name}}</span>
-						<span>{{info.value}}</span>
-					</div>
-				</span>
-			</span>
-		</mat-card-content>
-	</mat-card>
+            <span>{{info.value}}</span>
+</div>
+</span>
+</span>
+</mat-card-content>
+</mat-card>
 </div>

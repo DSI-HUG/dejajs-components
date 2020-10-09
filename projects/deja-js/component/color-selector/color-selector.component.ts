@@ -19,7 +19,8 @@ import { ControlValueAccessor } from '@angular/forms';
 import { NgControl } from '@angular/forms';
 import { Color, MaterialColor } from '@deja-js/core';
 import { BehaviorSubject, combineLatest, from, fromEvent, merge, Observable, Subject, timer } from 'rxjs';
-import { debounce, debounceTime, delay, distinctUntilChanged, filter, first, map, takeUntil, tap } from 'rxjs/operators';
+import { debounce, debounceTime, delay, distinctUntilChanged, filter, map, take, takeUntil, tap } from 'rxjs/operators';
+
 import { DejaColorFab } from './color-fab.class';
 
 export interface IColorEvent extends CustomEvent {
@@ -30,17 +31,19 @@ export interface IColorEvent extends CustomEvent {
 @Component({
     selector: 'deja-color-selector',
     styleUrls: [
-        './color-selector.component.scss',
+        './color-selector.component.scss'
     ],
-    templateUrl: './color-selector.component.html',
+    templateUrl: './color-selector.component.html'
 })
 export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestroy {
-    private static indexAttribute = 'index';
+    private static INDEX_ATTRIBUTE = 'index';
 
     /** Evénement déclenché lorsqu'une couleur est survolée par la souris. */
-    @Output() public colorhover = new EventEmitter<IColorEvent>();
+    @Output() public readonly colorhover = new EventEmitter<IColorEvent>();
 
     public _resetcolor: Color;
+
+    protected destroyed$ = new Subject();
 
     private _value: Color;
 
@@ -66,8 +69,6 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
     private hilightedSubIndex: number;
     private hilightedSubIndex$ = new Subject<number>();
 
-    protected destroyed$ = new Subject();
-
     public get subColorFabs() {
         return this._subColorFabs;
     }
@@ -81,27 +82,25 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
     }
 
     @Input() public set resetcolor(value: string | Color) {
-        if (value === '') { value = new Color(); }
+        if (value === '') {
+            value = new Color();
+        }
         const color = value && (typeof value === 'string' ? Color.parse(value) : value);
         this._resetcolor$.next(color || null);
     }
 
-    // ngModel
-    public onTouchedCallback = (_a: any) => { };
-    public onChangeCallback = (_a: any) => { };
-
-    constructor(elementRef: ElementRef, @Self() @Optional() public _control: NgControl) {
+    public constructor(elementRef: ElementRef, @Self() @Optional() public control: NgControl) {
         const element = elementRef.nativeElement as HTMLElement;
 
-        if (this._control) {
-            this._control.valueAccessor = this;
+        if (this.control) {
+            this.control.valueAccessor = this;
         }
 
         this._colorFabs$ = from(this._colors$).pipe(
-            map((colors) => colors.map((color, index) => new DejaColorFab(color, this._disabled, index === this._selectedBaseIndex))),
-            tap((colorFabs) => this._colorFabs = colorFabs));
+            map(colors => colors.map((color, index) => new DejaColorFab(color, this._disabled, index === this._selectedBaseIndex))),
+            tap(colorFabs => this._colorFabs = colorFabs));
 
-        combineLatest(this._colors$, this._resetcolor$).pipe(
+        combineLatest([this._colors$, this._resetcolor$]).pipe(
             takeUntil(this.destroyed$)
         ).subscribe(([colors, resetcolor]) => {
             if (!colors || !colors.length || !resetcolor) {
@@ -117,7 +116,7 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
                     acc.push(color);
                 }
                 return acc;
-            }, []);
+            }, [] as Color[]);
 
             let bestColor: Color;
             allColors.reduce((bestDiff, color) => {
@@ -135,32 +134,32 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
 
         const hilightedBaseIndex$ = from(this.hilightedBaseIndex$).pipe(
             distinctUntilChanged(),
-            debounce((colorIndex) => timer(colorIndex !== undefined ? 100 : 1000)),
-            tap((colorIndex) => {
+            debounce(colorIndex => timer(colorIndex !== undefined ? 100 : 1000)),
+            tap(colorIndex => {
                 this.hilightedBaseIndex = colorIndex;
                 const event = new CustomEvent('ColorEvent', {}) as IColorEvent;
-                event.color = colorIndex ? this._colorFabs && this._colorFabs[colorIndex] && this._colorFabs[colorIndex].color : this.value;
+                event.color = colorIndex ? this._colorFabs?.[colorIndex]?.color : this.value;
                 this.colorhover.emit(event);
             }),
-            map((colorIndex) => colorIndex !== undefined ? colorIndex : this._selectedBaseIndex || 0)
+            map(colorIndex => colorIndex !== undefined ? colorIndex : this._selectedBaseIndex || 0)
         );
 
         const selectedBaseIndex$ = from(this.selectedBaseIndex$).pipe(
-            tap((colorIndex) => this._selectedBaseIndex = colorIndex)
+            tap(colorIndex => this._selectedBaseIndex = colorIndex)
         );
 
         this._subColorFabs$ = merge(hilightedBaseIndex$, selectedBaseIndex$).pipe(
             distinctUntilChanged(),
-            tap((colorIndex) => {
+            tap(colorIndex => {
                 if (this._colorFabs) {
                     this._colorFabs.forEach((colorFab, index) => colorFab.active = index === colorIndex);
                 }
             }),
             debounceTime(100),
             tap(() => element.setAttribute('sub-tr', '')),
-            map((baseIndex) => this._colorFabs && this._colorFabs[baseIndex] && (this._colorFabs[baseIndex].color as MaterialColor).subColors),
-            map((colors) => colors?.map((color, index) => new DejaColorFab(color, this._disabled, index === this._selectedSubIndex))),
-            tap((subColorFabs) => this._subColorFabs = subColorFabs)
+            map(baseIndex => this._colorFabs?.[baseIndex] && (this._colorFabs[baseIndex].color as MaterialColor).subColors),
+            map(colors => colors?.map((color, index) => new DejaColorFab(color, this._disabled, index === this._selectedSubIndex))),
+            tap(subColorFabs => this._subColorFabs = subColorFabs)
         );
 
         this._subColorFabs$.pipe(
@@ -170,32 +169,33 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
 
         const hilightedSubIndex$ = from(this.hilightedSubIndex$).pipe(
             distinctUntilChanged(),
-            debounce((subColorIndex) => timer(subColorIndex !== undefined ? 200 : 1100)),
-            tap((subColorIndex) => {
+            debounce(subColorIndex => timer(subColorIndex !== undefined ? 200 : 1100)),
+            tap(subColorIndex => {
                 this.hilightedSubIndex = subColorIndex;
                 const event = new CustomEvent('ColorEvent', {}) as IColorEvent;
-                event.color = subColorIndex !== undefined ? this._subColorFabs && this._subColorFabs[subColorIndex] && this._subColorFabs[subColorIndex].color : this.value;
+                event.color = subColorIndex !== undefined ? this._subColorFabs?.[subColorIndex]?.color : this.value;
                 this.colorhover.emit(event);
             }),
-            map((subColorIndex) => subColorIndex !== undefined ? subColorIndex : this._selectedSubIndex || 0)
+            map(subColorIndex => subColorIndex !== undefined ? subColorIndex : this._selectedSubIndex || 0)
         );
 
         const selectedSubIndex$ = from(this.selectedSubIndex$).pipe(
             distinctUntilChanged(),
-            tap((subColorIndex) => this._selectedSubIndex = subColorIndex)
+            tap(subColorIndex => this._selectedSubIndex = subColorIndex)
         );
 
         merge(hilightedSubIndex$, selectedSubIndex$).pipe(
             filter(() => !!this._subColorFabs),
             takeUntil(this.destroyed$)
-        ).subscribe((subColorIndex) => this._subColorFabs.forEach((colorFab, index) => colorFab.active = index === subColorIndex));
+        ).subscribe(subColorIndex => this._subColorFabs.forEach((colorFab, index) => colorFab.active = index === subColorIndex));
 
         fromEvent(element, 'mousemove').pipe(
             filter(() => !this._disabled),
             takeUntil(this.destroyed$)
         ).subscribe(event => {
             const target = event.target as HTMLElement;
-            const targetIndex = (<any>target.attributes)[DejaColorSelectorComponent.indexAttribute];
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const targetIndex = (<any>target.attributes)[DejaColorSelectorComponent.INDEX_ATTRIBUTE];
             if (target.hasAttribute('basecolor')) {
                 this.hilightedBaseIndex$.next(+targetIndex.value);
                 this.hilightedSubIndex$.next(this.hilightedSubIndex);
@@ -203,8 +203,8 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
                 this.hilightedBaseIndex$.next(this.hilightedBaseIndex);
                 this.hilightedSubIndex$.next(+targetIndex.value);
             } else {
-                this.hilightedBaseIndex$.next();
-                this.hilightedSubIndex$.next();
+                this.hilightedBaseIndex$.next(null);
+                this.hilightedSubIndex$.next(null);
             }
         });
 
@@ -224,10 +224,10 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
     public set disabled(value: boolean | string) {
         const disabled = coerceBooleanProperty(value);
         if (this._colorFabs) {
-            this._colorFabs.forEach((colorFab) => colorFab.disabled = disabled);
+            this._colorFabs.forEach(colorFab => colorFab.disabled = disabled);
         }
         if (this._subColorFabs) {
-            this._subColorFabs.forEach((colorFab) => colorFab.disabled = disabled);
+            this._subColorFabs.forEach(colorFab => colorFab.disabled = disabled);
         }
         this._disabled = disabled || null;
     }
@@ -262,7 +262,7 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
     public set selectedColor(color: Color) {
         const selectSubIndex = (index: number) => {
             timer(1).pipe(
-                first(),
+                take(1),
                 takeUntil(this.destroyed$)
             ).subscribe(() => this.selectedSubIndex$.next(index));
         };
@@ -270,7 +270,7 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
         if (this._colorFabs) {
             const find = this._colorFabs.find((colorFab, index) => {
                 const baseColor = colorFab.color as MaterialColor;
-                const subIndex = baseColor.subColors?.findIndex((subColor) => Color.equals(subColor, color));
+                const subIndex = baseColor.subColors?.findIndex(subColor => Color.equals(subColor, color));
                 if (subIndex !== undefined && subIndex >= 0) {
                     this.selectedBaseIndex$.next(index);
                     selectSubIndex(subIndex);
@@ -314,12 +314,12 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
     }
 
     // From ControlValueAccessor interface
-    public registerOnChange(fn: any) {
+    public registerOnChange(fn: (_a: unknown) => void) {
         this.onChangeCallback = fn;
     }
 
     // From ControlValueAccessor interface
-    public registerOnTouched(fn: any) {
+    public registerOnTouched(fn: () => void) {
         this.onTouchedCallback = fn;
     }
 
@@ -327,6 +327,10 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
         this.disabled = isDisabled;
     }
     // ************* End of ControlValueAccessor Implementation **************
+
+    // ngModel
+    public onTouchedCallback = () => undefined as void;
+    public onChangeCallback = (_a: unknown) => undefined as void;
 
     public ngOnDestroy() {
         this.destroyed$.next();

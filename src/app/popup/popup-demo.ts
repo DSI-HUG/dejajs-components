@@ -10,8 +10,9 @@ import { ComponentPortal, PortalInjector, TemplatePortal } from '@angular/cdk/po
 import { ChangeDetectorRef, Component, Injector, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { DialogPosition } from '@angular/material/dialog';
 import { DejaPopupAction, DejaPopupButton, DejaPopupConfig, DejaPopupCustomAction, DejaPopupReponse, DejaPopupService } from '@deja-js/component/popup';
-import { Color } from '@deja-js/core';
-import { filter, map } from 'rxjs/operators';
+import { Color, Destroy } from '@deja-js/core';
+import { filter, map, takeUntil } from 'rxjs/operators';
+
 import { DummyComponent } from './dummy/dummy.component';
 import { DejaPopupCustomDemoComponent } from './popup-custom.component';
 import { PopupDemoButtonComponent, PopupDemoButtonComponentData } from './popup-demo-button/popup-demo-button.component';
@@ -20,30 +21,30 @@ import { CONTAINER_DATA } from './popup-demo.service';
 @Component({
     selector: 'popup-demo',
     styleUrls: ['popup-demo.scss'],
-    templateUrl: 'popup-demo.html',
+    templateUrl: 'popup-demo.html'
 })
-export class DejaPopupDemoComponent {
-
-    private dummyPdfUrl = 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
-    private dummyImgUrl = 'http://lorempixel.com/800/600/abstract/';
-
+export class DejaPopupDemoComponent extends Destroy {
     @ViewChild('templateButton')
     private _templateButton: TemplateRef<unknown>;
 
     public hoveredColor: Color;
+    public openGate = false;
 
     public message = {
         type: 'info',
-        text: '',
+        text: ''
     };
-    public openGate = false;
 
-    constructor(
+    private dummyPdfUrl = 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
+    private dummyImgUrl = 'http://lorempixel.com/800/600/abstract/';
+
+    public constructor(
         public dejaPopupService: DejaPopupService,
         protected changeDetectorRef: ChangeDetectorRef,
-        private _viewContainerRef: ViewContainerRef,
-        private _injector: Injector
+        private viewContainerRef: ViewContainerRef,
+        private injector: Injector
     ) {
+        super();
         this.dejaPopupService.dejaPopupCom$.pipe(
             filter((action: DejaPopupAction) => !!action && action.target !== 'popup-tray' && !action.isFinalAction),
             map((action: DejaPopupAction) => {
@@ -51,24 +52,22 @@ export class DejaPopupDemoComponent {
                 this.message.text = action.label || action.name;
                 this.openGate = true;
                 if (action.name === 'color-change') {
-                    this.hoveredColor = action.data;
+                    this.hoveredColor = action.data as Color;
                 }
                 this.changeDetectorRef.markForCheck();
             }),
+            takeUntil(this.destroyed$)
         ).subscribe();
     }
 
     public askConfirmation1() {
         const butSave = new DejaPopupButton('save', 'Save', 'save');
         const butCancel = new DejaPopupButton('cancel', 'Cancel', 'cancel');
-        this.dejaPopupService
-            .openInline(
-                'Inscription à la formation',
-                'Etes-vous sure de vouloir faire cela ?',
-                [butSave, butCancel])
-            .subscribe((response: DejaPopupReponse) => {
-                this.showResponse(response);
-            });
+        this.dejaPopupService.openInline('Inscription à la formation', 'Etes-vous sure de vouloir faire cela ?', [butSave, butCancel]).pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe((response: DejaPopupReponse) => {
+            this.showResponse(response);
+        });
     }
 
     public askConfirmation2() {
@@ -91,11 +90,11 @@ export class DejaPopupDemoComponent {
 
         const actions = [butYes, butNo, butCancel];
 
-        this.dejaPopupService
-            .openInline(title, body, actions, config)
-            .subscribe((response: DejaPopupReponse) => {
-                this.showResponse(response);
-            });
+        this.dejaPopupService.openInline(title, body, actions, config).pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe((response: DejaPopupReponse) => {
+            this.showResponse(response);
+        });
     }
 
     public askConfirmationCustom() {
@@ -109,42 +108,42 @@ export class DejaPopupDemoComponent {
         config.actions = [
             new DejaPopupButton('confirm', 'Confirm', 'done'),
             new DejaPopupButton('undo', 'Undo', 'undo'),
-            new DejaPopupButton('cancel', 'Cancel', 'cancel'),
+            new DejaPopupButton('cancel', 'Cancel', 'cancel')
         ];
 
-        this.dejaPopupService.openCustom(
-            DejaPopupCustomDemoComponent,
-            config,
-        )
-            .subscribe((response: DejaPopupReponse) => {
-                this.showResponse(response);
-            });
+        this.dejaPopupService.openCustom(DejaPopupCustomDemoComponent, config).pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe((response: DejaPopupReponse) => {
+            this.showResponse(response);
+        });
     }
 
     public showUrlImg() {
         const config = new DejaPopupConfig();
         config.height = '600px';
         config.width = '800px';
-        this.dejaPopupService.openUrl(this.dummyImgUrl, config)
-            .subscribe((response: DejaPopupReponse) => {
-                this.showResponse(response);
-            });
+        this.dejaPopupService.openUrl(this.dummyImgUrl, config).pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe((response: DejaPopupReponse) => {
+            this.showResponse(response);
+        });
     }
 
-    public showUrlPdf(conf?: DejaPopupConfig) {
+    public showUrlPdf(conf?: DejaPopupConfig<unknown>) {
         if (!conf) {
             conf = new DejaPopupConfig();
         }
         conf.actions = [
-            new DejaPopupButton('close', 'Close', 'close'),
+            new DejaPopupButton('close', 'Close', 'close')
         ];
         conf.toolbarType = 'window';
         conf.toolbarColor = 'warn';
 
-        this.dejaPopupService.openUrl(this.dummyPdfUrl, conf)
-            .subscribe((response: DejaPopupReponse) => {
-                this.showResponse(response);
-            });
+        this.dejaPopupService.openUrl(this.dummyPdfUrl, conf).pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe((response: DejaPopupReponse) => {
+            this.showResponse(response);
+        });
     }
 
     public showUrlPdfFullscreen() {
@@ -157,20 +156,21 @@ export class DejaPopupDemoComponent {
     public useAdvancedComponent() {
         const conf = new DejaPopupConfig();
         conf.actions = [
-            new DejaPopupButton('close', 'Close', 'close'),
+            new DejaPopupButton('close', 'Close', 'close')
         ];
         conf.toolbarType = 'window';
         conf.padding = true;
         conf.content = [
             'One Line of Content',
             'Two Lines of Content',
-            'Many Lines of Content',
+            'Many Lines of Content'
         ];
 
-        this.dejaPopupService.openAdvanced$(conf)
-            .subscribe((response: DejaPopupReponse) => {
-                this.showResponse(response);
-            });
+        this.dejaPopupService.openAdvanced$(conf).pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe((response: DejaPopupReponse) => {
+            this.showResponse(response);
+        });
     }
 
     public showPopUp() {
@@ -179,21 +179,21 @@ export class DejaPopupDemoComponent {
         config.content = '<h2>Movable Popup No Modal</h2>';
         config.content = [
             '<p><h3>First</h3> html line</p>',
-            '<p><h3>Second</h3> html line</p><br><div> One More Line</div>',
+            '<p><h3>Second</h3> html line</p><br><div> One More Line</div>'
         ];
         config.padding = true;
         config.actions = [
-            new DejaPopupButton('close', 'Close', 'close'),
+            new DejaPopupButton('close', 'Close', 'close')
         ];
         config.width = '500px';
         config.height = '400px';
         config.toolbarColor = 'warn';
 
-        this.dejaPopupService.openPopUp(config)
-            // .filter((resp: DejaPopupReponse) => !!resp)
-            .subscribe((response: DejaPopupReponse) => {
-                this.showResponse(response);
-            });
+        this.dejaPopupService.openPopUp(config).pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe((response: DejaPopupReponse) => {
+            this.showResponse(response);
+        });
     }
 
     public showPopUpPdf() {
@@ -217,18 +217,19 @@ export class DejaPopupDemoComponent {
         const demoButtonPortal = new ComponentPortal(PopupDemoButtonComponent, null, this.createInjector(dummyButtonPortalData));
         config.toolbarActions = [
             new DejaPopupCustomAction(demoButtonPortal),
-            new DejaPopupCustomAction(new TemplatePortal(this._templateButton, this._viewContainerRef)),
+            new DejaPopupCustomAction(new TemplatePortal(this._templateButton, this.viewContainerRef)),
             new DejaPopupButton('account', 'User', 'account_circle', false),
-            new DejaPopupButton('view', 'Show', 'visibility', false),
+            new DejaPopupButton('view', 'Show', 'visibility', false)
         ];
 
         config.ensureDimension();
 
         this.dejaPopupService.openPopUp(config).pipe(
-            filter((resp: DejaPopupReponse) => !!resp))
-            .subscribe((response: DejaPopupReponse) => {
-                this.showResponse(response);
-            });
+            filter((resp: DejaPopupReponse) => !!resp),
+            takeUntil(this.destroyed$)
+        ).subscribe((response: DejaPopupReponse) => {
+            this.showResponse(response);
+        });
     }
 
     public showComponentInjection() {
@@ -237,14 +238,21 @@ export class DejaPopupDemoComponent {
         config.height = 'auto';
         config.width = 'auto';
         config.contentComponentRef = DummyComponent;
-        this.dejaPopupService.openPopUp(config)
-            .subscribe((response: DejaPopupReponse) => {
-                this.showResponse(response);
-            });
+        this.dejaPopupService.openPopUp(config).pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe((response: DejaPopupReponse) => {
+            this.showResponse(response);
+        });
+    }
+
+    public onClickTemplateButton(): void {
+        this.showMessage('Click on Template portal button!', 'success');
     }
 
     private showResponse(resp: DejaPopupReponse): void {
-        this.showMessage(resp.lastAction.label.length ? resp.lastAction.label : resp.lastAction.name, resp.accepted ? 'success' : 'warn');
+        if (resp.lastAction instanceof DejaPopupAction) {
+            this.showMessage(resp.lastAction.label.length ? resp.lastAction.label : resp.lastAction.name, resp.accepted ? 'success' : 'warn');
+        }
     }
 
     private showMessage(text: string, type: string): void {
@@ -254,13 +262,9 @@ export class DejaPopupDemoComponent {
         this.changeDetectorRef.markForCheck();
     }
 
-    public onClickTemplateButton(): void {
-        this.showMessage('Click on Template portal button!', 'success');
-    }
-
-    private createInjector<T>(data: T): PortalInjector {
+    private createInjector<T>(data: T) {
         const injectorTokens = new WeakMap();
         injectorTokens.set(CONTAINER_DATA, data);
-        return new PortalInjector(this._injector, injectorTokens);
+        return new PortalInjector(this.injector, injectorTokens);
     }
 }

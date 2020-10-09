@@ -34,7 +34,7 @@ import { DejaPopupService } from './service/popup.service';
         DejaPopupContentComponent,
         DejaPopupComponent,
         DejaPopupBoxComponent,
-        DejaPopupActionsComponent,
+        DejaPopupActionsComponent
     ],
     entryComponents: [DejaPopupComponent, DejaPopupAdvancedComponent, DejaPopupActionsComponent],
     exports: [
@@ -45,7 +45,7 @@ import { DejaPopupService } from './service/popup.service';
         DejaPopupContentComponent,
         DejaPopupComponent,
         PortalModule,
-        DejaPopupActionsComponent,
+        DejaPopupActionsComponent
     ],
     imports: [
         CommonModule,
@@ -56,9 +56,9 @@ import { DejaPopupService } from './service/popup.service';
         MatTooltipModule,
         DejaOverlayModule,
         PortalModule,
-        DragDropModule,
+        DragDropModule
     ],
-    providers: [DejaPopupService],
+    providers: [DejaPopupService]
 })
 export class DejaPopupModule { }
 

@@ -117,8 +117,8 @@ Composant pour afficher des données dans un tableau, avec une fonction de reche
 </tr>
 <tr>
 	<td>viewportMode</td>
-	<td>ViewportMode (enum)</td>
-	<td>ViewportMode.fixed</td>
+	<td>ViewportMode</td>
+	<td>fixed</td>
 	<td>Définit le mode de calcul du viewport. Le Viewport ne fonctionne qu'avec des hauteurs de lignes fixe / ou définies sur chaque items. Pour désactiver le viewport, mettre le mode disabled. Attention, une désactivation du viewport dégrade considérablement les performances de la liste et ne doit pas être activée si la liste est suceptible de contenir beaucoup d'éléments.</td>
 </tr>
 <tr>

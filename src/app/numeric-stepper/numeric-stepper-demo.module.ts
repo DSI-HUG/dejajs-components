@@ -15,6 +15,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { DejaNumericStepperModule } from '@deja-js/component/numeric-stepper';
+
 import { DejaMarkdownModule } from '../../component/markdown/index';
 import { DejaNumericStepperDemoComponent } from './numeric-stepper-demo.component';
 import { routing } from './numeric-stepper-demo.routes';
@@ -36,6 +37,6 @@ import { routing } from './numeric-stepper-demo.routes';
         ReactiveFormsModule
     ],
     providers: [
-    ],
+    ]
 })
 export class DejaNumericStepperDemoModule { }

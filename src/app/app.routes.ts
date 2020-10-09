@@ -7,7 +7,7 @@
  */
 
 import { ModuleWithProviders } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Route, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -39,11 +39,11 @@ const routes: Routes = [
     { path: 'tiles', loadChildren: () => import('./tiles/tiles-demo.module').then(m => m.DejaTilesDemoModule), data: { title: 'Tiles' } },
     { path: 'tree-list', loadChildren: () => import('./tree-list/tree-list-demo.module').then(m => m.DejaTreeListDemoModule), data: { title: 'Tree List' } },
     { path: 'viewport', loadChildren: () => import('./viewport/viewport-demo.module').then(m => m.DejaViewPortDemoModule), data: { title: 'Viewport' } },
-    { path: '**', redirectTo: 'home', pathMatch: 'prefix' },
+    { path: '**', redirectTo: 'home', pathMatch: 'prefix' }
 ];
 
-export const appRoutingProviders: any[] = [
+export const appRoutingProviders: Route[] = [
 
 ];
 
-export const routing: ModuleWithProviders = RouterModule.forRoot(routes);
+export const routing: ModuleWithProviders<Route> = RouterModule.forRoot(routes);

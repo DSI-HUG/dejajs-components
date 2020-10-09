@@ -13,7 +13,7 @@ import { DejaDroppableDirective } from './droppable.directive';
 
 @NgModule({
     declarations: [DejaDraggableDirective, DejaDroppableDirective],
-    exports: [DejaDraggableDirective, DejaDroppableDirective],
+    exports: [DejaDraggableDirective, DejaDroppableDirective]
 })
 export class DejaDragDropModule { }
 

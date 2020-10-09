@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Point } from '@angular/cdk/drag-drop/drag-ref';
+import { Point } from '@angular/cdk/drag-drop';
 import { ComponentPortal, Portal } from '@angular/cdk/portal';
 import { AfterViewInit } from '@angular/core';
 import { Component } from '@angular/core';
@@ -16,10 +16,11 @@ import { Injector } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import { ViewEncapsulation } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
 import { timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
 import { DejaPopupAction } from '../../model/popup-action.model';
 import { DejaPopupBase } from '../../model/popup-base.class';
 import { DejaPopupConfig } from '../../model/popup-config.model';
@@ -28,27 +29,27 @@ import { DejaPopupConfig } from '../../model/popup-config.model';
     encapsulation: ViewEncapsulation.None,
     selector: 'deja-popup-advanced',
     styleUrls: ['popup-advanced.component.scss'],
-    templateUrl: 'popup-advanced.component.html',
+    templateUrl: 'popup-advanced.component.html'
 })
 export class DejaPopupAdvancedComponent extends DejaPopupBase implements AfterViewInit, OnInit {
+    public dragstart = false;
+    public dragPosition = { x: 0, y: 0 } as Point;
+    public componentPortal: Portal<unknown>;
 
     private left: number;
     private top: number;
-    public dragstart = false;
-    public dragPosition: Point = { x: 0, y: 0 };
-    public componentPortal: Portal<any>;
 
-    constructor(
+    public constructor(
         public dialogRef: MatDialogRef<DejaPopupBase>,
-        @Inject(MAT_DIALOG_DATA) public config: DejaPopupConfig,
+        @Inject(MAT_DIALOG_DATA) public config: DejaPopupConfig<unknown>,
         protected injector: Injector,
         protected renderer: Renderer2,
         protected elRef: ElementRef,
-        private domSanitizer: DomSanitizer,
+        private domSanitizer: DomSanitizer
     ) {
         super();
         if (config.url && typeof config.url === 'string') {
-            config.url = this.domSanitizer.bypassSecurityTrustResourceUrl(config.url as string);
+            config.url = this.domSanitizer.bypassSecurityTrustResourceUrl(config.url);
         }
     }
 
@@ -72,8 +73,9 @@ export class DejaPopupAdvancedComponent extends DejaPopupBase implements AfterVi
 
     public doAction(action: DejaPopupAction) {
         this.actionSelected = action;
+        const actionName = typeof action === 'string' ? action : action.name;
 
-        switch (action.name || action) {
+        switch (actionName) {
             case 'toolbar-close':
             case 'close':
                 action.isFinalAction = true;
@@ -95,6 +97,8 @@ export class DejaPopupAdvancedComponent extends DejaPopupBase implements AfterVi
                     this.config.dejaPopupCom$.next(actionOut);
                 }
                 break;
+
+            default:
         }
     }
 

@@ -14,9 +14,10 @@ import { Input } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { ViewEncapsulation } from '@angular/core';
-import { DejaConnectionPositionPair, Destroy, Position, Rect, } from '@deja-js/core';
+import { DejaConnectionPositionPair, Destroy, Position, Rect } from '@deja-js/core';
 import { from, fromEvent, Observable } from 'rxjs';
 import { debounceTime, delay, filter, map, takeUntil, tap } from 'rxjs/operators';
+
 import { ITooltipParams } from './tooltip-params.interface';
 import { DejaTooltipService } from './tooltip.service';
 
@@ -28,10 +29,25 @@ import { DejaTooltipService } from './tooltip.service';
     selector: 'deja-tooltip',
     templateUrl: 'tooltip.component.html',
     styleUrls: [
-        './tooltip.component.scss',
-    ],
+        './tooltip.component.scss'
+    ]
 })
 export class DejaTooltipComponent extends Destroy implements OnInit {
+    /** Tooltip name. Mandatory, and need to be unic */
+    @Input() public name: string;
+    /** Event Emmited when hide action is called */
+    // eslint-disable-next-line @angular-eslint/prefer-output-readonly
+    @Output() public hide = new EventEmitter();
+
+    /** Template for tooltip content */
+    @ContentChild('tooltipTemplate')
+    public tooltipTemplate: unknown;
+
+    /** Parameters of the tooltip */
+    public params: ITooltipParams;
+    public overlayVisible = false;
+    public ownerElement: HTMLElement;
+
     /**
      * This position config ensures that the top "start" corner of the overlay
      * is aligned with with the top "start" of the origin by default (overlapping
@@ -43,53 +59,41 @@ export class DejaTooltipComponent extends Destroy implements OnInit {
             originX: 'center',
             originY: 'bottom',
             overlayX: 'center',
-            overlayY: 'top',
+            overlayY: 'top'
         },
         {
             originX: 'center',
             originY: 'top',
             overlayX: 'center',
-            overlayY: 'bottom',
+            overlayY: 'bottom'
         },
         {
             originX: 'start',
             originY: 'bottom',
             overlayX: 'start',
-            overlayY: 'top',
+            overlayY: 'top'
         },
         {
             originX: 'start',
             originY: 'top',
             overlayX: 'start',
-            overlayY: 'bottom',
+            overlayY: 'bottom'
         },
         {
             originX: 'end',
             originY: 'bottom',
             overlayX: 'end',
-            overlayY: 'top',
+            overlayY: 'top'
         },
         {
             originX: 'end',
             originY: 'top',
             overlayX: 'end',
-            overlayY: 'bottom',
-        },
+            overlayY: 'bottom'
+        }
     ] as DejaConnectionPositionPair[];
 
-    /** Tooltip name. Mandatory, and need to be unic */
-    @Input() public name: string;
-    /** Event Emmited when hide action is called */
-    @Output() public hide = new EventEmitter();
-    /** Template for tooltip content */
-    @ContentChild('tooltipTemplate')
-    public tooltipTemplate: any;
-
-    /** Parameters of the tooltip */
-    public params: ITooltipParams;
-    public overlayVisible = false;
-    public ownerElement: HTMLElement;
-    private _model: any;
+    private _model: unknown;
     private _closeOnMoveOver = false;
 
     @Input()
@@ -118,7 +122,7 @@ export class DejaTooltipComponent extends Destroy implements OnInit {
      * Constructor
      * Subscribe to mouseover to know when tooltip must disappear.
      */
-    constructor(elementRef: ElementRef, private tooltipService: DejaTooltipService) {
+    public constructor(elementRef: ElementRef, private tooltipService: DejaTooltipService) {
         super();
 
         const element = elementRef.nativeElement as HTMLElement;
@@ -127,15 +131,17 @@ export class DejaTooltipComponent extends Destroy implements OnInit {
             tap(() => this._model = undefined));
 
         fromEvent(element.ownerDocument, 'mousemove').pipe(
+            // eslint-disable-next-line rxjs/no-unsafe-takeuntil
             takeUntil(hide$),
             debounceTime(100),
             map((event: MouseEvent) => new Position(event.pageX, event.pageY)),
-            filter((position) => {
+            filter(position => {
                 if (this._closeOnMoveOver) {
                     return true;
                 }
                 const containerElement = document.elementFromPoint(position.left, position.top);
                 let parentElement = containerElement;
+                // eslint-disable-next-line no-loops/no-loops
                 while (parentElement) {
                     if (parentElement.className === 'cdk-overlay-pane') {
                         return false;
@@ -144,7 +150,7 @@ export class DejaTooltipComponent extends Destroy implements OnInit {
                 }
                 return true;
             }),
-            filter((position) => {
+            filter(position => {
                 if (this._closeOnMoveOver) {
                     return true;
                 }
@@ -171,7 +177,7 @@ export class DejaTooltipComponent extends Destroy implements OnInit {
         this.params = this.tooltipService.params[this.name];
         this.ownerElement = (this.params.ownerElement as ElementRef).nativeElement || this.params.ownerElement;
 
-        const model$ = this.params.model as Observable<any>;
+        const model$ = this.params.model as Observable<unknown>;
         if (!model$) {
             this._model = undefined;
             this.overlayVisible = true;
@@ -186,10 +192,10 @@ export class DejaTooltipComponent extends Destroy implements OnInit {
                 this.overlayVisible = false;
             });
         } else {
-            const promise = this.params.model as Promise<any>;
+            const promise = this.params.model as Promise<unknown>;
             if (promise.then) {
                 promise
-                    .then((model) => {
+                    .then(model => {
                         this._model = model;
                         this.overlayVisible = true;
                     })

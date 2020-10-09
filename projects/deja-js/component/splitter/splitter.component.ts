@@ -20,6 +20,7 @@ import { Output } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 import { ViewEncapsulation } from '@angular/core';
+
 import { IAreaData } from './area-data.model';
 import { Point } from './point.model';
 import { SplitAreaDirective } from './split-area.directive';
@@ -37,7 +38,7 @@ const disabled = 'disabled';
     encapsulation: ViewEncapsulation.None,
     selector: 'deja-splitter',
     styleUrls: ['./splitter.component.scss'],
-    templateUrl: './splitter.component.html',
+    templateUrl: './splitter.component.html'
 })
 export class DejaSplitterComponent implements OnChanges, OnDestroy {
     /**
@@ -62,15 +63,15 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
     /**
      * Event triggered when the user start to drag the cursor
      */
-    @Output() public dragStart = new EventEmitter<number[]>(false);
+    @Output() public readonly dragStart = new EventEmitter<number[]>(false);
     /**
      * Event triggered during the cursor's drag
      */
-    @Output() public dragProgress = new EventEmitter<number[]>(false);
+    @Output() public readonly dragProgress = new EventEmitter<number[]>(false);
     /**
      * Event triggered when the user stop to drag the cursor
      */
-    @Output() public dragEnd = new EventEmitter<number[]>(false);
+    @Output() public readonly dragEnd = new EventEmitter<number[]>(false);
 
     /**
      * Host Binding
@@ -100,9 +101,9 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
     private _areas: IAreaData[] = [];
     private isDragging = false;
     private containerSize = 0;
-    private areaASize = 0;
-    private areaBSize = 0;
-    private eventsDragFct: Function[] = [];
+    private areaAsize = 0;
+    private areaBsize = 0;
+    private eventsDragFct = [] as (() => void)[];
     private _disabled = false;
 
     /** Retourne ou definit si le selecteur est desactivé. */
@@ -122,7 +123,7 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
     /**
      * Constructor
      */
-    constructor(private cdRef: ChangeDetectorRef,
+    public constructor(private cdRef: ChangeDetectorRef,
         private elementRef: ElementRef,
         private renderer: Renderer2) {
     }
@@ -157,7 +158,7 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
             order: -1,
             sizeUser,
             size: -1,
-            minPixel,
+            minPixel
         });
 
         this.refresh();
@@ -171,7 +172,7 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
      * @param minPixel  Min size of the area
      */
     public updateArea(component: SplitAreaDirective, orderUser: number | null, sizeUser: number | null, minPixel: number) {
-        const item = this._areas.find((a) => a.component === component);
+        const item = this._areas.find(a => a.component === component);
 
         if (item) {
             item.orderUser = orderUser;
@@ -187,7 +188,7 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
      * @param area Area to delete
      */
     public removeArea(area: SplitAreaDirective) {
-        const item = this._areas.find((a) => a.component === area);
+        const item = this._areas.find(a => a.component === area);
 
         if (item) {
             const index = this._areas.indexOf(item);
@@ -210,20 +211,20 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
             return;
         }
 
-        const areaA = this._areas.find((a) => a.order === gutterOrder - 1);
-        const areaB = this._areas.find((a) => a.order === gutterOrder + 1);
+        const areaA = this._areas.find(a => a.order === gutterOrder - 1);
+        const areaB = this._areas.find(a => a.order === gutterOrder + 1);
         if (!areaA || !areaB) {
             return;
         }
 
         const prop = (this.direction === 'horizontal') ? 'offsetWidth' : 'offsetHeight';
         this.containerSize = this.elementRef.nativeElement[prop];
-        this.areaASize = this.containerSize * areaA.size / 100;
-        this.areaBSize = this.containerSize * areaB.size / 100;
+        this.areaAsize = this.containerSize * areaA.size / 100;
+        this.areaBsize = this.containerSize * areaB.size / 100;
 
         const start: Point = {
             x: startEvent.screenX,
-            y: startEvent.screenY,
+            y: startEvent.screenY
         };
 
         this.eventsDragFct.push(this.renderer.listen('document', 'mousemove', (e: MouseEvent) => this.dragEvent(e, start, areaA, areaB)));
@@ -243,7 +244,7 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
         this.stopDragging();
 
         // ORDERS: Set css 'order' property depending on user input or added order
-        const nbCorrectOrder = this._areas.filter((a) => a.orderUser !== null && !isNaN(a.orderUser)).length;
+        const nbCorrectOrder = this._areas.filter(a => a.orderUser !== null && !isNaN(a.orderUser)).length;
         if (nbCorrectOrder === this._areas.length) {
             this._areas.sort((a, b) => +a.orderUser - +b.orderUser);
         }
@@ -254,13 +255,13 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
         });
 
         // SIZES: Set css 'flex-basis' property depending on user input or equal sizes
-        const totalSize = this._areas.map((a) => a.sizeUser).reduce((acc, s) => acc + s, 0);
-        const toBeDefined = this._areas.filter((a) => !a.sizeUser || isNaN(a.sizeUser));
+        const totalSize = this._areas.map(a => a.sizeUser).reduce((acc, s) => acc + s, 0);
+        const toBeDefined = this._areas.filter(a => !a.sizeUser || isNaN(a.sizeUser));
 
         if ((totalSize < 99.99 || totalSize > 100.01) && this._areas.length > 1) {
             if (toBeDefined.length === 0) {
                 // Map to 100%
-                this._areas.forEach((a) => {
+                this._areas.forEach(a => {
                     const adjustedSize = Number(a.sizeUser) * 100 / totalSize;
                     a.size = adjustedSize;
                 });
@@ -268,22 +269,22 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
                 // Share the remaining size to the undefined areas
                 let remain = (100 - totalSize);
                 let toBeDefinedLength = toBeDefined.length;
-                toBeDefined.forEach((a) => {
+                toBeDefined.forEach(a => {
                     const size = remain / toBeDefinedLength--;
                     a.size = size;
                     remain -= size;
                 });
                 this._areas
-                    .filter((a) => a.sizeUser && !isNaN(a.sizeUser))
-                    .forEach((a) => a.size = Number(a.sizeUser));
+                    .filter(a => a.sizeUser && !isNaN(a.sizeUser))
+                    .forEach(a => a.size = Number(a.sizeUser));
             } else {
                 const size = Number((100 / this._areas.length).toFixed(3));
-                this._areas.forEach((a) => a.size = size);
+                this._areas.forEach(a => a.size = size);
             }
         } else if (totalSize === 0 && this._areas.length === 1) {
             this._areas[0].size = 100;
         } else {
-            this._areas.forEach((a) => a.size = Number(a.sizeUser));
+            this._areas.forEach(a => a.size = Number(a.sizeUser));
         }
 
         this.refreshStyleSizes();
@@ -292,7 +293,7 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
 
     private refreshStyleSizes() {
         const f = this.gutterSize * this.nbGutters / this._areas.length;
-        this._areas.forEach((a) => a.component.setStyle('flex-basis', `calc( ${a.size}% - ${f}px )`));
+        this._areas.forEach(a => a.component.setStyle('flex-basis', `calc( ${a.size}% - ${f}px )`));
     }
 
     private dragEvent(event: MouseEvent, start: Point, areaA: IAreaData, areaB: IAreaData) {
@@ -302,7 +303,7 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
 
         const end: Point = {
             x: event.screenX,
-            y: event.screenY,
+            y: event.screenY
         };
 
         this.drag(start, end, areaA, areaB);
@@ -311,8 +312,8 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
     private drag(start: Point, end: Point, areaA: IAreaData, areaB: IAreaData) {
         const offsetPixel = (this.direction === 'horizontal') ? (start.x - end.x) : (start.y - end.y);
 
-        const newSizePixelA = this.areaASize - offsetPixel;
-        const newSizePixelB = this.areaBSize + offsetPixel;
+        const newSizePixelA = this.areaAsize - offsetPixel;
+        const newSizePixelB = this.areaBsize + offsetPixel;
 
         const minPercentA = areaA.minPixel ? (areaA.minPixel + 5) / this.containerSize * 100 : 0;
         const minPercentB = areaB.minPixel ? (areaB.minPixel + 5) / this.containerSize * 100 : 0;
@@ -343,8 +344,9 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
             return;
         }
 
-        this._areas.forEach((a) => a.component.unlockEvents());
+        this._areas.forEach(a => a.component.unlockEvents());
 
+        // eslint-disable-next-line no-loops/no-loops
         while (this.eventsDragFct.length > 0) {
             const fct = this.eventsDragFct.pop();
             if (fct) {
@@ -353,15 +355,15 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
         }
 
         this.containerSize = 0;
-        this.areaASize = 0;
-        this.areaBSize = 0;
+        this.areaAsize = 0;
+        this.areaBsize = 0;
 
         this.isDragging = false;
         this.notify('end');
     }
 
     private notify(type: string) {
-        const data: number[] = this._areas.map((a) => a.size);
+        const data: number[] = this._areas.map(a => a.size);
 
         switch (type) {
             case 'start':

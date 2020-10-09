@@ -6,17 +6,17 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { CommonModule } from '@angular/common';
 import { Component, DebugElement } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 import { DejaEditableDirective } from './content-editable.directive';
 import { DejaEditableModule } from './index';
 
 @Component({
-    template: `<span deja-editable="false" [ngModel]="text"></span>`,
+    selector: 'DejaEditableContainerComponent',
+    template: '<span deja-editable="false" [ngModel]="text"></span>'
 })
 class DejaEditableContainerComponent {
     public text = 'Content to edit';
@@ -27,17 +27,15 @@ describe('DejaEditableDirective', () => {
     let editableDebugElement: DebugElement;
     let editableInstance: DejaEditableDirective;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        void TestBed.configureTestingModule({
             declarations: [
-                DejaEditableContainerComponent,
+                DejaEditableContainerComponent
             ],
             imports: [
-                BrowserAnimationsModule,
-                CommonModule,
                 FormsModule,
-                DejaEditableModule,
-            ],
+                DejaEditableModule
+            ]
         }).compileComponents();
 
         fixture = TestBed.createComponent(DejaEditableContainerComponent);
@@ -46,58 +44,59 @@ describe('DejaEditableDirective', () => {
         editableInstance = editableDebugElement.injector.get(DejaEditableDirective);
     }));
 
-    it('should create the component', async(() => {
-        expect(editableDebugElement).not.toBeNull();
-        expect(editableInstance).toBeTruthy();
+    it('should create the component', waitForAsync(() => {
+        void expect(editableDebugElement).not.toBeNull();
+        void expect(editableInstance).toBeTruthy();
     }));
 
-    it('should get and set the model', async(() => {
-        expect(editableInstance.value).toEqual('Content to edit');
+    it('should get and set the model', waitForAsync(() => {
+        void expect(editableInstance.value).toEqual('Content to edit');
         editableInstance.value = 'Content edited!';
-        expect(editableInstance.value).toEqual('Content edited!');
+        void expect(editableInstance.value).toEqual('Content edited!');
     }));
 
-    it('should able to pass in edition programatically', async(() => {
+    it('should able to pass in edition programatically', waitForAsync(() => {
         const element = editableDebugElement.nativeElement as HTMLElement;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const privateAccessInstance = editableInstance as any;
 
-        expect(editableInstance.editMode).toBeFalsy();
-        expect(editableInstance.inEdition).toBeFalsy();
-        expect(element.getAttribute('contenteditable')).toBeNull();
+        void expect(editableInstance.editMode).toBeFalsy();
+        void expect(editableInstance.inEdition).toBeFalsy();
+        void expect(element.getAttribute('contenteditable')).toBeNull();
         editableInstance.inEdition = 'true';
         fixture.detectChanges();
 
-        expect(editableInstance.inEdition).toBeTruthy();
-        expect(element.getAttribute('contenteditable')).toEqual('true');
+        void expect(editableInstance.inEdition).toBeTruthy();
+        void expect(element.getAttribute('contenteditable')).toEqual('true');
 
         editableInstance.disabled = 'true';
         fixture.detectChanges();
 
-        expect(editableInstance.inEdition).toBeFalsy();
-        expect(privateAccessInstance._disabled).toBeTruthy();
+        void expect(editableInstance.inEdition).toBeFalsy();
+        void expect(privateAccessInstance.disabled).toBeTruthy();
 
         editableInstance.inEdition = 'true';
         fixture.detectChanges();
 
-        expect(editableInstance.inEdition).toBeFalsy();
-        expect(privateAccessInstance._disabled).toBeTruthy();
+        void expect(editableInstance.inEdition).toBeFalsy();
+        void expect(privateAccessInstance.disabled).toBeTruthy();
 
         editableInstance.disabled = 'false';
         fixture.detectChanges();
 
         editableInstance.edit(true);
-        expect(editableInstance.inEdition).toBeTruthy();
+        void expect(editableInstance.inEdition).toBeTruthy();
     }));
 
-    it('should get and set multiline', async(() => {
-        expect(editableInstance.multiline).toBeFalsy();
+    it('should get and set multiline', waitForAsync(() => {
+        void expect(editableInstance.multiline).toBeFalsy();
         editableInstance.multiline = 'true';
-        expect(editableInstance.multiline).toBeTruthy();
+        void expect(editableInstance.multiline).toBeTruthy();
     }));
 
-    it('should get and set mandatory', async(() => {
-        expect(editableInstance.mandatory).toBeFalsy();
+    it('should get and set mandatory', waitForAsync(() => {
+        void expect(editableInstance.mandatory).toBeFalsy();
         editableInstance.mandatory = 'true';
-        expect(editableInstance.mandatory).toBeTruthy();
+        void expect(editableInstance.mandatory).toBeTruthy();
     }));
 });

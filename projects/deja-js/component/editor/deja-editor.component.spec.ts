@@ -6,25 +6,26 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { timer } from 'rxjs';
+
 import { DejaEditorComponent } from './deja-editor.component';
+import { DejaEditorModule } from './deja-editor.module';
 import { DejaEditorService } from './deja-editor.service';
 
 describe('DejaEditorComponent', () => {
     let component: DejaEditorComponent;
     let fixture: ComponentFixture<DejaEditorComponent>;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         // Define a ckeditor base path just for tests, because webpack configuration or asset plugin not working
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (<any>window).CKEDITOR_BASEPATH = 'https://dsi-hug.github.io/dejajs-components/assets/ckeditor/';
 
-        TestBed.configureTestingModule({
-            declarations: [
-                DejaEditorComponent,
-            ],
+        void TestBed.configureTestingModule({
             imports: [
+                DejaEditorModule
             ],
             providers: [DejaEditorService]
         }).compileComponents();
@@ -33,18 +34,19 @@ describe('DejaEditorComponent', () => {
         component = fixture.componentInstance;
     }));
 
-    it('should create the component', async(() => {
-        expect(component).toBeTruthy();
+    it('should create the component', waitForAsync(() => {
+        void expect(component).toBeTruthy();
     }));
 
-    it('should load ckeditor', (done) => {
+    it('should load ckeditor', done => {
         fixture.detectChanges();
-        fixture.whenStable().then(() => {
+        return fixture.whenStable().then(() => {
             timer(5000).subscribe(() => {
                 fixture.detectChanges();
-                expect(window.hasOwnProperty('CKEDITOR')).toBeTruthy();
+                // eslint-disable-next-line no-prototype-builtins
+                void expect(window.hasOwnProperty('CKEDITOR')).toBeTruthy();
                 const element = fixture.debugElement.query(By.css('textarea'));
-                expect(element).not.toBeNull();
+                void expect(element).not.toBeNull();
                 done();
             });
         });

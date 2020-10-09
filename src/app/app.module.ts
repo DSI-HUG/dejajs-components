@@ -17,8 +17,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DejaSidenavModule } from '@deja-js/component/sidenav';
-import { DejaMaterialColorsModule, DejaSlimScrollModule, IconModule } from '@deja-js/core';
-import { DejaTextMetricsModule } from '../../projects/deja-js/core/text-metrics/index';
+import { DejaMaterialColorsModule, DejaSlimScrollModule, DejaTextMetricsModule, IconModule } from '@deja-js/core';
+
 import { AppComponent } from './app.component';
 import { routing } from './app.routes';
 import { CountriesListService } from './services/countries-list.service';
@@ -53,7 +53,7 @@ import { PeopleService } from './services/people.service';
         CountriesService,
         FoldersService,
         NewsService,
-        PeopleService,
+        PeopleService
     ],
     bootstrap: [AppComponent]
 })

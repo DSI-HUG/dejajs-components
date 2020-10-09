@@ -13,7 +13,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 })
 export class DejaDateFormatPipe implements PipeTransform {
 
-    constructor(private momentDateAdapter: MomentDateAdapter) { }
+    public constructor(private momentDateAdapter: MomentDateAdapter) { }
 
     public transform(date: Date, format: string) {
         return this.momentDateAdapter.deserialize(date)?.format(format) || date;

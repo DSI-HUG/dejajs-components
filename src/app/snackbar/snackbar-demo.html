@@ -1,19 +1,19 @@
 <mat-tab-group [selectedIndex]="tabIndex" (selectedTabChange)="tabIndex = $event.index">
-	<!--<mat-tab label="OVERVIEW">-->
-	<!--<mat-card class="demo-card demo-basic">-->
-	<!--TODO-->
-	<!--</mat-card>-->
-	<!--</mat-tab>-->
-	<mat-tab label="API REFERENCE"></mat-tab>
-	<mat-tab label="EXAMPLES"></mat-tab>
+    <!--<mat-tab label="OVERVIEW">-->
+    <!--<mat-card class="demo-card demo-basic">-->
+    <!--TODO-->
+    <!--</mat-card>-->
+    <!--</mat-tab>-->
+    <mat-tab label="API REFERENCE"></mat-tab>
+    <mat-tab label="EXAMPLES"></mat-tab>
 </mat-tab-group>
 
 <mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
-	<deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/projects/deja-js/component/snackbar/readme.md'"></deja-markdown>
+    <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/develop/projects/deja-js/component/snackbar/readme.md'"></deja-markdown>
 </mat-card>
 
 <div class="demo-card" *ngIf="tabIndex === 1">
-	<!--
+    <!--
 			important:
 
 			using web-animations-js polyfill is mandatory for IE & Safari because
@@ -26,96 +26,96 @@
 			which will be translated to it's color and z index
 			-->
 
-	<!--
+    <!--
 			todo
 			check body position if scrollHeight > viewportHeight
 			check if html container but !outerContainerElement => position on viewport
 		-->
 
-	<div id="btnContainer">
-		<button mat-raised-button [style.background]="danger" (click)="push.emit('danger')">Danger</button>
-		<button mat-raised-button [style.background]="warning" (click)="push.emit('warning')">Warning</button>
-		<button mat-raised-button [style.background]="success" (click)="push.emit('success')">Success</button>
-		<button mat-raised-button [style.background]="info" (click)="push.emit('info')">Info</button>
-		<button mat-raised-button (click)="simpleGate = true">Simple</button>
-	</div>
+    <div id="btnContainer">
+        <button mat-raised-button [style.background]="danger" (click)="push.emit('danger')">Danger</button>
+        <button mat-raised-button [style.background]="warning" (click)="push.emit('warning')">Warning</button>
+        <button mat-raised-button [style.background]="success" (click)="push.emit('success')">Success</button>
+        <button mat-raised-button [style.background]="info" (click)="push.emit('info')">Info</button>
+        <button mat-raised-button (click)="simpleGate = true">Simple</button>
+    </div>
 
-	<!-- simple use case, single snackbar -->
-	<deja-snackbar *ngIf="simpleGate" alignment="top left" [duration]="2000" (onAnimationDone)="simpleGate = false">
-		<deja-message-box type="primary" horizontal>
-			Hello world ! I'm a simple snackbar.
-		</deja-message-box>
-	</deja-snackbar>
+    <!-- simple use case, single snackbar -->
+    <deja-snackbar *ngIf="simpleGate" alignment="top left" [duration]="2000" (onAnimationDone)="simpleGate = false">
+        <deja-message-box type="primary" horizontal>
+            Hello world ! I'm a simple snackbar.
+        </deja-message-box>
+    </deja-snackbar>
 
-	<!-- event driven from UI -->
-	<!-- this behavior is to be used to react to user behavior on the UI, snackbars MUST be disposed using user interraction -->
+    <!-- event driven from UI -->
+    <!-- this behavior is to be used to react to user behavior on the UI, snackbars MUST be disposed using user interraction -->
 
-	<!--inside a container-->
-	<section #containerEl id="container" [style.position]="'relative'">
-		<ng-template ngFor let-message [ngForOf]="infos | async">
-			<deja-snackbar *ngIf="message.gate" alignment="right" [outerContainerElement]="containerEl">
-				<deja-message-box type="primary" horizontal>
-					{{message.content}}
-					<ng-template #actionsTemplate>
-						<button mat-mini-fab class="action-button" [color]="'blank'" (click)="message.gate = false">
+    <!--inside a container-->
+    <section #containerEl id="container" [style.position]="'relative'">
+        <ng-template ngFor let-message [ngForOf]="infos$ | async">
+            <deja-snackbar *ngIf="message.gate" alignment="right" [outerContainerElement]="containerEl">
+                <deja-message-box type="primary" horizontal>
+                    {{message.content}}
+                    <ng-template #actionsTemplate>
+                        <button mat-mini-fab class="action-button" [color]="'blank'" (click)="message.gate = false">
 							<mat-icon>clear</mat-icon>
 						</button>
-					</ng-template>
-				</deja-message-box>
-			</deja-snackbar>
-		</ng-template>
-	</section>
+                    </ng-template>
+                </deja-message-box>
+            </deja-snackbar>
+        </ng-template>
+    </section>
 
-	<!--on the viewport-->
-	<ng-template ngFor let-message [ngForOf]="successes | async">
-		<deja-snackbar *ngIf="message.gate" alignment="bottom left">
-			<deja-message-box type="success" horizontal>
-				{{message.content}}
-				<ng-template #actionsTemplate>
-					<button mat-mini-fab class="action-button" [color]="'blank'" (click)="message.gate = false">
+    <!--on the viewport-->
+    <ng-template ngFor let-message [ngForOf]="successes$ | async">
+        <deja-snackbar *ngIf="message.gate" alignment="bottom left">
+            <deja-message-box type="success" horizontal>
+                {{message.content}}
+                <ng-template #actionsTemplate>
+                    <button mat-mini-fab class="action-button" [color]="'blank'" (click)="message.gate = false">
 						<mat-icon>clear</mat-icon>
 					</button>
-				</ng-template>
-			</deja-message-box>
-		</deja-snackbar>
-	</ng-template>
+                </ng-template>
+            </deja-message-box>
+        </deja-snackbar>
+    </ng-template>
 
-	<ng-template ngFor let-message [ngForOf]="warnings | async">
-		<deja-snackbar *ngIf="message.gate" alignment="bottom">
-			<deja-message-box type="warn" horizontal>
-				{{message.content}}
-				<ng-template #actionsTemplate>
-					<button mat-mini-fab class="action-button" [color]="'blank'" (click)="message.gate = false">
+    <ng-template ngFor let-message [ngForOf]="warnings$ | async">
+        <deja-snackbar *ngIf="message.gate" alignment="bottom">
+            <deja-message-box type="warn" horizontal>
+                {{message.content}}
+                <ng-template #actionsTemplate>
+                    <button mat-mini-fab class="action-button" [color]="'blank'" (click)="message.gate = false">
 						<mat-icon>clear</mat-icon>
 					</button>
-				</ng-template>
-			</deja-message-box>
-		</deja-snackbar>
-	</ng-template>
+                </ng-template>
+            </deja-message-box>
+        </deja-snackbar>
+    </ng-template>
 
-	<ng-template ngFor let-message [ngForOf]="dangers | async">
-		<deja-snackbar *ngIf="message.gate" alignment="bottom right">
-			<deja-message-box type="danger" horizontal>
-				{{message.content}}
-				<ng-template #actionsTemplate>
-					<button mat-mini-fab class="action-button" [color]="'blank'" (click)="message.gate = false">
+    <ng-template ngFor let-message [ngForOf]="dangers$ | async">
+        <deja-snackbar *ngIf="message.gate" alignment="bottom right">
+            <deja-message-box type="danger" horizontal>
+                {{message.content}}
+                <ng-template #actionsTemplate>
+                    <button mat-mini-fab class="action-button" [color]="'blank'" (click)="message.gate = false">
 						<mat-icon>clear</mat-icon>
 					</button>
-				</ng-template>
-			</deja-message-box>
-		</deja-snackbar>
-	</ng-template>
+                </ng-template>
+            </deja-message-box>
+        </deja-snackbar>
+    </ng-template>
 
-	<section style="width: 400px; height: 4000px; border: red solid 1px;">
-		<!-- server push like feed -->
-		<!-- this behavior is to be used to push message to the client for example, snackbars MUST be displosed by themself -->
-		<!-- to do so, define duration @Input and negate flag used for disposal using the onAnimationDone @Output -->
-		<ng-template ngFor let-message [ngForOf]="messages | async">
-			<deja-snackbar *ngIf="message.gate" alignment="left" [duration]="5000" (onAnimationDone)="message.gate = false">
-				<deja-message-box type="primary" horizontal>
-					{{message.content}}
-				</deja-message-box>
-			</deja-snackbar>
-		</ng-template>
-	</section>
+    <section style="width: 400px; height: 4000px; border: red solid 1px;">
+        <!-- server push like feed -->
+        <!-- this behavior is to be used to push message to the client for example, snackbars MUST be displosed by themself -->
+        <!-- to do so, define duration @Input and negate flag used for disposal using the onAnimationDone @Output -->
+        <ng-template ngFor let-message [ngForOf]="messages$ | async">
+            <deja-snackbar *ngIf="message.gate" alignment="left" [duration]="5000" (onAnimationDone)="message.gate = false">
+                <deja-message-box type="primary" horizontal>
+                    {{message.content}}
+                </deja-message-box>
+            </deja-snackbar>
+        </ng-template>
+    </section>
 </div>

@@ -16,14 +16,15 @@ import { MatInputModule } from '@angular/material/input';
 import { DejaDragDropModule } from '@deja-js/component/dragdrop';
 import { DejaListLoaderModule } from '@deja-js/component/loaders';
 import { DejaChildValidatorModule, DejaItemModule, DejaTextMetricsModule } from '@deja-js/core';
+
 import { DejaTreeListComponent } from './tree-list.component';
 
 @NgModule({
     declarations: [
-        DejaTreeListComponent,
+        DejaTreeListComponent
     ],
     exports: [
-        DejaTreeListComponent,
+        DejaTreeListComponent
     ],
     imports: [
         CommonModule,
@@ -36,8 +37,8 @@ import { DejaTreeListComponent } from './tree-list.component';
         DejaListLoaderModule,
         DejaDragDropModule,
         DejaTextMetricsModule,
-        DejaItemModule,
-    ],
+        DejaItemModule
+    ]
 })
 export class DejaTreeListModule { }
 

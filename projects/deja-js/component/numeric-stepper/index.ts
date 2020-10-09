@@ -13,8 +13,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-
 import { DejaChildValidatorModule, DejaTextMetricsModule } from '@deja-js/core';
+
 import { DejaNumericStepperComponent } from './numeric-stepper.component';
 
 @NgModule({
@@ -26,14 +26,14 @@ import { DejaNumericStepperComponent } from './numeric-stepper.component';
         MatButtonModule,
         MatFormFieldModule,
         MatIconModule,
-        MatInputModule,
+        MatInputModule
     ],
     exports: [
-        DejaNumericStepperComponent,
+        DejaNumericStepperComponent
     ],
     declarations: [
-        DejaNumericStepperComponent,
-    ],
+        DejaNumericStepperComponent
+    ]
 })
 export class DejaNumericStepperModule { }
 

@@ -14,13 +14,13 @@ import { RegExpUtils } from '@deja-js/core/util';
     encapsulation: ViewEncapsulation.None,
     selector: 'deja-bold-query',
     styleUrls: [
-        './bold-query.component.scss',
+        './bold-query.component.scss'
     ],
-    template: `<div [innerHTML]="content"></div>`,
+    template: '<div [innerHTML]="content"></div>'
 })
 export class DejaBoldQueryComponent {
     private _query: string;
-    private _value: any;
+    private _value: string;
     private _content: string;
     private _regexpOptions = 'i';
     private _firstOccurenceOnly = false;
@@ -49,7 +49,7 @@ export class DejaBoldQueryComponent {
     /*
      * The model value. Usually the model display label.
      */
-    public set value(value: any) {
+    public set value(value: string) {
         this._value = value;
         this.refresh();
     }
@@ -102,7 +102,7 @@ export class DejaBoldQueryComponent {
         if (this._value && this._query && this._query.length > 0) {
             const regexpPattern = this._atTheBeginningOfWordOnly ? (`\\b${RegExpUtils.escapeRegExp(this._query)}`) : RegExpUtils.escapeRegExp(this._query);
             const sc = new RegExp(regexpPattern, this._regexpOptions);
-            const value = this._value.toString() as string;
+            const value = this._value.toString();
             const search = Diacritics.remove(value);
             const splitted = search.split(sc);
             let position = 0;
@@ -110,7 +110,7 @@ export class DejaBoldQueryComponent {
             const contents = [] as string[];
             let firstOccurence = true;
             let nbOccurence = 0;
-            splitted.forEach((text) => {
+            splitted.forEach(text => {
                 if (text) {
                     contents.push(value.slice(position, position + text.length));
                     position += text.length;

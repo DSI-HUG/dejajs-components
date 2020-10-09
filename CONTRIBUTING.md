@@ -86,7 +86,7 @@ Before you submit your Pull Request (PR) consider the following guidelines:
     git push my-fork my-fix-branch
     ```
 
-* In GitHub, send a pull request to `deja-js/component:dev`.
+* In GitHub, send a pull request to `deja-js/component:develop`.
 * If we suggest changes then:
   * Make the required updates.
   * Re-run the test suites to ensure tests are still passing.

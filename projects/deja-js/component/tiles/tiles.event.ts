@@ -7,6 +7,7 @@
  */
 
 import { IDejaCancelableEvent } from '@deja-js/core';
+
 import { DejaTile } from './tile.class';
 
 export interface IDejaTilesEvent extends CustomEvent {

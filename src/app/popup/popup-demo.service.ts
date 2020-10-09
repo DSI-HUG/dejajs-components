@@ -8,7 +8,8 @@
 
 import { Injectable, InjectionToken } from '@angular/core';
 
-export const CONTAINER_DATA = new InjectionToken<{}>('CONTAINER_DATA');
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const CONTAINER_DATA = new InjectionToken<unknown>('CONTAINER_DATA');
 
 @Injectable()
 export class PopupDemoService {

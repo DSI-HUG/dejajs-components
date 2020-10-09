@@ -12,7 +12,7 @@ export interface HSL {
 }
 
 export class Color {
-    private static colorNames = {
+    private static COLOR_NAMES = {
         aliceblue: '#f0f8ff',
         antiquewhite: '#faebd7',
         aqua: '#00ffff',
@@ -153,18 +153,26 @@ export class Color {
         white: '#ffffff',
         whitesmoke: '#f5f5f5',
         yellow: '#ffff00',
-        yellowgreen: '#9acd3',
-    } as { [color: string]: string };
+        yellowgreen: '#9acd3'
+    } as Record<string, string>;
 
     private _r: number;
     private _g: number;
     private _b: number;
     private _a: number;
 
+    public constructor(r?: number, g?: number, b?: number, a?: number) {
+        this._r = r;
+        this._g = g;
+        this._b = b;
+        this._a = a;
+    }
+
     public static equals(c1: Color, c2: Color) {
         return !c1 === !c2 && !c1.isEmpty() && c1.r === c2.r && c1.g === c2.g && c1.b === c2.b && c1.a === c2.a;
     }
 
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     public static fromHSL(h: number, s: number, l: number) {
         let r: number;
         let g: number;
@@ -216,7 +224,7 @@ export class Color {
         let g: number;
         let b: number;
         let a: number;
-        let startIndex = hex[0] === '#' ? 1 : 0;
+        let startIndex = hex.startsWith('#') ? 1 : 0;
         switch (hex.length - startIndex) {
             case 3:
                 r = parseInt(hex[startIndex] + hex[startIndex], 16);
@@ -250,9 +258,9 @@ export class Color {
     public static parse(color: string) {
         if (!color || color.length === 0) {
             return new Color();
-        } else if (Color.colorNames[color]) {
-            return Color.fromHex(Color.colorNames[color]);
-        } else if (color[0] === '#') {
+        } else if (Color.COLOR_NAMES[color]) {
+            return Color.fromHex(Color.COLOR_NAMES[color]);
+        } else if (color.startsWith('#')) {
             return Color.fromHex(color);
         } else {
             const rgb = /rgb\((\d{1,3}), (\d{1,3}), (\d{1,3})\)/.exec(color);
@@ -270,14 +278,8 @@ export class Color {
                 }
                 return new Color(+rgba[1], +rgba[2], +rgba[3], a);
             }
+            return undefined;
         }
-    }
-
-    constructor(r?: number, g?: number, b?: number, a?: number) {
-        this._r = r;
-        this._g = g;
-        this._b = b;
-        this._a = a;
     }
 
     public get r() {
@@ -336,6 +338,7 @@ export class Color {
         }
     }
 
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     public toHSL(): HSL {
         const r = this.r / 255;
         const g = this.g / 255;

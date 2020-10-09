@@ -18,28 +18,29 @@ import { Color, DejaConnectionPositionPair } from '@deja-js/core';
     encapsulation: ViewEncapsulation.None,
     selector: 'deja-color-picker',
     styleUrls: [
-        './color-picker.component.scss',
+        './color-picker.component.scss'
     ],
-    templateUrl: './color-picker.component.html',
+    templateUrl: './color-picker.component.html'
 })
 export class DejaColorPickerComponent implements ControlValueAccessor {
+    @HostBinding('attr.disabled') public _disabled: boolean = null;
+
     /** Retourne ou definit les couleurs selectionables affichées. */
     @Input() public colors: Color[];
 
     @Input() public resetcolor: string = null;
 
     /** Déclenché lorsqu'une couleur est survolée par la souris. */
-    @Output() public colorhover = new EventEmitter();
+    @Output() public readonly colorhover = new EventEmitter();
+
+    /** Overlay pane containing the options. */
+    @ViewChild(DejaOverlayComponent, { static: true }) private dejaOverlayCmp: DejaOverlayComponent;
 
     /** Internal use */
     public ownerElement: HTMLElement;
 
     private _small = false;
     private _value: Color;
-    @HostBinding('attr.disabled') public _disabled: boolean = null;
-
-    /** Overlay pane containing the options. */
-    @ViewChild(DejaOverlayComponent, { static: true }) private dejaOverlayCmp: DejaOverlayComponent;
 
     private _isOpen = false;
 
@@ -64,12 +65,9 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
         return this._positions;
     }
 
-    protected onTouchedCallback = (_a: any) => { };
-    protected onChangeCallback = (_a: any) => { };
-
-    constructor(elementRef: ElementRef, @Self() @Optional() public _control: NgControl, private changeDetectorRef: ChangeDetectorRef) {
-        if (this._control) {
-            this._control.valueAccessor = this;
+    public constructor(elementRef: ElementRef, @Self() @Optional() public control: NgControl, private changeDetectorRef: ChangeDetectorRef) {
+        if (this.control) {
+            this.control.valueAccessor = this;
         }
         this.ownerElement = elementRef.nativeElement;
     }
@@ -116,12 +114,12 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
     }
 
     // From ControlValueAccessor interface
-    public registerOnChange(fn: any) {
+    public registerOnChange(fn: (_a: unknown) => void) {
         this.onChangeCallback = fn;
     }
 
     // From ControlValueAccessor interface
-    public registerOnTouched(fn: any) {
+    public registerOnTouched(fn: () => void) {
         this.onTouchedCallback = fn;
     }
 
@@ -132,13 +130,11 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
 
     /** Affiche le color picker. */
     public show(event: MouseEvent) {
-        if (this.disabled) {
-            return false;
+        if (!this.disabled) {
+            this.dejaOverlayCmp.show(event);
+            this.isOpen = true;
+            this.changeDetectorRef.markForCheck();
         }
-
-        this.dejaOverlayCmp.show(event);
-        this.isOpen = true;
-        this.changeDetectorRef.markForCheck();
         return false;
     }
 
@@ -153,7 +149,11 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
     }
 
     public getStyle() {
-        const backgroundColor = this.value && this.value.toHex();
+        const backgroundColor = this.value?.toHex();
         return backgroundColor ? { 'background-color': backgroundColor } : null;
     }
+
+    protected onTouchedCallback = () => undefined as void;
+    protected onChangeCallback = (_a: unknown) => undefined as void;
+
 }

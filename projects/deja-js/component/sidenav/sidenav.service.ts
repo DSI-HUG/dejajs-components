@@ -16,8 +16,6 @@ export class DejaSidenavService {
     public mode: 'over' | 'side' = 'side';
     public hidden = false;
 
-    constructor() { }
-
     public open(): void {
         this.opened = true;
     }

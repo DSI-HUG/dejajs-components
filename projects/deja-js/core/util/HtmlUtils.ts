@@ -8,10 +8,13 @@
 
 export class HtmlUtils {
 
-    public static getEncodedURIComponent(jsonObjParameters: any): string {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    public static getEncodedURIComponent(jsonObjParameters: Record<string, string |number | boolean>): string {
         if (jsonObjParameters) {
             const params: string[] = [];
+            // eslint-disable-next-line no-loops/no-loops
             for (const p in jsonObjParameters) {
+                // eslint-disable-next-line no-prototype-builtins
                 if (jsonObjParameters.hasOwnProperty(p)) {
                     params.push(`${encodeURIComponent(p)}=${encodeURIComponent(jsonObjParameters[p])}`);
                 }

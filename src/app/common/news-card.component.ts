@@ -7,21 +7,18 @@
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+
 import { News } from './news.model';
 
 @Component({
     selector: 'news-card',
     styleUrls: ['./news-card.component.scss'],
-    templateUrl: 'news-card.component.html',
+    templateUrl: 'news-card.component.html'
 })
 export class NewsCardComponent {
     @Input()
     public item: News;
 
     @Output()
-    public imageLoaded = new EventEmitter();
-
-    public constructor() {
-
-    }
+    public readonly imageLoaded = new EventEmitter();
 }

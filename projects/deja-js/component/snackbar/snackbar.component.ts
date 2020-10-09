@@ -17,7 +17,7 @@ import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { Destroy } from '@deja-js/core';
 import { from, Subject, Subscription, timer } from 'rxjs';
-import { debounce, delay, first, takeUntil, tap } from 'rxjs/operators';
+import { debounce, delay, take, takeUntil, tap } from 'rxjs/operators';
 
 interface IAnimation {
     before: CSSStyleDeclaration;
@@ -30,7 +30,7 @@ interface IAnimation {
 @Component({
     selector: 'deja-snackbar',
     styleUrls: ['./snackbar.component.scss'],
-    template: `<ng-content></ng-content>`,
+    template: '<ng-content></ng-content>'
 
 })
 export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewInit, OnDestroy {
@@ -38,7 +38,13 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
     /**
      * all snackbar instances
      */
-    private static instances: DejaSnackbarComponent[] = [];
+    private static INSTANCES: DejaSnackbarComponent[] = [];
+
+    /**
+ * callback used to negate the boolean responsible for the presence of the snackbar on the dom (see demo)
+ */
+    // eslint-disable-next-line @angular-eslint/no-output-on-prefix
+    @Output() public readonly onAnimationDone = new EventEmitter();
 
     /**
      * inner container
@@ -59,11 +65,6 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
      * set a container for the snackbar instead of default behavior (viewport)
      */
     @Input() public outerContainerElement: HTMLElement;
-
-    /**
-     * callback used to negate the boolean responsible for the presence of the snackbar on the dom (see demo)
-     */
-    @Output() public onAnimationDone: EventEmitter<any> = new EventEmitter();
 
     /**
      * inner container element, represent the snackbar since the host has no height width and a position relative to it's html declaration
@@ -127,7 +128,7 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
             bottom: false,
             left: false,
             right: false,
-            top: false,
+            top: false
         };
 
         // set _alignments
@@ -146,19 +147,20 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
      * @param elementRef
      * @param renderer
      */
-    constructor(private elementRef: ElementRef) {
+    public constructor(private elementRef: ElementRef) {
         super();
 
-        if (!DejaSnackbarComponent.instances) {
-            DejaSnackbarComponent.instances = [];
+        if (!DejaSnackbarComponent.INSTANCES) {
+            DejaSnackbarComponent.INSTANCES = [];
         }
 
-        DejaSnackbarComponent.instances.push(this);
+        DejaSnackbarComponent.INSTANCES.push(this);
 
         const applyParams = (styles: CSSStyleDeclaration) => {
             Object.keys(styles)
-                .forEach((key) => {
-                    (<any>this.host.style)[key] = (<any>styles)[key];
+                .forEach(key => {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    (<any> this.host.style)[key] = (<any>styles)[key];
                 });
         };
 
@@ -197,7 +199,7 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
         // Choose animation depending on alignment
         const anchors = [] as string[];
 
-        Object.keys(this._alignments).forEach((key) => {
+        Object.keys(this._alignments).forEach(key => {
             if (this._alignments[key]) {
                 anchors.push(key);
             }
@@ -224,7 +226,7 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
 
         if (!this.outerContainerElement) {
             // Set default outer container if none specified
-            this.outerContainerElement = this.host.ownerDocument.body as HTMLElement;
+            this.outerContainerElement = this.host.ownerDocument.body;
         } else {
             // Otherwise, set inner container position to absolute for correct placement of snackbars
             this.host.classList.add('absolute');
@@ -236,9 +238,9 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
 
         // if a duration has been been specified, launch the 'leave' animation after snackbar's lifetime flow, then emit amination done
         timer(this.duration + this.delay).pipe(
-            first(),
+            take(1),
             tap(() => {
-                if (!!this.duration) {
+                if (this.duration) {
                     this.launchLeaveAnimation();
                 }
             }),
@@ -254,8 +256,8 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
         super.ngOnDestroy();
 
         // check if snackbars have to move (if they were created after the one deleted)
-        if (!!DejaSnackbarComponent.instances.length) {
-            DejaSnackbarComponent.instances
+        if (DejaSnackbarComponent.INSTANCES.length) {
+            DejaSnackbarComponent.INSTANCES
                 .filter(instance => this.outerContainerElement === instance.outerContainerElement)
                 .filter(instance => this.anchor === instance.anchor)
                 .forEach(instance => {
@@ -265,7 +267,7 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
                 });
         }
         // remove the soon to be destroyed snackbar from the instances array
-        DejaSnackbarComponent.instances = DejaSnackbarComponent.instances
+        DejaSnackbarComponent.INSTANCES = DejaSnackbarComponent.INSTANCES
             .filter(instance => this !== instance);
 
         this.animate$sub.unsubscribe();
@@ -295,24 +297,24 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
      *
      * @return cumulated height of all snackbars, precedent instance height, width and height of the innerContainer
      */
-    private computePosition(): any {
+    private computePosition() {
         // Inner container
         const innerContainerElementBounds = this.host.getBoundingClientRect();
         const innerContainerWidth = innerContainerElementBounds.width;
         const innerContainerHeight = innerContainerElementBounds.height;
 
         // Instances sharing the same outer container and the same anchor
-        const instancesInSameZone = DejaSnackbarComponent.instances
+        const instancesInSameZone = DejaSnackbarComponent.INSTANCES
             .filter((instance: DejaSnackbarComponent) => this.outerContainerElement === instance.outerContainerElement)
             .filter((instance: DejaSnackbarComponent) => this.anchor === instance.anchor)
             .filter((instance: DejaSnackbarComponent) => this !== instance);
 
         let precedentInstanceHeight = 0;
 
-        if (!!instancesInSameZone) {
+        if (instancesInSameZone) {
             const precedentInstance = instancesInSameZone[instancesInSameZone.length - 1];
 
-            if (!!precedentInstance) {
+            if (precedentInstance) {
                 const innerContainerElement = precedentInstance.elementRef.nativeElement as HTMLElement;
                 precedentInstanceHeight = innerContainerElement.getBoundingClientRect().height;
             }
@@ -333,7 +335,7 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
             innerContainerWidth,
             innerContainerHeight,
             precedentInstanceHeight,
-            computedHeight,
+            computedHeight
         };
     }
 
@@ -416,13 +418,13 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
 
         this.animate$.next({
             before: {
-                transform: `${transform}`,
+                transform: `${transform}`
             },
             after: {
-                transform: `matrix(1,0,0,1,0,${sixth + ((height + this.marginTop) * direction)})`,
+                transform: `matrix(1,0,0,1,0,${sixth + ((height + this.marginTop) * direction)})`
             },
             duration: this.adaptAnimationDuration,
-            easing: 'ease',
+            easing: 'ease'
         } as IAnimation);
     }
 
@@ -438,15 +440,15 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
         this.animate$.next({
             before: {
                 opacity: '0',
-                transform: `translateY(${direction * 200}%)`,
+                transform: `translateY(${direction * 200}%)`
             },
             after: {
                 opacity: '1',
-                transform: `translateY(0)`,
+                transform: 'translateY(0)'
             },
             delay: this.delay,
             duration: this.enterAnimationDuration,
-            easing: 'ease',
+            easing: 'ease'
         } as IAnimation);
     }
 
@@ -456,13 +458,13 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
     private launchLeaveAnimation() {
         this.animate$.next({
             before: {
-                opacity: '1',
+                opacity: '1'
             },
             after: {
-                opacity: '0',
+                opacity: '0'
             },
             duration: this.leaveAnimationDuration,
-            easing: 'ease',
+            easing: 'ease'
         } as IAnimation);
     }
 }

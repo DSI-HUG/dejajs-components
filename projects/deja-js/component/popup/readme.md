@@ -25,7 +25,7 @@ Exemple
 
 `ViewContainerRef` est injecté dans le constructeur
 ```
-    constructor(private dpiDialogService: DpiDialogService,
+    public constructor(private dpiDialogService: DpiDialogService,
                 private viewContainerRef: ViewContainerRef) {
     }
 ```

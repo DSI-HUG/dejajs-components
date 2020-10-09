@@ -6,6 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+
 import { DejaPopupAction } from '../../model/popup-action.model';
 import { DejaPopupConfig, DialogToolbarColor, DialogToolbarType } from '../../model/popup-config.model';
 
@@ -15,9 +16,10 @@ import { DejaPopupConfig, DialogToolbarColor, DialogToolbarType } from '../../mo
     styleUrls: ['./popup-toolbar.component.scss']
 })
 export class DejaPopupToolbarComponent {
+    @Output() public readonly actionSelected = new EventEmitter<DejaPopupAction>();
 
     @Input()
-    public set config(conf: DejaPopupConfig) {
+    public set config(conf: DejaPopupConfig<unknown>) {
         this.color = conf.toolbarColor;
         this.title = conf.title;
         this.iconName = conf.toolbarIconName;
@@ -27,7 +29,7 @@ export class DejaPopupToolbarComponent {
         this.isFullScreen = conf.fullscreen;
 
         if (!conf.fullscreen) {
-            this.defaultActions.unshift(this.buttonFullscreen);
+            this.defaultActions.unshift(this.buttonFullscreenExit);
         } else if (conf.buttonFullscreenExit !== false) {
             this.defaultActions.unshift(this.buttonFullscreenExit);
         }
@@ -37,6 +39,8 @@ export class DejaPopupToolbarComponent {
         }
     }
 
+    public defaultActions: DejaPopupAction[];
+
     public color: DialogToolbarColor;
     public title: string;
     public iconName: string;
@@ -45,35 +49,31 @@ export class DejaPopupToolbarComponent {
     private dialogId: string;
     private isFullScreen: boolean;
 
-    @Output() public actionSelected = new EventEmitter<DejaPopupAction>();
-
-    public defaultActions: DejaPopupAction[];
-
     private buttonClose = {
         name: 'toolbar-close',
         icon: 'close',
-        label: 'Close',
+        label: 'Close'
     } as DejaPopupAction;
 
     private buttonFullscreen = {
         name: 'toolbar-fullscreen',
         icon: 'fullscreen',
-        label: 'Fullscreen',
+        label: 'Fullscreen'
     } as DejaPopupAction;
 
     private buttonFullscreenExit = {
         name: 'toolbar-fullscreen-exit',
         icon: 'fullscreen_exit',
-        label: 'Exit fullscreen',
+        label: 'Exit fullscreen'
     } as DejaPopupAction;
 
     private buttonMinimize = {
         name: 'toolbar-minify',
         icon: 'remove',
-        label: 'Dock',
+        label: 'Dock'
     } as DejaPopupAction;
 
-    constructor() {
+    public constructor() {
         this.defaultActions = [this.buttonClose];
     }
 
@@ -105,5 +105,6 @@ export class DejaPopupToolbarComponent {
             return false;
         }
         this.defaultActions.splice(idx, 1, newButton);
+        return undefined;
     }
 }

@@ -16,6 +16,4 @@ export class DejaTagDemoComponent {
     public tabIndex = 1;
 
     public values = ['HTML5', 'ANGULAR'];
-
-    constructor() { }
 }

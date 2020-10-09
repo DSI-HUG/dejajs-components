@@ -6,6 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { Component, Input } from '@angular/core';
+
 import { DejaPopupConfig } from '../../model/popup-config.model';
 
 @Component({
@@ -18,7 +19,7 @@ export class DejaPopupContentComponent {
     public content: string[];
 
     @Input()
-    public set config(value: DejaPopupConfig) {
+    public set config(value: DejaPopupConfig<unknown>) {
         if (!value.content) {
             this.content = [];
         } else if (typeof value.content === 'string') {

@@ -14,13 +14,13 @@ import { DatePipe } from '@angular/common';
 export class DateUtils {
     public static SYSTEM_DATE_FORMAT = 'yyyy-MM-dd HH:mm:ss';
 
-    private static datePipe = new DatePipe('fr-CH');
+    private static DATE_PIPE = new DatePipe('fr-CH');
 
     /**
      * Fromat a javascript date object to a 'yyyy-MM-dd HH:mm:ss' String Format
      * @param date
      */
     public static formatSystem(date: Date): string {
-        return DateUtils.datePipe.transform(date, DateUtils.SYSTEM_DATE_FORMAT);
+        return DateUtils.DATE_PIPE.transform(date, DateUtils.SYSTEM_DATE_FORMAT);
     }
 }

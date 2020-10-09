@@ -10,6 +10,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, In
 import { IDejaChipsComponentCloseEvent } from '@deja-js/component/chips';
 import { IDejaDragEvent, IDejaDropEvent } from '@deja-js/component/dragdrop';
 import { DejaClipboardService } from '@deja-js/core';
+
 import { IDejaGridColumn } from '../data-grid-column/data-grid-column';
 import { IDejaGridGroupsEvent } from './data-grid-group';
 
@@ -18,13 +19,13 @@ import { IDejaGridGroupsEvent } from './data-grid-group';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'deja-grid-grouparea',
     styleUrls: ['./data-grid-grouparea.component.scss'],
-    templateUrl: './data-grid-grouparea.component.html',
+    templateUrl: './data-grid-grouparea.component.html'
 })
 export class DejaGridGroupAreaComponent {
     /** Cet évenement est levé lorsque le model de groupe est modifié */
-    @Output() public groupsChanged = new EventEmitter<IDejaGridGroupsEvent>();
+    @Output() public readonly groupsChanged = new EventEmitter<IDejaGridGroupsEvent>();
     /** Cet évenement est levé lorsqu'un group est supprimé du model */
-    @Output() public groupRemoved = new EventEmitter<IDejaChipsComponentCloseEvent>();
+    @Output() public readonly groupRemoved = new EventEmitter<IDejaChipsComponentCloseEvent>();
     private _groups = [] as IDejaGridColumn[];
     private columnGroupKey = 'deja-grid-column';
     private groupGroupKey = 'deja-grid-group';
@@ -40,7 +41,7 @@ export class DejaGridGroupAreaComponent {
         this._groups = columns || [];
     }
 
-    constructor(private changeDetectorRef: ChangeDetectorRef, @Optional() private clipboardService: DejaClipboardService) { }
+    public constructor(private changeDetectorRef: ChangeDetectorRef, @Optional() private clipboardService: DejaClipboardService) { }
 
     public getDragContext(group: IDejaGridColumn) {
         if (!this.clipboardService) {
@@ -50,13 +51,14 @@ export class DejaGridGroupAreaComponent {
         // console.log(`getDragContext ` + group.name + ' ' + Date.now());
         return {
             dragendcallback: (event: IDejaDragEvent) => {
+                // eslint-disable-next-line no-prototype-builtins
                 if (!event.dragInfo.hasOwnProperty(this.columnGroupKey)) {
                     return;
                 }
             },
             dragstartcallback: (event: IDejaDragEvent) => {
                 event.dragInfo[this.groupGroupKey] = group;
-            },
+            }
         };
     }
 
@@ -65,34 +67,36 @@ export class DejaGridGroupAreaComponent {
             return null;
         }
 
-        const raiseEvent = (group: IDejaGridColumn) => {
+        const raiseEvent = (evt: Event, group: IDejaGridColumn) => {
             const e = {
                 column: group,
                 columns: this.groups,
-                originalEvent: event,
+                originalEvent: evt
             } as IDejaGridGroupsEvent;
 
             this.groupsChanged.emit(e);
-            event.preventDefault();
+            evt.preventDefault();
         };
 
         const dragcallback = (event: IDejaDropEvent) => {
+            // eslint-disable-next-line no-prototype-builtins
             if (event.dragInfo.hasOwnProperty(this.columnGroupKey)) {
                 const sourceColumn = event.dragInfo[this.columnGroupKey] as IDejaGridColumn;
-                if (!this.groups.find((column) => column === sourceColumn)) {
+                if (!this.groups.find(column => column === sourceColumn)) {
                     event.preventDefault();
                 }
 
+            // eslint-disable-next-line no-prototype-builtins
             } else if (event.dragInfo.hasOwnProperty(this.groupGroupKey)) {
-                const targetElement = this.getGroupElementFromHTMLElement(event.target as HTMLElement);
-                const attrIndex = (targetElement && targetElement.getAttribute('index')) || null;
+                const targetElement = this.getGroupElementFromHtmlElement(event.target as HTMLElement);
+                const attrIndex = (targetElement?.getAttribute('index')) || null;
                 const targetIndex = attrIndex !== null ? +attrIndex : null;
                 if (targetIndex === null) {
                     return;
                 }
 
                 const sourceColumn = event.dragInfo[this.groupGroupKey] as IDejaGridColumn;
-                const sourceIndex = this.groups.findIndex((column) => column === sourceColumn);
+                const sourceIndex = this.groups.findIndex(column => column === sourceColumn);
 
                 // Dead zones
                 if (sourceIndex === targetIndex) {
@@ -103,7 +107,7 @@ export class DejaGridGroupAreaComponent {
                 this.groups.splice(sourceIndex, 1);
                 this.groups.splice(targetIndex, 0, sourceColumn);
 
-                raiseEvent(sourceColumn);
+                raiseEvent(event, sourceColumn);
 
                 this.changeDetectorRef.markForCheck();
 
@@ -118,11 +122,12 @@ export class DejaGridGroupAreaComponent {
             dragentercallback: dragcallback,
             dragovercallback: dragcallback,
             dropcallback: (event: IDejaDropEvent) => {
+                // eslint-disable-next-line no-prototype-builtins
                 if (event.dragInfo.hasOwnProperty(this.columnGroupKey)) {
                     const sourceColumn = event.dragInfo[this.columnGroupKey] as IDejaGridColumn;
 
-                    const targetElement = this.getGroupElementFromHTMLElement(event.target as HTMLElement);
-                    const attrIndex = (targetElement && targetElement.getAttribute('index')) || null;
+                    const targetElement = this.getGroupElementFromHtmlElement(event.target as HTMLElement);
+                    const attrIndex = (targetElement?.getAttribute('index')) || null;
                     const targetIndex = attrIndex !== null ? +attrIndex : null;
 
                     if (targetIndex !== null) {
@@ -138,15 +143,16 @@ export class DejaGridGroupAreaComponent {
                         this.groups.push(sourceColumn);
                     }
 
-                    raiseEvent(sourceColumn);
+                    raiseEvent(event, sourceColumn);
 
+                // eslint-disable-next-line no-prototype-builtins
                 } else if (event.dragInfo.hasOwnProperty(this.groupGroupKey)) {
                     const sourceColumn = event.dragInfo[this.groupGroupKey] as IDejaGridColumn;
-                    raiseEvent(sourceColumn);
+                    raiseEvent(event, sourceColumn);
                 }
 
                 this.changeDetectorRef.markForCheck();
-            },
+            }
         };
     }
 
@@ -156,9 +162,10 @@ export class DejaGridGroupAreaComponent {
         return false;
     }
 
-    private getGroupElementFromHTMLElement(element: HTMLElement): HTMLElement {
+    private getGroupElementFromHtmlElement(element: HTMLElement): HTMLElement {
         let parentElement = element;
 
+        // eslint-disable-next-line no-loops/no-loops
         while (parentElement && !parentElement.hasAttribute('groupname')) {
             element = parentElement;
             parentElement = parentElement.parentElement;

@@ -6,22 +6,15 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
     selector: 'deja-splitter-demo',
     styleUrls: [
-        'splitter-demo.scss',
+        'splitter-demo.scss'
     ],
-    templateUrl: 'splitter-demo.html',
+    templateUrl: 'splitter-demo.html'
 })
-export class DejaSplitterDemoComponent implements OnInit {
+export class DejaSplitterDemoComponent {
     public tabIndex = 1;
-
-    constructor() {
-    }
-
-    public ngOnInit() {
-
-    }
 }

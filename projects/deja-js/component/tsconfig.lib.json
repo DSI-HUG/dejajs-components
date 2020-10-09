@@ -13,10 +13,12 @@
         "importHelpers": true,
         "noUnusedParameters": true,
         "noUnusedLocals": true,
-        "types": [],
         "lib": [
             "dom",
             "es2018"
+        ],
+        "types": [
+            "../../../node_modules/@types/ckeditor"
         ]
     },
     "angularCompilerOptions": {
@@ -24,7 +26,9 @@
         "strictMetadataEmit": true,
         "fullTemplateTypeCheck": true,
         "strictInjectionParameters": true,
-        "enableResourceInlining": true
+        "enableResourceInlining": true,
+        "strictTemplates": true,
+        "strictAttributeTypes": false
     },
     "exclude": [
         "test.ts",

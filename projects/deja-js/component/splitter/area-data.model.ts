@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import {SplitAreaDirective} from './split-area.directive';
+import { SplitAreaDirective } from './split-area.directive';
 
 /**
  * Represent an area for the SplitterComponent

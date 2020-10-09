@@ -7,15 +7,16 @@
  */
 
 import { NgModule } from '@angular/core';
+
 import { DejaCodeViewerComponent } from './code-viewer.component';
 
 @NgModule({
     declarations: [
-        DejaCodeViewerComponent,
+        DejaCodeViewerComponent
     ],
     exports: [
-        DejaCodeViewerComponent,
-    ],
+        DejaCodeViewerComponent
+    ]
 })
 export class DejaCodeViewerModule { }
 

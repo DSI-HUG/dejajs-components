@@ -69,7 +69,7 @@ export class DejaRangeDemoComponent {
     @ViewChild('dejaWeight') protected weightRef;
 
 
-    constructor() {
+    public constructor() {
         this.weights = weights;
     }
 

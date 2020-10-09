@@ -10,19 +10,19 @@ export class Position {
     public left: number;
     public top: number;
 
-    public static equals(p1: Position, p2: Position) {
-        return p1.left === p2.left && p1.top === p2.top;
-    }
-
-    constructor(left?: number, top?: number) {
+    public constructor(left?: number, top?: number) {
         this.left = left || 0;
         this.top = top || 0;
+    }
+
+    public static equals(p1: Position, p2: Position) {
+        return p1.left === p2.left && p1.top === p2.top;
     }
 
     public offset(x: number, y: number): Position {
         return new Position(
             this.left + x,
-            this.top + y,
+            this.top + y
         );
     }
 

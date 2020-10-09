@@ -13,23 +13,25 @@ import { DejaOverlayComponent } from '@deja-js/component/overlay';
     encapsulation: ViewEncapsulation.None,
     selector: 'deja-overlay-demo',
     styleUrls: ['./overlay-demo.scss'],
-    templateUrl: './overlay-demo.html',
+    templateUrl: './overlay-demo.html'
 })
 export class DejaOverlayDemoComponent {
+    @ViewChild('contextMenu')
+    private contextMenu: DejaOverlayComponent;
+
     public selected = '';
     public items = [
         { text: 'Refresh' },
         { text: 'Settings' },
         { text: 'Help', disabled: true },
-        { text: 'Sign Out' },
+        { text: 'Sign Out' }
     ];
 
     public tabIndex = 1;
 
-    @ViewChild('contextMenu')
-    private contextMenu: DejaOverlayComponent;
-
-    public select(text: string) { this.selected = text; }
+    public select(text: string) {
+        this.selected = text;
+    }
 
     protected onContextMenu(event: MouseEvent) {
         const parent = event.currentTarget as HTMLElement;

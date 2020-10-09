@@ -7,7 +7,8 @@
  */
 
 import { CommonModule } from '@angular/common';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+
 import { DejaBoldQueryComponent } from './bold-query.component';
 
 describe('DejaBoldQueryComponent', () => {
@@ -17,14 +18,14 @@ describe('DejaBoldQueryComponent', () => {
     let highlightOpenTag: string;
     const highlightEndTag = '</span>';
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        void TestBed.configureTestingModule({
             declarations: [
                 DejaBoldQueryComponent
             ],
             imports: [
-                CommonModule,
-            ],
+                CommonModule
+            ]
         }).compileComponents();
 
         fixture = TestBed.createComponent(DejaBoldQueryComponent);
@@ -32,8 +33,8 @@ describe('DejaBoldQueryComponent', () => {
         highlightOpenTag = `<span class="${comp.highlightClassName}">`;
     }));
 
-    it('should create the component', async(() => {
-        expect(comp).toBeTruthy();
+    it('should create the component', waitForAsync(() => {
+        void expect(comp).toBeTruthy();
     }));
 
     it('should highlight \'Grande\' search term', () => {
@@ -41,7 +42,7 @@ describe('DejaBoldQueryComponent', () => {
         comp.query = 'Grande';
         fixture.detectChanges();
         const result = `${highlightOpenTag}Grande${highlightEndTag} Bretagne`;
-        expect(comp.content).toEqual(result);
+        void expect(comp.content).toEqual(result);
     });
 
     it('should highlight all \'e\'', () => {
@@ -49,7 +50,7 @@ describe('DejaBoldQueryComponent', () => {
         comp.query = 'e';
         fixture.detectChanges();
         const result = `Grand${highlightOpenTag}e${highlightEndTag} Br${highlightOpenTag}e${highlightEndTag}tagn${highlightOpenTag}e${highlightEndTag}`;
-        expect(comp.content).toEqual(result);
+        void expect(comp.content).toEqual(result);
     });
 
     it('should highlight \'g\' only at the beginning of word', () => {
@@ -58,7 +59,7 @@ describe('DejaBoldQueryComponent', () => {
         comp.atTheBeginningOfWordOnly = true;
         fixture.detectChanges();
         const result = `${highlightOpenTag}G${highlightEndTag}rande Bretagne`;
-        expect(comp.content).toEqual(result);
+        void expect(comp.content).toEqual(result);
     });
 
     it('should highlight \'g\' only once', () => {
@@ -67,7 +68,7 @@ describe('DejaBoldQueryComponent', () => {
         comp.firstOccurenceOnly = true;
         fixture.detectChanges();
         const result = `${highlightOpenTag}G${highlightEndTag}rande Bretagne`;
-        expect(comp.content).toEqual(result);
+        void expect(comp.content).toEqual(result);
     });
 
     it('should highlight \'e\' only once per word', () => {
@@ -76,7 +77,7 @@ describe('DejaBoldQueryComponent', () => {
         comp.firstOccurencePerWordOnly = true;
         fixture.detectChanges();
         const result = `Grand${highlightOpenTag}e${highlightEndTag} Br${highlightOpenTag}e${highlightEndTag}tagne`;
-        expect(comp.content).toEqual(result);
+        void expect(comp.content).toEqual(result);
     });
 
     it('should highlight \'g\' but not \'G\' (case sensitive)', () => {
@@ -85,7 +86,7 @@ describe('DejaBoldQueryComponent', () => {
         comp.regexpOption = '';
         fixture.detectChanges();
         const result = `Grande Breta${highlightOpenTag}g${highlightEndTag}ne`;
-        expect(comp.content).toEqual(result);
+        void expect(comp.content).toEqual(result);
     });
 
     it('should apply highlight class name \'customClass\'', () => {
@@ -95,26 +96,26 @@ describe('DejaBoldQueryComponent', () => {
         comp.highlightClassName = 'customClass';
         fixture.detectChanges();
         const divEl = fixture.debugElement.nativeElement.querySelector('div');
-        expect(divEl.innerHTML).toContain('<span class="customClass">');
+        void expect(divEl.innerHTML).toContain('<span class="customClass">');
         /*
                 fixture.whenStable().then(()=> {
                     fixture.detectChanges();
                     const el = fixture.debugElement.query(By.css('.customClass'));
-                    expect(el).toBeTruthy();
-                    expect(el.name).toEqual('span');
+                    void expect(el).toBeTruthy();
+                    void expect(el.name).toEqual('span');
                     done();
                 });
         */
     });
 
-    it('should escape special chars', (done) => {
+    it('should escape special chars', done => {
         comp.value = 'test caractères spéciaux +?^${}()|[]\\. Fin test.';
         comp.query = 'test';
         comp.regexpOption = '';
         fixture.detectChanges();
-        fixture.whenStable().then(() => {
+        return fixture.whenStable().then(() => {
             const result = `${highlightOpenTag}test${highlightEndTag} caractères spéciaux +?^\${}()|[]\\. Fin ${highlightOpenTag}test${highlightEndTag}.`;
-            expect(comp.content).toEqual(result);
+            void expect(comp.content).toEqual(result);
             done();
         });
     });

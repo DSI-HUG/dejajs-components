@@ -7,6 +7,7 @@
  */
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
+
 import { CONTAINER_DATA } from '../popup-demo.service';
 
 export interface PopupDemoButtonComponentData {
@@ -20,12 +21,12 @@ export interface PopupDemoButtonComponentData {
     selector: 'deja-dummy-button',
     templateUrl: './popup-demo-button.component.html',
     styleUrls: ['./popup-demo-button.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopupDemoButtonComponent {
 
-    constructor(
-        @Inject(CONTAINER_DATA) public data: PopupDemoButtonComponentData,
+    public constructor(
+        @Inject(CONTAINER_DATA) public data: PopupDemoButtonComponentData
     ) {
     }
 

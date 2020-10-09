@@ -34,7 +34,7 @@ describe('DejaClipboardService', () => {
         date: Date.now(),
         item: {
             name: 'Party',
-            color: '#333',
+            color: '#333'
         },
         title: 'Pizza Party'
     };
@@ -44,11 +44,11 @@ describe('DejaClipboardService', () => {
     });
 
     it('Should, store and restore an object.', () => {
-        expect(service.isAvailable('datas')).toBe(false);
+        void expect(service.isAvailable('datas')).toBe(false);
         service.set('datas', datas);
-        expect(service.isAvailable('datas')).toBe(true);
-        expect(service.get('datas')).toBe(datas);
+        void expect(service.isAvailable('datas')).toBe(true);
+        void expect(service.get('datas')).toBe(datas);
         service.clear();
-        expect(service.isAvailable('datas')).toBe(false);
+        void expect(service.isAvailable('datas')).toBe(false);
     });
 });

@@ -7,9 +7,11 @@
  */
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AfterViewChecked, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { AfterViewChecked, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewEncapsulation } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { Destroy } from '@deja-js/core';
 import * as Prism from 'prismjs';
+import { takeUntil } from 'rxjs/operators';
 import * as Showdown from 'showdown';
 
 @Component({
@@ -17,11 +19,11 @@ import * as Showdown from 'showdown';
     encapsulation: ViewEncapsulation.None,
     selector: 'deja-markdown',
     styleUrls: [
-        './markdown.component.scss',
+        './markdown.component.scss'
     ],
-    templateUrl: './markdown.component.html',
+    templateUrl: './markdown.component.html'
 })
-export class DejaMarkdownComponent implements OnInit, AfterViewChecked {
+export class DejaMarkdownComponent extends Destroy implements AfterViewChecked {
 
     @Input()
     public set value(value: string) {
@@ -37,30 +39,30 @@ export class DejaMarkdownComponent implements OnInit, AfterViewChecked {
     @Input()
     public set url(url: string) {
         const headers = new HttpHeaders({
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             'Content-Type': 'text/plain;charset=utf-8'
         });
-        this.httpClient.get(url, { observe: 'body', headers: headers, responseType: 'text' }).subscribe((object) => {
+        this.httpClient.get(url, { observe: 'body', headers: headers, responseType: 'text' }).pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe(object => {
             this.value = object.toString();
-        }, (error) => {
+        }, error => {
             this.value = `${error.message}`;
         });
     }
 
     private _initialised = false;
     private _html: SafeHtml;
-    private _converter: any;
+    private _converter: Showdown.Converter;
 
     public get html() {
         return this._html;
     }
 
-    constructor(private changeDetectorRef: ChangeDetectorRef, protected httpClient: HttpClient, private sanitized: DomSanitizer) {
+    public constructor(public changeDetectorRef: ChangeDetectorRef, protected httpClient: HttpClient, private sanitized: DomSanitizer) {
+        super();
         this._converter = new Showdown.Converter();
         this._converter.setOption('tables', true);
-    }
-
-    public ngOnInit() {
-
     }
 
     public ngAfterViewChecked() {

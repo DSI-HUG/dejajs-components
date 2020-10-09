@@ -4,11 +4,9 @@
         "outDir": "../../../out-tsc/spec",
         "types": [
             "jasmine",
-            "node"
+            "node",
+            "../../../node_modules/@types/ckeditor"
         ]
-    },
-    "angularCompilerOptions": {
-        "enableIvy": false
     },
     "files": [
         "./test.ts"

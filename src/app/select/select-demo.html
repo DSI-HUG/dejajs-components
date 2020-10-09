@@ -19,7 +19,7 @@
 </deja-dialog>
 
 <mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
-    <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/projects/deja-js/component/select/readme.md'"></deja-markdown>
+    <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/develop/projects/deja-js/component/select/readme.md'"></deja-markdown>
 </mat-card>
 
 <div *ngIf="tabIndex === 1">
@@ -181,7 +181,7 @@
 						<h4>Selected country model :</h4>
 						<ul>
 							<li *ngFor="let item of multiselectModel">
-								<span>{{ item.naqme }}</span>
+								<span>{{ $any(item).naqme }}</span>
                     </li>
                     </ul>
                     </span>

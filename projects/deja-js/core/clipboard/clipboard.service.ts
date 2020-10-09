@@ -15,13 +15,13 @@ import { Injectable } from '@angular/core';
     providedIn: 'root'
 })
 export class DejaClipboardService {
-    private clipboard = {} as { [key: string]: any };
+    private clipboard = {} as { [key: string]: unknown };
 
     public get(key: string) {
         return this.clipboard[key];
     }
 
-    public set(key: string, value: any) {
+    public set(key: string, value: unknown) {
         this.clipboard[key] = value;
     }
 

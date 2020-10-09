@@ -19,9 +19,15 @@ import { KeyCodes } from '@deja-js/core';
 @Component({
     selector: 'deja-tag',
     templateUrl: 'tag.component.html',
-    styleUrls: ['tag.component.scss'],
+    styleUrls: ['tag.component.scss']
 })
 export class DejaTagComponent implements ControlValueAccessor {
+    @HostBinding('attr.disabled') public _disabled: boolean = null;
+
+    /**
+     * Placeholder of the input
+     */
+    @Input() public placeholder: string;
 
     /**
      * Current value into the input
@@ -32,11 +38,6 @@ export class DejaTagComponent implements ControlValueAccessor {
      * Current value of the array of string
      */
     public items: string[] = [];
-
-    /**
-     * Placeholder of the input
-     */
-    @Input() public placeholder: string;
 
     /** Allow to disabled the component */
     @Input()
@@ -49,19 +50,12 @@ export class DejaTagComponent implements ControlValueAccessor {
      * Get disable value
      */
     public get disabled() {
-        return this._control ? this._control.disabled : this._disabled;
+        return this.control ? this.control.disabled : this._disabled;
     }
 
-    @HostBinding('attr.disabled') public _disabled: boolean = null;
-
-    // NgModel implementation
-    protected onTouchedCallback = (_a?: any) => { };
-    protected onChangeCallback = (_a?: any) => { };
-    protected onValidatorChangeCallback = (_a?: any) => { };
-
-    constructor(@Self() @Optional() public _control: NgControl) {
-        if (this._control) {
-            this._control.valueAccessor = this;
+    public constructor(@Self() @Optional() public control: NgControl) {
+        if (this.control) {
+            this.control.valueAccessor = this;
         }
     }
 
@@ -80,11 +74,11 @@ export class DejaTagComponent implements ControlValueAccessor {
         this.items = value ? value : [];
     }
 
-    public registerOnChange(fn: any) {
+    public registerOnChange(fn: (_a: unknown) => void) {
         this.onChangeCallback = fn;
     }
 
-    public registerOnTouched(fn: any) {
+    public registerOnTouched(fn: () => void) {
         this.onTouchedCallback = fn;
     }
 
@@ -118,4 +112,9 @@ export class DejaTagComponent implements ControlValueAccessor {
     public onRemoveItem() {
         this.onChangeCallback(this.value);
     }
+
+    // NgModel implementation
+    protected onTouchedCallback = () => undefined as void;
+    protected onChangeCallback = (_a?: unknown) => undefined as void;
+    protected onValidatorChangeCallback = (_a?: unknown) => undefined as void;
 }

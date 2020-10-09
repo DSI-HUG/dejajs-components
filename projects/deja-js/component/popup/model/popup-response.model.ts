@@ -11,13 +11,13 @@ import { DejaPopupBase } from './popup-base.class';
 export class DejaPopupReponse {
 
     public acceptedActionNames = ['check', 'ok', 'yes', 'confirm', 'save'];
-    public lastAction: DejaPopupAction;
+    public lastAction: DejaPopupAction | string;
 
-    constructor(
-        public resp: any,
-        public componentInstance: DejaPopupBase,
+    public constructor(
+        public resp: unknown,
+        public componentInstance: DejaPopupBase
     ) {
-        if (componentInstance && componentInstance.actionSelected) {
+        if (componentInstance?.actionSelected) {
             this.lastAction = this.componentInstance.actionSelected;
         } else {
             this.lastAction = new DejaPopupAction('cancel');
@@ -25,6 +25,6 @@ export class DejaPopupReponse {
     }
 
     public get accepted(): boolean {
-        return this.acceptedActionNames.some((nameOk: string) => nameOk === this.lastAction.name);
+        return this.acceptedActionNames.some((nameOk: string) => typeof this.lastAction === 'string' ? nameOk === this.lastAction : nameOk === this.lastAction.name);
     }
 }

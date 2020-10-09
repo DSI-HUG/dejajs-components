@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
- import { ElementRef } from '@angular/core';
+import { ElementRef } from '@angular/core';
 import { DejaConnectionPositionPair } from '@deja-js/core';
 
 /**
@@ -16,5 +16,5 @@ export interface ITooltipParams {
     /** Renvoie ou définit l'élement du DOM sur lequel le conteneur déroulant devra s'aligner */
     ownerElement: ElementRef | HTMLElement;
     positions: DejaConnectionPositionPair | string;
-    model: any;
+    model: unknown;
 }

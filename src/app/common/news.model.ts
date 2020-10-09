@@ -23,19 +23,20 @@ export class NewsSource {
     public category: string = void 0;
     public language: string = void 0;
     public country: string = void 0;
-    @JsonProperty({ type: String })
     public sortBysAvailable: string[] = void 0;
 }
 
 export class NewsSources {
-    public status: string = void 0;
     @JsonProperty({ type: NewsSource })
     public sources: NewsSource[] = void 0;
+
+    public status: string = void 0;
 }
 
 export class NewsArticles {
-    public status: string = void 0;
-    public sources: string = void 0;
     @JsonProperty({ type: News })
     public articles: News[] = void 0;
+
+    public status: string = void 0;
+    public sources: string = void 0;
 }

@@ -14,10 +14,11 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule, Routes } from '@angular/router';
 import { DejaSidenavModule } from '@deja-js/component/sidenav';
+
 import { SidenavDemoComponent } from './sidenav-demo.component';
 
 const routes: Routes = [
-    { path: '', component: SidenavDemoComponent },
+    { path: '', component: SidenavDemoComponent }
 ];
 
 @NgModule({
@@ -30,9 +31,9 @@ const routes: Routes = [
         MatCardModule,
         MatTabsModule,
         MatToolbarModule,
-        RouterModule.forChild(routes),
+        RouterModule.forChild(routes)
     ],
     providers: [
-    ],
+    ]
 })
 export class DejaSidenavDemoModule { }

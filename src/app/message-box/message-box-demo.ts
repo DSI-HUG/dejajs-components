@@ -11,10 +11,11 @@ import { Component } from '@angular/core';
 @Component({
     selector: 'message-box-demo',
     styleUrls: ['./message-box-demo.scss'],
-    templateUrl: './message-box-demo.html',
+    templateUrl: './message-box-demo.html'
 })
 export class DejaMessageBoxDemoComponent {
     public tabIndex = 1;
+    public dialogTitle: string;
 
     public toolTipModel = {
         text: 'Je suis un deja-tooltip'
@@ -28,27 +29,22 @@ export class DejaMessageBoxDemoComponent {
                 this.dialogTitle = '<b>I am a deja-dialog !</b><br/> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sit amet felis id nisl maximus interdum. Morbi mollis sapien sapien. Vivamus lacinia elementum eros';
             },
             text: 'Cliquez moi pour ouvrir une deja-dialog',
-            type: 'primary',
+            type: 'primary'
         },
         {
             action: () => alert('test action'),
-            text: 'test sans icon',
+            text: 'test sans icon'
         },
         {
             action: () => alert('test action'),
-            type: 'danger',
-        },
+            type: 'danger'
+        }
     ];
 
     protected closeAction = [
         {
             action: () => alert('test action'),
-            icon: 'clear',
-        },
+            icon: 'clear'
+        }
     ];
-
-    public dialogTitle: string;
-
-    constructor() { }
-
 }

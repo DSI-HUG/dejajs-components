@@ -16,6 +16,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { DejaDatePickerModule } from '@deja-js/component/date-picker';
 import { DejaDateSelectorModule } from '@deja-js/component/date-selector';
+
 import { DejaMarkdownModule } from '../../component/markdown/index';
 import { DejaDatePickerDemoComponent } from './date-picker-demo';
 import { routing } from './date-picker-demo.routes';
@@ -34,9 +35,9 @@ import { routing } from './date-picker-demo.routes';
         DejaDatePickerModule,
         DejaDateSelectorModule,
         DejaMarkdownModule,
-        routing,
+        routing
     ],
     providers: [
-    ],
+    ]
 })
 export class DejaDatePickerDemoModule { }

@@ -8,11 +8,12 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+
 import { MediaService } from './media.service';
 
 @NgModule({
     imports: [CommonModule],
-    providers: [MediaService],
+    providers: [MediaService]
 })
 export class MediaModule { }
 

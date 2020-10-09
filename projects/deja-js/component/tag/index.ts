@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { DejaChipsModule } from '@deja-js/component/chips';
+
 import { DejaTagComponent } from './tag.component';
 
 @NgModule({
@@ -22,9 +23,9 @@ import { DejaTagComponent } from './tag.component';
         FormsModule,
         MatIconModule,
         MatInputModule,
-        DejaChipsModule,
+        DejaChipsModule
     ],
-    providers: [],
+    providers: []
 })
 export class DejaTagModule { }
 

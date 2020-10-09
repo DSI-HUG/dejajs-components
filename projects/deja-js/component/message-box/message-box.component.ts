@@ -7,22 +7,24 @@
  */
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import {Component, ContentChild, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
+import { Component, ContentChild, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 
 @Component({
     encapsulation: ViewEncapsulation.None,
     selector: 'deja-message-box',
     styleUrls: ['./message-box.component.scss'],
-    templateUrl: './message-box.component.html',
+    templateUrl: './message-box.component.html'
 })
 export class DejaMessageBoxComponent implements OnInit {
+    // eslint-disable-next-line @angular-eslint/no-output-native
+    @Output() public readonly close = new EventEmitter();
+
     @Input() public type: 'info' | 'primary' | 'success' | 'warn' | 'danger';
     @Input() public title: string;
     @Input() public icon: string;
-    @Input() public actions: Array<{text?: string; type?: 'info' | 'primary' | 'success' | 'warn' | 'danger'; icon?: string; action(): any}>;
+    @Input() public actions: Array<{text?: string; type?: 'info' | 'primary' | 'success' | 'warn' | 'danger'; icon?: string; action(): unknown}>;
     /** Event Emmited when the close action is called */
-    @Output() public close = new EventEmitter();
-    @ContentChild('actionsTemplate') public actionsTemplate: any;
+    @ContentChild('actionsTemplate') public actionsTemplate: unknown;
 
     private _horizontal: boolean;
 
@@ -45,15 +47,13 @@ export class DejaMessageBoxComponent implements OnInit {
         return this._showCloseIcon;
     }
 
-    constructor() { }
-
     public ngOnInit() {
         if (!this.icon && this.type) {
             this.icon = this.getIconFromType(this.type);
         }
 
         if (this.actions) {
-            this.actions.forEach((action) => {
+            this.actions.forEach(action => {
                 if (!action.icon && action.type) {
                     action.icon = this.getIconFromType(action.type);
                 }

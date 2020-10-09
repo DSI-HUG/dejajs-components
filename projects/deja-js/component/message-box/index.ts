@@ -11,21 +11,22 @@ import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+
 import { DejaMessageBoxComponent } from './message-box.component';
 
 @NgModule({
     declarations: [
-        DejaMessageBoxComponent,
+        DejaMessageBoxComponent
     ],
     exports: [
-        DejaMessageBoxComponent,
+        DejaMessageBoxComponent
     ],
     imports: [
         CommonModule,
         MatCardModule,
         MatIconModule,
-        MatButtonModule,
-    ],
+        MatButtonModule
+    ]
 })
 export class DejaMessageBoxModule { }
 

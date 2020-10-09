@@ -8,11 +8,12 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+
 import { DejaTextMetricsService } from './text-metrics.service';
 
 @NgModule({
     imports: [CommonModule],
-    providers: [DejaTextMetricsService],
+    providers: [DejaTextMetricsService]
 })
 export class DejaTextMetricsModule { }
 

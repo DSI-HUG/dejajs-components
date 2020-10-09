@@ -13,7 +13,7 @@ import { Color, MaterialColors } from '@deja-js/core';
 @Component({
     selector: 'deja-color-selector-demo',
     styleUrls: ['./color-selector-demo.scss'],
-    templateUrl: './color-selector-demo.html',
+    templateUrl: './color-selector-demo.html'
 })
 export class DejaColorSelectorDemoComponent {
     public tabIndex = 1;
@@ -22,7 +22,7 @@ export class DejaColorSelectorDemoComponent {
     public invalidColor = Color.fromHex('#D02D06');
     public hoveredColor: Color;
 
-    constructor(public materialColors: MaterialColors) { }
+    public constructor(public materialColors: MaterialColors) { }
 
     public onColorPickerHover(event: IColorEvent) {
         this.hoveredColor = event.color;

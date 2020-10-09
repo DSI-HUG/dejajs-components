@@ -7,15 +7,16 @@
  */
 
 import { NgModule } from '@angular/core';
+
 import { DejaResizeListenerDirective } from './resize-listener.directive';
 
 @NgModule({
     declarations: [
-        DejaResizeListenerDirective,
+        DejaResizeListenerDirective
     ],
     exports: [
-        DejaResizeListenerDirective,
-    ],
+        DejaResizeListenerDirective
+    ]
 })
 export class ResizeListenerModule { }
 

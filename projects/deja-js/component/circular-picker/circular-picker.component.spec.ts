@@ -6,10 +6,12 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { timer } from 'rxjs';
-import { delay, first, tap } from 'rxjs/operators';
+import { delay, take, tap } from 'rxjs/operators';
+
+import { DejaCircularPickerModule } from '.';
 import { DejaCircularPickerComponent, ICircularRange } from './circular-picker.component';
 
 describe('DejaCircularPickerComponent', () => {
@@ -17,17 +19,17 @@ describe('DejaCircularPickerComponent', () => {
     let fixture: ComponentFixture<DejaCircularPickerComponent>;
 
     const ranges = [
-        { min: 1, max: 20 },
+        { min: 1, max: 20 }
     ] as ICircularRange[];
 
     const rangesWithInterval = [
-        { min: 1, max: 20, labelInterval: 2 },
+        { min: 1, max: 20, labelInterval: 2 }
     ] as ICircularRange[];
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
-            declarations: [
-                DejaCircularPickerComponent
+    beforeEach(waitForAsync(() => {
+        void TestBed.configureTestingModule({
+            imports: [
+                DejaCircularPickerModule
             ]
         }).compileComponents();
 
@@ -36,7 +38,7 @@ describe('DejaCircularPickerComponent', () => {
     }));
 
     it('should create the component', () => {
-        expect(component).toBeTruthy();
+        void expect(component).toBeTruthy();
     });
 
     it('should display as many values as asked', () => {
@@ -44,7 +46,7 @@ describe('DejaCircularPickerComponent', () => {
         fixture.detectChanges();
 
         const values = fixture.debugElement.queryAll(By.css('.circular-picker > .value'));
-        expect(values.length).toEqual(20);
+        void expect(values.length).toEqual(20);
     });
 
     it('should display as many values as asked with interval', () => {
@@ -52,7 +54,7 @@ describe('DejaCircularPickerComponent', () => {
         fixture.detectChanges();
 
         const values = fixture.debugElement.queryAll(By.css('.circular-picker > .value'));
-        expect(values.length).toEqual(10);
+        void expect(values.length).toEqual(10);
     });
 
     it('should update the cursor position programmatically', () => {
@@ -61,15 +63,15 @@ describe('DejaCircularPickerComponent', () => {
         fixture.detectChanges();
 
         const values = fixture.debugElement.query(By.css('.circular-picker > .cursor-container > .cursor > span'));
-        expect(values.nativeElement.innerHTML).toEqual('3');
+        void expect(values.nativeElement.innerHTML).toEqual('3');
     });
 
-    it('should update the cursor position on mouse event', async (done) => {
+    it('should update the cursor position on mouse event', done => {
         component.ranges = ranges;
         component.value = 3;
         fixture.detectChanges();
 
-        fixture.whenStable().then(() => {
+        return fixture.whenStable().then(() => {
             const htmlElement = fixture.debugElement.nativeElement as HTMLElement;
             const cursorElement = fixture.debugElement.query(By.css('.circular-picker > .cursor-container > .cursor > span')).nativeElement as HTMLSpanElement;
             const valueElement = fixture.debugElement.query(By.css('.circular-picker > [value="9"]')).nativeElement as HTMLSpanElement;
@@ -87,7 +89,7 @@ describe('DejaCircularPickerComponent', () => {
                     buttons: buttons,
                     clientX: x,
                     clientY: y,
-                    relatedTarget: element,
+                    relatedTarget: element
                 } as MouseEventInit);
                 const event = new MouseEvent(type, eventInit());
                 element.dispatchEvent(event);
@@ -102,14 +104,14 @@ describe('DejaCircularPickerComponent', () => {
             sendMouseEvent(htmlElement.ownerDocument, 'mousemove', cursorBounds.left + 1, cursorBounds.top + 1, 1);
 
             timer(150).pipe(
-                first(),
+                take(1),
                 tap(() => {
                     sendMouseEvent(htmlElement.ownerDocument, 'mousemove', cursorBounds.left + 50, cursorBounds.top + 67, 1);
                 }),
                 delay(150),
                 tap(() => {
                     sendMouseEvent(htmlElement.ownerDocument, 'mouseup', cursorBounds.left + 50, cursorBounds.top + 67, 0);
-                    expect(component.value).toEqual(5);
+                    void expect(component.value).toEqual(5);
                 }),
                 delay(150),
                 tap(() => {
@@ -120,7 +122,7 @@ describe('DejaCircularPickerComponent', () => {
                 delay(150),
                 tap(() => {
                     sendMouseEvent(htmlElement.ownerDocument, 'mousemove', valueBounds.left + 1, valueBounds.top + 1, 0);
-                    expect(component.value).toEqual(9);
+                    void expect(component.value).toEqual(9);
                 }))
                 .subscribe(() => {
                     done();

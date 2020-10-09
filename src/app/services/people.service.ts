@@ -10,9 +10,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Color, MaterialColors, UUID } from '@deja-js/core';
 import { JsonProperty, ObjectMapper } from 'json-object-mapper';
-import * as _ from 'lodash';
+import { cloneDeep } from 'lodash';
 import { Observable } from 'rxjs';
-import {map, publishLast, refCount} from 'rxjs/operators';
+import { map, publishLast, refCount } from 'rxjs/operators';
 
 export class Friend {
     public id: number = void 0;
@@ -20,6 +20,15 @@ export class Friend {
 }
 
 export class Person {
+    @JsonProperty({ type: Date })
+    public registered: Date = void 0;
+
+    @JsonProperty({ type: String })
+    public tags: string[] = void 0;
+
+    @JsonProperty({ type: Friend })
+    public friends: Friend[] = void 0;
+
     public _id: string = void 0;
     public index: number = void 0;
     public guid: string = void 0;
@@ -35,15 +44,9 @@ export class Person {
     public phone: string = void 0;
     public address: string = void 0;
     public about: string = void 0;
-    @JsonProperty({ type: Date })
-    public registered: Date = void 0;
     public latitude: number = void 0;
     public longitude: number = void 0;
-    @JsonProperty({ type: String })
-    public tags: string[] = void 0;
     public color: string = void 0;
-    @JsonProperty({ type: Friend })
-    public friends: Friend[] = void 0;
     public greeting: string = void 0;
     public favoriteFruit: string = void 0;
 }
@@ -53,17 +56,17 @@ export class PeopleService {
     private peopleDic = {} as { [code: string]: Person };
     private materialColors: Color[];
 
-    constructor(private httpClient: HttpClient, materialColors: MaterialColors) {
+    public constructor(private httpClient: HttpClient, materialColors: MaterialColors) {
         this.materialColors = materialColors.getPalet('700');
     }
 
     public getPeople$(query?: string, number?: number): Observable<Person[]> {
         let recordCount = number || 0;
         return this.httpClient.get('assets/datas/people.json', {}).pipe(
-            map((json) => ObjectMapper.deserializeArray(Person, json)),
-            map((people) => {
+            map(json => ObjectMapper.deserializeArray(Person, json)),
+            map(people => {
                 let colorIndex = 0;
-                people.forEach((person) => {
+                people.forEach(person => {
                     person.color = this.materialColors[colorIndex].toHex();
                     this.peopleDic[person.guid] = person;
 
@@ -79,8 +82,8 @@ export class PeopleService {
                 if (query) {
                     const sr = new RegExp(`^${query}`, 'i');
                     const sc = new RegExp(`^(?!${query}).*(${query})`, 'i');
-                    const result = people.filter((z) => sr.test(z.name));
-                    people.forEach((z) => {
+                    const result = people.filter(z => sr.test(z.name));
+                    people.forEach(z => {
                         if (sc.test(z.name)) {
                             result.push(z);
                         }
@@ -90,12 +93,13 @@ export class PeopleService {
                     return people;
                 }
             }),
-            map((people) => {
+            map(people => {
                 let returnPeople = people;
                 if (recordCount) {
+                    // eslint-disable-next-line no-loops/no-loops
                     while (recordCount > 0) {
-                        const clonedPeople = people.map((person) => _.cloneDeep(person));
-                        returnPeople = returnPeople.concat(clonedPeople.map((person) => {
+                        const clonedPeople = people.map(person => cloneDeep(person));
+                        returnPeople = returnPeople.concat(clonedPeople.map(person => {
                             person.guid = (new UUID()).toString();
                             return person;
                         }));
@@ -103,6 +107,7 @@ export class PeopleService {
                     }
                 }
                 return returnPeople;
-            }), );
+            })
+        );
     }
 }

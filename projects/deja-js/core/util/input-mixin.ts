@@ -11,11 +11,12 @@
  * to make easier input forms.
  */
 
+/* eslint-disable @typescript-eslint/naming-convention */
 import { FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { CanUpdateErrorStateCtor, ErrorStateMatcher, mixinErrorState } from '@angular/material/core';
 
 export class MatInputBase {
-    constructor(
+    public constructor(
         public _defaultErrorStateMatcher: ErrorStateMatcher,
         public _parentForm: NgForm,
         public _parentFormGroup: FormGroupDirective,

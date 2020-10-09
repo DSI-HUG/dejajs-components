@@ -6,12 +6,16 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
-import * as _ from 'lodash';
+import { sortBy } from 'lodash';
 import { Observable, of } from 'rxjs';
 import { map, reduce, switchMap } from 'rxjs/operators';
+
 import { ISortInfos } from './sort-infos.model';
-import { SortOrder } from './sort-order.model';
+
+export type SortOrder = 'ascending' | 'descending';
 
 /** Classe de tri d'une liste plate ou hierarchique */
 @Injectable()
@@ -31,13 +35,14 @@ export class SortingService {
      * @return Liste triée.
      */
     public sort(list: any[], sortInfos: ISortInfos | ISortInfos[]) {
-        if (list && list.length) {
+        if (list?.length) {
             const sis = sortInfos instanceof Array ? sortInfos : [sortInfos];
             let i = sis.length;
+            // eslint-disable-next-line no-loops/no-loops
             while (--i >= 0) {
                 const si = sis[i];
-                list = _.sortBy(list, si.name);
-                if (si.order === SortOrder.descending) {
+                list = sortBy(list, si.name);
+                if (si.order === 'descending') {
                     list = list.reverse();
                 }
             }
@@ -54,13 +59,13 @@ export class SortingService {
     public sortTree$(tree: any[], sortInfos: ISortInfos | ISortInfos[], childrenField?: string): Observable<any[]> {
         childrenField = childrenField || 'items';
         return this.sort$(tree, sortInfos).pipe(
-            switchMap((child) => child),
-            switchMap((child) => {
+            switchMap(child => child),
+            switchMap(child => {
                 if (!child || !child[childrenField]) {
                     return of(child);
                 }
                 return this.sortTree$(child[childrenField], sortInfos, childrenField).pipe(
-                    map((sortedList) => {
+                    map(sortedList => {
                         child[childrenField] = sortedList;
                         return child;
                     }));

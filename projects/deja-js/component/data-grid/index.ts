@@ -8,12 +8,13 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule  } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { DejaChipsModule } from '@deja-js/component/chips';
 import { DejaDragDropModule } from '@deja-js/component/dragdrop';
 import { DejaTreeListModule } from '@deja-js/component/tree-list';
 import { DejaSortingModule } from '@deja-js/core';
+
 import { DejaGridGroupAreaComponent } from './data-grid-grouparea/data-grid-grouparea.component';
 import { DejaGridHeaderComponent } from './data-grid-header/data-grid-header.component';
 import { DejaGridParentRowComponent } from './data-grid-parent-row/data-grid-parent-row.component';
@@ -26,14 +27,14 @@ import { DejaGridComponent } from './data-grid.component';
         DejaGridRowComponent,
         DejaGridParentRowComponent,
         DejaGridHeaderComponent,
-        DejaGridGroupAreaComponent,
+        DejaGridGroupAreaComponent
     ],
     exports: [
         DejaGridComponent,
         DejaGridRowComponent,
         DejaGridParentRowComponent,
         DejaGridHeaderComponent,
-        DejaGridGroupAreaComponent,
+        DejaGridGroupAreaComponent
     ],
     imports: [
         CommonModule,
@@ -42,8 +43,8 @@ import { DejaGridComponent } from './data-grid.component';
         DejaTreeListModule,
         DejaDragDropModule,
         DejaSortingModule,
-        DejaChipsModule,
-    ],
+        DejaChipsModule
+    ]
 })
 export class DejaGridModule {}
 

@@ -7,15 +7,18 @@
  */
 
 import { Component, OnInit } from '@angular/core';
+import { Destroy } from '@deja-js/core';
+import { takeUntil } from 'rxjs/operators';
+
 import { MonacoEditorDemoService } from './monaco-editor-demo.service';
 
 @Component({
     providers: [MonacoEditorDemoService],
     selector: 'deja-monaco-editor-demo',
     templateUrl: './monaco-editor-demo.component.html',
-    styleUrls: ['./monaco-editor-demo.component.scss'],
+    styleUrls: ['./monaco-editor-demo.component.scss']
 })
-export class DejaMonacoEditorDemoComponent implements OnInit {
+export class DejaMonacoEditorDemoComponent extends Destroy implements OnInit {
     public tabIndex = 1;
 
     public xmlContent: string;
@@ -26,15 +29,30 @@ export class DejaMonacoEditorDemoComponent implements OnInit {
     public dynamicContent: string;
     public dynamicLanguage: string;
 
-    constructor(
+    public readOnly = false;
+
+    public constructor(
         private fileService: MonacoEditorDemoService
-    ) { }
+    ) {
+        super();
+    }
 
     public ngOnInit() {
-        this.fileService.getFile$('xmlFile.xml').subscribe((val) => this.xmlContent = val);
-        this.fileService.getFile$('xmlFileToCompare.xml').subscribe((val) => this.xmlContentToCompare = val);
-        this.fileService.getFile$('jsonFile.json').subscribe((val) => this.jsonContent = val);
-        this.fileService.getFile$('jsonFileToCompare.json').subscribe((val) => this.jsonContentToCompare = val);
+        this.fileService.getFile$('xmlFile.xml').pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe(val => this.xmlContent = val);
+
+        this.fileService.getFile$('xmlFileToCompare.xml').pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe(val => this.xmlContentToCompare = val);
+
+        this.fileService.getFile$('jsonFile.json').pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe(val => this.jsonContent = val);
+
+        this.fileService.getFile$('jsonFileToCompare.json').pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe(val => this.jsonContentToCompare = val);
 
         this.updateLanguage('xml');
     }

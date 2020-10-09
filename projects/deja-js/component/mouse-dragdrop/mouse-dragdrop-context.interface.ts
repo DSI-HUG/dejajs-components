@@ -6,6 +6,6 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
- export interface IDragDropContext {
-    [key: string]: any;
+export interface IDragDropContext {
+    [key: string]: unknown;
 }
