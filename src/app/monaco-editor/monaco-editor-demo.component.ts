@@ -29,6 +29,8 @@ export class DejaMonacoEditorDemoComponent extends Destroy implements OnInit {
     public dynamicContent: string;
     public dynamicLanguage: string;
 
+    public readOnly = false;
+
     public constructor(
         private fileService: MonacoEditorDemoService
     ) {

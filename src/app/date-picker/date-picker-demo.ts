@@ -29,6 +29,20 @@ export class DejaDatePickerDemoComponent implements OnInit {
 
     public myLayout = DateComponentLayout.timeonly;
 
+    // HTML Variables
+    public datetimeRangeFrom: Date;
+    public datetimeRangeTo: Date;
+    public theFreeEntryDatePicker: Date;
+    public theTimePicker: Date;
+    public theDatetimePicker: Date;
+    public theDatePicker: Date;
+    public theDateTimeLayout: Date;
+    public disableDateTime: Date;
+    public theDateTime: Date;
+    public theDate1: Date;
+    public theDate2: Date;
+    public theDate3: Date;
+
     public ngOnInit() {
         const now: Date = new Date();
         this.dateMin = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
