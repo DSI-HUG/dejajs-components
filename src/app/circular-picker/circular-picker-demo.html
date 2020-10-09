@@ -1,51 +1,51 @@
 <mat-tab-group [selectedIndex]="tabIndex" (selectedTabChange)="tabIndex = $event.index">
-	<!--<mat-tab label="OVERVIEW">-->
-	<!--<mat-card class="demo-card demo-basic">-->
-	<!--TODO-->
-	<!--</mat-card>-->
-	<!--</mat-tab>-->
-	<mat-tab label="API REFERENCE"></mat-tab>
-	<mat-tab label="EXAMPLES"></mat-tab>
+    <!--<mat-tab label="OVERVIEW">-->
+    <!--<mat-card class="demo-card demo-basic">-->
+    <!--TODO-->
+    <!--</mat-card>-->
+    <!--</mat-tab>-->
+    <mat-tab label="API REFERENCE"></mat-tab>
+    <mat-tab label="EXAMPLES"></mat-tab>
 </mat-tab-group>
 
 <mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
-	<deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/projects/deja-js/component/circular-picker/readme.md'"></deja-markdown>
+    <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/develop/projects/deja-js/component/circular-picker/readme.md'"></deja-markdown>
 </mat-card>
 
 <div *ngIf="tabIndex === 1">
-	<mat-card class="demo-card">
-		<mat-toolbar color="primary">Complex Circular-picker width custom labels</mat-toolbar>
-		<mat-card-content id="complex-wrapper" class="listContainer">
-			<deja-circular-picker [ranges]="ranges41" [outerLabels]="true" id="outside">
-			</deja-circular-picker>
-			<deja-circular-picker [(ngModel)]="sm" [ranges]="ranges42" id="inside" (ngModelChange)="range42Changed($event)">
-				<ng-template #cursorTemplate #labelTemplate let-value>
-					{{ getLabelForValue(value) }}
-				</ng-template>
-			</deja-circular-picker>
-		</mat-card-content>
-	</mat-card>
-	<mat-card class="demo-card">
-		<mat-toolbar color="primary">Circular-picker demo simple - Range 1 to 20 (inside and outside labels)</mat-toolbar>
-		<mat-card-content class="listContainer">
-			<div>
-				<deja-circular-picker [ranges]="ranges1">
-				</deja-circular-picker>
-			</div>
-			<div>
-				<deja-circular-picker [ranges]="ranges2" [outerLabels]="true">
-				</deja-circular-picker>
-			</div>
-		</mat-card-content>
-	</mat-card>
-	<mat-card class="demo-card">
-		<mat-toolbar color="primary">Circular-picker demo multiple range (inside labels)</mat-toolbar>
-		<mat-card-content class="listContainer">
-			<deja-circular-picker [(ngModel)]="sms" [ranges]="ranges3">
-				<ng-template #cursorTemplate #labelTemplate let-value>
-					{{ value === 24 ? 0 : value }}
-				</ng-template>
-			</deja-circular-picker>
-		</mat-card-content>
-	</mat-card>
+    <mat-card class="demo-card">
+        <mat-toolbar color="primary">Complex Circular-picker width custom labels</mat-toolbar>
+        <mat-card-content id="complex-wrapper" class="listContainer">
+            <deja-circular-picker [ranges]="ranges41" [outerLabels]="true" id="outside">
+            </deja-circular-picker>
+            <deja-circular-picker [(ngModel)]="sm" [ranges]="ranges42" id="inside" (ngModelChange)="range42Changed($event)">
+                <ng-template #cursorTemplate #labelTemplate let-value>
+                    {{ getLabelForValue(value) }}
+                </ng-template>
+            </deja-circular-picker>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="demo-card">
+        <mat-toolbar color="primary">Circular-picker demo simple - Range 1 to 20 (inside and outside labels)</mat-toolbar>
+        <mat-card-content class="listContainer">
+            <div>
+                <deja-circular-picker [ranges]="ranges1">
+                </deja-circular-picker>
+            </div>
+            <div>
+                <deja-circular-picker [ranges]="ranges2" [outerLabels]="true">
+                </deja-circular-picker>
+            </div>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="demo-card">
+        <mat-toolbar color="primary">Circular-picker demo multiple range (inside labels)</mat-toolbar>
+        <mat-card-content class="listContainer">
+            <deja-circular-picker [(ngModel)]="sms" [ranges]="ranges3">
+                <ng-template #cursorTemplate #labelTemplate let-value>
+                    {{ value === 24 ? 0 : value }}
+                </ng-template>
+            </deja-circular-picker>
+        </mat-card-content>
+    </mat-card>
 </div>

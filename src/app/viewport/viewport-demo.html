@@ -1,36 +1,36 @@
 <mat-tab-group [selectedIndex]="tabIndex" (selectedTabChange)="tabIndex = $event.index">
-	<!--<mat-tab label="OVERVIEW">-->
-	<!--<mat-card class="demo-card demo-basic">-->
-	<!--TODO-->
-	<!--</mat-card>-->
-	<!--</mat-tab>-->
-	<mat-tab label="API REFERENCE"> </mat-tab>
-	<mat-tab label="EXAMPLES"> </mat-tab>
+    <!--<mat-tab label="OVERVIEW">-->
+    <!--<mat-card class="demo-card demo-basic">-->
+    <!--TODO-->
+    <!--</mat-card>-->
+    <!--</mat-tab>-->
+    <mat-tab label="API REFERENCE"> </mat-tab>
+    <mat-tab label="EXAMPLES"> </mat-tab>
 </mat-tab-group>
 
 <mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
-	<deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/projects/deja-js/component/viewport/readme.md'"></deja-markdown>
+    <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/develop/projects/deja-js/component/viewport/readme.md'"></deja-markdown>
 </mat-card>
 
 <mat-card class="demo-card demo-basic" *ngIf="tabIndex === 1">
-	<mat-toolbar color="primary">Viewport</mat-toolbar>
-	<mat-card-content id="viewPortContainer">
-		Sample with a big list of more than 3000 templates. Rendering can be horizontal or vertical. Only the visible templates are created on the dom. In this example, the size of the template is automatically calculated on the rendering, and the scroll bar is adapted during the scolling. This is the worst case for perfomances.
-		<div class="flexLayout flexOffset3rl">
-			<mat-checkbox [(ngModel)]="isHorizontal">Horizontal</mat-checkbox>
-			<mat-checkbox [(ngModel)]="hasButtons" class="flexOffset1rl">Buttons Scrolling (Tips: press ctrl to increase the step)</mat-checkbox>
-			<span class="flexLayout flexOffset1rl">
+    <mat-toolbar color="primary">Viewport</mat-toolbar>
+    <mat-card-content id="viewPortContainer">
+        Sample with a big list of more than 3000 templates. Rendering can be horizontal or vertical. Only the visible templates are created on the dom. In this example, the size of the template is automatically calculated on the rendering, and the scroll bar is adapted during the scolling. This is the worst case for perfomances.
+        <div class="flexLayout flexOffset3rl">
+            <mat-checkbox [(ngModel)]="isHorizontal">Horizontal</mat-checkbox>
+            <mat-checkbox [(ngModel)]="hasButtons" class="flexOffset1rl">Buttons Scrolling (Tips: press ctrl to increase the step)</mat-checkbox>
+            <span class="flexLayout flexOffset1rl">
 				<span>Ensure index:</span>
-				<mat-form-field class="flex3r">
-					<input matInput type="number" [(ngModel)]="ensureIndex" autocomplete="off">
+            <mat-form-field class="flex3r">
+                <input matInput type="number" [(ngModel)]="ensureIndex" autocomplete="off">
 				</mat-form-field>
-				<button type="button" mat-button (click)="viewport.ensureVisible(ensureIndex)">Go</button>
-			</span>
-		</div>
-		<deja-viewport #viewport [models]="news$ | async" viewportMode="auto" [direction]="isHorizontal ? 'horizontal': 'vertical'" [scrollingStyle]="hasButtons ? 'buttons' : 'scrollbar'">
-			<ng-template #itemTemplate let-item let-size="size">
-				<news-card [item]="item.model" (imageLoaded)="imageLoaded(item)"></news-card>
-			</ng-template>
-		</deja-viewport>
-	</mat-card-content>
+                <button type="button" mat-button (click)="viewport.ensureVisible(ensureIndex)">Go</button>
+            </span>
+        </div>
+        <deja-viewport #viewport [models]="news$ | async" viewportMode="auto" [direction]="isHorizontal ? 'horizontal': 'vertical'" [scrollingStyle]="hasButtons ? 'buttons' : 'scrollbar'">
+            <ng-template #itemTemplate let-item let-size="size">
+                <news-card [item]="item.model" (imageLoaded)="imageLoaded(item)"></news-card>
+            </ng-template>
+        </deja-viewport>
+    </mat-card-content>
 </mat-card>

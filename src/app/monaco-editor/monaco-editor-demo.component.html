@@ -10,11 +10,11 @@
 </mat-tab-group>
 
 <mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
-    <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/projects/deja-js/component/monaco-editor/readme.md'"></deja-markdown>
+    <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/develop/projects/deja-js/component/monaco-editor/readme.md'"></deja-markdown>
 </mat-card>
 
 <div *ngIf="tabIndex === 1">
-      <mat-card class="demo-card demo-basic">
+    <mat-card class="demo-card demo-basic">
         <mat-toolbar color="primary">
             Modification d'un fichier XML
             <span flex></span>
@@ -52,11 +52,11 @@
                 <deja-monaco-editor [(value)]="jsonContent" [valueToCompare]="jsonContentToCompare" [isDiffEditor]="true" [folding]="true" language="json"></deja-monaco-editor>
             </div>
         </mat-card-content>
-    </mat-card>  
+    </mat-card>
 </div>
 
 <div *ngIf="tabIndex === 2">
-     <mat-card class="demo-card demo-basic">
+    <mat-card class="demo-card demo-basic">
         <mat-toolbar color="primary">
             Resize auto
         </mat-toolbar>
@@ -77,9 +77,9 @@
                 </split-area>
             </deja-splitter>
         </mat-card-content>
-    </mat-card> 
+    </mat-card>
 
-     <mat-card class="demo-card demo-basic">
+    <mat-card class="demo-card demo-basic">
         <mat-toolbar color="primary">
             Modification du text et du language
         </mat-toolbar>
@@ -95,5 +95,5 @@
                 <deja-monaco-editor [(value)]="dynamicContent" [folding]="true" [language]="dynamicLanguage"></deja-monaco-editor>
             </div>
         </mat-card-content>
-    </mat-card> 
+    </mat-card>
 </div>

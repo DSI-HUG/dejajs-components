@@ -1,23 +1,23 @@
 <mat-tab-group [selectedIndex]="tabIndex" (selectedTabChange)="tabIndex = $event.index">
-	<mat-tab label="API REFERENCE"></mat-tab>
-	<mat-tab label="EXAMPLES"></mat-tab>
+    <mat-tab label="API REFERENCE"></mat-tab>
+    <mat-tab label="EXAMPLES"></mat-tab>
 </mat-tab-group>
 
 <mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
-	<deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/dev/projects/deja-js/component/numeric-stepper/readme.md'"></deja-markdown>
+    <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/develop/projects/deja-js/component/numeric-stepper/readme.md'"></deja-markdown>
 </mat-card>
 
 <div *ngIf="tabIndex === 1">
-	<mat-card class="demo-card">
-		<mat-toolbar color="primary">Numeric Stepper</mat-toolbar>
-		<mat-card-content>
-			<mat-form-field appearance="standard">
-				<mat-label>With unit standard</mat-label>
-				<deja-numeric-stepper placeholder="With unit" [min]="1" [max]="10" unit="kms" [formControl]="control"></deja-numeric-stepper>
-			</mat-form-field>
-			<mat-form-field appearance="fill">
-				<mat-label>With unit fill</mat-label>
-				<deja-numeric-stepper placeholder="With unit always displayed" [min]="1" [max]="10" unit="kms" alwaysDisplayUnit></deja-numeric-stepper>
+    <mat-card class="demo-card">
+        <mat-toolbar color="primary">Numeric Stepper</mat-toolbar>
+        <mat-card-content>
+            <mat-form-field appearance="standard">
+                <mat-label>With unit standard</mat-label>
+                <deja-numeric-stepper placeholder="With unit" [min]="1" [max]="10" unit="kms" [formControl]="control"></deja-numeric-stepper>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>With unit fill</mat-label>
+                <deja-numeric-stepper placeholder="With unit always displayed" [min]="1" [max]="10" unit="kms" alwaysDisplayUnit></deja-numeric-stepper>
             </mat-form-field>
 
             <div class="focus">
@@ -32,24 +32,24 @@
                 <mat-label>Without unit</mat-label>
                 <deja-numeric-stepper placeholder="Without unit" [min]="1" [max]="10" [ngModel]="5"></deja-numeric-stepper>
             </mat-form-field>
-			<mat-form-field appearance="outline">
-				<mat-label>Without steppers</mat-label>
-				<deja-numeric-stepper placeholder="Without steppers" [min]="1" [max]="10" unit="kms" hideSteppers="true"></deja-numeric-stepper>
-			</mat-form-field>
-			<mat-form-field appearance="outline">
-				<mat-label>Disabled</mat-label>
-				<deja-numeric-stepper placeholder="Disabled" [min]="1" [max]="10" unit="kms" disabled></deja-numeric-stepper>
-			</mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Without steppers</mat-label>
+                <deja-numeric-stepper placeholder="Without steppers" [min]="1" [max]="10" unit="kms" hideSteppers="true"></deja-numeric-stepper>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Disabled</mat-label>
+                <deja-numeric-stepper placeholder="Disabled" [min]="1" [max]="10" unit="kms" disabled></deja-numeric-stepper>
+            </mat-form-field>
 
-			<mat-form-field appearance="outline">
-				<mat-label>min : 0, max : 10, value : -5</mat-label>
-				<deja-numeric-stepper placeholder="Without unit" min="0" max="10" [ngModel]="-5" #numericStepper="ngModel"></deja-numeric-stepper>
-				<mat-error *ngIf="numericStepper.errors?.rangeError">
-					Min : {{numericStepper.errors?.rangeError?.min}}, Max : {{numericStepper.errors?.rangeError?.max}}
-				</mat-error>
-			</mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>min : 0, max : 10, value : -5</mat-label>
+                <deja-numeric-stepper placeholder="Without unit" min="0" max="10" [ngModel]="-5" #numericStepper="ngModel"></deja-numeric-stepper>
+                <mat-error *ngIf="numericStepper.errors?.rangeError">
+                    Min : {{numericStepper.errors?.rangeError?.min}}, Max : {{numericStepper.errors?.rangeError?.max}}
+                </mat-error>
+            </mat-form-field>
 
-			<deja-numeric-stepper placeholder="With unit" [min]="1" [max]="10" unit="kms"></deja-numeric-stepper>
-		</mat-card-content>
-	</mat-card>
+            <deja-numeric-stepper placeholder="With unit" [min]="1" [max]="10" unit="kms"></deja-numeric-stepper>
+        </mat-card-content>
+    </mat-card>
 </div>
