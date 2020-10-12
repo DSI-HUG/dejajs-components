@@ -37,7 +37,7 @@ import { DejaTreeListComponent } from './tree-list.component';
     ]
 })
 class DejaTreeListContainerComponent {
-    public itemList = [] as IItemTree[];
+    public itemList = [] as IItemTree<unknown>[];
 
     public constructor(groupingService: GroupingService) {
         // eslint-disable-next-line prefer-spread
@@ -46,7 +46,7 @@ class DejaTreeListContainerComponent {
             return {
                 size: rand,
                 displayName: `${i} - Une ligne de test avec une taille de : ${rand}`
-            } as IItemTree;
+            } as IItemTree<unknown>;
         });
 
         groupingService.group$(itemList, [{ groupByField: 'size' }]).pipe(
@@ -91,7 +91,7 @@ class DejaTreeListByModelContainerComponent {
         this.modelsList$ = sortingService.sort$(modelsList, { name: 'value' } as ISortInfos);
     }
 
-    public backgroundColor(item: IItemBase) {
+    public backgroundColor(item: IItemBase<unknown>) {
         return item.selected ? '#888' : null;
     }
 }
@@ -247,7 +247,7 @@ describe('DejaTreeListComponent', () => {
             collapsed: false,
             selected: false,
             odd: false
-        } as IItemTree;
+        } as IItemTree<unknown>;
         void expect(tl.getItemClass(item)).toEqual('listitem parent');
 
         item.className = 'test';
@@ -373,7 +373,7 @@ describe('DejaTreeListComponent', () => {
                 // Bind view port
                 fixture.detectChanges();
                 const selectedElements = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem.selected'));
-                const selectedItems = vp.items.filter((item: IItemBase) => item.selected);
+                const selectedItems = vp.items.filter((item: IItemBase<unknown>) => item.selected);
 
                 switch (++pass) {
                     case 1:
@@ -443,8 +443,8 @@ describe('DejaTreeListComponent', () => {
                 // Bind view port
                 fixture.detectChanges();
                 const collapsed = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem.parent.collapsed'));
-                const collapsedItems = vp.items.filter((item: IItemTree) => item.collapsed);
-                const parentItems = vp.items.filter((item: IItemTree) => item.depth === 0);
+                const collapsedItems = vp.items.filter((item: IItemTree<unknown>) => item.collapsed);
+                const parentItems = vp.items.filter((item: IItemTree<unknown>) => item.depth === 0);
                 switch (++pass) {
                     case 1:
                         void expect(collapsed.length).toBe(0);
@@ -520,8 +520,8 @@ describe('DejaTreeListByModelContainerComponent', () => {
                 // Bind view port
                 fixture.detectChanges();
                 const selectedModels = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem.selected'));
-                const models = vp.visibleItems.map((item: IItemBase) => item.model as IItemBase);
-                const selectedItems = vp.items.filter((item: IItemBase) => item.selected);
+                const models = vp.visibleItems.map((item: IItemBase<unknown>) => item.model as IItemBase<unknown>);
+                const selectedItems = vp.items.filter((item: IItemBase<unknown>) => item.selected);
 
                 switch (++pass) {
                     case 1:
@@ -575,7 +575,7 @@ describe('DejaTreeListByModelContainerComponent', () => {
                         void expect(selectedItems.length).toBe(0);
                         // Set selection by value
                         treeListInstance.value = models[4];
-                        void expect((treeListInstance.value as IItemBase).model).toBe(models[4]);
+                        void expect((treeListInstance.value as IItemBase<unknown>).model).toBe(models[4]);
                         treeListInstance.refreshViewPort();
                         fixture.detectChanges();
                         break;
@@ -653,12 +653,12 @@ describe('DejaTreeListByModelContainerComponent', () => {
                 fixture.detectChanges();
                 const selectedElements = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem.selected'));
                 const currentElement = fixture.debugElement.query(By.css('deja-tree-list > .deja-listcontainer > .listitem[current="true"]'));
-                const selectedItems = vp.items.filter((item: IItemBase) => item.selected);
+                const selectedItems = vp.items.filter((item: IItemBase<unknown>) => item.selected);
 
                 switch (++pass) {
                     case 1:
                         // Selection from HTML
-                        void expect(vp.items.filter((item: IItemBase) => item.selected).length).toBe(3);
+                        void expect(vp.items.filter((item: IItemBase<unknown>) => item.selected).length).toBe(3);
                         // Clear selection
                         treeListInstance.selectedModel = null;
                         treeListInstance.refreshViewPort();
@@ -977,7 +977,7 @@ describe('DejaTreeListByOptionsContainerComponent', () => {
                 fixture.detectChanges();
                 const selectedElements = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem.selected'));
                 const currentElement = fixture.debugElement.query(By.css('deja-tree-list > .deja-listcontainer > .listitem[current="true"]'));
-                const selectedItems = vp.items.filter((item: IItemBase) => item.selected);
+                const selectedItems = vp.items.filter((item: IItemBase<unknown>) => item.selected);
 
                 switch (++pass) {
                     case 1:
@@ -1095,7 +1095,7 @@ describe('DejaTreeListByOptionsContainerComponent', () => {
                 const displayedElements = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem'));
                 const selectedElements = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem.selected'));
                 const currentElement = fixture.debugElement.query(By.css('deja-tree-list > .deja-listcontainer > .listitem[current="true"]'));
-                const selectedItems = vp.items.filter((item: IItemBase) => item.selected);
+                const selectedItems = vp.items.filter((item: IItemBase<unknown>) => item.selected);
 
                 switch (++pass) {
                     case 1:

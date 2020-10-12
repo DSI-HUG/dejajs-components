@@ -24,6 +24,7 @@
         "test:lib": "ng test @deja-js/component --watch=false",
         "test:lib:watch": "ng test @deja-js/component --watch=true",
         "lint": "eslint . --ext .js,.ts",
+        "lint:fix": "eslint . --ext .js,.ts --fix",
         "e2e": "ng e2e",
         "license-check": "node scripts/licenses.js",
         "build:core": "ng build @deja-js/core --configuration=production",
