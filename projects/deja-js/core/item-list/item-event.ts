@@ -8,7 +8,7 @@
 
 import { IItemBase } from './item-base';
 
-export class DejaItemEvent {
-    public item: IItemBase;
-    public model: Record<string, unknown>;
+export class DejaItemEvent<T> {
+    public item: IItemBase<unknown>;
+    public model: T;
 }

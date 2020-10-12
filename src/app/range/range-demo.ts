@@ -6,8 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
-import { IStepRangeEvent, Range } from '@deja-js/component/range';
-import { DejaRangeComponent } from 'dist/deja-js/component/range';
+import { DejaRangeComponent, IStepRangeEvent, Range } from '@deja-js/component/range';
 import { from, Observable } from 'rxjs';
 import { defaultIfEmpty, map, scan } from 'rxjs/operators';
 

@@ -9,4 +9,4 @@
 import { IItemTree } from '@deja-js/core';
 
 // tslint:disable-next-line:no-empty-interface
-export type IDejaGridRow = IItemTree;
+export type IDejaGridRow<T> = IItemTree<T>;

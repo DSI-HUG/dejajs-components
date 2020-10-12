@@ -27,7 +27,7 @@ import { IDejaGridRow } from './data-grid-row';
 })
 export class DejaGridRowComponent extends Destroy {
     /** Définit la structure de la ligne associée à ce composant */
-    @Input() public row: IDejaGridRow;
+    @Input() public row: IDejaGridRow<unknown>;
 
     /** Template de cellule si définit extérieurement à la grille */
     @Input() public cellTemplateExternal: unknown;
@@ -75,7 +75,7 @@ export class DejaGridRowComponent extends Destroy {
         super();
     }
 
-    public getCellText(row: IDejaGridRow, textField: string) {
+    public getCellText(row: IDejaGridRow<unknown>, textField: string) {
         return ItemListService.getItemText(row, textField) as string;
     }
 }

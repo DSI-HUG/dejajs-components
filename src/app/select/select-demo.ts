@@ -176,7 +176,7 @@ export class SelectDemoComponent extends Destroy {
     }
 
     protected loadingItems() {
-        return (_query: string | RegExp, _selectedItems: IItemBase[]) => {
+        return (_query: string | RegExp, _selectedItems: IItemBase<unknown>[]) => {
             this.onDemandSelect.waiter = true;
             this.onDemandPlaceHolder = 'loading...';
             return this.countriesService.getCountries$().pipe(
@@ -189,14 +189,14 @@ export class SelectDemoComponent extends Destroy {
     }
 
     protected collapsingItems() {
-        return (item: IItemBase) => {
+        return (item: IItemBase<unknown>) => {
             const country = item as ICountryGroup;
             return country.loaded ? of(item) : this.confirmDialog()(item);
         };
     }
 
     protected expandingItems() {
-        return (item: IItemBase) => {
+        return (item: IItemBase<unknown>) => {
             const group = item as ICountryGroup;
             if (group.loaded) {
                 return of(item);
@@ -222,11 +222,11 @@ export class SelectDemoComponent extends Destroy {
 
     protected confirmDialogWithPromise() {
         // eslint-disable-next-line rxjs/no-topromise
-        return (item: IItemBase) => this.confirmDialog()(item).toPromise();
+        return (item: IItemBase<unknown>) => this.confirmDialog()(item).toPromise();
     }
 
     protected confirmDialog() {
-        return (item: IItemBase) => {
+        return (item: IItemBase<unknown>) => {
             this.dialogVisible = true;
             return from(this.dialogResponse$).pipe(
                 take(1),
@@ -270,13 +270,13 @@ export class SelectDemoComponent extends Destroy {
 
 }
 
-interface ISelectCountry extends IItemTree {
-    items?: IItemTree[];
+interface ISelectCountry extends IItemTree<unknown> {
+    items?: IItemTree<unknown>[];
 }
 
 interface ICountryGroup extends ISelectCountry {
     groupName?: string;
-    items: IItemBase[];
+    items: IItemBase<unknown>[];
     loaded?: boolean;
 }
 

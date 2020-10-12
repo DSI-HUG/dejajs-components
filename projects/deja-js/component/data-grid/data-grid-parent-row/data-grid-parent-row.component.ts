@@ -22,7 +22,7 @@ import { IDejaGridParentRow } from './data-grid-parent-row';
 })
 export class DejaGridParentRowComponent {
     /** Définit la structure de la ligne associée à ce composant */
-    @Input() public row: IDejaGridParentRow;
+    @Input() public row: IDejaGridParentRow<unknown>;
 
     /** Template de cellule si définit extérieurement à la grille */
     @Input() public cellTemplateExternal: unknown;
@@ -80,7 +80,7 @@ export class DejaGridParentRowComponent {
 
     public constructor(private changeDetectorRef: ChangeDetectorRef) { }
 
-    public getCellText(row: IDejaGridRow, textField: string) {
+    public getCellText(row: IDejaGridRow<unknown>, textField: string) {
         return ItemListService.getItemText(row, textField) as string;
     }
 }

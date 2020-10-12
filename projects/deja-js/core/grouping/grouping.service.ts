@@ -64,9 +64,8 @@ export class GroupingService {
     }
 
     protected groupChildren$(list: any[], groupInfo: IGroupInfo, _depth: number, childrenField: string): Observable<any[]> {
-        return of(list).pipe(
-            switchMap(l => l),
-            reduce((groups: { [groupby: string]: IItemTree }, item) => {
+        return from(list).pipe(
+            reduce((groups: { [groupby: string]: IItemTree<unknown> }, item) => {
                 let groupedBy = typeof groupInfo.groupByField === 'function' ? groupInfo.groupByField(item) : item[groupInfo.groupByField];
 
                 if (typeof item[groupedBy] === 'function') {
@@ -85,7 +84,7 @@ export class GroupingService {
                         depth: _depth,
                         toString: () => groupLabel,
                         $text: groupLabel
-                    } as IItemTree;
+                    } as IItemTree<unknown>;
                     (<any>parent)[childrenField] = [];
                 }
 

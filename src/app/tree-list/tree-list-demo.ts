@@ -47,15 +47,15 @@ export class DejaTreeListDemoComponent extends Destroy {
 
     public fruct = 'apricots';
     public fructs = [] as string[];
-    public fructItems = [] as IItemBase[];
-    public fructItemsWithPreSelection = [] as IItemBase[];
+    public fructItems = [] as IItemBase<unknown>[];
+    public fructItemsWithPreSelection = [] as IItemBase<unknown>[];
     public folders: Folder[];
     public ensureIndex: number;
     public tabIndex = 1;
     public deepCountries$: Observable<DeepCountry[]>;
     public countriesForMultiselect: Country[];
     public onDemandGroupedCountries: ICountryGroup[];
-    public multiselectModel: IItemTree[];
+    public multiselectModel: IItemTree<unknown>[];
     public fruitForm: FormGroup;
     public fruitFormModels: FormGroup;
     public fruits$: Observable<string[]>;
@@ -83,7 +83,7 @@ export class DejaTreeListDemoComponent extends Destroy {
 
     protected viewPortInfos$: Subscription;
     protected dialogResponse$: Subject<string> = new Subject<string>();
-    protected loremList: IItemTree[] = [];
+    protected loremList: IItemTree<unknown>[] = [];
 
     private _dialogVisible = false;
 
@@ -114,7 +114,7 @@ export class DejaTreeListDemoComponent extends Destroy {
         // eslint-disable-next-line no-loops/no-loops
         for (let i = 0; i < 50; i++) {
             const rand = Math.floor(Math.random() * (70 - 33 + 1)) + 33; // random de 33 à 70
-            this.loremList[i] = {} as IItemTree;
+            this.loremList[i] = {} as IItemTree<unknown>;
             this.loremList[i].size = rand;
             this.loremList[i].displayName = `${i} - Une ligne de test avec une taille de : ${rand}`;
         }
@@ -168,13 +168,13 @@ export class DejaTreeListDemoComponent extends Destroy {
         this.fructItems = this.fructs.map(fruct => ({
             displayName: fruct,
             value: fruct.toLowerCase()
-        } as IItemBase));
+        } as IItemBase<unknown>));
 
         this.fructItemsWithPreSelection = this.fructs.map((fruct, index) => ({
             displayName: fruct,
             value: fruct.toLowerCase(),
             selected: index === 1
-        } as IItemBase));
+        } as IItemBase<unknown>));
 
         this.countries$.pipe(
             tap(value => this.countriesForMultiselect = value),
@@ -243,18 +243,18 @@ export class DejaTreeListDemoComponent extends Destroy {
     }
 
     protected loadingItems() {
-        return (_query: string | RegExp, _selectedItems: IItemBase[]) => this.countriesService.getCountries$().pipe(delay(3000));
+        return (_query: string | RegExp, _selectedItems: IItemBase<unknown>[]) => this.countriesService.getCountries$().pipe(delay(3000));
     }
 
     protected collapsingItems() {
-        return (item: IItemBase) => {
+        return (item: IItemBase<unknown>) => {
             const country = item as ICountryGroup;
             return country.loaded ? of(item) : this.confirmDialog()(item);
         };
     }
 
     protected expandingItems() {
-        return (item: IItemBase) => {
+        return (item: IItemBase<unknown>) => {
             const group = item as ICountryGroup;
             if (group.loaded) {
                 return of(item);
@@ -285,7 +285,7 @@ export class DejaTreeListDemoComponent extends Destroy {
     }
 
     protected confirmDialog() {
-        return (item: IItemBase) => {
+        return (item: IItemBase<unknown>) => {
             this.dialogVisible = true;
             return from(this.dialogResponse$).pipe(
                 take(1),
@@ -380,13 +380,13 @@ export class DejaTreeListDemoComponent extends Destroy {
     }
 }
 
-interface ISelectCountry extends IItemTree {
-    items?: IItemTree[];
+interface ISelectCountry extends IItemTree<unknown> {
+    items?: IItemTree<unknown>[];
 }
 
 interface ICountryGroup extends ISelectCountry {
     groupName?: string;
-    items: IItemBase[];
+    items: IItemBase<unknown>[];
     loaded?: boolean;
 }
 

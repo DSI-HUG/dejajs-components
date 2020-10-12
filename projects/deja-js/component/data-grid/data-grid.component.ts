@@ -94,11 +94,11 @@ export class DejaGridComponent extends Destroy {
      */
     @Input() public searchField: string;
     /** Ligne courant ou ligne active */
-    @Input() public currentRow: IItemBase;
+    @Input() public currentRow: IItemBase<unknown>;
     /** Liste des éléments sélectionnés en mode multiselect */
-    @Input() public selectedItems: IItemBase[];
+    @Input() public selectedItems: IItemBase<unknown>[];
     /** Elément selectioné en mode single select */
-    @Input() public selectedItem: IItemBase | string;
+    @Input() public selectedItem: IItemBase<unknown> | string;
     /** Liste des models selectionés en mode multiselect */
     @Input() public selectedModels: unknown[];
     /** Model selectioné en mode single select */
@@ -122,21 +122,21 @@ export class DejaGridComponent extends Destroy {
     /** Permet de définir un template comme suffixe de la zone de recherche par binding. */
     @Input() public searchSuffixTemplateExternal: unknown;
     /** Set a observable called before the rows will be displayed */
-    @Input() public loadingRows: (query: string | RegExp, selectedRows: IDejaGridRow[]) => Observable<IDejaGridRow[]>;
+    @Input() public loadingRows: (query: string | RegExp, selectedRows: IDejaGridRow<unknown>[]) => Observable<IDejaGridRow<unknown>[]>;
     /** Set a promise called before a row selection */
-    @Input() public selectingRow: (row: IDejaGridRow) => Promise<IDejaGridRow> | Observable<IDejaGridRow>;
+    @Input() public selectingRow: (row: IDejaGridRow<unknown>) => Promise<IDejaGridRow<unknown>> | Observable<IDejaGridRow<unknown>>;
     /** Set a promise called before a row deselection */
-    @Input() public unselectingRow: (row: IDejaGridRow) => Promise<IDejaGridRow> | Observable<IDejaGridRow>;
+    @Input() public unselectingRow: (row: IDejaGridRow<unknown>) => Promise<IDejaGridRow<unknown>> | Observable<IDejaGridRow<unknown>>;
     /** Set a promise called before a row expand */
-    @Input() public expandingRow: (row: IDejaGridRow) => Promise<IDejaGridRow> | Observable<IDejaGridRow>;
+    @Input() public expandingRow: (row: IDejaGridRow<unknown>) => Promise<IDejaGridRow<unknown>> | Observable<IDejaGridRow<unknown>>;
     /** Set a promise called before a row collapse */
-    @Input() public collapsingRow: (row: IDejaGridRow) => Promise<IDejaGridRow> | Observable<IDejaGridRow>;
+    @Input() public collapsingRow: (row: IDejaGridRow<unknown>) => Promise<IDejaGridRow<unknown>> | Observable<IDejaGridRow<unknown>>;
     /** Exécuté lorsque le déplacement d'une ligne est terminée. */
     @Output() public readonly itemDragEnd = new EventEmitter<IDejaDragEvent>();
     /** Exécuté lorsque le déplacement d'une ligne commence. */
     @Output() public readonly itemDragStart = new EventEmitter<IDejaDragEvent>();
     /** Exécuté lorsque l'utilisateur sélectionne ou désélectionne une ligne. */
-    @Output() public readonly selectedChange = new EventEmitter<DejaGridRowEvent | DejaGridRowsEvent>();
+    @Output() public readonly selectedChange = new EventEmitter<DejaGridRowEvent<unknown> | DejaGridRowsEvent<unknown>>();
     /** Cet évenement est levé lorsque la position des colonnes est modifiée */
     @Output() public readonly columnLayoutChanged = new EventEmitter<IDejaGridColumnLayoutEvent>();
     /** Cet évenement est levé lorsque la taille d'une colonne est modifiée */
@@ -179,7 +179,7 @@ export class DejaGridComponent extends Destroy {
     public rowsWidth: number = null;
 
     // eslint-disable-next-line rxjs/finnish
-    private _rows: IItemBase[] | Promise<IItemBase[]> | Observable<IItemBase[]>;
+    private _rows: IItemBase<unknown>[] | Promise<IItemBase<unknown>[]> | Observable<IItemBase<unknown>[]>;
     private _columns: IDejaGridColumn[];
     private _columnLayout = {
         scrollLeft: 0,
@@ -195,7 +195,7 @@ export class DejaGridComponent extends Destroy {
     private disableUserSelection$ = new Subject();
 
     private _noHorizontalScroll = false;
-    private _itemListService: ItemListService;
+    private _itemListService: ItemListService<unknown>;
     private sizingLayoutInfos: DejaGridColumnsLayoutInfos;
     private columnsLayoutInfos: DejaGridColumnsLayoutInfos;
     private hasPercentageColumns = false;
@@ -349,7 +349,7 @@ export class DejaGridComponent extends Destroy {
     /** Définit le modèle affiché dans les lignes de la grille. */
     @Input()
     // eslint-disable-next-line rxjs/finnish
-    public set rows(rows: IItemBase[] | Promise<IItemBase[]> | Observable<IItemBase[]>) {
+    public set rows(rows: IItemBase<unknown>[] | Promise<IItemBase<unknown>[]> | Observable<IItemBase<unknown>[]>) {
         this._rows = rows;
         if (this._rows && !this._columns) {
             if (this._rows instanceof Array) {
@@ -392,7 +392,7 @@ export class DejaGridComponent extends Destroy {
 
     /** Definit le service de liste utilisé par ce composant. Ce srevice permet de controller dynamiquement la liste, ou de faire du lazyloading. */
     @Input()
-    public set itemListService(value: ItemListService) {
+    public set itemListService(value: ItemListService<unknown>) {
         this._itemListService = value;
     }
 
@@ -584,7 +584,7 @@ export class DejaGridComponent extends Destroy {
 
     // set accessor including call the onchange callback
     public set value(value: unknown) {
-        this.rows = value as IItemBase[] | Promise<IItemBase[]> | Observable<IItemBase[]>;
+        this.rows = value as IItemBase<unknown>[] | Promise<IItemBase<unknown>[]> | Observable<IItemBase<unknown>[]>;
     }
 
     /** Nettoye les caches et réaffiche le viewport. */
@@ -603,7 +603,7 @@ export class DejaGridComponent extends Destroy {
     }
 
     /** Recalcule le viewport. */
-    public refreshViewPort(item?: IItemBase) {
+    public refreshViewPort(item?: IItemBase<unknown>) {
         this.treeListComponent.refreshViewPort(item);
     }
 
@@ -659,7 +659,7 @@ export class DejaGridComponent extends Destroy {
     }
 
     /** Trie la liste par le champs spécifié. */
-    public sort$(name?: string): Observable<IViewListResult> {
+    public sort$(name?: string): Observable<IViewListResult<unknown>> {
         return this.treeListComponent.sort$(name);
     }
 
@@ -667,7 +667,7 @@ export class DejaGridComponent extends Destroy {
      * @param groupInfos Modèle de groupe à appliquer.
      * @return Observable résolu par la fonction.
      */
-    public group$(groups: IGroupInfo[]): Observable<IViewListResult> {
+    public group$(groups: IGroupInfo[]): Observable<IViewListResult<unknown>> {
         return this.treeListComponent.group$(groups);
     }
 
@@ -675,7 +675,7 @@ export class DejaGridComponent extends Destroy {
      * @param groupInfos Modèle de groupe à retirer.
      * @return Observable résolu par la fonction.
      */
-    public ungroup$(groupInfo: IGroupInfo): Observable<IViewListResult> {
+    public ungroup$(groupInfo: IGroupInfo): Observable<IViewListResult<unknown>> {
         return this.treeListComponent.ungroup$(groupInfo);
     }
 
@@ -790,15 +790,15 @@ export class DejaGridComponent extends Destroy {
         this.columnGroups$.next(e.columns);
     }
 
-    public calcColumnsLayout(rows?: IItemBase[]) {
+    public calcColumnsLayout(rows?: IItemBase<unknown>[]) {
         // this.noColumnsSpecified = false;
 
         if (!this._columns || !this._columns.length) {
             if (rows?.length) {
-                const searchFirstLastLevelRow = (items: IItemTree[]) => items.find(row => {
+                const searchFirstLastLevelRow = (items: IItemTree<unknown>[]) => items.find(row => {
                     if (row.$items) {
                         // IItemTree
-                        const srow: IItemTree = searchFirstLastLevelRow(row.$items);
+                        const srow: IItemTree<unknown> = searchFirstLastLevelRow(row.$items);
                         if (srow) {
                             return true;
                         }
