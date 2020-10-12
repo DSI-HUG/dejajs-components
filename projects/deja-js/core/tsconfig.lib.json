@@ -2,8 +2,8 @@
     "extends": "../../../tsconfig.base.json",
     "compilerOptions": {
         "outDir": "../../../out-tsc/lib",
-        "target": "es2015",
-        "module": "es2015",
+        "target": "es2016",
+        "module": "es2020",
         "moduleResolution": "node",
         "declaration": true,
         "sourceMap": true,
@@ -15,7 +15,7 @@
         "noUnusedLocals": true,
         "lib": [
             "dom",
-            "es2018"
+            "es2020"
         ],
         "paths": {
             "@deja-js/core": [
