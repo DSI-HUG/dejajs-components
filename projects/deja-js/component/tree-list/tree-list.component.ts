@@ -283,7 +283,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
     public get pageSize() {
         if (this._pageSize === 0) {
             const vpRowHeight = this.getViewPortRowHeight();
-            const containerHeight = this.maxHeight || this.listElement.clientHeight;
+            const containerHeight = this.getMaxHeight() || this.listElement.clientHeight;
             return Math.floor(containerHeight / vpRowHeight);
         }
 
@@ -360,7 +360,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
      * Spécifier 0 pour que le composant determine sa hauteur à partir du container
      */
     @Input()
-    public set maxHeight(value: number) {
+    public set maxHeight(value: number | string) {
         super.setMaxHeight(value);
     }
 

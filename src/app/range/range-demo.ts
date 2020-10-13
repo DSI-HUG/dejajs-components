@@ -24,10 +24,10 @@ interface Error {
     templateUrl: './range-demo.html'
 })
 export class DejaRangeDemoComponent {
-    @Output() protected readonly errorFeed = new EventEmitter();
+    @Output() public readonly errorFeed = new EventEmitter();
 
-    @ViewChild('dejaRange') protected rangeRef: DejaRangeComponent;
-    @ViewChild('dejaWeight') protected weightRef: DejaRangeComponent;
+    @ViewChild('dejaRange') public rangeRef: DejaRangeComponent;
+    @ViewChild('dejaWeight') public weightRef: DejaRangeComponent;
 
     public tabIndex = 1;
     public readOnlyRanges: Range[];
@@ -87,13 +87,13 @@ export class DejaRangeDemoComponent {
     /**
      * compute next step for the weights (rounded to one)
      *
-     * @protected
+     * @public
      * @param {IStepRangeEvent} event
      * @returns
      *
      * @memberOf DejaRangeDemoComponent
      */
-    protected stepFn(event: IStepRangeEvent) {
+    public stepFn(event: IStepRangeEvent) {
 
         const weight = event.ranges[event.index] as IWeight;
 
@@ -118,7 +118,7 @@ export class DejaRangeDemoComponent {
         return newRangeMax;
     }
 
-    protected remove(index: number) {
+    public remove(index: number) {
         if (this.weights.length >= 2) {
 
             const weight = this.weights
@@ -138,7 +138,7 @@ export class DejaRangeDemoComponent {
         }
     }
 
-    protected add(index: number) {
+    public add(index: number) {
         const weight = this.weights
             .find((_w: Weight, i: number) => index === i);
 
@@ -164,7 +164,7 @@ export class DejaRangeDemoComponent {
      *
      * @memberOf DejaRangeDemoComponent
      */
-    protected increase(): void {
+    public increase(): void {
         this.weights[this.weights.length - 1].maxWeight++;
         this.computeRangeFromWeight();
     }
@@ -176,7 +176,7 @@ export class DejaRangeDemoComponent {
      *
      * @memberOf DejaRangeDemoComponent
      */
-    protected decrease(): void {
+    public decrease(): void {
         if (this.weights[0].minWeight > 0) {
             this.weights[0].minWeight--;
             this.computeRangeFromWeight();

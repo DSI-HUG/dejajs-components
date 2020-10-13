@@ -88,7 +88,7 @@ export class DejaViewPortComponent extends Destroy {
 
     /** Set the list of models to render inside the viewport control */
     @Input()
-    public set models(models: IDejaViewPortItem[]) {
+    public set models(models: unknown[]) {
         this.items = models ? models.map(model => ({
             model: model
         } as IDejaViewPortItem)) : [];
@@ -372,5 +372,5 @@ export class DejaViewPortComponent extends Destroy {
 }
 
 export interface IDejaViewPortItem extends IViewPortItem {
-    model: unknown;
+    model?: unknown;
 }

@@ -102,7 +102,7 @@
 					<deja-item value="Pineapple" text="My preferred fruct is Pineapple"></deja-item>
 					<deja-item value="Watermelon" text="My preferred fruct is Watermelon"></deja-item>
 				</deja-tree-list>
-				<deja-tree-list class="flex45p flexOffset5p demo-half-width optionstl" multiSelect="true" selectedModels="mango, apricots, coconut">
+				<deja-tree-list class="flex45p flexOffset5p demo-half-width optionstl" multiSelect="true" [selectedModels]="['Mango', 'Apricots', 'Coconut']">
 					<deja-item value="apricots" text="Apricots"></deja-item>
 					<deja-item value="banana" text="Banana"></deja-item>
 					<deja-item value="cantaloupe" text="Cantaloupe"></deja-item>
@@ -290,7 +290,7 @@
                 </div>
                 <div class="flexFixed140px flexLayout flexColumn flexOffset15px">
                     <div>Preselections with the input selectedModels</div>
-                    <deja-tree-list class="fixed-height" multiSelect="true" selectedModels="Mango, Apricots, Coconut" [models]="fructs"></deja-tree-list>
+                    <deja-tree-list class="fixed-height" multiSelect="true" [selectedModels]="['Mango', 'Apricots', 'Coconut']" [models]="fructs"></deja-tree-list>
                 </div>
             </div>
             <div class="flexLayout">

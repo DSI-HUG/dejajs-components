@@ -457,7 +457,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
     /** required property setter. Can be string or empty so you can use it like : <deja-date-picker required></deja-date-picker> */
     @Input()
     public set required(value: boolean) {
-        this._required = coerceBooleanProperty(value) ? true : null;
+        this._required = coerceBooleanProperty(value) || null;
         this.stateChanges.next();
     }
 

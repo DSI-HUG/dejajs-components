@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Component } from '@angular/core';
@@ -62,22 +62,10 @@ export class DejaGridComponent extends Destroy {
     /** Texte à afficher par default dans la zone de recherche */
     /** Texte affiché si aucune donnée n'est présente dans le tableau */
     @Input() public nodataholder: string;
-    /** Permet de définir la longueur minimale de caractères dans le champ de recherche avant que la recherche ou le filtrage soient effectués */
-    // eslint-disable-next-line @angular-eslint/no-input-rename
-    @Input('min-search-length') public minSearchLength = 0;
     /** Correspond au ngModel du champ de filtrage ou recherche */
     @Input() public query = '';
-    /** Hauteur maximum avant que le composant affiche une scrollbar
-     * spécifier une grande valeur pour ne jamais afficher de scrollbar
-     * Spécifier 0 pour que le composant determine sa hauteur à partir du container
-     */
-    @Input() public maxHeight = 0;
-    /** Définit le nombre de lignes à sauter en cas de pression sur les touches PageUp ou PageDown */
-    @Input() public pageSize = 0;
     /** Définit un texte de conseil en cas d'erreur de validation ou autre */
     @Input() public hintLabel: string;
-    /** Définit la hauteur d'une ligne pour le calcul du viewport en pixels */
-    @Input() public viewPortRowHeight = ViewPortService.itemDefaultSize;
     /** Les trois valeurs acceptés en paramètre se trouvent dans l'enum ViewportMode (disabled, fixed, variable ou auto)
      * Attention, une désactivation du viewport dégrade considérablement les performances de la liste et ne doit pas être activée si la liste
      * est suceptible de contenir beaucoup d'éléments.
@@ -94,11 +82,11 @@ export class DejaGridComponent extends Destroy {
      */
     @Input() public searchField: string;
     /** Ligne courant ou ligne active */
-    @Input() public currentRow: IItemBase<unknown>;
+    @Input() public currentRow: unknown;
     /** Liste des éléments sélectionnés en mode multiselect */
-    @Input() public selectedItems: IItemBase<unknown>[];
+    @Input() public selectedItems: unknown[] | string;
     /** Elément selectioné en mode single select */
-    @Input() public selectedItem: IItemBase<unknown> | string;
+    @Input() public selectedItem: unknown;
     /** Liste des models selectionés en mode multiselect */
     @Input() public selectedModels: unknown[];
     /** Model selectioné en mode single select */
@@ -122,7 +110,7 @@ export class DejaGridComponent extends Destroy {
     /** Permet de définir un template comme suffixe de la zone de recherche par binding. */
     @Input() public searchSuffixTemplateExternal: unknown;
     /** Set a observable called before the rows will be displayed */
-    @Input() public loadingRows: (query: string | RegExp, selectedRows: IDejaGridRow<unknown>[]) => Observable<IDejaGridRow<unknown>[]>;
+    @Input() public loadingRows: (query: string | RegExp, selectedRows: IDejaGridRow<unknown>[]) => Observable<unknown[]>;
     /** Set a promise called before a row selection */
     @Input() public selectingRow: (row: IDejaGridRow<unknown>) => Promise<IDejaGridRow<unknown>> | Observable<IDejaGridRow<unknown>>;
     /** Set a promise called before a row deselection */
@@ -179,7 +167,7 @@ export class DejaGridComponent extends Destroy {
     public rowsWidth: number = null;
 
     // eslint-disable-next-line rxjs/finnish
-    private _rows: IItemBase<unknown>[] | Promise<IItemBase<unknown>[]> | Observable<IItemBase<unknown>[]>;
+    private _rows: unknown[] | Promise<unknown[]> | Observable<unknown[]>;
     private _columns: IDejaGridColumn[];
     private _columnLayout = {
         scrollLeft: 0,
@@ -208,12 +196,60 @@ export class DejaGridComponent extends Destroy {
     private _columnsSortable = false;
     private _columnsSizable = false;
     private _multiSelect = false;
+    private _minSearchLength = 0;
+    private _maxHeight = 0;
+    private _pageSize = 0;
+    private _viewPortRowHeight = ViewPortService.itemDefaultSize;
     // private noColumnsSpecified = false;
 
     private columnGroups$ = new Subject<IDejaGridColumn[] | string>();
     private columns$ = new ReplaySubject<IDejaGridColumn[]>(1);
     private _columnGroups = [] as IDejaGridColumn[];
     private _waiter: boolean;
+
+    /** Définit la hauteur d'une ligne pour le calcul du viewport en pixels */
+    @Input()
+    public set viewPortRowHeight(value: number | string) {
+        this._viewPortRowHeight = coerceNumberProperty(value);
+    }
+
+    public get viewPortRowHeight() {
+        return this._viewPortRowHeight;
+    }
+
+    /** Permet de définir la longueur minimale de caractères dans le champ de recherche avant que la recherche ou le filtrage soient effectués */
+    // eslint-disable-next-line @angular-eslint/no-input-rename
+    @Input()
+    public set minSearchLength(value: number | string) {
+        this._minSearchLength = coerceNumberProperty(value);
+    }
+
+    public get minSearchLength() {
+        return this._minSearchLength;
+    }
+
+    /** Hauteur maximum avant que le composant affiche une scrollbar
+     * spécifier une grande valeur pour ne jamais afficher de scrollbar
+     * Spécifier 0 pour que le composant determine sa hauteur à partir du container
+     */
+    @Input()
+    public set maxHeight(value: number | string) {
+        this._maxHeight = coerceNumberProperty(value);
+    }
+
+    public get maxHeight() {
+        return this._maxHeight;
+    }
+
+    /** Définit le nombre de lignes à sauter en cas de pression sur les touches PageUp ou PageDown */
+    @Input()
+    public set pageSize(value: number | string) {
+        this._pageSize = coerceNumberProperty(value);
+    }
+
+    public get pageSize() {
+        return this._pageSize;
+    }
 
     /** Définit si le waiter doit être affiché dans la grille. */
     @Input()
@@ -349,7 +385,7 @@ export class DejaGridComponent extends Destroy {
     /** Définit le modèle affiché dans les lignes de la grille. */
     @Input()
     // eslint-disable-next-line rxjs/finnish
-    public set rows(rows: IItemBase<unknown>[] | Promise<IItemBase<unknown>[]> | Observable<IItemBase<unknown>[]>) {
+    public set rows(rows: unknown[] | Promise<unknown[]> | Observable<unknown[]>) {
         this._rows = rows;
         if (this._rows && !this._columns) {
             if (this._rows instanceof Array) {
@@ -584,7 +620,7 @@ export class DejaGridComponent extends Destroy {
 
     // set accessor including call the onchange callback
     public set value(value: unknown) {
-        this.rows = value as IItemBase<unknown>[] | Promise<IItemBase<unknown>[]> | Observable<IItemBase<unknown>[]>;
+        this.rows = value as unknown[] | Promise<unknown[]> | Observable<unknown[]>;
     }
 
     /** Nettoye les caches et réaffiche le viewport. */
@@ -790,20 +826,18 @@ export class DejaGridComponent extends Destroy {
         this.columnGroups$.next(e.columns);
     }
 
-    public calcColumnsLayout(rows?: IItemBase<unknown>[]) {
+    public calcColumnsLayout(rows?: unknown[]) {
         // this.noColumnsSpecified = false;
 
         if (!this._columns || !this._columns.length) {
             if (rows?.length) {
                 const searchFirstLastLevelRow = (items: IItemTree<unknown>[]) => items.find(row => {
                     if (row.$items) {
-                        // IItemTree
                         const srow: IItemTree<unknown> = searchFirstLastLevelRow(row.$items);
                         if (srow) {
                             return true;
                         }
                     } else {
-                        // IItemBase
                         return !!row;
                     }
                     return false;

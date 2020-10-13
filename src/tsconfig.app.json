@@ -4,6 +4,8 @@
         "outDir": "../out-tsc/app"
     },
     "angularCompilerOptions": {
+        "enableResourceInlining": true,
+        "strictTemplates": true,
         "enableIvy": true
     },
     "files": [

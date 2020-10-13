@@ -488,8 +488,8 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
 
     /** Définit la longueur minimale de caractères dans le champ de recherche avant que la recherche ou le filtrage soient effectués */
     // eslint-disable-next-line @angular-eslint/no-input-rename
-    @Input('min-search-length') public set minSearchlength(value: number) {
-        this._minSearchLength = value;
+    @Input('min-search-length') public set minSearchlength(value: number | string) {
+        this._minSearchLength = coerceNumberProperty(value);
     }
 
     public get minSearchlength() {
@@ -520,7 +520,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
 
     @Input()
     /** Définit une valeur indiquant si les éléments selectionés doivent être masqué de la liste déroulante. */
-    public set hideSelected(value: boolean) {
+    public set hideSelected(value: boolean | string) {
         this.setHideSelected(coerceBooleanProperty(value));
     }
 
