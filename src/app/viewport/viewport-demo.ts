@@ -27,7 +27,7 @@ export class DejaViewPortDemoComponent {
     public hasButtons = false;
     public ensureIndex: number;
 
-    protected exampleValue = `
+    public exampleValue = `
     <deja-viewport [models]="news$ | async" itemSize="120">
         <ng-template #itemTemplate let-item>
             <div *ngIf="item" class="news" [attr.id]="id">
@@ -46,13 +46,13 @@ export class DejaViewPortDemoComponent {
         </ng-template>
     </deja-viewport>`;
 
-    protected news$: Observable<News[]>;
+    public news$: Observable<News[]>;
 
     public constructor(newsService: NewsService) {
         this.news$ = newsService.getNews$(50);
     }
 
-    protected imageLoaded(item: IViewPortItem) {
+    public imageLoaded(item: IViewPortItem) {
         const itemExt = item as IExtendedViewPortItem;
         if (!itemExt.loaded) {
             itemExt.loaded = true;

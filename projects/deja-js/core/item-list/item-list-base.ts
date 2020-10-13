@@ -24,15 +24,15 @@ import { IItemTree } from './item-tree';
 import { IViewPort, IViewPortRefreshParams, ViewportMode, ViewPortService } from './viewport.service';
 
 /** Classe de base pour tous les composants à listes (deja-treelist, deja-select, deja-grid) */
-export abstract class ItemListBase extends Destroy {
+export abstract class ItemListBase<T> extends Destroy {
     protected _waiter = true;
 
-    protected _itemList: IItemBase[] = []; // Viewport list
+    protected _itemList: IItemBase<T>[] = []; // Viewport list
     protected _multiSelect = false;
     protected _searchField: string;
     protected _maxHeight: number;
     protected _currentItemIndex = -1;
-    protected _currentItem: IItemBase;
+    protected _currentItem: IItemBase<T>;
     protected _hintLabel: string;
     protected _nodataLabel: string;
     protected _hideSelected: boolean;
@@ -63,7 +63,7 @@ export abstract class ItemListBase extends Destroy {
 
     private waiter$sub: Subscription;
 
-    private _itemListService: ItemListService;
+    private _itemListService: ItemListService<T>;
     private allCollapsed = false;
     private _viewPortRowHeight = ViewPortService.itemDefaultSize;
 
@@ -128,7 +128,7 @@ export abstract class ItemListBase extends Destroy {
     }
 
     public get treeItemList() {
-        return this._itemList as IItemTree[];
+        return this._itemList as IItemTree<T>[];
     }
 
     public get ddStartIndex() {
@@ -203,7 +203,7 @@ export abstract class ItemListBase extends Destroy {
     }
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    public getItemFromHTMLElement(element: HTMLElement): IItemBase {
+    public getItemFromHTMLElement(element: HTMLElement): IItemBase<T> {
         const itemIndex = this.getItemIndexFromHTMLElement(element);
         if (itemIndex === undefined) {
             return undefined;
@@ -232,7 +232,7 @@ export abstract class ItemListBase extends Destroy {
     /** Définit la liste des éléments sélectionés.
      * @param items Liste des éléments a selectioner.
      */
-    public setSelectedItems(value: IItemBase[]) {
+    public setSelectedItems(value: IItemBase<T>[]) {
         this.getItemListService().setSelectedItems(value);
         this.changeDetectorRef.markForCheck();
     }
@@ -240,35 +240,35 @@ export abstract class ItemListBase extends Destroy {
     /**
      * Set a promise or an observable called before an item selection
      */
-    public setLoadingItems(fn: (query: string | RegExp, selectedItems: IItemBase[]) => Observable<IItemBase[]>) {
+    public setLoadingItems(fn: (query: string | RegExp, selectedItems: IItemBase<T>[]) => Observable<IItemBase<T>[]>) {
         this.getItemListService().setLoadingItems(fn);
     }
 
     /**
      * Set a promise or an observable called before an item deselection
      */
-    public setSelectingItem(fn: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>) {
+    public setSelectingItem(fn: (item: IItemBase<T>) => Promise<IItemBase<T>> | Observable<IItemBase<T>>) {
         this.getItemListService().setSelectingItem(fn);
     }
 
     /**
      * Set a promise or an observable called before an item deselection
      */
-    public setUnselectingItem(fn: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>) {
+    public setUnselectingItem(fn: (item: IItemBase<T>) => Promise<IItemBase<T>> | Observable<IItemBase<T>>) {
         this.getItemListService().setUnselectingItem(fn);
     }
 
     /**
      * Set a promise or an observable called before an item selection
      */
-    public setExpandingItem(fn: (item: IItemTree) => Promise<IItemTree> | Observable<IItemTree>) {
+    public setExpandingItem(fn: (item: IItemTree<T>) => Promise<IItemTree<T>> | Observable<IItemTree<T>>) {
         this.getItemListService().setExpandingItem(fn);
     }
 
     /**
      * Set a promise or an observable called before an item deselection
      */
-    public setCollapsingItem(fn: (item: IItemTree) => Promise<IItemTree> | Observable<IItemTree>) {
+    public setCollapsingItem(fn: (item: IItemTree<T>) => Promise<IItemTree<T>> | Observable<IItemTree<T>>) {
         this.getItemListService().setCollapsingItem(fn);
     }
 
@@ -298,7 +298,7 @@ export abstract class ItemListBase extends Destroy {
     }
 
     /** Trie la liste par le champs spécifié. */
-    public sort$(name?: string): Observable<IViewListResult> {
+    public sort$(name?: string): Observable<IViewListResult<T>> {
         const sortField = name || this._textField;
 
         if (!this._sortInfos) {
@@ -322,7 +322,7 @@ export abstract class ItemListBase extends Destroy {
      * @param groupInfos Modèle de groupe à appliquer.
      * @return Observable résolu par la fonction.
      */
-    public group$(groups: IGroupInfo[]): Observable<IViewListResult> {
+    public group$(groups: IGroupInfo[]): Observable<IViewListResult<T>> {
         return this.getItemListService().group$(groups).pipe(
             switchMap(() => this.calcViewList$().pipe(take(1)))
         );
@@ -332,7 +332,7 @@ export abstract class ItemListBase extends Destroy {
      * @param groupInfos Modèle de groupe à retirer.
      * @return Observable résolu par la fonction.
      */
-    public ungroup$(groupInfo: IGroupInfo): Observable<IViewListResult> {
+    public ungroup$(groupInfo: IGroupInfo): Observable<IViewListResult<T>> {
         return this.getItemListService().ungroup$(groupInfo).pipe(
             switchMap(() => this.calcViewList$().pipe(
                 take(1)
@@ -343,16 +343,16 @@ export abstract class ItemListBase extends Destroy {
     /** Change l'état d'expansion de tous les éléments.
      * @return Observable résolu par la fonction.
      */
-    public toggleAll$(collapsed?: boolean): Observable<IItemTree[]> {
+    public toggleAll$(collapsed?: boolean): Observable<IItemTree<T>[]> {
         this.allCollapsed = (collapsed !== undefined) ? collapsed : !this.allCollapsed;
         if (this.viewPort.mode === 'disabled') {
             return from(this._itemList).pipe(
-                filter((item: IItemTree) => item.$items && item.depth === 0 && item.collapsible !== false),
-                switchMap((_item: IItemTree, index: number) => this.toggleCollapse$(index + this.vpStartRow, this.allCollapsed)),
+                filter((item: IItemTree<T>) => item.$items && item.depth === 0 && item.collapsible !== false),
+                switchMap((_item: IItemTree<T>, index: number) => this.toggleCollapse$(index + this.vpStartRow, this.allCollapsed)),
                 reduce((acc, item) => {
                     acc.push(item);
                     return acc;
-                }, [] as IItemTree[]));
+                }, [] as IItemTree<T>[]));
         } else {
             return this.getItemListService().toggleAll$(this.allCollapsed);
         }
@@ -363,7 +363,7 @@ export abstract class ItemListBase extends Destroy {
      * @param collapse  Etat de l'élément. True pour réduire l'élément.
      * @return Observable résolu par la fonction.
      */
-    public toggleCollapse$(index: number, collapsed: boolean): Observable<IItemTree> {
+    public toggleCollapse$(index: number, collapsed: boolean): Observable<IItemTree<T>> {
         return this.getItemListService().toggleCollapse$(index, collapsed).pipe(
             switchMap(toogleResult => this.calcViewList$().pipe(
                 take(1), map(() => toogleResult))
@@ -389,7 +389,7 @@ export abstract class ItemListBase extends Destroy {
     }
 
     /** Recalcule le viewport. */
-    public refreshViewPort(item?: IItemBase | IItemBase[], clearMeasuredHeight?: boolean) {
+    public refreshViewPort(item?: IItemBase<T> | IItemBase<T>[], clearMeasuredHeight?: boolean) {
         const refreshParams = {} as IViewPortRefreshParams;
         if (item) {
             refreshParams.items = item instanceof Array ? item : [item];
@@ -415,7 +415,7 @@ export abstract class ItemListBase extends Destroy {
      * @param item Element enfant du parent à retrouver.
      * @return Observable résolu par la fonction, qui retourne les informations sur le parent de l'élément spécifié
      */
-    public getParentListInfos$(item: IItemTree): Observable<IParentListInfoResult> {
+    public getParentListInfos$(item: IItemTree<T>): Observable<IParentListInfoResult<T>> {
         return this.getItemListService().getParentListInfos$(item, this._multiSelect);
     }
 
@@ -450,7 +450,7 @@ export abstract class ItemListBase extends Destroy {
         return this._currentItem;
     }
 
-    public getItemHeight(item: IItemBase) {
+    public getItemHeight(item: IItemBase<T>) {
         if (this.viewPort.mode === 'disabled') {
             return null;
         } else if (this.viewPort.mode === 'fixed') {
@@ -475,7 +475,7 @@ export abstract class ItemListBase extends Destroy {
      * @param startIndex Index de départ sur la liste des éléments visibles.
      * @return Observable résolu par la fonction.
      */
-    protected findNextMatch$(compare?: (item: IItemBase, index: number) => boolean, startIndex?: number): Observable<IFindItemResult> {
+    protected findNextMatch$(compare?: (item: IItemBase<T>, index: number) => boolean, startIndex?: number): Observable<IFindItemResult<T>> {
         return this.ensureListCaches$().pipe(
             switchMap(() => this.getItemListService().findNextMatch$(compare, startIndex)));
     }
@@ -496,7 +496,7 @@ export abstract class ItemListBase extends Destroy {
     /** Definit le service de liste utilisé par ce composant.
      * @param value Service de liste utilisé par ce composant.
      */
-    protected setItemListService(value: ItemListService) {
+    protected setItemListService(value: ItemListService<T>) {
         if (this.waiter$sub) {
             this.waiter$sub.unsubscribe();
             this.waiter$sub = undefined;
@@ -557,7 +557,7 @@ export abstract class ItemListBase extends Destroy {
     /** Définit l'élément courant (actif).
      * @param item Elément courant.
      */
-    protected setCurrentItem(item: IItemBase) {
+    protected setCurrentItem(item: IItemBase<T>) {
         this._currentItemIndex = item ? this.getItemListService().getItemIndex(item) : -1;
         this._currentItem = item;
     }
@@ -566,7 +566,7 @@ export abstract class ItemListBase extends Destroy {
      * @param item Element à chercher sur la liste des éléments visibles.
      * @return Index correspondant à l'élément recherché.
      */
-    protected getItemIndex(item: IItemBase) {
+    protected getItemIndex(item: IItemBase<T>) {
         return item && this.getItemListService() ? this.getItemListService().getItemIndex(item) : -1;
     }
 
@@ -577,11 +577,11 @@ export abstract class ItemListBase extends Destroy {
         this._multiSelect = value;
     }
 
-    /** Définit le modèle utilisé par la liste. Il est uniquement de type IItemBase. Ce model peut ètre hierarchique sans limitation de la profondeur ou une chargé en asynchrone par une promise ou un observable.
+    /** Définit le modèle utilisé par la liste. Il est uniquement de type IItemBase<T>. Ce model peut ètre hierarchique sans limitation de la profondeur ou une chargé en asynchrone par une promise ou un observable.
      * @param items Provider de la liste des éléments de la liste.
      */
     // eslint-disable-next-line rxjs/finnish
-    protected setItems$(items: IItemBase[] | Promise<IItemBase[]> | Observable<IItemBase[]>) {
+    protected setItems$(items: IItemBase<T>[] | Promise<IItemBase<T>[]> | Observable<IItemBase<T>[]>) {
         if (!(items instanceof Array)) {
             this.clearViewPort();
         }
@@ -617,12 +617,12 @@ export abstract class ItemListBase extends Destroy {
     }
 
     /** Usage interne. Retourne la portion de la liste à afficher en fonction des paramètres spécifiés. */
-    protected getViewList$(query?: RegExp | string, ignoreCache?: boolean): Observable<IViewListResult> {
+    protected getViewList$(query?: RegExp | string, ignoreCache?: boolean): Observable<IViewListResult<T>> {
         if (typeof query === 'string' && (query || '').length < this._minSearchLength) {
             const emptyListResult = {
                 depthMax: 0,
                 visibleList: []
-            } as IViewListResult;
+            } as IViewListResult<T>;
 
             if (!this.getItems()) {
                 return this.setItems$([]).pipe(map(() => emptyListResult));
@@ -651,7 +651,7 @@ export abstract class ItemListBase extends Destroy {
      * @param selected True si les éléments divent être sélectionés, False si ils doivent être déselectionés.
      * @return Observable résolu par la fonction.
      */
-    protected toggleSelect$(items: IItemBase[], selected: boolean) {
+    protected toggleSelect$(items: IItemBase<T>[], selected: boolean) {
         const itemListService = this.getItemListService();
         return itemListService.toggleSelect$(items, selected);
     }
@@ -660,7 +660,7 @@ export abstract class ItemListBase extends Destroy {
      * @param item Elément à analyser.
      * @return True si l'élément peut être réduit.
      */
-    protected isCollapsible(item: IItemTree) {
+    protected isCollapsible(item: IItemTree<T>) {
         return item?.$items && item.collapsible !== false;
     }
 
@@ -668,7 +668,7 @@ export abstract class ItemListBase extends Destroy {
      * @param item Elément à analyser.
      * @return True si l'élément est selectionable.
      */
-    protected isSelectable(item: IItemBase) {
+    protected isSelectable(item: IItemBase<T>) {
         return item && item.selectable !== false;
     }
 
@@ -731,21 +731,21 @@ export abstract class ItemListBase extends Destroy {
     }
 
     /** Internal usage */
-    protected getItemTreeInfo(items: IItemBase[], item: IItemBase): IItemTreeInfo {
+    protected getItemTreeInfo(items: IItemBase<T>[], item: IItemBase<T>): IItemTreeInfo<T> {
         const parentIndex = items.findIndex(itm => itm === item);
         if (parentIndex < 0) {
             return null;
         }
 
-        const treeItem = item as IItemTree;
+        const treeItem = item as IItemTree<T>;
         const parentDepth = treeItem.depth;
         let lastIndex = parentIndex;
-        const children = [] as IItemBase[];
+        const children = [] as IItemBase<T>[];
 
         if (parentDepth !== undefined) {
             // eslint-disable-next-line no-loops/no-loops
             for (let i = parentIndex + 1; i < items.length; i++) {
-                const curItem = items[i] as IItemTree;
+                const curItem = items[i] as IItemTree<T>;
                 if (curItem.depth <= parentDepth) {
                     break;
                 }
@@ -759,13 +759,13 @@ export abstract class ItemListBase extends Destroy {
             item: item,
             lastIndex: lastIndex,
             startIndex: parentIndex
-        } as IItemTreeInfo;
+        } as IItemTreeInfo<T>;
     }
 
     /** Calcule le viewport pour le conteneur spécifié. */
-    protected calcViewList$(query?: string): Observable<IViewListResult> {
+    protected calcViewList$(query?: string): Observable<IViewListResult<T>> {
         return this.getViewList$(query).pipe(
-            tap((result: IViewListResult) => {
+            tap((result: IViewListResult<T>) => {
                 if (result.depthMax !== undefined) {
                     this._depthMax = result.depthMax;
                 }
@@ -774,20 +774,20 @@ export abstract class ItemListBase extends Destroy {
             }));
     }
 
-    protected ensureListCaches$(): Observable<IViewListResult> {
+    protected ensureListCaches$(): Observable<IViewListResult<T>> {
         return this._itemListService.hasCache ? of(null) : this.getViewList$();
     }
 
     /** Calcul la position de la scrollbar pour que l'élément spécifié soit dans la zone visible. */
-    protected ensureItemVisible(item: IItemBase | number) {
+    protected ensureItemVisible(item: IItemBase<T> | number) {
         this.viewPort.ensureItem$.next(item);
     }
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    protected mapToIItemBase(modls: any[], selected?: boolean): IItemBase[] {
+    protected mapToIItemBase(modls: any[], selected?: boolean): IItemBase<T>[] {
         const m = modls || [];
         return m.map(model => {
-            const itemBase: IItemBase = {};
+            const itemBase: IItemBase<T> = {};
 
             itemBase.model = model;
 
@@ -853,9 +853,9 @@ export abstract class ItemListBase extends Destroy {
     }
 }
 
-export interface IItemTreeInfo {
-    item?: IItemBase;
-    children?: IItemBase[];
+export interface IItemTreeInfo<T> {
+    item?: IItemBase<T>;
+    children?: IItemBase<T>[];
     startIndex: number;
     lastIndex?: number;
 }

@@ -69,7 +69,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
 
     @HostBinding() public id = `deja-numeric-stepper-${DejaNumericStepperComponent.nextId++}`;
     @HostBinding('class.floating') public get shouldLabelFloat() {
-        return this.focused || !this.empty || this.alwaysDisplayUnit;
+        return this.focused || !this.empty || this._alwaysDisplayUnit;
     }
 
     @HostBinding('attr.aria-describedby') public describedBy = '';
@@ -88,11 +88,12 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     /** Function for min / max validation */
     public validateFn: ValidatorFn;
 
+    public _max: number = null;
+    public _min: number = null;
+    public _step = 1;
+
     private _hideSteppers = false;
     private inputElement: HTMLInputElement;
-    private _max: number = null;
-    private _min: number = null;
-    private _step = 1;
 
     /** InputElement of stepper */
     @ViewChild('inputStepper')
@@ -108,7 +109,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     }
 
     @Input()
-    public set max(value) {
+    public set max(value: number | string) {
         this._max = coerceNumberProperty(value, null);
         this.changeDetectorRef.markForCheck();
     }
@@ -119,7 +120,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     }
 
     @Input()
-    public set min(value) {
+    public set min(value: number | string) {
         this._min = coerceNumberProperty(value, null);
         this.changeDetectorRef.markForCheck();
     }
@@ -134,7 +135,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     }
 
     @Input()
-    public set step(value) {
+    public set step(value: number | string) {
         this._step = coerceNumberProperty(value, 1);
         this.changeDetectorRef.markForCheck();
     }
@@ -145,7 +146,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     }
 
     @Input()
-    public set hideSteppers(value) {
+    public set hideSteppers(value: boolean | string) {
         this._hideSteppers = coerceBooleanProperty(value);
         this.changeDetectorRef.markForCheck();
     }
@@ -176,7 +177,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
         return this._alwaysDisplayUnit;
     }
 
-    public set alwaysDisplayUnit(value) {
+    public set alwaysDisplayUnit(value: boolean | string) {
         this._alwaysDisplayUnit = coerceBooleanProperty(value);
     }
 

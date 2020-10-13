@@ -77,7 +77,7 @@ export class SelectDemoComponent extends Destroy {
         return this._dialogVisible;
     }
 
-    public constructor(private changeDetectorRef: ChangeDetectorRef, private countriesService: CountriesService, protected countriesListService: CountriesListService, newsService: NewsService, private fb: FormBuilder) {
+    public constructor(private changeDetectorRef: ChangeDetectorRef, private countriesService: CountriesService, public countriesListService: CountriesListService, newsService: NewsService, private fb: FormBuilder) {
         super();
 
         this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","displayName":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","displayName":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","displayName":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","displayName":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","displayName":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","displayName":"Dominica","depth":0,"odd":false,"selected":true}]');
@@ -175,8 +175,8 @@ export class SelectDemoComponent extends Destroy {
         });
     }
 
-    protected loadingItems() {
-        return (_query: string | RegExp, _selectedItems: IItemBase[]) => {
+    public loadingItems() {
+        return (_query: string | RegExp, _selectedItems: IItemBase<unknown>[]) => {
             this.onDemandSelect.waiter = true;
             this.onDemandPlaceHolder = 'loading...';
             return this.countriesService.getCountries$().pipe(
@@ -188,15 +188,15 @@ export class SelectDemoComponent extends Destroy {
         };
     }
 
-    protected collapsingItems() {
-        return (item: IItemBase) => {
+    public collapsingItems() {
+        return (item: IItemBase<unknown>) => {
             const country = item as ICountryGroup;
             return country.loaded ? of(item) : this.confirmDialog()(item);
         };
     }
 
-    protected expandingItems() {
-        return (item: IItemBase) => {
+    public expandingItems() {
+        return (item: IItemBase<unknown>) => {
             const group = item as ICountryGroup;
             if (group.loaded) {
                 return of(item);
@@ -220,13 +220,13 @@ export class SelectDemoComponent extends Destroy {
         };
     }
 
-    protected confirmDialogWithPromise() {
+    public confirmDialogWithPromise() {
         // eslint-disable-next-line rxjs/no-topromise
-        return (item: IItemBase) => this.confirmDialog()(item).toPromise();
+        return (item: IItemBase<unknown>) => this.confirmDialog()(item).toPromise();
     }
 
-    protected confirmDialog() {
-        return (item: IItemBase) => {
+    public confirmDialog() {
+        return (item: IItemBase<unknown>) => {
             this.dialogVisible = true;
             return from(this.dialogResponse$).pipe(
                 take(1),
@@ -238,7 +238,7 @@ export class SelectDemoComponent extends Destroy {
     }
 
     @ViewChild('bigCountries')
-    protected set bigCountriesSelect(select: DejaSelectComponent) {
+    public set bigCountriesSelect(select: DejaSelectComponent) {
         if (this.viewPortInfos$) {
             this.viewPortInfos$.unsubscribe();
             this.viewPortInfos = [];
@@ -260,7 +260,7 @@ export class SelectDemoComponent extends Destroy {
         });
     }
 
-    protected imageLoaded(item: IViewPortItem) {
+    public imageLoaded(item: IViewPortItem) {
         const itemExt = item as IExtendedViewPortItem;
         if (!itemExt.loaded) {
             itemExt.loaded = true;
@@ -270,13 +270,13 @@ export class SelectDemoComponent extends Destroy {
 
 }
 
-interface ISelectCountry extends IItemTree {
-    items?: IItemTree[];
+interface ISelectCountry extends IItemTree<unknown> {
+    items?: IItemTree<unknown>[];
 }
 
 interface ICountryGroup extends ISelectCountry {
     groupName?: string;
-    items: IItemBase[];
+    items: IItemBase<unknown>[];
     loaded?: boolean;
 }
 

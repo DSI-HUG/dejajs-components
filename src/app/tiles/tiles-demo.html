@@ -9,7 +9,7 @@
 
 <ng-template ngFor let-message [ngForOf]="messages$ | async">
     <deja-snackbar alignment="bottom right" *ngIf="message.gate" [duration]="8000" (onAnimationDone)="message.cancel(false)">
-        <deja-message-box type="{{message.type}}" title="{{message.title}}">
+        <deja-message-box [type]="message.type" [title]="message.title">
             {{message.content}}
             <ng-template #actionsTemplate>
                 <button mat-raised-button (click)="message.cancel(false)" color="primary">

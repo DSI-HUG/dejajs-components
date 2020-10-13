@@ -20,7 +20,7 @@ import { IDejaGridColumn, IDejaGridColumnLayoutEvent } from './data-grid-column/
 import { DejaGridComponent } from './data-grid.component';
 import { DejaGridModule } from './index';
 
-interface IFructs extends IItemBase {
+interface IFructs extends IItemBase<unknown> {
     name: string;
     value: string;
     color: string;

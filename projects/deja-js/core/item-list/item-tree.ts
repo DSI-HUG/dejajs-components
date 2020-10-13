@@ -9,7 +9,7 @@
 import { IItemBase } from './item-base';
 
 /** Interface représentant un model de liste hierarchique. */
-export interface IItemTree extends IItemBase {
+export interface IItemTree<T> extends IItemBase<T> {
     /** Indique si l'élément peut être réduit. */
     collapsible?: boolean;
     /** Indique si l'élément est réduit. */
@@ -21,5 +21,5 @@ export interface IItemTree extends IItemBase {
     /** Retourne la profondeur de l'élément dans la hierarchie. */
     depth?: number;
     /** Usage interne. */
-    $items?: IItemTree[];
+    $items?: IItemTree<T>[];
 }

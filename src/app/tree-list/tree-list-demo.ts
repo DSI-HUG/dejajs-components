@@ -47,24 +47,24 @@ export class DejaTreeListDemoComponent extends Destroy {
 
     public fruct = 'apricots';
     public fructs = [] as string[];
-    public fructItems = [] as IItemBase[];
-    public fructItemsWithPreSelection = [] as IItemBase[];
+    public fructItems = [] as IItemBase<unknown>[];
+    public fructItemsWithPreSelection = [] as IItemBase<unknown>[];
     public folders: Folder[];
     public ensureIndex: number;
     public tabIndex = 1;
     public deepCountries$: Observable<DeepCountry[]>;
     public countriesForMultiselect: Country[];
     public onDemandGroupedCountries: ICountryGroup[];
-    public multiselectModel: IItemTree[];
+    public multiselectModel: IItemTree<unknown>[];
     public fruitForm: FormGroup;
     public fruitFormModels: FormGroup;
     public fruits$: Observable<string[]>;
     public countries$: Observable<Country[]>;
     public groupedCountries: ICountryGroup[];
 
-    protected disabled: boolean;
-    protected country: Country;
-    protected deepCountry: DeepCountry = {
+    public disabled: boolean;
+    public country: Country;
+    public deepCountry: DeepCountry = {
         l1: {
             l2: {
                 name: 'Switzerland',
@@ -73,17 +73,17 @@ export class DejaTreeListDemoComponent extends Destroy {
         }
     };
 
-    protected news$: Observable<News[]>;
-    protected bigNews$: Observable<News[]>;
-    protected bigCountries$: Observable<Country[]>;
-    protected viewPortInfos: {
+    public news$: Observable<News[]>;
+    public bigNews$: Observable<News[]>;
+    public bigCountries$: Observable<Country[]>;
+    public viewPortInfos: {
         name: string;
         value: string;
     }[];
 
-    protected viewPortInfos$: Subscription;
-    protected dialogResponse$: Subject<string> = new Subject<string>();
-    protected loremList: IItemTree[] = [];
+    public viewPortInfos$: Subscription;
+    public dialogResponse$: Subject<string> = new Subject<string>();
+    public loremList: IItemTree<unknown>[] = [];
 
     private _dialogVisible = false;
 
@@ -100,7 +100,7 @@ export class DejaTreeListDemoComponent extends Destroy {
         private changeDetectorRef: ChangeDetectorRef,
         private countriesService: CountriesService,
         private folderService: FoldersService,
-        protected countriesListService: CountriesListService,
+        public countriesListService: CountriesListService,
         public newsService: NewsService,
         public groupingService: GroupingService,
         private fb: FormBuilder
@@ -114,7 +114,7 @@ export class DejaTreeListDemoComponent extends Destroy {
         // eslint-disable-next-line no-loops/no-loops
         for (let i = 0; i < 50; i++) {
             const rand = Math.floor(Math.random() * (70 - 33 + 1)) + 33; // random de 33 à 70
-            this.loremList[i] = {} as IItemTree;
+            this.loremList[i] = {} as IItemTree<unknown>;
             this.loremList[i].size = rand;
             this.loremList[i].displayName = `${i} - Une ligne de test avec une taille de : ${rand}`;
         }
@@ -168,13 +168,13 @@ export class DejaTreeListDemoComponent extends Destroy {
         this.fructItems = this.fructs.map(fruct => ({
             displayName: fruct,
             value: fruct.toLowerCase()
-        } as IItemBase));
+        } as IItemBase<unknown>));
 
         this.fructItemsWithPreSelection = this.fructs.map((fruct, index) => ({
             displayName: fruct,
             value: fruct.toLowerCase(),
             selected: index === 1
-        } as IItemBase));
+        } as IItemBase<unknown>));
 
         this.countries$.pipe(
             tap(value => this.countriesForMultiselect = value),
@@ -242,19 +242,19 @@ export class DejaTreeListDemoComponent extends Destroy {
         });
     }
 
-    protected loadingItems() {
-        return (_query: string | RegExp, _selectedItems: IItemBase[]) => this.countriesService.getCountries$().pipe(delay(3000));
+    public loadingItems() {
+        return (_query: string | RegExp, _selectedItems: IItemBase<unknown>[]) => this.countriesService.getCountries$().pipe(delay(3000));
     }
 
-    protected collapsingItems() {
-        return (item: IItemBase) => {
+    public collapsingItems() {
+        return (item: IItemBase<unknown>) => {
             const country = item as ICountryGroup;
             return country.loaded ? of(item) : this.confirmDialog()(item);
         };
     }
 
-    protected expandingItems() {
-        return (item: IItemBase) => {
+    public expandingItems() {
+        return (item: IItemBase<unknown>) => {
             const group = item as ICountryGroup;
             if (group.loaded) {
                 return of(item);
@@ -284,8 +284,8 @@ export class DejaTreeListDemoComponent extends Destroy {
         };
     }
 
-    protected confirmDialog() {
-        return (item: IItemBase) => {
+    public confirmDialog() {
+        return (item: IItemBase<unknown>) => {
             this.dialogVisible = true;
             return from(this.dialogResponse$).pipe(
                 take(1),
@@ -297,7 +297,7 @@ export class DejaTreeListDemoComponent extends Destroy {
     }
 
     @ViewChild('bigCountries')
-    protected set bigCountriesList(treelist: DejaTreeListComponent) {
+    public set bigCountriesList(treelist: DejaTreeListComponent) {
         if (this.viewPortInfos$) {
             this.viewPortInfos$.unsubscribe();
             this.viewPortInfos = [];
@@ -318,7 +318,7 @@ export class DejaTreeListDemoComponent extends Destroy {
         });
     }
 
-    protected imageLoaded(item: IViewPortItem) {
+    public imageLoaded(item: IViewPortItem) {
         const itemExt = item as IExtendedViewPortItem;
         if (!itemExt.loaded) {
             itemExt.loaded = true;
@@ -326,26 +326,26 @@ export class DejaTreeListDemoComponent extends Destroy {
         }
     }
 
-    protected multiselectModelChange(countries: Country[]) {
+    public multiselectModelChange(countries: Country[]) {
         this.multiselectModel = countries ? countries : null;
     }
 
-    protected onFilterTemplateClicked(where: string) {
+    public onFilterTemplateClicked(where: string) {
         alert(`${where} clicked`);
     }
 
-    protected onItemDragStart(event: IDejaDragEvent) {
+    public onItemDragStart(event: IDejaDragEvent) {
         event.dragInfo.country = event.dragObject;
     }
 
-    protected onDivDragOver(event: IDejaDragEvent) {
+    public onDivDragOver(event: IDejaDragEvent) {
         // eslint-disable-next-line no-prototype-builtins
         if (event.dragInfo.hasOwnProperty('country')) {
             event.preventDefault();
         }
     }
 
-    protected onDivDropEvent(event: IDejaDragEvent) {
+    public onDivDropEvent(event: IDejaDragEvent) {
         // eslint-disable-next-line no-prototype-builtins
         if (event.dragInfo.hasOwnProperty('country')) {
             const country = event.dragInfo.country as Country;
@@ -354,7 +354,7 @@ export class DejaTreeListDemoComponent extends Destroy {
         }
     }
 
-    protected getDragContext() {
+    public getDragContext() {
         return {
             target: '[ddid]',
             className: 'item-base-cursor',
@@ -365,7 +365,7 @@ export class DejaTreeListDemoComponent extends Destroy {
         } as IDejaMouseDraggableContext;
     }
 
-    protected getDropContext(dropArea: HTMLElement) {
+    public getDropContext(dropArea: HTMLElement) {
         return {
             dragEnter: _dragContext => ({
                 width: 200,
@@ -380,13 +380,13 @@ export class DejaTreeListDemoComponent extends Destroy {
     }
 }
 
-interface ISelectCountry extends IItemTree {
-    items?: IItemTree[];
+interface ISelectCountry extends IItemTree<unknown> {
+    items?: IItemTree<unknown>[];
 }
 
 interface ICountryGroup extends ISelectCountry {
     groupName?: string;
-    items: IItemBase[];
+    items: IItemBase<unknown>[];
     loaded?: boolean;
 }
 

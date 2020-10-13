@@ -28,7 +28,7 @@
         "strictInjectionParameters": true,
         "enableResourceInlining": true,
         "strictTemplates": true,
-        "strictAttributeTypes": false
+        "strictAttributeTypes": true
     },
     "exclude": [
         "test.ts",

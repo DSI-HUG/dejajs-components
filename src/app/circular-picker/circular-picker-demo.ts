@@ -19,20 +19,20 @@ export class DejaCircularPickerDemoComponent {
 
     public sm = 3;
     public sms = 10;
-    protected ranges1 = [
+    public ranges1 = [
         { min: 1, max: 20, labelInterval: 2 }
     ] as ICircularRange[];
 
-    protected ranges2 = [
+    public ranges2 = [
         { min: 1, max: 20 }
     ] as ICircularRange[];
 
-    protected ranges3 = [
+    public ranges3 = [
         { min: 1, max: 12, beginOffset: Math.PI / 3 },
         { min: 13, max: 24, beginOffset: Math.PI / 3 }
     ] as ICircularRange[];
 
-    protected ranges41 = [
+    public ranges41 = [
         {
             labelInterval: 5,
             max: 59,
@@ -40,7 +40,7 @@ export class DejaCircularPickerDemoComponent {
         }
     ] as ICircularRange[];
 
-    protected ranges42 = [
+    public ranges42 = [
         {
             max: 11,
             min: 0
@@ -78,11 +78,11 @@ export class DejaCircularPickerDemoComponent {
         { value: 111, label: 'T-12', realValue: -12 }
     ] as ITemplateModel[];
 
-    protected range42Changed(selection: number) {
+    public range42Changed(selection: number) {
         console.log(`Selected model ${this.getLabelForValue(selection)}`);
     }
 
-    protected getLabelForValue(value: number) {
+    public getLabelForValue(value: number) {
         const val = this.myModel.find(m => m.value === value);
         return (val) ? val.label : value;
     }

@@ -33,7 +33,7 @@ export class DejaOverlayDemoComponent {
         this.selected = text;
     }
 
-    protected onContextMenu(event: MouseEvent) {
+    public onContextMenu(event: MouseEvent) {
         const parent = event.currentTarget as HTMLElement;
         const parentRect = parent.getBoundingClientRect();
         this.contextMenu.show(event.pageX - parentRect.left, event.pageY - parentRect.top);

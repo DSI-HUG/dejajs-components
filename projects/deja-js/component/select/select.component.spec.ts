@@ -39,7 +39,7 @@ import { DejaSelectComponent } from './select.component';
     ]
 })
 class DejaSelectContainerComponent {
-    public itemList = [] as IItemTree[];
+    public itemList = [] as IItemTree<unknown>[];
 
     public constructor(groupingService: GroupingService) {
         document.body.style.width = '1280px';
@@ -51,7 +51,7 @@ class DejaSelectContainerComponent {
             return {
                 size: rand,
                 displayName: `${i} - Une ligne de test avec une taille de : ${rand}`
-            } as IItemTree;
+            } as IItemTree<unknown>;
         });
 
         groupingService.group$(itemList, [{ groupByField: 'size' }]).pipe(
@@ -94,7 +94,7 @@ class DejaSelectByModelContainerComponent {
         this.modelsList$ = sortingService.sort$(modelsList, { name: 'value' } as ISortInfos);
     }
 
-    public backgroundColor(item: IItemBase) {
+    public backgroundColor(item: IItemBase<unknown>) {
         return item.selected ? '#888' : null;
     }
 }
@@ -128,7 +128,7 @@ class DejaSelectByOptionsContainerComponent {
         document.body.style.height = '1024px';
     }
 
-    public backgroundColor(item: IItemBase) {
+    public backgroundColor(item: IItemBase<unknown>) {
         return item.selected ? '#888' : null;
     }
 }
@@ -352,8 +352,8 @@ describe('DejaSelectComponent', () => {
                 ).subscribe(vp => {
                     fixture.detectChanges(); // Bind view port
                     const collapsed = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem.parent.collapsed'));
-                    const collapsedItems = vp.items.filter((item: IItemTree) => item.collapsed);
-                    const parentItems = vp.items.filter((item: IItemTree) => item.depth === 0);
+                    const collapsedItems = vp.items.filter((item: IItemTree<unknown>) => item.collapsed);
+                    const parentItems = vp.items.filter((item: IItemTree<unknown>) => item.depth === 0);
 
                     switch (++pass) {
                         case 1:
@@ -692,7 +692,7 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                     const selectedChips = fixture.debugElement.queryAll(By.css('deja-select > deja-chips > span.chips-item'));
                     const selectedElements = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem.selected'));
                     const currentElement = fixture.debugElement.query(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem[current="true"]'));
-                    const selectedItems = vp.items.filter((item: IItemBase) => item.selected);
+                    const selectedItems = vp.items.filter((item: IItemBase<unknown>) => item.selected);
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     const selItem = selectedItems[0] as any;
 
@@ -858,7 +858,7 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                     fixture.detectChanges();
                     const displayedElements = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem'));
                     const selectedElements = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem.selected'));
-                    const selectedItems = vp.items.filter((item: IItemBase) => item.selected);
+                    const selectedItems = vp.items.filter((item: IItemBase<unknown>) => item.selected);
 
                     // Check selected and current
                     void expect(selectedElements.length).toBe(0);

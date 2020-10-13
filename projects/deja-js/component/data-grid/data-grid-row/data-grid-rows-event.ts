@@ -8,6 +8,6 @@
 
 import { DejaItemsEvent } from '@deja-js/core';
 
-export class DejaGridRowsEvent extends DejaItemsEvent {
+export class DejaGridRowsEvent<T> extends DejaItemsEvent<T> {
 
 }

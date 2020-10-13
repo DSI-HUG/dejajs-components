@@ -61,7 +61,7 @@ import { DejaTreeListScrollEvent } from './tree-list-scroll-event';
     ],
     templateUrl: './tree-list.component.html'
 })
-export class DejaTreeListComponent extends ItemListBase implements AfterViewInit, AfterContentInit, ControlValueAccessor {
+export class DejaTreeListComponent extends ItemListBase<unknown> implements AfterViewInit, AfterContentInit, ControlValueAccessor {
     @ContentChildren(DejaItemComponent) public options: DejaItemComponent[];
 
     /** Exécuté lorsque la scrollbar change de position. */
@@ -92,7 +92,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     /** Exécuté lorsque le déplacement d'une ligne commence. */
     @Output() public readonly itemDragStart = new EventEmitter<IDejaDragEvent>();
     /** Exécuté lorsque l'utilisateur sélectionne ou désélectionne une ligne. */
-    @Output() public readonly selectedChange = new EventEmitter<DejaItemsEvent | DejaItemEvent>();
+    @Output() public readonly selectedChange = new EventEmitter<DejaItemsEvent<unknown> | DejaItemEvent<unknown>>();
     /** Exécuté lorsque le calcul du viewPort est executé. */
     @Output() public readonly viewPortChanged = new EventEmitter<IViewPort>();
 
@@ -114,7 +114,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     private _keyboardNavigation = false;
 
     // protected _items: IItemBase[]; In the base class, correspond to the model
-    private clickedItem: IItemBase;
+    private clickedItem: IItemBase<unknown>;
     private rangeStartIndex = 0;
     private filterExpression = '';
     private _searchArea = false;
@@ -283,7 +283,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     public get pageSize() {
         if (this._pageSize === 0) {
             const vpRowHeight = this.getViewPortRowHeight();
-            const containerHeight = this.maxHeight || this.listElement.clientHeight;
+            const containerHeight = this.getMaxHeight() || this.listElement.clientHeight;
             return Math.floor(containerHeight / vpRowHeight);
         }
 
@@ -360,7 +360,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
      * Spécifier 0 pour que le composant determine sa hauteur à partir du container
      */
     @Input()
-    public set maxHeight(value: number) {
+    public set maxHeight(value: number | string) {
         super.setMaxHeight(value);
     }
 
@@ -374,7 +374,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
 
     /** Définit la ligne courant ou ligne active */
     @Input()
-    public set currentItem(item: IItemBase) {
+    public set currentItem(item: IItemBase<unknown>) {
         super.setCurrentItem(item);
         if (item) {
             this.ensureItemVisible(item);
@@ -404,7 +404,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
 
     /** Définit la liste des éléments selectionés en mode multiselect */
     @Input()
-    public set selectedItems(value: IItemBase[]) {
+    public set selectedItems(value: IItemBase<unknown>[]) {
         if (value !== undefined) {
             this.selectItems$.next(value);
         }
@@ -458,7 +458,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
 
     /** Definit le service de liste utilisé par ce composant. Ce srevice permet de controller dynamiquement la liste, ou de faire du lazyloading. */
     @Input()
-    public set itemListService(itemListService: ItemListService) {
+    public set itemListService(itemListService: ItemListService<unknown>) {
         if (itemListService !== undefined) {
             this.hasCustomService = true;
             this.setItemListService(itemListService);
@@ -487,7 +487,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
 
     /** Définit la liste des éléments */
     // eslint-disable-next-line rxjs/finnish
-    @Input() public set items(items: IItemBase[] | Promise<IItemBase[]> | Observable<IItemBase[]>) {
+    @Input() public set items(items: IItemBase<unknown>[] | Promise<IItemBase<unknown>[]> | Observable<IItemBase<unknown>[]>) {
         delete this.hintLabel;
         super.setItems$(items).pipe(
             switchMap(itms => {
@@ -508,7 +508,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
      * Set a observable called before the list will be displayed
      */
     @Input()
-    public set loadingItems(fn: (query: string | RegExp, selectedItems: IItemBase[]) => Observable<IItemBase[]>) {
+    public set loadingItems(fn: (query: string | RegExp, selectedItems: IItemBase<unknown>[]) => Observable<IItemBase<unknown>[]>) {
         this.hasLoadingEvent = !!fn;
         super.setLoadingItems(fn);
     }
@@ -517,7 +517,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
      * Set a promise or an observable called before an item selection
      */
     @Input()
-    public set selectingItem(fn: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>) {
+    public set selectingItem(fn: (item: IItemBase<unknown>) => Promise<IItemBase<unknown>> | Observable<IItemBase<unknown>>) {
         super.setSelectingItem(fn);
     }
 
@@ -525,7 +525,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
      * Set a promise or an observable called before an item deselection
      */
     @Input()
-    public set unselectingItem(fn: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>) {
+    public set unselectingItem(fn: (item: IItemBase<unknown>) => Promise<IItemBase<unknown>> | Observable<IItemBase<unknown>>) {
         super.setUnselectingItem(fn);
     }
 
@@ -533,7 +533,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
      * Set a promise or an observable called before an item expand
      */
     @Input()
-    public set expandingItem(fn: (item: IItemTree) => Promise<IItemTree> | Observable<IItemTree>) {
+    public set expandingItem(fn: (item: IItemTree<unknown>) => Promise<IItemTree<unknown>> | Observable<IItemTree<unknown>>) {
         super.setExpandingItem(fn);
     }
 
@@ -541,7 +541,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
      * Set a promise or an observable called before an item collapse
      */
     @Input()
-    public set collapsingItem(fn: (item: IItemTree) => Promise<IItemTree> | Observable<IItemTree>) {
+    public set collapsingItem(fn: (item: IItemTree<unknown>) => Promise<IItemTree<unknown>> | Observable<IItemTree<unknown>>) {
         super.setCollapsingItem(fn);
     }
 
@@ -631,7 +631,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
         this.onTouchedCallback();
     }
 
-    public writeValue(value: IItemBase[] | IItemBase) {
+    public writeValue(value: IItemBase<unknown>[] | IItemBase<unknown>) {
         this.writeValue$.next(value);
     }
 
@@ -649,7 +649,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     // ************* End of ControlValueAccessor Implementation **************
 
     /** Change l'état d'expansion de toute les lignes parentes */
-    public toggleAll$(collapsed?: boolean): Observable<IItemTree[]> {
+    public toggleAll$(collapsed?: boolean): Observable<IItemTree<unknown>[]> {
         return super.toggleAll$(collapsed).pipe(
             switchMap(items => this.calcViewList$().pipe(take(1), map(() => items))));
     }
@@ -663,7 +663,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
     }
 
     /** Positionne a scrollbar pour assurer que l'élément spécifié soit visible */
-    public ensureItemVisible(item: IItemBase | number) {
+    public ensureItemVisible(item: IItemBase<unknown> | number) {
         super.ensureItemVisible(item);
     }
 
@@ -765,8 +765,8 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                     let uaindex: number;
                     let daindex: number;
                     let target: HTMLElement;
-                    let eitem: IItemTree;
-                    let sitem: IItemTree;
+                    let eitem: IItemTree<unknown>;
+                    let sitem: IItemTree<unknown>;
 
                     switch (event.code) {
                         case KeyCodes.Home:
@@ -847,7 +847,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                                 return of(null);
                             }
 
-                            sitem = this.currentItem as IItemTree;
+                            sitem = this.currentItem as IItemTree<unknown>;
                             if (sitem) {
                                 if (this.isCollapsible(sitem)) {
                                     return this.toggleCollapse$(currentIndex, !sitem.collapsed);
@@ -864,7 +864,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                             return of(-1);
 
                         case KeyCodes.Enter:
-                            eitem = this.currentItem as IItemTree;
+                            eitem = this.currentItem as IItemTree<unknown>;
                             if (eitem) {
                                 if (this.isCollapsible(eitem)) {
                                     return this.toggleCollapse$(currentIndex, !eitem.collapsed);
@@ -941,7 +941,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                     this.keyboardNavigation$.next();
                 }
 
-                return of(null as IFindItemResult);
+                return of(null as IFindItemResult<unknown>);
             }),
             filter(result => result?.index >= 0),
             takeUntil(this.destroyed$)
@@ -1028,7 +1028,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
                 }
 
                 if (this.isCollapsible(upItem) && (isExpandButton(upTarget) || !this.isSelectable(upItem))) {
-                    const treeItem = upItem as IItemTree;
+                    const treeItem = upItem as IItemTree<unknown>;
                     return this.toggleCollapse$(upIndex, !treeItem.collapsed).pipe(
                         map(() => upIndex)
                     );
@@ -1166,7 +1166,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
             outputEmitter = {
                 items: this.selectedItems,
                 models: models
-            } as DejaItemsEvent;
+            } as DejaItemsEvent<Record<string, unknown>>;
 
             if (this.modelIsValue) {
                 const valueField = this.getValueField();
@@ -1182,7 +1182,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
             outputEmitter = {
                 item: this.selectedItems[0],
                 model: model
-            } as DejaItemEvent;
+            } as DejaItemEvent<Record<string, unknown>>;
 
             if (this.modelIsValue) {
                 const valueField = this.getValueField();
@@ -1206,7 +1206,7 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
         }), tap(() => this.changeDetectorRef.markForCheck()));
     }
 
-    public toggleSelect$(items: IItemBase[], state: boolean): Observable<IItemBase[]> {
+    public toggleSelect$(items: IItemBase<unknown>[], state: boolean): Observable<IItemBase<unknown>[]> {
         if (!this._multiSelect && !items[0].selected === !state) {
             return of(items);
         } else {
@@ -1218,12 +1218,12 @@ export class DejaTreeListComponent extends ItemListBase implements AfterViewInit
         }
     }
 
-    public calcViewList$(): Observable<IViewListResult> {
+    public calcViewList$(): Observable<IViewListResult<unknown>> {
         return super.calcViewList$(this.query).pipe(
             tap(() => this.changeDetectorRef.markForCheck()));
     }
 
-    public getItemClass(item: IItemTree) {
+    public getItemClass(item: IItemTree<unknown>) {
         const classNames = ['listitem'] as string[];
         if (item.className) {
             classNames.push(item.className);

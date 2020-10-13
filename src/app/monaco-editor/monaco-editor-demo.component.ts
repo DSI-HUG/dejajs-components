@@ -7,6 +7,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
+import { Languages } from '@deja-js/component/monaco-editor';
 import { Destroy } from '@deja-js/core';
 import { takeUntil } from 'rxjs/operators';
 
@@ -24,10 +25,10 @@ export class DejaMonacoEditorDemoComponent extends Destroy implements OnInit {
     public xmlContent: string;
     public xmlContentToCompare: string;
     public jsonContent: string;
-    public jsonContentToCompare: string;
+    public jsonContentToCompare: Languages;
 
     public dynamicContent: string;
-    public dynamicLanguage: string;
+    public dynamicLanguage: Languages;
 
     public readOnly = false;
 
@@ -52,7 +53,7 @@ export class DejaMonacoEditorDemoComponent extends Destroy implements OnInit {
 
         this.fileService.getFile$('jsonFileToCompare.json').pipe(
             takeUntil(this.destroyed$)
-        ).subscribe(val => this.jsonContentToCompare = val);
+        ).subscribe((val: Languages) => this.jsonContentToCompare = val);
 
         this.updateLanguage('xml');
     }

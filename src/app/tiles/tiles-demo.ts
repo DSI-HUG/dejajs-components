@@ -10,6 +10,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDropCursorInfos } from '@deja-js/component/mouse-dragdrop';
 import { DejaTile, IDejaTilesAddEvent, IDejaTilesRemoveEvent } from '@deja-js/component/tiles';
 import { Rect } from '@deja-js/core';
+import { DejaMessageBoxType } from 'projects/deja-js/component/message-box';
 import { from, Observable, Subject } from 'rxjs';
 import { defaultIfEmpty, map, reduce, scan, switchMap, take } from 'rxjs/operators';
 
@@ -88,7 +89,7 @@ export class DejaTilesDemoComponent implements OnInit {
             reduce((acc: DejaTile[], cur: DejaTile) => [...acc, cur], []));
     }
 
-    protected getDragContext() {
+    public getDragContext() {
         return {
             target: 'deja-tile',
             className: 'deja-tile-cursor',
@@ -108,7 +109,7 @@ export class DejaTilesDemoComponent implements OnInit {
         } as IDejaMouseDraggableContext;
     }
 
-    protected getDropContext(dropArea: HTMLElement) {
+    public getDropContext(dropArea: HTMLElement) {
         return {
             dragEnter: _dragContext => ({
                 width: 200,
@@ -122,7 +123,7 @@ export class DejaTilesDemoComponent implements OnInit {
         } as IDejaMouseDroppableContext;
     }
 
-    protected onContentAdding(event: IDejaTilesAddEvent) {
+    public onContentAdding(event: IDejaTilesAddEvent) {
         this.message$.next({
             title: 'Tiles added',
             content: `${event.added.length} tiles added.`,
@@ -138,7 +139,7 @@ export class DejaTilesDemoComponent implements OnInit {
         event.preventDefault();
     }
 
-    protected onContentRemoving(event: IDejaTilesRemoveEvent) {
+    public onContentRemoving(event: IDejaTilesRemoveEvent) {
         this.message$.next({
             title: 'Tiles deleted',
             content: `${event.removed.length} tiles deleted.`,
@@ -158,7 +159,7 @@ export class DejaTilesDemoComponent implements OnInit {
 interface IMessage {
     content: string;
     title: string;
-    type: string;
+    type: DejaMessageBoxType;
     gate: boolean;
-    cancel(): void;
+    cancel(value: boolean): void;
 }

@@ -23,7 +23,7 @@ import { IItemTree } from './item-tree';
  * Ce service permet la gestion du viewport et la gestion des caches des listes.
  * Il peut-être surchargé pour faire du lazy loading ou du paging.
  */
-export class ItemListService {
+export class ItemListService<T> {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     public static defaultChildrenField = 'items';
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -35,19 +35,19 @@ export class ItemListService {
     private _waiter$ = new BehaviorSubject<boolean>(false);
 
     // Working item array (can be recursive)
-    private _items: IItemBase[];
+    private _items: IItemBase<T>[];
 
     // Cache for lists (flat lists only, not recursive)
     private _cache = {} as {
         rowsCount?: number;
         depthMax?: number;
-        groupedList?: IItemTree[];
-        flatList?: IItemBase[];
-        visibleList?: IItemBase[];
+        groupedList?: IItemTree<T>[];
+        flatList?: IItemBase<T>[];
+        visibleList?: IItemBase<T>[];
     };
 
     // Selected items cache
-    private selectedList: IItemBase[];
+    private selectedList: IItemBase<T>[];
     private _hideSelected: boolean;
 
     // Cache for last query. Flat list will be regenerated only if the query change
@@ -62,18 +62,18 @@ export class ItemListService {
     private _groupingService: GroupingService;
 
     // Cache for drag and drop (flat list modified by the current drag).
-    private _ddList: IItemBase[];
+    private _ddList: IItemBase<T>[];
     private _ddCurrentIndex: number;
     private _ddChildCount: number;
 
     private _childrenField = ItemListService.defaultChildrenField;
 
     // Cnacelable pre events
-    private loadingItems$: (query: string | RegExp, selectedItems: IItemBase[]) => Observable<IItemBase[]>;
-    private selectingItem$: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>;
-    private unselectingItem$: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>;
-    private expandingItem$: (item: IItemTree) => Promise<IItemTree> | Observable<IItemTree>;
-    private collapsingItem$: (item: IItemTree) => Promise<IItemTree> | Observable<IItemTree>;
+    private loadingItems$: (query: string | RegExp, selectedItems: IItemBase<T>[]) => Observable<IItemBase<T>[]>;
+    private selectingItem$: (item: IItemBase<T>) => Promise<IItemBase<T>> | Observable<IItemBase<T>>;
+    private unselectingItem$: (item: IItemBase<T>) => Promise<IItemBase<T>> | Observable<IItemBase<T>>;
+    private expandingItem$: (item: IItemTree<T>) => Promise<IItemTree<T>> | Observable<IItemTree<T>>;
+    private collapsingItem$: (item: IItemTree<T>) => Promise<IItemTree<T>> | Observable<IItemTree<T>>;
 
     // champs à utiliser comme valeur de comparaison
     private _valueField: string;
@@ -136,35 +136,35 @@ export class ItemListService {
     /**
      * Set a observable called before the list will be displayed
      */
-    public setLoadingItems(fn: (query: string | RegExp, selectedItems: IItemBase[]) => Observable<IItemBase[]>) {
+    public setLoadingItems(fn: (query: string | RegExp, selectedItems: IItemBase<T>[]) => Observable<IItemBase<T>[]>) {
         this.loadingItems$ = fn;
     }
 
     /**
      * Set a promise or an observable called before an item selection
      */
-    public setSelectingItem(fn: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>) {
+    public setSelectingItem(fn: (item: IItemBase<T>) => Promise<IItemBase<T>> | Observable<IItemBase<T>>) {
         this.selectingItem$ = fn;
     }
 
     /**
      * Set a promise or an observable called before an item deselection
      */
-    public setUnselectingItem(fn: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>) {
+    public setUnselectingItem(fn: (item: IItemBase<T>) => Promise<IItemBase<T>> | Observable<IItemBase<T>>) {
         this.unselectingItem$ = fn;
     }
 
     /**
      * Set a promise or an observable called before an item expand
      */
-    public setExpandingItem(fn: (item: IItemTree) => Promise<IItemTree> | Observable<IItemTree>) {
+    public setExpandingItem(fn: (item: IItemTree<T>) => Promise<IItemTree<T>> | Observable<IItemTree<T>>) {
         this.expandingItem$ = fn;
     }
 
     /**
      * Set a promise or an observable called before an item collapse
      */
-    public setCollapsingItem(fn: (item: IItemTree) => Promise<IItemTree> | Observable<IItemTree>) {
+    public setCollapsingItem(fn: (item: IItemTree<T>) => Promise<IItemTree<T>> | Observable<IItemTree<T>>) {
         this.collapsingItem$ = fn;
     }
 
@@ -219,7 +219,7 @@ export class ItemListService {
         return this._cache && !!this._cache.visibleList;
     }
 
-    private set items(items: IItemBase[]) {
+    private set items(items: IItemBase<T>[]) {
         this._items = items;
         this.invalidateCache();
     }
@@ -245,9 +245,9 @@ export class ItemListService {
         } else {
             this.items = undefined;
             this._waiter$.next(true);
-            let observable$ = items as Observable<IItemBase[]>;
+            let observable$ = items as Observable<IItemBase<T>[]>;
             if (observable$.subscribe === undefined) {
-                const promise = items as Promise<IItemBase[]>;
+                const promise = items as Promise<IItemBase<T>[]>;
                 observable$ = from(promise);
             }
 
@@ -299,7 +299,7 @@ export class ItemListService {
      * @param item Element à chercher sur la liste des éléments visibles.
      * @return Index correspondant à l'élément recherché.
      */
-    public getItemIndex(item: IItemBase) {
+    public getItemIndex(item: IItemBase<T>) {
         return this._cache.visibleList ? this._cache.visibleList.findIndex(itm => this.compareItems(item, itm)) : -1;
     }
 
@@ -364,21 +364,21 @@ export class ItemListService {
             }
 
             const listIndex = this._ddCurrentIndex;
-            const item = this._ddList[listIndex] as IItemTree;
+            const item = this._ddList[listIndex] as IItemTree<T>;
             if (!item) {
                 throw new Error('invalid drag infos stored in cache.');
             }
 
             // La drag and drop liste est incomplète, en cas de filtrage, retrouver l'élément juste en dessus dans la liste complète
-            const targetItem = this._ddList[listIndex - 1] as IItemTree;
-            let targetParent: IItemTree;
+            const targetItem = this._ddList[listIndex - 1];
+            let targetParent: IItemTree<T>;
 
             // Find target in the flat list to calculate the correct index
             let flatListIndex = this._cache.flatList.findIndex(itm => itm === targetItem);
             let targetIndex = 0;
             // eslint-disable-next-line no-loops/no-loops
             while (flatListIndex >= 0) {
-                const parentItem = this._cache.flatList[flatListIndex] as IItemTree;
+                const parentItem = this._cache.flatList[flatListIndex] as IItemTree<T>;
                 if (parentItem.depth === undefined) {
                     // Flat list
                     targetIndex = flatListIndex;
@@ -392,7 +392,7 @@ export class ItemListService {
                 --flatListIndex;
             }
 
-            const findItem = (itemToFind: IItemTree, treeList: IItemTree[]): IFindItemsResult => {
+            const findItem = (itemToFind: IItemTree<T>, treeList: IItemTree<T>[]): IFindItemsResult<T> => {
                 // eslint-disable-next-line no-loops/no-loops
                 for (let i = 0; i < treeList.length; i++) {
                     const itm = treeList[i];
@@ -448,7 +448,7 @@ export class ItemListService {
                 return;
             }
 
-            const item = currentList[startIndex] as IItemTree;
+            const item = currentList[startIndex] as IItemTree<T>;
             const dragDropIndex = startIndex;
 
             if (item.depth !== undefined && targetIndex !== startIndex) {
@@ -457,7 +457,7 @@ export class ItemListService {
                     let beforeIndex = 0;
                     // eslint-disable-next-line no-loops/no-loops
                     for (let b = startIndex - 1; b >= 0; b--) {
-                        const targetItem = currentList[b] as IItemTree;
+                        const targetItem = currentList[b] as IItemTree<T>;
                         if (targetItem.depth <= item.depth) {
                             beforeIndex = b;
                             break;
@@ -467,7 +467,7 @@ export class ItemListService {
                         // Descend jusqu'au premier élément avec la même profondeur
                         // eslint-disable-next-line no-loops/no-loops
                         for (let a = targetIndex; a <= beforeIndex; a++) {
-                            const targetItem = currentList[a] as IItemTree;
+                            const targetItem = currentList[a] as IItemTree<T>;
                             if (targetItem.depth === item.depth) {
                                 subscriber.next(a);
                                 return;
@@ -484,7 +484,7 @@ export class ItemListService {
                     let afterIndex = currentList.length - 1;
                     // eslint-disable-next-line no-loops/no-loops
                     for (let a = startIndex + 1; a < currentList.length; a++) {
-                        const targetItem = currentList[a] as IItemTree;
+                        const targetItem = currentList[a] as IItemTree<T>;
                         if (targetItem.depth <= item.depth) {
                             afterIndex = a;
                             break;
@@ -494,7 +494,7 @@ export class ItemListService {
                         // Descend jusqu'au premier élément avec la même profondeur
                         // eslint-disable-next-line no-loops/no-loops
                         for (let a = targetIndex + 1; a < currentList.length; a++) {
-                            const itm = currentList[a] as IItemTree;
+                            const itm = currentList[a] as IItemTree<T>;
                             if (itm.depth === item.depth) {
                                 subscriber.next(a);
                                 return;
@@ -504,7 +504,7 @@ export class ItemListService {
                             }
                         }
                         // Not found
-                        const targetItem = currentList[afterIndex] as IItemTree;
+                        const targetItem = currentList[afterIndex] as IItemTree<T>;
                         if (targetItem.depth === item.depth) {
                             subscriber.next(afterIndex);
                             return;
@@ -521,9 +521,9 @@ export class ItemListService {
      * @param collapsed True si les éléments doivent être réduits.
      * @return Observable résolu par la fonction.
      */
-    public toggleAll$(collapsed: boolean): Observable<IItemTree[]> {
+    public toggleAll$(collapsed: boolean): Observable<IItemTree<T>[]> {
         return of(this._cache.flatList).pipe(
-            map((items: IItemTree[]) => items.filter(item => item.$items && item.collapsible !== false)),
+            map((items: IItemTree<T>[]) => items.filter(item => item.$items && item.collapsible !== false)),
             tap(() => delete this._cache.visibleList), // Invalidate view cache
             switchMap(items => collapsed ? this.collapseItems$(items) : this.expandItems$(items)));
     }
@@ -533,13 +533,13 @@ export class ItemListService {
      * @param collapse Etat de l'élément. True pour réduire l'élément.
      * @return Observable résolu par la fonction.
      */
-    public toggleCollapse$(index: number, collapse?: boolean): Observable<IItemTree> {
+    public toggleCollapse$(index: number, collapse?: boolean): Observable<IItemTree<T>> {
         const visibleList = this._cache.visibleList;
         if (!visibleList || !visibleList.length) {
             throw new Error('Empty cache on toggleCollapse');
         }
 
-        const item = visibleList[index] as IItemTree;
+        const item = visibleList[index] as IItemTree<T>;
         if (!item || item.collapsible === false) {
             return of([]);
         }
@@ -552,7 +552,7 @@ export class ItemListService {
      * @param items Liste des éléments à étendre.
      * @return Observable résolu par la fonction.
      */
-    public expandItems$(items: IItemBase[]): Observable<IItemBase[]> {
+    public expandItems$(items: IItemBase<T>[]): Observable<IItemBase<T>[]> {
         return from(items || []).pipe(
             switchMap(item => this.expandItem$(item)),
             reduce((acc, cur) => [...acc, cur], []));
@@ -562,7 +562,7 @@ export class ItemListService {
      * @param items Liste des éléments à réduire.
      * @return Observable résolu par la fonction.
      */
-    public collapseItems$(items: IItemBase[]): Observable<IItemBase[]> {
+    public collapseItems$(items: IItemBase<T>[]): Observable<IItemBase<T>[]> {
         return from(items || []).pipe(
             switchMap(item => this.collapseItem$(item)),
             reduce((acc, cur) => [...acc, cur], []));
@@ -572,7 +572,7 @@ export class ItemListService {
      * @param items Eléments à étendre.
      * @return Observable résolu par la fonction.
      */
-    public expandItem$(item: IItemTree) {
+    public expandItem$(item: IItemTree<T>) {
         return of(item).pipe(
             filter(itm => !!itm),
             switchMap(itm => this.expandingItem$ ? this.expandingItem$(itm) : of(itm)),
@@ -588,7 +588,7 @@ export class ItemListService {
      * @param items Eléments à réduire.
      * @return Observable résolu par la fonction.
      */
-    public collapseItem$(item: IItemTree) {
+    public collapseItem$(item: IItemTree<T>) {
         return of(item).pipe(
             filter(itm => !!itm),
             switchMap(itm => this.collapsingItem$ ? this.collapsingItem$(itm) : of(itm)),
@@ -610,7 +610,7 @@ export class ItemListService {
     /** Définit la liste des éléments sélectionés.
      * @param items Liste des éléments a selectioner.
      */
-    public setSelectedItems(items: IItemBase[]) {
+    public setSelectedItems(items: IItemBase<T>[]) {
         if (this.selectedList) {
             this.selectedList.forEach(item => {
                 item.selected = false;
@@ -627,7 +627,7 @@ export class ItemListService {
     /** Déselectionne tous les éléments sélectionés.
      * @return Observable résolu par la fonction.
      */
-    public unselectAll$(): Observable<IItemBase[]> {
+    public unselectAll$(): Observable<IItemBase<T>[]> {
         if (this.hideSelected) {
             delete this._cache.visibleList;
         }
@@ -670,7 +670,7 @@ export class ItemListService {
      * @param selected True si les éléments divent être sélectionés, False si ils doivent être déselectionés.
      * @return Observable résolu par la fonction.
      */
-    public toggleSelect$(items: IItemBase[], selected: boolean) {
+    public toggleSelect$(items: IItemBase<T>[], selected: boolean) {
         items = items || [];
         return iif(() => selected, this.selectItems$(items), this.unSelectItems$(items)).pipe(
             map(() => {
@@ -685,28 +685,28 @@ export class ItemListService {
      * @param items Liste des éléments à sélectioner.
      * @return Observable résolu par la fonction.
      */
-    public selectItems$(items: IItemBase[]): Observable<IItemBase[]> {
+    public selectItems$(items: IItemBase<T>[]): Observable<IItemBase<T>[]> {
         return from(items || []).pipe(
             switchMap(item => this.selectItem$(item)),
-            reduce((acc: IItemBase[], cur: IItemBase) => [...acc, cur], []));
+            reduce((acc: IItemBase<T>[], cur: IItemBase<T>) => [...acc, cur], []));
     }
 
     /** Déselectionne les éléments spécifiés
      * @param items Liste des éléments à déselectioner.
      * @return Observable résolu par la fonction.
      */
-    public unSelectItems$(items: IItemBase[]): Observable<IItemBase[]> {
+    public unSelectItems$(items: IItemBase<T>[]): Observable<IItemBase<T>[]> {
         return from(items || []).pipe(
             filter(item => item.selected),
             switchMap(item => this.unSelectItem$(item)),
-            reduce((acc: IItemBase[], cur: IItemBase) => [...acc, cur], []));
+            reduce((acc: IItemBase<T>[], cur: IItemBase<T>) => [...acc, cur], []));
     }
 
     /** Sélectionne l'élément spécifié
      * @param item Elément à sélectioner.
      * @return Observable résolu par la fonction.
      */
-    public selectItem$(item: IItemBase) {
+    public selectItem$(item: IItemBase<T>) {
         return of(item).pipe(
             filter(itm => !!itm),
             switchMap(itm => this.selectingItem$ ? this.selectingItem$(itm) : of(itm)),
@@ -725,7 +725,7 @@ export class ItemListService {
      * @param item Elément à déselectioner.
      * @return Observable résolu par la fonction.
      */
-    public unSelectItem$(item: IItemBase) {
+    public unSelectItem$(item: IItemBase<T>) {
         return of(item).pipe(
             filter(itm => !!itm),
             switchMap(itm => this.unselectingItem$ ? this.unselectingItem$(itm) : of(itm)),
@@ -746,8 +746,8 @@ export class ItemListService {
      * @param startIndex Index de départ sur la liste des éléments visibles.
      * @return Observable résolu par la fonction.
      */
-    public findNextMatch$(compare?: (item: IItemBase, index: number) => boolean, startIndex?: number): Observable<IFindItemResult> {
-        let result = { index: -1 } as IFindItemResult;
+    public findNextMatch$(compare?: (item: IItemBase<T>, index: number) => boolean, startIndex?: number): Observable<IFindItemResult<T>> {
+        let result = { index: -1 } as IFindItemResult<T>;
 
         const list = this._cache.visibleList;
         if (!list || !list.length) {
@@ -766,7 +766,7 @@ export class ItemListService {
                     result = {
                         index: idx,
                         item: itm
-                    } as IFindItemResult;
+                    } as IFindItemResult<T>;
                     break;
                 }
                 idx++;
@@ -792,7 +792,7 @@ export class ItemListService {
 
         const sortTree$ = this.getSortingService()
             .sortTree$(this._cache.groupedList, sortInfos, '$items').pipe(
-                tap((sortedList: IItemTree[]) => {
+                tap((sortedList: IItemTree<T>[]) => {
                     this._cache.groupedList = sortedList;
                     this.invalidateViewCache();
                 }));
@@ -836,30 +836,30 @@ export class ItemListService {
      * @param item Element enfant du parent à retrouver.
      * @return Observable résolu par la fonction, qui retourne les informations sur le parent de l'élément spécifié
      */
-    public getParentListInfos$(item: IItemTree, multiSelect: boolean): Observable<IParentListInfoResult> {
-        const search$ = (flatList: IItemBase[]) => {
+    public getParentListInfos$(item: IItemTree<T>, multiSelect: boolean): Observable<IParentListInfoResult<T>> {
+        const search$ = (flatList: IItemBase<T>[]) => {
             let flatIndex = flatList.findIndex(itm => itm === item);
             if (flatIndex < 0) {
                 throw new Error('Item not found.');
             }
 
-            let result: IParentListInfoResult;
+            let result: IParentListInfoResult<T>;
             if (!item.depth) {
                 const rootIndex = this.items.findIndex(itm => itm === item);
                 result = {
                     index: rootIndex
-                } as IParentListInfoResult;
+                } as IParentListInfoResult<T>;
             } else {
                 // Search parent and treeindex
                 let idx = 0;
                 // eslint-disable-next-line no-loops/no-loops
                 while (--flatIndex >= 0) {
-                    const parentItem = flatList[flatIndex] as IItemTree;
+                    const parentItem = flatList[flatIndex] as IItemTree<T>;
                     if (parentItem.depth < item.depth) {
                         result = {
                             index: idx,
                             parent: parentItem
-                        } as IParentListInfoResult;
+                        } as IParentListInfoResult<T>;
                     }
                     idx++;
                 }
@@ -886,8 +886,8 @@ export class ItemListService {
     }
 
     /** Usage interne. Retourne la portion de la liste à afficher en fonction des paramètres spécifiés. */
-    public getViewList$(searchField: string, query?: RegExp | string, ignoreCache?: boolean, ddStartIndex?: number, ddTargetIndex?: number, multiSelect?: boolean): Observable<IViewListResult> {
-        const result = {} as IViewListResult;
+    public getViewList$(searchField: string, query?: RegExp | string, ignoreCache?: boolean, ddStartIndex?: number, ddTargetIndex?: number, multiSelect?: boolean): Observable<IViewListResult<T>> {
+        const result = {} as IViewListResult<T>;
 
         const queryChanged = (query?.toString()) !== (this._lastQuery?.toString());
         ignoreCache = ignoreCache || queryChanged || !this.items || !this.items.length;
@@ -920,20 +920,20 @@ export class ItemListService {
         }
 
         const loadViewList = () => {
-            let viewList: IItemBase[];
+            let viewList: IItemBase<T>[];
             if (ddStartIndex !== undefined && ddTargetIndex !== undefined && ddStartIndex !== ddTargetIndex) {
                 if (!this._ddList) {
                     // Generate a modified flat list for drag and drop Only
                     this._ddList = [...this._cache.visibleList];
 
                     // Calc child count to be dragged
-                    const draggedItem = this._ddList[ddStartIndex] as IItemTree;
+                    const draggedItem = this._ddList[ddStartIndex] as IItemTree<T>;
                     const parentDepth = draggedItem.depth;
                     let lastIndex = ddStartIndex;
                     if (parentDepth !== undefined) {
                         // eslint-disable-next-line no-loops/no-loops
                         for (let i = ddStartIndex + 1; i < this._ddList.length; i++) {
-                            const curItem = this._ddList[i] as IItemTree;
+                            const curItem = this._ddList[i] as IItemTree<T>;
                             if (curItem.depth <= parentDepth) {
                                 break;
                             }
@@ -1009,7 +1009,7 @@ export class ItemListService {
      * @param selectedItems Liste des éléments selectionés.
      * @return Observable résolu par la fonction, qui retourne la liste à utiliser.
      */
-    protected getItemList$(query?: RegExp | string, selectedItems?: IItemBase[]): Observable<IItemBase[]> {
+    protected getItemList$(query?: RegExp | string, selectedItems?: IItemBase<T>[]): Observable<IItemBase<T>[]> {
         return this.loadingItems$ ? this.loadingItems$(query, selectedItems) : of(this.items);
     }
 
@@ -1019,8 +1019,8 @@ export class ItemListService {
      * @param regExp Expression de test sur le champs spécifié.
      * @return True si l'élément correspond aux critères de recherche.
      */
-    protected itemMatch(item: IItemBase, searchField: string, regExp: RegExp) {
-        const itmTree = (item as IItemTree);
+    protected itemMatch(item: IItemBase<T>, searchField: string, regExp: RegExp) {
+        const itmTree = item as IItemTree<T>;
         if (itmTree.$items) {
             return true;
         }
@@ -1034,7 +1034,7 @@ export class ItemListService {
      * @param items Liste des éléments à grouper.
      * @return Observable résolu par la fonction, qui retourne la liste groupés.
      */
-    protected getGroupedList$(items: IItemBase[]): Observable<IItemTree[]> {
+    protected getGroupedList$(items: IItemBase<T>[]): Observable<IItemTree<T>[]> {
         return items ? this.getGroupingService().group$(this.items, this.groupInfos, '$items') : of([]);
     }
 
@@ -1046,22 +1046,22 @@ export class ItemListService {
      * @param Auto expand parents on search query.
      * @return Observable résolu par la fonction, qui retourne la liste visibles.
      */
-    protected getVisibleList$(items: IItemBase[], searchField: string, regExp: RegExp, expandTree: boolean, multiSelect: boolean): Observable<IItemBase[]> {
+    protected getVisibleList$(items: IItemBase<T>[], searchField: string, regExp: RegExp, expandTree: boolean, multiSelect: boolean): Observable<IItemBase<T>[]> {
         if (!items) {
             return of([]);
         }
 
-        let visibleList = [] as IItemTree[];
-        const selectedList = [] as IItemBase[];
+        let visibleList = [] as IItemTree<T>[];
+        const selectedList = [] as IItemBase<T>[];
         let odd = false;
 
         if (regExp) {
             // Recalc visible list and select list from the filter
-            const getFilteredList = (treeList: IItemBase[], depth: number, hidden: boolean) => {
-                let filteredItems: IItemBase[];
+            const getFilteredList = (treeList: IItemBase<T>[], depth: number, hidden: boolean) => {
+                let filteredItems: IItemBase<T>[];
                 if (treeList) {
                     treeList.forEach(itm => {
-                        const itmTree = (itm as IItemTree);
+                        const itmTree = itm as IItemTree<T>;
                         if (itmTree.$items) {
                             if (this.isVisible(itmTree) && this.itemMatch(itmTree, searchField, regExp)) {
                                 odd = false;
@@ -1106,7 +1106,7 @@ export class ItemListService {
 
         } else {
             // Get visible items list without filter
-            const getVisibleListInternal = (treeList: IItemTree[], depth: number, hidden: boolean) => {
+            const getVisibleListInternal = (treeList: IItemTree<T>[], depth: number, hidden: boolean) => {
                 if (treeList) {
                     treeList.forEach(item => {
                         if (!hidden && this.isVisible(item) && !(item.selected && this.hideSelected)) {
@@ -1148,18 +1148,18 @@ export class ItemListService {
      * @param items Liste des éléments hierarchique.
      * @return Observable résolu par la fonction, qui retourne la liste hierarchique mise à plat.
      */
-    protected getFlatList$(items: IItemBase[], isFiltered: boolean, multiSelect: boolean): Observable<IItemBase[]> {
+    protected getFlatList$(items: IItemBase<T>[], isFiltered: boolean, multiSelect: boolean): Observable<IItemBase<T>[]> {
         if (!items) {
             return of([]);
         }
 
-        const visibleList = [] as IItemBase[];
-        const selectedList = [] as IItemBase[];
+        const visibleList = [] as IItemBase<T>[];
+        const selectedList = [] as IItemBase<T>[];
         let depthMax = 0;
         let isTree = false;
         let odd = false;
 
-        const flatList$: any = (itms: IItemTree[], depth: number, hidden: boolean) => from(itms || []).pipe(
+        const flatList$: any = (itms: IItemTree<T>[], depth: number, hidden: boolean) => from(itms || []).pipe(
             tap(item => {
                 if (depth > depthMax) {
                     depthMax = depth;
@@ -1203,7 +1203,7 @@ export class ItemListService {
                 }
                 this._cache.depthMax = isTree ? depthMax : 0;
             }),
-            reduce((acc: any[], cur: IItemBase) => {
+            reduce((acc: any[], cur: IItemBase<T>) => {
                 acc.push(cur);
                 return acc;
             }, []));
@@ -1217,7 +1217,7 @@ export class ItemListService {
         this._cache.rowsCount = 0;
     }
 
-    private ensureSelectedItems(items: IItemBase[]) {
+    private ensureSelectedItems(items: IItemBase<T>[]) {
         if (this.selectedList && this.selectedList.length > 0) {
             // Ensure selected flag
             this.selectedList.forEach(item => item.selected = true);
@@ -1226,8 +1226,8 @@ export class ItemListService {
                 return this.selectedList;
             }
 
-            const newSelectedList = [] as IItemBase[];
-            const ensureSelectedChildren = (children: IItemTree[]) => {
+            const newSelectedList = [] as IItemBase<T>[];
+            const ensureSelectedChildren = (children: IItemTree<T>[]) => {
                 children.forEach(item => {
                     const selectedItem = this.selectedList.find(selected => this.compareItems(selected, item));
                     if (selectedItem) {
@@ -1257,7 +1257,7 @@ export class ItemListService {
                 return this.selectedList;
             }
 
-            const ensureSelectedChildren = (children: IItemTree[]) => {
+            const ensureSelectedChildren = (children: IItemTree<T>[]) => {
                 children.forEach(item => {
                     if (item.selected) {
                         this.selectedList.push(item);
@@ -1274,7 +1274,7 @@ export class ItemListService {
         return this.selectedList;
     }
 
-    private compareItems = (item1: IItemBase, item2: IItemBase) => {
+    private compareItems = (item1: IItemBase<T>, item2: IItemBase<T>) => {
         // eslint-disable-next-line eqeqeq
         const isDefined = (value: any) => value != undefined;
 
@@ -1285,8 +1285,8 @@ export class ItemListService {
         } else if (item2.equals) {
             return item2.equals(item1);
         } else {
-            const model1 = item1.model as { equals(model: unknown): number };
-            const model2 = item1.model as { equals(model: unknown): number };
+            const model1 = item1.model as IItemBase<unknown>;
+            const model2 = item1.model as IItemBase<unknown>;
             if (model1?.equals) {
                 return model1.equals(item2.model);
             } else if (model2?.equals) {
@@ -1330,7 +1330,7 @@ export class ItemListService {
                         // Ensure depth max
                         this._cache.depthMax = 0;
                         if (flatList) {
-                            flatList.forEach((item: IItemTree) => {
+                            flatList.forEach((item: IItemTree<T>) => {
                                 if (item.depth && item.depth > this._cache.depthMax) {
                                     this._cache.depthMax = item.depth;
                                 }
@@ -1362,7 +1362,7 @@ export class ItemListService {
         }
     }
 
-    private ensureChildrenProperties(items: IItemTree[]) {
+    private ensureChildrenProperties(items: IItemTree<T>[]) {
         if (!items) {
             return;
         }
@@ -1376,34 +1376,34 @@ export class ItemListService {
         });
     }
 
-    private isVisible(item: IItemBase) {
+    private isVisible(item: IItemBase<T>) {
         return item.visible !== false;
     }
 }
 
 /** Structure de retour de getViewList. */
-export interface IViewListResult {
+export interface IViewListResult<T> {
     depthMax?: number;
-    visibleList?: IItemBase[];
+    visibleList?: IItemBase<T>[];
 }
 
 /** Structure de retour de findNextMatch. */
-export interface IFindItemResult {
+export interface IFindItemResult<T> {
     /** Elément trouvé. */
-    item: IItemBase;
+    item: IItemBase<T>;
     /** Index de l'élément dans la liste des éléments visibles. */
     index: number;
 }
 
 /** Structure de retour de getParentListInfos. */
-export interface IParentListInfoResult {
+export interface IParentListInfoResult<T> {
     /** Elément parent. */
-    parent?: IItemTree;
+    parent?: IItemTree<T>;
     /** Index de l'élément enfant dans la liste des enfants du parent. */
     index: number;
 }
 
-interface IFindItemsResult {
-    list: IItemBase[];
+interface IFindItemsResult<T> {
+    list: IItemBase<T>[];
     index: number;
 }

@@ -8,6 +8,6 @@
 
 import { IGroupParent, IItemTree } from '@deja-js/core';
 
-export class IDejaGridParentRow implements IItemTree, IGroupParent {
+export class IDejaGridParentRow<T> implements IItemTree<T>, IGroupParent {
 
 }

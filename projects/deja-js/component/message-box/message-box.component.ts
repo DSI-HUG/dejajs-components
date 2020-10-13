@@ -7,7 +7,16 @@
  */
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Component, ContentChild, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { Component, ContentChild, EventEmitter, Input, OnInit, Output, TemplateRef, ViewEncapsulation } from '@angular/core';
+
+export type DejaMessageBoxType = 'info' | 'primary' | 'success' | 'warn' | 'danger';
+
+export interface DejaMessageBoxAction {
+    text?: string;
+    type?: DejaMessageBoxType;
+    icon?: string;
+    action(): unknown;
+}
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -19,12 +28,12 @@ export class DejaMessageBoxComponent implements OnInit {
     // eslint-disable-next-line @angular-eslint/no-output-native
     @Output() public readonly close = new EventEmitter();
 
-    @Input() public type: 'info' | 'primary' | 'success' | 'warn' | 'danger';
+    @Input() public type: DejaMessageBoxType;
     @Input() public title: string;
     @Input() public icon: string;
-    @Input() public actions: Array<{text?: string; type?: 'info' | 'primary' | 'success' | 'warn' | 'danger'; icon?: string; action(): unknown}>;
+    @Input() public actions: Array<DejaMessageBoxAction>;
     /** Event Emmited when the close action is called */
-    @ContentChild('actionsTemplate') public actionsTemplate: unknown;
+    @ContentChild('actionsTemplate') public actionsTemplate: TemplateRef<unknown>;
 
     private _horizontal: boolean;
 

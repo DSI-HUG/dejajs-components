@@ -202,7 +202,7 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
     }
 
     @Input()
-    public set canDelete(value: boolean) {
+    public set canDelete(value: boolean | string) {
         if (coerceBooleanProperty(value) && !this.delete$sub) {
             this.delete$sub = this.keyup$.pipe(
                 filter(event => this.layoutProvider.designMode && event.code === KeyCodes.Delete && this.hasFocus),
@@ -216,7 +216,7 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
     }
 
     @Input()
-    public set canCopy(value: boolean) {
+    public set canCopy(value: boolean | string) {
         if (coerceBooleanProperty(value) && !this.copy$sub) {
             this.copy$sub = this.keyup$.pipe(
                 filter(event => event.code === KeyCodes.KeyC && event.ctrlKey && this.hasFocus),
@@ -230,7 +230,7 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
     }
 
     @Input()
-    public set canCut(value: boolean) {
+    public set canCut(value: boolean | string) {
         if (coerceBooleanProperty(value) && !this.cut$sub) {
             this.cut$sub = this.keyup$.pipe(
                 filter(event => this.layoutProvider.designMode && event.code === KeyCodes.KeyX && event.ctrlKey && this.hasFocus),
@@ -244,7 +244,7 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
     }
 
     @Input()
-    public set canPaste(value: boolean) {
+    public set canPaste(value: boolean | string) {
         if (coerceBooleanProperty(value) && !this.paste$sub) {
             this.paste$sub = this.keyup$.pipe(
                 filter(event => this.layoutProvider.designMode && event.code === KeyCodes.KeyV && event.ctrlKey && this.hasFocus),

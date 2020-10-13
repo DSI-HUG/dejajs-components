@@ -21,7 +21,7 @@ import { NewsService } from '../services/news.service';
 import { PeopleService, Person } from '../services/people.service';
 import { IExtendedViewPortItem } from '../tree-list/tree-list-demo';
 
-interface PersonRow extends IDejaGridRow {
+interface PersonRow extends IDejaGridRow<unknown> {
     p1: {
         p2: {
             person: Person;
@@ -29,7 +29,7 @@ interface PersonRow extends IDejaGridRow {
     };
 }
 
-interface Fruct extends IDejaGridRow {
+interface Fruct extends IDejaGridRow<unknown> {
     name: string;
     value: string;
     color: string;
@@ -62,8 +62,8 @@ interface Fruct extends IDejaGridRow {
 })
 export class DejaGridDemoComponent extends Destroy {
     public tabIndex = 1;
-    public fructsForMultiSelection: IDejaGridRow[];
-    public fructsWithPreSelection: IDejaGridRow[];
+    public fructsForMultiSelection: IDejaGridRow<unknown>[];
+    public fructsWithPreSelection: IDejaGridRow<unknown>[];
     public people$: Observable<Person[]>;
     public peopleForMultiselect$: Observable<Person[]>;
     public groupedByGenderPerson$: Observable<Person[]>;
@@ -718,7 +718,7 @@ export class DejaGridDemoComponent extends Destroy {
             takeUntil(this.destroyed$)
         ).subscribe((value: Person[]) => {
             const onDemandResult = [] as IPeopleGroup[];
-            const dic = {} as { [groupName: string]: IDejaGridRow[] };
+            const dic = {} as { [groupName: string]: IDejaGridRow<unknown>[] };
             value.forEach(person => {
                 const groupName = `Group${person.color}`;
                 if (!dic[groupName]) {
@@ -731,7 +731,7 @@ export class DejaGridDemoComponent extends Destroy {
                         rows: [{
                             displayName: 'loading...',
                             selectable: false
-                        } as IDejaGridRow],
+                        } as IDejaGridRow<unknown>],
                         displayName: groupName,
                         selectable: false,
                         loaded: false
@@ -740,7 +740,7 @@ export class DejaGridDemoComponent extends Destroy {
 
                 dic[groupName].push({
                     model: person
-                } as IDejaGridRow);
+                } as IDejaGridRow<unknown>);
             });
 
             this.onDemandGroupedPeople = onDemandResult;
@@ -751,7 +751,7 @@ export class DejaGridDemoComponent extends Destroy {
 
         this.fructsWithPreSelection = this.fructs
             .map(fruct => {
-                const f = cloneDeep(fruct);
+                const f = cloneDeep(fruct) as IItemTree<unknown>;
                 f.selected = fruct.value === 'banana';
                 return f;
             });
@@ -781,18 +781,18 @@ export class DejaGridDemoComponent extends Destroy {
     }
 
     public loadingRows() {
-        return (_query: string | RegExp, _selectedItems: IDejaGridRow[]) => this.peopleService.getPeople$().pipe(delay(3000));
+        return (_query: string | RegExp, _selectedItems: IDejaGridRow<unknown>[]) => this.peopleService.getPeople$().pipe(delay(3000));
     }
 
     public collapsingRows() {
-        return (row: IDejaGridRow) => {
+        return (row: IDejaGridRow<unknown>) => {
             const group = row as IPeopleGroup;
             return group.loaded ? of(row) : this.confirmDialog()(row);
         };
     }
 
     public expandingRows() {
-        return (row: IDejaGridRow) => {
+        return (row: IDejaGridRow<unknown>) => {
             const group = row as IPeopleGroup;
             if (group.loaded) {
                 return of(row);
@@ -823,7 +823,7 @@ export class DejaGridDemoComponent extends Destroy {
     }
 
     public confirmDialog() {
-        return (row: IDejaGridRow) => {
+        return (row: IDejaGridRow<unknown>) => {
             this.dialogVisible = true;
             return from(this.dialogResponse$).pipe(
                 take(1),
@@ -838,11 +838,11 @@ export class DejaGridDemoComponent extends Destroy {
         alert(`${where} clicked`);
     }
 
-    public getParentRowDecr(row: IDejaGridRow) {
+    public getParentRowDecr(row: IDejaGridRow<unknown>) {
         return row.toString();
     }
 
-    public getDragContext(row: IDejaGridRow) {
+    public getDragContext(row: IDejaGridRow<unknown>) {
         return {
             object: row
         } as IDejaDragContext;
@@ -867,9 +867,9 @@ export class DejaGridDemoComponent extends Destroy {
     }
 }
 
-interface IPeopleGroup extends IItemTree {
+interface IPeopleGroup extends IItemTree<unknown> {
     groupName: string;
     color: string;
-    rows: IDejaGridRow[];
+    rows: IDejaGridRow<unknown>[];
     loaded?: boolean;
 }

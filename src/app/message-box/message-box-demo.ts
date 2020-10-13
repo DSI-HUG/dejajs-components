@@ -7,6 +7,7 @@
  */
 
 import { Component } from '@angular/core';
+import { DejaMessageBoxAction } from '@deja-js/component/message-box';
 
 @Component({
     selector: 'message-box-demo',
@@ -23,7 +24,7 @@ export class DejaMessageBoxDemoComponent {
 
     public tooltipVisible = false;
 
-    protected actions = [
+    public actions = [
         {
             action: () => {
                 this.dialogTitle = '<b>I am a deja-dialog !</b><br/> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sit amet felis id nisl maximus interdum. Morbi mollis sapien sapien. Vivamus lacinia elementum eros';
@@ -39,9 +40,9 @@ export class DejaMessageBoxDemoComponent {
             action: () => alert('test action'),
             type: 'danger'
         }
-    ];
+    ] as DejaMessageBoxAction[];
 
-    protected closeAction = [
+    public closeAction = [
         {
             action: () => alert('test action'),
             icon: 'clear'

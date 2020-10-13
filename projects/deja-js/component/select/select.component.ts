@@ -62,19 +62,19 @@ export type SelectType = 'autocomplete' | 'multiselect' | 'select';
 
 /** Combo box avec une liste basée sur la treelist */
 @Component({
+    selector: 'deja-select',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     providers: [
         ViewPortService,
         { provide: MatFormFieldControl, useExisting: DejaSelectComponent }
     ],
-    selector: 'deja-select',
     styleUrls: [
         './select.component.scss'
     ],
     templateUrl: './select.component.html'
 })
-export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorState, CanDisable, DoCheck, MatFormFieldControl<unknown>, ControlValueAccessor, OnDestroy, AfterViewInit, AfterContentInit {
+export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpdateErrorState, CanDisable, DoCheck, MatFormFieldControl<unknown>, ControlValueAccessor, OnDestroy, AfterViewInit, AfterContentInit {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     public static nextId = 0;
 
@@ -105,7 +105,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
     /** Exécuté lorsque le calcul du viewPort est terminé. */
     @Output() public readonly viewPortChanged = new EventEmitter<IViewPort>();
     /** Exécuté lorsque l'utilisateur sélectionne ou désélectionne une ligne. */
-    @Output() public readonly selectedChange = new EventEmitter<DejaItemsEvent | DejaItemEvent>();
+    @Output() public readonly selectedChange = new EventEmitter<DejaItemsEvent<unknown> | DejaItemEvent<unknown>>();
     /** For test only. */
     @Output() public readonly dropDownVisibleChange = new EventEmitter<boolean>();
 
@@ -488,8 +488,8 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
 
     /** Définit la longueur minimale de caractères dans le champ de recherche avant que la recherche ou le filtrage soient effectués */
     // eslint-disable-next-line @angular-eslint/no-input-rename
-    @Input('min-search-length') public set minSearchlength(value: number) {
-        this._minSearchLength = value;
+    @Input('min-search-length') public set minSearchlength(value: number | string) {
+        this._minSearchLength = coerceNumberProperty(value);
     }
 
     public get minSearchlength() {
@@ -520,7 +520,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
 
     @Input()
     /** Définit une valeur indiquant si les éléments selectionés doivent être masqué de la liste déroulante. */
-    public set hideSelected(value: boolean) {
+    public set hideSelected(value: boolean | string) {
         this.setHideSelected(coerceBooleanProperty(value));
     }
 
@@ -531,7 +531,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
 
     /** Définit la ligne courant ou ligne active */
     @Input()
-    public set currentItem(item: IItemBase) {
+    public set currentItem(item: IItemBase<unknown>) {
         super.setCurrentItem(item);
         if (item) {
             this.ensureItemVisible(item);
@@ -649,7 +649,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
      * Set an observable called before the list will be displayed
      */
     @Input()
-    public set loadingItems(fn: (query: string | RegExp, selectedItems: IItemBase[]) => Observable<IItemBase[]>) {
+    public set loadingItems(fn: (query: string | RegExp, selectedItems: IItemBase<unknown>[]) => Observable<IItemBase<unknown>[]>) {
         super.setLoadingItems(fn);
     }
 
@@ -657,7 +657,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
      * Set a promise or an observable called before an item selection
      */
     @Input()
-    public set selectingItem(fn: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>) {
+    public set selectingItem(fn: (item: IItemBase<unknown>) => Promise<IItemBase<unknown>> | Observable<IItemBase<unknown>>) {
         super.setSelectingItem(fn);
     }
 
@@ -665,7 +665,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
      * Set a promise or an observable called before an item deselection
      */
     @Input()
-    public set unselectingItem(fn: (item: IItemBase) => Promise<IItemBase> | Observable<IItemBase>) {
+    public set unselectingItem(fn: (item: IItemBase<unknown>) => Promise<IItemBase<unknown>> | Observable<IItemBase<unknown>>) {
         super.setUnselectingItem(fn);
     }
 
@@ -673,7 +673,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
      * Set a promise or an observable called before an item expand
      */
     @Input()
-    public set expandingItem(fn: (item: IItemTree) => Promise<IItemTree> | Observable<IItemTree>) {
+    public set expandingItem(fn: (item: IItemTree<unknown>) => Promise<IItemTree<unknown>> | Observable<IItemTree<unknown>>) {
         super.setExpandingItem(fn);
     }
 
@@ -681,7 +681,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
      * Set a promise or an observable called before an item collapse
      */
     @Input()
-    public set collapsingItem(fn: (item: IItemTree) => Promise<IItemTree> | Observable<IItemTree>) {
+    public set collapsingItem(fn: (item: IItemTree<unknown>) => Promise<IItemTree<unknown>> | Observable<IItemTree<unknown>>) {
         super.setCollapsingItem(fn);
     }
 
@@ -697,7 +697,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
 
     /** Définit la liste des éléments selectionés en mode multiselect */
     @Input()
-    public set selectedItems(value: IItemBase[]) {
+    public set selectedItems(value: IItemBase<unknown>[]) {
         this.setSelectedItems(value);
     }
 
@@ -708,7 +708,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
 
     /** Définit l'éléments selectioné en mode single select */
     @Input()
-    public set selectedItem(value: IItemBase) {
+    public set selectedItem(value: IItemBase<unknown>) {
         this.setSelectedItems(value !== undefined && value !== null ? [value] : []);
     }
 
@@ -743,7 +743,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
 
     /** Definit le service de liste utilisé par ce composant. Ce service permet de controller dynamiquement la liste, ou de faire du lazyloading. */
     @Input()
-    public set itemListService(itemListService: ItemListService) {
+    public set itemListService(itemListService: ItemListService<unknown>) {
         this.setItemListService(itemListService);
         if (itemListService?.lastQuery) {
             this.query = itemListService.lastQuery.toString();
@@ -781,7 +781,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
     /** Définit la liste des éléments au format IItemBase */
     @Input()
     // eslint-disable-next-line rxjs/finnish
-    public set items(items: IItemBase[] | Promise<IItemBase[]> | Observable<IItemBase[]>) {
+    public set items(items: IItemBase<unknown>[] | Promise<IItemBase<unknown>[]> | Observable<IItemBase<unknown>[]>) {
         super.setItems$(items).pipe(
             take(1),
             tap(() => this.ensureSelection()),
@@ -885,7 +885,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
         this.stateChanges.next();
     }
 
-    public writeValue(value: IItemBase | IItemBase[]) {
+    public writeValue(value: IItemBase<unknown> | IItemBase<unknown>[]) {
         this.writeValue$.next(value);
     }
 
@@ -987,7 +987,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
             switchMap(event => this.ensureListCaches$().pipe(
                 switchMap(() => {
                     // Set and get current index for keyboard features only
-                    const setCurrentIndex = (index: number, item?: IItemBase) => {
+                    const setCurrentIndex = (index: number, item?: IItemBase<unknown>) => {
                         this.currentItemIndex = index;
                         if (this.dropdownVisible) {
                             this.ensureItemVisible(this.currentItemIndex);
@@ -1055,7 +1055,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
 
                         case KeyCodes.Space:
                             if (this.dropdownVisible) {
-                                const item = this._itemList[this.currentItemIndex - this.vpStartRow] as IItemTree;
+                                const item = this._itemList[this.currentItemIndex - this.vpStartRow] as IItemTree<unknown>;
                                 if (this.isCollapsible(item)) {
                                     this.keyboardNavigation$.next();
                                     return this.toggleCollapse$(this.currentItemIndex, !item.collapsed).pipe(
@@ -1164,7 +1164,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
     }
 
     /** Change l'état d'expansion de toute les lignes parentes */
-    public toggleAll$(collapsed?: boolean): Observable<IItemTree[]> {
+    public toggleAll$(collapsed?: boolean): Observable<IItemTree<unknown>[]> {
         return super.toggleAll$(collapsed).pipe(
             switchMap(items => this.calcViewList$().pipe(take(1), map(() => items))));
     }
@@ -1182,7 +1182,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
      * @param collapsed  Etat de l'élément. True pour réduire l'élément.
      * @return Observable résolu par la fonction.
      */
-    public toggleCollapse$(index: number, collapsed: boolean): Observable<IItemTree> {
+    public toggleCollapse$(index: number, collapsed: boolean): Observable<IItemTree<unknown>> {
         return super.toggleCollapse$(index, collapsed).pipe(
             tap(() => {
                 if (this.dropdownVisible) {
@@ -1240,7 +1240,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
                     return of(null);
                 }
 
-                const item = this._itemList[itemIndex - this.vpStartRow] as IItemTree;
+                const item = this._itemList[itemIndex - this.vpStartRow] as IItemTree<unknown>;
                 if (!item || upEvent.button !== 0) {
                     // Right click menu
                     return of(null);
@@ -1262,7 +1262,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
         ).subscribe();
     }
 
-    public getItemClass(item: IItemTree) {
+    public getItemClass(item: IItemTree<unknown>) {
         const classNames = ['listitem'] as string[];
         if (item.className) {
             classNames.push(item.className);
@@ -1348,7 +1348,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
     public onChangeCallback = (_a?: unknown) => undefined as void;
     public onValidatorChangeCallback = (_a?: unknown) => undefined as void;
 
-    protected removeSelection(item?: IItemBase) {
+    protected removeSelection(item?: IItemBase<unknown>) {
         if (!this._multiSelect) {
             this.query = '';
             this.dropDownQuery = '';
@@ -1372,16 +1372,17 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
         }
     }
 
-    protected calcViewList$(): Observable<IViewListResult> {
+    protected calcViewList$(): Observable<IViewListResult<unknown>> {
         return super.calcViewList$(this.dropDownQuery).pipe(
-            tap(() => this.changeDetectorRef.markForCheck()));
+            tap(() => void this.changeDetectorRef.markForCheck())
+        );
     }
 
-    protected ensureItemVisible(item: IItemBase | number) {
+    protected ensureItemVisible(item: IItemBase<unknown> | number) {
         super.ensureItemVisible(item);
     }
 
-    private onModelChange(items?: IItemBase[] | IItemBase) {
+    private onModelChange(items?: IItemBase<unknown>[] | IItemBase<unknown>) {
         let outputEmitter = null;
 
         let output = null;
@@ -1393,7 +1394,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
                 outputEmitter = {
                     items: items,
                     models: models
-                } as DejaItemsEvent;
+                } as DejaItemsEvent<unknown>;
 
                 if (this.modelIsValue) {
                     const valueField = this.getValueField();
@@ -1409,7 +1410,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
                 outputEmitter = {
                     item: items,
                     model: model
-                } as DejaItemEvent;
+                } as DejaItemEvent<unknown>;
 
                 if (this.modelIsValue) {
                     const valueField = this.getValueField();
@@ -1427,7 +1428,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
         }
     }
 
-    private select(item: IItemBase, hideDropDown?: boolean) {
+    private select(item: IItemBase<unknown>, hideDropDown?: boolean) {
         if (!this.isSelectable(item)) {
             return;
         }
@@ -1477,7 +1478,7 @@ export class DejaSelectComponent extends ItemListBase implements CanUpdateErrorS
         }
 
         this.calcViewList$().pipe(
-            tap(() => this.refreshViewPort()),
+            tap(() => void this.refreshViewPort()),
             switchMap(() => this.viewPortChanged), // Wait for viewport calculation
             take(1),
             delay(1),

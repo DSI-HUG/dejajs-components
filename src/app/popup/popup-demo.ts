@@ -9,6 +9,7 @@
 import { ComponentPortal, PortalInjector, TemplatePortal } from '@angular/cdk/portal';
 import { ChangeDetectorRef, Component, Injector, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { DialogPosition } from '@angular/material/dialog';
+import { DejaMessageBoxAction, DejaMessageBoxType } from '@deja-js/component/message-box';
 import { DejaPopupAction, DejaPopupButton, DejaPopupConfig, DejaPopupCustomAction, DejaPopupReponse, DejaPopupService } from '@deja-js/component/popup';
 import { Color, Destroy } from '@deja-js/core';
 import { filter, map, takeUntil } from 'rxjs/operators';
@@ -33,7 +34,7 @@ export class DejaPopupDemoComponent extends Destroy {
     public message = {
         type: 'info',
         text: ''
-    };
+    } as DejaMessageBoxAction;
 
     private dummyPdfUrl = 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
     private dummyImgUrl = 'http://lorempixel.com/800/600/abstract/';
@@ -255,7 +256,7 @@ export class DejaPopupDemoComponent extends Destroy {
         }
     }
 
-    private showMessage(text: string, type: string): void {
+    private showMessage(text: string, type: DejaMessageBoxType): void {
         this.message.text = text;
         this.message.type = type;
         this.openGate = true;

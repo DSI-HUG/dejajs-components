@@ -113,7 +113,7 @@
 				</span>
                 <span class="flex45p flexOffset2rl" id="dropArea">
 					<div>You can drag and drop items the the area bellow (That will display a JSON representation of the dropped model) :</div>
-					<div #dropArea [deja-droppable]="getDropContext(dropArea)" style="border:1px solid red;min-height:150px;">
+					<div #dropArea [deja-droppable]="getDropContext()" style="border:1px solid red;min-height:150px;">
 						<pre>{{draggedPerson | json}}</pre>
 					</div>
 				</span>
