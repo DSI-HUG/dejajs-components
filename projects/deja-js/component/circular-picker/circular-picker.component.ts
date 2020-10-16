@@ -23,7 +23,6 @@ import { Circle, Destroy, Position } from '@deja-js/core';
 import { fromEvent, merge, Observable, Subject } from 'rxjs';
 import { debounceTime, filter, sampleTime, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 
-// eslint-disable-next-line no-shadow
 export enum ClockwiseFactorEnum {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     clockwise = -1,

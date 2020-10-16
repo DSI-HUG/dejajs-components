@@ -7,7 +7,6 @@
  */
 
 /* eslint-disable @typescript-eslint/naming-convention */
-// eslint-disable-next-line no-shadow
 export enum Directions {
     none = 0x0,
     left = 0x1,

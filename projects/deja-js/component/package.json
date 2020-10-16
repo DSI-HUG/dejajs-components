@@ -16,7 +16,7 @@
         "url": "https://github.com/DSI-HUG/dejajs-components.git"
     },
     "dependencies": {
-        "tslib": "~2.0.1"
+        "tslib": "~2.0.0"
     },
     "peerDependencies": {
         "@angular/animations": "^10.1.3",
