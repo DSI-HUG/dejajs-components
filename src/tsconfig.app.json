@@ -4,8 +4,12 @@
         "outDir": "../out-tsc/app"
     },
     "angularCompilerOptions": {
+        "skipTemplateCodegen": true,
+        "fullTemplateTypeCheck": true,
+        "strictInjectionParameters": true,
         "enableResourceInlining": true,
         "strictTemplates": true,
+        "strictAttributeTypes": true,
         "enableIvy": true
     },
     "files": [
