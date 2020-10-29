@@ -160,7 +160,7 @@ export class DejaOverlayComponent extends Destroy {
     /**
      * définit la largeur de l'overlay.
      */
-    public set width(width: string | number) {
+    public set width(width: NumberInput) {
         this._width = coerceNumberProperty(width);
     }
 
