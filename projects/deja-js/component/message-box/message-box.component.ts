@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Component, ContentChild, EventEmitter, Input, OnInit, Output, TemplateRef, ViewEncapsulation } from '@angular/core';
 
 export type DejaMessageBoxType = 'info' | 'primary' | 'success' | 'warn' | 'danger';
@@ -38,7 +38,7 @@ export class DejaMessageBoxComponent implements OnInit {
     private _horizontal: boolean;
 
     @Input()
-    public set horizontal(value: boolean | string) {
+    public set horizontal(value: BooleanInput) {
         this._horizontal = coerceBooleanProperty(value);
     }
 
@@ -48,7 +48,7 @@ export class DejaMessageBoxComponent implements OnInit {
 
     private _showCloseIcon = false;
     @Input()
-    public set showCloseIcon(value: boolean | string) {
+    public set showCloseIcon(value: BooleanInput) {
         this._showCloseIcon = coerceBooleanProperty(value);
     }
 

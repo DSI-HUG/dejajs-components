@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Component } from '@angular/core';
@@ -108,7 +108,7 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
 
     /** Retourne ou definit si le selecteur est desactivé. */
     @Input()
-    public set disabled(value: boolean | string) {
+    public set disabled(value: BooleanInput) {
         this._disabled = coerceBooleanProperty(value) || null;
     }
 
@@ -204,7 +204,8 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
      * @param startEvent drag event
      * @param gutterOrder separator number
      */
-    public startDragging(startEvent: MouseEvent, gutterOrder: number) {
+    public startDragging(event: Event, gutterOrder: number) {
+        const startEvent = event as MouseEvent;
         startEvent.preventDefault();
 
         if (this.disabled) {

@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Directive } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { HostBinding } from '@angular/core';
@@ -130,7 +130,7 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
 
     /** Définit une valeur indiquant si le contenu édité est obligatoire. Si la valeur est 'true' la sortie du mode édition ne sera pas possible tant qu'un contenu n'est pas ajouté. */
     @Input()
-    public set mandatory(value: boolean | string) {
+    public set mandatory(value: BooleanInput) {
         this._mandatory = coerceBooleanProperty(value);
     }
 
@@ -141,7 +141,7 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
 
     /** Définit une valeur indiquant si le contenu édité est multiligne */
     @Input()
-    public set multiline(value: boolean | string) {
+    public set multiline(value: BooleanInput) {
         this._multiline = coerceBooleanProperty(value);
     }
 
@@ -152,7 +152,7 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
 
     /** Permet de désactiver le controle */
     @Input()
-    public set disabled(value: boolean | string) {
+    public set disabled(value: BooleanInput) {
         const disabled = coerceBooleanProperty(value);
         this._disabled = disabled || null;
         if (this.disabled) {
@@ -166,7 +166,7 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
 
     /** Définit une valeur indiquant si l'édition est activée. */
     @Input('deja-editable')
-    public set editMode(value: boolean | string) {
+    public set editMode(value: BooleanInput) {
         this._editMode = coerceBooleanProperty(value);
     }
 
@@ -177,7 +177,7 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
 
     /** Définit une valeur indiquant si l'élément est en édition. */
     @Input()
-    public set inEdition(value: boolean | string) {
+    public set inEdition(value: BooleanInput) {
         if (this.disabled) {
             return;
         }

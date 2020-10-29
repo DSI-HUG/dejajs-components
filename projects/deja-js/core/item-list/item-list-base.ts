@@ -8,7 +8,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-import { coerceNumberProperty } from '@angular/cdk/coercion';
+import { coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { ChangeDetectorRef, EventEmitter } from '@angular/core';
 import { from, Observable, of, Subscription, timer } from 'rxjs';
 import { filter, map, reduce, switchMap, take, takeUntil, tap } from 'rxjs/operators';
@@ -486,7 +486,7 @@ export abstract class ItemListBase<T> extends Destroy {
      * est suceptible de contenir beaucoup d'éléments.
      * @param value Hauteur de ligne à utiliser pour le calcul du viewport.
      */
-    protected setViewPortRowHeight(value: number | string) {
+    protected setViewPortRowHeight(value: NumberInput) {
         this._viewPortRowHeight = coerceNumberProperty(value);
         if (value) {
             this.viewPort.itemsSize$.next(this._viewPortRowHeight);
@@ -711,7 +711,7 @@ export abstract class ItemListBase<T> extends Destroy {
      * spécifier une grande valeur pour ne jamais afficher de scrollbar
      * Spécifier 0 pour que le composant determine sa hauteur à partir du container
      */
-    protected setMaxHeight(value: number | string) {
+    protected setMaxHeight(value: NumberInput) {
         this._maxHeight = value === 'auto' ? null : +value || null;
         this.viewPort.maxSize$.next(value);
     }

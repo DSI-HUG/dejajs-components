@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectorRef } from '@angular/core';
 import { Component } from '@angular/core';
 import { Input } from '@angular/core';
@@ -30,7 +30,7 @@ import { DejaSidenavService } from './sidenav.service';
 })
 export class DejaSidenavComponent extends Destroy implements OnInit {
     @Input()
-    public set showToolbar(value: boolean | string) {
+    public set showToolbar(value: BooleanInput) {
         this._showToolbar = coerceBooleanProperty(value);
     }
 

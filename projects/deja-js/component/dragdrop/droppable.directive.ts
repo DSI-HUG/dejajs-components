@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Directive, ElementRef, HostBinding, Input, Optional } from '@angular/core';
 import { DejaClipboardService, Destroy } from '@deja-js/core';
 import { fromEvent, merge, Observable } from 'rxjs';
@@ -24,7 +24,7 @@ export class DejaDroppableDirective extends Destroy {
      */
     // eslint-disable-next-line @angular-eslint/no-input-rename
     @Input('continous-dragover')
-    public set allEvents(value: boolean | string) {
+    public set allEvents(value: BooleanInput) {
         this._allEvents = coerceBooleanProperty(value);
     }
 

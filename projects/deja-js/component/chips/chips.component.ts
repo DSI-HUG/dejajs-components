@@ -6,8 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Component, ContentChild, EventEmitter, HostBinding, Input, Optional, Output, Self } from '@angular/core';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
+import { Component, ContentChild, EventEmitter, HostBinding, Input, Optional, Output, Self, TemplateRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { NgControl } from '@angular/forms';
 
@@ -31,16 +31,16 @@ export class DejaChipsComponent implements ControlValueAccessor {
     @Input() public textField: string;
 
     /** Template d'élément si définit extérieurement au composant */
-    @Input() public itemTemplateExternal: unknown;
+    @Input() public itemTemplateExternal: TemplateRef<unknown>;
 
     /** Template de control d'insertion si définit extérieurement au composant */
-    @Input() public insertTemplateExternal: unknown;
+    @Input() public insertTemplateExternal: TemplateRef<unknown>;
 
     @HostBinding('attr.disabled') public _disabled: boolean = null;
 
-    @ContentChild('itemTemplate') private itemTemplateInternal: unknown;
+    @ContentChild('itemTemplate') private itemTemplateInternal: TemplateRef<unknown>;
 
-    @ContentChild('insertTemplate') private insertTemplateInternal: unknown;
+    @ContentChild('insertTemplate') private insertTemplateInternal: TemplateRef<unknown>;
 
     private _readonly = false;
 
@@ -52,7 +52,7 @@ export class DejaChipsComponent implements ControlValueAccessor {
 
     /** Lecture seule */
     @Input()
-    public set readonly(value: boolean | string) {
+    public set readonly(value: BooleanInput) {
         this._readonly = coerceBooleanProperty(value) || null;
     }
 
@@ -62,7 +62,7 @@ export class DejaChipsComponent implements ControlValueAccessor {
 
     /** Retourne ou definit si le selecteur est desactivé. */
     @Input()
-    public set disabled(value: boolean | string) {
+    public set disabled(value: BooleanInput) {
         this._disabled = coerceBooleanProperty(value) || null;
     }
 

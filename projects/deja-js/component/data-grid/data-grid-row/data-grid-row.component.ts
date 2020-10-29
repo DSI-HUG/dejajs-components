@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, TemplateRef } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Component } from '@angular/core';
 import { ContentChild } from '@angular/core';
@@ -30,13 +30,13 @@ export class DejaGridRowComponent extends Destroy {
     @Input() public row: IDejaGridRow<unknown>;
 
     /** Template de cellule si définit extérieurement à la grille */
-    @Input() public cellTemplateExternal: unknown;
+    @Input() public cellTemplateExternal: TemplateRef<unknown>;
 
     /** Index de la ligne sur la liste plate de ItemListService */
     @Input() public flatIndex: number;
 
     /** Template de cellule par defaut  définit dans le HTML de la grille */
-    @ContentChild('cellTemplate') public cellTemplateInternal: unknown;
+    @ContentChild('cellTemplate') public cellTemplateInternal: TemplateRef<unknown>;
 
     private _columnLayout = {} as IDejaGridColumnLayout;
     private refresh$sub: Subscription;

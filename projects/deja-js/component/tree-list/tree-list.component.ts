@@ -6,8 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
-import { AfterContentInit } from '@angular/core';
+import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
+import { AfterContentInit, TemplateRef } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
@@ -74,17 +74,17 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
     /** Correspond au ngModel du champ de filtrage ou recherche */
     @Input() public query = '';
     /** Permet de définir un template de ligne par binding */
-    @Input() public itemTemplateExternal: unknown;
+    @Input() public itemTemplateExternal: TemplateRef<unknown>;
     /** Permet de définir un template de ligne parente par binding. */
-    @Input() public parentItemTemplateExternal: unknown;
+    @Input() public parentItemTemplateExternal: TemplateRef<unknown>;
     /** Permet de définir un template pour le loader par binding. */
-    @Input() public loaderTemplateExternal: unknown;
+    @Input() public loaderTemplateExternal: TemplateRef<unknown>;
     /** Permet de définir un template d'entête de colonne par binding. */
-    @Input() public headerTemplateExternal: unknown;
+    @Input() public headerTemplateExternal: TemplateRef<unknown>;
     /** Permet de définir un template comme prefixe de la zone de recherche par binding. */
-    @Input() public searchPrefixTemplateExternal: unknown;
+    @Input() public searchPrefixTemplateExternal: TemplateRef<unknown>;
     /** Permet de définir un template comme suffixe de la zone de recherche par binding. */
-    @Input() public searchSuffixTemplateExternal: unknown;
+    @Input() public searchSuffixTemplateExternal: TemplateRef<unknown>;
     /** Largeur des éléments par defaut si différent de 100% */
     @Input() public itemsWidth: number = null;
     /** Exécuté lorsque le déplacement d'une ligne est terminée. */
@@ -102,12 +102,12 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
     @HostBinding('attr.disabled') public _disabled: boolean = null;
 
     // Templates
-    @ContentChild('itemTemplate') private itemTemplateInternal: unknown;
-    @ContentChild('parentItemTemplate') private parentItemTemplateInternal: unknown;
-    @ContentChild('loaderTemplate') private loaderTemplateInternal: unknown;
-    @ContentChild('headerTemplate') private headerTemplateInternal: unknown;
-    @ContentChild('searchPrefixTemplate') private searchPrefixTemplateInternal: unknown;
-    @ContentChild('searchSuffixTemplate') private searchSuffixTemplateInternal: unknown;
+    @ContentChild('itemTemplate') private itemTemplateInternal: TemplateRef<unknown>;
+    @ContentChild('parentItemTemplate') private parentItemTemplateInternal: TemplateRef<unknown>;
+    @ContentChild('loaderTemplate') private loaderTemplateInternal: TemplateRef<unknown>;
+    @ContentChild('headerTemplate') private headerTemplateInternal: TemplateRef<unknown>;
+    @ContentChild('searchPrefixTemplate') private searchPrefixTemplateInternal: TemplateRef<unknown>;
+    @ContentChild('searchSuffixTemplate') private searchSuffixTemplateInternal: TemplateRef<unknown>;
 
     public setQuery$ = new Subject<string>();
 
@@ -136,7 +136,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
     /** Définit la longueur minimale de caractères dans le champ de recherche avant que la recherche ou le filtrage soient effectués */
     // eslint-disable-next-line @angular-eslint/no-input-rename
     @Input('min-search-length')
-    public set minSearchlength(value: number | string) {
+    public set minSearchlength(value: NumberInput) {
         this._minSearchLength = coerceNumberProperty(value);
     }
 
@@ -235,7 +235,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
 
     /** Affiche un barre de recherche au dessus de la liste. */
     @Input()
-    public set searchArea(value: boolean | string) {
+    public set searchArea(value: BooleanInput) {
         this._searchArea = coerceBooleanProperty(value);
     }
 
@@ -245,7 +245,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
 
     /** Définit une valeur indiquant si en reactive form le model renvoyé doit être un obeject oue une valeur */
     @Input()
-    public set modelIsValue(value: boolean | string) {
+    public set modelIsValue(value: BooleanInput) {
         this._modelIsValue = coerceBooleanProperty(value);
     }
 
@@ -255,7 +255,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
 
     /** Retourne ou définit une valeur indiquant si les lignes de la liste peuvent être déplacées manuelement par l'utilisateur */
     @Input()
-    public set sortable(value: boolean | string) {
+    public set sortable(value: BooleanInput) {
         this._sortable = coerceBooleanProperty(value);
     }
 
@@ -265,7 +265,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
 
     /** Retourne ou définit une valeur indiquant si les lignes peuvent être déplacées vers un autre composant */
     @Input()
-    public set itemsDraggable(value: boolean | string) {
+    public set itemsDraggable(value: BooleanInput) {
         this._itemsDraggable = coerceBooleanProperty(value);
     }
 
@@ -275,7 +275,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
 
     @Input()
     /** Définit le nombre de lignes à sauter en cas de pression sur les touches PageUp ou PageDown */
-    public set pageSize(value: number | string) {
+    public set pageSize(value: NumberInput) {
         this._pageSize = coerceNumberProperty(value);
     }
 
@@ -303,7 +303,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
 
     /** Définit la hauteur d'une ligne pour le calcul du viewport en pixels (la valeur par défaut sera utilisée si aucune valeur n'est setté). */
     @Input()
-    public set viewPortRowHeight(value: number | string) {
+    public set viewPortRowHeight(value: NumberInput) {
         this.setViewPortRowHeight(value);
     }
 
@@ -360,7 +360,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
      * Spécifier 0 pour que le composant determine sa hauteur à partir du container
      */
     @Input()
-    public set maxHeight(value: number | string) {
+    public set maxHeight(value: NumberInput) {
         super.setMaxHeight(value);
     }
 
@@ -393,7 +393,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
 
     /** Définit une valeur indiquant si plusieurs lignes peuvent être sélectionées. */
     @Input()
-    public set multiSelect(value: boolean | string) {
+    public set multiSelect(value: BooleanInput) {
         super.setMultiSelect(coerceBooleanProperty(value));
     }
 
@@ -557,7 +557,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
 
     /** Permet de désactiver la liste */
     @Input()
-    public set disabled(value: boolean | string) {
+    public set disabled(value: BooleanInput) {
         const disabled = coerceBooleanProperty(value);
         this._disabled = disabled || null;
         this.changeDetectorRef.markForCheck();
@@ -569,10 +569,8 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
 
     /** Definit si le waiter doit être affiché dans la liste. */
     @Input()
-    public set waiter(value: boolean) {
-        if (value !== undefined) {
-            this._waiter = value;
-        }
+    public set waiter(value: BooleanInput) {
+        this._waiter = coerceBooleanProperty(value);
     }
 
     /** Retourne si le waiter doit être affiché dans la liste. */

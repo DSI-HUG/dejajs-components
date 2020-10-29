@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, Input, TemplateRef } from '@angular/core';
 import { ItemListService } from '@deja-js/core';
 
 import { IDejaGridColumn } from '../data-grid-column/data-grid-column';
@@ -25,19 +25,19 @@ export class DejaGridParentRowComponent {
     @Input() public row: IDejaGridParentRow<unknown>;
 
     /** Template de cellule si définit extérieurement à la grille */
-    @Input() public cellTemplateExternal: unknown;
+    @Input() public cellTemplateExternal: TemplateRef<unknown>;
 
     /** Template de titre si définit extérieurement à la grille */
-    @Input() public parentTitleTemplateExternal: unknown;
+    @Input() public parentTitleTemplateExternal: TemplateRef<unknown>;
 
     /** Index de la ligne sur la liste plate de ItemListService */
     @Input() public flatIndex: number;
 
     /** Template de titre par defaut définit dans le HTML de la grille */
-    @ContentChild('parentTitleTemplate') public parentTitleTemplateInternal: unknown;
+    @ContentChild('parentTitleTemplate') public parentTitleTemplateInternal: TemplateRef<unknown>;
 
     /** Template de cellule par defaut  définit dans le HTML de la grille */
-    @ContentChild('cellTemplate') public cellTemplateInternal: unknown;
+    @ContentChild('cellTemplate') public cellTemplateInternal: TemplateRef<unknown>;
 
     private _columnLayout = {} as IDejaGridParentRowColumnLayout;
 

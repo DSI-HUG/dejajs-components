@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Component, Input } from '@angular/core';
 
 @Component({
@@ -18,7 +18,7 @@ export class DejaItemComponent {
     @Input() public text: string;
 
     @Input()
-    public set selected(value: boolean | string) {
+    public set selected(value: BooleanInput) {
         this._selected = coerceBooleanProperty(value);
     }
 
