@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Component } from '@angular/core';
+import { Component, TemplateRef } from '@angular/core';
 import { ContentChild } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
@@ -41,7 +41,7 @@ export class DejaTooltipComponent extends Destroy implements OnInit {
 
     /** Template for tooltip content */
     @ContentChild('tooltipTemplate')
-    public tooltipTemplate: unknown;
+    public tooltipTemplate: TemplateRef<unknown>;
 
     /** Parameters of the tooltip */
     public params: ITooltipParams;

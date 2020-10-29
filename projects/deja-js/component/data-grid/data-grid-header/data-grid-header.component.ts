@@ -6,8 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, Optional, Output } from '@angular/core';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, Optional, Output, TemplateRef } from '@angular/core';
 import { IDejaDragEvent, IDejaDropEvent } from '@deja-js/component/dragdrop';
 import { DejaClipboardService } from '@deja-js/core';
 import { Destroy } from '@deja-js/core';
@@ -26,7 +26,7 @@ import { IDejaGridColumnLayout } from '../data-grid-column/data-grid-column-layo
 })
 export class DejaGridHeaderComponent extends Destroy {
     /** Template d'entête de colonne si définit extérieurement à la grille */
-    @Input() public columnHeaderTemplateExternal: unknown;
+    @Input() public columnHeaderTemplateExternal: TemplateRef<unknown>;
 
     /** Infos de tri à afficher dans les entêtes */
     @Input() public sortInfos: ISortInfos;
@@ -44,7 +44,7 @@ export class DejaGridHeaderComponent extends Destroy {
     @Output() public readonly columnDragEnd = new EventEmitter();
 
     /** Template d'entête de colonne par defaut définit dans le HTML de la grille */
-    @ContentChild('columnHeaderTemplate') public columnHeaderTemplateInternal: unknown;
+    @ContentChild('columnHeaderTemplate') public columnHeaderTemplateInternal: TemplateRef<unknown>;
 
     public _sizedColumn: IDejaGridColumn;
     private _columnsDraggable = false;
@@ -58,7 +58,7 @@ export class DejaGridHeaderComponent extends Destroy {
      * Si une valeur spécifique à une colonne est spécifiée dans le modèle de la colonne, cette dernière sera prioritaire.
      */
     @Input()
-    public set columnsDraggable(value: boolean | string) {
+    public set columnsDraggable(value: BooleanInput) {
         this._columnsDraggable = coerceBooleanProperty(value);
     }
 
@@ -73,7 +73,7 @@ export class DejaGridHeaderComponent extends Destroy {
      * Si une valeur spécifique à une colonne est spécifiée dans le modèle de la colonne, cette dernière sera prioritaire.
      */
     @Input()
-    public set columnsSortable(value: boolean | string) {
+    public set columnsSortable(value: BooleanInput) {
         this._columnsSortable = coerceBooleanProperty(value);
     }
 
@@ -92,7 +92,7 @@ export class DejaGridHeaderComponent extends Destroy {
      * Si une valeur spécifique à une colonne est spécifiée dans le modèle de la colonne, cette dernière sera prioritaire.
      */
     @Input()
-    public set columnsSizable(value: boolean | string) {
+    public set columnsSizable(value: BooleanInput) {
         this._columnsSizable = coerceBooleanProperty(value);
     }
 

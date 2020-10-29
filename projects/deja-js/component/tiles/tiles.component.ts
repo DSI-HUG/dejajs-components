@@ -6,8 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { AfterViewInit } from '@angular/core';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
+import { AfterViewInit, TemplateRef } from '@angular/core';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Component } from '@angular/core';
@@ -87,7 +87,7 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
      */
     @Input() public tabIndex = 0;
 
-    @ContentChild('tileTemplate')public tileTemplate: unknown;
+    @ContentChild('tileTemplate')public tileTemplate: TemplateRef<unknown>;
 
     @ViewChild('tilesContainer', { static: true }) private tilesContainer: ElementRef;
 
@@ -188,7 +188,7 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
     }
 
     @Input()
-    public set designMode(value: boolean | string) {
+    public set designMode(value: BooleanInput) {
         this.layoutProvider.designMode = coerceBooleanProperty(value);
     }
 
@@ -202,7 +202,7 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
     }
 
     @Input()
-    public set canDelete(value: boolean | string) {
+    public set canDelete(value: BooleanInput) {
         if (coerceBooleanProperty(value) && !this.delete$sub) {
             this.delete$sub = this.keyup$.pipe(
                 filter(event => this.layoutProvider.designMode && event.code === KeyCodes.Delete && this.hasFocus),
@@ -216,7 +216,7 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
     }
 
     @Input()
-    public set canCopy(value: boolean | string) {
+    public set canCopy(value: BooleanInput) {
         if (coerceBooleanProperty(value) && !this.copy$sub) {
             this.copy$sub = this.keyup$.pipe(
                 filter(event => event.code === KeyCodes.KeyC && event.ctrlKey && this.hasFocus),
@@ -230,7 +230,7 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
     }
 
     @Input()
-    public set canCut(value: boolean | string) {
+    public set canCut(value: BooleanInput) {
         if (coerceBooleanProperty(value) && !this.cut$sub) {
             this.cut$sub = this.keyup$.pipe(
                 filter(event => this.layoutProvider.designMode && event.code === KeyCodes.KeyX && event.ctrlKey && this.hasFocus),
@@ -244,7 +244,7 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
     }
 
     @Input()
-    public set canPaste(value: boolean | string) {
+    public set canPaste(value: BooleanInput) {
         if (coerceBooleanProperty(value) && !this.paste$sub) {
             this.paste$sub = this.keyup$.pipe(
                 filter(event => this.layoutProvider.designMode && event.code === KeyCodes.KeyV && event.ctrlKey && this.hasFocus),

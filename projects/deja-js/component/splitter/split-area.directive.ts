@@ -9,7 +9,7 @@
 /**
  * Created by rtr on 22.12.2016.
  */
-import { coerceNumberProperty } from '@angular/cdk/coercion';
+import { coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { Directive } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { Input } from '@angular/core';
@@ -31,7 +31,7 @@ export class SplitAreaDirective implements OnInit, OnDestroy {
      * Order position of the current area
      */
     @Input()
-    public set order(value: number | string) {
+    public set order(value: NumberInput) {
         const v = coerceNumberProperty(value);
         this._order = !isNaN(v) ? v : null;
         this.split.updateArea(this, this._order, this._size, this._minSizePixel);
@@ -41,7 +41,7 @@ export class SplitAreaDirective implements OnInit, OnDestroy {
      * Size in percent of the current area
      */
     @Input()
-    public set size(value: number | string) {
+    public set size(value: NumberInput) {
         const v = coerceNumberProperty(value);
         this._size = !isNaN(v) ? v : null;
         this.split.updateArea(this, this._order, this._size, this._minSizePixel);
@@ -51,7 +51,7 @@ export class SplitAreaDirective implements OnInit, OnDestroy {
      * Min size in percent of the current area
      */
     @Input()
-    public set minSizePixel(value: number | string) {
+    public set minSizePixel(value: NumberInput) {
         const v = coerceNumberProperty(value);
         this._minSizePixel = (!isNaN(v) && v > 0) ? v : 0;
         this.split.updateArea(this, this._order, this._size, this._minSizePixel);

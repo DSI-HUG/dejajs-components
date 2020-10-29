@@ -6,8 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy } from '@angular/core';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
+import { ChangeDetectionStrategy, TemplateRef } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Component } from '@angular/core';
 import { ElementRef } from '@angular/core';
@@ -29,7 +29,7 @@ import { DejaTile } from './tile.class';
     templateUrl: './tile.component.html'
 })
 export class DejaTileComponent extends Destroy {
-    @Input() public template: unknown;
+    @Input() public template: TemplateRef<unknown>;
     // eslint-disable-next-line @angular-eslint/no-output-native
     @Output() public readonly close = new EventEmitter<Event>();
 
@@ -40,7 +40,7 @@ export class DejaTileComponent extends Destroy {
     private _designMode: boolean;
 
     @Input()
-    public set designMode(value: boolean | string) {
+    public set designMode(value: BooleanInput) {
         this._designMode = coerceBooleanProperty(value);
     }
 
@@ -59,7 +59,7 @@ export class DejaTileComponent extends Destroy {
         this._tile = tile;
 
         if (tile) {
-            const toogleAttribute = (attribute: string, value: string | boolean) => {
+            const toogleAttribute = (attribute: string, value: BooleanInput) => {
                 if (value) {
                     this.element.setAttribute(attribute, value.toString());
                 } else {

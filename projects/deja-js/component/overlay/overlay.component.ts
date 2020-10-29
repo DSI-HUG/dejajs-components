@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
 import { CdkConnectedOverlay, CdkOverlayOrigin, OverlayContainer } from '@angular/cdk/overlay';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { DejaConnectionPositionPair, Destroy, MediaService } from '@deja-js/core';
@@ -48,7 +48,7 @@ export class DejaOverlayComponent extends Destroy {
         return this._isVisible;
     }
 
-    @Input() public set isVisible(value: boolean) {
+    @Input() public set isVisible(value: BooleanInput) {
         const isVisible = coerceBooleanProperty(value);
         if (this._isVisible !== isVisible) {
             this._isVisible = isVisible;
@@ -66,16 +66,16 @@ export class DejaOverlayComponent extends Destroy {
             }
 
             this.changeDetectorRef.markForCheck();
-            this.visibleChange.emit(this.isVisible);
+            this.visibleChange.emit(this._isVisible);
         }
     }
 
     private _hasBackdrop = true;
-    private _width: string = null;
+    private _width: number = null;
     private _widthForMobile = '100%';
     private _ownerElement: HTMLElement;
 
-    @Input() public set hasBackdrop(value: boolean) {
+    @Input() public set hasBackdrop(value: BooleanInput) {
         this._hasBackdrop = coerceBooleanProperty(value);
     }
 
@@ -114,6 +114,10 @@ export class DejaOverlayComponent extends Destroy {
         });
     }
 
+    public get positionPairs() {
+        return this.positions as DejaConnectionPositionPair[];
+    }
+
     public get positions() {
         if (!this.isMobile) {
             return this._positions;
@@ -142,7 +146,7 @@ export class DejaOverlayComponent extends Destroy {
     }
 
     @Input()
-    public set isMobile(value: boolean) {
+    public set isMobile(value: BooleanInput) {
         this._isMobile = coerceBooleanProperty(value);
         this.updateOriginOverlay();
         this.disableMediaService = true;
@@ -156,8 +160,8 @@ export class DejaOverlayComponent extends Destroy {
     /**
      * définit la largeur de l'overlay.
      */
-    public set width(width: string) {
-        this._width = width;
+    public set width(width: string | number) {
+        this._width = coerceNumberProperty(width);
     }
 
     public get widthForMobile() {

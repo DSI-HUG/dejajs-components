@@ -6,8 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy } from '@angular/core';
+import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
+import { ChangeDetectionStrategy, TemplateRef } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Component } from '@angular/core';
 import { ContentChild } from '@angular/core';
@@ -84,7 +84,7 @@ export class DejaGridComponent extends Destroy {
     /** Ligne courant ou ligne active */
     @Input() public currentRow: unknown;
     /** Liste des éléments sélectionnés en mode multiselect */
-    @Input() public selectedItems: unknown[] | string;
+    @Input() public selectedItems: unknown[];
     /** Elément selectioné en mode single select */
     @Input() public selectedItem: unknown;
     /** Liste des models selectionés en mode multiselect */
@@ -98,17 +98,17 @@ export class DejaGridComponent extends Destroy {
     /** Définit la largeur minimum que peut prendre une colonne en cas de redimensionement. */
     @Input() public columnsMinWidth = 15;
     /** Permet de définir un template de ligne par binding */
-    @Input() public rowTemplateExternal: unknown;
+    @Input() public rowTemplateExternal: TemplateRef<unknown>;
     /** Permet de définir un template de ligne parente par binding. */
-    @Input() public parentRowTemplateExternal: unknown;
+    @Input() public parentRowTemplateExternal: TemplateRef<unknown>;
     /** Permet de définir un template d'entête par binding. */
-    @Input() public headerTemplateExternal: unknown;
+    @Input() public headerTemplateExternal: TemplateRef<unknown>;
     /** Permet de définir un template d'entête de colonnes par binding. */
-    @Input() public columnHeaderTemplateExternal: unknown;
+    @Input() public columnHeaderTemplateExternal: TemplateRef<unknown>;
     /** Permet de définir un template comme prefixe de la zone de recherche par binding. */
-    @Input() public searchPrefixTemplateExternal: unknown;
+    @Input() public searchPrefixTemplateExternal: TemplateRef<unknown>;
     /** Permet de définir un template comme suffixe de la zone de recherche par binding. */
-    @Input() public searchSuffixTemplateExternal: unknown;
+    @Input() public searchSuffixTemplateExternal: TemplateRef<unknown>;
     /** Set a observable called before the rows will be displayed */
     @Input() public loadingRows: (query: string | RegExp, selectedRows: IDejaGridRow<unknown>[]) => Observable<unknown[]>;
     /** Set a promise called before a row selection */
@@ -137,28 +137,28 @@ export class DejaGridComponent extends Destroy {
     @Output() public readonly groupChanged = new EventEmitter<IGroupInfo[]>();
 
     @ContentChild('rowTemplate')
-    private rowTemplateInternal: unknown;
+    private rowTemplateInternal: TemplateRef<unknown>;
 
     @ContentChild('parentRowTemplate')
-    private parentRowTemplateInternal: unknown;
+    private parentRowTemplateInternal: TemplateRef<unknown>;
 
     @ContentChild('cellTemplate')
-    private _cellTemplate: unknown;
+    private _cellTemplate: TemplateRef<unknown>;
 
     @ContentChild('parentTitleTemplate')
-    private _parentTitleTemplate: unknown;
+    private _parentTitleTemplate: TemplateRef<unknown>;
 
     @ContentChild('columnHeaderTemplate')
-    private _columnHeaderTemplate: unknown;
+    private _columnHeaderTemplate: TemplateRef<unknown>;
 
     @ContentChild('headerTemplate')
-    private headerTemplateInternal: unknown;
+    private headerTemplateInternal: TemplateRef<unknown>;
 
     @ContentChild('searchPrefixTemplate')
-    private searchPrefixTemplateInternal: unknown;
+    private searchPrefixTemplateInternal: TemplateRef<unknown>;
 
     @ContentChild('searchSuffixTemplate')
-    private searchSuffixTemplateInternal: unknown;
+    private searchSuffixTemplateInternal: TemplateRef<unknown>;
 
     @ViewChild(DejaGridHeaderComponent) private header: DejaGridHeaderComponent;
     @ViewChild(DejaTreeListComponent, { static: true }) private treeListComponent: DejaTreeListComponent;
@@ -209,7 +209,7 @@ export class DejaGridComponent extends Destroy {
 
     /** Définit la hauteur d'une ligne pour le calcul du viewport en pixels */
     @Input()
-    public set viewPortRowHeight(value: number | string) {
+    public set viewPortRowHeight(value: NumberInput) {
         this._viewPortRowHeight = coerceNumberProperty(value);
     }
 
@@ -220,7 +220,7 @@ export class DejaGridComponent extends Destroy {
     /** Permet de définir la longueur minimale de caractères dans le champ de recherche avant que la recherche ou le filtrage soient effectués */
     // eslint-disable-next-line @angular-eslint/no-input-rename
     @Input()
-    public set minSearchLength(value: number | string) {
+    public set minSearchLength(value: NumberInput) {
         this._minSearchLength = coerceNumberProperty(value);
     }
 
@@ -233,7 +233,7 @@ export class DejaGridComponent extends Destroy {
      * Spécifier 0 pour que le composant determine sa hauteur à partir du container
      */
     @Input()
-    public set maxHeight(value: number | string) {
+    public set maxHeight(value: NumberInput) {
         this._maxHeight = coerceNumberProperty(value);
     }
 
@@ -243,7 +243,7 @@ export class DejaGridComponent extends Destroy {
 
     /** Définit le nombre de lignes à sauter en cas de pression sur les touches PageUp ou PageDown */
     @Input()
-    public set pageSize(value: number | string) {
+    public set pageSize(value: NumberInput) {
         this._pageSize = coerceNumberProperty(value);
     }
 
@@ -253,7 +253,7 @@ export class DejaGridComponent extends Destroy {
 
     /** Définit si le waiter doit être affiché dans la grille. */
     @Input()
-    public set waiter(value: boolean | string) {
+    public set waiter(value: BooleanInput) {
         this._waiter = coerceBooleanProperty(value);
     }
 
@@ -263,7 +263,7 @@ export class DejaGridComponent extends Destroy {
 
     /** Permet de trier le tableau au clic sur l'entête de la colonne */
     @Input()
-    public set sortable(value: boolean | string) {
+    public set sortable(value: BooleanInput) {
         this._sortable = coerceBooleanProperty(value);
     }
 
@@ -273,7 +273,7 @@ export class DejaGridComponent extends Destroy {
 
     /** Définit les options de regroupement utilisateur de la grille. Plusieurs champs peuvent etre spécifiés dans le HTML en utilisant la , comme séparateur (Ex: columnGroups="color, name") */
     @Input()
-    public set columnGroups(value: IDejaGridColumn[] | string) {
+    public set columnGroups(value: IDejaGridColumn[]) {
         this.columnGroups$.next(value);
     }
 
@@ -287,7 +287,7 @@ export class DejaGridComponent extends Destroy {
 
     /** Affiche un barre de recherche au dessus du tableau. */
     @Input()
-    public set searchArea(value: boolean | string) {
+    public set searchArea(value: BooleanInput) {
         this._searchArea = coerceBooleanProperty(value);
     }
 
@@ -297,7 +297,7 @@ export class DejaGridComponent extends Destroy {
 
     /** Affiche une zone de regroupement des colonnes par drag and drop. */
     @Input()
-    public set groupArea(value: boolean | string) {
+    public set groupArea(value: BooleanInput) {
         this._groupArea = coerceBooleanProperty(value);
         if (this._columnsSortable && !this.clipboardService) {
             throw new Error('To use the DejaGrid.groupArea feature, please import and provide the DejaClipboardService in your application.');
@@ -310,7 +310,7 @@ export class DejaGridComponent extends Destroy {
 
     /** Rend les lignes du tableau draggable vers un autre composant (ne pas confondre avec la propriété `sortable`) */
     @Input()
-    public set rowsDraggable(value: boolean | string) {
+    public set rowsDraggable(value: BooleanInput) {
         this._rowsDraggable = coerceBooleanProperty(value);
     }
 
@@ -320,7 +320,7 @@ export class DejaGridComponent extends Destroy {
 
     /** Rend les lignes du tableau triables par drag-and-drop */
     @Input()
-    public set rowsSortable(value: boolean | string) {
+    public set rowsSortable(value: BooleanInput) {
         this._rowsSortable = coerceBooleanProperty(value);
     }
 
@@ -330,7 +330,7 @@ export class DejaGridComponent extends Destroy {
 
     /** Définit si toutes les colonnes peuvent être draggable vers un autre composant. */
     @Input()
-    public set columnsDraggable(value: boolean | string) {
+    public set columnsDraggable(value: BooleanInput) {
         this._columnsDraggable = coerceBooleanProperty(value);
     }
 
@@ -340,7 +340,7 @@ export class DejaGridComponent extends Destroy {
 
     /** Définit si toutes les colonnes peuvent être déplacées parmis les autres colonnes. */
     @Input()
-    public set columnsSortable(value: boolean | string) {
+    public set columnsSortable(value: BooleanInput) {
         this._columnsSortable = coerceBooleanProperty(value);
         if (this._columnsSortable && !this.clipboardService) {
             throw new Error('To use the DejaGrid.columnsSortable feature, please import and provide the DejaClipboardService in your application.');
@@ -353,7 +353,7 @@ export class DejaGridComponent extends Destroy {
 
     /** Permet de redimensionner manuellement les colonnes du tableau. */
     @Input()
-    public set columnsSizable(value: boolean | string) {
+    public set columnsSizable(value: BooleanInput) {
         this._columnsSizable = coerceBooleanProperty(value);
     }
 
@@ -363,7 +363,7 @@ export class DejaGridComponent extends Destroy {
 
     /** Permet la sélection multiple des ligne de la grille (avec la touche shift ou ctrl) */
     @Input()
-    public set multiSelect(value: boolean | string) {
+    public set multiSelect(value: BooleanInput) {
         this._multiSelect = coerceBooleanProperty(value);
     }
 

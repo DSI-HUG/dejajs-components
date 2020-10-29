@@ -5,6 +5,7 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
+import { BooleanInput } from '@angular/cdk/coercion';
 import { Component } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { Input } from '@angular/core';
@@ -36,7 +37,7 @@ export class DejaColorFabComponent extends Destroy {
         this._colorFab = colorFab;
 
         if (colorFab) {
-            const toogleAttribute = (attribute: string, value: string | boolean) => {
+            const toogleAttribute = (attribute: string, value: BooleanInput) => {
                 if (value) {
                     this.element.setAttribute(attribute, value.toString());
                 } else {

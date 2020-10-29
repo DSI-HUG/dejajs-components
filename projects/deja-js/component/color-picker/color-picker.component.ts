@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { NgControl } from '@angular/forms';
@@ -46,7 +46,7 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
 
     /** Retourne ou definit si la partie déroulante est visible. */
     @Input()
-    public set isOpen(value: boolean | string) {
+    public set isOpen(value: BooleanInput) {
         this._isOpen = coerceBooleanProperty(value) || null;
     }
 
@@ -74,7 +74,7 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
 
     /** Retourne ou définit la taille du bouton. */
     @Input()
-    public set small(value: boolean | string) {
+    public set small(value: BooleanInput) {
         this._small = coerceBooleanProperty(value);
     }
 
@@ -84,7 +84,7 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
 
     /** Retourne ou definit si le selecteur est desactivé. */
     @Input()
-    public set disabled(value: boolean | string) {
+    public set disabled(value: BooleanInput) {
         this._disabled = coerceBooleanProperty(value);
         this.changeDetectorRef.markForCheck();
     }

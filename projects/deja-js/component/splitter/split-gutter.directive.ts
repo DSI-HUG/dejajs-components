@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { coerceNumberProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { Directive, ElementRef, Input, Renderer2 } from '@angular/core';
 
 /**
@@ -21,7 +21,7 @@ export class SplitGutterDirective {
      * Order of the seperator
      */
     @Input()
-    public set order(v: number | string) {
+    public set order(v: NumberInput) {
         this.setStyle('order', coerceNumberProperty(v));
     }
 
@@ -40,7 +40,7 @@ export class SplitGutterDirective {
      * Separator size in pixel
      */
     @Input()
-    public set size(v: number | string) {
+    public set size(v: NumberInput) {
         if (!v) {
             this.setStyle('flex-basis', '');
         } else if (typeof v === 'string') {
@@ -56,8 +56,8 @@ export class SplitGutterDirective {
      * By default `false`
      */
     @Input()
-    public set disabled(v: boolean) {
-        this._disabled = v;
+    public set disabled(v: BooleanInput) {
+        this._disabled = coerceBooleanProperty(v);
         this.refreshStyle();
     }
 

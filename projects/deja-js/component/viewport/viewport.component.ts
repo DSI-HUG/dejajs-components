@@ -6,8 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { coerceNumberProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy } from '@angular/core';
+import { coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
+import { ChangeDetectionStrategy, TemplateRef } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Component } from '@angular/core';
 import { ContentChild } from '@angular/core';
@@ -41,9 +41,9 @@ export class DejaViewPortComponent extends Destroy {
     @HostBinding('attr.buttons') public _hasButtons = false;
 
     /** Permet de définir un template d'élément par binding */
-    @Input() public itemTemplateExternal: unknown;
+    @Input() public itemTemplateExternal: TemplateRef<unknown>;
 
-    @ContentChild('itemTemplate') private itemTemplateInternal: unknown;
+    @ContentChild('itemTemplate') private itemTemplateInternal: TemplateRef<unknown>;
 
     public beforeSize: number;
     public afterSize: number;
@@ -126,7 +126,7 @@ export class DejaViewPortComponent extends Destroy {
 
     /** Set the item size in fixed mode or the default item size before rendering in auto mode */
     @Input()
-    public set itemSize(value: number | string) {
+    public set itemSize(value: NumberInput) {
         if (value) {
             const size = coerceNumberProperty(value);
             this.viewPort.itemsSize$.next(+value);

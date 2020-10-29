@@ -6,11 +6,13 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { NumberInput } from '@angular/cdk/coercion';
+
 export class UnitValue {
     public value: number;
     public unit: string;
 
-    public constructor(value?: number | string, unit?: string) {
+    public constructor(value?: NumberInput, unit?: string) {
         if (typeof value === 'string') {
             // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
             const match = value.match(/([0-9.]+)(.*)/);
