@@ -6,8 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy } from '@angular/core';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
+import { ChangeDetectionStrategy, TemplateRef } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Component } from '@angular/core';
 import { ContentChild } from '@angular/core';
@@ -23,7 +23,6 @@ import { Circle, Destroy, Position } from '@deja-js/core';
 import { fromEvent, merge, Observable, Subject } from 'rxjs';
 import { debounceTime, filter, sampleTime, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 
-// eslint-disable-next-line no-shadow
 export enum ClockwiseFactorEnum {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     clockwise = -1,
@@ -57,9 +56,9 @@ export class DejaCircularPickerComponent extends Destroy implements OnInit, Cont
     @Input() public ranges: ICircularRange[];
 
     /** Template for labels inside picker. Use it to customize labels */
-    @ContentChild('labelTemplate') public labelTemplate: unknown;
+    @ContentChild('labelTemplate') public labelTemplate: TemplateRef<unknown>;
     /** template for cursor inside picker. Use it to customize labels */
-    @ContentChild('cursorTemplate') public cursorTemplate: unknown;
+    @ContentChild('cursorTemplate') public cursorTemplate: TemplateRef<unknown>;
 
     @ViewChild('picker', { static: true }) private picker: ElementRef;
 
@@ -72,7 +71,7 @@ export class DejaCircularPickerComponent extends Destroy implements OnInit, Cont
      * With outerLabels = false, and ranges.length > 1, labels will go inwards.
      */
     @Input()
-    public set outerLabels(value: boolean | string) {
+    public set outerLabels(value: BooleanInput) {
         this._outerLabels = coerceBooleanProperty(value) || null;
     }
 
@@ -82,7 +81,7 @@ export class DejaCircularPickerComponent extends Destroy implements OnInit, Cont
 
     /** disabled property setter. Can be string or empty so you can use it like : <circular-picker disabled></circular-picker> */
     @Input()
-    public set disabled(value: boolean | string) {
+    public set disabled(value: BooleanInput) {
         this._disabled = coerceBooleanProperty(value);
         this.changeDetectorRef.markForCheck();
     }

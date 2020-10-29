@@ -7,7 +7,7 @@
  */
 
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty, NumberInput } from '@angular/cdk/coercion';
 import { AfterContentInit } from '@angular/core';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
@@ -77,7 +77,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
     /** Offset de position verticale de la zone de dropdown */
     @Input() public overlayOffsetY = 6;
 
-    @Input() public updateInputOn: string;
+    @Input() public updateInputOn: 'change' | 'blur' | 'submit';
 
     @ViewChild(DejaChildValidatorDirective) private inputValidatorDirective: DejaChildValidatorDirective;
 
@@ -85,7 +85,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
         return this.focused || !this.empty || !!this.mask;
     }
 
-    public _layout: number | string;
+    public _layout: NumberInput;
 
     /** Date format. If unset, format will be 'YYYY-MM-DD' + ' HH:mm' it's a date-time selector */
     @Input() public set format(format: string) {
@@ -128,7 +128,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
 
     /** Permettre la saisie de texte libre */
     @Input()
-    public set allowFreeEntry(value: boolean | string) {
+    public set allowFreeEntry(value: BooleanInput) {
         this._allowFreeEntry = coerceBooleanProperty(value) || null;
     }
 
@@ -486,7 +486,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
      * Used to add time selector next to calendar
      */
     @Input()
-    public set time(value: boolean | string) {
+    public set time(value: BooleanInput) {
         this._time = coerceBooleanProperty(value) ? true : null;
         if (this._time) {
             this.layout = DateComponentLayout.datetime;

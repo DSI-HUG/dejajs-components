@@ -7,7 +7,7 @@
  */
 
 /* eslint-disable @typescript-eslint/naming-convention */
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Component } from '@angular/core';
@@ -27,7 +27,6 @@ import { debounceTime, filter, takeUntil, tap } from 'rxjs/operators';
 
 import { IDateSelectorItem } from './date-selector-item.model';
 
-// eslint-disable-next-line no-shadow
 export enum DaysOfWeek {
     Sunday = 0,
     Monday = 1,
@@ -38,7 +37,6 @@ export enum DaysOfWeek {
     Saturday = 6,
 }
 
-// eslint-disable-next-line no-shadow
 export enum DateComponentLayout {
     dateonly = 1,
     datetime,
@@ -135,7 +133,7 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
      * Used to add time selector next to calendar
      */
     @Input()
-    public set time(value: boolean | string) {
+    public set time(value: BooleanInput) {
         this._time = coerceBooleanProperty(value) ? true : null;
         if (this._time) {
             this.layout = DateComponentLayout.datetime;
@@ -166,7 +164,7 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
 
     /** Disabled property setter. Can be string or empty so you can use it like : <deja-date-selector disabled></deja-date-selector> */
     @Input()
-    public set disabled(value: boolean | string) {
+    public set disabled(value: BooleanInput) {
         this._disabled = coerceBooleanProperty(value) ? true : null;
         // this.changeDetectorRef.markForCheck();
         this.bind();

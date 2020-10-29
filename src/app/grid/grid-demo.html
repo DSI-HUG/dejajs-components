@@ -94,7 +94,7 @@
         <mat-toolbar color="primary">Grouping Client Side</mat-toolbar>
         <mat-card-content class="flexLayout flexColumn listContainer">
             <div>To allow the user grouping just add the groupArea directive</div>
-            <deja-grid class="flex600" groupArea columnsSortable multiSelect columnsSizable sortable columnGroups="eyeColor" [rows]="people$" [columns]="peopleColumnsEx" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid">
+            <deja-grid class="flex600" groupArea columnsSortable multiSelect columnsSizable sortable [columnGroups]="[{ name: 'eyeColor' }]" [rows]="people$" [columns]="peopleColumnsEx" nodataholder="No datas" placeholder="Filter by name" searchField="name" valueField="guid">
                 <ng-template #cellTemplate let-row let-column="column">
                     <span *ngIf="column.name==='color'" class="color" [style.background-color]="row[column.name]"></span>
                 </ng-template>
@@ -219,7 +219,7 @@
 						<span *ngIf="column.name==='color'" class="color" [style.background-color]="row[column.name]"></span>
             </ng-template>
             </deja-grid>
-            <deja-grid class="flex45p flexOffset2rl" multiSelect="true" selectedItems="mango, peach, cranberries" maxHeight="auto" [rows]="fructsForMultiSelection" [columns]="fructsColumns" valueField="value">
+            <deja-grid class="flex45p flexOffset2rl" multiSelect="true" [selectedItems]="['mango', 'peach', 'cranberries']" maxHeight="auto" [rows]="fructsForMultiSelection" [columns]="fructsColumns" valueField="value">
                 <ng-template #cellTemplate let-row let-column="column">
                     <span *ngIf="column.name==='color'" class="color" [style.background-color]="row[column.name]"></span>
                 </ng-template>

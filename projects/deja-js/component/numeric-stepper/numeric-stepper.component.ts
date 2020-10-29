@@ -7,7 +7,7 @@
  */
 
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Component } from '@angular/core';
@@ -109,7 +109,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     }
 
     @Input()
-    public set max(value: number | string) {
+    public set max(value: NumberInput) {
         this._max = coerceNumberProperty(value, null);
         this.changeDetectorRef.markForCheck();
     }
@@ -120,7 +120,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     }
 
     @Input()
-    public set min(value: number | string) {
+    public set min(value: NumberInput) {
         this._min = coerceNumberProperty(value, null);
         this.changeDetectorRef.markForCheck();
     }
@@ -135,7 +135,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     }
 
     @Input()
-    public set step(value: number | string) {
+    public set step(value: NumberInput) {
         this._step = coerceNumberProperty(value, 1);
         this.changeDetectorRef.markForCheck();
     }
@@ -146,7 +146,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     }
 
     @Input()
-    public set hideSteppers(value: boolean | string) {
+    public set hideSteppers(value: BooleanInput) {
         this._hideSteppers = coerceBooleanProperty(value);
         this.changeDetectorRef.markForCheck();
     }
@@ -177,7 +177,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
         return this._alwaysDisplayUnit;
     }
 
-    public set alwaysDisplayUnit(value: boolean | string) {
+    public set alwaysDisplayUnit(value: BooleanInput) {
         this._alwaysDisplayUnit = coerceBooleanProperty(value);
     }
 

@@ -6,8 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy } from '@angular/core';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
+import { ChangeDetectionStrategy, TemplateRef } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Component } from '@angular/core';
 import { ContentChild } from '@angular/core';
@@ -48,8 +48,8 @@ export class DejaRangeComponent extends Destroy implements ControlValueAccessor 
     // index of the selected range
     @Input() public selected = 0;
     // custom templates
-    @ContentChild('rangeTemplate') public rangeTemplate: unknown;
-    @ContentChild('separatorTemplate') public separatorTemplate: unknown;
+    @ContentChild('rangeTemplate') public rangeTemplate: TemplateRef<unknown>;
+    @ContentChild('separatorTemplate') public separatorTemplate: TemplateRef<unknown>;
 
     // minimum range percentage, used to avoid 2 separator being on the same visual space
     private minimumRangePercentage = 0.01;
@@ -91,7 +91,7 @@ export class DejaRangeComponent extends Destroy implements ControlValueAccessor 
     }
 
     @Input()
-    public set disabled(value: boolean | string) {
+    public set disabled(value: BooleanInput) {
         this._disabled = coerceBooleanProperty(value);
         this.changeDetectorRef.markForCheck();
     }
@@ -101,7 +101,7 @@ export class DejaRangeComponent extends Destroy implements ControlValueAccessor 
     }
 
     @Input()
-    public set readOnly(value: boolean | string) {
+    public set readOnly(value: BooleanInput) {
         this._readOnly = coerceBooleanProperty(value);
     }
 

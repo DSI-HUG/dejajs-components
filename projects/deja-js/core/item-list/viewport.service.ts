@@ -7,6 +7,7 @@
  */
 
 /* eslint-disable @typescript-eslint/naming-convention */
+import { NumberInput } from '@angular/cdk/coercion';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, from, Observable, of, ReplaySubject, timer } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
@@ -40,7 +41,7 @@ export class ViewPortService extends Destroy {
 
     public mode$ = new BehaviorSubject<ViewportMode>('fixed');
     public items$ = new BehaviorSubject<IViewPortItem[]>([]);
-    public maxSize$ = new BehaviorSubject<number | string>(0);
+    public maxSize$ = new BehaviorSubject<NumberInput>(0);
     public ensureItem$ = new BehaviorSubject<IViewPortItem | number>(null);
     public scrollPosition$ = new BehaviorSubject<number>(0);
     public element$ = new ReplaySubject<HTMLElement>(1);

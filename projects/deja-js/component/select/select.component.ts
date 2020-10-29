@@ -7,8 +7,8 @@
  */
 
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
-import { AfterContentInit } from '@angular/core';
+import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
+import { AfterContentInit, TemplateRef } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
@@ -97,11 +97,11 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
     /** Nom de classe du container de la liste */
     @Input() public overlayContainerClass: string;
     /** Permet de définir un template de ligne par binding */
-    @Input() public itemTemplateExternal: unknown;
+    @Input() public itemTemplateExternal: TemplateRef<unknown>;
     /** Permet de définir un template de ligne parente par binding. */
-    @Input() public parentItemTemplateExternal: unknown;
+    @Input() public parentItemTemplateExternal: TemplateRef<unknown>;
     /** Permet de définir un template pour le loader par binding. */
-    @Input() public loaderTemplateExternal: unknown;
+    @Input() public loaderTemplateExternal: TemplateRef<unknown>;
     /** Exécuté lorsque le calcul du viewPort est terminé. */
     @Output() public readonly viewPortChanged = new EventEmitter<IViewPort>();
     /** Exécuté lorsque l'utilisateur sélectionne ou désélectionne une ligne. */
@@ -109,16 +109,16 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
     /** For test only. */
     @Output() public readonly dropDownVisibleChange = new EventEmitter<boolean>();
 
-    @ContentChild('itemTemplate') public itemTemplateInternal: unknown;
-    @ContentChild('parentItemTemplate') public parentItemTemplateInternal: unknown;
-    @ContentChild('selectedTemplate') public selectedTemplate: unknown;
+    @ContentChild('itemTemplate') public itemTemplateInternal: TemplateRef<unknown>;
+    @ContentChild('parentItemTemplate') public parentItemTemplateInternal: TemplateRef<unknown>;
+    @ContentChild('selectedTemplate') public selectedTemplate: TemplateRef<unknown>;
 
     @ViewChild(MatInput) protected input: MatInput;
 
     /** Overlay pane containing the options. */
     @ViewChild(DejaOverlayComponent, { static: true }) private overlay: DejaOverlayComponent;
 
-    @ContentChild('loaderTemplate') private loaderTemplateInternal: unknown;
+    @ContentChild('loaderTemplate') private loaderTemplateInternal: TemplateRef<unknown>;
 
     @HostBinding('class.floating') public get shouldLabelFloat() {
         return this.focused || !this.empty;
@@ -170,7 +170,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
 
     /** Définit une valeur indiquant si en reactive form le model renvoyé doit être un object ou une valeur */
     @Input()
-    public set modelIsValue(value: boolean | string) {
+    public set modelIsValue(value: BooleanInput) {
         this._modelIsValue = coerceBooleanProperty(value);
     }
 
@@ -190,7 +190,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
     }
 
     @Input()
-    public set dropDownWidth(value: number | string) {
+    public set dropDownWidth(value: NumberInput) {
         this._dropDownWidth = value && (typeof value === 'string' ? value : `${value}px`);
     }
 
@@ -488,7 +488,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
 
     /** Définit la longueur minimale de caractères dans le champ de recherche avant que la recherche ou le filtrage soient effectués */
     // eslint-disable-next-line @angular-eslint/no-input-rename
-    @Input('min-search-length') public set minSearchlength(value: number | string) {
+    @Input('min-search-length') public set minSearchlength(value: NumberInput) {
         this._minSearchLength = coerceNumberProperty(value);
     }
 
@@ -510,7 +510,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
 
     /** Indique ou détermine si le bouton pour effacer la selection doit être affiché */
     @Input()
-    public set selectionClearable(value: boolean | string) {
+    public set selectionClearable(value: BooleanInput) {
         this._selectionClearable = coerceBooleanProperty(value);
     }
 
@@ -520,7 +520,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
 
     @Input()
     /** Définit une valeur indiquant si les éléments selectionés doivent être masqué de la liste déroulante. */
-    public set hideSelected(value: boolean | string) {
+    public set hideSelected(value: BooleanInput) {
         this.setHideSelected(coerceBooleanProperty(value));
     }
 
@@ -540,7 +540,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
 
     /** Définit le nombre de lignes à sauter en cas de pression sur les touches PageUp ou PageDown */
     @Input()
-    public set pageSize(value: number | string) {
+    public set pageSize(value: NumberInput) {
         this._pageSize = coerceNumberProperty(value);
     }
 
@@ -569,7 +569,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
 
     /** Définit la hauteur d'une ligne pour le calcul du viewport en pixels (la valeur par défaut sera utilisée si aucune valeur n'est définie). */
     @Input()
-    public set viewPortRowHeight(value: number | string) {
+    public set viewPortRowHeight(value: NumberInput) {
         this.setViewPortRowHeight(value);
     }
 

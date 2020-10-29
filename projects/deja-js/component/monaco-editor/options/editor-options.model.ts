@@ -6,6 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { NumberInput } from '@angular/cdk/coercion';
+
 import { EditorScrollbarOptions } from './editor-scrollbar-options.model';
 
 /**
@@ -66,7 +68,7 @@ export class EditorOptions {
      * You can pass in a string in the format floating point followed by "ch". e.g. 1.3ch.
      * Defaults to 10.
      */
-    public lineDecorationsWidth?: number | string;
+    public lineDecorationsWidth?: NumberInput;
     /**
      * When revealing the cursor, a virtual padding (px) is added to the cursor, turning it into a rectangle.
      * This virtual padding ensures that the cursor gets revealed before hitting the edge of the viewport.

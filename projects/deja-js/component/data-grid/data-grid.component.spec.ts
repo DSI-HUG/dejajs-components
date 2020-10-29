@@ -619,7 +619,7 @@ describe('DejaGridComponent', () => {
                     case 1:
                         void expect(vp.items.length).toBe(12);
                         void expect(groupChips.length).toBe(0);
-                        gridInstance.columnGroups = 'name';
+                        gridInstance.columnGroups = [{ name: 'name' }];
                         gridInstance.refresh();
                         fixture.detectChanges();
                         break;
