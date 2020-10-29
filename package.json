@@ -95,7 +95,6 @@
         "@types/ckeditor": "~4.9.10",
         "@typescript-eslint/eslint-plugin": "~4.4.1",
         "@typescript-eslint/parser": "~4.4.1",
-        "codelyzer": "~6.0.1",
         "eslint": "^7.11.0",
         "eslint-plugin-chai-friendly": "^0.6.0",
         "eslint-plugin-cypress": "^2.11.2",
