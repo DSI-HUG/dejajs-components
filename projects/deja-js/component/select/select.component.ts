@@ -146,7 +146,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
     private _dropdownVisible = false;
     private lastScrollPosition = 0;
     private _selectionClearable = false;
-    private _dropDownWidth: string;
+    private _dropDownWidth: number;
     private _query = '';
     private _required = false;
     private _placeholder: string;
@@ -191,12 +191,11 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
 
     @Input()
     public set dropDownWidth(value: NumberInput) {
-        this._dropDownWidth = value && (typeof value === 'string' ? value : `${value}px`);
+        this._dropDownWidth = coerceNumberProperty(value);
     }
 
     public get dropDownWidth() {
-        const element = this.elementRef?.nativeElement as HTMLElement;
-        return this._dropDownWidth || element.clientWidth;
+        return this._dropDownWidth || this.elementRef?.nativeElement.clientWidth;
     }
 
     public get keyboardNavigation() {
@@ -262,7 +261,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
     public constructor(changeDetectorRef: ChangeDetectorRef,
         public viewPort: ViewPortService,
         private fm: FocusMonitor,
-        private elementRef: ElementRef,
+        private elementRef: ElementRef<HTMLElement>,
         @Self() @Optional() public ngControl: NgControl,
         @Optional() private parentForm: NgForm,
         @Optional() private parentFormGroup: FormGroupDirective,
@@ -928,7 +927,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
             });
         }
 
-        this.overlayOwnerElement = this.elementRef.nativeElement as HTMLElement;
+        this.overlayOwnerElement = this.elementRef.nativeElement;
         if (this.overlayOwnerElement.parentElement.className.includes('mat-form-field-infix')) {
             this.overlayOwnerElement = this.overlayOwnerElement.parentElement;
         }
