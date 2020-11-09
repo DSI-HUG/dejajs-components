@@ -24,7 +24,7 @@ import { ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Destroy } from '@deja-js/core';
 import * as _ from 'lodash';
-import { Subscription, timer } from 'rxjs';
+import { Subscription, timer, from } from 'rxjs';
 import { first, take, takeUntil } from 'rxjs/operators';
 import { DejaEditorService } from './deja-editor.service';
 
@@ -158,14 +158,15 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
      * On component view init
      */
     public ngAfterViewInit() {
-        this._initializer.initDejaEditorLib().then(() => {
+        from(this._initializer.initDejaEditorLib()).pipe(
+            take(1),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => {
             this.ckeditorInit(_.cloneDeep(this.config) || {});
-            if (!this.destroyed$.closed) {
-                // Effectively display the editor even if parents component ChangeDetectionStrategy is OnPush
-                timer(0).pipe(
-                    takeUntil(this.destroyed$)
-                ).subscribe(() => this._changeDetectorRef.markForCheck());
-            }
+            // Effectively display the editor even if parents component ChangeDetectionStrategy is OnPush
+            timer(0).pipe(
+                takeUntil(this.destroyed$)
+            ).subscribe(() => this._changeDetectorRef.markForCheck());
         });
     }
 
@@ -402,10 +403,14 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
     }
 
     public setFocus(): void {
-        if (this.instance) {
-            this.instance.focus();
+        if (this._ready) {
+            if (this.instance) {
+                this.instance.focus();
+            } else {
+                this.host.nativeElement.focus();
+            }
         } else {
-            this.host.nativeElement.focus();
+            this.ready.pipe(take(1)).subscribe(() => this.setFocus());
         }
     }
 
