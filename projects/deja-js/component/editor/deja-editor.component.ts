@@ -27,8 +27,8 @@ import { ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Destroy } from '@deja-js/core';
 import { cloneDeep } from 'lodash';
-import { Subscription, timer } from 'rxjs';
-import { first, take, takeUntil } from 'rxjs/operators';
+import { from, Subscription, timer } from 'rxjs';
+import { delay, first, take, takeUntil, tap } from 'rxjs/operators';
 
 import { DejaEditorService } from './deja-editor.service';
 
@@ -168,15 +168,12 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
      * On component view init
      */
     public ngAfterViewInit() {
-        void this.initializer.initDejaEditorLib().then(() => {
-            this.ckeditorInit(cloneDeep(this.config) || {});
-            if (!this.destroyed$.closed) {
-                // Effectively display the editor even if parents component ChangeDetectionStrategy is OnPush
-                timer(0).pipe(
-                    takeUntil(this.destroyed$)
-                ).subscribe(() => this.changeDetectorRef.markForCheck());
-            }
-        });
+        from(this.initializer.initDejaEditorLib()).pipe(
+            take(1),
+            tap(() => this.ckeditorInit(cloneDeep(this.config) || {})),
+            delay(0),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => this.changeDetectorRef.markForCheck());
     }
 
     /**
