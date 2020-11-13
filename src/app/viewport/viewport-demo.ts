@@ -52,7 +52,7 @@ export class DejaViewPortDemoComponent {
         this.news$ = newsService.getNews$(50);
     }
 
-    public imageLoaded(item: IViewPortItem) {
+    public imageLoaded(item: IViewPortItem): void {
         const itemExt = item as IExtendedViewPortItem;
         if (!itemExt.loaded) {
             itemExt.loaded = true;

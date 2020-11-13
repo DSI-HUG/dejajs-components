@@ -15,11 +15,11 @@ export class Size {
         this.height = height || 0;
     }
 
-    public static equals(s1: Size, s2: Size) {
+    public static equals(s1: Size, s2: Size): boolean {
         return s1.width === s2.width && s1.height === s2.height;
     }
 
-    public clone() {
+    public clone(): Size {
         return new Size(this.width, this.height);
     }
 }

@@ -24,11 +24,11 @@ export class DejaColorSelectorDemoComponent {
 
     public constructor(public materialColors: MaterialColors) { }
 
-    public onColorPickerHover(event: IColorEvent) {
+    public onColorPickerHover(event: IColorEvent): void {
         this.hoveredColor = event.color;
     }
 
-    public onColorPickerChange(event: IColorEvent) {
+    public onColorPickerChange(event: IColorEvent): void {
         this.hoveredColor = event.color;
     }
 }

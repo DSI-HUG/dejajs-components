@@ -47,11 +47,11 @@ export class Rect {
         }
     }
 
-    public static equals(r1: Rect, r2: Rect) {
+    public static equals(r1: Rect, r2: Rect): boolean {
         return r1 && r2 && r1.left === r2.left && r1.top === r2.top && r1.width === r2.width && r1.height === r2.height;
     }
 
-    public static union(r1: Rect, r2: Rect) {
+    public static union(r1: Rect, r2: Rect): Rect {
         return Rect.fromLTRB(Math.min(r1.left, r2.left), Math.min(r1.top, r2.top), Math.max(r1.left + r1.width, r2.left + r2.width), Math.max(r1.top + r1.height, r2.top + r2.height));
     }
 
@@ -71,7 +71,7 @@ export class Rect {
         return new Rect(left, top, right - left, bottom - top);
     }
 
-    public static fromPoints(p1: Position, p2: Position) {
+    public static fromPoints(p1: Position, p2: Position): Rect {
         return Rect.fromLTRB(Math.min(p1.left, p2.left), Math.min(p1.top, p2.top), Math.max(p1.left, p2.left), Math.max(p1.top, p2.top));
     }
 
@@ -79,7 +79,7 @@ export class Rect {
         this.width = value - this.left;
     }
 
-    public get right() {
+    public get right(): number {
         return this.left + this.width;
     }
 
@@ -87,11 +87,11 @@ export class Rect {
         this.height = value - this.top;
     }
 
-    public get bottom() {
+    public get bottom(): number {
         return this.top + this.height;
     }
 
-    public get position() {
+    public get position(): Position {
         return new Position(this.left, this.top);
     }
 
@@ -104,37 +104,37 @@ export class Rect {
         );
     }
 
-    public adjacent(bounds: Rect) {
+    public adjacent(bounds: Rect): boolean {
         return bounds.left <= this.right &&
             bounds.right >= this.left &&
             bounds.top <= this.bottom &&
             bounds.bottom >= this.top;
     }
 
-    public contains(bounds: Rect) {
+    public contains(bounds: Rect): boolean {
         return bounds.left >= this.left && bounds.right <= this.right && bounds.top >= this.top && bounds.bottom <= this.bottom;
     }
 
-    public containsPoint(point: Position) {
+    public containsPoint(point: Position): boolean {
         return point.left >= this.left && point.left <= this.right && point.top >= this.top && point.top <= this.bottom;
     }
 
-    public intersectWith(bounds: Rect) {
+    public intersectWith(bounds: Rect): boolean {
         return bounds.left < this.right &&
             bounds.right > this.left &&
             bounds.top < this.bottom &&
             bounds.bottom > this.top;
     }
 
-    public isEmpty() {
+    public isEmpty(): boolean {
         return !this.width || !this.height;
     }
 
-    public clone() {
+    public clone(): Rect {
         return new Rect(this.left, this.top, this.width, this.height);
     }
 
-    public toClientRect() {
+    public toClientRect(): ClientRect {
         return {
             left: this.left,
             top: this.top,
@@ -148,7 +148,7 @@ export class Rect {
     /**
      * @deprecated use toClientRect instead
      */
-    public toRectStruct() {
+    public toRectStruct(): ClientRect {
         return this.toClientRect();
     }
 }

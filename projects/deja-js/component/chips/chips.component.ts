@@ -56,7 +56,7 @@ export class DejaChipsComponent implements ControlValueAccessor {
         this._readonly = coerceBooleanProperty(value) || null;
     }
 
-    public get readonly() {
+    public get readonly(): BooleanInput {
         return this._readonly;
     }
 
@@ -66,7 +66,7 @@ export class DejaChipsComponent implements ControlValueAccessor {
         this._disabled = coerceBooleanProperty(value) || null;
     }
 
-    public get disabled() {
+    public get disabled(): BooleanInput {
         return this._disabled;
     }
 
@@ -79,11 +79,11 @@ export class DejaChipsComponent implements ControlValueAccessor {
         return this._items;
     }
 
-    public get itemTemplate() {
+    public get itemTemplate(): TemplateRef<unknown> {
         return this.itemTemplateExternal || this.itemTemplateInternal;
     }
 
-    public get insertTemplate() {
+    public get insertTemplate(): TemplateRef<unknown> {
         return this.insertTemplateExternal || this.insertTemplateInternal;
     }
 
@@ -100,27 +100,27 @@ export class DejaChipsComponent implements ControlValueAccessor {
     }
 
     // From ControlValueAccessor interface
-    public writeValue(value: unknown[]) {
+    public writeValue(value: unknown[]): void {
         this._items = value;
     }
 
     // From ControlValueAccessor interface
-    public registerOnChange(fn: (_a: unknown) => void) {
+    public registerOnChange(fn: (_a: unknown) => void): void {
         this.onChangeCallback = fn;
     }
 
     // From ControlValueAccessor interface
-    public registerOnTouched(fn: () => void) {
+    public registerOnTouched(fn: () => void): void {
         this.onTouchedCallback = fn;
     }
 
-    public setDisabledState(isDisabled: boolean) {
+    public setDisabledState(isDisabled: boolean): void {
         this.disabled = isDisabled;
     }
     // ************* End of ControlValueAccessor Implementation **************
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public getTextValue(value: any) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
+    public getTextValue(value: any): string {
         if (!value) {
             return '';
         } else if (this.textField && value.model && value.model[this.textField] !== undefined) {
@@ -151,6 +151,6 @@ export class DejaChipsComponent implements ControlValueAccessor {
         return false;
     }
 
-    protected onChangeCallback = (_a: unknown) => undefined as void;
-    protected onTouchedCallback = () => undefined as void;
+    protected onChangeCallback = (_a: unknown): void => undefined;
+    protected onTouchedCallback = (): void => undefined;
 }

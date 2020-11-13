@@ -24,12 +24,11 @@ export class IconService {
      * @param iconName
      * @param iconUrl
      */
-    public addSvgIcon(iconName: string, iconUrl: string) {
-        this.iconRegistry.addSvgIcon(iconName,
-            this.sanitizer.bypassSecurityTrustResourceUrl(iconUrl));
+    public addSvgIcon(iconName: string, iconUrl: string): void {
+        this.iconRegistry.addSvgIcon(iconName, this.sanitizer.bypassSecurityTrustResourceUrl(iconUrl));
     }
 
-    public useMaterialIcons(value = true) {
+    public useMaterialIcons(value = true): void {
         this.iconRegistry.registerFontClassAlias('deja-icons', value ? 'material-icons' : null);
     }
 }

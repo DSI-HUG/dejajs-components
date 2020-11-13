@@ -44,7 +44,7 @@ export class DejaMessageBoxDemoComponent {
 
     public closeAction = [
         {
-            action: () => alert('test action'),
+            action: (): void => alert('test action'),
             icon: 'clear'
         }
     ];

@@ -41,7 +41,7 @@ export class DejaTile {
         this._id = id || `#${DejaTile.CURRENT_ID++}`;
     }
 
-    public get idealBounds() {
+    public get idealBounds(): Rect {
         return new Rect(0, 0, 15, 15);
     }
 
@@ -52,7 +52,7 @@ export class DejaTile {
         }
     }
 
-    public get pixelBounds() {
+    public get pixelBounds(): Rect {
         return this._pixelBounds;
     }
 
@@ -60,7 +60,7 @@ export class DejaTile {
         this._percentBounds = value;
     }
 
-    public get percentBounds() {
+    public get percentBounds(): Rect {
         return this._percentBounds;
     }
 
@@ -68,11 +68,11 @@ export class DejaTile {
         this._templateModel = value;
     }
 
-    public get templateModel() {
+    public get templateModel(): unknown {
         return this._templateModel;
     }
 
-    public get id() {
+    public get id(): string {
         return this._id;
     }
 
@@ -83,7 +83,7 @@ export class DejaTile {
         }
     }
 
-    public get isCutted() {
+    public get isCutted(): boolean {
         return this._cutted;
     }
 
@@ -91,7 +91,7 @@ export class DejaTile {
         this._color = value;
     }
 
-    public get color() {
+    public get color(): string {
         return this._color;
     }
 
@@ -102,7 +102,7 @@ export class DejaTile {
         }
     }
 
-    public get isDragging() {
+    public get isDragging(): boolean {
         return this._isDragging;
     }
 
@@ -113,7 +113,7 @@ export class DejaTile {
         }
     }
 
-    public get isDropping() {
+    public get isDropping(): boolean {
         return this._isDropping;
     }
 
@@ -124,7 +124,7 @@ export class DejaTile {
         }
     }
 
-    public get isPressed() {
+    public get isPressed(): boolean {
         return this._isPressed;
     }
 
@@ -135,7 +135,7 @@ export class DejaTile {
         }
     }
 
-    public get isSelected() {
+    public get isSelected(): boolean {
         return this._selected;
     }
 
@@ -146,7 +146,7 @@ export class DejaTile {
         }
     }
 
-    public get isHidden() {
+    public get isHidden(): boolean {
         return this._isHidden;
     }
 
@@ -154,11 +154,11 @@ export class DejaTile {
         this._pending = value;
     }
 
-    public get isPending() {
+    public get isPending(): boolean {
         return this._pending;
     }
 
-    public get fading() {
+    public get fading(): boolean {
         return this._fading;
     }
 
@@ -166,11 +166,11 @@ export class DejaTile {
         this._fading = value;
     }
 
-    public makeId() {
+    public makeId(): void {
         this._id = `#${DejaTile.CURRENT_ID++}`;
     }
 
-    public equalsTo(tile: DejaTile) {
+    public equalsTo(tile: DejaTile): boolean {
         if (this._templateModel) {
             return this._templateModel === tile._templateModel;
         } else {
@@ -178,7 +178,7 @@ export class DejaTile {
         }
     }
 
-    public clone(tile?: DejaTile) {
+    public clone(tile?: DejaTile): DejaTile {
         if (!tile) {
             tile = new DejaTile(this.id);
         }
@@ -193,11 +193,11 @@ export class DejaTile {
         return tile;
     }
 
-    public delete() {
+    public delete(): void {
         this.deleted$.next();
     }
 
-    public refresh() {
+    public refresh(): void {
         this.refresh$.next();
     }
 }

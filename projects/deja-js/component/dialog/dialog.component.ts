@@ -52,7 +52,7 @@ export class DejaDialogComponent extends Destroy {
      * @param event
      */
     @HostListener('click', ['$event'])
-    public close(event: MouseEvent) {
+    public close(event: MouseEvent): void {
 
         let close = true;
 

@@ -118,7 +118,7 @@ export class DejaEditorSelectorDirective extends _MatInputMixinBase implements M
         this.describedBy = ids.join(' ');
     }
 
-    public ngOnInit() {
+    public ngOnInit(): void {
         this.editor.focus.subscribe(() => {
             this.focused = true;
             this.stateChanges.next();
@@ -134,7 +134,7 @@ export class DejaEditorSelectorDirective extends _MatInputMixinBase implements M
         this.generatePlaceholder();
     }
 
-    public ngDoCheck() {
+    public ngDoCheck(): void {
         if (this.ngControl) {
             this.updateErrorState();
         }

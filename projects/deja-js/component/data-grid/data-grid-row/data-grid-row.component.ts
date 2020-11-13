@@ -63,11 +63,11 @@ export class DejaGridRowComponent extends Destroy {
         }
     }
 
-    public get columnLayout() {
+    public get columnLayout(): IDejaGridColumnLayout {
         return this._columnLayout;
     }
 
-    public get cellTemplate() {
+    public get cellTemplate(): TemplateRef<unknown> {
         return this.cellTemplateExternal || this.cellTemplateInternal;
     }
 
@@ -75,7 +75,7 @@ export class DejaGridRowComponent extends Destroy {
         super();
     }
 
-    public getCellText(row: IDejaGridRow<unknown>, textField: string) {
+    public getCellText(row: IDejaGridRow<unknown>, textField: string): string {
         return ItemListService.getItemText(row, textField) as string;
     }
 }

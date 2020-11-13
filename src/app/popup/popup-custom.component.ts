@@ -66,7 +66,7 @@ export class DejaPopupCustomDemoComponent extends DejaPopupComponent implements 
         }
     }
 
-    public doAction(action: DejaPopupAction) {
+    public doAction(action: DejaPopupAction): boolean {
 
         if (!action) {
             return false;

@@ -619,7 +619,7 @@ export class DejaGridDemoComponent extends Destroy {
         this.changeDetectorRef.markForCheck();
     }
 
-    public get dialogVisible() {
+    public get dialogVisible(): boolean {
         return this._dialogVisible;
     }
 
@@ -757,7 +757,7 @@ export class DejaGridDemoComponent extends Destroy {
             });
     }
 
-    public onColumnSizeChanged(e: IDejaGridColumnSizeEvent, grid: DejaGridComponent) {
+    public onColumnSizeChanged(e: IDejaGridColumnSizeEvent, grid: DejaGridComponent): void {
         switch (e.column.name) {
             case 'description':
             case 'urlToImage':
@@ -772,7 +772,7 @@ export class DejaGridDemoComponent extends Destroy {
         }
     }
 
-    public imageLoaded(item: IViewPortItem, grid: DejaGridComponent) {
+    public imageLoaded(item: IViewPortItem, grid: DejaGridComponent): void {
         const itemExt = item as IExtendedViewPortItem;
         if (!itemExt.loaded) {
             itemExt.loaded = true;
@@ -780,19 +780,19 @@ export class DejaGridDemoComponent extends Destroy {
         }
     }
 
-    public loadingRows() {
+    public loadingRows(): (_query: string | RegExp, _selectedItems: IDejaGridRow<unknown>[]) => Observable<Person[]> {
         return (_query: string | RegExp, _selectedItems: IDejaGridRow<unknown>[]) => this.peopleService.getPeople$().pipe(delay(3000));
     }
 
     public collapsingRows() {
-        return (row: IDejaGridRow<unknown>) => {
+        return (row: IDejaGridRow<unknown>): Observable<IDejaGridRow<unknown>> => {
             const group = row as IPeopleGroup;
             return group.loaded ? of(row) : this.confirmDialog()(row);
         };
     }
 
     public expandingRows() {
-        return (row: IDejaGridRow<unknown>) => {
+        return (row: IDejaGridRow<unknown>): Observable<IDejaGridRow<unknown>> => {
             const group = row as IPeopleGroup;
             if (group.loaded) {
                 return of(row);
@@ -800,7 +800,7 @@ export class DejaGridDemoComponent extends Destroy {
                 return this.confirmDialog()(row).pipe(
                     switchMap(itm => {
                         if (!itm) {
-                            return of(null);
+                            return of(null as IDejaGridRow<unknown>);
                         }
 
                         of(group).pipe(
@@ -817,38 +817,40 @@ export class DejaGridDemoComponent extends Destroy {
                         });
 
                         return of(itm);
-                    }));
+                    })
+                );
             }
         };
     }
 
     public confirmDialog() {
-        return (row: IDejaGridRow<unknown>) => {
+        return (row: IDejaGridRow<unknown>): Observable<IDejaGridRow<unknown>> => {
             this.dialogVisible = true;
             return from(this.dialogResponse$).pipe(
                 take(1),
                 map(response => {
                     this.dialogVisible = false;
                     return response === 'ok' ? row : null;
-                }));
+                })
+            );
         };
     }
 
-    public onFilterTemplateClicked(where: string) {
+    public onFilterTemplateClicked(where: string): void {
         alert(`${where} clicked`);
     }
 
-    public getParentRowDecr(row: IDejaGridRow<unknown>) {
+    public getParentRowDecr(row: IDejaGridRow<unknown>): string {
         return row.toString();
     }
 
-    public getDragContext(row: IDejaGridRow<unknown>) {
+    public getDragContext(row: IDejaGridRow<unknown>): IDejaDragContext {
         return {
             object: row
         } as IDejaDragContext;
     }
 
-    public getDropContext() {
+    public getDropContext(): IDejaDropContext {
         const drag = (event: IDejaDropEvent) => {
             const element = event?.dragInfo?.element as HTMLElement;
             if (element.tagName === 'DEJA-GRID-ROW') {

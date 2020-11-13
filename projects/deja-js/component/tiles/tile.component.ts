@@ -44,7 +44,7 @@ export class DejaTileComponent extends Destroy {
         this._designMode = coerceBooleanProperty(value);
     }
 
-    public get designMode() {
+    public get designMode(): BooleanInput {
         return this._designMode;
     }
 
@@ -159,7 +159,7 @@ export class DejaTileComponent extends Destroy {
         }
     }
 
-    public get tile() {
+    public get tile(): DejaTile {
         return this._tile;
     }
 }

@@ -32,6 +32,6 @@ export class DejaPopupComponent extends DejaPopupBase {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    public doAction(_action: DejaPopupAction) { }
+    public doAction(_action: DejaPopupAction): void { }
 
 }

@@ -57,7 +57,7 @@ export class DejaEditorDemoComponent implements OnInit {
         this.editorConfig.coreStyles_italic = { element: 'i', overrides: { em: true } };
     }
 
-    public replace() {
+    public replace(): void {
         this.replaceEditor.replace(this.replaceWith);
     }
 }

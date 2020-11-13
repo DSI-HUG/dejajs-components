@@ -47,7 +47,7 @@ export class AppComponent extends Destroy {
         // iconService.useMaterialIcons(false);
     }
 
-    public get theme() {
+    public get theme(): string {
         return this._theme;
     }
 

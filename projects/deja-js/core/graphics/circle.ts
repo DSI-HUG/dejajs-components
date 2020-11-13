@@ -31,7 +31,7 @@ export class Circle {
      * @param height    The height of the outer rectangle
      * @return A circle contained end centered inside the passed ractangle
      */
-    public static fromOuterRect(left?: number | unknown, top?: number, width?: number, height?: number) {
+    public static fromOuterRect(left?: number | unknown, top?: number, width?: number, height?: number): Circle {
         if (typeof left === 'object') {
             const bounds = left as IRect;
             left = bounds.left;
@@ -46,7 +46,7 @@ export class Circle {
     }
 
     /** Return a boolean indicating if the two circle are equals */
-    public static equals(c1: Circle, c2: Circle) {
+    public static equals(c1: Circle, c2: Circle): boolean {
         return !c1 === !c2 && Position.equals(c1.center, c2.center) && c1.radius === c2.radius;
     }
 
@@ -56,7 +56,7 @@ export class Circle {
     }
 
     /** Return a boolean indicate if the circle contains the passed circle */
-    public contains(circle: Circle) {
+    public contains(circle: Circle): boolean {
         return this.outerRect.contains(circle.outerRect);
     }
 
@@ -69,12 +69,12 @@ export class Circle {
     }
 
     /** Return a the cloned of the cirlce */
-    public clone() {
+    public clone(): Circle {
         return new Circle(this.center, this.radius);
     }
 
     /** Inflate the circle radius with the specified value */
-    public inflate(radius: number) {
+    public inflate(radius: number): Circle {
         return new Circle(this.center, this.radius + radius);
     }
 }

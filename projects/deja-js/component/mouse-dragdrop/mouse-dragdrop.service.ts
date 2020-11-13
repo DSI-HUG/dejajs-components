@@ -39,7 +39,7 @@ export class DejaMouseDragDropService extends Destroy {
         ).subscribe(() => this._context = {});
     }
 
-    public get isDragging() {
+    public get isDragging(): boolean {
         return this._isDragging;
     }
 
@@ -47,7 +47,7 @@ export class DejaMouseDragDropService extends Destroy {
         this._context = value;
     }
 
-    public get context() {
+    public get context(): IDragDropContext {
         return this._context;
     }
 }

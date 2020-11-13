@@ -28,7 +28,7 @@ export class DejaBoldQueryComponent {
     private _atTheBeginningOfWordOnly = false;
     private _highlightClassName = 'highlight | yellowBackgroundColorHighlight';
 
-    public get content() {
+    public get content(): string {
         return this._content;
     }
 
@@ -85,7 +85,7 @@ export class DejaBoldQueryComponent {
         this.refresh();
     }
 
-    public get highlightClassName() {
+    public get highlightClassName(): string {
         return this._highlightClassName;
     }
 

@@ -42,7 +42,7 @@ export class DejaMessageBoxComponent implements OnInit {
         this._horizontal = coerceBooleanProperty(value);
     }
 
-    public get horizontal() {
+    public get horizontal(): BooleanInput {
         return this._horizontal;
     }
 
@@ -52,11 +52,11 @@ export class DejaMessageBoxComponent implements OnInit {
         this._showCloseIcon = coerceBooleanProperty(value);
     }
 
-    public get showCloseIcon() {
+    public get showCloseIcon(): BooleanInput {
         return this._showCloseIcon;
     }
 
-    public ngOnInit() {
+    public ngOnInit(): void {
         if (!this.icon && this.type) {
             this.icon = this.getIconFromType(this.type);
         }
@@ -70,7 +70,7 @@ export class DejaMessageBoxComponent implements OnInit {
         }
     }
 
-    public onClose() {
+    public onClose(): void {
         this.close.emit();
     }
 

@@ -22,13 +22,13 @@ export class DejaPopupActionsComponent implements OnInit {
     public buttons: DejaPopupAction[];
     public constructor(@Inject(MAT_DIALOG_DATA) public config: DejaPopupConfig<unknown>) { }
 
-    public ngOnInit() {
+    public ngOnInit(): void {
         if (this.config.actions.length) {
             this.buttons = this.config.actions;
         }
     }
 
-    public emit(action: DejaPopupAction) {
+    public emit(action: DejaPopupAction): void {
         if (this.config.dejaPopupCom$) {
             action.target = this.config.id;
             this.config.dejaPopupCom$.next(action);

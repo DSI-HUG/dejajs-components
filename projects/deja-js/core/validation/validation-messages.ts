@@ -14,7 +14,7 @@ export class ValidationMessages {
         required: 'Ce champ est obligatoire.'
     } as { [key: string]: string };
 
-    public getMessage(key: string) {
+    public getMessage(key: string): string {
         return this.messages[key];
     }
 }

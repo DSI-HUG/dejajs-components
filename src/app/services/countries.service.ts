@@ -30,12 +30,12 @@ export class CountriesService {
         this.materialColors = materialColors.getPalet('700');
     }
 
-    public getCountryByIndex$(index: number) {
+    public getCountryByIndex$(index: number): Observable<Country> {
         return this.getCountries$().pipe(
             map(countries => countries[index % countries.length]));
     }
 
-    public getCountryByCode$(code: string) {
+    public getCountryByCode$(code: string): Observable<Country> {
         return of(this.countriesDic[code]);
     }
 

@@ -172,15 +172,15 @@ export class DejaSlimScrollDirective extends Destroy implements OnInit, OnDestro
     }
 
     @HostListener('window:resize', ['$event'])
-    public onResize() {
+    public onResize(): void {
         this.init();
     }
 
-    public ngOnInit() {
+    public ngOnInit(): void {
         this.init();
     }
 
-    public ngOnDestroy() {
+    public ngOnDestroy(): void {
         super.ngOnDestroy();
 
         if (window.removeEventListener) {
@@ -319,7 +319,7 @@ export class DejaSlimScrollDirective extends Destroy implements OnInit, OnDestro
         this._options.maxHeightBeforeEnable = value || defaults.maxHeightBeforeEnable;
     }
 
-    public scrollContent(y: number, isWheel: boolean, isJump = false) {
+    public scrollContent(y: number, isWheel: boolean, isJump = false): void {
         this._releaseScroll = false;
         let delta: number = y;
         const maxTop: number = this._me.offsetHeight - this._bar.offsetHeight;

@@ -28,7 +28,7 @@ export class DejaDraggableDirective extends Destroy {
         this.draggable = !!value || null;
     }
 
-    public get context() {
+    public get context(): IDejaDragContext {
         return this._context;
     }
 

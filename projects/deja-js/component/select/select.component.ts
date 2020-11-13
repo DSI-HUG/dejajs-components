@@ -120,7 +120,8 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
 
     @ContentChild('loaderTemplate') private loaderTemplateInternal: TemplateRef<unknown>;
 
-    @HostBinding('class.floating') public get shouldLabelFloat() {
+    @HostBinding('class.floating')
+    public get shouldLabelFloat(): boolean {
         return this.focused || !this.empty;
     }
 
@@ -174,7 +175,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
         this._modelIsValue = coerceBooleanProperty(value);
     }
 
-    public get modelIsValue() {
+    public get modelIsValue(): BooleanInput {
         return this._modelIsValue;
     }
 
@@ -185,7 +186,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
         this._positions = typeof value === 'string' ? DejaConnectionPositionPair.parse(value) : value;
     }
 
-    public get positions() {
+    public get positions(): DejaConnectionPositionPair[] | string {
         return this._positions;
     }
 
@@ -194,19 +195,19 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
         this._dropDownWidth = coerceNumberProperty(value);
     }
 
-    public get dropDownWidth() {
+    public get dropDownWidth(): NumberInput {
         return this._dropDownWidth || this.elementRef?.nativeElement.clientWidth;
     }
 
-    public get keyboardNavigation() {
+    public get keyboardNavigation(): boolean {
         return this._keyboardNavigation;
     }
 
-    @Input() public get required() {
+    @Input() public get required(): boolean {
         return this._required;
     }
 
-    public set required(req) {
+    public set required(req: boolean) {
         this._required = coerceBooleanProperty(req);
         this.stateChanges.next();
     }
@@ -214,20 +215,20 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
     /**
      * Placeholder of the input
      */
-    @Input() public get placeholder() {
+    @Input() public get placeholder(): string {
         return this._placeholder;
     }
 
-    public set placeholder(plh) {
+    public set placeholder(plh: string) {
         this._placeholder = plh;
         this.stateChanges.next();
     }
 
-    public get empty() {
+    public get empty(): boolean {
         return !this.value;
     }
 
-    public get focused() {
+    public get focused(): boolean {
         return this._focused;
     }
 
@@ -475,7 +476,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
         this.query$.next(value);
     }
 
-    public get query() {
+    public get query(): string {
         return this._query;
     }
 
@@ -491,7 +492,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
         this._minSearchLength = coerceNumberProperty(value);
     }
 
-    public get minSearchlength() {
+    public get minSearchlength(): NumberInput {
         return this._minSearchLength;
     }
 
@@ -503,7 +504,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
         this.changeDetectorRef.markForCheck();
     }
 
-    public get disabled() {
+    public get disabled(): boolean {
         return this.ngControl ? this.ngControl.disabled : this._disabled;
     }
 
@@ -513,7 +514,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
         this._selectionClearable = coerceBooleanProperty(value);
     }
 
-    public get selectionClearable() {
+    public get selectionClearable(): BooleanInput {
         return this._selectionClearable;
     }
 
@@ -524,7 +525,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
     }
 
     /** Renvoie une valeur indiquant si les éléments selectionés doivent être masqué de la liste déroulante. */
-    public get hideSelected() {
+    public get hideSelected(): BooleanInput {
         return this._hideSelected;
     }
 
@@ -544,7 +545,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
     }
 
     /** Retourne le nombre de lignes à sauter en cas de pression sur les touches PageUp ou PageDown */
-    public get pageSize() {
+    public get pageSize(): NumberInput {
         if (this._pageSize === 0) {
             const vpRowHeight = this.getViewPortRowHeight();
             const containerElement = this.listElement;
@@ -589,7 +590,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
     }
 
     /** Définit le champ utilisé pour la liste des enfants d'un parent */
-    public get childrenField() {
+    public get childrenField(): string {
         return this._childrenField;
     }
 
@@ -600,7 +601,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
     }
 
     /** Retourne le champ à utiliser comme valeur d'affichage. */
-    public get textField() {
+    public get textField(): string {
         return super.getTextField();
     }
 
@@ -611,7 +612,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
     }
 
     /** Retourne le champ à utiliser comme valeur de comparaison. */
-    public get valueField() {
+    public get valueField(): string {
         return super.getValueField();
     }
 
@@ -626,7 +627,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
     /** Retourne le champ à utiliser comme champ de recherche.
      * Ce champ peut indiquer, un champ contenant une valeur, un texte indexé, ou une fonction.
      */
-    public get searchField() {
+    public get searchField(): string {
         return this._searchField;
     }
 
@@ -640,7 +641,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
         this.changeDetectorRef.markForCheck();
     }
 
-    public get type() {
+    public get type(): SelectType {
         return this._type;
     }
 
@@ -685,12 +686,12 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
     }
 
     /** Retourne si le select est en mode select, donc en lecture seule. */
-    public get isModeSelect() {
+    public get isModeSelect(): boolean {
         return this._type === 'select';
     }
 
     /** Retourne si le select est en mode autocomplete */
-    public get isModeAutocomplete() {
+    public get isModeAutocomplete(): boolean {
         return this._type === 'autocomplete';
     }
 
@@ -701,7 +702,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
     }
 
     /** Retourne la liste des éléments selectionés en mode multiselect */
-    public get selectedItems() {
+    public get selectedItems(): IItemBase<unknown>[] {
         return super.getSelectedItems();
     }
 
@@ -712,7 +713,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
     }
 
     /** Retourne l'élément selectioné en mode single select */
-    public get selectedItem() {
+    public get selectedItem(): IItemBase<unknown> {
         const selectedItem = super.getSelectedItems();
         return selectedItem?.[0];
     }
@@ -724,7 +725,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
     }
 
     /** Retourne le model selectioné en mode single select */
-    public get selectedModel() {
+    public get selectedModel(): unknown {
         const selectedModel = super.getSelectedModels();
         return selectedModel?.[0] as unknown[];
     }
@@ -736,7 +737,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
     }
 
     /** Retourne la liste des models selectionés en mode multiselect */
-    public get selectedModels() {
+    public get selectedModels(): unknown[] {
         return super.getSelectedModels();
     }
 
@@ -750,7 +751,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
     }
 
     /** Retourne le service de liste utilisé par ce composant. Ce service permet de controller dynamiquement la liste, ou de faire du lazyloading. */
-    public get itemListService() {
+    public get itemListService(): ItemListService<unknown> {
         return this.getItemListService();
     }
 
@@ -773,7 +774,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
     }
 
     /** Retourne si le waiter doit être affiché dans le select. */
-    public get waiter() {
+    public get waiter(): boolean {
         return this._waiter;
     }
 
@@ -802,7 +803,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
     }
 
     /** Retourne le nombre de niveau pour une liste hierarchique */
-    public get depthMax() {
+    public get depthMax(): number {
         return this._depthMax;
     }
 
@@ -819,7 +820,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
      * spécifier une grande valeur pour ne jamais afficher de scrollbar
      * Spécifier 0 pour que le composant determine sa hauteur à partir du container
      */
-    public get maxHeight() {
+    public get maxHeight(): number {
         return this.getMaxHeight();
     }
 
@@ -832,7 +833,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
     }
 
     /** Retourne une valeur indiquant si le composant est en lecture seule */
-    public get readonly() {
+    public get readonly(): boolean {
         return this._readonly;
     }
 
@@ -852,67 +853,67 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
         return this.getCurrentItemIndex();
     }
 
-    public get itemTemplate() {
+    public get itemTemplate(): TemplateRef<unknown> {
         return this.itemTemplateExternal || this.itemTemplateInternal;
     }
 
-    public get parentItemTemplate() {
+    public get parentItemTemplate(): TemplateRef<unknown> {
         return this.parentItemTemplateExternal || this.parentItemTemplateInternal;
     }
 
-    private get htmlInputElement() {
+    private get htmlInputElement(): HTMLInputElement {
         return this.inputElement?.nativeElement as HTMLInputElement;
     }
 
-    public get loaderTemplate() {
+    public get loaderTemplate(): TemplateRef<unknown> {
         return this.loaderTemplateExternal || this.loaderTemplateInternal;
     }
 
-    public get dropdownVisible() {
+    public get dropdownVisible(): boolean {
         return this._dropdownVisible;
     }
 
     // ************* ControlValueAccessor Implementation **************
-    public get value() {
+    public get value(): IItemBase<unknown> | IItemBase<unknown>[] {
         return this._multiSelect ? this.selectedItems : this.selectedItem;
     }
 
-    public set value(val) {
+    public set value(val: IItemBase<unknown> | IItemBase<unknown>[]) {
         this.writeValue(val);
         this.onChangeCallback(val);
         this.onTouchedCallback();
         this.stateChanges.next();
     }
 
-    public writeValue(value: IItemBase<unknown> | IItemBase<unknown>[]) {
+    public writeValue(value: IItemBase<unknown> | IItemBase<unknown>[]): void {
         this.writeValue$.next(value);
     }
 
-    public registerOnChange(fn: (_a: unknown) => void) {
+    public registerOnChange(fn: (_a: unknown) => void): void {
         this.onChangeCallback = fn;
     }
 
-    public registerOnTouched(fn: () => void) {
+    public registerOnTouched(fn: () => void): void {
         this.onTouchedCallback = fn;
     }
 
-    public setDisabledState(isDisabled: boolean) {
+    public setDisabledState(isDisabled: boolean): void {
         this.disabled = isDisabled;
     }
     // ************* End of ControlValueAccessor Implementation **************
 
-    public ngDoCheck() {
+    public ngDoCheck(): void {
         if (this.ngControl) {
             this.updateErrorState();
         }
     }
 
-    public ngOnDestroy() {
+    public ngOnDestroy(): void {
         this.stateChanges.complete();
         this.fm.stopMonitoring(this.elementRef.nativeElement);
     }
 
-    public ngAfterContentInit() {
+    public ngAfterContentInit(): void {
         this.contentInitialized$.next(true);
 
         if (this.ngControl) {
@@ -933,7 +934,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
         }
     }
 
-    public ngAfterViewInit() {
+    public ngAfterViewInit(): void {
         fromEvent(this.htmlInputElement, 'click').pipe(
             filter(() => !this.dropdownVisible && !this.disabled),
             takeUntil(this.destroyed$)
@@ -1152,11 +1153,11 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
         });
     }
 
-    public setDescribedByIds(ids: string[]) {
+    public setDescribedByIds(ids: string[]): void {
         this.describedBy = ids.join(' ');
     }
 
-    public onContainerClick(event: MouseEvent) {
+    public onContainerClick(event: MouseEvent): void {
         if ((event.target as Element).tagName.toLowerCase() !== 'input') {
             this.elementRef.nativeElement.querySelector('input').focus();
         }
@@ -1169,7 +1170,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
     }
 
     /** Change l'état d'expansion de toute les lignes parentes */
-    public toggleAll(collapsed?: boolean) {
+    public toggleAll(collapsed?: boolean): void {
         this.toggleAll$(collapsed).pipe(
             take(1),
             takeUntil(this.destroyed$)
@@ -1194,14 +1195,14 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
      * @param index  Index sur la liste des éléments visibles de l'élément à changer.
      * @param collapsed  Etat de l'élément. True pour réduire l'élément.
      */
-    public toggleCollapse(index: number, collapsed: boolean) {
+    public toggleCollapse(index: number, collapsed: boolean): void {
         this.toggleCollapse$(index, collapsed).pipe(
             take(1),
             takeUntil(this.destroyed$)
         ).subscribe();
     }
 
-    public queryChanged(value: string) {
+    public queryChanged(value: string): void {
         this.query = value;
         if (!this.isModeSelect) {
             // Autocomplete or multiselect only
@@ -1215,16 +1216,16 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
         }
     }
 
-    public hideDropDown() {
+    public hideDropDown(): void {
         this.hideDropDown$.next(null);
     }
 
-    public scroll(event: Event) {
+    public scroll(event: Event): void {
         const element = event.target as HTMLElement;
         this.storeScrollPosition$.next(element.scrollTop);
     }
 
-    public mousedown(e: MouseEvent) {
+    public mousedown(e: MouseEvent): void {
         if (this.mouseUp$sub) {
             this.mouseUp$sub.unsubscribe();
             this.mouseUp$sub = undefined;
@@ -1261,7 +1262,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
         ).subscribe();
     }
 
-    public getItemClass(item: IItemTree<unknown>) {
+    public getItemClass(item: IItemTree<unknown>): string {
         const classNames = ['listitem'] as string[];
         if (item.className) {
             classNames.push(item.className);
@@ -1287,7 +1288,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
         return classNames.join(' ');
     }
 
-    public updateErrorState() {
+    public updateErrorState(): void {
         const oldState = this.errorState;
         const parent = this.parentFormGroup || this.parentForm;
         const matcher = this.errorStateMatcher || this.defaultErrorStateMatcher;
@@ -1300,7 +1301,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
         }
     }
 
-    public clearSelection() {
+    public clearSelection(): void {
         this.removeSelection();
     }
 
@@ -1310,14 +1311,14 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
         return false;
     }
 
-    public onRemoveSelection(closeEvent?: IDejaChipsComponentCloseEvent) {
+    public onRemoveSelection(closeEvent?: IDejaChipsComponentCloseEvent): void {
         if (this.ngControl) {
             this.ngControl.control.markAsTouched();
         }
         this.removeSelection(closeEvent?.item);
     }
 
-    public onOpenClicked(event: Event) {
+    public onOpenClicked(event: Event): void {
         if (this.dropdownVisible || this.disabled) {
             return;
         }
@@ -1330,7 +1331,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
         }
     }
 
-    public toggleDropDown() {
+    public toggleDropDown(): void {
         if (this.dropdownVisible) {
             this.hideDropDown();
         } else {
@@ -1338,16 +1339,16 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
         }
     }
 
-    public showDropDown() {
+    public showDropDown(): void {
         this.showDropDown$.next();
     }
 
     // NgModel implementation
-    public onTouchedCallback = () => undefined as void;
-    public onChangeCallback = (_a?: unknown) => undefined as void;
-    public onValidatorChangeCallback = (_a?: unknown) => undefined as void;
+    public onTouchedCallback = (): void => undefined;
+    public onChangeCallback = (_a?: unknown): void => undefined;
+    public onValidatorChangeCallback = (_a?: unknown): void => undefined;
 
-    protected removeSelection(item?: IItemBase<unknown>) {
+    protected removeSelection(item?: IItemBase<unknown>): void {
         if (!this._multiSelect) {
             this.query = '';
             this.dropDownQuery = '';
@@ -1377,7 +1378,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
         );
     }
 
-    protected ensureItemVisible(item: IItemBase<unknown> | number) {
+    protected ensureItemVisible(item: IItemBase<unknown> | number): void {
         super.ensureItemVisible(item);
     }
 

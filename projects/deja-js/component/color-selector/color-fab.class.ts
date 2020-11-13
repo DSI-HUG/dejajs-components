@@ -25,7 +25,7 @@ export class DejaColorFab {
         this.color$.next(this._color = value);
     }
 
-    public get color() {
+    public get color(): Color {
         return this._color;
     }
 
@@ -33,7 +33,7 @@ export class DejaColorFab {
         this.disabled$.next(this._disabled = value);
     }
 
-    public get disabled() {
+    public get disabled(): boolean {
         return this._disabled;
     }
 
@@ -41,7 +41,7 @@ export class DejaColorFab {
         this.active$.next(this._active = value);
     }
 
-    public get active() {
+    public get active(): boolean {
         return this._active;
     }
 }

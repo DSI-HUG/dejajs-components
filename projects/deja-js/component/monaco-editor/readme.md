@@ -26,7 +26,7 @@ export class DejaMonacoEditorDemoComponent implements OnInit {
     public constructor() {
     }
 
-    public ngOnInit() {
+    public ngOnInit(): void {
 		this.code = `<GROUP ID="GROUP_PROBE_UPSRV">
         <LABEL><![CDATA[UserProfile]]></LABEL>
         <TAG>up upsrv</TAG>

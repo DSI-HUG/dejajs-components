@@ -15,7 +15,7 @@ export class Position {
         this.top = top || 0;
     }
 
-    public static equals(p1: Position, p2: Position) {
+    public static equals(p1: Position, p2: Position): boolean {
         return p1.left === p2.left && p1.top === p2.top;
     }
 
@@ -26,7 +26,7 @@ export class Position {
         );
     }
 
-    public clone() {
+    public clone(): Position {
         return new Position(this.left, this.top);
     }
 

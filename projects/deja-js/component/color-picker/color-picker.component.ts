@@ -50,7 +50,7 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
         this._isOpen = coerceBooleanProperty(value) || null;
     }
 
-    public get isOpen() {
+    public get isOpen(): BooleanInput {
         return this._isOpen;
     }
 
@@ -61,7 +61,7 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
         this._positions = typeof value === 'string' ? DejaConnectionPositionPair.parse(value) : value;
     }
 
-    public get positions() {
+    public get positions(): DejaConnectionPositionPair[] | string {
         return this._positions;
     }
 
@@ -78,7 +78,7 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
         this._small = coerceBooleanProperty(value);
     }
 
-    public get small() {
+    public get small(): BooleanInput {
         return this._small;
     }
 
@@ -89,7 +89,7 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
         this.changeDetectorRef.markForCheck();
     }
 
-    public get disabled() {
+    public get disabled(): BooleanInput {
         return this._disabled;
     }
 
@@ -108,28 +108,28 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
     }
 
     // From ControlValueAccessor interface
-    public writeValue(value: Color) {
+    public writeValue(value: Color): void {
         this._value = value;
         this.changeDetectorRef.markForCheck();
     }
 
     // From ControlValueAccessor interface
-    public registerOnChange(fn: (_a: unknown) => void) {
+    public registerOnChange(fn: (_a: unknown) => void): void {
         this.onChangeCallback = fn;
     }
 
     // From ControlValueAccessor interface
-    public registerOnTouched(fn: () => void) {
+    public registerOnTouched(fn: () => void): void {
         this.onTouchedCallback = fn;
     }
 
-    public setDisabledState(isDisabled: boolean) {
+    public setDisabledState(isDisabled: boolean): void {
         this.disabled = isDisabled;
     }
     // ************* End of ControlValueAccessor Implementation **************
 
     /** Affiche le color picker. */
-    public show(event: MouseEvent) {
+    public show(event: MouseEvent): boolean {
         if (!this.disabled) {
             this.dejaOverlayCmp.show(event);
             this.isOpen = true;
@@ -139,21 +139,21 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
     }
 
     /** Ferme le color picker. */
-    public close() {
+    public close(): void {
         this.isOpen = false;
     }
 
-    public onColorChange(color: Color) {
+    public onColorChange(color: Color): void {
         this.isOpen = false;
         this.value = color;
     }
 
-    public getStyle() {
+    public getStyle(): { 'background-color': string } {
         const backgroundColor = this.value?.toHex();
         return backgroundColor ? { 'background-color': backgroundColor } : null;
     }
 
-    protected onTouchedCallback = () => undefined as void;
-    protected onChangeCallback = (_a: unknown) => undefined as void;
+    protected onTouchedCallback = (): void => undefined;
+    protected onChangeCallback = (_a: unknown): void => undefined;
 
 }

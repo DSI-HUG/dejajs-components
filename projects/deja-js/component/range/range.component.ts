@@ -66,7 +66,7 @@ export class DejaRangeComponent extends Destroy implements ControlValueAccessor 
     }
 
     @HostListener('window:resize', [])
-    public onResize() {
+    public onResize(): void {
         this.ranges = this.ranges.concat();
     }
 
@@ -96,7 +96,7 @@ export class DejaRangeComponent extends Destroy implements ControlValueAccessor 
         this.changeDetectorRef.markForCheck();
     }
 
-    public get disabled() {
+    public get disabled(): BooleanInput {
         return this._disabled;
     }
 
@@ -105,7 +105,7 @@ export class DejaRangeComponent extends Destroy implements ControlValueAccessor 
         this._readOnly = coerceBooleanProperty(value);
     }
 
-    public get readOnly() {
+    public get readOnly(): BooleanInput {
         return this._readOnly || this.disabled;
     }
 
@@ -130,7 +130,7 @@ export class DejaRangeComponent extends Destroy implements ControlValueAccessor 
         }
     }
 
-    public setDisabledState(isDisabled: boolean) {
+    public setDisabledState(isDisabled: boolean): void {
         this.disabled = isDisabled;
     }
     // End of ControlValueAccessor implementation
@@ -206,7 +206,7 @@ export class DejaRangeComponent extends Destroy implements ControlValueAccessor 
     }
 
     /** Force control to rebind */
-    public refresh() {
+    public refresh(): void {
         this.changeDetectorRef.markForCheck();
     }
 
@@ -293,9 +293,9 @@ export class DejaRangeComponent extends Destroy implements ControlValueAccessor 
     }
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    public _onChangeCallback = (_a?: unknown) => undefined as void;
+    public _onChangeCallback = (_a?: unknown): void => undefined;
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    public _onTouchCallback = () => undefined as void;
+    public _onTouchCallback = (): void => undefined;
 
     private toStep(ranges: IRange[], index: number, newMax: number): number {
 

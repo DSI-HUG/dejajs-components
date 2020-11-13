@@ -27,7 +27,7 @@ export class FoldersService {
         this.addLevel(1, this.folders);
     }
 
-    public getFolders() {
+    public getFolders(): Folder[] {
         return this.folders;
     }
 

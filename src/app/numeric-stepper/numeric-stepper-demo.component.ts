@@ -19,7 +19,7 @@ export class DejaNumericStepperDemoComponent {
     public tabIndex = 1;
     public control = new FormControl(null, Validators.required);
 
-    public focus(numStepper: DejaNumericStepperComponent) {
+    public focus(numStepper: DejaNumericStepperComponent): void {
         numStepper.setFocus();
     }
 

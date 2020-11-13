@@ -56,7 +56,7 @@ export class DejaColorFabComponent extends Destroy {
         }
     }
 
-    public get tile() {
+    public get tile(): DejaColorFab {
         return this._colorFab;
     }
 }

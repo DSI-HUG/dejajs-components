@@ -213,7 +213,7 @@ export class DejaGridComponent extends Destroy {
         this._viewPortRowHeight = coerceNumberProperty(value);
     }
 
-    public get viewPortRowHeight() {
+    public get viewPortRowHeight(): NumberInput {
         return this._viewPortRowHeight;
     }
 
@@ -224,7 +224,7 @@ export class DejaGridComponent extends Destroy {
         this._minSearchLength = coerceNumberProperty(value);
     }
 
-    public get minSearchLength() {
+    public get minSearchLength(): NumberInput {
         return this._minSearchLength;
     }
 
@@ -237,7 +237,7 @@ export class DejaGridComponent extends Destroy {
         this._maxHeight = coerceNumberProperty(value);
     }
 
-    public get maxHeight() {
+    public get maxHeight(): NumberInput {
         return this._maxHeight;
     }
 
@@ -247,7 +247,7 @@ export class DejaGridComponent extends Destroy {
         this._pageSize = coerceNumberProperty(value);
     }
 
-    public get pageSize() {
+    public get pageSize(): NumberInput {
         return this._pageSize;
     }
 
@@ -257,7 +257,7 @@ export class DejaGridComponent extends Destroy {
         this._waiter = coerceBooleanProperty(value);
     }
 
-    public get waiter() {
+    public get waiter(): BooleanInput {
         return this._waiter;
     }
 
@@ -267,7 +267,7 @@ export class DejaGridComponent extends Destroy {
         this._sortable = coerceBooleanProperty(value);
     }
 
-    public get sortable() {
+    public get sortable(): BooleanInput {
         return this._sortable;
     }
 
@@ -277,11 +277,11 @@ export class DejaGridComponent extends Destroy {
         this.columnGroups$.next(value);
     }
 
-    public get columnGroups() {
+    public get columnGroups(): IDejaGridColumn[] {
         return this._columnGroups;
     }
 
-    public get noHorizontalScroll() {
+    public get noHorizontalScroll(): boolean {
         return this._noHorizontalScroll;
     }
 
@@ -291,7 +291,7 @@ export class DejaGridComponent extends Destroy {
         this._searchArea = coerceBooleanProperty(value);
     }
 
-    public get searchArea() {
+    public get searchArea(): BooleanInput {
         return this._searchArea;
     }
 
@@ -304,7 +304,7 @@ export class DejaGridComponent extends Destroy {
         }
     }
 
-    public get groupArea() {
+    public get groupArea(): BooleanInput {
         return this._groupArea;
     }
 
@@ -314,7 +314,7 @@ export class DejaGridComponent extends Destroy {
         this._rowsDraggable = coerceBooleanProperty(value);
     }
 
-    public get rowsDraggable() {
+    public get rowsDraggable(): BooleanInput {
         return this._rowsDraggable;
     }
 
@@ -324,7 +324,7 @@ export class DejaGridComponent extends Destroy {
         this._rowsSortable = coerceBooleanProperty(value);
     }
 
-    public get rowsSortable() {
+    public get rowsSortable(): BooleanInput {
         return this._rowsSortable;
     }
 
@@ -334,7 +334,7 @@ export class DejaGridComponent extends Destroy {
         this._columnsDraggable = coerceBooleanProperty(value);
     }
 
-    public get columnsDraggable() {
+    public get columnsDraggable(): BooleanInput {
         return this._columnsDraggable;
     }
 
@@ -347,7 +347,7 @@ export class DejaGridComponent extends Destroy {
         }
     }
 
-    public get columnsSortable() {
+    public get columnsSortable(): BooleanInput {
         return this._columnsSortable;
     }
 
@@ -357,7 +357,7 @@ export class DejaGridComponent extends Destroy {
         this._columnsSizable = coerceBooleanProperty(value);
     }
 
-    public get columnsSizable() {
+    public get columnsSizable(): BooleanInput {
         return this._columnsSizable;
     }
 
@@ -367,7 +367,7 @@ export class DejaGridComponent extends Destroy {
         this._multiSelect = coerceBooleanProperty(value);
     }
 
-    public get multiSelect() {
+    public get multiSelect(): BooleanInput {
         return this._multiSelect;
     }
 
@@ -378,7 +378,7 @@ export class DejaGridComponent extends Destroy {
     }
 
     /** Retourne la structure des colonnes de la grille. */
-    public get columns() {
+    public get columns(): IDejaGridColumn[] {
         return this._columns;
     }
 
@@ -404,7 +404,7 @@ export class DejaGridComponent extends Destroy {
 
     /** Retourne le modèle affiché dans les lignes de la grille. */
     // eslint-disable-next-line rxjs/finnish
-    public get rows() {
+    public get rows(): unknown[] | Promise<unknown[]> | Observable<unknown[]> {
         return this._rows;
     }
 
@@ -422,7 +422,7 @@ export class DejaGridComponent extends Destroy {
     }
 
     /** Retourne la colonne en surbrillance. */
-    public get currentColumn() {
+    public get currentColumn(): IDejaGridColumn {
         return this.columns.find(c => c.isCurrent);
     }
 
@@ -433,53 +433,53 @@ export class DejaGridComponent extends Destroy {
     }
 
     /** Retourne le service de liste utilisé par ce composant. */
-    public get itemListService() {
+    public get itemListService(): ItemListService<unknown> {
         return this._itemListService || this.treeListComponent.itemListService;
     }
 
     /** Retourne une valeur indiquant le nombre de niveau hierarchiques affichés par la grille. */
-    public get depthMax() {
+    public get depthMax(): number {
         return this.treeListComponent.depthMax;
     }
 
     /** Retourne le service de viewport utilisé pour la grille */
-    public get viewPort() {
+    public get viewPort(): ViewPortService {
         return this.treeListComponent.viewPort;
     }
 
-    public get searchPrefixTemplate() {
+    public get searchPrefixTemplate(): TemplateRef<unknown> {
         return this.searchPrefixTemplateExternal || this.searchPrefixTemplateInternal;
     }
 
-    public get searchSuffixTemplate() {
+    public get searchSuffixTemplate(): TemplateRef<unknown> {
         return this.searchSuffixTemplateExternal || this.searchSuffixTemplateInternal;
     }
 
-    public get rowTemplate() {
+    public get rowTemplate(): TemplateRef<unknown> {
         return this.rowTemplateExternal || this.rowTemplateInternal;
     }
 
-    public get parentRowTemplate() {
+    public get parentRowTemplate(): TemplateRef<unknown> {
         return this.parentRowTemplateExternal || this.parentRowTemplateInternal;
     }
 
-    public get cellTemplate() {
+    public get cellTemplate(): TemplateRef<unknown> {
         return this._cellTemplate;
     }
 
-    public get parentTitleTemplate() {
+    public get parentTitleTemplate(): TemplateRef<unknown> {
         return this._parentTitleTemplate;
     }
 
-    public get columnsHeaderTemplate() {
+    public get columnsHeaderTemplate(): TemplateRef<unknown> {
         return this.headerTemplateExternal || this.headerTemplateInternal;
     }
 
-    public get columnHeaderTemplate() {
+    public get columnHeaderTemplate(): TemplateRef<unknown> {
         return this.columnHeaderTemplateExternal || this._columnHeaderTemplate;
     }
 
-    public get columnLayout() {
+    public get columnLayout(): IDejaGridColumnLayout {
         return this._columnLayout;
     }
 
@@ -624,7 +624,7 @@ export class DejaGridComponent extends Destroy {
     }
 
     /** Nettoye les caches et réaffiche le viewport. */
-    public refresh() {
+    public refresh(): void {
         if (this.treeListComponent) {
             this.treeListComponent.refresh();
         }
@@ -639,26 +639,26 @@ export class DejaGridComponent extends Destroy {
     }
 
     /** Recalcule le viewport. */
-    public refreshViewPort(item?: IItemBase<unknown>) {
+    public refreshViewPort(item?: IItemBase<unknown>): void {
         this.treeListComponent.refreshViewPort(item);
     }
 
     /** Efface la hauteur calculée des lignes en mode automatique */
-    public clearRowsHeight() {
+    public clearRowsHeight(): void {
         if (this.treeListComponent) {
             this.treeListComponent.clearRowsHeight();
         }
     }
 
     /** Efface le viewport */
-    public clearViewPort() {
+    public clearViewPort(): void {
         if (this.treeListComponent) {
             this.treeListComponent.clearViewPort();
         }
     }
 
     /** Calcul la position de la scrollbar horizontale pour que la colonne spéfiée soit dans la zone visible. */
-    public ensureColumnVisible(column: IDejaGridColumn) {
+    public ensureColumnVisible(column: IDejaGridColumn): boolean {
         if (column === undefined || !this.columns || this.columns.length === 0 || this._noHorizontalScroll) {
             return;
         }
@@ -682,7 +682,7 @@ export class DejaGridComponent extends Destroy {
         }
     }
 
-    public scroll(event: DejaTreeListScrollEvent) {
+    public scroll(event: DejaTreeListScrollEvent): void {
         if (this.lastScrollLeft !== event.scrollLeft) {
             this.lastScrollLeft = event.scrollLeft;
             this.calcColumnsLayout();
@@ -690,7 +690,7 @@ export class DejaGridComponent extends Destroy {
     }
 
     /** Trie la liste par le champs spécifié. */
-    public sort(name?: string) {
+    public sort(name?: string): void {
         this.treeListComponent.sort(name);
     }
 
@@ -715,7 +715,7 @@ export class DejaGridComponent extends Destroy {
         return this.treeListComponent.ungroup$(groupInfo);
     }
 
-    public onColumnHeaderClicked(event: IDejaGridColumnEvent) {
+    public onColumnHeaderClicked(event: IDejaGridColumnEvent): void {
         if (this.treeListComponent && !this.sortable || event.column.sortable === false) {
             return;
         }
@@ -742,11 +742,11 @@ export class DejaGridComponent extends Destroy {
         });
     }
 
-    public onColumnDragEnd() {
+    public onColumnDragEnd(): void {
         this.columnLayout.refresh$.next();
     }
 
-    public onColumnLayoutChanged(e: IDejaGridColumnLayoutEvent) {
+    public onColumnLayoutChanged(e: IDejaGridColumnLayoutEvent): void {
         this.columns.splice(e.index, 1);
 
         if (e.target) {
@@ -763,7 +763,7 @@ export class DejaGridComponent extends Destroy {
         this.changeDetectorRef.markForCheck();
     }
 
-    public onColumnSizeChanged(e: IDejaGridColumnSizeEvent) {
+    public onColumnSizeChanged(e: IDejaGridColumnSizeEvent): void {
 
         if (!this.columnsLayoutInfos) {
             return;
@@ -808,7 +808,7 @@ export class DejaGridComponent extends Destroy {
         this.columnSizeChanged.emit(e);
     }
 
-    public onGroupRemoved(event: IDejaChipsComponentCloseEvent) {
+    public onGroupRemoved(event: IDejaChipsComponentCloseEvent): void {
         const column = event.item as IDejaGridColumn;
 
         const groupInfo = {
@@ -822,11 +822,11 @@ export class DejaGridComponent extends Destroy {
         ).subscribe();
     }
 
-    public onGroupsChanged(e: IDejaGridGroupsEvent) {
+    public onGroupsChanged(e: IDejaGridGroupsEvent): void {
         this.columnGroups$.next(e.columns);
     }
 
-    public calcColumnsLayout(rows?: unknown[]) {
+    public calcColumnsLayout(rows?: unknown[]): void {
         // this.noColumnsSpecified = false;
 
         if (!this._columns || !this._columns.length) {

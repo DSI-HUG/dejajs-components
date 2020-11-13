@@ -78,13 +78,13 @@ export class DejaCircularPickerDemoComponent {
         { value: 111, label: 'T-12', realValue: -12 }
     ] as ITemplateModel[];
 
-    public range42Changed(selection: number) {
+    public range42Changed(selection: number): void {
         console.log(`Selected model ${this.getLabelForValue(selection)}`);
     }
 
-    public getLabelForValue(value: number) {
+    public getLabelForValue(value: number): string {
         const val = this.myModel.find(m => m.value === value);
-        return (val) ? val.label : value;
+        return val?.label || value?.toString() || '';
     }
 }
 

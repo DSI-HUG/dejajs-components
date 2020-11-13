@@ -24,19 +24,19 @@ export class UnitValue {
         }
     }
 
-    public static equals(s1: UnitValue, s2: UnitValue) {
+    public static equals(s1: UnitValue, s2: UnitValue): boolean {
         return s1.value === s2.value && s1.unit === s2.unit;
     }
 
-    public clone() {
+    public clone(): UnitValue {
         return new UnitValue(this.value, this.unit);
     }
 
-    public toString() {
+    public toString(): string {
         return String(this.value) + this.unit;
     }
 
-    public isInvalid() {
+    public isInvalid(): boolean {
         return this.value === undefined || this.value === null || isNaN(this.value);
     }
 }

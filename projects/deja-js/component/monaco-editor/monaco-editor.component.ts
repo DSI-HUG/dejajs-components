@@ -470,7 +470,7 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
 * Resize the component
 */
     @HostListener('window:resize', [])
-    public onResize() {
+    public onResize(): void {
         // Manually set monaco size because MonacoEditor doesn't work with Flexbox css
         const myDiv: HTMLDivElement = this.editorContent.nativeElement;
         myDiv.setAttribute('style', 'height: 100%; width: 100%;');
@@ -482,7 +482,7 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
     /**
      * Load Monaco Editor library
      */
-    public ngAfterViewInit() {
+    public ngAfterViewInit(): void {
         void this.monacoEditorService.initMonacoLib().then(() => {
             this.initEditor();
         });
@@ -491,38 +491,38 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
     /**
      * Lifecycle hook that is called when a directive, pipe or service is destroyed.
      */
-    public ngOnDestroy() {
+    public ngOnDestroy(): void {
         this.dispose();
     }
 
     /**
      * Lifecycle hook that is called when any data-bound property of a directive changes.
      */
-    public ngOnChanges() {
+    public ngOnChanges(): void {
         if (this._editor) {
             this._editor.updateOptions(this.getOptions());
         }
     }
 
     /** From ControlValueAccessor interface */
-    public writeValue(value: string) {
+    public writeValue(value: string): void {
         this.value = value;
     }
 
     /** From ControlValueAccessor interface */
-    public registerOnChange(fn: (_a: unknown) => void) {
+    public registerOnChange(fn: (_a: unknown) => void): void {
         this.onChangeCallback = fn;
     }
 
     /** From ControlValueAccessor interface */
-    public registerOnTouched(fn: () => void) {
+    public registerOnTouched(fn: () => void): void {
         this.onTouchedCallback = fn;
     }
 
     /**
      * Destroy the monaco component
      */
-    public dispose() {
+    public dispose(): void {
         const myDiv: HTMLDivElement = this.editorContent.nativeElement;
         if (this._editor) {
             // this._editor.dispose();
@@ -534,8 +534,8 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
         }
     }
 
-    public onTouchedCallback = () => undefined as void;
-    public onChangeCallback = (_: string) => undefined as void;
+    public onTouchedCallback = (): void => undefined;
+    public onChangeCallback = (_: string): void => undefined;
 
     /**
      * Init the component

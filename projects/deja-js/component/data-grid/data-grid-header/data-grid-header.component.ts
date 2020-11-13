@@ -8,7 +8,7 @@
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, Optional, Output, TemplateRef } from '@angular/core';
-import { IDejaDragEvent, IDejaDropEvent } from '@deja-js/component/dragdrop';
+import { IDejaDragContext, IDejaDragEvent, IDejaDropContext, IDejaDropEvent } from '@deja-js/component/dragdrop';
 import { DejaClipboardService } from '@deja-js/core';
 import { Destroy } from '@deja-js/core';
 import { ISortInfos } from '@deja-js/core';
@@ -65,7 +65,7 @@ export class DejaGridHeaderComponent extends Destroy {
     /** Retourne si toutes les colonnes peuvent être draggable vers un autre composant.
      * Si une valeur spécifique à une colonne est spécifiée dans le modèle de la colonne, cette dernière sera prioritaire.
      */
-    public get columnsDraggable() {
+    public get columnsDraggable(): BooleanInput {
         return this._columnsDraggable;
     }
 
@@ -80,11 +80,11 @@ export class DejaGridHeaderComponent extends Destroy {
     /** Retourne si toutes les colonnes peuvent être déplacées parmis les autres colonnes.
      * Si une valeur spécifique à une colonne est spécifiée dans le modèle de la colonne, cette dernière sera prioritaire.
      */
-    public get columnsSortable() {
+    public get columnsSortable(): BooleanInput {
         return this._columnsSortable;
     }
 
-    public get sizedColumn() {
+    public get sizedColumn(): IDejaGridColumn {
         return this._sizedColumn;
     }
 
@@ -99,7 +99,7 @@ export class DejaGridHeaderComponent extends Destroy {
     /** Retourne si toutes les colonnes peuvent être redimensionées
      * Si une valeur spécifique à une colonne est spécifiée dans le modèle de la colonne, cette dernière sera prioritaire.
      */
-    public get columnsSizable() {
+    public get columnsSizable(): BooleanInput {
         return this._columnsSizable;
     }
 
@@ -117,11 +117,11 @@ export class DejaGridHeaderComponent extends Destroy {
     }
 
     /** Retourne la structire de colonnes associée aux entêtes */
-    public get columnLayout() {
+    public get columnLayout(): IDejaGridColumnLayout {
         return this._columnLayout;
     }
 
-    public get columnHeaderTemplate() {
+    public get columnHeaderTemplate(): TemplateRef<unknown> {
         return this.columnHeaderTemplateExternal || this.columnHeaderTemplateInternal;
     }
 
@@ -212,13 +212,13 @@ export class DejaGridHeaderComponent extends Destroy {
         ).subscribe();
     }
 
-    public refresh() {
+    public refresh(): void {
         this.changeDetectorRef.markForCheck();
     }
 
-    public getDragContext(column: IDejaGridColumn) {
+    public getDragContext(column: IDejaGridColumn): IDejaDragContext {
         if (!this.clipboardService || (!this.columnsDraggable && !this.columnsSortable) || column.draggable === false) {
-            return null;
+            return null as IDejaDragContext;
         }
 
         // console.log(`getDragContext ` + column.name + ' ' + Date.now());
@@ -244,12 +244,12 @@ export class DejaGridHeaderComponent extends Destroy {
                     event.preventDefault();
                 }
             }
-        };
+        } as IDejaDragContext;
     }
 
-    public getDropContext() {
+    public getDropContext(): IDejaDropContext {
         if (!this.clipboardService) {
-            return null;
+            return null as IDejaDropContext;
         }
 
         const dragCallback = (event: IDejaDropEvent) => {
@@ -306,7 +306,7 @@ export class DejaGridHeaderComponent extends Destroy {
             dragentercallback: dragCallback,
             dragovercallback: dragCallback,
             dropcallback: dragCallback
-        };
+        } as IDejaDropContext;
     }
 
     private getColumnElementFromHtmlElement(element: HTMLElement): HTMLElement {

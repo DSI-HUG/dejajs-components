@@ -44,7 +44,7 @@ export class DejaOverlayComponent extends Destroy {
     /** Renvoie une valeur qui indique si le dialog est affiché. */
     private _isVisible = false;
 
-    public get isVisible() {
+    public get isVisible(): BooleanInput {
         return this._isVisible;
     }
 
@@ -79,7 +79,7 @@ export class DejaOverlayComponent extends Destroy {
         this._hasBackdrop = coerceBooleanProperty(value);
     }
 
-    public get hasBackdrop() {
+    public get hasBackdrop(): BooleanInput {
         return this._hasBackdrop;
     }
 
@@ -114,11 +114,11 @@ export class DejaOverlayComponent extends Destroy {
         });
     }
 
-    public get positionPairs() {
+    public get positionPairs(): DejaConnectionPositionPair[] {
         return this.positions as DejaConnectionPositionPair[];
     }
 
-    public get positions() {
+    public get positions(): string | DejaConnectionPositionPair[] {
         if (!this.isMobile) {
             return this._positions;
         } else if (this._positionsForMobile) {
@@ -141,7 +141,7 @@ export class DejaOverlayComponent extends Destroy {
         this._positionsForMobile = typeof value === 'string' ? DejaConnectionPositionPair.parse(value) : value;
     }
 
-    public get isMobile() {
+    public get isMobile(): BooleanInput {
         return this._isMobile;
     }
 
@@ -152,7 +152,7 @@ export class DejaOverlayComponent extends Destroy {
         this.disableMediaService = true;
     }
 
-    public get width() {
+    public get width(): NumberInput {
         return this._width;
     }
 
@@ -164,7 +164,7 @@ export class DejaOverlayComponent extends Destroy {
         this._width = coerceNumberProperty(width);
     }
 
-    public get widthForMobile() {
+    public get widthForMobile(): string {
         return this._widthForMobile;
     }
 
@@ -176,7 +176,7 @@ export class DejaOverlayComponent extends Destroy {
         this._widthForMobile = widthForMobile;
     }
 
-    public get overlayWidth() {
+    public get overlayWidth(): NumberInput {
         if (!this.isMobile) {
             return this._width;
         } else {
@@ -184,12 +184,12 @@ export class DejaOverlayComponent extends Destroy {
         }
     }
 
-    public updatePosition() {
+    public updatePosition(): void {
         this.overlay?.overlayRef?.updatePosition();
     }
 
     /** Affiche le dialog. */
-    public show(eventOrOffsetX: MouseEvent | number, offsetY?: number) {
+    public show(eventOrOffsetX: MouseEvent | number, offsetY?: number): void {
         this.overlayOffsetX = offsetY !== undefined ? +eventOrOffsetX : 0;
         this.overlayOffsetY = offsetY || 0;
         const e = eventOrOffsetX as MouseEvent;
@@ -204,7 +204,7 @@ export class DejaOverlayComponent extends Destroy {
     }
 
     /** Ferme le dialog. */
-    public close() {
+    public close(): void {
         this.isVisible = false;
         this.closed.emit(true);
         this.changeDetectorRef.markForCheck();

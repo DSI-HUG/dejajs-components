@@ -25,7 +25,7 @@ export class SortingService {
      * @param sortInfos Modèle de tri à appliquer.
      * @return Observable résolu par la fonction.
      */
-    public sort$(list: any[], sortInfos: ISortInfos | ISortInfos[]) {
+    public sort$(list: any[], sortInfos: ISortInfos | ISortInfos[]): Observable<any[]> {
         return of(this.sort(list, sortInfos));
     }
 
@@ -34,7 +34,7 @@ export class SortingService {
      * @param sortInfos Modèle de tri à appliquer.
      * @return Liste triée.
      */
-    public sort(list: any[], sortInfos: ISortInfos | ISortInfos[]) {
+    public sort(list: any[], sortInfos: ISortInfos | ISortInfos[]): unknown[] {
         if (list?.length) {
             const sis = sortInfos instanceof Array ? sortInfos : [sortInfos];
             let i = sis.length;

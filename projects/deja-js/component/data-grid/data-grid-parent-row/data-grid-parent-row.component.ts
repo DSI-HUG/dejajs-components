@@ -41,11 +41,11 @@ export class DejaGridParentRowComponent {
 
     private _columnLayout = {} as IDejaGridParentRowColumnLayout;
 
-    public get columnLayoutOfColumn0() {
+    public get columnLayoutOfColumn0(): number {
         return this._columnLayout.column0;
     }
 
-    public get columnLayoutOfColumns() {
+    public get columnLayoutOfColumns(): { column: IDejaGridColumn; left: number }[] {
         return this._columnLayout.columns;
     }
 
@@ -70,17 +70,17 @@ export class DejaGridParentRowComponent {
         this.changeDetectorRef.markForCheck();
     }
 
-    public get cellTemplate() {
+    public get cellTemplate(): TemplateRef<unknown> {
         return this.cellTemplateExternal || this.cellTemplateInternal;
     }
 
-    public get parentTitleTemplate() {
+    public get parentTitleTemplate(): TemplateRef<unknown> {
         return this.parentTitleTemplateExternal || this.parentTitleTemplateInternal;
     }
 
     public constructor(private changeDetectorRef: ChangeDetectorRef) { }
 
-    public getCellText(row: IDejaGridRow<unknown>, textField: string) {
+    public getCellText(row: IDejaGridRow<unknown>, textField: string): string {
         return ItemListService.getItemText(row, textField) as string;
     }
 }

@@ -29,11 +29,11 @@ export class DejaOverlayDemoComponent {
 
     public tabIndex = 1;
 
-    public select(text: string) {
+    public select(text: string): void {
         this.selected = text;
     }
 
-    public onContextMenu(event: MouseEvent) {
+    public onContextMenu(event: MouseEvent): boolean {
         const parent = event.currentTarget as HTMLElement;
         const parentRect = parent.getBoundingClientRect();
         this.contextMenu.show(event.pageX - parentRect.left, event.pageY - parentRect.top);

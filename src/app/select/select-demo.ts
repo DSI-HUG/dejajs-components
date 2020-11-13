@@ -73,7 +73,7 @@ export class SelectDemoComponent extends Destroy {
         this.changeDetectorRef.markForCheck();
     }
 
-    public get dialogVisible() {
+    public get dialogVisible(): boolean {
         return this._dialogVisible;
     }
 
@@ -175,7 +175,7 @@ export class SelectDemoComponent extends Destroy {
         });
     }
 
-    public loadingItems() {
+    public loadingItems(): (_query: string | RegExp, _selectedItems: IItemBase<unknown>[]) => Observable<Country[]> {
         return (_query: string | RegExp, _selectedItems: IItemBase<unknown>[]) => {
             this.onDemandSelect.waiter = true;
             this.onDemandPlaceHolder = 'loading...';
@@ -188,14 +188,14 @@ export class SelectDemoComponent extends Destroy {
         };
     }
 
-    public collapsingItems() {
+    public collapsingItems(): (item: IItemBase<unknown>) => Observable<IItemBase<unknown>> {
         return (item: IItemBase<unknown>) => {
             const country = item as ICountryGroup;
             return country.loaded ? of(item) : this.confirmDialog()(item);
         };
     }
 
-    public expandingItems() {
+    public expandingItems(): (item: IItemBase<unknown>) => Observable<unknown> {
         return (item: IItemBase<unknown>) => {
             const group = item as ICountryGroup;
             if (group.loaded) {
@@ -220,12 +220,12 @@ export class SelectDemoComponent extends Destroy {
         };
     }
 
-    public confirmDialogWithPromise() {
+    public confirmDialogWithPromise(): (item: IItemBase<unknown>) => Promise<IItemBase<unknown>> {
         // eslint-disable-next-line rxjs/no-topromise
         return (item: IItemBase<unknown>) => this.confirmDialog()(item).toPromise();
     }
 
-    public confirmDialog() {
+    public confirmDialog(): (item: IItemBase<unknown>) => Observable<IItemBase<unknown>> {
         return (item: IItemBase<unknown>) => {
             this.dialogVisible = true;
             return from(this.dialogResponse$).pipe(
@@ -260,7 +260,7 @@ export class SelectDemoComponent extends Destroy {
         });
     }
 
-    public imageLoaded(item: IViewPortItem) {
+    public imageLoaded(item: IViewPortItem): void {
         const itemExt = item as IExtendedViewPortItem;
         if (!itemExt.loaded) {
             itemExt.loaded = true;

@@ -76,21 +76,24 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
     /**
      * Host Binding
      */
-    @HostBinding('style.flex-direction') public get styleFlexDirection() {
+    @HostBinding('style.flex-direction')
+    public get styleFlexDirection(): string {
         return this.direction === 'horizontal' ? 'row' : 'column';
     }
 
     /**
      * Host Binding
      */
-    @HostBinding('style.width') public get styleWidth() {
+    @HostBinding('style.width')
+    public get styleWidth(): string {
         return (this.width && !isNaN(this.width) && this.width > 0) ? `${this.width}px` : '100%';
     }
 
     /**
      * Host Binding
      */
-    @HostBinding('style.height') public get styleHeight() {
+    @HostBinding('style.height')
+    public get styleHeight(): string {
         return (this.height && !isNaN(this.height) && this.height > 0) ? `${this.height}px` : '100%';
     }
 
@@ -112,11 +115,11 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
         this._disabled = coerceBooleanProperty(value) || null;
     }
 
-    public get disabled() {
+    public get disabled(): BooleanInput {
         return this._disabled;
     }
 
-    public get areas() {
+    public get areas(): IAreaData[] {
         return this._areas;
     }
 
@@ -131,7 +134,7 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
     /**
      * Lifecycle hook that is called when any data-bound property of a directive changes.
      */
-    public ngOnChanges(changes: SimpleChanges) {
+    public ngOnChanges(changes: SimpleChanges): void {
         if (changes[gutterSize] || changes[disabled]) {
             this.refresh();
         }
@@ -140,7 +143,7 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
     /**
      * Lifecycle hook that is called when a directive, pipe or service is destroyed.
      */
-    public ngOnDestroy() {
+    public ngOnDestroy(): void {
         this.stopDragging();
     }
 
@@ -151,7 +154,7 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
      * @param sizeUser Size of the new area
      * @param minPixel Min size of the new area
      */
-    public addArea(component: SplitAreaDirective, orderUser: number | null, sizeUser: number | null, minPixel: number) {
+    public addArea(component: SplitAreaDirective, orderUser: number | null, sizeUser: number | null, minPixel: number): void {
         this._areas.push({
             component,
             orderUser,
@@ -171,7 +174,7 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
      * @param sizeUser Size of the area
      * @param minPixel  Min size of the area
      */
-    public updateArea(component: SplitAreaDirective, orderUser: number | null, sizeUser: number | null, minPixel: number) {
+    public updateArea(component: SplitAreaDirective, orderUser: number | null, sizeUser: number | null, minPixel: number): void {
         const item = this._areas.find(a => a.component === component);
 
         if (item) {
@@ -187,7 +190,7 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
      * Delete an existing area into the component
      * @param area Area to delete
      */
-    public removeArea(area: SplitAreaDirective) {
+    public removeArea(area: SplitAreaDirective): void {
         const item = this._areas.find(a => a.component === area);
 
         if (item) {
@@ -204,7 +207,7 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
      * @param startEvent drag event
      * @param gutterOrder separator number
      */
-    public startDragging(event: Event, gutterOrder: number) {
+    public startDragging(event: Event, gutterOrder: number): void {
         const startEvent = event as MouseEvent;
         startEvent.preventDefault();
 
@@ -241,7 +244,7 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
         this.notify('start');
     }
 
-    public refresh() {
+    public refresh(): void {
         this.stopDragging();
 
         // ORDERS: Set css 'order' property depending on user input or added order
