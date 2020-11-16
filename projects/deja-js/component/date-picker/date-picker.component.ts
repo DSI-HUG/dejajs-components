@@ -8,6 +8,7 @@
 
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { AfterContentInit } from '@angular/core';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
@@ -151,6 +152,17 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
      */
     public controlType = 'deja-date-picker';
 
+    public get overlayContainerClass() {
+        let oc = 'deja-datepicker-overlay-container';
+        if (this.breakpointObserver.isMatched('(max-height: 900px)')) {
+            oc += ' under-toolbar-position';
+        }
+        if (this.breakpointObserver.isMatched('(max-height: 550px)')) {
+            oc += ' top-position';
+        }
+        return oc;
+    }
+
     @ViewChild(DejaChildValidatorDirective) private inputValidatorDirective: DejaChildValidatorDirective;
 
     /** Default placeholder for input */
@@ -216,6 +228,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
         _defaultErrorStateMatcher: ErrorStateMatcher,
         private fm: FocusMonitor,
         private momentDateAdapter: MomentDateAdapter,
+        private breakpointObserver: BreakpointObserver
     ) {
         super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
         if (this.ngControl) {

@@ -42,7 +42,9 @@ export class DejaOverlayComponent extends Destroy {
 
             containerElement.classList.add('deja-overlay-container');
             if (this.overlayContainerClass) {
-                containerElement.classList.add(this.overlayContainerClass);
+                this.overlayContainerClass.split(' ').forEach(className => {
+                    containerElement.classList.add(className);
+                });
             }
 
             this.changeDetectorRef.markForCheck();
