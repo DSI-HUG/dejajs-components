@@ -34,6 +34,18 @@ deja-date-picker {
 .deja-datepicker-overlay-container {
 	overflow: visible;
 
+    &.under-toolbar-position {
+        .cdk-overlay-pane {
+            top: 100px !important;
+        }
+
+        &.top-position {
+            .cdk-overlay-pane {
+                top: 5px !important;
+            }
+        }
+    }
+
 	.actions {
 		position: absolute;
 		right: 0.3rem;
