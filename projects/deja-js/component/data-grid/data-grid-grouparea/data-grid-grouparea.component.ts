@@ -8,8 +8,7 @@
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Optional, Output } from '@angular/core';
 import { IDejaChipsComponentCloseEvent } from '@deja-js/component/chips';
-import { IDejaDragContext, IDejaDragEvent, IDejaDropEvent } from '@deja-js/component/dragdrop';
-import { IDejaMouseDroppableContext } from '@deja-js/component/mouse-dragdrop';
+import { IDejaDragContext, IDejaDragEvent, IDejaDropContext, IDejaDropEvent } from '@deja-js/component/dragdrop';
 import { DejaClipboardService } from '@deja-js/core';
 
 import { IDejaGridColumn } from '../data-grid-column/data-grid-column';
@@ -63,7 +62,7 @@ export class DejaGridGroupAreaComponent {
         } as IDejaDragContext;
     }
 
-    public getDropContext(): IDejaMouseDroppableContext {
+    public getDropContext(): IDejaDropContext {
         if (!this.clipboardService) {
             return null;
         }
@@ -154,7 +153,7 @@ export class DejaGridGroupAreaComponent {
 
                 this.changeDetectorRef.markForCheck();
             }
-        } as IDejaMouseDroppableContext;
+        } as IDejaDropContext;
     }
 
     public removeGroup(event: IDejaChipsComponentCloseEvent): boolean {
