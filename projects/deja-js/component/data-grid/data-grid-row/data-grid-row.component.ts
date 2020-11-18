@@ -76,6 +76,6 @@ export class DejaGridRowComponent extends Destroy {
     }
 
     public getCellText(row: IDejaGridRow<unknown>, textField: string): string {
-        return ItemListService.getItemText(row, textField) as string;
+        return ItemListService.getItemText(row, textField);
     }
 }
