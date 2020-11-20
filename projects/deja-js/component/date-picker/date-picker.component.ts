@@ -589,13 +589,14 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
     public updateModel(date: string | Date) {
         if (typeof date === 'string' && !this.allowFreeEntry) { // && date.replace(/_/g, '').length === this._format.length) {
             if (date.replace(/_/g, '').length === this._format.length) { // If mask is fully filled
-                const d = this.momentDateAdapter.parse(date, this._format)?.toDate() || null;
-                if (!d) {
+                const mDate = this.momentDateAdapter.parse(date, this._format);
+                if (mDate && this.momentDateAdapter.isValid(mDate)) {
+                    date = mDate.toDate() || null;
+                } else {
                     console.warn('[DatePicker]: Invalid Date');
                     this.ngControl.control.setErrors({ invalidMask: true });
                     this.changeDetectorRef.markForCheck();
                 }
-                date = d;
             } else if (!date.match(/[0-9]/)) { // if mask is empty - do nothing
                 return;
             } else { // If mask is partially filled
