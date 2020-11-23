@@ -60,10 +60,13 @@
                                 "replace": "src/environments/environment.ts",
                                 "with": "src/environments/environment.prod.ts"
                             }],
-                            "optimization": true,
+                            "optimization": {
+                                "scripts": true,
+                                "styles": true,
+                                "fonts": false
+                            },
                             "outputHashing": "all",
                             "sourceMap": false,
-                            "extractCss": true,
                             "namedChunks": false,
                             "aot": true,
                             "extractLicenses": true,
@@ -168,7 +171,7 @@
             "prefix": "lib",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-ng-packagr:build",
+                    "builder": "@angular-devkit/build-angular:ng-packagr",
                     "options": {
                         "tsConfig": "projects/deja-js/component/tsconfig.lib.json",
                         "project": "projects/deja-js/component/ng-package.json"
@@ -208,7 +211,7 @@
             "prefix": "lib",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-ng-packagr:build",
+                    "builder": "@angular-devkit/build-angular:ng-packagr",
                     "options": {
                         "tsConfig": "projects/deja-js/core/tsconfig.lib.json",
                         "project": "projects/deja-js/core/ng-package.json"

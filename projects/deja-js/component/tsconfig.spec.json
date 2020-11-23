@@ -5,7 +5,7 @@
         "types": [
             "jasmine",
             "node",
-            "../../../node_modules/@types/ckeditor"
+            "ckeditor"
         ]
     },
     "files": [
