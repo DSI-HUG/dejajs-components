@@ -1,3 +1,11 @@
+#### 0.0.1 (2020-11-23)
+
+##### Bug Fixes
+
+* **DateSelector:**
+  *  Remove the code that was resetting the hours:minute when changing date on date-time-picker (DEJS-913) ([8ac07cb1](https://github.com/DSI-HUG/dejajs-components/commit/8ac07cb147c1954a22c555e90d928967a7539929))
+  *  Avoid modifying control value during the write value process, use a clone object instead ([d99596ee](https://github.com/DSI-HUG/dejajs-components/commit/d99596eeea67ab6d5438ca3b9126f014054cfd9d))
+
 #### 0.0.1 (2020-11-20)
 
 ##### Chores
