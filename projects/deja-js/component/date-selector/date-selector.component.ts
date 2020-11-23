@@ -245,10 +245,8 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
         if (value instanceof Date && value !== this.selectedDate) {
             const clone = new Date(value.getTime()); // Use a cloned date to avoid modifying the object itself
             if (this.selectedDate) {
-                const h = clone.getHours();
-                const m = clone.getMinutes();
-                // TODO Check if this if block if really necessary, I don't understand why we need it
-                if (((!this.layoutId && this.selectedDate.toLocaleTimeString() !== clone.toLocaleTimeString()) || (this.layoutId > 1 && ((this.selectedDate.getHours() === 0 && this.selectedDate.getMinutes() === 0) && (h !== 0 && m !== 0) || (this.selectedDate.toLocaleDateString() !== clone.toLocaleDateString()))))) {
+                // When using a date-picker without time keep the time specified in the selectedDate when changing date
+                if (this.layoutId === 1 && this.selectedDate.toLocaleDateString() !== clone.toLocaleDateString()) {
                     clone.setHours(this.selectedDate.getHours(), this.selectedDate.getMinutes(), this.selectedDate.getSeconds());
                 }
             }
