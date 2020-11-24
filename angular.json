@@ -49,7 +49,6 @@
                             "lodash",
                             "showdown",
                             "ckeditor",
-                            "hammerjs",
                             "angular2-text-mask"
                         ],
                         "scripts": []
