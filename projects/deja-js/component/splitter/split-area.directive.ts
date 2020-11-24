@@ -103,7 +103,7 @@ export class SplitAreaDirective implements OnInit, OnDestroy {
      * @param key style key
      * @param value style value
      */
-    public setStyle(key: string, value: unknown): void{
+    public setStyle(key: string, value: unknown): void {
         void (value === null || value === undefined ? this.renderer.removeStyle(this.elementRef.nativeElement, key) : this.renderer.setStyle(this.elementRef.nativeElement, key, value));
     }
 

@@ -1,6 +1,6 @@
 {
     "name": "@deja-js/component",
-    "version": "11.0.0-alpha.1",
+    "version": "11.0.0-alpha.2",
     "description": "Angular Components Library",
     "homepage": "https://github.com/DSI-HUG/dejajs-components",
     "bugs": "https://github.com/DSI-HUG/dejajs-components/issues",
@@ -30,7 +30,7 @@
         "@angular/platform-browser": "~11.0.2",
         "@angular/platform-browser-dynamic": "~11.0.2",
         "@angular/router": "~11.0.2",
-        "@deja-js/core": "^11.0.0-alpha.1",
+        "@deja-js/core": "^11.0.0-alpha.2",
         "angular2-text-mask": "9.0.0",
         "core-js": "^3.6.5",
         "json-object-mapper": "^1.6.0",
