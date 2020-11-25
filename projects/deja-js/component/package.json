@@ -34,9 +34,7 @@
         "core-js": "^3.6.5",
         "json-object-mapper": "^1.6.0",
         "material-icons-font": "^2.1.0",
-        "prismjs": "~1.22.0",
         "rxjs": "^6.6.3",
-        "showdown": "^1.9.1",
         "zone.js": "~0.10.3"
     },
     "publishConfig": {
