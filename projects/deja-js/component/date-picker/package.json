@@ -9,5 +9,8 @@
                 "@angular/material-moment-adapter": "@angular/material-moment-adapter"
             }
         }
+    },
+    "peerDependencies": {
+        "angular2-text-mask": "9.0.0"
     }
 }
